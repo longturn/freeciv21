@@ -18,8 +18,9 @@
 // common
 #include "city.h"
 #include "dataio.h"
+#include "featured_text.h"
+#include "nation.h"
 #include "specialist.h"
-
 /* client */
 #include "attribute.h"
 #include "client_main.h"
@@ -41,9 +42,9 @@
 #define log_handle_city2 log_debug
 #define log_results_are_equal log_debug
 
-#define SHOW_TIME_STATS FALSE
-#define SHOW_APPLY_RESULT_ON_SERVER_ERRORS FALSE
-#define ALWAYS_APPLY_AT_SERVER FALSE
+#define SHOW_TIME_STATS false
+#define SHOW_APPLY_RESULT_ON_SERVER_ERRORS false
+#define ALWAYS_APPLY_AT_SERVER false
 #define RESULT_COLUMNS 10
 #define BUFFER_SIZE 100
 #define MAX_LEN_PRESET_NAME 80
@@ -194,7 +195,7 @@ inline bool operator==(const struct cm_result &result1,
   }
   output_type_iterate_end;
 
-  fc_assert_ret_val(result1.city_radius_sq == result2.city_radius_sq, FALSE);
+  fc_assert_ret_val(result1.city_radius_sq == result2.city_radius_sq, false);
   city_map_iterate(result1.city_radius_sq, cindex, x, y)
   {
     if (is_free_worked_index(cindex)) {
@@ -204,12 +205,12 @@ inline bool operator==(const struct cm_result &result1,
     if (result1.worker_positions[cindex]
         != result2.worker_positions[cindex]) {
       log_results_are_equal("worker_positions");
-      return FALSE;
+      return false;
     }
   }
   city_map_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 // yet another abstraction layer
@@ -297,12 +298,12 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
   struct cm_result *current_state = cm_result_new(pcity);
   struct tile *pcenter = city_tile(pcity);
 
-  fc_assert_ret_val(result->found_a_valid, FALSE);
+  fc_assert_ret_val(result->found_a_valid, false);
   cm_result_from_main_map(current_state, pcity);
 
   if (*current_state == *result && !ALWAYS_APPLY_AT_SERVER) {
     stats.apply_result_ignored++;
-    return TRUE;
+    return true;
   }
   /* Do checks */
   if (city_size_get(pcity) != cm_result_citizens(result)) {
@@ -310,7 +311,7 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
               pcity->id, city_name_get(pcity));
     cm_print_city(pcity);
     cm_print_result(result);
-    return FALSE;
+    return false;
   }
 
   stats.apply_result_applied++;
@@ -444,7 +445,7 @@ bool cma_yoloswag::is_city_under_agent(const struct city *pcity,
 
   if (!cma_get_parameter(ATTR_CITY_CMA_PARAMETER, pcity->id,
                          &my_parameter)) {
-    return FALSE;
+    return false;
   }
 
   int codacybs = sizeof(struct cm_parameter);
@@ -452,7 +453,7 @@ bool cma_yoloswag::is_city_under_agent(const struct city *pcity,
       && sizeof(*parameter) == sizeof(my_parameter)) {
     memcpy(parameter, &my_parameter, codacybs);
   }
-  return TRUE;
+  return true;
 }
 bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
                                  struct cm_parameter *parameter)
@@ -467,13 +468,13 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
 
   len = attr_city_get(attr, city_id, sizeof(buffer), buffer);
   if (len == 0) {
-    return FALSE;
+    return false;
   }
 
   dio_input_init(&din, buffer, len);
 
   dio_get_uint8_raw(&din, &version);
-  fc_assert_ret_val(version == 2, FALSE);
+  fc_assert_ret_val(version == 2, false);
 
   /* Initialize the parameter (includes some AI-only fields that aren't
    * touched below). */
@@ -491,7 +492,7 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
                     &dummy); /* Dummy value; used to be factor_target. */
   dio_get_bool8_raw(&din, &parameter->require_happy);
 
-  return TRUE;
+  return true;
 }
 
 void cma_yoloswag::set_parameter(enum attr_city attr, int city_id,
@@ -568,18 +569,18 @@ void cma_yoloswag::handle_city(struct city *pcity)
   log_handle_city2("START handle city %d=\"%s\"", pcity->id,
                    city_name_get(pcity));
 
-  handled = FALSE;
+  handled = false;
   for (i = 0; i < 5; i++) {
     struct cm_parameter parameter;
 
     log_handle_city2("  try %d", i);
 
     if (pcity != check_city(city_id, &parameter)) {
-      handled = TRUE;
+      handled = true;
       break;
     }
 
-    cm_query_result(pcity, &parameter, result, FALSE);
+    cm_query_result(pcity, &parameter, result, false);
     if (!result->found_a_valid) {
       log_handle_city2("  no valid found result");
 
@@ -589,7 +590,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
                    _("The citizen governor can't fulfill the requirements "
                      "for %s. Passing back control."),
                    city_link(pcity));
-      handled = TRUE;
+      handled = true;
       break;
     } else {
       if (!apply_result_on_server(pcity, result)) {
@@ -603,7 +604,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
       } else {
         log_handle_city2("  ok");
         /* Everything ok */
-        handled = TRUE;
+        handled = true;
         break;
       }
     }
@@ -864,7 +865,7 @@ static const char *get_city_growth_string(struct city *pcity, int surplus)
   buffer = new char[50];
 
   if (surplus == 0) {
-    fc_snprintf(buffer, sizeof(buffer), _("never"));
+    fc_snprintf(buffer, 50, _("never"));
     return buffer;
   }
 
@@ -878,7 +879,7 @@ static const char *get_city_growth_string(struct city *pcity, int surplus)
   } else {
     turns = ((cost - stock - 1) / surplus) + 1 + 1;
   }
-  fc_snprintf(buffer, sizeof(buffer), PL_("%d turn", "%d turns", turns),
+  fc_snprintf(buffer, 50, PL_("%d turn", "%d turns", turns),
               turns);
   return buffer;
 }
@@ -899,8 +900,7 @@ static const char *get_prod_complete_string(struct city *pcity, int surplus)
   if (city_production_has_flag(pcity, IF_GOLD)) {
     fc_strlcpy(
         buffer,
-        improvement_name_translation(pcity->production.value.building),
-        sizeof(buffer));
+        improvement_name_translation(pcity->production.value.building), 50);
     return buffer;
   }
   stock = pcity->shield_stock + surplus;
@@ -959,7 +959,7 @@ cmafec_get_result_descr(struct city *pcity, const struct cm_result *result,
                 cmafec_get_short_descr(parameter));
   }
 
-  fc_snprintf(buffer, sizeof(buffer),
+  fc_snprintf(buffer, 600,
               _("Name: %s\n"
                 "Food:       %10s Gold:    %10s\n"
                 "Production: %10s Luxury:  %10s\n"
@@ -986,37 +986,37 @@ void create_default_cma_presets(void)
   struct cm_parameter parameters[] = {
       {/* very happy */
        .minimal_surplus = {0, 0, 0, -20, 0, 0},
-       .require_happy = FALSE,
-       .allow_disorder = FALSE,
-       .allow_specialists = TRUE,
+       .require_happy = false,
+       .allow_disorder = false,
+       .allow_specialists = true,
        .factor = {10, 5, 0, 4, 0, 4},
        .happy_factor = 25},
       {/* prefer food */
        .minimal_surplus = {-20, 0, 0, -20, 0, 0},
-       .require_happy = FALSE,
-       .allow_disorder = FALSE,
-       .allow_specialists = TRUE,
+       .require_happy = false,
+       .allow_disorder = false,
+       .allow_specialists = true,
        .factor = {25, 5, 0, 4, 0, 4},
        .happy_factor = 0},
       {/* prefer prod */
        .minimal_surplus = {0, -20, 0, -20, 0, 0},
-       .require_happy = FALSE,
-       .allow_disorder = FALSE,
-       .allow_specialists = TRUE,
+       .require_happy = false,
+       .allow_disorder = false,
+       .allow_specialists = true,
        .factor = {10, 25, 0, 4, 0, 4},
        .happy_factor = 0},
       {/* prefer gold */
        .minimal_surplus = {0, 0, 0, -20, 0, 0},
-       .require_happy = FALSE,
-       .allow_disorder = FALSE,
-       .allow_specialists = TRUE,
+       .require_happy = false,
+       .allow_disorder = false,
+       .allow_specialists = true,
        .factor = {10, 5, 0, 25, 0, 4},
        .happy_factor = 0},
       {/* prefer science */
        .minimal_surplus = {0, 0, 0, -20, 0, 0},
-       .require_happy = FALSE,
-       .allow_disorder = FALSE,
-       .allow_specialists = TRUE,
+       .require_happy = false,
+       .allow_disorder = false,
+       .allow_specialists = true,
        .factor = {10, 5, 0, 4, 0, 25},
        .happy_factor = 0}};
   const char *names[ARRAY_SIZE(parameters)] = {

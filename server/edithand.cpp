@@ -61,7 +61,7 @@
 /* Set if anything in a sequence of edits triggers the expensive
  * assign_continent_numbers() check, which will be done once when the
  * sequence is complete. */
-static bool need_continents_reassigned = FALSE;
+static bool need_continents_reassigned = false;
 /* Hold pointers to tiles which were changed during the edit sequence,
  * so that they can be sanity-checked when the sequence is complete
  * and final global fix-ups have been done. */
@@ -78,7 +78,7 @@ void edithand_init(void)
 {
   modified_tile_table->clear();
 
-  need_continents_reassigned = FALSE;
+  need_continents_reassigned = false;
 
   if (unfogged_players != NULL) {
     free(unfogged_players);
@@ -114,7 +114,7 @@ void edithand_send_initial_packets(struct conn_list *dest)
   {
     if (psp->exclude) continue;
     startpos.id = tile_index(startpos_tile(psp));
-    startpos.removal = FALSE;
+    startpos.removal = false;
     startpos.tag = 0;
 
     startpos_pack(psp, &startpos_full);
@@ -139,7 +139,7 @@ static void check_edited_tile_terrains(void)
   if (need_continents_reassigned) {
     assign_continent_numbers();
     send_all_known_tiles(NULL);
-    need_continents_reassigned = FALSE;
+    need_continents_reassigned = false;
   }
 
 #ifdef SANITY_CHECKING
@@ -222,21 +222,21 @@ static bool edit_tile_terrain_handling(struct tile *ptile,
   if (old_terrain == pterrain
       || (terrain_has_flag(pterrain, TER_NO_CITIES)
           && NULL != tile_city(ptile))) {
-    return FALSE;
+    return false;
   }
 
   tile_change_terrain(ptile, pterrain);
-  fix_tile_on_terrain_change(ptile, old_terrain, FALSE);
+  fix_tile_on_terrain_change(ptile, old_terrain, false);
   modified_tile_table->insert(ptile);
   if (need_to_reassign_continents(old_terrain, pterrain)) {
-    need_continents_reassigned = TRUE;
+    need_continents_reassigned = true;
   }
 
   if (send_info) {
     update_tile_knowledge(ptile);
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -249,22 +249,22 @@ static bool edit_tile_extra_handling(struct tile *ptile,
 {
   if (remove_mode) {
     if (!tile_has_extra(ptile, pextra)) {
-      return FALSE;
+      return false;
     }
 
     if (!tile_extra_rm_apply(ptile, pextra)) {
-      return FALSE;
+      return false;
     }
 
     terrain_changed(ptile);
 
   } else {
     if (tile_has_extra(ptile, pextra)) {
-      return FALSE;
+      return false;
     }
 
     if (!tile_extra_apply(ptile, pextra)) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -272,7 +272,7 @@ static bool edit_tile_extra_handling(struct tile *ptile,
     update_tile_knowledge(ptile);
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -311,7 +311,7 @@ void handle_edit_tile_terrain(struct connection *pc, int tile,
    * changed terrain the best chance of survival. */
   square_iterate(&(wld.map), ptile_center, size - 1, ptile)
   {
-    edit_tile_terrain_handling(ptile, pterrain, TRUE);
+    edit_tile_terrain_handling(ptile, pterrain, true);
   }
   square_iterate_end;
   conn_list_do_unbuffer(game.est_connections);
@@ -355,7 +355,7 @@ void handle_edit_tile_extra(struct connection *pc, int tile, int id,
   square_iterate(&(wld.map), ptile_center, size - 1, ptile)
   {
     ptile->extras_owner = plr_eowner;
-    edit_tile_extra_handling(ptile, extra_by_number(id), removal, TRUE);
+    edit_tile_extra_handling(ptile, extra_by_number(id), removal, true);
   }
   square_iterate_end;
   conn_list_do_unbuffer(game.est_connections);
@@ -369,7 +369,7 @@ void handle_edit_tile(struct connection *pc,
 {
   struct tile *ptile;
   struct player *eowner;
-  bool changed = FALSE;
+  bool changed = false;
 
   ptile = index_to_tile(&(wld.map), packet->tile);
   if (!ptile) {
@@ -392,8 +392,8 @@ void handle_edit_tile(struct connection *pc,
     {
       if (edit_tile_extra_handling(
               ptile, pextra, !BV_ISSET(packet->extras, extra_number(pextra)),
-              FALSE)) {
-        changed = TRUE;
+              false)) {
+        changed = true;
       }
     }
     extra_type_iterate_end;
@@ -401,12 +401,12 @@ void handle_edit_tile(struct connection *pc,
 
   if (ptile->extras_owner != eowner) {
     ptile->extras_owner = eowner;
-    changed = TRUE;
+    changed = true;
   }
 
   /* Handle changes in label */
   if (tile_set_label(ptile, packet->label)) {
-    changed = TRUE;
+    changed = true;
   }
 
   /* TODO: Handle more property edits. */
@@ -414,7 +414,7 @@ void handle_edit_tile(struct connection *pc,
   /* Send the new state to all affected. */
   if (changed) {
     update_tile_knowledge(ptile);
-    send_tile_info(NULL, ptile, FALSE);
+    send_tile_info(NULL, ptile, false);
   }
 }
 
@@ -485,12 +485,12 @@ void handle_edit_unit_create(struct connection *pc, int owner, int tile,
   }
 
   if (count > 0 && !pplayer->is_alive) {
-    pplayer->is_alive = TRUE;
+    pplayer->is_alive = true;
     send_player_info_c(pplayer, NULL);
   }
 
-  homecity = find_closest_city(ptile, NULL, pplayer, FALSE, FALSE, FALSE,
-                               TRUE, FALSE, utype_class(punittype));
+  homecity = find_closest_city(ptile, NULL, pplayer, false, false, false,
+                               true, false, utype_class(punittype));
   id = homecity ? homecity->id : 0;
 
   conn_list_do_buffer(game.est_connections);
@@ -590,7 +590,7 @@ void handle_edit_unit(struct connection *pc,
   const struct unit_type *putype;
   struct unit *punit;
   int id;
-  bool changed = FALSE;
+  bool changed = false;
   int fuel, hp;
 
   id = packet->id;
@@ -605,29 +605,29 @@ void handle_edit_unit(struct connection *pc,
 
   if (packet->moves_left != punit->moves_left) {
     punit->moves_left = packet->moves_left;
-    changed = TRUE;
+    changed = true;
   }
 
   fuel = CLIP(0, packet->fuel, utype_fuel(putype));
   if (fuel != punit->fuel) {
     punit->fuel = fuel;
-    changed = TRUE;
+    changed = true;
   }
 
   if (packet->moved != punit->moved) {
     punit->moved = packet->moved;
-    changed = TRUE;
+    changed = true;
   }
 
   if (packet->done_moving != punit->done_moving) {
     punit->done_moving = packet->done_moving;
-    changed = TRUE;
+    changed = true;
   }
 
   hp = CLIP(1, packet->hp, putype->hp);
   if (hp != punit->hp) {
     punit->hp = hp;
-    changed = TRUE;
+    changed = true;
   }
 
   if (packet->veteran != punit->veteran) {
@@ -638,13 +638,13 @@ void handle_edit_unit(struct connection *pc,
                   unit_link(punit));
     } else {
       punit->veteran = v;
-      changed = TRUE;
+      changed = true;
     }
   }
 
   if (packet->stay != punit->stay) {
     punit->stay = packet->stay;
-    changed = TRUE;
+    changed = true;
   }
 
   /* TODO: Handle more property edits. */
@@ -694,7 +694,7 @@ void handle_edit_city_create(struct connection *pc, int owner, int tile,
   }
 
   if (!pplayer->is_alive) {
-    pplayer->is_alive = TRUE;
+    pplayer->is_alive = true;
     send_player_info_c(pplayer, NULL);
   }
 
@@ -728,8 +728,8 @@ void handle_edit_city(struct connection *pc,
   struct player *pplayer;
   char buf[1024];
   int id;
-  bool changed = FALSE;
-  bool need_game_info = FALSE;
+  bool changed = false;
+  bool need_game_info = false;
   bv_player need_player_info;
 
   pcity = game_city_by_number(packet->id);
@@ -750,7 +750,7 @@ void handle_edit_city(struct connection *pc,
                   _("Cannot edit city name: %s"), buf);
     } else {
       sz_strlcpy(pcity->name, packet->name);
-      changed = TRUE;
+      changed = true;
     }
   }
 
@@ -763,13 +763,13 @@ void handle_edit_city(struct connection *pc,
     } else {
       /* FIXME: Slow and inefficient for large size changes. */
       city_change_size(pcity, packet->size, NULL, NULL);
-      changed = TRUE;
+      changed = true;
     }
   }
 
   if (packet->history != pcity->history) {
     pcity->history = packet->history;
-    changed = TRUE;
+    changed = true;
   }
 
   /* Handle city improvement changes. */
@@ -792,7 +792,7 @@ void handle_edit_city(struct connection *pc,
 
     if (city_has_building(pcity, pimprove) && packet->built[id] < 0) {
       city_remove_improvement(pcity, pimprove);
-      changed = TRUE;
+      changed = true;
 
     } else if (!city_has_building(pcity, pimprove)
                && packet->built[id] >= 0) {
@@ -803,7 +803,7 @@ void handle_edit_city(struct connection *pc,
         }
         if (NULL != oldcity && city_owner(oldcity) != pplayer) {
           /* Great wonders make more changes. */
-          need_game_info = TRUE;
+          need_game_info = true;
           BV_SET(need_player_info, player_index(city_owner(oldcity)));
         }
       } else if (is_small_wonder(pimprove)) {
@@ -819,7 +819,7 @@ void handle_edit_city(struct connection *pc,
       }
 
       city_add_improvement(pcity, pimprove);
-      changed = TRUE;
+      changed = true;
     }
   }
   improvement_iterate_end;
@@ -834,7 +834,7 @@ void handle_edit_city(struct connection *pc,
                   packet->food_stock, city_link(pcity), 0, max);
     } else {
       pcity->food_stock = packet->food_stock;
-      changed = TRUE;
+      changed = true;
     }
   }
 
@@ -848,7 +848,7 @@ void handle_edit_city(struct connection *pc,
                   packet->shield_stock, city_link(pcity), 0, max);
     } else {
       pcity->shield_stock = packet->shield_stock;
-      changed = TRUE;
+      changed = true;
     }
   }
 
@@ -906,7 +906,7 @@ void handle_edit_player_create(struct connection *pc, int tag)
     return;
   }
 
-  pnation = pick_a_nation(NULL, TRUE, TRUE, NOT_A_BARBARIAN);
+  pnation = pick_a_nation(NULL, true, true, NOT_A_BARBARIAN);
   if (!pnation) {
     notify_conn(pc->self, NULL, E_BAD_COMMAND, ftc_editor,
                 _("Player cannot be created because random nation "
@@ -914,30 +914,30 @@ void handle_edit_player_create(struct connection *pc, int tag)
     return;
   }
 
-  pplayer = server_create_player(-1, default_ai_type_name(), NULL, FALSE);
+  pplayer = server_create_player(-1, default_ai_type_name(), NULL, false);
   if (!pplayer) {
     notify_conn(pc->self, NULL, E_BAD_COMMAND, ftc_editor,
                 _("Player creation failed."));
     return;
   }
-  server_player_init(pplayer, TRUE, TRUE);
+  server_player_init(pplayer, true, true);
 
-  player_nation_defaults(pplayer, pnation, TRUE);
+  player_nation_defaults(pplayer, pnation, true);
   if (game_was_started()) {
     /* Find a color for the new player. */
     assign_player_colors();
   }
   sz_strlcpy(pplayer->username, _(ANON_USER_NAME));
-  pplayer->unassigned_user = TRUE;
-  pplayer->is_connected = FALSE;
+  pplayer->unassigned_user = true;
+  pplayer->is_connected = false;
   pplayer->government = init_government_of_nation(pnation);
-  pplayer->server.got_first_city = FALSE;
+  pplayer->server.got_first_city = false;
 
   pplayer->economic.gold = 0;
   pplayer->economic = player_limit_to_max_rates(pplayer);
 
   presearch = research_get(pplayer);
-  init_tech(presearch, TRUE);
+  init_tech(presearch, true);
   give_initial_techs(presearch, 0);
 
   send_player_all_c(pplayer, NULL);
@@ -966,7 +966,7 @@ void handle_edit_player_remove(struct connection *pc, int id)
   /* Don't use conn_list_iterate here because connection_detach() can be
    * recursive and free the next connection pointer. */
   while (conn_list_size(pplayer->connections) > 0) {
-    connection_detach(conn_list_get(pplayer->connections, 0), FALSE);
+    connection_detach(conn_list_get(pplayer->connections, 0), false);
   }
 
   kill_player(pplayer);
@@ -980,7 +980,7 @@ void handle_edit_player(struct connection *pc,
                         const struct packet_edit_player *packet)
 {
   struct player *pplayer;
-  bool changed = FALSE, update_research = FALSE;
+  bool changed = false, update_research = false;
   struct nation_type *pnation;
   struct research *research;
   enum tech_state known;
@@ -1002,7 +1002,7 @@ void handle_edit_player(struct connection *pc,
 
     if (server_player_set_name_full(pc, pplayer, NULL, packet->name,
                                     error_buf, sizeof(error_buf))) {
-      changed = TRUE;
+      changed = true;
     } else {
       notify_conn(pc->self, NULL, E_BAD_COMMAND, ftc_editor,
                   _("Cannot change name of player (%d) '%s' to '%s': %s"),
@@ -1053,8 +1053,8 @@ void handle_edit_player(struct connection *pc,
   /* Handle a change in research progress. */
   if (packet->bulbs_researched != research->bulbs_researched) {
     research->bulbs_researched = packet->bulbs_researched;
-    changed = TRUE;
-    update_research = TRUE;
+    changed = true;
+    update_research = true;
   }
 
   /* Handle a change in known inventions. */
@@ -1073,8 +1073,8 @@ void handle_edit_player(struct connection *pc,
       research_invention_set(research, tech, TECH_UNKNOWN);
       research->techs_researched--;
     }
-    changed = TRUE;
-    update_research = TRUE;
+    changed = true;
+    update_research = true;
   }
   advance_index_iterate_end;
 
@@ -1088,7 +1088,7 @@ void handle_edit_player(struct connection *pc,
                   packet->gold);
     } else {
       pplayer->economic.gold = packet->gold;
-      changed = TRUE;
+      changed = true;
     }
   }
 
@@ -1096,7 +1096,7 @@ void handle_edit_player(struct connection *pc,
   gov = government_by_number(packet->government);
   if (gov != pplayer->government) {
     if (gov != game.government_during_revolution) {
-      government_change(pplayer, gov, FALSE);
+      government_change(pplayer, gov, false);
     } else {
       int turns = revolution_length(gov, pplayer);
 
@@ -1106,17 +1106,17 @@ void handle_edit_player(struct connection *pc,
       }
     }
 
-    changed = TRUE;
+    changed = true;
   }
 
   if (packet->scenario_reserved) {
     if (!player_has_flag(pplayer, PLRF_SCENARIO_RESERVED)) {
-      changed = TRUE;
+      changed = true;
       BV_SET(pplayer->flags, PLRF_SCENARIO_RESERVED);
     }
   } else {
     if (player_has_flag(pplayer, PLRF_SCENARIO_RESERVED)) {
-      changed = TRUE;
+      changed = true;
       BV_CLR(pplayer->flags, PLRF_SCENARIO_RESERVED);
     }
   }
@@ -1160,7 +1160,7 @@ void handle_edit_player(struct connection *pc,
         }
       }
     }
-    changed = TRUE;
+    changed = true;
 
     /* Inform everybody about global advances */
     send_game_info(NULL);
@@ -1205,7 +1205,7 @@ void handle_edit_player_vision(struct connection *pc, int plr_no, int tile,
   {
     if (!known) {
       struct city *pcity = tile_city(ptile);
-      bool cannot_make_unknown = FALSE;
+      bool cannot_make_unknown = false;
 
       if (pcity && city_owner(pcity) == pplayer) {
         continue;
@@ -1215,7 +1215,7 @@ void handle_edit_player_vision(struct connection *pc, int plr_no, int tile,
       {
         if (unit_owner(punit) == pplayer
             || really_gives_vision(pplayer, unit_owner(punit))) {
-          cannot_make_unknown = TRUE;
+          cannot_make_unknown = true;
           break;
         }
       }
@@ -1312,10 +1312,10 @@ void handle_edit_toggle_fogofwar(struct connection *pc, int plr_no)
   conn_list_do_buffer(game.est_connections);
   if (unfogged_players[player_number(pplayer)]) {
     enable_fog_of_war_player(pplayer);
-    unfogged_players[player_number(pplayer)] = FALSE;
+    unfogged_players[player_number(pplayer)] = false;
   } else {
     disable_fog_of_war_player(pplayer);
-    unfogged_players[player_number(pplayer)] = TRUE;
+    unfogged_players[player_number(pplayer)] = true;
   }
   conn_list_do_unbuffer(game.est_connections);
 }
@@ -1341,10 +1341,10 @@ void handle_edit_startpos(struct connection *pconn,
     changed = map_startpos_remove(ptile);
   } else {
     if (NULL != map_startpos_get(ptile)) {
-      changed = FALSE;
+      changed = false;
     } else {
       map_startpos_new(ptile);
-      changed = TRUE;
+      changed = true;
     }
   }
 
@@ -1404,53 +1404,53 @@ void handle_edit_startpos_full(
 void handle_edit_game(struct connection *pc,
                       const struct packet_edit_game *packet)
 {
-  bool changed = FALSE;
+  bool changed = false;
 
   if (packet->scenario != game.scenario.is_scenario) {
     game.scenario.is_scenario = packet->scenario;
-    changed = TRUE;
+    changed = true;
   }
 
   if (0 != strncmp(packet->scenario_name, game.scenario.name, 256)) {
     sz_strlcpy(game.scenario.name, packet->scenario_name);
-    changed = TRUE;
+    changed = true;
   }
 
   if (0
       != strncmp(packet->scenario_authors, game.scenario.authors,
                  MAX_LEN_PACKET)) {
     sz_strlcpy(game.scenario.authors, packet->scenario_authors);
-    changed = TRUE;
+    changed = true;
   }
 
   if (packet->scenario_random != game.scenario.save_random) {
     game.scenario.save_random = packet->scenario_random;
-    changed = TRUE;
+    changed = true;
   }
 
   if (packet->scenario_players != game.scenario.players) {
     game.scenario.players = packet->scenario_players;
-    changed = TRUE;
+    changed = true;
   }
 
   if (packet->startpos_nations != game.scenario.startpos_nations) {
     game.scenario.startpos_nations = packet->startpos_nations;
-    changed = TRUE;
+    changed = true;
   }
 
   if (packet->prevent_new_cities != game.scenario.prevent_new_cities) {
     game.scenario.prevent_new_cities = packet->prevent_new_cities;
-    changed = TRUE;
+    changed = true;
   }
 
   if (packet->lake_flooding != game.scenario.lake_flooding) {
     game.scenario.lake_flooding = packet->lake_flooding;
-    changed = TRUE;
+    changed = true;
   }
 
   if (packet->ruleset_locked != game.scenario.ruleset_locked) {
     game.scenario.ruleset_locked = packet->ruleset_locked;
-    changed = TRUE;
+    changed = true;
   }
 
   if (changed) {
@@ -1492,7 +1492,7 @@ void handle_save_scenario(struct connection *pc, const char *name)
   }
 
   /* Client initiated scenario saving is not handmade */
-  game.scenario.handmade = FALSE;
+  game.scenario.handmade = false;
 
-  save_game(name, "Scenario", TRUE);
+  save_game(name, "Scenario", true);
 }

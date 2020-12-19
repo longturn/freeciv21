@@ -12,9 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
-#include "support.h" /* bool type */
-
 #include "fc_types.h"
 
 /* Number of city report columns: have to set this manually now... */

@@ -28,6 +28,7 @@
 #include "game.h"
 #include "packets.h"
 #include "spaceship.h"
+#include "nation.h"
 
 /* server */
 #include "notify.h"
@@ -223,7 +224,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                       " but you don't have a spaceship!"));
     }
 
-    return FALSE;
+    return false;
   }
 
   if (ship->state >= SSHIP_LAUNCHED) {
@@ -232,13 +233,13 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                     _("You can't modify your spaceship after launch!"));
     }
 
-    return FALSE;
+    return false;
   }
 
   if (type == SSHIP_PLACE_STRUCTURAL) {
     if (num < 0 || num >= NUM_SS_STRUCTURALS
         || BV_ISSET(ship->structure, num)) {
-      return FALSE;
+      return false;
     }
     if (num_spaceship_structurals_placed(ship) >= ship->structurals) {
       if (from == ACT_REQ_PLAYER) {
@@ -246,7 +247,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                       _("You don't have any unplaced Space Structurals!"));
       }
 
-      return FALSE;
+      return false;
     }
     if (num != 0
         && !BV_ISSET(ship->structure, structurals_info[num].required)) {
@@ -255,18 +256,18 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                       _("That Space Structural would not be connected!"));
       }
 
-      return FALSE;
+      return false;
     }
 
     BV_SET(ship->structure, num);
     spaceship_calc_derived(ship);
     send_spaceship_info(pplayer, NULL);
-    return TRUE;
+    return true;
   }
 
   if (type == SSHIP_PLACE_FUEL) {
     if (ship->fuel != num - 1) {
-      return FALSE;
+      return false;
     }
     if (ship->fuel + ship->propulsion >= ship->components) {
       if (from == ACT_REQ_PLAYER) {
@@ -274,7 +275,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                       _("You don't have any unplaced Space Components!"));
       }
 
-      return FALSE;
+      return false;
     }
     if (num > NUM_SS_COMPONENTS / 2) {
       if (from == ACT_REQ_PLAYER) {
@@ -283,18 +284,18 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                         " the maximum number of Fuel Components!"));
       }
 
-      return FALSE;
+      return false;
     }
 
     ship->fuel++;
     spaceship_calc_derived(ship);
     send_spaceship_info(pplayer, NULL);
-    return TRUE;
+    return true;
   }
 
   if (type == SSHIP_PLACE_PROPULSION) {
     if (ship->propulsion != num - 1) {
-      return FALSE;
+      return false;
     }
     if (ship->fuel + ship->propulsion >= ship->components) {
       if (from == ACT_REQ_PLAYER) {
@@ -303,7 +304,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                         " Space Components!"));
       }
 
-      return FALSE;
+      return false;
     }
     if (num > NUM_SS_COMPONENTS / 2) {
       if (from == ACT_REQ_PLAYER) {
@@ -312,18 +313,18 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                         " maximum number of Propulsion Components!"));
       }
 
-      return FALSE;
+      return false;
     }
 
     ship->propulsion++;
     spaceship_calc_derived(ship);
     send_spaceship_info(pplayer, NULL);
-    return TRUE;
+    return true;
   }
 
   if (type == SSHIP_PLACE_HABITATION) {
     if (ship->habitation != num - 1) {
-      return FALSE;
+      return false;
     }
     if (ship->habitation + ship->life_support + ship->solar_panels
         >= ship->modules) {
@@ -332,7 +333,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                       _("You don't have any unplaced Space Modules!"));
       }
 
-      return FALSE;
+      return false;
     }
     if (num > NUM_SS_MODULES / 3) {
       if (from == ACT_REQ_PLAYER) {
@@ -341,18 +342,18 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                         " maximum number of Habitation Modules!"));
       }
 
-      return FALSE;
+      return false;
     }
 
     ship->habitation++;
     spaceship_calc_derived(ship);
     send_spaceship_info(pplayer, NULL);
-    return TRUE;
+    return true;
   }
 
   if (type == SSHIP_PLACE_LIFE_SUPPORT) {
     if (ship->life_support != num - 1) {
-      return FALSE;
+      return false;
     }
     if (ship->habitation + ship->life_support + ship->solar_panels
         >= ship->modules) {
@@ -361,7 +362,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                       _("You don't have any unplaced Space Modules!"));
       }
 
-      return FALSE;
+      return false;
     }
     if (num > NUM_SS_MODULES / 3) {
       if (from == ACT_REQ_PLAYER) {
@@ -370,18 +371,18 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                         " maximum number of Life Support Modules!"));
       }
 
-      return FALSE;
+      return false;
     }
 
     ship->life_support++;
     spaceship_calc_derived(ship);
     send_spaceship_info(pplayer, NULL);
-    return TRUE;
+    return true;
   }
 
   if (type == SSHIP_PLACE_SOLAR_PANELS) {
     if (ship->solar_panels != num - 1) {
-      return FALSE;
+      return false;
     }
     if (ship->habitation + ship->life_support + ship->solar_panels
         >= ship->modules) {
@@ -390,7 +391,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                       _("You don't have any unplaced Space Modules!"));
       }
 
-      return FALSE;
+      return false;
     }
     if (num > NUM_SS_MODULES / 3) {
       if (from == ACT_REQ_PLAYER) {
@@ -399,18 +400,18 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                         " maximum number of Solar Panel Modules!"));
       }
 
-      return FALSE;
+      return false;
     }
 
     ship->solar_panels++;
     spaceship_calc_derived(ship);
     send_spaceship_info(pplayer, NULL);
-    return TRUE;
+    return true;
   }
 
   qCritical("Received unknown spaceship place type %d from %s", type,
             player_name(pplayer));
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**

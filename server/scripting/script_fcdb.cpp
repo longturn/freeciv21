@@ -42,7 +42,6 @@
 /* utility */
 #include "log.h"
 #include "registry.h"
-#include "string_vector.h"
 
 /* common/scriptcore */
 #include "luascript.h"
@@ -106,21 +105,21 @@ static struct fc_lua *fcl = NULL;
  *****************************************************************************/
 static void script_fcdb_functions_define(void)
 {
-  luascript_func_add(fcl, "database_init", TRUE, 0, 0);
-  luascript_func_add(fcl, "database_free", TRUE, 0, 0);
+  luascript_func_add(fcl, "database_init", true, 0, 0);
+  luascript_func_add(fcl, "database_free", true, 0, 0);
 
-  luascript_func_add(fcl, "user_exists", TRUE, 1, 1, API_TYPE_CONNECTION,
+  luascript_func_add(fcl, "user_exists", true, 1, 1, API_TYPE_CONNECTION,
                      API_TYPE_BOOL);
-  luascript_func_add(fcl, "user_verify", TRUE, 2, 1, API_TYPE_CONNECTION,
+  luascript_func_add(fcl, "user_verify", true, 2, 1, API_TYPE_CONNECTION,
                      API_TYPE_STRING, API_TYPE_BOOL);
-  luascript_func_add(fcl, "user_save", FALSE, 2, 0, API_TYPE_CONNECTION,
+  luascript_func_add(fcl, "user_save", false, 2, 0, API_TYPE_CONNECTION,
                      API_TYPE_STRING);
-  luascript_func_add(fcl, "user_log", TRUE, 2, 0, API_TYPE_CONNECTION,
+  luascript_func_add(fcl, "user_log", true, 2, 0, API_TYPE_CONNECTION,
                      API_TYPE_BOOL);
-  luascript_func_add(fcl, "user_delegate_to", FALSE, 3, 1,
+  luascript_func_add(fcl, "user_delegate_to", false, 3, 1,
                      API_TYPE_CONNECTION, API_TYPE_PLAYER, API_TYPE_STRING,
                      API_TYPE_BOOL);
-  luascript_func_add(fcl, "user_take", FALSE, 4, 1, API_TYPE_CONNECTION,
+  luascript_func_add(fcl, "user_take", false, 4, 1, API_TYPE_CONNECTION,
                      API_TYPE_CONNECTION, API_TYPE_PLAYER, API_TYPE_BOOL,
                      API_TYPE_BOOL);
 }
@@ -130,31 +129,29 @@ static void script_fcdb_functions_define(void)
  *****************************************************************************/
 static bool script_fcdb_functions_check(const char *fcdb_luafile)
 {
-  bool ret = TRUE;
-  struct strvec *missing_func_required = strvec_new();
-  struct strvec *missing_func_optional = strvec_new();
+  bool ret = true;
+  QVector<QString> *missing_func_required = new QVector<QString>;
+  QVector<QString> *missing_func_optional = new QVector<QString>;
 
   if (!luascript_func_check(fcl, missing_func_required,
                             missing_func_optional)) {
-    strvec_iterate(missing_func_required, func_name)
+    for (auto func_name : *missing_func_required)
     {
       qCritical("Database script '%s' does not define the required function "
                 "'%s'.",
                 fcdb_luafile, func_name);
-      ret = FALSE;
+      ret = false;
     }
-    strvec_iterate_end;
-    strvec_iterate(missing_func_optional, func_name)
+    for (auto func_name : *missing_func_optional)
     {
       qDebug("Database script '%s' does not define the optional "
              "function '%s'.",
              fcdb_luafile, func_name);
     }
-    strvec_iterate_end;
   }
 
-  strvec_destroy(missing_func_required);
-  strvec_destroy(missing_func_optional);
+  delete missing_func_required;
+  delete missing_func_optional;
 
   return ret;
 }
@@ -228,9 +225,9 @@ bool script_fcdb_init(const char *fcdb_luafile)
 {
 #ifdef HAVE_FCDB
   if (fcl != NULL) {
-    fc_assert_ret_val(fcl->state != NULL, FALSE);
+    fc_assert_ret_val(fcl->state != NULL, false);
 
-    return TRUE;
+    return true;
   }
 
   if (!fcdb_luafile) {
@@ -238,10 +235,10 @@ bool script_fcdb_init(const char *fcdb_luafile)
     fcdb_luafile = FC_CONF_PATH "/" SCRIPT_FCDB_LUA_FILE;
   }
 
-  fcl = luascript_new(NULL, FALSE);
+  fcl = luascript_new(NULL, false);
   if (fcl == NULL) {
     qCritical("Error loading the Freeciv database lua definition.");
-    return FALSE;
+    return false;
   }
 
   tolua_common_a_open(fcl->state);
@@ -276,17 +273,17 @@ bool script_fcdb_init(const char *fcdb_luafile)
     qCritical("Error loading the Freeciv database lua script '%s'.",
               fcdb_luafile);
     script_fcdb_free();
-    return FALSE;
+    return false;
   }
 
   if (!script_fcdb_call("database_init")) {
     qCritical("Error connecting to the database");
     script_fcdb_free();
-    return FALSE;
+    return false;
   }
 #endif /* HAVE_FCDB */
 
-  return TRUE;
+  return true;
 }
 
 /*************************************************************************/ /**
@@ -297,7 +294,7 @@ bool script_fcdb_init(const char *fcdb_luafile)
  *****************************************************************************/
 bool script_fcdb_call(const char *func_name, ...)
 {
-  bool success = TRUE;
+  bool success = true;
 #ifdef HAVE_FCDB
 
   va_list args;
@@ -354,6 +351,6 @@ bool script_fcdb_do_string(struct connection *caller, const char *str)
 
   return (status == 0);
 #else
-  return TRUE;
+  return true;
 #endif /* HAVE_FCDB */
 }

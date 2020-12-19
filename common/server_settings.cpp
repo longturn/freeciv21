@@ -69,9 +69,9 @@ bool server_setting_exists(server_setting_id id)
  ***************************************************************************/
 bool server_setting_value_bool_get(server_setting_id id)
 {
-  fc_assert_ret_val(fc_funcs, FALSE);
-  fc_assert_ret_val(fc_funcs->server_setting_val_bool_get, FALSE);
-  fc_assert_ret_val(server_setting_type_get(id) == SST_BOOL, FALSE);
+  fc_assert_ret_val(fc_funcs, false);
+  fc_assert_ret_val(fc_funcs->server_setting_val_bool_get, false);
+  fc_assert_ret_val(server_setting_type_get(id) == SST_BOOL, false);
 
   return fc_funcs->server_setting_val_bool_get(id);
 }
@@ -81,9 +81,9 @@ bool server_setting_value_bool_get(server_setting_id id)
  ***************************************************************************/
 int server_setting_value_int_get(server_setting_id id)
 {
-  fc_assert_ret_val(fc_funcs, FALSE);
-  fc_assert_ret_val(fc_funcs->server_setting_val_int_get, FALSE);
-  fc_assert_ret_val(server_setting_type_get(id) == SST_INT, FALSE);
+  fc_assert_ret_val(fc_funcs, false);
+  fc_assert_ret_val(fc_funcs->server_setting_val_int_get, false);
+  fc_assert_ret_val(server_setting_type_get(id) == SST_INT, false);
 
   return fc_funcs->server_setting_val_int_get(id);
 }
@@ -93,9 +93,9 @@ int server_setting_value_int_get(server_setting_id id)
  ***************************************************************************/
 unsigned int server_setting_value_bitwise_get(server_setting_id id)
 {
-  fc_assert_ret_val(fc_funcs, FALSE);
-  fc_assert_ret_val(fc_funcs->server_setting_val_bitwise_get, FALSE);
-  fc_assert_ret_val(server_setting_type_get(id) == SST_BITWISE, FALSE);
+  fc_assert_ret_val(fc_funcs, false);
+  fc_assert_ret_val(fc_funcs->server_setting_val_bitwise_get, false);
+  fc_assert_ret_val(server_setting_type_get(id) == SST_BITWISE, false);
 
   return fc_funcs->server_setting_val_bitwise_get(id);
 }
@@ -107,8 +107,8 @@ ssetv ssetv_from_values(server_setting_id setting, int value)
 {
   /* Only Boolean and TRUE can be supported unless setting value encoding
    * is implemented. */
-  if (value != TRUE) {
-    fc_assert(value == TRUE);
+  if (value != true) {
+    fc_assert(value == true);
     return SSETV_NONE;
   }
 
@@ -144,7 +144,7 @@ int ssetv_value_get(ssetv enc)
    * encoded with the setting id. */
   fc_assert(server_setting_type_get((server_setting_id) enc) == SST_BOOL);
 
-  return TRUE;
+  return true;
 }
 
 /***********************************************************************/ /**
@@ -203,7 +203,7 @@ bool ssetv_setting_has_value(ssetv val)
   /* Only boolean settings can be supported unless the setting value is
    * encoded with the setting id. */
   fc_assert_ret_val(
-      server_setting_type_get((server_setting_id) val) == SST_BOOL, FALSE);
+      server_setting_type_get((server_setting_id) val) == SST_BOOL, false);
 
   return server_setting_value_bool_get((server_setting_id) val);
 }

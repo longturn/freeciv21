@@ -8,11 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-
 #pragma once
-
-#include "fc_types.h"
-#include "unitlist.h"
 
 struct player_spaceship;
 
@@ -55,11 +51,9 @@ const char *get_act_sel_action_custom_text(struct action *paction,
 const char *act_sel_action_tool_tip(const struct action *paction,
                                     const struct act_prob prob);
 
-const char *text_happiness_buildings(const struct city *pcity);
+QString text_happiness_buildings(const struct city *pcity);
 const char *text_happiness_nationality(const struct city *pcity);
 const char *text_happiness_cities(const struct city *pcity);
 const char *text_happiness_luxuries(const struct city *pcity);
 const char *text_happiness_units(const struct city *pcity);
-const char *text_happiness_wonders(const struct city *pcity);
-
-
+QString text_happiness_wonders(const struct city *pcity);

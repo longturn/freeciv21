@@ -17,13 +17,6 @@
 ***********************************************************************/
 #pragma once
 
-/* utility */
-#include "log.h" /* QtMsgType */
-
-/* common */
-#include "city.h" /* enum citizen_category */
-#include "fc_types.h"
-
 #include "options.h"
 
 struct sprite; /* opaque; gui-dep */
@@ -198,8 +191,7 @@ struct tileset;
 extern struct tileset *tileset;
 extern struct tileset *unscaled_tileset;
 
-struct strvec;
-const struct strvec *get_tileset_list(const struct option *poption);
+const QVector<QString> *get_tileset_list(const struct option *poption);
 
 void tileset_error(QtMsgType level, const char *format, ...);
 
@@ -415,5 +407,3 @@ const char *tileset_summary(struct tileset *t);
 const char *tileset_description(struct tileset *t);
 char *tileset_what_ruleset(struct tileset *t);
 int tileset_topo_index(struct tileset *t);
-
-

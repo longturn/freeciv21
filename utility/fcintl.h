@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
 #include <locale.h>
 
 #include "shared.h" /* bool */

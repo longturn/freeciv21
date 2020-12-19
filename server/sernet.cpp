@@ -86,8 +86,7 @@ static void close_connection(struct connection *pconn)
     while (!pconn->server.ping_timers->isEmpty()) {
       timer_destroy(pconn->server.ping_timers->takeFirst());
     }
-    delete pconn->server.ping_timers;
-    pconn->server.ping_timers = NULL;
+    FC_FREE(pconn->server.ping_timers);
   }
   conn_list_iterate(game.all_connections, xconn)
   {
@@ -188,7 +187,7 @@ void really_close_connections()
 static void server_conn_close_callback(struct connection *pconn)
 {
   /* Do as little as possible here to avoid recursive evil. */
-  pconn->server.is_closing = TRUE;
+  pconn->server.is_closing = true;
 }
 
 /*************************************************************************/ /**
@@ -330,7 +329,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
     if (!pconn->used) {
       connection_common_init(pconn);
       pconn->sock = new_sock;
-      pconn->observer = FALSE;
+      pconn->observer = false;
       pconn->playing = NULL;
       pconn->capability[0] = '\0';
       pconn->access_level = access_level_for_next_connection();
@@ -344,7 +343,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
       pconn->server.granted_access_level = pconn->access_level;
       pconn->server.ignore_list =
           conn_pattern_list_new_full(conn_pattern_destroy);
-      pconn->server.is_closing = FALSE;
+      pconn->server.is_closing = false;
       pconn->ping_time = -1.0;
       pconn->incoming_packet_notify = NULL;
       pconn->outgoing_packet_notify = NULL;
@@ -454,7 +453,7 @@ void init_connections(void)
   for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
     struct connection *pconn = &connections[i];
 
-    pconn->used = FALSE;
+    pconn->used = false;
     pconn->self = conn_list_new();
     conn_list_prepend(pconn->self, pconn);
   }

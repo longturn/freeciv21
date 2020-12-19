@@ -423,16 +423,16 @@ static bool tile_type_equal(const struct cm_tile_type *a,
   output_type_iterate(stat_index)
   {
     if (a->production[stat_index] != b->production[stat_index]) {
-      return FALSE;
+      return false;
     }
   }
   output_type_iterate_end;
 
   if (a->is_specialist != b->is_specialist) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -447,7 +447,7 @@ static bool tile_type_better(const struct cm_tile_type *a,
   output_type_iterate(stat_index)
   {
     if (a->production[stat_index] < b->production[stat_index]) {
-      return FALSE;
+      return false;
     }
   }
   output_type_iterate_end;
@@ -456,13 +456,13 @@ static bool tile_type_better(const struct cm_tile_type *a,
     /* If A is a specialist and B isn't, and all of A's production is at
      * least as good as B's, then A is better because it doesn't tie up
      * the map tile. */
-    return TRUE;
+    return true;
   } else if (!a->is_specialist && b->is_specialist) {
     /* Vice versa. */
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -565,7 +565,7 @@ static struct cm_fitness worst_fitness(void)
 {
   struct cm_fitness f;
 
-  f.sufficient = FALSE;
+  f.sufficient = false;
   f.weighted = -FC_INFINITY;
   return f;
 }
@@ -580,14 +580,14 @@ compute_fitness(const int surplus[], bool disorder, bool happy,
 {
   struct cm_fitness fitness;
 
-  fitness.sufficient = TRUE;
+  fitness.sufficient = true;
   fitness.weighted = 0;
 
   output_type_iterate(stat_index)
   {
     fitness.weighted += surplus[stat_index] * parameter->factor[stat_index];
     if (surplus[stat_index] < parameter->minimal_surplus[stat_index]) {
-      fitness.sufficient = FALSE;
+      fitness.sufficient = false;
     }
   }
   output_type_iterate_end;
@@ -595,11 +595,11 @@ compute_fitness(const int surplus[], bool disorder, bool happy,
   if (happy) {
     fitness.weighted += parameter->happy_factor;
   } else if (parameter->require_happy) {
-    fitness.sufficient = FALSE;
+    fitness.sufficient = false;
   }
 
   if (disorder && !parameter->allow_disorder) {
-    fitness.sufficient = FALSE;
+    fitness.sufficient = false;
   }
 
   return fitness;
@@ -682,9 +682,9 @@ static void apply_solution(struct cm_state *state,
   city_map_iterate(city_radius_sq, cindex, x, y)
   {
     if (is_free_worked_index(cindex)) {
-      state->workers_map[cindex] = TRUE;
+      state->workers_map[cindex] = true;
     } else {
-      state->workers_map[cindex] = FALSE;
+      state->workers_map[cindex] = false;
     }
   }
   city_map_iterate_end;
@@ -714,7 +714,7 @@ static void apply_solution(struct cm_state *state,
       for (j = 0; j < nworkers; j++) {
         const struct cm_tile *cmtile = tile_get(type, j);
 
-        state->workers_map[cmtile->index] = TRUE;
+        state->workers_map[cmtile->index] = true;
       }
     }
   }
@@ -792,7 +792,7 @@ static void convert_solution_to_result(struct cm_state *state,
   if (soln->idle != 0) {
     /* If there are unplaced citizens it's not a real solution, so the
      * result is invalid. */
-    result->found_a_valid = FALSE;
+    result->found_a_valid = false;
     return;
   }
 
@@ -840,7 +840,7 @@ static int compare_tile_type_by_lattice_order(const struct cm_tile_type *a,
   output_type_iterate_end;
 
   /* If we get here, then we have two copies of identical types, an error */
-  fc_assert(FALSE);
+  fc_assert(false);
   return 0;
 }
 
@@ -998,7 +998,7 @@ static void init_specialist_lattice_nodes(struct tile_type_vector *lattice,
   struct cm_tile_type type;
 
   tile_type_init(&type);
-  type.is_specialist = TRUE;
+  type.is_specialist = true;
 
   /* for each specialist type, create a tile_type that has as production
    * the bonus for the specialist (if the city is allowed to use it) */
@@ -1066,7 +1066,7 @@ static void top_sort_lattice(struct tile_type_vector *lattice)
     {
       /* see if all prereqs were marked.  If so, decide to mark this guy,
          and put all the descendents on 'next'.  */
-      bool can_mark = TRUE;
+      bool can_mark = true;
       int sumdepth = 0;
 
       if (will_mark[ptype->lattice_index]) {
@@ -1075,7 +1075,7 @@ static void top_sort_lattice(struct tile_type_vector *lattice)
       tile_type_vector_iterate(&ptype->better_types, better)
       {
         if (!marked[better->lattice_index]) {
-          can_mark = FALSE;
+          can_mark = false;
           break;
         } else {
           sumdepth += tile_type_num_tiles(better);
@@ -1083,7 +1083,7 @@ static void top_sort_lattice(struct tile_type_vector *lattice)
             /* if this is the case, then something better could
                always be used, and the same holds for our children */
             sumdepth = FC_INFINITY;
-            can_mark = TRUE;
+            can_mark = true;
             break;
           }
         }
@@ -1091,7 +1091,7 @@ static void top_sort_lattice(struct tile_type_vector *lattice)
       tile_type_vector_iterate_end;
       if (can_mark) {
         /* mark and put successors on the next frontier */
-        will_mark[ptype->lattice_index] = TRUE;
+        will_mark[ptype->lattice_index] = true;
         tile_type_vector_iterate(&ptype->worse_types, worse)
         {
           tile_type_vector_append(next, worse);
@@ -1107,7 +1107,7 @@ static void top_sort_lattice(struct tile_type_vector *lattice)
     /* now, actually mark everyone and get set for next loop */
     for (i = 0; i < lattice->size; i++) {
       marked[i] = marked[i] || will_mark[i];
-      will_mark[i] = FALSE;
+      will_mark[i] = false;
     }
   }
 
@@ -1136,7 +1136,7 @@ static void clean_lattice(struct tile_type_vector *lattice,
 {
   int i, j; /* i is the index we read, j is the index we write */
   struct tile_type_vector tofree;
-  bool forced_loop = FALSE;
+  bool forced_loop = false;
 
   /* We collect the types we want to remove and free them in one fell
      swoop at the end, in order to avoid memory errors.  */
@@ -1146,12 +1146,12 @@ static void clean_lattice(struct tile_type_vector *lattice,
    * bug.
    * This applies to -O2 optimization on some distributions. */
   if (lattice->size > 0) {
-    forced_loop = TRUE;
+    forced_loop = true;
   }
   for (i = 0, j = 0; i < lattice->size || forced_loop; i++) {
     struct cm_tile_type *ptype = lattice->p[i];
 
-    forced_loop = FALSE;
+    forced_loop = false;
 
     if (ptype->lattice_depth >= city_size_get(pcity)) {
       tile_type_vector_append(&tofree, ptype);
@@ -1441,12 +1441,12 @@ static bool take_sibling_choice(struct cm_state *state, bool negative_ok)
   if (newchoice == num_types(state)) {
     /* add back in so the caller can then remove it again. */
     add_worker(&state->current, oldchoice, state);
-    return FALSE;
+    return false;
   } else {
     add_worker(&state->current, newchoice, state);
     state->choice.stack[state->choice.size - 1] = newchoice;
     /* choice.size is unchanged */
-    return TRUE;
+    return true;
   }
 }
 
@@ -1462,7 +1462,7 @@ static bool take_child_choice(struct cm_state *state, bool negative_ok)
   int oldchoice, newchoice;
 
   if (state->current.idle == 0) {
-    return FALSE;
+    return false;
   }
 
   if (state->choice.size == 0) {
@@ -1476,7 +1476,7 @@ static bool take_child_choice(struct cm_state *state, bool negative_ok)
 
   /* did we fail? */
   if (newchoice == num_types(state)) {
-    return FALSE;
+    return false;
   }
 
   /* now push the new choice on the choice stack */
@@ -1484,7 +1484,7 @@ static bool take_child_choice(struct cm_state *state, bool negative_ok)
   state->choice.stack[state->choice.size] = newchoice;
   state->choice.size++;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1652,7 +1652,7 @@ static bool choice_is_promising(struct cm_state *state, int newchoice,
                                 bool negative_ok)
 {
   int production[O_LAST];
-  bool beats_best = FALSE;
+  bool beats_best = false;
 
   /* this computes an upper bound (componentwise) for the current branch,
      if it is worse in every component than the best, or still unsufficient,
@@ -1666,11 +1666,11 @@ static bool choice_is_promising(struct cm_state *state, int newchoice,
       log_base(LOG_PRUNE_BRANCH, "--- pruning: insufficient %s (%d < %d)",
                get_output_name(stat_index), production[stat_index],
                state->min_production[stat_index]);
-      return FALSE;
+      return false;
     }
     if (production[stat_index] > state->best.production[stat_index]
         && state->parameter.factor[stat_index] > 0) {
-      beats_best = TRUE;
+      beats_best = true;
       /* may still fail to meet min at another production type, so
        * don't short-circuit */
     }
@@ -1699,7 +1699,7 @@ static bool choice_is_promising(struct cm_state *state, int newchoice,
       log_base(LOG_PRUNE_BRANCH, "--- pruning: disorder (%d + %d*%d < %d)",
                production[O_LUXURY], game.info.happy_cost,
                specialists_suppress_unhappy, state->min_luxury);
-      return FALSE;
+      return false;
     }
   }
   if (!beats_best) {
@@ -1845,12 +1845,12 @@ static bool bb_next(struct cm_state *state, bool negative_ok)
 
     /* if we popped out all the way, we're done */
     if (choice_stack_empty(state)) {
-      return TRUE;
+      return true;
     }
   }
 
   /* if we didn't detect that we were done, we aren't */
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -2077,7 +2077,7 @@ static void cm_find_best_solution(struct cm_state *state,
     max_count = CM_MAX_LOOP;
   }
 
-  result->aborted = FALSE;
+  result->aborted = false;
 
   /* search until we find a feasible solution */
   while (!bb_next(state, negative_ok)) {
@@ -2088,7 +2088,7 @@ static void cm_find_best_solution(struct cm_state *state,
       qCWarning(cm_category,
                 "Did not find a cm solution in %d iterations for %s.",
                 max_count, city_name_get(state->pcity));
-      result->aborted = TRUE;
+      result->aborted = true;
       break;
     }
   }
@@ -2125,27 +2125,27 @@ bool operator==(const struct cm_parameter &p1, const struct cm_parameter &p2)
   output_type_iterate(i)
   {
     if (p1.minimal_surplus[i] != p2.minimal_surplus[i]) {
-      return FALSE;
+      return false;
     }
     if (p1.factor[i] != p2.factor[i]) {
-      return FALSE;
+      return false;
     }
   }
   output_type_iterate_end;
   if (p1.require_happy != p2.require_happy) {
-    return FALSE;
+    return false;
   }
   if (p1.allow_disorder != p2.allow_disorder) {
-    return FALSE;
+    return false;
   }
   if (p1.allow_specialists != p2.allow_specialists) {
-    return FALSE;
+    return false;
   }
   if (p1.happy_factor != p2.happy_factor) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -2170,10 +2170,10 @@ void cm_init_parameter(struct cm_parameter *dest)
   output_type_iterate_end;
 
   dest->happy_factor = 1;
-  dest->require_happy = FALSE;
-  dest->allow_disorder = FALSE;
-  dest->allow_specialists = TRUE;
-  dest->max_growth = FALSE;
+  dest->require_happy = false;
+  dest->allow_disorder = false;
+  dest->allow_specialists = true;
+  dest->max_growth = false;
 }
 
 /************************************************************************/ /**
@@ -2190,10 +2190,10 @@ void cm_init_emergency_parameter(struct cm_parameter *dest)
   output_type_iterate_end;
 
   dest->happy_factor = 1;
-  dest->require_happy = FALSE;
-  dest->allow_disorder = TRUE;
-  dest->allow_specialists = TRUE;
-  dest->max_growth = FALSE;
+  dest->require_happy = false;
+  dest->allow_disorder = true;
+  dest->allow_specialists = true;
+  dest->max_growth = false;
 }
 
 /************************************************************************/ /**
@@ -2289,7 +2289,7 @@ static void cm_result_copy(struct cm_result *result,
                    &result->happy);
 
   /* this is a valid result, in a sense */
-  result->found_a_valid = TRUE;
+  result->found_a_valid = true;
 }
 
 /************************************************************************/ /**

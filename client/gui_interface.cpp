@@ -63,7 +63,7 @@ void version_message(const char *vertext) { funcs.version_message(vertext); }
 /**********************************************************************/ /**
    Call real_output_window_append callback
  **************************************************************************/
-void real_output_window_append(const QString& astring,
+void real_output_window_append(const QString &astring,
                                const struct text_tag_list *tags, int conn_id)
 {
   funcs.real_output_window_append(astring, tags, conn_id);
@@ -208,11 +208,11 @@ void canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
 }
 
 void canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
-                              int canvas_y, struct sprite *psprite, bool fog,
-                              int fog_x, int fog_y)
+                                int canvas_y, struct sprite *psprite,
+                                bool fog, int fog_x, int fog_y)
 {
   funcs.canvas_put_sprite_citymode(pcanvas, canvas_x, canvas_y, psprite, fog,
-                                 fog_x, fog_y);
+                                   fog_x, fog_y);
 }
 
 /**********************************************************************/ /**
@@ -229,8 +229,7 @@ void canvas_put_rectangle(struct canvas *pcanvas, QColor *pcolor,
    Call canvas_fill_sprite_area callback
  **************************************************************************/
 void canvas_fill_sprite_area(struct canvas *pcanvas, struct sprite *psprite,
-                             QColor *pcolor, int canvas_x,
-                             int canvas_y)
+                             QColor *pcolor, int canvas_x, int canvas_y)
 {
   funcs.canvas_fill_sprite_area(pcanvas, psprite, pcolor, canvas_x,
                                 canvas_y);
@@ -261,7 +260,7 @@ void canvas_put_curved_line(struct canvas *pcanvas, QColor *pcolor,
    Call get_text_size callback
  **************************************************************************/
 void get_text_size(int *width, int *height, enum client_font font,
-                   const QString& text)
+                   const QString &text)
 {
   funcs.get_text_size(width, height, font, text);
 }
@@ -271,7 +270,7 @@ void get_text_size(int *width, int *height, enum client_font font,
  **************************************************************************/
 void canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
                      enum client_font font, QColor *pcolor,
-                     const QString& text)
+                     const QString &text)
 {
   funcs.canvas_put_text(pcanvas, canvas_x, canvas_y, font, pcolor, text);
 }
@@ -288,7 +287,6 @@ void set_rulesets(int num_rulesets, char **rulesets)
    Call options_extra_init callback
  **************************************************************************/
 void options_extra_init(void) { funcs.options_extra_init(); }
-
 
 /**********************************************************************/ /**
    Call add_net_input callback
@@ -366,7 +364,7 @@ void set_unit_icons_more_arrow(bool onoff)
 /**********************************************************************/ /**
    Call gui_update_font callback
  **************************************************************************/
-void gui_update_font(const char *font_name, const char *font_value)
+void gui_update_font(const QString &font_name, const QString &font_value)
 {
   funcs.gui_update_font(font_name, font_value);
 }

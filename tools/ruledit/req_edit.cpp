@@ -39,7 +39,7 @@
 /**********************************************************************/ /**
    Setup req_edit object
  **************************************************************************/
-req_edit::req_edit(ruledit_gui *ui_in, QString target,
+req_edit::req_edit(ruledit_gui *ui_in, const QString &target,
                    struct requirement_vector *preqs)
     : QDialog()
 {
@@ -341,9 +341,9 @@ void req_edit::req_present_menu(QAction *action)
 {
   if (selected != nullptr) {
     if (action->text() == QLatin1String("Prevents")) {
-      selected->present = FALSE;
+      selected->present = false;
     } else {
-      selected->present = TRUE;
+      selected->present = true;
     }
     update_selected();
   }

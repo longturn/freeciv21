@@ -17,7 +17,6 @@
 
 // utility
 #include "fcintl.h"
-#include "string_vector.h"
 
 /* common */
 #include "game.h"
@@ -36,7 +35,7 @@ void multipliers_init(void)
   for (i = 0; i < ARRAY_SIZE(multipliers); i++) {
     name_init(&multipliers[i].name);
     requirement_vector_init(&multipliers[i].reqs);
-    multipliers[i].ruledit_disabled = FALSE;
+    multipliers[i].ruledit_disabled = false;
     multipliers[i].helptext = NULL;
   }
 }
@@ -49,10 +48,7 @@ void multipliers_free(void)
   multipliers_iterate(pmul)
   {
     requirement_vector_free(&(pmul->reqs));
-    if (pmul->helptext) {
-      strvec_destroy(pmul->helptext);
-      pmul->helptext = NULL;
-    }
+    NFCN_FREE(pmul->helptext);
   }
   multipliers_iterate_end;
 }

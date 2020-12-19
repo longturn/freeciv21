@@ -48,7 +48,6 @@
 #include "fciconv.h"
 #include "fcintl.h"
 #include "rand.h"
-#include "string_vector.h"
 
 #include "shared.h"
 
@@ -63,10 +62,9 @@
 #define FREECIV_SCENARIO_PATH "FREECIV_SCENARIO_PATH"
 #endif
 
-
 static QString default_data_path()
 {
-  QString path = QString(".%1data%1%2%3%4")
+  QString path = QStringLiteral(".%1data%1%2%3%4")
                      .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR,
                           QDir::separator(), DATASUBDIR);
   return path;
@@ -74,7 +72,7 @@ static QString default_data_path()
 
 static QString default_save_path()
 {
-  QString path = QString(".%1%2%3saves")
+  QString path = QStringLiteral(".%1%2%3saves")
                      .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR,
                           QDir::separator());
   return path;
@@ -83,7 +81,7 @@ static QString default_save_path()
 static QString default_scenario_path()
 {
   QString path =
-      QString(".%1data%3scenarios%1%2%3%4%3scenarios%1%2%3scenarios")
+      QStringLiteral(".%1data%3scenarios%1%2%3%4%3scenarios%1%2%3scenarios")
           .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR, QDir::separator(),
                DATASUBDIR);
   return path;
@@ -236,22 +234,22 @@ bool is_safe_filename(const char *name)
 
   /* must not be NULL or empty */
   if (!name || *name == '\0') {
-    return FALSE;
+    return false;
   }
 
   for (; '\0' != name[i]; i++) {
     if ('.' != name[i] && NULL == strchr(base64url, name[i])) {
-      return FALSE;
+      return false;
     }
   }
 
   /* we don't allow the filename to ascend directories */
   if (strstr(name, PARENT_DIR_OPERATOR)) {
-    return FALSE;
+    return false;
   }
 
   /* Otherwise, it is okay... */
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -267,29 +265,29 @@ bool is_ascii_name(const char *name)
 
   /* must not be NULL or empty */
   if (!name || *name == '\0') {
-    return FALSE;
+    return false;
   }
 
   /* must begin and end with some non-space character */
   if ((*name == ' ') || (*(strchr(name, '\0') - 1) == ' ')) {
-    return FALSE;
+    return false;
   }
 
   /* must be composed entirely of printable ascii characters,
    * and no illegal characters which can break ranking scripts. */
   for (i = 0; name[i]; i++) {
     if (!is_ascii(name[i])) {
-      return FALSE;
+      return false;
     }
     for (j = 0; illegal_chars[j]; j++) {
       if (name[i] == illegal_chars[j]) {
-        return FALSE;
+        return false;
       }
     }
   }
 
   /* otherwise, it's okay... */
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -301,15 +299,15 @@ bool is_base64url(const char *s)
 
   /* must not be NULL or empty */
   if (NULL == s || '\0' == *s) {
-    return FALSE;
+    return false;
   }
 
   for (; '\0' != s[i]; i++) {
     if (NULL == strchr(base64url, s[i])) {
-      return FALSE;
+      return false;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -349,17 +347,6 @@ int compare_strings(const void *first, const void *second)
 int compare_strings_ptrs(const void *first, const void *second)
 {
   return fc_strcoll(*((const char **) first), *((const char **) second));
-}
-
-/************************************************************************/ /**
-   Compares two strings, in the collating order of the current locale,
-   given pointers to the two string pointers.  Case-sensitive.
-   Designed to be called from strvec_sort().
- ****************************************************************************/
-int compare_strings_strvec(const char *const *first,
-                           const char *const *second)
-{
-  return fc_strcoll(*first, *second);
 }
 
 /************************************************************************/ /**
@@ -472,8 +459,8 @@ char *end_of_strn(char *str, int *nleft)
  ****************************************************************************/
 bool check_strlen(const char *str, size_t len, const char *errmsg)
 {
-  fc_assert_ret_val_msg(strlen(str) < len, TRUE, errmsg, str, len);
-  return FALSE;
+  fc_assert_ret_val_msg(strlen(str) < len, true, errmsg, str, len);
+  return false;
 }
 
 /************************************************************************/ /**
@@ -494,7 +481,7 @@ bool str_to_int(const char *str, int *pint)
 {
   const char *start;
 
-  fc_assert_ret_val(NULL != str, FALSE);
+  fc_assert_ret_val(NULL != str, false);
 
   while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
@@ -527,7 +514,7 @@ bool str_to_uint(const char *str, unsigned int *pint)
 {
   const char *start;
 
-  fc_assert_ret_val(NULL != str, FALSE);
+  fc_assert_ret_val(NULL != str, false);
 
   while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
@@ -561,7 +548,7 @@ bool str_to_float(const char *str, float *pfloat)
   bool dot;
   const char *start;
 
-  fc_assert_ret_val(NULL != str, FALSE);
+  fc_assert_ret_val(NULL != str, false);
 
   while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
@@ -580,7 +567,7 @@ bool str_to_float(const char *str, float *pfloat)
   }
 
   if (*str == '.') {
-    dot = TRUE;
+    dot = true;
     str++;
 
     while (QChar::isDigit(*str)) {
@@ -588,7 +575,7 @@ bool str_to_float(const char *str, float *pfloat)
       str++;
     }
   } else {
-    dot = FALSE;
+    dot = false;
   }
 
   while (QChar::isSpace(*str)) {
@@ -630,13 +617,7 @@ char *user_home_dir(void)
 /************************************************************************/ /**
    Free user home directory information
  ****************************************************************************/
-void free_user_home_dir(void)
-{
-  if (home_dir_user != NULL) {
-    delete[] home_dir_user;
-    home_dir_user = NULL;
-  }
-}
+void free_user_home_dir(void) { NFCNPP_FREE(home_dir_user); }
 
 /************************************************************************/ /**
    Returns string which gives freeciv storage dir.
@@ -650,7 +631,7 @@ char *freeciv_storage_dir(void)
 
     qstrcpy(storage_dir_freeciv, FREECIV_STORAGE_DIR);
 
-    storage_dir_freeciv = expand_dir(storage_dir_freeciv, TRUE);
+    storage_dir_freeciv = expand_dir(storage_dir_freeciv, true);
 
     qDebug(_("Storage dir is \"%s\"."), storage_dir_freeciv);
   }
@@ -661,13 +642,7 @@ char *freeciv_storage_dir(void)
 /************************************************************************/ /**
    Free freeciv storage directory information
  ****************************************************************************/
-void free_freeciv_storage_dir(void)
-{
-  if (storage_dir_freeciv != NULL) {
-    delete[] storage_dir_freeciv;
-    storage_dir_freeciv = NULL;
-  }
-}
+void free_freeciv_storage_dir(void) { NFCNPP_FREE(storage_dir_freeciv); }
 
 /************************************************************************/ /**
    Returns string which gives user's username, as specified by $USER or
@@ -818,18 +793,9 @@ static QStringList *base_get_dirs(const char *dir_list)
  ****************************************************************************/
 void free_data_dir_names(void)
 {
-  if (data_dir_names != NULL) {
-    delete data_dir_names;
-    data_dir_names = NULL;
-  }
-  if (save_dir_names != NULL) {
-    delete save_dir_names;
-    save_dir_names = NULL;
-  }
-  if (scenario_dir_names != NULL) {
-    delete scenario_dir_names;
-    scenario_dir_names = NULL;
-  }
+  NFCN_FREE(data_dir_names);
+  NFCN_FREE(save_dir_names);
+  NFCN_FREE(scenario_dir_names);
 }
 
 /************************************************************************/ /**
@@ -861,7 +827,7 @@ const QStringList *get_data_dirs(void)
     data_dir_names = base_get_dirs(
         NULL != path ? path : qUtf8Printable(default_data_path()));
     data_dir_names->removeDuplicates();
-    for (auto toyota : *data_dir_names) {
+    for (const auto &toyota : *data_dir_names) {
       qDebug("Data path component: %s", qUtf8Printable(toyota));
     }
   }
@@ -898,7 +864,7 @@ const QStringList *get_save_dirs(void)
     save_dir_names = base_get_dirs(
         NULL != path ? path : qUtf8Printable(default_save_path()));
     save_dir_names->removeDuplicates();
-    for (auto mercedes : *save_dir_names) {
+    for (const auto &mercedes : *save_dir_names) {
       qDebug("Save path component: %s", qUtf8Printable(mercedes));
     }
   }
@@ -936,7 +902,7 @@ const QStringList *get_scenario_dirs(void)
     scenario_dir_names = base_get_dirs(
         NULL != path ? path : qUtf8Printable(default_scenario_path()));
     scenario_dir_names->removeDuplicates();
-    for (auto tesla : *scenario_dir_names) {
+    for (const auto &tesla : *scenario_dir_names) {
       qDebug("Scenario path component: %s", qUtf8Printable(tesla));
     }
   }
@@ -954,18 +920,17 @@ const QStringList *get_scenario_dirs(void)
    The suffixes are removed from the filenames before the list is
    returned.
  ****************************************************************************/
-struct strvec *fileinfolist(const QStringList *dirs, const char *suffix)
-{
-  struct strvec *files = strvec_new();
-
+struct QVector<QString> *fileinfolist(const QStringList *dirs,
+                                      const char *suffix) {
   fc_assert_ret_val(!strchr(suffix, DIR_SEPARATOR_CHAR), NULL);
 
+  QVector<QString> *files = new QVector<QString>();
   if (NULL == dirs) {
     return files;
   }
 
   /* First assemble a full list of names. */
-  for (auto dirname : *dirs) {
+  for (const auto &dirname : *dirs) {
     QDir dir(dirname);
 
     if (!dir.exists()) {
@@ -978,14 +943,11 @@ struct strvec *fileinfolist(const QStringList *dirs, const char *suffix)
     dir.setNameFilters({QStringLiteral("*") + QString::fromUtf8(suffix)});
     for (auto name : dir.entryList()) {
       name.truncate(name.length() - qstrlen(suffix));
-      strvec_append(files, name.toUtf8().data());
+      files->append(name.toUtf8().data());
     }
   }
-
-  /* Sort the list and remove duplications. */
-  strvec_remove_duplicate(files, strcmp);
-  strvec_sort(files, compare_strings_strvec);
-
+  files->erase(std::unique(files->begin(), files->end()), files->end());
+  std::sort(files->begin(), files->end());
   return files;
 }
 
@@ -1005,7 +967,8 @@ struct strvec *fileinfolist(const QStringList *dirs, const char *suffix)
 
    TODO: Make this re-entrant
  ****************************************************************************/
-const char *fileinfoname(const QStringList *dirs, const char *filename)
+const char *
+fileinfoname(const QStringList *dirs, const char *filename)
 {
 #ifndef DIR_SEPARATOR_IS_DEFAULT
   char fnbuf[filename != NULL ? qstrlen(filename) + 1 : 1];
@@ -1019,13 +982,13 @@ const char *fileinfoname(const QStringList *dirs, const char *filename)
   }
 
   if (!filename) {
-    bool first = TRUE;
+    bool first = true;
 
     astr_clear(&realfile);
-    for (auto dirname : *dirs) {
+    for (const auto &dirname : *dirs) {
       if (first) {
         astr_add(&realfile, "/%s", qUtf8Printable(dirname));
-        first = FALSE;
+        first = false;
       } else {
         astr_add(&realfile, "%s", qUtf8Printable(dirname));
       }
@@ -1045,7 +1008,7 @@ const char *fileinfoname(const QStringList *dirs, const char *filename)
   fnbuf[i] = '\0';
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
-  for (auto dirname : *dirs) {
+  for (const auto &dirname : *dirs) {
     struct stat buf; /* see if we can open the file or directory */
 
     astr_set(&realfile, "%s%c%s", qUtf8Printable(dirname),
@@ -1127,7 +1090,7 @@ struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
   auto infix_str = QString::fromUtf8(infix);
 
   /* First assemble a full list of names. */
-  for (auto dirname : *dirs) {
+  for (const auto &dirname : *dirs) {
     QDir dir(dirname);
 
     if (!dir.exists()) {
@@ -1301,7 +1264,7 @@ static void autocap_update(void)
 {
   const char *autocap_opt_in[] = {"fi", NULL};
   int i;
-  bool ac_enabled = FALSE;
+  bool ac_enabled = false;
 
   char *lang = getenv("LANG");
 
@@ -1309,7 +1272,7 @@ static void autocap_update(void)
     for (i = 0; autocap_opt_in[i] != NULL && !ac_enabled; i++) {
       if (lang[0] == autocap_opt_in[i][0]
           && lang[1] == autocap_opt_in[i][1]) {
-        ac_enabled = TRUE;
+        ac_enabled = true;
         break;
       }
     }
@@ -1334,7 +1297,7 @@ void switch_lang(const char *lang)
 
   qInfo("LANG set to %s", lang);
 #else  /* FREECIV_ENABLE_NLS */
-  fc_assert(FALSE);
+  fc_assert(false);
 #endif /* FREECIV_ENABLE_NLS */
 }
 
@@ -1404,10 +1367,8 @@ void init_nls(void)
  ****************************************************************************/
 void free_nls(void)
 {
-  delete[] grouping;
-  grouping = NULL;
-  delete[] grouping_sep;
-  grouping_sep = NULL;
+  FCPP_FREE(grouping);
+  FCPP_FREE(grouping_sep);
 }
 
 /************************************************************************/ /**
@@ -1558,13 +1519,7 @@ char *get_multicast_group(bool ipv6_preferred)
 /************************************************************************/ /**
    Free multicast group resources
  ****************************************************************************/
-void free_multicast_group(void)
-{
-  if (mc_group != NULL) {
-    delete[] mc_group;
-    mc_group = NULL;
-  }
-}
+void free_multicast_group(void) { NFCNPP_FREE(mc_group); }
 
 /************************************************************************/ /**
    Interpret ~/ in filename as home dir
@@ -1648,20 +1603,20 @@ bool make_dir(const char *pathname)
 bool path_is_absolute(const char *filename)
 {
   if (!filename) {
-    return FALSE;
+    return false;
   }
 
 #ifdef FREECIV_MSWINDOWS
   if (strchr(filename, ':')) {
-    return TRUE;
+    return true;
   }
 #else  /* FREECIV_MSWINDOWS */
   if (filename[0] == '/') {
-    return TRUE;
+    return true;
   }
 #endif /* FREECIV_MSWINDOWS */
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -1732,7 +1687,7 @@ char scanin(char **buf, char *delimiters, char *dest, int size)
 void format_time_duration(time_t t, char *buf, int maxlen)
 {
   int seconds, minutes, hours, days;
-  bool space = FALSE;
+  bool space = false;
 
   seconds = t % 60;
   minutes = (t / 60) % 60;
@@ -1747,17 +1702,17 @@ void format_time_duration(time_t t, char *buf, int maxlen)
 
   if (days > 0) {
     cat_snprintf(buf, maxlen, "%d %s", days, PL_("day", "days", days));
-    space = TRUE;
+    space = true;
   }
   if (hours > 0) {
     cat_snprintf(buf, maxlen, "%s%d %s", space ? " " : "", hours,
                  PL_("hour", "hours", hours));
-    space = TRUE;
+    space = true;
   }
   if (minutes > 0) {
     cat_snprintf(buf, maxlen, "%s%d %s", space ? " " : "", minutes,
                  PL_("minute", "minutes", minutes));
-    space = TRUE;
+    space = true;
   }
   if (seconds > 0) {
     cat_snprintf(buf, maxlen, "%s%d %s", space ? " " : "", seconds,
@@ -1794,17 +1749,17 @@ static bool wildcard_asterisk_fit(const char *pattern, const char *test)
 
   /* Jump over the leading asterisks. */
   pattern++;
-  while (TRUE) {
+  while (true) {
     switch (*pattern) {
     case '\0':
       /* It is a leading asterisk. */
-      return TRUE;
+      return true;
     case '*':
       pattern++;
       continue;
     case '?':
       if ('\0' == *test) {
-        return FALSE;
+        return false;
       }
       test++;
       pattern++;
@@ -1830,18 +1785,18 @@ static bool wildcard_asterisk_fit(const char *pattern, const char *test)
       test = strchr(test, jump_to);
       if (NULL == test) {
         /* No match. */
-        return FALSE;
+        return false;
       }
     }
 
     if (wildcard_fit_string(pattern, test)) {
-      return TRUE;
+      return true;
     }
 
     (test)++;
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -1856,15 +1811,15 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
 
   if ('\0' == **test) {
     /* Need one character. */
-    return FALSE;
+    return false;
   }
 
   /* Find the end of the pattern. */
-  while (TRUE) {
+  while (true) {
     *pattern = strchr(*pattern, ']');
     if (NULL == *pattern) {
       /* Wildcard format error. */
-      return FALSE;
+      return false;
     } else if (*(*pattern - 1) != '\\') {
       /* This is the end. */
       break;
@@ -1875,10 +1830,10 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
   }
 
   if ('!' == *start) {
-    negation = TRUE;
+    negation = true;
     start++;
   } else {
-    negation = FALSE;
+    negation = false;
   }
   testc = **test;
   (*test)++;
@@ -1887,7 +1842,7 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
   for (; start < *pattern; start++) {
     if ('-' == *start || '!' == *start) {
       /* Wildcard format error. */
-      return FALSE;
+      return false;
     } else if (start < *pattern - 2 && '-' == *(start + 1)) {
       /* Case range. */
       if (*start <= testc && testc <= *(start + 2)) {
@@ -1916,7 +1871,7 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
  ****************************************************************************/
 bool wildcard_fit_string(const char *pattern, const char *test)
 {
-  while (TRUE) {
+  while (true) {
     switch (*pattern) {
     case '\0':
       /* '\0' != test. */
@@ -1925,12 +1880,12 @@ bool wildcard_fit_string(const char *pattern, const char *test)
       return wildcard_asterisk_fit(pattern, test); /* Maybe recursive. */
     case '[':
       if (!wildcard_range_fit(&pattern, &test)) {
-        return FALSE;
+        return false;
       }
       continue;
     case '?':
       if ('\0' == *test) {
-        return FALSE;
+        return false;
       }
       break;
     case '\\':
@@ -1938,7 +1893,7 @@ bool wildcard_fit_string(const char *pattern, const char *test)
       fc__fallthrough; /* No break */
     default:
       if (*pattern != *test) {
-        return FALSE;
+        return false;
       }
       break;
     }
@@ -1946,7 +1901,7 @@ bool wildcard_fit_string(const char *pattern, const char *test)
     test++;
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -2152,7 +2107,7 @@ static size_t extract_escapes(const char *format, char *escapes,
   static const char format_escapes[] = {'*', 'd', 'i', 'o', 'u', 'x', 'X',
                                         'e', 'E', 'f', 'F', 'g', 'G', 'a',
                                         'A', 'c', 's', 'p', 'n', '\0'};
-  bool reordered = FALSE;
+  bool reordered = false;
   size_t num = 0;
   int idx = 0;
 
@@ -2172,7 +2127,7 @@ static size_t extract_escapes(const char *format, char *escapes,
       if ('$' == *format) {
         /* Strings are reordered. */
         sscanf(start, "%d", &idx);
-        reordered = TRUE;
+        reordered = true;
       }
     }
 

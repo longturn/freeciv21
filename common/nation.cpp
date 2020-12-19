@@ -55,25 +55,25 @@ static struct nation_group nation_groups[MAX_NUM_NATION_GROUPS];
 
 /************************************************************************/ /**
    Returns TRUE if the nation is valid, else, print an error message and
-   returns FALSE.
+   returns false.
  ****************************************************************************/
 static bool nation_check(const nation_type *pnation)
 {
   if (0 == nation_count()) {
     qCritical("Function called before nations setup.");
-    return FALSE;
+    return false;
   }
   if (NULL == pnation) {
     qCritical("This function has NULL nation argument.");
-    return FALSE;
+    return false;
   }
   if (pnation->item_number < 0 || pnation->item_number >= nation_count()
       || &nations[nation_index(pnation)] != pnation) {
     qCritical("This function has bad nation number %d (count %d).",
               pnation->item_number, nation_count());
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 #else                                 /* FREECIV_DEBUG */
@@ -172,7 +172,7 @@ const char *nation_plural_for_player(const struct player *pplayer)
  ****************************************************************************/
 bool is_nation_pickable(const struct nation_type *nation)
 {
-  fc_assert_ret_val(!is_server(), FALSE);
+  fc_assert_ret_val(!is_server(), false);
   return nation->client.is_pickable;
 }
 
@@ -184,7 +184,7 @@ bool is_nation_pickable(const struct nation_type *nation)
  ****************************************************************************/
 bool is_nation_playable(const struct nation_type *nation)
 {
-  NATION_CHECK(nation, return FALSE);
+  NATION_CHECK(nation, return false);
   return nation->is_playable;
 }
 
@@ -273,7 +273,7 @@ const char *nation_leader_name(const struct nation_leader *pleader)
  ****************************************************************************/
 bool nation_leader_is_male(const struct nation_leader *pleader)
 {
-  fc_assert_ret_val(NULL != pleader, TRUE);
+  fc_assert_ret_val(NULL != pleader, true);
   return pleader->is_male;
 }
 
@@ -799,16 +799,16 @@ const char *nation_set_description(const struct nation_set *pset)
 bool nation_is_in_set(const struct nation_type *pnation,
                       const struct nation_set *pset)
 {
-  fc_assert_ret_val(NULL != pnation, FALSE);
+  fc_assert_ret_val(NULL != pnation, false);
 
   nation_set_list_iterate(pnation->sets, aset)
   {
     if (aset == pset) {
-      return TRUE;
+      return true;
     }
   }
   nation_set_list_iterate_end;
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -1009,7 +1009,7 @@ void nation_group_set_match(struct nation_group *pgroup, int match)
  ****************************************************************************/
 bool is_nation_group_hidden(struct nation_group *pgroup)
 {
-  fc_assert_ret_val(NULL != pgroup, TRUE);
+  fc_assert_ret_val(NULL != pgroup, true);
   return pgroup->hidden;
 }
 
@@ -1052,16 +1052,16 @@ const char *nation_group_name_translation(const struct nation_group *pgroup)
 bool nation_is_in_group(const struct nation_type *pnation,
                         const struct nation_group *pgroup)
 {
-  fc_assert_ret_val(NULL != pnation, FALSE);
+  fc_assert_ret_val(NULL != pnation, false);
 
   nation_group_list_iterate(pnation->groups, agroup)
   {
     if (agroup == pgroup) {
-      return TRUE;
+      return true;
     }
   }
   nation_group_list_iterate_end;
-  return FALSE;
+  return false;
 }
 
 /****************************************************************************
@@ -1161,7 +1161,7 @@ bool can_conn_edit_players_nation(const struct connection *pconn,
 int nations_match(const struct nation_type *pnation1,
                   const struct nation_type *pnation2, bool ignore_conflicts)
 {
-  bool in_conflict = FALSE;
+  bool in_conflict = false;
   int sum = 0;
 
   fc_assert_ret_val(is_server(), -1);
@@ -1172,7 +1172,7 @@ int nations_match(const struct nation_type *pnation1,
     nation_list_iterate(pnation1->server.conflicts_with, pnation0)
     {
       if (pnation0 == pnation2) {
-        in_conflict = TRUE;
+        in_conflict = true;
         sum = 1; /* Be sure to returns something negative. */
         break;
       }
@@ -1183,7 +1183,7 @@ int nations_match(const struct nation_type *pnation1,
       nation_list_iterate(pnation2->server.conflicts_with, pnation0)
       {
         if (pnation0 == pnation1) {
-          in_conflict = TRUE;
+          in_conflict = true;
           sum = 1; /* Be sure to returns something negative. */
           break;
         }

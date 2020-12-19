@@ -12,12 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type. */
-
-/* common */
-#include "fc_types.h"
-
 /*
  * Some words about the featured text module.
  *

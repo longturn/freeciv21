@@ -16,6 +16,7 @@
 #include "events.h" /* enum event_type */
 #include "packets.h"
 #include "unitlist.h"
+#include "workertask.h"
 
 #define LOG_BUILD_TARGET LOG_DEBUG
 

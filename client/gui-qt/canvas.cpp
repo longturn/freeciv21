@@ -436,7 +436,7 @@ QRect zealous_crop_rect(QImage &p)
   t = p.height();
   b = 0;
   for (int y = 0; y < p.height(); ++y) {
-    QRgb *row = (QRgb *)p.scanLine(y);
+    QRgb *row = (QRgb *) p.scanLine(y);
     bool row_filled = false;
     int x;
 
@@ -629,9 +629,10 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     if (gtime < 1000) {
       growth_time = QString::number(gtime);
     } else {
-      growth_time = "∞";
+      growth_time = QStringLiteral("∞");
     }
-    granary_max = city_granary_size(city_size_get(pcity));
+    // avoid div by 0
+    granary_max = qMax(1 , city_granary_size(city_size_get(pcity)));
 
     int hstock = (fonttext_height * pcity->food_stock) / granary_max;
     int hhstock = (fonttext_height * pcity->surplus[O_FOOD]) / granary_max;
@@ -706,7 +707,7 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     if (ptime < 1000) {
       prod_time = QString::number(ptime);
     } else {
-      prod_time = "∞";
+      prod_time = QStringLiteral("∞");
     }
     prod_max = universal_build_shield_cost(pcity, &pcity->production);
 

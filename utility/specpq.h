@@ -208,10 +208,10 @@ static inline bool SPECPQ_FOO(_pq_remove)(SPECPQ_PQ *_pq,
   int i, j, s;
 
   if (pq->size == 1) {
-    return FALSE;
+    return false;
   }
 
-  fc_assert_ret_val(pq->size <= pq->avail, FALSE);
+  fc_assert_ret_val(pq->size <= pq->avail, false);
   top = pq->cells[1].data;
   pq->size--;
   tmp = pq->cells[pq->size];
@@ -236,7 +236,7 @@ static inline bool SPECPQ_FOO(_pq_remove)(SPECPQ_PQ *_pq,
   if (pdata) {
     *pdata = top;
   }
-  return TRUE;
+  return true;
 }
 
 /****************************************************************************
@@ -249,11 +249,11 @@ static inline bool SPECPQ_FOO(_pq_peek)(const SPECPQ_PQ *_pq,
   const SPECPQ_PQ_ *pq = (SPECPQ_PQ_ *) _pq;
 
   if (pq->size == 1) {
-    return FALSE;
+    return false;
   }
 
   *pdata = pq->cells[1].data;
-  return TRUE;
+  return true;
 }
 
 /****************************************************************************
@@ -267,11 +267,11 @@ static inline bool SPECPQ_FOO(_pq_priority)(const SPECPQ_PQ *_pq,
   const SPECPQ_PQ_ *pq = (SPECPQ_PQ_ *) _pq;
 
   if (pq->size == 1) {
-    return FALSE;
+    return false;
   }
 
   *ppriority = pq->cells[1].priority;
-  return TRUE;
+  return true;
 }
 
 #undef SPECPQ_TAG

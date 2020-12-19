@@ -165,7 +165,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
   struct Treaty *ptreaty;
   bool *player_accept, *other_accept;
   enum dipl_reason diplcheck;
-  bool worker_refresh_required = FALSE;
+  bool worker_refresh_required = false;
   struct player *pother = player_by_number(counterpart);
 
   if (NULL == pother || pplayer == pother) {
@@ -514,7 +514,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
                               advance_by_number(pclause->value), "traded");
           research_apply_penalty(presearch, pclause->value,
                                  game.server.diplbulbcost);
-          found_new_tech(presearch, pclause->value, FALSE, TRUE);
+          found_new_tech(presearch, pclause->value, false, true);
         }
       } break;
       case CLAUSE_GOLD: {
@@ -533,7 +533,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
                       _("You receive the %s worldmap."),
                       nation_adjective_for_player(pgiver));
 
-        worker_refresh_required = TRUE; /* See CLAUSE_VISION */
+        worker_refresh_required = true; /* See CLAUSE_VISION */
         break;
       case CLAUSE_SEAMAP:
         give_seamap_from_player_to_player(pgiver, pdest);
@@ -542,7 +542,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
                       _("You receive the %s seamap."),
                       nation_adjective_for_player(pgiver));
 
-        worker_refresh_required = TRUE; /* See CLAUSE_VISION */
+        worker_refresh_required = true; /* See CLAUSE_VISION */
         break;
       case CLAUSE_CITY: {
         struct city *pcity = game_city_by_number(pclause->value);
@@ -561,7 +561,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
                       _("You give the city of %s to %s."), city_link(pcity),
                       player_name(pdest));
 
-        if (transfer_city(pdest, pcity, -1, TRUE, TRUE, FALSE,
+        if (transfer_city(pdest, pcity, -1, true, true, false,
                           !is_barbarian(pdest))) {
           script_server_signal_emit("city_transferred", pcity, pgiver, pdest,
                                     "trade");
@@ -590,7 +590,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
           unit_list_destroy(pdest_seen_units);
         }
 
-        worker_refresh_required = TRUE;
+        worker_refresh_required = true;
         break;
       case CLAUSE_PEACE:
         if (old_diplstate == DS_ALLIANCE) {
@@ -640,7 +640,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
           unit_list_destroy(pdest_seen_units);
         }
 
-        worker_refresh_required = TRUE;
+        worker_refresh_required = true;
         break;
       case CLAUSE_ALLIANCE:
         ds_giverdest->type = DS_ALLIANCE;
@@ -658,7 +658,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
         give_allied_visibility(pgiver, pdest);
         give_allied_visibility(pdest, pgiver);
 
-        worker_refresh_required = TRUE;
+        worker_refresh_required = true;
         break;
       case CLAUSE_VISION:
         give_shared_vision(pgiver, pdest);
@@ -670,7 +670,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
 
         /* Yes, shared vision may let us to _know_ tiles
          * within radius of our own city. */
-        worker_refresh_required = TRUE;
+        worker_refresh_required = true;
         break;
       case CLAUSE_COUNT:
         fc_assert(pclause->type != CLAUSE_COUNT);
@@ -932,12 +932,12 @@ void reject_all_treaties(struct player *pplayer)
     if (!treaty) {
       continue;
     }
-    treaty->accept0 = FALSE;
-    treaty->accept1 = FALSE;
+    treaty->accept0 = false;
+    treaty->accept1 = false;
     dlsend_packet_diplomacy_accept_treaty(
-        pplayer->connections, player_number(pplayer2), FALSE, FALSE);
+        pplayer->connections, player_number(pplayer2), false, false);
     dlsend_packet_diplomacy_accept_treaty(
-        pplayer2->connections, player_number(pplayer), FALSE, FALSE);
+        pplayer2->connections, player_number(pplayer), false, false);
   }
   players_iterate_end;
 }

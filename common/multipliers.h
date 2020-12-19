@@ -13,16 +13,6 @@
 
 #pragma once
 
-
-/* utility */
-#include "bitvector.h"
-#include "string_vector.h"
-
-/* common */
-#include "fc_types.h"
-#include "name_translation.h"
-#include "requirements.h"
-
 struct multiplier {
   Multiplier_type_id id;
   struct name_translation name;
@@ -35,7 +25,7 @@ struct multiplier {
   int offset;
   int factor;
   struct requirement_vector reqs;
-  struct strvec *helptext;
+  QVector<QString> *helptext;
 };
 
 void multipliers_init(void);
@@ -73,5 +63,3 @@ bool multiplier_can_be_changed(struct multiplier *pmul,
   }                                                                         \
   }                                                                         \
   multipliers_iterate_end;
-
-

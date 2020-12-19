@@ -161,7 +161,7 @@ static void dai_select_tech(struct ai_type *ait, struct player *pplayer,
   {
     if (valid_advance_by_number(i)) {
       if (values[i] > values[newtech]
-          && research_invention_gettable(presearch, i, TRUE)) {
+          && research_invention_gettable(presearch, i, true)) {
         newtech = i;
       }
       if (goal_values[i] > goal_values[newgoal]
@@ -283,8 +283,8 @@ static void dai_tech_effect_values(struct ai_type *ait,
 
         effect_list_iterate(get_req_source_effects(&source), peffect)
         {
-          bool present = TRUE;
-          bool active = TRUE;
+          bool present = true;
+          bool active = true;
 
           requirement_vector_iterate(&peffect->reqs, preq)
           {
@@ -299,7 +299,7 @@ static void dai_tech_effect_values(struct ai_type *ait,
             }
             if (!is_req_active(pplayer, NULL, pcity, NULL, NULL, NULL, NULL,
                                NULL, NULL, NULL, preq, RPT_POSSIBLE)) {
-              active = FALSE;
+              active = false;
               break; /* presence doesn't matter for inactive effects. */
             }
           }
@@ -365,7 +365,7 @@ void dai_manage_tech(struct ai_type *ait, struct player *pplayer)
     if (choice.want - choice.current_want > penalty
         && (penalty + research->bulbs_researched
             <= research_total_bulbs_required(research, research->researching,
-                                             FALSE))) {
+                                             false))) {
       TECH_LOG(ait, LOG_DEBUG, pplayer, advance_by_number(choice.choice),
                "new research, was %s, penalty was %d",
                research_advance_rule_name(research, research->researching),
@@ -440,7 +440,7 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
       const struct impr_type *building;
       int cost = 0;
       struct advance *itech = deftype->require_advance;
-      bool impossible_to_get = FALSE;
+      bool impossible_to_get = false;
 
       if (A_NEVER != itech
           && research_invention_state(presearch, advance_number(itech))
@@ -449,7 +449,8 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
         cost =
             research_goal_bulbs_required(presearch, advance_number(itech));
       }
-      if (((building = utype_needs_improvement(deftype, pcity)))
+      building = utype_needs_improvement(deftype, pcity);
+      if (building
           && !can_player_build_improvement_direct(pplayer, building)) {
         requirement_vector_iterate(&building->reqs, preq)
         {
@@ -471,7 +472,7 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
               cost += imprcost;
             } else if (!dai_can_requirement_be_met_in_city(preq, pplayer,
                                                            pcity)) {
-              impossible_to_get = TRUE;
+              impossible_to_get = true;
             }
           }
         }
@@ -544,7 +545,8 @@ struct unit_type *dai_wants_role_unit(struct ai_type *ait,
         cost =
             research_goal_bulbs_required(presearch, advance_number(itech));
       }
-      if (((building = utype_needs_improvement(iunit, pcity)))
+      building = utype_needs_improvement(iunit, pcity);
+      if (building
           && !can_player_build_improvement_direct(pplayer, building)) {
         requirement_vector_iterate(&building->reqs, preq)
         {

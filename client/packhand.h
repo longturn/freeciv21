@@ -10,14 +10,6 @@
 **************************************************************************/
 #pragma once
 
-
-#include "fc_types.h" /* struct connection, struct government */
-
-#include "events.h" /* enum event_type */
-#include "map.h"
-
-#include "packhand_gen.h"
-
 void packhand_free(void);
 
 void notify_about_incoming_packet(struct connection *pc, int packet_type,

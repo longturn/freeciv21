@@ -96,7 +96,7 @@ static void calculate_city_clusters(struct player *pplayer)
     parameter.omniscience = !has_handicap(pplayer, H_MAP);
     pfm = pf_map_new(&parameter);
 
-    pf_map_move_costs_iterate(pfm, ptile, move_cost, FALSE)
+    pf_map_move_costs_iterate(pfm, ptile, move_cost, false)
     {
       struct city *acity = tile_city(ptile);
 
@@ -237,7 +237,7 @@ void building_advisor(struct player *pplayer)
       struct adv_city *city_data = pcity->server.adv;
 
       if (is_ai(pplayer)) {
-        bool result = TRUE;
+        bool result = true;
 
         /* AI has opportunity to say that this city cannot be
          * wonder city */
@@ -323,7 +323,7 @@ void building_advisor_choose(struct city *pcity, struct adv_choice *choice)
   } else {
     choice->type = CT_NONE;
   }
-  choice->need_boat = FALSE;
+  choice->need_boat = false;
 
   /* Allow ai to override */
   CALL_PLR_AI_FUNC(choose_building, plr, pcity, choice);

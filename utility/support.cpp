@@ -201,10 +201,12 @@ int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
 {
   auto left = QString::fromUtf8(str0);
   auto right = QString::fromUtf8(str1);
-  if (left.startsWith("\"") && left.endsWith("\"")) {
+  if (left.startsWith(QLatin1String("\""))
+      && left.endsWith(QLatin1String("\""))) {
     left = left.mid(1, left.length() - 2);
   }
-  if (right.startsWith("\"") && right.endsWith("\"")) {
+  if (right.startsWith(QLatin1String("\""))
+      && right.endsWith(QLatin1String("\""))) {
     right = right.mid(1, right.length() - 2);
   }
   return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
@@ -345,7 +347,7 @@ const char *fc_strerror(fc_errno err)
                 err);
   }
   return buf;
-#else /* FREECIV_MSWINDOWS */
+#else  /* FREECIV_MSWINDOWS */
   static char buf[256];
   return local_to_internal_string_buffer(strerror(err), buf, sizeof(buf));
 #endif /* FREECIV_MSWINDOWS */
@@ -384,7 +386,7 @@ char *fc_strrep_resize(char *str, size_t *len, const char *search,
 
   success = fc_strrep(str, (*len), search, replace);
   /* should never happen */
-  fc_assert_ret_val_msg(success == TRUE, NULL,
+  fc_assert_ret_val_msg(success == true, NULL,
                         "Can't replace '%s' by '%s' in '%s'. To small "
                         "size after reallocation: %lu.",
                         search, replace, str, (long unsigned int) *len);
@@ -403,9 +405,9 @@ bool fc_strrep(char *str, size_t len, const char *search,
   size_t len_search, len_replace;
   char *s, *p;
 
-  fc_assert_ret_val(str != NULL, FALSE);
+  fc_assert_ret_val(str != NULL, false);
   if (search == NULL || replace == NULL) {
-    return TRUE;
+    return true;
   }
 
   len_search = qstrlen(search);
@@ -421,7 +423,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
 
     if (len < (strlen(str) + len_replace - len_search + 1)) {
       /* sizeof(str) not large enough to do the replacement */
-      return FALSE;
+      return false;
     }
 
     memmove(p + len_replace, p + len_search, qstrlen(p + len_search) + 1);
@@ -429,7 +431,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
     s = p + len_replace;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**

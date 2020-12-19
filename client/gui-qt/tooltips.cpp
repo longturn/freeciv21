@@ -175,7 +175,7 @@ QString get_tooltip_unit(const struct unit_type *utype, bool ext)
       + QStringLiteral("</td><td>") + bold(QString(_("Defense:"))) + " "
       + QString::number(utype->defense_strength).toHtmlEscaped()
       + QStringLiteral("</td><td>") + bold(QString(_("Move:"))) + " "
-      + QString(move_points_text(utype->move_rate, TRUE)).toHtmlEscaped()
+      + QString(move_points_text(utype->move_rate, true)).toHtmlEscaped()
       + QStringLiteral("</td></tr><tr><td>") + bold(QString(_("Cost:")))
       + " "
       + QString::number(utype_build_shield_cost_base(utype)).toHtmlEscaped()
@@ -210,7 +210,7 @@ QString get_tooltip_unit(const struct unit_type *utype, bool ext)
 /************************************************************************/ /**
    Returns shortened help for given universal ( stored in qvar )
  ****************************************************************************/
-QString get_tooltip(QVariant qvar)
+QString get_tooltip(const QVariant &qvar)
 {
   QString str, def_str, ret_str;
   QStringList sl;

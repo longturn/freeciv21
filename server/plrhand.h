@@ -108,7 +108,7 @@ void reset_all_start_commands(bool plrchange);
   }                                                                         \
   }                                                                         \
   }                                                                         \
-  while (FALSE)
+  while (false)
 
 #define phase_players_iterate(pplayer)                                      \
   do {                                                                      \
@@ -121,7 +121,7 @@ void reset_all_start_commands(bool plrchange);
   }                                                                         \
   shuffled_players_iterate_end;                                             \
   }                                                                         \
-  while (FALSE)                                                             \
+  while (false)                                                             \
     ;
 
 #define alive_phase_players_iterate(pplayer)                                \
@@ -135,7 +135,7 @@ void reset_all_start_commands(bool plrchange);
   }                                                                         \
   phase_players_iterate_end                                                 \
   }                                                                         \
-  while (FALSE)                                                             \
+  while (false)                                                             \
     ;
 
 bool civil_war_possible(struct player *pplayer, bool conquering_city,

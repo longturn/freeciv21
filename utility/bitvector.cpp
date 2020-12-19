@@ -25,7 +25,6 @@
 #include "fciconv.h"
 #include "fcintl.h"
 #include "rand.h"
-#include "string_vector.h"
 
 #include "bitvector.h"
 
@@ -45,16 +44,16 @@ bool bv_check_mask(const unsigned char *vec1, const unsigned char *vec2,
                    size_t size1, size_t size2)
 {
   size_t i;
-  fc_assert_ret_val(size1 == size2, FALSE);
+  fc_assert_ret_val(size1 == size2, false);
 
   for (i = 0; i < size1; i++) {
     if ((vec1[0] & vec2[0]) != 0) {
-      return TRUE;
+      return true;
     }
     vec1++;
     vec2++;
   }
-  return FALSE;
+  return false;
 }
 
 /***********************************************************************/ /**
@@ -65,16 +64,16 @@ bool bv_are_equal(const unsigned char *vec1, const unsigned char *vec2,
                   size_t size1, size_t size2)
 {
   size_t i;
-  fc_assert_ret_val(size1 == size2, FALSE);
+  fc_assert_ret_val(size1 == size2, false);
 
   for (i = 0; i < size1; i++) {
     if (vec1[0] != vec2[0]) {
-      return FALSE;
+      return false;
     }
     vec1++;
     vec2++;
   }
-  return TRUE;
+  return true;
 }
 
 /***********************************************************************/ /**

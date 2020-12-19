@@ -85,16 +85,11 @@ void team_slots_free(void)
     if (NULL != tslot->team) {
       team_destroy(tslot->team);
     }
-    if (NULL != tslot->defined_name) {
-      delete[] tslot->defined_name;
-    }
-    if (NULL != tslot->rule_name) {
-      delete[] tslot->rule_name;
-    }
+    NFCPP_FREE(tslot->defined_name);
+    NFCPP_FREE(tslot->rule_name);
+
 #ifdef FREECIV_ENABLE_NLS
-    if (NULL != tslot->name_translation) {
-      delete[] tslot->name_translation;
-    }
+    NFCPP_FREE(tslot->name_translation);
 #endif /* FREECIV_ENABLE_NLS */
   }
   team_slots_iterate_end;
@@ -154,7 +149,7 @@ bool team_slot_is_used(const struct team_slot *tslot)
 {
   /* No team slot available, if the game is not initialised. */
   if (!team_slots_initialised()) {
-    return FALSE;
+    return false;
   }
 
   return NULL != tslot->team;
@@ -285,20 +280,14 @@ void team_slot_set_defined_name(struct team_slot *tslot,
   fc_assert_ret(NULL != tslot);
   fc_assert_ret(NULL != team_name);
 
-  if (NULL != tslot->defined_name) {
-    delete[] tslot->defined_name;
-  }
+  NFCPP_FREE(tslot->defined_name);
   tslot->defined_name = fc_strdup(team_name);
+  NFCPP_FREE(tslot->rule_name);
 
-  if (NULL != tslot->rule_name) {
-    delete[] tslot->rule_name;
-  }
   tslot->rule_name = fc_strdup(Qn_(team_name));
 
 #ifdef FREECIV_ENABLE_NLS
-  if (NULL != tslot->name_translation) {
-    delete[] tslot->name_translation;
-  }
+  NFCPP_FREE(tslot->name_translation);
   tslot->name_translation = fc_strdup(Q_(team_name));
 #endif /* FREECIV_ENABLE_NLS */
 }
@@ -422,7 +411,8 @@ int team_pretty_name(const struct team *pteam, QString &buf)
   if (NULL != pteam) {
     if (NULL != pteam->slot->defined_name) {
       /* TRANS: %s is ruleset-chosen team name (e.g. "Red") */
-      buf = QString(_("team %1")).arg(team_slot_name_translation(pteam->slot));
+      buf =
+          QString(_("team %1")).arg(team_slot_name_translation(pteam->slot));
       return 1;
     } else {
       buf = QString(_("team %1")).arg(QString::number(team_number(pteam)));
@@ -431,7 +421,7 @@ int team_pretty_name(const struct team *pteam, QString &buf)
   }
 
   /* No need to translate, it's an error. */
-  buf = "(null team)";
+  buf = QLatin1String("(null team)");
   return -1;
 }
 

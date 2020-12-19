@@ -45,7 +45,7 @@ void achievements_init(void)
 
   for (i = 0; i < ARRAY_SIZE(achievements); i++) {
     achievements[i].id = i;
-    achievements[i].ruledit_disabled = FALSE;
+    achievements[i].ruledit_disabled = false;
     achievements[i].first = NULL;
     achievements[i].value = 0;
     achievements[i].culture = 0;
@@ -63,12 +63,8 @@ void achievements_free(void)
   int i;
 
   for (i = 0; i < ARRAY_SIZE(achievements); i++) {
-    if (achievements[i].first_msg != NULL) {
-      delete[] achievements[i].first_msg;
-    }
-    if (achievements[i].cons_msg != NULL) {
-      delete[] achievements[i].cons_msg;
-    }
+    NFCPP_FREE(achievements[i].first_msg);
+    NFCPP_FREE(achievements[i].cons_msg);
   }
 }
 
@@ -192,7 +188,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
   if ((ach->unique && ach->first != NULL)
       || (BV_ISSET(ach->achievers, player_index(pplayer)))) {
     /* It was already achieved */
-    return FALSE;
+    return false;
   }
 
   switch (ach->type) {
@@ -218,35 +214,35 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
 
     whole_map_iterate(&(wld.map), ptile)
     {
-      bool this_is_known = FALSE;
+      bool this_is_known = false;
 
       if (is_server()) {
         if (pplayer->tile_known->at(tile_index(ptile))) {
-          this_is_known = TRUE;
+          this_is_known = true;
         }
       } else {
         /* Client */
         if (ptile->terrain != T_UNKNOWN) {
-          this_is_known = TRUE;
+          this_is_known = true;
         }
       }
 
       if (this_is_known) {
         known++;
         if (known >= required) {
-          return TRUE;
+          return true;
         }
       } else {
         unknown++;
         if (unknown >= max_unknown) {
-          return FALSE;
+          return false;
         }
       }
     }
     whole_map_iterate_end;
   }
 
-    return FALSE;
+    return false;
   case ACHIEVEMENT_MULTICULTURAL: {
     bv_player seen_citizens;
     int count = 0;
@@ -264,7 +260,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
           count++;
           if (count >= ach->value) {
             /* There's at least value different nationalities. */
-            return TRUE;
+            return true;
           }
         }
       }
@@ -273,23 +269,23 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
     city_list_iterate_end;
   }
 
-    return FALSE;
+    return false;
   case ACHIEVEMENT_CULTURED_CITY:
     city_list_iterate(pplayer->cities, pcity)
     {
       if (city_culture(pcity) >= ach->value) {
-        return TRUE;
+        return true;
       }
     }
     city_list_iterate_end;
 
-    return FALSE;
+    return false;
   case ACHIEVEMENT_CULTURED_NATION:
     if (player_culture(pplayer) >= ach->value) {
-      return TRUE;
+      return true;
     }
 
-    return FALSE;
+    return false;
   case ACHIEVEMENT_LUCKY:
     return ((int) fc_rand(10000) < ach->value);
   case ACHIEVEMENT_HUTS:
@@ -298,12 +294,12 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
     city_list_iterate(pplayer->cities, pcity)
     {
       if (city_size_get(pcity) >= ach->value) {
-        return TRUE;
+        return true;
       }
     }
     city_list_iterate_end;
 
-    return FALSE;
+    return false;
   case ACHIEVEMENT_LITERATE:
     return get_literacy(pplayer) >= ach->value;
   case ACHIEVEMENT_LAND_AHOY: {
@@ -312,16 +308,16 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
 
     whole_map_iterate(&(wld.map), ptile)
     {
-      bool this_is_known = FALSE;
+      bool this_is_known = false;
 
       if (is_server()) {
         if (pplayer->tile_known->at(tile_index(ptile))) {
-          this_is_known = TRUE;
+          this_is_known = true;
         }
       } else {
         /* Client */
         if (ptile->terrain != T_UNKNOWN) {
-          this_is_known = TRUE;
+          this_is_known = true;
         }
       }
 
@@ -330,15 +326,15 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
          *        to their current continent when they were last seen. */
         if (ptile->continent > 0 && !seen[ptile->continent - 1]) {
           if (++count >= ach->value) {
-            return TRUE;
+            return true;
           }
-          seen[ptile->continent - 1] = TRUE;
+          seen[ptile->continent - 1] = true;
         }
       }
     }
     whole_map_iterate_end;
 
-    return FALSE;
+    return false;
   }
   case ACHIEVEMENT_COUNT:
     break;
@@ -346,7 +342,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
 
   qCritical("achievement_check(): Illegal achievement type %d", ach->type);
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -376,7 +372,7 @@ bool achievement_player_has(const struct achievement *pach,
                             const struct player *pplayer)
 {
   if (pplayer == NULL) {
-    return FALSE;
+    return false;
   }
 
   return BV_ISSET(pach->achievers, player_index(pplayer));

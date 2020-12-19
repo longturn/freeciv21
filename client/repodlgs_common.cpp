@@ -27,6 +27,7 @@
 
 /* client/include */
 #include "repodlgs_g.h"
+#include "citydlg_common.h"
 
 /* client */
 #include "client_main.h"

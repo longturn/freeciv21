@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "requirements.h"
+#include "name_translation.h"
 
 struct nation_style {
   int id;
@@ -21,8 +23,8 @@ struct nation_style {
 
 struct music_style {
   int id;
-  char music_peaceful[MAX_LEN_NAME];
-  char music_combat[MAX_LEN_NAME];
+  QString music_peaceful;
+  QString music_combat;
   struct requirement_vector reqs;
 };
 

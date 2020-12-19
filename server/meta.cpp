@@ -43,6 +43,7 @@
 #include "game.h"
 #include "map.h"
 #include "version.h"
+#include "nation.h"
 
 /* server */
 #include "console.h"
@@ -52,8 +53,8 @@
 
 #include "meta.h"
 
-static bool server_is_open = FALSE;
-static bool persistent_meta_connection = FALSE;
+static bool server_is_open = false;
+static bool persistent_meta_connection = false;
 static int meta_retry_wait = 0;
 
 static char meta_patches[256] = "";
@@ -201,7 +202,7 @@ static inline bool meta_insert_setting(QUrlQuery *query,
   const struct setting *pset = setting_by_name(set_name);
   char buf[256];
 
-  fc_assert_ret_val_msg(NULL != pset, FALSE, "Setting \"%s\" not found!",
+  fc_assert_ret_val_msg(NULL != pset, false, "Setting \"%s\" not found!",
                         set_name);
   query->addQueryItem(QStringLiteral("vn[]"),
                       QString::fromUtf8(setting_name(pset)));
@@ -324,7 +325,7 @@ static bool send_to_metaserver(enum meta_flag flag)
 
       players_iterate(plr)
       {
-        bool is_player_available = TRUE;
+        bool is_player_available = true;
         struct connection *pconn = conn_by_user(plr->username);
 
         QLatin1String type;
@@ -362,21 +363,21 @@ static bool send_to_metaserver(enum meta_flag flag)
          * TODO: there's some duplication here with
          * stdinhand.c:is_allowed_to_take() */
         if (is_barbarian(plr) && !strchr(game.server.allow_take, 'b')) {
-          is_player_available = FALSE;
+          is_player_available = false;
         } else if (!plr->is_alive && !strchr(game.server.allow_take, 'd')) {
-          is_player_available = FALSE;
+          is_player_available = false;
         } else if (is_ai(plr)
                    && !strchr(game.server.allow_take,
                               (game.info.is_new_game ? 'A' : 'a'))) {
-          is_player_available = FALSE;
+          is_player_available = false;
         } else if (is_human(plr)
                    && !strchr(game.server.allow_take,
                               (game.info.is_new_game ? 'H' : 'h'))) {
-          is_player_available = FALSE;
+          is_player_available = false;
         }
 
         if (pconn) {
-          is_player_available = FALSE;
+          is_player_available = false;
         }
 
         if (is_player_available) {
@@ -441,7 +442,7 @@ static bool send_to_metaserver(enum meta_flag flag)
   meta_srv_thread->set_func(send_metaserver_post, post);
   meta_srv_thread->start(QThread::NormalPriority);
 
-  return TRUE;
+  return true;
 }
 
 /*********************************************************************/ /**
@@ -449,8 +450,8 @@ static bool send_to_metaserver(enum meta_flag flag)
  *************************************************************************/
 void server_close_meta(void)
 {
-  server_is_open = FALSE;
-  persistent_meta_connection = FALSE;
+  server_is_open = false;
+  persistent_meta_connection = false;
 }
 
 /*********************************************************************/ /**
@@ -465,11 +466,11 @@ bool server_open_meta(bool persistent)
     set_meta_message_string(default_meta_message_string());
   }
 
-  server_is_open = TRUE;
+  server_is_open = true;
   persistent_meta_connection = persistent;
   meta_retry_wait = 0;
 
-  return TRUE;
+  return true;
 }
 
 /*********************************************************************/ /**
@@ -486,7 +487,7 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
   static bool want_update;
 
   if (!server_is_open) {
-    return FALSE;
+    return false;
   }
 
   /* Persistent connection temporary failures handling */
@@ -494,7 +495,7 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
     if (meta_retry_wait++ > 5) {
       meta_retry_wait = 0;
     } else {
-      return FALSE;
+      return false;
     }
   }
 
@@ -509,7 +510,7 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
     meta_srv_thread->wait();
     meta_srv_thread->quit();
 
-    return TRUE;
+    return true;
   }
 
   /* don't allow the user to spam the metaserver with updates */
@@ -517,9 +518,9 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
       && (timer_read_seconds(last_send_timer)
           < METASERVER_MIN_UPDATE_INTERVAL)) {
     if (flag == META_INFO) {
-      want_update = TRUE; /* we couldn't update now, but update a.s.a.p. */
+      want_update = true; /* we couldn't update now, but update a.s.a.p. */
     }
-    return FALSE;
+    return false;
   }
 
   /* if we're asking for a refresh, only do so if
@@ -527,7 +528,7 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
   if ((flag == META_REFRESH) && !want_update && last_send_timer
       && (timer_read_seconds(last_send_timer)
           < METASERVER_REFRESH_INTERVAL)) {
-    return FALSE;
+    return false;
   }
 
   /* start a new timer if we haven't already */
@@ -537,7 +538,7 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
 
   timer_clear(last_send_timer);
   timer_start(last_send_timer);
-  want_update = FALSE;
+  want_update = false;
 
   return send_to_metaserver(flag);
 }

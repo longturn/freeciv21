@@ -157,7 +157,7 @@ void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
               "Trying to load the game nevertheless ...",
               loading->version, compat[compat_current].version);
   }
-#else /* FREECIV_DEBUG */
+#else  /* FREECIV_DEBUG */
   sg_failure_ret(0 < loading->version
                      && loading->version <= compat[compat_current].version,
                  "Unknown savefile format version (%d).", loading->version);
@@ -424,14 +424,14 @@ static void compat_load_020400(struct loaddata *loading,
       /* Process a map row at a time */
       for (y = 0; y < maxmapsize; y++) {
         /* Look for broken info to convert */
-        bool found = FALSE;
+        bool found = false;
         memset(known_row_old, 0, sizeof(known_row_old));
         for (l = 0; l < lines; l++) {
           for (j = 0; j < 8; j++) {
             const char *s = secfile_lookup_str_default(
                 loading->file, NULL, "map.k%02d_%04d", l * 8 + j, y);
             if (s) {
-              found = TRUE;
+              found = true;
               if (xsize == 0) {
                 xsize = qstrlen(s);
               }
@@ -489,7 +489,7 @@ static void compat_load_020400(struct loaddata *loading,
                            "settings.set_count")) {
       int i, new_opt = set_count;
       bool gamestart_valid = secfile_lookup_bool_default(
-          loading->file, FALSE, "settings.gamestart_valid");
+          loading->file, false, "settings.gamestart_valid");
       for (i = 0; i < set_count; i++) {
         const char *name =
             secfile_lookup_str(loading->file, "settings.set%d.name", i);
@@ -607,7 +607,7 @@ static void compat_load_020500(struct loaddata *loading,
                            "settings.set_count")) {
       int i;
       bool gamestart_valid = secfile_lookup_bool_default(
-          loading->file, FALSE, "settings.gamestart_valid");
+          loading->file, false, "settings.gamestart_valid");
       for (i = 0; i < set_count; i++) {
         const char *name =
             secfile_lookup_str(loading->file, "settings.set%d.name", i);
@@ -620,34 +620,34 @@ static void compat_load_020500(struct loaddata *loading,
         if (!fc_strcasecmp("killcitizen", name)) {
           int value;
 
-          if (secfile_lookup_enum_data(loading->file, &value, TRUE,
+          if (secfile_lookup_enum_data(loading->file, &value, true,
                                        killcitizen_enum_str, NULL,
                                        "settings.set%d.value", i)) {
             /* Lowest bit of old killcitizen value indicates if
              * land units should kill citizens. We take that as
              * new boolean killcitizen value. */
             if (value & 0x1) {
-              secfile_replace_bool(loading->file, TRUE,
+              secfile_replace_bool(loading->file, true,
                                    "settings.set%d.value", i);
             } else {
-              secfile_replace_bool(loading->file, FALSE,
+              secfile_replace_bool(loading->file, false,
                                    "settings.set%d.value", i);
             }
           } else {
             log_sg("Setting '%s': %s", name, secfile_error());
           }
           if (gamestart_valid) {
-            if (secfile_lookup_enum_data(loading->file, &value, TRUE,
+            if (secfile_lookup_enum_data(loading->file, &value, true,
                                          killcitizen_enum_str, NULL,
                                          "settings.set%d.gamestart", i)) {
               /* Lowest bit of old killcitizen value indicates if
                * land units should kill citizens. We take that as
                * new boolean killcitizen value. */
               if (value & 0x1) {
-                secfile_replace_bool(loading->file, TRUE,
+                secfile_replace_bool(loading->file, true,
                                      "settings.set%d.gamestart", i);
               } else {
-                secfile_replace_bool(loading->file, FALSE,
+                secfile_replace_bool(loading->file, false,
                                      "settings.set%d.gamestart", i);
               }
             } else {
@@ -725,7 +725,7 @@ static void compat_load_020600(struct loaddata *loading,
       enum revolen_type rlt = GAME_DEFAULT_REVOLENTYPE;
       enum revolen_type gsrlt = GAME_DEFAULT_REVOLENTYPE;
       bool gamestart_valid = secfile_lookup_bool_default(
-          loading->file, FALSE, "settings.gamestart_valid");
+          loading->file, false, "settings.gamestart_valid");
       int new_set_count;
 
       for (i = 0; i < set_count; i++) {
@@ -1028,7 +1028,7 @@ static void compat_load_020600(struct loaddata *loading,
     for (i = 0; i < units_num; i++) {
       int len;
 
-      if (secfile_lookup_bool_default(loading->file, FALSE,
+      if (secfile_lookup_bool_default(loading->file, false,
                                       "player%d.u%d.orders_last_move_safe",
                                       plrno, i)) {
         continue;
@@ -1326,16 +1326,16 @@ static void compat_load_030000(struct loaddata *loading,
   }
 
   /* Already started games should have their turn counts increased by 1 */
-  if (secfile_lookup_bool_default(loading->file, TRUE,
+  if (secfile_lookup_bool_default(loading->file, true,
                                   "game.save_players")) {
-    started = TRUE;
+    started = true;
 
-    old_turn = increase_secfile_turn_int(loading, "game.turn", 0, FALSE) - 1;
+    old_turn = increase_secfile_turn_int(loading, "game.turn", 0, false) - 1;
     increase_secfile_turn_int(loading, "game.scoreturn",
-                              old_turn + GAME_DEFAULT_SCORETURN, FALSE);
-    increase_secfile_turn_int(loading, "history.turn", -2, TRUE);
+                              old_turn + GAME_DEFAULT_SCORETURN, false);
+    increase_secfile_turn_int(loading, "history.turn", -2, true);
   } else {
-    started = FALSE;
+    started = false;
   }
 
   player_slots_iterate(pslot)
@@ -1347,7 +1347,7 @@ static void compat_load_030000(struct loaddata *loading,
       continue;
     }
 
-    if (secfile_lookup_bool_default(loading->file, FALSE,
+    if (secfile_lookup_bool_default(loading->file, false,
                                     "player%d.ai.control", plrno)) {
       flag_names[0] = plr_flag_id_name(PLRF_AI);
 
@@ -1365,7 +1365,7 @@ static void compat_load_030000(struct loaddata *loading,
 
         fc_snprintf(buf, sizeof(buf), "player%d.u%d.born", plrno, i);
 
-        increase_secfile_turn_int(loading, buf, old_turn, FALSE);
+        increase_secfile_turn_int(loading, buf, old_turn, false);
       }
 
       num = secfile_lookup_int_default(loading->file, 0, "player%d.ncities",
@@ -1376,7 +1376,7 @@ static void compat_load_030000(struct loaddata *loading,
 
         fc_snprintf(buf, sizeof(buf), "player%d.c%d.turn_founded", plrno, i);
 
-        increase_secfile_turn_int(loading, buf, -2, TRUE);
+        increase_secfile_turn_int(loading, buf, -2, true);
       }
     }
   }
@@ -1387,7 +1387,7 @@ static void compat_load_030000(struct loaddata *loading,
       secfile_lookup_int_default(loading->file, 0, "settings.set_count");
 
   /* User meta server message is now a setting. */
-  if (secfile_lookup_bool_default(loading->file, FALSE,
+  if (secfile_lookup_bool_default(loading->file, false,
                                   "game.meta_usermessage")) {
     const char *metamessage;
 
@@ -1474,7 +1474,7 @@ static void insert_server_side_agent(struct loaddata *loading,
         continue;
       }
 
-      ai = secfile_lookup_bool_default(loading->file, FALSE,
+      ai = secfile_lookup_bool_default(loading->file, false,
                                        "player%d.u%d.ai", plrno, unit);
 
       if (ai) {
@@ -1526,10 +1526,9 @@ static void compat_load_030100(struct loaddata *loading,
 
       order_len = secfile_lookup_int_default(
           loading->file, 0, "player%d.u%d.orders_length", plrno, unit);
-
-      if ((action_unitstr = secfile_lookup_str_default(
-               loading->file, "", "player%d.u%d.action_list", plrno,
-               unit))) {
+      action_unitstr = secfile_lookup_str_default(
+          loading->file, "", "player%d.u%d.action_list", plrno, unit);
+      if (action_unitstr) {
         int order_num;
 
         if (order_len > qstrlen(action_unitstr)) {
@@ -1911,10 +1910,10 @@ static void compat_load_dev(struct loaddata *loading)
       for (unit = 0; unit < units_num; unit++) {
         size_t old_tgt_size;
         int *old_tgt_vec;
-
-        if ((old_tgt_vec = secfile_lookup_int_vec(
-                 loading->file, &old_tgt_size, "player%d.u%d.tgt_vec", plrno,
-                 unit))) {
+        old_tgt_vec =
+            secfile_lookup_int_vec(loading->file, &old_tgt_size,
+                                   "player%d.u%d.tgt_vec", plrno, unit);
+        if (old_tgt_vec) {
           secfile_insert_int_vec(loading->file, old_tgt_vec, old_tgt_size,
                                  "player%d.u%d.sub_tgt_vec", plrno, unit);
           free(old_tgt_vec);
@@ -2039,10 +2038,9 @@ static void compat_load_dev(struct loaddata *loading)
 
         order_len = secfile_lookup_int_default(
             loading->file, 0, "player%d.u%d.orders_length", plrno, unit);
-
-        if ((action_unitstr = secfile_lookup_str_default(
-                 loading->file, "", "player%d.u%d.action_list", plrno,
-                 unit))) {
+        action_unitstr = secfile_lookup_str_default(
+            loading->file, "", "player%d.u%d.action_list", plrno, unit);
+        if (action_unitstr) {
           int order_num;
 
           if (order_len > qstrlen(action_unitstr)) {
@@ -2093,10 +2091,10 @@ static void compat_load_dev(struct loaddata *loading)
         order_len = secfile_lookup_int_default(
             loading->file, 0, "player%d.c%d.rally_point_length", plrno,
             city);
-
-        if ((action_citystr = secfile_lookup_str_default(
-                 loading->file, "", "player%d.c%d.rally_point_actions",
-                 plrno, city))) {
+        action_citystr = secfile_lookup_str_default(
+            loading->file, "", "player%d.c%d.rally_point_actions", plrno,
+            city);
+        if (action_citystr) {
           int order_num;
 
           if (order_len > qstrlen(action_citystr)) {
@@ -2246,7 +2244,7 @@ enum ai_level ai_level_convert(int old_level)
   case 10:
 #ifdef FREECIV_DEBUG
     return AI_LEVEL_EXPERIMENTAL;
-#else /* FREECIV_DEBUG */
+#else  /* FREECIV_DEBUG */
     return AI_LEVEL_HARD;
 #endif /* FREECIV_DEBUG */
   }

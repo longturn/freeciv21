@@ -249,7 +249,7 @@ void really_handle_city_sell(struct player *pplayer, struct city *pcity,
     return;
   }
 
-  pcity->did_sell = TRUE;
+  pcity->did_sell = true;
   price = impr_sell_gold(pimprove);
   notify_player(pplayer, pcity->tile, E_IMP_SOLD, ftc_server,
                 PL_("You sell %s in %s for %d gold.",
@@ -347,7 +347,7 @@ void really_handle_city_buy(struct player *pplayer, struct city *pcity)
      * fully well add the missing shields there. */
     pcity->disbanded_shields += total - pcity->shield_stock;
     pcity->shield_stock = total; /* AI wants this -- Syela */
-    pcity->did_buy = TRUE;       /* !PS: no need to set buy flag otherwise */
+    pcity->did_buy = true;       /* !PS: no need to set buy flag otherwise */
   }
   city_refresh(pcity);
 
@@ -540,8 +540,8 @@ void handle_city_rally_point(struct player *pplayer, int city_id, int length,
   pcity->rally_point.length = length;
 
   if (length == 0) {
-    pcity->rally_point.vigilant = FALSE;
-    pcity->rally_point.persistent = FALSE;
+    pcity->rally_point.vigilant = false;
+    pcity->rally_point.persistent = false;
     if (pcity->rally_point.orders) {
       FCPP_FREE(pcity->rally_point.orders);
     }

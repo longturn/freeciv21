@@ -42,21 +42,20 @@ static void none_audio_wait(void) {}
 /**********************************************************************/ /**
    Play sound sample
  **************************************************************************/
-static bool none_audio_play(const char *const tag,
-                            const char *const fullpath, bool repeat,
-                            audio_finished_callback cb)
+static bool none_audio_play(const QString &tag, const QString &fullpath,
+                            bool repeat, audio_finished_callback cb)
 {
-  if (strcmp(tag, "e_turn_bell") == 0) {
+  if (tag == "e_turn_bell") {
     sound_bell();
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
    Initialize.
  **************************************************************************/
-static bool none_audio_init(void) { return TRUE; }
+static bool none_audio_init(void) { return true; }
 
 /**********************************************************************/ /**
    Initialize.
@@ -65,12 +64,14 @@ void audio_none_init(void)
 {
   struct audio_plugin self;
 
-  sz_strlcpy(self.name, "none");
-  sz_strlcpy(self.descr, "/dev/null plugin");
+  self.name = QStringLiteral("none");
+  self.descr = QStringLiteral("/dev/null plugin");
   self.init = none_audio_init;
   self.shutdown = none_audio_shutdown;
   self.stop = none_audio_stop;
   self.wait = none_audio_wait;
   self.play = none_audio_play;
+  self.get_volume = audio_get_volume;
+  self.set_volume = audio_set_volume;
   audio_add_plugin(&self);
 }

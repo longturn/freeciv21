@@ -32,7 +32,7 @@ const char *fc_ai_stub_capstr(void) { return FC_AI_MOD_CAPSTR; }
  **************************************************************************/
 static void stub_end_turn(struct player *pplayer)
 {
-  pplayer->ai_phase_done = TRUE;
+  pplayer->ai_phase_done = true;
 }
 
 /**********************************************************************/ /**
@@ -45,5 +45,5 @@ bool fc_ai_stub_setup(struct ai_type *ai)
   ai->funcs.first_activities = stub_end_turn;
   ai->funcs.restart_phase = stub_end_turn;
 
-  return TRUE;
+  return true;
 }

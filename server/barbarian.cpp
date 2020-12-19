@@ -105,7 +105,7 @@ struct player *create_barbarian_player(enum barbarian_type type)
         || (type == SEA_BARBARIAN && is_sea_barbarian(old_barbs))) {
       if (!old_barbs->is_alive) {
         old_barbs->economic.gold = 0;
-        old_barbs->is_alive = TRUE;
+        old_barbs->is_alive = true;
         player_status_reset(old_barbs);
 
         /* Free old name so pick_random_player_name() can select it again.
@@ -115,7 +115,7 @@ struct player *create_barbarian_player(enum barbarian_type type)
         server_player_set_name(
             old_barbs, pick_random_player_name(nation_of_player(old_barbs)));
         sz_strlcpy(old_barbs->username, _(ANON_USER_NAME));
-        old_barbs->unassigned_user = TRUE;
+        old_barbs->unassigned_user = true;
         /* I need to make them to forget the map, I think */
         whole_map_iterate(&(wld.map), ptile)
         {
@@ -131,31 +131,31 @@ struct player *create_barbarian_player(enum barbarian_type type)
   players_iterate_end;
 
   /* make a new player, or not */
-  barbarians = server_create_player(-1, default_ai_type_name(), NULL, FALSE);
+  barbarians = server_create_player(-1, default_ai_type_name(), NULL, false);
   if (!barbarians) {
     return NULL;
   }
-  server_player_init(barbarians, TRUE, TRUE);
+  server_player_init(barbarians, true, true);
 
   if (type == LAND_BARBARIAN || type == SEA_BARBARIAN) {
     /* Try LAND_AND_SEA *FIRST*, so that we don't end up
      * with one of the Land/Sea barbarians created first and
      * then LAND_AND_SEA created instead of the second. */
-    nation = pick_a_nation(NULL, FALSE, FALSE, LAND_AND_SEA_BARBARIAN);
+    nation = pick_a_nation(NULL, false, false, LAND_AND_SEA_BARBARIAN);
     if (nation != NULL) {
       type = LAND_AND_SEA_BARBARIAN;
     }
   }
 
   if (nation == NULL) {
-    nation = pick_a_nation(NULL, FALSE, FALSE, type);
+    nation = pick_a_nation(NULL, false, false, type);
   }
 
   /* Ruleset loading time checks should guarantee that there always is
      suitable nation available */
   fc_assert(nation != NULL);
 
-  player_nation_defaults(barbarians, nation, TRUE);
+  player_nation_defaults(barbarians, nation, true);
   if (game_was_started()) {
     /* Find a color for the new player. */
     assign_player_colors();
@@ -164,14 +164,14 @@ struct player *create_barbarian_player(enum barbarian_type type)
   server.nbarbarians++;
 
   sz_strlcpy(barbarians->username, _(ANON_USER_NAME));
-  barbarians->unassigned_user = TRUE;
-  barbarians->is_connected = FALSE;
+  barbarians->unassigned_user = true;
+  barbarians->is_connected = false;
   barbarians->government = init_government_of_nation(nation);
   fc_assert(barbarians->revolution_finishes < 0);
-  barbarians->server.got_first_city = FALSE;
+  barbarians->server.got_first_city = false;
   barbarians->economic.gold = 100;
 
-  barbarians->phase_done = TRUE;
+  barbarians->phase_done = true;
 
   /* Do the ai */
   set_as_ai(barbarians);
@@ -179,7 +179,7 @@ struct player *create_barbarian_player(enum barbarian_type type)
   set_ai_level_directer(barbarians, ai_level(game.info.skill_level));
 
   presearch = research_get(barbarians);
-  init_tech(presearch, TRUE);
+  init_tech(presearch, true);
   give_initial_techs(presearch, 0);
 
   /* Ensure that we are at war with everyone else */
@@ -221,9 +221,9 @@ static void init_dir_checked_status(bool *checked,
 
   for (dir = 0; dir < 8; dir++) {
     if (terrainc[dir] == tclass) {
-      checked[dir] = FALSE;
+      checked[dir] = false;
     } else {
-      checked[dir] = TRUE;
+      checked[dir] = true;
     }
   }
 }
@@ -263,7 +263,7 @@ bool unleash_barbarians(struct tile *ptile)
   struct player *barbarians;
   int unit_cnt;
   int i;
-  bool alive = TRUE; /* explorer survived */
+  bool alive = true; /* explorer survived */
   enum terrain_class terrainc[8];
   struct tile *dir_tiles[8];
   int land_tiles = 0;
@@ -271,7 +271,7 @@ bool unleash_barbarians(struct tile *ptile)
   bool checked[8];
   int checked_count;
   int dir;
-  bool barbarian_stays = FALSE;
+  bool barbarian_stays = false;
 
   /* FIXME: When there is no L_BARBARIAN unit,
    *        but L_BARBARIAN_TECH is already available,
@@ -285,16 +285,16 @@ bool unleash_barbarians(struct tile *ptile)
       wipe_unit(punit, ULR_BARB_UNLEASH, NULL);
     }
     unit_list_iterate_safe_end;
-    return FALSE;
+    return false;
   }
 
   barbarians = create_barbarian_player(LAND_BARBARIAN);
   if (!barbarians) {
-    return FALSE;
+    return false;
   }
 
-  adv_data_phase_init(barbarians, TRUE);
-  CALL_PLR_AI_FUNC(phase_begin, barbarians, barbarians, TRUE);
+  adv_data_phase_init(barbarians, true);
+  CALL_PLR_AI_FUNC(phase_begin, barbarians, barbarians, true);
 
   unit_cnt = 3 + fc_rand(4);
   for (i = 0; i < unit_cnt; i++) {
@@ -337,7 +337,7 @@ bool unleash_barbarians(struct tile *ptile)
     unit_list_iterate_safe((ptile)->units, punit2)
     {
       if (unit_owner(punit2) == barbarians) {
-        bool dest_found = FALSE;
+        bool dest_found = false;
 
         /* Initialize checked status for checking free land tiles */
         init_dir_checked_status(checked, terrainc, TC_LAND);
@@ -349,19 +349,19 @@ bool unleash_barbarians(struct tile *ptile)
                                                 checked);
 
           if (unit_can_move_to_tile(&(wld.map), punit2, dir_tiles[rdir],
-                                    TRUE, FALSE)) {
+                                    true, false)) {
             /* Move */
-            (void) unit_move_handling(punit2, dir_tiles[rdir], TRUE, TRUE);
+            (void) unit_move_handling(punit2, dir_tiles[rdir], true, true);
             log_debug("Moved barbarian unit from (%d, %d) to (%d, %d)",
                       TILE_XY(ptile), TILE_XY(dir_tiles[rdir]));
-            dest_found = TRUE;
+            dest_found = true;
           }
 
-          checked[rdir] = TRUE;
+          checked[rdir] = true;
         }
         if (!dest_found) {
           /* This barbarian failed to move out of hut tile. */
-          barbarian_stays = TRUE;
+          barbarian_stays = true;
         }
       }
     }
@@ -388,7 +388,7 @@ bool unleash_barbarians(struct tile *ptile)
               create_unit(barbarians, dir_tiles[rdir], candidate, 0, 0, -1);
         }
 
-        checked[rdir] = TRUE;
+        checked[rdir] = true;
       }
 
       if (boat) {
@@ -411,7 +411,7 @@ bool unleash_barbarians(struct tile *ptile)
       unit_list_iterate_safe((ptile)->units, punit2)
       {
         if (unit_owner(punit2) == barbarians) {
-          bool dest_found = FALSE;
+          bool dest_found = false;
 
           /* Initialize checked status for checking Land tiles */
           init_dir_checked_status(checked, terrainc, TC_LAND);
@@ -425,24 +425,24 @@ bool unleash_barbarians(struct tile *ptile)
                                               checked);
 
             if (unit_can_move_to_tile(&(wld.map), punit2, dir_tiles[rdir],
-                                      TRUE, FALSE)) {
+                                      true, false)) {
               /* Move */
-              (void) unit_move_handling(punit2, dir_tiles[rdir], TRUE, TRUE);
-              dest_found = TRUE;
+              (void) unit_move_handling(punit2, dir_tiles[rdir], true, true);
+              dest_found = true;
             }
 
-            checked[rdir] = TRUE;
+            checked[rdir] = true;
           }
           if (!dest_found) {
             /* This barbarian failed to move out of hut tile. */
-            barbarian_stays = TRUE;
+            barbarian_stays = true;
           }
         }
       }
       unit_list_iterate_safe_end;
     } else {
       /* The village is surrounded! Barbarians cannot leave. */
-      barbarian_stays = TRUE;
+      barbarian_stays = true;
     }
   }
 
@@ -452,7 +452,7 @@ bool unleash_barbarians(struct tile *ptile)
     {
       if (unit_owner(punit2) != barbarians) {
         wipe_unit(punit2, ULR_BARB_UNLEASH, NULL);
-        alive = FALSE;
+        alive = false;
       } else {
         send_unit_info(NULL, punit2);
       }
@@ -476,12 +476,12 @@ static bool is_near_land(struct tile *tile0)
   square_iterate(&(wld.map), tile0, 4, ptile)
   {
     if (!is_ocean_tile(ptile)) {
-      return TRUE;
+      return true;
     }
   }
   square_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -527,7 +527,7 @@ static void try_summon_barbarians(void)
   struct player *barbarians, *victim;
   struct unit_type *leader_type;
   int barb_count, really_created = 0;
-  bool hut_present = FALSE;
+  bool hut_present = false;
   int city_count;
   int city_max;
 
@@ -542,8 +542,9 @@ static void try_summon_barbarians(void)
     return;
   }
 
-  if (!(pc = find_closest_city(ptile, NULL, NULL, FALSE, FALSE, FALSE, FALSE,
-                               FALSE, NULL))) {
+  pc = find_closest_city(ptile, NULL, NULL, false, false, false, false,
+                         false, NULL);
+  if (!pc) {
     /* any city */
     return;
   }
@@ -581,7 +582,7 @@ static void try_summon_barbarians(void)
   {
     if (tile_has_extra(utile, pextra)) {
       tile_extra_rm_apply(utile, pextra);
-      hut_present = TRUE;
+      hut_present = true;
     }
   }
   extra_type_by_rmcause_iterate_end;
@@ -644,9 +645,9 @@ static void try_summon_barbarians(void)
        of both opening and closing the data phase. Return value of
        adv_data_phase_init() tells us if data phase was already initialized
        at turn beginning. */
-    miniphase = adv_data_phase_init(barbarians, TRUE);
+    miniphase = adv_data_phase_init(barbarians, true);
     if (miniphase) {
-      CALL_PLR_AI_FUNC(phase_begin, barbarians, barbarians, TRUE);
+      CALL_PLR_AI_FUNC(phase_begin, barbarians, barbarians, true);
     }
 
     boat = find_a_unit_type(L_BARBARIAN_BOAT, unit_role_id(-1));

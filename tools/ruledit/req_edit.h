@@ -32,7 +32,7 @@ class req_edit : public QDialog {
   Q_OBJECT
 
 public:
-  explicit req_edit(ruledit_gui *ui_in, QString target,
+  explicit req_edit(ruledit_gui *ui_in, const QString &target,
                     struct requirement_vector *preqs);
   void refresh();
   void add(const char *msg);

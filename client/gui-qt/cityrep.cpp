@@ -56,21 +56,15 @@ hIcon *hIcon::i()
   return m_instance;
 }
 
-void hIcon::drop()
-{
-  if (m_instance) {
-    delete m_instance;
-    m_instance = nullptr;
-  }
-}
+void hIcon::drop() { NFCN_FREE(m_instance); }
 
 void hIcon::createIcons()
 {
-  hash.insert("prodplus",
+  hash.insert(QStringLiteral("prodplus"),
               fcIcons::instance()->getIcon(QStringLiteral("hprod")));
-  hash.insert("foodplus",
+  hash.insert(QStringLiteral("foodplus"),
               fcIcons::instance()->getIcon(QStringLiteral("hfood")));
-  hash.insert("tradeplus",
+  hash.insert(QStringLiteral("tradeplus"),
               fcIcons::instance()->getIcon(QStringLiteral("htrade")));
 }
 
@@ -198,7 +192,7 @@ QVariant city_item::data(int column, int role) const
     return QVariant();
   }
   spec = city_report_specs + column;
-  QString buf = QString("%1").arg(spec->func(i_city, spec->data));
+  QString buf = QStringLiteral("%1").arg(spec->func(i_city, spec->data));
   return buf.trimmed();
 }
 
@@ -274,8 +268,9 @@ QVariant city_model::headerData(int section, Qt::Orientation orientation,
 
   if (orientation == Qt::Horizontal && section < NUM_CREPORT_COLS) {
     if (role == Qt::DisplayRole) {
-      QString buf = QString("%1\n%2").arg(spec->title1 ? spec->title1 : "",
-                                          spec->title2 ? spec->title2 : "");
+      QString buf =
+          QStringLiteral("%1\n%2").arg(spec->title1 ? spec->title1 : "",
+                                       spec->title2 ? spec->title2 : "");
       QIcon i = hIcon::i()->get(spec->tagname);
       if (!i.isNull()) { // icon exists for that header
         return QString();
@@ -1120,7 +1115,7 @@ void city_widget::gen_production_labels(city_widget::menu_labels what,
 
     str.clear();
     universal_name_translation(&target, buf, sizeof(buf));
-    QString txt = QString("%1 ").arg(buf);
+    QString txt = QStringLiteral("%1 ").arg(buf);
     str = str + txt;
     list.insert(str, cid_encode(target));
   }

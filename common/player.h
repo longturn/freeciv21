@@ -12,25 +12,13 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <QBitArray>
-
-/* utility */
-#include "bitvector.h"
-
 /* common */
 #include "city.h"
-#include "connection.h"
 #include "effects.h"
-#include "fc_types.h"
-#include "multipliers.h"
-#include "nation.h"
-#include "shared.h"
 #include "spaceship.h"
-#include "style.h"
 #include "tech.h"
 #include "traits.h"
-#include "unitlist.h"
-#include "vision.h"
+
 
 #define PLAYER_DEFAULT_TAX_RATE 0
 #define PLAYER_DEFAULT_SCIENCE_RATE 100
@@ -571,7 +559,7 @@ static inline bool player_is_cpuhog(const struct player *pplayer)
    * specific configure option they happened to pass to build this time - or
    * even knowing what configure options somebody else used when building
    * freeciv for them. */
-  return FALSE;
+  return false;
 }
 
 

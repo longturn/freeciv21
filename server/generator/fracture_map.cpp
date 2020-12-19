@@ -331,9 +331,9 @@ void make_fracture_relief(void)
               && (fc_rand(10) < 4));
       /* The following avoids hills and mountains directly along the coast.
        */
-      if (count_terrain_class_near_tile(ptile, TRUE, TRUE, TC_OCEAN) > 0) {
-        choose_mountain = FALSE;
-        choose_hill = FALSE;
+      if (count_terrain_class_near_tile(ptile, true, true, TC_OCEAN) > 0) {
+        choose_mountain = false;
+        choose_hill = false;
       }
       if (choose_mountain) {
         total_mtns++;

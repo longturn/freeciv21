@@ -147,14 +147,14 @@ void fc_srand(RANDOM_TYPE seed)
   rand_state.k = (55 - 24);
   rand_state.x = (55 - 0);
 
-  rand_state.is_init = TRUE;
+  rand_state.is_init = true;
   fc_rand(MAX_UINT32);
 }
 
 /*********************************************************************/ /**
    Mark fc_rand state uninitialized.
  *************************************************************************/
-void fc_rand_uninit(void) { rand_state.is_init = FALSE; }
+void fc_rand_uninit(void) { rand_state.is_init = false; }
 
 /*********************************************************************/ /**
    Return whether the current state has been initialized.
@@ -213,7 +213,7 @@ void test_random1(int n)
 {
   RANDOM_STATE saved_state;
   int i, old_value = 0, new_value;
-  bool didchange, olddidchange = FALSE;
+  bool didchange, olddidchange = false;
   int behaviourchange = 0, behavioursame = 0;
 
   saved_state = fc_rand_state();

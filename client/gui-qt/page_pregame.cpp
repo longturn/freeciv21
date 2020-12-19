@@ -72,9 +72,7 @@ page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
   ui.bstart->setIcon(style()->standardPixmap(QStyle::SP_DialogOkButton));
   connect(ui.bstart, &QAbstractButton::clicked, this,
           &page_pregame::slot_pregame_start);
-  pre_vote = new pregamevote;
-  // down_layout->addWidget(pre_vote, 4, 0, 1, 4);
-  pre_vote->hide();
+  ui.pre_vote->hide();
   chat_listener::listen();
   setLayout(ui.gridLayout);
 }
@@ -86,6 +84,10 @@ void page_pregame::set_rulesets(int num_rulesets, char **rulesets)
   ui.pr_options->set_rulesets(num_rulesets, rulesets);
 }
 
+void page_pregame::update_vote()
+{
+  ui.pre_vote->update_vote();
+}
 /**********************************************************************/ /**
    Updates start page (start page = client connected to server, but game not
    started)
@@ -184,8 +186,8 @@ void page_pregame::update_start_page()
             item->setIcon(
                 col, fcIcons::instance()->getIcon(QStringLiteral("ai")));
           } else {
-            item->setIcon(col, fcIcons::instance()->getIcon(
-                                   QStringLiteral("human")));
+            item->setIcon(
+                col, fcIcons::instance()->getIcon(QStringLiteral("human")));
           }
 
           item->setText(col, str);
@@ -431,7 +433,7 @@ void page_pregame::start_page_menu(QPoint pos)
     return;
   }
 
-  for (auto item : sel_items) {
+  for (auto item : qAsConst(sel_items)) {
     qvar = item->data(0, Qt::UserRole);
     qvar2 = item->data(1, Qt::UserRole);
 
@@ -520,7 +522,7 @@ void page_pregame::start_page_menu(QPoint pos)
                   new QAction(QString(level_name), ui.start_players_tree);
               QObject::connect(action, &QAction::triggered,
                                [this, spl, level_cmd]() {
-                                 for (auto sp : spl) {
+                                 for (const auto &sp : spl) {
                                    QString str;
                                    str = "/" + QString(level_cmd) + " " + sp;
                                    send_fake_chat_message(str);
@@ -554,7 +556,7 @@ void page_pregame::start_page_menu(QPoint pos)
           action = new QAction(str, ui.start_players_tree);
           QObject::connect(
               action, &QAction::triggered, [this, spl, tslot]() {
-                for (auto sp : spl) {
+                for (const auto &sp : spl) {
                   QString str = "/team" + sp + " \""
                                 + QString(team_slot_rule_name(tslot)) + "\"";
                   send_fake_chat_message(str);
@@ -570,7 +572,7 @@ void page_pregame::start_page_menu(QPoint pos)
         str = QString(_("Aitoggle player"));
         action = new QAction(str, ui.start_players_tree);
         QObject::connect(action, &QAction::triggered, [this, spl]() {
-          for (auto sp : spl) {
+          for (const auto &sp : spl) {
             QString str = "/aitoggle " + sp;
             send_fake_chat_message(str);
           }
@@ -635,7 +637,7 @@ void page_pregame::slot_pregame_start()
     dsend_packet_player_ready(&client.conn, player_number(client_player()),
                               !client_player()->is_ready);
   } else {
-    dsend_packet_player_ready(&client.conn, 0, TRUE);
+    dsend_packet_player_ready(&client.conn, 0, true);
   }
 }
 

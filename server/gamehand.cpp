@@ -24,7 +24,6 @@
 #include "rand.h"
 #include "registry.h"
 #include "shared.h"
-#include "string_vector.h"
 #include "support.h"
 
 /* common */
@@ -34,6 +33,7 @@
 #include "game.h"
 #include "improvement.h"
 #include "movement.h"
+#include "nation.h"
 #include "packets.h"
 
 /* server */
@@ -118,7 +118,7 @@ struct unit_type *crole_to_unit_type(char crole, struct player *pplayer)
   enum unit_role_id role = crole_to_role_id(crole);
 
   if (role == 0) {
-    fc_assert_ret_val(FALSE, NULL);
+    fc_assert_ret_val(false, NULL);
     return NULL;
   }
 
@@ -146,7 +146,7 @@ static struct tile *place_starting_unit(struct tile *starttile,
 {
   struct tile *ptile = NULL;
   struct unit_type *utype;
-  bool hut_present = FALSE;
+  bool hut_present = false;
 
   if (ptype != NULL) {
     utype = ptype;
@@ -183,7 +183,7 @@ static struct tile *place_starting_unit(struct tile *starttile,
   {
     if (tile_has_extra(ptile, pextra)) {
       tile_extra_rm_apply(ptile, pextra);
-      hut_present = TRUE;
+      hut_present = true;
     }
   }
   extra_type_by_rmcause_iterate_end;
@@ -196,7 +196,7 @@ static struct tile *place_starting_unit(struct tile *starttile,
   /* Expose visible area. */
   map_show_circle(pplayer, ptile, game.server.init_vis_radius_sq);
 
-  (void) create_unit(pplayer, ptile, utype, FALSE, 0, 0);
+  (void) create_unit(pplayer, ptile, utype, false, 0, 0);
   return ptile;
 }
 
@@ -321,14 +321,14 @@ static void do_team_placement(const struct team_placement_config *pconfig,
   pstate->score = pbest_state->score;
 
   do {
-    repeat = FALSE;
+    repeat = false;
     for (i = 0; i < pconfig->usable_startpos_num; i++) {
       t1 = pstate->startpos[i];
       if (t1 == -1) {
         continue; /* Not used. */
       }
       ptile1 = pconfig->startpos[i];
-      base_delta_calculated = FALSE;
+      base_delta_calculated = false;
       for (j = i + 1; j < (i >= pconfig->flexible_startpos_num
                                ? pconfig->usable_startpos_num
                                : pconfig->flexible_startpos_num);
@@ -354,7 +354,7 @@ static void do_team_placement(const struct team_placement_config *pconfig,
               }
             }
             delta += base_delta;
-            base_delta_calculated = TRUE;
+            base_delta_calculated = true;
           }
         } else if (t1 < t2) {
           ptile2 = pconfig->startpos[j];
@@ -381,14 +381,14 @@ static void do_team_placement(const struct team_placement_config *pconfig,
               }
             }
             delta += base_delta;
-            base_delta_calculated = TRUE;
+            base_delta_calculated = true;
           }
         } else {
           continue;
         }
 
         if (delta <= 0) {
-          repeat = TRUE;
+          repeat = true;
           auto pnew = new team_placement_state;
           pnew->startpos = new int[pconfig->total_startpos_num];
           memcpy(pnew->startpos, pstate->startpos, state_array_size);
@@ -447,9 +447,9 @@ void init_new_game(void)
   targeted_list = startpos_list_new();
   flexible_list = startpos_list_new();
 
-  for (auto psp : *wld.map.startpos_table)
-  {
-    if (psp->exclude) continue;
+  for (auto psp : *wld.map.startpos_table) {
+    if (psp->exclude)
+      continue;
     if (startpos_allows_all(psp)) {
       startpos_list_append(flexible_list, psp);
     } else {
@@ -473,7 +473,7 @@ void init_new_game(void)
     do {
       struct nation_type *pnation;
       struct startpos_list_link *choice;
-      bool removed = FALSE;
+      bool removed = false;
 
       /* Assign first players which can pick only one start position. */
       players_iterate(pplayer)
@@ -507,7 +507,7 @@ void init_new_game(void)
           player_startpos[player_index(pplayer)] = ptile;
           startpos_list_erase(targeted_list, choice);
           players_to_place--;
-          removed = TRUE;
+          removed = true;
           qDebug("Start position (%d, %d) exactly matches player %s (%s).",
                  TILE_XY(ptile), player_name(pplayer),
                  nation_rule_name(pnation));
@@ -801,8 +801,8 @@ void init_new_game(void)
 
     /* We have to initialise the advisor and ai here as we could make contact
      * to other nations at this point. */
-    adv_data_phase_init(pplayer, FALSE);
-    CALL_PLR_AI_FUNC(phase_begin, pplayer, pplayer, FALSE);
+    adv_data_phase_init(pplayer, false);
+    CALL_PLR_AI_FUNC(phase_begin, pplayer, pplayer, false);
 
     ptile = player_startpos[player_index(pplayer)];
 
@@ -1115,14 +1115,13 @@ const char *new_challenge_filename(struct connection *pc)
  ****************************************************************************/
 static void send_ruleset_choices(struct connection *pc)
 {
-  struct strvec *ruleset_choices;
+  QVector<QString> *ruleset_choices;
   struct packet_ruleset_choices packet;
   size_t i = 0;
 
   ruleset_choices = get_init_script_choices();
 
-  strvec_iterate(ruleset_choices, s)
-  {
+  for (const auto &s : *ruleset_choices) {
     const int maxlen = sizeof packet.rulesets[i];
     if (i >= MAX_NUM_RULESETS) {
       qDebug("Can't send more than %d ruleset names to client, "
@@ -1130,18 +1129,18 @@ static void send_ruleset_choices(struct connection *pc)
              MAX_NUM_RULESETS);
       break;
     }
-    if (fc_strlcpy(packet.rulesets[i], s, maxlen) < maxlen) {
+    if (fc_strlcpy(packet.rulesets[i], qUtf8Printable(s), maxlen) < maxlen) {
       i++;
     } else {
-      qDebug("Ruleset name '%s' too long to send to client, skipped", s);
+      qDebug("Ruleset name '%s' too long to send to client, skipped",
+             qUtf8Printable(s));
     }
   }
-  strvec_iterate_end;
   packet.ruleset_count = i;
 
   send_packet_ruleset_choices(pc, &packet);
 
-  strvec_destroy(ruleset_choices);
+  delete ruleset_choices;
 }
 
 /************************************************************************/ /**
@@ -1153,9 +1152,9 @@ void handle_single_want_hack_req(
 {
   struct section_file *secfile;
   const char *token = NULL;
-  bool you_have_hack = FALSE;
+  bool you_have_hack = false;
 
-  if ((secfile = secfile_load(get_challenge_fullname(pc), FALSE))) {
+  if ((secfile = secfile_load(get_challenge_fullname(pc), false))) {
     token = secfile_lookup_str(secfile, "challenge.token");
     you_have_hack = (token && strcmp(token, packet->token) == 0);
     secfile_destroy(secfile);
@@ -1169,7 +1168,7 @@ void handle_single_want_hack_req(
   }
 
   if (you_have_hack) {
-    conn_set_access(pc, ALLOW_HACK, TRUE);
+    conn_set_access(pc, ALLOW_HACK, true);
   }
 
   dsend_packet_single_want_hack_reply(pc, you_have_hack);

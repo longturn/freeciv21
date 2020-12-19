@@ -368,7 +368,7 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
       continue;
     }
     nodes[tech] = new_tree_node();
-    nodes[tech]->is_dummy = FALSE;
+    nodes[tech]->is_dummy = false;
     nodes[tech]->tech = tech;
   }
   advance_index_iterate_end;
@@ -531,7 +531,7 @@ static struct reqtree *add_dummy_nodes(struct reqtree *tree)
   /* copy normal nodes */
   for (i = 0; i < tree->num_nodes; i++) {
     new_tree->nodes[i] = new_tree_node();
-    new_tree->nodes[i]->is_dummy = FALSE;
+    new_tree->nodes[i]->is_dummy = false;
     new_tree->nodes[i]->tech = tree->nodes[i]->tech;
     new_tree->nodes[i]->layer = tree->nodes[i]->layer;
     tree->nodes[i]->number = i;
@@ -540,7 +540,7 @@ static struct reqtree *add_dummy_nodes(struct reqtree *tree)
   /* allocate dummy nodes */
   for (i = 0; i < num_dummy_nodes; i++) {
     new_tree->nodes[i + tree->num_nodes] = new_tree_node();
-    new_tree->nodes[i + tree->num_nodes]->is_dummy = TRUE;
+    new_tree->nodes[i + tree->num_nodes]->is_dummy = true;
   }
   /* k points to the first unused dummy node */
   k = tree->num_nodes;
@@ -844,7 +844,7 @@ static QColor* node_color(struct tree_node *node)
       return get_diag_color(30);
     }
 
-    if (!research_invention_gettable(research, node->tech, TRUE)) {
+    if (!research_invention_gettable(research, node->tech, true)) {
       if (research_goal_tech_req(research, research->tech_goal, node->tech)
           || node->tech == research->tech_goal) {
         return get_diag_color(7);
@@ -864,12 +864,7 @@ static QColor* node_color(struct tree_node *node)
 
     if (research_goal_tech_req(research, research->tech_goal, node->tech)
         || node->tech == research->tech_goal) {
-      if (TECH_PREREQS_KNOWN
-          == research_invention_state(research, node->tech)) {
-        return get_diag_color(7); // first tech in queue
-      } else {
-        return get_diag_color(7); // rest techs in queue
-      }
+        return get_diag_color(7);
     }
 
     if (TECH_PREREQS_KNOWN
@@ -1170,8 +1165,8 @@ bool find_tech_on_reqtree(struct reqtree *tree, Tech_type_id tech, int *x,
       if (h) {
         *h = node->node_height;
       }
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }

@@ -66,14 +66,14 @@ static double sdl_audio_get_volume(void) { return sdl_audio_volume; }
 /**********************************************************************/ /**
    Play sound
  **************************************************************************/
-static bool sdl_audio_play(const char *const tag, const char *const fullpath,
+static bool sdl_audio_play(const QString &tag, const QString &fullpath,
                            bool repeat, audio_finished_callback cb)
 {
   int i, j;
   Mix_Chunk *wave = NULL;
 
-  if (!fullpath) {
-    return FALSE;
+  if (fullpath.isEmpty()) {
+    return false;
   }
 
   if (repeat) {
@@ -82,9 +82,9 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
     Mix_FreeMusic(mus);
 
     /* load music file */
-    mus = Mix_LoadMUS(fullpath);
+    mus = Mix_LoadMUS(qUtf8Printable(fullpath));
     if (mus == NULL) {
-      qCritical("Can't open file \"%s\"", fullpath);
+      qCritical("Can't open file \"%s\"", qUtf8Printable(fullpath));
     }
 
     if (cb == NULL) {
@@ -93,7 +93,7 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
       Mix_PlayMusic(mus, 0);
       Mix_HookMusicFinished(cb);
     }
-    qDebug("Playing file \"%s\" on music channel", fullpath);
+    qDebug("Playing file \"%s\" on music channel", qUtf8Printable(fullpath));
     /* in case we did a sdl_audio_stop() recently; add volume controls later
      */
     Mix_VolumeMusic(sdl_audio_volume * MIX_MAX_VOLUME);
@@ -101,28 +101,29 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
   } else {
     /* see if we can cache on this one */
     for (j = 0; j < MIX_CHANNELS; j++) {
-      if (samples[j].tag && (strcmp(samples[j].tag, tag) == 0)) {
-        log_debug("Playing file \"%s\" from cache (slot %d)", fullpath, j);
+      if (samples[j].tag && samples[j].tag == qUtf8Printable(tag)) {
+        log_debug("Playing file \"%s\" from cache (slot %d)",
+                  qUtf8Printable(fullpath), j);
         Mix_PlayChannel(-1, samples[j].wave, 0);
-        return TRUE;
+        return true;
       }
     } /* guess not */
 
     /* load wave */
-    wave = Mix_LoadWAV(fullpath);
+    wave = Mix_LoadWAV(qUtf8Printable(fullpath));
     if (wave == NULL) {
-      qCritical("Can't open file \"%s\"", fullpath);
+      qCritical("Can't open file \"%s\"", qUtf8Printable(fullpath));
     }
 
     /* play sound sample on first available channel, returns -1 if no
        channel found */
     i = Mix_PlayChannel(-1, wave, 0);
     if (i < 0) {
-      qDebug("No available sound channel to play %s.", tag);
+      qDebug("No available sound channel to play %s.", qUtf8Printable(tag));
       Mix_FreeChunk(wave);
-      return FALSE;
+      return false;
     }
-    qDebug("Playing file \"%s\" on channel %d", fullpath, i);
+    qDebug("Playing file \"%s\" on channel %d", qUtf8Printable(fullpath), i);
     /* free previous sample on this channel. it will by definition no
        longer be playing by the time we get here */
     if (samples[i].wave) {
@@ -131,9 +132,9 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
     }
     /* remember for cacheing */
     samples[i].wave = wave;
-    samples[i].tag = tag;
+    samples[i].tag = qUtf8Printable(tag);
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -222,7 +223,7 @@ static bool sdl_audio_init(void)
   int i;
 
   if (init_sdl_audio() < 0) {
-    return FALSE;
+    return false;
   }
 
   if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, buf_size)
@@ -230,7 +231,7 @@ static bool sdl_audio_init(void)
     qCritical("Error calling Mix_OpenAudio");
     /* try something else */
     quit_sdl_audio();
-    return FALSE;
+    return false;
   }
 
   Mix_AllocateChannels(MIX_CHANNELS);
@@ -239,7 +240,7 @@ static bool sdl_audio_init(void)
   }
   /* sanity check, for now; add volume controls later */
   sdl_audio_set_volume(sdl_audio_volume);
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -250,8 +251,8 @@ void audio_sdl_init(void)
 {
   struct audio_plugin self;
 
-  sz_strlcpy(self.name, "sdl");
-  sz_strlcpy(self.descr, "Simple DirectMedia Library (SDL) mixer plugin");
+  self.name = "sdl";
+  self.descr = "Simple DirectMedia Library (SDL) mixer plugin";
   self.init = sdl_audio_init;
   self.shutdown = sdl_audio_shutdown;
   self.stop = sdl_audio_stop;

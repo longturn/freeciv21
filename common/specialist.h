@@ -12,7 +12,6 @@
 
 #pragma once
 
-
 /* utility */
 #include "shared.h"
 
@@ -32,7 +31,7 @@ struct specialist {
 
   struct requirement_vector reqs;
 
-  struct strvec *helptext;
+  QVector<QString> *helptext;
 };
 
 #define DEFAULT_SPECIALIST default_specialist
@@ -85,5 +84,3 @@ void specialists_free(void);
   }                                                                         \
   }                                                                         \
   specialist_type_iterate_end;
-
-

@@ -19,8 +19,8 @@ void luascript_func_init(struct fc_lua *fcl);
 void luascript_func_free(struct fc_lua *fcl);
 
 bool luascript_func_check(struct fc_lua *fcl,
-                          struct strvec *missing_func_required,
-                          struct strvec *missing_func_optional);
+                          QVector<QString> *missing_func_required,
+                          QVector<QString> *missing_func_optional);
 void luascript_func_add_valist(struct fc_lua *fcl, const char *func_name,
                                bool required, int nargs, int nreturns,
                                va_list args);

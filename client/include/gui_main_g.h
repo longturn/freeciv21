@@ -40,13 +40,11 @@ GUI_FUNC_PROTO(void, add_idle_callback, void(callback)(void *), void *data)
 GUI_FUNC_PROTO(enum gui_type, get_gui_type, void)
 GUI_FUNC_PROTO(void, insert_client_build_info, char *outbuf, size_t outlen)
 
-GUI_FUNC_PROTO(void, gui_update_font, const char *font_name,
-               const char *font_value)
+GUI_FUNC_PROTO(void, gui_update_font, const QString &font_name,
+               const QString &font_value)
 
 extern const char *client_string;
 
 /* Actually defined in update_queue.c */
 void gui_update_allfonts();
 void conn_list_dialog_update(void);
-
-

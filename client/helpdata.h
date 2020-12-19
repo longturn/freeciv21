@@ -12,11 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <stddef.h> /* size_t */
-
-/* common */
-#include "improvement.h" /* Impr_type_id */
-
 #include "helpdlg_g.h" /* enum help_page_type */
 
 struct help_item {

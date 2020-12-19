@@ -573,7 +573,7 @@ bool fc_ai_tex_setup(struct ai_type *ai)
   if (!has_thread_cond_impl()) {
     qCritical(_("This Freeciv compilation has no full threads "
                 "implementation, tex ai cannot be used."));
-    return FALSE;
+    return false;
   }
 
   qstrncpy(ai->name, "tex", sizeof(ai->name));
@@ -582,7 +582,7 @@ private
   = fc_malloc(sizeof(struct dai_private_data));
 private
   ->contemplace_workers =
-      FALSE; /* We use custom code to set worker want and type */
+      false; /* We use custom code to set worker want and type */
   ai->private = private;
 
   texai_init_self(ai);
@@ -668,5 +668,5 @@ private
   ai->funcs.city_info = texai_city_changed;
   ai->funcs.unit_info = texai_unit_changed;
 
-  return TRUE;
+  return true;
 }

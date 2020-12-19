@@ -64,7 +64,7 @@
 
 /* utility */
 #include "fcintl.h"
-#include "log.h" /* fc_assert */
+#include "log.h"     /* fc_assert */
 #include "support.h" /* fc_vsnprintf, fc_strlcat */
 
 #include "astring.h"
@@ -354,5 +354,50 @@ void astr_copy(struct astring *dest, const struct astring *src)
     astr_clear(dest);
   } else {
     astr_set(dest, "%s", src->str);
+  }
+}
+
+QString strvec_to_or_list(const QVector<QString> &psv)
+{
+  if (psv.size() == 1) {
+    /* TRANS: "or"-separated string list with one single item. */
+    return QString(Q_("?or-list-single:%1")).arg(psv[0]);
+  } else if (psv.size() == 2) {
+    /* TRANS: "or"-separated string list with 2 items. */
+    return QString(Q_("?or-list:%1 or %2")).arg(psv[0], psv[1]);
+  } else {
+    /* TRANS: start of an "or"-separated string list with more than two
+     * items. */
+    auto result = QString(Q_("?or-list:%1")).arg(psv[0]);
+    for (int i = 1; i < psv.size() - 1; ++i) {
+      /* TRANS: next elements of an "or"-separated string list with more
+       * than two items. */
+      result += QString(Q_("?or-list:, %1")).arg(psv[i]);
+    }
+    /* TRANS: end of an "or"-separated string list with more than two
+     * items. */
+    return result + QString(Q_("?or-list:, or %1")).arg(psv.back());
+  }
+}
+
+QString strvec_to_and_list(const QVector<QString> &psv)
+{
+  if (psv.size() == 1) {
+    // TRANS: "and"-separated string list with one single item.
+    return QString(Q_("?and-list-single:%1")).arg(psv[0]);
+  } else if (psv.size() == 2) {
+    // TRANS: "and"-separated string list with 2 items.
+    return QString(Q_("?and-list:%1 and %2")).arg(psv[0], psv[1]);
+  } else {
+    // TRANS: start of an "and"-separated string list with more than two
+    // items.
+    auto result = QString(Q_("?and-list:%1")).arg(psv[0]);
+    for (int i = 1; i < psv.size() - 1; ++i) {
+      // TRANS: next elements of an "and"-separated string list with more
+      // than two items.
+      result += QString(Q_("?and-list:, %1")).arg(psv[i]);
+    }
+    // TRANS: end of an "and"-separated string list with more than two items.
+    return result + QString(Q_("?and-list:, and %1")).arg(psv.back());
   }
 }

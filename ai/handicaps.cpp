@@ -66,7 +66,7 @@ void handicaps_set(struct player *pplayer, bv_handicap handicaps)
 bool has_handicap(const struct player *pplayer, enum handicap_type htype)
 {
   if (is_human(pplayer)) {
-    return TRUE;
+    return true;
   }
 
   return BV_ISSET(*((bv_handicap *) pplayer->ai_common.handicaps), htype);
@@ -79,7 +79,7 @@ bool has_handicap(const struct player *pplayer, enum handicap_type htype)
  **************************************************************************/
 const char *handicap_desc(enum handicap_type htype, bool *inverted)
 {
-  *inverted = FALSE;
+  *inverted = false;
   switch (htype) {
   case H_DIPLOMAT:
     return _("Doesn't build offensive diplomatic units.");
@@ -94,27 +94,27 @@ const char *handicap_desc(enum handicap_type htype, bool *inverted)
     return _("THIS IS ONLY FOR TESTING OF NEW AI FEATURES! For ordinary "
              "servers, this level is no different to 'Hard'.");
   case H_RATES:
-    *inverted = TRUE;
+    *inverted = true;
     return _("Has no restrictions on tax rates.");
   case H_TARGETS:
-    *inverted = TRUE;
+    *inverted = true;
     return _(
         "Can target units and cities in unseen or unexplored territory.");
   case H_HUTS:
-    *inverted = TRUE;
+    *inverted = true;
     return _("Knows the location of huts in unexplored territory.");
   case H_FOG:
-    *inverted = TRUE;
+    *inverted = true;
     return _("Can see through fog of war.");
   case H_NOPLANES:
     return _("Doesn't build air units.");
   case H_MAP:
-    *inverted = TRUE;
+    *inverted = true;
     return _("Has complete map knowledge, including unexplored territory.");
   case H_DIPLOMACY:
     return _("Naive at diplomacy.");
   case H_REVOLUTION:
-    *inverted = TRUE;
+    *inverted = true;
     return _("Can skip anarchy during revolution.");
   case H_EXPANSION:
     return _("Limits growth to match human players.");
@@ -125,7 +125,7 @@ const char *handicap_desc(enum handicap_type htype, bool *inverted)
   case H_NOBRIBE_WF:
     return _("Doesn't bribe worker or city founder units.");
   case H_PRODCHGPEN:
-    *inverted = TRUE;
+    *inverted = true;
     return _("Can change city production type without penalty.");
 #ifdef FREECIV_WEB
   case H_ASSESS_DANGER_LIMITED:
@@ -136,6 +136,6 @@ const char *handicap_desc(enum handicap_type htype, bool *inverted)
   }
 
   /* Should never reach here */
-  fc_assert(FALSE);
+  fc_assert(false);
   return nullptr;
 }

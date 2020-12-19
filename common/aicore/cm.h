@@ -7,23 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
 #pragma once
-
-/*
- * The purpose of this module is to manage the citizens of a city. The
- * caller has to provide a goal (struct cm_parameter) which determines
- * in which way the citizens are allocated and placed. The module will
- * also avoid disorder.
- *
- * The plan defines a minimal surplus. The module will try to get the
- * required surplus. If there are citizens free after allocation of
- * the minimal surplus these citizens will get arranged to maximize
- * the weighted sum over the surplus of each type.
- */
-
-/* utility */
-#include "support.h" /* bool type */
 
 /* common */
 #include "city.h" /* CITY_MAP_MAX_SIZE */

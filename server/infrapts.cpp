@@ -77,5 +77,5 @@ void handle_player_place_infra(struct player *pplayer, int tile, int extra)
 
   /* update_tile_knowledge() would not know to send the tile
    * when only placing has changed, so send it explicitly. */
-  send_tile_info(pplayer->connections, ptile, FALSE);
+  send_tile_info(pplayer->connections, ptile, false);
 }

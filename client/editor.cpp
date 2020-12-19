@@ -311,7 +311,7 @@ bool editor_tool_has_mode(enum editor_tool_type ett,
 {
   if (editor == NULL || !(ett < NUM_EDITOR_TOOL_TYPES)
       || !(etm < NUM_EDITOR_TOOL_MODES)) {
-    return FALSE;
+    return false;
   }
 
   if (etm == ETM_COPY || etm == ETM_PASTE) {
@@ -322,7 +322,7 @@ bool editor_tool_has_mode(enum editor_tool_type ett,
     return etm == ETM_COPY || etm == ETM_PASTE;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -352,7 +352,7 @@ bool editor_is_active(void) { return can_conn_edit(&client.conn); }
 bool editor_tool_is_usable(enum editor_tool_type ett)
 {
   if (!editor || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return FALSE;
+    return false;
   }
 
   switch (ett) {
@@ -368,7 +368,7 @@ bool editor_tool_is_usable(enum editor_tool_type ett)
     break;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -378,7 +378,7 @@ bool editor_tool_is_usable(enum editor_tool_type ett)
 bool editor_tool_has_value(enum editor_tool_type ett)
 {
   if (!editor || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return FALSE;
+    return false;
   }
   return editor->tools[ett].flags & ETF_HAS_VALUE;
 }
@@ -428,7 +428,7 @@ static void editor_start_selection_rectangle(int canvas_x, int canvas_y)
   editor->selrect_start_y = canvas_y;
   editor->selrect_width = 0;
   editor->selrect_height = 0;
-  editor->selrect_active = TRUE;
+  editor->selrect_active = true;
 }
 
 /************************************************************************/ /**
@@ -439,18 +439,18 @@ static void editor_start_selection_rectangle(int canvas_x, int canvas_y)
 static inline bool tile_really_has_any_specials(const struct tile *ptile)
 {
   if (!ptile) {
-    return FALSE;
+    return false;
   }
 
   extra_type_by_cause_iterate(static_cast<extra_cause>(EC_SPECIAL), pextra)
   {
     if (tile_has_extra(ptile, pextra)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -684,8 +684,8 @@ void editor_mouse_button_press(int canvas_x, int canvas_y, int button,
     } else if (modifiers == EKM_CTRL) {
       editor_grab_applied_player(ptile);
     } else if (modifiers == EKM_NONE) {
-      editor->tool_active = TRUE;
-      editor_apply_tool(ptile, FALSE);
+      editor->tool_active = true;
+      editor_apply_tool(ptile, false);
       editor_notify_edit_finished();
       editor_set_current_tile(ptile);
     }
@@ -731,7 +731,7 @@ static void editor_end_selection_rectangle(int canvas_x, int canvas_y)
     return;
   }
 
-  editor->selrect_active = FALSE;
+  editor->selrect_active = false;
 
   if (editor->selrect_width <= 0 || editor->selrect_height <= 0) {
     struct tile *ptile;
@@ -747,7 +747,7 @@ static void editor_end_selection_rectangle(int canvas_x, int canvas_y)
     }
 
     if (ptile) {
-      refresh_tile_mapcanvas(ptile, TRUE, TRUE);
+      refresh_tile_mapcanvas(ptile, true, true);
     }
 
     return;
@@ -804,7 +804,7 @@ void editor_mouse_button_release(int canvas_x, int canvas_y, int button,
   switch (button) {
   case MOUSE_BUTTON_LEFT:
     editor_set_current_tile(NULL);
-    editor->tool_active = FALSE;
+    editor->tool_active = false;
     break;
 
   case MOUSE_BUTTON_RIGHT:
@@ -882,7 +882,7 @@ void editor_mouse_move(int canvas_x, int canvas_y, int modifiers)
   }
 
   if (editor->tool_active && old != NULL && old != ptile) {
-    editor_apply_tool(ptile, FALSE);
+    editor_apply_tool(ptile, false);
     editor_notify_edit_finished();
     editor_set_current_tile(ptile);
   }
@@ -1058,7 +1058,7 @@ void editor_tool_toggle_mode(enum editor_tool_type ett,
 void editor_tool_cycle_mode(enum editor_tool_type ett)
 {
   int mode, count;
-  bool found = FALSE;
+  bool found = false;
 
   mode = editor_tool_get_mode(ett);
   if (!(0 <= mode && mode < NUM_EDITOR_TOOL_MODES)) {
@@ -1068,7 +1068,7 @@ void editor_tool_cycle_mode(enum editor_tool_type ett)
   for (count = 0; count < NUM_EDITOR_TOOL_MODES; count++) {
     mode = (mode + 1) % NUM_EDITOR_TOOL_MODES;
     if (editor_tool_has_mode(ett, static_cast<editor_tool_mode>(mode))) {
-      found = TRUE;
+      found = true;
       break;
     }
   }
@@ -1117,7 +1117,7 @@ void editor_selection_remove(const struct tile *ptile)
 bool editor_tile_is_selected(const struct tile *ptile)
 {
   if (!editor || !ptile) {
-    return FALSE;
+    return false;
   }
   return editor->selected_tile_table->contains(ptile);
 }
@@ -1143,7 +1143,7 @@ void editor_apply_tool_to_selection(void)
 
   connection_do_buffer(&client.conn);
   for (auto ptile : *editor->selected_tile_table) {
-    editor_apply_tool(ptile, TRUE);
+    editor_apply_tool(ptile, true);
   }
   editor_notify_edit_finished();
   connection_do_unbuffer(&client.conn);
@@ -1207,7 +1207,7 @@ const char *editor_tool_get_value_name(enum editor_tool_type emt, int value)
 bool editor_tool_has_size(enum editor_tool_type ett)
 {
   if (!editor || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return FALSE;
+    return false;
   }
   return editor->tools[ett].flags & ETF_HAS_SIZE;
 }
@@ -1241,7 +1241,7 @@ void editor_tool_set_size(enum editor_tool_type ett, int size)
 bool editor_tool_has_count(enum editor_tool_type ett)
 {
   if (!editor || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return FALSE;
+    return false;
   }
   return editor->tools[ett].flags & ETF_HAS_COUNT;
 }
@@ -1364,7 +1364,7 @@ void editor_tool_set_applied_player(enum editor_tool_type ett, int player_no)
 bool editor_tool_has_applied_player(enum editor_tool_type ett)
 {
   if (!editor || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return FALSE;
+    return false;
   }
   return editor->tools[ett].flags & ETF_HAS_APPLIED_PLAYER;
 }
@@ -1376,7 +1376,7 @@ bool editor_tool_has_applied_player(enum editor_tool_type ett)
 bool editor_tool_has_value_erase(enum editor_tool_type ett)
 {
   if (!editor || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return FALSE;
+    return false;
   }
   return editor->tools[ett].flags & ETF_HAS_VALUE_ERASE;
 }
@@ -1494,7 +1494,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
 {
   struct tile *vtile;
   struct unit *vunit;
-  bool copied = FALSE;
+  bool copied = false;
 
   if (!ebuf || !ptile) {
     return;
@@ -1509,13 +1509,13 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
     case EBT_TERRAIN:
       if (tile_terrain(ptile)) {
         tile_set_terrain(vtile, tile_terrain(ptile));
-        copied = TRUE;
+        copied = true;
       }
       break;
     case EBT_RESOURCE:
       if (tile_resource(ptile)) {
         tile_set_resource(vtile, tile_resource(ptile));
-        copied = TRUE;
+        copied = true;
       }
       break;
     case EBT_SPECIAL:
@@ -1524,7 +1524,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
       {
         if (tile_has_extra(ptile, pextra)) {
           tile_add_extra(vtile, pextra);
-          copied = TRUE;
+          copied = true;
         }
       }
       extra_type_by_cause_iterate_end;
@@ -1535,7 +1535,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
         if (tile_has_extra(ptile, pextra)
             && is_extra_caused_by(pextra, EC_BASE)) {
           tile_add_extra(vtile, pextra);
-          copied = TRUE;
+          copied = true;
         }
       }
       extra_type_iterate_end;
@@ -1546,7 +1546,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
         if (tile_has_extra(ptile, pextra)
             && is_extra_caused_by(pextra, EC_ROAD)) {
           tile_add_extra(vtile, pextra);
-          copied = TRUE;
+          copied = true;
         }
       }
       extra_type_iterate_end;
@@ -1562,7 +1562,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
         vunit->homecity = punit->homecity;
         vunit->hp = punit->hp;
         unit_list_append(vtile->units, vunit);
-        copied = TRUE;
+        copied = true;
       }
       unit_list_iterate_end;
       break;
@@ -1585,7 +1585,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
         }
         improvement_iterate_end;
         tile_set_worked(vtile, vcity);
-        copied = TRUE;
+        copied = true;
       }
       break;
     default:
@@ -1645,7 +1645,7 @@ static void paste_tile(struct edit_buffer *ebuf, const struct tile *vtile,
   struct packet_edit_tile tile_packet;
   struct city *vcity;
   int value, owner, tile;
-  bool send_edit_tile = FALSE;
+  bool send_edit_tile = false;
 
   if (!ebuf || !vtile || !ptile_dest) {
     return;
@@ -1670,7 +1670,7 @@ static void paste_tile(struct edit_buffer *ebuf, const struct tile *vtile,
       {
         if (tile_has_extra(vtile, pextra)) {
           BV_SET(tile_packet.extras, extra_index(pextra));
-          send_edit_tile = TRUE;
+          send_edit_tile = true;
         }
       }
       extra_type_by_cause_iterate_end;
@@ -1681,7 +1681,7 @@ static void paste_tile(struct edit_buffer *ebuf, const struct tile *vtile,
       {
         if (tile_has_extra(vtile, pextra)) {
           BV_SET(tile_packet.extras, extra_index(pextra));
-          send_edit_tile = TRUE;
+          send_edit_tile = true;
         }
       }
       extra_type_by_cause_iterate_end;
@@ -1692,7 +1692,7 @@ static void paste_tile(struct edit_buffer *ebuf, const struct tile *vtile,
         if (tile_has_extra(vtile, pextra)
             && is_extra_caused_by(pextra, EC_BASE)) {
           BV_SET(tile_packet.extras, extra_index(pextra));
-          send_edit_tile = TRUE;
+          send_edit_tile = true;
         }
       }
       extra_type_iterate_end;
@@ -1703,7 +1703,7 @@ static void paste_tile(struct edit_buffer *ebuf, const struct tile *vtile,
         if (tile_has_extra(vtile, pextra)
             && is_extra_caused_by(pextra, EC_ROAD)) {
           BV_SET(tile_packet.extras, extra_index(pextra));
-          send_edit_tile = TRUE;
+          send_edit_tile = true;
         }
       }
       extra_type_iterate_end;
@@ -1932,7 +1932,7 @@ const struct tile *edit_buffer_get_origin(const struct edit_buffer *ebuf)
 bool edit_buffer_has_type(const struct edit_buffer *ebuf, int type)
 {
   if (!ebuf) {
-    return FALSE;
+    return false;
   }
   return ebuf->type_flags & type;
 }

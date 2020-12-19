@@ -12,15 +12,9 @@
       \____/        ********************************************************/
 #pragma once
 
-
-/* utility */
-#include "bitvector.h"
-
 /* common */
 #include "fc_types.h"
 #include "requirements.h"
-
-struct strvec; /* Actually defined in "utility/string_vector.h". */
 
 /* Used in the network protocol. */
 #define SPECENUM_NAME base_gui_type

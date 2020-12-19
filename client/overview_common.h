@@ -10,15 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-
 #pragma once
-
-
-#include "fc_types.h"
-
-#include "canvas_g.h"
-
-#include "options.h"
 
 /* The overview tile width and height are defined in terms of the base
  * size.  For iso-maps the width is twice the height since "natural"

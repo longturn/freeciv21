@@ -17,7 +17,6 @@
 /* utility */
 #include "fcintl.h"
 #include "log.h"
-#include "string_vector.h"
 
 /* common */
 #include "city.h"
@@ -40,7 +39,7 @@ void specialists_init(void)
     struct specialist *p = &specialists[i];
 
     p->item_number = i;
-    p->ruledit_disabled = FALSE;
+    p->ruledit_disabled = false;
 
     requirement_vector_init(&p->reqs);
   }
@@ -57,10 +56,7 @@ void specialists_free(void)
     struct specialist *p = &specialists[i];
 
     requirement_vector_free(&p->reqs);
-    if (NULL != p->helptext) {
-      strvec_destroy(p->helptext);
-      p->helptext = NULL;
-    }
+    NFCN_FREE(p->helptext);
   }
 }
 

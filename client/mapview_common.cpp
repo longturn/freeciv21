@@ -68,9 +68,9 @@ struct gotoline_counter {
 typedef QHash<const struct tile *, struct gotoline_counter *> gotohash;
 Q_GLOBAL_STATIC(gotohash, mapdeco_gotoline)
 struct view mapview;
-bool can_slide = TRUE;
+bool can_slide = true;
 
-static bool frame_by_frame_animation = FALSE;
+static bool frame_by_frame_animation = false;
 
 struct tile *center_tile = NULL;
 
@@ -189,7 +189,7 @@ static void animation_add(struct animation *anim)
     anim_timer->start();
   }
 
-  anim->finished = FALSE;
+  anim->finished = false;
   anim->old_x = -1; /* Initial frame */
   animation_list_append(animations, anim);
 }
@@ -228,13 +228,13 @@ static bool movement_animation(struct animation *anim, double time_gone)
       if (--anim->movement.mover->refcount <= 0) {
         FC_FREE(anim->movement.mover);
       }
-      return TRUE;
+      return true;
     }
   } else {
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -254,7 +254,7 @@ static bool battle_animation(struct animation *anim, double time_gone)
     unit_virtual_destroy(anim->battle.virt_winner);
     unit_virtual_destroy(anim->battle.virt_loser);
 
-    return TRUE;
+    return true;
   }
 
   time_per_step = timing_sec / anim->battle.steps;
@@ -292,7 +292,7 @@ static bool battle_animation(struct animation *anim, double time_gone)
                tileset_tile_height(tileset));
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -304,7 +304,7 @@ static bool explosion_animation(struct animation *anim, double time_gone)
   double timing_sec;
 
   if (anim->expl.sprite_count <= 0) {
-    return TRUE;
+    return true;
   }
 
   timing_sec = (double) gui_options.smooth_combat_step_msec
@@ -337,10 +337,10 @@ static bool explosion_animation(struct animation *anim, double time_gone)
 
   if (time_gone >= timing_sec) {
     /* Animation over */
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -365,18 +365,18 @@ static bool nuke_animation(struct animation *anim, double time_gone)
     anim->old_x = canvas_x;
     anim->old_y = canvas_y;
 
-    anim->nuke.shown = TRUE;
+    anim->nuke.shown = true;
 
-    return FALSE;
+    return false;
   }
 
   if (time_gone > 1.0) {
     update_map_canvas_visible();
 
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -404,7 +404,7 @@ void update_animation(void)
       }
     } else {
       double time_gone = double(anim_timer->elapsed()) / 1000;
-      bool finished = FALSE;
+      bool finished = false;
 
       switch (anim->type) {
       case ANIM_MOVEMENT:
@@ -421,7 +421,7 @@ void update_animation(void)
       }
 
       if (finished) {
-        anim->finished = TRUE;
+        anim->finished = true;
       }
     }
   }
@@ -440,7 +440,7 @@ void refresh_tile_mapcanvas(struct tile *ptile, bool full_refresh,
     queue_mapview_tile_update(ptile, TILE_UPDATE_TILE_SINGLE);
   }
   if (write_to_screen) {
-    unqueue_mapview_updates(TRUE);
+    unqueue_mapview_updates(true);
     flush_dirty_overview();
   }
 }
@@ -453,13 +453,13 @@ void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
 {
   if (full_refresh && gui_options.draw_native) {
     queue_mapview_update(UPDATE_MAP_CANVAS_VISIBLE);
-  } else if (full_refresh && unit_drawn_with_city_outline(punit, TRUE)) {
+  } else if (full_refresh && unit_drawn_with_city_outline(punit, true)) {
     queue_mapview_tile_update(ptile, TILE_UPDATE_CITYMAP);
   } else {
     queue_mapview_tile_update(ptile, TILE_UPDATE_UNIT);
   }
   if (write_to_screen) {
-    unqueue_mapview_updates(TRUE);
+    unqueue_mapview_updates(true);
   }
 }
 
@@ -480,7 +480,7 @@ void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
     queue_mapview_tile_update(ptile, TILE_UPDATE_UNIT);
   }
   if (write_to_screen) {
-    unqueue_mapview_updates(TRUE);
+    unqueue_mapview_updates(true);
     flush_dirty_overview();
   }
 }
@@ -920,10 +920,10 @@ static bool calc_mapview_origin(float *gui_x0, float *gui_y0)
   }
 
   if (mapview.gui_x0 == *gui_x0 && mapview.gui_y0 == *gui_y0) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -963,7 +963,7 @@ void set_mapview_origin(float gui_x0, float gui_y0)
                           gui_x0, gui_y0);
       anim_timer->start();
 
-      unqueue_mapview_updates(TRUE);
+      unqueue_mapview_updates(true);
       flush_dirty_overview();
 
       do {
@@ -1142,9 +1142,9 @@ void set_mapview_scroll_pos(int scroll_x, int scroll_y)
 {
   int gui_x0 = scroll_x, gui_y0 = scroll_y;
 
-  can_slide = FALSE;
+  can_slide = false;
   set_mapview_origin(gui_x0, gui_y0);
-  can_slide = TRUE;
+  can_slide = true;
 }
 
 /************************************************************************/ /**
@@ -1162,12 +1162,12 @@ void center_tile_mapcanvas(struct tile *ptile)
 {
   float gui_x, gui_y;
   int tile_x, tile_y;
-  static bool first = TRUE;
+  static bool first = true;
 
   if (first && can_slide) {
     return;
   }
-  first = FALSE;
+  first = false;
 
   index_to_map_pos(&tile_x, &tile_y, tile_index(ptile));
   map_to_gui_pos(tileset, &gui_x, &gui_y, tile_x, tile_y);
@@ -1221,7 +1221,7 @@ bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile)
 
   if (!tile_to_canvas_pos(&canvas_x, &canvas_y, ptile)) {
     /* The tile isn't visible at all. */
-    return FALSE;
+    return false;
   }
 
   /* For each direction: if the tile is too close to the mapview border
@@ -1230,24 +1230,24 @@ bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile)
    * scrolling when the mapview window lines up with the map. */
   if (canvas_x < border_x
       && (!same || scroll_x > xmin || current_topo_has_flag(TF_WRAPX))) {
-    return FALSE;
+    return false;
   }
   if (canvas_y < border_y
       && (!same || scroll_y > ymin || current_topo_has_flag(TF_WRAPY))) {
-    return FALSE;
+    return false;
   }
   if (canvas_x + tileset_tile_width(tileset) > mapview.width - border_x
       && (!same || scroll_x + xsize < xmax
           || current_topo_has_flag(TF_WRAPX))) {
-    return FALSE;
+    return false;
   }
   if (canvas_y + tileset_tile_height(tileset) > mapview.height - border_y
       && (!same || scroll_y + ysize < ymax
           || current_topo_has_flag(TF_WRAPY))) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1269,15 +1269,15 @@ void put_drawn_sprites(struct canvas *pcanvas, int canvas_x, int canvas_y,
             || i == LAYER_FOCUS_UNIT || i == LAYER_CATEGORY_TILE)) {
       canvas_put_unit_fogged(pcanvas, canvas_x + pdrawn[i].offset_x,
                              canvas_y + pdrawn[i].offset_y, pdrawn[i].sprite,
-                             TRUE, canvas_x, canvas_y);
+                             true, canvas_x, canvas_y);
     } else if (city_dialog) {
       canvas_put_sprite_citymode(pcanvas, canvas_x + pdrawn[i].offset_x,
                                  canvas_y + pdrawn[i].offset_y,
-                                 pdrawn[i].sprite, TRUE, canvas_x, canvas_y);
+                                 pdrawn[i].sprite, true, canvas_x, canvas_y);
     } else if (fog && pdrawn[i].foggable) {
       canvas_put_sprite_fogged(pcanvas, canvas_x + pdrawn[i].offset_x,
                                canvas_y + pdrawn[i].offset_y,
-                               pdrawn[i].sprite, TRUE, canvas_x, canvas_y);
+                               pdrawn[i].sprite, true, canvas_x, canvas_y);
     } else {
       /* We avoid calling canvas_put_sprite_fogged, even though it
        * should be a valid thing to do, because gui-gtk-2.0 doesn't have
@@ -1448,14 +1448,14 @@ static int color_index = 0;
 void toggle_city_color(struct city *pcity)
 {
   if (pcity->client.colored) {
-    pcity->client.colored = FALSE;
+    pcity->client.colored = false;
   } else {
-    pcity->client.colored = TRUE;
+    pcity->client.colored = true;
     pcity->client.color_index = color_index;
     color_index = (color_index + 1) % NUM_CITY_COLORS;
   }
 
-  refresh_city_mapcanvas(pcity, pcity->tile, TRUE, FALSE);
+  refresh_city_mapcanvas(pcity, pcity->tile, true, false);
 }
 
 /************************************************************************/ /**
@@ -1466,14 +1466,14 @@ void toggle_city_color(struct city *pcity)
 void toggle_unit_color(struct unit *punit)
 {
   if (punit->client.colored) {
-    punit->client.colored = FALSE;
+    punit->client.colored = false;
   } else {
-    punit->client.colored = TRUE;
+    punit->client.colored = true;
     punit->client.color_index = color_index;
     color_index = (color_index + 1) % NUM_CITY_COLORS;
   }
 
-  refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, FALSE);
+  refresh_unit_mapcanvas(punit, unit_tile(punit), true, false);
 }
 
 /************************************************************************/ /**
@@ -1492,7 +1492,7 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
 
     anim->type = ANIM_NUKE;
     anim->id = -1;
-    anim->nuke.shown = FALSE;
+    anim->nuke.shown = false;
     anim->nuke.nuke_tile = ptile;
 
     (void) tile_to_canvas_pos(&canvas_x, &canvas_y, ptile);
@@ -1513,7 +1513,7 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
      * we update everything to the store, but don't write this to screen.
      * Then add the nuke graphic to the store.  Finally flush everything to
      * the screen and wait 1 second. */
-    unqueue_mapview_updates(FALSE);
+    unqueue_mapview_updates(false);
 
     canvas_put_sprite_full(mapview.store, canvas_x, canvas_y, mysprite);
     dirty_rect(canvas_x, canvas_y, width, height);
@@ -2027,9 +2027,9 @@ bool show_unit_orders(struct unit *punit)
         break;
       }
     }
-    return TRUE;
+    return true;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
@@ -2086,7 +2086,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
   punit0->hp = MAX(punit0->hp, hp0);
   punit1->hp = MAX(punit1->hp, hp1);
 
-  unqueue_mapview_updates(TRUE);
+  unqueue_mapview_updates(true);
 
   if (frame_by_frame_animation) {
     struct animation *anim = new animation();
@@ -2138,13 +2138,13 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
 
       if (fc_rand(diff0 + diff1) < diff0) {
         punit0->hp--;
-        refresh_unit_mapcanvas(punit0, unit_tile(punit0), FALSE, FALSE);
+        refresh_unit_mapcanvas(punit0, unit_tile(punit0), false, false);
       } else {
         punit1->hp--;
-        refresh_unit_mapcanvas(punit1, unit_tile(punit1), FALSE, FALSE);
+        refresh_unit_mapcanvas(punit1, unit_tile(punit1), false, false);
       }
 
-      unqueue_mapview_updates(TRUE);
+      unqueue_mapview_updates(true);
       gui_flush();
       anim_delay(gui_options.smooth_combat_step_msec);
     }
@@ -2152,9 +2152,9 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
     if (num_tiles_explode_unit > 0
         && tile_to_canvas_pos(&canvas_x, &canvas_y,
                               unit_tile(losing_unit))) {
-      refresh_unit_mapcanvas(losing_unit, unit_tile(losing_unit), FALSE,
-                             FALSE);
-      unqueue_mapview_updates(FALSE);
+      refresh_unit_mapcanvas(losing_unit, unit_tile(losing_unit), false,
+                             false);
+      unqueue_mapview_updates(false);
       canvas_copy(mapview.tmp_store, mapview.store, canvas_x, canvas_y,
                   canvas_x, canvas_y, tileset_tile_width(tileset),
                   tileset_tile_height(tileset));
@@ -2185,8 +2185,8 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
   }
 
   set_units_in_combat(NULL, NULL);
-  refresh_unit_mapcanvas(punit0, unit_tile(punit0), TRUE, FALSE);
-  refresh_unit_mapcanvas(punit1, unit_tile(punit1), TRUE, FALSE);
+  refresh_unit_mapcanvas(punit0, unit_tile(punit0), true, false);
+  refresh_unit_mapcanvas(punit1, unit_tile(punit1), true, false);
   flush_dirty_overview();
 }
 
@@ -2236,7 +2236,7 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
     }
 
     /* Bring the backing store up to date, but don't flush. */
-    unqueue_mapview_updates(FALSE);
+    unqueue_mapview_updates(false);
 
     tuw = tileset_unit_width(tileset);
     tuh = tileset_unit_height(tileset);
@@ -2443,7 +2443,7 @@ void get_city_mapview_production(struct city *pcity, char *buffer,
   if (city_production_has_flag(pcity, IF_GOLD)) {
     return;
   }
-  turns = city_production_turns_to_build(pcity, TRUE);
+  turns = city_production_turns_to_build(pcity, true);
 
   if (999 < turns) {
     cat_snprintf(buffer, buffer_len, " -");
@@ -2498,7 +2498,7 @@ void get_city_mapview_trade_routes(struct city *pcity,
 
 /***************************************************************************/
 static enum update_type needed_updates = UPDATE_NONE;
-static bool callback_queued = FALSE;
+static bool callback_queued = false;
 
 /* These values hold the tiles that need city, unit, or tile updates.
  * These different types of updates just tell what area need to be updated,
@@ -2515,8 +2515,8 @@ struct tile_list *tile_updates[TILE_UPDATE_COUNT];
 static void queue_callback(void *data)
 {
   Q_UNUSED(data)
-  callback_queued = FALSE;
-  unqueue_mapview_updates(TRUE);
+  callback_queued = false;
+  unqueue_mapview_updates(true);
 }
 
 /************************************************************************/ /**
@@ -2526,7 +2526,7 @@ static void queue_callback(void *data)
 static void queue_add_callback(void)
 {
   if (!callback_queued) {
-    callback_queued = TRUE;
+    callback_queued = true;
     add_idle_callback(queue_callback, NULL);
   }
 }
@@ -2780,7 +2780,7 @@ static bool can_do_cached_drawing(void)
   if (!current_topo_has_flag(TF_WRAPX) && !current_topo_has_flag(TF_WRAPY)) {
     /* An unwrapping map: no limitation.  On an unwrapping map no tile can
      * be visible twice so there's no problem. */
-    return TRUE;
+    return true;
   }
   if (XOR(current_topo_has_flag(TF_ISO) || current_topo_has_flag(TF_HEX),
           tileset_is_isometric(tileset))) {
@@ -2805,13 +2805,13 @@ static bool can_do_cached_drawing(void)
      * small area on each side. */
     if (current_topo_has_flag(TF_WRAPX)
         && w > (NATURAL_WIDTH - isodiff) * W / isofactor) {
-      return FALSE;
+      return false;
     }
     if (current_topo_has_flag(TF_WRAPY)
         && h > (NATURAL_HEIGHT - isodiff) * H / isofactor) {
-      return FALSE;
+      return false;
     }
-    return TRUE;
+    return true;
   }
 }
 
@@ -2845,7 +2845,7 @@ void mapdeco_free(void)
  ****************************************************************************/
 void mapdeco_set_highlight(const struct tile *ptile, bool highlight)
 {
-  bool changed = FALSE;
+  bool changed = false;
 
   if (!ptile) {
     return;
@@ -2861,7 +2861,7 @@ void mapdeco_set_highlight(const struct tile *ptile, bool highlight)
 
   if (!changed) {
     /* FIXME: Remove the cast. */
-    refresh_tile_mapcanvas((struct tile *) ptile, TRUE, FALSE);
+    refresh_tile_mapcanvas((struct tile *) ptile, true, false);
   }
 }
 
@@ -2871,7 +2871,7 @@ void mapdeco_set_highlight(const struct tile *ptile, bool highlight)
 bool mapdeco_is_highlight_set(const struct tile *ptile)
 {
   if (!ptile) {
-    return FALSE;
+    return false;
   }
   return mapdeco_highlight_set->contains(ptile);
 }
@@ -2883,7 +2883,7 @@ bool mapdeco_is_highlight_set(const struct tile *ptile)
 void mapdeco_clear_highlights(void)
 {
   for (auto ptile : *mapdeco_highlight_set) {
-    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), TRUE, FALSE);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), true, false);
   }
   mapdeco_highlight_set->clear();
 }
@@ -2909,7 +2909,7 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
 
   if (!changed) {
     /* FIXME: Remove the cast. */
-    refresh_tile_mapcanvas((struct tile *) ptile, FALSE, FALSE);
+    refresh_tile_mapcanvas((struct tile *) ptile, false, false);
   }
 }
 
@@ -2919,7 +2919,7 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
 bool mapdeco_is_crosshair_set(const struct tile *ptile)
 {
   if (!mapdeco_crosshair_set || !ptile) {
-    return FALSE;
+    return false;
   }
   return mapdeco_crosshair_set->contains(ptile);
 }
@@ -2931,7 +2931,7 @@ bool mapdeco_is_crosshair_set(const struct tile *ptile)
 void mapdeco_clear_crosshairs(void)
 {
   for (auto ptile : *mapdeco_crosshair_set) {
-    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), FALSE, FALSE);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
   }
   mapdeco_crosshair_set->clear();
 }
@@ -2964,8 +2964,8 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir)
 
   if (changed) {
     /* FIXME: Remove cast. */
-    refresh_tile_mapcanvas((struct tile *) ptile, FALSE, FALSE);
-    refresh_tile_mapcanvas((struct tile *) ptile_dest, FALSE, FALSE);
+    refresh_tile_mapcanvas((struct tile *) ptile, false, false);
+    refresh_tile_mapcanvas((struct tile *) ptile_dest, false, false);
   }
 }
 
@@ -2977,7 +2977,7 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir)
 void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir)
 {
   struct gotoline_counter *pglc;
-  bool changed = FALSE;
+  bool changed = false;
 
   if (!ptile || !(dir <= direction8_max())) {
     return;
@@ -2990,15 +2990,15 @@ void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir)
   pglc->line_count[dir]--;
   if (pglc->line_count[dir] <= 0) {
     pglc->line_count[dir] = 0;
-    changed = TRUE;
+    changed = true;
   }
 
   if (changed) {
     /* FIXME: Remove the casts. */
-    refresh_tile_mapcanvas((struct tile *) ptile, FALSE, FALSE);
+    refresh_tile_mapcanvas((struct tile *) ptile, false, false);
     ptile = mapstep(&(wld.map), ptile, dir);
     if (ptile != NULL) {
-      refresh_tile_mapcanvas((struct tile *) ptile, FALSE, FALSE);
+      refresh_tile_mapcanvas((struct tile *) ptile, false, false);
     }
   }
 }
@@ -3048,11 +3048,11 @@ bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir)
   struct gotoline_counter *pglc;
 
   if (!ptile || !(dir <= direction8_max())) {
-    return FALSE;
+    return false;
   }
 
   if (!(pglc = mapdeco_gotoline->value(ptile, nullptr))) {
-    return FALSE;
+    return false;
   }
 
   return pglc->line_count[dir] > 0;
@@ -3066,11 +3066,11 @@ void mapdeco_clear_gotoroutes(void)
 {
   gotohash::const_iterator i = mapdeco_gotoline->constBegin();
   while (i != mapdeco_gotoline->constEnd()) {
-    refresh_tile_mapcanvas(const_cast<struct tile *>(i.key()), FALSE, FALSE);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(i.key()), false, false);
     adjc_dir_iterate(&(wld.map), i.key(), ptile_dest, dir)
     {
       if (i.value()->line_count[dir] > 0) {
-        refresh_tile_mapcanvas(ptile_dest, FALSE, FALSE);
+        refresh_tile_mapcanvas(ptile_dest, false, false);
       }
     }
     adjc_dir_iterate_end;
@@ -3093,7 +3093,7 @@ bool map_canvas_resized(int width, int height)
                     / (tileset_tile_height(tileset));
   int full_width = tile_width * tileset_tile_width(tileset);
   int full_height = tile_height * tileset_tile_height(tileset);
-  bool tile_size_changed, size_changed, redrawn = FALSE;
+  bool tile_size_changed, size_changed, redrawn = false;
 
   /* Resized */
 
@@ -3148,8 +3148,8 @@ bool map_canvas_resized(int width, int height)
       /* Do not draw to the screen here as that could cause problems
        * when we are only initially setting up the view and some widgets
        * are not yet ready. */
-      unqueue_mapview_updates(FALSE);
-      redrawn = TRUE;
+      unqueue_mapview_updates(false);
+      redrawn = true;
     }
 
     /* If the width/height has changed, update the scrollbars even if
@@ -3483,7 +3483,7 @@ void link_mark_add_new(enum text_link_type type, int id)
   link_mark_list_append(link_marks, pmark);
   ptile = link_mark_tile(pmark);
   if (ptile && tile_visible_mapcanvas(ptile)) {
-    refresh_tile_mapcanvas(ptile, FALSE, FALSE);
+    refresh_tile_mapcanvas(ptile, false, false);
   }
 }
 
@@ -3503,7 +3503,7 @@ void link_mark_restore(enum text_link_type type, int id)
   link_mark_list_append(link_marks, pmark);
   ptile = link_mark_tile(pmark);
   if (ptile && tile_visible_mapcanvas(ptile)) {
-    refresh_tile_mapcanvas(ptile, FALSE, FALSE);
+    refresh_tile_mapcanvas(ptile, false, false);
   }
 }
 
@@ -3551,4 +3551,4 @@ enum topo_comp_lvl tileset_map_topo_compatible(int topology_id,
 /************************************************************************/ /**
    Set frame by frame animation mode on.
  ****************************************************************************/
-void set_frame_by_frame_animation(void) { frame_by_frame_animation = TRUE; }
+void set_frame_by_frame_animation(void) { frame_by_frame_animation = true; }

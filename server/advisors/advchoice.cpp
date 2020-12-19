@@ -33,7 +33,7 @@ void adv_init_choice(struct adv_choice *choice)
   choice->value.utype = NULL;
   choice->want = 0;
   choice->type = CT_NONE;
-  choice->need_boat = FALSE;
+  choice->need_boat = false;
 #ifdef ADV_CHOICE_TRACK
   choice->use = NULL;
   choice->log_if_chosen = FALSE;

@@ -34,26 +34,26 @@ void adv_units_ruleset_init(void)
 {
   unit_class_iterate(pclass)
   {
-    bool move_land_enabled = FALSE;  /* Can move at some land terrains */
-    bool move_land_disabled = FALSE; /* Cannot move at some land terrains */
-    bool move_sea_enabled = FALSE;   /* Can move at some ocean terrains */
-    bool move_sea_disabled = FALSE;  /* Cannot move at some ocean terrains */
+    bool move_land_enabled = false;  /* Can move at some land terrains */
+    bool move_land_disabled = false; /* Cannot move at some land terrains */
+    bool move_sea_enabled = false;   /* Can move at some ocean terrains */
+    bool move_sea_disabled = false;  /* Cannot move at some ocean terrains */
 
     terrain_type_iterate(pterrain)
     {
       if (is_native_to_class(pclass, pterrain, NULL)) {
         /* Can move at terrain */
         if (is_ocean(pterrain)) {
-          move_sea_enabled = TRUE;
+          move_sea_enabled = true;
         } else {
-          move_land_enabled = TRUE;
+          move_land_enabled = true;
         }
       } else {
         /* Cannot move at terrain */
         if (is_ocean(pterrain)) {
-          move_sea_disabled = TRUE;
+          move_sea_disabled = true;
         } else {
-          move_land_disabled = TRUE;
+          move_land_disabled = true;
         }
       }
     }
@@ -81,7 +81,7 @@ void adv_units_ruleset_init(void)
 
   unit_type_iterate(ptype)
   {
-    ptype->adv.igwall = TRUE;
+    ptype->adv.igwall = true;
 
     effect_list_iterate(get_effects(EFT_DEFEND_BONUS), peffect)
     {
@@ -90,7 +90,7 @@ void adv_units_ruleset_init(void)
         {
           if (!is_req_active(NULL, NULL, NULL, NULL, NULL, NULL, ptype, NULL,
                              NULL, NULL, preq, RPT_POSSIBLE)) {
-            ptype->adv.igwall = FALSE;
+            ptype->adv.igwall = false;
             break;
           }
         }

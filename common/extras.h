@@ -12,11 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
-
 /* common */
-#include "base.h"
 #include "fc_types.h"
-#include "road.h"
 #include "terrain.h"
 
 /* Used in the network protocol. */
@@ -131,7 +128,7 @@ struct extra_type {
   /* Same information as bridged_over */
   struct extra_type_list *bridged;
 
-  struct strvec *helptext;
+  QVector<QString> *helptext;
 
   struct {
     int special_idx;
@@ -350,5 +347,3 @@ bool player_knows_extra_exist(const struct player *pplayer,
   }                                                                         \
   requirement_vector_iterate_end;                                           \
   }
-
-

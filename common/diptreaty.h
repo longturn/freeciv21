@@ -12,10 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
-
 /* utility */
 #include "requirements.h"
-#include "support.h" /* bool type */
 
 /* Used in the network protocol */
 #define SPECENUM_NAME clause_type

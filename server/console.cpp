@@ -38,10 +38,10 @@
 
 #include "console.h"
 
-static bool console_show_prompt = FALSE;
-static bool console_prompt_is_showing = FALSE;
-static bool console_rfcstyle = FALSE;
-static bool readline_received_enter = TRUE;
+static bool console_show_prompt = false;
+static bool console_prompt_is_showing = false;
+static bool console_rfcstyle = false;
+static bool readline_received_enter = true;
 
 namespace {
 static QString log_prefix();
@@ -54,7 +54,9 @@ static void console_handle_message(QtMsgType type,
                                    const QMessageLogContext &context,
                                    const QString &message)
 {
+  con_set_color(CON_GREEN);
   if (type == QtCriticalMsg) {
+    con_set_color(CON_RED);
     notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning, "%s",
                 qUtf8Printable(message));
   } else if (type == QtFatalMsg) {
@@ -66,15 +68,18 @@ static void console_handle_message(QtMsgType type,
     }
     conn_list_iterate_end;
 
+
     notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning, "%s",
                 qUtf8Printable(message));
     notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning,
                 _("Please report this message at %s"), BUG_URL);
+
   }
 
   if (original_handler != nullptr) {
     original_handler(type, context, log_prefix() + message);
   }
+  con_set_color(CON_RESET);
 }
 } // anonymous namespace
 
@@ -88,12 +93,11 @@ static void con_update_prompt(void)
   }
 
   if (readline_received_enter) {
-    readline_received_enter = FALSE;
+    readline_received_enter = false;
   } else {
     rl_forced_update_display();
   }
-
-  console_prompt_is_showing = TRUE;
+  console_prompt_is_showing = true;
 }
 
 /********************************************************************/ /**
@@ -140,6 +144,12 @@ void con_log_close(void)
   log_close();
 }
 
+void con_set_color(const char *col)
+{
+  fc_printf("%s", col);
+  console_prompt_is_showing = false;
+  con_update_prompt();
+}
 /********************************************************************/ /**
    Write to console and add line-break, and show prompt if required.
  ************************************************************************/
@@ -155,7 +165,7 @@ void con_write(enum rfc_status rfc_status, const char *message, ...)
   va_end(args);
 
   /* remove all format tags */
-  featured_text_to_plain_text(buf1, buf2, sizeof(buf2), NULL, FALSE);
+  featured_text_to_plain_text(buf1, buf2, sizeof(buf2), NULL, false);
   con_puts(rfc_status, buf2);
 }
 
@@ -168,6 +178,9 @@ void con_write(enum rfc_status rfc_status, const char *message, ...)
  ************************************************************************/
 void con_puts(enum rfc_status rfc_status, const char *str)
 {
+  if (rfc_status > 0) {
+    con_set_color(CON_YELLOW);
+  }
   if (console_prompt_is_showing) {
     fc_printf("\n");
   }
@@ -176,8 +189,9 @@ void con_puts(enum rfc_status rfc_status, const char *str)
   } else {
     fc_printf("%s\n", str);
   }
-  console_prompt_is_showing = FALSE;
+  console_prompt_is_showing = false;
   con_update_prompt();
+  con_set_color(CON_RESET);
 }
 
 /********************************************************************/ /**
@@ -208,12 +222,12 @@ bool con_get_style(void) { return console_rfcstyle; }
  ************************************************************************/
 void con_prompt_init(void)
 {
-  static bool first = TRUE;
+  static bool first = true;
 
   if (first) {
     con_puts(C_COMMENT, "");
     con_puts(C_COMMENT, _("For introductory help, type 'help'."));
-    first = FALSE;
+    first = false;
   }
 }
 
@@ -222,22 +236,22 @@ void con_prompt_init(void)
  ************************************************************************/
 void con_prompt_on(void)
 {
-  console_show_prompt = TRUE;
+  console_show_prompt = true;
   con_update_prompt();
 }
 
 /********************************************************************/ /**
    Do not print a prompt after log messages.
  ************************************************************************/
-void con_prompt_off(void) { console_show_prompt = FALSE; }
+void con_prompt_off(void) { console_show_prompt = false; }
 
 /********************************************************************/ /**
    User pressed enter: will need a new prompt
  ************************************************************************/
 void con_prompt_enter(void)
 {
-  console_prompt_is_showing = FALSE;
-  readline_received_enter = TRUE;
+  console_prompt_is_showing = false;
+  readline_received_enter = true;
 }
 
 /********************************************************************/ /**
@@ -245,6 +259,6 @@ void con_prompt_enter(void)
  ************************************************************************/
 void con_prompt_enter_clear(void)
 {
-  console_prompt_is_showing = TRUE;
-  readline_received_enter = FALSE;
+  console_prompt_is_showing = true;
+  readline_received_enter = false;
 }

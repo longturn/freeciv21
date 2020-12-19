@@ -39,7 +39,7 @@ void styles_alloc(int count)
 
   for (i = 0; i < count; i++) {
     styles[i].id = i;
-    styles[i].ruledit_disabled = FALSE;
+    styles[i].ruledit_disabled = false;
   }
 }
 
@@ -48,8 +48,7 @@ void styles_alloc(int count)
  **************************************************************************/
 void styles_free(void)
 {
-  delete[] styles;
-  styles = NULL;
+  FCPP_FREE(styles);
 }
 
 /**********************************************************************/ /**

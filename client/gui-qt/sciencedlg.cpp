@@ -489,13 +489,8 @@ void science_report::update_report()
 
   fc_assert_ret(NULL != research);
 
-  if (curr_list) {
-    delete curr_list;
-  }
-
-  if (goal_list) {
-    delete goal_list;
-  }
+  NFC_FREE(curr_list);
+  NFC_FREE(goal_list);
 
   if (research->researching != A_UNSET) {
     total = research->client.researching_cost;

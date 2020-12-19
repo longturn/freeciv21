@@ -34,7 +34,7 @@ struct vision *vision_new(struct player *pplayer, struct tile *ptile)
 
   vision->player = pplayer;
   vision->tile = ptile;
-  vision->can_reveal_tiles = TRUE;
+  vision->can_reveal_tiles = true;
   vision->radius_sq[V_MAIN] = -1;
   vision->radius_sq[V_INVIS] = -1;
   vision->radius_sq[V_SUBSURFACE] = -1;

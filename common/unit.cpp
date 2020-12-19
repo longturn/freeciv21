@@ -188,7 +188,7 @@ test_unit_can_airlift_to(const struct player *restriction,
 bool unit_can_airlift_to(const struct unit *punit,
                          const struct city *pdest_city)
 {
-  fc_assert_ret_val(pdest_city, FALSE);
+  fc_assert_ret_val(pdest_city, false);
 
   if (is_server()) {
     return is_action_enabled_unit_on_city(ACTION_AIRLIFT, punit, pdest_city);
@@ -254,12 +254,12 @@ bool unit_can_help_build_wonder_here(const struct unit *punit)
 
   if (!pcity) {
     /* No city to help at this tile. */
-    return FALSE;
+    return false;
   }
 
   if (!utype_can_do_action(unit_type_get(punit), ACTION_HELP_WONDER)) {
     /* This unit can never do help wonder. */
-    return FALSE;
+    return false;
   }
 
   /* Evaluate all action enablers for extra accuracy. */
@@ -346,14 +346,14 @@ bool is_square_threatened(const struct player *pplayer,
               || (can_attack_non_native(unit_type_get(punit))
                   && is_native_near_tile(&(wld.map), unit_class_get(punit),
                                          ptile)))) {
-        return TRUE;
+        return true;
       }
     }
     unit_list_iterate_end;
   }
   square_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -377,17 +377,17 @@ bool is_hiding_unit(const struct unit *punit)
   enum vision_layer vl = unit_type_get(punit)->vlayer;
 
   if (vl == V_INVIS || vl == V_SUBSURFACE) {
-    return TRUE;
+    return true;
   }
 
   if (unit_transported(punit)) {
     vl = unit_type_get(unit_transport_get(punit))->vlayer;
     if (vl == V_INVIS || vl == V_SUBSURFACE) {
-      return TRUE;
+      return true;
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -425,7 +425,7 @@ bool can_unit_change_homecity_to(const struct unit *punit,
 {
   if (pcity == NULL) {
     /* Can't change home city to a non existing city. */
-    return FALSE;
+    return false;
   }
 
   return action_prob_possible(
@@ -521,7 +521,7 @@ bool activity_requires_target(enum unit_activity activity)
   case ACTIVITY_MINE:
   case ACTIVITY_POLLUTION:
   case ACTIVITY_FALLOUT:
-    return TRUE;
+    return true;
   case ACTIVITY_IDLE:
   case ACTIVITY_FORTIFIED:
   case ACTIVITY_SENTRY:
@@ -532,16 +532,16 @@ bool activity_requires_target(enum unit_activity activity)
   case ACTIVITY_PLANT:
   case ACTIVITY_FORTIFYING:
   case ACTIVITY_CONVERT:
-    return FALSE;
+    return false;
   /* These shouldn't be kicking around internally. */
   case ACTIVITY_FORTRESS:
   case ACTIVITY_AIRBASE:
   case ACTIVITY_PATROL_UNUSED:
   default:
-    fc_assert_ret_val(FALSE, FALSE);
+    fc_assert_ret_val(false, false);
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -643,7 +643,7 @@ const char *get_activity_text(enum unit_activity activity)
     break;
   }
 
-  fc_assert(FALSE);
+  fc_assert(false);
   return _("Unknown");
 }
 
@@ -654,45 +654,45 @@ const char *get_activity_text(enum unit_activity activity)
 bool could_unit_load(const struct unit *pcargo, const struct unit *ptrans)
 {
   if (!pcargo || !ptrans || pcargo == ptrans) {
-    return FALSE;
+    return false;
   }
 
   /* Double-check ownership of the units: you can load into an allied unit
    * (of course only allied units can be on the same tile). */
   if (!pplayers_allied(unit_owner(pcargo), unit_owner(ptrans))) {
-    return FALSE;
+    return false;
   }
 
   /* Make sure this transporter can carry this type of unit. */
   if (!can_unit_transport(ptrans, pcargo)) {
-    return FALSE;
+    return false;
   }
 
   /* Un-embarkable transport must be in city or base to load cargo. */
   if (!utype_can_freely_load(unit_type_get(pcargo), unit_type_get(ptrans))
       && !tile_city(unit_tile(ptrans))
       && !tile_has_native_base(unit_tile(ptrans), unit_type_get(ptrans))) {
-    return FALSE;
+    return false;
   }
 
   /* Make sure there's room in the transporter. */
   if (get_transporter_occupancy(ptrans)
       >= get_transporter_capacity(ptrans)) {
-    return FALSE;
+    return false;
   }
 
   /* Check iff this is a valid transport. */
   if (!unit_transport_check(pcargo, ptrans)) {
-    return FALSE;
+    return false;
   }
 
   /* Check transport depth. */
   if (GAME_TRANSPORT_MAX_RECURSIVE
       < 1 + unit_transport_depth(ptrans) + unit_cargo_depth(pcargo)) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -705,12 +705,12 @@ bool can_unit_load(const struct unit *pcargo, const struct unit *ptrans)
   /* Check positions of the units.  Of course you can't load a unit onto
    * a transporter on a different tile... */
   if (!same_pos(unit_tile(pcargo), unit_tile(ptrans))) {
-    return FALSE;
+    return false;
   }
 
   /* Cannot load if cargo is already loaded onto something else. */
   if (unit_transported(pcargo)) {
-    return FALSE;
+    return false;
   }
 
   return could_unit_load(pcargo, ptrans);
@@ -728,22 +728,22 @@ bool can_unit_load(const struct unit *pcargo, const struct unit *ptrans)
 bool can_unit_unload(const struct unit *pcargo, const struct unit *ptrans)
 {
   if (!pcargo || !ptrans) {
-    return FALSE;
+    return false;
   }
 
   /* Make sure the unit's transporter exists and is known. */
   if (unit_transport_get(pcargo) != ptrans) {
-    return FALSE;
+    return false;
   }
 
   /* Un-disembarkable transport must be in city or base to unload cargo. */
   if (!utype_can_freely_unload(unit_type_get(pcargo), unit_type_get(ptrans))
       && !tile_city(unit_tile(ptrans))
       && !tile_has_native_base(unit_tile(ptrans), unit_type_get(ptrans))) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -754,10 +754,10 @@ bool can_unit_alight_or_be_unloaded(const struct unit *pcargo,
                                     const struct unit *ptrans)
 {
   if (!pcargo || !ptrans) {
-    return FALSE;
+    return false;
   }
 
-  fc_assert_ret_val(unit_transport_get(pcargo) == ptrans, FALSE);
+  fc_assert_ret_val(unit_transport_get(pcargo) == ptrans, false);
 
   if (is_server()) {
     return (is_action_enabled_unit_on_unit(ACTION_TRANSPORT_ALIGHT, pcargo,
@@ -829,13 +829,13 @@ bool can_unit_do_activity(const struct unit *punit,
       target = next_extra_for_tile(ptile, EC_IRRIGATION, unit_owner(punit),
                                    punit);
       if (NULL == target) {
-        return FALSE; /* No more irrigation extras available. */
+        return false; /* No more irrigation extras available. */
       }
     } else if (activity == ACTIVITY_MINE
                && pterrain->mining_result == pterrain) {
       target = next_extra_for_tile(ptile, EC_MINE, unit_owner(punit), punit);
       if (NULL == target) {
-        return FALSE; /* No more mine extras available. */
+        return false; /* No more mine extras available. */
       }
     }
   }
@@ -870,14 +870,14 @@ bool can_unit_do_activity_targeted_at(const struct unit *punit,
    * terrain change that destroys the target of the other activity */
   if (target != NULL && is_build_activity(activity, ptile)) {
     if (tile_is_placing(ptile)) {
-      return FALSE;
+      return false;
     }
 
     unit_list_iterate(ptile->units, tunit)
     {
       if (is_build_activity(tunit->activity, ptile)
           && !can_extras_coexist(target, tunit->activity_target)) {
-        return FALSE;
+        return false;
       }
     }
     unit_list_iterate_end;
@@ -886,7 +886,7 @@ bool can_unit_do_activity_targeted_at(const struct unit *punit,
   switch (activity) {
   case ACTIVITY_IDLE:
   case ACTIVITY_GOTO:
-    return TRUE;
+    return true;
 
   case ACTIVITY_POLLUTION:
     /* The call below doesn't support actor tile speculation. */
@@ -935,7 +935,7 @@ bool can_unit_do_activity_targeted_at(const struct unit *punit,
     return is_action_enabled_unit_on_self(ACTION_FORTIFY, punit);
 
   case ACTIVITY_FORTIFIED:
-    return FALSE;
+    return false;
 
   case ACTIVITY_BASE:
     /* The call below doesn't support actor tile speculation. */
@@ -953,9 +953,9 @@ bool can_unit_do_activity_targeted_at(const struct unit *punit,
     if (!can_unit_survive_at_tile(&(wld.map), punit, unit_tile(punit))
         && !unit_transported(punit)) {
       /* Don't let units sentry on tiles they will die on. */
-      return FALSE;
+      return false;
     }
-    return TRUE;
+    return true;
 
   case ACTIVITY_PILLAGE:
     /* The call below doesn't support actor tile speculation. */
@@ -991,7 +991,7 @@ bool can_unit_do_activity_targeted_at(const struct unit *punit,
   }
   qCritical("can_unit_do_activity_targeted_at() unknown activity %d",
             activity);
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1008,7 +1008,7 @@ static void set_unit_activity_internal(struct unit *punit,
   punit->activity_target = NULL;
   if (new_activity == ACTIVITY_IDLE && punit->moves_left > 0) {
     /* No longer done. */
-    punit->done_moving = FALSE;
+    punit->done_moving = false;
   }
 }
 
@@ -1056,11 +1056,11 @@ bool is_unit_activity_on_tile(enum unit_activity activity,
   unit_list_iterate(ptile->units, punit)
   {
     if (punit->activity == activity) {
-      return TRUE;
+      return true;
     }
   }
   unit_list_iterate_end;
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1119,11 +1119,11 @@ void unit_activity_astr(const struct unit *punit, struct astring *astr)
       /* Add in two parts as move_points_text() returns ptr to static
        * End result: "Moves: (fuel)moves_left" */
       astr_add_line(astr, "%s: (%s)", _("Moves"),
-                    move_points_text((rate * f) + punit->moves_left, FALSE));
-      astr_add(astr, "%s", move_points_text(punit->moves_left, FALSE));
+                    move_points_text((rate * f) + punit->moves_left, false));
+      astr_add(astr, "%s", move_points_text(punit->moves_left, false));
     } else {
       astr_add_line(astr, "%s: %s", _("Moves"),
-                    move_points_text(punit->moves_left, FALSE));
+                    move_points_text(punit->moves_left, false));
     }
     return;
   case ACTIVITY_POLLUTION:
@@ -1371,14 +1371,14 @@ bool is_my_zoc(const struct player *pplayer, const struct tile *ptile0,
                   || TILE_KNOWN_UNSEEN == tile_get_known(ptile, pplayer)))) {
         /* Occupied enemy city, it doesn't matter if units inside have
          * UTYF_NOZOC or not. Fogged city is assumed to be occupied. */
-        return FALSE;
+        return false;
       }
     } else {
       unit_list_iterate(ptile->units, punit)
       {
         if (!pplayers_allied(unit_owner(punit), pplayer)
             && !unit_has_type_flag(punit, UTYF_NOZOC)) {
-          return FALSE;
+          return false;
         }
       }
       unit_list_iterate_end;
@@ -1386,7 +1386,7 @@ bool is_my_zoc(const struct player *pplayer, const struct tile *ptile0,
   }
   square_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1409,10 +1409,10 @@ bool unit_type_really_ignores_zoc(const struct unit_type *punittype)
 bool unit_being_aggressive(const struct unit *punit)
 {
   if (!is_attack_unit(punit)) {
-    return FALSE;
+    return false;
   }
   if (tile_city(unit_tile(punit))) {
-    return FALSE;
+    return false;
   }
   if (BORDERS_DISABLED != game.info.borders) {
     switch (game.info.happyborders) {
@@ -1420,12 +1420,12 @@ bool unit_being_aggressive(const struct unit *punit)
       break;
     case HB_NATIONAL:
       if (tile_owner(unit_tile(punit)) == unit_owner(punit)) {
-        return FALSE;
+        return false;
       }
       break;
     case HB_ALLIANCE:
       if (pplayers_allied(tile_owner(unit_tile(punit)), unit_owner(punit))) {
-        return FALSE;
+        return false;
       }
       break;
     }
@@ -1435,7 +1435,7 @@ bool unit_being_aggressive(const struct unit *punit)
     return !is_unit_near_a_friendly_city(punit);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1448,9 +1448,9 @@ bool is_build_activity(enum unit_activity activity, const struct tile *ptile)
   case ACTIVITY_IRRIGATE:
   case ACTIVITY_BASE:
   case ACTIVITY_GEN_ROAD:
-    return TRUE;
+    return true;
   default:
-    return FALSE;
+    return false;
   }
 }
 
@@ -1463,9 +1463,9 @@ bool is_clean_activity(enum unit_activity activity)
   case ACTIVITY_PILLAGE:
   case ACTIVITY_POLLUTION:
   case ACTIVITY_FALLOUT:
-    return TRUE;
+    return true;
   default:
-    return FALSE;
+    return false;
   }
 }
 
@@ -1478,9 +1478,9 @@ bool is_terrain_change_activity(enum unit_activity activity)
   case ACTIVITY_CULTIVATE:
   case ACTIVITY_PLANT:
   case ACTIVITY_TRANSFORM:
-    return TRUE;
+    return true;
   default:
-    return FALSE;
+    return false;
   }
 }
 
@@ -1535,11 +1535,11 @@ struct unit *unit_virtual_create(struct player *pplayer, struct city *pcity,
   punit->fuel = utype_fuel(unit_type_get(punit));
   punit->hp = unit_type_get(punit)->hp;
   punit->moves_left = unit_move_rate(punit);
-  punit->moved = FALSE;
+  punit->moved = false;
 
   punit->ssa_controller = SSA_NONE;
-  punit->paradropped = FALSE;
-  punit->done_moving = FALSE;
+  punit->paradropped = false;
+  punit->done_moving = false;
 
   punit->transporter = NULL;
   punit->transporting = unit_list_new();
@@ -1548,18 +1548,18 @@ struct unit *unit_virtual_create(struct player *pplayer, struct city *pcity,
 
   set_unit_activity(punit, ACTIVITY_IDLE);
   punit->battlegroup = BATTLEGROUP_NONE;
-  punit->has_orders = FALSE;
+  punit->has_orders = false;
 
   punit->action_decision_want = ACT_DEC_NOTHING;
   punit->action_decision_tile = NULL;
 
-  punit->stay = FALSE;
+  punit->stay = false;
 
   if (is_server()) {
-    punit->server.debug = FALSE;
+    punit->server.debug = false;
     punit->server.birth_turn = game.info.turn;
 
-    punit->server.dying = FALSE;
+    punit->server.dying = false;
 
     punit->server.removal_callback = NULL;
 
@@ -1582,7 +1582,7 @@ struct unit *unit_virtual_create(struct player *pplayer, struct city *pcity,
   } else {
     punit->client.focus_status = FOCUS_AVAIL;
     punit->client.transported_by = -1;
-    punit->client.colored = FALSE;
+    punit->client.colored = false;
     punit->client.act_prob_cache = NULL;
   }
 
@@ -1639,11 +1639,10 @@ void free_unit_orders(struct unit *punit)
 {
   if (punit->has_orders) {
     punit->goto_tile = NULL;
-    delete[] punit->orders.list;
-    punit->orders.list = NULL;
+    FCPP_FREE(punit->orders.list);
   }
   punit->orders.length = 0;
-  punit->has_orders = FALSE;
+  punit->has_orders = false;
 }
 
 /**********************************************************************/ /**
@@ -1667,7 +1666,7 @@ static struct unit *base_transporter_for_unit(
   struct {
     bool has_orders, is_idle, can_freely_unload;
     int depth, outermost_moves_left, total_moves;
-  } cur, best = {FALSE};
+  } cur, best = {false};
 
   unit_list_iterate(ptile->units, ptrans)
   {
@@ -1685,7 +1684,7 @@ static struct unit *base_transporter_for_unit(
     unit_transports_iterate(ptrans, ptranstrans)
     {
       if (unit_has_orders(ptranstrans)) {
-        cur.has_orders = TRUE;
+        cur.has_orders = true;
       }
       cur.outermost_moves_left = ptranstrans->moves_left;
       cur.total_moves +=
@@ -1805,18 +1804,18 @@ static bool can_type_transport_units_cargo(const struct unit_type *utype,
                                            const struct unit *punit)
 {
   if (get_transporter_occupancy(punit) > utype->transport_capacity) {
-    return FALSE;
+    return false;
   }
 
   unit_list_iterate(punit->transporting, pcargo)
   {
     if (!can_unit_type_transport(utype, unit_class_get(pcargo))) {
-      return FALSE;
+      return false;
     }
   }
   unit_list_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1884,18 +1883,18 @@ bool unit_can_convert(const struct unit *punit)
   const struct unit_type *tgt = unit_type_get(punit)->converted_to;
 
   if (tgt == NULL) {
-    return FALSE;
+    return false;
   }
 
   if (!can_type_transport_units_cargo(tgt, punit)) {
-    return FALSE;
+    return false;
   }
 
   if (!can_exist_at_tile(&(wld.map), tgt, unit_tile(punit))) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1906,7 +1905,7 @@ enum unit_upgrade_result unit_upgrade_info(const struct unit *punit,
                                            char *buf, size_t bufsz)
 {
   struct player *pplayer = unit_owner(punit);
-  enum unit_upgrade_result result = unit_upgrade_test(punit, FALSE);
+  enum unit_upgrade_result result = unit_upgrade_test(punit, false);
   int upgrade_cost;
   const struct unit_type *from_unittype = unit_type_get(punit);
   const struct unit_type *to_unittype =
@@ -2020,10 +2019,10 @@ bool unit_is_alive(int id)
 {
   /* Check if unit exist in game */
   if (game_unit_by_number(id)) {
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -2036,7 +2035,7 @@ bool unit_is_alive(int id)
 bool unit_is_virtual(const struct unit *punit)
 {
   if (!punit) {
-    return FALSE;
+    return false;
   }
 
   return punit != game_unit_by_number(punit->id);
@@ -2131,19 +2130,19 @@ int unit_bribe_cost(struct unit *punit, struct player *briber)
 bool unit_transport_load(struct unit *pcargo, struct unit *ptrans,
                          bool force)
 {
-  fc_assert_ret_val(ptrans != NULL, FALSE);
-  fc_assert_ret_val(pcargo != NULL, FALSE);
+  fc_assert_ret_val(ptrans != NULL, false);
+  fc_assert_ret_val(pcargo != NULL, false);
 
-  fc_assert_ret_val(!unit_list_search(ptrans->transporting, pcargo), FALSE);
+  fc_assert_ret_val(!unit_list_search(ptrans->transporting, pcargo), false);
 
   if (force || can_unit_load(pcargo, ptrans)) {
     pcargo->transporter = ptrans;
     unit_list_append(ptrans->transporting, pcargo);
 
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -2153,11 +2152,11 @@ bool unit_transport_unload(struct unit *pcargo)
 {
   struct unit *ptrans;
 
-  fc_assert_ret_val(pcargo != NULL, FALSE);
+  fc_assert_ret_val(pcargo != NULL, false);
 
   if (!unit_transported(pcargo)) {
     /* 'pcargo' is not transported. */
-    return FALSE;
+    return false;
   }
 
   /* Get the transporter; must not be defined on the client! */
@@ -2175,7 +2174,7 @@ bool unit_transport_unload(struct unit *pcargo)
   /* For the server (also safe for the client). */
   pcargo->transporter = NULL;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -2183,16 +2182,16 @@ bool unit_transport_unload(struct unit *pcargo)
  **************************************************************************/
 bool unit_transported(const struct unit *pcargo)
 {
-  fc_assert_ret_val(pcargo != NULL, FALSE);
+  fc_assert_ret_val(pcargo != NULL, false);
 
   /* The unit is transported if a transporter unit is set or, (for the
    * client) if the transported_by field is set. */
   if (pcargo->transporter != NULL
       || (!is_server() && pcargo->client.transported_by != -1)) {
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -2243,14 +2242,14 @@ bool unit_transport_check(const struct unit *pcargo,
 
   /* Check 'pcargo' against 'ptrans'. */
   if (!unit_transport_check_one(cargo_utype, unit_type_get(ptrans))) {
-    return FALSE;
+    return false;
   }
 
   /* Check 'pcargo' against 'ptrans' parents. */
   unit_transports_iterate(ptrans, pparent)
   {
     if (!unit_transport_check_one(cargo_utype, unit_type_get(pparent))) {
-      return FALSE;
+      return false;
     }
   }
   unit_transports_iterate_end;
@@ -2262,21 +2261,21 @@ bool unit_transport_check(const struct unit *pcargo,
 
     /* ...against 'ptrans'. */
     if (!unit_transport_check_one(cargo_utype, unit_type_get(ptrans))) {
-      return FALSE;
+      return false;
     }
 
     /* ...and against 'ptrans' parents. */
     unit_transports_iterate(ptrans, pparent)
     {
       if (!unit_transport_check_one(cargo_utype, unit_type_get(pparent))) {
-        return FALSE;
+        return false;
       }
     }
     unit_transports_iterate_end;
   }
   unit_cargo_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -2288,11 +2287,11 @@ bool unit_contained_in(const struct unit *pcargo, const struct unit *ptrans)
   unit_transports_iterate(pcargo, plevel)
   {
     if (ptrans == plevel) {
-      return TRUE;
+      return true;
     }
   }
   unit_transports_iterate_end;
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**

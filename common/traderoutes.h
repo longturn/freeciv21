@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
 #include "support.h" /* bool */
 
 struct city;
@@ -127,7 +126,7 @@ int city_trade_removable(const struct city *pcity,
   }                                                                         \
   trade_route_list_iterate_end;                                             \
   }                                                                         \
-  while (FALSE)
+  while (false)
 
 #define trade_routes_iterate_safe(c, proute)                                \
   {                                                                         \
@@ -159,7 +158,7 @@ int city_trade_removable(const struct city *pcity,
   }                                                                         \
   trade_routes_iterate_end;                                                 \
   }                                                                         \
-  while (FALSE)                                                             \
+  while (false)                                                             \
     ;
 
 /* Used in the network protocol. */
@@ -185,7 +184,7 @@ struct goods_type {
 
   bv_goods_flags flags;
 
-  struct strvec *helptext;
+  QVector<QString> *helptext;
 };
 
 void goods_init(void);
@@ -229,5 +228,3 @@ bool city_receives_goods(const struct city *pcity,
   }                                                                         \
   }                                                                         \
   goods_type_iterate_end;
-
-

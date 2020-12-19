@@ -12,9 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
-#include "support.h" /* bool type */
-
 /* Used in the network protocol. */
 #define SPECENUM_NAME event_type
 #define SPECENUM_VALUE0 E_CITY_CANTBUILD

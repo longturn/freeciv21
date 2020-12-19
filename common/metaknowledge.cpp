@@ -32,20 +32,20 @@ static bool is_tile_seen_cadj(const struct player *pow_player,
 {
   /* The tile it self is unseen. */
   if (!tile_is_seen(target_tile, pow_player)) {
-    return FALSE;
+    return false;
   }
 
   /* A cardinally adjacent tile is unseen. */
   cardinal_adjc_iterate(&(wld.map), target_tile, ptile)
   {
     if (!tile_is_seen(ptile, pow_player)) {
-      return FALSE;
+      return false;
     }
   }
   cardinal_adjc_iterate_end;
 
   /* They are all seen. */
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -57,20 +57,20 @@ static bool is_tile_seen_adj(const struct player *pow_player,
 {
   /* The tile it self is unseen. */
   if (!tile_is_seen(target_tile, pow_player)) {
-    return FALSE;
+    return false;
   }
 
   /* An adjacent tile is unseen. */
   adjc_iterate(&(wld.map), target_tile, ptile)
   {
     if (!tile_is_seen(ptile, pow_player)) {
-      return FALSE;
+      return false;
     }
   }
   adjc_iterate_end;
 
   /* They are all seen. */
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -81,7 +81,7 @@ static bool is_tile_seen_city(const struct player *pow_player,
 {
   /* Don't know the city radius. */
   if (!can_player_see_city_internals(pow_player, target_city)) {
-    return FALSE;
+    return false;
   }
 
   /* A tile of the city is unseen */
@@ -89,13 +89,13 @@ static bool is_tile_seen_city(const struct player *pow_player,
                     city_tile(target_city), ptile)
   {
     if (!tile_is_seen(ptile, pow_player)) {
-      return FALSE;
+      return false;
     }
   }
   city_tile_iterate_end;
 
   /* They are all seen. */
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -107,25 +107,25 @@ static bool is_tile_seen_traderoute(const struct player *pow_player,
 {
   /* Don't know who the trade routes will go to. */
   if (!can_player_see_city_internals(pow_player, target_city)) {
-    return FALSE;
+    return false;
   }
 
   /* A tile of the city is unseen */
   if (!is_tile_seen_city(pow_player, target_city)) {
-    return FALSE;
+    return false;
   }
 
   /* A tile of a trade parter is unseen */
   trade_partners_iterate(target_city, trade_partner)
   {
     if (!is_tile_seen_city(pow_player, trade_partner)) {
-      return FALSE;
+      return false;
     }
   }
   trade_partners_iterate_end;
 
   /* They are all seen. */
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -137,20 +137,20 @@ static bool can_plr_see_all_sym_diplrels_of(const struct player *pplayer,
 {
   if (pplayer == tplayer) {
     /* Can see own relationships. */
-    return TRUE;
+    return true;
   }
 
   if (player_has_embassy(pplayer, tplayer)) {
     /* Gets reports from the embassy. */
-    return TRUE;
+    return true;
   }
 
   if (player_diplstate_get(pplayer, tplayer)->contact_turns_left > 0) {
     /* Can see relationships during contact turns. */
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -197,12 +197,12 @@ static bool is_req_knowable(
     case REQ_RANGE_ALLIANCE:
     case REQ_RANGE_WORLD:
     case REQ_RANGE_COUNT:
-      return FALSE;
+      return false;
     }
   }
 
   if (req->source.kind == VUT_UNITSTATE) {
-    fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, FALSE,
+    fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, false,
                           "Wrong range");
 
     if (target_unit == NULL) {
@@ -228,12 +228,12 @@ static bool is_req_knowable(
       fc_assert_msg(req->source.value.unit_state != USP_COUNT,
                     "Invalid unit state property.");
       /* Invalid property is unknowable. */
-      return FALSE;
+      return false;
     }
   }
 
   if (req->source.kind == VUT_MINMOVES) {
-    fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, FALSE,
+    fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, false,
                           "Wrong range");
 
     if (target_unit == NULL) {
@@ -257,12 +257,12 @@ static bool is_req_knowable(
     case REQ_RANGE_WORLD:
     case REQ_RANGE_COUNT:
       /* Invalid range */
-      return FALSE;
+      return false;
     }
   }
 
   if (req->source.kind == VUT_ACTIVITY) {
-    fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, FALSE,
+    fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, false,
                           "Wrong range");
 
     if (target_unit == NULL) {
@@ -272,7 +272,7 @@ static bool is_req_knowable(
     }
 
     if (unit_owner(target_unit) == pow_player) {
-      return TRUE;
+      return true;
     }
 
     if (req->source.value.activity != ACTIVITY_EXPLORE
@@ -292,12 +292,12 @@ static bool is_req_knowable(
       }
 
       if (pow_player == target_player || pow_player == other_player) {
-        return TRUE;
+        return true;
       }
 
       if (can_plr_see_all_sym_diplrels_of(pow_player, target_player)
           || can_plr_see_all_sym_diplrels_of(pow_player, other_player)) {
-        return TRUE;
+        return true;
       }
 
       /* TODO: Non symmetric diplomatic relationships. */
@@ -310,11 +310,11 @@ static bool is_req_knowable(
       }
 
       if (pow_player == target_player) {
-        return TRUE;
+        return true;
       }
 
       if (can_plr_see_all_sym_diplrels_of(pow_player, target_player)) {
-        return TRUE;
+        return true;
       }
 
       /* TODO: Non symmetric diplomatic relationships. */
@@ -335,7 +335,7 @@ static bool is_req_knowable(
     case REQ_RANGE_CONTINENT:
     case REQ_RANGE_COUNT:
       /* Invalid range */
-      return FALSE;
+      return false;
       break;
     }
   }
@@ -348,7 +348,7 @@ static bool is_req_knowable(
     }
 
     if (player_can_see_city_externals(pow_player, target_city)) {
-      return TRUE;
+      return true;
     }
   }
 
@@ -365,7 +365,7 @@ static bool is_req_knowable(
     case REQ_RANGE_LOCAL:
       /* Known because the tile is seen */
       if (tile_is_seen(target_tile, pow_player)) {
-        return TRUE;
+        return true;
       }
 
       /* The player knows its city even if he can't see it */
@@ -374,7 +374,7 @@ static bool is_req_knowable(
     case REQ_RANGE_CADJACENT:
       /* Known because the tile is seen */
       if (is_tile_seen_cadj(pow_player, target_tile)) {
-        return TRUE;
+        return true;
       }
 
       /* The player knows its city even if he can't see it */
@@ -382,17 +382,17 @@ static bool is_req_knowable(
       {
         pcity = tile_city(ptile);
         if (pcity && city_owner(pcity) == pow_player) {
-          return TRUE;
+          return true;
         }
       }
       cardinal_adjc_iterate_end;
 
       /* Unknown */
-      return FALSE;
+      return false;
     case REQ_RANGE_ADJACENT:
       /* Known because the tile is seen */
       if (is_tile_seen_adj(pow_player, target_tile)) {
-        return TRUE;
+        return true;
       }
 
       /* The player knows its city even if he can't see it */
@@ -400,13 +400,13 @@ static bool is_req_knowable(
       {
         pcity = tile_city(ptile);
         if (pcity && city_owner(pcity) == pow_player) {
-          return TRUE;
+          return true;
         }
       }
       adjc_iterate_end;
 
       /* Unknown */
-      return FALSE;
+      return false;
     case REQ_RANGE_CITY:
     case REQ_RANGE_TRADEROUTE:
     case REQ_RANGE_CONTINENT:
@@ -416,7 +416,7 @@ static bool is_req_knowable(
     case REQ_RANGE_WORLD:
     case REQ_RANGE_COUNT:
       /* Invalid range */
-      return FALSE;
+      return false;
     }
   }
 
@@ -443,14 +443,14 @@ static bool is_req_knowable(
     case REQ_RANGE_CONTINENT:
       /* Only wonders (great or small) can be required in those ranges.
        * Wonders are always visible. */
-      return TRUE;
+      return true;
     case REQ_RANGE_TRADEROUTE:
       /* Could be known for trade routes to cities owned by pow_player as
        * long as the requirement is present. Not present requirements would
        * require knowledge that no trade routes to another foreign city
        * exists (since all possible trade routes are to a city owned by
        * pow_player). Not worth the complexity, IMHO. */
-      return FALSE;
+      return false;
     case REQ_RANGE_CITY:
     case REQ_RANGE_LOCAL:
       if (!target_city) {
@@ -462,23 +462,23 @@ static bool is_req_knowable(
       if (can_player_see_city_internals(pow_player, target_city)) {
         /* Anyone that can see city internals (like the owner) known all
          * its improvements. */
-        return TRUE;
+        return true;
       }
 
       if (is_improvement_visible(req->source.value.building)
           && player_can_see_city_externals(pow_player, target_city)) {
         /* Can see visible improvements when the outside of the city is
          * seen. */
-        return TRUE;
+        return true;
       }
 
       /* No way to know if a city has an improvement */
-      return FALSE;
+      return false;
     case REQ_RANGE_CADJACENT:
     case REQ_RANGE_ADJACENT:
     case REQ_RANGE_COUNT:
       /* Not supported by the requirement type. */
-      return FALSE;
+      return false;
     }
   }
 
@@ -493,7 +493,7 @@ static bool is_req_knowable(
       return prob_type == RPT_CERTAIN;
     }
 
-    return TRUE;
+    return true;
   }
 
   if (req->source.kind == VUT_ADVANCE || req->source.kind == VUT_TECHFLAG) {
@@ -533,30 +533,30 @@ static bool is_req_knowable(
       return can_player_see_hypotetic_units_at(pow_player, target_tile);
     case REQ_RANGE_CADJACENT:
       if (!can_player_see_hypotetic_units_at(pow_player, target_tile)) {
-        return FALSE;
+        return false;
       }
       cardinal_adjc_iterate(&(wld.map), target_tile, adjc_tile)
       {
         if (!can_player_see_hypotetic_units_at(pow_player, adjc_tile)) {
-          return FALSE;
+          return false;
         }
       }
       cardinal_adjc_iterate_end;
 
-      return TRUE;
+      return true;
     case REQ_RANGE_ADJACENT:
       if (!can_player_see_hypotetic_units_at(pow_player, target_tile)) {
-        return FALSE;
+        return false;
       }
       adjc_iterate(&(wld.map), target_tile, adjc_tile)
       {
         if (!can_player_see_hypotetic_units_at(pow_player, adjc_tile)) {
-          return FALSE;
+          return false;
         }
       }
       adjc_iterate_end;
 
-      return TRUE;
+      return true;
     case REQ_RANGE_CONTINENT:
     case REQ_RANGE_CITY:
     case REQ_RANGE_TRADEROUTE:
@@ -566,7 +566,7 @@ static bool is_req_knowable(
     case REQ_RANGE_WORLD:
     case REQ_RANGE_COUNT:
       /* Non existing. */
-      return FALSE;
+      return false;
     }
   }
 
@@ -611,22 +611,22 @@ static bool is_req_knowable(
     case REQ_RANGE_WORLD:
     case REQ_RANGE_COUNT:
       /* Non existing range for requirement types. */
-      return FALSE;
+      return false;
     }
   }
 
   if (req->source.kind == VUT_ACTION || req->source.kind == VUT_OTYPE) {
     /* This requirement type is intended to specify the situation. */
-    return TRUE;
+    return true;
   }
 
   if (req->source.kind == VUT_SERVERSETTING) {
     /* Only visible server settings can be requirements. */
-    return TRUE;
+    return true;
   }
 
   /* Uncertain or no support added yet. */
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**

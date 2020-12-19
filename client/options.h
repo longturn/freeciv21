@@ -10,12 +10,8 @@
 **************************************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
-
 /* common */
 #include "events.h"
-#include "fc_types.h"      /* enum gui_type */
 #include "featured_text.h" /* struct ft_color */
 #include "mapimg.h"
 
@@ -225,10 +221,10 @@ int option_number(const struct option *poption);
 #define option_index option_number
 const char *option_name(const struct option *poption);
 const char *option_description(const struct option *poption);
-const char *option_help_text(const struct option *poption);
+QString option_help_text(const struct option *poption);
 enum option_type option_type(const struct option *poption);
 int option_category(const struct option *poption);
-const char *option_category_name(const struct option *poption);
+QString option_category_name(const struct option *poption);
 bool option_is_changeable(const struct option *poption);
 struct option *option_next(const struct option *poption);
 
@@ -259,17 +255,17 @@ bool option_int_set(struct option *poption, int val);
 /* Option type OT_STRING functions. */
 const char *option_str_get(const struct option *poption);
 const char *option_str_def(const struct option *poption);
-const struct strvec *option_str_values(const struct option *poption);
+const QVector<QString> *option_str_values(const struct option *poption);
 bool option_str_set(struct option *poption, const char *str);
 
 /* Option type OT_ENUM functions. */
 int option_enum_str_to_int(const struct option *poption, const char *str);
-const char *option_enum_int_to_str(const struct option *poption, int val);
+QString option_enum_int_to_str(const struct option *poption, int val);
 int option_enum_get_int(const struct option *poption);
-const char *option_enum_get_str(const struct option *poption);
+QString option_enum_get_str(const struct option *poption);
 int option_enum_def_int(const struct option *poption);
-const char *option_enum_def_str(const struct option *poption);
-const struct strvec *option_enum_values(const struct option *poption);
+QString option_enum_def_str(const struct option *poption);
+const QVector<QString> *option_enum_values(const struct option *poption);
 bool option_enum_set_int(struct option *poption, int val);
 bool option_enum_set_str(struct option *poption, const char *str);
 
@@ -277,14 +273,14 @@ bool option_enum_set_str(struct option *poption, const char *str);
 unsigned option_bitwise_get(const struct option *poption);
 unsigned option_bitwise_def(const struct option *poption);
 unsigned option_bitwise_mask(const struct option *poption);
-const struct strvec *option_bitwise_values(const struct option *poption);
+const QVector<QString> *option_bitwise_values(const struct option *poption);
 bool option_bitwise_set(struct option *poption, unsigned val);
 
 /* Option type OT_FONT functions. */
-const char *option_font_get(const struct option *poption);
-const char *option_font_def(const struct option *poption);
-const char *option_font_target(const struct option *poption);
-bool option_font_set(struct option *poption, const char *font);
+const QString option_font_get(const struct option *poption);
+const QString option_font_def(const struct option *poption);
+const QString option_font_target(const struct option *poption);
+bool option_font_set(struct option *poption, const QString &font);
 
 /* Option type OT_COLOR functions. */
 struct ft_color option_color_get(const struct option *poption);
@@ -330,5 +326,3 @@ struct tileset;
 const char *tileset_name_for_topology(int topology_id);
 void option_set_default_ts(struct tileset *t);
 void fill_topo_ts_default(void);
-
-

@@ -39,6 +39,7 @@
 #include "requirements.h"
 #include "specialist.h"
 #include "traderoutes.h"
+#include "workertask.h"
 #include "unit.h"
 
 /* aicore */
@@ -81,12 +82,12 @@ struct citystyle *city_styles = NULL;
 /* One day these values may be read in from the ruleset.  In the meantime
  * they're just an easy way to access information about each output type. */
 struct output_type output_types[O_LAST] = {
-    {O_FOOD, N_("Food"), "food", TRUE, UNHAPPY_PENALTY_SURPLUS},
-    {O_SHIELD, N_("Shield"), "shield", TRUE, UNHAPPY_PENALTY_SURPLUS},
-    {O_TRADE, N_("Trade"), "trade", TRUE, UNHAPPY_PENALTY_NONE},
-    {O_GOLD, N_("Gold"), "gold", FALSE, UNHAPPY_PENALTY_ALL_PRODUCTION},
-    {O_LUXURY, N_("Luxury"), "luxury", FALSE, UNHAPPY_PENALTY_NONE},
-    {O_SCIENCE, N_("Science"), "science", FALSE,
+    {O_FOOD, N_("Food"), "food", true, UNHAPPY_PENALTY_SURPLUS},
+    {O_SHIELD, N_("Shield"), "shield", true, UNHAPPY_PENALTY_SURPLUS},
+    {O_TRADE, N_("Trade"), "trade", true, UNHAPPY_PENALTY_NONE},
+    {O_GOLD, N_("Gold"), "gold", false, UNHAPPY_PENALTY_ALL_PRODUCTION},
+    {O_LUXURY, N_("Luxury"), "luxury", false, UNHAPPY_PENALTY_NONE},
+    {O_SCIENCE, N_("Science"), "science", false,
      UNHAPPY_PENALTY_ALL_PRODUCTION}};
 
 /**********************************************************************/ /**
@@ -96,19 +97,19 @@ struct output_type output_types[O_LAST] = {
 bool city_tile_index_to_xy(int *city_map_x, int *city_map_y,
                            int city_tile_index, int city_radius_sq)
 {
-  fc_assert_ret_val(city_radius_sq >= CITY_MAP_MIN_RADIUS_SQ, FALSE);
-  fc_assert_ret_val(city_radius_sq <= CITY_MAP_MAX_RADIUS_SQ, FALSE);
+  fc_assert_ret_val(city_radius_sq >= CITY_MAP_MIN_RADIUS_SQ, false);
+  fc_assert_ret_val(city_radius_sq <= CITY_MAP_MAX_RADIUS_SQ, false);
 
   /* tile indices are sorted from smallest to largest city radius */
   if (city_tile_index < 0
       || city_tile_index >= city_map_tiles(city_radius_sq)) {
-    return FALSE;
+    return false;
   }
 
   *city_map_x = CITY_REL2ABS(city_map_index[city_tile_index].dx);
   *city_map_y = CITY_REL2ABS(city_map_index[city_tile_index].dy);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -718,12 +719,12 @@ bool city_production_build_units(const struct city *pcity,
   int shields_left = pcity->shield_stock;
   int unit_shield_cost, i;
 
-  fc_assert_ret_val(num_units != NULL, FALSE);
+  fc_assert_ret_val(num_units != NULL, false);
   (*num_units) = 0;
 
   if (pcity->production.kind != VUT_UTYPE) {
     /* not a unit as the current production */
-    return FALSE;
+    return false;
   }
 
   utype = pcity->production.value.utype;
@@ -731,7 +732,7 @@ bool city_production_build_units(const struct city *pcity,
     /* unit with population cost or unique unit means that only one unit can
      * be build */
     (*num_units)++;
-    return FALSE;
+    return false;
   }
 
   if (add_production) {
@@ -760,7 +761,7 @@ bool city_production_build_units(const struct city *pcity,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -797,11 +798,11 @@ bool can_city_build_improvement_direct(const struct city *pcity,
                                        const struct impr_type *pimprove)
 {
   if (!can_player_build_improvement_direct(city_owner(pcity), pimprove)) {
-    return FALSE;
+    return false;
   }
 
   if (city_has_building(pcity, pimprove)) {
-    return FALSE;
+    return false;
   }
 
   return are_reqs_active(city_owner(pcity), NULL, pcity, NULL, pcity->tile,
@@ -817,13 +818,13 @@ bool can_city_build_improvement_now(const struct city *pcity,
                                     const struct impr_type *pimprove)
 {
   if (!can_city_build_improvement_direct(pcity, pimprove)) {
-    return FALSE;
+    return false;
   }
   if (improvement_obsolete(city_owner(pcity), pimprove, pcity)) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -835,7 +836,7 @@ bool can_city_build_improvement_later(const struct city *pcity,
 {
   /* Can the _player_ ever build this improvement? */
   if (!can_player_build_improvement_later(city_owner(pcity), pimprove)) {
-    return FALSE;
+    return false;
   }
 
   /* Check for requirements that aren't met and that are unchanging (so
@@ -846,12 +847,12 @@ bool can_city_build_improvement_later(const struct city *pcity,
         && !is_req_active(city_owner(pcity), NULL, pcity, NULL, pcity->tile,
                           NULL, NULL, NULL, NULL, NULL, preq,
                           RPT_POSSIBLE)) {
-      return FALSE;
+      return false;
     }
   }
   requirement_vector_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -862,29 +863,29 @@ bool can_city_build_unit_direct(const struct city *pcity,
                                 const struct unit_type *punittype)
 {
   if (!can_player_build_unit_direct(city_owner(pcity), punittype)) {
-    return FALSE;
+    return false;
   }
 
   /* Check unit build requirements. */
   if (!are_reqs_active(city_owner(pcity), NULL, pcity, NULL,
                        city_tile(pcity), NULL, punittype, NULL, NULL, NULL,
                        &punittype->build_reqs, RPT_CERTAIN)) {
-    return FALSE;
+    return false;
   }
 
   /* You can't build naval units inland. */
   if (!uclass_has_flag(utype_class(punittype), UCF_BUILD_ANYWHERE)
       && !is_native_near_tile(&(wld.map), utype_class(punittype),
                               pcity->tile)) {
-    return FALSE;
+    return false;
   }
 
   if (punittype->city_slots > 0
       && city_unit_slots_available(pcity) < punittype->city_slots) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -895,14 +896,14 @@ bool can_city_build_unit_now(const struct city *pcity,
                              const struct unit_type *punittype)
 {
   if (!can_city_build_unit_direct(pcity, punittype)) {
-    return FALSE;
+    return false;
   }
   while ((punittype = punittype->obsoleted_by) != U_NOT_OBSOLETED) {
     if (can_player_build_unit_direct(city_owner(pcity), punittype)) {
-      return FALSE;
+      return false;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -914,7 +915,7 @@ bool can_city_build_unit_later(const struct city *pcity,
 {
   /* Can the _player_ ever build this unit? */
   if (!can_player_build_unit_later(city_owner(pcity), punittype)) {
-    return FALSE;
+    return false;
   }
 
   /* Some units can be built only in certain cities -- for instance,
@@ -922,10 +923,10 @@ bool can_city_build_unit_later(const struct city *pcity,
   if (!uclass_has_flag(utype_class(punittype), UCF_BUILD_ANYWHERE)
       && !is_native_near_tile(&(wld.map), utype_class(punittype),
                               pcity->tile)) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -943,7 +944,7 @@ bool can_city_build_direct(const struct city *pcity,
   default:
     break;
   };
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -961,7 +962,7 @@ bool can_city_build_now(const struct city *pcity,
   default:
     break;
   };
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -978,7 +979,7 @@ bool can_city_build_later(const struct city *pcity,
   default:
     break;
   };
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1037,14 +1038,14 @@ void city_choose_build_default(struct city *pcity)
       pcity->production.kind = VUT_UTYPE;
       pcity->production.value.utype = u;
     } else {
-      bool found = FALSE;
+      bool found = false;
 
       /* Just pick the first available item. */
 
       improvement_iterate(pimprove)
       {
         if (can_city_build_improvement_direct(pcity, pimprove)) {
-          found = TRUE;
+          found = true;
           pcity->production.kind = VUT_IMPROVEMENT;
           pcity->production.value.building = pimprove;
           break;
@@ -1056,7 +1057,7 @@ void city_choose_build_default(struct city *pcity)
         unit_type_iterate(punittype)
         {
           if (can_city_build_unit_direct(pcity, punittype)) {
-            found = TRUE;
+            found = true;
             pcity->production.kind = VUT_UTYPE;
             pcity->production.value.utype = punittype;
           }
@@ -1192,7 +1193,7 @@ bool city_has_building(const struct city *pcity,
   if (NULL == pimprove) {
     /* Callers should ensure that any external data is tested with
      * valid_improvement_by_number() */
-    return FALSE;
+    return false;
   }
   return (pcity->built[improvement_index(pimprove)].turn > I_NEVER);
 }
@@ -1346,43 +1347,43 @@ bool base_city_can_work_tile(const struct player *restriction,
   int city_map_x, city_map_y;
 
   if (NULL == ptile) {
-    return FALSE;
+    return false;
   }
 
   if (!city_base_to_city_map(&city_map_x, &city_map_y, pcity, ptile)) {
-    return FALSE;
+    return false;
   }
 
   if (NULL != restriction
       && TILE_UNKNOWN == tile_get_known(ptile, restriction)) {
-    return FALSE;
+    return false;
   }
 
   if (NULL != tile_owner(ptile) && tile_owner(ptile) != powner) {
-    return FALSE;
+    return false;
   }
   /* TODO: civ3-like option for borders */
 
   if (NULL != tile_worked(ptile) && tile_worked(ptile) != pcity) {
-    return FALSE;
+    return false;
   }
 
   if (powner == restriction
       && TILE_KNOWN_SEEN != tile_get_known(ptile, powner)) {
-    return FALSE;
+    return false;
   }
 
   if (!is_free_worked(pcity, ptile)
       && NULL != unit_occupies_tile(ptile, powner)) {
-    return FALSE;
+    return false;
   }
 
   if (get_city_tile_output_bonus(pcity, ptile, NULL, EFT_TILE_WORKABLE)
       <= 0) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1407,12 +1408,12 @@ bool citymindist_prevents_city_on_tile(const struct tile *ptile)
   square_iterate(&(wld.map), ptile, citymindist - 1, ptile1)
   {
     if (tile_city(ptile1)) {
-      return TRUE;
+      return true;
     }
   }
   square_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1426,12 +1427,12 @@ bool city_can_be_built_here(const struct tile *ptile,
                             const struct unit *punit)
 {
   if (!city_can_be_built_tile_only(ptile)) {
-    return FALSE;
+    return false;
   }
 
   if (punit == NULL) {
     /* The reamining checks tests if punit can found a city here */
-    return TRUE;
+    return true;
   }
 
   action_by_result_iterate(paction, act_id, ACTRES_FOUND_CITY)
@@ -1445,7 +1446,7 @@ bool city_can_be_built_here(const struct tile *ptile,
     if (!can_unit_exist_at_tile(&(wld.map), punit, ptile)
         /* The ruleset may allow founding cities on non native terrain. */
         && !utype_can_do_act_when_ustate(unit_type_get(punit), paction->id,
-                                         USP_LIVABLE_TILE, FALSE)) {
+                                         USP_LIVABLE_TILE, false)) {
       /* Many rulesets allow land units to build land cities and sea units
        * to build ocean cities. Air units can build cities anywhere. */
       continue;
@@ -1456,17 +1457,17 @@ bool city_can_be_built_here(const struct tile *ptile,
         && tile_owner(ptile) != unit_owner(punit)
         /* The ruleset may allow founding cities on foreign terrain. */
         && !can_utype_do_act_if_tgt_diplrel(
-            unit_type_get(punit), paction->id, DRO_FOREIGN, TRUE)) {
+            unit_type_get(punit), paction->id, DRO_FOREIGN, true)) {
       /* Cannot steal borders by settling. This has to be settled by
        * force of arms. */
       continue;
     }
 
-    return TRUE;
+    return true;
   }
   action_by_result_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1480,14 +1481,14 @@ bool city_can_be_built_tile_only(const struct tile *ptile)
 {
   if (terrain_has_flag(tile_terrain(ptile), TER_NO_CITIES)) {
     /* No cities on this terrain. */
-    return FALSE;
+    return false;
   }
 
   if (citymindist_prevents_city_on_tile(ptile)) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1712,8 +1713,8 @@ void city_production_caravan_shields_init(void)
 
   /* Common for all production kinds. */
   prod_as_req.range = REQ_RANGE_LOCAL;
-  prod_as_req.survives = FALSE;
-  prod_as_req.present = TRUE;
+  prod_as_req.survives = false;
+  prod_as_req.present = true;
 
   /* Check improvements */
   prod_as_req.source.kind = VUT_IMPROVEMENT;
@@ -1797,8 +1798,8 @@ bool city_production_gets_caravan_shields(const struct universal *tgt)
   case VUT_UTYPE:
     return BV_ISSET(caravan_helped_utype, utype_index(tgt->value.utype));
   default:
-    fc_assert(FALSE);
-    return FALSE;
+    fc_assert(false);
+    return false;
   };
 }
 
@@ -2027,12 +2028,12 @@ bool is_friendly_city_near(const struct player *owner,
     struct city *pcity = tile_city(ptile1);
 
     if (pcity && pplayers_allied(owner, city_owner(pcity))) {
-      return TRUE;
+      return true;
     }
   }
   square_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -2046,13 +2047,13 @@ bool city_exists_within_max_city_map(const struct tile *ptile,
   {
     if (may_be_on_center || !same_pos(ptile, ptile1)) {
       if (tile_city(ptile1)) {
-        return TRUE;
+        return true;
       }
     }
   }
   city_tile_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -2867,7 +2868,7 @@ void set_city_production(struct city *pcity)
           trade_route_settings_by_type(type);
 
       if (settings->cancelling == TRI_ACTIVE) {
-        can_trade = TRUE;
+        can_trade = true;
       }
     }
 
@@ -3110,7 +3111,7 @@ int city_waste(const struct city *pcity, Output_type_id otype, int total,
                           * possible size penalty */
   int waste_level =
       get_city_output_bonus(pcity, get_output_type(otype), EFT_OUTPUT_WASTE);
-  bool waste_all = FALSE;
+  bool waste_all = false;
 
   if (otype == O_TRADE) {
     /* FIXME: special case for trade: it is affected by notradesize and
@@ -3167,7 +3168,7 @@ int city_waste(const struct city *pcity, Output_type_id otype, int total,
       }
 
       if (gov_center == NULL) {
-        waste_all = TRUE; /* no gov center - no income */
+        waste_all = true; /* no gov center - no income */
       } else {
         waste_level += waste_by_dist * min_dist / 100;
         if (waste_by_rel_dist > 0) {
@@ -3357,7 +3358,7 @@ struct city *create_city_virtual(struct player *pplayer, struct tile *ptile,
   output_type_iterate_end;
 
   pcity->turn_plague = -1; /* -1 = never */
-  pcity->did_buy = FALSE;
+  pcity->did_buy = false;
   pcity->city_radius_sq = game.info.init_city_radius_sq;
   pcity->turn_founded = game.info.turn;
   pcity->turn_last_built = game.info.turn;
@@ -3418,11 +3419,7 @@ void destroy_city_virtual(struct city *pcity)
   if (pcity->tile_cache != NULL) {
     free(pcity->tile_cache); //realloc
   }
-
-  if (pcity->cm_parameter) {
-    delete[] pcity->cm_parameter;
-  }
-
+  NFCPP_FREE(pcity->cm_parameter);
   if (!is_server()) {
     unit_list_destroy(pcity->client.info_units_supported);
     unit_list_destroy(pcity->client.info_units_present);
@@ -3448,10 +3445,10 @@ bool city_exist(int id)
 {
   /* Check if city exist in game */
   if (game_city_by_number(id)) {
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -3464,7 +3461,7 @@ bool city_exist(int id)
 bool city_is_virtual(const struct city *pcity)
 {
   if (!pcity) {
-    return FALSE;
+    return false;
   }
 
   return pcity != game_city_by_number(pcity->id);
@@ -3483,7 +3480,7 @@ bool city_is_virtual(const struct city *pcity)
 bool is_city_center(const struct city *pcity, const struct tile *ptile)
 {
   if (!pcity || !pcity->tile || !ptile) {
-    return FALSE;
+    return false;
   }
 
   return tile_index(city_tile(pcity)) == tile_index(ptile);

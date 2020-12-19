@@ -17,7 +17,6 @@
 #include <QTextStream>
 /* utility */
 #include "shared.h"
-#include "string_vector.h"
 /* client */
 #include "page_game.h"
 #include "qtg_cxxside.h"
@@ -117,9 +116,8 @@ char **qtg_get_gui_specific_themes_directories(int *count)
   int i = 0;
 
   *count = data_dirs->size();
-  for (auto data_dir: *data_dirs)
-  {
-    QString buf = QString("%1/themes/gui-qt").arg(data_dir);
+  for (const auto &data_dir : *data_dirs) {
+    QString buf = QStringLiteral("%1/themes/gui-qt").arg(data_dir);
 
     directories[i++] = qstrdup(qUtf8Printable(buf));
   }

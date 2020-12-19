@@ -13,9 +13,6 @@
 #pragma once
 
 #include <QDir>
-#include <stdlib.h> /* size_t */
-#include <string.h> /* memset */
-#include <time.h>   /* time_t */
 
 /* utility */
 #include "log.h"
@@ -122,8 +119,6 @@ void randomize_base64url_string(char *s, size_t n);
 
 int compare_strings(const void *first, const void *second);
 int compare_strings_ptrs(const void *first, const void *second);
-int compare_strings_strvec(const char *const *first,
-                           const char *const *second);
 
 char *skip_leading_spaces(char *s);
 void remove_leading_spaces(char *s);
@@ -171,7 +166,8 @@ const QStringList *get_scenario_dirs(void);
 
 void free_data_dir_names(void);
 
-struct strvec *fileinfolist(const QStringList *dirs, const char *suffix);
+struct QVector<QString> *fileinfolist(const QStringList *dirs,
+                                      const char *suffix);
 struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
                                          const char *infix, bool nodups);
 const char *fileinfoname(const QStringList *dirs, const char *filename);
@@ -406,5 +402,3 @@ static inline struct cf_sequence cf_end(void)
 }
 
 bool formats_match(const char *format1, const char *format2);
-
-

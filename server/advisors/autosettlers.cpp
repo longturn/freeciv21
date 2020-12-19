@@ -34,6 +34,8 @@
 #include "movement.h"
 #include "packets.h"
 #include "unitlist.h"
+#include "nation.h"
+#include "workertask.h"
 
 /* common/aicore */
 #include "citymap.h"
@@ -160,9 +162,9 @@ adv_want adv_settlers_road_bonus(struct tile *ptile, struct road_type *proad)
     struct tile *tile1 = map_pos_to_tile(&(wld.map), x + dx[i], y + dy[i]);
 
     if (!tile1) {
-      real_road[i] = FALSE;
-      potential_road[i] = FALSE;
-      is_slow[i] = FALSE; /* FIXME: should be TRUE? */
+      real_road[i] = false;
+      potential_road[i] = false;
+      is_slow[i] = false; /* FIXME: should be TRUE? */
     } else {
       int build_time = terrain_extra_build_time(tile_terrain(tile1),
                                                 ACTIVITY_GEN_ROAD, pextra);
@@ -192,12 +194,12 @@ adv_want adv_settlers_road_bonus(struct tile *ptile, struct road_type *proad)
             build_rnbr = road_number(extra_road_get(punit->activity_target));
 
             if (build_rnbr == rnbr) {
-              real_road[i] = TRUE;
-              potential_road[i] = TRUE;
+              real_road[i] = true;
+              potential_road[i] = true;
             }
             for (j = 0; !potential_road[i] && j < dep_count; j++) {
               if (build_rnbr == dep_rnbr[j]) {
-                potential_road[i] = TRUE;
+                potential_road[i] = true;
               }
             }
           }
@@ -320,11 +322,11 @@ static void consider_settler_action(
   }
 
   if (new_tile_value > old_tile_value) {
-    improves = TRUE;
+    improves = true;
   } else if (new_tile_value == old_tile_value && extra > 0) {
-    improves = TRUE;
+    improves = true;
   } else {
-    improves = FALSE;
+    improves = false;
   }
 
   /* find the present value of the future benefit of this action */
@@ -378,10 +380,10 @@ static void consider_settler_action(
             && old_tile_value > *best_old_tile_value)) {
       if (in_use) {
         *best_value = total_value;
-        *improve_worked = TRUE;
+        *improve_worked = true;
       } else {
         *best_value = new_tile_value;
-        *improve_worked = FALSE;
+        *improve_worked = false;
       }
       *best_old_tile_value = old_tile_value;
       *best_extra = extra;
@@ -441,7 +443,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
                          * newv == best_newv; not initialized to zero,
                          * so that newv = 0 activities are not chosen. */
   adv_want best_newv = 0;
-  bool improve_worked = FALSE;
+  bool improve_worked = false;
   int best_extra = 0;
   int best_delay = 0;
 
@@ -461,7 +463,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
     city_tile_iterate_index(city_map_radius_sq_get(pcity), pcenter, ptile,
                             cindex)
     {
-      bool consider = TRUE;
+      bool consider = true;
       bool in_use = (tile_worked(ptile) == pcity);
 
       if (!in_use && !city_can_work_tile(pcity, ptile)) {
@@ -479,7 +481,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
       {
         if (unit_owner(aunit) == pplayer && aunit->id != punit->id
             && unit_has_type_flag(aunit, UTYF_SETTLERS)) {
-          consider = FALSE;
+          consider = false;
         }
       }
       unit_list_iterate_end;
@@ -822,14 +824,14 @@ struct city *settler_evaluate_city_requests(struct unit *punit,
   {
     worker_task_list_iterate(pcity->task_reqs, ptask)
     {
-      bool consider = TRUE;
+      bool consider = true;
 
       /* Do not go to tiles that already have workers there. */
       unit_list_iterate(ptask->ptile->units, aunit)
       {
         if (unit_owner(aunit) == pplayer && aunit->id != punit->id
             && unit_has_type_flag(aunit, UTYF_SETTLERS)) {
-          consider = FALSE;
+          consider = false;
         }
       }
       unit_list_iterate_end;
@@ -984,12 +986,12 @@ bool auto_settler_setup_work(struct player *pplayer, struct unit *punit,
   if (punit->server.adv->task == AUT_AUTO_SETTLER) {
     struct pf_map *pfm = NULL;
     struct pf_parameter parameter;
-    bool working = FALSE;
+    bool working = false;
     struct unit *displaced;
 
     if (!best_tile) {
       UNIT_LOG(LOG_DEBUG, punit, "giving up trying to improve terrain");
-      return FALSE; /* We cannot do anything */
+      return false; /* We cannot do anything */
     }
 
     /* Mark the square as taken. */
@@ -1026,7 +1028,7 @@ bool auto_settler_setup_work(struct player *pplayer, struct unit *punit,
         /* Actions of the displaced settler somehow caused this settler
          * to die. (maybe by recursively giving control back to this unit)
          */
-        return FALSE;
+        return false;
       }
       if (goto_tile != punit->goto_tile || old_pos != unit_tile(punit)
           || punit->activity != ACTIVITY_IDLE) {
@@ -1040,7 +1042,7 @@ bool auto_settler_setup_work(struct player *pplayer, struct unit *punit,
                  "Now heading from (%d, %d) to (%d, %d).",
                  punit->id, TILE_XY(old_pos), TILE_XY(goto_tile),
                  TILE_XY(unit_tile(punit)), TILE_XY(punit->goto_tile));
-        return FALSE;
+        return false;
       }
     }
 
@@ -1074,7 +1076,7 @@ bool auto_settler_setup_work(struct player *pplayer, struct unit *punit,
         send_unit_info(NULL, punit); /* FIXME: probably duplicate */
 
         UNIT_LOG(LOG_DEBUG, punit, "reached its worksite and started work");
-        working = TRUE;
+        working = true;
       } else if (alive) {
         UNIT_LOG(LOG_DEBUG, punit,
                  "didn't start work yet; got to (%d, %d) with "
@@ -1093,7 +1095,7 @@ bool auto_settler_setup_work(struct player *pplayer, struct unit *punit,
     return working;
   }
 
-  return FALSE;
+  return false;
 }
 #undef LOG_SETTLER
 
@@ -1106,16 +1108,16 @@ bool adv_settler_safe_tile(const struct player *pplayer, struct unit *punit,
   unit_list_iterate(ptile->units, defender)
   {
     if (is_military_unit(defender)) {
-      return TRUE;
+      return true;
     }
   }
   unit_list_iterate_end;
 
   if (is_square_threatened(pplayer, ptile, !has_handicap(pplayer, H_FOG))) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1260,7 +1262,7 @@ bool auto_settlers_speculate_can_act_at(const struct unit *punit,
 
   if (paction == NULL) {
     /* The action it self isn't there. It can't be enabled. */
-    return FALSE;
+    return false;
   }
 
   switch (action_get_target_kind(paction)) {
@@ -1269,7 +1271,7 @@ bool auto_settlers_speculate_can_act_at(const struct unit *punit,
         paction->id, punit, unit_home(punit), ptile, omniscient_cheat,
         tile_city(ptile)));
   case ATK_UNIT:
-    fc_assert_ret_val(action_get_target_kind(paction) != ATK_UNIT, FALSE);
+    fc_assert_ret_val(action_get_target_kind(paction) != ATK_UNIT, false);
     break;
   case ATK_UNITS:
     return action_prob_possible(
@@ -1283,10 +1285,10 @@ bool auto_settlers_speculate_can_act_at(const struct unit *punit,
     return action_prob_possible(action_speculate_unit_on_self(
         paction->id, punit, unit_home(punit), ptile, omniscient_cheat));
   case ATK_COUNT:
-    fc_assert_ret_val(action_get_target_kind(paction) != ATK_COUNT, FALSE);
+    fc_assert_ret_val(action_get_target_kind(paction) != ATK_COUNT, false);
     break;
   }
 
-  fc_assert(FALSE);
-  return FALSE;
+  fc_assert(false);
+  return false;
 }

@@ -32,6 +32,7 @@
 #include "movement.h"
 #include "packets.h"
 #include "player.h"
+#include "workertask.h"
 
 /* common/aicore */
 #include "citymap.h"
@@ -220,8 +221,8 @@ static struct cityresult *cityresult_new(struct tile *ptile)
   result->result = -666;
   result->corruption = 0;
   result->waste = 0;
-  result->overseas = FALSE;
-  result->virt_boat = FALSE;
+  result->overseas = false;
+  result->virt_boat = false;
 
   /* city centre */
   result->city_center.tdc = NULL;
@@ -246,7 +247,7 @@ static void cityresult_destroy(struct cityresult *result)
   if (result != NULL) {
     if (result->tdc_hash != NULL) {
       for (auto ptdc : *result->tdc_hash) {
-        NFCPP_FREE(ptdc)
+        NFCPP_FREE(ptdc);
       }
       delete result->tdc_hash;
     }
@@ -270,7 +271,7 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
   struct government *curr_govt = government_of_player(pplayer);
   struct player *saved_owner = NULL;
   struct tile *saved_claimer = NULL;
-  bool virtual_city = FALSE;
+  bool virtual_city = false;
   bool handicap = has_handicap(pplayer, H_MAP);
   struct adv_data *adv = adv_data_get(pplayer, NULL);
   struct ai_plr *ai = dai_plr_data_get(ait, pplayer, NULL);
@@ -290,7 +291,7 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
     saved_claimer = tile_claimer(result->tile);
     tile_set_owner(result->tile, pplayer, result->tile); /* temporarily */
     city_choose_build_default(pcity);                    /* ?? */
-    virtual_city = TRUE;
+    virtual_city = true;
   }
 
   result->city_radius_sq = city_map_radius_sq_get(pcity);
@@ -321,11 +322,11 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
         ptdc = tile_data_cache_new();
 
         /* Food */
-        ptdc->food = city_tile_output(pcity, ptile, FALSE, O_FOOD);
+        ptdc->food = city_tile_output(pcity, ptile, false, O_FOOD);
         /* Shields */
-        ptdc->shield = city_tile_output(pcity, ptile, FALSE, O_SHIELD);
+        ptdc->shield = city_tile_output(pcity, ptile, false, O_SHIELD);
         /* Trade */
-        ptdc->trade = city_tile_output(pcity, ptile, FALSE, O_TRADE);
+        ptdc->trade = city_tile_output(pcity, ptile, false, O_TRADE);
         /* Weighted sum */
         ptdc->sum = ptdc->food * adv->food_priority
                     + ptdc->trade * adv->science_priority
@@ -785,7 +786,7 @@ static struct cityresult *settler_map_iterate(struct ai_type *ait,
   struct pf_map *pfm;
 
   pfm = pf_map_new(parameter);
-  pf_map_move_costs_iterate(pfm, ptile, move_cost, FALSE)
+  pf_map_move_costs_iterate(pfm, ptile, move_cost, false)
   {
     int turns;
 
@@ -951,7 +952,7 @@ static struct cityresult *find_best_city_placement(struct ai_type *ait,
     cr2 = settler_map_iterate(ait, &parameter, punit,
                               unit_build_shield_cost_base(ferry));
     if (cr2) {
-      cr2->overseas = TRUE;
+      cr2->overseas = true;
       cr2->virt_boat = (ferry->id == 0);
     }
 
@@ -1049,7 +1050,7 @@ BUILD_CITY:
       if (same_pos(unit_tile(punit), ptile)) {
         if (!dai_do_build_city(ait, pplayer, punit)) {
           UNIT_LOG(LOG_DEBUG, punit, "could not make city on %s",
-                   tile_get_info_text(unit_tile(punit), TRUE, 0));
+                   tile_get_info_text(unit_tile(punit), true, 0));
           dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
           /* Only known way to end in here is that hut turned in to a city
            * when settler entered tile. So this is not going to lead in any
@@ -1106,7 +1107,7 @@ BUILD_CITY:
 
     /* may use a boat: */
     TIMING_LOG(AIT_SETTLERS, TIMER_START);
-    result = find_best_city_placement(ait, punit, TRUE, FALSE);
+    result = find_best_city_placement(ait, punit, true, false);
     TIMING_LOG(AIT_SETTLERS, TIMER_STOP);
     if (result && result->result > best_impr) {
       UNIT_LOG(LOG_DEBUG, punit, "city want %d", result->result);
@@ -1206,7 +1207,7 @@ void dai_auto_settler_reset(struct ai_type *ait, struct player *pplayer)
 #endif /* FREECIV_DEBUG */
 
   for (auto ptdc : *ai->settler->tdc_hash) {
-    NFCPP_FREE(ptdc)
+    NFCPP_FREE(ptdc);
   }
   ai->settler->tdc_hash->clear();
 
@@ -1223,9 +1224,7 @@ void dai_auto_settler_free(struct ai_plr *ai)
   fc_assert_ret(ai != NULL);
 
   if (ai->settler) {
-    if (ai->settler->tdc_hash) {
-      delete ai->settler->tdc_hash;
-    }
+    NFC_FREE(ai->settler->tdc_hash);
     delete[] ai->settler;
   }
   ai->settler = NULL;
@@ -1240,7 +1239,7 @@ static bool dai_do_build_city(struct ai_type *ait, struct player *pplayer,
   struct tile *ptile = unit_tile(punit);
   struct city *pcity;
 
-  fc_assert_ret_val(pplayer == unit_owner(punit), FALSE);
+  fc_assert_ret_val(pplayer == unit_owner(punit), false);
   unit_activity_handling(punit, ACTIVITY_IDLE);
 
   /* Free city reservations */
@@ -1252,7 +1251,7 @@ static bool dai_do_build_city(struct ai_type *ait, struct player *pplayer,
      * and it turned in to a city when settler entered tile. */
     log_debug("%s: There is already a city at (%d, %d)!",
               player_name(pplayer), TILE_XY(ptile));
-    return FALSE;
+    return false;
   }
   unit_do_action(pplayer, punit->id, ptile->index, 0,
                  city_name_suggestion(pplayer, ptile), ACTION_FOUND_CITY);
@@ -1271,19 +1270,19 @@ static bool dai_do_build_city(struct ai_type *ait, struct player *pplayer,
       qCritical("%s: Failed to build city at (%d, %d). Reason id: %d",
                 player_name(pplayer), TILE_XY(ptile), reason);
     }
-    return FALSE;
+    return false;
   }
 
   /* We have to rebuild at least the cache for this city.  This event is
    * rare enough we might as well build the whole thing.  Who knows what
    * else might be cached in the future? */
-  fc_assert_ret_val(pplayer == city_owner(pcity), FALSE);
+  fc_assert_ret_val(pplayer == city_owner(pcity), false);
   initialize_infrastructure_cache(pplayer);
 
   /* Init ai.choice. Handling ferryboats might use it. */
   adv_init_choice(&def_ai_city_data(pcity, ait)->choice);
 
-  return TRUE;
+  return true;
 }
 
 /*************************************************************************/ /**

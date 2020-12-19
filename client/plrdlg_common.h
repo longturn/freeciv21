@@ -10,16 +10,6 @@
 **************************************************************************/
 #pragma once
 
-// Qt
-#include <QString>
-
-/* utility */
-#include "support.h" /* bool type */
-
-/* common */
-#include "fc_types.h"
-#include "player.h"
-
 enum player_dlg_column_type {
   COL_FLAG,
   COL_COLOR,

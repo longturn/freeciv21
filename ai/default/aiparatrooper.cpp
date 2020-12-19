@@ -418,7 +418,7 @@ void dai_choose_paratrooper(struct ai_type *ait, struct player *pplayer,
       choice->want = profit;
       choice->value.utype = u_type;
       choice->type = CT_ATTACKER;
-      choice->need_boat = FALSE;
+      choice->need_boat = false;
       adv_choice_set_use(choice, "paratrooper");
       log_base(LOGLEVEL_PARATROOPER, "%s wants to build %s (want=%d)",
                city_name_get(pcity), utype_rule_name(u_type), profit);

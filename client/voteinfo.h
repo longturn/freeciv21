@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
 #include "fc_types.h"
 
 enum client_vote_type { CVT_NONE = 0, CVT_YES, CVT_NO, CVT_ABSTAIN };

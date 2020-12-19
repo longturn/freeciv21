@@ -56,7 +56,7 @@ void dai_data_init(struct ai_type *ait, struct player *pplayer)
 {
   struct ai_plr *ai = def_ai_player_data(pplayer, ait);
 
-  ai->phase_initialized = FALSE;
+  ai->phase_initialized = false;
 
   ai->last_num_continents = -1;
   ai->last_num_oceans = -1;
@@ -157,7 +157,7 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
     return;
   }
 
-  ai->phase_initialized = TRUE;
+  ai->phase_initialized = true;
 
   adv = adv_data_get(pplayer, &caller_closes);
 
@@ -297,7 +297,7 @@ void dai_data_phase_finished(struct ai_type *ait, struct player *pplayer)
   delete[] ai->stats.ocean_workers;
   ai->stats.ocean_workers = NULL;
 
-  ai->phase_initialized = FALSE;
+  ai->phase_initialized = false;
 }
 
 /************************************************************************/ /**
@@ -320,7 +320,7 @@ struct ai_plr *dai_plr_data_get(struct ai_type *ait, struct player *pplayer,
 #endif
 
   if (caller_closes != NULL) {
-    *caller_closes = FALSE;
+    *caller_closes = false;
   }
 
   if (ai->last_num_continents != wld.map.num_continents
@@ -330,22 +330,22 @@ struct ai_plr *dai_plr_data_get(struct ai_type *ait, struct player *pplayer,
     /* See adv_data_get() */
     if (ai->phase_initialized) {
       dai_data_phase_finished(ait, pplayer);
-      dai_data_phase_begin(ait, pplayer, FALSE);
+      dai_data_phase_begin(ait, pplayer, false);
     } else {
       /* wrong order */
       log_debug("%s ai data phase closed when dai_plr_data_get() called",
                 player_name(pplayer));
-      dai_data_phase_begin(ait, pplayer, FALSE);
+      dai_data_phase_begin(ait, pplayer, false);
       if (caller_closes != NULL) {
-        *caller_closes = TRUE;
+        *caller_closes = true;
       } else {
         dai_data_phase_finished(ait, pplayer);
       }
     }
   } else {
     if (!ai->phase_initialized && caller_closes != NULL) {
-      dai_data_phase_begin(ait, pplayer, FALSE);
-      *caller_closes = TRUE;
+      dai_data_phase_begin(ait, pplayer, false);
+      *caller_closes = true;
     }
   }
 
@@ -441,7 +441,7 @@ static void dai_diplomacy_destroy(struct ai_type *ait,
  ****************************************************************************/
 void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
 {
-  bool needs_back_rearrange = FALSE;
+  bool needs_back_rearrange = false;
   struct adv_data *adv;
 
   adv = adv_data_get(pplayer, NULL);
@@ -452,7 +452,7 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
       int orig_value = 0;
       int mp_val = player_multiplier_value(pplayer, ppol);
       int pidx = multiplier_index(ppol);
-      bool better_found = FALSE;
+      bool better_found = false;
 
       city_list_iterate(pplayer->cities, pcity)
       {
@@ -482,8 +482,8 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
           /* This is step to right direction, leave it in effect. */
           pplayer->multipliers_target[pidx] = pplayer->multipliers[pidx];
 
-          needs_back_rearrange = FALSE;
-          better_found = TRUE;
+          needs_back_rearrange = false;
+          better_found = true;
         }
       }
 
@@ -509,15 +509,15 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
           /* This is step to right direction, leave it in effect. */
           pplayer->multipliers_target[pidx] = pplayer->multipliers[pidx];
 
-          needs_back_rearrange = FALSE;
-          better_found = TRUE;
+          needs_back_rearrange = false;
+          better_found = true;
         }
       }
 
       if (!better_found) {
         /* Restore original multiplier value */
         pplayer->multipliers[pidx] = mp_val;
-        needs_back_rearrange = TRUE;
+        needs_back_rearrange = true;
       }
     }
   }
@@ -550,7 +550,7 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
 
   /* Use default handling of no-cities case */
   if (city_list_size(pplayer->cities) == 0) {
-    *override = FALSE;
+    *override = false;
     return;
   }
 
@@ -573,8 +573,8 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
 
     effect_list_iterate(get_req_source_effects(&source), peffect)
     {
-      bool present = TRUE;
-      bool active = TRUE;
+      bool present = true;
+      bool active = true;
 
       requirement_vector_iterate(&peffect->reqs, preq)
       {
@@ -588,7 +588,7 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
         }
         if (!is_req_active(pplayer, NULL, pcity, NULL, NULL, NULL, NULL,
                            NULL, NULL, NULL, preq, RPT_POSSIBLE)) {
-          active = FALSE;
+          active = false;
           break; /* presence doesn't matter for inactive effects. */
         }
       }
@@ -632,5 +632,5 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
   requirement_vector_iterate_end;
   *val = amortize(*val, dist);
 
-  *override = TRUE;
+  *override = true;
 }

@@ -312,10 +312,10 @@ bool is_city_event(enum event_type event)
   case E_UNIT_RELOCATED:
   case E_UNIT_ILLEGAL_ACTION:
   case E_UNIT_WAKE:
-    return FALSE;
+    return false;
 
   default:
-    return TRUE;
+    return true;
   }
 }
 

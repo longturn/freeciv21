@@ -190,7 +190,8 @@ static bool find_option(const char *buf_in, const char *option,
       /* This is this one. */
       buf_in += option_len;
 
-      while ((QChar::isSpace(*buf_in) || *buf_in == '=') && *buf_in != '\0') {
+      while ((QChar::isSpace(*buf_in) || *buf_in == '=')
+             && *buf_in != '\0') {
         buf_in++;
       }
       if (*buf_in == '"') {
@@ -198,27 +199,27 @@ static bool find_option(const char *buf_in, const char *option,
         const char *end = strchr(++buf_in, '"');
 
         if (!end) {
-          return FALSE;
+          return false;
         }
         if (end - buf_in + 1 > 0) {
           fc_strlcpy(buf_out, buf_in, MIN(end - buf_in + 1, write_len));
         } else {
           *buf_out = '\0';
         }
-        return TRUE;
+        return true;
       } else {
         while (QChar::isLetterOrNumber(*buf_in) && write_len > 1) {
           *buf_out++ = *buf_in++;
           write_len--;
         }
         *buf_out = '\0';
-        return TRUE;
+        return true;
       }
     }
     buf_in++;
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -228,7 +229,7 @@ static bool find_option(const char *buf_in, const char *option,
 static bool text_tag_init_from_sequence(struct text_tag *ptag,
                                         enum text_tag_type type,
                                         ft_offset_t start_offset,
-                                        QString& qsequence)
+                                        QString &qsequence)
 {
   ptag->type = type;
   ptag->start_offset = start_offset;
@@ -242,8 +243,8 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
   case TTT_ITALIC:
   case TTT_STRIKE:
   case TTT_UNDERLINE:
-    return TRUE;
-  case TTT_COLOR: {
+    return true;
+  case TTT_COLOR:
     if (!find_option(sequence, "foreground", ptag->color.foreground,
                      sizeof(ptag->color.foreground))
         && !find_option(sequence, "fg", ptag->color.foreground,
@@ -256,8 +257,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
                         sizeof(ptag->color.background))) {
       ptag->color.background[0] = '\0';
     }
-  }
-    return TRUE;
+    return true;
   case TTT_LINK: {
     char buf[64];
     const char *name;
@@ -267,7 +267,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
         && !find_option(sequence, "tgt", buf, sizeof(buf))) {
       log_featured_text("text_tag_init_from_sequence(): "
                         "target link type not set.");
-      return FALSE;
+      return false;
     }
 
     ptag->link.type = TLT_INVALID;
@@ -281,21 +281,21 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
       log_featured_text("text_tag_init_from_sequence(): "
                         "target link type not supported (\"%s\").",
                         buf);
-      return FALSE;
+      return false;
     }
 
     switch (ptag->link.type) {
-    case TLT_CITY: {
+    case TLT_CITY:
       if (!find_option(sequence, "id", buf, sizeof(buf))) {
         log_featured_text("text_tag_init_from_sequence(): "
                           "city link without id.");
-        return FALSE;
+        return false;
       }
       if (!str_to_int(buf, &ptag->link.id)) {
         log_featured_text("text_tag_init_from_sequence(): "
                           "city link without valid id (\"%s\").",
                           buf);
-        return FALSE;
+        return false;
       }
 
       if (!find_option(sequence, "name", ptag->link.name,
@@ -304,36 +304,35 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
         fc_snprintf(ptag->link.name, sizeof(ptag->link.name), "CITY_ID%d",
                     ptag->link.id);
       }
-    }
-      return TRUE;
-    case TLT_TILE: {
+      return true;
+    case TLT_TILE:
       struct tile *ptile;
       int x, y;
 
       if (!find_option(sequence, "x", buf, sizeof(buf))) {
         log_featured_text("text_tag_init_from_sequence(): "
                           "tile link without x coordinate.");
-        return FALSE;
+        return false;
       }
       if (!str_to_int(buf, &x)) {
         log_featured_text("text_tag_init_from_sequence(): "
                           "tile link without valid x coordinate "
                           "(\"%s\").",
                           buf);
-        return FALSE;
+        return false;
       }
 
       if (!find_option(sequence, "y", buf, sizeof(buf))) {
         log_featured_text("text_tag_init_from_sequence(): "
                           "tile link without y coordinate.");
-        return FALSE;
+        return false;
       }
       if (!str_to_int(buf, &y)) {
         log_featured_text("text_tag_init_from_sequence(): "
                           "tile link without valid y coordinate "
                           "(\"%s\").",
                           buf);
-        return FALSE;
+        return false;
       }
 
       ptile = map_pos_to_tile(&(wld.map), x, y);
@@ -342,24 +341,23 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
                           "(%d, %d) are not valid coordinates "
                           "in this game.",
                           x, y);
-        return FALSE;
+        return false;
       }
       ptag->link.id = tile_index(ptile);
       fc_snprintf(ptag->link.name, sizeof(ptag->link.name), "(%d, %d)",
                   TILE_XY(ptile));
-    }
-      return TRUE;
-    case TLT_UNIT: {
+      return true;
+    case TLT_UNIT:
       if (!find_option(sequence, "id", buf, sizeof(buf))) {
         log_featured_text("text_tag_init_from_sequence(): "
                           "unit link without id.");
-        return FALSE;
+        return false;
       }
       if (!str_to_int(buf, &ptag->link.id)) {
         log_featured_text("text_tag_init_from_sequence(): "
                           "unit link without valid id (\"%s\").",
                           buf);
-        return FALSE;
+        return false;
       }
 
       if (!find_option(sequence, "name", ptag->link.name,
@@ -368,16 +366,16 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
         fc_snprintf(ptag->link.name, sizeof(ptag->link.name), "UNIT_ID%d",
                     ptag->link.id);
       }
-    }
-      return TRUE;
+      return true;
     case TLT_INVALID:
       fc_assert_ret_val(ptag->link.type != TLT_INVALID, false);
+      break;
     };
   }
   case TTT_INVALID:
     fc_assert_ret_val(type != TTT_INVALID, false);
   };
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -410,13 +408,13 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
   case TTT_ITALIC:
   case TTT_STRIKE:
   case TTT_UNDERLINE:
-    return TRUE;
+    return true;
   case TTT_COLOR: {
     const struct ft_color color = va_arg(args, struct ft_color);
 
     if ((NULL == color.foreground || '\0' == color.foreground[0])
         && (NULL == color.background || '\0' == color.background[0])) {
-      return FALSE; /* No color at all. */
+      return false; /* No color at all. */
     }
 
     if (NULL != color.foreground && '\0' != color.foreground[0]) {
@@ -431,7 +429,7 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
       ptag->color.background[0] = '\0';
     }
   }
-    return TRUE;
+    return true;
   case TTT_LINK: {
     ptag->link.type = text_link_type(va_arg(args, int));
     switch (ptag->link.type) {
@@ -439,33 +437,33 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
       struct city *pcity = va_arg(args, struct city *);
 
       if (!pcity) {
-        return FALSE;
+        return false;
       }
       ptag->link.id = pcity->id;
       sz_strlcpy(ptag->link.name, city_name_get(pcity));
     }
-      return TRUE;
+      return true;
     case TLT_TILE: {
       struct tile *ptile = va_arg(args, struct tile *);
 
       if (!ptile) {
-        return FALSE;
+        return false;
       }
       ptag->link.id = tile_index(ptile);
       fc_snprintf(ptag->link.name, sizeof(ptag->link.name), "(%d, %d)",
                   TILE_XY(ptile));
     }
-      return TRUE;
+      return true;
     case TLT_UNIT: {
       struct unit *punit = va_arg(args, struct unit *);
 
       if (!punit) {
-        return FALSE;
+        return false;
       }
       ptag->link.id = punit->id;
       sz_strlcpy(ptag->link.name, unit_name_translation(punit));
     }
-      return TRUE;
+      return true;
     case TLT_INVALID:
       fc_assert_ret_val(ptag->link.type != TLT_INVALID, false);
     };
@@ -473,7 +471,7 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
   case TTT_INVALID:
     fc_assert_ret_val(type != TTT_INVALID, false);
   };
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -846,7 +844,7 @@ static size_t extract_sequence_text(const char *featured_text, QString &buf,
   if (end - buf_in + 2 > 0) {
     buf = QString(buf_in).left(MIN(end - buf_in + 2, len));
   } else {
-    buf = "";
+    buf = QLatin1String("");
   }
   return stop - featured_text + 1;
 }

@@ -51,6 +51,17 @@ enum rfc_status {
   C_READY = 999         /* waiting for input */
 };
 
+#define CON_RED "\u001b[31m"
+#define CON_GREEN "\u001b[32m"
+#define CON_YELLOW "\u001b[33m"
+#define CON_BLUE "\u001b[34m"
+#define CON_MAGENTA "\u001b[35m"
+#define CON_CYAN "\u001b[36m"
+#define CON_WHITE "\u001b[37m"
+#define CON_RESET "\u001b[0m"
+
+void con_set_color(const char *);
+
 /* initialize logging via console */
 void con_log_init(const QString &log_filename);
 void con_log_close(void);

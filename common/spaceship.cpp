@@ -85,7 +85,7 @@ bool next_spaceship_component(struct player *pplayer,
                               struct spaceship_component *fill)
 {
   Q_UNUSED(pplayer)
-  fc_assert_ret_val(fill != NULL, FALSE);
+  fc_assert_ret_val(fill != NULL, false);
 
   if (ship->modules
       > (ship->habitation + ship->life_support + ship->solar_panels)) {
@@ -126,7 +126,7 @@ bool next_spaceship_component(struct player *pplayer,
     }
     fc_assert(fill->num <= NUM_SS_MODULES / 3);
 
-    return TRUE;
+    return true;
   }
   if (ship->components > ship->fuel + ship->propulsion) {
     if (ship->fuel <= ship->propulsion) {
@@ -136,7 +136,7 @@ bool next_spaceship_component(struct player *pplayer,
       fill->type = SSHIP_PLACE_PROPULSION;
       fill->num = ship->propulsion + 1;
     }
-    return TRUE;
+    return true;
   }
   if (ship->structurals > num_spaceship_structurals_placed(ship)) {
     /* Want to choose which structurals are most important.
@@ -151,7 +151,7 @@ bool next_spaceship_component(struct player *pplayer,
       /* if we don't have the first structural, place that! */
       fill->type = SSHIP_PLACE_STRUCTURAL;
       fill->num = 0;
-      return TRUE;
+      return true;
     }
 
     if (ship->habitation >= 1
@@ -208,8 +208,8 @@ bool next_spaceship_component(struct player *pplayer,
     fill->type = SSHIP_PLACE_STRUCTURAL;
     fill->num = req;
 
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }

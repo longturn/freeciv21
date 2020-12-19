@@ -116,7 +116,7 @@ int tile_border_strength(struct tile *ptile, struct tile *source)
 bool is_border_source(struct tile *ptile)
 {
   if (tile_city(ptile)) {
-    return TRUE;
+    return true;
   }
 
   if (extra_owner(ptile) != NULL) {
@@ -125,11 +125,11 @@ bool is_border_source(struct tile *ptile)
       struct base_type *pbase = extra_base_get(pextra);
 
       if (tile_has_extra(ptile, pextra) && territory_claiming_base(pbase)) {
-        return TRUE;
+        return true;
       }
     }
     extra_type_by_cause_iterate_end;
   }
 
-  return FALSE;
+  return false;
 }

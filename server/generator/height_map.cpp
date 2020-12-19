@@ -108,7 +108,7 @@ void make_random_hmap(int smooth)
   INITIALIZE_ARRAY(height_map, MAP_INDEX_SIZE, fc_rand(1000 * smooth));
 
   for (; i < smooth; i++) {
-    smooth_int_map(height_map, TRUE);
+    smooth_int_map(height_map, true);
   }
 
   adjust_int_map(height_map, hmap_max_level);
@@ -284,14 +284,14 @@ bool area_is_too_flat(struct tile *ptile, int thill, int my_height)
   square_iterate(&(wld.map), ptile, 2, tile1)
   {
     if (hmap(tile1) > thill) {
-      return FALSE;
+      return false;
     }
     if (hmap(tile1) > my_height) {
       if (map_distance(ptile, tile1) == 1) {
-        return FALSE;
+        return false;
       }
       if (++higher_than_me > 2) {
-        return FALSE;
+        return false;
       }
     }
   }
@@ -299,8 +299,8 @@ bool area_is_too_flat(struct tile *ptile, int thill, int my_height)
 
   if ((thill - hmap_shore_level) * higher_than_me
       > (my_height - hmap_shore_level) * 4) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }

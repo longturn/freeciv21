@@ -44,7 +44,7 @@
  * All values 0<=size<COMPRESSION_BORDER are uncompressed packets.
  */
 #define COMPRESSION_BORDER (16 * 1024 + 1)
-
+#define PACKET_STRVEC_SEPARATOR '\3'
 /*
  * All compressed packets this size or greater are sent as a jumbo packet.
  */
@@ -103,12 +103,12 @@ static bool conn_compression_flush(struct connection *pconn)
 
   error = compress2(compressed, &compressed_size, pconn->compression.queue.p,
                     pconn->compression.queue.size, compression_level);
-  fc_assert_ret_val(error == Z_OK, FALSE);
+  fc_assert_ret_val(error == Z_OK, false);
 
   /* Compression signalling currently assumes a 2-byte packet length; if that
    * changes, the protocol should probably be changed */
   fc_assert_ret_val(
-      data_type_size(data_type(pconn->packet_header.length)) == 2, FALSE);
+      data_type_size(data_type(pconn->packet_header.length)) == 2, false);
 
   /* Include normal length field in decision */
   jumbo = (compressed_size + 2 >= JUMBO_BORDER);
@@ -201,7 +201,7 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
     pc->outgoing_packet_notify(pc, packet_type, len, result);
   }
 
-  if (TRUE) {
+  if (true) {
     int size = len;
 
     if (conn_compression_frozen(pc)) {
@@ -344,7 +344,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
     int itype;
   } utype;
   struct data_in din;
-  bool compressed_packet = FALSE;
+  bool compressed_packet = false;
   int header_size = 0;
   void *data;
   void *(*receive_handler)(struct connection *);
@@ -369,7 +369,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
    * changes, the protocol should probably be changed */
   fc_assert(data_type_size(data_type(pc->packet_header.length)) == 2);
   if (len_read == JUMBO_SIZE) {
-    compressed_packet = TRUE;
+    compressed_packet = true;
     header_size = 6;
     if (dio_input_remaining(&din) >= 4) {
       dio_get_uint32_raw(&din, &whole_packet_len);
@@ -380,7 +380,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
       whole_packet_len = 6;
     }
   } else if (len_read >= COMPRESSION_BORDER) {
-    compressed_packet = TRUE;
+    compressed_packet = true;
     header_size = 2;
     whole_packet_len = len_read - COMPRESSION_BORDER;
     log_compress("COMPRESS: got a normal packet of size %d",
@@ -635,9 +635,9 @@ bool packet_check(struct data_in *din, struct connection *pc)
 
     log_packet("received long packet (type %d, len %d, rem %lu) from %s",
                type, len, (unsigned long) rem, conn_description(pc));
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -771,12 +771,12 @@ static void packet_handlers_free(void) {}
 const struct packet_handlers *packet_handlers_initial(void)
 {
   static struct packet_handlers default_handlers;
-  static bool initialized = FALSE;
+  static bool initialized = false;
 
   if (!initialized) {
     memset(&default_handlers, 0, sizeof(default_handlers));
     packet_handlers_fill_initial(&default_handlers);
-    initialized = TRUE;
+    initialized = true;
   }
 
   return &default_handlers;
@@ -794,10 +794,10 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
   fc_assert(strlen(capability) < sizeof(functional_capability));
 
   /* Get functional network capability string. */
-  tokens = QString(capability).split(" \t\n,");
+  tokens = QString(capability).split(QStringLiteral(" \t\n,"));
   tokens.sort();
 
-  for (auto str : tokens) {
+  for (const auto &str : qAsConst(tokens)) {
     if (!has_capability(qUtf8Printable(str), packet_functional_capability)) {
       continue;
     }
@@ -824,3 +824,67 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
    All connections must have been closed.
  **************************************************************************/
 void packets_deinit(void) { packet_handlers_free(); }
+
+void packet_strvec_compute(char *str, QVector<QString> *qstrvec)
+{
+  if (NULL != qstrvec) {
+    qstrvec_to_str(qstrvec, PACKET_STRVEC_SEPARATOR, str);
+  } else {
+    str[0] = '\0';
+  }
+}
+
+QVector<QString> *packet_strvec_extract(const char *str)
+{
+  QVector<QString> *qstrvec = nullptr;
+  if ('\0' != str[0]) {
+    qstrvec = new QVector<QString>;
+    qstrvec_from_str(qstrvec, PACKET_STRVEC_SEPARATOR, str);
+  }
+  return qstrvec;
+}
+
+/**********************************************************************/ /**
+   Build the string from a string vector.
+
+   This string format is a list of strings separated by 'separator'.
+
+   See also strvec_from_str().
+ **************************************************************************/
+void qstrvec_to_str(const QVector<QString> *psv, char separator, char *buf)
+{
+  QString s;
+
+  for (const auto &str : *psv) {
+    s = s + str + separator;
+  }
+  qstrncpy(buf, qUtf8Printable(s), s.count());
+}
+
+/**********************************************************************/ /**
+   Build the string vector from a string until 'str_size' bytes are read.
+   Passing -1 for 'str_size' will assume 'str' as the expected format. Note
+   it's a bit dangerous.
+
+   This string format is a list of strings separated by 'separator'.
+
+   See also strvec_to_str().
+ **************************************************************************/
+void qstrvec_from_str(QVector<QString> *psv, char separator, const char *str)
+{
+  const char *p;
+  char *new_str;
+
+  psv->clear();
+  while ((p = strchr(str, separator))) {
+    new_str = new char[p - str + 1];
+    memcpy(new_str, str, p - str);
+    new_str[p - str] = '\0';
+    psv->append(new_str);
+    str = p + 1;
+    delete[] new_str;
+  }
+  if ('\0' != *str) {
+    psv->append(str);
+  }
+}

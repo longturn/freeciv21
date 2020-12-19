@@ -15,6 +15,8 @@
 #include <fc_config.h>
 #endif
 
+#include <sys/stat.h>
+
 /* utility */
 #include "fciconv.h"
 #include "fcintl.h"
@@ -65,17 +67,17 @@ void load_install_info_lists(struct fcmp_params *fcmp)
               DIR_SEPARATOR_CHAR, DIR_SEPARATOR_CHAR);
 
   if (fc_stat(main_db_filename, &buf)) {
-    create_mpdb(main_db_filename, FALSE);
+    create_mpdb(main_db_filename, false);
     load_install_info_list(main_ii_filename);
   } else {
-    open_mpdb(main_db_filename, FALSE);
+    open_mpdb(main_db_filename, false);
   }
 
   if (fc_stat(scenario_db_filename, &buf)) {
-    create_mpdb(scenario_db_filename, TRUE);
+    create_mpdb(scenario_db_filename, true);
     load_install_info_list(scenario_ii_filename);
   } else {
-    open_mpdb(scenario_db_filename, TRUE);
+    open_mpdb(scenario_db_filename, true);
   }
 }
 
@@ -85,7 +87,7 @@ void load_install_info_lists(struct fcmp_params *fcmp)
 void fcmp_init(void)
 {
   init_nls();
-  init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
+  init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);
 
   fc_srand(time(NULL)); /* Needed at least for Windows version of
                            netfile_get_section_file() */

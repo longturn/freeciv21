@@ -267,9 +267,9 @@ bool global_worklist_set(struct global_worklist *pgwl,
 {
   if (pgwl && pgwl->status == STATUS_WORKLIST && pwl) {
     worklist_copy(&pgwl->worklist, pwl);
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -353,7 +353,7 @@ static bool global_worklist_load(struct section_file *file, const char *path,
   length = secfile_lookup_int_default(file, -1, "%s.wl_length", path_str);
   if (length == -1) {
     /* Not set. */
-    return FALSE;
+    return false;
   }
   length = MIN(length, MAX_LEN_WORKLIST);
   pgwl = global_worklist_alloc(STATUS_UNBUILT);
@@ -368,7 +368,7 @@ static bool global_worklist_load(struct section_file *file, const char *path,
     if (!kind) {
       /* before 2.2.0 unit production was indicated by flag. */
       bool is_unit = secfile_lookup_bool_default(
-          file, FALSE, "%s.wl_is_unit%d", path_str, i);
+          file, false, "%s.wl_is_unit%d", path_str, i);
       kind = universals_n_name(is_unit ? VUT_UTYPE : VUT_IMPROVEMENT);
     }
 
@@ -383,7 +383,7 @@ static bool global_worklist_load(struct section_file *file, const char *path,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /*******************************************************************/ /**

@@ -18,7 +18,6 @@
 /* utility */
 #include "fcintl.h"
 #include "rand.h"
-#include "string_vector.h"
 
 /* common */
 #include "base.h"
@@ -67,7 +66,7 @@ void extras_init(void)
     extras[i].causes = 0;
     extras[i].rmcauses = 0;
     extras[i].helptext = NULL;
-    extras[i].ruledit_disabled = FALSE;
+    extras[i].ruledit_disabled = false;
     extras[i].visibility_req = A_NONE;
   }
 }
@@ -84,18 +83,9 @@ void extras_free(void)
   resource_types_free();
 
   for (i = 0; i < game.control.num_extra_types; i++) {
-    if (extras[i].data.base != NULL) {
-      FC_FREE(extras[i].data.base);
-      extras[i].data.base = NULL;
-    }
-    if (extras[i].data.road != NULL) {
-      FC_FREE(extras[i].data.road);
-      extras[i].data.road = NULL;
-    }
-    if (extras[i].data.resource != NULL) {
-      FC_FREE(extras[i].data.resource);
-      extras[i].data.resource = NULL;
-    }
+      NFCN_FREE(extras[i].data.base);
+      NFCN_FREE(extras[i].data.road);
+      NFCN_FREE(extras[i].data.resource);
   }
 
   for (i = 0; i < EC_LAST; i++) {
@@ -116,11 +106,7 @@ void extras_free(void)
     requirement_vector_free(&(extras[i].rmreqs));
     requirement_vector_free(&(extras[i].appearance_reqs));
     requirement_vector_free(&(extras[i].disappearance_reqs));
-
-    if (NULL != extras[i].helptext) {
-      strvec_destroy(extras[i].helptext);
-      extras[i].helptext = NULL;
-    }
+    NFCN_FREE(extras[i].helptext);
   }
 
   extra_type_iterate(pextra)
@@ -336,12 +322,12 @@ bool is_extra_card_near(const struct tile *ptile,
   cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (tile_has_extra(adjc_tile, pextra)) {
-      return TRUE;
+      return true;
     }
   }
   cardinal_adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -354,12 +340,12 @@ bool is_extra_near_tile(const struct tile *ptile,
   adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (tile_has_extra(adjc_tile, pextra)) {
-      return TRUE;
+      return true;
     }
   }
   adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -370,15 +356,15 @@ bool extra_can_be_built(const struct extra_type *pextra,
 {
   if (!pextra->buildable) {
     /* Extra type not buildable */
-    return FALSE;
+    return false;
   }
 
   if (tile_has_extra(ptile, pextra)) {
     /* Extra exist already */
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -389,21 +375,21 @@ bool can_build_extra_base(const struct extra_type *pextra,
                           const struct tile *ptile)
 {
   if (!extra_can_be_built(pextra, ptile)) {
-    return FALSE;
+    return false;
   }
 
   if (is_extra_caused_by(pextra, EC_BASE)) {
     if (tile_terrain(ptile)->base_time == 0) {
-      return FALSE;
+      return false;
     }
     if (tile_city(ptile) != NULL && extra_base_get(pextra)->border_sq >= 0) {
-      return FALSE;
+      return false;
     }
   }
 
   if (is_extra_caused_by(pextra, EC_ROAD)
       && tile_terrain(ptile)->road_time == 0) {
-    return FALSE;
+    return false;
   }
 
   if (pplayer != NULL && !player_knows_techs_with_flag(pplayer, TF_BRIDGE)) {
@@ -413,13 +399,13 @@ bool can_build_extra_base(const struct extra_type *pextra,
     {
       if (tile_has_extra(ptile, pbridged)) {
         /* Tile has extra that would require bridging over. */
-        return FALSE;
+        return false;
       }
     }
     extra_type_list_iterate_end;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -430,7 +416,7 @@ bool player_can_build_extra(const struct extra_type *pextra,
                             const struct tile *ptile)
 {
   if (!can_build_extra_base(pextra, pplayer, ptile)) {
-    return FALSE;
+    return false;
   }
 
   return are_reqs_active(pplayer, tile_owner(ptile), NULL, NULL, ptile, NULL,
@@ -446,28 +432,28 @@ bool player_can_place_extra(const struct extra_type *pextra,
                             const struct tile *ptile)
 {
   if (pextra->infracost == 0) {
-    return FALSE;
+    return false;
   }
 
   if (ptile->placing != NULL) {
     /* Already placing something */
-    return FALSE;
+    return false;
   }
 
   if (tile_terrain(ptile)->placing_time <= 0) {
     /* Can't place to this terrain */
-    return FALSE;
+    return false;
   }
 
   if (game.info.borders != BORDERS_DISABLED) {
     if (tile_owner(ptile) != pplayer) {
-      return FALSE;
+      return false;
     }
   } else {
     struct city *pcity = tile_worked(ptile);
 
     if (pcity == NULL || city_owner(pcity) != pplayer) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -477,7 +463,7 @@ bool player_can_place_extra(const struct extra_type *pextra,
     tile_changing_activities_iterate(act)
     {
       if (punit->activity == act) {
-        return FALSE;
+        return false;
       }
     }
     tile_changing_activities_iterate_end;
@@ -496,7 +482,7 @@ bool can_build_extra(const struct extra_type *pextra,
   struct player *pplayer = unit_owner(punit);
 
   if (!can_build_extra_base(pextra, pplayer, ptile)) {
-    return FALSE;
+    return false;
   }
 
   return are_reqs_active(pplayer, tile_owner(ptile), NULL, NULL, ptile,
@@ -515,7 +501,7 @@ static bool can_extra_be_removed(const struct extra_type *pextra,
   /* Cannot remove EF_ALWAYS_ON_CITY_CENTER extras from city center. */
   if (pcity != NULL) {
     if (extra_has_flag(pextra, EF_ALWAYS_ON_CITY_CENTER)) {
-      return FALSE;
+      return false;
     }
     if (extra_has_flag(pextra, EF_AUTO_ON_CITY_CENTER)) {
       struct tile *vtile = tile_virtual_new(ptile);
@@ -527,14 +513,14 @@ static bool can_extra_be_removed(const struct extra_type *pextra,
          * not been here if conflicting one is. */
         tile_virtual_destroy(vtile);
 
-        return FALSE;
+        return false;
       }
 
       tile_virtual_destroy(vtile);
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -545,7 +531,7 @@ bool player_can_remove_extra(const struct extra_type *pextra,
                              const struct tile *ptile)
 {
   if (!can_extra_be_removed(pextra, ptile)) {
-    return FALSE;
+    return false;
   }
 
   /* For huts, it's not checked if player has any non-HUT_NOTHING units */
@@ -562,7 +548,7 @@ bool can_remove_extra(const struct extra_type *pextra,
                       const struct unit *punit, const struct tile *ptile)
 {
   if (!can_extra_be_removed(pextra, ptile)) {
-    return FALSE;
+    return false;
   }
 
   return are_reqs_active(unit_owner(punit), tile_owner(ptile), NULL, NULL,
@@ -579,24 +565,24 @@ bool is_native_tile_to_extra(const struct extra_type *pextra,
   struct terrain *pterr = tile_terrain(ptile);
 
   if (terrain_has_resource(pterr, pextra)) {
-    return TRUE;
+    return true;
   }
 
   if (is_extra_caused_by(pextra, EC_IRRIGATION)
       && pterr->irrigation_result != pterr) {
-    return FALSE;
+    return false;
   }
 
   if (is_extra_caused_by(pextra, EC_MINE) && pterr->mining_result != pterr) {
-    return FALSE;
+    return false;
   }
 
   if (is_extra_caused_by(pextra, EC_BASE)) {
     if (pterr->base_time == 0) {
-      return FALSE;
+      return false;
     }
     if (tile_city(ptile) != NULL && extra_base_get(pextra)->border_sq >= 0) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -605,10 +591,10 @@ bool is_native_tile_to_extra(const struct extra_type *pextra,
 
     if (road_has_flag(proad, RF_RIVER)) {
       if (!terrain_has_flag(pterr, TER_CAN_HAVE_RIVER)) {
-        return FALSE;
+        return false;
       }
     } else if (pterr->road_time == 0) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -626,12 +612,12 @@ bool extra_conflicting_on_tile(const struct extra_type *pextra,
   {
     if (tile_has_extra(ptile, old_extra)
         && !can_extras_coexist(old_extra, pextra)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -643,12 +629,12 @@ bool hut_on_tile(const struct tile *ptile)
   extra_type_by_rmcause_iterate(ERM_ENTER, extra)
   {
     if (tile_has_extra(ptile, extra)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_rmcause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -658,7 +644,7 @@ bool hut_on_tile(const struct tile *ptile)
 bool unit_can_enter_hut(const struct unit *punit, const struct tile *ptile)
 {
   if (HUT_NORMAL != unit_class_get(punit)->hut_behavior) {
-    return FALSE;
+    return false;
   }
   extra_type_by_rmcause_iterate(ERM_ENTER, extra)
   {
@@ -666,11 +652,11 @@ bool unit_can_enter_hut(const struct unit *punit, const struct tile *ptile)
         && are_reqs_active(unit_owner(punit), tile_owner(ptile), NULL, NULL,
                            ptile, NULL, NULL, NULL, NULL, NULL,
                            &extra->rmreqs, RPT_POSSIBLE)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_rmcause_iterate_end;
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -681,7 +667,7 @@ bool unit_can_displace_hut(const struct unit *punit,
                            const struct tile *ptile)
 {
   if (HUT_NOTHING == unit_class_get(punit)->hut_behavior) {
-    return FALSE;
+    return false;
   }
   extra_type_by_rmcause_iterate(ERM_ENTER, extra)
   {
@@ -689,11 +675,11 @@ bool unit_can_displace_hut(const struct unit *punit,
         && are_reqs_active(unit_owner(punit), tile_owner(ptile), NULL, NULL,
                            ptile, NULL, NULL, NULL, NULL, NULL,
                            &extra->rmreqs, RPT_POSSIBLE)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_rmcause_iterate_end;
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -809,7 +795,7 @@ bool is_extra_flag_card_near(const struct tile *ptile,
       cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
       {
         if (tile_has_extra(adjc_tile, pextra)) {
-          return TRUE;
+          return true;
         }
       }
       cardinal_adjc_iterate_end;
@@ -817,7 +803,7 @@ bool is_extra_flag_card_near(const struct tile *ptile,
   }
   extra_type_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -833,7 +819,7 @@ bool is_extra_flag_near_tile(const struct tile *ptile,
       adjc_iterate(&(wld.map), ptile, adjc_tile)
       {
         if (tile_has_extra(adjc_tile, pextra)) {
-          return TRUE;
+          return true;
         }
       }
       adjc_iterate_end;
@@ -841,7 +827,7 @@ bool is_extra_flag_near_tile(const struct tile *ptile,
   }
   extra_type_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -877,21 +863,11 @@ void set_user_extra_flag_name(enum extra_flag_id id, const char *name,
   int efid = id - EF_USER_FLAG_1;
 
   fc_assert_ret(id >= EF_USER_FLAG_1 && id <= EF_LAST_USER_FLAG);
-
-  if (user_extra_flags[efid].name != NULL) {
-    FC_FREE(user_extra_flags[efid].name);
-    user_extra_flags[efid].name = NULL;
-  }
-
+  NFCN_FREE(user_extra_flags[efid].name);
   if (name && name[0] != '\0') {
     user_extra_flags[efid].name = fc_strdup(name);
   }
-
-  if (user_extra_flags[efid].helptxt != NULL) {
-    delete[] user_extra_flags[efid].helptxt;
-    user_extra_flags[efid].helptxt = NULL;
-  }
-
+  NFCNPP_FREE(user_extra_flags[efid].helptxt);
   if (helptxt && helptxt[0] != '\0') {
     user_extra_flags[efid].helptxt = fc_strdup(helptxt);
   }
@@ -926,7 +902,7 @@ bool can_extras_coexist(const struct extra_type *pextra1,
                         const struct extra_type *pextra2)
 {
   if (pextra1 == pextra2) {
-    return TRUE;
+    return true;
   }
 
   return !BV_ISSET(pextra1->conflicts, extra_index(pextra2));
@@ -945,7 +921,7 @@ bool extra_causes_env_upset(struct extra_type *pextra,
     return extra_has_flag(pextra, EF_NUCLEAR_WINTER);
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -1075,7 +1051,7 @@ bool player_knows_extra_exist(const struct player *pplayer,
                               const struct tile *ptile)
 {
   if (!tile_has_extra(ptile, pextra)) {
-    return FALSE;
+    return false;
   }
 
   return research_invention_state(research_get(pplayer),

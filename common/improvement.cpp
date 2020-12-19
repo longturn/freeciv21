@@ -19,7 +19,6 @@
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h" /* ARRAY_SIZE */
-#include "string_vector.h"
 #include "support.h"
 
 /* common */
@@ -54,7 +53,7 @@ void improvements_init(void)
     p->item_number = i;
     requirement_vector_init(&p->reqs);
     requirement_vector_init(&p->obsolete_by);
-    p->ruledit_disabled = FALSE;
+    p->ruledit_disabled = false;
   }
 }
 
@@ -63,11 +62,7 @@ void improvements_init(void)
  **************************************************************************/
 static void improvement_free(struct impr_type *p)
 {
-  if (NULL != p->helptext) {
-    strvec_destroy(p->helptext);
-    p->helptext = NULL;
-  }
-
+  NFCN_FREE(p->helptext);
   requirement_vector_free(&p->reqs);
   requirement_vector_free(&p->obsolete_by);
 }
@@ -88,42 +83,42 @@ void improvement_feature_cache_init(void)
 {
   improvement_iterate(pimprove)
   {
-    pimprove->allows_units = FALSE;
+    pimprove->allows_units = false;
     unit_type_iterate(putype)
     {
       if (requirement_needs_improvement(pimprove, &putype->build_reqs)) {
-        pimprove->allows_units = TRUE;
+        pimprove->allows_units = true;
         break;
       }
     }
     unit_type_iterate_end;
 
-    pimprove->allows_extras = FALSE;
+    pimprove->allows_extras = false;
     extra_type_iterate(pextra)
     {
       if (requirement_needs_improvement(pimprove, &pextra->reqs)) {
-        pimprove->allows_extras = TRUE;
+        pimprove->allows_extras = true;
         break;
       }
     }
     extra_type_iterate_end;
 
-    pimprove->prevents_disaster = FALSE;
+    pimprove->prevents_disaster = false;
     disaster_type_iterate(pdis)
     {
       if (!requirement_fulfilled_by_improvement(pimprove, &pdis->reqs)) {
-        pimprove->prevents_disaster = TRUE;
+        pimprove->prevents_disaster = true;
         break;
       }
     }
     disaster_type_iterate_end;
 
-    pimprove->protects_vs_actions = FALSE;
+    pimprove->protects_vs_actions = false;
     action_enablers_iterate(act)
     {
       if (!requirement_fulfilled_by_improvement(pimprove,
                                                 &act->target_reqs)) {
-        pimprove->protects_vs_actions = TRUE;
+        pimprove->protects_vs_actions = true;
         break;
       }
     }
@@ -381,7 +376,7 @@ struct impr_type *improvement_by_rule_name(const char *name)
 bool improvement_has_flag(const struct impr_type *pimprove,
                           enum impr_flag_id flag)
 {
-  fc_assert_ret_val(impr_flag_id_is_valid(flag), FALSE);
+  fc_assert_ret_val(impr_flag_id_is_valid(flag), false);
   return BV_ISSET(pimprove->flags, flag);
 }
 
@@ -420,12 +415,12 @@ bool improvement_obsolete(const struct player *pplayer,
   {
     if (is_req_active(pplayer, NULL, pcity, pimprove, ptile, NULL, NULL,
                       NULL, NULL, NULL, preq, RPT_CERTAIN)) {
-      return TRUE;
+      return true;
     }
   }
   requirement_vector_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -436,19 +431,19 @@ static bool impr_provides_buildable_units(const struct city *pcity,
 {
   /* Fast check */
   if (!pimprove->allows_units) {
-    return FALSE;
+    return false;
   }
 
   unit_type_iterate(ut)
   {
     if (requirement_needs_improvement(pimprove, &ut->build_reqs)
         && can_city_build_unit_now(pcity, ut)) {
-      return TRUE;
+      return true;
     }
   }
   unit_type_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -459,7 +454,7 @@ static bool impr_provides_buildable_extras(const struct city *pcity,
 {
   /* Fast check */
   if (!pimprove->allows_extras) {
-    return FALSE;
+    return false;
   }
 
   extra_type_iterate(pextra)
@@ -469,7 +464,7 @@ static bool impr_provides_buildable_extras(const struct city *pcity,
                         ptile)
       {
         if (player_can_build_extra(pextra, city_owner(pcity), ptile)) {
-          return TRUE;
+          return true;
         }
       }
       city_tile_iterate_end;
@@ -477,7 +472,7 @@ static bool impr_provides_buildable_extras(const struct city *pcity,
   }
   extra_type_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -488,19 +483,19 @@ static bool impr_prevents_disaster(const struct city *pcity,
 {
   /* Fast check */
   if (!pimprove->prevents_disaster) {
-    return FALSE;
+    return false;
   }
 
   disaster_type_iterate(pdis)
   {
     if (!requirement_fulfilled_by_improvement(pimprove, &pdis->reqs)
         && !can_disaster_happen(pdis, pcity)) {
-      return TRUE;
+      return true;
     }
   }
   disaster_type_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -514,19 +509,19 @@ static bool impr_protects_vs_actions(const struct city *pcity,
 {
   /* Fast check */
   if (!pimprove->protects_vs_actions) {
-    return FALSE;
+    return false;
   }
 
   action_enablers_iterate(act)
   {
     if (!requirement_fulfilled_by_improvement(pimprove, &act->target_reqs)
         && !is_action_possible_on_city(act->action, NULL, pcity)) {
-      return TRUE;
+      return true;
     }
   }
   action_enablers_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -563,7 +558,7 @@ static bool improvement_has_effects(const struct city *pcity,
   struct effect_list *plist = get_req_source_effects(&source);
 
   if (!plist || improvement_obsolete(city_owner(pcity), pimprove, pcity)) {
-    return FALSE;
+    return false;
   }
 
   effect_list_iterate(plist, peffect)
@@ -571,12 +566,12 @@ static bool improvement_has_effects(const struct city *pcity,
     if (0
         != get_potential_improvement_bonus(pimprove, pcity, peffect->type,
                                            RPT_CERTAIN)) {
-      return TRUE;
+      return true;
     }
   }
   effect_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -612,12 +607,12 @@ bool is_improvement_redundant(const struct city *pcity,
 {
   /* A capitalization production is never redundant. */
   if (improvement_has_flag(pimprove, IF_GOLD)) {
-    return FALSE;
+    return false;
   }
 
   /* If an improvement has side effects, don't claim it's redundant. */
   if (improvement_has_side_effects(pcity, pimprove)) {
-    return FALSE;
+    return false;
   }
 
   /* Otherwise, it's redundant if its effects are available by other means,
@@ -633,10 +628,10 @@ bool is_improvement_redundant(const struct city *pcity,
 bool can_player_build_improvement_direct(const struct player *p,
                                          const struct impr_type *pimprove)
 {
-  bool space_part = FALSE;
+  bool space_part = false;
 
   if (!valid_improvement(pimprove)) {
-    return FALSE;
+    return false;
   }
 
   requirement_vector_iterate(&pimprove->reqs, preq)
@@ -644,7 +639,7 @@ bool can_player_build_improvement_direct(const struct player *p,
     if (preq->range >= REQ_RANGE_PLAYER
         && !is_req_active(p, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
                           NULL, preq, RPT_CERTAIN)) {
-      return FALSE;
+      return false;
     }
   }
   requirement_vector_iterate_end;
@@ -652,37 +647,37 @@ bool can_player_build_improvement_direct(const struct player *p,
   /* Check for space part construction.  This assumes that space parts have
    * no other effects. */
   if (building_has_effect(pimprove, EFT_SS_STRUCTURAL)) {
-    space_part = TRUE;
+    space_part = true;
     if (p->spaceship.structurals >= NUM_SS_STRUCTURALS) {
-      return FALSE;
+      return false;
     }
   }
   if (building_has_effect(pimprove, EFT_SS_COMPONENT)) {
-    space_part = TRUE;
+    space_part = true;
     if (p->spaceship.components >= NUM_SS_COMPONENTS) {
-      return FALSE;
+      return false;
     }
   }
   if (building_has_effect(pimprove, EFT_SS_MODULE)) {
-    space_part = TRUE;
+    space_part = true;
     if (p->spaceship.modules >= NUM_SS_MODULES) {
-      return FALSE;
+      return false;
     }
   }
   if (space_part
       && (get_player_bonus(p, EFT_ENABLE_SPACE) <= 0
           || p->spaceship.state >= SSHIP_LAUNCHED)) {
-    return FALSE;
+    return false;
   }
 
   if (is_great_wonder(pimprove)) {
     /* Can't build wonder if already built */
     if (!great_wonder_is_available(pimprove)) {
-      return FALSE;
+      return false;
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -693,12 +688,12 @@ bool can_player_build_improvement_now(const struct player *p,
                                       struct impr_type *pimprove)
 {
   if (!can_player_build_improvement_direct(p, pimprove)) {
-    return FALSE;
+    return false;
   }
   if (improvement_obsolete(p, pimprove, NULL)) {
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -710,14 +705,14 @@ bool can_player_build_improvement_later(const struct player *p,
                                         const struct impr_type *pimprove)
 {
   if (!valid_improvement(pimprove)) {
-    return FALSE;
+    return false;
   }
   if (improvement_obsolete(p, pimprove, NULL)) {
-    return FALSE;
+    return false;
   }
   if (is_great_wonder(pimprove) && !great_wonder_is_available(pimprove)) {
     /* Can't build wonder if already built */
-    return FALSE;
+    return false;
   }
 
   /* Check for requirements that aren't met and that are unchanging (so
@@ -727,14 +722,14 @@ bool can_player_build_improvement_later(const struct player *p,
     if (preq->range >= REQ_RANGE_PLAYER && is_req_unchanging(preq)
         && !is_req_active(p, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
                           NULL, preq, RPT_POSSIBLE)) {
-      return FALSE;
+      return false;
     }
   }
   requirement_vector_iterate_end;
   /* FIXME: should check some "unchanging" reqs here - like if there's
    * a nation requirement, we can go ahead and check it now. */
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -820,8 +815,8 @@ void wonder_destroyed(const struct city *pcity,
 bool wonder_is_lost(const struct player *pplayer,
                     const struct impr_type *pimprove)
 {
-  fc_assert_ret_val(NULL != pplayer, FALSE);
-  fc_assert_ret_val(is_wonder(pimprove), FALSE);
+  fc_assert_ret_val(NULL != pplayer, false);
+  fc_assert_ret_val(is_wonder(pimprove), false);
 
   return pplayer->wonders[improvement_index(pimprove)] == WONDER_LOST;
 }
@@ -833,8 +828,8 @@ bool wonder_is_lost(const struct player *pplayer,
 bool wonder_is_built(const struct player *pplayer,
                      const struct impr_type *pimprove)
 {
-  fc_assert_ret_val(NULL != pplayer, FALSE);
-  fc_assert_ret_val(is_wonder(pimprove), FALSE);
+  fc_assert_ret_val(NULL != pplayer, false);
+  fc_assert_ret_val(is_wonder(pimprove), false);
 
   return WONDER_BUILT(pplayer->wonders[improvement_index(pimprove)]);
 }
@@ -890,7 +885,7 @@ struct city *city_from_wonder(const struct player *pplayer,
  **************************************************************************/
 bool great_wonder_is_built(const struct impr_type *pimprove)
 {
-  fc_assert_ret_val(is_great_wonder(pimprove), FALSE);
+  fc_assert_ret_val(is_great_wonder(pimprove), false);
 
   return WONDER_OWNED(
       game.info.great_wonder_owners[improvement_index(pimprove)]);
@@ -901,7 +896,7 @@ bool great_wonder_is_built(const struct impr_type *pimprove)
  **************************************************************************/
 bool great_wonder_is_destroyed(const struct impr_type *pimprove)
 {
-  fc_assert_ret_val(is_great_wonder(pimprove), FALSE);
+  fc_assert_ret_val(is_great_wonder(pimprove), false);
 
   return (WONDER_DESTROYED
           == game.info.great_wonder_owners[improvement_index(pimprove)]);
@@ -912,7 +907,7 @@ bool great_wonder_is_destroyed(const struct impr_type *pimprove)
  **************************************************************************/
 bool great_wonder_is_available(const struct impr_type *pimprove)
 {
-  fc_assert_ret_val(is_great_wonder(pimprove), FALSE);
+  fc_assert_ret_val(is_great_wonder(pimprove), false);
 
   return (WONDER_NOT_OWNED
           == game.info.great_wonder_owners[improvement_index(pimprove)]);
@@ -973,7 +968,7 @@ struct player *great_wonder_owner(const struct impr_type *pimprove)
 bool small_wonder_is_built(const struct player *pplayer,
                            const struct impr_type *pimprove)
 {
-  fc_assert_ret_val(is_small_wonder(pimprove), FALSE);
+  fc_assert_ret_val(is_small_wonder(pimprove), false);
 
   return (NULL != pplayer && wonder_is_built(pplayer, pimprove));
 }

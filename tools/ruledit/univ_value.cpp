@@ -24,7 +24,8 @@
 #include "specialist.h"
 #include "tech.h"
 #include "traderoutes.h"
-
+#include "nation.h"
+#include "style.h"
 /* server */
 #include "rssanity.h"
 #include "settings.h"
@@ -42,185 +43,185 @@ bool universal_value_initial(struct universal *src)
   switch (src->kind) {
   case VUT_NONE:
     /* Value of None should never be used */
-    return TRUE;
+    return true;
   case VUT_ADVANCE:
     if (game.control.num_tech_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.advance = advance_by_number(A_NONE);
-    return TRUE;
+    return true;
   case VUT_GOVERNMENT:
     src->value.govern = game.government_during_revolution;
-    return TRUE;
+    return true;
   case VUT_IMPROVEMENT:
     if (game.control.num_impr_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.building = improvement_by_number(0);
-    return TRUE;
+    return true;
   case VUT_TERRAIN:
     src->value.terrain = terrain_by_number(0);
-    return TRUE;
+    return true;
   case VUT_NATION:
     if (game.control.nation_count <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.nation = nation_by_number(0);
-    return TRUE;
+    return true;
   case VUT_UTYPE:
     if (game.control.num_unit_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.utype = utype_by_number(0);
-    return TRUE;
+    return true;
   case VUT_UTFLAG:
     src->value.unitflag = (enum unit_type_flag_id) 0;
-    return TRUE;
+    return true;
   case VUT_UCLASS:
     if (game.control.num_unit_classes <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.uclass = uclass_by_number(0);
-    return TRUE;
+    return true;
   case VUT_UCFLAG:
     src->value.unitclassflag = (enum unit_class_flag_id) 0;
-    return TRUE;
+    return true;
   case VUT_OTYPE:
     src->value.outputtype = (enum output_type_id) 0;
-    return TRUE;
+    return true;
   case VUT_SPECIALIST:
     if (game.control.num_specialist_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.specialist = specialist_by_number(0);
-    return TRUE;
+    return true;
   case VUT_MINSIZE:
     src->value.minsize = 0;
-    return TRUE;
+    return true;
   case VUT_AI_LEVEL:
     src->value.ai_level = AI_LEVEL_CHEATING;
-    return TRUE;
+    return true;
   case VUT_TERRAINCLASS:
     src->value.terrainclass = TC_LAND;
-    return TRUE;
+    return true;
   case VUT_MINYEAR:
     src->value.minyear = 0;
-    return TRUE;
+    return true;
   case VUT_MINCALFRAG:
     src->value.mincalfrag = 0;
-    return TRUE;
+    return true;
   case VUT_TERRAINALTER:
     src->value.terrainalter = TA_CAN_IRRIGATE;
-    return TRUE;
+    return true;
   case VUT_CITYTILE:
     src->value.citytile = CITYT_CENTER;
-    return TRUE;
+    return true;
   case VUT_CITYSTATUS:
     src->value.citystatus = CITYS_OWNED_BY_ORIGINAL;
-    return TRUE;
+    return true;
   case VUT_GOOD:
     if (game.control.num_goods_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.good = goods_by_number(0);
-    return TRUE;
+    return true;
   case VUT_TERRFLAG:
     src->value.terrainflag = TER_NO_BARBS;
-    return TRUE;
+    return true;
   case VUT_NATIONALITY:
     if (game.control.nation_count <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.nationality = nation_by_number(0);
-    return TRUE;
+    return true;
   case VUT_BASEFLAG:
     src->value.baseflag = BF_NOT_AGGRESSIVE;
-    return TRUE;
+    return true;
   case VUT_ROADFLAG:
     src->value.roadflag = RF_RIVER;
-    return TRUE;
+    return true;
   case VUT_EXTRA:
     if (game.control.num_extra_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.extra = extra_by_number(0);
-    return TRUE;
+    return true;
   case VUT_TECHFLAG:
     src->value.techflag = TF_BONUS_TECH;
-    return TRUE;
+    return true;
   case VUT_ACHIEVEMENT:
     if (game.control.num_achievement_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.achievement = achievement_by_number(0);
-    return TRUE;
+    return true;
   case VUT_DIPLREL:
     src->value.diplrel = DS_WAR;
-    return TRUE;
+    return true;
   case VUT_MAXTILEUNITS:
     src->value.max_tile_units = 0;
-    return TRUE;
+    return true;
   case VUT_STYLE:
     if (game.control.num_styles <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.style = style_by_number(0);
-    return TRUE;
+    return true;
   case VUT_MINCULTURE:
     src->value.minculture = 0;
-    return TRUE;
+    return true;
   case VUT_MINFOREIGNPCT:
     src->value.minforeignpct = 0;
-    return TRUE;
+    return true;
   case VUT_UNITSTATE:
     src->value.unit_state = USP_TRANSPORTED;
-    return TRUE;
+    return true;
   case VUT_ACTIVITY:
     src->value.activity = ACTIVITY_IDLE;
-    return TRUE;
+    return true;
   case VUT_MINMOVES:
     src->value.minmoves = 0;
-    return TRUE;
+    return true;
   case VUT_MINVETERAN:
     src->value.minveteran = 0;
-    return TRUE;
+    return true;
   case VUT_MINHP:
     src->value.min_hit_points = 0;
-    return TRUE;
+    return true;
   case VUT_AGE:
     src->value.age = 0;
-    return TRUE;
+    return true;
   case VUT_NATIONGROUP:
     if (nation_group_count() <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.nationgroup = nation_group_by_number(0);
-    return TRUE;
+    return true;
   case VUT_TOPO:
     src->value.topo_property = TF_ISO;
-    return TRUE;
+    return true;
   case VUT_SERVERSETTING:
     src->value.ssetval =
-        ssetv_from_values(server_setting_by_name("killstack"), TRUE);
-    return TRUE;
+        ssetv_from_values(server_setting_by_name("killstack"), true);
+    return true;
   case VUT_IMPR_GENUS:
     src->value.impr_genus = IG_IMPROVEMENT;
-    return TRUE;
+    return true;
   case VUT_ACTION:
     src->value.action = action_by_number(0);
-    return TRUE;
+    return true;
   case VUT_MINTECHS:
     src->value.min_techs = 0;
-    return TRUE;
+    return true;
   case VUT_EXTRAFLAG:
     src->value.extraflag = EF_NATIVE_TILE;
-    return TRUE;
+    return true;
   case VUT_COUNT:
     fc_assert(src->kind != VUT_COUNT);
-    return FALSE;
+    return false;
   }
 
-  return FALSE;
+  return false;
 }
 
 /********************************************************************/ /**
@@ -447,7 +448,7 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
          i < settings_number(); i++) {
       if (sanity_check_server_setting_value_in_req(i)) {
         cb(ssetv_rule_name(i),
-           univ->value.ssetval == ssetv_from_values(i, TRUE), data);
+           univ->value.ssetval == ssetv_from_values(i, true), data);
       }
     }
     break;
@@ -478,7 +479,7 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
   case VUT_AGE:
   case VUT_MINTECHS:
     /* Requirement types having numerical value */
-    cb(NULL, FALSE, data);
+    cb(NULL, false, data);
     break;
   case VUT_COUNT:
     fc_assert(univ->kind != VUT_COUNT);

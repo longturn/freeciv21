@@ -79,7 +79,7 @@ bool load_ai_module(const char *modname)
   char filename[1024];
 
   if (ai == NULL) {
-    return FALSE;
+    return false;
   }
 
   init_ai(ai);
@@ -90,7 +90,7 @@ bool load_ai_module(const char *modname)
   if (handle == NULL) {
     qCritical(_("Cannot open AI module %s (%s)"), filename,
               fc_module_error());
-    return FALSE;
+    return false;
   }
 
   fc_snprintf(buffer, sizeof(buffer), "%s_capstr", filename);
@@ -98,7 +98,7 @@ bool load_ai_module(const char *modname)
   if (capstr_func == NULL) {
     qCritical(_("Cannot find capstr function from ai module %s (%s)"),
               filename, fc_module_error());
-    return FALSE;
+    return false;
   }
 
   capstr = capstr_func();
@@ -107,7 +107,7 @@ bool load_ai_module(const char *modname)
     qCritical(_("  Module options:    %s"), capstr);
     qCritical(_("  Supported options: %s"), FC_AI_MOD_CAPSTR);
 
-    return FALSE;
+    return false;
   }
 
   fc_snprintf(buffer, sizeof(buffer), "%s_setup", filename);
@@ -115,13 +115,13 @@ bool load_ai_module(const char *modname)
   if (setup_func == NULL) {
     qCritical(_("Cannot find setup function from ai module %s (%s)"),
               filename, fc_module_error());
-    return FALSE;
+    return false;
   }
   setup_success = setup_func(ai);
 
   if (!setup_success) {
     qCritical(_("Setup of ai module %s failed."), filename);
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -133,7 +133,7 @@ bool load_ai_module(const char *modname)
  **************************************************************************/
 void ai_init(void)
 {
-  bool failure = FALSE;
+  bool failure = false;
 #if !defined(AI_MODULES) || defined(AI_MOD_STATIC_CLASSIC)                  \
     || defined(AI_MOD_STATIC_THREADED) || defined(AI_MOD_STATIC_TEX)        \
     || defined(AI_MOD_STATIC_STUB)

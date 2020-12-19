@@ -10,9 +10,6 @@
 **************************************************************************/
 #pragma once
 
-
-#include <stddef.h> /* size_t */
-
 /*
  * If 4 byte wide signed int is used this gives 20 object types with
  * 100 million keys each.

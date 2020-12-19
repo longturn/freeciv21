@@ -442,7 +442,7 @@ static void cai_do_first_activities(struct player *pplayer)
 
   dai_do_first_activities(deftype, pplayer);
 
-  pplayer->ai_phase_done = TRUE;
+  pplayer->ai_phase_done = true;
 }
 
 /**********************************************************************/ /**
@@ -450,7 +450,7 @@ static void cai_do_first_activities(struct player *pplayer)
  **************************************************************************/
 static void cai_restart_phase(struct player *pplayer)
 {
-  pplayer->ai_phase_done = TRUE;
+  pplayer->ai_phase_done = true;
 }
 
 /**********************************************************************/ /**
@@ -590,7 +590,7 @@ bool fc_ai_classic_setup(struct ai_type *ai)
   qstrncpy(ai->name, "classic", sizeof(ai->name));
 
   pprivate = new dai_private_data;
-  pprivate->contemplace_workers = TRUE;
+  pprivate->contemplace_workers = true;
   ai->pprivate = pprivate;
 
   ai->funcs.module_close = cai_module_close;
@@ -690,5 +690,5 @@ bool fc_ai_classic_setup(struct ai_type *ai)
   /* ai->funcs.city_info = NULL; */
   /* ai->funcs.unit_info = NULL; */
 
-  return TRUE;
+  return true;
 }

@@ -21,7 +21,6 @@
 #include <QSpinBox>
 // utility
 #include "log.h"
-#include "string_vector.h"
 // client
 #include "options.h"
 // gui-qt
@@ -580,8 +579,7 @@ void option_dialog::add_option(struct option *poption)
   QWidget *twidget;
   QString category_name, description, qstr;
   QStringList qlist, qlist2;
-  const char *str;
-  const struct strvec *values;
+  const QVector<QString> *values;
   QVBoxLayout *twidget_layout;
   QHBoxLayout *hbox_layout;
   QVBoxLayout *vbox_layout;
@@ -638,8 +636,9 @@ void option_dialog::add_option(struct option *poption)
     values = option_str_values(poption);
     if (NULL != values) {
       combo = new QComboBox();
-      strvec_iterate(values, value) { combo->addItem(value); }
-      strvec_iterate_end;
+      for (const auto &value : *values) {
+        combo->addItem(value);
+      }
       widget = combo;
     } else {
       edit = new QLineEdit();
@@ -649,10 +648,15 @@ void option_dialog::add_option(struct option *poption)
 
   case OT_ENUM:
     combo = new QComboBox();
-
-    for (i = 0; (str = option_enum_int_to_str(poption, i)); i++) {
+    i = 0;
+    while (true) {
+      QString s = option_enum_int_to_str(poption, i);
+      if (s.isEmpty()) {
+        break;
+      }
       /* we store enum value in QVariant */
-      combo->addItem(_(str), i);
+      combo->addItem(_(qUtf8Printable(s)), i);
+      i++;
     }
     widget = combo;
     break;
@@ -661,8 +665,8 @@ void option_dialog::add_option(struct option *poption)
     group = new QGroupBox();
     values = option_bitwise_values(poption);
     vbox_layout = new QVBoxLayout();
-    for (j = 0; j < strvec_size(values); j++) {
-      check = new QCheckBox(_(strvec_get(values, j)));
+    for (j = 0; j < values->count(); j++) {
+      check = new QCheckBox(_(qUtf8Printable(values->at(j))));
       vbox_layout->addWidget(check);
     }
     group->setLayout(vbox_layout);
@@ -852,4 +856,3 @@ void option_gui_update(struct option *poption)
     }
   }
 }
-

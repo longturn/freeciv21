@@ -47,7 +47,7 @@ class effect_edit : public QDialog {
   Q_OBJECT
 
 public:
-  explicit effect_edit(ruledit_gui *ui_in, QString target,
+  explicit effect_edit(ruledit_gui *ui_in, const QString &target,
                        struct universal *filter_in,
                        enum effect_filter_main_class efmc_in);
   ~effect_edit();

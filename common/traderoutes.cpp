@@ -19,7 +19,6 @@
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
-#include "string_vector.h"
 
 /* common */
 #include "city.h"
@@ -81,7 +80,7 @@ enum trade_route_type cities_trade_route_type(const struct city *pcity1,
         fc_assert(ds->type != DS_LAST);
         return TRT_IN_IC;
       }
-      fc_assert(FALSE);
+      fc_assert(false);
 
       return TRT_IN_IC;
     } else {
@@ -101,7 +100,7 @@ enum trade_route_type cities_trade_route_type(const struct city *pcity1,
         fc_assert(ds->type != DS_LAST);
         return TRT_IN;
       }
-      fc_assert(FALSE);
+      fc_assert(false);
 
       return TRT_IN;
     }
@@ -280,24 +279,24 @@ bool can_establish_trade_route(const struct city *pc1,
 
   if (!pc1 || !pc2 || pc1 == pc2 || !can_cities_trade(pc1, pc2)
       || have_cities_trade_route(pc1, pc2)) {
-    return FALSE;
+    return false;
   }
 
   /* First check if cities can have trade routes at all. */
   maxpc1 = max_trade_routes(pc1);
   if (maxpc1 <= 0) {
-    return FALSE;
+    return false;
   }
   maxpc2 = max_trade_routes(pc2);
   if (maxpc2 <= 0) {
-    return FALSE;
+    return false;
   }
 
   if (city_num_trade_routes(pc1) >= maxpc1) {
     trade = trade_base_between_cities(pc1, pc2);
     /* can we replace trade route? */
     if (city_trade_removable(pc1, NULL) >= trade) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -307,11 +306,11 @@ bool can_establish_trade_route(const struct city *pc1,
     }
     /* can we replace trade route? */
     if (city_trade_removable(pc2, NULL) >= trade) {
-      return FALSE;
+      return false;
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /*********************************************************************/ /**
@@ -372,7 +371,6 @@ int city_num_trade_routes(const struct city *pcity)
 {
   return trade_route_list_size(pcity->routes);
 }
-
 
 /*********************************************************************/ /**
    Returns the maximum trade production of the tiles of the city.
@@ -501,12 +499,12 @@ bool have_cities_trade_route(const struct city *pc1, const struct city *pc2)
   trade_partners_iterate(pc1, route_to)
   {
     if (route_to->id == pc2->id) {
-      return TRUE;
+      return true;
     }
   }
   trade_partners_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /*********************************************************************/ /**
@@ -520,7 +518,7 @@ void goods_init(void)
     goods[i].id = i;
 
     requirement_vector_init(&(goods[i].reqs));
-    goods[i].ruledit_disabled = FALSE;
+    goods[i].ruledit_disabled = false;
     goods[i].helptext = NULL;
   }
 }
@@ -534,11 +532,7 @@ void goods_free(void)
 
   for (i = 0; i < MAX_GOODS_TYPES; i++) {
     requirement_vector_free(&(goods[i].reqs));
-
-    if (NULL != goods[i].helptext) {
-      strvec_destroy(goods[i].helptext);
-      goods[i].helptext = NULL;
-    }
+    NFCN_FREE(goods[i].helptext);
   }
 }
 
@@ -670,12 +664,12 @@ bool city_receives_goods(const struct city *pcity,
   {
     if (proute->goods == pgood
         && (proute->dir == RDIR_TO || proute->dir == RDIR_BIDIRECTIONAL)) {
-      return TRUE;
+      return true;
     }
   }
   trade_routes_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /*********************************************************************/ /**

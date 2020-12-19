@@ -44,7 +44,7 @@ void load_install_info_list(const char *filename)
   struct section_file *file;
   const char *caps;
 
-  file = secfile_load(filename, FALSE);
+  file = secfile_load(filename, false);
 
   if (file == NULL) {
     /* This happens in first run - or actually all runs until something is
@@ -73,7 +73,7 @@ void load_install_info_list(const char *filename)
   }
 
   if (file != NULL) {
-    bool all_read = FALSE;
+    bool all_read = false;
     int i;
 
     for (i = 0; !all_read; i++) {
@@ -94,7 +94,7 @@ void load_install_info_list(const char *filename)
         mpdb_update_modpack(str, modpack_type_by_name(type, fc_strcasecmp),
                             ver);
       } else {
-        all_read = TRUE;
+        all_read = true;
       }
     }
 

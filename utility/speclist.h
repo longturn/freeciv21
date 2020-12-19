@@ -568,7 +568,7 @@ static inline SPECLIST_LINK *
 #define LIST_ITERATE_END                                                    \
   }                                                                         \
   }                                                                         \
-  while (FALSE)                                                             \
+  while (false)                                                             \
     ;
 
 /* Mutex protected speclist data iterator.
@@ -598,13 +598,13 @@ static inline SPECLIST_LINK *
   }                                                                         \
   LIST_tag##_list_release_mutex(ARG_list);                                  \
   }                                                                         \
-  while (FALSE)                                                             \
+  while (false)                                                             \
     ;
 
 #define MUTEXED_ITERATE_BREAK(LIST_tag, ARG_list)                           \
   do {                                                                      \
     LIST_tag##_list_release_mutex(ARG_list);                                \
-  } while (FALSE);
+  } while (false);
 
 /* Same, but iterate backwards:
  *
@@ -625,7 +625,7 @@ static inline SPECLIST_LINK *
 #define LIST_ITERATE_REV_END                                                \
   }                                                                         \
   }                                                                         \
-  while (FALSE)                                                             \
+  while (false)                                                             \
     ;
 
 /* Speclist link iterator.
@@ -650,7 +650,7 @@ static inline SPECLIST_LINK *
 #define LIST_LINK_ITERATE_END                                               \
   }                                                                         \
   }                                                                         \
-  while (FALSE)                                                             \
+  while (false)                                                             \
     ;
 
 /* Same, but iterate backwards:
@@ -672,7 +672,7 @@ static inline SPECLIST_LINK *
 #define LIST_LINK_ITERATE_REV_END                                           \
   }                                                                         \
   }                                                                         \
-  while (FALSE)                                                             \
+  while (false)                                                             \
     ;
 
 /* Speclist link and data iterator.
@@ -703,7 +703,7 @@ static inline SPECLIST_LINK *
 #define LIST_BOTH_ITERATE_END                                               \
   }                                                                         \
   }                                                                         \
-  while (FALSE)                                                             \
+  while (false)                                                             \
     ;
 
 /* Same, but iterate backwards:
@@ -731,7 +731,7 @@ static inline SPECLIST_LINK *
 #define LIST_BOTH_ITERATE_REV_END                                           \
   }                                                                         \
   }                                                                         \
-  while (FALSE)                                                             \
+  while (false)                                                             \
     ;
 
 #endif /* FC__SPECLIST_H */

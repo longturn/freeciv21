@@ -12,22 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h> /* size_t */
-#include <sys/stat.h>
-
-#ifdef TRUE
-#undef TRUE
-#endif
-
-#ifdef FALSE
-#undef FALSE
-#endif
-
-#define TRUE true
-#define FALSE false
-
+#include <cstdio>
 #include <inttypes.h>
 
 /* Want to use GCC's __attribute__ keyword to check variadic
@@ -73,26 +58,59 @@ typedef int fc_errno;
 #define fc_realloc(ptr, sz) realloc(ptr, sz)
 
 #define NFCPP_FREE(ptr)                                                     \
-if (ptr) delete[] (ptr);                                                    \
+  do {                                                                      \
+    if (ptr) {                                                              \
+      delete[](ptr);                                                        \
+    }                                                                       \
+  } while (false)
 
 #define NFC_FREE(ptr)                                                       \
-if (ptr) delete (ptr);                                                      \
+  do {                                                                      \
+    if (ptr) {                                                              \
+      delete (ptr);                                                         \
+    }                                                                       \
+  } while (false)
+
+#define NFCN_FREE(ptr)                                                      \
+  do {                                                                      \
+    if (ptr) {                                                              \
+      delete (ptr);                                                         \
+      (ptr) = nullptr;                                                      \
+    }                                                                       \
+  } while (false)
+
+#define VOIDNFCN_FREE(ptr)                                                  \
+  do {                                                                      \
+    if (ptr) {                                                              \
+      ::operator delete(ptr);                                               \
+      (ptr) = nullptr;                                                      \
+    }                                                                       \
+  } while (false)
+
+#define NFCNPP_FREE(ptr)                                                    \
+  do {                                                                      \
+    if (ptr) {                                                              \
+      delete[](ptr);                                                        \
+      (ptr) = nullptr;                                                      \
+    }                                                                       \
+  } while (false)
 
 #define FCPP_FREE(ptr)                                                      \
-delete[] (ptr);                                                             \
-(ptr) = NULL;
+  do {                                                                      \
+    delete[](ptr);                                                          \
+    (ptr) = NULL;                                                           \
+  } while (false)
 
 #define FC_FREE(ptr)                                                        \
   do {                                                                      \
     delete (ptr);                                                           \
     (ptr) = NULL;                                                           \
-  } while (FALSE)
+  } while (false)
 
 #define fc_strdup(str) real_fc_strdup((str), "strdup", __FC_LINE__, __FILE__)
 
 char *real_fc_strdup(const char *str, const char *called_as, int line,
                      const char *file) fc__warn_unused_result;
-
 
 int fc_strcasecmp(const char *str0, const char *str1);
 int fc_strncasecmp(const char *str0, const char *str1, size_t n);

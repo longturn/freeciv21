@@ -7,14 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
 #pragma once
-
-/* utility */
-#include "registry.h"
-
-/* common */
-#include "fc_types.h"
 
 /* The color system is designed on the assumption that almost, but
  * not quite, all displays will be truecolor. */

@@ -43,13 +43,13 @@
 #include "menu_g.h"
 
 /* client */
-#include "governor.h"
 #include "audio.h"
 #include "client_main.h"
 #include "climap.h"
 #include "climisc.h"
 #include "editor.h"
 #include "goto.h"
+#include "governor.h"
 #include "options.h"
 #include "overview_common.h"
 #include "tilespec.h"
@@ -367,7 +367,7 @@ static void ask_server_for_actions(struct unit *punit)
 
   dsend_packet_unit_get_actions(
       &client.conn, punit->id, IDENTITY_NUMBER_ZERO,
-      tile_index(punit->action_decision_tile), EXTRA_NONE, TRUE);
+      tile_index(punit->action_decision_tile), EXTRA_NONE, true);
 }
 
 /**********************************************************************/ /**
@@ -440,7 +440,7 @@ static void current_focus_append(struct unit *punit)
   unit_list_append(current_focus, punit);
 
   punit->client.focus_status = FOCUS_AVAIL;
-  refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, FALSE);
+  refresh_unit_mapcanvas(punit, unit_tile(punit), true, false);
 
   if (should_ask_server_for_actions(punit) && can_ask_server_for_actions()) {
     ask_server_for_actions(punit);
@@ -462,7 +462,7 @@ static void current_focus_remove(struct unit *punit)
   }
 
   unit_list_remove(current_focus, punit);
-  refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, FALSE);
+  refresh_unit_mapcanvas(punit, unit_tile(punit), true, false);
 }
 
 /**********************************************************************/ /**
@@ -495,7 +495,7 @@ void clear_unit_orders(struct unit *punit)
  **************************************************************************/
 void unit_focus_set(struct unit *punit)
 {
-  bool focus_changed = FALSE;
+  bool focus_changed = false;
 
   if (NULL != punit && NULL != client.conn.playing
       && unit_owner(punit) != client.conn.playing) {
@@ -509,7 +509,7 @@ void unit_focus_set(struct unit *punit)
   if (!(get_num_units_in_focus() == 1
         && punit == head_of_units_in_focus())) {
     store_previous_focus();
-    focus_changed = TRUE;
+    focus_changed = true;
   }
 
   /* Close the action selection dialog if the actor unit lose focus. */
@@ -525,7 +525,7 @@ void unit_focus_set(struct unit *punit)
    * circle). */
   unit_list_iterate(current_focus, punit_old)
   {
-    refresh_unit_mapcanvas(punit_old, unit_tile(punit_old), TRUE, FALSE);
+    refresh_unit_mapcanvas(punit_old, unit_tile(punit_old), true, false);
   }
   unit_list_iterate_end;
   unit_list_clear(current_focus);
@@ -687,7 +687,7 @@ void unit_focus_advance(void)
      * enables the auto end turn.
      */
     if (punit->ssa_controller == SSA_NONE) {
-      non_ai_unit_focus = TRUE;
+      non_ai_unit_focus = true;
       break;
     }
   }
@@ -729,7 +729,7 @@ void unit_focus_advance(void)
   }
 
   if (NULL == candidate) {
-    candidate = find_best_focus_candidate(FALSE);
+    candidate = find_best_focus_candidate(false);
 
     if (!candidate) {
       /* Try for "waiting" units. */
@@ -740,11 +740,11 @@ void unit_focus_advance(void)
         }
       }
       unit_list_iterate_end;
-      candidate = find_best_focus_candidate(FALSE);
+      candidate = find_best_focus_candidate(false);
 
       if (!candidate) {
         /* Accept current focus unit as last resort. */
-        candidate = find_best_focus_candidate(TRUE);
+        candidate = find_best_focus_candidate(true);
       }
     }
   }
@@ -898,7 +898,7 @@ int blink_active_unit(void)
         /* We flush to screen directly here.  This is most likely faster
          * since these drawing operations are all small but may be spread
          * out widely. */
-        refresh_unit_mapcanvas(punit, unit_tile(punit), FALSE, TRUE);
+        refresh_unit_mapcanvas(punit, unit_tile(punit), false, true);
       }
       unit_list_iterate_end;
     }
@@ -931,7 +931,7 @@ int blink_turn_done_button(void)
       if (opt != NULL) {
         blocking_mode = option_bool_get(opt);
       } else {
-        blocking_mode = FALSE;
+        blocking_mode = false;
       }
 
       players_iterate_alive(pplayer)
@@ -948,7 +948,7 @@ int blink_turn_done_button(void)
       players_iterate_alive_end;
 
       if (is_moving == 1 && is_waiting > 0) {
-        update_turn_done_button(FALSE); /* stress the slow player! */
+        update_turn_done_button(false); /* stress the slow player! */
       }
       blink_timer.start(blink_time);
     }
@@ -1003,9 +1003,9 @@ void update_unit_pix_label(struct unit_list *punitlist)
     unit_list_iterate_end;
 
     if (i > num_units_below) {
-      set_unit_icons_more_arrow(TRUE);
+      set_unit_icons_more_arrow(true);
     } else {
-      set_unit_icons_more_arrow(FALSE);
+      set_unit_icons_more_arrow(false);
       for (; i < num_units_below; i++) {
         set_unit_icon(i, NULL);
       }
@@ -1014,7 +1014,7 @@ void update_unit_pix_label(struct unit_list *punitlist)
     for (i = -1; i < num_units_below; i++) {
       set_unit_icon(i, NULL);
     }
-    set_unit_icons_more_arrow(FALSE);
+    set_unit_icons_more_arrow(false);
   }
 }
 
@@ -1062,9 +1062,9 @@ void action_selection_no_longer_in_progress(const int old_actor_id)
  **************************************************************************/
 void action_decision_clear_want(const int old_actor_id)
 {
-  struct unit *old;
+  struct unit *old = game_unit_by_number(old_actor_id);
 
-  if ((old = game_unit_by_number(old_actor_id))) {
+  if (old) {
     /* Have the server record that a decision no longer is wanted. */
     dsend_packet_unit_sscs_set(&client.conn, old_actor_id, USSDT_UNQUEUE,
                                IDENTITY_NUMBER_ZERO);
@@ -1137,7 +1137,7 @@ void request_unit_goto(enum unit_orders last_order, action_id act_id,
         struct astring astr = ASTRING_INIT;
 
         if (role_units_translations(&astr, action_id_get_role(act_id),
-                                    TRUE)) {
+                                    true)) {
           /* ...but other units can perform it. */
 
           create_event(unit_tile(punit), E_BAD_COMMAND, ftc_client,
@@ -1184,12 +1184,12 @@ static bool can_units_attack_at(struct unit_list *punits,
   unit_list_iterate(punits, punit)
   {
     if (is_attack_unit(punit) && can_unit_attack_tile(punit, ptile)) {
-      return TRUE;
+      return true;
     }
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1307,12 +1307,12 @@ static bool is_activity_on_tile(struct tile *ptile,
   unit_list_iterate(ptile->units, punit)
   {
     if (punit->activity == activity) {
-      return TRUE;
+      return true;
     }
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1389,7 +1389,7 @@ static bool can_be_irrigated(const struct tile *ptile,
   };
 
   if (T_UNKNOWN == pterrain) {
-    return FALSE;
+    return false;
   }
 
   return action_id_univs_not_blocking(ACTION_IRRIGATE, &for_unit, &for_tile);
@@ -1444,7 +1444,7 @@ bool can_unit_do_connect(struct unit *punit, enum unit_activity activity,
     /* Special case for irrigation: only irrigate to make S_IRRIGATION,
      * never to transform tiles. */
     if (!unit_has_type_flag(punit, UTYF_SETTLERS)) {
-      return FALSE;
+      return false;
     }
     if (tile_has_extra(ptile, tgt)) {
       return are_reqs_active(NULL, NULL, NULL, NULL, NULL, punit,
@@ -1460,7 +1460,7 @@ bool can_unit_do_connect(struct unit *punit, enum unit_activity activity,
     break;
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1539,9 +1539,9 @@ void request_unit_airlift(struct unit *punit, struct city *pcity)
  **************************************************************************/
 void request_unit_return(struct unit *punit)
 {
-  struct pf_path *path;
+  struct pf_path *path = path_to_nearest_allied_city(punit);
 
-  if ((path = path_to_nearest_allied_city(punit))) {
+  if (path) {
     int turns = pf_path_last_position(path)->turn;
     int max_hp = unit_type_get(punit)->hp;
 
@@ -1634,7 +1634,6 @@ void request_unit_select(struct unit_list *punits,
   }
   unit_list_iterate_end;
 
-
   if (selloc == SELLOC_TILE) {
     for (auto hash_tile : tile_table) {
       unit_list_iterate(hash_tile->units, punit)
@@ -1665,7 +1664,6 @@ void request_unit_select(struct unit_list *punits,
     }
     unit_list_iterate_end;
   }
-
 }
 
 /**********************************************************************/ /**
@@ -1704,7 +1702,7 @@ void request_action_details(action_id action, int actor_id, int target_id)
                                  /* Users that need the answer in the
                                   * background should send the packet them
                                   * self. At least for now. */
-                                 TRUE);
+                                 true);
 }
 
 /**********************************************************************/ /**
@@ -1717,9 +1715,9 @@ void request_action_details(action_id action, int actor_id, int target_id)
  **************************************************************************/
 void request_unit_build_city(struct unit *punit)
 {
-  struct city *pcity;
+  struct city *pcity = tile_city(unit_tile(punit));
 
-  if ((pcity = tile_city(unit_tile(punit)))) {
+  if (pcity) {
     /* Try to join the city. */
     request_do_action(ACTION_JOIN_CITY, punit->id, pcity->id, 0, "");
   } else {
@@ -1748,8 +1746,8 @@ void request_unit_non_action_move(struct unit *punit, struct tile *dest_tile)
 
   memset(&p, 0, sizeof(p));
 
-  p.repeat = FALSE;
-  p.vigilant = FALSE;
+  p.repeat = false;
+  p.vigilant = false;
 
   p.unit_id = punit->id;
   p.src_tile = tile_index(unit_tile(punit));
@@ -1803,8 +1801,8 @@ void request_move_unit_direction(struct unit *punit, int dir)
 
   memset(&p, 0, sizeof(p));
 
-  p.repeat = FALSE;
-  p.vigilant = FALSE;
+  p.repeat = false;
+  p.vigilant = false;
 
   p.unit_id = punit->id;
   p.src_tile = tile_index(unit_tile(punit));
@@ -1914,7 +1912,8 @@ static void do_disband_alternative(void *p)
   /* Send a request to the server unless it is known to be pointless. */
   switch (action_id_get_target_kind(act)) {
   case ATK_CITY:
-    if ((pcity = tile_city(unit_tile(punit)))
+    pcity = tile_city(unit_tile(punit));
+    if (pcity
         && action_prob_possible(action_prob_vs_city(punit, act, pcity))) {
       request_do_action(act, punit->id, pcity->id, 0, "");
     }
@@ -2107,9 +2106,9 @@ void request_unit_unload(struct unit *pcargo)
  **************************************************************************/
 void request_unit_caravan_action(struct unit *punit, action_id action)
 {
-  struct city *target_city;
+  struct city *target_city = tile_city(unit_tile(punit));
 
-  if (!((target_city = tile_city(unit_tile(punit))))) {
+  if (!target_city) {
     return;
   }
 
@@ -2128,7 +2127,7 @@ void request_unit_caravan_action(struct unit *punit, action_id action)
  **************************************************************************/
 void request_unit_paradrop(struct unit_list *punits)
 {
-  bool can = FALSE;
+  bool can = false;
   struct tile *offender = NULL;
 
   if (unit_list_size(punits) == 0) {
@@ -2137,7 +2136,7 @@ void request_unit_paradrop(struct unit_list *punits)
   unit_list_iterate(punits, punit)
   {
     if (can_unit_paradrop(punit)) {
-      can = TRUE;
+      can = true;
       break;
     }
     if (!offender) { /* Take first offender tile/unit */
@@ -2661,7 +2660,7 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
       && gui_options.auto_center_on_unit && !unit_has_orders(punit)
       && punit->activity != ACTIVITY_GOTO
       && punit->activity != ACTIVITY_SENTRY
-      && ((gui_options.auto_center_on_automated == TRUE
+      && ((gui_options.auto_center_on_automated == true
            && punit->ssa_controller != SSA_NONE)
           || (punit->ssa_controller == SSA_NONE))
       && !tile_visible_and_not_on_border_mapcanvas(dst_tile)) {
@@ -2684,9 +2683,9 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
 
     /* We have to refresh the tile before moving.  This will draw
      * the tile without the unit (because it was unlinked above). */
-    refresh_unit_mapcanvas(punit, src_tile, TRUE, FALSE);
+    refresh_unit_mapcanvas(punit, src_tile, true, false);
 
-    if (gui_options.auto_center_on_automated == FALSE
+    if (gui_options.auto_center_on_automated == false
         && punit->ssa_controller != SSA_NONE) {
       /* Dont animate automatic units */
     } else if (do_animation) {
@@ -2706,7 +2705,7 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
     /* For find_visible_unit(), see above. */
     punit_moving = NULL;
 
-    refresh_unit_mapcanvas(punit, dst_tile, TRUE, FALSE);
+    refresh_unit_mapcanvas(punit, dst_tile, true, false);
   }
 
   /* With the "full" city bar we have to update the city bar when units move
@@ -2754,7 +2753,7 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
 {
   struct city *pcity = tile_city(ptile);
   struct unit_list *punits = get_units_in_focus();
-  bool maybe_goto = FALSE;
+  bool maybe_goto = false;
   struct city *near_pcity = find_city_near_tile(ptile);
 
   if (hover_state != HOVER_NONE) {
@@ -2846,7 +2845,7 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
   /* See mapctrl_common.c */
   keyboardless_goto_start_tile = maybe_goto ? ptile : NULL;
   keyboardless_goto_button_down = maybe_goto;
-  keyboardless_goto_active = FALSE;
+  keyboardless_goto_active = false;
 }
 
 /**********************************************************************/ /**
@@ -3059,8 +3058,8 @@ void key_cancel_action(void)
     clear_hover_state();
     update_unit_info_label(get_units_in_focus());
 
-    keyboardless_goto_button_down = FALSE;
-    keyboardless_goto_active = FALSE;
+    keyboardless_goto_button_down = false;
+    keyboardless_goto_active = false;
     keyboardless_goto_start_tile = NULL;
     break;
   case HOVER_NONE:
@@ -3176,8 +3175,8 @@ void key_unit_action_select(void)
 
   unit_list_iterate(get_units_in_focus(), punit)
   {
-    if (utype_may_act_at_all(unit_type_get(punit))
-        && (ptile = unit_tile(punit))) {
+    ptile = unit_tile(punit);
+    if (utype_may_act_at_all(unit_type_get(punit)) && ptile) {
       /* Have the server record that an action decision is wanted for this
        * unit. */
       dsend_packet_unit_sscs_set(&client.conn, punit->id, USSDT_QUEUE,
@@ -3292,7 +3291,8 @@ void key_unit_unload_all(void)
 
   unit_list_iterate(get_units_in_focus(), punit)
   {
-    if ((plast = request_unit_unload_all(punit))) {
+    plast = request_unit_unload_all(punit);
+    if (plast) {
       pnext_focus = plast;
     }
   }
@@ -3602,7 +3602,7 @@ void key_unit_assign_battlegroup(int battlegroup, bool append)
            dsend_packet_unit_sscs_set(&client.conn, punit->id,
                                       USSDT_BATTLE_GROUP,
                                       BATTLEGROUP_NONE);
-           refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, FALSE);
+           refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, false);
            unit_list_remove(battlegroups[battlegroup], punit);
          }
        } unit_list_iterate_safe_end;
@@ -3618,7 +3618,7 @@ void key_unit_assign_battlegroup(int battlegroup, bool append)
                                     USSDT_BATTLE_GROUP,
                                     battlegroup);
          unit_list_append(battlegroups[battlegroup], punit);
-         refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, FALSE);
+         refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, false);
        }
      } unit_list_iterate_end;
      unit_list_iterate(battlegroups[battlegroup], punit) {
@@ -3831,7 +3831,7 @@ void finish_city(struct tile *ptile, const char *name)
        * Cancel city building status just in case something has changed
        * to prevent city building in the meanwhile and unit will remain
        * alive. */
-      punit->client.asking_city_name = FALSE;
+      punit->client.asking_city_name = false;
       request_do_action(ACTION_FOUND_CITY, punit->id, ptile->index, 0, name);
     }
   }
@@ -3846,7 +3846,7 @@ void cancel_city(struct tile *ptile)
 {
   unit_list_iterate(ptile->units, punit)
   {
-    punit->client.asking_city_name = FALSE;
+    punit->client.asking_city_name = false;
   }
   unit_list_iterate_end;
 }

@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
 /* utility */
 #include "bitvector.h"
 #include "shared.h"
@@ -23,7 +22,6 @@
 #include "unittype.h"
 
 struct base_type;
-struct strvec; /* Actually defined in "utility/string_vector.h". */
 struct rgbcolor;
 
 /* Used in the network protocol. */
@@ -241,7 +239,7 @@ struct terrain {
 
   struct rgbcolor *rgb;
 
-  struct strvec *helptext;
+  QVector<QString> *helptext;
 };
 
 /* General terrain accessor functions. */
@@ -361,5 +359,3 @@ const struct terrain *terrain_array_last(void);
   }                                                                         \
   }                                                                         \
   terrain_type_iterate_end;
-
-

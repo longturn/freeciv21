@@ -241,7 +241,7 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
         utility -= 500;
         break;
       case CBR_LAST:
-        fc_assert_msg(FALSE, "Shouldn't happen");
+        fc_assert_msg(false, "Shouldn't happen");
         break;
       }
     }

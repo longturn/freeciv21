@@ -25,6 +25,7 @@
 #include "government.h"
 #include "map.h"
 #include "movement.h"
+#include "nation.h"
 #include "player.h"
 #include "research.h"
 #include "specialist.h"
@@ -64,7 +65,7 @@
     } else {                                                                \
       SANITY_TERRAIN(_tile, check);                                         \
     }                                                                       \
-  } while (FALSE)
+  } while (false)
 
 static void check_city_feelings(const struct city *pcity, const char *file,
                                 const char *function, int line);
@@ -257,7 +258,7 @@ static bool check_city_good(struct city *pcity, const char *file,
                 "at %s \"%s\"[%d]%s",
                 nation_rule_name(nation_of_player(pplayer)),
                 city_name_get(pcity), city_size_get(pcity), "{city center}");
-    return FALSE;
+    return false;
   }
 
   SANITY_CITY(pcity,
@@ -330,7 +331,7 @@ static bool check_city_good(struct city *pcity, const char *file,
   }
   trade_routes_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -463,7 +464,7 @@ static void check_units(const char *file, const char *function, int line)
                     "but it can't continue at %s",
                     TILE_XY(ptile), unit_rule_name(punit),
                     get_activity_text(punit->activity),
-                    tile_get_info_text(ptile, TRUE, 0));
+                    tile_get_info_text(ptile, true, 0));
       }
 
       if (activity_requires_target(punit->activity)
@@ -748,7 +749,7 @@ void real_sanity_check_tile(struct tile *ptile, const char *file,
     if (!can_unit_exist_at_tile(&(wld.map), punit, ptile)
         && !unit_transported(punit)) {
       SANITY_FAIL("(%4d,%4d) %s can't survive on %s", TILE_XY(ptile),
-                  unit_rule_name(punit), tile_get_info_text(ptile, TRUE, 0));
+                  unit_rule_name(punit), tile_get_info_text(ptile, true, 0));
     }
   }
   unit_list_iterate_end;

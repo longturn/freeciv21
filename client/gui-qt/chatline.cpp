@@ -210,10 +210,7 @@ void chat_input::send()
 void chat_input::chat_word_list_changed(const QStringList &word_list)
 {
   cmplt = completer();
-
-  if (cmplt != nullptr) {
-    delete cmplt;
-  }
+  NFC_FREE(cmplt);
   cmplt = new QCompleter(word_list);
   cmplt->setCaseSensitivity(Qt::CaseInsensitive);
   cmplt->setCompletionMode(QCompleter::InlineCompletion);

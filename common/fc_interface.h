@@ -12,12 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-
-/* utility */
-#include "support.h"
-
 /* common */
-#include "fc_types.h"
 #include "vision.h"
 
 struct player;

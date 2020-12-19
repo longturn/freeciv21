@@ -10,12 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 *****************************************************************************/
-
 #pragma once
-
-
-/* utility */
-#include "support.h" /* bool type */
 
 struct ft_color;
 struct text_tag_list;

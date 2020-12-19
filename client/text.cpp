@@ -21,6 +21,7 @@
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
+#include "nation.h"
 #include "support.h"
 
 /* common */
@@ -60,7 +61,7 @@ const char *get_tile_output_text(const struct tile *ptile)
   for (i = 0; i < O_LAST; i++) {
     int before_penalty = 0;
     int x =
-        city_tile_output(NULL, ptile, FALSE, static_cast<Output_type_id>(i));
+        city_tile_output(NULL, ptile, false, static_cast<Output_type_id>(i));
 
     if (NULL != client.conn.playing) {
       before_penalty = get_player_output_bonus(
@@ -167,9 +168,9 @@ const char *popup_info_text(struct tile *ptile)
     astr_add(&str, _("Unknown"));
     return astr_str(&str);
   }
-  astr_add_line(&str, _("Terrain: %s"), tile_get_info_text(ptile, TRUE, 0));
+  astr_add_line(&str, _("Terrain: %s"), tile_get_info_text(ptile, true, 0));
   astr_add_line(&str, _("Food/Prod/Trade: %s"), get_tile_output_text(ptile));
-  first = TRUE;
+  first = true;
   extra_type_iterate(pextra)
   {
     if (pextra->category == ECAT_BONUS
@@ -178,7 +179,7 @@ const char *popup_info_text(struct tile *ptile)
         astr_add(&str, ",%s", extra_name_translation(pextra));
       } else {
         astr_add_line(&str, "%s", extra_name_translation(pextra));
-        first = FALSE;
+        first = false;
       }
     }
   }
@@ -233,7 +234,7 @@ const char *popup_info_text(struct tile *ptile)
     /* Look at city owner, not tile owner (the two should be the same, if
      * borders are in use). */
     struct player *owner = city_owner(pcity);
-    const char **improvements = new const char*[improvement_count()];
+    const char **improvements = new const char *[improvement_count()];
     int has_improvements = 0;
 
     get_full_username(username, sizeof(username), owner);
@@ -407,7 +408,7 @@ const char *popup_info_text(struct tile *ptile)
     unit_list_iterate(get_units_in_focus(), pfocus_unit)
     {
       int att_chance = FC_INFINITY, def_chance = FC_INFINITY;
-      bool found = FALSE;
+      bool found = false;
 
       unit_list_iterate(ptile->units, tile_unit)
       {
@@ -415,7 +416,7 @@ const char *popup_info_text(struct tile *ptile)
           int att = unit_win_chance(pfocus_unit, tile_unit) * 100;
           int def = (1.0 - unit_win_chance(tile_unit, pfocus_unit)) * 100;
 
-          found = TRUE;
+          found = true;
 
           /* Presumably the best attacker and defender will be used. */
           att_chance = MIN(att, att_chance);
@@ -682,7 +683,7 @@ static int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs)
 {
   const struct research *presearch;
   int ours = 0, theirs = 0;
-  bool team = FALSE;
+  bool team = false;
 
   if (!client_has_player()) {
     return 0;
@@ -699,7 +700,7 @@ static int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs)
       }
       city_list_iterate_end;
     } else {
-      team = TRUE;
+      team = true;
       theirs -= pplayer->client.tech_upkeep;
     }
   }
@@ -1147,7 +1148,7 @@ const char *get_unit_info_label_text2(struct unit_list *punits,
     struct city *pcity = player_city_by_number(owner, punit->homecity);
 
     astr_add_line(&str, "%s",
-                  tile_get_info_text(unit_tile(punit), TRUE, linebreaks));
+                  tile_get_info_text(unit_tile(punit), true, linebreaks));
     {
       const char *infratext =
           get_infrastructure_text(unit_tile(punit)->extras);
@@ -1283,7 +1284,7 @@ bool get_units_upgrade_info(char *buf, size_t bufsz,
 {
   if (unit_list_size(punits) == 0) {
     fc_snprintf(buf, bufsz, _("No units to upgrade!"));
-    return FALSE;
+    return false;
   } else if (unit_list_size(punits) == 1) {
     return (UU_OK == unit_upgrade_info(unit_list_front(punits), buf, bufsz));
   } else {
@@ -1294,7 +1295,7 @@ bool get_units_upgrade_info(char *buf, size_t bufsz,
     unit_list_iterate(punits, punit)
     {
       if (unit_owner(punit) == client_player()
-          && UU_OK == unit_upgrade_test(punit, FALSE)) {
+          && UU_OK == unit_upgrade_test(punit, false)) {
         const struct unit_type *from_unittype = unit_type_get(punit);
         const struct unit_type *to_unittype =
             can_upgrade_unittype(client.conn.playing, from_unittype);
@@ -1309,7 +1310,7 @@ bool get_units_upgrade_info(char *buf, size_t bufsz,
     unit_list_iterate_end;
     if (num_upgraded == 0) {
       fc_snprintf(buf, bufsz, _("None of these units may be upgraded."));
-      return FALSE;
+      return false;
     } else {
       /* This may trigger sometimes if you don't have enough money for
        * a full upgrade.  If you have enough to upgrade at least one, it
@@ -1336,7 +1337,7 @@ bool get_units_upgrade_info(char *buf, size_t bufsz,
           buf, bufsz,
           PL_("%s for %d gold?\n%s", "%s for %d gold?\n%s", upgrade_cost),
           ubuf, upgrade_cost, tbuf);
-      return TRUE;
+      return true;
     }
   }
 }
@@ -1351,17 +1352,17 @@ bool get_units_disband_info(char *buf, size_t bufsz,
 {
   if (unit_list_size(punits) == 0) {
     fc_snprintf(buf, bufsz, _("No units to disband!"));
-    return FALSE;
+    return false;
   } else if (unit_list_size(punits) == 1) {
     if (!unit_can_do_action(unit_list_front(punits), ACTION_DISBAND_UNIT)) {
       fc_snprintf(buf, bufsz, _("%s refuses to disband!"),
                   unit_name_translation(unit_list_front(punits)));
-      return FALSE;
+      return false;
     } else {
       /* TRANS: %s is a unit type */
       fc_snprintf(buf, bufsz, _("Disband %s?"),
                   unit_name_translation(unit_list_front(punits)));
-      return TRUE;
+      return true;
     }
   } else {
     int count = 0;
@@ -1374,13 +1375,13 @@ bool get_units_disband_info(char *buf, size_t bufsz,
     unit_list_iterate_end;
     if (count == 0) {
       fc_snprintf(buf, bufsz, _("None of these units may be disbanded."));
-      return FALSE;
+      return false;
     } else {
       /* TRANS: %d is never 0 or 1 */
       fc_snprintf(buf, bufsz,
                   PL_("Disband %d unit?", "Disband %d units?", count),
                   count);
-      return TRUE;
+      return true;
     }
   }
 }
@@ -1731,7 +1732,7 @@ const char *get_act_sel_action_custom_text(struct action *paction,
 
   if (action_has_result(paction, ACTRES_TRADE_ROUTE)) {
     int revenue = get_caravan_enter_city_trade_bonus(
-        actor_homecity, target_city, actor_unit->carrying, TRUE);
+        actor_homecity, target_city, actor_unit->carrying, true);
 
     astr_set(&custom,
              /* TRANS: Estimated one time bonus and recurring revenue for
@@ -1740,7 +1741,7 @@ const char *get_act_sel_action_custom_text(struct action *paction,
              trade_base_between_cities(actor_homecity, target_city));
   } else if (action_has_result(paction, ACTRES_MARKETPLACE)) {
     int revenue = get_caravan_enter_city_trade_bonus(
-        actor_homecity, target_city, actor_unit->carrying, FALSE);
+        actor_homecity, target_city, actor_unit->carrying, false);
 
     astr_set(&custom,
              /* TRANS: Estimated one time bonus for the Enter Marketplace
@@ -1776,27 +1777,22 @@ const char *act_sel_action_tool_tip(const struct action *paction,
 /************************************************************************/ /**
    Describing buildings that affect happiness.
  ****************************************************************************/
-const char *text_happiness_buildings(const struct city *pcity)
+QString text_happiness_buildings(const struct city *pcity)
 {
   struct effect_list *plist = effect_list_new();
-  static struct astring str = ASTRING_INIT;
+  QString effects;
+  QString str;
 
   get_city_bonus_effects(plist, pcity, NULL, EFT_MAKE_CONTENT);
   if (0 < effect_list_size(plist)) {
-    struct astring effects = ASTRING_INIT;
-
-    get_effect_list_req_text(plist, &effects);
-    astr_set(&str, _("Buildings: %s."), astr_str(&effects));
-    astr_free(&effects);
+    effects = get_effect_list_req_text(plist);
+    str = QString(_("Buildings: %1.")).arg(effects);
   } else {
-    astr_set(&str, _("Buildings: None."));
+    str = _("Buildings: None.");
   }
   effect_list_destroy(plist);
 
-  /* Add line breaks after 80 characters. */
-  astr_break_lines(&str, 80);
-
-  return astr_str(&str);
+  return str;
 }
 
 /************************************************************************/ /**
@@ -1844,29 +1840,25 @@ const char *text_happiness_nationality(const struct city *pcity)
 /************************************************************************/ /**
    Describing wonders that affect happiness.
  ****************************************************************************/
-const char *text_happiness_wonders(const struct city *pcity)
+QString text_happiness_wonders(const struct city *pcity)
 {
   struct effect_list *plist = effect_list_new();
-  static struct astring str = ASTRING_INIT;
+  QString str;
 
   get_city_bonus_effects(plist, pcity, NULL, EFT_MAKE_HAPPY);
   get_city_bonus_effects(plist, pcity, NULL, EFT_FORCE_CONTENT);
   get_city_bonus_effects(plist, pcity, NULL, EFT_NO_UNHAPPY);
   if (0 < effect_list_size(plist)) {
-    struct astring effects = ASTRING_INIT;
+    QString effects;
 
-    get_effect_list_req_text(plist, &effects);
-    astr_set(&str, _("Wonders: %s."), astr_str(&effects));
-    astr_free(&effects);
+    effects = get_effect_list_req_text(plist);
+    str = QString(_("Wonders: %1.")).arg(effects);
   } else {
-    astr_set(&str, _("Wonders: None."));
+    str = _("Wonders: None.");
   }
-
-  /* Add line breaks after 80 characters. */
-  astr_break_lines(&str, 80);
   effect_list_destroy(plist);
 
-  return astr_str(&str);
+  return str;
 }
 
 /************************************************************************/ /**

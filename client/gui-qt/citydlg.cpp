@@ -127,9 +127,7 @@ progress_bar::progress_bar(QWidget *parent) : QProgressBar(parent)
  ****************************************************************************/
 progress_bar::~progress_bar()
 {
-  if (pix != nullptr) {
-    delete pix;
-  }
+  NFC_FREE(pix);
   delete sfont;
 }
 
@@ -159,9 +157,7 @@ void progress_bar::set_pixmap(struct universal *target)
   } else {
     sprite = get_building_sprite(tileset, target->value.building);
   }
-  if (pix != nullptr) {
-    delete pix;
-  }
+  NFC_FREE(pix);
   if (sprite == nullptr) {
     pix = nullptr;
     return;
@@ -187,9 +183,7 @@ void progress_bar::set_pixmap(int n)
   } else {
     sprite = nullptr;
   }
-  if (pix != nullptr) {
-    delete pix;
-  }
+  NFC_FREE(pix);
   if (sprite == nullptr) {
     pix = nullptr;
     return;
@@ -3089,9 +3083,7 @@ production_item::production_item(struct universal *ptarget, QObject *parent)
 production_item::~production_item()
 {
   /* allocated as renegade in model */
-  if (target != NULL) {
-    delete target;
-  }
+  NFC_FREE(target);
 }
 
 /************************************************************************/ /**

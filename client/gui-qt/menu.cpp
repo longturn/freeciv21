@@ -20,12 +20,13 @@
 #include <QVBoxLayout>
 // utility
 #include "fcintl.h"
-#include "string_vector.h"
 // common
+#include "fc_types.h"
 #include "game.h"
 #include "goto.h"
 #include "government.h"
 #include "map.h"
+#include "multipliers.h"
 #include "road.h"
 #include "unit.h"
 // client
@@ -147,7 +148,7 @@ static const char *get_tile_change_menu_text(struct tile *ptile,
   const char *text;
 
   tile_apply_activity(newtile, activity, NULL);
-  text = tile_get_info_text(newtile, FALSE, 0);
+  text = tile_get_info_text(newtile, false, 0);
   tile_virtual_destroy(newtile);
 
   return text;
@@ -459,7 +460,7 @@ void go_act_menu::update()
    * target tile. */
   QList<QAction *> keys = items.keys();
   for (QAction *item : qAsConst(keys)) {
-    if (units_can_do_action(get_units_in_focus(), items.value(item), TRUE)) {
+    if (units_can_do_action(get_units_in_focus(), items.value(item), true)) {
       item->setVisible(true);
       can_do_something = true;
     } else {
@@ -1622,7 +1623,7 @@ void mr_menu::menus_sensitive()
 
           pterrain = tile_terrain(unit_tile(punit));
 
-          if (units_have_type_flag(punits, UTYF_SETTLERS, TRUE)) {
+          if (units_have_type_flag(punits, UTYF_SETTLERS, true)) {
             struct extra_type *pextra = next_extra(punits, EC_MINE);
 
             if (pextra != NULL) {
@@ -1648,7 +1649,7 @@ void mr_menu::menus_sensitive()
 
           pterrain = tile_terrain(unit_tile(punit));
 
-          if (units_have_type_flag(punits, UTYF_SETTLERS, TRUE)) {
+          if (units_have_type_flag(punits, UTYF_SETTLERS, true)) {
             struct extra_type *pextra = next_extra(punits, EC_IRRIGATION);
 
             if (pextra != nullptr) {
@@ -1896,7 +1897,7 @@ void mr_menu::menus_sensitive()
         break;
 
       case AUTOTRADEROUTE:
-        if (units_can_do_action(punits, ACTION_TRADE_ROUTE, TRUE)) {
+        if (units_can_do_action(punits, ACTION_TRADE_ROUTE, true)) {
           i.value()->setEnabled(true);
         }
         break;
@@ -1910,7 +1911,7 @@ void mr_menu::menus_sensitive()
         break;
 
       case ORDER_DIPLOMAT_DLG:
-        if (units_can_do_action(punits, ACTION_ANY, TRUE)) {
+        if (units_can_do_action(punits, ACTION_ANY, true)) {
           i.value()->setEnabled(true);
         }
         break;
@@ -2730,7 +2731,7 @@ void mr_menu::tileset_custom_load()
   QLabel *label;
   QPushButton *but;
   QVBoxLayout *layout;
-  const struct strvec *tlset_list;
+  const QVector<QString> *tlset_list;
   const struct option *poption;
   QStringList sl;
 
@@ -2751,14 +2752,12 @@ void mr_menu::tileset_custom_load()
     on_bytes = s.toLocal8Bit();
     poption = optset_option_by_name(client_optset, on_bytes.data());
     tlset_list = get_tileset_list(poption);
-    strvec_iterate(tlset_list, value)
-    {
+    for (const auto &value : *tlset_list) {
       but = new QPushButton(value);
       connect(but, &QAbstractButton::clicked, this,
               &mr_menu::load_new_tileset);
       layout->addWidget(but);
     }
-    strvec_iterate_end;
   }
   dialog->setSizeGripEnabled(true);
   dialog->setLayout(layout);
@@ -2939,8 +2938,7 @@ void mr_menu::save_game_as()
   QString current_file;
   QString location;
 
-  for (auto dirname : *get_save_dirs())
-  {
+  for (const auto &dirname : *get_save_dirs()) {
     location = dirname;
     // choose last location
   }

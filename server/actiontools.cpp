@@ -18,7 +18,7 @@
 
 /* common */
 #include "actions.h"
-
+#include "nation.h"
 /* server */
 #include "aiiface.h"
 #include "notify.h"
@@ -534,7 +534,7 @@ static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
 {
   if (actor == NULL || target == NULL) {
     /* Can't do any actions if actor or target are missing. */
-    return FALSE;
+    return false;
   }
 
   action_iterate(act)
@@ -553,12 +553,12 @@ static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
     if (action_prob_possible(action_prob_vs_city(actor, act, target))) {
       /* The actor unit may be able to do this action to the target
        * city. */
-      return TRUE;
+      return true;
     }
   }
   action_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -600,7 +600,7 @@ static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
 {
   if (actor == NULL || target == NULL) {
     /* Can't do any actions if actor or target are missing. */
-    return FALSE;
+    return false;
   }
 
   action_iterate(act)
@@ -619,12 +619,12 @@ static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
     if (action_prob_possible(action_prob_vs_unit(actor, act, target))) {
       /* The actor unit may be able to do this action to the target
        * unit. */
-      return TRUE;
+      return true;
     }
   }
   action_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -736,7 +736,7 @@ static bool may_unit_act_vs_tile_extra(const struct unit *actor,
 {
   if (actor == NULL || tgt_tile == NULL || tgt_extra == NULL) {
     /* Can't do any actions if actor or target are missing. */
-    return FALSE;
+    return false;
   }
 
   action_iterate(act)
@@ -757,12 +757,12 @@ static bool may_unit_act_vs_tile_extra(const struct unit *actor,
             action_prob_vs_tile(actor, act, tgt_tile, tgt_extra))) {
       /* The actor unit may be able to do this action to the target
        * extra. */
-      return TRUE;
+      return true;
     }
   }
   action_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -882,13 +882,13 @@ const struct action_auto_perf *action_auto_perf_unit_sel(
 #define action_auto_perf_acquire_targets(_target_extra_)                    \
   tgt_city =                                                                \
       (target_city ? target_city                                            \
-                   : action_tgt_city(actor, unit_tile(actor), TRUE));       \
+                   : action_tgt_city(actor, unit_tile(actor), true));       \
   tgt_tile = (target_tile ? target_tile                                     \
                           : action_tgt_tile(actor, unit_tile(actor),        \
-                                            _target_extra_, TRUE));         \
+                                            _target_extra_, true));         \
   tgt_unit =                                                                \
       (target_unit ? target_unit                                            \
-                   : action_tgt_unit(actor, unit_tile(actor), TRUE));
+                   : action_tgt_unit(actor, unit_tile(actor), true));
 
 /**********************************************************************/ /**
    Make the specified actor unit perform an action because of cause.

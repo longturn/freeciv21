@@ -184,19 +184,19 @@ bool road_can_be_built(const struct road_type *proad,
 {
   if (!(road_extra_get(proad)->buildable)) {
     /* Road type not buildable. */
-    return FALSE;
+    return false;
   }
 
   if (tile_has_road(ptile, proad)) {
     /* Road exist already */
-    return FALSE;
+    return false;
   }
 
   if (tile_terrain(ptile)->road_time == 0) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -218,7 +218,7 @@ static bool are_road_reqs_fulfilled(const struct road_type *proad,
   }
 
   if (requirement_vector_size(&proad->first_reqs) > 0) {
-    bool beginning = TRUE;
+    bool beginning = true;
 
     extra_type_list_iterate(proad->integrators, iroad)
     {
@@ -228,7 +228,7 @@ static bool are_road_reqs_fulfilled(const struct road_type *proad,
         cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
         {
           if (tile_has_extra(adjc_tile, iroad)) {
-            beginning = FALSE;
+            beginning = false;
             break;
           }
         }
@@ -237,7 +237,7 @@ static bool are_road_reqs_fulfilled(const struct road_type *proad,
         adjc_iterate(&(wld.map), ptile, adjc_tile)
         {
           if (tile_has_extra(adjc_tile, iroad)) {
-            beginning = FALSE;
+            beginning = false;
             break;
           }
         }
@@ -254,7 +254,7 @@ static bool are_road_reqs_fulfilled(const struct road_type *proad,
       if (!are_reqs_active(pplayer, tile_owner(ptile), NULL, NULL, ptile,
                            punit, utype, NULL, NULL, NULL,
                            &proad->first_reqs, RPT_POSSIBLE)) {
-        return FALSE;
+        return false;
       }
     }
   }
@@ -272,7 +272,7 @@ bool player_can_build_road(const struct road_type *proad,
                            const struct tile *ptile)
 {
   if (!can_build_extra_base(road_extra_get(proad), pplayer, ptile)) {
-    return FALSE;
+    return false;
   }
 
   return are_road_reqs_fulfilled(proad, pplayer, NULL, ptile);
@@ -287,7 +287,7 @@ bool can_build_road(struct road_type *proad, const struct unit *punit,
   struct player *pplayer = unit_owner(punit);
 
   if (!can_build_extra_base(road_extra_get(proad), pplayer, ptile)) {
-    return FALSE;
+    return false;
   }
 
   return are_road_reqs_fulfilled(proad, pplayer, punit, ptile);
@@ -414,7 +414,7 @@ bool is_road_flag_card_near(const struct tile *ptile, enum road_flag_id flag)
       cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
       {
         if (tile_has_extra(adjc_tile, pextra)) {
-          return TRUE;
+          return true;
         }
       }
       cardinal_adjc_iterate_end;
@@ -422,7 +422,7 @@ bool is_road_flag_card_near(const struct tile *ptile, enum road_flag_id flag)
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -437,7 +437,7 @@ bool is_road_flag_near_tile(const struct tile *ptile, enum road_flag_id flag)
       adjc_iterate(&(wld.map), ptile, adjc_tile)
       {
         if (tile_has_extra(adjc_tile, pextra)) {
-          return TRUE;
+          return true;
         }
       }
       adjc_iterate_end;
@@ -445,7 +445,7 @@ bool is_road_flag_near_tile(const struct tile *ptile, enum road_flag_id flag)
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -458,10 +458,10 @@ bool is_native_tile_to_road(const struct road_type *proad,
 
   if (road_has_flag(proad, RF_RIVER)) {
     if (!terrain_has_flag(tile_terrain(ptile), TER_CAN_HAVE_RIVER)) {
-      return FALSE;
+      return false;
     }
   } else if (tile_terrain(ptile)->road_time == 0) {
-    return FALSE;
+    return false;
   }
 
   pextra = road_extra_get(proad);
@@ -478,7 +478,7 @@ bool is_cardinal_only_road(const struct extra_type *pextra)
   const struct road_type *proad;
 
   if (!is_extra_caused_by(pextra, EC_ROAD)) {
-    return FALSE;
+    return false;
   }
 
   proad = extra_road_get(pextra);

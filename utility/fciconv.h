@@ -12,8 +12,6 @@
 **************************************************************************/
 #pragma once
 
-#include <stdio.h>
-
 /* utility */
 #include "shared.h"
 
@@ -101,5 +99,3 @@ void fc_fprintf(FILE *stream, const char *format, ...)
     fc__attribute((__format__(__printf__, 2, 3)));
 
 size_t get_internal_string_length(const char *text);
-
-

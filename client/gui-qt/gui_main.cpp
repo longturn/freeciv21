@@ -82,7 +82,7 @@ static void migrate_options_from_2_5()
 
   gui_options.gui_qt_fullscreen = gui_options.migrate_fullscreen;
 
-  gui_options.gui_qt_migrated_from_2_5 = TRUE;
+  gui_options.gui_qt_migrated_from_2_5 = true;
 }
 
 /**********************************************************************/ /**
@@ -103,7 +103,7 @@ void qtg_ui_main()
     if (gui_options.first_boot) {
       /* We're using fresh defaults for this version of this client,
        * so prevent any future migrations from other versions */
-      gui_options.gui_qt_migrated_from_2_5 = TRUE;
+      gui_options.gui_qt_migrated_from_2_5 = true;
     } else if (!gui_options.gui_qt_migrated_from_2_5) {
       migrate_options_from_2_5();
     }
@@ -298,8 +298,7 @@ void gui_qt_apply_font(struct option *poption)
     fcFont::instance()->setFont(s, f);
     update_city_descriptions();
     queen()->infotab->chtwdg->update_font();
-    QApplication::setFont(
-        *fcFont::instance()->getFont(fonts::default_font));
+    QApplication::setFont(*fcFont::instance()->getFont(fonts::default_font));
     real_science_report_dialog_update(nullptr);
     fcFont::instance()->getMapfontSize();
   }
@@ -380,7 +379,7 @@ void qtg_editgui_notify_object_created(int tag, int id) {}
 /**********************************************************************/ /**
    Updates a gui font style.
  **************************************************************************/
-void qtg_gui_update_font(const char *font_name, const char *font_value)
+void qtg_gui_update_font(const QString &font_name, const QString &font_value)
 {
   QFont *f;
   QFont *remove_old;

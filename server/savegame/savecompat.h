@@ -160,13 +160,13 @@ struct loaddata {
 
 #define sg_failure_ret(condition, message, ...)                             \
   if (!(condition)) {                                                       \
-    sg_success = FALSE;                                                     \
+    sg_success = false;                                                     \
     log_sg(message, ##__VA_ARGS__);                                         \
     sg_check_ret();                                                         \
   }
 #define sg_failure_ret_val(condition, _val, message, ...)                   \
   if (!(condition)) {                                                       \
-    sg_success = FALSE;                                                     \
+    sg_success = false;                                                     \
     log_sg(message, ##__VA_ARGS__);                                         \
     sg_check_ret_val(_val);                                                 \
   }

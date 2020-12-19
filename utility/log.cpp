@@ -190,12 +190,7 @@ void log_close()
 {
   QMutexLocker locker(&mutex);
 
-  // Flush and delete log file
-  if (log_file != nullptr) {
-    delete log_file;
-    log_file = nullptr;
-  }
-
+  NFCN_FREE(log_file);
   // Reinstall the old handler
   qInstallMessageHandler(original_handler);
 }
@@ -231,7 +226,7 @@ void fc_assert_handle_failure(const char *condition, const char *file,
   }
 }
 
-void log_time(QString msg, bool log)
+void log_time(const QString &msg, bool log)
 {
   static bool logging;
   if (log) {

@@ -19,13 +19,13 @@
 #include "iterator.h"
 #include "log.h"
 #include "shared.h"
-#include "string_vector.h"
 #include "support.h"
 
 /* common */
 #include "fc_types.h"
 #include "game.h"
 #include "name_translation.h"
+#include "nation.h"
 #include "player.h"
 #include "team.h"
 #include "tech.h"
@@ -53,8 +53,8 @@ static struct name_translation advance_unset_name = NAME_INIT;
 static struct name_translation advance_future_name = NAME_INIT;
 static struct name_translation advance_unknown_name = NAME_INIT;
 
-static struct strvec *future_rule_name;
-static struct strvec *future_name_translation;
+Q_GLOBAL_STATIC(QVector<QString>, future_rule_name)
+Q_GLOBAL_STATIC(QVector<QString>, future_name_translation);
 
 /************************************************************************/ /**
    Initializes all player research structure.
@@ -81,7 +81,7 @@ void researches_init(void)
     advance_index_iterate_end;
   }
 
-  game.info.global_advances[A_NONE] = TRUE;
+  game.info.global_advances[A_NONE] = true;
 
   /* Set technology names. */
   /* TRANS: "None" tech */
@@ -89,9 +89,6 @@ void researches_init(void)
   name_set(&advance_future_name, NULL, N_("Future Tech."));
   /* TRANS: "Unknown" advance/technology */
   name_set(&advance_unknown_name, NULL, N_("(Unknown)"));
-
-  future_rule_name = strvec_new();
-  future_name_translation = strvec_new();
 }
 
 /************************************************************************/ /**
@@ -99,8 +96,8 @@ void researches_init(void)
  ****************************************************************************/
 void researches_free(void)
 {
-  strvec_destroy(future_rule_name);
-  strvec_destroy(future_name_translation);
+  future_rule_name->clear();
+  future_name_translation->clear();
 }
 
 /************************************************************************/ /**
@@ -216,19 +213,19 @@ research_advance_name(Tech_type_id tech)
    Set a new future tech name in the string vector, and return the string
    duplicate stored inside the vector.
  ****************************************************************************/
-static const char *research_future_set_name(struct strvec *psv, int no,
+static const char *research_future_set_name(QVector<QString> *psv, int no,
                                             const char *new_name)
 {
-  if (strvec_size(psv) <= no) {
+  if (psv->count() <= no) {
     /* Increase the size of the vector if needed. */
-    strvec_reserve(psv, no + 1);
+    psv->resize(no + 1);
   }
 
   /* Set in vector. */
-  strvec_set(psv, no, new_name);
+  psv->replace(no, new_name);
 
   /* Return duplicate of 'new_name'. */
-  return strvec_get(psv, no);
+  return qUtf8Printable(psv->at(no));
 }
 
 /************************************************************************/ /**
@@ -244,7 +241,7 @@ const char *research_advance_rule_name(const struct research *presearch,
     const int no = presearch->future_tech;
     const char *name;
 
-    name = strvec_get(future_rule_name, no);
+    name = qUtf8Printable(future_rule_name->at(no));
     if (name == NULL) {
       char buffer[256];
 
@@ -274,10 +271,13 @@ research_advance_name_translation(const struct research *presearch,
 {
   if (A_FUTURE == tech && NULL != presearch) {
     const int no = presearch->future_tech;
-    const char *name;
+    const char *name = nullptr;
 
-    name = strvec_get(future_name_translation, no);
-    if (name == NULL) {
+    if (no < future_name_translation->count()) {
+       /* FIXME remove check to read outside vector */
+      name = qUtf8Printable(future_name_translation->at(no));
+    }
+    if (name == nullptr) {
       char buffer[256];
 
       /* NB: 'presearch->future_tech == 0' means "Future Tech. 1". */
@@ -319,11 +319,11 @@ static bool reqs_may_activate(const struct player *target_player,
                           target_building, target_tile, target_unit,
                           target_unittype, target_output, target_specialist,
                           target_action, preq, prob_type)) {
-      return FALSE;
+      return false;
     }
   }
   requirement_vector_iterate_end;
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -354,7 +354,7 @@ static bool research_allowed(
 
   if (adv == NULL) {
     /* Not a valid advance. */
-    return FALSE;
+    return false;
   }
 
   research_players_iterate(presearch, pplayer)
@@ -368,12 +368,12 @@ static bool research_allowed(
        * research it will be illegal in research sharing games. To require
        * that the player that fulfills the requirement must order it to be
        * researched creates unnecessary bureaucracy. */
-      return TRUE;
+      return true;
     }
   }
   research_players_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -428,7 +428,7 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
       /* It will always be illegal to start researching this tech because
        * of unchanging requirements. Since it isn't already known and can't
        * be researched it must be unreachable. */
-      return FALSE;
+      return false;
     }
 
     /* Check if required techs are research_reqs reachable. */
@@ -436,7 +436,7 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
       Tech_type_id req_tech = advance_required(techs[i], tech_req(req));
 
       if (valid_advance_by_number(req_tech) == NULL) {
-        return FALSE;
+        return false;
       } else if (!BV_ISSET(done, req_tech)) {
         techs[techs_num] = req_tech;
         techs_num++;
@@ -446,7 +446,7 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -459,7 +459,7 @@ static bool research_get_reachable(const struct research *presearch,
                                    Tech_type_id tech)
 {
   if (valid_advance_by_number(tech) == NULL) {
-    return FALSE;
+    return false;
   } else {
     advance_root_req_iterate(advance_by_number(tech), proot)
     {
@@ -470,13 +470,13 @@ static bool research_get_reachable(const struct research *presearch,
          * case is needed for descendants of this tech.) */
         if (presearch->inventions[advance_number(proot)].state
             != TECH_KNOWN) {
-          return FALSE;
+          return false;
         }
       } else {
         for (int req = 0; req < AR_SIZE; req++) {
           if (valid_advance(advance_requires(proot, tech_req(req)))
               == NULL) {
-            return FALSE;
+            return false;
           }
         }
       }
@@ -486,10 +486,10 @@ static bool research_get_reachable(const struct research *presearch,
 
   /* Check research reqs reachability. */
   if (!research_get_reachable_rreqs(presearch, tech)) {
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -505,12 +505,12 @@ static bool research_get_root_reqs_known(const struct research *presearch,
   advance_root_req_iterate(advance_by_number(tech), proot)
   {
     if (presearch->inventions[advance_number(proot)].state != TECH_KNOWN) {
-      return FALSE;
+      return false;
     }
   }
   advance_root_req_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -527,7 +527,7 @@ void research_update(struct research *presearch)
   advance_index_iterate(A_FIRST, i)
   {
     enum tech_state state = presearch->inventions[i].state;
-    bool root_reqs_known = TRUE;
+    bool root_reqs_known = true;
     bool reachable = research_get_reachable(presearch, i);
 
     /* Finding if the root reqs of an unreachable tech isn't redundant.
@@ -579,7 +579,7 @@ void research_update(struct research *presearch)
       BV_SET(presearch->inventions[i].required_techs, j);
       presearch->inventions[i].num_required_techs++;
       presearch->inventions[i].bulbs_required +=
-          research_total_bulbs_required(presearch, j, FALSE);
+          research_total_bulbs_required(presearch, j, false);
       /* This is needed to get a correct result for the
        * research_total_bulbs_required() call when
        * game.info.game.info.tech_cost_style is TECH_COST_CIV1CIV2. */
@@ -675,7 +675,7 @@ enum tech_state research_invention_set(struct research *presearch,
 
   if (value == TECH_KNOWN) {
     if (!game.info.global_advances[tech]) {
-      game.info.global_advances[tech] = TRUE;
+      game.info.global_advances[tech] = true;
       game.info.global_advance_count++;
     }
   }
@@ -694,19 +694,19 @@ bool research_invention_reachable(const struct research *presearch,
                                   const Tech_type_id tech)
 {
   if (valid_advance_by_number(tech) == NULL) {
-    return FALSE;
+    return false;
   } else if (presearch != NULL) {
     return presearch->inventions[tech].reachable;
   } else {
     researches_iterate(research_iter)
     {
       if (research_iter->inventions[tech].reachable) {
-        return TRUE;
+        return true;
       }
     }
     researches_iterate_end;
 
-    return FALSE;
+    return false;
   }
 }
 
@@ -721,7 +721,7 @@ bool research_invention_gettable(const struct research *presearch,
                                  const Tech_type_id tech, bool allow_holes)
 {
   if (valid_advance_by_number(tech) == NULL) {
-    return FALSE;
+    return false;
   } else if (presearch != NULL) {
     return (allow_holes
                 ? presearch->inventions[tech].root_reqs_known
@@ -732,12 +732,12 @@ bool research_invention_gettable(const struct research *presearch,
       if (allow_holes ? research_iter->inventions[tech].root_reqs_known
                       : research_iter->inventions[tech].state
                             == TECH_PREREQS_KNOWN) {
-        return TRUE;
+        return true;
       }
     }
     researches_iterate_end;
 
-    return FALSE;
+    return false;
   }
 }
 
@@ -832,18 +832,18 @@ bool research_goal_tech_req(const struct research *presearch,
 
   if (tech == goal || NULL == (pgoal = valid_advance_by_number(goal))
       || NULL == (ptech = valid_advance_by_number(tech))) {
-    return FALSE;
+    return false;
   } else if (NULL != presearch) {
     return BV_ISSET(presearch->inventions[goal].required_techs, tech);
   } else {
     advance_req_iterate(pgoal, preq)
     {
       if (preq == ptech) {
-        return TRUE;
+        return true;
       }
     }
     advance_req_iterate_end;
-    return FALSE;
+    return false;
   }
 }
 

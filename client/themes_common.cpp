@@ -21,15 +21,16 @@
 /* utility */
 #include "log.h"
 #include "shared.h"
-#include "string_vector.h"
 #include "support.h"
 
 /* client/include */
 #include "themes_g.h"
 
 /* client */
+#include "options.h"
 #include "themes_common.h"
 
+Q_GLOBAL_STATIC(QVector<QString>, themes_list)
 /***************************************************************************
   A theme is a portion of client data, which for following reasons should
   be separated from a tileset:
@@ -84,24 +85,22 @@ void init_themes(void)
 /************************************************************************/ /**
    Return a static string vector of useable theme names.
  ****************************************************************************/
-const struct strvec *get_themes_list(const struct option *poption)
+const QVector<QString> *get_themes_list(const struct option *poption)
 {
-  static struct strvec *themes_list = NULL;
-
-  if (NULL == themes_list) {
+  if (themes_list->isEmpty()) {
     int i, j, k;
 
-    themes_list = strvec_new();
     for (i = 0; i < num_directories; i++) {
       for (j = 0; j < directories[i].num_themes; j++) {
-        for (k = 0; k < strvec_size(themes_list); k++) {
-          if (strcmp(strvec_get(themes_list, k), directories[i].themes[j])
+        for (k = 0; k < themes_list->count(); k++) {
+          if (strcmp(qUtf8Printable(themes_list->at(k)),
+                     directories[i].themes[j])
               == 0) {
             break;
           }
         }
-        if (k == strvec_size(themes_list)) {
-          strvec_append(themes_list, directories[i].themes[j]);
+        if (k == themes_list->count()) {
+          themes_list->append(directories[i].themes[j]);
         }
       }
     }
@@ -122,11 +121,11 @@ bool load_theme(const char *theme_name)
     for (j = 0; j < directories[i].num_themes; j++) {
       if (strcmp(theme_name, directories[i].themes[j]) == 0) {
         gui_load_theme(directories[i].path, directories[i].themes[j]);
-        return TRUE;
+        return true;
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**

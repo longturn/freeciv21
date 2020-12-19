@@ -191,7 +191,7 @@ int citymap_read(struct tile *ptile) { return citymap[tile_index(ptile)]; }
 bool citymap_is_reserved(struct tile *ptile)
 {
   if (NULL != tile_worked(ptile) /*|| tile_city(ptile)*/) {
-    return TRUE;
+    return true;
   }
   return (citymap[tile_index(ptile)] < 0);
 }

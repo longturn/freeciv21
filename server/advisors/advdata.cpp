@@ -156,7 +156,7 @@ static bool player_has_really_useful_tech_parasite(struct player *pplayer)
   int players_needed = get_player_bonus(pplayer, EFT_TECH_PARASITE);
 
   if (players_needed == 0) {
-    return FALSE;
+    return false;
   }
 
   presearch = research_get(pplayer);
@@ -183,14 +183,14 @@ static bool player_has_really_useful_tech_parasite(struct player *pplayer)
           || aresearch->researching == tech) {
         players_having++;
         if (players_having >= players_needed) {
-          return TRUE;
+          return true;
         }
       }
     }
     players_iterate_alive_end;
   }
   advance_index_iterate_end;
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -282,26 +282,26 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
     action_list_end(nuke_actions, i);
   }
 
-  fc_assert_ret_val(adv != NULL, FALSE);
+  fc_assert_ret_val(adv != NULL, false);
 
   if (adv->phase_is_initialized) {
-    return FALSE;
+    return false;
   }
-  adv->phase_is_initialized = TRUE;
+  adv->phase_is_initialized = true;
 
   TIMING_LOG(AIT_AIDATA, TIMER_START);
 
-  danger_of_nukes = FALSE;
+  danger_of_nukes = false;
 
   /*** Threats ***/
 
   adv->num_continents = wld.map.num_continents;
   adv->num_oceans = wld.map.num_oceans;
   adv->threats.continent = new bool[adv->num_continents + 1]();
-  adv->threats.invasions = FALSE;
+  adv->threats.invasions = false;
   adv->threats.nuclear = 0; /* none */
   adv->threats.ocean = new bool[adv->num_oceans + 1]();
-  adv->threats.igwall = FALSE;
+  adv->threats.igwall = false;
 
   players_iterate(aplayer)
   {
@@ -317,7 +317,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
     {
       Continent_id continent = tile_continent(acity->tile);
       if (continent >= 0) {
-        adv->threats.continent[continent] = TRUE;
+        adv->threats.continent[continent] = true;
       }
     }
     city_list_iterate_end;
@@ -327,7 +327,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
       const struct unit_class *pclass = unit_class_get(punit);
 
       if (unit_type_get(punit)->adv.igwall) {
-        adv->threats.igwall = TRUE;
+        adv->threats.igwall = true;
       }
 
       if (pclass->adv.sea_move != MOVE_NONE) {
@@ -335,7 +335,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
          * control over the seas, don't worry, keep attacking. */
         if (uclass_has_flag(pclass, UCF_CAN_OCCUPY_CITY)) {
           /* Enemy represents a cross-continental threat! */
-          adv->threats.invasions = TRUE;
+          adv->threats.invasions = true;
         } else if (get_transporter_capacity(punit) > 0) {
           unit_class_iterate(cargoclass)
           {
@@ -343,7 +343,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
                 && can_unit_type_transport(unit_type_get(punit),
                                            cargoclass)) {
               /* Enemy can transport some threatening units! */
-              adv->threats.invasions = TRUE;
+              adv->threats.invasions = true;
               break;
             }
           }
@@ -356,14 +356,14 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
           if (is_ocean_tile(unit_tile(punit))) {
             Continent_id continent = tile_continent(unit_tile(punit));
 
-            adv->threats.ocean[-continent] = TRUE;
+            adv->threats.ocean[-continent] = true;
           } else {
             adjc_iterate(&(wld.map), unit_tile(punit), tile2)
             {
               if (is_ocean_tile(tile2)) {
                 Continent_id continent = tile_continent(tile2);
 
-                adv->threats.ocean[-continent] = TRUE;
+                adv->threats.ocean[-continent] = true;
               }
             }
             adjc_iterate_end;
@@ -375,14 +375,14 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
       /* If our enemy builds missiles, worry about missile defence. */
       if (utype_can_do_action(unit_type_get(punit), ACTION_SUICIDE_ATTACK)
           && unit_type_get(punit)->attack_strength > 1) {
-        adv->threats.suicide_attack = TRUE;
+        adv->threats.suicide_attack = true;
       }
 
       /* If he builds nukes, worry a lot. */
       action_list_iterate(nuke_actions, act_id)
       {
         if (unit_can_do_action(punit, act_id)) {
-          danger_of_nukes = TRUE;
+          danger_of_nukes = true;
         }
       }
       action_list_iterate_end;
@@ -415,8 +415,8 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
 
   /*** Exploration ***/
 
-  adv->explore.land_done = TRUE;
-  adv->explore.sea_done = TRUE;
+  adv->explore.land_done = true;
+  adv->explore.sea_done = true;
   adv->explore.continent = new bool[adv->num_continents + 1]();
   adv->explore.ocean = new bool[adv->num_oceans + 1]();
 
@@ -428,8 +428,8 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
       if (adv->explore.sea_done && has_handicap(pplayer, H_TARGETS)
           && !map_is_known(ptile, pplayer)) {
         /* We're not done there. */
-        adv->explore.sea_done = FALSE;
-        adv->explore.ocean[-continent] = TRUE;
+        adv->explore.sea_done = false;
+        adv->explore.ocean[-continent] = true;
       }
       /* skip rest, which is land only */
       continue;
@@ -441,14 +441,14 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
     if (hut_on_tile(ptile)
         && (!has_handicap(pplayer, H_HUTS)
             || map_is_known(ptile, pplayer))) {
-      adv->explore.land_done = FALSE;
-      adv->explore.continent[continent] = TRUE;
+      adv->explore.land_done = false;
+      adv->explore.continent[continent] = true;
       continue;
     }
     if (has_handicap(pplayer, H_TARGETS) && !map_is_known(ptile, pplayer)) {
       /* this AI must explore */
-      adv->explore.land_done = FALSE;
-      adv->explore.continent[continent] = TRUE;
+      adv->explore.land_done = false;
+      adv->explore.continent[continent] = true;
     }
   }
   whole_map_iterate_end;
@@ -478,12 +478,12 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
   {
     struct adv_dipl *dip = adv_dipl_get(pplayer, aplayer);
 
-    dip->allied_with_enemy = FALSE;
+    dip->allied_with_enemy = false;
     players_iterate(check_pl)
     {
       if (pplayers_allied(aplayer, check_pl)
           && player_diplstate_get(pplayer, check_pl)->type == DS_WAR) {
-        dip->allied_with_enemy = TRUE;
+        dip->allied_with_enemy = true;
       }
     }
     players_iterate_end;
@@ -528,9 +528,9 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
   /* Research want */
   if (is_future_tech(research_get(pplayer)->researching)
       || player_has_really_useful_tech_parasite(pplayer)) {
-    adv->wants_science = FALSE;
+    adv->wants_science = false;
   } else {
-    adv->wants_science = TRUE;
+    adv->wants_science = true;
   }
 
   /* max num cities
@@ -541,7 +541,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
    * for the beginners.
    */
   if (has_handicap(pplayer, H_EXPANSION)) {
-    bool found_human = FALSE;
+    bool found_human = false;
     adv->max_num_cities = 3;
     players_iterate_alive(aplayer)
     {
@@ -550,7 +550,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
       }
       adv->max_num_cities =
           MAX(adv->max_num_cities, city_list_size(aplayer->cities) + 3);
-      found_human = TRUE;
+      found_human = true;
     }
     players_iterate_alive_end;
     if (!found_human) {
@@ -569,7 +569,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
   adv_best_government(pplayer);
   TIMING_LOG(AIT_GOVERNMENT, TIMER_STOP);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -595,7 +595,7 @@ void adv_data_phase_done(struct player *pplayer)
   adv->num_continents = 0;
   adv->num_oceans = 0;
 
-  adv->phase_is_initialized = FALSE;
+  adv->phase_is_initialized = false;
 }
 
 /**********************************************************************/ /**
@@ -652,7 +652,7 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
 #endif
 
   if (caller_closes != NULL) {
-    *caller_closes = FALSE;
+    *caller_closes = false;
   }
 
   if (adv->num_continents != wld.map.num_continents
@@ -665,7 +665,7 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
          at illegal time. This at least minimize bad effects of such calls.
        */
       adv_data_phase_done(pplayer);
-      adv_data_phase_init(pplayer, FALSE);
+      adv_data_phase_init(pplayer, false);
     } else {
       /* Call them in "wrong" order so we return recalculated data to caller,
          but leave data phase closed.
@@ -678,17 +678,17 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
          for example) */
       log_debug("%s advisor data phase closed when adv_data_get() called",
                 player_name(pplayer));
-      adv_data_phase_init(pplayer, FALSE);
+      adv_data_phase_init(pplayer, false);
       if (caller_closes != NULL) {
-        *caller_closes = TRUE;
+        *caller_closes = true;
       } else {
         adv_data_phase_done(pplayer);
       }
     }
   } else {
     if (!adv->phase_is_initialized && caller_closes != NULL) {
-      adv_data_phase_init(pplayer, FALSE);
-      *caller_closes = TRUE;
+      adv_data_phase_init(pplayer, false);
+      *caller_closes = true;
     }
   }
 
@@ -746,8 +746,8 @@ void adv_data_default(struct player *pplayer)
 
   adv->wonder_city = 0;
 
-  adv->wants_science = TRUE;
-  adv->celebrate = FALSE;
+  adv->wants_science = true;
+  adv->celebrate = false;
   adv->max_num_cities = 10000;
 }
 
@@ -762,9 +762,9 @@ void adv_data_close(struct player *pplayer)
 
   adv_data_phase_done(pplayer);
 
-  if (adv->government_want != NULL) {
-    delete[] adv->government_want;
-  }
+
+    NFCPP_FREE(adv->government_want);
+
 
   if (adv->dipl.adv_dipl_slots != NULL) {
     players_iterate(aplayer)
@@ -778,9 +778,7 @@ void adv_data_close(struct player *pplayer)
     delete[] adv->dipl.adv_dipl_slots;
   }
 
-  if (adv != NULL) {
-    delete adv;
-  }
+  NFC_FREE(adv);
 
   pplayer->server.adv = NULL;
 }
@@ -857,7 +855,7 @@ void adv_best_government(struct player *pplayer)
     governments_iterate(gov)
     {
       adv_want val = 0;
-      bool override = FALSE;
+      bool override = false;
 
       if (gov == game.government_during_revolution) {
         continue; /* pointless */
@@ -1099,41 +1097,41 @@ bool adv_is_player_dangerous(struct player *pplayer, struct player *aplayer)
   }
 
   if (dang == OVERRIDE_FALSE) {
-    return FALSE;
+    return false;
   }
 
   if (dang == OVERRIDE_TRUE) {
-    return TRUE;
+    return true;
   }
 
   if (pplayer == aplayer) {
     /* We always trust ourself */
-    return FALSE;
+    return false;
   }
 
   ds = player_diplstate_get(pplayer, aplayer)->type;
 
   if (ds == DS_WAR || ds == DS_CEASEFIRE) {
     /* It's already a war or aplayer can declare it soon */
-    return TRUE;
+    return true;
   }
 
   dip = adv_dipl_get(pplayer, aplayer);
 
   if (dip->allied_with_enemy) {
     /* Don't trust someone who will declare war on us soon */
-    return TRUE;
+    return true;
   }
 
   if (player_diplstate_get(pplayer, aplayer)->has_reason_to_cancel > 0) {
-    return TRUE;
+    return true;
   }
 
   if (pplayer->ai_common.love[player_index(aplayer)] < MAX_AI_LOVE / 10) {
     /* We don't trust players who we don't like. Note that
      * aplayer's units inside pplayer's borders decreases AI's love */
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }

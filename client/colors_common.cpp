@@ -22,6 +22,7 @@
 /* common */
 #include "player.h"
 #include "rgbcolor.h"
+#include "terrain.h"
 
 /* client/include */
 #include "colors_g.h"
@@ -78,7 +79,6 @@ void color_system_free(struct color_system *colors)
   }
 
   delete[] colors->stdcolors;
-
   delete colors;
 }
 

@@ -18,7 +18,6 @@
 #include "log.h" /* fc_assert */
 #include "rand.h"
 #include "shared.h"
-#include "string_vector.h"
 #include "support.h"
 
 /* common */
@@ -43,7 +42,7 @@ void terrains_init(void)
   for (i = 0; i < ARRAY_SIZE(civ_terrains); i++) {
     /* Can't use terrain_by_number here because it does a bounds check. */
     civ_terrains[i].item_number = i;
-    civ_terrains[i].ruledit_disabled = FALSE;
+    civ_terrains[i].ruledit_disabled = false;
     civ_terrains[i].rgb = NULL;
     civ_terrains[i].animal = NULL;
   }
@@ -56,16 +55,8 @@ void terrains_free(void)
 {
   terrain_type_iterate(pterrain)
   {
-    if (NULL != pterrain->helptext) {
-      strvec_destroy(pterrain->helptext);
-      pterrain->helptext = NULL;
-    }
-    if (pterrain->resources != NULL) {
-      /* Server allocates this on ruleset loading, client when
-       * ruleset packet is received. */
-      delete[] pterrain->resources;
-      pterrain->resources = NULL;
-    }
+    NFCN_FREE(pterrain->helptext);
+    NFCNPP_FREE(pterrain->resources);
     if (pterrain->rgb != NULL) {
       /* Server allocates this on ruleset loading, client when
        * ruleset packet is received. */
@@ -250,11 +241,11 @@ bool terrain_has_resource(const struct terrain *pterrain,
 
   while (NULL != *r) {
     if (*r == presource) {
-      return TRUE;
+      return true;
     }
     r++;
   }
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -319,13 +310,13 @@ bool is_terrain_card_near(const struct tile *ptile,
                           const struct terrain *pterrain, bool check_self)
 {
   if (!pterrain) {
-    return FALSE;
+    return false;
   }
 
   cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (tile_terrain(adjc_tile) == pterrain) {
-      return TRUE;
+      return true;
     }
   }
   cardinal_adjc_iterate_end;
@@ -340,13 +331,13 @@ bool is_terrain_near_tile(const struct tile *ptile,
                           const struct terrain *pterrain, bool check_self)
 {
   if (!pterrain) {
-    return FALSE;
+    return false;
   }
 
   adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (tile_terrain(adjc_tile) == pterrain) {
-      return TRUE;
+      return true;
     }
   }
   adjc_iterate_end;
@@ -410,13 +401,13 @@ bool is_resource_card_near(const struct tile *ptile,
                            const struct extra_type *pres, bool check_self)
 {
   if (!pres) {
-    return FALSE;
+    return false;
   }
 
   cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (tile_resource(adjc_tile) == pres) {
-      return TRUE;
+      return true;
     }
   }
   cardinal_adjc_iterate_end;
@@ -431,13 +422,13 @@ bool is_resource_near_tile(const struct tile *ptile,
                            const struct extra_type *pres, bool check_self)
 {
   if (!pres) {
-    return FALSE;
+    return false;
   }
 
   adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (tile_resource(adjc_tile) == pres) {
-      return TRUE;
+      return true;
     }
   }
   adjc_iterate_end;
@@ -457,12 +448,12 @@ bool is_terrain_flag_card_near(const struct tile *ptile,
     struct terrain *pterrain = tile_terrain(adjc_tile);
 
     if (T_UNKNOWN != pterrain && terrain_has_flag(pterrain, flag)) {
-      return TRUE;
+      return true;
     }
   }
   cardinal_adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -477,12 +468,12 @@ bool is_terrain_flag_near_tile(const struct tile *ptile,
     struct terrain *pterrain = tile_terrain(adjc_tile);
 
     if (T_UNKNOWN != pterrain && terrain_has_flag(pterrain, flag)) {
-      return TRUE;
+      return true;
     }
   }
   adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -530,14 +521,14 @@ const char *get_infrastructure_text(bv_extras extras)
   {
     if (pextra->category == ECAT_INFRA
         && BV_ISSET(extras, extra_index(pextra))) {
-      bool hidden = FALSE;
+      bool hidden = false;
 
       extra_type_iterate(top)
       {
         int topi = extra_index(top);
 
         if (BV_ISSET(pextra->hidden_by, topi) && BV_ISSET(extras, topi)) {
-          hidden = TRUE;
+          hidden = true;
           break;
         }
       }
@@ -606,13 +597,13 @@ bool is_terrain_class_card_near(const struct tile *ptile,
 
     if (pterrain != T_UNKNOWN) {
       if (terrain_type_terrain_class(pterrain) == tclass) {
-        return TRUE;
+        return true;
       }
     }
   }
   cardinal_adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -628,13 +619,13 @@ bool is_terrain_class_near_tile(const struct tile *ptile,
 
     if (pterrain != T_UNKNOWN) {
       if (terrain_type_terrain_class(pterrain) == tclass) {
-        return TRUE;
+        return true;
       }
     }
   }
   adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -696,8 +687,8 @@ bool terrain_can_support_alteration(const struct terrain *pterrain,
     break;
   }
 
-  fc_assert(FALSE);
-  return FALSE;
+  fc_assert(false);
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -731,7 +722,7 @@ int terrain_extra_build_time(const struct terrain *pterrain,
   case ACTIVITY_MINE:
     return pterrain->mining_time * factor;
   default:
-    fc_assert(FALSE);
+    fc_assert(false);
     return 0;
   }
 }
@@ -765,7 +756,7 @@ int terrain_extra_removal_time(const struct terrain *pterrain,
   case ACTIVITY_PILLAGE:
     return pterrain->pillage_time * factor;
   default:
-    fc_assert(FALSE);
+    fc_assert(false);
     return 0;
   }
 }
@@ -804,19 +795,13 @@ void set_user_terrain_flag_name(enum terrain_flag_id id, const char *name,
 
   fc_assert_ret(id >= TER_USER_1 && id <= TER_USER_LAST);
 
-  if (user_terrain_flags[tfid].name != NULL) {
-    FC_FREE(user_terrain_flags[tfid].name);
-    user_terrain_flags[tfid].name = NULL;
-  }
+  NFCN_FREE(user_terrain_flags[tfid].name);
 
   if (name && name[0] != '\0') {
     user_terrain_flags[tfid].name = fc_strdup(name);
   }
 
-  if (user_terrain_flags[tfid].helptxt != NULL) {
-    FC_FREE(user_terrain_flags[tfid].helptxt);
-    user_terrain_flags[tfid].helptxt = NULL;
-  }
+  NFCN_FREE(user_terrain_flags[tfid].helptxt);
 
   if (helptxt && helptxt[0] != '\0') {
     user_terrain_flags[tfid].helptxt = fc_strdup(helptxt);

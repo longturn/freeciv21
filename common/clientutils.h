@@ -10,10 +10,6 @@
 **************************************************************************/
 #pragma once
 
-
-/* common */
-#include "fc_types.h"
-
 struct extra_type;
 struct tile;
 struct unit;

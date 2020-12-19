@@ -27,7 +27,7 @@ public:
   ~page_pregame();
   void update_start_page();
   void set_rulesets(int num_rulesets, char **rulesets);
-  pregamevote *pre_vote;
+  void update_vote();
 private slots:
   void slot_pick_nation();
   void start_page_menu(QPoint pos);

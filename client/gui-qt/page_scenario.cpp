@@ -127,10 +127,11 @@ void page_scenario::update_scenarios_page(void)
   files = fileinfolist_infix(get_scenario_dirs(), ".sav", false);
   fileinfo_list_iterate(files, pfile)
   {
-    struct section_file *sf;
+    struct section_file *sf =
+        secfile_load_section(pfile->fullname, "scenario", true);
 
-    if ((sf = secfile_load_section(pfile->fullname, "scenario", TRUE))
-        && secfile_lookup_bool_default(sf, TRUE, "scenario.is_scenario")) {
+    if (sf
+        && secfile_lookup_bool_default(sf, true, "scenario.is_scenario")) {
       const char *sname, *sdescription, *sauthors;
       QTableWidgetItem *item;
       QString format;
@@ -206,7 +207,8 @@ void page_scenario::update_scenarios_page(void)
           st = QLatin1String("");
         }
         sl << "<b>"
-                  + QString(sname && qstrlen(sname) ? Q_(sname) : pfile->name)
+                  + QString(sname && qstrlen(sname) ? Q_(sname)
+                                                    : pfile->name)
                         .toHtmlEscaped()
                   + "</b>"
            << QString(pfile->fullname).toHtmlEscaped()

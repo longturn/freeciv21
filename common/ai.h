@@ -377,7 +377,7 @@ void ai_timer_player_stop(const struct player *pplayer);
 #define ai_type_iterate_end                                                 \
   }                                                                         \
   }                                                                         \
-  while (FALSE)                                                             \
+  while (false)                                                             \
     ;
 
 /* FIXME: This should also check if player is ai controlled */
@@ -389,7 +389,7 @@ void ai_timer_player_stop(const struct player *pplayer);
       _plr_->ai->funcs._func(__VA_ARGS__);                                  \
       ai_timer_player_stop(_plr_);                                          \
     }                                                                       \
-  } while (FALSE)
+  } while (false)
 
 #define CALL_FUNC_EACH_AI(_func, ...)                                       \
   do {                                                                      \
@@ -402,6 +402,6 @@ void ai_timer_player_stop(const struct player *pplayer);
       }                                                                     \
     }                                                                       \
     ai_type_iterate_end;                                                    \
-  } while (FALSE)
+  } while (false)
 
 

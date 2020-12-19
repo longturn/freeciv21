@@ -13,15 +13,6 @@
 
 #pragma once
 
-
-/* utility */
-#include "support.h" /* bool type */
-
-/* common */
-#include "events.h"        /* enum event_type */
-#include "fc_types.h"      /* struct tile */
-#include "featured_text.h" /* struct text_tag_list */
-
 struct message {
   char *descr;
   struct text_tag_list *tags;

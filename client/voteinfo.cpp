@@ -185,9 +185,7 @@ void voteinfo_queue_free(void)
 
   voteinfo_list_iterate(voteinfo_queue, vi)
   {
-    if (vi != NULL) {
-      delete vi;
-    }
+    NFC_FREE(vi);
   }
   voteinfo_list_iterate_end;
 

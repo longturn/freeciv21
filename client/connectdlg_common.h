@@ -10,9 +10,6 @@
 **************************************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool */
-
 bool client_start_server(void);
 void client_kill_server(bool force);
 

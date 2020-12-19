@@ -12,19 +12,15 @@
       \____/        ********************************************************/
 #pragma once
 
-
 /* City Improvements, including Wonders.  (Alternatively "Buildings".) */
 
 /* utility */
 #include "bitvector.h"
-#include "support.h" /* bool */
 
 /* common */
-#include "fc_types.h"
 #include "name_translation.h"
 #include "requirements.h"
 
-struct strvec; /* Actually defined in "utility/string_vector.h". */
 
 /* B_LAST is a value that is guaranteed to be larger than all
  * actual Impr_type_id values.  It is used as a flag value; it can
@@ -75,7 +71,7 @@ struct impr_type {
   int sabotage; /* Base chance of diplomat sabotage succeeding. */
   enum impr_genus_id genus; /* genus; e.g. GreatWonder */
   bv_impr_flags flags;
-  struct strvec *helptext;
+  QVector<QString> *helptext;
   char soundtag[MAX_LEN_NAME];
   char soundtag_alt[MAX_LEN_NAME];
 
@@ -139,10 +135,12 @@ const struct impr_type *
 improvement_replacement(const struct impr_type *pimprove);
 
 /* Macros for struct packet_game_info::great_wonder_owners[]. */
-#define WONDER_DESTROYED (MAX_NUM_PLAYER_SLOTS + 1) /* Used as player id.   \
-                                                     */
-#define WONDER_NOT_OWNED (MAX_NUM_PLAYER_SLOTS + 2) /* Used as player id.   \
-                                                     */
+#define WONDER_DESTROYED                                                    \
+  (MAX_NUM_PLAYER_SLOTS + 1) /* Used as player id.                          \
+                              */
+#define WONDER_NOT_OWNED                                                    \
+  (MAX_NUM_PLAYER_SLOTS + 2) /* Used as player id.                          \
+                              */
 #define WONDER_OWNED(player_id) ((player_id) < MAX_NUM_PLAYER_SLOTS)
 
 /* Macros for struct player::wonders[]. */
@@ -218,5 +216,3 @@ const struct impr_type *improvement_array_last(void);
   }                                                                         \
   }                                                                         \
   improvement_iterate_end;
-
-

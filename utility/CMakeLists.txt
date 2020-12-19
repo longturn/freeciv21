@@ -43,7 +43,6 @@ add_library(
   registry_ini.cpp
   section_file.cpp
   shared.cpp
-  string_vector.cpp
   support.cpp
   timing.cpp
   # Generated

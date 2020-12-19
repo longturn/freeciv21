@@ -37,7 +37,7 @@ struct gui_funcs {
   void (*insert_client_build_info)(char *outbuf, size_t outlen);
 
   void (*version_message)(const char *vertext);
-  void (*real_output_window_append)(const QString& astring,
+  void (*real_output_window_append)(const QString &astring,
                                     const struct text_tag_list *tags,
                                     int conn_id);
 
@@ -45,8 +45,7 @@ struct gui_funcs {
   void (*tileset_type_set)(enum ts_type type);
   void (*free_intro_radar_sprites)(void);
   struct sprite *(*load_gfxfile)(const char *filename);
-  struct sprite *(*create_sprite)(int width, int height,
-                                  QColor *pcolor);
+  struct sprite *(*create_sprite)(int width, int height, QColor *pcolor);
   void (*get_sprite_dimensions)(struct sprite *sprite, int *width,
                                 int *height);
   struct sprite *(*crop_sprite)(struct sprite *source, int x, int y,
@@ -73,26 +72,25 @@ struct gui_funcs {
                                    int canvas_y, struct sprite *psprite,
                                    bool fog, int fog_x, int fog_y);
   void (*canvas_put_sprite_citymode)(struct canvas *pcanvas, int canvas_x,
-                                   int canvas_y, struct sprite *psprite,
-                                   bool fog, int fog_x, int fog_y);
+                                     int canvas_y, struct sprite *psprite,
+                                     bool fog, int fog_x, int fog_y);
   void (*canvas_put_rectangle)(struct canvas *pcanvas, QColor *pcolor,
                                int canvas_x, int canvas_y, int width,
                                int height);
   void (*canvas_fill_sprite_area)(struct canvas *pcanvas,
-                                  struct sprite *psprite,
-                                  QColor *pcolor, int canvas_x,
-                                  int canvas_y);
+                                  struct sprite *psprite, QColor *pcolor,
+                                  int canvas_x, int canvas_y);
   void (*canvas_put_line)(struct canvas *pcanvas, QColor *pcolor,
                           enum line_type ltype, int start_x, int start_y,
                           int dx, int dy);
-  void (*canvas_put_curved_line)(struct canvas *pcanvas,
-                                 QColor *pcolor, enum line_type ltype,
-                                 int start_x, int start_y, int dx, int dy);
+  void (*canvas_put_curved_line)(struct canvas *pcanvas, QColor *pcolor,
+                                 enum line_type ltype, int start_x,
+                                 int start_y, int dx, int dy);
   void (*get_text_size)(int *width, int *height, enum client_font font,
-                        const QString& text);
+                        const QString &text);
   void (*canvas_put_text)(struct canvas *pcanvas, int canvas_x, int canvas_y,
                           enum client_font font, QColor *pcolor,
-                          const QString&);
+                          const QString &);
 
   void (*set_rulesets)(int num_rulesets, char **rulesets);
   void (*options_extra_init)(void);
@@ -109,7 +107,8 @@ struct gui_funcs {
   void (*set_unit_icon)(int idx, struct unit *punit);
   void (*set_unit_icons_more_arrow)(bool onoff);
   void (*real_focus_units_changed)(void);
-  void (*gui_update_font)(const char *font_name, const char *font_value);
+  void (*gui_update_font)(const QString &font_name,
+                          const QString &font_value);
 
   void (*editgui_refresh)(void);
   void (*editgui_notify_object_created)(int tag, int id);
@@ -145,5 +144,3 @@ struct gui_funcs {
 };
 
 struct gui_funcs *get_gui_funcs(void);
-
-

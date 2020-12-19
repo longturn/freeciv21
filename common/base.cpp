@@ -44,7 +44,7 @@ bool is_base_flag_card_near(const struct tile *ptile, enum base_flag_id flag)
       cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
       {
         if (tile_has_extra(adjc_tile, pextra)) {
-          return TRUE;
+          return true;
         }
       }
       cardinal_adjc_iterate_end;
@@ -52,7 +52,7 @@ bool is_base_flag_card_near(const struct tile *ptile, enum base_flag_id flag)
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -67,7 +67,7 @@ bool is_base_flag_near_tile(const struct tile *ptile, enum base_flag_id flag)
       adjc_iterate(&(wld.map), ptile, adjc_tile)
       {
         if (tile_has_extra(adjc_tile, pextra)) {
-          return TRUE;
+          return true;
         }
       }
       adjc_iterate_end;
@@ -75,7 +75,7 @@ bool is_base_flag_near_tile(const struct tile *ptile, enum base_flag_id flag)
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -86,7 +86,7 @@ bool base_flag_is_retired(enum base_flag_id flag)
   Q_UNUSED(flag)
   /* No new flags retired in 3.1. Flags that were retired in 3.0 are already
    * completely removed. */
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -111,7 +111,7 @@ bool player_can_build_base(const struct base_type *pbase,
   struct extra_type *pextra;
 
   if (!can_build_extra_base(base_extra_get(pbase), pplayer, ptile)) {
-    return FALSE;
+    return false;
   }
 
   pextra = base_extra_get(pbase);
@@ -131,7 +131,7 @@ bool can_build_base(const struct unit *punit, const struct base_type *pbase,
   struct player *pplayer = unit_owner(punit);
 
   if (!can_build_extra_base(pextra, pplayer, ptile)) {
-    return FALSE;
+    return false;
   }
 
   return are_reqs_active(pplayer, tile_owner(ptile), NULL, NULL, ptile,

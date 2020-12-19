@@ -53,7 +53,7 @@ bool adv_follow_path(struct unit *punit, struct pf_path *path,
   bool alive;
 
   if (punit->moves_left <= 0) {
-    return TRUE;
+    return true;
   }
   punit->goto_tile = ptile;
   unit_activity_handling(punit, ACTIVITY_GOTO);
@@ -91,7 +91,7 @@ bool adv_unit_execute_path(struct unit *punit, struct pf_path *path)
 
     if (same_pos(unit_tile(punit), ptile)) {
       UNIT_LOG(LOG_DEBUG, punit, "execute_path: waiting this turn");
-      return TRUE;
+      return true;
     }
 
     /* We use ai_unit_move() for everything but the last step
@@ -109,16 +109,16 @@ bool adv_unit_execute_path(struct unit *punit, struct pf_path *path)
     }
     if (!game_unit_by_number(id)) {
       /* Died... */
-      return FALSE;
+      return false;
     }
 
     if (!same_pos(unit_tile(punit), ptile) || punit->moves_left <= 0) {
       /* Stopped (or maybe fought) or ran out of moves */
-      return TRUE;
+      return true;
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -140,7 +140,7 @@ static bool adv_unit_move(struct unit *punit, struct tile *ptile)
   if (is_enemy_unit_tile(ptile, pplayer)
       || is_enemy_city_tile(ptile, pplayer)) {
     UNIT_LOG(LOG_DEBUG, punit, "movement halted due to enemy presence");
-    return FALSE;
+    return false;
   }
 
   /* Select move kind. */
@@ -188,7 +188,7 @@ static bool adv_unit_move(struct unit *punit, struct tile *ptile)
         && adv_danger_at(punit, ptile)
         && !adv_danger_at(punit, unit_tile(punit))) {
       UNIT_LOG(LOG_DEBUG, punit, "ending move early to stay out of trouble");
-      return FALSE;
+      return false;
     }
   }
 
@@ -210,10 +210,10 @@ static bool adv_unit_move(struct unit *punit, struct tile *ptile)
                    action_number(paction));
   } else {
     /* Other move. */
-    (void) unit_move_handling(punit, ptile, FALSE, TRUE);
+    (void) unit_move_handling(punit, ptile, false, true);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -226,23 +226,23 @@ static bool adv_unit_move(struct unit *punit, struct tile *ptile)
 static bool adv_could_be_my_zoc(struct unit *myunit, struct tile *ptile)
 {
   if (same_pos(ptile, unit_tile(myunit))) {
-    return FALSE; /* can't be my zoc */
+    return false; /* can't be my zoc */
   }
   if (is_tiles_adjacent(ptile, unit_tile(myunit))
       && !is_non_allied_unit_tile(ptile, unit_owner(myunit))) {
-    return FALSE;
+    return false;
   }
 
   adjc_iterate(&(wld.map), ptile, atile)
   {
     if (!terrain_has_flag(tile_terrain(atile), TER_NO_ZOC)
         && is_non_allied_unit_tile(atile, unit_owner(myunit))) {
-      return FALSE;
+      return false;
     }
   }
   adjc_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -257,7 +257,7 @@ int adv_could_unit_move_to_tile(struct unit *punit, struct tile *dest_tile)
 {
   enum unit_move_result reason = unit_move_to_tile_test(
       &(wld.map), punit, ACTIVITY_IDLE, unit_tile(punit), dest_tile,
-      unit_has_type_flag(punit, UTYF_IGZOC), NULL, FALSE);
+      unit_has_type_flag(punit, UTYF_IGZOC), NULL, false);
 
   switch (reason) {
   case MR_OK:
@@ -330,15 +330,15 @@ bool adv_danger_at(struct unit *punit, struct tile *ptile)
   CALL_PLR_AI_FUNC(consider_tile_dangerous, unit_owner(punit), ptile, punit,
                    &dc);
   if (dc == OVERRIDE_TRUE) {
-    return TRUE;
+    return true;
   } else if (dc == OVERRIDE_FALSE) {
-    return FALSE;
+    return false;
   }
 
   if (pcity && pplayers_allied(city_owner(pcity), unit_owner(punit))
       && !is_non_allied_unit_tile(ptile, pplayer)) {
     /* We will be safe in a friendly city */
-    return FALSE;
+    return false;
   }
 
   /* Calculate how well we can defend at (x,y) */
@@ -361,7 +361,7 @@ bool adv_danger_at(struct unit *punit, struct tile *ptile)
         a += adv_unit_att_rating(enemy);
         if ((a * a * 10) >= d) {
           /* The enemies combined strength is too big! */
-          return TRUE;
+          return true;
         }
       }
     }
@@ -369,7 +369,7 @@ bool adv_danger_at(struct unit *punit, struct tile *ptile)
   }
   adjc_iterate_end;
 
-  return FALSE; /* as good a quick'n'dirty should be -- Syela */
+  return false; /* as good a quick'n'dirty should be -- Syela */
 }
 
 /**********************************************************************/ /**

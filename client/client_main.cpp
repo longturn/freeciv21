@@ -24,6 +24,7 @@
 
 // Qt
 #include <QApplication>
+#include <QBitArray>
 #include <QCommandLineParser>
 #include <QElapsedTimer>
 #include <QGlobalStatic>
@@ -137,8 +138,8 @@ char password[MAX_LEN_PASSWORD] = "\0";
 QString cmd_metaserver;
 int server_port = -1;
 bool auto_connect =
-    FALSE;               /* TRUE = skip "Connect to Freeciv Server" dialog */
-bool auto_spawn = FALSE; /* TRUE = skip main menu, start local server */
+    false;               /* TRUE = skip "Connect to Freeciv Server" dialog */
+bool auto_spawn = false; /* TRUE = skip main menu, start local server */
 enum announce_type announce;
 
 struct civclient client;
@@ -146,18 +147,18 @@ struct civclient client;
 static enum client_states civclient_state = C_S_INITIAL;
 
 /* TRUE if an end turn request is blocked by busy agents */
-bool waiting_for_end_turn = FALSE;
+bool waiting_for_end_turn = false;
 
 /*
  * TRUE between receiving PACKET_END_TURN and PACKET_BEGIN_TURN
  */
-static bool server_busy = FALSE;
+static bool server_busy = false;
 
 #ifdef FREECIV_DEBUG
-bool hackless = FALSE;
+bool hackless = false;
 #endif
 
-static bool client_quitting = FALSE;
+static bool client_quitting = false;
 
 /**********************************************************************/ /**
    Convert a text string from the internal to the data encoding, when it
@@ -186,17 +187,17 @@ static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
   Q_UNUSED(nsrc)
 
   char *out = data_to_internal_string_malloc(src);
-  bool ret = TRUE;
+  bool ret = true;
   size_t len;
 
   if (!out) {
     dst[0] = '\0';
-    return FALSE;
+    return false;
   }
 
   len = qstrlen(out);
   if (ndst > 0 && len >= ndst) {
-    ret = FALSE;
+    ret = false;
     len = ndst - 1;
   }
 
@@ -220,7 +221,7 @@ static void charsets_init(void)
    This is called at program exit in any emergency. This is registered
    as at_quick_exit() callback, so no destructor kind of actions here
  **************************************************************************/
-static void emergency_exit(void) { client_kill_server(TRUE); }
+static void emergency_exit(void) { client_kill_server(true); }
 
 /**********************************************************************/ /**
    This is called at program exit.
@@ -239,9 +240,9 @@ static void at_exit(void)
 static void client_game_init(void)
 {
   client.conn.playing = NULL;
-  client.conn.observer = FALSE;
+  client.conn.observer = false;
 
-  game_init(FALSE);
+  game_init(false);
   attribute_init();
   control_init();
   link_marks_init();
@@ -272,8 +273,8 @@ static void client_game_free(void)
   free_help_texts();
   attribute_free();
   governor::i()->drop();
-  game.client.ruleset_init = FALSE;
-  game.client.ruleset_ready = FALSE;
+  game.client.ruleset_init = false;
+  game.client.ruleset_ready = false;
   game_free();
   /* update_queue_init() is correct at this point. The queue is reset to
      a clean state which is also needed if the client is not connected to
@@ -281,7 +282,7 @@ static void client_game_free(void)
   update_queue_init();
 
   client.conn.playing = NULL;
-  client.conn.observer = FALSE;
+  client.conn.observer = false;
 }
 
 /**********************************************************************/ /**
@@ -327,7 +328,7 @@ int client_main(int argc, char *argv[])
 
   fc_interface_init_client();
 
-  game.client.ruleset_init = FALSE;
+  game.client.ruleset_init = false;
 
   /* Ensure that all AIs are initialized to unused state
    * Not using ai_type_iterate as it would stop at
@@ -383,7 +384,7 @@ int client_main(int argc, char *argv[])
         "PORT"},
        {{"P", _("Plugin")},
         QString::asprintf(_("Use PLUGIN for sound output %s"),
-                          audio_get_all_plugin_names()),
+                          qUtf8Printable(audio_get_all_plugin_names())),
         "PLUGIN"},
        {{"r", "read"},
         _("Read startup script FILE (for spawned server only)"),
@@ -411,7 +412,7 @@ int client_main(int argc, char *argv[])
   }
 #ifdef FREECIV_DEBUG
   if (parser.isSet(QStringLiteral("Hackless"))) {
-    hackless = TRUE;
+    hackless = true;
   }
 #endif
   if (parser.isSet(QStringLiteral("log"))) {
@@ -423,7 +424,7 @@ int client_main(int argc, char *argv[])
   }
   if (parser.isSet(QStringLiteral("file"))) {
     savefile = parser.value(QStringLiteral("file"));
-    auto_spawn = TRUE;
+    auto_spawn = true;
   }
   if (parser.isSet(QStringLiteral("name"))) {
     user_name = parser.value(QStringLiteral("name"));
@@ -450,7 +451,7 @@ int client_main(int argc, char *argv[])
     }
   }
   if (parser.isSet(QStringLiteral("autoconnect"))) {
-    auto_connect = TRUE;
+    auto_connect = true;
   }
   if (parser.isSet(QStringLiteral("tiles"))) {
     forced_tileset_name = parser.value(QStringLiteral("tiles"));
@@ -579,15 +580,15 @@ int client_main(int argc, char *argv[])
   fill_topo_ts_default();
 
   if (!forced_tileset_name.isEmpty()) {
-    if (!tilespec_try_read(qUtf8Printable(forced_tileset_name), TRUE, -1,
-                           TRUE)) {
+    if (!tilespec_try_read(qUtf8Printable(forced_tileset_name), true, -1,
+                           true)) {
       qCritical(_("Can't load requested tileset %s!"),
                 qUtf8Printable(forced_tileset_name));
       client_exit();
       return EXIT_FAILURE;
     }
   } else {
-    tilespec_try_read(gui_options.default_tileset_name, FALSE, -1, TRUE);
+    tilespec_try_read(gui_options.default_tileset_name, false, -1, true);
   }
 
   audio_real_init(sound_set_name, music_set_name, sound_plugin_name);
@@ -712,13 +713,13 @@ void send_turn_done(void)
      */
 
     if (!governor::i()->hot()) {
-      waiting_for_end_turn = TRUE;
+      waiting_for_end_turn = true;
     }
 
     return;
   }
 
-  waiting_for_end_turn = FALSE;
+  waiting_for_end_turn = false;
 
   attribute_flush();
 
@@ -745,7 +746,7 @@ void set_client_state(enum client_states newstate)
 
   if (auto_spawn) {
     fc_assert(!auto_connect);
-    auto_spawn = FALSE;
+    auto_spawn = false;
     if (!client_start_server()) {
       qFatal(_("Failed to start local server; aborting."));
       exit(EXIT_FAILURE);
@@ -758,7 +759,7 @@ void set_client_state(enum client_states newstate)
       exit(EXIT_FAILURE);
     } else {
       start_autoconnecting_to_server();
-      auto_connect = FALSE; /* Don't try this again. */
+      auto_connect = false; /* Don't try this again. */
     }
   }
 
@@ -846,9 +847,9 @@ void set_client_state(enum client_states newstate)
     role_unit_precalcs();
     boot_help_texts(); /* reboot with player */
     global_worklists_build();
-    can_slide = FALSE;
+    can_slide = false;
     unit_focus_update();
-    can_slide = TRUE;
+    can_slide = true;
     set_client_page(PAGE_GAME);
     /* Find something sensible to display instead of the intro gfx. */
     center_on_something();
@@ -915,7 +916,7 @@ void set_client_state(enum client_states newstate)
   }
 
   /* If turn was going to change, that is now aborted. */
-  set_server_busy(FALSE);
+  set_server_busy(false);
 }
 
 /**********************************************************************/ /**
@@ -978,7 +979,7 @@ Q_GLOBAL_STATIC(QTimer, turndone_timer)
 /* The timer tells how long since server informed us about starting
  * turn-change activities. */
 Q_GLOBAL_STATIC(QElapsedTimer, between_turns)
-static bool waiting_turn_change = FALSE;
+static bool waiting_turn_change = false;
 
 /* This value shows what value the timeout label is currently showing for
  * the seconds-to-turndone. */
@@ -1017,7 +1018,7 @@ void start_turn_change_wait(void)
   seconds_shown_to_new_turn = ceil(game.tinfo.last_turn_change_time) + 0.1;
   between_turns->start();
 
-  waiting_turn_change = TRUE;
+  waiting_turn_change = true;
 }
 
 /**********************************************************************/ /**
@@ -1025,7 +1026,7 @@ void start_turn_change_wait(void)
  **************************************************************************/
 void stop_turn_change_wait(void)
 {
-  waiting_turn_change = FALSE;
+  waiting_turn_change = false;
   update_timeout_label();
 }
 
@@ -1193,7 +1194,7 @@ bool is_server_busy(void) { return server_busy; }
  **************************************************************************/
 bool client_is_global_observer(void)
 {
-  return client.conn.playing == NULL && client.conn.observer == TRUE;
+  return client.conn.playing == NULL && client.conn.observer == true;
 }
 
 /**********************************************************************/ /**
@@ -1324,7 +1325,7 @@ static bool client_ss_val_bool_get(server_setting_id id)
     return option_bool_get(pset);
   } else {
     qCritical("No server setting with the id %d exists.", id);
-    return FALSE;
+    return false;
   }
 }
 
@@ -1354,7 +1355,7 @@ static unsigned int client_ss_val_bitwise_get(server_setting_id id)
     return option_bitwise_get(pset);
   } else {
     qCritical("No server setting with the id %d exists.", id);
-    return FALSE;
+    return false;
   }
 }
 
@@ -1494,4 +1495,4 @@ bool is_client_quitting(void) { return client_quitting; }
 /**********************************************************************/ /**
    Mark client as one going to quit as soon as possible,
  **************************************************************************/
-void start_quitting(void) { client_quitting = TRUE; }
+void start_quitting(void) { client_quitting = true; }

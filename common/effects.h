@@ -12,15 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
-/* utility */
-#include "support.h" /* bool type */
-
-/* common */
-#include "connection.h"
-#include "fc_types.h"
-#include "multipliers.h"
-
 #include "requirements.h"
 
 /* Type of effects. Add new values via SPECENUM_VALUE%d and
@@ -347,8 +338,7 @@ void effect_req_append(struct effect *peffect, struct requirement req);
 struct astring;
 void get_effect_req_text(const struct effect *peffect, char *buf,
                          size_t buf_len);
-void get_effect_list_req_text(const struct effect_list *plist,
-                              struct astring *astr);
+QString get_effect_list_req_text(const struct effect_list *plist);
 
 /* ruleset cache creation and communication functions */
 struct packet_ruleset_effect;
@@ -434,5 +424,3 @@ struct effect_list *get_effects(enum effect_type effect_type);
 
 typedef bool (*iec_cb)(struct effect *, void *data);
 bool iterate_effect_cache(iec_cb cb, void *data);
-
-

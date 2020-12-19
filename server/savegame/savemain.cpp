@@ -154,7 +154,8 @@ void save_game(const char *orig_filename, const char *save_reason,
     filename = stdata->filepath;
   } else {
     sz_strlcpy(stdata->filepath, orig_filename);
-    if ((filename = strrchr(stdata->filepath, '/'))) {
+    filename = strrchr(stdata->filepath, '/');
+    if (filename) {
       filename++;
     } else {
       filename = stdata->filepath;
@@ -170,17 +171,17 @@ void save_game(const char *orig_filename, const char *save_reason,
     } else {
       char *end_dot;
       const char *strip_extensions[] = {".sav", ".gz", ".bz2", ".xz", NULL};
-      bool stripped = TRUE;
+      bool stripped = true;
 
       while ((end_dot = strrchr(dot, '.')) && stripped) {
         int i;
 
-        stripped = FALSE;
+        stripped = false;
 
         for (i = 0; strip_extensions[i] != NULL && !stripped; i++) {
           if (!strcmp(end_dot, strip_extensions[i])) {
             *end_dot = '\0';
-            stripped = TRUE;
+            stripped = true;
           }
         }
       }
@@ -200,7 +201,7 @@ void save_game(const char *orig_filename, const char *save_reason,
 
   /* Allowing duplicates shouldn't be allowed. However, it takes very too
    * long time for huge game saving... */
-  stdata->sfile = secfile_new(TRUE);
+  stdata->sfile = secfile_new(true);
   savegame_save(stdata->sfile, save_reason, scenario);
 
   /* We have consistent game state in stdata->sfile now, so
@@ -253,7 +254,7 @@ void save_game(const char *orig_filename, const char *save_reason,
       tmpname = srvarg.saves_pathname;
     } else {
       /* Make sure scenario directory exist */
-      if (srvarg.saves_pathname.isNull()) {
+      if (srvarg.scenarios_pathname.isNull()) {
         QDir().mkpath(srvarg.scenarios_pathname);
       }
 

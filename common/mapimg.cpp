@@ -26,7 +26,6 @@
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
-#include "string_vector.h"
 #include "timing.h"
 
 /* common */
@@ -63,6 +62,8 @@
 #else
 #define magickwand_size_t unsigned long
 #endif
+
+Q_GLOBAL_STATIC(QVector<QString>, format_list)
 
 /* == image colors == */
 enum img_special {
@@ -446,7 +447,7 @@ static struct {
   mapimg_tile_player_func mapimg_tile_unit;
   mapimg_plrcolor_count_func mapimg_plrcolor_count;
   mapimg_plrcolor_get_func mapimg_plrcolor_get;
-} mapimg = {.init = FALSE};
+} mapimg = {.init = false};
 
 /*
  * ==============================================
@@ -488,7 +489,7 @@ void mapimg_init(mapimg_tile_known_func mapimg_tile_known,
   fc_assert_ret(mapimg_plrcolor_get != NULL);
   mapimg.mapimg_plrcolor_get = mapimg_plrcolor_get;
 
-  mapimg.init = TRUE;
+  mapimg.init = true;
 }
 
 /************************************************************************/ /**
@@ -522,7 +523,7 @@ void mapimg_free(void)
   mapimg_reset();
   mapdef_list_destroy(mapimg.mapdef);
 
-  mapimg.init = FALSE;
+  mapimg.init = false;
 }
 
 /************************************************************************/ /**
@@ -580,7 +581,7 @@ char *mapimg_help(const char *cmdname)
     /* Help text was created already. */
     return fc_strdup(astr_str(&help));
   }
-  pmapdef = mapdef_new(FALSE);
+  pmapdef = mapdef_new(false);
   /* Possible 'format' settings (toolkit + format). */
   for (tool = imagetool_begin(); tool != imagetool_end();
        tool = imagetool_next(tool)) {
@@ -732,26 +733,26 @@ bool mapimg_define(const char *maparg, bool check)
   struct mapdef *pmapdef = NULL;
   QStringList mapargs, mapopts;
   int i;
-  bool ret = TRUE;
+  bool ret = true;
 
-  MAPIMG_ASSERT_RET_VAL(mapimg_initialised(), FALSE);
+  MAPIMG_ASSERT_RET_VAL(mapimg_initialised(), false);
 
   if (maparg == NULL) {
     MAPIMG_LOG(_("no map definition"));
-    return FALSE;
+    return false;
   }
 
   if (strlen(maparg) > MAX_LEN_MAPARG) {
     /* too long map definition string */
     MAPIMG_LOG(_("map definition string too long (max %d characters)"),
                MAX_LEN_MAPARG);
-    return FALSE;
+    return false;
   }
 
   if (mapimg_count() == MAX_NUM_MAPIMG) {
     MAPIMG_LOG(_("maximum number of map definitions reached (%d)"),
                MAX_NUM_MAPIMG);
-    return FALSE;
+    return false;
   }
 
   for (i = 0; i < mapimg_count(); i++) {
@@ -759,18 +760,18 @@ bool mapimg_define(const char *maparg, bool check)
     if (0 == fc_strcasecmp(pmapdef->maparg, maparg)) {
       MAPIMG_LOG(_("duplicate of map image definition %d ('%s')"), i,
                  maparg);
-      return FALSE;
+      return false;
     }
   }
 
-  pmapdef = mapdef_new(FALSE);
+  pmapdef = mapdef_new(false);
 
   /* get map options */
-  mapargs = QString(maparg).split(":");
+  mapargs = QString(maparg).split(QStringLiteral(":"));
 
-  for (auto str : mapargs) {
+  for (const auto &str : qAsConst(mapargs)) {
     /* split map options into variable and value */
-    mapopts = str.split("=");
+    mapopts = str.split(QStringLiteral("="));
 
     if (mapopts.count() == 2) {
       enum mapdef_arg arg =
@@ -781,11 +782,11 @@ bool mapimg_define(const char *maparg, bool check)
                                 check);
       } else {
         MAPIMG_LOG(_("unknown map option: '%s'"), qUtf8Printable(str));
-        ret = FALSE;
+        ret = false;
       }
     } else {
       MAPIMG_LOG(_("unknown map option: '%s'"), qUtf8Printable(str));
-      ret = FALSE;
+      ret = false;
     }
 
     if (!ret) {
@@ -799,21 +800,21 @@ bool mapimg_define(const char *maparg, bool check)
     if (!BV_ISSET(pmapdef->args, MAPDEF_PLRNAME)) {
       MAPIMG_LOG(_("'show=%s' but no player name 'plrname'"),
                  show_player_name(SHOW_PLRNAME));
-      ret = FALSE;
+      ret = false;
     }
     break;
   case SHOW_PLRID: /* display player given by id */
     if (!BV_ISSET(pmapdef->args, MAPDEF_PLRID)) {
       MAPIMG_LOG(_("'show=%s' but no player id 'plrid'"),
                  show_player_name(SHOW_PLRID));
-      ret = FALSE;
+      ret = false;
     }
     break;
   case SHOW_PLRBV: /* display players given by bitvector */
     if (!BV_ISSET(pmapdef->args, MAPDEF_PLRBV)) {
       MAPIMG_LOG(_("'show=%s' but no player bitvector 'plrbv'"),
                  show_player_name(SHOW_PLRBV));
-      ret = FALSE;
+      ret = false;
     }
     break;
   case SHOW_NONE: /* no player on the map */
@@ -867,11 +868,11 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
       QStringList formatargs;
       enum imageformat format;
       enum imagetool tool;
-      bool error = TRUE;
+      bool error = true;
 
       /* get format options */
 
-      formatargs = QString(val).split("|");
+      formatargs = QString(val).split(QStringLiteral("|"));
 
       if (formatargs.count() == 2) {
         tool = imagetool_by_name(qUtf8Printable(formatargs.at(0)), strcmp);
@@ -885,7 +886,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
             pmapdef->tool = tool;
             pmapdef->format = format;
 
-            error = FALSE;
+            error = false;
           }
         }
       } else {
@@ -899,7 +900,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
             pmapdef->tool = toolkit->tool;
             pmapdef->format = toolkit->format_default;
 
-            error = FALSE;
+            error = false;
           }
         } else {
           format =
@@ -912,7 +913,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
                 pmapdef->tool = toolkit->tool;
                 pmapdef->format = toolkit->format_default;
 
-                error = FALSE;
+                error = false;
                 break;
               }
             }
@@ -936,16 +937,16 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
 
       for (layer = mapimg_layer_begin(); layer != mapimg_layer_end();
            layer = mapimg_layer_next(layer)) {
-        pmapdef->layers[layer] = FALSE;
+        pmapdef->layers[layer] = false;
       }
 
       for (l = 0; l < len; l++) {
-        error = TRUE;
+        error = true;
         for (layer = mapimg_layer_begin(); layer != mapimg_layer_end();
              layer = mapimg_layer_next(layer)) {
           if (val[l] == mapimg_layer_name(layer)[0]) {
-            pmapdef->layers[layer] = TRUE;
-            error = FALSE;
+            pmapdef->layers[layer] = true;
+            error = false;
             break;
           }
         }
@@ -968,7 +969,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
           if (!strchr("01", val[i])) {
             MAPIMG_LOG(_("invalid character in bitvector: '%c' (%s)"),
                        val[i], val);
-            return FALSE;
+            return false;
           } else if (val[i] == '1') {
             BV_SET(pmapdef->player.plrbv, i);
           }
@@ -989,7 +990,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
         if (plrid < 0 || plrid >= MAX_NUM_PLAYER_SLOTS) {
           MAPIMG_LOG(_("'plrid' should be between 0 and %d"),
                      MAX_NUM_PLAYER_SLOTS - 1);
-          return FALSE;
+          return false;
         }
         pmapdef->player.id = plrid;
       } else {
@@ -1005,7 +1006,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
       if (strlen(val) > sizeof(pmapdef->player.name)) {
         MAPIMG_LOG(_("player name too long: '%s' (max: %lu)"), val,
                    (unsigned long) sizeof(pmapdef->player.name));
-        return FALSE;
+        return false;
       } else {
         sz_strlcpy(pmapdef->player.name, val);
       }
@@ -1034,7 +1035,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
       if (sscanf(val, "%d", &turns) != 0) {
         if (turns < 0 || turns > 99) {
           MAPIMG_LOG(_("'turns' should be between 0 and 99"));
-          return FALSE;
+          return false;
         } else {
           pmapdef->turns = turns;
         }
@@ -1052,7 +1053,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
       if (sscanf(val, "%d", &zoom) != 0) {
         if (zoom < 1 || zoom > 5) {
           MAPIMG_LOG(_("'zoom' factor should be between 1 and 5"));
-          return FALSE;
+          return false;
         } else {
           pmapdef->zoom = zoom;
         }
@@ -1063,16 +1064,16 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
     break;
 
   case MAPDEF_COUNT:
-    fc_assert_ret_val(arg != MAPDEF_COUNT, FALSE);
+    fc_assert_ret_val(arg != MAPDEF_COUNT, false);
     break;
   }
 
-  return TRUE;
+  return true;
 
 INVALID:
   MAPIMG_LOG(_("invalid value for option '%s': '%s'"), mapdef_arg_name(arg),
              val);
-  return FALSE;
+  return false;
 }
 #undef NUM_MAX_FORMATARGS
 
@@ -1090,7 +1091,7 @@ struct mapdef *mapimg_isvalid(int id)
   }
 
   pmapdef = mapdef_list_get(mapimg.mapdef, id);
-  mapimg_checkplayers(pmapdef, TRUE);
+  mapimg_checkplayers(pmapdef, true);
 
   switch (pmapdef->status) {
   case MAPIMG_STATUS_UNKNOWN:
@@ -1112,14 +1113,10 @@ struct mapdef *mapimg_isvalid(int id)
 /************************************************************************/ /**
    Return a list of all available tookits and formats for the client.
  ****************************************************************************/
-const struct strvec *mapimg_get_format_list(void)
+const QVector<QString> *mapimg_get_format_list(void)
 {
-  static struct strvec *format_list = NULL;
-
-  if (NULL == format_list) {
+  if (format_list->isEmpty()) {
     enum imagetool tool;
-
-    format_list = strvec_new();
 
     for (tool = imagetool_begin(); tool != imagetool_end();
          tool = imagetool_next(tool)) {
@@ -1137,7 +1134,8 @@ const struct strvec *mapimg_get_format_list(void)
 
           fc_snprintf(str_format, sizeof(str_format), "%s|%s",
                       imagetool_name(tool), imageformat_name(format));
-          strvec_append(format_list, str_format);
+
+          format_list->append(str_format);
         }
       }
     }
@@ -1170,14 +1168,14 @@ bool mapimg_delete(int id)
 
   if (!mapimg_test(id)) {
     /* The error message is set in mapimg_test(). */
-    return FALSE;
+    return false;
   }
 
   /* delete map definition */
   pmapdef = mapdef_list_get(mapimg.mapdef, id);
   mapdef_list_remove(mapimg.mapdef, pmapdef);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1189,13 +1187,13 @@ bool mapimg_show(int id, char *str, size_t str_len, bool detail)
 
   if (!mapimg_test(id)) {
     /* The error message is set in mapimg_test(). */
-    return FALSE;
+    return false;
   }
 
   pmapdef = mapdef_list_get(mapimg.mapdef, id);
 
   /* Clear string ... */
-  fc_assert_ret_val(str_len > 0, FALSE);
+  fc_assert_ret_val(str_len > 0, false);
   str[0] = '\0';
 
   if (detail) {
@@ -1270,7 +1268,7 @@ bool mapimg_show(int id, char *str, size_t str_len, bool detail)
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1283,7 +1281,7 @@ bool mapimg_id2str(int id, char *str, size_t str_len)
 
   if (!mapimg_test(id)) {
     /* The error message is set in mapimg_test(). */
-    return FALSE;
+    return false;
   }
 
   pmapdef = mapdef_list_get(mapimg.mapdef, id);
@@ -1303,7 +1301,7 @@ bool mapimg_create(struct mapdef *pmapdef, bool force, const char *savename,
 {
   struct img *pimg;
   char mapimgfile[MAX_LEN_PATH];
-  bool ret = TRUE;
+  bool ret = true;
 #ifdef FREECIV_DEBUG
   civtimer *timer_cpu, *timer_user;
 #endif
@@ -1311,14 +1309,14 @@ bool mapimg_create(struct mapdef *pmapdef, bool force, const char *savename,
   if (map_is_empty()) {
     MAPIMG_LOG(_("map not yet created"));
 
-    return FALSE;
+    return false;
   }
 
-  mapimg_checkplayers(pmapdef, FALSE);
+  mapimg_checkplayers(pmapdef, false);
 
   if (pmapdef->status != MAPIMG_STATUS_OK) {
     MAPIMG_LOG(_("map definition not checked or error"));
-    return FALSE;
+    return false;
   }
 
   /* An image should be saved if:
@@ -1328,7 +1326,7 @@ bool mapimg_create(struct mapdef *pmapdef, bool force, const char *savename,
    *   by this number */
   if (!force && game.info.turn != 1
       && !(pmapdef->turns != 0 && game.info.turn % pmapdef->turns == 0)) {
-    return TRUE;
+    return true;
   }
 
 #ifdef FREECIV_DEBUG
@@ -1351,7 +1349,7 @@ bool mapimg_create(struct mapdef *pmapdef, bool force, const char *savename,
     pimg = img_new(pmapdef, CURRENT_TOPOLOGY, wld.map.xsize, wld.map.ysize);
     img_createmap(pimg);
     if (!img_save(pimg, mapimgfile, path)) {
-      ret = FALSE;
+      ret = false;
     }
     img_destroy(pimg);
     break;
@@ -1376,7 +1374,7 @@ bool mapimg_create(struct mapdef *pmapdef, bool force, const char *savename,
           img_new(pmapdef, CURRENT_TOPOLOGY, wld.map.xsize, wld.map.ysize);
       img_createmap(pimg);
       if (!img_save(pimg, mapimgfile, path)) {
-        ret = FALSE;
+        ret = false;
       }
       img_destroy(pimg);
 
@@ -1409,13 +1407,13 @@ bool mapimg_colortest(const char *savename, const char *path)
 {
   struct img *pimg;
   const struct rgbcolor *pcolor;
-  struct mapdef *pmapdef = mapdef_new(TRUE);
+  struct mapdef *pmapdef = mapdef_new(true);
   char mapimgfile[MAX_LEN_PATH];
   bv_pixel pixel;
   int i, nat_x, nat_y;
   int max_playercolor = mapimg.mapimg_plrcolor_count();
   int max_terraincolor = terrain_count();
-  bool ret = TRUE;
+  bool ret = true;
   enum imagetool tool;
 
 #define SIZE_X 16
@@ -1424,7 +1422,7 @@ bool mapimg_colortest(const char *savename, const char *path)
   pimg = img_new(pmapdef, 0, SIZE_X + 2,
                  SIZE_Y * (max_playercolor / SIZE_X) + 2);
 
-  pixel = pimg->pixel_tile(NULL, NULL, FALSE);
+  pixel = pimg->pixel_tile(NULL, NULL, false);
 
   pcolor = imgcolor_special(IMGCOLOR_OCEAN);
   for (i = 0; i < MAX(max_playercolor, max_terraincolor); i++) {
@@ -1501,7 +1499,7 @@ bool mapimg_colortest(const char *savename, const char *path)
         if (!img_save(pimg, mapimgfile, path)) {
           /* If one of the mapimg format/toolkit combination fail, return
            * FALSE, i.e. an error occurred. */
-          ret = FALSE;
+          ret = false;
         }
       }
     }
@@ -1530,14 +1528,14 @@ static inline bool mapimg_initialised(void) { return mapimg.init; }
  ****************************************************************************/
 static bool mapimg_test(int id)
 {
-  MAPIMG_ASSERT_RET_VAL(mapimg_initialised(), FALSE);
+  MAPIMG_ASSERT_RET_VAL(mapimg_initialised(), false);
 
   if (id < 0 || id >= mapimg_count()) {
     MAPIMG_LOG(_("no map definition with id %d"), id);
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1552,7 +1550,7 @@ static bool mapimg_def2str(struct mapdef *pmapdef, char *str, size_t str_len)
   if (pmapdef->status != MAPIMG_STATUS_OK) {
     MAPIMG_LOG(_("map definition not checked or error"));
     fc_strlcpy(str, pmapdef->maparg, str_len);
-    return FALSE;
+    return false;
   }
 
   str[0] = '\0';
@@ -1594,7 +1592,7 @@ static bool mapimg_def2str(struct mapdef *pmapdef, char *str, size_t str_len)
   }
   cat_snprintf(str, str_len, "zoom=%d", pmapdef->zoom);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1608,7 +1606,7 @@ static bool mapimg_checkplayers(struct mapdef *pmapdef, bool recheck)
   enum m_pre_result result;
 
   if (!recheck && pmapdef->status == MAPIMG_STATUS_ERROR) {
-    return FALSE;
+    return false;
   }
 
   /* game started - generate / check bitvector for players */
@@ -1640,7 +1638,7 @@ static bool mapimg_checkplayers(struct mapdef *pmapdef, bool recheck)
       fc_snprintf(pmapdef->error, sizeof(pmapdef->error),
                   _("unknown player name: '%s'"), pmapdef->player.name);
       MAPIMG_LOG("%s", pmapdef->error);
-      return FALSE;
+      return false;
     }
     break;
   case SHOW_PLRID:
@@ -1656,14 +1654,14 @@ static bool mapimg_checkplayers(struct mapdef *pmapdef, bool recheck)
       fc_snprintf(pmapdef->error, sizeof(pmapdef->error),
                   _("invalid player id: %d"), pmapdef->player.id);
       MAPIMG_LOG("%s", pmapdef->error);
-      return FALSE;
+      return false;
     }
     break;
   }
 
   pmapdef->status = MAPIMG_STATUS_OK;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1782,13 +1780,13 @@ static struct mapdef *mapdef_new(bool colortest)
   pmapdef->tool = MAPIMG_DEFAULT_IMGTOOL;
   pmapdef->zoom = 2;
   pmapdef->turns = 1;
-  pmapdef->layers[MAPIMG_LAYER_TERRAIN] = FALSE;
-  pmapdef->layers[MAPIMG_LAYER_CITIES] = TRUE;
-  pmapdef->layers[MAPIMG_LAYER_UNITS] = TRUE;
-  pmapdef->layers[MAPIMG_LAYER_BORDERS] = TRUE;
-  pmapdef->layers[MAPIMG_LAYER_FOGOFWAR] = FALSE;
-  pmapdef->layers[MAPIMG_LAYER_KNOWLEDGE] = TRUE;
-  pmapdef->layers[MAPIMG_LAYER_AREA] = FALSE;
+  pmapdef->layers[MAPIMG_LAYER_TERRAIN] = false;
+  pmapdef->layers[MAPIMG_LAYER_CITIES] = true;
+  pmapdef->layers[MAPIMG_LAYER_UNITS] = true;
+  pmapdef->layers[MAPIMG_LAYER_BORDERS] = true;
+  pmapdef->layers[MAPIMG_LAYER_FOGOFWAR] = false;
+  pmapdef->layers[MAPIMG_LAYER_KNOWLEDGE] = true;
+  pmapdef->layers[MAPIMG_LAYER_AREA] = false;
   pmapdef->player.show = SHOW_ALL;
   /* The union is not set at this point (player.id, player.name and
    * player.plrbv). */
@@ -2012,7 +2010,7 @@ static bool img_save(const struct img *pimg, const char *mapimgfile,
 
   if (!toolkit) {
     MAPIMG_LOG(_("toolkit not defined"));
-    return FALSE;
+    return false;
   }
 
   if (!path_is_absolute(mapimgfile) && path != NULL) {
@@ -2028,7 +2026,7 @@ static bool img_save(const struct img *pimg, const char *mapimgfile,
 
   sz_strlcat(tmpname, mapimgfile);
 
-  MAPIMG_ASSERT_RET_VAL(toolkit->img_save, FALSE);
+  MAPIMG_ASSERT_RET_VAL(toolkit->img_save, false);
 
   return toolkit->img_save(pimg, tmpname);
 }
@@ -2065,7 +2063,7 @@ static bool img_save_magickwand(const struct img *pimg,
 {
   const struct rgbcolor *pcolor = NULL;
   struct player *pplr_now = NULL, *pplr_only = NULL;
-  bool ret = TRUE;
+  bool ret = true;
   char imagefile[MAX_LEN_PATH];
   char str_color[32], comment[2048] = "", title[258];
   magickwand_size_t img_width, img_height, map_width, map_height;
@@ -2075,7 +2073,7 @@ static bool img_save_magickwand(const struct img *pimg,
   if (!img_filename(mapimgfile, pimg->def->format, imagefile,
                     sizeof(imagefile))) {
     MAPIMG_LOG(_("error generating the file name"));
-    return FALSE;
+    return false;
   }
 
   MagickWand *mw;
@@ -2251,7 +2249,7 @@ static bool img_save_magickwand(const struct img *pimg,
 
   if (!MagickWriteImage(mw, imagefile)) {
     MAPIMG_LOG(_("error saving map image '%s'"), imagefile);
-    ret = FALSE;
+    ret = false;
   } else {
     qDebug("Map image saved as '%s'.", imagefile);
   }
@@ -2280,18 +2278,18 @@ static bool img_save_ppm(const struct img *pimg, const char *mapimgfile)
   if (pimg->def->format != IMGFORMAT_PPM) {
     MAPIMG_LOG(_("the ppm toolkit can only create images in the ppm "
                  "format"));
-    return FALSE;
+    return false;
   }
 
   if (!img_filename(mapimgfile, IMGFORMAT_PPM, ppmname, sizeof(ppmname))) {
     MAPIMG_LOG(_("error generating the file name"));
-    return FALSE;
+    return false;
   }
 
   fp = fopen(ppmname, "w");
   if (!fp) {
     MAPIMG_LOG(_("could not open file: %s"), ppmname);
-    return FALSE;
+    return false;
   }
 
   fprintf(fp, "P3\n");
@@ -2343,7 +2341,7 @@ static bool img_save_ppm(const struct img *pimg, const char *mapimgfile)
   qDebug("Map image saved as '%s'.", ppmname);
   fclose(fp);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -2352,12 +2350,12 @@ static bool img_save_ppm(const struct img *pimg, const char *mapimgfile)
 static bool img_filename(const char *mapimgfile, enum imageformat format,
                          char *filename, size_t filename_len)
 {
-  fc_assert_ret_val(imageformat_is_valid(format), FALSE);
+  fc_assert_ret_val(imageformat_is_valid(format), false);
 
   fc_snprintf(filename, filename_len, "%s.map.%s", mapimgfile,
               imageformat_name(format));
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**

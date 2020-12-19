@@ -15,6 +15,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/stat.h>
 
 /* dependencies/lua */
 extern "C" {
@@ -283,17 +284,17 @@ static void script_server_code_save(struct section_file *file)
 bool script_server_init(void)
 {
   if (fcl_main != NULL) {
-    fc_assert_ret_val(fcl_main->state != NULL, FALSE);
+    fc_assert_ret_val(fcl_main->state != NULL, false);
 
-    return TRUE;
+    return true;
   }
 
-  fcl_main = luascript_new(NULL, TRUE);
+  fcl_main = luascript_new(NULL, true);
   if (fcl_main == NULL) {
     luascript_destroy(fcl_main);
     fcl_main = NULL;
 
-    return FALSE;
+    return false;
   }
 
   tolua_common_a_open(fcl_main->state);
@@ -315,12 +316,12 @@ bool script_server_init(void)
   script_server_functions_define();
 
   /* Add the unsafe instance. */
-  fcl_unsafe = luascript_new(NULL, FALSE);
+  fcl_unsafe = luascript_new(NULL, false);
   if (fcl_unsafe == NULL) {
     luascript_destroy(fcl_unsafe);
     fcl_unsafe = NULL;
 
-    return FALSE;
+    return false;
   }
 
   tolua_common_a_open(fcl_unsafe->state);
@@ -334,7 +335,7 @@ bool script_server_init(void)
   luascript_signal_init(fcl_unsafe);
   luascript_func_init(fcl_unsafe);
 
-  return TRUE;
+  return true;
 }
 
 /***********************************************************************/ /**
@@ -521,7 +522,7 @@ static void script_server_signals_create(void)
  ***************************************************************************/
 static void script_server_functions_define(void)
 {
-  luascript_func_add(fcl_main, "respawn_callback", FALSE, 1, 0,
+  luascript_func_add(fcl_main, "respawn_callback", false, 1, 0,
                      API_TYPE_PLAYER);
 }
 

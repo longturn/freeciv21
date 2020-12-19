@@ -45,7 +45,7 @@ struct overview overview = {
  * Set to TRUE if the backing store is more recent than the version
  * drawn into overview.window.
  */
-static bool overview_dirty = FALSE;
+static bool overview_dirty = false;
 
 /************************************************************************/ /**
    Translate from gui to natural coordinate systems.  This provides natural
@@ -223,13 +223,13 @@ static void redraw_overview(void)
 
   update_minimap();
 
-  overview_dirty = FALSE;
+  overview_dirty = false;
 }
 
 /************************************************************************/ /**
    Mark the overview as "dirty" so that it will be redrawn soon.
  ****************************************************************************/
-static void dirty_overview(void) { overview_dirty = TRUE; }
+static void dirty_overview(void) { overview_dirty = true; }
 
 /************************************************************************/ /**
    Redraw the overview if it is "dirty".

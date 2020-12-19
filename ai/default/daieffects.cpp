@@ -138,8 +138,8 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
                           const int c, const int nplayers)
 {
   int amount = peffect->value;
-  bool affects_sea_capable_units = FALSE;
-  bool affects_land_capable_units = FALSE;
+  bool affects_sea_capable_units = false;
+  bool affects_land_capable_units = false;
   int num;
   int trait;
   adv_want v = 0;
@@ -464,10 +464,10 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     {
       if (requirement_fulfilled_by_unit_class(pclass, &peffect->reqs)) {
         if (pclass->adv.sea_move != MOVE_NONE) {
-          affects_sea_capable_units = TRUE;
+          affects_sea_capable_units = true;
         }
         if (pclass->adv.land_move != MOVE_NONE) {
-          affects_land_capable_units = TRUE;
+          affects_land_capable_units = true;
         }
       }
       if (affects_sea_capable_units && affects_land_capable_units) {
@@ -690,12 +690,12 @@ static bool have_better_government(const struct player *pplayer,
 {
   if (pgov->ai.better) {
     if (pplayer->government == pgov->ai.better) {
-      return TRUE;
+      return true;
     } else {
       return have_better_government(pplayer, pgov->ai.better);
     }
   }
-  return FALSE;
+  return false;
 }
 /**********************************************************************/ /**
    Does the AI expect to ever be able to meet this requirement.
@@ -721,18 +721,18 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
 
     if (preq->present && improvement_obsolete(pplayer, pimprove, pcity)) {
       /* Would need to unobsolete a building, which is too hard. */
-      return FALSE;
+      return false;
     } else if (!preq->present && pcity != NULL
                && I_NEVER < pcity->built[improvement_index(pimprove)].turn
                && !can_improvement_go_obsolete(pimprove)) {
       /* Would need to unbuild an unobsoleteable building, which is too hard.
        */
-      return FALSE;
+      return false;
     } else if (preq->present) {
       requirement_vector_iterate(&pimprove->reqs, ireq)
       {
         if (!dai_can_requirement_be_met_in_city(ireq, pplayer, pcity)) {
-          return FALSE;
+          return false;
         }
       }
       requirement_vector_iterate_end;
@@ -746,7 +746,7 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
                                  sreq)
       {
         if (!dai_can_requirement_be_met_in_city(sreq, pplayer, pcity)) {
-          return FALSE;
+          return false;
         }
       }
       requirement_vector_iterate_end;
@@ -802,13 +802,13 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
   case VUT_AI_LEVEL:
   case VUT_SERVERSETTING:
     /* Beyond player control. */
-    return FALSE;
+    return false;
 
   case VUT_OTYPE:
   case VUT_CITYTILE:
   case VUT_IMPR_GENUS:
     /* Can always be achieved. */
-    return TRUE;
+    return true;
 
   case VUT_NONE:
   case VUT_UTYPE:
@@ -830,5 +830,5 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
     /* No sensible implementation possible with data available. */
     break;
   }
-  return TRUE;
+  return true;
 }

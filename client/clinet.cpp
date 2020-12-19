@@ -91,7 +91,7 @@ static void client_conn_close_callback(struct connection *pconn)
 
   close_socket_nomessage(pconn);
   /* If we lost connection to the internal server - kill it. */
-  client_kill_server(TRUE);
+  client_kill_server(true);
   qCritical("Lost connection to server: %s.", qPrintable(reason));
   output_window_printf(ftc_client, _("Lost connection to server (%s)!"),
                        qUtf8Printable(reason));
@@ -221,11 +221,11 @@ void disconnect_from_server(void)
   /* If it's internal server - kill him
    * We assume that we are always connected to the internal server  */
   if (!force) {
-    client_kill_server(FALSE);
+    client_kill_server(false);
   }
   close_socket_nomessage(&client.conn);
   if (force) {
-    client_kill_server(TRUE);
+    client_kill_server(true);
   }
   output_window_append(ftc_client, _("Disconnected from server."));
 
@@ -294,7 +294,7 @@ void input_from_server(QTcpSocket *sock)
 
   fc_assert_ret(sock == client.conn.sock);
 
-  nb = read_from_connection(&client.conn, FALSE);
+  nb = read_from_connection(&client.conn, false);
   if (0 <= nb) {
     governor::i()->freeze();
     while (client.conn.used) {
@@ -325,7 +325,7 @@ void input_from_server(QTcpSocket *sock)
   }
 }
 
-static bool autoconnecting = FALSE;
+static bool autoconnecting = false;
 /**********************************************************************/ /**
    Make an attempt to autoconnect to the server.
    It returns number of seconds it should be called again.
@@ -355,7 +355,7 @@ double try_to_autoconnect(void)
                      sizeof(errbuf))
       == 0) {
     // Success! Don't call me again
-    autoconnecting = FALSE;
+    autoconnecting = false;
     return FC_INFINITY;
   } else {
     // All errors are fatal
@@ -383,5 +383,5 @@ void start_autoconnecting_to_server(void)
       qUtf8Printable(server_host), server_port, qUtf8Printable(user_name),
       0.001 * AUTOCONNECT_INTERVAL, MAX_AUTOCONNECT_ATTEMPTS);
 
-  autoconnecting = TRUE;
+  autoconnecting = true;
 }
