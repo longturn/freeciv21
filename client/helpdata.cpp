@@ -534,7 +534,7 @@ static void insert_allows_single(struct universal *psource,
                          Q_(strs[0]), /* "Allows %s (with %s but no %s)." */
                          subjstr,
                          qUtf8Printable(strvec_to_and_list(*coreqs)),
-                         strvec_to_or_list(conoreqs, &conoreqstr));
+                         qUtf8Printable(strvec_to_or_list(*conoreqs)));
           } else {
             cat_snprintf(
                 buf, bufsz, Q_(strs[1]), /* "Allows %s (with %s)." */
@@ -4046,6 +4046,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          const char *user_text, struct government *gov)
 {
   bool reqs = false;
+  QVector<QString> outputs;
   struct universal source = {.value = {.govern = gov},
                              .kind = VUT_GOVERNMENT};
 
@@ -4081,8 +4082,8 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
     struct unit_class *unitclass = NULL;
     const struct unit_type *unittype = NULL;
     enum unit_type_flag_id unitflag = unit_type_flag_id_invalid();
-    QVector<QString> *outputs = new QVector<QString>;
-    struct astring outputs_or = ASTRING_INIT;
+    outputs.clear();
+    const char *or_outputs = Q_("?outputlist: Nothing ");
     const char *and_outputs = Q_("?outputlist: Nothing ");
     bool too_complex = false;
     bool world_value_valid = true;
@@ -4106,7 +4107,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
          * Ruleset loading code should check against that. */
         fc_assert(output_type == O_LAST);
         output_type = preq->source.value.outputtype;
-        outputs->append(get_output_name(output_type));
+        outputs.append(get_output_name(output_type));
         break;
       case VUT_UCLASS:
         fc_assert(unitclass == NULL);
@@ -4193,17 +4194,14 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
               get_output_type(static_cast<Output_type_id>(ot));
 
           if (!harvested_only || pot->harvested) {
-            outputs->append(_(pot->name));
+            outputs.append(_(pot->name));
           }
         }
         output_type_iterate_end;
       }
-      if (0 == outputs->count()) {
-        /* TRANS: Empty output type list, should never happen. */
-        astr_set(&outputs_or, "%s", Q_("?outputlist: Nothing "));
-      } else {
-        strvec_to_or_list(outputs, &outputs_or);
-        and_outputs = qUtf8Printable(strvec_to_and_list(*outputs));
+      if (outputs.count()) {
+        or_outputs = qUtf8Printable(strvec_to_or_list(outputs));
+        and_outputs = qUtf8Printable(strvec_to_and_list(outputs));
       }
 
       switch (peffect->type) {
@@ -4287,7 +4285,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                            /* TRANS: %s is the output type, like 'shield'
                             * or 'gold'. */
                            _("* You pay no %s upkeep for your units.\n"),
-                           astr_str(&outputs_or));
+                           or_outputs);
             } else {
               CATLSTR(buf, bufsz,
                       _("* You pay no upkeep for your units.\n"));
@@ -4461,13 +4459,12 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         break;
       case EFT_FANATICS:
         if (playerwide && net_value > 0) {
-          QVector<QString> *fanatics = new QVector<QString>;
-          struct astring fanaticstr = ASTRING_INIT;
+          QVector<QString> fanatics;
 
           unit_type_iterate(putype)
           {
             if (utype_has_flag(putype, UTYF_FANATIC)) {
-              fanatics->append(utype_name_translation(putype));
+              fanatics.append(utype_name_translation(putype));
             }
           }
           unit_type_iterate_end;
@@ -4475,9 +4472,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
               buf, bufsz,
               /* TRANS: %s is list of unit types separated by 'or' */
               _("* Pays no upkeep for %s.\n"),
-              strvec_to_or_list(fanatics, &fanaticstr));
-          delete fanatics;
-          astr_free(&fanaticstr);
+              qUtf8Printable(strvec_to_or_list(fanatics)));
         }
         break;
       case EFT_NO_UNHAPPY:
@@ -4549,7 +4544,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                   " suffer a -1 penalty, unless the city working it"
                   " is celebrating.",
                   net_value),
-              net_value, astr_str(&outputs_or));
+              net_value, or_outputs);
           if (game.info.celebratesize > 1) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: Preserve leading space. %d should always
@@ -4570,7 +4565,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          " %d more of it while the city working it is"
                          " celebrating.",
                          peffect->value),
-                     astr_str(&outputs_or), peffect->value);
+                     or_outputs, peffect->value);
         if (game.info.celebratesize > 1) {
           cat_snprintf(buf, bufsz,
                        /* TRANS: Preserve leading space. %d should always be
@@ -4588,7 +4583,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          "* Each worked tile with at least 1 %s will yield"
                          " %d more of it.\n",
                          peffect->value),
-                     astr_str(&outputs_or), peffect->value);
+                     or_outputs, peffect->value);
         break;
       case EFT_OUTPUT_BONUS:
       case EFT_OUTPUT_BONUS_2:
@@ -4686,9 +4681,6 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         break;
       };
     }
-
-    delete outputs;
-    astr_free(&outputs_or);
   }
   effect_list_iterate_end;
 

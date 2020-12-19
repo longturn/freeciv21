@@ -357,17 +357,27 @@ void astr_copy(struct astring *dest, const struct astring *src)
   }
 }
 
-const char *strvec_to_or_list(const QVector<QString> *psv,
-                              struct astring *astr)
+QString strvec_to_or_list(const QVector<QString> &psv)
 {
-  char *ccc[psv->count()];
-  int i = 0;
-  for (const auto &a : *psv) {
-    ccc[i] = a.toLocal8Bit().data();
-    i++;
+  if (psv.size() == 1) {
+    /* TRANS: "or"-separated string list with one single item. */
+    return QString(Q_("?or-list-single:%1")).arg(psv[0]);
+  } else if (psv.size() == 2) {
+    /* TRANS: "or"-separated string list with 2 items. */
+    return QString(Q_("?or-list:%1 or %2")).arg(psv[0], psv[1]);
+  } else {
+    /* TRANS: start of an "or"-separated string list with more than two
+     * items. */
+    auto result = QString(Q_("?or-list:%1")).arg(psv[0]);
+    for (int i = 1; i < psv.size() - 1; ++i) {
+      /* TRANS: next elements of an "or"-separated string list with more
+       * than two items. */
+      result += QString(Q_("?or-list:, %1")).arg(psv[i]);
+    }
+    /* TRANS: end of an "or"-separated string list with more than two
+     * items. */
+    return result + QString(Q_("?or-list:, or %1")).arg(psv.back());
   }
-
-  return astr_build_or_list(astr, ccc, psv->count());
 }
 
 QString strvec_to_and_list(const QVector<QString> &psv)

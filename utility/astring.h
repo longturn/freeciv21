@@ -122,6 +122,5 @@ static inline bool astr_empty(const struct astring *astr)
 #undef n
 #undef n_alloc
 
-const char *strvec_to_or_list(const QVector<QString> *psv,
-                              struct astring *astr);
+QString strvec_to_or_list(const QVector<QString> &psv);
 QString strvec_to_and_list(const QVector<QString> &psv);
