@@ -474,7 +474,6 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
           }
         }
         astr_set(&columns.p[i], "%s", tok + 1);
-
       } while (inf_token(inf, INF_TOK_COMMA));
 
       if (!inf_token(inf, INF_TOK_EOL)) {

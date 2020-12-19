@@ -904,7 +904,6 @@ static bool make_river(struct river_map *privermap, struct tile *ptile,
     }
     cardinal_adjc_dir_iterate_end;
     fc_assert_ret_val(direction == 0, false);
-
   } /* end while; (Make a river.) */
 }
 
