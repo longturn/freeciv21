@@ -342,7 +342,6 @@ bool rscompat_names(struct rscompat_info *info)
      * XXX: ruleset might not need all of these, and may have enough
      * flags of its own that these additional ones prevent conversion. */
     const std::vector<new_flags> new_flags_31 = {
-        new_flags{N_("Infra"), N_("Can build infrastructure.")},
         new_flags{N_("BeachLander"),
                   N_("Won't lose all movement when moving from"
                      " non-native terrain to native terrain.")},
@@ -792,20 +791,6 @@ void rscompat_postprocess(struct rscompat_info *info)
     peffect = effect_new(EFT_UNIT_SHIELD_VALUE_PCT, -50, NULL);
     effect_req_append(peffect, req_from_str("Action", "Local", false, true,
                                             false, "Upgrade Unit"));
-  }
-
-  if (info->ver_units < 20) {
-    unit_type_iterate(ptype)
-    {
-      if (utype_has_flag(ptype, UTYF_SETTLERS)) {
-        int flag;
-
-        flag = unit_type_flag_id_by_name("Infra", fc_strcasecmp);
-        fc_assert(unit_type_flag_id_is_valid(unit_type_flag_id(flag)));
-        BV_SET(ptype->flags, flag);
-      }
-    }
-    unit_type_iterate_end;
   }
 
   if (info->ver_game < 20) {
