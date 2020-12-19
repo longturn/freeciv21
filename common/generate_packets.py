@@ -334,8 +334,8 @@ class Field:
   }
 
 ''' % (cmp, b, i)
-        else:
-            return '''%s
+
+        return '''%s
   if (differ) {
     different++;
     BV_SET(fields, %d);
@@ -434,8 +434,8 @@ class Field:
         }
       }
     }''' % self.get_dict(vars())
-        else:
-            return '''
+
+        return '''
     {
       int i;
 
@@ -487,8 +487,8 @@ class Field:
                 return '''if (!DIO_GET(%(dataio_type)s, &din, &field_addr, &real_packet->%(name)s)) {
   RECEIVE_PACKET_FIELD_ERROR(%(name)s);
 }''' % self.__dict__
-            else:
-                return '''{
+
+            return '''{
   int readin;
 
   if (!DIO_GET(%(dataio_type)s, &din, &field_addr, &readin)) {
@@ -567,7 +567,7 @@ class Field:
   if (!DIO_GET(%(dataio_type)s, &din, &field_addr, real_packet->%(name)s, %(array_size_u)s)) {
     RECEIVE_PACKET_FIELD_ERROR(%(name)s);
   }''' % self.get_dict(vars())
-            elif self.is_array == 2 and self.dataio_type != "string" \
+            if self.is_array == 2 and self.dataio_type != "string" \
                     and self.dataio_type != "estring":
                 return '''
 {
@@ -760,25 +760,25 @@ static char *stats_%(name)s_names[] = {%(names)s};
     def get_hash(self):
         if len(self.key_fields) == 0:
             return "#define hash_%(name)s hash_const\n\n" % self.__dict__
-        else:
-            intro = '''static genhash_val_t hash_%(name)s(const void *vkey)
+
+        intro = '''static genhash_val_t hash_%(name)s(const void *vkey)
 {
 ''' % self.__dict__
 
-            body = '''  const struct %(packet_name)s *key = (const struct %(packet_name)s *) vkey;
+        body = '''  const struct %(packet_name)s *key = (const struct %(packet_name)s *) vkey;
 
 ''' % self.__dict__
 
-            keys = list(map(lambda x: "key->"+x.name, self.key_fields))
-            if len(keys) == 1:
-                a = keys[0]
-            elif len(keys) == 2:
-                a = "(%s << 8) ^ %s" % (keys[0], keys[1])
-            else:
-                assert 0
-            body = body+('  return %s;\n' % a)
-            extro = "}\n\n"
-            return intro+body+extro
+        keys = list(map(lambda x: "key->"+x.name, self.key_fields))
+        if len(keys) == 1:
+            a = keys[0]
+        elif len(keys) == 2:
+            a = "(%s << 8) ^ %s" % (keys[0], keys[1])
+        else:
+            assert 0
+        body = body+('  return %s;\n' % a)
+        extro = "}\n\n"
+        return intro+body+extro
 
     # Returns a code fragment which is the implementation of the cmp
     # function. The cmp function is using all key fields. The cmp
@@ -786,20 +786,20 @@ static char *stats_%(name)s_names[] = {%(names)s};
     def get_cmp(self):
         if len(self.key_fields) == 0:
             return "#define cmp_%(name)s cmp_const\n\n" % self.__dict__
-        else:
-            intro = '''static bool cmp_%(name)s(const void *vkey1, const void *vkey2)
+
+        intro = '''static bool cmp_%(name)s(const void *vkey1, const void *vkey2)
 {
 ''' % self.__dict__
-            body = ""
-            body = body+'''  const struct %(packet_name)s *key1 = (const struct %(packet_name)s *) vkey1;
+        body = ""
+        body = body+'''  const struct %(packet_name)s *key1 = (const struct %(packet_name)s *) vkey1;
   const struct %(packet_name)s *key2 = (const struct %(packet_name)s *) vkey2;
 
 ''' % self.__dict__
-            for field in self.key_fields:
-                body = body+'''  return key1->%s == key2->%s;
+        for field in self.key_fields:
+            body = body+'''  return key1->%s == key2->%s;
 ''' % (field.name, field.name)
-            extro = "}\n"
-            return intro+body+extro
+        extro = "}\n"
+        return intro+body+extro
 
     # Returns a code fragment which is the implementation of the send
     # function. This is one of the two real functions. So it is rather
