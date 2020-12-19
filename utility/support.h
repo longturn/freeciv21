@@ -75,7 +75,7 @@ typedef int fc_errno;
   do {                                                                      \
     if (ptr) {                                                              \
       delete (ptr);                                                         \
-      ptr = nullptr;                                                        \
+      (ptr) = nullptr;                                                      \
     }                                                                       \
   } while (false)
 
@@ -83,7 +83,7 @@ typedef int fc_errno;
   do {                                                                      \
     if (ptr) {                                                              \
       ::operator delete(ptr);                                               \
-      ptr = nullptr;                                                        \
+      (ptr) = nullptr;                                                      \
     }                                                                       \
   } while (false)
 
@@ -91,7 +91,7 @@ typedef int fc_errno;
   do {                                                                      \
     if (ptr) {                                                              \
       delete[](ptr);                                                        \
-      ptr = nullptr;                                                        \
+      (ptr) = nullptr;                                                      \
     }                                                                       \
   } while (false)
 

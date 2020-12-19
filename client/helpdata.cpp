@@ -532,18 +532,19 @@ static void insert_allows_single(struct universal *psource,
           if (0 < conoreqs->count()) {
             cat_snprintf(buf, bufsz,
                          Q_(strs[0]), /* "Allows %s (with %s but no %s)." */
-                         subjstr, strvec_to_and_list(coreqs, &coreqstr),
+                         subjstr,
+                         qUtf8Printable(strvec_to_and_list(*coreqs)),
                          strvec_to_or_list(conoreqs, &conoreqstr));
           } else {
-            cat_snprintf(buf, bufsz,
-                         Q_(strs[1]), /* "Allows %s (with %s)." */
-                         subjstr, strvec_to_and_list(coreqs, &coreqstr));
+            cat_snprintf(
+                buf, bufsz, Q_(strs[1]), /* "Allows %s (with %s)." */
+                subjstr, qUtf8Printable(strvec_to_and_list(*coreqs)));
           }
         } else {
           if (0 < conoreqs->count()) {
-            cat_snprintf(buf, bufsz,
-                         Q_(strs[2]), /* "Allows %s (absent %s)." */
-                         subjstr, strvec_to_and_list(conoreqs, &conoreqstr));
+            cat_snprintf(
+                buf, bufsz, Q_(strs[2]), /* "Allows %s (absent %s)." */
+                subjstr, qUtf8Printable(strvec_to_and_list(*conoreqs)));
           } else {
             cat_snprintf(buf, bufsz, Q_(strs[3]), /* "Allows %s." */
                          subjstr);
@@ -2717,7 +2718,6 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       case ACTRES_MINE:
       case ACTRES_IRRIGATE:
       case ACTRES_BASE: {
-        struct astring extras_and = ASTRING_INIT;
         QVector<QString> *extras_vec = new QVector<QString>;
 
         extra_type_iterate(pextra)
@@ -2727,12 +2727,11 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
           }
         }
         extra_type_iterate_end;
-
         if (extras_vec->count() > 0) {
-          strvec_to_and_list(extras_vec, &extras_and);
+          ;
           /* TRANS: %s is list of extra types separated by ',' and 'and' */
           cat_snprintf(buf, bufsz, _("  * builds %s on tiles.\n"),
-                       astr_str(&extras_and));
+                       qUtf8Printable(strvec_to_and_list(*extras_vec)));
           extras_vec->clear();
         }
 
@@ -2740,7 +2739,6 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       } break;
       case ACTRES_CLEAN_POLLUTION:
       case ACTRES_CLEAN_FALLOUT: {
-        struct astring extras_and = ASTRING_INIT;
         QVector<QString> *extras_vec = new QVector<QString>;
 
         extra_type_iterate(pextra)
@@ -2752,10 +2750,9 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
         extra_type_iterate_end;
 
         if (extras_vec->count() > 0) {
-          strvec_to_and_list(extras_vec, &extras_and);
           /* TRANS: list of extras separated by "and" */
           cat_snprintf(buf, bufsz, _("  * cleans %s from tiles.\n"),
-                       astr_str(&extras_and));
+                       qUtf8Printable(strvec_to_and_list(*extras_vec)));
           extras_vec->clear();
         }
 
@@ -2774,10 +2771,9 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
         extra_type_iterate_end;
 
         if (extras_vec->count() > 0) {
-          strvec_to_and_list(extras_vec, &extras_and);
           /* TRANS: list of extras separated by "and" */
           cat_snprintf(buf, bufsz, _("  * pillages %s from tiles.\n"),
-                       astr_str(&extras_and));
+                       qUtf8Printable(strvec_to_and_list(*extras_vec)));
           extras_vec->clear();
         }
 
@@ -4087,7 +4083,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
     enum unit_type_flag_id unitflag = unit_type_flag_id_invalid();
     QVector<QString> *outputs = new QVector<QString>;
     struct astring outputs_or = ASTRING_INIT;
-    struct astring outputs_and = ASTRING_INIT;
+    const char *and_outputs = Q_("?outputlist: Nothing ");
     bool too_complex = false;
     bool world_value_valid = true;
 
@@ -4202,14 +4198,12 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         }
         output_type_iterate_end;
       }
-
       if (0 == outputs->count()) {
         /* TRANS: Empty output type list, should never happen. */
         astr_set(&outputs_or, "%s", Q_("?outputlist: Nothing "));
-        astr_set(&outputs_and, "%s", Q_("?outputlist: Nothing "));
       } else {
         strvec_to_or_list(outputs, &outputs_or);
-        strvec_to_and_list(outputs, &outputs_and);
+        and_outputs = qUtf8Printable(strvec_to_and_list(*outputs));
       }
 
       switch (peffect->type) {
@@ -4307,7 +4301,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                    * or 'gold'. */
                   _("* You pay %.2g times normal %s upkeep for your "
                     "units.\n"),
-                  ratio, astr_str(&outputs_and));
+                  ratio, and_outputs);
             } else {
               cat_snprintf(buf, bufsz,
                            _("* You pay %.2g times normal upkeep for your "
@@ -4330,7 +4324,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                              "* Each of your cities will avoid paying %d %s"
                              " upkeep for your units.\n",
                              peffect->value),
-                         peffect->value, astr_str(&outputs_and));
+                         peffect->value, and_outputs);
           } else {
             cat_snprintf(buf, bufsz,
                          /* TRANS: Amount is subtracted from upkeep cost
@@ -4601,8 +4595,8 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         /* FIXME: makes most sense iff world_value == 0 */
         cat_snprintf(buf, bufsz,
                      /* TRANS: %s is list of output types, with 'and' */
-                     _("* %s production is increased %d%%.\n"),
-                     astr_str(&outputs_and), peffect->value);
+                     _("* %s production is increased %d%%.\n"), and_outputs,
+                     peffect->value);
         break;
       case EFT_OUTPUT_WASTE:
         if (world_value_valid) {
@@ -4610,18 +4604,18 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s production will suffer massive losses.\n"),
-                         astr_str(&outputs_and));
+                         and_outputs);
           } else if (net_value >= 15) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s production will suffer some losses.\n"),
-                         astr_str(&outputs_and));
+                         and_outputs);
           } else if (net_value > 0) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s production will suffer a small amount "
                            "of losses.\n"),
-                         astr_str(&outputs_and));
+                         and_outputs);
           }
         }
         break;
@@ -4651,19 +4645,19 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s losses will increase quickly"
                            " with distance from capital.\n"),
-                         astr_str(&outputs_and));
+                         and_outputs);
           } else if (net_value >= 200) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s losses will increase"
                            " with distance from capital.\n"),
-                         astr_str(&outputs_and));
+                         and_outputs);
           } else if (net_value > 0) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s losses will increase slowly"
                            " with distance from capital.\n"),
-                         astr_str(&outputs_and));
+                         and_outputs);
           }
         }
         break;
@@ -4695,7 +4689,6 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
 
     delete outputs;
     astr_free(&outputs_or);
-    astr_free(&outputs_and);
   }
   effect_list_iterate_end;
 

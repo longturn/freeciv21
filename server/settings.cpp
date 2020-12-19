@@ -1328,7 +1328,7 @@ static bool plrcol_validate(int value, struct connection *caller,
    scateg,                                                                  \
    slevel,                                                                  \
    INIT_BRACE_BEGIN.string = {value, _default, sizeof(value),               \
-                              func_validate, (char*)""} INIT_BRACE_END,     \
+                              func_validate, (char *) ""} INIT_BRACE_END,   \
    func_action,                                                             \
    false},
 
@@ -5701,31 +5701,25 @@ static const char *setting_bitwise_to_str(const struct setting *pset,
 
   if (pretty) {
     char buf2[256];
-    struct astring astr = ASTRING_INIT;
-    QVector<QString> *vec = new QVector<QString>;
+    QVector<QString> vec;
     size_t len;
 
     for (bit = 0; (name = pset->bitwise.name(bit)); bit++) {
       if ((1 << bit) & value) {
         /* TRANS: only emphasizing a string. */
         fc_snprintf(buf2, sizeof(buf2), _("\"%s\""), Q_(name->pretty));
-        vec->append(buf2);
+        vec.append(buf2);
       }
     }
 
-    if (0 == vec->count()) {
+    if (0 == vec.count()) {
       /* No value. */
       fc_assert(0 == value);
       /* TRANS: Bitwise setting has no bits set. */
       fc_strlcpy(buf, _("empty value"), buf_len);
-      delete vec;
       return buf;
     }
-
-    strvec_to_and_list(vec, &astr);
-    delete vec;
-    fc_strlcpy(buf, astr_str(&astr), buf_len);
-    astr_free(&astr);
+    fc_strlcpy(buf, qUtf8Printable(strvec_to_and_list(vec)), buf_len);
     fc_strlcat(buf, " (", buf_len);
     len = qstrlen(buf);
     buf += len;

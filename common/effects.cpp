@@ -1037,21 +1037,18 @@ void get_effect_req_text(const struct effect *peffect, char *buf,
    Make user-friendly text for an effect list. The text is put into a user
    astring.
  **************************************************************************/
-void get_effect_list_req_text(const struct effect_list *plist,
-                              struct astring *astr)
+QString get_effect_list_req_text(const struct effect_list *plist)
 {
-  QVector<QString> *psv = new QVector<QString>;
+  QVector<QString> psv;
   char req_text[512];
 
   effect_list_iterate(plist, peffect)
   {
     get_effect_req_text(peffect, req_text, sizeof(req_text));
-    psv->append(req_text);
+    psv.append(req_text);
   }
   effect_list_iterate_end;
-
-  strvec_to_and_list(psv, astr);
-  delete psv;
+  return strvec_to_and_list(psv);
 }
 
 /**********************************************************************/ /**

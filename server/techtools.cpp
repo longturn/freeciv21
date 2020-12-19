@@ -146,8 +146,8 @@ static void tech_researched(struct research *research)
 void do_tech_parasite_effect(struct player *pplayer)
 {
   struct effect_list *plist = effect_list_new();
-  struct astring effects;
   struct research *plr_research;
+  QString effects;
   char research_name[MAX_LEN_NAME * 2];
   const char *advance_name;
   Tech_type_id tech;
@@ -201,28 +201,26 @@ void do_tech_parasite_effect(struct player *pplayer)
   /* Notify. */
   research_pretty_name(plr_research, research_name, sizeof(research_name));
   advance_name = research_advance_name_translation(plr_research, tech);
-  astr_init(&effects);
-  get_effect_list_req_text(plist, &effects);
+  effects = get_effect_list_req_text(plist);
 
   notify_player(pplayer, NULL, E_TECH_GAIN, ftc_server,
                 /* TRANS: Tech from source of an effect
                  * (Great Library) */
                 Q_("?fromeffect:%s acquired from %s!"), advance_name,
-                astr_str(&effects));
+                qUtf8Printable(effects));
   notify_research(plr_research, pplayer, E_TECH_GAIN, ftc_server,
                   /* TRANS: Tech from source of an effect
                    * (Great Library) */
                   Q_("?fromeffect:%s acquired from %s's %s!"), advance_name,
-                  player_name(pplayer), astr_str(&effects));
+                  player_name(pplayer), qUtf8Printable(effects));
   notify_research_embassies(
       plr_research, NULL, E_TECH_EMBASSY, ftc_server,
       /* TRANS: Tech from source of an effect
        * (Great Library) */
       Q_("?fromeffect:The %s have acquired %s from %s."), research_name,
-      advance_name, astr_str(&effects));
+      advance_name, qUtf8Printable(effects));
 
   effect_list_destroy(plist);
-  astr_free(&effects);
 
   /* Really get tech. */
   research_apply_penalty(plr_research, tech, game.server.freecost);

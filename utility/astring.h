@@ -16,7 +16,6 @@
 
 #pragma once
 
-
 #include <QByteArray>
 #include <string.h> /* qstrlen() */
 
@@ -125,5 +124,4 @@ static inline bool astr_empty(const struct astring *astr)
 
 const char *strvec_to_or_list(const QVector<QString> *psv,
                               struct astring *astr);
-const char *strvec_to_and_list(const QVector<QString> *psv,
-                               struct astring *astr);
+QString strvec_to_and_list(const QVector<QString> &psv);

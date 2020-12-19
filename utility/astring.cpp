@@ -370,15 +370,24 @@ const char *strvec_to_or_list(const QVector<QString> *psv,
   return astr_build_or_list(astr, ccc, psv->count());
 }
 
-const char *strvec_to_and_list(const QVector<QString> *psv,
-                               struct astring *astr)
+QString strvec_to_and_list(const QVector<QString> &psv)
 {
-  char *ccc[psv->count()];
-  int i = 0;
-  for (const auto &a : *psv) {
-    ccc[i] = a.toLocal8Bit().data();
-    i++;
+  if (psv.size() == 1) {
+    // TRANS: "and"-separated string list with one single item.
+    return QString(Q_("?and-list-single:%1")).arg(psv[0]);
+  } else if (psv.size() == 2) {
+    // TRANS: "and"-separated string list with 2 items.
+    return QString(Q_("?and-list:%1 and %2")).arg(psv[0], psv[1]);
+  } else {
+    // TRANS: start of an "and"-separated string list with more than two
+    // items.
+    auto result = QString(Q_("?and-list:%1")).arg(psv[0]);
+    for (int i = 1; i < psv.size() - 1; ++i) {
+      // TRANS: next elements of an "and"-separated string list with more
+      // than two items.
+      result += QString(Q_("?and-list:, %1")).arg(psv[i]);
+    }
+    // TRANS: end of an "and"-separated string list with more than two items.
+    return result + QString(Q_("?and-list:, and %1")).arg(psv.back());
   }
-
-  return astr_build_and_list(astr, ccc, psv->count());
 }
