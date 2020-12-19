@@ -72,9 +72,7 @@ page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
   ui.bstart->setIcon(style()->standardPixmap(QStyle::SP_DialogOkButton));
   connect(ui.bstart, &QAbstractButton::clicked, this,
           &page_pregame::slot_pregame_start);
-  pre_vote = new pregamevote;
-  // down_layout->addWidget(pre_vote, 4, 0, 1, 4);
-  pre_vote->hide();
+  ui.pre_vote->hide();
   chat_listener::listen();
   setLayout(ui.gridLayout);
 }
@@ -86,6 +84,10 @@ void page_pregame::set_rulesets(int num_rulesets, char **rulesets)
   ui.pr_options->set_rulesets(num_rulesets, rulesets);
 }
 
+void page_pregame::update_vote()
+{
+  ui.pre_vote->update_vote();
+}
 /**********************************************************************/ /**
    Updates start page (start page = client connected to server, but game not
    started)
