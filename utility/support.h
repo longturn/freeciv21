@@ -93,7 +93,7 @@ typedef int fc_errno;
       delete[](ptr);                                                        \
       ptr = nullptr;                                                        \
     }                                                                       \
-    while (false)
+  } while (false)
 
 #define FCPP_FREE(ptr)                                                      \
   do {                                                                      \

@@ -2375,7 +2375,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 ON_ERROR:
   secfile_destroy(file);
   delete[] fname;
-  NFCPP_FREE(layer_order)
+  NFCPP_FREE(layer_order);
   delete[] t;
   if (NULL != sections) {
     section_list_destroy(sections);
