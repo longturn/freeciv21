@@ -676,7 +676,9 @@ char *user_username(char *buf, size_t bufsz)
   /* Otherwise if getpwuid() is available we can use it to find the true
    * username. */
   {
-    struct passwd *pwent = getpwuid(getuid());
+    // cppcheck warns about thread safety, but this function is called once
+    // before any thread is spawned
+    auto pwent = getpwuid(getuid()); // NOLINT(runtime/threadsafe_fn)
 
     if (pwent) {
       fc_strlcpy(buf, pwent->pw_name, bufsz);
