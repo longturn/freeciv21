@@ -542,8 +542,9 @@ static void try_summon_barbarians(void)
     return;
   }
 
-  if (!(pc = find_closest_city(ptile, NULL, NULL, false, false, false, false,
-                               false, NULL))) {
+  pc = find_closest_city(ptile, NULL, NULL, false, false, false, false,
+                         false, NULL);
+  if (!pc) {
     /* any city */
     return;
   }

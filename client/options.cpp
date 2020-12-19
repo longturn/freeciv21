@@ -456,7 +456,7 @@ const char *option_description(const struct option *poption)
 /************************************************************************/ /**
    Returns the help text (translated) of the option.
  ****************************************************************************/
-const char *option_help_text(const struct option *poption)
+QString option_help_text(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
 
@@ -486,7 +486,7 @@ int option_category(const struct option *poption)
 /************************************************************************/ /**
    Returns the name (translated) of the category of the option.
  ****************************************************************************/
-const char *option_category_name(const struct option *poption)
+QString option_category_name(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
 
@@ -772,7 +772,7 @@ int option_enum_str_to_int(const struct option *poption, const char *str)
    Returns the user-visible (translatable but not translated) string
    corresponding to the value. Returns NULL on error.
  ****************************************************************************/
-const char *option_enum_int_to_str(const struct option *poption, int val)
+QString option_enum_int_to_str(const struct option *poption, int val)
 {
   const QVector<QString> *values;
 
@@ -782,7 +782,7 @@ const char *option_enum_int_to_str(const struct option *poption, int val)
   fc_assert_ret_val(NULL != values, NULL);
   if (val < values->count()) {
     // TODO bug here - val is bigger than vector size
-    return qUtf8Printable(values->at(val));
+    return values->at(val);
   } else {
     return nullptr;
   }
@@ -803,13 +803,13 @@ int option_enum_get_int(const struct option *poption)
    Returns the current value of this enum option as a user-visible
    (translatable but not translated) string.
  ****************************************************************************/
-const char *option_enum_get_str(const struct option *poption)
+QString option_enum_get_str(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
   fc_assert_ret_val(OT_ENUM == poption->type, NULL);
 
-  return qUtf8Printable(poption->enum_vtable->values(poption)->at(
-      poption->enum_vtable->get(poption)));
+  return poption->enum_vtable->values(poption)->at(
+      poption->enum_vtable->get(poption));
 }
 
 /************************************************************************/ /**
@@ -827,13 +827,13 @@ int option_enum_def_int(const struct option *poption)
    Returns the default value of this enum option as a user-visible
    (translatable but not translated) string.
  ****************************************************************************/
-const char *option_enum_def_str(const struct option *poption)
+QString option_enum_def_str(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
   fc_assert_ret_val(OT_ENUM == poption->type, NULL);
 
-  return qUtf8Printable(poption->enum_vtable->values(poption)->at(
-      poption->enum_vtable->def(poption)));
+  return poption->enum_vtable->values(poption)->at(
+      poption->enum_vtable->def(poption));
 }
 
 /************************************************************************/ /**
@@ -952,7 +952,7 @@ bool option_bitwise_set(struct option *poption, unsigned val)
 /************************************************************************/ /**
    Returns the current value of this font option.
  ****************************************************************************/
-const char *option_font_get(const struct option *poption)
+const QString option_font_get(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
   fc_assert_ret_val(OT_FONT == poption->type, NULL);
@@ -963,7 +963,7 @@ const char *option_font_get(const struct option *poption)
 /************************************************************************/ /**
    Returns the default value of this font option.
  ****************************************************************************/
-const char *option_font_def(const struct option *poption)
+const QString option_font_def(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
   fc_assert_ret_val(OT_FONT == poption->type, NULL);
@@ -974,7 +974,7 @@ const char *option_font_def(const struct option *poption)
 /************************************************************************/ /**
    Returns the target style name of this font option.
  ****************************************************************************/
-const char *option_font_target(const struct option *poption)
+const QString option_font_target(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
   fc_assert_ret_val(OT_FONT == poption->type, NULL);
@@ -985,13 +985,13 @@ const char *option_font_target(const struct option *poption)
 /************************************************************************/ /**
    Sets the value of this font option. Returns TRUE if the value changed.
  ****************************************************************************/
-bool option_font_set(struct option *poption, const char *font)
+bool option_font_set(struct option *poption, const QString &font)
 {
   fc_assert_ret_val(NULL != poption, false);
   fc_assert_ret_val(OT_FONT == poption->type, false);
   fc_assert_ret_val(NULL != font, false);
 
-  if (poption->font_vtable->set(poption, font)) {
+  if (poption->font_vtable->set(poption, qUtf8Printable(font))) {
     option_changed(poption);
     return true;
   }
@@ -2599,8 +2599,8 @@ static void client_option_save(struct option *poption,
                              "client.%s", option_name(poption));
     break;
   case OT_FONT:
-    secfile_insert_str(sf, option_font_get(poption), "client.%s",
-                       option_name(poption));
+    secfile_insert_str(sf, qUtf8Printable(option_font_get(poption)),
+                       "client.%s", option_name(poption));
     break;
   case OT_COLOR: {
     struct ft_color color = option_color_get(poption);

@@ -627,9 +627,9 @@ const QString audio_get_all_plugin_names(void)
   buffer = "[";
 
   for (i = 0; i < num_plugins_used; i++) {
-    buffer += plugins[i].name;
+    buffer = buffer + plugins[i].name;
     if (i != num_plugins_used - 1) {
-      buffer += ", ";
+      buffer = buffer + ", ";
     }
   }
   buffer += "]";

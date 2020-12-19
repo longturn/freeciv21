@@ -30,7 +30,7 @@ void qtg_insert_client_build_info(char *outbuf, size_t outlen);
 void qtg_adjust_default_options();
 
 void qtg_version_message(const char *vertext);
-void qtg_real_output_window_append(const QString& astring,
+void qtg_real_output_window_append(const QString &astring,
                                    const struct text_tag_list *tags,
                                    int conn_id);
 
@@ -38,8 +38,7 @@ bool qtg_is_view_supported(enum ts_type type);
 void qtg_tileset_type_set(enum ts_type type);
 void qtg_free_intro_radar_sprites();
 struct sprite *qtg_load_gfxfile(const char *filename);
-struct sprite *qtg_create_sprite(int width, int height,
-                                 QColor *pcolor);
+struct sprite *qtg_create_sprite(int width, int height, QColor *pcolor);
 void qtg_get_sprite_dimensions(struct sprite *sprite, int *width,
                                int *height);
 struct sprite *qtg_crop_sprite(struct sprite *source, int x, int y,
@@ -65,15 +64,14 @@ void qtg_canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
                                   int canvas_y, struct sprite *psprite,
                                   bool fog, int fog_x, int fog_y);
 void qtg_canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
-                                  int canvas_y, struct sprite *psprite,
-                                  bool fog, int fog_x, int fog_y);
+                                    int canvas_y, struct sprite *psprite,
+                                    bool fog, int fog_x, int fog_y);
 void qtg_canvas_put_rectangle(struct canvas *pcanvas, QColor *pcolor,
                               int canvas_x, int canvas_y, int width,
                               int height);
 void qtg_canvas_fill_sprite_area(struct canvas *pcanvas,
-                                 struct sprite *psprite,
-                                 QColor *pcolor, int canvas_x,
-                                 int canvas_y);
+                                 struct sprite *psprite, QColor *pcolor,
+                                 int canvas_x, int canvas_y);
 void qtg_canvas_put_line(struct canvas *pcanvas, QColor *pcolor,
                          enum line_type ltype, int start_x, int start_y,
                          int dx, int dy);
@@ -81,10 +79,10 @@ void qtg_canvas_put_curved_line(struct canvas *pcanvas, QColor *pcolor,
                                 enum line_type ltype, int start_x,
                                 int start_y, int dx, int dy);
 void qtg_get_text_size(int *width, int *height, enum client_font font,
-                       const QString&);
+                       const QString &);
 void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
                          enum client_font font, QColor *pcolor,
-                         const QString& text);
+                         const QString &text);
 
 void qtg_set_rulesets(int num_rulesets, char **rulesets);
 void qtg_options_extra_init();
@@ -104,7 +102,8 @@ void qtg_popup_combat_info(int attacker_unit_id, int defender_unit_id,
 void qtg_set_unit_icon(int idx, struct unit *punit);
 void qtg_set_unit_icons_more_arrow(bool onoff);
 void qtg_real_focus_units_changed(void);
-void qtg_gui_update_font(const char *font_name, const char *font_value);
+void qtg_gui_update_font(const QString &font_name,
+                         const QString &font_value);
 
 void qtg_editgui_refresh();
 void qtg_editgui_notify_object_created(int tag, int id);
@@ -134,4 +133,3 @@ void qtg_gui_clear_theme();
 char **qtg_get_gui_specific_themes_directories(int *count);
 char **qtg_get_useable_themes_in_directory(const char *directory,
                                            int *count);
-

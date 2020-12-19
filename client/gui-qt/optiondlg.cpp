@@ -579,7 +579,6 @@ void option_dialog::add_option(struct option *poption)
   QWidget *twidget;
   QString category_name, description, qstr;
   QStringList qlist, qlist2;
-  const char *str;
   const QVector<QString> *values;
   QVBoxLayout *twidget_layout;
   QHBoxLayout *hbox_layout;
@@ -649,10 +648,15 @@ void option_dialog::add_option(struct option *poption)
 
   case OT_ENUM:
     combo = new QComboBox();
-
-    for (i = 0; (str = option_enum_int_to_str(poption, i)); i++) {
+    i = 0;
+    while (true) {
+      QString s = option_enum_int_to_str(poption, i);
+      if (s.isEmpty()) {
+        break;
+      }
       /* we store enum value in QVariant */
-      combo->addItem(_(str), i);
+      combo->addItem(_(s), i);
+      i++;
     }
     widget = combo;
     break;

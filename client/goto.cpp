@@ -1250,7 +1250,8 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
 
       for (i = 0; i < goto_map->num_parts; i++) {
         if (i > 0 && goto_map->parts[i].start_tile == ptile) {
-          mark_on_map = *waypoint = true;
+          mark_on_map = true;
+          *waypoint = true;
         }
 
         path = goto_map->parts[i].path;
@@ -1369,7 +1370,8 @@ void request_orders_cleared(struct unit *punit)
   qCDebug(goto_category, "Clearing orders for unit %d.", punit->id);
   p.unit_id = punit->id;
   p.src_tile = tile_index(unit_tile(punit));
-  p.repeat = p.vigilant = false;
+  p.repeat = false;
+  p.vigilant = false;
   p.length = 0;
   p.dest_tile = tile_index(unit_tile(punit));
   request_unit_ssa_set(punit, SSA_NONE);
