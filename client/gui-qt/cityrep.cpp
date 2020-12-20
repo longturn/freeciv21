@@ -54,6 +54,8 @@ void hIcon::createIcons()
               fcIcons::instance()->getIcon(QStringLiteral("hgold")));
   hash.insert(QStringLiteral("science"),
               fcIcons::instance()->getIcon(QStringLiteral("hsci")));
+  hash.insert(QStringLiteral("resize"),
+              fcIcons::instance()->getIcon(QStringLiteral("resize")));
 }
 
 QIcon hIcon::get(const QString &id) { return hash.value(id, QIcon()); }

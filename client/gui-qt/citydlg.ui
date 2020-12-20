@@ -85,8 +85,8 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="0" rowspan="2">
-         <widget class="QPushButton" name="prev_city_but">
+        <item row="0" column="3" rowspan="2">
+         <widget class="QPushButton" name="bclose">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -97,7 +97,7 @@
            <string/>
           </property>
           <property name="shortcut">
-           <string/>
+           <string>Esc</string>
           </property>
           <property name="flat">
            <bool>true</bool>
@@ -123,8 +123,8 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="3" rowspan="2">
-         <widget class="QPushButton" name="bclose">
+        <item row="0" column="0" rowspan="2">
+         <widget class="QPushButton" name="prev_city_but">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -135,12 +135,15 @@
            <string/>
           </property>
           <property name="shortcut">
-           <string>Esc</string>
+           <string/>
           </property>
           <property name="flat">
            <bool>true</bool>
           </property>
          </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="cityIconInfoLabel" name="info_icon_label" native="true"/>
         </item>
        </layout>
       </widget>
@@ -528,7 +531,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>16</width>
-                 <height>83</height>
+                 <height>90</height>
                 </rect>
                </property>
                <property name="sizePolicy">
@@ -654,8 +657,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>264</width>
-                    <height>183</height>
+                    <width>194</width>
+                    <height>197</height>
                    </rect>
                   </property>
                   <layout class="QFormLayout" name="formLayout_2">
@@ -896,6 +899,12 @@
    <class>icon_list</class>
    <extends>QListWidget</extends>
    <header>citydlg.h</header>
+  </customwidget>
+  <customwidget>
+   <class>cityIconInfoLabel</class>
+   <extends>QWidget</extends>
+   <header>citydlg.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
