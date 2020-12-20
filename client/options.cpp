@@ -3505,7 +3505,8 @@ static bool server_option_enum_set(struct option *poption, int val)
     return false;
   }
 
-  send_chat_printf("/set %s \"%s\"", psoption->name, name);
+  send_chat_printf("/set %s \"%s\"", psoption->name, qUtf8Printable(
+               psoption->enumerator.support_names->at(val)));
   return true;
 }
 
