@@ -2433,8 +2433,10 @@ void cm_print_city(const struct city *pcity)
     if (NULL != pwork && pwork == pcity) {
       int cx, cy;
 
-      city_tile_index_to_xy(&cx, &cy, cindex, city_map_radius_sq_get(pcity));
-      log_test("    {%2d,%2d} (%4d,%4d)", cx, cy, TILE_XY(ptile));
+      if (city_tile_index_to_xy(&cx, &cy, cindex,
+                                city_map_radius_sq_get(pcity))) {
+        log_test("    {%2d,%2d} (%4d,%4d)", cx, cy, TILE_XY(ptile));
+      }
     }
   }
   city_tile_iterate_index_end;
