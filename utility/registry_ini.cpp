@@ -1272,7 +1272,7 @@ struct entry *secfile_insert_str_full(struct section_file *secfile,
     entry_set_comment(pentry, comment);
   }
 
-  if (stype == EST_COMMENT) {
+  if (pentry != nullptr && stype == EST_COMMENT) {
     pentry->string.raw = true;
   }
 
@@ -3265,8 +3265,9 @@ bool entry_bool_get(const struct entry *pentry, bool *value)
     return true;
   }
 
-  SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_BOOL == pentry->type, false);
+  SECFILE_RETURN_VAL_IF_FAIL(
+      pentry->psection->secfile, pentry->psection,
+      pentry->psection != nullptr && ENTRY_BOOL == pentry->type, false);
 
   if (NULL != value) {
     *value = pentry->boolean.value;
