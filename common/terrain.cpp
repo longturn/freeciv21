@@ -363,7 +363,7 @@ int count_terrain_near_tile(const struct tile *ptile, bool cardinal_only,
   variable_adjc_iterate_end;
 
   if (percentage) {
-    count = count * 100 / total;
+    count = count * 100 / std::max(1, total);
   }
   return count;
 }
@@ -389,7 +389,7 @@ int count_terrain_property_near_tile(const struct tile *ptile,
   variable_adjc_iterate_end;
 
   if (percentage) {
-    count = count * 100 / total;
+    count = count * 100 / std::max(1, total);
   }
   return count;
 }
@@ -498,7 +498,7 @@ int count_terrain_flag_near_tile(const struct tile *ptile,
   variable_adjc_iterate_end;
 
   if (percentage) {
-    count = count * 100 / total;
+    count = count * 100 / std::max(1, total);
   }
   return count;
 }
