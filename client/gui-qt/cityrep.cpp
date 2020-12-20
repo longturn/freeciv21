@@ -66,6 +66,10 @@ void hIcon::createIcons()
               fcIcons::instance()->getIcon(QStringLiteral("hfood")));
   hash.insert(QStringLiteral("tradeplus"),
               fcIcons::instance()->getIcon(QStringLiteral("htrade")));
+  hash.insert(QStringLiteral("gold"),
+              fcIcons::instance()->getIcon(QStringLiteral("hgold")));
+  hash.insert(QStringLiteral("science"),
+              fcIcons::instance()->getIcon(QStringLiteral("hsci")));
 }
 
 QIcon hIcon::get(const QString &id) { return hash.value(id, QIcon()); }
