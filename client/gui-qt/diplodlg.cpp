@@ -25,9 +25,9 @@
 #include "climisc.h"
 #include "game.h"
 #include "government.h"
+#include "nation.h"
 #include "player.h"
 #include "research.h"
-#include "nation.h"
 // client
 #include "client_main.h"
 #include "colors_common.h"
@@ -68,9 +68,8 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
   char plr_buf[4 * MAX_LEN_NAME];
   const struct player_diplstate *state;
   QHeaderView *header;
-  QColor *textcolors[2] = {
-      get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
-      get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
+  QColor *textcolors[2] = {get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
+                           get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
   if (counterpart == initiated_from) {
     initiated_from = client_player_number();
   }
@@ -100,11 +99,10 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
             .toHtmlEscaped()
       + "</center></h3></b>";
   colr = get_player_color(tileset, player_by_number(initiated_from));
-  text = "<style>h3{background-color: " + colr->name() + ";"
-         + "color: "
-         + color_best_contrast(colr, textcolors, ARRAY_SIZE(textcolors))
-               ->name()
-         + "}</style>" + text;
+  text =
+      "<style>h3{background-color: " + colr->name() + ";" + "color: "
+      + color_best_contrast(colr, textcolors, ARRAY_SIZE(textcolors))->name()
+      + "}</style>" + text;
   label3->setText(text);
   label3->setMinimumWidth(300);
   label4 = new QLabel;
@@ -113,11 +111,10 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
                .toHtmlEscaped()
          + "</center></h3></b></body>";
   colr = get_player_color(tileset, player_by_number(counterpart));
-  text = "<style>h3{background-color: " + colr->name() + ";"
-         + "color: "
-         + color_best_contrast(colr, textcolors, ARRAY_SIZE(textcolors))
-               ->name()
-         + "}</style>" + text;
+  text =
+      "<style>h3{background-color: " + colr->name() + ";" + "color: "
+      + color_best_contrast(colr, textcolors, ARRAY_SIZE(textcolors))->name()
+      + "}</style>" + text;
   label4->setMinimumWidth(300);
   label4->setText(text);
   layout->addWidget(label3, 0, 5);
@@ -687,7 +684,7 @@ void diplo_wdg::restore_pixmap()
   queen()->sw_diplo->setPixmap(
       fcIcons::instance()->getPixmap(QStringLiteral("nations")));
   queen()->sw_diplo->resizePixmap(queen()->sw_diplo->width(),
-                                   queen()->sw_diplo->height());
+                                  queen()->sw_diplo->height());
   queen()->sw_diplo->setCustomLabels(QString());
   queen()->sw_diplo->updateFinalPixmap();
 }
@@ -903,7 +900,7 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   p.end();
   queen()->sw_diplo->setPixmap(pix3);
   queen()->sw_diplo->resizePixmap(queen()->sw_diplo->width(),
-                                   queen()->sw_diplo->height());
+                                  queen()->sw_diplo->height());
   queen()->sw_diplo->setCustomLabels(
       QString(nation_plural_for_player(player_by_number(counterpart))));
   queen()->sw_diplo->updateFinalPixmap();

@@ -231,5 +231,3 @@ const char *city_tile_link(const struct city *pcity);
 const char *tile_link(const struct tile *ptile);
 const char *unit_link(const struct unit *punit);
 const char *unit_tile_link(const struct unit *punit);
-
-

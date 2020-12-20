@@ -33,5 +33,3 @@ void building_advisor(struct player *pplayer);
 
 void advisor_choose_build(struct player *pplayer, struct city *pcity);
 void building_advisor_choose(struct city *pcity, struct adv_choice *choice);
-
-

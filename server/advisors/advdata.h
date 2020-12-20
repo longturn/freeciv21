@@ -151,5 +151,3 @@ void adv_best_government(struct player *pplayer);
 bool adv_wants_science(struct player *pplayer);
 
 bool adv_is_player_dangerous(struct player *pplayer, struct player *aplayer);
-
-

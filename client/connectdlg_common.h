@@ -20,5 +20,3 @@ void send_client_wants_hack(const char *filename);
 void send_save_game(const char *filename);
 
 void set_ruleset(const char *ruleset);
-
-

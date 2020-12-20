@@ -549,7 +549,7 @@ END:
   if (!error) {
     /* Build the entry hash table. */
     secfile->allow_duplicates = allow_duplicates;
-    secfile->hash.entries = new QMultiHash<QString, struct entry*>;
+    secfile->hash.entries = new QMultiHash<QString, struct entry *>;
     section_list_iterate(secfile->sections, hashing_section)
     {
       entry_list_iterate(section_entries(hashing_section), pentry)

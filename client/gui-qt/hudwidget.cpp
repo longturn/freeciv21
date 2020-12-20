@@ -20,11 +20,11 @@
 #include <QVBoxLayout>
 // common
 #include "movement.h"
+#include "nation.h"
 #include "research.h"
 #include "tile.h"
 #include "unit.h"
 #include "unitlist.h"
-#include "nation.h"
 // client
 #include "calendar.h"
 #include "client_main.h"
@@ -1040,16 +1040,14 @@ int unit_actions::update_actions()
   if (can_unit_do_activity(current_unit, ACTIVITY_FORTIFYING)) {
     a = new hud_action(this);
     a->action_shortcut = SC_FORTIFY;
-    a->set_pixmap(
-        fcIcons::instance()->getPixmap(QStringLiteral("fortify")));
+    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("fortify")));
     actions.append(a);
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_SENTRY)) {
     a = new hud_action(this);
     a->action_shortcut = SC_SENTRY;
-    a->set_pixmap(
-        fcIcons::instance()->getPixmap(QStringLiteral("sentry")));
+    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("sentry")));
     actions.append(a);
   }
 
@@ -1077,8 +1075,7 @@ int unit_actions::update_actions()
   if (UU_OK == unit_upgrade_test(current_unit, false)) {
     a = new hud_action(this);
     a->action_shortcut = SC_UPGRADE_UNIT;
-    a->set_pixmap(
-        fcIcons::instance()->getPixmap(QStringLiteral("upgrade")));
+    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("upgrade")));
     actions.append(a);
   }
 
@@ -1116,8 +1113,7 @@ int unit_actions::update_actions()
                                 unit_tile(current_unit))) {
     a = new hud_action(this);
     a->action_shortcut = SC_UNLOAD;
-    a->set_pixmap(
-        fcIcons::instance()->getPixmap(QStringLiteral("unload")));
+    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("unload")));
     actions.append(a);
   }
 
@@ -1708,7 +1704,7 @@ hud_unit_combat::hud_unit_combat(int attacker_unit_id, int defender_unit_id,
 
   attacker = game_unit_by_number(attacker_unit_id);
   defender = game_unit_by_number(defender_unit_id);
-  if (!attacker || ! defender) {
+  if (!attacker || !defender) {
     return;
   }
   type_attacker = attacker->utype;

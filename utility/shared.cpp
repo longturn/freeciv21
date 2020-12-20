@@ -975,7 +975,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
 #ifndef DIR_SEPARATOR_IS_DEFAULT
   char fnbuf[filename != NULL ? qstrlen(filename) + 1 : 1];
   int i;
-#else  /* DIR_SEPARATOR_IS_DEFAULT */
+#else /* DIR_SEPARATOR_IS_DEFAULT */
   const char *fnbuf = filename;
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
@@ -1297,7 +1297,7 @@ void switch_lang(const char *lang)
   autocap_update();
 
   qInfo("LANG set to %s", lang);
-#else  /* FREECIV_ENABLE_NLS */
+#else /* FREECIV_ENABLE_NLS */
   fc_assert(false);
 #endif /* FREECIV_ENABLE_NLS */
 }
@@ -1319,7 +1319,7 @@ void init_nls(void)
 
 #ifdef FREECIV_MSWINDOWS
   setup_langname(); /* Makes sure LANG env variable has been set */
-#endif              /* FREECIV_MSWINDOWS */
+#endif /* FREECIV_MSWINDOWS */
 
   (void) setlocale(LC_ALL, "");
   (void) bindtextdomain("freeciv-core", get_locale_dir());
@@ -1389,7 +1389,9 @@ void dont_run_as_root(const char *argv0, const char *fallback)
   if (getuid() == 0 || geteuid() == 0) {
     fc_fprintf(stderr,
                _("%s: Fatal error: you're trying to run me as superuser!\n"),
-               (argv0 ? argv0 : fallback ? fallback : "freeciv"));
+               (argv0      ? argv0
+                : fallback ? fallback
+                           : "freeciv"));
     fc_fprintf(stderr, _("Use a non-privileged account instead.\n"));
     exit(EXIT_FAILURE);
   }
@@ -1611,7 +1613,7 @@ bool path_is_absolute(const char *filename)
   if (strchr(filename, ':')) {
     return true;
   }
-#else  /* FREECIV_MSWINDOWS */
+#else /* FREECIV_MSWINDOWS */
   if (filename[0] == '/') {
     return true;
   }

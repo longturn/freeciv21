@@ -18,7 +18,6 @@
 #include "registry.h"
 #include "section_file.h"
 
-
 #define MAX_LEN_ERRORBUF 1024
 
 static char error_buffer[MAX_LEN_ERRORBUF] = "\0";
@@ -74,7 +73,7 @@ struct section_file *secfile_new(bool allow_duplicates)
   secfile->allow_duplicates = allow_duplicates;
   secfile->allow_digital_boolean = false; /* Default */
 
-  secfile->hash.sections = new QMultiHash<QString, struct section*>;
+  secfile->hash.sections = new QMultiHash<QString, struct section *>;
   /* Maybe allocated later. */
   secfile->hash.entries = NULL;
 
@@ -119,7 +118,7 @@ bool entry_from_token(struct section *psection, const char *name,
 {
   if ('*' == tok[0]) {
     char *buf = new char[strlen(tok) + 1];
-    remove_escapes(tok + 1, false, buf , strlen(tok) + 1);
+    remove_escapes(tok + 1, false, buf, strlen(tok) + 1);
     (void) section_entry_str_new(psection, name, buf, false);
     DEBUG_ENTRIES("entry %s '%s'", name, buf);
     delete[] buf;

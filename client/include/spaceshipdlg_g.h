@@ -17,5 +17,3 @@
 void popup_spaceship_dialog(struct player *pplayer);
 GUI_FUNC_PROTO(void, popdown_spaceship_dialog, struct player *pplayer)
 GUI_FUNC_PROTO(void, refresh_spaceship_dialog, struct player *pplayer)
-
-

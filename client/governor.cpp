@@ -879,8 +879,7 @@ static const char *get_city_growth_string(struct city *pcity, int surplus)
   } else {
     turns = ((cost - stock - 1) / surplus) + 1 + 1;
   }
-  fc_snprintf(buffer, 50, PL_("%d turn", "%d turns", turns),
-              turns);
+  fc_snprintf(buffer, 50, PL_("%d turn", "%d turns", turns), turns);
   return buffer;
 }
 

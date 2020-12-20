@@ -11,8 +11,8 @@
 #pragma once
 
 /* common */
-#include "map.h"
 #include "featured_text.h"
+#include "map.h"
 /* include */
 #include "colors_g.h"
 
@@ -347,5 +347,3 @@ void animations_init(void);
 void animations_free(void);
 void set_frame_by_frame_animation(void);
 void update_animation(void);
-
-

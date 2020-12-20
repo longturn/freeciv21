@@ -56,5 +56,3 @@ void overview_update_line(int overview_x, int overview_y);
 void fill_tile_unit_list(const struct tile *ptile, struct unit **unit_list);
 
 extern struct city *city_workers_display;
-
-

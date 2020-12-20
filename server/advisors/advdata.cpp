@@ -762,9 +762,7 @@ void adv_data_close(struct player *pplayer)
 
   adv_data_phase_done(pplayer);
 
-
-    NFCPP_FREE(adv->government_want);
-
+  NFCPP_FREE(adv->government_want);
 
   if (adv->dipl.adv_dipl_slots != NULL) {
     players_iterate(aplayer)

@@ -9,7 +9,6 @@
 **************************************************************************/
 #pragma once
 
-
 /* utility */
 #include "support.h"
 
@@ -31,5 +30,3 @@ bool luascript_func_call_valist(struct fc_lua *fcl, const char *func_name,
 bool luascript_func_call(struct fc_lua *fcl, const char *func_name, ...);
 
 bool luascript_func_is_required(struct fc_lua *fcl, const char *func_name);
-
-

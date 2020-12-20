@@ -508,7 +508,7 @@ void chatwdg::make_link(struct tile *ptile)
   } else if (punit) {
     buf = unit_link(punit);
   } else {
-    buf =  tile_link(ptile);
+    buf = tile_link(ptile);
   }
   chat_line->insert(buf);
   chat_line->setFocus();
@@ -707,7 +707,7 @@ static bool is_plain_public_message(const QString &s)
    Appends the string to the chat output window.  The string should be
    inserted on its own line, although it will have no newline.
  ***************************************************************************/
-void qtg_real_output_window_append(const QString& astring,
+void qtg_real_output_window_append(const QString &astring,
                                    const struct text_tag_list *tags,
                                    int conn_id)
 {
@@ -719,7 +719,8 @@ void qtg_real_output_window_append(const QString& astring,
   }
 
   chat_listener::update_word_list();
-  chat_listener::invoke(&chat_listener::chat_message_received, astring, tags);
+  chat_listener::invoke(&chat_listener::chat_message_received, astring,
+                        tags);
 }
 
 /***********************************************************************/ /**

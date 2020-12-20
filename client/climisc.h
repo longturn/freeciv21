@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
 /* common */
 #include "events.h"
 #include "fc_types.h"
@@ -123,7 +122,6 @@ enum unit_bg_color_type {
 
 enum unit_bg_color_type unit_color_type(const struct unit_type *punittype);
 
-
 void unit_focus_set_status(struct player *pplayer);
 
 void client_player_init(struct player *pplayer);
@@ -137,5 +135,3 @@ struct nation_set *client_current_nation_set(void);
 bool client_nation_is_in_current_set(const struct nation_type *pnation);
 
 enum ai_level server_ai_level(void);
-
-

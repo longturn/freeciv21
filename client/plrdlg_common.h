@@ -40,5 +40,3 @@ void init_player_dlg_common(void);
 int player_dlg_default_sort_column(void);
 
 QString player_addr_hack(const struct player *pplayer);
-
-

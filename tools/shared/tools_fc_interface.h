@@ -14,10 +14,6 @@
 #ifndef FC_TOOLS_FC_INTERFACE_H
 #define FC_TOOLS_FC_INTERFACE_H
 
-
-
 void fc_interface_init_tool(void);
-
-
 
 #endif /* FC_TOOLS_FC_INTERFACE_H */

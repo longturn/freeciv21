@@ -49,5 +49,3 @@ void voteinfo_queue_next(void);
 int voteinfo_queue_size(void);
 
 bool voteinfo_bar_can_be_shown(void);
-
-

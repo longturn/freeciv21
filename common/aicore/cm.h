@@ -69,5 +69,3 @@ int cm_result_workers(const struct cm_result *result);
 
 void cm_result_from_main_map(struct cm_result *result,
                              const struct city *pcity);
-
-

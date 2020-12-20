@@ -157,7 +157,7 @@ void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
               "Trying to load the game nevertheless ...",
               loading->version, compat[compat_current].version);
   }
-#else  /* FREECIV_DEBUG */
+#else /* FREECIV_DEBUG */
   sg_failure_ret(0 < loading->version
                      && loading->version <= compat[compat_current].version,
                  "Unknown savefile format version (%d).", loading->version);
@@ -2244,7 +2244,7 @@ enum ai_level ai_level_convert(int old_level)
   case 10:
 #ifdef FREECIV_DEBUG
     return AI_LEVEL_EXPERIMENTAL;
-#else  /* FREECIV_DEBUG */
+#else /* FREECIV_DEBUG */
     return AI_LEVEL_HARD;
 #endif /* FREECIV_DEBUG */
   }

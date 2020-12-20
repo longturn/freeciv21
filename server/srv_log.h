@@ -123,5 +123,3 @@ void timing_results_real(void);
 #define TIMING_LOG(timer, activity)
 #define TIMING_RESULTS()
 #endif /* FREECIV_DEBUG */
-
-

@@ -14,7 +14,6 @@
 
 #include "hand_gen.h"
 
-
 struct Treaty;
 struct packet_diplomacy_info;
 struct connection;
@@ -40,5 +39,3 @@ void cancel_all_meetings(struct player *pplayer);
 void reject_all_treaties(struct player *pplayer);
 
 struct treaty_list *get_all_treaties(void);
-
-

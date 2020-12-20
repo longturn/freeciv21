@@ -810,11 +810,13 @@ struct conn_pattern *conn_pattern_from_string(const char *pattern,
     QString pattern_type;
 
     pattern_type = QString(pattern).trimmed();
-    type = conn_pattern_type_by_name(qUtf8Printable(pattern_type), fc_strcasecmp);
+    type = conn_pattern_type_by_name(qUtf8Printable(pattern_type),
+                                     fc_strcasecmp);
     if (!conn_pattern_type_is_valid(type)) {
       if (NULL != error_buf) {
         fc_snprintf(error_buf, error_buf_len,
-                    _("\"%s\" is not a valid pattern type"), qUtf8Printable(pattern_type));
+                    _("\"%s\" is not a valid pattern type"),
+                    qUtf8Printable(pattern_type));
       }
       return NULL;
     }

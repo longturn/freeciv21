@@ -21,8 +21,8 @@
 // common
 #include "chatline_common.h"
 #include "government.h"
-#include "research.h"
 #include "nation.h"
+#include "research.h"
 // client
 #include "client_main.h"
 #include "climisc.h"
@@ -747,7 +747,4 @@ void sidebarLeftClickScience(bool nothing)
 }
 
 // Reloads all icons and resize sidebar width to new value
-void gui_update_sidebar()
-{
-  queen()->reloadSidebarIcons();
-}
+void gui_update_sidebar() { queen()->reloadSidebarIcons(); }

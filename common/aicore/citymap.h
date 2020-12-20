@@ -18,5 +18,3 @@ int citymap_read(struct tile *ptile);
 bool citymap_is_reserved(struct tile *ptile);
 
 void citymap_free(void);
-
-

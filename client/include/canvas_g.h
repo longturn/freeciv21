@@ -48,15 +48,15 @@ GUI_FUNC_PROTO(void, canvas_put_rectangle, struct canvas *pcanvas,
 GUI_FUNC_PROTO(void, canvas_fill_sprite_area, struct canvas *pcanvas,
                struct sprite *psprite, QColor *pcolor, int canvas_x,
                int canvas_y)
-GUI_FUNC_PROTO(void, canvas_put_line, struct canvas *pcanvas,
-               QColor *pcolor, enum line_type ltype, int start_x,
-               int start_y, int dx, int dy)
+GUI_FUNC_PROTO(void, canvas_put_line, struct canvas *pcanvas, QColor *pcolor,
+               enum line_type ltype, int start_x, int start_y, int dx,
+               int dy)
 GUI_FUNC_PROTO(void, canvas_put_curved_line, struct canvas *pcanvas,
                QColor *pcolor, enum line_type ltype, int start_x,
                int start_y, int dx, int dy)
-void canvas_put_unit_fogged(struct canvas *pcanvas,
-               int canvas_x, int canvas_y, struct sprite *psprite, bool fog,
-               int fog_x, int fog_y);
+void canvas_put_unit_fogged(struct canvas *pcanvas, int canvas_x,
+                            int canvas_y, struct sprite *psprite, bool fog,
+                            int fog_x, int fog_y);
 /* Text drawing functions */
 enum client_font {
   FONT_CITY_NAME,
@@ -68,6 +68,4 @@ GUI_FUNC_PROTO(void, get_text_size, int *width, int *height,
                enum client_font font, const QString &text)
 GUI_FUNC_PROTO(void, canvas_put_text, struct canvas *pcanvas, int canvas_x,
                int canvas_y, enum client_font font, QColor *pcolor,
-               const QString& text)
-
-
+               const QString &text)

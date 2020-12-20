@@ -77,5 +77,3 @@ bool rgbcolor_to_hex(const struct rgbcolor *prgbcolor, char *hex,
 bool rgbcolor_from_hex(struct rgbcolor **prgbcolor, const char *hex);
 
 int rgbcolor_brightness_score(struct rgbcolor *prgbcolor);
-
-

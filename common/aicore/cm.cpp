@@ -300,7 +300,6 @@ void cm_init_citymap(void)
   /* In the B&B algorithm there's not really anything to initialize. */
 }
 
-
 /************************************************************************/ /**
    Called at the end of a game to free any CM data.
  ****************************************************************************/
@@ -1035,7 +1034,6 @@ static void top_sort_lattice(struct tile_type_vector *lattice)
 
   struct tile_type_vector vectors[2];
   struct tile_type_vector *current, *next;
-
 
   tile_type_vector_init(&vectors[0]);
   tile_type_vector_init(&vectors[1]);
@@ -2118,7 +2116,6 @@ void cm_query_result(struct city *pcity, const struct cm_parameter *param,
   cm_find_best_solution(state, param, result, negative_ok);
   cm_state_free(state);
 }
-
 
 bool operator==(const struct cm_parameter &p1, const struct cm_parameter &p2)
 {

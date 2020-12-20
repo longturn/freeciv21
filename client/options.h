@@ -310,9 +310,9 @@ void options_dialogs_set(void);
 
 /* for specifying which event messages go where: */
 #define NUM_MW 3
-#define MW_OUTPUT 1   /* add to the output window */
+#define MW_OUTPUT 1 /* add to the output window */
 #define MW_MESSAGES 2 /* add to the messages window */
-#define MW_POPUP 4    /* popup an individual window */
+#define MW_POPUP 4 /* popup an individual window */
 
 extern int messages_where[]; /* OR-ed MW_ values [E_COUNT] */
 

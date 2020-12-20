@@ -64,5 +64,3 @@ enum tile_behavior no_fights(const struct tile *ptile, enum known_type known,
 enum tile_behavior no_intermediate_fights(const struct tile *ptile,
                                           enum known_type known,
                                           const struct pf_parameter *param);
-
-

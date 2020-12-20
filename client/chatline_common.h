@@ -33,5 +33,3 @@ void fc_allocate_ow_mutex(void);
 void fc_release_ow_mutex(void);
 void fc_init_ow_mutex(void);
 void fc_destroy_ow_mutex(void);
-
-

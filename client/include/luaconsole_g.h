@@ -24,5 +24,3 @@ GUI_FUNC_PROTO(void, real_luaconsole_dialog_update, void)
 
 GUI_FUNC_PROTO(void, real_luaconsole_append, const char *astring,
                const struct text_tag_list *tags)
-
-

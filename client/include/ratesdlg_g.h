@@ -18,5 +18,3 @@ void real_multipliers_dialog_update(void *unused);
 /* Actually defined in update_queue.c */
 void multipliers_dialog_update(void);
 void gui_update_sidebar();
-
-

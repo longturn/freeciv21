@@ -48,10 +48,10 @@
 #include "road.h"
 #include "server_settings.h"
 #include "specialist.h"
+#include "style.h"
 #include "tech.h"
 #include "traderoutes.h"
 #include "unit.h"
-#include "style.h"
 #include "unitlist.h"
 
 /* common/scriptcore */

@@ -517,7 +517,7 @@ void adv_city_free(struct city *pcity)
 
   if (pcity->server.adv) {
     if (pcity->server.adv->act_cache) {
-      free(pcity->server.adv->act_cache); //realloc
+      free(pcity->server.adv->act_cache); // realloc
       pcity->server.adv->act_cache = nullptr;
     }
     FCPP_FREE(pcity->server.adv);

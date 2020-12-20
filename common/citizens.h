@@ -57,5 +57,3 @@ struct player_slot *citizens_random(const struct city *pcity);
 #define citizens_foreign_iterate_end                                        \
   }                                                                         \
   citizens_iterate_end;
-
-

@@ -14,8 +14,8 @@
 
 #include <QHash>
 /* utility */
-#include "shared.h"
 #include "iterator.h"
+#include "shared.h"
 /* common */
 #include "fc_types.h"
 #include "name_translation.h"

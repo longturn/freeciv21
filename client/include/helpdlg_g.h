@@ -67,5 +67,3 @@ GUI_FUNC_PROTO(void, popdown_help_dialog, void)
 #define HELP_COPYING_ITEM N_("Copying")
 #define HELP_ABOUT_ITEM N_("About Freeciv")
 #define HELP_MULTIPLIER_ITEM N_("Policies")
-
-

@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #include "fcthread.h"
 
-
 fcThread::fcThread(void(tfunc)(void *), void *tdata)
     : func(tfunc), data(tdata)
 {
@@ -24,13 +23,12 @@ void fcThread::set_func(void(tfunc)(void *), void *tdata)
   data = tdata;
 }
 
-
 fcThread::~fcThread() {}
 
 void fcThread::run()
 {
   QMutexLocker locker(&mutex);
   if (func) {
-  (func)(data);
+    (func)(data);
   }
 }

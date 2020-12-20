@@ -26,8 +26,8 @@
 #include "extras.h"
 #include "government.h"
 #include "map.h"
-#include "nation.h"
 #include "movement.h"
+#include "nation.h"
 #include "player.h"
 #include "requirements.h"
 #include "server_settings.h"
@@ -1404,7 +1404,7 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
     break;
 
   case VUT_UCFLAG: {
-    const char** classes = new const char*[uclass_count()];
+    const char **classes = new const char *[uclass_count()];
     int i = 0;
     bool done = false;
     struct astring list = ASTRING_INIT;

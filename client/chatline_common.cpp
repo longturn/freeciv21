@@ -86,7 +86,7 @@ void fc_init_ow_mutex(void) {}
 /**********************************************************************/ /**
    Destroy output window mutex
  **************************************************************************/
-void fc_destroy_ow_mutex(void) { }
+void fc_destroy_ow_mutex(void) {}
 
 /**********************************************************************/ /**
    Add a line of text to the output ("chatline") window, like puts() would

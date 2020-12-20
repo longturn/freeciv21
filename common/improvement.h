@@ -21,7 +21,6 @@
 #include "name_translation.h"
 #include "requirements.h"
 
-
 /* B_LAST is a value that is guaranteed to be larger than all
  * actual Impr_type_id values.  It is used as a flag value; it can
  * also be used for fixed allocations to ensure ability to hold the
@@ -144,7 +143,7 @@ improvement_replacement(const struct impr_type *pimprove);
 #define WONDER_OWNED(player_id) ((player_id) < MAX_NUM_PLAYER_SLOTS)
 
 /* Macros for struct player::wonders[]. */
-#define WONDER_LOST (-1)   /* Used as city id. */
+#define WONDER_LOST (-1) /* Used as city id. */
 #define WONDER_NOT_BUILT 0 /* Used as city id. */
 #define WONDER_BUILT(city_id) ((city_id) > 0)
 

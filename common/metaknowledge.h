@@ -35,5 +35,3 @@ enum fc_tristate mke_eval_reqs(
 
 bool can_see_techs_of_target(const struct player *pow_player,
                              const struct player *target_player);
-
-

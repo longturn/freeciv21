@@ -640,7 +640,7 @@ extern struct world wld;
 
 #define GAME_DEFAULT_SKILL_LEVEL AI_LEVEL_EASY
 #define GAME_HARDCODED_DEFAULT_SKILL_LEVEL                                  \
-  3                                    /* that was 'easy' in old saves */
+  3 /* that was 'easy' in old saves */
 #define GAME_OLD_DEFAULT_SKILL_LEVEL 5 /* normal; for oldest save games */
 
 #define GAME_DEFAULT_DEMOGRAPHY "NASRLPEMOCqrb"
@@ -685,8 +685,8 @@ extern struct world wld;
 #define GAME_MAX_READ_RECURSION 10 /* max recursion for the read command */
 
 #define GAME_DEFAULT_KICK_TIME 1800 /* 1800 seconds = 30 minutes. */
-#define GAME_MIN_KICK_TIME 0        /* 0 = disabling. */
-#define GAME_MAX_KICK_TIME 86400    /* 86400 seconds = 24 hours. */
+#define GAME_MIN_KICK_TIME 0 /* 0 = disabling. */
+#define GAME_MAX_KICK_TIME 86400 /* 86400 seconds = 24 hours. */
 
 /* Max distance from the capital used to calculat the bribe cost. */
 #define GAME_UNIT_BRIBE_DIST_MAX 32
@@ -835,5 +835,3 @@ extern struct world wld;
 #define RS_DEFAULT_EXPLODE_NUCLEAR_MAX_RANGE 0
 
 #define RS_ACTION_NO_MAX_DISTANCE "unlimited"
-
-

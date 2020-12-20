@@ -92,5 +92,3 @@ enum server_scan_type server_scan_get_type(const struct server_scan *scan);
 enum server_scan_status server_scan_poll(struct server_scan *scan);
 struct server_list *server_scan_get_list(struct server_scan *scan);
 void server_scan_finish(struct server_scan *scan);
-
-

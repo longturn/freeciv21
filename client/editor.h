@@ -181,5 +181,3 @@ int edit_buffer_get_status_string(const struct edit_buffer *ebuf, char *buf,
   }                                                                         \
   }                                                                         \
   while (false)
-
-

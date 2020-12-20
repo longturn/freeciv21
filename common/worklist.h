@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
 #include "registry.h"
 
 #include "fc_types.h"
@@ -55,5 +54,3 @@ bool are_worklists_equal(const struct worklist *wlist1,
 #define worklist_iterate_end                                                \
   }                                                                         \
   }
-
-

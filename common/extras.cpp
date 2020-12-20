@@ -83,9 +83,9 @@ void extras_free(void)
   resource_types_free();
 
   for (i = 0; i < game.control.num_extra_types; i++) {
-      NFCN_FREE(extras[i].data.base);
-      NFCN_FREE(extras[i].data.road);
-      NFCN_FREE(extras[i].data.resource);
+    NFCN_FREE(extras[i].data.base);
+    NFCN_FREE(extras[i].data.road);
+    NFCN_FREE(extras[i].data.resource);
   }
 
   for (i = 0; i < EC_LAST; i++) {

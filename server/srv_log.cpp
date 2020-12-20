@@ -28,8 +28,8 @@
 #include "city.h"
 #include "game.h"
 #include "map.h"
-#include "unit.h"
 #include "nation.h"
+#include "unit.h"
 
 /* server */
 #include "notify.h"

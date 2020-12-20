@@ -30,5 +30,3 @@ GUI_FUNC_PROTO(struct sprite *, create_sprite, int width, int height,
 GUI_FUNC_PROTO(void, get_sprite_dimensions, struct sprite *sprite,
                int *width, int *height)
 GUI_FUNC_PROTO(void, free_sprite, struct sprite *s)
-
-

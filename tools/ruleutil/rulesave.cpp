@@ -25,12 +25,12 @@
 #include "map.h"
 #include "movement.h"
 #include "multipliers.h"
+#include "nation.h"
+#include "rgbcolor.h"
 #include "specialist.h"
 #include "style.h"
 #include "unittype.h"
 #include "version.h"
-#include "rgbcolor.h"
-#include "nation.h"
 
 /* server */
 #include "ruleset.h"
@@ -338,8 +338,9 @@ static bool save_uclass_vec(struct section_file *sfile,
 /**********************************************************************/ /**
    Save strvec as ruleset vector of strings
  **************************************************************************/
-static bool save_strvec(struct section_file *sfile, QVector<QString> *to_save,
-                        const char *path, const char *entry)
+static bool save_strvec(struct section_file *sfile,
+                        QVector<QString> *to_save, const char *path,
+                        const char *entry)
 {
   if (to_save != NULL) {
     int sect_count = to_save->count();
@@ -496,9 +497,10 @@ static bool save_styles_ruleset(const char *filename, const char *name)
 
     fc_snprintf(path, sizeof(path), "musicstyle_%d", sect_idx++);
 
-    secfile_insert_str(sfile, qUtf8Printable(pmus->music_peaceful), "%s.music_peaceful",
-                       path);
-    secfile_insert_str(sfile, qUtf8Printable(pmus->music_combat), "%s.music_combat", path);
+    secfile_insert_str(sfile, qUtf8Printable(pmus->music_peaceful),
+                       "%s.music_peaceful", path);
+    secfile_insert_str(sfile, qUtf8Printable(pmus->music_combat),
+                       "%s.music_combat", path);
 
     save_reqs_vector(sfile, &(pmus->reqs), path, "reqs");
   }

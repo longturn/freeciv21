@@ -47,7 +47,7 @@ struct resource_type {
 
 /* === */
 
-#define T_NONE (NULL)    /* A special flag meaning no terrain type. */
+#define T_NONE (NULL) /* A special flag meaning no terrain type. */
 #define T_UNKNOWN (NULL) /* An unknown terrain. */
 
 /* The first terrain value. */

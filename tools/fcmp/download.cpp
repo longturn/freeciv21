@@ -313,8 +313,8 @@ static const char *download_modpack_recursive(const char *URL,
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
     if (!illegal_filename) {
-      fc_snprintf(local_name, sizeof(local_name), "%s%c%s",
-                  local_dir, DIR_SEPARATOR_CHAR, dest_name_copy);
+      fc_snprintf(local_name, sizeof(local_name), "%s%c%s", local_dir,
+                  DIR_SEPARATOR_CHAR, dest_name_copy);
 
 #ifndef DIR_SEPARATOR_IS_DEFAULT
       free(dest_name_copy);

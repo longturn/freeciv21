@@ -33,13 +33,13 @@
 #include "events.h"
 #include "game.h"
 #include "government.h"
+#include "nation.h"
 #include "packets.h"
 #include "player.h"
 #include "research.h"
 #include "specialist.h"
 #include "unitlist.h"
 #include "version.h"
-#include "nation.h"
 
 /* server */
 #include "citytools.h"

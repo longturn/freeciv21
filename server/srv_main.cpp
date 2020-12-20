@@ -56,16 +56,16 @@
 #include "government.h"
 #include "map.h"
 #include "mapimg.h"
+#include "multipliers.h"
 #include "nation.h"
 #include "packets.h"
 #include "player.h"
 #include "research.h"
+#include "style.h"
 #include "tech.h"
 #include "unitlist.h"
 #include "version.h"
 #include "victory.h"
-#include "multipliers.h"
-#include "style.h"
 
 /* server */
 #include "aiiface.h"
@@ -167,7 +167,7 @@ void init_game_seed(void)
 #ifdef FREECIV_TESTMATIC
     /* Log command to reproduce the gameseed */
     log_testmatic("set gameseed %d", game.server.seed);
-#else  /* FREECIV_TESTMATIC */
+#else /* FREECIV_TESTMATIC */
     log_debug("Setting game.seed:%d", game.server.seed);
 #endif /* FREECIV_TESTMATIC */
   } else {

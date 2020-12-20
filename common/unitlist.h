@@ -11,7 +11,6 @@
 
 #pragma once
 
-
 #include "fc_types.h"
 #include "unit.h"     /* for diplomat_actions */
 #include "unittype.h" /* for unit_type_flag_id */
@@ -86,4 +85,3 @@ bool units_can_upgrade(const struct unit_list *punits);
 bool units_can_convert(const struct unit_list *punits);
 bool any_unit_in_city(const struct unit_list *punits);
 bool units_on_the_same_tile(const struct unit_list *punits);
-

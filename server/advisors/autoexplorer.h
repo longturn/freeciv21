@@ -15,5 +15,3 @@
 struct unit;
 
 enum unit_move_result manage_auto_explorer(struct unit *punit);
-
-

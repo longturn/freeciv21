@@ -45,7 +45,6 @@
  * should be included _once_, inside a .h file which _is_ itself protected
  * against multiple inclusions. */
 
-
 #ifndef SPECPQ_TAG
 #error Must define a SPECPQ_TAG to use this header
 #endif
@@ -283,5 +282,3 @@ static inline bool SPECPQ_FOO(_pq_priority)(const SPECPQ_PQ *_pq,
 #undef SPECPQ_PQ_
 #undef SPECPQ_CELL_
 #undef SPECPQ_FOO
-
-

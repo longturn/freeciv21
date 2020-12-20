@@ -427,7 +427,6 @@ void update_animation(void)
   }
 }
 
-
 /************************************************************************/ /**
    Refreshes a single tile on the map canvas.
  ****************************************************************************/
@@ -1835,7 +1834,6 @@ void update_tile_label(struct tile *ptile)
 {
   queue_mapview_tile_update(ptile, TILE_UPDATE_TILE_LABEL);
 }
-
 
 /************************************************************************/ /**
    Draw a label for the given tile.

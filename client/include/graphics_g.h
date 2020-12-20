@@ -30,5 +30,3 @@ GUI_FUNC_PROTO(void, load_intro_gfx, void)
 GUI_FUNC_PROTO(void, load_cursors, void)
 
 GUI_FUNC_PROTO(void, free_intro_radar_sprites, void)
-
-

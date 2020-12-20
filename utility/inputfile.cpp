@@ -366,7 +366,7 @@ static bool check_include(struct inputfile *inf)
 
   if (*c != '\"') {
     qCCritical(inf_category,
-            "Did not find opening doublequote for '*include' line");
+               "Did not find opening doublequote for '*include' line");
     return false;
   }
   c++;
@@ -377,7 +377,7 @@ static bool check_include(struct inputfile *inf)
     c++;
   if (*c != '\"') {
     qCCritical(inf_category,
-            "Did not find closing doublequote for '*include' line");
+               "Did not find closing doublequote for '*include' line");
     return false;
   }
   c++;
@@ -951,7 +951,7 @@ static const char *get_token_value(struct inputfile *inf)
     if (!read_a_line(inf)) {
       /* shouldn't happen */
       qCCritical(inf_category,
-              "Bad return for multi-line string from read_a_line");
+                 "Bad return for multi-line string from read_a_line");
       return NULL;
     }
     c = start = astr_str(&inf->cur_line);

@@ -38,5 +38,3 @@ GUI_FUNC_PROTO(void, real_units_report_dialog_update, void *unused)
 void science_report_dialog_update(void);
 void economy_report_dialog_update(void);
 void units_report_dialog_update(void);
-
-

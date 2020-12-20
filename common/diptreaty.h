@@ -93,5 +93,3 @@ struct clause_info *clause_info_get(enum clause_type type);
 
 bool clause_enabled(enum clause_type type, struct player *from,
                     struct player *to);
-
-

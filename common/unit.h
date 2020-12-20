@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
 /* utility */
 #include "bitvector.h"
 
@@ -247,9 +246,9 @@ struct unit {
    fc_assert(player_by_number(player_index(unit_owner(punit)))              \
              == unit_owner(punit)),                                         \
    fc_assert(game_unit_by_number(punit->id) != NULL))
-#else                     /* FREECIV_DEBUG */
+#else /* FREECIV_DEBUG */
 #define CHECK_UNIT(punit) /* Do nothing */
-#endif                    /* FREECIV_DEBUG */
+#endif /* FREECIV_DEBUG */
 
 void setup_real_activities_array(void);
 
@@ -450,5 +449,3 @@ struct iterator *cargo_iter_init(struct cargo_iter *iter,
   generic_iterate(struct cargo_iter, struct unit *, _pcargo,                \
                   cargo_iter_sizeof, cargo_iter_init, _ptrans)
 #define unit_cargo_iterate_end generic_iterate_end
-
-

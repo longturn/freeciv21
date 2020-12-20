@@ -47,8 +47,7 @@ struct color_system *color_system_read(struct section_file *file)
   struct color_system *colors = new color_system;
   enum color_std stdcolor;
 
-
-  colors->stdcolors = new rgbcolor*[COLOR_LAST]();
+  colors->stdcolors = new rgbcolor *[COLOR_LAST]();
 
   for (stdcolor = color_std_begin(); stdcolor != color_std_end();
        stdcolor = color_std_next(stdcolor)) {
@@ -125,7 +124,7 @@ bool player_has_color(const struct tileset *t, const struct player *pplayer)
    this.
  ****************************************************************************/
 QColor *get_player_color(const struct tileset *t,
-                               const struct player *pplayer)
+                         const struct player *pplayer)
 {
   Q_UNUSED(t)
   fc_assert_ret_val(pplayer != NULL, NULL);
@@ -138,7 +137,7 @@ QColor *get_player_color(const struct tileset *t,
    Return a pointer to the given "terrain" color.
  ****************************************************************************/
 QColor *get_terrain_color(const struct tileset *t,
-                                const struct terrain *pterrain)
+                          const struct terrain *pterrain)
 {
   Q_UNUSED(t)
   fc_assert_ret_val(pterrain != NULL, NULL);
@@ -151,8 +150,8 @@ QColor *get_terrain_color(const struct tileset *t,
    Find the colour from 'candidates' with the best perceptual contrast from
    'subject'.
  ****************************************************************************/
-QColor *color_best_contrast(QColor *subject,
-                                  QColor **candidates, int ncandidates)
+QColor *color_best_contrast(QColor *subject, QColor **candidates,
+                            int ncandidates)
 {
   int sbright = color_brightness_score(subject), bestdiff = 0;
   int i;

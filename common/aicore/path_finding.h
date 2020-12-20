@@ -598,5 +598,3 @@ bool pf_reverse_map_unit_position(struct pf_reverse_map *pfrm,
   while (pf_map_iterate(_MY_pf_map_))                                       \
     ;                                                                       \
   }
-
-

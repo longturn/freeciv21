@@ -20,12 +20,12 @@
 #include "game.h"
 #include "map.h"
 #include "movement.h"
+#include "nation.h"
 #include "player.h"
 #include "research.h"
 #include "tech.h"
 #include "tile.h"
 #include "unittype.h"
-#include "nation.h"
 
 /* server */
 #include "aiiface.h"

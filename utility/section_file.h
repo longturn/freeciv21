@@ -39,8 +39,8 @@ struct section_file {
   bool allow_duplicates;
   bool allow_digital_boolean;
   struct {
-    QMultiHash<QString, struct section*> *sections;
-    QMultiHash<QString, struct entry*> *entries;
+    QMultiHash<QString, struct section *> *sections;
+    QMultiHash<QString, struct entry *> *entries;
   } hash;
 };
 
@@ -65,4 +65,3 @@ void secfile_log(const struct section_file *secfile,
 
 bool entry_from_token(struct section *psection, const char *name,
                       const char *tok);
-

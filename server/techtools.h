@@ -15,7 +15,6 @@
 #include "player.h"
 #include "tech.h"
 
-
 struct research;
 
 void research_apply_penalty(struct research *presearch, Tech_type_id tech,
@@ -44,5 +43,3 @@ void give_initial_techs(struct research *presearch, int num_random_techs);
 
 bool tech_transfer(struct player *plr_recv, struct player *plr_donor,
                    Tech_type_id tech);
-
-

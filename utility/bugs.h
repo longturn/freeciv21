@@ -16,5 +16,3 @@
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(bugs_category)
-
-

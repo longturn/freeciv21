@@ -177,7 +177,6 @@ bool canvas_to_city_pos(int *city_x, int *city_y, int city_radius_sq,
   gui_rect_iterate_coord_end;                                               \
   }
 
-
 /**********************************************************************/ /**
    Return a string describing the cost for the production of the city
    considerung several build slots for units.

@@ -10,7 +10,6 @@
 **************************************************************************/
 #pragma once
 
-
 struct packet_game_info;
 void game_next_year(struct packet_game_info *info);
 void game_advance_year(void);
@@ -18,5 +17,3 @@ void game_advance_year(void);
 const char *textcalfrag(int frag);
 const char *textyear(int year);
 const char *calendar_text(void);
-
-

@@ -39,8 +39,8 @@
 #include "requirements.h"
 #include "specialist.h"
 #include "traderoutes.h"
-#include "workertask.h"
 #include "unit.h"
+#include "workertask.h"
 
 /* aicore */
 #include "cm.h"
@@ -3417,7 +3417,7 @@ void destroy_city_virtual(struct city *pcity)
   unit_list_destroy(pcity->units_supported);
   trade_route_list_destroy(pcity->routes);
   if (pcity->tile_cache != NULL) {
-    free(pcity->tile_cache); //realloc
+    free(pcity->tile_cache); // realloc
   }
   NFCPP_FREE(pcity->cm_parameter);
   if (!is_server()) {

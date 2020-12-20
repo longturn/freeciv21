@@ -16,5 +16,3 @@
  * Currently dataio_raw.h has all the functionality, including the
  * #include of the dataio_json.h at correct spot. */
 #include "dataio_raw.h"
-
-

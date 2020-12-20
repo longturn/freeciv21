@@ -17,7 +17,6 @@
 #include "packets.h" /* enum unit_info_use */
 #include "unitlist.h"
 
-
 #define SPECENUM_NAME unit_loss_reason
 #define SPECENUM_VALUE0 ULR_KILLED
 #define SPECENUM_VALUE0NAME "killed"
@@ -175,5 +174,3 @@ void unit_get_goods(struct unit *punit);
 bool unit_order_list_is_sane(int length, const struct unit_order *orders);
 struct unit_order *create_unit_orders(int length,
                                       const struct unit_order *orders);
-
-

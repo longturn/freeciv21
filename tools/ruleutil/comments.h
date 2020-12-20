@@ -13,8 +13,6 @@
 #ifndef FC__COMMENTS_H
 #define FC__COMMENTS_H
 
-
-
 #define COMMENTS_FILE_NAME "comments-3.1.txt"
 
 struct section_file;
@@ -49,7 +47,5 @@ void comment_nationsets(struct section_file *sfile);
 void comment_nationgroups(struct section_file *sfile);
 void comment_nations(struct section_file *sfile);
 void comment_clauses(struct section_file *sfile);
-
-
 
 #endif /* FC__COMMENTS_H */

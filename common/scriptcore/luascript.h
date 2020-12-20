@@ -41,9 +41,9 @@ struct fc_lua {
   /* This is needed for server 'lua' and 'luafile' commands. */
   struct connection *caller;
 
-  QHash<QString, struct luascript_func*> *funcs;
+  QHash<QString, struct luascript_func *> *funcs;
 
-  QHash<QString, struct signal*> *signals_hash;
+  QHash<QString, struct signal *> *signals_hash;
   QVector<QString> *signal_names;
 };
 
@@ -140,5 +140,3 @@ const Direction *luascript_dir(enum direction8);
     luascript_arg_error(L, 2, "got 'nil' for self");                        \
     return LUASCRIPT_ASSERT_CAT(, __VA_ARGS__);                             \
   }
-
-

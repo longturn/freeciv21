@@ -19,5 +19,3 @@ GUI_FUNC_PROTO(void, real_players_dialog_update, void *)
 
 /* Actually defined in update_queue.c */
 void players_dialog_update(void);
-
-

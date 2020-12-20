@@ -12,7 +12,6 @@
 ****************************************************************************/
 #pragma once
 
-
 /* utility */
 #include "iterator.h"
 #include "support.h"
@@ -165,5 +164,3 @@ struct iterator *research_player_iter_init(struct research_player_iter *it,
                   research_player_iter_sizeof, research_player_iter_init,   \
                   _presearch)
 #define research_players_iterate_end generic_iterate_end
-
-

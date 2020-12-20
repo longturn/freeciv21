@@ -135,15 +135,13 @@ static bool script_fcdb_functions_check(const char *fcdb_luafile)
 
   if (!luascript_func_check(fcl, missing_func_required,
                             missing_func_optional)) {
-    for (auto func_name : *missing_func_required)
-    {
+    for (auto func_name : *missing_func_required) {
       qCritical("Database script '%s' does not define the required function "
                 "'%s'.",
                 fcdb_luafile, func_name);
       ret = false;
     }
-    for (auto func_name : *missing_func_optional)
-    {
+    for (auto func_name : *missing_func_optional) {
       qDebug("Database script '%s' does not define the optional "
              "function '%s'.",
              fcdb_luafile, func_name);

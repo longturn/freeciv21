@@ -11,8 +11,6 @@
 #ifndef FC__RULESAVE_H
 #define FC__RULESAVE_H
 
-
-
 struct rule_data {
   char *nationlist;
   char *nationlist_saved;
@@ -20,7 +18,5 @@ struct rule_data {
 
 bool save_ruleset(const char *path, const char *name,
                   struct rule_data *data);
-
-
 
 #endif /* FC__RULESAVE_H */

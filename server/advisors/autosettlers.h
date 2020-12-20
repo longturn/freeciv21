@@ -91,5 +91,3 @@ extern action_id as_actions_rmextra[MAX_NUM_ACTIONS];
 #define as_rmextra_action_iterate_end                                       \
   action_list_iterate_end                                                   \
   }
-
-

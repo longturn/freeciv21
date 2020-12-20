@@ -23,6 +23,7 @@ public:
   fcThread(void(tfunc)(void *), void *tdata);
   void set_func(void(tfunc)(void *), void *tdata);
   ~fcThread();
+
 protected:
   void run() Q_DECL_OVERRIDE;
 
@@ -31,5 +32,3 @@ private:
   void *data;
   QMutex mutex;
 };
-
-

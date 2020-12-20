@@ -177,7 +177,8 @@ int research_pretty_name(const struct research *presearch, char *buf,
       team_pretty_name(pteam, buf2);
       /* TRANS: e.g. "members of team 1", or even "members of team Red".
        * Used in many places where a nation plural might be used. */
-      return fc_snprintf(buf, buf_len, _("members of %s"), qUtf8Printable(buf2));
+      return fc_snprintf(buf, buf_len, _("members of %s"),
+                         qUtf8Printable(buf2));
     } else {
       pplayer = player_list_front(team_members(pteam));
     }
@@ -274,7 +275,7 @@ research_advance_name_translation(const struct research *presearch,
     const char *name = nullptr;
 
     if (no < future_name_translation->count()) {
-       /* FIXME remove check to read outside vector */
+      /* FIXME remove check to read outside vector */
       name = qUtf8Printable(future_name_translation->at(no));
     }
     if (name == nullptr) {
@@ -614,7 +615,8 @@ void research_update(struct research *presearch)
               presearch->inventions[i].root_reqs_known
                   ? ""
                   : " [root reqs aren't known]");
-    log_debug("%s: [%3d] %s", research_rule_name(presearch), i, qUtf8Printable(buf));
+    log_debug("%s: [%3d] %s", research_rule_name(presearch), i,
+              qUtf8Printable(buf));
   }
   advance_index_iterate_end;
 #endif /* FREECIV_DEBUG */

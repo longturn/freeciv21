@@ -14,20 +14,20 @@
 #include <QWidget>
 class fc_client;
 
-class page_scenario : public QWidget
-{
-    Q_OBJECT
-    public:
-    page_scenario(QWidget *, fc_client *);
-    ~page_scenario();
-    void update_scenarios_page(void);
+class page_scenario : public QWidget {
+  Q_OBJECT
+public:
+  page_scenario(QWidget *, fc_client *);
+  ~page_scenario();
+  void update_scenarios_page(void);
 private slots:
   void slot_selection_changed(const QItemSelection &,
                               const QItemSelection &);
   void browse_scenarios();
   void start_scenario();
+
 private:
-  fc_client* king;
+  fc_client *king;
   Ui::FormPageScenario ui;
   QString current_file;
 };
