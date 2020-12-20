@@ -652,6 +652,8 @@ void generic_handle_player_attribute_chunk(
              (unsigned int) chunk->total_length,
              (unsigned int) chunk->chunk_length);
 
+  fc_assert_ret(chunk->chunk_length < ATTRIBUTE_CHUNK_SIZE);
+
   if (chunk->total_length < 0 || chunk->chunk_length < 0
       || chunk->total_length >= MAX_ATTRIBUTE_BLOCK || chunk->offset < 0
       || chunk->offset
