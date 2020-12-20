@@ -2965,6 +2965,15 @@ static struct pf_map *pf_fuel_map_new(const struct pf_parameter *parameter)
   struct pf_parameter *params;
   struct pf_fuel_node *node;
 
+  /* 'get_MC' callback must be set. */
+  fc_assert_ret_val(parameter->get_MC != NULL, NULL);
+
+  /* 'get_moves_left_req' callback must be set. */
+  fc_assert_ret_val(parameter->get_moves_left_req != NULL, NULL);
+
+  /* 'get_move_scope' callback must be set. */
+  fc_assert_ret_val(parameter->get_move_scope != NULL, NULL);
+
   pffm = new pf_fuel_map;
   base_map = &pffm->base_map;
   params = &base_map->params;
@@ -2977,15 +2986,6 @@ static struct pf_map *pf_fuel_map_new(const struct pf_parameter *parameter)
   pffm->lattice = new pf_fuel_node[MAP_INDEX_SIZE]();
   pffm->queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
   pffm->waited_queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
-
-  /* 'get_MC' callback must be set. */
-  fc_assert_ret_val(parameter->get_MC != NULL, NULL);
-
-  /* 'get_moves_left_req' callback must be set. */
-  fc_assert_ret_val(parameter->get_moves_left_req != NULL, NULL);
-
-  /* 'get_move_scope' callback must be set. */
-  fc_assert_ret_val(parameter->get_move_scope != NULL, NULL);
 
   /* Copy parameters. */
   *params = *parameter;
