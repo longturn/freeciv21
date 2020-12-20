@@ -389,7 +389,7 @@ int count_river_type_near_tile(const struct tile *ptile,
   adjc_iterate_end;
 
   if (percentage) {
-    count = count * 100 / total;
+    count = count * 100 / std::max(1, total);
   }
   return count;
 }
