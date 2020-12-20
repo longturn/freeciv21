@@ -920,9 +920,8 @@ void city_label::set_type(int x) { type = x; }
  ****************************************************************************/
 void city_label::mousePressEvent(QMouseEvent *event)
 {
-  int citnum, i;
+  int citnum, i, num_citizens, nothing_width;
   int w = tileset_small_sprite_width(tileset) / king()->map_scale;
-  int num_citizens;
 
   if (!pcity)
     return;
@@ -930,9 +929,10 @@ void city_label::mousePressEvent(QMouseEvent *event)
     return;
   }
   num_citizens = pcity->size;
+  nothing_width = (this->width() - num_citizens * w) / 2;
   i = 1 + (num_citizens * 5 / 200);
   w = w / i;
-  citnum = event->x() / w;
+  citnum = (event->x() - nothing_width) / w;
 
   if (!can_client_issue_orders()) {
     return;
