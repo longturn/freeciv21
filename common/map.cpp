@@ -1140,7 +1140,7 @@ struct tile *rand_map_pos_filtered(const struct civ_map *nmap, void *data,
 
     whole_map_iterate(nmap, check_tile)
     {
-      if (filter(check_tile, data)) {
+      if (filter && filter(check_tile, data)) {
         positions[count] = tile_index(check_tile);
         count++;
       }
