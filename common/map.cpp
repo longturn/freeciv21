@@ -1434,7 +1434,7 @@ static struct startpos *startpos_new(struct tile *ptile)
 
   psp->location = ptile;
   psp->exclude = false;
-  psp->nations = new QSet<const struct nation_type *>;
+  psp->nations = new QSet<const struct nation_type *>();
 
   return psp;
 }
@@ -1528,7 +1528,7 @@ bool startpos_nation_allowed(const struct startpos *psp,
 bool startpos_allows_all(const struct startpos *psp)
 {
   fc_assert_ret_val(NULL != psp, false);
-  return (0 == psp->nations->size());
+  return (psp->nations->isDetached() || psp->nations->isEmpty());
 }
 
 /*******************************************************************/ /**
