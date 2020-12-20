@@ -10,7 +10,4 @@
 **************************************************************************/
 #pragma once
 
-
 bool victory_enabled(enum victory_condition_type victory);
-
-

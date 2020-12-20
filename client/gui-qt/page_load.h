@@ -16,13 +16,12 @@
 #include <QWidget>
 class fc_client;
 
-class page_load : public QWidget
-{
-    Q_OBJECT
-    public:
-    page_load(QWidget *, fc_client *);
-    ~page_load();
-    void update_load_page(void);
+class page_load : public QWidget {
+  Q_OBJECT
+public:
+  page_load(QWidget *, fc_client *);
+  ~page_load();
+  void update_load_page(void);
 private slots:
   void slot_selection_changed(const QItemSelection &,
                               const QItemSelection &);
@@ -31,7 +30,7 @@ private slots:
 
 private:
   void start_from_save();
-  fc_client* gui;
+  fc_client *gui;
   Ui::FormPageLoad ui;
   QString current_file;
 };

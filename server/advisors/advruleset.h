@@ -11,5 +11,3 @@
 #pragma once
 
 void adv_units_ruleset_init(void);
-
-

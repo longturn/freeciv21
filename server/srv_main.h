@@ -153,5 +153,3 @@ player *mapimg_server_tile_unit(const struct tile *ptile,
 
 int mapimg_server_plrcolor_count(void);
 rgbcolor *mapimg_server_plrcolor_get(int i);
-
-

@@ -121,7 +121,6 @@
  * should be included _once_, inside a .h file which _is_ itself protected
  * against multiple inclusions. */
 
-
 #include "genlist.h"
 
 #ifndef SPECLIST_TAG
@@ -542,7 +541,7 @@ static inline SPECLIST_LINK *
 #define TYPED_LIST_CHECK(ARG_list) fc_assert_action(NULL != ARG_list, break)
 #else
 #define TYPED_LIST_CHECK(ARG_list) /* Nothing. */
-#endif                             /* FREECIV_DEBUG */
+#endif /* FREECIV_DEBUG */
 
 /* Speclist data iterator.
  *
@@ -739,4 +738,3 @@ static inline SPECLIST_LINK *
 /* This is after #endif FC__SPECLIST_H on purpose.
    extern "C" portion begins well before latter part of the header
    is guarded against multiple inclusions. */
-

@@ -13,7 +13,6 @@
 
 #pragma once
 
-
 /* common */
 #include "fc_types.h"
 
@@ -45,5 +44,3 @@ const char *ssetv_rule_name(ssetv val);
 const char *ssetv_human_readable(ssetv val, bool present);
 
 bool ssetv_setting_has_value(ssetv val);
-
-

@@ -23,4 +23,3 @@ void disconnect_from_server(void);
 
 double try_to_autoconnect(void);
 void start_autoconnecting_to_server(void);
-

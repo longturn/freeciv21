@@ -33,8 +33,8 @@
 #include "achievements.h"
 #include "game.h"
 #include "government.h"
-#include "specialist.h"
 #include "multipliers.h"
+#include "specialist.h"
 #include "style.h"
 
 // server
@@ -228,7 +228,7 @@ void tab_misc::save_now()
 
   ba_bytes = version->text().toUtf8();
   qstrncpy(game.control.version, ba_bytes.data(),
-          sizeof(game.control.version) - 1);
+           sizeof(game.control.version) - 1);
 
   if (!autoadjust_ruleset_data() || !sanity_check_ruleset_data(false)) {
     QMessageBox *box = new QMessageBox();

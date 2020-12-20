@@ -11,7 +11,7 @@
 #pragma once
 
 #include "connection.h" // cmdlevel
-#include "support.h" /* bool type */
+#include "support.h"    /* bool type */
 
 #include "fc_types.h"
 
@@ -45,5 +45,3 @@ bool connection_delegate_take(struct connection *pconn,
 bool connection_delegate_restore(struct connection *pconn);
 
 void connection_close_server(struct connection *pconn, const char *reason);
-
-

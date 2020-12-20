@@ -80,7 +80,7 @@ enum pf_zoc_type {
 struct pf_map {
 #ifdef PF_DEBUG
   enum pf_mode mode; /* The mode of the map, for conversion checking. */
-#endif               /* PF_DEBUG */
+#endif /* PF_DEBUG */
 
   /* "Virtual" function table. */
   void (*destroy)(struct pf_map *pfm); /* Destructor. */

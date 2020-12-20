@@ -97,5 +97,3 @@ void con_set_style(bool i);
 
 /* return server output style */
 bool con_get_style(void);
-
-

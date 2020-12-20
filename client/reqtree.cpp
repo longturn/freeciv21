@@ -411,7 +411,7 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
 
   /* Copy nodes from local array to dynamically allocated one.
    * Skip non-existing entries */
-  tree->nodes = new tree_node*[advance_count()]();
+  tree->nodes = new tree_node *[advance_count()]();
   j = 0;
   advance_index_iterate(A_FIRST, tech)
   {
@@ -827,11 +827,10 @@ void get_reqtree_dimensions(struct reqtree *reqtree, int *width, int *height)
   }
 }
 
-
 /*********************************************************************/ /**
    Return a background color of node's rectangle
  *************************************************************************/
-static QColor* node_color(struct tree_node *node)
+static QColor *node_color(struct tree_node *node)
 {
   if (!node->is_dummy) {
     struct research *research = research_get(client_player());
@@ -864,7 +863,7 @@ static QColor* node_color(struct tree_node *node)
 
     if (research_goal_tech_req(research, research->tech_goal, node->tech)
         || node->tech == research->tech_goal) {
-        return get_diag_color(7);
+      return get_diag_color(7);
     }
 
     if (TECH_PREREQS_KNOWN
@@ -953,8 +952,8 @@ static enum reqtree_edge_type get_edge_type(struct tree_node *node,
    Return a stroke color for an edge between two nodes
    if node is a dummy, dest_node can be NULL
  *************************************************************************/
-static QColor* edge_color(struct tree_node *node,
-                                 struct tree_node *dest_node)
+static QColor *edge_color(struct tree_node *node,
+                          struct tree_node *dest_node)
 {
   enum reqtree_edge_type type = get_edge_type(node, dest_node);
 
@@ -1006,20 +1005,19 @@ void draw_reqtree(struct reqtree *tree, struct canvas *pcanvas, int canvas_x,
 
       if (node->is_dummy) {
         /* Use the same layout as lines for dummy nodes */
-        canvas_put_line(pcanvas, get_diag_color(20),
-                        LINE_GOTO, startx, starty, width, 0);
+        canvas_put_line(pcanvas, get_diag_color(20), LINE_GOTO, startx,
+                        starty, width, 0);
       } else {
         const char *text = research_advance_name_translation(
             research_get(client_player()), node->tech);
         int text_w, text_h;
         int icon_startx;
 
-        canvas_put_rectangle(pcanvas,
-                             get_diag_color(10),
-                             startx, starty, width, height);
+        canvas_put_rectangle(pcanvas, get_diag_color(10), startx, starty,
+                             width, height);
         /* Print color rectangle with text inside. */
-        canvas_put_rectangle(pcanvas, node_color(node),
-                             startx + 1, starty + 1, width - 2, height - 2);
+        canvas_put_rectangle(pcanvas, node_color(node), startx + 1,
+                             starty + 1, width - 2, height - 2);
         /* The following code is similar to the one in
          * node_rectangle_minimum_size(). If you change something here,
          * change also node_rectangle_minimum_size().

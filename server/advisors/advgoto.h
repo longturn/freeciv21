@@ -43,5 +43,3 @@ int adv_unittype_att_rating(const struct unit_type *punittype, int veteran,
 int adv_unit_att_rating(const struct unit *punit);
 int adv_unit_def_rating_basic(const struct unit *punit);
 int adv_unit_def_rating_basic_squared(const struct unit *punit);
-
-

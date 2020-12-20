@@ -14,5 +14,3 @@
 #pragma once
 
 void setup_gui_funcs(void);
-
-

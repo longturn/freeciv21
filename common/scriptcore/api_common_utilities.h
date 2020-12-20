@@ -28,5 +28,3 @@ void api_utilities_log_base(lua_State *L, int level, const char *message);
 void api_utilities_deprecation_warning(lua_State *L, char *method,
                                        char *replacement,
                                        char *deprecated_since);
-
-

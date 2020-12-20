@@ -10,7 +10,6 @@
 
 #pragma once
 
-
 #include "fc_types.h"
 
 #include "tech.h"
@@ -78,5 +77,3 @@ void team_remove_player(struct player *pplayer);
   }                                                                         \
   }                                                                         \
   team_slots_iterate_end;
-
-

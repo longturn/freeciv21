@@ -25,7 +25,6 @@
 #include "unitlist.h"
 
 /* client */
-#include "governor.h"
 #include "chatline_common.h"
 #include "cityrep_g.h"
 #include "client_main.h"
@@ -34,6 +33,7 @@
 #include "editor.h"
 #include "fcintl.h"
 #include "goto.h"
+#include "governor.h"
 #include "mapctrl_common.h"
 #include "mapctrl_g.h"
 #include "mapview_g.h"

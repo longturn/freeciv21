@@ -117,11 +117,11 @@ void request_unit_wakeup(struct unit *punit);
 
 #define SPECENUM_NAME unit_select_location_mode
 #define SPECENUM_VALUE0 SELLOC_UNITS /* Units on tile. */
-#define SPECENUM_VALUE1 SELLOC_TILE  /* Tile. */
-#define SPECENUM_VALUE2 SELLOC_CONT  /* Continent. */
-#define SPECENUM_VALUE3 SELLOC_LAND  /* Move type: land. */
-#define SPECENUM_VALUE4 SELLOC_SEA   /* Move type: sea. */
-#define SPECENUM_VALUE5 SELLOC_BOTH  /* Move type: both. */
+#define SPECENUM_VALUE1 SELLOC_TILE /* Tile. */
+#define SPECENUM_VALUE2 SELLOC_CONT /* Continent. */
+#define SPECENUM_VALUE3 SELLOC_LAND /* Move type: land. */
+#define SPECENUM_VALUE4 SELLOC_SEA /* Move type: sea. */
+#define SPECENUM_VALUE5 SELLOC_BOTH /* Move type: both. */
 #define SPECENUM_VALUE6 SELLOC_WORLD /* World. */
 #define SPECENUM_COUNT SELLOC_COUNT
 #include "specenum_gen.h"
@@ -267,5 +267,3 @@ void cancel_city(struct tile *ptile);
 #define MAX_NUM_UNITS_BELOW 4
 
 extern int num_units_below;
-
-

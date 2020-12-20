@@ -118,5 +118,3 @@ name_translation_get(const struct name_translation *ptrans)
 #undef vernacular
 #undef rulename
 #undef translated
-
-

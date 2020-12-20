@@ -246,7 +246,8 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
   cont_size = get_continent_size(cont);
   island = islands + islands_index[cont];
   for (auto psp : *wld.map.startpos_table) {
-    if (psp->exclude) continue;
+    if (psp->exclude)
+      continue;
     struct tile *tile1 = startpos_tile(psp);
 
     if ((tile_continent(ptile) == tile_continent(tile1)
@@ -322,7 +323,7 @@ bool create_start_positions(enum map_startpos mode,
   int min_goodies_per_player = 1500;
   int total_goodies = 0;
   /* this is factor is used to maximize land used in extreme little maps */
-  float efactor = (float)player_count() / float(map_size_checked()) / 4;
+  float efactor = (float) player_count() / float(map_size_checked()) / 4;
   bool failure = false;
   bool is_tmap = temperature_is_initialized();
 

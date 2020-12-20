@@ -41,7 +41,7 @@ enum attribute_serial {
 
 class attr_key {
 public:
-  attr_key() : key(0), id(0), x(0), y(0) {};
+  attr_key() : key(0), id(0), x(0), y(0){};
   attr_key(int, int, int, int);
   int key, id, x, y;
 };
@@ -105,7 +105,7 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
   const size_t entries = hash->size();
   int total_length;
   std::vector<int> value_lengths;
-  value_lengths.reserve(entries) ;
+  value_lengths.reserve(entries);
   void *result;
   struct raw_data_out dout;
   int i;

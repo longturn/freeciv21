@@ -96,10 +96,10 @@
 #include "research.h"
 #include "rgbcolor.h"
 #include "specialist.h"
+#include "style.h"
 #include "unit.h"
 #include "unitlist.h"
 #include "version.h"
-#include "style.h"
 
 /* server */
 #include "barbarian.h"

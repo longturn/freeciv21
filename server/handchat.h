@@ -10,9 +10,6 @@
 **************************************************************************/
 #pragma once
 
-
 struct connection;
 
 void handle_chat_msg_req(struct connection *pc, const char *message);
-
-

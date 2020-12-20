@@ -76,9 +76,9 @@ const char *fc_git_revision(void)
               translate ? _(FC_GITREV1) : FC_GITREV1, FC_GITREV2);
 
   return buf; /* Either revision, or modified revision */
-#else         /* FC_GITREV_OFF */
+#else /* FC_GITREV_OFF */
   return NULL;
-#endif        /* FC_GITREV_OFF */
+#endif /* FC_GITREV_OFF */
 }
 
 /*******************************************************************/ /**
@@ -116,7 +116,7 @@ const char *beta_message(void)
                 NEXT_STABLE_VERSION, WIKI_URL);
   }
   return msgbuf;
-#else  /* IS_BETA_VERSION */
+#else /* IS_BETA_VERSION */
   return NULL;
 #endif /* IS_BETA_VERSION */
 }

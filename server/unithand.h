@@ -18,7 +18,6 @@
 
 #include "hand_gen.h"
 
-
 bool unit_activity_handling(struct unit *punit,
                             enum unit_activity new_activity);
 bool unit_activity_handling_targeted(struct unit *punit,
@@ -52,5 +51,3 @@ enum ane_kind action_not_enabled_reason(struct unit *punit, action_id act_id,
 
 bool unit_server_side_agent_set(struct player *pplayer, struct unit *punit,
                                 enum server_side_agent agent);
-
-

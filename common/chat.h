@@ -16,7 +16,6 @@
  * Behaviour generally can't be changed at whim because client and
  * server are assumed to agree on these details. */
 
-
 /* Special characters in chatlines. */
 
 /* The character to mark chatlines as server commands */
@@ -24,5 +23,3 @@
 #define SERVER_COMMAND_PREFIX '/'
 #define CHAT_ALLIES_PREFIX '.'
 #define CHAT_DIRECT_PREFIX ':'
-
-

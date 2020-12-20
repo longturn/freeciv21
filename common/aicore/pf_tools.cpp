@@ -622,7 +622,7 @@ static int get_fuel_moves_left_req(const struct tile *ptile,
                                    enum known_type known,
                                    const struct pf_parameter *param)
 {
-   Q_UNUSED(known)
+  Q_UNUSED(known)
   int dist, max;
 
   if (is_possible_base_fuel(ptile, param)) {

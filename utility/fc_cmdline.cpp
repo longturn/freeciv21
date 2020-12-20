@@ -73,7 +73,7 @@ static size_t fc_strcspn(const char *s, const char *reject)
    **tokens using free_tokens().
  **************************************************************************/
 unsigned int get_tokens(const char *str, char **tokens, size_t num_tokens,
-               const char *delimiterset)
+                        const char *delimiterset)
 {
   unsigned int token;
 

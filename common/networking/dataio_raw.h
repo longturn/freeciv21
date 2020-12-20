@@ -202,5 +202,3 @@ void dio_put_uint16_vec8_raw(struct raw_data_out *dout, int *values,
   dio_put_memory_raw((pdout), (bv).vec, sizeof((bv).vec))
 
 #define DIO_PUT(f, d, l, ...) dio_put_##f##_raw(d, ##__VA_ARGS__)
-
-

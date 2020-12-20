@@ -167,5 +167,3 @@ static inline void SPECVEC_FOO(_vector_remove)(SPECVEC_VECTOR *tthis,
 #undef SPECVEC_PASTE
 #undef SPECVEC_VECTOR
 #undef SPECVEC_FOO
-
-

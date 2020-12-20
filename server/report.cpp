@@ -33,13 +33,13 @@
 #include "events.h"
 #include "game.h"
 #include "government.h"
+#include "nation.h"
 #include "packets.h"
 #include "player.h"
 #include "research.h"
 #include "specialist.h"
 #include "unitlist.h"
 #include "version.h"
-#include "nation.h"
 
 /* server */
 #include "citytools.h"
@@ -1137,7 +1137,7 @@ static bool scan_score_log(char *id)
 {
   int line_nr, turn, plr_no, spaces;
   struct plrdata_slot *plrdata;
-  char plr_name[MAX_LEN_NAME], line[120], *ptr;
+  char plr_name[120], line[120], *ptr;
 
   fc_assert_ret_val(score_log != NULL, false);
   fc_assert_ret_val(score_log->fp != NULL, false);

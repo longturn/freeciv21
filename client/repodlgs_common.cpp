@@ -26,8 +26,8 @@
 #include "unitlist.h"
 
 /* client/include */
-#include "repodlgs_g.h"
 #include "citydlg_common.h"
+#include "repodlgs_g.h"
 
 /* client */
 #include "client_main.h"

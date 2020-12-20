@@ -32,10 +32,11 @@ private slots:
   void slot_pick_nation();
   void start_page_menu(QPoint pos);
   void send_fake_chat_message(const QString &message);
+
 private:
   void update_buttons();
   void chat_message_received(const QString &message,
-                        const struct text_tag_list *tags);
+                             const struct text_tag_list *tags);
   void slot_pregame_observe();
   void slot_pregame_start();
   Ui::FormPagePregame ui;

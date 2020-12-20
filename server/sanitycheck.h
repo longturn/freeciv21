@@ -38,5 +38,3 @@ void real_sanity_check(const char *file, const char *function, int line);
 #define sanity_check() (void) 0
 
 #endif /* SANITY_CHECKING */
-
-

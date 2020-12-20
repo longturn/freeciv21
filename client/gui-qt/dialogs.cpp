@@ -880,8 +880,7 @@ notify_goto::notify_goto(const char *headline, const char *lines,
   goto_but = this->addButton(_("Goto Location"), QMessageBox::ActionRole);
   goto_but->setIcon(fcIcons::instance()->getIcon(QStringLiteral("go-up")));
   inspect_but = this->addButton(_("Inspect City"), QMessageBox::ActionRole);
-  inspect_but->setIcon(
-      fcIcons::instance()->getIcon(QStringLiteral("plus")));
+  inspect_but->setIcon(fcIcons::instance()->getIcon(QStringLiteral("plus")));
 
   close_but = this->addButton(QMessageBox::Close);
   gtile = ptile;
@@ -1196,8 +1195,7 @@ void choice_dialog::set_layout()
     next->setIconSize(QSize(32, 32));
     next->setFixedSize(QSize(36, 36));
     prev = new QPushButton();
-    prev->setIcon(
-        fcIcons::instance()->getIcon(QStringLiteral("city-left")));
+    prev->setIcon(fcIcons::instance()->getIcon(QStringLiteral("city-left")));
     prev->setIconSize(QSize(32, 32));
     prev->setFixedSize(QSize(36, 36));
     target_unit_button = new QPushButton;
@@ -3699,7 +3697,7 @@ void action_selection_close(void)
 /***********************************************************************/ /**
    Player has gained a new tech.
  ***************************************************************************/
-void show_tech_gained_dialog(Tech_type_id tech) {Q_UNUSED(tech)}
+void show_tech_gained_dialog(Tech_type_id tech) { Q_UNUSED(tech) }
 
 /***********************************************************************/ /**
    Show tileset error dialog.
@@ -3709,7 +3707,8 @@ void show_tileset_error(QString msg)
   QString buf;
 
   buf = QString(_("Tileset problem, it's probably incompatible with the"
-                " ruleset:\n%1")).arg(msg);
+                  " ruleset:\n%1"))
+            .arg(msg);
 
   if (king() != nullptr) {
     QMessageBox *ask = new QMessageBox(king()->central_wdg);

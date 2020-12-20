@@ -19,8 +19,8 @@
 #include "colors_common.h"
 #include "game.h"
 #include "government.h"
-#include "research.h"
 #include "nation.h"
+#include "research.h"
 // client
 #include "chatline_common.h"
 #include "client_main.h"
@@ -689,10 +689,7 @@ plr_report::plr_report() : QWidget()
 /**********************************************************************/ /**
    Destructor for plr_report
  **************************************************************************/
-plr_report::~plr_report()
-{
-  queen()->removeRepoDlg(QStringLiteral("PLR"));
-}
+plr_report::~plr_report() { queen()->removeRepoDlg(QStringLiteral("PLR")); }
 
 /**********************************************************************/ /**
    Adds plr_report to tab widget

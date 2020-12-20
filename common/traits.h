@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
 #define SPECENUM_NAME trait
 #define SPECENUM_VALUE0 TRAIT_EXPANSIONIST
 #define SPECENUM_VALUE0NAME "Expansionist"
@@ -39,5 +38,3 @@ struct trait_limits {
   int max;
   int fixed;
 };
-
-

@@ -30,7 +30,6 @@ static struct ai_type ai_types[FREECIV_AI_MOD_LAST];
 
 static int ai_type_count = 0;
 
-
 /*************************************************************************/ /**
    Returns ai_type of given id.
  *****************************************************************************/

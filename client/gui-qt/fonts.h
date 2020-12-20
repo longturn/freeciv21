@@ -48,5 +48,5 @@ public:
 };
 
 void configure_fonts();
-QString configure_font(const QString &font_name, const QStringList &sl, int size,
-                       bool bold = false);
+QString configure_font(const QString &font_name, const QStringList &sl,
+                       int size, bool bold = false);

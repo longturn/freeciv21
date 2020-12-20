@@ -87,5 +87,3 @@ static inline const char *adv_choice_get_use(const struct adv_choice *choice)
       }                                                                     \
     }                                                                       \
   } while (false);
-
-

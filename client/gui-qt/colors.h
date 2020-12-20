@@ -10,8 +10,8 @@
 #pragma once
 
 // Qt
-#include <QWidget>
 #include "QColor"
+#include <QWidget>
 
 // helper class to get color from qss
 class research_color : public QWidget {
@@ -22,6 +22,7 @@ public:
   static research_color *i();
   QColor *get_color(int);
   void init_colors();
+
 private:
   static research_color *m_instance;
   QColor colors[31];

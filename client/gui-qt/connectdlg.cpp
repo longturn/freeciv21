@@ -17,8 +17,8 @@
 #include "connectdlg.h"
 #include "connectdlg_g.h"
 #include "fc_client.h"
-#include "pages_g.h"
 #include "page_network.h"
+#include "pages_g.h"
 #include "qtg_cxxside.h"
 
 /**********************************************************************/ /**
@@ -61,4 +61,3 @@ void handle_game_load(bool load_successful, const char *filename)
     }
   }
 }
-

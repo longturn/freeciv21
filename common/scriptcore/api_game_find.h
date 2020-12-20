@@ -48,5 +48,3 @@ Terrain *api_find_terrain(lua_State *L, int terrain_id);
 Terrain *api_find_terrain_by_name(lua_State *L, const char *name_orig);
 
 Nonexistent *api_find_nonexistent(lua_State *L);
-
-

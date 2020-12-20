@@ -53,9 +53,5 @@ GUI_FUNC_PROTO(void, put_cross_overlay_tile, struct tile *ptile)
 GUI_FUNC_PROTO(void, draw_selection_rectangle, int canvas_x, int canvas_y,
                int w, int h)
 GUI_FUNC_PROTO(void, tileset_changed, void)
-void show_city_desc(struct canvas *pcanvas, int canvas_x,
-                           int canvas_y, struct city *pcity, int *width,
-                           int *height);
-
-
-
+void show_city_desc(struct canvas *pcanvas, int canvas_x, int canvas_y,
+                    struct city *pcity, int *width, int *height);

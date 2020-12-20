@@ -78,5 +78,3 @@ bool can_disaster_happen(const struct disaster_type *pdis,
 #define disaster_type_iterate_end                                           \
   }                                                                         \
   }
-
-

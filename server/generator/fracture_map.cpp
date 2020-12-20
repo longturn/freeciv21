@@ -69,8 +69,10 @@ void make_fracture_map(void)
   /* For larger maps, increase the number of landmasses - makes the map more
    * interesting */
   num_landmass = 20 + 15 * get_sqsize();
-  landmass = new map_landmass[wld.map.xsize / 2 + wld.map.ysize / 2 + num_landmass];
-  fracture_points = new map_point[wld.map.xsize / 2 + wld.map.ysize / 2 + num_landmass];
+  landmass =
+      new map_landmass[wld.map.xsize / 2 + wld.map.ysize / 2 + num_landmass];
+  fracture_points =
+      new map_point[wld.map.xsize / 2 + wld.map.ysize / 2 + num_landmass];
   height_map = new int[MAP_INDEX_SIZE];
 
   /* Setup a whole bunch of landmasses along the view bordere. These will be

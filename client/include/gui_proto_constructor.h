@@ -24,5 +24,3 @@
 #else
 #define GUI_FUNC_PROTO(_type, _func, ...) EXTERN_C _type _func(__VA_ARGS__);
 #endif
-
-

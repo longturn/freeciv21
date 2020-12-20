@@ -110,5 +110,3 @@ struct civ_map {
     /* Add client side when needed */
   };
 };
-
-

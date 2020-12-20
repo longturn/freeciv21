@@ -23,5 +23,3 @@ adv_want amortize(adv_want benefit, int delay);
  *
  */
 #define POWER_DIVIDER (POWER_FACTOR * 3)
-
-

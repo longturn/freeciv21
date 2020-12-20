@@ -32,9 +32,9 @@
 #include "government.h"
 #include "map.h"
 #include "movement.h"
+#include "nation.h"
 #include "packets.h"
 #include "unitlist.h"
-#include "nation.h"
 #include "workertask.h"
 
 /* common/aicore */

@@ -16,7 +16,6 @@
 /* common/scriptcore */
 #include "luascript_types.h"
 
-
 struct section_file;
 struct connection;
 
@@ -44,5 +43,3 @@ void script_server_signal_emit(const char *signal_name, ...);
 
 /* Functions */
 bool script_server_call(const char *func_name, ...);
-
-

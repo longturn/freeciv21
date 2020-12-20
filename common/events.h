@@ -203,5 +203,3 @@ void events_free(void);
   }                                                                         \
   }                                                                         \
   }
-
-

@@ -26,5 +26,3 @@ GUI_FUNC_PROTO(void, editgui_popdown_all, void)
 GUI_FUNC_PROTO(void, editgui_notify_object_changed, int objtype, int id,
                bool removal)
 GUI_FUNC_PROTO(void, editgui_notify_object_created, int tag, int id)
-
-

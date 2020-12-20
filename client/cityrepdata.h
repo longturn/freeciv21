@@ -62,5 +62,3 @@ int cityrepfield_compare(const char *field1, const char *field2);
 
 bool can_city_sell_universal(const struct city *pcity,
                              const struct universal *target);
-
-

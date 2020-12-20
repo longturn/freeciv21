@@ -93,29 +93,21 @@ bool next_spaceship_component(struct player *pplayer,
      * others build habitation first (for score?)  (Thanks Massimo.)
      */
     fill->type =
-        (ship->habitation == 0)
+        (ship->habitation == 0)     ? SSHIP_PLACE_HABITATION
+        : (ship->life_support == 0) ? SSHIP_PLACE_LIFE_SUPPORT
+        : (ship->solar_panels == 0) ? SSHIP_PLACE_SOLAR_PANELS
+        : ((ship->habitation < ship->life_support)
+           && (ship->solar_panels * 2
+               >= ship->habitation + ship->life_support + 1))
             ? SSHIP_PLACE_HABITATION
-            : (ship->life_support == 0)
-                  ? SSHIP_PLACE_LIFE_SUPPORT
-                  : (ship->solar_panels == 0)
-                        ? SSHIP_PLACE_SOLAR_PANELS
-                        : ((ship->habitation < ship->life_support)
-                           && (ship->solar_panels * 2
-                               >= ship->habitation + ship->life_support + 1))
-                              ? SSHIP_PLACE_HABITATION
-                              : (ship->solar_panels * 2
-                                 < ship->habitation + ship->life_support)
-                                    ? SSHIP_PLACE_SOLAR_PANELS
-                                    : (ship->life_support < ship->habitation)
-                                          ? SSHIP_PLACE_LIFE_SUPPORT
-                                          : ((ship->life_support
-                                              <= ship->habitation)
-                                             && (ship->solar_panels * 2
-                                                 >= ship->habitation
-                                                        + ship->life_support
-                                                        + 1))
-                                                ? SSHIP_PLACE_LIFE_SUPPORT
-                                                : SSHIP_PLACE_SOLAR_PANELS;
+        : (ship->solar_panels * 2 < ship->habitation + ship->life_support)
+            ? SSHIP_PLACE_SOLAR_PANELS
+        : (ship->life_support < ship->habitation) ? SSHIP_PLACE_LIFE_SUPPORT
+        : ((ship->life_support <= ship->habitation)
+           && (ship->solar_panels * 2
+               >= ship->habitation + ship->life_support + 1))
+            ? SSHIP_PLACE_LIFE_SUPPORT
+            : SSHIP_PLACE_SOLAR_PANELS;
 
     if (fill->type == SSHIP_PLACE_HABITATION) {
       fill->num = ship->habitation + 1;

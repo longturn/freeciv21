@@ -15,7 +15,6 @@
 /* utility */
 #include "support.h" /* bool type */
 
-
 /*
  *  temperature_map[] stores the temperature of each tile
  *  values on tmap can get one of these 4 values
@@ -38,5 +37,3 @@ bool tmap_is(const struct tile *ptile, temperature_type tt);
 bool is_temperature_type_near(const struct tile *ptile, temperature_type tt);
 void destroy_tmap(void);
 void create_tmap(bool real);
-
-

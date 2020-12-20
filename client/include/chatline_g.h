@@ -14,8 +14,6 @@
 
 #include "gui_proto_constructor.h"
 
-GUI_FUNC_PROTO(void, real_output_window_append, const QString& astring,
+GUI_FUNC_PROTO(void, real_output_window_append, const QString &astring,
                const struct text_tag_list *tags, int conn_id)
 GUI_FUNC_PROTO(void, version_message, const char *vertext)
-
-

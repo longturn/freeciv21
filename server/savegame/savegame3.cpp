@@ -102,10 +102,10 @@
 #include "research.h"
 #include "rgbcolor.h"
 #include "specialist.h"
+#include "style.h"
 #include "unit.h"
 #include "unitlist.h"
 #include "version.h"
-#include "style.h"
 
 /* server */
 #include "barbarian.h"
@@ -232,7 +232,7 @@ extern bool sg_success;
         char buf[64];                                                       \
         fc_snprintf(buf, sizeof(buf), secpath, ##__VA_ARGS__, _nat_y);      \
         qDebug("Line too short (expected %d got %lu)='%s'", wld.map.xsize,  \
-               (unsigned long) qstrlen(_line), buf);                         \
+               (unsigned long) qstrlen(_line), buf);                        \
         _printed_warning = true;                                            \
         continue;                                                           \
       }                                                                     \
@@ -1267,7 +1267,7 @@ static void sg_load_savefile(struct loaddata *loading)
     req_caps = secfile_lookup_str_default(loading->file, "",
                                           "scenario.ruleset_caps");
     qstrncpy(game.scenario.req_caps, req_caps,
-            sizeof(game.scenario.req_caps) - 1);
+             sizeof(game.scenario.req_caps) - 1);
     game.scenario.req_caps[sizeof(game.scenario.req_caps) - 1] = '\0';
 
     if (!has_capabilities(req_caps, game.ruleset_capabilities)) {
@@ -1384,7 +1384,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    game.control.num_extra_types, (int) loading->extra.size);
     /* make sure that the size of the array is divisible by 4 */
     nmod = 4 * ((loading->extra.size + 3) / 4);
-    loading->extra.order = new extra_type*[nmod]();
+    loading->extra.order = new extra_type *[nmod]();
     for (j = 0; j < loading->extra.size; j++) {
       loading->extra.order[j] = extra_type_by_rule_name(modname[j]);
     }
@@ -1408,7 +1408,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    "Failed to load multipliers order: %s", secfile_error());
     /* It's OK for the set of multipliers in the savefile to differ
      * from those in the ruleset. */
-    loading->multiplier.order = new multiplier*[loading->multiplier.size]();
+    loading->multiplier.order = new multiplier *[loading->multiplier.size]();
     for (j = 0; j < loading->multiplier.size; j++) {
       loading->multiplier.order[j] = multiplier_by_rule_name(modname[j]);
       if (!loading->multiplier.order[j]) {
@@ -2178,7 +2178,7 @@ static void sg_save_game(struct savedata *saving)
 #ifndef SAVE_DUMMY_TURN_CHANGE_TIME
     secfile_insert_int(saving->file, game.server.turn_change_time * 100,
                        "game.last_turn_change_time");
-#else  /* SAVE_DUMMY_TURN_CHANGE_TIME */
+#else /* SAVE_DUMMY_TURN_CHANGE_TIME */
     secfile_insert_int(saving->file, game.info.turn * 10,
                        "game.last_turn_change_time");
 #endif /* SAVE_DUMMY_TURN_CHANGE_TIME */
@@ -2846,10 +2846,10 @@ static void sg_save_map_startpos(struct savedata *saving)
   secfile_insert_int(saving->file, map_startpos_count(),
                      "map.startpos_count");
 
-  for (auto psp : *wld.map.startpos_table)
-  {
+  for (auto psp : *wld.map.startpos_table) {
     int nat_x, nat_y;
-    if (psp->exclude) continue;
+    if (psp->exclude)
+      continue;
     ptile = startpos_tile(psp);
 
     index_to_native_pos(&nat_x, &nat_y, tile_index(ptile));
@@ -2861,12 +2861,11 @@ static void sg_save_map_startpos(struct savedata *saving)
     if (startpos_allows_all(psp)) {
       secfile_insert_str(saving->file, "", "map.startpos%d.nations", i);
     } else {
-      QSet<const nation_type*> *nations = startpos_raw_nations(psp);
+      QSet<const nation_type *> *nations = startpos_raw_nations(psp);
       char nation_names[MAX_LEN_NAME * nations->size()];
 
       nation_names[0] = '\0';
-      for (auto pnation : *nations)
-      {
+      for (auto pnation : *nations) {
         if ('\0' == nation_names[0]) {
           fc_strlcpy(nation_names, nation_rule_name(pnation),
                      sizeof(nation_names));
@@ -3295,7 +3294,7 @@ static void sg_save_map_known(struct savedata *saving)
                         "game.save_known");
     if (game.server.save_options.save_known) {
       int j, p, l, i;
-      unsigned int *known =  new unsigned int[lines * MAP_INDEX_SIZE]();
+      unsigned int *known = new unsigned int[lines * MAP_INDEX_SIZE]();
 
       /* HACK: we convert the data into a 32-bit integer, and then save it as
        * hex. */

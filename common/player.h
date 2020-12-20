@@ -19,7 +19,6 @@
 #include "tech.h"
 #include "traits.h"
 
-
 #define PLAYER_DEFAULT_TAX_RATE 0
 #define PLAYER_DEFAULT_SCIENCE_RATE 100
 #define PLAYER_DEFAULT_LUXURY_RATE 0
@@ -561,5 +560,3 @@ static inline bool player_is_cpuhog(const struct player *pplayer)
    * freeciv for them. */
   return false;
 }
-
-

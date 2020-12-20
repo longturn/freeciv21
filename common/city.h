@@ -215,8 +215,8 @@ void citylog_map_workers(QtMsgType level, struct city *pcity);
  * (replaced Impr_Status) */
 
 struct built_status {
-  int turn;              /* turn built, negative for old state */
-#define I_NEVER (-1)     /* Improvement never built */
+  int turn;          /* turn built, negative for old state */
+#define I_NEVER (-1) /* Improvement never built */
 #define I_DESTROYED (-2) /* Improvement built and destroyed */
 };
 
@@ -761,5 +761,3 @@ bool is_free_worked(const struct city *pcity, const struct tile *ptile);
 void *city_ai_data(const struct city *pcity, const struct ai_type *ai);
 void city_set_ai_data(struct city *pcity, const struct ai_type *ai,
                       void *data);
-
-

@@ -32,8 +32,8 @@
 /* common */
 #include "game.h"
 #include "map.h"
-#include "road.h"
 #include "nation.h"
+#include "road.h"
 
 /* server/generator */
 #include "fracture_map.h"
@@ -904,7 +904,6 @@ static bool make_river(struct river_map *privermap, struct tile *ptile,
     }
     cardinal_adjc_dir_iterate_end;
     fc_assert_ret_val(direction == 0, false);
-
   } /* end while; (Make a river.) */
 }
 
@@ -1313,7 +1312,7 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
 #ifdef FREECIV_TESTMATIC
     /* Log command to reproduce the mapseed */
     log_testmatic("set mapseed %d", wld.map.server.seed);
-#else  /* FREECIV_TESTMATICE */
+#else /* FREECIV_TESTMATICE */
     log_debug("Setting map.seed:%d", wld.map.server.seed);
 #endif /* FREECIV_TESTMATIC */
   } else {
@@ -2582,7 +2581,10 @@ struct fair_geometry_data {
 /**********************************************************************/ /**
    Free a map.
  **************************************************************************/
-static inline void fair_map_destroy(struct fair_tile *pmap) { delete[] pmap; }
+static inline void fair_map_destroy(struct fair_tile *pmap)
+{
+  delete[] pmap;
+}
 
 /**********************************************************************/ /**
    Get the coordinates of tile 'ptile'.

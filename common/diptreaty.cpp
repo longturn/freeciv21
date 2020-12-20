@@ -19,10 +19,10 @@
 #include "log.h"
 
 /* common */
-#include "game.h"
-#include "player.h"
-#include "nation.h"
 #include "diptreaty.h"
+#include "game.h"
+#include "nation.h"
+#include "player.h"
 
 static struct clause_info clause_infos[CLAUSE_COUNT];
 
@@ -103,7 +103,7 @@ void init_treaty(struct Treaty *ptreaty, struct player *plr0,
  **************************************************************************/
 void clear_treaty(struct Treaty *ptreaty)
 {
-  clause_list_iterate(ptreaty->clauses, pclause) { delete(pclause); }
+  clause_list_iterate(ptreaty->clauses, pclause) { delete (pclause); }
   clause_list_iterate_end;
   clause_list_destroy(ptreaty->clauses);
 }

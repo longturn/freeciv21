@@ -18,8 +18,8 @@
 ***************************************************************************/
 
 // Qt
-#include <QString>
 #include <QList>
+#include <QString>
 
 /* utility */
 #include "shared.h"  /* MAX_LEN_ADDR */
@@ -190,7 +190,7 @@ struct connection {
 
       /* The start times of the PACKET_CONN_PING which have been sent but
        * weren't PACKET_CONN_PONGed yet? */
-      QList<civtimer*> *ping_timers;
+      QList<civtimer *> *ping_timers;
 
       /* Holds number of tries for authentication from client. */
       int auth_tries;
@@ -343,5 +343,3 @@ struct conn_pattern *conn_pattern_from_string(const char *pattern,
                                               size_t error_buf_len);
 
 bool conn_is_valid(const struct connection *pconn);
-
-

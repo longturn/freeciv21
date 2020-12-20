@@ -14,5 +14,3 @@ struct city;
 struct adv_data;
 
 int adv_eval_calc_city(struct city *pcity, struct adv_data *adv);
-
-

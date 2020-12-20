@@ -20,5 +20,3 @@ GUI_FUNC_PROTO(void, gui_clear_theme, void)
 GUI_FUNC_PROTO(char **, get_gui_specific_themes_directories, int *count)
 GUI_FUNC_PROTO(char **, get_useable_themes_in_directory,
                const char *directory, int *count)
-
-

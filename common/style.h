@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "requirements.h"
 #include "name_translation.h"
+#include "requirements.h"
 
 struct nation_style {
   int id;
@@ -83,5 +83,3 @@ int style_of_city(const struct city *pcity);
 int basic_city_style_for_style(struct nation_style *pstyle);
 
 int city_style(struct city *pcity);
-
-

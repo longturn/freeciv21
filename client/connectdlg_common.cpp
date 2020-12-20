@@ -386,8 +386,8 @@ void send_client_wants_hack(const char *filename)
 
     make_dir(sdir);
 
-    fc_snprintf(challenge_fullname, sizeof(challenge_fullname),
-                "%s%c%s", sdir, DIR_SEPARATOR_CHAR, filename);
+    fc_snprintf(challenge_fullname, sizeof(challenge_fullname), "%s%c%s",
+                sdir, DIR_SEPARATOR_CHAR, filename);
 
     /* generate an authentication token */
     randomize_string(req.token, sizeof(req.token));
@@ -450,7 +450,7 @@ void send_save_game(const char *filename)
  **************************************************************************/
 void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
 {
-  char **rulesets = new char*[packet->ruleset_count];
+  char **rulesets = new char *[packet->ruleset_count];
   int i;
   size_t suf_len = qstrlen(RULESET_SUFFIX);
 

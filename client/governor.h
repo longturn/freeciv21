@@ -20,16 +20,21 @@ public:
   static void drop();
   bool hot() { return superhot > 0; };
   void freeze() { --superhot; };
-  void unfreeze() { ++superhot; run();};
+  void unfreeze()
+  {
+    ++superhot;
+    run();
+  };
   void add_city_changed(struct city *pcity);
   void add_city_new(struct city *pcity);
   void add_city_remove(struct city *pcity);
+
 private:
   governor() { superhot = 1; };
   void run();
   static governor *m_instance;
-  QSet<struct city*> scity_changed;
-  QSet<struct city*> scity_remove;
+  QSet<struct city *> scity_changed;
+  QSet<struct city *> scity_remove;
   int superhot;
 };
 
@@ -74,4 +79,3 @@ char *cmafec_preset_get_descr(int idx);
 const struct cm_parameter *cmafec_preset_get_parameter(int idx);
 int cmafec_preset_num(void);
 void create_default_cma_presets(void);
-

@@ -10,12 +10,9 @@
 
 #pragma once
 
-
 /* common/scriptcore */
 #include "luascript_types.h"
 
 struct lua_State;
 
 void api_client_chat_base(lua_State *L, const char *msg);
-
-

@@ -199,7 +199,7 @@ void fcdb_free(void)
   fcdb_config = NULL;
 }
 
-#else  /* HAVE_FCDB */
+#else /* HAVE_FCDB */
 
 /************************************************************************/ /**
    Dummy function - Initialize freeciv database system

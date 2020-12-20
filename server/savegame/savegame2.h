@@ -10,9 +10,6 @@
 **************************************************************************/
 #pragma once
 
-
 struct section_file;
 
 void savegame2_load(struct section_file *sfile);
-
-

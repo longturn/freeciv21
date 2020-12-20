@@ -75,5 +75,3 @@ private:
 };
 
 } // namespace freeciv
-
-

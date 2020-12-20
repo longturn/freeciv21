@@ -468,10 +468,10 @@ static inline void genhash_slot_free(struct genhash *pgenhash,
   struct genhash_entry *entry = *slot;
 
   if (NULL != pgenhash->key_free_func) {
-    ::operator delete[] (entry->key);
+    ::operator delete[](entry->key);
   }
   if (NULL != pgenhash->data_free_func) {
-    ::operator delete (entry->data);
+    ::operator delete(entry->data);
   }
   *slot = entry->next;
   delete entry;

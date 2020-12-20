@@ -80,7 +80,8 @@ bool startpos_unpack(struct startpos *psp,
 
 /* See comment in "common/map.c". */
 bool startpos_is_excluding(const struct startpos *psp);
-QSet<const struct nation_type *> *startpos_raw_nations(const struct startpos *psp);
+QSet<const struct nation_type *> *
+startpos_raw_nations(const struct startpos *psp);
 
 /* General map start positions functions. */
 int map_startpos_count(void);
@@ -665,5 +666,3 @@ static inline bool is_border_tile(const struct tile *ptile, int dist)
 
 enum direction8 rand_direction(void);
 enum direction8 opposite_direction(enum direction8 dir);
-
-

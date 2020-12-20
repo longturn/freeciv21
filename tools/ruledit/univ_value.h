@@ -13,15 +13,11 @@
 #ifndef FC__UNIV_VALUE_H
 #define FC__UNIV_VALUE_H
 
-
-
 typedef void (*univ_kind_values_cb)(const char *value, bool current,
                                     void *data);
 
 bool universal_value_initial(struct universal *src);
 void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
                            void *data);
-
-
 
 #endif /* FC__UNIV_VALUE_H */

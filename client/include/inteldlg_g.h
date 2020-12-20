@@ -16,5 +16,3 @@
 
 GUI_FUNC_PROTO(void, close_intel_dialog, struct player *p)
 GUI_FUNC_PROTO(void, update_intel_dialog, struct player *p)
-
-

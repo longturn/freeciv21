@@ -52,10 +52,7 @@ eco_report::eco_report()
 /************************************************************************/ /**
    Destructor for economy report
  ****************************************************************************/
-eco_report::~eco_report()
-{
-  queen()->removeRepoDlg(QStringLiteral("ECO"));
-}
+eco_report::~eco_report() { queen()->removeRepoDlg(QStringLiteral("ECO")); }
 
 /************************************************************************/ /**
    Initializes place in tab for economy report

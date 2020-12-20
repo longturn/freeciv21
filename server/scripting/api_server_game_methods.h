@@ -17,7 +17,6 @@
 /* server/scripting */
 #include "api_server_edit.h"
 
-
 /* Server-only methods added to the modules defined in
  * the common tolua_game.pkg. */
 
@@ -34,5 +33,3 @@ int api_methods_nation_trait_max(lua_State *L, Nation_Type *pnation,
                                  const char *tname);
 int api_methods_nation_trait_default(lua_State *L, Nation_Type *pnation,
                                      const char *tname);
-
-

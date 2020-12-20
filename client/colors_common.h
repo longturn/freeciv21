@@ -120,5 +120,3 @@ void color_system_free(struct color_system *colors);
 /* Utilities for color values */
 QColor *color_best_contrast(QColor *subject, QColor **candidates,
                             int ncandidates);
-
-

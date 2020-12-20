@@ -68,12 +68,10 @@ static void console_handle_message(QtMsgType type,
     }
     conn_list_iterate_end;
 
-
     notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning, "%s",
                 qUtf8Printable(message));
     notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning,
                 _("Please report this message at %s"), BUG_URL);
-
   }
 
   if (original_handler != nullptr) {

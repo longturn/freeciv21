@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
 #include "support.h" /* bool type */
 
 // Forward declarations
@@ -45,5 +44,3 @@ bool server_open_meta(bool persistent);
 bool is_metaserver_open(void);
 
 bool send_server_info_to_metaserver(enum meta_flag flag);
-
-

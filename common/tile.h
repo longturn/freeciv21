@@ -12,7 +12,6 @@
 
 #pragma once
 
-
 /* utility */
 #include "bitvector.h"
 
@@ -66,7 +65,6 @@ struct tile {
 #define tile_list_iterate(tile_list, ptile)                                 \
   TYPED_LIST_ITERATE(struct tile, tile_list, ptile)
 #define tile_list_iterate_end LIST_ITERATE_END
-
 
 /* Tile accessor functions. */
 #define tile_index(_pt_) (_pt_)->index
@@ -179,5 +177,3 @@ void *tile_hash_key(const struct tile *ptile);
 bool tile_set_label(struct tile *ptile, const char *label);
 
 bool tile_is_placing(const struct tile *ptile);
-
-

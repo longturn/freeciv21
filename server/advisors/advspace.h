@@ -20,5 +20,3 @@ struct player_spaceship;
 
 bool adv_spaceship_autoplace(struct player *pplayer,
                              struct player_spaceship *ship);
-
-

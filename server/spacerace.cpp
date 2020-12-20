@@ -26,9 +26,9 @@
 #include "calendar.h"
 #include "events.h"
 #include "game.h"
+#include "nation.h"
 #include "packets.h"
 #include "spaceship.h"
-#include "nation.h"
 
 /* server */
 #include "notify.h"

@@ -24,8 +24,8 @@
 /* utility */
 #include "fcintl.h"
 #include "log.h"
-#include "support.h"
 #include "nation.h"
+#include "support.h"
 
 /* common */
 #include "city.h"
@@ -36,8 +36,8 @@
 #include "unitlist.h"
 
 /* client */
-#include "governor.h"
 #include "citydlg_common.h" /* city_production_cost_str() */
+#include "governor.h"
 #include "options.h"
 
 #include "cityrepdata.h"
@@ -565,10 +565,10 @@ static const char *cr_entry_building(const struct city *pcity,
                                      const void *data)
 {
   static char buf[192];
-  const char *from_worklist =
-      worklist_is_empty(&pcity->worklist)
-          ? ""
-          : gui_options.concise_city_production ? "+" : _("(worklist)");
+  const char *from_worklist = worklist_is_empty(&pcity->worklist) ? ""
+                              : gui_options.concise_city_production
+                                  ? "+"
+                                  : _("(worklist)");
 
   if (city_production_has_flag(pcity, IF_GOLD)) {
     fc_snprintf(buf, sizeof(buf), "%s (%d)%s",

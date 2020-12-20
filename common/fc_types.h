@@ -326,7 +326,7 @@ struct action;
 #define SP_MAX 20
 #define MAX_NUM_REQS 20
 
-#define MAX_NUM_RULESETS 63        /* Used in the network protocol. */
+#define MAX_NUM_RULESETS 63 /* Used in the network protocol. */
 #define MAX_RULESET_NAME_LENGTH 64 /* Used in the network protocol. */
 #define RULESET_SUFFIX ".serv"
 
@@ -1137,5 +1137,3 @@ enum setting_default_level {
 #define SPECENUM_VALUE2 CAPITAL_PRIMARY
 #define SPECENUM_VALUE2NAME "Primary"
 #include "specenum_gen.h"
-
-

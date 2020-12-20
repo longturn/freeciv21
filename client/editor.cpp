@@ -1381,7 +1381,6 @@ bool editor_tool_has_value_erase(enum editor_tool_type ett)
   return editor->tools[ett].flags & ETF_HAS_VALUE_ERASE;
 }
 
-
 /************************************************************************/ /**
    Creates a virtual unit (like unit_virtual_create) based on the current
    editor state. You should free() the unit when it is no longer needed.

@@ -17,7 +17,6 @@
 /* server */
 #include "hand_gen.h"
 
-
 struct player_spaceship;
 struct conn_list;
 
@@ -30,5 +29,3 @@ int rank_spaceship_arrival(struct player **result);
 
 bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                         enum spaceship_place_type type, int num);
-
-

@@ -16,9 +16,6 @@
 /* server */
 #include "fcdb.h"
 
-
 struct lua_State;
 
 const char *api_fcdb_option(lua_State *L, const char *type);
-
-
