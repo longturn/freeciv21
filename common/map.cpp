@@ -488,7 +488,7 @@ void map_allocate(struct civ_map *amap)
   }
   whole_map_iterate_end;
   NFC_FREE(amap->startpos_table);
-  amap->startpos_table = new QHash<struct tile *, struct startpos *>;
+  amap->startpos_table = new QMap<struct tile *, struct startpos *>;
 }
 
 /*******************************************************************/ /**
@@ -1528,7 +1528,7 @@ bool startpos_nation_allowed(const struct startpos *psp,
 bool startpos_allows_all(const struct startpos *psp)
 {
   fc_assert_ret_val(NULL != psp, false);
-  return (psp->nations->isDetached() || psp->nations->isEmpty());
+  return (psp->nations->isEmpty());
 }
 
 /*******************************************************************/ /**

@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <QHash>
+#include <QMap>
 
 /* common */
 #include "fc_types.h"
@@ -76,7 +76,7 @@ struct civ_map {
   int num_continents;
   int num_oceans; /* not updated at the client */
   struct tile *tiles;
-  QHash<struct tile *, struct startpos *> *startpos_table;
+  QMap<struct tile *, struct startpos *> *startpos_table;
 
   union {
     struct {
