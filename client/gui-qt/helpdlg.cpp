@@ -652,6 +652,15 @@ void help_widget::add_info_progress(const QString &text, int progress,
   info_layout->addWidget(wdg);
 }
 
+static QLabel *set_properties(help_widget *hw)
+{
+  QLabel *tb = new QLabel(hw);
+  tb->setProperty(fonts::help_label, "true");
+  tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+  tb->setTextFormat(Qt::RichText);
+  return tb;
+}
+
 /**********************************************************************/ /**
    Create labels about all extras of one cause buildable to the terrain.
  **************************************************************************/
@@ -673,11 +682,7 @@ void help_widget::add_extras_of_act_for_terrain(struct terrain *pterr,
       QLabel *tb;
       QString str;
 
-      tb = new QLabel(this);
-      tb->setProperty(fonts::help_label, "true");
-      tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-      tb->setTextFormat(Qt::RichText);
-
+      tb = set_properties(this);
       str = str + QString(label)
             + link_me(extra_name_translation(pextra), HELP_EXTRA)
             + QString(helptext_extra_for_terrain_str(pextra, pterr, act))
@@ -887,15 +892,11 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
     if (tech && tech != advance_by_number(0)) {
       QLabel *tb;
 
-      tb = new QLabel(this);
+      tb = set_properties(this);
       /* TRANS: this and similar literal strings interpreted as (Qt) HTML */
       str = _("Requires");
       str = "<b>" + str + "</b> "
             + link_me(advance_name_translation(tech), HELP_TECH);
-
-      tb->setProperty(fonts::help_label, "true");
-      tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-      tb->setTextFormat(Qt::RichText);
       tb->setText(str.trimmed());
       connect(tb, &QLabel::linkActivated, this,
               &help_widget::anchor_clicked);
@@ -911,14 +912,11 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
       if (tech && tech != advance_by_number(0)) {
         QLabel *tb;
 
-        tb = new QLabel(this);
         str = _("Obsoleted by");
         str = "<b>" + str + "</b> "
               + link_me(utype_name_translation(obsolete), HELP_UNIT) + "("
               + link_me(advance_name_translation(tech), HELP_TECH) + ")";
-        tb->setProperty(fonts::help_label, "true");
-        tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-        tb->setTextFormat(Qt::RichText);
+        tb = set_properties(this);
         tb->setText(str.trimmed());
         connect(tb, &QLabel::linkActivated, this,
                 &help_widget::anchor_clicked);
@@ -1001,12 +999,9 @@ void help_widget::set_topic_building(const help_item *topic,
     requirement_vector_iterate_end;
 
     if (!s1.isEmpty()) {
-      tb = new QLabel(this);
       str = _("Requirement:");
       str = "<b>" + str + "</b> " + s1;
-      tb->setProperty(fonts::help_label, "true");
-      tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-      tb->setTextFormat(Qt::RichText);
+      tb = set_properties(this);
       tb->setText(str.trimmed());
       connect(tb, &QLabel::linkActivated, this,
               &help_widget::anchor_clicked);
@@ -1026,10 +1021,7 @@ void help_widget::set_topic_building(const help_item *topic,
     str = _("Obsolete by:");
     str = "<b>" + str + "</b> " + s2;
     if (!s2.isEmpty()) {
-      tb = new QLabel(this);
-      tb->setProperty(fonts::help_label, "true");
-      tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-      tb->setTextFormat(Qt::RichText);
+      tb = set_properties(this);
       tb->setText(str.trimmed());
       connect(tb, &QLabel::linkActivated, this,
               &help_widget::anchor_clicked);
@@ -1067,10 +1059,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
         {
           if (VUT_ADVANCE == preq->source.kind
               && preq->source.value.advance == padvance) {
-            tb = new QLabel(this);
-            tb->setProperty(fonts::help_label, "true");
-            tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-            tb->setTextFormat(Qt::RichText);
+            tb = set_properties(this);
             str = _("Allows");
             str = "<b>" + str + "</b> "
                   + link_me(government_name_translation(pgov),
@@ -1096,10 +1085,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
                   + link_me(improvement_name_translation(pimprove),
                             is_great_wonder(pimprove) ? HELP_WONDER
                                                       : HELP_IMPROVEMENT);
-            tb = new QLabel(this);
-            tb->setProperty(fonts::help_label, "true");
-            tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-            tb->setTextFormat(Qt::RichText);
+            tb = set_properties(this);
             tb->setText(str.trimmed());
             connect(tb, &QLabel::linkActivated, this,
                     &help_widget::anchor_clicked);
@@ -1117,10 +1103,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
                   + link_me(improvement_name_translation(pimprove),
                             is_great_wonder(pimprove) ? HELP_WONDER
                                                       : HELP_IMPROVEMENT);
-            tb = new QLabel(this);
-            tb->setProperty(fonts::help_label, "true");
-            tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-            tb->setTextFormat(Qt::RichText);
+            tb = set_properties(this);
             tb->setText(str.trimmed());
             connect(tb, &QLabel::linkActivated, this,
                     &help_widget::anchor_clicked);
@@ -1139,10 +1122,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
         str = _("Allows");
         str = "<b>" + str + "</b> "
               + link_me(utype_name_translation(punittype), HELP_UNIT);
-        tb = new QLabel(this);
-        tb->setProperty(fonts::help_label, "true");
-        tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-        tb->setTextFormat(Qt::RichText);
+        tb = set_properties(this);
         tb->setText(str.trimmed());
         connect(tb, &QLabel::linkActivated, this,
                 &help_widget::anchor_clicked);
@@ -1211,13 +1191,10 @@ static QLabel *make_helplabel(const QString &title, const QString &tooltip,
   QLabel *label;
   QFont f;
   QFontMetrics *fm;
-  int isize;
 
   label = new QLabel(title);
   f = *fcFont::instance()->getFont(fonts::help_text);
   fm = new QFontMetrics(f);
-  isize = fm->height() * 2 / 3;
-  label->setFixedHeight(isize + 4);
   layout->addWidget(label, Qt::AlignVCenter);
   label->setProperty(fonts::default_font, "true");
   label->setToolTip(tooltip);
@@ -1243,12 +1220,10 @@ static void make_helppiclabel(struct sprite *spr, const QString &tooltip,
   pix = QPixmap::fromImage(cropped_img);
   f = *fcFont::instance()->getFont(fonts::help_text);
   fm = new QFontMetrics(f);
-  isize = fm->height() * 2 / 3;
+  isize = fm->height() * 7 / 8;
   label = new QLabel();
   label->setPixmap(pix.scaledToHeight(isize));
-  label->setFixedHeight(isize + 4);
-  layout->addWidget(label, Qt::AlignVCenter);
-  label->setProperty(fonts::help_label, "true");
+  layout->addWidget(label, Qt::AlignBottom);
   label->setToolTip(tooltip);
 }
 
@@ -1304,6 +1279,15 @@ QLayout *help_widget::create_terrain_widget(const QString &title,
   layout->addWidget(w1, Qt::AlignVCenter);
   layout->addWidget(w2, Qt::AlignVCenter);
   return layout;
+}
+
+// helper
+void help_widget::make_terrain_lab(QString &str)
+{
+  QLabel *tb = set_properties(this);
+  tb->setText(str.trimmed());
+  connect(tb, &QLabel::linkActivated, this, &help_widget::anchor_clicked);
+  info_layout->addWidget(tb);
 }
 
 /**********************************************************************/ /**
@@ -1376,14 +1360,7 @@ void help_widget::set_topic_terrain(const help_item *topic,
             + link_me(terrain_name_translation(pterrain->irrigation_result),
                       HELP_TERRAIN)
             + QString(buffer).toHtmlEscaped();
-      tb = new QLabel(this);
-      tb->setProperty(fonts::help_label, "true");
-      tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-      tb->setTextFormat(Qt::RichText);
-      tb->setText(str.trimmed());
-      connect(tb, &QLabel::linkActivated, this,
-              &help_widget::anchor_clicked);
-      info_layout->addWidget(tb);
+      make_terrain_lab(str);
     }
 
     if (pterrain->mining_result != pterrain
@@ -1402,14 +1379,7 @@ void help_widget::set_topic_terrain(const help_item *topic,
             + link_me(terrain_name_translation(pterrain->mining_result),
                       HELP_TERRAIN)
             + QString(buffer).toHtmlEscaped();
-      tb = new QLabel(this);
-      tb->setProperty(fonts::help_label, "true");
-      tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-      tb->setTextFormat(Qt::RichText);
-      tb->setText(str.trimmed());
-      connect(tb, &QLabel::linkActivated, this,
-              &help_widget::anchor_clicked);
-      info_layout->addWidget(tb);
+      make_terrain_lab(str);
     }
 
     if (pterrain->transform_result != T_NONE && pterrain->transform_time != 0
@@ -1427,14 +1397,7 @@ void help_widget::set_topic_terrain(const help_item *topic,
             + link_me(terrain_name_translation(pterrain->transform_result),
                       HELP_TERRAIN)
             + QString(buffer).toHtmlEscaped();
-      tb = new QLabel(this);
-      tb->setProperty(fonts::help_label, "true");
-      tb->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-      tb->setTextFormat(Qt::RichText);
-      tb->setText(str.trimmed());
-      connect(tb, &QLabel::linkActivated, this,
-              &help_widget::anchor_clicked);
-      info_layout->addWidget(tb);
+      make_terrain_lab(str);
     }
 
     if (pterrain->irrigation_result == pterrain

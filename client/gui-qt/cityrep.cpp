@@ -1311,12 +1311,8 @@ void city_report_dialog_popup(bool raise)
   }
 }
 
-/***********************************************************************/ /**
-   Update (refresh) the entire city report dialog.
- ***************************************************************************/
-void real_city_report_dialog_update(void *unused)
+static void update_city_report(struct city *pcity)
 {
-  Q_UNUSED(unused)
   int i;
   city_report *cr;
   QWidget *w;
@@ -1326,9 +1322,21 @@ void real_city_report_dialog_update(void *unused)
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       cr = reinterpret_cast<city_report *>(w);
-      cr->update_report();
+      if (pcity) {
+        cr->update_city(pcity);
+      } else {
+        cr->update_report();
+      }
     }
   }
+}
+
+/***********************************************************************/ /**
+   Update (refresh) the entire city report dialog.
+ ***************************************************************************/
+void real_city_report_dialog_update(void *unused)
+{
+  update_city_report(nullptr);
 }
 
 /***********************************************************************/ /**
@@ -1336,18 +1344,7 @@ void real_city_report_dialog_update(void *unused)
  ***************************************************************************/
 void real_city_report_update_city(struct city *pcity)
 {
-  int i;
-  city_report *cr;
-  QWidget *w;
-
-  if (queen()->isRepoDlgOpen(QStringLiteral("CTS"))) {
-    i = queen()->gimmeIndexOf(QStringLiteral("CTS"));
-    if (queen()->game_tab_widget->currentIndex() == i) {
-      w = queen()->game_tab_widget->widget(i);
-      cr = reinterpret_cast<city_report *>(w);
-      cr->update_city(pcity);
-    }
-  }
+  update_city_report(pcity);
 }
 
 /***********************************************************************/ /**
