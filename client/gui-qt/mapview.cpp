@@ -793,12 +793,18 @@ static void show_small_citybar(QPixmap *pcanvas, int canvas_x, int canvas_y,
 
     drawposx = canvas_x;
     drawposx -= total_width / 2;
+    canvas_put_text(pcanvas, drawposx + 1, canvas_y + 1, FONT_CITY_NAME,
+                    get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK), name);
     canvas_put_text(pcanvas, drawposx, canvas_y, FONT_CITY_NAME,
                     get_color(tileset, COLOR_MAPVIEW_CITYTEXT), name);
     drawposx += name_rect.w;
 
     if (gui_options.draw_city_growth && can_see_inside) {
       drawposx += spacer_width;
+      canvas_put_text(
+          pcanvas, drawposx + 1,
+          (canvas_y + total_height - growth_rect.h + 1), FONT_CITY_PROD,
+          get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK), growth);
       canvas_put_text(
           pcanvas, drawposx, (canvas_y + total_height - growth_rect.h),
           FONT_CITY_PROD, get_color(tileset, growth_color), growth);
@@ -807,6 +813,11 @@ static void show_small_citybar(QPixmap *pcanvas, int canvas_x, int canvas_y,
 
     if (gui_options.draw_city_trade_routes && can_see_inside) {
       drawposx += spacer_width;
+      canvas_put_text(pcanvas, drawposx + 1,
+                      (canvas_y + total_height - trade_routes_rect.h + 1),
+                      FONT_CITY_PROD,
+                      get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK),
+                      trade_routes);
       canvas_put_text(pcanvas, drawposx,
                       (canvas_y + total_height - trade_routes_rect.h),
                       FONT_CITY_PROD, get_color(tileset, trade_routes_color),
@@ -826,6 +837,9 @@ static void show_small_citybar(QPixmap *pcanvas, int canvas_x, int canvas_y,
     total_width = prod_rect.w;
     total_height = prod_rect.h;
 
+    canvas_put_text(pcanvas, (canvas_x - total_width / 2 + 1), canvas_y + 1,
+                    FONT_CITY_PROD,
+                    get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK), prod);
     canvas_put_text(pcanvas, (canvas_x - total_width / 2), canvas_y,
                     FONT_CITY_PROD, get_color(tileset, production_color),
                     prod);
