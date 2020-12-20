@@ -121,6 +121,7 @@ class help_widget : public QWidget {
   void set_topic_government(const help_item *item, const char *title);
   void set_topic_nation(const help_item *item, const char *title);
   void set_topic_goods(const help_item *item, const char *title);
+  void make_terrain_lab(QString &str);
 
 public:
   help_widget(QWidget *parent = 0);

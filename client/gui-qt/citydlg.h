@@ -395,6 +395,7 @@ private:
 private slots:
   void next_city();
   void prev_city();
+  void get_city(bool next);
   void production_changed(int index);
   void show_targets();
   void show_targets_worklist();

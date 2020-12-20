@@ -2186,19 +2186,24 @@ static void transport_alight(QVariant data1, QVariant data2)
   request_do_action(ACTION_TRANSPORT_ALIGHT, actor_id, target_id, 0, "");
 }
 
-/***********************************************************************/ /**
-   Action "Transport Disembark" for choice dialog
- ***************************************************************************/
-static void disembark1(QVariant data1, QVariant data2)
+static void do_that_action(QVariant data1, QVariant data2,
+                             enum gen_action a)
 {
   int actor_id = data1.toInt();
   int target_id = data2.toInt();
 
   if (NULL != game_unit_by_number(actor_id)
       && NULL != index_to_tile(&(wld.map), target_id)) {
-    request_do_action(ACTION_TRANSPORT_DISEMBARK1, actor_id, target_id, 0,
-                      "");
+    request_do_action(a, actor_id, target_id, 0, "");
   }
+}
+
+/***********************************************************************/ /**
+   Action "Transport Disembark" for choice dialog
+ ***************************************************************************/
+static void disembark1(QVariant data1, QVariant data2)
+{
+  do_that_action(data1, data2, ACTION_TRANSPORT_DISEMBARK1);
 }
 
 /***********************************************************************/ /**
@@ -2206,14 +2211,7 @@ static void disembark1(QVariant data1, QVariant data2)
  ***************************************************************************/
 static void disembark2(QVariant data1, QVariant data2)
 {
-  int actor_id = data1.toInt();
-  int target_id = data2.toInt();
-
-  if (NULL != game_unit_by_number(actor_id)
-      && NULL != index_to_tile(&(wld.map), target_id)) {
-    request_do_action(ACTION_TRANSPORT_DISEMBARK2, actor_id, target_id, 0,
-                      "");
-  }
+  do_that_action(data1, data2, ACTION_TRANSPORT_DISEMBARK2);
 }
 
 /**********************************************************************/ /**
@@ -2297,13 +2295,7 @@ static void found_city(QVariant data1, QVariant data2)
  ***************************************************************************/
 static void transform_terrain(QVariant data1, QVariant data2)
 {
-  int actor_id = data1.toInt();
-  int target_id = data2.toInt();
-
-  if (NULL != game_unit_by_number(actor_id)
-      && NULL != index_to_tile(&(wld.map), target_id)) {
-    request_do_action(ACTION_TRANSFORM_TERRAIN, actor_id, target_id, 0, "");
-  }
+  do_that_action(data1, data2, ACTION_TRANSFORM_TERRAIN);
 }
 
 /***********************************************************************/ /**
@@ -2311,13 +2303,7 @@ static void transform_terrain(QVariant data1, QVariant data2)
  ***************************************************************************/
 static void cultivate(QVariant data1, QVariant data2)
 {
-  int actor_id = data1.toInt();
-  int target_id = data2.toInt();
-
-  if (NULL != game_unit_by_number(actor_id)
-      && NULL != index_to_tile(&(wld.map), target_id)) {
-    request_do_action(ACTION_CULTIVATE, actor_id, target_id, 0, "");
-  }
+  do_that_action(data1, data2, ACTION_CULTIVATE);
 }
 
 /***********************************************************************/ /**
@@ -2325,13 +2311,7 @@ static void cultivate(QVariant data1, QVariant data2)
  ***************************************************************************/
 static void plant(QVariant data1, QVariant data2)
 {
-  int actor_id = data1.toInt();
-  int target_id = data2.toInt();
-
-  if (NULL != game_unit_by_number(actor_id)
-      && NULL != index_to_tile(&(wld.map), target_id)) {
-    request_do_action(ACTION_PLANT, actor_id, target_id, 0, "");
-  }
+  do_that_action(data1, data2, ACTION_PLANT);
 }
 
 /***********************************************************************/ /**
@@ -2512,13 +2492,7 @@ static void suicide_attack(QVariant data1, QVariant data2)
  ***************************************************************************/
 static void paradrop(QVariant data1, QVariant data2)
 {
-  int actor_id = data1.toInt();
-  int target_id = data2.toInt();
-
-  if (NULL != game_unit_by_number(actor_id)
-      && NULL != index_to_tile(&(wld.map), target_id)) {
-    request_do_action(ACTION_PARADROP, actor_id, target_id, 0, "");
-  }
+  do_that_action(data1, data2, ACTION_PARADROP);
 }
 
 /***********************************************************************/ /**

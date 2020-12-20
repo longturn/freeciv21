@@ -2417,10 +2417,7 @@ void city_dialog::item_selected(const QItemSelection &sl,
   update_prod_buttons();
 }
 
-/************************************************************************/ /**
-   Changes city_dialog to next city after pushing next city button
- ****************************************************************************/
-void city_dialog::next_city()
+void city_dialog::get_city(bool next)
 {
   int size, i, j;
   struct city *other_pcity = NULL;
@@ -2442,8 +2439,9 @@ void city_dialog::next_city()
   }
 
   for (j = 1; j < size; j++) {
+    int k = next ? j : -j;
     other_pcity =
-        city_list_get(client.conn.playing->cities, (i + j + size) % size);
+        city_list_get(client.conn.playing->cities, (i + k + size) % size);
   }
   center_tile_mapcanvas(other_pcity->tile);
   key_city_hide_open(pcity);
@@ -2451,37 +2449,19 @@ void city_dialog::next_city()
 }
 
 /************************************************************************/ /**
+   Changes city_dialog to next city after pushing next city button
+ ****************************************************************************/
+void city_dialog::next_city()
+{
+  get_city(true);
+}
+
+/************************************************************************/ /**
    Changes city_dialog to previous city after pushing prev city button
  ****************************************************************************/
 void city_dialog::prev_city()
 {
-  int size, i, j;
-  struct city *other_pcity = NULL;
-
-  if (NULL == client.conn.playing) {
-    return;
-  }
-
-  size = city_list_size(client.conn.playing->cities);
-
-  if (size == 1) {
-    return;
-  }
-
-  for (i = 0; i < size; i++) {
-    if (pcity == city_list_get(client.conn.playing->cities, i)) {
-      break;
-    }
-  }
-
-  for (j = 1; j < size; j++) {
-    other_pcity =
-        city_list_get(client.conn.playing->cities, (i - j + size) % size);
-  }
-
-  center_tile_mapcanvas(other_pcity->tile);
-  key_city_hide_open(pcity);
-  qtg_real_city_dialog_popup(other_pcity);
+  get_city(false);
 }
 
 /************************************************************************/ /**
