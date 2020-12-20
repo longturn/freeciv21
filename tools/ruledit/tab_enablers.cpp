@@ -330,8 +330,11 @@ void tab_enabler::add_now()
   // Try to add completely new enabler
   new_enabler = action_enabler_new();
 
-  fc_assert_ret(NUM_ACTIONS > 0);
-  fc_assert_ret(action_id_exists(NUM_ACTIONS - 1));
+  fc_assert_action(NUM_ACTIONS > 0, action_enabler_free(new_enabler);
+                   return );
+  fc_assert_action(action_id_exists(NUM_ACTIONS - 1),
+                   action_enabler_free(new_enabler);
+                   return );
   new_enabler->action = (NUM_ACTIONS - 1);
 
   action_enabler_add(new_enabler);
