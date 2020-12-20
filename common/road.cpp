@@ -362,7 +362,7 @@ int count_river_type_tile_card(const struct tile *ptile,
   cardinal_adjc_iterate_end;
 
   if (percentage) {
-    count = count * 100 / total;
+    count = count * 100 / std::max(total, 1);
   }
   return count;
 }
