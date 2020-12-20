@@ -180,6 +180,16 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
 }
 
 /**********************************************************************/ /**
+   Destructor
+ **************************************************************************/
+ruledit_gui::~ruledit_gui()
+{
+  req_edit_list_destroy(req_edits);
+  req_vec_fix_list_destroy(req_vec_fixers);
+  effect_edit_list_destroy(effect_edits);
+}
+
+/**********************************************************************/ /**
    Ruleset conversion log callback
  **************************************************************************/
 static void conversion_log_cb(const char *msg) { convlog->add(msg); }

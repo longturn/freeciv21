@@ -85,6 +85,7 @@ class ruledit_gui : public QObject {
 
 public:
   ruledit_gui(ruledit_main *main);
+  virtual ~ruledit_gui();
 
   void display_msg(const char *msg);
   requirers_dlg *create_requirers(const char *title);
