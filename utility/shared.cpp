@@ -47,6 +47,7 @@
 #include "astring.h"
 #include "fciconv.h"
 #include "fcintl.h"
+#include "log.h"
 #include "rand.h"
 
 #include "shared.h"
@@ -2129,8 +2130,11 @@ static size_t extract_escapes(const char *format, char *escapes,
       } while (QChar::isDigit(*format));
       if ('$' == *format) {
         /* Strings are reordered. */
-        sscanf(start, "%d", &idx);
-        reordered = true;
+        if (1 != sscanf(start, "%d", &idx)) {
+          reordered = true;
+        } else {
+          fc_assert_msg(false, "Invalid format string \"%s\"", format);
+        }
       }
     }
 
