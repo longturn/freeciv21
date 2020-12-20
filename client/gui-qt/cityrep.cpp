@@ -31,22 +31,6 @@
 #include "page_game.h"
 #include "qtg_cxxside.h"
 
-// header city icons
-class hIcon {
-  Q_DISABLE_COPY(hIcon);
-
-private:
-  explicit hIcon(){};
-  static hIcon *m_instance;
-  QHash<QString, QIcon> hash;
-
-public:
-  static hIcon *i();
-  static void drop();
-  void createIcons();
-  QIcon get(const QString &id);
-};
-
 hIcon *hIcon::i()
 {
   if (!m_instance) {

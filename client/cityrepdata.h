@@ -12,6 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
+#include <QIcon>
 #include "fc_types.h"
 
 /* Number of city report columns: have to set this manually now... */
@@ -31,27 +32,22 @@ struct city_report_spec {
 
 extern struct city_report_spec *city_report_specs;
 
-/* Use tagname rather than index for load/save, because later
-   additions won't necessarily be at the end.
-*/
+// header city icons
+class hIcon {
+  Q_DISABLE_COPY(hIcon);
 
-/* Note on space: you can do spacing and alignment in various ways;
-   you can avoid explicit space between columns if they are bracketted,
-   but the problem is that with a configurable report you don't know
-   what's going to be next to what.
+private:
+  explicit hIcon(){};
+  static hIcon *m_instance;
+  QHash<QString, QIcon> hash;
 
-   Here specify width, and leading space, although different clients
-   may interpret these differently (gui-gtk and gui-mui ignore space
-   field, handling columns without additional spacing).
-   For some clients negative width means left justified (gui-gtk
-   always treats width as negative; gui-mui ignores width field).
-*/
+public:
+  static hIcon *i();
+  static void drop();
+  void createIcons();
+  QIcon get(const QString &id);
+};
 
-/* Following are wanted to save/load options; use wrappers rather
-   than expose the grotty details of the city_report_spec:
-   (well, the details are exposed now too, but still keep
-   this "clean" interface...)
-*/
 int num_city_report_spec(void);
 bool *city_report_spec_show_ptr(int i);
 const char *city_report_spec_tagname(int i);
