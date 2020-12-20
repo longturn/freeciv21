@@ -28,7 +28,7 @@ protected:
   void run() Q_DECL_OVERRIDE;
 
 private:
-  void (*func)(void *data);
-  void *data;
+  void (*func)(void *data) = nullptr;
+  void *data = nullptr;
   QMutex mutex;
 };

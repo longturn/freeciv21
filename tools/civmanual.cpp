@@ -741,6 +741,7 @@ static bool manual_command(struct tag_types *tag_info)
       break;
 
     case MANUAL_COUNT:
+      Q_UNREACHABLE();
       break;
 
     } /* switch */

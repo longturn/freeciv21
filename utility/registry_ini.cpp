@@ -177,7 +177,7 @@
 static inline bool entry_used(const struct entry *pentry);
 static inline void entry_use(struct entry *pentry);
 
-static void entry_to_file(const struct entry *pentry, fz_FILE *fs);
+static bool entry_to_file(const struct entry *pentry, fz_FILE *fs);
 static void entry_from_inf_token(struct section *psection, const char *name,
                                  const char *tok, struct inputfile *file);
 
@@ -661,9 +661,9 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
            ent_iter = entry_list_link_next(ent_iter)) {
         fc_assert(!strcmp(entry_name(pentry), "file"));
 
-        fz_fprintf(fs, "*include ");
-        entry_to_file(pentry, fs);
-        fz_fprintf(fs, "\n");
+        fc_assert_ret_val(fz_fprintf(fs, "*include ") > 0, false);
+        fc_assert_ret_val(entry_to_file(pentry, fs), false);
+        fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
       }
     } else if (psection->special == EST_COMMENT) {
       for (ent_iter = entry_list_head(section_entries(psection));
@@ -671,11 +671,12 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
            ent_iter = entry_list_link_next(ent_iter)) {
         fc_assert(!strcmp(entry_name(pentry), "comment"));
 
-        entry_to_file(pentry, fs);
-        fz_fprintf(fs, "\n");
+        fc_assert_ret_val(entry_to_file(pentry, fs), false);
+        fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
       }
     } else {
-      fz_fprintf(fs, "\n[%s]\n", section_name(psection));
+      fc_assert_ret_val(
+          fz_fprintf(fs, "\n[%s]\n", section_name(psection)) > 0, false);
 
       /* Following doesn't use entry_list_iterate() because we want to do
        * tricky things with the iterators...
@@ -726,7 +727,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
           first[offset - 2] = '\0';
           sz_strlcpy(base, first);
           first[offset - 2] = '0';
-          fz_fprintf(fs, "%s={", base);
+          fc_assert_ret_val(fz_fprintf(fs, "%s={", base) > 0, false);
 
           /* Save an iterator at this first entry, which we can later use
            * to repeatedly iterate over column names:
@@ -742,11 +743,14 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
             if (strncmp(col_entry_name, first, offset) != 0) {
               break;
             }
-            fz_fprintf(fs, "%s\"%s\"", (ncol == 0 ? "" : ","),
-                       col_entry_name + offset);
+            fc_assert_ret_val(fz_fprintf(fs, "%s\"%s\"",
+                                         (ncol == 0 ? "" : ","),
+                                         col_entry_name + offset)
+                                  > 0,
+                              false);
             ncol++;
           }
-          fz_fprintf(fs, "\n");
+          fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
 
           /* Iterate over rows and columns, incrementing ent_iter as we go,
            * and writing values to the table.  Have a separate iterator
@@ -783,23 +787,23 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
                     "To avoid this make sure all rows of a table are\n"
                     "filled out with an entry for every column.",
                     real_filename, section_name(psection), expect);
-                fz_fprintf(fs, "\n");
+                fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
               }
-              fz_fprintf(fs, "}\n");
+              fc_assert_ret_val(fz_fprintf(fs, "}\n") > 0, false);
               break;
             }
 
             if (icol > 0) {
-              fz_fprintf(fs, ",");
+              fc_assert_ret_val(fz_fprintf(fs, ",") > 0, false);
             }
-            entry_to_file(pentry, fs);
+            fc_assert_ret_val(entry_to_file(pentry, fs), false);
 
             ent_iter = entry_list_link_next(ent_iter);
             col_iter = entry_list_link_next(col_iter);
 
             icol++;
             if (icol == ncol) {
-              fz_fprintf(fs, "\n");
+              fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
               irow++;
               icol = 0;
               col_iter = save_iter;
@@ -815,8 +819,8 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
 
         /* Classic entry. */
         col_entry_name = entry_name(pentry);
-        fz_fprintf(fs, "%s=", col_entry_name);
-        entry_to_file(pentry, fs);
+        fc_assert_ret_val(fz_fprintf(fs, "%s=", col_entry_name), false);
+        fc_assert_ret_val(entry_to_file(pentry, fs), false);
 
         /* Check for vector. */
         for (i = 1;; i++) {
@@ -830,16 +834,16 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
           if (0 != strcmp(pentry_name, entry_name(col_pentry))) {
             break;
           }
-          fz_fprintf(fs, ",");
-          entry_to_file(col_pentry, fs);
+          fc_assert_ret_val(fz_fprintf(fs, ",") > 0, false);
+          fc_assert_ret_val(entry_to_file(col_pentry, fs), false);
           ent_iter = col_iter;
         }
 
         comment = entry_comment(pentry);
         if (comment) {
-          fz_fprintf(fs, "  # %s\n", comment);
+          fc_assert_ret_val(fz_fprintf(fs, "  # %s\n", comment) > 0, false);
         } else {
-          fz_fprintf(fs, "\n");
+          fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
         }
       }
     }
@@ -1268,7 +1272,7 @@ struct entry *secfile_insert_str_full(struct section_file *secfile,
     entry_set_comment(pentry, comment);
   }
 
-  if (stype == EST_COMMENT) {
+  if (pentry != nullptr && stype == EST_COMMENT) {
     pentry->string.raw = true;
   }
 
@@ -3261,8 +3265,9 @@ bool entry_bool_get(const struct entry *pentry, bool *value)
     return true;
   }
 
-  SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_BOOL == pentry->type, false);
+  SECFILE_RETURN_VAL_IF_FAIL(
+      pentry->psection->secfile, pentry->psection,
+      pentry->psection != nullptr && ENTRY_BOOL == pentry->type, false);
 
   if (NULL != value) {
     *value = pentry->boolean.value;
@@ -3419,7 +3424,7 @@ bool entry_str_set_gt_marking(struct entry *pentry, bool gt_marking)
 /**********************************************************************/ /**
    Push an entry into a file stream.
  **************************************************************************/
-static void entry_to_file(const struct entry *pentry, fz_FILE *fs)
+static bool entry_to_file(const struct entry *pentry, fz_FILE *fs)
 {
   static char buf[8192];
   char *dot = NULL;
@@ -3427,10 +3432,13 @@ static void entry_to_file(const struct entry *pentry, fz_FILE *fs)
 
   switch (pentry->type) {
   case ENTRY_BOOL:
-    fz_fprintf(fs, "%s", pentry->boolean.value ? "TRUE" : "FALSE");
+    fc_assert_ret_val(
+        fz_fprintf(fs, "%s", pentry->boolean.value ? "TRUE" : "FALSE") > 0,
+        false);
     break;
   case ENTRY_INT:
-    fz_fprintf(fs, "%d", pentry->integer.value);
+    fc_assert_ret_val(fz_fprintf(fs, "%d", pentry->integer.value) > 0,
+                      false);
     break;
   case ENTRY_FLOAT:
     snprintf(buf, sizeof(buf), "%f", pentry->floating.value);
@@ -3443,32 +3451,38 @@ static void entry_to_file(const struct entry *pentry, fz_FILE *fs)
     if (dot == NULL) {
       /* There's no '.' so it would seem like a integer value when loaded.
        * Force it not to look like an integer by adding ".0" */
-      fz_fprintf(fs, "%s.0", buf);
+      fc_assert_ret_val(fz_fprintf(fs, "%s.0", buf) > 0, false);
     } else {
-      fz_fprintf(fs, "%s", buf);
+      fc_assert_ret_val(fz_fprintf(fs, "%s", buf) > 0, false);
     }
     break;
   case ENTRY_STR:
     if (pentry->string.escaped) {
       make_escapes(pentry->string.value, buf, sizeof(buf));
       if (pentry->string.gt_marking) {
-        fz_fprintf(fs, "_(\"%s\")", buf);
+        fc_assert_ret_val(fz_fprintf(fs, "_(\"%s\")", buf) > 0, false);
       } else {
-        fz_fprintf(fs, "\"%s\"", buf);
+        fc_assert_ret_val(fz_fprintf(fs, "\"%s\"", buf) > 0, false);
       }
     } else if (pentry->string.raw) {
-      fz_fprintf(fs, "%s", pentry->string.value);
+      fc_assert_ret_val(fz_fprintf(fs, "%s", pentry->string.value) > 0,
+                        false);
     } else {
-      fz_fprintf(fs, "$%s$", pentry->string.value);
+      fc_assert_ret_val(fz_fprintf(fs, "$%s$", pentry->string.value) > 0,
+                        false);
     }
     break;
   case ENTRY_FILEREFERENCE:
-    fz_fprintf(fs, "*%s*", pentry->string.value);
+    fc_assert_ret_val(fz_fprintf(fs, "*%s*", pentry->string.value) > 0,
+                      false);
     break;
   case ENTRY_ILLEGAL:
     fc_assert(pentry->type != ENTRY_ILLEGAL);
-    break;
+    return false;
   }
+
+  fc_assert(false);
+  return false;
 }
 
 /**********************************************************************/ /**

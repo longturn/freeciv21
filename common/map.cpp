@@ -764,31 +764,16 @@ int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
     /* units without UCF_TERRAIN_SPEED have a constant cost. */
     return SINGLE_MOVE;
 
-  } else if (!is_native_tile_to_class(pclass, t2)) {
-    /* FIXME the same if then x else x 2 times */
-    if (tile_city(t2) == NULL) {
-      /* Loading to transport. */
-
-      /* UTYF_IGTER units get move benefit. */
-      return (utype_has_flag(punittype, UTYF_IGTER) ? MOVE_COST_IGTER
-                                                    : SINGLE_MOVE);
-    } else {
-      /* Entering port. (Could be "Conquer City") */
-
-      /* UTYF_IGTER units get move benefit. */
-      return (utype_has_flag(punittype, UTYF_IGTER) ? MOVE_COST_IGTER
-                                                    : SINGLE_MOVE);
-    }
-
-  } else if (!is_native_tile_to_class(pclass, t1)) {
+  } else if (!is_native_tile_to_class(pclass, t2)
+             || !is_native_tile_to_class(pclass, t1)) {
     if (tile_city(t1) == NULL) {
-      /* Disembarking from transport. */
+      /* Loading to/disembarking from transport. */
 
       /* UTYF_IGTER units get move benefit. */
       return (utype_has_flag(punittype, UTYF_IGTER) ? MOVE_COST_IGTER
                                                     : SINGLE_MOVE);
     } else {
-      /* Leaving port. */
+      /* Entering/leaving port. */
 
       /* UTYF_IGTER units get move benefit. */
       return (utype_has_flag(punittype, UTYF_IGTER) ? MOVE_COST_IGTER
@@ -1140,7 +1125,7 @@ struct tile *rand_map_pos_filtered(const struct civ_map *nmap, void *data,
 
     whole_map_iterate(nmap, check_tile)
     {
-      if (filter(check_tile, data)) {
+      if (filter && filter(check_tile, data)) {
         positions[count] = tile_index(check_tile);
         count++;
       }

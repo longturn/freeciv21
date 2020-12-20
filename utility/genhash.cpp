@@ -288,7 +288,7 @@ void genhash_destroy(struct genhash *pgenhash)
   fc_assert_ret(NULL != pgenhash);
   pgenhash->no_shrink = true;
   genhash_clear(pgenhash);
-  free(pgenhash->buckets);
+  delete[] pgenhash->buckets;
   delete pgenhash;
 }
 

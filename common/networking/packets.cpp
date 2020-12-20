@@ -564,7 +564,7 @@ void remove_packet_from_buffer(struct socket_packet_buffer *buffer)
   int len;
 
   dio_input_init(&din, buffer->data, buffer->ndata);
-  dio_get_uint16_raw(&din, &len);
+  fc_assert_ret(dio_get_uint16_raw(&din, &len));
   memmove(buffer->data, buffer->data + len, buffer->ndata - len);
   buffer->ndata -= len;
   log_debug("remove_packet_from_buffer: remove %d; remaining %d", len,
@@ -651,6 +651,8 @@ void generic_handle_player_attribute_chunk(
              (unsigned int) chunk->offset,
              (unsigned int) chunk->total_length,
              (unsigned int) chunk->chunk_length);
+
+  fc_assert_ret(chunk->chunk_length < ATTRIBUTE_CHUNK_SIZE);
 
   if (chunk->total_length < 0 || chunk->chunk_length < 0
       || chunk->total_length >= MAX_ATTRIBUTE_BLOCK || chunk->offset < 0

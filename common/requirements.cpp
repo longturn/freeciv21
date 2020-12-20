@@ -1653,6 +1653,8 @@ static enum fc_tristate
 is_minforeignpct_in_range(const struct city *target_city,
                           enum req_range range, int min_foreign_pct)
 {
+  fc_assert_ret_val(target_city != nullptr, TRI_NO);
+
   int foreign_pct;
 
   switch (range) {

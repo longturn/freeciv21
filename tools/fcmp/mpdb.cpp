@@ -91,8 +91,9 @@ void load_install_info_list(const char *filename)
         type = secfile_lookup_str(file, "%s.type", buf);
         ver = secfile_lookup_str(file, "%s.version", buf);
 
-        mpdb_update_modpack(str, modpack_type_by_name(type, fc_strcasecmp),
-                            ver);
+        auto mptype = modpack_type_by_name(type, fc_strcasecmp);
+        fc_assert_action(modpack_type_is_valid(mptype), break);
+        mpdb_update_modpack(str, mptype, ver);
       } else {
         all_read = true;
       }

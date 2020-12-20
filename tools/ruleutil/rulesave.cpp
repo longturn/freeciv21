@@ -2991,11 +2991,10 @@ static bool save_script_lua(const char *filename, const char *name,
     if (ffile != NULL) {
       len = fwrite(buffer, 1, full_len, ffile);
 
+      fclose(ffile);
       if (len != full_len) {
         return false;
       }
-
-      fclose(ffile);
     } else {
       return false;
     }

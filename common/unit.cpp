@@ -1501,6 +1501,9 @@ struct unit *unit_virtual_create(struct player *pplayer, struct city *pcity,
                                  const struct unit_type *punittype,
                                  int veteran_level)
 {
+  fc_assert_ret_val(NULL != punittype, NULL); /* No untyped units! */
+  fc_assert_ret_val(NULL != pplayer, NULL); /* No unowned units! */
+
   /* Make sure that contents of unit structure are correctly initialized,
    * if you ever allocate it by some other mean than fc_calloc() */
   struct unit *punit = new unit[1]();
@@ -1509,10 +1512,8 @@ struct unit *unit_virtual_create(struct player *pplayer, struct city *pcity,
   /* It does not register the unit so the id is set to 0. */
   punit->id = IDENTITY_NUMBER_ZERO;
 
-  fc_assert_ret_val(NULL != punittype, NULL); /* No untyped units! */
   punit->utype = punittype;
 
-  fc_assert_ret_val(NULL != pplayer, NULL); /* No unowned units! */
   punit->owner = pplayer;
   punit->nationality = pplayer;
 

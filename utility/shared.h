@@ -397,6 +397,8 @@ static inline struct cf_sequence cf_end(void)
   struct cf_sequence sequence;
 
   sequence.type = CF_LAST;
+  sequence.letter = '\0';
+  sequence.bool_value = false;
 
   return sequence;
 }

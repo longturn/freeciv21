@@ -187,7 +187,7 @@ bool next_spaceship_component(struct player *pplayer,
       }
     }
     /* sanity: */
-    fc_assert(req != -1);
+    fc_assert_ret_val(req >= 0, false);
     fc_assert(!BV_ISSET(ship->structure, req));
 
     /* Now we want to find a structural we can build which leads to req.

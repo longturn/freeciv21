@@ -343,11 +343,11 @@ void dio_put_sint16_raw(struct raw_data_out *dout, int value)
  **************************************************************************/
 void dio_put_sint32_raw(struct raw_data_out *dout, int value)
 {
-#if SIZEOF_INT == 4
-  dio_put_uint32_raw(dout, value);
-#else
-  dio_put_uint32_raw(dout, (0 <= value ? value : value + 0x100000000));
-#endif
+  if (sizeof(int) == 4) {
+    dio_put_uint32_raw(dout, value);
+  } else {
+    dio_put_uint32_raw(dout, (0 <= value ? value : value + 0x100000000));
+  }
 }
 
 /**********************************************************************/ /**
@@ -754,11 +754,11 @@ bool dio_get_sint32_raw(struct data_in *din, int *dest)
     return false;
   }
 
-#if SIZEOF_INT != 4
-  if (tmp > 0x7fffffff) {
-    tmp -= 0x100000000;
+  if (sizeof(int) != 4) {
+    if (tmp > 0x7fffffff) {
+      tmp -= 0x100000000;
+    }
   }
-#endif
 
   *dest = tmp;
   return true;
