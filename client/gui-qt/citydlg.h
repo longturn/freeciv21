@@ -299,15 +299,11 @@ public:
   cityIconInfoLabel(QWidget *parent = 0);
   void setCity(struct city *pcity);
   void updateText();
+  void updateTooltip(int , QString);
 private:
   void initLayout();
   struct city *pcity;
-  QLabel food;
-  QLabel prod;
-  QLabel science;
-  QLabel gold;
-  QLabel trade;
-  QLabel resize;
+  QLabel labs[12];
   int pixHeight;
 };
 
@@ -336,7 +332,7 @@ class city_info : public QWidget {
 
 public:
   city_info(QWidget *parent = 0);
-  void update_labels(struct city *ci_city);
+  void update_labels(struct city *ci_city, cityIconInfoLabel *);
 
 private:
   QLabel *qlt[NUM_INFO_FIELDS];
