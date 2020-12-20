@@ -2681,6 +2681,7 @@ static void generate_players(void)
         it = hash.constBegin();
         while (it != hash.constEnd()) {
           if (!startpos_nation_allowed(it.key(), pnation)) {
+            ++it;
             continue;
           }
 
