@@ -31,22 +31,6 @@
 #include "page_game.h"
 #include "qtg_cxxside.h"
 
-// header city icons
-class hIcon {
-  Q_DISABLE_COPY(hIcon);
-
-private:
-  explicit hIcon(){};
-  static hIcon *m_instance;
-  QHash<QString, QIcon> hash;
-
-public:
-  static hIcon *i();
-  static void drop();
-  void createIcons();
-  QIcon get(const QString &id);
-};
-
 hIcon *hIcon::i()
 {
   if (!m_instance) {
@@ -66,6 +50,12 @@ void hIcon::createIcons()
               fcIcons::instance()->getIcon(QStringLiteral("hfood")));
   hash.insert(QStringLiteral("tradeplus"),
               fcIcons::instance()->getIcon(QStringLiteral("htrade")));
+  hash.insert(QStringLiteral("gold"),
+              fcIcons::instance()->getIcon(QStringLiteral("hgold")));
+  hash.insert(QStringLiteral("science"),
+              fcIcons::instance()->getIcon(QStringLiteral("hsci")));
+  hash.insert(QStringLiteral("resize"),
+              fcIcons::instance()->getIcon(QStringLiteral("resize")));
 }
 
 QIcon hIcon::get(const QString &id) { return hash.value(id, QIcon()); }

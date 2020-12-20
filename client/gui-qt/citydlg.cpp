@@ -46,6 +46,7 @@
 #include "tilespec.h"
 // gui-qt
 #include "canvas.h"
+#include "cityrep.h" // hIcon
 #include "colors.h"
 #include "fc_client.h"
 #include "fonts.h"
@@ -905,6 +906,76 @@ bool unit_list_event_filter::eventFilter(QObject *object, QEvent *event)
   return false;
 }
 
+cityIconInfoLabel::cityIconInfoLabel(QWidget *parent)
+    : QWidget(parent), pcity(nullptr)
+{
+  QFont f = *fcFont::instance()->getFont(fonts::default_font);
+  QFontMetrics fm(f);
+
+  pixHeight = fm.height();
+
+  initLayout();
+}
+
+void cityIconInfoLabel::setCity(city *pciti) { pcity = pciti; }
+
+// inits icons only
+void cityIconInfoLabel::initLayout()
+{
+  QHBoxLayout *l = new QHBoxLayout();
+  labs[0].setPixmap((hIcon::i()->get("foodplus")).pixmap(pixHeight));
+  l->addWidget(&labs[0]);
+  l->addWidget(&labs[1]);
+
+  labs[2].setPixmap((hIcon::i()->get("prodplus")).pixmap(pixHeight));
+  l->addWidget(&labs[2]);
+  l->addWidget(&labs[3]);
+
+  labs[4].setPixmap((hIcon::i()->get("gold")).pixmap(pixHeight));
+  l->addWidget(&labs[4]);
+  l->addWidget(&labs[5]);
+
+  labs[6].setPixmap((hIcon::i()->get("science")).pixmap(pixHeight));
+  l->addWidget(&labs[6]);
+  l->addWidget(&labs[7]);
+
+  labs[8].setPixmap((hIcon::i()->get("tradeplus")).pixmap(pixHeight));
+  l->addWidget(&labs[8]);
+  l->addWidget(&labs[9]);
+
+  labs[10].setPixmap((hIcon::i()->get("resize")).pixmap(pixHeight));
+  l->addWidget(&labs[10]);
+  l->addWidget(&labs[11]);
+
+  setLayout(l);
+}
+
+void cityIconInfoLabel::updateText()
+{
+  QString grow_time;
+  if (!pcity) {
+    return;
+  }
+
+  labs[1].setText(QString::number(pcity->surplus[O_FOOD]));
+  labs[3].setText(QString::number(pcity->surplus[O_SHIELD]));
+  labs[9].setText(QString::number(pcity->surplus[O_TRADE]));
+  labs[5].setText(QString::number(pcity->surplus[O_GOLD]));
+  labs[7].setText(QString::number(pcity->surplus[O_SCIENCE]));
+  if (city_turns_to_grow(pcity) < 1000) {
+    grow_time = QString::number(city_turns_to_grow(pcity));
+  } else {
+    grow_time = QStringLiteral("∞");
+  }
+  labs[11].setText(grow_time);
+}
+
+void cityIconInfoLabel::updateTooltip(int nr, QString tooltipText)
+{
+  labs[nr].setToolTip(tooltipText);
+  labs[nr + 1].setToolTip(tooltipText);
+}
+
 /************************************************************************/ /**
    city_label is used only for showing citizens icons
    and was created only to catch mouse events
@@ -980,7 +1051,7 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
 
   setLayout(info_grid_layout);
 }
-void city_info::update_labels(struct city *pcity)
+void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
 {
   int illness = 0;
   char buffer[512];
@@ -1098,6 +1169,13 @@ void city_info::update_labels(struct city *pcity)
                          + "</pre>");
     }
   }
+  // handjob
+  ciil->updateTooltip(0, buf[FOOD + 1]);
+  ciil->updateTooltip(2, buf[SHIELD + 1]);
+  ciil->updateTooltip(4, buf[GOLD + 1]);
+  ciil->updateTooltip(6, buf[SCIENCE + 1]);
+  ciil->updateTooltip(8, buf[TRADE + 1]);
+  ciil->updateTooltip(10, buf[GROWTH]);
 }
 
 governor_sliders::governor_sliders(QWidget *parent)
@@ -2199,7 +2277,12 @@ void city_dialog::update_nation_table()
 /************************************************************************/ /**
    Updates information label ( food, prod ... surpluses ...)
  ****************************************************************************/
-void city_dialog::update_info_label() { ui.info_wdg->update_labels(pcity); }
+void city_dialog::update_info_label()
+{
+  ui.info_wdg->update_labels(pcity, ui.info_icon_label);
+  ui.info_icon_label->setCity(pcity);
+  ui.info_icon_label->updateText();
+}
 
 /************************************************************************/ /**
    Setups whole city dialog, public function

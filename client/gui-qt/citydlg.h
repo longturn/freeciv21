@@ -292,6 +292,21 @@ private:
   fc_tooltip *fc_tt;
 };
 
+class cityIconInfoLabel : public QWidget {
+  Q_OBJECT
+
+public:
+  cityIconInfoLabel(QWidget *parent = 0);
+  void setCity(struct city *pcity);
+  void updateText();
+  void updateTooltip(int , QString);
+private:
+  void initLayout();
+  struct city *pcity;
+  QLabel labs[12];
+  int pixHeight;
+};
+
 /****************************************************************************
   city_label is used only for showing citizens icons
   and was created to catch mouse events
@@ -317,7 +332,7 @@ class city_info : public QWidget {
 
 public:
   city_info(QWidget *parent = 0);
-  void update_labels(struct city *ci_city);
+  void update_labels(struct city *ci_city, cityIconInfoLabel *);
 
 private:
   QLabel *qlt[NUM_INFO_FIELDS];
