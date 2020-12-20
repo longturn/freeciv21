@@ -137,7 +137,7 @@ static int try_to_connect(QString &hostname, int port, QString &username,
         client.conn.sock,
         QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
         [] {
-          log_debug(qUtf8Printable(client.conn.sock->errorString()));
+          log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
           real_output_window_append(client.conn.sock->errorString(), NULL,
                                     -1);
           client.conn.used = false;
