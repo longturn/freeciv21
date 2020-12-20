@@ -1856,11 +1856,8 @@ void city_dialog::cma_context_menu(const QPoint)
  ****************************************************************************/
 void city_dialog::display_worklist_menu(const QPoint)
 {
-  QAction *action;
-  QAction *disband;
-  QAction *wl_save;
-  QAction *wl_clear;
-  QAction *wl_empty;
+  QAction *action, *disband, *wl_save, *wl_clear, *wl_empty,
+      *submenu_buildings, *submenu_futures, *submenu_units, *submenu_wonders;
   QMap<QString, cid> list;
   QMap<QString, cid>::const_iterator map_iter;
   QMenu *change_menu;
@@ -1905,6 +1902,26 @@ void city_dialog::display_worklist_menu(const QPoint)
   wl_save = list_menu->addAction(_("Save worklist"));
   connect(wl_save, &QAction::triggered, this, &city_dialog::save_worklist);
   options_menu = list_menu->addMenu(_("Options"));
+  submenu_units = options_menu->addAction(_("Show units"));
+  submenu_buildings = options_menu->addAction(_("Show buildings"));
+  submenu_wonders = options_menu->addAction(_("Show wonders"));
+  submenu_futures = options_menu->addAction(_("Show future targets"));
+  submenu_futures->setCheckable(true);
+  submenu_wonders->setCheckable(true);
+  submenu_buildings->setCheckable(true);
+  submenu_units->setCheckable(true);
+  submenu_futures->setChecked(future_targets);
+  connect(submenu_futures, &QAction::triggered, this,
+          [=]() { future_targets = !future_targets; });
+  submenu_units->setChecked(show_units);
+  connect(submenu_units, &QAction::triggered, this,
+          [=]() { show_units = !show_units; });
+  submenu_buildings->setChecked(show_buildings);
+  connect(submenu_buildings, &QAction::triggered, this,
+          [=]() { show_buildings = !show_buildings; });
+  submenu_wonders->setChecked(show_wonders);
+  connect(submenu_wonders, &QAction::triggered, this,
+          [=]() { show_wonders = !show_wonders; });
   disband = options_menu->addAction(_("Allow disbanding city"));
   disband->setCheckable(true);
   disband->setChecked(is_city_option_set(pcity, CITYO_DISBAND));
