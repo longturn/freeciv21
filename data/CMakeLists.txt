@@ -68,6 +68,11 @@ if (FREECIV_ENABLE_SERVER OR FREECIV_ENABLE_RULEDIT)
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/override")
 endif()
 
+if (FREECIV_ENABLE_SERVER)
+  # Scenarios
+  add_subdirectory(scenarios)
+endif()
+
 if (FREECIV_ENABLE_CLIENT)
   # Tilesets
   add_tileset(NAME amplio)
