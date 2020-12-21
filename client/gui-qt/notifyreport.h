@@ -31,6 +31,7 @@ void restart_notify_reports();
 ***************************************************************************/
 class notify_dialog : public fcwidget {
   Q_OBJECT
+
 public:
   notify_dialog(const char *caption, const char *headline, const char *lines,
                 QWidget *parent = 0);

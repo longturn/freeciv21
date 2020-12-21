@@ -111,6 +111,7 @@ protected:
 ***************************************************************************/
 class chatwdg : public QWidget, private chat_listener {
   Q_OBJECT
+
 public:
   chatwdg(QWidget *parent);
   void append(const QString &str);

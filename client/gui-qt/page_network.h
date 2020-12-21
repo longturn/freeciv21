@@ -23,6 +23,7 @@ class QItemSelection;
 
 class page_network : public QWidget {
   Q_OBJECT
+
 public:
   page_network(QWidget *, fc_client *);
   ~page_network();

@@ -220,7 +220,6 @@ void smooth_int_map(int *int_map, bool zeroes_at_edges)
 
     source_map = alt_int_map;
     target_map = int_map;
-
   } while (!axe);
 
   FCPP_FREE(alt_int_map);

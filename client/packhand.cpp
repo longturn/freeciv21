@@ -1783,7 +1783,6 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
           refresh_city_dialog(ccity);
         }
       }
-
     } /*** End of Change position. ***/
 
     if (repaint_city || repaint_unit) {

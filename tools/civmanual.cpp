@@ -743,7 +743,6 @@ static bool manual_command(struct tag_types *tag_info)
     case MANUAL_COUNT:
       Q_UNREACHABLE();
       break;
-
     } /* switch */
 
     fprintf(doc, "%s", tag_info->tail);

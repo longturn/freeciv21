@@ -48,6 +48,7 @@ private slots:
 
 class pageGame : public QWidget {
   Q_OBJECT
+
 public:
   pageGame(QWidget *);
   ~pageGame();

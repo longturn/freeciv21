@@ -29,7 +29,6 @@ class QWheelEvent;
 struct unit_type;
 
 class unittype_item : public QFrame {
-
   Q_OBJECT
 
   bool entered;
@@ -62,7 +61,6 @@ protected:
 };
 
 class units_reports : public fcwidget {
-
   Q_DISABLE_COPY(units_reports);
   Q_OBJECT
 

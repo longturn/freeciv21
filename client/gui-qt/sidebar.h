@@ -36,6 +36,7 @@ void sidebarShowMap(bool nothing);
 ***************************************************************************/
 class sidebarWidget : public QWidget {
   Q_OBJECT
+
 public:
   sidebarWidget(QPixmap *pix, const QString &label, const QString &pg,
                 pfcn_bool func, int type = SW_STD);

@@ -115,7 +115,6 @@ RANDOM_TYPE fc_rand_debug(RANDOM_TYPE size, const char *called_as, int line,
       new_rand = 0;
       break;
     }
-
   } while (size > 1 && new_rand > max);
 
   if (size > 1) {

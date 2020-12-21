@@ -557,7 +557,6 @@ adv_want settler_evaluate_improvements(struct unit *punit,
                   base_value, oldv, in_use, turns, &best_newv, &best_oldv,
                   &best_extra, &improve_worked, &best_delay, best_act,
                   best_target, best_tile, ptile);
-
             } /* endif: can the worker perform this action */
           }
           as_transform_action_iterate_end;

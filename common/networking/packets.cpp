@@ -430,7 +430,6 @@ void *get_packet_from_connection_raw(struct connection *pc,
           return NULL;
         }
       }
-
     } while (error != Z_OK);
 
     buffer->ndata -= whole_packet_len;
