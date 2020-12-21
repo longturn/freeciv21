@@ -373,9 +373,6 @@ void fc_client::read_settings()
 {
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
               QStringLiteral("freeciv-qt-client"));
-  if (!s.contains(QStringLiteral("Fonts-set"))) {
-    configure_fonts();
-  }
   if (s.contains(QStringLiteral("Chat-fx-size"))) {
     qt_settings.chat_fwidth =
         s.value(QStringLiteral("Chat-fx-size")).toFloat();
