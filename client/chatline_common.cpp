@@ -178,26 +178,3 @@ void chat_welcome_message(bool gui_has_copying_mitem)
   }
   output_window_append(ftc_any, _("Now ... Go give 'em hell!"));
 }
-
-/**********************************************************************/ /**
-   Writes the supplied string into the file defined by the variable
-   'default_chat_logfile'.
- **************************************************************************/
-void write_chatline_content(const char *txt)
-{
-  FILE *fp = fc_fopen(gui_options.default_chat_logfile, "w");
-  char buf[512];
-
-  fc_snprintf(buf, sizeof(buf), _("Exporting output window to '%s' ..."),
-              gui_options.default_chat_logfile);
-  output_window_append(ftc_client, buf);
-
-  if (fp) {
-    fputs(txt, fp);
-    fclose(fp);
-    output_window_append(ftc_client, _("Export complete."));
-  } else {
-    output_window_append(ftc_client,
-                         _("Export failed, couldn't write to file."));
-  }
-}

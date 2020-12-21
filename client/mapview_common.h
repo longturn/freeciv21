@@ -292,7 +292,6 @@ void show_tile_labels(int canvas_base_x, int canvas_base_y, int width_base,
 bool show_unit_orders(struct unit *punit);
 
 void draw_segment(struct tile *ptile, enum direction8 dir);
-void undraw_segment(struct tile *ptile, enum direction8 dir);
 
 void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
                              struct unit *punit1, int hp1);
@@ -343,7 +342,3 @@ enum topo_comp_lvl {
 enum topo_comp_lvl tileset_map_topo_compatible(int topology_id,
                                                struct tileset *tset);
 
-void animations_init(void);
-void animations_free(void);
-void set_frame_by_frame_animation(void);
-void update_animation(void);

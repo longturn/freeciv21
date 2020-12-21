@@ -1138,33 +1138,3 @@ Tech_type_id get_tech_on_reqtree(struct reqtree *tree, int x, int y)
   return A_NONE;
 }
 
-/*********************************************************************/ /**
-   Return the position of the given tech on the reqtree.  Return TRUE iff
-   it was found.
- *************************************************************************/
-bool find_tech_on_reqtree(struct reqtree *tree, Tech_type_id tech, int *x,
-                          int *y, int *w, int *h)
-{
-  int i;
-
-  for (i = 0; i < tree->num_nodes; i++) {
-    struct tree_node *node = tree->nodes[i];
-
-    if (!node->is_dummy && node->tech == tech) {
-      if (x) {
-        *x = node->node_x;
-      }
-      if (y) {
-        *y = node->node_y;
-      }
-      if (w) {
-        *w = node->node_width;
-      }
-      if (h) {
-        *h = node->node_height;
-      }
-      return true;
-    }
-  }
-  return false;
-}

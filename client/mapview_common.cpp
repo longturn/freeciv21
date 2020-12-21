@@ -70,8 +70,6 @@ Q_GLOBAL_STATIC(gotohash, mapdeco_gotoline)
 struct view mapview;
 bool can_slide = true;
 
-static bool frame_by_frame_animation = false;
-
 struct tile *center_tile = NULL;
 
 static void base_canvas_to_map_pos(int *map_x, int *map_y, float canvas_x,
@@ -109,52 +107,6 @@ struct trade_route_line {
 static const int MAX_TRADE_ROUTE_DRAW_LINES = 2;
 Q_GLOBAL_STATIC(QElapsedTimer, anim_timer);
 
-enum animation_type { ANIM_MOVEMENT, ANIM_BATTLE, ANIM_EXPL, ANIM_NUKE };
-
-struct animation {
-  enum animation_type type;
-  int id;
-  bool finished;
-  int old_x;
-  int old_y;
-  int width;
-  int height;
-  union {
-    struct {
-      struct unit *mover;
-      struct tile *src;
-      struct tile *dest;
-      float canvas_dx;
-      float canvas_dy;
-    } movement;
-    struct {
-      struct unit *virt_loser;
-      struct tile *loser_tile;
-      int loser_hp_start;
-      struct unit *virt_winner;
-      struct tile *winner_tile;
-      int winner_hp_start;
-      int winner_hp_end;
-      int steps;
-    } battle;
-    struct {
-      struct tile *tile;
-      const struct sprite_vector *sprites;
-      int sprite_count;
-    } expl;
-    struct {
-      bool shown;
-      struct tile *nuke_tile;
-    } nuke;
-  };
-};
-
-#define SPECLIST_TAG animation
-#define SPECLIST_TYPE struct animation
-#include "speclist.h"
-
-struct animation_list *animations = NULL;
-
 void anim_delay(int milliseconds)
 {
   QEventLoop loop;
@@ -163,268 +115,6 @@ void anim_delay(int milliseconds)
   t.start(milliseconds);
   QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
   loop.exec();
-}
-
-/************************************************************************/ /**
-   Initialize animations system
- ****************************************************************************/
-void animations_init(void) { animations = animation_list_new(); }
-
-/************************************************************************/ /**
-   Clean up animations system
- ****************************************************************************/
-void animations_free(void)
-{
-  if (animations != NULL) {
-    animation_list_destroy(animations);
-  }
-}
-
-/************************************************************************/ /**
-   Add new animation to the queue
- ****************************************************************************/
-static void animation_add(struct animation *anim)
-{
-  if (animation_list_size(animations) == 0) {
-    anim_timer->start();
-  }
-
-  anim->finished = false;
-  anim->old_x = -1; /* Initial frame */
-  animation_list_append(animations, anim);
-}
-
-/************************************************************************/ /**
-   Progress animation of type 'movement'
- ****************************************************************************/
-static bool movement_animation(struct animation *anim, double time_gone)
-{
-  float start_x, start_y;
-  int new_x, new_y;
-  double timing_sec = (double) gui_options.smooth_move_unit_msec / 1000.0;
-  double mytime = MIN(time_gone, timing_sec);
-  struct unit *punit = anim->movement.mover;
-
-  if (punit != NULL) {
-    tile_to_canvas_pos(&start_x, &start_y, anim->movement.src);
-    if (tileset_is_isometric(tileset) && tileset_hex_height(tileset) == 0) {
-      start_y -= tileset_tile_height(tileset) / 2;
-      start_y -=
-          (tileset_unit_height(tileset) - tileset_full_tile_height(tileset));
-    }
-    new_x = start_x + anim->movement.canvas_dx * (mytime / timing_sec);
-    new_y = start_y + anim->movement.canvas_dy * (mytime / timing_sec);
-
-    if (anim->old_x >= 0) {
-      update_map_canvas(anim->old_x, anim->old_y, anim->width, anim->height);
-    }
-    put_unit(punit, mapview.store, new_x, new_y);
-    dirty_rect(new_x, new_y, anim->width, anim->height);
-    anim->old_x = new_x;
-    anim->old_y = new_y;
-
-    if (time_gone >= timing_sec) {
-      /* Animation over */
-      if (--anim->movement.mover->refcount <= 0) {
-        FC_FREE(anim->movement.mover);
-      }
-      return true;
-    }
-  } else {
-    return true;
-  }
-
-  return false;
-}
-
-/************************************************************************/ /**
-   Progress animation of type 'battle'
- ****************************************************************************/
-static bool battle_animation(struct animation *anim, double time_gone)
-{
-  double time_per_step;
-  int step;
-  float canvas_x, canvas_y;
-  double timing_sec = (double) gui_options.smooth_combat_step_msec
-                      * anim->battle.steps / 1000.0;
-
-  if (time_gone >= timing_sec) {
-    /* Animation over */
-
-    unit_virtual_destroy(anim->battle.virt_winner);
-    unit_virtual_destroy(anim->battle.virt_loser);
-
-    return true;
-  }
-
-  time_per_step = timing_sec / anim->battle.steps;
-  step = time_gone / time_per_step;
-
-  if (tile_to_canvas_pos(&canvas_x, &canvas_y, anim->battle.loser_tile)) {
-    anim->battle.virt_loser->hp =
-        anim->battle.loser_hp_start
-        - (anim->battle.loser_hp_start * step / anim->battle.steps);
-
-    if (tileset_is_isometric(tileset) && tileset_hex_height(tileset) == 0) {
-      canvas_y -= tileset_tile_height(tileset) / 2;
-      canvas_y -=
-          (tileset_unit_height(tileset) - tileset_full_tile_height(tileset));
-    }
-
-    put_unit(anim->battle.virt_loser, mapview.store, canvas_x, canvas_y);
-    dirty_rect(canvas_x, canvas_y, tileset_tile_width(tileset),
-               tileset_tile_height(tileset));
-  }
-
-  if (tile_to_canvas_pos(&canvas_x, &canvas_y, anim->battle.winner_tile)) {
-    anim->battle.virt_winner->hp =
-        anim->battle.winner_hp_start
-        - ((anim->battle.winner_hp_start - anim->battle.winner_hp_end) * step
-           / anim->battle.steps);
-
-    if (tileset_is_isometric(tileset) && tileset_hex_height(tileset) == 0) {
-      canvas_y -= tileset_tile_height(tileset) / 2;
-      canvas_y -=
-          (tileset_unit_height(tileset) - tileset_full_tile_height(tileset));
-    }
-    put_unit(anim->battle.virt_winner, mapview.store, canvas_x, canvas_y);
-    dirty_rect(canvas_x, canvas_y, tileset_tile_width(tileset),
-               tileset_tile_height(tileset));
-  }
-
-  return false;
-}
-
-/************************************************************************/ /**
-   Progress animation of type 'explosion'
- ****************************************************************************/
-static bool explosion_animation(struct animation *anim, double time_gone)
-{
-  float canvas_x, canvas_y;
-  double timing_sec;
-
-  if (anim->expl.sprite_count <= 0) {
-    return true;
-  }
-
-  timing_sec = (double) gui_options.smooth_combat_step_msec
-               * anim->expl.sprite_count / 1000.0;
-
-  if (tile_to_canvas_pos(&canvas_x, &canvas_y, anim->expl.tile)) {
-    double time_per_frame = timing_sec / anim->expl.sprite_count;
-    int frame = time_gone / time_per_frame;
-    struct sprite *spr;
-    int w, h;
-
-    frame = MIN(frame, anim->expl.sprite_count - 1);
-
-    if (anim->old_x >= 0) {
-      update_map_canvas(anim->old_x, anim->old_y, anim->width, anim->height);
-    }
-
-    spr = *sprite_vector_get(anim->expl.sprites, frame);
-    get_sprite_dimensions(spr, &w, &h);
-
-    canvas_put_sprite_full(
-        mapview.store, canvas_x + tileset_tile_width(tileset) / 2 - w / 2,
-        canvas_y + tileset_tile_height(tileset) / 2 - h / 2, spr);
-    dirty_rect(canvas_x, canvas_y, tileset_tile_width(tileset),
-               tileset_tile_height(tileset));
-
-    anim->old_x = canvas_x;
-    anim->old_y = canvas_y;
-  }
-
-  if (time_gone >= timing_sec) {
-    /* Animation over */
-    return true;
-  }
-
-  return false;
-}
-
-/************************************************************************/ /**
-   Progress animation of type 'nuke'
- ****************************************************************************/
-static bool nuke_animation(struct animation *anim, double time_gone)
-{
-  if (!anim->nuke.shown) {
-    float canvas_x, canvas_y;
-    struct sprite *nuke_spr = get_nuke_explode_sprite(tileset);
-    int w, h;
-
-    (void) tile_to_canvas_pos(&canvas_x, &canvas_y, anim->nuke.nuke_tile);
-    get_sprite_dimensions(nuke_spr, &w, &h);
-
-    canvas_put_sprite_full(
-        mapview.store, canvas_x + tileset_tile_width(tileset) / 2 - w / 2,
-        canvas_y + tileset_tile_height(tileset) / 2 - h / 2, nuke_spr);
-    dirty_rect(canvas_x, canvas_y, tileset_tile_width(tileset),
-               tileset_tile_height(tileset));
-
-    anim->old_x = canvas_x;
-    anim->old_y = canvas_y;
-
-    anim->nuke.shown = true;
-
-    return false;
-  }
-
-  if (time_gone > 1.0) {
-    update_map_canvas_visible();
-
-    return true;
-  }
-
-  return false;
-}
-
-/************************************************************************/ /**
-   Progress current animation
- ****************************************************************************/
-void update_animation(void)
-{
-  if (animation_list_size(animations) > 0) {
-    struct animation *anim = animation_list_get(animations, 0);
-
-    if (anim->finished) {
-      /* Animation over */
-
-      anim->id = -1;
-      if (anim->old_x >= 0) {
-        update_map_canvas(anim->old_x, anim->old_y, anim->width,
-                          anim->height);
-      }
-      animation_list_remove(animations, anim);
-      delete anim;
-
-      if (animation_list_size(animations) > 0) {
-        /* Start next */
-        anim_timer->start();
-      }
-    } else {
-      double time_gone = double(anim_timer->elapsed()) / 1000;
-      bool finished = false;
-
-      switch (anim->type) {
-      case ANIM_MOVEMENT:
-        finished = movement_animation(anim, time_gone);
-        break;
-      case ANIM_BATTLE:
-        finished = battle_animation(anim, time_gone);
-        break;
-      case ANIM_EXPL:
-        finished = explosion_animation(anim, time_gone);
-        break;
-      case ANIM_NUKE:
-        finished = nuke_animation(anim, time_gone);
-      }
-
-      if (finished) {
-        anim->finished = true;
-      }
-    }
-  }
 }
 
 /************************************************************************/ /**
@@ -935,69 +625,63 @@ void set_mapview_origin(float gui_x0, float gui_y0)
   }
 
   if (can_slide && gui_options.smooth_center_slide_msec > 0) {
-    if (frame_by_frame_animation) {
-      /* TODO: Implement animation */
-      base_set_mapview_origin(gui_x0, gui_y0);
-    } else {
-      int start_x = mapview.gui_x0, start_y = mapview.gui_y0;
-      float diff_x, diff_y;
-      double timing_sec =
-          (double) gui_options.smooth_center_slide_msec / 1000.0;
-      double currtime;
-      int frames = 0;
+    int start_x = mapview.gui_x0, start_y = mapview.gui_y0;
+    float diff_x, diff_y;
+    double timing_sec =
+        (double) gui_options.smooth_center_slide_msec / 1000.0;
+    double currtime;
+    int frames = 0;
 
-      /* We track the average FPS, which is used to predict how long the
-       * next draw will take.  We start with a 100 FPS estimate - this
-       * value will quickly become irrelevant as the correct value is
-       * calculated, but it's needed to give an estimate of the FPS for
-       * the first draw.
-       *
-       * Note that the initial value shouldn't be larger than the sliding
-       * time, or we'll jump straight to the last frame.  The FPS should
-       * therefore be a "high" estimate. */
-      static double total_frames = 0.01;
-      static double total_time = 0.0001;
+    /* We track the average FPS, which is used to predict how long the
+     * next draw will take.  We start with a 100 FPS estimate - this
+     * value will quickly become irrelevant as the correct value is
+     * calculated, but it's needed to give an estimate of the FPS for
+     * the first draw.
+     *
+     * Note that the initial value shouldn't be larger than the sliding
+     * time, or we'll jump straight to the last frame.  The FPS should
+     * therefore be a "high" estimate. */
+    static double total_frames = 0.01;
+    static double total_time = 0.0001;
 
-      gui_distance_vector(tileset, &diff_x, &diff_y, start_x, start_y,
-                          gui_x0, gui_y0);
-      anim_timer->start();
+    gui_distance_vector(tileset, &diff_x, &diff_y, start_x, start_y, gui_x0,
+                        gui_y0);
+    anim_timer->start();
 
-      unqueue_mapview_updates(true);
-      flush_dirty_overview();
+    unqueue_mapview_updates(true);
+    flush_dirty_overview();
 
-      do {
-        double mytime;
+    do {
+      double mytime;
 
-        /* Get the current time, and add on the average 1/FPS, which is the
-         * expected time this frame will take.  This is done so that the
-         * frame's position is calculated from the expected time when the
-         * frame will complete, rather than the time when the frame drawing
-         * is started. */
-        currtime = double(anim_timer->elapsed()) / 1000;
-        currtime += total_time / total_frames;
-
-        mytime = MIN(currtime, timing_sec);
-        base_set_mapview_origin(start_x + diff_x * (mytime / timing_sec),
-                                start_y + diff_y * (mytime / timing_sec));
-        flush_dirty();
-        gui_flush();
-        frames++;
-      } while (currtime < timing_sec);
-
+      /* Get the current time, and add on the average 1/FPS, which is the
+       * expected time this frame will take.  This is done so that the
+       * frame's position is calculated from the expected time when the
+       * frame will complete, rather than the time when the frame drawing
+       * is started. */
       currtime = double(anim_timer->elapsed()) / 1000;
-      total_frames += frames;
-      total_time += currtime;
-      qCDebug(graphics_category,
-              "Got %d frames in %f seconds: %f FPS (avg %f).", frames,
-              currtime, (double) frames / currtime,
-              total_frames / total_time);
+      currtime += total_time / total_frames;
 
-      /* A very small decay factor to make things more accurate when
-       * something changes (mapview size, tileset change, etc.).  This gives
-       * a half-life of 68 slides. */
-      total_frames *= 0.99;
-      total_time *= 0.99;
-    }
+      mytime = MIN(currtime, timing_sec);
+      base_set_mapview_origin(start_x + diff_x * (mytime / timing_sec),
+                              start_y + diff_y * (mytime / timing_sec));
+      flush_dirty();
+      gui_flush();
+      frames++;
+    } while (currtime < timing_sec);
+
+    currtime = double(anim_timer->elapsed()) / 1000;
+    total_frames += frames;
+    total_time += currtime;
+    qCDebug(graphics_category,
+            "Got %d frames in %f seconds: %f FPS (avg %f).", frames,
+            currtime, (double) frames / currtime, total_frames / total_time);
+
+    /* A very small decay factor to make things more accurate when
+     * something changes (mapview size, tileset change, etc.).  This gives
+     * a half-life of 68 slides. */
+    total_frames *= 0.99;
+    total_time *= 0.99;
   } else {
     base_set_mapview_origin(gui_x0, gui_y0);
   }
@@ -1485,45 +1169,28 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
   int width, height;
 
   get_sprite_dimensions(mysprite, &width, &height);
+  /* We can't count on the return value of tile_to_canvas_pos since the
+   * sprite may span multiple tiles. */
+  (void) tile_to_canvas_pos(&canvas_x, &canvas_y, ptile);
 
-  if (frame_by_frame_animation) {
-    struct animation *anim = new animation();
+  canvas_x += (tileset_tile_width(tileset) - width) / 2;
+  canvas_y += (tileset_tile_height(tileset) - height) / 2;
 
-    anim->type = ANIM_NUKE;
-    anim->id = -1;
-    anim->nuke.shown = false;
-    anim->nuke.nuke_tile = ptile;
+  /* Make sure everything is flushed and synced before proceeding.  First
+   * we update everything to the store, but don't write this to screen.
+   * Then add the nuke graphic to the store.  Finally flush everything to
+   * the screen and wait 1 second. */
+  unqueue_mapview_updates(false);
 
-    (void) tile_to_canvas_pos(&canvas_x, &canvas_y, ptile);
-    get_sprite_dimensions(mysprite, &width, &height);
+  canvas_put_sprite_full(mapview.store, canvas_x, canvas_y, mysprite);
+  dirty_rect(canvas_x, canvas_y, width, height);
 
-    anim->width = width;
-    anim->height = height;
-    animation_add(anim);
-  } else {
-    /* We can't count on the return value of tile_to_canvas_pos since the
-     * sprite may span multiple tiles. */
-    (void) tile_to_canvas_pos(&canvas_x, &canvas_y, ptile);
+  flush_dirty();
+  gui_flush();
 
-    canvas_x += (tileset_tile_width(tileset) - width) / 2;
-    canvas_y += (tileset_tile_height(tileset) - height) / 2;
+  fc_usleep(1000000);
 
-    /* Make sure everything is flushed and synced before proceeding.  First
-     * we update everything to the store, but don't write this to screen.
-     * Then add the nuke graphic to the store.  Finally flush everything to
-     * the screen and wait 1 second. */
-    unqueue_mapview_updates(false);
-
-    canvas_put_sprite_full(mapview.store, canvas_x, canvas_y, mysprite);
-    dirty_rect(canvas_x, canvas_y, width, height);
-
-    flush_dirty();
-    gui_flush();
-
-    fc_usleep(1000000);
-
-    update_map_canvas_visible();
-  }
+  update_map_canvas_visible();
 }
 
 /************************************************************************/ /**
@@ -1536,15 +1203,6 @@ static void put_one_tile(struct canvas *pcanvas, enum mapview_layer layer,
   if (client_tile_get_known(ptile) != TILE_UNKNOWN
       || (editor_is_active() && editor_tile_is_selected(ptile))) {
     struct unit *punit = get_drawable_unit(tileset, ptile, citymode);
-    struct animation *anim = NULL;
-
-    if (animation_list_size(animations) > 0) {
-      anim = animation_list_get(animations, 0);
-    }
-
-    if (anim != NULL && punit != NULL && punit->id == anim->id) {
-      punit = NULL;
-    }
 
     put_one_element(pcanvas, layer, ptile, NULL, NULL, punit,
                     tile_city(ptile), canvas_x, canvas_y, citymode, NULL);
@@ -2086,99 +1744,54 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
 
   unqueue_mapview_updates(true);
 
-  if (frame_by_frame_animation) {
-    struct animation *anim = new animation();
-    struct unit *winning_unit;
-    int winner_end_hp;
+  const struct sprite_vector *anim = get_unit_explode_animation(tileset);
+  const int num_tiles_explode_unit = sprite_vector_size(anim);
 
-    if (losing_unit == punit1) {
-      winning_unit = punit0;
-      winner_end_hp = hp0;
+  while (punit0->hp > hp0 || punit1->hp > hp1) {
+    const int diff0 = punit0->hp - hp0, diff1 = punit1->hp - hp1;
+
+    if (fc_rand(diff0 + diff1) < diff0) {
+      punit0->hp--;
+      refresh_unit_mapcanvas(punit0, unit_tile(punit0), false, false);
     } else {
-      winning_unit = punit1;
-      winner_end_hp = hp1;
+      punit1->hp--;
+      refresh_unit_mapcanvas(punit1, unit_tile(punit1), false, false);
     }
 
-    anim->type = ANIM_BATTLE;
-    anim->id = -1;
-    anim->battle.virt_loser = unit_virtual_create(
-        unit_owner(losing_unit), NULL, unit_type_get(losing_unit),
-        losing_unit->veteran);
-    anim->battle.loser_tile = unit_tile(losing_unit);
-    anim->battle.virt_loser->facing = losing_unit->facing;
-    anim->battle.loser_hp_start = losing_unit->hp;
-    anim->battle.virt_winner = unit_virtual_create(
-        unit_owner(winning_unit), NULL, unit_type_get(winning_unit),
-        winning_unit->veteran);
-    anim->battle.winner_tile = unit_tile(winning_unit);
-    anim->battle.virt_winner->facing = winning_unit->facing;
-    anim->battle.winner_hp_start = MAX(winning_unit->hp, winner_end_hp);
-    anim->battle.winner_hp_end = winner_end_hp;
-    anim->battle.steps =
-        MAX(losing_unit->hp, anim->battle.winner_hp_start - winner_end_hp);
-    animation_add(anim);
+    unqueue_mapview_updates(true);
+    gui_flush();
+    anim_delay(gui_options.smooth_combat_step_msec);
+  }
 
-    anim = new animation();
-    anim->type = ANIM_EXPL;
-    anim->id = winning_unit->id;
-    anim->expl.tile = losing_unit->tile;
-    anim->expl.sprites = get_unit_explode_animation(tileset);
-    anim->expl.sprite_count = sprite_vector_size(anim->expl.sprites);
-    anim->width = tileset_tile_width(tileset);
-    anim->height = tileset_tile_height(tileset);
-    animation_add(anim);
-  } else {
-    const struct sprite_vector *anim = get_unit_explode_animation(tileset);
-    const int num_tiles_explode_unit = sprite_vector_size(anim);
+  if (num_tiles_explode_unit > 0
+      && tile_to_canvas_pos(&canvas_x, &canvas_y, unit_tile(losing_unit))) {
+    refresh_unit_mapcanvas(losing_unit, unit_tile(losing_unit), false,
+                           false);
+    unqueue_mapview_updates(false);
+    canvas_copy(mapview.tmp_store, mapview.store, canvas_x, canvas_y,
+                canvas_x, canvas_y, tileset_tile_width(tileset),
+                tileset_tile_height(tileset));
 
-    while (punit0->hp > hp0 || punit1->hp > hp1) {
-      const int diff0 = punit0->hp - hp0, diff1 = punit1->hp - hp1;
+    for (i = 0; i < num_tiles_explode_unit; i++) {
+      int w, h;
+      struct sprite *sprite = *sprite_vector_get(anim, i);
 
-      if (fc_rand(diff0 + diff1) < diff0) {
-        punit0->hp--;
-        refresh_unit_mapcanvas(punit0, unit_tile(punit0), false, false);
-      } else {
-        punit1->hp--;
-        refresh_unit_mapcanvas(punit1, unit_tile(punit1), false, false);
-      }
-
-      unqueue_mapview_updates(true);
-      gui_flush();
-      anim_delay(gui_options.smooth_combat_step_msec);
-    }
-
-    if (num_tiles_explode_unit > 0
-        && tile_to_canvas_pos(&canvas_x, &canvas_y,
-                              unit_tile(losing_unit))) {
-      refresh_unit_mapcanvas(losing_unit, unit_tile(losing_unit), false,
-                             false);
-      unqueue_mapview_updates(false);
-      canvas_copy(mapview.tmp_store, mapview.store, canvas_x, canvas_y,
+      get_sprite_dimensions(sprite, &w, &h);
+      /* We first draw the explosion onto the unit and draw draw the
+       * complete thing onto the map canvas window. This avoids
+       * flickering. */
+      canvas_copy(mapview.store, mapview.tmp_store, canvas_x, canvas_y,
                   canvas_x, canvas_y, tileset_tile_width(tileset),
                   tileset_tile_height(tileset));
+      canvas_put_sprite_full(
+          mapview.store, canvas_x + tileset_tile_width(tileset) / 2 - w / 2,
+          canvas_y + tileset_tile_height(tileset) / 2 - h / 2, sprite);
+      dirty_rect(canvas_x, canvas_y, tileset_tile_width(tileset),
+                 tileset_tile_height(tileset));
 
-      for (i = 0; i < num_tiles_explode_unit; i++) {
-        int w, h;
-        struct sprite *sprite = *sprite_vector_get(anim, i);
-
-        get_sprite_dimensions(sprite, &w, &h);
-        /* We first draw the explosion onto the unit and draw draw the
-         * complete thing onto the map canvas window. This avoids
-         * flickering. */
-        canvas_copy(mapview.store, mapview.tmp_store, canvas_x, canvas_y,
-                    canvas_x, canvas_y, tileset_tile_width(tileset),
-                    tileset_tile_height(tileset));
-        canvas_put_sprite_full(
-            mapview.store,
-            canvas_x + tileset_tile_width(tileset) / 2 - w / 2,
-            canvas_y + tileset_tile_height(tileset) / 2 - h / 2, sprite);
-        dirty_rect(canvas_x, canvas_y, tileset_tile_width(tileset),
-                   tileset_tile_height(tileset));
-
-        flush_dirty();
-        gui_flush();
-        anim_delay(gui_options.smooth_combat_step_msec);
-      }
+      flush_dirty();
+      gui_flush();
+      anim_delay(gui_options.smooth_combat_step_msec);
     }
   }
 
@@ -2239,58 +1852,42 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
     tuw = tileset_unit_width(tileset);
     tuh = tileset_unit_height(tileset);
 
-    if (frame_by_frame_animation) {
-      struct animation *anim = new animation();
+    /* Start the timer (AFTER the unqueue above). */
+    anim_timer->start();
 
-      anim->type = ANIM_MOVEMENT;
-      anim->id = punit->id;
-      punit->refcount++;
-      anim->movement.mover = punit;
-      anim->movement.src = src_tile;
-      anim->movement.dest = dest_tile;
-      anim->movement.canvas_dx = canvas_dx;
-      anim->movement.canvas_dy = canvas_dy;
-      anim->width = tuw;
-      anim->height = tuh;
-      animation_add(anim);
-    } else {
-      /* Start the timer (AFTER the unqueue above). */
-      anim_timer->start();
+    do {
+      int new_x, new_y;
 
-      do {
-        int new_x, new_y;
+      mytime = MIN(anim_timer->elapsed(), timing_sec);
 
-        mytime = MIN(anim_timer->elapsed(), timing_sec);
+      new_x = start_x + canvas_dx * (mytime / timing_sec);
+      new_y = start_y + canvas_dy * (mytime / timing_sec);
 
-        new_x = start_x + canvas_dx * (mytime / timing_sec);
-        new_y = start_y + canvas_dy * (mytime / timing_sec);
+      if (new_x != prev_x || new_y != prev_y) {
+        /* Backup the canvas store to the temp store. */
+        canvas_copy(mapview.tmp_store, mapview.store, new_x, new_y, new_x,
+                    new_y, tuw, tuh);
 
-        if (new_x != prev_x || new_y != prev_y) {
-          /* Backup the canvas store to the temp store. */
-          canvas_copy(mapview.tmp_store, mapview.store, new_x, new_y, new_x,
-                      new_y, tuw, tuh);
+        /* Draw */
+        put_unit(punit, mapview.store, new_x, new_y);
+        dirty_rect(new_x, new_y, tuw, tuh);
 
-          /* Draw */
-          put_unit(punit, mapview.store, new_x, new_y);
-          dirty_rect(new_x, new_y, tuw, tuh);
+        /* Flush. */
+        flush_dirty();
+        gui_flush();
 
-          /* Flush. */
-          flush_dirty();
-          gui_flush();
+        /* Restore the backup.  It won't take effect until the next flush.
+         */
+        canvas_copy(mapview.store, mapview.tmp_store, new_x, new_y, new_x,
+                    new_y, tuw, tuh);
+        dirty_rect(new_x, new_y, tuw, tuh);
 
-          /* Restore the backup.  It won't take effect until the next flush.
-           */
-          canvas_copy(mapview.store, mapview.tmp_store, new_x, new_y, new_x,
-                      new_y, tuw, tuh);
-          dirty_rect(new_x, new_y, tuw, tuh);
-
-          prev_x = new_x;
-          prev_y = new_y;
-        } else {
-          fc_usleep(500);
-        }
-      } while (mytime < timing_sec);
-    }
+        prev_x = new_x;
+        prev_y = new_y;
+      } else {
+        fc_usleep(500);
+      }
+    } while (mytime < timing_sec);
   }
 }
 
@@ -3226,9 +2823,9 @@ void put_spaceship(struct canvas *pcanvas, int canvas_x, int canvas_y,
     x = modules_info[i].x * w / 4 - w / 2;
     y = modules_info[i].y * h / 4 - h / 2;
 
-    spr = (k == 0   ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
-           : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
-                    : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
+    spr = (k == 0 ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
+                  : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
+                           : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
     canvas_put_sprite_full(pcanvas, x, y, spr);
   }
 
@@ -3545,8 +3142,3 @@ enum topo_comp_lvl tileset_map_topo_compatible(int topology_id,
 
   return TOPO_COMPATIBLE;
 }
-
-/************************************************************************/ /**
-   Set frame by frame animation mode on.
- ****************************************************************************/
-void set_frame_by_frame_animation(void) { frame_by_frame_animation = true; }

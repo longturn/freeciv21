@@ -291,15 +291,3 @@ int voteinfo_queue_size(void)
   return (NULL != voteinfo_queue ? voteinfo_list_size(voteinfo_queue) : 0);
 }
 
-/**********************************************************************/ /**
-   Returns whether the voteinfo bar should be displayed or not.
- **************************************************************************/
-bool voteinfo_bar_can_be_shown(void)
-{
-  return (NULL != voteinfo_queue && gui_options.voteinfo_bar_use
-          && (gui_options.voteinfo_bar_always_show
-              || (0 < voteinfo_list_size(voteinfo_queue)
-                  && NULL != voteinfo_queue_get_current(NULL)))
-          && (!gui_options.voteinfo_bar_hide_when_not_player
-              || (client_has_player() && !client_is_observer())));
-}
