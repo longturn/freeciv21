@@ -1197,8 +1197,8 @@ static bool scan_score_log(char *id)
 
     if (strncmp(line, "addplayer ", qstrlen("addplayer ")) == 0) {
       if (3
-          != sscanf(line + qstrlen("addplayer "), "%d %d %s", &turn, &plr_no,
-                    plr_name)) {
+          != std::sscanf(line + qstrlen("addplayer "), "%d %d %s", &turn,
+                         &plr_no, plr_name)) {
         qCritical("[%s:%d] Bad line (addplayer)!", game.server.scorefile,
                   line_nr);
         return false;

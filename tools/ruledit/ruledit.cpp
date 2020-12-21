@@ -60,15 +60,6 @@ struct ruledit_arguments reargs;
  **************************************************************************/
 int main(int argc, char **argv)
 {
-  /* Load win32 post-crash debugger */
-#ifdef FREECIV_MSWINDOWS
-  if (LoadLibrary("exchndl.dll") == NULL) {
-#ifdef FREECIV_DEBUG
-    fprintf(stderr, "exchndl.dll could not be loaded, no crash debugger\n");
-#endif /* FREECIV_DEBUG */
-  }
-#endif /* FREECIV_MSWINDOWS */
-
   QApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(VERSION_STRING);
 
