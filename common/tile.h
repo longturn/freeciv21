@@ -172,8 +172,5 @@ struct tile *tile_virtual_new(const struct tile *ptile);
 void tile_virtual_destroy(struct tile *vtile);
 bool tile_virtual_check(struct tile *vtile);
 
-void *tile_hash_key(const struct tile *ptile);
-
 bool tile_set_label(struct tile *ptile, const char *label);
-
 bool tile_is_placing(const struct tile *ptile);

@@ -2846,7 +2846,7 @@ static void sg_save_map_startpos(struct savedata *saving)
   secfile_insert_int(saving->file, map_startpos_count(),
                      "map.startpos_count");
 
-  for (auto psp : *wld.map.startpos_table) {
+  for (auto psp : qAsConst(*wld.map.startpos_table)) {
     int nat_x, nat_y;
     if (psp->exclude)
       continue;
