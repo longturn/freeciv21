@@ -3481,7 +3481,6 @@ static bool entry_to_file(const struct entry *pentry, fz_FILE *fs)
     return false;
   }
 
-  fc_assert(false);
   return true;
 }
 
