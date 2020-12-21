@@ -330,8 +330,6 @@ struct sprite *get_unittype_sprite(const struct tileset *t,
                                    enum direction8 facing);
 struct sprite *get_sample_city_sprite(const struct tileset *t,
                                       int style_idx);
-struct sprite *get_arrow_sprite(const struct tileset *t,
-                                enum arrow_type arrow);
 struct sprite *get_tax_sprite(const struct tileset *t, Output_type_id otype);
 struct sprite *get_treaty_thumb_sprite(const struct tileset *t, bool on_off);
 const struct sprite_vector *

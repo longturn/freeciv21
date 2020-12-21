@@ -78,5 +78,3 @@ void draw_reqtree(struct reqtree *tree, struct canvas *pcanvas, int canvas_x,
                   int canvas_y, int tt_x, int tt_y, int w, int h);
 
 Tech_type_id get_tech_on_reqtree(struct reqtree *tree, int x, int y);
-bool find_tech_on_reqtree(struct reqtree *tree, Tech_type_id tech, int *x,
-                          int *y, int *w, int *h);

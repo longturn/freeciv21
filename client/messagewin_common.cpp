@@ -209,18 +209,3 @@ void meswin_goto(int message_index)
     center_tile_mapcanvas(messages[message_index]->tile);
   }
 }
-
-/************************************************************************/ /**
-   Called from messagewin.c if the user double clicks on a message.
- ****************************************************************************/
-void meswin_double_click(int message_index)
-{
-  fc_assert_ret(0 <= message_index && message_index < messages_total);
-
-  if (messages[message_index]->city_ok
-      && is_city_event(messages[message_index]->event)) {
-    meswin_popup_city(message_index);
-  } else if (messages[message_index]->location_ok) {
-    meswin_goto(message_index);
-  }
-}

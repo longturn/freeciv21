@@ -47,5 +47,3 @@ void voteinfo_do_vote(int vote_no, enum client_vote_type vote);
 struct voteinfo *voteinfo_queue_get_current(int *pindex);
 void voteinfo_queue_next(void);
 int voteinfo_queue_size(void);
-
-bool voteinfo_bar_can_be_shown(void);
