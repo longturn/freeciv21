@@ -40,8 +40,9 @@ const QVector<QString> *get_soundset_list(const struct option *poption);
 const QVector<QString> *get_musicset_list(const struct option *poption);
 
 void audio_init(void);
-void audio_real_init(QString &soundspec_name, QString &musicset_name,
-                     QString &preferred_plugin_name);
+void audio_real_init(const QString &soundspec_name,
+                     const QString &musicset_name,
+                     const QString &preferred_plugin_name);
 void audio_add_plugin(struct audio_plugin *p);
 void audio_shutdown(void);
 void audio_stop(void);
@@ -57,5 +58,5 @@ void audio_play_track(const QString &tag, const QString &alt_tag);
 double audio_get_volume(void);
 void audio_set_volume(double volume);
 
-bool audio_select_plugin(QString &name);
+bool audio_select_plugin(const QString &name);
 const QString audio_get_all_plugin_names(void);
