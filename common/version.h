@@ -29,7 +29,5 @@ const char *fc_git_revision(void);
 const char *fc_comparable_version(void);
 const char *freeciv_datafile_version(void);
 
-const char *freeciv_motto(void);
-
 /* If returns NULL, not a beta version. */
 const char *beta_message(void);

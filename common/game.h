@@ -14,11 +14,6 @@
 
 #include <time.h> /* time_t */
 
-/* utility */
-// #include "fcthread.h"
-// #include "shared.h"
-// #include "timing.h"
-
 /* common */
 #include "connection.h" /* struct conn_list */
 #include "packets.h"

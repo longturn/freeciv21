@@ -1384,16 +1384,6 @@ const char *action_id_name_translation(action_id act_id)
 }
 
 /**********************************************************************/ /**
-   Get the action name with a mnemonic ready to display in the UI.
- **************************************************************************/
-const char *action_get_ui_name_mnemonic(action_id act_id,
-                                        const char *mnemonic)
-{
-  return action_prepare_ui_name(gen_action(act_id), mnemonic, ACTPROB_NA,
-                                NULL);
-}
-
-/**********************************************************************/ /**
    Returns a text representation of the action probability prob unless it
    is a signal. Returns NULL if prob is a signal.
  **************************************************************************/
