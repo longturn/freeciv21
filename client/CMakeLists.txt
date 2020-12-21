@@ -38,6 +38,7 @@ add_library(
   client
   STATIC
   attribute.cpp
+  citybar.cpp
   citydlg_common.cpp
   cityrepdata.cpp
   client_main.cpp
