@@ -149,6 +149,7 @@ QRect simple_citybar_painter::paint(QPainter &painter,
     if (gui_options.draw_city_trade_routes && can_see_inside) {
       // Separator
       cursor.insertText(en_space, format);
+      dark_cursor.insertText(en_space, dark_format);
 
       // Get the text
       char trade_routes[32];
