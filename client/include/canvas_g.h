@@ -17,6 +17,7 @@
 #include "gui_proto_constructor.h"
 
 struct QColor;
+class QFont;
 class QString;
 class QPixmap; /* opaque type, real type is gui-dep */
 
@@ -65,3 +66,5 @@ GUI_FUNC_PROTO(void, get_text_size, int *width, int *height,
 GUI_FUNC_PROTO(void, canvas_put_text, QPixmap *pcanvas, int canvas_x,
                int canvas_y, enum client_font font, QColor *pcolor,
                const QString &text)
+
+QFont *get_font(enum client_font font);

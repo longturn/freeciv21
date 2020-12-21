@@ -36,7 +36,6 @@
 #include "qtg_cxxside.h"
 #include "sprite.h"
 
-static QFont *get_font(enum client_font font);
 /************************************************************************/ /**
    Create a canvas of the given size.
  ****************************************************************************/
