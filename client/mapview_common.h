@@ -302,15 +302,15 @@ struct city *find_city_or_settler_near_tile(const struct tile *ptile,
                                             struct unit **punit);
 struct city *find_city_near_tile(const struct tile *ptile);
 
-void get_city_mapview_production(struct city *pcity, char *buf,
+void get_city_mapview_production(const city *pcity, char *buf,
                                  size_t buf_len);
-void get_city_mapview_name_and_growth(struct city *pcity, char *name_buffer,
+void get_city_mapview_name_and_growth(const city *pcity, char *name_buffer,
                                       size_t name_buffer_len,
                                       char *growth_buffer,
                                       size_t growth_buffer_len,
                                       enum color_std *growth_color,
                                       enum color_std *production_color);
-void get_city_mapview_trade_routes(struct city *pcity,
+void get_city_mapview_trade_routes(const city *pcity,
                                    char *trade_routes_buffer,
                                    size_t trade_routes_buffer_len,
                                    enum color_std *trade_routes_color);
