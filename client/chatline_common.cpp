@@ -178,4 +178,3 @@ void chat_welcome_message(bool gui_has_copying_mitem)
   }
   output_window_append(ftc_any, _("Now ... Go give 'em hell!"));
 }
-

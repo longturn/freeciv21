@@ -52,11 +52,8 @@ int get_city_citizen_types(struct city *pcity, enum citizen_feeling index,
                            enum citizen_category *categories);
 void city_rotate_specialist(struct city *pcity, int citizen_index);
 
-void activate_all_units(struct tile *ptile);
-
 int city_change_production(struct city *pcity, struct universal *target);
 int city_set_worklist(struct city *pcity, const struct worklist *pworklist);
-void city_worklist_commit(struct city *pcity, struct worklist *pwl);
 
 bool city_queue_insert(struct city *pcity, int position,
                        struct universal *target);

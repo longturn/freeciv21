@@ -1053,29 +1053,6 @@ void city_rotate_specialist(struct city *pcity, int citizen_index)
 }
 
 /**********************************************************************/ /**
-   Activate all units on the given map tile.
- **************************************************************************/
-void activate_all_units(struct tile *ptile)
-{
-  struct unit_list *punit_list = ptile->units;
-  struct unit *pmyunit = NULL;
-
-  unit_list_iterate(punit_list, punit)
-  {
-    if (unit_owner(punit) == client.conn.playing) {
-      /* Activate this unit. */
-      pmyunit = punit;
-      request_new_unit_activity(punit, ACTIVITY_IDLE);
-    }
-  }
-  unit_list_iterate_end;
-  if (pmyunit) {
-    /* Put the focus on one of the activated units. */
-    unit_focus_set(pmyunit);
-  }
-}
-
-/**********************************************************************/ /**
    Change the production of a given city.  Return the request ID.
  **************************************************************************/
 int city_change_production(struct city *pcity, struct universal *target)
@@ -1092,60 +1069,6 @@ int city_change_production(struct city *pcity, struct universal *target)
 int city_set_worklist(struct city *pcity, const struct worklist *pworklist)
 {
   return dsend_packet_city_worklist(&client.conn, pcity->id, pworklist);
-}
-
-/**********************************************************************/ /**
-   Commit the changes to the worklist for the city.
- **************************************************************************/
-void city_worklist_commit(struct city *pcity, struct worklist *pwl)
-{
-  int k;
-
-  /* Update the worklist.  Remember, though -- the current build
-     target really isn't in the worklist; don't send it to the server
-     as part of the worklist.  Of course, we have to search through
-     the current worklist to find the first _now_available_ build
-     target (to cope with players who try mean things like adding a
-     Battleship to a city worklist when the player doesn't even yet
-     have the Map Making tech).  */
-
-  for (k = 0; k < MAX_LEN_WORKLIST; k++) {
-    int same_as_current_build;
-    struct universal target;
-
-    if (!worklist_peek_ith(pwl, &target, k)) {
-      break;
-    }
-
-    same_as_current_build =
-        are_universals_equal(&pcity->production, &target);
-
-    /* Very special case: If we are currently building a wonder we
-       allow the construction to continue, even if we the wonder is
-       finished elsewhere, ie unbuildable. */
-    if (k == 0 && VUT_IMPROVEMENT == target.kind
-        && is_wonder(target.value.building) && same_as_current_build) {
-      worklist_remove(pwl, k);
-      break;
-    }
-
-    /* If it can be built... */
-    if (can_city_build_now(pcity, &target)) {
-      /* ...but we're not yet building it, then switch. */
-      if (!same_as_current_build) {
-        /* Change the current target */
-        city_change_production(pcity, &target);
-      }
-
-      /* This item is now (and may have always been) the current
-         build target.  Drop it out of the worklist. */
-      worklist_remove(pwl, k);
-      break;
-    }
-  }
-
-  /* Send the rest of the worklist on its way. */
-  city_set_worklist(pcity, pwl);
 }
 
 /**********************************************************************/ /**
