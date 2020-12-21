@@ -1528,7 +1528,7 @@ bool startpos_nation_allowed(const struct startpos *psp,
 bool startpos_allows_all(const struct startpos *psp)
 {
   fc_assert_ret_val(NULL != psp, false);
-  return (psp->nations->isDetached() || psp->nations->isEmpty());
+  return (psp->nations->isEmpty());
 }
 
 /*******************************************************************/ /**
@@ -1545,7 +1545,7 @@ bool startpos_pack(const struct startpos *psp,
   packet->exclude = psp->exclude;
   BV_CLR_ALL(packet->nations);
 
-  for (auto pnation : *psp->nations) {
+  for (auto pnation : qAsConst(*psp->nations)) {
     BV_SET(packet->nations, nation_number(pnation));
   }
   return true;
@@ -1627,8 +1627,7 @@ struct startpos *map_startpos_new(struct tile *ptile)
   fc_assert_ret_val(NULL != wld.map.startpos_table, NULL);
 
   psp = startpos_new(ptile);
-  wld.map.startpos_table->insert(static_cast<tile *>(tile_hash_key(ptile)),
-                                 psp);
+  wld.map.startpos_table->insert(ptile, psp);
 
   return psp;
 }
@@ -1644,8 +1643,8 @@ struct startpos *map_startpos_get(const struct tile *ptile)
   fc_assert_ret_val(NULL != ptile, NULL);
   fc_assert_ret_val(NULL != wld.map.startpos_table, NULL);
 
-  psp = wld.map.startpos_table->value(
-      static_cast<tile *>(tile_hash_key(ptile)), nullptr);
+  psp = wld.map.startpos_table->value(const_cast<struct tile *>(ptile),
+                                      nullptr);
 
   return psp;
 }
@@ -1657,7 +1656,7 @@ struct startpos *map_startpos_get(const struct tile *ptile)
 bool map_startpos_remove(struct tile *ptile)
 {
   bool ret;
-  struct tile *prtile = static_cast<tile *>(tile_hash_key(ptile));
+  struct tile *prtile = static_cast<tile *>(ptile);
   fc_assert_ret_val(NULL != ptile, false);
   fc_assert_ret_val(NULL != wld.map.startpos_table, false);
   ret = wld.map.startpos_table->contains(prtile);
