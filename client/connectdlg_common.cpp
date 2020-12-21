@@ -16,6 +16,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QProcess>
+#include <QStandardPaths>
 #include <QTcpServer>
 
 #include <fcntl.h>
@@ -204,8 +205,6 @@ static int find_next_free_port(int starting_port, int highest_port)
  **************************************************************************/
 bool client_start_server(void)
 {
-  QStringList program = {QStringLiteral("freeciv-server.exe"),
-                         "./freeciv-server", "freeciv-server"};
   QStringList arguments;
   QString trueFcser, ruleset, storage, port_buf, savesdir, scensdir;
   char buf[512];
@@ -267,13 +266,31 @@ bool client_start_server(void)
     arguments << QStringLiteral("--ruleset") << ruleset;
   }
 
-  for (auto const &trueServer : qAsConst(program)) {
-    serverProcess::i()->start(trueServer, arguments);
-    trueFcser = trueServer;
-    if (serverProcess::i()->waitForStarted(3000) == true) {
-      break;
-    }
+  // Look for a server binary
+  const QString server_name = QStringLiteral("freeciv-server");
+
+  // First next to the client binary
+  // NOTE On Windows findExecutable adds the .exe automatically
+  QString location = QStandardPaths::findExecutable(
+      server_name, {QCoreApplication::applicationDirPath()});
+  if (location.isEmpty()) {
+    // Then in PATH
+    location = QStandardPaths::findExecutable(server_name);
   }
+
+  // Start it
+  qInfo(_("Starting freeciv-server at %s"), qPrintable(location));
+
+  serverProcess::i()->start(location, arguments);
+  if (!serverProcess::i()->waitForStarted(3000)) {
+    output_window_append(ftc_client, _("Couldn't start the server."));
+    output_window_append(ftc_client,
+                         _("We probably couldn't start it from here."));
+    output_window_append(ftc_client,
+                         _("You'll have to start one manually. Sorry..."));
+    return false;
+  }
+
   // Wait for the server to print its welcome screen
   serverProcess::i()->waitForReadyRead();
   server_quitting = false;
