@@ -22,6 +22,7 @@ class QStringList;
 class QTextDocument;
 
 struct city;
+struct option;
 
 /**
  * Abstraction for city bars of various styles.
@@ -38,6 +39,8 @@ public:
                       const city *pcity) const = 0;
 
   static QStringList available();
+  static const QVector<QString> *available_vector(const option *);
+  static void option_changed(option *opt);
   static bool set_current(const QString &name);
   static citybar_painter *current() { return s_current.get(); }
 
