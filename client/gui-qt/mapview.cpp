@@ -8,6 +8,8 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
+#include <memory>
+
 // Qt
 #include <QMouseEvent>
 #include <QPainter>
@@ -746,7 +748,11 @@ void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
   if (gui_options.draw_full_citybar) {
     draw_full_city_bar(pcity, pcanvas, canvas_x, canvas_y, width, height);
   } else {
-    citybar_painter *painter = new simple_citybar_painter;
+    auto painter = citybar_painter::current();
+    if (!painter) {
+      citybar_painter::set_current(QStringLiteral("Simple"));
+      painter = citybar_painter::current();
+    }
 
     QPainter p;
     p.begin(pcanvas);
@@ -757,7 +763,6 @@ void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
     auto rect = painter->paint(p, QPointF(canvas_x, canvas_y), pcity);
     *width = rect.width();
     *height = rect.height();
-    delete painter;
 
     p.end();
   }

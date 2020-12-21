@@ -16,6 +16,11 @@
 #include <QTextCursor>
 #include <QTextDocument>
 
+// utility
+#include "bugs.h"
+#include "fcintl.h"
+#include "log.h"
+
 // common
 #include "city.h"
 
@@ -26,6 +31,33 @@
 #include "mapview_common.h"
 
 #include "citybar.h"
+
+/// Pointer to the city bar painter currently in use.
+std::unique_ptr<citybar_painter> citybar_painter::s_current = nullptr;
+
+/**
+ * Returns the list of all available city bar styles. The strings are not
+ * translated.
+ */
+QStringList citybar_painter::available() { return {N_("Simple")}; }
+
+/**
+ * Sets the current city bar style. The name should not be translated.
+ * Returns true on success.
+ */
+bool citybar_painter::set_current(const QString &name)
+{
+  fc_assert_ret_val(available().contains(name), false);
+
+  if (name == QStringLiteral("Simple")) {
+    s_current = std::make_unique<simple_citybar_painter>();
+    return true;
+  }
+
+  qCCritical(bugs_category, "Could not instantiate known city bar style %s",
+             qPrintable(name));
+  return false;
+}
 
 /**
  * Constructor
