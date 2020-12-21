@@ -1656,12 +1656,11 @@ struct startpos *map_startpos_get(const struct tile *ptile)
 bool map_startpos_remove(struct tile *ptile)
 {
   bool ret;
-  struct tile *prtile = static_cast<tile *>(ptile);
   fc_assert_ret_val(NULL != ptile, false);
   fc_assert_ret_val(NULL != wld.map.startpos_table, false);
-  ret = wld.map.startpos_table->contains(prtile);
+  ret = wld.map.startpos_table->contains(ptile);
   if (ret) {
-    startpos_destroy(wld.map.startpos_table->take(prtile));
+    startpos_destroy(wld.map.startpos_table->take(ptile));
   }
 
   return ret;
