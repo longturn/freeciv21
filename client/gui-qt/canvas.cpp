@@ -579,6 +579,9 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   x = x - draw_width / 2;
 
   // draw
+  // we draw using negative values to 3 pixels add first so add 3 pixels
+  x = x + 3;
+  y = y + 3;
 
   p.begin(&pcanvas->map_pixmap);
 
