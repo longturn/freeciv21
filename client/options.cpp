@@ -46,6 +46,7 @@
 
 /* client */
 #include "audio.h"
+#include "citybar.h"
 #include "cityrepdata.h"
 #include "client_main.h"
 #include "climisc.h"
@@ -78,6 +79,7 @@ struct client_options gui_options = {
     "\0",                      // .default_tileset_square_name =
     "\0",                      //.default_tileset_hex_name =
     "\0",                      //.default_tileset_isohex_name =
+    "Simple",                  //.default_city_bar_style_name =
     "stdsounds",               //.default_sound_set_name =
     "stdmusic",                //.default_music_set_name =
     "\0",                      //.default_sound_plugin_name =
@@ -1587,6 +1589,12 @@ static struct client_option client_options[] = {
            "command-line parameter."),
         COC_GRAPHICS, GUI_STUB, "", get_tileset_list,
         tilespec_reread_callback, TF_ISO | TF_HEX),
+
+    GEN_STR_LIST_OPTION(default_city_bar_style_name, N_("City bar style"),
+                        N_("Selects the style of the city bar."),
+                        COC_GRAPHICS, GUI_STUB, "Simple",
+                        citybar_painter::available_vector,
+                        citybar_painter::option_changed, 0),
 
     GEN_BOOL_OPTION(draw_city_outlines, N_("Draw city outlines"),
                     N_("Setting this option will draw a line at the city "

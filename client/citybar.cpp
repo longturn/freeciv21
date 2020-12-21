@@ -42,6 +42,31 @@ std::unique_ptr<citybar_painter> citybar_painter::s_current = nullptr;
 QStringList citybar_painter::available() { return {N_("Simple")}; }
 
 /**
+ * Returns the list of all available city bar styles. For compatibility with
+ * the option code.
+ */
+const QVector<QString> *citybar_painter::available_vector(const option *)
+{
+  static QVector<QString> vector;
+  if (vector.isEmpty()) {
+    for (auto &name : available()) {
+      vector << _(qPrintable(name));
+    }
+  }
+  return &vector;
+}
+
+/**
+ * Called by the option code when the option has changed. Sets the current
+ * painter and refreshes the map.
+ */
+void citybar_painter::option_changed(option *opt)
+{
+  set_current(option_str_get(opt));
+  update_map_canvas_visible();
+}
+
+/**
  * Sets the current city bar style. The name should not be translated.
  * Returns true on success.
  */
