@@ -11,10 +11,14 @@
 
 #pragma once
 
+#include <memory>
+
 // Forward declarations
 class QPainter;
 class QPointF;
 class QRect;
+class QString;
+class QStringList;
 class QTextDocument;
 
 struct city;
@@ -32,6 +36,13 @@ public:
    */
   virtual QRect paint(QPainter &painter, const QPointF &position,
                       const city *pcity) const = 0;
+
+  static QStringList available();
+  static bool set_current(const QString &name);
+  static citybar_painter *current() { return s_current.get(); }
+
+private:
+  static std::unique_ptr<citybar_painter> s_current;
 };
 
 /**
