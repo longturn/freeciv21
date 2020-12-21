@@ -241,7 +241,6 @@ static const char *download_modpack_recursive(const char *URL,
     }
 
     dep++;
-
   } while (dep_name != NULL);
 
   total_files = 0;

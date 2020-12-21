@@ -412,7 +412,6 @@ static void do_team_placement(const struct team_placement_config *pconfig,
             iter);
       break;
     }
-
   } while (repeat && team_placement_pq_remove(pqueue, &pstate));
 
   team_placement_pq_destroy_full(pqueue, team_placement_state_destroy);

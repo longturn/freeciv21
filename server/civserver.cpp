@@ -115,15 +115,6 @@ static void signal_handler(int sig)
  **************************************************************************/
 int main(int argc, char *argv[])
 {
-  /* Load win32 post-crash debugger */
-#ifdef FREECIV_MSWINDOWS
-  if (LoadLibrary("exchndl.dll") == NULL) {
-#ifdef FREECIV_DEBUG
-    fprintf(stderr, "exchndl.dll could not be loaded, no crash debugger\n");
-#endif /* FREECIV_DEBUG */
-  }
-#endif /* FREECIV_MSWINDOWS */
-
   if (SIG_ERR == signal(SIGINT, signal_handler)) {
     fc_fprintf(stderr, _("Failed to install SIGINT handler: %s\n"),
                fc_strerror(fc_get_errno()));

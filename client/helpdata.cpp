@@ -155,6 +155,16 @@ static bool insert_veteran_help(char *outbuf, size_t outlen,
   }
 }
 
+static const char *terrtrans2char(struct terrain *result,
+                                  universal &for_terr,
+                                  struct terrain *pterrain,
+                                  enum gen_action act)
+{
+  return (result == pterrain || result == T_NONE
+          || !action_id_univs_not_blocking(act, NULL, &for_terr))
+             ? ""
+             : terrain_name_translation(result);
+}
 /************************************************************************/ /**
    Insert generated text for the helpdata "name".
    Returns TRUE if anything was added.
@@ -196,25 +206,13 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
                     pterrain->transform_time);
         terrain = terrain_name_translation(pterrain);
         irrigation_result =
-            (pterrain->irrigation_result == pterrain
-             || pterrain->irrigation_result == T_NONE
-             || !action_id_univs_not_blocking(ACTION_CULTIVATE, NULL,
-                                              &for_terr))
-                ? ""
-                : terrain_name_translation(pterrain->irrigation_result);
-        mining_result =
-            (pterrain->mining_result == pterrain
-             || pterrain->mining_result == T_NONE
-             || !action_id_univs_not_blocking(ACTION_PLANT, NULL, &for_terr))
-                ? ""
-                : terrain_name_translation(pterrain->mining_result);
+            terrtrans2char(pterrain->irrigation_result, for_terr, pterrain,
+                           ACTION_CULTIVATE);
+        mining_result = terrtrans2char(pterrain->mining_result, for_terr,
+                                       pterrain, ACTION_PLANT);
         transform_result =
-            (pterrain->transform_result == pterrain
-             || pterrain->transform_result == T_NONE
-             || !action_id_univs_not_blocking(ACTION_TRANSFORM_TERRAIN, NULL,
-                                              &for_terr))
-                ? ""
-                : terrain_name_translation(pterrain->transform_result);
+            terrtrans2char(pterrain->transform_result, for_terr, pterrain,
+                           ACTION_TRANSFORM_TERRAIN);
         /* Use get_internal_string_length() for correct alignment with
          * multibyte character encodings */
         cat_snprintf(

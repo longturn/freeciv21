@@ -106,15 +106,6 @@ static void conv_log(const char *msg) { qInfo("%s", msg); }
  **************************************************************************/
 int main(int argc, char **argv)
 {
-  /* Load win32 post-crash debugger */
-#ifdef FREECIV_MSWINDOWS
-  if (LoadLibrary("exchndl.dll") == NULL) {
-#ifdef FREECIV_DEBUG
-    fprintf(stderr, "exchndl.dll could not be loaded, no crash debugger\n");
-#endif /* FREECIV_DEBUG */
-  }
-#endif /* FREECIV_MSWINDOWS */
-
   QCoreApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(VERSION_STRING);
 

@@ -57,6 +57,7 @@ public slots:
 ***************************************************************************/
 class info_tab : public fcwidget {
   Q_OBJECT
+
 public:
   info_tab(QWidget *parent);
   void max_chat_size();

@@ -64,6 +64,7 @@ private:
 **************************************************************************/
 class minimap_view : public fcwidget {
   Q_OBJECT
+
 public:
   minimap_view(QWidget *parent);
   ~minimap_view();
