@@ -713,15 +713,15 @@ void send_attribute_block(const struct player *pplayer,
   fc_assert_ret(pplayer->attribute_block.length > 0
                 && pplayer->attribute_block.length < MAX_ATTRIBUTE_BLOCK);
 
-  chunks = (pplayer->attribute_block.length - 1) / ATTRIBUTE_CHUNK_SIZE + 1;
+  chunks = (pplayer->attribute_block.length - 1) / ATTRIBUTE_CHUNK_SIZE;
   bytes_left = pplayer->attribute_block.length;
 
   connection_do_buffer(pconn);
 
   for (current_chunk = 0; current_chunk < chunks; current_chunk++) {
-    int size_of_current_chunk = MIN(bytes_left, ATTRIBUTE_CHUNK_SIZE);
+    int size_of_current_chunk = MIN(bytes_left, ATTRIBUTE_CHUNK_SIZE - 1);
 
-    packet.offset = ATTRIBUTE_CHUNK_SIZE * current_chunk;
+    packet.offset = (ATTRIBUTE_CHUNK_SIZE - 1) * current_chunk;
     packet.total_length = pplayer->attribute_block.length;
     packet.chunk_length = size_of_current_chunk;
 
@@ -730,11 +730,11 @@ void send_attribute_block(const struct player *pplayer,
            packet.chunk_length);
     bytes_left -= packet.chunk_length;
 
-    if (packet.chunk_length < ATTRIBUTE_CHUNK_SIZE) {
+    if (packet.chunk_length < ATTRIBUTE_CHUNK_SIZE - 1) {
       /* Last chunk is not full. Make sure that delta does
        * not use random data. */
       memset(packet.data + packet.chunk_length, 0,
-             ATTRIBUTE_CHUNK_SIZE - packet.chunk_length);
+             ATTRIBUTE_CHUNK_SIZE - 1 - packet.chunk_length);
     }
 
     send_packet_player_attribute_chunk(pconn, &packet);
