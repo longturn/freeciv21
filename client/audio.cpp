@@ -141,7 +141,7 @@ void audio_add_plugin(struct audio_plugin *p)
 /**********************************************************************/ /**
    Choose plugin. Returns TRUE on success, FALSE if not
  **************************************************************************/
-bool audio_select_plugin(QString &name)
+bool audio_select_plugin(const QString &name)
 {
   int i;
   bool found = false;
@@ -204,7 +204,8 @@ void audio_init(void)
    Returns the filename for the given audio set. Returns NULL if
    set couldn't be found. Caller has to free the return value.
  **************************************************************************/
-static const QString audiospec_fullname(QString &audioset_name, bool music)
+static const QString audiospec_fullname(const QString &audioset_name,
+                                        bool music)
 {
   const QString suffix = music ? MUSICSPEC_SUFFIX : SNDSPEC_SUFFIX;
   QString audioset_default =
@@ -267,8 +268,9 @@ static bool check_audiofile_capstr(struct section_file *sfile,
 /**********************************************************************/ /**
    Initialize audio system and autoselect a plugin
  **************************************************************************/
-void audio_real_init(QString &soundset_name, QString &musicset_name,
-                     QString &preferred_plugin_name)
+void audio_real_init(const QString &soundset_name,
+                     const QString &musicset_name,
+                     const QString &preferred_plugin_name)
 {
   QString ss_filename;
   QString ms_filename;
@@ -335,7 +337,7 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
 
   atexit(audio_shutdown);
 
-  if (preferred_plugin_name[0] != '\0') {
+  if (!preferred_plugin_name.isEmpty()) {
     if (!audio_select_plugin(preferred_plugin_name))
       qInfo(_("Proceeding with sound support disabled."));
     return;
