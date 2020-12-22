@@ -251,8 +251,8 @@ void minimap_thread::run()
       if (scale > 1) {
         /* move minimap now,
            scale later and draw without looking for origin */
-        src = &gui_options.overview.map->map_pixmap;
-        dst = &gui_options.overview.window->map_pixmap;
+        src = gui_options.overview.map;
+        dst = gui_options.overview.window;
         x = gui_options.overview.map_x0;
         y = gui_options.overview.map_y0;
         ix = gui_options.overview.width - x;
@@ -261,7 +261,7 @@ void minimap_thread::run()
         pixmap_copy(dst, src, 0, y, ix, 0, x, iy);
         pixmap_copy(dst, src, x, 0, 0, iy, ix, y);
         pixmap_copy(dst, src, x, y, 0, 0, ix, iy);
-        tpix = gui_options.overview.window->map_pixmap.toImage();
+        tpix = gui_options.overview.window->toImage();
         wf = static_cast<float>(gui_options.overview.width) / scale;
         hf = static_cast<float>(gui_options.overview.height) / scale;
         x = 0;
@@ -276,7 +276,7 @@ void minimap_thread::run()
         image = gpix.scaled(mini_width, mini_height, Qt::IgnoreAspectRatio,
                             Qt::FastTransformation);
       } else {
-        tpix = gui_options.overview.map->map_pixmap.toImage();
+        tpix = gui_options.overview.map->toImage();
         image = tpix.scaled(mini_width, mini_height, Qt::IgnoreAspectRatio,
                             Qt::FastTransformation);
       }

@@ -48,7 +48,7 @@
 const char *get_timeout_label_text();
 static int mapview_frozen_level = 0;
 extern void destroy_city_dialog();
-extern struct canvas *canvas;
+extern QPixmap *canvas;
 extern QApplication *qapp;
 
 #define MAX_DIRTY_RECTS 20
@@ -132,7 +132,7 @@ void draw_calculated_trade_routes(QPainter *painter)
         && tile_to_canvas_pos(&canvas_x, &canvas_y, pcity->tile)) {
       painter->drawPixmap(static_cast<int>(canvas_x),
                           static_cast<int>(canvas_y),
-                          *get_attention_crosshair_sprite(tileset)->pm);
+                          *get_attention_crosshair_sprite(tileset));
     }
   }
 }
@@ -262,8 +262,7 @@ void map_view::paintEvent(QPaintEvent *event)
  **************************************************************************/
 void map_view::paint(QPainter *painter, QPaintEvent *event)
 {
-  painter->drawPixmap(event->rect(), mapview.store->map_pixmap,
-                      event->rect());
+  painter->drawPixmap(event->rect(), *mapview.store, event->rect());
   draw_calculated_trade_routes(painter);
 }
 
@@ -409,8 +408,8 @@ void update_turn_done_button(bool do_restore)
    client window.  The parameters tell which sprite to use for the
    indicator.
  **************************************************************************/
-void set_indicator_icons(struct sprite *bulb, struct sprite *sol,
-                         struct sprite *flake, struct sprite *gov)
+void set_indicator_icons(QPixmap *bulb, QPixmap *sol, QPixmap *flake,
+                         QPixmap *gov)
 {
   queen()->sw_indicators->updateFinalPixmap();
 }
@@ -501,8 +500,7 @@ void update_city_descriptions(void) { update_map_canvas_visible(); }
 /**********************************************************************/ /**
    Put overlay tile to pixmap
  **************************************************************************/
-void pixmap_put_overlay_tile(int canvas_x, int canvas_y,
-                             struct sprite *ssprite)
+void pixmap_put_overlay_tile(int canvas_x, int canvas_y, QPixmap *ssprite)
 {
   if (!ssprite) {
     return;
@@ -736,9 +734,8 @@ void qtg_start_turn()
    (see that function for more info) for tilesets that do not have a full
    city bar.
  ****************************************************************************/
-static void show_small_citybar(struct canvas *pcanvas, int canvas_x,
-                               int canvas_y, struct city *pcity, int *width,
-                               int *height)
+static void show_small_citybar(QPixmap *pcanvas, int canvas_x, int canvas_y,
+                               struct city *pcity, int *width, int *height)
 {
   static char name[512], growth[32], prod[512], trade_routes[32];
   enum color_std growth_color;
@@ -857,7 +854,7 @@ static void show_small_citybar(struct canvas *pcanvas, int canvas_x,
    width and height of the text block (centered directly underneath the
    city's tile).
  ****************************************************************************/
-void show_city_desc(struct canvas *pcanvas, int canvas_x, int canvas_y,
+void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
                     struct city *pcity, int *width, int *height)
 {
   if (is_any_city_dialog_open()) {

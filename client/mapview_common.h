@@ -26,7 +26,7 @@ struct view {
   int tile_width, tile_height; /* Size in tiles. Rounded up. */
   int store_width, store_height;
   bool can_do_cached_drawing; /* TRUE if cached drawing is possible. */
-  struct canvas *store, *tmp_store;
+  QPixmap *store, *tmp_store;
 };
 
 void mapdeco_init(void);
@@ -252,16 +252,16 @@ void center_tile_mapcanvas(struct tile *ptile);
 bool tile_visible_mapcanvas(struct tile *ptile);
 bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile);
 
-void put_unit(const struct unit *punit, struct canvas *pcanvas, int canvas_x,
+void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
               int canvas_y);
-void put_unittype(const struct unit_type *putype, struct canvas *pcanvas,
+void put_unittype(const struct unit_type *putype, QPixmap *pcanvas,
                   int canvas_x, int canvas_y);
-void put_city(struct city *pcity, struct canvas *pcanvas, int canvas_x,
+void put_city(struct city *pcity, QPixmap *pcanvas, int canvas_x,
               int canvas_y);
-void put_terrain(struct tile *ptile, struct canvas *pcanvas, int canvas_x,
+void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,
                  int canvas_y);
 
-void put_unit_city_overlays(struct unit *punit, struct canvas *pcanvas,
+void put_unit_city_overlays(struct unit *punit, QPixmap *pcanvas,
                             int canvas_x, int canvas_y, int *upkeep_cost,
                             int happy_cost);
 void toggle_city_color(struct city *pcity);
@@ -269,14 +269,14 @@ void toggle_unit_color(struct unit *punit);
 
 void put_nuke_mushroom_pixmaps(struct tile *ptile);
 
-void put_one_element(struct canvas *pcanvas, enum mapview_layer layer,
+void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
                      const struct tile *ptile, const struct tile_edge *pedge,
                      const struct tile_corner *pcorner,
                      const struct unit *punit, const struct city *pcity,
                      int canvas_x, int canvas_y, const struct city *citymode,
                      const struct unit_type *putype);
 
-void put_drawn_sprites(struct canvas *pcanvas, int canvas_x, int canvas_y,
+void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
                        int count, struct drawn_sprite *pdrawn, bool fog,
                        bool citydialog = false, bool city_unit = false);
 
@@ -320,7 +320,7 @@ void init_mapcanvas_and_overview(void);
 void free_mapcanvas_and_overview(void);
 
 void get_spaceship_dimensions(int *width, int *height);
-void put_spaceship(struct canvas *pcanvas, int canvas_x, int canvas_y,
+void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
                    const struct player *pplayer);
 
 void link_marks_init(void);

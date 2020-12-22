@@ -137,11 +137,11 @@ void sidebarWidget::setLabel(const QString &str) { desc = str; }
 void sidebarWidget::resizePixmap(int width, int height)
 {
   if (standard == SW_TAX) {
-    height = get_tax_sprite(tileset, O_LUXURY)->pm->height() + 8;
+    height = get_tax_sprite(tileset, O_LUXURY)->height() + 8;
   }
 
   if (standard == SW_INDICATORS) {
-    height = client_government_sprite()->pm->height() + 8;
+    height = client_government_sprite()->height() + 8;
   }
 
   if (def_pixmap) {
@@ -324,7 +324,7 @@ void sidebarWidget::someSlot()
  ***************************************************************************/
 void sidebarWidget::updateFinalPixmap()
 {
-  const struct sprite *sprite;
+  const QPixmap *sprite;
   int w, h, pos, i;
   QPainter p;
   QPen pen;
@@ -360,13 +360,13 @@ void sidebarWidget::updateFinalPixmap()
     }
     w = width() / 10;
     modulo = width() % 10;
-    h = sprite->pm->height();
+    h = sprite->height();
     reduce_mod(modulo, pos);
     if (client.conn.playing == nullptr) {
       return;
     }
     for (d = 0; d < client.conn.playing->economic.tax / 10; ++d) {
-      p.drawPixmap(pos, 5, sprite->pm->scaled(w, h), 0, 0, w, h);
+      p.drawPixmap(pos, 5, sprite->scaled(w, h), 0, 0, w, h);
       pos = pos + w;
       reduce_mod(modulo, pos);
     }
@@ -377,7 +377,7 @@ void sidebarWidget::updateFinalPixmap()
                 + client.conn.playing->economic.science)
                    / 10;
          ++d) {
-      p.drawPixmap(pos, 5, sprite->pm->scaled(w, h), 0, 0, w, h);
+      p.drawPixmap(pos, 5, sprite->scaled(w, h), 0, 0, w, h);
       pos = pos + w;
       reduce_mod(modulo, pos);
     }
@@ -385,24 +385,24 @@ void sidebarWidget::updateFinalPixmap()
     sprite = get_tax_sprite(tileset, O_LUXURY);
 
     for (; d < 10; ++d) {
-      p.drawPixmap(pos, 5, sprite->pm->scaled(w, h), 0, 0, w, h);
+      p.drawPixmap(pos, 5, sprite->scaled(w, h), 0, 0, w, h);
       pos = pos + w;
       reduce_mod(modulo, pos);
     }
   } else if (standard == SW_INDICATORS) {
     sprite = client_research_sprite();
-    w = sprite->pm->width();
+    w = sprite->width();
     pos = scaled_pixmap->width() / 2 - 2 * w;
-    p.drawPixmap(pos, 5, *sprite->pm);
+    p.drawPixmap(pos, 5, *sprite);
     pos = pos + w;
     sprite = client_warming_sprite();
-    p.drawPixmap(pos, 5, *sprite->pm);
+    p.drawPixmap(pos, 5, *sprite);
     pos = pos + w;
     sprite = client_cooling_sprite();
-    p.drawPixmap(pos, 5, *sprite->pm);
+    p.drawPixmap(pos, 5, *sprite);
     pos = pos + w;
     sprite = client_government_sprite();
-    p.drawPixmap(pos, 5, *sprite->pm);
+    p.drawPixmap(pos, 5, *sprite);
 
   } else {
     p.drawPixmap(0, 0, *scaled_pixmap);
@@ -699,12 +699,12 @@ void sidebarRightClickScience(void)
     menu = new QMenu(king()->central_wdg);
     for (int i = 0; i < curr_list.count(); i++) {
       QIcon ic;
-      struct sprite *sp;
+      QPixmap *sp;
 
       qvar = curr_list.at(i).id;
       sp = get_tech_sprite(tileset, curr_list.at(i).id);
       if (sp) {
-        ic = QIcon(*sp->pm);
+        ic = QIcon(*sp);
       }
       act = new QAction(ic, curr_list.at(i).tech_str, queen()->mapview_wdg);
       act->setData(qvar);

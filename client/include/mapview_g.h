@@ -33,8 +33,8 @@ GUI_FUNC_PROTO(void, update_mouse_cursor, enum cursor_type new_cursor_type)
 GUI_FUNC_PROTO(void, update_timeout_label, void)
 GUI_FUNC_PROTO(void, update_turn_done_button, bool do_restore)
 GUI_FUNC_PROTO(void, update_city_descriptions, void)
-GUI_FUNC_PROTO(void, set_indicator_icons, struct sprite *bulb,
-               struct sprite *sol, struct sprite *flake, struct sprite *gov)
+GUI_FUNC_PROTO(void, set_indicator_icons, QPixmap *bulb, QPixmap *sol,
+               QPixmap *flake, QPixmap *gov)
 
 GUI_FUNC_PROTO(void, start_turn, void)
 
@@ -53,5 +53,5 @@ GUI_FUNC_PROTO(void, put_cross_overlay_tile, struct tile *ptile)
 GUI_FUNC_PROTO(void, draw_selection_rectangle, int canvas_x, int canvas_y,
                int w, int h)
 GUI_FUNC_PROTO(void, tileset_changed, void)
-void show_city_desc(struct canvas *pcanvas, int canvas_x, int canvas_y,
+void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
                     struct city *pcity, int *width, int *height);

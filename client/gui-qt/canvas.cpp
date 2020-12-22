@@ -40,11 +40,9 @@ static QFont *get_font(enum client_font font);
 /************************************************************************/ /**
    Create a canvas of the given size.
  ****************************************************************************/
-struct canvas *qtg_canvas_create(int width, int height)
+QPixmap *qtg_canvas_create(int width, int height)
 {
-  struct canvas *store = new canvas;
-
-  store->map_pixmap = QPixmap(width, height);
+  QPixmap *store = new QPixmap(width, height);
   return store;
 }
 
@@ -52,14 +50,13 @@ struct canvas *qtg_canvas_create(int width, int height)
    Free any resources associated with this canvas and the canvas struct
    itself.
  ****************************************************************************/
-void qtg_canvas_free(struct canvas *store) { delete store; }
+void qtg_canvas_free(QPixmap *store) { delete store; }
 
 /************************************************************************/ /**
    Copies an area from the source canvas to the destination canvas.
  ****************************************************************************/
-void qtg_canvas_copy(struct canvas *dest, struct canvas *src, int src_x,
-                     int src_y, int dest_x, int dest_y, int width,
-                     int height)
+void qtg_canvas_copy(QPixmap *dest, QPixmap *src, int src_x, int src_y,
+                     int dest_x, int dest_y, int width, int height)
 {
   QRectF source_rect(src_x, src_y, width, height);
   QRectF dest_rect(dest_x, dest_y, width, height);
@@ -69,8 +66,8 @@ void qtg_canvas_copy(struct canvas *dest, struct canvas *src, int src_x,
     return;
   }
 
-  p.begin(&dest->map_pixmap);
-  p.drawPixmap(dest_rect, src->map_pixmap, source_rect);
+  p.begin(dest);
+  p.drawPixmap(dest_rect, *src, source_rect);
   p.end();
 }
 
@@ -115,14 +112,14 @@ void image_copy(QImage *dest, QImage *src, int src_x, int src_y, int dest_x,
 /************************************************************************/ /**
    Draw some or all of a sprite onto the canvas.
  ****************************************************************************/
-void qtg_canvas_put_sprite(struct canvas *pcanvas, int canvas_x,
-                           int canvas_y, struct sprite *sprite, int offset_x,
-                           int offset_y, int width, int height)
+void qtg_canvas_put_sprite(QPixmap *pcanvas, int canvas_x, int canvas_y,
+                           QPixmap *sprite, int offset_x, int offset_y,
+                           int width, int height)
 {
   QPainter p;
 
-  p.begin(&pcanvas->map_pixmap);
-  p.drawPixmap(canvas_x, canvas_y, *sprite->pm, offset_x, offset_y, width,
+  p.begin(pcanvas);
+  p.drawPixmap(canvas_x, canvas_y, *sprite, offset_x, offset_y, width,
                height);
   p.end();
 }
@@ -130,8 +127,8 @@ void qtg_canvas_put_sprite(struct canvas *pcanvas, int canvas_x,
 /************************************************************************/ /**
    Draw a full sprite onto the canvas.
  ****************************************************************************/
-void qtg_canvas_put_sprite_full(struct canvas *pcanvas, int canvas_x,
-                                int canvas_y, struct sprite *sprite)
+void qtg_canvas_put_sprite_full(QPixmap *pcanvas, int canvas_x, int canvas_y,
+                                QPixmap *sprite)
 {
   int width, height;
 
@@ -144,9 +141,9 @@ void qtg_canvas_put_sprite_full(struct canvas *pcanvas, int canvas_x,
    Draw a full sprite onto the canvas.  If "fog" is specified draw it with
    fog.
  ****************************************************************************/
-void qtg_canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
-                                  int canvas_y, struct sprite *psprite,
-                                  bool fog, int fog_x, int fog_y)
+void qtg_canvas_put_sprite_fogged(QPixmap *pcanvas, int canvas_x,
+                                  int canvas_y, QPixmap *psprite, bool fog,
+                                  int fog_x, int fog_y)
 {
   Q_UNUSED(fog_x)
   Q_UNUSED(fog_y)
@@ -154,77 +151,75 @@ void qtg_canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
   /* TODO make proper fog from this, just guess good compositions :D,
    * probably use original black pixmap */
   // QPainter p, q;
-  // QPixmap pix(psprite->pm->width(), psprite->pm->height());
+  // QPixmap pix(psprite->width(), psprite->height());
   // pix.fill(Qt::transparent);
-  // pix = psprite->pm->copy();
+  // pix = psprite->copy();
 
   // q.begin(&pix);
   // q.setCompositionMode(QPainter::RasterOp_NotSourceOrNotDestination);
-  // q.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  // q.drawPixmap(canvas_x, canvas_y, *psprite);
   // q.end();
 
-  // p.begin(&pcanvas->map_pixmap);
+  // p.begin(pcanvas );
   // p.setOpacity(0.8);
   // //p.setCompositionMode(QPainter::CompositionMode_SourceIn);
   // p.drawPixmap(canvas_x, canvas_y, pix);
   // p.setOpacity(0.5);
   // p.setCompositionMode(QPainter::CompositionMode_Lighten);
-  // p.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  // p.drawPixmap(canvas_x, canvas_y, *psprite);
   // p.end();
 
-  p.begin(&pcanvas->map_pixmap);
+  p.begin(pcanvas);
   p.setCompositionMode(QPainter::CompositionMode_Difference);
   p.setOpacity(0.5);
-  p.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  p.drawPixmap(canvas_x, canvas_y, *psprite);
   p.end();
 }
 
 /*****************************************************************************
    Draw fog outside city map when city is opened
  ****************************************************************************/
-void qtg_canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
-                                    int canvas_y, struct sprite *psprite,
-                                    bool fog, int fog_x, int fog_y)
+void qtg_canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x,
+                                    int canvas_y, QPixmap *psprite, bool fog,
+                                    int fog_x, int fog_y)
 {
   Q_UNUSED(fog_x)
   Q_UNUSED(fog_y)
   QPainter p;
 
-  p.begin(&pcanvas->map_pixmap);
+  p.begin(pcanvas);
   p.setCompositionMode(QPainter::CompositionMode_Difference);
   p.setOpacity(0.5);
-  p.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  p.drawPixmap(canvas_x, canvas_y, *psprite);
   p.end();
 }
 
 /*****************************************************************************
    Put unit in city area when city dialog is open
  ****************************************************************************/
-void canvas_put_unit_fogged(struct canvas *pcanvas, int canvas_x,
-                            int canvas_y, struct sprite *psprite, bool fog,
-                            int fog_x, int fog_y)
+void canvas_put_unit_fogged(QPixmap *pcanvas, int canvas_x, int canvas_y,
+                            QPixmap *psprite, bool fog, int fog_x, int fog_y)
 {
   Q_UNUSED(fog_y)
   Q_UNUSED(fog_x)
   QPainter p;
 
-  p.begin(&pcanvas->map_pixmap);
+  p.begin(pcanvas);
   p.setOpacity(0.7);
-  p.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  p.drawPixmap(canvas_x, canvas_y, *psprite);
   p.end();
 }
 /************************************************************************/ /**
    Draw a filled-in colored rectangle onto canvas.
  ****************************************************************************/
-void qtg_canvas_put_rectangle(struct canvas *pcanvas, QColor *pcolor,
-                              int canvas_x, int canvas_y, int width,
-                              int height)
+void qtg_canvas_put_rectangle(QPixmap *pcanvas, QColor *pcolor, int canvas_x,
+                              int canvas_y, int width, int height)
 {
   QBrush brush(*pcolor);
   QPen pen(*pcolor);
   QPainter p;
 
-  p.begin(&pcanvas->map_pixmap);
+  p.begin(pcanvas);
   p.setPen(pen);
   p.setBrush(brush);
   if (width == 1 && height == 1) {
@@ -243,9 +238,8 @@ void qtg_canvas_put_rectangle(struct canvas *pcanvas, QColor *pcolor,
 /************************************************************************/ /**
    Fill the area covered by the sprite with the given color.
  ****************************************************************************/
-void qtg_canvas_fill_sprite_area(struct canvas *pcanvas,
-                                 struct sprite *psprite, QColor *pcolor,
-                                 int canvas_x, int canvas_y)
+void qtg_canvas_fill_sprite_area(QPixmap *pcanvas, QPixmap *psprite,
+                                 QColor *pcolor, int canvas_x, int canvas_y)
 {
   int width, height;
 
@@ -257,7 +251,7 @@ void qtg_canvas_fill_sprite_area(struct canvas *pcanvas,
 /************************************************************************/ /**
    Draw a 1-pixel-width colored line onto the canvas.
  ****************************************************************************/
-void qtg_canvas_put_line(struct canvas *pcanvas, QColor *pcolor,
+void qtg_canvas_put_line(QPixmap *pcanvas, QColor *pcolor,
                          enum line_type ltype, int start_x, int start_y,
                          int dx, int dy)
 {
@@ -285,7 +279,7 @@ void qtg_canvas_put_line(struct canvas *pcanvas, QColor *pcolor,
     break;
   }
 
-  p.begin(&pcanvas->map_pixmap);
+  p.begin(pcanvas);
   p.setPen(pen);
   p.setRenderHint(QPainter::Antialiasing);
   p.drawLine(start_x, start_y, start_x + dx, start_y + dy);
@@ -295,7 +289,7 @@ void qtg_canvas_put_line(struct canvas *pcanvas, QColor *pcolor,
 /************************************************************************/ /**
    Draw a 1-pixel-width colored curved line onto the canvas.
  ****************************************************************************/
-void qtg_canvas_put_curved_line(struct canvas *pcanvas, QColor *pcolor,
+void qtg_canvas_put_curved_line(QPixmap *pcanvas, QColor *pcolor,
                                 enum line_type ltype, int start_x,
                                 int start_y, int dx, int dy)
 {
@@ -324,7 +318,7 @@ void qtg_canvas_put_curved_line(struct canvas *pcanvas, QColor *pcolor,
     break;
   }
 
-  p.begin(&pcanvas->map_pixmap);
+  p.begin(pcanvas);
   p.setRenderHints(QPainter::Antialiasing);
   p.setPen(pen);
 
@@ -363,7 +357,7 @@ void qtg_get_text_size(int *width, int *height, enum client_font font,
    position does not account for the ascent of the text; this function must
    take care of this manually.  The text will not be NULL but may be empty.
  ****************************************************************************/
-void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
+void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
                          enum client_font font, QColor *pcolor,
                          const QString &text)
 {
@@ -376,7 +370,7 @@ void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
   pen.setColor(*pcolor);
   fm = new QFontMetrics(*afont);
 
-  p.begin(&pcanvas->map_pixmap);
+  p.begin(pcanvas);
   p.setPen(pen);
   p.setFont(*afont);
   p.drawText(canvas_x, canvas_y + fm->ascent(), text);
@@ -458,8 +452,8 @@ QRect zealous_crop_rect(QImage &p)
   return QRect(l, t, qMax(0, r - l + 1), qMax(0, b - t + 1));
 }
 
-void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
-                        int y, int *ref_width, int *ref_height)
+void draw_full_city_bar(struct city *pcity, QPixmap *pcanvas, int x, int y,
+                        int *ref_width, int *ref_height)
 {
   QBrush blackBrush, brush, grow2Brush, growBrush, redBrush, prod2Brush,
       prodBrush, ownerBrush;
@@ -513,11 +507,11 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   }
 
   QString text = pcity->name;
-  struct sprite *flag = get_city_flag_sprite(tileset, pcity);
+  QPixmap *flag = get_city_flag_sprite(tileset, pcity);
   fonttext_height = fm->ascent();
   QString city_size = QString::number(pcity->size);
   const struct citybar_sprites *citybar = get_citybar_sprites(tileset);
-  struct sprite *occupy = nullptr;
+  QPixmap *occupy = nullptr;
   QPixmap occupyPix;
 
   if (can_player_see_units_in_city(client.conn.playing, pcity)) {
@@ -540,7 +534,7 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
 
   struct universal *target;
   target = &pcity->production;
-  struct sprite *xsprite = nullptr;
+  QPixmap *xsprite = nullptr;
   if (can_see && (VUT_UTYPE == target->kind)) {
     xsprite = get_unittype_sprite(get_tileset(), target->value.utype,
                                   direction8_invalid());
@@ -549,17 +543,16 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   }
   QPixmap prodPix;
   if (xsprite) {
-    prodPix = xsprite->pm->scaledToHeight(fonttext_height,
-                                          Qt::SmoothTransformation);
+    prodPix =
+        xsprite->scaledToHeight(fonttext_height, Qt::SmoothTransformation);
   } else {
     prodPix = QPixmap(1, 1);
   }
 
   flagPix =
-      (*flag->pm).scaledToHeight(fonttext_height, Qt::SmoothTransformation);
-  occupyPix = (*occupy->pm)
-                  .scaledToHeight((fonttext_height * 3) / 2,
-                                  Qt::SmoothTransformation);
+      (*flag).scaledToHeight(fonttext_height, Qt::SmoothTransformation);
+  occupyPix = (*occupy).scaledToHeight((fonttext_height * 3) / 2,
+                                       Qt::SmoothTransformation);
 
   // count width
   int draw_width;
@@ -583,7 +576,7 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   x = x + 3;
   y = y + 3;
 
-  p.begin(&pcanvas->map_pixmap);
+  p.begin(pcanvas);
 
   p.setPen(ownerPen);
   p.setBrush(ownerBrush);
@@ -597,7 +590,7 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
 
     QString trade_text = QString(trade_routes);
     mid = mid - fm->horizontalAdvance(trade_text) / 2;
-    QPixmap tradePix = citybar->trade->pm->scaledToHeight(fonttext_height);
+    QPixmap tradePix = citybar->trade->scaledToHeight(fonttext_height);
 
     p.drawRoundedRect(mid - 3, y + fonttext_height,
                       tradePix.width() + fm->horizontalAdvance(trade_text),

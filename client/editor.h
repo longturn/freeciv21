@@ -93,11 +93,11 @@ void editor_tool_set_value(enum editor_tool_type ett, int value);
 const char *editor_tool_get_value_name(enum editor_tool_type ett, int value);
 
 const char *editor_tool_get_name(enum editor_tool_type ett);
-struct sprite *editor_tool_get_sprite(enum editor_tool_type ett);
+QPixmap *editor_tool_get_sprite(enum editor_tool_type ett);
 const char *editor_tool_get_tooltip(enum editor_tool_type ett);
 
 const char *editor_get_mode_tooltip(enum editor_tool_mode etm);
-struct sprite *editor_get_mode_sprite(enum editor_tool_mode etm);
+QPixmap *editor_get_mode_sprite(enum editor_tool_mode etm);
 
 struct edit_buffer;
 struct edit_buffer *editor_get_copy_buffer(void);

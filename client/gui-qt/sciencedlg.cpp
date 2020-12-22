@@ -86,7 +86,7 @@ void research_diagram::create_tooltip_help()
 {
   int i, j;
   int swidth, sheight;
-  struct sprite *sprite;
+  QPixmap *sprite;
   reqtree *tree;
   req_tooltip_help *rttp;
 
@@ -223,7 +223,7 @@ void research_diagram::reset()
   req = create_reqtree(client_player(), true);
   get_reqtree_dimensions(req, &width, &height);
   pcanvas = qtg_canvas_create(width, height);
-  pcanvas->map_pixmap.fill(Qt::transparent);
+  pcanvas->fill(Qt::transparent);
   resize(width, height);
 }
 
@@ -358,7 +358,7 @@ void research_diagram::paintEvent(QPaintEvent *event)
   QPainter painter;
 
   painter.begin(this);
-  painter.drawPixmap(0, 0, width, height, pcanvas->map_pixmap);
+  painter.drawPixmap(0, 0, width, height, *pcanvas);
   painter.end();
 }
 
@@ -485,7 +485,7 @@ void science_report::update_report()
   double not_used;
   QString str;
   qlist_item item;
-  struct sprite *sp;
+  QPixmap *sp;
 
   fc_assert_ret(NULL != research);
 
@@ -560,7 +560,7 @@ void science_report::update_report()
 
     sp = get_tech_sprite(tileset, curr_list->at(i).id);
     if (sp) {
-      ic = QIcon(*sp->pm);
+      ic = QIcon(*sp);
     }
     qvar = curr_list->at(i).id;
     researching_combo->insertItem(i, ic, curr_list->at(i).tech_str, qvar);
@@ -571,7 +571,7 @@ void science_report::update_report()
 
     sp = get_tech_sprite(tileset, goal_list->at(i).id);
     if (sp) {
-      ic = QIcon(*sp->pm);
+      ic = QIcon(*sp);
     }
     qvar = goal_list->at(i).id;
     goal_combo->insertItem(i, ic, goal_list->at(i).tech_str, qvar);

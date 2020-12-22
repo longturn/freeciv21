@@ -42,7 +42,7 @@ ss_report::ss_report(struct player *pplayer)
 
   QGridLayout *layout = new QGridLayout;
   ss_pix_label = new QLabel;
-  ss_pix_label->setPixmap(can->map_pixmap);
+  ss_pix_label->setPixmap(*can);
   layout->addWidget(ss_pix_label, 0, 0, 3, 3);
   ss_label = new QLabel;
   layout->addWidget(ss_label, 0, 3, 3, 1);
@@ -94,7 +94,7 @@ void ss_report::update_report()
   ch = get_spaceship_descr(&player->spaceship);
   ss_label->setText(ch);
   put_spaceship(can, 0, 0, player);
-  ss_pix_label->setPixmap(can->map_pixmap);
+  ss_pix_label->setPixmap(*can);
   update();
 }
 

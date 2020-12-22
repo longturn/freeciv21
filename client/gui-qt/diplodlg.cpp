@@ -64,7 +64,7 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
   QPushButton *add_clause1;
   QPushButton *add_clause2;
   QPixmap *pix = NULL;
-  struct sprite *sprite, *sprite2;
+  QPixmap *sprite, *sprite2;
   char plr_buf[4 * MAX_LEN_NAME];
   const struct player_diplstate *state;
   QHeaderView *header;
@@ -124,7 +124,7 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
   sprite = get_nation_flag_sprite(
       tileset, nation_of_player(player_by_number(initiated_from)));
   if (sprite != NULL) {
-    pix = sprite->pm;
+    pix = sprite;
     plr1_label->setPixmap(*pix);
   } else {
     plr1_label->setText(QStringLiteral("FLAG MISSING"));
@@ -142,7 +142,7 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
       tileset, nation_of_player(player_by_number(counterpart)));
   plr2_label = new QLabel;
   if (sprite2 != NULL) {
-    pix = sprite2->pm;
+    pix = sprite2;
     plr2_label->setPixmap(*pix);
   } else {
     plr2_label->setText(QStringLiteral("FLAG MISSING"));
@@ -628,7 +628,7 @@ void diplo_wdg::update_wdg()
 {
   bool blank;
   int i;
-  struct sprite *sprite;
+  QPixmap *sprite;
   QPixmap *pix = NULL;
   QTableWidgetItem *qitem;
 
@@ -661,7 +661,7 @@ void diplo_wdg::update_wdg()
 
   sprite = get_treaty_thumb_sprite(tileset, treaty.accept0);
   if (sprite != NULL) {
-    pix = sprite->pm;
+    pix = sprite;
     plr1_accept->setPixmap(*pix);
   } else {
     plr1_accept->setText(QStringLiteral("PIXMAP MISSING"));
@@ -669,7 +669,7 @@ void diplo_wdg::update_wdg()
 
   sprite = get_treaty_thumb_sprite(tileset, treaty.accept1);
   if (sprite != NULL) {
-    pix = sprite->pm;
+    pix = sprite;
     plr2_accept->setPixmap(*pix);
   } else {
     plr2_accept->setText(QStringLiteral("PIXMAP MISSING"));
@@ -724,7 +724,7 @@ diplo_dlg::diplo_dlg(int counterpart, int initiated_from) : QTabWidget()
 void diplo_dlg::add_widget(int counterpart, int initiated_from)
 {
   diplo_wdg *dw;
-  struct sprite *sprite;
+  QPixmap *sprite;
   QPixmap *pix;
   int i;
 
@@ -736,7 +736,7 @@ void diplo_dlg::add_widget(int counterpart, int initiated_from)
   sprite = get_nation_flag_sprite(
       tileset, nation_of_player(player_by_number(counterpart)));
   if (sprite != NULL) {
-    pix = sprite->pm;
+    pix = sprite;
   }
   if (pix != NULL) {
     setTabIcon(i, QIcon(*pix));
@@ -882,8 +882,7 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
 
   pix2 = new QPixmap();
   pix = get_nation_flag_sprite(
-            tileset, nation_of_player(player_by_number(counterpart)))
-            ->pm;
+      tileset, nation_of_player(player_by_number(counterpart)));
   *pix2 = pix->scaledToWidth(queen()->sw_diplo->width() - 2,
                              Qt::SmoothTransformation);
   if (pix2->height() > queen()->sw_diplo->height()) {

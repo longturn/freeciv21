@@ -89,7 +89,7 @@ void endgame_report::update_report(
       item->setText(player_name(pplayer));
       break;
     case 1:
-      pix = get_nation_flag_sprite(tileset, nation_of_player(pplayer))->pm;
+      pix = get_nation_flag_sprite(tileset, nation_of_player(pplayer));
       if (pix != NULL) {
         item->setData(Qt::DecorationRole, *pix);
       }

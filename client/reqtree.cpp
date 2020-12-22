@@ -111,7 +111,7 @@ static void node_rectangle_minimum_size(struct tree_node *node, int *width,
 {
   int max_icon_height; /* maximal height of icons below the text */
   int icons_width_sum; /* sum of icons width plus space between them */
-  struct sprite *sprite;
+  QPixmap *sprite;
   int swidth, sheight;
 
   if (node->is_dummy) {
@@ -978,7 +978,7 @@ static QColor *edge_color(struct tree_node *node,
    This draws the given portion of the reqtree diagram (given by
    (tt_x,tt_y) and (w,h) onto the canvas at position (canvas_x, canvas_y).
  *************************************************************************/
-void draw_reqtree(struct reqtree *tree, struct canvas *pcanvas, int canvas_x,
+void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
                   int canvas_y, int tt_x, int tt_y, int w, int h)
 {
   Q_UNUSED(h)
@@ -989,7 +989,7 @@ void draw_reqtree(struct reqtree *tree, struct canvas *pcanvas, int canvas_x,
   Q_UNUSED(canvas_y)
   int i, j, k;
   int swidth, sheight;
-  struct sprite *sprite;
+  QPixmap *sprite;
   QColor *color;
 
   /* draw the diagram */
@@ -1137,4 +1137,3 @@ Tech_type_id get_tech_on_reqtree(struct reqtree *tree, int x, int y)
   }
   return A_NONE;
 }
-

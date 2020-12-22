@@ -442,7 +442,7 @@ races_dialog::races_dialog(struct player *pplayer, QWidget *parent)
     if (i >= 0) {
       item = new QTableWidgetItem;
       styles->insertRow(i);
-      pix = get_sample_city_sprite(tileset, i)->pm;
+      pix = get_sample_city_sprite(tileset, i);
       item->setData(Qt::DecorationRole, *pix);
       item->setData(Qt::UserRole, style_number(pstyle));
       size.setWidth(pix->width());
@@ -627,7 +627,7 @@ void races_dialog::set_index(int index)
   QFont f;
   struct nation_group *group;
   int i;
-  struct sprite *s;
+  QPixmap *s;
   QHeaderView *header;
   selected_nation_tabs->clearContents();
   selected_nation_tabs->setRowCount(0);
@@ -657,7 +657,7 @@ void races_dialog::set_index(int index)
       f.setStrikeOut(true);
       item->setFont(f);
     }
-    pix = s->pm;
+    pix = s;
     item->setData(Qt::DecorationRole, *pix);
     item->setData(Qt::UserRole, nation_number(pnation));
     item->setText(nation_adjective_translation(pnation));
@@ -1186,7 +1186,7 @@ void choice_dialog::set_layout()
 
   if ((game_unit_by_number(unit_id)) && targeted_unit
       && unit_list_size(targeted_unit->tile->units) > 1) {
-    struct canvas *pix;
+    QPixmap *pix;
     QPushButton *next, *prev;
     unit_skip = new QHBoxLayout;
     next = new QPushButton();
@@ -1201,9 +1201,9 @@ void choice_dialog::set_layout()
     target_unit_button = new QPushButton;
     pix = qtg_canvas_create(tileset_unit_width(tileset),
                             tileset_unit_height(tileset));
-    pix->map_pixmap.fill(Qt::transparent);
+    pix->fill(Qt::transparent);
     put_unit(targeted_unit, pix, 0, 0);
-    target_unit_button->setIcon(QIcon(pix->map_pixmap));
+    target_unit_button->setIcon(QIcon(*pix));
     qtg_canvas_free(pix);
     target_unit_button->setIconSize(QSize(96, 96));
     target_unit_button->setFixedSize(QSize(100, 100));
@@ -1327,7 +1327,7 @@ void choice_dialog::next_unit()
   struct unit *new_target = nullptr;
   bool break_next = false;
   bool first = true;
-  struct canvas *pix;
+  QPixmap *pix;
 
   if (targeted_unit == nullptr) {
     return;
@@ -1353,9 +1353,9 @@ void choice_dialog::next_unit()
   targeted_unit = new_target;
   pix = qtg_canvas_create(tileset_unit_width(tileset),
                           tileset_unit_height(tileset));
-  pix->map_pixmap.fill(Qt::transparent);
+  pix->fill(Qt::transparent);
   put_unit(targeted_unit, pix, 0, 0);
-  target_unit_button->setIcon(QIcon(pix->map_pixmap));
+  target_unit_button->setIcon(QIcon(*pix));
   qtg_canvas_free(pix);
   switch_target();
 }
@@ -1367,7 +1367,7 @@ void choice_dialog::prev_unit()
 {
   struct tile *ptile;
   struct unit *new_target = nullptr;
-  struct canvas *pix;
+  QPixmap *pix;
   if (targeted_unit == nullptr) {
     return;
   }
@@ -1384,9 +1384,9 @@ void choice_dialog::prev_unit()
   targeted_unit = new_target;
   pix = qtg_canvas_create(tileset_unit_width(tileset),
                           tileset_unit_height(tileset));
-  pix->map_pixmap.fill(Qt::transparent);
+  pix->fill(Qt::transparent);
   put_unit(targeted_unit, pix, 0, 0);
-  target_unit_button->setIcon(QIcon(pix->map_pixmap));
+  target_unit_button->setIcon(QIcon(*pix));
   qtg_canvas_free(pix);
   switch_target();
 }
@@ -2186,8 +2186,7 @@ static void transport_alight(QVariant data1, QVariant data2)
   request_do_action(ACTION_TRANSPORT_ALIGHT, actor_id, target_id, 0, "");
 }
 
-static void do_that_action(QVariant data1, QVariant data2,
-                             enum gen_action a)
+static void do_that_action(QVariant data1, QVariant data2, enum gen_action a)
 {
   int actor_id = data1.toInt();
   int target_id = data2.toInt();

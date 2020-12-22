@@ -55,18 +55,15 @@ const char **gfx_fileextensions(void)
    entire image file, which may later be broken up into individual sprites
    with crop_sprite.
  ****************************************************************************/
-struct sprite *qtg_load_gfxfile(const char *filename)
+QPixmap *qtg_load_gfxfile(const char *filename)
 {
-  sprite *entire = new sprite;
-  QPixmap *pm = new QPixmap;
+  QPixmap *entire = new QPixmap;
 
-  if (QPixmapCache::find(QString(filename), pm)) {
-    entire->pm = pm;
+  if (QPixmapCache::find(QString(filename), entire)) {
     return entire;
   }
-  pm->load(QString(filename));
-  entire->pm = pm;
-  QPixmapCache::insert(QString(filename), *pm);
+  entire->load(QString(filename));
+  QPixmapCache::insert(QString(filename), *entire);
 
   return entire;
 }
@@ -92,15 +89,14 @@ struct sprite *qtg_load_gfxfile(const char *filename)
    in the mask image will be used to clip pixel (0,0) in the source image
    which is pixel (-x,-y) in the new image.
  ****************************************************************************/
-struct sprite *qtg_crop_sprite(struct sprite *source, int x, int y,
-                               int width, int height, struct sprite *mask,
-                               int mask_offset_x, int mask_offset_y,
-                               float scale, bool smooth)
+QPixmap *qtg_crop_sprite(QPixmap *source, int x, int y, int width,
+                         int height, QPixmap *mask, int mask_offset_x,
+                         int mask_offset_y, float scale, bool smooth)
 {
   QPainter p;
   QRectF source_rect;
   QRectF dest_rect;
-  sprite *cropped;
+  QPixmap *cropped;
   int widthzoom;
   int heightzoom;
   int hex = 0;
@@ -117,31 +113,30 @@ struct sprite *qtg_crop_sprite(struct sprite *source, int x, int y,
   }
   widthzoom = ceil(width * scale) + hex;
   heightzoom = ceil(height * scale) + hex;
-  cropped = new sprite;
-  cropped->pm = new QPixmap(widthzoom, heightzoom);
-  cropped->pm->fill(Qt::transparent);
+  cropped = new QPixmap(widthzoom, heightzoom);
+  cropped->fill(Qt::transparent);
   source_rect = QRectF(x, y, width, height);
   dest_rect = QRectF(0, 0, widthzoom, heightzoom);
 
-  p.begin(cropped->pm);
+  p.begin(cropped);
   if (smooth) {
     p.setRenderHint(QPainter::SmoothPixmapTransform);
   }
   p.setRenderHint(QPainter::Antialiasing);
-  p.drawPixmap(dest_rect, *source->pm, source_rect);
+  p.drawPixmap(dest_rect, *source, source_rect);
   p.end();
 
   if (mask) {
-    int mw = mask->pm->width();
-    int mh = mask->pm->height();
+    int mw = mask->width();
+    int mh = mask->height();
 
     source_rect = QRectF(0, 0, mw, mh);
     dest_rect = QRectF(mask_offset_x - x, mask_offset_y - y, mw, mh);
-    p.begin(cropped->pm);
+    p.begin(cropped);
     p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
     p.setRenderHint(QPainter::Antialiasing);
     p.setRenderHint(QPainter::SmoothPixmapTransform);
-    p.drawPixmap(dest_rect, *mask->pm, source_rect);
+    p.drawPixmap(dest_rect, *mask, source_rect);
     p.end();
   }
 
@@ -151,32 +146,27 @@ struct sprite *qtg_crop_sprite(struct sprite *source, int x, int y,
 /************************************************************************/ /**
    Find the dimensions of the sprite.
  ****************************************************************************/
-void qtg_get_sprite_dimensions(struct sprite *sprite, int *width,
-                               int *height)
+void qtg_get_sprite_dimensions(QPixmap *sprite, int *width, int *height)
 {
-  *width = sprite->pm->width();
-  *height = sprite->pm->height();
+  *width = sprite->width();
+  *height = sprite->height();
 }
 
 /************************************************************************/ /**
    Free a sprite and all associated image data.
  ****************************************************************************/
-void qtg_free_sprite(struct sprite *s)
-{
-  delete s->pm;
-  delete s;
-}
+void qtg_free_sprite(QPixmap *s) { delete s; }
 
 /************************************************************************/ /**
    Create a new sprite with the given height, width and color.
  ****************************************************************************/
-struct sprite *qtg_create_sprite(int width, int height, QColor *pcolor)
+QPixmap *qtg_create_sprite(int width, int height, QColor *pcolor)
 {
-  struct sprite *created = new sprite;
+  QPixmap *created = new QPixmap;
 
-  created->pm = new QPixmap(width, height);
+  created = new QPixmap(width, height);
 
-  created->pm->fill(*pcolor);
+  created->fill(*pcolor);
 
   return created;
 }
