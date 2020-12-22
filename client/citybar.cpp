@@ -112,6 +112,14 @@ void line_of_text::add_text(const QString &text,
   QFontMetricsF metrics(format.font());
   m_blocks.back().base_size =
       QSizeF(metrics.horizontalAdvance(text), metrics.height());
+  m_blocks.back().ascent = metrics.ascent();
+  m_blocks.back().descent = metrics.descent();
+  if (shadow) {
+    // Add some space for the shadow
+    m_blocks.back().base_size += QSizeF(1, 1);
+    // Bake it into the margin
+    m_blocks.back().margins.setBottom(margins.bottom() + 1);
+  }
 }
 
 /**
@@ -169,7 +177,7 @@ void line_of_text::do_layout(double width)
   }
 
   // We're done with the horizontal layout. Set the width already.
-  m_size.rwidth() = x;
+  m_size.setWidth(x);
 
   // Now do the vertical layout. The tricky bit here is to set the text
   // position correctly so the baselines align nicely. We calculate the max
@@ -178,22 +186,27 @@ void line_of_text::do_layout(double width)
   double ascent = 0, descent = 0, height = 0;
   for (const auto &blk : m_blocks) {
     ascent = std::max(ascent, blk.ascent + blk.margins.top());
-    descent = std::max(ascent, blk.descent + blk.margins.bottom());
+    descent = std::max(descent, blk.descent + blk.margins.bottom());
     height = std::max(height, blk.margins.top() + blk.base_size.height()
                                   + blk.margins.bottom());
   }
 
-  double baseline = ascent + (height - ascent - descent) / 2;
-  m_size.rheight() = std::max(ascent + descent, height);
+  // The ascent might come from one block and the descent from another, in
+  // which case they're not summed in `height` yet.
+  height = std::max(height, ascent + descent);
+  m_size.setHeight(height);
+
+  // Text baseline position with respect to the top of the bounding rect
+  double baseline = (height + ascent - descent) / 2;
 
   // Set y and height
   for (auto &blk : m_blocks) {
     if (blk.mode == block::TEXT_MODE) {
       // Align text on the baseline
-      blk.draw_rect.setY(baseline - blk.descent);
+      blk.draw_rect.setY(baseline - blk.ascent);
     } else {
       // Center the rest vertically
-      blk.draw_rect.setY((m_size.height() - blk.base_size.height()) / 2);
+      blk.draw_rect.setY((height - blk.base_size.height()) / 2);
     }
     blk.draw_rect.setHeight(blk.base_size.height());
   }
