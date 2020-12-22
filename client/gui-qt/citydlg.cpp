@@ -398,16 +398,16 @@ impr_item::impr_item(QWidget *parent, const impr_type *building,
   if (sprite != nullptr) {
     impr_pixmap =
         qtg_canvas_create(sprite->pm->width(), sprite->pm->height());
-    impr_pixmap->map_pixmap.fill(Qt::transparent);
-    pixmap_copy(&impr_pixmap->map_pixmap, sprite->pm, 0, 0, 0, 0,
+    impr_pixmap->fill(Qt::transparent);
+    pixmap_copy(impr_pixmap, sprite->pm, 0, 0, 0, 0,
                 sprite->pm->width(), sprite->pm->height());
   } else {
     impr_pixmap = qtg_canvas_create(10, 10);
-    impr_pixmap->map_pixmap.fill(Qt::red);
+    impr_pixmap->fill(Qt::red);
   }
 
-  setFixedWidth(impr_pixmap->map_pixmap.width() + 4);
-  setFixedHeight(impr_pixmap->map_pixmap.height());
+  setFixedWidth(impr_pixmap->width() + 4);
+  setFixedHeight(impr_pixmap->height());
   setToolTip(get_tooltip_improvement(building, city, true).trimmed());
 }
 
@@ -426,7 +426,7 @@ impr_item::~impr_item()
  ****************************************************************************/
 void impr_item::init_pix()
 {
-  setPixmap(impr_pixmap->map_pixmap);
+  setPixmap(*impr_pixmap);
   update();
 }
 
@@ -447,13 +447,13 @@ void impr_item::enterEvent(QEvent *event)
   if (impr && sprite) {
     impr_pixmap =
         qtg_canvas_create(sprite->pm->width(), sprite->pm->height());
-    impr_pixmap->map_pixmap.fill(
+    impr_pixmap->fill(
         QColor(palette().color(QPalette::Highlight)));
-    pixmap_copy(&impr_pixmap->map_pixmap, sprite->pm, 0, 0, 0, 0,
+    pixmap_copy(impr_pixmap, sprite->pm, 0, 0, 0, 0,
                 sprite->pm->width(), sprite->pm->height());
   } else {
     impr_pixmap = qtg_canvas_create(10, 10);
-    impr_pixmap->map_pixmap.fill(
+    impr_pixmap->fill(
         QColor(palette().color(QPalette::Highlight)));
   }
 
@@ -476,12 +476,12 @@ void impr_item::leaveEvent(QEvent *event)
   if (impr && sprite) {
     impr_pixmap =
         qtg_canvas_create(sprite->pm->width(), sprite->pm->height());
-    impr_pixmap->map_pixmap.fill(Qt::transparent);
-    pixmap_copy(&impr_pixmap->map_pixmap, sprite->pm, 0, 0, 0, 0,
+    impr_pixmap->fill(Qt::transparent);
+    pixmap_copy(impr_pixmap, sprite->pm, 0, 0, 0, 0,
                 sprite->pm->width(), sprite->pm->height());
   } else {
     impr_pixmap = qtg_canvas_create(10, 10);
-    impr_pixmap->map_pixmap.fill(Qt::red);
+    impr_pixmap->fill(Qt::red);
   }
 
   init_pix();
@@ -624,7 +624,7 @@ static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
   QImage cropped_img;
   QImage img;
   QRect crop;
-  struct canvas *unit_pixmap;
+  QPixmap *unit_pixmap;
   struct tileset *tmp;
   float isosize;
 
@@ -648,7 +648,7 @@ static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
                                       tileset_unit_height(get_tileset()));
     }
 
-    unit_pixmap->map_pixmap.fill(Qt::transparent);
+    unit_pixmap->fill(Qt::transparent);
     put_unit(punit, unit_pixmap, 0, 0);
 
     if (supported) {
@@ -658,10 +658,10 @@ static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
     }
   } else {
     unit_pixmap = qtg_canvas_create(10, 10);
-    unit_pixmap->map_pixmap.fill(Qt::transparent);
+    unit_pixmap->fill(Qt::transparent);
   }
 
-  img = unit_pixmap->map_pixmap.toImage();
+  img = unit_pixmap->toImage();
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
 

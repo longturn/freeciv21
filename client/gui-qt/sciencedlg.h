@@ -57,7 +57,7 @@ private:
   void mouseMoveEvent(QMouseEvent *event);
   void paintEvent(QPaintEvent *event);
   void create_tooltip_help();
-  struct canvas *pcanvas;
+  QPixmap *pcanvas;
   struct reqtree *req;
   bool timer_active;
   int width;

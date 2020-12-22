@@ -530,7 +530,7 @@ static void base_set_mapview_origin(float gui_x0, float gui_y0)
     /* Do a partial redraw only.  This means the area of overlap (a
      * rectangle) is copied.  Then the remaining areas (two rectangles)
      * are updated through update_map_canvas. */
-    struct canvas *target = mapview.tmp_store;
+    QPixmap *target = mapview.tmp_store;
 
     if (old_gui_x0 < gui_x0) {
       update_x0 = MAX(old_gui_x0 + width, gui_x0);
@@ -936,7 +936,7 @@ bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile)
 /************************************************************************/ /**
    Draw an array of drawn sprites onto the canvas.
  ****************************************************************************/
-void put_drawn_sprites(struct canvas *pcanvas, int canvas_x, int canvas_y,
+void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
                        int count, struct drawn_sprite *pdrawn, bool fog,
                        bool city_dialog, bool city_unit)
 {
@@ -976,7 +976,7 @@ void put_drawn_sprites(struct canvas *pcanvas, int canvas_x, int canvas_y,
    Draw one layer of a tile, edge, corner, unit, and/or city onto the
    canvas at the given position.
  ****************************************************************************/
-void put_one_element(struct canvas *pcanvas, enum mapview_layer layer,
+void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
                      const struct tile *ptile, const struct tile_edge *pedge,
                      const struct tile_corner *pcorner,
                      const struct unit *punit, const struct city *pcity,
@@ -1016,7 +1016,7 @@ void put_one_element(struct canvas *pcanvas, enum mapview_layer layer,
    Draw the given unit onto the canvas store at the given location. The area
    of drawing is tileset_unit_height(tileset) x tileset_unit_width(tileset).
  ****************************************************************************/
-void put_unit(const struct unit *punit, struct canvas *pcanvas, int canvas_x,
+void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
               int canvas_y)
 {
   canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
@@ -1032,7 +1032,7 @@ void put_unit(const struct unit *punit, struct canvas *pcanvas, int canvas_x,
    Draw the given unit onto the canvas store at the given location. The area
    of drawing is tileset_unit_height(tileset) x tileset_unit_width(tileset).
  ****************************************************************************/
-void put_unittype(const struct unit_type *putype, struct canvas *pcanvas,
+void put_unittype(const struct unit_type *putype, QPixmap *pcanvas,
                   int canvas_x, int canvas_y)
 {
   canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
@@ -1049,7 +1049,7 @@ void put_unittype(const struct unit_type *putype, struct canvas *pcanvas,
    area of drawing is
    tileset_full_tile_height(tileset) x tileset_full_tile_width(tileset).
  ****************************************************************************/
-void put_city(struct city *pcity, struct canvas *pcanvas, int canvas_x,
+void put_city(struct city *pcity, QPixmap *pcanvas, int canvas_x,
               int canvas_y)
 {
   canvas_y +=
@@ -1068,7 +1068,7 @@ void put_city(struct city *pcity, struct canvas *pcanvas, int canvas_x,
    tileset_full_tile_height(tileset) x tileset_full_tile_width(tileset)
    (even though most tiles are not this tall).
  ****************************************************************************/
-void put_terrain(struct tile *ptile, struct canvas *pcanvas, int canvas_x,
+void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,
                  int canvas_y)
 {
   /* Use full tile height, even for terrains. */
@@ -1089,7 +1089,7 @@ void put_terrain(struct tile *ptile, struct canvas *pcanvas, int canvas_x,
    (one sprite drawn N times on top of itself), but we just use separate
    sprites (limiting the number of combinations).
  ****************************************************************************/
-void put_unit_city_overlays(struct unit *punit, struct canvas *pcanvas,
+void put_unit_city_overlays(struct unit *punit, QPixmap *pcanvas,
                             int canvas_x, int canvas_y, int *upkeep_cost,
                             int happy_cost)
 {
@@ -1196,7 +1196,7 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
 /************************************************************************/ /**
    Draw some or all of a tile onto the canvas.
  ****************************************************************************/
-static void put_one_tile(struct canvas *pcanvas, enum mapview_layer layer,
+static void put_one_tile(QPixmap *pcanvas, enum mapview_layer layer,
                          struct tile *ptile, int canvas_x, int canvas_y,
                          const struct city *citymode)
 {
@@ -1347,7 +1347,7 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
 {
   int gui_x0, gui_y0;
   bool full;
-  struct canvas *tmp;
+  QPixmap *tmp;
 
   canvas_x = MAX(canvas_x, 0);
   canvas_y = MAX(canvas_y, 0);
@@ -1503,7 +1503,7 @@ void update_tile_label(struct tile *ptile)
    width and height of the text block (centered directly underneath the
    city's tile).
  ****************************************************************************/
-static void show_tile_label(struct canvas *pcanvas, int canvas_x,
+static void show_tile_label(QPixmap *pcanvas, int canvas_x,
                             int canvas_y, struct tile *ptile, int *width,
                             int *height)
 {
@@ -2793,7 +2793,7 @@ void get_spaceship_dimensions(int *width, int *height)
 /************************************************************************/ /**
    Draw the spaceship onto the canvas.
  ****************************************************************************/
-void put_spaceship(struct canvas *pcanvas, int canvas_x, int canvas_y,
+void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
                    const struct player *pplayer)
 {
   Q_UNUSED(canvas_x)

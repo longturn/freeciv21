@@ -50,37 +50,37 @@ void qtg_free_sprite(struct sprite *s);
 QColor *qtg_color_alloc(int r, int g, int b);
 void qtg_color_free(QColor *pcolor);
 
-struct canvas *qtg_canvas_create(int width, int height);
-void qtg_canvas_free(struct canvas *store);
-void qtg_canvas_copy(struct canvas *dest, struct canvas *src, int src_x,
+QPixmap *qtg_canvas_create(int width, int height);
+void qtg_canvas_free(QPixmap *store);
+void qtg_canvas_copy(QPixmap *dest, QPixmap *src, int src_x,
                      int src_y, int dest_x, int dest_y, int width,
                      int height);
-void qtg_canvas_put_sprite(struct canvas *pcanvas, int canvas_x,
+void qtg_canvas_put_sprite(QPixmap *pcanvas, int canvas_x,
                            int canvas_y, struct sprite *sprite, int offset_x,
                            int offset_y, int width, int height);
-void qtg_canvas_put_sprite_full(struct canvas *pcanvas, int canvas_x,
+void qtg_canvas_put_sprite_full(QPixmap *pcanvas, int canvas_x,
                                 int canvas_y, struct sprite *sprite);
-void qtg_canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
+void qtg_canvas_put_sprite_fogged(QPixmap *pcanvas, int canvas_x,
                                   int canvas_y, struct sprite *psprite,
                                   bool fog, int fog_x, int fog_y);
-void qtg_canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
+void qtg_canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x,
                                     int canvas_y, struct sprite *psprite,
                                     bool fog, int fog_x, int fog_y);
-void qtg_canvas_put_rectangle(struct canvas *pcanvas, QColor *pcolor,
+void qtg_canvas_put_rectangle(QPixmap *pcanvas, QColor *pcolor,
                               int canvas_x, int canvas_y, int width,
                               int height);
-void qtg_canvas_fill_sprite_area(struct canvas *pcanvas,
+void qtg_canvas_fill_sprite_area(QPixmap *pcanvas,
                                  struct sprite *psprite, QColor *pcolor,
                                  int canvas_x, int canvas_y);
-void qtg_canvas_put_line(struct canvas *pcanvas, QColor *pcolor,
+void qtg_canvas_put_line(QPixmap *pcanvas, QColor *pcolor,
                          enum line_type ltype, int start_x, int start_y,
                          int dx, int dy);
-void qtg_canvas_put_curved_line(struct canvas *pcanvas, QColor *pcolor,
+void qtg_canvas_put_curved_line(QPixmap *pcanvas, QColor *pcolor,
                                 enum line_type ltype, int start_x,
                                 int start_y, int dx, int dy);
 void qtg_get_text_size(int *width, int *height, enum client_font font,
                        const QString &);
-void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
+void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
                          enum client_font font, QColor *pcolor,
                          const QString &text);
 

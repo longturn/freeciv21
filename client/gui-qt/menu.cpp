@@ -2911,7 +2911,7 @@ void mr_menu::save_image()
     img_name = QStandardPaths::writableLocation(QStandardPaths::HomeLocation)
                + DIR_SEPARATOR + img_name;
   }
-  map_saved = mapview.store->map_pixmap.save(img_name, "png");
+  map_saved = mapview.store->save(img_name, "png");
   map_canvas_resized(current_width, current_height);
   saved->setStandardButtons(QMessageBox::Ok);
   saved->setDefaultButton(QMessageBox::Cancel);

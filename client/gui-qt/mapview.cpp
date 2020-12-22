@@ -48,7 +48,7 @@
 const char *get_timeout_label_text();
 static int mapview_frozen_level = 0;
 extern void destroy_city_dialog();
-extern struct canvas *canvas;
+extern QPixmap *canvas;
 extern QApplication *qapp;
 
 #define MAX_DIRTY_RECTS 20
@@ -262,7 +262,7 @@ void map_view::paintEvent(QPaintEvent *event)
  **************************************************************************/
 void map_view::paint(QPainter *painter, QPaintEvent *event)
 {
-  painter->drawPixmap(event->rect(), mapview.store->map_pixmap,
+  painter->drawPixmap(event->rect(), *mapview.store,
                       event->rect());
   draw_calculated_trade_routes(painter);
 }
@@ -736,7 +736,7 @@ void qtg_start_turn()
    (see that function for more info) for tilesets that do not have a full
    city bar.
  ****************************************************************************/
-static void show_small_citybar(struct canvas *pcanvas, int canvas_x,
+static void show_small_citybar(QPixmap *pcanvas, int canvas_x,
                                int canvas_y, struct city *pcity, int *width,
                                int *height)
 {
@@ -857,7 +857,7 @@ static void show_small_citybar(struct canvas *pcanvas, int canvas_x,
    width and height of the text block (centered directly underneath the
    city's tile).
  ****************************************************************************/
-void show_city_desc(struct canvas *pcanvas, int canvas_x, int canvas_y,
+void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
                     struct city *pcity, int *width, int *height)
 {
   if (is_any_city_dialog_open()) {

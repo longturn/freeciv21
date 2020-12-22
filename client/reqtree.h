@@ -74,7 +74,7 @@ void destroy_reqtree(struct reqtree *tree);
 
 void get_reqtree_dimensions(struct reqtree *tree, int *width, int *height);
 
-void draw_reqtree(struct reqtree *tree, struct canvas *pcanvas, int canvas_x,
+void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
                   int canvas_y, int tt_x, int tt_y, int w, int h);
 
 Tech_type_id get_tech_on_reqtree(struct reqtree *tree, int x, int y);

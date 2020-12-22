@@ -189,8 +189,8 @@ static void redraw_overview(void)
   }
 
   {
-    struct canvas *src = gui_options.overview.map;
-    struct canvas *dst = gui_options.overview.window;
+    QPixmap *src = gui_options.overview.map;
+    QPixmap *dst = gui_options.overview.window;
     int x_left = gui_options.overview.map_x0 * OVERVIEW_TILE_SIZE;
     int y_top = gui_options.overview.map_y0 * OVERVIEW_TILE_SIZE;
     int ix = gui_options.overview.width - x_left;
@@ -364,7 +364,7 @@ void refresh_overview_canvas(void)
    This is just a simple helper function for overview_update_tile, since
    sometimes a tile may cover more than one rectangle.
  ****************************************************************************/
-static void put_overview_tile_area(struct canvas *pcanvas,
+static void put_overview_tile_area(QPixmap *pcanvas,
                                    struct tile *ptile, int x, int y, int w,
                                    int h)
 {

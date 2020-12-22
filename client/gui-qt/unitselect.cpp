@@ -93,7 +93,7 @@ void units_select::create_pixmap()
   QPixmap *pixp;
   QPixmap *tmp_pix;
   QRect crop;
-  struct canvas *unit_pixmap;
+  QPixmap *unit_pixmap;
   struct unit *punit;
   float isosize;
 
@@ -134,9 +134,9 @@ void units_select::create_pixmap()
     for (auto punit : qAsConst(unit_list)) {
       unit_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
                                       tileset_unit_height(tileset));
-      unit_pixmap->map_pixmap.fill(Qt::transparent);
+      unit_pixmap->fill(Qt::transparent);
       put_unit(punit, unit_pixmap, 0, 0);
-      img = unit_pixmap->map_pixmap.toImage();
+      img = unit_pixmap->toImage();
       crop = zealous_crop_rect(img);
       cropped_img = img.copy(crop);
       if (!tileset_is_isometric(tileset)) {

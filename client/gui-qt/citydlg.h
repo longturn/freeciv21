@@ -53,7 +53,7 @@ class QTimerEvent;
 class QVBoxLayout;
 class QVariant;
 class fc_tooltip;
-struct canvas;
+class QPixmap;
 
 /****************************************************************************
   A list widget that sets its size hint to the size of its contents.
@@ -158,7 +158,7 @@ public:
 
 private:
   const struct impr_type *impr;
-  struct canvas *impr_pixmap;
+  QPixmap *impr_pixmap;
   struct city *pcity;
 
 protected:

@@ -573,8 +573,8 @@ void hud_units::update_actions(unit_list *punits)
   QString snum;
   QString fraction1, fraction2;
   QString text_str, move_pt_text;
-  struct canvas *tile_pixmap;
-  struct canvas *unit_pixmap;
+  QPixmap *tile_pixmap;
+  QPixmap *unit_pixmap;
   struct city *pcity;
   struct player *owner;
   struct tileset *tmp;
@@ -655,9 +655,9 @@ void hud_units::update_actions(unit_list *punits)
 
   unit_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
                                   tileset_unit_height(tileset));
-  unit_pixmap->map_pixmap.fill(Qt::transparent);
+  unit_pixmap->fill(Qt::transparent);
   put_unit(punit, unit_pixmap, 0, 0);
-  img = unit_pixmap->map_pixmap.toImage();
+  img = unit_pixmap->toImage();
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
   img = cropped_img.scaledToHeight(height(), Qt::SmoothTransformation);
@@ -739,9 +739,9 @@ void hud_units::update_actions(unit_list *punits)
     tile_pixmap = qtg_canvas_create(tileset_full_tile_width(tileset),
                                     tileset_tile_height(tileset));
   }
-  tile_pixmap->map_pixmap.fill(QColor(0, 0, 0, 0));
+  tile_pixmap->fill(QColor(0, 0, 0, 0));
   put_terrain(punit->tile, tile_pixmap, 0, 0);
-  img = tile_pixmap->map_pixmap.toImage();
+  img = tile_pixmap->toImage();
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
   img = cropped_img.scaledToHeight(height() - 5, Qt::SmoothTransformation);
@@ -1729,8 +1729,8 @@ void hud_unit_combat::init_images(bool redraw)
   QImage crdimg, acrimg, at, dt;
   QRect dr, ar;
   QPainter p;
-  struct canvas *defender_pixmap;
-  struct canvas *attacker_pixmap;
+  QPixmap *defender_pixmap;
+  QPixmap *attacker_pixmap;
   int w;
 
   focus = false;
@@ -1739,14 +1739,14 @@ void hud_unit_combat::init_images(bool redraw)
   setFixedSize(2 * w, w);
   defender_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
                                       tileset_unit_height(tileset));
-  defender_pixmap->map_pixmap.fill(Qt::transparent);
+  defender_pixmap->fill(Qt::transparent);
   if (defender != nullptr) {
     if (!redraw) {
       put_unit(defender, defender_pixmap, 0, 0);
     } else {
       put_unittype(type_defender, defender_pixmap, 0, 0);
     }
-    dimg = defender_pixmap->map_pixmap.toImage();
+    dimg = defender_pixmap->toImage();
     dr = zealous_crop_rect(dimg);
     crdimg = dimg.copy(dr);
     dimg = crdimg.scaledToHeight(w, Qt::SmoothTransformation);
@@ -1762,14 +1762,14 @@ void hud_unit_combat::init_images(bool redraw)
   dimg = dimg.scaled(w, w, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
   attacker_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
                                       tileset_unit_height(tileset));
-  attacker_pixmap->map_pixmap.fill(Qt::transparent);
+  attacker_pixmap->fill(Qt::transparent);
   if (attacker != nullptr) {
     if (!redraw) {
       put_unit(attacker, attacker_pixmap, 0, 0);
     } else {
       put_unittype(type_attacker, attacker_pixmap, 0, 0);
     }
-    aimg = attacker_pixmap->map_pixmap.toImage();
+    aimg = attacker_pixmap->toImage();
     ar = zealous_crop_rect(aimg);
     acrimg = aimg.copy(ar);
     aimg = acrimg.scaledToHeight(w, Qt::SmoothTransformation);
