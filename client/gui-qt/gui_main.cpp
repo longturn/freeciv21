@@ -104,6 +104,7 @@ void qtg_ui_main()
       /* We're using fresh defaults for this version of this client,
        * so prevent any future migrations from other versions */
       gui_options.gui_qt_migrated_from_2_5 = true;
+      configure_fonts();
     } else if (!gui_options.gui_qt_migrated_from_2_5) {
       migrate_options_from_2_5();
     }
