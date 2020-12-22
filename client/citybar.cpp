@@ -9,6 +9,9 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
+#include <algorithm>
+#include <vector>
+
 // Qt
 #include <QPainter>
 #include <QTextBlockFormat>
@@ -34,6 +37,193 @@
 
 /// Pointer to the city bar painter currently in use.
 std::unique_ptr<citybar_painter> citybar_painter::s_current = nullptr;
+
+/**
+ * Helper class to create a line of text. It's a lot like a dumbed down
+ * version of the Qt rich text engine, but handles a few things that we
+ * need and are not easy in Qt.
+ *
+ * A line of text is a series of `blocks`. Each block contains either an
+ * icon (QPixmap) or a string and its attributes. In addition, "spacer"
+ * blocks can be added to add a stretchable space between items.
+ */
+class line_of_text {
+  struct block {
+    enum { TEXT_MODE, ICON_MODE, SPACER_MODE } mode; // What's in this block
+    QString text;                                    // Text only
+    QTextCharFormat format;                          // Text only
+    double ascent = 0, descent = 0;                  // Text only
+    const QPixmap *icon = nullptr;                   // Icon only
+    QMargins margins;                                // All modes
+    QSizeF base_size; // The base size of the block without margins
+
+    QRectF draw_rect; // The laid out rect
+  };
+
+public:
+  void add_spacer();
+  void add_icon(const QPixmap *icon, const QMargins &margins = QMargins());
+  void add_text(const QString &text, const QTextCharFormat &format,
+                const QMargins &margins = QMargins());
+
+  double ideal_width() const;
+  void do_layout(double width = 0);
+  QSizeF size() const { return m_size; }
+  void paint(QPainter &p, const QPointF &top_left) const;
+
+private:
+  QSizeF m_size;
+  std::vector<block> m_blocks;
+};
+
+/**
+ * Adds a spacer to the line. Spacers have zero width by default and expand
+ * as needed to fill the available space.
+ */
+void line_of_text::add_spacer()
+{
+  m_blocks.emplace_back();
+  m_blocks.back().mode = block::SPACER_MODE;
+}
+
+/**
+ * Adds an icon to the line. It will be centered vertically.
+ */
+void line_of_text::add_icon(const QPixmap *icon, const QMargins &margins)
+{
+  m_blocks.emplace_back();
+  m_blocks.back().mode = block::ICON_MODE;
+  m_blocks.back().icon = icon;
+  m_blocks.back().margins = margins;
+  m_blocks.back().base_size = icon->size();
+}
+
+/**
+ * Adds text to the line with the given format. Text items are aligned on
+ * their baseline and centered vertically.
+ */
+void line_of_text::add_text(const QString &text,
+                            const QTextCharFormat &format,
+                            const QMargins &margins)
+{
+  m_blocks.emplace_back();
+  m_blocks.back().mode = block::TEXT_MODE;
+  m_blocks.back().text = text;
+  m_blocks.back().format = format;
+  m_blocks.back().margins = margins;
+
+  QFontMetricsF metrics(format.font());
+  m_blocks.back().base_size =
+      QSizeF(metrics.horizontalAdvance(text), metrics.height());
+}
+
+/**
+ * Returns the ideal line width (the sum of the width of all blocks)
+ */
+double line_of_text::ideal_width() const
+{
+  double width = 0;
+  for (const auto &blk : m_blocks) {
+    width +=
+        blk.margins.left() + blk.base_size.width() + blk.margins.right();
+  }
+  return width;
+}
+
+/**
+ * Lays out the line to fill the given width. Additional space is added
+ * between central blocks as required to fill the available space. If the
+ * width is zero (the default), no spacing is added between items.
+ *
+ * Do not specify a width between zero and width().
+ */
+void line_of_text::do_layout(double width)
+{
+  // Compute the amount of horizontal space left
+  double empty_width;
+
+  if (width <= 0) {
+    width = this->ideal_width();
+    empty_width = 0;
+  } else {
+    empty_width = width - this->ideal_width();
+  }
+
+  // Set the widths and horizontal positions. Margins are counted outside of
+  // the rectangle.
+
+  // Calculate the spacer block width
+  long num_spacers =
+      std::count_if(m_blocks.begin(), m_blocks.end(), [](const block &blk) {
+        return blk.mode == block::SPACER_MODE;
+      });
+  double spacer = empty_width / std::max(num_spacers, 1L);
+
+  // Set the geometry
+  double x = 0;
+  for (auto &blk : m_blocks) {
+    blk.draw_rect.setX(x + blk.margins.left());
+    if (blk.mode == block::SPACER_MODE) {
+      x += spacer;
+    } else {
+      blk.draw_rect.setWidth(blk.base_size.width());
+      x += blk.margins.left() + blk.base_size.width() + blk.margins.right();
+    }
+  }
+
+  // We're done with the horizontal layout. Set the width already.
+  m_size.rwidth() = x;
+
+  // Now do the vertical layout. The tricky bit here is to set the text
+  // position correctly so the baselines align nicely. We calculate the max
+  // ascent, descent and total height (for icons), then combine them as
+  // needed.
+  double ascent = 0, descent = 0, height = 0;
+  for (const auto &blk : m_blocks) {
+    ascent = std::max(ascent, blk.ascent + blk.margins.top());
+    descent = std::max(ascent, blk.descent + blk.margins.bottom());
+    height = std::max(height, blk.margins.top() + blk.base_size.height()
+                                  + blk.margins.bottom());
+  }
+
+  double baseline = ascent + (height - ascent - descent) / 2;
+  m_size.rheight() = std::max(ascent + descent, height);
+
+  // Set y and height
+  for (auto &blk : m_blocks) {
+    if (blk.mode == block::TEXT_MODE) {
+      // Align text on the baseline
+      blk.draw_rect.setY(baseline - blk.descent);
+    } else {
+      // Center the rest vertically
+      blk.draw_rect.setY((m_size.height() - blk.base_size.height()) / 2);
+    }
+    blk.draw_rect.setHeight(blk.base_size.height());
+  }
+}
+
+/**
+ * Paints the line at the given position. The state of the painter is
+ * altered.
+ */
+void line_of_text::paint(QPainter &p, const QPointF &top_left) const
+{
+  for (const auto &blk : m_blocks) {
+    switch (blk.mode) {
+    case block::TEXT_MODE:
+      p.setPen(QPen(blk.format.foreground(), 1));
+      p.setFont(blk.format.font());
+      p.drawText(blk.draw_rect.translated(top_left), blk.text);
+      break;
+    case block::ICON_MODE:
+      p.drawPixmap(blk.draw_rect.translated(top_left), *blk.icon,
+                   blk.icon->rect());
+      break;
+    case block::SPACER_MODE:
+      continue;
+    }
+  }
+}
 
 /**
  * Returns the list of all available city bar styles. The strings are not
