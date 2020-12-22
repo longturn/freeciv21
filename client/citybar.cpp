@@ -48,6 +48,7 @@ class line_of_text {
   struct block {
     enum { TEXT_MODE, ICON_MODE, SPACER_MODE } mode; // What's in this block
     QString text;                                    // Text only
+    bool shadow = true;                              // Text only
     QTextCharFormat format;                          // Text only
     double ascent = 0, descent = 0;                  // Text only
     const QPixmap *icon = nullptr;                   // Icon only
@@ -61,7 +62,9 @@ public:
   void add_spacer();
   void add_icon(const QPixmap *icon, const QMargins &margins = QMargins());
   void add_text(const QString &text, const QTextCharFormat &format,
-                const QMargins &margins = QMargins());
+                bool shadow = true, const QMargins &margins = QMargins());
+
+  void set_text_shadow_brush(const QBrush &brush) { m_shadow_brush = brush; }
 
   double ideal_width() const;
   void do_layout(double width = 0);
@@ -69,6 +72,8 @@ public:
   void paint(QPainter &p, const QPointF &top_left) const;
 
 private:
+  QBrush m_shadow_brush;
+
   QSizeF m_size;
   std::vector<block> m_blocks;
 };
@@ -100,13 +105,14 @@ void line_of_text::add_icon(const QPixmap *icon, const QMargins &margins)
  * their baseline and centered vertically.
  */
 void line_of_text::add_text(const QString &text,
-                            const QTextCharFormat &format,
+                            const QTextCharFormat &format, bool shadow,
                             const QMargins &margins)
 {
   m_blocks.emplace_back();
   m_blocks.back().mode = block::TEXT_MODE;
   m_blocks.back().text = text;
   m_blocks.back().format = format;
+  m_blocks.back().shadow = shadow;
   m_blocks.back().margins = margins;
 
   QFontMetricsF metrics(format.font());
@@ -221,8 +227,14 @@ void line_of_text::paint(QPainter &p, const QPointF &top_left) const
   for (const auto &blk : m_blocks) {
     switch (blk.mode) {
     case block::TEXT_MODE:
-      p.setPen(QPen(blk.format.foreground(), 1));
       p.setFont(blk.format.font());
+      if (blk.shadow) {
+        // Draw the shadow
+        p.setPen(QPen(m_shadow_brush, 1));
+        p.drawText(blk.draw_rect.translated(top_left + QPointF(1, 1)),
+                   blk.text);
+      }
+      p.setPen(QPen(blk.format.foreground(), 1));
       p.drawText(blk.draw_rect.translated(top_left), blk.text);
       break;
     case block::ICON_MODE:
@@ -310,6 +322,11 @@ QRect simple_citybar_painter::paint(QPainter &painter,
 
   // This is used for both lines
   QTextCharFormat format;
+
+  // Enable shadows
+  auto dark_color = *get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK);
+  first.set_text_shadow_brush(dark_color);
+  second.set_text_shadow_brush(dark_color);
 
   // First line
   if (gui_options.draw_city_names) {
