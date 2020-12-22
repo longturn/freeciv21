@@ -124,7 +124,7 @@ void pregame_options::set_aifill(int aifill)
  ****************************************************************************/
 void pregame_options::update_buttons()
 {
-  struct sprite *psprite = nullptr;
+  QPixmap *psprite = nullptr;
   QPixmap *pixmap = nullptr;
   const struct player *pplayer = client_player();
 
@@ -136,7 +136,7 @@ void pregame_options::update_buttons()
           QString(nation_adjective_for_player(pplayer))
               .replace(QLatin1String("&"), QLatin1String("&&")));
       psprite = get_nation_shield_sprite(tileset, pplayer->nation);
-      pixmap = psprite->pm;
+      pixmap = psprite;
       ui.nation->setIconSize(pixmap->size());
       ui.nation->setIcon(QIcon(*pixmap));
     } else {

@@ -75,7 +75,7 @@ void eco_report::update_report()
   h = fm.height() + 6;
   QPixmap *pix;
   QPixmap pix_scaled;
-  struct sprite *sprite;
+  QPixmap *sprite;
 
   ui.eco_widget->setRowCount(0);
   ui.eco_widget->clearContents();
@@ -88,7 +88,7 @@ void eco_report::update_report()
     pix = NULL;
     sprite = get_building_sprite(tileset, pimprove);
     if (sprite != NULL) {
-      pix = sprite->pm;
+      pix = sprite;
     }
     if (pix != NULL) {
       pix_scaled = pix->scaledToHeight(h);
@@ -136,7 +136,7 @@ void eco_report::update_report()
     pix = NULL;
     sprite = get_unittype_sprite(tileset, putype, direction8_invalid());
     if (sprite != NULL) {
-      pix = sprite->pm;
+      pix = sprite;
     }
     id = cid_encode_unit(putype);
 

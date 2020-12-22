@@ -12,7 +12,3 @@
 #include "sprite_g.h"
 
 class QPixmap;
-
-struct sprite {
-  QPixmap *pm;
-};

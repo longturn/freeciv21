@@ -97,7 +97,7 @@ void page_pregame::update_start_page()
   QString host, nation, leader, team, str;
   QPixmap *pixmap;
   QPainter p;
-  struct sprite *psprite;
+  QPixmap *psprite;
   QTreeWidgetItem *item;
   QTreeWidgetItem *item_r;
   QList<QTreeWidgetItem *> items;
@@ -208,7 +208,7 @@ void page_pregame::update_start_page()
             break;
           }
           psprite = get_nation_flag_sprite(tileset, pplayer->nation);
-          pixmap = psprite->pm;
+          pixmap = psprite;
           item->setData(col, Qt::DecorationRole, *pixmap);
           break;
         case 4:

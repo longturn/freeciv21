@@ -442,7 +442,7 @@ races_dialog::races_dialog(struct player *pplayer, QWidget *parent)
     if (i >= 0) {
       item = new QTableWidgetItem;
       styles->insertRow(i);
-      pix = get_sample_city_sprite(tileset, i)->pm;
+      pix = get_sample_city_sprite(tileset, i);
       item->setData(Qt::DecorationRole, *pix);
       item->setData(Qt::UserRole, style_number(pstyle));
       size.setWidth(pix->width());
@@ -627,7 +627,7 @@ void races_dialog::set_index(int index)
   QFont f;
   struct nation_group *group;
   int i;
-  struct sprite *s;
+  QPixmap *s;
   QHeaderView *header;
   selected_nation_tabs->clearContents();
   selected_nation_tabs->setRowCount(0);
@@ -657,7 +657,7 @@ void races_dialog::set_index(int index)
       f.setStrikeOut(true);
       item->setFont(f);
     }
-    pix = s->pm;
+    pix = s;
     item->setData(Qt::DecorationRole, *pix);
     item->setData(Qt::UserRole, nation_number(pnation));
     item->setText(nation_adjective_translation(pnation));
@@ -2186,8 +2186,7 @@ static void transport_alight(QVariant data1, QVariant data2)
   request_do_action(ACTION_TRANSPORT_ALIGHT, actor_id, target_id, 0, "");
 }
 
-static void do_that_action(QVariant data1, QVariant data2,
-                             enum gen_action a)
+static void do_that_action(QVariant data1, QVariant data2, enum gen_action a)
 {
   int actor_id = data1.toInt();
   int target_id = data2.toInt();

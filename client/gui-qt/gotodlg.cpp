@@ -223,7 +223,7 @@ void goto_dialog::fill_tab(player *pplayer)
   QFont f = QApplication::font();
   QFontMetrics fm(f);
   int h;
-  struct sprite *sprite;
+  QPixmap *sprite;
   QPixmap *pix;
   QPixmap pix_scaled;
   QTableWidgetItem *item;
@@ -242,7 +242,7 @@ void goto_dialog::fill_tab(player *pplayer)
       case 1:
         sprite = get_nation_flag_sprite(tileset, nation_of_player(pplayer));
         if (sprite != NULL) {
-          pix = sprite->pm;
+          pix = sprite;
           pix_scaled = pix->scaledToHeight(h);
           item->setData(Qt::DecorationRole, pix_scaled);
         }

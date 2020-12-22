@@ -173,8 +173,8 @@ struct drawing_layer {
   enum sprite_type sprite_type;
 
   struct sprite_vector base;
-  struct sprite *match[MAX_INDEX_CARDINAL];
-  struct sprite **cells;
+  QPixmap *match[MAX_INDEX_CARDINAL];
+  QPixmap **cells;
 
   /* List of those sprites in 'cells' that are allocated by some other
    * means than load_sprite() and thus are not freed by unload_all_sprites().
@@ -195,12 +195,12 @@ struct drawing_data {
   bool is_reversed;
 
   int blending; /* layer, 0 = none */
-  struct sprite *blender;
-  struct sprite *blend[4]; /* indexed by a direction4 */
+  QPixmap *blender;
+  QPixmap *blend[4]; /* indexed by a direction4 */
 };
 
 struct city_style_threshold {
-  struct sprite *sprite;
+  QPixmap *sprite;
 };
 
 struct styles {
@@ -214,18 +214,18 @@ struct city_sprite {
 };
 
 struct river_sprites {
-  struct sprite *spec[MAX_INDEX_CARDINAL], *outlet[MAX_INDEX_CARDINAL];
+  QPixmap *spec[MAX_INDEX_CARDINAL], *outlet[MAX_INDEX_CARDINAL];
 };
 
 struct citizen_graphic {
   /* Each citizen type has up to MAX_NUM_CITIZEN_SPRITES different
    * sprites, as defined by the tileset. */
   int count;
-  struct sprite *sprite[MAX_NUM_CITIZEN_SPRITES];
+  QPixmap *sprite[MAX_NUM_CITIZEN_SPRITES];
 };
 
 struct named_sprites {
-  struct sprite *indicator[INDICATOR_COUNT][NUM_TILES_PROGRESS],
+  QPixmap *indicator[INDICATOR_COUNT][NUM_TILES_PROGRESS],
       *treaty_thumb[2],   /* 0=disagree, 1=agree */
       *arrow[ARROW_LAST], /* 0=right arrow, 1=plus, 2=minus */
 
@@ -238,33 +238,33 @@ struct named_sprites {
       *dither_tile; /* only used for isometric view */
 
   struct {
-    struct sprite *tile, *worked_tile, *unworked_tile;
+    QPixmap *tile, *worked_tile, *unworked_tile;
   } mask;
 
-  struct sprite *tech[A_LAST];
-  struct sprite *building[B_LAST];
-  struct sprite *government[G_LAST];
+  QPixmap *tech[A_LAST];
+  QPixmap *building[B_LAST];
+  QPixmap *government[G_LAST];
 
   struct {
-    struct sprite *icon[U_LAST];
-    struct sprite *facing[U_LAST][DIR8_MAGIC_MAX];
+    QPixmap *icon[U_LAST];
+    QPixmap *facing[U_LAST][DIR8_MAGIC_MAX];
   } units;
 
   struct sprite_vector nation_flag;
   struct sprite_vector nation_shield;
 
   struct citizen_graphic citizen[CITIZEN_LAST], specialist[SP_MAX];
-  struct sprite *spaceship[SPACESHIP_COUNT];
+  QPixmap *spaceship[SPACESHIP_COUNT];
   struct {
     int hot_x, hot_y;
-    struct sprite *frame[NUM_CURSOR_FRAMES];
+    QPixmap *frame[NUM_CURSOR_FRAMES];
   } cursor[CURSOR_LAST];
   struct {
     struct sprite_vector unit;
-    struct sprite *nuke;
+    QPixmap *nuke;
   } explode;
   struct {
-    struct sprite *hp_bar[NUM_TILES_HP_BAR], *vet_lev[MAX_VET_LEVELS],
+    QPixmap *hp_bar[NUM_TILES_HP_BAR], *vet_lev[MAX_VET_LEVELS],
         *select[NUM_TILES_SELECT], *auto_attack, *auto_settler,
         *auto_explore, *fortified, *fortifying,
         *go_to, /* goto is a C keyword :-) */
@@ -273,14 +273,13 @@ struct named_sprites {
         *action_decision_want, *lowfuel, *tired;
   } unit;
   struct {
-    struct sprite *unhappy[MAX_NUM_UPKEEP_SPRITES],
+    QPixmap *unhappy[MAX_NUM_UPKEEP_SPRITES],
         *output[O_LAST][MAX_NUM_UPKEEP_SPRITES];
   } upkeep;
   struct {
-    struct sprite *disorder, *size[NUM_TILES_DIGITS],
-        *size_tens[NUM_TILES_DIGITS], *size_hundreds[NUM_TILES_DIGITS],
-        *tile_foodnum[NUM_TILES_DIGITS], *tile_shieldnum[NUM_TILES_DIGITS],
-        *tile_tradenum[NUM_TILES_DIGITS];
+    QPixmap *disorder, *size[NUM_TILES_DIGITS], *size_tens[NUM_TILES_DIGITS],
+        *size_hundreds[NUM_TILES_DIGITS], *tile_foodnum[NUM_TILES_DIGITS],
+        *tile_shieldnum[NUM_TILES_DIGITS], *tile_tradenum[NUM_TILES_DIGITS];
     struct city_sprite *tile, *single_wall, *wall[NUM_WALL_TYPES], *occupied;
     struct sprite_vector worked_tile_overlay;
     struct sprite_vector unworked_tile_overlay;
@@ -289,31 +288,31 @@ struct named_sprites {
   struct editor_sprites editor;
   struct {
     struct {
-      struct sprite *specific;
-      struct sprite *turns[NUM_TILES_DIGITS];
-      struct sprite *turns_tens[NUM_TILES_DIGITS];
-      struct sprite *turns_hundreds[NUM_TILES_DIGITS];
+      QPixmap *specific;
+      QPixmap *turns[NUM_TILES_DIGITS];
+      QPixmap *turns_tens[NUM_TILES_DIGITS];
+      QPixmap *turns_hundreds[NUM_TILES_DIGITS];
     } s[GTS_COUNT];
-    struct sprite *waypoint;
+    QPixmap *waypoint;
   } path;
   struct {
-    struct sprite *attention;
+    QPixmap *attention;
   } user;
   struct {
-    struct sprite *fog, **fullfog,
+    QPixmap *fog, **fullfog,
         *darkness[MAX_INDEX_CARDINAL]; /* first unused */
   } tx;                                /* terrain extra */
   struct {
-    struct sprite *activity, *rmact;
+    QPixmap *activity, *rmact;
     int extrastyle;
     union {
-      struct sprite *single;
-      struct sprite *cardinals[MAX_INDEX_CARDINAL];
+      QPixmap *single;
+      QPixmap *cardinals[MAX_INDEX_CARDINAL];
       struct {
-        struct sprite *background, *middleground, *foreground;
+        QPixmap *background, *middleground, *foreground;
       } bmf;
       struct {
-        struct sprite
+        QPixmap
             /* for extrastyles ESTYLE_ROAD_ALL_SEPARATE and
                ESTYLE_ROAD_PARITY_COMBINED */
             *isolated,
@@ -321,21 +320,21 @@ struct named_sprites {
                          */
         union {
           /* for ESTYLE_ROAD_ALL_SEPARATE */
-          struct sprite *dir[8]; /* all entries used */
+          QPixmap *dir[8]; /* all entries used */
           /* ESTYLE_ROAD_PARITY_COMBINED */
           struct {
-            struct sprite *even[MAX_INDEX_HALF], /* first unused */
-                *odd[MAX_INDEX_HALF];            /* first unused */
+            QPixmap *even[MAX_INDEX_HALF], /* first unused */
+                *odd[MAX_INDEX_HALF];      /* first unused */
           } combo;
           /* ESTYLE_ALL_SEPARATE */
-          struct sprite *total[MAX_INDEX_VALID];
+          QPixmap *total[MAX_INDEX_VALID];
           struct river_sprites rivers;
         } ru;
       } road;
     } u;
   } extras[MAX_EXTRA_TYPES];
   struct {
-    struct sprite *main[EDGE_COUNT], *city[EDGE_COUNT], *worked[EDGE_COUNT],
+    QPixmap *main[EDGE_COUNT], *city[EDGE_COUNT], *worked[EDGE_COUNT],
         *unavailable, *nonnative, *selected[EDGE_COUNT],
         *coastline[EDGE_COUNT], *borders[EDGE_COUNT][2];
   } grid;
@@ -343,20 +342,20 @@ struct named_sprites {
     struct sprite_vector overlays;
   } colors;
   struct {
-    struct sprite *color;   /* Generic background color */
-    struct sprite *graphic; /* Generic background graphic */
+    QPixmap *color;   /* Generic background color */
+    QPixmap *graphic; /* Generic background graphic */
   } background;
   struct {
-    struct sprite *grid_borders[EDGE_COUNT][2];
-    struct sprite *color;
-    struct sprite *background;
+    QPixmap *grid_borders[EDGE_COUNT][2];
+    QPixmap *color;
+    QPixmap *background;
   } player[MAX_NUM_PLAYER_SLOTS];
 
   struct drawing_data *drawing[MAX_NUM_ITEMS];
 };
 
 struct specfile {
-  struct sprite *big_sprite;
+  QPixmap *big_sprite;
   char *file_name;
 };
 
@@ -378,7 +377,7 @@ struct small_sprite {
   /* A little more (optional) data. */
   int hot_x, hot_y;
 
-  struct sprite *sprite;
+  QPixmap *sprite;
 };
 
 static void drawing_data_destroy(struct drawing_data *draw);
@@ -1387,10 +1386,10 @@ void tilespec_reread_frozen_refresh(const char *tname)
    Loads the given graphics file (found in the data path) into a newly
    allocated sprite.
  ****************************************************************************/
-static struct sprite *load_gfx_file(const char *gfx_filename)
+static QPixmap *load_gfx_file(const char *gfx_filename)
 {
   const char **gfx_fileexts = gfx_fileextensions(), *gfx_fileext;
-  struct sprite *s;
+  QPixmap *s;
 
   /* Try out all supported file extensions to find one that works. */
   while ((gfx_fileext = *gfx_fileexts++)) {
@@ -2495,8 +2494,8 @@ static QString &valid_index_str(const struct tileset *t, int idx)
    Scale means if sprite should be scaled, smooth if scaling might use
    other scaling algorithm than nearest neighbor.
  ****************************************************************************/
-static struct sprite *load_sprite(struct tileset *t, const QString &tag_name,
-                                  bool scale, bool smooth)
+static QPixmap *load_sprite(struct tileset *t, const QString &tag_name,
+                            bool scale, bool smooth)
 {
   struct small_sprite *ss;
   float sprite_scale = 1.0f;
@@ -2514,7 +2513,7 @@ static struct sprite *load_sprite(struct tileset *t, const QString &tag_name,
     fc_assert(ss->ref_count == 0);
     if (ss->file) {
       int w, h;
-      struct sprite *s;
+      QPixmap *s;
 
       if (scale) {
         s = load_gfx_file(ss->file);
@@ -2561,9 +2560,9 @@ static struct sprite *load_sprite(struct tileset *t, const QString &tag_name,
 /************************************************************************/ /**
    Create a sprite with the given color and tag.
  ****************************************************************************/
-static struct sprite *create_plr_sprite(QColor *pcolor)
+static QPixmap *create_plr_sprite(QColor *pcolor)
 {
-  struct sprite *sprite;
+  QPixmap *sprite;
 
   fc_assert_ret_val(pcolor != NULL, NULL);
 
@@ -2761,8 +2760,8 @@ static void tileset_setup_citizen_types(struct tileset *t)
 
    See also load_city_sprite, free_city_sprite.
  ****************************************************************************/
-static struct sprite *get_city_sprite(const struct city_sprite *city_sprite,
-                                      const struct city *pcity)
+static QPixmap *get_city_sprite(const struct city_sprite *city_sprite,
+                                const struct city *pcity)
 {
   /* get style and match the best tile based on city size */
   int style = style_of_city(pcity);
@@ -2805,7 +2804,7 @@ load_city_thresholds_sprites(struct tileset *t, QString tag, char *graphic,
   QString buffer;
   char *gfx_in_use = graphic;
   int num_thresholds = 0;
-  struct sprite *sprite;
+  QPixmap *sprite;
   int size;
 
   *thresholds = NULL;
@@ -2975,7 +2974,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
 
   sprite_vector_init(&t->sprites.explode.unit);
   for (i = 0;; i++) {
-    struct sprite *sprite;
+    QPixmap *sprite;
 
     buffer = QStringLiteral("explode.unit_%1").arg(QString::number(i));
     sprite = load_sprite(t, buffer, true, true);
@@ -3039,7 +3038,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   SET_SPRITE(citybar.background, "citybar.background");
   sprite_vector_init(&t->sprites.citybar.occupancy);
   for (i = 0;; i++) {
-    struct sprite *sprite;
+    QPixmap *sprite;
 
     buffer = QStringLiteral("citybar.occupancy_%1").arg(QString::number(i));
     sprite = load_sprite(t, buffer, true, true);
@@ -3169,7 +3168,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
 
   sprite_vector_init(&t->sprites.colors.overlays);
   for (i = 0;; i++) {
-    struct sprite *sprite;
+    QPixmap *sprite;
 
     buffer = QStringLiteral("colors.overlay_%1").arg(QString::number(i));
     sprite = load_sprite(t, buffer, true, true);
@@ -3189,8 +3188,8 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   sprite_vector_reserve(&t->sprites.city.unworked_tile_overlay,
                         sprite_vector_size(&t->sprites.colors.overlays));
   for (i = 0; i < sprite_vector_size(&t->sprites.colors.overlays); i++) {
-    struct sprite *color, *color_mask;
-    struct sprite *worked, *unworked;
+    QPixmap *color, *color_mask;
+    QPixmap *worked, *unworked;
 
     color = *sprite_vector_get(&t->sprites.colors.overlays, i);
     color_mask = crop_sprite(color, 0, 0, W, H, t->sprites.mask.tile, 0, 0,
@@ -3245,7 +3244,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     break;
   case DARKNESS_ISORECT: {
     /* Isometric: take a single tx.darkness tile and split it into 4. */
-    struct sprite *darkness =
+    QPixmap *darkness =
         load_sprite(t, QStringLiteral("tx.darkness"), true, false);
     const int ntw = t->normal_tile_width, nth = t->normal_tile_height;
     int offsets[4][2] = {
@@ -3277,7 +3276,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     }
     break;
   case DARKNESS_CORNER:
-    t->sprites.tx.fullfog = static_cast<sprite **>(fc_realloc(
+    t->sprites.tx.fullfog = static_cast<QPixmap **>(fc_realloc(
         t->sprites.tx.fullfog, 81 * sizeof(*t->sprites.tx.fullfog)));
     for (i = 0; i < 81; i++) {
       /* Unknown, fog, known. */
@@ -3369,12 +3368,12 @@ void tileset_load_tiles(struct tileset *t)
    Lookup sprite to match tag, or else to match alt if don't find,
    or else return NULL, and emit log message.
  ****************************************************************************/
-struct sprite *tiles_lookup_sprite_tag_alt(struct tileset *t,
-                                           QtMsgType level, const char *tag,
-                                           const char *alt, const char *what,
-                                           const char *name, bool scale)
+QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
+                                     const char *tag, const char *alt,
+                                     const char *what, const char *name,
+                                     bool scale)
 {
-  struct sprite *sp;
+  QPixmap *sp;
 
   /* (should get sprite_hash before connection) */
   fc_assert_ret_val_msg(NULL != t->sprite_hash, NULL,
@@ -3812,7 +3811,7 @@ void tileset_setup_tile_type(struct tileset *t,
                              const struct terrain *pterrain)
 {
   struct drawing_data *draw;
-  struct sprite *sprite;
+  QPixmap *sprite;
   QString buffer;
   int i, l;
 
@@ -3902,7 +3901,7 @@ void tileset_setup_tile_type(struct tileset *t,
         break;
       };
 
-      dlp->cells = new struct sprite *[number]();
+      dlp->cells = new QPixmap *[number]();
 
       for (i = 0; i < number; i++) {
         enum direction4 dir = static_cast<direction4>(i % NUM_CORNER_DIRS);
@@ -4097,7 +4096,7 @@ void tileset_setup_nation_flag(struct tileset *t, struct nation_type *nation)
   const char *tags[] = {nation->flag_graphic_str, nation->flag_graphic_alt,
                         "unknown", NULL};
   int i;
-  struct sprite *flag = NULL, *shield = NULL;
+  QPixmap *flag = NULL, *shield = NULL;
   QString buf;
 
   for (i = 0; tags[i] && !flag; i++) {
@@ -4124,8 +4123,8 @@ void tileset_setup_nation_flag(struct tileset *t, struct nation_type *nation)
 /************************************************************************/ /**
    Return the flag graphic to be used by the city.
  ****************************************************************************/
-struct sprite *get_city_flag_sprite(const struct tileset *t,
-                                    const struct city *pcity)
+QPixmap *get_city_flag_sprite(const struct tileset *t,
+                              const struct city *pcity)
 {
   return get_nation_flag_sprite(t, nation_of_city(pcity));
 }
@@ -4133,8 +4132,8 @@ struct sprite *get_city_flag_sprite(const struct tileset *t,
 /************************************************************************/ /**
    Return a sprite for the national flag for this unit.
  ****************************************************************************/
-static struct sprite *get_unit_nation_flag_sprite(const struct tileset *t,
-                                                  const struct unit *punit)
+static QPixmap *get_unit_nation_flag_sprite(const struct tileset *t,
+                                            const struct unit *punit)
 {
   struct nation_type *pnation = nation_of_unit(punit);
 
@@ -4202,7 +4201,7 @@ static int fill_unit_type_sprite_array(const struct tileset *t,
                                        enum direction8 facing)
 {
   struct drawn_sprite *save_sprs = sprs;
-  struct sprite *uspr = get_unittype_sprite(t, putype, facing);
+  QPixmap *uspr = get_unittype_sprite(t, putype, facing);
 
   ADD_SPRITE(uspr, true, FULL_TILE_X_OFFSET + t->unit_offset_x,
              FULL_TILE_Y_OFFSET + t->unit_offset_y);
@@ -4240,7 +4239,7 @@ static int fill_unit_sprite_array(const struct tileset *t,
   }
 
   if (punit->activity != ACTIVITY_IDLE) {
-    struct sprite *s = NULL;
+    QPixmap *s = NULL;
 
     switch (punit->activity) {
     case ACTIVITY_MINE:
@@ -4306,7 +4305,7 @@ static int fill_unit_sprite_array(const struct tileset *t,
   }
 
   {
-    struct sprite *s = NULL;
+    QPixmap *s = NULL;
     int offset_x = 0;
     int offset_y = 0;
 
@@ -4983,7 +4982,7 @@ static int fill_terrain_sprite_array(
       int y = (t->type == TS_ISOMETRIC ? iso_offsets[i][1]
                                        : noniso_offsets[i][1]);
       int m[3] = {MATCH(dir_ccw(dir)), MATCH(dir), MATCH(dir_cw(dir))};
-      struct sprite *s;
+      QPixmap *s;
 
       /* synthesize 4 dimensional array? */
       switch (dlp->match_style) {
@@ -5107,7 +5106,7 @@ static int fill_terrain_sprite_layer(struct tileset *t,
                                      const struct terrain *pterrain,
                                      struct terrain **tterrain_near)
 {
-  struct sprite *sprite;
+  QPixmap *sprite;
   struct drawn_sprite *saved_sprs = sprs;
   struct drawing_data *draw = t->sprites.drawing[terrain_index(pterrain)];
   const int l =
@@ -5323,7 +5322,7 @@ static int fill_goto_sprite_array(const struct tileset *t,
                                   const struct tile_corner *pcorner)
 {
   struct drawn_sprite *saved_sprs = sprs;
-  struct sprite *sprite;
+  QPixmap *sprite;
   bool warn = false;
   enum goto_tile_state state;
   int length;
@@ -5729,7 +5728,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
       if (t->type == TS_ISOMETRIC && pcity->client.walls > 0) {
         struct city_sprite *cspr =
             t->sprites.city.wall[pcity->client.walls - 1];
-        struct sprite *spr = NULL;
+        QPixmap *spr = NULL;
 
         if (cspr != NULL) {
           spr = get_city_sprite(cspr, pcity);
@@ -5754,7 +5753,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
       if (t->type == TS_OVERHEAD && pcity->client.walls > 0) {
         struct city_sprite *cspr =
             t->sprites.city.wall[pcity->client.walls - 1];
-        struct sprite *spr = NULL;
+        QPixmap *spr = NULL;
 
         if (cspr != NULL) {
           spr = get_city_sprite(cspr, pcity);
@@ -5934,8 +5933,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
                    FULL_TILE_X_OFFSET + t->city_size_offset_x,
                    FULL_TILE_Y_OFFSET + t->city_size_offset_y);
         if (100 <= size) {
-          struct sprite *sprite =
-              t->sprites.city.size_hundreds[(size / 100) % 10];
+          QPixmap *sprite = t->sprites.city.size_hundreds[(size / 100) % 10];
 
           if (NULL != sprite) {
             ADD_SPRITE(sprite, false,
@@ -6301,8 +6299,8 @@ void tileset_free_tiles(struct tileset *t)
 /************************************************************************/ /**
    Return the sprite for drawing the given spaceship part.
  ****************************************************************************/
-struct sprite *get_spaceship_sprite(const struct tileset *t,
-                                    enum spaceship_part part)
+QPixmap *get_spaceship_sprite(const struct tileset *t,
+                              enum spaceship_part part)
 {
   return t->sprites.spaceship[part];
 }
@@ -6314,10 +6312,9 @@ struct sprite *get_spaceship_sprite(const struct tileset *t,
    value indicates there is no city; i.e., the sprite is just being
    used as a picture).
  ****************************************************************************/
-struct sprite *get_citizen_sprite(const struct tileset *t,
-                                  enum citizen_category type,
-                                  int citizen_index,
-                                  const struct city *pcity)
+QPixmap *get_citizen_sprite(const struct tileset *t,
+                            enum citizen_category type, int citizen_index,
+                            const struct city *pcity)
 {
   const struct citizen_graphic *graphic;
   int gfx_index = citizen_index;
@@ -6344,8 +6341,8 @@ struct sprite *get_citizen_sprite(const struct tileset *t,
 /************************************************************************/ /**
    Return the sprite for the nation.
  ****************************************************************************/
-struct sprite *get_nation_flag_sprite(const struct tileset *t,
-                                      const struct nation_type *pnation)
+QPixmap *get_nation_flag_sprite(const struct tileset *t,
+                                const struct nation_type *pnation)
 {
   return t->sprites.nation_flag.p[nation_index(pnation)];
 }
@@ -6353,8 +6350,8 @@ struct sprite *get_nation_flag_sprite(const struct tileset *t,
 /************************************************************************/ /**
    Return the shield sprite for the nation.
  ****************************************************************************/
-struct sprite *get_nation_shield_sprite(const struct tileset *t,
-                                        const struct nation_type *pnation)
+QPixmap *get_nation_shield_sprite(const struct tileset *t,
+                                  const struct nation_type *pnation)
 {
   return t->sprites.nation_shield.p[nation_index(pnation)];
 }
@@ -6362,7 +6359,7 @@ struct sprite *get_nation_shield_sprite(const struct tileset *t,
 /************************************************************************/ /**
    Return the sprite for the technology/advance.
  ****************************************************************************/
-struct sprite *get_tech_sprite(const struct tileset *t, Tech_type_id tech)
+QPixmap *get_tech_sprite(const struct tileset *t, Tech_type_id tech)
 {
   fc_assert_ret_val(0 <= tech && tech < advance_count(), NULL);
   return t->sprites.tech[tech];
@@ -6371,8 +6368,8 @@ struct sprite *get_tech_sprite(const struct tileset *t, Tech_type_id tech)
 /************************************************************************/ /**
    Return the sprite for the building/improvement.
  ****************************************************************************/
-struct sprite *get_building_sprite(const struct tileset *t,
-                                   const struct impr_type *pimprove)
+QPixmap *get_building_sprite(const struct tileset *t,
+                             const struct impr_type *pimprove)
 {
   fc_assert_ret_val(NULL != pimprove, NULL);
   return t->sprites.building[improvement_index(pimprove)];
@@ -6381,8 +6378,8 @@ struct sprite *get_building_sprite(const struct tileset *t,
 /************************************************************************/ /**
    Return the sprite for the government.
  ****************************************************************************/
-struct sprite *get_government_sprite(const struct tileset *t,
-                                     const struct government *gov)
+QPixmap *get_government_sprite(const struct tileset *t,
+                               const struct government *gov)
 {
   fc_assert_ret_val(NULL != gov, NULL);
   return t->sprites.government[government_index(gov)];
@@ -6393,9 +6390,9 @@ struct sprite *get_government_sprite(const struct tileset *t,
    If 'facing' is direction8_invalid(), will use an unoriented sprite or
    a default orientation.
  ****************************************************************************/
-struct sprite *get_unittype_sprite(const struct tileset *t,
-                                   const struct unit_type *punittype,
-                                   enum direction8 facing)
+QPixmap *get_unittype_sprite(const struct tileset *t,
+                             const struct unit_type *punittype,
+                             enum direction8 facing)
 {
   int uidx = utype_index(punittype);
   bool icon = !direction8_is_valid(facing);
@@ -6424,7 +6421,7 @@ struct sprite *get_unittype_sprite(const struct tileset *t,
 /************************************************************************/ /**
    Return a "sample" sprite for this city style.
  ****************************************************************************/
-struct sprite *get_sample_city_sprite(const struct tileset *t, int style_idx)
+QPixmap *get_sample_city_sprite(const struct tileset *t, int style_idx)
 {
   int num_thresholds =
       t->sprites.city.tile->styles[style_idx].land_num_thresholds;
@@ -6438,11 +6435,10 @@ struct sprite *get_sample_city_sprite(const struct tileset *t, int style_idx)
   }
 }
 
-
 /************************************************************************/ /**
    Return a tax sprite for the given output type (usually gold/lux/sci).
  ****************************************************************************/
-struct sprite *get_tax_sprite(const struct tileset *t, Output_type_id otype)
+QPixmap *get_tax_sprite(const struct tileset *t, Output_type_id otype)
 {
   switch (otype) {
   case O_SCIENCE:
@@ -6463,8 +6459,7 @@ struct sprite *get_tax_sprite(const struct tileset *t, Output_type_id otype)
 /************************************************************************/ /**
    Return event icon sprite
  ****************************************************************************/
-struct sprite *get_event_sprite(const struct tileset *t,
-                                enum event_type event)
+QPixmap *get_event_sprite(const struct tileset *t, enum event_type event)
 {
   return t->sprites.events[event];
 }
@@ -6473,7 +6468,7 @@ struct sprite *get_event_sprite(const struct tileset *t,
    Return a thumbs-up/thumbs-down sprite to show treaty approval or
    disapproval.
  ****************************************************************************/
-struct sprite *get_treaty_thumb_sprite(const struct tileset *t, bool on_off)
+QPixmap *get_treaty_thumb_sprite(const struct tileset *t, bool on_off)
 {
   return t->sprites.treaty_thumb[on_off ? 1 : 0];
 }
@@ -6493,7 +6488,7 @@ get_unit_explode_animation(const struct tileset *t)
 
    TODO: This should be an animation like the unit explode animation.
  ****************************************************************************/
-struct sprite *get_nuke_explode_sprite(const struct tileset *t)
+QPixmap *get_nuke_explode_sprite(const struct tileset *t)
 {
   return t->sprites.explode.nuke;
 }
@@ -6524,9 +6519,8 @@ const struct editor_sprites *get_editor_sprites(const struct tileset *t)
    (*hot_x, *hot_y).
    A cursor can consist of several frames to be used for animation.
  ****************************************************************************/
-struct sprite *get_cursor_sprite(const struct tileset *t,
-                                 enum cursor_type cursor, int *hot_x,
-                                 int *hot_y, int frame)
+QPixmap *get_cursor_sprite(const struct tileset *t, enum cursor_type cursor,
+                           int *hot_x, int *hot_y, int frame)
 {
   *hot_x = t->sprites.cursor[cursor].hot_x;
   *hot_y = t->sprites.cursor[cursor].hot_y;
@@ -6542,7 +6536,7 @@ struct sprite *get_cursor_sprite(const struct tileset *t,
    The GUI code must be sure to call tileset_load_tiles before setting the
    top-level icon.
  ****************************************************************************/
-struct sprite *get_icon_sprite(const struct tileset *t, enum icon_type icon)
+QPixmap *get_icon_sprite(const struct tileset *t, enum icon_type icon)
 {
   return t->sprites.icon[icon];
 }
@@ -6553,7 +6547,7 @@ struct sprite *get_icon_sprite(const struct tileset *t, enum icon_type icon)
    FIXME: This function shouldn't be needed if the attention graphics are
    drawn natively by the tileset code.
  ****************************************************************************/
-struct sprite *get_attention_crosshair_sprite(const struct tileset *t)
+QPixmap *get_attention_crosshair_sprite(const struct tileset *t)
 {
   return t->sprites.user.attention;
 }
@@ -6562,8 +6556,8 @@ struct sprite *get_attention_crosshair_sprite(const struct tileset *t)
    Returns a sprite for the given indicator with the given index.  The
    index should be in [0, NUM_TILES_PROGRESS).
  ****************************************************************************/
-struct sprite *get_indicator_sprite(const struct tileset *t,
-                                    enum indicator_type indicator, int idx)
+QPixmap *get_indicator_sprite(const struct tileset *t,
+                              enum indicator_type indicator, int idx)
 {
   idx = CLIP(0, idx, NUM_TILES_PROGRESS - 1);
 
@@ -6578,9 +6572,8 @@ struct sprite *get_indicator_sprite(const struct tileset *t,
 
    May return NULL if there's no unhappiness.
  ****************************************************************************/
-struct sprite *get_unit_unhappy_sprite(const struct tileset *t,
-                                       const struct unit *punit,
-                                       int happy_cost)
+QPixmap *get_unit_unhappy_sprite(const struct tileset *t,
+                                 const struct unit *punit, int happy_cost)
 {
   Q_UNUSED(punit)
   const int unhappy = CLIP(0, happy_cost, MAX_NUM_UPKEEP_SPRITES + 1);
@@ -6598,10 +6591,10 @@ struct sprite *get_unit_unhappy_sprite(const struct tileset *t,
 
    May return NULL if there's no upkeep of the kind.
  ****************************************************************************/
-struct sprite *get_unit_upkeep_sprite(const struct tileset *t,
-                                      Output_type_id otype,
-                                      const struct unit *punit,
-                                      const int *upkeep_cost)
+QPixmap *get_unit_upkeep_sprite(const struct tileset *t,
+                                Output_type_id otype,
+                                const struct unit *punit,
+                                const int *upkeep_cost)
 {
   Q_UNUSED(punit)
   const int upkeep = CLIP(0, upkeep_cost[otype], MAX_NUM_UPKEEP_SPRITES);
@@ -6617,7 +6610,7 @@ struct sprite *get_unit_upkeep_sprite(const struct tileset *t,
    Return a rectangular sprite containing a fog "color".  This can be used
    for drawing fog onto arbitrary areas (like the overview).
  ****************************************************************************/
-struct sprite *get_basic_fog_sprite(const struct tileset *t)
+QPixmap *get_basic_fog_sprite(const struct tileset *t)
 {
   return t->sprites.tx.fog;
 }
@@ -6916,7 +6909,7 @@ bool tileset_layer_in_category(enum mapview_layer layer,
 void tileset_player_init(struct tileset *t, struct player *pplayer)
 {
   int plrid, i, j;
-  struct sprite *color;
+  QPixmap *color;
 
   fc_assert_ret(pplayer != NULL);
 
@@ -6946,7 +6939,7 @@ void tileset_player_init(struct tileset *t, struct player *pplayer)
 
   for (i = 0; i < EDGE_COUNT; i++) {
     for (j = 0; j < 2; j++) {
-      struct sprite *s;
+      QPixmap *s;
 
       if (color && t->sprites.grid.borders[i][j]) {
         s = crop_sprite(color, 0, 0, t->normal_tile_width,

@@ -551,14 +551,14 @@ void fc_client::create_cursors(void)
   int cursor;
   QPixmap *pix;
   int hot_x, hot_y;
-  struct sprite *sprite;
+  QPixmap *sprite;
   int frame;
   QCursor *c;
   for (cursor = 0; cursor < CURSOR_LAST; cursor++) {
     for (frame = 0; frame < NUM_CURSOR_FRAMES; frame++) {
       curs = static_cast<cursor_type>(cursor);
       sprite = get_cursor_sprite(tileset, curs, &hot_x, &hot_y, frame);
-      pix = sprite->pm;
+      pix = sprite;
       c = new QCursor(*pix, hot_x, hot_y);
       fc_cursors[cursor][frame] = c;
     }

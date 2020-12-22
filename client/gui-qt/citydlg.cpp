@@ -146,7 +146,7 @@ void progress_bar::resizeEvent(QResizeEvent *event)
  ****************************************************************************/
 void progress_bar::set_pixmap(struct universal *target)
 {
-  struct sprite *sprite;
+  QPixmap *sprite;
   QImage cropped_img;
   QImage img;
   QPixmap tpix;
@@ -163,7 +163,7 @@ void progress_bar::set_pixmap(struct universal *target)
     pix = nullptr;
     return;
   }
-  img = sprite->pm->toImage();
+  img = sprite->toImage();
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
   tpix = QPixmap::fromImage(cropped_img);
@@ -177,7 +177,7 @@ void progress_bar::set_pixmap(struct universal *target)
  ****************************************************************************/
 void progress_bar::set_pixmap(int n)
 {
-  struct sprite *sprite;
+  QPixmap *sprite;
 
   if (valid_advance_by_number(n)) {
     sprite = get_tech_sprite(tileset, n);
@@ -189,10 +189,9 @@ void progress_bar::set_pixmap(int n)
     pix = nullptr;
     return;
   }
-  pix = new QPixmap(sprite->pm->width(), sprite->pm->height());
+  pix = new QPixmap(sprite->width(), sprite->height());
   pix->fill(Qt::transparent);
-  pixmap_copy(pix, sprite->pm, 0, 0, 0, 0, sprite->pm->width(),
-              sprite->pm->height());
+  pixmap_copy(pix, sprite, 0, 0, 0, 0, sprite->width(), sprite->height());
   if (isVisible()) {
     update();
   }
@@ -392,15 +391,14 @@ impr_item::impr_item(QWidget *parent, const impr_type *building,
   pcity = city;
   impr = building;
   impr_pixmap = nullptr;
-  struct sprite *sprite;
+  QPixmap *sprite;
   sprite = get_building_sprite(tileset, building);
 
   if (sprite != nullptr) {
-    impr_pixmap =
-        qtg_canvas_create(sprite->pm->width(), sprite->pm->height());
+    impr_pixmap = qtg_canvas_create(sprite->width(), sprite->height());
     impr_pixmap->fill(Qt::transparent);
-    pixmap_copy(impr_pixmap, sprite->pm, 0, 0, 0, 0,
-                sprite->pm->width(), sprite->pm->height());
+    pixmap_copy(impr_pixmap, sprite, 0, 0, 0, 0, sprite->width(),
+                sprite->height());
   } else {
     impr_pixmap = qtg_canvas_create(10, 10);
     impr_pixmap->fill(Qt::red);
@@ -436,7 +434,7 @@ void impr_item::init_pix()
 void impr_item::enterEvent(QEvent *event)
 {
   Q_UNUSED(event)
-  struct sprite *sprite;
+  QPixmap *sprite;
   QPainter p;
 
   if (impr_pixmap) {
@@ -445,16 +443,13 @@ void impr_item::enterEvent(QEvent *event)
 
   sprite = get_building_sprite(tileset, impr);
   if (impr && sprite) {
-    impr_pixmap =
-        qtg_canvas_create(sprite->pm->width(), sprite->pm->height());
-    impr_pixmap->fill(
-        QColor(palette().color(QPalette::Highlight)));
-    pixmap_copy(impr_pixmap, sprite->pm, 0, 0, 0, 0,
-                sprite->pm->width(), sprite->pm->height());
+    impr_pixmap = qtg_canvas_create(sprite->width(), sprite->height());
+    impr_pixmap->fill(QColor(palette().color(QPalette::Highlight)));
+    pixmap_copy(impr_pixmap, sprite, 0, 0, 0, 0, sprite->width(),
+                sprite->height());
   } else {
     impr_pixmap = qtg_canvas_create(10, 10);
-    impr_pixmap->fill(
-        QColor(palette().color(QPalette::Highlight)));
+    impr_pixmap->fill(QColor(palette().color(QPalette::Highlight)));
   }
 
   init_pix();
@@ -466,7 +461,7 @@ void impr_item::enterEvent(QEvent *event)
 void impr_item::leaveEvent(QEvent *event)
 {
   Q_UNUSED(event)
-  struct sprite *sprite;
+  QPixmap *sprite;
 
   if (impr_pixmap) {
     canvas_free(impr_pixmap);
@@ -474,11 +469,10 @@ void impr_item::leaveEvent(QEvent *event)
 
   sprite = get_building_sprite(tileset, impr);
   if (impr && sprite) {
-    impr_pixmap =
-        qtg_canvas_create(sprite->pm->width(), sprite->pm->height());
+    impr_pixmap = qtg_canvas_create(sprite->width(), sprite->height());
     impr_pixmap->fill(Qt::transparent);
-    pixmap_copy(impr_pixmap, sprite->pm, 0, 0, 0, 0,
-                sprite->pm->width(), sprite->pm->height());
+    pixmap_copy(impr_pixmap, sprite, 0, 0, 0, 0, sprite->width(),
+                sprite->height());
   } else {
     impr_pixmap = qtg_canvas_create(10, 10);
     impr_pixmap->fill(Qt::red);
@@ -2092,7 +2086,7 @@ void city_dialog::update_citizens()
 
   for (j = 0, i = 0; i < num_citizens; i++, j++) {
     dest_rect.moveTo(i * w, 0);
-    pix = get_citizen_sprite(tileset, categories[j], j, pcity)->pm;
+    pix = get_citizen_sprite(tileset, categories[j], j, pcity);
     p.begin(citizen_pixmap);
     p.drawPixmap(dest_rect, *pix, source_rect);
     p.end();
@@ -2111,7 +2105,7 @@ void city_dialog::update_citizens()
 
     for (j = 0, i = 0; i < num_citizens; i++, j++) {
       dest_rect.moveTo(i * w, 0);
-      pix = get_citizen_sprite(tileset, categories[j], j, pcity)->pm;
+      pix = get_citizen_sprite(tileset, categories[j], j, pcity);
       p.begin(citizen_pixmap);
       p.drawPixmap(dest_rect, *pix, source_rect);
       p.end();
@@ -2212,7 +2206,7 @@ void city_dialog::update_nation_table()
   citizens nationality_i;
   int h;
   int i = 0;
-  struct sprite *sprite;
+  QPixmap *sprite;
 
   h = fm.height() + 6;
   ui.nationality_table->clear();
@@ -2247,7 +2241,7 @@ void city_dialog::update_nation_table()
             tileset, nation_of_player(player_slot_get_player(pslot)));
 
         if (sprite != NULL) {
-          pix = sprite->pm;
+          pix = sprite;
           pix_scaled = pix->scaledToHeight(h);
           item->setData(Qt::DecorationRole, pix_scaled);
         } else {
@@ -2289,7 +2283,7 @@ void city_dialog::update_info_label()
  ****************************************************************************/
 void city_dialog::setup_ui(struct city *qcity)
 {
-  QPixmap q_pix = *get_icon_sprite(tileset, ICON_CITYDLG)->pm;
+  QPixmap q_pix = *get_icon_sprite(tileset, ICON_CITYDLG);
   QIcon q_icon = ::QIcon(q_pix);
 
   setWindowIcon(q_icon);
@@ -2451,18 +2445,12 @@ void city_dialog::get_city(bool next)
 /************************************************************************/ /**
    Changes city_dialog to next city after pushing next city button
  ****************************************************************************/
-void city_dialog::next_city()
-{
-  get_city(true);
-}
+void city_dialog::next_city() { get_city(true); }
 
 /************************************************************************/ /**
    Changes city_dialog to previous city after pushing prev city button
  ****************************************************************************/
-void city_dialog::prev_city()
-{
-  get_city(false);
-}
+void city_dialog::prev_city() { get_city(false); }
 
 /************************************************************************/ /**
    Updates building improvement/unit
@@ -2542,7 +2530,7 @@ void city_dialog::update_improvements()
   QPixmap pix_scaled;
   QString str, tooltip;
   QTableWidgetItem *qitem;
-  struct sprite *sprite = nullptr;
+  QPixmap *sprite = nullptr;
   int h, cost, item, targets_used, col, upkeep;
   struct item items[MAX_NUM_PRODUCTION_TARGETS];
   struct universal targets[MAX_NUM_PRODUCTION_TARGETS];
@@ -2569,7 +2557,7 @@ void city_dialog::update_improvements()
     sprite = get_building_sprite(tileset, target.value.building);
     upkeep = upkeep + city_improvement_upkeep(pcity, target.value.building);
     if (sprite != nullptr) {
-      pix = sprite->pm;
+      pix = sprite;
       pix_scaled = pix->scaledToHeight(h);
     }
   }
@@ -2608,7 +2596,7 @@ void city_dialog::update_improvements()
       switch (col) {
       case 0:
         if (sprite) {
-          pix = sprite->pm;
+          pix = sprite;
           pix_scaled = pix->scaledToHeight(h);
           qitem->setData(Qt::DecorationRole, pix_scaled);
         }
@@ -2990,7 +2978,7 @@ void city_production_delegate::paint(QPainter *painter,
   QPixmap pix_scaled;
   QRect rect1;
   QRect rect2;
-  struct sprite *sprite;
+  QPixmap *sprite;
   bool useless = false;
   bool is_coinage = false;
   bool is_neutral = false;
@@ -3020,7 +3008,7 @@ void city_production_delegate::paint(QPainter *painter,
     col = QColor(Qt::white);
     sprite = qtg_create_sprite(100, 100, &col);
     free_sprite = true;
-    *sprite->pm = icon.pixmap(100, 100);
+    *sprite = icon.pixmap(100, 100);
     name = _("Cancel");
     is_unit = false;
   } else if (VUT_UTYPE == target->kind) {
@@ -3061,7 +3049,7 @@ void city_production_delegate::paint(QPainter *painter,
   }
 
   if (sprite != NULL) {
-    pix = sprite->pm;
+    pix = sprite;
     pix_scaled =
         pix->scaledToHeight(item_height - 2, Qt::SmoothTransformation);
 

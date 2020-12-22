@@ -219,7 +219,7 @@ void gov_menu::create()
 void gov_menu::update()
 {
   struct government *gov, *revol_gov;
-  struct sprite *sprite;
+  QPixmap *sprite;
 
   revol_gov = game.government_during_revolution;
   for (int i = 0, j = 0; i < actions.count(); ++i) {
@@ -227,7 +227,7 @@ void gov_menu::update()
     if (gov != revol_gov) { // Skip revolution goverment
       sprite = get_government_sprite(tileset, gov);
       if (sprite != NULL) {
-        actions[j + 1]->setIcon(QIcon(*(sprite->pm)));
+        actions[j + 1]->setIcon(QIcon(*(sprite)));
       }
       actions[j + 1]->setEnabled(
           can_change_to_government(client.conn.playing, gov));

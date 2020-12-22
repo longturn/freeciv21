@@ -97,7 +97,7 @@ void qtg_ui_main()
 
     tileset_init(tileset);
     tileset_load_tiles(tileset);
-    qpm = get_icon_sprite(tileset, ICON_FREECIV)->pm;
+    qpm = get_icon_sprite(tileset, ICON_FREECIV);
     app_icon = ::QIcon(*qpm);
     qApp->setWindowIcon(app_icon);
     if (gui_options.first_boot) {

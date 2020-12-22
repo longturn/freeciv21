@@ -1272,7 +1272,7 @@ void editor_tool_set_count(enum editor_tool_type ett, int count)
    Returns a sprite containing an icon for the given tool type. Returns
    NULL if no such sprite exists.
  ****************************************************************************/
-struct sprite *editor_tool_get_sprite(enum editor_tool_type ett)
+QPixmap *editor_tool_get_sprite(enum editor_tool_type ett)
 {
   const struct editor_sprites *sprites;
 
@@ -1844,7 +1844,7 @@ const char *editor_get_mode_tooltip(enum editor_tool_mode etm)
 /************************************************************************/ /**
    Returns the editor sprite corresponding to the tool mode.
  ****************************************************************************/
-struct sprite *editor_get_mode_sprite(enum editor_tool_mode etm)
+QPixmap *editor_get_mode_sprite(enum editor_tool_mode etm)
 {
   const struct editor_sprites *sprites;
 

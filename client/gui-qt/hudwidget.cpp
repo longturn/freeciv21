@@ -1213,7 +1213,7 @@ void hud_unit_loader::show_me()
   int max_size = 0;
   int i, j;
   int w, h;
-  sprite *spite;
+  QPixmap *spite;
 
   unit_list_iterate(qtile->units, ptransport)
   {
@@ -1237,14 +1237,14 @@ void hud_unit_loader::show_me()
     str = str + " ("
           + QString(move_points_text(transports.at(i)->moves_left, false))
           + _("MP") + ")";
-    new_item = new QTableWidgetItem(QIcon(*spite->pm), str);
+    new_item = new QTableWidgetItem(QIcon(*spite), str);
     setItem(i, 0, new_item);
     j = 1;
     unit_list_iterate(transports.at(i)->transporting, tunit)
     {
       spite =
           get_unittype_sprite(tileset, tunit->utype, direction8_invalid());
-      new_item = new QTableWidgetItem(QIcon(*spite->pm), QLatin1String(""));
+      new_item = new QTableWidgetItem(QIcon(*spite), QLatin1String(""));
       setItem(i, j, new_item);
       j++;
     }
