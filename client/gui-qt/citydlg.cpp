@@ -1594,9 +1594,10 @@ void city_dialog::hideEvent(QHideEvent *event)
   Q_UNUSED(event)
   if (pcity) {
     key_city_hide_open(pcity);
-    if (!dont_focus)
+    if (!dont_focus) {
       unit_focus_update();
-    update_map_canvas_visible();
+    }
+    redraw_visible_map_now();
   }
   queen()->mapview_wdg->show_all_fcwidgets();
 }
@@ -1612,7 +1613,7 @@ void city_dialog::showEvent(QShowEvent *event)
   if (pcity) {
     key_city_show_open(pcity);
     unit_focus_set(nullptr);
-    update_map_canvas_visible();
+    redraw_visible_map_now();
   }
 }
 

@@ -2126,6 +2126,15 @@ static void queue_add_callback(void)
   }
 }
 
+/*****************************************************************************
+   Redraw visible map without queuing
+ ****************************************************************************/
+void redraw_visible_map_now()
+{
+  needed_updates = UPDATE_MAP_CANVAS_VISIBLE;
+  unqueue_mapview_updates(true);
+}
+
 /************************************************************************/ /**
    This function, along with unqueue_mapview_update(), helps in updating
    the mapview when a packet is received.  Previously, we just called
