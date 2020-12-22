@@ -147,32 +147,18 @@ void qtg_canvas_put_sprite_fogged(QPixmap *pcanvas, int canvas_x,
 {
   Q_UNUSED(fog_x)
   Q_UNUSED(fog_y)
-  QPainter p;
-  /* TODO make proper fog from this, just guess good compositions :D,
-   * probably use original black pixmap */
-  // QPainter p, q;
-  // QPixmap pix(psprite->width(), psprite->height());
-  // pix.fill(Qt::transparent);
-  // pix = psprite->copy();
 
-  // q.begin(&pix);
-  // q.setCompositionMode(QPainter::RasterOp_NotSourceOrNotDestination);
-  // q.drawPixmap(canvas_x, canvas_y, *psprite);
-  // q.end();
-
-  // p.begin(pcanvas );
-  // p.setOpacity(0.8);
-  // //p.setCompositionMode(QPainter::CompositionMode_SourceIn);
-  // p.drawPixmap(canvas_x, canvas_y, pix);
-  // p.setOpacity(0.5);
-  // p.setCompositionMode(QPainter::CompositionMode_Lighten);
-  // p.drawPixmap(canvas_x, canvas_y, *psprite);
-  // p.end();
+  QPixmap temp(psprite->size());
+  temp.fill(Qt::transparent);
+  QPainter p(&temp);
+  p.setCompositionMode(QPainter::CompositionMode_Source);
+  p.drawPixmap(0, 0, *psprite);
+  p.setCompositionMode(QPainter::CompositionMode_SourceAtop);
+  p.fillRect(temp.rect(), QColor(0, 0, 0, 110));
+  p.end();
 
   p.begin(pcanvas);
-  p.setCompositionMode(QPainter::CompositionMode_Difference);
-  p.setOpacity(0.5);
-  p.drawPixmap(canvas_x, canvas_y, *psprite);
+  p.drawPixmap(canvas_x, canvas_y, temp);
   p.end();
 }
 
