@@ -14,7 +14,7 @@
 #include "graphics.h"
 #include "qtg_cxxside.h"
 
-static struct sprite *intro_gfx_sprite = NULL;
+static QPixmap *intro_gfx_sprite = NULL;
 
 /************************************************************************/ /**
    Return whether the client supports given view type.

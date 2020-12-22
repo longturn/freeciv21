@@ -1093,7 +1093,7 @@ void put_unit_city_overlays(struct unit *punit, QPixmap *pcanvas,
                             int canvas_x, int canvas_y, int *upkeep_cost,
                             int happy_cost)
 {
-  struct sprite *sprite;
+  QPixmap *sprite;
 
   sprite = get_unit_unhappy_sprite(tileset, punit, happy_cost);
   if (sprite) {
@@ -1165,7 +1165,7 @@ void toggle_unit_color(struct unit *punit)
 void put_nuke_mushroom_pixmaps(struct tile *ptile)
 {
   float canvas_x, canvas_y;
-  struct sprite *mysprite = get_nuke_explode_sprite(tileset);
+  QPixmap *mysprite = get_nuke_explode_sprite(tileset);
   int width, height;
 
   get_sprite_dimensions(mysprite, &width, &height);
@@ -1503,9 +1503,8 @@ void update_tile_label(struct tile *ptile)
    width and height of the text block (centered directly underneath the
    city's tile).
  ****************************************************************************/
-static void show_tile_label(QPixmap *pcanvas, int canvas_x,
-                            int canvas_y, struct tile *ptile, int *width,
-                            int *height)
+static void show_tile_label(QPixmap *pcanvas, int canvas_x, int canvas_y,
+                            struct tile *ptile, int *width, int *height)
 {
   const enum client_font FONT_TILE_LABEL =
       FONT_CITY_NAME; /* TODO: new font */
@@ -1774,7 +1773,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
 
     for (i = 0; i < num_tiles_explode_unit; i++) {
       int w, h;
-      struct sprite *sprite = *sprite_vector_get(anim, i);
+      QPixmap *sprite = *sprite_vector_get(anim, i);
 
       get_sprite_dimensions(sprite, &w, &h);
       /* We first draw the explosion onto the unit and draw draw the
@@ -2791,8 +2790,7 @@ void free_mapcanvas_and_overview(void)
  ****************************************************************************/
 void get_spaceship_dimensions(int *width, int *height)
 {
-  struct sprite *sprite =
-      get_spaceship_sprite(tileset, SPACESHIP_HABITATION);
+  QPixmap *sprite = get_spaceship_sprite(tileset, SPACESHIP_HABITATION);
 
   get_sprite_dimensions(sprite, width, height);
   *width *= 7;
@@ -2810,7 +2808,7 @@ void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
   int i, x, y;
   const struct player_spaceship *ship = &pplayer->spaceship;
   int w, h;
-  struct sprite *spr;
+  QPixmap *spr;
   struct tileset *t = tileset;
 
   spr = get_spaceship_sprite(t, SPACESHIP_HABITATION);
@@ -2832,9 +2830,9 @@ void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
     x = modules_info[i].x * w / 4 - w / 2;
     y = modules_info[i].y * h / 4 - h / 2;
 
-    spr = (k == 0 ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
-                  : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
-                           : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
+    spr = (k == 0   ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
+           : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
+                    : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
     canvas_put_sprite_full(pcanvas, x, y, spr);
   }
 

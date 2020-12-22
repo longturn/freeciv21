@@ -15,18 +15,17 @@
 #include "gui_proto_constructor.h"
 #include "support.h"
 
-struct sprite; /* opaque type, real type is gui-dep */
+class QPixmap; /* opaque type, real type is gui-dep */
 struct color;
 
 GUI_FUNC_PROTO(const char **, gfx_fileextensions, void)
 
-GUI_FUNC_PROTO(struct sprite *, load_gfxfile, const char *filename)
-GUI_FUNC_PROTO(struct sprite *, crop_sprite, struct sprite *source, int x,
-               int y, int width, int height, struct sprite *mask,
-               int mask_offset_x, int mask_offset_y, float scale,
-               bool smooth)
-GUI_FUNC_PROTO(struct sprite *, create_sprite, int width, int height,
+GUI_FUNC_PROTO(QPixmap *, load_gfxfile, const char *filename)
+GUI_FUNC_PROTO(QPixmap *, crop_sprite, QPixmap *source, int x, int y,
+               int width, int height, QPixmap *mask, int mask_offset_x,
+               int mask_offset_y, float scale, bool smooth)
+GUI_FUNC_PROTO(QPixmap *, create_sprite, int width, int height,
                QColor *pcolor)
-GUI_FUNC_PROTO(void, get_sprite_dimensions, struct sprite *sprite,
-               int *width, int *height)
-GUI_FUNC_PROTO(void, free_sprite, struct sprite *s)
+GUI_FUNC_PROTO(void, get_sprite_dimensions, QPixmap *sprite, int *width,
+               int *height)
+GUI_FUNC_PROTO(void, free_sprite, QPixmap *s)

@@ -17,7 +17,6 @@
 #include "gui_proto_constructor.h"
 
 struct QColor;
-struct sprite;
 class QString;
 class QPixmap; /* opaque type, real type is gui-dep */
 
@@ -28,35 +27,32 @@ GUI_FUNC_PROTO(QPixmap *, canvas_create, int width, int height)
 GUI_FUNC_PROTO(void, canvas_free, QPixmap *store)
 
 /* Drawing functions */
-GUI_FUNC_PROTO(void, canvas_copy, QPixmap *dest, QPixmap *src,
-               int src_x, int src_y, int dest_x, int dest_y, int width,
-               int height)
+GUI_FUNC_PROTO(void, canvas_copy, QPixmap *dest, QPixmap *src, int src_x,
+               int src_y, int dest_x, int dest_y, int width, int height)
 GUI_FUNC_PROTO(void, canvas_put_sprite, QPixmap *pcanvas, int canvas_x,
-               int canvas_y, struct sprite *sprite, int offset_x,
-               int offset_y, int width, int height);
-GUI_FUNC_PROTO(void, canvas_put_sprite_full, QPixmap *pcanvas,
-               int canvas_x, int canvas_y, struct sprite *sprite)
+               int canvas_y, QPixmap *sprite, int offset_x, int offset_y,
+               int width, int height);
+GUI_FUNC_PROTO(void, canvas_put_sprite_full, QPixmap *pcanvas, int canvas_x,
+               int canvas_y, QPixmap *sprite)
 GUI_FUNC_PROTO(void, canvas_put_sprite_fogged, QPixmap *pcanvas,
-               int canvas_x, int canvas_y, struct sprite *psprite, bool fog,
+               int canvas_x, int canvas_y, QPixmap *psprite, bool fog,
                int fog_x, int fog_y)
 GUI_FUNC_PROTO(void, canvas_put_sprite_citymode, QPixmap *pcanvas,
-               int canvas_x, int canvas_y, struct sprite *psprite, bool fog,
+               int canvas_x, int canvas_y, QPixmap *psprite, bool fog,
                int fog_x, int fog_y)
-GUI_FUNC_PROTO(void, canvas_put_rectangle, QPixmap *pcanvas,
-               QColor *pcolor, int canvas_x, int canvas_y, int width,
-               int height)
+GUI_FUNC_PROTO(void, canvas_put_rectangle, QPixmap *pcanvas, QColor *pcolor,
+               int canvas_x, int canvas_y, int width, int height)
 GUI_FUNC_PROTO(void, canvas_fill_sprite_area, QPixmap *pcanvas,
-               struct sprite *psprite, QColor *pcolor, int canvas_x,
-               int canvas_y)
+               QPixmap *psprite, QColor *pcolor, int canvas_x, int canvas_y)
 GUI_FUNC_PROTO(void, canvas_put_line, QPixmap *pcanvas, QColor *pcolor,
                enum line_type ltype, int start_x, int start_y, int dx,
                int dy)
 GUI_FUNC_PROTO(void, canvas_put_curved_line, QPixmap *pcanvas,
                QColor *pcolor, enum line_type ltype, int start_x,
                int start_y, int dx, int dy)
-void canvas_put_unit_fogged(QPixmap *pcanvas, int canvas_x,
-                            int canvas_y, struct sprite *psprite, bool fog,
-                            int fog_x, int fog_y);
+void canvas_put_unit_fogged(QPixmap *pcanvas, int canvas_x, int canvas_y,
+                            QPixmap *psprite, bool fog, int fog_x,
+                            int fog_y);
 /* Text drawing functions */
 enum client_font {
   FONT_CITY_NAME,

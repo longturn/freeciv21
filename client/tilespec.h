@@ -19,17 +19,17 @@
 
 #include "options.h"
 
-struct sprite; /* opaque; gui-dep */
+class QPixmap; /* opaque; gui-dep */
 
 struct base_type;
 struct resource_type;
 
 /* Create the sprite_vector type. */
 #define SPECVEC_TAG sprite
-#define SPECVEC_TYPE struct sprite *
+#define SPECVEC_TYPE QPixmap *
 #include "specvec.h"
 #define sprite_vector_iterate(sprite_vec, psprite)                          \
-  TYPED_VECTOR_ITERATE(struct sprite *, sprite_vec, psprite)
+  TYPED_VECTOR_ITERATE(QPixmap *, sprite_vec, psprite)
 #define sprite_vector_iterate_end VECTOR_ITERATE_END
 
 #define SPECENUM_NAME ts_type
@@ -98,7 +98,7 @@ struct tile_corner {
 
 struct drawn_sprite {
   bool foggable; /* Set to FALSE for sprites that are never fogged. */
-  struct sprite *sprite;
+  QPixmap *sprite;
   int offset_x, offset_y; /* offset from tile origin */
 };
 
@@ -296,73 +296,67 @@ enum spaceship_part {
 };
 
 struct citybar_sprites {
-  struct sprite *shields, *food, *trade, *occupied, *background;
+  QPixmap *shields, *food, *trade, *occupied, *background;
   struct sprite_vector occupancy;
 };
 
 struct editor_sprites {
-  struct sprite *erase, *brush, *copy, *paste, *copypaste, *startpos,
-      *terrain, *terrain_resource, *terrain_special, *unit, *city, *vision,
-      *territory, *properties, *road, *military_base;
+  QPixmap *erase, *brush, *copy, *paste, *copypaste, *startpos, *terrain,
+      *terrain_resource, *terrain_special, *unit, *city, *vision, *territory,
+      *properties, *road, *military_base;
 };
 
 #define NUM_WALL_TYPES 7
 
-struct sprite *get_spaceship_sprite(const struct tileset *t,
-                                    enum spaceship_part part);
-struct sprite *get_citizen_sprite(const struct tileset *t,
-                                  enum citizen_category type,
-                                  int citizen_index,
-                                  const struct city *pcity);
-struct sprite *get_city_flag_sprite(const struct tileset *t,
-                                    const struct city *pcity);
-struct sprite *get_nation_flag_sprite(const struct tileset *t,
-                                      const struct nation_type *nation);
-struct sprite *get_nation_shield_sprite(const struct tileset *t,
-                                        const struct nation_type *nation);
-struct sprite *get_tech_sprite(const struct tileset *t, Tech_type_id tech);
-struct sprite *get_building_sprite(const struct tileset *t,
-                                   const struct impr_type *pimprove);
-struct sprite *get_government_sprite(const struct tileset *t,
-                                     const struct government *gov);
-struct sprite *get_unittype_sprite(const struct tileset *t,
-                                   const struct unit_type *punittype,
-                                   enum direction8 facing);
-struct sprite *get_sample_city_sprite(const struct tileset *t,
-                                      int style_idx);
-struct sprite *get_tax_sprite(const struct tileset *t, Output_type_id otype);
-struct sprite *get_treaty_thumb_sprite(const struct tileset *t, bool on_off);
+QPixmap *get_spaceship_sprite(const struct tileset *t,
+                              enum spaceship_part part);
+QPixmap *get_citizen_sprite(const struct tileset *t,
+                            enum citizen_category type, int citizen_index,
+                            const struct city *pcity);
+QPixmap *get_city_flag_sprite(const struct tileset *t,
+                              const struct city *pcity);
+QPixmap *get_nation_flag_sprite(const struct tileset *t,
+                                const struct nation_type *nation);
+QPixmap *get_nation_shield_sprite(const struct tileset *t,
+                                  const struct nation_type *nation);
+QPixmap *get_tech_sprite(const struct tileset *t, Tech_type_id tech);
+QPixmap *get_building_sprite(const struct tileset *t,
+                             const struct impr_type *pimprove);
+QPixmap *get_government_sprite(const struct tileset *t,
+                               const struct government *gov);
+QPixmap *get_unittype_sprite(const struct tileset *t,
+                             const struct unit_type *punittype,
+                             enum direction8 facing);
+QPixmap *get_sample_city_sprite(const struct tileset *t, int style_idx);
+QPixmap *get_tax_sprite(const struct tileset *t, Output_type_id otype);
+QPixmap *get_treaty_thumb_sprite(const struct tileset *t, bool on_off);
 const struct sprite_vector *
 get_unit_explode_animation(const struct tileset *t);
-struct sprite *get_nuke_explode_sprite(const struct tileset *t);
-struct sprite *get_cursor_sprite(const struct tileset *t,
-                                 enum cursor_type cursor, int *hot_x,
-                                 int *hot_y, int frame);
+QPixmap *get_nuke_explode_sprite(const struct tileset *t);
+QPixmap *get_cursor_sprite(const struct tileset *t, enum cursor_type cursor,
+                           int *hot_x, int *hot_y, int frame);
 const struct citybar_sprites *get_citybar_sprites(const struct tileset *t);
 const struct editor_sprites *get_editor_sprites(const struct tileset *t);
-struct sprite *get_icon_sprite(const struct tileset *t, enum icon_type icon);
-struct sprite *get_attention_crosshair_sprite(const struct tileset *t);
-struct sprite *get_indicator_sprite(const struct tileset *t,
-                                    enum indicator_type indicator,
-                                    int index);
-struct sprite *get_unit_unhappy_sprite(const struct tileset *t,
-                                       const struct unit *punit,
-                                       int happy_cost);
-struct sprite *get_unit_upkeep_sprite(const struct tileset *t,
-                                      Output_type_id otype,
-                                      const struct unit *punit,
-                                      const int *upkeep_cost);
-struct sprite *get_basic_fog_sprite(const struct tileset *t);
+QPixmap *get_icon_sprite(const struct tileset *t, enum icon_type icon);
+QPixmap *get_attention_crosshair_sprite(const struct tileset *t);
+QPixmap *get_indicator_sprite(const struct tileset *t,
+                              enum indicator_type indicator, int index);
+QPixmap *get_unit_unhappy_sprite(const struct tileset *t,
+                                 const struct unit *punit, int happy_cost);
+QPixmap *get_unit_upkeep_sprite(const struct tileset *t,
+                                Output_type_id otype,
+                                const struct unit *punit,
+                                const int *upkeep_cost);
+QPixmap *get_basic_fog_sprite(const struct tileset *t);
 int fill_basic_extra_sprite_array(const struct tileset *t,
                                   struct drawn_sprite *sprs,
                                   const struct extra_type *pextra);
-struct sprite *get_event_sprite(const struct tileset *t,
-                                enum event_type event);
+QPixmap *get_event_sprite(const struct tileset *t, enum event_type event);
 
-struct sprite *tiles_lookup_sprite_tag_alt(struct tileset *t,
-                                           QtMsgType level, const char *tag,
-                                           const char *alt, const char *what,
-                                           const char *name, bool scale);
+QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
+                                     const char *tag, const char *alt,
+                                     const char *what, const char *name,
+                                     bool scale);
 
 struct color_system;
 struct color_system *get_color_system(const struct tileset *t);

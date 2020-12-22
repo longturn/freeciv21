@@ -48,7 +48,7 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
   QSpacerItem *spacer;
   QVBoxLayout *vbox;
   QVBoxLayout *vbox_main;
-  struct sprite *spr;
+  QPixmap *spr;
 
   setParent(parent);
   utype = ut;
@@ -80,7 +80,7 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
   lab = new QLabel(QLatin1String(""));
   spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.shield",
                                     "citybar.shields", "", "", false);
-  img = spr->pm->toImage();
+  img = spr->toImage();
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
   pix = QPixmap::fromImage(cropped_img);
@@ -92,7 +92,7 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
   hbox_upkeep->addWidget(&gold_upkeep);
   spr = get_tax_sprite(tileset, O_GOLD);
   lab = new QLabel(QLatin1String(""));
-  lab->setPixmap(spr->pm->scaledToHeight(isize));
+  lab->setPixmap(spr->scaledToHeight(isize));
   hbox_upkeep->addWidget(lab);
   spacer = new QSpacerItem(0, isize, QSizePolicy::Expanding,
                            QSizePolicy::Minimum);
@@ -101,7 +101,7 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
   lab = new QLabel(QLatin1String(""));
   spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "citybar.food",
                                     "citybar.food", "", "", false);
-  img = spr->pm->toImage();
+  img = spr->toImage();
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
   pix = QPixmap::fromImage(cropped_img);
@@ -123,10 +123,10 @@ unittype_item::~unittype_item() {}
  ****************************************************************************/
 void unittype_item::init_img()
 {
-  struct sprite *sp;
+  QPixmap *sp;
 
   sp = get_unittype_sprite(get_tileset(), utype, direction8_invalid());
-  label_pix.setPixmap(*sp->pm);
+  label_pix.setPixmap(*sp);
 }
 
 /************************************************************************/ /**

@@ -41,8 +41,8 @@
 #define REQ_LABEL_NONE _("?tech:None")
 static help_dialog *help_dlg = NULL;
 QPixmap *terrain_canvas(struct terrain *terrain,
-                       const struct extra_type *resource = NULL,
-                       enum extra_cause cause = EC_COUNT);
+                        const struct extra_type *resource = NULL,
+                        enum extra_cause cause = EC_COUNT);
 
 extern QList<const struct help_item *> *help_nodes;
 
@@ -219,7 +219,7 @@ void help_dialog::make_tree()
   QHash<int, QTreeWidgetItem *> hash;
   QIcon icon;
   QTreeWidgetItem *item;
-  sprite *spite;
+  QPixmap *spite;
   struct advance *padvance;
   QPixmap *pcan;
   struct extra_type *pextra;
@@ -298,7 +298,7 @@ void help_dialog::make_tree()
         break;
       }
       if (spite)
-        icon = QIcon(*spite->pm);
+        icon = QIcon(*spite);
       if (!icon.isNull()) {
         item->setIcon(0, icon);
       }
@@ -948,7 +948,7 @@ void help_widget::set_topic_building(const help_item *topic,
 {
   char buffer[MAX_HELP_TEXT_SIZE];
   int type, value;
-  struct sprite *spr;
+  QPixmap *spr;
   struct impr_type *itype = improvement_by_translated_name(title);
   char req_buf[512];
   QString str, s1, s2;
@@ -961,7 +961,7 @@ void help_widget::set_topic_building(const help_item *topic,
     show_info_panel();
     spr = get_building_sprite(tileset, itype);
     if (spr) {
-      add_info_pixmap(spr->pm);
+      add_info_pixmap(spr);
     }
     str = _("Base Cost:");
     str = "<b>" + str + "</b>" + " "
@@ -1039,7 +1039,7 @@ void help_widget::set_topic_building(const help_item *topic,
 void help_widget::set_topic_tech(const help_item *topic, const char *title)
 {
   char buffer[MAX_HELP_TEXT_SIZE];
-  struct sprite *spr;
+  QPixmap *spr;
   QLabel *tb;
   struct advance *padvance = advance_by_translated_name(title);
   QString str;
@@ -1050,7 +1050,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
       show_info_panel();
       spr = get_tech_sprite(tileset, n);
       if (spr) {
-        add_info_pixmap(spr->pm);
+        add_info_pixmap(spr);
       }
 
       governments_iterate(pgov)
@@ -1144,8 +1144,8 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
    Creates a terrain image on the given canvas.
  **************************************************************************/
 QPixmap *terrain_canvas(struct terrain *terrain,
-                       const struct extra_type *resource,
-                       enum extra_cause cause)
+                        const struct extra_type *resource,
+                        enum extra_cause cause)
 {
   QPixmap *canvas;
   struct drawn_sprite sprs[80];
@@ -1198,7 +1198,7 @@ static QLabel *make_helplabel(const QString &title, const QString &tooltip,
 }
 
 // helper for create_terrain_widget, creates label from sprite
-static void make_helppiclabel(struct sprite *spr, const QString &tooltip,
+static void make_helppiclabel(QPixmap *spr, const QString &tooltip,
                               QHBoxLayout *layout)
 {
   QLabel *label;
@@ -1210,7 +1210,7 @@ static void make_helppiclabel(struct sprite *spr, const QString &tooltip,
   QFontMetrics *fm;
   int isize;
 
-  img = spr->pm->toImage();
+  img = spr->toImage();
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
   pix = QPixmap::fromImage(cropped_img);
@@ -1235,7 +1235,7 @@ QLayout *help_widget::create_terrain_widget(const QString &title,
 {
   QGraphicsDropShadowEffect *effect;
   QLabel *label;
-  struct sprite *spr;
+  QPixmap *spr;
   QHBoxLayout *layout = new QHBoxLayout();
   QHBoxLayout *layout1 = new QHBoxLayout();
   QHBoxLayout *layout2 = new QHBoxLayout();

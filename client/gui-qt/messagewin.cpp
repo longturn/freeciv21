@@ -298,7 +298,7 @@ void messagewdg::clr()
 void messagewdg::msg(const struct message *pmsg)
 {
   int i;
-  struct sprite *icon;
+  QPixmap *icon;
   QFont f;
   QTableWidgetItem *item;
 
@@ -313,7 +313,7 @@ void messagewdg::msg(const struct message *pmsg)
   }
   icon = get_event_sprite(tileset, pmsg->event);
   if (icon != NULL) {
-    pix = icon->pm;
+    pix = icon;
     item->setIcon(QIcon(*pix));
   }
   mesg_table->setItem(i, 0, item);

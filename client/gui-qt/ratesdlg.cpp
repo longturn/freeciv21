@@ -316,8 +316,8 @@ fc_double_edge::~fc_double_edge() {}
  **************************************************************************/
 QSize fc_double_edge::sizeHint() const
 {
-  return QSize(30 * get_tax_sprite(tileset, O_LUXURY)->pm->width(),
-               3 * get_tax_sprite(tileset, O_LUXURY)->pm->height());
+  return QSize(30 * get_tax_sprite(tileset, O_LUXURY)->width(),
+               3 * get_tax_sprite(tileset, O_LUXURY)->height());
 }
 
 /**********************************************************************/ /**
@@ -348,7 +348,7 @@ void fc_double_edge::paintEvent(QPaintEvent *event)
           + cursor_size;
 
   pos = cursor_size;
-  pix = get_tax_sprite(tileset, O_GOLD)->pm;
+  pix = get_tax_sprite(tileset, O_GOLD);
   s.setWidth((width() - 2 * cursor_size) / 10);
   s.setHeight(height());
   pix_scaled =
@@ -358,7 +358,7 @@ void fc_double_edge::paintEvent(QPaintEvent *event)
     pos = pos + pix_scaled.width();
   }
   j = i;
-  pix = get_tax_sprite(tileset, O_SCIENCE)->pm;
+  pix = get_tax_sprite(tileset, O_SCIENCE);
   pix_scaled =
       pix->scaled(s, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
   for (i = j; i < current_max; i++) {
@@ -366,7 +366,7 @@ void fc_double_edge::paintEvent(QPaintEvent *event)
     pos = pos + pix_scaled.width();
   }
   j = i;
-  pix = get_tax_sprite(tileset, O_LUXURY)->pm;
+  pix = get_tax_sprite(tileset, O_LUXURY);
   pix_scaled =
       pix->scaled(s, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
   for (i = j; i < 10; i++) {
