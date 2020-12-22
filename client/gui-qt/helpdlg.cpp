@@ -40,7 +40,7 @@
 #define REQ_LABEL_NEVER _("(Never)")
 #define REQ_LABEL_NONE _("?tech:None")
 static help_dialog *help_dlg = NULL;
-canvas *terrain_canvas(struct terrain *terrain,
+QPixmap *terrain_canvas(struct terrain *terrain,
                        const struct extra_type *resource = NULL,
                        enum extra_cause cause = EC_COUNT);
 
@@ -221,7 +221,7 @@ void help_dialog::make_tree()
   QTreeWidgetItem *item;
   sprite *spite;
   struct advance *padvance;
-  struct canvas *pcan;
+  QPixmap *pcan;
   struct extra_type *pextra;
   struct government *gov;
   struct impr_type *imp;
@@ -282,7 +282,7 @@ void help_dialog::make_tree()
         pterrain = terrain_by_translated_name(s);
         pcan = terrain_canvas(pterrain);
         if (pcan) {
-          icon = QIcon(pcan->map_pixmap);
+          icon = QIcon(*pcan);
           delete pcan;
         }
         break;
@@ -835,7 +835,7 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
   char buffer[MAX_HELP_TEXT_SIZE];
   int upkeep, max_upkeep;
   struct advance *tech;
-  struct canvas *canvas;
+  QPixmap *canvas;
   const struct unit_type *obsolete;
   struct unit_type *utype, *max_utype;
   QString str;
@@ -853,9 +853,9 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
     // Unit icon
     canvas = qtg_canvas_create(tileset_full_tile_width(tileset),
                                tileset_full_tile_height(tileset));
-    canvas->map_pixmap.fill(Qt::transparent);
+    canvas->fill(Qt::transparent);
     put_unittype(utype, canvas, 0, 0);
-    add_info_pixmap(&canvas->map_pixmap);
+    add_info_pixmap(canvas);
     qtg_canvas_free(canvas);
 
     add_info_progress(_("Attack:"), utype->attack_strength, 0,
@@ -1143,11 +1143,11 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
 /**********************************************************************/ /**
    Creates a terrain image on the given canvas.
  **************************************************************************/
-canvas *terrain_canvas(struct terrain *terrain,
+QPixmap *terrain_canvas(struct terrain *terrain,
                        const struct extra_type *resource,
                        enum extra_cause cause)
 {
-  struct canvas *canvas;
+  QPixmap *canvas;
   struct drawn_sprite sprs[80];
   int canvas_y, count, i, width, height;
   struct extra_type *pextra;
@@ -1157,7 +1157,7 @@ canvas *terrain_canvas(struct terrain *terrain,
   canvas_y = height - tileset_tile_height(tileset);
 
   canvas = qtg_canvas_create(width, height);
-  canvas->map_pixmap.fill(Qt::transparent);
+  canvas->fill(Qt::transparent);
   for (i = 0; i < 3; ++i) {
     count = fill_basic_terrain_layer_sprite_array(tileset, sprs, i, terrain);
     put_drawn_sprites(canvas, 0, canvas_y, count, sprs, false);
@@ -1228,7 +1228,7 @@ static void make_helppiclabel(struct sprite *spr, const QString &tooltip,
    tooltip can be given to explain the legend.
  **************************************************************************/
 QLayout *help_widget::create_terrain_widget(const QString &title,
-                                            const struct canvas *image,
+                                            const QPixmap *image,
                                             const int &food, const int &sh,
                                             const int &eco,
                                             const QString &tooltip)
@@ -1248,7 +1248,7 @@ QLayout *help_widget::create_terrain_widget(const QString &title,
   effect->setBlurRadius(3);
   effect->setOffset(0, 2);
   label->setGraphicsEffect(effect);
-  label->setPixmap(image->map_pixmap);
+  label->setPixmap(*image);
   layout1->addWidget(label, Qt::AlignVCenter);
   w1->setLayout(layout1);
 
@@ -1294,7 +1294,7 @@ void help_widget::set_topic_terrain(const help_item *topic,
 {
   char buffer[MAX_HELP_TEXT_SIZE];
   struct terrain *pterrain, *max;
-  canvas *canvas;
+  QPixmap *canvas;
   QVBoxLayout *vbox;
   bool show_panel = false;
   QScrollArea *area;
@@ -1318,7 +1318,7 @@ void help_widget::set_topic_terrain(const help_item *topic,
 
     // Create terrain icon. Use shadow to help distinguish terrain.
     canvas = terrain_canvas(pterrain);
-    add_info_pixmap(&canvas->map_pixmap, true);
+    add_info_pixmap(canvas, true);
     qtg_canvas_free(canvas);
 
     add_info_progress(_("Food:"), pterrain->output[O_FOOD], 0,

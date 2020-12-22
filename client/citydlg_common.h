@@ -17,7 +17,7 @@
 #include "city.h"
 #include "fc_types.h"
 
-struct canvas;
+class QPixmap;
 struct worklist;
 
 int get_citydlg_canvas_width(void);

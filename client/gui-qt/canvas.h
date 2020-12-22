@@ -13,16 +13,14 @@
 #include "canvas_g.h"
 // Qt
 #include <QPixmap>
-struct canvas {
-  QPixmap map_pixmap;
-};
 
-struct canvas *qtg_canvas_create(int width, int height);
+
+QPixmap *qtg_canvas_create(int width, int height);
 void pixmap_copy(QPixmap *dest, QPixmap *src, int src_x, int src_y,
                  int dest_x, int dest_y, int width, int height);
 void image_copy(QImage *dest, QImage *src, int src_x, int src_y, int dest_x,
                 int dest_y, int width, int height);
 QRect zealous_crop_rect(QImage &p);
 
-void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
+void draw_full_city_bar(struct city *pcity, QPixmap *pcanvas, int x,
                         int y, int *width, int *height);

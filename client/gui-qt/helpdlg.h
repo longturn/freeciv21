@@ -104,7 +104,7 @@ class help_widget : public QWidget {
   void set_bottom_panel(QWidget *widget);
 
   QLayout *create_terrain_widget(const QString &title,
-                                 const struct canvas *image, const int &food,
+                                 const QPixmap *image, const int &food,
                                  const int &sh, const int &eco,
                                  const QString &tooltip = QString());
 

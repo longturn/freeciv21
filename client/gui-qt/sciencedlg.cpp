@@ -223,7 +223,7 @@ void research_diagram::reset()
   req = create_reqtree(client_player(), true);
   get_reqtree_dimensions(req, &width, &height);
   pcanvas = qtg_canvas_create(width, height);
-  pcanvas->map_pixmap.fill(Qt::transparent);
+  pcanvas->fill(Qt::transparent);
   resize(width, height);
 }
 
@@ -358,7 +358,7 @@ void research_diagram::paintEvent(QPaintEvent *event)
   QPainter painter;
 
   painter.begin(this);
-  painter.drawPixmap(0, 0, width, height, pcanvas->map_pixmap);
+  painter.drawPixmap(0, 0, width, height, *pcanvas);
   painter.end();
 }
 

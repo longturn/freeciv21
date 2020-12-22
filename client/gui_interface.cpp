@@ -157,7 +157,7 @@ void color_free(QColor *pcolor) { return funcs.color_free(pcolor); }
 /**********************************************************************/ /**
    Call canvas_create callback
  **************************************************************************/
-struct canvas *canvas_create(int width, int height)
+QPixmap *canvas_create(int width, int height)
 {
   return funcs.canvas_create(width, height);
 }
@@ -165,12 +165,12 @@ struct canvas *canvas_create(int width, int height)
 /**********************************************************************/ /**
    Call canvas_free callback
  **************************************************************************/
-void canvas_free(struct canvas *store) { funcs.canvas_free(store); }
+void canvas_free(QPixmap *store) { funcs.canvas_free(store); }
 
 /**********************************************************************/ /**
    Call canvas_copy callback
  **************************************************************************/
-void canvas_copy(struct canvas *dest, struct canvas *src, int src_x,
+void canvas_copy(QPixmap *dest, QPixmap *src, int src_x,
                  int src_y, int dest_x, int dest_y, int width, int height)
 {
   funcs.canvas_copy(dest, src, src_x, src_y, dest_x, dest_y, width, height);
@@ -179,7 +179,7 @@ void canvas_copy(struct canvas *dest, struct canvas *src, int src_x,
 /**********************************************************************/ /**
    Call canvas_put_sprite callback
  **************************************************************************/
-void canvas_put_sprite(struct canvas *pcanvas, int canvas_x, int canvas_y,
+void canvas_put_sprite(QPixmap *pcanvas, int canvas_x, int canvas_y,
                        struct sprite *psprite, int offset_x, int offset_y,
                        int width, int height)
 {
@@ -190,7 +190,7 @@ void canvas_put_sprite(struct canvas *pcanvas, int canvas_x, int canvas_y,
 /**********************************************************************/ /**
    Call canvas_put_sprite_full callback
  **************************************************************************/
-void canvas_put_sprite_full(struct canvas *pcanvas, int canvas_x,
+void canvas_put_sprite_full(QPixmap *pcanvas, int canvas_x,
                             int canvas_y, struct sprite *psprite)
 {
   funcs.canvas_put_sprite_full(pcanvas, canvas_x, canvas_y, psprite);
@@ -199,7 +199,7 @@ void canvas_put_sprite_full(struct canvas *pcanvas, int canvas_x,
 /**********************************************************************/ /**
    Call canvas_put_sprite_fogged callback
  **************************************************************************/
-void canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
+void canvas_put_sprite_fogged(QPixmap *pcanvas, int canvas_x,
                               int canvas_y, struct sprite *psprite, bool fog,
                               int fog_x, int fog_y)
 {
@@ -207,7 +207,7 @@ void canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
                                  fog_x, fog_y);
 }
 
-void canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
+void canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x,
                                 int canvas_y, struct sprite *psprite,
                                 bool fog, int fog_x, int fog_y)
 {
@@ -218,7 +218,7 @@ void canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
 /**********************************************************************/ /**
    Call canvas_put_rectangle callback
  **************************************************************************/
-void canvas_put_rectangle(struct canvas *pcanvas, QColor *pcolor,
+void canvas_put_rectangle(QPixmap *pcanvas, QColor *pcolor,
                           int canvas_x, int canvas_y, int width, int height)
 {
   funcs.canvas_put_rectangle(pcanvas, pcolor, canvas_x, canvas_y, width,
@@ -228,7 +228,7 @@ void canvas_put_rectangle(struct canvas *pcanvas, QColor *pcolor,
 /**********************************************************************/ /**
    Call canvas_fill_sprite_area callback
  **************************************************************************/
-void canvas_fill_sprite_area(struct canvas *pcanvas, struct sprite *psprite,
+void canvas_fill_sprite_area(QPixmap *pcanvas, struct sprite *psprite,
                              QColor *pcolor, int canvas_x, int canvas_y)
 {
   funcs.canvas_fill_sprite_area(pcanvas, psprite, pcolor, canvas_x,
@@ -238,7 +238,7 @@ void canvas_fill_sprite_area(struct canvas *pcanvas, struct sprite *psprite,
 /**********************************************************************/ /**
    Call canvas_put_line callback
  **************************************************************************/
-void canvas_put_line(struct canvas *pcanvas, QColor *pcolor,
+void canvas_put_line(QPixmap *pcanvas, QColor *pcolor,
                      enum line_type ltype, int start_x, int start_y, int dx,
                      int dy)
 {
@@ -248,7 +248,7 @@ void canvas_put_line(struct canvas *pcanvas, QColor *pcolor,
 /**********************************************************************/ /**
    Call canvas_put_curved_line callback
  **************************************************************************/
-void canvas_put_curved_line(struct canvas *pcanvas, QColor *pcolor,
+void canvas_put_curved_line(QPixmap *pcanvas, QColor *pcolor,
                             enum line_type ltype, int start_x, int start_y,
                             int dx, int dy)
 {
@@ -268,7 +268,7 @@ void get_text_size(int *width, int *height, enum client_font font,
 /**********************************************************************/ /**
    Call canvas_put_text callback
  **************************************************************************/
-void canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
+void canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
                      enum client_font font, QColor *pcolor,
                      const QString &text)
 {

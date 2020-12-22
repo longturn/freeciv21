@@ -1186,7 +1186,7 @@ void choice_dialog::set_layout()
 
   if ((game_unit_by_number(unit_id)) && targeted_unit
       && unit_list_size(targeted_unit->tile->units) > 1) {
-    struct canvas *pix;
+    QPixmap *pix;
     QPushButton *next, *prev;
     unit_skip = new QHBoxLayout;
     next = new QPushButton();
@@ -1201,9 +1201,9 @@ void choice_dialog::set_layout()
     target_unit_button = new QPushButton;
     pix = qtg_canvas_create(tileset_unit_width(tileset),
                             tileset_unit_height(tileset));
-    pix->map_pixmap.fill(Qt::transparent);
+    pix->fill(Qt::transparent);
     put_unit(targeted_unit, pix, 0, 0);
-    target_unit_button->setIcon(QIcon(pix->map_pixmap));
+    target_unit_button->setIcon(QIcon(*pix));
     qtg_canvas_free(pix);
     target_unit_button->setIconSize(QSize(96, 96));
     target_unit_button->setFixedSize(QSize(100, 100));
@@ -1327,7 +1327,7 @@ void choice_dialog::next_unit()
   struct unit *new_target = nullptr;
   bool break_next = false;
   bool first = true;
-  struct canvas *pix;
+  QPixmap *pix;
 
   if (targeted_unit == nullptr) {
     return;
@@ -1353,9 +1353,9 @@ void choice_dialog::next_unit()
   targeted_unit = new_target;
   pix = qtg_canvas_create(tileset_unit_width(tileset),
                           tileset_unit_height(tileset));
-  pix->map_pixmap.fill(Qt::transparent);
+  pix->fill(Qt::transparent);
   put_unit(targeted_unit, pix, 0, 0);
-  target_unit_button->setIcon(QIcon(pix->map_pixmap));
+  target_unit_button->setIcon(QIcon(*pix));
   qtg_canvas_free(pix);
   switch_target();
 }
@@ -1367,7 +1367,7 @@ void choice_dialog::prev_unit()
 {
   struct tile *ptile;
   struct unit *new_target = nullptr;
-  struct canvas *pix;
+  QPixmap *pix;
   if (targeted_unit == nullptr) {
     return;
   }
@@ -1384,9 +1384,9 @@ void choice_dialog::prev_unit()
   targeted_unit = new_target;
   pix = qtg_canvas_create(tileset_unit_width(tileset),
                           tileset_unit_height(tileset));
-  pix->map_pixmap.fill(Qt::transparent);
+  pix->fill(Qt::transparent);
   put_unit(targeted_unit, pix, 0, 0);
-  target_unit_button->setIcon(QIcon(pix->map_pixmap));
+  target_unit_button->setIcon(QIcon(*pix));
   qtg_canvas_free(pix);
   switch_target();
 }

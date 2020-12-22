@@ -34,10 +34,10 @@ struct overview {
   int width, height;     /* Size in pixels. */
 
   /* Holds the map, unwrapped. */
-  struct canvas *map;
+  QPixmap *map;
 
   /* A backing store for the window itself, wrapped. */
-  struct canvas *window;
+  QPixmap *window;
 
   bool fog;
   bool layers[OLAYER_COUNT];

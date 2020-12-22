@@ -107,5 +107,5 @@ bool mapview_is_frozen(void);
 void pixmap_put_overlay_tile(int canvas_x, int canvas_y,
                              struct sprite *ssprite);
 
-void show_city_desc(struct canvas *pcanvas, int canvas_x, int canvas_y,
+void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
                     struct city *pcity, int *width, int *height);

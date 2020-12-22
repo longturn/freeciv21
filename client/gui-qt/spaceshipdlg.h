@@ -26,7 +26,7 @@ class ss_report : public QWidget {
   QPushButton *launch_button;
   QLabel *ss_pix_label;
   QLabel *ss_label;
-  struct canvas *can;
+  QPixmap *can;
 
 public:
   ss_report(struct player *pplayer);

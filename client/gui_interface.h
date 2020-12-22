@@ -57,38 +57,38 @@ struct gui_funcs {
   QColor *(*color_alloc)(int r, int g, int b);
   void (*color_free)(QColor *pcolor);
 
-  struct canvas *(*canvas_create)(int width, int height);
-  void (*canvas_free)(struct canvas *store);
-  void (*canvas_copy)(struct canvas *dest, struct canvas *src, int src_x,
+  QPixmap *(*canvas_create)(int width, int height);
+  void (*canvas_free)(QPixmap *store);
+  void (*canvas_copy)(QPixmap *dest, QPixmap *src, int src_x,
                       int src_y, int dest_x, int dest_y, int width,
                       int height);
-  void (*canvas_put_sprite)(struct canvas *pcanvas, int canvas_x,
+  void (*canvas_put_sprite)(QPixmap *pcanvas, int canvas_x,
                             int canvas_y, struct sprite *psprite,
                             int offset_x, int offset_y, int width,
                             int height);
-  void (*canvas_put_sprite_full)(struct canvas *pcanvas, int canvas_x,
+  void (*canvas_put_sprite_full)(QPixmap *pcanvas, int canvas_x,
                                  int canvas_y, struct sprite *psprite);
-  void (*canvas_put_sprite_fogged)(struct canvas *pcanvas, int canvas_x,
+  void (*canvas_put_sprite_fogged)(QPixmap *pcanvas, int canvas_x,
                                    int canvas_y, struct sprite *psprite,
                                    bool fog, int fog_x, int fog_y);
-  void (*canvas_put_sprite_citymode)(struct canvas *pcanvas, int canvas_x,
+  void (*canvas_put_sprite_citymode)(QPixmap *pcanvas, int canvas_x,
                                      int canvas_y, struct sprite *psprite,
                                      bool fog, int fog_x, int fog_y);
-  void (*canvas_put_rectangle)(struct canvas *pcanvas, QColor *pcolor,
+  void (*canvas_put_rectangle)(QPixmap *pcanvas, QColor *pcolor,
                                int canvas_x, int canvas_y, int width,
                                int height);
-  void (*canvas_fill_sprite_area)(struct canvas *pcanvas,
+  void (*canvas_fill_sprite_area)(QPixmap *pcanvas,
                                   struct sprite *psprite, QColor *pcolor,
                                   int canvas_x, int canvas_y);
-  void (*canvas_put_line)(struct canvas *pcanvas, QColor *pcolor,
+  void (*canvas_put_line)(QPixmap *pcanvas, QColor *pcolor,
                           enum line_type ltype, int start_x, int start_y,
                           int dx, int dy);
-  void (*canvas_put_curved_line)(struct canvas *pcanvas, QColor *pcolor,
+  void (*canvas_put_curved_line)(QPixmap *pcanvas, QColor *pcolor,
                                  enum line_type ltype, int start_x,
                                  int start_y, int dx, int dy);
   void (*get_text_size)(int *width, int *height, enum client_font font,
                         const QString &text);
-  void (*canvas_put_text)(struct canvas *pcanvas, int canvas_x, int canvas_y,
+  void (*canvas_put_text)(QPixmap *pcanvas, int canvas_x, int canvas_y,
                           enum client_font font, QColor *pcolor,
                           const QString &);
 
