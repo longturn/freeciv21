@@ -14,10 +14,7 @@
 
 // Qt
 #include <QPainter>
-#include <QTextBlockFormat>
 #include <QTextCharFormat>
-#include <QTextCursor>
-#include <QTextDocument>
 
 // utility
 #include "bugs.h"
@@ -275,23 +272,6 @@ bool citybar_painter::set_current(const QString &name)
 }
 
 /**
- * Constructor
- */
-simple_citybar_painter::simple_citybar_painter()
-    : m_document(new QTextDocument), m_dark_document(new QTextDocument)
-{
-}
-
-/**
- * Destructor
- */
-simple_citybar_painter::~simple_citybar_painter()
-{
-  delete m_document;
-  delete m_dark_document;
-}
-
-/**
  * Draws a simple city bar.
  */
 QRect simple_citybar_painter::paint(QPainter &painter,
@@ -303,19 +283,7 @@ QRect simple_citybar_painter::paint(QPainter &painter,
    * position: the first with the city name and the second with the
    * production.
    */
-
-  // We use the heavy QTextDocument machinery to avoid dealing with offsets
-  // by hand.
-  m_document->clear();
-  m_dark_document->clear();
-  QTextCursor cursor(m_document);
-  QTextCursor dark_cursor(m_dark_document);
-
-  // Prepare the cursors
-  QTextBlockFormat block_format;
-  block_format.setAlignment(Qt::AlignHCenter);
-  cursor.setBlockFormat(block_format);
-  dark_cursor.setBlockFormat(block_format);
+  line_of_text first, second;
 
   // Get some city properties
   const bool can_see_inside =
@@ -329,42 +297,31 @@ QRect simple_citybar_painter::paint(QPainter &painter,
 
   // This is used for both lines
   QTextCharFormat format;
-  QTextCharFormat dark_format;
-  dark_format.setForeground(
-      *get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK));
 
   // First line
   if (gui_options.draw_city_names) {
     // City name
     format.setFont(*get_font(FONT_CITY_NAME));
     format.setForeground(*get_color(tileset, COLOR_MAPVIEW_CITYTEXT));
-    cursor.insertText(name, format);
-
-    dark_format.setFont(*get_font(FONT_CITY_NAME));
-    dark_cursor.insertText(name, dark_format);
+    first.add_text(name, format);
 
     static const QString en_space = "\342\200\200";
 
     // Growth string (eg "5")
     if (gui_options.draw_city_growth && can_see_inside) {
       // Separator (assuming the em space is wider for the city name)
-      cursor.insertText(en_space, format);
-      dark_cursor.insertText(en_space, dark_format);
+      first.add_text(en_space, format);
 
       // Text
       format.setFont(*get_font(FONT_CITY_PROD));
       format.setForeground(*get_color(tileset, growth_color));
-      cursor.insertText(growth, format);
-
-      dark_format.setFont(*get_font(FONT_CITY_PROD));
-      dark_cursor.insertText(growth, dark_format);
+      first.add_text(growth, format);
     }
 
     // Trade routes (eg "3/4")
     if (gui_options.draw_city_trade_routes && can_see_inside) {
-      // Separator
-      cursor.insertText(en_space, format);
-      dark_cursor.insertText(en_space, dark_format);
+      // Separator (can still be the city name format)
+      first.add_text(en_space, format);
 
       // Get the text
       char trade_routes[32];
@@ -375,18 +332,8 @@ QRect simple_citybar_painter::paint(QPainter &painter,
       // Add it
       format.setFont(*get_font(FONT_CITY_PROD));
       format.setForeground(*get_color(tileset, trade_routes_color));
-      cursor.insertText(trade_routes, format);
-
-      dark_format.setFont(*get_font(FONT_CITY_PROD));
-      dark_cursor.insertText(trade_routes, dark_format);
+      first.add_text(en_space + trade_routes, format);
     }
-  }
-
-  // Line separator if needed
-  if (gui_options.draw_city_names && gui_options.draw_city_productions
-      && can_see_inside) {
-    cursor.insertBlock();
-    dark_cursor.insertBlock();
   }
 
   // Second line
@@ -398,27 +345,22 @@ QRect simple_citybar_painter::paint(QPainter &painter,
     // Add text
     format.setFont(*get_font(FONT_CITY_PROD));
     format.setForeground(*get_color(tileset, production_color));
-    cursor.insertText(prod, format);
-
-    dark_format.setFont(*get_font(FONT_CITY_PROD));
-    dark_cursor.insertText(prod, dark_format);
+    second.add_text(prod, format);
   }
 
   // Do the text layout
-  m_document->adjustSize();
-  m_dark_document->adjustSize();
+  double first_width = first.ideal_width();
+  double second_width = second.ideal_width();
+
+  double width = std::max(first_width, second_width);
+  first.do_layout(width);
+  second.do_layout(width);
 
   // Paint
-  int half_width = std::ceil((m_document->size().width() + 1) / 2);
+  first.paint(painter, position - QPointF(first_width / 2, 0));
+  second.paint(painter, position + QPointF(-second_width / 2,
+                                           first.size().height()));
 
-  painter.save();
-  painter.translate(position + QPointF(-half_width + 1, -1));
-  m_dark_document->drawContents(&painter);
-  painter.translate(-1.0, -1.0);
-  m_document->drawContents(&painter);
-  painter.restore();
-
-  int height = 1 + std::ceil(m_document->size().height());
-  return QRect(position.x() - half_width, position.y(), 2 * half_width,
-               height);
+  return QRect(position.x() - width / 2, position.y(), width,
+               first.size().height() + second.size().height());
 }

@@ -53,13 +53,6 @@ private:
  */
 class simple_citybar_painter : public citybar_painter {
 public:
-  explicit simple_citybar_painter();
-  virtual ~simple_citybar_painter();
-
   QRect paint(QPainter &painter, const QPointF &position,
               const city *pcity) const override;
-
-private:
-  mutable QTextDocument *m_document;
-  mutable QTextDocument *m_dark_document;
 };
