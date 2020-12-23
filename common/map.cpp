@@ -1197,6 +1197,7 @@ enum direction8 dir_cw(enum direction8 dir)
     return DIR8_NORTH;
   default:
     fc_assert(false);
+    return DIR8_ORIGIN;
   }
 }
 
@@ -1225,6 +1226,7 @@ enum direction8 dir_ccw(enum direction8 dir)
     return DIR8_WEST;
   default:
     fc_assert(false);
+    return DIR8_ORIGIN;
   }
 }
 

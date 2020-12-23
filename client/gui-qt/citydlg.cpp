@@ -1031,7 +1031,8 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
   info_grid_layout->setSpacing(0);
   info_grid_layout->setContentsMargins(0, 0, 0, 0);
 
-  for (iter = 0; iter < info_nr; iter++) {
+  fc_assert(info_list.count() == 2 * O_LAST + 2);
+  for (iter = 0; iter < 2 * O_LAST + 2; iter++) {
     ql = new QLabel(info_list[iter], this);
     ql->setFont(*small_font);
     ql->setProperty(fonts::notify_label, "true");
