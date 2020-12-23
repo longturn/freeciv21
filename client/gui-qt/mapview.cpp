@@ -750,7 +750,7 @@ void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
   } else {
     auto painter = citybar_painter::current();
     if (!painter) {
-      citybar_painter::set_current(QStringLiteral("Simple"));
+      citybar_painter::set_current(gui_options.default_city_bar_style_name);
       painter = citybar_painter::current();
     }
 
