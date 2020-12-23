@@ -31,37 +31,6 @@
 #include "page_game.h"
 #include "qtg_cxxside.h"
 
-hIcon *hIcon::i()
-{
-  if (!m_instance) {
-    m_instance = new hIcon;
-    m_instance->createIcons();
-  }
-  return m_instance;
-}
-
-void hIcon::drop() { NFCN_FREE(m_instance); }
-
-void hIcon::createIcons()
-{
-  hash.insert(QStringLiteral("prodplus"),
-              fcIcons::instance()->getIcon(QStringLiteral("hprod")));
-  hash.insert(QStringLiteral("foodplus"),
-              fcIcons::instance()->getIcon(QStringLiteral("hfood")));
-  hash.insert(QStringLiteral("tradeplus"),
-              fcIcons::instance()->getIcon(QStringLiteral("htrade")));
-  hash.insert(QStringLiteral("gold"),
-              fcIcons::instance()->getIcon(QStringLiteral("hgold")));
-  hash.insert(QStringLiteral("science"),
-              fcIcons::instance()->getIcon(QStringLiteral("hsci")));
-  hash.insert(QStringLiteral("resize"),
-              fcIcons::instance()->getIcon(QStringLiteral("resize")));
-}
-
-QIcon hIcon::get(const QString &id) { return hash.value(id, QIcon()); }
-
-hIcon *hIcon::m_instance = nullptr;
-
 /***********************************************************************/ /**
    Overriden compare for sorting items
  ***************************************************************************/
