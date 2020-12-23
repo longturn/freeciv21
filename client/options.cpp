@@ -4569,10 +4569,10 @@ void options_load(void)
       secfile_lookup_bool_default(sf, true, "client.draw_full_citybar");
   if (draw_full_citybar) {
     fc_strlcpy(gui_options.default_city_bar_style_name, "Polished",
-               qstrlen("Polished"));
+               sizeof(gui_options.default_city_bar_style_name));
   } else {
     fc_strlcpy(gui_options.default_city_bar_style_name, "Simple",
-               qstrlen("Simple"));
+               sizeof(gui_options.default_city_bar_style_name));
   }
 
   /* Backwards compatibility for removed options replaced by entirely "new"
