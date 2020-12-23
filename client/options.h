@@ -141,7 +141,6 @@ struct client_options {
   bool draw_fog_of_war;
   bool draw_borders;
   bool draw_native;
-  bool draw_full_citybar;
   bool draw_unit_shields;
 
   bool player_dlg_show_dead_players;

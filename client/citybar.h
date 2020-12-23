@@ -38,13 +38,29 @@ public:
   virtual QRect paint(QPainter &painter, const QPointF &position,
                       const city *pcity) const = 0;
 
+  /**
+   * Returns whether the flag is shown in the bar.
+   */
+  virtual bool has_flag() const { return true; }
+
+  /**
+   * Returns whether the units inside are shown in the bar.
+   */
+  virtual bool has_units() const { return true; }
+
+  /**
+   * Returns whether the city size is shown in the bar.
+   */
+  virtual bool has_size() const { return true; }
+
   static QStringList available();
   static const QVector<QString> *available_vector(const option *);
   static void option_changed(option *opt);
-  static bool set_current(const QString &name);
-  static citybar_painter *current() { return s_current.get(); }
+  static citybar_painter *current();
 
 private:
+  static void set_current(const QString &name);
+
   static std::unique_ptr<citybar_painter> s_current;
 };
 
@@ -55,6 +71,10 @@ class simple_citybar_painter : public citybar_painter {
 public:
   QRect paint(QPainter &painter, const QPointF &position,
               const city *pcity) const override;
+
+  bool has_flag() const override { return false; }
+  bool has_units() const override { return false; }
+  bool has_size() const override { return false; }
 };
 
 /**

@@ -1146,9 +1146,7 @@ void handle_city_short_info(const struct packet_city_short_info *packet)
    * us this much. */
   if (pcity->client.occupied != packet->occupied) {
     pcity->client.occupied = packet->occupied;
-    if (gui_options.draw_full_citybar) {
-      update_descriptions = true;
-    }
+    update_descriptions = true;
   }
   pcity->client.walls = packet->walls;
   pcity->style = packet->style;
@@ -1752,9 +1750,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
           if (ccity->client.occupied != new_occupied) {
             ccity->client.occupied = new_occupied;
             refresh_city_mapcanvas(ccity, ccity->tile, false, false);
-            if (gui_options.draw_full_citybar) {
-              update_city_description(ccity);
-            }
+            update_city_description(ccity);
           }
         }
 
@@ -1771,9 +1767,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
           if (!ccity->client.occupied) {
             ccity->client.occupied = true;
             refresh_city_mapcanvas(ccity, ccity->tile, false, false);
-            if (gui_options.draw_full_citybar) {
-              update_city_description(ccity);
-            }
+            update_city_description(ccity);
           }
         }
 
