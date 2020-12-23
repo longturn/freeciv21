@@ -363,7 +363,7 @@ QRect simple_citybar_painter::paint(QPainter &painter,
     format.setForeground(*get_color(tileset, COLOR_MAPVIEW_CITYTEXT));
     first.add_text(name, format);
 
-    static const QString en_space = "\342\200\200";
+    static const QString en_space = QStringLiteral(" ");
 
     // Growth string (eg "5")
     if (gui_options.draw_city_growth && can_see_inside) {
