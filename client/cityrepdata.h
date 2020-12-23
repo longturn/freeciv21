@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <QIcon>
 #include "fc_types.h"
 
 /* Number of city report columns: have to set this manually now... */
@@ -32,21 +31,6 @@ struct city_report_spec {
 
 extern struct city_report_spec *city_report_specs;
 
-// header city icons
-class hIcon {
-  Q_DISABLE_COPY(hIcon);
-
-private:
-  explicit hIcon(){};
-  static hIcon *m_instance;
-  QHash<QString, QIcon> hash;
-
-public:
-  static hIcon *i();
-  static void drop();
-  void createIcons();
-  QIcon get(const QString &id);
-};
 
 int num_city_report_spec(void);
 bool *city_report_spec_show_ptr(int i);
