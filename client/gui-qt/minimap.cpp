@@ -49,12 +49,7 @@ minimap_view::minimap_view(QWidget *parent) : fcwidget()
 /**********************************************************************/ /**
    Minimap_view destructor
  **************************************************************************/
-minimap_view::~minimap_view()
-{
-  if (pix) {
-    delete pix;
-  }
-}
+minimap_view::~minimap_view() { NFC_FREE(pix); }
 
 /**********************************************************************/ /**
    Paint event for minimap
@@ -353,7 +348,7 @@ void minimap_view::resizeEvent(QResizeEvent *event)
  **************************************************************************/
 void minimap_view::wheelEvent(QWheelEvent *event)
 {
-  if (event->delta() > 0) {
+  if (event->angleDelta().y() > 0) {
     zoom_in();
   } else {
     zoom_out();

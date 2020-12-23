@@ -161,7 +161,7 @@ static bool is_more_user_input_needed = false;
 static bool did_not_decide = false;
 
 extern char forced_tileset_name[512];
-qdef_act *qdef_act::m_instance = 0;
+qdef_act *qdef_act::m_instance = nullptr;
 
 /***********************************************************************/ /**
    Initialize a mapping between an action and the function to call if
@@ -825,10 +825,7 @@ qdef_act *qdef_act::action()
  ***************************************************************************/
 void qdef_act::drop()
 {
-  if (m_instance) {
-    delete m_instance;
-    m_instance = 0;
-  }
+  NFCN_FREE(m_instance);
 }
 
 /***********************************************************************/ /**

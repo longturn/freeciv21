@@ -840,12 +840,7 @@ void hud_action::paintEvent(QPaintEvent *event)
 /************************************************************************/ /**
    Hud action destructor
  ****************************************************************************/
-hud_action::~hud_action()
-{
-  if (action_pixmap) {
-    delete action_pixmap;
-  }
-}
+hud_action::~hud_action() { NFC_FREE(action_pixmap); }
 
 /************************************************************************/ /**
    Mouse press event for hud_action

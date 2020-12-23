@@ -100,10 +100,7 @@ sidebarWidget::~sidebarWidget()
  ***************************************************************************/
 void sidebarWidget::setPixmap(QPixmap *pm)
 {
-  if (def_pixmap) {
-    delete def_pixmap;
-  }
-
+  NFC_FREE(def_pixmap);
   def_pixmap = pm;
 }
 
@@ -252,9 +249,9 @@ void sidebarWidget::mousePressEvent(QMouseEvent *event)
  ***************************************************************************/
 void sidebarWidget::wheelEvent(QWheelEvent *event)
 {
-  if (event->delta() < -90 && wheel_down) {
+  if (event->angleDelta().y()< 0 && wheel_down) {
     wheel_down();
-  } else if (event->delta() > 90 && wheel_up) {
+  } else if (event->angleDelta().y()> 0 && wheel_up) {
     wheel_up();
   }
 
@@ -330,9 +327,7 @@ void sidebarWidget::updateFinalPixmap()
   QPen pen;
   bool current = false;
 
-  if (final_pixmap) {
-    delete final_pixmap;
-  }
+  NFC_FREE(final_pixmap);
 
   i = queen()->gimmeIndexOf(page);
   if (i == queen()->game_tab_widget->currentIndex()) {

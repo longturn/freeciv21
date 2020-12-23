@@ -11,8 +11,9 @@
 **************************************************************************/
 
 #include "idlecallback.h"
+#include "support.h"
 
-mrIdle *mrIdle::m_instance = 0;
+mrIdle *mrIdle::m_instance = nullptr;
 
 /**********************************************************************/ /**
    Constructor for idle callbacks
@@ -39,13 +40,7 @@ mrIdle::~mrIdle()
 /**********************************************************************/ /**
    Deletes current instance
  **************************************************************************/
-void mrIdle::drop()
-{
-  if (m_instance) {
-    delete m_instance;
-    m_instance = 0;
-  }
-}
+void mrIdle::drop() { NFCN_FREE(m_instance); }
 
 /**********************************************************************/ /**
    Returns given instance

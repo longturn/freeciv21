@@ -15,7 +15,8 @@
 #include "shared.h"
 
 QString current_theme;
-fcIcons *fcIcons::m_instance = 0;
+fcIcons *fcIcons::m_instance = nullptr;
+hIcon *hIcon::m_instance = nullptr;
 
 /************************************************************************/ /**
    Icon provider constructor
@@ -36,13 +37,7 @@ fcIcons *fcIcons::instance()
 /************************************************************************/ /**
    Deletes fc_icons instance
  ****************************************************************************/
-void fcIcons::drop()
-{
-  if (m_instance) {
-    delete m_instance;
-    m_instance = 0;
-  }
-}
+void fcIcons::drop() { NFCN_FREE(m_instance); }
 
 /************************************************************************/ /**
    Returns icon by given name
@@ -115,3 +110,32 @@ QString fcIcons::getPath(const QString &id)
 
   return fileinfoname(get_data_dirs(), png_bytes.data());
 }
+
+hIcon *hIcon::i()
+{
+  if (!m_instance) {
+    m_instance = new hIcon;
+    m_instance->createIcons();
+  }
+  return m_instance;
+}
+
+void hIcon::drop() { NFCN_FREE(m_instance); }
+
+void hIcon::createIcons()
+{
+  hash.insert(QStringLiteral("prodplus"),
+              fcIcons::instance()->getIcon(QStringLiteral("hprod")));
+  hash.insert(QStringLiteral("foodplus"),
+              fcIcons::instance()->getIcon(QStringLiteral("hfood")));
+  hash.insert(QStringLiteral("tradeplus"),
+              fcIcons::instance()->getIcon(QStringLiteral("htrade")));
+  hash.insert(QStringLiteral("gold"),
+              fcIcons::instance()->getIcon(QStringLiteral("hgold")));
+  hash.insert(QStringLiteral("science"),
+              fcIcons::instance()->getIcon(QStringLiteral("hsci")));
+  hash.insert(QStringLiteral("resize"),
+              fcIcons::instance()->getIcon(QStringLiteral("resize")));
+}
+
+QIcon hIcon::get(const QString &id) { return hash.value(id, QIcon()); }

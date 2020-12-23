@@ -241,8 +241,7 @@ void pageGame::updateInfoLabelTimeout(void)
   }
   sw_tax->updateFinalPixmap();
   sw_economy->updateFinalPixmap();
-  delete update_info_timer;
-  update_info_timer = nullptr;
+  FC_FREE(update_info_timer);
 }
 
 /**********************************************************************/ /**

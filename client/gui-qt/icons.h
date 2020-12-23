@@ -10,7 +10,7 @@
 #pragma once
 
 #include <QPixmapCache>
-
+#include <QHash>
 /****************************************************************************
   Class helping reading icons/pixmaps from themes/gui-qt/icons folder
 ****************************************************************************/
@@ -27,4 +27,20 @@ public:
   QIcon getIcon(const QString &id);
   QPixmap *getPixmap(const QString &id);
   QString getPath(const QString &id);
+};
+
+// header city icons
+class hIcon {
+  Q_DISABLE_COPY(hIcon);
+
+private:
+  explicit hIcon(){};
+  static hIcon *m_instance;
+  QHash<QString, QIcon> hash;
+
+public:
+  static hIcon *i();
+  static void drop();
+  void createIcons();
+  QIcon get(const QString &id);
 };
