@@ -24,7 +24,7 @@
 #include "hudwidget.h"
 #include "page_game.h"
 
-units_reports *units_reports::m_instance = 0;
+units_reports *units_reports::m_instance = nullptr;
 
 /************************************************************************/ /**
    Unit item constructor (single item for units report)
@@ -305,10 +305,7 @@ units_reports *units_reports::instance()
  ****************************************************************************/
 void units_reports::drop()
 {
-  if (m_instance) {
-    delete m_instance;
-    m_instance = 0;
-  }
+  NFCN_FREE(m_instance);
 }
 
 /************************************************************************/ /**

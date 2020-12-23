@@ -1568,14 +1568,7 @@ void city_dialog::update_prod_buttons()
  ****************************************************************************/
 city_dialog::~city_dialog()
 {
-  if (citizen_pixmap) {
-    citizen_pixmap->detach();
-    delete citizen_pixmap;
-  }
-
-  ui.cma_table->clear();
-  ui.p_table_p->clear();
-  ui.nationality_table->clear();
+  NFC_FREE(citizen_pixmap);
   removeEventFilter(this);
 }
 

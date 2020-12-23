@@ -431,13 +431,8 @@ science_report::science_report()
  ****************************************************************************/
 science_report::~science_report()
 {
-  if (curr_list) {
-    delete curr_list;
-  }
-
-  if (goal_list) {
-    delete goal_list;
-  }
+  NFC_FREE(curr_list);
+  NFC_FREE(goal_list);
   queen()->removeRepoDlg(QStringLiteral("SCI"));
 }
 
