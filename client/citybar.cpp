@@ -258,7 +258,11 @@ void line_of_text::paint(QPainter &p, const QPointF &top_left) const
  * Returns the list of all available city bar styles. The strings are not
  * translated.
  */
-QStringList citybar_painter::available() { return {N_("Simple")}; }
+QStringList citybar_painter::available()
+{
+  // TRANS: City bar style
+  return {N_("Simple"), N_("Traditional")};
+}
 
 /**
  * Returns the list of all available city bar styles. For compatibility with
@@ -295,6 +299,9 @@ bool citybar_painter::set_current(const QString &name)
 
   if (name == QStringLiteral("Simple")) {
     s_current = std::make_unique<simple_citybar_painter>();
+    return true;
+  } else if (name == QStringLiteral("Traditional")) {
+    s_current = std::make_unique<traditional_citybar_painter>();
     return true;
   }
 
@@ -395,9 +402,174 @@ QRect simple_citybar_painter::paint(QPainter &painter,
 
   // Paint
   first.paint(painter, position - QPointF(first_width / 2, 0));
-  second.paint(painter, position + QPointF(-second_width / 2,
-                                           first.size().height()));
+  second.paint(painter,
+               position + QPointF(-second_width / 2, first.height()));
 
   return QRect(position.x() - width / 2, position.y(), width,
-               first.size().height() + second.size().height());
+               first.height() + second.height());
+}
+
+/**
+ * Draws the traditional city bar with a dark background, two lines of text
+ * and colored borders.
+ */
+QRect traditional_citybar_painter::paint(QPainter &painter,
+                                         const QPointF &position,
+                                         const city *pcity) const
+{
+  /*
+   * We draw two lines of centered text under each other, below the requested
+   * position: the first with the city name and the second with the
+   * production.
+   */
+
+  // Decide what to do
+  const bool can_see_inside =
+      (client_is_global_observer() || city_owner(pcity) == client_player());
+  const bool should_draw_productions =
+      can_see_inside && gui_options.draw_city_productions;
+  const bool should_draw_growth =
+      can_see_inside && gui_options.draw_city_growth;
+  const bool should_draw_trade_routes =
+      can_see_inside && gui_options.draw_city_trade_routes;
+  const bool should_draw_lower_bar = should_draw_productions
+                                     || should_draw_growth
+                                     || should_draw_trade_routes;
+
+  if (!gui_options.draw_city_names && !should_draw_lower_bar) {
+    // Nothing to draw.
+    return QRect();
+  }
+
+  // Get some city properties
+  const citybar_sprites *citybar = get_citybar_sprites(tileset);
+
+  char name[512], growth[32];
+  color_std growth_color, production_color;
+  get_city_mapview_name_and_growth(pcity, name, sizeof(name), growth,
+                                   sizeof(growth), &growth_color,
+                                   &production_color);
+  const QMargins text_margins(3, 0, 3, 0);
+  QColor owner_color = *get_player_color(tileset, city_owner(pcity));
+
+  // This is used for both lines
+  QTextCharFormat format;
+
+  // Fill the lines
+  line_of_text first, second;
+
+  // First line
+  if (gui_options.draw_city_names) {
+    // Flag
+    first.add_icon(get_city_flag_sprite(tileset, pcity));
+
+    // Units in city
+    if (can_player_see_units_in_city(client.conn.playing, pcity)) {
+      unsigned long count = unit_list_size(pcity->tile->units);
+      count = qBound(0UL, count, citybar->occupancy.size - 1);
+      first.add_icon(citybar->occupancy.p[count]);
+    } else {
+      if (pcity->client.occupied) {
+        first.add_icon(citybar->occupied);
+      } else {
+        first.add_icon(citybar->occupancy.p[0]);
+      }
+    }
+
+    // City name
+    format.setForeground(*get_color(tileset, COLOR_MAPVIEW_CITYTEXT));
+    first.add_spacer(); // Center it
+    first.add_text(name, format, false, text_margins);
+    first.add_spacer();
+
+    // City size (on colored background)
+    format.setFont(*get_font(FONT_CITY_NAME));
+    format.setBackground(owner_color);
+
+    // Try to pick a color for city size text that contrasts with player
+    // color
+    QColor *textcolors[2] = {
+        get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
+        get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
+    format.setForeground(*color_best_contrast(&owner_color, textcolors,
+                                              ARRAY_SIZE(textcolors)));
+
+    first.add_text(QStringLiteral("%1").arg(city_size_get(pcity)), format,
+                   false, text_margins);
+
+    format.setBackground(Qt::transparent); // Reset
+  }
+
+  // Second line
+  if (should_draw_lower_bar) {
+    // All items share the same font
+    format.setFont(*get_font(FONT_CITY_PROD));
+
+    if (should_draw_productions) {
+      // Icon
+      second.add_icon(citybar->shields);
+
+      // Text
+      char prod[512];
+      get_city_mapview_production(pcity, prod, sizeof(prod));
+
+      format.setForeground(*get_color(tileset, production_color));
+      second.add_text(prod, format, false, text_margins);
+    }
+
+    // Flush production to the left and the rest to the right
+    second.add_spacer();
+
+    if (should_draw_growth) {
+      // Icon
+      second.add_icon(citybar->food);
+
+      // Text
+      format.setForeground(*get_color(tileset, growth_color));
+      second.add_text(growth, format, false, text_margins);
+    }
+
+    if (should_draw_trade_routes) {
+      // Icon
+      second.add_icon(citybar->trade);
+
+      // Text
+      char trade_routes[32];
+      color_std trade_routes_color;
+      get_city_mapview_trade_routes(
+          pcity, trade_routes, sizeof(trade_routes), &trade_routes_color);
+
+      format.setForeground(*get_color(tileset, trade_routes_color));
+      second.add_text(trade_routes, format, false, text_margins);
+    }
+  }
+
+  // Do the text layout. We need to align everything to integer pixels to
+  // avoid surprises with the rounding (but we still assume integer heights).
+  double width =
+      std::ceil(std::max(first.ideal_width(), second.ideal_width()));
+  first.do_layout(width);
+  second.do_layout(width);
+
+  double x = std::floor(position.x() - width / 2 - 1);
+  double y = std::floor(position.y());
+
+  int num_lines = (should_draw_lower_bar ? 2 : 1);
+  QRectF bounds =
+      QRectF(x, y, width + 2, first.height() + num_lines + second.height());
+
+  // Paint the background, frame and separator
+  painter.drawTiledPixmap(bounds, *citybar->background);
+  painter.setPen(owner_color);
+  painter.drawRect(bounds);
+  if (gui_options.draw_city_names && should_draw_lower_bar) {
+    painter.drawLine(bounds.topLeft() + QPointF(0, first.height() + 1),
+                     bounds.topRight() + QPointF(0, first.height() + 1));
+  }
+
+  // Draw text and icons on top
+  first.paint(painter, QPointF(x + 1, y + 1)); // +1 for the frame
+  second.paint(painter, QPointF(x + 1, y + 1 + num_lines + first.height()));
+
+  return QRect(x, y, x + width + 2, bounds.height());
 }

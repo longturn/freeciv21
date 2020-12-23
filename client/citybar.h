@@ -56,3 +56,12 @@ public:
   QRect paint(QPainter &painter, const QPointF &position,
               const city *pcity) const override;
 };
+
+/**
+ * The traditional box-based city bar.
+ */
+class traditional_citybar_painter : public citybar_painter {
+public:
+  QRect paint(QPainter &painter, const QPointF &position,
+              const city *pcity) const override;
+};
