@@ -745,25 +745,21 @@ void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
     return;
   }
 
-  if (gui_options.draw_full_citybar) {
-    draw_full_city_bar(pcity, pcanvas, canvas_x, canvas_y, width, height);
-  } else {
-    auto painter = citybar_painter::current();
-    if (!painter) {
-      citybar_painter::set_current(gui_options.default_city_bar_style_name);
-      painter = citybar_painter::current();
-    }
-
-    QPainter p;
-    p.begin(pcanvas);
-
-    canvas_x += tileset_tile_width(tileset) / 2;
-    canvas_y += tileset_citybar_offset_y(tileset);
-
-    auto rect = painter->paint(p, QPointF(canvas_x, canvas_y), pcity);
-    *width = rect.width();
-    *height = rect.height();
-
-    p.end();
+  auto painter = citybar_painter::current();
+  if (!painter) {
+    citybar_painter::set_current(gui_options.default_city_bar_style_name);
+    painter = citybar_painter::current();
   }
+
+  QPainter p;
+  p.begin(pcanvas);
+
+  canvas_x += tileset_tile_width(tileset) / 2;
+  canvas_y += tileset_citybar_offset_y(tileset);
+
+  auto rect = painter->paint(p, QPointF(canvas_x, canvas_y), pcity);
+  *width = rect.width();
+  *height = rect.height();
+
+  p.end();
 }

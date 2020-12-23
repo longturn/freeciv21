@@ -65,3 +65,12 @@ public:
   QRect paint(QPainter &painter, const QPointF &position,
               const city *pcity) const override;
 };
+
+/**
+ * A polished city bar, more like certain commercial game.
+ */
+class polished_citybar_painter : public citybar_painter {
+public:
+  QRect paint(QPainter &painter, const QPointF &position,
+              const city *pcity) const override;
+};
