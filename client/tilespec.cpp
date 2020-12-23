@@ -6498,11 +6498,7 @@ QPixmap *get_nuke_explode_sprite(const struct tileset *t)
  ****************************************************************************/
 const struct citybar_sprites *get_citybar_sprites(const struct tileset *t)
 {
-  if (gui_options.draw_full_citybar) {
-    return &t->sprites.citybar;
-  } else {
-    return NULL;
-  }
+  return &t->sprites.citybar;
 }
 
 /************************************************************************/ /**
