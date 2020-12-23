@@ -319,7 +319,7 @@ static bool manual_command(struct tag_types *tag_info)
           fc_break_lines(help, LINE_BREAK);
           help = html_special_chars(help, &help_len);
           fprintf(doc, "<pre>%s</pre>\n\n", help);
-          FC_FREE(help);
+          FCPP_FREE(help);
         }
         fprintf(doc, "<p class=\"misc\">");
         fprintf(doc, _("Level: %s.<br>"),
@@ -418,7 +418,7 @@ static bool manual_command(struct tag_types *tag_info)
             fprintf(doc, "\n");
             fprintf(doc, _("<p>Description:</p>\n\n"));
             fprintf(doc, "<pre>%s</pre>\n", help);
-            FC_FREE(help);
+            FCPP_FREE(help);
           }
         }
 
