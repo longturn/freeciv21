@@ -5314,7 +5314,8 @@ static bool load_style_names(struct section_file *file,
       const int i = style_index(ps);
       const char *sec_name = section_name(section_list_get(sec, i));
 
-      ruleset_load_names(&ps->name, NULL, file, sec_name);
+      fc_assert_ret_val(ruleset_load_names(&ps->name, NULL, file, sec_name),
+                        false);
     }
     styles_iterate_end;
   }

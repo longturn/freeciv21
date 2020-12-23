@@ -3000,7 +3000,8 @@ static bool place_pollution(struct city *pcity, enum extra_cause cause)
     int tile_id = fc_rand(city_map_tiles(city_radius_sq));
     struct extra_type *pextra;
 
-    city_tile_index_to_xy(&cx, &cy, tile_id, city_radius_sq);
+    fc_assert_ret_val(
+        city_tile_index_to_xy(&cx, &cy, tile_id, city_radius_sq), false);
 
     /* check for a a real map position */
     if (!(ptile = city_map_to_tile(pcenter, city_radius_sq, cx, cy))) {

@@ -200,15 +200,23 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
     auto data = datagram.data();
     dio_input_init(&din, data.constData(), data.size());
 
-    dio_get_uint8_raw(&din, &type);
-    dio_get_string_raw(&din, servername, sizeof(servername));
-    dio_get_string_raw(&din, portstr, sizeof(portstr));
+    fc_assert_ret_val(dio_get_uint8_raw(&din, &type), SCAN_STATUS_ERROR);
+    fc_assert_ret_val(
+        dio_get_string_raw(&din, servername, sizeof(servername)),
+        SCAN_STATUS_ERROR);
+    fc_assert_ret_val(dio_get_string_raw(&din, portstr, sizeof(portstr)),
+                      SCAN_STATUS_ERROR);
     port = atoi(portstr);
-    dio_get_string_raw(&din, version, sizeof(version));
-    dio_get_string_raw(&din, status, sizeof(status));
-    dio_get_string_raw(&din, players, sizeof(players));
-    dio_get_string_raw(&din, humans, sizeof(humans));
-    dio_get_string_raw(&din, message, sizeof(message));
+    fc_assert_ret_val(dio_get_string_raw(&din, version, sizeof(version)),
+                      SCAN_STATUS_ERROR);
+    fc_assert_ret_val(dio_get_string_raw(&din, status, sizeof(status)),
+                      SCAN_STATUS_ERROR);
+    fc_assert_ret_val(dio_get_string_raw(&din, players, sizeof(players)),
+                      SCAN_STATUS_ERROR);
+    fc_assert_ret_val(dio_get_string_raw(&din, humans, sizeof(humans)),
+                      SCAN_STATUS_ERROR);
+    fc_assert_ret_val(dio_get_string_raw(&din, message, sizeof(message)),
+                      SCAN_STATUS_ERROR);
 
     if (!fc_strcasecmp("none", servername)) {
       sz_strlcpy(servername,

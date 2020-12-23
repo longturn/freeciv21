@@ -2645,8 +2645,10 @@ void unit_do_action(struct player *pplayer, const int actor_id,
                     const int target_id, const int sub_tgt_id,
                     const char *name, const action_id action_type)
 {
-  unit_perform_action(pplayer, actor_id, target_id, sub_tgt_id, name,
+  bool unused;
+  unused = unit_perform_action(pplayer, actor_id, target_id, sub_tgt_id, name,
                       action_type, ACT_REQ_PLAYER);
+  Q_UNUSED(unused);
 }
 
 /**********************************************************************/ /**
