@@ -103,10 +103,7 @@ void fcUdpScan::sockError(QAbstractSocket::SocketError socketError)
 **************************************************************************/
 void fcUdpScan::drop()
 {
-  if (m_instance) {
-    delete m_instance;
-    m_instance = 0;
-  }
+  NFCN_FREE(m_instance);
 }
 
 /**********************************************************************/ /**

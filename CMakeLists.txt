@@ -20,7 +20,7 @@ project(freeciv21 VERSION 3.1.0 LANGUAGES C CXX)
 if (NOT ${CMAKE_BUILD_TYPE} EQUAL "Release")
   add_compile_definitions(FREECIV_DEBUG)
 endif()
-add_definitions(-DQT_DEPRECATED_WARNINGS -DQT_DISABLE_DEPRECATED_BEFORE=0x051400)
+
 # After project() because the list of languages has to be known
 include(FreecivDependencies)
 include(FreecivHelpers)

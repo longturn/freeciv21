@@ -32,7 +32,7 @@ static QHash<int, const char *> key_map;
 static QString button_name(Qt::MouseButton bt);
 static QMap<shortcut_id, fc_shortcut *> *
 hash_copy(QMap<shortcut_id, fc_shortcut *> *h);
-fc_shortcuts *fc_shortcuts::m_instance = 0;
+fc_shortcuts *fc_shortcuts::m_instance = nullptr;
 QMap<shortcut_id, fc_shortcut *> fc_shortcuts::hash =
     QMap<shortcut_id, fc_shortcut *>();
 
@@ -240,10 +240,7 @@ void fc_shortcuts::set_shortcut(fc_shortcut *s)
  **************************************************************************/
 void fc_shortcuts::drop()
 {
-  if (m_instance) {
-    delete m_instance;
-    m_instance = 0;
-  }
+  NFCN_FREE(m_instance);
 }
 
 /**********************************************************************/ /**

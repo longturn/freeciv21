@@ -54,7 +54,7 @@ extern QApplication *qapp;
 #define MAX_DIRTY_RECTS 20
 static int num_dirty_rects = 0;
 static QRect dirty_rects[MAX_DIRTY_RECTS];
-info_tile *info_tile::m_instance = 0;
+info_tile *info_tile::m_instance = nullptr;
 extern int last_center_enemy;
 extern int last_center_capital;
 extern int last_center_player_city;
@@ -669,13 +669,7 @@ void info_tile::update_font(const QString &name, const QFont &font)
 /**********************************************************************/ /**
    Deletes current instance
  **************************************************************************/
-void info_tile::drop()
-{
-  if (m_instance) {
-    delete m_instance;
-    m_instance = 0;
-  }
-}
+void info_tile::drop() { NFCN_FREE(m_instance); }
 
 /**********************************************************************/ /**
    Returns given instance

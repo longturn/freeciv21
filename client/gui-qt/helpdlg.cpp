@@ -1445,7 +1445,6 @@ void help_widget::set_topic_terrain(const help_item *topic,
     } else {
       panel->deleteLater();
     }
-
     delete max;
   } else {
     set_topic_other(topic, title);

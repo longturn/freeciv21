@@ -112,10 +112,7 @@ Q_GLOBAL_STATIC(cma_yoloswag, gimb)
 // deletes governor
 void governor::drop()
 {
-  if (m_instance) {
-    delete m_instance;
-    m_instance = nullptr;
-  }
+  NFCN_FREE(m_instance);
 }
 
 governor::~governor() {}

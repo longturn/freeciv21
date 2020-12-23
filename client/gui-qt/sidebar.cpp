@@ -100,10 +100,7 @@ sidebarWidget::~sidebarWidget()
  ***************************************************************************/
 void sidebarWidget::setPixmap(QPixmap *pm)
 {
-  if (def_pixmap) {
-    delete def_pixmap;
-  }
-
+  NFC_FREE(def_pixmap);
   def_pixmap = pm;
 }
 
@@ -330,9 +327,7 @@ void sidebarWidget::updateFinalPixmap()
   QPen pen;
   bool current = false;
 
-  if (final_pixmap) {
-    delete final_pixmap;
-  }
+  NFC_FREE(final_pixmap);
 
   i = queen()->gimmeIndexOf(page);
   if (i == queen()->game_tab_widget->currentIndex()) {
