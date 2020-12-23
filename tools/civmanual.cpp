@@ -313,7 +313,7 @@ static bool manual_command(struct tag_types *tag_info)
                 tag_info->sect_title_end);
         sethelp = _(setting_extra_help(pset, true));
         if (strlen(sethelp) > 0) {
-          char *help = fc_strdup(sethelp);
+          char *help = qstrdup(sethelp);
           size_t help_len = qstrlen(help) + 1;
 
           fc_break_lines(help, LINE_BREAK);
@@ -397,7 +397,7 @@ static bool manual_command(struct tag_types *tag_info)
                 command_name(cmd), command_short_help(cmd),
                 tag_info->sect_title_end);
         if (command_synopsis(cmd)) {
-          char *cmdstr = fc_strdup(command_synopsis(cmd));
+          char *cmdstr = qstrdup(command_synopsis(cmd));
           size_t cmdstr_len = qstrlen(cmdstr) + 1;
 
           cmdstr = html_special_chars(cmdstr, &cmdstr_len);

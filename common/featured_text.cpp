@@ -258,6 +258,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
       ptag->color.background[0] = '\0';
     }
     return true;
+    break;
   case TTT_LINK: {
     char buf[64];
     const char *name;
@@ -430,6 +431,7 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
     }
   }
     return true;
+    break;
   case TTT_LINK: {
     ptag->link.type = text_link_type(va_arg(args, int));
     switch (ptag->link.type) {
@@ -501,6 +503,7 @@ static size_t text_tag_start_sequence(const struct text_tag *ptag, char *buf,
     }
     return ret + fc_snprintf(buf + ret, len - ret, "%c", SEQ_STOP);
   }
+  break;
   case TTT_LINK: {
     size_t ret = fc_snprintf(buf, len, "%c%s tgt=\"%s\"", SEQ_START,
                              text_tag_type_short_name(ptag->type),
