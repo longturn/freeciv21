@@ -1676,8 +1676,10 @@ is_minforeignpct_in_range(const struct city *target_city,
     } else {
       trade_partners_iterate(target_city, trade_partner)
       {
+        int notzero = city_size_get(trade_partner);
+        fc_assert_ret_val(notzero, TRI_YES);
         foreign_pct = citizens_nation_foreign(trade_partner) * 100
-                      / city_size_get(trade_partner);
+                      / notzero;
         if (foreign_pct >= min_foreign_pct) {
           return TRI_YES;
         }

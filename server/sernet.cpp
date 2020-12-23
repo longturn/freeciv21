@@ -576,7 +576,7 @@ void get_lanserver_announcement()
     QNetworkDatagram qnd = udp_socket->receiveDatagram();
     auto data = qnd.data();
     dio_input_init(&din, data.constData(), 1);
-    dio_get_uint8_raw(&din, &type);
+    fc_assert_ret_msg(dio_get_uint8_raw(&din, &type), "dio error");
     if (type == SERVER_LAN_VERSION) {
       log_debug("Received request for server LAN announcement.");
       send_lanserver_response();

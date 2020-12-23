@@ -124,7 +124,7 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
     struct data_in din;
 
     dio_input_init(&din, pvalue, 4);
-    dio_get_uint32_raw(&din, &value_lengths[i]);
+    fc_assert_ret_val(dio_get_uint32_raw(&din, &value_lengths[i]), A_SERIAL_FAIL);
 
     total_length += value_lengths[i];
     i++;
@@ -197,21 +197,21 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
 
   dio_input_init(&din, data, data_length);
 
-  dio_get_uint32_raw(&din, &dummy);
+  fc_assert_ret_val(dio_get_uint32_raw(&din, &dummy), A_SERIAL_FAIL);
   if (dummy != 0) {
     qDebug("attribute.c unserialize_hash() preamble, uint32 %lu != 0",
            (long unsigned) dummy);
     return A_SERIAL_OLD;
   }
-  dio_get_uint8_raw(&din, &dummy);
+  fc_assert_ret_val(dio_get_uint8_raw(&din, &dummy), A_SERIAL_FAIL);
   if (dummy != 2) {
     qDebug("attribute.c unserialize_hash() preamble, "
            "uint8 %lu != 2 version",
            (long unsigned) dummy);
     return A_SERIAL_OLD;
   }
-  dio_get_uint32_raw(&din, &entries);
-  dio_get_uint32_raw(&din, &dummy);
+  fc_assert_ret_val(dio_get_uint32_raw(&din, &entries), A_SERIAL_FAIL);
+  fc_assert_ret_val(dio_get_uint32_raw(&din, &dummy), A_SERIAL_FAIL);
   if (dummy != data_length) {
     qDebug("attribute.c unserialize_hash() preamble, "
            "uint32 %lu != %lu data_length",
@@ -391,7 +391,7 @@ size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
   auto pvalue = attribute_hash->value(akey);
 
   dio_input_init(&din, pvalue, 0xffffffff);
-  dio_get_uint32_raw(&din, &length);
+  fc_assert_ret_val(dio_get_uint32_raw(&din, &length), 0);
 
   if (length <= max_data_length) {
     dio_get_memory_raw(&din, data, length);

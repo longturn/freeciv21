@@ -228,7 +228,8 @@ shortcut_id fc_shortcuts::get_id(fc_shortcut *sc) { return hash.key(sc); }
 void fc_shortcuts::set_shortcut(fc_shortcut *s)
 {
   fc_shortcut *sc;
-  sc = hash.value(s->id);
+  sc = hash.value(s->id, nullptr);
+  fc_assert_ret_msg(sc, "shortcut error");
   sc->key = s->key;
   sc->mod = s->mod;
   sc->mouse = s->mouse;
@@ -749,6 +750,7 @@ void write_shortcuts()
   for (int i = 0; i < SC_LAST_SC - 1; ++i) {
     s.setArrayIndex(i);
     sc = h.value(static_cast<shortcut_id>(i + 1));
+    fc_assert_ret_msg(sc, "shortuct error");
     s.setValue(QStringLiteral("id"), sc->id);
     s.setValue(QStringLiteral("key"), sc->key);
     s.setValue(QStringLiteral("mouse"), sc->mouse);

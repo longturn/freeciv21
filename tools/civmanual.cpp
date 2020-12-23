@@ -313,13 +313,13 @@ static bool manual_command(struct tag_types *tag_info)
                 tag_info->sect_title_end);
         sethelp = _(setting_extra_help(pset, true));
         if (strlen(sethelp) > 0) {
-          char *help = fc_strdup(sethelp);
+          char *help = qstrdup(sethelp);
           size_t help_len = qstrlen(help) + 1;
 
           fc_break_lines(help, LINE_BREAK);
           help = html_special_chars(help, &help_len);
           fprintf(doc, "<pre>%s</pre>\n\n", help);
-          FC_FREE(help);
+          FCPP_FREE(help);
         }
         fprintf(doc, "<p class=\"misc\">");
         fprintf(doc, _("Level: %s.<br>"),
@@ -397,7 +397,7 @@ static bool manual_command(struct tag_types *tag_info)
                 command_name(cmd), command_short_help(cmd),
                 tag_info->sect_title_end);
         if (command_synopsis(cmd)) {
-          char *cmdstr = fc_strdup(command_synopsis(cmd));
+          char *cmdstr = qstrdup(command_synopsis(cmd));
           size_t cmdstr_len = qstrlen(cmdstr) + 1;
 
           cmdstr = html_special_chars(cmdstr, &cmdstr_len);
@@ -418,7 +418,7 @@ static bool manual_command(struct tag_types *tag_info)
             fprintf(doc, "\n");
             fprintf(doc, _("<p>Description:</p>\n\n"));
             fprintf(doc, "<pre>%s</pre>\n", help);
-            FC_FREE(help);
+            FCPP_FREE(help);
           }
         }
 

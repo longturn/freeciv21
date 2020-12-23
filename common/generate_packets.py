@@ -604,7 +604,7 @@ for (count = 0;; count++) {
   if (i == 255) {
     break;
   }
-  if (i > %(array_size_u)s) {
+  if (i >= %(array_size_u)s) {
     RECEIVE_PACKET_FIELD_ERROR(%(name)s,
                                \": unexpected value %%%%d \"
                                \"(> %(array_size_u)s) in array diff\",

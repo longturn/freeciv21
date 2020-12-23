@@ -153,7 +153,9 @@ static struct unit_type *dai_choose_attacker(struct ai_type *ait,
         && utype_upkeep_cost(putype, pplayer, O_GOLD) > 0) {
       continue;
     }
-
+    if (!bestid) {
+      bestid = putype;
+    }
     cur = dai_unit_attack_desirability(ait, putype);
     if ((tc == TC_LAND && utype_class(putype)->adv.land_move != MOVE_NONE)
         || (tc == TC_OCEAN
@@ -200,6 +202,9 @@ static struct unit_type *dai_choose_bodyguard(struct ai_type *ait,
       }
     }
 
+    if (!bestid) {
+      bestid = putype;
+    }
     if (!allow_gold_upkeep
         && utype_upkeep_cost(putype, pplayer, O_GOLD) > 0) {
       continue;
@@ -857,10 +862,12 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
       /* Cost (shield equivalent) of gaining these techs. */
       /* FIXME? Katvrr advises that this should be weighted more heavily in
        * big danger. */
+      int notzero = city_list_size(pplayer->cities);
+      fc_assert_ret_val(notzero, false);
       int tech_cost =
           research_goal_bulbs_required(
               presearch, advance_number(punittype->require_advance))
-          / 4 / city_list_size(pplayer->cities);
+          / 4 / notzero;
 
       /* Contrary to the above, we don't care if walls are actually built
        * - we're looking into the future now. */
@@ -1002,8 +1009,10 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
       /* Cost (shield equivalent) of gaining these techs. */
       /* FIXME? Katvrr advises that this should be weighted more heavily in
        * big danger. */
+      int notzero = city_list_size(pplayer->cities);
+      fc_assert_ret_msg(notzero, "div by zero");
       int tech_cost = research_goal_bulbs_required(presearch, tech_req) / 4
-                      / city_list_size(pplayer->cities);
+                      / notzero;
       int bcost_balanced = build_cost_balanced(punittype);
       /* See description of kill_desire() for info about this variables. */
       int bcost = utype_build_shield_cost(pcity, punittype);
