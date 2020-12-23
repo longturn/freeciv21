@@ -4731,7 +4731,7 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
 {
   const struct city *pcity;
   const struct city *pwork;
-  struct unit *psettler;
+  struct unit *psettler = nullptr;
   struct drawn_sprite *saved_sprs = sprs;
   int city_x, city_y;
   const int NUM_CITY_COLORS = t->sprites.city.worked_tile_overlay.size;

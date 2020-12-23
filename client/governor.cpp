@@ -482,15 +482,19 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
 
   output_type_iterate(i)
   {
-    dio_get_sint16_raw(&din, &parameter->minimal_surplus[i]);
-    dio_get_sint16_raw(&din, &parameter->factor[i]);
+    fc_assert_ret_val(
+        dio_get_sint16_raw(&din, &parameter->minimal_surplus[i]), false);
+    fc_assert_ret_val(dio_get_sint16_raw(&din, &parameter->factor[i]),
+                      false);
   }
   output_type_iterate_end;
 
-  dio_get_sint16_raw(&din, &parameter->happy_factor);
-  dio_get_uint8_raw(&din,
-                    &dummy); /* Dummy value; used to be factor_target. */
-  dio_get_bool8_raw(&din, &parameter->require_happy);
+  fc_assert_ret_val(dio_get_sint16_raw(&din, &parameter->happy_factor),
+                    false);
+  fc_assert_ret_val(dio_get_uint8_raw(&din, &dummy),
+                    false); /* Dummy value; used to be factor_target. */
+  fc_assert_ret_val(dio_get_bool8_raw(&din, &parameter->require_happy),
+                    false);
 
   return true;
 }
@@ -854,7 +858,6 @@ cmafec_get_short_descr(const struct cm_parameter *const parameter)
     return cmafec_preset_get_descr(idx);
   }
 }
-
 
 /**********************************************************************/ /**
    Create default cma presets for a new user (or without configuration file)
