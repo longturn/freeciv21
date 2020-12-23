@@ -68,6 +68,7 @@ public:
 
   double ideal_width() const;
   void do_layout(double width = 0);
+  double height() const { return size().height(); }
   QSizeF size() const { return m_size; }
   void paint(QPainter &p, const QPointF &top_left) const;
 
