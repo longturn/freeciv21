@@ -261,7 +261,7 @@ void line_of_text::paint(QPainter &p, const QPointF &top_left) const
 QStringList citybar_painter::available()
 {
   // TRANS: City bar style
-  return {N_("Simple"), N_("Traditional")};
+  return {N_("Simple"), N_("Traditional"), N_("Polished")};
 }
 
 /**
@@ -302,6 +302,9 @@ bool citybar_painter::set_current(const QString &name)
     return true;
   } else if (name == QStringLiteral("Traditional")) {
     s_current = std::make_unique<traditional_citybar_painter>();
+    return true;
+  } else if (name == QStringLiteral("Polished")) {
+    s_current = std::make_unique<polished_citybar_painter>();
     return true;
   }
 
@@ -572,4 +575,283 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
   second.paint(painter, QPointF(x + 1, y + 1 + num_lines + first.height()));
 
   return QRect(x, y, x + width + 2, bounds.height());
+}
+
+/**
+ * Draws the "polished" city bar. It uses a single line and semitransparent
+ * colored background.
+ */
+QRect polished_citybar_painter::paint(QPainter &painter,
+                                      const QPointF &position,
+                                      const city *pcity) const
+{
+  /**
+   * Most of the info is on a single line. The only exception is trade.
+   */
+
+  // Decide what to do
+  const bool can_see_inside =
+      (client_is_global_observer() || city_owner(pcity) == client_player());
+  const bool should_draw_productions =
+      can_see_inside && gui_options.draw_city_productions;
+  const bool should_draw_growth =
+      can_see_inside && gui_options.draw_city_growth;
+  const bool should_draw_trade_routes =
+      can_see_inside && gui_options.draw_city_trade_routes;
+
+  // Get some city properties
+  const citybar_sprites *citybar = get_citybar_sprites(tileset);
+
+  char name[512], growth[32];
+  color_std growth_color, production_color;
+  get_city_mapview_name_and_growth(pcity, name, sizeof(name), growth,
+                                   sizeof(growth), &growth_color,
+                                   &production_color);
+
+  // Decide colors
+  QColor owner_color = *get_player_color(tileset, city_owner(pcity));
+  QColor *textcolors[2] = {get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
+                           get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
+  QColor text_color =
+      *color_best_contrast(&owner_color, textcolors, ARRAY_SIZE(textcolors));
+
+  // Decide on the target height. It's the max of the font sizes and the
+  // occupied indicator (we assume all indicators have the same size).
+  // It's used to scale the flag, progress bars and production.
+  double target_height = citybar->occupancy.p[0]->height();
+  target_height = std::max(
+      target_height, QFontMetricsF(*get_font(FONT_CITY_NAME)).height());
+  target_height = std::max(
+      target_height, QFontMetricsF(*get_font(FONT_CITY_PROD)).height());
+
+  // Build the contents
+  line_of_text line;
+
+  QMargins text_margins(3, 0, 3, 0);
+  QTextCharFormat format;
+
+  // Size
+  format.setFont(*get_font(FONT_CITY_NAME));
+  format.setForeground(text_color);
+  line.add_text(QString::number(pcity->size), format, false, text_margins);
+
+  // Growth
+  std::unique_ptr<QPixmap> growth_progress;
+  if (should_draw_growth) {
+    // Progress bar
+    growth_progress = std::make_unique<QPixmap>(
+        QSize(6, target_height) * painter.device()->devicePixelRatio());
+    growth_progress->setDevicePixelRatio(
+        painter.device()->devicePixelRatio());
+    growth_progress->fill(Qt::black);
+
+    QPainter p(growth_progress.get());
+
+    // Avoid div by 0
+    int granary_max = std::max(1, city_granary_size(city_size_get(pcity)));
+    double current = double(pcity->food_stock) / granary_max;
+    double next_turn = qBound(
+        0.0, current + double(pcity->surplus[O_FOOD]) / granary_max, 1.0);
+
+    current *= target_height;
+    next_turn *= target_height;
+
+    // Surplus (yellow)
+    if (next_turn > current) {
+      p.fillRect(QRectF(0, target_height, 6, -next_turn),
+                 QColor(200, 200, 60));
+    }
+
+    // Stock (green)
+    p.fillRect(QRectF(0, target_height, 6, -current), QColor(70, 120, 50));
+
+    // Negative surplus (red)
+    if (next_turn < current) {
+      p.fillRect(QRectF(0, target_height - current, 6, current - next_turn),
+                 Qt::red);
+    }
+
+    // Add it
+    line.add_icon(growth_progress.get());
+
+    // Text
+    format.setFont(*get_font(FONT_CITY_PROD));
+    format.setFontPointSize(format.fontPointSize() / 1.5);
+    format.setForeground(*get_color(tileset, growth_color));
+    line.add_text(growth, format, false, text_margins);
+  }
+
+  // Flag
+  std::unique_ptr<QPixmap> scaled_flag;
+  if (city_owner(pcity) != client_player()) {
+    scaled_flag = std::make_unique<QPixmap>(
+        get_city_flag_sprite(tileset, pcity)
+            ->scaledToHeight(target_height, Qt::SmoothTransformation));
+    line.add_icon(scaled_flag.get());
+  }
+
+  // Occupied indicator
+  if (can_player_see_units_in_city(client.conn.playing, pcity)) {
+    unsigned long count = unit_list_size(pcity->tile->units);
+    count = qBound(0UL, count, citybar->occupancy.size - 1);
+    line.add_icon(citybar->occupancy.p[count]);
+  } else {
+    if (pcity->client.occupied) {
+      line.add_icon(citybar->occupied);
+    } else {
+      line.add_icon(citybar->occupancy.p[0]);
+    }
+  }
+
+  // Name
+  if (gui_options.draw_city_names) {
+    format.setFont(*get_font(FONT_CITY_NAME));
+    format.setForeground(text_color);
+    line.add_text(name, format, false, text_margins);
+  }
+
+  // Production
+  std::unique_ptr<QPixmap> production_pix;
+  std::unique_ptr<QPixmap> production_progress;
+  if (should_draw_productions) {
+    // Format
+    format.setFont(*get_font(FONT_CITY_PROD));
+    format.setFontPointSize(format.fontPointSize() / 1.5);
+    format.setForeground(*get_color(tileset, production_color));
+
+    QMargins prod_margins = text_margins;
+    prod_margins.setLeft(0); // Already have the city name on the left
+
+    // Text
+    int turns = city_production_turns_to_build(pcity, true);
+    if (turns < 1000) {
+      line.add_text(QString::number(turns), format, false, text_margins);
+    } else {
+      line.add_text(QStringLiteral("∞"), format, false, text_margins);
+    }
+
+    // Progress bar
+    production_progress = std::make_unique<QPixmap>(
+        QSize(6, target_height) * painter.device()->devicePixelRatio());
+    production_progress->setDevicePixelRatio(
+        painter.device()->devicePixelRatio());
+
+    QPainter p(production_progress.get());
+
+    // Draw
+    if (pcity->surplus[O_SHIELD] < 0) {
+      production_progress->fill(Qt::red);
+    } else {
+      production_progress->fill(Qt::black);
+    }
+    int total = universal_build_shield_cost(pcity, &pcity->production);
+    double current = double(pcity->shield_stock) / total;
+    double next_turn =
+        qBound(0.0, current + double(pcity->surplus[O_SHIELD]) / total, 1.0);
+
+    current *= target_height;
+    next_turn *= target_height;
+
+    // Surplus (yellow)
+    if (next_turn > current) {
+      p.fillRect(QRectF(0, target_height, 6, -next_turn),
+                 QColor(200, 200, 60));
+    }
+
+    // Stock (blue)
+    p.fillRect(QRectF(0, target_height, 6, -current), Qt::blue);
+
+    // Negative surplus (red)
+    if (next_turn < current) {
+      p.fillRect(QRectF(0, target_height - current, 6, current - next_turn),
+                 Qt::red);
+    }
+
+    // Add it
+    line.add_icon(production_progress.get());
+
+    // Icon
+    QPixmap *xsprite = nullptr;
+    const auto &target = pcity->production;
+    if (can_see_inside && (VUT_UTYPE == target.kind)) {
+      xsprite = get_unittype_sprite(get_tileset(), target.value.utype,
+                                    direction8_invalid());
+    } else if (can_see_inside && (target.kind == VUT_IMPROVEMENT)) {
+      xsprite = get_building_sprite(get_tileset(), target.value.building);
+    }
+    if (xsprite) {
+      production_pix = std::make_unique<QPixmap>(
+          xsprite->scaledToHeight(target_height, Qt::SmoothTransformation));
+      line.add_icon(production_pix.get());
+    }
+  }
+
+  // Lay out and draw the first line
+  line.do_layout();
+
+  double width = std::ceil(line.size().width());
+  double height = line.height() + 2;
+  double x = std::floor(position.x() - width / 2 - 1);
+  double y = std::floor(position.y());
+
+  // Draw the background
+  if (city_owner(pcity) == client_player()) {
+    painter.setPen(QPen(Qt::black, 1));
+    painter.setBrush(QColor(0, 0, 0, 100));
+  } else {
+    owner_color.setAlpha(90);
+    painter.setPen(QPen(owner_color, 1));
+    painter.setBrush(QBrush(owner_color));
+  }
+  painter.drawRoundedRect(QRectF(x, y, width + 2, height - 1), 7, 7);
+
+  // Draw the text
+  line.paint(painter, QPointF(x + 1, y + 1));
+
+  // Trade line
+  if (should_draw_trade_routes) {
+    line_of_text trade_line;
+
+    // Icon
+    trade_line.add_icon(citybar->trade);
+
+    // Text
+    char trade_routes[32];
+    color_std trade_routes_color;
+    get_city_mapview_trade_routes(pcity, trade_routes, sizeof(trade_routes),
+                                  &trade_routes_color);
+
+    format.setFont(*get_font(FONT_CITY_PROD));
+    format.setForeground(*get_color(tileset, trade_routes_color));
+    trade_line.add_text(trade_routes, format, false, text_margins);
+
+    // Lay it out
+    trade_line.do_layout();
+
+    double trade_width = std::ceil(trade_line.size().width());
+    double trade_x = std::floor(position.x() - trade_width / 2 - 1);
+    double trade_y = y + height;
+
+    // Draw the background
+    if (city_owner(pcity) == client_player()) {
+      painter.setPen(QPen(Qt::black, 1));
+      painter.setBrush(QColor(0, 0, 0, 100));
+    } else {
+      owner_color.setAlpha(90);
+      painter.setPen(QPen(owner_color, 1));
+      painter.setBrush(QBrush(owner_color));
+    }
+    painter.drawRoundedRect(QRectF(trade_x, y + line.height() + 2,
+                                   trade_width + 2, trade_line.height() + 1),
+                            7, 7);
+
+    // Draw the text
+    trade_line.paint(painter, QPointF(trade_x + 1, trade_y + 1));
+
+    x = std::min(x, trade_x);
+    width = std::max(width, trade_width);
+    height += trade_line.height() + 2;
+  }
+
+  return QRect(x, y, std::ceil(width + 2), std::ceil(height));
 }
