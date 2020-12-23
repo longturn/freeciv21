@@ -165,7 +165,6 @@ struct client_options gui_options = {
     true,  //.draw_fog_of_war =
     true,  //.draw_borders =
     false, //.draw_native =
-    true,  //.draw_full_citybar =
     true,  //.draw_unit_shields =
     true,  //.player_dlg_show_dead_players =
     true,  //.reqtree_show_icons =
@@ -1592,7 +1591,7 @@ static struct client_option client_options[] = {
 
     GEN_STR_LIST_OPTION(default_city_bar_style_name, N_("City bar style"),
                         N_("Selects the style of the city bar."),
-                        COC_GRAPHICS, GUI_STUB, "Simple",
+                        COC_GRAPHICS, GUI_STUB, "Polished",
                         citybar_painter::available_vector,
                         citybar_painter::option_changed, 0),
 
@@ -1609,13 +1608,6 @@ static struct client_option client_options[] = {
     GEN_BOOL_OPTION(draw_map_grid, N_("Draw the map grid"),
                     N_("Setting this option will draw a grid over the map."),
                     COC_GRAPHICS, GUI_STUB, false,
-                    view_option_changed_callback),
-    GEN_BOOL_OPTION(draw_full_citybar, N_("Draw the city bar"),
-                    N_("Setting this option will display a 'city bar' "
-                       "containing useful information beneath each city. "
-                       "Disabling this option will display only the city's "
-                       "name and, optionally, production."),
-                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_city_names, N_("Draw the city names"),
@@ -3513,8 +3505,9 @@ static bool server_option_enum_set(struct option *poption, int val)
     return false;
   }
 
-  send_chat_printf("/set %s \"%s\"", psoption->name, qUtf8Printable(
-               psoption->enumerator.support_names->at(val)));
+  send_chat_printf(
+      "/set %s \"%s\"", psoption->name,
+      qUtf8Printable(psoption->enumerator.support_names->at(val)));
   return true;
 }
 
@@ -4570,6 +4563,16 @@ void options_load(void)
                                    "client.default_tileset_iso_name");
   if (str != NULL) {
     sz_strlcpy(gui_options.default_tileset_iso_name, str);
+  }
+
+  bool draw_full_citybar =
+      secfile_lookup_bool_default(sf, true, "client.draw_full_citybar");
+  if (draw_full_citybar) {
+    fc_strlcpy(gui_options.default_city_bar_style_name, "Polished",
+               qstrlen("Polished"));
+  } else {
+    fc_strlcpy(gui_options.default_city_bar_style_name, "Simple",
+               qstrlen("Simple"));
   }
 
   /* Backwards compatibility for removed options replaced by entirely "new"

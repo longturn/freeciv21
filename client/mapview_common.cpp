@@ -1532,18 +1532,6 @@ void show_city_descriptions(int canvas_base_x, int canvas_base_y,
   const int offset_y = tileset_citybar_offset_y(tileset);
   int new_max_width = max_desc_width, new_max_height = max_desc_height;
 
-  if (gui_options.draw_full_citybar
-      && !(gui_options.draw_city_names || gui_options.draw_city_productions
-           || gui_options.draw_city_growth)) {
-    return;
-  }
-
-  if (!gui_options.draw_full_citybar
-      && !(gui_options.draw_city_names
-           || gui_options.draw_city_productions)) {
-    return;
-  }
-
   /* A city description is shown below the city.  It has a specified
    * maximum width and height (although these are only estimates).  Thus
    * we need to update some tiles above the mapview and some to the left

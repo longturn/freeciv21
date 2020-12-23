@@ -745,18 +745,13 @@ void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
     return;
   }
 
-  auto painter = citybar_painter::current();
-  if (!painter) {
-    citybar_painter::set_current(gui_options.default_city_bar_style_name);
-    painter = citybar_painter::current();
-  }
-
   QPainter p;
   p.begin(pcanvas);
 
   canvas_x += tileset_tile_width(tileset) / 2;
   canvas_y += tileset_citybar_offset_y(tileset);
 
+  auto painter = citybar_painter::current();
   auto rect = painter->paint(p, QPointF(canvas_x, canvas_y), pcity);
   *width = rect.width();
   *height = rect.height();

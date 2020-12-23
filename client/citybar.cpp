@@ -290,27 +290,38 @@ void citybar_painter::option_changed(option *opt)
 }
 
 /**
+ * Returns the current painter (never null).
+ */
+citybar_painter *citybar_painter::current()
+{
+  if (!s_current) {
+    set_current(gui_options.default_city_bar_style_name);
+  }
+  return s_current.get();
+}
+
+/**
  * Sets the current city bar style. The name should not be translated.
  * Returns true on success.
  */
-bool citybar_painter::set_current(const QString &name)
+void citybar_painter::set_current(const QString &name)
 {
-  fc_assert_ret_val(available().contains(name), false);
-
   if (name == QStringLiteral("Simple")) {
     s_current = std::make_unique<simple_citybar_painter>();
-    return true;
+    return;
   } else if (name == QStringLiteral("Traditional")) {
     s_current = std::make_unique<traditional_citybar_painter>();
-    return true;
+    return;
   } else if (name == QStringLiteral("Polished")) {
     s_current = std::make_unique<polished_citybar_painter>();
-    return true;
+    return;
   }
 
   qCCritical(bugs_category, "Could not instantiate known city bar style %s",
              qPrintable(name));
-  return false;
+
+  // Allocate the default to avoid crashes
+  s_current = std::make_unique<polished_citybar_painter>();
 }
 
 /**

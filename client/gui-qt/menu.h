@@ -273,7 +273,6 @@ private slots:
   void slot_city_output();
   void slot_map_grid();
   void slot_borders();
-  void slot_fullbar();
   void slot_native_tiles();
   void slot_city_growth();
   void slot_city_production();

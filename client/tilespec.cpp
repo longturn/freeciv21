@@ -68,6 +68,7 @@
 #include "themes_g.h"
 
 /* client */
+#include "citybar.h"
 #include "citydlg_common.h" /* for generate_citydlg_dimensions() */
 #include "client_main.h"
 #include "climap.h" /* for client_tile_get_known() */
@@ -5711,8 +5712,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
   case LAYER_CITY1:
     /* City.  Some city sprites are drawn later. */
     if (pcity && gui_options.draw_cities) {
-      if (!gui_options.draw_full_citybar
-          && !gui_options.solid_color_behind_units) {
+      if (!citybar_painter::current()->has_flag()) {
         ADD_SPRITE(get_city_flag_sprite(t, pcity), true,
                    FULL_TILE_X_OFFSET + t->city_flag_offset_x,
                    FULL_TILE_Y_OFFSET + t->city_flag_offset_y);
@@ -5745,7 +5745,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
                      FULL_TILE_Y_OFFSET + t->city_offset_y);
         }
       }
-      if (!gui_options.draw_full_citybar && pcity->client.occupied) {
+      if (!citybar_painter::current()->has_units()) {
         ADD_SPRITE(get_city_sprite(t->sprites.city.occupied, pcity), true,
                    FULL_TILE_X_OFFSET + t->occupied_offset_x,
                    FULL_TILE_Y_OFFSET + t->occupied_offset_y);
@@ -5921,7 +5921,8 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
 
   case LAYER_CITY2:
     /* City size.  Drawing this under fog makes it hard to read. */
-    if (pcity && gui_options.draw_cities && !gui_options.draw_full_citybar) {
+    if (pcity && gui_options.draw_cities
+        && !citybar_painter::current()->has_size()) {
       bool warn = false;
       unsigned int size = city_size_get(pcity);
 

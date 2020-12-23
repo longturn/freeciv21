@@ -2306,19 +2306,6 @@ void request_toggle_map_native(void)
 }
 
 /**********************************************************************/ /**
-   Toggle display of city full bar.
- **************************************************************************/
-void request_toggle_city_full_bar(void)
-{
-  if (!can_client_change_view()) {
-    return;
-  }
-
-  gui_options.draw_full_citybar ^= 1;
-  update_map_canvas_visible();
-}
-
-/**********************************************************************/ /**
    Toggle display of city names
  **************************************************************************/
 void request_toggle_city_names(void)
@@ -3680,11 +3667,6 @@ void key_map_borders_toggle(void) { request_toggle_map_borders(); }
    Toggle native tiles on the mapview on/off based on a keypress.
  **************************************************************************/
 void key_map_native_toggle(void) { request_toggle_map_native(); }
-
-/**********************************************************************/ /**
-   Toggle the "Draw the city bar" option.
- **************************************************************************/
-void key_city_full_bar_toggle(void) { request_toggle_city_full_bar(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle city names display' input
