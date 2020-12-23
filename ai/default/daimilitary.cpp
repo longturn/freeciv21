@@ -153,7 +153,9 @@ static struct unit_type *dai_choose_attacker(struct ai_type *ait,
         && utype_upkeep_cost(putype, pplayer, O_GOLD) > 0) {
       continue;
     }
-
+    if (!bestid) {
+      bestid = putype;
+    }
     cur = dai_unit_attack_desirability(ait, putype);
     if ((tc == TC_LAND && utype_class(putype)->adv.land_move != MOVE_NONE)
         || (tc == TC_OCEAN
@@ -200,6 +202,9 @@ static struct unit_type *dai_choose_bodyguard(struct ai_type *ait,
       }
     }
 
+    if (!bestid) {
+      bestid = putype;
+    }
     if (!allow_gold_upkeep
         && utype_upkeep_cost(putype, pplayer, O_GOLD) > 0) {
       continue;

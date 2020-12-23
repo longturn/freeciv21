@@ -1013,7 +1013,6 @@ void city_label::set_city(city *pciti) { pcity = pciti; }
 
 city_info::city_info(QWidget *parent) : QWidget(parent)
 {
-  int info_nr;
   int iter;
   QFont *small_font;
   QLabel *ql;
@@ -1026,13 +1025,12 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
             << _("Change in:") << _("Corruption:") << _("Waste:")
             << _("Culture:") << _("Pollution:") << _("Plague risk:")
             << _("Tech Stolen:") << _("Airlift:");
-  info_nr = info_list.count();
   setFont(*small_font);
   info_grid_layout->setSpacing(0);
   info_grid_layout->setContentsMargins(0, 0, 0, 0);
 
-  fc_assert(info_list.count() == 2 * O_LAST + 2);
-  for (iter = 0; iter < 2 * O_LAST + 2; iter++) {
+  fc_assert(info_list.count() == NUM_INFO_FIELDS);
+  for (iter = 0; iter < NUM_INFO_FIELDS; iter++) {
     ql = new QLabel(info_list[iter], this);
     ql->setFont(*small_font);
     ql->setProperty(fonts::notify_label, "true");

@@ -1171,7 +1171,7 @@ QPixmap *terrain_canvas(struct terrain *terrain,
       break;
     }
     extra_type_by_cause_iterate_end;
-
+    fc_assert_ret_val(pextra, nullptr);
     count = fill_basic_extra_sprite_array(tileset, sprs, pextra);
     put_drawn_sprites(canvas, 0, canvas_y, count, sprs, false);
   }
@@ -1189,11 +1189,12 @@ static QLabel *make_helplabel(const QString &title, const QString &tooltip,
                               QHBoxLayout *layout)
 {
   QLabel *label;
-
+  QFont f = *fcFont::instance()->getFont(fonts::default_font);
   label = new QLabel(title);
   layout->addWidget(label, Qt::AlignVCenter);
   label->setProperty(fonts::default_font, "true");
   label->setToolTip(tooltip);
+  label->setMaximumHeight(QFontMetrics(f).height()* 1.2);
   return label;
 }
 
