@@ -252,9 +252,9 @@ void sidebarWidget::mousePressEvent(QMouseEvent *event)
  ***************************************************************************/
 void sidebarWidget::wheelEvent(QWheelEvent *event)
 {
-  if (event->delta() < -90 && wheel_down) {
+  if (event->angleDelta().y()< 0 && wheel_down) {
     wheel_down();
-  } else if (event->delta() > 90 && wheel_up) {
+  } else if (event->angleDelta().y()> 0 && wheel_up) {
     wheel_up();
   }
 
