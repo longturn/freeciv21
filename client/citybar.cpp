@@ -226,21 +226,27 @@ void line_of_text::do_layout(double width)
 void line_of_text::paint(QPainter &p, const QPointF &top_left) const
 {
   for (const auto &blk : m_blocks) {
+    auto rect = blk.draw_rect.translated(top_left);
     switch (blk.mode) {
     case block::TEXT_MODE:
+      if (blk.format.background() != Qt::transparent) {
+        // Fill the background
+        auto fill_rect = rect.marginsAdded(blk.margins);
+        fill_rect.setY(top_left.y());
+        fill_rect.setHeight(height());
+        p.fillRect(fill_rect, blk.format.background());
+      }
       p.setFont(blk.format.font());
       if (blk.shadow) {
         // Draw the shadow
         p.setPen(QPen(m_shadow_brush, 1));
-        p.drawText(blk.draw_rect.translated(top_left + QPointF(1, 1)),
-                   blk.text);
+        p.drawText(rect.translated(1, 1), blk.text);
       }
       p.setPen(QPen(blk.format.foreground(), 1));
-      p.drawText(blk.draw_rect.translated(top_left), blk.text);
+      p.drawText(rect, blk.text);
       break;
     case block::ICON_MODE:
-      p.drawPixmap(blk.draw_rect.translated(top_left), *blk.icon,
-                   blk.icon->rect());
+      p.drawPixmap(rect, *blk.icon, blk.icon->rect());
       break;
     case block::SPACER_MODE:
       continue;
