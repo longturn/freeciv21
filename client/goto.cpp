@@ -1297,6 +1297,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
             turns_for_map = map_turns + pos->turn;
           }
         }
+        fc_assert_ret_val(pos, false);
         map_turns += pos->turn;
         destination = pos->tile;
       } else {
@@ -1739,6 +1740,7 @@ void send_connect_route(enum unit_activity activity, struct extra_type *tgt)
     p.vigilant = false; /* Should be TRUE? */
 
     p.length = 0;
+    fc_assert_ret_msg(path, "send connect error");
     old_tile = path->positions[0].tile;
 
     for (i = 0; i < path->length; i++) {
@@ -1885,7 +1887,7 @@ void send_goto_route(void)
     }
 
     clear_unit_orders(punit);
-
+    fc_assert_ret_msg(path, "goto error");
     tgt_tile = pf_path_last_position(path)->tile;
 
     /* Make the last move in a plain goto try to pop up the action

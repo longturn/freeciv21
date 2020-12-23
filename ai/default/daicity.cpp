@@ -1710,6 +1710,7 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
 
     n_needed_techs = tech_vector_size(&needed_techs);
     if ((active || n_needed_techs) && !impossible_to_get) {
+      fc_assert_ret_msg(mypreq, "AI error");
       adv_want v1 =
           dai_effect_value(pplayer, gov, ai, pcity, capital, turns, peffect,
                            cities[mypreq->range], nplayers);
