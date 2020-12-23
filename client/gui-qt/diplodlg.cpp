@@ -47,7 +47,8 @@ extern QApplication *qapp;
 /************************************************************************/ /**
    Constructor for diplomacy widget
  ****************************************************************************/
-diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
+diplo_wdg::diplo_wdg(int counterpart, int initiated_from)
+    : QWidget(), index(0), active_menu(0), curr_player(0)
 {
   QColor *colr;
   QString text;
