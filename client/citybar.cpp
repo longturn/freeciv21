@@ -315,10 +315,13 @@ void citybar_painter::set_current(const QString &name)
   } else if (name == QStringLiteral("Polished")) {
     s_current = std::make_unique<polished_citybar_painter>();
     return;
+  } else if (available().contains(name)) {
+    qCCritical(bugs_category,
+               "Could not instantiate known city bar style %s",
+               qPrintable(name));
+  } else {
+    qCCritical(bugs_category, "Unknown city bar style %s", qPrintable(name));
   }
-
-  qCCritical(bugs_category, "Could not instantiate known city bar style %s",
-             qPrintable(name));
 
   // Allocate the default to avoid crashes
   s_current = std::make_unique<polished_citybar_painter>();
