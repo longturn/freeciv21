@@ -944,6 +944,7 @@ static void goto_fill_parameter_full(struct goto_map *goto_map,
       /* First action is activity */
       parameter->moves_left_initially = parameter->move_rate;
       /* Number of turns, rounding up */
+      fc_assert_ret_msg(speed, "speed=0");
       goto_map->connect.initial_turns =
           ((activity_initial * ACTIVITY_FACTOR + (speed - 1)) / speed);
       if (punit->moves_left == 0) {

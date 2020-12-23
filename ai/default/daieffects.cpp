@@ -398,6 +398,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
           v += 30 * extra_food;
         }
       }
+      fc_assert_ret_val(aqueduct_size, 0);
       v += c * amount * 4 / aqueduct_size;
     }
     break;

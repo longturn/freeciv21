@@ -857,10 +857,12 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
       /* Cost (shield equivalent) of gaining these techs. */
       /* FIXME? Katvrr advises that this should be weighted more heavily in
        * big danger. */
+      int notzero = city_list_size(pplayer->cities);
+      fc_assert_ret_val(notzero, false);
       int tech_cost =
           research_goal_bulbs_required(
               presearch, advance_number(punittype->require_advance))
-          / 4 / city_list_size(pplayer->cities);
+          / 4 / notzero;
 
       /* Contrary to the above, we don't care if walls are actually built
        * - we're looking into the future now. */
@@ -1002,8 +1004,10 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
       /* Cost (shield equivalent) of gaining these techs. */
       /* FIXME? Katvrr advises that this should be weighted more heavily in
        * big danger. */
+      int notzero = city_list_size(pplayer->cities);
+      fc_assert_ret_msg(notzero, "div by zero");
       int tech_cost = research_goal_bulbs_required(presearch, tech_req) / 4
-                      / city_list_size(pplayer->cities);
+                      / notzero;
       int bcost_balanced = build_cost_balanced(punittype);
       /* See description of kill_desire() for info about this variables. */
       int bcost = utype_build_shield_cost(pcity, punittype);

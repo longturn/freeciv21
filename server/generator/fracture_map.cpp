@@ -282,6 +282,7 @@ static int local_ave_elevation(struct tile *ptile)
     n++;
   }
   square_iterate_end;
+  fc_assert_ret_val(n, 0);
   ele /= n;
 
   return ele;

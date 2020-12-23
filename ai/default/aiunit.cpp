@@ -32,12 +32,12 @@
 #include "government.h"
 #include "map.h"
 #include "movement.h"
+#include "nation.h"
 #include "packets.h"
 #include "specialist.h"
 #include "traderoutes.h"
 #include "unit.h"
 #include "unitlist.h"
-#include "nation.h"
 
 /* common/aicore */
 #include "caravan.h"
@@ -653,13 +653,12 @@ static void dai_military_bodyguard(struct ai_type *ait,
       int me2them = real_map_distance(unit_tile(punit), unit_tile(aunit));
       int me2goal = real_map_distance(unit_tile(punit), aunit->goto_tile);
       int them2goal = real_map_distance(unit_tile(aunit), aunit->goto_tile);
-
+      int unit_mv_rate = unit_move_rate(punit);
+      fc_assert_ret_msg(unit_mv_rate, "div by zero");
       if (me2goal < me2them
-          || (me2goal / unit_move_rate(punit)
-                  < them2goal / unit_move_rate(aunit)
-              && me2goal / unit_move_rate(punit)
-                     < me2them / unit_move_rate(punit)
-              && unit_move_rate(punit) > unit_move_rate(aunit))) {
+          || (me2goal / unit_mv_rate < them2goal / unit_move_rate(aunit)
+              && me2goal / unit_mv_rate < me2them / unit_mv_rate
+              && unit_mv_rate > unit_move_rate(aunit))) {
         ptile = aunit->goto_tile;
       } else {
         ptile = unit_tile(aunit);
@@ -778,7 +777,9 @@ int look_for_charge(struct ai_type *ait, struct player *pplayer,
         /* Reduce want based on move cost. We can't do this for
          * transports since they move around all the time, leading
          * to hillarious flip-flops. */
-        def >>= move_cost / (2 * unit_move_rate(punit));
+        int notzero = 2 * unit_move_rate(punit);
+        fc_assert_ret_val(notzero, 0);
+        def >>= move_cost / notzero;
       }
       if (def > best_def) {
         *aunit = buddy;
