@@ -9,7 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#include <algorithm>
+#include <cmath>
 #include <vector>
 
 // Qt
