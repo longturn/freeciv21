@@ -827,7 +827,7 @@ const char *move_points_text_full(int mp, bool reduce, const char *prefix,
     }
     if (mp < SINGLE_MOVE) {
       /* Fractional move points */
-      str += QStringLiteral("%s%d/%d").arg(
+      str += QStringLiteral("%1%2/%3").arg(
           prefix, QString::number((mp % SINGLE_MOVE) / cancel),
           QString::number(SINGLE_MOVE / cancel));
     } else {
