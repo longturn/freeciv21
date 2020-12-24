@@ -1389,7 +1389,7 @@ const QString action_id_name_translation(action_id act_id)
  **************************************************************************/
 static const char *action_prob_to_text(const struct act_prob prob)
 {
-  static struct astring chance = ASTRING_INIT;
+  QString chance;
 
   /* How to interpret action probabilities like prob is documented in
    * fc_types.h */
@@ -1403,18 +1403,12 @@ static const char *action_prob_to_text(const struct act_prob prob)
   if (prob.min == prob.max) {
     /* Only one probability in range. */
 
-    /* TRANS: the probability that an action will succeed. Given in
-     * percentage. Resolution is 0.5%. */
-    astr_set(&chance, _("%.1f%%"), (double) prob.max / ACTPROB_VAL_1_PCT);
+    chance = QString(_("%1%")).arg((int) prob.max / ACTPROB_VAL_1_PCT);
   } else {
-    /* TRANS: the interval (end points included) where the probability of
-     * the action's success is. Given in percentage. Resolution is 0.5%. */
-    astr_set(&chance, _("[%.1f%%, %.1f%%]"),
-             (double) prob.min / ACTPROB_VAL_1_PCT,
-             (double) prob.max / ACTPROB_VAL_1_PCT);
+    chance = QString(_("[%1% - %2%]")).arg((int) prob.min / ACTPROB_VAL_1_PCT).arg((int) prob.max / ACTPROB_VAL_1_PCT);
   }
 
-  return astr_str(&chance);
+  return qUtf8Printable(chance);
 }
 
 /**********************************************************************/ /**
@@ -1520,29 +1514,25 @@ const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
  **************************************************************************/
 const char *action_prob_explain(const struct act_prob prob)
 {
-  static struct astring tool_tip = ASTRING_INIT;
+  QString tool_tip;
 
   if (action_prob_is_signal(prob)) {
     fc_assert(action_prob_not_impl(prob));
-
-    /* Missing server support. No in game action will change this. */
-    astr_clear(&tool_tip);
   } else if (prob.min == prob.max) {
     /* TRANS: action probability of success. Given in percentage.
      * Resolution is 0.5%. */
-    astr_set(&tool_tip, _("The probability of success is %.1f%%."),
-             (double) prob.max / ACTPROB_VAL_1_PCT);
+    tool_tip = QString(_("The probability of success is %.1f%%.")).arg((double) prob.max / ACTPROB_VAL_1_PCT);
   } else {
-    astr_set(&tool_tip,
+    tool_tip = QString(
              /* TRANS: action probability interval (min to max). Given in
               * percentage. Resolution is 0.5%. The string at the end is
               * shown when the interval is wide enough to not be caused by
               * rounding. It explains that the interval is imprecise because
               * the player doesn't have enough information. */
-             _("The probability of success is %.1f%%, %.1f%% or somewhere"
-               " in between.%s"),
-             (double) prob.min / ACTPROB_VAL_1_PCT,
-             (double) prob.max / ACTPROB_VAL_1_PCT,
+             _("The probability of success is %1%, %2% or somewhere"
+               " in between.%3")).arg(
+             (double) prob.min / ACTPROB_VAL_1_PCT).arg(
+             (double) prob.max / ACTPROB_VAL_1_PCT).arg(
              prob.max - prob.min > 1
                  ?
                  /* TRANS: explanation used in the action probability tooltip
@@ -1552,7 +1542,7 @@ const char *action_prob_explain(const struct act_prob prob)
                  : "");
   }
 
-  return astr_str(&tool_tip);
+  return qUtf8Printable(tool_tip);
 }
 
 /**********************************************************************/ /**

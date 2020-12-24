@@ -317,7 +317,7 @@ bool check_for_game_over(void)
   if (winners) {
     notify_conn(game.est_connections, NULL, E_GAME_END, ftc_server,
                 /* TRANS: There can be several winners listed */
-                _("Scenario victory to %1."), qUtf8Printable(str));
+                _("Scenario victory to %s."), qUtf8Printable(str));
     return true;
   }
 
@@ -445,7 +445,7 @@ bool check_for_game_over(void)
         player_list_iterate_end;
         notify_conn(game.est_connections, NULL, E_GAME_END, ftc_server,
                     /* TRANS: There can be several winners listed */
-                    _("Allied victory to %1."), qUtf8Printable(str));
+                    _("Allied victory to %s."), qUtf8Printable(str));
         player_list_destroy(winner_list);
         return true;
       }

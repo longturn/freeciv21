@@ -232,7 +232,7 @@ char *ai_level_help(const char *cmdname)
 {
   /* Translate cmdname to AI level. */
   enum ai_level level = ai_level_by_name(cmdname, fc_strcasecmp);
-  struct astring help = ASTRING_INIT, features = ASTRING_INIT;
+  QString help, features;
   bv_handicap handicaps;
   int h;
 
@@ -240,17 +240,15 @@ char *ai_level_help(const char *cmdname)
 
   if (level == AI_LEVEL_AWAY) {
     /* Special case */
-    astr_add_line(&help,
-                  _("Toggles 'away' mode for your nation. In away mode, "
+    help = _("Toggles 'away' mode for your nation. In away mode, "
                     "the AI will govern your nation but make only minimal "
-                    "changes."));
+                    "changes.");
   } else {
     /* TRANS: %s is a (translated) skill level ('Novice', 'Hard', etc) */
-    astr_add_line(&help,
-                  _("With no arguments, sets all AI players to skill level "
-                    "'%s', and sets the default level for any new AI "
-                    "players to '%s'. With an argument, sets the skill "
-                    "level for the specified player only."),
+    help =  QString(_("With no arguments, sets all AI players to skill level "
+                    "'%1', and sets the default level for any new AI "
+                    "players to '%2'. With an argument, sets the skill "
+                    "level for the specified player only.")).arg(
                   _(ai_level_name(level)), _(ai_level_name(level)));
   }
 
@@ -261,56 +259,45 @@ char *ai_level_help(const char *cmdname)
         handicap_desc(static_cast<handicap_type>(h), &inverted);
 
     if (desc && BV_ISSET(handicaps, h) != inverted) {
-      astr_add_line(&features, "%s", desc);
+      features += desc;
     }
   }
 
   if (fuzzy_of_skill_level(level) > 0) {
-    astr_add_line(&features, _("Has erratic decision-making."));
+    features += _("Has erratic decision-making.");
   }
   {
     int science = science_cost_of_skill_level(level);
 
     if (science != 100) {
-      astr_add_line(&features, _("Research takes %d%% as long as usual."),
-                    science);
+      features += QString(_("Research takes %1%% as long as usual.")).arg(science);
     }
   }
   if (expansionism_of_skill_level(level) < 100) {
-    astr_add_line(&features, _("Has reduced appetite for expansion."));
+    features += _("Has reduced appetite for expansion.");
   } /* no level currently has >100, so no string yet */
 
   switch (level) {
   case AI_LEVEL_HANDICAPPED:
     /* TRANS: describing an AI skill level */
-    astr_add_line(&help,
-                  _("\nThis skill level has the same features as 'Novice', "
-                    "but may suffer additional ruleset-defined penalties."));
+    help +=   _("\nThis skill level has the same features as 'Novice', "
+                    "but may suffer additional ruleset-defined penalties.") + qendl();
     break;
   case AI_LEVEL_CHEATING:
     /* TRANS: describing an AI skill level */
-    astr_add_line(&help,
-                  _("\nThis skill level has the same features as 'Hard', "
-                    "but may enjoy additional ruleset-defined bonuses."));
+    help += _("\nThis skill level has the same features as 'Hard', "
+                    "but may enjoy additional ruleset-defined bonuses.") + qendl();
     break;
   default:
-    /* In principle this text should vary, but all current skill levels
-     * have _some_ feature text */
-    fc_assert(!astr_empty(&features));
     /* TRANS: describing an AI skill level */
-    astr_add_line(&help,
-                  _("\nThis skill level's features include the following. "
+    help += _("\nThis skill level's features include the following. "
                     "(Some rulesets may define extra level-specific "
-                    "behavior.)"));
+                    "behavior.)") + qendl();
     break;
   }
 
-  if (!astr_empty(&features)) {
-    astr_add_line(&help, "\n%s", astr_str(&features));
-  }
-
-  astr_free(&features);
-  return astr_to_str(&help);
+  help += features;
+  return const_cast<char*>(qUtf8Printable(help));
 }
 
 /**********************************************************************/ /**
