@@ -281,19 +281,19 @@ struct msum {
   /* Description; compared for duplicate-merging.
    * Both of these are maintained/compared until the net 'value' is known;
    * then posdesc is used if value>=0, negdesc if value<0 */
-  char *posdesc, *negdesc;
+  QString posdesc, negdesc;
   /* Whether posdesc is printed for total==0 */
   bool suppress_if_zero;
   /* An auxiliary value that is also accumulated, but not tested */
   double aux;
   /* ...and the format string for the net aux value (appended to *desc) */
-  const char *auxfmt;
+  QString auxfmt;
 } * sums;
 
 struct city_sum {
-  const char *format;
+  QString format;
   size_t n;
-  msum *sums;
+  QVector<msum> sums;
 };
 
 /**********************************************************************/ /**
@@ -308,7 +308,7 @@ static struct city_sum *city_sum_new(const char *format)
 
   sum->format = format;
   sum->n = 0;
-  sum->sums = NULL;
+  sum->sums.clear();
 
   return sum;
 }
@@ -319,31 +319,26 @@ static struct city_sum *city_sum_new(const char *format)
    'value' is added to the existing entry, else a new one is appended.
  **************************************************************************/
 static void city_sum_add_real(struct city_sum *sum, double value,
-                              bool suppress_if_zero, const char *auxfmt,
-                              double aux, char *posdesc, char *negdesc)
+                              bool suppress_if_zero, const QString auxfmt,
+                              double aux, QString posdesc, QString negdesc)
 {
   size_t i;
 
   /* likely to lead to quadratic behaviour, but who cares: */
   for (i = 0; i < sum->n; i++) {
-    fc_assert(sum->sums != NULL);
-    if ((strcmp(sum->sums[i].posdesc, posdesc) == 0)
-        && (strcmp(sum->sums[i].negdesc, negdesc) == 0)
-        && ((sum->sums[i].auxfmt == auxfmt)
-            || (strcmp(sum->sums[i].auxfmt, auxfmt) == 0))
+    if (sum->sums[i].posdesc == posdesc && sum->sums[i].negdesc == negdesc
+        && (sum->sums[i].auxfmt == auxfmt || sum->sums[i].auxfmt == auxfmt)
         && sum->sums[i].suppress_if_zero == suppress_if_zero) {
       /* Looks like we already have an entry like this. Accumulate values. */
       sum->sums[i].value += value;
       sum->sums[i].aux += aux;
-      FC_FREE(posdesc);
-      FCPP_FREE(negdesc);
+
       return;
     }
   }
 
   /* Didn't find description already, so add it to the end. */
-  sum->sums = static_cast<msum *>(
-      fc_realloc(sum->sums, (sum->n + 1) * sizeof(sum->sums[0])));
+  sum->sums.resize(sum->n + 1);
   sum->sums[sum->n].value = value;
   sum->sums[sum->n].posdesc = posdesc;
   sum->sums[sum->n].negdesc = negdesc;
@@ -373,17 +368,14 @@ static void fc__attribute((__format__(__printf__, 6, 8)))
                               const char *negfmt, ...)
 {
   va_list args;
-  struct astring astr = ASTRING_INIT;
-  char *posdesc, *negdesc;
 
   /* Format both descriptions */
   va_start(args, negfmt); /* sic -- arguments follow negfmt */
-  astr_vadd(&astr, posfmt, args);
-  posdesc = astr_to_str(&astr);
+  auto posdesc = QString::vasprintf(posfmt, args);
   va_end(args);
-  va_start(args, negfmt);
-  astr_vadd(&astr, negfmt, args);
-  negdesc = astr_to_str(&astr);
+
+  va_start(args, negfmt); /* sic -- arguments follow negfmt */
+  auto negdesc = QString::vasprintf(negfmt, args);
   va_end(args);
 
   city_sum_add_real(sum, value, suppress_if_zero, auxfmt, aux, posdesc,
@@ -403,17 +395,14 @@ static void fc__attribute((__format__(__printf__, 3, 4)))
                      ...)
 {
   va_list args;
-  struct astring astr = ASTRING_INIT;
-  char *desc;
 
   /* Format description (same used for positive or negative net value) */
   va_start(args, descfmt);
-  astr_vadd(&astr, descfmt, args);
-  desc = astr_to_str(&astr);
+  auto desc = QString::vasprintf(descfmt, args);
   va_end(args);
 
   /* Descriptions will be freed individually, so need to strdup */
-  city_sum_add_real(sum, value, false, NULL, 0, desc, fc_strdup(desc));
+  city_sum_add_real(sum, value, false, NULL, 0, desc, desc);
 }
 
 /**********************************************************************/ /**
@@ -429,17 +418,14 @@ static void fc__attribute((__format__(__printf__, 3, 4)))
                                 const char *descfmt, ...)
 {
   va_list args;
-  struct astring astr = ASTRING_INIT;
-  char *desc;
 
   /* Format description (same used for positive or negative net value) */
   va_start(args, descfmt);
-  astr_vadd(&astr, descfmt, args);
-  desc = astr_to_str(&astr);
+  auto desc = QString::vasprintf(descfmt, args);
   va_end(args);
 
   /* Descriptions will be freed individually, so need to strdup */
-  city_sum_add_real(sum, value, true, NULL, 0, desc, fc_strdup(desc));
+  city_sum_add_real(sum, value, true, NULL, 0, desc, desc);
 }
 
 /**********************************************************************/ /**
@@ -510,23 +496,22 @@ static void fc__attribute((__format__(__printf__, 5, 6)))
   for (i = 0; i < sum->n; i++) {
     if (!sum->sums[i].suppress_if_zero
         || city_sum_compare(sum->sums[i].value, 0) != 0) {
-      cat_snprintf(buf, bufsz, sum->format, sum->sums[i].value,
-                   (sum->sums[i].value < 0) ? sum->sums[i].negdesc
-                                            : sum->sums[i].posdesc);
-      if (sum->sums[i].auxfmt) {
-        cat_snprintf(buf, bufsz, sum->sums[i].auxfmt, sum->sums[i].aux);
+      cat_snprintf(
+          buf, bufsz, qUtf8Printable(sum->format), sum->sums[i].value,
+          (sum->sums[i].value < 0) ? qUtf8Printable(sum->sums[i].negdesc)
+                                   : qUtf8Printable(sum->sums[i].posdesc));
+      if (!sum->sums[i].auxfmt.isEmpty()) {
+        cat_snprintf(buf, bufsz, qUtf8Printable(sum->sums[i].auxfmt),
+                     sum->sums[i].aux);
       }
       cat_snprintf(buf, bufsz, "\n");
     }
-    FC_FREE(sum->sums[i].posdesc);
-    FC_FREE(sum->sums[i].negdesc);
   }
 
   va_start(args, totalfmt);
   fc_vsnprintf(buf + qstrlen(buf), bufsz - qstrlen(buf), totalfmt, args);
   va_end(args);
 
-  free(sum->sums);
   FC_FREE(sum);
 }
 

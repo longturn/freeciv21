@@ -682,7 +682,7 @@ struct unit_type *best_role_unit_for_player(const struct player *pplayer,
                                             int role);
 struct unit_type *first_role_unit_for_player(const struct player *pplayer,
                                              int role);
-bool role_units_translations(struct astring *astr, int flag, bool alts);
+bool role_units_translations(QString &astr, int flag, bool alts);
 
 /* General unit class routines */
 Unit_Class_id uclass_count(void);

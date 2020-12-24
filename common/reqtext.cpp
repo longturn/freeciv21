@@ -1339,23 +1339,22 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
   case VUT_UTFLAG:
     switch (preq->range) {
     case REQ_RANGE_LOCAL: {
-      struct astring astr = ASTRING_INIT;
+      QString roles;
 
       /* Unit type flags mean nothing to users. Explicitly list the unit
        * types with those flags. */
-      if (role_units_translations(&astr, preq->source.value.unitflag,
+      if (role_units_translations(roles, preq->source.value.unitflag,
                                   true)) {
         fc_strlcat(buf, prefix, bufsz);
         if (preq->present) {
           /* TRANS: %s is a list of unit types separated by "or". */
           cat_snprintf(buf, bufsz, Q_("?ulist:Requires %s."),
-                       astr_str(&astr));
+                       qUtf8Printable(roles));
         } else {
           /* TRANS: %s is a list of unit types separated by "or". */
           cat_snprintf(buf, bufsz, Q_("?ulist:Does not apply to %s."),
-                       astr_str(&astr));
+                       qUtf8Printable(roles));
         }
-        astr_free(&astr);
         return true;
       }
     } break;

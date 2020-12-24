@@ -18,7 +18,6 @@
 #include <QSet>
 #include <QTimer>
 /* utility */
-#include "astring.h"
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
@@ -1133,20 +1132,16 @@ void request_unit_goto(enum unit_orders last_order, action_id act_id,
       if (!unit_can_do_action(punit, act_id)) {
         /* This unit can't perform the action specified in the last
          * order. */
+        QString roles;
 
-        struct astring astr = ASTRING_INIT;
-
-        if (role_units_translations(&astr, action_id_get_role(act_id),
+        if (role_units_translations(roles, action_id_get_role(act_id),
                                     true)) {
           /* ...but other units can perform it. */
-
           create_event(unit_tile(punit), E_BAD_COMMAND, ftc_client,
                        /* TRANS: Only Nuclear or ICBM can do Explode
                         * Nuclear. */
-                       _("Only %s can do %s."), astr_str(&astr),
+                       _("Only %s can do %s."), qUtf8Printable(roles),
                        action_id_name_translation(act_id));
-
-          astr_free(&astr);
         } else {
           create_event(unit_tile(punit), E_BAD_COMMAND, ftc_client,
                        /* TRANS: Spy can't do Explode Nuclear. */

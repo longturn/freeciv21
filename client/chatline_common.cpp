@@ -20,7 +20,6 @@
 #include <string.h>
 
 /* utility */
-#include "astring.h"
 #include "fcintl.h"
 #include "fcthread.h"
 #include "log.h"
