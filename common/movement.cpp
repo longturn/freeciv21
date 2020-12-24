@@ -799,10 +799,11 @@ const char *move_points_text_full(int mp, bool reduce, const char *prefix,
     /* (Also used when SINGLE_MOVE == 0, to avoid dividing by zero, which is
      * important for client before ruleset has been received. Doesn't much
      * matter what we print in this case.) */
-    str = QString("%1").arg(none ? none : "");
+    str = QStringLiteral("%1").arg(none ? none : "");
   } else if ((mp % SINGLE_MOVE) == 0) {
     /* Integer move points */
-    str = QString("%1%2%3").arg(prefix, QString::number(mp / SINGLE_MOVE),  "");
+    str = QStringLiteral("%1%2%3").arg(
+        prefix, QString::number(mp / SINGLE_MOVE), "");
   } else {
     /* Fractional part */
     int cancel;
@@ -826,12 +827,15 @@ const char *move_points_text_full(int mp, bool reduce, const char *prefix,
     }
     if (mp < SINGLE_MOVE) {
       /* Fractional move points */
-      str += QString("%s%d/%d").arg(prefix,  QString::number((mp % SINGLE_MOVE) / cancel),
-               QString::number(SINGLE_MOVE / cancel));
+      str += QStringLiteral("%s%d/%d").arg(
+          prefix, QString::number((mp % SINGLE_MOVE) / cancel),
+          QString::number(SINGLE_MOVE / cancel));
     } else {
       /* Integer + fractional move points */
-      str += QString("%1%2 %3/%4").arg(prefix, QString::number(mp / SINGLE_MOVE),
-               QString::number((mp % SINGLE_MOVE) / cancel),  QString::number(SINGLE_MOVE / cancel));
+      str += QStringLiteral("%1%2 %3/%4")
+                 .arg(prefix, QString::number(mp / SINGLE_MOVE),
+                      QString::number((mp % SINGLE_MOVE) / cancel),
+                      QString::number(SINGLE_MOVE / cancel));
     }
   }
   return qUtf8Printable(str);

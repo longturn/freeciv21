@@ -1405,7 +1405,9 @@ static const char *action_prob_to_text(const struct act_prob prob)
 
     chance = QString(_("%1%")).arg((int) prob.max / ACTPROB_VAL_1_PCT);
   } else {
-    chance = QString(_("[%1% - %2%]")).arg((int) prob.min / ACTPROB_VAL_1_PCT).arg((int) prob.max / ACTPROB_VAL_1_PCT);
+    chance = QString(_("[%1% - %2%]"))
+                 .arg((int) prob.min / ACTPROB_VAL_1_PCT)
+                 .arg((int) prob.max / ACTPROB_VAL_1_PCT);
   }
 
   return qUtf8Printable(chance);
@@ -1419,8 +1421,8 @@ static const char *action_prob_to_text(const struct act_prob prob)
    A custom text can be inserted before the probability information.
  **************************************************************************/
 const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
-                                   const struct act_prob prob,
-                                   const QString custom)
+                                     const struct act_prob prob,
+                                     const QString custom)
 {
   QString str, chance;
 
@@ -1441,7 +1443,8 @@ const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
     fc_assert(custom == NULL || custom[0] == '\0');
 
     /* Make the best of what is known */
-    str = QString(_("%1%2 (name may be wrong)")).arg(mnemonic, action_id_rule_name(act_id));
+    str = QString(_("%1%2 (name may be wrong)"))
+              .arg(mnemonic, action_id_rule_name(act_id));
 
     /* Return the guess. */
     return str;
@@ -1493,12 +1496,12 @@ const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
   {
     QString fmtstr;
     QString ui_name = _(actions[act_id]->ui_name);
-    int k = ui_name.indexOf("%s");
+    int k = ui_name.indexOf(QLatin1String("%s"));
     if (k >= 0) {
       ui_name = ui_name.remove(k, 2);
     }
-    ui_name.replace("%s", "%1");
-    fmtstr += QString("%1").arg(ui_name);
+    ui_name.replace(QLatin1String("%s"), QLatin1String("%1"));
+    fmtstr += QStringLiteral("%1").arg(ui_name);
 
     /* Use the modified format string */
     str = QString(fmtstr).arg(chance);
@@ -1521,25 +1524,27 @@ const char *action_prob_explain(const struct act_prob prob)
   } else if (prob.min == prob.max) {
     /* TRANS: action probability of success. Given in percentage.
      * Resolution is 0.5%. */
-    tool_tip = QString(_("The probability of success is %.1f%%.")).arg((double) prob.max / ACTPROB_VAL_1_PCT);
+    tool_tip = QString(_("The probability of success is %.1f%%."))
+                   .arg((double) prob.max / ACTPROB_VAL_1_PCT);
   } else {
-    tool_tip = QString(
-             /* TRANS: action probability interval (min to max). Given in
-              * percentage. Resolution is 0.5%. The string at the end is
-              * shown when the interval is wide enough to not be caused by
-              * rounding. It explains that the interval is imprecise because
-              * the player doesn't have enough information. */
-             _("The probability of success is %1%, %2% or somewhere"
-               " in between.%3")).arg(
-             (double) prob.min / ACTPROB_VAL_1_PCT).arg(
-             (double) prob.max / ACTPROB_VAL_1_PCT).arg(
-             prob.max - prob.min > 1
-                 ?
-                 /* TRANS: explanation used in the action probability tooltip
-                  * above. Preserve leading space. */
-                 _(" (This is the most precise interval I can calculate "
-                   "given the information our nation has access to.)")
-                 : "");
+    tool_tip =
+        QString(
+            /* TRANS: action probability interval (min to max). Given in
+             * percentage. Resolution is 0.5%. The string at the end is
+             * shown when the interval is wide enough to not be caused by
+             * rounding. It explains that the interval is imprecise because
+             * the player doesn't have enough information. */
+            _("The probability of success is %1%, %2% or somewhere"
+              " in between.%3"))
+            .arg((double) prob.min / ACTPROB_VAL_1_PCT)
+            .arg((double) prob.max / ACTPROB_VAL_1_PCT)
+            .arg(prob.max - prob.min > 1
+                     ?
+                     /* TRANS: explanation used in the action probability
+                      * tooltip above. Preserve leading space. */
+                     _(" (This is the most precise interval I can calculate "
+                       "given the information our nation has access to.)")
+                     : "");
   }
 
   return qUtf8Printable(tool_tip);

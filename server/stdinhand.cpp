@@ -5535,7 +5535,7 @@ static const char *delegate_player_str(struct player *pplayer, bool observer)
     if (observer) {
       buf = QString(_("%1 (observer)")).arg(player_name(pplayer));
     } else {
-      buf = QString("%1").arg(player_name(pplayer));
+      buf = QStringLiteral("%1").arg(player_name(pplayer));
     }
   } else if (observer) {
     buf = _("global observer");

@@ -581,7 +581,7 @@ int client_main(int argc, char *argv[])
   }
 
   audio_real_init(sound_set_name, music_set_name, sound_plugin_name);
-  start_menu_music("music_menu", NULL);
+  start_menu_music(QStringLiteral("music_menu"), NULL);
 
   editor_init();
 
@@ -767,7 +767,7 @@ void set_client_state(enum client_states newstate)
 
     if (!is_client_quitting()) {
       /* Back to menu */
-      start_menu_music("music_menu", NULL);
+      start_menu_music(QStringLiteral("music_menu"), NULL);
     }
   }
 

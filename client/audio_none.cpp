@@ -45,7 +45,7 @@ static void none_audio_wait(void) {}
 static bool none_audio_play(const QString &tag, const QString &fullpath,
                             bool repeat, audio_finished_callback cb)
 {
-  if (tag == "e_turn_bell") {
+  if (tag == QLatin1String("e_turn_bell")) {
     sound_bell();
     return true;
   }

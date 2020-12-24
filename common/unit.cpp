@@ -1117,15 +1117,17 @@ void unit_activity_astr(const struct unit *punit, QString &s)
       /* Add in two parts as move_points_text() returns ptr to static
        * End result: "Moves: (fuel)moves_left" */
       s = s
-          + QString("%1: (%2)")
+          + QStringLiteral("%1: (%2)")
                 .arg(_("Moves"),
                      move_points_text((rate * f) + punit->moves_left, false))
           + qendl();
-      s = s + QString("%1").arg(move_points_text(punit->moves_left, false));
+      s = s
+          + QStringLiteral("%1").arg(
+              move_points_text(punit->moves_left, false));
     } else {
       s = s
-          + QString("%1: %2").arg(_("Moves"),
-                                  move_points_text(punit->moves_left, false))
+          + QStringLiteral("%1: %2").arg(
+              _("Moves"), move_points_text(punit->moves_left, false))
           + qendl();
     }
     return;
@@ -1144,16 +1146,17 @@ void unit_activity_astr(const struct unit *punit, QString &s)
   case ACTIVITY_CONVERT:
   case ACTIVITY_CULTIVATE:
   case ACTIVITY_PLANT:
-    s = s + QString("%1").arg(get_activity_text(punit->activity)) + qendl();
+    s = s + QStringLiteral("%1").arg(get_activity_text(punit->activity))
+        + qendl();
     return;
   case ACTIVITY_MINE:
   case ACTIVITY_IRRIGATE:
     if (punit->activity_target == NULL) {
-      s = s + QString("%1").arg(get_activity_text(punit->activity))
+      s = s + QStringLiteral("%1").arg(get_activity_text(punit->activity))
           + qendl();
     } else {
       s = s
-          + QString("Building %1")
+          + QStringLiteral("Building %1")
                 .arg(extra_name_translation(punit->activity_target))
           + qendl();
     }
@@ -1161,25 +1164,25 @@ void unit_activity_astr(const struct unit *punit, QString &s)
   case ACTIVITY_PILLAGE:
     if (punit->activity_target != NULL) {
       s = s
-          + QString("%1: %2").arg(
+          + QStringLiteral("%1: %2").arg(
               get_activity_text(punit->activity),
               extra_name_translation(punit->activity_target))
           + qendl();
     } else {
-      s = s + QString("%1").arg(get_activity_text(punit->activity))
+      s = s + QStringLiteral("%1").arg(get_activity_text(punit->activity))
           + qendl();
     }
     return;
   case ACTIVITY_BASE:
     s = s
-        + QString("%1: %2").arg(
+        + QStringLiteral("%1: %2").arg(
             get_activity_text(punit->activity),
             extra_name_translation(punit->activity_target))
         + qendl();
     return;
   case ACTIVITY_GEN_ROAD:
     s = s
-        + QString("%1: %2").arg(
+        + QStringLiteral("%1: %2").arg(
             get_activity_text(punit->activity),
             extra_name_translation(punit->activity_target))
         + qendl();
@@ -1207,7 +1210,7 @@ void unit_upkeep_astr(const struct unit *punit, QString &s)
   }
 
   s = s
-      + QString("%1 %2/%3/%4")
+      + QStringLiteral("%1 %2/%3/%4")
             .arg(_("Food/Shield/Gold:"),
                  QString::number(punit->upkeep[O_FOOD]),
                  QString::number(punit->upkeep[O_SHIELD]),

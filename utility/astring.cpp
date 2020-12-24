@@ -271,7 +271,6 @@ void astr_break_lines(struct astring *astr, size_t desired_len)
   fc_break_lines(astr->str, desired_len);
 }
 
-
 /************************************************************************/ /**
    Copy one astring in another.
  ****************************************************************************/
@@ -329,7 +328,4 @@ QString strvec_to_and_list(const QVector<QString> &psv)
   }
 }
 
-QString qendl()
-{
-  return QString("\n");
-}
+QString qendl() { return QStringLiteral("\n"); }
