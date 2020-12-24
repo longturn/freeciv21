@@ -970,7 +970,7 @@ void cityIconInfoLabel::updateText()
   labs[11].setText(grow_time);
 }
 
-void cityIconInfoLabel::updateTooltip(int nr, QString tooltipText)
+void cityIconInfoLabel::updateTooltip(int nr, const QString &tooltipText)
 {
   labs[nr].setToolTip(tooltipText);
   labs[nr + 1].setToolTip(tooltipText);

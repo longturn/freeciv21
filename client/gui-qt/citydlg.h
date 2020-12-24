@@ -299,7 +299,7 @@ public:
   cityIconInfoLabel(QWidget *parent = 0);
   void setCity(struct city *pcity);
   void updateText();
-  void updateTooltip(int , QString);
+  void updateTooltip(int , const QString&);
 private:
   void initLayout();
   struct city *pcity;
