@@ -8,6 +8,8 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
+#include <memory>
+
 // Qt
 #include <QMouseEvent>
 #include <QPainter>
@@ -18,6 +20,7 @@
 #include "game.h"
 #include "map.h"
 // client
+#include "citybar.h"
 #include "citydlg_g.h"
 #include "client_main.h"
 #include "climap.h"
@@ -724,119 +727,6 @@ void qtg_start_turn()
 }
 
 /************************************************************************/ /**
-   Draw a "small" city bar for the city.  This is a subcase of show_city_desc
-   (see that function for more info) for tilesets that do not have a full
-   city bar.
- ****************************************************************************/
-static void show_small_citybar(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                               struct city *pcity, int *width, int *height)
-{
-  static char name[512], growth[32], prod[512], trade_routes[32];
-  enum color_std growth_color;
-  enum color_std production_color;
-  /* trade_routes_color initialized just to get rid off gcc warning
-   * on optimization level 3 when it misdiagnoses that it would be used
-   * uninitialized otherwise. Funny thing here is that warning would
-   * go away also by *not* setting it to values other than
-   * COLOR_MAPVIEW_CITYTEXT in get_city_mapview_trade_routes() */
-  enum color_std trade_routes_color = COLOR_MAPVIEW_CITYTEXT;
-  struct {
-    int x, y, w, h;
-  } name_rect = {0, 0, 0, 0}, growth_rect = {0, 0, 0, 0},
-    prod_rect = {0, 0, 0, 0},
-    trade_routes_rect = {
-        0,
-    };
-  int total_width, total_height;
-  int spacer_width = 0;
-  const bool can_see_inside =
-      (client_is_global_observer() || city_owner(pcity) == client_player());
-
-  *width = *height = 0;
-
-  canvas_x += tileset_tile_width(tileset) / 2;
-  canvas_y += tileset_citybar_offset_y(tileset);
-
-  get_city_mapview_name_and_growth(pcity, name, sizeof(name), growth,
-                                   sizeof(growth), &growth_color,
-                                   &production_color);
-
-  if (gui_options.draw_city_names) {
-    int drawposx;
-
-    /* HACK: put a character's worth of space between the two
-     * strings if needed. */
-    get_text_size(&spacer_width, nullptr, FONT_CITY_NAME,
-                  QStringLiteral("M"));
-
-    total_width = 0;
-    total_height = 0;
-
-    get_text_size(&name_rect.w, &name_rect.h, FONT_CITY_NAME, name);
-    total_width += name_rect.w;
-    total_height = qMax(total_height, name_rect.h);
-
-    if (gui_options.draw_city_growth && can_see_inside) {
-      get_text_size(&growth_rect.w, &growth_rect.h, FONT_CITY_PROD, growth);
-      total_width += spacer_width + growth_rect.w;
-      total_height = qMax(total_height, growth_rect.h);
-    }
-
-    if (gui_options.draw_city_trade_routes && can_see_inside) {
-      get_city_mapview_trade_routes(
-          pcity, trade_routes, sizeof(trade_routes), &trade_routes_color);
-      get_text_size(&trade_routes_rect.w, &trade_routes_rect.h,
-                    FONT_CITY_PROD, trade_routes);
-      total_width += spacer_width + trade_routes_rect.w;
-      total_height = qMax(total_height, trade_routes_rect.h);
-    }
-
-    drawposx = canvas_x;
-    drawposx -= total_width / 2;
-    canvas_put_text(pcanvas, drawposx, canvas_y, FONT_CITY_NAME,
-                    get_color(tileset, COLOR_MAPVIEW_CITYTEXT), name);
-    drawposx += name_rect.w;
-
-    if (gui_options.draw_city_growth && can_see_inside) {
-      drawposx += spacer_width;
-      canvas_put_text(
-          pcanvas, drawposx, (canvas_y + total_height - growth_rect.h),
-          FONT_CITY_PROD, get_color(tileset, growth_color), growth);
-      drawposx += growth_rect.w;
-    }
-
-    if (gui_options.draw_city_trade_routes && can_see_inside) {
-      drawposx += spacer_width;
-      canvas_put_text(pcanvas, drawposx,
-                      (canvas_y + total_height - trade_routes_rect.h),
-                      FONT_CITY_PROD, get_color(tileset, trade_routes_color),
-                      trade_routes);
-      drawposx += trade_routes_rect.w;
-    }
-
-    canvas_y += total_height + 3;
-
-    *width = qMax(*width, total_width);
-    *height += total_height + 3;
-  }
-  if (gui_options.draw_city_productions && can_see_inside) {
-    get_city_mapview_production(pcity, prod, sizeof(prod));
-    get_text_size(&prod_rect.w, &prod_rect.h, FONT_CITY_PROD, prod);
-
-    total_width = prod_rect.w;
-    total_height = prod_rect.h;
-
-    canvas_put_text(pcanvas, (canvas_x - total_width / 2), canvas_y,
-                    FONT_CITY_PROD, get_color(tileset, production_color),
-                    prod);
-
-    canvas_y += total_height;
-    *width = qMax(*width, total_width);
-    *height += total_height;
-  }
-}
-
-/************************************************************************/ /**
    Draw a description for the given city.  This description may include the
    name, turns-to-grow, production, and city turns-to-build (depending on
    client options).
@@ -855,9 +745,16 @@ void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
     return;
   }
 
-  if (gui_options.draw_full_citybar) {
-    draw_full_city_bar(pcity, pcanvas, canvas_x, canvas_y, width, height);
-  } else {
-    show_small_citybar(pcanvas, canvas_x, canvas_y, pcity, width, height);
-  }
+  QPainter p;
+  p.begin(pcanvas);
+
+  canvas_x += tileset_tile_width(tileset) / 2;
+  canvas_y += tileset_citybar_offset_y(tileset);
+
+  auto painter = citybar_painter::current();
+  auto rect = painter->paint(p, QPointF(canvas_x, canvas_y), pcity);
+  *width = rect.width();
+  *height = rect.height();
+
+  p.end();
 }

@@ -686,11 +686,6 @@ void mr_menu::setup_menus()
   act->setChecked(gui_options.draw_native);
   act->setShortcut(QKeySequence(tr("ctrl+shift+n")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_native_tiles);
-  act = menu->addAction(_("City Full Bar"));
-  act->setCheckable(true);
-  act->setShortcut(shortcut2key(SC_SHOW_FULLBAR));
-  act->setChecked(gui_options.draw_full_citybar);
-  connect(act, &QAction::triggered, this, &mr_menu::slot_fullbar);
   act = menu->addAction(_("City Names"));
   act->setCheckable(true);
   act->setChecked(gui_options.draw_city_names);
@@ -2617,11 +2612,6 @@ void mr_menu::slot_city_production() { key_city_productions_toggle(); }
    Action "SHOW CITY TRADEROUTES"
  **************************************************************************/
 void mr_menu::slot_city_traderoutes() { key_city_trade_routes_toggle(); }
-
-/**********************************************************************/ /**
-   Action "SHOW FULLBAR"
- **************************************************************************/
-void mr_menu::slot_fullbar() { key_city_full_bar_toggle(); }
 
 /**********************************************************************/ /**
    Action "SHOW MAP GRID"

@@ -1532,18 +1532,6 @@ void show_city_descriptions(int canvas_base_x, int canvas_base_y,
   const int offset_y = tileset_citybar_offset_y(tileset);
   int new_max_width = max_desc_width, new_max_height = max_desc_height;
 
-  if (gui_options.draw_full_citybar
-      && !(gui_options.draw_city_names || gui_options.draw_city_productions
-           || gui_options.draw_city_growth)) {
-    return;
-  }
-
-  if (!gui_options.draw_full_citybar
-      && !(gui_options.draw_city_names
-           || gui_options.draw_city_productions)) {
-    return;
-  }
-
   /* A city description is shown below the city.  It has a specified
    * maximum width and height (although these are only estimates).  Thus
    * we need to update some tiles above the mapview and some to the left
@@ -2027,7 +2015,7 @@ static void append_city_buycost_string(const struct city *pcity,
    Find the mapview city production text for the given city, and place it
    into the buffer.
  ****************************************************************************/
-void get_city_mapview_production(struct city *pcity, char *buffer,
+void get_city_mapview_production(const city *pcity, char *buffer,
                                  size_t buffer_len)
 {
   int turns;
@@ -2053,7 +2041,7 @@ void get_city_mapview_production(struct city *pcity, char *buffer,
    into the buffer. Sets 'pcolor' to the preferred color the text should
    be drawn in if it is non-NULL.
  ****************************************************************************/
-void get_city_mapview_trade_routes(struct city *pcity,
+void get_city_mapview_trade_routes(const city *pcity,
                                    char *trade_routes_buffer,
                                    size_t trade_routes_buffer_len,
                                    enum color_std *pcolor)
@@ -2303,7 +2291,7 @@ void unqueue_mapview_updates(bool write_to_screen)
    Fill the two buffers which information about the city which is shown
    below it. It does not take draw_city_names/draw_city_growth into account.
  ****************************************************************************/
-void get_city_mapview_name_and_growth(struct city *pcity, char *name_buffer,
+void get_city_mapview_name_and_growth(const city *pcity, char *name_buffer,
                                       size_t name_buffer_len,
                                       char *growth_buffer,
                                       size_t growth_buffer_len,

@@ -53,6 +53,7 @@ struct client_options {
   char default_tileset_square_name[512];
   char default_tileset_hex_name[512];
   char default_tileset_isohex_name[512];
+  char default_city_bar_style_name[512];
   char default_sound_set_name[512];
   char default_music_set_name[512];
   char default_sound_plugin_name[512];
@@ -140,7 +141,6 @@ struct client_options {
   bool draw_fog_of_war;
   bool draw_borders;
   bool draw_native;
-  bool draw_full_citybar;
   bool draw_unit_shields;
 
   bool player_dlg_show_dead_players;

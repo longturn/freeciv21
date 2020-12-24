@@ -134,7 +134,6 @@ void request_toggle_city_output(void);
 void request_toggle_map_grid(void);
 void request_toggle_map_borders(void);
 void request_toggle_map_native(void);
-void request_toggle_city_full_bar(void);
 void request_toggle_city_names(void);
 void request_toggle_city_growth(void);
 void request_toggle_city_productions(void);
@@ -190,7 +189,6 @@ void action_decision_request(struct unit *actor_unit);
 
 void key_cancel_action(void);
 void key_center_capital(void);
-void key_city_full_bar_toggle(void);
 void key_city_names_toggle(void);
 void key_city_growth_toggle(void);
 void key_city_productions_toggle(void);
