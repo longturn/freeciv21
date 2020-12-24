@@ -318,8 +318,8 @@ static struct city_sum *city_sum_new(const char *format)
    'value' is added to the existing entry, else a new one is appended.
  **************************************************************************/
 static void city_sum_add_real(struct city_sum *sum, double value,
-                              bool suppress_if_zero, const QString auxfmt,
-                              double aux, QString posdesc, QString negdesc)
+                              bool suppress_if_zero, const QString &auxfmt,
+                              double aux, const QString &posdesc, const QString &negdesc)
 {
   size_t i;
 
