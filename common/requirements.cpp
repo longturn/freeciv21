@@ -689,14 +689,12 @@ int universal_number(const struct universal *source)
  **************************************************************************/
 const char *req_to_fstring(const struct requirement *req)
 {
-  struct astring printable_req = ASTRING_INIT;
-
-  astr_set(&printable_req, "%s%s %s %s%s", req->survives ? "surviving " : "",
+  QString printable_req = QString("%1%2 %3 %4%5").arg(req->survives ? "surviving " : "",
            req_range_name(req->range),
            universal_type_rule_name(&req->source), req->present ? "" : "!",
            universal_rule_name(&req->source));
 
-  return astr_str(&printable_req);
+  return qUtf8Printable(printable_req);
 }
 
 /**********************************************************************/ /**

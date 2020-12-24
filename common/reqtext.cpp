@@ -1403,20 +1403,20 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
     break;
 
   case VUT_UCFLAG: {
-    const char **classes = new const char *[uclass_count()];
-    int i = 0;
+    QVector<QString> classes;
+    classes.reserve(uclass_count());
     bool done = false;
-    struct astring list = ASTRING_INIT;
+    QString list;
 
     unit_class_iterate(uclass)
     {
       if (uclass_has_flag(uclass, unit_class_flag_id(
                                       preq->source.value.unitclassflag))) {
-        classes[i++] = uclass_name_translation(uclass);
+        classes.append(uclass_name_translation(uclass));
       }
     }
     unit_class_iterate_end;
-    astr_build_or_list(&list, classes, i);
+    list = strvec_to_or_list(classes);
 
     switch (preq->range) {
     case REQ_RANGE_LOCAL:
@@ -1424,13 +1424,13 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
       if (preq->present) {
         /* TRANS: %s is a list of unit classes separated by "or". */
         cat_snprintf(buf, bufsz, Q_("?uclasslist:Requires %s units."),
-                     astr_str(&list));
+                     qUtf8Printable(list));
       } else {
         /* TRANS: %s is a list of unit classes separated by "or". */
         cat_snprintf(buf, bufsz,
                      Q_("?uclasslist:Does not apply to "
                         "%s units."),
-                     astr_str(&list));
+                     qUtf8Printable(list));
       }
       done = true;
       break;
@@ -1447,8 +1447,6 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
       /* Not supported. */
       break;
     }
-    astr_free(&list);
-    delete[] classes;
     if (done) {
       return true;
     }

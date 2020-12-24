@@ -334,8 +334,6 @@ struct effect *effect_new(enum effect_type type, int value,
                           struct multiplier *pmul);
 struct effect *effect_copy(struct effect *old);
 void effect_req_append(struct effect *peffect, struct requirement req);
-
-struct astring;
 void get_effect_req_text(const struct effect *peffect, char *buf,
                          size_t buf_len);
 QString get_effect_list_req_text(const struct effect_list *plist);
