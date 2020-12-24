@@ -293,7 +293,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
     punit = unit_list.at(highligh_num);
     /* TRANS: HP - hit points */
     str2 = QString(_("%1 HP:%2/%3"))
-               .arg(QString(unit_activity_text(punit)),
+               .arg(unit_activity_text(punit),
                     QString::number(punit->hp),
                     QString::number(unit_type_get(punit)->hp));
   }

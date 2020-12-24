@@ -4180,7 +4180,7 @@ const char *universal_name_translation(const struct universal *psource,
     cat_snprintf(buf, bufsz, _("%d Techs"), psource->value.min_techs);
     return buf;
   case VUT_ACTION:
-    fc_strlcat(buf, action_name_translation(psource->value.action), bufsz);
+    fc_strlcat(buf, qUtf8Printable(action_name_translation(psource->value.action)), bufsz);
     return buf;
   case VUT_OTYPE:
     /* FIXME */

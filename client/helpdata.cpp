@@ -1354,7 +1354,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target the city building it "
                        "with the action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_CITY:
         /* At least one action enabler needed the building in its target
@@ -1363,7 +1363,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target its city with the "
                        "action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_TRADEROUTE:
         /* At least one action enabler needed the building in its target
@@ -1372,7 +1372,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target its city and its "
                        "trade partners with the action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_CONTINENT:
         /* At least one action enabler needed the building in its target
@@ -1381,7 +1381,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target all cities with its "
                        "owner on its continent with the action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_PLAYER:
         /* At least one action enabler needed the building in its target
@@ -1390,7 +1390,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target all cities with its "
                        "owner with the action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_TEAM:
         /* At least one action enabler needed the building in its target
@@ -1399,7 +1399,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target all cities on the "
                        "same team with the action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_ALLIANCE:
         /* At least one action enabler needed the building in its target
@@ -1408,7 +1408,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target all cities owned by "
                        "or allied to its owner with the action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_WORLD:
         /* At least one action enabler needed the building in its target
@@ -1417,7 +1417,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target all cities with the "
                        "action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_CADJACENT:
       case REQ_RANGE_ADJACENT:
@@ -1496,56 +1496,56 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "the city building it.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_CITY:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "its city.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_TRADEROUTE:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "its city or to its city's trade partners.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_CONTINENT:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "any city with its owner on its continent.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_PLAYER:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "any city with its owner.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_TEAM:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "any city on the same team.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_ALLIANCE:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "any city allied to or owned by its owner.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_WORLD:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "any city in the game.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_CADJACENT:
       case REQ_RANGE_ADJACENT:
@@ -2334,7 +2334,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       cat_snprintf(buf, bufsz,
                    /* TRANS: %s is the action's ruleset defined ui name */
                    _("* Can do the action \'%s\'.\n"),
-                   action_id_name_translation(act));
+                   qUtf8Printable(action_id_name_translation(act)));
 
       switch (action_id_get_target_kind(act)) {
       case ATK_SELF:
@@ -2784,7 +2784,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
           fc_snprintf(quoted, maxlen,
                       /* TRANS: %s is an action that can block another. */
-                      _("\'%s\'"), action_id_name_translation(blocker));
+                      _("\'%s\'"), qUtf8Printable(action_id_name_translation(blocker)));
           blockers.append(quoted);
         }
       }
@@ -2836,7 +2836,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       cat_snprintf(buf, bufsz,
                    _("* Doing the action \'%s\' to this unit"
                      " is impossible.\n"),
-                   action_id_name_translation(act));
+                   qUtf8Printable(action_id_name_translation(act)));
     }
   }
   action_iterate_end;
@@ -4635,7 +4635,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
            * ("individual units", etc) */
           _("* Makes it impossible to do the action \'%s\'"
             " to your %s.\n"),
-          action_id_name_translation(act),
+          qUtf8Printable(action_id_name_translation(act)),
           _(action_target_kind_name(action_id_get_target_kind(act))));
     }
   }

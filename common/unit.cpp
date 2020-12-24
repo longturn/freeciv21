@@ -1089,22 +1089,20 @@ bv_extras get_unit_tile_pillage_set(const struct tile *ptile)
    FIXME: Convert all callers of this function to unit_activity_astr()
    because this function is not re-entrant.
  **************************************************************************/
-const char *unit_activity_text(const struct unit *punit)
+const QString unit_activity_text(const struct unit *punit)
 {
-  static struct astring str = ASTRING_INIT;
+  QString str;
+  unit_activity_astr(punit, str);
 
-  astr_clear(&str);
-  unit_activity_astr(punit, &str);
-
-  return astr_str(&str);
+  return str;
 }
 
 /**********************************************************************/ /**
    Append text describing the unit's current activity to the given astring.
  **************************************************************************/
-void unit_activity_astr(const struct unit *punit, struct astring *astr)
+void unit_activity_astr(const struct unit *punit, QString &s)
 {
-  if (!punit || !astr) {
+  if (!punit) {
     return;
   }
 
@@ -1118,12 +1116,17 @@ void unit_activity_astr(const struct unit *punit, struct astring *astr)
 
       /* Add in two parts as move_points_text() returns ptr to static
        * End result: "Moves: (fuel)moves_left" */
-      astr_add_line(astr, "%s: (%s)", _("Moves"),
-                    move_points_text((rate * f) + punit->moves_left, false));
-      astr_add(astr, "%s", move_points_text(punit->moves_left, false));
+      s = s
+          + QString("%1: (%2)")
+                .arg(_("Moves"),
+                     move_points_text((rate * f) + punit->moves_left, false))
+          + qendl();
+      s = s + QString("%1").arg(move_points_text(punit->moves_left, false));
     } else {
-      astr_add_line(astr, "%s: %s", _("Moves"),
-                    move_points_text(punit->moves_left, false));
+      s = s
+          + QString("%1: %2").arg(_("Moves"),
+                                  move_points_text(punit->moves_left, false))
+          + qendl();
     }
     return;
   case ACTIVITY_POLLUTION:
@@ -1141,32 +1144,45 @@ void unit_activity_astr(const struct unit *punit, struct astring *astr)
   case ACTIVITY_CONVERT:
   case ACTIVITY_CULTIVATE:
   case ACTIVITY_PLANT:
-    astr_add_line(astr, "%s", get_activity_text(punit->activity));
+    s = s + QString("%1").arg(get_activity_text(punit->activity)) + qendl();
     return;
   case ACTIVITY_MINE:
   case ACTIVITY_IRRIGATE:
     if (punit->activity_target == NULL) {
-      astr_add_line(astr, "%s", get_activity_text(punit->activity));
+      s = s + QString("%1").arg(get_activity_text(punit->activity))
+          + qendl();
     } else {
-      astr_add_line(astr, "Building %s",
-                    extra_name_translation(punit->activity_target));
+      s = s
+          + QString("Building %1")
+                .arg(extra_name_translation(punit->activity_target))
+          + qendl();
     }
     return;
   case ACTIVITY_PILLAGE:
     if (punit->activity_target != NULL) {
-      astr_add_line(astr, "%s: %s", get_activity_text(punit->activity),
-                    extra_name_translation(punit->activity_target));
+      s = s
+          + QString("%1: %2").arg(
+              get_activity_text(punit->activity),
+              extra_name_translation(punit->activity_target))
+          + qendl();
     } else {
-      astr_add_line(astr, "%s", get_activity_text(punit->activity));
+      s = s + QString("%1").arg(get_activity_text(punit->activity))
+          + qendl();
     }
     return;
   case ACTIVITY_BASE:
-    astr_add_line(astr, "%s: %s", get_activity_text(punit->activity),
-                  extra_name_translation(punit->activity_target));
+    s = s
+        + QString("%1: %2").arg(
+            get_activity_text(punit->activity),
+            extra_name_translation(punit->activity_target))
+        + qendl();
     return;
   case ACTIVITY_GEN_ROAD:
-    astr_add_line(astr, "%s: %s", get_activity_text(punit->activity),
-                  extra_name_translation(punit->activity_target));
+    s = s
+        + QString("%1: %2").arg(
+            get_activity_text(punit->activity),
+            extra_name_translation(punit->activity_target))
+        + qendl();
     return;
   case ACTIVITY_UNKNOWN:
   case ACTIVITY_PATROL_UNUSED:
@@ -1184,15 +1200,19 @@ void unit_activity_astr(const struct unit *punit, struct astring *astr)
    NB: In the client it is assumed that this information is only available
    for units owned by the client's player; the caller must check this.
  **************************************************************************/
-void unit_upkeep_astr(const struct unit *punit, struct astring *astr)
+void unit_upkeep_astr(const struct unit *punit, QString &s)
 {
-  if (!punit || !astr) {
+  if (!punit) {
     return;
   }
 
-  astr_add_line(astr, "%s %d/%d/%d", _("Food/Shield/Gold:"),
-                punit->upkeep[O_FOOD], punit->upkeep[O_SHIELD],
-                punit->upkeep[O_GOLD]);
+  s = s
+      + QString("%1 %2/%3/%4")
+            .arg(_("Food/Shield/Gold:"),
+                 QString::number(punit->upkeep[O_FOOD]),
+                 QString::number(punit->upkeep[O_SHIELD]),
+                 QString::number(punit->upkeep[O_GOLD]))
+      + qendl();
 }
 
 /**********************************************************************/ /**
@@ -1502,7 +1522,7 @@ struct unit *unit_virtual_create(struct player *pplayer, struct city *pcity,
                                  int veteran_level)
 {
   fc_assert_ret_val(NULL != punittype, NULL); /* No untyped units! */
-  fc_assert_ret_val(NULL != pplayer, NULL); /* No unowned units! */
+  fc_assert_ret_val(NULL != pplayer, NULL);   /* No unowned units! */
 
   /* Make sure that contents of unit structure are correctly initialized,
    * if you ever allocate it by some other mean than fc_calloc() */

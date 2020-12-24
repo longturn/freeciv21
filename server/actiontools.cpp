@@ -210,7 +210,7 @@ notify_actor_caught(struct player *receiver, const struct action *paction,
                   /* TRANS: Suitcase Nuke ... San Francisco */
                   _("You have caused an incident getting caught"
                     " trying to do %s to %s."),
-                  action_name_translation(paction), victim_link);
+                  qUtf8Printable(action_name_translation(paction)), victim_link);
     break;
   case ATK_UNIT:
   case ATK_UNITS:
@@ -218,7 +218,7 @@ notify_actor_caught(struct player *receiver, const struct action *paction,
                   /* TRANS: Bribe Enemy Unit ... American ... Partisan */
                   _("You have caused an incident getting caught"
                     " trying to do %s to %s %s."),
-                  action_name_translation(paction),
+                  qUtf8Printable(action_name_translation(paction)),
                   nation_adjective_for_player(victim_player), victim_link);
     break;
   case ATK_TILE:
@@ -226,7 +226,7 @@ notify_actor_caught(struct player *receiver, const struct action *paction,
                   /* TRANS: Explode Nuclear ... (54, 26) */
                   _("You have caused an incident getting caught"
                     " trying to do %s at %s."),
-                  action_name_translation(paction), victim_link);
+                  qUtf8Printable(action_name_translation(paction)), victim_link);
     break;
   case ATK_SELF:
     /* Special actor notice not needed. Actor is victim. */
@@ -259,7 +259,7 @@ notify_victim_caught(struct player *receiver, const struct action *paction,
                   _("The %s have caused an incident getting caught"
                     " trying to do %s to %s."),
                   nation_plural_for_player(offender),
-                  action_name_translation(paction), victim_link);
+                  qUtf8Printable(action_name_translation(paction)), victim_link);
     break;
   case ATK_UNIT:
   case ATK_UNITS:
@@ -268,7 +268,7 @@ notify_victim_caught(struct player *receiver, const struct action *paction,
                   _("The %s have caused an incident getting caught"
                     " trying to do %s to your %s."),
                   nation_plural_for_player(offender),
-                  action_name_translation(paction), victim_link);
+                  qUtf8Printable(action_name_translation(paction)), victim_link);
     break;
   case ATK_TILE:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
@@ -276,7 +276,7 @@ notify_victim_caught(struct player *receiver, const struct action *paction,
                   _("The %s have caused an incident getting caught"
                     " trying to do %s at %s."),
                   nation_plural_for_player(offender),
-                  action_name_translation(paction), victim_link);
+                  qUtf8Printable(action_name_translation(paction)), victim_link);
     break;
   case ATK_SELF:
     /* Special victim notice not needed. Actor is victim. */
@@ -301,13 +301,13 @@ notify_global_caught(struct player *receiver, const struct action *paction,
                   /* TRANS: Suitcase Nuke */
                   _("Getting caught while trying to do %s gives "
                     "everyone a casus belli against you."),
-                  action_name_translation(paction));
+                  qUtf8Printable(action_name_translation(paction)));
   } else if (receiver == victim_player) {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
                   /* TRANS: Suitcase Nuke ... Europeans */
                   _("Getting caught while trying to do %s to you gives "
                     "everyone a casus belli against the %s."),
-                  action_name_translation(paction),
+                  qUtf8Printable(action_name_translation(paction)),
                   nation_plural_for_player(offender));
   } else if (victim_player == NULL) {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
@@ -315,14 +315,14 @@ notify_global_caught(struct player *receiver, const struct action *paction,
                   _("You now have a casus belli against the %s. "
                     "They got caught trying to do %s."),
                   nation_plural_for_player(offender),
-                  action_name_translation(paction));
+                  qUtf8Printable(action_name_translation(paction)));
   } else {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
                   /* TRANS: Europeans ... Suitcase Nuke ... Americans */
                   _("You now have a casus belli against the %s. "
                     "They got caught trying to do %s to the %s."),
                   nation_plural_for_player(offender),
-                  action_name_translation(paction),
+                  qUtf8Printable(action_name_translation(paction)),
                   nation_plural_for_player(victim_player));
   }
 }
@@ -365,21 +365,21 @@ notify_actor_success(struct player *receiver, const struct action *paction,
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
                   /* TRANS: Suitcase Nuke ... San Francisco */
                   _("You have caused an incident doing %s to %s."),
-                  action_name_translation(paction), victim_link);
+                  qUtf8Printable(action_name_translation(paction)), victim_link);
     break;
   case ATK_UNIT:
   case ATK_UNITS:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
                   /* TRAND: Bribe Enemy Unit ... American ... Partisan */
                   _("You have caused an incident doing %s to %s %s."),
-                  action_name_translation(paction),
+                  qUtf8Printable(action_name_translation(paction)),
                   nation_adjective_for_player(victim_player), victim_link);
     break;
   case ATK_TILE:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
                   /* TRANS: Explode Nuclear ... (54, 26) */
                   _("You have caused an incident doing %s at %s."),
-                  action_name_translation(paction), victim_link);
+                  qUtf8Printable(action_name_translation(paction)), victim_link);
     break;
   case ATK_SELF:
     /* Special actor notice not needed. Actor is victim. */
@@ -413,7 +413,7 @@ static void notify_victim_success(struct player *receiver,
                   /* TRANS: Europeans ... Suitcase Nuke ... San Francisco */
                   _("The %s have caused an incident doing %s to %s."),
                   nation_plural_for_player(offender),
-                  action_name_translation(paction), victim_link);
+                  qUtf8Printable(action_name_translation(paction)), victim_link);
     break;
   case ATK_UNIT:
   case ATK_UNITS:
@@ -422,14 +422,14 @@ static void notify_victim_success(struct player *receiver,
                   _("The %s have caused an incident doing "
                     "%s to your %s."),
                   nation_plural_for_player(offender),
-                  action_name_translation(paction), victim_link);
+                  qUtf8Printable(action_name_translation(paction)), victim_link);
     break;
   case ATK_TILE:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
                   /* TRANS: Europeans ... Explode Nuclear ... (54, 26) */
                   _("The %s have caused an incident doing %s at %s."),
                   nation_plural_for_player(offender),
-                  action_name_translation(paction), victim_link);
+                  qUtf8Printable(action_name_translation(paction)), victim_link);
     break;
   case ATK_SELF:
     /* Special victim notice not needed. Actor is victim. */
@@ -455,13 +455,13 @@ static void notify_global_success(struct player *receiver,
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
                   /* TRANS: Suitcase Nuke */
                   _("Doing %s gives everyone a casus belli against you."),
-                  action_name_translation(paction));
+                  qUtf8Printable(action_name_translation(paction)));
   } else if (receiver == victim_player) {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
                   /* TRANS: Suitcase Nuke ... Europeans */
                   _("Doing %s to you gives everyone a casus belli against "
                     "the %s."),
-                  action_name_translation(paction),
+                  qUtf8Printable(action_name_translation(paction)),
                   nation_plural_for_player(offender));
   } else if (victim_player == NULL) {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
@@ -469,14 +469,14 @@ static void notify_global_success(struct player *receiver,
                   _("You now have a casus belli against the %s. "
                     "They did %s."),
                   nation_plural_for_player(offender),
-                  action_name_translation(paction));
+                  qUtf8Printable(action_name_translation(paction)));
   } else {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
                   /* TRANS: Europeans ... Suitcase Nuke ... Americans */
                   _("You now have a casus belli against the %s. "
                     "They did %s to the %s."),
                   nation_plural_for_player(offender),
-                  action_name_translation(paction),
+                  qUtf8Printable(action_name_translation(paction)),
                   nation_plural_for_player(victim_player));
   }
 }

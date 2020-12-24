@@ -1141,12 +1141,12 @@ void request_unit_goto(enum unit_orders last_order, action_id act_id,
                        /* TRANS: Only Nuclear or ICBM can do Explode
                         * Nuclear. */
                        _("Only %s can do %s."), qUtf8Printable(roles),
-                       action_id_name_translation(act_id));
+                       qUtf8Printable(action_id_name_translation(act_id)));
         } else {
           create_event(unit_tile(punit), E_BAD_COMMAND, ftc_client,
                        /* TRANS: Spy can't do Explode Nuclear. */
                        _("%s can't do %s."), unit_name_translation(punit),
-                       action_id_name_translation(act_id));
+                       qUtf8Printable(action_id_name_translation(act_id)));
         }
 
         return;
@@ -3209,7 +3209,7 @@ void key_unit_action_select_tgt(void)
                  ftc_client,
                  /* TRANS: Perform action inside a goto. */
                  _("Click on a tile to do %s against it."),
-                 action_name_translation(paction));
+                 qUtf8Printable(action_name_translation(paction)));
 
     set_hover_state(punits, HOVER_GOTO_SEL_TGT, connect_activity,
                     connect_tgt, goto_last_tgt, goto_last_sub_tgt,

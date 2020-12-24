@@ -27,6 +27,7 @@
 #define n _private_n_
 #define n_alloc _private_n_alloc_
 
+class QStringLiteral;
 struct astring {
   char *str;      /* the string */
   size_t n;       /* size most recently requested */
@@ -124,3 +125,4 @@ static inline bool astr_empty(const struct astring *astr)
 
 QString strvec_to_or_list(const QVector<QString> &psv);
 QString strvec_to_and_list(const QVector<QString> &psv);
+QString qendl();
