@@ -259,18 +259,18 @@ char *ai_level_help(const char *cmdname)
         handicap_desc(static_cast<handicap_type>(h), &inverted);
 
     if (desc && BV_ISSET(handicaps, h) != inverted) {
-      features += desc;
+      features += desc + qendl();
     }
   }
 
   if (fuzzy_of_skill_level(level) > 0) {
-    features += _("Has erratic decision-making.");
+    features += _("Has erratic decision-making.") + qendl();
   }
   {
     int science = science_cost_of_skill_level(level);
 
     if (science != 100) {
-      features += QString(_("Research takes %1%% as long as usual.")).arg(science);
+      features += QString(_("Research takes %1 as long as usual.")).arg(science);
     }
   }
   if (expansionism_of_skill_level(level) < 100) {
@@ -297,7 +297,7 @@ char *ai_level_help(const char *cmdname)
   }
 
   help += features;
-  return const_cast<char*>(qUtf8Printable(help));
+  return qstrdup(const_cast<char*>(qUtf8Printable(help)));
 }
 
 /**********************************************************************/ /**
