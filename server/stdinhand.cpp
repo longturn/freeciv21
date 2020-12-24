@@ -1435,19 +1435,18 @@ static bool cmdlevel_command(struct connection *caller, char *str,
   /* A level name was supplied; set the level. */
   level = cmdlevel_by_name(qUtf8Printable(arg.at(0)), fc_strcasecmp);
   if (!cmdlevel_is_valid(level)) {
-    const char *cmdlevel_names[CMDLEVEL_COUNT];
-    struct astring astr = ASTRING_INIT;
-    int i = 0;
+    QVector<QString> cmdlevel_names;
+    cmdlevel_names.reserve(CMDLEVEL_COUNT);
+    QString astr;
 
     for (level = cmdlevel_begin(); level != cmdlevel_end();
          level = cmdlevel_next(level)) {
-      cmdlevel_names[i++] = cmdlevel_name(level);
+      cmdlevel_names.append(cmdlevel_name(level));
     }
     cmd_reply(CMD_CMDLEVEL, caller, C_SYNTAX,
               /* TRANS: comma and 'or' separated list of access levels */
               _("Command access level must be one of %s."),
-              astr_build_or_list(&astr, cmdlevel_names, i));
-    astr_free(&astr);
+              qUtf8Printable(strvec_to_and_list(cmdlevel_names)));
     return ret;
   } else if (caller && level > conn_get_access(caller)) {
     cmd_reply(CMD_CMDLEVEL, caller, C_FAIL,
@@ -5530,22 +5529,22 @@ static bool delegate_command(struct connection *caller, char *arg,
  **************************************************************************/
 static const char *delegate_player_str(struct player *pplayer, bool observer)
 {
-  static struct astring buf;
+  QString buf;
 
   if (pplayer) {
     if (observer) {
-      astr_set(&buf, _("%s (observer)"), player_name(pplayer));
+      buf = QString(_("%1 (observer)")).arg(player_name(pplayer));
     } else {
-      astr_set(&buf, "%s", player_name(pplayer));
+      buf = QString("%1").arg(player_name(pplayer));
     }
   } else if (observer) {
-    astr_set(&buf, "%s", _("global observer"));
+    buf = _("global observer");
   } else {
     /* TRANS: in place of player name or "global observer" */
-    astr_set(&buf, "%s", _("nothing"));
+    buf = _("nothing");
   }
 
-  return astr_str(&buf);
+  return qUtf8Printable(buf);
 }
 
 /* Define the possible arguments to the mapimg command */

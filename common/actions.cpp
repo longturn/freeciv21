@@ -1499,11 +1499,15 @@ const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
   {
     QString fmtstr;
     QString ui_name = _(actions[act_id]->ui_name);
+    int k = ui_name.indexOf("%s");
+    if (k >= 0) {
+      ui_name = ui_name.remove(k, 2);
+    }
     ui_name.replace("%s", "%1");
     fmtstr += QString("%1").arg(ui_name);
 
     /* Use the modified format string */
-    str = QString(fmtstr).arg(mnemonic, chance);
+    str = QString(fmtstr).arg(chance);
   }
 
   return str;

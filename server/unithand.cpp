@@ -1464,9 +1464,9 @@ static void explain_why_no_action_enabled(struct unit *punit,
                   unit_name_translation(punit));
     break;
   case ANEK_BAD_TERRAIN_ACT: {
-    const char *types[utype_count()];
+    QVector<QString> types;
+    types.reserve(utype_count());
     int i = 0;
-
     if (!utype_can_do_act_when_ustate(unit_type_get(punit), ACTION_ANY,
                                       USP_LIVABLE_TILE, false)
         && !can_unit_exist_at_tile(&(wld.map), punit, unit_tile(punit))) {
@@ -1474,15 +1474,14 @@ static void explain_why_no_action_enabled(struct unit *punit,
       {
         if (utype_can_do_act_when_ustate(utype, ACTION_ANY, USP_LIVABLE_TILE,
                                          false)) {
-          types[i++] = utype_name_translation(utype);
+                                           i++;
+          types.append(utype_name_translation(utype));
         }
       }
       unit_type_iterate_end;
     }
 
     if (0 < i) {
-      struct astring astr = ASTRING_INIT;
-
       notify_player(pplayer, unit_tile(punit), E_BAD_COMMAND, ftc_server,
                     /* TRANS: terrain name
                      * "Your Diplomat cannot act from Ocean. Only
@@ -1491,9 +1490,7 @@ static void explain_why_no_action_enabled(struct unit *punit,
                       "Only %s can act from a non livable tile."),
                     unit_name_translation(punit),
                     terrain_name_translation(explnat->no_act_terrain),
-                    astr_build_or_list(&astr, types, i));
-
-      astr_free(&astr);
+                    qUtf8Printable(strvec_to_and_list(types)));
     } else {
       notify_player(pplayer, unit_tile(punit), E_BAD_COMMAND, ftc_server,
                     /* TRANS: terrain name */
@@ -1969,12 +1966,12 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
       notify_player(pplayer, unit_tile(actor), event, ftc_server,
                     /* TRANS: Only Diplomat or Spy can do Steal Gold. */
                     _("Only %s can do %s."), qUtf8Printable(roles),
-                    action_id_name_translation(stopped_action));
+                    qUtf8Printable(action_id_name_translation(stopped_action)));
     } else {
       notify_player(pplayer, unit_tile(actor), event, ftc_server,
                     /* TRANS: Spy can't do Capture Units. */
                     _("%s can't do %s."), unit_name_translation(actor),
-                    action_id_name_translation(stopped_action));
+                    qUtf8Printable(action_id_name_translation(stopped_action)));
     }
   } break;
   case ANEK_MISSING_TARGET:
@@ -1983,7 +1980,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * Bribe Enemy Unit." */
                   _("Your %s found no target suitable for %s."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_BAD_TARGET:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -1991,10 +1988,11 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * this target ..." */
                   _("Having your %s do %s to this target is redundant."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_BAD_TERRAIN_ACT: {
-    const char *types[utype_count()];
+    QVector<QString> types;
+    types.reserve(utype_count());
     int i = 0;
 
     if (!utype_can_do_act_when_ustate(unit_type_get(actor), stopped_action,
@@ -2004,15 +2002,14 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
       {
         if (utype_can_do_act_when_ustate(utype, stopped_action,
                                          USP_LIVABLE_TILE, false)) {
-          types[i++] = utype_name_translation(utype);
+          types.append(utype_name_translation(utype));
+          i++;
         }
       }
       unit_type_iterate_end;
     }
 
     if (0 < i) {
-      struct astring astr = ASTRING_INIT;
-
       notify_player(pplayer, unit_tile(actor), event, ftc_server,
                     /* TRANS: action name.
                      * "Your Spy can't do Steal Gold from Ocean.
@@ -2020,19 +2017,17 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                     _("Your %s can't do %s from %s. "
                       "Only %s can do %s from a non livable tile."),
                     unit_name_translation(actor),
-                    action_id_name_translation(stopped_action),
+                    qUtf8Printable(action_id_name_translation(stopped_action)),
                     terrain_name_translation(explnat->no_act_terrain),
-                    astr_build_or_list(&astr, types, i),
-                    action_id_name_translation(stopped_action));
-
-      astr_free(&astr);
+                    qUtf8Printable(strvec_to_and_list(types)),
+                    qUtf8Printable(action_id_name_translation(stopped_action)));
     } else {
       notify_player(pplayer, unit_tile(actor), event, ftc_server,
                     /* TRANS: action name.
                      * "Your Spy can't do Steal Gold from Ocean." */
                     _("Your %s can't do %s from %s."),
                     unit_name_translation(actor),
-                    action_id_name_translation(stopped_action),
+                    qUtf8Printable(action_id_name_translation(stopped_action)),
                     terrain_name_translation(explnat->no_act_terrain));
     }
   } break;
@@ -2042,7 +2037,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Your Spy can't do Industrial Sabotage to Mountains." */
                   _("Your %s can't do %s to %s."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action),
+                  qUtf8Printable(action_id_name_translation(stopped_action)),
                   terrain_name_translation(explnat->no_act_terrain));
     break;
   case ANEK_IS_TRANSPORTED:
@@ -2051,7 +2046,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Your Spy can't do Industrial Sabotage while ..." */
                   _("Your %s can't do %s while being transported."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(qUtf8Printable(action_id_name_translation(stopped_action))));
     break;
   case ANEK_IS_NOT_TRANSPORTED:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2059,7 +2054,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Your Spy can't do Industrial Sabotage while ..." */
                   _("Your %s can't do %s while not being transported."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_IS_TRANSPORTING:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2067,7 +2062,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Your Spy can't do Industrial Sabotage while ..." */
                   _("Your %s can't do %s while transporting."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_IS_NOT_TRANSPORTING:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2075,7 +2070,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Your Spy can't do Industrial Sabotage while ..." */
                   _("Your %s can't do %s while not transporting."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_ACTOR_HAS_HOME_CITY:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2083,7 +2078,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Your Spy can't do Industrial Sabotage because ..." */
                   _("Your %s can't do %s because it has a home city."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_ACTOR_HAS_NO_HOME_CITY:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2091,7 +2086,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Your Spy can't do Industrial Sabotage because ..." */
                   _("Your %s can't do %s because it is homeless."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_NO_WAR:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2101,7 +2096,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                   _("Your %s can't do %s while you"
                     " aren't at war with %s."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action),
+                  qUtf8Printable(action_id_name_translation(stopped_action)),
                   player_name(explnat->no_war_with));
     break;
   case ANEK_PEACE:
@@ -2114,7 +2109,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                     " are at peace with %s. Try using"
                     " the Nations report."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action),
+                  qUtf8Printable(action_id_name_translation(stopped_action)),
                   player_name(explnat->peace_with));
     break;
   case ANEK_DOMESTIC:
@@ -2124,7 +2119,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * unit stacks." */
                   _("Your %s can't do %s to domestic %s."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action),
+                  qUtf8Printable(action_id_name_translation(stopped_action)),
                   action_target_kind_translated_name(
                       action_id_get_target_kind(stopped_action)));
     break;
@@ -2135,7 +2130,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * unit stacks." */
                   _("Your %s can't do %s to foreign %s."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action),
+                  qUtf8Printable(action_id_name_translation(stopped_action)),
                   action_target_kind_translated_name(
                       action_id_get_target_kind(stopped_action)));
     break;
@@ -2146,7 +2141,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                   _("%s %s can't do %s."),
                   nation_adjective_translation(explnat->no_act_nation),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_NATION_TGT:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2154,7 +2149,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Riflemen... Expel Unit... Pirate Migrants." */
                   _("Your %s can't do %s to %s %s."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action),
+                  qUtf8Printable(action_id_name_translation(stopped_action)),
                   nation_adjective_translation(explnat->no_act_nation),
                   action_target_kind_translated_name(
                       action_id_get_target_kind(stopped_action)));
@@ -2165,7 +2160,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Your Spy has ... to do Bribe Enemy Unit." */
                   _("Your %s has too few moves left to do %s."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_IS_CITY_CENTER:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2173,7 +2168,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Your Spy can't do Bribe Enemy Unit to city centers." */
                   _("Your %s can't do %s to city centers."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_IS_NOT_CITY_CENTER:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2182,7 +2177,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * city centers." */
                   _("Your %s can only do %s to city centers."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_TGT_IS_CLAIMED:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2190,7 +2185,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Your Settlers can't do Build City to claimed tiles." */
                   _("Your %s can't do %s to claimed tiles."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_TGT_IS_UNCLAIMED:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2199,7 +2194,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * unclaimed tiles." */
                   _("Your %s can't do %s to unclaimed tiles."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_DISTANCE_NEAR:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2210,7 +2205,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                       "Your %s must be at least %d tiles away to do %s.",
                       explnat->distance),
                   unit_name_translation(actor), explnat->distance,
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_DISTANCE_FAR:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2221,26 +2216,26 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                       "Your %s can't be more than %d tiles away to do %s.",
                       explnat->distance),
                   unit_name_translation(actor), explnat->distance,
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_SCENARIO_DISABLED:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
                   /* TRANS: Can't do Build City in this scenario. */
                   _("Can't do %s in this scenario."),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_CITY_TOO_CLOSE_TGT:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
                   /* TRANS: Can't do Build City this close to a city. */
                   _("Can't do %s this close to a city."),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_CITY_TOO_BIG:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
                   /* TRANS: Settlers ... Join City ... London */
                   _("%s can't do %s to %s. It is too big."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action),
+                  qUtf8Printable(action_id_name_translation(stopped_action)),
                   city_name_get(target_city));
     break;
   case ANEK_CITY_POP_LIMIT:
@@ -2249,14 +2244,14 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                   _("%s needs an improvement to grow, so "
                     "%s cannot do %s."),
                   city_name_get(target_city), unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_CITY_NO_CAPACITY:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
                   /* TRANS: Paris ... Airlift to City ... Warriors */
                   _("%s has no capacity to %s %s."),
                   city_name_get(explnat->capacity_city),
-                  action_id_name_translation(stopped_action),
+                  qUtf8Printable(action_id_name_translation(stopped_action)),
                   unit_name_translation(actor));
     break;
   case ANEK_TGT_TILE_UNKNOWN:
@@ -2264,7 +2259,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                   /* TRANS: Paratroopers ... Drop Paratrooper */
                   _("%s can't do %s to an unknown tile."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_ACT_NOT_ENOUGH_MONEY: {
     char tbuf[MAX_LEN_MSG];
@@ -2283,7 +2278,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                       "%s can't do %s for %d gold. %s",
                       explnat->gold_needed),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action),
+                  qUtf8Printable(action_id_name_translation(stopped_action)),
                   explnat->gold_needed, tbuf);
   } break;
   case ANEK_TRIREME_MOVE:
@@ -2308,7 +2303,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                   _("Your %s can't do %s there since there's an "
                     "unreachable unit."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_TGT_IS_UNIQUE_ACT_HAS:
     notify_player(pplayer, target_tile, event, ftc_server,
@@ -2321,8 +2316,8 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                   /* TRANS: Freight ... Recycle Unit ... Help Wonder ... */
                   _("Your %s can't do %s when %s is legal."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action),
-                  action_id_name_translation(explnat->blocker->id));
+                  qUtf8Printable(action_id_name_translation(stopped_action)),
+                  qUtf8Printable(action_id_name_translation(explnat->blocker->id)));
     break;
   case ANEK_UNKNOWN:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2330,7 +2325,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Your Spy was unable to do Bribe Enemy Unit." */
                   _("Your %s was unable to do %s."),
                   unit_name_translation(actor),
-                  action_id_name_translation(stopped_action));
+                  qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   }
 
@@ -2406,7 +2401,7 @@ static bool illegal_action_pay_price(
                     _("Your %s lost %d hit points while attempting to"
                       " do %s."),
                     unit_name_translation(act_unit), punishment_hp,
-                    action_name_translation(stopped_action));
+                    qUtf8Printable(action_name_translation(stopped_action)));
       send_unit_info(NULL, act_unit);
     } else {
       /* The unit didn't survive */
@@ -2418,7 +2413,7 @@ static bool illegal_action_pay_price(
                     /* TRANS: Spy ... Drop Paratrooper */
                     _("Your %s was killed while attempting to do %s."),
                     unit_name_translation(act_unit),
-                    action_name_translation(stopped_action));
+                    qUtf8Printable(action_name_translation(stopped_action)));
 
       wipe_unit(act_unit, ULR_KILLED, NULL);
       act_unit = NULL;
@@ -2503,7 +2498,7 @@ illegal_action(struct player *pplayer, struct unit *actor,
         ftc_server,
         _("No explanation why you couldn't do %s. This is a bug."
           " Sorry about that. -- Sveinung"),
-        action_id_name_translation(stopped_action_id));
+        qUtf8Printable(action_id_name_translation(stopped_action_id)));
   }
 }
 
