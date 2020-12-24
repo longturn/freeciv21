@@ -1637,15 +1637,13 @@ const QString get_timeout_label_text(void)
     if (wt < 0.01) {
       str = Q_("?timeout:wait");
     } else {
-      str = str
-            + QString("%1: %2").arg(Q_("?timeout:eta"), format_duration(wt));
+      str = QString("%1: %2").arg(Q_("?timeout:eta"), format_duration(wt));
     }
   } else {
     if (current_turn_timeout() <= 0) {
-      str = str + QString("%1").arg(Q_("?timeout:off"));
+      str = QString("%1").arg(Q_("?timeout:off"));
     } else {
-      str = str
-            + QString("%1").arg(format_duration(get_seconds_to_turndone()));
+      str = QString("%1").arg(format_duration(get_seconds_to_turndone()));
     }
   }
 
@@ -1669,13 +1667,13 @@ const QString format_duration(int duration)
     str = str + QString(Q_("?seconds:%1s")).arg(duration, 2);
   } else if (duration < 3600) { /* < 60 minutes */
     str = str
-          + QString(Q_("?mins/secs:%1m %1s"))
+          + QString(Q_("?mins/secs:%1m %2s"))
                 .arg(duration / 60, 2)
                 .arg(duration % 60, 2);
   } else if (duration < 360000) { /* < 100 hours */
   str = str + QString(Q_("?hrs/mns:%1h %2m")).arg(duration / 3600, 2).arg((duration / 60) % 60, 2);
   } else if (duration < 8640000) { /* < 100 days */
-  str = str + QString(Q_("?dys/hrs:%02dd %02dh")).arg(duration / 86400, 2).arg((duration / 3600) % 24, 2);
+  str = str + QString(Q_("?dys/hrs:%1d %2dh")).arg(duration / 86400, 2).arg((duration / 3600) % 24, 2);
   } else {
     str = str + QString("%1").arg(Q_("?duration:overflow"));
   }

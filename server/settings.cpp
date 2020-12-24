@@ -5136,7 +5136,7 @@ bool setting_is_visible(const struct setting *pset,
  ****************************************************************************/
 static enum m_pre_result
 setting_match_prefix_base(const val_name_func_t name_fn, const char *prefix,
-                          int *ind_result, const char **matches,
+                          int *ind_result, QVector<QString> &matches,
                           size_t max_matches, size_t *pnum_matches)
 {
   const struct sset_val_name *name;
@@ -5157,7 +5157,7 @@ setting_match_prefix_base(const val_name_func_t name_fn, const char *prefix,
         return M_PRE_EXACT;
       }
       if (num_matches < max_matches) {
-        matches[num_matches] = name->support;
+        matches.append(name->support);
         (*pnum_matches)++;
       }
       if (0 == num_matches++) {
@@ -5183,23 +5183,20 @@ static bool setting_match_prefix(const val_name_func_t name_fn,
                                  const char *prefix, int *pvalue,
                                  char *reject_msg, size_t reject_msg_len)
 {
-  const char *matches[16];
+  QVector<QString> matches;
+  matches.reserve(16);
   size_t num_matches;
 
   switch (setting_match_prefix_base(name_fn, prefix, pvalue, matches,
-                                    ARRAY_SIZE(matches), &num_matches)) {
+                                    16, &num_matches)) {
   case M_PRE_EXACT:
   case M_PRE_ONLY:
     return true; /* Ok. */
   case M_PRE_AMBIGUOUS: {
-    struct astring astr = ASTRING_INIT;
-
     fc_assert(2 <= num_matches);
     settings_snprintf(reject_msg, reject_msg_len,
                       _("\"%s\" prefix is ambiguous. Candidates are: %s."),
-                      prefix,
-                      astr_build_and_list(&astr, matches, num_matches));
-    astr_free(&astr);
+                      prefix, qUtf8Printable(strvec_to_and_list(matches)));
   }
     return false;
   case M_PRE_EMPTY:

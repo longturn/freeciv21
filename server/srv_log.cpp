@@ -18,7 +18,6 @@
 #include <stdarg.h>
 
 /* utility */
-#include "astring.h"
 #include "shared.h"
 #include "support.h"
 #include "timing.h"
