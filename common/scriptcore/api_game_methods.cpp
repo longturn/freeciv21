@@ -725,7 +725,7 @@ const char *api_methods_action_name_translation(lua_State *L, Action *pact)
   LUASCRIPT_CHECK_STATE(L, NULL);
   LUASCRIPT_CHECK_SELF(L, pact, NULL);
 
-  return action_id_name_translation(pact->id);
+  return qUtf8Printable(action_id_name_translation(pact->id));
 }
 
 /*************************************************************************/ /**

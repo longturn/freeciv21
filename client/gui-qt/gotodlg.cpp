@@ -219,7 +219,6 @@ void goto_dialog::fill_tab(player *pplayer)
   int i;
 
   QString str;
-  const char *at;
   QFont f = QApplication::font();
   QFontMetrics fm(f);
   int h;
@@ -249,11 +248,9 @@ void goto_dialog::fill_tab(player *pplayer)
         str = nation_adjective_translation(nation_of_player(pplayer));
         break;
       case 2:
-        at = get_airlift_text(get_units_in_focus(), pcity);
-        if (at == NULL) {
+        str = get_airlift_text(get_units_in_focus(), pcity);
+        if (str.isEmpty()) {
           str = QStringLiteral("-");
-        } else {
-          str = at;
         }
         item->setTextAlignment(Qt::AlignHCenter);
         break;

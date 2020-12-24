@@ -1358,7 +1358,7 @@ const char *action_rule_name(const struct action *action)
    Get the action name used when displaying the action in the UI. Nothing
    is added to the UI name.
  **************************************************************************/
-const char *action_name_translation(const struct action *action)
+const QString action_name_translation(const struct action *action)
 {
   /* Use action_id_name_translation() to format the UI name. */
   return action_id_name_translation(action->id);
@@ -1378,7 +1378,7 @@ const char *action_id_rule_name(action_id act_id)
    Get the action name used when displaying the action in the UI. Nothing
    is added to the UI name.
  **************************************************************************/
-const char *action_id_name_translation(action_id act_id)
+const QString action_id_name_translation(action_id act_id)
 {
   return action_prepare_ui_name(gen_action(act_id), "", ACTPROB_NA, NULL);
 }
@@ -1424,12 +1424,11 @@ static const char *action_prob_to_text(const struct act_prob prob)
    Success probability information is interpreted and added to the text.
    A custom text can be inserted before the probability information.
  **************************************************************************/
-const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
+const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
                                    const struct act_prob prob,
-                                   const char *custom)
+                                   const QString custom)
 {
-  static struct astring str = ASTRING_INIT;
-  static struct astring chance = ASTRING_INIT;
+  QString str, chance;
 
   /* Text representation of the probability. */
   const char *probtxt;
@@ -1448,11 +1447,10 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
     fc_assert(custom == NULL || custom[0] == '\0');
 
     /* Make the best of what is known */
-    astr_set(&str, _("%s%s (name may be wrong)"), mnemonic,
-             action_id_rule_name(act_id));
+    str = QString(_("%1%2 (name may be wrong)")).arg(mnemonic, action_id_rule_name(act_id));
 
     /* Return the guess. */
-    return astr_str(&str);
+    return str;
   }
 
   probtxt = action_prob_to_text(prob);
@@ -1467,7 +1465,7 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
      * name. To avoid a `()` when no UI name info part is added you have
      * to add the extra information to every action name or remove the
      * surrounding parens. */
-    astr_set(&chance, _(" (%s; %s)"), custom, probtxt);
+    chance = QString(_(" (%1; %2)")).arg(custom, probtxt);
   } else if (probtxt != NULL) {
     /* TRANS: action UI name's info part with probability.
      * Hint: you can move the paren handling from this sting to the action
@@ -1477,7 +1475,7 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
      * name. To avoid a `()` when no UI name info part is added you have
      * to add the extra information to every action name or remove the
      * surrounding parens. */
-    astr_set(&chance, _(" (%s)"), probtxt);
+    chance = QString(_(" (%1)")).arg(probtxt);
   } else if (custom != NULL) {
     /* TRANS: action UI name's info part with custom info.
      * Hint: you can move the paren handling from this sting to the action
@@ -1487,10 +1485,9 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
      * name. To avoid a `()` when no UI name info part is added you have
      * to add the extra information to every action name or remove the
      * surrounding parens. */
-    astr_set(&chance, _(" (%s)"), custom);
+    chance = QString(_(" (%1)")).arg(custom);
   } else {
     /* No info part to display. */
-    astr_clear(&chance);
   }
 
   fc_assert_msg(actions[act_id], "Action %d don't exist.", act_id);
@@ -1500,30 +1497,16 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
    * unlikely to appear in a format specifier. True for clients seen so
    * far: Gtk's _ and Qt's &) */
   {
-    struct astring fmtstr = ASTRING_INIT;
-    const char *ui_name = _(actions[act_id]->ui_name);
-
-    if (mnemonic[0] != '\0') {
-      const char *hit;
-
-      fc_assert(!strchr(mnemonic, '%'));
-      while ((hit = strstr(ui_name, mnemonic))) {
-        astr_add(&fmtstr, "%.*s%s%s", (int) (hit - ui_name), ui_name,
-                 mnemonic, mnemonic);
-        ui_name = hit + qstrlen(mnemonic);
-      }
-    }
-    astr_add(&fmtstr, "%s", ui_name);
+    QString fmtstr;
+    QString ui_name = _(actions[act_id]->ui_name);
+    ui_name.replace("%s", "%1");
+    fmtstr += QString("%1").arg(ui_name);
 
     /* Use the modified format string */
-    astr_set(&str, astr_str(&fmtstr), mnemonic, astr_str(&chance));
-
-    astr_free(&fmtstr);
+    str = QString(fmtstr).arg(mnemonic, chance);
   }
 
-  astr_free(&chance);
-
-  return astr_str(&str);
+  return str;
 }
 
 /**********************************************************************/ /**

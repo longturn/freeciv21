@@ -4086,7 +4086,7 @@ static bool do_unit_strike_city_production(const struct player *act_player,
                     E_UNIT_ACTION_ACTOR_FAILURE, ftc_server,
                     /* TRANS: unit, action, city */
                     _("Your %s failed to do %s in %s."), unit_link(act_unit),
-                    action_name_translation(paction), city_link(tgt_city));
+                    qUtf8Printable(action_name_translation(paction)), city_link(tgt_city));
 
       /* Make the failed attempt cost a single move. */
       act_unit->moves_left = MAX(0, act_unit->moves_left - SINGLE_MOVE);
@@ -4156,7 +4156,7 @@ static bool do_unit_strike_city_building(const struct player *act_player,
                     E_UNIT_ACTION_ACTOR_FAILURE, ftc_server,
                     /* TRANS: unit, action, city */
                     _("Your %s failed to do %s in %s."), unit_link(act_unit),
-                    action_name_translation(paction), city_link(tgt_city));
+                    qUtf8Printable(action_name_translation(paction)), city_link(tgt_city));
 
       /* Make the failed attempt cost a single move. */
       act_unit->moves_left = MAX(0, act_unit->moves_left - SINGLE_MOVE);
@@ -4173,7 +4173,7 @@ static bool do_unit_strike_city_building(const struct player *act_player,
                   E_UNIT_ACTION_ACTOR_FAILURE, ftc_server,
                   _("Your %s didn't find a %s to %s in %s."),
                   unit_link(act_unit), improvement_name_translation(tgt_bld),
-                  action_name_translation(paction), city_link(tgt_city));
+                  qUtf8Printable(action_name_translation(paction)), city_link(tgt_city));
 
     /* Punish the player for blindly attacking a building. */
     act_unit->moves_left = MAX(0, act_unit->moves_left - SINGLE_MOVE);
@@ -4531,7 +4531,7 @@ static bool unit_do_help_build(struct player *pplayer, struct unit *punit,
                 /* TRANS: Your Caravan does "Help Wonder" to help build the
                  * Pyramids in Bergen (4 surplus). */
                 _("Your %s does %s to help build the %s in %s (%d %s)."),
-                unit_link(punit), action_name_translation(paction), prod,
+                unit_link(punit), qUtf8Printable(action_name_translation(paction)), prod,
                 city_link(pcity_dest), abs(build_points_left(pcity_dest)),
                 work);
 

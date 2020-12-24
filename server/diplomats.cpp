@@ -214,12 +214,12 @@ bool spy_spread_plague(struct player *act_player, struct unit *act_unit,
                   /* TRANS: unit, action */
                   _("Your %s was caught attempting to do %s!"),
                   unit_tile_link(act_unit),
-                  action_name_translation(paction));
+                  qUtf8Printable(action_name_translation(paction)));
     notify_player(tgt_player, tgt_tile, E_ENEMY_DIPLOMAT_FAILED, ftc_server,
                   /* TRANS: nation, unit, action, city */
                   _("You caught %s %s attempting to do %s in %s!"),
                   nation_adjective_for_player(act_player),
-                  unit_tile_link(act_unit), action_name_translation(paction),
+                  unit_tile_link(act_unit), qUtf8Printable(action_name_translation(paction)),
                   tgt_city_link);
 
     /* This may cause a diplomatic incident */
@@ -246,11 +246,11 @@ bool spy_spread_plague(struct player *act_player, struct unit *act_unit,
                 ftc_server,
                 /* TRANS: unit, action, city */
                 _("Your %s did %s to %s."), unit_link(act_unit),
-                action_name_translation(paction), tgt_city_link);
+                qUtf8Printable(action_name_translation(paction)), tgt_city_link);
   notify_player(
       tgt_player, tgt_tile, E_UNIT_ACTION_TARGET_HOSTILE, ftc_server,
       /* TRANS: action, city, nation */
-      _("%s done to %s, %s suspected."), action_name_translation(paction),
+      _("%s done to %s, %s suspected."), qUtf8Printable(action_name_translation(paction)),
       tgt_city_link, nation_plural_for_player(act_player));
 
   /* This may cause a diplomatic incident. */

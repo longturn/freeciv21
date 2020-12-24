@@ -588,11 +588,11 @@ enum unit_activity action_get_activity(const struct action *paction);
 const char *action_rule_name(const struct action *action);
 const char *action_id_rule_name(action_id act_id);
 
-const char *action_name_translation(const struct action *action);
-const char *action_id_name_translation(action_id act_id);
-const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
+const QString action_name_translation(const struct action *action);
+const QString action_id_name_translation(action_id act_id);
+const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
                                    const struct act_prob prob,
-                                   const char *custom);
+                                   const QString custom);
 
 const char *action_ui_name_ruleset_var_name(int act);
 const char *action_ui_name_default(int act);

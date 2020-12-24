@@ -144,7 +144,7 @@ static void keep_moving(QVariant data1, QVariant data2);
 static void pillage_something(QVariant data1, QVariant data2);
 static void action_entry(choice_dialog *cd, action_id act,
                          const struct act_prob *act_probs,
-                         const char *custom, QVariant data1, QVariant data2);
+                         const QString custom, QVariant data1, QVariant data2);
 
 static bool is_showing_pillage_dialog = false;
 static races_dialog *race_dialog;
@@ -1990,7 +1990,7 @@ static action_id get_production_targeted_action_id(action_id tgt_action_id)
  ***************************************************************************/
 static void action_entry(choice_dialog *cd, action_id act,
                          const struct act_prob *act_probs,
-                         const char *custom, QVariant data1, QVariant data2)
+                         const QString custom, QVariant data1, QVariant data2)
 {
   QString title;
   QString tool_tip;
@@ -2019,7 +2019,7 @@ static void action_entry(choice_dialog *cd, action_id act,
  ***************************************************************************/
 static void action_entry_update(Choice_dialog_button *button, action_id act,
                                 const struct act_prob *act_probs,
-                                const char *custom, QVariant data1,
+                                const QString custom, QVariant data1,
                                 QVariant data2)
 {
   QString title;
@@ -3552,7 +3552,7 @@ void action_selection_refresh(struct unit *actor_unit,
 
   action_iterate(act)
   {
-    const char *custom;
+    QString custom;
 
     if (action_id_get_actor_kind(act) != AAK_UNIT) {
       /* Not relevant. */

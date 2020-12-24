@@ -58,6 +58,8 @@
 #include <fc_config.h>
 #endif
 
+#include <QStringLiteral>
+
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
@@ -400,4 +402,9 @@ QString strvec_to_and_list(const QVector<QString> &psv)
     // TRANS: end of an "and"-separated string list with more than two items.
     return result + QString(Q_("?and-list:, and %1")).arg(psv.back());
   }
+}
+
+QString qendl()
+{
+  return QString("\n");
 }
