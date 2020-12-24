@@ -212,7 +212,7 @@ static const QString audiospec_fullname(const QString &audioset_name,
       music ? QStringLiteral("stdmusic") : QStringLiteral("stdsounds");
   const char *dname;
 
-  QString fname = QString("%1%2").arg(audioset_name, suffix);
+  QString fname = QStringLiteral("%1%2").arg(audioset_name, suffix);
   dname = fileinfoname(get_data_dirs(), qUtf8Printable(fname));
 
   if (dname) {
@@ -329,10 +329,10 @@ void audio_real_init(const QString &soundset_name,
            qUtf8Printable(ms_filename), secfile_error());
     exit(EXIT_FAILURE);
   }
-  QString t0 = "soundspec.options";
+  QString t0 = QStringLiteral("soundspec.options");
   check_audiofile_capstr(ss_tagfile, &ss_filename, &us_ss_capstr, &t0);
 
-  QString t1 = "musicspec.options";
+  QString t1 = QStringLiteral("musicspec.options");
   check_audiofile_capstr(ms_tagfile, &ms_filename, &us_ms_capstr, &t1);
 
   atexit(audio_shutdown);
@@ -408,7 +408,7 @@ static int audio_play_tag(struct section_file *sfile, const QString &tag,
   audio_finished_callback cb = NULL;
   int ret = 0;
 
-  if (tag.isEmpty() || (tag == "-")) {
+  if (tag.isEmpty() || (tag == QLatin1String("-"))) {
     return -1;
   }
 
@@ -500,7 +500,8 @@ static int audio_play_music_tag(const QString &tag, bool repeat,
  **************************************************************************/
 void audio_play_sound(const QString &tag, const QString &alt_tag)
 {
-  const QString pretty_alt_tag = alt_tag.isEmpty() ? "(null)" : alt_tag;
+  const QString pretty_alt_tag =
+      alt_tag.isEmpty() ? QStringLiteral("(null)") : alt_tag;
 
   if (gui_options.sound_enable_effects) {
     fc_assert_ret(tag != NULL);
@@ -603,7 +604,7 @@ void audio_shutdown(void)
   /* avoid infinite loop at end of game */
   audio_stop();
 
-  audio_play_sound("e_game_quit", NULL);
+  audio_play_sound(QStringLiteral("e_game_quit"), NULL);
   plugins[selected_plugin].wait();
   plugins[selected_plugin].shutdown();
 
@@ -626,7 +627,7 @@ const QString audio_get_all_plugin_names(void)
   QString buffer;
   int i;
 
-  buffer = "[";
+  buffer = QLatin1String("[");
 
   for (i = 0; i < num_plugins_used; i++) {
     buffer = buffer + plugins[i].name;
@@ -634,6 +635,6 @@ const QString audio_get_all_plugin_names(void)
       buffer = buffer + ", ";
     }
   }
-  buffer += "]";
+  buffer += QLatin1String("]");
   return buffer;
 }

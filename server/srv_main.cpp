@@ -166,7 +166,7 @@ void init_game_seed(void)
 #ifdef FREECIV_TESTMATIC
     /* Log command to reproduce the gameseed */
     log_testmatic("set gameseed %d", game.server.seed);
-#else  /* FREECIV_TESTMATIC */
+#else /* FREECIV_TESTMATIC */
     log_debug("Setting game.seed:%d", game.server.seed);
 #endif /* FREECIV_TESTMATIC */
   } else {
@@ -429,16 +429,18 @@ bool check_for_game_over(void)
 
         fc_assert(candidates == player_list_size(winner_list));
 
-        str = "";
+        str = QLatin1String("");
         player_list_iterate(winner_list, pplayer)
         {
           if (first) {
             /* TRANS: Beginning of the winners list ("the French") */
-            str += QString(Q_("?winners:the %1")).arg(nation_plural_for_player(pplayer));
+            str += QString(Q_("?winners:the %1"))
+                       .arg(nation_plural_for_player(pplayer));
             first = false;
           } else {
             /* TRANS: Another entry in winners list (", the Tibetans") */
-            str += QString(Q_("?winners:, the %1")).arg(nation_plural_for_player(pplayer));
+            str += QString(Q_("?winners:, the %1"))
+                       .arg(nation_plural_for_player(pplayer));
           }
           pplayer->is_winner = true;
         }

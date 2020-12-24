@@ -2784,7 +2784,8 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
           fc_snprintf(quoted, maxlen,
                       /* TRANS: %s is an action that can block another. */
-                      _("\'%s\'"), qUtf8Printable(action_id_name_translation(blocker)));
+                      _("\'%s\'"),
+                      qUtf8Printable(action_id_name_translation(blocker)));
           blockers.append(quoted);
         }
       }
@@ -4787,7 +4788,7 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
                                     QString::number(count[i])));
       } else {
         utype_names.append(
-            QString("%s").arg(utype_name_translation(utypes[i])));
+            QStringLiteral("%s").arg(utype_name_translation(utypes[i])));
       }
     }
     QString list = strvec_to_and_list(utype_names);

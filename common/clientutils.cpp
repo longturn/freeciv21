@@ -239,9 +239,9 @@ const char *concat_tile_activity_text(struct tile *ptile)
 
         if (calc->extra_turns[ei][i] > 0) {
           if (num_activities > 0) {
-            str += "/";
+            str += QLatin1String("/");
           }
-          str += QString("%1(%2)").arg(
+          str += QStringLiteral("%1(%2)").arg(
               extra_name_translation(ep),
               QString::number(calc->extra_turns[ei][i]));
           num_activities++;
@@ -273,10 +273,12 @@ const char *concat_tile_activity_text(struct tile *ptile)
 
           if (calc->rmextra_turns[ei][i] > 0) {
             if (num_activities > 0) {
-              str += "/";
+              str += QLatin1String("/");
             }
             str += QString(rmcause == ERM_PILLAGE ? _("Pillage %1(%2)")
-                                            : _("Clean %1(%2)")).arg(extra_name_translation(ep), QString::number(calc->rmextra_turns[ei][i]));
+                                                  : _("Clean %1(%2)"))
+                       .arg(extra_name_translation(ep),
+                            QString::number(calc->rmextra_turns[ei][i]));
             num_activities++;
           }
         }
@@ -285,10 +287,10 @@ const char *concat_tile_activity_text(struct tile *ptile)
     } else if (is_tile_activity(i)) {
       if (calc->activity_turns[i] > 0) {
         if (num_activities > 0) {
-          str += "/";
+          str += QLatin1String("/");
         }
-        str += QString("%1(%2)").arg(get_activity_text(i),
-                 QString::number(calc->activity_turns[i]));
+        str += QStringLiteral("%1(%2)").arg(
+            get_activity_text(i), QString::number(calc->activity_turns[i]));
         num_activities++;
       }
     }

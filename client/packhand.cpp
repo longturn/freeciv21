@@ -5026,9 +5026,9 @@ void handle_endgame_player(const struct packet_endgame_player *packet)
   if (client_has_player()
       && packet->player_id == player_number(client_player())) {
     if (packet->winner) {
-      start_menu_music("music_victory", NULL);
+      start_menu_music(QStringLiteral("music_victory"), NULL);
     } else {
-      start_menu_music("music_defeat", NULL);
+      start_menu_music(QStringLiteral("music_defeat"), NULL);
     }
   }
   endgame_report_dialog_player(packet);

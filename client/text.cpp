@@ -77,7 +77,7 @@ const QString get_tile_output_text(const struct tile *ptile)
     }
   }
 
-  str = QString("%1/%2/%3")
+  str = QStringLiteral("%1/%2/%3")
             .arg(output_text[O_FOOD], output_text[O_SHIELD],
                  output_text[O_TRADE]);
 
@@ -168,7 +168,7 @@ const QString popup_info_text(struct tile *ptile)
               .arg(QString::number(nat_x), QString::number(nat_y));
 
   if (client_tile_get_known(ptile) == TILE_UNKNOWN) {
-    str = str + QString(_("Unknown"));
+    str += QString(_("Unknown"));
     return str;
   }
   str = str
@@ -183,10 +183,10 @@ const QString popup_info_text(struct tile *ptile)
     if (pextra->category == ECAT_BONUS
         && tile_has_visible_extra(ptile, pextra)) {
       if (!first) {
-        str = str + QString(",%1").arg(extra_name_translation(pextra));
+        str += QStringLiteral(",%1").arg(extra_name_translation(pextra));
       } else {
-        str = str + QString("%1").arg(extra_name_translation(pextra))
-              + qendl();
+        str += QStringLiteral("%1").arg(extra_name_translation(pextra))
+               + qendl();
         first = false;
       }
     }
@@ -199,11 +199,11 @@ const QString popup_info_text(struct tile *ptile)
     get_full_nation(nation, sizeof(nation), owner);
 
     if (NULL != client.conn.playing && owner == client.conn.playing) {
-      str = str + QString(_("Our territory")) + qendl();
+      str += QString(_("Our territory")) + qendl();
     } else if (NULL != owner && NULL == client.conn.playing) {
       /* TRANS: "Territory of <username> (<nation + team>)" */
-      str = str + QString(_("Territory of %1 (%2)")).arg(username, nation)
-            + qendl();
+      str +=
+          QString(_("Territory of %1 (%2)")).arg(username, nation) + qendl();
     } else if (NULL != owner) {
       struct player_diplstate *ds =
           player_diplstate_get(client.conn.playing, owner);
@@ -239,7 +239,7 @@ const QString popup_info_text(struct tile *ptile)
               + qendl();
       }
     } else {
-      str = str + QString(_("Unclaimed territory")) + qendl();
+      str += QString(_("Unclaimed territory")) + qendl();
     }
   }
   if (pcity) {
@@ -306,15 +306,15 @@ const QString popup_info_text(struct tile *ptile)
                     .arg(QString::number(count));
       } else {
         /* TRANS: preserve leading space */
-        str = str + QString(_(" | Not occupied."));
+        str += QString(_(" | Not occupied."));
       }
     } else {
       if (city_is_occupied(pcity)) {
         /* TRANS: preserve leading space */
-        str = str + QString(_(" | Occupied."));
+        str += QString(_(" | Occupied."));
       } else {
         /* TRANS: preserve leading space */
-        str = str + QString(_(" | Not occupied."));
+        str += QString(_(" | Not occupied."));
       }
     }
     improvement_iterate(pimprove)
@@ -355,12 +355,12 @@ const QString popup_info_text(struct tile *ptile)
     const char *infratext = get_infrastructure_text(ptile->extras);
 
     if (*infratext != '\0') {
-      str = str + QString(_("Infrastructure: %1")).arg(infratext) + qendl();
+      str += QString(_("Infrastructure: %1")).arg(infratext) + qendl();
     }
   }
   activity_text = concat_tile_activity_text(ptile);
   if (strlen(activity_text) > 0) {
-    str = str + QString(_("Activity: %1")).arg(activity_text) + qendl();
+    str += QString(_("Activity: %1")).arg(activity_text) + qendl();
   }
   if (punit && !pcity) {
     struct player *owner = unit_owner(punit);
@@ -481,10 +481,10 @@ const QString popup_info_text(struct tile *ptile)
       const char *veteran_name =
           utype_veteran_name_translation(ptype, punit->veteran);
       if (veteran_name) {
-        str = str + QString(" (%1)").arg(veteran_name);
+        str += QStringLiteral(" (%1)").arg(veteran_name);
       }
     }
-    str = str + qendl();
+    str += qendl();
 
     if (unit_owner(punit) == client_player()
         || client_is_global_observer()) {
@@ -557,25 +557,25 @@ const QString unit_description(struct unit *punit)
   struct city *pcity_near = get_nearest_city(punit, &pcity_near_dist);
   const struct unit_type *ptype = unit_type_get(punit);
   const struct player *pplayer = client_player();
-  QString str = QString("%1").arg(utype_name_translation(ptype));
+  QString str = QStringLiteral("%1").arg(utype_name_translation(ptype));
   const char *veteran_name =
       utype_veteran_name_translation(ptype, punit->veteran);
   if (veteran_name) {
-    str = str + QString("( %1)").arg(veteran_name);
+    str += QStringLiteral("( %1)").arg(veteran_name);
   }
 
   if (pplayer == owner) {
     unit_upkeep_astr(punit, str);
   } else {
-    str = str + qendl();
+    str += qendl();
   }
   unit_activity_astr(punit, str);
 
   if (pcity) {
     /* TRANS: on own line immediately following \n, ... <city> */
-    str = str + QString(_("from %1")).arg(city_name_get(pcity)) + qendl();
+    str += QString(_("from %1")).arg(city_name_get(pcity)) + qendl();
   } else {
-    str = str + qendl();
+    str += qendl();
   }
   if (game.info.citizen_nationality) {
     if (nationality != NULL && owner != nationality) {
@@ -586,15 +586,15 @@ const QString unit_description(struct unit *punit)
                   .arg(nation_adjective_for_player(nationality))
             + qendl();
     } else {
-      str = str + qendl();
+      str += qendl();
     }
   }
-  str =
-      str
-      + QString("%1").arg(get_nearest_city_text(pcity_near, pcity_near_dist))
-      + qendl();
+  str = str
+        + QStringLiteral("%1").arg(
+            get_nearest_city_text(pcity_near, pcity_near_dist))
+        + qendl();
 #ifdef FREECIV_DEBUG
-  str = str + QString("Unit ID: %1").arg(punit->id);
+  str += QString("Unit ID: %1").arg(punit->id);
 #endif
 
   return str;
@@ -699,10 +699,10 @@ const QString get_airlift_text(const struct unit_list *punits,
   case AL_IMPOSSIBLE:
     return NULL;
   case AL_UNKNOWN:
-    str = "?";
+    str = QLatin1String("?");
     break;
   case AL_FINITE:
-    str = QString("%1/%2").arg(cur, max);
+    str = QStringLiteral("%1/%2").arg(cur, max);
     break;
   case AL_INFINITE:
     str = _("Yes");
@@ -847,9 +847,9 @@ const QString science_dialog_text(void)
     } else {
       /* no forward progress -- no research, or tech loss disallowed */
       if (perturn < 0) {
-        str = str + QString(_("Progress: decreasing!"));
+        str += QString(_("Progress: decreasing!"));
       } else {
-        str = str + QString(_("Progress: none"));
+        str += QString(_("Progress: none"));
       }
     }
   }
@@ -860,9 +860,9 @@ const QString science_dialog_text(void)
                            ", %1 bulbs/turn from team", theirs))
                    .arg(theirs);
   } else {
-    theirbuf = "";
+    theirbuf = QLatin1String("");
   }
-  str = str + QString(" (%1%2)").arg(ourbuf, theirbuf);
+  str += QStringLiteral(" (%1%2)").arg(ourbuf, theirbuf);
 
   if (game.info.tech_upkeep_style != TECH_UPKEEP_NONE) {
     /* perturn is defined as: (bulbs produced) - upkeep */
@@ -893,7 +893,7 @@ const QString get_science_target_text(double *percent)
   QString str;
 
   if (!research) {
-    return "-";
+    return QStringLiteral("-");
   }
 
   if (research->researching == A_UNSET) {
@@ -940,7 +940,7 @@ const QString get_science_goal_text(Tech_type_id goal)
   QString str, buf1, buf2, buf3;
 
   if (!research) {
-    return "-";
+    return QStringLiteral("-");
   }
 
   if (research_goal_tech_req(research, goal, research->researching)
@@ -956,7 +956,7 @@ const QString get_science_goal_text(Tech_type_id goal)
   } else {
     buf3 = QString(_("never"));
   }
-  str = str + QString("(%1 - %2 - %3)").arg(buf1, buf2, buf3);
+  str += QStringLiteral("(%1 - %2 - %3)").arg(buf1, buf2, buf3);
 
   return str;
 }
@@ -996,7 +996,7 @@ const QString get_info_label_text(bool moreinfo)
   }
   if (game.info.phase_mode == PMT_PLAYERS_ALTERNATE) {
     if (game.info.phase < 0 || game.info.phase >= player_count()) {
-      str = str + QString(_("Moving: Nobody")) + qendl();
+      str += QString(_("Moving: Nobody")) + qendl();
     } else {
       str = str
             + QString(_("Moving: %1"))
@@ -1005,7 +1005,7 @@ const QString get_info_label_text(bool moreinfo)
     }
   } else if (game.info.phase_mode == PMT_TEAMS_ALTERNATE) {
     if (game.info.phase < 0 || game.info.phase >= team_count()) {
-      str = str + QString(_("Moving: Nobody")) + qendl();
+      str += QString(_("Moving: Nobody")) + qendl();
     } else {
       str =
           str
@@ -1016,7 +1016,7 @@ const QString get_info_label_text(bool moreinfo)
   }
 
   if (moreinfo) {
-    str = str + QString(_("(Click for more info)")) + qendl();
+    str += QString(_("(Click for more info)")) + qendl();
   }
 
   return str;
@@ -1036,8 +1036,8 @@ const QString get_info_label_text_popup(void)
               .arg(population_to_text(civ_population(client.conn.playing)))
           + qendl();
   }
-  str = str + QString(_("Year: %1")).arg(calendar_text()) + qendl();
-  str = str + QString(_("Turn: %1")).arg(game.info.turn) + qendl();
+  str += QString(_("Year: %1")).arg(calendar_text()) + qendl();
+  str += QString(_("Turn: %1")).arg(game.info.turn) + qendl();
 
   if (NULL != client.conn.playing) {
     const struct research *presearch = research_get(client_player());
@@ -1073,7 +1073,7 @@ const QString get_info_label_text_popup(void)
             + qendl();
     } else {
       fc_assert(upkeep == 0);
-      str = str + QString(_("Bulbs per turn: %1")).arg(perturn) + qendl();
+      str += QString(_("Bulbs per turn: %1")).arg(perturn) + qendl();
     }
     {
       int history_perturn = nation_history_gain(client.conn.playing);
@@ -1099,7 +1099,7 @@ const QString get_info_label_text_popup(void)
                 .arg(chance, rate)
           + qendl();
   } else {
-    str = str + QString(_("Global warming deactivated.")) + qendl();
+    str += QString(_("Global warming deactivated.")) + qendl();
   }
 
   if (game.info.nuclear_winter) {
@@ -1110,7 +1110,7 @@ const QString get_info_label_text_popup(void)
                 .arg(chance, rate)
           + qendl();
   } else {
-    str = str + QString(_("Nuclear winter deactivated.")) + qendl();
+    str += QString(_("Nuclear winter deactivated.")) + qendl();
   }
 
   if (NULL != client.conn.playing) {
@@ -1156,7 +1156,7 @@ const QString get_unit_info_label_text2(struct unit_list *punits,
   QString str;
 
   if (!punits) {
-    return "";
+    return QLatin1String("");
   }
 
   count = unit_list_size(punits);
@@ -1173,14 +1173,15 @@ const QString get_unit_info_label_text2(struct unit_list *punits,
 
     if (!goto_get_turns(&min, &max)) {
       /* TRANS: Impossible to reach goto target tile */
-      str = QString("%1").arg(Q_("?goto:Unreachable")) + qendl();
+      str = QStringLiteral("%1").arg(Q_("?goto:Unreachable")) + qendl();
     } else if (min == max) {
       str = QString(_("Turns to target: %1")).arg(max) + qendl();
     } else {
       str = QString(_("Turns to target: %1 to %2")).arg(min, max) + qendl();
     }
   } else if (count == 1) {
-    str = QString("%1").arg(unit_activity_text(unit_list_get(punits, 0)))
+    str = QStringLiteral("%1").arg(
+              unit_activity_text(unit_list_get(punits, 0)))
           + qendl();
   } else if (count > 1) {
     str = QString(PL_("%1 unit selected", "%1 units selected", count))
@@ -1197,7 +1198,7 @@ const QString get_unit_info_label_text2(struct unit_list *punits,
     struct city *pcity = player_city_by_number(owner, punit->homecity);
 
     str = str
-          + QString("%1").arg(
+          + QStringLiteral("%1").arg(
               tile_get_info_text(unit_tile(punit), true, linebreaks))
           + qendl();
     {
@@ -1205,15 +1206,15 @@ const QString get_unit_info_label_text2(struct unit_list *punits,
           get_infrastructure_text(unit_tile(punit)->extras);
 
       if (*infratext != '\0') {
-        str = str + QString("%1").arg(infratext) + qendl();
+        str += QStringLiteral("%1").arg(infratext) + qendl();
       } else {
-        str = str + QString(" \n");
+        str += QStringLiteral(" \n");
       }
     }
     if (pcity) {
-      str = str + QString("%1").arg(city_name_get(pcity)) + qendl();
+      str += QStringLiteral("%1").arg(city_name_get(pcity)) + qendl();
     } else {
-      str = str + QString(" \n");
+      str += QStringLiteral(" \n");
     }
 
     if (game.info.citizen_nationality) {
@@ -1228,7 +1229,7 @@ const QString get_unit_info_label_text2(struct unit_list *punits,
                     .arg(nation_adjective_for_player(nationality))
               + qendl();
       } else {
-        str = str + QString(" \n");
+        str += QStringLiteral(" \n");
       }
     }
 
@@ -1282,19 +1283,19 @@ const QString get_unit_info_label_text2(struct unit_list *punits,
           mil -= types_count[utype_index(top[i])];
         }
         str = str
-              + QString("%1: %2").arg(
+              + QStringLiteral("%1: %2").arg(
                   QString::number(types_count[utype_index(top[i])]),
                   utype_name_translation(top[i]))
               + qendl();
       } else {
-        str = str + QString(" \n");
+        str += QStringLiteral(" \n");
       }
     }
 
     if (top[2] && types_count[utype_index(top[2])] > 0
         && types_count[utype_index(top[2])] == nonmil + mil) {
       str = str
-            + QString("%1: %2").arg(
+            + QStringLiteral("%1: %2").arg(
                 QString::number(types_count[utype_index(top[2])]),
                 utype_name_translation(top[2]))
             + qendl();
@@ -1303,33 +1304,33 @@ const QString get_unit_info_label_text2(struct unit_list *punits,
             + QString(_("Others: %1 civil; %2 military")).arg(nonmil, mil)
             + qendl();
     } else if (nonmil > 0) {
-      str = str + QString(_("Others: %1 civilian")).arg(nonmil) + qendl();
+      str += QString(_("Others: %1 civilian")).arg(nonmil) + qendl();
     } else if (mil > 0) {
-      str = str + QString(_("Others: %1 military")).arg(mil) + qendl();
+      str += QString(_("Others: %1 military")).arg(mil) + qendl();
     } else {
-      str = str + QString(" \n");
+      str += QStringLiteral(" \n");
     }
 
     if (game.info.citizen_nationality) {
-      str = str + QString(" \n");
+      str += QStringLiteral(" \n");
     }
   } else {
-    str = str + QString(" \n");
-    str = str + QString(" \n");
-    str = str + QString(" \n");
+    str += QStringLiteral(" \n");
+    str += QStringLiteral(" \n");
+    str += QStringLiteral(" \n");
 
     if (game.info.citizen_nationality) {
-      str = str + QString(" \n");
+      str += QStringLiteral(" \n");
     }
   }
 
   /* Line 5/6. Debug text. */
 #ifdef FREECIV_DEBUG
   if (count == 1) {
-    str = str + QString("(Unit ID %1)").arg(unit_list_get(punits, 0)->id)
-          + qendl();
+    str +=
+        QString("(Unit ID %1)").arg(unit_list_get(punits, 0)->id) + qendl();
   } else {
-    str = str + QString(" \n");
+    str += QString(" \n");
   }
 #endif /* FREECIV_DEBUG */
 
@@ -1462,7 +1463,7 @@ const QString get_bulb_tooltip(void)
     struct research *research = research_get(client_player());
 
     if (research->researching == A_UNSET) {
-      str = str + _("No research target.");
+      str += _("No research target.");
     } else {
       int turns;
       int perturn = get_bulbs_per_turn(NULL, NULL, NULL);
@@ -1511,7 +1512,7 @@ const QString get_global_warming_tooltip(void)
     int chance, rate;
     global_warming_scaled(&chance, &rate, 100);
     str = _("Shows the progress of global warming:");
-    str = str + QString(_("Pollution rate: %1%%")).arg(rate) + qendl();
+    str += QString(_("Pollution rate: %1%%")).arg(rate) + qendl();
     str = str
           + QString(_("Chance of catastrophic warming each turn: %1%%"))
                 .arg(chance)
@@ -1535,7 +1536,7 @@ const QString get_nuclear_winter_tooltip(void)
     int chance, rate;
     nuclear_winter_scaled(&chance, &rate, 100);
     str = _("Shows the progress of nuclear winter:") + qendl();
-    str = str + QString(_("Fallout rate: %1%%")).arg(rate) + qendl();
+    str += QString(_("Fallout rate: %1%%")).arg(rate) + qendl();
     str = str
           + QString(_("Chance of catastrophic winter each turn: %1%%"))
                 .arg(chance)
@@ -1556,10 +1557,10 @@ const QString get_government_tooltip(void)
   str = _("Shows your current government:") + qendl();
 
   if (NULL != client.conn.playing) {
-    str =
-        str
-        + QString("%1").arg(government_name_for_player(client.conn.playing))
-        + qendl();
+    str = str
+          + QStringLiteral("%1").arg(
+              government_name_for_player(client.conn.playing))
+          + qendl();
   }
   return str;
 }
@@ -1578,8 +1579,7 @@ const QString get_spaceship_descr(struct player_spaceship *pship)
     memset(&ship, 0, sizeof(ship));
   }
   /* TRANS: spaceship text; should have constant width. */
-  str = str + QString(_("Population:      %1")).arg(pship->population)
-        + qendl();
+  str += QString(_("Population:      %1")).arg(pship->population) + qendl();
   /* TRANS: spaceship text; should have constant width. */
   str = str
         + QString(_("Support:         %1 %%"))
@@ -1604,8 +1604,8 @@ const QString get_spaceship_descr(struct player_spaceship *pship)
           + qendl();
   } else {
     /* TRANS: spaceship text; should have constant width. */
-    str =
-        str + QString("%1").arg(_("Travel time:        N/A     ")) + qendl();
+    str = str + QStringLiteral("%1").arg(_("Travel time:        N/A     "))
+          + qendl();
   }
   /* TRANS: spaceship text; should have constant width. */
   str = str
@@ -1637,13 +1637,15 @@ const QString get_timeout_label_text(void)
     if (wt < 0.01) {
       str = Q_("?timeout:wait");
     } else {
-      str = QString("%1: %2").arg(Q_("?timeout:eta"), format_duration(wt));
+      str = QStringLiteral("%1: %2").arg(Q_("?timeout:eta"),
+                                         format_duration(wt));
     }
   } else {
     if (current_turn_timeout() <= 0) {
-      str = QString("%1").arg(Q_("?timeout:off"));
+      str = QStringLiteral("%1").arg(Q_("?timeout:off"));
     } else {
-      str = QString("%1").arg(format_duration(get_seconds_to_turndone()));
+      str = QStringLiteral("%1").arg(
+          format_duration(get_seconds_to_turndone()));
     }
   }
 
@@ -1664,18 +1666,22 @@ const QString format_duration(int duration)
     duration = 0;
   }
   if (duration < 60) {
-    str = str + QString(Q_("?seconds:%1s")).arg(duration, 2);
+    str += QString(Q_("?seconds:%1s")).arg(duration, 2);
   } else if (duration < 3600) { /* < 60 minutes */
     str = str
           + QString(Q_("?mins/secs:%1m %2s"))
                 .arg(duration / 60, 2)
                 .arg(duration % 60, 2);
   } else if (duration < 360000) { /* < 100 hours */
-  str = str + QString(Q_("?hrs/mns:%1h %2m")).arg(duration / 3600, 2).arg((duration / 60) % 60, 2);
+    str += QString(Q_("?hrs/mns:%1h %2m"))
+               .arg(duration / 3600, 2)
+               .arg((duration / 60) % 60, 2);
   } else if (duration < 8640000) { /* < 100 days */
-  str = str + QString(Q_("?dys/hrs:%1d %2dh")).arg(duration / 86400, 2).arg((duration / 3600) % 24, 2);
+    str += QString(Q_("?dys/hrs:%1d %2dh"))
+               .arg(duration / 86400, 2)
+               .arg((duration / 3600) % 24, 2);
   } else {
-    str = str + QString("%1").arg(Q_("?duration:overflow"));
+    str += QStringLiteral("%1").arg(Q_("?duration:overflow"));
   }
 
   return str;
@@ -1696,7 +1702,9 @@ QString get_ping_time_text(const struct player *pplayer)
         && 0 == strcmp(pconn->username, pplayer->username)) {
       if (pconn->ping_time != -1) {
         double ping_time_in_ms = 1000 * pconn->ping_time;
-        str = str + QString(_("%1.%2 ms")).arg((int) ping_time_in_ms, 6).arg(((int) (ping_time_in_ms * 100.0)) % 100, 2);
+        str += QString(_("%1.%2 ms"))
+                   .arg((int) ping_time_in_ms, 6)
+                   .arg(((int) (ping_time_in_ms * 100.0)) % 100, 2);
       }
       break;
     }
@@ -1716,9 +1724,9 @@ QString get_score_text(const struct player *pplayer)
 
   if (pplayer->score.game > 0 || NULL == client.conn.playing
       || pplayer == client.conn.playing) {
-    str = QString("%1").arg(pplayer->score.game);
+    str = QStringLiteral("%1").arg(pplayer->score.game);
   } else {
-    str = "?";
+    str = QLatin1String("?");
   }
 
   return str;
@@ -1754,7 +1762,7 @@ const QString get_report_title(const char *report_name)
           + qendl();
   } else {
     /* TRANS: "Observer - 1985 AD" */
-    str = str + QString(_("Observer - %1")).arg(calendar_text()) + qendl();
+    str += QString(_("Observer - %1")).arg(calendar_text()) + qendl();
   }
   return str;
 }
@@ -1878,10 +1886,10 @@ const QString text_happiness_nationality(const struct city *pcity)
     }
 
     if (enemies == 0) {
-      str = str + QString(_("None."));
+      str += QString(_("None."));
     }
   } else {
-    str = str + QString(_("Disabled."));
+    str += QString(_("Disabled."));
   }
 
   return str;
@@ -1990,8 +1998,10 @@ const QString text_happiness_cities(const struct city *pcity)
                           "%1 content before penalty.", content))
                   .arg(content)
             + qendl();
-      str = str + QString(PL_("%1 additional unhappy citizen.",
-                        "%1 additional unhappy citizens.",unhappy)).arg(unhappy) + qendl();
+      str += QString(PL_("%1 additional unhappy citizen.",
+                         "%1 additional unhappy citizens.", unhappy))
+                 .arg(unhappy)
+             + qendl();
       if (angry > 0) {
         str =
             str
@@ -2057,8 +2067,8 @@ const QString text_happiness_units(const struct city *pcity)
   if (mlmax > 0) {
     int mleach = get_city_bonus(pcity, EFT_MARTIAL_LAW_EACH);
     if (mlmax == 100) {
-      str =
-          QString("%1").arg(_("Unlimited martial law in effect.")) + qendl();
+      str = QStringLiteral("%1").arg(_("Unlimited martial law in effect."))
+            + qendl();
     } else {
       str = str
             + QString(PL_("%1 military unit may impose martial law.",
@@ -2081,8 +2091,7 @@ const QString text_happiness_units(const struct city *pcity)
           + QString(_("Military units in the field may cause unhappiness. "))
           + qendl();
   } else {
-    str = str + QString(_("Military units have no happiness effect. "))
-          + qendl();
+    str += QString(_("Military units have no happiness effect. ")) + qendl();
   }
   return str;
 }
@@ -2092,5 +2101,6 @@ const QString text_happiness_units(const struct city *pcity)
  ****************************************************************************/
 const QString text_happiness_luxuries(const struct city *pcity)
 {
-  return QString(_("Luxury: %1 total.")).arg(pcity->prod[O_LUXURY]) + qendl();
+  return QString(_("Luxury: %1 total.")).arg(pcity->prod[O_LUXURY])
+         + qendl();
 }
