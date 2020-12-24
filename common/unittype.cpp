@@ -1397,33 +1397,30 @@ const char *uclass_rule_name(const struct unit_class *pclass)
    set, separate with "or", otherwise "and". Return FALSE if no unit with
    this flag exists.
  **************************************************************************/
-bool role_units_translations(struct astring *astr, int flag, bool alts)
+bool role_units_translations(QString &astr, int flag, bool alts)
 {
   const int count = num_role_units(flag);
 
   if (4 < count) {
     if (alts) {
-      astr_set(astr, _("%s or similar units"),
-               utype_name_translation(get_role_unit(flag, 0)));
+      astr = QString(_("%1 or similar units")).arg(utype_name_translation(get_role_unit(flag, 0)));
     } else {
-      astr_set(astr, _("%s and similar units"),
-               utype_name_translation(get_role_unit(flag, 0)));
+      astr = QString(_("%1 and similar units")).arg(utype_name_translation(get_role_unit(flag, 0)));
     }
     return true;
   } else if (0 < count) {
-    const char **vec = new const char *[count];
-    int i;
+    QVector<QString> vec;
+    vec.reserve(count);
 
-    for (i = 0; i < count; i++) {
-      vec[i] = utype_name_translation(get_role_unit(flag, i));
+    for (int i = 0; i < count; i++) {
+      vec.append(utype_name_translation(get_role_unit(flag, i)));
     }
 
     if (alts) {
-      astr_build_or_list(astr, vec, count);
+      astr = strvec_to_or_list(vec);
     } else {
-      astr_build_and_list(astr, vec, count);
+      astr = strvec_to_and_list(vec);
     }
-    delete[] vec;
     return true;
   }
   return false;

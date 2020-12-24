@@ -1962,15 +1962,14 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                                target_city, target_unit);
   switch (explnat->kind) {
   case ANEK_ACTOR_UNIT: {
-    struct astring astr = ASTRING_INIT;
+    QString roles;
 
-    if (role_units_translations(&astr, action_id_get_role(stopped_action),
+    if (role_units_translations(roles, action_id_get_role(stopped_action),
                                 true)) {
       notify_player(pplayer, unit_tile(actor), event, ftc_server,
                     /* TRANS: Only Diplomat or Spy can do Steal Gold. */
-                    _("Only %s can do %s."), astr_str(&astr),
+                    _("Only %s can do %s."), qUtf8Printable(roles),
                     action_id_name_translation(stopped_action));
-      astr_free(&astr);
     } else {
       notify_player(pplayer, unit_tile(actor), event, ftc_server,
                     /* TRANS: Spy can't do Capture Units. */
