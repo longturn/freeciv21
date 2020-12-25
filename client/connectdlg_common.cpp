@@ -29,7 +29,6 @@
 #endif
 
 /* utility */
-#include "astring.h"
 #include "capability.h"
 #include "deprecations.h"
 #include "fciconv.h"

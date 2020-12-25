@@ -496,13 +496,11 @@ static void insert_allows_single(struct universal *psource,
                                  const char *const *strs, char *buf,
                                  size_t bufsz, const char *prefix)
 {
-  QVector<QString> *coreqs = new QVector<QString>;
-  QVector<QString> *conoreqs = new QVector<QString>;
-  struct astring coreqstr = ASTRING_INIT;
-  struct astring conoreqstr = ASTRING_INIT;
+  QVector<QString> coreqs;
+  QVector<QString> conoreqs;
   char *buf2 = new char[bufsz];
 
-  /* FIXME: show other data like range and survives. */
+  /* TODO: show other data like range and survives. */
 
   requirement_vector_iterate(psubjreqs, req)
   {
@@ -518,31 +516,30 @@ static void insert_allows_single(struct universal *psource,
               && !are_universals_equal(psource, &coreq->source)) {
             universal_name_translation(&coreq->source, buf2, bufsz);
             if (coreq->present) {
-              coreqs->append(buf2);
+              coreqs.append(buf2);
             } else {
-              conoreqs->append(buf2);
+              conoreqs.append(buf2);
             }
           }
         }
         requirement_vector_iterate_end;
 
-        if (0 < coreqs->count()) {
-          if (0 < conoreqs->count()) {
+        if (0 < coreqs.count()) {
+          if (0 < conoreqs.count()) {
             cat_snprintf(buf, bufsz,
                          Q_(strs[0]), /* "Allows %s (with %s but no %s)." */
-                         subjstr,
-                         qUtf8Printable(strvec_to_and_list(*coreqs)),
-                         qUtf8Printable(strvec_to_or_list(*conoreqs)));
+                         subjstr, qUtf8Printable(strvec_to_and_list(coreqs)),
+                         qUtf8Printable(strvec_to_or_list(conoreqs)));
           } else {
             cat_snprintf(
                 buf, bufsz, Q_(strs[1]), /* "Allows %s (with %s)." */
-                subjstr, qUtf8Printable(strvec_to_and_list(*coreqs)));
+                subjstr, qUtf8Printable(strvec_to_and_list(coreqs)));
           }
         } else {
-          if (0 < conoreqs->count()) {
+          if (0 < conoreqs.count()) {
             cat_snprintf(
                 buf, bufsz, Q_(strs[2]), /* "Allows %s (absent %s)." */
-                subjstr, qUtf8Printable(strvec_to_and_list(*conoreqs)));
+                subjstr, qUtf8Printable(strvec_to_and_list(conoreqs)));
           } else {
             cat_snprintf(buf, bufsz, Q_(strs[3]), /* "Allows %s." */
                          subjstr);
@@ -558,10 +555,6 @@ static void insert_allows_single(struct universal *psource,
   }
   requirement_vector_iterate_end;
 
-  delete coreqs;
-  delete conoreqs;
-  astr_free(&coreqstr);
-  astr_free(&conoreqstr);
   delete[] buf2;
 }
 
@@ -1361,7 +1354,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target the city building it "
                        "with the action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_CITY:
         /* At least one action enabler needed the building in its target
@@ -1370,7 +1363,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target its city with the "
                        "action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_TRADEROUTE:
         /* At least one action enabler needed the building in its target
@@ -1379,7 +1372,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target its city and its "
                        "trade partners with the action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_CONTINENT:
         /* At least one action enabler needed the building in its target
@@ -1388,7 +1381,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target all cities with its "
                        "owner on its continent with the action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_PLAYER:
         /* At least one action enabler needed the building in its target
@@ -1397,7 +1390,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target all cities with its "
                        "owner with the action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_TEAM:
         /* At least one action enabler needed the building in its target
@@ -1406,7 +1399,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target all cities on the "
                        "same team with the action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_ALLIANCE:
         /* At least one action enabler needed the building in its target
@@ -1415,7 +1408,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target all cities owned by "
                        "or allied to its owner with the action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_WORLD:
         /* At least one action enabler needed the building in its target
@@ -1424,7 +1417,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Help build Wonder */
                      _("* Makes it possible to target all cities with the "
                        "action \'%s\'.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_CADJACENT:
       case REQ_RANGE_ADJACENT:
@@ -1503,56 +1496,56 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "the city building it.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_CITY:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "its city.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_TRADEROUTE:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "its city or to its city's trade partners.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_CONTINENT:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "any city with its owner on its continent.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_PLAYER:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "any city with its owner.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_TEAM:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "any city on the same team.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_ALLIANCE:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "any city allied to or owned by its owner.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_WORLD:
         cat_snprintf(buf, bufsz,
                      /* TRANS: Incite City */
                      _("* Makes it impossible to do the action \'%s\' to "
                        "any city in the game.\n"),
-                     action_id_name_translation(act));
+                     qUtf8Printable(action_id_name_translation(act)));
         break;
       case REQ_RANGE_CADJACENT:
       case REQ_RANGE_ADJACENT:
@@ -1786,49 +1779,48 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       continue;
     }
     int targets = 0;
-    const char **against = new const char *[utype_count()];
+    QVector<QString> against;
+    against.reserve(utype_count());
 
     /* Find the unit types of the bonus targets. */
     unit_type_iterate(utype2)
     {
       if (utype_has_flag(utype2, cbonus->flag)) {
-        against[targets++] = utype_name_translation(utype2);
+        against.append(utype_name_translation(utype2));
       }
     }
     unit_type_iterate_end;
 
     if (targets > 0) {
-      struct astring list = ASTRING_INIT;
+      QString orlist = strvec_to_or_list(against);
+      QString andlist = strvec_to_and_list(against);
 
       switch (cbonus->type) {
       case CBONUS_DEFENSE_MULTIPLIER:
         cat_snprintf(buf, bufsz,
                      /* TRANS: percentage ... or-list of unit types */
                      _("* %d%% defense bonus if attacked by %s.\n"),
-                     cbonus->value * 100,
-                     astr_build_or_list(&list, against, targets));
+                     cbonus->value * 100, qUtf8Printable(orlist));
         break;
       case CBONUS_DEFENSE_DIVIDER:
         cat_snprintf(buf, bufsz,
                      /* TRANS: defense divider ... or-list of unit types */
                      _("* Reduces target's defense to 1 / %d when "
                        "attacking %s.\n"),
-                     cbonus->value + 1,
-                     astr_build_or_list(&list, against, targets));
+                     cbonus->value + 1, qUtf8Printable(orlist));
         break;
       case CBONUS_FIREPOWER1:
         cat_snprintf(buf, bufsz,
                      /* TRANS: or-list of unit types */
                      _("* Reduces target's fire power to 1 when "
                        "attacking %s.\n"),
-                     astr_build_and_list(&list, against, targets));
+                     qUtf8Printable(andlist));
         break;
       case CBONUS_DEFENSE_MULTIPLIER_PCT:
         cat_snprintf(buf, bufsz,
                      /* TRANS: percentage ... or-list of unit types */
                      _("* %d%% defense bonus if attacked by %s.\n"),
-                     cbonus->value,
-                     astr_build_or_list(&list, against, targets));
+                     cbonus->value, qUtf8Printable(orlist));
         break;
       case CBONUS_DEFENSE_DIVIDER_PCT:
         cat_snprintf(buf, bufsz,
@@ -1836,13 +1828,10 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                      _("* Reduces target's defense to 1 / %.2f when "
                        "attacking %s.\n"),
                      ((float) cbonus->value + 100.0f) / 100.0f,
-                     astr_build_or_list(&list, against, targets));
+                     qUtf8Printable(orlist));
         break;
       }
-
-      astr_free(&list);
     }
-    delete[] against;
   }
   combat_bonus_list_iterate_end;
 
@@ -1909,28 +1898,25 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   }
   nations_iterate_end;
   {
-    const char **types = new const char *[utype_count()];
+    QVector<QString> types;
+    types.reserve(utype_count());
     int i = 0;
 
     unit_type_iterate(utype2)
     {
       if (utype2->converted_to == utype
           && utype_can_do_action_result(utype2, ACTRES_CONVERT)) {
-        types[i++] = utype_name_translation(utype2);
+        types.append(utype_name_translation(utype2));
       }
     }
     unit_type_iterate_end;
     if (i > 0) {
-      struct astring list = ASTRING_INIT;
-
-      astr_build_or_list(&list, types, i);
+      QString orlist = strvec_to_or_list(types);
       cat_snprintf(buf, bufsz,
                    /* TRANS: %s is a list of unit types separated by "or". */
                    _("* May be obtained by conversion of %s.\n"),
-                   astr_str(&list));
-      astr_free(&list);
+                   qUtf8Printable(orlist));
     }
-    delete[] types;
   }
   if (utype_has_flag(utype, UTYF_NOHOME)) {
     CATLSTR(buf, bufsz, _("* Never has a home city.\n"));
@@ -1962,26 +1948,24 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                  utype->pop_cost);
   }
   if (0 < utype->transport_capacity) {
-    const char **classes = new const char *[uclass_count()];
-    int i = 0;
-    struct astring list = ASTRING_INIT;
+    QVector<QString> classes;
+    classes.reserve(uclass_count());
 
     unit_class_iterate(uclass)
     {
       if (can_unit_type_transport(utype, uclass)) {
-        classes[i++] = uclass_name_translation(uclass);
+        classes.append(uclass_name_translation(uclass));
       }
     }
     unit_class_iterate_end;
-    astr_build_or_list(&list, classes, i);
+    QString orlist = strvec_to_or_list(classes);
 
     cat_snprintf(buf, bufsz,
                  /* TRANS: %s is a list of unit classes separated by "or". */
                  PL_("* Can carry and refuel %d %s unit.\n",
                      "* Can carry and refuel up to %d %s units.\n",
                      utype->transport_capacity),
-                 utype->transport_capacity, astr_str(&list));
-    astr_free(&list);
+                 utype->transport_capacity, qUtf8Printable(orlist));
     if (uclass_has_flag(utype_class(utype), UCF_UNREACHABLE)) {
       /* Document restrictions on when units can load/unload */
       bool has_restricted_load = false, has_unrestricted_load = false,
@@ -2035,7 +2019,6 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
         }
       } /* else, no restricted cargo exists; keep quiet */
     }
-    delete[] classes;
   }
   if (utype_has_flag(utype, UTYF_COAST_STRICT)) {
     CATLSTR(buf, bufsz, _("* Must stay next to safe coast.\n"));
@@ -2087,19 +2070,17 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
     if (BV_ISSET_ANY(embarks)) {
       /* Build list of embark exceptions */
-      const char **eclasses = new const char *[uclass_count()];
-
-      int i = 0;
-      struct astring elist = ASTRING_INIT;
+      QVector<QString> eclasses;
+      eclasses.reserve(uclass_count());
 
       unit_class_iterate(uclass)
       {
         if (BV_ISSET(embarks, uclass_index(uclass))) {
-          eclasses[i++] = uclass_name_translation(uclass);
+          eclasses.append(uclass_name_translation(uclass));
         }
       }
       unit_class_iterate_end;
-      astr_build_or_list(&elist, eclasses, i);
+      QString elist = strvec_to_or_list(eclasses);
       if (BV_ARE_EQUAL(embarks, disembarks)) {
         /* A common case: the list of disembark exceptions is identical */
         cat_snprintf(buf, bufsz,
@@ -2107,40 +2088,35 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                       * by "or". */
                      _("* May load onto and unload from %s transports even "
                        "when underway.\n"),
-                     astr_str(&elist));
+                     qUtf8Printable(elist));
       } else {
         cat_snprintf(
             buf, bufsz,
             /* TRANS: %s is a list of unit classes separated
              * by "or". */
             _("* May load onto %s transports even when underway.\n"),
-            astr_str(&elist));
+            qUtf8Printable(elist));
       }
-      astr_free(&elist);
-      delete[] eclasses;
     }
     if (BV_ISSET_ANY(disembarks) && !BV_ARE_EQUAL(embarks, disembarks)) {
       /* Build list of disembark exceptions (if different from embarking) */
-      const char **dclasses = new const char *[uclass_count()];
-      int i = 0;
-      struct astring dlist = ASTRING_INIT;
+      QVector<QString> dclasses;
+      dclasses.reserve(uclass_count());
 
       unit_class_iterate(uclass)
       {
         if (BV_ISSET(disembarks, uclass_index(uclass))) {
-          dclasses[i++] = uclass_name_translation(uclass);
+          dclasses.append(uclass_name_translation(uclass));
         }
       }
       unit_class_iterate_end;
-      astr_build_or_list(&dlist, dclasses, i);
+      QString dlist = strvec_to_or_list(dclasses);
       cat_snprintf(
           buf, bufsz,
           /* TRANS: %s is a list of unit classes separated
            * by "or". */
           _("* May unload from %s transports even when underway.\n"),
-          astr_str(&dlist));
-      astr_free(&dlist);
-      delete[] dclasses;
+          qUtf8Printable(dlist));
     }
   }
 
@@ -2245,13 +2221,14 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
   fuel = utype_fuel(utype);
   if (fuel > 0) {
-    const char **types = new const char *[utype_count()];
+    QVector<QString> types;
+    types.reserve(utype_count() + 1);
     int i = 0;
 
     unit_type_iterate(transport)
     {
       if (can_unit_type_transport(transport, utype_class(utype))) {
-        types[i++] = utype_name_translation(transport);
+        types.append(utype_name_translation(transport));
       }
     }
     unit_type_iterate_end;
@@ -2285,8 +2262,6 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                      fuel);
       }
     } else {
-      struct astring list = ASTRING_INIT;
-
       if (utype_has_flag(utype, UTYF_COAST)) {
         cat_snprintf(
             buf, bufsz,
@@ -2298,7 +2273,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                 "on a %s"
                 " after %d turns.\n",
                 fuel),
-            astr_build_or_list(&list, types, i), fuel);
+            qUtf8Printable(strvec_to_or_list(types)), fuel);
       } else {
         cat_snprintf(
             buf, bufsz,
@@ -2308,11 +2283,9 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                 "* Unit has to be in a city, a base, or on a %s"
                 " after %d turns.\n",
                 fuel),
-            astr_build_or_list(&list, types, i), fuel);
+            qUtf8Printable(strvec_to_or_list(types)), fuel);
       }
-      astr_free(&list);
     }
-    delete[] types;
   }
 
   /* Auto attack immunity. (auto_attack.if_attacker ruleset setting) */
@@ -2353,14 +2326,15 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     if (utype_can_do_action(utype, act)) {
       const char *target_adjective;
       char sub_target_text[100];
-      const char *blockers[MAX_NUM_ACTIONS];
+      QVector<QString> blockers;
+      blockers.reserve(MAX_NUM_ACTIONS);
       int i = 0;
 
       /* Generic action information. */
       cat_snprintf(buf, bufsz,
                    /* TRANS: %s is the action's ruleset defined ui name */
                    _("* Can do the action \'%s\'.\n"),
-                   action_id_name_translation(act));
+                   qUtf8Printable(action_id_name_translation(act)));
 
       switch (action_id_get_target_kind(act)) {
       case ATK_SELF:
@@ -2546,8 +2520,10 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
           int diplrel;
 
           /* DiplRel list of each Casus Belli size. */
-          const char *victim_diplrel_names[DRO_LAST];
-          const char *outrage_diplrel_names[DRO_LAST];
+          QVector<QString> victim_diplrel_names;
+          QVector<QString> outrage_diplrel_names;
+          outrage_diplrel_names.reserve(DRO_LAST);
+          victim_diplrel_names.reserve(DRO_LAST);
           int victim_diplrel_count = 0;
           int outrage_diplrel_count = 0;
 
@@ -2566,38 +2542,33 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                 casus_belli[i].eft, req_pattern, ARRAY_SIZE(req_pattern));
 
             if (CASUS_BELLI_OUTRAGE <= casus_belli_amount) {
-              outrage_diplrel_names[outrage_diplrel_count++] =
-                  diplrel_name_translation(diplrel);
+              outrage_diplrel_names.append(
+                  diplrel_name_translation(diplrel));
             } else if (CASUS_BELLI_VICTIM <= casus_belli_amount) {
-              victim_diplrel_names[victim_diplrel_count++] =
-                  diplrel_name_translation(diplrel);
+              victim_diplrel_names.append(diplrel_name_translation(diplrel));
             }
           }
 
           /* Then group by Casus Belli size (currently victim and
            * international outrage) */
           if (outrage_diplrel_count > 0) {
-            struct astring list = ASTRING_INIT;
-            cat_snprintf(buf, bufsz,
-                         /* TRANS: successfully ... Peace, or Alliance  */
-                         _("  * %s performing this action during %s causes"
-                           " international outrage: the whole world gets "
-                           "Casus Belli against you.\n"),
-                         _(casus_belli[i].hlp_text),
-                         astr_build_or_list(&list, outrage_diplrel_names,
-                                            outrage_diplrel_count));
-            astr_free(&list);
+            cat_snprintf(
+                buf, bufsz,
+                /* TRANS: successfully ... Peace, or Alliance  */
+                _("  * %s performing this action during %s causes"
+                  " international outrage: the whole world gets "
+                  "Casus Belli against you.\n"),
+                _(casus_belli[i].hlp_text),
+                qUtf8Printable(strvec_to_or_list(outrage_diplrel_names)));
           }
           if (victim_diplrel_count > 0) {
-            struct astring list = ASTRING_INIT;
-            cat_snprintf(buf, bufsz,
-                         /* TRANS: successfully ... Peace, or Alliance  */
-                         _("  * %s performing this action during %s gives"
-                           " the victim Casus Belli against you.\n"),
-                         _(casus_belli[i].hlp_text),
-                         astr_build_or_list(&list, victim_diplrel_names,
-                                            victim_diplrel_count));
-            astr_free(&list);
+            cat_snprintf(
+                buf, bufsz,
+                /* TRANS: successfully ... Peace, or Alliance  */
+                _("  * %s performing this action during %s gives"
+                  " the victim Casus Belli against you.\n"),
+                _(casus_belli[i].hlp_text),
+                qUtf8Printable(strvec_to_or_list(victim_diplrel_names)));
           }
         }
       }
@@ -2715,67 +2686,56 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       case ACTRES_MINE:
       case ACTRES_IRRIGATE:
       case ACTRES_BASE: {
-        QVector<QString> *extras_vec = new QVector<QString>;
+        QVector<QString> extras_vec;
 
         extra_type_iterate(pextra)
         {
           if (action_creates_extra(paction, pextra)) {
-            extras_vec->append(extra_name_translation(pextra));
+            extras_vec.append(extra_name_translation(pextra));
           }
         }
         extra_type_iterate_end;
-        if (extras_vec->count() > 0) {
+        if (extras_vec.count() > 0) {
           ;
           /* TRANS: %s is list of extra types separated by ',' and 'and' */
           cat_snprintf(buf, bufsz, _("  * builds %s on tiles.\n"),
-                       qUtf8Printable(strvec_to_and_list(*extras_vec)));
-          extras_vec->clear();
+                       qUtf8Printable(strvec_to_and_list(extras_vec)));
         }
-
-        delete extras_vec;
       } break;
       case ACTRES_CLEAN_POLLUTION:
       case ACTRES_CLEAN_FALLOUT: {
-        QVector<QString> *extras_vec = new QVector<QString>;
+        QVector<QString> extras_vec;
 
         extra_type_iterate(pextra)
         {
           if (action_removes_extra(paction, pextra)) {
-            extras_vec->append(extra_name_translation(pextra));
+            extras_vec.append(extra_name_translation(pextra));
           }
         }
         extra_type_iterate_end;
 
-        if (extras_vec->count() > 0) {
+        if (extras_vec.count() > 0) {
           /* TRANS: list of extras separated by "and" */
           cat_snprintf(buf, bufsz, _("  * cleans %s from tiles.\n"),
-                       qUtf8Printable(strvec_to_and_list(*extras_vec)));
-          extras_vec->clear();
+                       qUtf8Printable(strvec_to_and_list(extras_vec)));
         }
-
-        delete extras_vec;
       } break;
       case ACTRES_PILLAGE: {
-        struct astring extras_and = ASTRING_INIT;
-        QVector<QString> *extras_vec = new QVector<QString>;
+        QVector<QString> extras_vec;
 
         extra_type_iterate(pextra)
         {
           if (action_removes_extra(paction, pextra)) {
-            extras_vec->append(extra_name_translation(pextra));
+            extras_vec.append(extra_name_translation(pextra));
           }
         }
         extra_type_iterate_end;
 
-        if (extras_vec->count() > 0) {
+        if (extras_vec.count() > 0) {
           /* TRANS: list of extras separated by "and" */
           cat_snprintf(buf, bufsz, _("  * pillages %s from tiles.\n"),
-                       qUtf8Printable(strvec_to_and_list(*extras_vec)));
-          extras_vec->clear();
+                       qUtf8Printable(strvec_to_and_list(extras_vec)));
         }
-
-        delete extras_vec;
-        astr_free(&extras_and);
       } break;
       case ACTRES_FORTIFY: {
         struct universal uni_cazfi = {.value = {.utype = utype},
@@ -2824,28 +2784,18 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
           fc_snprintf(quoted, maxlen,
                       /* TRANS: %s is an action that can block another. */
-                      _("\'%s\'"), action_id_name_translation(blocker));
-          blockers[i] = quoted;
-
-          i++;
+                      _("\'%s\'"),
+                      qUtf8Printable(action_id_name_translation(blocker)));
+          blockers.append(quoted);
         }
       }
       action_iterate_end;
 
       if (i > 0) {
-        struct astring blist = ASTRING_INIT;
-
         cat_snprintf(buf, bufsz,
                      /* TRANS: %s is a list of actions separated by "or". */
                      _("  * can't be done if %s is legal.\n"),
-                     astr_build_or_list(&blist, blockers, i));
-
-        astr_free(&blist);
-
-        for (; i > 0; i--) {
-          /* The text was copied above. */
-          free((char *) (blockers[i - 1]));
-        }
+                     qUtf8Printable(strvec_to_or_list(blockers)));
       }
     }
   }
@@ -2887,7 +2837,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       cat_snprintf(buf, bufsz,
                    _("* Doing the action \'%s\' to this unit"
                      " is impossible.\n"),
-                   action_id_name_translation(act));
+                   qUtf8Printable(action_id_name_translation(act)));
     }
   }
   action_iterate_end;
@@ -2965,7 +2915,6 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
                       const char *user_text, int i)
 {
-  struct astring astr = ASTRING_INIT;
   struct advance *vap = valid_advance_by_number(i);
   struct universal source = {.value = {.advance = vap}, .kind = VUT_ADVANCE};
   int flagid;
@@ -3132,15 +3081,15 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
     BV_CLR_ALL_FROM(roots, rootsofroots);
 
     if (BV_ISSET_ANY(roots)) {
-      const char *root_techs[A_LAST];
+      QVector<QString> root_techs;
+      root_techs.reserve(A_LAST);
       size_t n_roots = 0;
-      struct astring root_list = ASTRING_INIT;
 
       advance_index_iterate(A_FIRST, root)
       {
         if (BV_ISSET(roots, root)) {
-          root_techs[n_roots++] =
-              advance_name_translation(advance_by_number(root));
+          root_techs.append(
+              advance_name_translation(advance_by_number(root)));
         }
       }
       advance_index_iterate_end;
@@ -3149,8 +3098,7 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
                    /* TRANS: 'and'-separated list of techs */
                    _("* Only those who know %s can acquire this "
                      "technology (by any means).\n"),
-                   astr_build_and_list(&root_list, root_techs, n_roots));
-      astr_free(&root_list);
+                   qUtf8Printable(strvec_to_and_list(root_techs)));
     }
   }
 
@@ -3192,8 +3140,6 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
-
-  astr_free(&astr);
 }
 
 /************************************************************************/ /**
@@ -3252,26 +3198,23 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
     CATLSTR(buf, bufsz, "\n");
   }
   {
-    const char **classes = new const char *[uclass_count()];
+    QVector<QString> classes;
+    classes.reserve(uclass_count());
     int i = 0;
 
     unit_class_iterate(uclass)
     {
       if (is_native_to_class(uclass, pterrain, NULL)) {
-        classes[i++] = uclass_name_translation(uclass);
+        classes.append(uclass_name_translation(uclass));
       }
     }
     unit_class_iterate_end;
 
     if (0 < i) {
-      struct astring list = ASTRING_INIT;
-
       /* TRANS: %s is a list of unit classes separated by "and". */
       cat_snprintf(buf, bufsz, _("* Can be traveled by %s units.\n"),
-                   astr_build_and_list(&list, classes, i));
-      astr_free(&list);
+                   qUtf8Printable(strvec_to_and_list(classes)));
     }
-    delete[] classes;
   }
   if (terrain_has_flag(pterrain, TER_NO_ZOC)) {
     CATLSTR(buf, bufsz,
@@ -3744,30 +3687,28 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   {
-    const char **classes = new const char *[uclass_count()];
+    QVector<QString> classes;
+    classes.reserve(uclass_count());
     int i = 0;
 
     unit_class_iterate(uclass)
     {
       if (is_native_extra_to_uclass(pextra, uclass)) {
-        classes[i++] = uclass_name_translation(uclass);
+        classes.append(uclass_name_translation(uclass));
       }
     }
     unit_class_iterate_end;
-
+    QString andlist = strvec_to_and_list(classes);
     if (0 < i) {
-      struct astring list = ASTRING_INIT;
-
       if (proad != NULL) {
         /* TRANS: %s is a list of unit classes separated by "and". */
         cat_snprintf(buf, bufsz, _("* Can be traveled by %s units.\n"),
-                     astr_build_and_list(&list, classes, i));
+                     qUtf8Printable(andlist));
       } else {
         /* TRANS: %s is a list of unit classes separated by "and". */
         cat_snprintf(buf, bufsz, _("* Native to %s units.\n"),
-                     astr_build_and_list(&list, classes, i));
+                     qUtf8Printable(andlist));
       }
-      astr_free(&list);
 
       if (extra_has_flag(pextra, EF_NATIVE_TILE)) {
         CATLSTR(buf, bufsz,
@@ -3799,7 +3740,6 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
                      pextra->defense_bonus);
       }
     }
-    delete[] classes;
   }
 
   if (proad != NULL && road_provides_move_bonus(proad)) {
@@ -4696,7 +4636,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
            * ("individual units", etc) */
           _("* Makes it impossible to do the action \'%s\'"
             " to your %s.\n"),
-          action_id_name_translation(act),
+          qUtf8Printable(action_id_name_translation(act)),
           _(action_target_kind_name(action_id_get_target_kind(act))));
     }
   }
@@ -4783,18 +4723,18 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
                  government_name_translation(pnation->init_government));
   }
   if (pnation->init_techs[0] != A_LAST) {
-    const char *tech_names[MAX_NUM_TECH_LIST];
+    QVector<QString> tech_names;
+    tech_names.reserve(MAX_NUM_TECH_LIST);
     int i;
-    struct astring list = ASTRING_INIT;
 
     for (i = 0; i < MAX_NUM_TECH_LIST; i++) {
       if (pnation->init_techs[i] == A_LAST) {
         break;
       }
-      tech_names[i] = advance_name_translation(
-          advance_by_number(pnation->init_techs[i]));
+      tech_names.append(advance_name_translation(
+          advance_by_number(pnation->init_techs[i])));
     }
-    astr_build_and_list(&list, tech_names, i);
+    QString list = strvec_to_and_list(tech_names);
     PRINT_BREAK();
     if (game.rgame.global_init_techs[0] != A_LAST) {
       cat_snprintf(
@@ -4802,13 +4742,13 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
           /* TRANS: %s is an and-separated list of techs */
           _("Starts with knowledge of %s in addition to the standard "
             "starting technologies.\n"),
-          astr_str(&list));
+          qUtf8Printable(list));
     } else {
       cat_snprintf(buf, bufsz,
                    /* TRANS: %s is an and-separated list of techs */
-                   _("Starts with knowledge of %s.\n"), astr_str(&list));
+                   _("Starts with knowledge of %s.\n"),
+                   qUtf8Printable(list));
     }
-    astr_free(&list);
   }
   if (pnation->init_units[0]) {
     const struct unit_type *utypes[MAX_NUM_UNIT_LIST];
@@ -4834,72 +4774,61 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
         n++;
       }
     }
-    {
-      /* Construct the list of unit types and counts. */
-      struct astring utype_names[MAX_NUM_UNIT_LIST];
-      struct astring list = ASTRING_INIT;
+    /* Construct the list of unit types and counts. */
+    QVector<QString> utype_names;
+    utype_names.reserve(MAX_NUM_UNIT_LIST);
 
-      for (i = 0; i < n; i++) {
-        astr_init(&utype_names[i]);
-        if (count[i] > 1) {
-          /* TRANS: a unit type followed by a count. For instance,
-           * "Fighter (2)" means two Fighters. Count is never 1.
-           * Used in a list. */
-          astr_set(&utype_names[i], _("%s (%d)"),
-                   utype_name_translation(utypes[i]), count[i]);
-        } else {
-          astr_set(&utype_names[i], "%s", utype_name_translation(utypes[i]));
-        }
+    for (i = 0; i < n; i++) {
+      if (count[i] > 1) {
+        /* TRANS: a unit type followed by a count. For instance,
+         * "Fighter (2)" means two Fighters. Count is never 1.
+         * Used in a list. */
+        utype_names.append(QString(_("%1 (%2)"))
+                               .arg(utype_name_translation(utypes[i]),
+                                    QString::number(count[i])));
+      } else {
+        utype_names.append(
+            QStringLiteral("%s").arg(utype_name_translation(utypes[i])));
       }
-      {
-        const char *utype_name_strs[MAX_NUM_UNIT_LIST];
-
-        for (i = 0; i < n; i++) {
-          utype_name_strs[i] = astr_str(&utype_names[i]);
-        }
-        astr_build_and_list(&list, utype_name_strs, n);
-      }
-      for (i = 0; i < n; i++) {
-        astr_free(&utype_names[i]);
-      }
-      PRINT_BREAK();
-      cat_snprintf(buf, bufsz,
-                   /* TRANS: %s is an and-separated list of unit types
-                    * possibly with counts. Plurality is in total number of
-                    * units represented. */
-                   PL_("Starts with the following additional unit: %s.\n",
-                       "Starts with the following additional units: %s.\n",
-                       total),
-                   astr_str(&list));
-      astr_free(&list);
     }
+    QString list = strvec_to_and_list(utype_names);
+
+    PRINT_BREAK();
+    cat_snprintf(buf, bufsz,
+                 /* TRANS: %s is an and-separated list of unit types
+                  * possibly with counts. Plurality is in total number of
+                  * units represented. */
+                 PL_("Starts with the following additional unit: %s.\n",
+                     "Starts with the following additional units: %s.\n",
+                     total),
+                 qUtf8Printable(list));
   }
   if (pnation->init_buildings[0] != B_LAST) {
-    const char *impr_names[MAX_NUM_BUILDING_LIST];
+    QVector<QString> impr_names;
+    impr_names.reserve(MAX_NUM_BUILDING_LIST);
     int i;
-    struct astring list = ASTRING_INIT;
 
     for (i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
       if (pnation->init_buildings[i] == B_LAST) {
         break;
       }
-      impr_names[i] = improvement_name_translation(
-          improvement_by_number(pnation->init_buildings[i]));
+      impr_names.append(improvement_name_translation(
+          improvement_by_number(pnation->init_buildings[i])));
     }
-    astr_build_and_list(&list, impr_names, i);
+    QString list = strvec_to_and_list(impr_names);
     PRINT_BREAK();
     if (game.rgame.global_init_buildings[0] != B_LAST) {
       cat_snprintf(buf, bufsz,
                    /* TRANS: %s is an and-separated list of improvements */
                    _("First city will get %s for free in addition to the "
                      "standard improvements.\n"),
-                   astr_str(&list));
+                   qUtf8Printable(list));
     } else {
       cat_snprintf(buf, bufsz,
                    /* TRANS: %s is an and-separated list of improvements */
-                   _("First city will get %s for free.\n"), astr_str(&list));
+                   _("First city will get %s for free.\n"),
+                   qUtf8Printable(list));
     }
-    astr_free(&list);
   }
 
   if (buf[0] != '\0') {

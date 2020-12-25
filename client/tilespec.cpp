@@ -31,7 +31,6 @@
 #include <string.h>
 
 /* utility */
-#include "astring.h"
 #include "bitvector.h"
 #include "capability.h"
 #include "deprecations.h"

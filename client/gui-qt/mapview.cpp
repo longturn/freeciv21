@@ -48,7 +48,6 @@
 #include "sidebar.h"
 #include "widgetdecorations.h"
 
-const char *get_timeout_label_text();
 static int mapview_frozen_level = 0;
 extern void destroy_city_dialog();
 extern QPixmap *canvas;

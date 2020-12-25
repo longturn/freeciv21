@@ -180,7 +180,7 @@ const char *ssetv_rule_name(ssetv val)
  ***************************************************************************/
 const char *ssetv_human_readable(ssetv val, bool present)
 {
-  static struct astring out = ASTRING_INIT;
+  QString out;
 
   /* Only Boolean settings can be supported unless the setting value is
    * encoded with the setting id. */
@@ -188,11 +188,11 @@ const char *ssetv_human_readable(ssetv val, bool present)
 
   /* TRANS: the first %s is a server setting, the second %s is it's value.
    * Example: killstack is enabled */
-  astr_set(&out, _("%s is %s"),
-           server_setting_name_get((server_setting_id) val),
-           present ? _("enabled") : _("disabled"));
+  out = QString(_("%1 is %2"))
+            .arg(server_setting_name_get((server_setting_id) val),
+                 present ? _("enabled") : _("disabled"));
 
-  return astr_str(&out);
+  return qUtf8Printable(out);
 }
 
 /***********************************************************************/ /**

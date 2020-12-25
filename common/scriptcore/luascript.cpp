@@ -127,63 +127,18 @@ static int luascript_report(struct fc_lua *fcl, int status, const char *code)
   fc_assert_ret_val(fcl->state, 0);
 
   if (status) {
-    struct astring str = ASTRING_INIT;
+    QString str;
     const char *msg;
-    int lineno;
 
     if (!(msg = lua_tostring(fcl->state, -1))) {
       msg = "(error with no message)";
     }
 
     /* Add error message. */
-    astr_add_line(&str, "lua error:");
-    astr_add_line(&str, "\t%s", msg);
+    str = QLatin1String("lua error:");
+    str += QStringLiteral("\t%s").arg(msg);
 
-    if (code) {
-      /* Add lines around the place the parse error is. */
-      if (sscanf(msg, "%*[^:]:%d:", &lineno) == 1) {
-        const char *begin, *end;
-        int i;
-
-        astr_add(&str, "\n");
-
-        i = 1;
-        for (begin = code; *begin != '\0';) {
-          int len;
-
-          end = strchr(begin, '\n');
-          if (end) {
-            len = end - begin;
-          } else {
-            len = qstrlen(begin);
-          }
-
-          if (abs(lineno - i) <= 3) {
-            const char *indicator;
-
-            indicator = (lineno == i) ? "-->" : "   ";
-
-            astr_add_line(&str, "\t%s%3d:\t%*.*s", indicator, i, len, len,
-                          begin);
-          }
-
-          i++;
-
-          if (end) {
-            begin = end + 1;
-          } else {
-            break;
-          }
-        }
-
-        astr_add(&str, "\n");
-      }
-    }
-
-    luascript_log(fcl, LOG_ERROR, "%s", astr_str(&str));
-
-    astr_free(&str);
-
+    luascript_log(fcl, LOG_ERROR, "%s", qUtf8Printable(str));
     lua_pop(fcl->state, 1);
   }
 

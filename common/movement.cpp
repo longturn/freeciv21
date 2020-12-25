@@ -789,33 +789,21 @@ void init_move_fragments(void)
 const char *move_points_text_full(int mp, bool reduce, const char *prefix,
                                   const char *none, bool align)
 {
-  static struct astring str = ASTRING_INIT;
-  int pad1, pad2;
+  QString str;
 
-  if (align && SINGLE_MOVE > 1) {
-    /* Align to worst-case denominator even if we might be reducing to
-     * lowest terms, as other entries in a table might not reduce */
-    pad1 = move_points_denomlen; /* numerator or denominator */
-    pad2 =
-        move_points_denomlen * 2 + 2; /* everything right of integer part */
-  } else {
-    /* If no possible fractional part, alignment unneeded even if requested
-     */
-    pad1 = pad2 = 0;
-  }
   if (!prefix) {
     prefix = "";
   }
-  astr_clear(&str);
   if ((mp == 0 && none) || SINGLE_MOVE == 0) {
     /* No movement points, and we have a special representation to use */
     /* (Also used when SINGLE_MOVE == 0, to avoid dividing by zero, which is
      * important for client before ruleset has been received. Doesn't much
      * matter what we print in this case.) */
-    astr_add(&str, "%s%*s", none ? none : "", pad2, "");
+    str = QStringLiteral("%1").arg(none ? none : "");
   } else if ((mp % SINGLE_MOVE) == 0) {
     /* Integer move points */
-    astr_add(&str, "%s%d%*s", prefix, mp / SINGLE_MOVE, pad2, "");
+    str = QStringLiteral("%1%2%3").arg(
+        prefix, QString::number(mp / SINGLE_MOVE), "");
   } else {
     /* Fractional part */
     int cancel;
@@ -839,15 +827,18 @@ const char *move_points_text_full(int mp, bool reduce, const char *prefix,
     }
     if (mp < SINGLE_MOVE) {
       /* Fractional move points */
-      astr_add(&str, "%s%*d/%*d", prefix, pad1, (mp % SINGLE_MOVE) / cancel,
-               pad1, SINGLE_MOVE / cancel);
+      str += QStringLiteral("%1%2/%3").arg(
+          prefix, QString::number((mp % SINGLE_MOVE) / cancel),
+          QString::number(SINGLE_MOVE / cancel));
     } else {
       /* Integer + fractional move points */
-      astr_add(&str, "%s%d %*d/%*d", prefix, mp / SINGLE_MOVE, pad1,
-               (mp % SINGLE_MOVE) / cancel, pad1, SINGLE_MOVE / cancel);
+      str += QStringLiteral("%1%2 %3/%4")
+                 .arg(prefix, QString::number(mp / SINGLE_MOVE),
+                      QString::number((mp % SINGLE_MOVE) / cancel),
+                      QString::number(SINGLE_MOVE / cancel));
     }
   }
-  return astr_str(&str);
+  return qUtf8Printable(str);
 }
 
 /************************************************************************/ /**

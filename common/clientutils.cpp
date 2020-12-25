@@ -226,9 +226,7 @@ const char *concat_tile_activity_text(struct tile *ptile)
 {
   auto *calc = new actcalc;
   int num_activities = 0;
-  static struct astring str = ASTRING_INIT;
-
-  astr_clear(&str);
+  QString str;
 
   calc_activity(calc, ptile, NULL, ACTIVITY_LAST, NULL);
 
@@ -241,10 +239,11 @@ const char *concat_tile_activity_text(struct tile *ptile)
 
         if (calc->extra_turns[ei][i] > 0) {
           if (num_activities > 0) {
-            astr_add(&str, "/");
+            str += QLatin1String("/");
           }
-          astr_add(&str, "%s(%d)", extra_name_translation(ep),
-                   calc->extra_turns[ei][i]);
+          str += QStringLiteral("%1(%2)").arg(
+              extra_name_translation(ep),
+              QString::number(calc->extra_turns[ei][i]));
           num_activities++;
         }
       }
@@ -274,12 +273,12 @@ const char *concat_tile_activity_text(struct tile *ptile)
 
           if (calc->rmextra_turns[ei][i] > 0) {
             if (num_activities > 0) {
-              astr_add(&str, "/");
+              str += QLatin1String("/");
             }
-            astr_add(&str,
-                     rmcause == ERM_PILLAGE ? _("Pillage %s(%d)")
-                                            : _("Clean %s(%d)"),
-                     extra_name_translation(ep), calc->rmextra_turns[ei][i]);
+            str += QString(rmcause == ERM_PILLAGE ? _("Pillage %1(%2)")
+                                                  : _("Clean %1(%2)"))
+                       .arg(extra_name_translation(ep),
+                            QString::number(calc->rmextra_turns[ei][i]));
             num_activities++;
           }
         }
@@ -288,10 +287,10 @@ const char *concat_tile_activity_text(struct tile *ptile)
     } else if (is_tile_activity(i)) {
       if (calc->activity_turns[i] > 0) {
         if (num_activities > 0) {
-          astr_add(&str, "/");
+          str += QLatin1String("/");
         }
-        astr_add(&str, "%s(%d)", get_activity_text(i),
-                 calc->activity_turns[i]);
+        str += QStringLiteral("%1(%2)").arg(
+            get_activity_text(i), QString::number(calc->activity_turns[i]));
         num_activities++;
       }
     }
@@ -300,5 +299,5 @@ const char *concat_tile_activity_text(struct tile *ptile)
 
   FC_FREE(calc);
 
-  return astr_str(&str);
+  return qUtf8Printable(str);
 }

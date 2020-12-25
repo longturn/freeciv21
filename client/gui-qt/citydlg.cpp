@@ -917,27 +917,33 @@ void cityIconInfoLabel::setCity(city *pciti) { pcity = pciti; }
 void cityIconInfoLabel::initLayout()
 {
   QHBoxLayout *l = new QHBoxLayout();
-  labs[0].setPixmap((hIcon::i()->get("foodplus")).pixmap(pixHeight));
+  labs[0].setPixmap(
+      (hIcon::i()->get(QStringLiteral("foodplus"))).pixmap(pixHeight));
   l->addWidget(&labs[0]);
   l->addWidget(&labs[1]);
 
-  labs[2].setPixmap((hIcon::i()->get("prodplus")).pixmap(pixHeight));
+  labs[2].setPixmap(
+      (hIcon::i()->get(QStringLiteral("prodplus"))).pixmap(pixHeight));
   l->addWidget(&labs[2]);
   l->addWidget(&labs[3]);
 
-  labs[4].setPixmap((hIcon::i()->get("gold")).pixmap(pixHeight));
+  labs[4].setPixmap(
+      (hIcon::i()->get(QStringLiteral("gold"))).pixmap(pixHeight));
   l->addWidget(&labs[4]);
   l->addWidget(&labs[5]);
 
-  labs[6].setPixmap((hIcon::i()->get("science")).pixmap(pixHeight));
+  labs[6].setPixmap(
+      (hIcon::i()->get(QStringLiteral("science"))).pixmap(pixHeight));
   l->addWidget(&labs[6]);
   l->addWidget(&labs[7]);
 
-  labs[8].setPixmap((hIcon::i()->get("tradeplus")).pixmap(pixHeight));
+  labs[8].setPixmap(
+      (hIcon::i()->get(QStringLiteral("tradeplus"))).pixmap(pixHeight));
   l->addWidget(&labs[8]);
   l->addWidget(&labs[9]);
 
-  labs[10].setPixmap((hIcon::i()->get("resize")).pixmap(pixHeight));
+  labs[10].setPixmap(
+      (hIcon::i()->get(QStringLiteral("resize"))).pixmap(pixHeight));
   l->addWidget(&labs[10]);
   l->addWidget(&labs[11]);
 
@@ -964,7 +970,7 @@ void cityIconInfoLabel::updateText()
   labs[11].setText(grow_time);
 }
 
-void cityIconInfoLabel::updateTooltip(int nr, QString tooltipText)
+void cityIconInfoLabel::updateTooltip(int nr, const QString &tooltipText)
 {
   labs[nr].setToolTip(tooltipText);
   labs[nr + 1].setToolTip(tooltipText);

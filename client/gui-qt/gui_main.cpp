@@ -333,11 +333,13 @@ static void apply_help_font(struct option *poption)
 static void apply_notify_font(struct option *poption)
 {
   if (king()) {
-    qtg_gui_update_font("notify_label", option_font_get(poption));
+    qtg_gui_update_font(QStringLiteral("notify_label"),
+                        option_font_get(poption));
     restart_notify_reports();
   }
   if (king() && qtg_get_current_client_page() == PAGE_GAME) {
-    qtg_gui_update_font("city_label", option_font_get(poption));
+    qtg_gui_update_font(QStringLiteral("city_label"),
+                        option_font_get(poption));
     city_font_update();
   }
 }

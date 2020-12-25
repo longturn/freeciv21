@@ -9,11 +9,6 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-/****************************************************************************
-  Allocated/allocatable strings
-  See comments in astring.c
-****************************************************************************/
-
 #pragma once
 
 #include <QByteArray>
@@ -27,6 +22,7 @@
 #define n _private_n_
 #define n_alloc _private_n_alloc_
 
+class QStringLiteral;
 struct astring {
   char *str;      /* the string */
   size_t n;       /* size most recently requested */
@@ -71,10 +67,6 @@ void astr_add_line(struct astring *astr, const char *format, ...)
         fc__attribute((nonnull(1, 2)));
 void astr_break_lines(struct astring *astr, size_t desired_len)
     fc__attribute((nonnull(1)));
-const char *astr_build_or_list(struct astring *astr,
-                               const char *const *items, size_t number);
-const char *astr_build_and_list(struct astring *astr,
-                                const char *const *items, size_t number);
 void astr_copy(struct astring *dest, const struct astring *src)
     fc__attribute((nonnull(1, 2)));
 
@@ -124,3 +116,4 @@ static inline bool astr_empty(const struct astring *astr)
 
 QString strvec_to_or_list(const QVector<QString> &psv);
 QString strvec_to_and_list(const QVector<QString> &psv);
+QString qendl();

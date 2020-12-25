@@ -121,7 +121,7 @@ void musicspec_reread_callback(struct option *poption)
 
   /* Start suitable music from the new set */
   if (client_state() != C_S_RUNNING) {
-    start_menu_music("music_menu", NULL);
+    start_menu_music(QStringLiteral("music_menu"), NULL);
   } else {
     start_style_music();
   }

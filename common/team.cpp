@@ -421,7 +421,7 @@ int team_pretty_name(const struct team *pteam, QString &buf)
   }
 
   /* No need to translate, it's an error. */
-  buf = QLatin1String("(null team)");
+  buf = QStringLiteral("(null team)");
   return -1;
 }
 

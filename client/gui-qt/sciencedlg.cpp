@@ -473,7 +473,6 @@ void science_report::reset_tree()
 void science_report::update_report()
 {
   struct research *research = research_get(client_player());
-  const char *text;
   int total;
   int done = research->bulbs_researched;
   QVariant qvar, qres;
@@ -499,8 +498,7 @@ void science_report::update_report()
   progress_label->setAlignment(Qt::AlignHCenter);
   info_label->setAlignment(Qt::AlignHCenter);
   info_label->setText(get_science_goal_text(research->tech_goal));
-  text = get_science_target_text(&not_used);
-  str = QString::fromUtf8(text);
+  str = get_science_target_text(&not_used);
   progress->setFormat(str);
   progress->setMinimum(0);
   progress->setMaximum(total);

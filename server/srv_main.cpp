@@ -27,7 +27,6 @@
 #include <QElapsedTimer>
 
 /* utility */
-#include "astring.h"
 #include "bitvector.h"
 #include "bugs.h"
 #include "capability.h"
@@ -293,7 +292,7 @@ bool check_for_game_over(void)
   int candidates, defeated;
   struct player *victor;
   int winners = 0;
-  struct astring str = ASTRING_INIT;
+  QString str;
 
   /* Check for scenario victory; dead players can win if they are on a team
    * with the winners. */
@@ -303,12 +302,12 @@ bool check_for_game_over(void)
         || get_player_bonus(pplayer, EFT_VICTORY) > 0) {
       if (winners) {
         /* TRANS: Another entry in winners list (", the Tibetans") */
-        astr_add(&str, Q_("?winners:, the %s"),
-                 nation_plural_for_player(pplayer));
+        str = QString(Q_("?winners:, the %1"))
+                  .arg(nation_plural_for_player(pplayer));
       } else {
         /* TRANS: Beginning of the winners list ("the French") */
-        astr_add(&str, Q_("?winners:the %s"),
-                 nation_plural_for_player(pplayer));
+        str = QString(Q_("?winners:the %1"))
+                  .arg(nation_plural_for_player(pplayer));
       }
       pplayer->is_winner = true;
       winners++;
@@ -318,11 +317,9 @@ bool check_for_game_over(void)
   if (winners) {
     notify_conn(game.est_connections, NULL, E_GAME_END, ftc_server,
                 /* TRANS: There can be several winners listed */
-                _("Scenario victory to %s."), astr_str(&str));
-    astr_free(&str);
+                _("Scenario victory to %s."), qUtf8Printable(str));
     return true;
   }
-  astr_free(&str);
 
   /* Count candidates for the victory. */
   candidates = 0;
@@ -432,26 +429,25 @@ bool check_for_game_over(void)
 
         fc_assert(candidates == player_list_size(winner_list));
 
-        astr_init(&str);
+        str = QLatin1String("");
         player_list_iterate(winner_list, pplayer)
         {
           if (first) {
             /* TRANS: Beginning of the winners list ("the French") */
-            astr_add(&str, Q_("?winners:the %s"),
-                     nation_plural_for_player(pplayer));
+            str += QString(Q_("?winners:the %1"))
+                       .arg(nation_plural_for_player(pplayer));
             first = false;
           } else {
             /* TRANS: Another entry in winners list (", the Tibetans") */
-            astr_add(&str, Q_("?winners:, the %s"),
-                     nation_plural_for_player(pplayer));
+            str += QString(Q_("?winners:, the %1"))
+                       .arg(nation_plural_for_player(pplayer));
           }
           pplayer->is_winner = true;
         }
         player_list_iterate_end;
         notify_conn(game.est_connections, NULL, E_GAME_END, ftc_server,
                     /* TRANS: There can be several winners listed */
-                    _("Allied victory to %s."), astr_str(&str));
-        astr_free(&str);
+                    _("Allied victory to %s."), qUtf8Printable(str));
         player_list_destroy(winner_list);
         return true;
       }
@@ -800,15 +796,14 @@ static void notify_illegal_armistice_units(struct player *phost,
   }
   unit_list_iterate_end;
   if (nunits > 0) {
-    struct astring unitstr = ASTRING_INIT;
-
-    astr_set(
-        &unitstr,
-        /* TRANS: "... 2 military units in Norwegian territory." */
-        PL_("Warning: you still have %d military unit in %s territory.",
-            "Warning: you still have %d military units in %s territory.",
-            nunits),
-        nunits, nation_adjective_for_player(phost));
+    /* TRANS: "... 2 military units in Norwegian territory." */
+    QString unitstr =
+        QString(
+            PL_("Warning: you still have %1 military unit in %2 territory.",
+                "Warning: you still have %1 military units in %2 territory.",
+                nunits))
+            .arg(QString::number(nunits),
+                 nation_adjective_for_player(phost));
     /* If there's one lousy unit left, we may as well include a link for it
      */
     notify_player(pguest, nunits == 1 ? unit_tile(a_unit) : NULL,
@@ -820,8 +815,7 @@ static void notify_illegal_armistice_units(struct player *phost,
                       "%s Any such units will be disbanded in %d turns, "
                       "in accordance with peace treaty.",
                       turns_left),
-                  astr_str(&unitstr), turns_left);
-    astr_free(&unitstr);
+                  qUtf8Printable(unitstr), turns_left);
   }
 }
 

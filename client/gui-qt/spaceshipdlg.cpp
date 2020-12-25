@@ -80,7 +80,7 @@ void ss_report::init()
  ****************************************************************************/
 void ss_report::update_report()
 {
-  const char *ch;
+  QString ch;
   struct player_spaceship *pship;
 
   pship = &(player->spaceship);

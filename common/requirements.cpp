@@ -689,14 +689,13 @@ int universal_number(const struct universal *source)
  **************************************************************************/
 const char *req_to_fstring(const struct requirement *req)
 {
-  struct astring printable_req = ASTRING_INIT;
+  QString printable_req =
+      QStringLiteral("%1%2 %3 %4%5")
+          .arg(req->survives ? "surviving " : "", req_range_name(req->range),
+               universal_type_rule_name(&req->source),
+               req->present ? "" : "!", universal_rule_name(&req->source));
 
-  astr_set(&printable_req, "%s%s %s %s%s", req->survives ? "surviving " : "",
-           req_range_name(req->range),
-           universal_type_rule_name(&req->source), req->present ? "" : "!",
-           universal_rule_name(&req->source));
-
-  return astr_str(&printable_req);
+  return qUtf8Printable(printable_req);
 }
 
 /**********************************************************************/ /**
@@ -1678,8 +1677,7 @@ is_minforeignpct_in_range(const struct city *target_city,
       {
         int notzero = city_size_get(trade_partner);
         fc_assert_ret_val(notzero, TRI_YES);
-        foreign_pct = citizens_nation_foreign(trade_partner) * 100
-                      / notzero;
+        foreign_pct = citizens_nation_foreign(trade_partner) * 100 / notzero;
         if (foreign_pct >= min_foreign_pct) {
           return TRI_YES;
         }
@@ -4180,7 +4178,9 @@ const char *universal_name_translation(const struct universal *psource,
     cat_snprintf(buf, bufsz, _("%d Techs"), psource->value.min_techs);
     return buf;
   case VUT_ACTION:
-    fc_strlcat(buf, action_name_translation(psource->value.action), bufsz);
+    fc_strlcat(
+        buf, qUtf8Printable(action_name_translation(psource->value.action)),
+        bufsz);
     return buf;
   case VUT_OTYPE:
     /* FIXME */

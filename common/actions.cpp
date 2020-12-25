@@ -1358,7 +1358,7 @@ const char *action_rule_name(const struct action *action)
    Get the action name used when displaying the action in the UI. Nothing
    is added to the UI name.
  **************************************************************************/
-const char *action_name_translation(const struct action *action)
+const QString action_name_translation(const struct action *action)
 {
   /* Use action_id_name_translation() to format the UI name. */
   return action_id_name_translation(action->id);
@@ -1378,7 +1378,7 @@ const char *action_id_rule_name(action_id act_id)
    Get the action name used when displaying the action in the UI. Nothing
    is added to the UI name.
  **************************************************************************/
-const char *action_id_name_translation(action_id act_id)
+const QString action_id_name_translation(action_id act_id)
 {
   return action_prepare_ui_name(gen_action(act_id), "", ACTPROB_NA, NULL);
 }
@@ -1389,7 +1389,7 @@ const char *action_id_name_translation(action_id act_id)
  **************************************************************************/
 static const char *action_prob_to_text(const struct act_prob prob)
 {
-  static struct astring chance = ASTRING_INIT;
+  QString chance;
 
   /* How to interpret action probabilities like prob is documented in
    * fc_types.h */
@@ -1403,18 +1403,14 @@ static const char *action_prob_to_text(const struct act_prob prob)
   if (prob.min == prob.max) {
     /* Only one probability in range. */
 
-    /* TRANS: the probability that an action will succeed. Given in
-     * percentage. Resolution is 0.5%. */
-    astr_set(&chance, _("%.1f%%"), (double) prob.max / ACTPROB_VAL_1_PCT);
+    chance = QString(_("%1%")).arg((int) prob.max / ACTPROB_VAL_1_PCT);
   } else {
-    /* TRANS: the interval (end points included) where the probability of
-     * the action's success is. Given in percentage. Resolution is 0.5%. */
-    astr_set(&chance, _("[%.1f%%, %.1f%%]"),
-             (double) prob.min / ACTPROB_VAL_1_PCT,
-             (double) prob.max / ACTPROB_VAL_1_PCT);
+    chance = QString(_("[%1% - %2%]"))
+                 .arg((int) prob.min / ACTPROB_VAL_1_PCT)
+                 .arg((int) prob.max / ACTPROB_VAL_1_PCT);
   }
 
-  return astr_str(&chance);
+  return qUtf8Printable(chance);
 }
 
 /**********************************************************************/ /**
@@ -1424,12 +1420,11 @@ static const char *action_prob_to_text(const struct act_prob prob)
    Success probability information is interpreted and added to the text.
    A custom text can be inserted before the probability information.
  **************************************************************************/
-const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
-                                   const struct act_prob prob,
-                                   const char *custom)
+const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
+                                     const struct act_prob prob,
+                                     const QString custom)
 {
-  static struct astring str = ASTRING_INIT;
-  static struct astring chance = ASTRING_INIT;
+  QString str, chance;
 
   /* Text representation of the probability. */
   const char *probtxt;
@@ -1448,11 +1443,11 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
     fc_assert(custom == NULL || custom[0] == '\0');
 
     /* Make the best of what is known */
-    astr_set(&str, _("%s%s (name may be wrong)"), mnemonic,
-             action_id_rule_name(act_id));
+    str = QString(_("%1%2 (name may be wrong)"))
+              .arg(mnemonic, action_id_rule_name(act_id));
 
     /* Return the guess. */
-    return astr_str(&str);
+    return str;
   }
 
   probtxt = action_prob_to_text(prob);
@@ -1467,7 +1462,7 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
      * name. To avoid a `()` when no UI name info part is added you have
      * to add the extra information to every action name or remove the
      * surrounding parens. */
-    astr_set(&chance, _(" (%s; %s)"), custom, probtxt);
+    chance = QString(_(" (%1; %2)")).arg(custom, probtxt);
   } else if (probtxt != NULL) {
     /* TRANS: action UI name's info part with probability.
      * Hint: you can move the paren handling from this sting to the action
@@ -1477,7 +1472,7 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
      * name. To avoid a `()` when no UI name info part is added you have
      * to add the extra information to every action name or remove the
      * surrounding parens. */
-    astr_set(&chance, _(" (%s)"), probtxt);
+    chance = QString(_(" (%1)")).arg(probtxt);
   } else if (custom != NULL) {
     /* TRANS: action UI name's info part with custom info.
      * Hint: you can move the paren handling from this sting to the action
@@ -1487,10 +1482,9 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
      * name. To avoid a `()` when no UI name info part is added you have
      * to add the extra information to every action name or remove the
      * surrounding parens. */
-    astr_set(&chance, _(" (%s)"), custom);
+    chance = QString(_(" (%1)")).arg(custom);
   } else {
     /* No info part to display. */
-    astr_clear(&chance);
   }
 
   fc_assert_msg(actions[act_id], "Action %d don't exist.", act_id);
@@ -1500,30 +1494,20 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
    * unlikely to appear in a format specifier. True for clients seen so
    * far: Gtk's _ and Qt's &) */
   {
-    struct astring fmtstr = ASTRING_INIT;
-    const char *ui_name = _(actions[act_id]->ui_name);
-
-    if (mnemonic[0] != '\0') {
-      const char *hit;
-
-      fc_assert(!strchr(mnemonic, '%'));
-      while ((hit = strstr(ui_name, mnemonic))) {
-        astr_add(&fmtstr, "%.*s%s%s", (int) (hit - ui_name), ui_name,
-                 mnemonic, mnemonic);
-        ui_name = hit + qstrlen(mnemonic);
-      }
+    QString fmtstr;
+    QString ui_name = _(actions[act_id]->ui_name);
+    int k = ui_name.indexOf(QLatin1String("%s"));
+    if (k >= 0) {
+      ui_name = ui_name.remove(k, 2);
     }
-    astr_add(&fmtstr, "%s", ui_name);
+    ui_name.replace(QLatin1String("%s"), QLatin1String("%1"));
+    fmtstr += QStringLiteral("%1").arg(ui_name);
 
     /* Use the modified format string */
-    astr_set(&str, astr_str(&fmtstr), mnemonic, astr_str(&chance));
-
-    astr_free(&fmtstr);
+    str = QString(fmtstr).arg(chance);
   }
 
-  astr_free(&chance);
-
-  return astr_str(&str);
+  return str;
 }
 
 /**********************************************************************/ /**
@@ -1533,39 +1517,37 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
  **************************************************************************/
 const char *action_prob_explain(const struct act_prob prob)
 {
-  static struct astring tool_tip = ASTRING_INIT;
+  QString tool_tip;
 
   if (action_prob_is_signal(prob)) {
     fc_assert(action_prob_not_impl(prob));
-
-    /* Missing server support. No in game action will change this. */
-    astr_clear(&tool_tip);
   } else if (prob.min == prob.max) {
     /* TRANS: action probability of success. Given in percentage.
      * Resolution is 0.5%. */
-    astr_set(&tool_tip, _("The probability of success is %.1f%%."),
-             (double) prob.max / ACTPROB_VAL_1_PCT);
+    tool_tip = QString(_("The probability of success is %.1f%%."))
+                   .arg((double) prob.max / ACTPROB_VAL_1_PCT);
   } else {
-    astr_set(&tool_tip,
-             /* TRANS: action probability interval (min to max). Given in
-              * percentage. Resolution is 0.5%. The string at the end is
-              * shown when the interval is wide enough to not be caused by
-              * rounding. It explains that the interval is imprecise because
-              * the player doesn't have enough information. */
-             _("The probability of success is %.1f%%, %.1f%% or somewhere"
-               " in between.%s"),
-             (double) prob.min / ACTPROB_VAL_1_PCT,
-             (double) prob.max / ACTPROB_VAL_1_PCT,
-             prob.max - prob.min > 1
-                 ?
-                 /* TRANS: explanation used in the action probability tooltip
-                  * above. Preserve leading space. */
-                 _(" (This is the most precise interval I can calculate "
-                   "given the information our nation has access to.)")
-                 : "");
+    tool_tip =
+        QString(
+            /* TRANS: action probability interval (min to max). Given in
+             * percentage. Resolution is 0.5%. The string at the end is
+             * shown when the interval is wide enough to not be caused by
+             * rounding. It explains that the interval is imprecise because
+             * the player doesn't have enough information. */
+            _("The probability of success is %1%, %2% or somewhere"
+              " in between.%3"))
+            .arg((double) prob.min / ACTPROB_VAL_1_PCT)
+            .arg((double) prob.max / ACTPROB_VAL_1_PCT)
+            .arg(prob.max - prob.min > 1
+                     ?
+                     /* TRANS: explanation used in the action probability
+                      * tooltip above. Preserve leading space. */
+                     _(" (This is the most precise interval I can calculate "
+                       "given the information our nation has access to.)")
+                     : "");
   }
 
-  return astr_str(&tool_tip);
+  return qUtf8Printable(tool_tip);
 }
 
 /**********************************************************************/ /**

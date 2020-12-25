@@ -20,7 +20,6 @@
 #include <QVBoxLayout>
 #include <QtMath>
 // utility
-#include "astring.h"
 #include "fcintl.h"
 // common
 #include "actions.h"
@@ -145,7 +144,7 @@ static void keep_moving(QVariant data1, QVariant data2);
 static void pillage_something(QVariant data1, QVariant data2);
 static void action_entry(choice_dialog *cd, action_id act,
                          const struct act_prob *act_probs,
-                         const char *custom, QVariant data1, QVariant data2);
+                         const QString custom, QVariant data1, QVariant data2);
 
 static bool is_showing_pillage_dialog = false;
 static races_dialog *race_dialog;
@@ -823,10 +822,7 @@ qdef_act *qdef_act::action()
 /***********************************************************************/ /**
    Deletes qdef_act instance
  ***************************************************************************/
-void qdef_act::drop()
-{
-  NFCN_FREE(m_instance);
-}
+void qdef_act::drop() { NFCN_FREE(m_instance); }
 
 /***********************************************************************/ /**
    Sets default action vs city
@@ -1703,7 +1699,7 @@ void popup_action_selection(struct unit *actor_unit,
                             struct extra_type *target_extra,
                             const struct act_prob *act_probs)
 {
-  struct astring title = ASTRING_INIT, text = ASTRING_INIT;
+  QString title, text;
   choice_dialog *cd;
   QVariant qv1, qv2;
   pfcn_void func;
@@ -1750,33 +1746,31 @@ void popup_action_selection(struct unit *actor_unit,
 
   actor_homecity = game_city_by_number(actor_unit->homecity);
 
-  astr_set(&title,
-           /* TRANS: %s is a unit name, e.g., Spy */
-           _("Choose Your %s's Strategy"),
-           unit_name_translation(actor_unit));
+  title = /* TRANS: %s is a unit name, e.g., Spy */
+      QString(_("Choose Your %1's Strategy"))
+          .arg(unit_name_translation(actor_unit));
 
   if (target_city && actor_homecity) {
-    astr_set(&text, _("Your %s from %s reaches the city of %s.\nWhat now?"),
-             unit_name_translation(actor_unit),
-             city_name_get(actor_homecity), city_name_get(target_city));
+    text =
+        QString(_("Your %1 from %2 reaches the city of %3.\nWhat now?"))
+            .arg(unit_name_translation(actor_unit),
+                 city_name_get(actor_homecity), city_name_get(target_city));
   } else if (target_city) {
-    astr_set(&text, _("Your %s has arrived at %s.\nWhat is your command?"),
-             unit_name_translation(actor_unit), city_name_get(target_city));
+    text = QString(_("Your %1 has arrived at %2.\nWhat is your command?"))
+               .arg(unit_name_translation(actor_unit),
+                    city_name_get(target_city));
   } else if (target_unit) {
-    astr_set(&text,
-             /* TRANS: Your Spy is ready to act against Roman Freight. */
-             _("Your %s is ready to act against %s %s."),
-             unit_name_translation(actor_unit),
-             nation_adjective_for_player(unit_owner(target_unit)),
-             unit_name_translation(target_unit));
+    /* TRANS: Your Spy is ready to act against Roman Freight. */
+    text = QString(_("Your %1 is ready to act against %2 %3."))
+               .arg(unit_name_translation(actor_unit),
+                    nation_adjective_for_player(unit_owner(target_unit)),
+                    unit_name_translation(target_unit));
   } else {
     fc_assert_msg(target_unit || target_city || target_tile,
                   "No target specified.");
-
-    astr_set(&text,
-             /* TRANS: %s is a unit name, e.g., Diplomat, Spy */
-             _("Your %s is waiting for your command."),
-             unit_name_translation(actor_unit));
+    /* TRANS: %s is a unit name, e.g., Diplomat, Spy */
+    text = QString(_("Your %1 is waiting for your command."))
+               .arg(unit_name_translation(actor_unit));
   }
 
   cd = king()->get_diplo_dialog();
@@ -1784,8 +1778,7 @@ void popup_action_selection(struct unit *actor_unit,
     cd->update_dialog(act_probs);
     return;
   }
-  cd = new choice_dialog(astr_str(&title), astr_str(&text),
-                         queen()->game_tab_widget,
+  cd = new choice_dialog(title, text, queen()->game_tab_widget,
                          diplomat_queue_handle_primary);
   qv1 = actor_unit->id;
 
@@ -1946,9 +1939,6 @@ void popup_action_selection(struct unit *actor_unit,
     actor_unit->client.act_prob_cache[act] = act_probs[act];
   }
   action_iterate_end;
-
-  astr_free(&title);
-  astr_free(&text);
 }
 
 /***********************************************************************/ /**
@@ -2000,7 +1990,7 @@ static action_id get_production_targeted_action_id(action_id tgt_action_id)
  ***************************************************************************/
 static void action_entry(choice_dialog *cd, action_id act,
                          const struct act_prob *act_probs,
-                         const char *custom, QVariant data1, QVariant data2)
+                         const QString custom, QVariant data1, QVariant data2)
 {
   QString title;
   QString tool_tip;
@@ -2029,7 +2019,7 @@ static void action_entry(choice_dialog *cd, action_id act,
  ***************************************************************************/
 static void action_entry_update(Choice_dialog_button *button, action_id act,
                                 const struct act_prob *act_probs,
-                                const char *custom, QVariant data1,
+                                const QString custom, QVariant data1,
                                 QVariant data2)
 {
   QString title;
@@ -2533,7 +2523,7 @@ static void spy_steal_shared(QVariant data1, QVariant data2,
   if (cd != NULL) {
     cd->close();
   }
-  struct astring stra = ASTRING_INIT;
+  QString stra;
   cd = new choice_dialog(_("Steal"), _("Steal Technology"),
                          queen()->game_tab_widget,
                          diplomat_queue_handle_secondary);
@@ -2556,9 +2546,7 @@ static void spy_steal_shared(QVariant data1, QVariant data2,
           && research_invention_state(vresearch, i) == TECH_KNOWN
           && research_invention_state(presearch, i) != TECH_KNOWN) {
         func = spy_steal_something;
-        // Defeat keyboard shortcut mnemonics
-        str = QString(research_advance_name_translation(presearch, i))
-                  .replace(QLatin1String("&"), QLatin1String("&&"));
+        str = QString(research_advance_name_translation(presearch, i));
         cd->add_item(str, func, qv1, i);
       }
     }
@@ -2567,18 +2555,15 @@ static void spy_steal_shared(QVariant data1, QVariant data2,
     if (action_prob_possible(
             actor_unit->client
                 .act_prob_cache[get_non_targeted_action_id(act_id)])) {
-      astr_set(&stra, _("At %s's Discretion"),
-               unit_name_translation(actor_unit));
+      stra = QString(_("At %1's Discretion"))
+                 .arg(unit_name_translation(actor_unit));
       func = spy_steal_something;
-      str = QString(astr_str(&stra))
-                .replace(QLatin1String("&"), QLatin1String("&&"));
-      cd->add_item(str, func, qv1, A_UNSET);
+      cd->add_item(stra, func, qv1, A_UNSET);
     }
 
     cd->set_layout();
     cd->show_me();
   }
-  astr_free(&stra);
 }
 
 /***********************************************************************/ /**
@@ -3167,7 +3152,6 @@ static void spy_sabotage(QVariant data1, QVariant data2)
 void popup_sabotage_dialog(struct unit *actor, struct city *tcity,
                            const struct action *paction)
 {
-  QString str;
   QVariant qv1, qv2;
   int diplomat_id = actor->id;
   int diplomat_target_id = tcity->id;
@@ -3176,7 +3160,7 @@ void popup_sabotage_dialog(struct unit *actor, struct city *tcity,
       _("Sabotage"), _("Select Improvement to Sabotage"),
       queen()->game_tab_widget, diplomat_queue_handle_secondary);
   int nr = 0;
-  struct astring stra = ASTRING_INIT;
+  QString stra;
   QList<QVariant> actor_and_target;
 
   /* Should be set before sending request to the server. */
@@ -3199,11 +3183,9 @@ void popup_sabotage_dialog(struct unit *actor, struct city *tcity,
   {
     if (pimprove->sabotage > 0) {
       func = spy_sabotage;
-      // Defeat keyboard shortcut mnemonics
-      str = QString(city_improvement_name_translation(tcity, pimprove))
-                .replace(QLatin1String("&"), QLatin1String("&&"));
+      stra = QString(city_improvement_name_translation(tcity, pimprove));
       qv2 = nr;
-      cd->add_item(str, func, qv1, improvement_number(pimprove));
+      cd->add_item(stra, func, qv1, improvement_number(pimprove));
       nr++;
     }
   }
@@ -3212,16 +3194,13 @@ void popup_sabotage_dialog(struct unit *actor, struct city *tcity,
   if (action_prob_possible(
           actor->client
               .act_prob_cache[get_non_targeted_action_id(paction->id)])) {
-    astr_set(&stra, _("At %s's Discretion"), unit_name_translation(actor));
+    stra =
+        QString(_("At %1's Discretion")).arg(unit_name_translation(actor));
     func = spy_sabotage;
-    str = QString(astr_str(&stra))
-              .replace(QLatin1String("&"), QLatin1String("&&"));
-    cd->add_item(str, func, qv1, B_LAST);
+    cd->add_item(stra, func, qv1, B_LAST);
   }
-
   cd->set_layout();
   cd->show_me();
-  astr_free(&stra);
 }
 
 /***********************************************************************/ /**
@@ -3249,9 +3228,7 @@ void popup_pillage_dialog(struct unit *punit, bv_extras extras)
     BV_CLR(extras, what);
 
     func = pillage_something;
-    // Defeat keyboard shortcut mnemonics
-    str = QString(extra_name_translation(tgt))
-              .replace(QLatin1String("&"), QLatin1String("&&"));
+    str = QString(extra_name_translation(tgt));
     qv1 = what;
     cd->add_item(str, func, qv1, qv2);
   }
@@ -3575,7 +3552,7 @@ void action_selection_refresh(struct unit *actor_unit,
 
   action_iterate(act)
   {
-    const char *custom;
+    QString custom;
 
     if (action_id_get_actor_kind(act) != AAK_UNIT) {
       /* Not relevant. */
