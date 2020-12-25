@@ -16,9 +16,9 @@
 
 /* common */
 #include "map.h"
+#include "nation.h"
 #include "player.h"
 #include "research.h"
-#include "nation.h"
 /* server */
 #include "notify.h"
 

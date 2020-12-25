@@ -1011,8 +1011,8 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
        * big danger. */
       int notzero = city_list_size(pplayer->cities);
       fc_assert_ret_msg(notzero, "div by zero");
-      int tech_cost = research_goal_bulbs_required(presearch, tech_req) / 4
-                      / notzero;
+      int tech_cost =
+          research_goal_bulbs_required(presearch, tech_req) / 4 / notzero;
       int bcost_balanced = build_cost_balanced(punittype);
       /* See description of kill_desire() for info about this variables. */
       int bcost = utype_build_shield_cost(pcity, punittype);

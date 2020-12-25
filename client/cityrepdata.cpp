@@ -747,8 +747,8 @@ static const struct city_report_spec base_city_report_specs[] = {
      N_("Surplus: Production"), NULL, FUNC_TAG(prodplus)},
     {false, 3, 1, NULL, N_("?Production loss (waste) [short]:-P"),
      N_("Waste"), NULL, FUNC_TAG(waste)},
-    {true, 3, 1, NULL, N_("?Trade surplus [short]:+T"),
-     N_("Surplus: Trade"), NULL, FUNC_TAG(tradeplus)},
+    {true, 3, 1, NULL, N_("?Trade surplus [short]:+T"), N_("Surplus: Trade"),
+     NULL, FUNC_TAG(tradeplus)},
     {true, 3, 1, NULL, N_("?Trade loss (corruption) [short]:-T"),
      N_("Corruption"), NULL, FUNC_TAG(corruption)},
 

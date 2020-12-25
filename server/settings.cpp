@@ -5187,8 +5187,8 @@ static bool setting_match_prefix(const val_name_func_t name_fn,
   matches.reserve(16);
   size_t num_matches;
 
-  switch (setting_match_prefix_base(name_fn, prefix, pvalue, matches,
-                                    16, &num_matches)) {
+  switch (setting_match_prefix_base(name_fn, prefix, pvalue, matches, 16,
+                                    &num_matches)) {
   case M_PRE_EXACT:
   case M_PRE_ONLY:
     return true; /* Ok. */
