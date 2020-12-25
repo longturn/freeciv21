@@ -30,6 +30,7 @@ jobs:
     addons:
       apt:
         packages:
+        - clang-format
         - cmake
         - ninja-build
         - python3
@@ -37,6 +38,9 @@ jobs:
         - qt5-default
         - libsqlite3-dev
         - libsdl2-mixer-dev
+    before_script:
+      - scripts/apply-clang-format.sh
+      - git diff --exit-code
   - name: "os_x"
     if: branch != coverity_scan
     os: osx
