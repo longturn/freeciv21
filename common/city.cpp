@@ -3334,7 +3334,7 @@ struct city *create_city_virtual(struct player *pplayer, struct tile *ptile,
 {
   int i;
 
-  fc_assert_ret_val(NULL != name, NULL); /* No unnamed cities! */
+  fc_assert_ret_val(NULL != name, NULL);    /* No unnamed cities! */
   fc_assert_ret_val(NULL != pplayer, NULL); /* No unowned cities! */
 
   /* Make sure that contents of city structure are correctly initialized,

@@ -1562,8 +1562,8 @@ const QString get_nuclear_winter_tooltip(void)
     int chance, rate;
     nuclear_winter_scaled(&chance, &rate, 100);
     str = _("Shows the progress of nuclear winter:") + qendl();
-    str += QString(_("Fallout rate: %1%")).arg(QString::number(rate))
-           + qendl();
+    str +=
+        QString(_("Fallout rate: %1%")).arg(QString::number(rate)) + qendl();
     str += str
            + QString(_("Chance of catastrophic winter each turn: %1%"))
                  .arg(QString::number(chance))

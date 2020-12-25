@@ -124,7 +124,8 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
     struct data_in din;
 
     dio_input_init(&din, pvalue, 4);
-    fc_assert_ret_val(dio_get_uint32_raw(&din, &value_lengths[i]), A_SERIAL_FAIL);
+    fc_assert_ret_val(dio_get_uint32_raw(&din, &value_lengths[i]),
+                      A_SERIAL_FAIL);
 
     total_length += value_lengths[i];
     i++;

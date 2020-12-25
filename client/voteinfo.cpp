@@ -290,4 +290,3 @@ int voteinfo_queue_size(void)
 {
   return (NULL != voteinfo_queue ? voteinfo_list_size(voteinfo_queue) : 0);
 }
-

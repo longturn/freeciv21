@@ -341,4 +341,3 @@ enum topo_comp_lvl {
 
 enum topo_comp_lvl tileset_map_topo_compatible(int topology_id,
                                                struct tileset *tset);
-

@@ -1474,7 +1474,7 @@ static void explain_why_no_action_enabled(struct unit *punit,
       {
         if (utype_can_do_act_when_ustate(utype, ACTION_ANY, USP_LIVABLE_TILE,
                                          false)) {
-                                           i++;
+          i++;
           types.append(utype_name_translation(utype));
         }
       }
@@ -1963,32 +1963,36 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
 
     if (role_units_translations(roles, action_id_get_role(stopped_action),
                                 true)) {
-      notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                    /* TRANS: Only Diplomat or Spy can do Steal Gold. */
-                    _("Only %s can do %s."), qUtf8Printable(roles),
-                    qUtf8Printable(action_id_name_translation(stopped_action)));
+      notify_player(
+          pplayer, unit_tile(actor), event, ftc_server,
+          /* TRANS: Only Diplomat or Spy can do Steal Gold. */
+          _("Only %s can do %s."), qUtf8Printable(roles),
+          qUtf8Printable(action_id_name_translation(stopped_action)));
     } else {
-      notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                    /* TRANS: Spy can't do Capture Units. */
-                    _("%s can't do %s."), unit_name_translation(actor),
-                    qUtf8Printable(action_id_name_translation(stopped_action)));
+      notify_player(
+          pplayer, unit_tile(actor), event, ftc_server,
+          /* TRANS: Spy can't do Capture Units. */
+          _("%s can't do %s."), unit_name_translation(actor),
+          qUtf8Printable(action_id_name_translation(stopped_action)));
     }
   } break;
   case ANEK_MISSING_TARGET:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: "Your Spy found ... suitable for
-                   * Bribe Enemy Unit." */
-                  _("Your %s found no target suitable for %s."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: "Your Spy found ... suitable for
+         * Bribe Enemy Unit." */
+        _("Your %s found no target suitable for %s."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_BAD_TARGET:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: "Having your Spy do Bribe Enemy Unit to
-                   * this target ..." */
-                  _("Having your %s do %s to this target is redundant."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: "Having your Spy do Bribe Enemy Unit to
+         * this target ..." */
+        _("Having your %s do %s to this target is redundant."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_BAD_TERRAIN_ACT: {
     QVector<QString> types;
@@ -2010,25 +2014,26 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
     }
 
     if (0 < i) {
-      notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                    /* TRANS: action name.
-                     * "Your Spy can't do Steal Gold from Ocean.
-                     * Only Explorer or Partisan can do Steal Gold ..." */
-                    _("Your %s can't do %s from %s. "
-                      "Only %s can do %s from a non livable tile."),
-                    unit_name_translation(actor),
-                    qUtf8Printable(action_id_name_translation(stopped_action)),
-                    terrain_name_translation(explnat->no_act_terrain),
-                    qUtf8Printable(strvec_to_and_list(types)),
-                    qUtf8Printable(action_id_name_translation(stopped_action)));
+      notify_player(
+          pplayer, unit_tile(actor), event, ftc_server,
+          /* TRANS: action name.
+           * "Your Spy can't do Steal Gold from Ocean.
+           * Only Explorer or Partisan can do Steal Gold ..." */
+          _("Your %s can't do %s from %s. "
+            "Only %s can do %s from a non livable tile."),
+          unit_name_translation(actor),
+          qUtf8Printable(action_id_name_translation(stopped_action)),
+          terrain_name_translation(explnat->no_act_terrain),
+          qUtf8Printable(strvec_to_and_list(types)),
+          qUtf8Printable(action_id_name_translation(stopped_action)));
     } else {
-      notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                    /* TRANS: action name.
-                     * "Your Spy can't do Steal Gold from Ocean." */
-                    _("Your %s can't do %s from %s."),
-                    unit_name_translation(actor),
-                    qUtf8Printable(action_id_name_translation(stopped_action)),
-                    terrain_name_translation(explnat->no_act_terrain));
+      notify_player(
+          pplayer, unit_tile(actor), event, ftc_server,
+          /* TRANS: action name.
+           * "Your Spy can't do Steal Gold from Ocean." */
+          _("Your %s can't do %s from %s."), unit_name_translation(actor),
+          qUtf8Printable(action_id_name_translation(stopped_action)),
+          terrain_name_translation(explnat->no_act_terrain));
     }
   } break;
   case ANEK_BAD_TERRAIN_TGT:
@@ -2046,47 +2051,53 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * "Your Spy can't do Industrial Sabotage while ..." */
                   _("Your %s can't do %s while being transported."),
                   unit_name_translation(actor),
-                  qUtf8Printable(qUtf8Printable(action_id_name_translation(stopped_action))));
+                  qUtf8Printable(qUtf8Printable(
+                      action_id_name_translation(stopped_action))));
     break;
   case ANEK_IS_NOT_TRANSPORTED:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Spy can't do Industrial Sabotage while ..." */
-                  _("Your %s can't do %s while not being transported."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Spy can't do Industrial Sabotage while ..." */
+        _("Your %s can't do %s while not being transported."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_IS_TRANSPORTING:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Spy can't do Industrial Sabotage while ..." */
-                  _("Your %s can't do %s while transporting."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Spy can't do Industrial Sabotage while ..." */
+        _("Your %s can't do %s while transporting."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_IS_NOT_TRANSPORTING:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Spy can't do Industrial Sabotage while ..." */
-                  _("Your %s can't do %s while not transporting."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Spy can't do Industrial Sabotage while ..." */
+        _("Your %s can't do %s while not transporting."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_ACTOR_HAS_HOME_CITY:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Spy can't do Industrial Sabotage because ..." */
-                  _("Your %s can't do %s because it has a home city."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Spy can't do Industrial Sabotage because ..." */
+        _("Your %s can't do %s because it has a home city."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_ACTOR_HAS_NO_HOME_CITY:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Spy can't do Industrial Sabotage because ..." */
-                  _("Your %s can't do %s because it is homeless."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Spy can't do Industrial Sabotage because ..." */
+        _("Your %s can't do %s because it is homeless."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_NO_WAR:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2135,13 +2146,14 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                       action_id_get_target_kind(stopped_action)));
     break;
   case ANEK_NATION_ACT:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Swedish Riflemen can't do Expel Unit." */
-                  _("%s %s can't do %s."),
-                  nation_adjective_translation(explnat->no_act_nation),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Swedish Riflemen can't do Expel Unit." */
+        _("%s %s can't do %s."),
+        nation_adjective_translation(explnat->no_act_nation),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_NATION_TGT:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2155,80 +2167,89 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                       action_id_get_target_kind(stopped_action)));
     break;
   case ANEK_LOW_MP:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Spy has ... to do Bribe Enemy Unit." */
-                  _("Your %s has too few moves left to do %s."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Spy has ... to do Bribe Enemy Unit." */
+        _("Your %s has too few moves left to do %s."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_IS_CITY_CENTER:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Spy can't do Bribe Enemy Unit to city centers." */
-                  _("Your %s can't do %s to city centers."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Spy can't do Bribe Enemy Unit to city centers." */
+        _("Your %s can't do %s to city centers."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_IS_NOT_CITY_CENTER:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Spy can only do Investigate City to
-                   * city centers." */
-                  _("Your %s can only do %s to city centers."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Spy can only do Investigate City to
+         * city centers." */
+        _("Your %s can only do %s to city centers."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_TGT_IS_CLAIMED:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Settlers can't do Build City to claimed tiles." */
-                  _("Your %s can't do %s to claimed tiles."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Settlers can't do Build City to claimed tiles." */
+        _("Your %s can't do %s to claimed tiles."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_TGT_IS_UNCLAIMED:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Spy can't do Bribe Enemy Unit to
-                   * unclaimed tiles." */
-                  _("Your %s can't do %s to unclaimed tiles."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Spy can't do Bribe Enemy Unit to
+         * unclaimed tiles." */
+        _("Your %s can't do %s to unclaimed tiles."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_DISTANCE_NEAR:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Spy must be at least 2 tiles away to do
-                   * Incite a Revolt and Escape." */
-                  PL_("Your %s must be at least %d tile away to do %s.",
-                      "Your %s must be at least %d tiles away to do %s.",
-                      explnat->distance),
-                  unit_name_translation(actor), explnat->distance,
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Spy must be at least 2 tiles away to do
+         * Incite a Revolt and Escape." */
+        PL_("Your %s must be at least %d tile away to do %s.",
+            "Your %s must be at least %d tiles away to do %s.",
+            explnat->distance),
+        unit_name_translation(actor), explnat->distance,
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_DISTANCE_FAR:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Diplomat can't be more than 1 tile away to do
-                   * Establish Embassy." */
-                  PL_("Your %s can't be more than %d tile away to do %s.",
-                      "Your %s can't be more than %d tiles away to do %s.",
-                      explnat->distance),
-                  unit_name_translation(actor), explnat->distance,
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Diplomat can't be more than 1 tile away to do
+         * Establish Embassy." */
+        PL_("Your %s can't be more than %d tile away to do %s.",
+            "Your %s can't be more than %d tiles away to do %s.",
+            explnat->distance),
+        unit_name_translation(actor), explnat->distance,
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_SCENARIO_DISABLED:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: Can't do Build City in this scenario. */
-                  _("Can't do %s in this scenario."),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: Can't do Build City in this scenario. */
+        _("Can't do %s in this scenario."),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_CITY_TOO_CLOSE_TGT:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: Can't do Build City this close to a city. */
-                  _("Can't do %s this close to a city."),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: Can't do Build City this close to a city. */
+        _("Can't do %s this close to a city."),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_CITY_TOO_BIG:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2239,12 +2260,13 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                   city_name_get(target_city));
     break;
   case ANEK_CITY_POP_LIMIT:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: London ... Settlers ... Join City */
-                  _("%s needs an improvement to grow, so "
-                    "%s cannot do %s."),
-                  city_name_get(target_city), unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: London ... Settlers ... Join City */
+        _("%s needs an improvement to grow, so "
+          "%s cannot do %s."),
+        city_name_get(target_city), unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_CITY_NO_CAPACITY:
     notify_player(pplayer, unit_tile(actor), event, ftc_server,
@@ -2255,11 +2277,12 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                   unit_name_translation(actor));
     break;
   case ANEK_TGT_TILE_UNKNOWN:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: Paratroopers ... Drop Paratrooper */
-                  _("%s can't do %s to an unknown tile."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: Paratroopers ... Drop Paratrooper */
+        _("%s can't do %s to an unknown tile."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_ACT_NOT_ENOUGH_MONEY: {
     char tbuf[MAX_LEN_MSG];
@@ -2298,12 +2321,13 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
         utype_name_translation(unit_type_get(unit_transport_get(actor))));
     break;
   case ANEK_TGT_UNREACHABLE:
-    notify_player(pplayer, target_tile, event, ftc_server,
-                  /* TRANS: "Your Spy can't do Bribe Enemy Unit there ..." */
-                  _("Your %s can't do %s there since there's an "
-                    "unreachable unit."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, target_tile, event, ftc_server,
+        /* TRANS: "Your Spy can't do Bribe Enemy Unit there ..." */
+        _("Your %s can't do %s there since there's an "
+          "unreachable unit."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   case ANEK_TGT_IS_UNIQUE_ACT_HAS:
     notify_player(pplayer, target_tile, event, ftc_server,
@@ -2312,20 +2336,21 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                   utype_name_translation(explnat->no_tgt_utype));
     break;
   case ANEK_ACTION_BLOCKS:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: Freight ... Recycle Unit ... Help Wonder ... */
-                  _("Your %s can't do %s when %s is legal."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)),
-                  qUtf8Printable(action_id_name_translation(explnat->blocker->id)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: Freight ... Recycle Unit ... Help Wonder ... */
+        _("Your %s can't do %s when %s is legal."),
+        unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)),
+        qUtf8Printable(action_id_name_translation(explnat->blocker->id)));
     break;
   case ANEK_UNKNOWN:
-    notify_player(pplayer, unit_tile(actor), event, ftc_server,
-                  /* TRANS: action name.
-                   * "Your Spy was unable to do Bribe Enemy Unit." */
-                  _("Your %s was unable to do %s."),
-                  unit_name_translation(actor),
-                  qUtf8Printable(action_id_name_translation(stopped_action)));
+    notify_player(
+        pplayer, unit_tile(actor), event, ftc_server,
+        /* TRANS: action name.
+         * "Your Spy was unable to do Bribe Enemy Unit." */
+        _("Your %s was unable to do %s."), unit_name_translation(actor),
+        qUtf8Printable(action_id_name_translation(stopped_action)));
     break;
   }
 
@@ -2640,8 +2665,8 @@ void unit_do_action(struct player *pplayer, const int actor_id,
                     const char *name, const action_id action_type)
 {
   bool unused;
-  unused = unit_perform_action(pplayer, actor_id, target_id, sub_tgt_id, name,
-                      action_type, ACT_REQ_PLAYER);
+  unused = unit_perform_action(pplayer, actor_id, target_id, sub_tgt_id,
+                               name, action_type, ACT_REQ_PLAYER);
   Q_UNUSED(unused);
 }
 
@@ -4081,7 +4106,8 @@ static bool do_unit_strike_city_production(const struct player *act_player,
                     E_UNIT_ACTION_ACTOR_FAILURE, ftc_server,
                     /* TRANS: unit, action, city */
                     _("Your %s failed to do %s in %s."), unit_link(act_unit),
-                    qUtf8Printable(action_name_translation(paction)), city_link(tgt_city));
+                    qUtf8Printable(action_name_translation(paction)),
+                    city_link(tgt_city));
 
       /* Make the failed attempt cost a single move. */
       act_unit->moves_left = MAX(0, act_unit->moves_left - SINGLE_MOVE);
@@ -4151,7 +4177,8 @@ static bool do_unit_strike_city_building(const struct player *act_player,
                     E_UNIT_ACTION_ACTOR_FAILURE, ftc_server,
                     /* TRANS: unit, action, city */
                     _("Your %s failed to do %s in %s."), unit_link(act_unit),
-                    qUtf8Printable(action_name_translation(paction)), city_link(tgt_city));
+                    qUtf8Printable(action_name_translation(paction)),
+                    city_link(tgt_city));
 
       /* Make the failed attempt cost a single move. */
       act_unit->moves_left = MAX(0, act_unit->moves_left - SINGLE_MOVE);
@@ -4168,7 +4195,8 @@ static bool do_unit_strike_city_building(const struct player *act_player,
                   E_UNIT_ACTION_ACTOR_FAILURE, ftc_server,
                   _("Your %s didn't find a %s to %s in %s."),
                   unit_link(act_unit), improvement_name_translation(tgt_bld),
-                  qUtf8Printable(action_name_translation(paction)), city_link(tgt_city));
+                  qUtf8Printable(action_name_translation(paction)),
+                  city_link(tgt_city));
 
     /* Punish the player for blindly attacking a building. */
     act_unit->moves_left = MAX(0, act_unit->moves_left - SINGLE_MOVE);
@@ -4522,13 +4550,13 @@ static bool unit_do_help_build(struct player *pplayer, struct unit *punit,
     work = _("surplus");
   }
 
-  notify_player(pplayer, city_tile(pcity_dest), E_CARAVAN_ACTION, ftc_server,
-                /* TRANS: Your Caravan does "Help Wonder" to help build the
-                 * Pyramids in Bergen (4 surplus). */
-                _("Your %s does %s to help build the %s in %s (%d %s)."),
-                unit_link(punit), qUtf8Printable(action_name_translation(paction)), prod,
-                city_link(pcity_dest), abs(build_points_left(pcity_dest)),
-                work);
+  notify_player(
+      pplayer, city_tile(pcity_dest), E_CARAVAN_ACTION, ftc_server,
+      /* TRANS: Your Caravan does "Help Wonder" to help build the
+       * Pyramids in Bergen (4 surplus). */
+      _("Your %s does %s to help build the %s in %s (%d %s)."),
+      unit_link(punit), qUtf8Printable(action_name_translation(paction)),
+      prod, city_link(pcity_dest), abs(build_points_left(pcity_dest)), work);
 
   /* May cause an incident */
   action_consequence_success(paction, pplayer, city_owner(pcity_dest),

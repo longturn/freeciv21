@@ -9,8 +9,8 @@
 **************************************************************************/
 #pragma once
 
-#include <QPixmapCache>
 #include <QHash>
+#include <QPixmapCache>
 /****************************************************************************
   Class helping reading icons/pixmaps from themes/gui-qt/icons folder
 ****************************************************************************/

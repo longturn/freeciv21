@@ -226,7 +226,7 @@ void unittype_item::wheelEvent(QWheelEvent *event)
   }
   unit_list_iterate_end;
 
-  if (event->angleDelta().y()< 0) {
+  if (event->angleDelta().y() < 0) {
     unit_scroll--;
   } else {
     unit_scroll++;
@@ -303,10 +303,7 @@ units_reports *units_reports::instance()
 /************************************************************************/ /**
    Deletes units_reports instance
  ****************************************************************************/
-void units_reports::drop()
-{
-  NFCN_FREE(m_instance);
-}
+void units_reports::drop() { NFCN_FREE(m_instance); }
 
 /************************************************************************/ /**
    Called when close button was pressed

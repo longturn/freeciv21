@@ -238,10 +238,7 @@ void fc_shortcuts::set_shortcut(fc_shortcut *s)
 /**********************************************************************/ /**
    Deletes current instance
  **************************************************************************/
-void fc_shortcuts::drop()
-{
-  NFCN_FREE(m_instance);
-}
+void fc_shortcuts::drop() { NFCN_FREE(m_instance); }
 
 /**********************************************************************/ /**
    Returns given instance

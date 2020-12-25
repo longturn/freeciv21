@@ -101,10 +101,7 @@ void fcUdpScan::sockError(QAbstractSocket::SocketError socketError)
 /**************************************************************************
   deletes fcUdpScan
 **************************************************************************/
-void fcUdpScan::drop()
-{
-  NFCN_FREE(m_instance);
-}
+void fcUdpScan::drop() { NFCN_FREE(m_instance); }
 
 /**********************************************************************/ /**
    Broadcast an UDP package to all servers on LAN, requesting information

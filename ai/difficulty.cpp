@@ -241,15 +241,15 @@ char *ai_level_help(const char *cmdname)
   if (level == AI_LEVEL_AWAY) {
     /* Special case */
     help = _("Toggles 'away' mode for your nation. In away mode, "
-                    "the AI will govern your nation but make only minimal "
-                    "changes.");
+             "the AI will govern your nation but make only minimal "
+             "changes.");
   } else {
     /* TRANS: %s is a (translated) skill level ('Novice', 'Hard', etc) */
-    help =  QString(_("With no arguments, sets all AI players to skill level "
-                    "'%1', and sets the default level for any new AI "
-                    "players to '%2'. With an argument, sets the skill "
-                    "level for the specified player only.")).arg(
-                  _(ai_level_name(level)), _(ai_level_name(level)));
+    help = QString(_("With no arguments, sets all AI players to skill level "
+                     "'%1', and sets the default level for any new AI "
+                     "players to '%2'. With an argument, sets the skill "
+                     "level for the specified player only."))
+               .arg(_(ai_level_name(level)), _(ai_level_name(level)));
   }
 
   handicaps = handicap_of_skill_level(level);
@@ -270,7 +270,8 @@ char *ai_level_help(const char *cmdname)
     int science = science_cost_of_skill_level(level);
 
     if (science != 100) {
-      features += QString(_("Research takes %1 as long as usual.")).arg(science);
+      features +=
+          QString(_("Research takes %1 as long as usual.")).arg(science);
     }
   }
   if (expansionism_of_skill_level(level) < 100) {
@@ -280,24 +281,27 @@ char *ai_level_help(const char *cmdname)
   switch (level) {
   case AI_LEVEL_HANDICAPPED:
     /* TRANS: describing an AI skill level */
-    help +=   _("\nThis skill level has the same features as 'Novice', "
-                    "but may suffer additional ruleset-defined penalties.") + qendl();
+    help += _("\nThis skill level has the same features as 'Novice', "
+              "but may suffer additional ruleset-defined penalties.")
+            + qendl();
     break;
   case AI_LEVEL_CHEATING:
     /* TRANS: describing an AI skill level */
     help += _("\nThis skill level has the same features as 'Hard', "
-                    "but may enjoy additional ruleset-defined bonuses.") + qendl();
+              "but may enjoy additional ruleset-defined bonuses.")
+            + qendl();
     break;
   default:
     /* TRANS: describing an AI skill level */
     help += _("\nThis skill level's features include the following. "
-                    "(Some rulesets may define extra level-specific "
-                    "behavior.)") + qendl();
+              "(Some rulesets may define extra level-specific "
+              "behavior.)")
+            + qendl();
     break;
   }
 
   help += features;
-  return qstrdup(const_cast<char*>(qUtf8Printable(help)));
+  return qstrdup(const_cast<char *>(qUtf8Printable(help)));
 }
 
 /**********************************************************************/ /**

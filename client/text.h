@@ -20,7 +20,7 @@ const QString popup_info_text(struct tile *ptile);
 const QString get_nearest_city_text(struct city *pcity, int sq_dist);
 const QString unit_description(struct unit *punit);
 const QString get_airlift_text(const struct unit_list *punits,
-                             const struct city *pdest);
+                               const struct city *pdest);
 const QString science_dialog_text(void);
 const QString get_science_target_text(double *percent);
 const QString get_science_goal_text(Tech_type_id goal);
@@ -32,7 +32,7 @@ const QString get_nuclear_winter_tooltip(void);
 const QString get_government_tooltip(void);
 const QString get_unit_info_label_text1(struct unit_list *punits);
 const QString get_unit_info_label_text2(struct unit_list *punits,
-                                      int linebreaks);
+                                        int linebreaks);
 bool get_units_upgrade_info(char *buf, size_t bufsz,
                             struct unit_list *punits);
 bool get_units_disband_info(char *buf, size_t bufsz,
@@ -45,11 +45,11 @@ QString get_score_text(const struct player *pplayer);
 const QString get_report_title(const char *report_name);
 
 const QString get_act_sel_action_custom_text(struct action *paction,
-                                           const struct act_prob prob,
-                                           const struct unit *actor_unit,
-                                           const struct city *target_city);
+                                             const struct act_prob prob,
+                                             const struct unit *actor_unit,
+                                             const struct city *target_city);
 const QString act_sel_action_tool_tip(const struct action *paction,
-                                    const struct act_prob prob);
+                                      const struct act_prob prob);
 
 QString text_happiness_buildings(const struct city *pcity);
 const QString text_happiness_nationality(const struct city *pcity);

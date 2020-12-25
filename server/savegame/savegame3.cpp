@@ -6032,9 +6032,10 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
             /* Sub target is a building. */
             if (!improvement_by_number(order_sub_tgt)) {
               /* Sub target is invalid. */
-              log_sg("Cannot find building %d for %s to %s", order_sub_tgt,
-                     unit_rule_name(punit),
-                     qUtf8Printable(action_id_name_translation(order->action)));
+              log_sg(
+                  "Cannot find building %d for %s to %s", order_sub_tgt,
+                  unit_rule_name(punit),
+                  qUtf8Printable(action_id_name_translation(order->action)));
               order->sub_target = B_LAST;
             } else {
               order->sub_target = order_sub_tgt;

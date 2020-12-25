@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
 struct ai_type;
 
 bool fc_ai_classic_setup(struct ai_type *ai);

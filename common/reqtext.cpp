@@ -320,12 +320,14 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
       fc_strlcat(buf, prefix, bufsz);
       if (preq->present) {
         cat_snprintf(buf, bufsz, _("Applies to the \"%s\" action."),
-                     qUtf8Printable(action_name_translation(preq->source.value.action)));
+                     qUtf8Printable(action_name_translation(
+                         preq->source.value.action)));
       } else {
         cat_snprintf(buf, bufsz,
                      _("Doesn't apply to the \"%s\""
                        " action."),
-                     qUtf8Printable(action_name_translation(preq->source.value.action)));
+                     qUtf8Printable(action_name_translation(
+                         preq->source.value.action)));
       }
       return true;
     default:

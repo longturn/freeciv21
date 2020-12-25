@@ -103,9 +103,9 @@ class help_widget : public QWidget {
 
   void set_bottom_panel(QWidget *widget);
 
-  QLayout *create_terrain_widget(const QString &title,
-                                 const QPixmap *image, const int &food,
-                                 const int &sh, const int &eco,
+  QLayout *create_terrain_widget(const QString &title, const QPixmap *image,
+                                 const int &food, const int &sh,
+                                 const int &eco,
                                  const QString &tooltip = QString());
 
   void set_topic_other(const help_item *item, const char *title);

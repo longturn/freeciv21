@@ -1194,7 +1194,7 @@ static QLabel *make_helplabel(const QString &title, const QString &tooltip,
   layout->addWidget(label, Qt::AlignVCenter);
   label->setProperty(fonts::default_font, "true");
   label->setToolTip(tooltip);
-  label->setMaximumHeight(QFontMetrics(f).height()* 1.2);
+  label->setMaximumHeight(QFontMetrics(f).height() * 1.2);
   return label;
 }
 
