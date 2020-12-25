@@ -39,8 +39,7 @@ jobs:
         - libsqlite3-dev
         - libsdl2-mixer-dev
     before_script:
-      - scripts/apply-clang-format.sh
-      - git diff --exit-code
+      - scripts/travis-clang-format.sh
   - name: "os_x"
     if: branch != coverity_scan
     os: osx
