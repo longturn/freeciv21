@@ -502,8 +502,7 @@ static size_t text_tag_start_sequence(const struct text_tag *ptag, char *buf,
                          ptag->color.background);
     }
     return ret + fc_snprintf(buf + ret, len - ret, "%c", SEQ_STOP);
-  }
-  break;
+  } break;
   case TTT_LINK: {
     size_t ret = fc_snprintf(buf, len, "%c%s tgt=\"%s\"", SEQ_START,
                              text_tag_type_short_name(ptag->type),

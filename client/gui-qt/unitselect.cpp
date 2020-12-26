@@ -293,8 +293,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
     punit = unit_list.at(highligh_num);
     /* TRANS: HP - hit points */
     str2 = QString(_("%1 HP:%2/%3"))
-               .arg(unit_activity_text(punit),
-                    QString::number(punit->hp),
+               .arg(unit_activity_text(punit), QString::number(punit->hp),
                     QString::number(unit_type_get(punit)->hp));
   }
   str = QString(PL_("%1 unit", "%1 units", unit_list_size(utile->units)))
@@ -422,7 +421,7 @@ void units_select::wheelEvent(QWheelEvent *event)
     return;
   }
   nr = qCeil(static_cast<qreal>(unit_list_size(utile->units)) / 4) - 3;
-  if (event->angleDelta().y()< 0) {
+  if (event->angleDelta().y() < 0) {
     show_line++;
     show_line = qMin(show_line, nr);
   } else {

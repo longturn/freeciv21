@@ -16,7 +16,6 @@
 #include "actions.h"
 #include "fc_types.h"
 
-
 adv_want dai_action_value_unit_vs_city(struct action *paction,
                                        struct unit *actor_unit,
                                        struct city *target_city,

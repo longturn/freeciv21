@@ -1403,9 +1403,11 @@ bool role_units_translations(QString &astr, int flag, bool alts)
 
   if (4 < count) {
     if (alts) {
-      astr = QString(_("%1 or similar units")).arg(utype_name_translation(get_role_unit(flag, 0)));
+      astr = QString(_("%1 or similar units"))
+                 .arg(utype_name_translation(get_role_unit(flag, 0)));
     } else {
-      astr = QString(_("%1 and similar units")).arg(utype_name_translation(get_role_unit(flag, 0)));
+      astr = QString(_("%1 and similar units"))
+                 .arg(utype_name_translation(get_role_unit(flag, 0)));
     }
     return true;
   } else if (0 < count) {

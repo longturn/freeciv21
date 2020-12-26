@@ -4510,10 +4510,11 @@ bool execute_orders(struct unit *punit, const bool fresh)
          * perform it. */
 
         cancel_orders(punit, "  illegal action");
-        notify_player(pplayer, unit_tile(punit), E_UNIT_ORDERS, ftc_server,
-                      _("%s could not do %s to %s."), unit_link(punit),
-                      qUtf8Printable(action_id_name_translation(order.action)),
-                      tile_link(dst_tile));
+        notify_player(
+            pplayer, unit_tile(punit), E_UNIT_ORDERS, ftc_server,
+            _("%s could not do %s to %s."), unit_link(punit),
+            qUtf8Printable(action_id_name_translation(order.action)),
+            tile_link(dst_tile));
 
         /* Try to explain what rule made it illegal. */
         illegal_action_msg(unit_owner(punit), E_BAD_COMMAND, punit,
@@ -4542,12 +4543,13 @@ bool execute_orders(struct unit *punit, const bool fresh)
         /* The action wasn't performed as ordered. */
 
         cancel_orders(punit, "  failed action");
-        notify_player(pplayer, unit_tile(punit), E_UNIT_ORDERS, ftc_server,
-                      _("Orders for %s aborted because "
-                        "doing %s to %s failed."),
-                      unit_link(punit),
-                      qUtf8Printable(action_id_name_translation(order.action)),
-                      tile_link(dst_tile));
+        notify_player(
+            pplayer, unit_tile(punit), E_UNIT_ORDERS, ftc_server,
+            _("Orders for %s aborted because "
+              "doing %s to %s failed."),
+            unit_link(punit),
+            qUtf8Printable(action_id_name_translation(order.action)),
+            tile_link(dst_tile));
 
         return true;
       }

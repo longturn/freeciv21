@@ -31,7 +31,6 @@ struct city_report_spec {
 
 extern struct city_report_spec *city_report_specs;
 
-
 int num_city_report_spec(void);
 bool *city_report_spec_show_ptr(int i);
 const char *city_report_spec_tagname(int i);

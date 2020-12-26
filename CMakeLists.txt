@@ -13,6 +13,9 @@ if (EMSCRIPTEN)
 endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
+# Always generate the compilation database by default
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
 include(FreecivBuildOptions)
 
 project(freeciv21 VERSION 3.1.0 LANGUAGES C CXX)

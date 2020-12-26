@@ -121,7 +121,6 @@ const char *beta_message(void)
 #endif /* IS_BETA_VERSION */
 }
 
-
 /*******************************************************************/ /**
    Return version string in a format suitable to be written to created
    datafiles as human readable information.
