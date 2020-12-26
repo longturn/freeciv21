@@ -10,6 +10,7 @@
 *.pyc
 *.pyo
 
+/compile_commands.json
 /freeciv-*
 /dependencies/tolua-5.2/tolua_program
 
