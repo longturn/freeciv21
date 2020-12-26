@@ -5163,11 +5163,11 @@ bool unit_drawn_with_city_outline(const struct unit *punit, bool check_focus)
 /************************************************************************/ /**
    Fill in the grid sprites for the given tile, city, and unit.
  ****************************************************************************/
-static int fill_grid_sprite_array(
-    const struct tileset *t, struct drawn_sprite *sprs,
-    const struct tile *ptile, const struct tile_edge *pedge,
-    const struct tile_corner *pcorner, const struct unit *punit,
-    const struct city *pcity, const struct city *citymode)
+static int fill_grid_sprite_array(const struct tileset *t,
+                                  struct drawn_sprite *sprs,
+                                  const struct tile *ptile,
+                                  const struct tile_edge *pedge,
+                                  const struct city *citymode)
 {
   struct drawn_sprite *saved_sprs = sprs;
 
@@ -5669,8 +5669,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
 
   case LAYER_GRID1:
     if (t->type == TS_ISOMETRIC) {
-      sprs += fill_grid_sprite_array(t, sprs, ptile, pedge, pcorner, punit,
-                                     pcity, citymode);
+      sprs += fill_grid_sprite_array(t, sprs, ptile, pedge, citymode);
     }
     break;
 
@@ -5930,8 +5929,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
 
   case LAYER_GRID2:
     if (t->type == TS_OVERHEAD) {
-      sprs += fill_grid_sprite_array(t, sprs, ptile, pedge, pcorner, punit,
-                                     pcity, citymode);
+      sprs += fill_grid_sprite_array(t, sprs, ptile, pedge, citymode);
     }
     break;
 
