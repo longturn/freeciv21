@@ -273,7 +273,7 @@ void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
                      const struct tile *ptile, const struct tile_edge *pedge,
                      const struct tile_corner *pcorner,
                      const struct unit *punit, const struct city *pcity,
-                     int canvas_x, int canvas_y, const struct city *citymode,
+                     int canvas_x, int canvas_y,
                      const struct unit_type *putype);
 
 void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
