@@ -30,6 +30,7 @@
 #include "road.h"
 #include "unit.h"
 // client
+#include "citybar.h"
 #include "cityrep_g.h"
 #include "client_main.h"
 #include "climisc.h"
@@ -662,6 +663,20 @@ void mr_menu::setup_menus()
   scale_fonts_status->setCheckable(true);
   scale_fonts_status->setChecked(true);
   menu->addSeparator();
+  action_citybar = new QActionGroup(this);
+  citybar_submenu = menu->addMenu(_("Citybar style"));
+
+  for (auto a : *citybar_painter::available_vector(nullptr)) {
+    act = citybar_submenu->addAction(a);
+    act->setCheckable(true);
+    act->setData(a);
+    action_citybar->addAction(act);
+    if (a == QString(gui_options.default_city_bar_style_name)) {
+      act->setChecked(true);
+    }
+    connect(act, &QAction::triggered, this, &mr_menu::slot_set_citybar);
+  }
+
   act = menu->addAction(_("City Outlines"));
   act->setCheckable(true);
   act->setChecked(gui_options.draw_city_outlines);
@@ -2597,6 +2612,27 @@ void mr_menu::slot_city_names() { key_city_names_toggle(); }
    Action "SHOW CITY OUTLINES"
  **************************************************************************/
 void mr_menu::slot_city_outlines() { key_city_outlines_toggle(); }
+
+/**************************************************************************
+   Action "Citybar changed"
+ **************************************************************************/
+void mr_menu::slot_set_citybar()
+{
+  for (auto a : action_citybar->actions()) {
+    if (a->isChecked()) {
+      fc_strlcpy(gui_options.default_city_bar_style_name,
+                 qUtf8Printable(a->data().toString()),
+                 sizeof(gui_options.default_city_bar_style_name));
+      options_iterate(client_optset, poption)
+      {
+        if (QString(option_name(poption)) == "default_city_bar_style_name") {
+          citybar_painter::option_changed(poption);
+        }
+      }
+      options_iterate_end;
+    }
+  }
+}
 
 /**********************************************************************/ /**
    Action "SHOW CITY OUTPUT"
