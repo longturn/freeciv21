@@ -20,6 +20,9 @@
 
 #include "shared.h" /* fc__attribute */
 
+// Qt
+#include <QIODevice>
+
 // Forward declarations
 class QByteArray;
 
@@ -38,9 +41,8 @@ enum fz_method {
 #endif
 };
 
-fz_FILE *fz_from_file(const char *filename, const char *in_mode,
+fz_FILE *fz_from_file(const char *filename, QIODevice::OpenMode in_mode,
                       enum fz_method method, int compress_level);
-fz_FILE *fz_from_stream(FILE *stream);
 fz_FILE *fz_from_memory(const QByteArray &buffer);
 int fz_fclose(fz_FILE *fp);
 char *fz_fgets(char *buffer, int size, fz_FILE *fp);

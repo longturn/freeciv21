@@ -152,7 +152,6 @@
 #endif
 
 /* utility */
-#include "astring.h"
 #include "bugs.h"
 #include "deprecations.h"
 #include "fcintl.h"
@@ -170,9 +169,6 @@
 
 /* Set to FALSE for old-style savefiles. */
 #define SAVE_TABLES true
-
-#define SPECVEC_TAG astring
-#include "specvec.h"
 
 static inline bool entry_used(const struct entry *pentry);
 static inline void entry_use(struct entry *pentry);
@@ -306,9 +302,9 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
   int table_lineno = 0;     /* Row number in tabular, 0 top data row. */
   const char *tok;
   int i;
-  struct astring base_name = ASTRING_INIT; /* for table or single entry */
-  struct astring field_name = ASTRING_INIT;
-  struct astring_vector columns; /* astrings for column headings */
+  QString base_name; /* for table or single entry */
+  QString field_name;
+  QVector<QString> columns; /* qstrings for column headings */
   bool found_my_section = false;
   bool error = false;
 
@@ -323,8 +319,6 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
   } else {
     secfile->name = NULL;
   }
-
-  astring_vector_init(&columns);
 
   if (filename) {
     qDebug("Reading registry from \"%s\"", filename);
@@ -401,7 +395,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
     if (table_state) {
       i = -1;
       do {
-        int num_columns = astring_vector_size(&columns);
+        int num_columns = columns.size();
 
         i++;
         inf_discard_tokens(inf, INF_TOK_EOL); /* allow newlines */
@@ -413,14 +407,16 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
         }
 
         if (i < num_columns) {
-          astr_set(&field_name, "%s%d.%s", astr_str(&base_name),
-                   table_lineno, astr_str(&columns.p[i]));
+          field_name = QString("%1%2.%3").arg(
+              base_name, QString::number(table_lineno), columns.at(i));
         } else {
-          astr_set(&field_name, "%s%d.%s,%d", astr_str(&base_name),
-                   table_lineno, astr_str(&columns.p[num_columns - 1]),
-                   (int) (i - num_columns + 1));
+          field_name =
+              QString("%1%2.%3,%4")
+                  .arg(base_name, QString::number(table_lineno),
+                       columns.at(num_columns - 1),
+                       QString::number((int) (i - num_columns + 1)));
         }
-        entry_from_inf_token(psection, astr_str(&field_name), tok, inf);
+        entry_from_inf_token(psection, qUtf8Printable(field_name), tok, inf);
       } while (inf_token(inf, INF_TOK_COMMA));
 
       if (!inf_token(inf, INF_TOK_EOL)) {
@@ -441,7 +437,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
     }
 
     /* need to store tok before next calls: */
-    astr_set(&base_name, "%s", tok);
+    base_name = tok;
 
     inf_discard_tokens(inf, INF_TOK_EOL); /* allow newlines */
 
@@ -462,18 +458,8 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
           error = true;
           goto END;
         }
-        { /* expand columns: */
-          int j, n_prev;
-          n_prev = astring_vector_size(&columns);
-          for (j = i + 1; j < n_prev; j++) {
-            astr_free(&columns.p[j]);
-          }
-          astring_vector_reserve(&columns, i + 1);
-          for (j = n_prev; j < i + 1; j++) {
-            astr_init(&columns.p[j]);
-          }
-        }
-        astr_set(&columns.p[i], "%s", tok + 1);
+        columns.resize(i + 1);
+        columns[i] = QString("%1").arg(tok + 1);
       } while (inf_token(inf, INF_TOK_COMMA));
 
       if (!inf_token(inf, INF_TOK_EOL)) {
@@ -498,10 +484,10 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
         goto END;
       }
       if (i == 0) {
-        entry_from_inf_token(psection, astr_str(&base_name), tok, inf);
+        entry_from_inf_token(psection, qUtf8Printable(base_name), tok, inf);
       } else {
-        astr_set(&field_name, "%s,%d", astr_str(&base_name), i);
-        entry_from_inf_token(psection, astr_str(&field_name), tok, inf);
+        field_name = QString("%1,%2").arg(base_name, QString::number(i));
+        entry_from_inf_token(psection, qUtf8Printable(field_name), tok, inf);
       }
     } while (inf_token(inf, INF_TOK_COMMA));
     if (!inf_token(inf, INF_TOK_EOL)) {
@@ -519,12 +505,6 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
 
 END:
   inf_close(inf);
-  astr_free(&base_name);
-  astr_free(&field_name);
-  for (i = 0; i < astring_vector_size(&columns); i++) {
-    astr_free(&columns.p[i]);
-  }
-  astring_vector_free(&columns);
 
   if (section != NULL) {
     if (!found_my_section) {
@@ -643,7 +623,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
   }
 
   interpret_tilde(real_filename, sizeof(real_filename), filename);
-  fs = fz_from_file(real_filename, "w", compression_method,
+  fs = fz_from_file(real_filename, QIODevice::WriteOnly, compression_method,
                     compression_level);
 
   if (!fs) {

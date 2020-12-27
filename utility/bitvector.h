@@ -96,3 +96,5 @@ void bv_clr_all_from(unsigned char *vec_to, const unsigned char *vec_from,
   typedef struct {                                                          \
     unsigned char vec[_BV_BYTES(bits)];                                     \
   } name
+
+bool is_any_set(QBitArray &ba);

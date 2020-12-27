@@ -96,7 +96,7 @@ struct inputfile {
   unsigned int cur_line_pos; /* position in current line */
   unsigned int line_num;     /* line number from file in cur_line */
   struct astring token;      /* data returned to user */
-  struct astring partial;    /* used in accumulating multi-line strings;
+  QString partial;    /* used in accumulating multi-line strings;
                                 used only in get_token_value, but put
                                 here so it gets freed when file closed */
   datafilename_fn_t datafn;  /* function like datafilename(); use a
@@ -162,7 +162,7 @@ static void init_zeros(struct inputfile *inf)
   inf->string_start_line = 0;
   astr_init(&inf->cur_line);
   astr_init(&inf->token);
-  astr_init(&inf->partial);
+  inf->partial.reserve(200);
 }
 
 /*******************************************************************/ /**
@@ -212,7 +212,7 @@ struct inputfile *inf_from_file(const char *filename,
 
   fc_assert_ret_val(NULL != filename, NULL);
   fc_assert_ret_val(0 < qstrlen(filename), NULL);
-  fp = fz_from_file(filename, "r", FZ_PLAIN, 0);
+  fp = fz_from_file(filename, QIODevice::ReadOnly, FZ_PLAIN, 0);
   if (!fp) {
     return NULL;
   }
@@ -268,7 +268,6 @@ static void inf_close_partial(struct inputfile *inf)
   inf->filename = NULL;
   astr_free(&inf->cur_line);
   astr_free(&inf->token);
-  astr_free(&inf->partial);
 
   /* assign zeros for safety if accidently re-use etc: */
   init_zeros(inf);
@@ -766,7 +765,6 @@ static const char *get_token_comma(struct inputfile *inf)
  ***********************************************************************/
 static const char *get_token_value(struct inputfile *inf)
 {
-  struct astring *partial;
   const char *c, *start;
   char trailing;
   bool has_i18n_marking = false;
@@ -857,7 +855,7 @@ static const char *get_token_value(struct inputfile *inf)
       return NULL;
     }
     *((char *) c) = trailing; /* Revert. */
-    fp = fz_from_file(rfname, "r", FZ_PLAIN, 0);
+    fp = fz_from_file(rfname, QIODevice::ReadOnly, FZ_PLAIN, 0);
     if (!fp) {
       qCCritical(inf_category, _("Cannot open stringfile \"%s\"."), rfname);
       return NULL;
@@ -925,9 +923,7 @@ static const char *get_token_value(struct inputfile *inf)
   /* prepare for possibly multi-line string: */
   inf->string_start_line = inf->line_num;
   inf->in_string = true;
-
-  partial = &inf->partial; /* abbreviation */
-  astr_clear(partial);
+  inf->partial.clear();
 
   start = c++; /* start includes the initial \", to
                 * distinguish from a number */
@@ -946,7 +942,7 @@ static const char *get_token_value(struct inputfile *inf)
       break;
     }
 
-    astr_add(partial, "%s\n", start);
+    inf->partial += QString("%1\n").arg(start);
 
     if (!read_a_line(inf)) {
       /* shouldn't happen */
@@ -962,7 +958,7 @@ static const char *get_token_value(struct inputfile *inf)
   *((char *) c) = '\0'; /* Tricky. */
 
   inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
-  astr_set(&inf->token, "%s%s", astr_str(partial), start);
+  astr_set(&inf->token, "%s%s", qUtf8Printable(inf->partial), start);
 
   *((char *) c) = trailing; /* Revert. */
 

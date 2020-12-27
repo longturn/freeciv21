@@ -5163,14 +5163,13 @@ bool unit_drawn_with_city_outline(const struct unit *punit, bool check_focus)
 /************************************************************************/ /**
    Fill in the grid sprites for the given tile, city, and unit.
  ****************************************************************************/
-static int fill_grid_sprite_array(
-    const struct tileset *t, struct drawn_sprite *sprs,
-    const struct tile *ptile, const struct tile_edge *pedge,
-    const struct tile_corner *pcorner, const struct unit *punit,
-    const struct city *pcity, const struct city *citymode)
+static int fill_grid_sprite_array(const struct tileset *t,
+                                  struct drawn_sprite *sprs,
+                                  const struct tile *ptile,
+                                  const struct tile_edge *pedge,
+                                  const struct city *citymode)
 {
   struct drawn_sprite *saved_sprs = sprs;
-  struct city *xcity;
 
   if (pedge) {
     bool known[NUM_EDGE_TILES], city[NUM_EDGE_TILES];
@@ -5220,14 +5219,10 @@ static int fill_grid_sprite_array(
           worked[i] = (NULL != tile_worked(tile));
         }
       }
-      if (tile && is_any_city_dialog_open()) {
-        { // Draw city grid for main citymap
-          xcity = find_city_near_tile(tile);
-          if (xcity && xcity->client.city_opened
-              && city_base_to_city_map(&dummy_x, &dummy_y, xcity, tile)) {
-            ADD_SPRITE_SIMPLE(t->sprites.grid.selected[pedge->type]);
-          }
-        }
+      // Draw city grid for main citymap
+      if (citymode
+          && city_base_to_city_map(&dummy_x, &dummy_y, citymode, tile)) {
+        ADD_SPRITE_SIMPLE(t->sprites.grid.selected[pedge->type]);
       }
     }
     if (mapdeco_is_highlight_set(pedge->tile[0])
@@ -5446,16 +5441,12 @@ static bool is_extra_drawing_enabled(struct extra_type *pextra)
 
    pcity, if specified, gives the city.  For tile drawing this should
    generally be tile_city(ptile); otherwise it can be any city.
-
-   citymode specifies whether this is part of a citydlg.  If so some
- drawing is done differently.
  ****************************************************************************/
 int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
                       enum mapview_layer layer, const struct tile *ptile,
                       const struct tile_edge *pedge,
                       const struct tile_corner *pcorner,
                       const struct unit *punit, const struct city *pcity,
-                      const struct city *citymode,
                       const struct unit_type *putype)
 {
   int tileno, dir;
@@ -5475,32 +5466,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
                    && (do_draw_unit || (pcity && gui_options.draw_cities)
                        || (ptile && !gui_options.draw_terrain)));
 
-  if (citymode) {
-    int count = 0, i, cx, cy;
-    const struct tile *const *tiles = NULL;
-    bool valid = false;
-
-    if (ptile) {
-      tiles = &ptile;
-      count = 1;
-    } else if (pcorner) {
-      tiles = pcorner->tile;
-      count = NUM_CORNER_TILES;
-    } else if (pedge) {
-      tiles = pedge->tile;
-      count = NUM_EDGE_TILES;
-    }
-
-    for (i = 0; i < count; i++) {
-      if (tiles[i] && city_base_to_city_map(&cx, &cy, citymode, tiles[i])) {
-        valid = true;
-        break;
-      }
-    }
-    if (!valid) {
-      return 0;
-    }
-  }
+  const city *citymode = is_any_city_dialog_open();
 
   if (ptile && client_tile_get_known(ptile) != TILE_UNKNOWN) {
     textras = *tile_extras(ptile);
@@ -5703,8 +5669,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
 
   case LAYER_GRID1:
     if (t->type == TS_ISOMETRIC) {
-      sprs += fill_grid_sprite_array(t, sprs, ptile, pedge, pcorner, punit,
-                                     pcity, citymode);
+      sprs += fill_grid_sprite_array(t, sprs, ptile, pedge, citymode);
     }
     break;
 
@@ -5964,8 +5929,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
 
   case LAYER_GRID2:
     if (t->type == TS_OVERHEAD) {
-      sprs += fill_grid_sprite_array(t, sprs, ptile, pedge, pcorner, punit,
-                                     pcity, citymode);
+      sprs += fill_grid_sprite_array(t, sprs, ptile, pedge, citymode);
     }
     break;
 
@@ -6180,16 +6144,11 @@ void toggle_focus_unit_state(struct tileset *t)
 /************************************************************************/ /**
    Find unit that we can display from given tile.
  ****************************************************************************/
-struct unit *get_drawable_unit(const struct tileset *t, struct tile *ptile,
-                               const struct city *citymode)
+struct unit *get_drawable_unit(const struct tileset *t, struct tile *ptile)
 {
   struct unit *punit = find_visible_unit(ptile);
 
   if (punit == NULL) {
-    return NULL;
-  }
-
-  if (citymode && unit_owner(punit) == city_owner(citymode)) {
     return NULL;
   }
 

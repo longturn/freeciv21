@@ -188,229 +188,54 @@ fz_FILE *fz_from_memory(const QByteArray &buffer)
    (If errno is 0, and using FZ_ZLIB, probably had zlib error
    Z_MEM_ERROR.  Wishlist: better interface for errors?)
  ****************************************************************************/
-fz_FILE *fz_from_file(const char *filename, const char *in_mode,
+fz_FILE *fz_from_file(const char *filename, QIODevice::OpenMode mode,
                       enum fz_method method, int compress_level)
 {
   fz_FILE *fp;
-  char mode[64];
 
-  if (!is_reg_file_for_access(filename, in_mode[0] == 'w')) {
+  if (!is_reg_file_for_access(filename, mode & QIODevice::WriteOnly)) {
     return NULL;
   }
 
   fp = (fz_FILE *) fc_malloc(sizeof(*fp));
   fp->memory = false;
-  sz_strlcpy(mode, in_mode);
 
-  if (mode[0] == 'w') {
-    /* Writing: */
+  if (mode & QIODevice::WriteOnly) {
+    // Writing
     fp->mode = 'w';
   } else {
-#if defined(FREECIV_HAVE_LIBBZ2) || defined(FREECIV_HAVE_LIBLZMA)
-    char test_mode[4];
-
-    sz_strlcpy(test_mode, mode);
-    sz_strlcat(test_mode, "b");
-#endif /* FREECIV_HAVE_LIBBZ2 || FREECIV_HAVE_LIBLZMA */
-
-    /* Reading: ignore specified method and try each: */
+    // Reading: ignore specified method and try each
     fp->mode = 'r';
-
-#ifdef FREECIV_HAVE_LIBBZ2
-    /* Try to open as bzip2 file
-       This is simplest test, so do it first. */
-    method = FZ_BZIP2;
-    fp->u.bz2.plain = fc_fopen(filename, test_mode);
-    if (fp->u.bz2.plain) {
-      fp->u.bz2.file =
-          BZ2_bzReadOpen(&fp->u.bz2.error, fp->u.bz2.plain, 1, 0, NULL, 0);
-    } else {
-      /* This may currently have garbage value assigned via other union
-       * member. */
-      fp->u.bz2.file = NULL;
-    }
-    if (!fp->u.bz2.file) {
-      if (fp->u.bz2.plain) {
-        fclose(fp->u.bz2.plain);
-      }
-      free(fp);
-      return NULL;
-    } else {
-      /* Try to read first byte out of stream so we can figure out if this
-         really is bzip2 file or not. Store byte for later use */
-      char tmp;
-      int read_len;
-
-      /* We put error to tmp variable when we don't want to overwrite
-       * error already in fp->u.bz2.error. So calls to fz_ferror() or
-       * fz_strerror() will later return what originally went wrong,
-       * and not what happened in error recovery. */
-      int tmp_err;
-
-      read_len = BZ2_bzRead(&fp->u.bz2.error, fp->u.bz2.file, &tmp, 1);
-      if (fp->u.bz2.error != BZ_DATA_ERROR_MAGIC) {
-        /* bzip2 file */
-        if (fp->u.bz2.error == BZ_STREAM_END) {
-          /* We already reached end of file with our read of one byte */
-          if (read_len == 0) {
-            /* 0 byte file */
-            fp->u.bz2.firstbyte = -1;
-          } else {
-            fp->u.bz2.firstbyte = tmp;
-          }
-          fp->u.bz2.eof = true;
-        } else if (fp->u.bz2.error != BZ_OK) {
-          /* Read failed */
-          BZ2_bzReadClose(&tmp_err, fp->u.bz2.file);
-          fclose(fp->u.bz2.plain);
-          free(fp);
-          return NULL;
-        } else {
-          /* Read success and we can continue reading */
-          fp->u.bz2.firstbyte = tmp;
-          fp->u.bz2.eof = false;
-        }
-        fp->method = FZ_BZIP2;
-        return fp;
-      }
-
-      /* Not bzip2 file */
-      BZ2_bzReadClose(&tmp_err, fp->u.bz2.file);
-      fclose(fp->u.bz2.plain);
-    }
-#endif /* FREECIV_HAVE_LIBBZ2 */
-
-#ifdef FREECIV_HAVE_LIBLZMA
-    /* Try to open as xz file */
-    fp->u.xz.memlimit = XZ_DECODER_MEMLIMIT;
-    memset(&fp->u.xz.stream, 0, sizeof(lzma_stream));
-    fp->u.xz.error = lzma_stream_decoder(&fp->u.xz.stream, fp->u.xz.memlimit,
-                                         LZMA_CONCATENATED);
-    if (fp->u.xz.error != LZMA_OK) {
-      free(fp);
-      return NULL;
-    }
-    fp->u.xz.plain = fc_fopen(filename, test_mode);
-    if (fp->u.xz.plain) {
-      size_t len = 0;
-
-      fp->u.xz.in_buf = fc_malloc(PLAIN_FILE_BUF_SIZE);
-
-      len = fread(fp->u.xz.in_buf, 1, XZ_DECODER_TEST_SIZE, fp->u.xz.plain);
-      if (len > 0) {
-        lzma_action action;
-
-        fp->u.xz.stream.next_in = fp->u.xz.in_buf;
-        fp->u.xz.stream.avail_in = len;
-        fp->u.xz.out_buf = fc_malloc(PLAIN_FILE_BUF_SIZE);
-        fp->u.xz.stream.next_out = fp->u.xz.out_buf;
-        fp->u.xz.stream.avail_out = PLAIN_FILE_BUF_SIZE;
-        len = fread(&fp->u.xz.hack_byte, 1, 1, fp->u.xz.plain);
-        if (len > 0) {
-          fp->u.xz.hack_byte_used = true;
-          action = LZMA_RUN;
-        } else {
-          fp->u.xz.hack_byte_used = false;
-          action = LZMA_FINISH;
-        }
-        xz_action(fp, action);
-        if (fp->u.xz.error == LZMA_OK || fp->u.xz.error == LZMA_STREAM_END) {
-          fp->method = FZ_XZ;
-          fp->u.xz.out_index = 0;
-          fp->u.xz.total_read = 0;
-          fp->u.xz.out_avail = fp->u.xz.stream.total_out;
-          return fp;
-        }
-
-        free(fp->u.xz.out_buf);
-      }
-      fclose(fp->u.xz.plain);
-      lzma_end(&fp->u.xz.stream);
-      free(fp->u.xz.in_buf);
-    } else {
-      free(fp);
-      return NULL;
-    }
-#endif /* FREECIV_HAVE_LIBLZMA */
-
     method = FZ_ZLIB;
   }
 
   fp->method = fz_method_validate(method);
 
-  switch (fp->method) {
-#ifdef FREECIV_HAVE_LIBLZMA
-  case FZ_XZ: {
-    lzma_ret ret;
-
-    /*  xz files are binary files, so we should add "b" to mode! */
-    sz_strlcat(mode, "b");
-    memset(&fp->u.xz.stream, 0, sizeof(lzma_stream));
-    ret = lzma_easy_encoder(&fp->u.xz.stream, compress_level,
-                            LZMA_CHECK_CRC32);
-    fp->u.xz.error = ret;
-    if (ret != LZMA_OK) {
-      free(fp);
-      return NULL;
-    }
-    fp->u.xz.in_buf = fc_malloc(PLAIN_FILE_BUF_SIZE);
-    fp->u.xz.stream.next_in = fp->u.xz.in_buf;
-    fp->u.xz.out_buf = fc_malloc(PLAIN_FILE_BUF_SIZE);
-    fp->u.xz.stream.next_out = fp->u.xz.out_buf;
-    fp->u.xz.stream.avail_out = PLAIN_FILE_BUF_SIZE;
-    fp->u.xz.out_index = 0;
-    fp->u.xz.total_read = 0;
-    fp->u.xz.plain = fc_fopen(filename, mode);
-    if (!fp->u.xz.plain) {
-      free(fp);
-      return NULL;
-    }
+  std::string mode_str;
+  if (mode & QIODevice::ReadOnly) {
+    mode_str += "r";
   }
-    return fp;
-#endif /* FREECIV_HAVE_LIBLZMA */
-#ifdef FREECIV_HAVE_LIBBZ2
-  case FZ_BZIP2:
-    /*  bz2 files are binary files, so we should add "b" to mode! */
-    sz_strlcat(mode, "b");
-    fp->u.bz2.plain = fc_fopen(filename, mode);
-    if (fp->u.bz2.plain) {
-      /*  Open for read handled earlier */
-      fc_assert_ret_val('w' == mode[0], NULL);
-      fp->u.bz2.file = BZ2_bzWriteOpen(&fp->u.bz2.error, fp->u.bz2.plain,
-                                       compress_level, 1, 15);
-      if (fp->u.bz2.error != BZ_OK) {
-        int tmp_err; /* See comments for similar variable
-                      * near BZ2_bzReadOpen() */
+  if (mode & QIODevice::WriteOnly) {
+    mode_str += "w";
+  }
+  if (method == FZ_ZLIB) {
+    // gz files are binary files, so we should add "b" to mode!
+    mode_str += "b";
+  }
 
-        BZ2_bzWriteClose(&tmp_err, fp->u.bz2.file, 0, NULL, NULL);
-        fp->u.bz2.file = NULL;
-      }
-    } else {
-      fp->u.bz2.file = NULL;
-    }
-    if (!fp->u.bz2.file) {
-      if (fp->u.bz2.plain) {
-        fclose(fp->u.bz2.plain);
-      }
-      free(fp);
-      fp = NULL;
-    }
-    return fp;
-#endif /* FREECIV_HAVE_LIBBZ2 */
+  switch (fp->method) {
   case FZ_ZLIB:
-    /*  gz files are binary files, so we should add "b" to mode! */
-    sz_strlcat(mode, "b");
-    if (mode[0] == 'w') {
-      cat_snprintf(mode, sizeof(mode), "%d", compress_level);
+    if (mode & QIODevice::WriteOnly) {
+      mode_str += std::to_string(compress_level);
     }
-    fp->u.zlib = fc_gzopen(filename, mode);
+    fp->u.zlib = fc_gzopen(filename, mode_str.data());
     if (!fp->u.zlib) {
       free(fp);
       fp = NULL;
     }
     return fp;
   case FZ_PLAIN:
-    fp->u.plain = fc_fopen(filename, mode);
+    fp->u.plain = fc_fopen(filename, mode_str.data());
     if (!fp->u.plain) {
       free(fp);
       fp = NULL;
@@ -423,22 +248,6 @@ fz_FILE *fz_from_file(const char *filename, const char *in_mode,
                 fp->method);
   free(fp);
   return NULL;
-}
-
-/************************************************************************/ /**
-   Open uncompressed stream for reading/writing.
- ****************************************************************************/
-fz_FILE *fz_from_stream(FILE *stream)
-{
-  if (!stream) {
-    return NULL;
-  }
-
-  fz_FILE *fp = (fz_FILE *) fc_malloc(sizeof(*fp));
-  fp->method = FZ_PLAIN;
-  fp->memory = false;
-  fp->u.plain = stream;
-  return fp;
 }
 
 /************************************************************************/ /**

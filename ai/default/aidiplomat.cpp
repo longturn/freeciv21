@@ -201,7 +201,7 @@ void dai_choose_diplomat_offensive(struct ai_type *ait,
     unit_virtual_destroy(punit);
 
     if (acity == NULL
-        || BV_ISSET(ai->stats.diplomat_reservations, acity->id)) {
+        || ai->stats.diplomat_reservations.contains(acity->id)) {
       /* Found no target or city already considered */
       return;
     }
@@ -294,7 +294,7 @@ void dai_choose_diplomat_offensive(struct ai_type *ait,
       choice->value.utype = ut;
       choice->need_boat = false;
       adv_choice_set_use(choice, "offensive diplomat");
-      BV_SET(ai->stats.diplomat_reservations, acity->id);
+      ai->stats.diplomat_reservations.insert(acity->id);
     }
   }
 }
