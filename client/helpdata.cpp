@@ -1578,13 +1578,11 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
    * init_buildings... */
   nations_iterate(pnation)
   {
-    int i;
-
     /* Avoid mentioning nations not in current set. */
     if (!show_help_for_nation(pnation)) {
       continue;
     }
-    for (i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
+    for (int i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
       Impr_type_id n = pnation->init_buildings[i];
       if (n == B_LAST) {
         break;
@@ -1778,7 +1776,6 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       /* Handled in the help text of the ruleset. */
       continue;
     }
-    int targets = 0;
     QVector<QString> against;
     against.reserve(utype_count());
 
@@ -1791,7 +1788,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
     unit_type_iterate_end;
 
-    if (targets > 0) {
+    if (!against.isEmpty()) {
       QString orlist = strvec_to_or_list(against);
       QString andlist = strvec_to_and_list(against);
 
@@ -1900,7 +1897,6 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   {
     QVector<QString> types;
     types.reserve(utype_count());
-    int i = 0;
 
     unit_type_iterate(utype2)
     {
@@ -1910,7 +1906,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       }
     }
     unit_type_iterate_end;
-    if (i > 0) {
+    if (!types.isEmpty()) {
       QString orlist = strvec_to_or_list(types);
       cat_snprintf(buf, bufsz,
                    /* TRANS: %s is a list of unit types separated by "or". */
@@ -2524,8 +2520,6 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
           QVector<QString> outrage_diplrel_names;
           outrage_diplrel_names.reserve(DRO_LAST);
           victim_diplrel_names.reserve(DRO_LAST);
-          int victim_diplrel_count = 0;
-          int outrage_diplrel_count = 0;
 
           /* Ignore Team and everything in diplrel_other. */
           for (diplrel = 0; diplrel < DS_NO_CONTACT; diplrel++) {
@@ -2551,7 +2545,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
           /* Then group by Casus Belli size (currently victim and
            * international outrage) */
-          if (outrage_diplrel_count > 0) {
+          if (!outrage_diplrel_names.isEmpty()) {
             cat_snprintf(
                 buf, bufsz,
                 /* TRANS: successfully ... Peace, or Alliance  */
@@ -2561,7 +2555,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                 _(casus_belli[i].hlp_text),
                 qUtf8Printable(strvec_to_or_list(outrage_diplrel_names)));
           }
-          if (victim_diplrel_count > 0) {
+          if (!victim_diplrel_names.isEmpty()) {
             cat_snprintf(
                 buf, bufsz,
                 /* TRANS: successfully ... Peace, or Alliance  */
@@ -2791,7 +2785,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       }
       action_iterate_end;
 
-      if (i > 0) {
+      if (!blockers.isEmpty()) {
         cat_snprintf(buf, bufsz,
                      /* TRANS: %s is a list of actions separated by "or". */
                      _("  * can't be done if %s is legal.\n"),
@@ -3200,7 +3194,6 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
   {
     QVector<QString> classes;
     classes.reserve(uclass_count());
-    int i = 0;
 
     unit_class_iterate(uclass)
     {
@@ -3210,7 +3203,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
     }
     unit_class_iterate_end;
 
-    if (0 < i) {
+    if (!classes.isEmpty()) {
       /* TRANS: %s is a list of unit classes separated by "and". */
       cat_snprintf(buf, bufsz, _("* Can be traveled by %s units.\n"),
                    qUtf8Printable(strvec_to_and_list(classes)));
@@ -3689,7 +3682,6 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   {
     QVector<QString> classes;
     classes.reserve(uclass_count());
-    int i = 0;
 
     unit_class_iterate(uclass)
     {
@@ -3699,7 +3691,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
     }
     unit_class_iterate_end;
     QString andlist = strvec_to_and_list(classes);
-    if (0 < i) {
+    if (!classes.isEmpty()) {
       if (proad != NULL) {
         /* TRANS: %s is a list of unit classes separated by "and". */
         cat_snprintf(buf, bufsz, _("* Can be traveled by %s units.\n"),
@@ -4725,9 +4717,8 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
   if (pnation->init_techs[0] != A_LAST) {
     QVector<QString> tech_names;
     tech_names.reserve(MAX_NUM_TECH_LIST);
-    int i;
 
-    for (i = 0; i < MAX_NUM_TECH_LIST; i++) {
+    for (int i = 0; i < MAX_NUM_TECH_LIST; i++) {
       if (pnation->init_techs[i] == A_LAST) {
         break;
       }
@@ -4806,9 +4797,8 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
   if (pnation->init_buildings[0] != B_LAST) {
     QVector<QString> impr_names;
     impr_names.reserve(MAX_NUM_BUILDING_LIST);
-    int i;
 
-    for (i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
+    for (int i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
       if (pnation->init_buildings[i] == B_LAST) {
         break;
       }
