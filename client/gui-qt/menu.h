@@ -174,9 +174,11 @@ class mr_menu : public QMenuBar {
   QMenu *menu;
   QMenu *multiplayer_menu;
   QMenu *roads_menu;
+  QMenu *citybar_submenu;
   QActionGroup *airlift_type;
   QActionGroup *action_vs_city;
   QActionGroup *action_vs_unit;
+  QActionGroup *action_citybar;
   QMenu *action_unit_menu;
   QMenu *action_city_menu;
   QMultiHash<munit, QAction *> menu_list;
@@ -263,6 +265,7 @@ private slots:
   void slot_action();
 
   /*used by view menu*/
+  void slot_set_citybar();
   void slot_center_view();
   void slot_minimap_view();
   void slot_show_new_turn_text();
