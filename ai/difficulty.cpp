@@ -15,9 +15,9 @@
 #include <fc_config.h>
 #endif
 
+#include <QBitArray>
 /* utility */
 #include "astring.h"
-#include "bitvector.h"
 #include "fcintl.h"
 #include "rand.h"
 
@@ -29,7 +29,7 @@
 
 #include "difficulty.h"
 
-static bv_handicap handicap_of_skill_level(enum ai_level level);
+static QBitArray* handicap_of_skill_level(enum ai_level level);
 static int fuzzy_of_skill_level(enum ai_level level);
 static int science_cost_of_skill_level(enum ai_level level);
 static int expansionism_of_skill_level(enum ai_level level);
@@ -49,73 +49,71 @@ void set_ai_level_directer(struct player *pplayer, enum ai_level level)
 /**********************************************************************/ /**
    Returns handicap bitvector for given AI skill level
  **************************************************************************/
-static bv_handicap handicap_of_skill_level(enum ai_level level)
+static QBitArray* handicap_of_skill_level(enum ai_level level)
 {
-  bv_handicap handicap;
+  QBitArray* handicap = new QBitArray(H_LAST);
 
   fc_assert(ai_level_is_valid(level));
 
-  BV_CLR_ALL(handicap);
-
   switch (level) {
   case AI_LEVEL_AWAY:
-    BV_SET(handicap, H_AWAY);
-    BV_SET(handicap, H_FOG);
-    BV_SET(handicap, H_MAP);
-    BV_SET(handicap, H_RATES);
-    BV_SET(handicap, H_TARGETS);
-    BV_SET(handicap, H_HUTS);
-    BV_SET(handicap, H_REVOLUTION);
-    BV_SET(handicap, H_PRODCHGPEN);
+    handicap->setBit(H_AWAY);
+    handicap->setBit(H_FOG);
+    handicap->setBit(H_MAP);
+    handicap->setBit(H_RATES);
+    handicap->setBit(H_TARGETS);
+    handicap->setBit(H_HUTS);
+    handicap->setBit(H_REVOLUTION);
+    handicap->setBit(H_PRODCHGPEN);
     break;
   case AI_LEVEL_NOVICE:
   case AI_LEVEL_HANDICAPPED:
-    BV_SET(handicap, H_RATES);
-    BV_SET(handicap, H_TARGETS);
-    BV_SET(handicap, H_HUTS);
-    BV_SET(handicap, H_NOPLANES);
-    BV_SET(handicap, H_DIPLOMAT);
-    BV_SET(handicap, H_LIMITEDHUTS);
-    BV_SET(handicap, H_DEFENSIVE);
-    BV_SET(handicap, H_DIPLOMACY);
-    BV_SET(handicap, H_REVOLUTION);
-    BV_SET(handicap, H_EXPANSION);
-    BV_SET(handicap, H_DANGER);
-    BV_SET(handicap, H_CEASEFIRE);
-    BV_SET(handicap, H_NOBRIBE_WF);
-    BV_SET(handicap, H_PRODCHGPEN);
+    handicap->setBit(H_RATES);
+    handicap->setBit(H_TARGETS);
+    handicap->setBit(H_HUTS);
+    handicap->setBit(H_NOPLANES);
+    handicap->setBit(H_DIPLOMAT);
+    handicap->setBit(H_LIMITEDHUTS);
+    handicap->setBit(H_DEFENSIVE);
+    handicap->setBit(H_DIPLOMACY);
+    handicap->setBit(H_REVOLUTION);
+    handicap->setBit(H_EXPANSION);
+    handicap->setBit(H_DANGER);
+    handicap->setBit(H_CEASEFIRE);
+    handicap->setBit(H_NOBRIBE_WF);
+    handicap->setBit(H_PRODCHGPEN);
     break;
   case AI_LEVEL_EASY:
-    BV_SET(handicap, H_RATES);
-    BV_SET(handicap, H_TARGETS);
-    BV_SET(handicap, H_HUTS);
-    BV_SET(handicap, H_NOPLANES);
-    BV_SET(handicap, H_DIPLOMAT);
-    BV_SET(handicap, H_LIMITEDHUTS);
-    BV_SET(handicap, H_DEFENSIVE);
-    BV_SET(handicap, H_DIPLOMACY);
-    BV_SET(handicap, H_REVOLUTION);
-    BV_SET(handicap, H_EXPANSION);
-    BV_SET(handicap, H_CEASEFIRE);
-    BV_SET(handicap, H_NOBRIBE_WF);
+    handicap->setBit(H_RATES);
+    handicap->setBit(H_TARGETS);
+    handicap->setBit(H_HUTS);
+    handicap->setBit(H_NOPLANES);
+    handicap->setBit(H_DIPLOMAT);
+    handicap->setBit(H_LIMITEDHUTS);
+    handicap->setBit(H_DEFENSIVE);
+    handicap->setBit(H_DIPLOMACY);
+    handicap->setBit(H_REVOLUTION);
+    handicap->setBit(H_EXPANSION);
+    handicap->setBit(H_CEASEFIRE);
+    handicap->setBit(H_NOBRIBE_WF);
     break;
   case AI_LEVEL_NORMAL:
-    BV_SET(handicap, H_RATES);
-    BV_SET(handicap, H_TARGETS);
-    BV_SET(handicap, H_HUTS);
-    BV_SET(handicap, H_DIPLOMAT);
-    BV_SET(handicap, H_CEASEFIRE);
-    BV_SET(handicap, H_NOBRIBE_WF);
+    handicap->setBit(H_RATES);
+    handicap->setBit(H_TARGETS);
+    handicap->setBit(H_HUTS);
+    handicap->setBit(H_DIPLOMAT);
+    handicap->setBit(H_CEASEFIRE);
+    handicap->setBit(H_NOBRIBE_WF);
     break;
 
 #ifdef FREECIV_DEBUG
   case AI_LEVEL_EXPERIMENTAL:
-    BV_SET(handicap, H_EXPERIMENTAL);
+    handicap->setBit(H_EXPERIMENTAL);
     break;
 #endif /* FREECIV_DEBUG */
 
   case AI_LEVEL_CHEATING:
-    BV_SET(handicap, H_RATES);
+    handicap->setBit(H_RATES);
     break;
   case AI_LEVEL_HARD:
     /* No handicaps */
@@ -233,7 +231,7 @@ char *ai_level_help(const char *cmdname)
   /* Translate cmdname to AI level. */
   enum ai_level level = ai_level_by_name(cmdname, fc_strcasecmp);
   QString help, features;
-  bv_handicap handicaps;
+  QBitArray* handicaps;
   int h;
 
   fc_assert(ai_level_is_valid(level));
@@ -258,7 +256,7 @@ char *ai_level_help(const char *cmdname)
     const char *desc =
         handicap_desc(static_cast<handicap_type>(h), &inverted);
 
-    if (desc && BV_ISSET(handicaps, h) != inverted) {
+    if (desc && handicaps->at(h) != inverted) {
       features += desc + qendl();
     }
   }
@@ -301,6 +299,7 @@ char *ai_level_help(const char *cmdname)
   }
 
   help += features;
+  delete handicaps;
   return qstrdup(const_cast<char *>(qUtf8Printable(help)));
 }
 
