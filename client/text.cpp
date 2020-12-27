@@ -248,7 +248,6 @@ const QString popup_info_text(struct tile *ptile)
     struct player *owner = city_owner(pcity);
     QVector<QString> improvements;
     improvements.reserve(improvement_count());
-    int has_improvements = 0;
 
     get_full_username(username, sizeof(username), owner);
     get_full_nation(nation, sizeof(nation), owner);
@@ -326,7 +325,7 @@ const QString popup_info_text(struct tile *ptile)
     }
     improvement_iterate_end;
 
-    if (0 < has_improvements) {
+    if (!improvements.isEmpty()) {
       /* TRANS: %s is a list of "and"-separated improvements. */
       str = str
             + QString(_("   with %1.")).arg(strvec_to_and_list(improvements))
