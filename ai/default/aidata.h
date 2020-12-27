@@ -61,11 +61,6 @@ struct ai_dip_intel {
   signed char warned_about_space;
 };
 
-/* max size of a short */
-#define MAX_NUM_ID (1 + MAX_UINT16)
-
-BV_DEFINE(bv_id, MAX_NUM_ID);
-
 struct ai_plr {
   bool phase_initialized;
 
