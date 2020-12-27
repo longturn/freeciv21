@@ -9,6 +9,7 @@
 **************************************************************************/
 #pragma once
 
+#include <QHash>
 /* utility */
 #include "support.h"
 
@@ -79,7 +80,7 @@ struct ai_plr {
     int *workers; /* cities to workers on continent */
     int *ocean_workers;
 
-    bv_id diplomat_reservations;
+    QSet<int> diplomat_reservations;
   } stats;
 
   /* AI diplomacy and opinions on other players */
