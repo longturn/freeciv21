@@ -22,7 +22,6 @@
 #endif /* HAVE_MAPIMG_MAGICKWAND */
 
 /* utility */
-#include "astring.h"
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
@@ -572,14 +571,13 @@ char *mapimg_help(const char *cmdname)
   enum imagetool tool;
   enum show_player showplr;
   enum mapimg_layer layer;
-  struct astring defaults[MAPDEF_COUNT];
-  struct astring str_format = ASTRING_INIT, str_showplr = ASTRING_INIT;
+  QString defaults[MAPDEF_COUNT];
+  QString str_format, str_showplr, help;
   struct mapdef *pmapdef;
-  static struct astring help = ASTRING_INIT;
 
-  if (astr_len(&help) > 0) {
+  if (help.length() > 0) {
     /* Help text was created already. */
-    return fc_strdup(astr_str(&help));
+    return fc_strdup(qUtf8Printable(help));
   }
   pmapdef = mapdef_new(false);
   /* Possible 'format' settings (toolkit + format). */
@@ -592,19 +590,19 @@ char *mapimg_help(const char *cmdname)
       continue;
     }
 
-    astr_add(&str_format, " - '%s': ", imagetool_name(tool));
+    str_format += QString(" - '%1': ").arg(tool);
 
     const char *separator = "";
     for (format = imageformat_begin(); format != imageformat_end();
          format = imageformat_next(format)) {
       if (toolkit->formats & format) {
-        astr_add(&str_format, "%s'%s'", separator, imageformat_name(format));
+        str_format += QString("%1'%2'").arg(separator, imageformat_name(format));
         separator = ", ";
       }
     }
 
     if (tool != imagetool_max()) {
-      astr_add(&str_format, "\n");
+      str_format += QStringLiteral("\n");
     }
   }
 
@@ -617,38 +615,31 @@ char *mapimg_help(const char *cmdname)
       char name[10];
 
       fc_snprintf(name, sizeof(name), "'%s'", nameptr);
-      astr_add(&str_showplr, " - %-9s %s", name, showname_help(showplr));
+      str_showplr += QString(" - %1 %2").arg(name, -9).arg(showname_help(showplr));
       if (showplr != show_player_max()) {
-        astr_add(&str_showplr, "\n");
+        str_showplr += QStringLiteral("\n");
       }
     }
   }
 
   /* Default values. */
-  astr_init(&defaults[MAPDEF_FORMAT]);
-  astr_set(&defaults[MAPDEF_FORMAT], "(%s|%s)",
+  defaults[MAPDEF_FORMAT] = QString("(%1|%2)").arg(
            imagetool_name(pmapdef->tool), imageformat_name(pmapdef->format));
-  astr_init(&defaults[MAPDEF_SHOW]);
-  astr_set(&defaults[MAPDEF_SHOW], "(%s)",
+  defaults[MAPDEF_SHOW] = QString("(%1)").arg(
            show_player_name(pmapdef->player.show));
-  astr_init(&defaults[MAPDEF_TURNS]);
-  astr_set(&defaults[MAPDEF_TURNS], "(%d)", pmapdef->turns);
-  astr_init(&defaults[MAPDEF_ZOOM]);
-  astr_set(&defaults[MAPDEF_ZOOM], "(%d)", pmapdef->zoom);
-
-  astr_init(&defaults[MAPDEF_MAP]);
-  astr_set(&defaults[MAPDEF_MAP], "(");
+  defaults[MAPDEF_TURNS] = QString("(%1)").arg(QString::number(pmapdef->turns));
+  defaults[MAPDEF_ZOOM] = QString("(%1)").arg(pmapdef->zoom);
+  defaults[MAPDEF_MAP] = "(";
   for (layer = mapimg_layer_begin(); layer != mapimg_layer_end();
        layer = mapimg_layer_next(layer)) {
     if (pmapdef->layers[layer]) {
-      astr_add(&defaults[MAPDEF_MAP], "%c", mapimg_layer_name(layer)[0]);
+      defaults[MAPDEF_MAP] += QString("%1").arg(mapimg_layer_name(layer)[0]);
     }
   }
-  astr_add(&defaults[MAPDEF_MAP], ")");
+  defaults[MAPDEF_MAP] += ")";
 
   /* help text */
-  astr_set(
-      &help,
+  help = QString(
       /* TRANS: This is help for a server command, so keywords like
        * "define" in the first column are server keywords that must not
        * be translated. Do not translate keywords in single quotes, but
@@ -667,26 +658,26 @@ char *mapimg_help(const char *cmdname)
         "\n"
         "option                 (default)  description\n"
         "\n"
-        "format=<[tool|]format> %-10s file format\n"
-        "show=<show>            %-10s which players to show\n"
+        "format=<[tool|]format> %1 file format\n"
+        "show=<show>            %2 which players to show\n"
         "  plrname=<name>                    player name\n"
         "  plrid=<id>                        numeric player id\n"
         "  plrbv=<bit vector>                see example; first char = id "
         "0\n"
-        "turns=<turns>          %-10s save image each <turns> turns\n"
+        "turns=<turns>          %3 save image each <turns> turns\n"
         "                                  (0=no autosave, save with "
         "'create')\n"
-        "zoom=<zoom>            %-10s magnification factor (1-5)\n"
-        "map=<map>              %-10s which map layers to draw\n"
+        "zoom=<zoom>            %4 magnification factor (1-5)\n"
+        "map=<map>              %5 which map layers to draw\n"
         "\n"
         "<[tool|]format> = use image format <format>, optionally specifying "
         "toolkit <tool>. The following toolkits and formats are compiled "
         "in:\n"
-        "%s\n"
+        "%6\n"
         "\n"
         "<show> determines which players are represented and how many "
         "images are saved by this definition:\n"
-        "%s\n"
+        "%7\n"
         "\n"
         "<map> can contain one or more of the following layers:\n"
         " - 'a' show area within borders of specified players\n"
@@ -702,22 +693,15 @@ char *mapimg_help(const char *cmdname)
         " 'zoom=2:map=tcub:show=each:format=png'\n"
         " 'zoom=1:map=tcub:show=plrname:plrname=Otto:format=gif'\n"
         " 'zoom=3:map=cu:show=plrbv:plrbv=010011:format=jpg'\n"
-        " 'zoom=1:map=t:show=none:format=magick|jpg'"),
-      astr_str(&defaults[MAPDEF_FORMAT]), astr_str(&defaults[MAPDEF_SHOW]),
-      astr_str(&defaults[MAPDEF_TURNS]), astr_str(&defaults[MAPDEF_ZOOM]),
-      astr_str(&defaults[MAPDEF_MAP]), astr_str(&str_format),
-      astr_str(&str_showplr));
+        " 'zoom=1:map=t:show=none:format=magick|jpg'")).arg(
+      defaults[MAPDEF_FORMAT], -10).arg(defaults[MAPDEF_SHOW], -10).arg(
+      defaults[MAPDEF_TURNS], -10).arg(defaults[MAPDEF_ZOOM], -10).arg(
+      defaults[MAPDEF_MAP]).arg(str_format,
+      str_showplr);
 
   mapdef_destroy(pmapdef);
-  astr_free(&str_format);
-  astr_free(&str_showplr);
-  astr_free(&defaults[MAPDEF_FORMAT]);
-  astr_free(&defaults[MAPDEF_SHOW]);
-  astr_free(&defaults[MAPDEF_TURNS]);
-  astr_free(&defaults[MAPDEF_ZOOM]);
-  astr_free(&defaults[MAPDEF_MAP]);
 
-  return fc_strdup(astr_str(&help));
+  return fc_strdup(qUtf8Printable(help));
 }
 
 /************************************************************************/ /**
