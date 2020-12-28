@@ -1387,10 +1387,8 @@ const QString action_id_name_translation(action_id act_id)
    Returns a text representation of the action probability prob unless it
    is a signal. Returns NULL if prob is a signal.
  **************************************************************************/
-static const char *action_prob_to_text(const struct act_prob prob)
+static QString action_prob_to_text(const struct act_prob prob)
 {
-  QString chance;
-
   /* How to interpret action probabilities like prob is documented in
    * fc_types.h */
   if (action_prob_is_signal(prob)) {
@@ -1403,14 +1401,13 @@ static const char *action_prob_to_text(const struct act_prob prob)
   if (prob.min == prob.max) {
     /* Only one probability in range. */
 
-    chance = QString(_("%1%")).arg((int) prob.max / ACTPROB_VAL_1_PCT);
+    return QString(_("%1%")).arg(
+        QString::number((int) prob.max / ACTPROB_VAL_1_PCT));
   } else {
-    chance = QString(_("[%1% - %2%]"))
-                 .arg((int) prob.min / ACTPROB_VAL_1_PCT)
-                 .arg((int) prob.max / ACTPROB_VAL_1_PCT);
+    return QString(_("[%1% - %2%]"))
+        .arg(QString::number((int) prob.min / ACTPROB_VAL_1_PCT))
+        .arg(QString::number((int) prob.max / ACTPROB_VAL_1_PCT));
   }
-
-  return qUtf8Printable(chance);
 }
 
 /**********************************************************************/ /**
@@ -1424,10 +1421,7 @@ const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
                                      const struct act_prob prob,
                                      const QString custom)
 {
-  QString str, chance;
-
-  /* Text representation of the probability. */
-  const char *probtxt;
+  QString str, chance, probtxt;
 
   if (!actions_are_ready()) {
     /* Could be a client who haven't gotten the ruleset yet */
@@ -1453,7 +1447,7 @@ const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
   probtxt = action_prob_to_text(prob);
 
   /* Format the info part of the action's UI name. */
-  if (probtxt != NULL && custom != NULL) {
+  if (!probtxt.isEmpty() && !custom.isEmpty()) {
     /* TRANS: action UI name's info part with custom info and probability.
      * Hint: you can move the paren handling from this sting to the action
      * names if you need to add extra information (like a mnemonic letter
@@ -1463,7 +1457,7 @@ const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
      * to add the extra information to every action name or remove the
      * surrounding parens. */
     chance = QString(_(" (%1; %2)")).arg(custom, probtxt);
-  } else if (probtxt != NULL) {
+  } else if (!probtxt.isEmpty()) {
     /* TRANS: action UI name's info part with probability.
      * Hint: you can move the paren handling from this sting to the action
      * names if you need to add extra information (like a mnemonic letter
@@ -1473,7 +1467,7 @@ const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
      * to add the extra information to every action name or remove the
      * surrounding parens. */
     chance = QString(_(" (%1)")).arg(probtxt);
-  } else if (custom != NULL) {
+  } else if (!custom.isEmpty()) {
     /* TRANS: action UI name's info part with custom info.
      * Hint: you can move the paren handling from this sting to the action
      * names if you need to add extra information (like a mnemonic letter
@@ -1524,8 +1518,9 @@ const char *action_prob_explain(const struct act_prob prob)
   } else if (prob.min == prob.max) {
     /* TRANS: action probability of success. Given in percentage.
      * Resolution is 0.5%. */
-    tool_tip = QString(_("The probability of success is %.1f%%."))
-                   .arg((double) prob.max / ACTPROB_VAL_1_PCT);
+    tool_tip =
+        QString(_("The probability of success is %1%."))
+            .arg(QString::number((double) prob.max / ACTPROB_VAL_1_PCT));
   } else {
     tool_tip =
         QString(
