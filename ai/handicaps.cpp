@@ -15,6 +15,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QBitArray>
 /* utility */
 #include "shared.h"
 
@@ -31,9 +32,7 @@ void handicaps_init(struct player *pplayer)
   if (pplayer->ai_common.handicaps != NULL) {
     return;
   }
-
-  pplayer->ai_common.handicaps = new bv_handicap;
-  BV_CLR_ALL(*((bv_handicap *) pplayer->ai_common.handicaps));
+  pplayer->ai_common.handicaps = new QBitArray(H_LAST);
 }
 
 /**********************************************************************/ /**
@@ -45,16 +44,16 @@ void handicaps_close(struct player *pplayer)
     return;
   }
 
-  ::operator delete(pplayer->ai_common.handicaps);
+  delete pplayer->ai_common.handicaps;
   pplayer->ai_common.handicaps = NULL;
 }
 
 /**********************************************************************/ /**
    Set player handicaps
  **************************************************************************/
-void handicaps_set(struct player *pplayer, bv_handicap handicaps)
+void handicaps_set(struct player *pplayer, QBitArray* handicaps)
 {
-  *((bv_handicap *) pplayer->ai_common.handicaps) = handicaps;
+  *(pplayer->ai_common.handicaps) = *handicaps;
 }
 
 /**********************************************************************/ /**
@@ -69,7 +68,7 @@ bool has_handicap(const struct player *pplayer, enum handicap_type htype)
     return true;
   }
 
-  return BV_ISSET(*((bv_handicap *) pplayer->ai_common.handicaps), htype);
+  return pplayer->ai_common.handicaps->at(htype);
 }
 
 /**********************************************************************/ /**

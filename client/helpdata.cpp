@@ -20,6 +20,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QBitArray>
 #include <QList>
 
 #include <stdio.h>
@@ -2022,9 +2023,9 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   {
     /* Document exceptions to embark/disembark restrictions that we
      * have as cargo. */
-    bv_unit_classes embarks, disembarks;
-    BV_CLR_ALL(embarks);
-    BV_CLR_ALL(disembarks);
+    QBitArray embarks, disembarks;
+    embarks.resize(UCL_LAST);
+    disembarks.resize(UCL_LAST);
     /* Determine which of our transport classes have restrictions in the
      * first place (that is, contain at least one transport which carries at
      * least one type of cargo which is restricted). We'll suppress output
@@ -2035,7 +2036,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       const Unit_Class_id trans_class = uclass_index(utype_class(utrans));
       /* Don't waste time repeating checks on classes we've already checked,
        * or weren't under consideration in the first place */
-      if (!BV_ISSET(embarks, trans_class)
+      if (!embarks.at(trans_class)
           && BV_ISSET(utype->embarks, trans_class)) {
         unit_type_iterate(other_cargo)
         {
@@ -2043,12 +2044,12 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
               && !utype_can_freely_load(other_cargo, utrans)) {
             /* At least one load restriction in transport class, which
              * we aren't subject to */
-            BV_SET(embarks, trans_class);
+            embarks.setBit(trans_class);
           }
         }
         unit_type_iterate_end; /* cargo */
       }
-      if (!BV_ISSET(disembarks, trans_class)
+      if (!disembarks.at(trans_class)
           && BV_ISSET(utype->disembarks, trans_class)) {
         unit_type_iterate(other_cargo)
         {
@@ -2056,7 +2057,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
               && !utype_can_freely_unload(other_cargo, utrans)) {
             /* At least one load restriction in transport class, which
              * we aren't subject to */
-            BV_SET(disembarks, trans_class);
+            disembarks.setBit(trans_class);
           }
         }
         unit_type_iterate_end; /* cargo */
@@ -2064,20 +2065,20 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
     unit_class_iterate_end; /* transports */
 
-    if (BV_ISSET_ANY(embarks)) {
+    if (is_any_set(embarks)) {
       /* Build list of embark exceptions */
       QVector<QString> eclasses;
       eclasses.reserve(uclass_count());
 
       unit_class_iterate(uclass)
       {
-        if (BV_ISSET(embarks, uclass_index(uclass))) {
+        if (embarks.at(uclass_index(uclass))) {
           eclasses.append(uclass_name_translation(uclass));
         }
       }
       unit_class_iterate_end;
       QString elist = strvec_to_or_list(eclasses);
-      if (BV_ARE_EQUAL(embarks, disembarks)) {
+      if (embarks == disembarks) {
         /* A common case: the list of disembark exceptions is identical */
         cat_snprintf(buf, bufsz,
                      /* TRANS: %s is a list of unit classes separated
@@ -2094,14 +2095,14 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
             qUtf8Printable(elist));
       }
     }
-    if (BV_ISSET_ANY(disembarks) && !BV_ARE_EQUAL(embarks, disembarks)) {
+    if (is_any_set(disembarks) && embarks != disembarks) {
       /* Build list of disembark exceptions (if different from embarking) */
       QVector<QString> dclasses;
       dclasses.reserve(uclass_count());
 
       unit_class_iterate(uclass)
       {
-        if (BV_ISSET(disembarks, uclass_index(uclass))) {
+        if (disembarks.at(uclass_index(uclass))) {
           dclasses.append(uclass_name_translation(uclass));
         }
       }

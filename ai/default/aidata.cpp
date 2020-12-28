@@ -224,7 +224,7 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
   }
   unit_list_iterate_end;
 
-  BV_CLR_ALL(ai->stats.diplomat_reservations);
+  ai->stats.diplomat_reservations.clear();
   unit_list_iterate(pplayer->units, punit)
   {
     if (aia_utype_is_considered_spy_vs_city(unit_type_get(punit))
@@ -237,7 +237,7 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
 
         if (pcity != NULL) {
           /* Heading somewhere on a mission, reserve target. */
-          BV_SET(ai->stats.diplomat_reservations, pcity->id);
+          ai->stats.diplomat_reservations.insert(pcity->id);
         }
       }
     }

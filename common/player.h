@@ -101,7 +101,7 @@ struct player_score {
 
 struct player_ai {
   int maxbuycost;
-  void *handicaps;
+  QBitArray *handicaps;
   enum ai_level skill_level; /* 0-10 value for save/load/display */
   int fuzzy;                 /* chance in 1000 to mis-decide */
   int expand;                /* percentage factor to value new cities */

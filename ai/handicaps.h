@@ -34,13 +34,12 @@ enum handicap_type {
   H_PRODCHGPEN,
   H_LAST
 };
-
-BV_DEFINE(bv_handicap, H_LAST);
+class QBitArray;
 
 void handicaps_init(struct player *pplayer);
 void handicaps_close(struct player *pplayer);
 
-void handicaps_set(struct player *pplayer, bv_handicap handicaps);
+void handicaps_set(struct player *pplayer, QBitArray *handicaps);
 bool has_handicap(const struct player *pplayer, enum handicap_type htype);
 
 const char *handicap_desc(enum handicap_type htype, bool *inverted);
