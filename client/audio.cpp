@@ -451,15 +451,17 @@ static int audio_play_tag(struct section_file *sfile, const QString &tag,
            * return */
           ret++;
         }
-        if (repeat) {
-          if (!keepstyle) {
-            mfcb.sfile = sfile;
-            mfcb.tag = tag;
-          }
-          cb = music_finished_callback;
-        }
       }
     }
+
+    if (repeat) {
+      if (!keepstyle) {
+        mfcb.sfile = sfile;
+        mfcb.tag = tag;
+      }
+      cb = music_finished_callback;
+    }
+
     if (NULL == soundfile) {
       qDebug("No sound file for tag %s", qUtf8Printable(tag));
     } else {
