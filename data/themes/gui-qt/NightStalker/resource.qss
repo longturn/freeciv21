@@ -14,6 +14,11 @@ QMainWindow {
   border: none;
 }
 
+/* shortcut dialog */
+*[shortcuts="true"] {
+  background-color: #485261;
+}
+
 *[city_name_button="true"] {
   font-weight: bold italic;
   border: 0px;
