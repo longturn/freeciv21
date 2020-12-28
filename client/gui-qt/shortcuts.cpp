@@ -562,7 +562,7 @@ void fc_shortcuts_dialog::init()
     desc = fc_shortcuts::sc()->get_desc(id);
     add_option(sc);
   }
-  widget->setProperty("doomed", true);
+  widget->setProperty("shortcuts", true);
   widget->setLayout(scroll_layout);
   scroll->setWidget(widget);
   main_layout->addWidget(scroll);
@@ -739,7 +739,7 @@ void write_shortcuts()
   fc_shortcut *sc;
   QMap<shortcut_id, fc_shortcut *> h = fc_shortcuts::sc()->hash;
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
-              QStringLiteral("freeciv-qt-client"));
+              QStringLiteral("freeciv21-client"));
   s.beginWriteArray(QStringLiteral("Shortcuts"));
   for (int i = 0; i < SC_LAST_SC - 1; ++i) {
     s.setArrayIndex(i);
@@ -761,7 +761,7 @@ bool read_shortcuts()
   int num, i;
   fc_shortcut *sc;
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
-              QStringLiteral("freeciv-qt-client"));
+              QStringLiteral("freeciv21-client"));
   num = s.beginReadArray(QStringLiteral("Shortcuts"));
   if (num <= SC_LAST_SC - 1) {
     for (i = 0; i < num; ++i) {

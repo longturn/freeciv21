@@ -18,6 +18,11 @@ QMainWindow {
   border: none;
 }
 
+*[shortcuts="true"] {
+  background-color: #cedccd;
+  border: none;
+}
+
 *[city_name_button="true"] {
   font-weight: bold italic;
   border: 0px;
