@@ -1047,9 +1047,9 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
     info_grid_layout->addWidget(qlt[iter], iter, 1);
     info_grid_layout->setRowStretch(iter, 0);
   }
-
   setLayout(info_grid_layout);
 }
+
 void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
 {
   int illness = 0;

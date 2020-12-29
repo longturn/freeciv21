@@ -424,7 +424,7 @@ void init_new_game(void)
 {
   struct startpos_list *impossible_list, *targeted_list, *flexible_list;
   struct tile *player_startpos[player_slot_count()];
-  int placed_units[player_slot_count()];
+  int placed_units[player_slot_count()] = {0};
   int players_to_place = player_count();
   int sulen;
 

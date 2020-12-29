@@ -1233,7 +1233,7 @@ static void remove_tiny_islands(void)
  **************************************************************************/
 static void print_mapgen_map(void)
 {
-  int terrain_counts[terrain_count()];
+  int terrain_counts[terrain_count()] = {0};
   int total = 0, ocean = 0;
 
   terrain_type_iterate(pterrain)
