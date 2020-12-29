@@ -331,6 +331,7 @@ bool diplomat_investigate(struct player *pplayer, struct unit *pdiplomat,
   /* Send city info to investigator's player.
      As this is a special case we bypass send_city_info. */
   routes = traderoute_packet_list_new();
+  package_city(pcity, &city_packet, routes, true);
   /* We need to force to send the packet to ensure the client will receive
    * something and popup the city dialog. */
   lsend_packet_city_info(pplayer->connections, &city_packet, true);

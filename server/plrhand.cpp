@@ -1040,7 +1040,6 @@ static void send_player_info_c_real(struct player *src,
       package_player_info(src, &info, NULL, INFO_MINIMUM);
     }
     send_packet_player_info(pconn, &info);
-    web_send_packet(player_info_addition, pconn);
   }
   conn_list_iterate_end;
 }

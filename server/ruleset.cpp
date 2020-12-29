@@ -7356,7 +7356,6 @@ static void send_ruleset_units(struct conn_list *dest)
     packet.worker = u->adv.worker;
 
     lsend_packet_ruleset_unit(dest, &packet);
-    web_lsend_packet(ruleset_unit_addition, dest, &web_packet);
 
     combat_bonus_list_iterate(u->bonuses, pbonus)
     {
