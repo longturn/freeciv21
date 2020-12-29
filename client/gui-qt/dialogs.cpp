@@ -20,6 +20,7 @@
 #include <QVBoxLayout>
 #include <QtMath>
 // utility
+#include "astring.h"
 #include "fcintl.h"
 // common
 #include "actions.h"
@@ -1234,7 +1235,7 @@ void choice_dialog::add_item(QString title, pfcn_void func, QVariant data1,
   buttons_list.append(button);
 
   if (!tool_tip.isEmpty()) {
-    button->setToolTip(tool_tip);
+    button->setToolTip(break_lines(tool_tip, 40));
   }
 
   if (0 <= button_id) {
