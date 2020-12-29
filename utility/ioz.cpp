@@ -426,22 +426,6 @@ fz_FILE *fz_from_file(const char *filename, const char *in_mode,
 }
 
 /************************************************************************/ /**
-   Open uncompressed stream for reading/writing.
- ****************************************************************************/
-fz_FILE *fz_from_stream(FILE *stream)
-{
-  if (!stream) {
-    return NULL;
-  }
-
-  fz_FILE *fp = (fz_FILE *) fc_malloc(sizeof(*fp));
-  fp->method = FZ_PLAIN;
-  fp->memory = false;
-  fp->u.plain = stream;
-  return fp;
-}
-
-/************************************************************************/ /**
    Close file, like fclose.
    Returns 0 on success, or non-zero for problems (but don't call
    fz_ferror in that case because the struct has already been
