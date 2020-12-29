@@ -2555,7 +2555,7 @@ static void spy_steal_shared(QVariant data1, QVariant data2,
     }
     advance_index_iterate_end;
 
-    if (action_prob_possible(
+    if (actor_unit && action_prob_possible(
             actor_unit->client
                 .act_prob_cache[get_non_targeted_action_id(act_id)])) {
       stra = QString(_("At %1's Discretion"))
@@ -3707,7 +3707,7 @@ void popup_upgrade_dialog(struct unit_list *punits)
     for (int id : not_ptr) {
       punit = game_unit_by_number(id);
       if (punit) {
-        request_unit_upgrade(game_unit_by_number(id));
+        request_unit_upgrade(punit);
       }
     }
   });

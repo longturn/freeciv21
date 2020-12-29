@@ -1892,7 +1892,7 @@ void handle_unit_get_actions(struct connection *pc, const int actor_unit_id,
       case ATK_UNIT:
         /* The unit should be sent as a target since it is possible to act
          * against it. */
-        fc_assert(target_unit != NULL);
+        fc_assert_ret(target_unit != NULL);
         target_unit_id = target_unit->id;
         break;
       case ATK_TILE:

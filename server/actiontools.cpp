@@ -972,7 +972,7 @@ const struct action *action_auto_perf_unit_do(
         }
         break;
       case ATK_SELF:
-        if (actor && is_action_enabled_unit_on_self(act, actor)) {
+        if (is_action_enabled_unit_on_self(act, actor)) {
           perform_action_to(act, actor, actor->id, EXTRA_NONE);
         }
         break;
