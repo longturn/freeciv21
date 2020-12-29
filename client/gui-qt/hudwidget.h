@@ -313,19 +313,19 @@ protected:
 
 private:
   void init_images(bool redraw = false);
-  int att_hp;
-  int def_hp;
-  int att_hp_loss;
-  int def_hp_loss;
-  bool att_veteran;
-  bool def_veteran;
-  struct unit *attacker;
-  struct unit *defender;
-  const struct unit_type *type_attacker;
-  const struct unit_type *type_defender;
-  struct tile *center_tile;
-  bool focus;
-  float fading;
+  int att_hp = 0;
+  int def_hp = 0;
+  int att_hp_loss = 0;
+  int def_hp_loss = 0;
+  bool att_veteran = false;
+  bool def_veteran = false;
+  struct unit *attacker = nullptr;
+  struct unit *defender = nullptr;
+  const struct unit_type *type_attacker = nullptr;
+  const struct unit_type *type_defender = nullptr;
+  struct tile *center_tile = nullptr;
+  bool focus = false;
+  float fading = 0.0f;
   float hud_scale;
   QImage dimg, aimg;
 };

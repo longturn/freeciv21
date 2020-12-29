@@ -169,21 +169,21 @@ public slots:
 **************************************************************************/
 class mr_menu : public QMenuBar {
   Q_OBJECT
-  QMenu *airlift_menu;
-  QMenu *bases_menu;
-  QMenu *menu;
-  QMenu *multiplayer_menu;
-  QMenu *roads_menu;
-  QMenu *citybar_submenu;
-  QActionGroup *airlift_type;
-  QActionGroup *action_vs_city;
-  QActionGroup *action_vs_unit;
-  QActionGroup *action_citybar;
-  QMenu *action_unit_menu;
-  QMenu *action_city_menu;
+  QMenu *airlift_menu = nullptr;
+  QMenu *bases_menu = nullptr;
+  QMenu *menu = nullptr;
+  QMenu *multiplayer_menu = nullptr;
+  QMenu *roads_menu = nullptr;
+  QMenu *citybar_submenu = nullptr;
+  QActionGroup *airlift_type = nullptr;
+  QActionGroup *action_vs_city = nullptr;
+  QActionGroup *action_vs_unit = nullptr;
+  QActionGroup *action_citybar = nullptr;
+  QMenu *action_unit_menu = nullptr;
+  QMenu *action_city_menu = nullptr;
   QMultiHash<munit, QAction *> menu_list;
   qfc_units_list units_list;
-  bool initialized;
+  bool initialized = false;
 
 public:
   mr_menu();
@@ -196,16 +196,16 @@ public:
   void execute_shortcut(int sid);
   QString shortcut_exist(fc_shortcut *fcs);
   QString shortcut_2_menustring(int sid);
-  QAction *minimap_status;
-  QAction *scale_fonts_status;
-  QAction *lock_status;
-  QAction *osd_status;
-  QAction *btlog_status;
-  QAction *chat_status;
-  QAction *messages_status;
-  bool delayed_order;
-  bool quick_airlifting;
-  Unit_type_id airlift_type_id;
+  QAction *minimap_status  = nullptr;
+  QAction *scale_fonts_status = nullptr;
+  QAction *lock_status = nullptr;
+  QAction *osd_status = nullptr;
+  QAction *btlog_status = nullptr;
+  QAction *chat_status = nullptr;
+  QAction *messages_status = nullptr;
+  bool delayed_order = false;
+  bool quick_airlifting = false;
+  Unit_type_id airlift_type_id = 0;
 private slots:
   /* game menu */
   void local_options();
