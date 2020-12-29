@@ -337,10 +337,14 @@ QString break_lines(QString src, int after)
   QString dst;
 
   int clen = 0;
-  while(!broken.isEmpty()) {
+  while (!broken.isEmpty()) {
     QString s = broken.takeFirst();
     dst += s + " ";
     clen += s.length();
+    if (s.contains('\n')) {
+      clen = 0;
+      continue;
+    }
     if (clen > after) {
       dst += qendl();
       clen = 0;
