@@ -1227,7 +1227,7 @@ void control_mouse_cursor(struct tile *ptile)
   }
 
   punit = find_visible_unit(ptile);
-  pcity = ptile ? tile_city(ptile) : NULL;
+  pcity = tile_city(ptile);
 
   switch (hover_state) {
   case HOVER_NONE:

@@ -2135,23 +2135,19 @@ static void package_dumb_city(struct player *pplayer, struct tile *ptile,
 {
   struct vision_site *pdcity = map_get_player_city(ptile, pplayer);
 
+  fc_assert_ret(pdcity != nullptr);
   packet->id = pdcity->identity;
   packet->owner = player_number(vision_site_owner(pdcity));
-
   packet->tile = tile_index(ptile);
   sz_strlcpy(packet->name, pdcity->name);
-
   packet->size = vision_site_size_get(pdcity);
-
   packet->occupied = pdcity->occupied;
   packet->walls = pdcity->walls;
   packet->style = pdcity->style;
   packet->city_image = pdcity->city_image;
   packet->capital = pdcity->capital;
-
   packet->happy = pdcity->happy;
   packet->unhappy = pdcity->unhappy;
-
   packet->improvements = pdcity->improvements;
 }
 
@@ -2814,7 +2810,7 @@ struct trade_route *remove_trade_route(struct city *pc1,
     }
   }
 
-  if (announce) {
+  if (announce && pc2) {
     announce_trade_route_removal(pc1, pc2, source_gone);
 
     city_refresh(pc2);

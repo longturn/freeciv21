@@ -3553,12 +3553,12 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
   const char *nation_from, *nation_to;
   struct city *rcity = NULL;
   bool incr_success;
-  int to_id = pcity_to->id;
+  int to_id;
 
   if (!pcity_from || !pcity_to) {
     return false;
   }
-
+  to_id = pcity_to->id;
   pplayer_from = city_owner(pcity_from);
   pplayer_citizen = pplayer_from;
   pplayer_to = city_owner(pcity_to);
