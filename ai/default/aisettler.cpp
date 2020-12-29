@@ -471,10 +471,11 @@ struct tile_data_cache *tile_data_cache_new(void)
 struct tile_data_cache *
 tile_data_cache_copy(const struct tile_data_cache *ptdc)
 {
-  struct tile_data_cache *ptdc_copy = tile_data_cache_new();
+  struct tile_data_cache *ptdc_copy;
 
   fc_assert_ret_val(ptdc, NULL);
 
+  ptdc_copy = tile_data_cache_new();
   ptdc_copy->shield = ptdc->shield;
   ptdc_copy->trade = ptdc->trade;
   ptdc_copy->food = ptdc->food;

@@ -7127,7 +7127,6 @@ static void sg_load_researches(struct loaddata *loading)
     }
 
     if (game.server.multiresearch) {
-      vlist_research = new int[game.control.num_tech_types]();
       vlist_research = secfile_lookup_int_vec(loading->file, &count_res,
                                               "research.r%d.vbs", i);
       advance_index_iterate(A_FIRST, o)

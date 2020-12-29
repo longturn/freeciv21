@@ -3230,7 +3230,7 @@ void city_production_model::populate()
   production_item *pi;
   struct universal targets[MAX_NUM_PRODUCTION_TARGETS];
   struct item items[MAX_NUM_PRODUCTION_TARGETS];
-  struct universal *renegade;
+  struct universal *renegade, *renegate;
   int item, targets_used;
   QString str;
   QFont f = *fcFont::instance()->getFont(fonts::default_font);
@@ -3275,8 +3275,8 @@ void city_production_model::populate()
     }
   }
 
-  renegade = NULL;
-  pi = new production_item(renegade, this);
+  renegate = NULL;
+  pi = new production_item(renegate, this);
   city_target_list << pi;
   sh.setX(2 * sh.y() + sh.x());
   sh.setX(qMin(sh.x(), 250));
