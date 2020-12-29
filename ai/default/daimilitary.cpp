@@ -516,7 +516,7 @@ static unsigned int assess_danger(struct ai_type *ait, struct city *pcity,
   int defense;
   int total_danger = 0;
   int defense_bonuses_pct[U_LAST];
-  bool defender_type_handled[U_LAST];
+  bool defender_type_handled[U_LAST] = {false};
   int assess_turns;
   bool omnimap;
 

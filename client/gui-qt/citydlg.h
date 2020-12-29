@@ -337,7 +337,6 @@ public:
 
 private:
   QLabel *qlt[NUM_INFO_FIELDS];
-  int positions;
 };
 
 class governor_sliders : public QGroupBox {
