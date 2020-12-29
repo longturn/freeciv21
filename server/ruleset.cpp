@@ -1204,6 +1204,9 @@ static bool load_tech_names(struct section_file *file,
 
   if (ok) {
     /* The techs: */
+    if (sec) {
+      section_list_destroy(sec);
+    }
     sec = secfile_sections_by_name_prefix(file, ADVANCE_SECTION_PREFIX);
     if (NULL == sec || 0 == (num_techs = section_list_size(sec))) {
       qCCritical(ruleset_category, "\"%s\": No Advances?!?", filename);
