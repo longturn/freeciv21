@@ -85,9 +85,3 @@ int fz_fprintf(QIODevice *fp, const char *format, ...)
 
   return fp->write(data);
 }
-
-/************************************************************************/ /**
-   Returns non-zero if there is an error status associated with
-   this stream.  Check the device for details.
- ****************************************************************************/
-int fz_ferror(QIODevice *fp) { return fp->errorString().isNull() ? 1 : 0; }

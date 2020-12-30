@@ -38,6 +38,3 @@ QIODevice *fz_from_memory(QByteArray *buffer);
 char *fz_fgets(char *buffer, int size, QIODevice *fp);
 int fz_fprintf(QIODevice *fp, const char *format, ...)
     fc__attribute((__format__(__printf__, 2, 3)));
-
-int fz_ferror(QIODevice *fp);
-const char *fz_strerror(QIODevice *fp);
