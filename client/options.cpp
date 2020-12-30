@@ -3118,11 +3118,11 @@ void handle_server_setting_enum(
     } else {
       /* Check if a value changed, then we need to reset the list
        * of possible values. */
-      const char *str;
+      QString str;
 
       for (i = 0; i < packet->values_num; i++) {
-        str = qUtf8Printable(psoption->enumerator.pretty_names->at(i));
-        if (NULL == str || 0 != strcmp(str, packet->pretty_names[i])) {
+        str = psoption->enumerator.pretty_names->at(i);
+        if (str.isEmpty() || (str == packet->pretty_names[i])) {
           /* Store untranslated string from server. */
           psoption->enumerator.pretty_names->replace(
               i, packet->pretty_names[i]);
@@ -3205,11 +3205,11 @@ void handle_server_setting_bitwise(
     } else {
       /* Check if a value changed, then we need to reset the list
        * of possible values. */
-      const char *str;
+      QString str;
 
       for (i = 0; i < packet->bits_num; i++) {
-        str = qUtf8Printable(psoption->bitwise.pretty_names->at(i));
-        if (NULL == str || 0 != strcmp(str, packet->pretty_names[i])) {
+        str = psoption->bitwise.pretty_names->at(i);
+        if (str.isEmpty() || (str == packet->pretty_names[i])) {
           /* Store untranslated string from server. */
           psoption->bitwise.pretty_names->replace(i,
                                                   packet->pretty_names[i]);
