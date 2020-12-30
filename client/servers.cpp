@@ -366,7 +366,7 @@ static bool meta_read_response(struct server_scan *scan)
   char str[4096];
   struct server_list *srvrs;
 
-  f = fz_from_memory(scan->meta.mem);
+  f = fz_from_memory(&scan->meta.mem);
 
   /* parse message body */
   srvrs = parse_metaserver_data(f);

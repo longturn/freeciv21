@@ -42,7 +42,7 @@ enum fz_method {
 };
 
 fz_FILE *fz_from_file(const char *filename, QIODevice::OpenMode in_mode);
-fz_FILE *fz_from_memory(const QByteArray &buffer);
+fz_FILE *fz_from_memory(QByteArray *buffer);
 int fz_fclose(fz_FILE *fp);
 char *fz_fgets(char *buffer, int size, fz_FILE *fp);
 int fz_fprintf(fz_FILE *fp, const char *format, ...)
