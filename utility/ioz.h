@@ -16,18 +16,10 @@
   (Currently only "required" functionality is supported.)
 ***********************************************************************/
 
-#include <stdio.h> /* FILE */
-
 #include "shared.h" /* fc__attribute */
 
 // Qt
 #include <QIODevice>
-
-// Forward declarations
-class QByteArray;
-
-struct fz_FILE_s; /* opaque */
-typedef struct fz_FILE_s fz_FILE;
 
 /* (Possibly) supported methods (depending on what KArchive supports). */
 enum fz_method {
@@ -41,14 +33,12 @@ enum fz_method {
 #endif
 };
 
-fz_FILE *fz_from_file(const char *filename, QIODevice::OpenMode in_mode);
-fz_FILE *fz_from_memory(QByteArray *buffer);
-int fz_fclose(fz_FILE *fp);
-char *fz_fgets(char *buffer, int size, fz_FILE *fp);
-int fz_fprintf(fz_FILE *fp, const char *format, ...)
+QIODevice *fz_from_file(const char *filename, QIODevice::OpenMode in_mode);
+QIODevice *fz_from_memory(QByteArray *buffer);
+int fz_fclose(QIODevice *fp);
+char *fz_fgets(char *buffer, int size, QIODevice *fp);
+int fz_fprintf(QIODevice *fp, const char *format, ...)
     fc__attribute((__format__(__printf__, 2, 3)));
 
-int fz_ferror(fz_FILE *fp);
-const char *fz_strerror(fz_FILE *fp);
-
-QIODevice *fz_device(fz_FILE *fp);
+int fz_ferror(QIODevice *fp);
+const char *fz_strerror(QIODevice *fp);

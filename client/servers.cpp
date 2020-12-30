@@ -244,7 +244,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
    The server sends a stream in a registry 'ini' type format.
    Read it using secfile functions and fill the server_list structs.
  **************************************************************************/
-static struct server_list *parse_metaserver_data(fz_FILE *f)
+static struct server_list *parse_metaserver_data(QIODevice *f)
 {
   struct server_list *server_list;
   struct section_file *file;
@@ -362,7 +362,7 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
  **************************************************************************/
 static bool meta_read_response(struct server_scan *scan)
 {
-  fz_FILE *f;
+  QIODevice *f;
   char str[4096];
   struct server_list *srvrs;
 

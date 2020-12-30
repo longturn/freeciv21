@@ -173,7 +173,7 @@
 static inline bool entry_used(const struct entry *pentry);
 static inline void entry_use(struct entry *pentry);
 
-static bool entry_to_file(const struct entry *pentry, fz_FILE *fs);
+static bool entry_to_file(const struct entry *pentry, QIODevice *fs);
 static void entry_from_inf_token(struct section *psection, const char *name,
                                  const char *tok, struct inputfile *file);
 
@@ -572,7 +572,7 @@ struct section_file *secfile_load_section(const char *filename,
 /**********************************************************************/ /**
    Create a section file from a stream.  Returns NULL on error.
  **************************************************************************/
-struct section_file *secfile_from_stream(fz_FILE *stream,
+struct section_file *secfile_from_stream(QIODevice *stream,
                                          bool allow_duplicates)
 {
   return secfile_from_input_file(inf_from_stream(stream, datafilename), NULL,
@@ -610,7 +610,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
   char real_filename[1024];
   char pentry_name[128];
   const char *col_entry_name;
-  fz_FILE *fs;
+  QIODevice *fs;
   const struct entry_list_link *ent_iter, *save_iter, *col_iter;
   struct entry *pentry, *col_pentry;
   int i;
@@ -830,7 +830,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
 
   if (0 != fz_ferror(fs)) {
     SECFILE_LOG(secfile, NULL, "Error before closing %s: %s", real_filename,
-                qPrintable(fz_device(fs)->errorString()));
+                qPrintable(fs->errorString()));
     fz_fclose(fs);
     return false;
   }
@@ -3402,7 +3402,7 @@ bool entry_str_set_gt_marking(struct entry *pentry, bool gt_marking)
 /**********************************************************************/ /**
    Push an entry into a file stream.
  **************************************************************************/
-static bool entry_to_file(const struct entry *pentry, fz_FILE *fs)
+static bool entry_to_file(const struct entry *pentry, QIODevice *fs)
 {
   static char buf[8192];
   char *dot = NULL;
