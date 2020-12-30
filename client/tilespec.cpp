@@ -1247,9 +1247,6 @@ bool tilespec_reread(const char *new_tileset_name,
     }
   }
   tileset_load_tiles(tileset);
-  if (game_fully_initialized) {
-    tileset_use_preferred_theme(tileset);
-  }
 
   if (game_fully_initialized) {
     if (game.client.ruleset_ready) {
@@ -6576,37 +6573,6 @@ QPixmap *get_basic_fog_sprite(const struct tileset *t)
 struct color_system *get_color_system(const struct tileset *t)
 {
   return t->color_system;
-}
-
-/************************************************************************/ /**
-   Loads preferred theme if there's any.
- ****************************************************************************/
-void tileset_use_preferred_theme(const struct tileset *t)
-{
-  char *default_theme_name = NULL;
-  size_t default_theme_name_sz = 0;
-  int i;
-
-  if (NULL == default_theme_name) {
-    /* Theme is not supported by this client. */
-    return;
-  }
-  Q_UNREACHABLE();
-  for (i = 0; i < t->num_preferred_themes; i++) {
-    if (strcmp(t->preferred_themes[i], default_theme_name)) {
-      if (popup_theme_suggestion_dialog(t->preferred_themes[i])) {
-        log_debug("trying theme \"%s\".", t->preferred_themes[i]);
-        if (load_theme(t->preferred_themes[i])) {
-          (void) fc_strlcpy(default_theme_name, t->preferred_themes[i],
-                            default_theme_name_sz);
-          return;
-        }
-      }
-    }
-  }
-  qDebug("The tileset doesn't specify preferred themes or none of its "
-         "preferred themes can be used. Using system default.");
-  gui_clear_theme();
 }
 
 /************************************************************************/ /**

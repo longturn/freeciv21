@@ -1391,12 +1391,14 @@ void choice_dialog::prev_unit()
  ***************************************************************************/
 void choice_dialog::update_dialog(const struct act_prob *act_probs)
 {
+  struct unit *actor_unit = game_unit_by_number(unit_id);
   if (targeted_unit == nullptr) {
     return;
   }
   unit_skip->setParent(nullptr);
-  action_selection_refresh(game_unit_by_number(unit_id), nullptr,
-                           targeted_unit, targeted_unit->tile,
+  fc_assert_ret(actor_unit);
+  action_selection_refresh(actor_unit, nullptr, targeted_unit,
+                           targeted_unit->tile,
                            (sub_target_id[ASTK_EXTRA] != EXTRA_NONE
                                 ? extra_by_number(sub_target_id[ASTK_EXTRA])
                                 : NULL),
@@ -2555,7 +2557,8 @@ static void spy_steal_shared(QVariant data1, QVariant data2,
     }
     advance_index_iterate_end;
 
-    if (actor_unit && action_prob_possible(
+    if (actor_unit
+        && action_prob_possible(
             actor_unit->client
                 .act_prob_cache[get_non_targeted_action_id(act_id)])) {
       stra = QString(_("At %1's Discretion"))

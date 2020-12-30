@@ -289,10 +289,11 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
 {
   int first_request_id = 0, last_request_id = 0, i;
   int city_radius_sq = city_map_radius_sq_get(pcity);
-  struct cm_result *current_state = cm_result_new(pcity);
+  struct cm_result *current_state;
   struct tile *pcenter = city_tile(pcity);
 
   fc_assert_ret_val(result->found_a_valid, false);
+  current_state = cm_result_new(pcity);
   cm_result_from_main_map(current_state, pcity);
 
   if (*current_state == *result && !ALWAYS_APPLY_AT_SERVER) {

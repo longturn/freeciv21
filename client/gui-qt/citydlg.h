@@ -346,7 +346,7 @@ public:
   governor_sliders(QWidget *parent = 0);
   void update_sliders(struct cm_parameter &param);
   QCheckBox *cma_celeb_checkbox;
-  QSlider *slider_tab[2 * O_LAST + 2];
+  QSlider *slider_tab[2 * O_LAST + 2] {nullptr};
 private slots:
   void cma_slider(int val);
   void cma_celebrate_changed(int val);
