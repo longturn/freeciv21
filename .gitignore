@@ -23,7 +23,7 @@
 *.rej
 *~
 *.#*
-*.swp
+*swp
 .DS_store
 
 # Saves
