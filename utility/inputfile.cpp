@@ -80,7 +80,6 @@
 /* utility */
 #include "astring.h"
 #include "fcintl.h"
-#include "ioz.h"
 #include "support.h"
 
 #include "inputfile.h"

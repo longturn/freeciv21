@@ -27,7 +27,6 @@
 
 /* utility */
 #include "fcintl.h"
-#include "ioz.h"
 #include "registry.h"
 
 #include "netfile.h"

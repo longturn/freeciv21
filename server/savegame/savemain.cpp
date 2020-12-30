@@ -109,7 +109,7 @@ void savegame_save(struct section_file *sfile, const char *save_reason,
 struct save_thread_data {
   struct section_file *sfile;
   char filepath[600];
-  enum fz_method save_compress_type;
+  compress_type save_compress_type;
 };
 
 /************************************************************************/ /**
@@ -210,23 +210,23 @@ void save_game(const char *orig_filename, const char *save_reason,
 
   {
     switch (stdata->save_compress_type) {
-    case FZ_ZLIB:
+    case COMPRESS_ZLIB:
       /* Append ".gz" to filename. */
       sz_strlcat(stdata->filepath, ".gz");
       break;
 #ifdef FREECIV_HAVE_BZ2
-    case FZ_BZIP2:
+    case COMPRESS_BZIP2:
       /* Append ".bz2" to filename. */
       sz_strlcat(stdata->filepath, ".bz2");
       break;
 #endif
 #ifdef FREECIV_HAVE_LZMA
-    case FZ_XZ:
+    case COMPRESS_XZ:
       /* Append ".xz" to filename. */
       sz_strlcat(stdata->filepath, ".xz");
       break;
 #endif
-    case FZ_PLAIN:
+    case COMPRESS_PLAIN:
       break;
     default:
       qCritical(_("Unsupported compression type %d."),
