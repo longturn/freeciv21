@@ -21,6 +21,7 @@ jobs:
         - python3
         - gettext
         - qt5-default
+        - libkf5archive-dev
         - libsqlite3-dev
         - libsdl2-mixer-dev
   - name: "ubuntu-clang"
@@ -36,6 +37,7 @@ jobs:
         - python3
         - gettext
         - qt5-default
+        - libkf5archive-dev
         - libsqlite3-dev
         - libsdl2-mixer-dev
     before_script:
@@ -56,6 +58,7 @@ jobs:
           - python3
           - gettext
           - qt
+          - kde-karchive
           - readline
           - sqlite
           - sdl2
@@ -74,6 +77,7 @@ jobs:
         - python3
         - gettext
         - qt5-default
+        - libkf5archive-dev
         - libsqlite3-dev
         - libsdl2-mixer-dev
       coverity_scan:
