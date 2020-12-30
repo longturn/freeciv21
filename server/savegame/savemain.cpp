@@ -109,7 +109,6 @@ void savegame_save(struct section_file *sfile, const char *save_reason,
 struct save_thread_data {
   struct section_file *sfile;
   char filepath[600];
-  int save_compress_level;
   enum fz_method save_compress_type;
 };
 
@@ -120,9 +119,7 @@ static void save_thread_run(void *arg)
 {
   struct save_thread_data *stdata = (struct save_thread_data *) arg;
 
-  if (!secfile_save(stdata->sfile, stdata->filepath,
-                    stdata->save_compress_level,
-                    stdata->save_compress_type)) {
+  if (!secfile_save(stdata->sfile, stdata->filepath)) {
     con_write(C_FAIL, _("Failed saving game as %s"), stdata->filepath);
     qCritical("Game saving failed: %s", secfile_error());
     notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning,
@@ -147,7 +144,6 @@ void save_game(const char *orig_filename, const char *save_reason,
   struct save_thread_data *stdata = new save_thread_data();
 
   stdata->save_compress_type = game.server.save_compress_type;
-  stdata->save_compress_level = game.server.save_compress_level;
 
   if (!orig_filename) {
     stdata->filepath[0] = '\0';
@@ -212,19 +208,19 @@ void save_game(const char *orig_filename, const char *save_reason,
   /* Append ".sav" to filename. */
   sz_strlcat(stdata->filepath, ".sav");
 
-  if (stdata->save_compress_level > 0) {
+  {
     switch (stdata->save_compress_type) {
     case FZ_ZLIB:
       /* Append ".gz" to filename. */
       sz_strlcat(stdata->filepath, ".gz");
       break;
-#ifdef FREECIV_HAVE_LIBBZ2
+#ifdef FREECIV_HAVE_BZ2
     case FZ_BZIP2:
       /* Append ".bz2" to filename. */
       sz_strlcat(stdata->filepath, ".bz2");
       break;
 #endif
-#ifdef FREECIV_HAVE_LIBLZMA
+#ifdef FREECIV_HAVE_LZMA
     case FZ_XZ:
       /* Append ".xz" to filename. */
       sz_strlcat(stdata->filepath, ".xz");

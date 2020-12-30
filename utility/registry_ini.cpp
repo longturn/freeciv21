@@ -605,8 +605,7 @@ static bool is_legal_table_entry_name(char c, bool num)
    simply specifies FZ_ZLIB method, since fz_fromFile() automatically
    changes to FZ_PLAIN method when level == 0.
  **************************************************************************/
-bool secfile_save(const struct section_file *secfile, const char *filename,
-                  int compression_level, enum fz_method compression_method)
+bool secfile_save(const struct section_file *secfile, const char *filename)
 {
   char real_filename[1024];
   char pentry_name[128];
@@ -623,8 +622,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
   }
 
   interpret_tilde(real_filename, sizeof(real_filename), filename);
-  fs = fz_from_file(real_filename, QIODevice::WriteOnly, compression_method,
-                    compression_level);
+  fs = fz_from_file(real_filename, QIODevice::WriteOnly);
 
   if (!fs) {
     SECFILE_LOG(secfile, NULL, _("Could not open %s for writing"),

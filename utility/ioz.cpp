@@ -62,12 +62,8 @@ fz_FILE *fz_from_memory(const QByteArray &buffer)
    Open file for reading/writing, like fopen.
    The compression method is chosen based on the file extension.
  ****************************************************************************/
-fz_FILE *fz_from_file(const char *filename, QIODevice::OpenMode mode,
-                      enum fz_method method, int compress_level)
+fz_FILE *fz_from_file(const char *filename, QIODevice::OpenMode mode)
 {
-  Q_UNUSED(method)
-  Q_UNUSED(compress_level)
-
   auto fp = new fz_FILE;
   fp->dev = std::make_unique<KFilterDev>(filename);
   fp->dev->open(mode);

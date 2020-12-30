@@ -14,6 +14,9 @@
 
 #include <time.h> /* time_t */
 
+/* utility */
+#include "ioz.h" // fz_method
+
 /* common */
 #include "connection.h" /* struct conn_list */
 #include "packets.h"
@@ -152,7 +155,6 @@ struct civ_game {
       int revolution_length;
       int spaceship_travel_time;
       bool threaded_save;
-      int save_compress_level;
       enum fz_method save_compress_type;
       int save_nturns;
       int save_frequency;
@@ -653,11 +655,7 @@ extern struct world wld;
 
 #define GAME_DEFAULT_EVENT_CACHE_INFO false
 
-#define GAME_DEFAULT_COMPRESS_LEVEL 6 /* if we have compression */
-#define GAME_MIN_COMPRESS_LEVEL 1
-#define GAME_MAX_COMPRESS_LEVEL 9
-
-#if defined(FREECIV_HAVE_LIBLZMA)
+#ifdef FREECIV_HAVE_LZMA
 #define GAME_DEFAULT_COMPRESS_TYPE FZ_XZ
 #else
 #define GAME_DEFAULT_COMPRESS_TYPE FZ_ZLIB

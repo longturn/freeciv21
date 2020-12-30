@@ -544,10 +544,10 @@ compresstype_name(enum fz_method compresstype)
   switch (compresstype) {
     NAME_CASE(FZ_PLAIN, "PLAIN", N_("No compression"));
     NAME_CASE(FZ_ZLIB, "LIBZ", N_("Using zlib (gzip format)"));
-#ifdef FREECIV_HAVE_LIBBZ2
+#ifdef FREECIV_HAVE_BZ2
     NAME_CASE(FZ_BZIP2, "BZIP2", N_("Using bzip2 (deprecated)"));
 #endif
-#ifdef FREECIV_HAVE_LIBLZMA
+#ifdef FREECIV_HAVE_LZMA
     NAME_CASE(FZ_XZ, "XZ", N_("Using xz"));
 #endif
   }
@@ -1244,12 +1244,12 @@ static bool topology_callback(unsigned value, struct connection *caller,
 static bool compresstype_callback(int value, struct connection *caller,
                                   char *reject_msg, size_t reject_msg_len)
 {
-#ifdef FREECIV_HAVE_LIBBZ2
+#ifdef FREECIV_HAVE_BZ2
   if (value == FZ_BZIP2) {
     qWarning(_("Bzip2 is deprecated as compresstype. Consider "
                "other options."));
   }
-#endif /* FREECIV_HAVE_LIBBZ2 */
+#endif /* FREECIV_HAVE_BZ2 */
 
   return true;
 }
@@ -4562,10 +4562,10 @@ static struct setting settings[] = {
                                                     NULL, NULL,
                                                     GAME_DEFAULT_THREADED_SAVE)
 
-                                                    GEN_INT(
-                                                        "compress",
+                                                    GEN_ENUM(
+                                                        "compresstype",
                                                         game.server
-                                                            .save_compress_level,
+                                                            .save_compress_type,
                                                         SSET_META,
                                                         SSET_INTERNAL,
                                                         SSET_RARE,
@@ -4573,345 +4573,348 @@ static struct setting settings[] = {
                                                         ALLOW_HACK,
                                                         N_("Savegame "
                                                            "compression "
-                                                           "level"),
-                                                        /* TRANS:
-                                                           'compresstype'
-                                                           setting name
-                                                           should not be
-                                                           translated. */
-                                                        N_("If non-zero, "
-                                                           "saved games "
-                                                           "will be "
-                                                           "compressed "
-                                                           "depending on "
-                                                           "the "
-                                                           "'compresstype' "
-                                                           "setting. Larger "
-                                                           "values will "
-                                                           "give better "
-                                                           "compression but "
-                                                           "take longer."),
-                                                        NULL, NULL, NULL,
-                                                        GAME_MIN_COMPRESS_LEVEL,
-                                                        GAME_MAX_COMPRESS_LEVEL,
-                                                        GAME_DEFAULT_COMPRESS_LEVEL)
+                                                           "algorithm"),
+                                                        N_("Compression "
+                                                           "library to "
+                                                           "use for "
+                                                           "savegames."),
+                                                        NULL,
+                                                        compresstype_callback,
+                                                        NULL,
+                                                        compresstype_name,
+                                                        GAME_DEFAULT_COMPRESS_TYPE)
 
-                                                        GEN_ENUM(
-                                                            "compresstype",
+                                                        GEN_STRING(
+                                                            "savename",
                                                             game.server
-                                                                .save_compress_type,
+                                                                .save_name,
                                                             SSET_META,
                                                             SSET_INTERNAL,
-                                                            SSET_RARE,
+                                                            SSET_VITAL,
                                                             ALLOW_HACK,
                                                             ALLOW_HACK,
-                                                            N_("Savegame "
-                                                               "compression "
-                                                               "algorithm"),
-                                                            N_("Compression "
-                                                               "library to "
-                                                               "use for "
-                                                               "savegames."),
+                                                            N_("Definiti"
+                                                               "on of "
+                                                               "the "
+                                                               "save "
+                                                               "file "
+                                                               "name"),
+                                                            /* TRANS: %R,
+                                                             * %S, %T and
+                                                             * %Y must
+                                                             * not be
+                                                             * translated.
+                                                             * The
+                                                             * strings
+                                                             * (examples
+                                                             * and
+                                                             * setting
+                                                             * names)
+                                                             * between
+                                                             * single
+                                                             * quotes
+                                                             * neither.
+                                                             * The
+                                                             * strings
+                                                             * between <>
+                                                             * should be
+                                                             * translated.
+                                                             * xgettext:no-c-format
+                                                             */
+                                                            N_("Within "
+                                                               "the "
+                                                               "string "
+                                                               "the "
+                                                               "followin"
+                                                               "g "
+                                                               "custom "
+                                                               "formats "
+                                                               "are "
+                                                               "allowed:"
+                                                               "\n"
+                                                               "  %R = "
+                                                               "<reason>"
+                                                               "\n"
+                                                               "  %S = "
+                                                               "<suffix>"
+                                                               "\n"
+                                                               "  %T = "
+                                                               "<turn-"
+                                                               "number>"
+                                                               "\n"
+                                                               "  %Y = "
+                                                               "<game-"
+                                                               "year>\n"
+                                                               "\n"
+                                                               "Example:"
+                                                               " '"
+                                                               "freeciv-"
+                                                               "T%04T-Y%"
+                                                               "+05Y-%R'"
+                                                               " => "
+                                                               "'freeciv"
+                                                               "-T0100-"
+                                                               "Y00001-"
+                                                               "manual'"
+                                                               "\n"
+                                                               "\n"
+                                                               "Be "
+                                                               "careful "
+                                                               "to use "
+                                                               "at "
+                                                               "least "
+                                                               "one of "
+                                                               "%T and "
+                                                               "%Y, "
+                                                               "else "
+                                                               "newer "
+                                                               "savegame"
+                                                               "s will "
+                                                               "overwrit"
+                                                               "e old "
+                                                               "ones. "
+                                                               "If none "
+                                                               "of the "
+                                                               "formats "
+                                                               "is used "
+                                                               "'-T%04T-"
+                                                               "Y%05Y-%"
+                                                               "R' is "
+                                                               "appended"
+                                                               " to the "
+                                                               "value "
+                                                               "of "
+                                                               "'savenam"
+                                                               "e'."),
+                                                            savename_validate,
                                                             NULL,
-                                                            compresstype_callback,
-                                                            NULL,
-                                                            compresstype_name,
-                                                            GAME_DEFAULT_COMPRESS_TYPE)
+                                                            GAME_DEFAULT_SAVE_NAME)
 
-                                                            GEN_STRING(
-                                                                "savename",
+                                                            GEN_BOOL(
+                                                                "scorelo"
+                                                                "g",
                                                                 game.server
-                                                                    .save_name,
+                                                                    .scorelog,
                                                                 SSET_META,
                                                                 SSET_INTERNAL,
-                                                                SSET_VITAL,
+                                                                SSET_SITUATIONAL,
                                                                 ALLOW_HACK,
                                                                 ALLOW_HACK,
-                                                                N_("Definiti"
-                                                                   "on of "
-                                                                   "the "
-                                                                   "save "
-                                                                   "file "
-                                                                   "name"),
-                                                                /* TRANS: %R,
-                                                                 * %S, %T and
-                                                                 * %Y must
-                                                                 * not be
-                                                                 * translated.
+                                                                N_("Whet"
+                                                                   "her "
+                                                                   "to "
+                                                                   "log "
+                                                                   "play"
+                                                                   "er "
+                                                                   "stat"
+                                                                   "isti"
+                                                                   "cs"),
+                                                                /* TRANS:
                                                                  * The
-                                                                 * strings
-                                                                 * (examples
-                                                                 * and
-                                                                 * setting
-                                                                 * names)
+                                                                 * string
                                                                  * between
                                                                  * single
                                                                  * quotes
-                                                                 * neither.
-                                                                 * The
-                                                                 * strings
-                                                                 * between <>
-                                                                 * should be
+                                                                 * is a
+                                                                 * setting
+                                                                 * name
+                                                                 * and
+                                                                 * should
+                                                                 * not be
                                                                  * translated.
-                                                                 * xgettext:no-c-format
                                                                  */
-                                                                N_("Within "
-                                                                   "the "
-                                                                   "string "
-                                                                   "the "
-                                                                   "followin"
-                                                                   "g "
-                                                                   "custom "
-                                                                   "formats "
+                                                                N_("If "
+                                                                   "this"
+                                                                   " is "
+                                                                   "turn"
+                                                                   "ed "
+                                                                   "on, "
+                                                                   "play"
+                                                                   "er "
+                                                                   "stat"
+                                                                   "isti"
+                                                                   "cs "
                                                                    "are "
-                                                                   "allowed:"
-                                                                   "\n"
-                                                                   "  %R = "
-                                                                   "<reason>"
-                                                                   "\n"
-                                                                   "  %S = "
-                                                                   "<suffix>"
-                                                                   "\n"
-                                                                   "  %T = "
-                                                                   "<turn-"
-                                                                   "number>"
-                                                                   "\n"
-                                                                   "  %Y = "
-                                                                   "<game-"
-                                                                   "year>\n"
-                                                                   "\n"
-                                                                   "Example:"
-                                                                   " '"
-                                                                   "freeciv-"
-                                                                   "T%04T-Y%"
-                                                                   "+05Y-%R'"
-                                                                   " => "
-                                                                   "'freeciv"
-                                                                   "-T0100-"
-                                                                   "Y00001-"
-                                                                   "manual'"
-                                                                   "\n"
-                                                                   "\n"
-                                                                   "Be "
-                                                                   "careful "
-                                                                   "to use "
-                                                                   "at "
-                                                                   "least "
-                                                                   "one of "
-                                                                   "%T and "
-                                                                   "%Y, "
-                                                                   "else "
-                                                                   "newer "
-                                                                   "savegame"
-                                                                   "s will "
-                                                                   "overwrit"
-                                                                   "e old "
-                                                                   "ones. "
-                                                                   "If none "
-                                                                   "of the "
-                                                                   "formats "
-                                                                   "is used "
-                                                                   "'-T%04T-"
-                                                                   "Y%05Y-%"
-                                                                   "R' is "
-                                                                   "appended"
-                                                                   " to the "
-                                                                   "value "
-                                                                   "of "
-                                                                   "'savenam"
-                                                                   "e'."),
-                                                                savename_validate,
+                                                                   "appe"
+                                                                   "nded"
+                                                                   " to "
+                                                                   "the "
+                                                                   "file"
+                                                                   " def"
+                                                                   "ined"
+                                                                   " by "
+                                                                   "the "
+                                                                   "opti"
+                                                                   "on "
+                                                                   "'sco"
+                                                                   "refi"
+                                                                   "le' "
+                                                                   "ever"
+                                                                   "y "
+                                                                   "turn"
+                                                                   ". "
+                                                                   "Thes"
+                                                                   "e "
+                                                                   "stat"
+                                                                   "isti"
+                                                                   "cs "
+                                                                   "can "
+                                                                   "be "
+                                                                   "used"
+                                                                   " to "
+                                                                   "crea"
+                                                                   "te "
+                                                                   "powe"
+                                                                   "r "
+                                                                   "grap"
+                                                                   "hs "
+                                                                   "afte"
+                                                                   "r "
+                                                                   "the "
+                                                                   "game"
+                                                                   "."),
                                                                 NULL,
-                                                                GAME_DEFAULT_SAVE_NAME)
+                                                                scorelog_action,
+                                                                GAME_DEFAULT_SCORELOG)
 
-                                                                GEN_BOOL(
-                                                                    "scorelo"
-                                                                    "g",
+                                                                GEN_ENUM(
+                                                                    "sco"
+                                                                    "rel"
+                                                                    "ogl"
+                                                                    "eve"
+                                                                    "l",
                                                                     game.server
-                                                                        .scorelog,
+                                                                        .scoreloglevel,
                                                                     SSET_META,
                                                                     SSET_INTERNAL,
                                                                     SSET_SITUATIONAL,
                                                                     ALLOW_HACK,
                                                                     ALLOW_HACK,
+                                                                    N_("Scor"
+                                                                       "elog"
+                                                                       " lev"
+                                                                       "el"),
                                                                     N_("Whet"
                                                                        "her "
-                                                                       "to "
-                                                                       "log "
-                                                                       "play"
-                                                                       "er "
-                                                                       "stat"
-                                                                       "isti"
-                                                                       "cs"),
-                                                                    /* TRANS:
-                                                                     * The
-                                                                     * string
-                                                                     * between
-                                                                     * single
-                                                                     * quotes
-                                                                     * is a
-                                                                     * setting
-                                                                     * name
-                                                                     * and
-                                                                     * should
-                                                                     * not be
-                                                                     * translated.
-                                                                     */
-                                                                    N_("If "
-                                                                       "this"
-                                                                       " is "
-                                                                       "turn"
-                                                                       "ed "
-                                                                       "on, "
-                                                                       "play"
-                                                                       "er "
-                                                                       "stat"
-                                                                       "isti"
-                                                                       "cs "
+                                                                       "scor"
+                                                                       "es "
                                                                        "are "
-                                                                       "appe"
-                                                                       "nded"
-                                                                       " to "
-                                                                       "the "
-                                                                       "file"
-                                                                       " def"
-                                                                       "ined"
-                                                                       " by "
-                                                                       "the "
-                                                                       "opti"
-                                                                       "on "
-                                                                       "'sco"
-                                                                       "refi"
-                                                                       "le' "
-                                                                       "ever"
-                                                                       "y "
-                                                                       "turn"
-                                                                       ". "
-                                                                       "Thes"
-                                                                       "e "
-                                                                       "stat"
-                                                                       "isti"
-                                                                       "cs "
-                                                                       "can "
-                                                                       "be "
-                                                                       "used"
-                                                                       " to "
-                                                                       "crea"
-                                                                       "te "
-                                                                       "powe"
-                                                                       "r "
-                                                                       "grap"
-                                                                       "hs "
-                                                                       "afte"
-                                                                       "r "
-                                                                       "the "
-                                                                       "game"
+                                                                       "logg"
+                                                                       "ed "
+                                                                       "for "
+                                                                       "all "
+                                                                       "play"
+                                                                       "ers "
+                                                                       "incl"
+                                                                       "udin"
+                                                                       "g "
+                                                                       "AIs,"
+                                                                       " "
+                                                                       "or "
+                                                                       "only"
+                                                                       " for"
+                                                                       " hum"
+                                                                       "an "
+                                                                       "play"
+                                                                       "ers"
                                                                        "."),
                                                                     NULL,
-                                                                    scorelog_action,
-                                                                    GAME_DEFAULT_SCORELOG)
+                                                                    NULL,
+                                                                    NULL,
+                                                                    scoreloglevel_name,
+                                                                    GAME_DEFAULT_SCORELOGLEVEL)
 
-                                                                    GEN_ENUM(
+                                                                    GEN_STRING(
                                                                         "sco"
-                                                                        "rel"
-                                                                        "ogl"
-                                                                        "eve"
-                                                                        "l",
+                                                                        "ref"
+                                                                        "il"
+                                                                        "e",
                                                                         game.server
-                                                                            .scoreloglevel,
+                                                                            .scorefile,
                                                                         SSET_META,
                                                                         SSET_INTERNAL,
                                                                         SSET_SITUATIONAL,
                                                                         ALLOW_HACK,
                                                                         ALLOW_HACK,
-                                                                        N_("Scorelog level"),
-                                                                        N_("Whether scores are logged for all players including AIs, "
-                                                                           "or only for human players."),
+                                                                        N_("Name for the score log file"),
+                                                                        /* TRANS:
+                                                                           Don't
+                                                                           translate
+                                                                           the
+                                                                           string
+                                                                           in
+                                                                           single
+                                                                           quotes.
+                                                                         */
+                                                                        N_("The default name for the score log file is "
+                                                                           "'freeciv-score.log'."),
+                                                                        scorefile_validate,
                                                                         NULL,
-                                                                        NULL,
-                                                                        NULL,
-                                                                        scoreloglevel_name,
-                                                                        GAME_DEFAULT_SCORELOGLEVEL)
+                                                                        GAME_DEFAULT_SCOREFILE)
 
-                                                                        GEN_STRING(
-                                                                            "scorefile",
+                                                                        GEN_INT(
+                                                                            "maxconnectionsperhost",
                                                                             game.server
-                                                                                .scorefile,
-                                                                            SSET_META,
-                                                                            SSET_INTERNAL,
-                                                                            SSET_SITUATIONAL,
-                                                                            ALLOW_HACK,
-                                                                            ALLOW_HACK,
-                                                                            N_("Name for the score log file"),
-                                                                            /* TRANS: Don't translate the string in single quotes. */
-                                                                            N_("The default name for the score log file is "
-                                                                               "'freeciv-score.log'."),
-                                                                            scorefile_validate,
+                                                                                .maxconnectionsperhost,
+                                                                            SSET_RULES_FLEXIBLE,
+                                                                            SSET_NETWORK,
+                                                                            SSET_RARE,
+                                                                            ALLOW_NONE,
+                                                                            ALLOW_BASIC,
+                                                                            N_("Maximum number of connections to the server per host"),
+                                                                            N_("New connections from a given host will be rejected if "
+                                                                               "the total number of connections from the very same host "
+                                                                               "equals or exceeds this value. A value of 0 means that "
+                                                                               "there is no limit, at least up to the maximum number of "
+                                                                               "connections supported by the server."),
                                                                             NULL,
-                                                                            GAME_DEFAULT_SCOREFILE)
+                                                                            NULL,
+                                                                            NULL,
+                                                                            GAME_MIN_MAXCONNECTIONSPERHOST,
+                                                                            GAME_MAX_MAXCONNECTIONSPERHOST,
+                                                                            GAME_DEFAULT_MAXCONNECTIONSPERHOST)
 
                                                                             GEN_INT(
-                                                                                "maxconnectionsperhost",
+                                                                                "kicktime",
                                                                                 game.server
-                                                                                    .maxconnectionsperhost,
+                                                                                    .kick_time,
                                                                                 SSET_RULES_FLEXIBLE,
                                                                                 SSET_NETWORK,
                                                                                 SSET_RARE,
-                                                                                ALLOW_NONE,
-                                                                                ALLOW_BASIC,
-                                                                                N_("Maximum number of connections to the server per host"),
-                                                                                N_("New connections from a given host will be rejected if "
-                                                                                   "the total number of connections from the very same host "
-                                                                                   "equals or exceeds this value. A value of 0 means that "
-                                                                                   "there is no limit, at least up to the maximum number of "
-                                                                                   "connections supported by the server."),
+                                                                                ALLOW_HACK,
+                                                                                ALLOW_HACK,
+                                                                                N_("Time before a kicked user can reconnect"),
+                                                                                /* TRANS: the string in double quotes is a server command name and
+                                                                                 * should not be translated */
+                                                                                N_("Gives the time in seconds before a user kicked using the "
+                                                                                   "\"kick\" command may reconnect. Changing this setting will "
+                                                                                   "affect users kicked in the past."),
                                                                                 NULL,
                                                                                 NULL,
                                                                                 NULL,
-                                                                                GAME_MIN_MAXCONNECTIONSPERHOST,
-                                                                                GAME_MAX_MAXCONNECTIONSPERHOST,
-                                                                                GAME_DEFAULT_MAXCONNECTIONSPERHOST)
+                                                                                GAME_MIN_KICK_TIME,
+                                                                                GAME_MAX_KICK_TIME,
+                                                                                GAME_DEFAULT_KICK_TIME)
 
-                                                                                GEN_INT(
-                                                                                    "kicktime",
+                                                                                GEN_STRING(
+                                                                                    "metamessage",
                                                                                     game.server
-                                                                                        .kick_time,
-                                                                                    SSET_RULES_FLEXIBLE,
-                                                                                    SSET_NETWORK,
+                                                                                        .meta_info
+                                                                                        .user_message,
+                                                                                    SSET_META,
+                                                                                    SSET_INTERNAL,
                                                                                     SSET_RARE,
-                                                                                    ALLOW_HACK,
-                                                                                    ALLOW_HACK,
-                                                                                    N_("Time before a kicked user can reconnect"),
-                                                                                    /* TRANS: the string in double quotes is a server command name and
-                                                                                     * should not be translated */
-                                                                                    N_("Gives the time in seconds before a user kicked using the "
-                                                                                       "\"kick\" command may reconnect. Changing this setting will "
-                                                                                       "affect users kicked in the past."),
+                                                                                    ALLOW_CTRL,
+                                                                                    ALLOW_CTRL,
+                                                                                    N_("Metaserver info line"),
+                                                                                    N_("User defined metaserver info line. For most of the time "
+                                                                                       "a user defined metamessage will be used instead of an "
+                                                                                       "automatically generated message. "
+                                                                                       "Set to empty (\"\", not \"empty\") to always use an "
+                                                                                       "automatically generated meta server message."),
                                                                                     NULL,
-                                                                                    NULL,
-                                                                                    NULL,
-                                                                                    GAME_MIN_KICK_TIME,
-                                                                                    GAME_MAX_KICK_TIME,
-                                                                                    GAME_DEFAULT_KICK_TIME)
-
-                                                                                    GEN_STRING(
-                                                                                        "metamessage",
-                                                                                        game.server
-                                                                                            .meta_info
-                                                                                            .user_message,
-                                                                                        SSET_META, SSET_INTERNAL,
-                                                                                        SSET_RARE,
-                                                                                        ALLOW_CTRL,
-                                                                                        ALLOW_CTRL,
-                                                                                        N_("Metaserver info line"),
-                                                                                        N_("User defined metaserver info line. For most of the time "
-                                                                                           "a user defined metamessage will be used instead of an "
-                                                                                           "automatically generated message. "
-                                                                                           "Set to empty (\"\", not \"empty\") to always use an "
-                                                                                           "automatically generated meta server message."),
-                                                                                        NULL,
-                                                                                        metamessage_action,
-                                                                                        GAME_DEFAULT_USER_META_MESSAGE)};
+                                                                                    metamessage_action,
+                                                                                    GAME_DEFAULT_USER_META_MESSAGE)};
 
 #undef GEN_BOOL
 #undef GEN_INT
