@@ -980,7 +980,7 @@ void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
                      const struct tile *ptile, const struct tile_edge *pedge,
                      const struct tile_corner *pcorner,
                      const struct unit *punit, const struct city *pcity,
-                     int canvas_x, int canvas_y, const struct city *citymode,
+                     int canvas_x, int canvas_y,
                      const struct unit_type *putype)
 {
   struct drawn_sprite tile_sprs[80];
@@ -988,7 +988,7 @@ void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
   bool city_unit = false;
   int dummy_x, dummy_y;
   int count = fill_sprite_array(tileset, tile_sprs, layer, ptile, pedge,
-                                pcorner, punit, pcity, citymode, putype);
+                                pcorner, punit, pcity, putype);
   bool fog = (ptile && gui_options.draw_fog_of_war
               && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile));
   if (ptile) {
@@ -1023,7 +1023,7 @@ void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
   mapview_layer_iterate(layer)
   {
     put_one_element(pcanvas, layer, NULL, NULL, NULL, punit, NULL, canvas_x,
-                    canvas_y, NULL, NULL);
+                    canvas_y, NULL);
   }
   mapview_layer_iterate_end;
 }
@@ -1039,7 +1039,7 @@ void put_unittype(const struct unit_type *putype, QPixmap *pcanvas,
   mapview_layer_iterate(layer)
   {
     put_one_element(pcanvas, layer, NULL, NULL, NULL, NULL, NULL, canvas_x,
-                    canvas_y, NULL, putype);
+                    canvas_y, putype);
   }
   mapview_layer_iterate_end;
 }
@@ -1057,7 +1057,7 @@ void put_city(struct city *pcity, QPixmap *pcanvas, int canvas_x,
   mapview_layer_iterate(layer)
   {
     put_one_element(pcanvas, layer, NULL, NULL, NULL, NULL, pcity, canvas_x,
-                    canvas_y, NULL, NULL);
+                    canvas_y, NULL);
   }
   mapview_layer_iterate_end;
 }
@@ -1077,7 +1077,7 @@ void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,
   mapview_layer_iterate(layer)
   {
     put_one_element(pcanvas, layer, ptile, NULL, NULL, NULL, NULL, canvas_x,
-                    canvas_y, NULL, NULL);
+                    canvas_y, NULL);
   }
   mapview_layer_iterate_end;
 }
@@ -1197,15 +1197,14 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
    Draw some or all of a tile onto the canvas.
  ****************************************************************************/
 static void put_one_tile(QPixmap *pcanvas, enum mapview_layer layer,
-                         struct tile *ptile, int canvas_x, int canvas_y,
-                         const struct city *citymode)
+                         struct tile *ptile, int canvas_x, int canvas_y)
 {
   if (client_tile_get_known(ptile) != TILE_UNKNOWN
       || (editor_is_active() && editor_tile_is_selected(ptile))) {
-    struct unit *punit = get_drawable_unit(tileset, ptile, citymode);
+    struct unit *punit = get_drawable_unit(tileset, ptile);
 
     put_one_element(pcanvas, layer, ptile, NULL, NULL, punit,
-                    tile_city(ptile), canvas_x, canvas_y, citymode, NULL);
+                    tile_city(ptile), canvas_x, canvas_y, NULL);
   }
 }
 
@@ -1402,13 +1401,13 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
       const int cx = gui_x - mapview.gui_x0, cy = gui_y - mapview.gui_y0;
 
       if (ptile) {
-        put_one_tile(mapview.store, layer, ptile, cx, cy, NULL);
+        put_one_tile(mapview.store, layer, ptile, cx, cy);
       } else if (pedge) {
         put_one_element(mapview.store, layer, NULL, pedge, NULL, NULL, NULL,
-                        cx, cy, NULL, NULL);
+                        cx, cy, NULL);
       } else if (pcorner) {
         put_one_element(mapview.store, layer, NULL, NULL, pcorner, NULL,
-                        NULL, cx, cy, NULL, NULL);
+                        NULL, cx, cy, NULL);
       } else {
         /* This can happen, for instance for unreal tiles. */
       }

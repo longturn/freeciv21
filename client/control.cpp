@@ -852,23 +852,22 @@ struct unit *find_visible_unit(struct tile *ptile)
        3: any transporter
        4: any unit
      (always return first in stack). */
-  unit_list_iterate(ptile->units,
-                    punit) if (unit_owner(punit) == client.conn.playing)
+  unit_list_iterate(ptile->units, punit)
   {
-    if (!unit_transported(punit)) {
-      if (get_transporter_capacity(punit) > 0) {
-        return punit;
-      } else if (!panyowned) {
-        panyowned = punit;
+    if (unit_owner(punit) == client.conn.playing) {
+      if (!unit_transported(punit)) {
+        if (get_transporter_capacity(punit) > 0) {
+          return punit;
+        } else if (!panyowned) {
+          panyowned = punit;
+        }
       }
-    }
-  }
-  else if (!ptptother && !unit_transported(punit))
-  {
-    if (get_transporter_capacity(punit) > 0) {
-      ptptother = punit;
-    } else if (!panyother) {
-      panyother = punit;
+    } else if (!ptptother && !unit_transported(punit)) {
+      if (get_transporter_capacity(punit) > 0) {
+        ptptother = punit;
+      } else if (!panyother) {
+        panyother = punit;
+      }
     }
   }
   unit_list_iterate_end;
