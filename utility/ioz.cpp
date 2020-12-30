@@ -61,15 +61,6 @@ QIODevice *fz_from_file(const char *filename, QIODevice::OpenMode mode)
 }
 
 /************************************************************************/ /**
-   Close file, like fclose. Always returns 0.
- ****************************************************************************/
-int fz_fclose(QIODevice *fp)
-{
-  delete fp;
-  return 0;
-}
-
-/************************************************************************/ /**
    Get a line, like fgets.
    Returns NULL in case of error, or when end-of-file reached
    and no characters have been read.

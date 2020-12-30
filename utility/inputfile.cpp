@@ -258,11 +258,10 @@ static void inf_close_partial(struct inputfile *inf)
   if (fz_ferror(inf->fp) != 0) {
     qCritical("Error before closing %s: %s", inf_filename(inf),
               qPrintable(inf->fp->errorString()));
-    fz_fclose(inf->fp);
-    inf->fp = NULL;
-  } else if (fz_fclose(inf->fp) != 0) {
-    qCritical("Error closing %s", inf_filename(inf));
   }
+  delete inf->fp;
+  inf->fp = nullptr;
+
   if (inf->filename) {
     delete[] inf->filename;
   }
@@ -880,7 +879,8 @@ static const char *get_token_value(struct inputfile *inf)
       }
     }
 
-    fz_fclose(fp);
+    delete fp;
+    fp = nullptr;
 
     inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
 
