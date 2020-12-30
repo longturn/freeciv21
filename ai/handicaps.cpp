@@ -54,6 +54,7 @@ void handicaps_close(struct player *pplayer)
 void handicaps_set(struct player *pplayer, QBitArray* handicaps)
 {
   *(pplayer->ai_common.handicaps) = *handicaps;
+  delete handicaps;
 }
 
 /**********************************************************************/ /**
