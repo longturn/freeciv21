@@ -4012,8 +4012,8 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
     const struct unit_type *unittype = NULL;
     enum unit_type_flag_id unitflag = unit_type_flag_id_invalid();
     outputs.clear();
-    const char *or_outputs = Q_("?outputlist: Nothing ");
-    const char *and_outputs = Q_("?outputlist: Nothing ");
+    QString or_outputs = Q_("?outputlist: Nothing ");
+    QString and_outputs = Q_("?outputlist: Nothing ");
     bool too_complex = false;
     bool world_value_valid = true;
 
@@ -4214,7 +4214,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                            /* TRANS: %s is the output type, like 'shield'
                             * or 'gold'. */
                            _("* You pay no %s upkeep for your units.\n"),
-                           or_outputs);
+                           qUtf8Printable(or_outputs));
             } else {
               CATLSTR(buf, bufsz,
                       _("* You pay no upkeep for your units.\n"));
@@ -4228,7 +4228,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                    * or 'gold'. */
                   _("* You pay %.2g times normal %s upkeep for your "
                     "units.\n"),
-                  ratio, and_outputs);
+                  ratio, qUtf8Printable(and_outputs));
             } else {
               cat_snprintf(buf, bufsz,
                            _("* You pay %.2g times normal upkeep for your "
@@ -4251,7 +4251,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                              "* Each of your cities will avoid paying %d %s"
                              " upkeep for your units.\n",
                              peffect->value),
-                         peffect->value, and_outputs);
+                         peffect->value, qUtf8Printable(and_outputs));
           } else {
             cat_snprintf(buf, bufsz,
                          /* TRANS: Amount is subtracted from upkeep cost
@@ -4473,7 +4473,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                   " suffer a -1 penalty, unless the city working it"
                   " is celebrating.",
                   net_value),
-              net_value, or_outputs);
+              net_value, qUtf8Printable(or_outputs));
           if (game.info.celebratesize > 1) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: Preserve leading space. %d should always
@@ -4494,7 +4494,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          " %d more of it while the city working it is"
                          " celebrating.",
                          peffect->value),
-                     or_outputs, peffect->value);
+                     qUtf8Printable(or_outputs), peffect->value);
         if (game.info.celebratesize > 1) {
           cat_snprintf(buf, bufsz,
                        /* TRANS: Preserve leading space. %d should always be
@@ -4512,15 +4512,15 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          "* Each worked tile with at least 1 %s will yield"
                          " %d more of it.\n",
                          peffect->value),
-                     or_outputs, peffect->value);
+                     qUtf8Printable(or_outputs), peffect->value);
         break;
       case EFT_OUTPUT_BONUS:
       case EFT_OUTPUT_BONUS_2:
         /* FIXME: makes most sense iff world_value == 0 */
         cat_snprintf(buf, bufsz,
                      /* TRANS: %s is list of output types, with 'and' */
-                     _("* %s production is increased %d%%.\n"), and_outputs,
-                     peffect->value);
+                     _("* %s production is increased %d%%.\n"),
+                     qUtf8Printable(and_outputs), peffect->value);
         break;
       case EFT_OUTPUT_WASTE:
         if (world_value_valid) {
@@ -4528,18 +4528,18 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s production will suffer massive losses.\n"),
-                         and_outputs);
+                         qUtf8Printable(and_outputs));
           } else if (net_value >= 15) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s production will suffer some losses.\n"),
-                         and_outputs);
+                         qUtf8Printable(and_outputs));
           } else if (net_value > 0) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s production will suffer a small amount "
                            "of losses.\n"),
-                         and_outputs);
+                         qUtf8Printable(and_outputs));
           }
         }
         break;
@@ -4569,19 +4569,19 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s losses will increase quickly"
                            " with distance from capital.\n"),
-                         and_outputs);
+                         qUtf8Printable(and_outputs));
           } else if (net_value >= 200) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s losses will increase"
                            " with distance from capital.\n"),
-                         and_outputs);
+                         qUtf8Printable(and_outputs));
           } else if (net_value > 0) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s losses will increase slowly"
                            " with distance from capital.\n"),
-                         and_outputs);
+                         qUtf8Printable(and_outputs));
           }
         }
         break;

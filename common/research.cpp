@@ -226,7 +226,7 @@ static const char *research_future_set_name(QVector<QString> *psv, int no,
   psv->replace(no, new_name);
 
   /* Return duplicate of 'new_name'. */
-  return qUtf8Printable(psv->at(no));
+  return qstrdup(qUtf8Printable(psv->at(no)));
 }
 
 /************************************************************************/ /**
