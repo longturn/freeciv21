@@ -41,7 +41,6 @@
 
 struct fz_FILE_s {
   std::unique_ptr<QIODevice> dev;
-  QByteArray buffer;
 };
 
 /************************************************************************/ /**
@@ -49,11 +48,10 @@ struct fz_FILE_s {
    If control is TRUE, caller gives up control of the buffer
    so ioz will free it when fz_FILE closed.
  ****************************************************************************/
-fz_FILE *fz_from_memory(const QByteArray &buffer)
+fz_FILE *fz_from_memory(QByteArray *buffer)
 {
   auto fp = new fz_FILE;
-  fp->buffer = buffer;
-  fp->dev = std::make_unique<QBuffer>(&fp->buffer);
+  fp->dev = std::make_unique<QBuffer>(buffer);
   fp->dev->open(QIODevice::ReadWrite);
   return fp;
 }
