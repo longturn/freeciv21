@@ -28,8 +28,6 @@
 
 #include <stdlib.h>
 
-#include <utility>
-
 // Qt
 #include <QBuffer>
 #include <QByteArray>
@@ -39,20 +37,15 @@
 
 #include "ioz.h"
 
-struct fz_FILE_s {
-  std::unique_ptr<QIODevice> dev;
-};
-
 /************************************************************************/ /**
-   Open memory buffer for reading as fz_FILE.
+   Open memory buffer for reading as QIODevice.
    If control is TRUE, caller gives up control of the buffer
-   so ioz will free it when fz_FILE closed.
+   so ioz will free it when QIODevice closed.
  ****************************************************************************/
-fz_FILE *fz_from_memory(QByteArray *buffer)
+QIODevice *fz_from_memory(QByteArray *buffer)
 {
-  auto fp = new fz_FILE;
-  fp->dev = std::make_unique<QBuffer>(buffer);
-  fp->dev->open(QIODevice::ReadWrite);
+  auto fp = new QBuffer(buffer);
+  fp->open(QIODevice::ReadWrite);
   return fp;
 }
 
@@ -60,18 +53,17 @@ fz_FILE *fz_from_memory(QByteArray *buffer)
    Open file for reading/writing, like fopen.
    The compression method is chosen based on the file extension.
  ****************************************************************************/
-fz_FILE *fz_from_file(const char *filename, QIODevice::OpenMode mode)
+QIODevice *fz_from_file(const char *filename, QIODevice::OpenMode mode)
 {
-  auto fp = new fz_FILE;
-  fp->dev = std::make_unique<KFilterDev>(filename);
-  fp->dev->open(mode);
+  auto fp = new KFilterDev(filename);
+  fp->open(mode);
   return fp;
 }
 
 /************************************************************************/ /**
    Close file, like fclose. Always returns 0.
  ****************************************************************************/
-int fz_fclose(fz_FILE *fp)
+int fz_fclose(QIODevice *fp)
 {
   delete fp;
   return 0;
@@ -82,9 +74,9 @@ int fz_fclose(fz_FILE *fp)
    Returns NULL in case of error, or when end-of-file reached
    and no characters have been read.
  ****************************************************************************/
-char *fz_fgets(char *buffer, int size, fz_FILE *fp)
+char *fz_fgets(char *buffer, int size, QIODevice *fp)
 {
-  auto read = fp->dev->readLine(buffer, size);
+  auto read = fp->readLine(buffer, size);
   return read > 0 ? buffer : nullptr;
 }
 
@@ -93,26 +85,18 @@ char *fz_fgets(char *buffer, int size, fz_FILE *fp)
 
    Returns number of bytes actually written, or 0 on error.
  ****************************************************************************/
-int fz_fprintf(fz_FILE *fp, const char *format, ...)
+int fz_fprintf(QIODevice *fp, const char *format, ...)
 {
   va_list ap;
   va_start(ap, format);
   auto data = QString::vasprintf(format, ap).toUtf8();
   va_end(ap);
 
-  return fp->dev->write(data);
+  return fp->write(data);
 }
 
 /************************************************************************/ /**
    Returns non-zero if there is an error status associated with
    this stream.  Check the device for details.
  ****************************************************************************/
-int fz_ferror(fz_FILE *fp)
-{
-  return fp->dev->errorString().isNull() ? 1 : 0;
-}
-
-/************************************************************************/ /**
-   Returns the underlying I/O device. Do not delete it.
- ****************************************************************************/
-QIODevice *fz_device(fz_FILE *fp) { return fp->dev.get(); }
+int fz_ferror(QIODevice *fp) { return fp->errorString().isNull() ? 1 : 0; }

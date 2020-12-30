@@ -90,7 +90,7 @@
 struct inputfile {
   unsigned int magic;        /* memory check */
   char *filename;            /* filename as passed to fopen */
-  fz_FILE *fp;               /* read from this */
+  QIODevice *fp;             /* read from this */
   bool at_eof;               /* flag for end-of-file */
   struct astring cur_line;   /* data from current line */
   unsigned int cur_line_pos; /* position in current line */
@@ -208,7 +208,7 @@ struct inputfile *inf_from_file(const char *filename,
                                 datafilename_fn_t datafn)
 {
   struct inputfile *inf;
-  fz_FILE *fp;
+  QIODevice *fp;
 
   fc_assert_ret_val(NULL != filename, NULL);
   fc_assert_ret_val(0 < qstrlen(filename), NULL);
@@ -226,7 +226,8 @@ struct inputfile *inf_from_file(const char *filename,
    Open the stream, and return an allocated, initialized structure.
    Returns NULL if the file could not be opened.
  ***********************************************************************/
-struct inputfile *inf_from_stream(fz_FILE *stream, datafilename_fn_t datafn)
+struct inputfile *inf_from_stream(QIODevice *stream,
+                                  datafilename_fn_t datafn)
 {
   struct inputfile *inf;
 
@@ -256,7 +257,7 @@ static void inf_close_partial(struct inputfile *inf)
 
   if (fz_ferror(inf->fp) != 0) {
     qCritical("Error before closing %s: %s", inf_filename(inf),
-              qPrintable(fz_device(inf->fp)->errorString()));
+              qPrintable(inf->fp->errorString()));
     fz_fclose(inf->fp);
     inf->fp = NULL;
   } else if (fz_fclose(inf->fp) != 0) {
@@ -825,7 +826,7 @@ static const char *get_token_value(struct inputfile *inf)
 
   if (border_character == '*') {
     const char *rfname;
-    fz_FILE *fp;
+    QIODevice *fp;
     bool eof;
     int pos;
 
