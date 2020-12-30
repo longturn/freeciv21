@@ -180,8 +180,9 @@ static bool find_option(const char *buf_in, const char *option,
                         char *buf_out, size_t write_len)
 {
   size_t option_len = qstrlen(option);
+  int i;
 
-  while (*buf_in != '\0') {
+  while (*buf_in != '\0' && i < qstrlen(buf_in)) {
     while (QChar::isSpace(*buf_in) && *buf_in != '\0') {
       buf_in++;
     }
@@ -217,6 +218,7 @@ static bool find_option(const char *buf_in, const char *option,
       }
     }
     buf_in++;
+    i++;
   }
 
   return false;
