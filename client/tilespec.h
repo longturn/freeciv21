@@ -382,7 +382,6 @@ int tileset_tilelabel_offset_y(const struct tileset *t);
 float tileset_scale(const struct tileset *t);
 const char *tileset_main_intro_filename(const struct tileset *t);
 int tileset_num_city_colors(const struct tileset *t);
-void tileset_use_preferred_theme(const struct tileset *t);
 bool tileset_use_hard_coded_fog(const struct tileset *t);
 
 /* These are used as array index -> can't be changed freely to values

@@ -719,7 +719,11 @@ hash_copy(QMap<shortcut_id, fc_shortcut *> *h)
   for (i = 1; i < SC_LAST_SC; i++) {
     sc = new fc_shortcut();
     id = static_cast<shortcut_id>(i);
-    s = h->value(id);
+    s = h->value(id, nullptr);
+    if (!s) {
+      fc_assert(false);
+      continue;
+    }
     sc->id = id;
     sc->key = s->key;
     sc->mouse = s->mouse;

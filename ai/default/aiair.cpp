@@ -353,6 +353,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
   struct pf_path *path;
 
   CHECK_UNIT(punit);
+  pft_fill_unit_parameter(&parameter, punit);
 
   if (!is_unit_being_refueled(punit)) {
     /* We are out in the open, what shall we do? */

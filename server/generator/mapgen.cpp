@@ -1271,6 +1271,7 @@ static void print_mapgen_map(void)
              (float) terrain_counts[terrain_index(pterrain)] * 100 / total,
              (float) terrain_counts[terrain_index(pterrain)] * 100 / ocean);
     } else {
+      fc_assert_ret_msg(total - ocean, "Div by zero");
       qDebug("  %-20s : %6d %5.1f%% (land:  %5.1f%%)",
              terrain_rule_name(pterrain),
              terrain_counts[terrain_index(pterrain)],

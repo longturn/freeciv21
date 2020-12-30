@@ -798,6 +798,7 @@ bool aiferry_gobyboat(struct ai_type *ait, struct player *pplayer,
       }
 
       ferryboat = game_unit_by_number(boatid);
+      fc_assert_ret_val(ferryboat != nullptr, false);
       UNIT_LOG(LOGLEVEL_GOBYBOAT, punit,
                "found boat[%d](%d,%d), going there", boatid,
                TILE_XY(unit_tile(ferryboat)));

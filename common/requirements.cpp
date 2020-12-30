@@ -1658,16 +1658,10 @@ is_minforeignpct_in_range(const struct city *target_city,
 
   switch (range) {
   case REQ_RANGE_CITY:
-    if (!target_city) {
-      return TRI_MAYBE;
-    }
     foreign_pct = citizens_nation_foreign(target_city) * 100
                   / city_size_get(target_city);
     return BOOL_TO_TRISTATE(foreign_pct >= min_foreign_pct);
   case REQ_RANGE_TRADEROUTE:
-    if (!target_city) {
-      return TRI_MAYBE;
-    }
     foreign_pct = citizens_nation_foreign(target_city) * 100
                   / city_size_get(target_city);
     if (foreign_pct >= min_foreign_pct) {
