@@ -16,11 +16,6 @@
   (Currently only "required" functionality is supported.)
 ***********************************************************************/
 
-#include "shared.h" /* fc__attribute */
-
-// Qt
-#include <QIODevice>
-
 /* (Possibly) supported methods (depending on what KArchive supports). */
 enum fz_method {
   FZ_PLAIN = 0,
@@ -32,6 +27,3 @@ enum fz_method {
   FZ_XZ,
 #endif
 };
-
-int fz_fprintf(QIODevice *fp, const char *format, ...)
-    fc__attribute((__format__(__printf__, 2, 3)));

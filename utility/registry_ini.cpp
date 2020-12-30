@@ -159,7 +159,6 @@
 #include "deprecations.h"
 #include "fcintl.h"
 #include "inputfile.h"
-#include "ioz.h"
 #include "log.h"
 #include "registry.h"
 #include "section_file.h"
@@ -638,9 +637,9 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
            ent_iter = entry_list_link_next(ent_iter)) {
         fc_assert(!strcmp(entry_name(pentry), "file"));
 
-        fc_assert_ret_val(fz_fprintf(fs, "*include ") > 0, false);
+        fc_assert_ret_val(fs->write("*include ") > 0, false);
         fc_assert_ret_val(entry_to_file(pentry, fs), false);
-        fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
+        fc_assert_ret_val(fs->write("\n") > 0, false);
       }
     } else if (psection->special == EST_COMMENT) {
       for (ent_iter = entry_list_head(section_entries(psection));
@@ -649,11 +648,12 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
         fc_assert(!strcmp(entry_name(pentry), "comment"));
 
         fc_assert_ret_val(entry_to_file(pentry, fs), false);
-        fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
+        fc_assert_ret_val(fs->write("\n") > 0, false);
       }
     } else {
-      fc_assert_ret_val(
-          fz_fprintf(fs, "\n[%s]\n", section_name(psection)) > 0, false);
+      fc_assert_ret_val(fs->write("\n[") > 0, false);
+      fc_assert_ret_val(fs->write(section_name(psection)) > 0, false);
+      fc_assert_ret_val(fs->write("]\n") > 0, false);
 
       /* Following doesn't use entry_list_iterate() because we want to do
        * tricky things with the iterators...
@@ -704,7 +704,8 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
           first[offset - 2] = '\0';
           sz_strlcpy(base, first);
           first[offset - 2] = '0';
-          fc_assert_ret_val(fz_fprintf(fs, "%s={", base) > 0, false);
+          fc_assert_ret_val(fs->write(base) > 0, false);
+          fc_assert_ret_val(fs->write("={") > 0, false);
 
           /* Save an iterator at this first entry, which we can later use
            * to repeatedly iterate over column names:
@@ -720,14 +721,13 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
             if (strncmp(col_entry_name, first, offset) != 0) {
               break;
             }
-            fc_assert_ret_val(fz_fprintf(fs, "%s\"%s\"",
-                                         (ncol == 0 ? "" : ","),
-                                         col_entry_name + offset)
-                                  > 0,
+            fc_assert_ret_val(fs->write(ncol == 0 ? "\"" : ",\"") > 0,
                               false);
+            fc_assert_ret_val(fs->write(col_entry_name + offset) > 0, false);
+            fc_assert_ret_val(fs->write("\"") > 0, false);
             ncol++;
           }
-          fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
+          fc_assert_ret_val(fs->write("\n") > 0, false);
 
           /* Iterate over rows and columns, incrementing ent_iter as we go,
            * and writing values to the table.  Have a separate iterator
@@ -764,14 +764,14 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
                     "To avoid this make sure all rows of a table are\n"
                     "filled out with an entry for every column.",
                     real_filename, section_name(psection), expect);
-                fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
+                fc_assert_ret_val(fs->write("\n") > 0, false);
               }
-              fc_assert_ret_val(fz_fprintf(fs, "}\n") > 0, false);
+              fc_assert_ret_val(fs->write("}\n") > 0, false);
               break;
             }
 
             if (icol > 0) {
-              fc_assert_ret_val(fz_fprintf(fs, ",") > 0, false);
+              fc_assert_ret_val(fs->write(",") > 0, false);
             }
             fc_assert_ret_val(entry_to_file(pentry, fs), false);
 
@@ -780,7 +780,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
 
             icol++;
             if (icol == ncol) {
-              fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
+              fc_assert_ret_val(fs->write("\n") > 0, false);
               irow++;
               icol = 0;
               col_iter = save_iter;
@@ -796,7 +796,8 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
 
         /* Classic entry. */
         col_entry_name = entry_name(pentry);
-        fc_assert_ret_val(fz_fprintf(fs, "%s=", col_entry_name), false);
+        fc_assert_ret_val(fs->write(col_entry_name), false);
+        fc_assert_ret_val(fs->write("="), false);
         fc_assert_ret_val(entry_to_file(pentry, fs), false);
 
         /* Check for vector. */
@@ -811,16 +812,18 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
           if (0 != strcmp(pentry_name, entry_name(col_pentry))) {
             break;
           }
-          fc_assert_ret_val(fz_fprintf(fs, ",") > 0, false);
+          fc_assert_ret_val(fs->write(",") > 0, false);
           fc_assert_ret_val(entry_to_file(col_pentry, fs), false);
           ent_iter = col_iter;
         }
 
         comment = entry_comment(pentry);
         if (comment) {
-          fc_assert_ret_val(fz_fprintf(fs, "  # %s\n", comment) > 0, false);
+          fc_assert_ret_val(fs->write("  # ") > 0, false);
+          fc_assert_ret_val(fs->write(comment) > 0, false);
+          fc_assert_ret_val(fs->write("\n") > 0, false);
         } else {
-          fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
+          fc_assert_ret_val(fs->write("\n") > 0, false);
         }
       }
     }
@@ -3406,54 +3409,44 @@ bool entry_str_set_gt_marking(struct entry *pentry, bool gt_marking)
 static bool entry_to_file(const struct entry *pentry, QIODevice *fs)
 {
   static char buf[8192];
-  char *dot = NULL;
-  int i;
 
   switch (pentry->type) {
   case ENTRY_BOOL:
     fc_assert_ret_val(
-        fz_fprintf(fs, "%s", pentry->boolean.value ? "TRUE" : "FALSE") > 0,
-        false);
+        fs->write(pentry->boolean.value ? "TRUE" : "FALSE") > 0, false);
     break;
-  case ENTRY_INT:
-    fc_assert_ret_val(fz_fprintf(fs, "%d", pentry->integer.value) > 0,
-                      false);
-    break;
-  case ENTRY_FLOAT:
-    snprintf(buf, sizeof(buf), "%f", pentry->floating.value);
-    for (i = 0; buf[i] != '\0'; i++) {
-      if (buf[i] == '.') {
-        dot = &(buf[i]);
-        break;
-      }
+  case ENTRY_INT: {
+    auto number = QString::number(pentry->integer.value);
+    fc_assert_ret_val(fs->write(number.toUtf8()) > 0, false);
+  } break;
+  case ENTRY_FLOAT: {
+    auto number = QString::number(pentry->floating.value, 'f');
+    if (!number.contains('.')) {
+      number += QStringLiteral(".0");
     }
-    if (dot == NULL) {
-      /* There's no '.' so it would seem like a integer value when loaded.
-       * Force it not to look like an integer by adding ".0" */
-      fc_assert_ret_val(fz_fprintf(fs, "%s.0", buf) > 0, false);
-    } else {
-      fc_assert_ret_val(fz_fprintf(fs, "%s", buf) > 0, false);
-    }
-    break;
+    fc_assert_ret_val(fs->write(number.toUtf8()) > 0, false);
+  } break;
   case ENTRY_STR:
     if (pentry->string.escaped) {
       make_escapes(pentry->string.value, buf, sizeof(buf));
       if (pentry->string.gt_marking) {
-        fc_assert_ret_val(fz_fprintf(fs, "_(\"%s\")", buf) > 0, false);
+        fc_assert_ret_val(fs->write("_(\"" + QByteArray(buf) + "\")") > 0,
+                          false);
       } else {
-        fc_assert_ret_val(fz_fprintf(fs, "\"%s\"", buf) > 0, false);
+        fc_assert_ret_val(fs->write("\"" + QByteArray(buf) + "\"") > 0,
+                          false);
       }
     } else if (pentry->string.raw) {
-      fc_assert_ret_val(fz_fprintf(fs, "%s", pentry->string.value) > 0,
-                        false);
+      fc_assert_ret_val(fs->write(pentry->string.value) > 0, false);
     } else {
-      fc_assert_ret_val(fz_fprintf(fs, "$%s$", pentry->string.value) > 0,
-                        false);
+      fc_assert_ret_val(
+          fs->write("$" + QByteArray(pentry->string.value) + "$") > 0,
+          false);
     }
     break;
   case ENTRY_FILEREFERENCE:
-    fc_assert_ret_val(fz_fprintf(fs, "*%s*", pentry->string.value) > 0,
-                      false);
+    fc_assert_ret_val(
+        fs->write("*" + QByteArray(pentry->string.value) + "*") > 0, false);
     break;
   case ENTRY_ILLEGAL:
     fc_assert(pentry->type != ENTRY_ILLEGAL);
