@@ -180,9 +180,10 @@ static bool find_option(const char *buf_in, const char *option,
                         char *buf_out, size_t write_len)
 {
   size_t option_len = qstrlen(option);
-  int i;
+  const char *buf_in_ptr = buf_in;
+  int len = qstrlen(buf_in);
 
-  while (*buf_in != '\0' && i < qstrlen(buf_in)) {
+  while (*buf_in != '\0' && (buf_in - buf_in_ptr) < len) {
     while (QChar::isSpace(*buf_in) && *buf_in != '\0') {
       buf_in++;
     }
@@ -218,7 +219,6 @@ static bool find_option(const char *buf_in, const char *option,
       }
     }
     buf_in++;
-    i++;
   }
 
   return false;
@@ -237,7 +237,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
   ptag->start_offset = start_offset;
   ptag->stop_offset = FT_OFFSET_UNSET;
 
-  QByteArray ba = qsequence.toUtf8();
+  QByteArray ba = qsequence.toLocal8Bit();
   const char *sequence = ba.constData();
 
   switch (type) {
