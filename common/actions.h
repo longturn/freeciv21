@@ -730,7 +730,7 @@ double action_prob_to_0_to_1_pessimist(const struct act_prob ap);
 struct act_prob action_prob_fall_back(const struct act_prob *ap1,
                                       const struct act_prob *ap2);
 
-const char *action_prob_explain(const struct act_prob prob);
+const QString action_prob_explain(const struct act_prob prob);
 
 struct act_prob action_prob_new_impossible(void);
 struct act_prob action_prob_new_not_relevant(void);

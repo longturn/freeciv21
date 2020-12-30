@@ -1509,7 +1509,7 @@ const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
    button that starts it.
    @return an explanation of what an action probability means
  **************************************************************************/
-const char *action_prob_explain(const struct act_prob prob)
+const QString action_prob_explain(const struct act_prob prob)
 {
   QString tool_tip;
 
@@ -1542,7 +1542,7 @@ const char *action_prob_explain(const struct act_prob prob)
                      : "");
   }
 
-  return qUtf8Printable(tool_tip);
+  return tool_tip;
 }
 
 /**********************************************************************/ /**
