@@ -33,8 +33,6 @@ enum fz_method {
 #endif
 };
 
-QIODevice *fz_from_file(const char *filename, QIODevice::OpenMode in_mode);
-QIODevice *fz_from_memory(QByteArray *buffer);
 char *fz_fgets(char *buffer, int size, QIODevice *fp);
 int fz_fprintf(QIODevice *fp, const char *format, ...)
     fc__attribute((__format__(__printf__, 2, 3)));

@@ -151,6 +151,9 @@
 #include <fc_config.h>
 #endif
 
+// KArchive
+#include <KFilterDev>
+
 /* utility */
 #include "bugs.h"
 #include "deprecations.h"
@@ -600,17 +603,12 @@ static bool is_legal_table_entry_name(char c, bool num)
    This should be followed by the other column values for u0,
    and then subsequent u1, u2, etc, in strict order with no omissions,
    and with all of the columns for all uN in the same order as for u0.
-
-   If compression_level is non-zero, then compress using zlib. Below
-   simply specifies FZ_ZLIB method, since fz_fromFile() automatically
-   changes to FZ_PLAIN method when level == 0.
  **************************************************************************/
 bool secfile_save(const struct section_file *secfile, const char *filename)
 {
   char real_filename[1024];
   char pentry_name[128];
   const char *col_entry_name;
-  QIODevice *fs;
   const struct entry_list_link *ent_iter, *save_iter, *col_iter;
   struct entry *pentry, *col_pentry;
   int i;
@@ -622,12 +620,13 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
   }
 
   interpret_tilde(real_filename, sizeof(real_filename), filename);
-  fs = fz_from_file(real_filename, QIODevice::WriteOnly);
+  auto fs = new KFilterDev(real_filename);
+  fs->open(QIODevice::WriteOnly);
 
-  if (!fs) {
+  if (!fs->isOpen()) {
     SECFILE_LOG(secfile, NULL, _("Could not open %s for writing"),
                 real_filename);
-
+    delete fs;
     return false;
   }
 
@@ -828,7 +827,12 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
   }
   section_list_iterate_end;
 
-  if (!fs->errorString().isEmpty()) {
+  bool error = !fs->errorString().isEmpty();
+  // KFilterDev returns "Unknown error" even when there's no error
+  if (qobject_cast<KFilterDev *>(fs)) {
+    error = qobject_cast<KFilterDev *>(fs)->error() != 0;
+  }
+  if (error) {
     SECFILE_LOG(secfile, NULL, "Error before closing %s: %s", real_filename,
                 qPrintable(fs->errorString()));
     delete fs;

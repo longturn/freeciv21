@@ -18,6 +18,7 @@
 #include "servers.h"
 
 // Qt
+#include <QBuffer>
 #include <QByteArray>
 #include <QDebug>
 #include <QEventLoop>
@@ -362,11 +363,10 @@ static struct server_list *parse_metaserver_data(QIODevice *f)
  **************************************************************************/
 static bool meta_read_response(struct server_scan *scan)
 {
-  QIODevice *f;
   char str[4096];
   struct server_list *srvrs;
 
-  f = fz_from_memory(&scan->meta.mem);
+  auto f = new QBuffer(&scan->meta.mem);
 
   /* parse message body */
   srvrs = parse_metaserver_data(f);
