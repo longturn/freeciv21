@@ -4771,7 +4771,7 @@ void options_init(void)
                     option_name(poption));
         } else {
           *((const char **) &(pcoption->string.def)) =
-              qUtf8Printable(values->at(0));
+              qstrdup(qUtf8Printable(values->at(0)));
         }
       }
       break;
