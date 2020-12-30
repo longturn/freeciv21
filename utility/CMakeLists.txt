@@ -34,7 +34,6 @@ add_library(
   genhash.cpp
   genlist.cpp
   inputfile.cpp
-  ioz.cpp
   iterator.cpp
   log.cpp
   netfile.cpp
