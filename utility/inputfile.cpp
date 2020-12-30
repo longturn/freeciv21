@@ -212,7 +212,7 @@ struct inputfile *inf_from_file(const char *filename,
 
   fc_assert_ret_val(NULL != filename, NULL);
   fc_assert_ret_val(0 < qstrlen(filename), NULL);
-  fp = fz_from_file(filename, "r", FZ_PLAIN, 0);
+  fp = fz_from_file(filename, QIODevice::ReadOnly, FZ_PLAIN, 0);
   if (!fp) {
     return NULL;
   }
@@ -855,7 +855,7 @@ static const char *get_token_value(struct inputfile *inf)
       return NULL;
     }
     *((char *) c) = trailing; /* Revert. */
-    fp = fz_from_file(rfname, "r", FZ_PLAIN, 0);
+    fp = fz_from_file(rfname, QIODevice::ReadOnly, FZ_PLAIN, 0);
     if (!fp) {
       qCCritical(inf_category, _("Cannot open stringfile \"%s\"."), rfname);
       return NULL;

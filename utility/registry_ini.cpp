@@ -623,7 +623,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
   }
 
   interpret_tilde(real_filename, sizeof(real_filename), filename);
-  fs = fz_from_file(real_filename, "w", compression_method,
+  fs = fz_from_file(real_filename, QIODevice::WriteOnly, compression_method,
                     compression_level);
 
   if (!fs) {
