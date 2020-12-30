@@ -150,6 +150,19 @@ void governor::run()
   }
 
   for (auto pcity : qAsConst(scity_changed)) {
+    // dont check city if its not ours, asan says
+    // city was removed, but city still points to something
+    // uncomment and check whats happening when city is conquered
+    bool dontCont = false;
+    city_list_iterate(client.conn.playing->cities, wtf) {
+      if (wtf == pcity) {
+        dontCont = true;
+      }
+    } city_list_iterate_end;
+
+    if (!dontCont) {
+      continue;
+    }
     if (pcity) {
       city_changed(pcity->id);
     }
