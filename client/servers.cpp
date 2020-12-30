@@ -366,14 +366,6 @@ static bool meta_read_response(struct server_scan *scan)
   struct server_list *srvrs;
 
   f = fz_from_memory(scan->meta.mem);
-  if (NULL == f) {
-    fc_snprintf(str, sizeof(str),
-                _("Failed to read the metaserver data from %s."),
-                qUtf8Printable(cmd_metaserver));
-    scan->error_func(scan, str);
-
-    return false;
-  }
 
   /* parse message body */
   srvrs = parse_metaserver_data(f);
