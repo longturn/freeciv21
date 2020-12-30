@@ -90,6 +90,7 @@ add_subdirectory(dependencies/tolua-5.2) # Will build the program if not found.
 include(FreecivBackward)
 
 # Compression
+find_package(KF5Archive REQUIRED)
 find_package(ZLIB REQUIRED)
 
 if(UNIX)

@@ -51,3 +51,5 @@ int fz_fprintf(fz_FILE *fp, const char *format, ...)
 
 int fz_ferror(fz_FILE *fp);
 const char *fz_strerror(fz_FILE *fp);
+
+QIODevice *fz_device(fz_FILE *fp);
