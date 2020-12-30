@@ -38,17 +38,6 @@
 #include "ioz.h"
 
 /************************************************************************/ /**
-   Get a line, like fgets.
-   Returns NULL in case of error, or when end-of-file reached
-   and no characters have been read.
- ****************************************************************************/
-char *fz_fgets(char *buffer, int size, QIODevice *fp)
-{
-  auto read = fp->readLine(buffer, size);
-  return read > 0 ? buffer : nullptr;
-}
-
-/************************************************************************/ /**
    Print formated, like fprintf.
 
    Returns number of bytes actually written, or 0 on error.
