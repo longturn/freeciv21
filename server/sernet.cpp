@@ -518,7 +518,7 @@ void handle_conn_pong(struct connection *pconn)
 
   timer = pconn->server.ping_timers->front();
   pconn->ping_time = timer_read_seconds(timer);
-  pconn->server.ping_timers->removeFirst();
+  timer_destroy(pconn->server.ping_timers->takeFirst());
 
   log_time(QStringLiteral("got pong from %1 (open=%2); ping time = %3s")
                .arg(conn_description(pconn))
