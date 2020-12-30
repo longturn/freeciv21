@@ -256,7 +256,7 @@ static void inf_close_partial(struct inputfile *inf)
 
   if (fz_ferror(inf->fp) != 0) {
     qCritical("Error before closing %s: %s", inf_filename(inf),
-              fz_strerror(inf->fp));
+              qPrintable(fz_device(inf->fp)->errorString()));
     fz_fclose(inf->fp);
     inf->fp = NULL;
   } else if (fz_fclose(inf->fp) != 0) {

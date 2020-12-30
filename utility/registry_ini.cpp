@@ -832,7 +832,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
 
   if (0 != fz_ferror(fs)) {
     SECFILE_LOG(secfile, NULL, "Error before closing %s: %s", real_filename,
-                fz_strerror(fs));
+                qPrintable(fz_device(fs)->errorString()));
     fz_fclose(fs);
     return false;
   }
