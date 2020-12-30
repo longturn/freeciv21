@@ -449,7 +449,6 @@ static bool check_include(struct inputfile *inf)
 static bool read_a_line(struct inputfile *inf)
 {
   struct astring *line;
-  char *ret;
   int pos;
 
   fc_assert_ret_val(inf_sanity_check(inf), false);
@@ -471,11 +470,11 @@ static bool read_a_line(struct inputfile *inf)
    * (or first position) in line.
    */
   for (;;) {
-    ret = fz_fgets((char *) astr_str(line) + pos, astr_capacity(line) - pos,
-                   inf->fp);
+    auto ret = inf->fp->readLine((char *) astr_str(line) + pos,
+                                 astr_capacity(line) - pos);
 
-    if (!ret) {
-      /* fgets failed */
+    if (ret < 0) {
+      /* readLine failed */
       if (pos > 0) {
         qCCritical(inf_category, _("End-of-file not in line of its own"));
       }
@@ -877,11 +876,9 @@ static const char *get_token_value(struct inputfile *inf)
     eof = false;
     pos = 1; /* Past 'filestring' marker */
     while (!eof) {
-      char *ret;
-
-      ret = fz_fgets((char *) astr_str(&inf->token) + pos,
-                     astr_capacity(&inf->token) - pos, fp);
-      if (ret == NULL) {
+      auto ret = fp->readLine((char *) astr_str(&inf->token) + pos,
+                              astr_capacity(&inf->token) - pos);
+      if (ret < 0 || fp->atEnd()) {
         eof = true;
       } else {
         pos = astr_len(&inf->token);
