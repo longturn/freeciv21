@@ -594,7 +594,8 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
     /* TODO: Ruleset should be able to customize this message too */
     notify_research_embassies(presearch, NULL, E_TECH_EMBASSY, ftc_server,
                               _("%s acquire %s as a result of learning %s."),
-                              research_name, radv_name, qUtf8Printable(advance_name));
+                              research_name, radv_name,
+                              qUtf8Printable(advance_name));
   }
 }
 
