@@ -333,7 +333,7 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
   bool was_first = false;
   bool bonus_tech_hack = false;
   int i;
-  const char *advance_name;
+  QString advance_name;
   struct advance *vap = valid_advance_by_number(tech_found);
   struct city *pcity;
 
@@ -345,8 +345,7 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
   }
 
   /* Assign 'advance_name' before we increase the future tech counter. */
-  advance_name = qUtf8Printable(
-      research_advance_name_translation(presearch, tech_found));
+  advance_name = research_advance_name_translation(presearch, tech_found);
 
   if (was_first && vap) {
     /* Alert the owners of any wonders that have been made obsolete */
@@ -466,7 +465,8 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
           notify_player(aplayer, NULL, E_NEW_GOVERNMENT, ftc_server,
                         _("Discovery of %s makes the government form %s"
                           " available. You may want to start a revolution."),
-                        advance_name, government_name_translation(pgov));
+                        qUtf8Printable(advance_name),
+                        government_name_translation(pgov));
         }
       }
       governments_iterate_end;
@@ -517,7 +517,7 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
       notify_research(presearch, NULL, E_TECH_LEARNED, ftc_server,
                       _("Learned %s. Our scientists focus on %s; "
                         "goal is %s."),
-                      advance_name,
+                      qUtf8Printable(advance_name),
                       qUtf8Printable(research_advance_name_translation(
                           presearch, next_tech)),
                       qUtf8Printable(research_advance_name_translation(
@@ -543,11 +543,11 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
         notify_research(presearch, NULL, E_TECH_LEARNED, ftc_server,
                         _("Learned %s. Scientists "
                           "do not know what to research next."),
-                        advance_name);
+                        qUtf8Printable(advance_name));
       } else {
         notify_research(presearch, NULL, E_TECH_LEARNED, ftc_server,
                         _("Learned %s. Scientists choose to research %s."),
-                        advance_name,
+                        qUtf8Printable(advance_name),
                         qUtf8Printable(research_advance_name_translation(
                             presearch, next_tech)));
       }
@@ -594,7 +594,7 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
     /* TODO: Ruleset should be able to customize this message too */
     notify_research_embassies(presearch, NULL, E_TECH_EMBASSY, ftc_server,
                               _("%s acquire %s as a result of learning %s."),
-                              research_name, radv_name, advance_name);
+                              research_name, radv_name, qUtf8Printable(advance_name));
   }
 }
 
@@ -1246,7 +1246,7 @@ Tech_type_id steal_a_tech(struct player *pplayer, struct player *victim,
 {
   struct research *presearch, *vresearch;
   Tech_type_id stolen_tech = A_NONE;
-  const char *advance_name;
+  QString advance_name;
   char research_name[MAX_LEN_NAME * 2];
 
   if (get_player_bonus(victim, EFT_NOT_TECH_SOURCE) > 0) {
@@ -1306,24 +1306,25 @@ Tech_type_id steal_a_tech(struct player *pplayer, struct player *victim,
     stolen_tech = preferred;
   }
 
-  advance_name = qUtf8Printable(
-      research_advance_name_translation(presearch, stolen_tech));
+  advance_name = research_advance_name_translation(presearch, stolen_tech);
   research_pretty_name(presearch, research_name, sizeof(research_name));
   notify_player(pplayer, NULL, E_MY_DIPLOMAT_THEFT, ftc_server,
-                _("You steal %s from the %s."), advance_name,
+                _("You steal %s from the %s."), qUtf8Printable(advance_name),
                 nation_plural_for_player(victim));
   notify_research(presearch, pplayer, E_TECH_GAIN, ftc_server,
                   _("The %s stole %s from the %s and shared it with you."),
-                  nation_plural_for_player(pplayer), advance_name,
+                  nation_plural_for_player(pplayer),
+                  qUtf8Printable(advance_name),
                   nation_plural_for_player(victim));
 
   notify_player(victim, NULL, E_ENEMY_DIPLOMAT_THEFT, ftc_server,
                 _("The %s stole %s from you!"),
-                nation_plural_for_player(pplayer), advance_name);
+                nation_plural_for_player(pplayer),
+                qUtf8Printable(advance_name));
 
   notify_research_embassies(presearch, victim, E_TECH_EMBASSY, ftc_server,
                             _("The %s have stolen %s from the %s."),
-                            research_name, advance_name,
+                            research_name, qUtf8Printable(advance_name),
                             nation_plural_for_player(victim));
 
   if (tech_transfer(pplayer, victim, stolen_tech)) {
