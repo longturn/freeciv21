@@ -74,6 +74,9 @@
 // Qt
 #include <QLoggingCategory>
 
+// KArchive
+#include <KFilterDev>
+
 /* utility */
 #include "astring.h"
 #include "fcintl.h"
@@ -208,12 +211,13 @@ struct inputfile *inf_from_file(const char *filename,
                                 datafilename_fn_t datafn)
 {
   struct inputfile *inf;
-  QIODevice *fp;
 
   fc_assert_ret_val(NULL != filename, NULL);
   fc_assert_ret_val(0 < qstrlen(filename), NULL);
-  fp = fz_from_file(filename, QIODevice::ReadOnly);
-  if (!fp) {
+  auto fp = new KFilterDev(filename);
+  fp->open(QIODevice::ReadOnly);
+  if (!fp->isOpen()) {
+    delete fp;
     return NULL;
   }
   log_debug("inputfile: opened \"%s\" ok", filename);
@@ -255,7 +259,12 @@ static void inf_close_partial(struct inputfile *inf)
 
   log_debug("inputfile: sub-closing \"%s\"", inf_filename(inf));
 
-  if (!inf->fp->errorString().isEmpty()) {
+  bool error = !inf->fp->errorString().isEmpty();
+  // KFilterDev returns "Unknown error" even when there's no error
+  if (qobject_cast<KFilterDev *>(inf->fp)) {
+    error = qobject_cast<KFilterDev *>(inf->fp)->error() != 0;
+  }
+  if (error) {
     qCritical("Error before closing %s: %s", inf_filename(inf),
               qPrintable(inf->fp->errorString()));
   }
@@ -825,7 +834,6 @@ static const char *get_token_value(struct inputfile *inf)
 
   if (border_character == '*') {
     const char *rfname;
-    QIODevice *fp;
     bool eof;
     int pos;
 
@@ -855,9 +863,11 @@ static const char *get_token_value(struct inputfile *inf)
       return NULL;
     }
     *((char *) c) = trailing; /* Revert. */
-    fp = fz_from_file(rfname, QIODevice::ReadOnly);
-    if (!fp) {
+    auto fp = new KFilterDev(rfname);
+    fp->open(QIODevice::ReadOnly);
+    if (!fp->isOpen()) {
       qCCritical(inf_category, _("Cannot open stringfile \"%s\"."), rfname);
+      delete fp;
       return NULL;
     }
     log_debug("Stringfile \"%s\" opened ok", start);

@@ -97,13 +97,11 @@ section_file *netfile_get_section_file(const QUrl &url, const nf_errmsg &cb)
 {
   QBuffer buffer;
   buffer.open(QIODevice::WriteOnly);
-  QByteArray array = buffer.buffer();
 
   // Try to download into the buffer
   if (netfile_download_file_core(url, &buffer, cb)) {
-    auto file = fz_from_memory(&array);
     // Parse
-    return secfile_from_stream(file, true);
+    return secfile_from_stream(&buffer, true);
   }
 
   return nullptr;

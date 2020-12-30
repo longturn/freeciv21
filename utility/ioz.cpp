@@ -38,29 +38,6 @@
 #include "ioz.h"
 
 /************************************************************************/ /**
-   Open memory buffer for reading as QIODevice.
-   If control is TRUE, caller gives up control of the buffer
-   so ioz will free it when QIODevice closed.
- ****************************************************************************/
-QIODevice *fz_from_memory(QByteArray *buffer)
-{
-  auto fp = new QBuffer(buffer);
-  fp->open(QIODevice::ReadWrite);
-  return fp;
-}
-
-/************************************************************************/ /**
-   Open file for reading/writing, like fopen.
-   The compression method is chosen based on the file extension.
- ****************************************************************************/
-QIODevice *fz_from_file(const char *filename, QIODevice::OpenMode mode)
-{
-  auto fp = new KFilterDev(filename);
-  fp->open(mode);
-  return fp;
-}
-
-/************************************************************************/ /**
    Get a line, like fgets.
    Returns NULL in case of error, or when end-of-file reached
    and no characters have been read.
