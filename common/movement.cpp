@@ -838,7 +838,7 @@ const char *move_points_text_full(int mp, bool reduce, const char *prefix,
                       QString::number(SINGLE_MOVE / cancel));
     }
   }
-  return qUtf8Printable(str);
+  return qstrdup(qUtf8Printable(str));
 }
 
 /************************************************************************/ /**
