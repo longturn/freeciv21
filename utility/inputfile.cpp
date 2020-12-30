@@ -255,7 +255,7 @@ static void inf_close_partial(struct inputfile *inf)
 
   log_debug("inputfile: sub-closing \"%s\"", inf_filename(inf));
 
-  if (fz_ferror(inf->fp) != 0) {
+  if (!inf->fp->errorString().isEmpty()) {
     qCritical("Error before closing %s: %s", inf_filename(inf),
               qPrintable(inf->fp->errorString()));
   }

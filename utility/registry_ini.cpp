@@ -828,7 +828,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
   }
   section_list_iterate_end;
 
-  if (0 != fz_ferror(fs)) {
+  if (!fs->errorString().isEmpty()) {
     SECFILE_LOG(secfile, NULL, "Error before closing %s: %s", real_filename,
                 qPrintable(fs->errorString()));
     delete fs;
