@@ -466,8 +466,7 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
   }
 
   dio_input_init(&din, buffer, len);
-
-  dio_get_uint8_raw(&din, &version);
+  fc_assert_ret_val(dio_get_uint8_raw(&din, &version), false);
   fc_assert_ret_val(version == 2, false);
 
   /* Initialize the parameter (includes some AI-only fields that aren't
