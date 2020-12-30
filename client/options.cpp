@@ -24,7 +24,6 @@
 /* utility */
 #include "deprecations.h"
 #include "fcintl.h"
-#include "ioz.h"
 #include "log.h"
 #include "registry.h"
 #include "shared.h"

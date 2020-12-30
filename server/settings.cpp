@@ -17,7 +17,6 @@
 #include "astring.h"
 #include "fcintl.h"
 #include "game.h"
-#include "ioz.h"
 #include "log.h"
 #include "registry.h"
 #include "shared.h"
@@ -534,16 +533,16 @@ scoreloglevel_name(enum scoreQtMsgType sl_level)
    Savegame compress type names accessor.
  ****************************************************************************/
 static const struct sset_val_name *
-compresstype_name(enum fz_method compresstype)
+compresstype_name(enum compress_type compresstype)
 {
   switch (compresstype) {
-    NAME_CASE(FZ_PLAIN, "PLAIN", N_("No compression"));
-    NAME_CASE(FZ_ZLIB, "LIBZ", N_("Using zlib (gzip format)"));
+    NAME_CASE(COMPRESS_PLAIN, "PLAIN", N_("No compression"));
+    NAME_CASE(COMPRESS_ZLIB, "LIBZ", N_("Using zlib (gzip format)"));
 #ifdef FREECIV_HAVE_BZ2
-    NAME_CASE(FZ_BZIP2, "BZIP2", N_("Using bzip2 (deprecated)"));
+    NAME_CASE(COMPRESS_BZIP2, "BZIP2", N_("Using bzip2 (deprecated)"));
 #endif
 #ifdef FREECIV_HAVE_LZMA
-    NAME_CASE(FZ_XZ, "XZ", N_("Using xz"));
+    NAME_CASE(COMPRESS_XZ, "XZ", N_("Using xz"));
 #endif
   }
   return NULL;
@@ -1235,7 +1234,7 @@ static bool compresstype_callback(int value, struct connection *caller,
                                   char *reject_msg, size_t reject_msg_len)
 {
 #ifdef FREECIV_HAVE_BZ2
-  if (value == FZ_BZIP2) {
+  if (value == COMPRESS_BZIP2) {
     qWarning(
         _("Bzip2 is deprecated as compresstype. Consider other options."));
   }

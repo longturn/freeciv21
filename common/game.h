@@ -14,9 +14,6 @@
 
 #include <time.h> /* time_t */
 
-/* utility */
-#include "ioz.h" // fz_method
-
 /* common */
 #include "connection.h" /* struct conn_list */
 #include "packets.h"
@@ -37,6 +34,18 @@ enum barbarians_rate {
   BARBS_NORMAL,
   BARBS_FREQUENT,
   BARBS_HORDES
+};
+
+/* (Possibly) supported methods (depending on what KArchive supports). */
+enum compress_type {
+  COMPRESS_PLAIN = 0,
+  COMPRESS_ZLIB,
+#ifdef FREECIV_HAVE_BZ2
+  COMPRESS_BZIP2,
+#endif
+#ifdef FREECIV_HAVE_LZMA
+  COMPRESS_XZ,
+#endif
 };
 
 enum autosave_type {
@@ -155,7 +164,7 @@ struct civ_game {
       int revolution_length;
       int spaceship_travel_time;
       bool threaded_save;
-      enum fz_method save_compress_type;
+      enum compress_type save_compress_type;
       int save_nturns;
       int save_frequency;
       unsigned
@@ -656,9 +665,9 @@ extern struct world wld;
 #define GAME_DEFAULT_EVENT_CACHE_INFO false
 
 #ifdef FREECIV_HAVE_LZMA
-#define GAME_DEFAULT_COMPRESS_TYPE FZ_XZ
+#define GAME_DEFAULT_COMPRESS_TYPE COMPRESS_XZ
 #else
-#define GAME_DEFAULT_COMPRESS_TYPE FZ_ZLIB
+#define GAME_DEFAULT_COMPRESS_TYPE COMPRESS_ZLIB
 #endif
 
 #define GAME_DEFAULT_ALLOWED_CITY_NAMES CNM_PLAYER_UNIQUE

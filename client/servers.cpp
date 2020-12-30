@@ -30,7 +30,6 @@
 #include "cvercmp.h"
 
 /* utility */
-#include "ioz.h"
 #include "net_types.h"
 
 /* common */
