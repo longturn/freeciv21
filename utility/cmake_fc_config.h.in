@@ -54,9 +54,6 @@
 /* libcharset.h available */
 #cmakedefine HAVE_LIBCHARSET_H
 
-/* lzma.h available */
-#cmakedefine HAVE_LZMA_H
-
 /* memory.h available */
 #cmakedefine HAVE_MEMORY_H
 
@@ -130,11 +127,11 @@
 
 /***** Previously freeciv_config.h *****/
 
-/* libbzip2 is available */
-#cmakedefine FREECIV_HAVE_LIBBZ2
+/* bzip2 compression is available in KArchive */
+#cmakedefine FREECIV_HAVE_BZ2
 
-/* liblzma is available */
-#cmakedefine FREECIV_HAVE_LIBLZMA
+/* lzma compression is available in KArchive */
+#cmakedefine FREECIV_HAVE_LZMA
 
 /* Location for freeciv to store its information */
 #cmakedefine FREECIV_STORAGE_DIR "${FREECIV_STORAGE_DIR}"

@@ -364,7 +364,7 @@ static bool save_strvec(struct section_file *sfile,
 static bool save_ruleset_file(struct section_file *sfile,
                               const char *filename)
 {
-  return secfile_save(sfile, filename, 0, FZ_PLAIN);
+  return secfile_save(sfile, filename);
 }
 
 /**********************************************************************/ /**
@@ -3009,7 +3009,7 @@ static bool save_script_lua(const char *filename, const char *name,
 static bool save_luadata(const char *filename)
 {
   if (game.server.luadata != NULL) {
-    return secfile_save(game.server.luadata, filename, 0, FZ_PLAIN);
+    return secfile_save(game.server.luadata, filename);
   }
 
   return true;

@@ -29,20 +29,19 @@ class QByteArray;
 struct fz_FILE_s; /* opaque */
 typedef struct fz_FILE_s fz_FILE;
 
-/* (Possibly) supported methods (depending on freeciv_config.h). */
+/* (Possibly) supported methods (depending on what KArchive supports). */
 enum fz_method {
   FZ_PLAIN = 0,
   FZ_ZLIB,
-#ifdef FREECIV_HAVE_LIBBZ2
+#ifdef FREECIV_HAVE_BZ2
   FZ_BZIP2,
 #endif
-#ifdef FREECIV_HAVE_LIBLZMA
+#ifdef FREECIV_HAVE_LZMA
   FZ_XZ,
 #endif
 };
 
-fz_FILE *fz_from_file(const char *filename, QIODevice::OpenMode in_mode,
-                      enum fz_method method, int compress_level);
+fz_FILE *fz_from_file(const char *filename, QIODevice::OpenMode in_mode);
 fz_FILE *fz_from_memory(const QByteArray &buffer);
 int fz_fclose(fz_FILE *fp);
 char *fz_fgets(char *buffer, int size, fz_FILE *fp);
