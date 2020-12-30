@@ -2220,7 +2220,6 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   if (fuel > 0) {
     QVector<QString> types;
     types.reserve(utype_count() + 1);
-    int i = 0;
 
     unit_type_iterate(transport)
     {
@@ -2230,7 +2229,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
     unit_type_iterate_end;
 
-    if (0 == i) {
+    if (types.isEmpty()) {
       if (utype_has_flag(utype, UTYF_COAST)) {
         if (fuel == 1) {
           cat_snprintf(buf, bufsz,

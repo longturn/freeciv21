@@ -2069,7 +2069,7 @@ static bool dai_is_unit_tired_waiting_boat(struct ai_type *ait,
     }
     dest = punit->goto_tile;
 
-    if (src == NULL || dest == NULL) {
+    if (src == NULL || dest == NULL || src_home_city == NULL) {
       return false;
     }
     /* if we're not at home continent */

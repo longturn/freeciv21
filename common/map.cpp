@@ -1362,7 +1362,7 @@ int get_direction_for_step(const struct civ_map *nmap,
   }
 
   fc_assert(false);
-  return -1;
+  return 0;
 }
 
 /*******************************************************************/ /**
