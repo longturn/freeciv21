@@ -266,19 +266,19 @@ const char *research_advance_rule_name(const struct research *presearch,
    We don't return a static buffer because that would break anything that
    needed to work with more than one name at a time.
  ****************************************************************************/
-const char *
+const QString
 research_advance_name_translation(const struct research *presearch,
                                   Tech_type_id tech)
 {
   if (A_FUTURE == tech && NULL != presearch) {
     const int no = presearch->future_tech;
-    const char *name = nullptr;
+    QString name;
 
     if (no < future_name_translation->count()) {
       /* FIXME remove check to read outside vector */
-      name = qUtf8Printable(future_name_translation->at(no));
+      name = future_name_translation->at(no);
     }
-    if (name == nullptr) {
+    if (name.isEmpty()) {
       char buffer[256];
 
       /* NB: 'presearch->future_tech == 0' means "Future Tech. 1". */
@@ -286,7 +286,7 @@ research_advance_name_translation(const struct research *presearch,
       name = research_future_set_name(future_name_translation, no, buffer);
     }
 
-    fc_assert(name != NULL);
+    fc_assert(!name.isEmpty());
 
     return name;
   }

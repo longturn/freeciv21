@@ -376,7 +376,7 @@ Tech_Type *api_edit_give_technology(lua_State *L, Player *pplayer,
 
     if (notify && result != NULL) {
       const char *adv_name =
-          research_advance_name_translation(presearch, id);
+          qUtf8Printable(research_advance_name_translation(presearch, id));
       char research_name[MAX_LEN_NAME * 2];
 
       research_pretty_name(presearch, research_name, sizeof(research_name));

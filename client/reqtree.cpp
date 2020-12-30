@@ -1008,7 +1008,7 @@ void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
         canvas_put_line(pcanvas, get_diag_color(20), LINE_GOTO, startx,
                         starty, width, 0);
       } else {
-        const char *text = research_advance_name_translation(
+        const QString text = research_advance_name_translation(
             research_get(client_player()), node->tech);
         int text_w, text_h;
         int icon_startx;

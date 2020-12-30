@@ -253,8 +253,8 @@ void research_diagram::mousePressEvent(QMouseEvent *event)
       if (rttp->rect.contains(event->pos())) {
         if (rttp->tech_id != -1) {
           popup_help_dialog_typed(
-              research_advance_name_translation(
-                  research_get(client_player()), rttp->tech_id),
+              qUtf8Printable(research_advance_name_translation(
+                  research_get(client_player()), rttp->tech_id)),
               HELP_TECH);
         } else if (rttp->timpr != nullptr) {
           popup_help_dialog_typed(

@@ -111,7 +111,7 @@ struct research *research_get(const struct player *pplayer);
 
 const char *research_advance_rule_name(const struct research *presearch,
                                        Tech_type_id tech);
-const char *
+const QString
 research_advance_name_translation(const struct research *presearch,
                                   Tech_type_id tech);
 
