@@ -347,7 +347,8 @@ static bool check_include(struct inputfile *inf)
   static size_t len = 0;
   size_t bare_name_len;
   char *bare_name;
-  const char *c, *bare_name_start, *full_name;
+  const char *c, *bare_name_start;
+  QString full_name;
   struct inputfile *new_inf, temp;
 
   if (len == 0) {
@@ -407,7 +408,7 @@ static bool check_include(struct inputfile *inf)
   inf->cur_line_pos = astr_len(&inf->cur_line) - 1;
 
   full_name = inf->datafn(bare_name);
-  if (!full_name) {
+  if (full_name.isEmpty()) {
     qCritical("Could not find included file \"%s\"", bare_name);
     delete[] bare_name;
     return false;
@@ -419,14 +420,15 @@ static bool check_include(struct inputfile *inf)
   {
     struct inputfile *inc = inf;
     do {
-      if (inc->filename && strcmp(full_name, inc->filename) == 0) {
-        qCritical("Recursion trap on '*include' for \"%s\"", full_name);
+      if (inc->filename && full_name == QString(inc->filename)) {
+        qCritical("Recursion trap on '*include' for \"%s\"",
+                  qUtf8Printable(full_name));
         return false;
       }
     } while ((inc = inc->included_from));
   }
 
-  new_inf = inf_from_file(full_name, inf->datafn);
+  new_inf = inf_from_file(qUtf8Printable(full_name), inf->datafn);
 
   /* Swap things around so that memory pointed to by inf (user pointer,
      and pointer in calling functions) contains the new inputfile,
@@ -833,7 +835,7 @@ static const char *get_token_value(struct inputfile *inf)
   border_character = *c;
 
   if (border_character == '*') {
-    const char *rfname;
+    QString rfname;
     bool eof;
     int pos;
 
@@ -866,7 +868,8 @@ static const char *get_token_value(struct inputfile *inf)
     auto *fp = new KFilterDev(rfname);
     fp->open(QIODevice::ReadOnly);
     if (!fp->isOpen()) {
-      qCCritical(inf_category, _("Cannot open stringfile \"%s\"."), rfname);
+      qCCritical(inf_category, _("Cannot open stringfile \"%s\"."),
+                 qUtf8Printable(rfname));
       delete fp;
       return NULL;
     }

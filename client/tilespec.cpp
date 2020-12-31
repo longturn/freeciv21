@@ -987,14 +987,14 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
 static char *tilespec_fullname(QString tileset_name)
 {
   if (!tileset_name.isEmpty()) {
-    const char *dname;
+    QString dname;
     QString fname =
         QStringLiteral("%1%2").arg(tileset_name, TILESPEC_SUFFIX);
 
     dname = fileinfoname(get_data_dirs(), qUtf8Printable(fname));
 
-    if (dname) {
-      return fc_strdup(dname);
+    if (!dname.isEmpty()) {
+      return fc_strdup(qUtf8Printable(dname));
     }
   }
 
@@ -1390,14 +1390,16 @@ static QPixmap *load_gfx_file(const char *gfx_filename)
 
   /* Try out all supported file extensions to find one that works. */
   while ((gfx_fileext = *gfx_fileexts++)) {
-    const char *real_full_name;
+    QString real_full_name;
     QString full_name =
         QStringLiteral("%1.%2").arg(gfx_filename, gfx_fileext);
 
-    if ((real_full_name =
-             fileinfoname(get_data_dirs(), qUtf8Printable(full_name)))) {
-      log_debug("trying to load gfx file \"%s\".", real_full_name);
-      s = load_gfxfile(real_full_name);
+    real_full_name =
+        fileinfoname(get_data_dirs(), qUtf8Printable(full_name));
+    if (!real_full_name.isEmpty()) {
+      log_debug("trying to load gfx file \"%s\".",
+                qUtf8Printable(real_full_name));
+      s = load_gfxfile(qUtf8Printable(real_full_name));
       if (s) {
         return s;
       }
@@ -1625,15 +1627,15 @@ static char *tilespec_gfx_filename(const char *gfx_filename)
   const char **gfx_fileexts = gfx_fileextensions();
 
   while ((gfx_current_fileext = *gfx_fileexts++)) {
-    const char *real_full_name;
+    QString real_full_name;
     QString full_name =
         QStringLiteral("%1.%2").arg(gfx_filename, gfx_current_fileext);
 
     real_full_name =
         fileinfoname(get_data_dirs(), qUtf8Printable(full_name));
 
-    if (real_full_name) {
-      return fc_strdup(real_full_name);
+    if (!real_full_name.isEmpty()) {
+      return fc_strdup(qUtf8Printable(real_full_name));
     }
   }
 
@@ -2366,13 +2368,13 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   t->sprite_hash = new QHash<QString, struct small_sprite *>;
   for (i = 0; i < num_spec_files; i++) {
     struct specfile *sf = new specfile();
-    const char *dname;
+    QString dname;
 
     log_debug("spec file %s", spec_filenames[i]);
 
     sf->big_sprite = NULL;
     dname = fileinfoname(get_data_dirs(), spec_filenames[i]);
-    if (!dname) {
+    if (dname.isEmpty()) {
       if (verbose) {
         qCritical("Can't find spec file \"%s\".", spec_filenames[i]);
       }
@@ -2380,7 +2382,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       tileset_stop_read(t, file, fname, sections, layer_order);
       return nullptr;
     }
-    sf->file_name = fc_strdup(dname);
+    sf->file_name = fc_strdup(qUtf8Printable(dname));
     scan_specfile(t, sf, duplicates_ok);
 
     t->specfiles->insert(sf);

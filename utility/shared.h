@@ -170,7 +170,7 @@ struct QVector<QString> *fileinfolist(const QStringList *dirs,
                                       const char *suffix);
 struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
                                          const char *infix, bool nodups);
-const char *fileinfoname(const QStringList *dirs, const char *filename);
+QString fileinfoname(const QStringList *dirs, const char *filename);
 void free_fileinfo_data();
 
 void init_nls();

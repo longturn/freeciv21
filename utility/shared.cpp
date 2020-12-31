@@ -106,7 +106,7 @@ static char *mc_group = NULL;
 static char *home_dir_user = NULL;
 static char *storage_dir_freeciv = NULL;
 
-static struct astring realfile = ASTRING_INIT;
+Q_GLOBAL_STATIC(QString, realfile);
 
 static int compare_file_mtime_ptrs(const struct fileinfo *const *ppa,
                                    const struct fileinfo *const *ppb);
@@ -970,7 +970,7 @@ struct QVector<QString> *fileinfolist(const QStringList *dirs,
 
    TODO: Make this re-entrant
  ****************************************************************************/
-const char *
+QString
 fileinfoname(const QStringList *dirs, const char *filename)
 {
 #ifndef DIR_SEPARATOR_IS_DEFAULT
@@ -987,17 +987,17 @@ fileinfoname(const QStringList *dirs, const char *filename)
   if (!filename) {
     bool first = true;
 
-    astr_clear(&realfile);
+    realfile->clear();
     for (const auto &dirname : *dirs) {
       if (first) {
-        astr_add(&realfile, "/%s", qUtf8Printable(dirname));
+        *realfile += QString("/%1").arg(dirname);
         first = false;
       } else {
-        astr_add(&realfile, "%s", qUtf8Printable(dirname));
+        *realfile += QString("%1").arg(dirname);
       }
     }
 
-    return astr_str(&realfile);
+    return *realfile;
   }
 
 #ifndef DIR_SEPARATOR_IS_DEFAULT
@@ -1014,10 +1014,10 @@ fileinfoname(const QStringList *dirs, const char *filename)
   for (const auto &dirname : *dirs) {
     struct stat buf; /* see if we can open the file or directory */
 
-    astr_set(&realfile, "%s%c%s", qUtf8Printable(dirname),
-             DIR_SEPARATOR_CHAR, fnbuf);
-    if (fc_stat(astr_str(&realfile), &buf) == 0) {
-      return astr_str(&realfile);
+    *realfile =
+        QString("%1%2%3").arg(dirname, QString(DIR_SEPARATOR_CHAR), fnbuf);
+    if (fc_stat(qUtf8Printable(*realfile), &buf) == 0) {
+      return *realfile;
     }
   }
 
@@ -1029,7 +1029,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
 /************************************************************************/ /**
    Free resources allocated for fileinfoname service
  ****************************************************************************/
-void free_fileinfo_data() { astr_free(&realfile); }
+void free_fileinfo_data() {}
 
 /************************************************************************/ /**
    Destroys the file info structure.

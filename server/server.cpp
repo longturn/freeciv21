@@ -185,11 +185,11 @@ QTcpServer *srv_prepare()
 #endif /* HAVE_FCDB */
 
   if (srvarg.ruleset != NULL) {
-    const char *testfilename;
+    QString testfilename;
 
     testfilename =
         fileinfoname(get_data_dirs(), qUtf8Printable(srvarg.ruleset));
-    if (testfilename == NULL) {
+    if (testfilename.isEmpty()) {
       qFatal(_("Ruleset directory \"%s\" not found"),
              qPrintable(srvarg.ruleset));
       QCoreApplication::exit(EXIT_FAILURE);

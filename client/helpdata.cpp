@@ -676,7 +676,7 @@ void boot_help_texts()
   static bool booted = false;
 
   struct section_file *sf;
-  const char *filename;
+  QString filename;
   struct help_item *pitem;
   int i;
   struct section_list *sec;
@@ -693,13 +693,13 @@ void boot_help_texts()
   help_nodes = new helpList;
 
   filename = fileinfoname(get_data_dirs(), "helpdata.txt");
-  if (!filename) {
+  if (filename.isEmpty()) {
     qCritical("Did not read help texts");
     return;
   }
   /* after following call filename may be clobbered; use sf->filename instead
    */
-  if (!(sf = secfile_load(filename, false))) {
+  if (!(sf = secfile_load(qUtf8Printable(filename), false))) {
     /* this is now unlikely to happen */
     qCritical("failed reading help-texts from '%s':\n%s", filename,
               secfile_error());

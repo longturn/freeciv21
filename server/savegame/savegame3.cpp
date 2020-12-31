@@ -1283,7 +1283,7 @@ static void sg_load_savefile(struct loaddata *loading)
     } else {
       const QStringList *pathes[] = {get_scenario_dirs(), NULL};
       const QStringList **path;
-      const char *found = NULL;
+      QString found;
       char testfile[MAX_LEN_PATH];
       struct section_file *secfile;
 
@@ -1294,14 +1294,14 @@ static void sg_load_savefile(struct loaddata *loading)
         found = fileinfoname(*path, testfile);
       }
 
-      if (found == NULL) {
+      if (found.isEmpty()) {
         qCritical(_("Can't find scenario luadata file %s.luadata."),
                   game.scenario.datafile);
         sg_success = false;
         return;
       }
 
-      secfile = secfile_load(found, false);
+      secfile = secfile_load(qUtf8Printable(found), false);
       if (secfile == NULL) {
         qCritical(_("Failed to load scenario luadata file %s.luadata"),
                   game.scenario.datafile);

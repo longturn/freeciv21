@@ -219,7 +219,7 @@ section_entry_filereference_new(struct section *psection, const char *name,
 /**********************************************************************/ /**
    Simplification of fileinfoname().
  **************************************************************************/
-static const char *datafilename(const char *filename)
+static QString datafilename(const char *filename)
 {
   return fileinfoname(get_data_dirs(), filename);
 }

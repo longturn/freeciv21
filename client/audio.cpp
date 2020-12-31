@@ -210,13 +210,13 @@ static const QString audiospec_fullname(const QString &audioset_name,
   const QString suffix = music ? MUSICSPEC_SUFFIX : SNDSPEC_SUFFIX;
   QString audioset_default =
       music ? QStringLiteral("stdmusic") : QStringLiteral("stdsounds");
-  const char *dname;
+  QString dname;
 
   QString fname = QStringLiteral("%1%2").arg(audioset_name, suffix);
   dname = fileinfoname(get_data_dirs(), qUtf8Printable(fname));
 
-  if (dname) {
-    return QString(dname);
+  if (!dname.isEmpty()) {
+    return dname;
   }
 
   if (audioset_name == audioset_default) {

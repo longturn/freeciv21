@@ -205,7 +205,7 @@ static const char *valid_ruleset_filename(const char *subdir,
                                           bool optional)
 {
   char filename[512];
-  const char *dfilename;
+  QString dfilename;
 
   fc_assert_ret_val(subdir && name && extension, NULL);
 
@@ -213,8 +213,8 @@ static const char *valid_ruleset_filename(const char *subdir,
               DIR_SEPARATOR_CHAR, name, extension);
   qCDebug(ruleset_category, "Trying \"%s\".", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
-  if (dfilename) {
-    return dfilename;
+  if (!dfilename.isEmpty()) {
+    return qUtf8Printable(dfilename);
   }
 
   fc_snprintf(filename, sizeof(filename), "default%c%s.%s",
@@ -222,8 +222,8 @@ static const char *valid_ruleset_filename(const char *subdir,
   qCDebug(ruleset_category, "Trying \"%s\": default ruleset directory.",
           filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
-  if (dfilename) {
-    return dfilename;
+  if (!dfilename.isEmpty()) {
+    return qUtf8Printable(dfilename);
   }
 
   fc_snprintf(filename, sizeof(filename), "%s_%s.%s", subdir, name,
@@ -231,8 +231,8 @@ static const char *valid_ruleset_filename(const char *subdir,
   qCDebug(ruleset_category,
           "Trying \"%s\": alternative ruleset filename syntax.", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
-  if (dfilename) {
-    return dfilename;
+  if (!dfilename.isEmpty()) {
+    return qUtf8Printable(dfilename);
   } else if (!optional) {
     qCCritical(ruleset_category,
                /* TRANS: message about an installation error. */
