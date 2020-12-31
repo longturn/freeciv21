@@ -696,37 +696,37 @@ void unit_list_item::create_menu()
 
   m_menu = new QMenu;
 
-  auto units = unit_list_new();
+  auto *units = unit_list_new();
   unit_list_append(units, m_unit);
 
-  auto activate_and_close_action = new QAction(_("Activate unit"), this);
+  auto *activate_and_close_action = new QAction(_("Activate unit"), this);
   connect(activate_and_close_action, &QAction::triggered, this,
           &unit_list_item::activate_and_close_dialog);
   m_menu->addAction(activate_and_close_action);
 
   if (can_unit_do_activity(m_unit, ACTIVITY_SENTRY)) {
-    auto sentry_action = new QAction(_("Sentry unit"), this);
+    auto *sentry_action = new QAction(_("Sentry unit"), this);
     connect(sentry_action, &QAction::triggered, this,
             &unit_list_item::sentry);
     m_menu->addAction(sentry_action);
   }
 
   if (can_unit_do_activity(m_unit, ACTIVITY_FORTIFYING)) {
-    auto fortify_action = new QAction(_("Fortify unit"), this);
+    auto *fortify_action = new QAction(_("Fortify unit"), this);
     connect(fortify_action, &QAction::triggered, this,
             &unit_list_item::fortify);
     m_menu->addAction(fortify_action);
   }
 
   if (unit_can_do_action(m_unit, ACTION_DISBAND_UNIT)) {
-    auto disband_action = new QAction(_("Disband unit"), this);
+    auto *disband_action = new QAction(_("Disband unit"), this);
     connect(disband_action, &QAction::triggered, this,
             &unit_list_item::disband);
     m_menu->addAction(disband_action);
   }
 
   if (can_unit_change_homecity(m_unit)) {
-    auto change_homecity_action =
+    auto *change_homecity_action =
         new QAction(action_id_name_translation(ACTION_HOME_CITY), this);
     connect(change_homecity_action, &QAction::triggered, this,
             &unit_list_item::change_homecity);
@@ -734,20 +734,20 @@ void unit_list_item::create_menu()
   }
 
   if (units_can_load(units)) {
-    auto load_action = new QAction(_("Load"), this);
+    auto *load_action = new QAction(_("Load"), this);
     connect(load_action, &QAction::triggered, this, &unit_list_item::load);
     m_menu->addAction(load_action);
   }
 
   if (units_can_unload(units)) {
-    auto unload_action = new QAction(_("Unload"), this);
+    auto *unload_action = new QAction(_("Unload"), this);
     connect(unload_action, &QAction::triggered, this,
             &unit_list_item::unload);
     m_menu->addAction(unload_action);
   }
 
   if (units_are_occupied(units)) {
-    auto unload_all_action =
+    auto *unload_all_action =
         new QAction(_("Unload All From Transporter"), this);
     connect(unload_all_action, &QAction::triggered, this,
             &unit_list_item::unload_all);
@@ -755,7 +755,7 @@ void unit_list_item::create_menu()
   }
 
   if (units_can_upgrade(units)) {
-    auto upgrade_action = new QAction(_("Upgrade Unit"), this);
+    auto *upgrade_action = new QAction(_("Upgrade Unit"), this);
     connect(upgrade_action, &QAction::triggered, this,
             &unit_list_item::upgrade);
     m_menu->addAction(upgrade_action);
@@ -778,7 +778,7 @@ bool unit_list_item::can_issue_orders() const
 void unit_list_item::disband()
 {
   if (!can_issue_orders()) {
-    auto units = unit_list_new();
+    auto *units = unit_list_new();
     unit_list_append(units, m_unit);
     popup_disband_dialog(units);
     unit_list_destroy(units);
@@ -821,7 +821,7 @@ void unit_list_item::unload_all()
 void unit_list_item::upgrade()
 {
   if (!can_issue_orders()) {
-    auto units = unit_list_new();
+    auto *units = unit_list_new();
     unit_list_append(units, m_unit);
     popup_upgrade_dialog(units);
     unit_list_destroy(units);
@@ -883,14 +883,14 @@ unit_list_event_filter::unit_list_event_filter(QObject *parent)
  ****************************************************************************/
 bool unit_list_event_filter::eventFilter(QObject *object, QEvent *event)
 {
-  auto list = qobject_cast<QListWidget *>(object);
+  auto *list = qobject_cast<QListWidget *>(object);
   if (list != nullptr && event->type() == QEvent::ContextMenu) {
-    auto menu_event = static_cast<QContextMenuEvent *>(event);
-    auto item = list->itemAt(menu_event->pos());
+    auto *menu_event = static_cast<QContextMenuEvent *>(event);
+    auto *item = list->itemAt(menu_event->pos());
     // Maybe there was no unit under the mouse
-    if (auto unit_item = dynamic_cast<unit_list_item *>(item)) {
+    if (auto *unit_item = dynamic_cast<unit_list_item *>(item)) {
       // Maybe we can't give orders to this unit
-      if (auto menu = unit_item->menu()) {
+      if (auto *menu = unit_item->menu()) {
         // OK, show the menu
         menu->exec(menu_event->globalPos());
         return true;
@@ -1447,7 +1447,7 @@ city_dialog::city_dialog(QWidget *parent)
 
   connect(ui.present_units_list, &QListWidget::itemDoubleClicked,
           [](QListWidgetItem *item) {
-            if (auto uitem = dynamic_cast<unit_list_item *>(item)) {
+            if (auto *uitem = dynamic_cast<unit_list_item *>(item)) {
               uitem->activate_and_close_dialog();
             }
           });
@@ -1456,7 +1456,7 @@ city_dialog::city_dialog(QWidget *parent)
 
   connect(ui.supported_units, &QListWidget::itemDoubleClicked,
           [](QListWidgetItem *item) {
-            if (auto uitem = dynamic_cast<unit_list_item *>(item)) {
+            if (auto *uitem = dynamic_cast<unit_list_item *>(item)) {
               uitem->activate_and_close_dialog();
             }
           });
@@ -2339,7 +2339,7 @@ void city_dialog::update_units()
     QSize icon_size;
     unit_list_iterate(units, punit)
     {
-      auto item = new unit_list_item(punit);
+      auto *item = new unit_list_item(punit);
 
       auto happy_cost = city_unit_unhappiness(punit, &free_unhappy);
       auto image = create_unit_image(punit, true, happy_cost);
@@ -2373,7 +2373,7 @@ void city_dialog::update_units()
     QSize icon_size;
     unit_list_iterate(units, punit)
     {
-      auto item = new unit_list_item(punit);
+      auto *item = new unit_list_item(punit);
 
       auto image = create_unit_image(punit, false, 0);
       icon_size = icon_size.expandedTo(image.size());
@@ -2844,7 +2844,7 @@ void qtg_real_city_dialog_popup(struct city *pcity)
   queen()->mapview_wdg->hide_all_fcwidgets();
   center_tile_mapcanvas(pcity->tile);
 
-  auto widget = queen()->city_overlay;
+  auto *widget = queen()->city_overlay;
   widget->setup_ui(pcity);
   widget->show();
   widget->resize(queen()->mapview_wdg->size());

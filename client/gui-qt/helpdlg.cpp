@@ -230,7 +230,7 @@ void help_dialog::make_tree()
   struct unit_type *f_type;
   struct drawn_sprite sprs[80];
 
-  for (auto pitem : *help_nodes) {
+  for (const auto *pitem : *help_nodes) {
     const char *s;
     int last;
     title = pitem->topic;

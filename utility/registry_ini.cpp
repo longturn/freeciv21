@@ -619,7 +619,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
   }
 
   interpret_tilde(real_filename, sizeof(real_filename), filename);
-  auto fs = new KFilterDev(real_filename);
+  auto *fs = new KFilterDev(real_filename);
   fs->open(QIODevice::WriteOnly);
 
   if (!fs->isOpen()) {

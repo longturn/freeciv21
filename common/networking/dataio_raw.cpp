@@ -1046,7 +1046,7 @@ void dio_put_requirement_raw(struct raw_data_out *dout,
  **************************************************************************/
 struct plocation *plocation_field_new(char *name)
 {
-  auto out = new plocation;
+  auto *out = new plocation;
 
   out->kind = PADR_FIELD;
   out->name = name;
@@ -1060,7 +1060,7 @@ struct plocation *plocation_field_new(char *name)
  **************************************************************************/
 struct plocation *plocation_elem_new(int number)
 {
-  auto out = new plocation;
+  auto *out = new plocation;
 
   out->kind = PADR_ELEMENT;
   out->number = number;

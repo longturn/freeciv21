@@ -402,7 +402,7 @@ int main(int argc, char *argv[])
   init_our_capability();
 
   /* have arguments, call the main server loop... */
-  auto server = new freeciv::server;
+  auto *server = new freeciv::server;
   if (!server->is_ready()) {
     delete server;
     exit(EXIT_FAILURE);

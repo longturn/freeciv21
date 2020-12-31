@@ -1015,7 +1015,7 @@ static struct ane_expl *expl_act_not_enabl(struct unit *punit,
   const struct player *act_player = unit_owner(punit);
   const struct unit_type *act_utype = unit_type_get(punit);
   struct player *tgt_player = NULL;
-  auto explnat = new ane_expl;
+  auto *explnat = new ane_expl;
   bool can_exist =
       can_unit_exist_at_tile(&(wld.map), punit, unit_tile(punit));
   bool on_native = is_native_tile(unit_type_get(punit), unit_tile(punit));

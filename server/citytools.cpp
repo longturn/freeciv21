@@ -2529,7 +2529,7 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
   i = 0;
   trade_routes_iterate(pcity, proute)
   {
-    auto tri_packet = new packet_traderoute_info;
+    auto *tri_packet = new packet_traderoute_info;
 
     tri_packet->city = pcity->id;
     tri_packet->index = i;

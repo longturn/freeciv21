@@ -532,7 +532,7 @@ void fc_game_tab_widget::current_changed(int index)
   }
   objs = queen()->sidebar_wdg->objects;
 
-  for (auto sw : qAsConst(objs)) {
+  for (auto *sw : qAsConst(objs)) {
     sw->updateFinalPixmap();
   }
   currentWidget()->hide();

@@ -56,7 +56,7 @@ static void signal_destroy(struct signal *psignal);
  *****************************************************************************/
 static struct signal_callback *signal_callback_new(const char *name)
 {
-  auto pcallback = new signal_callback;
+  auto *pcallback = new signal_callback;
 
   pcallback->name = fc_strdup(name);
   return pcallback;
@@ -76,7 +76,7 @@ static void signal_callback_destroy(struct signal_callback *pcallback)
  *****************************************************************************/
 static struct signal *signal_new(int nargs, enum api_types *parg_types)
 {
-  auto psignal = new struct signal;
+  auto *psignal = new struct signal;
 
   psignal->nargs = nargs;
   psignal->arg_types = parg_types;
@@ -118,7 +118,7 @@ void luascript_signal_emit_valist(struct fc_lua *fcl,
 
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
-    for (auto pcallback : qAsConst(*psignal->callbacks)) {
+    for (auto *pcallback : qAsConst(*psignal->callbacks)) {
       va_list args_cb;
 
       va_copy(args_cb, args);
@@ -247,7 +247,7 @@ void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
     /* check for a duplicate callback */
-    for (auto pcallback : qAsConst(*psignal->callbacks)) {
+    for (auto *pcallback : qAsConst(*psignal->callbacks)) {
       if (!strcmp(pcallback->name, callback_name)) {
         pcallback_found = pcallback;
         break;
@@ -293,7 +293,7 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
     /* check for a duplicate callback */
-    for (auto pcallback : qAsConst(*psignal->callbacks)) {
+    for (auto *pcallback : qAsConst(*psignal->callbacks)) {
       if (!strcmp(pcallback->name, callback_name)) {
         return true;
       }
@@ -323,7 +323,7 @@ void luascript_signal_free(struct fc_lua *fcl)
 {
   if (!fcl || !fcl->signals_hash)
     return;
-  for (auto nissan : *fcl->signals_hash) {
+  for (auto *nissan : *fcl->signals_hash) {
     signal_destroy(nissan);
   }
   NFC_FREE(fcl->signals_hash);

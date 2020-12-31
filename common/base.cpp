@@ -182,7 +182,7 @@ Base_type_id base_count(void) { return game.control.num_base_types; }
  ****************************************************************************/
 void base_type_init(struct extra_type *pextra, int idx)
 {
-  auto pbase = new base_type;
+  auto *pbase = new base_type;
 
   pextra->data.base = pbase;
 

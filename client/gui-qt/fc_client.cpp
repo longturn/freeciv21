@@ -309,7 +309,7 @@ void fc_client::closeEvent(QCloseEvent *event)
  ****************************************************************************/
 void fc_client::server_input()
 {
-  if (auto socket = dynamic_cast<QTcpSocket *>(sender())) {
+  if (auto *socket = dynamic_cast<QTcpSocket *>(sender())) {
     input_from_server(socket);
   }
 }

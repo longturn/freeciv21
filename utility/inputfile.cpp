@@ -213,7 +213,7 @@ struct inputfile *inf_from_file(const char *filename,
 
   fc_assert_ret_val(NULL != filename, NULL);
   fc_assert_ret_val(0 < qstrlen(filename), NULL);
-  auto fp = new KFilterDev(filename);
+  auto *fp = new KFilterDev(filename);
   fp->open(QIODevice::ReadOnly);
   if (!fp->isOpen()) {
     delete fp;
@@ -861,7 +861,7 @@ static const char *get_token_value(struct inputfile *inf)
       return NULL;
     }
     *((char *) c) = trailing; /* Revert. */
-    auto fp = new KFilterDev(rfname);
+    auto *fp = new KFilterDev(rfname);
     fp->open(QIODevice::ReadOnly);
     if (!fp->isOpen()) {
       qCCritical(inf_category, _("Cannot open stringfile \"%s\"."), rfname);

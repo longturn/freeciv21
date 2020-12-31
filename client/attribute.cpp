@@ -75,7 +75,7 @@ void attribute_init(void) {}
  ****************************************************************************/
 void attribute_free(void)
 {
-  for (auto at : *attribute_hash) {
+  for (auto *at : *attribute_hash) {
     ::operator delete(at);
   }
   attribute_hash->clear();
@@ -120,7 +120,7 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
   total_length += entries * (4 + 4 + 4 + 2 + 2); /* value_size + key */
   i = 0;
 
-  for (auto pvalue : *hash) {
+  for (auto *pvalue : *hash) {
     struct data_in din;
 
     dio_input_init(&din, pvalue, 4);
@@ -389,7 +389,7 @@ size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
     return 0;
   }
 
-  auto pvalue = attribute_hash->value(akey);
+  auto *pvalue = attribute_hash->value(akey);
 
   dio_input_init(&din, pvalue, 0xffffffff);
   fc_assert_ret_val(dio_get_uint32_raw(&din, &length), 0);

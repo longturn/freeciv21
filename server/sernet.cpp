@@ -379,7 +379,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
  *****************************************************************************/
 QTcpServer *server_open_socket()
 {
-  auto server = new QTcpServer;
+  auto *server = new QTcpServer;
 
   int max = srvarg.port + 100;
   for (; srvarg.port < max; ++srvarg.port) {
@@ -429,7 +429,7 @@ QTcpServer *server_open_socket()
               udp_socket->errorString().toLocal8Bit().data());
     return server;
   }
-  auto group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
+  auto *group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
   if (!udp_socket->joinMulticastGroup(QHostAddress(group))) {
     qCritical("Announcement socket binding failed: %s",
               udp_socket->errorString().toLocal8Bit().data());

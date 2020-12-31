@@ -3222,7 +3222,7 @@ static bool unit_survive_autoattack(struct unit *punit)
     /* First add all eligible units to a autoattack list */
     unit_list_iterate(ptile->units, penemy)
     {
-      auto probability = new autoattack_prob;
+      auto *probability = new autoattack_prob;
       struct tile *tgt_tile = unit_tile(punit);
 
       fc_assert_action(tgt_tile, continue);
@@ -4917,7 +4917,7 @@ struct unit_order *create_unit_orders(int length,
     return NULL;
   }
 
-  auto unit_orders = new unit_order[length];
+  auto *unit_orders = new unit_order[length];
   memcpy(unit_orders, orders, length * sizeof(*(unit_orders)));
 
   return unit_orders;

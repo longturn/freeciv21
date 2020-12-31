@@ -1629,7 +1629,7 @@ void request_unit_select(struct unit_list *punits,
   unit_list_iterate_end;
 
   if (selloc == SELLOC_TILE) {
-    for (auto hash_tile : tile_table) {
+    for (const auto *hash_tile : tile_table) {
       unit_list_iterate(hash_tile->units, punit)
       {
         if (unit_owner(punit) != pplayer) {

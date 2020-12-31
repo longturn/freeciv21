@@ -91,7 +91,7 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
   data.nationlist = NULL;
   data.nationlist_saved = NULL;
 
-  auto central = new QWidget;
+  auto *central = new QWidget;
   main->setCentralWidget(central);
 
   rev_ver = fc_git_revision();

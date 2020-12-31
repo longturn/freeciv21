@@ -427,7 +427,7 @@ void city_widget::clear_worlist()
   struct worklist empty;
   worklist_init(&empty);
 
-  for (auto pcity : qAsConst(selected_cities)) {
+  for (auto *pcity : qAsConst(selected_cities)) {
     Q_ASSERT(pcity != NULL);
     city_set_worklist(pcity, &empty);
   }
@@ -438,7 +438,7 @@ void city_widget::clear_worlist()
  ***************************************************************************/
 void city_widget::buy()
 {
-  for (auto pcity : qAsConst(selected_cities)) {
+  for (auto *pcity : qAsConst(selected_cities)) {
     Q_ASSERT(pcity != NULL);
     cityrep_buy(pcity);
   }
@@ -479,7 +479,7 @@ void city_widget::display_list_menu(const QPoint)
   if (selected_cities.isEmpty()) {
     select_only = true;
   }
-  for (auto pcity : qAsConst(selected_cities)) {
+  for (auto *pcity : qAsConst(selected_cities)) {
     sell_gold = sell_gold + pcity->client.buy_cost;
   }
   if (!can_client_issue_orders()) {
@@ -645,7 +645,7 @@ void city_widget::display_list_menu(const QPoint)
     }
     city_list_iterate_end;
 
-    for (auto pcity : qAsConst(selected_cities)) {
+    for (auto *pcity : qAsConst(selected_cities)) {
       if (nullptr != pcity) {
         switch (m_state) {
         case CHANGE_PROD_NOW:
@@ -869,7 +869,7 @@ void city_widget::select_same_island()
       continue;
     }
     pcity = reinterpret_cast<city *>(qvar.value<void *>());
-    for (auto pscity : qAsConst(selected_cities)) {
+    for (auto *pscity : qAsConst(selected_cities)) {
       if (NULL != pcity
           && (tile_continent(pcity->tile) == tile_continent(pscity->tile))) {
         selection.append(QItemSelectionRange(i));

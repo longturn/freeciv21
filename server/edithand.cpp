@@ -110,7 +110,7 @@ void edithand_send_initial_packets(struct conn_list *dest)
   }
 
   /* Send map start positions. */
-  for (auto psp : qAsConst(*wld.map.startpos_table)) {
+  for (auto *psp : qAsConst(*wld.map.startpos_table)) {
     if (psp->exclude)
       continue;
     startpos.id = tile_index(startpos_tile(psp));
@@ -143,7 +143,7 @@ static void check_edited_tile_terrains(void)
   }
 
 #ifdef SANITY_CHECKING
-  for (auto ptile : *modified_tile_table) {
+  for (const auto *ptile : *modified_tile_table) {
     sanity_check_tile(const_cast<struct tile *>(ptile));
   }
 #endif /* SANITY_CHECKING */

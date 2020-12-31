@@ -3655,7 +3655,7 @@ struct req_vec_problem *req_vec_problem_new(int num_suggested_solutions,
   int i;
   va_list ap;
 
-  auto out = new req_vec_problem;
+  auto *out = new req_vec_problem;
 
   va_start(ap, descr);
   fc_vsnprintf(out->description, sizeof(out->description), descr, ap);

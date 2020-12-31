@@ -93,7 +93,7 @@ int main(int argc, char **argv)
   fc_interface_init_tool();
 
   if (comments_load()) {
-    auto main = new ruledit_main;
+    auto *main = new ruledit_main;
     new ruledit_gui(main);
 
     main->show();

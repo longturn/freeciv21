@@ -153,7 +153,7 @@ static struct ae_contra_or *req_contradiction_or(int alternatives, ...)
   va_list args;
 
   fc_assert_ret_val(alternatives > 0, NULL);
-  auto out = new ae_contra_or;
+  auto *out = new ae_contra_or;
   out->users = 0;
   out->alternatives = alternatives;
   out->alternative = new action_enabler_contradiction[alternatives];
@@ -1076,7 +1076,7 @@ static struct action *action_new(action_id id, enum action_result result,
                                  const int max_distance,
                                  bool actor_consuming_always)
 {
-  auto action = new struct action;
+  auto *action = new struct action;
 
   action->id = id;
 
@@ -1817,7 +1817,7 @@ bool action_removes_extra(const struct action *paction,
  **************************************************************************/
 struct action_enabler *action_enabler_new(void)
 {
-  auto enabler = new action_enabler;
+  auto *enabler = new action_enabler;
   enabler->disabled = false;
   requirement_vector_init(&enabler->actor_reqs);
   requirement_vector_init(&enabler->target_reqs);

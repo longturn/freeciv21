@@ -67,7 +67,7 @@ QString tech_log_prefix(ai_type *ait, const player *pplayer,
     return QStringLiteral("(invalid tech)");
   }
 
-  auto plr_data = def_ai_player_data(pplayer, ait);
+  auto *plr_data = def_ai_player_data(pplayer, ait);
   return QString::asprintf(
       "%s::%s (want " ADV_WANT_PRINTF ", dist %d) ", player_name(pplayer),
       advance_rule_name(padvance),
@@ -86,7 +86,7 @@ QString diplo_log_prefix(ai_type *ait, const player *pplayer,
 {
   // FIXME const-correctness of the arguments
   /* Don't use ai_data_get since it can have side effects. */
-  auto adip = dai_diplomacy_get(ait, pplayer, aplayer);
+  auto *adip = dai_diplomacy_get(ait, pplayer, aplayer);
 
   return QString::asprintf(
       "%s->%s(l%d,c%d,d%d%s): ", player_name(pplayer), player_name(aplayer),

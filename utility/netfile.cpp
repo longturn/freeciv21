@@ -48,7 +48,7 @@ static bool netfile_download_file_core(const QUrl &url, QIODevice *out,
   request.setHeader(QNetworkRequest::UserAgentHeader,
                     QLatin1String("Freeciv/" VERSION_STRING));
 
-  auto reply = manager->get(request);
+  auto *reply = manager->get(request);
   bool retval = true;
 
   QEventLoop loop; // Need an event loop for QNetworkReply to work

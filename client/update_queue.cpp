@@ -168,7 +168,7 @@ void update_queue_free(void)
   }
 
   if (processing_started_waiting_queue.exists())
-    for (auto a : *processing_started_waiting_queue) {
+    for (auto *a : *processing_started_waiting_queue) {
       waiting_queue_list_iterate(a, data)
       {
         waiting_queue_data_destroy(data);
@@ -176,7 +176,7 @@ void update_queue_free(void)
       waiting_queue_list_iterate_end;
     }
   if (processing_finished_waiting_queue.exists())
-    for (auto a : *processing_finished_waiting_queue) {
+    for (auto *a : *processing_finished_waiting_queue) {
       waiting_queue_list_iterate(a, data)
       {
         waiting_queue_data_destroy(data);
@@ -277,7 +277,7 @@ static void update_unqueue(void *data)
   while (!update_queue->isEmpty()) {
     pair = update_queue->dequeue();
     auto callback = pair.first;
-    auto uq_data = pair.second;
+    auto *uq_data = pair.second;
     callback(uq_data->data);
     update_queue_data_destroy(uq_data);
   }

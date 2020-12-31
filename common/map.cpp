@@ -516,7 +516,7 @@ void map_free(struct civ_map *fmap)
     FCPP_FREE(fmap->tiles);
 
     if (fmap->startpos_table) {
-      for (auto a : *fmap->startpos_table) {
+      for (auto *a : *fmap->startpos_table) {
         startpos_destroy(a);
       }
       FC_FREE(fmap->startpos_table);
@@ -1526,7 +1526,7 @@ bool startpos_pack(const struct startpos *psp,
   packet->exclude = psp->exclude;
   BV_CLR_ALL(packet->nations);
 
-  for (auto pnation : qAsConst(*psp->nations)) {
+  for (const auto *pnation : qAsConst(*psp->nations)) {
     BV_SET(packet->nations, nation_number(pnation));
   }
   return true;

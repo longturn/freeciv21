@@ -1754,7 +1754,7 @@ static char *mapimg_generate_name(struct mapdef *pmapdef)
  ****************************************************************************/
 static struct mapdef *mapdef_new(bool colortest)
 {
-  auto pmapdef = new mapdef;
+  auto *pmapdef = new mapdef;
 
   /* default values */
   pmapdef->maparg[0] = '\0';
@@ -1821,7 +1821,7 @@ static const struct toolkit *img_toolkit_get(enum imagetool tool)
 static struct img *img_new(struct mapdef *mapdef, int topo, int xsize,
                            int ysize)
 {
-  auto pimg = new img;
+  auto *pimg = new img;
 
   pimg->def = mapdef;
   pimg->turn = game.info.turn;

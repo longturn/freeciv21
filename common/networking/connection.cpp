@@ -387,7 +387,7 @@ struct connection *conn_by_number(int id)
  **************************************************************************/
 struct socket_packet_buffer *new_socket_packet_buffer(void)
 {
-  auto buf = new socket_packet_buffer;
+  auto *buf = new socket_packet_buffer;
   buf->ndata = 0;
   buf->do_buffer_sends = 0;
   buf->nsize = 10 * MAX_LEN_PACKET;
@@ -714,7 +714,7 @@ struct conn_pattern {
 struct conn_pattern *conn_pattern_new(enum conn_pattern_type type,
                                       const char *wildcard)
 {
-  auto ppattern = new conn_pattern;
+  auto *ppattern = new conn_pattern;
 
   ppattern->type = type;
   ppattern->wildcard = fc_strdup(wildcard);

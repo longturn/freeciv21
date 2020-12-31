@@ -496,7 +496,7 @@ static bool lookup_cbonus_list(struct rscompat_info *compat,
   for (j = 0; (flag = secfile_lookup_str_default(file, NULL, "%s.%s%d.flag",
                                                  sec, sub, j));
        j++) {
-    auto bonus = new combat_bonus;
+    auto *bonus = new combat_bonus;
     const char *type;
 
     bonus->flag = unit_type_flag_id_by_name(
@@ -8130,7 +8130,7 @@ static void send_ruleset_governments(struct conn_list *dest)
 
     /* Send one packet_government_ruler_title per ruler title. */
 
-    for (auto pruler_title : qAsConst(*government_ruler_titles(g))) {
+    for (auto *pruler_title : qAsConst(*government_ruler_titles(g))) {
       {
         const struct nation_type *pnation = ruler_title_nation(pruler_title);
 

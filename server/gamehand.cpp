@@ -315,7 +315,7 @@ static void do_team_placement(const struct team_placement_config *pconfig,
                     wld.map.server.team_placement);
 
   /* Initialize starting state. */
-  auto pstate = new team_placement_state;
+  auto *pstate = new team_placement_state;
   pstate->startpos = new int[pconfig->total_startpos_num];
   memcpy(pstate->startpos, pbest_state->startpos, state_array_size);
   pstate->score = pbest_state->score;
@@ -389,7 +389,7 @@ static void do_team_placement(const struct team_placement_config *pconfig,
 
         if (delta <= 0) {
           repeat = true;
-          auto pnew = new team_placement_state;
+          auto *pnew = new team_placement_state;
           pnew->startpos = new int[pconfig->total_startpos_num];
           memcpy(pnew->startpos, pstate->startpos, state_array_size);
           pnew->startpos[i] = t2;
@@ -446,7 +446,7 @@ void init_new_game(void)
   targeted_list = startpos_list_new();
   flexible_list = startpos_list_new();
 
-  for (auto psp : qAsConst(*wld.map.startpos_table)) {
+  for (auto *psp : qAsConst(*wld.map.startpos_table)) {
     if (psp->exclude)
       continue;
     if (startpos_allows_all(psp)) {

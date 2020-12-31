@@ -149,7 +149,7 @@ void governor::run()
     return;
   }
 
-  for (auto pcity : qAsConst(scity_changed)) {
+  for (auto *pcity : qAsConst(scity_changed)) {
     // dont check city if its not ours, asan says
     // city was removed, but city still points to something
     // uncomment and check whats happening when city is conquered
@@ -168,7 +168,7 @@ void governor::run()
     }
   }
   scity_changed.clear();
-  for (auto pcity : qAsConst(scity_remove)) {
+  for (auto *pcity : qAsConst(scity_remove)) {
     if (pcity) {
       attr_city_set(ATTR_CITY_CMAFE_PARAMETER, pcity->id, 0, NULL);
       city_remove(pcity->id);

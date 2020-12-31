@@ -158,7 +158,7 @@ void log_set_file(const QString &path)
 
   // Open a new file. Note that we can't hold the mutex because QFile
   // might want to log.
-  auto new_file = new QFile(path);
+  auto *new_file = new QFile(path);
   if (!new_file->open(QIODevice::WriteOnly | QIODevice::Text)) {
     // Could not open the log file.
     // TRANS: %1 is an error message
