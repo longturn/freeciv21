@@ -559,7 +559,7 @@ event_cache_data_new(const struct packet_chat_msg *packet, time_t timestamp,
 /**********************************************************************/ /**
    Initializes the event cache.
  **************************************************************************/
-void event_cache_init(void)
+void event_cache_init()
 {
   if (event_cache != NULL) {
     event_cache_free();
@@ -571,7 +571,7 @@ void event_cache_init(void)
 /**********************************************************************/ /**
    Frees the event cache.
  **************************************************************************/
-void event_cache_free(void)
+void event_cache_free()
 {
   if (event_cache != NULL) {
     event_cache_data_list_destroy(event_cache);
@@ -583,12 +583,12 @@ void event_cache_free(void)
 /**********************************************************************/ /**
    Remove all events from the cache.
  **************************************************************************/
-void event_cache_clear(void) { event_cache_data_list_clear(event_cache); }
+void event_cache_clear() { event_cache_data_list_clear(event_cache); }
 
 /**********************************************************************/ /**
    Remove the old events from the cache.
  **************************************************************************/
-void event_cache_remove_old(void)
+void event_cache_remove_old()
 {
   struct event_cache_data *current;
 
@@ -968,7 +968,7 @@ void event_cache_save(struct section_file *file, const char *section)
 /**********************************************************************/ /**
    Mark all existing phase values in event cache invalid.
  **************************************************************************/
-void event_cache_phases_invalidate(void)
+void event_cache_phases_invalidate()
 {
   event_cache_iterate(pdata)
   {

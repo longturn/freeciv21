@@ -555,7 +555,7 @@ struct unit_type {
 };
 
 /* General unit and unit type (matched) routines */
-Unit_type_id utype_count(void);
+Unit_type_id utype_count();
 Unit_type_id utype_index(const struct unit_type *punittype);
 Unit_type_id utype_number(const struct unit_type *punittype);
 
@@ -590,7 +590,7 @@ static inline bool utype_has_flag(const struct unit_type *punittype,
 bool unit_has_type_role(const struct unit *punit, enum unit_role_id role);
 bool utype_has_role(const struct unit_type *punittype, int role);
 
-void user_unit_type_flags_init(void);
+void user_unit_type_flags_init();
 void set_user_unit_type_flag_name(enum unit_type_flag_id id,
                                   const char *name, const char *helptxt);
 const char *unit_type_flag_helptxt(enum unit_type_flag_id id);
@@ -668,8 +668,8 @@ int utype_pays_mp_for_action_estimate(const struct action *paction,
 /* Functions to operate on various flag and roles. */
 typedef bool (*role_unit_callback)(struct unit_type *ptype, void *data);
 
-void role_unit_precalcs(void);
-void role_unit_precalcs_free(void);
+void role_unit_precalcs();
+void role_unit_precalcs_free();
 int num_role_units(int role);
 struct unit_type *role_units_iterate(int role, role_unit_callback cb,
                                      void *data);
@@ -684,7 +684,7 @@ struct unit_type *first_role_unit_for_player(const struct player *pplayer,
 bool role_units_translations(QString &astr, int flag, bool alts);
 
 /* General unit class routines */
-Unit_Class_id uclass_count(void);
+Unit_Class_id uclass_count();
 Unit_Class_id uclass_number(const struct unit_class *pclass);
 /* Optimised to be identical to uclass_number: the implementation
  * unittype.c is also semantically correct. */
@@ -714,7 +714,7 @@ static inline bool uclass_has_flag(const struct unit_class *punitclass,
   return BV_ISSET(punitclass->flags, flag);
 }
 
-void user_unit_class_flags_init(void);
+void user_unit_class_flags_init();
 void set_user_unit_class_flag_name(enum unit_class_flag_id id,
                                    const char *name, const char *helptxt);
 const char *unit_class_flag_helptxt(enum unit_class_flag_id id);
@@ -781,13 +781,13 @@ bool can_player_build_unit_now(const struct player *p,
 bool utype_is_cityfounder(const struct unit_type *utype);
 
 /* Initialization and iteration */
-void unit_types_init(void);
-void unit_types_free(void);
-void unit_type_flags_free(void);
-void unit_class_flags_free(void);
+void unit_types_init();
+void unit_types_free();
+void unit_type_flags_free();
+void unit_class_flags_free();
 
-struct unit_type *unit_type_array_first(void);
-const struct unit_type *unit_type_array_last(void);
+struct unit_type *unit_type_array_first();
+const struct unit_type *unit_type_array_last();
 
 #define unit_type_iterate(_p)                                               \
   {                                                                         \
@@ -815,17 +815,17 @@ void utype_set_ai_data(struct unit_type *ptype, const struct ai_type *ai,
                        void *data);
 
 void unit_type_action_cache_set(struct unit_type *ptype);
-void unit_type_action_cache_init(void);
+void unit_type_action_cache_init();
 
 /* Initialization and iteration */
-void unit_classes_init(void);
-void unit_classes_free(void);
+void unit_classes_init();
+void unit_classes_free();
 
 void set_unit_class_caches(struct unit_class *pclass);
 void set_unit_type_caches(struct unit_type *ptype);
 
-struct unit_class *unit_class_array_first(void);
-const struct unit_class *unit_class_array_last(void);
+struct unit_class *unit_class_array_first();
+const struct unit_class *unit_class_array_last();
 
 #define unit_class_iterate(_p)                                              \
   {                                                                         \

@@ -28,10 +28,10 @@ struct multiplier {
   QVector<QString> *helptext;
 };
 
-void multipliers_init(void);
-void multipliers_free(void);
+void multipliers_init();
+void multipliers_free();
 
-Multiplier_type_id multiplier_count(void);
+Multiplier_type_id multiplier_count();
 Multiplier_type_id multiplier_index(const struct multiplier *pmul);
 Multiplier_type_id multiplier_number(const struct multiplier *pmul);
 

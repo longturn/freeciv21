@@ -168,7 +168,7 @@ qdef_act *qdef_act::m_instance = nullptr;
    Initialize a mapping between an action and the function to call if
    the action's button is pushed.
  ***************************************************************************/
-static const QHash<action_id, pfcn_void> af_map_init(void)
+static const QHash<action_id, pfcn_void> af_map_init()
 {
   QHash<action_id, pfcn_void> action_function;
 

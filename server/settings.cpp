@@ -175,8 +175,8 @@ static void setting_game_set(struct setting *pset, bool init);
 static void setting_game_free(struct setting *pset);
 static void setting_game_restore(struct setting *pset);
 
-static void settings_list_init(void);
-static void settings_list_free(void);
+static void settings_list_init();
+static void settings_list_free();
 int settings_list_cmp(const struct setting *const *pset1,
                       const struct setting *const *pset2);
 
@@ -4352,7 +4352,7 @@ static void setting_game_restore(struct setting *pset)
 /************************************************************************/ /**
    Save setting values at the start of  the game.
  ****************************************************************************/
-void settings_game_start(void)
+void settings_game_start()
 {
   settings_iterate(SSET_ALL, pset) { setting_game_set(pset, false); }
   settings_iterate_end;
@@ -4694,7 +4694,7 @@ void settings_game_load(struct section_file *file, const char *section)
 /************************************************************************/ /**
    Reset all settings to the values at game start.
  ****************************************************************************/
-bool settings_game_reset(void)
+bool settings_game_reset()
 {
   if (!game.server.settings_gamestart_valid) {
     log_debug("No saved settings from the game start available.");
@@ -4731,7 +4731,7 @@ void settings_init(bool act)
 /************************************************************************/ /**
    Reset all settings iff they are changeable.
  ****************************************************************************/
-void settings_reset(void)
+void settings_reset()
 {
   settings_iterate(SSET_ALL, pset)
   {
@@ -4747,14 +4747,14 @@ void settings_reset(void)
    Update stuff every turn that is related to this code module. Run this
    on turn end.
  ****************************************************************************/
-void settings_turn(void)
+void settings_turn()
 { /* Nothing at the moment. */
 }
 
 /************************************************************************/ /**
    Deinitialize stuff related to this code module.
  ****************************************************************************/
-void settings_free(void)
+void settings_free()
 {
   settings_iterate(SSET_ALL, pset) { setting_game_free(pset); }
   settings_iterate_end;
@@ -4765,7 +4765,7 @@ void settings_free(void)
 /************************************************************************/ /**
    Returns the total number of settings.
  ****************************************************************************/
-int settings_number(void) { return SETTINGS_NUM; }
+int settings_number() { return SETTINGS_NUM; }
 
 /************************************************************************/ /**
    Tell the client about just one server setting.  Call this after a setting
@@ -4973,7 +4973,7 @@ void send_server_setting_control(struct connection *pconn)
 /************************************************************************/ /**
    Initialise sorted settings.
  ****************************************************************************/
-static void settings_list_init(void)
+static void settings_list_init()
 {
   struct setting *pset;
   int i;
@@ -5033,7 +5033,7 @@ static void settings_list_init(void)
 /************************************************************************/ /**
    Update sorted settings (changed and locked values).
  ****************************************************************************/
-void settings_list_update(void)
+void settings_list_update()
 {
   struct setting *pset;
   int i;
@@ -5087,7 +5087,7 @@ struct setting_list *settings_list_get(enum sset_level level)
 /************************************************************************/ /**
    Free sorted settings.
  ****************************************************************************/
-static void settings_list_free(void)
+static void settings_list_free()
 {
   int i;
 

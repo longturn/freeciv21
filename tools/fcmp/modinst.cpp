@@ -84,7 +84,7 @@ void load_install_info_lists(struct fcmp_params *fcmp)
 /**********************************************************************/ /**
    Initialize modpack installer
  **************************************************************************/
-void fcmp_init(void)
+void fcmp_init()
 {
   init_nls();
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);
@@ -96,7 +96,7 @@ void fcmp_init(void)
 /**********************************************************************/ /**
    Deinitialize modpack installer
  **************************************************************************/
-void fcmp_deinit(void)
+void fcmp_deinit()
 {
   /* log_init() was not done by fcmp_init(); we assume the caller called
    * fcmp_parse_cmdline() (which sets up logging) in between */

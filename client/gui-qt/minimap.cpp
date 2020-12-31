@@ -454,7 +454,7 @@ void update_minimap() { queen()->minimapview_wdg->update_image(); }
    It's used for first creation of overview only, later overview stays the
    same size, scaled by qt-specific function.
  **************************************************************************/
-void overview_size_changed(void)
+void overview_size_changed()
 {
   queen()->minimapview_wdg->resize(0, 0);
   queen()->minimapview_wdg->move(

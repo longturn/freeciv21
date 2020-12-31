@@ -56,7 +56,7 @@ void adv_deinit_choice(struct adv_choice *choice)
 /**********************************************************************/ /**
    Dynamically allocate a new choice.
  **************************************************************************/
-struct adv_choice *adv_new_choice(void)
+struct adv_choice *adv_new_choice()
 {
   struct adv_choice *choice = new adv_choice();
 

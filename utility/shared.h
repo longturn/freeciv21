@@ -154,28 +154,28 @@ struct fileinfo {
   TYPED_LIST_ITERATE(struct fileinfo, list, pnode)
 #define fileinfo_list_iterate_end LIST_ITERATE_END
 
-char *user_home_dir(void);
-void free_user_home_dir(void);
+char *user_home_dir();
+void free_user_home_dir();
 char *user_username(char *buf, size_t bufsz);
-char *freeciv_storage_dir(void);
-void free_freeciv_storage_dir(void);
+char *freeciv_storage_dir();
+void free_freeciv_storage_dir();
 
-const QStringList *get_data_dirs(void);
-const QStringList *get_save_dirs(void);
-const QStringList *get_scenario_dirs(void);
+const QStringList *get_data_dirs();
+const QStringList *get_save_dirs();
+const QStringList *get_scenario_dirs();
 
-void free_data_dir_names(void);
+void free_data_dir_names();
 
 struct QVector<QString> *fileinfolist(const QStringList *dirs,
                                       const char *suffix);
 struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
                                          const char *infix, bool nodups);
 const char *fileinfoname(const QStringList *dirs, const char *filename);
-void free_fileinfo_data(void);
+void free_fileinfo_data();
 
-void init_nls(void);
-void free_nls(void);
-char *setup_langname(void);
+void init_nls();
+void free_nls();
+char *setup_langname();
 void switch_lang(const char *lang);
 
 void dont_run_as_root(const char *argv0, const char *fallback);
@@ -216,7 +216,7 @@ enum m_pre_result match_prefix_full(m_pre_accessor_fn_t accessor_fn,
                                     int max_matches, int *pnum_matches);
 
 char *get_multicast_group(bool ipv6_preferred);
-void free_multicast_group(void);
+void free_multicast_group();
 void interpret_tilde(char *buf, size_t buf_size, const char *filename);
 char *interpret_tilde_alloc(const char *filename);
 char *skip_to_basename(char *filepath);
@@ -251,7 +251,7 @@ static inline struct cf_sequence cf_hexa_seq(char letter, int value);
 static inline struct cf_sequence cf_float_seq(char letter, float value);
 static inline struct cf_sequence cf_ptr_seq(char letter, const void *value);
 static inline struct cf_sequence cf_str_seq(char letter, const char *value);
-static inline struct cf_sequence cf_end(void);
+static inline struct cf_sequence cf_end();
 
 enum cf_type {
   CF_BOOLEAN,
@@ -392,7 +392,7 @@ static inline struct cf_sequence cf_str_seq(char letter, const char *value)
 /****************************************************************************
   Must finish the list of the arguments of fc_snprintcf().
 ****************************************************************************/
-static inline struct cf_sequence cf_end(void)
+static inline struct cf_sequence cf_end()
 {
   struct cf_sequence sequence;
 

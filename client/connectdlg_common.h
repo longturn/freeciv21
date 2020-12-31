@@ -10,11 +10,11 @@
 **************************************************************************/
 #pragma once
 
-bool client_start_server(void);
+bool client_start_server();
 void client_kill_server(bool force);
 
-bool is_server_running(void);
-bool can_client_access_hack(void);
+bool is_server_running();
+bool can_client_access_hack();
 
 void send_client_wants_hack(const char *filename);
 void send_save_game(const char *filename);

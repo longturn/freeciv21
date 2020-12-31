@@ -16,12 +16,12 @@
 #include "fc_types.h"
 #include "map.h"
 
-void auto_settlers_ruleset_init(void);
+void auto_settlers_ruleset_init();
 
 struct settlermap;
 struct pf_path;
 
-void adv_settlers_free(void);
+void adv_settlers_free();
 
 void auto_settlers_player(struct player *pplayer);
 

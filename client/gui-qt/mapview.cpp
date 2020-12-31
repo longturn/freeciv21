@@ -382,7 +382,7 @@ void update_mouse_cursor(enum cursor_type new_cursor_type)
    Update the timeout display.  The timeout is the time until the turn
    ends, in seconds.
  **************************************************************************/
-void qtg_update_timeout_label(void)
+void qtg_update_timeout_label()
 {
   queen()->sw_endturn->setCustomLabels(QString(get_timeout_label_text()));
   queen()->sw_endturn->updateFinalPixmap();
@@ -555,17 +555,17 @@ void tileset_changed(void)
 /**********************************************************************/ /**
    Return whether the map should be drawn or not.
  **************************************************************************/
-bool mapview_is_frozen(void) { return (0 < mapview_frozen_level); }
+bool mapview_is_frozen() { return (0 < mapview_frozen_level); }
 
 /**********************************************************************/ /**
    Freeze the drawing of the map.
  **************************************************************************/
-void mapview_freeze(void) { mapview_frozen_level++; }
+void mapview_freeze() { mapview_frozen_level++; }
 
 /**********************************************************************/ /**
    Thaw the drawing of the map.
  **************************************************************************/
-void mapview_thaw(void)
+void mapview_thaw()
 {
   if (1 < mapview_frozen_level) {
     mapview_frozen_level--;

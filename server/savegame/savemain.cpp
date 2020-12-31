@@ -278,4 +278,4 @@ void save_game(const char *orig_filename, const char *save_reason,
 /************************************************************************/ /**
    Close saving system.
  ****************************************************************************/
-void save_system_close(void) { save_thread->wait(); }
+void save_system_close() { save_thread->wait(); }

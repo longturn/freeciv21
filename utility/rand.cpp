@@ -153,17 +153,17 @@ void fc_srand(RANDOM_TYPE seed)
 /*********************************************************************/ /**
    Mark fc_rand state uninitialized.
  *************************************************************************/
-void fc_rand_uninit(void) { rand_state.is_init = false; }
+void fc_rand_uninit() { rand_state.is_init = false; }
 
 /*********************************************************************/ /**
    Return whether the current state has been initialized.
  *************************************************************************/
-bool fc_rand_is_init(void) { return rand_state.is_init; }
+bool fc_rand_is_init() { return rand_state.is_init; }
 
 /*********************************************************************/ /**
    Return a copy of the current rand_state; eg for save/restore.
  *************************************************************************/
-RANDOM_STATE fc_rand_state(void)
+RANDOM_STATE fc_rand_state()
 {
   int i;
 

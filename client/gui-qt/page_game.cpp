@@ -186,7 +186,7 @@ void pageGame::updateSidebarPosition()
 /**********************************************************************/ /**
    Real update, updates only once per 300 ms.
  **************************************************************************/
-void pageGame::updateInfoLabel(void)
+void pageGame::updateInfoLabel()
 {
   if (king()->current_page() != PAGE_GAME) {
     return;
@@ -201,7 +201,7 @@ void pageGame::updateInfoLabel(void)
   }
 }
 
-void pageGame::updateInfoLabelTimeout(void)
+void pageGame::updateInfoLabelTimeout()
 {
   QString s, eco_info;
   if (update_info_timer->remainingTime() != -1) {

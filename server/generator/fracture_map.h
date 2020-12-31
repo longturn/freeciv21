@@ -24,6 +24,6 @@
 extern int *height_map;
 extern int hmap_shore_level, hmap_mountain_level;
 
-void make_fracture_map(void);
-void make_fracture_relief(void);
+void make_fracture_map();
+void make_fracture_relief();
 #define MG_UNUSED mapgen_terrain_property_invalid()

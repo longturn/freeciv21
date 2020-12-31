@@ -219,7 +219,7 @@ void sg_load_post_load_compat(struct loaddata *loading,
 /************************************************************************/ /**
    Return current compatibility version
  ****************************************************************************/
-int current_compat_ver(void) { return compat[compat_current].version; }
+int current_compat_ver() { return compat[compat_current].version; }
 
 /************************************************************************/ /**
    This returns an ascii hex value of the given half-byte of the binary

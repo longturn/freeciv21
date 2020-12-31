@@ -77,7 +77,7 @@ struct road_type {
 #define ROAD_NONE (-1)
 
 /* General road type accessor functions. */
-Road_type_id road_count(void);
+Road_type_id road_count();
 Road_type_id road_number(const struct road_type *proad);
 
 struct road_type *road_by_number(Road_type_id id);
@@ -125,8 +125,8 @@ int compare_road_move_cost(const struct extra_type *const *p,
 
 /* Initialization and iteration */
 void road_type_init(struct extra_type *pextra, int idx);
-void road_integrators_cache_init(void);
-void road_types_free(void);
+void road_integrators_cache_init();
+void road_types_free();
 
 #define road_deps_iterate(_reqs, _dep)                                      \
   {                                                                         \

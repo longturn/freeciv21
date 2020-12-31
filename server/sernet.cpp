@@ -70,7 +70,7 @@ static void start_processing_request(struct connection *pconn,
                                      int request_id);
 static void finish_processing_request(struct connection *pconn);
 
-static void send_lanserver_response(void);
+static void send_lanserver_response();
 
 /*************************************************************************/ /**
    Close the connection (very low-level). See also
@@ -113,7 +113,7 @@ static void close_connection(struct connection *pconn)
    Close all network stuff: connections, listening sockets, metaserver
    connection...
  *****************************************************************************/
-void close_connections_and_socket(void)
+void close_connections_and_socket()
 {
   int i;
 
@@ -194,7 +194,7 @@ static void server_conn_close_callback(struct connection *pconn)
    Attempt to flush all information in the send buffers for upto 'netwait'
    seconds.
  *****************************************************************************/
-void flush_packets(void)
+void flush_packets()
 {
   for (int i = 0; i < MAX_NUM_CONNECTIONS; i++) { // check for freaky players
     struct connection *pconn = &connections[i];
@@ -442,7 +442,7 @@ QTcpServer *server_open_socket()
    Initialize connection related stuff. Attention: Logging is not
    available within this functions!
  *****************************************************************************/
-void init_connections(void)
+void init_connections()
 {
   int i;
 
@@ -591,7 +591,7 @@ void get_lanserver_announcement()
    that requests information about the server state.
  *****************************************************************************/
 /* We would need a raw network connection for broadcast messages */
-static void send_lanserver_response(void)
+static void send_lanserver_response()
 {
   char buffer[MAX_LEN_PACKET];
   char hostname[512];

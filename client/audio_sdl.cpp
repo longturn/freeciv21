@@ -61,7 +61,7 @@ static void sdl_audio_set_volume(double volume)
 /**********************************************************************/ /**
    Get the volume.
  **************************************************************************/
-static double sdl_audio_get_volume(void) { return sdl_audio_volume; }
+static double sdl_audio_get_volume() { return sdl_audio_volume; }
 
 /**********************************************************************/ /**
    Play sound
@@ -140,7 +140,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
 /**********************************************************************/ /**
    Stop music
  **************************************************************************/
-static void sdl_audio_stop(void)
+static void sdl_audio_stop()
 {
   /* fade out over 2 sec */
   Mix_FadeOutMusic(2000);
@@ -151,7 +151,7 @@ static void sdl_audio_stop(void)
    WARNING: If a channel is looping, it will NEVER exit! Always call
    music_stop() first!
  **************************************************************************/
-static void sdl_audio_wait(void)
+static void sdl_audio_wait()
 {
   while (Mix_Playing(-1) != 0) {
     SDL_Delay(100);
@@ -164,7 +164,7 @@ static void sdl_audio_wait(void)
 
    This will need to be changed if SDL is used elsewhere.
  **************************************************************************/
-static void quit_sdl_audio(void)
+static void quit_sdl_audio()
 {
   if (SDL_WasInit(SDL_INIT_VIDEO)) {
     SDL_QuitSubSystem(SDL_INIT_AUDIO);
@@ -179,7 +179,7 @@ static void quit_sdl_audio(void)
 
    This will need to be changed if SDL is used elsewhere.
  **************************************************************************/
-static int init_sdl_audio(void)
+static int init_sdl_audio()
 {
   if (SDL_WasInit(SDL_INIT_VIDEO)) {
     return SDL_InitSubSystem(SDL_INIT_AUDIO | SDL_INIT_NOPARACHUTE);
@@ -191,7 +191,7 @@ static int init_sdl_audio(void)
 /**********************************************************************/ /**
    Clean up.
  **************************************************************************/
-static void sdl_audio_shutdown(void)
+static void sdl_audio_shutdown()
 {
   int i;
 
@@ -214,7 +214,7 @@ static void sdl_audio_shutdown(void)
 /**********************************************************************/ /**
    Initialize.
  **************************************************************************/
-static bool sdl_audio_init(void)
+static bool sdl_audio_init()
 {
   /* Initialize variables */
   const int audio_rate = MIX_DEFAULT_FREQUENCY;
@@ -247,7 +247,7 @@ static bool sdl_audio_init(void)
    Initialize. Note that this function is called very early at the
    client startup. So for example logging isn't available.
  **************************************************************************/
-void audio_sdl_init(void)
+void audio_sdl_init()
 {
   struct audio_plugin self;
 

@@ -246,12 +246,12 @@ static const char *valid_ruleset_filename(const char *subdir,
 /**********************************************************************/ /**
    Return current script.lua buffer.
  **************************************************************************/
-char *get_script_buffer(void) { return script_buffer; }
+char *get_script_buffer() { return script_buffer; }
 
 /**********************************************************************/ /**
    Return current parser.lua buffer.
  **************************************************************************/
-char *get_parser_buffer(void) { return parser_buffer; }
+char *get_parser_buffer() { return parser_buffer; }
 
 /**********************************************************************/ /**
    Do initial section_file_load on a ruleset file.
@@ -8588,7 +8588,7 @@ static void nullcheck_secfile_destroy(struct section_file *file)
    Completely deinitialize ruleset system. Server is not in usable
    state after this.
  **************************************************************************/
-void rulesets_deinit(void)
+void rulesets_deinit()
 {
   script_server_free();
   requirement_vector_free(&reqs_list);
@@ -8799,7 +8799,7 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
 /**********************************************************************/ /**
    Reload the game settings saved in the ruleset file.
  **************************************************************************/
-bool reload_rulesets_settings(void)
+bool reload_rulesets_settings()
 {
   struct section_file *file;
   bool ok = true;

@@ -154,7 +154,7 @@ public:
 
   const void *item();
 
-  bool refresh(void);
+  bool refresh();
 
 signals:
   /********************************************************************/ /**

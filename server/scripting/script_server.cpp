@@ -59,17 +59,17 @@ static struct fc_lua *fcl_unsafe = NULL;
  ***************************************************************************/
 static char *script_server_code = NULL;
 
-static void script_server_vars_init(void);
-static void script_server_vars_free(void);
+static void script_server_vars_init();
+static void script_server_vars_free();
 static void script_server_vars_load(struct section_file *file);
 static void script_server_vars_save(struct section_file *file);
-static void script_server_code_init(void);
-static void script_server_code_free(void);
+static void script_server_code_init();
+static void script_server_code_free();
 static void script_server_code_load(struct section_file *file);
 static void script_server_code_save(struct section_file *file);
 
-static void script_server_signals_create(void);
-static void script_server_functions_define(void);
+static void script_server_signals_create();
+static void script_server_functions_define();
 
 static void script_server_cmd_reply(struct fc_lua *fcl, QtMsgType level,
                                     const char *format, ...)
@@ -211,14 +211,14 @@ void script_server_remove_exported_object(void *object)
 /***********************************************************************/ /**
    Initialize the game script variables.
  ***************************************************************************/
-static void script_server_vars_init(void)
+static void script_server_vars_init()
 { /* nothing */
 }
 
 /***********************************************************************/ /**
    Free the game script variables.
  ***************************************************************************/
-static void script_server_vars_free(void)
+static void script_server_vars_free()
 { /* nothing */
 }
 
@@ -241,12 +241,12 @@ static void script_server_vars_save(struct section_file *file)
 /***********************************************************************/ /**
    Initialize the optional game script code (useful for scenarios).
  ***************************************************************************/
-static void script_server_code_init(void) { script_server_code = NULL; }
+static void script_server_code_init() { script_server_code = NULL; }
 
 /***********************************************************************/ /**
    Free the optional game script code (useful for scenarios).
  ***************************************************************************/
-static void script_server_code_free(void)
+static void script_server_code_free()
 {
   if (script_server_code) {
     FCPP_FREE(script_server_code);
@@ -281,7 +281,7 @@ static void script_server_code_save(struct section_file *file)
 /***********************************************************************/ /**
    Initialize the scripting state.
  ***************************************************************************/
-bool script_server_init(void)
+bool script_server_init()
 {
   if (fcl_main != NULL) {
     fc_assert_ret_val(fcl_main->state != NULL, false);
@@ -341,7 +341,7 @@ bool script_server_init(void)
 /***********************************************************************/ /**
    Free the scripting data.
  ***************************************************************************/
-void script_server_free(void)
+void script_server_free()
 {
   if (fcl_main != NULL) {
     script_server_code_free();
@@ -395,7 +395,7 @@ void script_server_signal_emit(const char *signal_name, ...)
 /***********************************************************************/ /**
    Declare any new signal types you need here.
  ***************************************************************************/
-static void script_server_signals_create(void)
+static void script_server_signals_create()
 {
   signal_deprecator *depr;
 
@@ -520,7 +520,7 @@ static void script_server_signals_create(void)
    respawn_callback (optional):
      - callback lua function for the respawn command
  ***************************************************************************/
-static void script_server_functions_define(void)
+static void script_server_functions_define()
 {
   luascript_func_add(fcl_main, "respawn_callback", false, 1, 0,
                      API_TYPE_PLAYER);

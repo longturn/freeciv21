@@ -4757,7 +4757,7 @@ static enum req_item_found output_type_found(const struct requirement *preq,
 /**********************************************************************/ /**
    Initialise universal_found_function array.
  **************************************************************************/
-void universal_found_functions_init(void)
+void universal_found_functions_init()
 {
   universal_found_function[VUT_GOVERNMENT] = &government_found;
   universal_found_function[VUT_NATION] = &nation_found;

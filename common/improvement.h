@@ -82,7 +82,7 @@ struct impr_type {
 };
 
 /* General improvement accessor functions. */
-Impr_type_id improvement_count(void);
+Impr_type_id improvement_count();
 Impr_type_id improvement_index(const struct impr_type *pimprove);
 Impr_type_id improvement_number(const struct impr_type *pimprove);
 
@@ -187,13 +187,13 @@ bool can_player_build_improvement_now(const struct player *p,
                                       struct impr_type *pimprove);
 
 /* Initialization and iteration */
-void improvements_init(void);
-void improvements_free(void);
+void improvements_init();
+void improvements_free();
 
-void improvement_feature_cache_init(void);
+void improvement_feature_cache_init();
 
-struct impr_type *improvement_array_first(void);
-const struct impr_type *improvement_array_last(void);
+struct impr_type *improvement_array_first();
+const struct impr_type *improvement_array_last();
 
 #define improvement_iterate(_p)                                             \
   {                                                                         \

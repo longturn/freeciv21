@@ -38,13 +38,13 @@ static const bool C_PERCENT = true;
 
 #define ALL_DIRECTIONS_CARDINAL() topo_has_flag((CURRENT_TOPOLOGY), TF_HEX)
 
-bool map_is_empty(void);
+bool map_is_empty();
 void map_init(struct civ_map *imap, bool server_side);
-void map_init_topology(void);
+void map_init_topology();
 void map_allocate(struct civ_map *amap);
-void main_map_allocate(void);
+void main_map_allocate();
 void map_free(struct civ_map *fmap);
-void main_map_free(void);
+void main_map_free();
 
 int map_vector_to_real_distance(int dx, int dy);
 int map_vector_to_sq_distance(int dx, int dy);
@@ -84,7 +84,7 @@ QSet<const struct nation_type *> *
 startpos_raw_nations(const struct startpos *psp);
 
 /* General map start positions functions. */
-int map_startpos_count(void);
+int map_startpos_count();
 struct startpos *map_startpos_new(struct tile *ptile);
 struct startpos *map_startpos_get(const struct tile *ptile);
 bool map_startpos_remove(struct tile *ptile);
@@ -215,7 +215,7 @@ void base_map_distance_vector(int *dx, int *dy, int x0, int y0, int x1,
                               int y1);
 void map_distance_vector(int *dx, int *dy, const struct tile *ptile0,
                          const struct tile *ptile1);
-int map_num_tiles(void);
+int map_num_tiles();
 #define map_size_checked() MAX(map_num_tiles() / 1000, 1)
 
 struct tile *rand_neighbour(const struct civ_map *nmap,
@@ -664,5 +664,5 @@ static inline bool is_border_tile(const struct tile *ptile, int dist)
           || nat_y >= wld.map.ysize - ydist);
 }
 
-enum direction8 rand_direction(void);
+enum direction8 rand_direction();
 enum direction8 opposite_direction(enum direction8 dir);

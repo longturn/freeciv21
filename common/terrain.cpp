@@ -35,7 +35,7 @@ static struct user_flag user_terrain_flags[MAX_NUM_USER_TER_FLAGS];
 /**********************************************************************/ /**
    Initialize terrain and resource structures.
  **************************************************************************/
-void terrains_init(void)
+void terrains_init()
 {
   int i;
 
@@ -51,7 +51,7 @@ void terrains_init(void)
 /**********************************************************************/ /**
    Free memory which is associated with terrain types.
  **************************************************************************/
-void terrains_free(void)
+void terrains_free()
 {
   terrain_type_iterate(pterrain)
   {
@@ -70,7 +70,7 @@ void terrains_free(void)
 /**********************************************************************/ /**
    Return the first item of terrains.
  **************************************************************************/
-struct terrain *terrain_array_first(void)
+struct terrain *terrain_array_first()
 {
   if (game.control.terrain_count > 0) {
     return civ_terrains;
@@ -81,7 +81,7 @@ struct terrain *terrain_array_first(void)
 /**********************************************************************/ /**
    Return the last item of terrains.
  **************************************************************************/
-const struct terrain *terrain_array_last(void)
+const struct terrain *terrain_array_last()
 {
   if (game.control.terrain_count > 0) {
     return &civ_terrains[game.control.terrain_count - 1];
@@ -92,7 +92,7 @@ const struct terrain *terrain_array_last(void)
 /**********************************************************************/ /**
    Return the number of terrains.
  **************************************************************************/
-Terrain_type_id terrain_count(void) { return game.control.terrain_count; }
+Terrain_type_id terrain_count() { return game.control.terrain_count; }
 
 /**********************************************************************/ /**
    Return the terrain identifier.
@@ -265,7 +265,7 @@ struct resource_type *resource_type_init(struct extra_type *pextra)
 /**********************************************************************/ /**
    Free the memory associated with resource types
  **************************************************************************/
-void resource_types_free(void)
+void resource_types_free()
 {
   /* Resource structure itself is freed as part of extras destruction. */
 }
@@ -764,7 +764,7 @@ int terrain_extra_removal_time(const struct terrain *pterrain,
 /**********************************************************************/ /**
    Initialize user terrain type flags.
  **************************************************************************/
-void user_terrain_flags_init(void)
+void user_terrain_flags_init()
 {
   int i;
 
@@ -776,7 +776,7 @@ void user_terrain_flags_init(void)
 /**********************************************************************/ /**
    Frees the memory associated with all user terrain flags
  **************************************************************************/
-void user_terrain_flags_free(void)
+void user_terrain_flags_free()
 {
   int i;
 

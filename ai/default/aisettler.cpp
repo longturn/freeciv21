@@ -128,7 +128,7 @@ struct tile_data_cache {
   int turn; /* the turn the values were calculated */
 };
 
-struct tile_data_cache *tile_data_cache_new(void);
+struct tile_data_cache *tile_data_cache_new();
 struct tile_data_cache *
 tile_data_cache_copy(const struct tile_data_cache *ptdc);
 
@@ -455,7 +455,7 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
 /*************************************************************************/ /**
    Allocate tile data cache
  *****************************************************************************/
-struct tile_data_cache *tile_data_cache_new(void)
+struct tile_data_cache *tile_data_cache_new()
 {
   struct tile_data_cache *ptdc_copy = new tile_data_cache[1]();
 

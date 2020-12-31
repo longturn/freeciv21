@@ -210,7 +210,7 @@ void make_connection(QTcpSocket *sock, QString &username)
    Get rid of server connection. This also kills internal server if it's
    used.
  **************************************************************************/
-void disconnect_from_server(void)
+void disconnect_from_server()
 {
   const bool force = !client.conn.used;
 
@@ -330,7 +330,7 @@ static bool autoconnecting = false;
    Make an attempt to autoconnect to the server.
    It returns number of seconds it should be called again.
  **************************************************************************/
-double try_to_autoconnect(void)
+double try_to_autoconnect()
 {
   char errbuf[512];
   static int count = 0;
@@ -374,7 +374,7 @@ double try_to_autoconnect(void)
    AUTOCONNECT_INTERVAL milliseconds, until success, fatal error or
    user intervention.
  **************************************************************************/
-void start_autoconnecting_to_server(void)
+void start_autoconnecting_to_server()
 {
   output_window_printf(
       ftc_client,

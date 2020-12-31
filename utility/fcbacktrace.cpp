@@ -48,7 +48,7 @@ void backtrace_print(QtMsgType type, const QMessageLogContext &context);
 /********************************************************************/ /**
    Take backtrace log callback to use
  ************************************************************************/
-void backtrace_init(void)
+void backtrace_init()
 {
 #ifdef BACKTRACE_ACTIVE
   previous = qInstallMessageHandler(backtrace_log);
@@ -58,7 +58,7 @@ void backtrace_init(void)
 /********************************************************************/ /**
    Remove backtrace log callback from use
  ************************************************************************/
-void backtrace_deinit(void)
+void backtrace_deinit()
 {
 #ifdef BACKTRACE_ACTIVE
   qInstallMessageHandler(previous);

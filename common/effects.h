@@ -341,8 +341,8 @@ QString get_effect_list_req_text(const struct effect_list *plist);
 /* ruleset cache creation and communication functions */
 struct packet_ruleset_effect;
 
-void ruleset_cache_init(void);
-void ruleset_cache_free(void);
+void ruleset_cache_init();
+void ruleset_cache_free();
 void recv_ruleset_effect(const struct packet_ruleset_effect *packet);
 void send_ruleset_cache(struct conn_list *dest);
 

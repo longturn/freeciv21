@@ -50,11 +50,11 @@ struct disaster_type {
 };
 
 /* Initialization and iteration */
-void disaster_types_init(void);
-void disaster_types_free(void);
+void disaster_types_init();
+void disaster_types_free();
 
 /* General disaster type accessor functions. */
-Disaster_type_id disaster_count(void);
+Disaster_type_id disaster_count();
 Disaster_type_id disaster_index(const struct disaster_type *pdis);
 Disaster_type_id disaster_number(const struct disaster_type *pdis);
 

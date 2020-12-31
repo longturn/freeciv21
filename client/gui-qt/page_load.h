@@ -21,7 +21,7 @@ class page_load : public QWidget {
 public:
   page_load(QWidget *, fc_client *);
   ~page_load() override;
-  void update_load_page(void);
+  void update_load_page();
 private slots:
   void slot_selection_changed(const QItemSelection &,
                               const QItemSelection &);

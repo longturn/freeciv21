@@ -29,7 +29,7 @@ typedef const char *(*secfile_enum_name_fn_t)(int enumerator);
 typedef int (*secfile_enum_by_name_fn_t)(const char *enum_name,
                                          int (*strcmp_fn)(const char *,
                                                           const char *));
-typedef int (*secfile_enum_iter_fn_t)(void);
+typedef int (*secfile_enum_iter_fn_t)();
 typedef int (*secfile_enum_next_fn_t)(int enumerator);
 typedef const char *(*secfile_enum_name_data_fn_t)(secfile_data_t data,
                                                    int enumerator);

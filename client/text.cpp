@@ -809,7 +809,7 @@ static int turns_to_tech_loss(const struct research *presearch, int per_turn)
 /************************************************************************/ /**
    Returns the text to display in the science dialog.
  ****************************************************************************/
-const QString science_dialog_text(void)
+const QString science_dialog_text()
 {
   bool team;
   int ours, theirs, perturn, upkeep;
@@ -1036,7 +1036,7 @@ const QString get_info_label_text(bool moreinfo)
    traditionally done as a popup whenever the regular info text is clicked
    on.)
  ****************************************************************************/
-const QString get_info_label_text_popup(void)
+const QString get_info_label_text_popup()
 {
   QString str;
 
@@ -1476,7 +1476,7 @@ bool get_units_disband_info(char *buf, size_t bufsz,
    Get a tooltip text for the info panel research indicator.  See
    client_research_sprite().
  ****************************************************************************/
-const QString get_bulb_tooltip(void)
+const QString get_bulb_tooltip()
 {
   QString str = _("Shows your progress in "
                   "researching the current technology.")
@@ -1526,7 +1526,7 @@ const QString get_bulb_tooltip(void)
    Get a tooltip text for the info panel global warning indicator.  See also
    client_warming_sprite().
  ****************************************************************************/
-const QString get_global_warming_tooltip(void)
+const QString get_global_warming_tooltip()
 {
   QString str;
 
@@ -1551,7 +1551,7 @@ const QString get_global_warming_tooltip(void)
    Get a tooltip text for the info panel nuclear winter indicator.  See also
    client_cooling_sprite().
  ****************************************************************************/
-const QString get_nuclear_winter_tooltip(void)
+const QString get_nuclear_winter_tooltip()
 {
   QString str;
 
@@ -1576,7 +1576,7 @@ const QString get_nuclear_winter_tooltip(void)
    Get a tooltip text for the info panel government indicator.  See also
    government_by_number(...)->sprite.
  ****************************************************************************/
-const QString get_government_tooltip(void)
+const QString get_government_tooltip()
 {
   QString str;
 
@@ -1656,7 +1656,7 @@ const QString get_spaceship_descr(struct player_spaceship *pship)
    Get the text showing the timeout.  This is generally disaplyed on the info
    panel.
  ****************************************************************************/
-const QString get_timeout_label_text(void)
+const QString get_timeout_label_text()
 {
   QString str;
 

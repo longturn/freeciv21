@@ -523,7 +523,7 @@ void tileset_error(QtMsgType level, const char *format, ...)
 /************************************************************************/ /**
    Create a new drawing data.
  ****************************************************************************/
-static struct drawing_data *drawing_data_new(void)
+static struct drawing_data *drawing_data_new()
 {
   struct drawing_data *draw = new drawing_data[1]();
 
@@ -562,7 +562,7 @@ static void drawing_data_destroy(struct drawing_data *draw)
 /************************************************************************/ /**
    Return unscaled tileset if it exists, or default otherwise
  ****************************************************************************/
-struct tileset *get_tileset(void)
+struct tileset *get_tileset()
 {
   if (unscaled_tileset != NULL) {
     return unscaled_tileset;
@@ -835,7 +835,7 @@ bool tileset_use_hard_coded_fog(const struct tileset *t)
 /************************************************************************/ /**
    Initialize.
  ****************************************************************************/
-static struct tileset *tileset_new(void)
+static struct tileset *tileset_new()
 {
   struct tileset *t = new struct tileset[1]();
 
@@ -6950,7 +6950,7 @@ void tileset_ruleset_reset(struct tileset *t)
 /************************************************************************/ /**
    Is tileset in sane state?
  ****************************************************************************/
-bool tileset_is_fully_loaded(void) { return !tileset_update; }
+bool tileset_is_fully_loaded() { return !tileset_update; }
 
 /************************************************************************/ /**
    Return tileset name

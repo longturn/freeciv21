@@ -38,7 +38,7 @@ void load_install_info_list(const char *filename);
 
 void create_mpdb(const char *filename, bool scenario_db);
 void open_mpdb(const char *filename, bool scenario_db);
-void close_mpdbs(void);
+void close_mpdbs();
 
 bool mpdb_update_modpack(const char *name, enum modpack_type type,
                          const char *version);

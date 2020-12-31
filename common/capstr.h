@@ -14,4 +14,4 @@
 
 extern const char *const our_capability;
 
-void init_our_capability(void);
+void init_our_capability();

@@ -349,20 +349,20 @@ struct player {
 };
 
 /* Initialization and iteration */
-void player_slots_init(void);
-bool player_slots_initialised(void);
-void player_slots_free(void);
+void player_slots_init();
+bool player_slots_initialised();
+void player_slots_free();
 
-struct player_slot *player_slot_first(void);
+struct player_slot *player_slot_first();
 struct player_slot *player_slot_next(struct player_slot *pslot);
 
 /* A player slot contains a possibly uninitialized player. */
-int player_slot_count(void);
+int player_slot_count();
 int player_slot_index(const struct player_slot *pslot);
 struct player *player_slot_get_player(const struct player_slot *pslot);
 bool player_slot_is_used(const struct player_slot *pslot);
 struct player_slot *player_slot_by_number(int player_id);
-int player_slot_max_used_number(void);
+int player_slot_max_used_number();
 
 /* General player accessor functions. */
 struct player *player_new(struct player_slot *pslot);
@@ -372,7 +372,7 @@ void player_clear(struct player *pplayer, bool full);
 void player_ruleset_close(struct player *pplayer);
 void player_destroy(struct player *pplayer);
 
-int player_count(void);
+int player_count();
 int player_index(const struct player *pplayer);
 int player_number(const struct player *pplayer);
 struct player *player_by_number(const int player_id);
@@ -469,7 +469,7 @@ static inline bool is_barbarian(const struct player *pplayer)
 
 bool gives_shared_vision(const struct player *me, const struct player *them);
 
-void diplrel_mess_close(void);
+void diplrel_mess_close();
 bool is_diplrel_between(const struct player *player1,
                         const struct player *player2, int diplrel);
 bool is_diplrel_to_other(const struct player *pplayer, int diplrel);
@@ -541,7 +541,7 @@ bool is_valid_username(const char *name);
 
 #define ai_level_cmd(_level_) ai_level_name(_level_)
 bool is_settable_ai_level(enum ai_level level);
-int number_of_ai_levels(void);
+int number_of_ai_levels();
 
 void *player_ai_data(const struct player *pplayer, const struct ai_type *ai);
 void player_set_ai_data(struct player *pplayer, const struct ai_type *ai,

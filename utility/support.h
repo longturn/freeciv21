@@ -126,7 +126,7 @@ gzFile fc_gzopen(const char *filename, const char *opentype);
 int fc_remove(const char *filename);
 int fc_stat(const char *filename, struct stat *buf);
 
-fc_errno fc_get_errno(void);
+fc_errno fc_get_errno();
 const char *fc_strerror(fc_errno err);
 void fc_usleep(unsigned long usec);
 
@@ -165,4 +165,4 @@ void make_escapes(const char *str, char *buf, size_t buf_len);
 void remove_escapes(const char *str, bool full_escapes, char *buf,
                     size_t buf_len);
 
-int fc_at_quick_exit(void (*func)(void));
+int fc_at_quick_exit(void (*func)());

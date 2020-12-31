@@ -487,7 +487,7 @@ Nation_type_id nation_index(const struct nation_type *pnation)
 /************************************************************************/ /**
    Return the number of nations.
  ****************************************************************************/
-Nation_type_id nation_count(void) { return game.control.nation_count; }
+Nation_type_id nation_count() { return game.control.nation_count; }
 
 /****************************************************************************
   Nation iterator.
@@ -501,7 +501,7 @@ struct nation_iter {
 /************************************************************************/ /**
    Implementation of iterator 'sizeof' function.
  ****************************************************************************/
-size_t nation_iter_sizeof(void) { return sizeof(struct nation_iter); }
+size_t nation_iter_sizeof() { return sizeof(struct nation_iter); }
 
 /************************************************************************/ /**
    Implementation of iterator 'next' function.
@@ -606,7 +606,7 @@ void nations_alloc(int num)
 /************************************************************************/ /**
    De-allocate the currently allocated nations.
  ****************************************************************************/
-void nations_free(void)
+void nations_free()
 {
   int i;
 
@@ -661,7 +661,7 @@ const struct rgbcolor *nation_color(const struct nation_type *pnation)
 /************************************************************************/ /**
    Return the number of nation sets.
  ****************************************************************************/
-int nation_set_count(void) { return num_nation_sets; }
+int nation_set_count() { return num_nation_sets; }
 
 /************************************************************************/ /**
    Return the nation set index.
@@ -850,7 +850,7 @@ struct nation_set_iter {
 /************************************************************************/ /**
    Implementation of iterator 'sizeof' function.
  ****************************************************************************/
-size_t nation_set_iter_sizeof(void)
+size_t nation_set_iter_sizeof()
 {
   return sizeof(struct nation_set_iter);
 }
@@ -896,7 +896,7 @@ struct iterator *nation_set_iter_init(struct nation_set_iter *it)
 /************************************************************************/ /**
    Return the number of nation groups.
  ****************************************************************************/
-int nation_group_count(void) { return num_nation_groups; }
+int nation_group_count() { return num_nation_groups; }
 
 /************************************************************************/ /**
    Return the nation group index.
@@ -1076,7 +1076,7 @@ struct nation_group_iter {
 /************************************************************************/ /**
    Implementation of iterator 'sizeof' function.
  ****************************************************************************/
-size_t nation_group_iter_sizeof(void)
+size_t nation_group_iter_sizeof()
 {
   return sizeof(struct nation_group_iter);
 }
@@ -1122,7 +1122,7 @@ struct iterator *nation_group_iter_init(struct nation_group_iter *it)
 /************************************************************************/ /**
    Initializes all nation set/group data.
  ****************************************************************************/
-void nation_sets_groups_init(void)
+void nation_sets_groups_init()
 {
   num_nation_sets = num_nation_groups = 0;
 }
@@ -1130,7 +1130,7 @@ void nation_sets_groups_init(void)
 /************************************************************************/ /**
    Frees and resets all nation set/group data.
  ****************************************************************************/
-void nation_sets_groups_free(void)
+void nation_sets_groups_free()
 {
   num_nation_sets = num_nation_groups = 0;
 }

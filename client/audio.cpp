@@ -188,7 +188,7 @@ bool audio_select_plugin(const QString &name)
    Initialize base audio system. Note that this function is called very
    early at the client startup. So for example logging isn't available.
  **************************************************************************/
-void audio_init(void)
+void audio_init()
 {
 #ifdef AUDIO_SDL
   audio_sdl_init();
@@ -371,7 +371,7 @@ void audio_restart(const QString &soundset_name,
 /**********************************************************************/ /**
    Callback to start new track
  **************************************************************************/
-static void music_finished_callback(void)
+static void music_finished_callback()
 {
   bool usage_enabled = true;
 
@@ -571,12 +571,12 @@ void audio_play_track(const QString &tag, const QString &alt_tag)
 /**********************************************************************/ /**
    Stop sound. Music should die down in a few seconds.
  **************************************************************************/
-void audio_stop(void) { plugins[selected_plugin].stop(); }
+void audio_stop() { plugins[selected_plugin].stop(); }
 
 /**********************************************************************/ /**
    Stop looping sound. Music should die down in a few seconds.
  **************************************************************************/
-void audio_stop_usage(void)
+void audio_stop_usage()
 {
   switching_usage = true;
   plugins[selected_plugin].stop();
@@ -585,7 +585,7 @@ void audio_stop_usage(void)
 /**********************************************************************/ /**
    Stop looping sound. Music should die down in a few seconds.
  **************************************************************************/
-double audio_get_volume(void)
+double audio_get_volume()
 {
   return plugins[selected_plugin].get_volume();
 }
@@ -601,7 +601,7 @@ void audio_set_volume(double volume)
 /**********************************************************************/ /**
    Call this at end of program only.
  **************************************************************************/
-void audio_shutdown(void)
+void audio_shutdown()
 {
   /* avoid infinite loop at end of game */
   audio_stop();
@@ -624,7 +624,7 @@ void audio_shutdown(void)
    Returns a string which list all available plugins. You don't have to
    free the string.
  **************************************************************************/
-const QString audio_get_all_plugin_names(void)
+const QString audio_get_all_plugin_names()
 {
   QString buffer;
   int i;

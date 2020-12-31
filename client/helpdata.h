@@ -19,8 +19,8 @@ struct help_item {
   enum help_page_type type;
 };
 
-void boot_help_texts(void);
-void free_help_texts(void);
+void boot_help_texts();
+void free_help_texts();
 
 const struct help_item *get_help_item(int pos);
 const struct help_item *

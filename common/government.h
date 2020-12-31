@@ -50,7 +50,7 @@ struct government {
 };
 
 /* General government accessor functions. */
-Government_type_id government_count(void);
+Government_type_id government_count();
 Government_type_id government_index(const struct government *pgovern);
 Government_type_id government_number(const struct government *pgovern);
 
@@ -88,10 +88,10 @@ bool can_change_to_government(struct player *pplayer,
 
 /* Initialization and iteration */
 void governments_alloc(int num);
-void governments_free(void);
+void governments_free();
 
 struct government_iter;
-size_t government_iter_sizeof(void);
+size_t government_iter_sizeof();
 struct iterator *government_iter_init(struct government_iter *it);
 
 /* Iterate over government types. */
@@ -110,4 +110,4 @@ struct iterator *government_iter_init(struct government_iter *it);
   }                                                                         \
   governments_iterate_end;
 
-bool untargeted_revolution_allowed(void);
+bool untargeted_revolution_allowed();

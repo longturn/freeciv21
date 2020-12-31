@@ -183,7 +183,7 @@ static bool city_workers_queue_remove(struct city *pcity)
    Process the frozen workers.
    Call sync_cities() to send the affected cities to the clients.
  ****************************************************************************/
-void city_thaw_workers_queue(void)
+void city_thaw_workers_queue()
 {
   if (NULL == arrange_workers_queue) {
     return;
@@ -3133,7 +3133,7 @@ bool city_map_update_tile_now(struct tile *ptile)
    Make sure all players (clients) have up-to-date information about all
    their cities.
  ****************************************************************************/
-void sync_cities(void)
+void sync_cities()
 {
   if (send_city_suppressed) {
     return;

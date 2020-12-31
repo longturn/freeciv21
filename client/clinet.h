@@ -19,7 +19,7 @@ int connect_to_server(QString &username, QString &hostname, int port,
 void make_connection(QTcpSocket *sock, QString &username);
 
 void input_from_server(QTcpSocket *sock);
-void disconnect_from_server(void);
+void disconnect_from_server();
 
-double try_to_autoconnect(void);
-void start_autoconnecting_to_server(void);
+double try_to_autoconnect();
+void start_autoconnecting_to_server();

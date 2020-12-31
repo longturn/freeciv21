@@ -78,7 +78,7 @@ helpList *help_nodes;
 /************************************************************************/ /**
    Free all allocations associated with help_nodes.
  ****************************************************************************/
-void free_help_texts(void)
+void free_help_texts()
 {
   if (!help_nodes) {
     return;
@@ -671,7 +671,7 @@ static int help_item_compar(const struct help_item *v1,
 /************************************************************************/ /**
    pplayer may be NULL.
  ****************************************************************************/
-void boot_help_texts(void)
+void boot_help_texts()
 {
   static bool booted = false;
 

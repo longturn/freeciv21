@@ -231,20 +231,20 @@ static enum command_id command_named(const char *token,
 /**********************************************************************/ /**
    Initialize stuff related to this code module.
  **************************************************************************/
-void stdinhand_init(void) {}
+void stdinhand_init() {}
 
 /**********************************************************************/ /**
    Update stuff every turn that is related to this code module. Run this
    on turn end.
  **************************************************************************/
-void stdinhand_turn(void)
+void stdinhand_turn()
 { /* Nothing at the moment. */
 }
 
 /**********************************************************************/ /**
    Deinitialize stuff related to this code module.
  **************************************************************************/
-void stdinhand_free(void)
+void stdinhand_free()
 {
   kick_table_by_addr->clear();
   kick_table_by_user->clear();
@@ -1215,7 +1215,7 @@ static bool read_init_script_real(struct connection *caller,
    These are conventionally scripts that load rulesets (generally
    containing just a 'rulesetdir' command).
  **************************************************************************/
-QVector<QString> *get_init_script_choices(void)
+QVector<QString> *get_init_script_choices()
 {
   return fileinfolist(get_data_dirs(), RULESET_SUFFIX);
 }
@@ -1341,7 +1341,7 @@ static bool set_cmdlevel(struct connection *caller,
 /**********************************************************************/ /**
    Returns true if there is at least one established connection.
  **************************************************************************/
-static bool a_connection_exists(void)
+static bool a_connection_exists()
 {
   return conn_list_size(game.est_connections) > 0;
 }
@@ -1349,7 +1349,7 @@ static bool a_connection_exists(void)
 /**********************************************************************/ /**
    Return whether first access level is already taken.
  **************************************************************************/
-static bool is_first_access_level_taken(void)
+static bool is_first_access_level_taken()
 {
   conn_list_iterate(game.est_connections, pconn)
   {
@@ -1364,7 +1364,7 @@ static bool is_first_access_level_taken(void)
 /**********************************************************************/ /**
    Return access level for next connection
  **************************************************************************/
-enum cmdlevel access_level_for_next_connection(void)
+enum cmdlevel access_level_for_next_connection()
 {
   if ((first_access_level > default_access_level)
       && !a_connection_exists()) {
@@ -1378,7 +1378,7 @@ enum cmdlevel access_level_for_next_connection(void)
    Check if first access level is available and if it is, notify
    connections about it.
  **************************************************************************/
-void notify_if_first_access_level_is_available(void)
+void notify_if_first_access_level_is_available()
 {
   if (first_access_level > default_access_level
       && !is_first_access_level_taken()) {
@@ -1568,7 +1568,7 @@ static bool firstlevel_command(struct connection *caller, bool check)
 /**********************************************************************/ /**
    Adjust default command level on game start.
  **************************************************************************/
-void set_running_game_access_level(void)
+void set_running_game_access_level()
 {
   if (default_access_level > ALLOW_BASIC) {
     notify_conn(NULL, NULL, E_SETTING, ftc_server,

@@ -39,8 +39,8 @@ public:
 
 private:
   QUrl m_url;
-  mpgui *m_gui{nullptr}{nullptr};
-  fcmp_params *m_fcmp{nullptr}{nullptr};
+  mpgui *m_gui{nullptr};;{nullptr};
+  fcmp_params *m_fcmp{nullptr};;{nullptr};
   dl_msg_callback m_msg_callback;
   dl_pb_callback m_pb_callback;
 };

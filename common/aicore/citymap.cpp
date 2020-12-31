@@ -111,7 +111,7 @@ void citymap_turn_init(struct player *pplayer)
 /**********************************************************************/ /**
    Free resources allocated for citymap.
  **************************************************************************/
-void citymap_free(void)
+void citymap_free()
 {
   if (citymap != NULL) {
     FC_FREE(citymap);

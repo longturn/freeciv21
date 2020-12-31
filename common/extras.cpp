@@ -39,7 +39,7 @@ static struct extra_type_list *unit_hidden;
 /************************************************************************/ /**
    Initialize extras structures.
  ****************************************************************************/
-void extras_init(void)
+void extras_init()
 {
   int i;
 
@@ -74,7 +74,7 @@ void extras_init(void)
 /************************************************************************/ /**
    Free the memory associated with extras
  ****************************************************************************/
-void extras_free(void)
+void extras_free()
 {
   int i;
 
@@ -126,7 +126,7 @@ void extras_free(void)
 /************************************************************************/ /**
    Return the number of extra_types.
  ****************************************************************************/
-int extra_count(void) { return game.control.num_extra_types; }
+int extra_count() { return game.control.num_extra_types; }
 
 /************************************************************************/ /**
    Return the extra id.
@@ -233,7 +233,7 @@ struct extra_type_list *extra_type_list_by_cause(enum extra_cause cause)
 /************************************************************************/ /**
    Returns extra types that hide units.
  ****************************************************************************/
-struct extra_type_list *extra_type_list_of_unit_hiders(void)
+struct extra_type_list *extra_type_list_of_unit_hiders()
 {
   return unit_hidden;
 }
@@ -833,7 +833,7 @@ bool is_extra_flag_near_tile(const struct tile *ptile,
 /************************************************************************/ /**
    Initialize user extra flags.
  ****************************************************************************/
-void user_extra_flags_init(void)
+void user_extra_flags_init()
 {
   int i;
 
@@ -845,7 +845,7 @@ void user_extra_flags_init(void)
 /************************************************************************/ /**
    Frees the memory associated with all extra flags
  ****************************************************************************/
-void extra_flags_free(void)
+void extra_flags_free()
 {
   int i;
 

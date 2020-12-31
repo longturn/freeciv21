@@ -107,7 +107,7 @@ page_load::~page_load() = default;
 /**********************************************************************/ /**
    Updates saves to load and updates in tableview = saves_load
  **************************************************************************/
-void page_load::update_load_page(void)
+void page_load::update_load_page()
 {
   struct fileinfo_list *files;
   int row;
@@ -158,7 +158,7 @@ void page_load::start_from_save()
 /**********************************************************************/ /**
    Browse saves directory
  **************************************************************************/
-void page_load::browse_saves(void)
+void page_load::browse_saves()
 {
   QString str;
   str = QString(_("Save Files"))

@@ -10,10 +10,10 @@
 **************************************************************************/
 #pragma once
 
-void start_style_music(void);
-void stop_style_music(void);
+void start_style_music();
+void stop_style_music();
 void start_menu_music(const QString &tag, const QString &alt_tag);
-void stop_menu_music(void);
+void stop_menu_music();
 void play_single_track(const QString &tag);
 
 void musicspec_reread_callback(struct option *poption);

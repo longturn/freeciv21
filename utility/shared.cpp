@@ -594,7 +594,7 @@ bool str_to_float(const char *str, float *pfloat)
    If $HOME is not set, give a log message and returns NULL.
    Note the caller should not mess with the returned string.
  ****************************************************************************/
-char *user_home_dir(void)
+char *user_home_dir()
 {
   if (home_dir_user == NULL) {
     char *env = getenv("HOME");
@@ -618,14 +618,14 @@ char *user_home_dir(void)
 /************************************************************************/ /**
    Free user home directory information
  ****************************************************************************/
-void free_user_home_dir(void) { NFCNPP_FREE(home_dir_user); }
+void free_user_home_dir() { NFCNPP_FREE(home_dir_user); }
 
 /************************************************************************/ /**
    Returns string which gives freeciv storage dir.
    Gets value once, and then caches result.
    Note the caller should not mess with the returned string.
  ****************************************************************************/
-char *freeciv_storage_dir(void)
+char *freeciv_storage_dir()
 {
   if (storage_dir_freeciv == NULL) {
     storage_dir_freeciv = new char[strlen(FREECIV_STORAGE_DIR) + 1];
@@ -643,7 +643,7 @@ char *freeciv_storage_dir(void)
 /************************************************************************/ /**
    Free freeciv storage directory information
  ****************************************************************************/
-void free_freeciv_storage_dir(void) { NFCNPP_FREE(storage_dir_freeciv); }
+void free_freeciv_storage_dir() { NFCNPP_FREE(storage_dir_freeciv); }
 
 /************************************************************************/ /**
    Returns string which gives user's username, as specified by $USER or
@@ -794,7 +794,7 @@ static QStringList *base_get_dirs(const char *dir_list)
 /************************************************************************/ /**
    Free data dir name vectors.
  ****************************************************************************/
-void free_data_dir_names(void)
+void free_data_dir_names()
 {
   NFCN_FREE(data_dir_names);
   NFCN_FREE(save_dir_names);
@@ -812,7 +812,7 @@ void free_data_dir_names(void)
    The returned pointer is static and shouldn't be modified, nor destroyed
    by the user caller.
  ****************************************************************************/
-const QStringList *get_data_dirs(void)
+const QStringList *get_data_dirs()
 {
   /* The first time this function is called it will search and
    * allocate the directory listing.  Subsequently we will already
@@ -849,7 +849,7 @@ const QStringList *get_data_dirs(void)
    The returned pointer is static and shouldn't be modified, nor destroyed
    by the user caller.
  ****************************************************************************/
-const QStringList *get_save_dirs(void)
+const QStringList *get_save_dirs()
 {
   /* The first time this function is called it will search and
    * allocate the directory listing.  Subsequently we will already
@@ -887,7 +887,7 @@ const QStringList *get_save_dirs(void)
    The returned pointer is static and shouldn't be modified, nor destroyed
    by the user caller.
  ****************************************************************************/
-const QStringList *get_scenario_dirs(void)
+const QStringList *get_scenario_dirs()
 {
   /* The first time this function is called it will search and
    * allocate the directory listing.  Subsequently we will already
@@ -1029,7 +1029,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
 /************************************************************************/ /**
    Free resources allocated for fileinfoname service
  ****************************************************************************/
-void free_fileinfo_data(void) { astr_free(&realfile); }
+void free_fileinfo_data() { astr_free(&realfile); }
 
 /************************************************************************/ /**
    Destroys the file info structure.
@@ -1134,7 +1134,7 @@ struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
 /************************************************************************/ /**
    Language environmental variable (with emulation).
  ****************************************************************************/
-char *setup_langname(void)
+char *setup_langname()
 {
   char *langname = NULL;
 
@@ -1307,7 +1307,7 @@ void switch_lang(const char *lang)
    Setup for Native Language Support, if configured to use it.
    (Call this only once, or it may leak memory.)
  ****************************************************************************/
-void init_nls(void)
+void init_nls()
 {
   /*
    * Setup the cached locale numeric formatting information. Defaults
@@ -1367,7 +1367,7 @@ void init_nls(void)
 /************************************************************************/ /**
    Free memory allocated by Native Language Support
  ****************************************************************************/
-void free_nls(void)
+void free_nls()
 {
   FCPP_FREE(grouping);
   FCPP_FREE(grouping_sep);
@@ -1523,7 +1523,7 @@ char *get_multicast_group(bool ipv6_preferred)
 /************************************************************************/ /**
    Free multicast group resources
  ****************************************************************************/
-void free_multicast_group(void) { NFCNPP_FREE(mc_group); }
+void free_multicast_group() { NFCNPP_FREE(mc_group); }
 
 /************************************************************************/ /**
    Interpret ~/ in filename as home dir

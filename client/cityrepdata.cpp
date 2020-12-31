@@ -794,7 +794,7 @@ static int num_creport_cols;
 /********************************************************************/ /**
    Simple wrapper for num_creport_cols()
  ************************************************************************/
-int num_city_report_spec(void) { return num_creport_cols; }
+int num_city_report_spec() { return num_creport_cols; }
 
 /********************************************************************/ /**
    Simple wrapper for city_report_specs.show
@@ -817,7 +817,7 @@ const char *city_report_spec_tagname(int i)
    columns and pre-translates the fields (to make things easier on
    the GUI writers).  Should be called before the GUI starts up.
  ************************************************************************/
-void init_city_report_game_data(void)
+void init_city_report_game_data()
 {
   static char sp_explanation[SP_MAX][128];
   static char sp_explanations[SP_MAX * 128];

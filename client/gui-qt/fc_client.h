@@ -139,8 +139,8 @@ public slots:
 
 private:
   void create_loading_page();
-  void create_cursors(void);
-  void delete_cursors(void);
+  void create_cursors();
+  void delete_cursors();
   void read_settings();
 
 protected:

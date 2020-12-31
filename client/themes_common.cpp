@@ -62,7 +62,7 @@ struct theme_directory *directories;
 /************************************************************************/ /**
    Initialized themes data
  ****************************************************************************/
-void init_themes(void)
+void init_themes()
 {
   int i;
 

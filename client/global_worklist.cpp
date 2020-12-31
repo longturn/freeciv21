@@ -73,7 +73,7 @@ static void global_worklist_save(const struct global_worklist *pgwl,
 /*******************************************************************/ /**
    Initialize the client global worklists.
  ***********************************************************************/
-void global_worklists_init(void)
+void global_worklists_init()
 {
   if (!client.worklists) {
     client.worklists = global_worklist_list_new();
@@ -83,7 +83,7 @@ void global_worklists_init(void)
 /*******************************************************************/ /**
    Free the client global worklists.
  ***********************************************************************/
-void global_worklists_free(void)
+void global_worklists_free()
 {
   if (client.worklists) {
     global_worklists_iterate_all(pgwl) { global_worklist_destroy(pgwl); }
@@ -96,7 +96,7 @@ void global_worklists_free(void)
 /*******************************************************************/ /**
    Check if the global worklists are valid or not for the ruleset.
  ***********************************************************************/
-void global_worklists_build(void)
+void global_worklists_build()
 {
   global_worklists_iterate_all(pgwl)
   {
@@ -143,7 +143,7 @@ void global_worklists_build(void)
 /*******************************************************************/ /**
    Convert the universal pointers to strings to work out-ruleset.
  ***********************************************************************/
-void global_worklists_unbuild(void)
+void global_worklists_unbuild()
 {
   global_worklists_iterate_all(pgwl)
   {
@@ -173,7 +173,7 @@ void global_worklists_unbuild(void)
    Returns the number of valid global worklists.
    N.B.: This counts only the valid global worklists.
  ***********************************************************************/
-int global_worklists_number(void)
+int global_worklists_number()
 {
   int count = 0;
 

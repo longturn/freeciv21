@@ -32,8 +32,8 @@ typedef int temperature_type;
 #define TT_NHOT (TT_FROZEN | TT_COLD)
 #define TT_HOT (TT_TEMPERATE | TT_TROPICAL)
 
-bool temperature_is_initialized(void);
+bool temperature_is_initialized();
 bool tmap_is(const struct tile *ptile, temperature_type tt);
 bool is_temperature_type_near(const struct tile *ptile, temperature_type tt);
-void destroy_tmap(void);
+void destroy_tmap();
 void create_tmap(bool real);

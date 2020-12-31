@@ -89,7 +89,7 @@ static void add_requirement(struct tree_node *node, struct tree_node *req)
 /*********************************************************************/ /**
    Allocate and initialize new tree node
  *************************************************************************/
-static struct tree_node *new_tree_node(void)
+static struct tree_node *new_tree_node()
 {
   struct tree_node *node = new tree_node();
 

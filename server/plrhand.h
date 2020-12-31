@@ -28,7 +28,7 @@ struct player *server_create_player(int player_id, const char *ai_tname,
 const struct rgbcolor *player_preferred_color(struct player *pplayer);
 bool player_color_changeable(const struct player *pplayer,
                              const char **reason);
-void assign_player_colors(void);
+void assign_player_colors();
 void server_player_set_color(struct player *pplayer,
                              const struct rgbcolor *prgbcolor);
 const char *player_color_ftstr(struct player *pplayer);
@@ -57,9 +57,9 @@ struct nation_type *pick_a_nation(const struct nation_list *choices,
                                   enum barbarian_type barb_type);
 bool nation_is_in_current_set(const struct nation_type *pnation);
 bool client_can_pick_nation(const struct nation_type *nation);
-void count_playable_nations(void);
+void count_playable_nations();
 void send_nation_availability(struct conn_list *dest, bool nationset_change);
-void fit_nationset_to_players(void);
+void fit_nationset_to_players();
 
 /* Iterate over nations in the currently selected set.
  * Does not filter on playability or anything else. */
@@ -80,8 +80,8 @@ void maybe_make_contact(struct tile *ptile, struct player *pplayer);
 void enter_war(struct player *pplayer, struct player *pplayer2);
 void player_update_last_war_action(struct player *pplayer);
 
-void player_info_freeze(void);
-void player_info_thaw(void);
+void player_info_freeze();
+void player_info_thaw();
 
 void send_player_all_c(struct player *src, struct conn_list *dest);
 void send_player_info_c(struct player *src, struct conn_list *dest);
@@ -89,7 +89,7 @@ void send_player_diplstate_c(struct player *src, struct conn_list *dest);
 
 struct conn_list *player_reply_dest(struct player *pplayer);
 
-void shuffle_players(void);
+void shuffle_players();
 void set_shuffled_players(int *shuffled_players);
 struct player *shuffled_player(int i);
 void reset_all_start_commands(bool plrchange);
@@ -149,8 +149,8 @@ void update_players_after_alliance_breakup(
     const struct unit_list *pplayer2_seen_units);
 
 /* Player counts, total player_count() is in common/player.c */
-int barbarian_count(void);
-int normal_player_count(void);
+int barbarian_count();
+int normal_player_count();
 
 void player_status_add(struct player *plr, enum player_status status);
 bool player_status_check(struct player *plr, enum player_status status);
@@ -165,10 +165,10 @@ void send_delegation_info(const struct connection *pconn);
 struct player *player_by_user_delegated(const char *name);
 
 /* player colors */
-void playercolor_init(void);
-void playercolor_free(void);
+void playercolor_init();
+void playercolor_free();
 
-int playercolor_count(void);
+int playercolor_count();
 void playercolor_add(struct rgbcolor *prgbcolor);
 struct rgbcolor *playercolor_get(int id);
 

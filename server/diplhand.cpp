@@ -86,12 +86,12 @@ static void call_treaty_accepted(struct player *pplayer,
 /**********************************************************************/ /**
    Initialize diplhand module
  **************************************************************************/
-void diplhand_init(void) { treaties = treaty_list_new(); }
+void diplhand_init() { treaties = treaty_list_new(); }
 
 /**********************************************************************/ /**
    Free all the resources allocated by diplhand.
  **************************************************************************/
-void diplhand_free(void)
+void diplhand_free()
 {
   free_treaties();
 
@@ -102,7 +102,7 @@ void diplhand_free(void)
 /**********************************************************************/ /**
    Free all the treaties currently in treaty list.
  **************************************************************************/
-void free_treaties(void)
+void free_treaties()
 {
   /* Free memory allocated for treaties */
   treaty_list_iterate(treaties, pt)
@@ -946,4 +946,4 @@ void reject_all_treaties(struct player *pplayer)
 /**********************************************************************/ /**
    Get treaty list
  **************************************************************************/
-struct treaty_list *get_all_treaties(void) { return treaties; }
+struct treaty_list *get_all_treaties() { return treaties; }

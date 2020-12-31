@@ -151,7 +151,7 @@ void city_map_radius_sq_set(struct city *pcity, int radius_sq)
 /**********************************************************************/ /**
    Maximum city radius in this ruleset.
  **************************************************************************/
-int rs_max_city_radius_sq(void)
+int rs_max_city_radius_sq()
 {
   int max_rad = game.info.init_city_radius_sq
                 + effect_cumulative_max(EFT_CITY_RADIUS_SQ, NULL);
@@ -498,7 +498,7 @@ static void citylog_map_radius_sq(QtMsgType level)
    Fill the arrays city_map_index, city_map_xy and city_map_numtiles. This
    may depend on topology and ruleset settings.
  **************************************************************************/
-void generate_city_map_indices(void)
+void generate_city_map_indices()
 {
   int i, dx, dy, city_x, city_y, dist, city_count_tiles = 0;
   struct iter_index
@@ -580,7 +580,7 @@ void generate_city_map_indices(void)
 /**********************************************************************/ /**
    Free memory allocated by generate_citymap_index
  **************************************************************************/
-void free_city_map_index(void)
+void free_city_map_index()
 {
   delete[] city_map_index;
   city_map_index = nullptr;
@@ -1701,7 +1701,7 @@ static bv_unit_types caravan_helped_utype;
    Initialize the cache of what city production can use shields from
    caravans.
  **************************************************************************/
-void city_production_caravan_shields_init(void)
+void city_production_caravan_shields_init()
 {
   struct requirement prod_as_req;
 
@@ -3311,7 +3311,7 @@ void city_styles_alloc(int num)
 /**********************************************************************/ /**
   De-allocate the memory used by the city styles.
  **************************************************************************/
-void city_styles_free(void)
+void city_styles_free()
 {
   int i;
 

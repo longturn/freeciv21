@@ -21,12 +21,12 @@ struct team;
 struct team_slot;
 
 /* General team slot accessor functions. */
-void team_slots_init(void);
-bool team_slots_initialised(void);
-void team_slots_free(void);
-int team_slot_count(void);
+void team_slots_init();
+bool team_slots_initialised();
+void team_slots_free();
+int team_slot_count();
 
-struct team_slot *team_slot_first(void);
+struct team_slot *team_slot_first();
 struct team_slot *team_slot_next(struct team_slot *tslot);
 
 /* Team slot accessor functions. */
@@ -44,7 +44,7 @@ void team_slot_set_defined_name(struct team_slot *tslot,
 /* Team accessor functions. */
 struct team *team_new(struct team_slot *tslot);
 void team_destroy(struct team *pteam);
-int team_count(void);
+int team_count();
 int team_index(const struct team *pteam);
 int team_number(const struct team *pteam);
 struct team *team_by_number(const int team_id);

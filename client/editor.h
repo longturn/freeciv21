@@ -50,16 +50,16 @@ enum editor_tool_mode {
   NUM_EDITOR_TOOL_MODES
 };
 
-void editor_init(void);
-void editor_clear(void);
-void editor_free(void);
+void editor_init();
+void editor_clear();
+void editor_free();
 
-void editor_ruleset_changed(void);
+void editor_ruleset_changed();
 
-bool editor_is_active(void);
-enum editor_tool_type editor_get_tool(void);
+bool editor_is_active();
+enum editor_tool_type editor_get_tool();
 void editor_set_tool(enum editor_tool_type emt);
-const struct tile *editor_get_current_tile(void);
+const struct tile *editor_get_current_tile();
 void editor_set_current_tile(const struct tile *ptile);
 
 bool editor_tool_has_mode(enum editor_tool_type ett,
@@ -100,7 +100,7 @@ const char *editor_get_mode_tooltip(enum editor_tool_mode etm);
 QPixmap *editor_get_mode_sprite(enum editor_tool_mode etm);
 
 struct edit_buffer;
-struct edit_buffer *editor_get_copy_buffer(void);
+struct edit_buffer *editor_get_copy_buffer();
 
 enum editor_keyboard_modifiers {
   EKM_NONE = 0,
@@ -124,16 +124,16 @@ void editor_mouse_button_release(int canvas_x, int canvas_y, int button,
 void editor_mouse_move(int canvas_x, int canvas_y, int modifiers);
 
 void editor_apply_tool(const struct tile *ptile, bool part_of_selection);
-void editor_notify_edit_finished(void);
+void editor_notify_edit_finished();
 
-void editor_selection_clear(void);
+void editor_selection_clear();
 void editor_selection_add(const struct tile *ptile);
 void editor_selection_remove(const struct tile *ptile);
 bool editor_tile_is_selected(const struct tile *ptile);
-void editor_apply_tool_to_selection(void);
-const struct tile *editor_get_selection_center(void);
+void editor_apply_tool_to_selection();
+const struct tile *editor_get_selection_center();
 
-struct unit *editor_unit_virtual_create(void);
+struct unit *editor_unit_virtual_create();
 
 /* These type flags determine what an edit buffer
  * will copy from its source tiles. Multiple flags

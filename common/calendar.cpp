@@ -90,7 +90,7 @@ void game_next_year(struct packet_game_info *info)
 /************************************************************************/ /**
    Advance the game year.
  ****************************************************************************/
-void game_advance_year(void)
+void game_advance_year()
 {
   game_next_year(&game.info);
   game.info.turn++;
@@ -140,7 +140,7 @@ const char *textyear(int year)
    Produce a statically allocated textual representation of the current
    calendar time.
  ****************************************************************************/
-const char *calendar_text(void)
+const char *calendar_text()
 {
   if (game.calendar.calendar_fragments) {
     static char buffer[128];

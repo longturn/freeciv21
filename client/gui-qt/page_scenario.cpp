@@ -80,7 +80,7 @@ page_scenario::~page_scenario() = default;
 /**********************************************************************/ /**
    Browse scenarios directory
  **************************************************************************/
-void page_scenario::browse_scenarios(void)
+void page_scenario::browse_scenarios()
 {
   QString str;
 
@@ -114,7 +114,7 @@ void page_scenario::start_scenario()
 /**********************************************************************/ /**
    Gets scenarios list and updates it in TableWidget = scenarios_load
  **************************************************************************/
-void page_scenario::update_scenarios_page(void)
+void page_scenario::update_scenarios_page()
 {
   struct fileinfo_list *files;
   int row = 0;

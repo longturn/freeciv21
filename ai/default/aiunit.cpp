@@ -3108,7 +3108,7 @@ void dai_consider_tile_dangerous(struct ai_type *ait, struct tile *ptile,
 /**********************************************************************/ /**
    Updates the global array simple_ai_types.
  **************************************************************************/
-static void update_simple_ai_types(void)
+static void update_simple_ai_types()
 {
   int i = 0;
 

@@ -221,7 +221,7 @@ void remove_vote(struct vote *pvote)
 /**********************************************************************/ /**
    Remove all votes. Sends vote_remove packets to clients.
  **************************************************************************/
-void clear_all_votes(void)
+void clear_all_votes()
 {
   if (!vote_list) {
     return;
@@ -723,7 +723,7 @@ void cancel_connection_votes(struct connection *pconn)
 /**********************************************************************/ /**
    Initialize data structures used by this module.
  **************************************************************************/
-void voting_init(void)
+void voting_init()
 {
   if (!vote_list) {
     vote_list = vote_list_new();
@@ -734,7 +734,7 @@ void voting_init(void)
 /**********************************************************************/ /**
    Check running votes. This should be called every turn.
  **************************************************************************/
-void voting_turn(void)
+void voting_turn()
 {
   if (!vote_list) {
     qCritical("voting_turn() called before voting_init()");
@@ -752,7 +752,7 @@ void voting_turn(void)
 /**********************************************************************/ /**
    Free all memory used by this module.
  **************************************************************************/
-void voting_free(void)
+void voting_free()
 {
   clear_all_votes();
   if (vote_list) {

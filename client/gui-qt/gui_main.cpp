@@ -48,7 +48,7 @@ const char *const gui_character_encoding = "UTF-8";
 const char *client_string = "gui-qt";
 static fc_client *freeciv_qt;
 
-void reset_unit_table(void);
+void reset_unit_table();
 static void apply_help_font(struct option *poption);
 static void apply_notify_font(struct option *poption);
 static void apply_sidebar(struct option *poption);
@@ -221,7 +221,7 @@ void qtg_set_unit_icons_more_arrow(bool onoff)
  platform- independent code, so some clients will not need to do anything
  here.
  **************************************************************************/
-void qtg_real_focus_units_changed(void)
+void qtg_real_focus_units_changed()
 {
   units_select *unit_sel = queen()->unit_selector;
   if (unit_sel != nullptr && unit_sel->isVisible()) {
@@ -411,7 +411,7 @@ enum gui_type qtg_get_gui_type() { return GUI_QT; }
 /**********************************************************************/ /**
    Called when the tileset is changed to reset the unit pixmap table.
  **************************************************************************/
-void reset_unit_table(void)
+void reset_unit_table()
 { /* FIXME */
 }
 

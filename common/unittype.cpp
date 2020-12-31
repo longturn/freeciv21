@@ -53,7 +53,7 @@ static struct user_flag user_class_flags[MAX_NUM_USER_UCLASS_FLAGS];
 /**********************************************************************/ /**
    Return the first item of unit_types.
  **************************************************************************/
-struct unit_type *unit_type_array_first(void)
+struct unit_type *unit_type_array_first()
 {
   if (game.control.num_unit_types > 0) {
     return unit_types;
@@ -64,7 +64,7 @@ struct unit_type *unit_type_array_first(void)
 /**********************************************************************/ /**
    Return the last item of unit_types.
  **************************************************************************/
-const struct unit_type *unit_type_array_last(void)
+const struct unit_type *unit_type_array_last()
 {
   if (game.control.num_unit_types > 0) {
     return &unit_types[game.control.num_unit_types - 1];
@@ -75,7 +75,7 @@ const struct unit_type *unit_type_array_last(void)
 /**********************************************************************/ /**
    Return the number of unit types.
  **************************************************************************/
-Unit_type_id utype_count(void) { return game.control.num_unit_types; }
+Unit_type_id utype_count() { return game.control.num_unit_types; }
 
 /**********************************************************************/ /**
    Return the unit type index.
@@ -775,7 +775,7 @@ void unit_type_action_cache_set(struct unit_type *ptype)
    Cache what unit types may be allowed do what actions, both at all and
    when certain properties are true.
  **************************************************************************/
-void unit_type_action_cache_init(void)
+void unit_type_action_cache_init()
 {
   unit_type_iterate(u) { unit_type_action_cache_set(u); }
   unit_type_iterate_end;
@@ -1535,7 +1535,7 @@ struct unit_class *unit_class_by_rule_name(const char *s)
 /**********************************************************************/ /**
    Initialize user unit class flags.
  **************************************************************************/
-void user_unit_class_flags_init(void)
+void user_unit_class_flags_init()
 {
   int i;
 
@@ -1598,7 +1598,7 @@ const char *unit_class_flag_helptxt(enum unit_class_flag_id id)
 /**********************************************************************/ /**
    Initialize user unit type flags.
  **************************************************************************/
-void user_unit_type_flags_init(void)
+void user_unit_type_flags_init()
 {
   int i;
 
@@ -1874,7 +1874,7 @@ static void precalc_one(int i,
 /**********************************************************************/ /**
    Free memory allocated by role_unit_precalcs().
  **************************************************************************/
-void role_unit_precalcs_free(void)
+void role_unit_precalcs_free()
 {
   int i;
 
@@ -1889,7 +1889,7 @@ void role_unit_precalcs_free(void)
    Initialize; it is safe to call this multiple times (e.g., if units have
    changed due to rulesets in client).
  **************************************************************************/
-void role_unit_precalcs(void)
+void role_unit_precalcs()
 {
   int i;
 
@@ -2070,7 +2070,7 @@ struct unit_type *first_role_unit_for_player(const struct player *pplayer,
 /**********************************************************************/ /**
    Inialize unit-type structures.
  **************************************************************************/
-void unit_types_init(void)
+void unit_types_init()
 {
   int i;
 
@@ -2106,7 +2106,7 @@ static void unit_type_free(struct unit_type *punittype)
 /**********************************************************************/ /**
    Frees the memory associated with all unit types.
  **************************************************************************/
-void unit_types_free(void)
+void unit_types_free()
 {
   int i;
 
@@ -2120,7 +2120,7 @@ void unit_types_free(void)
 /**********************************************************************/ /**
    Frees the memory associated with all unit type flags
  **************************************************************************/
-void unit_type_flags_free(void)
+void unit_type_flags_free()
 {
   int i;
 
@@ -2132,7 +2132,7 @@ void unit_type_flags_free(void)
 /**********************************************************************/ /**
    Frees the memory associated with all unit class flags
  **************************************************************************/
-void unit_class_flags_free(void)
+void unit_class_flags_free()
 {
   int i;
 
@@ -2144,7 +2144,7 @@ void unit_class_flags_free(void)
 /**********************************************************************/ /**
    Return the first item of unit_classes.
  **************************************************************************/
-struct unit_class *unit_class_array_first(void)
+struct unit_class *unit_class_array_first()
 {
   if (game.control.num_unit_classes > 0) {
     return unit_classes;
@@ -2155,7 +2155,7 @@ struct unit_class *unit_class_array_first(void)
 /**********************************************************************/ /**
    Return the last item of unit_classes.
  **************************************************************************/
-const struct unit_class *unit_class_array_last(void)
+const struct unit_class *unit_class_array_last()
 {
   if (game.control.num_unit_classes > 0) {
     return &unit_classes[game.control.num_unit_classes - 1];
@@ -2166,7 +2166,7 @@ const struct unit_class *unit_class_array_last(void)
 /**********************************************************************/ /**
    Return the unit_class count.
  **************************************************************************/
-Unit_Class_id uclass_count(void) { return game.control.num_unit_classes; }
+Unit_Class_id uclass_count() { return game.control.num_unit_classes; }
 
 #ifndef uclass_index
 /**********************************************************************/ /**
@@ -2224,7 +2224,7 @@ struct unit_class *unit_class_get(const struct unit *punit)
 /**********************************************************************/ /**
    Initialize unit_class structures.
  **************************************************************************/
-void unit_classes_init(void)
+void unit_classes_init()
 {
   int i;
 
@@ -2244,7 +2244,7 @@ void unit_classes_init(void)
 /**********************************************************************/ /**
    Free resources allocated for unit classes.
  **************************************************************************/
-void unit_classes_free(void)
+void unit_classes_free()
 {
   int i;
 

@@ -16,11 +16,11 @@ typedef void (*tile_knowledge_cb)(struct tile *ptile);
 
 #define MG_UNUSED mapgen_terrain_property_invalid()
 
-void generator_free(void);
+void generator_free();
 
-void regenerate_lakes(void);
-void smooth_water_depth(void);
-void assign_continent_numbers(void);
+void regenerate_lakes();
+void smooth_water_depth();
+void assign_continent_numbers();
 int get_lake_surrounders(Continent_id cont);
 int get_continent_size(Continent_id id);
 int get_ocean_size(Continent_id id);
@@ -110,11 +110,11 @@ void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
 void smooth_int_map(int *int_map, bool zeroes_at_edges);
 
 /* placed_map tool */
-void create_placed_map(void);
-void destroy_placed_map(void);
+void create_placed_map();
+void destroy_placed_map();
 void map_set_placed(struct tile *ptile);
 void map_unset_placed(struct tile *ptile);
 bool not_placed(const struct tile *ptile);
-bool placed_map_is_initialized(void);
-void set_all_ocean_tiles_placed(void);
+bool placed_map_is_initialized();
+void set_all_ocean_tiles_placed();
 void set_placed_near_pos(struct tile *ptile, int dist);

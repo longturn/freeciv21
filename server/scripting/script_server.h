@@ -22,8 +22,8 @@ struct connection;
 void script_server_remove_exported_object(void *object);
 
 /* Script functions. */
-bool script_server_init(void);
-void script_server_free(void);
+bool script_server_init();
+void script_server_free();
 
 bool script_server_do_string(struct connection *caller, const char *str);
 bool script_server_do_file(struct connection *caller, const char *filename);

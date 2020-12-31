@@ -113,10 +113,10 @@ void post_receive_packet_server_join_reply(
 void pre_send_packet_player_attribute_chunk(
     struct connection *pc, struct packet_player_attribute_chunk *packet);
 
-const struct packet_handlers *packet_handlers_initial(void);
+const struct packet_handlers *packet_handlers_initial();
 const struct packet_handlers *packet_handlers_get(const char *capability);
 
-void packets_deinit(void);
+void packets_deinit();
 
 #define SEND_PACKET_START(packet_type)                                      \
   unsigned char buffer[MAX_LEN_PACKET];                                     \

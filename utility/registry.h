@@ -12,8 +12,8 @@
 
 struct section;
 
-void registry_module_init(void);
-void registry_module_close(void);
+void registry_module_init();
+void registry_module_close();
 
 struct section_file *secfile_new(bool allow_duplicates);
 void secfile_destroy(struct section_file *secfile);
@@ -23,7 +23,7 @@ struct section_file *secfile_load(const char *filename,
 void secfile_allow_digital_boolean(struct section_file *secfile,
                                    bool allow_digital_boolean);
 
-const char *secfile_error(void);
+const char *secfile_error();
 const char *section_name(const struct section *psection);
 
 #include "registry_ini.h"

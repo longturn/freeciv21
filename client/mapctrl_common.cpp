@@ -258,7 +258,7 @@ void update_selection_rectangle(float canvas_x, float canvas_y)
 /**********************************************************************/ /**
    Redraws the selection rectangle after a map flush.
  **************************************************************************/
-void redraw_selection_rectangle(void)
+void redraw_selection_rectangle()
 {
   if (rectangle_active) {
     draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
@@ -268,7 +268,7 @@ void redraw_selection_rectangle(void)
 /**********************************************************************/ /**
    Redraws the selection rectangle after a map flush.
  **************************************************************************/
-void cancel_selection_rectangle(void)
+void cancel_selection_rectangle()
 {
   if (rectangle_active) {
     rectangle_active = false;
@@ -416,7 +416,7 @@ static void clipboard_send_production_packet(struct city *pcity)
    A newer technology may be available for units.
    Also called from packhand.c.
  **************************************************************************/
-void upgrade_canvas_clipboard(void)
+void upgrade_canvas_clipboard()
 {
   if (!can_client_issue_orders()) {
     return;
@@ -469,7 +469,7 @@ void maybe_activate_keyboardless_goto(int canvas_x, int canvas_y)
 /**********************************************************************/ /**
    Return TRUE iff the turn done button should be enabled.
  **************************************************************************/
-bool get_turn_done_button_state(void)
+bool get_turn_done_button_state()
 {
   return can_end_turn()
          && (is_human(client.conn.playing)
@@ -479,7 +479,7 @@ bool get_turn_done_button_state(void)
 /**********************************************************************/ /**
    Return TRUE iff client can end turn.
  **************************************************************************/
-bool can_end_turn(void)
+bool can_end_turn()
 {
   struct option *opt;
 
@@ -589,7 +589,7 @@ void recenter_button_pressed(int canvas_x, int canvas_y)
 /**********************************************************************/ /**
    Update the turn done button state.
  **************************************************************************/
-void update_turn_done_button_state(void)
+void update_turn_done_button_state()
 {
   bool turn_done_state = get_turn_done_button_state();
 

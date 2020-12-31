@@ -101,7 +101,7 @@ void handle_readline_input_callback(char *line)
 /**********************************************************************/ /**
    Initialize server specific functions.
  **************************************************************************/
-void fc_interface_init_server(void)
+void fc_interface_init_server()
 {
   struct functions *funcs = fc_interface_funcs();
 

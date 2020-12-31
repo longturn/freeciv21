@@ -49,7 +49,7 @@ public:
   const void *item() override;
   void *item_working_copy() override;
   const char *name() override;
-  struct req_vec_problem *find_next_problem(void) override;
+  struct req_vec_problem *find_next_problem() override;
   void apply_accepted_changes() override;
   void undo_accepted_changes() override;
   int num_vectors() override;
@@ -476,7 +476,7 @@ const char *fix_enabler_item::name() { return my_name.toUtf8().data(); }
    item or nullptr if no fix is found to be needed.
    @return the next requirement vector problem for the item.
  **************************************************************************/
-struct req_vec_problem *fix_enabler_item::find_next_problem(void)
+struct req_vec_problem *fix_enabler_item::find_next_problem()
 {
   struct req_vec_problem *out = action_enabler_suggest_repair(local_copy);
   if (out != NULL) {

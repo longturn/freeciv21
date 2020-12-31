@@ -29,8 +29,8 @@ struct music_style {
 };
 
 void styles_alloc(int count);
-void styles_free(void);
-int style_count(void);
+void styles_free();
+int style_count();
 int style_number(const struct nation_style *pstyle);
 int style_index(const struct nation_style *pstyle);
 struct nation_style *style_by_number(int id);
@@ -59,7 +59,7 @@ struct nation_style *style_by_rule_name(const char *name);
   styles_iterate_end;
 
 void music_styles_alloc(int count);
-void music_styles_free(void);
+void music_styles_free();
 
 int music_style_number(const struct music_style *pms);
 struct music_style *music_style_by_number(int id);

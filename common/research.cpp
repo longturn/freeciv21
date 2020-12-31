@@ -59,7 +59,7 @@ Q_GLOBAL_STATIC(QVector<QString>, future_name_translation);
 /************************************************************************/ /**
    Initializes all player research structure.
  ****************************************************************************/
-void researches_init(void)
+void researches_init()
 {
   int i;
 
@@ -94,7 +94,7 @@ void researches_init(void)
 /************************************************************************/ /**
    Free all resources allocated for the research system
  ****************************************************************************/
-void researches_free(void)
+void researches_free()
 {
   future_rule_name->clear();
   future_name_translation->clear();
@@ -1156,7 +1156,7 @@ int player_tech_upkeep(const struct player *pplayer)
 /************************************************************************/ /**
    Returns the real size of the player research iterator.
  ****************************************************************************/
-size_t research_iter_sizeof(void) { return sizeof(struct research_iter); }
+size_t research_iter_sizeof() { return sizeof(struct research_iter); }
 
 /************************************************************************/ /**
    Returns the research structure pointed by the iterator.
@@ -1241,7 +1241,7 @@ struct iterator *research_iter_init(struct research_iter *it)
 /************************************************************************/ /**
    Returns the real size of the research player iterator.
  ****************************************************************************/
-size_t research_player_iter_sizeof(void)
+size_t research_player_iter_sizeof()
 {
   return sizeof(struct research_player_iter);
 }

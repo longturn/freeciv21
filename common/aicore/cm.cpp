@@ -276,7 +276,7 @@ static bool choice_is_promising(struct cm_state *state, int newchoice,
    indices will not have been initialized yet (cm_init_citymap is called
    when they are).
  ****************************************************************************/
-void cm_init(void)
+void cm_init()
 {
   /* In the B&B algorithm there's not really anything to initialize. */
 #ifdef GATHER_TIME_STATS
@@ -295,7 +295,7 @@ void cm_init(void)
    city map indices are generated (basically when the topology is set,
    shortly after the start of the game).
  ****************************************************************************/
-void cm_init_citymap(void)
+void cm_init_citymap()
 {
   /* In the B&B algorithm there's not really anything to initialize. */
 }
@@ -303,7 +303,7 @@ void cm_init_citymap(void)
 /************************************************************************/ /**
    Called at the end of a game to free any CM data.
  ****************************************************************************/
-void cm_free(void)
+void cm_free()
 {
 #ifdef GATHER_TIME_STATS
   print_performance(&performance.greedy);
@@ -556,7 +556,7 @@ static bool fitness_better(struct cm_fitness a, struct cm_fitness b)
    Return a fitness struct that is the worst possible result we can
    represent.
  ****************************************************************************/
-static struct cm_fitness worst_fitness(void)
+static struct cm_fitness worst_fitness()
 {
   struct cm_fitness f;
 

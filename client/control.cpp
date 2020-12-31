@@ -134,7 +134,7 @@ static struct unit *quickselect(struct tile *ptile,
 /**********************************************************************/ /**
    Called only by client_game_init() in client/client_main.c
  **************************************************************************/
-void control_init(void)
+void control_init()
 {
   int i;
 
@@ -151,7 +151,7 @@ void control_init(void)
 /**********************************************************************/ /**
    Called only by client_game_free() in client/client_main.c
  **************************************************************************/
-void control_free(void)
+void control_free()
 {
   int i;
 
@@ -174,12 +174,12 @@ void control_free(void)
 /**********************************************************************/ /**
    Returns list of units currently in focus.
  **************************************************************************/
-struct unit_list *get_units_in_focus(void) { return current_focus; }
+struct unit_list *get_units_in_focus() { return current_focus; }
 
 /**********************************************************************/ /**
    Return the number of units currently in focus (0 or more).
  **************************************************************************/
-int get_num_units_in_focus(void)
+int get_num_units_in_focus()
 {
   return (NULL != current_focus ? unit_list_size(current_focus) : 0);
 }
@@ -188,7 +188,7 @@ int get_num_units_in_focus(void)
    Store the focus unit(s).  This is used so that we can return to the
    previously focused unit with an appropriate keypress.
  **************************************************************************/
-static void store_previous_focus(void)
+static void store_previous_focus()
 {
   if (get_num_units_in_focus() > 0) {
     unit_list_clear(previous_focus);
@@ -211,7 +211,7 @@ void unit_focus_urgent(struct unit *punit)
 /**********************************************************************/ /**
    Do various updates required when the set of units in focus changes.
  **************************************************************************/
-static void focus_units_changed(void)
+static void focus_units_changed()
 {
   update_unit_info_label(get_units_in_focus());
   menus_update();
@@ -316,7 +316,7 @@ void set_hover_state(struct unit_list *punits, enum cursor_hover_state state,
 /**********************************************************************/ /**
    Clear current hover state (go to HOVER_NONE).
  **************************************************************************/
-void clear_hover_state(void)
+void clear_hover_state()
 {
   set_hover_state(NULL, HOVER_NONE, ACTIVITY_LAST, NULL, NO_TARGET,
                   NO_TARGET, ACTION_NONE, ORDER_LAST);
@@ -339,7 +339,7 @@ bool should_ask_server_for_actions(const struct unit *punit)
    Returns TRUE iff it is OK to ask the server about what actions a unit
    can perform.
  **************************************************************************/
-static bool can_ask_server_for_actions(void)
+static bool can_ask_server_for_actions()
 {
   /* OK as long as no other unit already asked and aren't done yet. */
   return (action_selection_in_progress_for == IDENTITY_NUMBER_ZERO
@@ -396,7 +396,7 @@ struct unit *get_focus_unit_on_tile(const struct tile *ptile)
 /**********************************************************************/ /**
    Return head of focus units list.
  **************************************************************************/
-struct unit *head_of_units_in_focus(void)
+struct unit *head_of_units_in_focus()
 {
   return unit_list_get(current_focus, 0);
 }
@@ -404,7 +404,7 @@ struct unit *head_of_units_in_focus(void)
 /**********************************************************************/ /**
    Finds a single focus unit that we can center on.  May return NULL.
  **************************************************************************/
-static struct tile *find_a_focus_unit_tile_to_center_on(void)
+static struct tile *find_a_focus_unit_tile_to_center_on()
 {
   struct unit *punit;
 
@@ -421,7 +421,7 @@ static struct tile *find_a_focus_unit_tile_to_center_on(void)
 /**********************************************************************/ /**
    Center on the focus unit, if off-screen and auto_center_on_unit is true.
  **************************************************************************/
-void auto_center_on_focus_unit(void)
+void auto_center_on_focus_unit()
 {
   struct tile *ptile = find_a_focus_unit_tile_to_center_on();
 
@@ -665,7 +665,7 @@ static struct unit *find_best_focus_candidate(bool accept_current)
 
    FIXME: Add feature to focus only units of a certain category.
  **************************************************************************/
-void unit_focus_advance(void)
+void unit_focus_advance()
 {
   struct unit *candidate = NULL;
   const int num_units_in_old_focus = get_num_units_in_focus();
@@ -768,7 +768,7 @@ void unit_focus_advance(void)
    We let GOTO-ing units stay in focus, so that if they have moves left
    at the end of the goto, then they are still in focus.
  **************************************************************************/
-void unit_focus_update(void)
+void unit_focus_update()
 {
   if (NULL == client.conn.playing || !can_client_change_view()) {
     return;
@@ -879,7 +879,7 @@ struct unit *find_visible_unit(struct tile *ptile)
    Blink the active unit (if necessary).  Return the time until the next
    blink (in seconds).
  **************************************************************************/
-int blink_active_unit(void)
+int blink_active_unit()
 {
   static QTimer blink_timer;
   blink_timer.setSingleShot(true);
@@ -911,7 +911,7 @@ int blink_active_unit(void)
    Blink the turn done button (if necessary).  Return the time until the next
    blink (in seconds).
  **************************************************************************/
-int blink_turn_done_button(void)
+int blink_turn_done_button()
 {
   static QTimer blink_timer;
   blink_timer.setSingleShot(true);
@@ -2156,7 +2156,7 @@ void request_unit_paradrop(struct unit_list *punits)
 /**********************************************************************/ /**
    Either start new patrol route planning, or add waypoint to current one.
  **************************************************************************/
-void request_unit_patrol(void)
+void request_unit_patrol()
 {
   struct unit_list *punits = get_units_in_focus();
 
@@ -2237,7 +2237,7 @@ void request_unit_pillage(struct unit *punit)
 /**********************************************************************/ /**
    Toggle display of city outlines on the map
  **************************************************************************/
-void request_toggle_city_outlines(void)
+void request_toggle_city_outlines()
 {
   if (!can_client_change_view()) {
     return;
@@ -2250,7 +2250,7 @@ void request_toggle_city_outlines(void)
 /**********************************************************************/ /**
    Toggle display of worker output of cities on the map
  **************************************************************************/
-void request_toggle_city_output(void)
+void request_toggle_city_output()
 {
   if (!can_client_change_view()) {
     return;
@@ -2263,7 +2263,7 @@ void request_toggle_city_output(void)
 /**********************************************************************/ /**
    Toggle display of grid lines on the map
  **************************************************************************/
-void request_toggle_map_grid(void)
+void request_toggle_map_grid()
 {
   if (!can_client_change_view()) {
     return;
@@ -2276,7 +2276,7 @@ void request_toggle_map_grid(void)
 /**********************************************************************/ /**
    Toggle display of national borders on the map
  **************************************************************************/
-void request_toggle_map_borders(void)
+void request_toggle_map_borders()
 {
   if (!can_client_change_view()) {
     return;
@@ -2289,7 +2289,7 @@ void request_toggle_map_borders(void)
 /**********************************************************************/ /**
    Toggle display of native tiles on the map
  **************************************************************************/
-void request_toggle_map_native(void)
+void request_toggle_map_native()
 {
   if (!can_client_change_view()) {
     return;
@@ -2302,7 +2302,7 @@ void request_toggle_map_native(void)
 /**********************************************************************/ /**
    Toggle display of city names
  **************************************************************************/
-void request_toggle_city_names(void)
+void request_toggle_city_names()
 {
   if (!can_client_change_view()) {
     return;
@@ -2315,7 +2315,7 @@ void request_toggle_city_names(void)
 /**********************************************************************/ /**
    Toggle display of city growth (turns-to-grow)
  **************************************************************************/
-void request_toggle_city_growth(void)
+void request_toggle_city_growth()
 {
   if (!can_client_change_view()) {
     return;
@@ -2328,7 +2328,7 @@ void request_toggle_city_growth(void)
 /**********************************************************************/ /**
    Toggle display of city productions
  **************************************************************************/
-void request_toggle_city_productions(void)
+void request_toggle_city_productions()
 {
   if (!can_client_change_view()) {
     return;
@@ -2341,7 +2341,7 @@ void request_toggle_city_productions(void)
 /**********************************************************************/ /**
    Toggle display of city buycost
  **************************************************************************/
-void request_toggle_city_buycost(void)
+void request_toggle_city_buycost()
 {
   if (!can_client_change_view()) {
     return;
@@ -2354,7 +2354,7 @@ void request_toggle_city_buycost(void)
 /**********************************************************************/ /**
    Toggle display of city trade routes
  **************************************************************************/
-void request_toggle_city_trade_routes(void)
+void request_toggle_city_trade_routes()
 {
   if (!can_client_change_view()) {
     return;
@@ -2367,7 +2367,7 @@ void request_toggle_city_trade_routes(void)
 /**********************************************************************/ /**
    Toggle display of terrain
  **************************************************************************/
-void request_toggle_terrain(void)
+void request_toggle_terrain()
 {
   if (!can_client_change_view()) {
     return;
@@ -2380,7 +2380,7 @@ void request_toggle_terrain(void)
 /**********************************************************************/ /**
    Toggle display of coastline
  **************************************************************************/
-void request_toggle_coastline(void)
+void request_toggle_coastline()
 {
   if (!can_client_change_view()) {
     return;
@@ -2393,7 +2393,7 @@ void request_toggle_coastline(void)
 /**********************************************************************/ /**
    Toggle display of roads and rails
  **************************************************************************/
-void request_toggle_roads_rails(void)
+void request_toggle_roads_rails()
 {
   if (!can_client_change_view()) {
     return;
@@ -2406,7 +2406,7 @@ void request_toggle_roads_rails(void)
 /**********************************************************************/ /**
    Toggle display of irrigation
  **************************************************************************/
-void request_toggle_irrigation(void)
+void request_toggle_irrigation()
 {
   if (!can_client_change_view()) {
     return;
@@ -2419,7 +2419,7 @@ void request_toggle_irrigation(void)
 /**********************************************************************/ /**
    Toggle display of mines
  **************************************************************************/
-void request_toggle_mines(void)
+void request_toggle_mines()
 {
   if (!can_client_change_view()) {
     return;
@@ -2432,7 +2432,7 @@ void request_toggle_mines(void)
 /**********************************************************************/ /**
    Toggle display of bases
  **************************************************************************/
-void request_toggle_bases(void)
+void request_toggle_bases()
 {
   if (!can_client_change_view()) {
     return;
@@ -2445,7 +2445,7 @@ void request_toggle_bases(void)
 /**********************************************************************/ /**
    Toggle display of resources
  **************************************************************************/
-void request_toggle_resources(void)
+void request_toggle_resources()
 {
   if (!can_client_change_view()) {
     return;
@@ -2458,7 +2458,7 @@ void request_toggle_resources(void)
 /**********************************************************************/ /**
    Toggle display of huts
  **************************************************************************/
-void request_toggle_huts(void)
+void request_toggle_huts()
 {
   if (!can_client_change_view()) {
     return;
@@ -2471,7 +2471,7 @@ void request_toggle_huts(void)
 /**********************************************************************/ /**
    Toggle display of pollution
  **************************************************************************/
-void request_toggle_pollution(void)
+void request_toggle_pollution()
 {
   if (!can_client_change_view()) {
     return;
@@ -2484,7 +2484,7 @@ void request_toggle_pollution(void)
 /**********************************************************************/ /**
    Toggle display of cities
  **************************************************************************/
-void request_toggle_cities(void)
+void request_toggle_cities()
 {
   if (!can_client_change_view()) {
     return;
@@ -2497,7 +2497,7 @@ void request_toggle_cities(void)
 /**********************************************************************/ /**
    Toggle display of units
  **************************************************************************/
-void request_toggle_units(void)
+void request_toggle_units()
 {
   if (!can_client_change_view()) {
     return;
@@ -2510,7 +2510,7 @@ void request_toggle_units(void)
 /**********************************************************************/ /**
    Toggle display of unit solid background.
  **************************************************************************/
-void request_toggle_unit_solid_bg(void)
+void request_toggle_unit_solid_bg()
 {
   if (!can_client_change_view()) {
     return;
@@ -2523,7 +2523,7 @@ void request_toggle_unit_solid_bg(void)
 /**********************************************************************/ /**
    Toggle display of unit shields.
  **************************************************************************/
-void request_toggle_unit_shields(void)
+void request_toggle_unit_shields()
 {
   if (!can_client_change_view()) {
     return;
@@ -2536,7 +2536,7 @@ void request_toggle_unit_shields(void)
 /**********************************************************************/ /**
    Toggle display of focus unit
  **************************************************************************/
-void request_toggle_focus_unit(void)
+void request_toggle_focus_unit()
 {
   if (!can_client_change_view()) {
     return;
@@ -2549,7 +2549,7 @@ void request_toggle_focus_unit(void)
 /**********************************************************************/ /**
    Toggle display of fog of war
  **************************************************************************/
-void request_toggle_fog_of_war(void)
+void request_toggle_fog_of_war()
 {
   if (!can_client_change_view()) {
     return;
@@ -2563,7 +2563,7 @@ void request_toggle_fog_of_war(void)
 /**********************************************************************/ /**
    Center to focus unit.
  **************************************************************************/
-void request_center_focus_unit(void)
+void request_center_focus_unit()
 {
   struct tile *ptile = find_a_focus_unit_tile_to_center_on();
 
@@ -2591,7 +2591,7 @@ void request_units_wait(struct unit_list *punits)
 /**********************************************************************/ /**
    Set focus units to FOCUS_DONE state.
  **************************************************************************/
-void request_unit_move_done(void)
+void request_unit_move_done()
 {
   if (get_num_units_in_focus() > 0) {
     enum unit_focus_status new_status = FOCUS_DONE;
@@ -3017,7 +3017,7 @@ void do_unit_connect(struct tile *ptile, enum unit_activity activity,
 /**********************************************************************/ /**
    The 'Escape' key.
  **************************************************************************/
-void key_cancel_action(void)
+void key_cancel_action()
 {
   struct unit_list *punits = get_units_in_focus();
 
@@ -3052,7 +3052,7 @@ void key_cancel_action(void)
    Center the mapview on the player's named capital,
    or print a failure message.
  **************************************************************************/
-void key_center_capital(void)
+void key_center_capital()
 {
   struct city *capital = player_primary_capital(client_player());
 
@@ -3069,12 +3069,12 @@ void key_center_capital(void)
 /**********************************************************************/ /**
    Handle user 'end turn' input.
  **************************************************************************/
-void key_end_turn(void) { send_turn_done(); }
+void key_end_turn() { send_turn_done(); }
 
 /**********************************************************************/ /**
    Recall the previous focus unit(s).  See store_previous_focus().
  **************************************************************************/
-void key_recall_previous_focus_unit(void)
+void key_recall_previous_focus_unit()
 {
   int i = 0;
 
@@ -3111,7 +3111,7 @@ void key_unit_move(enum direction8 gui_dir)
 /**********************************************************************/ /**
    Handle use 'build city' input.
  **************************************************************************/
-void key_unit_build_city(void)
+void key_unit_build_city()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3123,7 +3123,7 @@ void key_unit_build_city(void)
 /**********************************************************************/ /**
    Handle user 'help build wonder' input
  **************************************************************************/
-void key_unit_build_wonder(void)
+void key_unit_build_wonder()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3145,7 +3145,7 @@ void key_unit_connect(enum unit_activity activity, struct extra_type *tgt)
 /**********************************************************************/ /**
    Handle user 'Do...' input
  **************************************************************************/
-void key_unit_action_select(void)
+void key_unit_action_select()
 {
   struct tile *ptile;
 
@@ -3174,7 +3174,7 @@ void key_unit_action_select(void)
    Will stop asking for a target tile and have each actor unit act against
    its own tile if called twice.
  **************************************************************************/
-void key_unit_action_select_tgt(void)
+void key_unit_action_select_tgt()
 {
   struct unit_list *punits = get_units_in_focus();
 
@@ -3230,27 +3230,27 @@ void key_unit_action_select_tgt(void)
 /**********************************************************************/ /**
    Handle user 'unit done' input
  **************************************************************************/
-void key_unit_done(void) { request_unit_move_done(); }
+void key_unit_done() { request_unit_move_done(); }
 
 /**********************************************************************/ /**
    Handle user 'unit goto' input
  **************************************************************************/
-void key_unit_goto(void) { request_unit_goto(ORDER_LAST, ACTION_NONE, -1); }
+void key_unit_goto() { request_unit_goto(ORDER_LAST, ACTION_NONE, -1); }
 
 /**********************************************************************/ /**
    Handle user 'paradrop' input
  **************************************************************************/
-void key_unit_paradrop(void) { request_unit_paradrop(get_units_in_focus()); }
+void key_unit_paradrop() { request_unit_paradrop(get_units_in_focus()); }
 
 /**********************************************************************/ /**
    Handle user 'patrol' input
  **************************************************************************/
-void key_unit_patrol(void) { request_unit_patrol(); }
+void key_unit_patrol() { request_unit_patrol(); }
 
 /**********************************************************************/ /**
    Handle user 'establish traderoute' input
  **************************************************************************/
-void key_unit_trade_route(void)
+void key_unit_trade_route()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3266,7 +3266,7 @@ void key_unit_trade_route(void)
 /**********************************************************************/ /**
    Handle user 'unload all' input
  **************************************************************************/
-void key_unit_unload_all(void)
+void key_unit_unload_all()
 {
   struct unit *pnext_focus = NULL, *plast;
 
@@ -3296,12 +3296,12 @@ void key_unit_unload_all(void)
 /**********************************************************************/ /**
    Handle user 'wait' input
  **************************************************************************/
-void key_unit_wait(void) { request_units_wait(get_units_in_focus()); }
+void key_unit_wait() { request_units_wait(get_units_in_focus()); }
 
 /**********************************************************************/ /**
    Handle user 'wakeup others' input
  **************************************************************************/
-void key_unit_wakeup_others(void)
+void key_unit_wakeup_others()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3313,7 +3313,7 @@ void key_unit_wakeup_others(void)
 /**********************************************************************/ /**
    Handle user 'build base of class airbase' input
  **************************************************************************/
-void key_unit_airbase(void)
+void key_unit_airbase()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3332,7 +3332,7 @@ void key_unit_airbase(void)
 /**********************************************************************/ /**
    Handle user 'autoexplore' input
  **************************************************************************/
-void key_unit_auto_explore(void)
+void key_unit_auto_explore()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3347,7 +3347,7 @@ void key_unit_auto_explore(void)
    Call to request (from the server) that the focus unit is put into
    autosettler mode.
  **************************************************************************/
-void key_unit_auto_settle(void)
+void key_unit_auto_settle()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3361,7 +3361,7 @@ void key_unit_auto_settle(void)
 /**********************************************************************/ /**
    Unit convert key pressed or respective menu entry selected.
  **************************************************************************/
-void key_unit_convert(void)
+void key_unit_convert()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3373,7 +3373,7 @@ void key_unit_convert(void)
 /**********************************************************************/ /**
    Handle user 'clean fallout' input
  **************************************************************************/
-void key_unit_fallout(void)
+void key_unit_fallout()
 {
   key_unit_clean(ACTIVITY_FALLOUT, ERM_CLEANFALLOUT);
 }
@@ -3381,7 +3381,7 @@ void key_unit_fallout(void)
 /**********************************************************************/ /**
    Handle user 'fortify' input
  **************************************************************************/
-void key_unit_fortify(void)
+void key_unit_fortify()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3395,7 +3395,7 @@ void key_unit_fortify(void)
 /**********************************************************************/ /**
    Handle user 'build base of class fortress' input
  **************************************************************************/
-void key_unit_fortress(void)
+void key_unit_fortress()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3414,7 +3414,7 @@ void key_unit_fortress(void)
 /**********************************************************************/ /**
    Handle user 'change homecity' input
  **************************************************************************/
-void key_unit_homecity(void)
+void key_unit_homecity()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3461,7 +3461,7 @@ static void key_unit_clean(enum unit_activity act,
 /**********************************************************************/ /**
    Handle user 'irrigate' input
  **************************************************************************/
-void key_unit_irrigate(void)
+void key_unit_irrigate()
 {
   key_unit_extra(ACTIVITY_IRRIGATE, EC_IRRIGATION);
 }
@@ -3469,7 +3469,7 @@ void key_unit_irrigate(void)
 /**********************************************************************/ /**
    Handle user 'cultivate' input
  **************************************************************************/
-void key_unit_cultivate(void)
+void key_unit_cultivate()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3483,12 +3483,12 @@ void key_unit_cultivate(void)
 /**********************************************************************/ /**
    Handle user 'build mine' input
  **************************************************************************/
-void key_unit_mine(void) { key_unit_extra(ACTIVITY_MINE, EC_MINE); }
+void key_unit_mine() { key_unit_extra(ACTIVITY_MINE, EC_MINE); }
 
 /**********************************************************************/ /**
    Handle user 'plant' input
  **************************************************************************/
-void key_unit_plant(void)
+void key_unit_plant()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3502,7 +3502,7 @@ void key_unit_plant(void)
 /**********************************************************************/ /**
    Handle user 'pillage' input
  **************************************************************************/
-void key_unit_pillage(void)
+void key_unit_pillage()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3516,7 +3516,7 @@ void key_unit_pillage(void)
 /**********************************************************************/ /**
    Handle user 'clean pollution' input
  **************************************************************************/
-void key_unit_pollution(void)
+void key_unit_pollution()
 {
   key_unit_clean(ACTIVITY_POLLUTION, ERM_CLEANPOLLUTION);
 }
@@ -3524,7 +3524,7 @@ void key_unit_pollution(void)
 /**********************************************************************/ /**
    Handle user 'build road or railroad' input
  **************************************************************************/
-void key_unit_road(void)
+void key_unit_road()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3542,7 +3542,7 @@ void key_unit_road(void)
 /**********************************************************************/ /**
    Handle user 'sentry' input
  **************************************************************************/
-void key_unit_sentry(void)
+void key_unit_sentry()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3556,7 +3556,7 @@ void key_unit_sentry(void)
 /**********************************************************************/ /**
    Handle user 'transform unit' input
  **************************************************************************/
-void key_unit_transform(void)
+void key_unit_transform()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -3640,55 +3640,55 @@ void key_unit_select_battlegroup(int battlegroup, bool append)
 /**********************************************************************/ /**
    Toggle drawing of city outlines.
  **************************************************************************/
-void key_city_outlines_toggle(void) { request_toggle_city_outlines(); }
+void key_city_outlines_toggle() { request_toggle_city_outlines(); }
 
 /**********************************************************************/ /**
    Toggle drawing of city output produced by workers of the city.
  **************************************************************************/
-void key_city_output_toggle(void) { request_toggle_city_output(); }
+void key_city_output_toggle() { request_toggle_city_output(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle map grid' input
  **************************************************************************/
-void key_map_grid_toggle(void) { request_toggle_map_grid(); }
+void key_map_grid_toggle() { request_toggle_map_grid(); }
 
 /**********************************************************************/ /**
    Toggle map borders on the mapview on/off based on a keypress.
  **************************************************************************/
-void key_map_borders_toggle(void) { request_toggle_map_borders(); }
+void key_map_borders_toggle() { request_toggle_map_borders(); }
 
 /**********************************************************************/ /**
    Toggle native tiles on the mapview on/off based on a keypress.
  **************************************************************************/
-void key_map_native_toggle(void) { request_toggle_map_native(); }
+void key_map_native_toggle() { request_toggle_map_native(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle city names display' input
  **************************************************************************/
-void key_city_names_toggle(void) { request_toggle_city_names(); }
+void key_city_names_toggle() { request_toggle_city_names(); }
 
 /**********************************************************************/ /**
    Toggles the "show city growth turns" option by passing off the
    request to another function...
  **************************************************************************/
-void key_city_growth_toggle(void) { request_toggle_city_growth(); }
+void key_city_growth_toggle() { request_toggle_city_growth(); }
 
 /**********************************************************************/ /**
    Toggles the showing of the buy cost of the current production in the
    city descriptions.
  **************************************************************************/
-void key_city_buycost_toggle(void) { request_toggle_city_buycost(); }
+void key_city_buycost_toggle() { request_toggle_city_buycost(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle city production display' input
  **************************************************************************/
-void key_city_productions_toggle(void) { request_toggle_city_productions(); }
+void key_city_productions_toggle() { request_toggle_city_productions(); }
 
 /**********************************************************************/ /**
    Handle client request to toggle drawing of trade route information
    by the city name for cities visible on the main map view.
  **************************************************************************/
-void key_city_trade_routes_toggle(void)
+void key_city_trade_routes_toggle()
 {
   request_toggle_city_trade_routes();
 }
@@ -3696,82 +3696,82 @@ void key_city_trade_routes_toggle(void)
 /**********************************************************************/ /**
    Handle user 'toggle terrain display' input
  **************************************************************************/
-void key_terrain_toggle(void) { request_toggle_terrain(); }
+void key_terrain_toggle() { request_toggle_terrain(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle coastline display' input
  **************************************************************************/
-void key_coastline_toggle(void) { request_toggle_coastline(); }
+void key_coastline_toggle() { request_toggle_coastline(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle road/railroad display' input
  **************************************************************************/
-void key_roads_rails_toggle(void) { request_toggle_roads_rails(); }
+void key_roads_rails_toggle() { request_toggle_roads_rails(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle irrigation display' input
  **************************************************************************/
-void key_irrigation_toggle(void) { request_toggle_irrigation(); }
+void key_irrigation_toggle() { request_toggle_irrigation(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle mine display' input
  **************************************************************************/
-void key_mines_toggle(void) { request_toggle_mines(); }
+void key_mines_toggle() { request_toggle_mines(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle bases display' input
  **************************************************************************/
-void key_bases_toggle(void) { request_toggle_bases(); }
+void key_bases_toggle() { request_toggle_bases(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle resources display' input
  **************************************************************************/
-void key_resources_toggle(void) { request_toggle_resources(); }
+void key_resources_toggle() { request_toggle_resources(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle huts display' input
  **************************************************************************/
-void key_huts_toggle(void) { request_toggle_huts(); }
+void key_huts_toggle() { request_toggle_huts(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle pollution display' input
  **************************************************************************/
-void key_pollution_toggle(void) { request_toggle_pollution(); }
+void key_pollution_toggle() { request_toggle_pollution(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle cities display' input
  **************************************************************************/
-void key_cities_toggle(void) { request_toggle_cities(); }
+void key_cities_toggle() { request_toggle_cities(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle units display' input
  **************************************************************************/
-void key_units_toggle(void) { request_toggle_units(); }
+void key_units_toggle() { request_toggle_units(); }
 
 /**********************************************************************/ /**
    Toggle the "Solid unit background color" option.
  **************************************************************************/
-void key_unit_solid_bg_toggle(void) { request_toggle_unit_solid_bg(); }
+void key_unit_solid_bg_toggle() { request_toggle_unit_solid_bg(); }
 
 /**********************************************************************/ /**
    Toggle the "Draw shield graphics for units" option.
  **************************************************************************/
-void key_unit_shields_toggle(void) { request_toggle_unit_shields(); }
+void key_unit_shields_toggle() { request_toggle_unit_shields(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle key units display' input
  **************************************************************************/
-void key_focus_unit_toggle(void) { request_toggle_focus_unit(); }
+void key_focus_unit_toggle() { request_toggle_focus_unit(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle fog of war display' input
  **************************************************************************/
-void key_fog_of_war_toggle(void) { request_toggle_fog_of_war(); }
+void key_fog_of_war_toggle() { request_toggle_fog_of_war(); }
 
 /**********************************************************************/ /**
    Toggle editor mode in the server.
  **************************************************************************/
-void key_editor_toggle(void)
+void key_editor_toggle()
 {
   dsend_packet_edit_mode(&client.conn, !game.info.is_edit_mode);
 }
@@ -3779,7 +3779,7 @@ void key_editor_toggle(void)
 /**********************************************************************/ /**
    Recalculate borders.
  **************************************************************************/
-void key_editor_recalculate_borders(void)
+void key_editor_recalculate_borders()
 {
   send_packet_edit_recalculate_borders(&client.conn);
 }
@@ -3788,7 +3788,7 @@ void key_editor_recalculate_borders(void)
    Send a request to the server to toggle fog-of-war for the current
    player (only applies in edit mode).
  **************************************************************************/
-void key_editor_toggle_fogofwar(void)
+void key_editor_toggle_fogofwar()
 {
   if (client_has_player()) {
     dsend_packet_edit_toggle_fogofwar(&client.conn, client_player_number());

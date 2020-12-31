@@ -38,7 +38,7 @@ static struct gui_funcs funcs;
    Return gui_funcs table. Used by gui side to get table for filling
    with function addresses.
  **************************************************************************/
-struct gui_funcs *get_gui_funcs(void) { return &funcs; }
+struct gui_funcs *get_gui_funcs() { return &funcs; }
 
 /**********************************************************************/ /**
    Call ui_init callback

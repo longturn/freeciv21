@@ -47,7 +47,7 @@ struct extra_type *road_extra_get(const struct road_type *proad)
 /************************************************************************/ /**
    Return the number of road_types.
  ****************************************************************************/
-Road_type_id road_count(void) { return game.control.num_road_types; }
+Road_type_id road_count() { return game.control.num_road_types; }
 
 /************************************************************************/ /**
    Return road type of given id.
@@ -103,7 +103,7 @@ void road_type_init(struct extra_type *pextra, int idx)
 /************************************************************************/ /**
    Initialize the road integrators cache
  ****************************************************************************/
-void road_integrators_cache_init(void)
+void road_integrators_cache_init()
 {
   extra_type_by_cause_iterate(EC_ROAD, pextra)
   {
@@ -130,7 +130,7 @@ void road_integrators_cache_init(void)
 /************************************************************************/ /**
    Free the memory associated with road types
  ****************************************************************************/
-void road_types_free(void)
+void road_types_free()
 {
   extra_type_by_cause_iterate(EC_ROAD, pextra)
   {

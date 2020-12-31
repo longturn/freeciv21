@@ -74,7 +74,7 @@ static int stat_size_no_compression = 0;
 /**********************************************************************/ /**
    Returns the compression level. Initilialize it if needed.
  **************************************************************************/
-static inline int get_compression_level(void)
+static inline int get_compression_level()
 {
   static int level = -2; /* Magic not initialized, see below. */
 
@@ -764,12 +764,12 @@ void pre_send_packet_player_attribute_chunk(
 /**********************************************************************/ /**
    Destroy the packet handler hash table.
  **************************************************************************/
-static void packet_handlers_free(void) {}
+static void packet_handlers_free() {}
 
 /**********************************************************************/ /**
    Returns the packet handlers variant with no special capability.
  **************************************************************************/
-const struct packet_handlers *packet_handlers_initial(void)
+const struct packet_handlers *packet_handlers_initial()
 {
   static struct packet_handlers default_handlers;
   static bool initialized = false;
@@ -824,7 +824,7 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
    Call when there is no longer a requirement for protocol processing.
    All connections must have been closed.
  **************************************************************************/
-void packets_deinit(void) { packet_handlers_free(); }
+void packets_deinit() { packet_handlers_free(); }
 
 void packet_strvec_compute(char *str, QVector<QString> *qstrvec)
 {

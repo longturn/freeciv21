@@ -954,13 +954,13 @@ static void send_player_remove_info_c(const struct player_slot *pslot,
    or ruleset (re)load cycles, to avoid sending infos to the client that
    depend on ruleset data it does not yet have.
  **************************************************************************/
-void player_info_freeze(void) { player_info_frozen_level++; }
+void player_info_freeze() { player_info_frozen_level++; }
 
 /**********************************************************************/ /**
    If the frozen level is back to 0, send all players' infos, and nation
    availability, to all connections.
  **************************************************************************/
-void player_info_thaw(void)
+void player_info_thaw()
 {
   if (0 == --player_info_frozen_level) {
     send_nation_availability_real(game.est_connections, false);
@@ -1536,7 +1536,7 @@ bool player_color_changeable(const struct player *pplayer,
    First assign preferred colors, then assign the rest randomly, trying to
    avoid clashes.
  **************************************************************************/
-void assign_player_colors(void)
+void assign_player_colors()
 {
   struct rgbcolor_list *spare_colors =
       rgbcolor_list_copy(game.server.plr_colors);
@@ -2194,7 +2194,7 @@ void maybe_make_contact(struct tile *ptile, struct player *pplayer)
 /**********************************************************************/ /**
    Shuffle or reshuffle the player order, storing in static variables above.
  **************************************************************************/
-void shuffle_players(void)
+void shuffle_players()
 {
   /* shuffled_order is defined global */
   int n = player_slot_count();
@@ -2409,7 +2409,7 @@ struct nation_type *pick_a_nation(const struct nation_list *choices,
 /**********************************************************************/ /**
    Return the nationset currently in effect.
  **************************************************************************/
-static struct nation_set *current_nationset(void)
+static struct nation_set *current_nationset()
 {
   return nation_set_by_setting_value(game.server.nationset);
 }
@@ -2427,7 +2427,7 @@ bool nation_is_in_current_set(const struct nation_type *pnation)
    Update the server's cached number of playable nations.
    Call when the nationset changes.
  **************************************************************************/
-void count_playable_nations(void)
+void count_playable_nations()
 {
   server.playable_nations = 0;
   allowed_nations_iterate(pnation)
@@ -2488,7 +2488,7 @@ void send_nation_availability(struct conn_list *dest, bool nationset_change)
    failing that, unset the nations of some of the players.
    To be called when loading an old savegame that predates nationsets.
  **************************************************************************/
-void fit_nationset_to_players(void)
+void fit_nationset_to_players()
 {
   int misfits[nation_set_count()];
   nation_sets_iterate(pset)
@@ -3036,12 +3036,12 @@ void handle_player_phase_done(struct player *pplayer, int turn)
 /**********************************************************************/ /**
    Return the number of barbarian players.
  **************************************************************************/
-int barbarian_count(void) { return server.nbarbarians; }
+int barbarian_count() { return server.nbarbarians; }
 
 /**********************************************************************/ /**
    Return the number of non-barbarian players.
  **************************************************************************/
-int normal_player_count(void) { return player_count() - server.nbarbarians; }
+int normal_player_count() { return player_count() - server.nbarbarians; }
 
 /**********************************************************************/ /**
    Add a status flag to a player.
@@ -3170,7 +3170,7 @@ struct player *player_by_user_delegated(const char *name)
 /**********************************************************************/ /**
    Initialise the player colors.
  **************************************************************************/
-void playercolor_init(void)
+void playercolor_init()
 {
   fc_assert_ret(game.server.plr_colors == NULL);
   game.server.plr_colors = rgbcolor_list_new();
@@ -3179,7 +3179,7 @@ void playercolor_init(void)
 /**********************************************************************/ /**
    Free the memory allocated for the player color.
  **************************************************************************/
-void playercolor_free(void)
+void playercolor_free()
 {
   if (game.server.plr_colors == NULL) {
     return;
@@ -3220,7 +3220,7 @@ struct rgbcolor *playercolor_get(int id)
 /**********************************************************************/ /**
    Number of player colors defined.
  **************************************************************************/
-int playercolor_count(void)
+int playercolor_count()
 {
   fc_assert_ret_val(game.server.plr_colors != NULL, 0);
 

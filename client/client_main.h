@@ -45,18 +45,18 @@ int client_main(int argc, char *argv[]);
 void client_packet_input(void *packet, int type);
 
 void send_report_request(enum report_type type);
-void send_attribute_block_request(void);
-void send_turn_done(void);
+void send_attribute_block_request();
+void send_turn_done();
 
-void user_ended_turn(void);
+void user_ended_turn();
 
 void set_client_state(enum client_states newstate);
-enum client_states client_state(void);
+enum client_states client_state();
 void set_server_busy(bool busy);
-bool is_server_busy(void);
+bool is_server_busy();
 
 void client_remove_cli_conn(struct connection *pconn);
-void client_remove_all_cli_conn(void);
+void client_remove_all_cli_conn();
 
 extern QString logfile;
 extern QString scriptfile;
@@ -88,31 +88,31 @@ extern struct civclient {
   struct global_worklist_list *worklists;
 } client;
 
-bool client_is_observer(void);
-bool client_is_global_observer(void);
-int client_player_number(void);
-bool client_has_player(void);
-struct player *client_player(void);
+bool client_is_observer();
+bool client_is_global_observer();
+int client_player_number();
+bool client_has_player();
+struct player *client_player();
 bool client_map_is_known_and_seen(const struct tile *ptile,
                                   const struct player *pplayer,
                                   enum vision_layer vlayer);
 void set_miliseconds_to_turndone(int miliseconds);
-int get_seconds_to_turndone(void);
-bool is_waiting_turn_change(void);
-void start_turn_change_wait(void);
-void stop_turn_change_wait(void);
-int get_seconds_to_new_turn(void);
-double real_timer_callback(void);
-bool can_client_control(void);
-bool can_client_issue_orders(void);
-bool can_client_change_view(void);
+int get_seconds_to_turndone();
+bool is_waiting_turn_change();
+void start_turn_change_wait();
+void stop_turn_change_wait();
+int get_seconds_to_new_turn();
+double real_timer_callback();
+bool can_client_control();
+bool can_client_issue_orders();
+bool can_client_change_view();
 bool can_meet_with_player(const struct player *pplayer);
 bool can_intel_with_player(const struct player *pplayer);
 
-void client_exit(void);
+void client_exit();
 
-bool is_client_quitting(void);
-void start_quitting(void);
+bool is_client_quitting();
+void start_quitting();
 
 /* Set in GUI code. */
 extern const char *const gui_character_encoding;
