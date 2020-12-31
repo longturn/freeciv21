@@ -16,9 +16,9 @@
 #endif
 
 /* ANSI */
-#include <stdlib.h>
+#include <cstdlib>
 
-#include <signal.h>
+#include <csignal>
 
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h>

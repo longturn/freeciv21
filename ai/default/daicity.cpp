@@ -15,8 +15,8 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* pow */
-#include <string.h>
+#include <cmath> /* pow */
+#include <cstring>
 
 /* utility */
 #include "rand.h"

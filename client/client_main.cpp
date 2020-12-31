@@ -19,8 +19,8 @@
 #include <windows.h> /* LoadLibrary() */
 #endif
 
-#include <math.h>
-#include <signal.h>
+#include <cmath>
+#include <csignal>
 
 // Qt
 #include <QApplication>

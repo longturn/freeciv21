@@ -10,7 +10,7 @@
 **************************************************************************/
 #pragma once
 
-#include <stdarg.h>
+#include <cstdarg>
 
 /* utility */
 #include "support.h" /* fc__attribute */

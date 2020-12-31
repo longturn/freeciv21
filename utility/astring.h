@@ -12,7 +12,7 @@
 #pragma once
 
 #include <QByteArray>
-#include <string.h> /* qstrlen() */
+#include <cstring> /* qstrlen() */
 
 /* utility */
 #include "support.h" /* bool, fc__attribute() */

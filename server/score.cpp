@@ -13,8 +13,8 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 // Qt
 #include <QString>

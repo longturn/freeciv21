@@ -16,8 +16,8 @@
 #endif
 
 #include <QHash>
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 /* utility */
 #include "log.h"

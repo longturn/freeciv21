@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <cerrno>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 // Qt
 #include <QCoreApplication>

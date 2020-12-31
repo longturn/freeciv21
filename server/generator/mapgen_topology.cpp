@@ -14,7 +14,7 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* sqrt */
+#include <cmath> /* sqrt */
 
 /* utility */
 #include "log.h"

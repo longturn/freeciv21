@@ -60,9 +60,9 @@
 
 #include <QStringLiteral>
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"

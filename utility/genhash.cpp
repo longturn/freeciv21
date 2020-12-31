@@ -59,7 +59,7 @@
 #include <fc_config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 
 /* utility */
 #include "log.h"

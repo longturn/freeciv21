@@ -17,7 +17,7 @@
 #include <fc_config.h>
 #endif
 #include <QSet>
-#include <string.h> /* qstrlen */
+#include <cstring> /* qstrlen */
 
 /* utility */
 #include "fcintl.h"

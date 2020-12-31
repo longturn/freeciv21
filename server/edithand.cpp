@@ -15,7 +15,7 @@
 #endif
 
 #include <QSet>
-#include <limits.h> /* USHRT_MAX */
+#include <climits> /* USHRT_MAX */
 
 /* utility */
 #include "bitvector.h"

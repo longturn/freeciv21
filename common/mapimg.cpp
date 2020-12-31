@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
+#include <cstdarg>
 
 #ifdef HAVE_MAPIMG_MAGICKWAND
 #include <wand/MagickWand.h>

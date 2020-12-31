@@ -25,10 +25,10 @@
 #include <QSet>
 #include <QString>
 #include <QVector>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h> /* exit */
-#include <string.h>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib> /* exit */
+#include <cstring>
 
 /* utility */
 #include "bitvector.h"

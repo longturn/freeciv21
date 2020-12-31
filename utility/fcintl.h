@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <locale.h>
+#include <clocale>
 
 #include "shared.h"  /* bool */
 #include "support.h" /* fc__attribute */

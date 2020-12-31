@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* exp, sqrt */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cmath> /* exp, sqrt */
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"

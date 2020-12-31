@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h> /* for remove() */
+#include <cstdio> /* for remove() */
 
 /* utility */
 #include "capability.h"

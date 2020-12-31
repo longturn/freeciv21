@@ -15,8 +15,8 @@
 #endif
 
 #include <QSet>
-#include <stdarg.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstring>
 
 /* utility */
 #include "bitvector.h"

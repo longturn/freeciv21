@@ -16,8 +16,8 @@
 #endif
 
 #include <QGlobalStatic>
-#include <stdarg.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"

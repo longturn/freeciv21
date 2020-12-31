@@ -19,10 +19,10 @@
 #include <QStandardPaths>
 #include <QTcpServer>
 
+#include <cstdio>
+#include <cstring>
+#include <ctime>
 #include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
 
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h>

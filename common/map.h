@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <math.h> /* sqrt */
+#include <cmath> /* sqrt */
 
 /* utility */
 #include "bitvector.h"

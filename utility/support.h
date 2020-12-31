@@ -12,8 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
+#include <cinttypes>
 #include <cstdio>
-#include <inttypes.h>
 
 /* Want to use GCC's __attribute__ keyword to check variadic
  * parameters to printf-like functions, without upsetting other

@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <time.h>
+#include <ctime>
 
 /* utility */
 #include "log.h"

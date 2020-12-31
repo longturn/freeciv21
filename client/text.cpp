@@ -12,9 +12,9 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* ceil */
-#include <stdarg.h>
-#include <string.h>
+#include <cmath> /* ceil */
+#include <cstdarg>
+#include <cstring>
 
 /* utility */
 #include "astring.h"

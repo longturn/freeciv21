@@ -16,8 +16,8 @@
 #endif
 
 #include <QHash>
-#include <stdarg.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstring>
 #include <sys/stat.h>
 #include <sys/types.h>
 

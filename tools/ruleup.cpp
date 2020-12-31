@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <signal.h>
+#include <csignal>
 
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h>

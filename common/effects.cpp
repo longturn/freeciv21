@@ -14,8 +14,8 @@
 #include <fc_config.h>
 #endif
 
-#include <ctype.h>
-#include <string.h>
+#include <cctype>
+#include <cstring>
 
 /* utility */
 #include "astring.h"

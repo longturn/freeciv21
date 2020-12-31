@@ -14,7 +14,7 @@
 #include <fc_config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 #include <sys/stat.h>
 #include <unistd.h>
 

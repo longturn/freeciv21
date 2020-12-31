@@ -12,7 +12,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
+#include <cstdarg>
 
 /* dependencies/lua */
 extern "C" {

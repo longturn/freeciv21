@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <time.h> /* time_t */
+#include <ctime> /* time_t */
 
 /* common */
 #include "connection.h" /* struct conn_list */

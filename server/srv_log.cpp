@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
+#include <cstdarg>
 
 /* utility */
 #include "shared.h"

@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 
 /* utility */
 #include "bitvector.h"

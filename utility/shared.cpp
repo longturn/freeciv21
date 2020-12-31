@@ -15,12 +15,12 @@
 #include <fc_config.h>
 #endif
 
-#include <errno.h>
-#include <limits.h>
-#include <locale.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cerrno>
+#include <climits>
+#include <clocale>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
 #include <sys/stat.h>
 #include <sys/types.h>
 
