@@ -2560,8 +2560,7 @@ static void dai_manage_settler(struct ai_type *ait, struct player *pplayer,
   if (unit_data->task == AIUNIT_NONE) {
     adv_unit_new_task(punit, AUT_AUTO_SETTLER, NULL);
   }
-  return;
-}
+  }
 
 /**********************************************************************/ /**
    manage one unit

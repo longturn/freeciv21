@@ -1308,5 +1308,4 @@ void dai_manage_ferryboat(struct ai_type *ait, struct player *pplayer,
     }
   }
 
-  return;
-}
+  }

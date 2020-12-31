@@ -63,8 +63,6 @@ void popup_newcity_dialog(struct unit *punit, const char *suggestname)
     }
   });
   ask->show();
-
-  return;
 }
 
 /**********************************************************************/ /**

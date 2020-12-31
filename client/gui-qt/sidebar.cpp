@@ -50,8 +50,7 @@ void reduce_mod(int &mod, int &val)
     mod--;
   }
 
-  return;
-}
+  }
 
 /***********************************************************************/ /**
    Sidewidget constructor
@@ -466,7 +465,6 @@ void sidebar::addWidget(sidebarWidget *fsw)
 {
   objects.append(fsw);
   layout->addWidget(fsw);
-  return;
 }
 
 /***********************************************************************/ /**
