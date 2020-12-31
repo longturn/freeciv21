@@ -1588,8 +1588,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
     if (!show_help_for_nation(pnation)) {
       continue;
     }
-    for (int i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
-      Impr_type_id n = pnation->init_buildings[i];
+    for (int n : pnation->init_buildings) {
       if (n == B_LAST) {
         break;
       } else if (improvement_by_number(n) == pimprove) {
@@ -4723,12 +4722,12 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
     QVector<QString> tech_names;
     tech_names.reserve(MAX_NUM_TECH_LIST);
 
-    for (int i = 0; i < MAX_NUM_TECH_LIST; i++) {
-      if (pnation->init_techs[i] == A_LAST) {
+    for (int init_tech : pnation->init_techs) {
+      if (init_tech == A_LAST) {
         break;
       }
       tech_names.append(advance_name_translation(
-          advance_by_number(pnation->init_techs[i])));
+          advance_by_number(init_tech)));
     }
     QString list = strvec_to_and_list(tech_names);
     PRINT_BREAK();
@@ -4803,12 +4802,12 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
     QVector<QString> impr_names;
     impr_names.reserve(MAX_NUM_BUILDING_LIST);
 
-    for (int i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
-      if (pnation->init_buildings[i] == B_LAST) {
+    for (int init_building : pnation->init_buildings) {
+      if (init_building == B_LAST) {
         break;
       }
       impr_names.append(improvement_name_translation(
-          improvement_by_number(pnation->init_buildings[i])));
+          improvement_by_number(init_building)));
     }
     QString list = strvec_to_and_list(impr_names);
     PRINT_BREAK();
