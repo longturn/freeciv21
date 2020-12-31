@@ -51,11 +51,11 @@ protected:
   void run() Q_DECL_OVERRIDE;
 
 private:
-  int mini_width, mini_height;
-  double scale;
+  int mini_width{20}, mini_height{20};
+  double scale{1.0f};
   QMutex mutex;
-  bool threadrestart;
-  bool threadabort;
+  bool threadrestart{false};
+  bool threadabort{false};
   QWaitCondition condition;
 };
 

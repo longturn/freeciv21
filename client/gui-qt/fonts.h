@@ -43,8 +43,8 @@ public:
   void initFonts();
   void releaseFonts();
   void getMapfontSize();
-  int city_fontsize;
-  int prod_fontsize;
+  int city_fontsize{12};
+  int prod_fontsize{12};
 };
 
 void configure_fonts();

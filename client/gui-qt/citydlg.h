@@ -303,7 +303,7 @@ public:
 
 private:
   void initLayout();
-  struct city *pcity;
+  struct city *pcity{nullptr};
   QLabel labs[12];
   int pixHeight;
 };
@@ -321,7 +321,7 @@ public:
   void set_type(int);
 
 private:
-  struct city *pcity;
+  struct city *pcity{nullptr};
   int type;
 
 protected:
@@ -345,7 +345,7 @@ class governor_sliders : public QGroupBox {
 public:
   governor_sliders(QWidget *parent = 0);
   void update_sliders(struct cm_parameter &param);
-  QCheckBox *cma_celeb_checkbox;
+  QCheckBox *cma_celeb_checkbox{nullptr};
   QSlider *slider_tab[2 * O_LAST + 2] {nullptr};
 private slots:
   void cma_slider(int val);
@@ -362,7 +362,7 @@ class city_dialog : public QWidget {
   Q_DISABLE_COPY(city_dialog);
   Ui::FormCityDlg ui;
   QPixmap *citizen_pixmap;
-  bool future_targets, show_units, show_wonders, show_buildings;
+  bool future_targets{false}, show_units{true}, show_wonders{true}, show_buildings{true};
   int selected_row_p;
   city_label *lab_table[6];
 
@@ -374,10 +374,10 @@ public:
   void refresh();
   void cma_check_agent();
   struct city *pcity;
-  bool dont_focus;
+  bool dont_focus{false};
 
 private:
-  int current_building;
+  int current_building{0};
   void update_title();
   void update_building();
   void update_info_label();

@@ -18,7 +18,7 @@
 
 research_color *research_color::m_instance = 0;
 
-research_color::research_color() : colors_init(false) {}
+research_color::research_color()  {}
 
 research_color *research_color::i()
 {

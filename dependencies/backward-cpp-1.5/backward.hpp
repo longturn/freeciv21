@@ -485,7 +485,7 @@ template <typename T, typename Deleter = deleter<void, void *, &::free>>
 class handle {
   struct dummy;
   T _val;
-  bool _empty;
+  bool _empty{true};
 
 #ifdef BACKWARD_ATLEAST_CXX11
   handle(const handle &) = delete;
@@ -499,7 +499,7 @@ public:
     }
   }
 
-  explicit handle() : _val(), _empty(true) {}
+  explicit handle() : _val() {}
   explicit handle(T val) : _val(val), _empty(false) {
     if (!_val)
       _empty = true;
@@ -575,7 +575,7 @@ template <typename TAG> struct demangler_impl {
 #if defined(BACKWARD_SYSTEM_LINUX) || defined(BACKWARD_SYSTEM_DARWIN)
 
 template <> struct demangler_impl<system_tag::current_tag> {
-  demangler_impl() : _demangle_buffer_length(0) {}
+  demangler_impl()  {}
 
   std::string demangle(const char *funcname) {
     using namespace details;
@@ -590,7 +590,7 @@ template <> struct demangler_impl<system_tag::current_tag> {
 
 private:
   details::handle<char *> _demangle_buffer;
-  size_t _demangle_buffer_length;
+  size_t _demangle_buffer_length{0};
 };
 
 #endif // BACKWARD_SYSTEM_LINUX || BACKWARD_SYSTEM_DARWIN
@@ -625,10 +625,10 @@ inline std::vector<std::string> split_source_prefixes(const std::string &s) {
 /*************** A TRACE ***************/
 
 struct Trace {
-  void *addr;
-  size_t idx;
+  void *addr{nullptr};
+  size_t idx{0};
 
-  Trace() : addr(nullptr), idx(0) {}
+  Trace()  {}
 
   explicit Trace(void *_addr, size_t _idx) : addr(_addr), idx(_idx) {}
 };
@@ -638,10 +638,10 @@ struct ResolvedTrace : public Trace {
   struct SourceLoc {
     std::string function;
     std::string filename;
-    unsigned line;
-    unsigned col;
+    unsigned line{0};
+    unsigned col{0};
 
-    SourceLoc() : line(0), col(0) {}
+    SourceLoc()  {}
 
     bool operator==(const SourceLoc &b) const {
       return function == b.function && filename == b.filename &&
@@ -689,7 +689,7 @@ public:
 
 class StackTraceImplBase {
 public:
-  StackTraceImplBase() : _thread_id(0), _skip(0) {}
+  StackTraceImplBase()  {}
 
   size_t thread_id() const { return _thread_id; }
 
@@ -720,8 +720,8 @@ protected:
   size_t skip_n_firsts() const { return _skip; }
 
 private:
-  size_t _thread_id;
-  size_t _skip;
+  size_t _thread_id{0};
+  size_t _skip{0};
 };
 
 class StackTraceImplHolder : public StackTraceImplBase {
@@ -1482,7 +1482,7 @@ template <>
 class TraceResolverLinuxImpl<trace_resolver_tag::libdw>
     : public TraceResolverLinuxBase {
 public:
-  TraceResolverLinuxImpl() : _dwfl_handle_initialized(false) {}
+  TraceResolverLinuxImpl()  {}
 
   template <class ST> void load_stacktrace(ST &) {}
 
@@ -1641,7 +1641,7 @@ private:
   details::handle<Dwfl_Callbacks *, details::default_delete<Dwfl_Callbacks *>>
       _dwfl_cb;
   dwfl_handle_t _dwfl_handle;
-  bool _dwfl_handle_initialized;
+  bool _dwfl_handle_initialized{false};
 
   // defined here because in C++98, template function cannot take locally
   // defined types... grrr.
@@ -3690,16 +3690,15 @@ public:
 
 class Printer {
 public:
-  bool snippet;
-  ColorMode::type color_mode;
-  bool address;
-  bool object;
-  int inliner_context_size;
-  int trace_context_size;
+  bool snippet{true};
+  ColorMode::type color_mode{ColorMode::automatic};
+  bool address{false};
+  bool object{false};
+  int inliner_context_size{5};
+  int trace_context_size{7};
 
   Printer()
-      : snippet(true), color_mode(ColorMode::automatic), address(false),
-        object(false), inliner_context_size(5), trace_context_size(7) {}
+       {}
 
   template <typename ST> FILE *print(ST &st, FILE *fp = stderr) {
     cfile_streambuf obuf(fp);
@@ -3873,7 +3872,7 @@ public:
   }
 
   SignalHandling(const std::vector<int> &posix_signals = make_default_signals())
-      : _loaded(false) {
+       {
     bool success = true;
 
     const size_t stack_size = 1024 * 1024 * 8;
@@ -3962,7 +3961,7 @@ public:
 
 private:
   details::handle<char *> _stack_content;
-  bool _loaded;
+  bool _loaded{false};
 
 #ifdef __GNUC__
   __attribute__((noreturn))

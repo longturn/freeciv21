@@ -167,7 +167,7 @@ public:
   ~fc_sc_button() override;
   fc_sc_button(fc_shortcut *s);
   fc_shortcut *sc;
-  fc_shortcut *sc_orig;
+  fc_shortcut *sc_orig{nullptr};
   void show_info(const QString &str);
 private slots:
   void popup_error();

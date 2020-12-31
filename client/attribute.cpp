@@ -41,9 +41,9 @@ enum attribute_serial {
 
 class attr_key {
 public:
-  attr_key() : key(0), id(0), x(0), y(0){};
+  attr_key()  {};
   attr_key(int, int, int, int);
-  int key, id, x, y;
+  int key{0}, id{0}, x{0}, y{0};
 };
 
 attr_key::attr_key(int k, int i, int x0, int y0)

@@ -69,7 +69,7 @@ private:
   void update_font(const QString &name, const QFont &font);
 
   bool stored_autocenter;
-  int cursor_frame;
+  int cursor_frame{0};
   int cursor;
   std::vector<fcwidget *> m_hidden_fcwidgets;
 };

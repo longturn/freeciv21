@@ -75,7 +75,7 @@ research_diagram::~research_diagram()
    Constructor for req_tooltip_help
  ****************************************************************************/
 req_tooltip_help::req_tooltip_help()
-    : tech_id(-1), tunit(nullptr), timpr(nullptr), tgov(nullptr)
+     
 {
 }
 
@@ -379,7 +379,7 @@ QSize research_diagram::size()
    Consctructor for science_report
  ****************************************************************************/
 science_report::science_report()
-    : QWidget(), curr_list(nullptr), goal_list(nullptr), index(0)
+    : QWidget() 
 {
   QSize size;
   QSizePolicy size_expanding_policy(QSizePolicy::Expanding,

@@ -49,8 +49,8 @@ class qdef_act {
 private:
   explicit qdef_act();
   static qdef_act *m_instance;
-  action_id vs_city;
-  action_id vs_unit;
+  action_id vs_city{-1};
+  action_id vs_unit{-1};
 
 public:
   static qdef_act *action();

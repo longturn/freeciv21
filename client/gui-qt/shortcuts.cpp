@@ -469,7 +469,7 @@ QString button_name(Qt::MouseButton bt)
 /**********************************************************************/ /**
    Constructor and destructor for button setting shortcut
  **************************************************************************/
-fc_sc_button::fc_sc_button() : QPushButton(), sc_orig(nullptr)
+fc_sc_button::fc_sc_button() : QPushButton() 
 {
   sc = new fc_shortcut;
 }

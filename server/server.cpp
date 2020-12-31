@@ -231,8 +231,8 @@ QTcpServer *srv_prepare()
    Creates a server. It starts working as soon as there is an event loop.
  *****************************************************************************/
 server::server()
-    : m_is_new_turn(false), m_need_send_pending_events(false),
-      m_skip_mapimg(false)
+    
+      
 {
   // Get notifications when there's some input on stdin. This is OS-dependent
   // and Qt doesn't have a wrapper. Maybe it should be split to a separate

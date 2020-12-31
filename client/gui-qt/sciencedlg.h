@@ -31,10 +31,10 @@ class req_tooltip_help {
 public:
   req_tooltip_help();
   QRect rect;
-  Tech_type_id tech_id;
-  struct unit_type *tunit;
-  struct impr_type *timpr;
-  struct government *tgov;
+  Tech_type_id tech_id{-1};
+  struct unit_type *tunit{nullptr};
+  struct impr_type *timpr{nullptr};
+  struct government *tgov{nullptr};
 };
 
 /****************************************************************************
@@ -90,8 +90,8 @@ class science_report : public QWidget {
   progress_bar *progress;
   QLabel *info_label;
   QLabel *progress_label;
-  QList<qlist_item> *curr_list;
-  QList<qlist_item> *goal_list;
+  QList<qlist_item> *curr_list{nullptr};
+  QList<qlist_item> *goal_list{nullptr};
   research_diagram *res_diag;
   QScrollArea *scroll;
 
@@ -105,7 +105,7 @@ public:
 
 private:
   void update_reqtree();
-  int index;
+  int index{0};
 
 private slots:
   void current_tech_changed(int index);
