@@ -131,7 +131,7 @@ void units_select::create_pixmap()
       pix = new QPixmap(4 * item_size.width(), 3 * item_size.height());
     }
     pix->fill(Qt::transparent);
-    for (auto punit : qAsConst(unit_list)) {
+    for (auto *punit : qAsConst(unit_list)) {
       unit_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
                                       tileset_unit_height(tileset));
       unit_pixmap->fill(Qt::transparent);

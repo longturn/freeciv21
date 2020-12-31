@@ -224,7 +224,7 @@ struct nation_leader *nation_leader_new(struct nation_type *pnation,
                                         const char *name, bool is_male)
 {
   NATION_CHECK(pnation, return NULL);
-  auto pleader = new nation_leader;
+  auto *pleader = new nation_leader;
   pleader->name = fc_strdup(name);
   pleader->is_male = is_male;
 

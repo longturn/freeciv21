@@ -92,7 +92,7 @@ void handle_readline_input_callback(char *line)
   }
 
   con_prompt_enter(); /* just got an 'Enter' hit */
-  auto line_internal = local_to_internal_string_malloc(line);
+  auto *line_internal = local_to_internal_string_malloc(line);
   (void) handle_stdin_input(NULL, line_internal);
   delete[] line_internal;
   free(line);
@@ -143,7 +143,7 @@ QTcpServer *srv_prepare()
   con_log_init(srvarg.log_filename);
   /* logging available after this point */
 
-  auto tcp_server = server_open_socket();
+  auto *tcp_server = server_open_socket();
   if (!tcp_server->isListening()) {
     // Don't even try to start a game.
     return tcp_server;
@@ -250,7 +250,7 @@ server::server()
 #else
   {
     // Unix-like
-    auto notifier =
+    auto *notifier =
         new QSocketNotifier(STDIN_FILENO, QSocketNotifier::Read, this);
     connect(notifier, &QSocketNotifier::activated, this,
             &server::input_on_stdin);
@@ -358,7 +358,7 @@ void server::accept_connections()
 {
   // There may be several connections available.
   while (m_tcp_server->hasPendingConnections()) {
-    auto socket = m_tcp_server->nextPendingConnection();
+    auto *socket = m_tcp_server->nextPendingConnection();
     socket->setParent(this);
 
     // Lookup the host name of the remote end.
@@ -476,7 +476,7 @@ void server::send_pings()
 void server::error_on_socket()
 {
   // Get the socket
-  auto socket = dynamic_cast<QTcpSocket *>(sender());
+  auto *socket = dynamic_cast<QTcpSocket *>(sender());
   if (socket == nullptr) {
     return;
   }
@@ -501,7 +501,7 @@ void server::error_on_socket()
 void server::input_on_socket()
 {
   // Get the socket
-  auto socket = dynamic_cast<QTcpSocket *>(sender());
+  auto *socket = dynamic_cast<QTcpSocket *>(sender());
   if (socket == nullptr) {
     return;
   }
@@ -550,7 +550,7 @@ void server::input_on_stdin()
       // Got something to read. Hopefully there's even a complete line and
       // we can process it.
       auto line = f.readLine();
-      auto non_const_line =
+      auto *non_const_line =
           local_to_internal_string_malloc(line.constData());
       (void) handle_stdin_input(NULL, non_const_line);
       free(non_const_line);

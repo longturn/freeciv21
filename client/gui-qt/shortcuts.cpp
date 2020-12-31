@@ -373,7 +373,7 @@ bool fc_shortcut_popup::check_if_exist()
 
   desc = QLatin1String("");
   if (sc != nullptr) {
-    for (auto fsc : qAsConst(fc_shortcuts::sc()->hash)) {
+    for (auto *fsc : qAsConst(fc_shortcuts::sc()->hash)) {
       if (id == 0) {
         id++;
         continue;
@@ -557,7 +557,7 @@ void fc_shortcuts_dialog::init()
   scroll->setWidgetResizable(true);
   scroll_layout = new QVBoxLayout;
   main_layout = new QVBoxLayout;
-  for (auto sc : qAsConst(fc_shortcuts::sc()->hash)) {
+  for (auto *sc : qAsConst(fc_shortcuts::sc()->hash)) {
     id = fc_shortcuts::sc()->get_id(sc);
     desc = fc_shortcuts::sc()->get_desc(id);
     add_option(sc);

@@ -372,7 +372,7 @@ static void tile_type_init(struct cm_tile_type *type)
  ****************************************************************************/
 static struct cm_tile_type *tile_type_dup(const struct cm_tile_type *oldtype)
 {
-  auto newtype = new cm_tile_type;
+  auto *newtype = new cm_tile_type;
 
   memcpy(newtype, oldtype, sizeof(*oldtype));
   tile_vector_init(&newtype->tiles);
@@ -847,8 +847,8 @@ static int compare_tile_type_by_lattice_order(const struct cm_tile_type *a,
  ****************************************************************************/
 static int compare_tile_type_by_fitness(const void *va, const void *vb)
 {
-  auto a = static_cast<cm_tile_type *const *>(va);
-  auto b = static_cast<cm_tile_type *const *>(vb);
+  const auto *a = static_cast<cm_tile_type *const *>(va);
+  const auto *b = static_cast<cm_tile_type *const *>(vb);
   double diff;
 
   if (*a == *b) {
@@ -879,8 +879,8 @@ static double compare_key_trade_bonus;
  ****************************************************************************/
 static int compare_tile_type_by_stat(const void *va, const void *vb)
 {
-  auto a = static_cast<cm_tile_type *const *>(va);
-  auto b = static_cast<cm_tile_type *const *>(vb);
+  const auto *a = static_cast<cm_tile_type *const *>(va);
+  const auto *b = static_cast<cm_tile_type *const *>(vb);
 
   if (*a == *b) {
     return 0;
@@ -1855,7 +1855,7 @@ static struct cm_state *cm_state_init(struct city *pcity, bool negative_ok)
   const int SCIENCE = 0, TAX = 1, LUXURY = 2;
   const struct player *pplayer = city_owner(pcity);
   int numtypes;
-  auto state = new cm_state;
+  auto *state = new cm_state;
   int rates[3];
 
   log_base(LOG_CM_STATE, "creating cm_state for %s (size %d)",

@@ -1147,7 +1147,7 @@ static struct pf_path *
 pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
                              struct tile *ptile)
 {
-  auto path = new pf_path;
+  auto *path = new pf_path;
   enum direction8 dir_next = direction8_invalid();
   struct pf_danger_node::pf_danger_pos *danger_seg = NULL;
   bool waited = false;
@@ -2249,7 +2249,7 @@ static struct pf_path *
 pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
                            struct tile *ptile)
 {
-  auto path = new pf_path;
+  auto *path = new pf_path;
   enum direction8 dir_next = direction8_invalid();
   struct pf_fuel_node *node = pffm->lattice + tile_index(ptile);
   struct pf_fuel_pos *segment = node->segment;
@@ -3241,8 +3241,8 @@ static void pf_position_fill_start_tile(struct pf_position *pos,
 static struct pf_path *
 pf_path_new_to_start_tile(const struct pf_parameter *param)
 {
-  auto path = new pf_path;
-  auto pos = new pf_position;
+  auto *path = new pf_path;
+  auto *pos = new pf_position;
 
   path->length = 1;
   pf_position_fill_start_tile(pos, param);
@@ -3492,7 +3492,7 @@ struct pf_reverse_map *pf_reverse_map_new(const struct player *pplayer,
                                           int max_turns, bool omniscient,
                                           const struct civ_map *map)
 {
-  auto pfrm = new pf_reverse_map;
+  auto *pfrm = new pf_reverse_map;
   struct pf_parameter *param = &pfrm->template_params;
 
   pfrm->target_tile = target_tile;

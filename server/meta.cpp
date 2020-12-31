@@ -218,17 +218,17 @@ static inline bool meta_insert_setting(QUrlQuery *query,
 static void send_metaserver_post(void *arg)
 {
   // Create a network manager
-  auto manager = new QNetworkAccessManager;
+  auto *manager = new QNetworkAccessManager;
 
   // Post the request
-  auto post = static_cast<QUrlQuery *>(arg);
+  auto *post = static_cast<QUrlQuery *>(arg);
 
   QNetworkRequest request(QUrl(srvarg.metaserver_addr));
   request.setHeader(QNetworkRequest::UserAgentHeader,
                     QLatin1String("Freeciv/" VERSION_STRING));
   request.setHeader(QNetworkRequest::ContentTypeHeader,
                     QLatin1String("application/x-www-form-urlencoded"));
-  auto reply =
+  auto *reply =
       manager->post(request, post->toString(QUrl::FullyEncoded).toUtf8());
 
   // Wait for the reply

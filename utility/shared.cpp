@@ -679,7 +679,7 @@ char *user_username(char *buf, size_t bufsz)
   {
     // cppcheck warns about thread safety, but this function is called once
     // before any thread is spawned
-    auto pwent = getpwuid(getuid()); // NOLINT(runtime/threadsafe_fn)
+    auto *pwent = getpwuid(getuid()); // NOLINT(runtime/threadsafe_fn)
 
     if (pwent) {
       fc_strlcpy(buf, pwent->pw_name, bufsz);
@@ -1592,7 +1592,7 @@ char *skip_to_basename(char *filepath)
  ****************************************************************************/
 bool make_dir(const char *pathname)
 {
-  auto path = interpret_tilde_alloc(pathname);
+  auto *path = interpret_tilde_alloc(pathname);
   auto str = QString::fromUtf8(path);
   // We can always create a directory with an empty name -- it's the current
   // folder.

@@ -640,7 +640,7 @@ struct text_tag *text_tag_new(enum text_tag_type tag_type,
                               ft_offset_t start_offset,
                               ft_offset_t stop_offset, ...)
 {
-  auto ptag = new text_tag;
+  auto *ptag = new text_tag;
   va_list args;
   bool ok;
 
@@ -666,7 +666,7 @@ struct text_tag *text_tag_copy(const struct text_tag *ptag)
     return NULL;
   }
 
-  auto pnew_tag = new text_tag;
+  auto *pnew_tag = new text_tag;
   *pnew_tag = *ptag;
 
   return pnew_tag;
@@ -942,7 +942,7 @@ size_t featured_text_to_plain_text(const char *featured_text,
             text_out_len -= len;
             if (tags) {
               /* Set it in the list. */
-              auto ptag = new text_tag;
+              auto *ptag = new text_tag;
 
               *ptag = tag;
               ptag->stop_offset = text_out - plain_text;

@@ -2419,7 +2419,7 @@ void mapdeco_init(void)
  ****************************************************************************/
 void mapdeco_free(void)
 {
-  for (auto a : *mapdeco_gotoline) {
+  for (auto *a : *mapdeco_gotoline) {
     NFCPP_FREE(a);
     a = nullptr;
   }
@@ -2468,7 +2468,7 @@ bool mapdeco_is_highlight_set(const struct tile *ptile)
  ****************************************************************************/
 void mapdeco_clear_highlights(void)
 {
-  for (auto ptile : *mapdeco_highlight_set) {
+  for (const auto *ptile : *mapdeco_highlight_set) {
     refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), true, false);
   }
   mapdeco_highlight_set->clear();
@@ -2516,7 +2516,7 @@ bool mapdeco_is_crosshair_set(const struct tile *ptile)
  ****************************************************************************/
 void mapdeco_clear_crosshairs(void)
 {
-  for (auto ptile : *mapdeco_crosshair_set) {
+  for (const auto *ptile : *mapdeco_crosshair_set) {
     refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
   }
   mapdeco_crosshair_set->clear();

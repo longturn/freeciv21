@@ -201,7 +201,7 @@ static struct ruler_title *ruler_title_new(const struct nation_type *pnation,
                                            const char *ruler_male_title,
                                            const char *ruler_female_title)
 {
-  auto pruler_title = new ruler_title;
+  auto *pruler_title = new ruler_title;
 
   pruler_title->pnation = pnation;
   name_set(&pruler_title->male, domain, ruler_male_title);
@@ -484,7 +484,7 @@ static inline void government_init(struct government *pgovern)
  **************************************************************************/
 static inline void government_free(struct government *pgovern)
 {
-  for (auto a : pgovern->ruler_titles->values()) {
+  for (auto *a : pgovern->ruler_titles->values()) {
     delete a;
   }
   FC_FREE(pgovern->ruler_titles);

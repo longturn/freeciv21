@@ -169,7 +169,7 @@ struct effect *effect_new(enum effect_type type, int value,
                           struct multiplier *pmul)
 {
   /* Create the effect. */
-  auto peffect = new effect;
+  auto *peffect = new effect;
   peffect->type = type;
   peffect->value = value;
   peffect->multiplier = pmul;

@@ -2811,7 +2811,7 @@ player_balance_treasury_units_and_buildings(struct player *pplayer)
     city_built_iterate(pcity, pimprove)
     {
       if (can_city_sell_building(pcity, pimprove)) {
-        auto ci = new cityimpr;
+        auto *ci = new cityimpr;
 
         ci->pcity = pcity;
         ci->pimprove = pimprove;
@@ -2918,7 +2918,7 @@ static bool city_balance_treasury_buildings(struct city *pcity)
   city_built_iterate(pcity, pimprove)
   {
     if (can_city_sell_building(pcity, pimprove)) {
-      auto ci = new cityimpr;
+      auto *ci = new cityimpr;
 
       ci->pcity = pcity;
       ci->pimprove = pimprove;

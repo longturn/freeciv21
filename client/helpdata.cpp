@@ -82,7 +82,7 @@ void free_help_texts(void)
 {
   if (!help_nodes)
     return;
-  for (auto ptmp : *help_nodes) {
+  for (const auto *ptmp : *help_nodes) {
     NFCPP_FREE(ptmp->topic);
     NFCPP_FREE(ptmp->text);
     NFC_FREE(ptmp);
@@ -1143,7 +1143,7 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
 
   idx = 0;
 
-  for (auto ptmp : *help_nodes) {
+  for (const auto *ptmp : *help_nodes) {
     char *p = ptmp->topic;
 
     while (*p == ' ') {

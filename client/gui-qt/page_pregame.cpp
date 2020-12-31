@@ -430,7 +430,7 @@ void page_pregame::start_page_menu(QPoint pos)
     return;
   }
 
-  for (auto item : qAsConst(sel_items)) {
+  for (auto *item : qAsConst(sel_items)) {
     qvar = item->data(0, Qt::UserRole);
     qvar2 = item->data(1, Qt::UserRole);
 
