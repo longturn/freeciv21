@@ -214,5 +214,5 @@ const char *fcdb_option_get(const char *type) { return NULL; }
 /************************************************************************/ /**
    Dummy function - Free resources allocated by fcdb system.
  ****************************************************************************/
-void fcdb_free(void) { }
+void fcdb_free() { }
 #endif /* HAVE_FCDB */

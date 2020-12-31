@@ -28,7 +28,7 @@ static char error_buffer[MAX_LEN_ERRORBUF] = "\0";
 /**********************************************************************/ /**
    Returns the last error which occurred in a string.  It never returns NULL.
  **************************************************************************/
-const char *secfile_error(void) { return error_buffer; }
+const char *secfile_error() { return error_buffer; }
 
 /**********************************************************************/ /**
    Edit the error_buffer.

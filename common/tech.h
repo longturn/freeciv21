@@ -147,7 +147,7 @@ struct advance {
 BV_DEFINE(bv_techs, A_LAST);
 
 /* General advance/technology accessor functions. */
-Tech_type_id advance_count(void);
+Tech_type_id advance_count();
 Tech_type_id advance_index(const struct advance *padvance);
 Tech_type_id advance_number(const struct advance *padvance);
 
@@ -162,7 +162,7 @@ struct advance *advance_by_translated_name(const char *name);
 const char *advance_rule_name(const struct advance *padvance);
 const char *advance_name_translation(const struct advance *padvance);
 
-void tech_classes_init(void);
+void tech_classes_init();
 struct tech_class *tech_class_by_number(const int idx);
 #define tech_class_index(_ptclass_) (_ptclass_)->idx
 const char *tech_class_name_translation(const struct tech_class *ptclass);
@@ -189,8 +189,8 @@ struct tech_class *tech_class_by_rule_name(const char *name);
   }                                                                         \
   tech_class_iterate_end;
 
-void user_tech_flags_init(void);
-void user_tech_flags_free(void);
+void user_tech_flags_init();
+void user_tech_flags_free();
 void set_user_tech_flag_name(enum tech_flag_id id, const char *name,
                              const char *helptxt);
 const char *tech_flag_helptxt(enum tech_flag_id id);
@@ -204,15 +204,15 @@ Tech_type_id advance_required(const Tech_type_id tech,
 struct advance *advance_requires(const struct advance *padvance,
                                  enum tech_req require);
 
-bool techs_have_fixed_costs(void);
+bool techs_have_fixed_costs();
 
 bool is_future_tech(Tech_type_id tech);
 
 /* Initialization */
-void techs_init(void);
-void techs_free(void);
+void techs_init();
+void techs_free();
 
-void techs_precalc_data(void);
+void techs_precalc_data();
 
 /* Iteration */
 
@@ -227,7 +227,7 @@ void techs_precalc_data(void);
   }                                                                         \
   }
 
-const struct advance *advance_array_last(void);
+const struct advance *advance_array_last();
 
 #define advance_iterate(_start, _p)                                         \
   {                                                                         \
@@ -255,7 +255,7 @@ const struct advance *advance_array_last(void);
  * recursively. */
 struct advance_req_iter;
 
-size_t advance_req_iter_sizeof(void);
+size_t advance_req_iter_sizeof();
 struct iterator *advance_req_iter_init(struct advance_req_iter *it,
                                        const struct advance *goal);
 
@@ -270,7 +270,7 @@ struct iterator *advance_req_iter_init(struct advance_req_iter *it,
  * self-root-req technology.) */
 struct advance_root_req_iter;
 
-size_t advance_root_req_iter_sizeof(void);
+size_t advance_root_req_iter_sizeof();
 struct iterator *advance_root_req_iter_init(struct advance_root_req_iter *it,
                                             const struct advance *goal);
 

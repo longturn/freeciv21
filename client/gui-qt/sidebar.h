@@ -18,7 +18,7 @@ class QPixmap;
 class QVBoxLayout;
 
 typedef void (*pfcn_bool)(bool);
-typedef void (*pfcn)(void);
+typedef void (*pfcn)();
 
 void sidebarBlinkEndturn(bool do_restore);
 void sidebarCenterUnit();

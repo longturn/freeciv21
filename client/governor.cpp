@@ -705,7 +705,7 @@ void cma_set_parameter(enum attr_city attr, int city_id,
 /**********************************************************************/ /**
    Initialize the presets if there are no presets loaded on startup.
  **************************************************************************/
-void cmafec_init(void)
+void cmafec_init()
 {
   if (preset_list == NULL) {
     preset_list = preset_list_new();
@@ -715,7 +715,7 @@ void cmafec_init(void)
 /**********************************************************************/ /**
    Free resources allocated for presets system.
  **************************************************************************/
-void cmafec_free(void)
+void cmafec_free()
 {
   while (cmafec_preset_num() > 0) {
     cmafec_preset_remove(0);
@@ -834,7 +834,7 @@ int cmafec_preset_get_index_of_parameter(
 /**********************************************************************/ /**
    Returns the total number of presets.
  **************************************************************************/
-int cmafec_preset_num(void) { return preset_list_size(preset_list); }
+int cmafec_preset_num() { return preset_list_size(preset_list); }
 
 /**********************************************************************/ /**
    Return short description of city governor preset
@@ -869,7 +869,7 @@ cmafec_get_short_descr(const struct cm_parameter *const parameter)
 /**********************************************************************/ /**
    Create default cma presets for a new user (or without configuration file)
  **************************************************************************/
-void create_default_cma_presets(void)
+void create_default_cma_presets()
 {
   int i;
   struct cm_parameter parameters[] = {

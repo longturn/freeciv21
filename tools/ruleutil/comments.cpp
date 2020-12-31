@@ -53,7 +53,7 @@ static struct {
 /**********************************************************************/ /**
    Load comments to add to the saved rulesets.
  **************************************************************************/
-bool comments_load(void)
+bool comments_load()
 {
   struct section_file *comment_file;
   const char *fullpath;
@@ -127,7 +127,7 @@ bool comments_load(void)
 /**********************************************************************/ /**
    Free comments.
  **************************************************************************/
-void comments_free(void) { free(comments_storage.file_header); }
+void comments_free() { free(comments_storage.file_header); }
 
 /**********************************************************************/ /**
    Generic comment writing function with some error checking.

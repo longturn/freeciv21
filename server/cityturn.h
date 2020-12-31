@@ -22,7 +22,7 @@ bool city_refresh(struct city *pcity); /* call if city has changed */
 void city_refresh_for_player(struct player *pplayer); /* tax/govt changed */
 
 void city_refresh_queue_add(struct city *pcity);
-void city_refresh_queue_processing(void);
+void city_refresh_queue_processing();
 
 void auto_arrange_workers(struct city *pcity); /* will arrange the workers */
 void apply_cmresult_to_city(struct city *pcity, const struct cm_result *cmr);
@@ -45,8 +45,8 @@ void choose_build_target(struct player *pplayer, struct city *pcity);
 
 void nullify_prechange_production(struct city *pcity);
 
-bool check_city_migrations(void);
+bool check_city_migrations();
 
-void check_disasters(void);
+void check_disasters();
 
 void city_style_refresh(struct city *pcity);

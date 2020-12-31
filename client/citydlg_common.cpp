@@ -47,17 +47,17 @@ static int citydlg_map_width, citydlg_map_height;
 /**********************************************************************/ /**
    Return the width of the city dialog canvas.
  **************************************************************************/
-int get_citydlg_canvas_width(void) { return citydlg_map_width; }
+int get_citydlg_canvas_width() { return citydlg_map_width; }
 
 /**********************************************************************/ /**
    Return the height of the city dialog canvas.
  **************************************************************************/
-int get_citydlg_canvas_height(void) { return citydlg_map_height; }
+int get_citydlg_canvas_height() { return citydlg_map_height; }
 
 /**********************************************************************/ /**
    Calculate the citydlg width and height.
  **************************************************************************/
-void generate_citydlg_dimensions(void)
+void generate_citydlg_dimensions()
 {
   int min_x = 0, max_x = 0, min_y = 0, max_y = 0;
   int max_rad = rs_max_city_radius_sq();

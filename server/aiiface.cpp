@@ -131,7 +131,7 @@ bool load_ai_module(const char *modname)
 /**********************************************************************/ /**
    Initialize ai stuff
  **************************************************************************/
-void ai_init(void)
+void ai_init()
 {
   bool failure = false;
 #if !defined(AI_MODULES) || defined(AI_MOD_STATIC_CLASSIC)                  \
@@ -254,7 +254,7 @@ void call_incident(enum incident_type type, enum casus_belli_range scope,
 /**********************************************************************/ /**
    Call ai refresh() callback for all players.
  **************************************************************************/
-void call_ai_refresh(void)
+void call_ai_refresh()
 {
   players_iterate(pplayer) { CALL_PLR_AI_FUNC(refresh, pplayer, pplayer); }
   players_iterate_end;
@@ -263,4 +263,4 @@ void call_ai_refresh(void)
 /**********************************************************************/ /**
    Return name of default ai type.
  **************************************************************************/
-const char *default_ai_type_name(void) { return default_ai->name; }
+const char *default_ai_type_name() { return default_ai->name; }

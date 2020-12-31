@@ -93,7 +93,7 @@ bool city_tile_index_to_xy(int *city_map_x, int *city_map_y,
 int city_tile_xy_to_index(int city_map_x, int city_map_y,
                           int city_radius_sq);
 
-int rs_max_city_radius_sq(void);
+int rs_max_city_radius_sq();
 int city_map_radius_sq_get(const struct city *pcity);
 void city_map_radius_sq_set(struct city *pcity, int radius_sq);
 int city_map_tiles(int city_radius_sq);
@@ -630,9 +630,9 @@ struct tile *city_map_to_tile(const struct tile *city_center,
 
 /* Initialization functions */
 int compare_iter_index(const void *a, const void *b);
-void generate_city_map_indices(void);
-void free_city_map_index(void);
-void city_production_caravan_shields_init(void);
+void generate_city_map_indices();
+void free_city_map_index();
+void city_production_caravan_shields_init();
 
 /* output on spot */
 int city_tile_output(const struct city *pcity, const struct tile *ptile,
@@ -707,7 +707,7 @@ bool city_is_virtual(const struct city *pcity);
 /* misc */
 bool is_city_option_set(const struct city *pcity, enum city_options option);
 void city_styles_alloc(int num);
-void city_styles_free(void);
+void city_styles_free();
 
 void add_tax_income(const struct player *pplayer, int trade, int *output);
 int get_city_tithes_bonus(const struct city *pcity);

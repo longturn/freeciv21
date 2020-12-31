@@ -282,7 +282,7 @@ void server_scan_error(struct server_scan *scan, const char *message)
 /**********************************************************************/ /**
    Free the server scans.
  **************************************************************************/
-void page_network::destroy_server_scans(void)
+void page_network::destroy_server_scans()
 {
   if (meta_scan) {
     server_scan_finish(meta_scan);
@@ -310,7 +310,7 @@ void page_network::destroy_server_scans(void)
 /**********************************************************************/ /**
    Stop and restart the metaserver and lan server scans.
  **************************************************************************/
-void page_network::update_network_lists(void)
+void page_network::update_network_lists()
 {
   destroy_server_scans();
 

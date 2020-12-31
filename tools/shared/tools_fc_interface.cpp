@@ -55,7 +55,7 @@ static void tool_gui_color_free(QColor *pcolor)
 /***********************************************************************/ /**
    Initialize tool specific functions.
  ***************************************************************************/
-void fc_interface_init_tool(void)
+void fc_interface_init_tool()
 {
   struct functions *funcs = fc_interface_funcs();
 

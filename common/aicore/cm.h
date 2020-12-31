@@ -36,9 +36,9 @@ struct cm_result {
   citizens specialists[SP_MAX];
 };
 
-void cm_init(void);
-void cm_init_citymap(void);
-void cm_free(void);
+void cm_init();
+void cm_init_citymap();
+void cm_free();
 
 struct cm_result *cm_result_new(struct city *pcity);
 void cm_result_destroy(struct cm_result *result);

@@ -28,9 +28,9 @@ struct connection;
 
 void establish_embassy(struct player *pplayer, struct player *aplayer);
 
-void diplhand_init(void);
-void diplhand_free(void);
-void free_treaties(void);
+void diplhand_init();
+void diplhand_free();
+void free_treaties();
 
 struct Treaty *find_treaty(struct player *plr0, struct player *plr1);
 
@@ -38,4 +38,4 @@ void send_diplomatic_meetings(struct connection *dest);
 void cancel_all_meetings(struct player *pplayer);
 void reject_all_treaties(struct player *pplayer);
 
-struct treaty_list *get_all_treaties(void);
+struct treaty_list *get_all_treaties();

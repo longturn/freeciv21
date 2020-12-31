@@ -52,7 +52,7 @@ static map_point *fracture_points;
 /**********************************************************************/ /**
    Fracture map generator
  **************************************************************************/
-void make_fracture_map(void)
+void make_fracture_map()
 {
   int nn, mm;
   int rad;
@@ -296,7 +296,7 @@ static int local_ave_elevation(struct tile *ptile)
    It can generate mountain ranges where there a differences in elevation
    between landmasses.
  **************************************************************************/
-void make_fracture_relief(void)
+void make_fracture_relief()
 {
   bool choose_mountain;
   bool choose_hill;

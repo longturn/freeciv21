@@ -86,4 +86,4 @@ private slots:
   void slot_cancel_button_pressed();
 };
 
-void popup_multiplier_dialog(void);
+void popup_multiplier_dialog();

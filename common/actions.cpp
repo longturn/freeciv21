@@ -273,7 +273,7 @@ static void oblig_hard_req_register(const struct requirement &contradiction,
    of the ruleset. They are sorted by requirement to make it easy to read,
    modify and explain them.
  **************************************************************************/
-static void hard_code_oblig_hard_reqs(void)
+static void hard_code_oblig_hard_reqs()
 {
   /* Why this is a hard requirement: There is currently no point in
    * allowing the listed actions against domestic targets.
@@ -591,7 +591,7 @@ static void hard_code_oblig_hard_reqs(void)
    Hard code the obligatory hard requirements that needs access to the
    ruleset before they can be generated.
  **************************************************************************/
-static void hard_code_oblig_hard_reqs_ruleset(void)
+static void hard_code_oblig_hard_reqs_ruleset()
 {
   /* Why this is a hard requirement: the "animal can't conquer a city"
    * rule. Assumed in unit_can_take_over(). */
@@ -613,7 +613,7 @@ static void hard_code_oblig_hard_reqs_ruleset(void)
 /**********************************************************************/ /**
    Hard code the actions.
  **************************************************************************/
-static void hard_code_actions(void)
+static void hard_code_actions()
 {
   actions[ACTION_SPY_POISON] = unit_action_new(
       ACTION_SPY_POISON, ACTRES_SPY_POISON, ATK_CITY, ASTK_NONE,
@@ -940,7 +940,7 @@ static void hard_code_actions(void)
 /**********************************************************************/ /**
    Initialize the actions and the action enablers.
  **************************************************************************/
-void actions_init(void)
+void actions_init()
 {
   int i, j;
 
@@ -990,7 +990,7 @@ void actions_init(void)
    before ruleset sanity checking and ruleset compatibility post
    processing.
  **************************************************************************/
-void actions_rs_pre_san_gen(void)
+void actions_rs_pre_san_gen()
 {
   /* Some obligatory hard requirements needs access to the rest of the
    * ruleset. */
@@ -1000,7 +1000,7 @@ void actions_rs_pre_san_gen(void)
 /**********************************************************************/ /**
    Free the actions and the action enablers.
  **************************************************************************/
-void actions_free(void)
+void actions_free()
 {
   int i;
 
@@ -1042,7 +1042,7 @@ void actions_free(void)
 
    Doesn't care about action enablers.
  **************************************************************************/
-bool actions_are_ready(void)
+bool actions_are_ready()
 {
   if (!actions_initialized) {
     /* The actions them self aren't initialized yet. */
@@ -1815,7 +1815,7 @@ bool action_removes_extra(const struct action *paction,
 /**********************************************************************/ /**
    Create a new action enabler.
  **************************************************************************/
-struct action_enabler *action_enabler_new(void)
+struct action_enabler *action_enabler_new()
 {
   auto *enabler = new action_enabler;
   enabler->disabled = false;
@@ -5358,7 +5358,7 @@ struct act_prob action_speculate_unit_on_self(action_id act_id,
 /**********************************************************************/ /**
    Returns the impossible action probability.
  **************************************************************************/
-struct act_prob action_prob_new_impossible(void)
+struct act_prob action_prob_new_impossible()
 {
   struct act_prob out = {ACTPROB_VAL_MIN, ACTPROB_VAL_MIN};
 
@@ -5368,7 +5368,7 @@ struct act_prob action_prob_new_impossible(void)
 /**********************************************************************/ /**
    Returns the certain action probability.
  **************************************************************************/
-struct act_prob action_prob_new_certain(void)
+struct act_prob action_prob_new_certain()
 {
   struct act_prob out = {ACTPROB_VAL_MAX, ACTPROB_VAL_MAX};
 
@@ -5378,7 +5378,7 @@ struct act_prob action_prob_new_certain(void)
 /**********************************************************************/ /**
    Returns the n/a action probability.
  **************************************************************************/
-struct act_prob action_prob_new_not_relevant(void)
+struct act_prob action_prob_new_not_relevant()
 {
   struct act_prob out = {ACTPROB_VAL_NA, ACTPROB_VAL_MIN};
 
@@ -5388,7 +5388,7 @@ struct act_prob action_prob_new_not_relevant(void)
 /**********************************************************************/ /**
    Returns the "not implemented" action probability.
  **************************************************************************/
-struct act_prob action_prob_new_not_impl(void)
+struct act_prob action_prob_new_not_impl()
 {
   struct act_prob out = {ACTPROB_VAL_NOT_IMPL, ACTPROB_VAL_MIN};
 
@@ -5398,7 +5398,7 @@ struct act_prob action_prob_new_not_impl(void)
 /**********************************************************************/ /**
    Returns the "user don't know" action probability.
  **************************************************************************/
-struct act_prob action_prob_new_unknown(void)
+struct act_prob action_prob_new_unknown()
 {
   struct act_prob out = {ACTPROB_VAL_MIN, ACTPROB_VAL_MAX};
 

@@ -785,7 +785,7 @@ bool genhashs_are_equal_full(const struct genhash *pgenhash1,
 /************************************************************************/ /**
    "Sizeof" function implementation for generic_iterate genhash iterators.
  ****************************************************************************/
-size_t genhash_iter_sizeof(void) { return sizeof(struct genhash_iter); }
+size_t genhash_iter_sizeof() { return sizeof(struct genhash_iter); }
 
 /************************************************************************/ /**
    Helper function for genhash (key, value) pair iteration.

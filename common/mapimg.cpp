@@ -264,7 +264,7 @@ BV_DEFINE(bv_mapdef_arg, MAPDEF_COUNT);
 #define MAX_LEN_MAPARG MAX_LEN_MAPDEF
 #define MAX_NUM_MAPIMG 10
 
-static inline bool mapimg_initialised(void);
+static inline bool mapimg_initialised();
 static bool mapimg_test(int id);
 static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
                               const char *val, bool check);
@@ -494,7 +494,7 @@ void mapimg_init(mapimg_tile_known_func mapimg_tile_known,
 /************************************************************************/ /**
    Reset the map image subsystem.
  ****************************************************************************/
-void mapimg_reset(void)
+void mapimg_reset()
 {
   if (!mapimg_initialised()) {
     return;
@@ -513,7 +513,7 @@ void mapimg_reset(void)
 /************************************************************************/ /**
    Free all memory allocated by the map image subsystem.
  ****************************************************************************/
-void mapimg_free(void)
+void mapimg_free()
 {
   if (!mapimg_initialised()) {
     return;
@@ -528,7 +528,7 @@ void mapimg_free(void)
 /************************************************************************/ /**
    Return the number of map image definitions.
  ****************************************************************************/
-int mapimg_count(void)
+int mapimg_count()
 {
   if (!mapimg_initialised()) {
     return 0;
@@ -707,7 +707,7 @@ char *mapimg_help(const char *cmdname)
 /************************************************************************/ /**
    Returns the last error.
  ****************************************************************************/
-const char *mapimg_error(void) { return error_buffer; }
+const char *mapimg_error() { return error_buffer; }
 
 /************************************************************************/ /**
    Define on map image.
@@ -1097,7 +1097,7 @@ struct mapdef *mapimg_isvalid(int id)
 /************************************************************************/ /**
    Return a list of all available tookits and formats for the client.
  ****************************************************************************/
-const QVector<QString> *mapimg_get_format_list(void)
+const QVector<QString> *mapimg_get_format_list()
 {
   if (format_list->isEmpty()) {
     enum imagetool tool;
@@ -1132,7 +1132,7 @@ const QVector<QString> *mapimg_get_format_list(void)
    Return the default value of the tookit and the image format for the
  client.
  ****************************************************************************/
-const char *mapimg_get_format_default(void)
+const char *mapimg_get_format_default()
 {
   static char default_format[64];
 
@@ -1504,7 +1504,7 @@ bool mapimg_colortest(const char *savename, const char *path)
 /************************************************************************/ /**
    Check if the map image subsustem is initialised.
  ****************************************************************************/
-static inline bool mapimg_initialised(void) { return mapimg.init; }
+static inline bool mapimg_initialised() { return mapimg.init; }
 
 /************************************************************************/ /**
    Check if the map image subsystem is initialised and the given ID is valid.

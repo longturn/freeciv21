@@ -65,12 +65,12 @@ Q_GLOBAL_STATIC(fcThread, meta_srv_thread);
 /*********************************************************************/ /**
    The default metaserver patches for this server
  *************************************************************************/
-const char *default_meta_patches_string(void) { return "none"; }
+const char *default_meta_patches_string() { return "none"; }
 
 /*********************************************************************/ /**
    Return static string with default info line to send to metaserver.
  *************************************************************************/
-const char *default_meta_message_string(void)
+const char *default_meta_message_string()
 {
 #if IS_BETA_VERSION
   return "unstable pre-" NEXT_STABLE_VERSION ": beware";
@@ -86,17 +86,17 @@ const char *default_meta_message_string(void)
 /*********************************************************************/ /**
    The metaserver patches
  *************************************************************************/
-const char *get_meta_patches_string(void) { return meta_patches; }
+const char *get_meta_patches_string() { return meta_patches; }
 
 /*********************************************************************/ /**
    The metaserver message
  *************************************************************************/
-const char *get_meta_message_string(void) { return meta_message; }
+const char *get_meta_message_string() { return meta_message; }
 
 /*********************************************************************/ /**
    The server metaserver type
  *************************************************************************/
-static const char *get_meta_type_string(void)
+static const char *get_meta_type_string()
 {
   if (game.server.meta_info.type[0] != '\0') {
     return game.server.meta_info.type;
@@ -108,7 +108,7 @@ static const char *get_meta_type_string(void)
 /*********************************************************************/ /**
    The metaserver message set by user
  *************************************************************************/
-const char *get_user_meta_message_string(void)
+const char *get_user_meta_message_string()
 {
   if (game.server.meta_info.user_message[0] != '\0') {
     return game.server.meta_info.user_message;
@@ -179,7 +179,7 @@ QString meta_addr_port() { return srvarg.metaserver_addr; }
 /*********************************************************************/ /**
    We couldn't find or connect to the metaserver.
  *************************************************************************/
-static void metaserver_failed(void)
+static void metaserver_failed()
 {
   if (!persistent_meta_connection) {
     con_puts(C_METAERROR,
@@ -448,7 +448,7 @@ static bool send_to_metaserver(enum meta_flag flag)
 /*********************************************************************/ /**
    Stop sending updates to metaserver
  *************************************************************************/
-void server_close_meta(void)
+void server_close_meta()
 {
   server_is_open = false;
   persistent_meta_connection = false;
@@ -476,7 +476,7 @@ bool server_open_meta(bool persistent)
 /*********************************************************************/ /**
    Are we sending info to the metaserver?
  *************************************************************************/
-bool is_metaserver_open(void) { return server_is_open; }
+bool is_metaserver_open() { return server_is_open; }
 
 /*********************************************************************/ /**
    Control when we send info to the metaserver.

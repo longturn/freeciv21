@@ -74,7 +74,7 @@ static bool *unfogged_players;
 /************************************************************************/ /**
    Initialize data structures required for edit mode.
  ****************************************************************************/
-void edithand_init(void)
+void edithand_init()
 {
   modified_tile_table->clear();
 
@@ -89,7 +89,7 @@ void edithand_init(void)
 /************************************************************************/ /**
    Free all memory used by data structures required for edit mode.
  ****************************************************************************/
-void edithand_free(void)
+void edithand_free()
 {
   if (unfogged_players != NULL) {
     delete[] unfogged_players;
@@ -135,7 +135,7 @@ void edithand_send_initial_packets(struct conn_list *dest)
    Do the potentially slow checks required after one or several tiles'
    terrain has change.
  ****************************************************************************/
-static void check_edited_tile_terrains(void)
+static void check_edited_tile_terrains()
 {
   if (need_continents_reassigned) {
     assign_continent_numbers();
@@ -155,7 +155,7 @@ static void check_edited_tile_terrains(void)
    Do any necessary checks after leaving edit mode to ensure that the game
    is in a consistent state.
  ****************************************************************************/
-static void check_leaving_edit_mode(void)
+static void check_leaving_edit_mode()
 {
   bool unfogged;
 

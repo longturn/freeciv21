@@ -285,21 +285,21 @@ struct civ_game {
   } callbacks;
 };
 
-bool is_server(void);
-void i_am_server(void);
-void i_am_client(void);
-static inline void i_am_tool(void)
+bool is_server();
+void i_am_server();
+void i_am_client();
+static inline void i_am_tool()
 {
   i_am_server(); /* No difference between a tool and server at the moment */
 }
 
 void game_init(bool keep_ruleset_value);
-void game_map_init(void);
-void game_free(void);
-void game_reset(void);
+void game_map_init();
+void game_free();
+void game_reset();
 
-void game_ruleset_init(void);
-void game_ruleset_free(void);
+void game_ruleset_init();
+void game_ruleset_free();
 
 int civ_population(const struct player *pplayer);
 struct city *game_city_by_name(const char *name);
@@ -309,7 +309,7 @@ struct unit *game_unit_by_number(int id);
 
 void game_remove_unit(struct world *gworld, struct unit *punit);
 void game_remove_city(struct world *gworld, struct city *pcity);
-void initialize_globals(void);
+void initialize_globals();
 
 bool is_player_phase(const struct player *pplayer, int phase);
 
@@ -321,7 +321,7 @@ int generate_save_name(const char *format, char *buf, int buflen,
 void user_flag_init(struct user_flag *flag);
 void user_flag_free(struct user_flag *flag);
 
-int current_turn_timeout(void);
+int current_turn_timeout();
 
 extern struct civ_game game;
 extern struct world wld;

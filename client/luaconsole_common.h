@@ -23,4 +23,4 @@ void luaconsole_printf(const struct ft_color color, const char *format, ...)
     fc__attribute((__format__(__printf__, 2, 3)));
 void luaconsole_event(const char *plain_text,
                       const struct text_tag_list *tags);
-void luaconsole_welcome_message(void);
+void luaconsole_welcome_message();

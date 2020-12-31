@@ -400,7 +400,7 @@ void generator_init_topology(bool autosize)
 /************************************************************************/ /**
    An estimate of the linear (1-dimensional) size of the map.
  ****************************************************************************/
-int get_sqsize(void)
+int get_sqsize()
 {
   int sqsize = sqrt(MAP_INDEX_SIZE / 1000);
 

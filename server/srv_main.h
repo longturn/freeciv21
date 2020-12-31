@@ -83,17 +83,17 @@ extern struct civserver {
   char game_identifier[MAX_LEN_GAME_IDENTIFIER];
 } server;
 
-void init_game_seed(void);
-void srv_init(void);
-void server_quit(void);
+void init_game_seed();
+void srv_init();
+void server_quit();
 void save_game_auto(const char *save_reason, enum autosave_type type);
 
-enum server_states server_state(void);
+enum server_states server_state();
 void set_server_state(enum server_states newstate);
 
-void check_for_full_turn_done(void);
-bool check_for_game_over(void);
-bool game_was_started(void);
+void check_for_full_turn_done();
+bool check_for_game_over();
+bool game_was_started();
 
 void server_gui_color_free(QColor *pcolor);
 int server_plr_tile_city_id_get(const struct tile *ptile,
@@ -107,7 +107,7 @@ int server_ss_val_int_get(server_setting_id id);
 unsigned int server_ss_val_bitwise_get(server_setting_id id);
 
 bool server_packet_input(struct connection *pconn, void *packet, int type);
-void start_game(void);
+void start_game();
 const char *pick_random_player_name(const struct nation_type *pnation);
 void player_nation_defaults(struct player *pplayer,
                             struct nation_type *pnation, bool set_name);
@@ -120,20 +120,20 @@ void end_turn();
 
 void identity_number_release(int id);
 void identity_number_reserve(int id);
-int identity_number(void);
+int identity_number();
 
 void srv_ready();
 void srv_scores();
 
 void server_game_init(bool keep_ruleset_value);
-void server_game_free(void);
+void server_game_free();
 const char *aifill(int amount);
 
 extern struct server_arguments srvarg;
 
 extern bool force_end_of_sniff;
 
-void update_nations_with_startpos(void);
+void update_nations_with_startpos();
 
 known_type mapimg_server_tile_known(const struct tile *ptile,
                                     const struct player *pplayer,
@@ -151,5 +151,5 @@ player *mapimg_server_tile_unit(const struct tile *ptile,
                                 const struct player *pplayer,
                                 bool knowledge);
 
-int mapimg_server_plrcolor_count(void);
+int mapimg_server_plrcolor_count();
 rgbcolor *mapimg_server_plrcolor_get(int i);

@@ -30,7 +30,7 @@
 /**********************************************************************/ /**
    Initialise the unit data from the ruleset for the advisors.
  **************************************************************************/
-void adv_units_ruleset_init(void)
+void adv_units_ruleset_init()
 {
   unit_class_iterate(pclass)
   {

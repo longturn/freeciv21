@@ -207,7 +207,7 @@ void city_refresh_queue_add(struct city *pcity)
    Refresh the listed cities.
    Called after significant changes to borders, and arranging workers.
  **************************************************************************/
-void city_refresh_queue_processing(void)
+void city_refresh_queue_processing()
 {
   if (NULL == city_refresh_queue) {
     return;
@@ -3794,7 +3794,7 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
 
    Returns TRUE iff there has been INTERNATIONAL migration.
  **************************************************************************/
-bool check_city_migrations(void)
+bool check_city_migrations()
 {
   bool internat = false;
 
@@ -3959,7 +3959,7 @@ static void apply_disaster(struct city *pcity, struct disaster_type *pdis)
 /**********************************************************************/ /**
    Check for any disasters hitting any city, and apply those disasters.
  **************************************************************************/
-void check_disasters(void)
+void check_disasters()
 {
   if (game.info.disasters == 0) {
     /* Shortcut out as no disaster is possible. */

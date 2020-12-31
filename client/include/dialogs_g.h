@@ -40,7 +40,7 @@ GUI_FUNC_PROTO(void, popup_races_dialog, struct player *pplayer)
 GUI_FUNC_PROTO(void, popdown_races_dialog, void)
 
 GUI_FUNC_PROTO(void, unit_select_dialog_popup, struct tile *ptile)
-void unit_select_dialog_update(void); /* Defined in update_queue.c. */
+void unit_select_dialog_update(); /* Defined in update_queue.c. */
 GUI_FUNC_PROTO(void, unit_select_dialog_update_real, void *unused)
 
 GUI_FUNC_PROTO(void, races_toggles_set_sensitive, void)

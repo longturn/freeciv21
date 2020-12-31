@@ -22,8 +22,8 @@ bool script_client_callback_invoke(const char *callback_name, int nargs,
 void script_client_remove_exported_object(void *object);
 
 /* script functions. */
-bool script_client_init(void);
-void script_client_free(void);
+bool script_client_init();
+void script_client_free();
 bool script_client_do_string(const char *str);
 bool script_client_do_file(const char *filename);
 
@@ -35,4 +35,4 @@ void script_client_state_save(struct section_file *file);
 void script_client_signal_connect(const char *signal_name,
                                   const char *callback_name);
 void script_client_signal_emit(const char *signal_name, ...);
-const char *script_client_signal_list(void);
+const char *script_client_signal_list();

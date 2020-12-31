@@ -385,7 +385,7 @@ struct connection *conn_by_number(int id)
 /**********************************************************************/ /**
    Return malloced struct, appropriately initialized.
  **************************************************************************/
-struct socket_packet_buffer *new_socket_packet_buffer(void)
+struct socket_packet_buffer *new_socket_packet_buffer()
 {
   auto *buf = new socket_packet_buffer;
   buf->ndata = 0;

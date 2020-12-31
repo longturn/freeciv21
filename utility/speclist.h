@@ -156,9 +156,9 @@ typedef bool (*SPECLIST_FOO(_list_cond_fn_t))(const SPECLIST_TYPE *);
   Create a new speclist.
 ****************************************************************************/
 static inline SPECLIST_LIST *
-    SPECLIST_FOO(_list_new)(void) fc__warn_unused_result;
+    SPECLIST_FOO(_list_new)() fc__warn_unused_result;
 
-static inline SPECLIST_LIST *SPECLIST_FOO(_list_new)(void)
+static inline SPECLIST_LIST *SPECLIST_FOO(_list_new)()
 {
   return (SPECLIST_LIST *) genlist_new();
 }

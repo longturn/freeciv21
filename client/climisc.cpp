@@ -348,7 +348,7 @@ void nuclear_winter_scaled(int *chance, int *rate, int max)
 /**********************************************************************/ /**
    Return the sprite for the research indicator.
  **************************************************************************/
-QPixmap *client_research_sprite(void)
+QPixmap *client_research_sprite()
 {
   if (NULL != client.conn.playing && can_client_change_view()) {
     const struct research *presearch = research_get(client_player());
@@ -371,7 +371,7 @@ QPixmap *client_research_sprite(void)
 /**********************************************************************/ /**
    Return the sprite for the global-warming indicator.
  **************************************************************************/
-QPixmap *client_warming_sprite(void)
+QPixmap *client_warming_sprite()
 {
   int idx;
 
@@ -388,7 +388,7 @@ QPixmap *client_warming_sprite(void)
 /**********************************************************************/ /**
    Return the sprite for the global-cooling indicator.
  **************************************************************************/
-QPixmap *client_cooling_sprite(void)
+QPixmap *client_cooling_sprite()
 {
   int idx;
 
@@ -405,7 +405,7 @@ QPixmap *client_cooling_sprite(void)
 /**********************************************************************/ /**
    Return the sprite for the government indicator.
  **************************************************************************/
-QPixmap *client_government_sprite(void)
+QPixmap *client_government_sprite()
 {
   if (NULL != client.conn.playing && can_client_change_view()
       && government_count() > 0) {
@@ -423,7 +423,7 @@ QPixmap *client_government_sprite(void)
    Find something sensible to display. This is used to overwrite the
    intro gfx.
  **************************************************************************/
-void center_on_something(void)
+void center_on_something()
 {
   struct city *pcity;
   struct unit *punit;
@@ -1254,7 +1254,7 @@ void client_player_init(struct player *pplayer)
 /**********************************************************************/ /**
    Reset the private maps of all players.
  **************************************************************************/
-void client_player_maps_reset(void)
+void client_player_maps_reset()
 {
   players_iterate(pplayer)
   {
@@ -1283,7 +1283,7 @@ void client_player_maps_reset(void)
 /**********************************************************************/ /**
    Create a map image definition on the client.
  **************************************************************************/
-bool mapimg_client_define(void)
+bool mapimg_client_define()
 {
   char str[MAX_LEN_MAPDEF];
   char mi_map[MAPIMG_LAYER_COUNT + 1];
@@ -1366,7 +1366,7 @@ bool mapimg_client_createmap(const char *filename)
 /**********************************************************************/ /**
    Returns the nation set in use.
  **************************************************************************/
-struct nation_set *client_current_nation_set(void)
+struct nation_set *client_current_nation_set()
 {
   struct option *poption = optset_option_by_name(server_optset, "nationset");
   const char *setting_str;
@@ -1391,7 +1391,7 @@ bool client_nation_is_in_current_set(const struct nation_type *pnation)
    currently used for all current AI players and will be for new ones;
    else return ai_level_invalid() to indicate inconsistency.
  **************************************************************************/
-enum ai_level server_ai_level(void)
+enum ai_level server_ai_level()
 {
   enum ai_level lvl = static_cast<ai_level>(game.info.skill_level);
 

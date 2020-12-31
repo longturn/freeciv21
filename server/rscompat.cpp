@@ -236,7 +236,7 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
    Update existing action enablers for new hard obligatory requirements.
    Disable those that can't be upgraded.
  **************************************************************************/
-void rscompat_enablers_add_obligatory_hard_reqs(void)
+void rscompat_enablers_add_obligatory_hard_reqs()
 {
   action_iterate(act_id)
   {
@@ -267,7 +267,7 @@ void rscompat_enablers_add_obligatory_hard_reqs(void)
    Find and return the first unused unit type user flag. If all unit type
    user flags are taken MAX_NUM_USER_UNIT_FLAGS is returned.
  **************************************************************************/
-static int first_free_unit_type_user_flag(void)
+static int first_free_unit_type_user_flag()
 {
   int flag;
 
@@ -287,7 +287,7 @@ static int first_free_unit_type_user_flag(void)
    Find and return the first unused unit class user flag. If all unit class
    user flags are taken MAX_NUM_USER_UCLASS_FLAGS is returned.
  **************************************************************************/
-static int first_free_unit_class_user_flag(void)
+static int first_free_unit_class_user_flag()
 {
   int flag;
 
@@ -308,7 +308,7 @@ static int first_free_unit_class_user_flag(void)
    Find and return the first unused terrain user flag. If all terrain
    user flags are taken MAX_NUM_USER_TER_FLAGS is returned.
  **************************************************************************/
-static int first_free_terrain_user_flag(void)
+static int first_free_terrain_user_flag()
 {
   int flag;
 

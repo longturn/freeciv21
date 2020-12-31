@@ -1003,7 +1003,7 @@ void handle_diplomacy_remove_clause(int counterpart, int giver,
 
    Called when the client disconnects from game.
  ****************************************************************************/
-void close_all_diplomacy_dialogs(void)
+void close_all_diplomacy_dialogs()
 {
   int i;
   diplo_dlg *dd;

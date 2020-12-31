@@ -33,7 +33,7 @@
 /*******************************************************************/ /**
    Find who is leading the space race. Returns NULL if nobody is.
  ***********************************************************************/
-struct player *player_leading_spacerace(void)
+struct player *player_leading_spacerace()
 {
   struct player *best = NULL;
   int best_arrival = FC_INFINITY;

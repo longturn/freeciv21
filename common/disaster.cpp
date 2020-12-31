@@ -30,7 +30,7 @@ static struct disaster_type disaster_types[MAX_DISASTER_TYPES];
 /************************************************************************/ /**
    Initialize disaster_type structures.
  ****************************************************************************/
-void disaster_types_init(void)
+void disaster_types_init()
 {
   int i;
 
@@ -43,7 +43,7 @@ void disaster_types_init(void)
 /************************************************************************/ /**
    Free the memory associated with disaster types
  ****************************************************************************/
-void disaster_types_free(void)
+void disaster_types_free()
 {
   disaster_type_iterate(pdis) { requirement_vector_free(&pdis->reqs); }
   disaster_type_iterate_end;
@@ -75,7 +75,7 @@ Disaster_type_id disaster_index(const struct disaster_type *pdis)
 /************************************************************************/ /**
    Return the number of disaster_types.
  ****************************************************************************/
-Disaster_type_id disaster_count(void)
+Disaster_type_id disaster_count()
 {
   return game.control.num_disaster_types;
 }

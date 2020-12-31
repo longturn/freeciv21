@@ -561,7 +561,7 @@ bool can_unit_do_autosettlers(const struct unit *punit)
 /**********************************************************************/ /**
    Setup array of real activities
  **************************************************************************/
-void setup_real_activities_array(void)
+void setup_real_activities_array()
 {
   int i = 0;
 
@@ -2343,7 +2343,7 @@ int unit_transport_depth(const struct unit *pcargo)
 /**********************************************************************/ /**
    Returns the size of the unit cargo iterator.
  **************************************************************************/
-size_t cargo_iter_sizeof(void) { return sizeof(struct cargo_iter); }
+size_t cargo_iter_sizeof() { return sizeof(struct cargo_iter); }
 
 /**********************************************************************/ /**
    Get the unit of the cargo iterator.

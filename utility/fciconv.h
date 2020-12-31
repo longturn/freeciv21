@@ -84,7 +84,7 @@
 void init_character_encodings(const char *internal_encoding,
                               bool use_transliteration);
 
-const char *get_internal_encoding(void);
+const char *get_internal_encoding();
 
 char *data_to_internal_string_malloc(const char *text);
 char *internal_to_data_string_malloc(const char *text);

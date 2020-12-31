@@ -81,7 +81,7 @@ static size_t astr_buffer_alloc = 0;
 
 static inline char *astr_buffer_get(size_t *alloc);
 static inline char *astr_buffer_grow(size_t *alloc);
-static void astr_buffer_free(void);
+static void astr_buffer_free();
 
 /************************************************************************/ /**
    Returns the astring buffer. Create it if necessary.
@@ -114,7 +114,7 @@ static inline char *astr_buffer_grow(size_t *alloc)
 /************************************************************************/ /**
    Free the astring buffer.
  ****************************************************************************/
-static void astr_buffer_free(void) { free(astr_buffer); }
+static void astr_buffer_free() { free(astr_buffer); }
 
 /************************************************************************/ /**
    Initialize the struct.

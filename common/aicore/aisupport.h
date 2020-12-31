@@ -10,6 +10,6 @@
 **************************************************************************/
 #pragma once
 
-struct player *player_leading_spacerace(void);
+struct player *player_leading_spacerace();
 int player_distance_to_player(struct player *pplayer, struct player *target);
 int city_gold_worth(struct city *pcity);

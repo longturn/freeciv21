@@ -250,7 +250,7 @@ struct unit {
 #define CHECK_UNIT(punit) /* Do nothing */
 #endif /* FREECIV_DEBUG */
 
-void setup_real_activities_array(void);
+void setup_real_activities_array();
 
 extern Activity_type_id real_activities[ACTIVITY_LAST];
 
@@ -439,7 +439,7 @@ bool unit_is_cityfounder(const struct unit *punit);
   }
 
 struct cargo_iter;
-size_t cargo_iter_sizeof(void) fc__attribute((const));
+size_t cargo_iter_sizeof() fc__attribute((const));
 
 struct iterator *cargo_iter_init(struct cargo_iter *iter,
                                  const struct unit *ptrans);

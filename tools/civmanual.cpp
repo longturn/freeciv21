@@ -228,7 +228,7 @@ const char *tileset_description(struct tileset *t) { return NULL; }
 /**********************************************************************/ /**
    Mostly a client stub.
  **************************************************************************/
-enum client_states client_state(void) { return C_S_INITIAL; }
+enum client_states client_state() { return C_S_INITIAL; }
 
 /**********************************************************************/ /**
    Mostly a client stub.

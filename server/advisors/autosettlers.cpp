@@ -84,7 +84,7 @@ static civtimer *as_timer = NULL;
 /**********************************************************************/ /**
    Free resources allocated for autosettlers system
  **************************************************************************/
-void adv_settlers_free(void)
+void adv_settlers_free()
 {
   timer_destroy(as_timer);
   as_timer = NULL;
@@ -93,7 +93,7 @@ void adv_settlers_free(void)
 /**********************************************************************/ /**
    Initialize auto settlers based on the ruleset.
  **************************************************************************/
-void auto_settlers_ruleset_init(void)
+void auto_settlers_ruleset_init()
 {
   int i;
 

@@ -25,14 +25,14 @@ void map_to_overview_pos(int *overview_x, int *overview_y, int map_x,
 void overview_to_map_pos(int *map_x, int *map_y, int overview_x,
                          int overview_y);
 
-void refresh_overview_canvas(void);
+void refresh_overview_canvas();
 void overview_update_tile(struct tile *ptile);
-void calculate_overview_dimensions(void);
-void overview_free(void);
+void calculate_overview_dimensions();
+void overview_free();
 
-void center_tile_overviewcanvas(void);
+void center_tile_overviewcanvas();
 
-void flush_dirty_overview(void);
+void flush_dirty_overview();
 
 void overview_redraw_callback(struct option *option);
 void gui_to_overview_pos(const struct tileset *t, int *ovr_x, int *ovr_y,

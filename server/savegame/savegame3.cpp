@@ -303,8 +303,8 @@ static void worklist_load(struct section_file *file, struct worklist *pwl,
 static void worklist_save(struct section_file *file,
                           const struct worklist *pwl, int max_length,
                           const char *path, ...);
-static void unit_ordering_calc(void);
-static void unit_ordering_apply(void);
+static void unit_ordering_calc();
+static void unit_ordering_apply();
 static void sg_extras_set(bv_extras *extras, char ch,
                           struct extra_type **idx);
 static char sg_extras_get(bv_extras extras, struct extra_type *presource,
@@ -962,7 +962,7 @@ static void worklist_save(struct section_file *file,
    Assign values to ord_city and ord_map for each unit, so the values can be
    saved.
  ****************************************************************************/
-static void unit_ordering_calc(void)
+static void unit_ordering_calc()
 {
   int j;
 
@@ -997,7 +997,7 @@ static void unit_ordering_calc(void)
    For each city and tile, sort unit lists according to ord_city and ord_map
    values.
  ****************************************************************************/
-static void unit_ordering_apply(void)
+static void unit_ordering_apply()
 {
   players_iterate(pplayer)
   {

@@ -34,7 +34,7 @@
 /**********************************************************************/ /**
    Start music suitable for current game situation
  **************************************************************************/
-void start_style_music(void)
+void start_style_music()
 {
   if (client_state() != C_S_RUNNING) {
     /* Style music plays in running game only */
@@ -80,7 +80,7 @@ void start_style_music(void)
 /**********************************************************************/ /**
    Stop style music completely.
  **************************************************************************/
-void stop_style_music(void) { audio_stop_usage(); }
+void stop_style_music() { audio_stop_usage(); }
 
 /**********************************************************************/ /**
    Start menu music.
@@ -95,7 +95,7 @@ void start_menu_music(const QString &tag, const QString &alt_tag)
 /**********************************************************************/ /**
    Stop menu music completely.
  **************************************************************************/
-void stop_menu_music(void) { audio_stop_usage(); }
+void stop_menu_music() { audio_stop_usage(); }
 
 /**********************************************************************/ /**
    Play single track before continuing normal style music

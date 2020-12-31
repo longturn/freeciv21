@@ -64,12 +64,12 @@ struct vote {
 extern struct vote_list *vote_list;
 extern int vote_number_sequence;
 
-void voting_init(void);
-void voting_free(void);
-void voting_turn(void);
+void voting_init();
+void voting_free();
+void voting_turn();
 
 int count_voters(const struct vote *pvote);
-void clear_all_votes(void);
+void clear_all_votes();
 void cancel_connection_votes(struct connection *pconn);
 bool conn_can_vote(const struct connection *pconn, const struct vote *pvote);
 bool conn_can_see_vote(const struct connection *pconn,

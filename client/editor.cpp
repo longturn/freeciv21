@@ -175,7 +175,7 @@ static void tool_init(enum editor_tool_type ett, const char *name, int flags,
 /************************************************************************/ /**
    Adjust editor for changed ruleset.
  ****************************************************************************/
-void editor_ruleset_changed(void)
+void editor_ruleset_changed()
 {
   int t;
 
@@ -188,7 +188,7 @@ void editor_ruleset_changed(void)
    Initialize the client's editor state information to some suitable default
    values. This only needs to be done once at client start.
  ****************************************************************************/
-void editor_init(void)
+void editor_init()
 {
   fc_assert(editor == NULL);
 
@@ -240,7 +240,7 @@ void editor_init(void)
 /************************************************************************/ /**
    Clear the editor data which is game dependent.
  ****************************************************************************/
-void editor_clear(void)
+void editor_clear()
 {
   fc_assert_ret(editor != NULL);
 
@@ -251,7 +251,7 @@ void editor_clear(void)
 /************************************************************************/ /**
    Free the client's editor.
  ****************************************************************************/
-void editor_free(void)
+void editor_free()
 {
   if (editor != NULL) {
     edit_buffer_free(editor->copybuf);
@@ -280,7 +280,7 @@ void editor_set_tool(enum editor_tool_type ett)
 /************************************************************************/ /**
    Get the current tool used by the editor.
  ****************************************************************************/
-enum editor_tool_type editor_get_tool(void)
+enum editor_tool_type editor_get_tool()
 {
   if (editor == NULL) {
     return NUM_EDITOR_TOOL_TYPES;
@@ -339,7 +339,7 @@ enum editor_tool_mode editor_tool_get_mode(enum editor_tool_type ett)
 /************************************************************************/ /**
    Returns TRUE if the *client* is in edit mode.
  ****************************************************************************/
-bool editor_is_active(void) { return can_conn_edit(&client.conn); }
+bool editor_is_active() { return can_conn_edit(&client.conn); }
 
 /************************************************************************/ /**
    Returns TRUE if the given tool should be made available to the user via
@@ -781,7 +781,7 @@ static void editor_end_selection_rectangle(int canvas_x, int canvas_y)
 /************************************************************************/ /**
    Draws the editor selection rectangle using draw_selection_rectangle().
  ****************************************************************************/
-static void editor_draw_selrect(void)
+static void editor_draw_selrect()
 {
   if (!editor) {
     return;
@@ -897,7 +897,7 @@ void editor_mouse_move(int canvas_x, int canvas_y, int modifiers)
    a hint for the server to now do any checks it has saved while the batch
    was being processed.
  ****************************************************************************/
-void editor_notify_edit_finished(void)
+void editor_notify_edit_finished()
 {
   send_packet_edit_check_tiles(&client.conn);
 }
@@ -1026,7 +1026,7 @@ void editor_set_current_tile(const struct tile *ptile)
 /************************************************************************/ /**
    Get the tile that the user's mouse pointer is currently over.
  ****************************************************************************/
-const struct tile *editor_get_current_tile(void)
+const struct tile *editor_get_current_tile()
 {
   if (editor == NULL) {
     return NULL;
@@ -1081,7 +1081,7 @@ void editor_tool_cycle_mode(enum editor_tool_type ett)
 /************************************************************************/ /**
    Unselect all selected tiles.
  ****************************************************************************/
-void editor_selection_clear(void)
+void editor_selection_clear()
 {
   if (!editor) {
     return;
@@ -1125,7 +1125,7 @@ bool editor_tile_is_selected(const struct tile *ptile)
 /************************************************************************/ /**
    Apply the current editor tool to all tiles in the current selection.
  ****************************************************************************/
-void editor_apply_tool_to_selection(void)
+void editor_apply_tool_to_selection()
 {
   enum editor_tool_type ett;
 
@@ -1390,7 +1390,7 @@ bool editor_tool_has_value_erase(enum editor_tool_type ett)
    corresponding to the current 'applied player' parameter and has unit type
    given by the sub-value of the unit tool (ETT_UNIT).
  ****************************************************************************/
-struct unit *editor_unit_virtual_create(void)
+struct unit *editor_unit_virtual_create()
 {
   struct unit *vunit;
   struct player *pplayer;
@@ -1773,7 +1773,7 @@ void edit_buffer_paste(struct edit_buffer *ebuf, const struct tile *dest)
 /************************************************************************/ /**
    Returns the copy buffer for the given tool.
  ****************************************************************************/
-struct edit_buffer *editor_get_copy_buffer(void)
+struct edit_buffer *editor_get_copy_buffer()
 {
   if (!editor) {
     return NULL;
@@ -1941,7 +1941,7 @@ bool edit_buffer_has_type(const struct edit_buffer *ebuf, int type)
    The center is calculated as the vector sum divided by the number of tiles,
    i.e. the average of the map distance vectors of the selected tiles.
  ****************************************************************************/
-const struct tile *editor_get_selection_center(void)
+const struct tile *editor_get_selection_center()
 {
   int count;
   const struct tile *origin, *center;

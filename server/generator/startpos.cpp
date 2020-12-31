@@ -277,7 +277,7 @@ static int compare_islands(const void *A_, const void *B_)
 /************************************************************************/ /**
    Initialize islands data.
  ****************************************************************************/
-static void initialize_isle_data(void)
+static void initialize_isle_data()
 {
   int nr;
   islands = new islands_data_type[wld.map.num_continents + 1];

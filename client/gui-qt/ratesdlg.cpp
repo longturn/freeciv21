@@ -239,7 +239,7 @@ int scale_to_mult(const struct multiplier *pmul, int scale)
 /**********************************************************************/ /**
    Popup (or raise) the (tax/science/luxury) rates selection dialog.
  **************************************************************************/
-void popup_rates_dialog(void)
+void popup_rates_dialog()
 {
   QList<QScreen *> screens = QGuiApplication::screens();
   QRect rect = screens[0]->availableGeometry();
@@ -273,7 +273,7 @@ void real_multipliers_dialog_update(void *unused)
 /**********************************************************************/ /**
    Popups multiplier dialog
  **************************************************************************/
-void popup_multiplier_dialog(void)
+void popup_multiplier_dialog()
 {
   multipler_rates_dialog *mrd;
 

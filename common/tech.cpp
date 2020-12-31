@@ -61,7 +61,7 @@ static struct user_flag user_tech_flags[MAX_NUM_USER_TECH_FLAGS];
 /**********************************************************************/ /**
    Return the last item of advances/technologies.
  **************************************************************************/
-const struct advance *advance_array_last(void)
+const struct advance *advance_array_last()
 {
   if (game.control.num_tech_types > 0) {
     return &advances[game.control.num_tech_types - 1];
@@ -72,7 +72,7 @@ const struct advance *advance_array_last(void)
 /**********************************************************************/ /**
    Return the number of advances/technologies.
  **************************************************************************/
-Tech_type_id advance_count(void) { return game.control.num_tech_types; }
+Tech_type_id advance_count() { return game.control.num_tech_types; }
 
 /**********************************************************************/ /**
    Return the advance index.
@@ -211,7 +211,7 @@ bool advance_has_flag(Tech_type_id tech, enum tech_flag_id flag)
 /**********************************************************************/ /**
    Function to precalculate needed data for technologies.
  **************************************************************************/
-void techs_precalc_data(void)
+void techs_precalc_data()
 {
   fc_assert_msg(tech_cost_style_is_valid(game.info.tech_cost_style),
                 "Invalid tech_cost_style %d", game.info.tech_cost_style);
@@ -295,7 +295,7 @@ const char *advance_rule_name(const struct advance *padvance)
 /**********************************************************************/ /**
    Initialize tech classes
  **************************************************************************/
-void tech_classes_init(void)
+void tech_classes_init()
 {
   int i;
 
@@ -358,7 +358,7 @@ struct tech_class *tech_class_by_rule_name(const char *name)
 /**********************************************************************/ /**
    Initialize user tech flags.
  **************************************************************************/
-void user_tech_flags_init(void)
+void user_tech_flags_init()
 {
   int i;
 
@@ -370,7 +370,7 @@ void user_tech_flags_init(void)
 /**********************************************************************/ /**
    Frees the memory associated with all user tech flags
  **************************************************************************/
-void user_tech_flags_free(void)
+void user_tech_flags_free()
 {
   int i;
 
@@ -432,7 +432,7 @@ const char *tech_flag_helptxt(enum tech_flag_id id)
   resources, when we can check that it is not the one style without fixed
   costs.
  **************************************************************************/
-bool techs_have_fixed_costs(void)
+bool techs_have_fixed_costs()
 {
   return (game.info.tech_leakage == TECH_LEAKAGE_NONE
           && game.info.tech_cost_style != TECH_COST_CIV1CIV2);
@@ -441,7 +441,7 @@ bool techs_have_fixed_costs(void)
 /**********************************************************************/ /**
    Initialize tech structures.
  **************************************************************************/
-void techs_init(void)
+void techs_init()
 {
   struct advance *a_none = &advances[A_NONE];
   struct advance *a_future = &advances[A_FUTURE];
@@ -483,7 +483,7 @@ static void tech_free(Tech_type_id tech)
 /**********************************************************************/ /**
    De-allocate resources of all techs.
  **************************************************************************/
-void techs_free(void)
+void techs_free()
 {
   int i;
 
@@ -498,7 +498,7 @@ void techs_free(void)
 /**********************************************************************/ /**
    Return the size of the advance requirements iterator.
  **************************************************************************/
-size_t advance_req_iter_sizeof(void)
+size_t advance_req_iter_sizeof()
 {
   return sizeof(struct advance_req_iter);
 }
@@ -572,7 +572,7 @@ struct iterator *advance_req_iter_init(struct advance_req_iter *it,
 /************************************************************************/ /**
    Return the size of the advance root requirements iterator.
  ****************************************************************************/
-size_t advance_root_req_iter_sizeof(void)
+size_t advance_root_req_iter_sizeof()
 {
   return sizeof(struct advance_root_req_iter);
 }

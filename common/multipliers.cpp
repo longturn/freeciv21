@@ -28,7 +28,7 @@ static struct multiplier multipliers[MAX_NUM_MULTIPLIERS];
 /************************************************************************/ /**
    Initialize all multipliers
  ****************************************************************************/
-void multipliers_init(void)
+void multipliers_init()
 {
   int i;
 
@@ -43,7 +43,7 @@ void multipliers_init(void)
 /************************************************************************/ /**
    Free all multipliers
  ****************************************************************************/
-void multipliers_free(void)
+void multipliers_free()
 {
   multipliers_iterate(pmul)
   {
@@ -87,7 +87,7 @@ Multiplier_type_id multiplier_index(const struct multiplier *pmul)
 /************************************************************************/ /**
    Return number of loaded multipliers in the ruleset.
  ****************************************************************************/
-Multiplier_type_id multiplier_count(void)
+Multiplier_type_id multiplier_count()
 {
   return game.control.num_multipliers;
 }

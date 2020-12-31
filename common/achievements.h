@@ -33,8 +33,8 @@ struct achievement {
   char *cons_msg;
 };
 
-void achievements_init(void);
-void achievements_free(void);
+void achievements_init();
+void achievements_free();
 
 int achievement_index(const struct achievement *pach);
 int achievement_number(const struct achievement *pach);

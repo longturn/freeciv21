@@ -71,6 +71,6 @@ const char *skip_intl_qualifier_prefix(const char *str)
 char *capitalized_string(const char *str);
 void free_capitalized(char *str);
 void capitalization_opt_in(bool opt_in);
-bool is_capitalization_enabled(void);
+bool is_capitalization_enabled();
 
-const char *get_locale_dir(void);
+const char *get_locale_dir();

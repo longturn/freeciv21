@@ -765,7 +765,7 @@ static int move_points_denomlen = 0;
 /************************************************************************/ /**
    Call whenever terrain_control.move_fragments / SINGLE_MOVE changes.
  ****************************************************************************/
-void init_move_fragments(void)
+void init_move_fragments()
 {
   char denomstr[10];
   /* String length of maximum denominator for fractional representation of

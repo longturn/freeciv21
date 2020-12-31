@@ -31,7 +31,7 @@ int default_specialist;
 /**********************************************************************/ /**
    Initialize data for specialists.
  **************************************************************************/
-void specialists_init(void)
+void specialists_init()
 {
   int i;
 
@@ -48,7 +48,7 @@ void specialists_init(void)
 /**********************************************************************/ /**
    Free data for specialists.
  **************************************************************************/
-void specialists_free(void)
+void specialists_free()
 {
   int i;
 
@@ -63,7 +63,7 @@ void specialists_free(void)
 /**********************************************************************/ /**
    Return the number of specialist_types.
  **************************************************************************/
-Specialist_type_id specialist_count(void)
+Specialist_type_id specialist_count()
 {
   return game.control.num_specialist_types;
 }
@@ -170,7 +170,7 @@ const char *specialist_abbreviation_translation(const struct specialist *sp)
    "E/S/T".
    You don't have to free the return pointer.
  **************************************************************************/
-const char *specialists_abbreviation_string(void)
+const char *specialists_abbreviation_string()
 {
   static char buf[5 * SP_MAX];
 

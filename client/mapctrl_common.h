@@ -25,8 +25,8 @@ extern struct tile *keyboardless_goto_start_tile;
 
 void anchor_selection_rectangle(int canvas_x, int canvas_y);
 void update_selection_rectangle(float canvas_x, float canvas_y);
-void redraw_selection_rectangle(void);
-void cancel_selection_rectangle(void);
+void redraw_selection_rectangle();
+void cancel_selection_rectangle();
 
 void key_city_overlay(int canvas_x, int canvas_y);
 void key_city_show_open(struct city *pcity);
@@ -34,22 +34,22 @@ void key_city_hide_open(struct city *pcity);
 
 bool clipboard_copy_production(struct tile *ptile);
 void clipboard_paste_production(struct city *pcity);
-void upgrade_canvas_clipboard(void);
+void upgrade_canvas_clipboard();
 
 void release_right_button(int canvas_x, int canvas_y, bool shift);
 
 void release_goto_button(int canvas_x, int canvas_y);
 void maybe_activate_keyboardless_goto(int canvas_x, int canvas_y);
 
-bool get_turn_done_button_state(void);
-bool can_end_turn(void);
+bool get_turn_done_button_state();
+bool can_end_turn();
 void scroll_mapview(enum direction8 gui_dir);
 void action_button_pressed(int canvas_x, int canvas_y,
                            enum quickselect_type qtype);
 void wakeup_button_pressed(int canvas_x, int canvas_y);
 void adjust_workers_button_pressed(int canvas_x, int canvas_y);
 void recenter_button_pressed(int canvas_x, int canvas_y);
-void update_turn_done_button_state(void);
+void update_turn_done_button_state();
 void update_line(int canvas_x, int canvas_y);
 void overview_update_line(int overview_x, int overview_y);
 

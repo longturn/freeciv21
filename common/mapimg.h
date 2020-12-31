@@ -84,7 +84,7 @@ typedef struct terrain *(*mapimg_tile_terrain_func)(
 typedef struct player *(*mapimg_tile_player_func)(
     const struct tile *ptile, const struct player *pplayer, bool knowledge);
 
-typedef int (*mapimg_plrcolor_count_func)(void);
+typedef int (*mapimg_plrcolor_count_func)();
 typedef struct rgbcolor *(*mapimg_plrcolor_get_func)(int);
 
 /* map definition */
@@ -97,11 +97,11 @@ void mapimg_init(mapimg_tile_known_func mapimg_tile_known,
                  mapimg_tile_player_func mapimg_tile_unit,
                  mapimg_plrcolor_count_func mapimg_plrcolor_count,
                  mapimg_plrcolor_get_func mapimg_plrcolor_get);
-void mapimg_reset(void);
-void mapimg_free(void);
-int mapimg_count(void);
+void mapimg_reset();
+void mapimg_free();
+int mapimg_count();
 char *mapimg_help(const char *cmdname);
-const char *mapimg_error(void);
+const char *mapimg_error();
 
 bool mapimg_define(const char *maparg, bool check);
 bool mapimg_delete(int id);
@@ -113,5 +113,5 @@ bool mapimg_colortest(const char *savename, const char *path);
 
 struct mapdef *mapimg_isvalid(int id);
 
-const QVector<QString> *mapimg_get_format_list(void);
-const char *mapimg_get_format_default(void);
+const QVector<QString> *mapimg_get_format_list();
+const char *mapimg_get_format_default();

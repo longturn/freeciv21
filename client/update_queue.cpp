@@ -151,7 +151,7 @@ waiting_queue_data_extract(struct waiting_queue_data *wq_data)
 /************************************************************************/ /**
    Initialize the update queue.
  ****************************************************************************/
-void update_queue_init(void)
+void update_queue_init()
 {
   update_queue_frozen_level = 0;
   update_queue_has_idle_callback = false;
@@ -160,7 +160,7 @@ void update_queue_init(void)
 /************************************************************************/ /**
    Free the update queue.
  ****************************************************************************/
-void update_queue_free(void)
+void update_queue_free()
 {
   while (update_queue.exists() && !update_queue->isEmpty()) {
     updatePair pair = update_queue->dequeue();
@@ -192,12 +192,12 @@ void update_queue_free(void)
 /************************************************************************/ /**
    Freezes the update queue.
  ****************************************************************************/
-void update_queue_freeze(void) { update_queue_frozen_level++; }
+void update_queue_freeze() { update_queue_frozen_level++; }
 
 /************************************************************************/ /**
    Free the update queue.
  ****************************************************************************/
-void update_queue_thaw(void)
+void update_queue_thaw()
 {
   update_queue_frozen_level--;
   if (0 == update_queue_frozen_level && !update_queue_has_idle_callback
@@ -213,7 +213,7 @@ void update_queue_thaw(void)
 /************************************************************************/ /**
    Free the update queue.
  ****************************************************************************/
-void update_queue_force_thaw(void)
+void update_queue_force_thaw()
 {
   while (update_queue_is_frozen()) {
     update_queue_thaw();
@@ -223,7 +223,7 @@ void update_queue_force_thaw(void)
 /************************************************************************/ /**
    Free the update queue.
  ****************************************************************************/
-bool update_queue_is_frozen(void) { return (0 < update_queue_frozen_level); }
+bool update_queue_is_frozen() { return (0 < update_queue_frozen_level); }
 
 /************************************************************************/ /**
    Moves the instances waiting to the request_id to the callback queue.
@@ -480,7 +480,7 @@ void client_start_server_and_set_page(enum client_pages page)
 /************************************************************************/ /**
    Returns the next client page.
  ****************************************************************************/
-enum client_pages get_client_page(void)
+enum client_pages get_client_page()
 {
   const void *data;
 
@@ -495,7 +495,7 @@ enum client_pages get_client_page(void)
 /************************************************************************/ /**
    Returns whether there's page switching already in progress.
  ****************************************************************************/
-bool update_queue_is_switching_page(void)
+bool update_queue_is_switching_page()
 {
   return update_queue_has_callback(set_client_page_callback);
 }
@@ -514,7 +514,7 @@ static void menus_update_callback(void *data)
 /************************************************************************/ /**
    Request the menus to be initialized and updated.
  ****************************************************************************/
-void menus_init(void)
+void menus_init()
 {
   update_queue_add(menus_update_callback, FC_INT_TO_PTR(true));
 }
@@ -522,7 +522,7 @@ void menus_init(void)
 /************************************************************************/ /**
    Request the menus to be updated.
  ****************************************************************************/
-void menus_update(void)
+void menus_update()
 {
   if (!update_queue_has_callback(menus_update_callback)) {
     update_queue_add(menus_update_callback, FC_INT_TO_PTR(false));
@@ -532,7 +532,7 @@ void menus_update(void)
 /************************************************************************/ /**
    Update multipliers/policy dialog.
  ****************************************************************************/
-void multipliers_dialog_update(void)
+void multipliers_dialog_update()
 {
   update_queue_add(real_multipliers_dialog_update, NULL);
 }
@@ -618,7 +618,7 @@ void city_report_dialog_update_city(struct city *pcity)
 /************************************************************************/ /**
    Update the connection list in the start page.
  ****************************************************************************/
-void conn_list_dialog_update(void)
+void conn_list_dialog_update()
 {
   update_queue_add(real_conn_list_dialog_update, NULL);
 }
@@ -626,7 +626,7 @@ void conn_list_dialog_update(void)
 /************************************************************************/ /**
    Update the nation report.
  ****************************************************************************/
-void players_dialog_update(void)
+void players_dialog_update()
 {
   update_queue_add(real_players_dialog_update, NULL);
 }
@@ -634,7 +634,7 @@ void players_dialog_update(void)
 /************************************************************************/ /**
    Update the city report.
  ****************************************************************************/
-void city_report_dialog_update(void)
+void city_report_dialog_update()
 {
   update_queue_add(real_city_report_dialog_update, NULL);
 }
@@ -642,7 +642,7 @@ void city_report_dialog_update(void)
 /************************************************************************/ /**
    Update the science report.
  ****************************************************************************/
-void science_report_dialog_update(void)
+void science_report_dialog_update()
 {
   update_queue_add(real_science_report_dialog_update, NULL);
 }
@@ -650,7 +650,7 @@ void science_report_dialog_update(void)
 /************************************************************************/ /**
    Update the economy report.
  ****************************************************************************/
-void economy_report_dialog_update(void)
+void economy_report_dialog_update()
 {
   update_queue_add(real_economy_report_dialog_update, NULL);
 }
@@ -658,7 +658,7 @@ void economy_report_dialog_update(void)
 /************************************************************************/ /**
    Update the units report.
  ****************************************************************************/
-void units_report_dialog_update(void)
+void units_report_dialog_update()
 {
   update_queue_add(real_units_report_dialog_update, NULL);
 }
@@ -666,7 +666,7 @@ void units_report_dialog_update(void)
 /************************************************************************/ /**
    Update the units report.
  ****************************************************************************/
-void unit_select_dialog_update(void)
+void unit_select_dialog_update()
 {
   update_queue_add(unit_select_dialog_update_real, NULL);
 }

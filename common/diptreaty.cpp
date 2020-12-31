@@ -229,7 +229,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
 /**********************************************************************/ /**
    Initialize clause info structures.
  **************************************************************************/
-void clause_infos_init(void)
+void clause_infos_init()
 {
   int i;
 
@@ -244,7 +244,7 @@ void clause_infos_init(void)
 /**********************************************************************/ /**
    Free memory associated with clause infos.
  **************************************************************************/
-void clause_infos_free(void)
+void clause_infos_free()
 {
   int i;
 

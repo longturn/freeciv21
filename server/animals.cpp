@@ -94,7 +94,7 @@ static void place_animal(struct player *plr)
 /************************************************************************/ /**
    Create animal kingdom player and his units.
  ****************************************************************************/
-void create_animals(void)
+void create_animals()
 {
   struct nation_type *anination;
   struct player *plr;

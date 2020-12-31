@@ -153,4 +153,4 @@ private slots:
 };
 
 void popup_players_dialog(bool raise);
-void popdown_players_report(void);
+void popdown_players_report();

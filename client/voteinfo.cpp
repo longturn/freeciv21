@@ -67,7 +67,7 @@ void voteinfo_queue_delayed_remove(int vote_no)
    Check for old votes that should be removed from the queue. This function
    should be called periodically from a timer callback.
  **************************************************************************/
-void voteinfo_queue_check_removed(void)
+void voteinfo_queue_check_removed()
 {
   time_t now;
   struct voteinfo_list *removed;
@@ -165,7 +165,7 @@ struct voteinfo *voteinfo_queue_find(int vote_no)
 /**********************************************************************/ /**
    Initialize data structures used by this module.
  **************************************************************************/
-void voteinfo_queue_init(void)
+void voteinfo_queue_init()
 {
   if (voteinfo_queue != NULL) {
     voteinfo_queue_free();
@@ -177,7 +177,7 @@ void voteinfo_queue_init(void)
 /**********************************************************************/ /**
    Free memory allocated by this module.
  **************************************************************************/
-void voteinfo_queue_free(void)
+void voteinfo_queue_free()
 {
   if (voteinfo_queue == NULL) {
     return;
@@ -267,7 +267,7 @@ void voteinfo_do_vote(int vote_no, enum client_vote_type vote)
 /**********************************************************************/ /**
    Cycle through the votes in the queue.
  **************************************************************************/
-void voteinfo_queue_next(void)
+void voteinfo_queue_next()
 {
   int size;
 
@@ -286,7 +286,7 @@ void voteinfo_queue_next(void)
 /**********************************************************************/ /**
    Returns the number of pending votes.
  **************************************************************************/
-int voteinfo_queue_size(void)
+int voteinfo_queue_size()
 {
   return (NULL != voteinfo_queue ? voteinfo_list_size(voteinfo_queue) : 0);
 }

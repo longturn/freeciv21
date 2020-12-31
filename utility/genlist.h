@@ -57,7 +57,7 @@ struct genlist {
   genlist_free_fn_t free_data_func;
 };
 
-struct genlist *genlist_new(void) fc__warn_unused_result;
+struct genlist *genlist_new() fc__warn_unused_result;
 struct genlist *
 genlist_new_full(genlist_free_fn_t free_data_func) fc__warn_unused_result;
 void genlist_destroy(struct genlist *pgenlist);

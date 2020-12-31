@@ -219,7 +219,7 @@ void effect_req_append(struct effect *peffect, struct requirement req)
    before this is done (so if it's previously been initialized, it needs
    to be freed (see ruleset_cache_free) before it can be reused).
  **************************************************************************/
-void ruleset_cache_init(void)
+void ruleset_cache_init()
 {
   int i;
 
@@ -245,7 +245,7 @@ void ruleset_cache_init(void)
    Free the ruleset cache.  This should be called at the end of the game or
    when the client disconnects from the server.  See ruleset_cache_init.
  **************************************************************************/
-void ruleset_cache_free(void)
+void ruleset_cache_free()
 {
   int i;
   struct effect_list *tracker_list = ruleset_cache.tracker;

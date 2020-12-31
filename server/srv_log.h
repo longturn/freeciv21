@@ -110,11 +110,11 @@ QString unit_log_prefix(const unit *punit);
     }                                                                       \
   }
 
-void timing_log_init(void);
-void timing_log_free(void);
+void timing_log_init();
+void timing_log_free();
 
 void timing_log_real(enum ai_timer timer, enum ai_timer_activity activity);
-void timing_results_real(void);
+void timing_results_real();
 
 #ifdef FREECIV_DEBUG
 #define TIMING_LOG(timer, activity) timing_log_real(timer, activity)

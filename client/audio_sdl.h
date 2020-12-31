@@ -10,4 +10,4 @@
 **************************************************************************/
 #pragma once
 
-void audio_sdl_init(void);
+void audio_sdl_init();

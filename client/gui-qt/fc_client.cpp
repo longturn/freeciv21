@@ -351,7 +351,7 @@ void fc_client::slot_disconnect()
 /****************************************************************************
   Deletes cursors
 ****************************************************************************/
-void fc_client::delete_cursors(void)
+void fc_client::delete_cursors()
 {
   int frame;
   int cursor;
@@ -539,7 +539,7 @@ void popup_client_options()
 /************************************************************************/ /**
    Setup cursors
  ****************************************************************************/
-void fc_client::create_cursors(void)
+void fc_client::create_cursors()
 {
   enum cursor_type curs;
   int cursor;

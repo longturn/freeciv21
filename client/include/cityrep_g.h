@@ -22,4 +22,4 @@ GUI_FUNC_PROTO(void, real_city_report_update_city, struct city *pcity)
 
 /* Actually defined in update_queue.c */
 void city_report_dialog_update_city(struct city *pcity);
-void city_report_dialog_update(void);
+void city_report_dialog_update();

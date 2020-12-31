@@ -420,7 +420,7 @@ static void do_team_placement(const struct team_placement_config *pconfig,
 /************************************************************************/ /**
    Initialize a new game: place the players' units onto the map, etc.
  ****************************************************************************/
-void init_new_game(void)
+void init_new_game()
 {
   struct startpos_list *impossible_list, *targeted_list, *flexible_list;
   struct tile *player_startpos[player_slot_count()];
@@ -883,7 +883,7 @@ void init_new_game(void)
    Tell clients the year, and also update turn_done and nturns_idle fields
    for all players.
  ****************************************************************************/
-void send_year_to_clients(void)
+void send_year_to_clients()
 {
   struct packet_new_year apacket;
 
@@ -992,7 +992,7 @@ void send_scenario_description(struct conn_list *dest)
  timeoutintinc to timeoutint. timeoutincmult: every time we adjust
  game.info.timeout, we multiply timeoutinc by timeoutincmult
  ****************************************************************************/
-int update_timeout(void)
+int update_timeout()
 {
   /* if there's no timer or we're doing autogame, do nothing */
   if (game.info.timeout < 1 || game.server.timeoutint == 0) {
@@ -1043,7 +1043,7 @@ int update_timeout(void)
    theory there should be a separate timeout for each player and the
    added time should only go onto the victim's timer.
  ****************************************************************************/
-void increase_timeout_because_unit_moved(void)
+void increase_timeout_because_unit_moved()
 {
   if (current_turn_timeout() > 0 && game.server.timeoutaddenemymove > 0) {
     double maxsec = (timer_read_seconds(game.server.phase_timer)

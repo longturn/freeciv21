@@ -217,9 +217,9 @@ get_mapimg_format_list(const struct option *poption);
 ****************************************************************************/
 struct option_set {
   struct option *(*option_by_number)(int);
-  struct option *(*option_first)(void);
+  struct option *(*option_first)();
 
-  int (*category_number)(void);
+  int (*category_number)();
   const char *(*category_name)(int);
 };
 
@@ -1042,8 +1042,8 @@ bool option_color_set(struct option *poption, struct ft_color color)
   Client option set.
 ****************************************************************************/
 static struct option *client_optset_option_by_number(int id);
-static struct option *client_optset_option_first(void);
-static int client_optset_category_number(void);
+static struct option *client_optset_option_first();
+static int client_optset_category_number();
 static const char *client_optset_category_name(int category);
 
 static struct option_set client_optset_static = {
@@ -2154,7 +2154,7 @@ static struct option *client_optset_option_by_number(int id)
 /************************************************************************/ /**
    Returns the first valid option pointer for the current gui type.
  ****************************************************************************/
-static struct option *client_optset_option_first(void)
+static struct option *client_optset_option_first()
 {
   return OPTION(client_option_next_valid(client_options));
 }
@@ -2162,7 +2162,7 @@ static struct option *client_optset_option_first(void)
 /************************************************************************/ /**
    Returns the number of client option categories.
  ****************************************************************************/
-static int client_optset_category_number(void) { return COC_MAX; }
+static int client_optset_category_number() { return COC_MAX; }
 
 /************************************************************************/ /**
    Returns the name (translated) of the option class.
@@ -2625,8 +2625,8 @@ static int server_options_num = 0;
   Server option set.
 ****************************************************************************/
 static struct option *server_optset_option_by_number(int id);
-static struct option *server_optset_option_first(void);
-static int server_optset_category_number(void);
+static struct option *server_optset_option_first();
+static int server_optset_category_number();
 static const char *server_optset_category_name(int category);
 
 static struct option_set server_optset_static = {
@@ -2770,7 +2770,7 @@ static void desired_settable_option_send(struct option *poption);
 /************************************************************************/ /**
    Initialize the server options (not received yet).
  ****************************************************************************/
-void server_options_init(void)
+void server_options_init()
 {
   fc_assert(NULL == server_options_categories);
   fc_assert(NULL == server_options);
@@ -2818,7 +2818,7 @@ static void server_option_free(struct server_option *poption)
 /************************************************************************/ /**
    Free the server options, if already received.
  ****************************************************************************/
-void server_options_free(void)
+void server_options_free()
 {
   int i;
 
@@ -3257,7 +3257,7 @@ struct option *server_optset_option_by_number(int id)
 /************************************************************************/ /**
    Returns the first valid (visible) option pointer.
  ****************************************************************************/
-struct option *server_optset_option_first(void)
+struct option *server_optset_option_first()
 {
   return OPTION(server_option_next_valid(server_options));
 }
@@ -3265,7 +3265,7 @@ struct option *server_optset_option_first(void)
 /************************************************************************/ /**
    Returns the number of server option categories.
  ****************************************************************************/
-int server_optset_category_number(void)
+int server_optset_category_number()
 {
   return server_options_categories_num;
 }
@@ -3623,7 +3623,7 @@ int messages_where[E_COUNT];
    These could be a static table initialisation, except
    its easier to do it this way.
  ****************************************************************************/
-static void message_options_init(void)
+static void message_options_init()
 {
   int none[] = {E_IMP_BUY,
                 E_IMP_SOLD,
@@ -3663,7 +3663,7 @@ static void message_options_init(void)
 /************************************************************************/ /**
    Free resources allocated for message options system
  ****************************************************************************/
-static void message_options_free(void) { events_free(); }
+static void message_options_free() { events_free(); }
 
 /************************************************************************/ /**
    Load the message options; use the function defined by
@@ -3939,7 +3939,7 @@ static void save_cma_presets(struct section_file *file)
    (or a OPTION_FILE_NAME define defined in fc_config.h)
    Or NULL if problem.
  ****************************************************************************/
-static const char *get_current_option_file_name(void)
+static const char *get_current_option_file_name()
 {
   static char name_buffer[256];
   const char *name;
@@ -4196,7 +4196,7 @@ static void settable_options_save(struct section_file *sf)
    Update the desired settable options hash table from the current
    setting configuration.
  ****************************************************************************/
-void desired_settable_options_update(void)
+void desired_settable_options_update()
 {
   char val_buf[1024], def_buf[1024];
   const char *value, *def_val;
@@ -4440,7 +4440,7 @@ static void options_dialogs_save(struct section_file *sf)
    current ones.  It's called when the client goes to
    C_S_DISCONNECTED state.
  ****************************************************************************/
-void options_dialogs_update(void)
+void options_dialogs_update()
 {
   char buf[64];
   int i;
@@ -4466,7 +4466,7 @@ void options_dialogs_update(void)
    This set the city and player report dialog options.  It's called
    when the client goes to C_S_RUNNING state.
  ****************************************************************************/
-void options_dialogs_set(void)
+void options_dialogs_set()
 {
   char buf[64];
   int i;
@@ -4496,7 +4496,7 @@ void options_dialogs_set(void)
    Unfortunately, this means that some clients cannot display.
    Instead, use log_*().
  ****************************************************************************/
-void options_load(void)
+void options_load()
 {
   struct section_file *sf;
   bool allow_digital_boolean;
@@ -4729,7 +4729,7 @@ static void options_init_names(const struct copt_val_name *(*acc)(int),
 /************************************************************************/ /**
    Initialize the option module.
  ****************************************************************************/
-void options_init(void)
+void options_init()
 {
   message_options_init();
   options_extra_init();
@@ -4822,7 +4822,7 @@ void options_init(void)
 /************************************************************************/ /**
    Free the option module.
  ****************************************************************************/
-void options_free(void)
+void options_free()
 {
   client_options_iterate_all(poption)
   {
@@ -5085,7 +5085,7 @@ static bool is_ts_option_unset(const char *optname)
 /************************************************************************/ /**
    Fill default tilesets for topology-specific settings.
  ****************************************************************************/
-void fill_topo_ts_default(void)
+void fill_topo_ts_default()
 {
   if (is_ts_option_unset("default_tileset_square_name")) {
     if (gui_options.default_tileset_iso_name[0] != '\0') {

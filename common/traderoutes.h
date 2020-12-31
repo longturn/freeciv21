@@ -89,7 +89,7 @@ enum trade_route_type cities_trade_route_type(const struct city *pcity1,
                                               const struct city *pcity2);
 int trade_route_type_trade_pct(enum trade_route_type type);
 
-void trade_route_types_init(void);
+void trade_route_types_init();
 const char *trade_route_type_name(enum trade_route_type type);
 enum trade_route_type trade_route_type_by_name(const char *name);
 
@@ -187,8 +187,8 @@ struct goods_type {
   QVector<QString> *helptext;
 };
 
-void goods_init(void);
-void goods_free(void);
+void goods_init();
+void goods_free();
 
 Goods_type_id goods_index(const struct goods_type *pgood);
 Goods_type_id goods_number(const struct goods_type *pgood);

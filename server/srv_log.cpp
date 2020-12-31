@@ -119,7 +119,7 @@ void timing_log_real(enum ai_timer timer, enum ai_timer_activity activity)
 /**********************************************************************/ /**
    Print results
  **************************************************************************/
-void timing_results_real(void)
+void timing_results_real()
 {
   char buf[200];
 
@@ -168,7 +168,7 @@ void timing_results_real(void)
 /**********************************************************************/ /**
    Initialize AI timing system
  **************************************************************************/
-void timing_log_init(void)
+void timing_log_init()
 {
   int i;
 
@@ -182,7 +182,7 @@ void timing_log_init(void)
 /**********************************************************************/ /**
    Free AI timing system resources
  **************************************************************************/
-void timing_log_free(void)
+void timing_log_free()
 {
   int i;
 

@@ -318,7 +318,7 @@ int fc_stat(const char *filename, struct stat *buf)
 /************************************************************************/ /**
    Returns last error code.
  ****************************************************************************/
-fc_errno fc_get_errno(void)
+fc_errno fc_get_errno()
 {
 #ifdef FREECIV_MSWINDOWS
   return GetLastError();
@@ -739,7 +739,7 @@ const char *fc_basename(const char *path)
 /************************************************************************/ /**
    Set quick_exit() callback if possible.
  ****************************************************************************/
-int fc_at_quick_exit(void (*func)(void))
+int fc_at_quick_exit(void (*func)())
 {
 #ifdef HAVE_AT_QUICK_EXIT
   return at_quick_exit(func);

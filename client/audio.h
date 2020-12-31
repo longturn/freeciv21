@@ -16,17 +16,17 @@
 
 #define MAX_ALT_AUDIO_FILES 5
 
-typedef void (*audio_finished_callback)(void);
+typedef void (*audio_finished_callback)();
 
 class QString;
 struct audio_plugin {
   QString name;
   QString descr;
-  bool (*init)(void);
-  void (*shutdown)(void);
-  void (*stop)(void);
-  void (*wait)(void);
-  double (*get_volume)(void);
+  bool (*init)();
+  void (*shutdown)();
+  void (*stop)();
+  void (*wait)();
+  double (*get_volume)();
   void (*set_volume)(double volume);
   bool (*play)(const QString &tag, const QString &path, bool repeat,
                audio_finished_callback cb);
@@ -39,14 +39,14 @@ const QVector<QString> *get_soundplugin_list(const struct option *poption);
 const QVector<QString> *get_soundset_list(const struct option *poption);
 const QVector<QString> *get_musicset_list(const struct option *poption);
 
-void audio_init(void);
+void audio_init();
 void audio_real_init(const QString &soundspec_name,
                      const QString &musicset_name,
                      const QString &preferred_plugin_name);
 void audio_add_plugin(struct audio_plugin *p);
-void audio_shutdown(void);
-void audio_stop(void);
-void audio_stop_usage(void);
+void audio_shutdown();
+void audio_stop();
+void audio_stop_usage();
 void audio_restart(const QString &soundset_name,
                    const QString &musicset_name);
 
@@ -55,8 +55,8 @@ void audio_play_music(const QString &tag, const QString &alt_tag,
                       enum music_usage usage);
 void audio_play_track(const QString &tag, const QString &alt_tag);
 
-double audio_get_volume(void);
+double audio_get_volume();
 void audio_set_volume(double volume);
 
 bool audio_select_plugin(const QString &name);
-const QString audio_get_all_plugin_names(void);
+const QString audio_get_all_plugin_names();

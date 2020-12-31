@@ -71,7 +71,7 @@ struct government *government_by_rule_name(const char *name)
 /**********************************************************************/ /**
    Return the number of governments.
  **************************************************************************/
-Government_type_id government_count(void)
+Government_type_id government_count()
 {
   return game.control.government_count;
 }
@@ -422,7 +422,7 @@ struct government_iter {
 /**********************************************************************/ /**
    Implementation of iterator 'sizeof' function.
  **************************************************************************/
-size_t government_iter_sizeof(void)
+size_t government_iter_sizeof()
 {
   return sizeof(struct government_iter);
 }
@@ -513,7 +513,7 @@ void governments_alloc(int num)
 /**********************************************************************/ /**
    De-allocate the currently allocated governments.
  **************************************************************************/
-void governments_free(void)
+void governments_free()
 {
   int i;
 
@@ -532,7 +532,7 @@ void governments_free(void)
    Is it possible to start a revolution without specifying the target
    government in the current game?
  **************************************************************************/
-bool untargeted_revolution_allowed(void)
+bool untargeted_revolution_allowed()
 {
   if (game.info.revolentype == REVOLEN_QUICKENING
       || game.info.revolentype == REVOLEN_RANDQUICK) {

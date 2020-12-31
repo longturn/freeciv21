@@ -35,13 +35,13 @@ typedef void (*rs_conversion_logger)(const char *msg);
 bool load_rulesets(const char *restore, const char *alt, bool compat_mode,
                    rs_conversion_logger logger, bool act, bool buffer_script,
                    bool load_luadata);
-bool reload_rulesets_settings(void);
+bool reload_rulesets_settings();
 void send_rulesets(struct conn_list *dest);
 
-void rulesets_deinit(void);
+void rulesets_deinit();
 
-char *get_script_buffer(void);
-char *get_parser_buffer(void);
+char *get_script_buffer();
+char *get_parser_buffer();
 
 /* Default ruleset values that are not settings (in game.h) */
 

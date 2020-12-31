@@ -130,7 +130,7 @@ int trade_route_type_trade_pct(enum trade_route_type type)
 /*********************************************************************/ /**
    Initialize trade route types.
  *************************************************************************/
-void trade_route_types_init(void)
+void trade_route_types_init()
 {
   for (int type = TRT_NATIONAL; type < TRT_LAST; type++) {
     struct trade_route_settings *set =
@@ -510,7 +510,7 @@ bool have_cities_trade_route(const struct city *pc1, const struct city *pc2)
 /*********************************************************************/ /**
    Initialize goods structures.
  *************************************************************************/
-void goods_init(void)
+void goods_init()
 {
   int i;
 
@@ -526,7 +526,7 @@ void goods_init(void)
 /*********************************************************************/ /**
    Free the memory associated with goods
  *************************************************************************/
-void goods_free(void)
+void goods_free()
 {
   int i;
 

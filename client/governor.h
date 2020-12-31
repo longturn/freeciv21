@@ -54,8 +54,8 @@ void cma_set_parameter(enum attr_city attr, int city_id,
 int cities_results_request();
 void cma_got_result(int);
 
-void cmafec_init(void);
-void cmafec_free(void);
+void cmafec_init();
+void cmafec_free();
 
 void cmafec_set_fe_parameter(struct city *pcity,
                              const struct cm_parameter *const parameter);
@@ -74,5 +74,5 @@ int cmafec_preset_get_index_of_parameter(
     const struct cm_parameter *const parameter);
 char *cmafec_preset_get_descr(int idx);
 const struct cm_parameter *cmafec_preset_get_parameter(int idx);
-int cmafec_preset_num(void);
-void create_default_cma_presets(void);
+int cmafec_preset_num();
+void create_default_cma_presets();

@@ -279,7 +279,7 @@ struct connection *conn_by_user_prefix(const char *user_name,
                                        enum m_pre_result *result);
 struct connection *conn_by_number(int id);
 
-struct socket_packet_buffer *new_socket_packet_buffer(void);
+struct socket_packet_buffer *new_socket_packet_buffer();
 void connection_common_init(struct connection *pconn);
 void connection_common_close(struct connection *pconn);
 void conn_set_capability(struct connection *pconn, const char *capability);

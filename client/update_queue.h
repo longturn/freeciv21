@@ -17,13 +17,13 @@ typedef void (*uq_free_fn_t)(void *data);
 #define UQ_FREEDATA(fn) ((uq_free_fn_t) fn)
 
 /* General update queue. */
-void update_queue_init(void);
-void update_queue_free(void);
+void update_queue_init();
+void update_queue_free();
 
-void update_queue_freeze(void);
-void update_queue_thaw(void);
-void update_queue_force_thaw(void);
-bool update_queue_is_frozen(void);
+void update_queue_freeze();
+void update_queue_thaw();
+void update_queue_force_thaw();
+bool update_queue_is_frozen();
 
 void update_queue_processing_started(int request_id);
 void update_queue_processing_finished(int request_id);
@@ -50,4 +50,4 @@ void update_queue_connect_processing_finished_full(
     int request_id, uq_callback_t callback, void *data,
     uq_free_fn_t free_data_func);
 
-bool update_queue_is_switching_page(void);
+bool update_queue_is_switching_page();

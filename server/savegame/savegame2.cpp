@@ -294,7 +294,7 @@ static int unquote_block(const char *const quoted_, void *dest,
                          int dest_length);
 static void worklist_load(struct section_file *file, struct worklist *pwl,
                           const char *path, ...);
-static void unit_ordering_apply(void);
+static void unit_ordering_apply();
 static void sg_extras_set(bv_extras *extras, char ch,
                           struct extra_type **idx);
 static void sg_special_set(struct tile *ptile, bv_extras *extras, char ch,
@@ -733,7 +733,7 @@ static void worklist_load(struct section_file *file, struct worklist *pwl,
    For each city and tile, sort unit lists according to ord_city and ord_map
    values.
  ****************************************************************************/
-static void unit_ordering_apply(void)
+static void unit_ordering_apply()
 {
   players_iterate(pplayer)
   {

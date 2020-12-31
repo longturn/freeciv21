@@ -308,7 +308,7 @@ bool script_fcdb_call(const char *func_name, ...)
 /*************************************************************************/ /**
    Free the scripting data.
  *****************************************************************************/
-void script_fcdb_free(void)
+void script_fcdb_free()
 {
 #ifdef HAVE_FCDB
   if (!script_fcdb_call("database_free", 0)) {

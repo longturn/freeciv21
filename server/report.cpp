@@ -1280,7 +1280,7 @@ static bool scan_score_log(char *id)
 /**********************************************************************/ /**
    Initialize score logging system
  **************************************************************************/
-void log_civ_score_init(void)
+void log_civ_score_init()
 {
   if (score_log != NULL) {
     return;
@@ -1304,7 +1304,7 @@ void log_civ_score_init(void)
 /**********************************************************************/ /**
    Free resources allocated for score logging system
  **************************************************************************/
-void log_civ_score_free(void)
+void log_civ_score_free()
 {
   if (!score_log) {
     /* nothing to do */
@@ -1334,7 +1334,7 @@ void log_civ_score_free(void)
 /**********************************************************************/ /**
    Create a log file of the civilizations so you can see what was happening.
  **************************************************************************/
-void log_civ_score_now(void)
+void log_civ_score_now()
 {
   enum { SL_CREATE, SL_APPEND, SL_UNSPEC } oper = SL_UNSPEC;
   char id[MAX_LEN_GAME_IDENTIFIER];
@@ -1546,7 +1546,7 @@ log_civ_score_disable:
 /**********************************************************************/ /**
    Produce random history report if it's time for one.
  **************************************************************************/
-void make_history_report(void)
+void make_history_report()
 {
   if (player_count() == 1) {
     return;
@@ -1705,7 +1705,7 @@ static void page_conn_etype(struct conn_list *dest, const char *caption,
 /**********************************************************************/ /**
    Return current history report
  **************************************************************************/
-struct history_report *history_report_get(void)
+struct history_report *history_report_get()
 {
   return &latest_history_report;
 }

@@ -84,9 +84,9 @@ void capitalization_opt_in(bool opt_in) { autocap = opt_in; }
 /*******************************************************************/ /**
    Automatic capitalization features requested.
  ***********************************************************************/
-bool is_capitalization_enabled(void) { return autocap; }
+bool is_capitalization_enabled() { return autocap; }
 
 /*******************************************************************/ /**
    Return directory containing locales.
  ***********************************************************************/
-const char *get_locale_dir(void) { return LOCALEDIR; }
+const char *get_locale_dir() { return LOCALEDIR; }

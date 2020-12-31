@@ -33,7 +33,7 @@ void meswin_add(const char *message, const struct text_tag_list *tags,
                 int phase);
 
 const struct message *meswin_get_message(int message_index);
-int meswin_get_num_messages(void);
+int meswin_get_num_messages();
 void meswin_set_visited_state(int message_index, bool state);
 void meswin_popup_city(int message_index);
 void meswin_goto(int message_index);

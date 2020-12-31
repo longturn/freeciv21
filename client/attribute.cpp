@@ -68,12 +68,12 @@ Q_GLOBAL_STATIC(attributeHash, attribute_hash)
 /************************************************************************/ /**
    Initializes the attribute module.
  ****************************************************************************/
-void attribute_init(void) {}
+void attribute_init() {}
 
 /************************************************************************/ /**
    Frees the attribute module.
  ****************************************************************************/
-void attribute_free(void)
+void attribute_free()
 {
   for (auto *at : *attribute_hash) {
     ::operator delete(at);
@@ -286,7 +286,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
    Send current state to the server. Note that the current
    implementation will send all attributes to the server.
  ****************************************************************************/
-void attribute_flush(void)
+void attribute_flush()
 {
   struct player *pplayer = client_player();
 
@@ -312,7 +312,7 @@ void attribute_flush(void)
    Recreate the attribute set from the player's
    attribute_block. Shouldn't be used by normal code.
  ****************************************************************************/
-void attribute_restore(void)
+void attribute_restore()
 {
   struct player *pplayer = client_player();
 

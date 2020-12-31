@@ -43,7 +43,7 @@ static int messages_alloc = 0;
 /************************************************************************/ /**
    Update the message dialog if needed.
  ****************************************************************************/
-static void meswin_dialog_update(void)
+static void meswin_dialog_update()
 {
   if (!can_client_change_view()) {
     return;
@@ -158,7 +158,7 @@ const struct message *meswin_get_message(int message_index)
 /************************************************************************/ /**
    Returns the number of message in the window.
  ****************************************************************************/
-int meswin_get_num_messages(void) { return messages_total; }
+int meswin_get_num_messages() { return messages_total; }
 
 /************************************************************************/ /**
    Sets the visited-state of a message

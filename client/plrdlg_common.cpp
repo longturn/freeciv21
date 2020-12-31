@@ -332,12 +332,12 @@ const int num_player_dlg_columns = ARRAY_SIZE(player_dlg_columns);
 /************************************************************************/ /**
    Return default player dlg sorting column.
  ****************************************************************************/
-int player_dlg_default_sort_column(void) { return 3; }
+int player_dlg_default_sort_column() { return 3; }
 
 /************************************************************************/ /**
    Translate all titles
  ****************************************************************************/
-void init_player_dlg_common(void)
+void init_player_dlg_common()
 {
   int i;
 

@@ -243,7 +243,7 @@ struct terrain {
 };
 
 /* General terrain accessor functions. */
-Terrain_type_id terrain_count(void);
+Terrain_type_id terrain_count();
 Terrain_type_id terrain_index(const struct terrain *pterrain);
 Terrain_type_id terrain_number(const struct terrain *pterrain);
 
@@ -268,8 +268,8 @@ bool is_terrain_flag_near_tile(const struct tile *ptile,
 int count_terrain_flag_near_tile(const struct tile *ptile,
                                  bool cardinal_only, bool percentage,
                                  enum terrain_flag_id flag);
-void user_terrain_flags_init(void);
-void user_terrain_flags_free(void);
+void user_terrain_flags_init();
+void user_terrain_flags_free();
 void set_user_terrain_flag_name(enum terrain_flag_id id, const char *name,
                                 const char *helptxt);
 const char *terrain_flag_helptxt(enum terrain_flag_id id);
@@ -300,7 +300,7 @@ bool is_resource_near_tile(const struct tile *ptile,
                            const struct extra_type *pres, bool check_self);
 
 struct resource_type *resource_type_init(struct extra_type *pextra);
-void resource_types_free(void);
+void resource_types_free();
 
 struct extra_type *resource_extra_get(const struct resource_type *presource);
 
@@ -333,11 +333,11 @@ bool terrain_can_support_alteration(const struct terrain *pterrain,
                                     enum terrain_alteration talter);
 
 /* Initialization and iteration */
-void terrains_init(void);
-void terrains_free(void);
+void terrains_init();
+void terrains_free();
 
-struct terrain *terrain_array_first(void);
-const struct terrain *terrain_array_last(void);
+struct terrain *terrain_array_first();
+const struct terrain *terrain_array_last();
 
 #define terrain_type_iterate(_p)                                            \
   {                                                                         \

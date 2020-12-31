@@ -24,4 +24,4 @@ void savegame_save(struct section_file *sfile, const char *save_reason,
 void save_game(const char *orig_filename, const char *save_reason,
                bool scenario);
 
-void save_system_close(void);
+void save_system_close();

@@ -21,15 +21,15 @@ const QString get_nearest_city_text(struct city *pcity, int sq_dist);
 const QString unit_description(struct unit *punit);
 const QString get_airlift_text(const struct unit_list *punits,
                                const struct city *pdest);
-const QString science_dialog_text(void);
+const QString science_dialog_text();
 const QString get_science_target_text(double *percent);
 const QString get_science_goal_text(Tech_type_id goal);
 const QString get_info_label_text(bool moreinfo);
-const QString get_info_label_text_popup(void);
-const QString get_bulb_tooltip(void);
-const QString get_global_warming_tooltip(void);
-const QString get_nuclear_winter_tooltip(void);
-const QString get_government_tooltip(void);
+const QString get_info_label_text_popup();
+const QString get_bulb_tooltip();
+const QString get_global_warming_tooltip();
+const QString get_nuclear_winter_tooltip();
+const QString get_government_tooltip();
 const QString get_unit_info_label_text1(struct unit_list *punits);
 const QString get_unit_info_label_text2(struct unit_list *punits,
                                         int linebreaks);
@@ -38,7 +38,7 @@ bool get_units_upgrade_info(char *buf, size_t bufsz,
 bool get_units_disband_info(char *buf, size_t bufsz,
                             struct unit_list *punits);
 const QString get_spaceship_descr(struct player_spaceship *pship);
-const QString get_timeout_label_text(void);
+const QString get_timeout_label_text();
 const QString format_duration(int duration);
 QString get_ping_time_text(const struct player *pplayer);
 QString get_score_text(const struct player *pplayer);

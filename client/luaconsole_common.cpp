@@ -101,7 +101,7 @@ void luaconsole_event(const char *plain_text,
 /*************************************************************************/ /**
    Standard welcome message.
  *****************************************************************************/
-void luaconsole_welcome_message(void)
+void luaconsole_welcome_message()
 {
   luaconsole_append(ftc_any, _("This is the Client Lua Console."));
 }

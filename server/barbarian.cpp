@@ -518,7 +518,7 @@ static struct tile *find_empty_tile_nearby(struct tile *ptile)
       be an average number of cities (all cities/player num)? Depending
       on the victim government type is also questionable.
  **************************************************************************/
-static void try_summon_barbarians(void)
+static void try_summon_barbarians()
 {
   struct tile *ptile, *utile;
   int i, dist;
@@ -717,7 +717,7 @@ static void try_summon_barbarians(void)
    Summon barbarians out of the blue. Try more times for more difficult
    levels - which means there can be more than one uprising in one year!
  **************************************************************************/
-void summon_barbarians(void)
+void summon_barbarians()
 {
   int i, n;
 

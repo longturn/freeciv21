@@ -12,7 +12,7 @@
 ***********************************************************************/
 #pragma once
 
-void init_themes(void);
+void init_themes();
 class QStringList;
 const QVector<QString> *get_themes_list(const struct option *poption);
 bool load_theme(const char *theme_name);
