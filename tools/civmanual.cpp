@@ -13,12 +13,12 @@
 #include <fc_config.h>
 #endif
 
-#include <assert.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cassert>
+#include <csignal>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 // Qt
 #include <QCommandLineParser>

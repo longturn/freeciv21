@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 
 #ifdef AUDIO_SDL
 #include <SDL2/SDL.h>

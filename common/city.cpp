@@ -15,9 +15,9 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* pow, sqrt, exp */
-#include <stdlib.h>
-#include <string.h>
+#include <cmath> /* pow, sqrt, exp */
+#include <cstdlib>
+#include <cstring>
 #include <vector>
 
 /* utility */

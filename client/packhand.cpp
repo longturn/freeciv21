@@ -16,7 +16,7 @@
 #endif
 
 #include <QBitArray>
-#include <string.h>
+#include <cstring>
 
 /* utility */
 #include "bitvector.h"

@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdlib.h>
+#include <cstdlib>
 
 // Qt
 #include <QCoreApplication>

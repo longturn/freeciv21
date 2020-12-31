@@ -12,7 +12,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
+#include <cstdarg>
 
 /* common */
 #include "map.h"

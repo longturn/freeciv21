@@ -15,9 +15,9 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h>
-#include <stdlib.h> /* exit */
-#include <string.h>
+#include <cmath>
+#include <cstdlib> /* exit */
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"

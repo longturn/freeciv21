@@ -12,7 +12,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdlib.h> /* qsort */
+#include <cstdlib> /* qsort */
 
 /* utility */
 #include "fcintl.h"

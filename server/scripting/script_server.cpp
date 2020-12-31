@@ -12,10 +12,10 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
-#include <stdlib.h>
+#include <cstdarg>
+#include <cstdlib>
+#include <ctime>
 #include <sys/stat.h>
-#include <time.h>
 
 /* dependencies/lua */
 extern "C" {

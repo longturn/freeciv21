@@ -12,9 +12,9 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <time.h>
+#include <cstdarg>
+#include <cstdlib>
+#include <ctime>
 
 /* dependencies/lua */
 #include "lua.h"

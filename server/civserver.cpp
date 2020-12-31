@@ -16,10 +16,10 @@
 #endif
 
 #include <QString>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <csignal>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h>

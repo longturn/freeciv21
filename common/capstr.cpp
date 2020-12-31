@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdlib.h> /* getenv() */
+#include <cstdlib> /* getenv() */
 
 /* gen_headers */
 #include "fc_version.h"

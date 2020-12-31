@@ -40,7 +40,7 @@
    which _is_ itself protected against multiple inclusions.
 */
 
-#include <string.h> /* for memcpy */
+#include <cstring> /* for memcpy */
 
 #ifndef SPECVEC_TAG
 #error Must define a SPECVEC_TAG to use this header

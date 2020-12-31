@@ -15,8 +15,8 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* pow, ceil */
-#include <string.h>
+#include <cmath> /* pow, ceil */
+#include <cstring>
 
 /* utility */
 #include "log.h"

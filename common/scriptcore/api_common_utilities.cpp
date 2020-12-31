@@ -14,7 +14,7 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h>
+#include <cmath>
 
 /* utilities */
 #include "deprecations.h"

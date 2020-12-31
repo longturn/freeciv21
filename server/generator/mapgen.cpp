@@ -16,10 +16,10 @@
 #endif
 
 #include <QBitArray>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 /* utility */
 #include "bitvector.h"

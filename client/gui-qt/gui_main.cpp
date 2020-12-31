@@ -13,7 +13,7 @@
 #endif /* AUDIO_SDL */
 
 #include "gui_main.h"
-#include <stdio.h>
+#include <cstdio>
 // Qt
 #include <QApplication>
 // utility

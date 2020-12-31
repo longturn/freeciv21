@@ -13,7 +13,7 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* log */
+#include <cmath> /* log */
 
 /* utility */
 #include "bitvector.h"

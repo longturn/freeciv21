@@ -16,7 +16,7 @@
 #endif
 
 #include <QBitArray>
-#include <math.h> /* sqrt, HUGE_VAL */
+#include <cmath> /* sqrt, HUGE_VAL */
 
 /* utility */
 #include "fcintl.h"

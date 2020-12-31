@@ -15,8 +15,8 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* ceil */
-#include <string.h>
+#include <cmath> /* ceil */
+#include <cstring>
 
 /* utility */
 #include "astring.h"

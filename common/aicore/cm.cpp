@@ -12,8 +12,8 @@
 #include <fc_config.h>
 #endif
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 // Qt
 #include <QLoggingCategory>

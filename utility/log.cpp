@@ -17,10 +17,10 @@
 
 #include <iostream>
 
-#include <signal.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
+#include <csignal>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
 #include <vector>
 
 // Qt

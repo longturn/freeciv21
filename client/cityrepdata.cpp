@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-#include <errno.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cerrno>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"
@@ -1018,7 +1018,7 @@ static void split_string(struct datum_vector *data, const char *str)
 
     errno = 0;
     value = strtof(str, &endptr);
-    if (errno != 0 || endptr == str || !isfinite(value)) {
+    if (errno != 0 || endptr == str || !std::isfinite(value)) {
       /* that wasn't a sensible number; go on */
       str++;
     } else {

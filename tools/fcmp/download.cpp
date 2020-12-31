@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <errno.h>
+#include <cerrno>
 #include <unistd.h>
 
 // Qt

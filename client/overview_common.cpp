@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* floor */
+#include <cmath> /* floor */
 
 /* utility */
 #include "log.h"

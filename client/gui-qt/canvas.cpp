@@ -19,7 +19,7 @@
  \_____       _____/
        \     /                                                      *****/
 #include "canvas.h"
-#include <math.h>
+#include <cmath>
 // Qt
 #include <QFontMetrics>
 #include <QPainter>
