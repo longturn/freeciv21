@@ -726,8 +726,9 @@ int collect_production_targets(struct universal *targets,
       }
     }
 
-    if (!append)
+    if (!append) {
       continue;
+}
 
     targets[items_used] = target;
     items_used++;

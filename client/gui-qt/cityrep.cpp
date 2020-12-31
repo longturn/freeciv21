@@ -1126,8 +1126,9 @@ void city_widget::display_header_menu(const QPoint)
     setColumnHidden(col, !isColumnHidden(col));
     spec = city_report_specs + col;
     spec->show = !spec->show;
-    if (!isColumnHidden(col) && columnWidth(col) <= 5)
+    if (!isColumnHidden(col) && columnWidth(col) <= 5) {
       setColumnWidth(col, 100);
+}
   });
   hideshow_column->popup(QCursor::pos());
 }

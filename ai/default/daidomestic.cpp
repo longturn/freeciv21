@@ -105,8 +105,9 @@ static void dai_choose_help_wonder(struct ai_type *ait, struct city *pcity,
   unit_list_iterate(pplayer->units, punit)
   {
     if (unit_can_do_action(punit, ACTION_HELP_WONDER)
-        && tile_continent(unit_tile(punit)) == continent)
+        && tile_continent(unit_tile(punit)) == continent) {
       caravans++;
+}
   }
   unit_list_iterate_end;
 

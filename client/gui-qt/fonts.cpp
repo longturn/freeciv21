@@ -27,8 +27,9 @@ fcFont::fcFont() : city_fontsize(12), prod_fontsize(12) {}
  ****************************************************************************/
 fcFont *fcFont::instance()
 {
-  if (!m_instance)
+  if (!m_instance) {
     m_instance = new fcFont;
+}
   return m_instance;
 }
 

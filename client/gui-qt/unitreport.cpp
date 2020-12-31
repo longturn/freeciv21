@@ -295,8 +295,9 @@ void units_reports::add_item(unittype_item *item)
  ****************************************************************************/
 units_reports *units_reports::instance()
 {
-  if (!m_instance)
+  if (!m_instance) {
     m_instance = new units_reports;
+}
   return m_instance;
 }
 

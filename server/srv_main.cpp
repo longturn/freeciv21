@@ -2243,8 +2243,9 @@ void update_nations_with_startpos(void)
          * available set. */
         pnation->server.no_startpos = true;
         for (auto *psp : qAsConst(*wld.map.startpos_table)) {
-          if (psp->exclude)
+          if (psp->exclude) {
             continue;
+}
           if (startpos_nation_allowed(psp, pnation)) {
             /* There is at least one start position that allows this nation,
              * so allow it to be picked.
@@ -2625,8 +2626,9 @@ static void generate_players(void)
 
     /* Initialization. */
     for (auto *psp : qAsConst(*wld.map.startpos_table)) {
-      if (psp->exclude)
+      if (psp->exclude) {
         continue;
+}
       if (startpos_allows_all(psp)) {
         continue;
       }

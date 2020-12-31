@@ -2844,8 +2844,9 @@ static void sg_save_map_startpos(struct savedata *saving)
 
   for (auto *psp : qAsConst(*wld.map.startpos_table)) {
     int nat_x, nat_y;
-    if (psp->exclude)
+    if (psp->exclude) {
       continue;
+}
     ptile = startpos_tile(psp);
 
     index_to_native_pos(&nat_x, &nat_y, tile_index(ptile));

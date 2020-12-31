@@ -994,8 +994,9 @@ void city_label::mousePressEvent(QMouseEvent *event)
   int citnum, i, num_citizens, nothing_width;
   int w = tileset_small_sprite_width(tileset) / king()->map_scale;
 
-  if (!pcity)
+  if (!pcity) {
     return;
+}
   if (cma_is_city_under_agent(pcity, NULL)) {
     return;
   }
@@ -2924,15 +2925,18 @@ void qtg_refresh_unit_city_dialogs(struct unit *punit)
 struct city *is_any_city_dialog_open()
 {
   // some checks not to iterate cities
-  if (!queen()->city_overlay->isVisible())
+  if (!queen()->city_overlay->isVisible()) {
     return nullptr;
-  if (client_is_global_observer() || client_is_observer())
+}
+  if (client_is_global_observer() || client_is_observer()) {
     return nullptr;
+}
 
   city_list_iterate(client.conn.playing->cities, pcity)
   {
-    if (qtg_city_dialog_is_open(pcity))
+    if (qtg_city_dialog_is_open(pcity)) {
       return pcity;
+}
   }
   city_list_iterate_end;
   return nullptr;
@@ -3193,8 +3197,9 @@ city_production_model::~city_production_model()
 QVariant city_production_model::data(const QModelIndex &index,
                                      int role) const
 {
-  if (!index.isValid())
+  if (!index.isValid()) {
     return QVariant();
+}
 
   if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
       && index.column() < columnCount()
@@ -3285,8 +3290,9 @@ bool city_production_model::setData(const QModelIndex &index,
                                     const QVariant &value, int role)
 {
   Q_UNUSED(value)
-  if (!index.isValid() || role != Qt::DisplayRole || role != Qt::ToolTipRole)
+  if (!index.isValid() || role != Qt::DisplayRole || role != Qt::ToolTipRole) {
     return false;
+}
 
   Q_UNREACHABLE();
   if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
@@ -3397,8 +3403,9 @@ bool production_widget::eventFilter(QObject *obj, QEvent *ev)
   QRect pw_rect;
   QPoint br;
 
-  if (obj != this)
+  if (obj != this) {
     return false;
+}
 
   if (ev->type() == QEvent::MouseButtonPress) {
     pw_rect.setTopLeft(pos());

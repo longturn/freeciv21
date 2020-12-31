@@ -3376,8 +3376,9 @@ QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
                         what, name);
 
   sp = load_sprite(t, tag, scale, true);
-  if (sp)
+  if (sp) {
     return sp;
+}
 
   sp = load_sprite(t, alt, scale, true);
   if (sp) {

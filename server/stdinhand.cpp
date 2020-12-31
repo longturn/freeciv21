@@ -7341,8 +7341,9 @@ static bool is_command(int start)
   char *str_itr;
 
   if (contains_str_before_start(start, command_name_by_number(CMD_HELP),
-                                false))
+                                false)) {
     return true;
+}
 
   /* if there is only it is also OK */
   str_itr = rl_line_buffer;

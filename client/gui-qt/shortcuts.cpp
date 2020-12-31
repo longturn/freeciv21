@@ -245,8 +245,9 @@ void fc_shortcuts::drop() { NFCN_FREE(m_instance); }
  **************************************************************************/
 fc_shortcuts *fc_shortcuts::sc()
 {
-  if (!m_instance)
+  if (!m_instance) {
     m_instance = new fc_shortcuts;
+}
   return m_instance;
 }
 

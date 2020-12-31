@@ -675,8 +675,9 @@ void info_tile::drop() { NFCN_FREE(m_instance); }
  **************************************************************************/
 info_tile *info_tile::i(struct tile *p)
 {
-  if (!m_instance && p)
+  if (!m_instance && p) {
     m_instance = new info_tile(p, queen()->mapview_wdg);
+}
   return m_instance;
 }
 

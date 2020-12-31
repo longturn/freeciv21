@@ -80,8 +80,9 @@ helpList *help_nodes;
  ****************************************************************************/
 void free_help_texts(void)
 {
-  if (!help_nodes)
+  if (!help_nodes) {
     return;
+}
   for (const auto *ptmp : *help_nodes) {
     NFCPP_FREE(ptmp->topic);
     NFCPP_FREE(ptmp->text);
@@ -425,15 +426,18 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
                * TRANS: Translators cannot change column widths :( */
               _("Activity            Time\n"));
       CATLSTR(outbuf, outlen, "---------------------------");
-      if (clean_pollution_time > 0)
+      if (clean_pollution_time > 0) {
         cat_snprintf(outbuf, outlen, _("\nClean pollution    %3d"),
                      clean_pollution_time);
-      if (clean_fallout_time > 0)
+}
+      if (clean_fallout_time > 0) {
         cat_snprintf(outbuf, outlen, _("\nClean fallout      %3d"),
                      clean_fallout_time);
-      if (pillage_time > 0)
+}
+      if (pillage_time > 0) {
         cat_snprintf(outbuf, outlen, _("\nPillage            %3d"),
                      pillage_time);
+}
       extra_type_by_cause_iterate(EC_ROAD, pextra)
       {
         if (pextra->buildable && pextra->build_time > 0) {
@@ -657,10 +661,11 @@ static struct help_item *new_help_item(int type)
 static int help_item_compar(const struct help_item *v1,
                             const struct help_item *v2)
 {
-  if (QString(v1->topic) != QString(v2->topic))
+  if (QString(v1->topic) != QString(v2->topic)) {
     return QString(v1->topic) < QString(v2->topic);
-  else
+  } else {
     return 0;
+}
 }
 
 /************************************************************************/ /**

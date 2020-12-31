@@ -215,11 +215,13 @@ plr_model::~plr_model()
  **************************************************************************/
 QVariant plr_model::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid())
+  if (!index.isValid()) {
     return QVariant();
+}
   if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
-      && index.column() < columnCount())
+      && index.column() < columnCount()) {
     return plr_list[index.row()]->data(index.column(), role);
+}
   return QVariant();
 }
 
@@ -245,8 +247,9 @@ QVariant plr_model::headerData(int section, Qt::Orientation orientation,
 bool plr_model::setData(const QModelIndex &index, const QVariant &value,
                         int role)
 {
-  if (!index.isValid() || role != Qt::DisplayRole)
+  if (!index.isValid() || role != Qt::DisplayRole) {
     return false;
+}
   if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
       && index.column() < columnCount()) {
     bool change =
@@ -381,8 +384,9 @@ void plr_widget::display_header_menu(const QPoint)
     pcol = &player_dlg_columns[col];
     pcol->show = !pcol->show;
     setColumnHidden(col, !isColumnHidden(col));
-    if (!isColumnHidden(col) && columnWidth(col) <= 5)
+    if (!isColumnHidden(col) && columnWidth(col) <= 5) {
       setColumnWidth(col, 100);
+}
   });
 
   hideshow_column->popup(QCursor::pos());

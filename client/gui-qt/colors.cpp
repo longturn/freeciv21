@@ -22,8 +22,9 @@ research_color::research_color() : colors_init(false) {}
 
 research_color *research_color::i()
 {
-  if (!m_instance)
+  if (!m_instance) {
     m_instance = new research_color;
+}
   return m_instance;
 }
 
