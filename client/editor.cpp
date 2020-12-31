@@ -1958,6 +1958,7 @@ const struct tile *editor_get_selection_center(void)
   }
 
   origin = map_pos_to_tile(&(wld.map), 0, 0);
+  fc_assert_ret_val(origin, nullptr);
   for (auto ptile : *editor->selected_tile_table) {
     map_distance_vector(&dx, &dy, origin, ptile);
     xsum += dx;

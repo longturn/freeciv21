@@ -6528,7 +6528,7 @@ QPixmap *get_unit_unhappy_sprite(const struct tileset *t,
                                  const struct unit *punit, int happy_cost)
 {
   Q_UNUSED(punit)
-  const int unhappy = CLIP(0, happy_cost, MAX_NUM_UPKEEP_SPRITES + 1);
+  const int unhappy = CLIP(0, happy_cost, MAX_NUM_UPKEEP_SPRITES - 1);
 
   if (unhappy > 0) {
     return t->sprites.upkeep.unhappy[unhappy - 1];

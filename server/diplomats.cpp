@@ -2009,6 +2009,7 @@ diplomat_infiltrate_tile(struct player *pplayer, struct player *cplayer,
 
       switch (action_get_target_kind(paction)) {
       case ATK_CITY:
+        fc_assert_ret_val(pcity, false);
         victim_link = city_link(pcity);
         break;
       case ATK_UNIT:

@@ -181,14 +181,14 @@ bool is_normal_nat_pos(int x, int y)
  **************************************************************************/
 void smooth_int_map(int *int_map, bool zeroes_at_edges)
 {
+  fc_assert_ret(NULL != int_map);
+
   static const float weight_standard[5] = {0.13, 0.19, 0.37, 0.19, 0.13};
   static const float weight_isometric[5] = {0.15, 0.21, 0.29, 0.21, 0.15};
   const float *weight;
   bool axe = true;
   int *target_map, *source_map;
   int *alt_int_map = new int[MAP_INDEX_SIZE]();
-
-  fc_assert_ret(NULL != int_map);
 
   weight = weight_standard;
   target_map = alt_int_map;

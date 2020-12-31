@@ -623,7 +623,7 @@ void update_line(int canvas_x, int canvas_y)
   case HOVER_GOTO_SEL_TGT:
     ptile = canvas_pos_to_tile(canvas_x, canvas_y);
     punits = get_units_in_focus();
-
+    fc_assert_ret(ptile);
     set_hover_state(punits, hover_state, connect_activity, connect_tgt,
                     ptile->index, goto_last_sub_tgt, goto_last_action,
                     goto_last_order);
@@ -657,7 +657,7 @@ void overview_update_line(int overview_x, int overview_y)
     overview_to_map_pos(&x, &y, overview_x, overview_y);
     ptile = map_pos_to_tile(&(wld.map), x, y);
     punits = get_units_in_focus();
-
+    fc_assert_ret(ptile);
     set_hover_state(punits, hover_state, connect_activity, connect_tgt,
                     ptile->index, goto_last_sub_tgt, goto_last_action,
                     goto_last_order);

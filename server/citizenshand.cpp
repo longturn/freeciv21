@@ -188,7 +188,7 @@ static bool citizen_convert_check(struct city *pcity)
  *****************************************************************************/
 void citizens_convert(struct city *pcity)
 {
-  struct player_slot *city_nations[MAX_NUM_PLAYER_SLOTS], *pslot;
+  struct player_slot *city_nations[MAX_NUM_PLAYER_SLOTS] = {nullptr}, *pslot;
   struct player *pplayer;
   int count = 0;
 

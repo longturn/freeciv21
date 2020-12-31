@@ -3692,8 +3692,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
   struct unit *ptransporter;
   struct packet_unit_info src_info, dest_info;
   struct packet_unit_short_info src_sinfo, dest_sinfo;
-  struct unit_move_data_list *plist =
-      unit_move_data_list_new_full(unit_move_data_unref);
+  struct unit_move_data_list *plist;
   struct unit_move_data *pdata;
   int saved_id;
   bool unit_lives;
@@ -3705,6 +3704,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
   fc_assert_ret_val(punit != NULL, false);
   fc_assert_ret_val(pdesttile != NULL, false);
 
+  plist = unit_move_data_list_new_full(unit_move_data_unref);
   pplayer = unit_owner(punit);
   saved_id = punit->id;
   psrctile = unit_tile(punit);
