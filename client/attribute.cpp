@@ -294,8 +294,9 @@ void attribute_flush(void)
     return;
   }
 
-  if (0 == attribute_hash->size())
+  if (0 == attribute_hash->size()) {
     return;
+}
 
   if (pplayer->attribute_block.data) {
     free(pplayer->attribute_block.data);

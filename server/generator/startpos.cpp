@@ -246,8 +246,9 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
   cont_size = get_continent_size(cont);
   island = islands + islands_index[cont];
   for (auto *psp : qAsConst(*wld.map.startpos_table)) {
-    if (psp->exclude)
+    if (psp->exclude) {
       continue;
+}
     struct tile *tile1 = startpos_tile(psp);
 
     if ((tile_continent(ptile) == tile_continent(tile1)

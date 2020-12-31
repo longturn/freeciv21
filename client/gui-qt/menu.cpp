@@ -1353,8 +1353,9 @@ void mr_menu::update_airlift_menu()
   Unit_type_id utype_id;
   QAction *act;
 
-  if (!initialized)
+  if (!initialized) {
     return;
+}
   airlift_menu->clear();
   if (client_is_observer()) {
     return;
@@ -1393,8 +1394,9 @@ void mr_menu::update_roads_menu()
   struct unit_list *punits = nullptr;
   bool enabled = false;
 
-  if (!initialized)
+  if (!initialized) {
     return;
+}
   QList<QAction *> actions = roads_menu->actions();
   for (auto *act : qAsConst(actions)) {
     removeAction(act);
@@ -1442,8 +1444,9 @@ void mr_menu::update_bases_menu()
   QAction *act;
   struct unit_list *punits = nullptr;
   bool enabled = false;
-  if (!initialized)
+  if (!initialized) {
     return;
+}
 
   QList<QAction *> actions = bases_menu->actions();
   for (auto *act : qAsConst(actions)) {

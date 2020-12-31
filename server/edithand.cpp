@@ -111,8 +111,9 @@ void edithand_send_initial_packets(struct conn_list *dest)
 
   /* Send map start positions. */
   for (auto *psp : qAsConst(*wld.map.startpos_table)) {
-    if (psp->exclude)
+    if (psp->exclude) {
       continue;
+}
     startpos.id = tile_index(startpos_tile(psp));
     startpos.removal = false;
     startpos.tag = 0;

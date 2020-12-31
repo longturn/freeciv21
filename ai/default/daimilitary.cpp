@@ -900,8 +900,9 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
                            * first defender type. */
   }
 
-  if (best <= 0)
+  if (best <= 0) {
     best = 1; /* Avoid division by zero below. */
+}
 
   /* Update tech_want for appropriate techs for units we want to build. */
   simple_ai_unit_type_iterate(punittype)

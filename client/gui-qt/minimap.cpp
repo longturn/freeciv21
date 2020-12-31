@@ -239,8 +239,9 @@ void minimap_thread::run()
     float wf, hf;
     QPixmap *src, *dst;
 
-    if (threadabort)
+    if (threadabort) {
       return;
+}
     mutex.lock();
     if (gui_options.overview.map != nullptr) {
       if (scale > 1) {
@@ -277,8 +278,9 @@ void minimap_thread::run()
       }
     }
     emit rendered_image(image);
-    if (!threadrestart)
+    if (!threadrestart) {
       condition.wait(&mutex);
+}
     threadrestart = false;
     mutex.unlock();
   }

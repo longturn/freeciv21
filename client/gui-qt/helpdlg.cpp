@@ -297,8 +297,9 @@ void help_dialog::make_tree()
       default:
         break;
       }
-      if (spite)
+      if (spite) {
         icon = QIcon(*spite);
+}
       if (!icon.isNull()) {
         item->setIcon(0, icon);
       }

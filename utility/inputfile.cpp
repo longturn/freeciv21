@@ -380,8 +380,9 @@ static bool check_include(struct inputfile *inf)
   inf->cur_line_pos = c - astr_str(&inf->cur_line);
 
   bare_name_start = c;
-  while (*c != '\0' && *c != '\"')
+  while (*c != '\0' && *c != '\"') {
     c++;
+}
   if (*c != '\"') {
     qCCritical(inf_category,
                "Did not find closing doublequote for '*include' line");

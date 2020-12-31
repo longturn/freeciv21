@@ -338,15 +338,17 @@ void audio_real_init(const QString &soundset_name,
   atexit(audio_shutdown);
 
   if (!preferred_plugin_name.isEmpty()) {
-    if (!audio_select_plugin(preferred_plugin_name))
+    if (!audio_select_plugin(preferred_plugin_name)) {
       qInfo(_("Proceeding with sound support disabled."));
+}
     return;
   }
 
 #ifdef AUDIO_SDL
   QString audio_str = QStringLiteral("sdl");
-  if (audio_select_plugin(audio_str))
+  if (audio_select_plugin(audio_str)) {
     return;
+}
 #endif
   qInfo(_("No real audio subsystem managed to initialize!"));
   qInfo(_("Perhaps there is some misconfiguration or bad permissions."));

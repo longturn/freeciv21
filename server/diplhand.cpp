@@ -779,8 +779,9 @@ void handle_diplomacy_create_clause_req(struct player *pplayer,
     if (type == CLAUSE_CITY) {
       struct city *pcity = game_city_by_number(value);
 
-      if (pcity && !map_is_known_and_seen(pcity->tile, pother, V_MAIN))
+      if (pcity && !map_is_known_and_seen(pcity->tile, pother, V_MAIN)) {
         give_citymap_from_player_to_player(pcity, pplayer, pother);
+}
     }
 
     dlsend_packet_diplomacy_create_clause(
