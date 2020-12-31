@@ -148,7 +148,7 @@ bool script_server_load_file(const char *filename, char **buf)
     fclose(ffile);
   }
 
-  return 1;
+  return true;
 }
 
 /***********************************************************************/ /**
