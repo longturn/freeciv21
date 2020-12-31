@@ -369,7 +369,8 @@ int kill_desire(int benefit, int attack, int loss, int vuln,
  **************************************************************************/
 static int avg_benefit(int benefit, int loss, double chance)
 {
-  return (int) (((benefit + loss) * chance - loss) * SHIELD_WEIGHTING);
+  return static_cast<int>(((benefit + loss) * chance - loss)
+                          * SHIELD_WEIGHTING);
 }
 
 /**********************************************************************/ /**
@@ -2556,7 +2557,7 @@ static void dai_manage_settler(struct ai_type *ait, struct player *pplayer,
   if (unit_data->task == AIUNIT_NONE) {
     adv_unit_new_task(punit, AUT_AUTO_SETTLER, NULL);
   }
-  }
+}
 
 /**********************************************************************/ /**
    manage one unit
@@ -3360,7 +3361,8 @@ struct role_unit_cb_data {
  **************************************************************************/
 static bool role_unit_cb(struct unit_type *ptype, void *data)
 {
-  struct role_unit_cb_data *cb_data = (struct role_unit_cb_data *) data;
+  struct role_unit_cb_data *cb_data =
+      static_cast<struct role_unit_cb_data *>(data);
   struct unit_class *pclass = utype_class(ptype);
 
   if ((cb_data->tc == TC_LAND && pclass->adv.land_move == MOVE_NONE)
@@ -3369,7 +3371,7 @@ static bool role_unit_cb(struct unit_type *ptype, void *data)
   }
 
   return cb_data->build_city == NULL
-      || can_city_build_unit_now(cb_data->build_city, ptype);
+         || can_city_build_unit_now(cb_data->build_city, ptype);
 }
 
 /**********************************************************************/ /**

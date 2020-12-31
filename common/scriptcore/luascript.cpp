@@ -178,7 +178,7 @@ static void luascript_exec_check(lua_State *L, lua_Debug *ar)
   lua_getfield(L, LUA_REGISTRYINDEX, "freeciv_exec_clock");
   exec_clock = lua_tonumber(L, -1);
   lua_pop(L, 1);
-  if ((float) (clock() - exec_clock) / CLOCKS_PER_SEC
+  if (static_cast<float>(clock() - exec_clock) / CLOCKS_PER_SEC
       > LUASCRIPT_MAX_EXECUTION_TIME_SEC) {
     luaL_error(L, "Execution time limit exceeded in script");
   }
@@ -647,7 +647,7 @@ void luascript_remove_exported_object(struct fc_lua *fcl, void *object)
       tolua_getmetatable(fcl->state, "Nonexistent");
       lua_setmetatable(fcl->state, -2);
       /* Set the userdata payload to NULL */
-      *((void **) lua_touserdata(fcl->state, -1)) = NULL;
+      *(static_cast<void **>(lua_touserdata(fcl->state, -1))) = NULL;
       /* Remove from ubox */
       /* stack: ubox ubox[u] u */
       lua_pushlightuserdata(fcl->state, object);

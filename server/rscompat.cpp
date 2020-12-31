@@ -502,7 +502,7 @@ static bool effect_handle_split_universal(struct effect *peffect,
  **************************************************************************/
 static bool effect_list_compat_cb(struct effect *peffect, void *data)
 {
-  struct rscompat_info *info = (struct rscompat_info *) data;
+  struct rscompat_info *info = static_cast<struct rscompat_info *>(data);
 
   if (info->ver_effects < 20) {
     /* Attack has been split in regular "Attack" and "Suicide Attack". */

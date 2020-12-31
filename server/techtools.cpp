@@ -328,7 +328,7 @@ void send_research_info(const struct research *presearch,
 void found_new_tech(struct research *presearch, Tech_type_id tech_found,
                     bool was_discovery, bool saving_bulbs)
 {
-  int had_embassies[player_slot_count()] = {0};
+  int had_embassies[player_slot_count()];
   bool could_switch[player_slot_count()][government_count()];
   bool was_first = false;
   bool bonus_tech_hack = false;
@@ -619,10 +619,10 @@ static bool lose_tech(struct research *research)
    * research_total_bulbs_required() from getting called before research
    * has even been set to value other than A_UNSET. */
   return research->bulbs_researched < 0
-      && research->bulbs_researched
-             < (-research_total_bulbs_required(research,
-                                               research->researching, false)
-                * game.info.techloss_forgiveness / 100);
+         && research->bulbs_researched
+                < (-research_total_bulbs_required(
+                       research, research->researching, false)
+                   * game.info.techloss_forgiveness / 100);
 }
 
 /************************************************************************/ /**

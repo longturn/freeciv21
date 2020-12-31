@@ -424,7 +424,7 @@ void init_new_game()
 {
   struct startpos_list *impossible_list, *targeted_list, *flexible_list;
   struct tile *player_startpos[player_slot_count()];
-  int placed_units[player_slot_count()] = {0};
+  int placed_units[player_slot_count()];
   int players_to_place = player_count();
   int sulen;
 
@@ -449,7 +449,7 @@ void init_new_game()
   for (auto *psp : qAsConst(*wld.map.startpos_table)) {
     if (psp->exclude) {
       continue;
-}
+    }
     if (startpos_allows_all(psp)) {
       startpos_list_append(flexible_list, psp);
     } else {
@@ -1047,7 +1047,7 @@ void increase_timeout_because_unit_moved()
 {
   if (current_turn_timeout() > 0 && game.server.timeoutaddenemymove > 0) {
     double maxsec = (timer_read_seconds(game.server.phase_timer)
-                     + (double) game.server.timeoutaddenemymove);
+                     + static_cast<double>(game.server.timeoutaddenemymove));
 
     if (maxsec > game.tinfo.seconds_to_phasedone) {
       game.tinfo.seconds_to_phasedone = maxsec;

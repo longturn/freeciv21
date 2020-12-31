@@ -527,7 +527,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
 
   /* Research want */
   adv->wants_science = !(is_future_tech(research_get(pplayer)->researching)
-      || player_has_really_useful_tech_parasite(pplayer));
+                         || player_has_really_useful_tech_parasite(pplayer));
 
   /* max num cities
    * The idea behind this code is that novice players don't understand that

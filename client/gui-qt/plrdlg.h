@@ -42,7 +42,7 @@ public:
   void paint(QPainter *painter, const QStyleOptionViewItem &option,
              const QModelIndex &index) const override;
   QSize sizeHint(const QStyleOptionViewItem &option,
-                         const QModelIndex &index) const override;
+                 const QModelIndex &index) const override;
 };
 
 /***************************************************************************
@@ -71,7 +71,8 @@ class plr_model : public QAbstractListModel {
 public:
   plr_model(QObject *parent = 0);
   ~plr_model() override;
-  inline int rowCount(const QModelIndex &index = QModelIndex()) const override
+  inline int
+  rowCount(const QModelIndex &index = QModelIndex()) const override
   {
     Q_UNUSED(index);
     return plr_list.size();
@@ -81,7 +82,8 @@ public:
     Q_UNUSED(parent);
     return num_player_dlg_columns;
   }
-  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+  QVariant data(const QModelIndex &index,
+                int role = Qt::DisplayRole) const override;
   bool setData(const QModelIndex &index, const QVariant &value,
                int role = Qt::DisplayRole) override;
   QVariant headerData(int section, Qt::Orientation orientation,

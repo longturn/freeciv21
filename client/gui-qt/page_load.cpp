@@ -178,7 +178,8 @@ void page_load::state_preview(int new_state)
   Q_UNUSED(new_state)
   QItemSelection slctn;
 
-  gui_options.gui_qt_show_preview = ui.show_preview->checkState() != Qt::Unchecked;
+  gui_options.gui_qt_show_preview =
+      ui.show_preview->checkState() != Qt::Unchecked;
   slctn = ui.saves_load->selectionModel()->selection();
   ui.saves_load->selectionModel()->clearSelection();
   ui.saves_load->selectionModel()->select(

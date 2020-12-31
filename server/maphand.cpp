@@ -1615,7 +1615,7 @@ void give_shared_vision(struct player *pfrom, struct player *pto)
   bv_player save_vision[player_slot_count()];
   if (pfrom == pto) {
     return;
-}
+  }
   if (gives_shared_vision(pfrom, pto)) {
     qCritical("Trying to give shared vision from %s to %s, "
               "but that vision is already given!",
@@ -1803,7 +1803,7 @@ static void ocean_to_land_fix_rivers(struct tile *ptile)
     {
       if (is_ocean_tile(tile2)) {
         ocean_near = true;
-}
+      }
     }
     cardinal_adjc_iterate_end;
 

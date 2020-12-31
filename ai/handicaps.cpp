@@ -51,7 +51,7 @@ void handicaps_close(struct player *pplayer)
 /**********************************************************************/ /**
    Set player handicaps
  **************************************************************************/
-void handicaps_set(struct player *pplayer, QBitArray* handicaps)
+void handicaps_set(struct player *pplayer, QBitArray *handicaps)
 {
   *(pplayer->ai_common.handicaps) = *handicaps;
   delete handicaps;

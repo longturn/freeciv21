@@ -481,8 +481,8 @@ bool is_boss_of_boat(struct ai_type *ait, struct unit *punit)
   }
 
   return unit_transported(punit)
-      && def_ai_unit_data(unit_transport_get(punit), ait)->passenger
-             == punit->id;
+         && def_ai_unit_data(unit_transport_get(punit), ait)->passenger
+                == punit->id;
 }
 
 /**********************************************************************/ /**
@@ -1303,5 +1303,4 @@ void dai_manage_ferryboat(struct ai_type *ait, struct player *pplayer,
       (void) dai_unit_goto(ait, punit, safe_city->tile);
     }
   }
-
-  }
+}

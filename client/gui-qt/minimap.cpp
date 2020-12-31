@@ -186,10 +186,7 @@ void minimap_view::update_pixmap(const QImage &image)
 /**********************************************************************/ /**
    Minimap thread's contructor
  **************************************************************************/
-minimap_thread::minimap_thread(QObject *parent)
-    : QThread(parent) 
-{
-}
+minimap_thread::minimap_thread(QObject *parent) : QThread(parent) {}
 
 /**********************************************************************/ /**
    Minimap thread's desctructor
@@ -240,7 +237,7 @@ void minimap_thread::run()
 
     if (threadabort) {
       return;
-}
+    }
     mutex.lock();
     if (gui_options.overview.map != nullptr) {
       if (scale > 1) {
@@ -279,7 +276,7 @@ void minimap_thread::run()
     emit rendered_image(image);
     if (!threadrestart) {
       condition.wait(&mutex);
-}
+    }
     threadrestart = false;
     mutex.unlock();
   }

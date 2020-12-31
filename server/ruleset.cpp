@@ -205,7 +205,7 @@ static const char *valid_ruleset_filename(const char *subdir,
                                           bool optional)
 {
   char filename[512];
-  const char *dfilename;
+  QString dfilename;
 
   fc_assert_ret_val(subdir && name && extension, NULL);
 
@@ -213,8 +213,8 @@ static const char *valid_ruleset_filename(const char *subdir,
               DIR_SEPARATOR_CHAR, name, extension);
   qCDebug(ruleset_category, "Trying \"%s\".", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
-  if (dfilename) {
-    return dfilename;
+  if (!dfilename.isEmpty()) {
+    return qUtf8Printable(dfilename);
   }
 
   fc_snprintf(filename, sizeof(filename), "default%c%s.%s",
@@ -222,8 +222,8 @@ static const char *valid_ruleset_filename(const char *subdir,
   qCDebug(ruleset_category, "Trying \"%s\": default ruleset directory.",
           filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
-  if (dfilename) {
-    return dfilename;
+  if (!dfilename.isEmpty()) {
+    return qUtf8Printable(dfilename);
   }
 
   fc_snprintf(filename, sizeof(filename), "%s_%s.%s", subdir, name,
@@ -231,8 +231,8 @@ static const char *valid_ruleset_filename(const char *subdir,
   qCDebug(ruleset_category,
           "Trying \"%s\": alternative ruleset filename syntax.", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
-  if (dfilename) {
-    return dfilename;
+  if (!dfilename.isEmpty()) {
+    return qUtf8Printable(dfilename);
   } else if (!optional) {
     qCCritical(ruleset_category,
                /* TRANS: message about an installation error. */
@@ -854,7 +854,7 @@ static char *lookup_string(struct section_file *file, const char *prefix,
 static void strvec_store(QVector<QString> *psv, const char *const *vec,
                          size_t size)
 {
-  if (size == (size_t) -1) {
+  if (size == static_cast<size_t>(-1)) {
     psv->clear();
     for (; *vec; vec++) {
       psv->append(*vec);
@@ -1670,8 +1670,8 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
     fc_snprintf(err, err_len,
                 "\"%s\": Too many veteran levels (section "
                 "'%s': %lu, max %d)",
-                secfile_name(file), path, (long unsigned) count_name,
-                MAX_VET_LEVELS);
+                secfile_name(file), path,
+                static_cast<long unsigned>(count_name), MAX_VET_LEVELS);
   } else if (count_name != count_power || count_name != count_raise
              || count_name != count_wraise || count_name != count_move) {
     ret = false;
@@ -1684,7 +1684,7 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
     *vsystem = NULL;
   } else {
     /* Generate the veteran system. */
-    *vsystem = veteran_system_new((int) count_name);
+    *vsystem = veteran_system_new(static_cast<int>(count_name));
 
 #define rs_sanity_veteran(_path, _entry, _i, _condition, _action)           \
   if (_condition) {                                                         \
@@ -6254,7 +6254,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
 
     food_ini =
         secfile_lookup_int_vec(file, &gni_tmp, "civstyle.granary_food_ini");
-    game.info.granary_num_inis = (int) gni_tmp;
+    game.info.granary_num_inis = static_cast<int>(gni_tmp);
 
     if (game.info.granary_num_inis > MAX_GRANARY_INIS) {
       qCCritical(ruleset_category,

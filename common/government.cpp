@@ -399,7 +399,7 @@ const char *ruler_title_for_player(const struct player *pplayer, char *buf,
     pruler_title = pgovern->ruler_titles->value(pnation);
     if (!pruler_title) {
       pruler_title = pgovern->ruler_titles->value(nullptr);
-}
+    }
     fc_snprintf(buf, buf_len,
                 name_translation_get(pplayer->is_male
                                          ? &pruler_title->male
@@ -422,10 +422,7 @@ struct government_iter {
 /**********************************************************************/ /**
    Implementation of iterator 'sizeof' function.
  **************************************************************************/
-size_t government_iter_sizeof()
-{
-  return sizeof(struct government_iter);
-}
+size_t government_iter_sizeof() { return sizeof(struct government_iter); }
 
 /**********************************************************************/ /**
    Implementation of iterator 'next' function.

@@ -113,7 +113,7 @@ void edithand_send_initial_packets(struct conn_list *dest)
   for (auto *psp : qAsConst(*wld.map.startpos_table)) {
     if (psp->exclude) {
       continue;
-}
+    }
     startpos.id = tile_index(startpos_tile(psp));
     startpos.removal = false;
     startpos.tag = 0;

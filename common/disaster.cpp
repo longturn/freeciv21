@@ -75,10 +75,7 @@ Disaster_type_id disaster_index(const struct disaster_type *pdis)
 /************************************************************************/ /**
    Return the number of disaster_types.
  ****************************************************************************/
-Disaster_type_id disaster_count()
-{
-  return game.control.num_disaster_types;
-}
+Disaster_type_id disaster_count() { return game.control.num_disaster_types; }
 
 /************************************************************************/ /**
    Return disaster type of given id.

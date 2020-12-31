@@ -3688,10 +3688,7 @@ void key_city_productions_toggle() { request_toggle_city_productions(); }
    Handle client request to toggle drawing of trade route information
    by the city name for cities visible on the main map view.
  **************************************************************************/
-void key_city_trade_routes_toggle()
-{
-  request_toggle_city_trade_routes();
-}
+void key_city_trade_routes_toggle() { request_toggle_city_trade_routes(); }
 
 /**********************************************************************/ /**
    Handle user 'toggle terrain display' input

@@ -29,7 +29,7 @@
 
 #include "difficulty.h"
 
-static QBitArray* handicap_of_skill_level(enum ai_level level);
+static QBitArray *handicap_of_skill_level(enum ai_level level);
 static int fuzzy_of_skill_level(enum ai_level level);
 static int science_cost_of_skill_level(enum ai_level level);
 static int expansionism_of_skill_level(enum ai_level level);
@@ -49,9 +49,9 @@ void set_ai_level_directer(struct player *pplayer, enum ai_level level)
 /**********************************************************************/ /**
    Returns handicap bitvector for given AI skill level
  **************************************************************************/
-static QBitArray* handicap_of_skill_level(enum ai_level level)
+static QBitArray *handicap_of_skill_level(enum ai_level level)
 {
-  QBitArray* handicap = new QBitArray(H_LAST);
+  QBitArray *handicap = new QBitArray(H_LAST);
 
   fc_assert(ai_level_is_valid(level));
 
@@ -231,7 +231,7 @@ char *ai_level_help(const char *cmdname)
   /* Translate cmdname to AI level. */
   enum ai_level level = ai_level_by_name(cmdname, fc_strcasecmp);
   QString help, features;
-  QBitArray* handicaps;
+  QBitArray *handicaps;
   int h;
 
   fc_assert(ai_level_is_valid(level));

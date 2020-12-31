@@ -1140,7 +1140,7 @@ static bool read_init_script_real(struct connection *caller,
   const char extension[] = ".serv";
   char serv_filename[strlen(extension) + qstrlen(script_filename) + 2];
   char tilde_filename[4096];
-  const char *real_filename;
+  QString real_filename;
 
   /* check recursion depth */
   if (read_recursion > GAME_MAX_READ_RECURSION) {
@@ -1149,9 +1149,8 @@ static bool read_init_script_real(struct connection *caller,
   }
 
   /* abuse real_filename to find if we already have a .serv extension */
-  real_filename = script_filename + qstrlen(script_filename)
-                  - MIN(strlen(extension), qstrlen(script_filename));
-  if (strcmp(real_filename, extension) != 0) {
+  real_filename = QString(script_filename);
+  if (real_filename.endsWith(extension)) {
     fc_snprintf(serv_filename, sizeof(serv_filename), "%s%s",
                 script_filename, extension);
   } else {
@@ -1171,7 +1170,7 @@ static bool read_init_script_real(struct connection *caller,
   }
 
   real_filename = fileinfoname(get_data_dirs(), tilde_filename);
-  if (!real_filename) {
+  if (real_filename.isEmpty()) {
     if (is_restricted(caller) && !from_cmdline) {
       cmd_reply(CMD_READ_SCRIPT, caller, C_FAIL,
                 _("No command script found by the name \"%s\"."),
@@ -1183,10 +1182,10 @@ static bool read_init_script_real(struct connection *caller,
   }
 
   log_testmatic_alt(LOG_NORMAL, _("Loading script file '%s'."),
-                    real_filename);
+                    qUtf8Printable(real_filename));
 
-  if (is_reg_file_for_access(real_filename, false)
-      && (script_file = fc_fopen(real_filename, "r"))) {
+  if (is_reg_file_for_access(qUtf8Printable(real_filename), false)
+      && (script_file = fc_fopen(qUtf8Printable(real_filename), "r"))) {
     char buffer[MAX_LEN_CONSOLE_LINE];
 
     /* the size is set as to not overflow buffer in handle_stdin_input */
@@ -1201,9 +1200,11 @@ static bool read_init_script_real(struct connection *caller,
     return true;
   } else {
     cmd_reply(CMD_READ_SCRIPT, caller, C_FAIL,
-              _("Cannot read command line scriptfile '%s'."), real_filename);
+              _("Cannot read command line scriptfile '%s'."),
+              qUtf8Printable(real_filename));
     if (NULL != caller) {
-      qCritical(_("Could not read script file '%s'."), real_filename);
+      qCritical(_("Could not read script file '%s'."),
+                qUtf8Printable(real_filename));
     }
     return false;
   }
@@ -2934,8 +2935,8 @@ static bool set_command(struct connection *caller, char *str, bool check)
     return ret;
   }
 
-  pset = validate_setting_arg(CMD_SET, caller,
-                              (char *) qUtf8Printable(args.at(0)));
+  pset = validate_setting_arg(
+      CMD_SET, caller, const_cast<char *>(qUtf8Printable(args.at(0))));
 
   if (!pset) {
     /* Reason already reported. */
@@ -3715,7 +3716,8 @@ bool load_command(struct connection *caller, const char *filename,
                                    NULL};
     const char *exts[] = {"sav",    "gz",      "bz2",    "xz",
                           "sav.gz", "sav.bz2", "sav.xz", NULL};
-    const char **ext, *found = NULL;
+    const char **ext;
+    QString found;
     const QStringList **path;
 
     if (cmdline_load) {
@@ -3725,25 +3727,25 @@ bool load_command(struct connection *caller, const char *filename,
        * looking any path with an extension, i.e., prefer plain name file
        * in later directory over file with extension in name in earlier
        * directory. */
-      for (path = pathes; !found && *path; path++) {
+      for (path = pathes; !found.isEmpty() && *path; path++) {
         found = fileinfoname(*path, filename);
-        if (found != NULL) {
-          sz_strlcpy(arg, found);
+        if (!found.isEmpty()) {
+          sz_strlcpy(arg, qUtf8Printable(found));
         }
       }
     }
 
-    for (path = pathes; !found && *path; path++) {
-      for (ext = exts; !found && *ext; ext++) {
+    for (path = pathes; !found.isEmpty() && *path; path++) {
+      for (ext = exts; !found.isEmpty() && *ext; ext++) {
         fc_snprintf(testfile, sizeof(testfile), "%s.%s", filename, *ext);
         found = fileinfoname(*path, testfile);
-        if (found != NULL) {
-          sz_strlcpy(arg, found);
+        if (!found.isEmpty()) {
+          sz_strlcpy(arg, qUtf8Printable(found));
         }
       }
     }
 
-    if (is_restricted(caller) && !found) {
+    if (is_restricted(caller) && !found.isEmpty()) {
       cmd_reply(CMD_LOAD, caller, C_FAIL,
                 _("Cannot find savegame or "
                   "scenario with the name \"%s\"."),
@@ -3751,7 +3753,7 @@ bool load_command(struct connection *caller, const char *filename,
       return false;
     }
 
-    if (!found) {
+    if (!found.isEmpty()) {
       sz_strlcpy(arg, filename);
     }
   }
@@ -3888,7 +3890,7 @@ static bool set_rulesetdir(struct connection *caller, char *str, bool check,
                            int read_recursion)
 {
   char filename[512];
-  const char *pfilename;
+  QString pfilename;
 
   if (NULL == str || '\0' == str[0]) {
     cmd_reply(CMD_RULESETDIR, caller, C_SYNTAX,
@@ -3918,7 +3920,7 @@ static bool set_rulesetdir(struct connection *caller, char *str, bool check,
 
   fc_snprintf(filename, sizeof(filename), "%s", str);
   pfilename = fileinfoname(get_data_dirs(), filename);
-  if (!pfilename) {
+  if (pfilename.isEmpty()) {
     cmd_reply(CMD_RULESETDIR, caller, C_SYNTAX,
               _("Ruleset directory \"%s\" not found"), str);
     return false;
@@ -4717,7 +4719,7 @@ static bool surrender_command(struct connection *caller, char *str,
 static const char *reset_accessor(int i)
 {
   i = CLIP(0, i, reset_args_max());
-  return reset_args_name((enum reset_args) i);
+  return reset_args_name(static_cast<enum reset_args>(i));
 }
 
 /**********************************************************************/ /**
@@ -4879,7 +4881,7 @@ static bool default_command(struct connection *caller, char *arg, bool check)
 static const char *lua_accessor(int i)
 {
   i = CLIP(0, i, lua_args_max());
-  return lua_args_name((enum lua_args) i);
+  return lua_args_name(static_cast<enum lua_args>(i));
 }
 
 /**********************************************************************/ /**
@@ -4987,7 +4989,8 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
       interpret_tilde(tilde_filename, sizeof(tilde_filename), luafile);
     }
 
-    real_filename = fileinfoname(get_data_dirs(), tilde_filename);
+    real_filename =
+        qUtf8Printable(fileinfoname(get_data_dirs(), tilde_filename));
     if (!real_filename) {
       if (is_restricted(caller)) {
         cmd_reply(CMD_LUA, caller, C_FAIL,
@@ -5066,7 +5069,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
 static const char *delegate_accessor(int i)
 {
   i = CLIP(0, i, delegate_args_max());
-  return delegate_args_name((enum delegate_args) i);
+  return delegate_args_name(static_cast<enum delegate_args>(i));
 }
 
 /**********************************************************************/ /**
@@ -5570,7 +5573,7 @@ static const char *delegate_player_str(struct player *pplayer, bool observer)
 static const char *mapimg_accessor(int i)
 {
   i = CLIP(0, i, mapimg_args_max());
-  return mapimg_args_name((enum mapimg_args) i);
+  return mapimg_args_name(static_cast<enum mapimg_args>(i));
 }
 
 /**********************************************************************/ /**
@@ -5880,7 +5883,7 @@ static bool aicmd_command(struct connection *caller, char *arg, bool check)
 static const char *fcdb_accessor(int i)
 {
   i = CLIP(0, i, fcdb_args_max());
-  return fcdb_args_name((enum fcdb_args) i);
+  return fcdb_args_name(static_cast<enum fcdb_args>(i));
 }
 
 /**********************************************************************/ /**
@@ -6340,7 +6343,8 @@ static void show_help_command(struct connection *caller,
     size_t synlen = qstrlen(syn);
     char prefix[40];
 
-    fc_snprintf(prefix, sizeof(prefix), "%*s", (int) synlen, " ");
+    fc_snprintf(prefix, sizeof(prefix), "%*s", static_cast<int>(synlen),
+                " ");
     cmd_reply_prefix(help_cmd, caller, C_COMMENT, prefix, "%s%s", syn,
                      command_synopsis(cmd));
   }
@@ -6464,7 +6468,7 @@ static const char *helparg_accessor(int i)
 
   i -= CMD_NUM;
   if (i < HELP_GENERAL_COUNT) {
-    return help_general_args_name((enum help_general_args) i);
+    return help_general_args_name(static_cast<enum help_general_args>(i));
   }
 
   i -= HELP_GENERAL_COUNT;
@@ -6932,7 +6936,7 @@ static void show_colors(struct connection *caller)
 static const char *list_accessor(int i)
 {
   i = CLIP(0, i, list_args_max());
-  return list_args_name((enum list_args) i);
+  return list_args_name(static_cast<enum list_args>(i));
 }
 
 /**********************************************************************/ /**
@@ -7343,7 +7347,7 @@ static bool is_command(int start)
   if (contains_str_before_start(start, command_name_by_number(CMD_HELP),
                                 false)) {
     return true;
-}
+  }
 
   /* if there is only it is also OK */
   str_itr = rl_line_buffer;

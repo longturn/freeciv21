@@ -2720,14 +2720,14 @@ static int get_trade_illness(const struct city *pcity)
     if (trade_city->turn_plague != -1
         && game.info.turn - trade_city->turn_plague < 5) {
       illness_trade +=
-          (float) game.info.illness_trade_infection
+          static_cast<float>(game.info.illness_trade_infection)
           * sqrt(1.0 * city_size_get(pcity) * city_size_get(trade_city))
           / 100.0;
     }
   }
   trade_partners_iterate_end;
 
-  return (int) illness_trade;
+  return static_cast<int>(illness_trade);
 }
 
 /**********************************************************************/ /**
@@ -2762,8 +2762,9 @@ int city_illness_calc(const struct city *pcity, int *ill_base, int *ill_size,
     /* offset the city size by game.info.illness_min_size */
     int use_size = city_size_get(pcity) - game.info.illness_min_size;
 
-    illness_size = (int) ((1.0 - exp(-(float) use_size / 10.0)) * 10.0
-                          * game.info.illness_base_factor);
+    illness_size =
+        static_cast<int>((1.0 - exp(-static_cast<float>(use_size) / 10.0))
+                         * 10.0 * game.info.illness_base_factor);
     if (is_server()) {
       /* on the server we recalculate the illness due to trade as we have
        * all informations */

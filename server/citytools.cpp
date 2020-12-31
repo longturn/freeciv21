@@ -212,7 +212,7 @@ static int evaluate_city_name_priority(struct tile *ptile,
                                        int default_priority)
 {
   /* Lower values mean higher priority. */
-  float priority = (float) default_priority;
+  float priority = static_cast<float>(default_priority);
   enum nation_city_preference goodness;
 
   /* Increasing this value will increase the difference caused by
@@ -305,7 +305,7 @@ static int evaluate_city_name_priority(struct tile *ptile,
   }
   terrain_type_iterate_end;
 
-  return (int) priority;
+  return static_cast<int>(priority);
 }
 
 /************************************************************************/ /**

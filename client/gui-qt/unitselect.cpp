@@ -375,7 +375,7 @@ void units_select::update_units()
 
   if (utile == nullptr) {
     return;
-}
+  }
   unit_count = 0;
   if (utile == NULL) {
     struct unit *punit = head_of_units_in_focus();
@@ -392,7 +392,7 @@ void units_select::update_units()
         unit_count++;
         if (i > show_line * 4) {
           unit_list.push_back(punit);
-}
+        }
         i++;
       }
       unit_list_iterate_end;

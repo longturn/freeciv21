@@ -168,7 +168,7 @@ void astr_reserve(struct astring *astr, size_t n)
   /* Allocated more if this is only a small increase on before: */
   n1 = (3 * (astr->n_alloc + 10)) / 2;
   astr->n_alloc = (n > n1) ? n : n1;
-  astr->str = (char *) fc_realloc(astr->str, astr->n_alloc);
+  astr->str = static_cast<char *>(fc_realloc(astr->str, astr->n_alloc));
   if (was_null) {
     astr_clear(astr);
   }
@@ -200,7 +200,7 @@ static inline void astr_vadd_at(struct astring *astr, size_t at,
   buffer = astr_buffer_get(&buffer_size);
   for (;;) {
     new_len = fc_vsnprintf(buffer, buffer_size, format, ap);
-    if (new_len < buffer_size && (size_t) -1 != new_len) {
+    if (new_len < buffer_size && static_cast<size_t>(-1) != new_len) {
       break;
     }
     buffer = astr_buffer_grow(&buffer_size);

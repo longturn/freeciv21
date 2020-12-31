@@ -447,4 +447,4 @@ void dai_choose_paratrooper(struct ai_type *ait, struct player *pplayer,
     }
     advance_index_iterate_end;
   }
-  }
+}

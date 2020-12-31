@@ -98,9 +98,9 @@ struct inputfile {
   unsigned int cur_line_pos; /* position in current line */
   unsigned int line_num;     /* line number from file in cur_line */
   struct astring token;      /* data returned to user */
-  QString partial;    /* used in accumulating multi-line strings;
-                                used only in get_token_value, but put
-                                here so it gets freed when file closed */
+  QString partial;           /* used in accumulating multi-line strings;
+                                       used only in get_token_value, but put
+                                       here so it gets freed when file closed */
   datafilename_fn_t datafn;  /* function like datafilename(); use a
                                 function pointer just to keep this
                                 inputfile module "generic" */
@@ -347,7 +347,8 @@ static bool check_include(struct inputfile *inf)
   static size_t len = 0;
   size_t bare_name_len;
   char *bare_name;
-  const char *c, *bare_name_start, *full_name;
+  const char *c, *bare_name_start;
+  QString full_name;
   struct inputfile *new_inf, temp;
 
   if (len == 0) {
@@ -382,7 +383,7 @@ static bool check_include(struct inputfile *inf)
   bare_name_start = c;
   while (*c != '\0' && *c != '\"') {
     c++;
-}
+  }
   if (*c != '\"') {
     qCCritical(inf_category,
                "Did not find closing doublequote for '*include' line");
@@ -407,7 +408,7 @@ static bool check_include(struct inputfile *inf)
   inf->cur_line_pos = astr_len(&inf->cur_line) - 1;
 
   full_name = inf->datafn(bare_name);
-  if (!full_name) {
+  if (full_name.isEmpty()) {
     qCritical("Could not find included file \"%s\"", bare_name);
     delete[] bare_name;
     return false;
@@ -419,14 +420,15 @@ static bool check_include(struct inputfile *inf)
   {
     struct inputfile *inc = inf;
     do {
-      if (inc->filename && strcmp(full_name, inc->filename) == 0) {
-        qCritical("Recursion trap on '*include' for \"%s\"", full_name);
+      if (inc->filename && full_name == QString(inc->filename)) {
+        qCritical("Recursion trap on '*include' for \"%s\"",
+                  qUtf8Printable(full_name));
         return false;
       }
     } while ((inc = inc->included_from));
   }
 
-  new_inf = inf_from_file(full_name, inf->datafn);
+  new_inf = inf_from_file(qUtf8Printable(full_name), inf->datafn);
 
   /* Swap things around so that memory pointed to by inf (user pointer,
      and pointer in calling functions) contains the new inputfile,
@@ -470,7 +472,7 @@ static bool read_a_line(struct inputfile *inf)
    * (or first position) in line.
    */
   for (;;) {
-    auto ret = inf->fp->readLine((char *) astr_str(line) + pos,
+    auto ret = inf->fp->readLine(const_cast<char *>(astr_str(line)) + pos,
                                  astr_capacity(line) - pos);
 
     if (ret < 0) {
@@ -491,7 +493,8 @@ static bool read_a_line(struct inputfile *inf)
     /* Cope with \n\r line endings if not caught by library:
      * strip off any leading \r */
     if (0 == pos && 0 < astr_len(line) && astr_str(line)[0] == '\r') {
-      memmove((char *) astr_str(line), astr_str(line) + 1, astr_len(line));
+      memmove(const_cast<char *>(astr_str(line)), astr_str(line) + 1,
+              astr_len(line));
     }
 
     pos = astr_len(line);
@@ -505,7 +508,7 @@ static bool read_a_line(struct inputfile *inf)
       } else {
         end = pos - 1;
       }
-      *((char *) astr_str(line) + end) = '\0';
+      *(const_cast<char *>(astr_str(line)) + end) = '\0';
       break;
     }
     astr_reserve(line, pos * 2);
@@ -647,9 +650,9 @@ static const char *get_token_section_name(struct inputfile *inf)
   if (*c != ']') {
     return NULL;
   }
-  *((char *) c) = '\0'; /* Tricky. */
+  *(const_cast<char *>(c)) = '\0'; /* Tricky. */
   astr_set(&inf->token, "%s", start);
-  *((char *) c) = ']'; /* Revert. */
+  *(const_cast<char *>(c)) = ']'; /* Revert. */
   inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
   return astr_str(&inf->token);
 }
@@ -687,9 +690,9 @@ static const char *get_token_entry_name(struct inputfile *inf)
     return NULL;
   }
   trailing = *end;
-  *((char *) end) = '\0'; /* Tricky. */
+  *(const_cast<char *>(end)) = '\0'; /* Tricky. */
   astr_set(&inf->token, "%s", start);
-  *((char *) end) = trailing; /* Revert. */
+  *(const_cast<char *>(end)) = trailing; /* Revert. */
   inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
   return astr_str(&inf->token);
 }
@@ -808,12 +811,12 @@ static const char *get_token_value(struct inputfile *inf)
     /* If its a comma, we don't want to obliterate it permanently,
      * so remember it: */
     trailing = *c;
-    *((char *) c) = '\0'; /* Tricky. */
+    *(const_cast<char *>(c)) = '\0'; /* Tricky. */
 
     inf->cur_line_pos = c - astr_str(&inf->cur_line);
     astr_set(&inf->token, "%s", start);
 
-    *((char *) c) = trailing; /* Revert. */
+    *(const_cast<char *>(c)) = trailing; /* Revert. */
     return astr_str(&inf->token);
   }
 
@@ -832,7 +835,7 @@ static const char *get_token_value(struct inputfile *inf)
   border_character = *c;
 
   if (border_character == '*') {
-    const char *rfname;
+    QString rfname;
     bool eof;
     int pos;
 
@@ -853,31 +856,33 @@ static const char *get_token_value(struct inputfile *inf)
     /* We don't want to obliterate ending '*' permanently,
      * so remember it: */
     trailing = *(c - 1);
-    *((char *) (c - 1)) = '\0'; /* Tricky. */
+    *(const_cast<char *>(c - 1)) = '\0'; /* Tricky. */
 
     rfname = fileinfoname(get_data_dirs(), start);
     if (rfname == NULL) {
       qCCritical(inf_category, _("Cannot find stringfile \"%s\"."), start);
-      *((char *) c) = trailing; /* Revert. */
+      *(const_cast<char *>(c)) = trailing; /* Revert. */
       return NULL;
     }
-    *((char *) c) = trailing; /* Revert. */
+    *(const_cast<char *>(c)) = trailing; /* Revert. */
     auto *fp = new KFilterDev(rfname);
     fp->open(QIODevice::ReadOnly);
     if (!fp->isOpen()) {
-      qCCritical(inf_category, _("Cannot open stringfile \"%s\"."), rfname);
+      qCCritical(inf_category, _("Cannot open stringfile \"%s\"."),
+                 qUtf8Printable(rfname));
       delete fp;
       return NULL;
     }
     log_debug("Stringfile \"%s\" opened ok", start);
-    *((char *) (c - 1)) = trailing; /* Revert. */
-    astr_set(&inf->token, "*");     /* Mark as a string read from a file */
+    *(const_cast<char *>(c - 1)) = trailing; /* Revert. */
+    astr_set(&inf->token, "*"); /* Mark as a string read from a file */
 
     eof = false;
     pos = 1; /* Past 'filestring' marker */
     while (!eof) {
-      auto ret = fp->readLine((char *) astr_str(&inf->token) + pos,
-                              astr_capacity(&inf->token) - pos);
+      auto ret =
+          fp->readLine(const_cast<char *>(astr_str(&inf->token)) + pos,
+                       astr_capacity(&inf->token) - pos);
       if (ret < 0 || fp->atEnd()) {
         eof = true;
       } else {
@@ -906,12 +911,12 @@ static const char *get_token_value(struct inputfile *inf)
     /* If its a comma, we don't want to obliterate it permanently,
      * so remember it: */
     trailing = *c;
-    *((char *) c) = '\0'; /* Tricky. */
+    *(const_cast<char *>(c)) = '\0'; /* Tricky. */
 
     inf->cur_line_pos = c - astr_str(&inf->cur_line);
     astr_set(&inf->token, "%s", start);
 
-    *((char *) c) = trailing; /* Revert. */
+    *(const_cast<char *>(c)) = trailing; /* Revert. */
     return astr_str(&inf->token);
   }
 
@@ -963,12 +968,12 @@ static const char *get_token_value(struct inputfile *inf)
 
   /* found end of string */
   trailing = *c;
-  *((char *) c) = '\0'; /* Tricky. */
+  *(const_cast<char *>(c)) = '\0'; /* Tricky. */
 
   inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
   astr_set(&inf->token, "%s%s", qUtf8Printable(inf->partial), start);
 
-  *((char *) c) = trailing; /* Revert. */
+  *(const_cast<char *>(c)) = trailing; /* Revert. */
 
   /* check gettext tag at end: */
   if (has_i18n_marking) {

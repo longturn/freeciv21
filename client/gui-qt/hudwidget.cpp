@@ -1505,9 +1505,9 @@ void unit_hud_selector::keyPressEvent(QKeyEvent *event)
 bool unit_hud_selector::activity_filter(struct unit *punit)
 {
   return (punit->activity == ACTIVITY_FORTIFIED && fortified->isChecked())
-      || (punit->activity == ACTIVITY_SENTRY && sentried->isChecked())
-      || (punit->activity == ACTIVITY_IDLE && idle->isChecked())
-      || any_activity->isChecked();
+         || (punit->activity == ACTIVITY_SENTRY && sentried->isChecked())
+         || (punit->activity == ACTIVITY_IDLE && idle->isChecked())
+         || any_activity->isChecked();
 }
 
 /************************************************************************/ /**
@@ -1516,11 +1516,11 @@ bool unit_hud_selector::activity_filter(struct unit *punit)
 bool unit_hud_selector::hp_filter(struct unit *punit)
 {
   return any->isChecked()
-       || (full_mp->isChecked()
-           && punit->moves_left >= punit->utype->move_rate)
-       || (full_hp->isChecked() && punit->hp >= punit->utype->hp)
-       || (full_hp_mp->isChecked() && punit->hp >= punit->utype->hp
-           && punit->moves_left >= punit->utype->move_rate);
+         || (full_mp->isChecked()
+             && punit->moves_left >= punit->utype->move_rate)
+         || (full_hp->isChecked() && punit->hp >= punit->utype->hp)
+         || (full_hp_mp->isChecked() && punit->hp >= punit->utype->hp
+             && punit->moves_left >= punit->utype->move_rate);
 }
 
 /************************************************************************/ /**

@@ -95,7 +95,7 @@ void fcUdpScan::sockError(QAbstractSocket::SocketError socketError)
   char *errstr;
   if (!fcudp_scan) {
     return;
-}
+  }
   errstr = errorString().toLocal8Bit().data();
   fcudp_scan->error_func(fcudp_scan, errstr);
 }

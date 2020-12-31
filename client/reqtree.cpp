@@ -669,7 +669,7 @@ static void barycentric_sort(struct reqtree *tree, int layer)
       v += node->require[j]->order;
     }
     if (node->nrequire > 0) {
-      v /= (float) node->nrequire;
+      v /= static_cast<float>(node->nrequire);
     }
     T[i].value = v;
   }

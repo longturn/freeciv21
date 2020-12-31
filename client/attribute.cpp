@@ -41,7 +41,7 @@ enum attribute_serial {
 
 class attr_key {
 public:
-  attr_key()  {};
+  attr_key(){};
   attr_key(int, int, int, int);
   int key{0}, id{0}, x{0}, y{0};
 };
@@ -201,14 +201,14 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
   fc_assert_ret_val(dio_get_uint32_raw(&din, &dummy), A_SERIAL_FAIL);
   if (dummy != 0) {
     qDebug("attribute.c unserialize_hash() preamble, uint32 %lu != 0",
-           (long unsigned) dummy);
+           static_cast<long unsigned>(dummy));
     return A_SERIAL_OLD;
   }
   fc_assert_ret_val(dio_get_uint8_raw(&din, &dummy), A_SERIAL_FAIL);
   if (dummy != 2) {
     qDebug("attribute.c unserialize_hash() preamble, "
            "uint8 %lu != 2 version",
-           (long unsigned) dummy);
+           static_cast<long unsigned>(dummy));
     return A_SERIAL_OLD;
   }
   fc_assert_ret_val(dio_get_uint32_raw(&din, &entries), A_SERIAL_FAIL);
@@ -216,7 +216,8 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
   if (dummy != data_length) {
     qDebug("attribute.c unserialize_hash() preamble, "
            "uint32 %lu != %lu data_length",
-           (long unsigned) dummy, (long unsigned) data_length);
+           static_cast<long unsigned>(dummy),
+           static_cast<long unsigned>(data_length));
     return A_SERIAL_FAIL;
   }
 
@@ -296,7 +297,7 @@ void attribute_flush()
 
   if (0 == attribute_hash->size()) {
     return;
-}
+  }
 
   if (pplayer->attribute_block.data) {
     free(pplayer->attribute_block.data);

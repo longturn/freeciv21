@@ -40,7 +40,8 @@ int api_utilities_random(lua_State *L, int min, int max)
 
   LUASCRIPT_CHECK_STATE(L, 0);
 
-  roll = ((double) (fc_rand(MAX_UINT32) % MAX_UINT32) / MAX_UINT32);
+  roll =
+      (static_cast<double>(fc_rand(MAX_UINT32) % MAX_UINT32) / MAX_UINT32);
 
   return (min + floor(roll * (max - min + 1)));
 }

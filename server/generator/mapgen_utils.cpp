@@ -208,7 +208,7 @@ void smooth_int_map(int *int_map, bool zeroes_at_edges)
       if (zeroes_at_edges) {
         D = 1;
       }
-      target_map[tile_index(ptile)] = (float) N / D;
+      target_map[tile_index(ptile)] = N / D;
     }
     whole_map_iterate_end;
 
@@ -367,7 +367,7 @@ void regenerate_lakes()
           lakes[frozen][num_laketypes[frozen]++] = pterr;
         } else {
           qDebug("Ruleset has more than %d %s lake types, ignoring %s",
-                 (int) ARRAY_SIZE(lakes[frozen]),
+                 static_cast<int> ARRAY_SIZE(lakes[frozen]),
                  frozen ? "frozen" : "unfrozen", terrain_rule_name(pterr));
         }
       }

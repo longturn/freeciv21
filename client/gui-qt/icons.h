@@ -34,7 +34,8 @@ class hIcon {
   Q_DISABLE_COPY(hIcon);
 
 private:
-  explicit hIcon()= default;;
+  explicit hIcon() = default;
+  ;
   static hIcon *m_instance;
   QHash<QString, QIcon> hash;
 

@@ -32,7 +32,8 @@ class fcUdpScan : public QUdpSocket {
 public:
   static void drop();
   static fcUdpScan *i();
-  ~fcUdpScan() override= default;;
+  ~fcUdpScan() override = default;
+  ;
   bool begin_scan(struct server_scan *scan);
   enum server_scan_status get_server_list(struct server_scan *scan);
 public slots:

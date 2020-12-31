@@ -239,7 +239,7 @@ static inline pf_normal_map *pf_normal_map_check(pf_map *pfm)
 {
   fc_assert_ret_val_msg(NULL != pfm && PF_NORMAL == pfm->mode, nullptr,
                         "Wrong pf_map to pf_normal_map conversion.");
-  return (struct pf_normal_map *) pfm;
+  return reinterpret_cast<struct pf_normal_map *>(pfm);
 }
 #define PF_NORMAL_MAP(pfm) pf_normal_map_check(pfm)
 #else
@@ -960,7 +960,7 @@ static inline pf_danger_map *pf_danger_map_check(pf_map *pfm)
 {
   fc_assert_ret_val_msg(NULL != pfm && PF_DANGER == pfm->mode, nullptr,
                         "Wrong pf_map to pf_danger_map conversion.");
-  return (struct pf_danger_map *) pfm;
+  return reinterpret_cast<struct pf_danger_map *>(pfm);
 }
 #define PF_DANGER_MAP(pfm) pf_danger_map_check(pfm)
 #else
@@ -1930,7 +1930,7 @@ static inline pf_fuel_map *pf_fuel_map_check(pf_map *pfm)
 {
   fc_assert_ret_val_msg(NULL != pfm && PF_FUEL == pfm->mode, nullptr,
                         "Wrong pf_map to pf_fuel_map conversion.");
-  return (struct pf_fuel_map *) pfm;
+  return reinterpret_cast<struct pf_fuel_map *>(pfm);
 }
 #define PF_FUEL_MAP(pfm) pf_fuel_map_check(pfm)
 #else

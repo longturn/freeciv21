@@ -673,7 +673,7 @@ void get_city_dialog_output_text(const struct city *pcity,
                  Q_("?city_surplus:"
                     "==== : Adds up to\n"
                     "%4.0f : Total surplus"),
-                 (double) pcity->surplus[otype]);
+                 static_cast<double>(pcity->surplus[otype]));
 }
 
 /**********************************************************************/ /**
@@ -698,11 +698,11 @@ void get_city_dialog_illness_text(const struct city *pcity, char *buf,
   illness = city_illness_calc(pcity, &ill_base, &ill_size, &ill_trade,
                               &ill_pollution);
 
-  city_sum_add(sum, (float) (ill_size) / 10.0,
+  city_sum_add(sum, static_cast<float>(ill_size) / 10.0,
                Q_("?city_plague:Risk from overcrowding"));
-  city_sum_add(sum, (float) (ill_trade) / 10.0,
+  city_sum_add(sum, static_cast<float>(ill_trade) / 10.0,
                Q_("?city_plague:Risk from trade"));
-  city_sum_add(sum, (float) (ill_pollution) / 10.0,
+  city_sum_add(sum, static_cast<float>(ill_pollution) / 10.0,
                Q_("?city_plague:Risk from pollution"));
 
   plist = effect_list_new();
@@ -747,7 +747,7 @@ void get_city_dialog_illness_text(const struct city *pcity, char *buf,
                  Q_("?city_plague:"
                     "====== : Adds up to\n"
                     "%5.1f%% : Plague chance per turn"),
-                 ((double) (illness) / 10.0));
+                 (static_cast<double>(illness) / 10.0));
 }
 
 /**********************************************************************/ /**
@@ -773,7 +773,7 @@ void get_city_dialog_pollution_text(const struct city *pcity, char *buf,
                  Q_("?city_pollution:"
                     "==== : Adds up to\n"
                     "%4.0f : Total surplus"),
-                 (double) pollu);
+                 static_cast<double>(pollu));
 }
 
 /**********************************************************************/ /**
@@ -826,7 +826,7 @@ void get_city_dialog_culture_text(const struct city *pcity, char *buf,
                  Q_("?city_culture:"
                     "==== : Adds up to\n"
                     "%4.0f : Total culture"),
-                 (double) pcity->client.culture);
+                 static_cast<double>(pcity->client.culture));
 }
 
 /**********************************************************************/ /**

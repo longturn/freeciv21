@@ -196,7 +196,7 @@ static void server_conn_close_callback(struct connection *pconn)
  *****************************************************************************/
 void flush_packets()
 {
-  for (auto & i : connections) { // check for freaky players
+  for (auto &i : connections) { // check for freaky players
     struct connection *pconn = &i;
 
     if (pconn->used && !pconn->server.is_closing) {
@@ -299,11 +299,11 @@ static const char *makeup_connection_name(int *id)
   static char name[MAX_LEN_NAME];
 
   for (;;) {
-    if (i == (unsigned short) -1) {
+    if (i == static_cast<unsigned short>(-1)) {
       /* don't use 0 */
       i++;
     }
-    fc_snprintf(name, sizeof(name), "c%u", (unsigned int) ++i);
+    fc_snprintf(name, sizeof(name), "c%u", static_cast<unsigned int>(++i));
     if (NULL == player_by_name(name) && NULL == player_by_user(name)
         && NULL == conn_by_number(i) && NULL == conn_by_user(name)) {
       *id = i;

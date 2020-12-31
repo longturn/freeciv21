@@ -1402,11 +1402,11 @@ static QString action_prob_to_text(const struct act_prob prob)
     /* Only one probability in range. */
 
     return QString(_("%1%")).arg(
-        QString::number((int) prob.max / ACTPROB_VAL_1_PCT));
+        QString::number(prob.max / ACTPROB_VAL_1_PCT));
   } else {
     return QString(_("[%1% - %2%]"))
-        .arg(QString::number((int) prob.min / ACTPROB_VAL_1_PCT))
-        .arg(QString::number((int) prob.max / ACTPROB_VAL_1_PCT));
+        .arg(QString::number(prob.min / ACTPROB_VAL_1_PCT))
+        .arg(QString::number(prob.max / ACTPROB_VAL_1_PCT));
   }
 }
 
@@ -1518,9 +1518,9 @@ const QString action_prob_explain(const struct act_prob prob)
   } else if (prob.min == prob.max) {
     /* TRANS: action probability of success. Given in percentage.
      * Resolution is 0.5%. */
-    tool_tip =
-        QString(_("The probability of success is %1%."))
-            .arg(QString::number((double) prob.max / ACTPROB_VAL_1_PCT));
+    tool_tip = QString(_("The probability of success is %1%."))
+                   .arg(QString::number(static_cast<double>(prob.max)
+                                        / ACTPROB_VAL_1_PCT));
   } else {
     tool_tip =
         QString(
@@ -1531,8 +1531,8 @@ const QString action_prob_explain(const struct act_prob prob)
              * the player doesn't have enough information. */
             _("The probability of success is %1%, %2% or somewhere"
               " in between.%3"))
-            .arg((double) prob.min / ACTPROB_VAL_1_PCT)
-            .arg((double) prob.max / ACTPROB_VAL_1_PCT)
+            .arg(static_cast<double>(prob.min) / ACTPROB_VAL_1_PCT)
+            .arg(static_cast<double>(prob.max) / ACTPROB_VAL_1_PCT)
             .arg(prob.max - prob.min > 1
                      ?
                      /* TRANS: explanation used in the action probability
@@ -5538,7 +5538,8 @@ double action_prob_to_0_to_1_pessimist(const struct act_prob ap)
   /* The action probability now has a math friendly form. */
   fc_assert(!action_prob_is_signal(my_ap));
 
-  return (double) my_ap.min / (double) ACTPROB_VAL_MAX;
+  return static_cast<double>(my_ap.min)
+         / static_cast<double>(ACTPROB_VAL_MAX);
 }
 
 /**********************************************************************/ /**
@@ -5947,7 +5948,7 @@ void action_list_add_all_by_result(action_id *act_list, int *position,
  **************************************************************************/
 const char *action_ui_name_ruleset_var_name(int act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
     return "ui_name_poison_city";
   case ACTION_SPY_POISON_ESC:
@@ -6362,7 +6363,7 @@ const char *action_ui_name_default(int act)
  **************************************************************************/
 const char *action_min_range_ruleset_var_name(int act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
   case ACTION_SPY_POISON_ESC:
   case ACTION_SPY_SABOTAGE_UNIT:
@@ -6458,7 +6459,7 @@ const char *action_min_range_ruleset_var_name(int act)
  **************************************************************************/
 int action_min_range_default(int act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
   case ACTION_SPY_POISON_ESC:
   case ACTION_SPY_SABOTAGE_UNIT:
@@ -6556,7 +6557,7 @@ int action_min_range_default(int act)
  **************************************************************************/
 const char *action_max_range_ruleset_var_name(int act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
   case ACTION_SPY_POISON_ESC:
   case ACTION_SPY_SABOTAGE_UNIT:
@@ -6661,7 +6662,7 @@ const char *action_max_range_ruleset_var_name(int act)
  **************************************************************************/
 int action_max_range_default(int act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
   case ACTION_SPY_POISON_ESC:
   case ACTION_SPY_SABOTAGE_UNIT:
@@ -6764,7 +6765,7 @@ int action_max_range_default(int act)
  **************************************************************************/
 const char *action_target_kind_ruleset_var_name(int act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
   case ACTION_SPY_POISON_ESC:
   case ACTION_SPY_SABOTAGE_UNIT:
@@ -6864,7 +6865,7 @@ const char *action_target_kind_ruleset_var_name(int act)
  **************************************************************************/
 const char *action_actor_consuming_always_ruleset_var_name(action_id act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
   case ACTION_SPY_POISON_ESC:
   case ACTION_SPY_SABOTAGE_UNIT:

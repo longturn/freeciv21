@@ -299,7 +299,7 @@ void help_dialog::make_tree()
       }
       if (spite) {
         icon = QIcon(*spite);
-}
+      }
       if (!icon.isNull()) {
         item->setIcon(0, icon);
       }

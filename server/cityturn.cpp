@@ -3489,28 +3489,41 @@ static float city_migration_score(struct city *pcity)
   city_built_iterate_end;
 
   /* take shield costs of all buidings into account; normalized by 1000 */
-  score *= (1 + (1 - exp(-(float) MAX(0, build_shield_cost) / 1000)) / 5);
+  score *= (1
+            + (1 - exp(-static_cast<float> MAX(0, build_shield_cost) / 1000))
+                  / 5);
   /* take trade into account; normalized by 100 */
   score *=
-      (1 + (1 - exp(-(float) MAX(0, pcity->surplus[O_TRADE]) / 100)) / 5);
+      (1
+       + (1 - exp(-static_cast<float> MAX(0, pcity->surplus[O_TRADE]) / 100))
+             / 5);
   /* take luxury into account; normalized by 100 */
   score *=
-      (1 + (1 - exp(-(float) MAX(0, pcity->surplus[O_LUXURY]) / 100)) / 5);
+      (1
+       + (1
+          - exp(-static_cast<float> MAX(0, pcity->surplus[O_LUXURY]) / 100))
+             / 5);
   /* take science into account; normalized by 100 */
   score *=
-      (1 + (1 - exp(-(float) MAX(0, pcity->surplus[O_SCIENCE]) / 100)) / 5);
+      (1
+       + (1
+          - exp(-static_cast<float> MAX(0, pcity->surplus[O_SCIENCE]) / 100))
+             / 5);
 
   score += city_culture(pcity) * game.info.culture_migration_pml / 1000;
 
   /* Take food into account; the food surplus is clipped to values between
    * -10..20 and normalize by 10. Thus, the factor is between 0.9 and 1.2. */
-  score *= (1 + (float) CLIP(-10, pcity->surplus[O_FOOD], 20) / 10);
+  score *=
+      (1 + static_cast<float> CLIP(-10, pcity->surplus[O_FOOD], 20) / 10);
 
   /* Reduce the score due to city illness (plague). The illness is given in
    * tenth of percent (0..1000) and normalized by 25. Thus, this factor is
    * between 0.6 (ill city) and 1.0 (health city). */
   score *=
-      (100 - (float) city_illness_calc(pcity, NULL, NULL, NULL, NULL) / 25);
+      (100
+       - static_cast<float>(city_illness_calc(pcity, NULL, NULL, NULL, NULL))
+             / 25);
 
   if (has_wonder) {
     /* people like wonders */
@@ -4059,7 +4072,8 @@ static bool check_city_migrations_player(const struct player *pplayer)
        * game.server.mgr_distance is added to the current city radius. If the
        * distance between both cities is lower or equal than this value,
        * migration is possible. */
-      mgr_dist = (int) sqrt((double) MAX(city_map_radius_sq_get(acity), 0))
+      mgr_dist = static_cast<int>(sqrt(static_cast<double> MAX(
+                     city_map_radius_sq_get(acity), 0)))
                  + game.server.mgr_distance;
 
       /* distance between the two cities */
@@ -4071,7 +4085,8 @@ static bool check_city_migrations_player(const struct player *pplayer)
       }
 
       /* score of the second city, weighted by the distance */
-      weight = ((float) (mgr_dist + 1 - dist) / (float) (mgr_dist + 1));
+      weight = (static_cast<float>(mgr_dist + 1 - dist)
+                / static_cast<float>(mgr_dist + 1));
       score_tmp = city_migration_score(acity) * weight;
 
       log_debug("[M] T%d - compare city: %s (%s) dist: %d mgr_dist: %d "

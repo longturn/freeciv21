@@ -442,7 +442,7 @@ void page_pregame::start_page_menu(QPoint pos)
       return;
     }
     if (qvar == 1) {
-      selected_players.append((player *) qvar2.value<void *>());
+      selected_players.append(static_cast<player *>(qvar2.value<void *>()));
     }
   }
 

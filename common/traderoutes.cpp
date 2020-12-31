@@ -464,7 +464,7 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
                     + max_trade_prod(pc1) + max_trade_prod(pc2))
                     * 2,
                 2);
-    tb = (int) bonus;
+    tb = bonus;
   }
 
   if (pgood != NULL) {
@@ -486,7 +486,8 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
       EFT_TRADE_REVENUE_BONUS);
 
   /* Be mercy full to players with small amounts. Round up. */
-  tb = ceil((float) tb * pow(2.0, (double) bonus / 1000.0));
+  tb = ceil(static_cast<float>(tb)
+            * pow(2.0, static_cast<double>(bonus) / 1000.0));
 
   return tb;
 }

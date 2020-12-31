@@ -95,7 +95,8 @@ static bool buffer_ensure_free_extra_space(struct socket_packet_buffer *buf,
       return false;
     }
     buf->nsize = buf->ndata + extra_space;
-    buf->data = (unsigned char *) fc_realloc(buf->data, buf->nsize);
+    buf->data =
+        static_cast<unsigned char *>(fc_realloc(buf->data, buf->nsize));
   }
 
   return true;
@@ -119,7 +120,7 @@ int read_socket_data(QTcpSocket *sock, struct socket_packet_buffer *buffer)
   }
 
   log_debug("try reading %d bytes", buffer->nsize - buffer->ndata);
-  didget = sock->read((char *) (buffer->data + buffer->ndata),
+  didget = sock->read(reinterpret_cast<char *>(buffer->data + buffer->ndata),
                       buffer->nsize - buffer->ndata);
 
   if (didget > 0) {
@@ -154,7 +155,8 @@ static int write_socket_data(struct connection *pc,
 
     nblock = MIN(buf->ndata - start, MAX_LEN_PACKET);
     log_debug("trying to write %d limit=%d", nblock, limit);
-    if ((nput = pc->sock->write((const char *) buf->data + start, nblock))
+    if ((nput = pc->sock->write(
+             reinterpret_cast<const char *>(buf->data) + start, nblock))
         == -1) {
       connection_close(pc, pc->sock->errorString().toUtf8().data());
       return -1;
@@ -391,7 +393,7 @@ struct socket_packet_buffer *new_socket_packet_buffer()
   buf->ndata = 0;
   buf->do_buffer_sends = 0;
   buf->nsize = 10 * MAX_LEN_PACKET;
-  buf->data = (unsigned char *) fc_malloc(buf->nsize);
+  buf->data = static_cast<unsigned char *>(fc_malloc(buf->nsize));
 
   return buf;
 }

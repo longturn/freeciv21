@@ -46,7 +46,7 @@ struct player *player_leading_spacerace()
   players_iterate_alive(pplayer)
   {
     struct player_spaceship *ship = &pplayer->spaceship;
-    int arrival = (int) ship->travel_time + ship->launch_year;
+    int arrival = static_cast<int>(ship->travel_time) + ship->launch_year;
 
     if (is_barbarian(pplayer) || ship->state == SSHIP_NONE) {
       continue;

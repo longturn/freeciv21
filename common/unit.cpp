@@ -465,8 +465,8 @@ int get_activity_rate(const struct unit *punit)
   int move_rate = unit_type_get(punit)->move_rate;
 
   /* All settler actions are multiplied by ACTIVITY_FACTOR. */
-  return ACTIVITY_FACTOR * (float) vlevel->power_fact / 100 * move_rate
-         / SINGLE_MOVE;
+  return ACTIVITY_FACTOR * static_cast<float>(vlevel->power_fact) / 100
+         * move_rate / SINGLE_MOVE;
 }
 
 /**********************************************************************/ /**
@@ -2141,7 +2141,8 @@ int unit_bribe_cost(struct unit *punit, struct player *briber)
   /* Cost now contains the basic bribe cost.  We now reduce it by:
    *    bribecost = cost/2 + cost/2 * damage/hp
    *              = cost/2 * (1 + damage/hp) */
-  return ((float) cost / 2 * (1.0 + (float) punit->hp / default_hp));
+  return (static_cast<float>(cost) / 2
+          * (1.0 + static_cast<float>(punit->hp) / default_hp));
 }
 
 /**********************************************************************/ /**
@@ -2207,7 +2208,7 @@ bool unit_transported(const struct unit *pcargo)
   /* The unit is transported if a transporter unit is set or, (for the
    * client) if the transported_by field is set. */
   return pcargo->transporter != NULL
-      || (!is_server() && pcargo->client.transported_by != -1);
+         || (!is_server() && pcargo->client.transported_by != -1);
 }
 
 /**********************************************************************/ /**

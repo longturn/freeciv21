@@ -900,8 +900,7 @@ bool unit_list_event_filter::eventFilter(QObject *object, QEvent *event)
   return false;
 }
 
-cityIconInfoLabel::cityIconInfoLabel(QWidget *parent)
-    : QWidget(parent) 
+cityIconInfoLabel::cityIconInfoLabel(QWidget *parent) : QWidget(parent)
 {
   QFont f = *fcFont::instance()->getFont(fonts::default_font);
   QFontMetrics fm(f);
@@ -980,7 +979,7 @@ void cityIconInfoLabel::updateTooltip(int nr, const QString &tooltipText)
    city_label is used only for showing citizens icons
    and was created only to catch mouse events
  ****************************************************************************/
-city_label::city_label(QWidget *parent) : QLabel(parent) 
+city_label::city_label(QWidget *parent) : QLabel(parent)
 {
   type = FEELING_FINAL;
 }
@@ -996,7 +995,7 @@ void city_label::mousePressEvent(QMouseEvent *event)
 
   if (!pcity) {
     return;
-}
+  }
   if (cma_is_city_under_agent(pcity, NULL)) {
     return;
   }
@@ -1144,7 +1143,7 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
     illness = city_illness_calc(pcity, NULL, NULL, NULL, NULL);
     /* illness is in tenth of percent */
     fc_snprintf(buf[ILLNESS], sizeof(buf[ILLNESS]), "%4.1f%%",
-                (float) illness / 10.0);
+                static_cast<float>(illness) / 10.0);
   }
   if (pcity->steal) {
     fc_snprintf(buf[STEAL], sizeof(buf[STEAL]), _("%d times"), pcity->steal);
@@ -1178,8 +1177,7 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
   ciil->updateTooltip(10, buf[GROWTH]);
 }
 
-governor_sliders::governor_sliders(QWidget *parent)
-    : QGroupBox(parent) 
+governor_sliders::governor_sliders(QWidget *parent) : QGroupBox(parent)
 {
   QStringList str_list;
   QSlider *slider;
@@ -1311,9 +1309,8 @@ void governor_sliders::update_sliders(struct cm_parameter &param)
 /************************************************************************/ /**
    Constructor for city_dialog, sets layouts, policies ...
  ****************************************************************************/
-city_dialog::city_dialog(QWidget *parent)
-    : QWidget(parent)
-      
+city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
+
 {
   QFont f = QApplication::font();
   QFont *small_font;
@@ -2926,16 +2923,16 @@ struct city *is_any_city_dialog_open()
   // some checks not to iterate cities
   if (!queen()->city_overlay->isVisible()) {
     return nullptr;
-}
+  }
   if (client_is_global_observer() || client_is_observer()) {
     return nullptr;
-}
+  }
 
   city_list_iterate(client.conn.playing->cities, pcity)
   {
     if (qtg_city_dialog_is_open(pcity)) {
       return pcity;
-}
+    }
   }
   city_list_iterate_end;
   return nullptr;
@@ -2947,7 +2944,7 @@ struct city *is_any_city_dialog_open()
 bool qtg_city_dialog_is_open(struct city *pcity)
 {
   return queen()->city_overlay->pcity == pcity
-      && queen()->city_overlay->isVisible();
+         && queen()->city_overlay->isVisible();
 }
 
 /************************************************************************/ /**
@@ -3198,7 +3195,7 @@ QVariant city_production_model::data(const QModelIndex &index,
 {
   if (!index.isValid()) {
     return QVariant();
-}
+  }
 
   if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
       && index.column() < columnCount()
@@ -3289,9 +3286,10 @@ bool city_production_model::setData(const QModelIndex &index,
                                     const QVariant &value, int role)
 {
   Q_UNUSED(value)
-  if (!index.isValid() || role != Qt::DisplayRole || role != Qt::ToolTipRole) {
+  if (!index.isValid() || role != Qt::DisplayRole
+      || role != Qt::ToolTipRole) {
     return false;
-}
+  }
 
   Q_UNREACHABLE();
   if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
@@ -3404,7 +3402,7 @@ bool production_widget::eventFilter(QObject *obj, QEvent *ev)
 
   if (obj != this) {
     return false;
-}
+  }
 
   if (ev->type() == QEvent::MouseButtonPress) {
     pw_rect.setTopLeft(pos());

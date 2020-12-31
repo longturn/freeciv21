@@ -235,7 +235,8 @@ public:
   city_production_model(struct city *pcity, bool f, bool su, bool sw,
                         bool sb, QObject *parent = 0);
   ~city_production_model() override;
-  inline int rowCount(const QModelIndex &index = QModelIndex()) const override
+  inline int
+  rowCount(const QModelIndex &index = QModelIndex()) const override
   {
     Q_UNUSED(index);
     return (qCeil(static_cast<float>(city_target_list.size()) / 3));
@@ -245,7 +246,8 @@ public:
     Q_UNUSED(parent);
     return 3;
   }
-  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+  QVariant data(const QModelIndex &index,
+                int role = Qt::DisplayRole) const override;
   bool setData(const QModelIndex &index, const QVariant &value,
                int role = Qt::DisplayRole) override;
   QPoint size_hint();
@@ -346,7 +348,7 @@ public:
   governor_sliders(QWidget *parent = 0);
   void update_sliders(struct cm_parameter &param);
   QCheckBox *cma_celeb_checkbox{nullptr};
-  QSlider *slider_tab[2 * O_LAST + 2] {nullptr};
+  QSlider *slider_tab[2 * O_LAST + 2]{nullptr};
 private slots:
   void cma_slider(int val);
   void cma_celebrate_changed(int val);
@@ -362,7 +364,8 @@ class city_dialog : public QWidget {
   Q_DISABLE_COPY(city_dialog);
   Ui::FormCityDlg ui;
   QPixmap *citizen_pixmap;
-  bool future_targets{false}, show_units{true}, show_wonders{true}, show_buildings{true};
+  bool future_targets{false}, show_units{true}, show_wonders{true},
+      show_buildings{true};
   int selected_row_p;
   city_label *lab_table[6];
 

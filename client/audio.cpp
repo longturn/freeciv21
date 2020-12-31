@@ -210,13 +210,13 @@ static const QString audiospec_fullname(const QString &audioset_name,
   const QString suffix = music ? MUSICSPEC_SUFFIX : SNDSPEC_SUFFIX;
   QString audioset_default =
       music ? QStringLiteral("stdmusic") : QStringLiteral("stdsounds");
-  const char *dname;
+  QString dname;
 
   QString fname = QStringLiteral("%1%2").arg(audioset_name, suffix);
   dname = fileinfoname(get_data_dirs(), qUtf8Printable(fname));
 
-  if (dname) {
-    return QString(dname);
+  if (!dname.isEmpty()) {
+    return dname;
   }
 
   if (audioset_name == audioset_default) {
@@ -340,7 +340,7 @@ void audio_real_init(const QString &soundset_name,
   if (!preferred_plugin_name.isEmpty()) {
     if (!audio_select_plugin(preferred_plugin_name)) {
       qInfo(_("Proceeding with sound support disabled."));
-}
+    }
     return;
   }
 
@@ -348,7 +348,7 @@ void audio_real_init(const QString &soundset_name,
   QString audio_str = QStringLiteral("sdl");
   if (audio_select_plugin(audio_str)) {
     return;
-}
+  }
 #endif
   qInfo(_("No real audio subsystem managed to initialize!"));
   qInfo(_("Perhaps there is some misconfiguration or bad permissions."));
@@ -585,10 +585,7 @@ void audio_stop_usage()
 /**********************************************************************/ /**
    Stop looping sound. Music should die down in a few seconds.
  **************************************************************************/
-double audio_get_volume()
-{
-  return plugins[selected_plugin].get_volume();
-}
+double audio_get_volume() { return plugins[selected_plugin].get_volume(); }
 
 /**********************************************************************/ /**
    Stop looping sound. Music should die down in a few seconds.

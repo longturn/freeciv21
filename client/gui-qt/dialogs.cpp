@@ -808,7 +808,7 @@ void races_dialog::ok_pressed()
 /***********************************************************************/ /**
    Default actions provider constructor
  ***************************************************************************/
-qdef_act::qdef_act()  {}
+qdef_act::qdef_act() {}
 
 /***********************************************************************/ /**
    Returns instance of qdef_act
@@ -1953,7 +1953,7 @@ static action_id get_non_targeted_action_id(action_id tgt_action_id)
 {
   /* Don't add an action mapping here unless the non targeted version is
    * selectable in the targeted version's target selection dialog. */
-  switch ((enum gen_action) tgt_action_id) {
+  switch (static_cast<enum gen_action>(tgt_action_id)) {
   case ACTION_SPY_TARGETED_SABOTAGE_CITY:
     return ACTION_SPY_SABOTAGE_CITY;
   case ACTION_SPY_TARGETED_SABOTAGE_CITY_ESC:
@@ -1976,7 +1976,7 @@ static action_id get_production_targeted_action_id(action_id tgt_action_id)
 {
   /* Don't add an action mapping here unless the non targeted version is
    * selectable in the targeted version's target selection dialog. */
-  switch ((enum gen_action) tgt_action_id) {
+  switch (static_cast<enum gen_action>(tgt_action_id)) {
   case ACTION_SPY_TARGETED_SABOTAGE_CITY:
     return ACTION_SPY_SABOTAGE_CITY_PRODUCTION;
   case ACTION_SPY_TARGETED_SABOTAGE_CITY_ESC:

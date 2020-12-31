@@ -850,10 +850,7 @@ struct nation_set_iter {
 /************************************************************************/ /**
    Implementation of iterator 'sizeof' function.
  ****************************************************************************/
-size_t nation_set_iter_sizeof()
-{
-  return sizeof(struct nation_set_iter);
-}
+size_t nation_set_iter_sizeof() { return sizeof(struct nation_set_iter); }
 
 /************************************************************************/ /**
    Implementation of iterator 'next' function.
@@ -1122,18 +1119,12 @@ struct iterator *nation_group_iter_init(struct nation_group_iter *it)
 /************************************************************************/ /**
    Initializes all nation set/group data.
  ****************************************************************************/
-void nation_sets_groups_init()
-{
-  num_nation_sets = num_nation_groups = 0;
-}
+void nation_sets_groups_init() { num_nation_sets = num_nation_groups = 0; }
 
 /************************************************************************/ /**
    Frees and resets all nation set/group data.
  ****************************************************************************/
-void nation_sets_groups_free()
-{
-  num_nation_sets = num_nation_groups = 0;
-}
+void nation_sets_groups_free() { num_nation_sets = num_nation_groups = 0; }
 
 /************************************************************************/ /**
    Return TRUE iff the editor is allowed to edit the player's nation in

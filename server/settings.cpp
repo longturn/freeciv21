@@ -3371,7 +3371,7 @@ bool setting_bool_validate(const struct setting *pset, const char *val,
 static const char *setting_bool_secfile_str(secfile_data_t data, int val)
 {
   const struct sset_val_name *name =
-      ((const struct setting *) data)->boolean.name(val);
+      (static_cast<const struct setting *>(data))->boolean.name(val);
 
   return (NULL != name ? name->support : NULL);
 }
@@ -3537,7 +3537,7 @@ char *setting_str_get(struct setting *pset)
 const char *setting_enum_secfile_str(secfile_data_t data, int val)
 {
   const struct sset_val_name *name =
-      ((const struct setting *) data)->enumerator.name(val);
+      (static_cast<const struct setting *>(data))->enumerator.name(val);
 
   return (NULL != name ? name->support : NULL);
 }
@@ -3626,12 +3626,12 @@ static bool set_enum_value(struct setting *pset, int val)
   case sizeof(char): {
     char *to_char = static_cast<char *>(pset->enumerator.pvalue);
 
-    *to_char = (char) val;
+    *to_char = static_cast<char>(val);
   } break;
   case sizeof(short): {
     short *to_short = static_cast<short *>(pset->enumerator.pvalue);
 
-    *to_short = (short) val;
+    *to_short = static_cast<short>(val);
   } break;
   default:
     return false;
@@ -3649,13 +3649,13 @@ int read_enum_value(const struct setting *pset)
 
   switch (pset->enumerator.store_size) {
   case sizeof(int):
-    val = *((int *) pset->enumerator.pvalue);
+    val = *(static_cast<int *>(pset->enumerator.pvalue));
     break;
   case sizeof(char):
-    val = *((char *) pset->enumerator.pvalue);
+    val = *(static_cast<char *>(pset->enumerator.pvalue));
     break;
   case sizeof(short):
-    val = *((short *) pset->enumerator.pvalue);
+    val = *(static_cast<short *>(pset->enumerator.pvalue));
     break;
   default:
     qCritical("Illegal enum store size %d, can't read value",
@@ -3717,7 +3717,7 @@ bool setting_enum_validate(const struct setting *pset, const char *val,
 const char *setting_bitwise_secfile_str(secfile_data_t data, int bit)
 {
   const struct sset_val_name *name =
-      ((const struct setting *) data)->bitwise.name(bit);
+      (static_cast<const struct setting *>(data))->bitwise.name(bit);
 
   return (NULL != name ? name->support : NULL);
 }
@@ -4172,8 +4172,8 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                 secfile_error());
     } else if (val != *pset->bitwise.pvalue) {
       if (NULL == pset->bitwise.validate
-          || pset->bitwise.validate((unsigned) val, NULL, reject_msg,
-                                    sizeof(reject_msg))) {
+          || pset->bitwise.validate(static_cast<unsigned>(val), NULL,
+                                    reject_msg, sizeof(reject_msg))) {
         *pset->bitwise.pvalue = val;
         qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
               setting_value_name(pset, true, buf, sizeof(buf)));

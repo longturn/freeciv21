@@ -132,7 +132,7 @@ bool sanity_check_server_setting_value_in_req(ssetv ssetval)
 
   /* TODO: use ssetv_setting_get() if setting value becomes multiplexed with
    * the server setting id. */
-  id = (server_setting_id) ssetval;
+  id = static_cast<server_setting_id>(ssetval);
   fc_assert_ret_val(server_setting_exists(id), false);
 
   if (server_setting_type_get(id) != SST_BOOL) {

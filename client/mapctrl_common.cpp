@@ -140,7 +140,8 @@ static void define_tiles_within_rectangle(bool append)
        */
       tile_to_canvas_pos(&x2, &y2, ptile);
 
-      if ((yy % 2) != 0 && ((rec_corner_x % W) ^ abs((int) x2 % W)) != 0) {
+      if ((yy % 2) != 0
+          && ((rec_corner_x % W) ^ abs(static_cast<int>(x2) % W)) != 0) {
         continue;
       }
 
