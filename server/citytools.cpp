@@ -1089,7 +1089,7 @@ bool transfer_city(struct player *ptaker, struct city *pcity,
   char old_city_name[MAX_LEN_CITYNAME];
   bv_imprs had_small_wonders;
   struct vision *old_vision, *new_vision;
-  struct unit_list *old_city_units = unit_list_new();
+  struct unit_list *old_city_units;
   struct player *pgiver = city_owner(pcity);
   struct tile *pcenter = city_tile(pcity);
   int saved_id = pcity->id;
@@ -1104,11 +1104,13 @@ bool transfer_city(struct player *ptaker, struct city *pcity,
   bool taker_had_no_cities = (city_list_size(ptaker->cities) == 0);
   bool new_extras;
   const int units_num = unit_list_size(pcenter->units);
-  bv_player *could_see_unit =
-      (units_num > 0 ? new bv_player[units_num] : NULL);
   int i;
 
   fc_assert_ret_val(pgiver != ptaker, true);
+
+  bv_player *could_see_unit =
+      (units_num > 0 ? new bv_player[units_num] : NULL);
+  old_city_units = unit_list_new();
 
   /* Remember what player see what unit. */
   i = 0;

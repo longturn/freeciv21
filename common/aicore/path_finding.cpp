@@ -832,6 +832,14 @@ static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
   struct pf_parameter *params;
   struct pf_normal_node *node;
 
+  if (NULL == parameter->get_costs) {
+    /* 'get_MC' callback must be set. */
+    fc_assert_ret_val(NULL != parameter->get_MC, NULL);
+
+    /* 'get_move_scope' callback must be set. */
+    fc_assert_ret_val(parameter->get_move_scope != NULL, NULL);
+  }
+
   pfnm = new pf_normal_map;
   base_map = &pfnm->base_map;
   params = &base_map->params;
@@ -843,14 +851,6 @@ static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
   /* Allocate the map. */
   pfnm->lattice = new pf_normal_node[MAP_INDEX_SIZE]();
   pfnm->queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
-
-  if (NULL == parameter->get_costs) {
-    /* 'get_MC' callback must be set. */
-    fc_assert_ret_val(NULL != parameter->get_MC, NULL);
-
-    /* 'get_move_scope' callback must be set. */
-    fc_assert_ret_val(parameter->get_move_scope != NULL, NULL);
-  }
 
   /* Copy parameters. */
   *params = *parameter;
