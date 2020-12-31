@@ -187,7 +187,8 @@ QString get_tooltip_unit(const struct unit_type *utype, bool ext)
       + QStringLiteral("</td><td>") + bold(QString(_("FirePower:"))) + " "
       + QString::number(utype->firepower).toHtmlEscaped()
       + QStringLiteral("</td><td>") + bold(QString(_("Vision:"))) + " "
-      + QString::number((int) sqrt((double) utype->vision_radius_sq))
+      + QString::number(static_cast<int>(sqrt(
+                            static_cast<double>(utype->vision_radius_sq))))
             .toHtmlEscaped()
       + obsolete_str
       + QStringLiteral("</td></tr></table><p style='white-space:pre'>");

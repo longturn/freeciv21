@@ -781,7 +781,7 @@ static size_t extract_sequence_text(const char *featured_text, QString &buf,
   /* Check sequence type. */
   for (buf_in++; QChar::isSpace(*buf_in); buf_in++) {
     ;
-}
+  }
 
   if (*buf_in == SEQ_END) {
     *seq_type = ST_STOP;
@@ -789,14 +789,14 @@ static size_t extract_sequence_text(const char *featured_text, QString &buf,
   } else {
     for (end--; QChar::isSpace(*end); end--) {
       ;
-}
+    }
 
     if (*end == SEQ_END) {
       *seq_type = ST_SINGLE;
 
       for (end--; QChar::isSpace(*end); end--) {
         ;
-}
+      }
     } else {
       *seq_type = ST_START;
     }

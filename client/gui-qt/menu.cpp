@@ -76,7 +76,7 @@ extern "C" void option_dialog_popup(const char *name,
 /**********************************************************************/ /**
    Constructor for units used in delayed orders
  **************************************************************************/
-qfc_units_list::qfc_units_list()  {}
+qfc_units_list::qfc_units_list() {}
 
 /**********************************************************************/ /**
    Adds givent unit to list
@@ -1355,7 +1355,7 @@ void mr_menu::update_airlift_menu()
 
   if (!initialized) {
     return;
-}
+  }
   airlift_menu->clear();
   if (client_is_observer()) {
     return;
@@ -1396,7 +1396,7 @@ void mr_menu::update_roads_menu()
 
   if (!initialized) {
     return;
-}
+  }
   QList<QAction *> actions = roads_menu->actions();
   for (auto *act : qAsConst(actions)) {
     removeAction(act);
@@ -1446,7 +1446,7 @@ void mr_menu::update_bases_menu()
   bool enabled = false;
   if (!initialized) {
     return;
-}
+  }
 
   QList<QAction *> actions = bases_menu->actions();
   for (auto *act : qAsConst(actions)) {

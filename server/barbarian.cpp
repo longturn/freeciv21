@@ -569,8 +569,8 @@ static void try_summon_barbarians()
 
   /* do not harass small civs - in practice: do not uprise at the beginning
    */
-  if ((int) fc_rand(30) + 1 > (int) city_list_size(victim->cities)
-                                  * (game.server.barbarianrate - 1)
+  if (static_cast<int>(fc_rand(30)) + 1
+          > city_list_size(victim->cities) * (game.server.barbarianrate - 1)
       || fc_rand(100) > get_player_bonus(victim, EFT_CIVIL_WAR_CHANCE)) {
     return;
   }

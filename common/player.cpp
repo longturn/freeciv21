@@ -299,7 +299,7 @@ struct player_diplstate *player_diplstate_get(const struct player *plr1,
 
   fc_assert_ret_val(*diplstate_slot != NULL, NULL);
 
-  return (struct player_diplstate *) *diplstate_slot;
+  return const_cast<struct player_diplstate *>(*diplstate_slot);
 }
 
 /*******************************************************************/ /**

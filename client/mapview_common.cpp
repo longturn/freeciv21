@@ -624,7 +624,7 @@ void set_mapview_origin(float gui_x0, float gui_y0)
     int start_x = mapview.gui_x0, start_y = mapview.gui_y0;
     float diff_x, diff_y;
     double timing_sec =
-        (double) gui_options.smooth_center_slide_msec / 1000.0;
+        static_cast<double>(gui_options.smooth_center_slide_msec) / 1000.0;
     double currtime;
     int frames = 0;
 
@@ -1229,8 +1229,10 @@ static int trade_route_to_canvas_lines(const struct tile *ptile1,
   map_to_gui_pos(tileset, &lines[0].width, &lines[0].height, dx, dy);
 
   /* FIXME: Remove these casts. */
-  tile_to_canvas_pos(&lines[0].x, &lines[0].y, (struct tile *) ptile1);
-  tile_to_canvas_pos(&lines[1].x, &lines[1].y, (struct tile *) ptile2);
+  tile_to_canvas_pos(&lines[0].x, &lines[0].y,
+                     const_cast<struct tile *>(ptile1));
+  tile_to_canvas_pos(&lines[1].x, &lines[1].y,
+                     const_cast<struct tile *>(ptile2));
 
   if (lines[1].x - lines[0].x == lines[0].width
       && lines[1].y - lines[0].y == lines[0].height) {
@@ -1814,7 +1816,8 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
       || tile_visible_mapcanvas(dest_tile)) {
     float start_x, start_y;
     float canvas_dx, canvas_dy;
-    double timing_sec = (double) gui_options.smooth_move_unit_msec / 1000.0;
+    double timing_sec =
+        static_cast<double>(gui_options.smooth_move_unit_msec) / 1000.0;
     double mytime;
 
     fc_assert(gui_options.smooth_move_unit_msec > 0);
@@ -2447,7 +2450,7 @@ void mapdeco_set_highlight(const struct tile *ptile, bool highlight)
 
   if (!changed) {
     /* FIXME: Remove the cast. */
-    refresh_tile_mapcanvas((struct tile *) ptile, true, false);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), true, false);
   }
 }
 
@@ -2495,7 +2498,7 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
 
   if (!changed) {
     /* FIXME: Remove the cast. */
-    refresh_tile_mapcanvas((struct tile *) ptile, false, false);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
   }
 }
 
@@ -2550,8 +2553,9 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir)
 
   if (changed) {
     /* FIXME: Remove cast. */
-    refresh_tile_mapcanvas((struct tile *) ptile, false, false);
-    refresh_tile_mapcanvas((struct tile *) ptile_dest, false, false);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile_dest), false,
+                           false);
   }
 }
 
@@ -2581,10 +2585,10 @@ void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir)
 
   if (changed) {
     /* FIXME: Remove the casts. */
-    refresh_tile_mapcanvas((struct tile *) ptile, false, false);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
     ptile = mapstep(&(wld.map), ptile, dir);
     if (ptile != NULL) {
-      refresh_tile_mapcanvas((struct tile *) ptile, false, false);
+      refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
     }
   }
 }

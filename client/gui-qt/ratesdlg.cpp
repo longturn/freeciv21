@@ -433,10 +433,10 @@ void fc_double_edge::mouseMoveEvent(QMouseEvent *event)
               - cursor_size;
       if (x_min < 0) {
         x_min = 0;
-}
+      }
       if (x_min > width()) {
         x_min = width();
-}
+      }
       current_min = (x_min * 10 / (width() - 1));
       if (current_min > max_rates) {
         current_min = max_rates;

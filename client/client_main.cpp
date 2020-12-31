@@ -1300,7 +1300,7 @@ static enum sset_type client_ss_type_get(server_setting_id id)
 
   /* Exploit the fact that each server setting type value corresponds to the
    * client option type value with the same meaning. */
-  return (enum sset_type) opt_type;
+  return static_cast<enum sset_type>(opt_type);
 }
 
 /**********************************************************************/ /**

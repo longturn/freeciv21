@@ -114,13 +114,13 @@ ssetv ssetv_from_values(server_setting_id setting, int value)
 
   /* Only Boolean settings can be supported unless the setting value is
    * encoded with the setting id. */
-  if (server_setting_type_get((server_setting_id) setting) != SST_BOOL) {
+  if (server_setting_type_get(setting) != SST_BOOL) {
     fc_assert(server_setting_type_get((server_setting_id) setting)
               == SST_BOOL);
     return SSETV_NONE;
   }
 
-  return (ssetv) setting;
+  return static_cast<ssetv>(setting);
 }
 
 /***********************************************************************/ /**
@@ -132,7 +132,7 @@ server_setting_id ssetv_setting_get(ssetv enc)
    * encoded with the setting id. */
   fc_assert(server_setting_type_get((server_setting_id) enc) == SST_BOOL);
 
-  return (server_setting_id) enc;
+  return static_cast<server_setting_id>(enc);
 }
 
 /***********************************************************************/ /**
@@ -152,11 +152,12 @@ int ssetv_value_get(ssetv enc)
  ***************************************************************************/
 ssetv ssetv_by_rule_name(const char *name)
 {
-  ssetv val = (ssetv) server_setting_by_name(name);
+  ssetv val = static_cast<ssetv>(server_setting_by_name(name));
 
   /* Only Boolean settings can be supported unless the setting value is
    * encoded with the setting id. */
-  if (server_setting_type_get((server_setting_id) val) != SST_BOOL) {
+  if (server_setting_type_get(static_cast<server_setting_id>(val))
+      != SST_BOOL) {
     return SSETV_NONE;
   }
 
@@ -172,7 +173,7 @@ const char *ssetv_rule_name(ssetv val)
    * encoded with the setting id. */
   fc_assert(server_setting_type_get((server_setting_id) val) == SST_BOOL);
 
-  return server_setting_name_get((server_setting_id) val);
+  return server_setting_name_get(static_cast<server_setting_id>(val));
 }
 
 /***********************************************************************/ /**
@@ -188,9 +189,10 @@ const char *ssetv_human_readable(ssetv val, bool present)
 
   /* TRANS: the first %s is a server setting, the second %s is it's value.
    * Example: killstack is enabled */
-  out = QString(_("%1 is %2"))
-            .arg(server_setting_name_get((server_setting_id) val),
-                 present ? _("enabled") : _("disabled"));
+  out =
+      QString(_("%1 is %2"))
+          .arg(server_setting_name_get(static_cast<server_setting_id>(val)),
+               present ? _("enabled") : _("disabled"));
 
   return qUtf8Printable(out);
 }
@@ -205,5 +207,5 @@ bool ssetv_setting_has_value(ssetv val)
   fc_assert_ret_val(
       server_setting_type_get((server_setting_id) val) == SST_BOOL, false);
 
-  return server_setting_value_bool_get((server_setting_id) val);
+  return server_setting_value_bool_get(static_cast<server_setting_id>(val));
 }

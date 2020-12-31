@@ -625,7 +625,8 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
   case EFT_MAX_TRADE_ROUTES:
     trait = ai_trait_get_value(TRAIT_TRADER, pplayer);
     v += amount
-         * (pow(2.0, (double) get_city_bonus(pcity, EFT_TRADE_REVENUE_BONUS)
+         * (pow(2.0, static_cast<double>(
+                         get_city_bonus(pcity, EFT_TRADE_REVENUE_BONUS))
                          / 1000.0)
             + c)
          * trait / TRAIT_DEFAULT_VALUE;
@@ -670,7 +671,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     adv_want move_fragment_cost = MIN(MAX_MOVE_FRAGS, amount);
 
     /* Lose all movement => 1. */
-    v -= move_fragment_cost / (adv_want) MAX_MOVE_FRAGS;
+    v -= move_fragment_cost / static_cast<adv_want>(MAX_MOVE_FRAGS);
   } break;
   case EFT_INFRA_POINTS:
     v += amount * adv->infra_priority;

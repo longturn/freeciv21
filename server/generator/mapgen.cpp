@@ -1268,16 +1268,19 @@ static void print_mapgen_map()
       qDebug("  %-20s : %6d %5.1f%% (ocean: %5.1f%%)",
              terrain_rule_name(pterrain),
              terrain_counts[terrain_index(pterrain)],
-             (float) terrain_counts[terrain_index(pterrain)] * 100 / total,
-             (float) terrain_counts[terrain_index(pterrain)] * 100 / ocean);
+             static_cast<float>(terrain_counts[terrain_index(pterrain)])
+                 * 100 / total,
+             static_cast<float>(terrain_counts[terrain_index(pterrain)])
+                 * 100 / ocean);
     } else {
       fc_assert_ret_msg(total - ocean, "Div by zero");
       qDebug("  %-20s : %6d %5.1f%% (land:  %5.1f%%)",
              terrain_rule_name(pterrain),
              terrain_counts[terrain_index(pterrain)],
-             (float) terrain_counts[terrain_index(pterrain)] * 100 / total,
-             (float) terrain_counts[terrain_index(pterrain)] * 100
-                 / (total - ocean));
+             static_cast<float>(terrain_counts[terrain_index(pterrain)])
+                 * 100 / total,
+             static_cast<float>(terrain_counts[terrain_index(pterrain)])
+                 * 100 / (total - ocean));
     }
   }
   terrain_type_iterate_end;
@@ -2152,11 +2155,11 @@ static bool make_island(int islemass, int starters,
     i = river_pct + mountain_pct + desert_pct + forest_pct + swamp_pct;
     i = (i <= 90) ? 100 : i * 11 / 10;
     tilefactor = pstate->totalmass / i;
-    riverbuck = -(long int) fc_rand(pstate->totalmass);
-    mountbuck = -(long int) fc_rand(pstate->totalmass);
-    desertbuck = -(long int) fc_rand(pstate->totalmass);
-    forestbuck = -(long int) fc_rand(pstate->totalmass);
-    swampbuck = -(long int) fc_rand(pstate->totalmass);
+    riverbuck = -static_cast<long int>(fc_rand(pstate->totalmass));
+    mountbuck = -static_cast<long int>(fc_rand(pstate->totalmass));
+    desertbuck = -static_cast<long int>(fc_rand(pstate->totalmass));
+    forestbuck = -static_cast<long int>(fc_rand(pstate->totalmass));
+    swampbuck = -static_cast<long int>(fc_rand(pstate->totalmass));
     lastplaced = pstate->totalmass;
   } else {
     /* makes the islands this big */

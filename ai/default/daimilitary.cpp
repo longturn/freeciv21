@@ -102,7 +102,8 @@ struct unit_type *dai_choose_defender_versus(struct city *pcity,
       /* Greg's algorithm. loss is the average number of health lost by
        * defender. If loss > attacker's hp then we should win the fight,
        * which is always a good thing, since we avoid shield loss. */
-      loss = (double) defense * punittype->hp * fpdef / (attack * fpatt);
+      loss = static_cast<double>(defense) * punittype->hp * fpdef
+             / (attack * fpatt);
       want = (loss + MAX(0, loss - attacker->hp)) / cost;
 
       if (want > best || (want == best && cost <= best_cost)) {
@@ -728,7 +729,7 @@ int dai_unit_defence_desirability(struct ai_type *ait,
   /* Sea and helicopters often have their firepower set to 1 when
    * defending. We can't have such units as defenders. */
   if (!utype_has_flag(punittype, UTYF_BADCITYDEFENDER)
-      && !((struct unit_type_ai *) utype_ai_data(punittype, ait))
+      && !(static_cast<struct unit_type_ai *>(utype_ai_data(punittype, ait)))
               ->firepower1) {
     /* Sea units get 1 firepower in Pearl Harbour,
      * and helicopters very bad against fighters */
@@ -902,7 +903,7 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
 
   if (best <= 0) {
     best = 1; /* Avoid division by zero below. */
-}
+  }
 
   /* Update tech_want for appropriate techs for units we want to build. */
   simple_ai_unit_type_iterate(punittype)
@@ -1103,7 +1104,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
 
           if (owner_size <= FINISH_HIM_CITY_COUNT) {
             finishing_factor =
-                (2 - (float) owner_size / FINISH_HIM_CITY_COUNT);
+                (2 - static_cast<float>(owner_size) / FINISH_HIM_CITY_COUNT);
           }
           desire = acity_data->worth * 10 * finishing_factor;
         } else {
@@ -1313,7 +1314,8 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
       float finishing_factor = 1;
 
       if (owner_size <= FINISH_HIM_CITY_COUNT) {
-        finishing_factor = (2 - (float) owner_size / FINISH_HIM_CITY_COUNT);
+        finishing_factor =
+            (2 - static_cast<float>(owner_size) / FINISH_HIM_CITY_COUNT);
       }
       benefit += acity_data->worth * finishing_factor / 3;
     }

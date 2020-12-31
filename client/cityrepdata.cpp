@@ -658,9 +658,10 @@ static const char *cr_entry_plague_risk(const struct city *pcity,
   if (!game.info.illness_on) {
     fc_snprintf(buf, sizeof(buf), " -.-");
   } else {
-    fc_snprintf(buf, sizeof(buf), "%4.1f",
-                (float) city_illness_calc(pcity, NULL, NULL, NULL, NULL)
-                    / 10.0);
+    fc_snprintf(
+        buf, sizeof(buf), "%4.1f",
+        static_cast<float>(city_illness_calc(pcity, NULL, NULL, NULL, NULL))
+            / 10.0);
   }
   return buf;
 }

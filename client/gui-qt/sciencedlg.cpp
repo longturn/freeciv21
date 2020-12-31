@@ -74,10 +74,7 @@ research_diagram::~research_diagram()
 /************************************************************************/ /**
    Constructor for req_tooltip_help
  ****************************************************************************/
-req_tooltip_help::req_tooltip_help()
-     
-{
-}
+req_tooltip_help::req_tooltip_help() {}
 
 /************************************************************************/ /**
    Create list of rectangles for showing tooltips
@@ -378,8 +375,7 @@ QSize research_diagram::size()
 /************************************************************************/ /**
    Consctructor for science_report
  ****************************************************************************/
-science_report::science_report()
-    : QWidget() 
+science_report::science_report() : QWidget()
 {
   QSize size;
   QSizePolicy size_expanding_policy(QSizePolicy::Expanding,

@@ -247,7 +247,7 @@ fc_shortcuts *fc_shortcuts::sc()
 {
   if (!m_instance) {
     m_instance = new fc_shortcuts;
-}
+  }
   return m_instance;
 }
 
@@ -469,10 +469,7 @@ QString button_name(Qt::MouseButton bt)
 /**********************************************************************/ /**
    Constructor and destructor for button setting shortcut
  **************************************************************************/
-fc_sc_button::fc_sc_button() : QPushButton() 
-{
-  sc = new fc_shortcut;
-}
+fc_sc_button::fc_sc_button() : QPushButton() { sc = new fc_shortcut; }
 fc_sc_button::~fc_sc_button() { delete sc; }
 
 /**********************************************************************/ /**

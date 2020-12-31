@@ -49,8 +49,7 @@ void reduce_mod(int &mod, int &val)
     val++;
     mod--;
   }
-
-  }
+}
 
 /***********************************************************************/ /**
    Sidewidget constructor

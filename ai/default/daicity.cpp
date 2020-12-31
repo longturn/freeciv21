@@ -713,7 +713,7 @@ static int unit_food_upkeep(struct unit *punit)
 
   if (punit->id != 0 && punit->homecity == 0) {
     upkeep = 0; /* thanks, Peter */
-}
+  }
 
   return upkeep;
 }
@@ -781,7 +781,7 @@ static void contemplate_terrain_improvements(struct ai_type *ait,
   Continent_id place = tile_continent(pcenter);
   struct ai_city *city_data = def_ai_city_data(pcity, ait);
   struct dai_private_data *pprivate =
-      (struct dai_private_data *) ait->pprivate;
+      static_cast<struct dai_private_data *>(ait->pprivate);
 
   if (!pprivate->contemplace_workers) {
     /* AI type uses custom method to set worker want and type. */

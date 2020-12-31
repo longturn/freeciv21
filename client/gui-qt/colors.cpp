@@ -18,13 +18,13 @@
 
 research_color *research_color::m_instance = 0;
 
-research_color::research_color()  {}
+research_color::research_color() {}
 
 research_color *research_color::i()
 {
   if (!m_instance) {
     m_instance = new research_color;
-}
+  }
   return m_instance;
 }
 

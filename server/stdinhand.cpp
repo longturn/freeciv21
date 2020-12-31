@@ -2934,8 +2934,8 @@ static bool set_command(struct connection *caller, char *str, bool check)
     return ret;
   }
 
-  pset = validate_setting_arg(CMD_SET, caller,
-                              (char *) qUtf8Printable(args.at(0)));
+  pset = validate_setting_arg(
+      CMD_SET, caller, const_cast<char *>(qUtf8Printable(args.at(0))));
 
   if (!pset) {
     /* Reason already reported. */
@@ -4717,7 +4717,7 @@ static bool surrender_command(struct connection *caller, char *str,
 static const char *reset_accessor(int i)
 {
   i = CLIP(0, i, reset_args_max());
-  return reset_args_name((enum reset_args) i);
+  return reset_args_name(static_cast<enum reset_args>(i));
 }
 
 /**********************************************************************/ /**
@@ -4879,7 +4879,7 @@ static bool default_command(struct connection *caller, char *arg, bool check)
 static const char *lua_accessor(int i)
 {
   i = CLIP(0, i, lua_args_max());
-  return lua_args_name((enum lua_args) i);
+  return lua_args_name(static_cast<enum lua_args>(i));
 }
 
 /**********************************************************************/ /**
@@ -5066,7 +5066,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
 static const char *delegate_accessor(int i)
 {
   i = CLIP(0, i, delegate_args_max());
-  return delegate_args_name((enum delegate_args) i);
+  return delegate_args_name(static_cast<enum delegate_args>(i));
 }
 
 /**********************************************************************/ /**
@@ -5570,7 +5570,7 @@ static const char *delegate_player_str(struct player *pplayer, bool observer)
 static const char *mapimg_accessor(int i)
 {
   i = CLIP(0, i, mapimg_args_max());
-  return mapimg_args_name((enum mapimg_args) i);
+  return mapimg_args_name(static_cast<enum mapimg_args>(i));
 }
 
 /**********************************************************************/ /**
@@ -5880,7 +5880,7 @@ static bool aicmd_command(struct connection *caller, char *arg, bool check)
 static const char *fcdb_accessor(int i)
 {
   i = CLIP(0, i, fcdb_args_max());
-  return fcdb_args_name((enum fcdb_args) i);
+  return fcdb_args_name(static_cast<enum fcdb_args>(i));
 }
 
 /**********************************************************************/ /**
@@ -6340,7 +6340,8 @@ static void show_help_command(struct connection *caller,
     size_t synlen = qstrlen(syn);
     char prefix[40];
 
-    fc_snprintf(prefix, sizeof(prefix), "%*s", (int) synlen, " ");
+    fc_snprintf(prefix, sizeof(prefix), "%*s", static_cast<int>(synlen),
+                " ");
     cmd_reply_prefix(help_cmd, caller, C_COMMENT, prefix, "%s%s", syn,
                      command_synopsis(cmd));
   }
@@ -6464,7 +6465,7 @@ static const char *helparg_accessor(int i)
 
   i -= CMD_NUM;
   if (i < HELP_GENERAL_COUNT) {
-    return help_general_args_name((enum help_general_args) i);
+    return help_general_args_name(static_cast<enum help_general_args>(i));
   }
 
   i -= HELP_GENERAL_COUNT;
@@ -6932,7 +6933,7 @@ static void show_colors(struct connection *caller)
 static const char *list_accessor(int i)
 {
   i = CLIP(0, i, list_args_max());
-  return list_args_name((enum list_args) i);
+  return list_args_name(static_cast<enum list_args>(i));
 }
 
 /**********************************************************************/ /**
@@ -7343,7 +7344,7 @@ static bool is_command(int start)
   if (contains_str_before_start(start, command_name_by_number(CMD_HELP),
                                 false)) {
     return true;
-}
+  }
 
   /* if there is only it is also OK */
   str_itr = rl_line_buffer;

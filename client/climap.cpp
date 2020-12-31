@@ -108,16 +108,18 @@ struct tile *client_city_tile(const struct city *pcity)
         num = 1;
       } else {
         num++;
-        base_map_distance_vector(&dx, &dy, (int) x, (int) y, tile_x, tile_y);
-        x += (double) dx / num;
-        y += (double) dy / num;
+        base_map_distance_vector(&dx, &dy, static_cast<int>(x),
+                                 static_cast<int>(y), tile_x, tile_y);
+        x += static_cast<double>(dx) / num;
+        y += static_cast<double>(dy) / num;
       }
     }
   }
   whole_map_iterate_end;
 
   if (0 < num) {
-    return map_pos_to_tile(&(wld.map), (int) x, (int) y);
+    return map_pos_to_tile(&(wld.map), static_cast<int>(x),
+                           static_cast<int>(y));
   } else {
     return NULL;
   }

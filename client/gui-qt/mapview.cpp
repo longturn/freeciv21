@@ -139,7 +139,7 @@ void draw_calculated_trade_routes(QPainter *painter)
 /**********************************************************************/ /**
    Constructor for map
  **************************************************************************/
-map_view::map_view() : QWidget() 
+map_view::map_view() : QWidget()
 {
   menu_click = false;
   cursor = -1;
@@ -677,7 +677,7 @@ info_tile *info_tile::i(struct tile *p)
 {
   if (!m_instance && p) {
     m_instance = new info_tile(p, queen()->mapview_wdg);
-}
+  }
   return m_instance;
 }
 

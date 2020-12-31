@@ -63,7 +63,7 @@ char *capitalized_string(const char *str)
   fc_strlcpy(result, str, len + 1);
 
   if (autocap) {
-    if ((unsigned char) result[0] < 128) {
+    if (static_cast<unsigned char>(result[0]) < 128) {
       result[0] = QChar::toUpper(result[0]);
     }
   }

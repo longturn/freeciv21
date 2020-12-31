@@ -4646,7 +4646,7 @@ void handle_unit_action_answer(int actor_id, int target_id, int cost,
     return;
   }
 
-  switch ((enum gen_action) action_type) {
+  switch (static_cast<enum gen_action>(action_type)) {
   case ACTION_SPY_BRIBE_UNIT:
     if (punit && client.conn.playing && is_human(client.conn.playing)) {
       if (disturb_player) {
@@ -4731,7 +4731,7 @@ static action_id auto_attack_act(const struct act_prob *act_probs)
   action_iterate(act)
   {
     if (action_prob_possible(act_probs[act])) {
-      switch ((enum gen_action) act) {
+      switch (static_cast<enum gen_action>(act)) {
       case ACTION_DISBAND_UNIT:
       case ACTION_FORTIFY:
       case ACTION_CONVERT:

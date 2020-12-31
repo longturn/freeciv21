@@ -710,7 +710,7 @@ char *user_username(char *buf, size_t bufsz)
 #ifdef ALWAYS_ROOT
   fc_strlcpy(buf, "name", bufsz);
 #else
-  fc_snprintf(buf, bufsz, "name%d", (int) getuid());
+  fc_snprintf(buf, bufsz, "name%d", static_cast<int>(getuid()));
 #endif
   qDebug("fake username is %s", buf);
   fc_assert(is_ascii_name(buf));
@@ -1933,7 +1933,7 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
   const char *const cmax = cformat + sizeof(cformat) - 2;
   int i, j;
 
-  if ((size_t) -1 == sequences_num) {
+  if (static_cast<size_t>(-1) == sequences_num) {
     /* Find the number of sequences. */
     sequences_num = 0;
     for (pseq = sequences; CF_LAST != pseq->type; pseq++) {

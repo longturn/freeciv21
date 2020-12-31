@@ -107,7 +107,7 @@ static void dai_manage_spaceship(struct player *pplayer)
           && (pplayer->spaceship.components == NUM_SS_COMPONENTS)
           && (pplayer->spaceship.modules == NUM_SS_MODULES)) {
         handle_spaceship_launch(pplayer);
-}
+      }
     }
   }
 }

@@ -42,7 +42,8 @@ struct city;
 template <class Key, class T> class QMap;
 
 class city_sort_model : public QSortFilterProxyModel {
-  bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
+  bool lessThan(const QModelIndex &left,
+                const QModelIndex &right) const override;
 };
 
 /***************************************************************************
@@ -90,7 +91,8 @@ class city_model : public QAbstractListModel {
 public:
   city_model(QObject *parent = 0);
   ~city_model() override;
-  inline int rowCount(const QModelIndex &index = QModelIndex()) const override
+  inline int
+  rowCount(const QModelIndex &index = QModelIndex()) const override
   {
     Q_UNUSED(index);
     return city_list.size();
@@ -100,7 +102,8 @@ public:
     Q_UNUSED(parent);
     return NUM_CREPORT_COLS;
   }
-  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+  QVariant data(const QModelIndex &index,
+                int role = Qt::DisplayRole) const override;
   bool setData(const QModelIndex &index, const QVariant &value,
                int role = Qt::DisplayRole) override;
   QVariant headerData(int section, Qt::Orientation orientation,

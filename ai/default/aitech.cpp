@@ -206,8 +206,7 @@ static void dai_select_tech(struct ai_type *ait, struct player *pplayer,
   if (choice && choice->choice == A_UNSET) {
     choice->choice = presearch->researching;
   }
-
-  }
+}
 
 /**********************************************************************/ /**
    Calculates want for some techs by actually adding the tech and

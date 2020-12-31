@@ -158,7 +158,8 @@ static int dai_evaluate_tile_for_air_attack(struct unit *punit,
     victim_cost -= unit_build_shield_cost_base(punit);
   }
 
-  unit_attack = (int) (PROB_MULTIPLIER * unit_win_chance(punit, pdefender));
+  unit_attack =
+      static_cast<int>(PROB_MULTIPLIER * unit_win_chance(punit, pdefender));
 
   victim_defence = PROB_MULTIPLIER - unit_attack;
 

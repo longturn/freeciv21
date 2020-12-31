@@ -217,11 +217,11 @@ QVariant plr_model::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid()) {
     return QVariant();
-}
+  }
   if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
       && index.column() < columnCount()) {
     return plr_list[index.row()]->data(index.column(), role);
-}
+  }
   return QVariant();
 }
 
@@ -249,7 +249,7 @@ bool plr_model::setData(const QModelIndex &index, const QVariant &value,
 {
   if (!index.isValid() || role != Qt::DisplayRole) {
     return false;
-}
+  }
   if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
       && index.column() < columnCount()) {
     bool change =
@@ -386,7 +386,7 @@ void plr_widget::display_header_menu(const QPoint)
     setColumnHidden(col, !isColumnHidden(col));
     if (!isColumnHidden(col) && columnWidth(col) <= 5) {
       setColumnWidth(col, 100);
-}
+    }
   });
 
   hideshow_column->popup(QCursor::pos());

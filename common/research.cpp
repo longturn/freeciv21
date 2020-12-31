@@ -942,7 +942,7 @@ int research_total_bulbs_required(const struct research *presearch,
   if (0 == members) {
     /* There is no more alive players for this research, no need to apply
      * complicated modifiers. */
-    return base_cost * (double) game.info.sciencebox / 100.0;
+    return base_cost * static_cast<double>(game.info.sciencebox) / 100.0;
   }
   base_cost = total_cost / members;
 
@@ -1057,7 +1057,7 @@ int research_total_bulbs_required(const struct research *presearch,
   research_players_iterate_end;
   base_cost = total_cost / members;
 
-  base_cost *= (double) game.info.sciencebox / 100.0;
+  base_cost *= static_cast<double>(game.info.sciencebox) / 100.0;
 
   return MAX(base_cost, 1);
 }
@@ -1118,14 +1118,14 @@ int player_tech_upkeep(const struct player *pplayer)
     if (0 < f) {
       /* Upkeep cost for future techs (f) are calculated using style 0:
        * sum_t^(t+f) x = (f * (2 * t + f + 1) + 2 * t) / 2 */
-      tech_upkeep += (double) (game.info.base_tech_cost
-                               * (f * (2 * t + f + 1) + 2 * t) / 2);
+      tech_upkeep += static_cast<double>(
+          game.info.base_tech_cost * (f * (2 * t + f + 1) + 2 * t) / 2);
     }
     break;
   }
 
   tech_upkeep *= total_research_factor / members;
-  tech_upkeep *= (double) game.info.sciencebox / 100.0;
+  tech_upkeep *= static_cast<double>(game.info.sciencebox) / 100.0;
   /* We only want to calculate the upkeep part of one player, not the
    * whole team! */
   tech_upkeep /= members;
@@ -1150,7 +1150,7 @@ int player_tech_upkeep(const struct player *pplayer)
 
   log_debug("[%s (%d)] tech upkeep: %d", player_name(pplayer),
             player_number(pplayer), (int) tech_upkeep);
-  return (int) tech_upkeep;
+  return static_cast<int>(tech_upkeep);
 }
 
 /************************************************************************/ /**

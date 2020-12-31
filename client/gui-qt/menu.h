@@ -196,7 +196,7 @@ public:
   void execute_shortcut(int sid);
   QString shortcut_exist(fc_shortcut *fcs);
   QString shortcut_2_menustring(int sid);
-  QAction *minimap_status  = nullptr;
+  QAction *minimap_status = nullptr;
   QAction *scale_fonts_status = nullptr;
   QAction *lock_status = nullptr;
   QAction *osd_status = nullptr;

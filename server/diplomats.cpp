@@ -1835,7 +1835,7 @@ static bool diplomat_success_vs_defender(struct unit *pattacker,
                                        NULL, NULL, EFT_SPY_RESISTANT)
             / 100;
 
-  return (int) fc_rand(100) < chance;
+  return static_cast<int>(fc_rand(100)) < chance;
 }
 
 /************************************************************************/ /**

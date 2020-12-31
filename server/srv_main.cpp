@@ -539,7 +539,7 @@ bool check_for_game_over()
       const struct player_list *members;
       bool win;
 
-      if (game.info.year < (int) spaceship_arrival(pplayer)) {
+      if (game.info.year < static_cast<int>(spaceship_arrival(pplayer))) {
         /* We are into the future arrivals */
         break;
       }
@@ -606,7 +606,7 @@ bool check_for_game_over()
       /* Advance the calendar in a throwaway copy of game.info. */
       game_next_year(&next_info);
 
-      if (next_info.year < (int) spaceship_arrival(pplayer)) {
+      if (next_info.year < static_cast<int>(spaceship_arrival(pplayer))) {
         /* Even further in the future */
         break;
       }
@@ -1336,8 +1336,9 @@ void begin_phase(bool is_new_phase)
 
   sanity_check();
 
-  game.tinfo.last_turn_change_time = (float) game.server.turn_change_time;
-  game.tinfo.seconds_to_phasedone = (double) current_turn_timeout();
+  game.tinfo.last_turn_change_time = game.server.turn_change_time;
+  game.tinfo.seconds_to_phasedone =
+      static_cast<double>(current_turn_timeout());
   game.server.phase_timer =
       timer_renew(game.server.phase_timer, TIMER_USER, TIMER_ACTIVE);
   timer_start(game.server.phase_timer);
@@ -2043,14 +2044,15 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
   }
 
   if (type == PACKET_SERVER_JOIN_REQ) {
-    return handle_login_request(pconn,
-                                (struct packet_server_join_req *) packet);
+    return handle_login_request(
+        pconn, static_cast<struct packet_server_join_req *>(packet));
   }
 
   /* May be received on a non-established connection. */
   if (type == PACKET_AUTHENTICATION_REPLY) {
     return auth_handle_reply(
-        pconn, ((struct packet_authentication_reply *) packet)->password);
+        pconn, (static_cast<struct packet_authentication_reply *>(packet))
+                   ->password);
   }
 
   if (type == PACKET_CONN_PONG) {
@@ -2245,7 +2247,7 @@ void update_nations_with_startpos()
         for (auto *psp : qAsConst(*wld.map.startpos_table)) {
           if (psp->exclude) {
             continue;
-}
+          }
           if (startpos_nation_allowed(psp, pnation)) {
             /* There is at least one start position that allows this nation,
              * so allow it to be picked.
@@ -2628,7 +2630,7 @@ static void generate_players()
     for (auto *psp : qAsConst(*wld.map.startpos_table)) {
       if (psp->exclude) {
         continue;
-}
+      }
       if (startpos_allows_all(psp)) {
         continue;
       }
@@ -3208,11 +3210,7 @@ void server_game_free()
    Initialize client specific functions.
  **************************************************************************/
 struct color;
-void server_gui_color_free(QColor *pcolor)
-{
-  fc_assert_ret(pcolor == NULL);
-
-  }
+void server_gui_color_free(QColor *pcolor) { fc_assert_ret(pcolor == NULL); }
 
 /**********************************************************************/ /**
    Returns the id of the city the player map of 'pplayer' has at 'ptile' or

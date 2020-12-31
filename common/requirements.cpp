@@ -1278,7 +1278,7 @@ static bool player_has_ever_built(const struct player *pplayer,
 {
   if (is_wonder(building)) {
     return (wonder_is_built(pplayer, building)
-                    || wonder_is_lost(pplayer, building));
+            || wonder_is_lost(pplayer, building));
   } else {
     qCritical("Player-ranged requirements are only supported for wonders.");
     return false;

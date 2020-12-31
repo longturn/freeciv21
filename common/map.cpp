@@ -887,7 +887,7 @@ static bool restrict_infra(const struct player *pplayer,
   }
 
   return (plr1 && pplayers_at_war(plr1, pplayer))
-      || (plr2 && pplayers_at_war(plr2, pplayer));
+         || (plr2 && pplayers_at_war(plr2, pplayer));
 }
 
 /*******************************************************************/ /**
@@ -1064,7 +1064,7 @@ struct tile *rand_neighbour(const struct civ_map *nmap,
   /* This clever loop by Trent Piepho will take no more than
    * 8 tries to find a valid direction. */
   for (n = 8; n > 0; n--) {
-    enum direction8 choice = (enum direction8) fc_rand(n);
+    enum direction8 choice = static_cast<enum direction8>(fc_rand(n));
 
     /* this neighbour's OK */
     tile1 = mapstep(nmap, ptile, dirs[choice]);

@@ -175,7 +175,7 @@ void update_queue_free()
       }
       waiting_queue_list_iterate_end;
     }
-}
+  }
   if (processing_finished_waiting_queue.exists()) {
     for (auto *a : *processing_finished_waiting_queue) {
       waiting_queue_list_iterate(a, data)
@@ -184,7 +184,7 @@ void update_queue_free()
       }
       waiting_queue_list_iterate_end;
     }
-}
+  }
   update_queue_frozen_level = 0;
   update_queue_has_idle_callback = false;
 }
@@ -296,13 +296,13 @@ static void update_queue_push(uq_callback_t callback,
   for (auto p : *update_queue) {
     if (p.first == callback) {
       uqr_data = p.second;
-}
+    }
   }
   auto pr = qMakePair(callback, uqr_data);
   update_queue->removeAll(pr);
   if (uqr_data) {
     update_queue_data_destroy(uqr_data);
-}
+  }
   update_queue->enqueue(qMakePair(callback, uq_data));
 
   if (!update_queue_has_idle_callback && !update_queue_is_frozen()) {
@@ -342,7 +342,7 @@ bool update_queue_has_callback(uq_callback_t callback)
   for (auto p : *update_queue) {
     if (p.first == callback) {
       return true;
-}
+    }
   }
   return false;
 }
@@ -360,7 +360,7 @@ bool update_queue_has_callback_full(uq_callback_t callback,
   for (auto p : *update_queue) {
     if (p.first == callback) {
       uq_data = p.second;
-}
+    }
   }
   if (uq_data) {
     if (NULL != data) {

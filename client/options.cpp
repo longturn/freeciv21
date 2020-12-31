@@ -3265,10 +3265,7 @@ struct option *server_optset_option_first()
 /************************************************************************/ /**
    Returns the number of server option categories.
  ****************************************************************************/
-int server_optset_category_number()
-{
-  return server_options_categories_num;
-}
+int server_optset_category_number() { return server_options_categories_num; }
 
 /************************************************************************/ /**
    Returns the name (translated) of the server option category.
@@ -4752,14 +4749,14 @@ void options_init()
                   option_name(poption), option_int_def(poption),
                   option_int_min(poption), option_int_max(poption),
                   new_default);
-        *((int *) &(pcoption->integer.def)) = new_default;
+        *(const_cast<int *>(&(pcoption->integer.def))) = new_default;
       }
       break;
 
     case OT_STRING:
       if (gui_options.default_user_name == option_str_get(poption)) {
         /* Hack to get a default value. */
-        *((const char **) &(pcoption->string.def)) =
+        *(const_cast<const char **>(&(pcoption->string.def))) =
             fc_strdup(gui_options.default_user_name);
       }
 
@@ -4770,7 +4767,7 @@ void options_init()
           qCritical("Invalid NULL default string for option %s.",
                     option_name(poption));
         } else {
-          *((const char **) &(pcoption->string.def)) =
+          *(const_cast<const char **>(&(pcoption->string.def))) =
               qstrdup(qUtf8Printable(values->at(0)));
         }
       }

@@ -124,7 +124,7 @@ void bv_clr_all_from(unsigned char *vec_to, const unsigned char *vec_from,
 // this is not very fast
 bool is_any_set(QBitArray &ba)
 {
-  for (int i = 0; i < ba.count() ; i++) {
+  for (int i = 0; i < ba.count(); i++) {
     if (ba.testBit(i)) {
       return true;
     }

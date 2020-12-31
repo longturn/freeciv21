@@ -221,7 +221,8 @@ static void notify_conn_packet(struct conn_list *dest,
 
     if (early) {
       send_packet_early_chat_msg(
-          pconn, (struct packet_early_chat_msg *) (&real_packet));
+          pconn,
+          reinterpret_cast<struct packet_early_chat_msg *>(&real_packet));
     } else {
       send_packet_chat_msg(pconn, &real_packet);
     }

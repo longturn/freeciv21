@@ -450,10 +450,10 @@ static inline void genhash_slot_create(struct genhash *pgenhash,
 
   entry->key =
       (NULL != pgenhash->key_copy_func ? pgenhash->key_copy_func(key)
-                                       : (void *) key);
+                                       : const_cast<void *>(key));
   entry->data =
       (NULL != pgenhash->data_copy_func ? pgenhash->data_copy_func(data)
-                                        : (void *) data);
+                                        : const_cast<void *>(data));
   entry->hash_val = hash_val;
   entry->next = *slot;
   *slot = entry;
@@ -494,10 +494,10 @@ static inline void genhash_slot_set(struct genhash *pgenhash,
   }
   entry->key =
       (NULL != pgenhash->key_copy_func ? pgenhash->key_copy_func(key)
-                                       : (void *) key);
+                                       : const_cast<void *>(key));
   entry->data =
       (NULL != pgenhash->data_copy_func ? pgenhash->data_copy_func(data)
-                                        : (void *) data);
+                                        : const_cast<void *>(data));
 }
 
 /************************************************************************/ /**
@@ -793,7 +793,7 @@ size_t genhash_iter_sizeof() { return sizeof(struct genhash_iter); }
 void *genhash_iter_key(const struct iterator *genhash_iter)
 {
   struct genhash_iter *iter = GENHASH_ITER(genhash_iter);
-  return (void *) iter->iterator->key;
+  return iter->iterator->key;
 }
 
 /************************************************************************/ /**
@@ -802,7 +802,7 @@ void *genhash_iter_key(const struct iterator *genhash_iter)
 void *genhash_iter_value(const struct iterator *genhash_iter)
 {
   struct genhash_iter *iter = GENHASH_ITER(genhash_iter);
-  return (void *) iter->iterator->data;
+  return iter->iterator->data;
 }
 
 /************************************************************************/ /**

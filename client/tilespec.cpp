@@ -1668,41 +1668,41 @@ static bool tileset_invalid_offsets(struct tileset *t,
                                     struct section_file *file)
 {
   return !secfile_lookup_int(file, &t->unit_flag_offset_x,
-                          "tilespec.unit_flag_offset_x")
-      || !secfile_lookup_int(file, &t->unit_flag_offset_y,
-                             "tilespec.unit_flag_offset_y")
-      || !secfile_lookup_int(file, &t->city_flag_offset_x,
-                             "tilespec.city_flag_offset_x")
-      || !secfile_lookup_int(file, &t->city_flag_offset_y,
-                             "tilespec.city_flag_offset_y")
-      || !secfile_lookup_int(file, &t->unit_offset_x,
-                             "tilespec.unit_offset_x")
-      || !secfile_lookup_int(file, &t->unit_offset_y,
-                             "tilespec.unit_offset_y")
-      || !secfile_lookup_int(file, &t->activity_offset_x,
-                             "tilespec.activity_offset_x")
-      || !secfile_lookup_int(file, &t->activity_offset_y,
-                             "tilespec.activity_offset_y")
-      || !secfile_lookup_int(file, &t->select_offset_x,
-                             "tilespec.select_offset_x")
-      || !secfile_lookup_int(file, &t->select_offset_y,
-                             "tilespec.select_offset_y")
-      || !secfile_lookup_int(file, &t->city_offset_x,
-                             "tilespec.city_offset_x")
-      || !secfile_lookup_int(file, &t->city_offset_y,
-                             "tilespec.city_offset_y")
-      || !secfile_lookup_int(file, &t->city_size_offset_x,
-                             "tilespec.city_size_offset_x")
-      || !secfile_lookup_int(file, &t->city_size_offset_y,
-                             "tilespec.city_size_offset_y")
-      || !secfile_lookup_int(file, &t->citybar_offset_y,
-                             "tilespec.citybar_offset_y")
-      || !secfile_lookup_int(file, &t->tilelabel_offset_y,
-                             "tilespec.tilelabel_offset_y")
-      || !secfile_lookup_int(file, &t->occupied_offset_x,
-                             "tilespec.occupied_offset_x")
-      || !secfile_lookup_int(file, &t->occupied_offset_y,
-                             "tilespec.occupied_offset_y");
+                             "tilespec.unit_flag_offset_x")
+         || !secfile_lookup_int(file, &t->unit_flag_offset_y,
+                                "tilespec.unit_flag_offset_y")
+         || !secfile_lookup_int(file, &t->city_flag_offset_x,
+                                "tilespec.city_flag_offset_x")
+         || !secfile_lookup_int(file, &t->city_flag_offset_y,
+                                "tilespec.city_flag_offset_y")
+         || !secfile_lookup_int(file, &t->unit_offset_x,
+                                "tilespec.unit_offset_x")
+         || !secfile_lookup_int(file, &t->unit_offset_y,
+                                "tilespec.unit_offset_y")
+         || !secfile_lookup_int(file, &t->activity_offset_x,
+                                "tilespec.activity_offset_x")
+         || !secfile_lookup_int(file, &t->activity_offset_y,
+                                "tilespec.activity_offset_y")
+         || !secfile_lookup_int(file, &t->select_offset_x,
+                                "tilespec.select_offset_x")
+         || !secfile_lookup_int(file, &t->select_offset_y,
+                                "tilespec.select_offset_y")
+         || !secfile_lookup_int(file, &t->city_offset_x,
+                                "tilespec.city_offset_x")
+         || !secfile_lookup_int(file, &t->city_offset_y,
+                                "tilespec.city_offset_y")
+         || !secfile_lookup_int(file, &t->city_size_offset_x,
+                                "tilespec.city_size_offset_x")
+         || !secfile_lookup_int(file, &t->city_size_offset_y,
+                                "tilespec.city_size_offset_y")
+         || !secfile_lookup_int(file, &t->citybar_offset_y,
+                                "tilespec.citybar_offset_y")
+         || !secfile_lookup_int(file, &t->tilelabel_offset_y,
+                                "tilespec.tilelabel_offset_y")
+         || !secfile_lookup_int(file, &t->occupied_offset_x,
+                                "tilespec.occupied_offset_x")
+         || !secfile_lookup_int(file, &t->occupied_offset_y,
+                                "tilespec.occupied_offset_y");
 }
 
 static void tileset_set_offsets(struct tileset *t, struct section_file *file)
@@ -2132,8 +2132,8 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     struct tileset_layer *tslp = &t->layers[i];
     int j, k;
 
-    tslp->match_types = (char **) secfile_lookup_str_vec(
-        file, &tslp->match_count, "layer%d.match_types", i);
+    tslp->match_types = const_cast<char **>(secfile_lookup_str_vec(
+        file, &tslp->match_count, "layer%d.match_types", i));
     for (j = 0; j < tslp->match_count; j++) {
       tslp->match_types[j] = fc_strdup(tslp->match_types[j]);
 
@@ -2233,7 +2233,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
         if (count > MAX_NUM_MATCH_WITH) {
           qCritical("[%s] match_with has too many types (%d, max %d)",
-                    sec_name, (int) count, MAX_NUM_MATCH_WITH);
+                    sec_name, static_cast<int>(count), MAX_NUM_MATCH_WITH);
           count = MAX_NUM_MATCH_WITH;
         }
 
@@ -2390,11 +2390,11 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   t->color_system = color_system_read(file);
 
   /* FIXME: remove this hack. */
-  t->preferred_themes = (char **) secfile_lookup_str_vec(
-      file, &num_preferred_themes, "tilespec.preferred_themes");
+  t->preferred_themes = const_cast<char **>(secfile_lookup_str_vec(
+      file, &num_preferred_themes, "tilespec.preferred_themes"));
   if (num_preferred_themes <= 0) {
-    t->preferred_themes = (char **) secfile_lookup_str_vec(
-        file, &num_preferred_themes, "tilespec.prefered_themes");
+    t->preferred_themes = const_cast<char **>(secfile_lookup_str_vec(
+        file, &num_preferred_themes, "tilespec.prefered_themes"));
     if (num_preferred_themes > 0) {
       qCWarning(deprecations_category,
                 "Entry tilespec.prefered_themes in tilespec."
@@ -2434,7 +2434,7 @@ static const char *citizen_rule_name(enum citizen_category citizen)
   default:
     break;
   }
-  qCritical("Unknown citizen type: %d.", (int) citizen);
+  qCritical("Unknown citizen type: %d.", static_cast<int>(citizen));
   return NULL;
 }
 
@@ -3378,7 +3378,7 @@ QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
   sp = load_sprite(t, tag, scale, true);
   if (sp) {
     return sp;
-}
+  }
 
   sp = load_sprite(t, alt, scale, true);
   if (sp) {

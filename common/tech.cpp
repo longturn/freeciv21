@@ -498,10 +498,7 @@ void techs_free()
 /**********************************************************************/ /**
    Return the size of the advance requirements iterator.
  **************************************************************************/
-size_t advance_req_iter_sizeof()
-{
-  return sizeof(struct advance_req_iter);
-}
+size_t advance_req_iter_sizeof() { return sizeof(struct advance_req_iter); }
 
 /**********************************************************************/ /**
    Return the current advance.

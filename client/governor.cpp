@@ -154,11 +154,13 @@ void governor::run()
     // city was removed, but city still points to something
     // uncomment and check whats happening when city is conquered
     bool dontCont = false;
-    city_list_iterate(client.conn.playing->cities, wtf) {
+    city_list_iterate(client.conn.playing->cities, wtf)
+    {
       if (wtf == pcity) {
         dontCont = true;
       }
-    } city_list_iterate_end;
+    }
+    city_list_iterate_end;
 
     if (!dontCont) {
       continue;

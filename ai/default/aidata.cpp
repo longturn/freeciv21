@@ -216,9 +216,9 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
 
     if (unit_has_type_flag(punit, UTYF_SETTLERS)) {
       if (is_ocean_tile(ptile)) {
-        ai->stats.ocean_workers[(int) -tile_continent(ptile)]++;
+        ai->stats.ocean_workers[-tile_continent(ptile)]++;
       } else {
-        ai->stats.workers[(int) tile_continent(ptile)]++;
+        ai->stats.workers[static_cast<int> tile_continent(ptile)]++;
       }
     }
   }
@@ -412,7 +412,7 @@ struct ai_dip_intel *dai_diplomacy_get(struct ai_type *ait,
 
   fc_assert_ret_val(player_intel_slot != NULL, NULL);
 
-  return (struct ai_dip_intel *) *player_intel_slot;
+  return const_cast<struct ai_dip_intel *>(*player_intel_slot);
 }
 
 /************************************************************************/ /**

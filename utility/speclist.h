@@ -160,7 +160,7 @@ static inline SPECLIST_LIST *
 
 static inline SPECLIST_LIST *SPECLIST_FOO(_list_new)()
 {
-  return (SPECLIST_LIST *) genlist_new();
+  return reinterpret_cast<SPECLIST_LIST *>(genlist_new());
 }
 
 /****************************************************************************
@@ -174,8 +174,8 @@ static inline SPECLIST_LIST *
     SPECLIST_FOO(_list_new_full)(SPECLIST_FOO(_list_free_fn_t)
                                      free_data_func)
 {
-  return ((SPECLIST_LIST *) genlist_new_full(
-      (genlist_free_fn_t) free_data_func));
+  return (reinterpret_cast<SPECLIST_LIST *>(genlist_new_full(
+      reinterpret_cast<genlist_free_fn_t>(free_data_func))));
 }
 
 /****************************************************************************
@@ -183,7 +183,7 @@ static inline SPECLIST_LIST *
 ****************************************************************************/
 static inline void SPECLIST_FOO(_list_destroy)(SPECLIST_LIST *tthis)
 {
-  genlist_destroy((struct genlist *) tthis);
+  genlist_destroy(reinterpret_cast<struct genlist *>(tthis));
 }
 
 /****************************************************************************
@@ -195,7 +195,8 @@ static inline SPECLIST_LIST *SPECLIST_FOO(_list_copy)(
 static inline SPECLIST_LIST *
     SPECLIST_FOO(_list_copy)(const SPECLIST_LIST *tthis)
 {
-  return (SPECLIST_LIST *) genlist_copy((const struct genlist *) tthis);
+  return reinterpret_cast<SPECLIST_LIST *>(
+      genlist_copy(reinterpret_cast<const struct genlist *>(tthis)));
 }
 
 /****************************************************************************
@@ -210,9 +211,10 @@ static inline SPECLIST_LIST *SPECLIST_FOO(_list_copy_full)(
     const SPECLIST_LIST *tthis, SPECLIST_FOO(_list_copy_fn_t) copy_data_func,
     SPECLIST_FOO(_list_free_fn_t) free_data_func)
 {
-  return ((SPECLIST_LIST *) genlist_copy_full(
-      (const struct genlist *) tthis, (genlist_copy_fn_t) copy_data_func,
-      (genlist_free_fn_t) free_data_func));
+  return (reinterpret_cast<SPECLIST_LIST *>(genlist_copy_full(
+      reinterpret_cast<const struct genlist *>(tthis),
+      reinterpret_cast<genlist_copy_fn_t>(copy_data_func),
+      reinterpret_cast<genlist_free_fn_t>(free_data_func))));
 }
 
 /****************************************************************************
@@ -220,7 +222,7 @@ static inline SPECLIST_LIST *SPECLIST_FOO(_list_copy_full)(
 ****************************************************************************/
 static inline void SPECLIST_FOO(_list_clear)(SPECLIST_LIST *tthis)
 {
-  genlist_clear((struct genlist *) tthis);
+  genlist_clear(reinterpret_cast<struct genlist *>(tthis));
 }
 
 /****************************************************************************
@@ -228,7 +230,7 @@ static inline void SPECLIST_FOO(_list_clear)(SPECLIST_LIST *tthis)
 ****************************************************************************/
 static inline void SPECLIST_FOO(_list_unique)(SPECLIST_LIST *tthis)
 {
-  genlist_unique((struct genlist *) tthis);
+  genlist_unique(reinterpret_cast<struct genlist *>(tthis));
 }
 
 /****************************************************************************
@@ -238,8 +240,8 @@ static inline void SPECLIST_FOO(_list_unique)(SPECLIST_LIST *tthis)
 static inline void SPECLIST_FOO(_list_unique_full)(
     SPECLIST_LIST *tthis, SPECLIST_FOO(_list_comp_fn_t) comp_data_func)
 {
-  genlist_unique_full((struct genlist *) tthis,
-                      (genlist_comp_fn_t) comp_data_func);
+  genlist_unique_full(reinterpret_cast<struct genlist *>(tthis),
+                      reinterpret_cast<genlist_comp_fn_t>(comp_data_func));
 }
 
 /****************************************************************************
@@ -248,7 +250,7 @@ static inline void SPECLIST_FOO(_list_unique_full)(
 static inline void SPECLIST_FOO(_list_append)(SPECLIST_LIST *tthis,
                                               SPECLIST_TYPE *pfoo)
 {
-  genlist_append((struct genlist *) tthis, pfoo);
+  genlist_append(reinterpret_cast<struct genlist *>(tthis), pfoo);
 }
 
 /****************************************************************************
@@ -257,7 +259,7 @@ static inline void SPECLIST_FOO(_list_append)(SPECLIST_LIST *tthis,
 static inline void SPECLIST_FOO(_list_prepend)(SPECLIST_LIST *tthis,
                                                SPECLIST_TYPE *pfoo)
 {
-  genlist_prepend((struct genlist *) tthis, pfoo);
+  genlist_prepend(reinterpret_cast<struct genlist *>(tthis), pfoo);
 }
 
 /****************************************************************************
@@ -266,7 +268,7 @@ static inline void SPECLIST_FOO(_list_prepend)(SPECLIST_LIST *tthis,
 static inline void SPECLIST_FOO(_list_insert)(SPECLIST_LIST *tthis,
                                               SPECLIST_TYPE *pfoo, int idx)
 {
-  genlist_insert((struct genlist *) tthis, pfoo, idx);
+  genlist_insert(reinterpret_cast<struct genlist *>(tthis), pfoo, idx);
 }
 
 /****************************************************************************
@@ -276,8 +278,8 @@ static inline void SPECLIST_FOO(_list_insert_after)(SPECLIST_LIST *tthis,
                                                     SPECLIST_TYPE *pfoo,
                                                     SPECLIST_LINK *plink)
 {
-  genlist_insert_after((struct genlist *) tthis, pfoo,
-                       (struct genlist_link *) plink);
+  genlist_insert_after(reinterpret_cast<struct genlist *>(tthis), pfoo,
+                       reinterpret_cast<struct genlist_link *>(plink));
 }
 
 /****************************************************************************
@@ -287,8 +289,8 @@ static inline void SPECLIST_FOO(_list_insert_before)(SPECLIST_LIST *tthis,
                                                      SPECLIST_TYPE *pfoo,
                                                      SPECLIST_LINK *plink)
 {
-  genlist_insert_before((struct genlist *) tthis, pfoo,
-                        (struct genlist_link *) plink);
+  genlist_insert_before(reinterpret_cast<struct genlist *>(tthis), pfoo,
+                        reinterpret_cast<struct genlist_link *>(plink));
 }
 
 /****************************************************************************
@@ -297,7 +299,7 @@ static inline void SPECLIST_FOO(_list_insert_before)(SPECLIST_LIST *tthis,
 static inline bool SPECLIST_FOO(_list_remove)(SPECLIST_LIST *tthis,
                                               const SPECLIST_TYPE *pfoo)
 {
-  return genlist_remove((struct genlist *) tthis, pfoo);
+  return genlist_remove(reinterpret_cast<struct genlist *>(tthis), pfoo);
 }
 
 /****************************************************************************
@@ -307,8 +309,9 @@ static inline bool SPECLIST_FOO(_list_remove)(SPECLIST_LIST *tthis,
 static inline bool SPECLIST_FOO(_list_remove_if)(
     SPECLIST_LIST *tthis, SPECLIST_FOO(_list_cond_fn_t) cond_data_func)
 {
-  return genlist_remove_if((struct genlist *) tthis,
-                           (genlist_cond_fn_t) cond_data_func);
+  return genlist_remove_if(
+      reinterpret_cast<struct genlist *>(tthis),
+      reinterpret_cast<genlist_cond_fn_t>(cond_data_func));
 }
 
 /****************************************************************************
@@ -317,7 +320,7 @@ static inline bool SPECLIST_FOO(_list_remove_if)(
 static inline int SPECLIST_FOO(_list_remove_all)(SPECLIST_LIST *tthis,
                                                  const SPECLIST_TYPE *pfoo)
 {
-  return genlist_remove_all((struct genlist *) tthis, pfoo);
+  return genlist_remove_all(reinterpret_cast<struct genlist *>(tthis), pfoo);
 }
 
 /****************************************************************************
@@ -327,8 +330,9 @@ static inline int SPECLIST_FOO(_list_remove_all)(SPECLIST_LIST *tthis,
 static inline bool SPECLIST_FOO(_list_remove_all_if)(
     SPECLIST_LIST *tthis, SPECLIST_FOO(_list_cond_fn_t) cond_data_func)
 {
-  return genlist_remove_all_if((struct genlist *) tthis,
-                               (genlist_cond_fn_t) cond_data_func);
+  return genlist_remove_all_if(
+      reinterpret_cast<struct genlist *>(tthis),
+      reinterpret_cast<genlist_cond_fn_t>(cond_data_func));
 }
 
 /****************************************************************************
@@ -341,7 +345,8 @@ static inline bool SPECLIST_FOO(_list_remove_all_if)(
 static inline void SPECLIST_FOO(_list_erase)(SPECLIST_LIST *tthis,
                                              SPECLIST_LINK *plink)
 {
-  genlist_erase((struct genlist *) tthis, (struct genlist_link *) plink);
+  genlist_erase(reinterpret_cast<struct genlist *>(tthis),
+                reinterpret_cast<struct genlist_link *>(plink));
 }
 
 /****************************************************************************
@@ -349,7 +354,7 @@ static inline void SPECLIST_FOO(_list_erase)(SPECLIST_LIST *tthis,
 ****************************************************************************/
 static inline void SPECLIST_FOO(_list_pop_front)(SPECLIST_LIST *tthis)
 {
-  genlist_pop_front((struct genlist *) tthis);
+  genlist_pop_front(reinterpret_cast<struct genlist *>(tthis));
 }
 
 /****************************************************************************
@@ -357,7 +362,7 @@ static inline void SPECLIST_FOO(_list_pop_front)(SPECLIST_LIST *tthis)
 ****************************************************************************/
 static inline void SPECLIST_FOO(_list_pop_back)(SPECLIST_LIST *tthis)
 {
-  genlist_pop_back((struct genlist *) tthis);
+  genlist_pop_back(reinterpret_cast<struct genlist *>(tthis));
 }
 
 /****************************************************************************
@@ -365,7 +370,7 @@ static inline void SPECLIST_FOO(_list_pop_back)(SPECLIST_LIST *tthis)
 ****************************************************************************/
 static inline int SPECLIST_FOO(_list_size)(const SPECLIST_LIST *tthis)
 {
-  return genlist_size((const struct genlist *) tthis);
+  return genlist_size(reinterpret_cast<const struct genlist *>(tthis));
 }
 
 /****************************************************************************
@@ -374,8 +379,8 @@ static inline int SPECLIST_FOO(_list_size)(const SPECLIST_LIST *tthis)
 static inline SPECLIST_TYPE *
     SPECLIST_FOO(_list_get)(const SPECLIST_LIST *tthis, int slindex)
 {
-  return ((SPECLIST_TYPE *) genlist_get((const struct genlist *) tthis,
-                                        slindex));
+  return (static_cast<SPECLIST_TYPE *>(genlist_get(
+      reinterpret_cast<const struct genlist *>(tthis), slindex)));
 }
 
 /****************************************************************************
@@ -384,7 +389,8 @@ static inline SPECLIST_TYPE *
 static inline SPECLIST_TYPE *
     SPECLIST_FOO(_list_front)(const SPECLIST_LIST *tthis)
 {
-  return (SPECLIST_TYPE *) genlist_front((const struct genlist *) tthis);
+  return static_cast<SPECLIST_TYPE *>(
+      genlist_front(reinterpret_cast<const struct genlist *>(tthis)));
 }
 
 /****************************************************************************
@@ -393,7 +399,8 @@ static inline SPECLIST_TYPE *
 static inline SPECLIST_TYPE *
     SPECLIST_FOO(_list_back)(const SPECLIST_LIST *tthis)
 {
-  return (SPECLIST_TYPE *) genlist_back((const struct genlist *) tthis);
+  return static_cast<SPECLIST_TYPE *>(
+      genlist_back(reinterpret_cast<const struct genlist *>(tthis)));
 }
 
 /****************************************************************************
@@ -402,8 +409,8 @@ static inline SPECLIST_TYPE *
 static inline SPECLIST_LINK *
     SPECLIST_FOO(_list_link_get)(const SPECLIST_LIST *tthis, int slindex)
 {
-  return ((SPECLIST_LINK *) genlist_link_get((const struct genlist *) tthis,
-                                             slindex));
+  return (reinterpret_cast<SPECLIST_LINK *>(genlist_link_get(
+      reinterpret_cast<const struct genlist *>(tthis), slindex)));
 }
 
 /****************************************************************************
@@ -412,7 +419,8 @@ static inline SPECLIST_LINK *
 static inline SPECLIST_LINK *
     SPECLIST_FOO(_list_head)(const SPECLIST_LIST *tthis)
 {
-  return (SPECLIST_LINK *) genlist_head((const struct genlist *) tthis);
+  return reinterpret_cast<SPECLIST_LINK *>(
+      genlist_head(reinterpret_cast<const struct genlist *>(tthis)));
 }
 
 /****************************************************************************
@@ -421,7 +429,8 @@ static inline SPECLIST_LINK *
 static inline SPECLIST_LINK *
     SPECLIST_FOO(_list_tail)(const SPECLIST_LIST *tthis)
 {
-  return (SPECLIST_LINK *) genlist_tail((const struct genlist *) tthis);
+  return reinterpret_cast<SPECLIST_LINK *>(
+      genlist_tail(reinterpret_cast<const struct genlist *>(tthis)));
 }
 
 /****************************************************************************
@@ -431,8 +440,8 @@ static inline SPECLIST_LINK *
     SPECLIST_FOO(_list_search)(const SPECLIST_LIST *tthis,
                                const SPECLIST_TYPE *pfoo)
 {
-  return ((SPECLIST_LINK *) genlist_search((const struct genlist *) tthis,
-                                           pfoo));
+  return (reinterpret_cast<SPECLIST_LINK *>(genlist_search(
+      reinterpret_cast<const struct genlist *>(tthis), pfoo)));
 }
 
 /****************************************************************************
@@ -441,8 +450,9 @@ static inline SPECLIST_LINK *
 static inline SPECLIST_LINK *SPECLIST_FOO(_list_search_if)(
     const SPECLIST_LIST *tthis, SPECLIST_FOO(_list_cond_fn_t) cond_data_func)
 {
-  return ((SPECLIST_LINK *) genlist_search_if(
-      (const struct genlist *) tthis, (genlist_cond_fn_t) cond_data_func));
+  return (reinterpret_cast<SPECLIST_LINK *>(genlist_search_if(
+      reinterpret_cast<const struct genlist *>(tthis),
+      reinterpret_cast<genlist_cond_fn_t>(cond_data_func))));
 }
 
 /****************************************************************************
@@ -453,8 +463,9 @@ static inline void
                              int (*compar)(const SPECLIST_TYPE *const *,
                                            const SPECLIST_TYPE *const *))
 {
-  genlist_sort((struct genlist *) tthis,
-               (int (*)(const void *, const void *)) compar);
+  genlist_sort(
+      reinterpret_cast<struct genlist *>(tthis),
+      reinterpret_cast<int (*)(const void *, const void *)>(compar));
 }
 
 /****************************************************************************
@@ -462,7 +473,7 @@ static inline void
 ****************************************************************************/
 static inline void SPECLIST_FOO(_list_shuffle)(SPECLIST_LIST *tthis)
 {
-  genlist_shuffle((struct genlist *) tthis);
+  genlist_shuffle(reinterpret_cast<struct genlist *>(tthis));
 }
 
 /****************************************************************************
@@ -470,7 +481,7 @@ static inline void SPECLIST_FOO(_list_shuffle)(SPECLIST_LIST *tthis)
 ****************************************************************************/
 static inline void SPECLIST_FOO(_list_reverse)(SPECLIST_LIST *tthis)
 {
-  genlist_reverse((struct genlist *) tthis);
+  genlist_reverse(reinterpret_cast<struct genlist *>(tthis));
 }
 
 /****************************************************************************
@@ -478,7 +489,7 @@ static inline void SPECLIST_FOO(_list_reverse)(SPECLIST_LIST *tthis)
 ****************************************************************************/
 static inline void SPECLIST_FOO(_list_allocate_mutex)(SPECLIST_LIST *tthis)
 {
-  genlist_allocate_mutex((struct genlist *) tthis);
+  genlist_allocate_mutex(reinterpret_cast<struct genlist *>(tthis));
 }
 
 /****************************************************************************
@@ -486,7 +497,7 @@ static inline void SPECLIST_FOO(_list_allocate_mutex)(SPECLIST_LIST *tthis)
 ****************************************************************************/
 static inline void SPECLIST_FOO(_list_release_mutex)(SPECLIST_LIST *tthis)
 {
-  genlist_release_mutex((struct genlist *) tthis);
+  genlist_release_mutex(reinterpret_cast<struct genlist *>(tthis));
 }
 
 /****************************************************************************
@@ -495,8 +506,8 @@ static inline void SPECLIST_FOO(_list_release_mutex)(SPECLIST_LIST *tthis)
 static inline SPECLIST_TYPE *
     SPECLIST_FOO(_list_link_data)(const SPECLIST_LINK *plink)
 {
-  return ((SPECLIST_TYPE *) genlist_link_data(
-      (const struct genlist_link *) plink));
+  return (static_cast<SPECLIST_TYPE *>(genlist_link_data(
+      reinterpret_cast<const struct genlist_link *>(plink))));
 }
 
 /****************************************************************************
@@ -508,8 +519,8 @@ static inline SPECLIST_LINK *SPECLIST_FOO(_list_link_prev)(
 static inline SPECLIST_LINK *
     SPECLIST_FOO(_list_link_prev)(const SPECLIST_LINK *plink)
 {
-  return ((SPECLIST_LINK *) genlist_link_prev(
-      (const struct genlist_link *) plink));
+  return (reinterpret_cast<SPECLIST_LINK *>(genlist_link_prev(
+      reinterpret_cast<const struct genlist_link *>(plink))));
 }
 
 /****************************************************************************
@@ -521,8 +532,8 @@ static inline SPECLIST_LINK *SPECLIST_FOO(_list_link_next)(
 static inline SPECLIST_LINK *
     SPECLIST_FOO(_list_link_next)(const SPECLIST_LINK *plink)
 {
-  return ((SPECLIST_LINK *) genlist_link_next(
-      (const struct genlist_link *) plink));
+  return (reinterpret_cast<SPECLIST_LINK *>(genlist_link_next(
+      reinterpret_cast<const struct genlist_link *>(plink))));
 }
 
 #undef SPECLIST_TAG

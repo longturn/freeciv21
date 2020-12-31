@@ -287,7 +287,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
 
     return false;
   case ACHIEVEMENT_LUCKY:
-    return ((int) fc_rand(10000) < ach->value);
+    return (static_cast<int>(fc_rand(10000)) < ach->value);
   case ACHIEVEMENT_HUTS:
     return pplayer->server.huts >= ach->value;
   case ACHIEVEMENT_METROPOLIS:

@@ -55,13 +55,10 @@
 fcFont *fcFont::m_instance = 0;
 extern "C" void real_science_report_dialog_update(void *);
 
-
 /************************************************************************/ /**
    Constructor
  ****************************************************************************/
-fc_client::fc_client()
-    : QMainWindow(), 
-      current_file(QLatin1String("")) 
+fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
 {
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
   status_bar_queue.clear();

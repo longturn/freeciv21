@@ -323,7 +323,7 @@ void luascript_signal_free(struct fc_lua *fcl)
 {
   if (!fcl || !fcl->signals_hash) {
     return;
-}
+  }
   for (auto *nissan : *fcl->signals_hash) {
     signal_destroy(nissan);
   }

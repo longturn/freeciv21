@@ -596,7 +596,8 @@ char *mapimg_help(const char *cmdname)
     for (format = imageformat_begin(); format != imageformat_end();
          format = imageformat_next(format)) {
       if (toolkit->formats & format) {
-        str_format += QString("%1'%2'").arg(separator, imageformat_name(format));
+        str_format +=
+            QString("%1'%2'").arg(separator, imageformat_name(format));
         separator = ", ";
       }
     }
@@ -615,7 +616,8 @@ char *mapimg_help(const char *cmdname)
       char name[10];
 
       fc_snprintf(name, sizeof(name), "'%s'", nameptr);
-      str_showplr += QString(" - %1 %2").arg(name, -9).arg(showname_help(showplr));
+      str_showplr +=
+          QString(" - %1 %2").arg(name, -9).arg(showname_help(showplr));
       if (showplr != show_player_max()) {
         str_showplr += QStringLiteral("\n");
       }
@@ -624,10 +626,11 @@ char *mapimg_help(const char *cmdname)
 
   /* Default values. */
   defaults[MAPDEF_FORMAT] = QString("(%1|%2)").arg(
-           imagetool_name(pmapdef->tool), imageformat_name(pmapdef->format));
-  defaults[MAPDEF_SHOW] = QString("(%1)").arg(
-           show_player_name(pmapdef->player.show));
-  defaults[MAPDEF_TURNS] = QString("(%1)").arg(QString::number(pmapdef->turns));
+      imagetool_name(pmapdef->tool), imageformat_name(pmapdef->format));
+  defaults[MAPDEF_SHOW] =
+      QString("(%1)").arg(show_player_name(pmapdef->player.show));
+  defaults[MAPDEF_TURNS] =
+      QString("(%1)").arg(QString::number(pmapdef->turns));
   defaults[MAPDEF_ZOOM] = QString("(%1)").arg(pmapdef->zoom);
   defaults[MAPDEF_MAP] = "(";
   for (layer = mapimg_layer_begin(); layer != mapimg_layer_end();
@@ -639,65 +642,73 @@ char *mapimg_help(const char *cmdname)
   defaults[MAPDEF_MAP] += ")";
 
   /* help text */
-  help = QString(
-      /* TRANS: This is help for a server command, so keywords like
-       * "define" in the first column are server keywords that must not
-       * be translated. Do not translate keywords in single quotes, but
-       * strings in <angle brackets> should be translated. */
-      _("This command controls the creation of map images. Supported "
-        "arguments:\n"
-        "  define <mapdef>  - define a map image; returns numeric <id>\n"
-        "  show <id>|all    - list map image definitions or show a specific "
-        "one\n"
-        "  create <id>|all  - manually save image(s) for current map state\n"
-        "  delete <id>|all  - delete map image definition(s)\n"
-        "  colortest        - create test image(s) showing all colors\n"
-        "\n"
-        "Multiple definitions can be active at once. "
-        "A definition <mapdef> consists of colon-separated options:\n"
-        "\n"
-        "option                 (default)  description\n"
-        "\n"
-        "format=<[tool|]format> %1 file format\n"
-        "show=<show>            %2 which players to show\n"
-        "  plrname=<name>                    player name\n"
-        "  plrid=<id>                        numeric player id\n"
-        "  plrbv=<bit vector>                see example; first char = id "
-        "0\n"
-        "turns=<turns>          %3 save image each <turns> turns\n"
-        "                                  (0=no autosave, save with "
-        "'create')\n"
-        "zoom=<zoom>            %4 magnification factor (1-5)\n"
-        "map=<map>              %5 which map layers to draw\n"
-        "\n"
-        "<[tool|]format> = use image format <format>, optionally specifying "
-        "toolkit <tool>. The following toolkits and formats are compiled "
-        "in:\n"
-        "%6\n"
-        "\n"
-        "<show> determines which players are represented and how many "
-        "images are saved by this definition:\n"
-        "%7\n"
-        "\n"
-        "<map> can contain one or more of the following layers:\n"
-        " - 'a' show area within borders of specified players\n"
-        " - 'b' show borders of specified players\n"
-        " - 'c' show cities of specified players\n"
-        " - 'f' show fog of war (single-player images only)\n"
-        " - 'k' show only player knowledge (single-player images only)\n"
-        " - 't' full display of terrain types\n"
-        " - 'u' show units of specified players\n"
-        "\n"
-        "Examples of <mapdef>:\n"
-        " 'zoom=1:map=tcub:show=all:format=ppm|ppm'\n"
-        " 'zoom=2:map=tcub:show=each:format=png'\n"
-        " 'zoom=1:map=tcub:show=plrname:plrname=Otto:format=gif'\n"
-        " 'zoom=3:map=cu:show=plrbv:plrbv=010011:format=jpg'\n"
-        " 'zoom=1:map=t:show=none:format=magick|jpg'")).arg(
-      defaults[MAPDEF_FORMAT], -10).arg(defaults[MAPDEF_SHOW], -10).arg(
-      defaults[MAPDEF_TURNS], -10).arg(defaults[MAPDEF_ZOOM], -10).arg(
-      defaults[MAPDEF_MAP]).arg(str_format,
-      str_showplr);
+  help =
+      QString(
+          /* TRANS: This is help for a server command, so keywords like
+           * "define" in the first column are server keywords that must not
+           * be translated. Do not translate keywords in single quotes, but
+           * strings in <angle brackets> should be translated. */
+          _("This command controls the creation of map images. Supported "
+            "arguments:\n"
+            "  define <mapdef>  - define a map image; returns numeric <id>\n"
+            "  show <id>|all    - list map image definitions or show a "
+            "specific "
+            "one\n"
+            "  create <id>|all  - manually save image(s) for current map "
+            "state\n"
+            "  delete <id>|all  - delete map image definition(s)\n"
+            "  colortest        - create test image(s) showing all colors\n"
+            "\n"
+            "Multiple definitions can be active at once. "
+            "A definition <mapdef> consists of colon-separated options:\n"
+            "\n"
+            "option                 (default)  description\n"
+            "\n"
+            "format=<[tool|]format> %1 file format\n"
+            "show=<show>            %2 which players to show\n"
+            "  plrname=<name>                    player name\n"
+            "  plrid=<id>                        numeric player id\n"
+            "  plrbv=<bit vector>                see example; first char = "
+            "id "
+            "0\n"
+            "turns=<turns>          %3 save image each <turns> turns\n"
+            "                                  (0=no autosave, save with "
+            "'create')\n"
+            "zoom=<zoom>            %4 magnification factor (1-5)\n"
+            "map=<map>              %5 which map layers to draw\n"
+            "\n"
+            "<[tool|]format> = use image format <format>, optionally "
+            "specifying "
+            "toolkit <tool>. The following toolkits and formats are "
+            "compiled "
+            "in:\n"
+            "%6\n"
+            "\n"
+            "<show> determines which players are represented and how many "
+            "images are saved by this definition:\n"
+            "%7\n"
+            "\n"
+            "<map> can contain one or more of the following layers:\n"
+            " - 'a' show area within borders of specified players\n"
+            " - 'b' show borders of specified players\n"
+            " - 'c' show cities of specified players\n"
+            " - 'f' show fog of war (single-player images only)\n"
+            " - 'k' show only player knowledge (single-player images only)\n"
+            " - 't' full display of terrain types\n"
+            " - 'u' show units of specified players\n"
+            "\n"
+            "Examples of <mapdef>:\n"
+            " 'zoom=1:map=tcub:show=all:format=ppm|ppm'\n"
+            " 'zoom=2:map=tcub:show=each:format=png'\n"
+            " 'zoom=1:map=tcub:show=plrname:plrname=Otto:format=gif'\n"
+            " 'zoom=3:map=cu:show=plrbv:plrbv=010011:format=jpg'\n"
+            " 'zoom=1:map=t:show=none:format=magick|jpg'"))
+          .arg(defaults[MAPDEF_FORMAT], -10)
+          .arg(defaults[MAPDEF_SHOW], -10)
+          .arg(defaults[MAPDEF_TURNS], -10)
+          .arg(defaults[MAPDEF_ZOOM], -10)
+          .arg(defaults[MAPDEF_MAP])
+          .arg(str_format, str_showplr);
 
   mapdef_destroy(pmapdef);
 

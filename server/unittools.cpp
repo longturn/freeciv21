@@ -3066,7 +3066,7 @@ static void unit_enter_hut(struct unit *punit)
   if (hut) {
     send_player_info_c(pplayer, pplayer->connections); /* eg, gold */
   }
-  }
+}
 
 /**********************************************************************/ /**
    Put the unit onto the transporter, and tell everyone.

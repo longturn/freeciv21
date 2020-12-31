@@ -297,7 +297,7 @@ units_reports *units_reports::instance()
 {
   if (!m_instance) {
     m_instance = new units_reports;
-}
+  }
   return m_instance;
 }
 

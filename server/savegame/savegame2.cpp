@@ -683,7 +683,7 @@ static int unquote_block(const char *const quoted_, void *dest,
     fc_assert_ret_val((endptr - quoted) == 2, 0);
     fc_assert_ret_val(*endptr == ' ', 0);
     fc_assert_ret_val((tmp & 0xff) == tmp, 0);
-    ((unsigned char *) dest)[i] = tmp;
+    (static_cast<unsigned char *>(dest))[i] = tmp;
     quoted += 3;
   }
   return length;
@@ -3395,7 +3395,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
   sg_warn_ret_val(
       secfile_lookup_int(loading->file, &value, "%s.size", citystr), false,
       "%s", secfile_error());
-  size = (citizens) value; /* set the correct type */
+  size = static_cast<citizens>(value); /* set the correct type */
   sg_warn_ret_val(value == (int) size, false,
                   "Invalid city size: %d, set to %d", value, size);
   city_size_set(pcity, size);
@@ -3405,7 +3405,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
         secfile_lookup_int(loading->file, &value, "%s.nspe%d", citystr, i),
         false, "%s", secfile_error());
     pcity->specialists[specialist_index(loading->specialist.order[i])] =
-        (citizens) value;
+        static_cast<citizens>(value);
     sp_count += value;
   }
 
@@ -4718,7 +4718,7 @@ static bool sg_load_player_vision_city(struct loaddata *loading,
   sg_warn_ret_val(
       secfile_lookup_int(loading->file, &size, "%s.size", citystr), false,
       "%s", secfile_error());
-  city_size = (citizens) size; /* set the correct type */
+  city_size = static_cast<citizens>(size); /* set the correct type */
   sg_warn_ret_val(size == (int) city_size, false,
                   "Invalid city size: %d; set to %d.", size, city_size);
   vision_site_size_set(pdcity, city_size);

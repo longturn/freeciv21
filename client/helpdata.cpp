@@ -82,7 +82,7 @@ void free_help_texts()
 {
   if (!help_nodes) {
     return;
-}
+  }
   for (const auto *ptmp : *help_nodes) {
     NFCPP_FREE(ptmp->topic);
     NFCPP_FREE(ptmp->text);
@@ -429,15 +429,15 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
       if (clean_pollution_time > 0) {
         cat_snprintf(outbuf, outlen, _("\nClean pollution    %3d"),
                      clean_pollution_time);
-}
+      }
       if (clean_fallout_time > 0) {
         cat_snprintf(outbuf, outlen, _("\nClean fallout      %3d"),
                      clean_fallout_time);
-}
+      }
       if (pillage_time > 0) {
         cat_snprintf(outbuf, outlen, _("\nPillage            %3d"),
                      pillage_time);
-}
+      }
       extra_type_by_cause_iterate(EC_ROAD, pextra)
       {
         if (pextra->buildable && pextra->build_time > 0) {
@@ -665,7 +665,7 @@ static int help_item_compar(const struct help_item *v1,
     return QString(v1->topic) < QString(v2->topic);
   } else {
     return 0;
-}
+  }
 }
 
 /************************************************************************/ /**
@@ -1829,7 +1829,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: defense divider ... or-list of unit types */
                      _("* Reduces target's defense to 1 / %.2f when "
                        "attacking %s.\n"),
-                     ((float) cbonus->value + 100.0f) / 100.0f,
+                     (static_cast<float>(cbonus->value) + 100.0f) / 100.0f,
                      qUtf8Printable(orlist));
         break;
       }
@@ -4173,7 +4173,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          _("* Each foreign citizen causes %.2g unhappiness "
                            "in their city while you are at war with their "
                            "home state.\n"),
-                         (double) net_value / 100);
+                         static_cast<double>(net_value) / 100);
           }
         }
         break;
@@ -4224,7 +4224,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                       _("* You pay no upkeep for your units.\n"));
             }
           } else if (net_value != world_value) {
-            double ratio = (double) net_value / world_value;
+            double ratio = static_cast<double>(net_value) / world_value;
             if (output_type != O_LAST) {
               cat_snprintf(
                   buf, bufsz,
@@ -4726,8 +4726,8 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
       if (init_tech == A_LAST) {
         break;
       }
-      tech_names.append(advance_name_translation(
-          advance_by_number(init_tech)));
+      tech_names.append(
+          advance_name_translation(advance_by_number(init_tech)));
     }
     QString list = strvec_to_and_list(tech_names);
     PRINT_BREAK();

@@ -219,8 +219,8 @@ static const char *ranking[] = {
  **************************************************************************/
 static int secompare(const void *a, const void *b)
 {
-  return (((const struct player_score_entry *) b)->value
-          - ((const struct player_score_entry *) a)->value);
+  return ((static_cast<const struct player_score_entry *>(b))->value
+          - (static_cast<const struct player_score_entry *>(a))->value);
 }
 
 /**********************************************************************/ /**
@@ -763,7 +763,7 @@ static int get_specialists(const struct player *pplayer)
  **************************************************************************/
 static int get_gov(const struct player *pplayer)
 {
-  return (int) government_number(government_of_player(pplayer));
+  return static_cast<int>(government_number(government_of_player(pplayer)));
 }
 
 /**********************************************************************/ /**
@@ -901,7 +901,8 @@ static void dem_line_item(char *outptr, size_t out_size,
 
     cat_snprintf(outptr, out_size, " %s", text);
     cat_snprintf(outptr, out_size, "%*s",
-                 18 - (int) get_internal_string_length(text), "");
+                 18 - static_cast<int>(get_internal_string_length(text)),
+                 "");
   }
 
   if (NULL != pplayer && BV_ISSET(selcols, DEM_COL_RANK)) {
@@ -1056,7 +1057,8 @@ void report_demographics(struct connection *pconn)
 
       cat_snprintf(buffer, sizeof(buffer), "%s", name);
       cat_snprintf(buffer, sizeof(buffer), "%*s",
-                   18 - (int) get_internal_string_length(name), "");
+                   18 - static_cast<int>(get_internal_string_length(name)),
+                   "");
       dem_line_item(buffer, sizeof(buffer), pplayer, &rowtable[i], selcols);
       sz_strlcat(buffer, "\n");
     }
@@ -1440,7 +1442,8 @@ void log_civ_score_now()
       }
       break;
     default:
-      qCritical("[%s] bad operation %d", __FUNCTION__, (int) oper);
+      qCritical("[%s] bad operation %d", __FUNCTION__,
+                static_cast<int>(oper));
       goto log_civ_score_disable;
     }
   }

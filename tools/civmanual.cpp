@@ -381,7 +381,8 @@ static bool manual_command(struct tag_types *tag_info)
           cmdstr = cmdstr.toHtmlEscaped();
           fprintf(doc, _("<table>\n<tr>\n<td valign=\"top\">"
                          "<pre>Synopsis:</pre></td>\n<td>"));
-          fprintf(doc, "<pre>%s</pre></td></tr></table>", qUtf8Printable(cmdstr));
+          fprintf(doc, "<pre>%s</pre></td></tr></table>",
+                  qUtf8Printable(cmdstr));
         }
         fprintf(doc, _("<p class=\"level\">Level: %s</p>\n"),
                 cmdlevel_name(command_level(cmd)));

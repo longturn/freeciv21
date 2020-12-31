@@ -100,11 +100,11 @@ void spaceship_calc_derived(struct player_spaceship *ship)
   ship->population = habitation * 10000;
 
   if (habitation > 0) {
-    ship->support_rate = life_support / (double) habitation;
+    ship->support_rate = life_support / static_cast<double>(habitation);
   }
   if (life_support + habitation > 0) {
     ship->energy_rate =
-        2.0 * solar_panels / (double) (life_support + habitation);
+        2.0 * solar_panels / static_cast<double>(life_support + habitation);
   }
   if (fuel > 0 && propulsion > 0) {
     ship->success_rate =
@@ -190,7 +190,7 @@ void handle_spaceship_launch(struct player *pplayer)
 
   ship->state = SSHIP_LAUNCHED;
   ship->launch_year = game.info.year;
-  arrival = ship->launch_year + (int) ship->travel_time;
+  arrival = ship->launch_year + static_cast<int>(ship->travel_time);
 
   notify_player(NULL, NULL, E_SPACESHIP, ftc_server,
                 _("The %s have launched a spaceship!  "

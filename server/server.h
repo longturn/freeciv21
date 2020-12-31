@@ -65,7 +65,8 @@ private:
 
   civtimer *m_eot_timer = nullptr, *m_between_turns_timer = nullptr;
 
-  bool m_is_new_turn{false}, m_need_send_pending_events{false}, m_skip_mapimg{false};
+  bool m_is_new_turn{false}, m_need_send_pending_events{false},
+      m_skip_mapimg{false};
   int m_save_counter = 0;
 
   bool m_someone_ever_connected = false;

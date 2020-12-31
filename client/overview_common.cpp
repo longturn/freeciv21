@@ -87,10 +87,8 @@ void gui_to_overview_pos(const struct tileset *t, int *ovr_x, int *ovr_y,
   gui_to_natural_pos(t, &ntl_x, &ntl_y, gui_x, gui_y);
 
   /* Now convert straight to overview coordinates. */
-  *ovr_x = floor((ntl_x - (double) gui_options.overview.map_x0)
-                 * OVERVIEW_TILE_SIZE);
-  *ovr_y = floor((ntl_y - (double) gui_options.overview.map_y0)
-                 * OVERVIEW_TILE_SIZE);
+  *ovr_x = floor((ntl_x - gui_options.overview.map_x0) * OVERVIEW_TILE_SIZE);
+  *ovr_y = floor((ntl_y - gui_options.overview.map_y0) * OVERVIEW_TILE_SIZE);
 
   /* Now do additional adjustments.  See map_to_overview_pos(). */
   if (current_topo_has_flag(TF_WRAPX)) {
@@ -273,14 +271,14 @@ void center_tile_overviewcanvas()
    * basically necessary for the overview to be efficiently
    * updated. */
   if (current_topo_has_flag(TF_WRAPX)) {
-    gui_options.overview.map_x0 =
-        wrap_double(ntl_x - (double) NATURAL_WIDTH / 2.0, NATURAL_WIDTH);
+    gui_options.overview.map_x0 = wrap_double(
+        ntl_x - static_cast<double> NATURAL_WIDTH / 2.0, NATURAL_WIDTH);
   } else {
     gui_options.overview.map_x0 = 0;
   }
   if (current_topo_has_flag(TF_WRAPY)) {
-    gui_options.overview.map_y0 =
-        wrap_double(ntl_y - (double) NATURAL_HEIGHT / 2.0, NATURAL_HEIGHT);
+    gui_options.overview.map_y0 = wrap_double(
+        ntl_y - static_cast<double>(NATURAL_HEIGHT) / 2.0, NATURAL_HEIGHT);
   } else {
     gui_options.overview.map_y0 = 0;
   }

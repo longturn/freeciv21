@@ -483,7 +483,8 @@ static int prefer_short_stacks(const struct tile *ptile,
                                enum known_type known,
                                const struct pf_parameter *param)
 {
-  return stack_risk(ptile, (struct adv_risk_cost *) param->data, param);
+  return stack_risk(ptile, static_cast<struct adv_risk_cost *>(param->data),
+                    param);
 }
 
 /**********************************************************************/ /**
@@ -497,7 +498,8 @@ void adv_avoid_risks(struct pf_parameter *parameter,
   /* If we stay a short time on each tile, the danger of each individual tile
    * is reduced. If we do not do this,
    * we will not favour longer but faster routs. */
-  const double linger_fraction = (double) SINGLE_MOVE / parameter->move_rate;
+  const double linger_fraction =
+      static_cast<double> SINGLE_MOVE / parameter->move_rate;
 
   parameter->data = risk_cost;
   parameter->get_EC = prefer_short_stacks;

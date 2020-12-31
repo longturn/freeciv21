@@ -49,7 +49,7 @@ mrIdle *mrIdle::idlecb()
 {
   if (!m_instance) {
     m_instance = new mrIdle;
-}
+  }
   return m_instance;
 }
 

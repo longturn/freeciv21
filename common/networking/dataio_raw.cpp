@@ -687,7 +687,7 @@ bool dio_get_ufloat_raw(struct data_in *din, float *dest, int float_factor)
     return false;
   }
 
-  *dest = (float) ival / float_factor;
+  *dest = static_cast<float>(ival) / float_factor;
   return true;
 }
 
@@ -703,7 +703,7 @@ bool dio_get_sfloat_raw(struct data_in *din, float *dest, int float_factor)
     return false;
   }
 
-  *dest = (float) ival / float_factor;
+  *dest = static_cast<float>(ival) / float_factor;
   return true;
 }
 

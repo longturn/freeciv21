@@ -19,8 +19,7 @@
 /************************************************************************/ /**
    Constructor for economy report
  ****************************************************************************/
-eco_report::eco_report()
-    : QWidget() 
+eco_report::eco_report() : QWidget()
 {
   ui.setupUi(this);
 

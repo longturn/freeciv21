@@ -182,7 +182,7 @@ citizens citizens_count(const struct city *pcity)
   fc_assert_ret_val(count >= 0 && count <= MAX_CITY_SIZE,
                     city_size_get(pcity));
 
-  return (citizens) count;
+  return static_cast<citizens>(count);
 }
 
 /*************************************************************************/ /**
