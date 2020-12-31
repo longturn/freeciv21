@@ -32,7 +32,7 @@ namespace freeciv {
 class server : public QObject {
 public:
   explicit server();
-  virtual ~server();
+  ~server() override;
 
   bool is_ready() const;
 

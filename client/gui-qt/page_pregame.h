@@ -24,7 +24,7 @@ class page_pregame : public QWidget, private chat_listener {
   Q_OBJECT
 public:
   page_pregame(QWidget *, fc_client *);
-  ~page_pregame();
+  ~page_pregame() override;
   void update_start_page();
   void set_rulesets(int num_rulesets, char **rulesets);
   void update_vote();
@@ -36,7 +36,7 @@ private slots:
 private:
   void update_buttons();
   void chat_message_received(const QString &message,
-                             const struct text_tag_list *tags);
+                             const struct text_tag_list *tags) override;
   void slot_pregame_observe();
   void slot_pregame_start();
   Ui::FormPagePregame ui;

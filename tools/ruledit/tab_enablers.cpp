@@ -44,18 +44,18 @@ class fix_enabler_item : public req_vec_fix_item {
 public:
   explicit fix_enabler_item(struct action_enabler *enabler);
   virtual ~fix_enabler_item();
-  void close();
+  void close() override;
 
-  const void *item();
-  void *item_working_copy();
-  const char *name();
-  struct req_vec_problem *find_next_problem(void);
-  void apply_accepted_changes();
-  void undo_accepted_changes();
-  int num_vectors();
-  requirement_vector_namer vector_namer();
-  requirement_vector_by_number vector_getter();
-  bool vector_in_item(const struct requirement_vector *vec);
+  const void *item() override;
+  void *item_working_copy() override;
+  const char *name() override;
+  struct req_vec_problem *find_next_problem(void) override;
+  void apply_accepted_changes() override;
+  void undo_accepted_changes() override;
+  int num_vectors() override;
+  requirement_vector_namer vector_namer() override;
+  requirement_vector_by_number vector_getter() override;
+  bool vector_in_item(const struct requirement_vector *vec) override;
 
 private:
   struct action_enabler *current_enabler;

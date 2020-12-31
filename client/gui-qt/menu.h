@@ -127,7 +127,7 @@ class gov_menu : public QMenu {
 
 public:
   gov_menu(QWidget *parent = 0);
-  virtual ~gov_menu();
+  ~gov_menu() override;
 
   static void create_all();
   static void update_all();
@@ -151,7 +151,7 @@ class go_act_menu : public QMenu {
 
 public:
   go_act_menu(QWidget *parent = 0);
-  virtual ~go_act_menu();
+  ~go_act_menu() override;
 
   static void reset_all();
   static void update_all();

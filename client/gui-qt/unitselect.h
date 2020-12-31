@@ -39,20 +39,20 @@ class units_select : public fcwidget {
 
 public:
   units_select(struct tile *ptile, QWidget *parent = 0);
-  ~units_select();
-  void update_menu();
+  ~units_select() override;
+  void update_menu() override;
   void update_units();
   void create_pixmap();
   tile *utile;
 
 protected:
   void paint(QPainter *painter, QPaintEvent *event);
-  void paintEvent(QPaintEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-  void keyPressEvent(QKeyEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void wheelEvent(QWheelEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void keyPressEvent(QKeyEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
+  void closeEvent(QCloseEvent *event) override;
 private slots:
   void update_img();
 

@@ -42,7 +42,7 @@ struct city;
 template <class Key, class T> class QMap;
 
 class city_sort_model : public QSortFilterProxyModel {
-  bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+  bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
 };
 
 /***************************************************************************
@@ -53,11 +53,11 @@ class city_item_delegate : public QItemDelegate {
 
 public:
   city_item_delegate(QObject *parent);
-  ~city_item_delegate() {}
+  ~city_item_delegate() override {}
   void paint(QPainter *painter, const QStyleOptionViewItem &option,
-             const QModelIndex &index) const;
+             const QModelIndex &index) const override;
   QSize sizeHint(const QStyleOptionViewItem &option,
-                 const QModelIndex &index) const;
+                 const QModelIndex &index) const override;
 
 private:
   int item_height;
@@ -89,22 +89,22 @@ class city_model : public QAbstractListModel {
 
 public:
   city_model(QObject *parent = 0);
-  ~city_model();
-  inline int rowCount(const QModelIndex &index = QModelIndex()) const
+  ~city_model() override;
+  inline int rowCount(const QModelIndex &index = QModelIndex()) const override
   {
     Q_UNUSED(index);
     return city_list.size();
   }
-  int columnCount(const QModelIndex &parent = QModelIndex()) const
+  int columnCount(const QModelIndex &parent = QModelIndex()) const override
   {
     Q_UNUSED(parent);
     return NUM_CREPORT_COLS;
   }
-  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
   bool setData(const QModelIndex &index, const QVariant &value,
-               int role = Qt::DisplayRole);
+               int role = Qt::DisplayRole) override;
   QVariant headerData(int section, Qt::Orientation orientation,
-                      int role) const;
+                      int role) const override;
   QVariant menu_data(int section) const;
   QVariant hide_data(int section) const;
   void populate();
@@ -146,7 +146,7 @@ class city_widget : public QTreeView {
 
 public:
   city_widget(city_report *ctr);
-  ~city_widget();
+  ~city_widget() override;
   city_model *get_model() const;
   QList<city *> selected_cities;
   void update_model();
@@ -194,7 +194,7 @@ class city_report : public QWidget {
 
 public:
   city_report();
-  ~city_report();
+  ~city_report() override;
   void update_report();
   void update_city(struct city *pcity);
   void init();

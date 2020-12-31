@@ -31,7 +31,7 @@ class mrIdle : public QObject {
   Q_DISABLE_COPY(mrIdle);
 
 public:
-  ~mrIdle();
+  ~mrIdle() override;
   static mrIdle *idlecb();
   static void drop();
   void addCallback(call_me_back *cb);

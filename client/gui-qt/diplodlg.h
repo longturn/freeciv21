@@ -40,7 +40,7 @@ class diplo_wdg : public QWidget {
 
 public:
   diplo_wdg(int id, int id2);
-  ~diplo_wdg();
+  ~diplo_wdg() override;
   void update_wdg();
   void set_index(int ind);
   int get_index();
@@ -68,7 +68,7 @@ private slots:
   void restore_pixmap();
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent *event) override;
 
 private:
   int player1;
@@ -89,7 +89,7 @@ class diplo_dlg : public QTabWidget {
 
 public:
   diplo_dlg(int counterpart, int initiated_from);
-  ~diplo_dlg();
+  ~diplo_dlg() override;
   void update_dlg();
   bool init(bool raise);
   diplo_wdg *find_widget(int counterpart);

@@ -28,5 +28,5 @@ public:
   explicit fc_tooltip(QObject *parent = NULL) : QObject(parent) {}
 
 protected:
-  bool eventFilter(QObject *obj, QEvent *event);
+  bool eventFilter(QObject *obj, QEvent *event) override;
 };

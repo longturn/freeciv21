@@ -40,7 +40,7 @@ private:
   QWidget *central;
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent *event) override;
 };
 
 class mpgui : public QObject {

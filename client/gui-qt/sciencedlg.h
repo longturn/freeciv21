@@ -45,7 +45,7 @@ class research_diagram : public QWidget {
 
 public:
   research_diagram(QWidget *parent = 0);
-  ~research_diagram();
+  ~research_diagram() override;
   void update_reqtree();
   void reset();
   QSize size();
@@ -53,9 +53,9 @@ private slots:
   void show_tooltip();
 
 private:
-  void mousePressEvent(QMouseEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void paintEvent(QPaintEvent *event);
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
   void create_tooltip_help();
   QPixmap *pcanvas;
   struct reqtree *req;
@@ -97,7 +97,7 @@ class science_report : public QWidget {
 
 public:
   science_report();
-  ~science_report();
+  ~science_report() override;
   void update_report();
   void init(bool raise);
   void redraw();

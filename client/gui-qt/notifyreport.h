@@ -35,17 +35,17 @@ class notify_dialog : public fcwidget {
 public:
   notify_dialog(const char *caption, const char *headline, const char *lines,
                 QWidget *parent = 0);
-  virtual void update_menu();
-  ~notify_dialog();
+  void update_menu() override;
+  ~notify_dialog() override;
   void restart();
 
 protected:
-  void mousePressEvent(QMouseEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void mouseReleaseEvent(QMouseEvent *event);
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
-  void paintEvent(QPaintEvent *paint_event);
+  void paintEvent(QPaintEvent *paint_event) override;
   void calc_size(int &x, int &y);
   close_widget *cw;
   QLabel *label;

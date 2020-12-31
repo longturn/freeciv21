@@ -59,9 +59,9 @@ public slots:
   void history_back();
 
 protected:
-  void showEvent(QShowEvent *event);
-  void hideEvent(QHideEvent *event);
-  void closeEvent(QCloseEvent *event);
+  void showEvent(QShowEvent *event) override;
+  void hideEvent(QHideEvent *event) override;
+  void closeEvent(QCloseEvent *event) override;
 
 private slots:
   void item_changed(QTreeWidgetItem *item, QTreeWidgetItem *prev);
@@ -126,7 +126,7 @@ class help_widget : public QWidget {
 public:
   help_widget(QWidget *parent = 0);
   help_widget(const help_item *item, QWidget *parent = 0);
-  ~help_widget();
+  ~help_widget() override;
   void update_fonts();
 
 private:

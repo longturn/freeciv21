@@ -41,7 +41,7 @@ public:
   void init();
 
 protected:
-  void resizeEvent(QResizeEvent *event);
+  void resizeEvent(QResizeEvent *event) override;
 private slots:
   void current_changed(int index);
 };
@@ -51,7 +51,7 @@ class pageGame : public QWidget {
 
 public:
   pageGame(QWidget *);
-  ~pageGame();
+  ~pageGame() override;
   void updateSidebarPosition();
   void reloadSidebarIcons();
   void updateSidebarTooltips();

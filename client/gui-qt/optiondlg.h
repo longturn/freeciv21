@@ -35,7 +35,7 @@ class option_dialog : public qfc_dialog {
 public:
   option_dialog(const QString &name, const option_set *options,
                 QWidget *parent = 0);
-  ~option_dialog();
+  ~option_dialog() override;
   void fill(const struct option_set *poptset);
   void add_option(struct option *poption);
   void option_dialog_refresh(struct option *poption);

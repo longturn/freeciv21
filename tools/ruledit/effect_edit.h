@@ -50,7 +50,7 @@ public:
   explicit effect_edit(ruledit_gui *ui_in, const QString &target,
                        struct universal *filter_in,
                        enum effect_filter_main_class efmc_in);
-  ~effect_edit();
+  ~effect_edit() override;
   void refresh();
   void add(const char *msg);
   void add_effect_to_list(struct effect *peffect,
@@ -84,7 +84,7 @@ private slots:
   void set_value(int value);
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent *event) override;
 };
 
 #endif // FC__EFFECT_EDIT_H

@@ -26,7 +26,7 @@ class pregamevote : public QWidget {
 
 public:
   explicit pregamevote(QWidget *parent = NULL);
-  ~pregamevote();
+  ~pregamevote() override;
   void update_vote();
   QLabel *label_text;
   QLabel *label_vote_text;
@@ -55,5 +55,5 @@ public:
 
 protected:
   void paint(QPainter *painter, QPaintEvent *event);
-  void paintEvent(QPaintEvent *event);
+  void paintEvent(QPaintEvent *event) override;
 };
