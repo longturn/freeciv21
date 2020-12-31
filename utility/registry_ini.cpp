@@ -151,12 +151,14 @@
 #include <fc_config.h>
 #endif
 
+// KArchive
+#include <KFilterDev>
+
 /* utility */
 #include "bugs.h"
 #include "deprecations.h"
 #include "fcintl.h"
 #include "inputfile.h"
-#include "ioz.h"
 #include "log.h"
 #include "registry.h"
 #include "section_file.h"
@@ -173,7 +175,7 @@
 static inline bool entry_used(const struct entry *pentry);
 static inline void entry_use(struct entry *pentry);
 
-static bool entry_to_file(const struct entry *pentry, fz_FILE *fs);
+static bool entry_to_file(const struct entry *pentry, QIODevice *fs);
 static void entry_from_inf_token(struct section *psection, const char *name,
                                  const char *tok, struct inputfile *file);
 
@@ -572,7 +574,7 @@ struct section_file *secfile_load_section(const char *filename,
 /**********************************************************************/ /**
    Create a section file from a stream.  Returns NULL on error.
  **************************************************************************/
-struct section_file *secfile_from_stream(fz_FILE *stream,
+struct section_file *secfile_from_stream(QIODevice *stream,
                                          bool allow_duplicates)
 {
   return secfile_from_input_file(inf_from_stream(stream, datafilename), NULL,
@@ -600,18 +602,12 @@ static bool is_legal_table_entry_name(char c, bool num)
    This should be followed by the other column values for u0,
    and then subsequent u1, u2, etc, in strict order with no omissions,
    and with all of the columns for all uN in the same order as for u0.
-
-   If compression_level is non-zero, then compress using zlib. Below
-   simply specifies FZ_ZLIB method, since fz_fromFile() automatically
-   changes to FZ_PLAIN method when level == 0.
  **************************************************************************/
-bool secfile_save(const struct section_file *secfile, const char *filename,
-                  int compression_level, enum fz_method compression_method)
+bool secfile_save(const struct section_file *secfile, const char *filename)
 {
   char real_filename[1024];
   char pentry_name[128];
   const char *col_entry_name;
-  fz_FILE *fs;
   const struct entry_list_link *ent_iter, *save_iter, *col_iter;
   struct entry *pentry, *col_pentry;
   int i;
@@ -623,13 +619,13 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
   }
 
   interpret_tilde(real_filename, sizeof(real_filename), filename);
-  fs = fz_from_file(real_filename, "w", compression_method,
-                    compression_level);
+  auto fs = new KFilterDev(real_filename);
+  fs->open(QIODevice::WriteOnly);
 
-  if (!fs) {
+  if (!fs->isOpen()) {
     SECFILE_LOG(secfile, NULL, _("Could not open %s for writing"),
                 real_filename);
-
+    delete fs;
     return false;
   }
 
@@ -641,9 +637,9 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
            ent_iter = entry_list_link_next(ent_iter)) {
         fc_assert(!strcmp(entry_name(pentry), "file"));
 
-        fc_assert_ret_val(fz_fprintf(fs, "*include ") > 0, false);
+        fc_assert_ret_val(fs->write("*include ") > 0, false);
         fc_assert_ret_val(entry_to_file(pentry, fs), false);
-        fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
+        fc_assert_ret_val(fs->write("\n") > 0, false);
       }
     } else if (psection->special == EST_COMMENT) {
       for (ent_iter = entry_list_head(section_entries(psection));
@@ -652,11 +648,12 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
         fc_assert(!strcmp(entry_name(pentry), "comment"));
 
         fc_assert_ret_val(entry_to_file(pentry, fs), false);
-        fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
+        fc_assert_ret_val(fs->write("\n") > 0, false);
       }
     } else {
-      fc_assert_ret_val(
-          fz_fprintf(fs, "\n[%s]\n", section_name(psection)) > 0, false);
+      fc_assert_ret_val(fs->write("\n[") > 0, false);
+      fc_assert_ret_val(fs->write(section_name(psection)) > 0, false);
+      fc_assert_ret_val(fs->write("]\n") > 0, false);
 
       /* Following doesn't use entry_list_iterate() because we want to do
        * tricky things with the iterators...
@@ -707,7 +704,8 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
           first[offset - 2] = '\0';
           sz_strlcpy(base, first);
           first[offset - 2] = '0';
-          fc_assert_ret_val(fz_fprintf(fs, "%s={", base) > 0, false);
+          fc_assert_ret_val(fs->write(base) > 0, false);
+          fc_assert_ret_val(fs->write("={") > 0, false);
 
           /* Save an iterator at this first entry, which we can later use
            * to repeatedly iterate over column names:
@@ -723,14 +721,13 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
             if (strncmp(col_entry_name, first, offset) != 0) {
               break;
             }
-            fc_assert_ret_val(fz_fprintf(fs, "%s\"%s\"",
-                                         (ncol == 0 ? "" : ","),
-                                         col_entry_name + offset)
-                                  > 0,
+            fc_assert_ret_val(fs->write(ncol == 0 ? "\"" : ",\"") > 0,
                               false);
+            fc_assert_ret_val(fs->write(col_entry_name + offset) > 0, false);
+            fc_assert_ret_val(fs->write("\"") > 0, false);
             ncol++;
           }
-          fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
+          fc_assert_ret_val(fs->write("\n") > 0, false);
 
           /* Iterate over rows and columns, incrementing ent_iter as we go,
            * and writing values to the table.  Have a separate iterator
@@ -767,14 +764,14 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
                     "To avoid this make sure all rows of a table are\n"
                     "filled out with an entry for every column.",
                     real_filename, section_name(psection), expect);
-                fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
+                fc_assert_ret_val(fs->write("\n") > 0, false);
               }
-              fc_assert_ret_val(fz_fprintf(fs, "}\n") > 0, false);
+              fc_assert_ret_val(fs->write("}\n") > 0, false);
               break;
             }
 
             if (icol > 0) {
-              fc_assert_ret_val(fz_fprintf(fs, ",") > 0, false);
+              fc_assert_ret_val(fs->write(",") > 0, false);
             }
             fc_assert_ret_val(entry_to_file(pentry, fs), false);
 
@@ -783,7 +780,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
 
             icol++;
             if (icol == ncol) {
-              fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
+              fc_assert_ret_val(fs->write("\n") > 0, false);
               irow++;
               icol = 0;
               col_iter = save_iter;
@@ -799,7 +796,8 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
 
         /* Classic entry. */
         col_entry_name = entry_name(pentry);
-        fc_assert_ret_val(fz_fprintf(fs, "%s=", col_entry_name), false);
+        fc_assert_ret_val(fs->write(col_entry_name), false);
+        fc_assert_ret_val(fs->write("="), false);
         fc_assert_ret_val(entry_to_file(pentry, fs), false);
 
         /* Check for vector. */
@@ -814,33 +812,37 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
           if (0 != strcmp(pentry_name, entry_name(col_pentry))) {
             break;
           }
-          fc_assert_ret_val(fz_fprintf(fs, ",") > 0, false);
+          fc_assert_ret_val(fs->write(",") > 0, false);
           fc_assert_ret_val(entry_to_file(col_pentry, fs), false);
           ent_iter = col_iter;
         }
 
         comment = entry_comment(pentry);
         if (comment) {
-          fc_assert_ret_val(fz_fprintf(fs, "  # %s\n", comment) > 0, false);
+          fc_assert_ret_val(fs->write("  # ") > 0, false);
+          fc_assert_ret_val(fs->write(comment) > 0, false);
+          fc_assert_ret_val(fs->write("\n") > 0, false);
         } else {
-          fc_assert_ret_val(fz_fprintf(fs, "\n") > 0, false);
+          fc_assert_ret_val(fs->write("\n") > 0, false);
         }
       }
     }
   }
   section_list_iterate_end;
 
-  if (0 != fz_ferror(fs)) {
-    SECFILE_LOG(secfile, NULL, "Error before closing %s: %s", real_filename,
-                fz_strerror(fs));
-    fz_fclose(fs);
-    return false;
+  bool error = !fs->errorString().isEmpty();
+  // KFilterDev returns "Unknown error" even when there's no error
+  if (qobject_cast<KFilterDev *>(fs)) {
+    error = qobject_cast<KFilterDev *>(fs)->error() != 0;
   }
-  if (0 != fz_fclose(fs)) {
-    SECFILE_LOG(secfile, NULL, "Error closing %s", real_filename);
+  if (error) {
+    SECFILE_LOG(secfile, NULL, "Error before closing %s: %s", real_filename,
+                qPrintable(fs->errorString()));
+    delete fs;
     return false;
   }
 
+  delete fs;
   return true;
 }
 
@@ -3404,57 +3406,47 @@ bool entry_str_set_gt_marking(struct entry *pentry, bool gt_marking)
 /**********************************************************************/ /**
    Push an entry into a file stream.
  **************************************************************************/
-static bool entry_to_file(const struct entry *pentry, fz_FILE *fs)
+static bool entry_to_file(const struct entry *pentry, QIODevice *fs)
 {
   static char buf[8192];
-  char *dot = NULL;
-  int i;
 
   switch (pentry->type) {
   case ENTRY_BOOL:
     fc_assert_ret_val(
-        fz_fprintf(fs, "%s", pentry->boolean.value ? "TRUE" : "FALSE") > 0,
-        false);
+        fs->write(pentry->boolean.value ? "TRUE" : "FALSE") > 0, false);
     break;
-  case ENTRY_INT:
-    fc_assert_ret_val(fz_fprintf(fs, "%d", pentry->integer.value) > 0,
-                      false);
-    break;
-  case ENTRY_FLOAT:
-    snprintf(buf, sizeof(buf), "%f", pentry->floating.value);
-    for (i = 0; buf[i] != '\0'; i++) {
-      if (buf[i] == '.') {
-        dot = &(buf[i]);
-        break;
-      }
+  case ENTRY_INT: {
+    auto number = QString::number(pentry->integer.value);
+    fc_assert_ret_val(fs->write(number.toUtf8()) > 0, false);
+  } break;
+  case ENTRY_FLOAT: {
+    auto number = QString::number(pentry->floating.value, 'f');
+    if (!number.contains('.')) {
+      number += QStringLiteral(".0");
     }
-    if (dot == NULL) {
-      /* There's no '.' so it would seem like a integer value when loaded.
-       * Force it not to look like an integer by adding ".0" */
-      fc_assert_ret_val(fz_fprintf(fs, "%s.0", buf) > 0, false);
-    } else {
-      fc_assert_ret_val(fz_fprintf(fs, "%s", buf) > 0, false);
-    }
-    break;
+    fc_assert_ret_val(fs->write(number.toUtf8()) > 0, false);
+  } break;
   case ENTRY_STR:
     if (pentry->string.escaped) {
       make_escapes(pentry->string.value, buf, sizeof(buf));
       if (pentry->string.gt_marking) {
-        fc_assert_ret_val(fz_fprintf(fs, "_(\"%s\")", buf) > 0, false);
+        fc_assert_ret_val(fs->write("_(\"" + QByteArray(buf) + "\")") > 0,
+                          false);
       } else {
-        fc_assert_ret_val(fz_fprintf(fs, "\"%s\"", buf) > 0, false);
+        fc_assert_ret_val(fs->write("\"" + QByteArray(buf) + "\"") > 0,
+                          false);
       }
     } else if (pentry->string.raw) {
-      fc_assert_ret_val(fz_fprintf(fs, "%s", pentry->string.value) > 0,
-                        false);
+      fc_assert_ret_val(fs->write(pentry->string.value) > 0, false);
     } else {
-      fc_assert_ret_val(fz_fprintf(fs, "$%s$", pentry->string.value) > 0,
-                        false);
+      fc_assert_ret_val(
+          fs->write("$" + QByteArray(pentry->string.value) + "$") > 0,
+          false);
     }
     break;
   case ENTRY_FILEREFERENCE:
-    fc_assert_ret_val(fz_fprintf(fs, "*%s*", pentry->string.value) > 0,
-                      false);
+    fc_assert_ret_val(
+        fs->write("*" + QByteArray(pentry->string.value) + "*") > 0, false);
     break;
   case ENTRY_ILLEGAL:
     fc_assert(pentry->type != ENTRY_ILLEGAL);

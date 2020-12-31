@@ -13,10 +13,10 @@
 #pragma once
 
 /* utility */
-#include "ioz.h"
 #include "support.h" /* bool type and fc__attribute */
 
 /* Opaque types. */
+struct QIODevice;
 struct section_file;
 struct section;
 struct entry;
@@ -55,11 +55,10 @@ typedef const char *(*secfile_enum_name_data_fn_t)(secfile_data_t data,
 struct section_file *secfile_load_section(const char *filename,
                                           const char *section,
                                           bool allow_duplicates);
-struct section_file *secfile_from_stream(fz_FILE *stream,
+struct section_file *secfile_from_stream(QIODevice *stream,
                                          bool allow_duplicates);
 
-bool secfile_save(const struct section_file *secfile, const char *filename,
-                  int compression_level, enum fz_method compression_method);
+bool secfile_save(const struct section_file *secfile, const char *filename);
 void secfile_check_unused(const struct section_file *secfile);
 const char *secfile_name(const struct section_file *secfile);
 

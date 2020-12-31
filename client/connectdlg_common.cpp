@@ -33,7 +33,6 @@
 #include "deprecations.h"
 #include "fciconv.h"
 #include "fcintl.h"
-#include "ioz.h"
 #include "log.h"
 #include "net_types.h"
 #include "rand.h"
@@ -410,7 +409,7 @@ void send_client_wants_hack(const char *filename)
 
     file = secfile_new(false);
     secfile_insert_str(file, req.token, "challenge.token");
-    if (!secfile_save(file, challenge_fullname, 0, FZ_PLAIN)) {
+    if (!secfile_save(file, challenge_fullname)) {
       qCritical("Couldn't write token to temporary file: %s",
                 challenge_fullname);
     }

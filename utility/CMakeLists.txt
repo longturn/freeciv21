@@ -34,7 +34,6 @@ add_library(
   genhash.cpp
   genlist.cpp
   inputfile.cpp
-  ioz.cpp
   iterator.cpp
   log.cpp
   netfile.cpp
@@ -66,6 +65,7 @@ target_include_directories(utility PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(utility PRIVATE ${STACK_UNWINDING_LIBRARY})
 target_link_libraries(utility PRIVATE ${STACK_SYMBOLS_LIBRARY})
 target_link_libraries(utility PUBLIC Qt5::Core Qt5::Network)
+target_link_libraries(utility PRIVATE KF5::Archive)
 if (WIN32 OR MSYS OR MINGW)
   target_link_libraries(utility PRIVATE ws2_32 wsock32)
 endif()

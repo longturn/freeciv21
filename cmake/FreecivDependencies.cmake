@@ -90,7 +90,11 @@ add_subdirectory(dependencies/tolua-5.2) # Will build the program if not found.
 include(FreecivBackward)
 
 # Compression
-find_package(ZLIB REQUIRED)
+find_package(KF5Archive REQUIRED)
+set(FREECIV_HAVE_BZ2 ${KArchive_HAVE_BZIP2})
+set(FREECIV_HAVE_LZMA ${KArchive_HAVE_LZMA})
+
+find_package(ZLIB REQUIRED) # Network protocol code
 
 if(UNIX)
   # To find the current user name

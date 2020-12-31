@@ -36,6 +36,18 @@ enum barbarians_rate {
   BARBS_HORDES
 };
 
+/* (Possibly) supported methods (depending on what KArchive supports). */
+enum compress_type {
+  COMPRESS_PLAIN = 0,
+  COMPRESS_ZLIB,
+#ifdef FREECIV_HAVE_BZ2
+  COMPRESS_BZIP2,
+#endif
+#ifdef FREECIV_HAVE_LZMA
+  COMPRESS_XZ,
+#endif
+};
+
 enum autosave_type {
   AS_TURN = 0,
   AS_GAME_OVER,
@@ -152,8 +164,7 @@ struct civ_game {
       int revolution_length;
       int spaceship_travel_time;
       bool threaded_save;
-      int save_compress_level;
-      enum fz_method save_compress_type;
+      enum compress_type save_compress_type;
       int save_nturns;
       int save_frequency;
       unsigned
@@ -653,14 +664,10 @@ extern struct world wld;
 
 #define GAME_DEFAULT_EVENT_CACHE_INFO false
 
-#define GAME_DEFAULT_COMPRESS_LEVEL 6 /* if we have compression */
-#define GAME_MIN_COMPRESS_LEVEL 1
-#define GAME_MAX_COMPRESS_LEVEL 9
-
-#if defined(FREECIV_HAVE_LIBLZMA)
-#define GAME_DEFAULT_COMPRESS_TYPE FZ_XZ
+#ifdef FREECIV_HAVE_LZMA
+#define GAME_DEFAULT_COMPRESS_TYPE COMPRESS_XZ
 #else
-#define GAME_DEFAULT_COMPRESS_TYPE FZ_ZLIB
+#define GAME_DEFAULT_COMPRESS_TYPE COMPRESS_ZLIB
 #endif
 
 #define GAME_DEFAULT_ALLOWED_CITY_NAMES CNM_PLAYER_UNIQUE

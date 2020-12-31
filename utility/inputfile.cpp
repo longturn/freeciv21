@@ -74,10 +74,12 @@
 // Qt
 #include <QLoggingCategory>
 
+// KArchive
+#include <KFilterDev>
+
 /* utility */
 #include "astring.h"
 #include "fcintl.h"
-#include "ioz.h"
 #include "support.h"
 
 #include "inputfile.h"
@@ -90,7 +92,7 @@
 struct inputfile {
   unsigned int magic;        /* memory check */
   char *filename;            /* filename as passed to fopen */
-  fz_FILE *fp;               /* read from this */
+  QIODevice *fp;             /* read from this */
   bool at_eof;               /* flag for end-of-file */
   struct astring cur_line;   /* data from current line */
   unsigned int cur_line_pos; /* position in current line */
@@ -208,12 +210,13 @@ struct inputfile *inf_from_file(const char *filename,
                                 datafilename_fn_t datafn)
 {
   struct inputfile *inf;
-  fz_FILE *fp;
 
   fc_assert_ret_val(NULL != filename, NULL);
   fc_assert_ret_val(0 < qstrlen(filename), NULL);
-  fp = fz_from_file(filename, "r", FZ_PLAIN, 0);
-  if (!fp) {
+  auto fp = new KFilterDev(filename);
+  fp->open(QIODevice::ReadOnly);
+  if (!fp->isOpen()) {
+    delete fp;
     return NULL;
   }
   log_debug("inputfile: opened \"%s\" ok", filename);
@@ -226,7 +229,8 @@ struct inputfile *inf_from_file(const char *filename,
    Open the stream, and return an allocated, initialized structure.
    Returns NULL if the file could not be opened.
  ***********************************************************************/
-struct inputfile *inf_from_stream(fz_FILE *stream, datafilename_fn_t datafn)
+struct inputfile *inf_from_stream(QIODevice *stream,
+                                  datafilename_fn_t datafn)
 {
   struct inputfile *inf;
 
@@ -254,14 +258,18 @@ static void inf_close_partial(struct inputfile *inf)
 
   log_debug("inputfile: sub-closing \"%s\"", inf_filename(inf));
 
-  if (fz_ferror(inf->fp) != 0) {
-    qCritical("Error before closing %s: %s", inf_filename(inf),
-              fz_strerror(inf->fp));
-    fz_fclose(inf->fp);
-    inf->fp = NULL;
-  } else if (fz_fclose(inf->fp) != 0) {
-    qCritical("Error closing %s", inf_filename(inf));
+  bool error = !inf->fp->errorString().isEmpty();
+  // KFilterDev returns "Unknown error" even when there's no error
+  if (qobject_cast<KFilterDev *>(inf->fp)) {
+    error = qobject_cast<KFilterDev *>(inf->fp)->error() != 0;
   }
+  if (error) {
+    qCritical("Error before closing %s: %s", inf_filename(inf),
+              qPrintable(inf->fp->errorString()));
+  }
+  delete inf->fp;
+  inf->fp = nullptr;
+
   if (inf->filename) {
     delete[] inf->filename;
   }
@@ -440,7 +448,6 @@ static bool check_include(struct inputfile *inf)
 static bool read_a_line(struct inputfile *inf)
 {
   struct astring *line;
-  char *ret;
   int pos;
 
   fc_assert_ret_val(inf_sanity_check(inf), false);
@@ -462,11 +469,11 @@ static bool read_a_line(struct inputfile *inf)
    * (or first position) in line.
    */
   for (;;) {
-    ret = fz_fgets((char *) astr_str(line) + pos, astr_capacity(line) - pos,
-                   inf->fp);
+    auto ret = inf->fp->readLine((char *) astr_str(line) + pos,
+                                 astr_capacity(line) - pos);
 
-    if (!ret) {
-      /* fgets failed */
+    if (ret < 0) {
+      /* readLine failed */
       if (pos > 0) {
         qCCritical(inf_category, _("End-of-file not in line of its own"));
       }
@@ -825,7 +832,6 @@ static const char *get_token_value(struct inputfile *inf)
 
   if (border_character == '*') {
     const char *rfname;
-    fz_FILE *fp;
     bool eof;
     int pos;
 
@@ -855,9 +861,11 @@ static const char *get_token_value(struct inputfile *inf)
       return NULL;
     }
     *((char *) c) = trailing; /* Revert. */
-    fp = fz_from_file(rfname, "r", FZ_PLAIN, 0);
-    if (!fp) {
+    auto fp = new KFilterDev(rfname);
+    fp->open(QIODevice::ReadOnly);
+    if (!fp->isOpen()) {
       qCCritical(inf_category, _("Cannot open stringfile \"%s\"."), rfname);
+      delete fp;
       return NULL;
     }
     log_debug("Stringfile \"%s\" opened ok", start);
@@ -867,11 +875,9 @@ static const char *get_token_value(struct inputfile *inf)
     eof = false;
     pos = 1; /* Past 'filestring' marker */
     while (!eof) {
-      char *ret;
-
-      ret = fz_fgets((char *) astr_str(&inf->token) + pos,
-                     astr_capacity(&inf->token) - pos, fp);
-      if (ret == NULL) {
+      auto ret = fp->readLine((char *) astr_str(&inf->token) + pos,
+                              astr_capacity(&inf->token) - pos);
+      if (ret < 0 || fp->atEnd()) {
         eof = true;
       } else {
         pos = astr_len(&inf->token);
@@ -879,7 +885,8 @@ static const char *get_token_value(struct inputfile *inf)
       }
     }
 
-    fz_fclose(fp);
+    delete fp;
+    fp = nullptr;
 
     inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
 

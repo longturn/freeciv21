@@ -24,7 +24,6 @@
 /* utility */
 #include "deprecations.h"
 #include "fcintl.h"
-#include "ioz.h"
 #include "log.h"
 #include "registry.h"
 #include "shared.h"
@@ -4525,7 +4524,7 @@ void options_load(void)
     save_cma_presets(sf);
 
     /* FIXME: need better messages */
-    if (!secfile_save(sf, name, 0, FZ_PLAIN)) {
+    if (!secfile_save(sf, name)) {
       qCritical(_("Save failed, cannot write to file %s"), name);
     } else {
       qInfo(_("Saved settings to file %s"), name);
@@ -4699,7 +4698,7 @@ void options_save(option_save_log_callback log_cb)
   }
 
   /* save to disk */
-  if (!secfile_save(sf, name, 0, FZ_PLAIN)) {
+  if (!secfile_save(sf, name)) {
     log_cb(LOG_ERROR, QString::asprintf(
                           _("Save failed, cannot write to file %s"), name));
   } else {

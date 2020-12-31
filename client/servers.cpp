@@ -18,6 +18,7 @@
 #include "servers.h"
 
 // Qt
+#include <QBuffer>
 #include <QByteArray>
 #include <QDebug>
 #include <QEventLoop>
@@ -243,7 +244,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
    The server sends a stream in a registry 'ini' type format.
    Read it using secfile functions and fill the server_list structs.
  **************************************************************************/
-static struct server_list *parse_metaserver_data(fz_FILE *f)
+static struct server_list *parse_metaserver_data(QIODevice *f)
 {
   struct server_list *server_list;
   struct section_file *file;
@@ -361,19 +362,10 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
  **************************************************************************/
 static bool meta_read_response(struct server_scan *scan)
 {
-  fz_FILE *f;
   char str[4096];
   struct server_list *srvrs;
 
-  f = fz_from_memory(scan->meta.mem);
-  if (NULL == f) {
-    fc_snprintf(str, sizeof(str),
-                _("Failed to read the metaserver data from %s."),
-                qUtf8Printable(cmd_metaserver));
-    scan->error_func(scan, str);
-
-    return false;
-  }
+  auto f = new QBuffer(&scan->meta.mem);
 
   /* parse message body */
   srvrs = parse_metaserver_data(f);

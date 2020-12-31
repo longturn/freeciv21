@@ -17,7 +17,6 @@
 
 /* utility */
 #include "fcintl.h"
-#include "ioz.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
@@ -389,7 +388,6 @@ static void game_defaults(bool keep_ruleset_value)
     if (!keep_ruleset_value) {
       sz_strlcpy(game.server.rulesetdir, GAME_DEFAULT_RULESETDIR);
     }
-    game.server.save_compress_level = GAME_DEFAULT_COMPRESS_LEVEL;
     game.server.save_compress_type = GAME_DEFAULT_COMPRESS_TYPE;
     sz_strlcpy(game.server.save_name, GAME_DEFAULT_SAVE_NAME);
     game.server.save_nturns = GAME_DEFAULT_SAVETURNS;

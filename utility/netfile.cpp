@@ -27,7 +27,6 @@
 
 /* utility */
 #include "fcintl.h"
-#include "ioz.h"
 #include "registry.h"
 
 #include "netfile.h"
@@ -100,9 +99,8 @@ section_file *netfile_get_section_file(const QUrl &url, const nf_errmsg &cb)
 
   // Try to download into the buffer
   if (netfile_download_file_core(url, &buffer, cb)) {
-    auto file = fz_from_memory(buffer.buffer());
     // Parse
-    return secfile_from_stream(file, true);
+    return secfile_from_stream(&buffer, true);
   }
 
   return nullptr;
