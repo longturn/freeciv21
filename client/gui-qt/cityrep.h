@@ -53,7 +53,7 @@ class city_item_delegate : public QItemDelegate {
 
 public:
   city_item_delegate(QObject *parent);
-  ~city_item_delegate() override {}
+  ~city_item_delegate() override = default;
   void paint(QPainter *painter, const QStyleOptionViewItem &option,
              const QModelIndex &index) const override;
   QSize sizeHint(const QStyleOptionViewItem &option,

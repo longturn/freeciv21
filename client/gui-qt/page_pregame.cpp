@@ -77,7 +77,7 @@ page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
   setLayout(ui.gridLayout);
 }
 
-page_pregame::~page_pregame() {}
+page_pregame::~page_pregame() = default;
 
 void page_pregame::set_rulesets(int num_rulesets, char **rulesets)
 {

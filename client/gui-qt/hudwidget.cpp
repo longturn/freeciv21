@@ -540,7 +540,7 @@ hud_units::hud_units(QWidget *parent)
 /************************************************************************/ /**
    Hud_units destructor
  ****************************************************************************/
-hud_units::~hud_units() {}
+hud_units::~hud_units() = default;
 
 /************************************************************************/ /**
    Move Event for hud_units, used to save position
@@ -1196,7 +1196,7 @@ hud_unit_loader::hud_unit_loader(struct unit *pcargo, struct tile *ptile)
 /************************************************************************/ /**
    Destructor for units loader
  ****************************************************************************/
-hud_unit_loader::~hud_unit_loader() {}
+hud_unit_loader::~hud_unit_loader() = default;
 
 /************************************************************************/ /**
    Shows unit loader, adds possible tranportsand units to table
@@ -1431,7 +1431,7 @@ void unit_hud_selector::show_me()
 /************************************************************************/ /**
    Unit_hud_selector destructor
  ****************************************************************************/
-unit_hud_selector::~unit_hud_selector() {}
+unit_hud_selector::~unit_hud_selector() = default;
 
 /************************************************************************/ /**
    Selects and closes widget
@@ -1778,7 +1778,7 @@ void hud_unit_combat::set_scale(float scale)
 /************************************************************************/ /**
    Hud unit combat destructor
  ****************************************************************************/
-hud_unit_combat::~hud_unit_combat() {}
+hud_unit_combat::~hud_unit_combat() = default;
 
 /************************************************************************/ /**
    Sets widget fading

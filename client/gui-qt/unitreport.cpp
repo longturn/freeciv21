@@ -116,7 +116,7 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
 /************************************************************************/ /**
    Unit item destructor
  ****************************************************************************/
-unittype_item::~unittype_item() {}
+unittype_item::~unittype_item() = default;
 
 /************************************************************************/ /**
    Sets unit type pixmap to label

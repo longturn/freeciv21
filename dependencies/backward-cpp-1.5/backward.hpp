@@ -3405,7 +3405,7 @@ class SourceFile {
 public:
   typedef std::vector<std::pair<unsigned, std::string>> lines_t;
 
-  SourceFile() {}
+  SourceFile() = default;
   SourceFile(const std::string &path) {
     // 1. If BACKWARD_CXX_SOURCE_PREFIXES is set then assume it contains
     //    a colon-separated list of path prefixes.  Try prepending each

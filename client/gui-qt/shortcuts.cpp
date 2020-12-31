@@ -539,7 +539,7 @@ fc_shortcuts_dialog::fc_shortcuts_dialog(QWidget *parent) : QDialog(parent)
 /**********************************************************************/ /**
    Destructor for shortcut dialog
  **************************************************************************/
-fc_shortcuts_dialog::~fc_shortcuts_dialog() {}
+fc_shortcuts_dialog::~fc_shortcuts_dialog() = default;
 
 /**********************************************************************/ /**
    Inits shortcut dialog layout

@@ -128,7 +128,7 @@ page_network::page_network(QWidget *parent, fc_client *gui)
   setLayout(ui.gridLayout);
 }
 
-page_network::~page_network() {}
+page_network::~page_network() = default;
 
 /**********************************************************************/ /**
    Update network page connection state.

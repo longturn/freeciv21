@@ -102,7 +102,7 @@ page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
   setLayout(ui.vertLayout);
 }
 
-page_load::~page_load() {}
+page_load::~page_load() = default;
 
 /**********************************************************************/ /**
    Updates saves to load and updates in tableview = saves_load

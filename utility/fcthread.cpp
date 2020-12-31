@@ -23,7 +23,7 @@ void fcThread::set_func(void(tfunc)(void *), void *tdata)
   data = tdata;
 }
 
-fcThread::~fcThread() {}
+fcThread::~fcThread() = default;
 
 void fcThread::run()
 {
