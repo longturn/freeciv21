@@ -808,7 +808,7 @@ void races_dialog::ok_pressed()
 /***********************************************************************/ /**
    Default actions provider constructor
  ***************************************************************************/
-qdef_act::qdef_act() : vs_city(-1), vs_unit(-1) {}
+qdef_act::qdef_act()  {}
 
 /***********************************************************************/ /**
    Returns instance of qdef_act

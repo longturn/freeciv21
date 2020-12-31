@@ -60,11 +60,8 @@ extern "C" void real_science_report_dialog_update(void *);
    Constructor
  ****************************************************************************/
 fc_client::fc_client()
-    : QMainWindow(), status_bar_label(nullptr), server_notifier(nullptr),
-      central_layout(nullptr), status_bar(nullptr),
-      current_file(QLatin1String("")), quitting(false),
-      opened_dialog(nullptr), central_wdg(nullptr), interface_locked(false),
-      map_font_scale(true), map_scale(1.0f), menu_bar(nullptr)
+    : QMainWindow(), 
+      current_file(QLatin1String("")) 
 {
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
   status_bar_queue.clear();

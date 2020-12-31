@@ -76,7 +76,7 @@ extern "C" void option_dialog_popup(const char *name,
 /**********************************************************************/ /**
    Constructor for units used in delayed orders
  **************************************************************************/
-qfc_units_list::qfc_units_list() : nr_units(0) {}
+qfc_units_list::qfc_units_list()  {}
 
 /**********************************************************************/ /**
    Adds givent unit to list
@@ -555,7 +555,7 @@ struct tile *mr_menu::find_last_unit_pos(unit *punit, int pos)
 /**********************************************************************/ /**
    Constructor for global menubar in gameview
  **************************************************************************/
-mr_menu::mr_menu() : QMenuBar(), initialized(false) {}
+mr_menu::mr_menu() : QMenuBar() {}
 
 /**********************************************************************/ /**
    Initializes menu system, and add custom enum(munit) for most of options

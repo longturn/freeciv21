@@ -113,7 +113,7 @@ public:
   void add(qfc_delayed_unit_item *fui);
   void clear();
   QList<qfc_delayed_unit_item *> unit_list;
-  int nr_units;
+  int nr_units{0};
 };
 
 /****************************************************************************

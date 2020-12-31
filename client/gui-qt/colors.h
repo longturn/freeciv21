@@ -26,5 +26,5 @@ public:
 private:
   static research_color *m_instance;
   QColor colors[31];
-  bool colors_init;
+  bool colors_init{false};
 };

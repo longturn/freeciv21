@@ -901,7 +901,7 @@ bool unit_list_event_filter::eventFilter(QObject *object, QEvent *event)
 }
 
 cityIconInfoLabel::cityIconInfoLabel(QWidget *parent)
-    : QWidget(parent), pcity(nullptr)
+    : QWidget(parent) 
 {
   QFont f = *fcFont::instance()->getFont(fonts::default_font);
   QFontMetrics fm(f);
@@ -980,7 +980,7 @@ void cityIconInfoLabel::updateTooltip(int nr, const QString &tooltipText)
    city_label is used only for showing citizens icons
    and was created only to catch mouse events
  ****************************************************************************/
-city_label::city_label(QWidget *parent) : QLabel(parent), pcity(nullptr)
+city_label::city_label(QWidget *parent) : QLabel(parent) 
 {
   type = FEELING_FINAL;
 }
@@ -1179,7 +1179,7 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
 }
 
 governor_sliders::governor_sliders(QWidget *parent)
-    : QGroupBox(parent), cma_celeb_checkbox(nullptr)
+    : QGroupBox(parent) 
 {
   QStringList str_list;
   QSlider *slider;
@@ -1312,9 +1312,8 @@ void governor_sliders::update_sliders(struct cm_parameter &param)
    Constructor for city_dialog, sets layouts, policies ...
  ****************************************************************************/
 city_dialog::city_dialog(QWidget *parent)
-    : QWidget(parent), future_targets(false), show_units(true),
-      show_wonders(true), show_buildings(true), dont_focus(false),
-      current_building(0)
+    : QWidget(parent)
+      
 {
   QFont f = QApplication::font();
   QFont *small_font;
