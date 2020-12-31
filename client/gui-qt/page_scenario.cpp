@@ -75,7 +75,7 @@ page_scenario::page_scenario(QWidget *parent, fc_client *gui)
   setLayout(ui.gridLayout);
 }
 
-page_scenario::~page_scenario() {}
+page_scenario::~page_scenario() = default;
 
 /**********************************************************************/ /**
    Browse scenarios directory

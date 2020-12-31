@@ -19,7 +19,7 @@
 
 class fcThread : public QThread {
 public:
-  fcThread(){};
+  fcThread()= default;;
   fcThread(void(tfunc)(void *), void *tdata);
   void set_func(void(tfunc)(void *), void *tdata);
   ~fcThread() override;

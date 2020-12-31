@@ -169,7 +169,7 @@ void pregamevote::update_vote()
 /***********************************************************************/ /**
    Destructor for pregamevote
  ***************************************************************************/
-pregamevote::~pregamevote() {}
+pregamevote::~pregamevote() = default;
 
 /***********************************************************************/ /**
    pregamevote class used for displaying vote bar in PAGE START

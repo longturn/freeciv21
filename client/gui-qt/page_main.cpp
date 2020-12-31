@@ -55,4 +55,4 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   setLayout(ui.gridLayout);
 }
 
-page_main::~page_main() {}
+page_main::~page_main() = default;

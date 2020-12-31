@@ -146,7 +146,7 @@ pageGame::pageGame(QWidget *parent)
   game_tab_widget->init();
 }
 
-pageGame::~pageGame() {}
+pageGame::~pageGame() = default;
 
 /**********************************************************************/ /**
    Reloads sidebar icons (useful on theme change)

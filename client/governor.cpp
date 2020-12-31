@@ -112,7 +112,7 @@ Q_GLOBAL_STATIC(cma_yoloswag, gimb)
 // deletes governor
 void governor::drop() { NFCN_FREE(m_instance); }
 
-governor::~governor() {}
+governor::~governor() = default;
 
 // instance for governor
 governor *governor::i()
@@ -280,7 +280,7 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
   xcity = nullptr;
 }
 
-cma_yoloswag::~cma_yoloswag() {}
+cma_yoloswag::~cma_yoloswag() = default;
 
 bool cma_yoloswag::apply_result(struct city *pcity,
                                 const struct cm_result *result)

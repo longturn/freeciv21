@@ -192,7 +192,7 @@ class city_production_delegate : public QItemDelegate {
 
 public:
   city_production_delegate(QPoint sh, QObject *parent, struct city *city);
-  ~city_production_delegate() override {}
+  ~city_production_delegate() override = default;
   void paint(QPainter *painter, const QStyleOptionViewItem &option,
              const QModelIndex &index) const override;
   QSize sizeHint(const QStyleOptionViewItem &option,

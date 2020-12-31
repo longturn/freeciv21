@@ -131,7 +131,7 @@ public:
 /***************************************************************************
   Constructor
 ***************************************************************************/
-template <class _type_> listener<_type_>::listener() {}
+template <class _type_> listener<_type_>::listener() = default;
 
 /***************************************************************************
   Starts listening to events

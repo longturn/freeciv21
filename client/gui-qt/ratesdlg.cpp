@@ -309,7 +309,7 @@ fc_double_edge::fc_double_edge(QWidget *parent) : QWidget(parent)
 /**********************************************************************/ /**
    Double edged slider destructor
  **************************************************************************/
-fc_double_edge::~fc_double_edge() {}
+fc_double_edge::~fc_double_edge() = default;
 
 /**********************************************************************/ /**
    Default size for double edge slider

@@ -235,7 +235,7 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from)
 /************************************************************************/ /**
    Destructor for diplomacy widget
  ****************************************************************************/
-diplo_wdg::~diplo_wdg() {}
+diplo_wdg::~diplo_wdg() = default;
 
 /************************************************************************/ /**
    Double click on treaty list - it removes clicked clause from list
