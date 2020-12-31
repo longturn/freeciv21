@@ -31,7 +31,7 @@ static void circle_bresenham(int xc, int yc, int r, int nn);
 static void fmfill(int x, int y, int c, int r);
 static int local_ave_elevation(struct tile *ptile);
 
-extern int *height_map;
+
 int num_landmass = 50;
 
 typedef struct {

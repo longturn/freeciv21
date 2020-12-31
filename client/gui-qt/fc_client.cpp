@@ -54,7 +54,7 @@
 
 fcFont *fcFont::m_instance = 0;
 extern "C" void real_science_report_dialog_update(void *);
-extern void write_shortcuts();
+
 
 /************************************************************************/ /**
    Constructor
