@@ -2898,9 +2898,9 @@ void city_font_update()
 
   f = fcFont::instance()->getFont(fonts::notify_label);
 
-  for (int i = 0; i < l.size(); ++i) {
-    if (l.at(i)->property(fonts::notify_label).isValid()) {
-      l.at(i)->setFont(*f);
+  for (auto i : l) {
+    if (i->property(fonts::notify_label).isValid()) {
+      i->setFont(*f);
     }
   }
 }

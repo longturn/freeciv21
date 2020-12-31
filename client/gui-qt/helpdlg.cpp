@@ -525,21 +525,21 @@ void help_widget::update_fonts()
   l = findChildren<QWidget *>();
 
   f = fcFont::instance()->getFont(fonts::notify_label);
-  for (int i = 0; i < l.size(); ++i) {
-    if (l.at(i)->property(fonts::help_label).isValid()) {
-      l.at(i)->setFont(*f);
+  for (auto i : l) {
+    if (i->property(fonts::help_label).isValid()) {
+      i->setFont(*f);
     }
   }
   f = fcFont::instance()->getFont(fonts::help_text);
-  for (int i = 0; i < l.size(); ++i) {
-    if (l.at(i)->property(fonts::help_text).isValid()) {
-      l.at(i)->setFont(*f);
+  for (auto i : l) {
+    if (i->property(fonts::help_text).isValid()) {
+      i->setFont(*f);
     }
   }
   f = fcFont::instance()->getFont(fonts::default_font);
-  for (int i = 0; i < l.size(); ++i) {
-    if (l.at(i)->property(fonts::default_font).isValid()) {
-      l.at(i)->setFont(*f);
+  for (auto i : l) {
+    if (i->property(fonts::default_font).isValid()) {
+      i->setFont(*f);
     }
   }
 }

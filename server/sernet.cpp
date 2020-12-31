@@ -196,8 +196,8 @@ static void server_conn_close_callback(struct connection *pconn)
  *****************************************************************************/
 void flush_packets()
 {
-  for (int i = 0; i < MAX_NUM_CONNECTIONS; i++) { // check for freaky players
-    struct connection *pconn = &connections[i];
+  for (auto & i : connections) { // check for freaky players
+    struct connection *pconn = &i;
 
     if (pconn->used && !pconn->server.is_closing) {
       if (!pconn->sock->isOpen()) {
