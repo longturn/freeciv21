@@ -1278,9 +1278,7 @@ static bool player_has_ever_built(const struct player *pplayer,
 {
   if (is_wonder(building)) {
     return (wonder_is_built(pplayer, building)
-                    || wonder_is_lost(pplayer, building)
-                ? true
-                : false);
+                    || wonder_is_lost(pplayer, building));
   } else {
     qCritical("Player-ranged requirements are only supported for wonders.");
     return false;
@@ -3340,11 +3338,7 @@ bool is_req_active(
   }
 
   if (eval == TRI_MAYBE) {
-    if (prob_type == RPT_POSSIBLE) {
-      return true;
-    } else {
-      return false;
-    }
+    return prob_type == RPT_POSSIBLE;
   }
   if (req->present) {
     return (eval == TRI_YES);

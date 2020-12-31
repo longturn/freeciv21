@@ -618,15 +618,11 @@ static bool lose_tech(struct research *research)
   /* First check is not for optimization only - it protects
    * research_total_bulbs_required() from getting called before research
    * has even been set to value other than A_UNSET. */
-  if (research->bulbs_researched < 0
+  return research->bulbs_researched < 0
       && research->bulbs_researched
              < (-research_total_bulbs_required(research,
                                                research->researching, false)
-                * game.info.techloss_forgiveness / 100)) {
-    return true;
-  }
-
-  return false;
+                * game.info.techloss_forgiveness / 100);
 }
 
 /************************************************************************/ /**
@@ -1035,7 +1031,7 @@ void choose_tech(struct research *research, Tech_type_id tech)
     }
     advance_index_iterate_end;
     research->researching = tech;
-    if (research->got_tech_multi == false) {
+    if (!research->got_tech_multi) {
       research->bulbs_researched = 0;
     }
     research->bulbs_researched = research->bulbs_researched + bulbs_res;

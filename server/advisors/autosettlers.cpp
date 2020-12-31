@@ -1112,11 +1112,7 @@ bool adv_settler_safe_tile(const struct player *pplayer, struct unit *punit,
   }
   unit_list_iterate_end;
 
-  if (is_square_threatened(pplayer, ptile, !has_handicap(pplayer, H_FOG))) {
-    return false;
-  }
-
-  return true;
+  return !is_square_threatened(pplayer, ptile, !has_handicap(pplayer, H_FOG));
 }
 
 /**********************************************************************/ /**

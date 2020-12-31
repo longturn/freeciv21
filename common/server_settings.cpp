@@ -107,7 +107,7 @@ ssetv ssetv_from_values(server_setting_id setting, int value)
 {
   /* Only Boolean and TRUE can be supported unless setting value encoding
    * is implemented. */
-  if (value != true) {
+  if (!static_cast<bool>(value)) {
     fc_assert(value == true);
     return SSETV_NONE;
   }

@@ -4478,7 +4478,7 @@ static void sg_load_player_vision(struct loaddata *loading,
     }
   }
 
-  if (!plr->is_alive || -1 == total_ncities || false == game.info.fogofwar
+  if (!plr->is_alive || -1 == total_ncities || !game.info.fogofwar
       || !secfile_lookup_bool_default(loading->file, true,
                                       "game.save_private_map")) {
     /* We have:

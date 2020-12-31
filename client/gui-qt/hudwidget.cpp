@@ -1504,13 +1504,10 @@ void unit_hud_selector::keyPressEvent(QKeyEvent *event)
  ****************************************************************************/
 bool unit_hud_selector::activity_filter(struct unit *punit)
 {
-  if ((punit->activity == ACTIVITY_FORTIFIED && fortified->isChecked())
+  return (punit->activity == ACTIVITY_FORTIFIED && fortified->isChecked())
       || (punit->activity == ACTIVITY_SENTRY && sentried->isChecked())
       || (punit->activity == ACTIVITY_IDLE && idle->isChecked())
-      || any_activity->isChecked()) {
-    return true;
-  }
-  return false;
+      || any_activity->isChecked();
 }
 
 /************************************************************************/ /**
@@ -1518,15 +1515,12 @@ bool unit_hud_selector::activity_filter(struct unit *punit)
  ****************************************************************************/
 bool unit_hud_selector::hp_filter(struct unit *punit)
 {
-  if ((any->isChecked()
+  return any->isChecked()
        || (full_mp->isChecked()
            && punit->moves_left >= punit->utype->move_rate)
        || (full_hp->isChecked() && punit->hp >= punit->utype->hp)
        || (full_hp_mp->isChecked() && punit->hp >= punit->utype->hp
-           && punit->moves_left >= punit->utype->move_rate))) {
-    return true;
-  }
-  return false;
+           && punit->moves_left >= punit->utype->move_rate);
 }
 
 /************************************************************************/ /**
@@ -1556,10 +1550,7 @@ bool unit_hud_selector::island_filter(struct unit *punit)
     }
   }
 
-  if (anywhere->isChecked()) {
-    return true;
-  }
-  return false;
+  return anywhere->isChecked();
 }
 
 /************************************************************************/ /**
@@ -1573,16 +1564,9 @@ bool unit_hud_selector::type_filter(struct unit *punit)
   if (this_type->isChecked()) {
     qvar = unit_sel_type->currentData();
     utype_id = qvar.toInt();
-    if (utype_id == utype_index(punit->utype)) {
-      return true;
-    } else {
-      return false;
-    }
+    return utype_id == utype_index(punit->utype);
   }
-  if (any_type->isChecked()) {
-    return true;
-  }
-  return false;
+  return any_type->isChecked();
 }
 
 /************************************************************************/ /**

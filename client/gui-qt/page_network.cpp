@@ -350,11 +350,7 @@ bool page_network::check_server_scan(server_scan *scan_data)
     update_server_list(type, srvrs);
   }
 
-  if (stat == SCAN_STATUS_ERROR || stat == SCAN_STATUS_DONE) {
-    return false;
-  }
-
-  return true;
+  return !(stat == SCAN_STATUS_ERROR || stat == SCAN_STATUS_DONE);
 }
 
 /**********************************************************************/ /**

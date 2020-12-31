@@ -305,10 +305,7 @@ bool dai_hunter_qualify(struct player *pplayer, struct unit *punit)
   if (is_barbarian(pplayer) || unit_owner(punit) != pplayer) {
     return false;
   }
-  if (unit_has_type_role(punit, L_HUNTER)) {
-    return true;
-  }
-  return false;
+  return unit_has_type_role(punit, L_HUNTER);
 }
 
 /**********************************************************************/ /**

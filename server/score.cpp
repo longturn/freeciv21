@@ -473,7 +473,7 @@ void rank_users(bool interrupt)
     players_iterate_end;
   }
 
-  if (interrupt == false) {
+  if (!interrupt) {
     /* game ended for a victory condition */
 
     /* first pass: locate those alive who haven't surrendered, set them to

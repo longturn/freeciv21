@@ -608,11 +608,7 @@ static bool calc_mapview_origin(float *gui_x0, float *gui_y0)
     *gui_y0 = CLIP(ymin, *gui_y0, ymax - ysize);
   }
 
-  if (mapview.gui_x0 == *gui_x0 && mapview.gui_y0 == *gui_y0) {
-    return false;
-  }
-
-  return true;
+  return !(mapview.gui_x0 == *gui_x0 && mapview.gui_y0 == *gui_y0);
 }
 
 /************************************************************************/ /**

@@ -3445,11 +3445,7 @@ void destroy_city_virtual(struct city *pcity)
 bool city_exist(int id)
 {
   /* Check if city exist in game */
-  if (game_city_by_number(id)) {
-    return true;
-  }
-
-  return false;
+  return game_city_by_number(id) != nullptr;
 }
 
 /**********************************************************************/ /**

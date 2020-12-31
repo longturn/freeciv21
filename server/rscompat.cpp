@@ -258,7 +258,7 @@ void rscompat_enablers_add_obligatory_hard_reqs(void)
         }
       }
       action_enabler_list_iterate_end;
-    } while (restart_enablers_for_action == true);
+    } while (restart_enablers_for_action);
   }
   action_iterate_end;
 }

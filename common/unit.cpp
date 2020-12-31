@@ -2042,11 +2042,7 @@ bool unit_type_is_losing_hp(const struct player *pplayer,
 bool unit_is_alive(int id)
 {
   /* Check if unit exist in game */
-  if (game_unit_by_number(id)) {
-    return true;
-  }
-
-  return false;
+  return game_unit_by_number(id) != nullptr;
 }
 
 /**********************************************************************/ /**
@@ -2210,12 +2206,8 @@ bool unit_transported(const struct unit *pcargo)
 
   /* The unit is transported if a transporter unit is set or, (for the
    * client) if the transported_by field is set. */
-  if (pcargo->transporter != NULL
-      || (!is_server() && pcargo->client.transported_by != -1)) {
-    return true;
-  }
-
-  return false;
+  return pcargo->transporter != NULL
+      || (!is_server() && pcargo->client.transported_by != -1);
 }
 
 /**********************************************************************/ /**

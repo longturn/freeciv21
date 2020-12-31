@@ -615,11 +615,7 @@ bool tile_extra_apply(struct tile *ptile, struct extra_type *tgt)
 bool tile_extra_rm_apply(struct tile *ptile, struct extra_type *tgt)
 {
   /* Remove extra with everything depending on it. */
-  if (!rm_recursive_extras(ptile, tgt, 0)) {
-    return false;
-  }
-
-  return true;
+  return rm_recursive_extras(ptile, tgt, 0);
 }
 
 /************************************************************************/ /**

@@ -886,12 +886,8 @@ static bool restrict_infra(const struct player *pplayer,
     return false;
   }
 
-  if ((plr1 && pplayers_at_war(plr1, pplayer))
-      || (plr2 && pplayers_at_war(plr2, pplayer))) {
-    return true;
-  }
-
-  return false;
+  return (plr1 && pplayers_at_war(plr1, pplayer))
+      || (plr2 && pplayers_at_war(plr2, pplayer));
 }
 
 /*******************************************************************/ /**

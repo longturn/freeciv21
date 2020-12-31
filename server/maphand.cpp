@@ -2080,11 +2080,7 @@ static bool is_claimable_ocean(struct tile *ptile, struct tile *source,
     }
   }
   adjc_iterate_end;
-  if (!other_continent && ocean_tiles <= 2) {
-    return true;
-  } else {
-    return false;
-  }
+  return !other_continent && ocean_tiles <= 2;
 }
 
 /**********************************************************************/ /**

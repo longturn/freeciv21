@@ -114,11 +114,7 @@ static void caravan_result_init(struct caravan_result *result,
   result->value = 0;
   result->help_wonder = false;
   if ((src != NULL) && (dest != NULL)) {
-    if (tile_continent(src->tile) != tile_continent(dest->tile)) {
-      result->required_boat = true;
-    } else {
-      result->required_boat = false;
-    }
+    result->required_boat = tile_continent(src->tile) != tile_continent(dest->tile);
   } else {
     result->required_boat = false;
   }

@@ -480,13 +480,9 @@ bool is_boss_of_boat(struct ai_type *ait, struct unit *punit)
     return false;
   }
 
-  if (unit_transported(punit)
+  return unit_transported(punit)
       && def_ai_unit_data(unit_transport_get(punit), ait)->passenger
-             == punit->id) {
-    return true;
-  }
-
-  return false;
+             == punit->id;
 }
 
 /**********************************************************************/ /**

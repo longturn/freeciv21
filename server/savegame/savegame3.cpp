@@ -1209,11 +1209,7 @@ static void sg_load_savefile(struct loaddata *loading)
   (void) secfile_entry_by_path(loading->file, "savefile.reason");
   (void) secfile_entry_by_path(loading->file, "savefile.revision");
 
-  if (game.scenario.datafile[0] != '\0') {
-    ruleset_datafile = false;
-  } else {
-    ruleset_datafile = true;
-  }
+  ruleset_datafile = game.scenario.datafile[0] == '\0';
 
   if (!game.scenario.is_scenario || game.scenario.ruleset_locked) {
     const char *ruleset, *alt_dir;
@@ -4064,11 +4060,7 @@ static void sg_load_player_main(struct loaddata *loading, struct player *plr)
                                     "player%d.idle_turns", plrno),
                  "%s", secfile_error());
   kind = secfile_lookup_str(loading->file, "player%d.kind", plrno);
-  if (!strcmp("male", kind)) {
-    plr->is_male = true;
-  } else {
-    plr->is_male = false;
-  }
+  plr->is_male = strcmp("male", kind) == 0;
   sg_failure_ret(secfile_lookup_bool(loading->file, &plr->is_alive,
                                      "player%d.is_alive", plrno),
                  "%s", secfile_error());
@@ -6618,7 +6610,7 @@ static void sg_load_player_vision(struct loaddata *loading,
     }
   }
 
-  if (-1 == total_ncities || false == game.info.fogofwar
+  if (-1 == total_ncities || !game.info.fogofwar
       || !secfile_lookup_bool_default(loading->file, true,
                                       "game.save_private_map")) {
     /* We have:
