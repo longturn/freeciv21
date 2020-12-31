@@ -199,10 +199,8 @@ char *parser_buffer = NULL;
    datafilename() wrapper: tries to match in two ways.
    Returns NULL on failure, the (statically allocated) filename on success.
  **************************************************************************/
-static const char *valid_ruleset_filename(const char *subdir,
-                                          const char *name,
-                                          const char *extension,
-                                          bool optional)
+static QString valid_ruleset_filename(const char *subdir, const char *name,
+                                      const char *extension, bool optional)
 {
   char filename[512];
   QString dfilename;
@@ -214,7 +212,7 @@ static const char *valid_ruleset_filename(const char *subdir,
   qCDebug(ruleset_category, "Trying \"%s\".", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
   if (!dfilename.isEmpty()) {
-    return qUtf8Printable(dfilename);
+    return dfilename;
   }
 
   fc_snprintf(filename, sizeof(filename), "default%c%s.%s",
@@ -223,7 +221,7 @@ static const char *valid_ruleset_filename(const char *subdir,
           filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
   if (!dfilename.isEmpty()) {
-    return qUtf8Printable(dfilename);
+    return dfilename;
   }
 
   fc_snprintf(filename, sizeof(filename), "%s_%s.%s", subdir, name,
@@ -232,7 +230,7 @@ static const char *valid_ruleset_filename(const char *subdir,
           "Trying \"%s\": alternative ruleset filename syntax.", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
   if (!dfilename.isEmpty()) {
-    return qUtf8Printable(dfilename);
+    return dfilename;
   } else if (!optional) {
     qCCritical(ruleset_category,
                /* TRANS: message about an installation error. */
@@ -260,23 +258,23 @@ char *get_parser_buffer() { return parser_buffer; }
 static struct section_file *openload_ruleset_file(const char *whichset,
                                                   const char *rsdir)
 {
-  char sfilename[512];
-  const char *dfilename =
+  QString sfilename;
+  QString dfilename =
       valid_ruleset_filename(rsdir, whichset, RULES_SUFFIX, false);
   struct section_file *secfile;
 
-  if (dfilename == NULL) {
+  if (dfilename.isEmpty()) {
     return NULL;
   }
 
   /* Need to save a copy of the filename for following message, since
      section_file_load() may call datafilename() for includes. */
-  sz_strlcpy(sfilename, dfilename);
-  secfile = secfile_load(sfilename, false);
+  sfilename = dfilename;
+  secfile = secfile_load(qUtf8Printable(sfilename), false);
 
   if (secfile == NULL) {
     qCCritical(ruleset_category, "Could not load ruleset '%s':\n%s",
-               sfilename, secfile_error());
+               qUtf8Printable(sfilename), secfile_error());
   }
 
   return secfile;
@@ -289,22 +287,22 @@ static enum fc_tristate openload_script_file(const char *whichset,
                                              const char *rsdir,
                                              char **buffer, bool optional)
 {
-  const char *dfilename =
+  QString dfilename =
       valid_ruleset_filename(rsdir, whichset, SCRIPT_SUFFIX, optional);
 
-  if (dfilename == NULL) {
+  if (dfilename.isEmpty()) {
     return optional ? TRI_MAYBE : TRI_NO;
   }
 
   if (buffer == NULL) {
-    if (!script_server_do_file(NULL, dfilename)) {
+    if (!script_server_do_file(NULL, qUtf8Printable(dfilename))) {
       qCCritical(ruleset_category, "\"%s\": could not load ruleset script.",
-                 dfilename);
+                 qUtf8Printable(dfilename));
 
       return TRI_NO;
     }
   } else {
-    script_server_load_file(dfilename, buffer);
+    script_server_load_file(qUtf8Printable(dfilename), buffer);
   }
 
   return TRI_YES;
@@ -316,22 +314,21 @@ static enum fc_tristate openload_script_file(const char *whichset,
 static struct section_file *openload_luadata_file(const char *rsdir)
 {
   struct section_file *secfile;
-  char sfilename[512];
-  const char *dfilename =
-      valid_ruleset_filename(rsdir, "luadata", "txt", true);
+  QString sfilename;
+  QString dfilename = valid_ruleset_filename(rsdir, "luadata", "txt", true);
 
-  if (dfilename == NULL) {
+  if (dfilename.isEmpty()) {
     return NULL;
   }
 
   /* Need to save a copy of the filename for following message, since
      section_file_load() may call datafilename() for includes. */
-  sz_strlcpy(sfilename, dfilename);
-  secfile = secfile_load(sfilename, false);
+  sfilename = dfilename;
+  secfile = secfile_load(qUtf8Printable(sfilename), false);
 
   if (secfile == NULL) {
     qCCritical(ruleset_category, "Could not load luadata '%s':\n%s",
-               sfilename, secfile_error());
+               qUtf8Printable(sfilename), secfile_error());
   }
 
   return secfile;
