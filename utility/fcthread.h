@@ -22,7 +22,7 @@ public:
   fcThread(){};
   fcThread(void(tfunc)(void *), void *tdata);
   void set_func(void(tfunc)(void *), void *tdata);
-  ~fcThread();
+  ~fcThread() override;
 
 protected:
   void run() Q_DECL_OVERRIDE;

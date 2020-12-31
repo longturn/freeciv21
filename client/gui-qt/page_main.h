@@ -18,7 +18,7 @@ class page_main : public QWidget {
   Q_OBJECT
 public:
   page_main(QWidget *, fc_client *);
-  ~page_main();
+  ~page_main() override;
 
 private:
   Ui::Form ui;

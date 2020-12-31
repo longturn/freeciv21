@@ -26,7 +26,7 @@ class page_network : public QWidget {
 
 public:
   page_network(QWidget *, fc_client *);
-  ~page_network();
+  ~page_network() override;
   void update_network_page(void);
   void update_network_lists(void);
   void set_connection_state(enum connection_state state);

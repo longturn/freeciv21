@@ -79,8 +79,8 @@ signals:
 
 public:
   progress_bar(QWidget *parent);
-  ~progress_bar();
-  void mousePressEvent(QMouseEvent *event)
+  ~progress_bar() override;
+  void mousePressEvent(QMouseEvent *event) override
   {
     Q_UNUSED(event);
     emit clicked();
@@ -89,9 +89,9 @@ public:
   void set_pixmap(int n);
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void timerEvent(QTimerEvent *event);
-  void resizeEvent(QResizeEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void timerEvent(QTimerEvent *event) override;
+  void resizeEvent(QResizeEvent *event) override;
 
 private:
   void create_region();
@@ -153,7 +153,7 @@ class impr_item : public QLabel {
 public:
   impr_item(QWidget *parent, const struct impr_type *building,
             struct city *pcity);
-  ~impr_item();
+  ~impr_item() override;
   void init_pix();
 
 private:
@@ -162,9 +162,9 @@ private:
   struct city *pcity;
 
 protected:
-  void mouseDoubleClickEvent(QMouseEvent *event);
-  void leaveEvent(QEvent *event);
-  void enterEvent(QEvent *event);
+  void mouseDoubleClickEvent(QMouseEvent *event) override;
+  void leaveEvent(QEvent *event) override;
+  void enterEvent(QEvent *event) override;
 };
 
 /****************************************************************************
@@ -175,7 +175,7 @@ class impr_info : public QFrame {
 
 public:
   impr_info();
-  ~impr_info();
+  ~impr_info() override;
   void add_item(impr_item *item);
   void init_layout();
   void update_buildings();
@@ -192,11 +192,11 @@ class city_production_delegate : public QItemDelegate {
 
 public:
   city_production_delegate(QPoint sh, QObject *parent, struct city *city);
-  ~city_production_delegate() {}
+  ~city_production_delegate() override {}
   void paint(QPainter *painter, const QStyleOptionViewItem &option,
-             const QModelIndex &index) const;
+             const QModelIndex &index) const override;
   QSize sizeHint(const QStyleOptionViewItem &option,
-                 const QModelIndex &index) const;
+                 const QModelIndex &index) const override;
 
 private:
   int item_height;
@@ -205,7 +205,7 @@ private:
 
 protected:
   void drawFocus(QPainter *painter, const QStyleOptionViewItem &option,
-                 const QRect &rect) const;
+                 const QRect &rect) const override;
 };
 
 /****************************************************************************
@@ -216,7 +216,7 @@ class production_item : public QObject {
 
 public:
   production_item(struct universal *ptarget, QObject *parent);
-  ~production_item();
+  ~production_item() override;
   inline int columnCount() const { return 1; }
   QVariant data() const;
   bool setData();
@@ -234,20 +234,20 @@ class city_production_model : public QAbstractListModel {
 public:
   city_production_model(struct city *pcity, bool f, bool su, bool sw,
                         bool sb, QObject *parent = 0);
-  ~city_production_model();
-  inline int rowCount(const QModelIndex &index = QModelIndex()) const
+  ~city_production_model() override;
+  inline int rowCount(const QModelIndex &index = QModelIndex()) const override
   {
     Q_UNUSED(index);
     return (qCeil(static_cast<float>(city_target_list.size()) / 3));
   }
-  int columnCount(const QModelIndex &parent = QModelIndex()) const
+  int columnCount(const QModelIndex &parent = QModelIndex()) const override
   {
     Q_UNUSED(parent);
     return 3;
   }
-  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
   bool setData(const QModelIndex &index, const QVariant &value,
-               int role = Qt::DisplayRole);
+               int role = Qt::DisplayRole) override;
   QPoint size_hint();
   void populate();
   QPoint sh;
@@ -274,14 +274,14 @@ public:
   production_widget(QWidget *parent, struct city *pcity, bool future,
                     int when, int curr, bool show_units, bool buy = false,
                     bool show_wonders = true, bool show_buildings = true);
-  ~production_widget();
+  ~production_widget() override;
 
 public slots:
   void prod_selected(const QItemSelection &sl, const QItemSelection &ds);
 
 protected:
-  void mousePressEvent(QMouseEvent *event);
-  bool eventFilter(QObject *obj, QEvent *ev);
+  void mousePressEvent(QMouseEvent *event) override;
+  bool eventFilter(QObject *obj, QEvent *ev) override;
 
 private:
   struct city *pw_city;
@@ -325,7 +325,7 @@ private:
   int type;
 
 protected:
-  void mousePressEvent(QMouseEvent *event);
+  void mousePressEvent(QMouseEvent *event) override;
 };
 
 class city_info : public QWidget {
@@ -369,7 +369,7 @@ class city_dialog : public QWidget {
 public:
   city_dialog(QWidget *parent = 0);
 
-  ~city_dialog();
+  ~city_dialog() override;
   void setup_ui(struct city *qcity);
   void refresh();
   void cma_check_agent();
@@ -420,10 +420,10 @@ private slots:
   void city_rename();
 
 protected:
-  void showEvent(QShowEvent *event);
-  void hideEvent(QHideEvent *event);
-  void closeEvent(QCloseEvent *event);
-  bool eventFilter(QObject *obj, QEvent *event);
+  void showEvent(QShowEvent *event) override;
+  void hideEvent(QHideEvent *event) override;
+  void closeEvent(QCloseEvent *event) override;
+  bool eventFilter(QObject *obj, QEvent *event) override;
 };
 
 void destroy_city_dialog();

@@ -102,11 +102,11 @@ class fc_client : public QMainWindow {
 
 public:
   fc_client();
-  ~fc_client();
+  ~fc_client() override;
   QWidget *pages[(int) PAGE_GAME + 2];
   void fc_main(QApplication *);
   void add_server_source(QTcpSocket *socket);
-  bool event(QEvent *event);
+  bool event(QEvent *event) override;
 
   enum client_pages current_page();
 
@@ -144,8 +144,8 @@ private:
   void read_settings();
 
 protected:
-  void timerEvent(QTimerEvent *);
-  void closeEvent(QCloseEvent *event);
+  void timerEvent(QTimerEvent *) override;
+  void closeEvent(QCloseEvent *event) override;
 
 signals:
   void keyCaught(QKeyEvent *e);

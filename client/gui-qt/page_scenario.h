@@ -18,7 +18,7 @@ class page_scenario : public QWidget {
   Q_OBJECT
 public:
   page_scenario(QWidget *, fc_client *);
-  ~page_scenario();
+  ~page_scenario() override;
   void update_scenarios_page(void);
 private slots:
   void slot_selection_changed(const QItemSelection &,

@@ -41,7 +41,7 @@ class minimap_thread : public QThread {
   Q_OBJECT
 public:
   minimap_thread(QObject *parent = 0);
-  ~minimap_thread();
+  ~minimap_thread() override;
   void render(double scale_factor, int width, int height);
 
 signals:
@@ -67,21 +67,21 @@ class minimap_view : public fcwidget {
 
 public:
   minimap_view(QWidget *parent);
-  ~minimap_view();
+  ~minimap_view() override;
   void paint(QPainter *painter, QPaintEvent *event);
-  virtual void update_menu();
+  void update_menu() override;
   void update_image();
   void reset();
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void resizeEvent(QResizeEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void mouseReleaseEvent(QMouseEvent *event);
-  void wheelEvent(QWheelEvent *event);
-  void moveEvent(QMoveEvent *event);
-  void showEvent(QShowEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void resizeEvent(QResizeEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
+  void moveEvent(QMoveEvent *event) override;
+  void showEvent(QShowEvent *event) override;
 
 private slots:
   void update_pixmap(const QImage &image);

@@ -26,7 +26,7 @@ class message_dlg : public QWidget {
 
 public:
   message_dlg();
-  ~message_dlg();
+  ~message_dlg() override;
   void fill_data();
 private slots:
   void apply_changes();

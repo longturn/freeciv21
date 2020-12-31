@@ -30,7 +30,7 @@ class ss_report : public QWidget {
 
 public:
   ss_report(struct player *pplayer);
-  ~ss_report();
+  ~ss_report() override;
   void update_report();
   void init();
 

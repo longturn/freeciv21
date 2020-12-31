@@ -55,13 +55,13 @@ public:
   bool menu_click;
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void keyPressEvent(QKeyEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-  void mouseReleaseEvent(QMouseEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void focusOutEvent(QFocusEvent *event);
-  void leaveEvent(QEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void keyPressEvent(QKeyEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void focusOutEvent(QFocusEvent *event) override;
+  void leaveEvent(QEvent *event) override;
 private slots:
   void timer_event();
 
@@ -87,7 +87,7 @@ public:
   struct tile *itile;
 
 protected:
-  void paintEvent(QPaintEvent *event);
+  void paintEvent(QPaintEvent *event) override;
   void paint(QPainter *painter, QPaintEvent *event);
 
 private:

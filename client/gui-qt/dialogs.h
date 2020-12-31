@@ -68,7 +68,7 @@ class qfc_dialog : public QDialog {
   Q_OBJECT
 public:
   qfc_dialog(QWidget *parent);
-  ~qfc_dialog();
+  ~qfc_dialog() override;
 
 private:
   int titlebar_height;
@@ -77,10 +77,10 @@ private:
   QPixmap *close_pix;
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-  void mouseReleaseEvent(QMouseEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
 };
 
 /***************************************************************************
@@ -92,7 +92,7 @@ class disband_box : public hud_message_box {
 
 public:
   explicit disband_box(struct unit_list *punits, QWidget *parent = 0);
-  ~disband_box();
+  ~disband_box() override;
 private slots:
   void disband_clicked();
 };
@@ -137,7 +137,7 @@ class races_dialog : public qfc_dialog {
 
 public:
   races_dialog(struct player *pplayer, QWidget *parent = 0);
-  ~races_dialog();
+  ~races_dialog() override;
   void refresh();
   void update_nationset_combo();
 
@@ -195,7 +195,7 @@ class choice_dialog : public QWidget {
 public:
   choice_dialog(const QString title, const QString text,
                 QWidget *parent = NULL, void (*run_on_close_in)(int) = NULL);
-  ~choice_dialog();
+  ~choice_dialog() override;
   void set_layout();
   void add_item(QString title, pfcn_void func, QVariant data1,
                 QVariant data2, QString tool_tip, const int button_id);
