@@ -486,11 +486,7 @@ static bool research_get_reachable(const struct research *presearch,
   }
 
   /* Check research reqs reachability. */
-  if (!research_get_reachable_rreqs(presearch, tech)) {
-    return false;
-  }
-
-  return true;
+  return research_get_reachable_rreqs(presearch, tech);
 }
 
 /************************************************************************/ /**

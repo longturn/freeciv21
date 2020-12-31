@@ -340,11 +340,7 @@ void req_edit::req_range_menu(QAction *action)
 void req_edit::req_present_menu(QAction *action)
 {
   if (selected != nullptr) {
-    if (action->text() == QLatin1String("Prevents")) {
-      selected->present = false;
-    } else {
-      selected->present = true;
-    }
+    selected->present = action->text() != QLatin1String("Prevents");
     update_selected();
   }
 

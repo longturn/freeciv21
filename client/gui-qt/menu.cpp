@@ -2512,11 +2512,7 @@ void mr_menu::slot_minimap_view()
  **************************************************************************/
 void mr_menu::slot_show_new_turn_text()
 {
-  if (osd_status->isChecked()) {
-    king()->qt_settings.show_new_turn_text = true;
-  } else {
-    king()->qt_settings.show_new_turn_text = false;
-  }
+  king()->qt_settings.show_new_turn_text = osd_status->isChecked();
 }
 
 /**********************************************************************/ /**
@@ -2524,11 +2520,7 @@ void mr_menu::slot_show_new_turn_text()
  **************************************************************************/
 void mr_menu::slot_battlelog()
 {
-  if (btlog_status->isChecked()) {
-    king()->qt_settings.show_battle_log = true;
-  } else {
-    king()->qt_settings.show_battle_log = false;
-  }
+  king()->qt_settings.show_battle_log = btlog_status->isChecked();
 }
 
 /**********************************************************************/ /**

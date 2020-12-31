@@ -67,10 +67,7 @@ extern int last_center_enemy_city;
  **************************************************************************/
 bool is_point_in_area(int x, int y, int px, int py, int pxe, int pye)
 {
-  if (x >= px && y >= py && x <= pxe && y <= pye) {
-    return true;
-  }
-  return false;
+  return x >= px && y >= py && x <= pxe && y <= pye;
 }
 
 /**********************************************************************/ /**

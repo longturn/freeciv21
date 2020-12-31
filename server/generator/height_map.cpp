@@ -297,10 +297,5 @@ bool area_is_too_flat(struct tile *ptile, int thill, int my_height)
   }
   square_iterate_end;
 
-  if ((thill - hmap_shore_level) * higher_than_me
-      > (my_height - hmap_shore_level) * 4) {
-    return false;
-  }
-
-  return true;
+  return (thill - hmap_shore_level) * higher_than_me <= (my_height - hmap_shore_level) * 4;
 }

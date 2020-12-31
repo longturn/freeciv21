@@ -620,11 +620,7 @@ bool pageGame::isRepoDlgOpen(const QString &str)
 
   w = opened_repo_dlgs.value(str);
 
-  if (w == NULL) {
-    return false;
-  }
-
-  return true;
+  return w != NULL;
 }
 
 /**********************************************************************/ /**

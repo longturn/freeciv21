@@ -432,7 +432,7 @@ void auto_arrange_workers(struct city *pcity)
     }
     output_type_iterate_end;
     cmp.require_happy = false;
-    cmp.allow_disorder = is_ai(city_owner(pcity)) ? false : true;
+    cmp.allow_disorder = !is_ai(city_owner(pcity));
     cm_query_result(pcity, &cmp, cmr, false);
   }
   if (!cmr->found_a_valid) {
@@ -3204,7 +3204,7 @@ static void update_city_activity(struct city *pcity)
 
     /* Keep old behaviour when building new improvement could keep
        city celebrating */
-    if (is_happy == false) {
+    if (!is_happy) {
       is_happy = city_happy(pcity);
     }
 
@@ -3340,11 +3340,7 @@ static void update_city_activity(struct city *pcity)
  **************************************************************************/
 static bool city_illness_check(const struct city *pcity)
 {
-  if (fc_rand(1000) < pcity->server.illness) {
-    return true;
-  }
-
-  return false;
+  return fc_rand(1000) < pcity->server.illness;
 }
 
 /**********************************************************************/ /**

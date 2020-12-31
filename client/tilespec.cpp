@@ -1667,7 +1667,7 @@ static int check_sprite_type(const char *sprite_type,
 static bool tileset_invalid_offsets(struct tileset *t,
                                     struct section_file *file)
 {
-  if (!secfile_lookup_int(file, &t->unit_flag_offset_x,
+  return !secfile_lookup_int(file, &t->unit_flag_offset_x,
                           "tilespec.unit_flag_offset_x")
       || !secfile_lookup_int(file, &t->unit_flag_offset_y,
                              "tilespec.unit_flag_offset_y")
@@ -1702,10 +1702,7 @@ static bool tileset_invalid_offsets(struct tileset *t,
       || !secfile_lookup_int(file, &t->occupied_offset_x,
                              "tilespec.occupied_offset_x")
       || !secfile_lookup_int(file, &t->occupied_offset_y,
-                             "tilespec.occupied_offset_y")) {
-    return true;
-  }
-  return false;
+                             "tilespec.occupied_offset_y");
 }
 
 static void tileset_set_offsets(struct tileset *t, struct section_file *file)
@@ -3434,11 +3431,7 @@ static bool tileset_setup_unit_direction(struct tileset *t, int uidx,
    * probably meant icon gfx to be used as fallback for all orientations */
   t->sprites.units.facing[uidx][dir] = load_sprite(t, buf, true, true);
 
-  if (t->sprites.units.facing[uidx][dir] != NULL) {
-    return true;
-  }
-
-  return false;
+  return t->sprites.units.facing[uidx][dir] != NULL;
 }
 
 /************************************************************************/ /**
@@ -4481,11 +4474,7 @@ static int fill_road_sprite_array(const struct tileset *t,
   }
   extra_type_list_iterate_end;
 
-  if (road && (!pcity || !gui_options.draw_cities) && !hider) {
-    draw_single_road = true;
-  } else {
-    draw_single_road = false;
-  }
+  draw_single_road = road && (!pcity || !gui_options.draw_cities) && !hider;
 
   for (dir = 0; dir < 8; dir++) {
     bool roads_exist;

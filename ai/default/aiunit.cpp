@@ -2276,11 +2276,9 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
         tired_of_waiting_boat = true;
       } else {
         dest = city_dest;
-        help_wonder = (unit_data->task == AIUNIT_WONDER) ? true : false;
+        help_wonder = unit_data->task == AIUNIT_WONDER;
         required_boat =
-            (tile_continent(unit_tile(punit)) == tile_continent(dest->tile))
-                ? false
-                : true;
+            tile_continent(unit_tile(punit)) != tile_continent(dest->tile);
         request_boat = false;
       }
     }
@@ -2328,9 +2326,7 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
       dest = result.dest;
       help_wonder = result.help_wonder;
       required_boat =
-          (tile_continent(unit_tile(punit)) == tile_continent(dest->tile))
-              ? false
-              : true;
+          tile_continent(unit_tile(punit)) != tile_continent(dest->tile);
       request_boat = required_boat;
       dai_unit_new_task(ait, punit,
                         (help_wonder) ? AIUNIT_WONDER : AIUNIT_TRADE,
@@ -3372,12 +3368,8 @@ static bool role_unit_cb(struct unit_type *ptype, void *data)
     return false;
   }
 
-  if (cb_data->build_city == NULL
-      || can_city_build_unit_now(cb_data->build_city, ptype)) {
-    return true;
-  }
-
-  return false;
+  return cb_data->build_city == NULL
+      || can_city_build_unit_now(cb_data->build_city, ptype);
 }
 
 /**********************************************************************/ /**

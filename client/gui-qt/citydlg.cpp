@@ -2943,12 +2943,8 @@ struct city *is_any_city_dialog_open()
  ****************************************************************************/
 bool qtg_city_dialog_is_open(struct city *pcity)
 {
-  if (queen()->city_overlay->pcity == pcity
-      && queen()->city_overlay->isVisible()) {
-    return true;
-  }
-
-  return false;
+  return queen()->city_overlay->pcity == pcity
+      && queen()->city_overlay->isVisible();
 }
 
 /************************************************************************/ /**

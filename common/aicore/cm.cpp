@@ -427,11 +427,7 @@ static bool tile_type_equal(const struct cm_tile_type *a,
   }
   output_type_iterate_end;
 
-  if (a->is_specialist != b->is_specialist) {
-    return false;
-  }
-
-  return true;
+  return a->is_specialist == b->is_specialist;
 }
 
 /************************************************************************/ /**

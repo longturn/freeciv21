@@ -286,11 +286,7 @@ chatwdg::chatwdg(QWidget *parent)
  ***************************************************************************/
 void chatwdg::state_changed(int state)
 {
-  if (state > 0) {
-    gui_options.gui_qt_allied_chat_only = true;
-  } else {
-    gui_options.gui_qt_allied_chat_only = false;
-  }
+  gui_options.gui_qt_allied_chat_only = state > 0;
 }
 
 /***********************************************************************/ /**

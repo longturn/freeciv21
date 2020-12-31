@@ -2456,11 +2456,7 @@ pf_fuel_map_attack_is_possible(const struct pf_parameter *param,
     }
   } else {
     /* Case fighters */
-    if (moves_left - SINGLE_MOVE < moves_left_req) {
-      return false;
-    } else {
-      return true;
-    }
+    return moves_left - SINGLE_MOVE >= moves_left_req;
   }
 }
 

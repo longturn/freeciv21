@@ -5079,11 +5079,7 @@ static bool is_ts_option_unset(const char *optname)
 
   val = opt->str_vtable->get(opt);
 
-  if (val == NULL || val[0] == '\0') {
-    return true;
-  }
-
-  return false;
+  return val == NULL || val[0] == '\0';
 }
 
 /************************************************************************/ /**
