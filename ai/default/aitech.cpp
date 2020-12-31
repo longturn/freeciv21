@@ -207,8 +207,7 @@ static void dai_select_tech(struct ai_type *ait, struct player *pplayer,
     choice->choice = presearch->researching;
   }
 
-  return;
-}
+  }
 
 /**********************************************************************/ /**
    Calculates want for some techs by actually adding the tech and

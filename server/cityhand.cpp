@@ -592,5 +592,4 @@ void handle_city_manager(struct player *pplayer, int city_id, bool enabled,
 
   auto_arrange_workers(pcity);
   sync_cities();
-  return;
 }

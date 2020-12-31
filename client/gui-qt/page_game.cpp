@@ -579,7 +579,6 @@ void pageGame::gimmePlace(QWidget *widget, const QString &str)
     return;
   }
   qCritical("Failed to find place for new tab widget");
-  return;
 }
 
 /************************************************************************/ /**

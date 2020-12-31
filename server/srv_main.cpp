@@ -236,9 +236,6 @@ void srv_init(void)
   /* Initialize global mutexes */
   QMutex *mutex = new QMutex;
   game.server.mutexes.city_list = mutex;
-
-  /* done */
-  return;
 }
 
 /**********************************************************************/ /**
@@ -3213,8 +3210,7 @@ void server_gui_color_free(QColor *pcolor)
 {
   fc_assert_ret(pcolor == NULL);
 
-  return;
-}
+  }
 
 /**********************************************************************/ /**
    Returns the id of the city the player map of 'pplayer' has at 'ptile' or
