@@ -328,7 +328,7 @@ void send_research_info(const struct research *presearch,
 void found_new_tech(struct research *presearch, Tech_type_id tech_found,
                     bool was_discovery, bool saving_bulbs)
 {
-  int had_embassies[player_slot_count()] = {0};
+  int had_embassies[player_slot_count()];
   bool could_switch[player_slot_count()][government_count()];
   bool was_first = false;
   bool bonus_tech_hack = false;
