@@ -80,6 +80,5 @@ void free_libfreeciv()
   free_data_dir_names();
   free_multicast_group();
   free_freeciv_storage_dir();
-  free_user_home_dir();
   free_fileinfo_data();
 }

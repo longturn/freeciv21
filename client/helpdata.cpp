@@ -699,7 +699,7 @@ void boot_help_texts()
   }
   /* after following call filename may be clobbered; use sf->filename instead
    */
-  if (!(sf = secfile_load(qUtf8Printable(filename), false))) {
+  if (!(sf = secfile_load(filename, false))) {
     /* this is now unlikely to happen */
     qCritical("failed reading help-texts from '%s':\n%s", qUtf8Printable(filename),
               secfile_error());

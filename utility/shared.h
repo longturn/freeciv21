@@ -154,8 +154,6 @@ struct fileinfo {
   TYPED_LIST_ITERATE(struct fileinfo, list, pnode)
 #define fileinfo_list_iterate_end LIST_ITERATE_END
 
-char *user_home_dir();
-void free_user_home_dir();
 char *user_username(char *buf, size_t bufsz);
 char *freeciv_storage_dir();
 void free_freeciv_storage_dir();
