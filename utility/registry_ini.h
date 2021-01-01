@@ -52,13 +52,13 @@ typedef const char *(*secfile_enum_name_data_fn_t)(secfile_data_t data,
 #define entry_list_iterate_end LIST_ITERATE_END
 
 /* Main functions. */
-struct section_file *secfile_load_section(QString filename,
-                                          const char *section,
+struct section_file *secfile_load_section(const QString &filename,
+                                          const QString &section,
                                           bool allow_duplicates);
 struct section_file *secfile_from_stream(QIODevice *stream,
                                          bool allow_duplicates);
 
-bool secfile_save(const struct section_file *secfile, const char *filename);
+bool secfile_save(const struct section_file *secfile, QString filename);
 void secfile_check_unused(const struct section_file *secfile);
 const char *secfile_name(const struct section_file *secfile);
 
@@ -547,7 +547,7 @@ const char *entry_name(const struct entry *pentry);
 bool entry_set_name(struct entry *pentry, const char *entry_name);
 
 const char *entry_comment(const struct entry *pentry);
-void entry_set_comment(struct entry *pentry, const char *comment);
+void entry_set_comment(struct entry *pentry, const QString &comment);
 
 bool entry_int_get(const struct entry *pentry, int *value);
 bool entry_int_set(struct entry *pentry, int value);

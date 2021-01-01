@@ -331,7 +331,7 @@ QString strvec_to_and_list(const QVector<QString> &psv)
 QString qendl() { return QStringLiteral("\n"); }
 
 // break line after after n-th char
-QString break_lines(QString src, int after)
+QString break_lines(const QString &src, int after)
 {
   QStringList broken = src.split(" ", QString::SkipEmptyParts);
   QString dst;

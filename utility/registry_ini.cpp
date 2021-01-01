@@ -293,8 +293,8 @@ static bool secfile_hash_delete(struct section_file *secfile,
    Base function to load a section file.  Note it closes the inputfile.
  **************************************************************************/
 static struct section_file *secfile_from_input_file(struct inputfile *inf,
-                                                    QString filename,
-                                                    const char *section,
+                                                    const QString &filename,
+                                                    const QString &section,
                                                     bool allow_duplicates)
 {
   struct section_file *secfile;
@@ -362,9 +362,9 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       */
       psection = secfile_section_by_name(secfile, tok);
       if (!psection) {
-        if (!section || strcmp(tok, section) == 0) {
+        if (section.isEmpty() || (QString(tok) == section)) {
           psection = secfile_section_new(secfile, tok);
-          if (section) {
+          if (!section.isEmpty()) {
             single_section = psection;
             found_my_section = true;
           }
@@ -559,8 +559,8 @@ END:
    Create a section file from a file, read only one particular section.
    Returns NULL on error.
  **************************************************************************/
-struct section_file *secfile_load_section(QString filename,
-                                          const char *section,
+struct section_file *secfile_load_section(const QString &filename,
+                                          const QString &section,
                                           bool allow_duplicates)
 {
   char real_filename[1024];
@@ -602,7 +602,7 @@ static bool is_legal_table_entry_name(char c, bool num)
    and then subsequent u1, u2, etc, in strict order with no omissions,
    and with all of the columns for all uN in the same order as for u0.
  **************************************************************************/
-bool secfile_save(const struct section_file *secfile, const char *filename)
+bool secfile_save(const struct section_file *secfile, QString filename)
 {
   char real_filename[1024];
   char pentry_name[128];
@@ -613,7 +613,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
 
   SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, false);
 
-  if (NULL == filename) {
+  if (filename.isEmpty()) {
     filename = secfile->name;
   }
 
@@ -3216,17 +3216,14 @@ const char *entry_comment(const struct entry *pentry)
 /**********************************************************************/ /**
    Sets a comment for the entry.  Pass NULL to remove the current one.
  **************************************************************************/
-void entry_set_comment(struct entry *pentry, const char *comment)
+void entry_set_comment(struct entry *pentry, const QString &comment)
 {
   if (NULL == pentry) {
     return;
   }
 
-  if (NULL != pentry->comment) {
-    free(pentry->comment);
-  }
-
-  pentry->comment = (NULL != comment ? fc_strdup(comment) : NULL);
+  pentry->comment =
+      (!comment.isEmpty() ? fc_strdup(qUtf8Printable(comment)) : NULL);
 }
 
 /**********************************************************************/ /**
