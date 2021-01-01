@@ -1532,15 +1532,15 @@ void free_multicast_group() { NFCNPP_FREE(mc_group); }
    This may fail if the path is too long.  It is better to use
    interpret_tilde_alloc.
  ****************************************************************************/
-void interpret_tilde(char *buf, size_t buf_size, const char *filename)
+void interpret_tilde(char *buf, size_t buf_size, QString filename)
 {
-  if (filename[0] == '~' && filename[1] == DIR_SEPARATOR_CHAR) {
+  if (filename.startsWith("~/")) {
     fc_snprintf(buf, buf_size, "%s%c%s", user_home_dir(), DIR_SEPARATOR_CHAR,
-                filename + 2);
-  } else if (filename[0] == '~' && filename[1] == '\0') {
+                filename.right(filename.length() - 2));
+  } else if (filename == "~") {
     qstrncpy(buf, user_home_dir(), buf_size);
   } else {
-    qstrncpy(buf, filename, buf_size);
+    qstrncpy(buf, qUtf8Printable(filename), buf_size);
   }
 }
 

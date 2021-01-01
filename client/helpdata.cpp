@@ -701,7 +701,7 @@ void boot_help_texts()
    */
   if (!(sf = secfile_load(qUtf8Printable(filename), false))) {
     /* this is now unlikely to happen */
-    qCritical("failed reading help-texts from '%s':\n%s", filename,
+    qCritical("failed reading help-texts from '%s':\n%s", qUtf8Printable(filename),
               secfile_error());
     return;
   }

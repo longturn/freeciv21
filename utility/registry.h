@@ -11,13 +11,13 @@
 #pragma once
 
 struct section;
-
+class QString;
 void registry_module_init();
 void registry_module_close();
 
 struct section_file *secfile_new(bool allow_duplicates);
 void secfile_destroy(struct section_file *secfile);
-struct section_file *secfile_load(const char *filename,
+struct section_file *secfile_load(QString filename,
                                   bool allow_duplicates);
 
 void secfile_allow_digital_boolean(struct section_file *secfile,

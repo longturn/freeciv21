@@ -52,7 +52,7 @@ typedef const char *(*secfile_enum_name_data_fn_t)(secfile_data_t data,
 #define entry_list_iterate_end LIST_ITERATE_END
 
 /* Main functions. */
-struct section_file *secfile_load_section(const char *filename,
+struct section_file *secfile_load_section(QString filename,
                                           const char *section,
                                           bool allow_duplicates);
 struct section_file *secfile_from_stream(QIODevice *stream,
