@@ -592,7 +592,7 @@ const QString action_name_translation(const struct action *action);
 const QString action_id_name_translation(action_id act_id);
 const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
                                      const struct act_prob prob,
-                                     const QString custom);
+                                     const QString &custom);
 
 const char *action_ui_name_ruleset_var_name(int act);
 const char *action_ui_name_default(int act);

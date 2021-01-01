@@ -20,7 +20,7 @@
 /*********************************************************************/ /**
    Create a section file from a file.  Returns NULL on error.
  *************************************************************************/
-struct section_file *secfile_load(QString filename,
+struct section_file *secfile_load(const QString &filename,
                                   bool allow_duplicates)
 {
   return secfile_load_section(filename, NULL, allow_duplicates);

@@ -1419,7 +1419,7 @@ static QString action_prob_to_text(const struct act_prob prob)
  **************************************************************************/
 const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
                                      const struct act_prob prob,
-                                     const QString custom)
+                                     const QString &custom)
 {
   QString str, chance, probtxt;
 
