@@ -365,7 +365,6 @@ static void wait_queue_add_request(waitingQueue *hash, int request_id,
 {
   waitq_list *wqlist;
   if (NULL != hash) {
-
     if (!hash->contains(request_id)) {
       waitq_list *wqlist = new waitq_list;
       hash->insert(request_id, wqlist);
