@@ -1150,7 +1150,7 @@ static bool read_init_script_real(struct connection *caller,
 
   /* abuse real_filename to find if we already have a .serv extension */
   real_filename = QString(script_filename);
-  if (real_filename.endsWith(extension)) {
+  if (!real_filename.endsWith(extension)) {
     fc_snprintf(serv_filename, sizeof(serv_filename), "%s%s",
                 script_filename, extension);
   } else {
@@ -3727,7 +3727,7 @@ bool load_command(struct connection *caller, const char *filename,
        * looking any path with an extension, i.e., prefer plain name file
        * in later directory over file with extension in name in earlier
        * directory. */
-      for (path = pathes; !found.isEmpty() && *path; path++) {
+      for (path = pathes; found.isEmpty() && *path; path++) {
         found = fileinfoname(*path, filename);
         if (!found.isEmpty()) {
           sz_strlcpy(arg, qUtf8Printable(found));
@@ -3735,8 +3735,8 @@ bool load_command(struct connection *caller, const char *filename,
       }
     }
 
-    for (path = pathes; !found.isEmpty() && *path; path++) {
-      for (ext = exts; !found.isEmpty() && *ext; ext++) {
+    for (path = pathes; found.isEmpty() && *path; path++) {
+      for (ext = exts; found.isEmpty() && *ext; ext++) {
         fc_snprintf(testfile, sizeof(testfile), "%s.%s", filename, *ext);
         found = fileinfoname(*path, testfile);
         if (!found.isEmpty()) {
@@ -3745,7 +3745,7 @@ bool load_command(struct connection *caller, const char *filename,
       }
     }
 
-    if (is_restricted(caller) && !found.isEmpty()) {
+    if (is_restricted(caller) && found.isEmpty()) {
       cmd_reply(CMD_LOAD, caller, C_FAIL,
                 _("Cannot find savegame or "
                   "scenario with the name \"%s\"."),
@@ -3753,7 +3753,7 @@ bool load_command(struct connection *caller, const char *filename,
       return false;
     }
 
-    if (!found.isEmpty()) {
+    if (found.isEmpty()) {
       sz_strlcpy(arg, filename);
     }
   }

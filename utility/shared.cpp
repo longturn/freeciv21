@@ -1534,9 +1534,9 @@ void free_multicast_group() { NFCNPP_FREE(mc_group); }
  ****************************************************************************/
 void interpret_tilde(char *buf, size_t buf_size, QString filename)
 {
-  if (filename.startsWith("~/")) {
+  if (filename.startsWith(QString("~") + QString(DIR_SEPARATOR_CHAR))) {
     fc_snprintf(buf, buf_size, "%s%c%s", user_home_dir(), DIR_SEPARATOR_CHAR,
-                filename.right(filename.length() - 2));
+                qUtf8Printable(filename.right(filename.length() - 2)));
   } else if (filename == "~") {
     qstrncpy(buf, user_home_dir(), buf_size);
   } else {
