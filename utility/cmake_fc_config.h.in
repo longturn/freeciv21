@@ -57,8 +57,6 @@
 /* memory.h available */
 #cmakedefine HAVE_MEMORY_H
 
-/* pwd.h available */
-#cmakedefine HAVE_PWD_H
 
 /* strings.h available */
 #cmakedefine HAVE_STRINGS_H

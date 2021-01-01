@@ -24,9 +24,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#ifdef HAVE_PWD_H
-#include <pwd.h>
-#endif
 #ifdef FREECIV_MSWINDOWS
 #define ALWAYS_ROOT
 #include <lmcons.h> /* UNLEN */
@@ -640,23 +637,16 @@ char *user_username(char *buf, size_t bufsz)
     }
   }
 
-#ifdef HAVE_GETPWUID
-  /* Otherwise if getpwuid() is available we can use it to find the true
-   * username. */
+#ifndef FREECIV_MSWINDOWS
   {
-    // cppcheck warns about thread safety, but this function is called once
-    // before any thread is spawned
-    auto *pwent = getpwuid(getuid()); // NOLINT(runtime/threadsafe_fn)
-
-    if (pwent) {
-      fc_strlcpy(buf, pwent->pw_name, bufsz);
-      if (is_ascii_name(buf)) {
-        qDebug("getpwuid username is %s", buf);
-        return buf;
-      }
+    fc_strlcpy(buf, qUtf8Printable(QDir::homePath().split("/").last()),
+               bufsz);
+    if (is_ascii_name(buf)) {
+      qDebug("username from homepath is %s", buf);
+      return buf;
     }
   }
-#endif /* HAVE_GETPWUID */
+#endif
 
 #ifdef FREECIV_MSWINDOWS
   /* On windows the GetUserName function will give us the login name. */
@@ -943,7 +933,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
 #ifndef DIR_SEPARATOR_IS_DEFAULT
   char fnbuf[filename != NULL ? qstrlen(filename) + 1 : 1];
   int i;
-#else /* DIR_SEPARATOR_IS_DEFAULT */
+#else  /* DIR_SEPARATOR_IS_DEFAULT */
   const char *fnbuf = filename;
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
@@ -1265,7 +1255,7 @@ void switch_lang(const char *lang)
   autocap_update();
 
   qInfo("LANG set to %s", lang);
-#else /* FREECIV_ENABLE_NLS */
+#else  /* FREECIV_ENABLE_NLS */
   fc_assert(false);
 #endif /* FREECIV_ENABLE_NLS */
 }
@@ -1287,7 +1277,7 @@ void init_nls()
 
 #ifdef FREECIV_MSWINDOWS
   setup_langname(); /* Makes sure LANG env variable has been set */
-#endif /* FREECIV_MSWINDOWS */
+#endif              /* FREECIV_MSWINDOWS */
 
   (void) setlocale(LC_ALL, "");
   (void) bindtextdomain("freeciv-core", get_locale_dir());
@@ -1357,9 +1347,7 @@ void dont_run_as_root(const char *argv0, const char *fallback)
   if (getuid() == 0 || geteuid() == 0) {
     fc_fprintf(stderr,
                _("%s: Fatal error: you're trying to run me as superuser!\n"),
-               (argv0      ? argv0
-                : fallback ? fallback
-                           : "freeciv"));
+               (argv0 ? argv0 : fallback ? fallback : "freeciv"));
     fc_fprintf(stderr, _("Use a non-privileged account instead.\n"));
     exit(EXIT_FAILURE);
   }
@@ -1582,7 +1570,7 @@ bool path_is_absolute(const char *filename)
   if (strchr(filename, ':')) {
     return true;
   }
-#else /* FREECIV_MSWINDOWS */
+#else  /* FREECIV_MSWINDOWS */
   if (filename[0] == '/') {
     return true;
   }
