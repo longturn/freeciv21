@@ -293,7 +293,7 @@ static bool secfile_hash_delete(struct section_file *secfile,
    Base function to load a section file.  Note it closes the inputfile.
  **************************************************************************/
 static struct section_file *secfile_from_input_file(struct inputfile *inf,
-                                                    const char *filename,
+                                                    QString filename,
                                                     const char *section,
                                                     bool allow_duplicates)
 {
@@ -316,14 +316,14 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
 
   /* Assign the real value later, to speed up the creation of new entries. */
   secfile = secfile_new(true);
-  if (filename) {
-    secfile->name = fc_strdup(filename);
+  if (!filename.isEmpty()) {
+    secfile->name = fc_strdup(qUtf8Printable(filename));
   } else {
     secfile->name = NULL;
   }
 
-  if (filename) {
-    qDebug("Reading registry from \"%s\"", filename);
+  if (!filename.isEmpty()) {
+    qDebug("Reading registry from \"%s\"", qUtf8Printable(filename));
   } else {
     qDebug("Reading registry");
   }
@@ -559,7 +559,7 @@ END:
    Create a section file from a file, read only one particular section.
    Returns NULL on error.
  **************************************************************************/
-struct section_file *secfile_load_section(const char *filename,
+struct section_file *secfile_load_section(QString filename,
                                           const char *section,
                                           bool allow_duplicates)
 {

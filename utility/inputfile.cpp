@@ -91,7 +91,7 @@
 
 struct inputfile {
   unsigned int magic;        /* memory check */
-  char *filename;            /* filename as passed to fopen */
+  QString filename;          /* filename as passed to fopen */
   QIODevice *fp;             /* read from this */
   bool at_eof;               /* flag for end-of-file */
   struct astring cur_line;   /* data from current line */
@@ -155,7 +155,7 @@ static void init_zeros(struct inputfile *inf)
 {
   fc_assert_ret(NULL != inf);
   inf->magic = INF_MAGIC;
-  inf->filename = NULL;
+  inf->filename.clear();
   inf->fp = NULL;
   inf->datafn = NULL;
   inf->included_from = NULL;
@@ -193,9 +193,9 @@ static bool inf_sanity_check(struct inputfile *inf)
    Return the filename the inputfile was loaded as, or "(anonymous)"
    if this inputfile was loaded from a stream rather than from a file.
  ***********************************************************************/
-static const char *inf_filename(struct inputfile *inf)
+static QString inf_filename(struct inputfile *inf)
 {
-  if (inf->filename) {
+  if (!inf->filename.isEmpty()) {
     return inf->filename;
   } else {
     return "(anonymous)";
@@ -206,22 +206,22 @@ static const char *inf_filename(struct inputfile *inf)
    Open the file, and return an allocated, initialized structure.
    Returns NULL if the file could not be opened.
  ***********************************************************************/
-struct inputfile *inf_from_file(const char *filename,
+struct inputfile *inf_from_file(const QString &filename,
                                 datafilename_fn_t datafn)
 {
   struct inputfile *inf;
 
-  fc_assert_ret_val(NULL != filename, NULL);
-  fc_assert_ret_val(0 < qstrlen(filename), NULL);
+  fc_assert_ret_val(!filename.isEmpty(), NULL);
+  fc_assert_ret_val(0 < filename.length(), NULL);
   auto *fp = new KFilterDev(filename);
   fp->open(QIODevice::ReadOnly);
   if (!fp->isOpen()) {
     delete fp;
     return NULL;
   }
-  log_debug("inputfile: opened \"%s\" ok", filename);
+  log_debug("inputfile: opened \"%s\" ok", qUtf8Printable(filename));
   inf = inf_from_stream(fp, datafn);
-  inf->filename = fc_strdup(filename);
+  inf->filename = filename;
   return inf;
 }
 
@@ -238,11 +238,12 @@ struct inputfile *inf_from_stream(QIODevice *stream,
   inf = new inputfile;
   init_zeros(inf);
 
-  inf->filename = NULL;
+  inf->filename.clear();
   inf->fp = stream;
   inf->datafn = datafn;
 
-  log_debug("inputfile: opened \"%s\" ok", inf_filename(inf));
+  log_debug("inputfile: opened \"%s\" ok",
+            qUtf8Printable(inf_filename(inf)));
   return inf;
 }
 
@@ -256,7 +257,8 @@ static void inf_close_partial(struct inputfile *inf)
 {
   fc_assert_ret(inf_sanity_check(inf));
 
-  log_debug("inputfile: sub-closing \"%s\"", inf_filename(inf));
+  log_debug("inputfile: sub-closing \"%s\"",
+            qUtf8Printable(inf_filename(inf)));
 
   bool error = !inf->fp->errorString().isEmpty();
   // KFilterDev returns "Unknown error" even when there's no error
@@ -264,16 +266,14 @@ static void inf_close_partial(struct inputfile *inf)
     error = qobject_cast<KFilterDev *>(inf->fp)->error() != 0;
   }
   if (error) {
-    qCritical("Error before closing %s: %s", inf_filename(inf),
+    qCritical("Error before closing %s: %s",
+              qUtf8Printable(inf_filename(inf)),
               qPrintable(inf->fp->errorString()));
   }
   delete inf->fp;
   inf->fp = nullptr;
 
-  if (inf->filename) {
-    delete[] inf->filename;
-  }
-  inf->filename = NULL;
+  inf->filename.clear();
   astr_free(&inf->cur_line);
   astr_free(&inf->token);
 
@@ -294,7 +294,7 @@ void inf_close(struct inputfile *inf)
 {
   fc_assert_ret(inf_sanity_check(inf));
 
-  log_debug("inputfile: closing \"%s\"", inf_filename(inf));
+  log_debug("inputfile: closing \"%s\"", qUtf8Printable(inf_filename(inf)));
   if (inf->included_from) {
     inf_close(inf->included_from);
   }
@@ -420,7 +420,7 @@ static bool check_include(struct inputfile *inf)
   {
     struct inputfile *inc = inf;
     do {
-      if (inc->filename && full_name == QString(inc->filename)) {
+      if (!inc->filename.isEmpty() && full_name == QString(inc->filename)) {
         qCritical("Recursion trap on '*include' for \"%s\"",
                   qUtf8Printable(full_name));
         return false;
@@ -559,7 +559,7 @@ char *inf_log_str(struct inputfile *inf, const char *message, ...)
   }
 
   cat_snprintf(str, sizeof(str), "  file \"%s\", line %d, pos %d%s",
-               inf_filename(inf), inf->line_num, inf->cur_line_pos,
+               qUtf8Printable(inf_filename(inf)), inf->line_num, inf->cur_line_pos,
                (inf->at_eof ? ", EOF" : ""));
 
   if (!astr_empty(&inf->cur_line)) {
@@ -573,7 +573,7 @@ char *inf_log_str(struct inputfile *inf, const char *message, ...)
   }
   while ((inf = inf->included_from)) { /* local pointer assignment */
     cat_snprintf(str, sizeof(str), "\n  included from file \"%s\", line %d",
-                 inf_filename(inf), inf->line_num);
+                 qUtf8Printable(inf_filename(inf)), inf->line_num);
   }
 
   return str;
