@@ -1301,7 +1301,7 @@ static void sg_load_savefile(struct loaddata *loading)
         return;
       }
 
-      secfile = secfile_load(qUtf8Printable(found), false);
+      secfile = secfile_load(found, false);
       if (secfile == NULL) {
         qCritical(_("Failed to load scenario luadata file %s.luadata"),
                   game.scenario.datafile);

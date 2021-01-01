@@ -317,13 +317,13 @@ void audio_real_init(const QString &soundset_name,
     ms_tagfile = NULL;
     return;
   }
-  ss_tagfile = secfile_load(qUtf8Printable(ss_filename), true);
+  ss_tagfile = secfile_load(ss_filename, true);
   if (!ss_tagfile) {
     qFatal(_("Could not load sound spec-file '%s':\n%s"),
            qUtf8Printable(ss_filename), secfile_error());
     exit(EXIT_FAILURE);
   }
-  ms_tagfile = secfile_load(qUtf8Printable(ms_filename), true);
+  ms_tagfile = secfile_load(ms_filename, true);
   if (!ms_tagfile) {
     qFatal(_("Could not load music spec-file '%s':\n%s"),
            qUtf8Printable(ms_filename), secfile_error());

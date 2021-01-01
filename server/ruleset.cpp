@@ -270,7 +270,7 @@ static struct section_file *openload_ruleset_file(const char *whichset,
   /* Need to save a copy of the filename for following message, since
      section_file_load() may call datafilename() for includes. */
   sfilename = dfilename;
-  secfile = secfile_load(qUtf8Printable(sfilename), false);
+  secfile = secfile_load(sfilename, false);
 
   if (secfile == NULL) {
     qCCritical(ruleset_category, "Could not load ruleset '%s':\n%s",
@@ -324,7 +324,7 @@ static struct section_file *openload_luadata_file(const char *rsdir)
   /* Need to save a copy of the filename for following message, since
      section_file_load() may call datafilename() for includes. */
   sfilename = dfilename;
-  secfile = secfile_load(qUtf8Printable(sfilename), false);
+  secfile = secfile_load(sfilename, false);
 
   if (secfile == NULL) {
     qCCritical(ruleset_category, "Could not load luadata '%s':\n%s",

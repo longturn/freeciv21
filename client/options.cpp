@@ -4033,7 +4033,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     }
 
     /* Older versions had options file in user home directory */
-    name = user_home_dir();
+    name = qUtf8Printable(QDir::homePath());
     if (name == NULL) {
       qCritical(_("Cannot find your home directory"));
 

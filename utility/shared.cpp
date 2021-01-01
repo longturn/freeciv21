@@ -103,7 +103,6 @@ static QStringList *save_dir_names = NULL;
 static QStringList *scenario_dir_names = NULL;
 
 static char *mc_group = NULL;
-static char *home_dir_user = NULL;
 static char *storage_dir_freeciv = NULL;
 
 Q_GLOBAL_STATIC(QString, realfile);
@@ -589,38 +588,6 @@ bool str_to_float(const char *str, float *pfloat)
 }
 
 /************************************************************************/ /**
-   Returns string which gives users home dir, as specified by $HOME.
-   Gets value once, and then caches result.
-   If $HOME is not set, give a log message and returns NULL.
-   Note the caller should not mess with the returned string.
- ****************************************************************************/
-char *user_home_dir()
-{
-  if (home_dir_user == NULL) {
-    char *env = getenv("HOME");
-
-#ifdef FREECIV_MSWINDOWS
-    env = getenv("APPDATA");
-#endif /* FREECIV_MSWINDOWS */
-
-    if (env) {
-      home_dir_user = fc_strdup(env);
-      qDebug("HOME is %s", home_dir_user);
-    } else {
-      qCritical("Could not find home directory (HOME is not set).");
-      home_dir_user = NULL;
-    }
-  }
-
-  return home_dir_user;
-}
-
-/************************************************************************/ /**
-   Free user home directory information
- ****************************************************************************/
-void free_user_home_dir() { NFCNPP_FREE(home_dir_user); }
-
-/************************************************************************/ /**
    Returns string which gives freeciv storage dir.
    Gets value once, and then caches result.
    Note the caller should not mess with the returned string.
@@ -748,18 +715,18 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
                 tok, DIR_SEPARATOR_CHAR);
       i = 0; /* skip this one */
     } else {
-      char *home = user_home_dir();
+      QString home = QDir::homePath();
 
-      if (!home) {
+      if (home.isEmpty()) {
         qDebug("No HOME, skipping path component %s", tok);
         i = 0;
       } else {
-        int len = qstrlen(home) + i; /* +1 -1 */
+        int len = home.length() + i; /* +1 -1 */
 
         allocated = new char[len];
         ret = &allocated;
 
-        fc_snprintf(allocated, len, "%s%s", home, tok + 1);
+        fc_snprintf(allocated, len, "%s%s", qUtf8Printable(home), tok + 1);
         i = -1; /* flag to free tok below */
       }
     }
@@ -976,7 +943,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
 #ifndef DIR_SEPARATOR_IS_DEFAULT
   char fnbuf[filename != NULL ? qstrlen(filename) + 1 : 1];
   int i;
-#else /* DIR_SEPARATOR_IS_DEFAULT */
+#else  /* DIR_SEPARATOR_IS_DEFAULT */
   const char *fnbuf = filename;
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
@@ -1298,7 +1265,7 @@ void switch_lang(const char *lang)
   autocap_update();
 
   qInfo("LANG set to %s", lang);
-#else /* FREECIV_ENABLE_NLS */
+#else  /* FREECIV_ENABLE_NLS */
   fc_assert(false);
 #endif /* FREECIV_ENABLE_NLS */
 }
@@ -1320,7 +1287,7 @@ void init_nls()
 
 #ifdef FREECIV_MSWINDOWS
   setup_langname(); /* Makes sure LANG env variable has been set */
-#endif /* FREECIV_MSWINDOWS */
+#endif              /* FREECIV_MSWINDOWS */
 
   (void) setlocale(LC_ALL, "");
   (void) bindtextdomain("freeciv-core", get_locale_dir());
@@ -1390,9 +1357,7 @@ void dont_run_as_root(const char *argv0, const char *fallback)
   if (getuid() == 0 || geteuid() == 0) {
     fc_fprintf(stderr,
                _("%s: Fatal error: you're trying to run me as superuser!\n"),
-               (argv0      ? argv0
-                : fallback ? fallback
-                           : "freeciv"));
+               (argv0 ? argv0 : fallback ? fallback : "freeciv"));
     fc_fprintf(stderr, _("Use a non-privileged account instead.\n"));
     exit(EXIT_FAILURE);
   }
@@ -1535,10 +1500,11 @@ void free_multicast_group() { NFCNPP_FREE(mc_group); }
 void interpret_tilde(char *buf, size_t buf_size, QString filename)
 {
   if (filename.startsWith(QString("~") + QString(DIR_SEPARATOR_CHAR))) {
-    fc_snprintf(buf, buf_size, "%s%c%s", user_home_dir(), DIR_SEPARATOR_CHAR,
+    fc_snprintf(buf, buf_size, "%s%c%s", qUtf8Printable(QDir::homePath()),
+                DIR_SEPARATOR_CHAR,
                 qUtf8Printable(filename.right(filename.length() - 2)));
   } else if (filename == "~") {
-    qstrncpy(buf, user_home_dir(), buf_size);
+    qstrncpy(buf, qUtf8Printable(QDir::homePath()), buf_size);
   } else {
     qstrncpy(buf, qUtf8Printable(filename), buf_size);
   }
@@ -1553,17 +1519,17 @@ void interpret_tilde(char *buf, size_t buf_size, QString filename)
 char *interpret_tilde_alloc(const char *filename)
 {
   if (filename[0] == '~' && filename[1] == DIR_SEPARATOR_CHAR) {
-    const char *home = user_home_dir();
+    QString home = QDir::homePath();
     size_t sz;
     char *buf;
 
     filename += 2; /* Skip past "~/" */
-    sz = qstrlen(home) + qstrlen(filename) + 2;
+    sz = home.length() + qstrlen(filename) + 2;
     buf = static_cast<char *>(fc_malloc(sz));
-    fc_snprintf(buf, sz, "%s/%s", home, filename);
+    fc_snprintf(buf, sz, "%s/%s", qUtf8Printable(home), filename);
     return buf;
   } else if (filename[0] == '~' && filename[1] == '\0') {
-    return fc_strdup(user_home_dir());
+    return fc_strdup(qUtf8Printable(QDir::homePath()));
   } else {
     return fc_strdup(filename);
   }
@@ -1614,7 +1580,7 @@ bool path_is_absolute(const char *filename)
   if (strchr(filename, ':')) {
     return true;
   }
-#else /* FREECIV_MSWINDOWS */
+#else  /* FREECIV_MSWINDOWS */
   if (filename[0] == '/') {
     return true;
   }
