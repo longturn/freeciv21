@@ -189,15 +189,13 @@ static bool find_option(const char *buf_in, const char *option,
     }
 
     if (0 == strncasecmp(buf_in, option, option_len)) {
-      /* This is this one. */
-      buf_in += option_len;
+      buf_in += option_len; /* This is this one. */
 
       while ((QChar::isSpace(*buf_in) || *buf_in == '=')
              && *buf_in != '\0') {
         buf_in++;
       }
-      if (*buf_in == '"') {
-        /* Quote case. */
+      if (*buf_in == '"') { /* Quote case. */
         const char *end = strchr(++buf_in, '"');
 
         if (!end) {
@@ -220,7 +218,6 @@ static bool find_option(const char *buf_in, const char *option,
     }
     buf_in++;
   }
-
   return false;
 }
 
