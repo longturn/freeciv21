@@ -4032,14 +4032,6 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
       minor = last_minors[major - 1];
     }
 
-    /* Older versions had options file in user home directory */
-    name = qUtf8Printable(QDir::homePath());
-    if (name == NULL) {
-      qCritical(_("Cannot find your home directory"));
-
-      return NULL;
-    }
-
     /* minor having max value of FIRST_MINOR_NEW_OPTION_FILE_NAME
      * works since MID versioning scheme was used within major version 2
      * only (2.2 - 2.6) so the last minor is bigger than any earlier minor.
@@ -4048,12 +4040,13 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
         minor = FIRST_MINOR_NEW_OPTION_FILE_NAME;
          minor >= FIRST_MINOR_MID_OPTION_FILE_NAME; minor--) {
       fc_snprintf(name_buffer, sizeof(name_buffer),
-                  "%s%c.freeciv-client-rc-%d.%d", name, DIR_SEPARATOR_CHAR,
+                  "%s%c.freeciv-client-rc-%d.%d",
+                  qUtf8Printable(QDir::homePath()), DIR_SEPARATOR_CHAR,
                   major, minor);
       if (0 == fc_stat(name_buffer, &buf)) {
         qInfo(_("Didn't find '%s' option file, "
                 "loading from '%s' instead."),
-              get_current_option_file_name() + qstrlen(name) + 1,
+              get_current_option_file_name() + qstrlen(qUtf8Printable(QDir::homePath())) + 1,
               name_buffer + qstrlen(name) + 1);
 
         if (FIRST_MINOR_NEW_BOOLEAN > minor) {
