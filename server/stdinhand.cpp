@@ -308,14 +308,15 @@ static void cmd_reply_line(enum command_id cmd, struct connection *caller,
                            enum rfc_status rfc_status, const char *prefix,
                            const char *line)
 {
-  const char *cmdname = cmd < CMD_NUM ? command_name_by_number(cmd)
-                        : cmd == CMD_AMBIGUOUS
-                            /* TRANS: ambiguous command */
-                            ? _("(ambiguous)")
-                            : cmd == CMD_UNRECOGNIZED
-                                  /* TRANS: unrecognized command */
-                                  ? _("(unknown)")
-                                  : "(?!?)"; /* this case is a bug! */
+  const char *cmdname = cmd < CMD_NUM
+                            ? command_name_by_number(cmd)
+                            : cmd == CMD_AMBIGUOUS
+                                  /* TRANS: ambiguous command */
+                                  ? _("(ambiguous)")
+                                  : cmd == CMD_UNRECOGNIZED
+                                        /* TRANS: unrecognized command */
+                                        ? _("(unknown)")
+                                        : "(?!?)"; /* this case is a bug! */
 
   if (caller) {
     notify_conn(caller->self, NULL, E_SETTING, ftc_command, "/%s: %s%s",
@@ -3561,8 +3562,7 @@ static bool take_command(struct connection *caller, char *str, bool check)
     cmd_reply(CMD_TAKE, caller, C_OK, _("%s now controls %s (%s, %s)."),
               pconn->username, player_name(pplayer),
               is_barbarian(pplayer) ? _("Barbarian")
-              : is_ai(pplayer)      ? _("AI")
-                                    : _("Human"),
+                                    : is_ai(pplayer) ? _("AI") : _("Human"),
               pplayer->is_alive ? _("Alive") : _("Dead"));
   } else {
     cmd_reply(CMD_TAKE, caller, C_FAIL,
@@ -5036,6 +5036,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
 
     if (is_reg_file_for_access(real_filename, false)
         && (script_file = fc_fopen(real_filename, "r"))) {
+      fclose(script_file);
       ret = script_server_unsafe_do_file(caller, real_filename);
       return ret;
     } else {
@@ -7176,9 +7177,9 @@ static char *cmdlevel_arg1_generator(const char *text, int state)
  **************************************************************************/
 static const char *cmdlevel_arg2_accessor(int idx)
 {
-  return ((idx == 0)   ? "first"
-          : (idx == 1) ? "new"
-                       : connection_name_accessor(idx - 2));
+  return ((idx == 0)
+              ? "first"
+              : (idx == 1) ? "new" : connection_name_accessor(idx - 2));
 }
 
 /**********************************************************************/ /**

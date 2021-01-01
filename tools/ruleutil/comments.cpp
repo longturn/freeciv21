@@ -56,11 +56,11 @@ static struct {
 bool comments_load()
 {
   struct section_file *comment_file;
-  const char *fullpath;
+  QString fullpath;
 
   fullpath = fileinfoname(get_data_dirs(), "ruledit/" COMMENTS_FILE_NAME);
 
-  if (fullpath == NULL) {
+  if (fullpath.isEmpty()) {
     return false;
   }
 

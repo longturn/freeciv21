@@ -164,7 +164,8 @@ int connect_to_server(QString &username, QString &hostname, int port,
     errbuf[0] = '\0';
   }
 
-  if (0 != try_to_connect(hostname, port, username, errbuf, errbufsize)) {
+  if (errbuf
+      && 0 != try_to_connect(hostname, port, username, errbuf, errbufsize)) {
     return -1;
   }
 

@@ -374,7 +374,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
       fc_assert_ret_val(ptag->link.type != TLT_INVALID, false);
       break;
     };
-  }
+  } break;
   case TTT_INVALID:
     fc_assert_ret_val(type != TTT_INVALID, false);
   };
@@ -471,7 +471,7 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
     case TLT_INVALID:
       fc_assert_ret_val(ptag->link.type != TLT_INVALID, false);
     };
-  }
+  } break;
   case TTT_INVALID:
     fc_assert_ret_val(type != TTT_INVALID, false);
   };
