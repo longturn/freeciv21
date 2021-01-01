@@ -187,6 +187,7 @@ static const char *download_modpack_recursive(const char *URL,
                                            "dependencies.list%d.URL", dep);
 
       if (dep_URL == NULL) {
+        secfile_destroy(control);
         return _("Dependency has no download URL");
       }
 

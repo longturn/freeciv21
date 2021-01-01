@@ -5209,7 +5209,7 @@ static int fill_grid_sprite_array(const struct tileset *t,
         }
       }
       // Draw city grid for main citymap
-      if (citymode
+      if (tile && citymode
           && city_base_to_city_map(&dummy_x, &dummy_y, citymode, tile)) {
         ADD_SPRITE_SIMPLE(t->sprites.grid.selected[pedge->type]);
       }
