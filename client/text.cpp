@@ -12,9 +12,10 @@
 #include <fc_config.h>
 #endif
 
-#include <cmath> /* ceil */
-#include <cstdarg>
-#include <cstring>
+#include <QDateTime>
+#include <math.h> /* ceil */
+#include <stdarg.h>
+#include <string.h>
 
 /* utility */
 #include "astring.h"
@@ -1716,7 +1717,16 @@ const QString format_duration(int duration)
   } else {
     str += QStringLiteral("%1").arg(Q_("?duration:overflow"));
   }
+  // Show time if there is more than 1hour left
+  if (duration > 3600) {
+    QDateTime time = QDateTime::currentDateTime();
+    QDateTime tc_time = time.addSecs(duration);
+    QString day_now = QLocale::system().toString(time, "ddd ");
+    QString day_tc = QLocale::system().toString(tc_time, "ddd ");
 
+    str += QStringLiteral("\n") + ((day_now != day_tc) ? day_tc : "")
+           + tc_time.toString("hh:mm");
+  }
   return str.trimmed();
 }
 
