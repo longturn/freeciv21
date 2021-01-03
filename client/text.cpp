@@ -1717,8 +1717,8 @@ const QString format_duration(int duration)
   if (duration > 3600) {
     QDateTime time = QDateTime::currentDateTime();
     QDateTime tc_time = time.addSecs(duration);
-    QString day_now = time.toString("ddd ");
-    QString day_tc = tc_time.toString("ddd ");
+    QString day_now = QLocale::system().toString(time, "ddd ");
+    QString day_tc = QLocale::system().toString(tc_time, "ddd ");
 
     str += QStringLiteral("\n") + ((day_now != day_tc) ? day_tc : "")
            + tc_time.toString("hh:mm");
