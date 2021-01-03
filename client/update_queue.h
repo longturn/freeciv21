@@ -12,42 +12,77 @@
       \____/        ********************************************************/
 #pragma once
 
+#include <QHash>
+#include <QPair>
+#include <QQueue>
+
 typedef void (*uq_callback_t)(void *data);
 typedef void (*uq_free_fn_t)(void *data);
-#define UQ_FREEDATA(fn) ((uq_free_fn_t) fn)
 
-/* General update queue. */
-void update_queue_init();
-void update_queue_free();
+// Data type in 'update_queue'.
+struct update_queue_data {
+  void *data;
+  uq_free_fn_t free_data_func;
+};
 
-void update_queue_freeze();
-void update_queue_thaw();
-void update_queue_force_thaw();
-bool update_queue_is_frozen();
+// Type of data listed in 'wq_processing_started' and
+// 'wq_processing_finished.'
+struct waiting_queue_data {
+  uq_callback_t callback;
+  struct update_queue_data *uq_data;
+};
 
-void update_queue_processing_started(int request_id);
-void update_queue_processing_finished(int request_id);
+typedef QList<struct waiting_queue_data *> waitq_list;
+typedef QPair<uq_callback_t, struct update_queue_data *> updatePair;
+typedef QHash<int, waitq_list *> waitingQueue;
 
-/* User interface. */
-void update_queue_add(uq_callback_t callback, void *data);
-void update_queue_add_full(uq_callback_t callback, void *data,
-                           uq_free_fn_t free_data_func);
-bool update_queue_has_callback(uq_callback_t callback);
-bool update_queue_has_callback_full(uq_callback_t callback,
-                                    const void **data,
-                                    uq_free_fn_t *free_data_func);
+class update_queue {
+  static update_queue *m_instance;
+  QQueue<updatePair> queue;
+  waitingQueue wq_processing_started;
+  waitingQueue wq_processing_finished;
+  int frozen_level = {0};
+  bool has_idle_cb = {false};
 
-void update_queue_connect_processing_started(int request_id,
-                                             uq_callback_t callback,
-                                             void *data);
-void update_queue_connect_processing_started_full(
-    int request_id, uq_callback_t callback, void *data,
-    uq_free_fn_t free_data_func);
-void update_queue_connect_processing_finished(int request_id,
-                                              uq_callback_t callback,
-                                              void *data);
-void update_queue_connect_processing_finished_full(
-    int request_id, uq_callback_t callback, void *data,
-    uq_free_fn_t free_data_func);
+public:
+  static update_queue *uq();
+  static void drop();
+  ~update_queue();
+  void init();
+  void add(uq_callback_t callback, void *data);
+  void add_full(uq_callback_t cb, void *data, uq_free_fn_t free_fn);
+  void processing_started(int request_id);
+  void processing_finished(int request_id);
+  bool has_callback(uq_callback_t callback);
+  bool has_callback_full(uq_callback_t cb, const void **data,
+                         uq_free_fn_t *free_fn);
+  void connect_processing_started(int request_id, uq_callback_t cb,
+                                  void *data);
+  void connect_processing_finished(int request_id, uq_callback_t cb,
+                                   void *data);
+  void connect_processing_started_full(int request_id, uq_callback_t cb,
+                                       void *data, uq_free_fn_t free_fn);
+  void connect_processing_finished_full(int request_id, uq_callback_t cb,
+                                        void *data, uq_free_fn_t free_func);
 
-bool update_queue_is_switching_page();
+private:
+  update_queue() = default;
+  void freeze();
+  void thaw();
+  void force_thaw();
+  bool is_frozen() const;
+  struct update_queue_data *data_new(void *data, uq_free_fn_t free_fn);
+  void data_destroy(struct update_queue_data *dt);
+  void update_unqueue();
+  void push(uq_callback_t cb, struct update_queue_data *dt);
+  struct update_queue_data *
+  wq_data_extract(struct waiting_queue_data *wq_data);
+  void wq_run_requests(waitingQueue &hash, int request_id);
+  void wq_data_destroy(struct waiting_queue_data *wq_data);
+  struct waiting_queue_data *wq_data_new(uq_callback_t callback, void *data,
+                                         uq_free_fn_t free_fn);
+  void wq_add_request(waitingQueue &hash, int request_id, uq_callback_t cb,
+                      void *data, uq_free_fn_t free_fn);
+};
+
+bool update_queue_is_switching_page(void);

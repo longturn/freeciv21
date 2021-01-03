@@ -230,7 +230,7 @@ static void at_exit()
 {
   emergency_exit();
   packets_deinit();
-  update_queue_free();
+  update_queue::uq()->drop();
   fc_destroy_ow_mutex();
 }
 
@@ -248,7 +248,7 @@ static void client_game_init()
   link_marks_init();
   voteinfo_queue_init();
   server_options_init();
-  update_queue_init();
+  update_queue::uq()->init();
   mapimg_init(mapimg_client_tile_known, mapimg_client_tile_terrain,
               mapimg_client_tile_owner, mapimg_client_tile_city,
               mapimg_client_tile_unit, mapimg_client_plrcolor_count,
@@ -277,7 +277,7 @@ static void client_game_free()
   /* update_queue_init() is correct at this point. The queue is reset to
      a clean state which is also needed if the client is not connected to
      the server! */
-  update_queue_init();
+  update_queue::uq()->init();
 
   client.conn.playing = NULL;
   client.conn.observer = false;
@@ -501,7 +501,7 @@ int client_main(int argc, char *argv[])
 
   ui_init();
   charsets_init();
-  update_queue_init();
+  update_queue::uq()->init();
 
   fc_init_ow_mutex();
 
