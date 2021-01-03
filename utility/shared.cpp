@@ -743,7 +743,7 @@ static QStringList *base_get_dirs(const char *dir_list)
 {
   QStringList *dirs = new QStringList;
   *dirs = QString(dir_list).split(QDir::listSeparator(),
-                                  QString::SkipEmptyParts);
+                                  Qt::SkipEmptyParts);
 
   return dirs;
 }

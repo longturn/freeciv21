@@ -737,7 +737,7 @@ static bool create_command(struct connection *caller, const char *str,
 
   sz_strlcpy(buf, str);
   arg = QString(buf).split(QRegularExpression(REG_EXP),
-                           QString::SkipEmptyParts);
+                           Qt::SkipEmptyParts);
 
   if (arg.count() == 1) {
     ai_type_name = default_ai_type_name();
@@ -1404,7 +1404,7 @@ static bool cmdlevel_command(struct connection *caller, char *str,
   struct connection *ptarget;
 
   arg = QString(str).split(QRegularExpression(REG_EXP),
-                           QString::SkipEmptyParts);
+                           Qt::SkipEmptyParts);
 
   if (arg.count() == 0) {
     /* No argument supplied; list the levels */
@@ -1619,7 +1619,7 @@ static bool timeout_command(struct connection *caller, char *str, bool check)
 
   sz_strlcpy(buf, str);
   arg = QString(buf).split(QRegularExpression(REG_EXP),
-                           QString::SkipEmptyParts);
+                           Qt::SkipEmptyParts);
 
   for (i = 0; i < arg.count(); i++) {
     if (!str_to_int(qUtf8Printable(arg.at(i)), timeouts[i])) {
@@ -2358,7 +2358,7 @@ static bool team_command(struct connection *caller, char *str, bool check)
   if (str != NULL || qstrlen(str) > 0) {
     sz_strlcpy(buf, str);
     arg = QString(buf).split(QRegularExpression(REG_EXP),
-                             QString::SkipEmptyParts);
+                             Qt::SkipEmptyParts);
     remove_quotes(arg);
     for (const auto &a : qAsConst(arg)) {
       qInfo() << a;
@@ -2474,7 +2474,7 @@ static bool vote_command(struct connection *caller, char *str, bool check)
 
   sz_strlcpy(buf, str);
   arg = QString(buf).split(QRegularExpression(REG_EXP),
-                           QString::SkipEmptyParts);
+                           Qt::SkipEmptyParts);
   remove_quotes(arg);
   if (arg.isEmpty()) {
     show_votes(caller);
@@ -2671,7 +2671,7 @@ static bool debug_command(struct connection *caller, char *str, bool check)
   if (str != NULL && qstrlen(str) > 0) {
     sz_strlcpy(buf, str);
     arg = QString(buf).split(QRegularExpression(REG_EXP),
-                             QString::SkipEmptyParts);
+                             Qt::SkipEmptyParts);
     remove_quotes(arg);
   }
 
@@ -2926,7 +2926,7 @@ static bool set_command(struct connection *caller, char *str, bool check)
 
   /* '=' is also a valid delimiter for this function. */
   args = QString(str).split(QRegularExpression(REG_EXP),
-                            QString::SkipEmptyParts);
+                            Qt::SkipEmptyParts);
   remove_quotes(args);
 
   if (args.count() < 2) {
@@ -3263,7 +3263,7 @@ static bool observe_command(struct connection *caller, char *str, bool check)
 
   sz_strlcpy(buf, str);
   arg = QString(buf).split(QRegularExpression(REG_EXP),
-                           QString::SkipEmptyParts);
+                           Qt::SkipEmptyParts);
   remove_quotes(arg);
 
   /* check syntax, only certain syntax if allowed depending on the caller */
@@ -3410,7 +3410,7 @@ static bool take_command(struct connection *caller, char *str, bool check)
 
   sz_strlcpy(buf, str);
   arg = QString(buf).split(QRegularExpression(REG_EXP),
-                           QString::SkipEmptyParts);
+                           Qt::SkipEmptyParts);
   remove_quotes(arg);
 
   /* check syntax */
@@ -3590,7 +3590,7 @@ static bool detach_command(struct connection *caller, char *str, bool check)
 
   sz_strlcpy(buf, str);
   arg = QString(buf).split(QRegularExpression(REG_EXP),
-                           QString::SkipEmptyParts);
+                           Qt::SkipEmptyParts);
   remove_quotes(arg);
 
   if (!caller && arg.count() == 0) {
@@ -4107,7 +4107,7 @@ static bool playercolor_command(struct connection *caller, char *str,
   bool ret = true;
 
   token = QString(str).split(QRegularExpression(REG_EXP),
-                             QString::SkipEmptyParts);
+                             Qt::SkipEmptyParts);
   remove_quotes(token);
 
   if (token.count() != 2) {
@@ -4198,7 +4198,7 @@ static bool playernation_command(struct connection *caller, char *str,
   QStringList token;
 
   token = QString(str).split(QRegularExpression(REG_EXP),
-                             QString::SkipEmptyParts);
+                             Qt::SkipEmptyParts);
   remove_quotes(token);
 
   if (token.count() == 0) {
@@ -4900,7 +4900,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
   bool ret = false;
 
   tokens = QString(arg).split(QRegularExpression(REG_EXP),
-                              QString::SkipEmptyParts);
+                              Qt::SkipEmptyParts);
   remove_quotes(tokens);
 
   if (tokens.count() > 0) {
@@ -5095,7 +5095,7 @@ static bool delegate_command(struct connection *caller, char *arg,
   }
 
   tokens = QString(arg).split(QRegularExpression(REG_EXP),
-                              QString::SkipEmptyParts);
+                              Qt::SkipEmptyParts);
   remove_quotes(tokens);
 
   if (tokens.count() > 0) {
@@ -5588,7 +5588,7 @@ static bool mapimg_command(struct connection *caller, char *arg, bool check)
   bool ret = true;
 
   token = QString(arg).split(QRegularExpression(REG_EXP),
-                             QString::SkipEmptyParts);
+                             Qt::SkipEmptyParts);
   remove_quotes(token);
   if (token.count() > 0) {
     /* match the argument */
@@ -5816,7 +5816,7 @@ static bool aicmd_command(struct connection *caller, char *arg, bool check)
   bool ret = false;
 
   tokens = QString(arg).split(QRegularExpression(REG_EXP),
-                              QString::SkipEmptyParts);
+                              Qt::SkipEmptyParts);
   remove_quotes(tokens);
 
   if (tokens.count() < 1) {
@@ -5913,7 +5913,7 @@ static bool fcdb_command(struct connection *caller, char *arg, bool check)
   }
 
   token = QString(arg).split(QRegularExpression(REG_EXP),
-                             QString::SkipEmptyParts);
+                             Qt::SkipEmptyParts);
   remove_quotes(token);
 
   if (token.count() > 0) {
