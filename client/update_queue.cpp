@@ -63,17 +63,11 @@ struct waiting_queue_data {
   struct update_queue_data *uq_data;
 };
 
-/* 'struct waiting_queue_list' and related functions. */
-#define SPECLIST_TAG waiting_queue
-#define SPECLIST_TYPE struct waiting_queue_data
-#include "speclist.h"
-#define waiting_queue_list_iterate(list, data)                              \
-  TYPED_LIST_ITERATE(struct waiting_queue_data, list, data)
-#define waiting_queue_list_iterate_end LIST_ITERATE_END
-
+typedef QList<struct waiting_queue_data *> waitq_list;
 typedef QPair<uq_callback_t, struct update_queue_data *> updatePair;
+typedef QHash<int, waitq_list *> waitingQueue;
+
 Q_GLOBAL_STATIC(QQueue<updatePair>, update_queue)
-typedef QHash<int, struct waiting_queue_list *> waitingQueue;
 Q_GLOBAL_STATIC(waitingQueue, processing_started_waiting_queue)
 Q_GLOBAL_STATIC(waitingQueue, processing_finished_waiting_queue)
 
@@ -169,19 +163,15 @@ void update_queue_free(void)
 
   if (processing_started_waiting_queue.exists())
     for (auto a : *processing_started_waiting_queue) {
-      waiting_queue_list_iterate(a, data)
-      {
+      for (auto data : *a) {
         waiting_queue_data_destroy(data);
       }
-      waiting_queue_list_iterate_end;
     }
   if (processing_finished_waiting_queue.exists())
     for (auto a : *processing_finished_waiting_queue) {
-      waiting_queue_list_iterate(a, data)
-      {
+      for (auto data : *a) {
         waiting_queue_data_destroy(data);
       }
-      waiting_queue_list_iterate_end;
     }
   update_queue_frozen_level = 0;
   update_queue_has_idle_callback = false;
@@ -228,18 +218,16 @@ bool update_queue_is_frozen(void) { return (0 < update_queue_frozen_level); }
  ****************************************************************************/
 static void wait_queue_run_requests(waitingQueue *hash, int request_id)
 {
-  struct waiting_queue_list *list;
+  waitq_list *list;
 
   if (NULL == hash || !hash->contains(request_id)) {
     return;
   }
   list = hash->value(request_id);
-  waiting_queue_list_iterate(list, wq_data)
-  {
+  for (auto wq_data : *list) {
     update_queue_push(wq_data->callback,
                       waiting_queue_data_extract(wq_data));
   }
-  waiting_queue_list_iterate_end;
   hash->remove(request_id);
 }
 
@@ -375,17 +363,14 @@ static void wait_queue_add_request(waitingQueue *hash, int request_id,
                                    uq_callback_t callback, void *data,
                                    uq_free_fn_t free_data_func)
 {
+  waitq_list *wqlist;
   if (NULL != hash) {
-    struct waiting_queue_list *list;
-
     if (!hash->contains(request_id)) {
-      /* The list doesn't exist yet for that request, create it. */
-      list = waiting_queue_list_new_full(waiting_queue_data_destroy);
-      hash->insert(request_id, list);
+      waitq_list *wqlist = new waitq_list;
+      hash->insert(request_id, wqlist);
     }
-    list = hash->value(request_id);
-    waiting_queue_list_append(
-        list, waiting_queue_data_new(callback, data, free_data_func));
+    wqlist = hash->value(request_id);
+    wqlist->append(waiting_queue_data_new(callback, data, free_data_func));
   }
 }
 
