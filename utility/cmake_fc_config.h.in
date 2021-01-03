@@ -96,9 +96,6 @@
 /* backtrace() available */
 #cmakedefine HAVE_BACKTRACE
 
-/* getpwuid() available */
-#cmakedefine HAVE_GETPWUID
-
 /* strcasecoll() available */
 #cmakedefine HAVE_STRCASECOLL
 
