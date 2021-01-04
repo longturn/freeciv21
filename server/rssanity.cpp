@@ -44,7 +44,7 @@
 /**********************************************************************/ /**
    Is non-rule data in ruleset sane?
  **************************************************************************/
-static bool sanity_check_metadata(void)
+static bool sanity_check_metadata()
 {
   if (game.ruleset_summary != NULL
       && qstrlen(game.ruleset_summary) > MAX_LEN_CONTENT) {
@@ -132,7 +132,7 @@ bool sanity_check_server_setting_value_in_req(ssetv ssetval)
 
   /* TODO: use ssetv_setting_get() if setting value becomes multiplexed with
    * the server setting id. */
-  id = (server_setting_id) ssetval;
+  id = static_cast<server_setting_id>(ssetval);
   fc_assert_ret_val(server_setting_exists(id), false);
 
   if (server_setting_type_get(id) != SST_BOOL) {
@@ -523,7 +523,7 @@ static bool effect_list_sanity_cb(struct effect *peffect, void *data)
 /**********************************************************************/ /**
    Sanity check barbarian unit types
  **************************************************************************/
-static bool rs_barbarian_units(void)
+static bool rs_barbarian_units()
 {
   if (num_role_units(L_BARBARIAN) > 0) {
     if (num_role_units(L_BARBARIAN_LEADER) == 0) {
@@ -600,7 +600,7 @@ static bool rs_barbarian_units(void)
 /**********************************************************************/ /**
    Sanity check common unit types
  **************************************************************************/
-static bool rs_common_units(void)
+static bool rs_common_units()
 {
   /* Check some required flags and roles etc: */
   if (num_role_units(UTYF_SETTLERS) == 0) {
@@ -652,7 +652,7 @@ static bool rs_common_units(void)
 /**********************************************************************/ /**
    Sanity check buildings
  **************************************************************************/
-static bool rs_buildings(void)
+static bool rs_buildings()
 {
   /* Special Genus */
   improvement_iterate(pimprove)
@@ -682,7 +682,7 @@ static bool rs_buildings(void)
 /**********************************************************************/ /**
    Check that boolean effect types have sensible effects.
  **************************************************************************/
-static bool sanity_check_boolean_effects(void)
+static bool sanity_check_boolean_effects()
 {
   enum effect_type boolean_effects[] = {
       EFT_ANY_GOVERNMENT,    EFT_CAPITAL_CITY,      EFT_ENABLE_NUKE,
@@ -1389,7 +1389,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 
    Returns TRUE iff everything ok.
  **************************************************************************/
-bool autoadjust_ruleset_data(void)
+bool autoadjust_ruleset_data()
 {
   bool ok = true;
 
@@ -1481,7 +1481,7 @@ bool autoadjust_ruleset_data(void)
 /**********************************************************************/ /**
    Set and lock settings that must have certain value.
  **************************************************************************/
-bool autolock_settings(void)
+bool autolock_settings()
 {
   bool ok = true;
 

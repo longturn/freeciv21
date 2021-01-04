@@ -239,7 +239,7 @@ int scale_to_mult(const struct multiplier *pmul, int scale)
 /**********************************************************************/ /**
    Popup (or raise) the (tax/science/luxury) rates selection dialog.
  **************************************************************************/
-void popup_rates_dialog(void)
+void popup_rates_dialog()
 {
   QList<QScreen *> screens = QGuiApplication::screens();
   QRect rect = screens[0]->availableGeometry();
@@ -273,7 +273,7 @@ void real_multipliers_dialog_update(void *unused)
 /**********************************************************************/ /**
    Popups multiplier dialog
  **************************************************************************/
-void popup_multiplier_dialog(void)
+void popup_multiplier_dialog()
 {
   multipler_rates_dialog *mrd;
 
@@ -309,7 +309,7 @@ fc_double_edge::fc_double_edge(QWidget *parent) : QWidget(parent)
 /**********************************************************************/ /**
    Double edged slider destructor
  **************************************************************************/
-fc_double_edge::~fc_double_edge() {}
+fc_double_edge::~fc_double_edge() = default;
 
 /**********************************************************************/ /**
    Default size for double edge slider
@@ -431,10 +431,12 @@ void fc_double_edge::mouseMoveEvent(QMouseEvent *event)
     if ((moved != 2) && on_min) {
       x_min = x_mouse * width() / ((width() - 1) - 2 * cursor_size)
               - cursor_size;
-      if (x_min < 0)
+      if (x_min < 0) {
         x_min = 0;
-      if (x_min > width())
+      }
+      if (x_min > width()) {
         x_min = width();
+      }
       current_min = (x_min * 10 / (width() - 1));
       if (current_min > max_rates) {
         current_min = max_rates;

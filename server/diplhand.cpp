@@ -15,8 +15,8 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 /* utility */
 #include "bitvector.h"
@@ -86,12 +86,12 @@ static void call_treaty_accepted(struct player *pplayer,
 /**********************************************************************/ /**
    Initialize diplhand module
  **************************************************************************/
-void diplhand_init(void) { treaties = treaty_list_new(); }
+void diplhand_init() { treaties = treaty_list_new(); }
 
 /**********************************************************************/ /**
    Free all the resources allocated by diplhand.
  **************************************************************************/
-void diplhand_free(void)
+void diplhand_free()
 {
   free_treaties();
 
@@ -102,7 +102,7 @@ void diplhand_free(void)
 /**********************************************************************/ /**
    Free all the treaties currently in treaty list.
  **************************************************************************/
-void free_treaties(void)
+void free_treaties()
 {
   /* Free memory allocated for treaties */
   treaty_list_iterate(treaties, pt)
@@ -779,8 +779,9 @@ void handle_diplomacy_create_clause_req(struct player *pplayer,
     if (type == CLAUSE_CITY) {
       struct city *pcity = game_city_by_number(value);
 
-      if (pcity && !map_is_known_and_seen(pcity->tile, pother, V_MAIN))
+      if (pcity && !map_is_known_and_seen(pcity->tile, pother, V_MAIN)) {
         give_citymap_from_player_to_player(pcity, pplayer, pother);
+      }
     }
 
     dlsend_packet_diplomacy_create_clause(
@@ -856,7 +857,7 @@ void handle_diplomacy_init_meeting_req(struct player *pplayer,
   }
 
   if (could_meet_with_player(pplayer, pother)) {
-    auto ptreaty = new Treaty;
+    auto *ptreaty = new Treaty;
     init_treaty(ptreaty, pplayer, pother);
     treaty_list_prepend(treaties, ptreaty);
 
@@ -945,4 +946,4 @@ void reject_all_treaties(struct player *pplayer)
 /**********************************************************************/ /**
    Get treaty list
  **************************************************************************/
-struct treaty_list *get_all_treaties(void) { return treaties; }
+struct treaty_list *get_all_treaties() { return treaties; }

@@ -20,7 +20,7 @@
 
 #define MAX_COLATITUDE 1000
 
-int get_sqsize(void);
+int get_sqsize();
 
 /* Size safe Unit of colatitude. 0 is not allowed due to possibility of
  * division by 0 in mapgen.c */

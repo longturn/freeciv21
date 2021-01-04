@@ -25,4 +25,4 @@ void handle_diplomacy_remove_clause(int counterpart, int giver,
 void handle_diplomacy_accept_treaty(int counterpart, bool I_accepted,
                                     bool other_accepted);
 
-void close_all_diplomacy_dialogs(void);
+void close_all_diplomacy_dialogs();

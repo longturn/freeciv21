@@ -1187,7 +1187,7 @@ void map_know_and_see_all(struct player *pplayer)
 /**********************************************************************/ /**
    Unfogs all tiles for all players.  See map_know_and_see_all.
  **************************************************************************/
-void show_map_to_all(void)
+void show_map_to_all()
 {
   players_iterate(pplayer) { map_know_and_see_all(pplayer); }
   players_iterate_end;
@@ -1568,7 +1568,7 @@ static void give_tile_info_from_player_to_player(struct player *pfrom,
    If p1 gives p2 shared vision and p2 gives p3 shared vision p1
    should also give p3 shared vision.
  **************************************************************************/
-static void create_vision_dependencies(void)
+static void create_vision_dependencies()
 {
   int added;
 
@@ -1613,8 +1613,9 @@ static void create_vision_dependencies(void)
 void give_shared_vision(struct player *pfrom, struct player *pto)
 {
   bv_player save_vision[player_slot_count()];
-  if (pfrom == pto)
+  if (pfrom == pto) {
     return;
+  }
   if (gives_shared_vision(pfrom, pto)) {
     qCritical("Trying to give shared vision from %s to %s, "
               "but that vision is already given!",
@@ -1752,7 +1753,7 @@ void enable_fog_of_war_player(struct player *pplayer)
 /**********************************************************************/ /**
    Turns FoW on for everyone.
  **************************************************************************/
-void enable_fog_of_war(void)
+void enable_fog_of_war()
 {
   players_iterate(pplayer) { enable_fog_of_war_player(pplayer); }
   players_iterate_end;
@@ -1777,7 +1778,7 @@ void disable_fog_of_war_player(struct player *pplayer)
 /**********************************************************************/ /**
    Turns FoW off for everyone
  **************************************************************************/
-void disable_fog_of_war(void)
+void disable_fog_of_war()
 {
   players_iterate(pplayer) { disable_fog_of_war_player(pplayer); }
   players_iterate_end;
@@ -1800,8 +1801,9 @@ static void ocean_to_land_fix_rivers(struct tile *ptile)
 
     cardinal_adjc_iterate(&(wld.map), tile1, tile2)
     {
-      if (is_ocean_tile(tile2))
+      if (is_ocean_tile(tile2)) {
         ocean_near = true;
+      }
     }
     cardinal_adjc_iterate_end;
 
@@ -2080,11 +2082,7 @@ static bool is_claimable_ocean(struct tile *ptile, struct tile *source,
     }
   }
   adjc_iterate_end;
-  if (!other_continent && ocean_tiles <= 2) {
-    return true;
-  } else {
-    return false;
-  }
+  return !other_continent && ocean_tiles <= 2;
 }
 
 /**********************************************************************/ /**
@@ -2328,7 +2326,7 @@ void map_claim_border(struct tile *ptile, struct player *owner,
 /**********************************************************************/ /**
    Update borders for all sources. Call this on turn end.
  **************************************************************************/
-void map_calculate_borders(void)
+void map_calculate_borders()
 {
   if (BORDERS_DISABLED == game.info.borders) {
     return;

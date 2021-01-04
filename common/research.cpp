@@ -59,7 +59,7 @@ Q_GLOBAL_STATIC(QVector<QString>, future_name_translation);
 /************************************************************************/ /**
    Initializes all player research structure.
  ****************************************************************************/
-void researches_init(void)
+void researches_init()
 {
   int i;
 
@@ -94,7 +94,7 @@ void researches_init(void)
 /************************************************************************/ /**
    Free all resources allocated for the research system
  ****************************************************************************/
-void researches_free(void)
+void researches_free()
 {
   future_rule_name->clear();
   future_name_translation->clear();
@@ -226,7 +226,7 @@ static const char *research_future_set_name(QVector<QString> *psv, int no,
   psv->replace(no, new_name);
 
   /* Return duplicate of 'new_name'. */
-  return qUtf8Printable(psv->at(no));
+  return qstrdup(qUtf8Printable(psv->at(no)));
 }
 
 /************************************************************************/ /**
@@ -266,19 +266,19 @@ const char *research_advance_rule_name(const struct research *presearch,
    We don't return a static buffer because that would break anything that
    needed to work with more than one name at a time.
  ****************************************************************************/
-const char *
+const QString
 research_advance_name_translation(const struct research *presearch,
                                   Tech_type_id tech)
 {
   if (A_FUTURE == tech && NULL != presearch) {
     const int no = presearch->future_tech;
-    const char *name = nullptr;
+    QString name;
 
     if (no < future_name_translation->count()) {
       /* FIXME remove check to read outside vector */
-      name = qUtf8Printable(future_name_translation->at(no));
+      name = future_name_translation->at(no);
     }
-    if (name == nullptr) {
+    if (name.isEmpty()) {
       char buffer[256];
 
       /* NB: 'presearch->future_tech == 0' means "Future Tech. 1". */
@@ -286,7 +286,7 @@ research_advance_name_translation(const struct research *presearch,
       name = research_future_set_name(future_name_translation, no, buffer);
     }
 
-    fc_assert(name != NULL);
+    fc_assert(!name.isEmpty());
 
     return name;
   }
@@ -486,11 +486,7 @@ static bool research_get_reachable(const struct research *presearch,
   }
 
   /* Check research reqs reachability. */
-  if (!research_get_reachable_rreqs(presearch, tech)) {
-    return false;
-  }
-
-  return true;
+  return research_get_reachable_rreqs(presearch, tech);
 }
 
 /************************************************************************/ /**
@@ -946,7 +942,7 @@ int research_total_bulbs_required(const struct research *presearch,
   if (0 == members) {
     /* There is no more alive players for this research, no need to apply
      * complicated modifiers. */
-    return base_cost * (double) game.info.sciencebox / 100.0;
+    return base_cost * static_cast<double>(game.info.sciencebox) / 100.0;
   }
   base_cost = total_cost / members;
 
@@ -1061,7 +1057,7 @@ int research_total_bulbs_required(const struct research *presearch,
   research_players_iterate_end;
   base_cost = total_cost / members;
 
-  base_cost *= (double) game.info.sciencebox / 100.0;
+  base_cost *= static_cast<double>(game.info.sciencebox) / 100.0;
 
   return MAX(base_cost, 1);
 }
@@ -1122,14 +1118,14 @@ int player_tech_upkeep(const struct player *pplayer)
     if (0 < f) {
       /* Upkeep cost for future techs (f) are calculated using style 0:
        * sum_t^(t+f) x = (f * (2 * t + f + 1) + 2 * t) / 2 */
-      tech_upkeep += (double) (game.info.base_tech_cost
-                               * (f * (2 * t + f + 1) + 2 * t) / 2);
+      tech_upkeep += static_cast<double>(
+          game.info.base_tech_cost * (f * (2 * t + f + 1) + 2 * t) / 2);
     }
     break;
   }
 
   tech_upkeep *= total_research_factor / members;
-  tech_upkeep *= (double) game.info.sciencebox / 100.0;
+  tech_upkeep *= static_cast<double>(game.info.sciencebox) / 100.0;
   /* We only want to calculate the upkeep part of one player, not the
    * whole team! */
   tech_upkeep /= members;
@@ -1154,13 +1150,13 @@ int player_tech_upkeep(const struct player *pplayer)
 
   log_debug("[%s (%d)] tech upkeep: %d", player_name(pplayer),
             player_number(pplayer), (int) tech_upkeep);
-  return (int) tech_upkeep;
+  return static_cast<int>(tech_upkeep);
 }
 
 /************************************************************************/ /**
    Returns the real size of the player research iterator.
  ****************************************************************************/
-size_t research_iter_sizeof(void) { return sizeof(struct research_iter); }
+size_t research_iter_sizeof() { return sizeof(struct research_iter); }
 
 /************************************************************************/ /**
    Returns the research structure pointed by the iterator.
@@ -1245,7 +1241,7 @@ struct iterator *research_iter_init(struct research_iter *it)
 /************************************************************************/ /**
    Returns the real size of the research player iterator.
  ****************************************************************************/
-size_t research_player_iter_sizeof(void)
+size_t research_player_iter_sizeof()
 {
   return sizeof(struct research_player_iter);
 }

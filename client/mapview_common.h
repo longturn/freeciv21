@@ -29,19 +29,19 @@ struct view {
   QPixmap *store, *tmp_store;
 };
 
-void mapdeco_init(void);
-void mapdeco_free(void);
+void mapdeco_init();
+void mapdeco_free();
 void mapdeco_set_highlight(const struct tile *ptile, bool highlight);
 bool mapdeco_is_highlight_set(const struct tile *ptile);
-void mapdeco_clear_highlights(void);
+void mapdeco_clear_highlights();
 void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair);
 bool mapdeco_is_crosshair_set(const struct tile *ptile);
-void mapdeco_clear_crosshairs(void);
+void mapdeco_clear_crosshairs();
 void mapdeco_set_gotoroute(const struct unit *punit);
 void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir);
 void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir);
 bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir);
-void mapdeco_clear_gotoroutes(void);
+void mapdeco_clear_gotoroutes();
 
 extern struct view mapview;
 
@@ -246,7 +246,7 @@ void get_mapview_scroll_pos(int *scroll_x, int *scroll_y);
 void set_mapview_scroll_pos(int scroll_x, int scroll_y);
 
 void set_mapview_origin(float gui_x0, float gui_y0);
-struct tile *get_center_tile_mapcanvas(void);
+struct tile *get_center_tile_mapcanvas();
 void center_tile_mapcanvas(struct tile *ptile);
 
 bool tile_visible_mapcanvas(struct tile *ptile);
@@ -281,7 +281,7 @@ void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
                        bool citydialog = false, bool city_unit = false);
 
 void update_map_canvas(int canvas_x, int canvas_y, int width, int height);
-void update_map_canvas_visible(void);
+void update_map_canvas_visible();
 void update_city_description(struct city *pcity);
 void update_tile_label(struct tile *ptile);
 
@@ -316,19 +316,19 @@ void get_city_mapview_trade_routes(const city *pcity,
                                    enum color_std *trade_routes_color);
 
 bool map_canvas_resized(int width, int height);
-void init_mapcanvas_and_overview(void);
-void free_mapcanvas_and_overview(void);
+void init_mapcanvas_and_overview();
+void free_mapcanvas_and_overview();
 
 void get_spaceship_dimensions(int *width, int *height);
 void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
                    const struct player *pplayer);
 
-void link_marks_init(void);
-void link_marks_free(void);
+void link_marks_init();
+void link_marks_free();
 
-void link_marks_draw_all(void);
-void link_marks_clear_all(void);
-void link_marks_decrease_turn_counters(void);
+void link_marks_draw_all();
+void link_marks_clear_all();
+void link_marks_decrease_turn_counters();
 
 void link_mark_add_new(enum text_link_type type, int id);
 void link_mark_restore(enum text_link_type type, int id);

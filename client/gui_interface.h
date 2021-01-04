@@ -29,11 +29,11 @@ class QTcpSocket;
 #include "tilespec.h"
 
 struct gui_funcs {
-  void (*ui_init)(void);
+  void (*ui_init)();
   void (*ui_main)();
-  void (*ui_exit)(void);
+  void (*ui_exit)();
 
-  enum gui_type (*get_gui_type)(void);
+  enum gui_type (*get_gui_type)();
   void (*insert_client_build_info)(char *outbuf, size_t outlen);
 
   void (*version_message)(const char *vertext);
@@ -43,7 +43,7 @@ struct gui_funcs {
 
   bool (*is_view_supported)(enum ts_type type);
   void (*tileset_type_set)(enum ts_type type);
-  void (*free_intro_radar_sprites)(void);
+  void (*free_intro_radar_sprites)();
   QPixmap *(*load_gfxfile)(const char *filename);
   QPixmap *(*create_sprite)(int width, int height, QColor *pcolor);
   void (*get_sprite_dimensions)(QPixmap *sprite, int *width, int *height);
@@ -89,54 +89,54 @@ struct gui_funcs {
                           const QString &);
 
   void (*set_rulesets)(int num_rulesets, char **rulesets);
-  void (*options_extra_init)(void);
+  void (*options_extra_init)();
   void (*add_net_input)(QTcpSocket *sock);
-  void (*remove_net_input)(void);
+  void (*remove_net_input)();
   void (*real_conn_list_dialog_update)(void *unused);
-  void (*close_connection_dialog)(void);
+  void (*close_connection_dialog)();
   void (*add_idle_callback)(void(callback)(void *), void *data);
-  void (*sound_bell)(void);
+  void (*sound_bell)();
 
   void (*real_set_client_page)(enum client_pages page);
-  enum client_pages (*get_current_client_page)(void);
+  enum client_pages (*get_current_client_page)();
 
   void (*set_unit_icon)(int idx, struct unit *punit);
   void (*set_unit_icons_more_arrow)(bool onoff);
-  void (*real_focus_units_changed)(void);
+  void (*real_focus_units_changed)();
   void (*gui_update_font)(const QString &font_name,
                           const QString &font_value);
 
-  void (*editgui_refresh)(void);
+  void (*editgui_refresh)();
   void (*editgui_notify_object_created)(int tag, int id);
   void (*editgui_notify_object_changed)(int objtype, int object_id,
                                         bool removal);
   void (*editgui_popup_properties)(const struct tile_list *tiles,
                                    int objtype);
-  void (*editgui_tileset_changed)(void);
-  void (*editgui_popdown_all)(void);
+  void (*editgui_tileset_changed)();
+  void (*editgui_popdown_all)();
 
   void (*popup_combat_info)(int attacker_unit_id, int defender_unit_id,
                             int attacker_hp, int defender_hp,
                             bool make_att_veteran, bool make_def_veteran);
-  void (*update_timeout_label)(void);
-  void (*start_turn)(void);
+  void (*update_timeout_label)();
+  void (*start_turn)();
   void (*real_city_dialog_popup)(struct city *pcity);
   void (*real_city_dialog_refresh)(struct city *pcity);
   void (*popdown_city_dialog)(struct city *pcity);
-  void (*popdown_all_city_dialogs)(void);
-  bool (*handmade_scenario_warning)(void);
+  void (*popdown_all_city_dialogs)();
+  bool (*handmade_scenario_warning)();
   void (*refresh_unit_city_dialogs)(struct unit *punit);
   bool (*city_dialog_is_open)(struct city *pcity);
 
   bool (*request_transport)(struct unit *pcargo, struct tile *ptile);
 
-  void (*update_infra_dialog)(void);
+  void (*update_infra_dialog)();
 
   void (*gui_load_theme)(const char *directory, const char *theme_name);
-  void (*gui_clear_theme)(void);
+  void (*gui_clear_theme)();
   char **(*get_gui_specific_themes_directories)(int *count);
   char **(*get_useable_themes_in_directory)(const char *directory,
                                             int *count);
 };
 
-struct gui_funcs *get_gui_funcs(void);
+struct gui_funcs *get_gui_funcs();

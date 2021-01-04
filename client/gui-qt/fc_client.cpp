@@ -54,17 +54,11 @@
 
 fcFont *fcFont::m_instance = 0;
 extern "C" void real_science_report_dialog_update(void *);
-extern void write_shortcuts();
 
 /************************************************************************/ /**
    Constructor
  ****************************************************************************/
-fc_client::fc_client()
-    : QMainWindow(), status_bar_label(nullptr), server_notifier(nullptr),
-      central_layout(nullptr), status_bar(nullptr),
-      current_file(QLatin1String("")), quitting(false),
-      opened_dialog(nullptr), central_wdg(nullptr), interface_locked(false),
-      map_font_scale(true), map_scale(1.0f), menu_bar(nullptr)
+fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
 {
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
   status_bar_queue.clear();
@@ -309,7 +303,7 @@ void fc_client::closeEvent(QCloseEvent *event)
  ****************************************************************************/
 void fc_client::server_input()
 {
-  if (auto socket = dynamic_cast<QTcpSocket *>(sender())) {
+  if (auto *socket = dynamic_cast<QTcpSocket *>(sender())) {
     input_from_server(socket);
   }
 }
@@ -354,7 +348,7 @@ void fc_client::slot_disconnect()
 /****************************************************************************
   Deletes cursors
 ****************************************************************************/
-void fc_client::delete_cursors(void)
+void fc_client::delete_cursors()
 {
   int frame;
   int cursor;
@@ -542,7 +536,7 @@ void popup_client_options()
 /************************************************************************/ /**
    Setup cursors
  ****************************************************************************/
-void fc_client::create_cursors(void)
+void fc_client::create_cursors()
 {
   enum cursor_type curs;
   int cursor;

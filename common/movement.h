@@ -115,7 +115,7 @@ bool can_unit_type_transport(const struct unit_type *transporter,
 bool unit_can_load(const struct unit *punit);
 bool unit_could_load_at(const struct unit *punit, const struct tile *ptile);
 
-void init_move_fragments(void);
+void init_move_fragments();
 const char *move_points_text_full(int mp, bool reduce, const char *prefix,
                                   const char *none, bool align);
 const char *move_points_text(int mp, bool reduce);

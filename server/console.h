@@ -64,7 +64,7 @@ void con_set_color(const char *);
 
 /* initialize logging via console */
 void con_log_init(const QString &log_filename);
-void con_log_close(void);
+void con_log_close();
 
 /* write to console and add line-break, and show prompt if required. */
 void con_write(enum rfc_status rfc_status, const char *message, ...)
@@ -75,25 +75,25 @@ void con_write(enum rfc_status rfc_status, const char *message, ...)
 void con_puts(enum rfc_status rfc_status, const char *str);
 
 /* ensure timely update */
-void con_flush(void);
+void con_flush();
 
 /* initialize prompt; display initial message */
-void con_prompt_init(void);
+void con_prompt_init();
 
 /* make sure a prompt is printed, and re-printed after every message */
-void con_prompt_on(void);
+void con_prompt_on();
 
 /* do not print a prompt after every message */
-void con_prompt_off(void);
+void con_prompt_off();
 
 /* user pressed enter: will need a new prompt */
-void con_prompt_enter(void);
+void con_prompt_enter();
 
 /* clear "user pressed enter" state (used in special cases) */
-void con_prompt_enter_clear(void);
+void con_prompt_enter_clear();
 
 /* set server output style */
 void con_set_style(bool i);
 
 /* return server output style */
-bool con_get_style(void);
+bool con_get_style();

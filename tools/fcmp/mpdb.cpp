@@ -204,7 +204,7 @@ void open_mpdb(const char *filename, bool scenario_db)
 /**********************************************************************/ /**
    Close open databases
  **************************************************************************/
-void close_mpdbs(void)
+void close_mpdbs()
 {
   sqlite3_close(main_handle);
   main_handle = NULL;

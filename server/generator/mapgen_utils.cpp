@@ -37,12 +37,12 @@ static bool *placed_map;
 /**********************************************************************/ /**
    Return TRUE if initialized
  **************************************************************************/
-bool placed_map_is_initialized(void) { return placed_map != NULL; }
+bool placed_map_is_initialized() { return placed_map != NULL; }
 
 /**********************************************************************/ /**
    Create a clean pmap
  **************************************************************************/
-void create_placed_map(void)
+void create_placed_map()
 {
   fc_assert_ret(!placed_map_is_initialized());
   placed_map = new bool[MAP_INDEX_SIZE];
@@ -52,7 +52,7 @@ void create_placed_map(void)
 /**********************************************************************/ /**
    Free the pmap
  **************************************************************************/
-void destroy_placed_map(void)
+void destroy_placed_map()
 {
   fc_assert_ret(placed_map_is_initialized());
   delete[] placed_map;
@@ -79,7 +79,7 @@ void map_unset_placed(struct tile *ptile) { pmap(ptile) = false; }
 /**********************************************************************/ /**
    Set all oceanics tiles in placed_map
  **************************************************************************/
-void set_all_ocean_tiles_placed(void)
+void set_all_ocean_tiles_placed()
 {
   whole_map_iterate(&(wld.map), ptile)
   {
@@ -181,14 +181,14 @@ bool is_normal_nat_pos(int x, int y)
  **************************************************************************/
 void smooth_int_map(int *int_map, bool zeroes_at_edges)
 {
+  fc_assert_ret(NULL != int_map);
+
   static const float weight_standard[5] = {0.13, 0.19, 0.37, 0.19, 0.13};
   static const float weight_isometric[5] = {0.15, 0.21, 0.29, 0.21, 0.15};
   const float *weight;
   bool axe = true;
   int *target_map, *source_map;
   int *alt_int_map = new int[MAP_INDEX_SIZE]();
-
-  fc_assert_ret(NULL != int_map);
 
   weight = weight_standard;
   target_map = alt_int_map;
@@ -208,7 +208,7 @@ void smooth_int_map(int *int_map, bool zeroes_at_edges)
       if (zeroes_at_edges) {
         D = 1;
       }
-      target_map[tile_index(ptile)] = (float) N / D;
+      target_map[tile_index(ptile)] = N / D;
     }
     whole_map_iterate_end;
 
@@ -242,7 +242,7 @@ static int *ocean_sizes = NULL;
 /**********************************************************************/ /**
    Calculate lake_surrounders[] array
  **************************************************************************/
-static void recalculate_lake_surrounders(void)
+static void recalculate_lake_surrounders()
 {
   const size_t size = (wld.map.num_oceans + 1) * sizeof(*lake_surrounders);
 
@@ -348,7 +348,7 @@ static void assign_continent_flood(struct tile *ptile, bool is_land, int nr)
    have already been done!
    FIXME: insufficiently generalized, use terrain property.
  **************************************************************************/
-void regenerate_lakes(void)
+void regenerate_lakes()
 {
   struct terrain *lake_for_ocean[2][wld.map.num_oceans];
 
@@ -367,7 +367,7 @@ void regenerate_lakes(void)
           lakes[frozen][num_laketypes[frozen]++] = pterr;
         } else {
           qDebug("Ruleset has more than %d %s lake types, ignoring %s",
-                 (int) ARRAY_SIZE(lakes[frozen]),
+                 static_cast<int> ARRAY_SIZE(lakes[frozen]),
                  frozen ? "frozen" : "unfrozen", terrain_rule_name(pterr));
         }
       }
@@ -453,7 +453,7 @@ int get_ocean_size(Continent_id id)
    Continents have numbers 1 to map.num_continents _inclusive_.
    Oceans have (negative) numbers -1 to -map.num_oceans _inclusive_.
  **************************************************************************/
-void assign_continent_numbers(void)
+void assign_continent_numbers()
 {
   /* Initialize */
   wld.map.num_continents = 0;
@@ -625,7 +625,7 @@ static struct terrain *most_adjacent_ocean_type(const struct tile *ptile)
    to any land tiles and reassignes ocean terrain types based on their
    MG_OCEAN_DEPTH property values.
  **************************************************************************/
-void smooth_water_depth(void)
+void smooth_water_depth()
 {
   const int OCEAN_DEPTH_STEP = 25;
   const int OCEAN_DEPTH_RAND = 15;
@@ -678,7 +678,7 @@ void smooth_water_depth(void)
 /**********************************************************************/ /**
    Free resources allocated by the generator.
  **************************************************************************/
-void generator_free(void)
+void generator_free()
 {
   if (lake_surrounders != NULL) {
     free(lake_surrounders);

@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* exp, sqrt */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cmath> /* exp, sqrt */
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"
@@ -207,7 +207,7 @@ void city_refresh_queue_add(struct city *pcity)
    Refresh the listed cities.
    Called after significant changes to borders, and arranging workers.
  **************************************************************************/
-void city_refresh_queue_processing(void)
+void city_refresh_queue_processing()
 {
   if (NULL == city_refresh_queue) {
     return;
@@ -432,7 +432,7 @@ void auto_arrange_workers(struct city *pcity)
     }
     output_type_iterate_end;
     cmp.require_happy = false;
-    cmp.allow_disorder = is_ai(city_owner(pcity)) ? false : true;
+    cmp.allow_disorder = !is_ai(city_owner(pcity));
     cm_query_result(pcity, &cmp, cmr, false);
   }
   if (!cmr->found_a_valid) {
@@ -2347,8 +2347,8 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
       research_pretty_name(presearch, research_name, sizeof(research_name));
       for (i = 0; i < mod; i++) {
         Tech_type_id tech = pick_free_tech(presearch);
-        const char *adv_name =
-            research_advance_name_translation(presearch, tech);
+        const char *adv_name = qUtf8Printable(
+            research_advance_name_translation(presearch, tech));
 
         give_immediate_free_tech(presearch, tech);
         notify_research(presearch, NULL, E_TECH_GAIN, ftc_server,
@@ -2811,7 +2811,7 @@ player_balance_treasury_units_and_buildings(struct player *pplayer)
     city_built_iterate(pcity, pimprove)
     {
       if (can_city_sell_building(pcity, pimprove)) {
-        auto ci = new cityimpr;
+        auto *ci = new cityimpr;
 
         ci->pcity = pcity;
         ci->pimprove = pimprove;
@@ -2918,7 +2918,7 @@ static bool city_balance_treasury_buildings(struct city *pcity)
   city_built_iterate(pcity, pimprove)
   {
     if (can_city_sell_building(pcity, pimprove)) {
-      auto ci = new cityimpr;
+      auto *ci = new cityimpr;
 
       ci->pcity = pcity;
       ci->pimprove = pimprove;
@@ -3204,7 +3204,7 @@ static void update_city_activity(struct city *pcity)
 
     /* Keep old behaviour when building new improvement could keep
        city celebrating */
-    if (is_happy == false) {
+    if (!is_happy) {
       is_happy = city_happy(pcity);
     }
 
@@ -3340,11 +3340,7 @@ static void update_city_activity(struct city *pcity)
  **************************************************************************/
 static bool city_illness_check(const struct city *pcity)
 {
-  if (fc_rand(1000) < pcity->server.illness) {
-    return true;
-  }
-
-  return false;
+  return fc_rand(1000) < pcity->server.illness;
 }
 
 /**********************************************************************/ /**
@@ -3493,28 +3489,41 @@ static float city_migration_score(struct city *pcity)
   city_built_iterate_end;
 
   /* take shield costs of all buidings into account; normalized by 1000 */
-  score *= (1 + (1 - exp(-(float) MAX(0, build_shield_cost) / 1000)) / 5);
+  score *= (1
+            + (1 - exp(-static_cast<float> MAX(0, build_shield_cost) / 1000))
+                  / 5);
   /* take trade into account; normalized by 100 */
   score *=
-      (1 + (1 - exp(-(float) MAX(0, pcity->surplus[O_TRADE]) / 100)) / 5);
+      (1
+       + (1 - exp(-static_cast<float> MAX(0, pcity->surplus[O_TRADE]) / 100))
+             / 5);
   /* take luxury into account; normalized by 100 */
   score *=
-      (1 + (1 - exp(-(float) MAX(0, pcity->surplus[O_LUXURY]) / 100)) / 5);
+      (1
+       + (1
+          - exp(-static_cast<float> MAX(0, pcity->surplus[O_LUXURY]) / 100))
+             / 5);
   /* take science into account; normalized by 100 */
   score *=
-      (1 + (1 - exp(-(float) MAX(0, pcity->surplus[O_SCIENCE]) / 100)) / 5);
+      (1
+       + (1
+          - exp(-static_cast<float> MAX(0, pcity->surplus[O_SCIENCE]) / 100))
+             / 5);
 
   score += city_culture(pcity) * game.info.culture_migration_pml / 1000;
 
   /* Take food into account; the food surplus is clipped to values between
    * -10..20 and normalize by 10. Thus, the factor is between 0.9 and 1.2. */
-  score *= (1 + (float) CLIP(-10, pcity->surplus[O_FOOD], 20) / 10);
+  score *=
+      (1 + static_cast<float> CLIP(-10, pcity->surplus[O_FOOD], 20) / 10);
 
   /* Reduce the score due to city illness (plague). The illness is given in
    * tenth of percent (0..1000) and normalized by 25. Thus, this factor is
    * between 0.6 (ill city) and 1.0 (health city). */
   score *=
-      (100 - (float) city_illness_calc(pcity, NULL, NULL, NULL, NULL) / 25);
+      (100
+       - static_cast<float>(city_illness_calc(pcity, NULL, NULL, NULL, NULL))
+             / 25);
 
   if (has_wonder) {
     /* people like wonders */
@@ -3553,12 +3562,12 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
   const char *nation_from, *nation_to;
   struct city *rcity = NULL;
   bool incr_success;
-  int to_id = pcity_to->id;
+  int to_id;
 
   if (!pcity_from || !pcity_to) {
     return false;
   }
-
+  to_id = pcity_to->id;
   pplayer_from = city_owner(pcity_from);
   pplayer_citizen = pplayer_from;
   pplayer_to = city_owner(pcity_to);
@@ -3798,7 +3807,7 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
 
    Returns TRUE iff there has been INTERNATIONAL migration.
  **************************************************************************/
-bool check_city_migrations(void)
+bool check_city_migrations()
 {
   bool internat = false;
 
@@ -3963,7 +3972,7 @@ static void apply_disaster(struct city *pcity, struct disaster_type *pdis)
 /**********************************************************************/ /**
    Check for any disasters hitting any city, and apply those disasters.
  **************************************************************************/
-void check_disasters(void)
+void check_disasters()
 {
   if (game.info.disasters == 0) {
     /* Shortcut out as no disaster is possible. */
@@ -4063,7 +4072,8 @@ static bool check_city_migrations_player(const struct player *pplayer)
        * game.server.mgr_distance is added to the current city radius. If the
        * distance between both cities is lower or equal than this value,
        * migration is possible. */
-      mgr_dist = (int) sqrt((double) MAX(city_map_radius_sq_get(acity), 0))
+      mgr_dist = static_cast<int>(sqrt(static_cast<double> MAX(
+                     city_map_radius_sq_get(acity), 0)))
                  + game.server.mgr_distance;
 
       /* distance between the two cities */
@@ -4075,7 +4085,8 @@ static bool check_city_migrations_player(const struct player *pplayer)
       }
 
       /* score of the second city, weighted by the distance */
-      weight = ((float) (mgr_dist + 1 - dist) / (float) (mgr_dist + 1));
+      weight = (static_cast<float>(mgr_dist + 1 - dist)
+                / static_cast<float>(mgr_dist + 1));
       score_tmp = city_migration_score(acity) * weight;
 
       log_debug("[M] T%d - compare city: %s (%s) dist: %d mgr_dist: %d "

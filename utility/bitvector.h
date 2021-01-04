@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <string.h> /* memset */
+#include <cstring> /* memset */
 
 /* utility */
 #include "log.h"

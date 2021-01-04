@@ -35,10 +35,10 @@ enum attr_tile { ATTR_TILE_DUMMY = ATTR_TILE_START };
 /*
  * Generic methods.
  */
-void attribute_init(void);
-void attribute_free(void);
-void attribute_flush(void);
-void attribute_restore(void);
+void attribute_init();
+void attribute_free();
+void attribute_flush();
+void attribute_restore();
 void attribute_set(int key, int id, int x, int y, size_t data_length,
                    const void *const data);
 size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,

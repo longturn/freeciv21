@@ -13,8 +13,8 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstring>
 
 /* utility */
 #include "log.h"
@@ -89,7 +89,7 @@ static void add_requirement(struct tree_node *node, struct tree_node *req)
 /*********************************************************************/ /**
    Allocate and initialize new tree node
  *************************************************************************/
-static struct tree_node *new_tree_node(void)
+static struct tree_node *new_tree_node()
 {
   struct tree_node *node = new tree_node();
 
@@ -669,7 +669,7 @@ static void barycentric_sort(struct reqtree *tree, int layer)
       v += node->require[j]->order;
     }
     if (node->nrequire > 0) {
-      v /= (float) node->nrequire;
+      v /= static_cast<float>(node->nrequire);
     }
     T[i].value = v;
   }
@@ -1008,7 +1008,7 @@ void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
         canvas_put_line(pcanvas, get_diag_color(20), LINE_GOTO, startx,
                         starty, width, 0);
       } else {
-        const char *text = research_advance_name_translation(
+        const QString text = research_advance_name_translation(
             research_get(client_player()), node->tech);
         int text_w, text_h;
         int icon_startx;

@@ -102,12 +102,12 @@ page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
   setLayout(ui.vertLayout);
 }
 
-page_load::~page_load() {}
+page_load::~page_load() = default;
 
 /**********************************************************************/ /**
    Updates saves to load and updates in tableview = saves_load
  **************************************************************************/
-void page_load::update_load_page(void)
+void page_load::update_load_page()
 {
   struct fileinfo_list *files;
   int row;
@@ -158,7 +158,7 @@ void page_load::start_from_save()
 /**********************************************************************/ /**
    Browse saves directory
  **************************************************************************/
-void page_load::browse_saves(void)
+void page_load::browse_saves()
 {
   QString str;
   str = QString(_("Save Files"))
@@ -178,11 +178,8 @@ void page_load::state_preview(int new_state)
   Q_UNUSED(new_state)
   QItemSelection slctn;
 
-  if (ui.show_preview->checkState() == Qt::Unchecked) {
-    gui_options.gui_qt_show_preview = false;
-  } else {
-    gui_options.gui_qt_show_preview = true;
-  }
+  gui_options.gui_qt_show_preview =
+      ui.show_preview->checkState() != Qt::Unchecked;
   slctn = ui.saves_load->selectionModel()->selection();
   ui.saves_load->selectionModel()->clearSelection();
   ui.saves_load->selectionModel()->select(

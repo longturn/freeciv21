@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <climits>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "capability.h"
@@ -74,7 +74,7 @@ static int stat_size_no_compression = 0;
 /**********************************************************************/ /**
    Returns the compression level. Initilialize it if needed.
  **************************************************************************/
-static inline int get_compression_level(void)
+static inline int get_compression_level()
 {
   static int level = -2; /* Magic not initialized, see below. */
 
@@ -387,7 +387,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
                  whole_packet_len);
   }
 
-  if ((unsigned) whole_packet_len > pc->buffer->ndata) {
+  if (static_cast<unsigned>(whole_packet_len) > pc->buffer->ndata) {
     return NULL; /* not all data has been read */
   }
 
@@ -633,7 +633,8 @@ bool packet_check(struct data_in *din, struct connection *pc)
     dio_get_type_raw(din, data_type(pc->packet_header.type), &type);
 
     log_packet("received long packet (type %d, len %d, rem %lu) from %s",
-               type, len, (unsigned long) rem, conn_description(pc));
+               type, len, static_cast<unsigned long>(rem),
+               conn_description(pc));
     return false;
   }
   return true;
@@ -647,9 +648,9 @@ void generic_handle_player_attribute_chunk(
     const struct packet_player_attribute_chunk *chunk)
 {
   log_packet("received attribute chunk %u/%u %u",
-             (unsigned int) chunk->offset,
-             (unsigned int) chunk->total_length,
-             (unsigned int) chunk->chunk_length);
+             static_cast<unsigned int>(chunk->offset),
+             static_cast<unsigned int>(chunk->total_length),
+             static_cast<unsigned int>(chunk->chunk_length));
 
   fc_assert_ret(chunk->chunk_length < ATTRIBUTE_CHUNK_SIZE);
 
@@ -680,7 +681,8 @@ void generic_handle_player_attribute_chunk(
     pplayer->attribute_block_buffer.data = fc_malloc(chunk->total_length);
     pplayer->attribute_block_buffer.length = chunk->total_length;
   }
-  memcpy((char *) (pplayer->attribute_block_buffer.data) + chunk->offset,
+  memcpy(static_cast<char *>(pplayer->attribute_block_buffer.data)
+             + chunk->offset,
          chunk->data, chunk->chunk_length);
 
   if (chunk->offset + chunk->chunk_length == chunk->total_length) {
@@ -725,7 +727,8 @@ void send_attribute_block(const struct player *pplayer,
     packet.chunk_length = size_of_current_chunk;
 
     memcpy(packet.data,
-           (char *) (pplayer->attribute_block.data) + packet.offset,
+           static_cast<char *>(pplayer->attribute_block.data)
+               + packet.offset,
            packet.chunk_length);
     bytes_left -= packet.chunk_length;
 
@@ -764,12 +767,12 @@ void pre_send_packet_player_attribute_chunk(
 /**********************************************************************/ /**
    Destroy the packet handler hash table.
  **************************************************************************/
-static void packet_handlers_free(void) {}
+static void packet_handlers_free() {}
 
 /**********************************************************************/ /**
    Returns the packet handlers variant with no special capability.
  **************************************************************************/
-const struct packet_handlers *packet_handlers_initial(void)
+const struct packet_handlers *packet_handlers_initial()
 {
   static struct packet_handlers default_handlers;
   static bool initialized = false;
@@ -824,7 +827,7 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
    Call when there is no longer a requirement for protocol processing.
    All connections must have been closed.
  **************************************************************************/
-void packets_deinit(void) { packet_handlers_free(); }
+void packets_deinit() { packet_handlers_free(); }
 
 void packet_strvec_compute(char *str, QVector<QString> *qstrvec)
 {

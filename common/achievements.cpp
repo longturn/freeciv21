@@ -39,7 +39,7 @@ static struct achievement achievements[MAX_ACHIEVEMENT_TYPES];
 /************************************************************************/ /**
    Initialize achievements.
  ****************************************************************************/
-void achievements_init(void)
+void achievements_init()
 {
   int i;
 
@@ -58,7 +58,7 @@ void achievements_init(void)
 /************************************************************************/ /**
    Free the memory associated with achievements
  ****************************************************************************/
-void achievements_free(void)
+void achievements_free()
 {
   int i;
 
@@ -287,7 +287,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
 
     return false;
   case ACHIEVEMENT_LUCKY:
-    return ((int) fc_rand(10000) < ach->value);
+    return (static_cast<int>(fc_rand(10000)) < ach->value);
   case ACHIEVEMENT_HUTS:
     return pplayer->server.huts >= ach->value;
   case ACHIEVEMENT_METROPOLIS:

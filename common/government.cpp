@@ -71,7 +71,7 @@ struct government *government_by_rule_name(const char *name)
 /**********************************************************************/ /**
    Return the number of governments.
  **************************************************************************/
-Government_type_id government_count(void)
+Government_type_id government_count()
 {
   return game.control.government_count;
 }
@@ -201,7 +201,7 @@ static struct ruler_title *ruler_title_new(const struct nation_type *pnation,
                                            const char *ruler_male_title,
                                            const char *ruler_female_title)
 {
-  auto pruler_title = new ruler_title;
+  auto *pruler_title = new ruler_title;
 
   pruler_title->pnation = pnation;
   name_set(&pruler_title->male, domain, ruler_male_title);
@@ -397,8 +397,9 @@ const char *ruler_title_for_player(const struct player *pplayer, char *buf,
     }
   } else {
     pruler_title = pgovern->ruler_titles->value(pnation);
-    if (!pruler_title)
+    if (!pruler_title) {
       pruler_title = pgovern->ruler_titles->value(nullptr);
+    }
     fc_snprintf(buf, buf_len,
                 name_translation_get(pplayer->is_male
                                          ? &pruler_title->male
@@ -421,10 +422,7 @@ struct government_iter {
 /**********************************************************************/ /**
    Implementation of iterator 'sizeof' function.
  **************************************************************************/
-size_t government_iter_sizeof(void)
-{
-  return sizeof(struct government_iter);
-}
+size_t government_iter_sizeof() { return sizeof(struct government_iter); }
 
 /**********************************************************************/ /**
    Implementation of iterator 'next' function.
@@ -484,7 +482,7 @@ static inline void government_init(struct government *pgovern)
  **************************************************************************/
 static inline void government_free(struct government *pgovern)
 {
-  for (auto a : pgovern->ruler_titles->values()) {
+  for (auto *a : pgovern->ruler_titles->values()) {
     delete a;
   }
   FC_FREE(pgovern->ruler_titles);
@@ -512,7 +510,7 @@ void governments_alloc(int num)
 /**********************************************************************/ /**
    De-allocate the currently allocated governments.
  **************************************************************************/
-void governments_free(void)
+void governments_free()
 {
   int i;
 
@@ -531,7 +529,7 @@ void governments_free(void)
    Is it possible to start a revolution without specifying the target
    government in the current game?
  **************************************************************************/
-bool untargeted_revolution_allowed(void)
+bool untargeted_revolution_allowed()
 {
   if (game.info.revolentype == REVOLEN_QUICKENING
       || game.info.revolentype == REVOLEN_RANDQUICK) {

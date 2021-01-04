@@ -74,7 +74,7 @@ static char *tmap_y2str(int ycoor)
 /**********************************************************************/ /**
    Return TRUE if temperateure_map is initialized
  **************************************************************************/
-bool temperature_is_initialized(void) { return temperature_map != NULL; }
+bool temperature_is_initialized() { return temperature_map != NULL; }
 
 /**********************************************************************/ /**
    Return true if the tile has tt temperature type
@@ -103,7 +103,7 @@ bool is_temperature_type_near(const struct tile *ptile, temperature_type tt)
 /**********************************************************************/ /**
     Free the tmap
  **************************************************************************/
-void destroy_tmap(void)
+void destroy_tmap()
 {
   fc_assert_ret(NULL != temperature_map);
   FCPP_FREE(temperature_map);

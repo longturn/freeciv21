@@ -230,7 +230,7 @@ void help_dialog::make_tree()
   struct unit_type *f_type;
   struct drawn_sprite sprs[80];
 
-  for (auto pitem : *help_nodes) {
+  for (const auto *pitem : *help_nodes) {
     const char *s;
     int last;
     title = pitem->topic;
@@ -297,8 +297,9 @@ void help_dialog::make_tree()
       default:
         break;
       }
-      if (spite)
+      if (spite) {
         icon = QIcon(*spite);
+      }
       if (!icon.isNull()) {
         item->setIcon(0, icon);
       }
@@ -524,21 +525,21 @@ void help_widget::update_fonts()
   l = findChildren<QWidget *>();
 
   f = fcFont::instance()->getFont(fonts::notify_label);
-  for (int i = 0; i < l.size(); ++i) {
-    if (l.at(i)->property(fonts::help_label).isValid()) {
-      l.at(i)->setFont(*f);
+  for (auto i : l) {
+    if (i->property(fonts::help_label).isValid()) {
+      i->setFont(*f);
     }
   }
   f = fcFont::instance()->getFont(fonts::help_text);
-  for (int i = 0; i < l.size(); ++i) {
-    if (l.at(i)->property(fonts::help_text).isValid()) {
-      l.at(i)->setFont(*f);
+  for (auto i : l) {
+    if (i->property(fonts::help_text).isValid()) {
+      i->setFont(*f);
     }
   }
   f = fcFont::instance()->getFont(fonts::default_font);
-  for (int i = 0; i < l.size(); ++i) {
-    if (l.at(i)->property(fonts::default_font).isValid()) {
-      l.at(i)->setFont(*f);
+  for (auto i : l) {
+    if (i->property(fonts::default_font).isValid()) {
+      i->setFont(*f);
     }
   }
 }

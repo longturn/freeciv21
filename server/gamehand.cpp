@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h> /* for remove() */
+#include <cstdio> /* for remove() */
 
 /* utility */
 #include "capability.h"
@@ -315,7 +315,7 @@ static void do_team_placement(const struct team_placement_config *pconfig,
                     wld.map.server.team_placement);
 
   /* Initialize starting state. */
-  auto pstate = new team_placement_state;
+  auto *pstate = new team_placement_state;
   pstate->startpos = new int[pconfig->total_startpos_num];
   memcpy(pstate->startpos, pbest_state->startpos, state_array_size);
   pstate->score = pbest_state->score;
@@ -389,7 +389,7 @@ static void do_team_placement(const struct team_placement_config *pconfig,
 
         if (delta <= 0) {
           repeat = true;
-          auto pnew = new team_placement_state;
+          auto *pnew = new team_placement_state;
           pnew->startpos = new int[pconfig->total_startpos_num];
           memcpy(pnew->startpos, pstate->startpos, state_array_size);
           pnew->startpos[i] = t2;
@@ -420,7 +420,7 @@ static void do_team_placement(const struct team_placement_config *pconfig,
 /************************************************************************/ /**
    Initialize a new game: place the players' units onto the map, etc.
  ****************************************************************************/
-void init_new_game(void)
+void init_new_game()
 {
   struct startpos_list *impossible_list, *targeted_list, *flexible_list;
   struct tile *player_startpos[player_slot_count()];
@@ -446,9 +446,10 @@ void init_new_game(void)
   targeted_list = startpos_list_new();
   flexible_list = startpos_list_new();
 
-  for (auto psp : qAsConst(*wld.map.startpos_table)) {
-    if (psp->exclude)
+  for (auto *psp : qAsConst(*wld.map.startpos_table)) {
+    if (psp->exclude) {
       continue;
+    }
     if (startpos_allows_all(psp)) {
       startpos_list_append(flexible_list, psp);
     } else {
@@ -882,7 +883,7 @@ void init_new_game(void)
    Tell clients the year, and also update turn_done and nturns_idle fields
    for all players.
  ****************************************************************************/
-void send_year_to_clients(void)
+void send_year_to_clients()
 {
   struct packet_new_year apacket;
 
@@ -991,7 +992,7 @@ void send_scenario_description(struct conn_list *dest)
  timeoutintinc to timeoutint. timeoutincmult: every time we adjust
  game.info.timeout, we multiply timeoutinc by timeoutincmult
  ****************************************************************************/
-int update_timeout(void)
+int update_timeout()
 {
   /* if there's no timer or we're doing autogame, do nothing */
   if (game.info.timeout < 1 || game.server.timeoutint == 0) {
@@ -1042,11 +1043,11 @@ int update_timeout(void)
    theory there should be a separate timeout for each player and the
    added time should only go onto the victim's timer.
  ****************************************************************************/
-void increase_timeout_because_unit_moved(void)
+void increase_timeout_because_unit_moved()
 {
   if (current_turn_timeout() > 0 && game.server.timeoutaddenemymove > 0) {
     double maxsec = (timer_read_seconds(game.server.phase_timer)
-                     + (double) game.server.timeoutaddenemymove);
+                     + static_cast<double>(game.server.timeoutaddenemymove));
 
     if (maxsec > game.tinfo.seconds_to_phasedone) {
       game.tinfo.seconds_to_phasedone = maxsec;

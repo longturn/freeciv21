@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 
 // Qt
 #include <QLoggingCategory>
@@ -148,7 +148,7 @@ static struct unit *goto_map_unit(const struct goto_map *goto_map)
 /************************************************************************/ /**
    Called only by handle_map_info() in client/packhand.c.
  ****************************************************************************/
-void init_client_goto(void)
+void init_client_goto()
 {
   free_client_goto();
 
@@ -158,7 +158,7 @@ void init_client_goto(void)
 /************************************************************************/ /**
    Called above, and by control_done() in client/control.c.
  ****************************************************************************/
-void free_client_goto(void)
+void free_client_goto()
 {
   if (NULL != goto_maps) {
     goto_map_list_iterate(goto_maps, goto_map) { goto_map_free(goto_map); }
@@ -473,7 +473,7 @@ static void remove_last_part(struct goto_map *goto_map)
 /************************************************************************/ /**
    Inserts a waypoint at the end of the current goto line.
  ****************************************************************************/
-bool goto_add_waypoint(void)
+bool goto_add_waypoint()
 {
   bool duplicate_of_last = true;
 
@@ -511,7 +511,7 @@ bool goto_add_waypoint(void)
    Returns whether there were any waypoint popped (we don't remove the
    initial position)
  ****************************************************************************/
-bool goto_pop_waypoint(void)
+bool goto_pop_waypoint()
 {
   bool popped = false;
 
@@ -1012,7 +1012,7 @@ void enter_goto_state(struct unit_list *punits)
 /************************************************************************/ /**
    Tidy up and deactivate goto state.
  ****************************************************************************/
-void exit_goto_state(void)
+void exit_goto_state()
 {
   if (!goto_is_active()) {
     return;
@@ -1052,7 +1052,7 @@ void goto_unit_killed(struct unit *punit)
 /************************************************************************/ /**
    Is goto state active?
  ****************************************************************************/
-bool goto_is_active(void)
+bool goto_is_active()
 {
   return (NULL != goto_maps && 0 != goto_map_list_size(goto_maps));
 }
@@ -1641,7 +1641,7 @@ bool send_attack_tile(struct unit *punit, struct tile *ptile)
    Send the current patrol route (i.e., the one generated via HOVER_STATE)
    to the server.
  ****************************************************************************/
-void send_patrol_route(void)
+void send_patrol_route()
 {
   fc_assert_ret(goto_is_active());
   goto_map_unit_iterate(goto_maps, goto_map, punit)
@@ -1867,7 +1867,7 @@ static bool order_demands_direction(enum unit_orders order, action_id act_id)
    HOVER_STATE) to the server.  The route might involve more than one
    part if waypoints were used.  FIXME: danger paths are not supported.
  ****************************************************************************/
-void send_goto_route(void)
+void send_goto_route()
 {
   fc_assert_ret(goto_is_active());
   goto_map_unit_iterate(goto_maps, goto_map, punit)

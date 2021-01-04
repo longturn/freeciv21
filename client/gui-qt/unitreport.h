@@ -37,7 +37,7 @@ class unittype_item : public QFrame {
 
 public:
   unittype_item(QWidget *parent, unit_type *ut);
-  ~unittype_item();
+  ~unittype_item() override;
   void init_img();
   QLabel food_upkeep;
   QLabel gold_upkeep;
@@ -54,10 +54,10 @@ private slots:
   void upgrade_units();
 
 protected:
-  void enterEvent(QEvent *event);
-  void leaveEvent(QEvent *event);
-  void paintEvent(QPaintEvent *event);
-  void wheelEvent(QWheelEvent *event);
+  void enterEvent(QEvent *event) override;
+  void leaveEvent(QEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
 };
 
 class units_reports : public fcwidget {
@@ -72,20 +72,20 @@ class units_reports : public fcwidget {
   static units_reports *m_instance;
 
 public:
-  ~units_reports();
+  ~units_reports() override;
   static units_reports *instance();
   static void drop();
   void clear_layout();
   void init_layout();
   void update_units(bool show = false);
   void add_item(unittype_item *item);
-  virtual void update_menu();
+  void update_menu() override;
   QHBoxLayout *layout;
   QList<unittype_item *> unittype_list;
 
 protected:
-  void mousePressEvent(QMouseEvent *event);
-  void paintEvent(QPaintEvent *event);
+  void mousePressEvent(QMouseEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 };
 
 void popdown_units_report();

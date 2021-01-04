@@ -506,11 +506,11 @@ struct action_auto_perf {
 #define ACTION_AUTO_MOVED_ADJ 3
 
 /* Initialization */
-void actions_init(void);
-void actions_rs_pre_san_gen(void);
-void actions_free(void);
+void actions_init();
+void actions_rs_pre_san_gen();
+void actions_free();
 
-bool actions_are_ready(void);
+bool actions_are_ready();
 
 bool action_id_exists(const action_id act_id);
 
@@ -592,7 +592,7 @@ const QString action_name_translation(const struct action *action);
 const QString action_id_name_translation(action_id act_id);
 const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
                                      const struct act_prob prob,
-                                     const QString custom);
+                                     const QString &custom);
 
 const char *action_ui_name_ruleset_var_name(int act);
 const char *action_ui_name_default(int act);
@@ -607,7 +607,7 @@ const char *action_actor_consuming_always_ruleset_var_name(action_id act);
 
 struct action_enabler_list *action_enablers_for_action(action_id action);
 
-struct action_enabler *action_enabler_new(void);
+struct action_enabler *action_enabler_new();
 void action_enabler_free(struct action_enabler *enabler);
 struct action_enabler *
 action_enabler_copy(const struct action_enabler *original);
@@ -730,13 +730,13 @@ double action_prob_to_0_to_1_pessimist(const struct act_prob ap);
 struct act_prob action_prob_fall_back(const struct act_prob *ap1,
                                       const struct act_prob *ap2);
 
-const char *action_prob_explain(const struct act_prob prob);
+const QString action_prob_explain(const struct act_prob prob);
 
-struct act_prob action_prob_new_impossible(void);
-struct act_prob action_prob_new_not_relevant(void);
-struct act_prob action_prob_new_not_impl(void);
-struct act_prob action_prob_new_unknown(void);
-struct act_prob action_prob_new_certain(void);
+struct act_prob action_prob_new_impossible();
+struct act_prob action_prob_new_not_relevant();
+struct act_prob action_prob_new_not_impl();
+struct act_prob action_prob_new_unknown();
+struct act_prob action_prob_new_certain();
 
 /* Special action probability values. Documented in fc_types.h's
  * definition of struct act_prob. */

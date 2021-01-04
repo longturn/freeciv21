@@ -88,7 +88,7 @@ bool genhashs_are_equal_full(const struct genhash *pgenhash1,
 
 /* Iteration. */
 struct genhash_iter;
-size_t genhash_iter_sizeof(void);
+size_t genhash_iter_sizeof();
 
 struct iterator *genhash_key_iter_init(struct genhash_iter *iter,
                                        const struct genhash *hash);

@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h>
+#include <cmath>
 
 #include "advtools.h"
 
@@ -28,7 +28,7 @@
  **************************************************************************/
 adv_want amortize(adv_want benefit, int delay)
 {
-  double discount = 1.0 - 1.0 / ((double) MORT);
+  double discount = 1.0 - 1.0 / (static_cast<double>(MORT));
 
   /* Note there's no rounding here.  We could round but it would probably
    * be better just to return (and take) a double for the benefit. */

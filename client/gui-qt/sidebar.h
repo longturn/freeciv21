@@ -18,7 +18,7 @@ class QPixmap;
 class QVBoxLayout;
 
 typedef void (*pfcn_bool)(bool);
-typedef void (*pfcn)(void);
+typedef void (*pfcn)();
 
 void sidebarBlinkEndturn(bool do_restore);
 void sidebarCenterUnit();
@@ -40,7 +40,7 @@ class sidebarWidget : public QWidget {
 public:
   sidebarWidget(QPixmap *pix, const QString &label, const QString &pg,
                 pfcn_bool func, int type = SW_STD);
-  ~sidebarWidget();
+  ~sidebarWidget() override;
   int getPriority();
   QPixmap *get_pixmap();
   void paint(QPainter *painter, QPaintEvent *event);
@@ -65,12 +65,12 @@ public slots:
   void someSlot();
 
 protected:
-  void contextMenuEvent(QContextMenuEvent *event);
-  void enterEvent(QEvent *event);
-  void leaveEvent(QEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-  void paintEvent(QPaintEvent *event);
-  void wheelEvent(QWheelEvent *event);
+  void contextMenuEvent(QContextMenuEvent *event) override;
+  void enterEvent(QEvent *event) override;
+  void leaveEvent(QEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
 
 private:
   void paint();
@@ -97,15 +97,15 @@ class sidebar : public QWidget {
 
 public:
   sidebar();
-  ~sidebar();
+  ~sidebar() override;
   void addWidget(sidebarWidget *fsw);
   void paint(QPainter *painter, QPaintEvent *event);
   void resizeMe(int height, bool force = false);
   QList<sidebarWidget *> objects;
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void resizeEvent(QResizeEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void resizeEvent(QResizeEvent *event) override;
 
 private:
   QVBoxLayout *layout;

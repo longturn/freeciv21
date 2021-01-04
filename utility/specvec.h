@@ -40,7 +40,7 @@
    which _is_ itself protected against multiple inclusions.
 */
 
-#include <string.h> /* for memcpy */
+#include <cstring> /* for memcpy */
 
 #ifndef SPECVEC_TAG
 #error Must define a SPECVEC_TAG to use this header
@@ -76,8 +76,8 @@ static inline void SPECVEC_FOO(_vector_reserve)(SPECVEC_VECTOR *tthis,
   if (size > tthis->size_alloc) {
     size_t new_size = MAX(size, tthis->size_alloc * 2);
 
-    tthis->p =
-        (SPECVEC_TYPE *) fc_realloc(tthis->p, new_size * sizeof(*tthis->p));
+    tthis->p = static_cast<SPECVEC_TYPE *>(
+        fc_realloc(tthis->p, new_size * sizeof(*tthis->p)));
     tthis->size_alloc = new_size;
   }
   tthis->size = size;
@@ -93,7 +93,7 @@ static inline SPECVEC_TYPE *
 {
   if (svindex == -1 && tthis->size > 0) {
     return tthis->p + tthis->size - 1;
-  } else if (svindex >= 0 && (size_t) svindex < tthis->size) {
+  } else if (svindex >= 0 && static_cast<size_t>(svindex) < tthis->size) {
     return tthis->p + svindex;
   } else {
     return NULL;
@@ -137,7 +137,7 @@ static inline void SPECVEC_FOO(_vector_remove)(SPECVEC_VECTOR *tthis,
    * number. */
   const size_t rmpos =
       (svindex < 0 ? SPECVEC_FOO(_vector_size)(tthis) - svindex
-                   : (size_t) svindex);
+                   : static_cast<size_t>(svindex));
 
   fc_assert_ret(rmpos < SPECVEC_FOO(_vector_size)(tthis));
 

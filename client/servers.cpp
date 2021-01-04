@@ -93,8 +93,9 @@ void fcUdpScan::sockError(QAbstractSocket::SocketError socketError)
 {
   Q_UNUSED(socketError)
   char *errstr;
-  if (!fcudp_scan)
+  if (!fcudp_scan) {
     return;
+  }
   errstr = errorString().toLocal8Bit().data();
   fcudp_scan->error_func(fcudp_scan, errstr);
 }
@@ -365,7 +366,7 @@ static bool meta_read_response(struct server_scan *scan)
   char str[4096];
   struct server_list *srvrs;
 
-  auto f = new QBuffer(&scan->meta.mem);
+  auto *f = new QBuffer(&scan->meta.mem);
 
   /* parse message body */
   srvrs = parse_metaserver_data(f);
@@ -416,7 +417,7 @@ static void metaserver_scan(void *arg)
 static bool begin_metaserver_scan(struct server_scan *scan)
 {
   // Create a network manager
-  auto manager = new QNetworkAccessManager;
+  auto *manager = new QNetworkAccessManager;
 
   // Post the request
   QUrlQuery post;
@@ -428,7 +429,7 @@ static bool begin_metaserver_scan(struct server_scan *scan)
                     QLatin1String("Freeciv/" VERSION_STRING));
   request.setHeader(QNetworkRequest::ContentTypeHeader,
                     QLatin1String("application/x-www-form-urlencoded"));
-  auto reply =
+  auto *reply =
       manager->post(request, post.toString(QUrl::FullyEncoded).toUtf8());
 
   // Read from the reply

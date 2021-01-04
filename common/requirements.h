@@ -251,7 +251,7 @@ bool universal_is_mentioned_by_requirements(
 /* An item contradicts, fulfills or is irrelevant to the requirement */
 enum req_item_found { ITF_NO, ITF_YES, ITF_NOT_APPLICABLE };
 
-void universal_found_functions_init(void);
+void universal_found_functions_init();
 enum req_item_found
 universal_fulfills_requirement(const struct requirement *preq,
                                const struct universal *source);

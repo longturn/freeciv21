@@ -29,7 +29,7 @@
 #define BARBARIAN_MIN_LIFESPAN 5
 
 bool unleash_barbarians(struct tile *ptile);
-void summon_barbarians(void);
+void summon_barbarians();
 bool is_land_barbarian(struct player *pplayer);
 bool is_sea_barbarian(struct player *pplayer);
 

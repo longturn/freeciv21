@@ -12,9 +12,9 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <time.h>
+#include <cstdarg>
+#include <cstdlib>
+#include <ctime>
 
 /* dependencies/lua */
 #include "lua.h"
@@ -308,7 +308,7 @@ bool script_fcdb_call(const char *func_name, ...)
 /*************************************************************************/ /**
    Free the scripting data.
  *****************************************************************************/
-void script_fcdb_free(void)
+void script_fcdb_free()
 {
 #ifdef HAVE_FCDB
   if (!script_fcdb_call("database_free", 0)) {

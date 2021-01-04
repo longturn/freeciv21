@@ -175,14 +175,14 @@ struct extra_type *base_extra_get(const struct base_type *pbase)
 /************************************************************************/ /**
    Return the number of base_types.
  ****************************************************************************/
-Base_type_id base_count(void) { return game.control.num_base_types; }
+Base_type_id base_count() { return game.control.num_base_types; }
 
 /************************************************************************/ /**
    Initialize base_type structures.
  ****************************************************************************/
 void base_type_init(struct extra_type *pextra, int idx)
 {
-  auto pbase = new base_type;
+  auto *pbase = new base_type;
 
   pextra->data.base = pbase;
 
@@ -193,7 +193,7 @@ void base_type_init(struct extra_type *pextra, int idx)
 /************************************************************************/ /**
    Free the memory associated with base types
  ****************************************************************************/
-void base_types_free(void) {}
+void base_types_free() {}
 
 /************************************************************************/ /**
    Get best gui_type base for given parameters

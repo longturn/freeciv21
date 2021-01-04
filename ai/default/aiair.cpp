@@ -158,7 +158,8 @@ static int dai_evaluate_tile_for_air_attack(struct unit *punit,
     victim_cost -= unit_build_shield_cost_base(punit);
   }
 
-  unit_attack = (int) (PROB_MULTIPLIER * unit_win_chance(punit, pdefender));
+  unit_attack =
+      static_cast<int>(PROB_MULTIPLIER * unit_win_chance(punit, pdefender));
 
   victim_defence = PROB_MULTIPLIER - unit_attack;
 
@@ -353,6 +354,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
   struct pf_path *path;
 
   CHECK_UNIT(punit);
+  pft_fill_unit_parameter(&parameter, punit);
 
   if (!is_unit_being_refueled(punit)) {
     /* We are out in the open, what shall we do? */

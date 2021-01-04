@@ -112,7 +112,7 @@ Q_GLOBAL_STATIC(cma_yoloswag, gimb)
 // deletes governor
 void governor::drop() { NFCN_FREE(m_instance); }
 
-governor::~governor() {}
+governor::~governor() = default;
 
 // instance for governor
 governor *governor::i()
@@ -149,13 +149,28 @@ void governor::run()
     return;
   }
 
-  for (auto pcity : qAsConst(scity_changed)) {
+  for (auto *pcity : qAsConst(scity_changed)) {
+    // dont check city if its not ours, asan says
+    // city was removed, but city still points to something
+    // uncomment and check whats happening when city is conquered
+    bool dontCont = false;
+    city_list_iterate(client.conn.playing->cities, wtf)
+    {
+      if (wtf == pcity) {
+        dontCont = true;
+      }
+    }
+    city_list_iterate_end;
+
+    if (!dontCont) {
+      continue;
+    }
     if (pcity) {
       city_changed(pcity->id);
     }
   }
   scity_changed.clear();
-  for (auto pcity : qAsConst(scity_remove)) {
+  for (auto *pcity : qAsConst(scity_remove)) {
     if (pcity) {
       attr_city_set(ATTR_CITY_CMAFE_PARAMETER, pcity->id, 0, NULL);
       city_remove(pcity->id);
@@ -267,7 +282,7 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
   xcity = nullptr;
 }
 
-cma_yoloswag::~cma_yoloswag() {}
+cma_yoloswag::~cma_yoloswag() = default;
 
 bool cma_yoloswag::apply_result(struct city *pcity,
                                 const struct cm_result *result)
@@ -289,10 +304,11 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
 {
   int first_request_id = 0, last_request_id = 0, i;
   int city_radius_sq = city_map_radius_sq_get(pcity);
-  struct cm_result *current_state = cm_result_new(pcity);
+  struct cm_result *current_state;
   struct tile *pcenter = city_tile(pcity);
 
   fc_assert_ret_val(result->found_a_valid, false);
+  current_state = cm_result_new(pcity);
   cm_result_from_main_map(current_state, pcity);
 
   if (*current_state == *result && !ALWAYS_APPLY_AT_SERVER) {
@@ -466,8 +482,7 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
   }
 
   dio_input_init(&din, buffer, len);
-
-  dio_get_uint8_raw(&din, &version);
+  fc_assert_ret_val(dio_get_uint8_raw(&din, &version), false);
   fc_assert_ret_val(version == 2, false);
 
   /* Initialize the parameter (includes some AI-only fields that aren't
@@ -692,7 +707,7 @@ void cma_set_parameter(enum attr_city attr, int city_id,
 /**********************************************************************/ /**
    Initialize the presets if there are no presets loaded on startup.
  **************************************************************************/
-void cmafec_init(void)
+void cmafec_init()
 {
   if (preset_list == NULL) {
     preset_list = preset_list_new();
@@ -702,7 +717,7 @@ void cmafec_init(void)
 /**********************************************************************/ /**
    Free resources allocated for presets system.
  **************************************************************************/
-void cmafec_free(void)
+void cmafec_free()
 {
   while (cmafec_preset_num() > 0) {
     cmafec_preset_remove(0);
@@ -821,7 +836,7 @@ int cmafec_preset_get_index_of_parameter(
 /**********************************************************************/ /**
    Returns the total number of presets.
  **************************************************************************/
-int cmafec_preset_num(void) { return preset_list_size(preset_list); }
+int cmafec_preset_num() { return preset_list_size(preset_list); }
 
 /**********************************************************************/ /**
    Return short description of city governor preset
@@ -856,7 +871,7 @@ cmafec_get_short_descr(const struct cm_parameter *const parameter)
 /**********************************************************************/ /**
    Create default cma presets for a new user (or without configuration file)
  **************************************************************************/
-void create_default_cma_presets(void)
+void create_default_cma_presets()
 {
   int i;
   struct cm_parameter parameters[] = {

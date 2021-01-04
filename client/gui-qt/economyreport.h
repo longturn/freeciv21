@@ -29,10 +29,10 @@ public:
 
 private:
   int index;
-  int curr_row;
-  int max_row;
-  cid uid;
-  int counter;
+  int curr_row{-1};
+  int max_row{0};
+  cid uid{0};
+  int counter{0};
   Ui::FormEconomyReport ui;
 private slots:
   void disband_units();

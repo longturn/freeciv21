@@ -23,8 +23,8 @@
 #include <QBitArray>
 #include <QList>
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 /* utility */
 #include "astring.h"
@@ -78,11 +78,12 @@ helpList *help_nodes;
 /************************************************************************/ /**
    Free all allocations associated with help_nodes.
  ****************************************************************************/
-void free_help_texts(void)
+void free_help_texts()
 {
-  if (!help_nodes)
+  if (!help_nodes) {
     return;
-  for (auto ptmp : *help_nodes) {
+  }
+  for (const auto *ptmp : *help_nodes) {
     NFCPP_FREE(ptmp->topic);
     NFCPP_FREE(ptmp->text);
     NFC_FREE(ptmp);
@@ -425,15 +426,18 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
                * TRANS: Translators cannot change column widths :( */
               _("Activity            Time\n"));
       CATLSTR(outbuf, outlen, "---------------------------");
-      if (clean_pollution_time > 0)
+      if (clean_pollution_time > 0) {
         cat_snprintf(outbuf, outlen, _("\nClean pollution    %3d"),
                      clean_pollution_time);
-      if (clean_fallout_time > 0)
+      }
+      if (clean_fallout_time > 0) {
         cat_snprintf(outbuf, outlen, _("\nClean fallout      %3d"),
                      clean_fallout_time);
-      if (pillage_time > 0)
+      }
+      if (pillage_time > 0) {
         cat_snprintf(outbuf, outlen, _("\nPillage            %3d"),
                      pillage_time);
+      }
       extra_type_by_cause_iterate(EC_ROAD, pextra)
       {
         if (pextra->buildable && pextra->build_time > 0) {
@@ -657,21 +661,22 @@ static struct help_item *new_help_item(int type)
 static int help_item_compar(const struct help_item *v1,
                             const struct help_item *v2)
 {
-  if (QString(v1->topic) != QString(v2->topic))
+  if (QString(v1->topic) != QString(v2->topic)) {
     return QString(v1->topic) < QString(v2->topic);
-  else
+  } else {
     return 0;
+  }
 }
 
 /************************************************************************/ /**
    pplayer may be NULL.
  ****************************************************************************/
-void boot_help_texts(void)
+void boot_help_texts()
 {
   static bool booted = false;
 
   struct section_file *sf;
-  const char *filename;
+  QString filename;
   struct help_item *pitem;
   int i;
   struct section_list *sec;
@@ -688,7 +693,7 @@ void boot_help_texts(void)
   help_nodes = new helpList;
 
   filename = fileinfoname(get_data_dirs(), "helpdata.txt");
-  if (!filename) {
+  if (filename.isEmpty()) {
     qCritical("Did not read help texts");
     return;
   }
@@ -696,7 +701,7 @@ void boot_help_texts(void)
    */
   if (!(sf = secfile_load(filename, false))) {
     /* this is now unlikely to happen */
-    qCritical("failed reading help-texts from '%s':\n%s", filename,
+    qCritical("failed reading help-texts from '%s':\n%s", qUtf8Printable(filename),
               secfile_error());
     return;
   }
@@ -1143,7 +1148,7 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
 
   idx = 0;
 
-  for (auto ptmp : *help_nodes) {
+  for (const auto *ptmp : *help_nodes) {
     char *p = ptmp->topic;
 
     while (*p == ' ') {
@@ -1583,8 +1588,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
     if (!show_help_for_nation(pnation)) {
       continue;
     }
-    for (int i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
-      Impr_type_id n = pnation->init_buildings[i];
+    for (int n : pnation->init_buildings) {
       if (n == B_LAST) {
         break;
       } else if (improvement_by_number(n) == pimprove) {
@@ -1825,7 +1829,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                      /* TRANS: defense divider ... or-list of unit types */
                      _("* Reduces target's defense to 1 / %.2f when "
                        "attacking %s.\n"),
-                     ((float) cbonus->value + 100.0f) / 100.0f,
+                     (static_cast<float>(cbonus->value) + 100.0f) / 100.0f,
                      qUtf8Printable(orlist));
         break;
       }
@@ -2220,7 +2224,6 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   if (fuel > 0) {
     QVector<QString> types;
     types.reserve(utype_count() + 1);
-    int i = 0;
 
     unit_type_iterate(transport)
     {
@@ -2230,7 +2233,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
     unit_type_iterate_end;
 
-    if (0 == i) {
+    if (types.isEmpty()) {
       if (utype_has_flag(utype, UTYF_COAST)) {
         if (fuel == 1) {
           cat_snprintf(buf, bufsz,
@@ -4013,8 +4016,8 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
     const struct unit_type *unittype = NULL;
     enum unit_type_flag_id unitflag = unit_type_flag_id_invalid();
     outputs.clear();
-    const char *or_outputs = Q_("?outputlist: Nothing ");
-    const char *and_outputs = Q_("?outputlist: Nothing ");
+    QString or_outputs = Q_("?outputlist: Nothing ");
+    QString and_outputs = Q_("?outputlist: Nothing ");
     bool too_complex = false;
     bool world_value_valid = true;
 
@@ -4170,7 +4173,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          _("* Each foreign citizen causes %.2g unhappiness "
                            "in their city while you are at war with their "
                            "home state.\n"),
-                         (double) net_value / 100);
+                         static_cast<double>(net_value) / 100);
           }
         }
         break;
@@ -4215,13 +4218,13 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                            /* TRANS: %s is the output type, like 'shield'
                             * or 'gold'. */
                            _("* You pay no %s upkeep for your units.\n"),
-                           or_outputs);
+                           qUtf8Printable(or_outputs));
             } else {
               CATLSTR(buf, bufsz,
                       _("* You pay no upkeep for your units.\n"));
             }
           } else if (net_value != world_value) {
-            double ratio = (double) net_value / world_value;
+            double ratio = static_cast<double>(net_value) / world_value;
             if (output_type != O_LAST) {
               cat_snprintf(
                   buf, bufsz,
@@ -4229,7 +4232,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                    * or 'gold'. */
                   _("* You pay %.2g times normal %s upkeep for your "
                     "units.\n"),
-                  ratio, and_outputs);
+                  ratio, qUtf8Printable(and_outputs));
             } else {
               cat_snprintf(buf, bufsz,
                            _("* You pay %.2g times normal upkeep for your "
@@ -4252,7 +4255,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                              "* Each of your cities will avoid paying %d %s"
                              " upkeep for your units.\n",
                              peffect->value),
-                         peffect->value, and_outputs);
+                         peffect->value, qUtf8Printable(and_outputs));
           } else {
             cat_snprintf(buf, bufsz,
                          /* TRANS: Amount is subtracted from upkeep cost
@@ -4474,7 +4477,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                   " suffer a -1 penalty, unless the city working it"
                   " is celebrating.",
                   net_value),
-              net_value, or_outputs);
+              net_value, qUtf8Printable(or_outputs));
           if (game.info.celebratesize > 1) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: Preserve leading space. %d should always
@@ -4495,7 +4498,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          " %d more of it while the city working it is"
                          " celebrating.",
                          peffect->value),
-                     or_outputs, peffect->value);
+                     qUtf8Printable(or_outputs), peffect->value);
         if (game.info.celebratesize > 1) {
           cat_snprintf(buf, bufsz,
                        /* TRANS: Preserve leading space. %d should always be
@@ -4513,15 +4516,15 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          "* Each worked tile with at least 1 %s will yield"
                          " %d more of it.\n",
                          peffect->value),
-                     or_outputs, peffect->value);
+                     qUtf8Printable(or_outputs), peffect->value);
         break;
       case EFT_OUTPUT_BONUS:
       case EFT_OUTPUT_BONUS_2:
         /* FIXME: makes most sense iff world_value == 0 */
         cat_snprintf(buf, bufsz,
                      /* TRANS: %s is list of output types, with 'and' */
-                     _("* %s production is increased %d%%.\n"), and_outputs,
-                     peffect->value);
+                     _("* %s production is increased %d%%.\n"),
+                     qUtf8Printable(and_outputs), peffect->value);
         break;
       case EFT_OUTPUT_WASTE:
         if (world_value_valid) {
@@ -4529,18 +4532,18 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s production will suffer massive losses.\n"),
-                         and_outputs);
+                         qUtf8Printable(and_outputs));
           } else if (net_value >= 15) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s production will suffer some losses.\n"),
-                         and_outputs);
+                         qUtf8Printable(and_outputs));
           } else if (net_value > 0) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s production will suffer a small amount "
                            "of losses.\n"),
-                         and_outputs);
+                         qUtf8Printable(and_outputs));
           }
         }
         break;
@@ -4570,19 +4573,19 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s losses will increase quickly"
                            " with distance from capital.\n"),
-                         and_outputs);
+                         qUtf8Printable(and_outputs));
           } else if (net_value >= 200) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s losses will increase"
                            " with distance from capital.\n"),
-                         and_outputs);
+                         qUtf8Printable(and_outputs));
           } else if (net_value > 0) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: %s is list of output types, with 'and' */
                          _("* %s losses will increase slowly"
                            " with distance from capital.\n"),
-                         and_outputs);
+                         qUtf8Printable(and_outputs));
           }
         }
         break;
@@ -4719,12 +4722,12 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
     QVector<QString> tech_names;
     tech_names.reserve(MAX_NUM_TECH_LIST);
 
-    for (int i = 0; i < MAX_NUM_TECH_LIST; i++) {
-      if (pnation->init_techs[i] == A_LAST) {
+    for (int init_tech : pnation->init_techs) {
+      if (init_tech == A_LAST) {
         break;
       }
-      tech_names.append(advance_name_translation(
-          advance_by_number(pnation->init_techs[i])));
+      tech_names.append(
+          advance_name_translation(advance_by_number(init_tech)));
     }
     QString list = strvec_to_and_list(tech_names);
     PRINT_BREAK();
@@ -4799,12 +4802,12 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
     QVector<QString> impr_names;
     impr_names.reserve(MAX_NUM_BUILDING_LIST);
 
-    for (int i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
-      if (pnation->init_buildings[i] == B_LAST) {
+    for (int init_building : pnation->init_buildings) {
+      if (init_building == B_LAST) {
         break;
       }
       impr_names.append(improvement_name_translation(
-          improvement_by_number(pnation->init_buildings[i])));
+          improvement_by_number(init_building)));
     }
     QString list = strvec_to_and_list(impr_names);
     PRINT_BREAK();

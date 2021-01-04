@@ -39,15 +39,15 @@ private:
 
 public:
   fc_double_edge(QWidget *parent = NULL);
-  ~fc_double_edge();
+  ~fc_double_edge() override;
   int current_min;
   int current_max;
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
 };
 
 /**************************************************************************
@@ -86,4 +86,4 @@ private slots:
   void slot_cancel_button_pressed();
 };
 
-void popup_multiplier_dialog(void);
+void popup_multiplier_dialog();

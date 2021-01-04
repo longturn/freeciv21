@@ -46,12 +46,12 @@ void styles_alloc(int count)
 /**********************************************************************/ /**
    Free the memory associated with styles
  **************************************************************************/
-void styles_free(void) { FCPP_FREE(styles); }
+void styles_free() { FCPP_FREE(styles); }
 
 /**********************************************************************/ /**
    Return the number of styles.
  **************************************************************************/
-int style_count(void) { return game.control.num_styles; }
+int style_count() { return game.control.num_styles; }
 
 /**********************************************************************/ /**
    Return the style id.
@@ -138,7 +138,7 @@ void music_styles_alloc(int count)
 /**********************************************************************/ /**
    Free the memory associated with music styles
  **************************************************************************/
-void music_styles_free(void)
+void music_styles_free()
 {
   music_styles_iterate(pmus) { requirement_vector_free(&(pmus->reqs)); }
   music_styles_iterate_end;

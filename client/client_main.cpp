@@ -19,8 +19,8 @@
 #include <windows.h> /* LoadLibrary() */
 #endif
 
-#include <math.h>
-#include <signal.h>
+#include <cmath>
+#include <csignal>
 
 // Qt
 #include <QApplication>
@@ -120,10 +120,10 @@ static struct player *mapimg_client_tile_city(const struct tile *ptile,
 static struct player *mapimg_client_tile_unit(const struct tile *ptile,
                                               const struct player *pplayer,
                                               bool knowledge);
-static int mapimg_client_plrcolor_count(void);
+static int mapimg_client_plrcolor_count();
 static struct rgbcolor *mapimg_client_plrcolor_get(int i);
 
-static void fc_interface_init_client(void);
+static void fc_interface_init_client();
 
 QString logfile;
 QString scriptfile;
@@ -211,7 +211,7 @@ static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
 /**********************************************************************/ /**
    Set up charsets for the client.
  **************************************************************************/
-static void charsets_init(void)
+static void charsets_init()
 {
   dio_set_put_conv_callback(put_conv);
   dio_set_get_conv_callback(get_conv);
@@ -221,23 +221,23 @@ static void charsets_init(void)
    This is called at program exit in any emergency. This is registered
    as at_quick_exit() callback, so no destructor kind of actions here
  **************************************************************************/
-static void emergency_exit(void) { client_kill_server(true); }
+static void emergency_exit() { client_kill_server(true); }
 
 /**********************************************************************/ /**
    This is called at program exit.
  **************************************************************************/
-static void at_exit(void)
+static void at_exit()
 {
   emergency_exit();
   packets_deinit();
-  update_queue_free();
+  update_queue::uq()->drop();
   fc_destroy_ow_mutex();
 }
 
 /**********************************************************************/ /**
    Called only by set_client_state() below.
  **************************************************************************/
-static void client_game_init(void)
+static void client_game_init()
 {
   client.conn.playing = NULL;
   client.conn.observer = false;
@@ -248,7 +248,7 @@ static void client_game_init(void)
   link_marks_init();
   voteinfo_queue_init();
   server_options_init();
-  update_queue_init();
+  update_queue::uq()->init();
   mapimg_init(mapimg_client_tile_known, mapimg_client_tile_terrain,
               mapimg_client_tile_owner, mapimg_client_tile_city,
               mapimg_client_tile_unit, mapimg_client_plrcolor_count,
@@ -258,7 +258,7 @@ static void client_game_init(void)
 /**********************************************************************/ /**
    Called by set_client_state() and client_exit() below.
  **************************************************************************/
-static void client_game_free(void)
+static void client_game_free()
 {
   editgui_popdown_all();
 
@@ -277,7 +277,7 @@ static void client_game_free(void)
   /* update_queue_init() is correct at this point. The queue is reset to
      a clean state which is also needed if the client is not connected to
      the server! */
-  update_queue_init();
+  update_queue::uq()->init();
 
   client.conn.playing = NULL;
   client.conn.observer = false;
@@ -287,7 +287,7 @@ static void client_game_free(void)
    Called only by set_client_state() below.  Just free what is needed to
    change view (player target).
  **************************************************************************/
-static void client_game_reset(void)
+static void client_game_reset()
 {
   editgui_popdown_all();
 
@@ -501,7 +501,7 @@ int client_main(int argc, char *argv[])
 
   ui_init();
   charsets_init();
-  update_queue_init();
+  update_queue::uq()->init();
 
   fc_init_ow_mutex();
 
@@ -623,7 +623,7 @@ static void log_option_save_msg(QtMsgType lvl, const QString &msg)
    Main client execution stop function. This calls ui_exit() and not the
    other way around.
  **************************************************************************/
-void client_exit(void)
+void client_exit()
 {
   if (client_state() >= C_S_PREPARING) {
     attribute_flush();
@@ -686,12 +686,12 @@ void client_packet_input(void *packet, int type)
 /**********************************************************************/ /**
    Handle user ending his/her turn.
  **************************************************************************/
-void user_ended_turn(void) { send_turn_done(); }
+void user_ended_turn() { send_turn_done(); }
 
 /**********************************************************************/ /**
    Send information about player having finished his/her turn to server.
  **************************************************************************/
-void send_turn_done(void)
+void send_turn_done()
 {
   log_debug("send_turn_done() can_end_turn=%d", can_end_turn());
 
@@ -911,7 +911,7 @@ void set_client_state(enum client_states newstate)
 /**********************************************************************/ /**
    Return current client state.
  **************************************************************************/
-enum client_states client_state(void) { return civclient_state; }
+enum client_states client_state() { return civclient_state; }
 
 /**********************************************************************/ /**
    Remove pconn from all connection lists in client, then free it.
@@ -933,7 +933,7 @@ void client_remove_cli_conn(struct connection *pconn)
    Remove (and free) all connections from all connection lists in client.
    Assumes game.all_connections is properly maintained with all connections.
  **************************************************************************/
-void client_remove_all_cli_conn(void)
+void client_remove_all_cli_conn()
 {
   fc_assert_msg(game.all_connections != NULL, "Connection list missing");
 
@@ -946,7 +946,7 @@ void client_remove_all_cli_conn(void)
 /**********************************************************************/ /**
    Send attribute block.
  **************************************************************************/
-void send_attribute_block_request(void)
+void send_attribute_block_request()
 {
   send_packet_player_attribute_block(&client.conn);
 }
@@ -954,7 +954,7 @@ void send_attribute_block_request(void)
 /**********************************************************************/ /**
    Returns whether client is observer.
  **************************************************************************/
-bool client_is_observer(void)
+bool client_is_observer()
 {
   return client.conn.established && client.conn.observer;
 }
@@ -997,12 +997,12 @@ void set_miliseconds_to_turndone(int miliseconds)
 /**********************************************************************/ /**
    Are we in turn-change wait state?
  **************************************************************************/
-bool is_waiting_turn_change(void) { return waiting_turn_change; }
+bool is_waiting_turn_change() { return waiting_turn_change; }
 
 /**********************************************************************/ /**
    Start waiting of the server turn change activities.
  **************************************************************************/
-void start_turn_change_wait(void)
+void start_turn_change_wait()
 {
   seconds_shown_to_new_turn = ceil(game.tinfo.last_turn_change_time) + 0.1;
   between_turns->start();
@@ -1013,7 +1013,7 @@ void start_turn_change_wait(void)
 /**********************************************************************/ /**
    Server is responsive again
  **************************************************************************/
-void stop_turn_change_wait(void)
+void stop_turn_change_wait()
 {
   waiting_turn_change = false;
   update_timeout_label();
@@ -1023,7 +1023,7 @@ void stop_turn_change_wait(void)
    Return the number of seconds until turn-done. Don't call this unless
    current_turn_timeout() != 0.
  **************************************************************************/
-int get_seconds_to_turndone(void)
+int get_seconds_to_turndone()
 {
   if (current_turn_timeout() > 0) {
     return seconds_shown_to_turndone;
@@ -1037,14 +1037,14 @@ int get_seconds_to_turndone(void)
    Return the number of seconds until turn-done.  Don't call this unless
    current_turn_timeout() != 0.
  **************************************************************************/
-int get_seconds_to_new_turn(void) { return seconds_shown_to_new_turn; }
+int get_seconds_to_new_turn() { return seconds_shown_to_new_turn; }
 
 /**********************************************************************/ /**
    This function should be called at least once per second.  It does various
    updates (idle animations and timeout updates).  It returns the number of
    seconds until it should be called again.
  **************************************************************************/
-double real_timer_callback(void)
+double real_timer_callback()
 {
   double time_until_next_call = 1.0;
 
@@ -1110,7 +1110,7 @@ double real_timer_callback(void)
 /**********************************************************************/ /**
    Returns TRUE iff the client can control player.
  **************************************************************************/
-bool can_client_control(void)
+bool can_client_control()
 {
   return (NULL != client.conn.playing && !client_is_observer());
 }
@@ -1120,7 +1120,7 @@ bool can_client_control(void)
    commands).  This function should be called each time before allowing the
    user to give an order.
  **************************************************************************/
-bool can_client_issue_orders(void)
+bool can_client_issue_orders()
 {
   return (can_client_control() && C_S_RUNNING == client_state());
 }
@@ -1152,7 +1152,7 @@ bool can_intel_with_player(const struct player *pplayer)
    active.  This function should be called each time before allowing the
    user to do mapview actions.
  **************************************************************************/
-bool can_client_change_view(void)
+bool can_client_change_view()
 {
   return ((NULL != client.conn.playing || client_is_observer())
           && (C_S_RUNNING == client_state() || C_S_OVER == client_state()));
@@ -1176,20 +1176,20 @@ void set_server_busy(bool busy)
 /**********************************************************************/ /**
    Returns if server is considered busy at the moment
  **************************************************************************/
-bool is_server_busy(void) { return server_busy; }
+bool is_server_busy() { return server_busy; }
 
 /**********************************************************************/ /**
    Returns whether client is global observer
  **************************************************************************/
-bool client_is_global_observer(void)
+bool client_is_global_observer()
 {
-  return client.conn.playing == NULL && client.conn.observer == true;
+  return client.conn.playing == NULL && client.conn.observer;
 }
 
 /**********************************************************************/ /**
    Returns number of player attached to client.
  **************************************************************************/
-int client_player_number(void)
+int client_player_number()
 {
   if (client.conn.playing == NULL) {
     return -1;
@@ -1200,12 +1200,12 @@ int client_player_number(void)
 /**********************************************************************/ /**
    Either controlling or observing.
  **************************************************************************/
-bool client_has_player(void) { return client.conn.playing != NULL; }
+bool client_has_player() { return client.conn.playing != NULL; }
 
 /**********************************************************************/ /**
    Either controlling or observing.
  **************************************************************************/
-struct player *client_player(void) { return client.conn.playing; }
+struct player *client_player() { return client.conn.playing; }
 
 /**********************************************************************/ /**
    Return the vision of the player on a tile. Client version of
@@ -1300,7 +1300,7 @@ static enum sset_type client_ss_type_get(server_setting_id id)
 
   /* Exploit the fact that each server setting type value corresponds to the
    * client option type value with the same meaning. */
-  return (enum sset_type) opt_type;
+  return static_cast<enum sset_type>(opt_type);
 }
 
 /**********************************************************************/ /**
@@ -1351,7 +1351,7 @@ static unsigned int client_ss_val_bitwise_get(server_setting_id id)
 /**********************************************************************/ /**
    Initialize client specific functions.
  **************************************************************************/
-static void fc_interface_init_client(void)
+static void fc_interface_init_client()
 {
   struct functions *funcs = fc_interface_funcs();
 
@@ -1450,7 +1450,7 @@ static struct player *mapimg_client_tile_unit(const struct tile *ptile,
 /**********************************************************************/ /**
    Helper function for the mapimg module - number of player colors.
  **************************************************************************/
-static int mapimg_client_plrcolor_count(void) { return player_count(); }
+static int mapimg_client_plrcolor_count() { return player_count(); }
 
 /**********************************************************************/ /**
    Helper function for the mapimg module - one player color. For the client
@@ -1479,9 +1479,9 @@ static struct rgbcolor *mapimg_client_plrcolor_get(int i)
 /**********************************************************************/ /**
    Is the client marked as one going down?
  **************************************************************************/
-bool is_client_quitting(void) { return client_quitting; }
+bool is_client_quitting() { return client_quitting; }
 
 /**********************************************************************/ /**
    Mark client as one going to quit as soon as possible,
  **************************************************************************/
-void start_quitting(void) { client_quitting = true; }
+void start_quitting() { client_quitting = true; }

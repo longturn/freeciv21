@@ -16,8 +16,8 @@
 #endif
 
 #include <QHash>
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 /* utility */
 #include "log.h"
@@ -128,7 +128,7 @@ struct tile_data_cache {
   int turn; /* the turn the values were calculated */
 };
 
-struct tile_data_cache *tile_data_cache_new(void);
+struct tile_data_cache *tile_data_cache_new();
 struct tile_data_cache *
 tile_data_cache_copy(const struct tile_data_cache *ptdc);
 
@@ -246,7 +246,7 @@ static void cityresult_destroy(struct cityresult *result)
 {
   if (result != NULL) {
     if (result->tdc_hash != NULL) {
-      for (auto ptdc : *result->tdc_hash) {
+      for (const auto *ptdc : *result->tdc_hash) {
         NFCPP_FREE(ptdc);
       }
       delete result->tdc_hash;
@@ -455,7 +455,7 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
 /*************************************************************************/ /**
    Allocate tile data cache
  *****************************************************************************/
-struct tile_data_cache *tile_data_cache_new(void)
+struct tile_data_cache *tile_data_cache_new()
 {
   struct tile_data_cache *ptdc_copy = new tile_data_cache[1]();
 
@@ -471,10 +471,11 @@ struct tile_data_cache *tile_data_cache_new(void)
 struct tile_data_cache *
 tile_data_cache_copy(const struct tile_data_cache *ptdc)
 {
-  struct tile_data_cache *ptdc_copy = tile_data_cache_new();
+  struct tile_data_cache *ptdc_copy;
 
   fc_assert_ret_val(ptdc, NULL);
 
+  ptdc_copy = tile_data_cache_new();
   ptdc_copy->shield = ptdc->shield;
   ptdc_copy->trade = ptdc->trade;
   ptdc_copy->food = ptdc->food;
@@ -1206,7 +1207,7 @@ void dai_auto_settler_reset(struct ai_type *ait, struct player *pplayer)
   ai->settler->cache.save = 0;
 #endif /* FREECIV_DEBUG */
 
-  for (auto ptdc : *ai->settler->tdc_hash) {
+  for (const auto *ptdc : *ai->settler->tdc_hash) {
     NFCPP_FREE(ptdc);
   }
   ai->settler->tdc_hash->clear();
@@ -1256,7 +1257,7 @@ static bool dai_do_build_city(struct ai_type *ait, struct player *pplayer,
   unit_do_action(pplayer, punit->id, ptile->index, 0,
                  city_name_suggestion(pplayer, ptile), ACTION_FOUND_CITY);
   pcity = tile_city(ptile);
-  if (!pcity && punit) {
+  if (!pcity) {
     enum ane_kind reason = action_not_enabled_reason(
         punit, ACTION_FOUND_CITY, ptile, NULL, NULL);
 

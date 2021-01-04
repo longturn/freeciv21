@@ -13,7 +13,7 @@
 #include <fc_config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 
 /* dependencies/lua */
 extern "C" {

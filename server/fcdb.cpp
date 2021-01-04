@@ -15,9 +15,9 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"
@@ -214,5 +214,5 @@ const char *fcdb_option_get(const char *type) { return NULL; }
 /************************************************************************/ /**
    Dummy function - Free resources allocated by fcdb system.
  ****************************************************************************/
-void fcdb_free(void) { return; }
+void fcdb_free() {}
 #endif /* HAVE_FCDB */

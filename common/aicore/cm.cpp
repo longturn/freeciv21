@@ -12,8 +12,8 @@
 #include <fc_config.h>
 #endif
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 // Qt
 #include <QLoggingCategory>
@@ -276,7 +276,7 @@ static bool choice_is_promising(struct cm_state *state, int newchoice,
    indices will not have been initialized yet (cm_init_citymap is called
    when they are).
  ****************************************************************************/
-void cm_init(void)
+void cm_init()
 {
   /* In the B&B algorithm there's not really anything to initialize. */
 #ifdef GATHER_TIME_STATS
@@ -295,7 +295,7 @@ void cm_init(void)
    city map indices are generated (basically when the topology is set,
    shortly after the start of the game).
  ****************************************************************************/
-void cm_init_citymap(void)
+void cm_init_citymap()
 {
   /* In the B&B algorithm there's not really anything to initialize. */
 }
@@ -303,7 +303,7 @@ void cm_init_citymap(void)
 /************************************************************************/ /**
    Called at the end of a game to free any CM data.
  ****************************************************************************/
-void cm_free(void)
+void cm_free()
 {
 #ifdef GATHER_TIME_STATS
   print_performance(&performance.greedy);
@@ -372,7 +372,7 @@ static void tile_type_init(struct cm_tile_type *type)
  ****************************************************************************/
 static struct cm_tile_type *tile_type_dup(const struct cm_tile_type *oldtype)
 {
-  auto newtype = new cm_tile_type;
+  auto *newtype = new cm_tile_type;
 
   memcpy(newtype, oldtype, sizeof(*oldtype));
   tile_vector_init(&newtype->tiles);
@@ -427,11 +427,7 @@ static bool tile_type_equal(const struct cm_tile_type *a,
   }
   output_type_iterate_end;
 
-  if (a->is_specialist != b->is_specialist) {
-    return false;
-  }
-
-  return true;
+  return a->is_specialist == b->is_specialist;
 }
 
 /************************************************************************/ /**
@@ -560,7 +556,7 @@ static bool fitness_better(struct cm_fitness a, struct cm_fitness b)
    Return a fitness struct that is the worst possible result we can
    represent.
  ****************************************************************************/
-static struct cm_fitness worst_fitness(void)
+static struct cm_fitness worst_fitness()
 {
   struct cm_fitness f;
 
@@ -851,8 +847,8 @@ static int compare_tile_type_by_lattice_order(const struct cm_tile_type *a,
  ****************************************************************************/
 static int compare_tile_type_by_fitness(const void *va, const void *vb)
 {
-  auto a = static_cast<cm_tile_type *const *>(va);
-  auto b = static_cast<cm_tile_type *const *>(vb);
+  const auto *a = static_cast<cm_tile_type *const *>(va);
+  const auto *b = static_cast<cm_tile_type *const *>(vb);
   double diff;
 
   if (*a == *b) {
@@ -883,8 +879,8 @@ static double compare_key_trade_bonus;
  ****************************************************************************/
 static int compare_tile_type_by_stat(const void *va, const void *vb)
 {
-  auto a = static_cast<cm_tile_type *const *>(va);
-  auto b = static_cast<cm_tile_type *const *>(vb);
+  const auto *a = static_cast<cm_tile_type *const *>(va);
+  const auto *b = static_cast<cm_tile_type *const *>(vb);
 
   if (*a == *b) {
     return 0;
@@ -1859,7 +1855,7 @@ static struct cm_state *cm_state_init(struct city *pcity, bool negative_ok)
   const int SCIENCE = 0, TAX = 1, LUXURY = 2;
   const struct player *pplayer = city_owner(pcity);
   int numtypes;
-  auto state = new cm_state;
+  auto *state = new cm_state;
   int rates[3];
 
   log_base(LOG_CM_STATE, "creating cm_state for %s (size %d)",

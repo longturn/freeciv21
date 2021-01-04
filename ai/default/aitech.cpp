@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 
 /* utility */
 #include "log.h"
@@ -206,8 +206,6 @@ static void dai_select_tech(struct ai_type *ait, struct player *pplayer,
   if (choice && choice->choice == A_UNSET) {
     choice->choice = presearch->researching;
   }
-
-  return;
 }
 
 /**********************************************************************/ /**
@@ -406,7 +404,7 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
   int best_cost = FC_INFINITY;
   struct advance *best_tech = A_NEVER;
   struct unit_type *best_unit = NULL;
-  int def_values[U_LAST];
+  int def_values[U_LAST] = {0};
   int att_idx = utype_index(att);
 
   unit_type_iterate(deftype)

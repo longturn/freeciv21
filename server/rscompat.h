@@ -47,7 +47,7 @@ void rscompat_postprocess(struct rscompat_info *info);
 
 /* General upgrade functions that should be kept to avoid regressions in
  * corner case handling. */
-void rscompat_enablers_add_obligatory_hard_reqs(void);
+void rscompat_enablers_add_obligatory_hard_reqs();
 
 /* Functions from ruleset.c made visible to rscompat.c */
 struct requirement_vector *lookup_req_list(struct section_file *file,

@@ -56,7 +56,7 @@ void citizens_update(struct city *pcity, struct player *plr)
     citizens_print(pcity);
   }
 
-  if (game.info.citizen_nationality != true) {
+  if (!game.info.citizen_nationality) {
     return;
   }
 
@@ -149,7 +149,7 @@ void citizens_print(const struct city *pcity)
 {
   fc_assert_ret(pcity);
 
-  if (game.info.citizen_nationality != true) {
+  if (!game.info.citizen_nationality) {
     return;
   }
 
@@ -176,11 +176,7 @@ void citizens_print(const struct city *pcity)
  *****************************************************************************/
 static bool citizen_convert_check(struct city *pcity)
 {
-  if (fc_rand(1000) + 1 > game.info.citizen_convert_speed) {
-    return false;
-  }
-
-  return true;
+  return fc_rand(1000) + 1 <= game.info.citizen_convert_speed;
 }
 
 /*************************************************************************/ /**
@@ -188,7 +184,7 @@ static bool citizen_convert_check(struct city *pcity)
  *****************************************************************************/
 void citizens_convert(struct city *pcity)
 {
-  struct player_slot *city_nations[MAX_NUM_PLAYER_SLOTS], *pslot;
+  struct player_slot *city_nations[MAX_NUM_PLAYER_SLOTS] = {nullptr}, *pslot;
   struct player *pplayer;
   int count = 0;
 

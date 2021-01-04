@@ -151,10 +151,10 @@ struct extra_type {
   TYPED_LIST_ITERATE_REV(struct extra_type, extralist, pextra)
 #define extra_type_list_iterate_rev_end LIST_ITERATE_REV_END
 
-void extras_init(void);
-void extras_free(void);
+void extras_init();
+void extras_free();
 
-int extra_count(void);
+int extra_count();
 int extra_number(const struct extra_type *pextra);
 struct extra_type *extra_by_number(int id);
 
@@ -179,7 +179,7 @@ struct extra_type *rand_extra_for_tile(struct tile *ptile,
                                        enum extra_cause cause,
                                        bool generated);
 
-struct extra_type_list *extra_type_list_of_unit_hiders(void);
+struct extra_type_list *extra_type_list_of_unit_hiders();
 
 #define is_extra_caused_by(e, c) (e->causes & (1 << c))
 bool is_extra_caused_by_worker_action(const struct extra_type *pextra);
@@ -243,8 +243,8 @@ bool is_extra_flag_card_near(const struct tile *ptile,
 bool is_extra_flag_near_tile(const struct tile *ptile,
                              enum extra_flag_id flag);
 
-void user_extra_flags_init(void);
-void extra_flags_free(void);
+void user_extra_flags_init();
+void extra_flags_free();
 void set_user_extra_flag_name(enum extra_flag_id id, const char *name,
                               const char *helptxt);
 const char *extra_flag_helptxt(enum extra_flag_id id);

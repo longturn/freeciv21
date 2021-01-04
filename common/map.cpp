@@ -17,7 +17,7 @@
 #include <fc_config.h>
 #endif
 #include <QSet>
-#include <string.h> /* qstrlen */
+#include <cstring> /* qstrlen */
 
 /* utility */
 #include "fcintl.h"
@@ -127,7 +127,7 @@ bv_extras get_tile_infrastructure_set(const struct tile *ptile, int *pcount)
    (To be precise, returns TRUE if map_allocate() has not yet been
    called.)
  ***********************************************************************/
-bool map_is_empty(void) { return wld.map.tiles == NULL; }
+bool map_is_empty() { return wld.map.tiles == NULL; }
 
 /*******************************************************************/ /**
    Put some sensible values into the map structure
@@ -176,7 +176,7 @@ void map_init(struct civ_map *imap, bool server_side)
 /*******************************************************************/ /**
    Fill the iterate_outwards_indices array.  This may depend on the topology.
  ***********************************************************************/
-static void generate_map_indices(void)
+static void generate_map_indices()
 {
   int i = 0, nat_x, nat_y, tiles;
   int nat_center_x, nat_center_y, nat_min_x, nat_min_y, nat_max_x, nat_max_y;
@@ -279,7 +279,7 @@ static void generate_map_indices(void)
    This is done by the map generator code (server), when loading a savegame
    or a scenario with map (server), and packhand code (client).
  ***********************************************************************/
-void map_init_topology(void)
+void map_init_topology()
 {
   /* sanity check for iso topologies*/
   fc_assert(!MAP_IS_ISOMETRIC || (wld.map.ysize % 2) == 0);
@@ -494,7 +494,7 @@ void map_allocate(struct civ_map *amap)
 /*******************************************************************/ /**
    Allocate main map and related global structures.
  ***********************************************************************/
-void main_map_allocate(void)
+void main_map_allocate()
 {
   map_allocate(&(wld.map));
   generate_city_map_indices();
@@ -516,7 +516,7 @@ void map_free(struct civ_map *fmap)
     FCPP_FREE(fmap->tiles);
 
     if (fmap->startpos_table) {
-      for (auto a : *fmap->startpos_table) {
+      for (auto *a : *fmap->startpos_table) {
         startpos_destroy(a);
       }
       FC_FREE(fmap->startpos_table);
@@ -529,7 +529,7 @@ void map_free(struct civ_map *fmap)
 /*******************************************************************/ /**
    Free main map and related global structures.
  ***********************************************************************/
-void main_map_free(void)
+void main_map_free()
 {
   map_free(&(wld.map));
   CALL_FUNC_EACH_AI(map_free);
@@ -886,12 +886,8 @@ static bool restrict_infra(const struct player *pplayer,
     return false;
   }
 
-  if ((plr1 && pplayers_at_war(plr1, pplayer))
-      || (plr2 && pplayers_at_war(plr2, pplayer))) {
-    return true;
-  }
-
-  return false;
+  return (plr1 && pplayers_at_war(plr1, pplayer))
+         || (plr2 && pplayers_at_war(plr2, pplayer));
 }
 
 /*******************************************************************/ /**
@@ -981,7 +977,7 @@ struct tile *nearest_real_tile(const struct civ_map *nmap, int x, int y)
 /*******************************************************************/ /**
    Returns the total number of (real) positions (or tiles) on the map.
  ***********************************************************************/
-int map_num_tiles(void) { return wld.map.xsize * wld.map.ysize; }
+int map_num_tiles() { return wld.map.xsize * wld.map.ysize; }
 
 /*******************************************************************/ /**
    Finds the difference between the two (unnormalized) positions, in
@@ -1068,7 +1064,7 @@ struct tile *rand_neighbour(const struct civ_map *nmap,
   /* This clever loop by Trent Piepho will take no more than
    * 8 tries to find a valid direction. */
   for (n = 8; n > 0; n--) {
-    enum direction8 choice = (enum direction8) fc_rand(n);
+    enum direction8 choice = static_cast<enum direction8>(fc_rand(n));
 
     /* this neighbour's OK */
     tile1 = mapstep(nmap, ptile, dirs[choice]);
@@ -1362,7 +1358,7 @@ int get_direction_for_step(const struct civ_map *nmap,
   }
 
   fc_assert(false);
-  return -1;
+  return 0;
 }
 
 /*******************************************************************/ /**
@@ -1530,7 +1526,7 @@ bool startpos_pack(const struct startpos *psp,
   packet->exclude = psp->exclude;
   BV_CLR_ALL(packet->nations);
 
-  for (auto pnation : qAsConst(*psp->nations)) {
+  for (const auto *pnation : qAsConst(*psp->nations)) {
     BV_SET(packet->nations, nation_number(pnation));
   }
   return true;
@@ -1591,7 +1587,7 @@ startpos_raw_nations(const struct startpos *psp)
 /*******************************************************************/ /**
    Is there start positions set for map
  ***********************************************************************/
-int map_startpos_count(void)
+int map_startpos_count()
 {
   if (NULL != wld.map.startpos_table) {
     return wld.map.startpos_table->size();
@@ -1654,7 +1650,7 @@ bool map_startpos_remove(struct tile *ptile)
 /*******************************************************************/ /**
    Return random direction that is valid in current map.
  ***********************************************************************/
-enum direction8 rand_direction(void)
+enum direction8 rand_direction()
 {
   return wld.map.valid_dirs[fc_rand(wld.map.num_valid_dirs)];
 }

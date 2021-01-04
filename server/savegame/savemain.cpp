@@ -117,7 +117,8 @@ struct save_thread_data {
  ****************************************************************************/
 static void save_thread_run(void *arg)
 {
-  struct save_thread_data *stdata = (struct save_thread_data *) arg;
+  struct save_thread_data *stdata =
+      static_cast<struct save_thread_data *>(arg);
 
   if (!secfile_save(stdata->sfile, stdata->filepath)) {
     con_write(C_FAIL, _("Failed saving game as %s"), stdata->filepath);
@@ -278,4 +279,4 @@ void save_game(const char *orig_filename, const char *save_reason,
 /************************************************************************/ /**
    Close saving system.
  ****************************************************************************/
-void save_system_close(void) { save_thread->wait(); }
+void save_system_close() { save_thread->wait(); }

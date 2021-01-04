@@ -56,7 +56,7 @@ struct base_type {
 #define BASE_NONE -1
 
 /* General base accessor functions. */
-Base_type_id base_count(void);
+Base_type_id base_count();
 Base_type_id base_number(const struct base_type *pbase);
 
 struct base_type *base_by_number(const Base_type_id id);
@@ -89,7 +89,7 @@ bool territory_claiming_base(const struct base_type *pbase);
 
 /* Initialization and iteration */
 void base_type_init(struct extra_type *pextra, int idx);
-void base_types_free(void);
+void base_types_free();
 
 #define base_deps_iterate(_reqs, _dep)                                      \
   {                                                                         \

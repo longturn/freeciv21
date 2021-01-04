@@ -299,7 +299,7 @@ struct player_diplstate *player_diplstate_get(const struct player *plr1,
 
   fc_assert_ret_val(*diplstate_slot != NULL, NULL);
 
-  return (struct player_diplstate *) *diplstate_slot;
+  return const_cast<struct player_diplstate *>(*diplstate_slot);
 }
 
 /*******************************************************************/ /**
@@ -324,7 +324,7 @@ static void player_diplstate_destroy(const struct player *plr1,
 /*******************************************************************/ /**
    Initialise all player slots (= pointer to player pointers).
  ***********************************************************************/
-void player_slots_init(void)
+void player_slots_init()
 {
   int i;
 
@@ -341,12 +341,12 @@ void player_slots_init(void)
 /*******************************************************************/ /**
    Return whether player slots are already initialized.
  ***********************************************************************/
-bool player_slots_initialised(void) { return (player_slots.pslots != NULL); }
+bool player_slots_initialised() { return (player_slots.pslots != NULL); }
 
 /*******************************************************************/ /**
    Remove all player slots.
  ***********************************************************************/
-void player_slots_free(void)
+void player_slots_free()
 {
   players_iterate(pplayer) { player_destroy(pplayer); }
   players_iterate_end;
@@ -358,7 +358,7 @@ void player_slots_free(void)
 /*******************************************************************/ /**
    Returns the first player slot.
  ***********************************************************************/
-struct player_slot *player_slot_first(void) { return player_slots.pslots; }
+struct player_slot *player_slot_first() { return player_slots.pslots; }
 
 /*******************************************************************/ /**
    Returns the next slot.
@@ -374,7 +374,7 @@ struct player_slot *player_slot_next(struct player_slot *pslot)
    number of players (including barbarians, etc.) that could ever
    exist at once.
  ***********************************************************************/
-int player_slot_count(void) { return (MAX_NUM_PLAYER_SLOTS); }
+int player_slot_count() { return (MAX_NUM_PLAYER_SLOTS); }
 
 /*******************************************************************/ /**
    Returns the index of the player slot.
@@ -429,7 +429,7 @@ struct player_slot *player_slot_by_number(int player_id)
 /*******************************************************************/ /**
    Return the highest used player slot index.
  ***********************************************************************/
-int player_slot_max_used_number(void)
+int player_slot_max_used_number()
 {
   int max_pslot = 0;
 
@@ -750,7 +750,7 @@ void player_destroy(struct player *pplayer)
 /*******************************************************************/ /**
    Return the number of players.
  ***********************************************************************/
-int player_count(void) { return player_slots.used_slots; }
+int player_count() { return player_slots.used_slots; }
 
 /*******************************************************************/ /**
    Return the player index.
@@ -1591,7 +1591,7 @@ enum casus_belli_range casus_belli_range_for(const struct player *offender,
    one requirement proves the absence of every other requirement. In other
    words: at most one of the requirements in the set can be present.
  ***********************************************************************/
-static bv_diplrel_all_reqs *diplrel_mess_gen(void)
+static bv_diplrel_all_reqs *diplrel_mess_gen()
 {
   /* The ranges supported by the DiplRel requiremnt type. */
   const enum req_range legal_ranges[] = {REQ_RANGE_LOCAL, REQ_RANGE_PLAYER,
@@ -1687,7 +1687,7 @@ static bv_diplrel_all_reqs *diplrel_mess = NULL;
 /*******************************************************************/ /**
    Get the mutually exclusive requirement sets for DiplRel.
  ***********************************************************************/
-static bv_diplrel_all_reqs *diplrel_mess_get(void)
+static bv_diplrel_all_reqs *diplrel_mess_get()
 {
   if (diplrel_mess == NULL) {
     /* This is the first call. Initialize diplrel_mess. */
@@ -1700,7 +1700,7 @@ static bv_diplrel_all_reqs *diplrel_mess_get(void)
 /*******************************************************************/ /**
    Free diplrel_mess
  ***********************************************************************/
-void diplrel_mess_close(void)
+void diplrel_mess_close()
 {
   if (diplrel_mess != NULL) {
     FCPP_FREE(diplrel_mess);
@@ -1815,7 +1815,7 @@ bool is_settable_ai_level(enum ai_level level)
 /*******************************************************************/ /**
    Return number of AI levels in game
  ***********************************************************************/
-int number_of_ai_levels(void)
+int number_of_ai_levels()
 {
   return AI_LEVEL_COUNT - 1; /* AI_LEVEL_AWAY is not real AI */
 }

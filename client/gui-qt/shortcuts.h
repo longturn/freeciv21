@@ -134,8 +134,8 @@ public:
   fc_shortcut shc;
 
 protected:
-  void mousePressEvent(QMouseEvent *event);
-  void keyReleaseEvent(QKeyEvent *event);
+  void mousePressEvent(QMouseEvent *event) override;
+  void keyReleaseEvent(QKeyEvent *event) override;
 };
 
 /**************************************************************************
@@ -148,7 +148,7 @@ public:
   fc_shortcut *sc;
 
 protected:
-  void closeEvent(QCloseEvent *);
+  void closeEvent(QCloseEvent *) override;
 
 private:
   bool check_if_exist();
@@ -164,10 +164,10 @@ class fc_sc_button : public QPushButton {
 
 public:
   fc_sc_button();
-  ~fc_sc_button();
+  ~fc_sc_button() override;
   fc_sc_button(fc_shortcut *s);
   fc_shortcut *sc;
-  fc_shortcut *sc_orig;
+  fc_shortcut *sc_orig{nullptr};
   void show_info(const QString &str);
 private slots:
   void popup_error();
@@ -188,7 +188,7 @@ class fc_shortcuts_dialog : public QDialog {
 
 public:
   fc_shortcuts_dialog(QWidget *parent = 0);
-  virtual ~fc_shortcuts_dialog();
+  ~fc_shortcuts_dialog() override;
 private slots:
   void apply_option(int response);
   void edit_shortcut();

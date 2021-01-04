@@ -552,7 +552,7 @@ static struct city *dai_diplomat_defend(struct ai_type *ait,
     /* This formula may not be optimal, but it works. */
     if (move_cost > best_dist) {
       /* punish city for being so far away */
-      urgency /= (float) (move_cost / best_dist);
+      urgency /= static_cast<float>(move_cost / best_dist);
     }
 
     if (urgency > best_urgency) {
@@ -668,11 +668,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
       unit_do_action(pplayer, punit->id, pvictim->id, -1, "",
                      ACTION_SPY_BRIBE_UNIT);
       /* autoattack might kill us as we move in */
-      if (game_unit_by_number(sanity) && punit->moves_left > 0) {
-        return true;
-      } else {
-        return false;
-      }
+      return game_unit_by_number(sanity) && punit->moves_left > 0;
     } else if (action_prob_possible(action_prob_vs_unit(
                    punit, ACTION_SPY_SABOTAGE_UNIT_ESC, pvictim))
                && threat) {
@@ -680,11 +676,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
       unit_do_action(pplayer, punit->id, pvictim->id, -1, "",
                      ACTION_SPY_SABOTAGE_UNIT_ESC);
       /* autoattack might kill us as we move in */
-      if (game_unit_by_number(sanity) && punit->moves_left > 0) {
-        return true;
-      } else {
-        return false;
-      }
+      return game_unit_by_number(sanity) && punit->moves_left > 0;
     } else {
       /* usually because we ended move early due to another unit */
       UNIT_LOG(LOG_DIPLOMAT, punit,

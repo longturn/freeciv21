@@ -13,18 +13,19 @@
 #include <fc_config.h>
 #endif
 
-#include <assert.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cassert>
+#include <csignal>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 // Qt
 #include <QCommandLineParser>
 #include <QCoreApplication>
 
 /* utility */
+#include "astring.h"
 #include "capability.h"
 #include "fciconv.h"
 #include "fcintl.h"
@@ -189,24 +190,6 @@ const char *client_string = "freeciv-manual";
 static QString ruleset;
 
 /**********************************************************************/ /**
-   Replace html special characters ('&', '<' and '>').
- **************************************************************************/
-static char *html_special_chars(char *str, size_t *len)
-{
-  char *buf;
-
-  buf = fc_strrep_resize(str, len, "&", "&amp;");
-  buf = fc_strrep_resize(buf, len, "<", "&lt;");
-  buf = fc_strrep_resize(buf, len, ">", "&gt;");
-
-  return buf;
-}
-
-/*******************************************
-  Useless stubs for compiling client code.
-*/
-
-/**********************************************************************/ /**
    Client stub
  **************************************************************************/
 void popup_help_dialog_string(const char *item)
@@ -245,7 +228,7 @@ const char *tileset_description(struct tileset *t) { return NULL; }
 /**********************************************************************/ /**
    Mostly a client stub.
  **************************************************************************/
-enum client_states client_state(void) { return C_S_INITIAL; }
+enum client_states client_state() { return C_S_INITIAL; }
 
 /**********************************************************************/ /**
    Mostly a client stub.
@@ -313,13 +296,10 @@ static bool manual_command(struct tag_types *tag_info)
                 tag_info->sect_title_end);
         sethelp = _(setting_extra_help(pset, true));
         if (strlen(sethelp) > 0) {
-          char *help = qstrdup(sethelp);
-          size_t help_len = qstrlen(help) + 1;
-
-          fc_break_lines(help, LINE_BREAK);
-          help = html_special_chars(help, &help_len);
-          fprintf(doc, "<pre>%s</pre>\n\n", help);
-          FCPP_FREE(help);
+          QString help = sethelp;
+          help = break_lines(help, LINE_BREAK);
+          help = help.toHtmlEscaped();
+          fprintf(doc, "<pre>%s</pre>\n\n", qUtf8Printable(help));
         }
         fprintf(doc, "<p class=\"misc\">");
         fprintf(doc, _("Level: %s.<br>"),
@@ -397,28 +377,23 @@ static bool manual_command(struct tag_types *tag_info)
                 command_name(cmd), command_short_help(cmd),
                 tag_info->sect_title_end);
         if (command_synopsis(cmd)) {
-          char *cmdstr = qstrdup(command_synopsis(cmd));
-          size_t cmdstr_len = qstrlen(cmdstr) + 1;
-
-          cmdstr = html_special_chars(cmdstr, &cmdstr_len);
+          QString cmdstr = command_synopsis(cmd);
+          cmdstr = cmdstr.toHtmlEscaped();
           fprintf(doc, _("<table>\n<tr>\n<td valign=\"top\">"
                          "<pre>Synopsis:</pre></td>\n<td>"));
-          fprintf(doc, "<pre>%s</pre></td></tr></table>", cmdstr);
-          FC_FREE(cmdstr);
+          fprintf(doc, "<pre>%s</pre></td></tr></table>",
+                  qUtf8Printable(cmdstr));
         }
         fprintf(doc, _("<p class=\"level\">Level: %s</p>\n"),
                 cmdlevel_name(command_level(cmd)));
         {
-          char *help = command_extra_help(cmd);
-          if (help) {
-            size_t help_len = qstrlen(help) + 1;
-
-            fc_break_lines(help, LINE_BREAK);
-            help = html_special_chars(help, &help_len);
+          QString help = command_extra_help(cmd);
+          if (!help.isEmpty()) {
+            help = break_lines(help, LINE_BREAK);
+            help = help.toHtmlEscaped();
             fprintf(doc, "\n");
             fprintf(doc, _("<p>Description:</p>\n\n"));
-            fprintf(doc, "<pre>%s</pre>\n", help);
-            FCPP_FREE(help);
+            fprintf(doc, "<pre>%s</pre>\n", qUtf8Printable(help));
           }
         }
 

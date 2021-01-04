@@ -16,11 +16,11 @@
 #endif
 
 #include <QBitArray>
-#include <errno.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cerrno>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "fciconv.h"
@@ -124,7 +124,7 @@ void bv_clr_all_from(unsigned char *vec_to, const unsigned char *vec_from,
 // this is not very fast
 bool is_any_set(QBitArray &ba)
 {
-  for (int i = 0; i < ba.count() ; i++) {
+  for (int i = 0; i < ba.count(); i++) {
     if (ba.testBit(i)) {
       return true;
     }

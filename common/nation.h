@@ -159,7 +159,7 @@ struct nation_group {
 };
 
 /* General nation accessor functions. */
-Nation_type_id nation_count(void);
+Nation_type_id nation_count();
 Nation_type_id nation_index(const struct nation_type *pnation);
 Nation_type_id nation_number(const struct nation_type *pnation);
 
@@ -229,7 +229,7 @@ enum nation_city_preference
 nation_city_river_preference(const struct nation_city *pncity);
 
 /* General nation set accessor routines */
-int nation_set_count(void);
+int nation_set_count();
 int nation_set_index(const struct nation_set *pset);
 int nation_set_number(const struct nation_set *pset);
 
@@ -250,7 +250,7 @@ bool nation_is_in_set(const struct nation_type *pnation,
 struct nation_set *nation_set_by_setting_value(const char *setting);
 
 /* General nation group accessor routines */
-int nation_group_count(void);
+int nation_group_count();
 int nation_group_index(const struct nation_group *pgroup);
 int nation_group_number(const struct nation_group *pgroup);
 
@@ -271,11 +271,11 @@ bool nation_is_in_group(const struct nation_type *pnation,
                         const struct nation_group *pgroup);
 
 /* Initialization and iteration */
-void nation_sets_groups_init(void);
-void nation_sets_groups_free(void);
+void nation_sets_groups_init();
+void nation_sets_groups_free();
 
 struct nation_set_iter;
-size_t nation_set_iter_sizeof(void);
+size_t nation_set_iter_sizeof();
 struct iterator *nation_set_iter_init(struct nation_set_iter *it);
 
 #define nation_sets_iterate(NAME_pset)                                      \
@@ -284,7 +284,7 @@ struct iterator *nation_set_iter_init(struct nation_set_iter *it);
 #define nation_sets_iterate_end generic_iterate_end
 
 struct nation_group_iter;
-size_t nation_group_iter_sizeof(void);
+size_t nation_group_iter_sizeof();
 struct iterator *nation_group_iter_init(struct nation_group_iter *it);
 
 #define nation_groups_iterate(NAME_pgroup)                                  \
@@ -295,13 +295,13 @@ struct iterator *nation_group_iter_init(struct nation_group_iter *it);
 
 /* Initialization and iteration */
 void nations_alloc(int num);
-void nations_free(void);
+void nations_free();
 
 int nations_match(const struct nation_type *pnation1,
                   const struct nation_type *pnation2, bool ignore_conflicts);
 
 struct nation_iter;
-size_t nation_iter_sizeof(void);
+size_t nation_iter_sizeof();
 struct iterator *nation_iter_init(struct nation_iter *it);
 
 /* Iterate over nations.  This iterates over _all_ nations, including

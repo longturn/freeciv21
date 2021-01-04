@@ -16,7 +16,7 @@
 #endif
 
 #include <QBitArray>
-#include <string.h>
+#include <cstring>
 
 /* utility */
 #include "bitvector.h"
@@ -133,7 +133,7 @@ static int last_turn = 0;
 /************************************************************************/ /**
    Called below, and by client/client_main.c client_game_free()
  ****************************************************************************/
-void packhand_free(void)
+void packhand_free()
 {
   if (NULL != invisible.cities) {
     city_list_iterate(invisible.cities, pcity)
@@ -156,7 +156,7 @@ void packhand_free(void)
 /************************************************************************/ /**
    Called only by handle_map_info() below.
  ****************************************************************************/
-static void packhand_init(void)
+static void packhand_init()
 {
   packhand_free();
 
@@ -1290,7 +1290,7 @@ void handle_new_year(int year, int fragments, int turn)
    signifies the end of our phase (it's not sent for other player's
    phases).
  ****************************************************************************/
-void handle_end_phase(void)
+void handle_end_phase()
 {
   /* Messagewindow will contain events happened since our own phase ended,
    * so player of the first phase and last phase are in equal situation. */
@@ -1363,7 +1363,7 @@ void handle_start_phase(int phase)
    Called when begin-turn packet is received. Server has finished processing
    turn change.
  ****************************************************************************/
-void handle_begin_turn(void)
+void handle_begin_turn()
 {
   log_debug("handle_begin_turn()");
 
@@ -1377,7 +1377,7 @@ void handle_begin_turn(void)
    Called when end-turn packet is received. Server starts processing turn
    change.
  ****************************************************************************/
-void handle_end_turn(void)
+void handle_end_turn()
 {
   log_debug("handle_end_turn()");
 
@@ -2163,7 +2163,7 @@ void set_government_choice(struct government *government)
    Begin a revolution by telling the server to start it.  This also clears
    the current government choice.
  ****************************************************************************/
-void start_revolution(void)
+void start_revolution()
 {
   dsend_packet_player_change_government(
       &client.conn, game.info.government_during_revolution_id);
@@ -3271,7 +3271,7 @@ void handle_ruleset_description_part(
 /************************************************************************/ /**
    Received packet indicating that all rulesets have now been received.
  ****************************************************************************/
-void handle_rulesets_ready(void)
+void handle_rulesets_ready()
 {
   /* Setup extra hiders caches */
   extra_type_iterate(pextra)
@@ -4646,7 +4646,7 @@ void handle_unit_action_answer(int actor_id, int target_id, int cost,
     return;
   }
 
-  switch ((enum gen_action) action_type) {
+  switch (static_cast<enum gen_action>(action_type)) {
   case ACTION_SPY_BRIBE_UNIT:
     if (punit && client.conn.playing && is_human(client.conn.playing)) {
       if (disturb_player) {
@@ -4731,7 +4731,7 @@ static action_id auto_attack_act(const struct act_prob *act_probs)
   action_iterate(act)
   {
     if (action_prob_possible(act_probs[act])) {
-      switch ((enum gen_action) act) {
+      switch (static_cast<enum gen_action>(act)) {
       case ACTION_DISBAND_UNIT:
       case ACTION_FORTIFY:
       case ACTION_CONVERT:
@@ -5056,14 +5056,14 @@ void handle_player_attribute_chunk(
 /************************************************************************/ /**
    Handle request to start processing packet.
  ****************************************************************************/
-void handle_processing_started(void)
+void handle_processing_started()
 {
   governor::i()->freeze();
 
   fc_assert(client.conn.client.request_id_of_currently_handled_packet == 0);
   client.conn.client.request_id_of_currently_handled_packet =
       get_next_request_id(client.conn.client.last_processed_request_id_seen);
-  update_queue_processing_started(
+  update_queue::uq()->processing_started(
       client.conn.client.request_id_of_currently_handled_packet);
 
   log_debug("start processing packet %d",
@@ -5073,7 +5073,7 @@ void handle_processing_started(void)
 /************************************************************************/ /**
    Handle request to stop processing packet.
  ****************************************************************************/
-void handle_processing_finished(void)
+void handle_processing_finished()
 {
   log_debug("finish processing packet %d",
             client.conn.client.request_id_of_currently_handled_packet);
@@ -5082,7 +5082,7 @@ void handle_processing_finished(void)
 
   client.conn.client.last_processed_request_id_seen =
       client.conn.client.request_id_of_currently_handled_packet;
-  update_queue_processing_finished(
+  update_queue::uq()->processing_finished(
       client.conn.client.last_processed_request_id_seen);
 
   client.conn.client.request_id_of_currently_handled_packet = 0;
@@ -5116,7 +5116,7 @@ void notify_about_outgoing_packet(struct connection *pc, int packet_type,
 /************************************************************************/ /**
    We have received PACKET_FREEZE_CLIENT.
  ****************************************************************************/
-void handle_freeze_client(void)
+void handle_freeze_client()
 {
   log_debug("handle_freeze_client");
 
@@ -5126,7 +5126,7 @@ void handle_freeze_client(void)
 /************************************************************************/ /**
    We have received PACKET_THAW_CLIENT
  ****************************************************************************/
-void handle_thaw_client(void)
+void handle_thaw_client()
 {
   log_debug("handle_thaw_client");
 
@@ -5137,12 +5137,12 @@ void handle_thaw_client(void)
 /************************************************************************/ /**
    Reply to 'ping' packet with 'pong'
  ****************************************************************************/
-void handle_conn_ping(void) { send_packet_conn_pong(&client.conn); }
+void handle_conn_ping() { send_packet_conn_pong(&client.conn); }
 
 /************************************************************************/ /**
    Handle server shutdown.
  ****************************************************************************/
-void handle_server_shutdown(void) { qDebug("server shutdown"); }
+void handle_server_shutdown() { qDebug("server shutdown"); }
 
 /************************************************************************/ /**
    Add effect data to ruleset cache.

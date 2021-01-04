@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-#include <errno.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cerrno>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"
@@ -658,9 +658,10 @@ static const char *cr_entry_plague_risk(const struct city *pcity,
   if (!game.info.illness_on) {
     fc_snprintf(buf, sizeof(buf), " -.-");
   } else {
-    fc_snprintf(buf, sizeof(buf), "%4.1f",
-                (float) city_illness_calc(pcity, NULL, NULL, NULL, NULL)
-                    / 10.0);
+    fc_snprintf(
+        buf, sizeof(buf), "%4.1f",
+        static_cast<float>(city_illness_calc(pcity, NULL, NULL, NULL, NULL))
+            / 10.0);
   }
   return buf;
 }
@@ -794,7 +795,7 @@ static int num_creport_cols;
 /********************************************************************/ /**
    Simple wrapper for num_creport_cols()
  ************************************************************************/
-int num_city_report_spec(void) { return num_creport_cols; }
+int num_city_report_spec() { return num_creport_cols; }
 
 /********************************************************************/ /**
    Simple wrapper for city_report_specs.show
@@ -817,7 +818,7 @@ const char *city_report_spec_tagname(int i)
    columns and pre-translates the fields (to make things easier on
    the GUI writers).  Should be called before the GUI starts up.
  ************************************************************************/
-void init_city_report_game_data(void)
+void init_city_report_game_data()
 {
   static char sp_explanation[SP_MAX][128];
   static char sp_explanations[SP_MAX * 128];
@@ -1018,7 +1019,7 @@ static void split_string(struct datum_vector *data, const char *str)
 
     errno = 0;
     value = strtof(str, &endptr);
-    if (errno != 0 || endptr == str || !isfinite(value)) {
+    if (errno != 0 || endptr == str || !std::isfinite(value)) {
       /* that wasn't a sensible number; go on */
       str++;
     } else {

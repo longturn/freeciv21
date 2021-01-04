@@ -74,10 +74,7 @@ research_diagram::~research_diagram()
 /************************************************************************/ /**
    Constructor for req_tooltip_help
  ****************************************************************************/
-req_tooltip_help::req_tooltip_help()
-    : tech_id(-1), tunit(nullptr), timpr(nullptr), tgov(nullptr)
-{
-}
+req_tooltip_help::req_tooltip_help() {}
 
 /************************************************************************/ /**
    Create list of rectangles for showing tooltips
@@ -253,8 +250,8 @@ void research_diagram::mousePressEvent(QMouseEvent *event)
       if (rttp->rect.contains(event->pos())) {
         if (rttp->tech_id != -1) {
           popup_help_dialog_typed(
-              research_advance_name_translation(
-                  research_get(client_player()), rttp->tech_id),
+              qUtf8Printable(research_advance_name_translation(
+                  research_get(client_player()), rttp->tech_id)),
               HELP_TECH);
         } else if (rttp->timpr != nullptr) {
           popup_help_dialog_typed(
@@ -378,8 +375,7 @@ QSize research_diagram::size()
 /************************************************************************/ /**
    Consctructor for science_report
  ****************************************************************************/
-science_report::science_report()
-    : QWidget(), curr_list(nullptr), goal_list(nullptr), index(0)
+science_report::science_report() : QWidget()
 {
   QSize size;
   QSizePolicy size_expanding_policy(QSizePolicy::Expanding,

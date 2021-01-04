@@ -766,8 +766,8 @@ static int turns_to_research_done(const struct research *presearch,
                                   int per_turn)
 {
   if (per_turn > 0) {
-    return ceil((double) (presearch->client.researching_cost
-                          - presearch->bulbs_researched)
+    return ceil(static_cast<double>(presearch->client.researching_cost
+                                    - presearch->bulbs_researched)
                 / per_turn);
   } else {
     return -1;
@@ -803,14 +803,14 @@ static int turns_to_tech_loss(const struct research *presearch, int per_turn)
                         + (presearch->client.researching_cost
                            * game.info.techloss_forgiveness / 100);
 
-    return ceil((double) bulbs_to_loss / -per_turn);
+    return ceil(static_cast<double>(bulbs_to_loss) / -per_turn);
   }
 }
 
 /************************************************************************/ /**
    Returns the text to display in the science dialog.
  ****************************************************************************/
-const QString science_dialog_text(void)
+const QString science_dialog_text()
 {
   bool team;
   int ours, theirs, perturn, upkeep;
@@ -925,7 +925,7 @@ const QString get_science_target_text(double *percent)
                 .arg(QString::number(done), QString::number(total));
     }
     if (percent) {
-      *percent = (double) done / (double) total;
+      *percent = static_cast<double>(done) / static_cast<double>(total);
       *percent = CLIP(0.0, *percent, 1.0);
     }
   }
@@ -1037,7 +1037,7 @@ const QString get_info_label_text(bool moreinfo)
    traditionally done as a popup whenever the regular info text is clicked
    on.)
  ****************************************************************************/
-const QString get_info_label_text_popup(void)
+const QString get_info_label_text_popup()
 {
   QString str;
 
@@ -1477,7 +1477,7 @@ bool get_units_disband_info(char *buf, size_t bufsz,
    Get a tooltip text for the info panel research indicator.  See
    client_research_sprite().
  ****************************************************************************/
-const QString get_bulb_tooltip(void)
+const QString get_bulb_tooltip()
 {
   QString str = _("Shows your progress in "
                   "researching the current technology.")
@@ -1527,7 +1527,7 @@ const QString get_bulb_tooltip(void)
    Get a tooltip text for the info panel global warning indicator.  See also
    client_warming_sprite().
  ****************************************************************************/
-const QString get_global_warming_tooltip(void)
+const QString get_global_warming_tooltip()
 {
   QString str;
 
@@ -1552,7 +1552,7 @@ const QString get_global_warming_tooltip(void)
    Get a tooltip text for the info panel nuclear winter indicator.  See also
    client_cooling_sprite().
  ****************************************************************************/
-const QString get_nuclear_winter_tooltip(void)
+const QString get_nuclear_winter_tooltip()
 {
   QString str;
 
@@ -1577,7 +1577,7 @@ const QString get_nuclear_winter_tooltip(void)
    Get a tooltip text for the info panel government indicator.  See also
    government_by_number(...)->sprite.
  ****************************************************************************/
-const QString get_government_tooltip(void)
+const QString get_government_tooltip()
 {
   QString str;
 
@@ -1612,12 +1612,14 @@ const QString get_spaceship_descr(struct player_spaceship *pship)
   /* TRANS: spaceship text; should have constant width. */
   str = str
         + QString(_("Support:         %1 %"))
-              .arg(QString::number((int) (pship->support_rate * 100.0)))
+              .arg(QString::number(
+                  static_cast<int>(pship->support_rate * 100.0)))
         + qendl();
   /* TRANS: spaceship text; should have constant width. */
   str = str
         + QString(_("Energy:          %1 %"))
-              .arg(QString::number((int) (pship->energy_rate * 100.0)))
+              .arg(QString::number(
+                  static_cast<int>(pship->energy_rate * 100.0)))
         + qendl();
   /* TRANS: spaceship text; should have constant width. */
   str = str
@@ -1629,8 +1631,8 @@ const QString get_spaceship_descr(struct player_spaceship *pship)
     /* TRANS: spaceship text; should have constant width. */
     str = str
           + QString(_("Travel time:     %1 years"))
-                .arg(QString::number(
-                    (float) (0.1 * ((int) (pship->travel_time * 10.0)))))
+                .arg(QString::number(static_cast<float>(
+                    0.1 * (static_cast<int>(pship->travel_time * 10.0)))))
           + qendl();
   } else {
     /* TRANS: spaceship text; should have constant width. */
@@ -1640,14 +1642,16 @@ const QString get_spaceship_descr(struct player_spaceship *pship)
   /* TRANS: spaceship text; should have constant width. */
   str = str
         + QString(_("Success prob.:   %1 %"))
-              .arg(QString::number((int) (pship->success_rate * 100.0)))
+              .arg(QString::number(
+                  static_cast<int>(pship->success_rate * 100.0)))
         + qendl();
   /* TRANS: spaceship text; should have constant width. */
   str = str
         + QString(_("Year of arrival: %1"))
-              .arg((pship->state == SSHIP_LAUNCHED) ? textyear(
-                       (int) (pship->launch_year + (int) pship->travel_time))
-                                                    : "-   ")
+              .arg((pship->state == SSHIP_LAUNCHED)
+                       ? textyear((pship->launch_year
+                                   + static_cast<int>(pship->travel_time)))
+                       : "-   ")
         + qendl();
 
   return str.trimmed();
@@ -1657,7 +1661,7 @@ const QString get_spaceship_descr(struct player_spaceship *pship)
    Get the text showing the timeout.  This is generally disaplyed on the info
    panel.
  ****************************************************************************/
-const QString get_timeout_label_text(void)
+const QString get_timeout_label_text()
 {
   QString str;
 
@@ -1741,11 +1745,12 @@ QString get_ping_time_text(const struct player *pplayer)
         && 0 == strcmp(pconn->username, pplayer->username)) {
       if (pconn->ping_time != -1) {
         double ping_time_in_ms = 1000 * pconn->ping_time;
-        str += QString(_("%1.%2 ms"))
-                   .arg(QString::number((int) ping_time_in_ms), 6)
-                   .arg(QString::number(((int) (ping_time_in_ms * 100.0))
-                                        % 100),
-                        2);
+        str +=
+            QString(_("%1.%2 ms"))
+                .arg(QString::number(static_cast<int>(ping_time_in_ms)), 6)
+                .arg(QString::number(
+                         (static_cast<int>(ping_time_in_ms * 100.0)) % 100),
+                     2);
       }
       break;
     }

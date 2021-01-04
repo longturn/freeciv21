@@ -41,7 +41,7 @@ static struct impr_type improvement_types[B_LAST];
 /**********************************************************************/ /**
    Initialize building structures.
  **************************************************************************/
-void improvements_init(void)
+void improvements_init()
 {
   int i;
 
@@ -70,7 +70,7 @@ static void improvement_free(struct impr_type *p)
 /**********************************************************************/ /**
   Frees the memory associated with all improvements.
  **************************************************************************/
-void improvements_free(void)
+void improvements_free()
 {
   improvement_iterate(p) { improvement_free(p); }
   improvement_iterate_end;
@@ -79,7 +79,7 @@ void improvements_free(void)
 /**********************************************************************/ /**
    Cache features of the improvement
  **************************************************************************/
-void improvement_feature_cache_init(void)
+void improvement_feature_cache_init()
 {
   improvement_iterate(pimprove)
   {
@@ -130,7 +130,7 @@ void improvement_feature_cache_init(void)
 /**********************************************************************/ /**
    Return the first item of improvements.
  **************************************************************************/
-struct impr_type *improvement_array_first(void)
+struct impr_type *improvement_array_first()
 {
   if (game.control.num_impr_types > 0) {
     return improvement_types;
@@ -141,7 +141,7 @@ struct impr_type *improvement_array_first(void)
 /**********************************************************************/ /**
    Return the last item of improvements.
  **************************************************************************/
-const struct impr_type *improvement_array_last(void)
+const struct impr_type *improvement_array_last()
 {
   if (game.control.num_impr_types > 0) {
     return &improvement_types[game.control.num_impr_types - 1];
@@ -152,7 +152,7 @@ const struct impr_type *improvement_array_last(void)
 /**********************************************************************/ /**
    Return the number of improvements.
  **************************************************************************/
-Impr_type_id improvement_count(void) { return game.control.num_impr_types; }
+Impr_type_id improvement_count() { return game.control.num_impr_types; }
 
 /**********************************************************************/ /**
    Return the improvement index.

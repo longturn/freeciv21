@@ -96,12 +96,6 @@ set(FREECIV_HAVE_LZMA ${KArchive_HAVE_LZMA})
 
 find_package(ZLIB REQUIRED) # Network protocol code
 
-if(UNIX)
-  # To find the current user name
-  check_include_file("pwd.h" HAVE_PWD_H)
-endif()
-
-check_function_exists("getpwuid" HAVE_GETPWUID)
 # Some systems don't have a well-defined root user
 if (EMSCRIPTEN)
   set(ALWAYS_ROOT TRUE)

@@ -480,13 +480,9 @@ bool is_boss_of_boat(struct ai_type *ait, struct unit *punit)
     return false;
   }
 
-  if (unit_transported(punit)
-      && def_ai_unit_data(unit_transport_get(punit), ait)->passenger
-             == punit->id) {
-    return true;
-  }
-
-  return false;
+  return unit_transported(punit)
+         && def_ai_unit_data(unit_transport_get(punit), ait)->passenger
+                == punit->id;
 }
 
 /**********************************************************************/ /**
@@ -798,6 +794,7 @@ bool aiferry_gobyboat(struct ai_type *ait, struct player *pplayer,
       }
 
       ferryboat = game_unit_by_number(boatid);
+      fc_assert_ret_val(ferryboat != nullptr, false);
       UNIT_LOG(LOGLEVEL_GOBYBOAT, punit,
                "found boat[%d](%d,%d), going there", boatid,
                TILE_XY(unit_tile(ferryboat)));
@@ -826,6 +823,7 @@ bool aiferry_gobyboat(struct ai_type *ait, struct player *pplayer,
 
     /* Ok, a boat found, try boarding it */
     ferryboat = game_unit_by_number(boatid);
+    fc_assert_ret_val(ferryboat != nullptr, false);
     UNIT_LOG(LOGLEVEL_GOBYBOAT, punit, "found a nearby boat[%d](%d,%d)",
              ferryboat->id, TILE_XY(unit_tile(ferryboat)));
     /* Setting ferry now in hope it won't run away even
@@ -1305,6 +1303,4 @@ void dai_manage_ferryboat(struct ai_type *ait, struct player *pplayer,
       (void) dai_unit_goto(ait, punit, safe_city->tile);
     }
   }
-
-  return;
 }

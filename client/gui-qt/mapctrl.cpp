@@ -63,8 +63,6 @@ void popup_newcity_dialog(struct unit *punit, const char *suggestname)
     }
   });
   ask->show();
-
-  return;
 }
 
 /**********************************************************************/ /**
@@ -456,8 +454,9 @@ void map_view::shortcut_released(Qt::MouseButton bt)
       return;
     }
     /* FIXME that mail fail for other cases below */
-    if (queen()->city_overlay->isVisible())
+    if (queen()->city_overlay->isVisible()) {
       return;
+    }
     if (!keyboardless_goto_active || goto_is_active()) {
       action_button_pressed(pos.x(), pos.y(), SELECT_POPUP);
       gui_options.auto_center_on_unit = stored_autocenter;

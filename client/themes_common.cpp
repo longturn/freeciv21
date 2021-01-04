@@ -14,7 +14,7 @@
 #include <fc_config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -62,7 +62,7 @@ struct theme_directory *directories;
 /************************************************************************/ /**
    Initialized themes data
  ****************************************************************************/
-void init_themes(void)
+void init_themes()
 {
   int i;
 

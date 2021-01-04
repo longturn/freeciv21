@@ -12,4 +12,4 @@
       \____/        ********************************************************/
 #pragma once
 
-void create_animals(void);
+void create_animals();

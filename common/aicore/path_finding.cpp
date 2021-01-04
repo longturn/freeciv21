@@ -239,7 +239,7 @@ static inline pf_normal_map *pf_normal_map_check(pf_map *pfm)
 {
   fc_assert_ret_val_msg(NULL != pfm && PF_NORMAL == pfm->mode, nullptr,
                         "Wrong pf_map to pf_normal_map conversion.");
-  return (struct pf_normal_map *) pfm;
+  return reinterpret_cast<struct pf_normal_map *>(pfm);
 }
 #define PF_NORMAL_MAP(pfm) pf_normal_map_check(pfm)
 #else
@@ -832,6 +832,14 @@ static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
   struct pf_parameter *params;
   struct pf_normal_node *node;
 
+  if (NULL == parameter->get_costs) {
+    /* 'get_MC' callback must be set. */
+    fc_assert_ret_val(NULL != parameter->get_MC, NULL);
+
+    /* 'get_move_scope' callback must be set. */
+    fc_assert_ret_val(parameter->get_move_scope != NULL, NULL);
+  }
+
   pfnm = new pf_normal_map;
   base_map = &pfnm->base_map;
   params = &base_map->params;
@@ -843,14 +851,6 @@ static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
   /* Allocate the map. */
   pfnm->lattice = new pf_normal_node[MAP_INDEX_SIZE]();
   pfnm->queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
-
-  if (NULL == parameter->get_costs) {
-    /* 'get_MC' callback must be set. */
-    fc_assert_ret_val(NULL != parameter->get_MC, NULL);
-
-    /* 'get_move_scope' callback must be set. */
-    fc_assert_ret_val(parameter->get_move_scope != NULL, NULL);
-  }
 
   /* Copy parameters. */
   *params = *parameter;
@@ -960,7 +960,7 @@ static inline pf_danger_map *pf_danger_map_check(pf_map *pfm)
 {
   fc_assert_ret_val_msg(NULL != pfm && PF_DANGER == pfm->mode, nullptr,
                         "Wrong pf_map to pf_danger_map conversion.");
-  return (struct pf_danger_map *) pfm;
+  return reinterpret_cast<struct pf_danger_map *>(pfm);
 }
 #define PF_DANGER_MAP(pfm) pf_danger_map_check(pfm)
 #else
@@ -1147,7 +1147,7 @@ static struct pf_path *
 pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
                              struct tile *ptile)
 {
-  auto path = new pf_path;
+  auto *path = new pf_path;
   enum direction8 dir_next = direction8_invalid();
   struct pf_danger_node::pf_danger_pos *danger_seg = NULL;
   bool waited = false;
@@ -1930,7 +1930,7 @@ static inline pf_fuel_map *pf_fuel_map_check(pf_map *pfm)
 {
   fc_assert_ret_val_msg(NULL != pfm && PF_FUEL == pfm->mode, nullptr,
                         "Wrong pf_map to pf_fuel_map conversion.");
-  return (struct pf_fuel_map *) pfm;
+  return reinterpret_cast<struct pf_fuel_map *>(pfm);
 }
 #define PF_FUEL_MAP(pfm) pf_fuel_map_check(pfm)
 #else
@@ -2249,7 +2249,7 @@ static struct pf_path *
 pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
                            struct tile *ptile)
 {
-  auto path = new pf_path;
+  auto *path = new pf_path;
   enum direction8 dir_next = direction8_invalid();
   struct pf_fuel_node *node = pffm->lattice + tile_index(ptile);
   struct pf_fuel_pos *segment = node->segment;
@@ -2456,11 +2456,7 @@ pf_fuel_map_attack_is_possible(const struct pf_parameter *param,
     }
   } else {
     /* Case fighters */
-    if (moves_left - SINGLE_MOVE < moves_left_req) {
-      return false;
-    } else {
-      return true;
-    }
+    return moves_left - SINGLE_MOVE >= moves_left_req;
   }
 }
 
@@ -3245,8 +3241,8 @@ static void pf_position_fill_start_tile(struct pf_position *pos,
 static struct pf_path *
 pf_path_new_to_start_tile(const struct pf_parameter *param)
 {
-  auto path = new pf_path;
-  auto pos = new pf_position;
+  auto *path = new pf_path;
+  auto *pos = new pf_position;
 
   path->length = 1;
   pf_position_fill_start_tile(pos, param);
@@ -3496,7 +3492,7 @@ struct pf_reverse_map *pf_reverse_map_new(const struct player *pplayer,
                                           int max_turns, bool omniscient,
                                           const struct civ_map *map)
 {
-  auto pfrm = new pf_reverse_map;
+  auto *pfrm = new pf_reverse_map;
   struct pf_parameter *param = &pfrm->template_params;
 
   pfrm->target_tile = target_tile;

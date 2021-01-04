@@ -897,11 +897,7 @@ bool api_methods_enemy_tile(lua_State *L, Tile *ptile, Player *against)
   }
 
   pcity = tile_city(ptile);
-  if (ptile != NULL && !pplayers_allied(against, city_owner(pcity))) {
-    return true;
-  }
-
-  return false;
+  return ptile != NULL && !pplayers_allied(against, city_owner(pcity));
 }
 
 /*************************************************************************/ /**

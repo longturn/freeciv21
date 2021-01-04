@@ -42,7 +42,7 @@ struct adv_choice {
 void adv_init_choice(struct adv_choice *choice);
 void adv_deinit_choice(struct adv_choice *choice);
 
-struct adv_choice *adv_new_choice(void);
+struct adv_choice *adv_new_choice();
 void adv_free_choice(struct adv_choice *choice);
 
 struct adv_choice *adv_better_choice(struct adv_choice *first,

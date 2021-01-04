@@ -14,8 +14,8 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"
@@ -180,22 +180,22 @@ static bool find_option(const char *buf_in, const char *option,
                         char *buf_out, size_t write_len)
 {
   size_t option_len = qstrlen(option);
+  const char *buf_in_ptr = buf_in;
+  int len = qstrlen(buf_in);
 
-  while (*buf_in != '\0') {
+  while (*buf_in != '\0' && (buf_in - buf_in_ptr) < len) {
     while (QChar::isSpace(*buf_in) && *buf_in != '\0') {
       buf_in++;
     }
 
     if (0 == strncasecmp(buf_in, option, option_len)) {
-      /* This is this one. */
-      buf_in += option_len;
+      buf_in += option_len; /* This is this one. */
 
       while ((QChar::isSpace(*buf_in) || *buf_in == '=')
              && *buf_in != '\0') {
         buf_in++;
       }
-      if (*buf_in == '"') {
-        /* Quote case. */
+      if (*buf_in == '"') { /* Quote case. */
         const char *end = strchr(++buf_in, '"');
 
         if (!end) {
@@ -218,7 +218,6 @@ static bool find_option(const char *buf_in, const char *option,
     }
     buf_in++;
   }
-
   return false;
 }
 
@@ -235,7 +234,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
   ptag->start_offset = start_offset;
   ptag->stop_offset = FT_OFFSET_UNSET;
 
-  QByteArray ba = qsequence.toUtf8();
+  QByteArray ba = qsequence.toLocal8Bit();
   const char *sequence = ba.constData();
 
   switch (type) {
@@ -372,7 +371,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
       fc_assert_ret_val(ptag->link.type != TLT_INVALID, false);
       break;
     };
-  }
+  } break;
   case TTT_INVALID:
     fc_assert_ret_val(type != TTT_INVALID, false);
   };
@@ -469,7 +468,7 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
     case TLT_INVALID:
       fc_assert_ret_val(ptag->link.type != TLT_INVALID, false);
     };
-  }
+  } break;
   case TTT_INVALID:
     fc_assert_ret_val(type != TTT_INVALID, false);
   };
@@ -638,7 +637,7 @@ struct text_tag *text_tag_new(enum text_tag_type tag_type,
                               ft_offset_t start_offset,
                               ft_offset_t stop_offset, ...)
 {
-  auto ptag = new text_tag;
+  auto *ptag = new text_tag;
   va_list args;
   bool ok;
 
@@ -664,7 +663,7 @@ struct text_tag *text_tag_copy(const struct text_tag *ptag)
     return NULL;
   }
 
-  auto pnew_tag = new text_tag;
+  auto *pnew_tag = new text_tag;
   *pnew_tag = *ptag;
 
   return pnew_tag;
@@ -777,21 +776,24 @@ static size_t extract_sequence_text(const char *featured_text, QString &buf,
   }
 
   /* Check sequence type. */
-  for (buf_in++; QChar::isSpace(*buf_in); buf_in++)
+  for (buf_in++; QChar::isSpace(*buf_in); buf_in++) {
     ;
+  }
 
   if (*buf_in == SEQ_END) {
     *seq_type = ST_STOP;
     buf_in++;
   } else {
-    for (end--; QChar::isSpace(*end); end--)
+    for (end--; QChar::isSpace(*end); end--) {
       ;
+    }
 
     if (*end == SEQ_END) {
       *seq_type = ST_SINGLE;
 
-      for (end--; QChar::isSpace(*end); end--)
+      for (end--; QChar::isSpace(*end); end--) {
         ;
+      }
     } else {
       *seq_type = ST_START;
     }
@@ -940,7 +942,7 @@ size_t featured_text_to_plain_text(const char *featured_text,
             text_out_len -= len;
             if (tags) {
               /* Set it in the list. */
-              auto ptag = new text_tag;
+              auto *ptag = new text_tag;
 
               *ptag = tag;
               ptag->stop_offset = text_out - plain_text;

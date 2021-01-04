@@ -20,9 +20,9 @@
 class QPixmap;
 struct worklist;
 
-int get_citydlg_canvas_width(void);
-int get_citydlg_canvas_height(void);
-void generate_citydlg_dimensions(void);
+int get_citydlg_canvas_width();
+int get_citydlg_canvas_height();
+void generate_citydlg_dimensions();
 
 bool city_to_canvas_pos(float *canvas_x, float *canvas_y, int city_x,
                         int city_y, int city_radius_sq);

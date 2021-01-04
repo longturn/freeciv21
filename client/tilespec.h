@@ -200,7 +200,7 @@ void tileset_free(struct tileset *tileset);
 void tileset_load_tiles(struct tileset *t);
 void tileset_free_tiles(struct tileset *t);
 void tileset_ruleset_reset(struct tileset *t);
-bool tileset_is_fully_loaded(void);
+bool tileset_is_fully_loaded();
 
 void finish_loading_sprites(struct tileset *t);
 
@@ -360,7 +360,7 @@ struct color_system;
 struct color_system *get_color_system(const struct tileset *t);
 
 /* Tileset accessor functions. */
-struct tileset *get_tileset(void);
+struct tileset *get_tileset();
 const char *tileset_basename(const struct tileset *t);
 bool tileset_is_isometric(const struct tileset *t);
 int tileset_hex_width(const struct tileset *t);
@@ -382,7 +382,6 @@ int tileset_tilelabel_offset_y(const struct tileset *t);
 float tileset_scale(const struct tileset *t);
 const char *tileset_main_intro_filename(const struct tileset *t);
 int tileset_num_city_colors(const struct tileset *t);
-void tileset_use_preferred_theme(const struct tileset *t);
 bool tileset_use_hard_coded_fog(const struct tileset *t);
 
 /* These are used as array index -> can't be changed freely to values

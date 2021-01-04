@@ -116,7 +116,7 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
 /************************************************************************/ /**
    Unit item destructor
  ****************************************************************************/
-unittype_item::~unittype_item() {}
+unittype_item::~unittype_item() = default;
 
 /************************************************************************/ /**
    Sets unit type pixmap to label
@@ -295,8 +295,9 @@ void units_reports::add_item(unittype_item *item)
  ****************************************************************************/
 units_reports *units_reports::instance()
 {
-  if (!m_instance)
+  if (!m_instance) {
     m_instance = new units_reports;
+  }
   return m_instance;
 }
 

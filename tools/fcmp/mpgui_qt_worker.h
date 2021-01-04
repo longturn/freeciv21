@@ -32,7 +32,7 @@ class mpqt_worker : public QThread {
 
 public:
   mpqt_worker() : m_gui(nullptr), m_fcmp(nullptr){};
-  void run();
+  void run() override;
   void download(const QUrl &url, mpgui *gui, fcmp_params *fcmp,
                 const dl_msg_callback &msg_callback,
                 const dl_pb_callback &pb_callback);

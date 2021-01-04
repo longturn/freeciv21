@@ -15,8 +15,8 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* ceil, floor */
-#include <stdarg.h>
+#include <cmath> /* ceil, floor */
+#include <cstdarg>
 
 /* utility */
 #include "astring.h"
@@ -153,7 +153,7 @@ static struct ae_contra_or *req_contradiction_or(int alternatives, ...)
   va_list args;
 
   fc_assert_ret_val(alternatives > 0, NULL);
-  auto out = new ae_contra_or;
+  auto *out = new ae_contra_or;
   out->users = 0;
   out->alternatives = alternatives;
   out->alternative = new action_enabler_contradiction[alternatives];
@@ -273,7 +273,7 @@ static void oblig_hard_req_register(const struct requirement &contradiction,
    of the ruleset. They are sorted by requirement to make it easy to read,
    modify and explain them.
  **************************************************************************/
-static void hard_code_oblig_hard_reqs(void)
+static void hard_code_oblig_hard_reqs()
 {
   /* Why this is a hard requirement: There is currently no point in
    * allowing the listed actions against domestic targets.
@@ -591,7 +591,7 @@ static void hard_code_oblig_hard_reqs(void)
    Hard code the obligatory hard requirements that needs access to the
    ruleset before they can be generated.
  **************************************************************************/
-static void hard_code_oblig_hard_reqs_ruleset(void)
+static void hard_code_oblig_hard_reqs_ruleset()
 {
   /* Why this is a hard requirement: the "animal can't conquer a city"
    * rule. Assumed in unit_can_take_over(). */
@@ -613,7 +613,7 @@ static void hard_code_oblig_hard_reqs_ruleset(void)
 /**********************************************************************/ /**
    Hard code the actions.
  **************************************************************************/
-static void hard_code_actions(void)
+static void hard_code_actions()
 {
   actions[ACTION_SPY_POISON] = unit_action_new(
       ACTION_SPY_POISON, ACTRES_SPY_POISON, ATK_CITY, ASTK_NONE,
@@ -940,7 +940,7 @@ static void hard_code_actions(void)
 /**********************************************************************/ /**
    Initialize the actions and the action enablers.
  **************************************************************************/
-void actions_init(void)
+void actions_init()
 {
   int i, j;
 
@@ -990,7 +990,7 @@ void actions_init(void)
    before ruleset sanity checking and ruleset compatibility post
    processing.
  **************************************************************************/
-void actions_rs_pre_san_gen(void)
+void actions_rs_pre_san_gen()
 {
   /* Some obligatory hard requirements needs access to the rest of the
    * ruleset. */
@@ -1000,7 +1000,7 @@ void actions_rs_pre_san_gen(void)
 /**********************************************************************/ /**
    Free the actions and the action enablers.
  **************************************************************************/
-void actions_free(void)
+void actions_free()
 {
   int i;
 
@@ -1042,7 +1042,7 @@ void actions_free(void)
 
    Doesn't care about action enablers.
  **************************************************************************/
-bool actions_are_ready(void)
+bool actions_are_ready()
 {
   if (!actions_initialized) {
     /* The actions them self aren't initialized yet. */
@@ -1076,7 +1076,7 @@ static struct action *action_new(action_id id, enum action_result result,
                                  const int max_distance,
                                  bool actor_consuming_always)
 {
-  auto action = new struct action;
+  auto *action = new struct action;
 
   action->id = id;
 
@@ -1402,11 +1402,11 @@ static QString action_prob_to_text(const struct act_prob prob)
     /* Only one probability in range. */
 
     return QString(_("%1%")).arg(
-        QString::number((int) prob.max / ACTPROB_VAL_1_PCT));
+        QString::number(prob.max / ACTPROB_VAL_1_PCT));
   } else {
     return QString(_("[%1% - %2%]"))
-        .arg(QString::number((int) prob.min / ACTPROB_VAL_1_PCT))
-        .arg(QString::number((int) prob.max / ACTPROB_VAL_1_PCT));
+        .arg(QString::number(prob.min / ACTPROB_VAL_1_PCT))
+        .arg(QString::number(prob.max / ACTPROB_VAL_1_PCT));
   }
 }
 
@@ -1419,7 +1419,7 @@ static QString action_prob_to_text(const struct act_prob prob)
  **************************************************************************/
 const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
                                      const struct act_prob prob,
-                                     const QString custom)
+                                     const QString &custom)
 {
   QString str, chance, probtxt;
 
@@ -1509,7 +1509,7 @@ const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
    button that starts it.
    @return an explanation of what an action probability means
  **************************************************************************/
-const char *action_prob_explain(const struct act_prob prob)
+const QString action_prob_explain(const struct act_prob prob)
 {
   QString tool_tip;
 
@@ -1518,9 +1518,9 @@ const char *action_prob_explain(const struct act_prob prob)
   } else if (prob.min == prob.max) {
     /* TRANS: action probability of success. Given in percentage.
      * Resolution is 0.5%. */
-    tool_tip =
-        QString(_("The probability of success is %1%."))
-            .arg(QString::number((double) prob.max / ACTPROB_VAL_1_PCT));
+    tool_tip = QString(_("The probability of success is %1%."))
+                   .arg(QString::number(static_cast<double>(prob.max)
+                                        / ACTPROB_VAL_1_PCT));
   } else {
     tool_tip =
         QString(
@@ -1531,8 +1531,8 @@ const char *action_prob_explain(const struct act_prob prob)
              * the player doesn't have enough information. */
             _("The probability of success is %1%, %2% or somewhere"
               " in between.%3"))
-            .arg((double) prob.min / ACTPROB_VAL_1_PCT)
-            .arg((double) prob.max / ACTPROB_VAL_1_PCT)
+            .arg(static_cast<double>(prob.min) / ACTPROB_VAL_1_PCT)
+            .arg(static_cast<double>(prob.max) / ACTPROB_VAL_1_PCT)
             .arg(prob.max - prob.min > 1
                      ?
                      /* TRANS: explanation used in the action probability
@@ -1542,7 +1542,7 @@ const char *action_prob_explain(const struct act_prob prob)
                      : "");
   }
 
-  return qUtf8Printable(tool_tip);
+  return tool_tip;
 }
 
 /**********************************************************************/ /**
@@ -1815,9 +1815,9 @@ bool action_removes_extra(const struct action *paction,
 /**********************************************************************/ /**
    Create a new action enabler.
  **************************************************************************/
-struct action_enabler *action_enabler_new(void)
+struct action_enabler *action_enabler_new()
 {
-  auto enabler = new action_enabler;
+  auto *enabler = new action_enabler;
   enabler->disabled = false;
   requirement_vector_init(&enabler->actor_reqs);
   requirement_vector_init(&enabler->target_reqs);
@@ -5358,7 +5358,7 @@ struct act_prob action_speculate_unit_on_self(action_id act_id,
 /**********************************************************************/ /**
    Returns the impossible action probability.
  **************************************************************************/
-struct act_prob action_prob_new_impossible(void)
+struct act_prob action_prob_new_impossible()
 {
   struct act_prob out = {ACTPROB_VAL_MIN, ACTPROB_VAL_MIN};
 
@@ -5368,7 +5368,7 @@ struct act_prob action_prob_new_impossible(void)
 /**********************************************************************/ /**
    Returns the certain action probability.
  **************************************************************************/
-struct act_prob action_prob_new_certain(void)
+struct act_prob action_prob_new_certain()
 {
   struct act_prob out = {ACTPROB_VAL_MAX, ACTPROB_VAL_MAX};
 
@@ -5378,7 +5378,7 @@ struct act_prob action_prob_new_certain(void)
 /**********************************************************************/ /**
    Returns the n/a action probability.
  **************************************************************************/
-struct act_prob action_prob_new_not_relevant(void)
+struct act_prob action_prob_new_not_relevant()
 {
   struct act_prob out = {ACTPROB_VAL_NA, ACTPROB_VAL_MIN};
 
@@ -5388,7 +5388,7 @@ struct act_prob action_prob_new_not_relevant(void)
 /**********************************************************************/ /**
    Returns the "not implemented" action probability.
  **************************************************************************/
-struct act_prob action_prob_new_not_impl(void)
+struct act_prob action_prob_new_not_impl()
 {
   struct act_prob out = {ACTPROB_VAL_NOT_IMPL, ACTPROB_VAL_MIN};
 
@@ -5398,7 +5398,7 @@ struct act_prob action_prob_new_not_impl(void)
 /**********************************************************************/ /**
    Returns the "user don't know" action probability.
  **************************************************************************/
-struct act_prob action_prob_new_unknown(void)
+struct act_prob action_prob_new_unknown()
 {
   struct act_prob out = {ACTPROB_VAL_MIN, ACTPROB_VAL_MAX};
 
@@ -5538,7 +5538,8 @@ double action_prob_to_0_to_1_pessimist(const struct act_prob ap)
   /* The action probability now has a math friendly form. */
   fc_assert(!action_prob_is_signal(my_ap));
 
-  return (double) my_ap.min / (double) ACTPROB_VAL_MAX;
+  return static_cast<double>(my_ap.min)
+         / static_cast<double>(ACTPROB_VAL_MAX);
 }
 
 /**********************************************************************/ /**
@@ -5947,7 +5948,7 @@ void action_list_add_all_by_result(action_id *act_list, int *position,
  **************************************************************************/
 const char *action_ui_name_ruleset_var_name(int act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
     return "ui_name_poison_city";
   case ACTION_SPY_POISON_ESC:
@@ -6362,7 +6363,7 @@ const char *action_ui_name_default(int act)
  **************************************************************************/
 const char *action_min_range_ruleset_var_name(int act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
   case ACTION_SPY_POISON_ESC:
   case ACTION_SPY_SABOTAGE_UNIT:
@@ -6458,7 +6459,7 @@ const char *action_min_range_ruleset_var_name(int act)
  **************************************************************************/
 int action_min_range_default(int act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
   case ACTION_SPY_POISON_ESC:
   case ACTION_SPY_SABOTAGE_UNIT:
@@ -6556,7 +6557,7 @@ int action_min_range_default(int act)
  **************************************************************************/
 const char *action_max_range_ruleset_var_name(int act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
   case ACTION_SPY_POISON_ESC:
   case ACTION_SPY_SABOTAGE_UNIT:
@@ -6661,7 +6662,7 @@ const char *action_max_range_ruleset_var_name(int act)
  **************************************************************************/
 int action_max_range_default(int act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
   case ACTION_SPY_POISON_ESC:
   case ACTION_SPY_SABOTAGE_UNIT:
@@ -6764,7 +6765,7 @@ int action_max_range_default(int act)
  **************************************************************************/
 const char *action_target_kind_ruleset_var_name(int act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
   case ACTION_SPY_POISON_ESC:
   case ACTION_SPY_SABOTAGE_UNIT:
@@ -6864,7 +6865,7 @@ const char *action_target_kind_ruleset_var_name(int act)
  **************************************************************************/
 const char *action_actor_consuming_always_ruleset_var_name(action_id act)
 {
-  switch ((enum gen_action) act) {
+  switch (static_cast<enum gen_action>(act)) {
   case ACTION_SPY_POISON:
   case ACTION_SPY_POISON_ESC:
   case ACTION_SPY_SABOTAGE_UNIT:

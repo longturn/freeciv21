@@ -15,9 +15,9 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "astring.h"
@@ -1015,7 +1015,7 @@ static struct ane_expl *expl_act_not_enabl(struct unit *punit,
   const struct player *act_player = unit_owner(punit);
   const struct unit_type *act_utype = unit_type_get(punit);
   struct player *tgt_player = NULL;
-  auto explnat = new ane_expl;
+  auto *explnat = new ane_expl;
   bool can_exist =
       can_unit_exist_at_tile(&(wld.map), punit, unit_tile(punit));
   bool on_native = is_native_tile(unit_type_get(punit), unit_tile(punit));
@@ -1892,7 +1892,7 @@ void handle_unit_get_actions(struct connection *pc, const int actor_unit_id,
       case ATK_UNIT:
         /* The unit should be sent as a target since it is possible to act
          * against it. */
-        fc_assert(target_unit != NULL);
+        fc_assert_ret(target_unit != NULL);
         target_unit_id = target_unit->id;
         break;
       case ATK_TILE:

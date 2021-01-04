@@ -17,9 +17,9 @@
 
 #include <QBitArray>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "bitvector.h"
@@ -183,7 +183,7 @@ static bool city_workers_queue_remove(struct city *pcity)
    Process the frozen workers.
    Call sync_cities() to send the affected cities to the clients.
  ****************************************************************************/
-void city_thaw_workers_queue(void)
+void city_thaw_workers_queue()
 {
   if (NULL == arrange_workers_queue) {
     return;
@@ -212,7 +212,7 @@ static int evaluate_city_name_priority(struct tile *ptile,
                                        int default_priority)
 {
   /* Lower values mean higher priority. */
-  float priority = (float) default_priority;
+  float priority = static_cast<float>(default_priority);
   enum nation_city_preference goodness;
 
   /* Increasing this value will increase the difference caused by
@@ -305,7 +305,7 @@ static int evaluate_city_name_priority(struct tile *ptile,
   }
   terrain_type_iterate_end;
 
-  return (int) priority;
+  return static_cast<int>(priority);
 }
 
 /************************************************************************/ /**
@@ -1089,7 +1089,7 @@ bool transfer_city(struct player *ptaker, struct city *pcity,
   char old_city_name[MAX_LEN_CITYNAME];
   bv_imprs had_small_wonders;
   struct vision *old_vision, *new_vision;
-  struct unit_list *old_city_units = unit_list_new();
+  struct unit_list *old_city_units;
   struct player *pgiver = city_owner(pcity);
   struct tile *pcenter = city_tile(pcity);
   int saved_id = pcity->id;
@@ -1104,11 +1104,13 @@ bool transfer_city(struct player *ptaker, struct city *pcity,
   bool taker_had_no_cities = (city_list_size(ptaker->cities) == 0);
   bool new_extras;
   const int units_num = unit_list_size(pcenter->units);
-  bv_player *could_see_unit =
-      (units_num > 0 ? new bv_player[units_num] : NULL);
   int i;
 
   fc_assert_ret_val(pgiver != ptaker, true);
+
+  bv_player *could_see_unit =
+      (units_num > 0 ? new bv_player[units_num] : NULL);
+  old_city_units = unit_list_new();
 
   /* Remember what player see what unit. */
   i = 0;
@@ -2135,23 +2137,19 @@ static void package_dumb_city(struct player *pplayer, struct tile *ptile,
 {
   struct vision_site *pdcity = map_get_player_city(ptile, pplayer);
 
+  fc_assert_ret(pdcity != nullptr);
   packet->id = pdcity->identity;
   packet->owner = player_number(vision_site_owner(pdcity));
-
   packet->tile = tile_index(ptile);
   sz_strlcpy(packet->name, pdcity->name);
-
   packet->size = vision_site_size_get(pdcity);
-
   packet->occupied = pdcity->occupied;
   packet->walls = pdcity->walls;
   packet->style = pdcity->style;
   packet->city_image = pdcity->city_image;
   packet->capital = pdcity->capital;
-
   packet->happy = pdcity->happy;
   packet->unhappy = pdcity->unhappy;
-
   packet->improvements = pdcity->improvements;
 }
 
@@ -2531,7 +2529,7 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
   i = 0;
   trade_routes_iterate(pcity, proute)
   {
-    auto tri_packet = new packet_traderoute_info;
+    auto *tri_packet = new packet_traderoute_info;
 
     tri_packet->city = pcity->id;
     tri_packet->index = i;
@@ -2814,7 +2812,7 @@ struct trade_route *remove_trade_route(struct city *pc1,
     }
   }
 
-  if (announce) {
+  if (announce && pc2) {
     announce_trade_route_removal(pc1, pc2, source_gone);
 
     city_refresh(pc2);
@@ -3135,7 +3133,7 @@ bool city_map_update_tile_now(struct tile *ptile)
    Make sure all players (clients) have up-to-date information about all
    their cities.
  ****************************************************************************/
-void sync_cities(void)
+void sync_cities()
 {
   if (send_city_suppressed) {
     return;

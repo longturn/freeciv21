@@ -15,8 +15,8 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 /* utility */
 #include "fcintl.h"
@@ -323,7 +323,7 @@ bool is_city_event(enum event_type event)
    Initialize events.
    Now also initialise sorted_events[].
  **************************************************************************/
-void events_init(void)
+void events_init()
 {
   int i;
 
@@ -370,7 +370,7 @@ void events_init(void)
 /**********************************************************************/ /**
    Free events.
  **************************************************************************/
-void events_free(void)
+void events_free()
 {
   int i;
 

@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 
 #include "support.h"
 
@@ -27,17 +27,17 @@
 /**********************************************************************/ /**
    Clean up
  **************************************************************************/
-static void none_audio_shutdown(void) {}
+static void none_audio_shutdown() {}
 
 /**********************************************************************/ /**
    Stop music
  **************************************************************************/
-static void none_audio_stop(void) {}
+static void none_audio_stop() {}
 
 /**********************************************************************/ /**
    Wait
  **************************************************************************/
-static void none_audio_wait(void) {}
+static void none_audio_wait() {}
 
 /**********************************************************************/ /**
    Play sound sample
@@ -55,12 +55,12 @@ static bool none_audio_play(const QString &tag, const QString &fullpath,
 /**********************************************************************/ /**
    Initialize.
  **************************************************************************/
-static bool none_audio_init(void) { return true; }
+static bool none_audio_init() { return true; }
 
 /**********************************************************************/ /**
    Initialize.
  **************************************************************************/
-void audio_none_init(void)
+void audio_none_init()
 {
   struct audio_plugin self;
 

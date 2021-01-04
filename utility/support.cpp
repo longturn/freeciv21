@@ -41,13 +41,13 @@
 #include <fc_config.h>
 #endif
 
-#include <ctype.h>
-#include <errno.h>
-#include <math.h> /* ceil() */
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cctype>
+#include <cerrno>
+#include <cmath> /* ceil() */
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <sys/stat.h>
 
 #ifdef FREECIV_MSWINDOWS
@@ -318,7 +318,7 @@ int fc_stat(const char *filename, struct stat *buf)
 /************************************************************************/ /**
    Returns last error code.
  ****************************************************************************/
-fc_errno fc_get_errno(void)
+fc_errno fc_get_errno()
 {
 #ifdef FREECIV_MSWINDOWS
   return GetLastError();
@@ -375,8 +375,9 @@ char *fc_strrep_resize(char *str, size_t *len, const char *search,
     return str;
   }
 
-  len_max =
-      ceil((double) qstrlen(str) * qstrlen(replace) / qstrlen(search)) + 1;
+  len_max = ceil(static_cast<double>(qstrlen(str)) * qstrlen(replace)
+                 / qstrlen(search))
+            + 1;
   if ((*len) < len_max) {
     /* replace string is longer than search string; allocated enough memory
      * for the worst case */
@@ -657,7 +658,7 @@ bool is_reg_file_for_access(const char *name, bool write_access)
  ****************************************************************************/
 int fc_break_lines(char *str, size_t desired_len)
 {
-  size_t slen = (size_t) qstrlen(str);
+  size_t slen = static_cast<size_t>(qstrlen(str));
   int num_lines = 0;
   bool not_end = true;
   /* At top of this loop, s points to the rest of string,
@@ -739,7 +740,7 @@ const char *fc_basename(const char *path)
 /************************************************************************/ /**
    Set quick_exit() callback if possible.
  ****************************************************************************/
-int fc_at_quick_exit(void (*func)(void))
+int fc_at_quick_exit(void (*func)())
 {
 #ifdef HAVE_AT_QUICK_EXIT
   return at_quick_exit(func);

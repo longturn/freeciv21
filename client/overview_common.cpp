@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* floor */
+#include <cmath> /* floor */
 
 /* utility */
 #include "log.h"
@@ -87,10 +87,8 @@ void gui_to_overview_pos(const struct tileset *t, int *ovr_x, int *ovr_y,
   gui_to_natural_pos(t, &ntl_x, &ntl_y, gui_x, gui_y);
 
   /* Now convert straight to overview coordinates. */
-  *ovr_x = floor((ntl_x - (double) gui_options.overview.map_x0)
-                 * OVERVIEW_TILE_SIZE);
-  *ovr_y = floor((ntl_y - (double) gui_options.overview.map_y0)
-                 * OVERVIEW_TILE_SIZE);
+  *ovr_x = floor((ntl_x - gui_options.overview.map_x0) * OVERVIEW_TILE_SIZE);
+  *ovr_y = floor((ntl_y - gui_options.overview.map_y0) * OVERVIEW_TILE_SIZE);
 
   /* Now do additional adjustments.  See map_to_overview_pos(). */
   if (current_topo_has_flag(TF_WRAPX)) {
@@ -180,7 +178,7 @@ static QColor *overview_tile_color(struct tile *ptile)
    Copies the overview image from the backing store to the window and
    draws the viewrect on top of it.
  ****************************************************************************/
-static void redraw_overview(void)
+static void redraw_overview()
 {
   int i, x[4], y[4];
 
@@ -229,12 +227,12 @@ static void redraw_overview(void)
 /************************************************************************/ /**
    Mark the overview as "dirty" so that it will be redrawn soon.
  ****************************************************************************/
-static void dirty_overview(void) { overview_dirty = true; }
+static void dirty_overview() { overview_dirty = true; }
 
 /************************************************************************/ /**
    Redraw the overview if it is "dirty".
  ****************************************************************************/
-void flush_dirty_overview(void)
+void flush_dirty_overview()
 {
   /* Currently this function is called from mapview_common.  However it
    * should be made static eventually. */
@@ -260,7 +258,7 @@ static double wrap_double(double value, double wrap)
 /************************************************************************/ /**
    Center the overview around the mapview.
  ****************************************************************************/
-void center_tile_overviewcanvas(void)
+void center_tile_overviewcanvas()
 {
   double ntl_x, ntl_y;
   int ox, oy;
@@ -273,14 +271,14 @@ void center_tile_overviewcanvas(void)
    * basically necessary for the overview to be efficiently
    * updated. */
   if (current_topo_has_flag(TF_WRAPX)) {
-    gui_options.overview.map_x0 =
-        wrap_double(ntl_x - (double) NATURAL_WIDTH / 2.0, NATURAL_WIDTH);
+    gui_options.overview.map_x0 = wrap_double(
+        ntl_x - static_cast<double> NATURAL_WIDTH / 2.0, NATURAL_WIDTH);
   } else {
     gui_options.overview.map_x0 = 0;
   }
   if (current_topo_has_flag(TF_WRAPY)) {
-    gui_options.overview.map_y0 =
-        wrap_double(ntl_y - (double) NATURAL_HEIGHT / 2.0, NATURAL_HEIGHT);
+    gui_options.overview.map_y0 = wrap_double(
+        ntl_y - static_cast<double>(NATURAL_HEIGHT) / 2.0, NATURAL_HEIGHT);
   } else {
     gui_options.overview.map_y0 = 0;
   }
@@ -348,7 +346,7 @@ void overview_to_map_pos(int *map_x, int *map_y, int overview_x,
 /************************************************************************/ /**
    Redraw the entire backing store for the overview minimap.
  ****************************************************************************/
-void refresh_overview_canvas(void)
+void refresh_overview_canvas()
 {
   if (!can_client_change_view()) {
     return;
@@ -419,7 +417,7 @@ void overview_update_tile(struct tile *ptile)
 /************************************************************************/ /**
    Called if the map size is know or changes.
  ****************************************************************************/
-void calculate_overview_dimensions(void)
+void calculate_overview_dimensions()
 {
   int w, h;
   int xfact = MAP_IS_ISOMETRIC ? 2 : 1;
@@ -475,7 +473,7 @@ void calculate_overview_dimensions(void)
 /************************************************************************/ /**
    Free overview resources.
  ****************************************************************************/
-void overview_free(void)
+void overview_free()
 {
   if (gui_options.overview.map) {
     canvas_free(gui_options.overview.map);

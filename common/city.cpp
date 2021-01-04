@@ -15,9 +15,9 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* pow, sqrt, exp */
-#include <stdlib.h>
-#include <string.h>
+#include <cmath> /* pow, sqrt, exp */
+#include <cstdlib>
+#include <cstring>
 #include <vector>
 
 /* utility */
@@ -151,7 +151,7 @@ void city_map_radius_sq_set(struct city *pcity, int radius_sq)
 /**********************************************************************/ /**
    Maximum city radius in this ruleset.
  **************************************************************************/
-int rs_max_city_radius_sq(void)
+int rs_max_city_radius_sq()
 {
   int max_rad = game.info.init_city_radius_sq
                 + effect_cumulative_max(EFT_CITY_RADIUS_SQ, NULL);
@@ -498,7 +498,7 @@ static void citylog_map_radius_sq(QtMsgType level)
    Fill the arrays city_map_index, city_map_xy and city_map_numtiles. This
    may depend on topology and ruleset settings.
  **************************************************************************/
-void generate_city_map_indices(void)
+void generate_city_map_indices()
 {
   int i, dx, dy, city_x, city_y, dist, city_count_tiles = 0;
   struct iter_index
@@ -580,7 +580,7 @@ void generate_city_map_indices(void)
 /**********************************************************************/ /**
    Free memory allocated by generate_citymap_index
  **************************************************************************/
-void free_city_map_index(void)
+void free_city_map_index()
 {
   delete[] city_map_index;
   city_map_index = nullptr;
@@ -1701,7 +1701,7 @@ static bv_unit_types caravan_helped_utype;
    Initialize the cache of what city production can use shields from
    caravans.
  **************************************************************************/
-void city_production_caravan_shields_init(void)
+void city_production_caravan_shields_init()
 {
   struct requirement prod_as_req;
 
@@ -2720,14 +2720,14 @@ static int get_trade_illness(const struct city *pcity)
     if (trade_city->turn_plague != -1
         && game.info.turn - trade_city->turn_plague < 5) {
       illness_trade +=
-          (float) game.info.illness_trade_infection
+          static_cast<float>(game.info.illness_trade_infection)
           * sqrt(1.0 * city_size_get(pcity) * city_size_get(trade_city))
           / 100.0;
     }
   }
   trade_partners_iterate_end;
 
-  return (int) illness_trade;
+  return static_cast<int>(illness_trade);
 }
 
 /**********************************************************************/ /**
@@ -2762,8 +2762,9 @@ int city_illness_calc(const struct city *pcity, int *ill_base, int *ill_size,
     /* offset the city size by game.info.illness_min_size */
     int use_size = city_size_get(pcity) - game.info.illness_min_size;
 
-    illness_size = (int) ((1.0 - exp(-(float) use_size / 10.0)) * 10.0
-                          * game.info.illness_base_factor);
+    illness_size =
+        static_cast<int>((1.0 - exp(-static_cast<float>(use_size) / 10.0))
+                         * 10.0 * game.info.illness_base_factor);
     if (is_server()) {
       /* on the server we recalculate the illness due to trade as we have
        * all informations */
@@ -3311,7 +3312,7 @@ void city_styles_alloc(int num)
 /**********************************************************************/ /**
   De-allocate the memory used by the city styles.
  **************************************************************************/
-void city_styles_free(void)
+void city_styles_free()
 {
   int i;
 
@@ -3435,7 +3436,7 @@ void destroy_city_virtual(struct city *pcity)
   }
 
   memset(pcity, 0, sizeof(*pcity)); /* ensure no pointers remain */
-  delete[] pcity;
+  FCPP_FREE(pcity);
 }
 
 /**********************************************************************/ /**
@@ -3445,11 +3446,7 @@ void destroy_city_virtual(struct city *pcity)
 bool city_exist(int id)
 {
   /* Check if city exist in game */
-  if (game_city_by_number(id)) {
-    return true;
-  }
-
-  return false;
+  return game_city_by_number(id) != nullptr;
 }
 
 /**********************************************************************/ /**

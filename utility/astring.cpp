@@ -60,9 +60,9 @@
 
 #include <QStringLiteral>
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"
@@ -81,7 +81,7 @@ static size_t astr_buffer_alloc = 0;
 
 static inline char *astr_buffer_get(size_t *alloc);
 static inline char *astr_buffer_grow(size_t *alloc);
-static void astr_buffer_free(void);
+static void astr_buffer_free();
 
 /************************************************************************/ /**
    Returns the astring buffer. Create it if necessary.
@@ -114,7 +114,7 @@ static inline char *astr_buffer_grow(size_t *alloc)
 /************************************************************************/ /**
    Free the astring buffer.
  ****************************************************************************/
-static void astr_buffer_free(void) { free(astr_buffer); }
+static void astr_buffer_free() { free(astr_buffer); }
 
 /************************************************************************/ /**
    Initialize the struct.
@@ -168,7 +168,7 @@ void astr_reserve(struct astring *astr, size_t n)
   /* Allocated more if this is only a small increase on before: */
   n1 = (3 * (astr->n_alloc + 10)) / 2;
   astr->n_alloc = (n > n1) ? n : n1;
-  astr->str = (char *) fc_realloc(astr->str, astr->n_alloc);
+  astr->str = static_cast<char *>(fc_realloc(astr->str, astr->n_alloc));
   if (was_null) {
     astr_clear(astr);
   }
@@ -200,7 +200,7 @@ static inline void astr_vadd_at(struct astring *astr, size_t at,
   buffer = astr_buffer_get(&buffer_size);
   for (;;) {
     new_len = fc_vsnprintf(buffer, buffer_size, format, ap);
-    if (new_len < buffer_size && (size_t) -1 != new_len) {
+    if (new_len < buffer_size && static_cast<size_t>(-1) != new_len) {
       break;
     }
     buffer = astr_buffer_grow(&buffer_size);
@@ -331,16 +331,20 @@ QString strvec_to_and_list(const QVector<QString> &psv)
 QString qendl() { return QStringLiteral("\n"); }
 
 // break line after after n-th char
-QString break_lines(QString src, int after)
+QString break_lines(const QString &src, int after)
 {
   QStringList broken = src.split(" ", QString::SkipEmptyParts);
   QString dst;
 
   int clen = 0;
-  while(!broken.isEmpty()) {
+  while (!broken.isEmpty()) {
     QString s = broken.takeFirst();
     dst += s + " ";
     clen += s.length();
+    if (s.contains('\n')) {
+      clen = 0;
+      continue;
+    }
     if (clen > after) {
       dst += qendl();
       clen = 0;

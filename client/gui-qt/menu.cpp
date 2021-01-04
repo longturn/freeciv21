@@ -76,7 +76,7 @@ extern "C" void option_dialog_popup(const char *name,
 /**********************************************************************/ /**
    Constructor for units used in delayed orders
  **************************************************************************/
-qfc_units_list::qfc_units_list() : nr_units(0) {}
+qfc_units_list::qfc_units_list() {}
 
 /**********************************************************************/ /**
    Adds givent unit to list
@@ -184,7 +184,7 @@ void gov_menu::create()
   int gov_count, i;
 
   // Clear any content
-  for (auto action : qAsConst(actions)) {
+  for (auto *action : qAsConst(actions)) {
     removeAction(action);
     action->deleteLater();
   }
@@ -305,7 +305,7 @@ static void reset_menu_and_sub_menues(QMenu *menu)
 {
   QList<QAction *> actions = menu->actions();
   /* Delete each existing menu item. */
-  for (auto action : qAsConst(actions)) {
+  for (auto *action : qAsConst(actions)) {
     if (action->menu() != nullptr) {
       /* Delete the sub menu */
       reset_menu_and_sub_menues(action->menu());
@@ -522,7 +522,7 @@ struct tile *mr_menu::find_last_unit_pos(unit *punit, int pos)
 
   int i = 0;
   qunit = punit;
-  for (auto fui : qAsConst(units_list.unit_list)) {
+  for (auto *fui : qAsConst(units_list.unit_list)) {
     zunit = unit_list_find(client_player()->units, fui->id);
     i++;
     if (i >= pos) {
@@ -555,7 +555,7 @@ struct tile *mr_menu::find_last_unit_pos(unit *punit, int pos)
 /**********************************************************************/ /**
    Constructor for global menubar in gameview
  **************************************************************************/
-mr_menu::mr_menu() : QMenuBar(), initialized(false) {}
+mr_menu::mr_menu() : QMenuBar() {}
 
 /**********************************************************************/ /**
    Initializes menu system, and add custom enum(munit) for most of options
@@ -1353,8 +1353,9 @@ void mr_menu::update_airlift_menu()
   Unit_type_id utype_id;
   QAction *act;
 
-  if (!initialized)
+  if (!initialized) {
     return;
+  }
   airlift_menu->clear();
   if (client_is_observer()) {
     return;
@@ -1393,10 +1394,11 @@ void mr_menu::update_roads_menu()
   struct unit_list *punits = nullptr;
   bool enabled = false;
 
-  if (!initialized)
+  if (!initialized) {
     return;
+  }
   QList<QAction *> actions = roads_menu->actions();
-  for (auto act : qAsConst(actions)) {
+  for (auto *act : qAsConst(actions)) {
     removeAction(act);
     act->deleteLater();
   }
@@ -1442,11 +1444,12 @@ void mr_menu::update_bases_menu()
   QAction *act;
   struct unit_list *punits = nullptr;
   bool enabled = false;
-  if (!initialized)
+  if (!initialized) {
     return;
+  }
 
   QList<QAction *> actions = bases_menu->actions();
-  for (auto act : qAsConst(actions)) {
+  for (auto *act : qAsConst(actions)) {
     removeAction(act);
     act->deleteLater();
   }
@@ -2337,7 +2340,7 @@ void mr_menu::slot_execute_orders()
   struct tile *new_tile;
   int i = 0;
 
-  for (auto fui : qAsConst(units_list.unit_list)) {
+  for (auto *fui : qAsConst(units_list.unit_list)) {
     i++;
     punit = unit_list_find(client_player()->units, fui->id);
     if (punit == nullptr) {
@@ -2512,11 +2515,7 @@ void mr_menu::slot_minimap_view()
  **************************************************************************/
 void mr_menu::slot_show_new_turn_text()
 {
-  if (osd_status->isChecked()) {
-    king()->qt_settings.show_new_turn_text = true;
-  } else {
-    king()->qt_settings.show_new_turn_text = false;
-  }
+  king()->qt_settings.show_new_turn_text = osd_status->isChecked();
 }
 
 /**********************************************************************/ /**
@@ -2524,11 +2523,7 @@ void mr_menu::slot_show_new_turn_text()
  **************************************************************************/
 void mr_menu::slot_battlelog()
 {
-  if (btlog_status->isChecked()) {
-    king()->qt_settings.show_battle_log = true;
-  } else {
-    king()->qt_settings.show_battle_log = false;
-  }
+  king()->qt_settings.show_battle_log = btlog_status->isChecked();
 }
 
 /**********************************************************************/ /**
@@ -2618,7 +2613,7 @@ void mr_menu::slot_city_outlines() { key_city_outlines_toggle(); }
  **************************************************************************/
 void mr_menu::slot_set_citybar()
 {
-  for (auto a : action_citybar->actions()) {
+  for (auto *a : action_citybar->actions()) {
     if (a->isChecked()) {
       fc_strlcpy(gui_options.default_city_bar_style_name,
                  qUtf8Printable(a->data().toString()),

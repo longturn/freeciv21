@@ -38,12 +38,12 @@ void client_diplomacy_clause_string(char *buf, int bufsiz,
 void global_warming_scaled(int *chance, int *rate, int max);
 void nuclear_winter_scaled(int *chance, int *rate, int max);
 
-QPixmap *client_research_sprite(void);
-QPixmap *client_warming_sprite(void);
-QPixmap *client_cooling_sprite(void);
-QPixmap *client_government_sprite(void);
+QPixmap *client_research_sprite();
+QPixmap *client_warming_sprite();
+QPixmap *client_cooling_sprite();
+QPixmap *client_government_sprite();
 
-void center_on_something(void);
+void center_on_something();
 
 /*
  * A compound id (cid) can hold all objects a city can build:
@@ -126,12 +126,12 @@ void unit_focus_set_status(struct player *pplayer);
 
 void client_player_init(struct player *pplayer);
 
-void client_player_maps_reset(void);
+void client_player_maps_reset();
 
-bool mapimg_client_define(void);
+bool mapimg_client_define();
 bool mapimg_client_createmap(const char *filename);
 
-struct nation_set *client_current_nation_set(void);
+struct nation_set *client_current_nation_set();
 bool client_nation_is_in_current_set(const struct nation_type *pnation);
 
-enum ai_level server_ai_level(void);
+enum ai_level server_ai_level();

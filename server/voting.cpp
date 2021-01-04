@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h>
+#include <cmath>
 
 /* utility */
 #include "fcintl.h"
@@ -221,7 +221,7 @@ void remove_vote(struct vote *pvote)
 /**********************************************************************/ /**
    Remove all votes. Sends vote_remove packets to clients.
  **************************************************************************/
-void clear_all_votes(void)
+void clear_all_votes()
 {
   if (!vote_list) {
     return;
@@ -378,11 +378,11 @@ struct vote *vote_new(struct connection *caller, const char *allargs,
   vote_list_append(vote_list, pvote);
 
   pvote->flags = command_vote_flags(pcmd);
-  pvote->need_pc = (double) command_vote_percent(pcmd) / 100.0;
+  pvote->need_pc = static_cast<double>(command_vote_percent(pcmd)) / 100.0;
 
   if (pvote->flags & VCF_NOPASSALONE) {
     int num_voters = count_voters(pvote);
-    double min_pc = 1.0 / (double) num_voters;
+    double min_pc = 1.0 / static_cast<double>(num_voters);
 
     if (num_voters > 1 && min_pc > pvote->need_pc) {
       pvote->need_pc = MIN(0.5, 2.0 * min_pc);
@@ -418,10 +418,10 @@ bool vote_would_pass_immediately(const struct connection *caller,
   }
 
   virtual_vote.caller_id = caller->id;
-  return (
-      ((double) (command_vote_percent(pcmd) * count_voters(&virtual_vote))
-       / 100.0)
-      < 1.0);
+  return ((static_cast<double>(command_vote_percent(pcmd)
+                               * count_voters(&virtual_vote))
+           / 100.0)
+          < 1.0);
 }
 
 /**********************************************************************/ /**
@@ -489,11 +489,11 @@ static void check_vote(struct vote *pvote)
     base = num_voters - pvote->abstain;
 
     if (base > MY_EPSILON) {
-      yes_pc = (double) pvote->yes / base;
-      no_pc = (double) pvote->no / base;
+      yes_pc = static_cast<double>(pvote->yes) / base;
+      no_pc = static_cast<double>(pvote->no) / base;
 
       /* The fraction of people who have not voted at all. */
-      rem_pc = (double) (num_voters - num_cast) / base;
+      rem_pc = static_cast<double>(num_voters - num_cast) / base;
     }
 
     if (flags & VCF_NODISSENT && no_pc > MY_EPSILON) {
@@ -723,7 +723,7 @@ void cancel_connection_votes(struct connection *pconn)
 /**********************************************************************/ /**
    Initialize data structures used by this module.
  **************************************************************************/
-void voting_init(void)
+void voting_init()
 {
   if (!vote_list) {
     vote_list = vote_list_new();
@@ -734,7 +734,7 @@ void voting_init(void)
 /**********************************************************************/ /**
    Check running votes. This should be called every turn.
  **************************************************************************/
-void voting_turn(void)
+void voting_turn()
 {
   if (!vote_list) {
     qCritical("voting_turn() called before voting_init()");
@@ -752,7 +752,7 @@ void voting_turn(void)
 /**********************************************************************/ /**
    Free all memory used by this module.
  **************************************************************************/
-void voting_free(void)
+void voting_free()
 {
   clear_all_votes();
   if (vote_list) {

@@ -35,15 +35,15 @@ struct voteinfo {
   time_t remove_time;
 };
 
-void voteinfo_queue_init(void);
-void voteinfo_queue_free(void);
+void voteinfo_queue_init();
+void voteinfo_queue_free();
 void voteinfo_queue_remove(int vote_no);
 void voteinfo_queue_delayed_remove(int vote_no);
-void voteinfo_queue_check_removed(void);
+void voteinfo_queue_check_removed();
 void voteinfo_queue_add(int vote_no, const char *user, const char *desc,
                         int percent_required, int flags);
 struct voteinfo *voteinfo_queue_find(int vote_no);
 void voteinfo_do_vote(int vote_no, enum client_vote_type vote);
 struct voteinfo *voteinfo_queue_get_current(int *pindex);
-void voteinfo_queue_next(void);
-int voteinfo_queue_size(void);
+void voteinfo_queue_next();
+int voteinfo_queue_size();

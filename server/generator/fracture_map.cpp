@@ -31,7 +31,6 @@ static void circle_bresenham(int xc, int yc, int r, int nn);
 static void fmfill(int x, int y, int c, int r);
 static int local_ave_elevation(struct tile *ptile);
 
-extern int *height_map;
 int num_landmass = 50;
 
 typedef struct {
@@ -52,7 +51,7 @@ static map_point *fracture_points;
 /**********************************************************************/ /**
    Fracture map generator
  **************************************************************************/
-void make_fracture_map(void)
+void make_fracture_map()
 {
   int nn, mm;
   int rad;
@@ -296,7 +295,7 @@ static int local_ave_elevation(struct tile *ptile)
    It can generate mountain ranges where there a differences in elevation
    between landmasses.
  **************************************************************************/
-void make_fracture_relief(void)
+void make_fracture_relief()
 {
   bool choose_mountain;
   bool choose_hill;

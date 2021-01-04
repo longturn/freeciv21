@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 // Qt
 #include <QCoreApplication>
@@ -157,7 +157,7 @@ static civtimer *between_turns = NULL;
 /**********************************************************************/ /**
    Initialize the game seed.  This may safely be called multiple times.
  **************************************************************************/
-void init_game_seed(void)
+void init_game_seed()
 {
   if (game.server.seed_setting == 0) {
     /* We strip the high bit for now because neither game file nor
@@ -181,7 +181,7 @@ void init_game_seed(void)
 /**********************************************************************/ /**
    Initialize freeciv server.
  **************************************************************************/
-void srv_init(void)
+void srv_init()
 {
   if (has_been_srv_init) {
     return;
@@ -236,9 +236,6 @@ void srv_init(void)
   /* Initialize global mutexes */
   QMutex *mutex = new QMutex;
   game.server.mutexes.city_list = mutex;
-
-  /* done */
-  return;
 }
 
 /**********************************************************************/ /**
@@ -260,7 +257,7 @@ void handle_client_info(struct connection *pc, enum gui_type gui,
 /**********************************************************************/ /**
    Return current server state.
  **************************************************************************/
-enum server_states server_state(void) { return civserver_state; }
+enum server_states server_state() { return civserver_state; }
 
 /**********************************************************************/ /**
    Set current server state.
@@ -273,7 +270,7 @@ void set_server_state(enum server_states newstate)
 /**********************************************************************/ /**
    Returns iff the game was started once upon a time.
  **************************************************************************/
-bool game_was_started(void)
+bool game_was_started()
 {
   return (!game.info.is_new_game || S_S_INITIAL != server_state());
 }
@@ -287,7 +284,7 @@ bool game_was_started(void)
 
    Also send notifications about impending, predictable game end conditions.
  **************************************************************************/
-bool check_for_game_over(void)
+bool check_for_game_over()
 {
   int candidates, defeated;
   struct player *victor;
@@ -542,7 +539,7 @@ bool check_for_game_over(void)
       const struct player_list *members;
       bool win;
 
-      if (game.info.year < (int) spaceship_arrival(pplayer)) {
+      if (game.info.year < static_cast<int>(spaceship_arrival(pplayer))) {
         /* We are into the future arrivals */
         break;
       }
@@ -609,7 +606,7 @@ bool check_for_game_over(void)
       /* Advance the calendar in a throwaway copy of game.info. */
       game_next_year(&next_info);
 
-      if (next_info.year < (int) spaceship_arrival(pplayer)) {
+      if (next_info.year < static_cast<int>(spaceship_arrival(pplayer))) {
         /* Even further in the future */
         break;
       }
@@ -657,7 +654,7 @@ void send_all_info(struct conn_list *dest)
    Give map information to players with EFT_REVEAL_CITIES or
    EFT_REVEAL_MAP effects (traditionally from the Apollo Program).
  **************************************************************************/
-static void do_reveal_effects(void)
+static void do_reveal_effects()
 {
   phase_players_iterate(pplayer)
   {
@@ -686,7 +683,7 @@ static void do_reveal_effects(void)
    Give contact to players with the EFT_HAVE_CONTACTS effect (traditionally
    from Marco Polo's Embassy).
  **************************************************************************/
-static void do_have_contacts_effect(void)
+static void do_have_contacts_effect()
 {
   phase_players_iterate(pplayer)
   {
@@ -707,7 +704,7 @@ static void do_have_contacts_effect(void)
 /**********************************************************************/ /**
    Handle the vision granting effect EFT_BORDER_VISION
  **************************************************************************/
-static void do_border_vision_effect(void)
+static void do_border_vision_effect()
 {
   if (game.info.borders != BORDERS_ENABLED) {
     /* Border_Vision is useless. If borders are disabled there are no
@@ -854,7 +851,7 @@ static void remove_illegal_armistice_units(struct player *plr1,
    Check for cease-fires and armistices running out; update cancelling
    reasons and contact information.
  **************************************************************************/
-static void update_diplomatics(void)
+static void update_diplomatics()
 {
   players_iterate(plr1)
   {
@@ -1025,7 +1022,7 @@ static void update_diplomatics(void)
    etc.  If a player dies, all his units will be wiped and other data will
    be overwritten.
  **************************************************************************/
-static void kill_dying_players(void)
+static void kill_dying_players()
 {
   bool voter_died = false;
 
@@ -1053,7 +1050,7 @@ static void kill_dying_players(void)
 /**********************************************************************/ /**
    Called at the start of each (new) phase to do AI activities.
  **************************************************************************/
-static void ai_start_phase(void)
+static void ai_start_phase()
 {
   phase_players_iterate(pplayer)
   {
@@ -1339,8 +1336,9 @@ void begin_phase(bool is_new_phase)
 
   sanity_check();
 
-  game.tinfo.last_turn_change_time = (float) game.server.turn_change_time;
-  game.tinfo.seconds_to_phasedone = (double) current_turn_timeout();
+  game.tinfo.last_turn_change_time = game.server.turn_change_time;
+  game.tinfo.seconds_to_phasedone =
+      static_cast<double>(current_turn_timeout());
   game.server.phase_timer =
       timer_renew(game.server.phase_timer, TIMER_USER, TIMER_ACTIVE);
   timer_start(game.server.phase_timer);
@@ -1800,7 +1798,7 @@ void save_game_auto(const char *save_reason, enum autosave_type type)
 /**********************************************************************/ /**
    Start actual game. Everything has been set up already.
  **************************************************************************/
-void start_game(void)
+void start_game()
 {
   if (S_S_INITIAL != server_state()) {
     con_puts(C_SYNTAX, _("The game is already running."));
@@ -1839,7 +1837,7 @@ void start_game(void)
 /**********************************************************************/ /**
    Quit the server and exit.
  **************************************************************************/
-void server_quit(void)
+void server_quit()
 {
   if (server_state() == S_S_RUNNING) {
     /* Quitting mid-game. */
@@ -1954,7 +1952,7 @@ static bool identity_number_is_used(int id)
 /**********************************************************************/ /**
    Increment identity_number and return result.
  **************************************************************************/
-static int increment_identity_number(void)
+static int increment_identity_number()
 {
   server.identity_number =
       (server.identity_number + 1) % IDENTITY_NUMBER_SIZE;
@@ -1965,7 +1963,7 @@ static int increment_identity_number(void)
    Identity ids wrap at IDENTITY_NUMBER_SIZE, skipping IDENTITY_NUMBER_ZERO
    Setup in server_game_init()
  **************************************************************************/
-int identity_number(void)
+int identity_number()
 {
   int retries = 0;
 
@@ -2046,14 +2044,15 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
   }
 
   if (type == PACKET_SERVER_JOIN_REQ) {
-    return handle_login_request(pconn,
-                                (struct packet_server_join_req *) packet);
+    return handle_login_request(
+        pconn, static_cast<struct packet_server_join_req *>(packet));
   }
 
   /* May be received on a non-established connection. */
   if (type == PACKET_AUTHENTICATION_REPLY) {
     return auth_handle_reply(
-        pconn, ((struct packet_authentication_reply *) packet)->password);
+        pconn, (static_cast<struct packet_authentication_reply *>(packet))
+                   ->password);
   }
 
   if (type == PACKET_CONN_PONG) {
@@ -2150,7 +2149,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
    Check if turn is really done. Returns nothing, but as a side effect sets
    force_end_of_sniff if no more input is expected this turn (i.e. turn done)
  **************************************************************************/
-void check_for_full_turn_done(void)
+void check_for_full_turn_done()
 {
   bool connected = false;
 
@@ -2210,7 +2209,7 @@ void check_for_full_turn_done(void)
 
    Call this on server start, or when loading a scenario.
  **************************************************************************/
-void update_nations_with_startpos(void)
+void update_nations_with_startpos()
 {
   if (!game_was_started() && 0 < map_startpos_count()) {
     /* Restrict nations to those for which start positions are defined. */
@@ -2245,9 +2244,10 @@ void update_nations_with_startpos(void)
          * If there are no start positions for a nation, remove it from the
          * available set. */
         pnation->server.no_startpos = true;
-        for (auto psp : qAsConst(*wld.map.startpos_table)) {
-          if (psp->exclude)
+        for (auto *psp : qAsConst(*wld.map.startpos_table)) {
+          if (psp->exclude) {
             continue;
+          }
           if (startpos_nation_allowed(psp, pnation)) {
             /* There is at least one start position that allows this nation,
              * so allow it to be picked.
@@ -2566,7 +2566,7 @@ void player_nation_defaults(struct player *pplayer,
    For 'aifill' players, the player name/sex is then reset to that of a
    random leader for the chosen nation.
  **************************************************************************/
-static void generate_players(void)
+static void generate_players()
 {
   int nations_to_assign = 0;
 
@@ -2627,9 +2627,10 @@ static void generate_players(void)
     int i, min;
 
     /* Initialization. */
-    for (auto psp : qAsConst(*wld.map.startpos_table)) {
-      if (psp->exclude)
+    for (auto *psp : qAsConst(*wld.map.startpos_table)) {
+      if (psp->exclude) {
         continue;
+      }
       if (startpos_allows_all(psp)) {
         continue;
       }
@@ -2829,7 +2830,7 @@ void srv_scores()
    We cannot do this during ruleset loading, since some players may be
    added later than that.
  **************************************************************************/
-static void final_ruleset_adjustments(void)
+static void final_ruleset_adjustments()
 {
   players_iterate(pplayer)
   {
@@ -3160,7 +3161,7 @@ void server_game_init(bool keep_ruleset_value)
    Bear in mind that this function is called when the 'load' command is
    used, for instance.
  **************************************************************************/
-void server_game_free(void)
+void server_game_free()
 {
   CALL_FUNC_EACH_AI(game_free);
 
@@ -3209,12 +3210,7 @@ void server_game_free(void)
    Initialize client specific functions.
  **************************************************************************/
 struct color;
-void server_gui_color_free(QColor *pcolor)
-{
-  fc_assert_ret(pcolor == NULL);
-
-  return;
-}
+void server_gui_color_free(QColor *pcolor) { fc_assert_ret(pcolor == NULL); }
 
 /**********************************************************************/ /**
    Returns the id of the city the player map of 'pplayer' has at 'ptile' or
@@ -3412,7 +3408,7 @@ player *mapimg_server_tile_unit(const struct tile *ptile,
 /**********************************************************************/ /**
    Helper function for the mapimg module - number of player colors.
  **************************************************************************/
-int mapimg_server_plrcolor_count(void) { return playercolor_count(); }
+int mapimg_server_plrcolor_count() { return playercolor_count(); }
 
 /**********************************************************************/ /**
    Helper function for the mapimg module - one player color.

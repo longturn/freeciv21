@@ -608,11 +608,7 @@ static bool calc_mapview_origin(float *gui_x0, float *gui_y0)
     *gui_y0 = CLIP(ymin, *gui_y0, ymax - ysize);
   }
 
-  if (mapview.gui_x0 == *gui_x0 && mapview.gui_y0 == *gui_y0) {
-    return false;
-  }
-
-  return true;
+  return !(mapview.gui_x0 == *gui_x0 && mapview.gui_y0 == *gui_y0);
 }
 
 /************************************************************************/ /**
@@ -628,7 +624,7 @@ void set_mapview_origin(float gui_x0, float gui_y0)
     int start_x = mapview.gui_x0, start_y = mapview.gui_y0;
     float diff_x, diff_y;
     double timing_sec =
-        (double) gui_options.smooth_center_slide_msec / 1000.0;
+        static_cast<double>(gui_options.smooth_center_slide_msec) / 1000.0;
     double currtime;
     int frames = 0;
 
@@ -833,7 +829,7 @@ void set_mapview_scroll_pos(int scroll_x, int scroll_y)
 /************************************************************************/ /**
    Finds the current center tile of the mapcanvas.
  ****************************************************************************/
-struct tile *get_center_tile_mapcanvas(void)
+struct tile *get_center_tile_mapcanvas()
 {
   return canvas_pos_to_nearest_tile(mapview.width / 2, mapview.height / 2);
 }
@@ -1233,8 +1229,10 @@ static int trade_route_to_canvas_lines(const struct tile *ptile1,
   map_to_gui_pos(tileset, &lines[0].width, &lines[0].height, dx, dy);
 
   /* FIXME: Remove these casts. */
-  tile_to_canvas_pos(&lines[0].x, &lines[0].y, (struct tile *) ptile1);
-  tile_to_canvas_pos(&lines[1].x, &lines[1].y, (struct tile *) ptile2);
+  tile_to_canvas_pos(&lines[0].x, &lines[0].y,
+                     const_cast<struct tile *>(ptile1));
+  tile_to_canvas_pos(&lines[1].x, &lines[1].y,
+                     const_cast<struct tile *>(ptile2));
 
   if (lines[1].x - lines[0].x == lines[0].width
       && lines[1].y - lines[0].y == lines[0].height) {
@@ -1305,7 +1303,7 @@ static void draw_trade_routes_for_city(const struct city *pcity_src)
 /************************************************************************/ /**
    Draw trade routes between cities as lines on the main map canvas.
  ****************************************************************************/
-static void draw_trade_routes(void)
+static void draw_trade_routes()
 {
   if (!gui_options.draw_city_trade_routes) {
     return;
@@ -1459,7 +1457,7 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
 /************************************************************************/ /**
    Update (only) the visible part of the map
  ****************************************************************************/
-void update_map_canvas_visible(void)
+void update_map_canvas_visible()
 {
   queue_mapview_update(UPDATE_MAP_CANVAS_VISIBLE);
 }
@@ -1818,7 +1816,8 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
       || tile_visible_mapcanvas(dest_tile)) {
     float start_x, start_y;
     float canvas_dx, canvas_dy;
-    double timing_sec = (double) gui_options.smooth_move_unit_msec / 1000.0;
+    double timing_sec =
+        static_cast<double>(gui_options.smooth_move_unit_msec) / 1000.0;
     double mytime;
 
     fc_assert(gui_options.smooth_move_unit_msec > 0);
@@ -2104,7 +2103,7 @@ static void queue_callback(void *data)
    When a mapview update is queued this function should be called to prepare
    an idle-time callback to unqueue the updates.
  ****************************************************************************/
-static void queue_add_callback(void)
+static void queue_add_callback()
 {
   if (!callback_queued) {
     callback_queued = true;
@@ -2334,7 +2333,7 @@ void get_city_mapview_name_and_growth(const city *pcity, char *name_buffer,
    Returns TRUE if cached drawing is possible.  If the mapview is too large
    we have to turn it off.
  ****************************************************************************/
-static bool can_do_cached_drawing(void)
+static bool can_do_cached_drawing()
 {
   const int W = tileset_tile_width(tileset);
   const int H = tileset_tile_height(tileset);
@@ -2409,7 +2408,7 @@ static bool can_do_cached_drawing(void)
    Called when we receive map dimensions.  It initialized the mapview
    decorations.
  ****************************************************************************/
-void mapdeco_init(void)
+void mapdeco_init()
 {
   /* HACK: this must be called on a map_info packet. */
   mapview.can_do_cached_drawing = can_do_cached_drawing();
@@ -2421,9 +2420,9 @@ void mapdeco_init(void)
 /************************************************************************/ /**
    Free all memory used for map decorations.
  ****************************************************************************/
-void mapdeco_free(void)
+void mapdeco_free()
 {
-  for (auto a : *mapdeco_gotoline) {
+  for (auto *a : *mapdeco_gotoline) {
     NFCPP_FREE(a);
     a = nullptr;
   }
@@ -2451,7 +2450,7 @@ void mapdeco_set_highlight(const struct tile *ptile, bool highlight)
 
   if (!changed) {
     /* FIXME: Remove the cast. */
-    refresh_tile_mapcanvas((struct tile *) ptile, true, false);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), true, false);
   }
 }
 
@@ -2470,9 +2469,9 @@ bool mapdeco_is_highlight_set(const struct tile *ptile)
    Clears all highlighting. Marks the previously highlighted tiles as
    needing a mapview update.
  ****************************************************************************/
-void mapdeco_clear_highlights(void)
+void mapdeco_clear_highlights()
 {
-  for (auto ptile : *mapdeco_highlight_set) {
+  for (const auto *ptile : *mapdeco_highlight_set) {
     refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), true, false);
   }
   mapdeco_highlight_set->clear();
@@ -2499,7 +2498,7 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
 
   if (!changed) {
     /* FIXME: Remove the cast. */
-    refresh_tile_mapcanvas((struct tile *) ptile, false, false);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
   }
 }
 
@@ -2518,9 +2517,9 @@ bool mapdeco_is_crosshair_set(const struct tile *ptile)
    Clears all previous set tile crosshair decorations. Marks the affected
    tiles as needing a mapview update.
  ****************************************************************************/
-void mapdeco_clear_crosshairs(void)
+void mapdeco_clear_crosshairs()
 {
-  for (auto ptile : *mapdeco_crosshair_set) {
+  for (const auto *ptile : *mapdeco_crosshair_set) {
     refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
   }
   mapdeco_crosshair_set->clear();
@@ -2554,8 +2553,9 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir)
 
   if (changed) {
     /* FIXME: Remove cast. */
-    refresh_tile_mapcanvas((struct tile *) ptile, false, false);
-    refresh_tile_mapcanvas((struct tile *) ptile_dest, false, false);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile_dest), false,
+                           false);
   }
 }
 
@@ -2585,10 +2585,10 @@ void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir)
 
   if (changed) {
     /* FIXME: Remove the casts. */
-    refresh_tile_mapcanvas((struct tile *) ptile, false, false);
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
     ptile = mapstep(&(wld.map), ptile, dir);
     if (ptile != NULL) {
-      refresh_tile_mapcanvas((struct tile *) ptile, false, false);
+      refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
     }
   }
 }
@@ -2652,7 +2652,7 @@ bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir)
    Clear all goto line map decorations and queues mapview updates for the
    affected tiles.
  ****************************************************************************/
-void mapdeco_clear_gotoroutes(void)
+void mapdeco_clear_gotoroutes()
 {
   gotohash::const_iterator i = mapdeco_gotoline->constBegin();
   while (i != mapdeco_gotoline->constEnd()) {
@@ -2757,7 +2757,7 @@ bool map_canvas_resized(int width, int height)
 /************************************************************************/ /**
    Sets up data for the mapview and overview.
  ****************************************************************************/
-void init_mapcanvas_and_overview(void)
+void init_mapcanvas_and_overview()
 {
   /* Create a dummy map to make sure mapview.store is never NULL. */
   map_canvas_resized(1, 1);
@@ -2766,7 +2766,7 @@ void init_mapcanvas_and_overview(void)
 /************************************************************************/ /**
    Frees resources allocated for mapview and overview
  ****************************************************************************/
-void free_mapcanvas_and_overview(void)
+void free_mapcanvas_and_overview()
 {
   canvas_free(mapview.store);
   canvas_free(mapview.tmp_store);
@@ -2998,7 +2998,7 @@ static void link_mark_draw(const struct link_mark *pmark)
 /************************************************************************/ /**
    Initialize the link marks.
  ****************************************************************************/
-void link_marks_init(void)
+void link_marks_init()
 {
   if (link_marks) {
     link_marks_free();
@@ -3010,7 +3010,7 @@ void link_marks_init(void)
 /************************************************************************/ /**
    Free the link marks.
  ****************************************************************************/
-void link_marks_free(void)
+void link_marks_free()
 {
   if (!link_marks) {
     return;
@@ -3023,7 +3023,7 @@ void link_marks_free(void)
 /************************************************************************/ /**
    Draw all link marks.
  ****************************************************************************/
-void link_marks_draw_all(void)
+void link_marks_draw_all()
 {
   link_marks_iterate(pmark) { link_mark_draw(pmark); }
   link_marks_iterate_end;
@@ -3032,7 +3032,7 @@ void link_marks_draw_all(void)
 /************************************************************************/ /**
    Clear all visible links.
  ****************************************************************************/
-void link_marks_clear_all(void)
+void link_marks_clear_all()
 {
   link_mark_list_clear(link_marks);
   update_map_canvas_visible();
@@ -3041,7 +3041,7 @@ void link_marks_clear_all(void)
 /************************************************************************/ /**
    Clear all visible links.
  ****************************************************************************/
-void link_marks_decrease_turn_counters(void)
+void link_marks_decrease_turn_counters()
 {
   link_marks_iterate(pmark)
   {

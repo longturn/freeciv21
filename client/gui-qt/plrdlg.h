@@ -38,11 +38,11 @@ class plr_item_delegate : public QItemDelegate {
 
 public:
   plr_item_delegate(QObject *parent) : QItemDelegate(parent) {}
-  ~plr_item_delegate() {}
+  ~plr_item_delegate() override = default;
   void paint(QPainter *painter, const QStyleOptionViewItem &option,
-             const QModelIndex &index) const;
-  virtual QSize sizeHint(const QStyleOptionViewItem &option,
-                         const QModelIndex &index) const;
+             const QModelIndex &index) const override;
+  QSize sizeHint(const QStyleOptionViewItem &option,
+                 const QModelIndex &index) const override;
 };
 
 /***************************************************************************
@@ -70,22 +70,24 @@ class plr_model : public QAbstractListModel {
 
 public:
   plr_model(QObject *parent = 0);
-  ~plr_model();
-  inline int rowCount(const QModelIndex &index = QModelIndex()) const
+  ~plr_model() override;
+  inline int
+  rowCount(const QModelIndex &index = QModelIndex()) const override
   {
     Q_UNUSED(index);
     return plr_list.size();
   }
-  int columnCount(const QModelIndex &parent = QModelIndex()) const
+  int columnCount(const QModelIndex &parent = QModelIndex()) const override
   {
     Q_UNUSED(parent);
     return num_player_dlg_columns;
   }
-  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+  QVariant data(const QModelIndex &index,
+                int role = Qt::DisplayRole) const override;
   bool setData(const QModelIndex &index, const QVariant &value,
-               int role = Qt::DisplayRole);
+               int role = Qt::DisplayRole) override;
   QVariant headerData(int section, Qt::Orientation orientation,
-                      int role) const;
+                      int role) const override;
   QVariant hide_data(int section) const;
   void populate();
 private slots:
@@ -110,7 +112,7 @@ class plr_widget : public QTreeView {
 
 public:
   plr_widget(QWidget *);
-  ~plr_widget();
+  ~plr_widget() override;
   void set_pr_rep(plr_report *pr);
   void restore_selection();
   plr_model *get_model() const;
@@ -123,7 +125,7 @@ public slots:
   void nation_selected(const QItemSelection &sl, const QItemSelection &ds);
 
 private:
-  void mousePressEvent(QMouseEvent *event);
+  void mousePressEvent(QMouseEvent *event) override;
   void hide_columns();
 };
 
@@ -136,7 +138,7 @@ class plr_report : public QWidget {
 
 public:
   plr_report();
-  ~plr_report();
+  ~plr_report() override;
   void update_report(bool update_selection = true);
   void init();
   void call_meeting();
@@ -153,4 +155,4 @@ private slots:
 };
 
 void popup_players_dialog(bool raise);
-void popdown_players_report(void);
+void popdown_players_report();

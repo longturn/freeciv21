@@ -93,13 +93,14 @@ SPECPQ_PQ_
 ****************************************************************************/
 static inline SPECPQ_PQ *SPECPQ_FOO(_pq_new)(int initial_size)
 {
-  SPECPQ_PQ_ *pq = (SPECPQ_PQ_ *) fc_malloc(sizeof(*pq));
+  SPECPQ_PQ_ *pq = static_cast<SPECPQ_PQ_ *>(fc_malloc(sizeof(*pq)));
 
-  pq->cells = (SPECPQ_CELL_ *) fc_malloc(sizeof(*pq->cells) * initial_size);
+  pq->cells = static_cast<SPECPQ_CELL_ *>(
+      fc_malloc(sizeof(*pq->cells) * initial_size));
   pq->avail = initial_size;
   pq->step = initial_size;
   pq->size = 1;
-  return (SPECPQ_PQ *) pq;
+  return reinterpret_cast<SPECPQ_PQ *>(pq);
 }
 
 /****************************************************************************
@@ -107,7 +108,7 @@ static inline SPECPQ_PQ *SPECPQ_FOO(_pq_new)(int initial_size)
 ****************************************************************************/
 static inline void SPECPQ_FOO(_pq_destroy)(SPECPQ_PQ *_pq)
 {
-  SPECPQ_PQ_ *pq = (SPECPQ_PQ_ *) _pq;
+  SPECPQ_PQ_ *pq = reinterpret_cast<SPECPQ_PQ_ *>(_pq);
 
   free(pq->cells);
   free(pq);
@@ -120,7 +121,7 @@ static inline void
     SPECPQ_FOO(_pq_destroy_full)(SPECPQ_PQ *_pq,
                                  SPECPQ_FOO(_pq_data_free_fn_t) data_free)
 {
-  SPECPQ_PQ_ *pq = (SPECPQ_PQ_ *) _pq;
+  SPECPQ_PQ_ *pq = reinterpret_cast<SPECPQ_PQ_ *>(_pq);
   int i;
 
   if (data_free != NULL) {
@@ -139,15 +140,15 @@ static inline void SPECPQ_FOO(_pq_insert)(SPECPQ_PQ *_pq,
                                           SPECPQ_DATA_TYPE data,
                                           SPECPQ_PRIORITY_TYPE priority)
 {
-  SPECPQ_PQ_ *pq = (SPECPQ_PQ_ *) _pq;
+  SPECPQ_PQ_ *pq = reinterpret_cast<SPECPQ_PQ_ *>(_pq);
   int i, j;
 
   /* Allocate more memory if necessary. */
   if (pq->size >= pq->avail) {
     int newsize = pq->size + pq->step;
 
-    pq->cells =
-        (SPECPQ_CELL_ *) fc_realloc(pq->cells, sizeof(*pq->cells) * newsize);
+    pq->cells = static_cast<SPECPQ_CELL_ *>(
+        fc_realloc(pq->cells, sizeof(*pq->cells) * newsize));
     pq->avail = newsize;
   }
 
@@ -168,7 +169,7 @@ static inline void SPECPQ_FOO(_pq_replace)(SPECPQ_PQ *_pq,
                                            SPECPQ_DATA_TYPE data,
                                            SPECPQ_PRIORITY_TYPE priority)
 {
-  SPECPQ_PQ_ *pq = (SPECPQ_PQ_ *) _pq;
+  SPECPQ_PQ_ *pq = reinterpret_cast<SPECPQ_PQ_ *>(_pq);
   int i, j;
 
   /* Lookup for 'data'... */
@@ -200,7 +201,7 @@ static inline void SPECPQ_FOO(_pq_replace)(SPECPQ_PQ *_pq,
 static inline bool SPECPQ_FOO(_pq_remove)(SPECPQ_PQ *_pq,
                                           SPECPQ_DATA_TYPE *pdata)
 {
-  SPECPQ_PQ_ *pq = (SPECPQ_PQ_ *) _pq;
+  SPECPQ_PQ_ *pq = reinterpret_cast<SPECPQ_PQ_ *>(_pq);
   SPECPQ_CELL_ tmp;
   SPECPQ_CELL_ *pcelli, *pcellj;
   SPECPQ_DATA_TYPE top;

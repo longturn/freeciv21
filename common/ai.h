@@ -46,24 +46,24 @@ struct ai_type {
 
   struct {
     /* Called for every AI type when server quits. */
-    void (*module_close)(void);
+    void (*module_close)();
 
     /* Called for every AI type when game starts. Game is not necessarily new
        one, it can also be an old game loaded from a savegame. */
-    void (*game_start)(void);
+    void (*game_start)();
 
     /* Called for every AI type when game has ended. */
-    void (*game_free)(void);
+    void (*game_free)();
 
     /* Called for every AI type when map tiles are allocated. */
-    void (*map_alloc)(void);
+    void (*map_alloc)();
 
     /* Called for every AI type when the game map is ready, either generated
      * or, in case of scenario, loaded. */
-    void (*map_ready)(void);
+    void (*map_ready)();
 
     /* Called for every AI type when map tiles are freed. */
-    void (*map_free)(void);
+    void (*map_free)();
 
     /* Called for every AI type when new player is added to game. */
     void (*player_alloc)(struct player *pplayer);
@@ -173,10 +173,10 @@ struct ai_type {
                       adv_want *val, bool *override);
 
     /* Called for every AI type when unit ruleset has been loaded. */
-    void (*units_ruleset_init)(void);
+    void (*units_ruleset_init)();
 
     /* Called for every AI type before unit ruleset gets reloaded. */
-    void (*units_ruleset_close)(void);
+    void (*units_ruleset_close)();
 
     /* Called for every AI type when new unit is added to game. Called even
      * for virtual units. */
@@ -331,20 +331,20 @@ struct ai_type {
      * to call these or is it too old version to do so. When mandatory
      * capability then changes again, please add new reservations to
      * replace those taken to use. */
-    void (*reserved_01)(void);
-    void (*reserved_02)(void);
-    void (*reserved_03)(void);
-    void (*reserved_04)(void);
-    void (*reserved_05)(void);
+    void (*reserved_01)();
+    void (*reserved_02)();
+    void (*reserved_03)();
+    void (*reserved_04)();
+    void (*reserved_05)();
   } funcs;
 };
 
-struct ai_type *ai_type_alloc(void);
-void ai_type_dealloc(void);
+struct ai_type *ai_type_alloc();
+void ai_type_dealloc();
 struct ai_type *get_ai_type(int id);
 int ai_type_number(const struct ai_type *ai);
 void init_ai(struct ai_type *ai);
-int ai_type_get_count(void);
+int ai_type_get_count();
 const char *ai_name(const struct ai_type *ai);
 
 struct ai_type *ai_type_by_name(const char *search);

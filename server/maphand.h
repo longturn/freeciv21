@@ -80,7 +80,7 @@ bool map_is_known(const struct tile *ptile, const struct player *pplayer);
 void map_set_known(struct tile *ptile, struct player *pplayer);
 void map_clear_known(struct tile *ptile, struct player *pplayer);
 void map_know_and_see_all(struct player *pplayer);
-void show_map_to_all(void);
+void show_map_to_all();
 
 void player_map_init(struct player *pplayer);
 void player_map_free(struct player *pplayer);
@@ -102,12 +102,12 @@ void give_shared_vision(struct player *pfrom, struct player *pto);
 void remove_shared_vision(struct player *pfrom, struct player *pto);
 bool really_gives_vision(struct player *me, struct player *them);
 
-void enable_fog_of_war(void);
-void disable_fog_of_war(void);
+void enable_fog_of_war();
+void disable_fog_of_war();
 void enable_fog_of_war_player(struct player *pplayer);
 void disable_fog_of_war_player(struct player *pplayer);
 
-void map_calculate_borders(void);
+void map_calculate_borders();
 void map_claim_border(struct tile *ptile, struct player *powner,
                       int radius_sq);
 void map_claim_ownership(struct tile *ptile, struct player *powner,

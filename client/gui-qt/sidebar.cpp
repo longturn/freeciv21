@@ -49,8 +49,6 @@ void reduce_mod(int &mod, int &val)
     val++;
     mod--;
   }
-
-  return;
 }
 
 /***********************************************************************/ /**
@@ -457,7 +455,7 @@ sidebar::sidebar()
 /***********************************************************************/ /**
    Sidebar destructor
  ***************************************************************************/
-sidebar::~sidebar() {}
+sidebar::~sidebar() = default;
 
 /***********************************************************************/ /**
    Adds new sidebar widget
@@ -466,7 +464,6 @@ void sidebar::addWidget(sidebarWidget *fsw)
 {
   objects.append(fsw);
   layout->addWidget(fsw);
-  return;
 }
 
 /***********************************************************************/ /**
@@ -618,7 +615,7 @@ void sidebarIndicatorsMenu()
    Opens diplomacy meeting for player
    For observer popups menu
  ***************************************************************************/
-void sidebarRightClickDiplomacy(void)
+void sidebarRightClickDiplomacy()
 {
   if (client_is_observer()) {
     QMenu *menu = new QMenu(king()->central_wdg);
@@ -665,7 +662,7 @@ void sidebarRightClickDiplomacy(void)
 /***********************************************************************/ /**
    Right click for science, allowing to choose current tech
  ***************************************************************************/
-void sidebarRightClickScience(void)
+void sidebarRightClickScience()
 {
   QMenu *menu;
   QAction *act;

@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 
 #include "fcintl.h"
 
@@ -63,7 +63,7 @@ char *capitalized_string(const char *str)
   fc_strlcpy(result, str, len + 1);
 
   if (autocap) {
-    if ((unsigned char) result[0] < 128) {
+    if (static_cast<unsigned char>(result[0]) < 128) {
       result[0] = QChar::toUpper(result[0]);
     }
   }
@@ -84,9 +84,9 @@ void capitalization_opt_in(bool opt_in) { autocap = opt_in; }
 /*******************************************************************/ /**
    Automatic capitalization features requested.
  ***********************************************************************/
-bool is_capitalization_enabled(void) { return autocap; }
+bool is_capitalization_enabled() { return autocap; }
 
 /*******************************************************************/ /**
    Return directory containing locales.
  ***********************************************************************/
-const char *get_locale_dir(void) { return LOCALEDIR; }
+const char *get_locale_dir() { return LOCALEDIR; }

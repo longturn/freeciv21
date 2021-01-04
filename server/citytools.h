@@ -90,7 +90,7 @@ const char *city_name_suggestion(struct player *pplayer, struct tile *ptile);
 void city_freeze_workers(struct city *pcity);
 void city_thaw_workers(struct city *pcity);
 void city_freeze_workers_queue(struct city *pcity);
-void city_thaw_workers_queue(void);
+void city_thaw_workers_queue();
 
 /* city map functions */
 void city_map_update_empty(struct city *pcity, struct tile *ptile);
@@ -108,7 +108,7 @@ void city_landlocked_sell_coastal_improvements(struct tile *ptile);
 void city_refresh_vision(struct city *pcity);
 void refresh_player_cities_vision(struct player *pplayer);
 
-void sync_cities(void);
+void sync_cities();
 
 void clear_worker_task(struct city *pcity, struct worker_task *ptask);
 void clear_worker_tasks(struct city *pcity);

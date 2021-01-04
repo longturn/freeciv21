@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 
 /* utility */
 #include "shared.h"  /* TRUE, FALSE */
@@ -57,7 +57,7 @@ static bool fc_has_capability(const char *cap, const char *capstr,
 
     fc_assert(next >= capstr);
 
-    if (((size_t)(next - capstr) == cap_len)
+    if ((static_cast<size_t>(next - capstr) == cap_len)
         && strncmp(cap, capstr, cap_len) == 0) {
       return true;
     }

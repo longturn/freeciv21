@@ -15,8 +15,8 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* pow, ceil */
-#include <string.h>
+#include <cmath> /* pow, ceil */
+#include <cstring>
 
 /* utility */
 #include "log.h"
@@ -105,8 +105,9 @@ static void dai_choose_help_wonder(struct ai_type *ait, struct city *pcity,
   unit_list_iterate(pplayer->units, punit)
   {
     if (unit_can_do_action(punit, ACTION_HELP_WONDER)
-        && tile_continent(unit_tile(punit)) == continent)
+        && tile_continent(unit_tile(punit)) == continent) {
       caravans++;
+    }
   }
   unit_list_iterate_end;
 
@@ -206,12 +207,8 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
     return;
   }
 
-  if (trade_route_type_trade_pct(TRT_NATIONAL_IC)
-      > trade_route_type_trade_pct(TRT_NATIONAL)) {
-    prefer_different_cont = true;
-  } else {
-    prefer_different_cont = false;
-  }
+  prefer_different_cont = trade_route_type_trade_pct(TRT_NATIONAL_IC)
+                          > trade_route_type_trade_pct(TRT_NATIONAL);
 
   /* Look for proper destination city for trade. */
   if (trade_route_type_trade_pct(TRT_NATIONAL) > 0
@@ -241,12 +238,8 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
    * income from different traderoute types. This works just
    * with more typical ruleset setups. */
   if (prefer_different_cont && !dest_city_nat_different_cont) {
-    if (trade_route_type_trade_pct(TRT_IN_IC)
-        > trade_route_type_trade_pct(TRT_IN)) {
-      prefer_different_cont = true;
-    } else {
-      prefer_different_cont = false;
-    }
+    prefer_different_cont = trade_route_type_trade_pct(TRT_IN_IC)
+                            > trade_route_type_trade_pct(TRT_IN);
 
     players_iterate(aplayer)
     {
@@ -350,7 +343,8 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
       NULL, action_by_number(trade_action), EFT_TRADE_REVENUE_BONUS);
 
   /* Be mercy full to players with small amounts. Round up. */
-  income = ceil((float) income * pow(2.0, (double) bonus / 1000.0));
+  income = ceil(static_cast<float>(income)
+                * pow(2.0, static_cast<double>(bonus) / 1000.0));
 
   if (dest_city_nat_same_cont) {
     pct = trade_route_type_trade_pct(TRT_NATIONAL);
@@ -522,8 +516,9 @@ struct adv_choice *domestic_advisor_choose_build(struct ai_type *ait,
     }
 
     /* Adjust founder want by traits */
-    founder_want *= (double) ai_trait_get_value(TRAIT_EXPANSIONIST, pplayer)
-                    / TRAIT_DEFAULT_VALUE;
+    founder_want *=
+        static_cast<double>(ai_trait_get_value(TRAIT_EXPANSIONIST, pplayer))
+        / TRAIT_DEFAULT_VALUE;
 
     if (founder_type
         && pcity->surplus[O_FOOD]

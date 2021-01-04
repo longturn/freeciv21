@@ -219,7 +219,7 @@ section_entry_filereference_new(struct section *psection, const char *name,
 /**********************************************************************/ /**
    Simplification of fileinfoname().
  **************************************************************************/
-static const char *datafilename(const char *filename)
+static QString datafilename(const char *filename)
 {
   return fileinfoname(get_data_dirs(), filename);
 }
@@ -293,8 +293,8 @@ static bool secfile_hash_delete(struct section_file *secfile,
    Base function to load a section file.  Note it closes the inputfile.
  **************************************************************************/
 static struct section_file *secfile_from_input_file(struct inputfile *inf,
-                                                    const char *filename,
-                                                    const char *section,
+                                                    const QString &filename,
+                                                    const QString &section,
                                                     bool allow_duplicates)
 {
   struct section_file *secfile;
@@ -316,14 +316,14 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
 
   /* Assign the real value later, to speed up the creation of new entries. */
   secfile = secfile_new(true);
-  if (filename) {
-    secfile->name = fc_strdup(filename);
+  if (!filename.isEmpty()) {
+    secfile->name = fc_strdup(qUtf8Printable(filename));
   } else {
     secfile->name = NULL;
   }
 
-  if (filename) {
-    qDebug("Reading registry from \"%s\"", filename);
+  if (!filename.isEmpty()) {
+    qDebug("Reading registry from \"%s\"", qUtf8Printable(filename));
   } else {
     qDebug("Reading registry");
   }
@@ -362,9 +362,9 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       */
       psection = secfile_section_by_name(secfile, tok);
       if (!psection) {
-        if (!section || strcmp(tok, section) == 0) {
+        if (section.isEmpty() || (QString(tok) == section)) {
           psection = secfile_section_new(secfile, tok);
-          if (section) {
+          if (!section.isEmpty()) {
             single_section = psection;
             found_my_section = true;
           }
@@ -412,11 +412,10 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
           field_name = QString("%1%2.%3").arg(
               base_name, QString::number(table_lineno), columns.at(i));
         } else {
-          field_name =
-              QString("%1%2.%3,%4")
-                  .arg(base_name, QString::number(table_lineno),
-                       columns.at(num_columns - 1),
-                       QString::number((int) (i - num_columns + 1)));
+          field_name = QString("%1%2.%3,%4")
+                           .arg(base_name, QString::number(table_lineno),
+                                columns.at(num_columns - 1),
+                                QString::number((i - num_columns + 1)));
         }
         entry_from_inf_token(psection, qUtf8Printable(field_name), tok, inf);
       } while (inf_token(inf, INF_TOK_COMMA));
@@ -560,8 +559,8 @@ END:
    Create a section file from a file, read only one particular section.
    Returns NULL on error.
  **************************************************************************/
-struct section_file *secfile_load_section(const char *filename,
-                                          const char *section,
+struct section_file *secfile_load_section(const QString &filename,
+                                          const QString &section,
                                           bool allow_duplicates)
 {
   char real_filename[1024];
@@ -603,7 +602,7 @@ static bool is_legal_table_entry_name(char c, bool num)
    and then subsequent u1, u2, etc, in strict order with no omissions,
    and with all of the columns for all uN in the same order as for u0.
  **************************************************************************/
-bool secfile_save(const struct section_file *secfile, const char *filename)
+bool secfile_save(const struct section_file *secfile, QString filename)
 {
   char real_filename[1024];
   char pentry_name[128];
@@ -614,12 +613,12 @@ bool secfile_save(const struct section_file *secfile, const char *filename)
 
   SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, false);
 
-  if (NULL == filename) {
+  if (filename.isEmpty()) {
     filename = secfile->name;
   }
 
   interpret_tilde(real_filename, sizeof(real_filename), filename);
-  auto fs = new KFilterDev(real_filename);
+  auto *fs = new KFilterDev(real_filename);
   fs->open(QIODevice::WriteOnly);
 
   if (!fs->isOpen()) {
@@ -1005,7 +1004,7 @@ size_t secfile_insert_bool_vec_full(struct section_file *secfile,
     if (NULL
         != secfile_insert_bool_full(secfile, values[i], comment,
                                     allow_replace, "%s,%d", fullpath,
-                                    (int) i)) {
+                                    static_cast<int>(i))) {
       ret++;
     }
   }
@@ -1094,7 +1093,7 @@ size_t secfile_insert_int_vec_full(struct section_file *secfile,
     if (NULL
         != secfile_insert_int_full(secfile, values[i], comment,
                                    allow_replace, "%s,%d", fullpath,
-                                   (int) i)) {
+                                   static_cast<int>(i))) {
       ret++;
     }
   }
@@ -1293,7 +1292,7 @@ size_t secfile_insert_str_vec_full(struct section_file *secfile,
     if (NULL
         != secfile_insert_str_full(secfile, strings[i], comment,
                                    allow_replace, no_escape, EST_NORMAL,
-                                   "%s,%d", fullpath, (int) i)) {
+                                   "%s,%d", fullpath, static_cast<int>(i))) {
       ret++;
     }
   }
@@ -1428,7 +1427,7 @@ size_t secfile_insert_plain_enum_vec_full(struct section_file *secfile,
     if (NULL
         != secfile_insert_plain_enum_full(secfile, enumurators[i], name_fn,
                                           comment, allow_replace, "%s,%d",
-                                          fullpath, (int) i)) {
+                                          fullpath, static_cast<int>(i))) {
       ret++;
     }
   }
@@ -1543,7 +1542,8 @@ size_t secfile_insert_bitwise_enum_vec_full(
     if (NULL
         != secfile_insert_bitwise_enum_full(
             secfile, bitwise_vals[i], name_fn, begin_fn, end_fn, next_fn,
-            comment, allow_replace, "%s,%d", fullpath, (int) i)) {
+            comment, allow_replace, "%s,%d", fullpath,
+            static_cast<int>(i))) {
       ret++;
     }
   }
@@ -1659,7 +1659,7 @@ size_t secfile_insert_enum_vec_data_full(
     if (NULL
         != secfile_insert_enum_data_full(
             secfile, values[i], bitwise, name_fn, data, comment,
-            allow_replace, "%s,%d", fullpath, (int) i)) {
+            allow_replace, "%s,%d", fullpath, static_cast<int>(i))) {
       ret++;
     }
   }
@@ -1932,7 +1932,9 @@ int *secfile_lookup_int_vec(const struct section_file *secfile, size_t *dim,
   va_end(args);
 
   /* Check size. */
-  while (NULL != secfile_entry_lookup(secfile, "%s,%d", fullpath, (int) i)) {
+  while (NULL
+         != secfile_entry_lookup(secfile, "%s,%d", fullpath,
+                                 static_cast<int>(i))) {
     i++;
   }
   *dim = i;
@@ -1945,7 +1947,8 @@ int *secfile_lookup_int_vec(const struct section_file *secfile, size_t *dim,
 
   vec = new int[i];
   for (i = 0; i < *dim; i++) {
-    if (!secfile_lookup_int(secfile, vec + i, "%s,%d", fullpath, (int) i)) {
+    if (!secfile_lookup_int(secfile, vec + i, "%s,%d", fullpath,
+                            static_cast<int>(i))) {
       SECFILE_LOG(secfile, NULL,
                   "An error occurred when looking up to \"%s,%d\" entry.",
                   fullpath, (int) i);
@@ -2092,7 +2095,9 @@ const char **secfile_lookup_str_vec(const struct section_file *secfile,
   va_end(args);
 
   /* Check size. */
-  while (NULL != secfile_entry_lookup(secfile, "%s,%d", fullpath, (int) i)) {
+  while (NULL
+         != secfile_entry_lookup(secfile, "%s,%d", fullpath,
+                                 static_cast<int>(i))) {
     i++;
   }
   *dim = i;
@@ -2105,8 +2110,8 @@ const char **secfile_lookup_str_vec(const struct section_file *secfile,
 
   vec = new const char *[i];
   for (i = 0; i < *dim; i++) {
-    if (!(vec[i] =
-              secfile_lookup_str(secfile, "%s,%d", fullpath, (int) i))) {
+    if (!(vec[i] = secfile_lookup_str(secfile, "%s,%d", fullpath,
+                                      static_cast<int>(i)))) {
       SECFILE_LOG(secfile, NULL,
                   "An error occurred when looking up to \"%s,%d\" entry.",
                   fullpath, (int) i);
@@ -2224,7 +2229,9 @@ int *secfile_lookup_plain_enum_vec_full(
   va_end(args);
 
   /* Check size. */
-  while (NULL != secfile_entry_lookup(secfile, "%s,%d", fullpath, (int) i)) {
+  while (NULL
+         != secfile_entry_lookup(secfile, "%s,%d", fullpath,
+                                 static_cast<int>(i))) {
     i++;
   }
   *dim = i;
@@ -2239,7 +2246,7 @@ int *secfile_lookup_plain_enum_vec_full(
   for (i = 0; i < *dim; i++) {
     if (!secfile_lookup_plain_enum_full(secfile, vec + i, is_valid_fn,
                                         by_name_fn, "%s,%d", fullpath,
-                                        (int) i)) {
+                                        static_cast<int>(i))) {
       SECFILE_LOG(secfile, NULL,
                   "An error occurred when looking up to \"%s,%d\" entry.",
                   fullpath, (int) i);
@@ -2401,7 +2408,9 @@ int *secfile_lookup_bitwise_enum_vec_full(
   va_end(args);
 
   /* Check size. */
-  while (NULL != secfile_entry_lookup(secfile, "%s,%d", fullpath, (int) i)) {
+  while (NULL
+         != secfile_entry_lookup(secfile, "%s,%d", fullpath,
+                                 static_cast<int>(i))) {
     i++;
   }
   *dim = i;
@@ -2416,7 +2425,7 @@ int *secfile_lookup_bitwise_enum_vec_full(
   for (i = 0; i < *dim; i++) {
     if (!secfile_lookup_bitwise_enum_full(secfile, vec + i, is_valid_fn,
                                           by_name_fn, "%s,%d", fullpath,
-                                          (int) i)) {
+                                          static_cast<int>(i))) {
       SECFILE_LOG(secfile, NULL,
                   "An error occurred when looking up to \"%s,%d\" entry.",
                   fullpath, (int) i);
@@ -2617,7 +2626,9 @@ int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
   va_end(args);
 
   /* Check size. */
-  while (NULL != secfile_entry_lookup(secfile, "%s,%d", fullpath, (int) i)) {
+  while (NULL
+         != secfile_entry_lookup(secfile, "%s,%d", fullpath,
+                                 static_cast<int>(i))) {
     i++;
   }
   *dim = i;
@@ -2631,7 +2642,7 @@ int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
   vec = new int[i];
   for (i = 0; i < *dim; i++) {
     if (!secfile_lookup_enum_data(secfile, vec + i, bitwise, name_fn, data,
-                                  "%s,%d", fullpath, (int) i)) {
+                                  "%s,%d", fullpath, static_cast<int>(i))) {
       SECFILE_LOG(secfile, NULL,
                   "An error occurred when looking up to \"%s,%d\" entry.",
                   fullpath, (int) i);
@@ -3205,17 +3216,14 @@ const char *entry_comment(const struct entry *pentry)
 /**********************************************************************/ /**
    Sets a comment for the entry.  Pass NULL to remove the current one.
  **************************************************************************/
-void entry_set_comment(struct entry *pentry, const char *comment)
+void entry_set_comment(struct entry *pentry, const QString &comment)
 {
   if (NULL == pentry) {
     return;
   }
 
-  if (NULL != pentry->comment) {
-    free(pentry->comment);
-  }
-
-  pentry->comment = (NULL != comment ? fc_strdup(comment) : NULL);
+  pentry->comment =
+      (!comment.isEmpty() ? fc_strdup(qUtf8Printable(comment)) : NULL);
 }
 
 /**********************************************************************/ /**

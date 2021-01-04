@@ -23,9 +23,9 @@
 struct QIODevice;
 struct inputfile; /* opaque */
 
-typedef const char *(*datafilename_fn_t)(const char *filename);
+typedef QString (*datafilename_fn_t)(const char *filename);
 
-struct inputfile *inf_from_file(const char *filename,
+struct inputfile *inf_from_file(const QString &filename,
                                 datafilename_fn_t datafn);
 struct inputfile *inf_from_stream(QIODevice *stream,
                                   datafilename_fn_t datafn);

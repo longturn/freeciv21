@@ -67,10 +67,7 @@ extern int last_center_enemy_city;
  **************************************************************************/
 bool is_point_in_area(int x, int y, int px, int py, int pxe, int pye)
 {
-  if (x >= px && y >= py && x <= pxe && y <= pye) {
-    return true;
-  }
-  return false;
+  return x >= px && y >= py && x <= pxe && y <= pye;
 }
 
 /**********************************************************************/ /**
@@ -128,7 +125,7 @@ void draw_calculated_trade_routes(QPainter *painter)
     }
   }
   /* Draw virtual cities */
-  for (auto pcity : qAsConst(king()->trade_gen.virtual_cities)) {
+  for (auto *pcity : qAsConst(king()->trade_gen.virtual_cities)) {
     float canvas_x, canvas_y;
     if (pcity->tile != nullptr
         && tile_to_canvas_pos(&canvas_x, &canvas_y, pcity->tile)) {
@@ -142,7 +139,7 @@ void draw_calculated_trade_routes(QPainter *painter)
 /**********************************************************************/ /**
    Constructor for map
  **************************************************************************/
-map_view::map_view() : QWidget(), cursor_frame(0)
+map_view::map_view() : QWidget()
 {
   menu_click = false;
   cursor = -1;
@@ -179,7 +176,7 @@ void map_view::update_cursor(enum cursor_type ct)
  **************************************************************************/
 void map_view::hide_all_fcwidgets()
 {
-  for (auto widget : this->findChildren<fcwidget *>()) {
+  for (auto *widget : this->findChildren<fcwidget *>()) {
     if (widget->isVisible()) {
       widget->hide();
       m_hidden_fcwidgets.push_back(widget);
@@ -192,7 +189,7 @@ void map_view::hide_all_fcwidgets()
  **************************************************************************/
 void map_view::show_all_fcwidgets()
 {
-  for (auto widget : m_hidden_fcwidgets) {
+  for (auto *widget : m_hidden_fcwidgets) {
     widget->show();
   }
   m_hidden_fcwidgets.clear();
@@ -385,7 +382,7 @@ void update_mouse_cursor(enum cursor_type new_cursor_type)
    Update the timeout display.  The timeout is the time until the turn
    ends, in seconds.
  **************************************************************************/
-void qtg_update_timeout_label(void)
+void qtg_update_timeout_label()
 {
   queen()->sw_endturn->setCustomLabels(QString(get_timeout_label_text()));
   queen()->sw_endturn->updateFinalPixmap();
@@ -558,17 +555,17 @@ void tileset_changed(void)
 /**********************************************************************/ /**
    Return whether the map should be drawn or not.
  **************************************************************************/
-bool mapview_is_frozen(void) { return (0 < mapview_frozen_level); }
+bool mapview_is_frozen() { return (0 < mapview_frozen_level); }
 
 /**********************************************************************/ /**
    Freeze the drawing of the map.
  **************************************************************************/
-void mapview_freeze(void) { mapview_frozen_level++; }
+void mapview_freeze() { mapview_frozen_level++; }
 
 /**********************************************************************/ /**
    Thaw the drawing of the map.
  **************************************************************************/
-void mapview_thaw(void)
+void mapview_thaw()
 {
   if (1 < mapview_frozen_level) {
     mapview_frozen_level--;
@@ -678,8 +675,9 @@ void info_tile::drop() { NFCN_FREE(m_instance); }
  **************************************************************************/
 info_tile *info_tile::i(struct tile *p)
 {
-  if (!m_instance && p)
+  if (!m_instance && p) {
     m_instance = new info_tile(p, queen()->mapview_wdg);
+  }
   return m_instance;
 }
 
@@ -750,7 +748,7 @@ void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
   canvas_x += tileset_tile_width(tileset) / 2;
   canvas_y += tileset_citybar_offset_y(tileset);
 
-  auto painter = citybar_painter::current();
+  auto *painter = citybar_painter::current();
   auto rect = painter->paint(p, QPointF(canvas_x, canvas_y), pcity);
   *width = rect.width();
   *height = rect.height();

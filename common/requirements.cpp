@@ -1278,9 +1278,7 @@ static bool player_has_ever_built(const struct player *pplayer,
 {
   if (is_wonder(building)) {
     return (wonder_is_built(pplayer, building)
-                    || wonder_is_lost(pplayer, building)
-                ? true
-                : false);
+            || wonder_is_lost(pplayer, building));
   } else {
     qCritical("Player-ranged requirements are only supported for wonders.");
     return false;
@@ -1658,16 +1656,10 @@ is_minforeignpct_in_range(const struct city *target_city,
 
   switch (range) {
   case REQ_RANGE_CITY:
-    if (!target_city) {
-      return TRI_MAYBE;
-    }
     foreign_pct = citizens_nation_foreign(target_city) * 100
                   / city_size_get(target_city);
     return BOOL_TO_TRISTATE(foreign_pct >= min_foreign_pct);
   case REQ_RANGE_TRADEROUTE:
-    if (!target_city) {
-      return TRI_MAYBE;
-    }
     foreign_pct = citizens_nation_foreign(target_city) * 100
                   / city_size_get(target_city);
     if (foreign_pct >= min_foreign_pct) {
@@ -3346,11 +3338,7 @@ bool is_req_active(
   }
 
   if (eval == TRI_MAYBE) {
-    if (prob_type == RPT_POSSIBLE) {
-      return true;
-    } else {
-      return false;
-    }
+    return prob_type == RPT_POSSIBLE;
   }
   if (req->present) {
     return (eval == TRI_YES);
@@ -3667,7 +3655,7 @@ struct req_vec_problem *req_vec_problem_new(int num_suggested_solutions,
   int i;
   va_list ap;
 
-  auto out = new req_vec_problem;
+  auto *out = new req_vec_problem;
 
   va_start(ap, descr);
   fc_vsnprintf(out->description, sizeof(out->description), descr, ap);
@@ -4769,7 +4757,7 @@ static enum req_item_found output_type_found(const struct requirement *preq,
 /**********************************************************************/ /**
    Initialise universal_found_function array.
  **************************************************************************/
-void universal_found_functions_init(void)
+void universal_found_functions_init()
 {
   universal_found_function[VUT_GOVERNMENT] = &government_found;
   universal_found_function[VUT_NATION] = &nation_found;

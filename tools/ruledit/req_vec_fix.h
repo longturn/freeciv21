@@ -150,11 +150,11 @@ class req_vec_fix : public QWidget {
 
 public:
   explicit req_vec_fix(ruledit_gui *ui_in, req_vec_fix_item *item_info);
-  ~req_vec_fix();
+  ~req_vec_fix() override;
 
   const void *item();
 
-  bool refresh(void);
+  bool refresh();
 
 signals:
   /********************************************************************/ /**

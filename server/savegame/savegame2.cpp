@@ -62,11 +62,11 @@
 
 #include <QBitArray>
 
-#include <ctype.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cctype>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "bitvector.h"
@@ -294,7 +294,7 @@ static int unquote_block(const char *const quoted_, void *dest,
                          int dest_length);
 static void worklist_load(struct section_file *file, struct worklist *pwl,
                           const char *path, ...);
-static void unit_ordering_apply(void);
+static void unit_ordering_apply();
 static void sg_extras_set(bv_extras *extras, char ch,
                           struct extra_type **idx);
 static void sg_special_set(struct tile *ptile, bv_extras *extras, char ch,
@@ -683,7 +683,7 @@ static int unquote_block(const char *const quoted_, void *dest,
     fc_assert_ret_val((endptr - quoted) == 2, 0);
     fc_assert_ret_val(*endptr == ' ', 0);
     fc_assert_ret_val((tmp & 0xff) == tmp, 0);
-    ((unsigned char *) dest)[i] = tmp;
+    (static_cast<unsigned char *>(dest))[i] = tmp;
     quoted += 3;
   }
   return length;
@@ -733,7 +733,7 @@ static void worklist_load(struct section_file *file, struct worklist *pwl,
    For each city and tile, sort unit lists according to ord_city and ord_map
    values.
  ****************************************************************************/
-static void unit_ordering_apply(void)
+static void unit_ordering_apply()
 {
   players_iterate(pplayer)
   {
@@ -3395,7 +3395,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
   sg_warn_ret_val(
       secfile_lookup_int(loading->file, &value, "%s.size", citystr), false,
       "%s", secfile_error());
-  size = (citizens) value; /* set the correct type */
+  size = static_cast<citizens>(value); /* set the correct type */
   sg_warn_ret_val(value == (int) size, false,
                   "Invalid city size: %d, set to %d", value, size);
   city_size_set(pcity, size);
@@ -3405,7 +3405,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
         secfile_lookup_int(loading->file, &value, "%s.nspe%d", citystr, i),
         false, "%s", secfile_error());
     pcity->specialists[specialist_index(loading->specialist.order[i])] =
-        (citizens) value;
+        static_cast<citizens>(value);
     sp_count += value;
   }
 
@@ -4478,7 +4478,7 @@ static void sg_load_player_vision(struct loaddata *loading,
     }
   }
 
-  if (!plr->is_alive || -1 == total_ncities || false == game.info.fogofwar
+  if (!plr->is_alive || -1 == total_ncities || !game.info.fogofwar
       || !secfile_lookup_bool_default(loading->file, true,
                                       "game.save_private_map")) {
     /* We have:
@@ -4718,7 +4718,7 @@ static bool sg_load_player_vision_city(struct loaddata *loading,
   sg_warn_ret_val(
       secfile_lookup_int(loading->file, &size, "%s.size", citystr), false,
       "%s", secfile_error());
-  city_size = (citizens) size; /* set the correct type */
+  city_size = static_cast<citizens>(size); /* set the correct type */
   sg_warn_ret_val(size == (int) city_size, false,
                   "Invalid city size: %d; set to %d.", size, city_size);
   vision_site_size_set(pdcity, city_size);

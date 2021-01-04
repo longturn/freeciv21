@@ -15,8 +15,8 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"
@@ -1158,7 +1158,7 @@ void dai_diplomacy_begin_new_phase(struct ai_type *ait,
     }
 
     /* Edge love towards zero */
-    *love -= *love * ((double) ai->diplomacy.love_coeff / 100.0);
+    *love -= *love * (static_cast<double>(ai->diplomacy.love_coeff) / 100.0);
 
     /* ai love should always be in range [-MAX_AI_LOVE..MAX_AI_LOVE] */
     *love = MAX(-MAX_AI_LOVE, MIN(MAX_AI_LOVE, *love));

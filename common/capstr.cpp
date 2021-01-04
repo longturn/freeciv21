@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdlib.h> /* getenv() */
+#include <cstdlib> /* getenv() */
 
 /* gen_headers */
 #include "fc_version.h"
@@ -84,7 +84,7 @@ const char *const our_capability = our_capability_internal;
 /**********************************************************************/ /**
    Setup our internal network capability string.
  **************************************************************************/
-void init_our_capability(void)
+void init_our_capability()
 {
   const char *s;
 

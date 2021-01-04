@@ -68,11 +68,11 @@
 
 #include <QBitArray>
 #include <QSet>
-#include <ctype.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cctype>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "bitvector.h"
@@ -303,8 +303,8 @@ static void worklist_load(struct section_file *file, struct worklist *pwl,
 static void worklist_save(struct section_file *file,
                           const struct worklist *pwl, int max_length,
                           const char *path, ...);
-static void unit_ordering_calc(void);
-static void unit_ordering_apply(void);
+static void unit_ordering_calc();
+static void unit_ordering_apply();
 static void sg_extras_set(bv_extras *extras, char ch,
                           struct extra_type **idx);
 static char sg_extras_get(bv_extras extras, struct extra_type *presource,
@@ -874,7 +874,7 @@ static int unquote_block(const char *const quoted_, void *dest,
     fc_assert_ret_val((endptr - quoted) == 2, 0);
     fc_assert_ret_val(*endptr == ' ', 0);
     fc_assert_ret_val((tmp & 0xff) == tmp, 0);
-    ((unsigned char *) dest)[i] = tmp;
+    (static_cast<unsigned char *>(dest))[i] = tmp;
     quoted += 3;
   }
   return length;
@@ -962,7 +962,7 @@ static void worklist_save(struct section_file *file,
    Assign values to ord_city and ord_map for each unit, so the values can be
    saved.
  ****************************************************************************/
-static void unit_ordering_calc(void)
+static void unit_ordering_calc()
 {
   int j;
 
@@ -997,7 +997,7 @@ static void unit_ordering_calc(void)
    For each city and tile, sort unit lists according to ord_city and ord_map
    values.
  ****************************************************************************/
-static void unit_ordering_apply(void)
+static void unit_ordering_apply()
 {
   players_iterate(pplayer)
   {
@@ -1209,11 +1209,7 @@ static void sg_load_savefile(struct loaddata *loading)
   (void) secfile_entry_by_path(loading->file, "savefile.reason");
   (void) secfile_entry_by_path(loading->file, "savefile.revision");
 
-  if (game.scenario.datafile[0] != '\0') {
-    ruleset_datafile = false;
-  } else {
-    ruleset_datafile = true;
-  }
+  ruleset_datafile = game.scenario.datafile[0] == '\0';
 
   if (!game.scenario.is_scenario || game.scenario.ruleset_locked) {
     const char *ruleset, *alt_dir;
@@ -1287,7 +1283,7 @@ static void sg_load_savefile(struct loaddata *loading)
     } else {
       const QStringList *pathes[] = {get_scenario_dirs(), NULL};
       const QStringList **path;
-      const char *found = NULL;
+      QString found;
       char testfile[MAX_LEN_PATH];
       struct section_file *secfile;
 
@@ -1298,7 +1294,7 @@ static void sg_load_savefile(struct loaddata *loading)
         found = fileinfoname(*path, testfile);
       }
 
-      if (found == NULL) {
+      if (found.isEmpty()) {
         qCritical(_("Can't find scenario luadata file %s.luadata."),
                   game.scenario.datafile);
         sg_success = false;
@@ -2846,10 +2842,11 @@ static void sg_save_map_startpos(struct savedata *saving)
   secfile_insert_int(saving->file, map_startpos_count(),
                      "map.startpos_count");
 
-  for (auto psp : qAsConst(*wld.map.startpos_table)) {
+  for (auto *psp : qAsConst(*wld.map.startpos_table)) {
     int nat_x, nat_y;
-    if (psp->exclude)
+    if (psp->exclude) {
       continue;
+    }
     ptile = startpos_tile(psp);
 
     index_to_native_pos(&nat_x, &nat_y, tile_index(ptile));
@@ -2865,7 +2862,7 @@ static void sg_save_map_startpos(struct savedata *saving)
       char nation_names[MAX_LEN_NAME * nations->size()];
 
       nation_names[0] = '\0';
-      for (auto pnation : *nations) {
+      for (const auto *pnation : *nations) {
         if ('\0' == nation_names[0]) {
           fc_strlcpy(nation_names, nation_rule_name(pnation),
                      sizeof(nation_names));
@@ -4064,11 +4061,7 @@ static void sg_load_player_main(struct loaddata *loading, struct player *plr)
                                     "player%d.idle_turns", plrno),
                  "%s", secfile_error());
   kind = secfile_lookup_str(loading->file, "player%d.kind", plrno);
-  if (!strcmp("male", kind)) {
-    plr->is_male = true;
-  } else {
-    plr->is_male = false;
-  }
+  plr->is_male = strcmp("male", kind) == 0;
   sg_failure_ret(secfile_lookup_bool(loading->file, &plr->is_alive,
                                      "player%d.is_alive", plrno),
                  "%s", secfile_error());
@@ -4772,7 +4765,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
   sg_warn_ret_val(
       secfile_lookup_int(loading->file, &value, "%s.size", citystr), false,
       "%s", secfile_error());
-  size = (citizens) value; /* set the correct type */
+  size = static_cast<citizens>(value); /* set the correct type */
   sg_warn_ret_val(value == (int) size, false,
                   "Invalid city size: %d, set to %d", value, size);
   city_size_set(pcity, size);
@@ -4782,7 +4775,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
         secfile_lookup_int(loading->file, &value, "%s.nspe%d", citystr, i),
         false, "%s", secfile_error());
     pcity->specialists[specialist_index(loading->specialist.order[i])] =
-        (citizens) value;
+        static_cast<citizens>(value);
     sp_count += value;
   }
 
@@ -6618,7 +6611,7 @@ static void sg_load_player_vision(struct loaddata *loading,
     }
   }
 
-  if (-1 == total_ncities || false == game.info.fogofwar
+  if (-1 == total_ncities || !game.info.fogofwar
       || !secfile_lookup_bool_default(loading->file, true,
                                       "game.save_private_map")) {
     /* We have:
@@ -6807,7 +6800,7 @@ static bool sg_load_player_vision_city(struct loaddata *loading,
   sg_warn_ret_val(
       secfile_lookup_int(loading->file, &size, "%s.size", citystr), false,
       "%s", secfile_error());
-  city_size = (citizens) size; /* set the correct type */
+  city_size = static_cast<citizens>(size); /* set the correct type */
   sg_warn_ret_val(size == (int) city_size, false,
                   "Invalid city size: %d; set to %d.", size, city_size);
   vision_site_size_set(pdcity, city_size);
@@ -7127,7 +7120,6 @@ static void sg_load_researches(struct loaddata *loading)
     }
 
     if (game.server.multiresearch) {
-      vlist_research = new int[game.control.num_tech_types]();
       vlist_research = secfile_lookup_int_vec(loading->file, &count_res,
                                               "research.r%d.vbs", i);
       advance_index_iterate(A_FIRST, o)

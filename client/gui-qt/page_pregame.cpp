@@ -77,7 +77,7 @@ page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
   setLayout(ui.gridLayout);
 }
 
-page_pregame::~page_pregame() {}
+page_pregame::~page_pregame() = default;
 
 void page_pregame::set_rulesets(int num_rulesets, char **rulesets)
 {
@@ -430,7 +430,7 @@ void page_pregame::start_page_menu(QPoint pos)
     return;
   }
 
-  for (auto item : qAsConst(sel_items)) {
+  for (auto *item : qAsConst(sel_items)) {
     qvar = item->data(0, Qt::UserRole);
     qvar2 = item->data(1, Qt::UserRole);
 
@@ -442,7 +442,7 @@ void page_pregame::start_page_menu(QPoint pos)
       return;
     }
     if (qvar == 1) {
-      selected_players.append((player *) qvar2.value<void *>());
+      selected_players.append(static_cast<player *>(qvar2.value<void *>()));
     }
   }
 

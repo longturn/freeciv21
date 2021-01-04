@@ -14,7 +14,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdlib.h>
+#include <cstdlib>
 
 /* utility */
 #include "fcintl.h"
@@ -49,7 +49,7 @@ static struct {
 /************************************************************************/ /**
    Initialise all team slots.
  ****************************************************************************/
-void team_slots_init(void)
+void team_slots_init()
 {
   int i;
 
@@ -73,12 +73,12 @@ void team_slots_init(void)
 /************************************************************************/ /**
    Returns TRUE if the team slots have been initialized.
  ****************************************************************************/
-bool team_slots_initialised(void) { return (team_slots.tslots != NULL); }
+bool team_slots_initialised() { return (team_slots.tslots != NULL); }
 
 /************************************************************************/ /**
    Remove all team slots.
  ****************************************************************************/
-void team_slots_free(void)
+void team_slots_free()
 {
   team_slots_iterate(tslot)
   {
@@ -102,12 +102,12 @@ void team_slots_free(void)
 /************************************************************************/ /**
    Returns the total number of team slots (including used slots).
  ****************************************************************************/
-int team_slot_count(void) { return (MAX_NUM_TEAM_SLOTS); }
+int team_slot_count() { return (MAX_NUM_TEAM_SLOTS); }
 
 /************************************************************************/ /**
    Returns the first team slot.
  ****************************************************************************/
-struct team_slot *team_slot_first(void) { return team_slots.tslots; }
+struct team_slot *team_slot_first() { return team_slots.tslots; }
 
 /************************************************************************/ /**
    Returns the next team slot.
@@ -355,7 +355,7 @@ void team_destroy(struct team *pteam)
 /************************************************************************/ /**
    Return the current number of teams.
  ****************************************************************************/
-int team_count(void) { return team_slots.used_slots; }
+int team_count() { return team_slots.used_slots; }
 
 /************************************************************************/ /**
    Return the team index.

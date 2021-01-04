@@ -26,11 +26,11 @@ class page_network : public QWidget {
 
 public:
   page_network(QWidget *, fc_client *);
-  ~page_network();
-  void update_network_page(void);
-  void update_network_lists(void);
+  ~page_network() override;
+  void update_network_page();
+  void update_network_lists();
   void set_connection_state(enum connection_state state);
-  void destroy_server_scans(void);
+  void destroy_server_scans();
   void handle_authentication_req(enum authentication_type type,
                                  const char *message);
 private slots:

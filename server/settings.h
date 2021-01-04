@@ -179,18 +179,18 @@ void setting_lock_set(struct setting *pset, bool lock);
   }                                                                         \
   }
 
-void settings_game_start(void);
+void settings_game_start();
 void settings_game_save(struct section_file *file, const char *section);
 void settings_game_load(struct section_file *file, const char *section);
-bool settings_game_reset(void);
+bool settings_game_reset();
 
 void settings_init(bool act);
-void settings_reset(void);
-void settings_turn(void);
-void settings_free(void);
-int settings_number(void);
+void settings_reset();
+void settings_turn();
+void settings_free();
+int settings_number();
 
-void settings_list_update(void);
+void settings_list_update();
 struct setting_list *settings_list_get(enum sset_level level);
 
 bool settings_ruleset(struct section_file *file, const char *section,

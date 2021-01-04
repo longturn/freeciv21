@@ -15,9 +15,9 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "bitvector.h"
@@ -3066,7 +3066,6 @@ static void unit_enter_hut(struct unit *punit)
   if (hut) {
     send_player_info_c(pplayer, pplayer->connections); /* eg, gold */
   }
-  return;
 }
 
 /**********************************************************************/ /**
@@ -3223,7 +3222,7 @@ static bool unit_survive_autoattack(struct unit *punit)
     /* First add all eligible units to a autoattack list */
     unit_list_iterate(ptile->units, penemy)
     {
-      auto probability = new autoattack_prob;
+      auto *probability = new autoattack_prob;
       struct tile *tgt_tile = unit_tile(punit);
 
       fc_assert_action(tgt_tile, continue);
@@ -3692,8 +3691,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
   struct unit *ptransporter;
   struct packet_unit_info src_info, dest_info;
   struct packet_unit_short_info src_sinfo, dest_sinfo;
-  struct unit_move_data_list *plist =
-      unit_move_data_list_new_full(unit_move_data_unref);
+  struct unit_move_data_list *plist;
   struct unit_move_data *pdata;
   int saved_id;
   bool unit_lives;
@@ -3705,6 +3703,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
   fc_assert_ret_val(punit != NULL, false);
   fc_assert_ret_val(pdesttile != NULL, false);
 
+  plist = unit_move_data_list_new_full(unit_move_data_unref);
   pplayer = unit_owner(punit);
   saved_id = punit->id;
   psrctile = unit_tile(punit);
@@ -4918,7 +4917,7 @@ struct unit_order *create_unit_orders(int length,
     return NULL;
   }
 
-  auto unit_orders = new unit_order[length];
+  auto *unit_orders = new unit_order[length];
   memcpy(unit_orders, orders, length * sizeof(*(unit_orders)));
 
   return unit_orders;

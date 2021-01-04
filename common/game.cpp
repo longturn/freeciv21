@@ -62,17 +62,17 @@ static void game_defaults(bool keep_ruleset_value);
 /**********************************************************************/ /**
    Is program type server?
  **************************************************************************/
-bool is_server(void) { return am_i_server; }
+bool is_server() { return am_i_server; }
 
 /**********************************************************************/ /**
    Set program type to server.
  **************************************************************************/
-void i_am_server(void) { am_i_server = true; }
+void i_am_server() { am_i_server = true; }
 
 /**********************************************************************/ /**
    Set program type to client.
  **************************************************************************/
-void i_am_client(void) { am_i_server = false; }
+void i_am_client() { am_i_server = false; }
 
 /**********************************************************************/ /**
    Count the # of thousand citizen in a civilisation.
@@ -442,7 +442,7 @@ void game_init(bool keep_ruleset_value)
    Initialize map-specific parts of the game structure.  Maybe these should
    be moved into the map structure?
  **************************************************************************/
-void game_map_init(void)
+void game_map_init()
 {
   /* FIXME: it's not clear where these values should be initialized.  It
    * can't be done in game_init because the map isn't created yet.  Maybe it
@@ -455,7 +455,7 @@ void game_map_init(void)
 /**********************************************************************/ /**
    Frees all memory of the game.
  **************************************************************************/
-void game_free(void)
+void game_free()
 {
   player_slots_free();
   main_map_free();
@@ -471,7 +471,7 @@ void game_free(void)
    Do all changes to change view, and not full
    game_free()/game_init().
  **************************************************************************/
-void game_reset(void)
+void game_reset()
 {
   if (is_server()) {
     game_free();
@@ -494,7 +494,7 @@ void game_reset(void)
 /**********************************************************************/ /**
    Initialize the objects which will read from a ruleset.
  **************************************************************************/
-void game_ruleset_init(void)
+void game_ruleset_init()
 {
   nation_sets_groups_init();
   ruleset_cache_init();
@@ -539,7 +539,7 @@ void game_ruleset_init(void)
 /**********************************************************************/ /**
    Frees all memory which in objects which are read from a ruleset.
  **************************************************************************/
-void game_ruleset_free(void)
+void game_ruleset_free()
 {
   int i;
 
@@ -640,7 +640,7 @@ void game_ruleset_free(void)
 /**********************************************************************/ /**
    Initialize wonder information.
  **************************************************************************/
-void initialize_globals(void)
+void initialize_globals()
 {
   players_iterate(pplayer)
   {
@@ -708,7 +708,7 @@ const char *population_to_text(int thousand_citizen)
 /**********************************************************************/ /**
    Return a string containing the save year.
  **************************************************************************/
-static char *year_suffix(void)
+static char *year_suffix()
 {
   static char buf[MAX_LEN_NAME];
   const char *suffix;
@@ -804,7 +804,7 @@ void user_flag_free(struct user_flag *flag)
 /**********************************************************************/ /**
    Return timeout value for the current turn.
  **************************************************************************/
-int current_turn_timeout(void)
+int current_turn_timeout()
 {
   if (game.info.turn == 1 && game.info.first_timeout != -1) {
     return game.info.first_timeout;

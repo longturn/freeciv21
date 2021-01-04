@@ -185,8 +185,8 @@ const char *get_event_tag(enum event_type event);
 
 bool is_city_event(enum event_type event);
 
-void events_init(void);
-void events_free(void);
+void events_init();
+void events_free();
 
 /* Iterates over all events, sorted by the message text string. */
 #define sorted_event_iterate(event)                                         \

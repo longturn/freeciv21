@@ -97,8 +97,8 @@ struct research {
 };
 
 /* Common functions. */
-void researches_init(void);
-void researches_free(void);
+void researches_init();
+void researches_free();
 
 int research_number(const struct research *presearch);
 const char *research_rule_name(const struct research *presearch);
@@ -111,7 +111,7 @@ struct research *research_get(const struct player *pplayer);
 
 const char *research_advance_rule_name(const struct research *presearch,
                                        Tech_type_id tech);
-const char *
+const QString
 research_advance_name_translation(const struct research *presearch,
                                   Tech_type_id tech);
 
@@ -145,7 +145,7 @@ int player_tech_upkeep(const struct player *pplayer);
 /* Iterating utilities. */
 struct research_iter;
 
-size_t research_iter_sizeof(void);
+size_t research_iter_sizeof();
 struct iterator *research_iter_init(struct research_iter *it);
 
 #define researches_iterate(_presearch)                                      \
@@ -155,7 +155,7 @@ struct iterator *research_iter_init(struct research_iter *it);
 
 struct research_player_iter;
 
-size_t research_player_iter_sizeof(void);
+size_t research_player_iter_sizeof();
 struct iterator *research_player_iter_init(struct research_player_iter *it,
                                            const struct research *presearch);
 

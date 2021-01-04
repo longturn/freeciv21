@@ -16,10 +16,10 @@
 #endif
 
 #include <QBitArray>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 /* utility */
 #include "bitvector.h"
@@ -47,11 +47,11 @@
 
 static void make_huts(int number);
 static void add_resources(int prob);
-static void mapgenerator2(void);
-static void mapgenerator3(void);
-static void mapgenerator4(void);
-static bool map_generate_fair_islands(void);
-static void adjust_terrain_param(void);
+static void mapgenerator2();
+static void mapgenerator3();
+static void mapgenerator4();
+static bool map_generate_fair_islands();
+static void adjust_terrain_param();
 
 /* common variables for generator 2, 3 and 4 */
 struct gen234_state {
@@ -96,8 +96,8 @@ static struct {
   struct terrain_select_list *swamp;
 } island_terrain = {.init = false};
 
-static void island_terrain_init(void);
-static void island_terrain_free(void);
+static void island_terrain_init();
+static void island_terrain_free();
 
 static void fill_island(int coast, long int *bucket,
                         const struct terrain_select_list *tersel_list,
@@ -143,9 +143,9 @@ static int river_test_height_map(struct river_map *privermap,
 static void river_blockmark(struct river_map *privermap, struct tile *ptile);
 static bool make_river(struct river_map *privermap, struct tile *ptile,
                        struct extra_type *priver);
-static void make_rivers(void);
+static void make_rivers();
 
-static void river_types_init(void);
+static void river_types_init();
 
 #define HAS_POLES                                                           \
   (wld.map.server.temperature < 70 && !wld.map.server.alltemperate)
@@ -288,7 +288,7 @@ static bool terrain_is_too_high(struct tile *ptile, int thill, int my_height)
    the map.server.steepness value, so increasing map.mountains will result
    in more hills and mountains.
  **************************************************************************/
-static void make_relief(void)
+static void make_relief()
 {
   /* Calculate the mountain level.  map.server.mountains specifies the
    * percentage of land that is turned into hills and mountains. */
@@ -329,7 +329,7 @@ static void make_relief(void)
    appropriate texturing.
    This is used in generators 2-4.
  **************************************************************************/
-static void make_polar(void)
+static void make_polar()
 {
   struct terrain *ocean = pick_ocean(TERRAIN_OCEAN_DEPTH_MAXIMUM, true);
 
@@ -372,7 +372,7 @@ static bool ok_for_separate_poles(struct tile *ptile)
    covered with TER_FROZEN terrain.
    This is used by generators 1 and 5.
  **************************************************************************/
-static void make_polar_land(void)
+static void make_polar_land()
 {
   assign_continent_numbers();
 
@@ -448,7 +448,7 @@ static void make_plain(struct tile *ptile, int *to_be_placed)
    Make_plains converts all not yet placed terrains to plains (tundra, grass)
    used by generators 2-4
  **************************************************************************/
-static void make_plains(void)
+static void make_plains()
 {
   int to_be_placed;
 
@@ -486,7 +486,7 @@ static void make_plains(void)
    to place one terrains in called position. Else make_terrains will get
    in a infinite loop!
  **************************************************************************/
-static void make_terrains(void)
+static void make_terrains()
 {
   int total = 0;
   int forests_count = 0;
@@ -911,7 +911,7 @@ static bool make_river(struct river_map *privermap, struct tile *ptile,
    Calls make_river until there are enough river tiles on the map. It stops
    when it has tried to create RIVERS_MAXTRIES rivers.           -Erik Sigra
  **************************************************************************/
-static void make_rivers(void)
+static void make_rivers()
 {
   struct tile *ptile;
   struct terrain *pterrain;
@@ -1062,7 +1062,7 @@ static void make_rivers(void)
    1) with map.server.landpercent it generates a ocean/unknown map
    2) it then calls the above functions to generate the different terrains
  **************************************************************************/
-static void make_land(void)
+static void make_land()
 {
   struct terrain *land_fill = NULL;
 
@@ -1203,7 +1203,7 @@ static bool is_tiny_island(struct tile *ptile)
    This happens before regenerate_lakes(), so don't need to worry about
    TER_FRESHWATER here.
  **************************************************************************/
-static void remove_tiny_islands(void)
+static void remove_tiny_islands()
 {
   whole_map_iterate(&(wld.map), ptile)
   {
@@ -1231,7 +1231,7 @@ static void remove_tiny_islands(void)
    Debugging function to print information about the map that's been
    generated.
  **************************************************************************/
-static void print_mapgen_map(void)
+static void print_mapgen_map()
 {
   int terrain_counts[terrain_count()];
   int total = 0, ocean = 0;
@@ -1268,15 +1268,19 @@ static void print_mapgen_map(void)
       qDebug("  %-20s : %6d %5.1f%% (ocean: %5.1f%%)",
              terrain_rule_name(pterrain),
              terrain_counts[terrain_index(pterrain)],
-             (float) terrain_counts[terrain_index(pterrain)] * 100 / total,
-             (float) terrain_counts[terrain_index(pterrain)] * 100 / ocean);
+             static_cast<float>(terrain_counts[terrain_index(pterrain)])
+                 * 100 / total,
+             static_cast<float>(terrain_counts[terrain_index(pterrain)])
+                 * 100 / ocean);
     } else {
+      fc_assert_ret_msg(total - ocean, "Div by zero");
       qDebug("  %-20s : %6d %5.1f%% (land:  %5.1f%%)",
              terrain_rule_name(pterrain),
              terrain_counts[terrain_index(pterrain)],
-             (float) terrain_counts[terrain_index(pterrain)] * 100 / total,
-             (float) terrain_counts[terrain_index(pterrain)] * 100
-                 / (total - ocean));
+             static_cast<float>(terrain_counts[terrain_index(pterrain)])
+                 * 100 / total,
+             static_cast<float>(terrain_counts[terrain_index(pterrain)])
+                 * 100 / (total - ocean));
     }
   }
   terrain_type_iterate_end;
@@ -1514,7 +1518,7 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
    Convert parameters from the server into terrains percents parameters for
    the generators
  **************************************************************************/
-static void adjust_terrain_param(void)
+static void adjust_terrain_param()
 {
   int polar =
       2 * ICE_BASE_LEVEL * wld.map.server.landpercent / MAX_COLATITUDE;
@@ -2045,7 +2049,7 @@ static bool create_island(int islemass, struct gen234_state *pstate)
 /**********************************************************************/ /**
    Initialize terrain selection lists for make_island().
  **************************************************************************/
-static void island_terrain_init(void)
+static void island_terrain_init()
 {
   struct terrain_select *ptersel;
 
@@ -2101,7 +2105,7 @@ static void island_terrain_init(void)
 /**********************************************************************/ /**
    Free memory allocated for terrain selection lists.
  **************************************************************************/
-static void island_terrain_free(void)
+static void island_terrain_free()
 {
   if (!island_terrain.init) {
     return;
@@ -2151,11 +2155,11 @@ static bool make_island(int islemass, int starters,
     i = river_pct + mountain_pct + desert_pct + forest_pct + swamp_pct;
     i = (i <= 90) ? 100 : i * 11 / 10;
     tilefactor = pstate->totalmass / i;
-    riverbuck = -(long int) fc_rand(pstate->totalmass);
-    mountbuck = -(long int) fc_rand(pstate->totalmass);
-    desertbuck = -(long int) fc_rand(pstate->totalmass);
-    forestbuck = -(long int) fc_rand(pstate->totalmass);
-    swampbuck = -(long int) fc_rand(pstate->totalmass);
+    riverbuck = -static_cast<long int>(fc_rand(pstate->totalmass));
+    mountbuck = -static_cast<long int>(fc_rand(pstate->totalmass));
+    desertbuck = -static_cast<long int>(fc_rand(pstate->totalmass));
+    forestbuck = -static_cast<long int>(fc_rand(pstate->totalmass));
+    swampbuck = -static_cast<long int>(fc_rand(pstate->totalmass));
     lastplaced = pstate->totalmass;
   } else {
     /* makes the islands this big */
@@ -2273,7 +2277,7 @@ static void initworld(struct gen234_state *pstate)
 /**********************************************************************/ /**
    island base map generators
  **************************************************************************/
-static void mapgenerator2(void)
+static void mapgenerator2()
 {
   long int totalweight;
   struct gen234_state state;
@@ -2370,7 +2374,7 @@ static void mapgenerator2(void)
    On popular demand, this tries to mimick the generator 3 as best as
    possible.
  **************************************************************************/
-static void mapgenerator3(void)
+static void mapgenerator3()
 {
   int spares = 1;
   int j = 0;
@@ -2469,7 +2473,7 @@ static void mapgenerator3(void)
 /**********************************************************************/ /**
    Generator for placing a couple of players to each island.
  **************************************************************************/
-static void mapgenerator4(void)
+static void mapgenerator4()
 {
   int bigweight = 70;
   int spares = 1;
@@ -2537,7 +2541,7 @@ static void mapgenerator4(void)
 /**********************************************************************/ /**
    Initialize river types array
  **************************************************************************/
-static void river_types_init(void)
+static void river_types_init()
 {
   river_type_count = 0;
 
@@ -3410,7 +3414,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
 /**********************************************************************/ /**
    Build a map using generator 'FAIR'.
  **************************************************************************/
-static bool map_generate_fair_islands(void)
+static bool map_generate_fair_islands()
 {
   struct terrain *deepest_ocean =
       pick_ocean(TERRAIN_OCEAN_DEPTH_MAXIMUM, false);

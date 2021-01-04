@@ -27,8 +27,8 @@ public:
   void put_to_corner();
 
 protected:
-  void mouseMoveEvent(QMouseEvent *event);
-  void mousePressEvent(QMouseEvent *event);
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
 
 private:
   QPoint point;
@@ -44,8 +44,8 @@ public:
   void put_to_corner();
 
 protected:
-  void mouseMoveEvent(QMouseEvent *event);
-  void mousePressEvent(QMouseEvent *event);
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
 
 private:
   QPoint point;
@@ -62,8 +62,8 @@ public:
   float scale;
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void mousePressEvent(QMouseEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
 
 private:
   int size;
@@ -94,6 +94,6 @@ public:
   void put_to_corner();
 
 protected:
-  void mousePressEvent(QMouseEvent *event);
+  void mousePressEvent(QMouseEvent *event) override;
   void notify_parent();
 };

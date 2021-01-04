@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h>
+#include <cmath>
 
 /* common */
 #include "game.h"
@@ -114,11 +114,8 @@ static void caravan_result_init(struct caravan_result *result,
   result->value = 0;
   result->help_wonder = false;
   if ((src != NULL) && (dest != NULL)) {
-    if (tile_continent(src->tile) != tile_continent(dest->tile)) {
-      result->required_boat = true;
-    } else {
-      result->required_boat = false;
-    }
+    result->required_boat =
+        tile_continent(src->tile) != tile_continent(dest->tile);
   } else {
     result->required_boat = false;
   }
@@ -165,7 +162,7 @@ static void caravan_search_from(const struct unit *caravan,
   end_time = param->horizon - turns_before;
 
   /* Initialize the pf run. */
-  pft_fill_unit_parameter(&pfparam, (struct unit *) caravan);
+  pft_fill_unit_parameter(&pfparam, const_cast<struct unit *>(caravan));
   pfparam.start_tile = start_tile;
   pfparam.moves_left_initially = moves_left_before;
   pfparam.omniscience = omniscient;

@@ -15,9 +15,9 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"
@@ -84,7 +84,7 @@ static civtimer *as_timer = NULL;
 /**********************************************************************/ /**
    Free resources allocated for autosettlers system
  **************************************************************************/
-void adv_settlers_free(void)
+void adv_settlers_free()
 {
   timer_destroy(as_timer);
   as_timer = NULL;
@@ -93,7 +93,7 @@ void adv_settlers_free(void)
 /**********************************************************************/ /**
    Initialize auto settlers based on the ruleset.
  **************************************************************************/
-void auto_settlers_ruleset_init(void)
+void auto_settlers_ruleset_init()
 {
   int i;
 
@@ -1112,11 +1112,8 @@ bool adv_settler_safe_tile(const struct player *pplayer, struct unit *punit,
   }
   unit_list_iterate_end;
 
-  if (is_square_threatened(pplayer, ptile, !has_handicap(pplayer, H_FOG))) {
-    return false;
-  }
-
-  return true;
+  return !is_square_threatened(pplayer, ptile,
+                               !has_handicap(pplayer, H_FOG));
 }
 
 /**********************************************************************/ /**

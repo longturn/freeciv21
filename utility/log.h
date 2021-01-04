@@ -29,7 +29,7 @@ constexpr auto LOG_DEBUG = QtDebugMsg;
  * value. */
 #define __FC_LINE__ __LINE__
 
-void log_close(void);
+void log_close();
 bool log_init(const QString &level_str = QStringLiteral("info"));
 void log_set_file(const QString &path);
 const QString &log_get_level();

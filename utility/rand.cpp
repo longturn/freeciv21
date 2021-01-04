@@ -111,7 +111,8 @@ RANDOM_TYPE fc_rand_debug(RANDOM_TYPE size, const char *called_as, int line,
 
     if (++bailout > 10000) {
       qCritical("%s(%lu) = %lu bailout at %s:%d", called_as,
-                (unsigned long) size, (unsigned long) new_rand, file, line);
+                static_cast<unsigned long>(size),
+                static_cast<unsigned long>(new_rand), file, line);
       new_rand = 0;
       break;
     }
@@ -153,17 +154,17 @@ void fc_srand(RANDOM_TYPE seed)
 /*********************************************************************/ /**
    Mark fc_rand state uninitialized.
  *************************************************************************/
-void fc_rand_uninit(void) { rand_state.is_init = false; }
+void fc_rand_uninit() { rand_state.is_init = false; }
 
 /*********************************************************************/ /**
    Return whether the current state has been initialized.
  *************************************************************************/
-bool fc_rand_is_init(void) { return rand_state.is_init; }
+bool fc_rand_is_init() { return rand_state.is_init; }
 
 /*********************************************************************/ /**
    Return a copy of the current rand_state; eg for save/restore.
  *************************************************************************/
-RANDOM_STATE fc_rand_state(void)
+RANDOM_STATE fc_rand_state()
 {
   int i;
 

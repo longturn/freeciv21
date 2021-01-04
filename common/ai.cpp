@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"
@@ -76,7 +76,7 @@ struct ai_type *ai_type_by_name(const char *search)
 /*************************************************************************/ /**
    Return next free ai_type
  *****************************************************************************/
-struct ai_type *ai_type_alloc(void)
+struct ai_type *ai_type_alloc()
 {
   if (ai_type_count >= FREECIV_AI_MOD_LAST) {
     qCritical(_("Too many AI modules. Max is %d."), FREECIV_AI_MOD_LAST);
@@ -90,12 +90,12 @@ struct ai_type *ai_type_alloc(void)
 /*************************************************************************/ /**
    Free latest ai_type
  *****************************************************************************/
-void ai_type_dealloc(void) { ai_type_count--; }
+void ai_type_dealloc() { ai_type_count--; }
 
 /*************************************************************************/ /**
    Return number of ai types
  *****************************************************************************/
-int ai_type_get_count(void) { return ai_type_count; }
+int ai_type_get_count() { return ai_type_count; }
 
 /*************************************************************************/ /**
    Return the name of the ai type.

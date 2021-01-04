@@ -47,8 +47,9 @@ void mrIdle::drop() { NFCN_FREE(m_instance); }
  **************************************************************************/
 mrIdle *mrIdle::idlecb()
 {
-  if (!m_instance)
+  if (!m_instance) {
     m_instance = new mrIdle;
+  }
   return m_instance;
 }
 

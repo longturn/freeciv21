@@ -76,9 +76,9 @@ private slots:
 
 public:
   explicit chat_input(QWidget *parent = nullptr);
-  ~chat_input();
-  virtual void chat_word_list_changed(const QStringList &);
-  bool event(QEvent *event);
+  ~chat_input() override;
+  void chat_word_list_changed(const QStringList &) override;
+  bool event(QEvent *event) override;
 
 private:
   QCompleter *cmplt;
@@ -99,7 +99,7 @@ signals:
   void dbl_clicked();
 
 protected:
-  void mouseDoubleClickEvent(QMouseEvent *event)
+  void mouseDoubleClickEvent(QMouseEvent *event) override
   {
     Q_UNUSED(event);
     emit dbl_clicked();
@@ -129,12 +129,12 @@ private slots:
 
 protected:
   void paint(QPainter *painter, QPaintEvent *event);
-  void paintEvent(QPaintEvent *event);
-  bool eventFilter(QObject *obj, QEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
   void chat_message_received(const QString &message,
-                             const struct text_tag_list *tags);
+                             const struct text_tag_list *tags) override;
 
   text_browser_dblclck *chat_output;
   QPushButton *remove_links;

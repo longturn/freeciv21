@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 
 /* utility */
 #include "bitvector.h"
@@ -1835,7 +1835,7 @@ static bool diplomat_success_vs_defender(struct unit *pattacker,
                                        NULL, NULL, EFT_SPY_RESISTANT)
             / 100;
 
-  return (int) fc_rand(100) < chance;
+  return static_cast<int>(fc_rand(100)) < chance;
 }
 
 /************************************************************************/ /**
@@ -2009,6 +2009,7 @@ diplomat_infiltrate_tile(struct player *pplayer, struct player *cplayer,
 
       switch (action_get_target_kind(paction)) {
       case ATK_CITY:
+        fc_assert_ret_val(pcity, false);
         victim_link = city_link(pcity);
         break;
       case ATK_UNIT:

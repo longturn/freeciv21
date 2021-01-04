@@ -50,7 +50,7 @@ public:
   ruledit_main();
 
 protected:
-  void closeEvent(QCloseEvent *cevent);
+  void closeEvent(QCloseEvent *cevent) override;
 };
 
 /* get 'struct req_edit_list' and related functions: */
@@ -85,7 +85,7 @@ class ruledit_gui : public QObject {
 
 public:
   ruledit_gui(ruledit_main *main);
-  virtual ~ruledit_gui();
+  ~ruledit_gui() override;
 
   void display_msg(const char *msg);
   requirers_dlg *create_requirers(const char *title);

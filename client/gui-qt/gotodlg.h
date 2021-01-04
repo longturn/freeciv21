@@ -39,7 +39,7 @@ class goto_dialog : public QWidget {
 public:
   goto_dialog(QWidget *parent = 0);
   void init();
-  ~goto_dialog();
+  ~goto_dialog() override;
   void update_dlg();
   void show_me();
   void sort_def();
@@ -53,7 +53,7 @@ private slots:
 
 protected:
   void paint(QPainter *painter, QPaintEvent *event);
-  void paintEvent(QPaintEvent *event);
+  void paintEvent(QPaintEvent *event) override;
 
 private:
   void fill_tab(struct player *pplayer);

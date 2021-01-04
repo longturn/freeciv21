@@ -16,10 +16,10 @@
 #endif
 
 #include <QString>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <csignal>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h>
@@ -402,7 +402,7 @@ int main(int argc, char *argv[])
   init_our_capability();
 
   /* have arguments, call the main server loop... */
-  auto server = new freeciv::server;
+  auto *server = new freeciv::server;
   if (!server->is_ready()) {
     delete server;
     exit(EXIT_FAILURE);

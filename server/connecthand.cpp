@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 
 /* utility */
 #include "capability.h"
@@ -562,7 +562,7 @@ void send_conn_info_remove(struct conn_list *src, struct conn_list *dest)
 /**********************************************************************/ /**
    Search for first uncontrolled player
  **************************************************************************/
-struct player *find_uncontrolled_player(void)
+struct player *find_uncontrolled_player()
 {
   players_iterate(played)
   {

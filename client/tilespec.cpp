@@ -25,10 +25,10 @@
 #include <QSet>
 #include <QString>
 #include <QVector>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h> /* exit */
-#include <string.h>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib> /* exit */
+#include <cstring>
 
 /* utility */
 #include "bitvector.h"
@@ -523,7 +523,7 @@ void tileset_error(QtMsgType level, const char *format, ...)
 /************************************************************************/ /**
    Create a new drawing data.
  ****************************************************************************/
-static struct drawing_data *drawing_data_new(void)
+static struct drawing_data *drawing_data_new()
 {
   struct drawing_data *draw = new drawing_data[1]();
 
@@ -562,7 +562,7 @@ static void drawing_data_destroy(struct drawing_data *draw)
 /************************************************************************/ /**
    Return unscaled tileset if it exists, or default otherwise
  ****************************************************************************/
-struct tileset *get_tileset(void)
+struct tileset *get_tileset()
 {
   if (unscaled_tileset != NULL) {
     return unscaled_tileset;
@@ -835,7 +835,7 @@ bool tileset_use_hard_coded_fog(const struct tileset *t)
 /************************************************************************/ /**
    Initialize.
  ****************************************************************************/
-static struct tileset *tileset_new(void)
+static struct tileset *tileset_new()
 {
   struct tileset *t = new struct tileset[1]();
 
@@ -987,14 +987,14 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
 static char *tilespec_fullname(QString tileset_name)
 {
   if (!tileset_name.isEmpty()) {
-    const char *dname;
+    QString dname;
     QString fname =
         QStringLiteral("%1%2").arg(tileset_name, TILESPEC_SUFFIX);
 
     dname = fileinfoname(get_data_dirs(), qUtf8Printable(fname));
 
-    if (dname) {
-      return fc_strdup(dname);
+    if (!dname.isEmpty()) {
+      return fc_strdup(qUtf8Printable(dname));
     }
   }
 
@@ -1063,7 +1063,7 @@ static void tileset_free_toplevel(struct tileset *t)
   t->num_preferred_themes = 0;
 
   if (t->tile_hash) {
-    for (auto a : *t->tile_hash) {
+    for (auto *a : *t->tile_hash) {
       drawing_data_destroy(a);
     }
     FC_FREE(t->tile_hash);
@@ -1247,9 +1247,6 @@ bool tilespec_reread(const char *new_tileset_name,
     }
   }
   tileset_load_tiles(tileset);
-  if (game_fully_initialized) {
-    tileset_use_preferred_theme(tileset);
-  }
 
   if (game_fully_initialized) {
     if (game.client.ruleset_ready) {
@@ -1393,14 +1390,16 @@ static QPixmap *load_gfx_file(const char *gfx_filename)
 
   /* Try out all supported file extensions to find one that works. */
   while ((gfx_fileext = *gfx_fileexts++)) {
-    const char *real_full_name;
+    QString real_full_name;
     QString full_name =
         QStringLiteral("%1.%2").arg(gfx_filename, gfx_fileext);
 
-    if ((real_full_name =
-             fileinfoname(get_data_dirs(), qUtf8Printable(full_name)))) {
-      log_debug("trying to load gfx file \"%s\".", real_full_name);
-      s = load_gfxfile(real_full_name);
+    real_full_name =
+        fileinfoname(get_data_dirs(), qUtf8Printable(full_name));
+    if (!real_full_name.isEmpty()) {
+      log_debug("trying to load gfx file \"%s\".",
+                qUtf8Printable(real_full_name));
+      s = load_gfxfile(qUtf8Printable(real_full_name));
       if (s) {
         return s;
       }
@@ -1628,15 +1627,15 @@ static char *tilespec_gfx_filename(const char *gfx_filename)
   const char **gfx_fileexts = gfx_fileextensions();
 
   while ((gfx_current_fileext = *gfx_fileexts++)) {
-    const char *real_full_name;
+    QString real_full_name;
     QString full_name =
         QStringLiteral("%1.%2").arg(gfx_filename, gfx_current_fileext);
 
     real_full_name =
         fileinfoname(get_data_dirs(), qUtf8Printable(full_name));
 
-    if (real_full_name) {
-      return fc_strdup(real_full_name);
+    if (!real_full_name.isEmpty()) {
+      return fc_strdup(qUtf8Printable(real_full_name));
     }
   }
 
@@ -1670,45 +1669,42 @@ static int check_sprite_type(const char *sprite_type,
 static bool tileset_invalid_offsets(struct tileset *t,
                                     struct section_file *file)
 {
-  if (!secfile_lookup_int(file, &t->unit_flag_offset_x,
-                          "tilespec.unit_flag_offset_x")
-      || !secfile_lookup_int(file, &t->unit_flag_offset_y,
-                             "tilespec.unit_flag_offset_y")
-      || !secfile_lookup_int(file, &t->city_flag_offset_x,
-                             "tilespec.city_flag_offset_x")
-      || !secfile_lookup_int(file, &t->city_flag_offset_y,
-                             "tilespec.city_flag_offset_y")
-      || !secfile_lookup_int(file, &t->unit_offset_x,
-                             "tilespec.unit_offset_x")
-      || !secfile_lookup_int(file, &t->unit_offset_y,
-                             "tilespec.unit_offset_y")
-      || !secfile_lookup_int(file, &t->activity_offset_x,
-                             "tilespec.activity_offset_x")
-      || !secfile_lookup_int(file, &t->activity_offset_y,
-                             "tilespec.activity_offset_y")
-      || !secfile_lookup_int(file, &t->select_offset_x,
-                             "tilespec.select_offset_x")
-      || !secfile_lookup_int(file, &t->select_offset_y,
-                             "tilespec.select_offset_y")
-      || !secfile_lookup_int(file, &t->city_offset_x,
-                             "tilespec.city_offset_x")
-      || !secfile_lookup_int(file, &t->city_offset_y,
-                             "tilespec.city_offset_y")
-      || !secfile_lookup_int(file, &t->city_size_offset_x,
-                             "tilespec.city_size_offset_x")
-      || !secfile_lookup_int(file, &t->city_size_offset_y,
-                             "tilespec.city_size_offset_y")
-      || !secfile_lookup_int(file, &t->citybar_offset_y,
-                             "tilespec.citybar_offset_y")
-      || !secfile_lookup_int(file, &t->tilelabel_offset_y,
-                             "tilespec.tilelabel_offset_y")
-      || !secfile_lookup_int(file, &t->occupied_offset_x,
-                             "tilespec.occupied_offset_x")
-      || !secfile_lookup_int(file, &t->occupied_offset_y,
-                             "tilespec.occupied_offset_y")) {
-    return true;
-  }
-  return false;
+  return !secfile_lookup_int(file, &t->unit_flag_offset_x,
+                             "tilespec.unit_flag_offset_x")
+         || !secfile_lookup_int(file, &t->unit_flag_offset_y,
+                                "tilespec.unit_flag_offset_y")
+         || !secfile_lookup_int(file, &t->city_flag_offset_x,
+                                "tilespec.city_flag_offset_x")
+         || !secfile_lookup_int(file, &t->city_flag_offset_y,
+                                "tilespec.city_flag_offset_y")
+         || !secfile_lookup_int(file, &t->unit_offset_x,
+                                "tilespec.unit_offset_x")
+         || !secfile_lookup_int(file, &t->unit_offset_y,
+                                "tilespec.unit_offset_y")
+         || !secfile_lookup_int(file, &t->activity_offset_x,
+                                "tilespec.activity_offset_x")
+         || !secfile_lookup_int(file, &t->activity_offset_y,
+                                "tilespec.activity_offset_y")
+         || !secfile_lookup_int(file, &t->select_offset_x,
+                                "tilespec.select_offset_x")
+         || !secfile_lookup_int(file, &t->select_offset_y,
+                                "tilespec.select_offset_y")
+         || !secfile_lookup_int(file, &t->city_offset_x,
+                                "tilespec.city_offset_x")
+         || !secfile_lookup_int(file, &t->city_offset_y,
+                                "tilespec.city_offset_y")
+         || !secfile_lookup_int(file, &t->city_size_offset_x,
+                                "tilespec.city_size_offset_x")
+         || !secfile_lookup_int(file, &t->city_size_offset_y,
+                                "tilespec.city_size_offset_y")
+         || !secfile_lookup_int(file, &t->citybar_offset_y,
+                                "tilespec.citybar_offset_y")
+         || !secfile_lookup_int(file, &t->tilelabel_offset_y,
+                                "tilespec.tilelabel_offset_y")
+         || !secfile_lookup_int(file, &t->occupied_offset_x,
+                                "tilespec.occupied_offset_x")
+         || !secfile_lookup_int(file, &t->occupied_offset_y,
+                                "tilespec.occupied_offset_y");
 }
 
 static void tileset_set_offsets(struct tileset *t, struct section_file *file)
@@ -2138,8 +2134,8 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     struct tileset_layer *tslp = &t->layers[i];
     int j, k;
 
-    tslp->match_types = (char **) secfile_lookup_str_vec(
-        file, &tslp->match_count, "layer%d.match_types", i);
+    tslp->match_types = const_cast<char **>(secfile_lookup_str_vec(
+        file, &tslp->match_count, "layer%d.match_types", i));
     for (j = 0; j < tslp->match_count; j++) {
       tslp->match_types[j] = fc_strdup(tslp->match_types[j]);
 
@@ -2239,7 +2235,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
         if (count > MAX_NUM_MATCH_WITH) {
           qCritical("[%s] match_with has too many types (%d, max %d)",
-                    sec_name, (int) count, MAX_NUM_MATCH_WITH);
+                    sec_name, static_cast<int>(count), MAX_NUM_MATCH_WITH);
           count = MAX_NUM_MATCH_WITH;
         }
 
@@ -2372,13 +2368,13 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   t->sprite_hash = new QHash<QString, struct small_sprite *>;
   for (i = 0; i < num_spec_files; i++) {
     struct specfile *sf = new specfile();
-    const char *dname;
+    QString dname;
 
     log_debug("spec file %s", spec_filenames[i]);
 
     sf->big_sprite = NULL;
     dname = fileinfoname(get_data_dirs(), spec_filenames[i]);
-    if (!dname) {
+    if (dname.isEmpty()) {
       if (verbose) {
         qCritical("Can't find spec file \"%s\".", spec_filenames[i]);
       }
@@ -2386,7 +2382,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       tileset_stop_read(t, file, fname, sections, layer_order);
       return nullptr;
     }
-    sf->file_name = fc_strdup(dname);
+    sf->file_name = fc_strdup(qUtf8Printable(dname));
     scan_specfile(t, sf, duplicates_ok);
 
     t->specfiles->insert(sf);
@@ -2396,11 +2392,11 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   t->color_system = color_system_read(file);
 
   /* FIXME: remove this hack. */
-  t->preferred_themes = (char **) secfile_lookup_str_vec(
-      file, &num_preferred_themes, "tilespec.preferred_themes");
+  t->preferred_themes = const_cast<char **>(secfile_lookup_str_vec(
+      file, &num_preferred_themes, "tilespec.preferred_themes"));
   if (num_preferred_themes <= 0) {
-    t->preferred_themes = (char **) secfile_lookup_str_vec(
-        file, &num_preferred_themes, "tilespec.prefered_themes");
+    t->preferred_themes = const_cast<char **>(secfile_lookup_str_vec(
+        file, &num_preferred_themes, "tilespec.prefered_themes"));
     if (num_preferred_themes > 0) {
       qCWarning(deprecations_category,
                 "Entry tilespec.prefered_themes in tilespec."
@@ -2440,7 +2436,7 @@ static const char *citizen_rule_name(enum citizen_category citizen)
   default:
     break;
   }
-  qCritical("Unknown citizen type: %d.", (int) citizen);
+  qCritical("Unknown citizen type: %d.", static_cast<int>(citizen));
   return NULL;
 }
 
@@ -3344,7 +3340,7 @@ static bool load_river_sprites(struct tileset *t,
  ****************************************************************************/
 void finish_loading_sprites(struct tileset *t)
 {
-  for (auto sf : *t->specfiles) {
+  for (auto *sf : *t->specfiles) {
     if (sf->big_sprite) {
       free_sprite(sf->big_sprite);
       sf->big_sprite = NULL;
@@ -3382,8 +3378,9 @@ QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
                         what, name);
 
   sp = load_sprite(t, tag, scale, true);
-  if (sp)
+  if (sp) {
     return sp;
+  }
 
   sp = load_sprite(t, alt, scale, true);
   if (sp) {
@@ -3437,11 +3434,7 @@ static bool tileset_setup_unit_direction(struct tileset *t, int uidx,
    * probably meant icon gfx to be used as fallback for all orientations */
   t->sprites.units.facing[uidx][dir] = load_sprite(t, buf, true, true);
 
-  if (t->sprites.units.facing[uidx][dir] != NULL) {
-    return true;
-  }
-
-  return false;
+  return t->sprites.units.facing[uidx][dir] != NULL;
 }
 
 /************************************************************************/ /**
@@ -4484,11 +4477,7 @@ static int fill_road_sprite_array(const struct tileset *t,
   }
   extra_type_list_iterate_end;
 
-  if (road && (!pcity || !gui_options.draw_cities) && !hider) {
-    draw_single_road = true;
-  } else {
-    draw_single_road = false;
-  }
+  draw_single_road = road && (!pcity || !gui_options.draw_cities) && !hider;
 
   for (dir = 0; dir < 8; dir++) {
     bool roads_exist;
@@ -5220,7 +5209,7 @@ static int fill_grid_sprite_array(const struct tileset *t,
         }
       }
       // Draw city grid for main citymap
-      if (citymode
+      if (tile && citymode
           && city_base_to_city_map(&dummy_x, &dummy_y, citymode, tile)) {
         ADD_SPRITE_SIMPLE(t->sprites.grid.selected[pedge->type]);
       }
@@ -6208,7 +6197,7 @@ void tileset_free_tiles(struct tileset *t)
     t->sprite_hash = NULL;
   }
 
-  for (auto ss : *t->small_sprites) {
+  for (auto *ss : *t->small_sprites) {
     if (ss->file) {
       delete[] ss->file;
     }
@@ -6217,7 +6206,7 @@ void tileset_free_tiles(struct tileset *t)
   }
   t->small_sprites->clear();
 
-  for (auto sf : *t->specfiles) {
+  for (auto *sf : *t->specfiles) {
     delete[] sf->file_name;
     if (sf->big_sprite) {
       free_sprite(sf->big_sprite);
@@ -6531,7 +6520,7 @@ QPixmap *get_unit_unhappy_sprite(const struct tileset *t,
                                  const struct unit *punit, int happy_cost)
 {
   Q_UNUSED(punit)
-  const int unhappy = CLIP(0, happy_cost, MAX_NUM_UPKEEP_SPRITES + 1);
+  const int unhappy = CLIP(0, happy_cost, MAX_NUM_UPKEEP_SPRITES - 1);
 
   if (unhappy > 0) {
     return t->sprites.upkeep.unhappy[unhappy - 1];
@@ -6576,37 +6565,6 @@ QPixmap *get_basic_fog_sprite(const struct tileset *t)
 struct color_system *get_color_system(const struct tileset *t)
 {
   return t->color_system;
-}
-
-/************************************************************************/ /**
-   Loads preferred theme if there's any.
- ****************************************************************************/
-void tileset_use_preferred_theme(const struct tileset *t)
-{
-  char *default_theme_name = NULL;
-  size_t default_theme_name_sz = 0;
-  int i;
-
-  if (NULL == default_theme_name) {
-    /* Theme is not supported by this client. */
-    return;
-  }
-  Q_UNREACHABLE();
-  for (i = 0; i < t->num_preferred_themes; i++) {
-    if (strcmp(t->preferred_themes[i], default_theme_name)) {
-      if (popup_theme_suggestion_dialog(t->preferred_themes[i])) {
-        log_debug("trying theme \"%s\".", t->preferred_themes[i]);
-        if (load_theme(t->preferred_themes[i])) {
-          (void) fc_strlcpy(default_theme_name, t->preferred_themes[i],
-                            default_theme_name_sz);
-          return;
-        }
-      }
-    }
-  }
-  qDebug("The tileset doesn't specify preferred themes or none of its "
-         "preferred themes can be used. Using system default.");
-  gui_clear_theme();
 }
 
 /************************************************************************/ /**
@@ -6994,7 +6952,7 @@ void tileset_ruleset_reset(struct tileset *t)
 /************************************************************************/ /**
    Is tileset in sane state?
  ****************************************************************************/
-bool tileset_is_fully_loaded(void) { return !tileset_update; }
+bool tileset_is_fully_loaded() { return !tileset_update; }
 
 /************************************************************************/ /**
    Return tileset name

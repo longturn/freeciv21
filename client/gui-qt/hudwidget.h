@@ -54,13 +54,13 @@ class hud_message_box : public QMessageBox {
 
 public:
   hud_message_box(QWidget *parent);
-  ~hud_message_box();
+  ~hud_message_box() override;
   void set_text_title(const QString &s1, const QString &s2);
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void timerEvent(QTimerEvent *event);
-  void keyPressEvent(QKeyEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void timerEvent(QTimerEvent *event) override;
+  void keyPressEvent(QKeyEvent *event) override;
 
 private:
   int m_animate_step;
@@ -83,12 +83,12 @@ class hud_text : public QWidget {
 
 public:
   hud_text(const QString &s, int time_secs, QWidget *parent);
-  ~hud_text();
+  ~hud_text() override;
   void show_me();
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void timerEvent(QTimerEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void timerEvent(QTimerEvent *event) override;
 
 private:
   void center_me();
@@ -111,14 +111,14 @@ class hud_input_box : public QDialog {
 
 public:
   hud_input_box(QWidget *parent);
-  ~hud_input_box();
+  ~hud_input_box() override;
   void set_text_title_definput(const QString &s1, const QString &s2,
                                const QString &def_input);
   QLineEdit input_edit;
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void timerEvent(QTimerEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void timerEvent(QTimerEvent *event) override;
 
 private:
   int m_animate_step;
@@ -147,7 +147,7 @@ private slots:
   void mouse_clicked();
 
 protected:
-  void mousePressEvent(QMouseEvent *e);
+  void mousePressEvent(QMouseEvent *e) override;
 };
 
 /****************************************************************************
@@ -160,7 +160,7 @@ class hud_action : public QWidget {
 
 public:
   hud_action(QWidget *parent);
-  ~hud_action();
+  ~hud_action() override;
   void set_pixmap(QPixmap *p);
   shortcut_id action_shortcut;
 signals:
@@ -168,11 +168,11 @@ signals:
   void right_clicked();
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void mousePressEvent(QMouseEvent *e);
-  void mouseMoveEvent(QMouseEvent *event);
-  void leaveEvent(QEvent *event);
-  void enterEvent(QEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void mousePressEvent(QMouseEvent *e) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void leaveEvent(QEvent *event) override;
+  void enterEvent(QEvent *event) override;
 private slots:
   void mouse_clicked();
   void mouse_right_clicked();
@@ -186,7 +186,7 @@ class unit_actions : public QWidget {
 
 public:
   unit_actions(QWidget *parent, unit *punit);
-  ~unit_actions();
+  ~unit_actions() override;
   void init_layout();
   int update_actions();
   void clear_layout();
@@ -211,11 +211,11 @@ class hud_units : public QFrame {
 
 public:
   hud_units(QWidget *parent);
-  ~hud_units();
+  ~hud_units() override;
   void update_actions(unit_list *punits);
 
 protected:
-  void moveEvent(QMoveEvent *event);
+  void moveEvent(QMoveEvent *event) override;
 
 private:
   move_widget *mw;
@@ -231,7 +231,7 @@ class hud_unit_loader : public QTableWidget {
   Q_OBJECT
 public:
   hud_unit_loader(struct unit *pcargo, struct tile *ptile);
-  ~hud_unit_loader();
+  ~hud_unit_loader() override;
   void show_me();
 protected slots:
   void selection_changed(const QItemSelection &, const QItemSelection &);
@@ -253,7 +253,7 @@ class unit_hud_selector : public QFrame {
 
 public:
   unit_hud_selector(QWidget *parent);
-  ~unit_hud_selector();
+  ~unit_hud_selector() override;
   void show_me();
 private slots:
   void select_units(int x = 0);
@@ -262,7 +262,7 @@ private slots:
   void uhs_cancel();
 
 protected:
-  void keyPressEvent(QKeyEvent *event);
+  void keyPressEvent(QKeyEvent *event) override;
 
 private:
   bool activity_filter(struct unit *punit);
@@ -300,32 +300,32 @@ public:
   hud_unit_combat(int attacker_unit_id, int defender_unit_id,
                   int attacker_hp, int defender_hp, bool make_att_veteran,
                   bool make_def_veteran, float scale, QWidget *parent);
-  ~hud_unit_combat();
+  ~hud_unit_combat() override;
   bool get_focus();
   void set_fading(float fade);
   void set_scale(float scale);
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void mousePressEvent(QMouseEvent *e);
-  void leaveEvent(QEvent *event);
-  void enterEvent(QEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void mousePressEvent(QMouseEvent *e) override;
+  void leaveEvent(QEvent *event) override;
+  void enterEvent(QEvent *event) override;
 
 private:
   void init_images(bool redraw = false);
-  int att_hp;
-  int def_hp;
-  int att_hp_loss;
-  int def_hp_loss;
-  bool att_veteran;
-  bool def_veteran;
-  struct unit *attacker;
-  struct unit *defender;
-  const struct unit_type *type_attacker;
-  const struct unit_type *type_defender;
-  struct tile *center_tile;
-  bool focus;
-  float fading;
+  int att_hp = 0;
+  int def_hp = 0;
+  int att_hp_loss = 0;
+  int def_hp_loss = 0;
+  bool att_veteran = false;
+  bool def_veteran = false;
+  struct unit *attacker = nullptr;
+  struct unit *defender = nullptr;
+  const struct unit_type *type_attacker = nullptr;
+  const struct unit_type *type_defender = nullptr;
+  struct tile *center_tile = nullptr;
+  bool focus = false;
+  float fading = 0.0f;
   float hud_scale;
   QImage dimg, aimg;
 };
@@ -340,16 +340,16 @@ class hud_battle_log : public QWidget {
 
 public:
   hud_battle_log(QWidget *parent);
-  ~hud_battle_log();
+  ~hud_battle_log() override;
   void add_combat_info(hud_unit_combat *huc);
   void set_scale(float s);
   float scale;
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void moveEvent(QMoveEvent *event);
-  void timerEvent(QTimerEvent *event);
-  void showEvent(QShowEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void moveEvent(QMoveEvent *event) override;
+  void timerEvent(QTimerEvent *event) override;
+  void showEvent(QShowEvent *event) override;
 
 private:
   void update_size();

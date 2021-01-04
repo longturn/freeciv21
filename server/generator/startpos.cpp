@@ -16,7 +16,7 @@
 #endif
 
 #include <QBitArray>
-#include <math.h> /* sqrt, HUGE_VAL */
+#include <cmath> /* sqrt, HUGE_VAL */
 
 /* utility */
 #include "fcintl.h"
@@ -245,9 +245,10 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
   /* Don't start too close to someone else. */
   cont_size = get_continent_size(cont);
   island = islands + islands_index[cont];
-  for (auto psp : qAsConst(*wld.map.startpos_table)) {
-    if (psp->exclude)
+  for (auto *psp : qAsConst(*wld.map.startpos_table)) {
+    if (psp->exclude) {
       continue;
+    }
     struct tile *tile1 = startpos_tile(psp);
 
     if ((tile_continent(ptile) == tile_continent(tile1)
@@ -276,7 +277,7 @@ static int compare_islands(const void *A_, const void *B_)
 /************************************************************************/ /**
    Initialize islands data.
  ****************************************************************************/
-static void initialize_isle_data(void)
+static void initialize_isle_data()
 {
   int nr;
   islands = new islands_data_type[wld.map.num_continents + 1];
@@ -323,7 +324,8 @@ bool create_start_positions(enum map_startpos mode,
   int min_goodies_per_player = 1500;
   int total_goodies = 0;
   /* this is factor is used to maximize land used in extreme little maps */
-  float efactor = (float) player_count() / float(map_size_checked()) / 4;
+  float efactor =
+      static_cast<float>(player_count()) / float(map_size_checked()) / 4;
   bool failure = false;
   bool is_tmap = temperature_is_initialized();
 
@@ -511,7 +513,8 @@ bool create_start_positions(enum map_startpos mode,
   while (map_startpos_count() < player_count()) {
     if ((ptile =
              rand_map_pos_filtered(&(wld.map), &data, is_valid_start_pos))) {
-      islands[islands_index[(int) tile_continent(ptile)]].starters--;
+      islands[islands_index[static_cast<int> tile_continent(ptile)]]
+          .starters--;
       log_debug("Adding (%d, %d) as starting position %d, %d goodies on "
                 "islands.",
                 TILE_XY(ptile), map_startpos_count(),

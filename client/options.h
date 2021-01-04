@@ -193,11 +193,11 @@ struct option_set; /* Opaque type. */
 typedef void (*option_save_log_callback)(QtMsgType lvl, const QString &msg);
 
 /* Main functions. */
-void options_init(void);
-void options_free(void);
-void server_options_init(void);
-void server_options_free(void);
-void options_load(void);
+void options_init();
+void options_free();
+void server_options_init();
+void server_options_free();
+void options_load();
 void options_save(option_save_log_callback log_cb);
 
 /* Option sets. */
@@ -297,14 +297,14 @@ bool option_color_set(struct option *poption, struct ft_color color);
   }
 
 /** Desired settable options. **/
-void desired_settable_options_update(void);
+void desired_settable_options_update();
 void desired_settable_option_update(const char *op_name,
                                     const char *op_value,
                                     bool allow_replace);
 
 /** Dialog report options. **/
-void options_dialogs_update(void);
-void options_dialogs_set(void);
+void options_dialogs_update();
+void options_dialogs_set();
 
 /** Message Options: **/
 
@@ -325,4 +325,4 @@ struct tileset;
 
 const char *tileset_name_for_topology(int topology_id);
 void option_set_default_ts(struct tileset *t);
-void fill_topo_ts_default(void);
+void fill_topo_ts_default();

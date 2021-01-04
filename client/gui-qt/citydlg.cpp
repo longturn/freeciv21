@@ -506,7 +506,7 @@ void impr_info::init_layout()
 /************************************************************************/ /**
    Improvement list destructor
  ****************************************************************************/
-impr_info::~impr_info() {}
+impr_info::~impr_info() = default;
 
 /************************************************************************/ /**
    Adds improvement item to list
@@ -696,37 +696,37 @@ void unit_list_item::create_menu()
 
   m_menu = new QMenu;
 
-  auto units = unit_list_new();
+  auto *units = unit_list_new();
   unit_list_append(units, m_unit);
 
-  auto activate_and_close_action = new QAction(_("Activate unit"), this);
+  auto *activate_and_close_action = new QAction(_("Activate unit"), this);
   connect(activate_and_close_action, &QAction::triggered, this,
           &unit_list_item::activate_and_close_dialog);
   m_menu->addAction(activate_and_close_action);
 
   if (can_unit_do_activity(m_unit, ACTIVITY_SENTRY)) {
-    auto sentry_action = new QAction(_("Sentry unit"), this);
+    auto *sentry_action = new QAction(_("Sentry unit"), this);
     connect(sentry_action, &QAction::triggered, this,
             &unit_list_item::sentry);
     m_menu->addAction(sentry_action);
   }
 
   if (can_unit_do_activity(m_unit, ACTIVITY_FORTIFYING)) {
-    auto fortify_action = new QAction(_("Fortify unit"), this);
+    auto *fortify_action = new QAction(_("Fortify unit"), this);
     connect(fortify_action, &QAction::triggered, this,
             &unit_list_item::fortify);
     m_menu->addAction(fortify_action);
   }
 
   if (unit_can_do_action(m_unit, ACTION_DISBAND_UNIT)) {
-    auto disband_action = new QAction(_("Disband unit"), this);
+    auto *disband_action = new QAction(_("Disband unit"), this);
     connect(disband_action, &QAction::triggered, this,
             &unit_list_item::disband);
     m_menu->addAction(disband_action);
   }
 
   if (can_unit_change_homecity(m_unit)) {
-    auto change_homecity_action =
+    auto *change_homecity_action =
         new QAction(action_id_name_translation(ACTION_HOME_CITY), this);
     connect(change_homecity_action, &QAction::triggered, this,
             &unit_list_item::change_homecity);
@@ -734,20 +734,20 @@ void unit_list_item::create_menu()
   }
 
   if (units_can_load(units)) {
-    auto load_action = new QAction(_("Load"), this);
+    auto *load_action = new QAction(_("Load"), this);
     connect(load_action, &QAction::triggered, this, &unit_list_item::load);
     m_menu->addAction(load_action);
   }
 
   if (units_can_unload(units)) {
-    auto unload_action = new QAction(_("Unload"), this);
+    auto *unload_action = new QAction(_("Unload"), this);
     connect(unload_action, &QAction::triggered, this,
             &unit_list_item::unload);
     m_menu->addAction(unload_action);
   }
 
   if (units_are_occupied(units)) {
-    auto unload_all_action =
+    auto *unload_all_action =
         new QAction(_("Unload All From Transporter"), this);
     connect(unload_all_action, &QAction::triggered, this,
             &unit_list_item::unload_all);
@@ -755,7 +755,7 @@ void unit_list_item::create_menu()
   }
 
   if (units_can_upgrade(units)) {
-    auto upgrade_action = new QAction(_("Upgrade Unit"), this);
+    auto *upgrade_action = new QAction(_("Upgrade Unit"), this);
     connect(upgrade_action, &QAction::triggered, this,
             &unit_list_item::upgrade);
     m_menu->addAction(upgrade_action);
@@ -778,7 +778,7 @@ bool unit_list_item::can_issue_orders() const
 void unit_list_item::disband()
 {
   if (!can_issue_orders()) {
-    auto units = unit_list_new();
+    auto *units = unit_list_new();
     unit_list_append(units, m_unit);
     popup_disband_dialog(units);
     unit_list_destroy(units);
@@ -821,7 +821,7 @@ void unit_list_item::unload_all()
 void unit_list_item::upgrade()
 {
   if (!can_issue_orders()) {
-    auto units = unit_list_new();
+    auto *units = unit_list_new();
     unit_list_append(units, m_unit);
     popup_upgrade_dialog(units);
     unit_list_destroy(units);
@@ -883,14 +883,14 @@ unit_list_event_filter::unit_list_event_filter(QObject *parent)
  ****************************************************************************/
 bool unit_list_event_filter::eventFilter(QObject *object, QEvent *event)
 {
-  auto list = qobject_cast<QListWidget *>(object);
+  auto *list = qobject_cast<QListWidget *>(object);
   if (list != nullptr && event->type() == QEvent::ContextMenu) {
-    auto menu_event = static_cast<QContextMenuEvent *>(event);
-    auto item = list->itemAt(menu_event->pos());
+    auto *menu_event = static_cast<QContextMenuEvent *>(event);
+    auto *item = list->itemAt(menu_event->pos());
     // Maybe there was no unit under the mouse
-    if (auto unit_item = dynamic_cast<unit_list_item *>(item)) {
+    if (auto *unit_item = dynamic_cast<unit_list_item *>(item)) {
       // Maybe we can't give orders to this unit
-      if (auto menu = unit_item->menu()) {
+      if (auto *menu = unit_item->menu()) {
         // OK, show the menu
         menu->exec(menu_event->globalPos());
         return true;
@@ -900,8 +900,7 @@ bool unit_list_event_filter::eventFilter(QObject *object, QEvent *event)
   return false;
 }
 
-cityIconInfoLabel::cityIconInfoLabel(QWidget *parent)
-    : QWidget(parent), pcity(nullptr)
+cityIconInfoLabel::cityIconInfoLabel(QWidget *parent) : QWidget(parent)
 {
   QFont f = *fcFont::instance()->getFont(fonts::default_font);
   QFontMetrics fm(f);
@@ -980,7 +979,7 @@ void cityIconInfoLabel::updateTooltip(int nr, const QString &tooltipText)
    city_label is used only for showing citizens icons
    and was created only to catch mouse events
  ****************************************************************************/
-city_label::city_label(QWidget *parent) : QLabel(parent), pcity(nullptr)
+city_label::city_label(QWidget *parent) : QLabel(parent)
 {
   type = FEELING_FINAL;
 }
@@ -994,8 +993,9 @@ void city_label::mousePressEvent(QMouseEvent *event)
   int citnum, i, num_citizens, nothing_width;
   int w = tileset_small_sprite_width(tileset) / king()->map_scale;
 
-  if (!pcity)
+  if (!pcity) {
     return;
+  }
   if (cma_is_city_under_agent(pcity, NULL)) {
     return;
   }
@@ -1047,9 +1047,9 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
     info_grid_layout->addWidget(qlt[iter], iter, 1);
     info_grid_layout->setRowStretch(iter, 0);
   }
-
   setLayout(info_grid_layout);
 }
+
 void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
 {
   int illness = 0;
@@ -1143,7 +1143,7 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
     illness = city_illness_calc(pcity, NULL, NULL, NULL, NULL);
     /* illness is in tenth of percent */
     fc_snprintf(buf[ILLNESS], sizeof(buf[ILLNESS]), "%4.1f%%",
-                (float) illness / 10.0);
+                static_cast<float>(illness) / 10.0);
   }
   if (pcity->steal) {
     fc_snprintf(buf[STEAL], sizeof(buf[STEAL]), _("%d times"), pcity->steal);
@@ -1177,8 +1177,7 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
   ciil->updateTooltip(10, buf[GROWTH]);
 }
 
-governor_sliders::governor_sliders(QWidget *parent)
-    : QGroupBox(parent), cma_celeb_checkbox(nullptr)
+governor_sliders::governor_sliders(QWidget *parent) : QGroupBox(parent)
 {
   QStringList str_list;
   QSlider *slider;
@@ -1310,10 +1309,8 @@ void governor_sliders::update_sliders(struct cm_parameter &param)
 /************************************************************************/ /**
    Constructor for city_dialog, sets layouts, policies ...
  ****************************************************************************/
-city_dialog::city_dialog(QWidget *parent)
-    : QWidget(parent), future_targets(false), show_units(true),
-      show_wonders(true), show_buildings(true), dont_focus(false),
-      current_building(0)
+city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
+
 {
   QFont f = QApplication::font();
   QFont *small_font;
@@ -1447,7 +1444,7 @@ city_dialog::city_dialog(QWidget *parent)
 
   connect(ui.present_units_list, &QListWidget::itemDoubleClicked,
           [](QListWidgetItem *item) {
-            if (auto uitem = dynamic_cast<unit_list_item *>(item)) {
+            if (auto *uitem = dynamic_cast<unit_list_item *>(item)) {
               uitem->activate_and_close_dialog();
             }
           });
@@ -1456,7 +1453,7 @@ city_dialog::city_dialog(QWidget *parent)
 
   connect(ui.supported_units, &QListWidget::itemDoubleClicked,
           [](QListWidgetItem *item) {
-            if (auto uitem = dynamic_cast<unit_list_item *>(item)) {
+            if (auto *uitem = dynamic_cast<unit_list_item *>(item)) {
               uitem->activate_and_close_dialog();
             }
           });
@@ -2339,7 +2336,7 @@ void city_dialog::update_units()
     QSize icon_size;
     unit_list_iterate(units, punit)
     {
-      auto item = new unit_list_item(punit);
+      auto *item = new unit_list_item(punit);
 
       auto happy_cost = city_unit_unhappiness(punit, &free_unhappy);
       auto image = create_unit_image(punit, true, happy_cost);
@@ -2373,7 +2370,7 @@ void city_dialog::update_units()
     QSize icon_size;
     unit_list_iterate(units, punit)
     {
-      auto item = new unit_list_item(punit);
+      auto *item = new unit_list_item(punit);
 
       auto image = create_unit_image(punit, false, 0);
       icon_size = icon_size.expandedTo(image.size());
@@ -2844,7 +2841,7 @@ void qtg_real_city_dialog_popup(struct city *pcity)
   queen()->mapview_wdg->hide_all_fcwidgets();
   center_tile_mapcanvas(pcity->tile);
 
-  auto widget = queen()->city_overlay;
+  auto *widget = queen()->city_overlay;
   widget->setup_ui(pcity);
   widget->show();
   widget->resize(queen()->mapview_wdg->size());
@@ -2898,9 +2895,9 @@ void city_font_update()
 
   f = fcFont::instance()->getFont(fonts::notify_label);
 
-  for (int i = 0; i < l.size(); ++i) {
-    if (l.at(i)->property(fonts::notify_label).isValid()) {
-      l.at(i)->setFont(*f);
+  for (auto i : l) {
+    if (i->property(fonts::notify_label).isValid()) {
+      i->setFont(*f);
     }
   }
 }
@@ -2924,15 +2921,18 @@ void qtg_refresh_unit_city_dialogs(struct unit *punit)
 struct city *is_any_city_dialog_open()
 {
   // some checks not to iterate cities
-  if (!queen()->city_overlay->isVisible())
+  if (!queen()->city_overlay->isVisible()) {
     return nullptr;
-  if (client_is_global_observer() || client_is_observer())
+  }
+  if (client_is_global_observer() || client_is_observer()) {
     return nullptr;
+  }
 
   city_list_iterate(client.conn.playing->cities, pcity)
   {
-    if (qtg_city_dialog_is_open(pcity))
+    if (qtg_city_dialog_is_open(pcity)) {
       return pcity;
+    }
   }
   city_list_iterate_end;
   return nullptr;
@@ -2943,12 +2943,8 @@ struct city *is_any_city_dialog_open()
  ****************************************************************************/
 bool qtg_city_dialog_is_open(struct city *pcity)
 {
-  if (queen()->city_overlay->pcity == pcity
-      && queen()->city_overlay->isVisible()) {
-    return true;
-  }
-
-  return false;
+  return queen()->city_overlay->pcity == pcity
+         && queen()->city_overlay->isVisible();
 }
 
 /************************************************************************/ /**
@@ -3197,8 +3193,9 @@ city_production_model::~city_production_model()
 QVariant city_production_model::data(const QModelIndex &index,
                                      int role) const
 {
-  if (!index.isValid())
+  if (!index.isValid()) {
     return QVariant();
+  }
 
   if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
       && index.column() < columnCount()
@@ -3230,7 +3227,7 @@ void city_production_model::populate()
   production_item *pi;
   struct universal targets[MAX_NUM_PRODUCTION_TARGETS];
   struct item items[MAX_NUM_PRODUCTION_TARGETS];
-  struct universal *renegade;
+  struct universal *renegade, *renegate;
   int item, targets_used;
   QString str;
   QFont f = *fcFont::instance()->getFont(fonts::default_font);
@@ -3275,8 +3272,8 @@ void city_production_model::populate()
     }
   }
 
-  renegade = NULL;
-  pi = new production_item(renegade, this);
+  renegate = NULL;
+  pi = new production_item(renegate, this);
   city_target_list << pi;
   sh.setX(2 * sh.y() + sh.x());
   sh.setX(qMin(sh.x(), 250));
@@ -3289,8 +3286,10 @@ bool city_production_model::setData(const QModelIndex &index,
                                     const QVariant &value, int role)
 {
   Q_UNUSED(value)
-  if (!index.isValid() || role != Qt::DisplayRole || role != Qt::ToolTipRole)
+  if (!index.isValid() || role != Qt::DisplayRole
+      || role != Qt::ToolTipRole) {
     return false;
+  }
 
   Q_UNREACHABLE();
   if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
@@ -3401,8 +3400,9 @@ bool production_widget::eventFilter(QObject *obj, QEvent *ev)
   QRect pw_rect;
   QPoint br;
 
-  if (obj != this)
+  if (obj != this) {
     return false;
+  }
 
   if (ev->type() == QEvent::MouseButtonPress) {
     pw_rect.setTopLeft(pos());

@@ -90,23 +90,23 @@ class fc_client : public QMainWindow {
 
   enum client_pages page;
   QGridLayout *pages_layout[PAGE_GAME + 2];
-  QLabel *status_bar_label;
-  QSocketNotifier *server_notifier;
-  QStackedLayout *central_layout;
-  QStatusBar *status_bar;
+  QLabel *status_bar_label{nullptr};
+  QSocketNotifier *server_notifier{nullptr};
+  QStackedLayout *central_layout{nullptr};
+  QStatusBar *status_bar{nullptr};
   QString current_file;
   QStringList status_bar_queue;
-  bool quitting;
+  bool quitting{false};
   bool send_new_aifill_to_server;
-  choice_dialog *opened_dialog;
+  choice_dialog *opened_dialog{nullptr};
 
 public:
   fc_client();
-  ~fc_client();
-  QWidget *pages[(int) PAGE_GAME + 2];
+  ~fc_client() override;
+  QWidget *pages[static_cast<int>(PAGE_GAME) + 2];
   void fc_main(QApplication *);
   void add_server_source(QTcpSocket *socket);
-  bool event(QEvent *event);
+  bool event(QEvent *event) override;
 
   enum client_pages current_page();
 
@@ -116,13 +116,13 @@ public:
   void write_settings();
   bool is_closing();
   QCursor *fc_cursors[CURSOR_LAST][NUM_CURSOR_FRAMES];
-  QWidget *central_wdg;
-  bool interface_locked;
-  bool map_font_scale;
+  QWidget *central_wdg{nullptr};
+  bool interface_locked{false};
+  bool map_font_scale{true};
   fc_corner *corner_wid;
   fc_settings qt_settings;
-  float map_scale;
-  mr_menu *menu_bar;
+  float map_scale{1.0f};
+  mr_menu *menu_bar{nullptr};
   qfc_rally_list rallies;
   trade_generator trade_gen;
 
@@ -139,13 +139,13 @@ public slots:
 
 private:
   void create_loading_page();
-  void create_cursors(void);
-  void delete_cursors(void);
+  void create_cursors();
+  void delete_cursors();
   void read_settings();
 
 protected:
-  void timerEvent(QTimerEvent *);
-  void closeEvent(QCloseEvent *event);
+  void timerEvent(QTimerEvent *) override;
+  void closeEvent(QCloseEvent *event) override;
 
 signals:
   void keyCaught(QKeyEvent *e);

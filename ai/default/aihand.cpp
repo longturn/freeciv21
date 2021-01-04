@@ -105,8 +105,9 @@ static void dai_manage_spaceship(struct player *pplayer)
       /* if we have built the best possible spaceship  -- AJS 19990610 */
       if ((pplayer->spaceship.structurals == NUM_SS_STRUCTURALS)
           && (pplayer->spaceship.components == NUM_SS_COMPONENTS)
-          && (pplayer->spaceship.modules == NUM_SS_MODULES))
+          && (pplayer->spaceship.modules == NUM_SS_MODULES)) {
         handle_spaceship_launch(pplayer);
+      }
     }
   }
 }
@@ -651,7 +652,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
     {
       struct cm_result *cmr = cm_result_new(pcity);
 
-      if (def_ai_city_data(pcity, ait)->celebrate == true) {
+      if (def_ai_city_data(pcity, ait)->celebrate) {
         log_base(LOGLEVEL_TAX, "setting %s to celebrate",
                  city_name_get(pcity));
         cm_query_result(pcity, &cmp, cmr, false);

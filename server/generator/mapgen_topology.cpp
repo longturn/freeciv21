@@ -14,7 +14,7 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h> /* sqrt */
+#include <cmath> /* sqrt */
 
 /* utility */
 #include "log.h"
@@ -87,12 +87,12 @@ int map_colatitude(const struct tile *ptile)
      * And now this is what we have - just one-quarter of the map.
      */
     x = ((ntl_x > (NATURAL_WIDTH / 2 - 1)
-              ? NATURAL_WIDTH - 1.0 - (double) ntl_x
-              : (double) ntl_x)
+              ? NATURAL_WIDTH - 1.0 - static_cast<double>(ntl_x)
+              : static_cast<double>(ntl_x))
          / (NATURAL_WIDTH / 2 - 1));
     y = ((ntl_y > (NATURAL_HEIGHT / 2 - 1)
-              ? NATURAL_HEIGHT - 1.0 - (double) ntl_y
-              : (double) ntl_y)
+              ? NATURAL_HEIGHT - 1.0 - static_cast<double>(ntl_y)
+              : static_cast<double>(ntl_y))
          / (NATURAL_HEIGHT / 2 - 1));
   }
   do_in_natural_pos_end;
@@ -213,7 +213,8 @@ static void set_sizes(double size, int Xratio, int Yratio)
    * that may be importante for some topologies.
    */
   const int i_size =
-      sqrt((float) (size) / (float) (Xratio * Yratio * iso * even * even))
+      sqrt(static_cast<float>(size)
+           / static_cast<float>(Xratio * Yratio * iso * even * even))
       + 0.49;
 
   /* Now build xsize and ysize value as described above. */
@@ -248,7 +249,7 @@ static void set_sizes(double size, int Xratio, int Yratio)
 
   qInfo(_("Creating a map of size %d x %d = %d tiles (%d requested)."),
         wld.map.xsize, wld.map.ysize, wld.map.xsize * wld.map.ysize,
-        (int) size);
+        static_cast<int>(size));
 }
 
 /************************************************************************/ /**
@@ -301,7 +302,7 @@ void generator_init_topology(bool autosize)
     switch (wld.map.server.mapsize) {
     case MAPSIZE_XYSIZE:
       wld.map.server.size =
-          (float) (wld.map.xsize * wld.map.ysize) / 1000.0 + 0.5;
+          static_cast<float>(wld.map.xsize * wld.map.ysize) / 1000.0 + 0.5;
       wld.map.server.tilesperplayer =
           ((map_num_tiles() * wld.map.server.landpercent)
            / (player_count() * 100));
@@ -312,9 +313,9 @@ void generator_init_topology(bool autosize)
       break;
 
     case MAPSIZE_PLAYER:
-      map_size =
-          ((double) (player_count() * wld.map.server.tilesperplayer * 100)
-           / wld.map.server.landpercent);
+      map_size = (static_cast<double>(player_count()
+                                      * wld.map.server.tilesperplayer * 100)
+                  / wld.map.server.landpercent);
 
       if (map_size < MAP_MIN_SIZE * 1000) {
         wld.map.server.size = MAP_MIN_SIZE;
@@ -333,7 +334,7 @@ void generator_init_topology(bool autosize)
               wld.map.server.tilesperplayer, player_count(),
               wld.map.server.size);
       } else {
-        wld.map.server.size = (double) map_size / 1000.0 + 0.5;
+        wld.map.server.size = map_size / 1000.0 + 0.5;
         qInfo(_("Setting map size to %d (approx. %d (land) tiles for "
                 "each of the %d player(s))."),
               wld.map.server.size, wld.map.server.tilesperplayer,
@@ -353,7 +354,8 @@ void generator_init_topology(bool autosize)
       break;
     }
   } else {
-    wld.map.server.size = (double) map_num_tiles() / 1000.0 + 0.5;
+    wld.map.server.size =
+        static_cast<double>(map_num_tiles()) / 1000.0 + 0.5;
     wld.map.server.tilesperplayer =
         ((map_num_tiles() * wld.map.server.landpercent)
          / (player_count() * 100));
@@ -400,7 +402,7 @@ void generator_init_topology(bool autosize)
 /************************************************************************/ /**
    An estimate of the linear (1-dimensional) size of the map.
  ****************************************************************************/
-int get_sqsize(void)
+int get_sqsize()
 {
   int sqsize = sqrt(MAP_INDEX_SIZE / 1000);
 

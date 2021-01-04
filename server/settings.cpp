@@ -175,8 +175,8 @@ static void setting_game_set(struct setting *pset, bool init);
 static void setting_game_free(struct setting *pset);
 static void setting_game_restore(struct setting *pset);
 
-static void settings_list_init(void);
-static void settings_list_free(void);
+static void settings_list_init();
+static void settings_list_free();
 int settings_list_cmp(const struct setting *const *pset1,
                       const struct setting *const *pset2);
 
@@ -3371,7 +3371,7 @@ bool setting_bool_validate(const struct setting *pset, const char *val,
 static const char *setting_bool_secfile_str(secfile_data_t data, int val)
 {
   const struct sset_val_name *name =
-      ((const struct setting *) data)->boolean.name(val);
+      (static_cast<const struct setting *>(data))->boolean.name(val);
 
   return (NULL != name ? name->support : NULL);
 }
@@ -3537,7 +3537,7 @@ char *setting_str_get(struct setting *pset)
 const char *setting_enum_secfile_str(secfile_data_t data, int val)
 {
   const struct sset_val_name *name =
-      ((const struct setting *) data)->enumerator.name(val);
+      (static_cast<const struct setting *>(data))->enumerator.name(val);
 
   return (NULL != name ? name->support : NULL);
 }
@@ -3626,12 +3626,12 @@ static bool set_enum_value(struct setting *pset, int val)
   case sizeof(char): {
     char *to_char = static_cast<char *>(pset->enumerator.pvalue);
 
-    *to_char = (char) val;
+    *to_char = static_cast<char>(val);
   } break;
   case sizeof(short): {
     short *to_short = static_cast<short *>(pset->enumerator.pvalue);
 
-    *to_short = (short) val;
+    *to_short = static_cast<short>(val);
   } break;
   default:
     return false;
@@ -3649,13 +3649,13 @@ int read_enum_value(const struct setting *pset)
 
   switch (pset->enumerator.store_size) {
   case sizeof(int):
-    val = *((int *) pset->enumerator.pvalue);
+    val = *(static_cast<int *>(pset->enumerator.pvalue));
     break;
   case sizeof(char):
-    val = *((char *) pset->enumerator.pvalue);
+    val = *(static_cast<char *>(pset->enumerator.pvalue));
     break;
   case sizeof(short):
-    val = *((short *) pset->enumerator.pvalue);
+    val = *(static_cast<short *>(pset->enumerator.pvalue));
     break;
   default:
     qCritical("Illegal enum store size %d, can't read value",
@@ -3717,7 +3717,7 @@ bool setting_enum_validate(const struct setting *pset, const char *val,
 const char *setting_bitwise_secfile_str(secfile_data_t data, int bit)
 {
   const struct sset_val_name *name =
-      ((const struct setting *) data)->bitwise.name(bit);
+      (static_cast<const struct setting *>(data))->bitwise.name(bit);
 
   return (NULL != name ? name->support : NULL);
 }
@@ -4172,8 +4172,8 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                 secfile_error());
     } else if (val != *pset->bitwise.pvalue) {
       if (NULL == pset->bitwise.validate
-          || pset->bitwise.validate((unsigned) val, NULL, reject_msg,
-                                    sizeof(reject_msg))) {
+          || pset->bitwise.validate(static_cast<unsigned>(val), NULL,
+                                    reject_msg, sizeof(reject_msg))) {
         *pset->bitwise.pvalue = val;
         qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
               setting_value_name(pset, true, buf, sizeof(buf)));
@@ -4352,7 +4352,7 @@ static void setting_game_restore(struct setting *pset)
 /************************************************************************/ /**
    Save setting values at the start of  the game.
  ****************************************************************************/
-void settings_game_start(void)
+void settings_game_start()
 {
   settings_iterate(SSET_ALL, pset) { setting_game_set(pset, false); }
   settings_iterate_end;
@@ -4694,7 +4694,7 @@ void settings_game_load(struct section_file *file, const char *section)
 /************************************************************************/ /**
    Reset all settings to the values at game start.
  ****************************************************************************/
-bool settings_game_reset(void)
+bool settings_game_reset()
 {
   if (!game.server.settings_gamestart_valid) {
     log_debug("No saved settings from the game start available.");
@@ -4731,7 +4731,7 @@ void settings_init(bool act)
 /************************************************************************/ /**
    Reset all settings iff they are changeable.
  ****************************************************************************/
-void settings_reset(void)
+void settings_reset()
 {
   settings_iterate(SSET_ALL, pset)
   {
@@ -4747,14 +4747,14 @@ void settings_reset(void)
    Update stuff every turn that is related to this code module. Run this
    on turn end.
  ****************************************************************************/
-void settings_turn(void)
+void settings_turn()
 { /* Nothing at the moment. */
 }
 
 /************************************************************************/ /**
    Deinitialize stuff related to this code module.
  ****************************************************************************/
-void settings_free(void)
+void settings_free()
 {
   settings_iterate(SSET_ALL, pset) { setting_game_free(pset); }
   settings_iterate_end;
@@ -4765,7 +4765,7 @@ void settings_free(void)
 /************************************************************************/ /**
    Returns the total number of settings.
  ****************************************************************************/
-int settings_number(void) { return SETTINGS_NUM; }
+int settings_number() { return SETTINGS_NUM; }
 
 /************************************************************************/ /**
    Tell the client about just one server setting.  Call this after a setting
@@ -4973,7 +4973,7 @@ void send_server_setting_control(struct connection *pconn)
 /************************************************************************/ /**
    Initialise sorted settings.
  ****************************************************************************/
-static void settings_list_init(void)
+static void settings_list_init()
 {
   struct setting *pset;
   int i;
@@ -5033,7 +5033,7 @@ static void settings_list_init(void)
 /************************************************************************/ /**
    Update sorted settings (changed and locked values).
  ****************************************************************************/
-void settings_list_update(void)
+void settings_list_update()
 {
   struct setting *pset;
   int i;
@@ -5087,7 +5087,7 @@ struct setting_list *settings_list_get(enum sset_level level)
 /************************************************************************/ /**
    Free sorted settings.
  ****************************************************************************/
-static void settings_list_free(void)
+static void settings_list_free()
 {
   int i;
 

@@ -15,8 +15,8 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstring>
 
 /* utility */
 #include "log.h"

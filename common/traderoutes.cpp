@@ -130,7 +130,7 @@ int trade_route_type_trade_pct(enum trade_route_type type)
 /*********************************************************************/ /**
    Initialize trade route types.
  *************************************************************************/
-void trade_route_types_init(void)
+void trade_route_types_init()
 {
   for (int type = TRT_NATIONAL; type < TRT_LAST; type++) {
     struct trade_route_settings *set =
@@ -464,7 +464,7 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
                     + max_trade_prod(pc1) + max_trade_prod(pc2))
                     * 2,
                 2);
-    tb = (int) bonus;
+    tb = bonus;
   }
 
   if (pgood != NULL) {
@@ -486,7 +486,8 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
       EFT_TRADE_REVENUE_BONUS);
 
   /* Be mercy full to players with small amounts. Round up. */
-  tb = ceil((float) tb * pow(2.0, (double) bonus / 1000.0));
+  tb = ceil(static_cast<float>(tb)
+            * pow(2.0, static_cast<double>(bonus) / 1000.0));
 
   return tb;
 }
@@ -510,7 +511,7 @@ bool have_cities_trade_route(const struct city *pc1, const struct city *pc2)
 /*********************************************************************/ /**
    Initialize goods structures.
  *************************************************************************/
-void goods_init(void)
+void goods_init()
 {
   int i;
 
@@ -526,7 +527,7 @@ void goods_init(void)
 /*********************************************************************/ /**
    Free the memory associated with goods
  *************************************************************************/
-void goods_free(void)
+void goods_free()
 {
   int i;
 

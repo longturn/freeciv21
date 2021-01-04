@@ -15,9 +15,9 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
 
 #include <readline/readline.h>
 
@@ -84,7 +84,7 @@ static void console_handle_message(QtMsgType type,
 /********************************************************************/ /**
  Print the prompt if it is not the last thing printed.
  ************************************************************************/
-static void con_update_prompt(void)
+static void con_update_prompt()
 {
   if (console_prompt_is_showing || !console_show_prompt) {
     return;
@@ -135,7 +135,7 @@ void con_log_init(const QString &log_filename)
 /********************************************************************/ /**
    Deinitialize logging
  ************************************************************************/
-void con_log_close(void)
+void con_log_close()
 {
   backtrace_deinit();
 
@@ -195,7 +195,7 @@ void con_puts(enum rfc_status rfc_status, const char *str)
 /********************************************************************/ /**
    Ensure timely update.
  ************************************************************************/
-void con_flush(void) { fflush(stdout); }
+void con_flush() { fflush(stdout); }
 
 /********************************************************************/ /**
    Set style.
@@ -213,12 +213,12 @@ void con_set_style(bool i)
 /********************************************************************/ /**
    Returns rfc-style.
  ************************************************************************/
-bool con_get_style(void) { return console_rfcstyle; }
+bool con_get_style() { return console_rfcstyle; }
 
 /********************************************************************/ /**
    Initialize prompt; display initial message.
  ************************************************************************/
-void con_prompt_init(void)
+void con_prompt_init()
 {
   static bool first = true;
 
@@ -232,7 +232,7 @@ void con_prompt_init(void)
 /********************************************************************/ /**
    Make sure a prompt is printed, and re-printed after every message.
  ************************************************************************/
-void con_prompt_on(void)
+void con_prompt_on()
 {
   console_show_prompt = true;
   con_update_prompt();
@@ -241,12 +241,12 @@ void con_prompt_on(void)
 /********************************************************************/ /**
    Do not print a prompt after log messages.
  ************************************************************************/
-void con_prompt_off(void) { console_show_prompt = false; }
+void con_prompt_off() { console_show_prompt = false; }
 
 /********************************************************************/ /**
    User pressed enter: will need a new prompt
  ************************************************************************/
-void con_prompt_enter(void)
+void con_prompt_enter()
 {
   console_prompt_is_showing = false;
   readline_received_enter = true;
@@ -255,7 +255,7 @@ void con_prompt_enter(void)
 /********************************************************************/ /**
    Clear "user pressed enter" state (used in special cases).
  ************************************************************************/
-void con_prompt_enter_clear(void)
+void con_prompt_enter_clear()
 {
   console_prompt_is_showing = true;
   readline_received_enter = false;

@@ -19,10 +19,10 @@
 #include <QStandardPaths>
 #include <QTcpServer>
 
+#include <cstdio>
+#include <cstring>
+#include <ctime>
 #include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
 
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h>
@@ -129,7 +129,7 @@ then:
 /**********************************************************************/ /**
    Tests if the client has started the server.
  **************************************************************************/
-bool is_server_running(void)
+bool is_server_running()
 {
   if (server_quitting) {
     return false;
@@ -140,7 +140,7 @@ bool is_server_running(void)
 /**********************************************************************/ /**
    Returns TRUE if the client has hack access.
  **************************************************************************/
-bool can_client_access_hack(void) { return client_has_hack; }
+bool can_client_access_hack() { return client_has_hack; }
 
 /**********************************************************************/ /**
    Kills the server if the client has started it.
@@ -201,7 +201,7 @@ static int find_next_free_port(int starting_port, int highest_port)
    Forks a server if it can. Returns FALSE if we find we
    couldn't start the server.
  **************************************************************************/
-bool client_start_server(void)
+bool client_start_server()
 {
   QStringList arguments;
   QString trueFcser, ruleset, storage, port_buf, savesdir, scensdir;

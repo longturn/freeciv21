@@ -17,10 +17,10 @@
 
 #include <QLocale>
 #include <QTextCodec>
-#include <errno.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
+#include <cerrno>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
 
 /* utility */
 #include "fciconv.h"
@@ -92,7 +92,7 @@ void init_character_encodings(const char *my_internal_encoding,
    Return the internal encoding.  This depends on the server or GUI being
    used.
  ***************************************************************************/
-const char *get_internal_encoding(void) { return internal_encoding; }
+const char *get_internal_encoding() { return internal_encoding; }
 
 char *data_to_internal_string_malloc(const char *text)
 {

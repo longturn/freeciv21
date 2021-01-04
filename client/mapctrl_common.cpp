@@ -12,7 +12,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdlib.h> /* qsort */
+#include <cstdlib> /* qsort */
 
 /* utility */
 #include "fcintl.h"
@@ -140,7 +140,8 @@ static void define_tiles_within_rectangle(bool append)
        */
       tile_to_canvas_pos(&x2, &y2, ptile);
 
-      if ((yy % 2) != 0 && ((rec_corner_x % W) ^ abs((int) x2 % W)) != 0) {
+      if ((yy % 2) != 0
+          && ((rec_corner_x % W) ^ abs(static_cast<int>(x2) % W)) != 0) {
         continue;
       }
 
@@ -258,7 +259,7 @@ void update_selection_rectangle(float canvas_x, float canvas_y)
 /**********************************************************************/ /**
    Redraws the selection rectangle after a map flush.
  **************************************************************************/
-void redraw_selection_rectangle(void)
+void redraw_selection_rectangle()
 {
   if (rectangle_active) {
     draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
@@ -268,7 +269,7 @@ void redraw_selection_rectangle(void)
 /**********************************************************************/ /**
    Redraws the selection rectangle after a map flush.
  **************************************************************************/
-void cancel_selection_rectangle(void)
+void cancel_selection_rectangle()
 {
   if (rectangle_active) {
     rectangle_active = false;
@@ -416,7 +417,7 @@ static void clipboard_send_production_packet(struct city *pcity)
    A newer technology may be available for units.
    Also called from packhand.c.
  **************************************************************************/
-void upgrade_canvas_clipboard(void)
+void upgrade_canvas_clipboard()
 {
   if (!can_client_issue_orders()) {
     return;
@@ -469,7 +470,7 @@ void maybe_activate_keyboardless_goto(int canvas_x, int canvas_y)
 /**********************************************************************/ /**
    Return TRUE iff the turn done button should be enabled.
  **************************************************************************/
-bool get_turn_done_button_state(void)
+bool get_turn_done_button_state()
 {
   return can_end_turn()
          && (is_human(client.conn.playing)
@@ -479,7 +480,7 @@ bool get_turn_done_button_state(void)
 /**********************************************************************/ /**
    Return TRUE iff client can end turn.
  **************************************************************************/
-bool can_end_turn(void)
+bool can_end_turn()
 {
   struct option *opt;
 
@@ -589,7 +590,7 @@ void recenter_button_pressed(int canvas_x, int canvas_y)
 /**********************************************************************/ /**
    Update the turn done button state.
  **************************************************************************/
-void update_turn_done_button_state(void)
+void update_turn_done_button_state()
 {
   bool turn_done_state = get_turn_done_button_state();
 
@@ -623,7 +624,7 @@ void update_line(int canvas_x, int canvas_y)
   case HOVER_GOTO_SEL_TGT:
     ptile = canvas_pos_to_tile(canvas_x, canvas_y);
     punits = get_units_in_focus();
-
+    fc_assert_ret(ptile);
     set_hover_state(punits, hover_state, connect_activity, connect_tgt,
                     ptile->index, goto_last_sub_tgt, goto_last_action,
                     goto_last_order);
@@ -657,7 +658,7 @@ void overview_update_line(int overview_x, int overview_y)
     overview_to_map_pos(&x, &y, overview_x, overview_y);
     ptile = map_pos_to_tile(&(wld.map), x, y);
     punits = get_units_in_focus();
-
+    fc_assert_ret(ptile);
     set_hover_state(punits, hover_state, connect_activity, connect_tgt,
                     ptile->index, goto_last_sub_tgt, goto_last_action,
                     goto_last_order);

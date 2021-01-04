@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h>
+#include <cmath>
 
 /* utility */
 #include "bitvector.h"
@@ -277,7 +277,8 @@ double win_chance(int as, int ahp, int afp, int ds, int dhp, int dfp)
   int att_N_lose = (ahp + dfp - 1) / dfp;
   int def_N_lose = (dhp + afp - 1) / afp;
   /* Probability of losing one round */
-  double att_P_lose1 = (as + ds == 0) ? 0.5 : (double) ds / (as + ds);
+  double att_P_lose1 =
+      (as + ds == 0) ? 0.5 : static_cast<double>(ds) / (as + ds);
   double def_P_lose1 = 1 - att_P_lose1;
 
   /*
@@ -326,7 +327,7 @@ double win_chance(int as, int ahp, int afp, int ds, int dhp, int dfp)
     (lots of talk for so little code)
   */
 
-  double binom_save = pow(def_P_lose1, (double) (def_N_lose - 1));
+  double binom_save = pow(def_P_lose1, static_cast<double>(def_N_lose - 1));
   double accum_prob = binom_save; /* lr = 0 */
 
   int lr; /* the number of Lost Rounds by the attacker */
@@ -742,8 +743,8 @@ struct unit *get_defender(const struct unit *attacker,
       int build_cost = unit_build_shield_cost_base(defender);
       int defense_rating = get_defense_rating(attacker, defender);
       /* This will make units roughly evenly good defenders look alike. */
-      int unit_def =
-          (int) (100000 * (1 - unit_win_chance(attacker, defender)));
+      int unit_def = static_cast<int>(
+          100000 * (1 - unit_win_chance(attacker, defender)));
 
       fc_assert_action(0 <= unit_def, continue);
 
@@ -798,7 +799,8 @@ struct unit *get_attacker(const struct unit *defender,
     if (pplayers_allied(unit_owner(defender), unit_owner(attacker))) {
       return NULL;
     }
-    unit_a = (int) (100000 * (unit_win_chance(attacker, defender)));
+    unit_a =
+        static_cast<int>(100000 * (unit_win_chance(attacker, defender)));
     if (unit_a > bestvalue
         || (unit_a == bestvalue && build_cost < best_cost)) {
       bestvalue = unit_a;

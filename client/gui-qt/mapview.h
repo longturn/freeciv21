@@ -55,13 +55,13 @@ public:
   bool menu_click;
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void keyPressEvent(QKeyEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-  void mouseReleaseEvent(QMouseEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void focusOutEvent(QFocusEvent *event);
-  void leaveEvent(QEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void keyPressEvent(QKeyEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void focusOutEvent(QFocusEvent *event) override;
+  void leaveEvent(QEvent *event) override;
 private slots:
   void timer_event();
 
@@ -69,7 +69,7 @@ private:
   void update_font(const QString &name, const QFont &font);
 
   bool stored_autocenter;
-  int cursor_frame;
+  int cursor_frame{0};
   int cursor;
   std::vector<fcwidget *> m_hidden_fcwidgets;
 };
@@ -87,7 +87,7 @@ public:
   struct tile *itile;
 
 protected:
-  void paintEvent(QPaintEvent *event);
+  void paintEvent(QPaintEvent *event) override;
   void paint(QPainter *painter, QPaintEvent *event);
 
 private:
@@ -101,9 +101,9 @@ private:
 
 void popdown_tile_info();
 void popup_tile_info(struct tile *ptile);
-void mapview_freeze(void);
-void mapview_thaw(void);
-bool mapview_is_frozen(void);
+void mapview_freeze();
+void mapview_thaw();
+bool mapview_is_frozen();
 void pixmap_put_overlay_tile(int canvas_x, int canvas_y, QPixmap *ssprite);
 
 void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,

@@ -40,7 +40,7 @@ extern struct specialist specialists[SP_MAX];
 extern int default_specialist;
 
 /* General specialist accessor functions. */
-Specialist_type_id specialist_count(void);
+Specialist_type_id specialist_count();
 Specialist_type_id specialist_index(const struct specialist *sp);
 Specialist_type_id specialist_number(const struct specialist *sp);
 
@@ -53,15 +53,15 @@ const char *specialist_plural_translation(const struct specialist *sp);
 const char *specialist_abbreviation_translation(const struct specialist *sp);
 
 /* Ancillary routines */
-const char *specialists_abbreviation_string(void);
+const char *specialists_abbreviation_string();
 const char *specialists_string(const citizens *specialist_list);
 
 int get_specialist_output(const struct city *pcity, Specialist_type_id sp,
                           Output_type_id otype);
 
 /* Initialization and iteration */
-void specialists_init(void);
-void specialists_free(void);
+void specialists_init();
+void specialists_free();
 
 /* usually an index to arrays */
 #define specialist_type_iterate(sp)                                         \

@@ -27,7 +27,7 @@ class endgame_report : public QWidget {
 
 public:
   endgame_report(const struct packet_endgame_report *packet);
-  ~endgame_report();
+  ~endgame_report() override;
   void update_report(const struct packet_endgame_player *packet);
   void init();
 

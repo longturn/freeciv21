@@ -186,11 +186,7 @@ void minimap_view::update_pixmap(const QImage &image)
 /**********************************************************************/ /**
    Minimap thread's contructor
  **************************************************************************/
-minimap_thread::minimap_thread(QObject *parent)
-    : QThread(parent), mini_width(20), mini_height(20), scale(1.0f),
-      threadrestart(false), threadabort(false)
-{
-}
+minimap_thread::minimap_thread(QObject *parent) : QThread(parent) {}
 
 /**********************************************************************/ /**
    Minimap thread's desctructor
@@ -239,8 +235,9 @@ void minimap_thread::run()
     float wf, hf;
     QPixmap *src, *dst;
 
-    if (threadabort)
+    if (threadabort) {
       return;
+    }
     mutex.lock();
     if (gui_options.overview.map != nullptr) {
       if (scale > 1) {
@@ -277,8 +274,9 @@ void minimap_thread::run()
       }
     }
     emit rendered_image(image);
-    if (!threadrestart)
+    if (!threadrestart) {
       condition.wait(&mutex);
+    }
     threadrestart = false;
     mutex.unlock();
   }
@@ -402,7 +400,9 @@ void minimap_view::mousePressEvent(QMouseEvent *event)
     fx = qMin(fx, gui_options.overview.width - 1);
     fy = qMin(fy, gui_options.overview.height - 1);
     overview_to_map_pos(&x, &y, fx, fy);
-    center_tile_mapcanvas(map_pos_to_tile(&(wld.map), x, y));
+    auto *ptile = map_pos_to_tile(&(wld.map), x, y);
+    fc_assert_ret(ptile);
+    center_tile_mapcanvas(ptile);
     update_image();
   }
   event->setAccepted(true);
@@ -451,7 +451,7 @@ void update_minimap() { queen()->minimapview_wdg->update_image(); }
    It's used for first creation of overview only, later overview stays the
    same size, scaled by qt-specific function.
  **************************************************************************/
-void overview_size_changed(void)
+void overview_size_changed()
 {
   queen()->minimapview_wdg->resize(0, 0);
   queen()->minimapview_wdg->move(

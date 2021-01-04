@@ -41,7 +41,7 @@
 
 /* This function is only needed as symbol in module. Nevertheless
    gcc requires that there is prior prototype. */
-const char *fc_ai_classic_capstr(void);
+const char *fc_ai_classic_capstr();
 
 static struct ai_type *self = NULL;
 
@@ -53,17 +53,17 @@ static void classic_ai_set_self(struct ai_type *ai) { self = ai; }
 /**********************************************************************/ /**
    Get pointer to ai type of the classic ai.
  **************************************************************************/
-static struct ai_type *classic_ai_get_self(void) { return self; }
+static struct ai_type *classic_ai_get_self() { return self; }
 
 /**********************************************************************/ /**
    Return module capability string
  **************************************************************************/
-const char *fc_ai_classic_capstr(void) { return FC_AI_MOD_CAPSTR; }
+const char *fc_ai_classic_capstr() { return FC_AI_MOD_CAPSTR; }
 
 /**********************************************************************/ /**
    Free resources allocated by the classic AI module
  **************************************************************************/
-static void cai_module_close(void)
+static void cai_module_close()
 {
   struct ai_type *deftype = classic_ai_get_self();
 
@@ -267,7 +267,7 @@ static void cai_gov_value(struct player *pplayer, struct government *gov,
 /**********************************************************************/ /**
    Call default ai with classic ai type as parameter.
  **************************************************************************/
-static void cai_units_ruleset_init(void)
+static void cai_units_ruleset_init()
 {
   struct ai_type *deftype = classic_ai_get_self();
 
@@ -277,7 +277,7 @@ static void cai_units_ruleset_init(void)
 /**********************************************************************/ /**
    Call default ai with classic ai type as parameter.
  **************************************************************************/
-static void cai_units_ruleset_close(void)
+static void cai_units_ruleset_close()
 {
   struct ai_type *deftype = classic_ai_get_self();
 

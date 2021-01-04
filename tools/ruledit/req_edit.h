@@ -79,7 +79,7 @@ private slots:
   void incoming_rec_vec_change(const requirement_vector *vec);
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent *event) override;
 };
 
 #endif // FC__REQ_EDIT_H

@@ -32,7 +32,7 @@
 /*******************************************************************/ /**
    Return string containing both name of Freeciv and version.
  ***********************************************************************/
-const char *freeciv_name_version(void)
+const char *freeciv_name_version()
 {
   static char msgbuf[256];
 
@@ -53,7 +53,7 @@ const char *freeciv_name_version(void)
 /*******************************************************************/ /**
    Return string describing version type.
  ***********************************************************************/
-const char *word_version(void)
+const char *word_version()
 {
 #if IS_BETA_VERSION
   return _("betatest version ");
@@ -66,7 +66,7 @@ const char *word_version(void)
    Returns string with git revision information if it is possible to
    determine. Can return also some fallback string or even NULL.
  ***********************************************************************/
-const char *fc_git_revision(void)
+const char *fc_git_revision()
 {
 #if defined(GITREV) && !defined(FC_GITREV_OFF)
   static char buf[100];
@@ -86,13 +86,13 @@ const char *fc_git_revision(void)
    This does not handle git revisions, as there's no way to compare
    which of the two commits is "higher".
  ***********************************************************************/
-const char *fc_comparable_version(void) { return VERSION_STRING; }
+const char *fc_comparable_version() { return VERSION_STRING; }
 
 /*******************************************************************/ /**
    Return the BETA message.
    If returns NULL, not a beta version.
  ***********************************************************************/
-const char *beta_message(void)
+const char *beta_message()
 {
 #if IS_BETA_VERSION
   static char msgbuf[500];
@@ -125,7 +125,7 @@ const char *beta_message(void)
    Return version string in a format suitable to be written to created
    datafiles as human readable information.
  ***********************************************************************/
-const char *freeciv_datafile_version(void)
+const char *freeciv_datafile_version()
 {
   static char buf[500] = {'\0'};
 

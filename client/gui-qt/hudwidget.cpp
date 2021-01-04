@@ -540,7 +540,7 @@ hud_units::hud_units(QWidget *parent)
 /************************************************************************/ /**
    Hud_units destructor
  ****************************************************************************/
-hud_units::~hud_units() {}
+hud_units::~hud_units() = default;
 
 /************************************************************************/ /**
    Move Event for hud_units, used to save position
@@ -953,7 +953,7 @@ int unit_actions::update_actions()
   clear_layout();
   setUpdatesEnabled(false);
 
-  for (auto a : qAsConst(actions)) {
+  for (auto *a : qAsConst(actions)) {
     delete a;
   }
   qDeleteAll(actions);
@@ -1132,7 +1132,7 @@ int unit_actions::update_actions()
   a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("done")));
   actions.append(a);
 
-  for (auto a : qAsConst(actions)) {
+  for (auto *a : qAsConst(actions)) {
     a->setToolTip(
         king()->menu_bar->shortcut_2_menustring(a->action_shortcut));
     a->setFixedHeight(height());
@@ -1196,7 +1196,7 @@ hud_unit_loader::hud_unit_loader(struct unit *pcargo, struct tile *ptile)
 /************************************************************************/ /**
    Destructor for units loader
  ****************************************************************************/
-hud_unit_loader::~hud_unit_loader() {}
+hud_unit_loader::~hud_unit_loader() = default;
 
 /************************************************************************/ /**
    Shows unit loader, adds possible tranportsand units to table
@@ -1431,7 +1431,7 @@ void unit_hud_selector::show_me()
 /************************************************************************/ /**
    Unit_hud_selector destructor
  ****************************************************************************/
-unit_hud_selector::~unit_hud_selector() {}
+unit_hud_selector::~unit_hud_selector() = default;
 
 /************************************************************************/ /**
    Selects and closes widget
@@ -1504,13 +1504,10 @@ void unit_hud_selector::keyPressEvent(QKeyEvent *event)
  ****************************************************************************/
 bool unit_hud_selector::activity_filter(struct unit *punit)
 {
-  if ((punit->activity == ACTIVITY_FORTIFIED && fortified->isChecked())
-      || (punit->activity == ACTIVITY_SENTRY && sentried->isChecked())
-      || (punit->activity == ACTIVITY_IDLE && idle->isChecked())
-      || any_activity->isChecked()) {
-    return true;
-  }
-  return false;
+  return (punit->activity == ACTIVITY_FORTIFIED && fortified->isChecked())
+         || (punit->activity == ACTIVITY_SENTRY && sentried->isChecked())
+         || (punit->activity == ACTIVITY_IDLE && idle->isChecked())
+         || any_activity->isChecked();
 }
 
 /************************************************************************/ /**
@@ -1518,15 +1515,12 @@ bool unit_hud_selector::activity_filter(struct unit *punit)
  ****************************************************************************/
 bool unit_hud_selector::hp_filter(struct unit *punit)
 {
-  if ((any->isChecked()
-       || (full_mp->isChecked()
-           && punit->moves_left >= punit->utype->move_rate)
-       || (full_hp->isChecked() && punit->hp >= punit->utype->hp)
-       || (full_hp_mp->isChecked() && punit->hp >= punit->utype->hp
-           && punit->moves_left >= punit->utype->move_rate))) {
-    return true;
-  }
-  return false;
+  return any->isChecked()
+         || (full_mp->isChecked()
+             && punit->moves_left >= punit->utype->move_rate)
+         || (full_hp->isChecked() && punit->hp >= punit->utype->hp)
+         || (full_hp_mp->isChecked() && punit->hp >= punit->utype->hp
+             && punit->moves_left >= punit->utype->move_rate);
 }
 
 /************************************************************************/ /**
@@ -1556,10 +1550,7 @@ bool unit_hud_selector::island_filter(struct unit *punit)
     }
   }
 
-  if (anywhere->isChecked()) {
-    return true;
-  }
-  return false;
+  return anywhere->isChecked();
 }
 
 /************************************************************************/ /**
@@ -1573,16 +1564,9 @@ bool unit_hud_selector::type_filter(struct unit *punit)
   if (this_type->isChecked()) {
     qvar = unit_sel_type->currentData();
     utype_id = qvar.toInt();
-    if (utype_id == utype_index(punit->utype)) {
-      return true;
-    } else {
-      return false;
-    }
+    return utype_id == utype_index(punit->utype);
   }
-  if (any_type->isChecked()) {
-    return true;
-  }
-  return false;
+  return any_type->isChecked();
 }
 
 /************************************************************************/ /**
@@ -1794,7 +1778,7 @@ void hud_unit_combat::set_scale(float scale)
 /************************************************************************/ /**
    Hud unit combat destructor
  ****************************************************************************/
-hud_unit_combat::~hud_unit_combat() {}
+hud_unit_combat::~hud_unit_combat() = default;
 
 /************************************************************************/ /**
    Sets widget fading
@@ -1938,7 +1922,7 @@ void hud_battle_log::update_size()
   king()->qt_settings.battlelog_scale = scale;
   delete layout();
   main_layout = new QVBoxLayout;
-  for (auto hudc : qAsConst(lhuc)) {
+  for (auto *hudc : qAsConst(lhuc)) {
     hudc->set_scale(scale);
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
@@ -1976,7 +1960,7 @@ void hud_battle_log::add_combat_info(hud_unit_combat *huc)
     hudc = lhuc.takeLast();
     delete hudc;
   }
-  for (auto hudc : qAsConst(lhuc)) {
+  for (auto *hudc : qAsConst(lhuc)) {
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
   }
@@ -2023,10 +2007,10 @@ void hud_battle_log::moveEvent(QMoveEvent *event)
 void hud_battle_log::timerEvent(QTimerEvent *event)
 {
   if (m_timer.elapsed() > 4000 && m_timer.elapsed() < 5000) {
-    for (auto hudc : qAsConst(lhuc)) {
+    for (auto *hudc : qAsConst(lhuc)) {
       if (hudc->get_focus()) {
         m_timer.restart();
-        for (auto hupdate : qAsConst(lhuc)) {
+        for (auto *hupdate : qAsConst(lhuc)) {
           hupdate->set_fading(1.0);
         }
         return;
@@ -2044,7 +2028,7 @@ void hud_battle_log::timerEvent(QTimerEvent *event)
  ****************************************************************************/
 void hud_battle_log::showEvent(QShowEvent *event)
 {
-  for (auto hupdate : qAsConst(lhuc)) {
+  for (auto *hupdate : qAsConst(lhuc)) {
     hupdate->set_fading(1.0);
   }
   m_timer.restart();

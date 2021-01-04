@@ -245,8 +245,9 @@ void fc_shortcuts::drop() { NFCN_FREE(m_instance); }
  **************************************************************************/
 fc_shortcuts *fc_shortcuts::sc()
 {
-  if (!m_instance)
+  if (!m_instance) {
     m_instance = new fc_shortcuts;
+  }
   return m_instance;
 }
 
@@ -373,7 +374,7 @@ bool fc_shortcut_popup::check_if_exist()
 
   desc = QLatin1String("");
   if (sc != nullptr) {
-    for (auto fsc : qAsConst(fc_shortcuts::sc()->hash)) {
+    for (auto *fsc : qAsConst(fc_shortcuts::sc()->hash)) {
       if (id == 0) {
         id++;
         continue;
@@ -468,10 +469,7 @@ QString button_name(Qt::MouseButton bt)
 /**********************************************************************/ /**
    Constructor and destructor for button setting shortcut
  **************************************************************************/
-fc_sc_button::fc_sc_button() : QPushButton(), sc_orig(nullptr)
-{
-  sc = new fc_shortcut;
-}
+fc_sc_button::fc_sc_button() : QPushButton() { sc = new fc_shortcut; }
 fc_sc_button::~fc_sc_button() { delete sc; }
 
 /**********************************************************************/ /**
@@ -538,7 +536,7 @@ fc_shortcuts_dialog::fc_shortcuts_dialog(QWidget *parent) : QDialog(parent)
 /**********************************************************************/ /**
    Destructor for shortcut dialog
  **************************************************************************/
-fc_shortcuts_dialog::~fc_shortcuts_dialog() {}
+fc_shortcuts_dialog::~fc_shortcuts_dialog() = default;
 
 /**********************************************************************/ /**
    Inits shortcut dialog layout
@@ -557,7 +555,7 @@ void fc_shortcuts_dialog::init()
   scroll->setWidgetResizable(true);
   scroll_layout = new QVBoxLayout;
   main_layout = new QVBoxLayout;
-  for (auto sc : qAsConst(fc_shortcuts::sc()->hash)) {
+  for (auto *sc : qAsConst(fc_shortcuts::sc()->hash)) {
     id = fc_shortcuts::sc()->get_id(sc);
     desc = fc_shortcuts::sc()->get_desc(id);
     add_option(sc);
@@ -717,9 +715,13 @@ hash_copy(QMap<shortcut_id, fc_shortcut *> *h)
   new_hash = new QMap<shortcut_id, fc_shortcut *>;
 
   for (i = 1; i < SC_LAST_SC; i++) {
-    sc = new fc_shortcut();
     id = static_cast<shortcut_id>(i);
-    s = h->value(id);
+    s = h->value(id, nullptr);
+    if (!s) {
+      fc_assert(false);
+      continue;
+    }
+    sc = new fc_shortcut();
     sc->id = id;
     sc->key = s->key;
     sc->mouse = s->mouse;

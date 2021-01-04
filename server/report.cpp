@@ -15,8 +15,8 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 /* utility */
 #include "bitvector.h"
@@ -219,8 +219,8 @@ static const char *ranking[] = {
  **************************************************************************/
 static int secompare(const void *a, const void *b)
 {
-  return (((const struct player_score_entry *) b)->value
-          - ((const struct player_score_entry *) a)->value);
+  return ((static_cast<const struct player_score_entry *>(b))->value
+          - (static_cast<const struct player_score_entry *>(a))->value);
 }
 
 /**********************************************************************/ /**
@@ -763,7 +763,7 @@ static int get_specialists(const struct player *pplayer)
  **************************************************************************/
 static int get_gov(const struct player *pplayer)
 {
-  return (int) government_number(government_of_player(pplayer));
+  return static_cast<int>(government_number(government_of_player(pplayer)));
 }
 
 /**********************************************************************/ /**
@@ -901,7 +901,8 @@ static void dem_line_item(char *outptr, size_t out_size,
 
     cat_snprintf(outptr, out_size, " %s", text);
     cat_snprintf(outptr, out_size, "%*s",
-                 18 - (int) get_internal_string_length(text), "");
+                 18 - static_cast<int>(get_internal_string_length(text)),
+                 "");
   }
 
   if (NULL != pplayer && BV_ISSET(selcols, DEM_COL_RANK)) {
@@ -1056,7 +1057,8 @@ void report_demographics(struct connection *pconn)
 
       cat_snprintf(buffer, sizeof(buffer), "%s", name);
       cat_snprintf(buffer, sizeof(buffer), "%*s",
-                   18 - (int) get_internal_string_length(name), "");
+                   18 - static_cast<int>(get_internal_string_length(name)),
+                   "");
       dem_line_item(buffer, sizeof(buffer), pplayer, &rowtable[i], selcols);
       sz_strlcat(buffer, "\n");
     }
@@ -1280,7 +1282,7 @@ static bool scan_score_log(char *id)
 /**********************************************************************/ /**
    Initialize score logging system
  **************************************************************************/
-void log_civ_score_init(void)
+void log_civ_score_init()
 {
   if (score_log != NULL) {
     return;
@@ -1304,7 +1306,7 @@ void log_civ_score_init(void)
 /**********************************************************************/ /**
    Free resources allocated for score logging system
  **************************************************************************/
-void log_civ_score_free(void)
+void log_civ_score_free()
 {
   if (!score_log) {
     /* nothing to do */
@@ -1334,7 +1336,7 @@ void log_civ_score_free(void)
 /**********************************************************************/ /**
    Create a log file of the civilizations so you can see what was happening.
  **************************************************************************/
-void log_civ_score_now(void)
+void log_civ_score_now()
 {
   enum { SL_CREATE, SL_APPEND, SL_UNSPEC } oper = SL_UNSPEC;
   char id[MAX_LEN_GAME_IDENTIFIER];
@@ -1440,7 +1442,8 @@ void log_civ_score_now(void)
       }
       break;
     default:
-      qCritical("[%s] bad operation %d", __FUNCTION__, (int) oper);
+      qCritical("[%s] bad operation %d", __FUNCTION__,
+                static_cast<int>(oper));
       goto log_civ_score_disable;
     }
   }
@@ -1546,7 +1549,7 @@ log_civ_score_disable:
 /**********************************************************************/ /**
    Produce random history report if it's time for one.
  **************************************************************************/
-void make_history_report(void)
+void make_history_report()
 {
   if (player_count() == 1) {
     return;
@@ -1616,7 +1619,7 @@ void report_final_scores(struct conn_list *dest)
   i = 0;
   players_iterate(pplayer)
   {
-    if (is_barbarian(pplayer) == false) {
+    if (!is_barbarian(pplayer)) {
       size[i].value = pplayer->score.game;
       size[i].player = pplayer;
       i++;
@@ -1705,7 +1708,7 @@ static void page_conn_etype(struct conn_list *dest, const char *caption,
 /**********************************************************************/ /**
    Return current history report
  **************************************************************************/
-struct history_report *history_report_get(void)
+struct history_report *history_report_get()
 {
   return &latest_history_report;
 }

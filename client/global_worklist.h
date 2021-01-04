@@ -13,14 +13,14 @@
 struct global_worklist;      /* Opaque type. */
 struct global_worklist_list; /* Opaque type. */
 
-void global_worklists_init(void);
-void global_worklists_free(void);
-void global_worklists_build(void);
-void global_worklists_unbuild(void);
+void global_worklists_init();
+void global_worklists_free();
+void global_worklists_build();
+void global_worklists_unbuild();
 
 void global_worklists_load(struct section_file *file);
 void global_worklists_save(struct section_file *file);
-int global_worklists_number(void);
+int global_worklists_number();
 
 struct global_worklist *global_worklist_new(const char *name);
 void global_worklist_destroy(struct global_worklist *pgwl);

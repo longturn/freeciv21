@@ -15,18 +15,15 @@
 #include <fc_config.h>
 #endif
 
-#include <errno.h>
-#include <limits.h>
-#include <locale.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cerrno>
+#include <climits>
+#include <clocale>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#ifdef HAVE_PWD_H
-#include <pwd.h>
-#endif
 #ifdef FREECIV_MSWINDOWS
 #define ALWAYS_ROOT
 #include <lmcons.h> /* UNLEN */
@@ -103,10 +100,9 @@ static QStringList *save_dir_names = NULL;
 static QStringList *scenario_dir_names = NULL;
 
 static char *mc_group = NULL;
-static char *home_dir_user = NULL;
 static char *storage_dir_freeciv = NULL;
 
-static struct astring realfile = ASTRING_INIT;
+Q_GLOBAL_STATIC(QString, realfile);
 
 static int compare_file_mtime_ptrs(const struct fileinfo *const *ppa,
                                    const struct fileinfo *const *ppb);
@@ -589,43 +585,11 @@ bool str_to_float(const char *str, float *pfloat)
 }
 
 /************************************************************************/ /**
-   Returns string which gives users home dir, as specified by $HOME.
-   Gets value once, and then caches result.
-   If $HOME is not set, give a log message and returns NULL.
-   Note the caller should not mess with the returned string.
- ****************************************************************************/
-char *user_home_dir(void)
-{
-  if (home_dir_user == NULL) {
-    char *env = getenv("HOME");
-
-#ifdef FREECIV_MSWINDOWS
-    env = getenv("APPDATA");
-#endif /* FREECIV_MSWINDOWS */
-
-    if (env) {
-      home_dir_user = fc_strdup(env);
-      qDebug("HOME is %s", home_dir_user);
-    } else {
-      qCritical("Could not find home directory (HOME is not set).");
-      home_dir_user = NULL;
-    }
-  }
-
-  return home_dir_user;
-}
-
-/************************************************************************/ /**
-   Free user home directory information
- ****************************************************************************/
-void free_user_home_dir(void) { NFCNPP_FREE(home_dir_user); }
-
-/************************************************************************/ /**
    Returns string which gives freeciv storage dir.
    Gets value once, and then caches result.
    Note the caller should not mess with the returned string.
  ****************************************************************************/
-char *freeciv_storage_dir(void)
+char *freeciv_storage_dir()
 {
   if (storage_dir_freeciv == NULL) {
     storage_dir_freeciv = new char[strlen(FREECIV_STORAGE_DIR) + 1];
@@ -643,7 +607,7 @@ char *freeciv_storage_dir(void)
 /************************************************************************/ /**
    Free freeciv storage directory information
  ****************************************************************************/
-void free_freeciv_storage_dir(void) { NFCNPP_FREE(storage_dir_freeciv); }
+void free_freeciv_storage_dir() { NFCNPP_FREE(storage_dir_freeciv); }
 
 /************************************************************************/ /**
    Returns string which gives user's username, as specified by $USER or
@@ -673,23 +637,16 @@ char *user_username(char *buf, size_t bufsz)
     }
   }
 
-#ifdef HAVE_GETPWUID
-  /* Otherwise if getpwuid() is available we can use it to find the true
-   * username. */
+#ifndef FREECIV_MSWINDOWS
   {
-    // cppcheck warns about thread safety, but this function is called once
-    // before any thread is spawned
-    auto pwent = getpwuid(getuid()); // NOLINT(runtime/threadsafe_fn)
-
-    if (pwent) {
-      fc_strlcpy(buf, pwent->pw_name, bufsz);
-      if (is_ascii_name(buf)) {
-        qDebug("getpwuid username is %s", buf);
-        return buf;
-      }
+    fc_strlcpy(buf, qUtf8Printable(QDir::homePath().split("/").last()),
+               bufsz);
+    if (is_ascii_name(buf)) {
+      qDebug("username from homepath is %s", buf);
+      return buf;
     }
   }
-#endif /* HAVE_GETPWUID */
+#endif
 
 #ifdef FREECIV_MSWINDOWS
   /* On windows the GetUserName function will give us the login name. */
@@ -710,7 +667,7 @@ char *user_username(char *buf, size_t bufsz)
 #ifdef ALWAYS_ROOT
   fc_strlcpy(buf, "name", bufsz);
 #else
-  fc_snprintf(buf, bufsz, "name%d", (int) getuid());
+  fc_snprintf(buf, bufsz, "name%d", static_cast<int>(getuid()));
 #endif
   qDebug("fake username is %s", buf);
   fc_assert(is_ascii_name(buf));
@@ -748,18 +705,18 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
                 tok, DIR_SEPARATOR_CHAR);
       i = 0; /* skip this one */
     } else {
-      char *home = user_home_dir();
+      QString home = QDir::homePath();
 
-      if (!home) {
+      if (home.isEmpty()) {
         qDebug("No HOME, skipping path component %s", tok);
         i = 0;
       } else {
-        int len = qstrlen(home) + i; /* +1 -1 */
+        int len = home.length() + i; /* +1 -1 */
 
         allocated = new char[len];
         ret = &allocated;
 
-        fc_snprintf(allocated, len, "%s%s", home, tok + 1);
+        fc_snprintf(allocated, len, "%s%s", qUtf8Printable(home), tok + 1);
         i = -1; /* flag to free tok below */
       }
     }
@@ -794,7 +751,7 @@ static QStringList *base_get_dirs(const char *dir_list)
 /************************************************************************/ /**
    Free data dir name vectors.
  ****************************************************************************/
-void free_data_dir_names(void)
+void free_data_dir_names()
 {
   NFCN_FREE(data_dir_names);
   NFCN_FREE(save_dir_names);
@@ -812,7 +769,7 @@ void free_data_dir_names(void)
    The returned pointer is static and shouldn't be modified, nor destroyed
    by the user caller.
  ****************************************************************************/
-const QStringList *get_data_dirs(void)
+const QStringList *get_data_dirs()
 {
   /* The first time this function is called it will search and
    * allocate the directory listing.  Subsequently we will already
@@ -849,7 +806,7 @@ const QStringList *get_data_dirs(void)
    The returned pointer is static and shouldn't be modified, nor destroyed
    by the user caller.
  ****************************************************************************/
-const QStringList *get_save_dirs(void)
+const QStringList *get_save_dirs()
 {
   /* The first time this function is called it will search and
    * allocate the directory listing.  Subsequently we will already
@@ -887,7 +844,7 @@ const QStringList *get_save_dirs(void)
    The returned pointer is static and shouldn't be modified, nor destroyed
    by the user caller.
  ****************************************************************************/
-const QStringList *get_scenario_dirs(void)
+const QStringList *get_scenario_dirs()
 {
   /* The first time this function is called it will search and
    * allocate the directory listing.  Subsequently we will already
@@ -970,13 +927,13 @@ struct QVector<QString> *fileinfolist(const QStringList *dirs,
 
    TODO: Make this re-entrant
  ****************************************************************************/
-const char *
+QString
 fileinfoname(const QStringList *dirs, const char *filename)
 {
 #ifndef DIR_SEPARATOR_IS_DEFAULT
   char fnbuf[filename != NULL ? qstrlen(filename) + 1 : 1];
   int i;
-#else /* DIR_SEPARATOR_IS_DEFAULT */
+#else  /* DIR_SEPARATOR_IS_DEFAULT */
   const char *fnbuf = filename;
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
@@ -987,17 +944,17 @@ fileinfoname(const QStringList *dirs, const char *filename)
   if (!filename) {
     bool first = true;
 
-    astr_clear(&realfile);
+    realfile->clear();
     for (const auto &dirname : *dirs) {
       if (first) {
-        astr_add(&realfile, "/%s", qUtf8Printable(dirname));
+        *realfile += QString("/%1").arg(dirname);
         first = false;
       } else {
-        astr_add(&realfile, "%s", qUtf8Printable(dirname));
+        *realfile += QString("%1").arg(dirname);
       }
     }
 
-    return astr_str(&realfile);
+    return *realfile;
   }
 
 #ifndef DIR_SEPARATOR_IS_DEFAULT
@@ -1014,10 +971,10 @@ fileinfoname(const QStringList *dirs, const char *filename)
   for (const auto &dirname : *dirs) {
     struct stat buf; /* see if we can open the file or directory */
 
-    astr_set(&realfile, "%s%c%s", qUtf8Printable(dirname),
-             DIR_SEPARATOR_CHAR, fnbuf);
-    if (fc_stat(astr_str(&realfile), &buf) == 0) {
-      return astr_str(&realfile);
+    *realfile =
+        QString("%1%2%3").arg(dirname, QString(DIR_SEPARATOR_CHAR), fnbuf);
+    if (fc_stat(qUtf8Printable(*realfile), &buf) == 0) {
+      return *realfile;
     }
   }
 
@@ -1029,7 +986,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
 /************************************************************************/ /**
    Free resources allocated for fileinfoname service
  ****************************************************************************/
-void free_fileinfo_data(void) { astr_free(&realfile); }
+void free_fileinfo_data() {}
 
 /************************************************************************/ /**
    Destroys the file info structure.
@@ -1134,7 +1091,7 @@ struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
 /************************************************************************/ /**
    Language environmental variable (with emulation).
  ****************************************************************************/
-char *setup_langname(void)
+char *setup_langname()
 {
   char *langname = NULL;
 
@@ -1298,7 +1255,7 @@ void switch_lang(const char *lang)
   autocap_update();
 
   qInfo("LANG set to %s", lang);
-#else /* FREECIV_ENABLE_NLS */
+#else  /* FREECIV_ENABLE_NLS */
   fc_assert(false);
 #endif /* FREECIV_ENABLE_NLS */
 }
@@ -1307,7 +1264,7 @@ void switch_lang(const char *lang)
    Setup for Native Language Support, if configured to use it.
    (Call this only once, or it may leak memory.)
  ****************************************************************************/
-void init_nls(void)
+void init_nls()
 {
   /*
    * Setup the cached locale numeric formatting information. Defaults
@@ -1320,7 +1277,7 @@ void init_nls(void)
 
 #ifdef FREECIV_MSWINDOWS
   setup_langname(); /* Makes sure LANG env variable has been set */
-#endif /* FREECIV_MSWINDOWS */
+#endif              /* FREECIV_MSWINDOWS */
 
   (void) setlocale(LC_ALL, "");
   (void) bindtextdomain("freeciv-core", get_locale_dir());
@@ -1367,7 +1324,7 @@ void init_nls(void)
 /************************************************************************/ /**
    Free memory allocated by Native Language Support
  ****************************************************************************/
-void free_nls(void)
+void free_nls()
 {
   FCPP_FREE(grouping);
   FCPP_FREE(grouping_sep);
@@ -1390,9 +1347,7 @@ void dont_run_as_root(const char *argv0, const char *fallback)
   if (getuid() == 0 || geteuid() == 0) {
     fc_fprintf(stderr,
                _("%s: Fatal error: you're trying to run me as superuser!\n"),
-               (argv0      ? argv0
-                : fallback ? fallback
-                           : "freeciv"));
+               (argv0 ? argv0 : fallback ? fallback : "freeciv"));
     fc_fprintf(stderr, _("Use a non-privileged account instead.\n"));
     exit(EXIT_FAILURE);
   }
@@ -1523,7 +1478,7 @@ char *get_multicast_group(bool ipv6_preferred)
 /************************************************************************/ /**
    Free multicast group resources
  ****************************************************************************/
-void free_multicast_group(void) { NFCNPP_FREE(mc_group); }
+void free_multicast_group() { NFCNPP_FREE(mc_group); }
 
 /************************************************************************/ /**
    Interpret ~/ in filename as home dir
@@ -1532,15 +1487,16 @@ void free_multicast_group(void) { NFCNPP_FREE(mc_group); }
    This may fail if the path is too long.  It is better to use
    interpret_tilde_alloc.
  ****************************************************************************/
-void interpret_tilde(char *buf, size_t buf_size, const char *filename)
+void interpret_tilde(char *buf, size_t buf_size, const QString &filename)
 {
-  if (filename[0] == '~' && filename[1] == DIR_SEPARATOR_CHAR) {
-    fc_snprintf(buf, buf_size, "%s%c%s", user_home_dir(), DIR_SEPARATOR_CHAR,
-                filename + 2);
-  } else if (filename[0] == '~' && filename[1] == '\0') {
-    qstrncpy(buf, user_home_dir(), buf_size);
+  if (filename.startsWith("~/")) {
+    fc_snprintf(buf, buf_size, "%s%c%s", qUtf8Printable(QDir::homePath()),
+                DIR_SEPARATOR_CHAR,
+                qUtf8Printable(filename.right(filename.length() - 2)));
+  } else if (filename == "~") {
+    qstrncpy(buf, qUtf8Printable(QDir::homePath()), buf_size);
   } else {
-    qstrncpy(buf, filename, buf_size);
+    qstrncpy(buf, qUtf8Printable(filename), buf_size);
   }
 }
 
@@ -1553,17 +1509,17 @@ void interpret_tilde(char *buf, size_t buf_size, const char *filename)
 char *interpret_tilde_alloc(const char *filename)
 {
   if (filename[0] == '~' && filename[1] == DIR_SEPARATOR_CHAR) {
-    const char *home = user_home_dir();
+    QString home = QDir::homePath();
     size_t sz;
     char *buf;
 
     filename += 2; /* Skip past "~/" */
-    sz = qstrlen(home) + qstrlen(filename) + 2;
+    sz = home.length() + qstrlen(filename) + 2;
     buf = static_cast<char *>(fc_malloc(sz));
-    fc_snprintf(buf, sz, "%s/%s", home, filename);
+    fc_snprintf(buf, sz, "%s/%s", qUtf8Printable(home), filename);
     return buf;
   } else if (filename[0] == '~' && filename[1] == '\0') {
-    return fc_strdup(user_home_dir());
+    return fc_strdup(qUtf8Printable(QDir::homePath()));
   } else {
     return fc_strdup(filename);
   }
@@ -1592,7 +1548,7 @@ char *skip_to_basename(char *filepath)
  ****************************************************************************/
 bool make_dir(const char *pathname)
 {
-  auto path = interpret_tilde_alloc(pathname);
+  auto *path = interpret_tilde_alloc(pathname);
   auto str = QString::fromUtf8(path);
   // We can always create a directory with an empty name -- it's the current
   // folder.
@@ -1614,7 +1570,7 @@ bool path_is_absolute(const char *filename)
   if (strchr(filename, ':')) {
     return true;
   }
-#else /* FREECIV_MSWINDOWS */
+#else  /* FREECIV_MSWINDOWS */
   if (filename[0] == '/') {
     return true;
   }
@@ -1933,7 +1889,7 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
   const char *const cmax = cformat + sizeof(cformat) - 2;
   int i, j;
 
-  if ((size_t) -1 == sequences_num) {
+  if (static_cast<size_t>(-1) == sequences_num) {
     /* Find the number of sequences. */
     sequences_num = 0;
     for (pseq = sequences; CF_LAST != pseq->type; pseq++) {

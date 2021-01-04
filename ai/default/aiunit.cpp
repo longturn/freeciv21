@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <math.h>
+#include <cmath>
 
 /* utility */
 #include "bitvector.h"
@@ -369,7 +369,8 @@ int kill_desire(int benefit, int attack, int loss, int vuln,
  **************************************************************************/
 static int avg_benefit(int benefit, int loss, double chance)
 {
-  return (int) (((benefit + loss) * chance - loss) * SHIELD_WEIGHTING);
+  return static_cast<int>(((benefit + loss) * chance - loss)
+                          * SHIELD_WEIGHTING);
 }
 
 /**********************************************************************/ /**
@@ -2069,7 +2070,7 @@ static bool dai_is_unit_tired_waiting_boat(struct ai_type *ait,
     }
     dest = punit->goto_tile;
 
-    if (src == NULL || dest == NULL) {
+    if (src == NULL || dest == NULL || src_home_city == NULL) {
       return false;
     }
     /* if we're not at home continent */
@@ -2276,11 +2277,9 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
         tired_of_waiting_boat = true;
       } else {
         dest = city_dest;
-        help_wonder = (unit_data->task == AIUNIT_WONDER) ? true : false;
+        help_wonder = unit_data->task == AIUNIT_WONDER;
         required_boat =
-            (tile_continent(unit_tile(punit)) == tile_continent(dest->tile))
-                ? false
-                : true;
+            tile_continent(unit_tile(punit)) != tile_continent(dest->tile);
         request_boat = false;
       }
     }
@@ -2328,9 +2327,7 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
       dest = result.dest;
       help_wonder = result.help_wonder;
       required_boat =
-          (tile_continent(unit_tile(punit)) == tile_continent(dest->tile))
-              ? false
-              : true;
+          tile_continent(unit_tile(punit)) != tile_continent(dest->tile);
       request_boat = required_boat;
       dai_unit_new_task(ait, punit,
                         (help_wonder) ? AIUNIT_WONDER : AIUNIT_TRADE,
@@ -2560,7 +2557,6 @@ static void dai_manage_settler(struct ai_type *ait, struct player *pplayer,
   if (unit_data->task == AIUNIT_NONE) {
     adv_unit_new_task(punit, AUT_AUTO_SETTLER, NULL);
   }
-  return;
 }
 
 /**********************************************************************/ /**
@@ -3113,7 +3109,7 @@ void dai_consider_tile_dangerous(struct ai_type *ait, struct tile *ptile,
 /**********************************************************************/ /**
    Updates the global array simple_ai_types.
  **************************************************************************/
-static void update_simple_ai_types(void)
+static void update_simple_ai_types()
 {
   int i = 0;
 
@@ -3365,7 +3361,8 @@ struct role_unit_cb_data {
  **************************************************************************/
 static bool role_unit_cb(struct unit_type *ptype, void *data)
 {
-  struct role_unit_cb_data *cb_data = (struct role_unit_cb_data *) data;
+  struct role_unit_cb_data *cb_data =
+      static_cast<struct role_unit_cb_data *>(data);
   struct unit_class *pclass = utype_class(ptype);
 
   if ((cb_data->tc == TC_LAND && pclass->adv.land_move == MOVE_NONE)
@@ -3373,12 +3370,8 @@ static bool role_unit_cb(struct unit_type *ptype, void *data)
     return false;
   }
 
-  if (cb_data->build_city == NULL
-      || can_city_build_unit_now(cb_data->build_city, ptype)) {
-    return true;
-  }
-
-  return false;
+  return cb_data->build_city == NULL
+         || can_city_build_unit_now(cb_data->build_city, ptype);
 }
 
 /**********************************************************************/ /**

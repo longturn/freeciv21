@@ -99,7 +99,7 @@ void tile_set_terrain(struct tile *ptile, struct terrain *pterrain);
 void tile_set_worked(struct tile *ptile, struct city *pcity);
 
 const bv_extras *tile_extras_safe(const struct tile *ptile);
-const bv_extras *tile_extras_null(void);
+const bv_extras *tile_extras_null();
 static inline const bv_extras *tile_extras(const struct tile *ptile)
 {
   return &(ptile->extras);

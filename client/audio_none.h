@@ -12,4 +12,4 @@
 ***********************************************************************/
 #pragma once
 
-void audio_none_init(void);
+void audio_none_init();

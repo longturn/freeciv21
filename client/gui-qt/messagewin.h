@@ -43,11 +43,11 @@ private:
   QPixmap *pix;
 
 protected:
-  void enterEvent(QEvent *event);
-  void leaveEvent(QEvent *event);
+  void enterEvent(QEvent *event) override;
+  void leaveEvent(QEvent *event) override;
   void paint(QPainter *painter, QPaintEvent *event);
-  void paintEvent(QPaintEvent *event);
-  void resizeEvent(QResizeEvent *event);
+  void paintEvent(QPaintEvent *event) override;
+  void resizeEvent(QResizeEvent *event) override;
 public slots:
   void item_selected(const QItemSelection &sl, const QItemSelection &ds);
 };
@@ -69,7 +69,7 @@ public:
   bool chat_maximized;
 
 private:
-  void update_menu();
+  void update_menu() override;
   QPoint cursor;
   QSize last_size;
   move_widget *mw;
@@ -79,8 +79,8 @@ private:
   bool resy;
 
 protected:
-  void mousePressEvent(QMouseEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void mouseReleaseEvent(QMouseEvent *event);
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
   int &e_pos();
 };

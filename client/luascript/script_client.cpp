@@ -12,9 +12,9 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <time.h>
+#include <cstdarg>
+#include <cstdlib>
+#include <ctime>
 
 extern "C" {
 /* dependencies/lua */
@@ -57,12 +57,12 @@ static struct fc_lua *main_fcl = NULL;
 *****************************************************************************/
 static char *script_client_code = NULL;
 
-static void script_client_vars_init(void);
-static void script_client_vars_free(void);
+static void script_client_vars_init();
+static void script_client_vars_free();
 static void script_client_vars_load(struct section_file *file);
 static void script_client_vars_save(struct section_file *file);
-static void script_client_code_init(void);
-static void script_client_code_free(void);
+static void script_client_code_init();
+static void script_client_code_free();
 static void script_client_code_load(struct section_file *file);
 static void script_client_code_save(struct section_file *file);
 
@@ -70,7 +70,7 @@ static void script_client_output(struct fc_lua *fcl, QtMsgType level,
                                  const char *format, ...)
     fc__attribute((__format__(__printf__, 3, 4)));
 
-static void script_client_signal_create(void);
+static void script_client_signal_create();
 
 /*************************************************************************/ /**
    Parse and execute the script in str
@@ -115,14 +115,14 @@ void script_client_remove_exported_object(void *object)
 /*************************************************************************/ /**
    Initialize the game script variables.
  *****************************************************************************/
-static void script_client_vars_init(void)
+static void script_client_vars_init()
 { /* nothing */
 }
 
 /*************************************************************************/ /**
    Free the game script variables.
  *****************************************************************************/
-static void script_client_vars_free(void)
+static void script_client_vars_free()
 { /* nothing */
 }
 
@@ -145,12 +145,12 @@ static void script_client_vars_save(struct section_file *file)
 /*************************************************************************/ /**
    Initialize the optional game script code (useful for scenarios).
  *****************************************************************************/
-static void script_client_code_init(void) { script_client_code = NULL; }
+static void script_client_code_init() { script_client_code = NULL; }
 
 /*************************************************************************/ /**
    Free the optional game script code (useful for scenarios).
  *****************************************************************************/
-static void script_client_code_free(void) { NFCN_FREE(script_client_code); }
+static void script_client_code_free() { NFCN_FREE(script_client_code); }
 
 /*************************************************************************/ /**
    Load the optional game script code from file (useful for scenarios).
@@ -180,7 +180,7 @@ static void script_client_code_save(struct section_file *file)
 /*************************************************************************/ /**
    Initialize the scripting state.
  *****************************************************************************/
-bool script_client_init(void)
+bool script_client_init()
 {
   if (main_fcl != NULL) {
     fc_assert_ret_val(main_fcl->state != NULL, false);
@@ -266,7 +266,7 @@ static void script_client_output(struct fc_lua *fcl, QtMsgType level,
 /*************************************************************************/ /**
    Free the scripting data.
  *****************************************************************************/
-void script_client_free(void)
+void script_client_free()
 {
   if (main_fcl != NULL) {
     script_client_code_free();
@@ -315,7 +315,7 @@ void script_client_signal_emit(const char *signal_name, ...)
 /*************************************************************************/ /**
    Declare any new signal types you need here.
  *****************************************************************************/
-static void script_client_signal_create(void)
+static void script_client_signal_create()
 {
   luascript_signal_create(main_fcl, "new_tech", 0);
 }

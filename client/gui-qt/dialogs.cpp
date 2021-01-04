@@ -168,7 +168,7 @@ qdef_act *qdef_act::m_instance = nullptr;
    Initialize a mapping between an action and the function to call if
    the action's button is pushed.
  ***************************************************************************/
-static const QHash<action_id, pfcn_void> af_map_init(void)
+static const QHash<action_id, pfcn_void> af_map_init()
 {
   QHash<action_id, pfcn_void> action_function;
 
@@ -808,7 +808,7 @@ void races_dialog::ok_pressed()
 /***********************************************************************/ /**
    Default actions provider constructor
  ***************************************************************************/
-qdef_act::qdef_act() : vs_city(-1), vs_unit(-1) {}
+qdef_act::qdef_act() {}
 
 /***********************************************************************/ /**
    Returns instance of qdef_act
@@ -1391,12 +1391,14 @@ void choice_dialog::prev_unit()
  ***************************************************************************/
 void choice_dialog::update_dialog(const struct act_prob *act_probs)
 {
+  struct unit *actor_unit = game_unit_by_number(unit_id);
   if (targeted_unit == nullptr) {
     return;
   }
   unit_skip->setParent(nullptr);
-  action_selection_refresh(game_unit_by_number(unit_id), nullptr,
-                           targeted_unit, targeted_unit->tile,
+  fc_assert_ret(actor_unit);
+  action_selection_refresh(actor_unit, nullptr, targeted_unit,
+                           targeted_unit->tile,
                            (sub_target_id[ASTK_EXTRA] != EXTRA_NONE
                                 ? extra_by_number(sub_target_id[ASTK_EXTRA])
                                 : NULL),
@@ -1951,7 +1953,7 @@ static action_id get_non_targeted_action_id(action_id tgt_action_id)
 {
   /* Don't add an action mapping here unless the non targeted version is
    * selectable in the targeted version's target selection dialog. */
-  switch ((enum gen_action) tgt_action_id) {
+  switch (static_cast<enum gen_action>(tgt_action_id)) {
   case ACTION_SPY_TARGETED_SABOTAGE_CITY:
     return ACTION_SPY_SABOTAGE_CITY;
   case ACTION_SPY_TARGETED_SABOTAGE_CITY_ESC:
@@ -1974,7 +1976,7 @@ static action_id get_production_targeted_action_id(action_id tgt_action_id)
 {
   /* Don't add an action mapping here unless the non targeted version is
    * selectable in the targeted version's target selection dialog. */
-  switch ((enum gen_action) tgt_action_id) {
+  switch (static_cast<enum gen_action>(tgt_action_id)) {
   case ACTION_SPY_TARGETED_SABOTAGE_CITY:
     return ACTION_SPY_SABOTAGE_CITY_PRODUCTION;
   case ACTION_SPY_TARGETED_SABOTAGE_CITY_ESC:
@@ -2555,7 +2557,8 @@ static void spy_steal_shared(QVariant data1, QVariant data2,
     }
     advance_index_iterate_end;
 
-    if (action_prob_possible(
+    if (actor_unit
+        && action_prob_possible(
             actor_unit->client
                 .act_prob_cache[get_non_targeted_action_id(act_id)])) {
       stra = QString(_("At %1's Discretion"))
@@ -3707,7 +3710,7 @@ void popup_upgrade_dialog(struct unit_list *punits)
     for (int id : not_ptr) {
       punit = game_unit_by_number(id);
       if (punit) {
-        request_unit_upgrade(game_unit_by_number(id));
+        request_unit_upgrade(punit);
       }
     }
   });

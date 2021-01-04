@@ -288,11 +288,7 @@ bool option_dialog::get_bool(struct option *poption)
   QCheckBox *c;
 
   c = reinterpret_cast<QCheckBox *>(option_get_gui_data(poption));
-  if (c->checkState() == Qt::Checked) {
-    return true;
-  } else {
-    return false;
-  }
+  return c->checkState() == Qt::Checked;
 }
 
 /************************************************************************/ /**

@@ -10,7 +10,7 @@
 **************************************************************************/
 #pragma once
 
-void packhand_free(void);
+void packhand_free();
 
 void notify_about_incoming_packet(struct connection *pc, int packet_type,
                                   int size);
@@ -19,6 +19,6 @@ void notify_about_outgoing_packet(struct connection *pc, int packet_type,
 void set_reports_thaw_request(int request_id);
 
 void play_sound_for_event(enum event_type type);
-void target_government_init(void);
+void target_government_init();
 void set_government_choice(struct government *government);
-void start_revolution(void);
+void start_revolution();

@@ -17,9 +17,9 @@
 
 #include <QString>
 #include <QVector>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "capability.h"
@@ -188,7 +188,7 @@ bool audio_select_plugin(const QString &name)
    Initialize base audio system. Note that this function is called very
    early at the client startup. So for example logging isn't available.
  **************************************************************************/
-void audio_init(void)
+void audio_init()
 {
 #ifdef AUDIO_SDL
   audio_sdl_init();
@@ -210,13 +210,13 @@ static const QString audiospec_fullname(const QString &audioset_name,
   const QString suffix = music ? MUSICSPEC_SUFFIX : SNDSPEC_SUFFIX;
   QString audioset_default =
       music ? QStringLiteral("stdmusic") : QStringLiteral("stdsounds");
-  const char *dname;
+  QString dname;
 
   QString fname = QStringLiteral("%1%2").arg(audioset_name, suffix);
   dname = fileinfoname(get_data_dirs(), qUtf8Printable(fname));
 
-  if (dname) {
-    return QString(dname);
+  if (!dname.isEmpty()) {
+    return dname;
   }
 
   if (audioset_name == audioset_default) {
@@ -317,13 +317,13 @@ void audio_real_init(const QString &soundset_name,
     ms_tagfile = NULL;
     return;
   }
-  ss_tagfile = secfile_load(qUtf8Printable(ss_filename), true);
+  ss_tagfile = secfile_load(ss_filename, true);
   if (!ss_tagfile) {
     qFatal(_("Could not load sound spec-file '%s':\n%s"),
            qUtf8Printable(ss_filename), secfile_error());
     exit(EXIT_FAILURE);
   }
-  ms_tagfile = secfile_load(qUtf8Printable(ms_filename), true);
+  ms_tagfile = secfile_load(ms_filename, true);
   if (!ms_tagfile) {
     qFatal(_("Could not load music spec-file '%s':\n%s"),
            qUtf8Printable(ms_filename), secfile_error());
@@ -338,15 +338,17 @@ void audio_real_init(const QString &soundset_name,
   atexit(audio_shutdown);
 
   if (!preferred_plugin_name.isEmpty()) {
-    if (!audio_select_plugin(preferred_plugin_name))
+    if (!audio_select_plugin(preferred_plugin_name)) {
       qInfo(_("Proceeding with sound support disabled."));
+    }
     return;
   }
 
 #ifdef AUDIO_SDL
   QString audio_str = QStringLiteral("sdl");
-  if (audio_select_plugin(audio_str))
+  if (audio_select_plugin(audio_str)) {
     return;
+  }
 #endif
   qInfo(_("No real audio subsystem managed to initialize!"));
   qInfo(_("Perhaps there is some misconfiguration or bad permissions."));
@@ -369,7 +371,7 @@ void audio_restart(const QString &soundset_name,
 /**********************************************************************/ /**
    Callback to start new track
  **************************************************************************/
-static void music_finished_callback(void)
+static void music_finished_callback()
 {
   bool usage_enabled = true;
 
@@ -569,12 +571,12 @@ void audio_play_track(const QString &tag, const QString &alt_tag)
 /**********************************************************************/ /**
    Stop sound. Music should die down in a few seconds.
  **************************************************************************/
-void audio_stop(void) { plugins[selected_plugin].stop(); }
+void audio_stop() { plugins[selected_plugin].stop(); }
 
 /**********************************************************************/ /**
    Stop looping sound. Music should die down in a few seconds.
  **************************************************************************/
-void audio_stop_usage(void)
+void audio_stop_usage()
 {
   switching_usage = true;
   plugins[selected_plugin].stop();
@@ -583,10 +585,7 @@ void audio_stop_usage(void)
 /**********************************************************************/ /**
    Stop looping sound. Music should die down in a few seconds.
  **************************************************************************/
-double audio_get_volume(void)
-{
-  return plugins[selected_plugin].get_volume();
-}
+double audio_get_volume() { return plugins[selected_plugin].get_volume(); }
 
 /**********************************************************************/ /**
    Stop looping sound. Music should die down in a few seconds.
@@ -599,7 +598,7 @@ void audio_set_volume(double volume)
 /**********************************************************************/ /**
    Call this at end of program only.
  **************************************************************************/
-void audio_shutdown(void)
+void audio_shutdown()
 {
   /* avoid infinite loop at end of game */
   audio_stop();
@@ -622,7 +621,7 @@ void audio_shutdown(void)
    Returns a string which list all available plugins. You don't have to
    free the string.
  **************************************************************************/
-const QString audio_get_all_plugin_names(void)
+const QString audio_get_all_plugin_names()
 {
   QString buffer;
   int i;

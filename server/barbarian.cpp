@@ -21,9 +21,9 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "fcintl.h"
@@ -518,7 +518,7 @@ static struct tile *find_empty_tile_nearby(struct tile *ptile)
       be an average number of cities (all cities/player num)? Depending
       on the victim government type is also questionable.
  **************************************************************************/
-static void try_summon_barbarians(void)
+static void try_summon_barbarians()
 {
   struct tile *ptile, *utile;
   int i, dist;
@@ -569,8 +569,8 @@ static void try_summon_barbarians(void)
 
   /* do not harass small civs - in practice: do not uprise at the beginning
    */
-  if ((int) fc_rand(30) + 1 > (int) city_list_size(victim->cities)
-                                  * (game.server.barbarianrate - 1)
+  if (static_cast<int>(fc_rand(30)) + 1
+          > city_list_size(victim->cities) * (game.server.barbarianrate - 1)
       || fc_rand(100) > get_player_bonus(victim, EFT_CIVIL_WAR_CHANCE)) {
     return;
   }
@@ -717,7 +717,7 @@ static void try_summon_barbarians(void)
    Summon barbarians out of the blue. Try more times for more difficult
    levels - which means there can be more than one uprising in one year!
  **************************************************************************/
-void summon_barbarians(void)
+void summon_barbarians()
 {
   int i, n;
 

@@ -146,7 +146,7 @@ pageGame::pageGame(QWidget *parent)
   game_tab_widget->init();
 }
 
-pageGame::~pageGame() {}
+pageGame::~pageGame() = default;
 
 /**********************************************************************/ /**
    Reloads sidebar icons (useful on theme change)
@@ -186,7 +186,7 @@ void pageGame::updateSidebarPosition()
 /**********************************************************************/ /**
    Real update, updates only once per 300 ms.
  **************************************************************************/
-void pageGame::updateInfoLabel(void)
+void pageGame::updateInfoLabel()
 {
   if (king()->current_page() != PAGE_GAME) {
     return;
@@ -201,7 +201,7 @@ void pageGame::updateInfoLabel(void)
   }
 }
 
-void pageGame::updateInfoLabelTimeout(void)
+void pageGame::updateInfoLabelTimeout()
 {
   QString s, eco_info;
   if (update_info_timer->remainingTime() != -1) {
@@ -532,7 +532,7 @@ void fc_game_tab_widget::current_changed(int index)
   }
   objs = queen()->sidebar_wdg->objects;
 
-  for (auto sw : qAsConst(objs)) {
+  for (auto *sw : qAsConst(objs)) {
     sw->updateFinalPixmap();
   }
   currentWidget()->hide();
@@ -579,7 +579,6 @@ void pageGame::gimmePlace(QWidget *widget, const QString &str)
     return;
   }
   qCritical("Failed to find place for new tab widget");
-  return;
 }
 
 /************************************************************************/ /**
@@ -621,11 +620,7 @@ bool pageGame::isRepoDlgOpen(const QString &str)
 
   w = opened_repo_dlgs.value(str);
 
-  if (w == NULL) {
-    return false;
-  }
-
-  return true;
+  return w != NULL;
 }
 
 /**********************************************************************/ /**

@@ -526,12 +526,8 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
   adv->infra_priority = INFRA_WEIGHTING;
 
   /* Research want */
-  if (is_future_tech(research_get(pplayer)->researching)
-      || player_has_really_useful_tech_parasite(pplayer)) {
-    adv->wants_science = false;
-  } else {
-    adv->wants_science = true;
-  }
+  adv->wants_science = !(is_future_tech(research_get(pplayer)->researching)
+                         || player_has_really_useful_tech_parasite(pplayer));
 
   /* max num cities
    * The idea behind this code is that novice players don't understand that

@@ -465,8 +465,8 @@ int get_activity_rate(const struct unit *punit)
   int move_rate = unit_type_get(punit)->move_rate;
 
   /* All settler actions are multiplied by ACTIVITY_FACTOR. */
-  return ACTIVITY_FACTOR * (float) vlevel->power_fact / 100 * move_rate
-         / SINGLE_MOVE;
+  return ACTIVITY_FACTOR * static_cast<float>(vlevel->power_fact) / 100
+         * move_rate / SINGLE_MOVE;
 }
 
 /**********************************************************************/ /**
@@ -561,7 +561,7 @@ bool can_unit_do_autosettlers(const struct unit *punit)
 /**********************************************************************/ /**
    Setup array of real activities
  **************************************************************************/
-void setup_real_activities_array(void)
+void setup_real_activities_array()
 {
   int i = 0;
 
@@ -2042,11 +2042,7 @@ bool unit_type_is_losing_hp(const struct player *pplayer,
 bool unit_is_alive(int id)
 {
   /* Check if unit exist in game */
-  if (game_unit_by_number(id)) {
-    return true;
-  }
-
-  return false;
+  return game_unit_by_number(id) != nullptr;
 }
 
 /**********************************************************************/ /**
@@ -2145,7 +2141,8 @@ int unit_bribe_cost(struct unit *punit, struct player *briber)
   /* Cost now contains the basic bribe cost.  We now reduce it by:
    *    bribecost = cost/2 + cost/2 * damage/hp
    *              = cost/2 * (1 + damage/hp) */
-  return ((float) cost / 2 * (1.0 + (float) punit->hp / default_hp));
+  return (static_cast<float>(cost) / 2
+          * (1.0 + static_cast<float>(punit->hp) / default_hp));
 }
 
 /**********************************************************************/ /**
@@ -2210,12 +2207,8 @@ bool unit_transported(const struct unit *pcargo)
 
   /* The unit is transported if a transporter unit is set or, (for the
    * client) if the transported_by field is set. */
-  if (pcargo->transporter != NULL
-      || (!is_server() && pcargo->client.transported_by != -1)) {
-    return true;
-  }
-
-  return false;
+  return pcargo->transporter != NULL
+         || (!is_server() && pcargo->client.transported_by != -1);
 }
 
 /**********************************************************************/ /**
@@ -2351,7 +2344,7 @@ int unit_transport_depth(const struct unit *pcargo)
 /**********************************************************************/ /**
    Returns the size of the unit cargo iterator.
  **************************************************************************/
-size_t cargo_iter_sizeof(void) { return sizeof(struct cargo_iter); }
+size_t cargo_iter_sizeof() { return sizeof(struct cargo_iter); }
 
 /**********************************************************************/ /**
    Get the unit of the cargo iterator.

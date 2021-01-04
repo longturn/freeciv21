@@ -17,8 +17,8 @@
 
 struct section_file;
 
-bool comments_load(void);
-void comments_free(void);
+bool comments_load();
+void comments_free();
 
 void comment_file_header(struct section_file *sfile);
 

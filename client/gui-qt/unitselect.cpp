@@ -131,7 +131,7 @@ void units_select::create_pixmap()
       pix = new QPixmap(4 * item_size.width(), 3 * item_size.height());
     }
     pix->fill(Qt::transparent);
-    for (auto punit : qAsConst(unit_list)) {
+    for (auto *punit : qAsConst(unit_list)) {
       unit_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
                                       tileset_unit_height(tileset));
       unit_pixmap->fill(Qt::transparent);
@@ -373,8 +373,9 @@ void units_select::update_units()
   int i = 1;
   struct unit_list *punit_list;
 
-  if (utile == nullptr)
+  if (utile == nullptr) {
     return;
+  }
   unit_count = 0;
   if (utile == NULL) {
     struct unit *punit = head_of_units_in_focus();
@@ -389,8 +390,9 @@ void units_select::update_units()
       unit_list_iterate(utile->units, punit)
       {
         unit_count++;
-        if (i > show_line * 4)
+        if (i > show_line * 4) {
           unit_list.push_back(punit);
+        }
         i++;
       }
       unit_list_iterate_end;

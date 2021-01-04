@@ -19,7 +19,7 @@
  \_____       _____/
        \     /                                                      *****/
 #include "canvas.h"
-#include <math.h>
+#include <cmath>
 // Qt
 #include <QFontMetrics>
 #include <QPainter>
@@ -415,7 +415,7 @@ QRect zealous_crop_rect(QImage &p)
   t = p.height();
   b = 0;
   for (int y = 0; y < p.height(); ++y) {
-    QRgb *row = (QRgb *) p.scanLine(y);
+    QRgb *row = reinterpret_cast<QRgb *>(p.scanLine(y));
     bool row_filled = false;
     int x;
 

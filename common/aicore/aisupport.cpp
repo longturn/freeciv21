@@ -33,7 +33,7 @@
 /*******************************************************************/ /**
    Find who is leading the space race. Returns NULL if nobody is.
  ***********************************************************************/
-struct player *player_leading_spacerace(void)
+struct player *player_leading_spacerace()
 {
   struct player *best = NULL;
   int best_arrival = FC_INFINITY;
@@ -46,7 +46,7 @@ struct player *player_leading_spacerace(void)
   players_iterate_alive(pplayer)
   {
     struct player_spaceship *ship = &pplayer->spaceship;
-    int arrival = (int) ship->travel_time + ship->launch_year;
+    int arrival = static_cast<int>(ship->travel_time) + ship->launch_year;
 
     if (is_barbarian(pplayer) || ship->state == SSHIP_NONE) {
       continue;

@@ -128,7 +128,7 @@ page_network::page_network(QWidget *parent, fc_client *gui)
   setLayout(ui.gridLayout);
 }
 
-page_network::~page_network() {}
+page_network::~page_network() = default;
 
 /**********************************************************************/ /**
    Update network page connection state.
@@ -282,7 +282,7 @@ void server_scan_error(struct server_scan *scan, const char *message)
 /**********************************************************************/ /**
    Free the server scans.
  **************************************************************************/
-void page_network::destroy_server_scans(void)
+void page_network::destroy_server_scans()
 {
   if (meta_scan) {
     server_scan_finish(meta_scan);
@@ -310,7 +310,7 @@ void page_network::destroy_server_scans(void)
 /**********************************************************************/ /**
    Stop and restart the metaserver and lan server scans.
  **************************************************************************/
-void page_network::update_network_lists(void)
+void page_network::update_network_lists()
 {
   destroy_server_scans();
 
@@ -350,11 +350,7 @@ bool page_network::check_server_scan(server_scan *scan_data)
     update_server_list(type, srvrs);
   }
 
-  if (stat == SCAN_STATUS_ERROR || stat == SCAN_STATUS_DONE) {
-    return false;
-  }
-
-  return true;
+  return !(stat == SCAN_STATUS_ERROR || stat == SCAN_STATUS_DONE);
 }
 
 /**********************************************************************/ /**

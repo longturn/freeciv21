@@ -12,7 +12,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
+#include <cstdarg>
 
 /* dependencies/lua */
 extern "C" {
@@ -48,7 +48,7 @@ static struct luascript_func *func_new(bool required, int nargs,
                                        int nreturns,
                                        enum api_types *preturn_types)
 {
-  auto pfunc = new luascript_func;
+  auto *pfunc = new luascript_func;
 
   pfunc->required = required;
   pfunc->nargs = nargs;
@@ -89,7 +89,7 @@ bool luascript_func_check(struct fc_lua *fcl,
     char *func_name = qfunc_name.toLocal8Bit().data();
     if (!luascript_check_function(fcl, func_name)) {
       fc_assert_ret_val(fcl->funcs->contains(func_name), false);
-      auto pfunc = fcl->funcs->value(func_name);
+      auto *pfunc = fcl->funcs->value(func_name);
       if (pfunc->required) {
         missing_func_required->append(func_name);
       } else {
@@ -158,7 +158,7 @@ void luascript_func_add(struct fc_lua *fcl, const char *func_name,
 void luascript_func_free(struct fc_lua *fcl)
 {
   if (fcl && fcl->funcs) {
-    for (auto a : *fcl->funcs) {
+    for (auto *a : *fcl->funcs) {
       func_destroy(a);
     }
     delete fcl->funcs;

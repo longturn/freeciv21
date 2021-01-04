@@ -60,7 +60,7 @@ static float hmap_pole_factor(struct tile *ptile)
 
    See also renormalize_hmap_poles
  **************************************************************************/
-void normalize_hmap_poles(void)
+void normalize_hmap_poles()
 {
   whole_map_iterate(&(wld.map), ptile)
   {
@@ -78,7 +78,7 @@ void normalize_hmap_poles(void)
    Invert (most of) the effects of normalize_hmap_poles so that we have
    accurate heights for texturing the poles.
  **************************************************************************/
-void renormalize_hmap_poles(void)
+void renormalize_hmap_poles()
 {
   whole_map_iterate(&(wld.map), ptile)
   {
@@ -297,10 +297,6 @@ bool area_is_too_flat(struct tile *ptile, int thill, int my_height)
   }
   square_iterate_end;
 
-  if ((thill - hmap_shore_level) * higher_than_me
-      > (my_height - hmap_shore_level) * 4) {
-    return false;
-  }
-
-  return true;
+  return (thill - hmap_shore_level) * higher_than_me
+         <= (my_height - hmap_shore_level) * 4;
 }

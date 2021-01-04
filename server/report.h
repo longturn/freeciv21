@@ -27,11 +27,11 @@ struct history_report {
 void page_conn(struct conn_list *dest, const char *caption,
                const char *headline, const char *lines);
 
-void log_civ_score_init(void);
-void log_civ_score_free(void);
-void log_civ_score_now(void);
+void log_civ_score_init();
+void log_civ_score_free();
+void log_civ_score_now();
 
-void make_history_report(void);
+void make_history_report();
 void send_current_history_report(struct conn_list *dest);
 void report_wonders_of_the_world(struct conn_list *dest);
 void report_top_five_cities(struct conn_list *dest);
@@ -40,4 +40,4 @@ void report_demographics(struct connection *pconn);
 void report_achievements(struct connection *pconn);
 void report_final_scores(struct conn_list *dest);
 
-struct history_report *history_report_get(void);
+struct history_report *history_report_get();

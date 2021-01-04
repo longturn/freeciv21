@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdlib.h>
+#include <cstdlib>
 
 /* utility */
 #include "fcthread.h"
@@ -27,7 +27,7 @@
 /************************************************************************/ /**
    Create a new empty genlist.
  ****************************************************************************/
-struct genlist *genlist_new(void) { return genlist_new_full(NULL); }
+struct genlist *genlist_new() { return genlist_new_full(NULL); }
 
 /************************************************************************/ /**
    Create a new empty genlist with a free data function.

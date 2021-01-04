@@ -10,7 +10,7 @@
 **************************************************************************/
 #pragma once
 
-#include <stdarg.h>
+#include <cstdarg>
 
 /* utility */
 #include "support.h" /* fc__attribute */
@@ -78,10 +78,10 @@ void notify_research_embassies(const struct research *presearch,
 /* The type of event target. */
 struct event_cache_players;
 
-void event_cache_init(void);
-void event_cache_free(void);
-void event_cache_clear(void);
-void event_cache_remove_old(void);
+void event_cache_init();
+void event_cache_free();
+void event_cache_clear();
+void event_cache_remove_old();
 
 void event_cache_add_for_all(const struct packet_chat_msg *packet);
 void event_cache_add_for_global_observers(
@@ -96,7 +96,7 @@ void event_cache_add_for_players(const struct packet_chat_msg *packet,
 
 void send_pending_events(struct connection *pconn, bool include_public);
 
-void event_cache_phases_invalidate(void);
+void event_cache_phases_invalidate();
 
 struct section_file;
 void event_cache_load(struct section_file *file, const char *section);

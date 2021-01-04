@@ -16,5 +16,5 @@ void popup_rates_dialog();
 void real_multipliers_dialog_update(void *unused);
 
 /* Actually defined in update_queue.c */
-void multipliers_dialog_update(void);
+void multipliers_dialog_update();
 void gui_update_sidebar();

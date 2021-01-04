@@ -41,9 +41,9 @@ enum attribute_serial {
 
 class attr_key {
 public:
-  attr_key() : key(0), id(0), x(0), y(0){};
+  attr_key(){};
   attr_key(int, int, int, int);
-  int key, id, x, y;
+  int key{0}, id{0}, x{0}, y{0};
 };
 
 attr_key::attr_key(int k, int i, int x0, int y0)
@@ -68,14 +68,14 @@ Q_GLOBAL_STATIC(attributeHash, attribute_hash)
 /************************************************************************/ /**
    Initializes the attribute module.
  ****************************************************************************/
-void attribute_init(void) {}
+void attribute_init() {}
 
 /************************************************************************/ /**
    Frees the attribute module.
  ****************************************************************************/
-void attribute_free(void)
+void attribute_free()
 {
-  for (auto at : *attribute_hash) {
+  for (auto *at : *attribute_hash) {
     ::operator delete(at);
   }
   attribute_hash->clear();
@@ -120,7 +120,7 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
   total_length += entries * (4 + 4 + 4 + 2 + 2); /* value_size + key */
   i = 0;
 
-  for (auto pvalue : *hash) {
+  for (auto *pvalue : *hash) {
     struct data_in din;
 
     dio_input_init(&din, pvalue, 4);
@@ -201,14 +201,14 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
   fc_assert_ret_val(dio_get_uint32_raw(&din, &dummy), A_SERIAL_FAIL);
   if (dummy != 0) {
     qDebug("attribute.c unserialize_hash() preamble, uint32 %lu != 0",
-           (long unsigned) dummy);
+           static_cast<long unsigned>(dummy));
     return A_SERIAL_OLD;
   }
   fc_assert_ret_val(dio_get_uint8_raw(&din, &dummy), A_SERIAL_FAIL);
   if (dummy != 2) {
     qDebug("attribute.c unserialize_hash() preamble, "
            "uint8 %lu != 2 version",
-           (long unsigned) dummy);
+           static_cast<long unsigned>(dummy));
     return A_SERIAL_OLD;
   }
   fc_assert_ret_val(dio_get_uint32_raw(&din, &entries), A_SERIAL_FAIL);
@@ -216,7 +216,8 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
   if (dummy != data_length) {
     qDebug("attribute.c unserialize_hash() preamble, "
            "uint32 %lu != %lu data_length",
-           (long unsigned) dummy, (long unsigned) data_length);
+           static_cast<long unsigned>(dummy),
+           static_cast<long unsigned>(data_length));
     return A_SERIAL_FAIL;
   }
 
@@ -286,7 +287,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
    Send current state to the server. Note that the current
    implementation will send all attributes to the server.
  ****************************************************************************/
-void attribute_flush(void)
+void attribute_flush()
 {
   struct player *pplayer = client_player();
 
@@ -294,8 +295,9 @@ void attribute_flush(void)
     return;
   }
 
-  if (0 == attribute_hash->size())
+  if (0 == attribute_hash->size()) {
     return;
+  }
 
   if (pplayer->attribute_block.data) {
     free(pplayer->attribute_block.data);
@@ -311,7 +313,7 @@ void attribute_flush(void)
    Recreate the attribute set from the player's
    attribute_block. Shouldn't be used by normal code.
  ****************************************************************************/
-void attribute_restore(void)
+void attribute_restore()
 {
   struct player *pplayer = client_player();
 
@@ -389,7 +391,7 @@ size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
     return 0;
   }
 
-  auto pvalue = attribute_hash->value(akey);
+  auto *pvalue = attribute_hash->value(akey);
 
   dio_input_init(&din, pvalue, 0xffffffff);
   fc_assert_ret_val(dio_get_uint32_raw(&din, &length), 0);

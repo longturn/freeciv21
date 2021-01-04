@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <cerrno>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 // Qt
 #include <QCoreApplication>
@@ -70,7 +70,7 @@ static void start_processing_request(struct connection *pconn,
                                      int request_id);
 static void finish_processing_request(struct connection *pconn);
 
-static void send_lanserver_response(void);
+static void send_lanserver_response();
 
 /*************************************************************************/ /**
    Close the connection (very low-level). See also
@@ -113,7 +113,7 @@ static void close_connection(struct connection *pconn)
    Close all network stuff: connections, listening sockets, metaserver
    connection...
  *****************************************************************************/
-void close_connections_and_socket(void)
+void close_connections_and_socket()
 {
   int i;
 
@@ -194,10 +194,10 @@ static void server_conn_close_callback(struct connection *pconn)
    Attempt to flush all information in the send buffers for upto 'netwait'
    seconds.
  *****************************************************************************/
-void flush_packets(void)
+void flush_packets()
 {
-  for (int i = 0; i < MAX_NUM_CONNECTIONS; i++) { // check for freaky players
-    struct connection *pconn = &connections[i];
+  for (auto &i : connections) { // check for freaky players
+    struct connection *pconn = &i;
 
     if (pconn->used && !pconn->server.is_closing) {
       if (!pconn->sock->isOpen()) {
@@ -299,11 +299,11 @@ static const char *makeup_connection_name(int *id)
   static char name[MAX_LEN_NAME];
 
   for (;;) {
-    if (i == (unsigned short) -1) {
+    if (i == static_cast<unsigned short>(-1)) {
       /* don't use 0 */
       i++;
     }
-    fc_snprintf(name, sizeof(name), "c%u", (unsigned int) ++i);
+    fc_snprintf(name, sizeof(name), "c%u", static_cast<unsigned int>(++i));
     if (NULL == player_by_name(name) && NULL == player_by_user(name)
         && NULL == conn_by_number(i) && NULL == conn_by_user(name)) {
       *id = i;
@@ -379,7 +379,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
  *****************************************************************************/
 QTcpServer *server_open_socket()
 {
-  auto server = new QTcpServer;
+  auto *server = new QTcpServer;
 
   int max = srvarg.port + 100;
   for (; srvarg.port < max; ++srvarg.port) {
@@ -429,7 +429,7 @@ QTcpServer *server_open_socket()
               udp_socket->errorString().toLocal8Bit().data());
     return server;
   }
-  auto group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
+  auto *group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
   if (!udp_socket->joinMulticastGroup(QHostAddress(group))) {
     qCritical("Announcement socket binding failed: %s",
               udp_socket->errorString().toLocal8Bit().data());
@@ -442,7 +442,7 @@ QTcpServer *server_open_socket()
    Initialize connection related stuff. Attention: Logging is not
    available within this functions!
  *****************************************************************************/
-void init_connections(void)
+void init_connections()
 {
   int i;
 
@@ -518,7 +518,7 @@ void handle_conn_pong(struct connection *pconn)
 
   timer = pconn->server.ping_timers->front();
   pconn->ping_time = timer_read_seconds(timer);
-  pconn->server.ping_timers->removeFirst();
+  timer_destroy(pconn->server.ping_timers->takeFirst());
 
   log_time(QStringLiteral("got pong from %1 (open=%2); ping time = %3s")
                .arg(conn_description(pconn))
@@ -591,7 +591,7 @@ void get_lanserver_announcement()
    that requests information about the server state.
  *****************************************************************************/
 /* We would need a raw network connection for broadcast messages */
-static void send_lanserver_response(void)
+static void send_lanserver_response()
 {
   char buffer[MAX_LEN_PACKET];
   char hostname[512];

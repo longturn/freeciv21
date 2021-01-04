@@ -23,12 +23,12 @@
 #include <fc_config.h>
 #endif
 
-#include <limits.h>
-#include <math.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <climits>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 // Qt
 #include <QtEndian>
@@ -687,7 +687,7 @@ bool dio_get_ufloat_raw(struct data_in *din, float *dest, int float_factor)
     return false;
   }
 
-  *dest = (float) ival / float_factor;
+  *dest = static_cast<float>(ival) / float_factor;
   return true;
 }
 
@@ -703,7 +703,7 @@ bool dio_get_sfloat_raw(struct data_in *din, float *dest, int float_factor)
     return false;
   }
 
-  *dest = (float) ival / float_factor;
+  *dest = static_cast<float>(ival) / float_factor;
   return true;
 }
 
@@ -1046,7 +1046,7 @@ void dio_put_requirement_raw(struct raw_data_out *dout,
  **************************************************************************/
 struct plocation *plocation_field_new(char *name)
 {
-  auto out = new plocation;
+  auto *out = new plocation;
 
   out->kind = PADR_FIELD;
   out->name = name;
@@ -1060,7 +1060,7 @@ struct plocation *plocation_field_new(char *name)
  **************************************************************************/
 struct plocation *plocation_elem_new(int number)
 {
-  auto out = new plocation;
+  auto *out = new plocation;
 
   out->kind = PADR_ELEMENT;
   out->number = number;

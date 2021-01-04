@@ -64,11 +64,11 @@ void trade_generator::add_all_cities()
  **************************************************************************/
 void trade_generator::clear_trade_planing()
 {
-  for (auto pcity : qAsConst(virtual_cities)) {
+  for (auto *pcity : qAsConst(virtual_cities)) {
     destroy_city_virtual(pcity);
   }
   virtual_cities.clear();
-  for (auto tc : qAsConst(cities)) {
+  for (auto *tc : qAsConst(cities)) {
     delete tc;
   }
   cities.clear();
@@ -95,7 +95,7 @@ void trade_generator::add_tile(struct tile *ptile)
   struct city *pcity;
   pcity = tile_city(ptile);
 
-  for (auto tc : qAsConst(cities)) {
+  for (auto *tc : qAsConst(cities)) {
     if (pcity != nullptr) {
       if (tc->city == pcity) {
         remove_city(pcity);
@@ -123,7 +123,7 @@ void trade_generator::add_tile(struct tile *ptile)
  **************************************************************************/
 void trade_generator::remove_city(struct city *pcity)
 {
-  for (auto tc : qAsConst(cities)) {
+  for (auto *tc : qAsConst(cities)) {
     if (tc->city->tile == pcity->tile) {
       cities.removeAll(tc);
       queen()->infotab->chtwdg->append(
@@ -139,7 +139,7 @@ void trade_generator::remove_city(struct city *pcity)
  **************************************************************************/
 void trade_generator::remove_virtual_city(tile *ptile)
 {
-  for (auto c : qAsConst(virtual_cities)) {
+  for (auto *c : qAsConst(virtual_cities)) {
     if (c->tile == ptile) {
       virtual_cities.removeAll(c);
       queen()->infotab->chtwdg->append(
@@ -147,7 +147,7 @@ void trade_generator::remove_virtual_city(tile *ptile)
     }
   }
 
-  for (auto tc : qAsConst(cities)) {
+  for (auto *tc : qAsConst(cities)) {
     if (tc->city->tile == ptile) {
       cities.removeAll(tc);
       return;
@@ -169,19 +169,19 @@ void trade_generator::calculate()
     tdone = true;
     std::shuffle(cities.begin(), cities.end(), g);
     lines.clear();
-    for (auto tc : qAsConst(cities)) {
+    for (auto *tc : qAsConst(cities)) {
       tc->pos_cities.clear();
       tc->new_tr_cities.clear();
       tc->curr_tr_cities.clear();
     }
-    for (auto tc : qAsConst(cities)) {
+    for (auto *tc : qAsConst(cities)) {
       tc->trade_num = city_num_trade_routes(tc->city);
       tc->poss_trade_num = 0;
       tc->pos_cities.clear();
       tc->new_tr_cities.clear();
       tc->curr_tr_cities.clear();
       tc->done = false;
-      for (auto ttc : qAsConst(cities)) {
+      for (auto *ttc : qAsConst(cities)) {
         if (!have_cities_trade_route(tc->city, ttc->city)
             && can_establish_trade_route(tc->city, ttc->city)) {
           tc->poss_trade_num++;
@@ -196,7 +196,7 @@ void trade_generator::calculate()
     discard();
     find_certain_routes();
 
-    for (auto tc : qAsConst(cities)) {
+    for (auto *tc : qAsConst(cities)) {
       if (!tc->done) {
         tdone = false;
       }
@@ -205,7 +205,7 @@ void trade_generator::calculate()
       break;
     }
   }
-  for (auto tc : qAsConst(cities)) {
+  for (auto *tc : qAsConst(cities)) {
     if (!tc->done) {
       char text[1024];
       fc_snprintf(text, sizeof(text),
@@ -229,7 +229,7 @@ int trade_generator::find_over_max(struct city *pcity = nullptr)
 {
   int max = 0;
 
-  for (auto tc : qAsConst(cities)) {
+  for (auto *tc : qAsConst(cities)) {
     if (pcity != tc->city) {
       max = qMax(max, tc->over_max);
     }
@@ -245,7 +245,7 @@ trade_city *trade_generator::find_most_free()
   trade_city *rc = nullptr;
   int max = 0;
 
-  for (auto tc : qAsConst(cities)) {
+  for (auto *tc : qAsConst(cities)) {
     if (max < tc->over_max) {
       max = tc->over_max;
       rc = tc;
@@ -337,11 +337,11 @@ bool trade_generator::discard_any(trade_city *tc, int freeroutes)
  **************************************************************************/
 void trade_generator::find_certain_routes()
 {
-  for (auto tc : qAsConst(cities)) {
+  for (auto *tc : qAsConst(cities)) {
     if (tc->done || tc->over_max > 0) {
       continue;
     }
-    for (auto ttc : qAsConst(cities)) {
+    for (auto *ttc : qAsConst(cities)) {
       if (ttc->done || ttc->over_max > 0 || tc == ttc || tc->done
           || tc->over_max > 0) {
         continue;

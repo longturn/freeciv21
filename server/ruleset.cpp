@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* utility */
 #include "bitvector.h"
@@ -199,13 +199,11 @@ char *parser_buffer = NULL;
    datafilename() wrapper: tries to match in two ways.
    Returns NULL on failure, the (statically allocated) filename on success.
  **************************************************************************/
-static const char *valid_ruleset_filename(const char *subdir,
-                                          const char *name,
-                                          const char *extension,
-                                          bool optional)
+static QString valid_ruleset_filename(const char *subdir, const char *name,
+                                      const char *extension, bool optional)
 {
   char filename[512];
-  const char *dfilename;
+  QString dfilename;
 
   fc_assert_ret_val(subdir && name && extension, NULL);
 
@@ -213,7 +211,7 @@ static const char *valid_ruleset_filename(const char *subdir,
               DIR_SEPARATOR_CHAR, name, extension);
   qCDebug(ruleset_category, "Trying \"%s\".", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
-  if (dfilename) {
+  if (!dfilename.isEmpty()) {
     return dfilename;
   }
 
@@ -222,7 +220,7 @@ static const char *valid_ruleset_filename(const char *subdir,
   qCDebug(ruleset_category, "Trying \"%s\": default ruleset directory.",
           filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
-  if (dfilename) {
+  if (!dfilename.isEmpty()) {
     return dfilename;
   }
 
@@ -231,7 +229,7 @@ static const char *valid_ruleset_filename(const char *subdir,
   qCDebug(ruleset_category,
           "Trying \"%s\": alternative ruleset filename syntax.", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
-  if (dfilename) {
+  if (!dfilename.isEmpty()) {
     return dfilename;
   } else if (!optional) {
     qCCritical(ruleset_category,
@@ -246,12 +244,12 @@ static const char *valid_ruleset_filename(const char *subdir,
 /**********************************************************************/ /**
    Return current script.lua buffer.
  **************************************************************************/
-char *get_script_buffer(void) { return script_buffer; }
+char *get_script_buffer() { return script_buffer; }
 
 /**********************************************************************/ /**
    Return current parser.lua buffer.
  **************************************************************************/
-char *get_parser_buffer(void) { return parser_buffer; }
+char *get_parser_buffer() { return parser_buffer; }
 
 /**********************************************************************/ /**
    Do initial section_file_load on a ruleset file.
@@ -260,23 +258,23 @@ char *get_parser_buffer(void) { return parser_buffer; }
 static struct section_file *openload_ruleset_file(const char *whichset,
                                                   const char *rsdir)
 {
-  char sfilename[512];
-  const char *dfilename =
+  QString sfilename;
+  QString dfilename =
       valid_ruleset_filename(rsdir, whichset, RULES_SUFFIX, false);
   struct section_file *secfile;
 
-  if (dfilename == NULL) {
+  if (dfilename.isEmpty()) {
     return NULL;
   }
 
   /* Need to save a copy of the filename for following message, since
      section_file_load() may call datafilename() for includes. */
-  sz_strlcpy(sfilename, dfilename);
+  sfilename = dfilename;
   secfile = secfile_load(sfilename, false);
 
   if (secfile == NULL) {
     qCCritical(ruleset_category, "Could not load ruleset '%s':\n%s",
-               sfilename, secfile_error());
+               qUtf8Printable(sfilename), secfile_error());
   }
 
   return secfile;
@@ -289,22 +287,22 @@ static enum fc_tristate openload_script_file(const char *whichset,
                                              const char *rsdir,
                                              char **buffer, bool optional)
 {
-  const char *dfilename =
+  QString dfilename =
       valid_ruleset_filename(rsdir, whichset, SCRIPT_SUFFIX, optional);
 
-  if (dfilename == NULL) {
+  if (dfilename.isEmpty()) {
     return optional ? TRI_MAYBE : TRI_NO;
   }
 
   if (buffer == NULL) {
-    if (!script_server_do_file(NULL, dfilename)) {
+    if (!script_server_do_file(NULL, qUtf8Printable(dfilename))) {
       qCCritical(ruleset_category, "\"%s\": could not load ruleset script.",
-                 dfilename);
+                 qUtf8Printable(dfilename));
 
       return TRI_NO;
     }
   } else {
-    script_server_load_file(dfilename, buffer);
+    script_server_load_file(qUtf8Printable(dfilename), buffer);
   }
 
   return TRI_YES;
@@ -316,22 +314,21 @@ static enum fc_tristate openload_script_file(const char *whichset,
 static struct section_file *openload_luadata_file(const char *rsdir)
 {
   struct section_file *secfile;
-  char sfilename[512];
-  const char *dfilename =
-      valid_ruleset_filename(rsdir, "luadata", "txt", true);
+  QString sfilename;
+  QString dfilename = valid_ruleset_filename(rsdir, "luadata", "txt", true);
 
-  if (dfilename == NULL) {
+  if (dfilename.isEmpty()) {
     return NULL;
   }
 
   /* Need to save a copy of the filename for following message, since
      section_file_load() may call datafilename() for includes. */
-  sz_strlcpy(sfilename, dfilename);
+  sfilename = dfilename;
   secfile = secfile_load(sfilename, false);
 
   if (secfile == NULL) {
     qCCritical(ruleset_category, "Could not load luadata '%s':\n%s",
-               sfilename, secfile_error());
+               qUtf8Printable(sfilename), secfile_error());
   }
 
   return secfile;
@@ -496,7 +493,7 @@ static bool lookup_cbonus_list(struct rscompat_info *compat,
   for (j = 0; (flag = secfile_lookup_str_default(file, NULL, "%s.%s%d.flag",
                                                  sec, sub, j));
        j++) {
-    auto bonus = new combat_bonus;
+    auto *bonus = new combat_bonus;
     const char *type;
 
     bonus->flag = unit_type_flag_id_by_name(
@@ -854,7 +851,7 @@ static char *lookup_string(struct section_file *file, const char *prefix,
 static void strvec_store(QVector<QString> *psv, const char *const *vec,
                          size_t size)
 {
-  if (size == (size_t) -1) {
+  if (size == static_cast<size_t>(-1)) {
     psv->clear();
     for (; *vec; vec++) {
       psv->append(*vec);
@@ -1204,6 +1201,9 @@ static bool load_tech_names(struct section_file *file,
 
   if (ok) {
     /* The techs: */
+    if (sec) {
+      section_list_destroy(sec);
+    }
     sec = secfile_sections_by_name_prefix(file, ADVANCE_SECTION_PREFIX);
     if (NULL == sec || 0 == (num_techs = section_list_size(sec))) {
       qCCritical(ruleset_category, "\"%s\": No Advances?!?", filename);
@@ -1267,7 +1267,9 @@ static bool load_ruleset_techs(struct section_file *file,
     i++;
   }
   tech_class_iterate_end;
-
+  if (sec) {
+    section_list_destroy(sec);
+  }
   sec = secfile_sections_by_name_prefix(file, ADVANCE_SECTION_PREFIX);
 
   i = 0;
@@ -1665,8 +1667,8 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
     fc_snprintf(err, err_len,
                 "\"%s\": Too many veteran levels (section "
                 "'%s': %lu, max %d)",
-                secfile_name(file), path, (long unsigned) count_name,
-                MAX_VET_LEVELS);
+                secfile_name(file), path,
+                static_cast<long unsigned>(count_name), MAX_VET_LEVELS);
   } else if (count_name != count_power || count_name != count_raise
              || count_name != count_wraise || count_name != count_move) {
     ret = false;
@@ -1679,7 +1681,7 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
     *vsystem = NULL;
   } else {
     /* Generate the veteran system. */
-    *vsystem = veteran_system_new((int) count_name);
+    *vsystem = veteran_system_new(static_cast<int>(count_name));
 
 #define rs_sanity_veteran(_path, _entry, _i, _condition, _action)           \
   if (_condition) {                                                         \
@@ -5314,8 +5316,7 @@ static bool load_style_names(struct section_file *file,
       const int i = style_index(ps);
       const char *sec_name = section_name(section_list_get(sec, i));
 
-      fc_assert_ret_val(ruleset_load_names(&ps->name, NULL, file, sec_name),
-                        false);
+      fc_assert(ruleset_load_names(&ps->name, NULL, file, sec_name));
     }
     styles_iterate_end;
   }
@@ -6250,7 +6251,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
 
     food_ini =
         secfile_lookup_int_vec(file, &gni_tmp, "civstyle.granary_food_ini");
-    game.info.granary_num_inis = (int) gni_tmp;
+    game.info.granary_num_inis = static_cast<int>(gni_tmp);
 
     if (game.info.granary_num_inis > MAX_GRANARY_INIS) {
       qCCritical(ruleset_category,
@@ -8126,7 +8127,7 @@ static void send_ruleset_governments(struct conn_list *dest)
 
     /* Send one packet_government_ruler_title per ruler title. */
 
-    for (auto pruler_title : qAsConst(*government_ruler_titles(g))) {
+    for (auto *pruler_title : qAsConst(*government_ruler_titles(g))) {
       {
         const struct nation_type *pnation = ruler_title_nation(pruler_title);
 
@@ -8584,7 +8585,7 @@ static void nullcheck_secfile_destroy(struct section_file *file)
    Completely deinitialize ruleset system. Server is not in usable
    state after this.
  **************************************************************************/
-void rulesets_deinit(void)
+void rulesets_deinit()
 {
   script_server_free();
   requirement_vector_free(&reqs_list);
@@ -8795,7 +8796,7 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
 /**********************************************************************/ /**
    Reload the game settings saved in the ruleset file.
  **************************************************************************/
-bool reload_rulesets_settings(void)
+bool reload_rulesets_settings()
 {
   struct section_file *file;
   bool ok = true;
