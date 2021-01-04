@@ -139,7 +139,7 @@ void draw_calculated_trade_routes(QPainter *painter)
 /**********************************************************************/ /**
    Constructor for map
  **************************************************************************/
-map_view::map_view() : QWidget()
+map_view::map_view() : QOpenGLWidget()
 {
   menu_click = false;
   cursor = -1;
@@ -585,6 +585,11 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent) : QLabel(parent)
   info_font = *fcFont::instance()->getFont(fonts::notify_label);
   itile = ptile;
   calc_size();
+}
+
+info_tile::~info_tile()
+{
+  hide();
 }
 
 /**********************************************************************/ /**

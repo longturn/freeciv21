@@ -15,6 +15,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QOpenGLWidget>
 #include <QRubberBand>
 #include <QTableWidget>
 // utility
@@ -153,7 +154,7 @@ protected:
 /****************************************************************************
   Single action on unit actions
 ****************************************************************************/
-class hud_action : public QWidget {
+class hud_action : public QOpenGLWidget {
   Q_OBJECT
   QPixmap *action_pixmap;
   bool focus;
@@ -181,7 +182,7 @@ private slots:
 /****************************************************************************
   List of unit actions
 ****************************************************************************/
-class unit_actions : public QWidget {
+class unit_actions : public QOpenGLWidget {
   Q_OBJECT
 
 public:

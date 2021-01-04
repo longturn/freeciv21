@@ -798,7 +798,7 @@ void click_label::mouse_clicked()
 /************************************************************************/ /**
    Hud action constructor, used to show one action
  ****************************************************************************/
-hud_action::hud_action(QWidget *parent) : QWidget(parent)
+hud_action::hud_action(QWidget *parent) : QOpenGLWidget(parent)
 {
   connect(this, &hud_action::left_clicked, this, &hud_action::mouse_clicked);
   setFocusPolicy(Qt::StrongFocus);
@@ -899,7 +899,7 @@ void hud_action::mouse_clicked()
 /************************************************************************/ /**
    Units action contructor, holds possible hud_actions
  ****************************************************************************/
-unit_actions::unit_actions(QWidget *parent, unit *punit) : QWidget(parent)
+unit_actions::unit_actions(QWidget *parent, unit *punit) : QOpenGLWidget(parent)
 {
   layout = new QHBoxLayout(this);
   layout->setSpacing(3);

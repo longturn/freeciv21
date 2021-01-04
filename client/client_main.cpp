@@ -310,6 +310,7 @@ static void client_game_reset()
  **************************************************************************/
 int client_main(int argc, char *argv[])
 {
+  QApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
   QApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(VERSION_STRING);
 

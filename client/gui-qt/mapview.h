@@ -12,6 +12,7 @@
 // Qt
 #include <QFrame>
 #include <QLabel>
+#include <QOpenGLWidget>
 #include <QQueue>
 #include <QThread>
 #include <QTimer>
@@ -35,7 +36,7 @@ void draw_calculated_trade_routes(QPainter *painter);
 /**************************************************************************
   QWidget used for displaying map
 **************************************************************************/
-class map_view : public QWidget {
+class map_view : public QOpenGLWidget {
   Q_OBJECT
   void shortcut_pressed(int key);
   void shortcut_released(Qt::MouseButton mb);
@@ -82,6 +83,7 @@ class info_tile : public QLabel {
   Q_DISABLE_COPY(info_tile);
 
 public:
+  ~info_tile();
   static info_tile *i(struct tile *p = nullptr);
   static void drop();
   struct tile *itile;
@@ -97,6 +99,8 @@ private:
   QStringList str_list;
   void calc_size();
   void update_font(const QString &name, const QFont &font);
+  // coords to redraw map on closing
+  QRect dirty{QRect(0, 0, 0, 0)};
 };
 
 void popdown_tile_info();
