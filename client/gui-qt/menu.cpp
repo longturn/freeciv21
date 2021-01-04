@@ -1353,7 +1353,7 @@ void mr_menu::update_airlift_menu()
   Unit_type_id utype_id;
   QAction *act;
 
-  if (!initialized) {
+  if (!initialized || !client.conn.playing) {
     return;
   }
   airlift_menu->clear();
