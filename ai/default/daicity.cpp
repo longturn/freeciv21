@@ -292,7 +292,7 @@ static void dai_city_choose_build(struct ai_type *ait,
       city_data->choice.type = CT_CIVILIAN;
       adv_choice_set_use(&(city_data->choice), "fallback trade route");
     } else {
-      unsigned int our_def = assess_defense_quadratic(ait, pcity);
+      int our_def = assess_defense_quadratic(ait, pcity);
 
       if (our_def == 0
           && dai_process_defender_want(ait, pplayer, pcity, 1,

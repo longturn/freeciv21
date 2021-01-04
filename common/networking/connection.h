@@ -105,9 +105,9 @@ struct connection;
   whenever it arrives to the client/server.
 ***********************************************************/
 struct socket_packet_buffer {
-  int ndata;
+  unsigned long ndata;
   int do_buffer_sends;
-  int nsize;
+  unsigned long nsize;
   unsigned char *data;
 };
 
