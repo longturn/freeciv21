@@ -19,7 +19,6 @@
 #include <cstdarg>
 
 /* utility */
-#include "astring.h"
 #include "fcintl.h"
 
 /* common */

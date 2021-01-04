@@ -15,9 +15,6 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
-#include "astring.h"
-
 /* common */
 #include "fc_interface.h"
 

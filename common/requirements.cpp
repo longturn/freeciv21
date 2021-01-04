@@ -13,7 +13,6 @@
 #endif
 
 /* utility */
-#include "astring.h"
 #include "fcintl.h"
 #include "log.h"
 #include "support.h"

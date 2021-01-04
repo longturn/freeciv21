@@ -25,7 +25,6 @@
 #include "support.h"
 
 /* common */
-#include "astring.h"
 #include "base.h"
 #include "effects.h"
 #include "fc_types.h"

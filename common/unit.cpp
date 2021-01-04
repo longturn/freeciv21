@@ -16,7 +16,6 @@
 #endif
 
 /* utility */
-#include "astring.h"
 #include "bitvector.h"
 #include "fcintl.h"
 #include "shared.h"
@@ -1116,19 +1115,14 @@ void unit_activity_astr(const struct unit *punit, QString &s)
 
       /* Add in two parts as move_points_text() returns ptr to static
        * End result: "Moves: (fuel)moves_left" */
-      s = s
-          + QStringLiteral("%1: (%2)")
-                .arg(_("Moves"),
-                     move_points_text((rate * f) + punit->moves_left, false))
-          + qendl();
-      s = s
-          + QStringLiteral("%1").arg(
-              move_points_text(punit->moves_left, false));
+      s += QStringLiteral("%1: (%2)\n")
+               .arg(_("Moves"),
+                    move_points_text((rate * f) + punit->moves_left, false));
+      s += QStringLiteral("%1").arg(
+          move_points_text(punit->moves_left, false));
     } else {
-      s = s
-          + QStringLiteral("%1: %2").arg(
-              _("Moves"), move_points_text(punit->moves_left, false))
-          + qendl();
+      s += QStringLiteral("%1: %2\n")
+               .arg(_("Moves"), move_points_text(punit->moves_left, false));
     }
     return;
   case ACTIVITY_POLLUTION:
@@ -1146,46 +1140,35 @@ void unit_activity_astr(const struct unit *punit, QString &s)
   case ACTIVITY_CONVERT:
   case ACTIVITY_CULTIVATE:
   case ACTIVITY_PLANT:
-    s = s + QStringLiteral("%1").arg(get_activity_text(punit->activity))
-        + qendl();
+    s += QStringLiteral("%1\n").arg(get_activity_text(punit->activity));
     return;
   case ACTIVITY_MINE:
   case ACTIVITY_IRRIGATE:
     if (punit->activity_target == NULL) {
-      s = s + QStringLiteral("%1").arg(get_activity_text(punit->activity))
-          + qendl();
+      s += QStringLiteral("%1\n").arg(get_activity_text(punit->activity));
     } else {
-      s = s
-          + QStringLiteral("Building %1")
-                .arg(extra_name_translation(punit->activity_target))
-          + qendl();
+      s += QStringLiteral("Building %1\n")
+               .arg(extra_name_translation(punit->activity_target));
     }
     return;
   case ACTIVITY_PILLAGE:
     if (punit->activity_target != NULL) {
-      s = s
-          + QStringLiteral("%1: %2").arg(
-              get_activity_text(punit->activity),
-              extra_name_translation(punit->activity_target))
-          + qendl();
+      s += QStringLiteral("%1: %2\n")
+               .arg(get_activity_text(punit->activity),
+                    extra_name_translation(punit->activity_target));
     } else {
-      s = s + QStringLiteral("%1").arg(get_activity_text(punit->activity))
-          + qendl();
+      s += QStringLiteral("%1\n").arg(get_activity_text(punit->activity));
     }
     return;
   case ACTIVITY_BASE:
-    s = s
-        + QStringLiteral("%1: %2").arg(
-            get_activity_text(punit->activity),
-            extra_name_translation(punit->activity_target))
-        + qendl();
+    s += QStringLiteral("%1: %2\n")
+             .arg(get_activity_text(punit->activity),
+                  extra_name_translation(punit->activity_target));
     return;
   case ACTIVITY_GEN_ROAD:
-    s = s
-        + QStringLiteral("%1: %2").arg(
-            get_activity_text(punit->activity),
-            extra_name_translation(punit->activity_target))
-        + qendl();
+    s += QStringLiteral("%1: %2\n")
+             .arg(get_activity_text(punit->activity),
+                  extra_name_translation(punit->activity_target));
     return;
   case ACTIVITY_UNKNOWN:
   case ACTIVITY_PATROL_UNUSED:
@@ -1209,13 +1192,11 @@ void unit_upkeep_astr(const struct unit *punit, QString &s)
     return;
   }
 
-  s = s
-      + QStringLiteral("%1 %2/%3/%4")
-            .arg(_("Food/Shield/Gold:"),
-                 QString::number(punit->upkeep[O_FOOD]),
-                 QString::number(punit->upkeep[O_SHIELD]),
-                 QString::number(punit->upkeep[O_GOLD]))
-      + qendl();
+  s += QStringLiteral("%1 %2/%3/%4\n")
+           .arg(_("Food/Shield/Gold:"),
+                QString::number(punit->upkeep[O_FOOD]),
+                QString::number(punit->upkeep[O_SHIELD]),
+                QString::number(punit->upkeep[O_GOLD]));
 }
 
 /**********************************************************************/ /**

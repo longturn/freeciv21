@@ -41,7 +41,6 @@
 #include <QtGlobal>
 
 /* utility */
-#include "astring.h"
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
