@@ -65,5 +65,5 @@ void secfile_log(const struct section_file *secfile,
     return value;                                                           \
   }
 
-bool entry_from_token(struct section *psection, const char *name,
-                      const char *tok);
+bool entry_from_token(struct section *psection, const QString &name,
+                      const QString &tok);

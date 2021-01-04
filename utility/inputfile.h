@@ -23,7 +23,7 @@
 struct QIODevice;
 struct inputfile; /* opaque */
 
-typedef QString (*datafilename_fn_t)(const char *filename);
+using datafilename_fn_t = QString (*)(const QString &filename);
 
 struct inputfile *inf_from_file(const QString &filename,
                                 datafilename_fn_t datafn);
@@ -44,8 +44,8 @@ enum inf_token_type {
 };
 #define INF_TOK_FIRST INF_TOK_SECTION_NAME
 
-const char *inf_token(struct inputfile *inf, enum inf_token_type type);
+QString inf_token(struct inputfile *inf, enum inf_token_type type);
 int inf_discard_tokens(struct inputfile *inf, enum inf_token_type type);
 
-char *inf_log_str(struct inputfile *inf, const char *message, ...)
+QString inf_log_str(struct inputfile *inf, const char *message, ...)
     fc__attribute((__format__(__printf__, 2, 3)));

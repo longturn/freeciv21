@@ -15,6 +15,9 @@
 #include <cinttypes>
 #include <cstdio>
 
+// Qt
+#include <QString>
+
 /* Want to use GCC's __attribute__ keyword to check variadic
  * parameters to printf-like functions, without upsetting other
  * compilers: put any required defines magic here.
@@ -162,7 +165,6 @@ int fc_break_lines(char *str, size_t desired_len);
 const char *fc_basename(const char *path);
 
 void make_escapes(const char *str, char *buf, size_t buf_len);
-void remove_escapes(const char *str, bool full_escapes, char *buf,
-                    size_t buf_len);
+QString remove_escapes(const QString &str, bool full_escapes);
 
 int fc_at_quick_exit(void (*func)());
