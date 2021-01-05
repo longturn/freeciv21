@@ -20,6 +20,11 @@
 
 #include "cvercmp.h"
 
+#ifdef _MSC_VER
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
+#endif
+
 static char **cvercmp_ver_tokenize(const char *ver);
 static int cvercmp_next_token(const char *str);
 static char **cvercmp_ver_subtokenize(const char *ver);

@@ -188,7 +188,7 @@ static bool find_option(const char *buf_in, const char *option,
       buf_in++;
     }
 
-    if (0 == strncasecmp(buf_in, option, option_len)) {
+    if (0 == fc_strncasecmp(buf_in, option, option_len)) {
       buf_in += option_len; /* This is this one. */
 
       while ((QChar::isSpace(*buf_in) || *buf_in == '=')
