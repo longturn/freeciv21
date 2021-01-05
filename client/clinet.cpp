@@ -59,8 +59,6 @@
 /* In autoconnect mode, try to connect 100 times */
 #define MAX_AUTOCONNECT_ATTEMPTS 100
 
-extern char forced_tileset_name[512];
-
 /**********************************************************************/ /**
    Close socket and cleanup.  This one doesn't print a message, so should
    do so before-hand if necessary.
