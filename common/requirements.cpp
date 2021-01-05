@@ -687,7 +687,7 @@ int universal_number(const struct universal *source)
    Returns the given requirement as a formatted string ready for printing.
    Does not care about the 'quiet' property.
  **************************************************************************/
-const char *req_to_fstring(const struct requirement *req)
+QString req_to_fstring(const struct requirement *req)
 {
   QString printable_req =
       QStringLiteral("%1%2 %3 %4%5")
@@ -695,7 +695,7 @@ const char *req_to_fstring(const struct requirement *req)
                universal_type_rule_name(&req->source),
                req->present ? "" : "!", universal_rule_name(&req->source));
 
-  return qUtf8Printable(printable_req);
+  return printable_req;
 }
 
 /**********************************************************************/ /**
@@ -3566,28 +3566,28 @@ const char *req_vec_change_translation(const struct req_vec_change *change,
 
   switch (change->operation) {
   case RVCO_REMOVE:
-    fc_snprintf(buf, sizeof(buf),
-                /* TRANS: remove a requirement from a requirement vector
-                 * (in ruledit).
-                 * The first %s is the operation.
-                 * The second %s is the requirement.
-                 * The third %s is a description of the requirement vector,
-                 * like "actor_reqs" */
-                _("%s %s from %s"),
-                req_vec_change_operation_name(change->operation),
-                req_to_fstring(&change->req), req_vec_description);
+    fc_snprintf(
+        buf, sizeof(buf),
+        /* TRANS: remove a requirement from a requirement vector
+         * (in ruledit).
+         * The first %s is the operation.
+         * The second %s is the requirement.
+         * The third %s is a description of the requirement vector,
+         * like "actor_reqs" */
+        _("%s %s from %s"), req_vec_change_operation_name(change->operation),
+        qUtf8Printable(req_to_fstring(&change->req)), req_vec_description);
     break;
   case RVCO_APPEND:
-    fc_snprintf(buf, sizeof(buf),
-                /* TRANS: append a requirement to a requirement vector
-                 * (in ruledit).
-                 * The first %s is the operation.
-                 * The second %s is the requirement.
-                 * The third %s is a description of the requirement vector,
-                 * like "actor_reqs" */
-                _("%s %s to %s"),
-                req_vec_change_operation_name(change->operation),
-                req_to_fstring(&change->req), req_vec_description);
+    fc_snprintf(
+        buf, sizeof(buf),
+        /* TRANS: append a requirement to a requirement vector
+         * (in ruledit).
+         * The first %s is the operation.
+         * The second %s is the requirement.
+         * The third %s is a description of the requirement vector,
+         * like "actor_reqs" */
+        _("%s %s to %s"), req_vec_change_operation_name(change->operation),
+        qUtf8Printable(req_to_fstring(&change->req)), req_vec_description);
     break;
   case RVCO_NOOP:
     fc_snprintf(buf, sizeof(buf),
@@ -3730,7 +3730,8 @@ req_vec_get_first_contradiction(const struct requirement_vector *vec,
 
         problem = req_vec_problem_new(
             2, N_("Requirements {%s} and {%s} contradict each other."),
-            req_to_fstring(preq), req_to_fstring(nreq));
+            qUtf8Printable(req_to_fstring(preq)),
+            qUtf8Printable(req_to_fstring(nreq)));
 
         /* The solution is to remove one of the contradictions. */
         problem->suggested_solutions[0].operation = RVCO_REMOVE;
@@ -4251,8 +4252,10 @@ const char *universal_name_translation(const struct universal *psource,
                  _(topo_flag_name(psource->value.topo_property)));
     return buf;
   case VUT_SERVERSETTING:
-    fc_strlcat(buf, ssetv_human_readable(psource->value.ssetval, true),
-               bufsz);
+    fc_strlcat(
+        buf,
+        qUtf8Printable(ssetv_human_readable(psource->value.ssetval, true)),
+        bufsz);
     return buf;
   case VUT_TERRAINALTER:
     /* TRANS: "Irrigation possible" */

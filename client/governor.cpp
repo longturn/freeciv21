@@ -145,7 +145,7 @@ void governor::add_city_remove(struct city *pcity)
 // run all events
 void governor::run()
 {
-  if (superhot < 1) {
+  if (superhot < 1 || !client.conn.playing) {
     return;
   }
 

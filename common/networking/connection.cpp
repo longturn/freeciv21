@@ -119,7 +119,7 @@ int read_socket_data(QTcpSocket *sock, struct socket_packet_buffer *buffer)
     return 0;
   }
 
-  log_debug("try reading %d bytes", buffer->nsize - buffer->ndata);
+  log_debug("try reading %lu bytes", buffer->nsize - buffer->ndata);
   didget = sock->read(reinterpret_cast<char *>(buffer->data + buffer->ndata),
                       buffer->nsize - buffer->ndata);
 
@@ -222,7 +222,7 @@ static bool add_connection_data(struct connection *pconn,
   }
 
   buf = pconn->send_buffer;
-  log_debug("add %d bytes to %d (space =%d)", len, buf->ndata, buf->nsize);
+  log_debug("add %d bytes to %lu (space =%lu)", len, buf->ndata, buf->nsize);
   if (!buffer_ensure_free_extra_space(buf, len)) {
     connection_close(pconn, _("buffer overflow"));
     return false;

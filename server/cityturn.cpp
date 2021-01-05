@@ -1788,18 +1788,19 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
         success = false;
         break;
       case VUT_SERVERSETTING:
-        notify_player(
-            pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
-            /* TRANS: %s is a server setting, its value and
-             * if it is required to be present or absent.
-             * The string's format is specified in
-             * ssetv_human_readable().
-             * Example: "killstack is enabled". */
-            _("%s can't build %s from the worklist; "
-              "only available when the server setting "
-              "%s."),
-            city_link(pcity), tgt_name,
-            ssetv_human_readable(preq->source.value.ssetval, preq->present));
+        notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
+                      ftc_server,
+                      /* TRANS: %s is a server setting, its value and
+                       * if it is required to be present or absent.
+                       * The string's format is specified in
+                       * ssetv_human_readable().
+                       * Example: "killstack is enabled". */
+                      _("%s can't build %s from the worklist; "
+                        "only available when the server setting "
+                        "%s."),
+                      city_link(pcity), tgt_name,
+                      qUtf8Printable(ssetv_human_readable(
+                          preq->source.value.ssetval, preq->present)));
         script_server_signal_emit(signal_name, ptarget, pcity,
                                   "need_setting");
         /* Don't assume that the server setting will be changed. */
@@ -2347,22 +2348,22 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
       research_pretty_name(presearch, research_name, sizeof(research_name));
       for (i = 0; i < mod; i++) {
         Tech_type_id tech = pick_free_tech(presearch);
-        const char *adv_name = qUtf8Printable(
-            research_advance_name_translation(presearch, tech));
+        QString adv_name =
+            research_advance_name_translation(presearch, tech);
 
         give_immediate_free_tech(presearch, tech);
         notify_research(presearch, NULL, E_TECH_GAIN, ftc_server,
                         /* TRANS: Tech from building (Darwin's Voyage) */
-                        Q_("?frombldg:Acquired %s from %s."), adv_name,
-                        provider);
+                        Q_("?frombldg:Acquired %s from %s."),
+                        qUtf8Printable(adv_name), provider);
 
-        notify_research_embassies(presearch, NULL, E_TECH_EMBASSY,
-                                  ftc_server,
-                                  /* TRANS: Tech from building (Darwin's
-                                   * Voyage) */
-                                  Q_("?frombldg:The %s have acquired %s "
-                                     "from %s."),
-                                  research_name, adv_name, provider);
+        notify_research_embassies(
+            presearch, NULL, E_TECH_EMBASSY, ftc_server,
+            /* TRANS: Tech from building (Darwin's
+             * Voyage) */
+            Q_("?frombldg:The %s have acquired %s "
+               "from %s."),
+            research_name, qUtf8Printable(adv_name), provider);
       }
     }
     if (space_part && pplayer->spaceship.state == SSHIP_NONE) {

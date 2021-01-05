@@ -1405,8 +1405,8 @@ static QString action_prob_to_text(const struct act_prob prob)
         QString::number(prob.max / ACTPROB_VAL_1_PCT));
   } else {
     return QString(_("[%1% - %2%]"))
-        .arg(QString::number(prob.min / ACTPROB_VAL_1_PCT))
-        .arg(QString::number(prob.max / ACTPROB_VAL_1_PCT));
+        .arg(QString::number(prob.min / ACTPROB_VAL_1_PCT),
+             QString::number(prob.max / ACTPROB_VAL_1_PCT));
   }
 }
 
@@ -2107,7 +2107,7 @@ enabler_tile_tgt_local_diplrel_implies_claimed(
        * so this is implicit.) */
       N_("Requirement {%s} implies a claimed "
          "tile. No diplomatic relation to Nature."),
-      req_to_fstring(local_diplrel));
+      qUtf8Printable(req_to_fstring(local_diplrel)));
 
   /* The solution is to add the requirement that the tile is claimed */
   out->suggested_solutions[0].req = tile_is_claimed;
@@ -2168,7 +2168,8 @@ enabler_first_self_contradiction(const struct action_enabler *enabler)
        * requirements to an unclaimed tile are never fulfilled.) */
       N_("No diplomatic relation to Nature."
          " Requirements {%s} and {%s} contradict each other."),
-      req_to_fstring(local_diplrel), req_to_fstring(unclaimed_req));
+      qUtf8Printable(req_to_fstring(local_diplrel)),
+      qUtf8Printable(req_to_fstring(unclaimed_req)));
 
   /* The first suggestion is to remove the diplrel */
   out->suggested_solutions[0].req = *local_diplrel;

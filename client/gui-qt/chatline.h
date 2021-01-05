@@ -99,11 +99,7 @@ signals:
   void dbl_clicked();
 
 protected:
-  void mouseDoubleClickEvent(QMouseEvent *event) override
-  {
-    Q_UNUSED(event);
-    emit dbl_clicked();
-  }
+  void mouseDoubleClickEvent(QMouseEvent *event) override;
 };
 
 /***************************************************************************

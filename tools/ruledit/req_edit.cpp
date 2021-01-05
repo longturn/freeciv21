@@ -66,7 +66,7 @@ req_edit::req_edit(ruledit_gui *ui_in, const QString &target,
   main_layout->addWidget(req_list);
 
   lbl = new QLabel(R__("Type:"));
-  active_layout->addWidget(lbl, 0, 0);
+  active_layout->addWidget(lbl, 0);
   edit_type_button = new QToolButton();
   menu = new QMenu();
   edit_type_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
@@ -83,10 +83,10 @@ req_edit::req_edit(ruledit_gui *ui_in, const QString &target,
     }
   }
   universals_iterate_end;
-  active_layout->addWidget(edit_type_button, 1, 0);
+  active_layout->addWidget(edit_type_button, 1);
 
   lbl = new QLabel(R__("Value:"));
-  active_layout->addWidget(lbl, 2, 0);
+  active_layout->addWidget(lbl, 2);
   edit_value_enum_button = new QToolButton();
   edit_value_enum_menu = new QMenu();
   edit_value_enum_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
@@ -95,15 +95,15 @@ req_edit::req_edit(ruledit_gui *ui_in, const QString &target,
           &req_edit::univ_value_enum_menu);
   edit_value_enum_button->setMenu(edit_value_enum_menu);
   edit_value_enum_menu->setVisible(false);
-  active_layout->addWidget(edit_value_enum_button, 3, 0);
+  active_layout->addWidget(edit_value_enum_button, 3);
   edit_value_nbr_field = new QLineEdit();
   edit_value_nbr_field->setVisible(false);
   connect(edit_value_nbr_field, &QLineEdit::returnPressed, this,
           &req_edit::univ_value_edit);
-  active_layout->addWidget(edit_value_nbr_field, 4, 0);
+  active_layout->addWidget(edit_value_nbr_field, 4);
 
   lbl = new QLabel(R__("Range:"));
-  active_layout->addWidget(lbl, 5, 0);
+  active_layout->addWidget(lbl, 5);
   edit_range_button = new QToolButton();
   menu = new QMenu();
   edit_range_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
@@ -112,7 +112,7 @@ req_edit::req_edit(ruledit_gui *ui_in, const QString &target,
   edit_range_button->setMenu(menu);
   req_range_iterate(range_id) { menu->addAction(req_range_name(range_id)); }
   req_range_iterate_end;
-  active_layout->addWidget(edit_range_button, 6, 0);
+  active_layout->addWidget(edit_range_button, 6);
 
   edit_present_button = new QToolButton();
   menu = new QMenu();
@@ -122,7 +122,7 @@ req_edit::req_edit(ruledit_gui *ui_in, const QString &target,
   edit_present_button->setMenu(menu);
   menu->addAction(QStringLiteral("Allows"));
   menu->addAction(QStringLiteral("Prevents"));
-  active_layout->addWidget(edit_present_button, 7, 0);
+  active_layout->addWidget(edit_present_button, 7);
 
   main_layout->addLayout(active_layout);
 

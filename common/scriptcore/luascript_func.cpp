@@ -158,7 +158,7 @@ void luascript_func_add(struct fc_lua *fcl, const char *func_name,
 void luascript_func_free(struct fc_lua *fcl)
 {
   if (fcl && fcl->funcs) {
-    for (auto *a : *fcl->funcs) {
+    for (auto *a : qAsConst(*fcl->funcs)) {
       func_destroy(a);
     }
     delete fcl->funcs;

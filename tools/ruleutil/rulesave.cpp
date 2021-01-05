@@ -536,7 +536,7 @@ static bool save_action_auto_uflag_block(
       protecor_flag[i++] = unit_type_flag_id(req->source.value.unitflag);
     } else if (unexpected_req(req)) {
       qCritical("Can't handle action auto performer requirement %s",
-                req_to_fstring(req));
+                qUtf8Printable(req_to_fstring(req)));
 
       return false;
     }

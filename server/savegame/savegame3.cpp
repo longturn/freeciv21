@@ -2862,7 +2862,7 @@ static void sg_save_map_startpos(struct savedata *saving)
       char nation_names[MAX_LEN_NAME * nations->size()];
 
       nation_names[0] = '\0';
-      for (const auto *pnation : *nations) {
+      for (const auto *pnation : qAsConst(*nations)) {
         if ('\0' == nation_names[0]) {
           fc_strlcpy(nation_names, nation_rule_name(pnation),
                      sizeof(nation_names));

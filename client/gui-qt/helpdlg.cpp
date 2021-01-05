@@ -230,7 +230,7 @@ void help_dialog::make_tree()
   struct unit_type *f_type;
   struct drawn_sprite sprs[80];
 
-  for (const auto *pitem : *help_nodes) {
+  for (const auto *pitem : qAsConst(*help_nodes)) {
     const char *s;
     int last;
     title = pitem->topic;
@@ -525,19 +525,19 @@ void help_widget::update_fonts()
   l = findChildren<QWidget *>();
 
   f = fcFont::instance()->getFont(fonts::notify_label);
-  for (auto i : l) {
+  for (auto i : qAsConst(l)) {
     if (i->property(fonts::help_label).isValid()) {
       i->setFont(*f);
     }
   }
   f = fcFont::instance()->getFont(fonts::help_text);
-  for (auto i : l) {
+  for (auto i : qAsConst(l)) {
     if (i->property(fonts::help_text).isValid()) {
       i->setFont(*f);
     }
   }
   f = fcFont::instance()->getFont(fonts::default_font);
-  for (auto i : l) {
+  for (auto i : qAsConst(l)) {
     if (i->property(fonts::default_font).isValid()) {
       i->setFont(*f);
     }

@@ -140,7 +140,7 @@ static inline void get_full_nation(char *buf, int buflen,
  ****************************************************************************/
 const QString popup_info_text(struct tile *ptile)
 {
-  const char *activity_text;
+  QString activity_text;
   struct city *pcity = tile_city(ptile);
   struct unit *punit = find_visible_unit(ptile);
   const char *diplo_nation_plural_adjectives[DS_LAST] = {
@@ -359,7 +359,7 @@ const QString popup_info_text(struct tile *ptile)
     }
   }
   activity_text = concat_tile_activity_text(ptile);
-  if (strlen(activity_text) > 0) {
+  if (activity_text.length() > 0) {
     str += QString(_("Activity: %1")).arg(activity_text) + qendl();
   }
   if (punit && !pcity) {
