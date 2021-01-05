@@ -644,7 +644,7 @@ static void popup_properties(struct tile *ptile)
   tiles = tile_list_new();
 
   if (editor_tile_is_selected(ptile)) {
-    for (const auto *sel_tile : *editor->selected_tile_table) {
+    for (const auto *sel_tile : qAsConst(*editor->selected_tile_table)) {
       if (can_edit_tile_properties(const_cast<tile *>(sel_tile))) {
         tile_list_append(tiles, const_cast<tile *>(sel_tile));
       }
@@ -1142,7 +1142,7 @@ void editor_apply_tool_to_selection()
   }
 
   connection_do_buffer(&client.conn);
-  for (const auto *ptile : *editor->selected_tile_table) {
+  for (const auto *ptile : qAsConst(*editor->selected_tile_table)) {
     editor_apply_tool(ptile, true);
   }
   editor_notify_edit_finished();
@@ -1959,7 +1959,7 @@ const struct tile *editor_get_selection_center()
 
   origin = map_pos_to_tile(&(wld.map), 0, 0);
   fc_assert_ret_val(origin, nullptr);
-  for (const auto *ptile : *editor->selected_tile_table) {
+  for (const auto *ptile : qAsConst(*editor->selected_tile_table)) {
     map_distance_vector(&dx, &dy, origin, ptile);
     xsum += dx;
     ysum += dy;

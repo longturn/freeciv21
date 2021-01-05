@@ -474,7 +474,7 @@ static bool effect_list_sanity_cb(struct effect *peffect, void *data)
           qCritical("The effect Action_Success_Target_Move_Cost has the"
                     " requirement {%s} but the action %s isn't"
                     " (single) unit targeted.",
-                    req_to_fstring(preq),
+                    qUtf8Printable(req_to_fstring(preq)),
                     universal_rule_name(&preq->source));
           return false;
         }
@@ -490,7 +490,7 @@ static bool effect_list_sanity_cb(struct effect *peffect, void *data)
           qCritical("The effect Action_Success_Actor_Move_Cost has the"
                     " requirement {%s} but the action %s isn't"
                     " performed by a unit.",
-                    req_to_fstring(preq),
+                    qUtf8Printable(req_to_fstring(preq)),
                     universal_rule_name(&preq->source));
           return false;
         }
@@ -507,7 +507,7 @@ static bool effect_list_sanity_cb(struct effect *peffect, void *data)
           qCritical("The effect Action_Odds_Pct has the"
                     " requirement {%s} but the action %s doesn't"
                     " roll the dice to see if it fails.",
-                    req_to_fstring(preq),
+                    qUtf8Printable(req_to_fstring(preq)),
                     universal_rule_name(&preq->source));
           return false;
         }
@@ -793,7 +793,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
                    " research_reqs. This requirement may change during"
                    " the game. Changing requirements aren't supported"
                    " yet.",
-                   advance_rule_name(padvance), req_to_fstring(preq));
+                   advance_rule_name(padvance),
+                   qUtf8Printable(req_to_fstring(preq)));
         ok = false;
       }
     }
@@ -1208,7 +1209,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
                      "requirement %s in target_reqs! Please read the "
                      "section \"Requirement vector rules\" in "
                      "doc/README.actions",
-                     action_id_rule_name(act), req_to_fstring(preq));
+                     action_id_rule_name(act),
+                     qUtf8Printable(req_to_fstring(preq)));
           ok = false;
         }
       }

@@ -962,7 +962,7 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
     QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
 
     tilesets[idx] = new QVector<QString>;
-    for (const auto &file : *list) {
+    for (const auto &file : qAsConst(*list)) {
       struct tileset *t =
           tileset_read_toplevel(qUtf8Printable(file), false, topo, 1.0f);
 
@@ -1063,7 +1063,7 @@ static void tileset_free_toplevel(struct tileset *t)
   t->num_preferred_themes = 0;
 
   if (t->tile_hash) {
-    for (auto *a : *t->tile_hash) {
+    for (auto *a : qAsConst(*t->tile_hash)) {
       drawing_data_destroy(a);
     }
     FC_FREE(t->tile_hash);
@@ -1141,7 +1141,7 @@ bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
     QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
 
     original = false;
-    for (const auto &file : *list) {
+    for (const auto &file : qAsConst(*list)) {
       struct tileset *t =
           tileset_read_toplevel(qUtf8Printable(file), false, topo_id, 1.0f);
 
@@ -3340,7 +3340,7 @@ static bool load_river_sprites(struct tileset *t,
  ****************************************************************************/
 void finish_loading_sprites(struct tileset *t)
 {
-  for (auto *sf : *t->specfiles) {
+  for (auto *sf : qAsConst(*t->specfiles)) {
     if (sf->big_sprite) {
       free_sprite(sf->big_sprite);
       sf->big_sprite = NULL;
@@ -6197,7 +6197,7 @@ void tileset_free_tiles(struct tileset *t)
     t->sprite_hash = NULL;
   }
 
-  for (auto *ss : *t->small_sprites) {
+  for (auto *ss : qAsConst(*t->small_sprites)) {
     if (ss->file) {
       delete[] ss->file;
     }
@@ -6206,7 +6206,7 @@ void tileset_free_tiles(struct tileset *t)
   }
   t->small_sprites->clear();
 
-  for (auto *sf : *t->specfiles) {
+  for (auto *sf : qAsConst(*t->specfiles)) {
     delete[] sf->file_name;
     if (sf->big_sprite) {
       free_sprite(sf->big_sprite);

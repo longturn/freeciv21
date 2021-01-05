@@ -375,25 +375,26 @@ Tech_Type *api_edit_give_technology(lua_State *L, Player *pplayer,
     script_tech_learned(presearch, pplayer, result, reason);
 
     if (notify && result != NULL) {
-      const char *adv_name =
-          qUtf8Printable(research_advance_name_translation(presearch, id));
+      QString adv_name = research_advance_name_translation(presearch, id);
       char research_name[MAX_LEN_NAME * 2];
 
       research_pretty_name(presearch, research_name, sizeof(research_name));
 
       notify_player(pplayer, NULL, E_TECH_GAIN, ftc_server,
-                    Q_("?fromscript:You acquire %s."), adv_name);
+                    Q_("?fromscript:You acquire %s."),
+                    qUtf8Printable(adv_name));
       notify_research(presearch, pplayer, E_TECH_GAIN, ftc_server,
                       /* TRANS: "The Greeks ..." or "The members of
                        * team Red ..." */
                       Q_("?fromscript:The %s acquire %s and share this "
                          "advance with you."),
-                      nation_plural_for_player(pplayer), adv_name);
+                      nation_plural_for_player(pplayer),
+                      qUtf8Printable(adv_name));
       notify_research_embassies(presearch, NULL, E_TECH_EMBASSY, ftc_server,
                                 /* TRANS: "The Greeks ..." or "The members of
                                  * team Red ..." */
                                 Q_("?fromscript:The %s acquire %s."),
-                                research_name, adv_name);
+                                research_name, qUtf8Printable(adv_name));
     }
 
     return result;

@@ -2611,14 +2611,14 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
       break;
     }
     fc_strlcat(buf, prefix, bufsz);
-    cat_snprintf(
-        buf, bufsz,
-        /* TRANS: %s is a server setting, its value and if it is
-         * required to be present or absent. The string's format
-         * is specified in ssetv_human_readable().
-         * Example: "killstack is enabled". */
-        _("Requires that the server setting %s."),
-        ssetv_human_readable(preq->source.value.ssetval, preq->present));
+    cat_snprintf(buf, bufsz,
+                 /* TRANS: %s is a server setting, its value and if it is
+                  * required to be present or absent. The string's format
+                  * is specified in ssetv_human_readable().
+                  * Example: "killstack is enabled". */
+                 _("Requires that the server setting %s."),
+                 qUtf8Printable(ssetv_human_readable(
+                     preq->source.value.ssetval, preq->present)));
     return true;
 
   case VUT_AGE:

@@ -420,6 +420,12 @@ void chatwdg::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
+void text_browser_dblclck::mouseDoubleClickEvent(QMouseEvent *event)
+{
+  Q_UNUSED(event);
+  emit dbl_clicked();
+}
+
 /***********************************************************************/ /**
    Processess history for chat
  ***************************************************************************/

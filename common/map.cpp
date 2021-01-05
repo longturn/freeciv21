@@ -516,7 +516,7 @@ void map_free(struct civ_map *fmap)
     FCPP_FREE(fmap->tiles);
 
     if (fmap->startpos_table) {
-      for (auto *a : *fmap->startpos_table) {
+      for (auto *a : qAsConst(*fmap->startpos_table)) {
         startpos_destroy(a);
       }
       FC_FREE(fmap->startpos_table);
