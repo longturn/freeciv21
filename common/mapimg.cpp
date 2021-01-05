@@ -590,14 +590,14 @@ char *mapimg_help(const char *cmdname)
       continue;
     }
 
-    str_format += QString(" - '%1': ").arg(tool);
+    str_format += QStringLiteral(" - '%1': ").arg(tool);
 
     const char *separator = "";
     for (format = imageformat_begin(); format != imageformat_end();
          format = imageformat_next(format)) {
       if (toolkit->formats & format) {
-        str_format +=
-            QString("%1'%2'").arg(separator, imageformat_name(format));
+        str_format += QStringLiteral("%1'%2'").arg(separator,
+                                                   imageformat_name(format));
         separator = ", ";
       }
     }
@@ -616,8 +616,9 @@ char *mapimg_help(const char *cmdname)
       char name[10];
 
       fc_snprintf(name, sizeof(name), "'%s'", nameptr);
-      str_showplr +=
-          QString(" - %1 %2").arg(name, -9).arg(showname_help(showplr));
+      str_showplr += QStringLiteral(" - %1 %2")
+                         .arg(name, -9)
+                         .arg(showname_help(showplr));
       if (showplr != show_player_max()) {
         str_showplr += QStringLiteral("\n");
       }
@@ -625,21 +626,22 @@ char *mapimg_help(const char *cmdname)
   }
 
   /* Default values. */
-  defaults[MAPDEF_FORMAT] = QString("(%1|%2)").arg(
+  defaults[MAPDEF_FORMAT] = QStringLiteral("(%1|%2)").arg(
       imagetool_name(pmapdef->tool), imageformat_name(pmapdef->format));
   defaults[MAPDEF_SHOW] =
-      QString("(%1)").arg(show_player_name(pmapdef->player.show));
+      QStringLiteral("(%1)").arg(show_player_name(pmapdef->player.show));
   defaults[MAPDEF_TURNS] =
-      QString("(%1)").arg(QString::number(pmapdef->turns));
-  defaults[MAPDEF_ZOOM] = QString("(%1)").arg(pmapdef->zoom);
-  defaults[MAPDEF_MAP] = "(";
+      QStringLiteral("(%1)").arg(QString::number(pmapdef->turns));
+  defaults[MAPDEF_ZOOM] = QStringLiteral("(%1)").arg(pmapdef->zoom);
+  defaults[MAPDEF_MAP] = QStringLiteral("(");
   for (layer = mapimg_layer_begin(); layer != mapimg_layer_end();
        layer = mapimg_layer_next(layer)) {
     if (pmapdef->layers[layer]) {
-      defaults[MAPDEF_MAP] += QString("%1").arg(mapimg_layer_name(layer)[0]);
+      defaults[MAPDEF_MAP] +=
+          QStringLiteral("%1").arg(mapimg_layer_name(layer)[0]);
     }
   }
-  defaults[MAPDEF_MAP] += ")";
+  defaults[MAPDEF_MAP] += QLatin1String(")");
 
   /* help text */
   help =

@@ -127,8 +127,8 @@ void page_scenario::update_scenarios_page()
   files = fileinfolist_infix(get_scenario_dirs(), ".sav", false);
   fileinfo_list_iterate(files, pfile)
   {
-    struct section_file *sf =
-        secfile_load_section(pfile->fullname, "scenario", true);
+    struct section_file *sf = secfile_load_section(
+        pfile->fullname, QStringLiteral("scenario"), true);
 
     if (sf
         && secfile_lookup_bool_default(sf, true, "scenario.is_scenario")) {
