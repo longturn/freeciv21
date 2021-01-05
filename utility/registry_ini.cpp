@@ -409,10 +409,10 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
         }
 
         if (i < num_columns) {
-          field_name = QString("%1%2.%3").arg(
+          field_name = QStringLiteral("%1%2.%3").arg(
               base_name, QString::number(table_lineno), columns.at(i));
         } else {
-          field_name = QString("%1%2.%3,%4")
+          field_name = QStringLiteral("%1%2.%3,%4")
                            .arg(base_name, QString::number(table_lineno),
                                 columns.at(num_columns - 1),
                                 QString::number((i - num_columns + 1)));
@@ -460,7 +460,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
           goto END;
         }
         columns.resize(i + 1);
-        columns[i] = QString("%1").arg(tok + 1);
+        columns[i] = QStringLiteral("%1").arg(tok + 1);
       } while (inf_token(inf, INF_TOK_COMMA));
 
       if (!inf_token(inf, INF_TOK_EOL)) {
@@ -487,7 +487,8 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       if (i == 0) {
         entry_from_inf_token(psection, qUtf8Printable(base_name), tok, inf);
       } else {
-        field_name = QString("%1,%2").arg(base_name, QString::number(i));
+        field_name =
+            QStringLiteral("%1,%2").arg(base_name, QString::number(i));
         entry_from_inf_token(psection, qUtf8Printable(field_name), tok, inf);
       }
     } while (inf_token(inf, INF_TOK_COMMA));

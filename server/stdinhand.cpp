@@ -6772,8 +6772,8 @@ static void show_scenarios(struct connection *caller)
 
   fileinfo_list_iterate(files, pfile)
   {
-    struct section_file *sf =
-        secfile_load_section(pfile->fullname, "scenario", true);
+    struct section_file *sf = secfile_load_section(
+        pfile->fullname, QStringLiteral("scenario"), true);
 
     if (secfile_lookup_bool_default(sf, true, "scenario.is_scenario")) {
       fc_snprintf(buf, sizeof(buf), "%s", pfile->name);

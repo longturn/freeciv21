@@ -2620,7 +2620,8 @@ void mr_menu::slot_set_citybar()
                  sizeof(gui_options.default_city_bar_style_name));
       options_iterate(client_optset, poption)
       {
-        if (QString(option_name(poption)) == "default_city_bar_style_name") {
+        if (QString(option_name(poption))
+            == QLatin1String("default_city_bar_style_name")) {
           citybar_painter::option_changed(poption);
         }
       }

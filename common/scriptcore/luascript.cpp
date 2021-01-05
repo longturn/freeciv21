@@ -135,7 +135,7 @@ static int luascript_report(struct fc_lua *fcl, int status, const char *code)
     }
 
     /* Add error message. */
-    str = QLatin1String("lua error:");
+    str = QStringLiteral("lua error:");
     str += QStringLiteral("\t%s").arg(msg);
 
     luascript_log(fcl, LOG_ERROR, "%s", qUtf8Printable(str));

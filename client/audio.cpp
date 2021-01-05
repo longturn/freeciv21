@@ -626,7 +626,7 @@ const QString audio_get_all_plugin_names()
   QString buffer;
   int i;
 
-  buffer = QLatin1String("[");
+  buffer = QStringLiteral("[");
 
   for (i = 0; i < num_plugins_used; i++) {
     buffer = buffer + plugins[i].name;

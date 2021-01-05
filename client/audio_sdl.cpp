@@ -251,9 +251,9 @@ void audio_sdl_init()
 {
   struct audio_plugin self;
 
-  self.name = QLatin1String("sdl");
+  self.name = QStringLiteral("sdl");
   self.descr =
-      QLatin1String("Simple DirectMedia Library (SDL) mixer plugin");
+      QStringLiteral("Simple DirectMedia Library (SDL) mixer plugin");
   self.init = sdl_audio_init;
   self.shutdown = sdl_audio_shutdown;
   self.stop = sdl_audio_stop;

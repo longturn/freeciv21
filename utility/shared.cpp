@@ -947,10 +947,10 @@ fileinfoname(const QStringList *dirs, const char *filename)
     realfile->clear();
     for (const auto &dirname : *dirs) {
       if (first) {
-        *realfile += QString("/%1").arg(dirname);
+        *realfile += QStringLiteral("/%1").arg(dirname);
         first = false;
       } else {
-        *realfile += QString("%1").arg(dirname);
+        *realfile += QStringLiteral("%1").arg(dirname);
       }
     }
 
@@ -971,8 +971,8 @@ fileinfoname(const QStringList *dirs, const char *filename)
   for (const auto &dirname : *dirs) {
     struct stat buf; /* see if we can open the file or directory */
 
-    *realfile =
-        QString("%1%2%3").arg(dirname, QString(DIR_SEPARATOR_CHAR), fnbuf);
+    *realfile = QStringLiteral("%1%2%3").arg(
+        dirname, QString(DIR_SEPARATOR_CHAR), fnbuf);
     if (fc_stat(qUtf8Printable(*realfile), &buf) == 0) {
       return *realfile;
     }
@@ -1491,11 +1491,11 @@ void free_multicast_group() { NFCNPP_FREE(mc_group); }
  ****************************************************************************/
 void interpret_tilde(char *buf, size_t buf_size, const QString &filename)
 {
-  if (filename.startsWith("~/")) {
+  if (filename.startsWith(QLatin1String("~/"))) {
     fc_snprintf(buf, buf_size, "%s%c%s", qUtf8Printable(QDir::homePath()),
                 DIR_SEPARATOR_CHAR,
                 qUtf8Printable(filename.right(filename.length() - 2)));
-  } else if (filename == "~") {
+  } else if (filename == QLatin1String("~")) {
     qstrncpy(buf, qUtf8Printable(QDir::homePath()), buf_size);
   } else {
     qstrncpy(buf, qUtf8Printable(filename), buf_size);
