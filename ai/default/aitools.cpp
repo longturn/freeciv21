@@ -183,7 +183,7 @@ static bool dai_gothere_bodyguard(struct ai_type *ait, struct unit *punit,
                                   struct tile *dest_tile)
 {
   struct player *pplayer = unit_owner(punit);
-  unsigned int danger = 0;
+  int danger = 0;
   struct city *dcity;
   struct unit *guard = aiguard_guard_of(ait, punit);
   const struct veteran_level *vlevel;

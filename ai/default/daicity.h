@@ -43,9 +43,9 @@ struct ai_city {
   int attack, bcost; /* This is also for invasion - total power and value of
                       * all units coming to kill us. */
 
-  unsigned int danger;       /* danger to be compared to assess_defense */
-  unsigned int grave_danger; /* danger, should show positive feedback */
-  unsigned int urgency;      /* how close the danger is; if zero,
+  int danger;       /* danger to be compared to assess_defense */
+  int grave_danger; /* danger, should show positive feedback */
+  int urgency;      /* how close the danger is; if zero,
                                 bodyguards can leave */
   int wallvalue;             /* how much it helps for defenders to be
                                 ground units */

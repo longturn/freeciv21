@@ -70,9 +70,9 @@
 
 #include "daimilitary.h"
 
-static unsigned int assess_danger(struct ai_type *ait, struct city *pcity,
-                                  const struct civ_map *dmap,
-                                  player_unit_list_getter ul_cb);
+static int assess_danger(struct ai_type *ait, struct city *pcity,
+                         const struct civ_map *dmap,
+                         player_unit_list_getter ul_cb);
 
 /**********************************************************************/ /**
    Choose the best unit the city can build to defend against attacker v.
@@ -369,16 +369,15 @@ static int assess_defense_igwall(struct ai_type *ait, struct city *pcity)
 /**********************************************************************/ /**
    How dangerous and far a unit is for a city?
  **************************************************************************/
-static unsigned int assess_danger_unit(const struct city *pcity,
-                                       struct pf_reverse_map *pcity_map,
-                                       const struct unit *punit,
-                                       int *move_time)
+static int assess_danger_unit(const struct city *pcity,
+                              struct pf_reverse_map *pcity_map,
+                              const struct unit *punit, int *move_time)
 {
   struct pf_position pos;
   const struct unit_type *punittype = unit_type_get(punit);
   const struct tile *ptile = city_tile(pcity);
   const struct unit *ferry;
-  unsigned int danger;
+  int danger;
   int mod;
 
   *move_time = PF_IMPOSSIBLE_MC;
@@ -468,8 +467,7 @@ void dai_assess_danger_player(struct ai_type *ait, struct player *pplayer,
    Syela's convoluted if ... else logic, and it seems to work. -- Per
  **************************************************************************/
 static void dai_reevaluate_building(struct city *pcity, adv_want *value,
-                                    unsigned int urgency,
-                                    unsigned int danger, int defense)
+                                    int urgency, int danger, int defense)
 {
   if (*value == 0 || danger <= 0) {
     return;
@@ -502,18 +500,18 @@ static void dai_reevaluate_building(struct city *pcity, adv_want *value,
    afraid of a boat laden with enemies if it stands on the coast (i.e.
    is directly reachable by this boat).
  **************************************************************************/
-static unsigned int assess_danger(struct ai_type *ait, struct city *pcity,
-                                  const struct civ_map *dmap,
-                                  player_unit_list_getter ul_cb)
+static int assess_danger(struct ai_type *ait, struct city *pcity,
+                         const struct civ_map *dmap,
+                         player_unit_list_getter ul_cb)
 {
   struct player *pplayer = city_owner(pcity);
   struct tile *ptile = city_tile(pcity);
   struct ai_city *city_data = def_ai_city_data(pcity, ait);
-  unsigned int danger_reduced[B_LAST]; /* How much such danger there is that
-                                        * building would help against. */
+  int danger_reduced[B_LAST]; /* How much such danger there is that
+                               * building would help against. */
   int i;
   int defender;
-  unsigned int urgency = 0;
+  int urgency = 0;
   int defense;
   int total_danger = 0;
   int defense_bonuses_pct[U_LAST];
@@ -605,7 +603,7 @@ static unsigned int assess_danger(struct ai_type *ait, struct city *pcity,
     unit_list_iterate(units, punit)
     {
       int move_time;
-      unsigned int vulnerability;
+      int vulnerability;
       int defbonus_pct;
       const struct unit_type *utype = unit_type_get(punit);
       struct unit_type_ai *utai =
@@ -789,7 +787,7 @@ int dai_unit_attack_desirability(struct ai_type *ait,
    build yet.
  **************************************************************************/
 bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
-                               struct city *pcity, unsigned int danger,
+                               struct city *pcity, int danger,
                                struct adv_choice *choice)
 {
   const struct research *presearch = research_get(pplayer);
@@ -1480,7 +1478,7 @@ struct adv_choice *military_advisor_choose_build(
 {
   struct adv_data *ai = adv_data_get(pplayer, NULL);
   struct unit_type *punittype;
-  unsigned int our_def, urgency;
+  int our_def, urgency;
   struct tile *ptile = pcity->tile;
   struct unit *virtualunit;
   struct ai_city *city_data = def_ai_city_data(pcity, ait);
