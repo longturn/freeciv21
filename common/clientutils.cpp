@@ -222,7 +222,7 @@ int turns_to_activity_done(const struct tile *ptile, Activity_type_id act,
 /************************************************************************/ /**
    Creates the activity progress text for the given tile.
  ****************************************************************************/
-const char *concat_tile_activity_text(struct tile *ptile)
+QString concat_tile_activity_text(struct tile *ptile)
 {
   auto *calc = new actcalc;
   int num_activities = 0;

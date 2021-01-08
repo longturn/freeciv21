@@ -787,7 +787,7 @@ const QStringList *get_data_dirs()
     data_dir_names = base_get_dirs(
         NULL != path ? path : qUtf8Printable(default_data_path()));
     data_dir_names->removeDuplicates();
-    for (const auto &toyota : *data_dir_names) {
+    for (const auto &toyota : qAsConst(*data_dir_names)) {
       qDebug("Data path component: %s", qUtf8Printable(toyota));
     }
   }
@@ -824,7 +824,7 @@ const QStringList *get_save_dirs()
     save_dir_names = base_get_dirs(
         NULL != path ? path : qUtf8Printable(default_save_path()));
     save_dir_names->removeDuplicates();
-    for (const auto &mercedes : *save_dir_names) {
+    for (const auto &mercedes : qAsConst(*save_dir_names)) {
       qDebug("Save path component: %s", qUtf8Printable(mercedes));
     }
   }
@@ -862,7 +862,7 @@ const QStringList *get_scenario_dirs()
     scenario_dir_names = base_get_dirs(
         NULL != path ? path : qUtf8Printable(default_scenario_path()));
     scenario_dir_names->removeDuplicates();
-    for (const auto &tesla : *scenario_dir_names) {
+    for (const auto &tesla : qAsConst(*scenario_dir_names)) {
       qDebug("Scenario path component: %s", qUtf8Printable(tesla));
     }
   }
@@ -933,7 +933,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
 #ifndef DIR_SEPARATOR_IS_DEFAULT
   char fnbuf[filename != NULL ? qstrlen(filename) + 1 : 1];
   int i;
-#else  /* DIR_SEPARATOR_IS_DEFAULT */
+#else /* DIR_SEPARATOR_IS_DEFAULT */
   const char *fnbuf = filename;
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
@@ -947,10 +947,10 @@ fileinfoname(const QStringList *dirs, const char *filename)
     realfile->clear();
     for (const auto &dirname : *dirs) {
       if (first) {
-        *realfile += QString("/%1").arg(dirname);
+        *realfile += QStringLiteral("/%1").arg(dirname);
         first = false;
       } else {
-        *realfile += QString("%1").arg(dirname);
+        *realfile += QStringLiteral("%1").arg(dirname);
       }
     }
 
@@ -971,8 +971,8 @@ fileinfoname(const QStringList *dirs, const char *filename)
   for (const auto &dirname : *dirs) {
     struct stat buf; /* see if we can open the file or directory */
 
-    *realfile =
-        QString("%1%2%3").arg(dirname, QString(DIR_SEPARATOR_CHAR), fnbuf);
+    *realfile = QStringLiteral("%1%2%3").arg(
+        dirname, QString(DIR_SEPARATOR_CHAR), fnbuf);
     if (fc_stat(qUtf8Printable(*realfile), &buf) == 0) {
       return *realfile;
     }
@@ -1255,7 +1255,7 @@ void switch_lang(const char *lang)
   autocap_update();
 
   qInfo("LANG set to %s", lang);
-#else  /* FREECIV_ENABLE_NLS */
+#else /* FREECIV_ENABLE_NLS */
   fc_assert(false);
 #endif /* FREECIV_ENABLE_NLS */
 }
@@ -1277,7 +1277,7 @@ void init_nls()
 
 #ifdef FREECIV_MSWINDOWS
   setup_langname(); /* Makes sure LANG env variable has been set */
-#endif              /* FREECIV_MSWINDOWS */
+#endif /* FREECIV_MSWINDOWS */
 
   (void) setlocale(LC_ALL, "");
   (void) bindtextdomain("freeciv-core", get_locale_dir());
@@ -1347,7 +1347,9 @@ void dont_run_as_root(const char *argv0, const char *fallback)
   if (getuid() == 0 || geteuid() == 0) {
     fc_fprintf(stderr,
                _("%s: Fatal error: you're trying to run me as superuser!\n"),
-               (argv0 ? argv0 : fallback ? fallback : "freeciv"));
+               (argv0      ? argv0
+                : fallback ? fallback
+                           : "freeciv"));
     fc_fprintf(stderr, _("Use a non-privileged account instead.\n"));
     exit(EXIT_FAILURE);
   }
@@ -1489,11 +1491,11 @@ void free_multicast_group() { NFCNPP_FREE(mc_group); }
  ****************************************************************************/
 void interpret_tilde(char *buf, size_t buf_size, const QString &filename)
 {
-  if (filename.startsWith("~/")) {
+  if (filename.startsWith(QLatin1String("~/"))) {
     fc_snprintf(buf, buf_size, "%s%c%s", qUtf8Printable(QDir::homePath()),
                 DIR_SEPARATOR_CHAR,
                 qUtf8Printable(filename.right(filename.length() - 2)));
-  } else if (filename == "~") {
+  } else if (filename == QLatin1String("~")) {
     qstrncpy(buf, qUtf8Printable(QDir::homePath()), buf_size);
   } else {
     qstrncpy(buf, qUtf8Printable(filename), buf_size);
@@ -1570,7 +1572,7 @@ bool path_is_absolute(const char *filename)
   if (strchr(filename, ':')) {
     return true;
   }
-#else  /* FREECIV_MSWINDOWS */
+#else /* FREECIV_MSWINDOWS */
   if (filename[0] == '/') {
     return true;
   }

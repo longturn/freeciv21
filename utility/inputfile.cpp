@@ -198,7 +198,7 @@ static QString inf_filename(struct inputfile *inf)
   if (!inf->filename.isEmpty()) {
     return inf->filename;
   } else {
-    return "(anonymous)";
+    return QStringLiteral("(anonymous)");
   }
 }
 
@@ -559,8 +559,8 @@ char *inf_log_str(struct inputfile *inf, const char *message, ...)
   }
 
   cat_snprintf(str, sizeof(str), "  file \"%s\", line %d, pos %d%s",
-               qUtf8Printable(inf_filename(inf)), inf->line_num, inf->cur_line_pos,
-               (inf->at_eof ? ", EOF" : ""));
+               qUtf8Printable(inf_filename(inf)), inf->line_num,
+               inf->cur_line_pos, (inf->at_eof ? ", EOF" : ""));
 
   if (!astr_empty(&inf->cur_line)) {
     cat_snprintf(str, sizeof(str), "\n  looking at: '%s'",
@@ -955,7 +955,7 @@ static const char *get_token_value(struct inputfile *inf)
       break;
     }
 
-    inf->partial += QString("%1\n").arg(start);
+    inf->partial += QStringLiteral("%1\n").arg(start);
 
     if (!read_a_line(inf)) {
       /* shouldn't happen */

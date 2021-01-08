@@ -41,6 +41,6 @@ int ssetv_value_get(ssetv enc);
 ssetv ssetv_by_rule_name(const char *name);
 const char *ssetv_rule_name(ssetv val);
 
-const char *ssetv_human_readable(ssetv val, bool present);
+QString ssetv_human_readable(ssetv val, bool present);
 
 bool ssetv_setting_has_value(ssetv val);

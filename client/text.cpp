@@ -140,7 +140,7 @@ static inline void get_full_nation(char *buf, int buflen,
  ****************************************************************************/
 const QString popup_info_text(struct tile *ptile)
 {
-  const char *activity_text;
+  QString activity_text;
   struct city *pcity = tile_city(ptile);
   struct unit *punit = find_visible_unit(ptile);
   const char *diplo_nation_plural_adjectives[DS_LAST] = {
@@ -359,7 +359,7 @@ const QString popup_info_text(struct tile *ptile)
     }
   }
   activity_text = concat_tile_activity_text(ptile);
-  if (strlen(activity_text) > 0) {
+  if (activity_text.length() > 0) {
     str += QString(_("Activity: %1")).arg(activity_text) + qendl();
   }
   if (punit && !pcity) {
@@ -594,7 +594,7 @@ const QString unit_description(struct unit *punit)
             get_nearest_city_text(pcity_near, pcity_near_dist))
         + qendl();
 #ifdef FREECIV_DEBUG
-  str += QString("Unit ID: %1").arg(punit->id);
+  str += QStringLiteral("Unit ID: %1").arg(punit->id);
 #endif
 
   return str.trimmed();
@@ -699,7 +699,7 @@ const QString get_airlift_text(const struct unit_list *punits,
   case AL_IMPOSSIBLE:
     return NULL;
   case AL_UNKNOWN:
-    str = QLatin1String("?");
+    str = QStringLiteral("?");
     break;
   case AL_FINITE:
     str = QStringLiteral("%1/%2").arg(cur, max);
@@ -1350,11 +1350,11 @@ const QString get_unit_info_label_text2(struct unit_list *punits,
   /* Line 5/6. Debug text. */
 #ifdef FREECIV_DEBUG
   if (count == 1) {
-    str += QString("(Unit ID %1)")
+    str += QStringLiteral("(Unit ID %1)")
                .arg(QString::number(unit_list_get(punits, 0)->id))
            + qendl();
   } else {
-    str += QString(" \n");
+    str += QStringLiteral(" \n");
   }
 #endif /* FREECIV_DEBUG */
 
@@ -1721,11 +1721,14 @@ const QString format_duration(int duration)
   if (duration > 3600) {
     QDateTime time = QDateTime::currentDateTime();
     QDateTime tc_time = time.addSecs(duration);
-    QString day_now = QLocale::system().toString(time, "ddd ");
-    QString day_tc = QLocale::system().toString(tc_time, "ddd ");
+    QString day_now =
+        QLocale::system().toString(time, QStringLiteral("ddd "));
+    QString day_tc =
+        QLocale::system().toString(tc_time, QStringLiteral("ddd "));
 
-    str += QStringLiteral("\n") + ((day_now != day_tc) ? day_tc : "")
-           + tc_time.toString("hh:mm");
+    str += QStringLiteral("\n")
+           + ((day_now != day_tc) ? day_tc : QLatin1String(""))
+           + tc_time.toString(QStringLiteral("hh:mm"));
   }
   return str.trimmed();
 }
@@ -1772,7 +1775,7 @@ QString get_score_text(const struct player *pplayer)
       || pplayer == client.conn.playing) {
     str = QStringLiteral("%1").arg(QString::number(pplayer->score.game));
   } else {
-    str = QLatin1String("?");
+    str = QStringLiteral("?");
   }
 
   return str.trimmed();

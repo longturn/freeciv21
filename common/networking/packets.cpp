@@ -566,7 +566,7 @@ void remove_packet_from_buffer(struct socket_packet_buffer *buffer)
   fc_assert_ret(dio_get_uint16_raw(&din, &len));
   memmove(buffer->data, buffer->data + len, buffer->ndata - len);
   buffer->ndata -= len;
-  log_debug("remove_packet_from_buffer: remove %d; remaining %d", len,
+  log_debug("remove_packet_from_buffer: remove %d; remaining %lu", len,
             buffer->ndata);
 }
 

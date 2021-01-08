@@ -140,8 +140,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
 static bool kick_command(struct connection *caller, char *name, bool check);
 static bool delegate_command(struct connection *caller, char *arg,
                              bool check);
-static const char *delegate_player_str(struct player *pplayer,
-                                       bool observer);
+static QString delegate_player_str(struct player *pplayer, bool observer);
 static bool aicmd_command(struct connection *caller, char *arg, bool check);
 static bool fcdb_command(struct connection *caller, char *arg, bool check);
 static const char *fcdb_accessor(int i);
@@ -308,15 +307,14 @@ static void cmd_reply_line(enum command_id cmd, struct connection *caller,
                            enum rfc_status rfc_status, const char *prefix,
                            const char *line)
 {
-  const char *cmdname = cmd < CMD_NUM
-                            ? command_name_by_number(cmd)
-                            : cmd == CMD_AMBIGUOUS
-                                  /* TRANS: ambiguous command */
-                                  ? _("(ambiguous)")
-                                  : cmd == CMD_UNRECOGNIZED
-                                        /* TRANS: unrecognized command */
-                                        ? _("(unknown)")
-                                        : "(?!?)"; /* this case is a bug! */
+  const char *cmdname = cmd < CMD_NUM ? command_name_by_number(cmd)
+                        : cmd == CMD_AMBIGUOUS
+                            /* TRANS: ambiguous command */
+                            ? _("(ambiguous)")
+                            : cmd == CMD_UNRECOGNIZED
+                                  /* TRANS: unrecognized command */
+                                  ? _("(unknown)")
+                                  : "(?!?)"; /* this case is a bug! */
 
   if (caller) {
     notify_conn(caller->self, NULL, E_SETTING, ftc_command, "/%s: %s%s",
@@ -1439,7 +1437,6 @@ static bool cmdlevel_command(struct connection *caller, char *str,
   if (!cmdlevel_is_valid(level)) {
     QVector<QString> cmdlevel_names;
     cmdlevel_names.reserve(CMDLEVEL_COUNT);
-    QString astr;
 
     for (level = cmdlevel_begin(); level != cmdlevel_end();
          level = cmdlevel_next(level)) {
@@ -3562,7 +3559,8 @@ static bool take_command(struct connection *caller, char *str, bool check)
     cmd_reply(CMD_TAKE, caller, C_OK, _("%s now controls %s (%s, %s)."),
               pconn->username, player_name(pplayer),
               is_barbarian(pplayer) ? _("Barbarian")
-                                    : is_ai(pplayer) ? _("AI") : _("Human"),
+              : is_ai(pplayer)      ? _("AI")
+                                    : _("Human"),
               pplayer->is_alive ? _("Alive") : _("Dead"));
   } else {
     cmd_reply(CMD_TAKE, caller, C_FAIL,
@@ -5400,12 +5398,12 @@ static bool delegate_command(struct connection *caller, char *arg,
       fc_assert_ret_val(pdelegate != NULL, false);
       if (!connection_delegate_restore(pdelegate)) {
         /* Should never happen. Generic failure message. */
-        qCritical(
-            "Failed to restore %s's connection as %s during "
-            "'delegate cancel'.",
-            pdelegate->username,
-            delegate_player_str(pdelegate->server.delegation.playing,
-                                pdelegate->server.delegation.observer));
+        qCritical("Failed to restore %s's connection as %s during "
+                  "'delegate cancel'.",
+                  pdelegate->username,
+                  qUtf8Printable(delegate_player_str(
+                      pdelegate->server.delegation.playing,
+                      pdelegate->server.delegation.observer)));
         cmd_reply(CMD_DELEGATE, caller, C_FAIL, _("Unexpected failure."));
         ret = false;
         break;
@@ -5509,19 +5507,20 @@ static bool delegate_command(struct connection *caller, char *arg,
       qCritical("Failed to restore %s's connection as %s during "
                 "'delegate restore'.",
                 caller->username,
-                delegate_player_str(caller->server.delegation.playing,
-                                    caller->server.delegation.observer));
+                qUtf8Printable(delegate_player_str(
+                    caller->server.delegation.playing,
+                    caller->server.delegation.observer)));
       cmd_reply(CMD_DELEGATE, caller, C_FAIL, _("Unexpected failure."));
       ret = false;
       break;
     }
 
-    cmd_reply(
-        CMD_DELEGATE, caller, C_OK,
-        /* TRANS: "<user> is now connected to <player>" where <player>
-         * can also be "global observer" or "nothing" */
-        _("%s is now connected as %s."), caller->username,
-        delegate_player_str(conn_get_player(caller), caller->observer));
+    cmd_reply(CMD_DELEGATE, caller, C_OK,
+              /* TRANS: "<user> is now connected to <player>" where <player>
+               * can also be "global observer" or "nothing" */
+              _("%s is now connected as %s."), caller->username,
+              qUtf8Printable(delegate_player_str(conn_get_player(caller),
+                                                 caller->observer)));
     ret = true;
     break;
   }
@@ -5532,7 +5531,7 @@ static bool delegate_command(struct connection *caller, char *arg,
 /**********************************************************************/ /**
    Return static string describing what a connection is connected to.
  **************************************************************************/
-static const char *delegate_player_str(struct player *pplayer, bool observer)
+static QString delegate_player_str(struct player *pplayer, bool observer)
 {
   QString buf;
 
@@ -6718,7 +6717,7 @@ void show_players(struct connection *caller)
       {
         fc_snprintf(buf, sizeof(buf),
                     _("%s from %s (command access level %s), "
-                      "bufsize=%dkb"),
+                      "bufsize=%lukb"),
                     pconn->username, qUtf8Printable(pconn->addr),
                     cmdlevel_name(pconn->access_level),
                     (pconn->send_buffer->nsize >> 10));
@@ -6750,7 +6749,7 @@ static void show_rulesets(struct connection *caller)
   cmd_reply(CMD_LIST, caller, C_COMMENT, horiz_line);
 
   serv_list = get_init_script_choices();
-  for (const auto &s : *serv_list) {
+  for (const auto &s : qAsConst(*serv_list)) {
     cmd_reply(CMD_LIST, caller, C_COMMENT, "%s", qUtf8Printable(s));
   }
   delete serv_list;
@@ -6773,8 +6772,8 @@ static void show_scenarios(struct connection *caller)
 
   fileinfo_list_iterate(files, pfile)
   {
-    struct section_file *sf =
-        secfile_load_section(pfile->fullname, "scenario", true);
+    struct section_file *sf = secfile_load_section(
+        pfile->fullname, QStringLiteral("scenario"), true);
 
     if (secfile_lookup_bool_default(sf, true, "scenario.is_scenario")) {
       fc_snprintf(buf, sizeof(buf), "%s", pfile->name);
@@ -7177,9 +7176,9 @@ static char *cmdlevel_arg1_generator(const char *text, int state)
  **************************************************************************/
 static const char *cmdlevel_arg2_accessor(int idx)
 {
-  return ((idx == 0)
-              ? "first"
-              : (idx == 1) ? "new" : connection_name_accessor(idx - 2));
+  return ((idx == 0)   ? "first"
+          : (idx == 1) ? "new"
+                       : connection_name_accessor(idx - 2));
 }
 
 /**********************************************************************/ /**

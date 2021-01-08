@@ -83,7 +83,7 @@ void free_help_texts()
   if (!help_nodes) {
     return;
   }
-  for (const auto *ptmp : *help_nodes) {
+  for (const auto *ptmp : qAsConst(*help_nodes)) {
     NFCPP_FREE(ptmp->topic);
     NFCPP_FREE(ptmp->text);
     NFC_FREE(ptmp);
@@ -701,8 +701,8 @@ void boot_help_texts()
    */
   if (!(sf = secfile_load(filename, false))) {
     /* this is now unlikely to happen */
-    qCritical("failed reading help-texts from '%s':\n%s", qUtf8Printable(filename),
-              secfile_error());
+    qCritical("failed reading help-texts from '%s':\n%s",
+              qUtf8Printable(filename), secfile_error());
     return;
   }
 
@@ -1039,7 +1039,7 @@ void boot_help_texts()
               pitem->topic = qstrdup(name);
               if (pmul->helptext) {
                 const char *sep = "";
-                for (const auto &text : *pmul->helptext) {
+                for (const auto &text : qAsConst(*pmul->helptext)) {
                   cat_snprintf(help_text_buffer, sizeof(help_text_buffer),
                                "%s%s", sep, qUtf8Printable(text));
                   sep = "\n\n";
@@ -1148,7 +1148,7 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
 
   idx = 0;
 
-  for (const auto *ptmp : *help_nodes) {
+  for (const auto *ptmp : qAsConst(*help_nodes)) {
     char *p = ptmp->topic;
 
     while (*p == ' ') {
@@ -1217,7 +1217,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   if (NULL != pimprove->helptext) {
-    for (const auto &text : *pimprove->helptext) {
+    for (const auto &text : qAsConst(*pimprove->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -1684,7 +1684,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   cat_snprintf(buf, bufsz, _("* Belongs to %s unit class."),
                uclass_name_translation(pclass));
   if (NULL != pclass->helptext) {
-    for (const auto &text : *pclass->helptext) {
+    for (const auto &text : qAsConst(*pclass->helptext)) {
       cat_snprintf(buf, bufsz, "\n%s\n", _(qUtf8Printable(text)));
     }
   } else {
@@ -2897,7 +2897,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
   }
   if (NULL != utype->helptext) {
-    for (const auto &text : *utype->helptext) {
+    for (const auto &text : qAsConst(*utype->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3134,7 +3134,7 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
     if (strlen(buf) > 0) {
       CATLSTR(buf, bufsz, "\n");
     }
-    for (const auto &text : *vap->helptext) {
+    for (const auto &text : qAsConst(*vap->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3240,7 +3240,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
     if (buf[0] != '\0') {
       CATLSTR(buf, bufsz, "\n");
     }
-    for (const auto &text : *pterrain->helptext) {
+    for (const auto &text : qAsConst(*pterrain->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3454,7 +3454,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   if (pextra->helptext != NULL) {
-    for (const auto &text : *pextra->helptext) {
+    for (const auto &text : qAsConst(*pextra->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3895,7 +3895,7 @@ void helptext_goods(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (NULL != pgood->helptext) {
-    for (const auto &text : *pgood->helptext) {
+    for (const auto &text : qAsConst(*pgood->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3947,7 +3947,7 @@ void helptext_specialist(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (NULL != pspec->helptext) {
-    for (const auto &text : *pspec->helptext) {
+    for (const auto &text : qAsConst(*pspec->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3987,7 +3987,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (NULL != gov->helptext) {
-    for (const auto &text : *gov->helptext) {
+    for (const auto &text : qAsConst(*gov->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }

@@ -246,7 +246,7 @@ static void cityresult_destroy(struct cityresult *result)
 {
   if (result != NULL) {
     if (result->tdc_hash != NULL) {
-      for (const auto *ptdc : *result->tdc_hash) {
+      for (const auto *ptdc : qAsConst(*result->tdc_hash)) {
         NFCPP_FREE(ptdc);
       }
       delete result->tdc_hash;
@@ -1207,7 +1207,7 @@ void dai_auto_settler_reset(struct ai_type *ait, struct player *pplayer)
   ai->settler->cache.save = 0;
 #endif /* FREECIV_DEBUG */
 
-  for (const auto *ptdc : *ai->settler->tdc_hash) {
+  for (const auto *ptdc : qAsConst(*ai->settler->tdc_hash)) {
     NFCPP_FREE(ptdc);
   }
   ai->settler->tdc_hash->clear();
