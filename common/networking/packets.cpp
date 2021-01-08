@@ -61,7 +61,7 @@
  */
 #define PACKET_SIZE_STATISTICS 0
 
-extern const char *const packet_functional_capability;
+extern "C" const char *const packet_functional_capability;
 
 typedef QHash<QString, struct packet_handlers *> packetsHash;
 Q_GLOBAL_STATIC(packetsHash, packet_handlers_hash)

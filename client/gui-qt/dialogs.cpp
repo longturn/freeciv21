@@ -161,7 +161,7 @@ static bool is_more_user_input_needed = false;
  unit that wants a decision in the current unit selection. */
 static bool did_not_decide = false;
 
-extern char forced_tileset_name[512];
+extern QString forced_tileset_name;
 qdef_act *qdef_act::m_instance = nullptr;
 
 /***********************************************************************/ /**
@@ -3318,7 +3318,7 @@ void popup_tileset_suggestion_dialog(void)
   ask->setAttribute(Qt::WA_DeleteOnClose);
 
   QObject::connect(ask, &hud_message_box::accepted, [=]() {
-    sz_strlcpy(forced_tileset_name, game.control.preferred_tileset);
+    forced_tileset_name = game.control.preferred_tileset;
     if (!tilespec_reread(game.control.preferred_tileset, true,
                          king()->map_scale)) {
       tileset_error(LOG_ERROR, _("Can't load requested tileset %s."),

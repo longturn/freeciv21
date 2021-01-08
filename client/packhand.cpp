@@ -126,7 +126,7 @@ static struct {
   int parts;
 } page_msg_report = {.parts = 0};
 
-extern const char forced_tileset_name[];
+extern QString forced_tileset_name;
 
 static int last_turn = 0;
 
@@ -2001,7 +2001,7 @@ void handle_set_topology(int topology_id)
 {
   wld.map.topology_id = topology_id;
 
-  if (forced_tileset_name[0] == '\0'
+  if (forced_tileset_name.isEmpty()
       && (tileset_map_topo_compatible(topology_id, tileset)
               == TOPO_INCOMP_HARD
           || strcmp(tileset_basename(tileset),
