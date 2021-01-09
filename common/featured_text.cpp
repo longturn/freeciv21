@@ -17,13 +17,13 @@
 #include <cstdarg>
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "city.h"
 #include "game.h"
 #include "map.h"
@@ -43,31 +43,31 @@
   TYPED_LIST_ITERATE_REV(struct text_tag, tags, ptag)
 #define text_tag_list_rev_iterate_end LIST_ITERATE_REV_END
 
-/* The text_tag structure.  See documentation in featured_text.h. */
+// The text_tag structure.  See documentation in featured_text.h.
 struct text_tag {
-  enum text_tag_type type;  /* The type of the tag. */
-  ft_offset_t start_offset; /* The start offset (in bytes). */
-  ft_offset_t stop_offset;  /* The stop offset (in bytes). */
+  enum text_tag_type type;  // The type of the tag.
+  ft_offset_t start_offset; // The start offset (in bytes).
+  ft_offset_t stop_offset;  // The stop offset (in bytes).
   union {
-    struct {                        /* TTT_COLOR only. */
-      char foreground[MAX_LEN_STR]; /* foreground color name. */
-      char background[MAX_LEN_STR]; /* background color name. */
+    struct {                        // TTT_COLOR only.
+      char foreground[MAX_LEN_STR]; // foreground color name.
+      char background[MAX_LEN_STR]; // background color name.
     } color;
-    struct {                    /* TTT_LINK only. */
-      enum text_link_type type; /* The target type of the link. */
-      int id;                   /* The id of linked object. */
-      char name[MAX_LEN_STR];   /* A string to indentify the link. */
+    struct {                    // TTT_LINK only.
+      enum text_link_type type; // The target type of the link.
+      int id;                   // The id of linked object.
+      char name[MAX_LEN_STR];   // A string to indentify the link.
     } link;
   };
 };
 
 enum sequence_type {
-  ST_START, /* e.g. [sequence]. */
+  ST_START, // e.g. [sequence].
   ST_STOP,  /* e.g. [/sequence]. */
   ST_SINGLE /* e.g. [sequence/]. */
 };
 
-/* Predefined colors. */
+// Predefined colors.
 const struct ft_color ftc_any = FT_COLOR(NULL, NULL);
 
 const struct ft_color ftc_warning = FT_COLOR("#FF0000", NULL);
@@ -100,10 +100,10 @@ const struct ft_color ftc_luaconsole_warn = FT_COLOR("#CF2020", NULL);
 const struct ft_color ftc_luaconsole_normal = FT_COLOR("#006400", NULL);
 const struct ft_color ftc_luaconsole_verbose = FT_COLOR("#B8B8B8", NULL);
 
-/**********************************************************************/ /**
+/**
    Return the long name of the text tag type.
    See also text_tag_type_short_name().
- **************************************************************************/
+ */
 static const char *text_tag_type_name(enum text_tag_type type)
 {
   switch (type) {
@@ -122,14 +122,14 @@ static const char *text_tag_type_name(enum text_tag_type type)
   case TTT_INVALID:
     return nullptr;
   };
-  /* Don't handle the default case to be warned if a new value was added. */
+  // Don't handle the default case to be warned if a new value was added.
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Return the name abbreviation of the text tag type.
    See also text_tag_type_name().
- **************************************************************************/
+ */
 static const char *text_tag_type_short_name(enum text_tag_type type)
 {
   switch (type) {
@@ -148,13 +148,13 @@ static const char *text_tag_type_short_name(enum text_tag_type type)
   case TTT_INVALID:
     return nullptr;
   };
-  /* Don't handle the default case to be warned if a new value was added. */
+  // Don't handle the default case to be warned if a new value was added.
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Return the name of the text tag link target type.
- **************************************************************************/
+ */
 static const char *text_link_type_name(enum text_link_type type)
 {
   switch (type) {
@@ -168,14 +168,14 @@ static const char *text_link_type_name(enum text_link_type type)
     Q_UNREACHABLE();
     fc_assert_ret_val(type != TLT_INVALID, nullptr);
   };
-  /* Don't handle the default case to be warned if a new value was added. */
+  // Don't handle the default case to be warned if a new value was added.
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Find inside a sequence the string associated to a particular option name.
    Returns TRUE on success.
- **************************************************************************/
+ */
 static bool find_option(const char *buf_in, const char *option,
                         char *buf_out, size_t write_len)
 {
@@ -189,13 +189,13 @@ static bool find_option(const char *buf_in, const char *option,
     }
 
     if (0 == fc_strncasecmp(buf_in, option, option_len)) {
-      buf_in += option_len; /* This is this one. */
+      buf_in += option_len; // This is this one.
 
       while ((QChar::isSpace(*buf_in) || *buf_in == '=')
              && *buf_in != '\0') {
         buf_in++;
       }
-      if (*buf_in == '"') { /* Quote case. */
+      if (*buf_in == '"') { // Quote case.
         const char *end = strchr(++buf_in, '"');
 
         if (!end) {
@@ -221,10 +221,10 @@ static bool find_option(const char *buf_in, const char *option,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Initialize a text_tag structure from a string sequence.
    Returns TRUE on success.
- **************************************************************************/
+ */
 static bool text_tag_init_from_sequence(struct text_tag *ptag,
                                         enum text_tag_type type,
                                         ft_offset_t start_offset,
@@ -300,7 +300,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
 
       if (!find_option(sequence, "name", ptag->link.name,
                        sizeof(ptag->link.name))) {
-        /* Set something as name. */
+        // Set something as name.
         fc_snprintf(ptag->link.name, sizeof(ptag->link.name), "CITY_ID%d",
                     ptag->link.id);
       }
@@ -362,7 +362,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
 
       if (!find_option(sequence, "name", ptag->link.name,
                        sizeof(ptag->link.name))) {
-        /* Set something as name. */
+        // Set something as name.
         fc_snprintf(ptag->link.name, sizeof(ptag->link.name), "UNIT_ID%d",
                     ptag->link.id);
       }
@@ -378,7 +378,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Initialize a text_tag structure from a va_list.
 
    What's should be in the va_list:
@@ -394,7 +394,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
      - If the link type is TLT_UNIT, last argument is typed 'struct unit *'.
 
    Returns TRUE on success.
- **************************************************************************/
+ */
 static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
                            ft_offset_t start_offset, ft_offset_t stop_offset,
                            va_list args)
@@ -414,7 +414,7 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
 
     if ((NULL == color.foreground || '\0' == color.foreground[0])
         && (NULL == color.background || '\0' == color.background[0])) {
-      return false; /* No color at all. */
+      return false; // No color at all.
     }
 
     if (NULL != color.foreground && '\0' != color.foreground[0]) {
@@ -475,9 +475,9 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Print in a string the start sequence of the tag.
- **************************************************************************/
+ */
 static size_t text_tag_start_sequence(const struct text_tag *ptag, char *buf,
                                       size_t len)
 {
@@ -555,14 +555,14 @@ static size_t text_tag_start_sequence(const struct text_tag *ptag, char *buf,
   return 0;
 }
 
-/**********************************************************************/ /**
+/**
    Print in a string the stop sequence of the tag.
- **************************************************************************/
+ */
 static size_t text_tag_stop_sequence(const struct text_tag *ptag, char *buf,
                                      size_t len)
 {
   if (ptag->type == TTT_LINK && ptag->stop_offset == ptag->start_offset) {
-    /* Should be already finished. */
+    // Should be already finished.
     return 0;
   }
 
@@ -570,9 +570,9 @@ static size_t text_tag_stop_sequence(const struct text_tag *ptag, char *buf,
                      text_tag_type_short_name(ptag->type), SEQ_STOP);
 }
 
-/**********************************************************************/ /**
+/**
    When the sequence looks like [sequence/] then we insert a string instead.
- **************************************************************************/
+ */
 static size_t text_tag_replace_text(const struct text_tag *ptag, char *buf,
                                     size_t len, bool replace_link_text)
 {
@@ -581,7 +581,7 @@ static size_t text_tag_replace_text(const struct text_tag *ptag, char *buf,
   }
 
   if (replace_link_text) {
-    /* The client might check if this should be updated or translated. */
+    // The client might check if this should be updated or translated.
     switch (ptag->link.type) {
     case TLT_CITY: {
       struct city *pcity = game_city_by_number(ptag->link.id);
@@ -609,14 +609,14 @@ static size_t text_tag_replace_text(const struct text_tag *ptag, char *buf,
   }
 
   if (ptag->link.type == TLT_UNIT) {
-    /* Attempt to translate the link name (it should be a unit type name). */
+    // Attempt to translate the link name (it should be a unit type name).
     return fc_snprintf(buf, len, "%s", _(ptag->link.name));
   } else {
     return fc_snprintf(buf, len, "%s", ptag->link.name);
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns a new text_tag or NULL on error.
 
    Prototype:
@@ -632,7 +632,7 @@ static size_t text_tag_replace_text(const struct text_tag *ptag, char *buf,
      struct text_tag *text_tag_new(..., TLT_UNIT, struct unit *punit);
 
    See also comment for text_tag_initv().
- **************************************************************************/
+ */
 struct text_tag *text_tag_new(enum text_tag_type tag_type,
                               ft_offset_t start_offset,
                               ft_offset_t stop_offset, ...)
@@ -653,10 +653,10 @@ struct text_tag *text_tag_new(enum text_tag_type tag_type,
   }
 }
 
-/**********************************************************************/ /**
+/**
    This function returns a new pointer to a text_tag which is similar
    to the 'ptag' argument.
- **************************************************************************/
+ */
 struct text_tag *text_tag_copy(const struct text_tag *ptag)
 {
   if (!ptag) {
@@ -669,39 +669,39 @@ struct text_tag *text_tag_copy(const struct text_tag *ptag)
   return pnew_tag;
 }
 
-/**********************************************************************/ /**
+/**
    Free a text_tag structure.
- **************************************************************************/
+ */
 void text_tag_destroy(struct text_tag *ptag) { delete ptag; }
 
-/**********************************************************************/ /**
+/**
    Return the type of this text tag.
- **************************************************************************/
+ */
 enum text_tag_type text_tag_type(const struct text_tag *ptag)
 {
   return ptag->type;
 }
 
-/**********************************************************************/ /**
+/**
    Return the start offset (in bytes) of this text tag.
- **************************************************************************/
+ */
 ft_offset_t text_tag_start_offset(const struct text_tag *ptag)
 {
   return ptag->start_offset;
 }
 
-/**********************************************************************/ /**
+/**
    Return the stop offset (in bytes) of this text tag.
- **************************************************************************/
+ */
 ft_offset_t text_tag_stop_offset(const struct text_tag *ptag)
 {
   return ptag->stop_offset;
 }
 
-/**********************************************************************/ /**
+/**
    Return the foreground color suggested by this text tag.  This requires
    the tag type to be TTT_COLOR.  Returns NULL on error, "" if unset.
- **************************************************************************/
+ */
 const char *text_tag_color_foreground(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_COLOR) {
@@ -712,10 +712,10 @@ const char *text_tag_color_foreground(const struct text_tag *ptag)
   return ptag->color.foreground;
 }
 
-/**********************************************************************/ /**
+/**
    Return the background color suggested by this text tag.  This requires
    the tag type to be TTT_COLOR.  Returns NULL on error, "" if unset.
- **************************************************************************/
+ */
 const char *text_tag_color_background(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_COLOR) {
@@ -726,10 +726,10 @@ const char *text_tag_color_background(const struct text_tag *ptag)
   return ptag->color.background;
 }
 
-/**********************************************************************/ /**
+/**
    Return the link target type suggested by this text tag.  This requires
    the tag type to be TTT_LINK.  Returns -1 on error.
- **************************************************************************/
+ */
 enum text_link_type text_tag_link_type(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_LINK) {
@@ -740,11 +740,11 @@ enum text_link_type text_tag_link_type(const struct text_tag *ptag)
   return ptag->link.type;
 }
 
-/**********************************************************************/ /**
+/**
    Return the link target id suggested by this text tag (city id,
    tile index or unit id).  This requires the tag type to be TTT_LINK.
    Returns -1 on error.
- **************************************************************************/
+ */
 int text_tag_link_id(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_LINK) {
@@ -755,10 +755,10 @@ int text_tag_link_id(const struct text_tag *ptag)
   return ptag->link.id;
 }
 
-/**********************************************************************/ /**
+/**
    Extract a sequence from a string.  Also, determine the type and the text
    tag type of the sequence.  Return 0 on error.
- **************************************************************************/
+ */
 static size_t extract_sequence_text(const char *featured_text, QString &buf,
                                     size_t len, enum sequence_type *seq_type,
                                     enum text_tag_type *type)
@@ -772,10 +772,10 @@ static size_t extract_sequence_text(const char *featured_text, QString &buf,
   int i;
 
   if (!stop) {
-    return 0; /* Not valid. */
+    return 0; // Not valid.
   }
 
-  /* Check sequence type. */
+  // Check sequence type.
   for (buf_in++; QChar::isSpace(*buf_in); buf_in++) {
     ;
   }
@@ -803,7 +803,7 @@ static size_t extract_sequence_text(const char *featured_text, QString &buf,
     buf_in++;
   }
 
-  /* Check the length of the type name. */
+  // Check the length of the type name.
   for (name = buf_in; name < stop; name++) {
     if (!QChar::isLetter(*name)) {
       break;
@@ -824,7 +824,7 @@ static size_t extract_sequence_text(const char *featured_text, QString &buf,
     }
   }
   if (*type == TTT_INVALID) {
-    /* Try with short names. */
+    // Try with short names.
     for (i = 0; (name = text_tag_type_short_name(
                      static_cast<enum text_tag_type>(i)));
          i++) {
@@ -837,7 +837,7 @@ static size_t extract_sequence_text(const char *featured_text, QString &buf,
       }
     }
     if (*type == TTT_INVALID) {
-      return 0; /* Not valid. */
+      return 0; // Not valid.
     }
   }
 
@@ -853,7 +853,7 @@ static size_t extract_sequence_text(const char *featured_text, QString &buf,
   return stop - featured_text + 1;
 }
 
-/**********************************************************************/ /**
+/**
    Separate the text from the text features.  'tags' can be NULL.
 
    When 'replace_link_text' is set, the text used for the signal sequence
@@ -861,7 +861,7 @@ static size_t extract_sequence_text(const char *featured_text, QString &buf,
    links in chatline, to communicate when users don't know share the city
    names, and avoid users making voluntary confusing names when editing
    links in chatline.
- **************************************************************************/
+ */
 size_t featured_text_to_plain_text(const char *featured_text,
                                    char *plain_text, size_t plain_text_len,
                                    struct text_tag_list **tags,
@@ -877,7 +877,7 @@ size_t featured_text_to_plain_text(const char *featured_text,
 
   while (*text_in != '\0' && text_out_len > 1) {
     if (SEQ_START == *text_in) {
-      /* Escape sequence... */
+      // Escape sequence...
       QString buf;
       enum sequence_type seq_type;
       enum text_tag_type type;
@@ -885,12 +885,12 @@ size_t featured_text_to_plain_text(const char *featured_text,
                                          &seq_type, &type);
 
       if (len > 0) {
-        /* Looks a valid sequence. */
+        // Looks a valid sequence.
         text_in += len;
         switch (seq_type) {
         case ST_START:
           if (tags) {
-            /* Create a new tag. */
+            // Create a new tag.
             text_tag *ptag = new text_tag;
 
             if (text_tag_init_from_sequence(ptag, type,
@@ -905,10 +905,10 @@ size_t featured_text_to_plain_text(const char *featured_text,
           break;
         case ST_STOP:
           if (tags) {
-            /* Set the stop offset. */
+            // Set the stop offset.
             struct text_tag *ptag = NULL;
 
-            /* Look up on reversed order. */
+            // Look up on reversed order.
             text_tag_list_rev_iterate(*tags, piter)
             {
               if (piter->type == type
@@ -928,7 +928,7 @@ size_t featured_text_to_plain_text(const char *featured_text,
           }
           break;
         case ST_SINGLE: {
-          /* In this case, we replace the sequence by some text. */
+          // In this case, we replace the sequence by some text.
           struct text_tag tag;
 
           if (!text_tag_init_from_sequence(&tag, type, text_out - plain_text,
@@ -941,7 +941,7 @@ size_t featured_text_to_plain_text(const char *featured_text,
             text_out += len;
             text_out_len -= len;
             if (tags) {
-              /* Set it in the list. */
+              // Set it in the list.
               auto *ptag = new text_tag;
 
               *ptag = tag;
@@ -965,7 +965,7 @@ size_t featured_text_to_plain_text(const char *featured_text,
   return plain_text_len - text_out_len;
 }
 
-/**********************************************************************/ /**
+/**
    Apply a tag to a text.  This text can already containing escape
    sequences.  Returns 0 on error.
 
@@ -982,7 +982,7 @@ size_t featured_text_to_plain_text(const char *featured_text,
      size_t featured_text_apply_tag(..., TLT_UNIT, struct unit *punit);
 
    See also comment for text_tag_initv().
- **************************************************************************/
+ */
 size_t featured_text_apply_tag(const char *text_source, char *featured_text,
                                size_t featured_text_len,
                                enum text_tag_type tag_type,
@@ -1007,7 +1007,7 @@ size_t featured_text_apply_tag(const char *text_source, char *featured_text,
   va_end(args);
 
   if (start_offset > 0) {
-    /* First part: before the sequence. */
+    // First part: before the sequence.
     len = 0;
     while (len < start_offset && *text_source != '\0'
            && featured_text_len > 1) {
@@ -1018,13 +1018,13 @@ size_t featured_text_apply_tag(const char *text_source, char *featured_text,
     total_len += len;
   }
 
-  /* Start sequence. */
+  // Start sequence.
   len = text_tag_start_sequence(&tag, featured_text, featured_text_len);
   total_len += len;
   featured_text += len;
   featured_text_len -= len;
 
-  /* Second part: between the sequences. */
+  // Second part: between the sequences.
   len = start_offset;
   while (len < stop_offset && *text_source != '\0'
          && featured_text_len > 1) {
@@ -1034,13 +1034,13 @@ size_t featured_text_apply_tag(const char *text_source, char *featured_text,
   }
   total_len += len;
 
-  /* Stop sequence. */
+  // Stop sequence.
   len = text_tag_stop_sequence(&tag, featured_text, featured_text_len);
   total_len += len;
   featured_text += len;
   featured_text_len -= len;
 
-  /* Third part: after the sequence. */
+  // Third part: after the sequence.
   while (*text_source != '\0' && featured_text_len > 1) {
     *featured_text++ = *text_source++;
     featured_text_len--;
@@ -1051,11 +1051,11 @@ size_t featured_text_apply_tag(const char *text_source, char *featured_text,
   return total_len;
 }
 
-/**********************************************************************/ /**
+/**
    Get a text link to a city.
    N.B.: The returned string is static, so every call to this function
    overwrites the previous.
- **************************************************************************/
+ */
 const char *city_link(const struct city *pcity)
 {
   static char buf[MAX_LEN_LINK];
@@ -1067,12 +1067,12 @@ const char *city_link(const struct city *pcity)
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Get a text link to a city tile (make a clickable link to a tile with the
    city name as text).
    N.B.: The returned string is static, so every call to this function
    overwrites the previous.
- **************************************************************************/
+ */
 const char *city_tile_link(const struct city *pcity)
 {
   static char buf[MAX_LEN_LINK];
@@ -1085,11 +1085,11 @@ const char *city_tile_link(const struct city *pcity)
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Get a text link to a tile.
    N.B.: The returned string is static, so every call to this function
    overwrites the previous.
- **************************************************************************/
+ */
 const char *tile_link(const struct tile *ptile)
 {
   static char buf[MAX_LEN_LINK];
@@ -1101,11 +1101,11 @@ const char *tile_link(const struct tile *ptile)
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Get a text link to an unit.
    N.B.: The returned string is static, so every call to this function
    overwrites the previous.
- **************************************************************************/
+ */
 const char *unit_link(const struct unit *punit)
 {
   static char buf[MAX_LEN_LINK];
@@ -1117,12 +1117,12 @@ const char *unit_link(const struct unit *punit)
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Get a text link to a unit tile (make a clickable link to a tile with the
    unit type name as text).
    N.B.: The returned string is static, so every call to this function
    overwrites the previous.
- **************************************************************************/
+ */
 const char *unit_tile_link(const struct unit *punit)
 {
   static char buf[MAX_LEN_LINK];

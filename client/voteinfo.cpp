@@ -17,23 +17,23 @@
 
 #include <ctime>
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "packets.h"
 
 /* client/include */
 #include "voteinfo_bar_g.h"
 
-/* client */
+// client
 #include "client_main.h"
 #include "clinet.h"
 #include "options.h"
 
 #include "voteinfo.h"
 
-/* Define struct voteinfo_list type. */
+// Define struct voteinfo_list type.
 #define SPECLIST_TAG voteinfo
 #define SPECLIST_TYPE struct voteinfo
 #include "speclist.h"
@@ -44,10 +44,10 @@
 static struct voteinfo_list *voteinfo_queue = NULL;
 static int voteinfo_queue_current_index = 0;
 
-/**********************************************************************/ /**
+/**
    Remove the vote with number 'vote_no' after a small amount of time so
    that the user can see that it was removed.
- **************************************************************************/
+ */
 void voteinfo_queue_delayed_remove(int vote_no)
 {
   struct voteinfo *vi;
@@ -63,10 +63,10 @@ void voteinfo_queue_delayed_remove(int vote_no)
   vi->remove_time = time(NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Check for old votes that should be removed from the queue. This function
    should be called periodically from a timer callback.
- **************************************************************************/
+ */
 void voteinfo_queue_check_removed()
 {
   time_t now;
@@ -96,9 +96,9 @@ void voteinfo_queue_check_removed()
   voteinfo_list_destroy(removed);
 }
 
-/**********************************************************************/ /**
+/**
    Remove the given vote from the queue immediately.
- **************************************************************************/
+ */
 void voteinfo_queue_remove(int vote_no)
 {
   struct voteinfo *vi;
@@ -116,9 +116,9 @@ void voteinfo_queue_remove(int vote_no)
   delete vi;
 }
 
-/**********************************************************************/ /**
+/**
    Create a new voteinfo record and place it in the queue.
- **************************************************************************/
+ */
 void voteinfo_queue_add(int vote_no, const char *user, const char *desc,
                         int percent_required, int flags)
 {
@@ -143,9 +143,9 @@ void voteinfo_queue_add(int vote_no, const char *user, const char *desc,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Find the voteinfo record corresponding to the given vote number.
- **************************************************************************/
+ */
 struct voteinfo *voteinfo_queue_find(int vote_no)
 {
   fc_assert_ret_val_msg(NULL != voteinfo_queue, NULL,
@@ -162,9 +162,9 @@ struct voteinfo *voteinfo_queue_find(int vote_no)
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Initialize data structures used by this module.
- **************************************************************************/
+ */
 void voteinfo_queue_init()
 {
   if (voteinfo_queue != NULL) {
@@ -174,9 +174,9 @@ void voteinfo_queue_init()
   voteinfo_queue_current_index = 0;
 }
 
-/**********************************************************************/ /**
+/**
    Free memory allocated by this module.
- **************************************************************************/
+ */
 void voteinfo_queue_free()
 {
   if (voteinfo_queue == NULL) {
@@ -191,11 +191,11 @@ void voteinfo_queue_free()
   voteinfo_queue_current_index = 0;
 }
 
-/**********************************************************************/ /**
+/**
    Get the voteinfo record at the start of the vote queue. If 'pindex' is
    non-NULL, it is set to queue index of that record. This function is
    used in conjunction with voteinfo_queue_next().
- **************************************************************************/
+ */
 struct voteinfo *voteinfo_queue_get_current(int *pindex)
 {
   struct voteinfo *vi;
@@ -225,10 +225,10 @@ struct voteinfo *voteinfo_queue_get_current(int *pindex)
   return vi;
 }
 
-/**********************************************************************/ /**
+/**
    Convenience function for submitting a vote to the server.
    NB: Only to be used if the server has the "voteinfo" capability.
- **************************************************************************/
+ */
 void voteinfo_do_vote(int vote_no, enum client_vote_type vote)
 {
   struct voteinfo *vi;
@@ -264,9 +264,9 @@ void voteinfo_do_vote(int vote_no, enum client_vote_type vote)
   vi->client_vote = vote;
 }
 
-/**********************************************************************/ /**
+/**
    Cycle through the votes in the queue.
- **************************************************************************/
+ */
 void voteinfo_queue_next()
 {
   int size;
@@ -283,9 +283,9 @@ void voteinfo_queue_next()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the number of pending votes.
- **************************************************************************/
+ */
 int voteinfo_queue_size()
 {
   return (NULL != voteinfo_queue ? voteinfo_list_size(voteinfo_queue) : 0);

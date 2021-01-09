@@ -10,7 +10,7 @@
 
 #pragma once
 
-/* utility */
+// utility
 #include "support.h"
 
 struct lua_State;

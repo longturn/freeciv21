@@ -9,11 +9,11 @@
 **************************************************************************/
 #pragma once
 
-/* common */
-#include "map.h" /* enum direction8 */
+// common
+#include "map.h" // enum direction8
 
-/* client */
-#include "control.h" /* quickselect_type */
+// client
+#include "control.h" // quickselect_type
 
 extern bool rbutton_down;
 extern bool rectangle_active;

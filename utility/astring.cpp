@@ -18,10 +18,10 @@
 QString strvec_to_or_list(const QVector<QString> &psv)
 {
   if (psv.size() == 1) {
-    /* TRANS: "or"-separated string list with one single item. */
+    // TRANS: "or"-separated string list with one single item.
     return QString(Q_("?or-list-single:%1")).arg(psv[0]);
   } else if (psv.size() == 2) {
-    /* TRANS: "or"-separated string list with 2 items. */
+    // TRANS: "or"-separated string list with 2 items.
     return QString(Q_("?or-list:%1 or %2")).arg(psv[0], psv[1]);
   } else {
     /* TRANS: start of an "or"-separated string list with more than two

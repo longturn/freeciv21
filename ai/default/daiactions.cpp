@@ -14,7 +14,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "city.h"
 #include "movement.h"
 #include "player.h"
@@ -22,7 +22,7 @@
 #include "tech.h"
 #include "unit.h"
 
-/* server */
+// server
 #include "cityturn.h"
 #include "diplomats.h"
 #include "srv_log.h"
@@ -34,9 +34,9 @@
 
 #define LOG_DIPLOMAT LOG_DEBUG
 
-/**************************************************************************/ /**
+/**
    Number of improvements that can be sabotaged in pcity.
- ******************************************************************************/
+ */
 static int count_sabotagable_improvements(struct city *pcity)
 {
   int count = 0;
@@ -52,11 +52,11 @@ static int count_sabotagable_improvements(struct city *pcity)
   return count;
 }
 
-/**************************************************************************/ /**
+/**
    Pick a tech for actor_player to steal from target_player.
 
    TODO: Make a smarter choice than picking the first stealable tech found.
- ******************************************************************************/
+ */
 static Tech_type_id choose_tech_to_steal(const struct player *actor_player,
                                          const struct player *target_player)
 {
@@ -82,15 +82,15 @@ static Tech_type_id choose_tech_to_steal(const struct player *actor_player,
     }
   }
 
-  /* Unable to find a target. */
+  // Unable to find a target.
   return A_UNSET;
 }
 
-/***********************************************************************/ /**
+/**
    Returns the utility of having the specified unit perform the specified
    action to the specified city target with the specified sub target.
    The sub target id is encoded like it is in the network protocol.
- ***************************************************************************/
+ */
 adv_want dai_action_value_unit_vs_city(struct action *paction,
                                        struct unit *actor_unit,
                                        struct city *target_city,
@@ -116,11 +116,11 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
 
   utility = 0;
 
-  /* If tech theft is impossible when expected. */
+  // If tech theft is impossible when expected.
   expected_kills =
       utype_is_consumed_by_action(paction, unit_type_get(actor_unit));
 
-  /* The unit was always spent */
+  // The unit was always spent
   utility += unit_build_shield_cost_base(actor_unit) + 1;
 
   if (action_has_result(paction, ACTRES_ESTABLISH_EMBASSY)) {
@@ -145,7 +145,7 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
     /* FIXME: Should probably just try to steal a random tech if no target
      * is found. */
     if (tgt_tech != A_UNSET) {
-      /* A tech target can be identified. */
+      // A tech target can be identified.
       utility += 8000;
     }
   }
@@ -175,7 +175,7 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
     int count_impr = count_sabotagable_improvements(target_city);
 
     if (count_impr > 0) {
-      /* TODO: start caring about the sub target. */
+      // TODO: start caring about the sub target.
       utility += 5000;
     }
   }
@@ -185,7 +185,7 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
     int count_impr = count_sabotagable_improvements(target_city);
 
     if (count_impr > 0) {
-      /* Usually better odds than already built buildings. */
+      // Usually better odds than already built buildings.
       utility += 5010;
     }
   }
@@ -230,14 +230,14 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
                                     casus_belli_eft[i], paction,
                                     city_tile(target_city))) {
       case CBR_NONE:
-        /* Noone cares. */
+        // Noone cares.
         break;
       case CBR_VICTIM_ONLY:
-        /* The victim gets a Casus Belli against me. */
+        // The victim gets a Casus Belli against me.
         utility -= 50;
         break;
       case CBR_INTERNATIONAL_OUTRAGE:
-        /* Every other player gets a Casus Belli against me. */
+        // Every other player gets a Casus Belli against me.
         utility -= 500;
         break;
       case CBR_LAST:
@@ -248,22 +248,22 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
   }
 
   if (utype_is_consumed_by_action(paction, unit_type_get(actor_unit))) {
-    /* Choose the non consuming version if possible. */
+    // Choose the non consuming version if possible.
     utility -= unit_build_shield_cost_base(actor_unit);
   } else {
-    /* Not going to spend the unit so care about move fragment cost. */
+    // Not going to spend the unit so care about move fragment cost.
 
     adv_want move_fragment_cost = 0;
     const struct unit_type *actor_utype = unit_type_get(actor_unit);
 
     if (utype_pays_for_regular_move_to_tgt(paction,
                                            unit_type_get(actor_unit))) {
-      /* Add the cost from the move. */
+      // Add the cost from the move.
       move_fragment_cost +=
           map_move_cost_unit(&(wld.map), actor_unit, city_tile(target_city));
     }
 
-    /* Note: The action performer function may charge more independently. */
+    // Note: The action performer function may charge more independently.
     if (utype_is_moved_to_tgt_by_action(paction, actor_utype)) {
       struct tile *from_tile;
 
@@ -275,7 +275,7 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
       actor_unit->tile = from_tile;
     } else if (utype_is_unmoved_by_action(paction,
                                           unit_type_get(actor_unit))) {
-      /* Should be accurate unless the action charges more. */
+      // Should be accurate unless the action charges more.
       move_fragment_cost += unit_pays_mp_for_action(paction, actor_unit);
     } else {
       /* Don't know where the actor unit will end up. Hope that it will be
@@ -285,20 +285,20 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
       move_fragment_cost += unit_pays_mp_for_action(paction, actor_unit);
     }
 
-    /* Taking MAX_MOVE_FRAGS takes all the move fragments. */
+    // Taking MAX_MOVE_FRAGS takes all the move fragments.
     move_fragment_cost = MIN(MAX_MOVE_FRAGS, move_fragment_cost);
 
-    /* Losing all movement is seen as losing 2 utility. */
+    // Losing all movement is seen as losing 2 utility.
     utility -= move_fragment_cost / (float(MAX_MOVE_FRAGS) / 2);
   }
 
   return MAX(0, utility);
 }
 
-/***********************************************************************/ /**
+/**
    Returns the sub target id of the sub target chosen for the specified
    action performed by the specified unit to the specified target city.
- ***************************************************************************/
+ */
 int dai_action_choose_sub_tgt_unit_vs_city(struct action *paction,
                                            struct unit *actor_unit,
                                            struct city *target_city)
@@ -318,20 +318,20 @@ int dai_action_choose_sub_tgt_unit_vs_city(struct action *paction,
   }
 
   if (action_has_result(paction, ACTRES_SPY_TARGETED_SABOTAGE_CITY)) {
-    /* Invalid */
+    // Invalid
     int tgt_impr = -1;
     int tgt_impr_vul = 0;
 
     city_built_iterate(target_city, pimprove)
     {
-      /* How vulnerable the target building is. */
+      // How vulnerable the target building is.
       int impr_vul = pimprove->sabotage;
 
       impr_vul -=
           (impr_vul * get_city_bonus(target_city, EFT_SABOTEUR_RESISTANT)
            / 100);
 
-      /* Can't be better than 100% */
+      // Can't be better than 100%
       impr_vul = MAX(impr_vul, 100);
 
       /* Swap if better or equal probability of sabotage than
@@ -353,6 +353,6 @@ int dai_action_choose_sub_tgt_unit_vs_city(struct action *paction,
     }
   }
 
-  /* No sub target specified. */
+  // No sub target specified.
   return 0;
 }

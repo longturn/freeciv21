@@ -9,7 +9,7 @@
 **************************************************************************/
 #pragma once
 
-/* client */
+// client
 #include "text.h"
 // Qt
 #include <QWidget>

@@ -15,14 +15,14 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "game.h"
 
 #include "victory.h"
 
-/************************************************************************/ /**
+/**
    Whether victory condition is enabled
- ****************************************************************************/
+ */
 bool victory_enabled(enum victory_condition_type victory)
 {
   return (game.info.victory_conditions & (1 << victory));

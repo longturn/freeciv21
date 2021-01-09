@@ -10,22 +10,22 @@
 **************************************************************************/
 #pragma once
 
-/* common */
+// common
 #include "featured_text.h"
 #include "map.h"
-/* include */
+// include
 #include "colors_g.h"
 
 #include "tilespec.h"
 
-struct canvas_store; /* opaque type, real type is gui-dep */
+struct canvas_store; // opaque type, real type is gui-dep
 
 struct view {
   float gui_x0, gui_y0;
-  int width, height;           /* Size in pixels. */
-  int tile_width, tile_height; /* Size in tiles. Rounded up. */
+  int width, height;           // Size in pixels.
+  int tile_width, tile_height; // Size in tiles. Rounded up.
   int store_width, store_height;
-  bool can_do_cached_drawing; /* TRUE if cached drawing is possible. */
+  bool can_do_cached_drawing; // TRUE if cached drawing is possible.
   QPixmap *store, *tmp_store;
 };
 

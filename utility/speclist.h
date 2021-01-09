@@ -138,13 +138,13 @@
 #define SPECLIST_LINK struct SPECLIST_PASTE(SPECLIST_TAG, _list_link)
 #define SPECLIST_FOO(suffix) SPECLIST_PASTE(SPECLIST_TAG, suffix)
 
-/* Dummy type. Actually a genlist, and not defined anywhere. */
+// Dummy type. Actually a genlist, and not defined anywhere.
 SPECLIST_LIST;
 
-/* Dummy type. Actually a genlist_link, and not defined anywhere. */
+// Dummy type. Actually a genlist_link, and not defined anywhere.
 SPECLIST_LINK;
 
-/* Function related typedefs. */
+// Function related typedefs.
 typedef void (*SPECLIST_FOO(_list_free_fn_t))(SPECLIST_TYPE *);
 typedef SPECLIST_TYPE *(*SPECLIST_FOO(_list_copy_fn_t))(
     const SPECLIST_TYPE *);
@@ -543,7 +543,7 @@ static inline SPECLIST_LINK *
 #undef SPECLIST_LIST
 #undef SPECLIST_FOO
 
-/* Base macros that the users can specialize. */
+// Base macros that the users can specialize.
 #ifndef FC__SPECLIST_H /* Defines this only once, no multiple inclusions.   \
                         */
 #define FC__SPECLIST_H
@@ -551,8 +551,8 @@ static inline SPECLIST_LINK *
 #ifdef FREECIV_DEBUG
 #define TYPED_LIST_CHECK(ARG_list) fc_assert_action(NULL != ARG_list, break)
 #else
-#define TYPED_LIST_CHECK(ARG_list) /* Nothing. */
-#endif /* FREECIV_DEBUG */
+#define TYPED_LIST_CHECK(ARG_list) // Nothing.
+#endif // FREECIV_DEBUG
 
 /* Speclist data iterator.
  *
@@ -574,7 +574,7 @@ static inline SPECLIST_LINK *
       NAME_data = (TYPE_data *) genlist_link_data(NAME_data##_iter);        \
       NAME_data##_iter = genlist_link_next(NAME_data##_iter);
 
-/* Balance for above: */
+// Balance for above:
 #define LIST_ITERATE_END                                                    \
   }                                                                         \
   }                                                                         \
@@ -603,7 +603,7 @@ static inline SPECLIST_LINK *
       NAME_data = (TYPE_data *) genlist_link_data(NAME_data##_iter);        \
       NAME_data##_iter = genlist_link_next(NAME_data##_iter);
 
-/* Balance for above: */
+// Balance for above:
 #define MUTEXED_ITERATE_END(LIST_tag, ARG_list)                             \
   }                                                                         \
   LIST_tag##_list_release_mutex(ARG_list);                                  \
@@ -631,7 +631,7 @@ static inline SPECLIST_LINK *
       NAME_data = (TYPE_data *) genlist_link_data(NAME_data##_iter);        \
       NAME_data##_iter = genlist_link_prev(NAME_data##_iter);
 
-/* Balance for above: */
+// Balance for above:
 #define LIST_ITERATE_REV_END                                                \
   }                                                                         \
   }                                                                         \
@@ -656,7 +656,7 @@ static inline SPECLIST_LINK *
       NAME_link##_next = ((TYPE_link *) genlist_link_next(                  \
           (struct genlist_link *) NAME_link));
 
-/* Balance for above: */
+// Balance for above:
 #define LIST_LINK_ITERATE_END                                               \
   }                                                                         \
   }                                                                         \
@@ -678,7 +678,7 @@ static inline SPECLIST_LINK *
       NAME_link##_prev = ((TYPE_link *) genlist_link_prev(                  \
           (struct genlist_link *) NAME_link));
 
-/* Balance for above: */
+// Balance for above:
 #define LIST_LINK_ITERATE_REV_END                                           \
   }                                                                         \
   }                                                                         \
@@ -709,7 +709,7 @@ static inline SPECLIST_LINK *
       NAME_data = ((TYPE_data *) genlist_link_data(                         \
           (struct genlist_link *) NAME_link));
 
-/* Balance for above: */
+// Balance for above:
 #define LIST_BOTH_ITERATE_END                                               \
   }                                                                         \
   }                                                                         \
@@ -737,14 +737,14 @@ static inline SPECLIST_LINK *
       NAME_data = ((TYPE_data *) genlist_link_data(                         \
           (struct genlist_link *) NAME_link));
 
-/* Balance for above: */
+// Balance for above:
 #define LIST_BOTH_ITERATE_REV_END                                           \
   }                                                                         \
   }                                                                         \
   while (false)                                                             \
     ;
 
-#endif /* FC__SPECLIST_H */
+#endif // FC__SPECLIST_H
 
 /* This is after #endif FC__SPECLIST_H on purpose.
    extern "C" portion begins well before latter part of the header

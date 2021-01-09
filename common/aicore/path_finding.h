@@ -10,7 +10,7 @@
 **************************************************************************/
 #pragma once
 
-/* ========================== Explanations =============================== */
+// ========================== Explanations ===============================
 
 /*
  * Functions in this file help to find a path from A to B.
@@ -256,9 +256,9 @@ class QDebug;
  * than MAX_INT (and a power of 2 for easy multiplication). */
 #define PF_TURN_FACTOR 65536
 
-/* =========================== Structures ================================ */
+// =========================== Structures ================================
 
-/* Specifies the type of the action. */
+// Specifies the type of the action.
 enum pf_action {
   PF_ACTION_NONE = 0,
   PF_ACTION_ATTACK,
@@ -267,7 +267,7 @@ enum pf_action {
   PF_ACTION_IMPOSSIBLE = -1
 };
 
-/* Specifies the actions to consider. */
+// Specifies the actions to consider.
 enum pf_action_account {
   PF_AA_NONE = 0,
   PF_AA_UNIT_ATTACK = 1 << 0,
@@ -279,10 +279,10 @@ enum pf_action_account {
   PF_AA_TRADE_ROUTE = 1 << 3
 };
 
-/* Specifies the way path-finding will treat a tile. */
+// Specifies the way path-finding will treat a tile.
 enum tile_behavior {
   TB_NORMAL = 0, /* Well, normal .*/
-  TB_IGNORE,     /* This one will be ignored. */
+  TB_IGNORE,     // This one will be ignored.
   TB_DONT_LEAVE  /* Paths can lead _to_ such tile, but are not
                   * allowed to go _through_. This move cost is
                   * always evaluated to a constant single move cost,
@@ -298,26 +298,26 @@ enum pf_move_scope {
   PF_MS_TRANSPORT = 1 << 2
 };
 
-/* Full specification of a position and time to reach it. */
+// Full specification of a position and time to reach it.
 struct pf_position {
-  struct tile *tile; /* The tile. */
-  int turn;          /* The number of turns to the target. */
+  struct tile *tile; // The tile.
+  int turn;          // The number of turns to the target.
   int moves_left;    /* The number of moves left the unit would have when
                       * reaching the tile. */
   int fuel_left;     /* The number of turns of fuel left the unit would
                       * have when reaching the tile. It is always set to
                       * 1 when unit types are not fueled. */
 
-  int total_MC; /* Total MC to reach this point */
-  int total_EC; /* Total EC to reach this point */
+  int total_MC; // Total MC to reach this point
+  int total_EC; // Total EC to reach this point
 
-  enum direction8 dir_to_next_pos; /* Used only in 'struct pf_path'. */
-  enum direction8 dir_to_here;     /* Where did we come from. */
+  enum direction8 dir_to_next_pos; // Used only in 'struct pf_path'.
+  enum direction8 dir_to_here;     // Where did we come from.
 };
 
-/* Full specification of a path. */
+// Full specification of a path.
 struct pf_path {
-  int length; /* Number of steps in the path */
+  int length; // Number of steps in the path
   struct pf_position *positions;
 };
 
@@ -331,24 +331,24 @@ struct pf_path {
  * NB: It should be safe to struct copy pf_parameter. */
 struct pf_parameter {
   const struct civ_map *map;
-  struct tile *start_tile; /* Initial position */
+  struct tile *start_tile; // Initial position
 
   int moves_left_initially;
-  int fuel_left_initially; /* Ignored for non-air units. */
-  /* Set if the unit is transported. */
+  int fuel_left_initially; // Ignored for non-air units.
+  // Set if the unit is transported.
   const struct unit_type *transported_by_initially;
-  /* See unit_cargo_depth(). */
+  // See unit_cargo_depth().
   int cargo_depth;
-  /* All cargo unit types. */
+  // All cargo unit types.
   bv_unit_types cargo_types;
 
-  int move_rate; /* Move rate of the virtual unit */
-  int fuel;      /* Should be 1 for units without fuel. */
+  int move_rate; // Move rate of the virtual unit
+  int fuel;      // Should be 1 for units without fuel.
 
   const struct unit_type *utype;
   const struct player *owner;
 
-  bool omniscience; /* Do we care if the tile is visible? */
+  bool omniscience; // Do we care if the tile is visible?
 
   /* Callback to get MC of a move from 'from_tile' to 'to_tile' and in the
    * direction 'dir'. Note that the callback can calculate 'to_tile' by
@@ -445,37 +445,37 @@ struct pf_parameter {
   void *data;
 };
 
-/* The map itself. Opaque type. */
+// The map itself. Opaque type.
 struct pf_map;
 
-/* The reverse map strucure. Opaque type. */
+// The reverse map strucure. Opaque type.
 struct pf_reverse_map;
 
-/* ========================= Public Interface ============================ */
+// ========================= Public Interface ============================
 
-/* Create and free. */
+// Create and free.
 struct pf_map *
 pf_map_new(const struct pf_parameter *parameter) fc__warn_unused_result;
 void pf_map_destroy(struct pf_map *pfm);
 
-/* Method A) functions. */
+// Method A) functions.
 int pf_map_move_cost(struct pf_map *pfm, struct tile *ptile);
 struct pf_path *pf_map_path(struct pf_map *pfm,
                             struct tile *ptile) fc__warn_unused_result;
 bool pf_map_position(struct pf_map *pfm, struct tile *ptile,
                      struct pf_position *pos) fc__warn_unused_result;
 
-/* Method B) functions. */
+// Method B) functions.
 bool pf_map_iterate(struct pf_map *pfm);
 struct tile *pf_map_iter(struct pf_map *pfm);
 int pf_map_iter_move_cost(struct pf_map *pfm);
 struct pf_path *pf_map_iter_path(struct pf_map *pfm) fc__warn_unused_result;
 void pf_map_iter_position(struct pf_map *pfm, struct pf_position *pos);
 
-/* Other related functions. */
+// Other related functions.
 const struct pf_parameter *pf_map_parameter(const struct pf_map *pfm);
 
-/* Paths functions. */
+// Paths functions.
 void pf_path_destroy(struct pf_path *path);
 struct pf_path *pf_path_concat(struct pf_path *dest_path,
                                const struct pf_path *src_path);
@@ -485,7 +485,7 @@ const struct pf_position *pf_path_last_position(const struct pf_path *path);
 
 QDebug &operator<<(QDebug &logger, const pf_path *path);
 
-/* Reverse map functions (Costs to go to start tile). */
+// Reverse map functions (Costs to go to start tile).
 struct pf_reverse_map *
 pf_reverse_map_new(const struct player *pplayer, struct tile *start_tile,
                    int max_turns, bool omniscient,

@@ -207,7 +207,7 @@ public:
   bool quick_airlifting = false;
   Unit_type_id airlift_type_id = 0;
 private slots:
-  /* game menu */
+  // game menu
   void local_options();
   void shortcut_options();
   void server_options();
@@ -221,7 +221,7 @@ private slots:
   void back_to_menu();
   void quit_game();
 
-  /* help menu */
+  // help menu
   void slot_help(const QString &topic);
 
   /*used by work menu*/
@@ -297,7 +297,7 @@ private slots:
   void slot_wait();
   void slot_unit_filter();
 
-  /* used by multiplayer menu */
+  // used by multiplayer menu
   void slot_orders_clear();
   void slot_execute_orders();
   void slot_delayed_goto();

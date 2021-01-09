@@ -14,10 +14,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 
-/* common */
+// common
 #include "fc_types.h"
 #include "game.h"
 #include "name_translation.h"
@@ -28,9 +28,9 @@ static struct nation_style *styles = NULL;
 
 static struct music_style *music_styles = NULL;
 
-/**********************************************************************/ /**
+/**
    Initialise styles structures.
- **************************************************************************/
+ */
 void styles_alloc(int count)
 {
   int i;
@@ -43,19 +43,19 @@ void styles_alloc(int count)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Free the memory associated with styles
- **************************************************************************/
+ */
 void styles_free() { FCPP_FREE(styles); }
 
-/**********************************************************************/ /**
+/**
    Return the number of styles.
- **************************************************************************/
+ */
 int style_count() { return game.control.num_styles; }
 
-/**********************************************************************/ /**
+/**
    Return the style id.
- **************************************************************************/
+ */
 int style_number(const struct nation_style *pstyle)
 {
   fc_assert_ret_val(NULL != pstyle, 0);
@@ -63,9 +63,9 @@ int style_number(const struct nation_style *pstyle)
   return pstyle->id;
 }
 
-/**********************************************************************/ /**
+/**
    Return the style index.
- **************************************************************************/
+ */
 int style_index(const struct nation_style *pstyle)
 {
   fc_assert_ret_val(NULL != pstyle, 0);
@@ -73,9 +73,9 @@ int style_index(const struct nation_style *pstyle)
   return pstyle - styles;
 }
 
-/**********************************************************************/ /**
+/**
    Return style of given id.
- **************************************************************************/
+ */
 struct nation_style *style_by_number(int id)
 {
   fc_assert_ret_val(id >= 0 && id < game.control.num_styles, NULL);
@@ -83,28 +83,28 @@ struct nation_style *style_by_number(int id)
   return &styles[id];
 }
 
-/**********************************************************************/ /**
+/**
    Return the (translated) name of the style.
    You don't have to free the return pointer.
- **************************************************************************/
+ */
 const char *style_name_translation(const struct nation_style *pstyle)
 {
   return name_translation_get(&pstyle->name);
 }
 
-/**********************************************************************/ /**
+/**
    Return the (untranslated) rule name of the style.
    You don't have to free the return pointer.
- **************************************************************************/
+ */
 const char *style_rule_name(const struct nation_style *pstyle)
 {
   return rule_name_get(&pstyle->name);
 }
 
-/**********************************************************************/ /**
+/**
    Returns style matching rule name or NULL if there is no style
    with such name.
- **************************************************************************/
+ */
 struct nation_style *style_by_rule_name(const char *name)
 {
   const char *qs = Qn_(name);
@@ -120,9 +120,9 @@ struct nation_style *style_by_rule_name(const char *name)
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Initialise music styles structures.
- **************************************************************************/
+ */
 void music_styles_alloc(int count)
 {
   int i;
@@ -135,9 +135,9 @@ void music_styles_alloc(int count)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Free the memory associated with music styles
- **************************************************************************/
+ */
 void music_styles_free()
 {
   music_styles_iterate(pmus) { requirement_vector_free(&(pmus->reqs)); }
@@ -147,9 +147,9 @@ void music_styles_free()
   music_styles = NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Return the music style id.
- **************************************************************************/
+ */
 int music_style_number(const struct music_style *pms)
 {
   fc_assert_ret_val(NULL != pms, -1);
@@ -157,9 +157,9 @@ int music_style_number(const struct music_style *pms)
   return pms->id;
 }
 
-/**********************************************************************/ /**
+/**
    Return music style of given id.
- **************************************************************************/
+ */
 struct music_style *music_style_by_number(int id)
 {
   fc_assert_ret_val(id >= 0 && id < game.control.num_music_styles, NULL);
@@ -171,9 +171,9 @@ struct music_style *music_style_by_number(int id)
   return &music_styles[id];
 }
 
-/**********************************************************************/ /**
+/**
    Return music style for player
- **************************************************************************/
+ */
 struct music_style *player_music_style(struct player *plr)
 {
   struct music_style *best = NULL;
@@ -190,14 +190,14 @@ struct music_style *player_music_style(struct player *plr)
   return best;
 }
 
-/**********************************************************************/ /**
+/**
    Evaluate which style should be used to draw a city.
- **************************************************************************/
+ */
 int style_of_city(const struct city *pcity) { return pcity->style; }
 
-/**********************************************************************/ /**
+/**
    Return basic city style representing nation style.
- **************************************************************************/
+ */
 int basic_city_style_for_style(struct nation_style *pstyle)
 {
   enum fc_tristate style_style;
@@ -232,9 +232,9 @@ int basic_city_style_for_style(struct nation_style *pstyle)
   return -1;
 }
 
-/**********************************************************************/ /**
+/**
    Return citystyle of the city.
- **************************************************************************/
+ */
 int city_style(struct city *pcity)
 {
   int i;

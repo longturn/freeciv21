@@ -20,16 +20,16 @@
 #include <QDir>
 #include <QString>
 
-/* utility */
+// utility
 #include "log.h"
 #include "registry.h"
 
-/* common */
+// common
 #include "ai.h"
 #include "capability.h"
 #include "game.h"
 
-/* server */
+// server
 #include "console.h"
 #include "notify.h"
 
@@ -41,9 +41,9 @@
 
 Q_GLOBAL_STATIC(fcThread, save_thread);
 
-/************************************************************************/ /**
+/**
    Main entry point for loading a game.
- ****************************************************************************/
+ */
 void savegame_load(struct section_file *sfile)
 {
   const char *savefile_options;
@@ -61,11 +61,11 @@ void savegame_load(struct section_file *sfile)
   }
 
   if (has_capabilities("+version3", savefile_options)) {
-    /* load new format (freeciv 3.0.x and newer) */
+    // load new format (freeciv 3.0.x and newer)
     qDebug("loading savefile in 3.0+ format ...");
     savegame3_load(sfile);
   } else if (has_capabilities("+version2", savefile_options)) {
-    /* load old format (freeciv 2.3 - 2.6) */
+    // load old format (freeciv 2.3 - 2.6)
     qDebug("loading savefile in 2.3 - 2.6 format ...");
     savegame2_load(sfile);
   } else {
@@ -97,9 +97,9 @@ void savegame_load(struct section_file *sfile)
   timer_destroy(loadtimer);
 }
 
-/************************************************************************/ /**
+/**
    Main entry point for saving a game.
- ****************************************************************************/
+ */
 void savegame_save(struct section_file *sfile, const char *save_reason,
                    bool scenario)
 {
@@ -112,9 +112,9 @@ struct save_thread_data {
   compress_type save_compress_type;
 };
 
-/************************************************************************/ /**
+/**
    Run game saving thread.
- ****************************************************************************/
+ */
 static void save_thread_run(void *arg)
 {
   struct save_thread_data *stdata =
@@ -133,10 +133,10 @@ static void save_thread_run(void *arg)
   delete stdata;
 }
 
-/************************************************************************/ /**
+/**
    Unconditionally save the game, with specified filename.
    Always prints a message: either save ok, or failed.
- ****************************************************************************/
+ */
 void save_game(const char *orig_filename, const char *save_reason,
                bool scenario)
 {
@@ -158,12 +158,12 @@ void save_game(const char *orig_filename, const char *save_reason,
       filename = stdata->filepath;
     }
 
-    /* Ignores the dot at the start of the filename. */
+    // Ignores the dot at the start of the filename.
     for (dot = filename; '.' == *dot; dot++) {
-      /* Nothing. */
+      // Nothing.
     }
     if ('\0' == *dot) {
-      /* Only dots in this file name, consider it as empty. */
+      // Only dots in this file name, consider it as empty.
       filename[0] = '\0';
     } else {
       char *end_dot;
@@ -185,9 +185,9 @@ void save_game(const char *orig_filename, const char *save_reason,
     }
   }
 
-  /* If orig_filename is NULL or empty, use a generated default name. */
+  // If orig_filename is NULL or empty, use a generated default name.
   if (filename[0] == '\0') {
-    /* manual save */
+    // manual save
     generate_save_name(
         game.server.save_name, filename,
         sizeof(stdata->filepath) + stdata->filepath - filename, "manual");
@@ -206,24 +206,24 @@ void save_game(const char *orig_filename, const char *save_reason,
    * handle below notify_conn() and directory creation in
    * main thread, though. */
 
-  /* Append ".sav" to filename. */
+  // Append ".sav" to filename.
   sz_strlcat(stdata->filepath, ".sav");
 
   {
     switch (stdata->save_compress_type) {
     case COMPRESS_ZLIB:
-      /* Append ".gz" to filename. */
+      // Append ".gz" to filename.
       sz_strlcat(stdata->filepath, ".gz");
       break;
 #ifdef FREECIV_HAVE_BZ2
     case COMPRESS_BZIP2:
-      /* Append ".bz2" to filename. */
+      // Append ".bz2" to filename.
       sz_strlcat(stdata->filepath, ".bz2");
       break;
 #endif
 #ifdef FREECIV_HAVE_LZMA
     case COMPRESS_XZ:
-      /* Append ".xz" to filename. */
+      // Append ".xz" to filename.
       sz_strlcat(stdata->filepath, ".xz");
       break;
 #endif
@@ -243,14 +243,14 @@ void save_game(const char *orig_filename, const char *save_reason,
     QString tmpname;
 
     if (!scenario) {
-      /* Ensure the saves directory exists. */
+      // Ensure the saves directory exists.
       if (srvarg.saves_pathname.isNull()) {
         QDir().mkpath(srvarg.saves_pathname);
       }
 
       tmpname = srvarg.saves_pathname;
     } else {
-      /* Make sure scenario directory exist */
+      // Make sure scenario directory exist
       if (srvarg.scenarios_pathname.isNull()) {
         QDir().mkpath(srvarg.scenarios_pathname);
       }
@@ -276,7 +276,7 @@ void save_game(const char *orig_filename, const char *save_reason,
   timer_destroy(timer_cpu);
 }
 
-/************************************************************************/ /**
+/**
    Close saving system.
- ****************************************************************************/
+ */
 void save_system_close() { save_thread->wait(); }

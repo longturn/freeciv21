@@ -16,4 +16,4 @@
 
 void fc_interface_init_tool();
 
-#endif /* FC_TOOLS_FC_INTERFACE_H */
+#endif // FC_TOOLS_FC_INTERFACE_H

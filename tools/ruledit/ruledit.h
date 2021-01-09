@@ -16,10 +16,10 @@
 void show_experimental(QWidget *wdg);
 
 struct ruledit_arguments {
-  /* Ruleset name. Is empty if not specified. */
+  // Ruleset name. Is empty if not specified.
   QString ruleset;
 };
 
 extern struct ruledit_arguments reargs;
 
-#endif /* FC__RULEDIT_H */
+#endif // FC__RULEDIT_H

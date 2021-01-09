@@ -40,9 +40,9 @@
 
 #include "tab_unit.h"
 
-/**********************************************************************/ /**
+/**
    Setup tab_unit object
- **************************************************************************/
+ */
 tab_unit::tab_unit(ruledit_gui *ui_in) : QWidget()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
@@ -112,9 +112,9 @@ tab_unit::tab_unit(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the information.
- **************************************************************************/
+ */
 void tab_unit::refresh()
 {
   unit_list->clear();
@@ -130,9 +130,9 @@ void tab_unit::refresh()
   unit_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Update info of the unit
- **************************************************************************/
+ */
 void tab_unit::update_utype_info(struct unit_type *ptype)
 {
   selected = ptype;
@@ -158,9 +158,9 @@ void tab_unit::update_utype_info(struct unit_type *ptype)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User selected unit from the list.
- **************************************************************************/
+ */
 void tab_unit::select_unit()
 {
   QList<QListWidgetItem *> select_list = unit_list->selectedItems();
@@ -173,9 +173,9 @@ void tab_unit::select_unit()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User entered name for the unit
- **************************************************************************/
+ */
 void tab_unit::name_given()
 {
   if (selected != nullptr) {
@@ -206,9 +206,9 @@ void tab_unit::name_given()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User requested unit deletion
- **************************************************************************/
+ */
 void tab_unit::delete_now()
 {
   if (selected != 0) {
@@ -227,9 +227,9 @@ void tab_unit::delete_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User requested unit edit dialog
- **************************************************************************/
+ */
 void tab_unit::edit_now()
 {
   if (selected != nullptr) {
@@ -239,9 +239,9 @@ void tab_unit::edit_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialize new tech for use.
- **************************************************************************/
+ */
 bool tab_unit::initialize_new_utype(struct unit_type *ptype)
 {
   if (unit_type_by_rule_name("New Unit") != nullptr) {
@@ -252,9 +252,9 @@ bool tab_unit::initialize_new_utype(struct unit_type *ptype)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    User requested new unit
- **************************************************************************/
+ */
 void tab_unit::add_now()
 {
   struct unit_type *new_utype;
@@ -291,9 +291,9 @@ void tab_unit::add_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Toggled whether rule_name and name should be kept identical
- **************************************************************************/
+ */
 void tab_unit::same_name_toggle(bool checked)
 {
   name->setEnabled(!checked);
@@ -302,9 +302,9 @@ void tab_unit::same_name_toggle(bool checked)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit effects
- **************************************************************************/
+ */
 void tab_unit::edit_effects()
 {
   if (selected != nullptr) {

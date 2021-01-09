@@ -14,7 +14,7 @@
 
 #include "fc_types.h"
 
-#include "packets.h" /* enum unit_info_use */
+#include "packets.h" // enum unit_info_use
 #include "unitlist.h"
 
 #define SPECENUM_NAME unit_loss_reason
@@ -70,7 +70,7 @@
 #define SPECENUM_VALUE24NAME "transport_lost"
 #include "specenum_gen.h"
 
-/* battle related */
+// battle related
 struct unit_type *find_a_unit_type(enum unit_role_id role,
                                    enum unit_role_id role_tech);
 bool maybe_make_veteran(struct unit *punit);
@@ -81,19 +81,19 @@ void unit_bombs_unit(struct unit *attacker, struct unit *defender,
                      int *att_hp, int *def_hp);
 void combat_veterans(struct unit *attacker, struct unit *defender);
 
-/* move check related */
+// move check related
 bool is_unit_being_refueled(const struct unit *punit);
 bool is_airunit_refuel_point(const struct tile *ptile,
                              const struct player *pplayer,
                              const struct unit *punit);
 
-/* turn update related */
+// turn update related
 void player_restore_units(struct player *pplayer);
 void update_unit_activities(struct player *pplayer);
 void execute_unit_orders(struct player *pplayer);
 void finalize_unit_phase_beginning(struct player *pplayer);
 
-/* various */
+// various
 void place_partisans(struct tile *pcenter, struct player *powner, int count,
                      int sq_radius);
 bool teleport_unit_to_city(struct unit *punit, struct city *pcity,
@@ -139,7 +139,7 @@ void unit_set_removal_callback(struct unit *punit,
                                void (*callback)(struct unit *punit));
 void unit_unset_removal_callback(struct unit *punit);
 
-/* sending to client */
+// sending to client
 void package_unit(struct unit *punit, struct packet_unit_info *packet);
 void package_short_unit(struct unit *punit,
                         struct packet_unit_short_info *packet,
@@ -148,7 +148,7 @@ void send_unit_info(struct conn_list *dest, struct unit *punit);
 void send_all_known_units(struct conn_list *dest);
 void unit_goes_out_of_sight(struct player *pplayer, struct unit *punit);
 
-/* doing a unit activity */
+// doing a unit activity
 void do_nuclear_explosion(struct player *pplayer, struct tile *ptile);
 bool do_airline(struct unit *punit, struct city *city2,
                 const struct action *paction);

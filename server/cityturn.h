@@ -11,20 +11,20 @@
 
 #pragma once
 
-#include "support.h" /* bool type */
+#include "support.h" // bool type
 
 #include "fc_types.h"
 
 struct conn_list;
 struct cm_result;
 
-bool city_refresh(struct city *pcity); /* call if city has changed */
+bool city_refresh(struct city *pcity); // call if city has changed
 void city_refresh_for_player(struct player *pplayer); /* tax/govt changed */
 
 void city_refresh_queue_add(struct city *pcity);
 void city_refresh_queue_processing();
 
-void auto_arrange_workers(struct city *pcity); /* will arrange the workers */
+void auto_arrange_workers(struct city *pcity); // will arrange the workers
 void apply_cmresult_to_city(struct city *pcity, const struct cm_result *cmr);
 
 bool city_change_size(struct city *pcity, citizens new_size,

@@ -19,7 +19,7 @@ struct city;
 struct texai_req;
 
 struct texai_city {
-  struct ai_city defai; /* Keep this first so default ai finds it */
+  struct ai_city defai; // Keep this first so default ai finds it
   int unit_wants[U_LAST];
 };
 

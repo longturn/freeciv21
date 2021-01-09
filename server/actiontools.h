@@ -11,7 +11,7 @@
 
 #pragma once
 
-/* common */
+// common
 #include "actions.h"
 #include "player.h"
 #include "tile.h"

@@ -34,7 +34,7 @@ bool log_init(const QString &level_str = QStringLiteral("info"));
 void log_set_file(const QString &path);
 const QString &log_get_level();
 
-/* The log macros */
+// The log macros
 #define log_base(level, message, ...)                                       \
   do {                                                                      \
     switch (level) {                                                        \
@@ -72,13 +72,13 @@ const QString &log_get_level();
 
 #define log_testmatic_alt(lvl, ...) log_testmatic(__VA_ARGS__)
 
-/* Used by game debug command */
+// Used by game debug command
 #define log_test qInfo
 #define log_packet qDebug
 #define log_packet_detailed log_debug
-#define LOG_TEST LOG_NORMAL /* needed by citylog_*() functions */
+#define LOG_TEST LOG_NORMAL // needed by citylog_*() functions
 
-/* Assertions. */
+// Assertions.
 Q_DECLARE_LOGGING_CATEGORY(assert_category)
 
 void fc_assert_set_fatal(bool fatal_assertions);
@@ -88,7 +88,7 @@ void fc_assert_handle_failure(const char *condition, const char *file,
                               int line, const char *function,
                               const QString &message = QString());
 
-/* Like assert(). */
+// Like assert().
 // The lambda below is used to allow returning a value from a multi-line
 // macro. We need a macro for line number reporting to work.
 #define fc_assert(condition)                                                \
@@ -97,7 +97,7 @@ void fc_assert_handle_failure(const char *condition, const char *file,
        : fc_assert_handle_failure(#condition, QT_MESSAGELOG_FILE,           \
                                   QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC))
 
-/* Like assert() with extra message. */
+// Like assert() with extra message.
 #define fc_assert_msg(condition, message, ...)                              \
   ((condition)                                                              \
        ? ((void) 0)                                                         \
@@ -105,7 +105,7 @@ void fc_assert_handle_failure(const char *condition, const char *file,
            #condition, QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE,              \
            QT_MESSAGELOG_FUNC, QString::asprintf(message, ##__VA_ARGS__)))
 
-/* Do action on failure. */
+// Do action on failure.
 #define fc_assert_action(condition, action)                                 \
   if (!(condition)) {                                                       \
     fc_assert_handle_failure(#condition, QT_MESSAGELOG_FILE,                \
@@ -113,16 +113,16 @@ void fc_assert_handle_failure(const char *condition, const char *file,
     action;                                                                 \
   }
 
-/* Return on failure. */
+// Return on failure.
 #define fc_assert_ret(condition) fc_assert_action(condition, return )
-/* Return a value on failure. */
+// Return a value on failure.
 #define fc_assert_ret_val(condition, val)                                   \
   fc_assert_action(condition, return val)
-/* Exit on failure. */
+// Exit on failure.
 #define fc_assert_exit(condition)                                           \
   fc_assert_action(condition, exit(EXIT_FAILURE))
 
-/* Do action on failure with extra message. */
+// Do action on failure with extra message.
 #define fc_assert_action_msg(condition, action, message, ...)               \
   if (!(condition)) {                                                       \
     fc_assert_handle_failure(#condition, QT_MESSAGELOG_FILE,                \
@@ -130,13 +130,13 @@ void fc_assert_handle_failure(const char *condition, const char *file,
                              QString::asprintf(message, ##__VA_ARGS__));    \
     action;                                                                 \
   }
-/* Return on failure with extra message. */
+// Return on failure with extra message.
 #define fc_assert_ret_msg(condition, message, ...)                          \
   fc_assert_action_msg(condition, return, message, ##__VA_ARGS__)
-/* Return a value on failure with extra message. */
+// Return a value on failure with extra message.
 #define fc_assert_ret_val_msg(condition, val, message, ...)                 \
   fc_assert_action_msg(condition, return val, message, ##__VA_ARGS__)
-/* Exit on failure with extra message. */
+// Exit on failure with extra message.
 #define fc_assert_exit_msg(condition, message, ...)                         \
   fc_assert_action(condition, qFatal(message, ##__VA_ARGS__);               \
                    exit(EXIT_FAILURE))
@@ -144,17 +144,17 @@ void fc_assert_handle_failure(const char *condition, const char *file,
 #ifdef __cplusplus
 #ifdef FREECIV_CXX11_STATIC_ASSERT
 #define FC_STATIC_ASSERT(cond, tag) static_assert(cond, #tag)
-#endif /* FREECIV_CXX11_STATIC_ASSERT */
-#else /* __cplusplus */
+#endif // FREECIV_CXX11_STATIC_ASSERT
+#else // __cplusplus
 #ifdef FREECIV_C11_STATIC_ASSERT
 #define FC_STATIC_ASSERT(cond, tag) _Static_assert(cond, #tag)
-#endif /* FREECIV_C11_STATIC_ASSERT */
+#endif // FREECIV_C11_STATIC_ASSERT
 #ifdef FREECIV_STATIC_STRLEN
 #define FC_STATIC_STRLEN_ASSERT(cond, tag) FC_STATIC_ASSERT(cond, tag)
-#else /* FREECIV_STATIC_STRLEN */
+#else // FREECIV_STATIC_STRLEN
 #define FC_STATIC_STRLEN_ASSERT(cond, tag)
-#endif /* FREECIV_STATIC_STRLEN */
-#endif /* __cplusplus */
+#endif // FREECIV_STATIC_STRLEN
+#endif // __cplusplus
 
 #ifndef FC_STATIC_ASSERT
 /* Static (compile-time) assertion.

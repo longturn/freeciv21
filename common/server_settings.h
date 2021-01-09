@@ -13,13 +13,13 @@
 
 #pragma once
 
-/* common */
+// common
 #include "fc_types.h"
 
-/* Special value to signal the absence of a server setting. */
+// Special value to signal the absence of a server setting.
 #define SERVER_SETTING_NONE ((server_setting_id) -1)
 
-/* Pure server settings. */
+// Pure server settings.
 server_setting_id server_setting_by_name(const char *name);
 bool server_setting_exists(server_setting_id id);
 
@@ -31,7 +31,7 @@ bool server_setting_value_bool_get(server_setting_id id);
 int server_setting_value_int_get(server_setting_id id);
 unsigned int server_setting_value_bitwise_get(server_setting_id id);
 
-/* Special value to signal the absence of a server setting + its value. */
+// Special value to signal the absence of a server setting + its value.
 #define SSETV_NONE SERVER_SETTING_NONE
 
 ssetv ssetv_from_values(server_setting_id setting, int value);

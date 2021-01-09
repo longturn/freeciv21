@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "support.h"
 
 struct cm_parameter;
@@ -29,7 +29,7 @@ struct data_in {
 struct raw_data_out {
   void *dest;
   size_t dest_size, used, current;
-  bool too_short; /* set to 1 if try to read past end */
+  bool too_short; // set to 1 if try to read past end
 };
 
 /* Used for dio_<put|get>_type() methods.
@@ -45,24 +45,24 @@ enum data_type {
   DIOT_LAST
 };
 
-/* What a location inside a packet is. */
+// What a location inside a packet is.
 enum plocation_kind {
-  /* A field. Addressed by its name. */
+  // A field. Addressed by its name.
   PADR_FIELD,
-  /* An array element. Addressed by its number. */
+  // An array element. Addressed by its number.
   PADR_ELEMENT
 };
 
-/* Address of a location inside a packet. */
+// Address of a location inside a packet.
 struct plocation {
-  /* The location kind. */
+  // The location kind.
   enum plocation_kind kind;
 
   union {
-    /* Used if this is an array element */
+    // Used if this is an array element
     int number;
 
-    /* Used if this is a field. */
+    // Used if this is a field.
     char *name;
   };
 
@@ -76,7 +76,7 @@ struct plocation *plocation_field_new(char *name);
 struct plocation *plocation_elem_new(int number);
 const char *plocation_name(const struct plocation *loc);
 
-/* network string conversion */
+// network string conversion
 typedef char *(*DIO_PUT_CONV_FUN)(const char *src, size_t *length);
 void dio_set_put_conv_callback(DIO_PUT_CONV_FUN fun);
 
@@ -87,7 +87,7 @@ void dio_set_get_conv_callback(DIO_GET_CONV_FUN fun);
 bool dataio_get_conv_callback(char *dst, size_t ndst, const char *src,
                               size_t nsrc);
 
-/* General functions */
+// General functions
 void dio_output_init(struct raw_data_out *dout, void *destination,
                      size_t dest_size);
 void dio_output_rewind(struct raw_data_out *dout);
@@ -100,7 +100,7 @@ bool dio_input_skip(struct data_in *din, size_t size);
 
 size_t data_type_size(enum data_type type);
 
-/* gets */
+// gets
 bool dio_get_type_raw(struct data_in *din, enum data_type type, int *dest)
     fc__attribute((nonnull(3)));
 
@@ -148,17 +148,17 @@ bool dio_get_uint8_vec8_raw(struct data_in *din, int **values,
 bool dio_get_uint16_vec8_raw(struct data_in *din, int **values,
                              int stop_value) fc__attribute((nonnull(2)));
 
-/* There is currently no need to escape strings in the binary protocol. */
+// There is currently no need to escape strings in the binary protocol.
 #define dio_get_estring_raw dio_get_string_raw
 #define dio_put_estring_raw dio_put_string_raw
 
-/* Should be a function but we need some macro magic. */
+// Should be a function but we need some macro magic.
 #define DIO_BV_GET(pdin, location, bv)                                      \
   dio_get_memory_raw((pdin), (bv).vec, sizeof((bv).vec))
 
 #define DIO_GET(f, d, l, ...) dio_get_##f##_raw(d, ##__VA_ARGS__)
 
-/* puts */
+// puts
 void dio_put_type_raw(struct raw_data_out *dout, enum data_type type,
                       int value);
 
@@ -197,7 +197,7 @@ void dio_put_uint8_vec8_raw(struct raw_data_out *dout, int *values,
 void dio_put_uint16_vec8_raw(struct raw_data_out *dout, int *values,
                              int stop_value);
 
-/* Should be a function but we need some macro magic. */
+// Should be a function but we need some macro magic.
 #define DIO_BV_PUT(pdout, location, bv)                                     \
   dio_put_memory_raw((pdout), (bv).vec, sizeof((bv).vec))
 

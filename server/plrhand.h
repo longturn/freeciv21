@@ -164,7 +164,7 @@ void send_delegation_info(const struct connection *pconn);
 
 struct player *player_by_user_delegated(const char *name);
 
-/* player colors */
+// player colors
 void playercolor_init();
 void playercolor_free();
 

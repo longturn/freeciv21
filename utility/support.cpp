@@ -43,7 +43,7 @@
 
 #include <cctype>
 #include <cerrno>
-#include <cmath> /* ceil() */
+#include <cmath> // ceil()
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
@@ -53,7 +53,7 @@
 #ifdef FREECIV_MSWINDOWS
 #include <process.h>
 #include <windows.h>
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
@@ -66,17 +66,17 @@
 #include <QString>
 #include <QThread>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
 
 #include "support.h"
 
-/******************************************************************/ /**
+/**
    Function used by fc_strdup macro, strdup() replacement
    No need to check return value.
- **********************************************************************/
+ */
 char *real_fc_strdup(const char *str, const char *called_as, int line,
                      const char *file)
 {
@@ -88,9 +88,9 @@ char *real_fc_strdup(const char *str, const char *called_as, int line,
   return dest;
 }
 
-/************************************************************************/ /**
+/**
    Compare strings like strcmp(), but ignoring case.
- ****************************************************************************/
+ */
 int fc_strcasecmp(const char *str0, const char *str1)
 {
   auto left = QString::fromUtf8(str0);
@@ -98,10 +98,10 @@ int fc_strcasecmp(const char *str0, const char *str1)
   return left.compare(right, Qt::CaseInsensitive);
 }
 
-/************************************************************************/ /**
+/**
    Compare strings like strncmp(), but ignoring case.
    ie, only compares first n chars.
- ****************************************************************************/
+ */
 int fc_strncasecmp(const char *str0, const char *str1, size_t n)
 {
   auto left = QString::fromUtf8(str0);
@@ -109,13 +109,13 @@ int fc_strncasecmp(const char *str0, const char *str1, size_t n)
   return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
 }
 
-/************************************************************************/ /**
+/**
    Copies a string and convert the following characters:
    - '\n' to "\\n".
    - '\\' to "\\\\".
    - '\"' to "\\\"".
    See also remove_escapes().
- ****************************************************************************/
+ */
 void make_escapes(const char *str, char *buf, size_t buf_len)
 {
   char *dest = buf;
@@ -133,7 +133,7 @@ void make_escapes(const char *str, char *buf, size_t buf_len)
     case '\\':
     case '\"':
       *dest++ = '\\';
-      /* Fallthrough. */
+      // Fallthrough.
     default:
       *dest++ = *str++;
       break;
@@ -142,7 +142,7 @@ void make_escapes(const char *str, char *buf, size_t buf_len)
   *dest = 0;
 }
 
-/************************************************************************/ /**
+/**
    Copies a string. Backslash followed by a genuine newline always
    removes the newline.
    If full_escapes is TRUE:
@@ -150,7 +150,7 @@ void make_escapes(const char *str, char *buf, size_t buf_len)
      - Other '\c' sequences (any character 'c') are just passed
        through with the '\' removed (eg, includes '\\', '\"').
    See also make_escapes().
- ****************************************************************************/
+ */
 QString remove_escapes(const QString &str, bool full_escapes)
 {
   QString copy;
@@ -188,9 +188,9 @@ QString remove_escapes(const QString &str, bool full_escapes)
   return copy;
 }
 
-/************************************************************************/ /**
+/**
    Count length of string without possible surrounding quotes.
- ****************************************************************************/
+ */
 size_t effectivestrlenquote(const char *str)
 {
   int len;
@@ -207,10 +207,10 @@ size_t effectivestrlenquote(const char *str)
   return len;
 }
 
-/************************************************************************/ /**
+/**
    Compare strings like strncasecmp() but ignoring surrounding
    quotes in either string.
- ****************************************************************************/
+ */
 int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
 {
   auto left = QString::fromUtf8(str0);
@@ -226,17 +226,17 @@ int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
   return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
 }
 
-/************************************************************************/ /**
+/**
    Wrapper function for strcoll().
- ****************************************************************************/
+ */
 int fc_strcoll(const char *str0, const char *str1)
 {
   return strcoll(str0, str1);
 }
 
-/************************************************************************/ /**
+/**
    Wrapper function for stricoll().
- ****************************************************************************/
+ */
 int fc_stricoll(const char *str0, const char *str1)
 {
   /* We prefer _stricoll() over stricoll() since
@@ -253,10 +253,10 @@ int fc_stricoll(const char *str0, const char *str1)
 #endif
 }
 
-/************************************************************************/ /**
+/**
    Wrapper function for fopen() with filename conversion to local
    encoding on Windows.
- ****************************************************************************/
+ */
 FILE *fc_fopen(const char *filename, const char *opentype)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -267,15 +267,15 @@ FILE *fc_fopen(const char *filename, const char *opentype)
   result = fopen(filename_in_local_encoding, opentype);
   free(filename_in_local_encoding);
   return result;
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   return fopen(filename, opentype);
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 }
 
-/************************************************************************/ /**
+/**
    Wrapper function for gzopen() with filename conversion to local
    encoding on Windows.
- ****************************************************************************/
+ */
 gzFile fc_gzopen(const char *filename, const char *opentype)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -286,15 +286,15 @@ gzFile fc_gzopen(const char *filename, const char *opentype)
   result = gzopen(filename_in_local_encoding, opentype);
   free(filename_in_local_encoding);
   return result;
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   return gzopen(filename, opentype);
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 }
 
-/************************************************************************/ /**
+/**
    Wrapper function for remove() with filename conversion to local
    encoding on Windows.
- ****************************************************************************/
+ */
 int fc_remove(const char *filename)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -305,15 +305,15 @@ int fc_remove(const char *filename)
   result = remove(filename_in_local_encoding);
   free(filename_in_local_encoding);
   return result;
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   return remove(filename);
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 }
 
-/************************************************************************/ /**
+/**
    Wrapper function for stat() with filename conversion to local
    encoding on Windows.
- ****************************************************************************/
+ */
 int fc_stat(const char *filename, struct stat *buf)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -324,31 +324,31 @@ int fc_stat(const char *filename, struct stat *buf)
   result = stat(filename_in_local_encoding, buf);
   free(filename_in_local_encoding);
   return result;
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   return stat(filename, buf);
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 }
 
-/************************************************************************/ /**
+/**
    Returns last error code.
- ****************************************************************************/
+ */
 fc_errno fc_get_errno()
 {
 #ifdef FREECIV_MSWINDOWS
   return GetLastError();
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   return errno;
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 }
 
-/************************************************************************/ /**
+/**
    Return a string which describes a given error (errno-style.)
    The string is converted as necessary from the local_encoding
    to internal_encoding, for inclusion in translations.  May be
    subsequently converted back to local_encoding for display.
 
    Note that this is not the reentrant form.
- ****************************************************************************/
+ */
 const char *fc_strerror(fc_errno err)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -361,22 +361,22 @@ const char *fc_strerror(fc_errno err)
                 err);
   }
   return buf;
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   static char buf[256];
   return local_to_internal_string_buffer(strerror(err), buf, sizeof(buf));
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 }
 
-/************************************************************************/ /**
+/**
    Suspend execution for the specified number of microseconds.
- ****************************************************************************/
+ */
 void fc_usleep(unsigned long usec) { QThread::usleep(usec); }
 
-/************************************************************************/ /**
+/**
    Replace 'search' by 'replace' within 'str'. If needed 'str' is resized
    using realloc() to fit the modified string. The new pointer to the string
    is returned.
- ****************************************************************************/
+ */
 char *fc_strrep_resize(char *str, size_t *len, const char *search,
                        const char *replace)
 {
@@ -400,7 +400,7 @@ char *fc_strrep_resize(char *str, size_t *len, const char *search,
   }
 
   success = fc_strrep(str, (*len), search, replace);
-  /* should never happen */
+  // should never happen
   fc_assert_ret_val_msg(success == true, NULL,
                         "Can't replace '%s' by '%s' in '%s'. To small "
                         "size after reallocation: %lu.",
@@ -409,11 +409,11 @@ char *fc_strrep_resize(char *str, size_t *len, const char *search,
   return str;
 }
 
-/************************************************************************/ /**
+/**
    Replace 'search' by 'replace' within 'str'. sizeof(str) should be large
    enough for the modified value of 'str'. Returns TRUE if the replacement
    was successful.
- ****************************************************************************/
+ */
 bool fc_strrep(char *str, size_t len, const char *search,
                const char *replace)
 {
@@ -432,12 +432,12 @@ bool fc_strrep(char *str, size_t len, const char *search,
   while (s != NULL) {
     p = strstr(s, search);
     if (p == NULL) {
-      /* nothing found */
+      // nothing found
       break;
     }
 
     if (len < (strlen(str) + len_replace - len_search + 1)) {
-      /* sizeof(str) not large enough to do the replacement */
+      // sizeof(str) not large enough to do the replacement
       return false;
     }
 
@@ -449,7 +449,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    fc_strlcpy() provides utf-8 version of (non-standard) function strlcpy()
    It is intended as more user-friendly version of strncpy(), in particular
    easier to use safely and correctly, and ensuring nul-terminated results
@@ -469,7 +469,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
    trying to ensure correct behaviour on strange inputs.
    In particular note that n == 0 is prohibited (e.g., since there
    must at least be room for a nul); could consider other options.
- ****************************************************************************/
+ */
 size_t fc_strlcpy(char *dest, const char *src, size_t n)
 {
   fc_assert_ret_val(NULL != dest, -1);
@@ -500,12 +500,12 @@ size_t fc_strlcpy(char *dest, const char *src, size_t n)
   }
 }
 
-/************************************************************************/ /**
+/**
    fc_strlcat() provides utf-8 version of (non-standard) function strlcat()
    It is intended as more user-friendly version of strncat(), in particular
    easier to use safely and correctly, and ensuring nul-terminated results
    while being able to detect truncation.
- ****************************************************************************/
+ */
 size_t fc_strlcat(char *dest, const char *src, size_t n)
 {
   size_t start;
@@ -517,7 +517,7 @@ size_t fc_strlcat(char *dest, const char *src, size_t n)
   return fc_strlcpy(dest + start, src, n - start) + start;
 }
 
-/************************************************************************/ /**
+/**
    vsnprintf() replacement using a big malloc()ed internal buffer,
    originally by David Pfitzner <dwp@mso.anu.edu.au>
 
@@ -566,9 +566,9 @@ size_t fc_strlcat(char *dest, const char *src, size_t n)
    any tricks to go through the va_list twice.
 
    See also fc_utf8_vsnprintf_trunc(), fc_utf8_vsnprintf_rep().
- ****************************************************************************/
+ */
 
-/* "64k should be big enough for anyone" ;-) */
+// "64k should be big enough for anyone" ;-)
 #define VSNP_BUF_SIZE (64 * 1024)
 int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
 {
@@ -584,7 +584,7 @@ int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
   r = vsnprintf(str, n, format, ap);
   str[n - 1] = 0;
 
-  /* Convert C99 return value to C89.  */
+  // Convert C99 return value to C89.
   if (r >= n) {
     return -1;
   }
@@ -592,9 +592,9 @@ int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
   return r;
 }
 
-/************************************************************************/ /**
+/**
    See also fc_utf8_snprintf_trunc(), fc_utf8_snprintf_rep().
- ****************************************************************************/
+ */
 int fc_snprintf(char *str, size_t n, const char *format, ...)
 {
   int ret;
@@ -608,7 +608,7 @@ int fc_snprintf(char *str, size_t n, const char *format, ...)
   return ret;
 }
 
-/************************************************************************/ /**
+/**
    cat_snprintf is like a combination of fc_snprintf and fc_strlcat;
    it does snprintf to the end of an existing string.
 
@@ -621,7 +621,7 @@ int fc_snprintf(char *str, size_t n, const char *format, ...)
    I.e., if return is >= n, truncation occurred.
 
    See also cat_utf8_snprintf(), cat_utf8_snprintf_rep().
- ****************************************************************************/
+ */
 int cat_snprintf(char *str, size_t n, const char *format, ...)
 {
   size_t len;
@@ -641,9 +641,9 @@ int cat_snprintf(char *str, size_t n, const char *format, ...)
   return (-1 == ret ? -1 : ret + len);
 }
 
-/************************************************************************/ /**
+/**
    Call gethostname() if supported, else just returns -1.
- ****************************************************************************/
+ */
 int fc_gethostname(char *buf, size_t len)
 {
   auto name = QHostInfo::localHostName();
@@ -651,10 +651,10 @@ int fc_gethostname(char *buf, size_t len)
   return 0;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE iff the file is a regular file or a link to a regular
    file or write_access is TRUE and the file doesn't exists yet.
- ****************************************************************************/
+ */
 bool is_reg_file_for_access(const char *name, bool write_access)
 {
   struct stat tmp;
@@ -666,10 +666,10 @@ bool is_reg_file_for_access(const char *name, bool write_access)
   }
 }
 
-/************************************************************************/ /**
+/**
    Replace the spaces by line breaks when the line lenght is over the desired
    one. 'str' is modified. Returns number of lines in modified s.
- ****************************************************************************/
+ */
 int fc_break_lines(char *str, size_t desired_len)
 {
   size_t slen = static_cast<size_t>(qstrlen(str));
@@ -684,7 +684,7 @@ int fc_break_lines(char *str, size_t desired_len)
 
       num_lines++;
 
-      /* check if there is already a newline: */
+      // check if there is already a newline:
       for (c = str; c < str + desired_len; c++) {
         if (*c == '\n') {
           slen -= c + 1 - str;
@@ -697,7 +697,7 @@ int fc_break_lines(char *str, size_t desired_len)
         continue;
       }
 
-      /* find space and break: */
+      // find space and break:
       for (c = str + desired_len; c > str; c--) {
         if (QChar::isSpace(*c)) {
           *c = '\n';
@@ -711,7 +711,7 @@ int fc_break_lines(char *str, size_t desired_len)
         continue;
       }
 
-      /* couldn't find a good break; settle for a bad one... */
+      // couldn't find a good break; settle for a bad one...
       for (c = str + desired_len + 1; *c != '\0'; c++) {
         if (QChar::isSpace(*c)) {
           *c = '\n';
@@ -739,26 +739,26 @@ int fc_break_lines(char *str, size_t desired_len)
   part of a multibyte sequence is non-ASCII.
 ****************************************************************************/
 
-/************************************************************************/ /**
+/**
    basename() replacement that always takes const parameter.
    POSIX basename() modifies its parameter, GNU one does not.
    Ideally we would like to use GNU one, when available, directly
    without extra string copies.
- ****************************************************************************/
+ */
 const char *fc_basename(const char *path)
 {
   QFileInfo fi(path);
   return fc_strdup(fi.fileName().toUtf8().constData());
 }
 
-/************************************************************************/ /**
+/**
    Set quick_exit() callback if possible.
- ****************************************************************************/
+ */
 int fc_at_quick_exit(void (*func)())
 {
 #ifdef HAVE_AT_QUICK_EXIT
   return at_quick_exit(func);
-#else /* HAVE_AT_QUICK_EXIT */
+#else // HAVE_AT_QUICK_EXIT
   return -1;
-#endif /* HAVE_AT_QUICK_EXIT */
+#endif // HAVE_AT_QUICK_EXIT
 }

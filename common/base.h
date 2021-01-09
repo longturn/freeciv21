@@ -12,11 +12,11 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
+// common
 #include "fc_types.h"
 #include "requirements.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME base_gui_type
 #define SPECENUM_VALUE0 BASE_GUI_FORTRESS
 #define SPECENUM_VALUE0NAME "Fortress"
@@ -26,9 +26,9 @@
 #define SPECENUM_VALUE2NAME "Other"
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME base_flag_id
-/* Unit inside are not considered aggressive if base is close to city */
+// Unit inside are not considered aggressive if base is close to city
 #define SPECENUM_VALUE0 BF_NOT_AGGRESSIVE
 /* TRANS: this and following strings are 'base flags', which may rarely
  * be presented to the player in ruleset help text */
@@ -55,7 +55,7 @@ struct base_type {
 
 #define BASE_NONE -1
 
-/* General base accessor functions. */
+// General base accessor functions.
 Base_type_id base_count();
 Base_type_id base_number(const struct base_type *pbase);
 
@@ -63,7 +63,7 @@ struct base_type *base_by_number(const Base_type_id id);
 
 struct extra_type *base_extra_get(const struct base_type *pbase);
 
-/* Functions to operate on a base flag. */
+// Functions to operate on a base flag.
 bool base_has_flag(const struct base_type *pbase, enum base_flag_id flag);
 bool is_base_flag_card_near(const struct tile *ptile,
                             enum base_flag_id flag);
@@ -74,7 +74,7 @@ bool base_has_flag_for_utype(const struct base_type *pbase,
                              enum base_flag_id flag,
                              const struct unit_type *punittype);
 
-/* Ancillary functions */
+// Ancillary functions
 bool can_build_base(const struct unit *punit, const struct base_type *pbase,
                     const struct tile *ptile);
 bool player_can_build_base(const struct base_type *pbase,
@@ -87,7 +87,7 @@ struct base_type *get_base_by_gui_type(enum base_gui_type type,
 
 bool territory_claiming_base(const struct base_type *pbase);
 
-/* Initialization and iteration */
+// Initialization and iteration
 void base_type_init(struct extra_type *pextra, int idx);
 void base_types_free();
 

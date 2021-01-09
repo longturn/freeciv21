@@ -12,10 +12,10 @@
 ***********************************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
+// utility
+#include "support.h" // bool type
 
-/* common */
+// common
 #include "ai.h"
 #include "city.h"
 #include "fc_types.h"

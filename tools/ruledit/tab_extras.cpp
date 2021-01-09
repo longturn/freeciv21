@@ -39,9 +39,9 @@
 
 #include "tab_extras.h"
 
-/**********************************************************************/ /**
+/**
    Setup tab_extras object
- **************************************************************************/
+ */
 tab_extras::tab_extras(ruledit_gui *ui_in) : QWidget()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
@@ -113,9 +113,9 @@ tab_extras::tab_extras(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the information.
- **************************************************************************/
+ */
 void tab_extras::refresh()
 {
   extra_list->clear();
@@ -132,9 +132,9 @@ void tab_extras::refresh()
   extra_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Update info of the extra
- **************************************************************************/
+ */
 void tab_extras::update_extra_info(struct extra_type *pextra)
 {
   selected = pextra;
@@ -160,9 +160,9 @@ void tab_extras::update_extra_info(struct extra_type *pextra)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User selected extra from the list.
- **************************************************************************/
+ */
 void tab_extras::select_extra()
 {
   QList<QListWidgetItem *> select_list = extra_list->selectedItems();
@@ -175,9 +175,9 @@ void tab_extras::select_extra()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User entered name for the extra
- **************************************************************************/
+ */
 void tab_extras::name_given()
 {
   if (selected != nullptr) {
@@ -208,9 +208,9 @@ void tab_extras::name_given()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User requested extra deletion
- **************************************************************************/
+ */
 void tab_extras::delete_now()
 {
   if (selected != nullptr) {
@@ -229,9 +229,9 @@ void tab_extras::delete_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialize new extra for use.
- **************************************************************************/
+ */
 bool tab_extras::initialize_new_extra(struct extra_type *pextra)
 {
   if (extra_type_by_rule_name("New Extra") != nullptr) {
@@ -243,9 +243,9 @@ bool tab_extras::initialize_new_extra(struct extra_type *pextra)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    User requested new extra
- **************************************************************************/
+ */
 void tab_extras::add_now()
 {
   struct extra_type *new_extra;
@@ -282,9 +282,9 @@ void tab_extras::add_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Toggled whether rule_name and name should be kept identical
- **************************************************************************/
+ */
 void tab_extras::same_name_toggle(bool checked)
 {
   name->setEnabled(!checked);
@@ -293,9 +293,9 @@ void tab_extras::same_name_toggle(bool checked)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit reqs
- **************************************************************************/
+ */
 void tab_extras::edit_reqs()
 {
   if (selected != nullptr) {
@@ -304,9 +304,9 @@ void tab_extras::edit_reqs()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit effects
- **************************************************************************/
+ */
 void tab_extras::edit_effects()
 {
   if (selected != nullptr) {

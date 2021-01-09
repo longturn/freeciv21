@@ -12,11 +12,11 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "shared.h"
 
-/* common */
+// common
 #include "fc_types.h"
 #include "name_translation.h"
 #include "requirements.h"
@@ -35,7 +35,7 @@ typedef int Tech_type_id;
  */
 #define A_NONE 0
 #define A_FIRST 1
-#define A_LAST (MAX_NUM_ADVANCES + 1) /* Used in the network protocol. */
+#define A_LAST (MAX_NUM_ADVANCES + 1) // Used in the network protocol.
 #define A_FUTURE (A_LAST + 1)
 #define A_ARRAY_SIZE (A_FUTURE + 1)
 #define A_UNSET (A_LAST + 2)
@@ -63,22 +63,22 @@ typedef int Tech_type_id;
    A_NEVER is the pointer equivalent replacement for A_LAST flag value.
 */
 
-/* Changing these breaks network compatibility. */
+// Changing these breaks network compatibility.
 /* If a new flag is added techtools.c:research_tech_lost() should be checked
  */
 #define SPECENUM_NAME tech_flag_id
-/* player gets extra tech if rearched first */
+// player gets extra tech if rearched first
 #define SPECENUM_VALUE0 TF_BONUS_TECH
 /* TRANS: this and following strings are 'tech flags', which may rarely
  * be presented to the player in ruleset help text */
 #define SPECENUM_VALUE0NAME N_("Bonus_Tech")
-/* "Settler" unit types can build bridges over rivers */
+// "Settler" unit types can build bridges over rivers
 #define SPECENUM_VALUE1 TF_BRIDGE
 #define SPECENUM_VALUE1NAME N_("Bridge")
-/* Player can build air units */
+// Player can build air units
 #define SPECENUM_VALUE2 TF_BUILD_AIRBORNE
 #define SPECENUM_VALUE2NAME N_("Build_Airborne")
-/* Player can claim ocean tiles non-adjacent to border source */
+// Player can claim ocean tiles non-adjacent to border source
 #define SPECENUM_VALUE3 TF_CLAIM_OCEAN
 #define SPECENUM_VALUE3NAME N_("Claim_Ocean")
 /* Player can claim ocean tiles non-adjacent to border source as long
@@ -93,7 +93,7 @@ typedef int Tech_type_id;
 #define SPECENUM_VALUE10 TECH_USER_6
 #define SPECENUM_VALUE11 TECH_USER_7
 #define SPECENUM_VALUE12 TECH_USER_LAST
-/* Keep this last. */
+// Keep this last.
 #define SPECENUM_COUNT TF_COUNT
 #define SPECENUM_BITVECTOR bv_tech_flags
 #define SPECENUM_NAMEOVERRIDE
@@ -113,8 +113,8 @@ struct tech_class {
 struct advance {
   Tech_type_id item_number;
   struct name_translation name;
-  char graphic_str[MAX_LEN_NAME]; /* which named sprite to use */
-  char graphic_alt[MAX_LEN_NAME]; /* alternate icon name */
+  char graphic_str[MAX_LEN_NAME]; // which named sprite to use
+  char graphic_alt[MAX_LEN_NAME]; // alternate icon name
   struct tech_class *tclass;
 
   struct advance *require[AR_SIZE];
@@ -198,7 +198,7 @@ const char *tech_flag_helptxt(enum tech_flag_id id);
 /* General advance/technology flag accessor routines */
 bool advance_has_flag(Tech_type_id tech, enum tech_flag_id flag);
 
-/* Ancillary routines */
+// Ancillary routines
 Tech_type_id advance_required(const Tech_type_id tech,
                               enum tech_req require);
 struct advance *advance_requires(const struct advance *padvance,
@@ -208,13 +208,13 @@ bool techs_have_fixed_costs();
 
 bool is_future_tech(Tech_type_id tech);
 
-/* Initialization */
+// Initialization
 void techs_init();
 void techs_free();
 
 void techs_precalc_data();
 
-/* Iteration */
+// Iteration
 
 /* This iterates over almost all technologies.  It includes non-existent
  * technologies, but not A_FUTURE. */

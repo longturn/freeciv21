@@ -28,10 +28,10 @@
 
 static struct terrain *char2terrain(char ch);
 
-/**********************************************************************/ /**
+/**
    Helper function for drawing map of savegames. Converts stored map char in
    savefile to proper terrain.
- **************************************************************************/
+ */
 static struct terrain *char2terrain(char ch)
 {
   if (ch == TERRAIN_UNKNOWN_IDENTIFIER) {
@@ -104,9 +104,9 @@ page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
 
 page_load::~page_load() = default;
 
-/**********************************************************************/ /**
+/**
    Updates saves to load and updates in tableview = saves_load
- **************************************************************************/
+ */
 void page_load::update_load_page()
 {
   struct fileinfo_list *files;
@@ -137,9 +137,9 @@ void page_load::update_load_page()
   fileinfo_list_destroy(files);
 }
 
-/**********************************************************************/ /**
+/**
    Starts game from chosen save - chosen_file (save or scenario)
- **************************************************************************/
+ */
 void page_load::start_from_save()
 {
   if (!is_server_running()) {
@@ -155,9 +155,9 @@ void page_load::start_from_save()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Browse saves directory
- **************************************************************************/
+ */
 void page_load::browse_saves()
 {
   QString str;
@@ -170,9 +170,9 @@ void page_load::browse_saves()
   }
 }
 
-/**********************************************************************/ /**
+/**
    State of preview has been changed
- **************************************************************************/
+ */
 void page_load::state_preview(int new_state)
 {
   Q_UNUSED(new_state)
@@ -253,13 +253,13 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
         }
       }
     }
-    /* Break case (and return) if no human player found */
+    // Break case (and return) if no human player found
     if (pl_str == nullptr) {
       ui.load_save_text->setText(final_str);
       return;
     }
 
-    /* Information about human player */
+    // Information about human player
     pl_bytes = pl_str.toLocal8Bit();
     if ((sf =
              secfile_load_section(fn_bytes.data(), pl_bytes.data(), true))) {
@@ -298,11 +298,11 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
         str_pixmap = str_pixmap + line;
       }
 
-      /* Reset terrain information */
+      // Reset terrain information
       terrain_type_iterate(pterr) { pterr->identifier_load = '\0'; }
       terrain_type_iterate_end;
 
-      /* Load possible terrains and their identifiers (chars) */
+      // Load possible terrains and their identifiers (chars)
       sf = secfile_load_section(fn_bytes.data(), QStringLiteral("savefile"),
                                 true);
       if (sf) {
@@ -318,7 +318,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
           ii++;
         }
       }
-      /* Create image */
+      // Create image
       QImage img(nat_x, nat_y, QImage::Format_ARGB32_Premultiplied);
       img.fill(Qt::black);
       for (int a = 0; a < nat_x; a++) {

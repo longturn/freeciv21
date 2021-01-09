@@ -12,25 +12,25 @@
       \____/        ********************************************************/
 #pragma once
 
-#include "support.h" /* bool type */
+#include "support.h" // bool type
 
 enum vote_condition_flags {
   VCF_NONE = 0,
-  VCF_NODISSENT = (1 << 0),   /* No 'no' votes.' */
+  VCF_NODISSENT = (1 << 0),   // No 'no' votes.'
   VCF_NOPASSALONE = (1 << 1), /* Can't pass with just one vote for,
                                * when there are multiple voters. */
-  VCF_TEAMONLY = (1 << 2)     /* Only team members can vote on it. */
+  VCF_TEAMONLY = (1 << 2)     // Only team members can vote on it.
 };
 
 enum vote_type { VOTE_YES, VOTE_NO, VOTE_ABSTAIN, VOTE_NUM };
 
-/* Forward declarations. */
+// Forward declarations.
 struct connection;
 struct conn_list;
 
 struct vote_cast {
-  enum vote_type vote_cast; /* see enum above */
-  int conn_id;              /* user id */
+  enum vote_type vote_cast; // see enum above
+  int conn_id;              // user id
 };
 
 #define SPECLIST_TAG vote_cast
@@ -41,12 +41,12 @@ struct vote_cast {
 #define vote_cast_list_iterate_end LIST_ITERATE_END
 
 struct vote {
-  int caller_id; /* caller connection id */
+  int caller_id; // caller connection id
   int command_id;
-  char cmdline[512]; /* Must match MAX_LEN_CONSOLE_LINE. */
-  int turn_count;    /* Number of turns active. */
+  char cmdline[512]; // Must match MAX_LEN_CONSOLE_LINE.
+  int turn_count;    // Number of turns active.
   struct vote_cast_list *votes_cast;
-  int vote_no; /* place in the queue */
+  int vote_no; // place in the queue
   int yes;
   int no;
   int abstain;

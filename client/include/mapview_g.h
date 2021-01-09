@@ -12,14 +12,14 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
+// utility
+#include "support.h" // bool type
 
-/* common */
+// common
 #include "fc_types.h"
 #include "unitlist.h"
 
-/* client */
+// client
 #include "mapview_common.h"
 
 /* client/include */

@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "ai.h"
 #include "game.h"
 #include "map.h"
@@ -27,7 +27,7 @@
 #include "tile.h"
 #include "unittype.h"
 
-/* server */
+// server
 #include "aiiface.h"
 #include "plrhand.h"
 #include "srv_main.h"
@@ -35,22 +35,22 @@
 #include "techtools.h"
 #include "unittools.h"
 
-/* ai */
+// ai
 #include "difficulty.h"
 
 #include "animals.h"
 
-/************************************************************************/ /**
+/**
    Return suitable animal type for the terrain
- ****************************************************************************/
+ */
 static const struct unit_type *animal_for_terrain(struct terrain *pterr)
 {
   return pterr->animal;
 }
 
-/************************************************************************/ /**
+/**
    Try to add one animal to the map.
- ****************************************************************************/
+ */
 static void place_animal(struct player *plr)
 {
   struct tile *ptile = rand_map_pos(&(wld.map));
@@ -59,8 +59,8 @@ static void place_animal(struct player *plr)
   extra_type_by_rmcause_iterate(ERM_ENTER, pextra)
   {
     if (tile_has_extra(ptile, pextra)) {
-      /* Animals should not displace huts */
-      /* FIXME: might HUT_NOTHING animals appear here? */
+      // Animals should not displace huts
+      // FIXME: might HUT_NOTHING animals appear here?
       return;
     }
   }
@@ -72,7 +72,7 @@ static void place_animal(struct player *plr)
   adjc_iterate(&(wld.map), ptile, padj)
   {
     if (unit_list_size(padj->units) > 0 || tile_city(padj)) {
-      /* No animals next to start units or start city */
+      // No animals next to start units or start city
       return;
     }
   }
@@ -91,9 +91,9 @@ static void place_animal(struct player *plr)
   }
 }
 
-/************************************************************************/ /**
+/**
    Create animal kingdom player and his units.
- ****************************************************************************/
+ */
 void create_animals()
 {
   struct nation_type *anination;
@@ -140,7 +140,7 @@ void create_animals()
   init_tech(presearch, true);
   give_initial_techs(presearch, 0);
 
-  /* Ensure that we are at war with everyone else */
+  // Ensure that we are at war with everyone else
   players_iterate(pplayer)
   {
     if (pplayer != plr) {

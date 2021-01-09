@@ -12,7 +12,7 @@
 ****************************************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "shared.h"
 
 struct section_file;
@@ -30,7 +30,7 @@ struct rgbcolor {
   QColor *color;
 };
 
-/* get 'struct color_list' and related functions: */
+// get 'struct color_list' and related functions:
 #define SPECLIST_TAG rgbcolor
 #define SPECLIST_TYPE struct rgbcolor
 #include "speclist.h"

@@ -55,9 +55,9 @@
 fcFont *fcFont::m_instance = 0;
 extern "C" void real_science_report_dialog_update(void *);
 
-/************************************************************************/ /**
+/**
    Constructor
- ****************************************************************************/
+ */
 fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
 {
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
@@ -120,9 +120,9 @@ fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
   QPixmapCache::setCacheLimit(80000);
 }
 
-/************************************************************************/ /**
+/**
    Destructor
- ****************************************************************************/
+ */
 fc_client::~fc_client()
 {
   status_bar_queue.clear();
@@ -133,12 +133,12 @@ fc_client::~fc_client()
   delete_cursors();
 }
 
-/************************************************************************/ /**
+/**
    Main part of gui-qt.
    This is not called simply 'fc_client::main()', since SDL includes
    ould sometimes cause 'main' to be considered an macro that expands to
    'SDL_main'
- ****************************************************************************/
+ */
 void fc_client::fc_main(QApplication *qapp)
 {
   qRegisterMetaType<QTextCursor>("QTextCursor");
@@ -158,22 +158,22 @@ void fc_client::fc_main(QApplication *qapp)
   tileset_free_tiles(tileset);
 }
 
-/************************************************************************/ /**
+/**
    Returns status if fc_client is being closed
- ****************************************************************************/
+ */
 bool fc_client::is_closing() { return quitting; }
 
-/************************************************************************/ /**
+/**
    Called when fc_client is going to quit
- ****************************************************************************/
+ */
 void fc_client::closing() { quitting = true; }
 
-/************************************************************************/ /**
+/**
    Switch from one client page to another.
    Argument is int cause QSignalMapper doesn't want to work with enum
    Because chat widget is in 2 layouts we need to switch between them here
    (addWidget removes it from prevoius layout automatically)
- ****************************************************************************/
+ */
 void fc_client::switch_page(int new_pg)
 {
   enum client_pages new_page;
@@ -217,7 +217,7 @@ void fc_client::switch_page(int new_pg)
     // Uncommenting will fix some resizing errors but will cause some
     // problems with no focus caused by update_queue or something
     // QCoreApplication::processEvents();
-    /* For MS Windows, it might ingore first */
+    // For MS Windows, it might ingore first
     showMaximized();
     queen()->infotab->chtwdg->update_widgets();
     status_bar->setVisible(false);
@@ -257,14 +257,14 @@ void fc_client::switch_page(int new_pg)
   }
 }
 
-/************************************************************************/ /**
+/**
    Returns currently open page
- ****************************************************************************/
+ */
 enum client_pages fc_client::current_page() { return page; }
 
-/************************************************************************/ /**
+/**
    Add notifier for server input
- ****************************************************************************/
+ */
 void fc_client::add_server_source(QTcpSocket *sock)
 {
   connect(sock, &QIODevice::readyRead, this, &fc_client::server_input);
@@ -274,9 +274,9 @@ void fc_client::add_server_source(QTcpSocket *sock)
   input_from_server(sock);
 }
 
-/************************************************************************/ /**
+/**
    Event handler
- ****************************************************************************/
+ */
 bool fc_client::event(QEvent *event)
 {
   if (event->type() == QEvent::User) {
@@ -289,18 +289,18 @@ bool fc_client::event(QEvent *event)
   }
 }
 
-/************************************************************************/ /**
+/**
    Closes main window
- ****************************************************************************/
+ */
 void fc_client::closeEvent(QCloseEvent *event)
 {
   popup_quit_dialog();
   event->ignore();
 }
 
-/************************************************************************/ /**
+/**
    There is input from server
- ****************************************************************************/
+ */
 void fc_client::server_input()
 {
   if (auto *socket = dynamic_cast<QTcpSocket *>(sender())) {
@@ -308,9 +308,9 @@ void fc_client::server_input()
   }
 }
 
-/************************************************************************/ /**
+/**
    Timer event handling
- ****************************************************************************/
+ */
 void fc_client::timerEvent(QTimerEvent *event)
 {
   // Prevent current timer from repeating with possibly wrong interval
@@ -321,9 +321,9 @@ void fc_client::timerEvent(QTimerEvent *event)
   startTimer(real_timer_callback() * 1000);
 }
 
-/************************************************************************/ /**
+/**
    Quit App
- ****************************************************************************/
+ */
 void fc_client::quit()
 {
   QApplication *qapp = current_app();
@@ -333,9 +333,9 @@ void fc_client::quit()
   }
 }
 
-/************************************************************************/ /**
+/**
    Disconnect from server and return to MAIN PAGE
- ****************************************************************************/
+ */
 void fc_client::slot_disconnect()
 {
   if (client.conn.used) {
@@ -360,9 +360,9 @@ void fc_client::delete_cursors()
   }
 }
 
-/************************************************************************/ /**
+/**
    Loads qt-specific options
- ****************************************************************************/
+ */
 void fc_client::read_settings()
 {
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
@@ -496,9 +496,9 @@ void fc_client::read_settings()
   }
 }
 
-/************************************************************************/ /**
+/**
    Save qt-specific options
- ****************************************************************************/
+ */
 void fc_client::write_settings()
 {
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
@@ -525,17 +525,17 @@ void fc_client::write_settings()
   write_shortcuts();
 }
 
-/************************************************************************/ /**
+/**
    Popups client options
- ****************************************************************************/
+ */
 void popup_client_options()
 {
   option_dialog_popup(_("Set local options"), client_optset);
 }
 
-/************************************************************************/ /**
+/**
    Setup cursors
- ****************************************************************************/
+ */
 void fc_client::create_cursors()
 {
   enum cursor_type curs;
@@ -556,45 +556,45 @@ void fc_client::create_cursors()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Sets the "page" that the client should show.  See also pages_g.h.
- **************************************************************************/
+ */
 void qtg_real_set_client_page(enum client_pages page)
 {
   king()->switch_page(page);
 }
 
-/**********************************************************************/ /**
+/**
    Set the list of available rulesets.  The default ruleset should be
    "default", and if the user changes this then set_ruleset() should be
    called.
- **************************************************************************/
+ */
 void qtg_set_rulesets(int num_rulesets, char **rulesets)
 {
   qobject_cast<page_pregame *>(king()->pages[PAGE_START])
       ->set_rulesets(num_rulesets, rulesets);
 }
 
-/**********************************************************************/ /**
+/**
    Returns current client page
- **************************************************************************/
+ */
 enum client_pages qtg_get_current_client_page()
 {
   return king()->current_page();
 }
 
-/**********************************************************************/ /**
+/**
    Update the start page.
- **************************************************************************/
+ */
 void update_start_page(void)
 {
   qobject_cast<page_pregame *>(king()->pages[PAGE_START])
       ->update_start_page();
 }
 
-/**********************************************************************/ /**
+/**
    Sets application status bar for given time in miliseconds
- **************************************************************************/
+ */
 void fc_client::set_status_bar(const QString &message, int timeout)
 {
   if (status_bar_label->text().isEmpty()) {
@@ -608,9 +608,9 @@ void fc_client::set_status_bar(const QString &message, int timeout)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Clears status bar or shows next message in queue if exists
- **************************************************************************/
+ */
 void fc_client::clear_status_bar()
 {
   QString str;
@@ -624,9 +624,9 @@ void fc_client::clear_status_bar()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Creates page LOADING, showing label with Loading text
- **************************************************************************/
+ */
 void fc_client::create_loading_page()
 {
   QLabel *label = new QLabel(_("Loading..."));
@@ -636,9 +636,9 @@ void fc_client::create_loading_page()
                                          Qt::AlignHCenter);
 }
 
-/**********************************************************************/ /**
+/**
    spawn a server, if there isn't one, using the default settings.
- **************************************************************************/
+ */
 void fc_client::start_new_game()
 {
   if (is_server_running() || client_start_server()) {
@@ -646,9 +646,9 @@ void fc_client::start_new_game()
   }
 }
 
-/************************************************************************/ /**
+/**
    Contructor for corner widget (used for menubar)
- ****************************************************************************/
+ */
 fc_corner::fc_corner(QMainWindow *qmw) : QWidget()
 {
   QHBoxLayout *hb;
@@ -682,14 +682,14 @@ fc_corner::fc_corner(QMainWindow *qmw) : QWidget()
   setLayout(hb);
 }
 
-/************************************************************************/ /**
+/**
    Slot for closing freeciv via corner widget
- ****************************************************************************/
+ */
 void fc_corner::close_fc() { mw->close(); }
 
-/************************************************************************/ /**
+/**
    Slot for maximizing freeciv window via corner widget
- ****************************************************************************/
+ */
 void fc_corner::maximize()
 {
   if (!mw->isMaximized()) {
@@ -699,7 +699,7 @@ void fc_corner::maximize()
   }
 }
 
-/************************************************************************/ /**
+/**
    Slot for minimizing freeciv window via corner widget
- ****************************************************************************/
+ */
 void fc_corner::minimize() { mw->showMinimized(); }

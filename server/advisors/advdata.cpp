@@ -12,10 +12,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "actions.h"
 #include "ai.h"
 #include "city.h"
@@ -33,7 +33,7 @@
 #include "path_finding.h"
 #include "pf_tools.h"
 
-/* server */
+// server
 #include "cityturn.h"
 #include "diplhand.h"
 #include "maphand.h"
@@ -47,7 +47,7 @@
 #include "advtools.h"
 #include "autosettlers.h"
 
-/* ai */
+// ai
 #include "handicaps.h"
 
 #include "advdata.h"
@@ -59,14 +59,14 @@ static void adv_dipl_free(const struct player *plr1,
 static struct adv_dipl *adv_dipl_get(const struct player *plr1,
                                      const struct player *plr2);
 
-/**********************************************************************/ /**
+/**
    Precalculates some important data about the improvements in the game
    that we use later in ai/aicity.c.  We mark improvements as 'calculate'
    if we want to run a full test on them, as 'estimate' if we just want
    to do some guesses on them, or as 'unused' is they are useless to us.
    Then we find the largest range of calculatable effects in the
    improvement and record it for later use.
- **************************************************************************/
+ */
 static void adv_data_city_impr_calc(struct player *pplayer,
                                     struct adv_data *adv)
 {
@@ -81,12 +81,12 @@ static void adv_data_city_impr_calc(struct player *pplayer,
 
     adv->impr_calc[improvement_index(pimprove)] = ADV_IMPR_ESTIMATE;
 
-    /* Find largest extension */
+    // Find largest extension
     effect_list_iterate(get_req_source_effects(&source), peffect)
     {
       switch (peffect->type) {
 #if 0
-      /* TODO */
+      // TODO
       case EFT_FORCE_CONTENT:
       case EFT_FORCE_CONTENT_PCT:
       case EFT_MAKE_CONTENT:
@@ -136,7 +136,7 @@ static void adv_data_city_impr_calc(struct player *pplayer,
         requirement_vector_iterate_end;
         break;
       default:
-        /* Nothing! */
+        // Nothing!
         break;
       }
     }
@@ -145,11 +145,11 @@ static void adv_data_city_impr_calc(struct player *pplayer,
   improvement_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Check if the player still takes advantage of EFT_TECH_PARASITE.
    Research is useless if there are still techs which may be given to the
    player for free.
- **************************************************************************/
+ */
 static bool player_has_really_useful_tech_parasite(struct player *pplayer)
 {
   struct research *presearch, *aresearch;
@@ -193,11 +193,11 @@ static bool player_has_really_useful_tech_parasite(struct player *pplayer)
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Analyze rulesets. Must be run after rulesets are loaded, unlike
    _init, which must be run before savegames are loaded, which is usually
    before rulesets.
- **************************************************************************/
+ */
 void adv_data_analyze_rulesets(struct player *pplayer)
 {
   struct adv_data *adv = pplayer->server.adv;
@@ -207,9 +207,9 @@ void adv_data_analyze_rulesets(struct player *pplayer)
   adv_data_city_impr_calc(pplayer, adv);
 }
 
-/**********************************************************************/ /**
+/**
    This function is called each turn to initialize pplayer->ai.stats.units.
- **************************************************************************/
+ */
 static void count_my_units(struct player *pplayer)
 {
   struct adv_data *adv = adv_data_get(pplayer, NULL);
@@ -241,10 +241,10 @@ static void count_my_units(struct player *pplayer)
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Return whether data phase is currently open. Data phase is open
    between adv_data_phase_init() and adv_data_phase_done() calls.
- **************************************************************************/
+ */
 bool is_adv_data_phase_open(struct player *pplayer)
 {
   struct adv_data *adv = pplayer->server.adv;
@@ -252,7 +252,7 @@ bool is_adv_data_phase_open(struct player *pplayer)
   return adv->phase_is_initialized;
 }
 
-/**********************************************************************/ /**
+/**
    Make and cache lots of calculations needed for other functions.
 
    Returns TRUE if new data was created, FALSE if data existed already.
@@ -264,7 +264,7 @@ bool is_adv_data_phase_open(struct player *pplayer)
    FIXME: We should try to find the lowest common defence strength of our
    defending units, and ignore enemy units that are incapable of harming
    us, instead of just checking attack strength > 1.
- **************************************************************************/
+ */
 bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
 {
   struct adv_data *adv = pplayer->server.adv;
@@ -274,11 +274,11 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
   {
     int i = 0;
 
-    /* Conventional nukes */
+    // Conventional nukes
     action_list_add_all_by_result(nuke_actions, &i, ACTRES_NUKE);
     action_list_add_all_by_result(nuke_actions, &i, ACTRES_NUKE_CITY);
     action_list_add_all_by_result(nuke_actions, &i, ACTRES_NUKE_UNITS);
-    /* TODO: worry about spy nuking too? */
+    // TODO: worry about spy nuking too?
     action_list_end(nuke_actions, i);
   }
 
@@ -299,7 +299,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
   adv->num_oceans = wld.map.num_oceans;
   adv->threats.continent = new bool[adv->num_continents + 1]();
   adv->threats.invasions = false;
-  adv->threats.nuclear = 0; /* none */
+  adv->threats.nuclear = 0; // none
   adv->threats.ocean = new bool[adv->num_oceans + 1]();
   adv->threats.igwall = false;
 
@@ -334,7 +334,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
         /* If the enemy has not started sailing yet, or we have total
          * control over the seas, don't worry, keep attacking. */
         if (uclass_has_flag(pclass, UCF_CAN_OCCUPY_CITY)) {
-          /* Enemy represents a cross-continental threat! */
+          // Enemy represents a cross-continental threat!
           adv->threats.invasions = true;
         } else if (get_transporter_capacity(punit) > 0) {
           unit_class_iterate(cargoclass)
@@ -342,7 +342,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
             if (uclass_has_flag(cargoclass, UCF_CAN_OCCUPY_CITY)
                 && can_unit_type_transport(unit_type_get(punit),
                                            cargoclass)) {
-              /* Enemy can transport some threatening units! */
+              // Enemy can transport some threatening units!
               adv->threats.invasions = true;
               break;
             }
@@ -372,13 +372,13 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
         continue;
       }
 
-      /* If our enemy builds missiles, worry about missile defence. */
+      // If our enemy builds missiles, worry about missile defence.
       if (utype_can_do_action(unit_type_get(punit), ACTION_SUICIDE_ATTACK)
           && unit_type_get(punit)->attack_strength > 1) {
         adv->threats.suicide_attack = true;
       }
 
-      /* If he builds nukes, worry a lot. */
+      // If he builds nukes, worry a lot.
       action_list_iterate(nuke_actions, act_id)
       {
         if (unit_can_do_action(punit, act_id)) {
@@ -389,7 +389,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
     }
     unit_list_iterate_end;
 
-    /* Check for nuke capability */
+    // Check for nuke capability
     action_list_iterate(nuke_actions, act_id)
     {
       int i;
@@ -408,9 +408,9 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
   }
   players_iterate_end;
 
-  /* Increase from fear to terror if opponent actually has nukes */
+  // Increase from fear to terror if opponent actually has nukes
   if (danger_of_nukes) {
-    adv->threats.nuclear++; /* sum of both fears */
+    adv->threats.nuclear++; // sum of both fears
   }
 
   /*** Exploration ***/
@@ -427,15 +427,15 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
     if (is_ocean_tile(ptile)) {
       if (adv->explore.sea_done && has_handicap(pplayer, H_TARGETS)
           && !map_is_known(ptile, pplayer)) {
-        /* We're not done there. */
+        // We're not done there.
         adv->explore.sea_done = false;
         adv->explore.ocean[-continent] = true;
       }
-      /* skip rest, which is land only */
+      // skip rest, which is land only
       continue;
     }
     if (adv->explore.continent[tile_continent(ptile)]) {
-      /* we don't need more explaining, we got the point */
+      // we don't need more explaining, we got the point
       continue;
     }
     if (hut_on_tile(ptile)
@@ -446,7 +446,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
       continue;
     }
     if (has_handicap(pplayer, H_TARGETS) && !map_is_known(ptile, pplayer)) {
-      /* this AI must explore */
+      // this AI must explore
       adv->explore.land_done = false;
       adv->explore.continent[continent] = true;
     }
@@ -520,12 +520,12 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
   }
   adv->gold_priority = TRADE_WEIGHTING;
   adv->happy_priority = 1;
-  adv->unhappy_priority = TRADE_WEIGHTING;   /* danger */
-  adv->angry_priority = TRADE_WEIGHTING * 3; /* grave danger */
+  adv->unhappy_priority = TRADE_WEIGHTING;   // danger
+  adv->angry_priority = TRADE_WEIGHTING * 3; // grave danger
   adv->pollution_priority = POLLUTION_WEIGHTING;
   adv->infra_priority = INFRA_WEIGHTING;
 
-  /* Research want */
+  // Research want
   adv->wants_science = !(is_future_tech(research_get(pplayer)->researching)
                          || player_has_really_useful_tech_parasite(pplayer));
 
@@ -560,7 +560,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
 
   TIMING_LOG(AIT_AIDATA, TIMER_STOP);
 
-  /* Government */
+  // Government
   TIMING_LOG(AIT_GOVERNMENT, TIMER_START);
   adv_best_government(pplayer);
   TIMING_LOG(AIT_GOVERNMENT, TIMER_STOP);
@@ -568,9 +568,9 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Clean up our mess.
- **************************************************************************/
+ */
 void adv_data_phase_done(struct player *pplayer)
 {
   struct adv_data *adv = pplayer->server.adv;
@@ -594,12 +594,12 @@ void adv_data_phase_done(struct player *pplayer)
   adv->phase_is_initialized = false;
 }
 
-/**********************************************************************/ /**
+/**
    Return a pointer to our data.
    If caller_closes is set, data phase will be opened even if it's
    currently closed, and the boolean will be set accordingly to tell caller
    that phase needs closing.
- **************************************************************************/
+ */
 struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
 {
   struct adv_data *adv = pplayer->server.adv;
@@ -653,7 +653,7 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
 
   if (adv->num_continents != wld.map.num_continents
       || adv->num_oceans != wld.map.num_oceans) {
-    /* we discovered more continents, recalculate! */
+    // we discovered more continents, recalculate!
 
     if (adv->phase_is_initialized) {
       /* Only call these in this order if inside data phase.
@@ -691,9 +691,9 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
   return adv;
 }
 
-/**********************************************************************/ /**
+/**
    Allocate memory for advisor data. Save to call multiple times.
- **************************************************************************/
+ */
 void adv_data_init(struct player *pplayer)
 {
   struct adv_data *adv;
@@ -726,9 +726,9 @@ void adv_data_init(struct player *pplayer)
   adv_data_default(pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Initialize with sane values.
- **************************************************************************/
+ */
 void adv_data_default(struct player *pplayer)
 {
   struct adv_data *adv = pplayer->server.adv;
@@ -747,9 +747,9 @@ void adv_data_default(struct player *pplayer)
   adv->max_num_cities = 10000;
 }
 
-/**********************************************************************/ /**
+/**
    Free memory for advisor data.
- **************************************************************************/
+ */
 void adv_data_close(struct player *pplayer)
 {
   struct adv_data *adv = pplayer->server.adv;
@@ -777,9 +777,9 @@ void adv_data_close(struct player *pplayer)
   pplayer->server.adv = NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Allocate new advisor diplomacy slot
- **************************************************************************/
+ */
 static void adv_dipl_new(const struct player *plr1,
                          const struct player *plr2)
 {
@@ -789,9 +789,9 @@ static void adv_dipl_new(const struct player *plr1,
   *dip_slot = new adv_dipl();
 }
 
-/**********************************************************************/ /**
+/**
    Free resources allocated for diplomacy information between two players.
- **************************************************************************/
+ */
 static void adv_dipl_free(const struct player *plr1,
                           const struct player *plr2)
 {
@@ -804,9 +804,9 @@ static void adv_dipl_free(const struct player *plr1,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns diplomatic state type between two players
- **************************************************************************/
+ */
 static struct adv_dipl *adv_dipl_get(const struct player *plr1,
                                      const struct player *plr2)
 {
@@ -816,7 +816,7 @@ static struct adv_dipl *adv_dipl_get(const struct player *plr1,
   return *dip_slot;
 }
 
-/**********************************************************************/ /**
+/**
    Find best government to aim for.
    We do it by setting our government to all possible values and calculating
    our GDP (total ai_eval_calc_city) under this government.  If the very
@@ -827,7 +827,7 @@ static struct adv_dipl *adv_dipl_get(const struct player *plr1,
    recalculate this data every ai->govt_reeval_turns turns.
 
    Note: Call this _before_ doing taxes!
- **************************************************************************/
+ */
 void adv_best_government(struct player *pplayer)
 {
   struct adv_data *adv = adv_data_get(pplayer, NULL);
@@ -852,18 +852,18 @@ void adv_best_government(struct player *pplayer)
       bool override = false;
 
       if (gov == game.government_during_revolution) {
-        continue; /* pointless */
+        continue; // pointless
       }
       if (gov->ai.better
           && can_change_to_government(pplayer, gov->ai.better)) {
-        continue; /* we have better governments available */
+        continue; // we have better governments available
       }
 
       CALL_PLR_AI_FUNC(gov_value, pplayer, pplayer, gov, &val, &override);
 
       if (!override) {
         int dist;
-        adv_want bonus = 0; /* in percentage */
+        adv_want bonus = 0; // in percentage
         int revolution_turns;
 
         pplayer->government = gov;
@@ -886,7 +886,7 @@ void adv_best_government(struct player *pplayer)
          * we have no cities yet. */
         bonus += get_player_bonus(pplayer, EFT_VETERAN_BUILD) > 0 ? 3 : 0;
 
-        /* TODO: Individual and well balanced value. */
+        // TODO: Individual and well balanced value.
         action_iterate(act)
         {
           struct action *paction = action_by_number(act);
@@ -938,8 +938,8 @@ void adv_best_government(struct player *pplayer)
           case ACTRES_STRIKE_BUILDING:
           case ACTRES_STRIKE_PRODUCTION:
           case ACTRES_SPY_ATTACK:
-            /* Being a target of this is usually undesireable */
-            /* TODO: Individual and well balanced values. */
+            // Being a target of this is usually undesireable
+            // TODO: Individual and well balanced values.
             bonus += 0.1;
             break;
 
@@ -954,7 +954,7 @@ void adv_best_government(struct player *pplayer)
             break;
 
           case ACTRES_NONE:
-            /* Ruleset defined */
+            // Ruleset defined
             break;
 
           case ACTRES_ESTABLISH_EMBASSY:
@@ -981,7 +981,7 @@ void adv_best_government(struct player *pplayer)
             /* Could be good. An embassy gives permanent contact. A trade
              * route gives gold per turn. Join city gives population. Help
              * wonder gives shields. */
-            /* TODO: Individual and well balanced values. */
+            // TODO: Individual and well balanced values.
             break;
           }
         }
@@ -1001,7 +1001,7 @@ void adv_best_government(struct player *pplayer)
 
         val += (val * bonus) / 100;
 
-        /* FIXME: handle reqs other than technologies. */
+        // FIXME: handle reqs other than technologies.
         dist = 0;
         requirement_vector_iterate(&gov->reqs, preq)
         {
@@ -1015,10 +1015,10 @@ void adv_best_government(struct player *pplayer)
         val = amortize(val, dist);
       }
 
-      adv->government_want[government_index(gov)] = val; /* Save want */
+      adv->government_want[government_index(gov)] = val; // Save want
     }
     governments_iterate_end;
-    /* Now reset our gov to it's real state. */
+    // Now reset our gov to it's real state.
     pplayer->government = current_gov;
     city_list_iterate(pplayer->cities, acity)
     {
@@ -1033,7 +1033,7 @@ void adv_best_government(struct player *pplayer)
   }
   adv->govt_reeval--;
 
-  /* Figure out which government is the best for us this turn. */
+  // Figure out which government is the best for us this turn.
   governments_iterate(gov)
   {
     int gi = government_index(gov);
@@ -1046,7 +1046,7 @@ void adv_best_government(struct player *pplayer)
       adv->goal.govt.gov = gov;
       adv->goal.govt.val = adv->government_want[gi];
 
-      /* FIXME: handle reqs other than technologies. */
+      // FIXME: handle reqs other than technologies.
       adv->goal.govt.req = A_NONE;
       requirement_vector_iterate(&gov->reqs, preq)
       {
@@ -1064,20 +1064,20 @@ void adv_best_government(struct player *pplayer)
   adv->goal.govt.val -= best_val;
 }
 
-/**********************************************************************/ /**
+/**
    Return whether science would help us at all.
- **************************************************************************/
+ */
 bool adv_wants_science(struct player *pplayer)
 {
   return adv_data_get(pplayer, NULL)->wants_science;
 }
 
-/**********************************************************************/ /**
+/**
    There are some signs that a player might be dangerous: We are at
    war with him, he has done lots of ignoble things to us, he is an
    ally of one of our enemies (a ticking bomb to be sure), we don't like him,
    diplomatic state is neutral or we have cease fire.
- **************************************************************************/
+ */
 bool adv_is_player_dangerous(struct player *pplayer, struct player *aplayer)
 {
   struct adv_dipl *dip;
@@ -1085,7 +1085,7 @@ bool adv_is_player_dangerous(struct player *pplayer, struct player *aplayer)
   enum override_bool dang = NO_OVERRIDE;
 
   if (is_ai(pplayer)) {
-    /* Give AI code possibility to decide itself */
+    // Give AI code possibility to decide itself
     CALL_PLR_AI_FUNC(consider_plr_dangerous, pplayer, pplayer, aplayer,
                      &dang);
   }
@@ -1099,21 +1099,21 @@ bool adv_is_player_dangerous(struct player *pplayer, struct player *aplayer)
   }
 
   if (pplayer == aplayer) {
-    /* We always trust ourself */
+    // We always trust ourself
     return false;
   }
 
   ds = player_diplstate_get(pplayer, aplayer)->type;
 
   if (ds == DS_WAR || ds == DS_CEASEFIRE) {
-    /* It's already a war or aplayer can declare it soon */
+    // It's already a war or aplayer can declare it soon
     return true;
   }
 
   dip = adv_dipl_get(pplayer, aplayer);
 
   if (dip->allied_with_enemy) {
-    /* Don't trust someone who will declare war on us soon */
+    // Don't trust someone who will declare war on us soon
     return true;
   }
 

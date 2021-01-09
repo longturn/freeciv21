@@ -24,9 +24,9 @@
 #include "page_game.h"
 #include "sprite.h"
 
-/***********************************************************************/ /**
+/**
    info_tab constructor
- ***************************************************************************/
+ */
 info_tab::info_tab(QWidget *parent)
 {
   setParent(parent);
@@ -55,9 +55,9 @@ info_tab::info_tab(QWidget *parent)
   chat_maximized = false;
 }
 
-/***********************************************************************/ /**
+/**
    Sets chat to default size of 3 lines
- ***************************************************************************/
+ */
 void info_tab::restore_chat()
 {
   msgwdg->setFixedHeight(qMax(0, (height() - chtwdg->default_size(3))));
@@ -66,9 +66,9 @@ void info_tab::restore_chat()
   chtwdg->scroll_to_bottom();
 }
 
-/***********************************************************************/ /**
+/**
    Maximizes size of chat
- ***************************************************************************/
+ */
 void info_tab::maximize_chat()
 {
   msgwdg->setFixedHeight(0);
@@ -77,9 +77,9 @@ void info_tab::maximize_chat()
   chtwdg->scroll_to_bottom();
 }
 
-/***********************************************************************/ /**
+/**
    Checks if info_tab can be moved
- ***************************************************************************/
+ */
 void info_tab::mousePressEvent(QMouseEvent *event)
 {
   if (king()->interface_locked) {
@@ -104,9 +104,9 @@ void info_tab::mousePressEvent(QMouseEvent *event)
   event->setAccepted(true);
 }
 
-/***********************************************************************/ /**
+/**
    Restores cursor when resizing is done
- ***************************************************************************/
+ */
 void info_tab::mouseReleaseEvent(QMouseEvent *event)
 {
   QPoint p;
@@ -131,10 +131,10 @@ void info_tab::mouseReleaseEvent(QMouseEvent *event)
       static_cast<float>(p.y()) / queen()->mapview_wdg->height();
 }
 
-/***********************************************************************/ /**
+/**
    Called when mouse moved (mouse track is enabled).
    Used for resizing info_tab.
- ***************************************************************************/
+ */
 void info_tab::mouseMoveEvent(QMouseEvent *event)
 {
   if (king()->interface_locked) {
@@ -171,14 +171,14 @@ void info_tab::mouseMoveEvent(QMouseEvent *event)
   event->setAccepted(true);
 }
 
-/***********************************************************************/ /**
+/**
    Inherited from abstract parent, does nothing here
- ***************************************************************************/
+ */
 void info_tab::update_menu() {}
 
-/***********************************************************************/ /**
+/**
    Messagewdg constructor
- ***************************************************************************/
+ */
 messagewdg::messagewdg(QWidget *parent) : QWidget(parent)
 {
   QPalette palette;
@@ -208,9 +208,9 @@ messagewdg::messagewdg(QWidget *parent) : QWidget(parent)
   setMouseTracking(true);
 }
 
-/***********************************************************************/ /**
+/**
    Slot executed when selection on meg_table has changed
- ***************************************************************************/
+ */
 void messagewdg::item_selected(const QItemSelection &sl,
                                const QItemSelection &ds)
 {
@@ -252,28 +252,28 @@ void messagewdg::item_selected(const QItemSelection &sl,
   mesg_table->clearSelection();
 }
 
-/***********************************************************************/ /**
+/**
    Mouse entered messagewdg
- ***************************************************************************/
+ */
 void messagewdg::enterEvent(QEvent *event) { setCursor(Qt::ArrowCursor); }
 
-/***********************************************************************/ /**
+/**
    Mouse left messagewdg
- ***************************************************************************/
+ */
 void messagewdg::leaveEvent(QEvent *event) { setCursor(Qt::ArrowCursor); }
 
-/***********************************************************************/ /**
+/**
    Paints semi-transparent background
- ***************************************************************************/
+ */
 void messagewdg::paint(QPainter *painter, QPaintEvent *event)
 {
   painter->setBrush(QColor(0, 0, 0, 35));
   painter->drawRect(0, 0, width(), height());
 }
 
-/***********************************************************************/ /**
+/**
    Paint event for messagewdg
- ***************************************************************************/
+ */
 void messagewdg::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
@@ -283,18 +283,18 @@ void messagewdg::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/***********************************************************************/ /**
+/**
    Clears and removes mesg_table all items
- ***************************************************************************/
+ */
 void messagewdg::clr()
 {
   mesg_table->clearContents();
   mesg_table->setRowCount(0);
 }
 
-/***********************************************************************/ /**
+/**
    Adds news message to mesg_table
- ***************************************************************************/
+ */
 void messagewdg::msg(const struct message *pmsg)
 {
   int i;
@@ -321,23 +321,23 @@ void messagewdg::msg(const struct message *pmsg)
   mesg_table->scrollToBottom();
 }
 
-/***********************************************************************/ /**
+/**
    Updates mesg_table painting
- ***************************************************************************/
+ */
 void messagewdg::msg_update()
 {
   mesg_table->resizeRowsToContents();
   update();
 }
 
-/***********************************************************************/ /**
+/**
    Resize event for messagewdg
- ***************************************************************************/
+ */
 void messagewdg::resizeEvent(QResizeEvent *event) { msg_update(); }
 
-/***********************************************************************/ /**
+/**
    Do the work of updating (populating) the message dialog.
- ***************************************************************************/
+ */
 void real_meswin_dialog_update(void *unused)
 {
   int i, num;

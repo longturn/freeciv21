@@ -25,13 +25,13 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
 #include "support.h"
 
-/* common */
+// common
 #include "effects.h"
 #include "events.h"
 #include "game.h"
@@ -44,7 +44,7 @@
 #include "terrain.h"
 #include "unitlist.h"
 
-/* server */
+// server
 #include "aiiface.h"
 #include "citytools.h"
 #include "gamehand.h"
@@ -60,7 +60,7 @@
 /* server/advisors */
 #include "advdata.h"
 
-/* ai */
+// ai
 #include "difficulty.h"
 
 #include "barbarian.h"
@@ -68,31 +68,31 @@
 #define BARBARIAN_INITIAL_VISION_RADIUS 3
 #define BARBARIAN_INITIAL_VISION_RADIUS_SQ 9
 
-/**********************************************************************/ /**
+/**
    Is player a land barbarian?
- **************************************************************************/
+ */
 bool is_land_barbarian(struct player *pplayer)
 {
   return (pplayer->ai_common.barbarian_type == LAND_BARBARIAN
           || pplayer->ai_common.barbarian_type == LAND_AND_SEA_BARBARIAN);
 }
 
-/**********************************************************************/ /**
+/**
    Is player a sea barbarian?
- **************************************************************************/
+ */
 bool is_sea_barbarian(struct player *pplayer)
 {
   return (pplayer->ai_common.barbarian_type == SEA_BARBARIAN
           || pplayer->ai_common.barbarian_type == LAND_AND_SEA_BARBARIAN);
 }
 
-/**********************************************************************/ /**
+/**
    Creates the land/sea barbarian player and inits some stuff. If
    barbarian player already exists, return player pointer. If barbarians
    are dead, revive them with a new leader :-)
 
    Dead barbarians forget the map and lose the money.
- **************************************************************************/
+ */
 struct player *create_barbarian_player(enum barbarian_type type)
 {
   struct player *barbarians;
@@ -116,21 +116,21 @@ struct player *create_barbarian_player(enum barbarian_type type)
             old_barbs, pick_random_player_name(nation_of_player(old_barbs)));
         sz_strlcpy(old_barbs->username, _(ANON_USER_NAME));
         old_barbs->unassigned_user = true;
-        /* I need to make them to forget the map, I think */
+        // I need to make them to forget the map, I think
         whole_map_iterate(&(wld.map), ptile)
         {
           map_clear_known(ptile, old_barbs);
         }
         whole_map_iterate_end;
       }
-      old_barbs->economic.gold += 100; /* New leader, new money */
+      old_barbs->economic.gold += 100; // New leader, new money
 
       return old_barbs;
     }
   }
   players_iterate_end;
 
-  /* make a new player, or not */
+  // make a new player, or not
   barbarians = server_create_player(-1, default_ai_type_name(), NULL, false);
   if (!barbarians) {
     return NULL;
@@ -157,7 +157,7 @@ struct player *create_barbarian_player(enum barbarian_type type)
 
   player_nation_defaults(barbarians, nation, true);
   if (game_was_started()) {
-    /* Find a color for the new player. */
+    // Find a color for the new player.
     assign_player_colors();
   }
 
@@ -173,7 +173,7 @@ struct player *create_barbarian_player(enum barbarian_type type)
 
   barbarians->phase_done = true;
 
-  /* Do the ai */
+  // Do the ai
   set_as_ai(barbarians);
   barbarians->ai_common.barbarian_type = type;
   set_ai_level_directer(barbarians, ai_level(game.info.skill_level));
@@ -182,7 +182,7 @@ struct player *create_barbarian_player(enum barbarian_type type)
   init_tech(presearch, true);
   give_initial_techs(presearch, 0);
 
-  /* Ensure that we are at war with everyone else */
+  // Ensure that we are at war with everyone else
   players_iterate(pplayer)
   {
     if (pplayer != barbarians) {
@@ -210,9 +210,9 @@ struct player *create_barbarian_player(enum barbarian_type type)
   return barbarians;
 }
 
-/**********************************************************************/ /**
+/**
    (Re)initialize direction checked status array based on terrain class.
- **************************************************************************/
+ */
 static void init_dir_checked_status(bool *checked,
                                     enum terrain_class *terrainc,
                                     enum terrain_class tclass)
@@ -228,9 +228,9 @@ static void init_dir_checked_status(bool *checked,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return random directory from not yet checked ones.
- **************************************************************************/
+ */
 static int random_unchecked_direction(int possibilities, const bool *checked)
 {
   int j = -1;
@@ -248,7 +248,7 @@ static int random_unchecked_direction(int possibilities, const bool *checked)
   return j;
 }
 
-/**********************************************************************/ /**
+/**
    Unleash barbarians means give barbarian player some units and move them
    out of the hut, unless there's no place to go.
 
@@ -257,13 +257,13 @@ static int random_unchecked_direction(int possibilities, const bool *checked)
    boats, otherwise (not much land and no sea) kill enemy unit and stay in
    a village. The return value indicates if the explorer survived entering
    the vilage.
- **************************************************************************/
+ */
 bool unleash_barbarians(struct tile *ptile)
 {
   struct player *barbarians;
   int unit_cnt;
   int i;
-  bool alive = true; /* explorer survived */
+  bool alive = true; // explorer survived
   enum terrain_class terrainc[8];
   struct tile *dir_tiles[8];
   int land_tiles = 0;
@@ -333,16 +333,16 @@ bool unleash_barbarians(struct tile *ptile)
   }
 
   if (land_tiles >= 3) {
-    /* Enough land, scatter guys around */
+    // Enough land, scatter guys around
     unit_list_iterate_safe((ptile)->units, punit2)
     {
       if (unit_owner(punit2) == barbarians) {
         bool dest_found = false;
 
-        /* Initialize checked status for checking free land tiles */
+        // Initialize checked status for checking free land tiles
         init_dir_checked_status(checked, terrainc, TC_LAND);
 
-        /* Search tile to move to */
+        // Search tile to move to
         for (checked_count = 0; !dest_found && checked_count < land_tiles;
              checked_count++) {
           int rdir = random_unchecked_direction(land_tiles - checked_count,
@@ -350,7 +350,7 @@ bool unleash_barbarians(struct tile *ptile)
 
           if (unit_can_move_to_tile(&(wld.map), punit2, dir_tiles[rdir],
                                     true, false)) {
-            /* Move */
+            // Move
             (void) unit_move_handling(punit2, dir_tiles[rdir], true, true);
             log_debug("Moved barbarian unit from (%d, %d) to (%d, %d)",
                       TILE_XY(ptile), TILE_XY(dir_tiles[rdir]));
@@ -360,7 +360,7 @@ bool unleash_barbarians(struct tile *ptile)
           checked[rdir] = true;
         }
         if (!dest_found) {
-          /* This barbarian failed to move out of hut tile. */
+          // This barbarian failed to move out of hut tile.
           barbarian_stays = true;
         }
       }
@@ -369,13 +369,13 @@ bool unleash_barbarians(struct tile *ptile)
 
   } else {
     if (ocean_tiles > 0) {
-      /* maybe it's an island, try to get on boats */
-      struct unit *boat = NULL; /* Boat */
+      // maybe it's an island, try to get on boats
+      struct unit *boat = NULL; // Boat
 
-      /* Initialize checked status for checking Ocean tiles */
+      // Initialize checked status for checking Ocean tiles
       init_dir_checked_status(checked, terrainc, TC_OCEAN);
 
-      /* Search tile for boat. We always create just one boat. */
+      // Search tile for boat. We always create just one boat.
       for (checked_count = 0; boat == NULL && checked_count < ocean_tiles;
            checked_count++) {
         struct unit_type *candidate;
@@ -392,13 +392,13 @@ bool unleash_barbarians(struct tile *ptile)
       }
 
       if (boat) {
-        /* We do have a boat. Try to get everybody in */
+        // We do have a boat. Try to get everybody in
         unit_list_iterate_safe((ptile)->units, punit2)
         {
           if (unit_owner(punit2) == barbarians) {
             if (is_action_enabled_unit_on_unit(ACTION_TRANSPORT_EMBARK,
                                                punit2, boat)) {
-              /* Load */
+              // Load
               unit_do_action(unit_owner(punit2), punit2->id, boat->id, 0, "",
                              ACTION_TRANSPORT_EMBARK);
             }
@@ -407,16 +407,16 @@ bool unleash_barbarians(struct tile *ptile)
         unit_list_iterate_safe_end;
       }
 
-      /* Move rest of the barbarians to random land tiles */
+      // Move rest of the barbarians to random land tiles
       unit_list_iterate_safe((ptile)->units, punit2)
       {
         if (unit_owner(punit2) == barbarians) {
           bool dest_found = false;
 
-          /* Initialize checked status for checking Land tiles */
+          // Initialize checked status for checking Land tiles
           init_dir_checked_status(checked, terrainc, TC_LAND);
 
-          /* Search tile to move to */
+          // Search tile to move to
           for (checked_count = 0; !dest_found && checked_count < land_tiles;
                checked_count++) {
             int rdir;
@@ -426,7 +426,7 @@ bool unleash_barbarians(struct tile *ptile)
 
             if (unit_can_move_to_tile(&(wld.map), punit2, dir_tiles[rdir],
                                       true, false)) {
-              /* Move */
+              // Move
               (void) unit_move_handling(punit2, dir_tiles[rdir], true, true);
               dest_found = true;
             }
@@ -434,20 +434,20 @@ bool unleash_barbarians(struct tile *ptile)
             checked[rdir] = true;
           }
           if (!dest_found) {
-            /* This barbarian failed to move out of hut tile. */
+            // This barbarian failed to move out of hut tile.
             barbarian_stays = true;
           }
         }
       }
       unit_list_iterate_safe_end;
     } else {
-      /* The village is surrounded! Barbarians cannot leave. */
+      // The village is surrounded! Barbarians cannot leave.
       barbarian_stays = true;
     }
   }
 
   if (barbarian_stays) {
-    /* There's barbarian in this village! Kill the explorer. */
+    // There's barbarian in this village! Kill the explorer.
     unit_list_iterate_safe((ptile)->units, punit2)
     {
       if (unit_owner(punit2) != barbarians) {
@@ -460,7 +460,7 @@ bool unleash_barbarians(struct tile *ptile)
     unit_list_iterate_safe_end;
   }
 
-  /* FIXME: I don't know if this is needed */
+  // FIXME: I don't know if this is needed
   if (ptile) {
     map_show_circle(barbarians, ptile, BARBARIAN_INITIAL_VISION_RADIUS_SQ);
   }
@@ -468,9 +468,9 @@ bool unleash_barbarians(struct tile *ptile)
   return alive;
 }
 
-/**********************************************************************/ /**
+/**
    Is sea not further than a couple of tiles away from land?
- **************************************************************************/
+ */
 static bool is_near_land(struct tile *tile0)
 {
   square_iterate(&(wld.map), tile0, 4, ptile)
@@ -484,9 +484,9 @@ static bool is_near_land(struct tile *tile0)
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Return this or a neighbouring tile that is free of any units
- **************************************************************************/
+ */
 static struct tile *find_empty_tile_nearby(struct tile *ptile)
 {
   square_iterate(&(wld.map), ptile, 1, tile1)
@@ -500,7 +500,7 @@ static struct tile *find_empty_tile_nearby(struct tile *ptile)
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    The barbarians are summoned at a randomly chosen place if:
    1. It's not closer than MIN_UNREST_DIST and not further than
       MAX_UNREST_DIST from the nearest city. City owner is called 'victim'
@@ -517,7 +517,7 @@ static struct tile *find_empty_tile_nearby(struct tile *ptile)
       a bit unjust if someone is always small. So maybe it should rather
       be an average number of cities (all cities/player num)? Depending
       on the victim government type is also questionable.
- **************************************************************************/
+ */
 static void try_summon_barbarians()
 {
   struct tile *ptile, *utile;
@@ -545,7 +545,7 @@ static void try_summon_barbarians()
   pc = find_closest_city(ptile, NULL, NULL, false, false, false, false,
                          false, NULL);
   if (!pc) {
-    /* any city */
+    // any city
     return;
   }
 
@@ -558,7 +558,7 @@ static void try_summon_barbarians()
     return;
   }
 
-  /* I think Sea Raiders can come out of unknown sea territory */
+  // I think Sea Raiders can come out of unknown sea territory
   if (!(utile = find_empty_tile_nearby(ptile))
       || (!map_is_known(utile, victim) && !is_ocean_tile(utile))
       || !is_near_land(utile)) {
@@ -576,8 +576,8 @@ static void try_summon_barbarians()
   }
   log_debug("Barbarians are willing to fight");
 
-  /* Remove huts in place of uprising */
-  /* FIXME: Should we really always do it? */
+  // Remove huts in place of uprising
+  // FIXME: Should we really always do it?
   extra_type_by_rmcause_iterate(ERM_ENTER, pextra)
   {
     if (tile_has_extra(utile, pextra)) {
@@ -604,7 +604,7 @@ static void try_summon_barbarians()
   leader_type = get_role_unit(L_BARBARIAN_LEADER, 0);
 
   if (!is_ocean_tile(utile)) {
-    /* land (disembark) barbarians */
+    // land (disembark) barbarians
     barbarians = create_barbarian_player(LAND_BARBARIAN);
     if (!barbarians) {
       return;
@@ -627,7 +627,7 @@ static void try_summon_barbarians()
       (void) create_unit(barbarians, utile, leader_type, 0, 0, -1);
       really_created++;
     }
-  } else { /* sea raiders - their units will be veteran */
+  } else { // sea raiders - their units will be veteran
     struct unit *ptrans;
     struct unit_type *boat;
     bool miniphase;
@@ -690,19 +690,19 @@ static void try_summon_barbarians()
   }
 
   if (really_created == 0) {
-    /* No barbarians found suitable spot */
+    // No barbarians found suitable spot
     return;
   }
 
-  /* Is this necessary?  create_unit_full already sends unit info. */
+  // Is this necessary?  create_unit_full already sends unit info.
   unit_list_iterate(utile->units, punit2) { send_unit_info(NULL, punit2); }
   unit_list_iterate_end;
 
-  /* to let them know where to get you */
+  // to let them know where to get you
   map_show_circle(barbarians, utile, BARBARIAN_INITIAL_VISION_RADIUS_SQ);
   map_show_circle(barbarians, pc->tile, BARBARIAN_INITIAL_VISION_RADIUS_SQ);
 
-  /* There should probably be a different message about Sea Raiders */
+  // There should probably be a different message about Sea Raiders
   if (is_land_barbarian(barbarians)) {
     notify_player(victim, utile, E_UPRISING, ftc_server,
                   _("Native unrest near %s led by %s."), city_link(pc),
@@ -713,10 +713,10 @@ static void try_summon_barbarians()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Summon barbarians out of the blue. Try more times for more difficult
    levels - which means there can be more than one uprising in one year!
- **************************************************************************/
+ */
 void summon_barbarians()
 {
   int i, n;
@@ -732,7 +732,7 @@ void summon_barbarians()
 
   n = map_num_tiles() / MAP_FACTOR;
   if (n == 0) {
-    /* Allow barbarians on maps smaller than MAP_FACTOR */
+    // Allow barbarians on maps smaller than MAP_FACTOR
     n = 1;
   }
 

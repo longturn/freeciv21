@@ -47,9 +47,9 @@
 
 #include "tab_misc.h"
 
-/**********************************************************************/ /**
+/**
    Setup tab_misc object
- **************************************************************************/
+ */
 tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
 {
   QGridLayout *main_layout = new QGridLayout(this);
@@ -198,9 +198,9 @@ tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the information.
- **************************************************************************/
+ */
 void tab_misc::refresh()
 {
   name->setText(game.control.name);
@@ -208,9 +208,9 @@ void tab_misc::refresh()
   refresh_stats();
 }
 
-/**********************************************************************/ /**
+/**
    User entered savedir
- **************************************************************************/
+ */
 void tab_misc::save_now()
 {
   char nameUTF8[MAX_LEN_NAME];
@@ -255,9 +255,9 @@ void tab_misc::save_now()
   ui->display_msg(R__("Ruleset saved"));
 }
 
-/**********************************************************************/ /**
+/**
    Recalculate stats
- **************************************************************************/
+ */
 void tab_misc::refresh_stats()
 {
   int row = 0;
@@ -359,18 +359,18 @@ void tab_misc::refresh_stats()
   stats->resizeColumnsToContents();
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit always active effects
- **************************************************************************/
+ */
 void tab_misc::edit_aae_effects()
 {
   ui->open_effect_edit(QString::fromUtf8(R__("Always active")), nullptr,
                        EFMC_NONE);
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit effects from full list
- **************************************************************************/
+ */
 void tab_misc::edit_all_effects()
 {
   ui->open_effect_edit(QString::fromUtf8(R__("All effects")), nullptr,

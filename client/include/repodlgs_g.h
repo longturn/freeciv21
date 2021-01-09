@@ -10,13 +10,13 @@
 **************************************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
+// utility
+#include "support.h" // bool type
 
-/* common */
+// common
 #include "packets.h"
 
-/* client */
+// client
 #include "repodlgs_common.h"
 
 #include "gui_proto_constructor.h"
@@ -34,7 +34,7 @@ GUI_FUNC_PROTO(void, real_science_report_dialog_update, void *unused)
 GUI_FUNC_PROTO(void, real_economy_report_dialog_update, void *unused)
 GUI_FUNC_PROTO(void, real_units_report_dialog_update, void *unused)
 
-/* Actually defined in update_queue.c */
+// Actually defined in update_queue.c
 void science_report_dialog_update();
 void economy_report_dialog_update();
 void units_report_dialog_update();

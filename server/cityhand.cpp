@@ -19,13 +19,13 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
 #include "support.h"
 
-/* common */
+// common
 #include "city.h"
 #include "events.h"
 #include "game.h"
@@ -39,7 +39,7 @@
 /* common/aicore */
 #include "cm.h"
 
-/* server */
+// server
 #include "citytools.h"
 #include "cityturn.h"
 #include "notify.h"
@@ -50,17 +50,17 @@
 
 #include "cityhand.h"
 
-/**********************************************************************/ /**
+/**
    Send city_name_suggestion packet back to requesting conn, with
    suggested name and with same id which was passed in (either unit id
    for city builder or existing city id for rename, we don't care here).
- **************************************************************************/
+ */
 void handle_city_name_suggestion_req(struct player *pplayer, int unit_id)
 {
   struct unit *punit = player_unit_by_number(pplayer, unit_id);
 
   if (NULL == punit) {
-    /* Probably died or bribed. */
+    // Probably died or bribed.
     qDebug("handle_city_name_suggestion_req() invalid unit %d", unit_id);
     return;
   }
@@ -73,7 +73,7 @@ void handle_city_name_suggestion_req(struct player *pplayer, int unit_id)
         pplayer->connections, unit_id,
         city_name_suggestion(pplayer, unit_tile(punit)));
 
-    /* The rest of this function is error handling. */
+    // The rest of this function is error handling.
     return;
   }
 
@@ -85,9 +85,9 @@ void handle_city_name_suggestion_req(struct player *pplayer, int unit_id)
                      unit_tile(punit), NULL, NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Handle request to change specialist type
- **************************************************************************/
+ */
 void handle_city_change_specialist(struct player *pplayer, int city_id,
                                    Specialist_type_id from,
                                    Specialist_type_id to)
@@ -115,9 +115,9 @@ void handle_city_change_specialist(struct player *pplayer, int city_id,
   send_city_info(pplayer, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Handle request to change city worker in to specialist.
- **************************************************************************/
+ */
 void handle_city_make_specialist(struct player *pplayer, int city_id,
                                  int tile_id)
 {
@@ -125,7 +125,7 @@ void handle_city_make_specialist(struct player *pplayer, int city_id,
   struct city *pcity = player_city_by_number(pplayer, city_id);
 
   if (NULL == pcity) {
-    /* Probably lost. */
+    // Probably lost.
     qDebug("handle_city_make_specialist() bad city number %d.", city_id);
     return;
   }
@@ -158,11 +158,11 @@ void handle_city_make_specialist(struct player *pplayer, int city_id,
   sync_cities();
 }
 
-/**********************************************************************/ /**
+/**
    Handle request to turn specialist in to city worker. Client cannot
    tell which kind of specialist is to be taken, but this just makes worker
    from first available specialist.
- **************************************************************************/
+ */
 void handle_city_make_worker(struct player *pplayer, int city_id,
                              int tile_id)
 {
@@ -170,7 +170,7 @@ void handle_city_make_worker(struct player *pplayer, int city_id,
   struct city *pcity = player_city_by_number(pplayer, city_id);
 
   if (NULL == pcity) {
-    /* Probably lost. */
+    // Probably lost.
     qDebug("handle_city_make_worker() bad city number %d.", city_id);
     return;
   }
@@ -227,10 +227,10 @@ void handle_city_make_worker(struct player *pplayer, int city_id,
   sync_cities();
 }
 
-/**********************************************************************/ /**
+/**
    Handle improvement selling request. Caller is responsible to validate
    input before passing to this function if it comes from untrusted source.
- **************************************************************************/
+ */
 void really_handle_city_sell(struct player *pplayer, struct city *pcity,
                              struct impr_type *pimprove)
 {
@@ -260,15 +260,15 @@ void really_handle_city_sell(struct player *pplayer, struct city *pcity,
 
   city_refresh(pcity);
 
-  /* If we sold the walls the other players should see it */
+  // If we sold the walls the other players should see it
   send_city_info(NULL, pcity);
   send_player_info_c(pplayer, pplayer->connections);
 }
 
-/**********************************************************************/ /**
+/**
    Handle improvement selling request. This function does check its
    parameters as they may come from untrusted source over the network.
- **************************************************************************/
+ */
 void handle_city_sell(struct player *pplayer, int city_id, int build_id)
 {
   struct city *pcity = player_city_by_number(pplayer, city_id);
@@ -280,15 +280,15 @@ void handle_city_sell(struct player *pplayer, int city_id, int build_id)
   really_handle_city_sell(pplayer, pcity, pimprove);
 }
 
-/**********************************************************************/ /**
+/**
    Handle buying request. Caller is responsible to validate input before
    passing to this function if it comes from untrusted source.
- **************************************************************************/
+ */
 void really_handle_city_buy(struct player *pplayer, struct city *pcity)
 {
   int cost, total;
 
-  /* This function corresponds to city_can_buy() in the client. */
+  // This function corresponds to city_can_buy() in the client.
 
   fc_assert_ret(pcity && player_owns_city(pplayer, pcity));
 
@@ -321,12 +321,12 @@ void really_handle_city_buy(struct player *pplayer, struct city *pcity)
   total = city_production_build_shield_cost(pcity);
   cost = city_production_buy_gold_cost(pcity);
   if (cost <= 0) {
-    return; /* sanity */
+    return; // sanity
   }
   if (cost > pplayer->economic.gold) {
     /* In case something changed while player tried to buy, or player
      * tried to cheat! */
-    /* Split into two to allow localization of two pluralisations. */
+    // Split into two to allow localization of two pluralisations.
     char buf[MAX_LEN_MSG];
     /* TRANS: This whole string is only ever used when included in one
      * other string (search for this string to find it). */
@@ -346,14 +346,14 @@ void really_handle_city_buy(struct player *pplayer, struct city *pcity)
     /* As we never put penalty on disbanded_shields, we can
      * fully well add the missing shields there. */
     pcity->disbanded_shields += total - pcity->shield_stock;
-    pcity->shield_stock = total; /* AI wants this -- Syela */
-    pcity->did_buy = true;       /* !PS: no need to set buy flag otherwise */
+    pcity->shield_stock = total; // AI wants this -- Syela
+    pcity->did_buy = true;       // !PS: no need to set buy flag otherwise
   }
   city_refresh(pcity);
 
   if (VUT_UTYPE == pcity->production.kind) {
     notify_player(pplayer, pcity->tile, E_UNIT_BUY, ftc_server,
-                  /* TRANS: bought an unit. */
+                  // TRANS: bought an unit.
                   Q_("?unit:You bought %s in %s."),
                   utype_name_translation(pcity->production.value.utype),
                   city_name_get(pcity));
@@ -372,9 +372,9 @@ void really_handle_city_buy(struct player *pplayer, struct city *pcity)
   conn_list_do_unbuffer(pplayer->connections);
 }
 
-/**********************************************************************/ /**
+/**
    Handle city worklist update request
- **************************************************************************/
+ */
 void handle_city_worklist(struct player *pplayer, int city_id,
                           const struct worklist *worklist)
 {
@@ -389,10 +389,10 @@ void handle_city_worklist(struct player *pplayer, int city_id,
   send_city_info(pplayer, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Handle buying request. This function does properly check its input as
    it may come from untrusted source over the network.
- **************************************************************************/
+ */
 void handle_city_buy(struct player *pplayer, int city_id)
 {
   struct city *pcity = player_city_by_number(pplayer, city_id);
@@ -404,9 +404,9 @@ void handle_city_buy(struct player *pplayer, int city_id)
   really_handle_city_buy(pplayer, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Handle city refresh request
- **************************************************************************/
+ */
 void handle_city_refresh(struct player *pplayer, int city_id)
 {
   if (city_id != 0) {
@@ -423,9 +423,9 @@ void handle_city_refresh(struct player *pplayer, int city_id)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Handle request to change current production.
- **************************************************************************/
+ */
 void handle_city_change(struct player *pplayer, int city_id,
                         int production_kind, int production_value)
 {
@@ -452,7 +452,7 @@ void handle_city_change(struct player *pplayer, int city_id,
   }
 
   if (are_universals_equal(&pcity->production, &prod)) {
-    /* The client probably shouldn't send such a packet. */
+    // The client probably shouldn't send such a packet.
     return;
   }
 
@@ -472,9 +472,9 @@ void handle_city_change(struct player *pplayer, int city_id,
   send_city_info(pplayer, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    'struct packet_city_rename' handler.
- **************************************************************************/
+ */
 void handle_city_rename(struct player *pplayer, int city_id,
                         const char *name)
 {
@@ -496,10 +496,10 @@ void handle_city_rename(struct player *pplayer, int city_id,
   send_city_info(NULL, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Handles a packet from the client that requests the city options for the
    given city be changed.
- **************************************************************************/
+ */
 void handle_city_options_req(struct player *pplayer, int city_id,
                              bv_city_options options)
 {
@@ -514,9 +514,9 @@ void handle_city_options_req(struct player *pplayer, int city_id,
   send_city_info(pplayer, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Handles a request to set city rally point for new units.
- **************************************************************************/
+ */
 void handle_city_rally_point(struct player *pplayer, int city_id, int length,
                              bool persistent, bool vigilant,
                              const struct unit_order *orders)
@@ -525,13 +525,13 @@ void handle_city_rally_point(struct player *pplayer, int city_id, int length,
   struct unit_order *checked_orders;
 
   if (NULL == pcity) {
-    /* Probably lost. */
+    // Probably lost.
     qDebug("handle_city_rally_point() bad city number %d.", city_id);
     return;
   }
 
   if (0 > length || MAX_LEN_ROUTE < length) {
-    /* Shouldn't happen */
+    // Shouldn't happen
     qCritical("handle_city_rally_point() invalid packet length %d (max %d)",
               length, MAX_LEN_ROUTE);
     return;
@@ -561,16 +561,16 @@ void handle_city_rally_point(struct player *pplayer, int city_id, int length,
   send_city_info(pplayer, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Handles a request to set city manager parameter.
- **************************************************************************/
+ */
 void handle_city_manager(struct player *pplayer, int city_id, bool enabled,
                          struct cm_parameter parameter)
 {
   struct city *pcity = player_city_by_number(pplayer, city_id);
 
   if (NULL == pcity) {
-    /* Probably lost. */
+    // Probably lost.
     qDebug("handle_city_manager() bad city number %d.", city_id);
     return;
   }

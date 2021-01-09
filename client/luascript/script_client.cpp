@@ -24,10 +24,10 @@ extern "C" {
 /* dependencies/tolua */
 #include "tolua.h"
 }
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "featured_text.h"
 
 /* common/scriptcore */
@@ -39,7 +39,7 @@ extern "C" {
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
 
-/* client */
+// client
 #include "luaconsole_common.h"
 
 /* client/luascript */
@@ -72,9 +72,9 @@ static void script_client_output(struct fc_lua *fcl, QtMsgType level,
 
 static void script_client_signal_create();
 
-/*************************************************************************/ /**
+/**
    Parse and execute the script in str
- *****************************************************************************/
+ */
 bool script_client_do_string(const char *str)
 {
   int status = luascript_do_string(main_fcl, str, "cmd");
@@ -82,9 +82,9 @@ bool script_client_do_string(const char *str)
   return (status == 0);
 }
 
-/*************************************************************************/ /**
+/**
    Parse and execute the script at filename.
- *****************************************************************************/
+ */
 bool script_client_do_file(const char *filename)
 {
   int status = luascript_do_file(main_fcl, filename);
@@ -92,9 +92,9 @@ bool script_client_do_file(const char *filename)
   return (status == 0);
 }
 
-/*************************************************************************/ /**
+/**
    Invoke the 'callback_name' Lua function.
- *****************************************************************************/
+ */
 bool script_client_callback_invoke(const char *callback_name, int nargs,
                                    enum api_types *parg_types, va_list args)
 {
@@ -102,59 +102,59 @@ bool script_client_callback_invoke(const char *callback_name, int nargs,
                                    parg_types, args);
 }
 
-/*************************************************************************/ /**
+/**
    Mark any, if exported, full userdata representing 'object' in
    the current script state as 'Nonexistent'.
    This changes the type of the lua variable.
- *****************************************************************************/
+ */
 void script_client_remove_exported_object(void *object)
 {
   luascript_remove_exported_object(main_fcl, object);
 }
 
-/*************************************************************************/ /**
+/**
    Initialize the game script variables.
- *****************************************************************************/
+ */
 static void script_client_vars_init()
-{ /* nothing */
+{ // nothing
 }
 
-/*************************************************************************/ /**
+/**
    Free the game script variables.
- *****************************************************************************/
+ */
 static void script_client_vars_free()
-{ /* nothing */
+{ // nothing
 }
 
-/*************************************************************************/ /**
+/**
    Load the game script variables in file.
- *****************************************************************************/
+ */
 static void script_client_vars_load(struct section_file *file)
 {
   luascript_vars_load(main_fcl, file, "script.vars");
 }
 
-/*************************************************************************/ /**
+/**
    Save the game script variables to file.
- *****************************************************************************/
+ */
 static void script_client_vars_save(struct section_file *file)
 {
   luascript_vars_save(main_fcl, file, "script.vars");
 }
 
-/*************************************************************************/ /**
+/**
    Initialize the optional game script code (useful for scenarios).
- *****************************************************************************/
+ */
 static void script_client_code_init() { script_client_code = NULL; }
 
-/*************************************************************************/ /**
+/**
    Free the optional game script code (useful for scenarios).
- *****************************************************************************/
+ */
 static void script_client_code_free() { NFCN_FREE(script_client_code); }
 
-/*************************************************************************/ /**
+/**
    Load the optional game script code from file (useful for scenarios).
- *****************************************************************************/
+ */
 static void script_client_code_load(struct section_file *file)
 {
   if (!script_client_code) {
@@ -167,9 +167,9 @@ static void script_client_code_load(struct section_file *file)
   }
 }
 
-/*************************************************************************/ /**
+/**
    Save the optional game script code to file (useful for scenarios).
- *****************************************************************************/
+ */
 static void script_client_code_save(struct section_file *file)
 {
   if (script_client_code) {
@@ -177,9 +177,9 @@ static void script_client_code_save(struct section_file *file)
   }
 }
 
-/*************************************************************************/ /**
+/**
    Initialize the scripting state.
- *****************************************************************************/
+ */
 bool script_client_init()
 {
   if (main_fcl != NULL) {
@@ -190,7 +190,7 @@ bool script_client_init()
 
   main_fcl = luascript_new(script_client_output, true);
   if (main_fcl == NULL) {
-    luascript_destroy(main_fcl); /* TODO: main_fcl is NULL here... */
+    luascript_destroy(main_fcl); // TODO: main_fcl is NULL here...
     main_fcl = NULL;
 
     return false;
@@ -206,9 +206,9 @@ bool script_client_init()
    * and we can't pass it a basename where the original
    * 'tolua_' has been stripped when generating from meson. */
   tolua_tolua_client_open(main_fcl->state);
-#else /* MESON_BUILD */
+#else // MESON_BUILD
   tolua_client_open(main_fcl->state);
-#endif /* MESON_BUILD */
+#endif // MESON_BUILD
 
   tolua_common_z_open(main_fcl->state);
 
@@ -221,9 +221,9 @@ bool script_client_init()
   return true;
 }
 
-/*************************************************************************/ /**
+/**
    Ouput a message on the client lua console.
- *****************************************************************************/
+ */
 static void script_client_output(struct fc_lua *fcl, QtMsgType level,
                                  const char *format, ...)
 {
@@ -233,7 +233,7 @@ static void script_client_output(struct fc_lua *fcl, QtMsgType level,
 
   switch (level) {
   case LOG_FATAL:
-    /* Special case - will quit the client. */
+    // Special case - will quit the client.
     {
       char buf[1024];
 
@@ -263,9 +263,9 @@ static void script_client_output(struct fc_lua *fcl, QtMsgType level,
   va_end(args);
 }
 
-/*************************************************************************/ /**
+/**
    Free the scripting data.
- *****************************************************************************/
+ */
 void script_client_free()
 {
   if (main_fcl != NULL) {
@@ -279,9 +279,9 @@ void script_client_free()
   }
 }
 
-/*************************************************************************/ /**
+/**
    Load the scripting state from file.
- *****************************************************************************/
+ */
 void script_client_state_load(struct section_file *file)
 {
   script_client_code_load(file);
@@ -291,18 +291,18 @@ void script_client_state_load(struct section_file *file)
   script_client_vars_load(file);
 }
 
-/*************************************************************************/ /**
+/**
    Save the scripting state to file.
- *****************************************************************************/
+ */
 void script_client_state_save(struct section_file *file)
 {
   script_client_code_save(file);
   script_client_vars_save(file);
 }
 
-/*************************************************************************/ /**
+/**
    Invoke all the callback functions attached to a given signal.
- *****************************************************************************/
+ */
 void script_client_signal_emit(const char *signal_name, ...)
 {
   va_list args;
@@ -312,9 +312,9 @@ void script_client_signal_emit(const char *signal_name, ...)
   va_end(args);
 }
 
-/*************************************************************************/ /**
+/**
    Declare any new signal types you need here.
- *****************************************************************************/
+ */
 static void script_client_signal_create()
 {
   luascript_signal_create(main_fcl, "new_tech", 0);

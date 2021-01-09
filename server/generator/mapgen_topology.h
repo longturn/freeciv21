@@ -12,8 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
+// utility
+#include "support.h" // bool type
 
 /* this is the maximal colatitude at equators returned by
    map_colatitude */

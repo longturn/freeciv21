@@ -26,9 +26,9 @@
 
 units_reports *units_reports::m_instance = nullptr;
 
-/************************************************************************/ /**
+/**
    Unit item constructor (single item for units report)
- ****************************************************************************/
+ */
 unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
     : QFrame(parent)
 {
@@ -113,14 +113,14 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
   delete fm;
 }
 
-/************************************************************************/ /**
+/**
    Unit item destructor
- ****************************************************************************/
+ */
 unittype_item::~unittype_item() = default;
 
-/************************************************************************/ /**
+/**
    Sets unit type pixmap to label
- ****************************************************************************/
+ */
 void unittype_item::init_img()
 {
   QPixmap *sp;
@@ -129,9 +129,9 @@ void unittype_item::init_img()
   label_pix.setPixmap(*sp);
 }
 
-/************************************************************************/ /**
+/**
    Popup question if to upgrade units
- ****************************************************************************/
+ */
 void unittype_item::upgrade_units()
 {
   QString b, c;
@@ -163,9 +163,9 @@ void unittype_item::upgrade_units()
   ask->show();
 }
 
-/************************************************************************/ /**
+/**
    Mouse entered widget
- ****************************************************************************/
+ */
 void unittype_item::enterEvent(QEvent *event)
 {
   Q_UNUSED(event)
@@ -173,9 +173,9 @@ void unittype_item::enterEvent(QEvent *event)
   update();
 }
 
-/************************************************************************/ /**
+/**
    Paint event for unittype item ( draws background from theme )
- ****************************************************************************/
+ */
 void unittype_item::paintEvent(QPaintEvent *event)
 {
   Q_UNUSED(event)
@@ -191,9 +191,9 @@ void unittype_item::paintEvent(QPaintEvent *event)
   }
 }
 
-/************************************************************************/ /**
+/**
    Mouse left widget
- ****************************************************************************/
+ */
 void unittype_item::leaveEvent(QEvent *event)
 {
   Q_UNUSED(event)
@@ -201,9 +201,9 @@ void unittype_item::leaveEvent(QEvent *event)
   update();
 }
 
-/************************************************************************/ /**
+/**
    Mouse wheel event - cycles via units for given unittype
- ****************************************************************************/
+ */
 void unittype_item::wheelEvent(QWheelEvent *event)
 {
   int unit_count = 0;
@@ -258,9 +258,9 @@ void unittype_item::wheelEvent(QWheelEvent *event)
   event->accept();
 }
 
-/************************************************************************/ /**
+/**
    Class representing list of unit types ( unit_items )
- ****************************************************************************/
+ */
 units_reports::units_reports() : fcwidget()
 {
   layout = new QHBoxLayout;
@@ -272,9 +272,9 @@ units_reports::units_reports() : fcwidget()
   setVisible(false);
 }
 
-/************************************************************************/ /**
+/**
    Destructor for unit_report
- ****************************************************************************/
+ */
 units_reports::~units_reports()
 {
   qDeleteAll(unittype_list);
@@ -282,17 +282,17 @@ units_reports::~units_reports()
   delete cw;
 }
 
-/************************************************************************/ /**
+/**
    Adds one unit to list
- ****************************************************************************/
+ */
 void units_reports::add_item(unittype_item *item)
 {
   unittype_list.append(item);
 }
 
-/************************************************************************/ /**
+/**
    Returns instance of units_reports
- ****************************************************************************/
+ */
 units_reports *units_reports::instance()
 {
   if (!m_instance) {
@@ -301,23 +301,23 @@ units_reports *units_reports::instance()
   return m_instance;
 }
 
-/************************************************************************/ /**
+/**
    Deletes units_reports instance
- ****************************************************************************/
+ */
 void units_reports::drop() { NFCN_FREE(m_instance); }
 
-/************************************************************************/ /**
+/**
    Called when close button was pressed
- ****************************************************************************/
+ */
 void units_reports::update_menu()
 {
   was_destroyed = true;
   drop();
 }
 
-/************************************************************************/ /**
+/**
    Initiazlizes layout ( layout needs to be changed after adding units )
- ****************************************************************************/
+ */
 void units_reports::init_layout()
 {
   QSizePolicy size_fixed_policy(QSizePolicy::Maximum, QSizePolicy::Maximum,
@@ -335,18 +335,18 @@ void units_reports::init_layout()
   setLayout(scroll_layout);
 }
 
-/************************************************************************/ /**
+/**
    Paint event
- ****************************************************************************/
+ */
 void units_reports::paintEvent(QPaintEvent *event)
 {
   Q_UNUSED(event);
   cw->put_to_corner();
 }
 
-/************************************************************************/ /**
+/**
    Updates units
- ****************************************************************************/
+ */
 void units_reports::update_units(bool show)
 {
   struct urd_info {
@@ -366,7 +366,7 @@ void units_reports::update_units(bool show)
 
   clear_layout();
   memset(&unit_totals, '\0', sizeof(unit_totals));
-  /* Count units. */
+  // Count units.
   players_iterate(pplayer)
   {
     if (client_has_player() && pplayer != client_player()) {
@@ -388,9 +388,9 @@ void units_reports::update_units(bool show)
       if (VUT_UTYPE == pcity->production.kind) {
         int num_units;
         info = unit_array + utype_index(pcity->production.value.utype);
-        /* Account for build slots in city */
+        // Account for build slots in city
         (void) city_production_build_units(pcity, true, &num_units);
-        /* Unit is in progress even if it won't be done this turn */
+        // Unit is in progress even if it won't be done this turn
         num_units = MAX(num_units, 1);
         info->building_count += num_units;
       }
@@ -406,7 +406,7 @@ void units_reports::update_units(bool show)
     upgradable = client_has_player()
                  && nullptr != can_upgrade_unittype(client_player(), utype);
     if (0 == info->active_count && 0 == info->building_count) {
-      continue; /* We don't need a row for this type. */
+      continue; // We don't need a row for this type.
     }
     ui = new unittype_item(this, utype);
     ui->label_info_active.setText("⚔:"
@@ -450,9 +450,9 @@ void units_reports::update_units(bool show)
   delete[] unit_array;
 }
 
-/************************************************************************/ /**
+/**
    Mouse press event -activates unit and closes dialog
- ****************************************************************************/
+ */
 void units_reports::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::RightButton) {
@@ -461,9 +461,9 @@ void units_reports::mousePressEvent(QMouseEvent *event)
   }
 }
 
-/************************************************************************/ /**
+/**
    Cleans layout - run it before layout initialization
- ****************************************************************************/
+ */
 void units_reports::clear_layout()
 {
   int i = unittype_list.count();
@@ -487,14 +487,14 @@ void units_reports::clear_layout()
   setUpdatesEnabled(true);
 }
 
-/************************************************************************/ /**
+/**
    Closes units report
- ****************************************************************************/
+ */
 void popdown_units_report() { units_reports::instance()->drop(); }
 
-/************************************************************************/ /**
+/**
    Toggles units report, bool used for compatibility with sidebar callback
- ****************************************************************************/
+ */
 void toggle_units_report(bool x)
 {
   Q_UNUSED(x);
@@ -506,9 +506,9 @@ void toggle_units_report(bool x)
   }
 }
 
-/************************************************************************/ /**
+/**
    Update the units report.
- ****************************************************************************/
+ */
 void real_units_report_dialog_update(void *unused)
 {
   Q_UNUSED(unused)
@@ -517,10 +517,10 @@ void real_units_report_dialog_update(void *unused)
   }
 }
 
-/************************************************************************/ /**
+/**
    Display the units report.  Optionally raise it.
    Typically triggered by F2.
- ****************************************************************************/
+ */
 void units_report_dialog_popup(bool raise)
 {
   Q_UNUSED(raise)

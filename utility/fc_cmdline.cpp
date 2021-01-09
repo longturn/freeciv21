@@ -17,17 +17,17 @@
 
 #include <string.h>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "support.h"
 
 #include "fc_cmdline.h"
 
-/**********************************************************************/ /**
+/**
    Like strcspn but also handles quotes, i.e. *reject chars are
    ignored if they are inside single or double quotes.
- **************************************************************************/
+ */
 static size_t fc_strcspn(const char *s, const char *reject)
 {
   bool in_single_quotes = false, in_double_quotes = false;
@@ -52,7 +52,7 @@ static size_t fc_strcspn(const char *s, const char *reject)
   return i;
 }
 
-/**********************************************************************/ /**
+/**
    Splits the string into tokens. The individual tokens are
    returned. The delimiterset can freely be chosen.
 
@@ -71,7 +71,7 @@ static size_t fc_strcspn(const char *s, const char *reject)
 
    The user has the responsiblity to free the memory allocated by
    **tokens using free_tokens().
- **************************************************************************/
+ */
 unsigned int get_tokens(const char *str, char **tokens, size_t num_tokens,
                         const char *delimiterset)
 {
@@ -82,7 +82,7 @@ unsigned int get_tokens(const char *str, char **tokens, size_t num_tokens,
   for (token = 0; token < num_tokens && *str != '\0'; token++) {
     size_t len, padlength = 0;
 
-    /* skip leading delimiters */
+    // skip leading delimiters
     str += strspn(str, delimiterset);
 
     len = fc_strcspn(str, delimiterset);
@@ -92,13 +92,13 @@ unsigned int get_tokens(const char *str, char **tokens, size_t num_tokens,
       if ((str[0] == '"' && str[len - 1] == '"')
           || (str[0] == '\'' && str[len - 1] == '\'')) {
         len -= 2;
-        padlength = 1; /* to set the string past the end quote */
+        padlength = 1; // to set the string past the end quote
         str++;
       }
     }
 
     tokens[token] = static_cast<char *>(fc_malloc(len + 1));
-    (void) fc_strlcpy(tokens[token], str, len + 1); /* adds the '\0' */
+    (void) fc_strlcpy(tokens[token], str, len + 1); // adds the '/* adds the '\0' */'
 
     str += len + padlength;
   }
@@ -106,9 +106,9 @@ unsigned int get_tokens(const char *str, char **tokens, size_t num_tokens,
   return token;
 }
 
-/**********************************************************************/ /**
+/**
    Frees a set of tokens created by get_tokens().
- **************************************************************************/
+ */
 void free_tokens(char **tokens, size_t ntokens)
 {
   size_t i;

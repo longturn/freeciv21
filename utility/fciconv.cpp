@@ -22,7 +22,7 @@
 #include <cstdio>
 #include <cstring>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -35,12 +35,12 @@ static QTextCodec *internalCodec;
 static const char *transliteration_string;
 static const char *local_encoding, *data_encoding, *internal_encoding;
 
-/***********************************************************************/ /**
+/**
    Must be called during the initialization phase of server and client to
    initialize the character encodings to be used.
 
    Pass an internal encoding of NULL to use the local encoding internally.
- ***************************************************************************/
+ */
 void init_character_encodings(const char *my_internal_encoding,
                               bool my_use_transliteration)
 {
@@ -85,13 +85,13 @@ void init_character_encodings(const char *my_internal_encoding,
 #ifdef FREECIV_DEBUG
   fprintf(stderr, "Encodings: Data=%s, Local=%s, Internal=%s\n",
           data_encoding, local_encoding, internal_encoding);
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 }
 
-/***********************************************************************/ /**
+/**
    Return the internal encoding.  This depends on the server or GUI being
    used.
- ***************************************************************************/
+ */
 const char *get_internal_encoding() { return internal_encoding; }
 
 char *data_to_internal_string_malloc(const char *text)
@@ -131,9 +131,9 @@ char *local_to_internal_string_buffer(const char *text, char *buf,
   return qstrncpy(buf, s.toLocal8Bit().data(), bufsz);
 }
 
-/***********************************************************************/ /**
+/**
    Do a fprintf from the internal charset into the local charset.
- ***************************************************************************/
+ */
 void fc_fprintf(FILE *stream, const char *format, ...)
 {
   va_list ap;
@@ -145,7 +145,7 @@ void fc_fprintf(FILE *stream, const char *format, ...)
   QTextStream(stream) << str;
 }
 
-/***********************************************************************/ /**
+/**
    Return the length, in *characters*, of the string.  This can be used in
    place of qstrlen in some places because it returns the number of
  characters not the number of bytes (with multi-byte characters in UTF-8, the
@@ -154,7 +154,7 @@ void fc_fprintf(FILE *stream, const char *format, ...)
    Use of this function outside of GUI layout code is probably a hack.  For
    instance the demographics code uses it, but this should instead pass the
    data directly to the GUI library for formatting.
- ***************************************************************************/
+ */
 size_t get_internal_string_length(const char *text)
 {
   return QString(text).length();

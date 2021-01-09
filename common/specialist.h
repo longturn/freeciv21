@@ -12,10 +12,10 @@
 
 #pragma once
 
-/* utility */
+// utility
 #include "shared.h"
 
-/* common */
+// common
 #include "fc_types.h"
 #include "name_translation.h"
 #include "requirements.h"
@@ -39,7 +39,7 @@ struct specialist {
 extern struct specialist specialists[SP_MAX];
 extern int default_specialist;
 
-/* General specialist accessor functions. */
+// General specialist accessor functions.
 Specialist_type_id specialist_count();
 Specialist_type_id specialist_index(const struct specialist *sp);
 Specialist_type_id specialist_number(const struct specialist *sp);
@@ -52,18 +52,18 @@ const char *specialist_rule_name(const struct specialist *sp);
 const char *specialist_plural_translation(const struct specialist *sp);
 const char *specialist_abbreviation_translation(const struct specialist *sp);
 
-/* Ancillary routines */
+// Ancillary routines
 const char *specialists_abbreviation_string();
 const char *specialists_string(const citizens *specialist_list);
 
 int get_specialist_output(const struct city *pcity, Specialist_type_id sp,
                           Output_type_id otype);
 
-/* Initialization and iteration */
+// Initialization and iteration
 void specialists_init();
 void specialists_free();
 
-/* usually an index to arrays */
+// usually an index to arrays
 #define specialist_type_iterate(sp)                                         \
   {                                                                         \
     Specialist_type_id sp;                                                  \

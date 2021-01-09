@@ -22,9 +22,9 @@
 #include "fc_client.h"
 #include "page_game.h"
 
-/************************************************************************/ /**
+/**
    Constructor for endgame report
- ****************************************************************************/
+ */
 endgame_report::endgame_report(const struct packet_endgame_report *packet)
     : QWidget()
 {
@@ -54,25 +54,25 @@ endgame_report::endgame_report(const struct packet_endgame_report *packet)
   setLayout(end_layout);
 }
 
-/************************************************************************/ /**
+/**
    Destructor for endgame report
- ****************************************************************************/
+ */
 endgame_report::~endgame_report()
 {
   queen()->removeRepoDlg(QStringLiteral("END"));
 }
 
-/************************************************************************/ /**
+/**
    Initializes place in tab for endgame report
- ****************************************************************************/
+ */
 void endgame_report::init()
 {
   queen()->game_tab_widget->setCurrentIndex(index);
 }
 
-/************************************************************************/ /**
+/**
    Refresh all widgets for economy report
- ****************************************************************************/
+ */
 void endgame_report::update_report(
     const struct packet_endgame_player *packet)
 {
@@ -109,9 +109,9 @@ void endgame_report::update_report(
   end_widget->resizeRowsToContents();
 }
 
-/************************************************************************/ /**
+/**
    Show a dialog with player statistics at endgame.
- ****************************************************************************/
+ */
 void endgame_report_dialog_start(const struct packet_endgame_report *packet)
 {
   endgame_report *end_rep;
@@ -119,9 +119,9 @@ void endgame_report_dialog_start(const struct packet_endgame_report *packet)
   end_rep->init();
 }
 
-/************************************************************************/ /**
+/**
    Removes endgame report
- ****************************************************************************/
+ */
 void popdown_endgame_report()
 {
   int i;
@@ -132,9 +132,9 @@ void popdown_endgame_report()
   }
 }
 
-/************************************************************************/ /**
+/**
    Popups endgame report to front if exists
- ****************************************************************************/
+ */
 void popup_endgame_report()
 {
   int i;
@@ -144,9 +144,9 @@ void popup_endgame_report()
   }
 }
 
-/************************************************************************/ /**
+/**
    Received endgame report information about single player.
- ****************************************************************************/
+ */
 void endgame_report_dialog_player(const struct packet_endgame_player *packet)
 {
   int i;

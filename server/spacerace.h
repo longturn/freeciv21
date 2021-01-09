@@ -10,11 +10,11 @@
 **************************************************************************/
 #pragma once
 
-/* common */
+// common
 #include "fc_types.h"
 #include "packets.h"
 
-/* server */
+// server
 #include "hand_gen.h"
 
 struct player_spaceship;

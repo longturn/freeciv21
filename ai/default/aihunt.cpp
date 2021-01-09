@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "log.h"
 
-/* common */
+// common
 #include "city.h"
 #include "combat.h"
 #include "game.h"
@@ -30,10 +30,10 @@
 #include "unit.h"
 #include "unitlist.h"
 
-/* aicore */
+// aicore
 #include "pf_tools.h"
 
-/* server */
+// server
 #include "citytools.h"
 #include "srv_log.h"
 #include "unithand.h"
@@ -45,7 +45,7 @@
 #include "advtools.h"
 #include "autosettlers.h"
 
-/* ai */
+// ai
 #include "handicaps.h"
 
 /* ai/default */
@@ -57,10 +57,10 @@
 
 #include "aihunt.h"
 
-/**********************************************************************/ /**
+/**
    We don't need a hunter in this city if we already have one. Return
    existing hunter if any.
- **************************************************************************/
+ */
 static struct unit *dai_hunter_find(struct player *pplayer,
                                     struct city *pcity)
 {
@@ -82,9 +82,9 @@ static struct unit *dai_hunter_find(struct player *pplayer,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Guess best hunter unit type.
- **************************************************************************/
+ */
 static struct unit_type *dai_hunter_guess_best(struct city *pcity,
                                                enum terrain_class tc,
                                                struct ai_type *ait,
@@ -104,7 +104,7 @@ static struct unit_type *dai_hunter_guess_best(struct city *pcity,
       continue;
     }
 
-    /* Temporary hack because pathfinding can't handle Fighters. */
+    // Temporary hack because pathfinding can't handle Fighters.
     if (!utype_is_consumed_by_action_result(ACTRES_ATTACK, ut)
         && 1 == utype_fuel(ut)) {
       continue;
@@ -132,9 +132,9 @@ static struct unit_type *dai_hunter_guess_best(struct city *pcity,
       desire += desire / 4;
     }
     if (!can_attack_non_native(ut)) {
-      desire -= desire / 4; /* less flexibility */
+      desire -= desire / 4; // less flexibility
     }
-    /* Causes continual unhappiness */
+    // Causes continual unhappiness
     if (utype_has_flag(ut, UTYF_FIELDUNIT)) {
       desire /= 2;
     }
@@ -152,9 +152,9 @@ static struct unit_type *dai_hunter_guess_best(struct city *pcity,
   return bestid;
 }
 
-/**********************************************************************/ /**
+/**
    Check if we want to build a missile for our hunter.
- **************************************************************************/
+ */
 static void dai_hunter_missile_want(struct player *pplayer,
                                     struct city *pcity,
                                     struct adv_choice *choice)
@@ -203,12 +203,12 @@ static void dai_hunter_missile_want(struct player *pplayer,
     /* FIXME: We need to store some data that can tell us if
      * enemy transports are protected by anti-missile technology.
      * In this case, want nuclear much more! */
-    desire = (ut->hp * MIN(ut->attack_strength, 30) /* nuke fix */
+    desire = (ut->hp * MIN(ut->attack_strength, 30) // nuke fix
               * ut->firepower * ut->move_rate)
                  / UNITTYPE_COSTS(ut)
              + 1;
 
-    /* Causes continual unhappiness */
+    // Causes continual unhappiness
     if (utype_has_flag(ut, UTYF_FIELDUNIT)) {
       desire /= 2;
     }
@@ -239,9 +239,9 @@ static void dai_hunter_missile_want(struct player *pplayer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Support function for ai_hunter_choice()
- **************************************************************************/
+ */
 static void eval_hunter_want(struct ai_type *ait, struct player *pplayer,
                              struct city *pcity, struct adv_choice *choice,
                              struct unit_type *best_type, int veteran)
@@ -262,9 +262,9 @@ static void eval_hunter_want(struct ai_type *ait, struct player *pplayer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Check if we want to build a hunter.
- **************************************************************************/
+ */
 void dai_hunter_choice(struct ai_type *ait, struct player *pplayer,
                        struct city *pcity, struct adv_choice *choice,
                        bool allow_gold_upkeep)
@@ -277,10 +277,10 @@ void dai_hunter_choice(struct ai_type *ait, struct player *pplayer,
 
   if ((!best_land_hunter && !best_sea_hunter) || is_barbarian(pplayer)
       || !pplayer->is_alive || has_handicap(pplayer, H_TARGETS)) {
-    return; /* None available */
+    return; // None available
   }
   if (hunter) {
-    /* Maybe want missiles to go with a hunter instead? */
+    // Maybe want missiles to go with a hunter instead?
     dai_hunter_missile_want(pplayer, pcity, choice);
     return;
   }
@@ -297,9 +297,9 @@ void dai_hunter_choice(struct ai_type *ait, struct player *pplayer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Does this unit qualify as a hunter?
- **************************************************************************/
+ */
 bool dai_hunter_qualify(struct player *pplayer, struct unit *punit)
 {
   if (is_barbarian(pplayer) || unit_owner(punit) != pplayer) {
@@ -308,11 +308,11 @@ bool dai_hunter_qualify(struct player *pplayer, struct unit *punit)
   return unit_has_type_role(punit, L_HUNTER);
 }
 
-/**********************************************************************/ /**
+/**
    Try to shoot our target with a missile. Also shoot down anything that
    might attempt to intercept _us_. We assign missiles to a hunter in
    ai_unit_new_role().
- **************************************************************************/
+ */
 static void dai_hunter_try_launch(struct ai_type *ait,
                                   struct player *pplayer, struct unit *punit,
                                   struct unit *target)
@@ -357,7 +357,7 @@ static void dai_hunter_try_launch(struct ai_type *ait,
                      "found primary target %d(%d, %d)"
                      " dist %d",
                      victim->id, TILE_XY(unit_tile(victim)), move_cost);
-            break; /* Our target! Get him!!! */
+            break; // Our target! Get him!!!
           }
 
           victim_type = unit_type_get(victim);
@@ -373,7 +373,7 @@ static void dai_hunter_try_launch(struct ai_type *ait,
         }
         unit_list_iterate_end;
         if (sucker) {
-          break; /* found something - kill it! */
+          break; // found something - kill it!
         }
       }
       pf_map_move_costs_iterate_end;
@@ -391,24 +391,24 @@ static void dai_hunter_try_launch(struct ai_type *ait,
 
         missile->goto_tile = unit_tile(sucker);
         if (dai_unit_goto(ait, missile, unit_tile(sucker))) {
-          /* We survived; did they? */
-          sucker = game_unit_by_number(target_sanity); /* Sanity */
+          // We survived; did they?
+          sucker = game_unit_by_number(target_sanity); // Sanity
           if (sucker
               && is_tiles_adjacent(unit_tile(sucker), unit_tile(missile))) {
             dai_unit_attack(ait, missile, unit_tile(sucker));
           }
         }
-        target = game_unit_by_number(target_sanity); /* Sanity */
-        break; /* try next missile, if any */
+        target = game_unit_by_number(target_sanity); // Sanity
+        break; // try next missile, if any
       }
-    } /* if */
+    } // if
   }
   unit_list_iterate_safe_end;
 }
 
-/**********************************************************************/ /**
+/**
    Calculate desire to crush this target.
- **************************************************************************/
+ */
 static void dai_hunter_juiciness(struct player *pplayer, struct unit *punit,
                                  struct unit *target, int *stackthreat,
                                  int *stackcost)
@@ -426,17 +426,17 @@ static void dai_hunter_juiciness(struct player *pplayer, struct unit *punit,
       *stackthreat += 5000;
     }
     if (utype_acts_hostile(unit_type_get(sucker))) {
-      *stackthreat += 500; /* extra threatening */
+      *stackthreat += 500; // extra threatening
     }
     *stackcost += unit_build_shield_cost_base(sucker);
   }
   unit_list_iterate_end;
 
-  *stackthreat *= 9; /* WAG - reduced by distance later */
+  *stackthreat *= 9; // WAG - reduced by distance later
   *stackthreat += *stackcost;
 }
 
-/**********************************************************************/ /**
+/**
    Manage a (possibly virtual) hunter. Return the want for building a
    hunter like this. If we return 0, then we have nothing to do with
    the hunter. If we return -1, then we succeeded, and can try again.
@@ -447,7 +447,7 @@ static void dai_hunter_juiciness(struct player *pplayer, struct unit *punit,
    snatch up closer targets if they are better.
 
    We set punit->server.ai->target to target's id.
- **************************************************************************/
+ */
 int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
                       struct unit *punit)
 {
@@ -473,7 +473,7 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
 
   pf_map_move_costs_iterate(pfm, ptile, move_cost, false)
   {
-    /* End faster if we have a target */
+    // End faster if we have a target
     if (move_cost > limit) {
       UNIT_LOG(LOGLEVEL_HUNT, punit, "gave up finding hunt target");
       pf_map_destroy(pfm);
@@ -492,7 +492,7 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
       struct pf_path *path;
       struct unit_ai *target_data;
 
-      /* Note that we need not (yet) be at war with aplayer */
+      // Note that we need not (yet) be at war with aplayer
       if (!adv_is_player_dangerous(pplayer, aplayer)) {
         continue;
       }
@@ -506,11 +506,11 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
       if (!utype_acts_hostile(unit_type_get(target))
           && get_transporter_capacity(target) == 0
           && !unit_has_type_flag(target, UTYF_GAMELOSS)) {
-        /* Won't hunt this one. */
+        // Won't hunt this one.
         continue;
       }
 
-      /* Figure out whether unit is coming closer */
+      // Figure out whether unit is coming closer
       if (target_data->cur_pos && target_data->prev_pos) {
         dist1 = real_map_distance(unit_tile(punit), *target_data->cur_pos);
         dist2 = real_map_distance(unit_tile(punit), *target_data->prev_pos);
@@ -523,7 +523,7 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
                unit_rule_name(target), target->id,
                TILE_XY(unit_tile(target)), dist1, dist2);
 
-      /* We can't chase if we aren't faster or on intercept vector */
+      // We can't chase if we aren't faster or on intercept vector
       if (unit_type_get(punit)->move_rate < unit_type_get(target)->move_rate
           && dist1 >= dist2) {
         UNIT_LOG(LOGLEVEL_HUNT, punit,
@@ -548,18 +548,18 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
         UNIT_LOG(LOGLEVEL_HUNT, punit,
                  "%d is too expensive (it %d vs us %d)", target->id,
                  stackcost, unit_build_shield_cost_base(punit));
-        continue; /* Too expensive */
+        continue; // Too expensive
       }
       stackthreat /= move_cost + 1;
       if (!is_virtual && original_target != target
           && original_threat > stackthreat) {
         UNIT_LOG(LOGLEVEL_HUNT, punit, "Unit %d is not worse than %d",
                  target->id, original_target->id);
-        continue; /* The threat we found originally was worse than this! */
+        continue; // The threat we found originally was worse than this!
       }
       if (stackthreat < unit_build_shield_cost_base(punit)) {
         UNIT_LOG(LOGLEVEL_HUNT, punit, "%d is not worth it", target->id);
-        continue; /* Not worth it */
+        continue; // Not worth it
       }
 
       UNIT_LOG(LOGLEVEL_HUNT, punit,
@@ -568,29 +568,29 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
                nation_rule_name(nation_of_unit(target)),
                unit_rule_name(target), target->id,
                TILE_XY(unit_tile(target)), stackthreat, dist1, dist2);
-      /* Ok, now we FINALLY have a target worth destroying! */
+      // Ok, now we FINALLY have a target worth destroying!
       unit_data->target = target->id;
       if (is_virtual) {
         pf_map_destroy(pfm);
         return stackthreat;
       }
 
-      /* This assigns missiles to us */
+      // This assigns missiles to us
       dai_unit_new_task(ait, punit, AIUNIT_HUNTER, unit_tile(target));
 
-      /* Check if we can nuke it */
+      // Check if we can nuke it
       dai_hunter_try_launch(ait, pplayer, punit, target);
 
-      /* Check if we have nuked it */
+      // Check if we have nuked it
       if (target != game_unit_by_number(sanity_target)) {
         UNIT_LOG(LOGLEVEL_HUNT, punit,
                  "mission accomplished by cargo (pre)");
         dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
         pf_map_destroy(pfm);
-        return -1; /* try again */
+        return -1; // try again
       }
 
-      /* Go towards it. */
+      // Go towards it.
       path = pf_map_path(pfm, unit_tile(target));
       if (!adv_unit_execute_path(punit, path)) {
         pf_path_destroy(path);
@@ -603,22 +603,22 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
         UNIT_LOG(LOGLEVEL_HUNT, punit, "mission accomplished");
         dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
         pf_map_destroy(pfm);
-        return -1; /* try again */
+        return -1; // try again
       }
 
-      /* Check if we can nuke it now */
+      // Check if we can nuke it now
       dai_hunter_try_launch(ait, pplayer, punit, target);
       if (target != game_unit_by_number(sanity_target)) {
         UNIT_LOG(LOGLEVEL_HUNT, punit,
                  "mission accomplished by cargo (post)");
         dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
         pf_map_destroy(pfm);
-        return -1; /* try again */
+        return -1; // try again
       }
 
       pf_map_destroy(pfm);
       unit_data->done = true;
-      return stackthreat; /* still have work to do */
+      return stackthreat; // still have work to do
     }
     unit_list_iterate_safe_end;
   }
@@ -626,5 +626,5 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
 
   UNIT_LOG(LOGLEVEL_HUNT, punit, "ran out of map finding hunt target");
   pf_map_destroy(pfm);
-  return 0; /* found nothing */
+  return 0; // found nothing
 }

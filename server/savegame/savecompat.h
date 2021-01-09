@@ -12,10 +12,10 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "rand.h"
 
-/* server */
+// server
 #include "srv_main.h"
 
 struct section_file;
@@ -33,7 +33,7 @@ enum tile_special_type {
   S_FARMLAND,
   S_FALLOUT,
 
-  /* internal values not saved */
+  // internal values not saved
   S_LAST,
 
   S_OLD_FORTRESS,
@@ -48,32 +48,32 @@ struct loaddata {
   const char *secfile_options;
   int version;
 
-  /* loaded in sg_load_savefile(); needed in sg_load_player() */
+  // loaded in sg_load_savefile(); needed in sg_load_player()
   struct {
     const char **order;
     size_t size;
   } improvement;
-  /* loaded in sg_load_savefile(); needed in sg_load_player() */
+  // loaded in sg_load_savefile(); needed in sg_load_player()
   struct {
     const char **order;
     size_t size;
   } technology;
-  /* loaded in sg_load_savefile(); needed in sg_load_player() */
+  // loaded in sg_load_savefile(); needed in sg_load_player()
   struct {
     const char **order;
     size_t size;
   } activities;
-  /* loaded in sg_load_savefile(); needed in sg_load_player() */
+  // loaded in sg_load_savefile(); needed in sg_load_player()
   struct {
     const char **order;
     size_t size;
   } trait;
-  /* loaded in sg_load_savefile(); needed in sg_load_map(), ... */
+  // loaded in sg_load_savefile(); needed in sg_load_map(), ...
   struct {
     struct extra_type **order;
     size_t size;
   } extra;
-  /* loaded in sg_load_savefile(); needed in sg_load_players_basic() */
+  // loaded in sg_load_savefile(); needed in sg_load_players_basic()
   struct {
     struct multiplier **order;
     size_t size;
@@ -96,39 +96,39 @@ struct loaddata {
     struct road_type **order;
     size_t size;
   } road;
-  /* loaded in sg_load_savefile(); needed in sg_load_(), ... */
+  // loaded in sg_load_savefile(); needed in sg_load_(), ...
   struct {
     struct specialist **order;
     size_t size;
   } specialist;
-  /* loaded in sg_load_savefile(); needed in sg_load_player_main(), ... */
+  // loaded in sg_load_savefile(); needed in sg_load_player_main(), ...
   struct {
     enum diplstate_type *order;
     size_t size;
   } ds_t;
-  /* loaded in sg_load_savefile(); needed in sg_load_player_unit(), ... */
+  // loaded in sg_load_savefile(); needed in sg_load_player_unit(), ...
   struct {
     action_id *order;
     size_t size;
   } action;
-  /* loaded in sg_load_savefile(); needed in sg_load_player_unit(), ... */
+  // loaded in sg_load_savefile(); needed in sg_load_player_unit(), ...
   struct {
     enum action_decision *order;
     size_t size;
   } act_dec;
-  /* loaded in sg_load_savefile(); needed in sg_load_player_unit(), ... */
+  // loaded in sg_load_savefile(); needed in sg_load_player_unit(), ...
   struct {
     enum server_side_agent *order;
     size_t size;
   } ssa;
 
-  /* loaded in sg_load_game(); needed in sg_load_random(), ... */
+  // loaded in sg_load_game(); needed in sg_load_random(), ...
   enum server_states server_state;
 
-  /* loaded in sg_load_random(); needed in sg_load_sanitycheck() */
+  // loaded in sg_load_random(); needed in sg_load_sanitycheck()
   RANDOM_STATE rstate;
 
-  /* loaded in sg_load_map_worked(); needed in sg_load_player_cities() */
+  // loaded in sg_load_map_worked(); needed in sg_load_player_cities()
   int *worked_tiles;
 };
 

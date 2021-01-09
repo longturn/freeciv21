@@ -77,9 +77,9 @@ page_scenario::page_scenario(QWidget *parent, fc_client *gui)
 
 page_scenario::~page_scenario() = default;
 
-/**********************************************************************/ /**
+/**
    Browse scenarios directory
- **************************************************************************/
+ */
 void page_scenario::browse_scenarios()
 {
   QString str;
@@ -93,9 +93,9 @@ void page_scenario::browse_scenarios()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Starts game from chosen scenario - chosen_file (save or scenario)
- **************************************************************************/
+ */
 void page_scenario::start_scenario()
 {
   if (!is_server_running()) {
@@ -111,9 +111,9 @@ void page_scenario::start_scenario()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Gets scenarios list and updates it in TableWidget = scenarios_load
- **************************************************************************/
+ */
 void page_scenario::update_scenarios_page()
 {
   struct fileinfo_list *files;
@@ -148,7 +148,7 @@ void page_scenario::update_scenarios_page()
         fcver *= 100;
       }
       fcver -=
-          (fcver % 10000); /* Patch level does not affect compatibility */
+          (fcver % 10000); // Patch level does not affect compatibility
       sname = secfile_lookup_str_default(sf, NULL, "scenario.name");
       sdescription =
           secfile_lookup_str_default(sf, NULL, "scenario.description");
@@ -171,7 +171,7 @@ void page_scenario::update_scenarios_page()
           min = fcver / 10000;
           version = QStringLiteral("%1.%2").arg(maj).arg(min);
         } else {
-          /* TRANS: Unknown scenario format */
+          // TRANS: Unknown scenario format
           version = QString(_("pre-2.6"));
         }
 

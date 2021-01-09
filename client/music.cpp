@@ -19,25 +19,25 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "connection.h"
 #include "log.h"
 #include "nation.h"
 #include "style.h"
-/* client */
+// client
 #include "audio.h"
 #include "client_main.h"
 #include "options.h"
 
 #include "music.h"
 
-/**********************************************************************/ /**
+/**
    Start music suitable for current game situation
- **************************************************************************/
+ */
 void start_style_music()
 {
   if (client_state() != C_S_RUNNING) {
-    /* Style music plays in running game only */
+    // Style music plays in running game only
     return;
   }
 
@@ -60,7 +60,7 @@ void start_style_music()
       switch (client.conn.playing->client.mood) {
       case MOOD_COUNT:
         fc_assert(client.conn.playing->client.mood != MOOD_COUNT);
-        fc__fallthrough; /* No break but use default tag */
+        fc__fallthrough; // No break but use default tag
       case MOOD_PEACEFUL:
         tag = pms->music_peaceful;
         break;
@@ -77,14 +77,14 @@ void start_style_music()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Stop style music completely.
- **************************************************************************/
+ */
 void stop_style_music() { audio_stop_usage(); }
 
-/**********************************************************************/ /**
+/**
    Start menu music.
- **************************************************************************/
+ */
 void start_menu_music(const QString &tag, const QString &alt_tag)
 {
   if (gui_options.sound_enable_menu_music) {
@@ -92,34 +92,34 @@ void start_menu_music(const QString &tag, const QString &alt_tag)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Stop menu music completely.
- **************************************************************************/
+ */
 void stop_menu_music() { audio_stop_usage(); }
 
-/**********************************************************************/ /**
+/**
    Play single track before continuing normal style music
- **************************************************************************/
+ */
 void play_single_track(const QString &tag)
 {
   if (client_state() != C_S_RUNNING) {
-    /* Only in running game */
+    // Only in running game
     return;
   }
 
   audio_play_track(tag, NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Musicset changed in options.
- **************************************************************************/
+ */
 void musicspec_reread_callback(struct option *poption)
 {
   const char *musicset_name = option_str_get(poption);
 
   audio_restart(sound_set_name, musicset_name);
 
-  /* Start suitable music from the new set */
+  // Start suitable music from the new set
   if (client_state() != C_S_RUNNING) {
     start_menu_music(QStringLiteral("music_menu"), NULL);
   } else {

@@ -12,17 +12,17 @@
 
 #include <cstdarg>
 
-/* utility */
-#include "support.h" /* fc__attribute */
+// utility
+#include "support.h" // fc__attribute
 
-/* common */
+// common
 #include "events.h"
 #include "fc_types.h"
-#include "featured_text.h" /* ftc_*: color pre-definitions. */
+#include "featured_text.h" // ftc_*: color pre-definitions.
 #include "packets.h"
 
-/* server */
-#include "srv_main.h" /* enum server_states */
+// server
+#include "srv_main.h" // enum server_states
 
 struct research;
 
@@ -73,9 +73,9 @@ void notify_research_embassies(const struct research *presearch,
                                const char *format, ...)
     fc__attribute((__format__(__printf__, 5, 6)));
 
-/* Event cache. */
+// Event cache.
 
-/* The type of event target. */
+// The type of event target.
 struct event_cache_players;
 
 void event_cache_init();

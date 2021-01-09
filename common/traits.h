@@ -29,8 +29,8 @@
 #define TRAIT_MAX_VALUE_SR (TRAIT_DEFAULT_VALUE)
 
 struct ai_trait {
-  int val; /* Value assigned in the beginning */
-  int mod; /* This is modification that changes during game. */
+  int val; // Value assigned in the beginning
+  int mod; // This is modification that changes during game.
 };
 
 struct trait_limits {

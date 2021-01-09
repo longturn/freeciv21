@@ -21,7 +21,7 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "capability.h"
 #include "fcintl.h"
 #include "log.h"
@@ -30,7 +30,7 @@
 #include "shared.h"
 #include "support.h"
 
-/* client */
+// client
 #include "audio_none.h"
 #ifdef AUDIO_SDL
 #include "audio_sdl.h"
@@ -47,7 +47,7 @@
 #define SOUNDSPEC_CAPSTR "+Freeciv-3.0-soundset"
 #define MUSICSPEC_CAPSTR "+Freeciv-2.6-musicset"
 
-/* keep it open throughout */
+// keep it open throughout
 static struct section_file *ss_tagfile = NULL;
 static struct section_file *ms_tagfile = NULL;
 
@@ -68,11 +68,11 @@ Q_GLOBAL_STATIC(QVector<QString>, plugin_list)
 static int audio_play_tag(struct section_file *sfile, const QString &tag,
                           bool repeat, int exclude, bool keepstyle);
 
-/**********************************************************************/ /**
+/**
    Returns a static string vector of all sound plugins
    available on the system.  This function is unfortunately similar to
    audio_get_all_plugin_names().
- **************************************************************************/
+ */
 const QVector<QString> *get_soundplugin_list(const struct option *poption)
 {
   if (plugin_list->isEmpty()) {
@@ -84,12 +84,12 @@ const QVector<QString> *get_soundplugin_list(const struct option *poption)
   return plugin_list;
 }
 
-/**********************************************************************/ /**
+/**
    Returns a static string vector of audiosets of given type available
    on the system by searching all data directories for files matching
    suffix.
    The list is NULL-terminated.
- **************************************************************************/
+ */
 static const QVector<QString> *
 get_audio_speclist(const char *suffix, QVector<QString> **audio_list)
 {
@@ -100,9 +100,9 @@ get_audio_speclist(const char *suffix, QVector<QString> **audio_list)
   return *audio_list;
 }
 
-/**********************************************************************/ /**
+/**
    Returns a static string vector of soundsets available on the system.
- **************************************************************************/
+ */
 const QVector<QString> *get_soundset_list(const struct option *poption)
 {
   static QVector<QString> *sound_list = NULL;
@@ -110,9 +110,9 @@ const QVector<QString> *get_soundset_list(const struct option *poption)
   return get_audio_speclist(SNDSPEC_SUFFIX, &sound_list);
 }
 
-/**********************************************************************/ /**
+/**
    Returns a static string vector of musicsets available on the system.
- **************************************************************************/
+ */
 const QVector<QString> *get_musicset_list(const struct option *poption)
 {
   static QVector<QString> *music_list = NULL;
@@ -120,9 +120,9 @@ const QVector<QString> *get_musicset_list(const struct option *poption)
   return get_audio_speclist(MUSICSPEC_SUFFIX, &music_list);
 }
 
-/**********************************************************************/ /**
+/**
    Add a plugin.
- **************************************************************************/
+ */
 void audio_add_plugin(struct audio_plugin *p)
 {
   fc_assert_ret(num_plugins_used < MAX_NUM_PLUGINS);
@@ -138,9 +138,9 @@ void audio_add_plugin(struct audio_plugin *p)
   num_plugins_used++;
 }
 
-/**********************************************************************/ /**
+/**
    Choose plugin. Returns TRUE on success, FALSE if not
- **************************************************************************/
+ */
 bool audio_select_plugin(const QString &name)
 {
   int i;
@@ -184,10 +184,10 @@ bool audio_select_plugin(const QString &name)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Initialize base audio system. Note that this function is called very
    early at the client startup. So for example logging isn't available.
- **************************************************************************/
+ */
 void audio_init()
 {
 #ifdef AUDIO_SDL
@@ -200,10 +200,10 @@ void audio_init()
   selected_plugin = 0;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the filename for the given audio set. Returns NULL if
    set couldn't be found. Caller has to free the return value.
- **************************************************************************/
+ */
 static const QString audiospec_fullname(const QString &audioset_name,
                                         bool music)
 {
@@ -220,7 +220,7 @@ static const QString audiospec_fullname(const QString &audioset_name,
   }
 
   if (audioset_name == audioset_default) {
-    /* avoid endless recursion */
+    // avoid endless recursion
     return NULL;
   }
 
@@ -230,9 +230,9 @@ static const QString audiospec_fullname(const QString &audioset_name,
   return audiospec_fullname(audioset_default, music);
 }
 
-/**********************************************************************/ /**
+/**
    Check capabilities of the audio specfile
- **************************************************************************/
+ */
 static bool check_audiofile_capstr(struct section_file *sfile,
                                    const QString *filename,
                                    const QString *our_cap,
@@ -265,9 +265,9 @@ static bool check_audiofile_capstr(struct section_file *sfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Initialize audio system and autoselect a plugin
- **************************************************************************/
+ */
 void audio_real_init(const QString &soundset_name,
                      const QString &musicset_name,
                      const QString &preferred_plugin_name)
@@ -278,14 +278,14 @@ void audio_real_init(const QString &soundset_name,
   const QString us_ms_capstr = MUSICSPEC_CAPSTR;
 
   if (preferred_plugin_name == QLatin1String("none")) {
-    /* We explicitly choose none plugin, silently skip the code below */
+    // We explicitly choose none plugin, silently skip the code below
     qDebug("Proceeding with sound support disabled.");
     ss_tagfile = NULL;
     ms_tagfile = NULL;
     return;
   }
   if (num_plugins_used == 1) {
-    /* We only have the dummy plugin, skip the code but issue an advertise */
+    // We only have the dummy plugin, skip the code but issue an advertise
     qInfo(_("No real audio plugin present."));
     qInfo(_("Proceeding with sound support disabled."));
     qInfo(_("For sound support, install SDL2_mixer"));
@@ -355,22 +355,22 @@ void audio_real_init(const QString &soundset_name,
   qInfo(_("Proceeding with sound support disabled."));
 }
 
-/**********************************************************************/ /**
+/**
    Switch soundset
- **************************************************************************/
+ */
 void audio_restart(const QString &soundset_name,
                    const QString &musicset_name)
 {
-  audio_stop(); /* Fade down old one */
+  audio_stop(); // Fade down old one
 
   sound_set_name = soundset_name;
   music_set_name = musicset_name;
   audio_real_init(sound_set_name, music_set_name, sound_plugin_name);
 }
 
-/**********************************************************************/ /**
+/**
    Callback to start new track
- **************************************************************************/
+ */
 static void music_finished_callback()
 {
   bool usage_enabled = true;
@@ -398,10 +398,10 @@ static void music_finished_callback()
   }
 }
 
-/**********************************************************************/ /**
+/**
    INTERNAL. Returns id (>= 0) of the tag selected for playing, 0 when
    there's no alternative tags, or negative value in case of error.
- **************************************************************************/
+ */
 static int audio_play_tag(struct section_file *sfile, const QString &tag,
                           bool repeat, int exclude, bool keepstyle)
 {
@@ -429,7 +429,7 @@ static int audio_play_tag(struct section_file *sfile, const QString &tag,
 
         if (ftmp == NULL) {
           if (excluded != -1 && j == 0) {
-            /* Cannot exclude the only track */
+            // Cannot exclude the only track
             excluded = -1;
             j++;
           }
@@ -480,26 +480,26 @@ static int audio_play_tag(struct section_file *sfile, const QString &tag,
   return ret;
 }
 
-/**********************************************************************/ /**
+/**
    Play tag from sound set
- **************************************************************************/
+ */
 static bool audio_play_sound_tag(const QString &tag, bool repeat)
 {
   return (audio_play_tag(ss_tagfile, tag, repeat, -1, false) >= 0);
 }
 
-/**********************************************************************/ /**
+/**
    Play tag from music set
- **************************************************************************/
+ */
 static int audio_play_music_tag(const QString &tag, bool repeat,
                                 bool keepstyle)
 {
   return audio_play_tag(ms_tagfile, tag, repeat, -1, keepstyle);
 }
 
-/**********************************************************************/ /**
+/**
    Play an audio sample as suggested by sound tags
- **************************************************************************/
+ */
 void audio_play_sound(const QString &tag, const QString &alt_tag)
 {
   const QString pretty_alt_tag =
@@ -511,7 +511,7 @@ void audio_play_sound(const QString &tag, const QString &alt_tag)
     log_debug("audio_play_sound('%s', '%s')", qUtf8Printable(tag),
               qUtf8Printable(pretty_alt_tag));
 
-    /* try playing primary tag first, if not go to alternative tag */
+    // try playing primary tag first, if not go to alternative tag
     if (!audio_play_sound_tag(tag, false)
         && !audio_play_sound_tag(alt_tag, false)) {
       qDebug("Neither of tags %s or %s found", qUtf8Printable(tag),
@@ -520,10 +520,10 @@ void audio_play_sound(const QString &tag, const QString &alt_tag)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Play music, either in loop or just one track in the middle of the style
    music.
- **************************************************************************/
+ */
 static void real_audio_play_music(const QString &tag, const QString &alt_tag,
                                   bool keepstyle)
 {
@@ -534,7 +534,7 @@ static void real_audio_play_music(const QString &tag, const QString &alt_tag,
   log_debug("audio_play_music('%s', '%s')", qUtf8Printable(tag),
             qUtf8Printable(pretty_alt_tag));
 
-  /* try playing primary tag first, if not go to alternative tag */
+  // try playing primary tag first, if not go to alternative tag
   current_track = audio_play_music_tag(tag, true, keepstyle);
 
   if (current_track < 0) {
@@ -547,9 +547,9 @@ static void real_audio_play_music(const QString &tag, const QString &alt_tag,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Loop music as suggested by sound tags
- **************************************************************************/
+ */
 void audio_play_music(const QString &tag, const QString &alt_tag,
                       enum music_usage usage)
 {
@@ -558,9 +558,9 @@ void audio_play_music(const QString &tag, const QString &alt_tag,
   real_audio_play_music(tag, alt_tag, false);
 }
 
-/**********************************************************************/ /**
+/**
    Play single track as suggested by sound tags
- **************************************************************************/
+ */
 void audio_play_track(const QString &tag, const QString &alt_tag)
 {
   current_usage = MU_SINGLE;
@@ -568,39 +568,39 @@ void audio_play_track(const QString &tag, const QString &alt_tag)
   real_audio_play_music(tag, alt_tag, true);
 }
 
-/**********************************************************************/ /**
+/**
    Stop sound. Music should die down in a few seconds.
- **************************************************************************/
+ */
 void audio_stop() { plugins[selected_plugin].stop(); }
 
-/**********************************************************************/ /**
+/**
    Stop looping sound. Music should die down in a few seconds.
- **************************************************************************/
+ */
 void audio_stop_usage()
 {
   switching_usage = true;
   plugins[selected_plugin].stop();
 }
 
-/**********************************************************************/ /**
+/**
    Stop looping sound. Music should die down in a few seconds.
- **************************************************************************/
+ */
 double audio_get_volume() { return plugins[selected_plugin].get_volume(); }
 
-/**********************************************************************/ /**
+/**
    Stop looping sound. Music should die down in a few seconds.
- **************************************************************************/
+ */
 void audio_set_volume(double volume)
 {
   plugins[selected_plugin].set_volume(volume);
 }
 
-/**********************************************************************/ /**
+/**
    Call this at end of program only.
- **************************************************************************/
+ */
 void audio_shutdown()
 {
-  /* avoid infinite loop at end of game */
+  // avoid infinite loop at end of game
   audio_stop();
 
   audio_play_sound(QStringLiteral("e_game_quit"), NULL);
@@ -617,10 +617,10 @@ void audio_shutdown()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns a string which list all available plugins. You don't have to
    free the string.
- **************************************************************************/
+ */
 const QString audio_get_all_plugin_names()
 {
   QString buffer;

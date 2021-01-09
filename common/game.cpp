@@ -15,16 +15,16 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* aicore */
+// aicore
 #include "cm.h"
 
-/* common */
+// common
 #include "achievements.h"
 #include "actions.h"
 #include "ai.h"
@@ -59,24 +59,24 @@ bool am_i_server = false;
 
 static void game_defaults(bool keep_ruleset_value);
 
-/**********************************************************************/ /**
+/**
    Is program type server?
- **************************************************************************/
+ */
 bool is_server() { return am_i_server; }
 
-/**********************************************************************/ /**
+/**
    Set program type to server.
- **************************************************************************/
+ */
 void i_am_server() { am_i_server = true; }
 
-/**********************************************************************/ /**
+/**
    Set program type to client.
- **************************************************************************/
+ */
 void i_am_client() { am_i_server = false; }
 
-/**********************************************************************/ /**
+/**
    Count the # of thousand citizen in a civilisation.
- **************************************************************************/
+ */
 int civ_population(const struct player *pplayer)
 {
   int ppl = 0;
@@ -85,9 +85,9 @@ int civ_population(const struct player *pplayer)
   return ppl;
 }
 
-/**********************************************************************/ /**
+/**
    Find city with given name from any player.
- **************************************************************************/
+ */
 struct city *game_city_by_name(const char *name)
 {
   players_iterate(pplayer)
@@ -103,28 +103,28 @@ struct city *game_city_by_name(const char *name)
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Often used function to get a city pointer from a city ID.
    City may be any city in the game.  This now always uses fast idex
    method, instead of looking through all cities of all players.
- **************************************************************************/
+ */
 struct city *game_city_by_number(int id)
 {
   return idex_lookup_city(&wld, id);
 }
 
-/**********************************************************************/ /**
+/**
    Find unit out of all units in game: now uses fast idex method,
    instead of looking through all units of all players.
- **************************************************************************/
+ */
 struct unit *game_unit_by_number(int id)
 {
   return idex_lookup_unit(&wld, id);
 }
 
-/**********************************************************************/ /**
+/**
    In the server call wipe_unit(), and never this function directly.
- **************************************************************************/
+ */
 void game_remove_unit(struct world *gworld, struct unit *punit)
 {
   struct city *pcity;
@@ -168,16 +168,16 @@ void game_remove_unit(struct world *gworld, struct unit *punit)
   unit_virtual_destroy(punit);
 }
 
-/**********************************************************************/ /**
+/**
    Remove city from game.
- **************************************************************************/
+ */
 void game_remove_city(struct world *gworld, struct city *pcity)
 {
   struct tile *pcenter = city_tile(pcity);
   struct player *powner = city_owner(pcity);
 
   if (NULL != powner) {
-    /* always unlink before clearing data */
+    // always unlink before clearing data
     city_list_remove(powner->cities, pcity);
   }
 
@@ -203,14 +203,14 @@ void game_remove_city(struct world *gworld, struct city *pcity)
   destroy_city_virtual(pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Set default game values.
- **************************************************************************/
+ */
 static void game_defaults(bool keep_ruleset_value)
 {
   int i;
 
-  /* The control packet. */
+  // The control packet.
   game.control.government_count = 0;
   game.control.nation_count = 0;
   game.control.num_base_types = 0;
@@ -235,7 +235,7 @@ static void game_defaults(bool keep_ruleset_value)
   game.ruleset_description = NULL;
   game.ruleset_capabilities = NULL;
 
-  /* The info packet. */
+  // The info packet.
   game.info.aifill = GAME_DEFAULT_AIFILL;
   game.info.airlifting_style = GAME_DEFAULT_AIRLIFTINGSTYLE;
   game.info.angrycitizen = GAME_DEFAULT_ANGRYCITIZEN;
@@ -245,18 +245,18 @@ static void game_defaults(bool keep_ruleset_value)
   game.info.celebratesize = GAME_DEFAULT_CELEBRATESIZE;
   game.info.citymindist = GAME_DEFAULT_CITYMINDIST;
   game.info.cooling = 0;
-  game.info.coolinglevel = 0; /* set later */
+  game.info.coolinglevel = 0; // set later
   game.info.diplomacy = GAME_DEFAULT_DIPLOMACY;
   game.info.fogofwar = GAME_DEFAULT_FOGOFWAR;
   game.info.foodbox = GAME_DEFAULT_FOODBOX;
   game.info.fulltradesize = GAME_DEFAULT_FULLTRADESIZE;
   game.info.global_advance_count = 0;
   for (i = 0; i < A_LAST; i++) {
-    /* game.num_tech_types = 0 here */
+    // game.num_tech_types = 0 here
     game.info.global_advances[i] = false;
   }
   for (i = 0; i < B_LAST; i++) {
-    /* game.num_impr_types = 0 here */
+    // game.num_impr_types = 0 here
     game.info.great_wonder_owners[i] = WONDER_NOT_OWNED;
   }
   game.info.globalwarming = 0;
@@ -293,11 +293,11 @@ static void game_defaults(bool keep_ruleset_value)
   game.info.trading_gold = GAME_DEFAULT_TRADING_GOLD;
   game.info.trading_tech = GAME_DEFAULT_TRADING_TECH;
   game.info.turn = 0;
-  game.info.warminglevel = 0; /* set later */
+  game.info.warminglevel = 0; // set later
   game.info.year_0_hack = false;
   game.info.year = GAME_START_YEAR;
 
-  /* The scenario packets. */
+  // The scenario packets.
   game.scenario.is_scenario = false;
   game.scenario.name[0] = '\0';
   game.scenario.authors[0] = '\0';
@@ -313,10 +313,10 @@ static void game_defaults(bool keep_ruleset_value)
 
   game.scenario_desc.description[0] = '\0';
 
-  /* Veteran system. */
+  // Veteran system.
   game.veteran = NULL;
 
-  /* player colors */
+  // player colors
   game.plr_bg_color = NULL;
 
   if (is_server()) {
@@ -416,15 +416,15 @@ static void game_defaults(bool keep_ruleset_value)
     game.server.unitwaittime = GAME_DEFAULT_UNITWAITTIME;
     game.server.plr_colors = NULL;
   } else {
-    /* Client side takes care of itself in client_main() */
+    // Client side takes care of itself in client_main()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialise all game settings.
 
    The variables are listed in alphabetical order.
- **************************************************************************/
+ */
 void game_init(bool keep_ruleset_value)
 {
   game_defaults(keep_ruleset_value);
@@ -438,10 +438,10 @@ void game_init(bool keep_ruleset_value)
   universal_found_functions_init();
 }
 
-/**********************************************************************/ /**
+/**
    Initialize map-specific parts of the game structure.  Maybe these should
    be moved into the map structure?
- **************************************************************************/
+ */
 void game_map_init()
 {
   /* FIXME: it's not clear where these values should be initialized.  It
@@ -452,9 +452,9 @@ void game_map_init()
   game.info.coolinglevel = (map_num_tiles() + 499) / 500;
 }
 
-/**********************************************************************/ /**
+/**
    Frees all memory of the game.
- **************************************************************************/
+ */
 void game_free()
 {
   player_slots_free();
@@ -467,17 +467,17 @@ void game_free()
   cm_free();
 }
 
-/**********************************************************************/ /**
+/**
    Do all changes to change view, and not full
    game_free()/game_init().
- **************************************************************************/
+ */
 void game_reset()
 {
   if (is_server()) {
     game_free();
     game_init(false);
   } else {
-    /* Reset the players infos. */
+    // Reset the players infos.
     players_iterate(pplayer) { player_clear(pplayer, false); }
     players_iterate_end;
 
@@ -491,9 +491,9 @@ void game_reset()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialize the objects which will read from a ruleset.
- **************************************************************************/
+ */
 void game_ruleset_init()
 {
   nation_sets_groups_init();
@@ -536,9 +536,9 @@ void game_ruleset_init()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Frees all memory which in objects which are read from a ruleset.
- **************************************************************************/
+ */
 void game_ruleset_free()
 {
   int i;
@@ -578,11 +578,11 @@ void game_ruleset_free()
   multipliers_free();
   clause_infos_free();
 
-  /* Destroy the default veteran system. */
+  // Destroy the default veteran system.
   veteran_system_destroy(game.veteran);
   game.veteran = NULL;
 
-  /* Player colors. */
+  // Player colors.
   if (game.plr_bg_color != NULL) {
     rgbcolor_destroy(game.plr_bg_color);
     game.plr_bg_color = NULL;
@@ -637,9 +637,9 @@ void game_ruleset_free()
   NFCNPP_FREE(game.ruleset_capabilities);
 }
 
-/**********************************************************************/ /**
+/**
    Initialize wonder information.
- **************************************************************************/
+ */
 void initialize_globals()
 {
   players_iterate(pplayer)
@@ -663,13 +663,13 @@ void initialize_globals()
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Return TRUE if it is this player's phase.
    NB: The meaning of the 'phase' argument must match its use in the
    function begin_turn() in server/srv_main.c.
    NB: The phase mode PMT_TEAMS_ALTERNATE assumes that every player is
    on a team, i.e. that pplayer->team is never NULL.
- **************************************************************************/
+ */
 bool is_player_phase(const struct player *pplayer, int phase)
 {
   switch (game.info.phase_mode) {
@@ -692,11 +692,11 @@ bool is_player_phase(const struct player *pplayer, int phase)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Return a prettily formatted string containing the population text.  The
    population is passed in as the number of citizens, in unit
    (tens/hundreds/thousands...) defined in cities.ruleset.
- **************************************************************************/
+ */
 const char *population_to_text(int thousand_citizen)
 {
   /* big_int_to_text can't handle negative values, and in any case we'd
@@ -705,9 +705,9 @@ const char *population_to_text(int thousand_citizen)
   return big_int_to_text(thousand_citizen, game.info.pop_report_zeroes - 1);
 }
 
-/**********************************************************************/ /**
+/**
    Return a string containing the save year.
- **************************************************************************/
+ */
 static char *year_suffix()
 {
   static char buf[MAX_LEN_NAME];
@@ -722,7 +722,7 @@ static char *year_suffix()
     suffix = game.calendar.positive_year_label;
   }
 
-  /* Remove all non alphanumeric characters from the year suffix. */
+  // Remove all non alphanumeric characters from the year suffix.
   for (; '\0' != *suffix && c < max; suffix++) {
     if (QChar::isLetterOrNumber(*suffix)) {
       *c++ = *suffix;
@@ -735,7 +735,7 @@ static char *year_suffix()
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Generate a default save file name and place it in the provided buffer.
    Within the name the following custom formats are allowed:
 
@@ -753,7 +753,7 @@ static char *year_suffix()
 
    NB: If you change the format definition, be sure to update the above
        function comment and the help text for the 'savename' setting.
- **************************************************************************/
+ */
 int generate_save_name(const char *format, char *buf, int buflen,
                        const char *reason)
 {
@@ -783,27 +783,27 @@ int generate_save_name(const char *format, char *buf, int buflen,
   return qstrlen(buf);
 }
 
-/**********************************************************************/ /**
+/**
    Initialize user flag.
- **************************************************************************/
+ */
 void user_flag_init(struct user_flag *flag)
 {
   flag->name = NULL;
   flag->helptxt = NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Free user flag.
- **************************************************************************/
+ */
 void user_flag_free(struct user_flag *flag)
 {
   NFCNPP_FREE(flag->name);
   NFCNPP_FREE(flag->helptxt);
 }
 
-/**********************************************************************/ /**
+/**
    Return timeout value for the current turn.
- **************************************************************************/
+ */
 int current_turn_timeout()
 {
   if (game.info.turn == 1 && game.info.first_timeout != -1) {

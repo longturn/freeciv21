@@ -20,7 +20,7 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "deprecations.h"
 #include "fcintl.h"
@@ -28,7 +28,7 @@
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "achievements.h"
 #include "actions.h"
 #include "ai.h"
@@ -58,7 +58,7 @@
 #include "unit.h"
 #include "unittype.h"
 
-/* server */
+// server
 #include "citytools.h"
 #include "notify.h"
 #include "plrhand.h"
@@ -75,7 +75,7 @@
 
 #include "ruleset.h"
 
-/* RULESET_SUFFIX already used, no leading dot here */
+// RULESET_SUFFIX already used, no leading dot here
 #define RULES_SUFFIX "ruleset"
 #define SCRIPT_SUFFIX "lua"
 
@@ -86,9 +86,9 @@
 #define MUSICSTYLE_SECTION_PREFIX "musicstyle_"
 #define EFFECT_SECTION_PREFIX "effect_"
 #define GOVERNMENT_SECTION_PREFIX "government_"
-#define NATION_SET_SECTION_PREFIX "nset"     /* without underscore? */
-#define NATION_GROUP_SECTION_PREFIX "ngroup" /* without underscore? */
-#define NATION_SECTION_PREFIX "nation"       /* without underscore? */
+#define NATION_SET_SECTION_PREFIX "nset"     // without underscore?
+#define NATION_GROUP_SECTION_PREFIX "ngroup" // without underscore?
+#define NATION_SECTION_PREFIX "nation"       // without underscore?
 #define STYLE_SECTION_PREFIX "style_"
 #define CLAUSE_SECTION_PREFIX "clause_"
 #define EXTRA_SECTION_PREFIX "extra_"
@@ -108,7 +108,7 @@
 #define check_name(name) (check_strlen(name, MAX_LEN_NAME, NULL))
 #define check_cityname(name) (check_strlen(name, MAX_LEN_CITYNAME, NULL))
 
-/* avoid re-reading files */
+// avoid re-reading files
 static const char name_too_long[] = "Name \"%s\" too long; truncating.";
 #define MAX_SECTION_LABEL 64
 #define section_strlcpy(dst, src)                                           \
@@ -195,10 +195,10 @@ Q_LOGGING_CATEGORY(ruleset_category, "freeciv.ruleset")
 char *script_buffer = NULL;
 char *parser_buffer = NULL;
 
-/**********************************************************************/ /**
+/**
    datafilename() wrapper: tries to match in two ways.
    Returns NULL on failure, the (statically allocated) filename on success.
- **************************************************************************/
+ */
 static QString valid_ruleset_filename(const char *subdir, const char *name,
                                       const char *extension, bool optional)
 {
@@ -233,7 +233,7 @@ static QString valid_ruleset_filename(const char *subdir, const char *name,
     return dfilename;
   } else if (!optional) {
     qCCritical(ruleset_category,
-               /* TRANS: message about an installation error. */
+               // TRANS: message about an installation error.
                _("Could not find a readable \"%s.%s\" ruleset file."), name,
                extension);
   }
@@ -241,20 +241,20 @@ static QString valid_ruleset_filename(const char *subdir, const char *name,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Return current script.lua buffer.
- **************************************************************************/
+ */
 char *get_script_buffer() { return script_buffer; }
 
-/**********************************************************************/ /**
+/**
    Return current parser.lua buffer.
- **************************************************************************/
+ */
 char *get_parser_buffer() { return parser_buffer; }
 
-/**********************************************************************/ /**
+/**
    Do initial section_file_load on a ruleset file.
    "whichset" = "techs", "units", "buildings", "terrain", ...
- **************************************************************************/
+ */
 static struct section_file *openload_ruleset_file(const char *whichset,
                                                   const char *rsdir)
 {
@@ -280,9 +280,9 @@ static struct section_file *openload_ruleset_file(const char *whichset,
   return secfile;
 }
 
-/**********************************************************************/ /**
+/**
    Parse script file.
- **************************************************************************/
+ */
 static enum fc_tristate openload_script_file(const char *whichset,
                                              const char *rsdir,
                                              char **buffer, bool optional)
@@ -308,9 +308,9 @@ static enum fc_tristate openload_script_file(const char *whichset,
   return TRI_YES;
 }
 
-/**********************************************************************/ /**
+/**
    Load optional luadata.txt
- **************************************************************************/
+ */
 static struct section_file *openload_luadata_file(const char *rsdir)
 {
   struct section_file *secfile;
@@ -334,10 +334,10 @@ static struct section_file *openload_luadata_file(const char *rsdir)
   return secfile;
 }
 
-/**********************************************************************/ /**
+/**
    Load a requirement list.  The list is returned as a static vector
    (callers need not worry about freeing anything).
- **************************************************************************/
+ */
 struct requirement_vector *lookup_req_list(struct section_file *file,
                                            struct rscompat_info *compat,
                                            const char *sec, const char *sub,
@@ -475,9 +475,9 @@ struct requirement_vector *lookup_req_list(struct section_file *file,
   return &reqs_list;
 }
 
-/**********************************************************************/ /**
+/**
    Load combat bonus list
- **************************************************************************/
+ */
 static bool lookup_cbonus_list(struct rscompat_info *compat,
                                struct combat_bonus_list *list,
                                struct section_file *file, const char *sec,
@@ -530,14 +530,14 @@ static bool lookup_cbonus_list(struct rscompat_info *compat,
   return success;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a string prefix.entry in the file and return the corresponding
    advances pointer.  If (!required), return A_NEVER for match "Never" or
    can't match.  If (required), die when can't match.  Note the first tech
    should have name "None" so that will always match.
    If description is not NULL, it is used in the warning message
    instead of prefix (eg pass unit->name instead of prefix="units2.u27")
- **************************************************************************/
+ */
 static bool lookup_tech(struct section_file *file, struct advance **result,
                         const char *prefix, const char *entry,
                         const char *filename, const char *description)
@@ -561,13 +561,13 @@ static bool lookup_tech(struct section_file *file, struct advance **result,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a string prefix.entry in the file and return the corresponding
    improvement pointer. Return B_NEVER for match "None" or
    can't match.
    If description is not NULL, it is used in the warning message
    instead of prefix (eg pass unit->name instead of prefix="units2.u27")
- **************************************************************************/
+ */
 static bool lookup_building(struct section_file *file, const char *prefix,
                             const char *entry, struct impr_type **result,
                             const char *filename, const char *description)
@@ -592,13 +592,13 @@ static bool lookup_building(struct section_file *file, const char *prefix,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a prefix.entry string vector in the file and fill in the
    array, which should hold MAX_NUM_UNIT_LIST items. The output array is
    either NULL terminated or full (contains MAX_NUM_UNIT_LIST
    items). If the vector is not found and the required parameter is set,
    we report it as an error, otherwise we just punt.
- **************************************************************************/
+ */
 static bool lookup_unit_list(struct section_file *file, const char *prefix,
                              const char *entry, struct unit_type **output,
                              const char *filename)
@@ -608,13 +608,13 @@ static bool lookup_unit_list(struct section_file *file, const char *prefix,
   int i;
   bool ok = true;
 
-  /* pre-fill with NULL: */
+  // pre-fill with NULL:
   for (i = 0; i < MAX_NUM_UNIT_LIST; i++) {
     output[i] = NULL;
   }
   slist = secfile_lookup_str_vec(file, &nval, "%s.%s", prefix, entry);
   if (nval == 0) {
-    /* 'No vector' is considered same as empty vector */
+    // 'No vector' is considered same as empty vector
     NFCPP_FREE(slist);
     return true;
   }
@@ -649,13 +649,13 @@ static bool lookup_unit_list(struct section_file *file, const char *prefix,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a prefix.entry string vector in the file and fill in the
    array, which should hold MAX_NUM_TECH_LIST items. The output array is
    either A_LAST terminated or full (contains MAX_NUM_TECH_LIST
    items). All valid entries of the output array are guaranteed to
    exist.
- **************************************************************************/
+ */
 static bool lookup_tech_list(struct section_file *file, const char *prefix,
                              const char *entry, int *output,
                              const char *filename)
@@ -665,7 +665,7 @@ static bool lookup_tech_list(struct section_file *file, const char *prefix,
   int i;
   bool ok = true;
 
-  /* pre-fill with A_LAST: */
+  // pre-fill with A_LAST:
   for (i = 0; i < MAX_NUM_TECH_LIST; i++) {
     output[i] = A_LAST;
   }
@@ -715,13 +715,13 @@ static bool lookup_tech_list(struct section_file *file, const char *prefix,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a prefix.entry string vector in the file and fill in the
    array, which should hold MAX_NUM_BUILDING_LIST items. The output array is
    either B_LAST terminated or full (contains MAX_NUM_BUILDING_LIST
    items). [All valid entries of the output array are guaranteed to pass
    improvement_exist()?]
- **************************************************************************/
+ */
 static bool lookup_building_list(struct section_file *file,
                                  const char *prefix, const char *entry,
                                  int *output, const char *filename)
@@ -731,7 +731,7 @@ static bool lookup_building_list(struct section_file *file,
   int i;
   bool ok = true;
 
-  /* pre-fill with B_LAST: */
+  // pre-fill with B_LAST:
   for (i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
     output[i] = B_LAST;
   }
@@ -768,12 +768,12 @@ static bool lookup_building_list(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a string prefix.entry in the file and set result to the
    corresponding unit_type.
    If description is not NULL, it is used in the warning message
    instead of prefix (eg pass unit->name instead of prefix="units2.u27")
- **************************************************************************/
+ */
 static bool lookup_unit_type(struct section_file *file, const char *prefix,
                              const char *entry,
                              const struct unit_type **result,
@@ -799,10 +799,10 @@ static bool lookup_unit_type(struct section_file *file, const char *prefix,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup entry in the file and return the corresponding government index.
    filename is for error message.
- **************************************************************************/
+ */
 static struct government *lookup_government(struct section_file *file,
                                             const char *entry,
                                             const char *filename,
@@ -824,9 +824,9 @@ static struct government *lookup_government(struct section_file *file,
   return gov;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup optional string, returning allocated memory or NULL.
- **************************************************************************/
+ */
 static char *lookup_string(struct section_file *file, const char *prefix,
                            const char *suffix)
 {
@@ -844,10 +844,10 @@ static char *lookup_string(struct section_file *file, const char *prefix,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Stores the string vector from a normal vector. If size == -1, it will
    assume it is a NULL terminated vector.
- **************************************************************************/
+ */
 static void strvec_store(QVector<QString> *psv, const char *const *vec,
                          size_t size)
 {
@@ -865,9 +865,9 @@ static void strvec_store(QVector<QString> *psv, const char *const *vec,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Lookup optional string vector, returning allocated memory or NULL.
- **************************************************************************/
+ */
 static QVector<QString> *lookup_strvec(struct section_file *file,
                                        const char *prefix,
                                        const char *suffix)
@@ -886,9 +886,9 @@ static QVector<QString> *lookup_strvec(struct section_file *file,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Look up the resource section name and return its pointer.
- **************************************************************************/
+ */
 static struct extra_type *
 lookup_resource(const char *filename, const char *name, const char *jsection)
 {
@@ -904,10 +904,10 @@ lookup_resource(const char *filename, const char *name, const char *jsection)
   return pres;
 }
 
-/**********************************************************************/ /**
+/**
    Look up the terrain by name and return its pointer.
    filename is for error message.
- **************************************************************************/
+ */
 static bool lookup_terrain(struct section_file *file, const char *entry,
                            const char *filename, struct terrain *pthis,
                            struct terrain **result)
@@ -941,19 +941,19 @@ static bool lookup_terrain(struct section_file *file, const char *entry,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Look up a value comparable to activity_count (road_time, etc).
    item_name describes the thing which has the time property, if non-NULL,
    for any error message.
    Returns FALSE if not found in secfile, but TRUE even if validation failed.
    Sets *ok to FALSE if validation failed, leaves it alone otherwise.
- **************************************************************************/
+ */
 static bool lookup_time(const struct section_file *secfile, int *turns,
                         const char *sec_name, const char *property_name,
                         const char *filename, const char *item_name,
                         bool *ok)
 {
-  /* Assumes that PACKET_UNIT_INFO.activity_count in packets.def is UINT16 */
+  // Assumes that PACKET_UNIT_INFO.activity_count in packets.def is UINT16
   const int max_turns = 65535 / ACTIVITY_FACTOR;
 
   if (!secfile_lookup_int(secfile, turns, "%s.%s", sec_name,
@@ -969,12 +969,12 @@ static bool lookup_time(const struct section_file *secfile, int *turns,
     *ok = false;
   }
 
-  return true; /* we found _something */
+  return true; // we found _something
 }
 
-/**********************************************************************/ /**
+/**
    Load "name" and (optionally) "rule_name" into a struct name_translation.
- **************************************************************************/
+ */
 static bool ruleset_load_names(struct name_translation *pname,
                                const char *domain, struct section_file *file,
                                const char *sec_name)
@@ -993,9 +993,9 @@ static bool ruleset_load_names(struct name_translation *pname,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Load trait values to array.
- **************************************************************************/
+ */
 static void ruleset_load_traits(struct trait_limits *out,
                                 struct section_file *file,
                                 const char *secname,
@@ -1018,13 +1018,13 @@ static void ruleset_load_traits(struct trait_limits *out,
         file, -1, "%s.%s%s_default", secname, field_prefix, trait_names[tr]);
   }
 
-  fc_assert(tr == trait_end()); /* number of trait_names correct */
+  fc_assert(tr == trait_end()); // number of trait_names correct
 }
 
-/**********************************************************************/ /**
+/**
    Load names from game.ruleset so other rulesets can refer to objects
    with their name.
- **************************************************************************/
+ */
 static bool load_game_names(struct section_file *file,
                             struct rscompat_info *compat)
 {
@@ -1033,19 +1033,19 @@ static bool load_game_names(struct section_file *file,
   const char *filename = secfile_name(file);
   bool ok = true;
 
-  /* section: datafile */
+  // section: datafile
   compat->ver_game = rscompat_check_capabilities(file, filename, compat);
   if (compat->ver_game <= 0) {
     return false;
   }
 
-  (void) secfile_entry_by_path(file, "datafile.description"); /* unused */
-  (void) secfile_entry_by_path(file, "datafile.ruledit");     /* unused */
+  (void) secfile_entry_by_path(file, "datafile.description"); // unused
+  (void) secfile_entry_by_path(file, "datafile.ruledit");     // unused
 
   sec = secfile_sections_by_name_prefix(file, ACHIEVEMENT_SECTION_PREFIX);
   nval = (NULL != sec ? section_list_size(sec) : 0);
   if (nval > MAX_ACHIEVEMENT_TYPES) {
-    int num = nval; /* No "size_t" to printf */
+    int num = nval; // No "size_t" to printf
 
     qCCritical(ruleset_category,
                "\"%s\": Too many achievement types (%d, max %d)", filename,
@@ -1079,7 +1079,7 @@ static bool load_game_names(struct section_file *file,
 
       nval = (NULL != sec ? section_list_size(sec) : 0);
       if (nval > MAX_GOODS_TYPES) {
-        int num = nval; /* No "size_t" to printf */
+        int num = nval; // No "size_t" to printf
         qCCritical(ruleset_category,
                    "\"%s\": Too many goods types (%d, max %d)", filename,
                    num, MAX_GOODS_TYPES);
@@ -1114,15 +1114,15 @@ static bool load_game_names(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load names of technologies so other rulesets can refer to techs with
    their name.
- **************************************************************************/
+ */
 static bool load_tech_names(struct section_file *file,
                             struct rscompat_info *compat)
 {
   struct section_list *sec = NULL;
-  /* Number of techs in the ruleset (means without A_NONE). */
+  // Number of techs in the ruleset (means without A_NONE).
   int num_techs = 0;
   int i;
   const char *filename = secfile_name(file);
@@ -1134,10 +1134,10 @@ static bool load_tech_names(struct section_file *file,
     return false;
   }
 
-  (void) secfile_entry_by_path(file, "datafile.description"); /* unused */
-  (void) secfile_entry_by_path(file, "datafile.ruledit");     /* unused */
+  (void) secfile_entry_by_path(file, "datafile.description"); // unused
+  (void) secfile_entry_by_path(file, "datafile.ruledit");     // unused
 
-  /* User tech flag names */
+  // User tech flag names
   for (i = 0; (flag = secfile_lookup_str_default(file, NULL,
                                                  "control.flags%d.name", i));
        i++) {
@@ -1167,12 +1167,12 @@ static bool load_tech_names(struct section_file *file,
       set_user_tech_flag_name(tech_flag_id(TECH_USER_1 + i), NULL, NULL);
     }
 
-    /* Tech classes */
+    // Tech classes
     sec = secfile_sections_by_name_prefix(file, TECH_CLASS_SECTION_PREFIX);
 
     nval = (NULL != sec ? section_list_size(sec) : 0);
     if (nval > MAX_NUM_TECH_CLASSES) {
-      int num = nval; /* No "size_t" to printf */
+      int num = nval; // No "size_t" to printf
 
       qCCritical(ruleset_category,
                  "\"%s\": Too many tech classes (%d, max %d)", filename, num,
@@ -1200,7 +1200,7 @@ static bool load_tech_names(struct section_file *file,
   }
 
   if (ok) {
-    /* The techs: */
+    // The techs:
     if (sec) {
       section_list_destroy(sec);
     }
@@ -1221,7 +1221,7 @@ static bool load_tech_names(struct section_file *file,
   }
 
   if (ok) {
-    game.control.num_tech_types = num_techs + A_FIRST; /* includes A_NONE */
+    game.control.num_tech_types = num_techs + A_FIRST; // includes A_NONE
 
     i = 0;
     advance_iterate(A_FIRST, a)
@@ -1240,9 +1240,9 @@ static bool load_tech_names(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load technologies related ruleset data
- **************************************************************************/
+ */
 static bool load_ruleset_techs(struct section_file *file,
                                struct rscompat_info *compat)
 {
@@ -1324,7 +1324,7 @@ static bool load_ruleset_techs(struct section_file *file,
           break;
         }
       } else {
-        a->tclass = NULL; /* Default */
+        a->tclass = NULL; // Default
       }
     }
 
@@ -1417,7 +1417,7 @@ restart:
     }
     advance_iterate_end;
 
-    /* Now rename A_NEVER to A_NONE for consistency */
+    // Now rename A_NEVER to A_NONE for consistency
     advance_iterate(A_NONE, a)
     {
       if (A_NEVER == a->require[AR_ROOT]) {
@@ -1462,10 +1462,10 @@ restart:
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load names of units so other rulesets can refer to units with
    their name.
- **************************************************************************/
+ */
 static bool load_unit_names(struct section_file *file,
                             struct rscompat_info *compat)
 {
@@ -1481,10 +1481,10 @@ static bool load_unit_names(struct section_file *file,
     return false;
   }
 
-  (void) secfile_entry_by_path(file, "datafile.description"); /* unused */
-  (void) secfile_entry_by_path(file, "datafile.ruledit");     /* unused */
+  (void) secfile_entry_by_path(file, "datafile.description"); // unused
+  (void) secfile_entry_by_path(file, "datafile.ruledit");     // unused
 
-  /* User unit flag names */
+  // User unit flag names
   for (i = 0; (flag = secfile_lookup_str_default(file, NULL,
                                                  "control.flags%d.name", i));
        i++) {
@@ -1511,7 +1511,7 @@ static bool load_unit_names(struct section_file *file,
   }
 
   if (ok) {
-    /* Blank the remaining unit type user flags. */
+    // Blank the remaining unit type user flags.
     for (; i < MAX_NUM_USER_UNIT_FLAGS; i++) {
       set_user_unit_type_flag_name(unit_type_flag_id(UTYF_USER_FLAG_1 + i),
                                    nullptr, nullptr);
@@ -1519,7 +1519,7 @@ static bool load_unit_names(struct section_file *file,
   }
 
   if (ok) {
-    /* User unit class flag names */
+    // User unit class flag names
     for (i = 0; (flag = secfile_lookup_str_default(
                      file, NULL, "control.class_flags%d.name", i));
          i++) {
@@ -1548,7 +1548,7 @@ static bool load_unit_names(struct section_file *file,
   }
 
   if (ok) {
-    /* Blank the remaining unit class user flags. */
+    // Blank the remaining unit class user flags.
     for (; i < MAX_NUM_USER_UCLASS_FLAGS; i++) {
       set_user_unit_class_flag_name(unit_class_flag_id(UCF_USER_FLAG_1 + i),
                                     nullptr, nullptr);
@@ -1556,7 +1556,7 @@ static bool load_unit_names(struct section_file *file,
   }
 
   if (ok) {
-    /* Unit classes */
+    // Unit classes
     sec = secfile_sections_by_name_prefix(file, UNIT_CLASS_SECTION_PREFIX);
     if (NULL == sec || 0 == (nval = section_list_size(sec))) {
       qCCritical(ruleset_category, "\"%s\": No unit classes?!?", filename);
@@ -1590,7 +1590,7 @@ static bool load_unit_names(struct section_file *file,
   section_list_destroy(sec);
   sec = NULL;
 
-  /* The names: */
+  // The names:
   if (ok) {
     sec = secfile_sections_by_name_prefix(file, UNIT_SECTION_PREFIX);
     if (NULL == sec || 0 == (nval = section_list_size(sec))) {
@@ -1627,9 +1627,9 @@ static bool load_unit_names(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load veteran levels.
- **************************************************************************/
+ */
 static bool load_ruleset_veteran(struct section_file *file, const char *path,
                                  struct veteran_system **vsystem, char *err,
                                  size_t err_len, bool compat)
@@ -1640,13 +1640,13 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
   int i;
   bool ret = true;
 
-  /* The pointer should be uninitialised. */
+  // The pointer should be uninitialised.
   if (*vsystem != NULL) {
     fc_snprintf(err, err_len, "Veteran system is defined?!");
     return false;
   }
 
-  /* Load data. */
+  // Load data.
   vlist_name =
       secfile_lookup_str_vec(file, &count_name, "%s.veteran_names", path);
   vlist_power = secfile_lookup_int_vec(file, &count_power,
@@ -1677,10 +1677,10 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
                 "settings in section '%s'",
                 secfile_name(file), path);
   } else if (count_name == 0) {
-    /* Nothing defined. */
+    // Nothing defined.
     *vsystem = NULL;
   } else {
-    /* Generate the veteran system. */
+    // Generate the veteran system.
     *vsystem = veteran_system_new(static_cast<int>(count_name));
 
 #define rs_sanity_veteran(_path, _entry, _i, _condition, _action)           \
@@ -1692,7 +1692,7 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
     _action;                                                                \
   }
     for (i = 0; i < count_name; i++) {
-      /* Some sanity checks. */
+      // Some sanity checks.
       rs_sanity_veteran(path, "veteran_power_fact", i, (vlist_power[i] < 0),
                         vlist_power[i] = 0);
       rs_sanity_veteran(path, "veteran_base_raise_chance", i,
@@ -1706,7 +1706,7 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
         rs_sanity_veteran(path, "veteran_power_fact", i,
                           (vlist_power[i] != 100), vlist_power[i] = 100);
       } else if (i == count_name - 1) {
-        /* Last element. */
+        // Last element.
         rs_sanity_veteran(path, "veteran_power_fact", i,
                           (vlist_power[i] < vlist_power[i - 1]),
                           vlist_power[i] = vlist_power[i - 1]);
@@ -1715,7 +1715,7 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
         rs_sanity_veteran(path, "veteran_work_raise_chance", i,
                           (vlist_wraise[i] != 0), vlist_wraise[i] = 0);
       } else {
-        /* All elements inbetween. */
+        // All elements inbetween.
         rs_sanity_veteran(path, "veteran_power_fact", i,
                           (vlist_power[i] < vlist_power[i - 1]),
                           vlist_power[i] = vlist_power[i - 1]);
@@ -1741,9 +1741,9 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
   return ret;
 }
 
-/**********************************************************************/ /**
+/**
    Load units related ruleset data.
- **************************************************************************/
+ */
 static bool load_ruleset_units(struct section_file *file,
                                struct rscompat_info *compat)
 {
@@ -1849,7 +1849,7 @@ static bool load_ruleset_units(struct section_file *file,
   }
 
   if (ok) {
-    /* Tech and Gov requirements; per unit veteran system */
+    // Tech and Gov requirements; per unit veteran system
     unit_type_iterate(u)
     {
       const int i = utype_index(u);
@@ -1914,7 +1914,7 @@ static bool load_ruleset_units(struct section_file *file,
         ok = false;
         break;
       }
-      u->convert_time = 1; /* default */
+      u->convert_time = 1; // default
       lookup_time(file, &u->convert_time, sec_name, "convert_time", filename,
                   rule_name_get(&u->name), &ok);
     }
@@ -1922,7 +1922,7 @@ static bool load_ruleset_units(struct section_file *file,
   }
 
   if (ok) {
-    /* main stats: */
+    // main stats:
     unit_type_iterate(u)
     {
       const int i = utype_index(u);
@@ -2188,7 +2188,7 @@ static bool load_ruleset_units(struct section_file *file,
   }
 
   if (ok) {
-    /* flags */
+    // flags
     unit_type_iterate(u)
     {
       const int i = utype_index(u);
@@ -2236,7 +2236,7 @@ static bool load_ruleset_units(struct section_file *file,
     unit_type_iterate_end;
   }
 
-  /* roles */
+  // roles
   if (ok) {
     unit_type_iterate(u)
     {
@@ -2269,7 +2269,7 @@ static bool load_ruleset_units(struct section_file *file,
   }
 
   if (ok) {
-    /* Some more consistency checking: */
+    // Some more consistency checking:
     unit_type_iterate(u)
     {
       if (!valid_advance(u->require_advance)) {
@@ -2305,10 +2305,10 @@ static bool load_ruleset_units(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load names of buildings so other rulesets can refer to buildings with
    their name.
- **************************************************************************/
+ */
 static bool load_building_names(struct section_file *file,
                                 struct rscompat_info *compat)
 {
@@ -2323,10 +2323,10 @@ static bool load_building_names(struct section_file *file,
     return false;
   }
 
-  (void) secfile_entry_by_path(file, "datafile.description"); /* unused */
-  (void) secfile_entry_by_path(file, "datafile.ruledit");     /* unused */
+  (void) secfile_entry_by_path(file, "datafile.description"); // unused
+  (void) secfile_entry_by_path(file, "datafile.ruledit");     // unused
 
-  /* The names: */
+  // The names:
   sec = secfile_sections_by_name_prefix(file, BUILDING_SECTION_PREFIX);
   if (NULL == sec || 0 == (nval = section_list_size(sec))) {
     qCCritical(ruleset_category, "\"%s\": No improvements?!?", filename);
@@ -2361,9 +2361,9 @@ static bool load_building_names(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load buildings related ruleset data
- **************************************************************************/
+ */
 static bool load_ruleset_buildings(struct section_file *file,
                                    struct rscompat_info *compat)
 {
@@ -2471,10 +2471,10 @@ static bool load_ruleset_buildings(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load names of terrain types so other rulesets can refer to terrains with
    their name.
- **************************************************************************/
+ */
 static bool load_terrain_names(struct section_file *file,
                                struct rscompat_info *compat)
 {
@@ -2490,10 +2490,10 @@ static bool load_terrain_names(struct section_file *file,
     return false;
   }
 
-  (void) secfile_entry_by_path(file, "datafile.description"); /* unused */
-  (void) secfile_entry_by_path(file, "datafile.ruledit");     /* unused */
+  (void) secfile_entry_by_path(file, "datafile.description"); // unused
+  (void) secfile_entry_by_path(file, "datafile.ruledit");     // unused
 
-  /* User terrain flag names */
+  // User terrain flag names
   for (i = 0; (flag = secfile_lookup_str_default(file, NULL,
                                                  "control.flags%d.name", i));
        i++) {
@@ -2519,14 +2519,14 @@ static bool load_terrain_names(struct section_file *file,
   }
 
   if (ok) {
-    /* Blank the remaining terrain user flag slots. */
+    // Blank the remaining terrain user flag slots.
     for (; i < MAX_NUM_USER_TER_FLAGS; i++) {
       set_user_terrain_flag_name(terrain_flag_id(TER_USER_1 + i), nullptr,
                                  nullptr);
     }
   }
 
-  /* User extra flag names */
+  // User extra flag names
   for (i = 0; (flag = secfile_lookup_str_default(
                    file, NULL, "control.extra_flags%d.name", i));
        i++) {
@@ -2552,13 +2552,13 @@ static bool load_terrain_names(struct section_file *file,
   }
 
   if (ok) {
-    /* Blank the remaining extra user flag slots. */
+    // Blank the remaining extra user flag slots.
     for (; i < MAX_NUM_USER_EXTRA_FLAGS; i++) {
       set_user_extra_flag_name(extra_flag_id(EF_USER_FLAG_1 + i), NULL,
                                NULL);
     }
 
-    /* terrain names */
+    // terrain names
 
     sec = secfile_sections_by_name_prefix(file, TERRAIN_SECTION_PREFIX);
     if (NULL == sec || 0 == (nval = section_list_size(sec))) {
@@ -2578,7 +2578,7 @@ static bool load_terrain_names(struct section_file *file,
   if (ok) {
     game.control.terrain_count = nval;
 
-    /* avoid re-reading files */
+    // avoid re-reading files
     NFCPP_FREE(terrain_sections);
     terrain_sections = new char[nval][MAX_SECTION_LABEL]{};
 
@@ -2600,7 +2600,7 @@ static bool load_terrain_names(struct section_file *file,
   section_list_destroy(sec);
   sec = NULL;
 
-  /* extra names */
+  // extra names
 
   if (ok) {
     sec = secfile_sections_by_name_prefix(file, EXTRA_SECTION_PREFIX);
@@ -2638,7 +2638,7 @@ static bool load_terrain_names(struct section_file *file,
   section_list_destroy(sec);
   sec = NULL;
 
-  /* base names */
+  // base names
 
   if (ok) {
     sec = secfile_sections_by_name_prefix(file, BASE_SECTION_PREFIX);
@@ -2691,7 +2691,7 @@ static bool load_terrain_names(struct section_file *file,
   section_list_destroy(sec);
   sec = NULL;
 
-  /* road names */
+  // road names
 
   if (ok) {
     sec = secfile_sections_by_name_prefix(file, ROAD_SECTION_PREFIX);
@@ -2744,7 +2744,7 @@ static bool load_terrain_names(struct section_file *file,
   section_list_destroy(sec);
   sec = NULL;
 
-  /* resource names */
+  // resource names
 
   if (ok) {
     sec = secfile_sections_by_name_prefix(file, RESOURCE_SECTION_PREFIX);
@@ -2804,9 +2804,9 @@ static bool load_terrain_names(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load terrain types related ruleset data
- **************************************************************************/
+ */
 static bool load_ruleset_terrain(struct section_file *file,
                                  struct rscompat_info *compat)
 {
@@ -2820,7 +2820,7 @@ static bool load_ruleset_terrain(struct section_file *file,
   const char *text;
   bool ok = true;
 
-  /* parameters */
+  // parameters
 
   terrain_control.ocean_reclaim_requirement_pct = secfile_lookup_int_default(
       file, 101, "parameters.ocean_reclaim_requirement");
@@ -2868,7 +2868,7 @@ static bool load_ruleset_terrain(struct section_file *file,
   sz_strlcpy(terrain_control.gui_type_base1, text);
 
   if (ok) {
-    /* terrain details */
+    // terrain details
 
     terrain_type_iterate(pterrain)
     {
@@ -3046,17 +3046,17 @@ static bool load_ruleset_terrain(struct section_file *file,
         break;
       }
 
-      pterrain->placing_time = 1; /* default */
+      pterrain->placing_time = 1; // default
       lookup_time(file, &pterrain->placing_time, tsection, "placing_time",
                   filename, NULL, &ok);
 
-      pterrain->pillage_time = 1; /* default */
+      pterrain->pillage_time = 1; // default
       lookup_time(file, &pterrain->pillage_time, tsection, "pillage_time",
                   filename, NULL, &ok);
-      pterrain->clean_pollution_time = 3; /* default */
+      pterrain->clean_pollution_time = 3; // default
       lookup_time(file, &pterrain->clean_pollution_time, tsection,
                   "clean_pollution_time", filename, NULL, &ok);
-      pterrain->clean_fallout_time = 3; /* default */
+      pterrain->clean_fallout_time = 3; // default
       lookup_time(file, &pterrain->clean_fallout_time, tsection,
                   "clean_fallout_time", filename, NULL, &ok);
 
@@ -3127,7 +3127,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         break;
       }
 
-      /* get terrain color */
+      // get terrain color
       {
         fc_assert_ret_val(pterrain->rgb == NULL, false);
         if (!rgbcolor_load(file, &pterrain->rgb, "%s.color", tsection)) {
@@ -3145,7 +3145,7 @@ static bool load_ruleset_terrain(struct section_file *file,
   }
 
   if (ok) {
-    /* extra details */
+    // extra details
     extra_type_iterate(pextra) { BV_CLR_ALL(pextra->conflicts); }
     extra_type_iterate_end;
 
@@ -3200,14 +3200,14 @@ static bool load_ruleset_terrain(struct section_file *file,
         }
 
         if (pextra->causes == 0) {
-          /* Extras that do not have any causes added to EC_NONE list */
+          // Extras that do not have any causes added to EC_NONE list
           extra_to_caused_by_list(pextra, EC_NONE);
         }
 
         if (!is_extra_caused_by(pextra, EC_BASE)
             && !is_extra_caused_by(pextra, EC_ROAD)
             && !is_extra_caused_by(pextra, EC_RESOURCE)) {
-          /* Not a base, road, nor resource, so special */
+          // Not a base, road, nor resource, so special
           pextra->data.special_idx =
               extra_type_list_size(extra_type_list_by_cause(EC_SPECIAL));
           extra_to_caused_by_list(pextra, EC_SPECIAL);
@@ -3295,12 +3295,12 @@ static bool load_ruleset_terrain(struct section_file *file,
         pextra->generated =
             secfile_lookup_bool_default(file, true, "%s.generated", section);
 
-        pextra->build_time = 0; /* default */
+        pextra->build_time = 0; // default
         lookup_time(file, &pextra->build_time, section, "build_time",
                     filename, extra_rule_name(pextra), &ok);
         pextra->build_time_factor = secfile_lookup_int_default(
             file, 1, "%s.build_time_factor", section);
-        pextra->removal_time = 0; /* default */
+        pextra->removal_time = 0; // default
         lookup_time(file, &pextra->removal_time, section, "removal_time",
                     filename, extra_rule_name(pextra), &ok);
         pextra->removal_time_factor = secfile_lookup_int_default(
@@ -3481,7 +3481,7 @@ static bool load_ruleset_terrain(struct section_file *file,
 
   if (ok) {
     int i = 0;
-    /* resource details */
+    // resource details
 
     extra_type_by_cause_iterate(EC_RESOURCE, presource)
     {
@@ -3572,7 +3572,7 @@ static bool load_ruleset_terrain(struct section_file *file,
   }
 
   if (ok) {
-    /* base details */
+    // base details
     extra_type_by_cause_iterate(EC_BASE, pextra)
     {
       struct base_type *pbase = extra_base_get(pextra);
@@ -3646,7 +3646,7 @@ static bool load_ruleset_terrain(struct section_file *file,
           struct base_type *pbase2;
 
           if (pextra == pextra2) {
-            /* End of the fully initialized bases iteration. */
+            // End of the fully initialized bases iteration.
             break;
           }
 
@@ -3827,7 +3827,7 @@ static bool load_ruleset_terrain(struct section_file *file,
 
         if (compat->compat_mode
             && !fc_strcasecmp("PreventsOtherRoads", sval)) {
-          /* Nothing to do here */
+          // Nothing to do here
         } else if (compat->compat_mode
                    && !fc_strcasecmp("RequiresBridge", sval)) {
           extra_type_iterate(pbridged)
@@ -3896,10 +3896,10 @@ static bool load_ruleset_terrain(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load names of governments so other rulesets can refer to governments with
    their name. Also load multiplier names/count from governments.ruleset.
- **************************************************************************/
+ */
 static bool load_government_names(struct section_file *file,
                                   struct rscompat_info *compat)
 {
@@ -3914,8 +3914,8 @@ static bool load_government_names(struct section_file *file,
     return false;
   }
 
-  (void) secfile_entry_by_path(file, "datafile.description"); /* unused */
-  (void) secfile_entry_by_path(file, "datafile.ruledit");     /* unused */
+  (void) secfile_entry_by_path(file, "datafile.description"); // unused
+  (void) secfile_entry_by_path(file, "datafile.ruledit");     // unused
 
   sec = secfile_sections_by_name_prefix(file, GOVERNMENT_SECTION_PREFIX);
   if (NULL == sec || 0 == (nval = section_list_size(sec))) {
@@ -3982,9 +3982,9 @@ static bool load_government_names(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    This loads information from given governments.ruleset
- **************************************************************************/
+ */
 static bool load_ruleset_governments(struct section_file *file,
                                      struct rscompat_info *compat)
 {
@@ -4004,7 +4004,7 @@ static bool load_ruleset_governments(struct section_file *file,
     game.info.government_during_revolution_id =
         government_number(game.government_during_revolution);
 
-    /* easy ones: */
+    // easy ones:
     governments_iterate(g)
     {
       const int i = government_index(g);
@@ -4042,7 +4042,7 @@ static bool load_ruleset_governments(struct section_file *file,
   }
 
   if (ok) {
-    /* titles */
+    // titles
     governments_iterate(g)
     {
       const char *sec_name =
@@ -4169,7 +4169,7 @@ static bool load_ruleset_governments(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Send information in packet_ruleset_control (numbers of units etc, and
    other miscellany) to specified connections.
 
@@ -4179,7 +4179,7 @@ static bool load_ruleset_governments(struct section_file *file,
    is-info in the network code!).  The client frees ruleset data when
    receiving this packet and then re-initializes as it receives the
    individual ruleset packets.  See packhand.c.
- **************************************************************************/
+ */
 static void send_ruleset_control(struct conn_list *dest)
 {
   int desc_left = game.control.desc_length;
@@ -4213,11 +4213,11 @@ static void send_ruleset_control(struct conn_list *dest)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Check for duplicate leader names in nation.
    If no duplicates return NULL; if yes return pointer to name which is
    repeated.
- **************************************************************************/
+ */
 static const char *check_leader_names(struct nation_type *pnation)
 {
   nation_leader_list_iterate(nation_leaders(pnation), pleader)
@@ -4238,10 +4238,10 @@ static const char *check_leader_names(struct nation_type *pnation)
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Load names of nations so other rulesets can refer to nations with
    their name.
- **************************************************************************/
+ */
 static bool load_nation_names(struct section_file *file,
                               struct rscompat_info *compat)
 {
@@ -4255,8 +4255,8 @@ static bool load_nation_names(struct section_file *file,
     return false;
   }
 
-  (void) secfile_entry_by_path(file, "datafile.description"); /* unused */
-  (void) secfile_entry_by_path(file, "datafile.ruledit");     /* unused */
+  (void) secfile_entry_by_path(file, "datafile.description"); // unused
+  (void) secfile_entry_by_path(file, "datafile.ruledit");     // unused
 
   sec = secfile_sections_by_name_prefix(file, NATION_SECTION_PREFIX);
   if (NULL == sec) {
@@ -4302,7 +4302,7 @@ static bool load_nation_names(struct section_file *file,
       }
       name_set(&pl->noun_plural, domain, noun_plural);
 
-      /* Check if nation name is already defined. */
+      // Check if nation name is already defined.
       for (j = 0; j < i && ok; j++) {
         struct nation_type *n2 = nation_by_number(j);
 
@@ -4332,7 +4332,7 @@ static bool load_nation_names(struct section_file *file,
         } else if (0
                    == strcmp(Qn_(untranslated_name(&n2->noun_plural)),
                              Qn_(untranslated_name(&pl->noun_plural)))) {
-          /* We don't want identical English plural names either. */
+          // We don't want identical English plural names either.
           qCCritical(ruleset_category,
                      "Two nations defined with the same plural name \"%s\": "
                      "in section \'%s\' and section \'%s\'",
@@ -4379,9 +4379,9 @@ static bool load_nation_names(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Check if a string is in a vector (case-insensitively).
- **************************************************************************/
+ */
 static bool is_on_allowed_list(const char *name, const char **list,
                                size_t len)
 {
@@ -4395,10 +4395,10 @@ static bool is_on_allowed_list(const char *name, const char **list,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    This function loads a city name list from a section file.  The file and
    two section names (which will be concatenated) are passed in.
- **************************************************************************/
+ */
 static bool
 load_city_name_list(struct section_file *file, struct nation_type *pnation,
                     const char *secfile_str1, const char *secfile_str2,
@@ -4451,7 +4451,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
       }
     }
 
-    /* Build the nation_city. */
+    // Build the nation_city.
     remove_leading_trailing_spaces(city_name);
     if (check_cityname(city_name)) {
       /* The ruleset contains a name that is too long. This shouldn't
@@ -4466,7 +4466,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
     pncity = nation_city_new(pnation, city_name);
 
     if (NULL != p) {
-      /* Handle the labels one at a time. */
+      // Handle the labels one at a time.
       do {
         enum nation_city_preference prefer;
 
@@ -4502,7 +4502,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
           const struct terrain *pterrain = terrain_by_rule_name(p);
 
           if (NULL == pterrain) {
-            /* Try with removing frequent trailing 's'. */
+            // Try with removing frequent trailing 's'.
             size_t l = qstrlen(p);
 
             if (0 < l && 's' == QChar::toLower(p[l - 1])) {
@@ -4511,7 +4511,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
               p[l - 1] = '\0';
               pterrain = terrain_by_rule_name(p);
               if (pterrain == NULL) {
-                /* Didn't help, restore for later allowed_terrains check */
+                // Didn't help, restore for later allowed_terrains check
                 p[l - 1] = saved;
               }
             }
@@ -4526,7 +4526,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
               && game.server.ruledit.allowed_terrains != NULL) {
             if (!is_on_allowed_list(p, game.server.ruledit.allowed_terrains,
                                     atcount)) {
-              /* Terrain exists, but not intended for these nations */
+              // Terrain exists, but not intended for these nations
               qCCritical(ruleset_category,
                          "\"%s\" [%s] %s: city \"%s\" "
                          "has terrain hint \"%s\" not in allowed_terrains.",
@@ -4563,9 +4563,9 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load nations.ruleset file
- **************************************************************************/
+ */
 static bool load_ruleset_nations(struct section_file *file,
                                  struct rscompat_info *compat)
 {
@@ -4591,7 +4591,7 @@ static bool load_ruleset_nations(struct section_file *file,
                                "ruledit.embedded_nations");
 
   if (vec != NULL) {
-    /* Copy to persistent vector */
+    // Copy to persistent vector
     game.server.ruledit.embedded_nations =
         new char *[game.server.ruledit.embedded_nations_count];
 
@@ -4634,7 +4634,7 @@ static bool load_ruleset_nations(struct section_file *file,
     vec = secfile_lookup_str_vec(file, &game.server.ruledit.ag_count,
                                  "compatibility.allowed_govs");
     if (vec != NULL) {
-      /* Copy to persistent vector */
+      // Copy to persistent vector
       game.server.ruledit.nc_agovs =
           new char *[game.server.ruledit.ag_count];
       game.server.ruledit.allowed_govs =
@@ -4650,7 +4650,7 @@ static bool load_ruleset_nations(struct section_file *file,
     vec = secfile_lookup_str_vec(file, &game.server.ruledit.at_count,
                                  "compatibility.allowed_terrains");
     if (vec != NULL) {
-      /* Copy to persistent vector */
+      // Copy to persistent vector
       game.server.ruledit.nc_aterrs =
           new char *[game.server.ruledit.at_count];
       game.server.ruledit.allowed_terrains =
@@ -4666,7 +4666,7 @@ static bool load_ruleset_nations(struct section_file *file,
     vec = secfile_lookup_str_vec(file, &game.server.ruledit.as_count,
                                  "compatibility.allowed_styles");
     if (vec != NULL) {
-      /* Copy to persistent vector */
+      // Copy to persistent vector
       game.server.ruledit.nc_astyles =
           new char *[game.server.ruledit.as_count];
       game.server.ruledit.allowed_styles =
@@ -4735,7 +4735,7 @@ static bool load_ruleset_nations(struct section_file *file,
   }
 
   if (ok) {
-    /* Default set that every nation is a member of. */
+    // Default set that every nation is a member of.
     sval = secfile_lookup_str_default(file, NULL,
                                       "compatibility.default_nationset");
     if (sval != NULL) {
@@ -4802,7 +4802,7 @@ static bool load_ruleset_nations(struct section_file *file,
       const char *sec_name = section_name(section_list_get(sec, i));
       const char *legend;
 
-      /* Nation sets and groups. */
+      // Nation sets and groups.
       if (default_set >= 0) {
         nation_set_list_append(pnation->sets,
                                nation_set_by_number(default_set));
@@ -4836,7 +4836,7 @@ static bool load_ruleset_nations(struct section_file *file,
         break;
       }
 
-      /* Nation conflicts. */
+      // Nation conflicts.
       vec =
           secfile_lookup_str_vec(file, &dim, "%s.conflicts_with", sec_name);
       for (j = 0; j < dim; j++) {
@@ -4864,14 +4864,14 @@ static bool load_ruleset_nations(struct section_file *file,
         break;
       }
 
-      /* Nation leaders. */
+      // Nation leaders.
       for (j = 0; j < MAX_NUM_LEADERS; j++) {
         const char *sex;
         bool is_male = false;
 
         name = secfile_lookup_str(file, "%s.leaders%d.name", sec_name, j);
         if (NULL == name) {
-          /* No more to read. */
+          // No more to read.
           break;
         }
 
@@ -4909,9 +4909,9 @@ static bool load_ruleset_nations(struct section_file *file,
         break;
       }
 
-      /* Check the number of leaders. */
+      // Check the number of leaders.
       if (MAX_NUM_LEADERS == j) {
-        /* Too much leaders, get the real number defined in the ruleset. */
+        // Too much leaders, get the real number defined in the ruleset.
         while (NULL
                != secfile_entry_lookup(file, "%s.leaders%d.name", sec_name,
                                        j)) {
@@ -4930,7 +4930,7 @@ static bool load_ruleset_nations(struct section_file *file,
         break;
       }
 
-      /* Check if leader name is not already defined in this nation. */
+      // Check if leader name is not already defined in this nation.
       if ((bad_leader = check_leader_names(pnation))) {
         qCCritical(ruleset_category,
                    "Nation %s: leader \"%s\" defined more than once.",
@@ -4939,11 +4939,11 @@ static bool load_ruleset_nations(struct section_file *file,
         break;
       }
 
-      /* Nation player color preference, if any */
+      // Nation player color preference, if any
       fc_assert_ret_val(pnation->server.rgb == NULL, false);
       (void) rgbcolor_load(file, &pnation->server.rgb, "%s.color", sec_name);
 
-      /* Load nation traits */
+      // Load nation traits
       ruleset_load_traits(pnation->server.traits, file, sec_name, "trait_");
       for (tr = trait_begin(); tr != trait_end(); tr = trait_next(tr)) {
         bool server_traits_used = true;
@@ -4989,7 +4989,7 @@ static bool load_ruleset_nations(struct section_file *file,
       pnation->is_playable = secfile_lookup_bool_default(
           file, true, "%s.is_playable", sec_name);
 
-      /* Check barbarian type. Default is "None" meaning not a barbarian */
+      // Check barbarian type. Default is "None" meaning not a barbarian
       barb_type = secfile_lookup_str_default(file, "None",
                                              "%s.barbarian_type", sec_name);
       pnation->barb_type = barbarian_type_by_name(barb_type, fc_strcasecmp);
@@ -5011,21 +5011,21 @@ static bool load_ruleset_nations(struct section_file *file,
         break;
       }
 
-      /* Flags */
+      // Flags
       sz_strlcpy(pnation->flag_graphic_str,
                  secfile_lookup_str_default(file, "-", "%s.flag", sec_name));
       sz_strlcpy(
           pnation->flag_graphic_alt,
           secfile_lookup_str_default(file, "-", "%s.flag_alt", sec_name));
 
-      /* Ruler titles */
+      // Ruler titles
       for (j = 0;; j++) {
         const char *male, *female;
 
         name = secfile_lookup_str_default(
             file, NULL, "%s.ruler_titles%d.government", sec_name, j);
         if (NULL == name) {
-          /* End of the list of ruler titles. */
+          // End of the list of ruler titles.
           break;
         }
 
@@ -5045,7 +5045,7 @@ static bool load_ruleset_nations(struct section_file *file,
         if (gov != NULL && game.server.ruledit.allowed_govs != NULL) {
           if (!is_on_allowed_list(name, game.server.ruledit.allowed_govs,
                                   game.server.ruledit.ag_count)) {
-            /* Gov exists, but not intended for these nations */
+            // Gov exists, but not intended for these nations
             gov = NULL;
             qCCritical(ruleset_category,
                        "Nation %s: government \"%s\" not in allowed_govs.",
@@ -5054,7 +5054,7 @@ static bool load_ruleset_nations(struct section_file *file,
             break;
           }
         } else if (!gov) {
-          /* Gov doesn't exist; only complain if it's not on any list */
+          // Gov doesn't exist; only complain if it's not on any list
           if (game.server.ruledit.allowed_govs == NULL
               || !is_on_allowed_list(name, game.server.ruledit.allowed_govs,
                                      game.server.ruledit.ag_count)) {
@@ -5079,7 +5079,7 @@ static bool load_ruleset_nations(struct section_file *file,
         break;
       }
 
-      /* City styles */
+      // City styles
       name = secfile_lookup_str(file, "%s.style", sec_name);
       if (!name) {
         qCCritical(ruleset_category, "%s", secfile_error());
@@ -5104,7 +5104,7 @@ static bool load_ruleset_nations(struct section_file *file,
         }
       }
 
-      /* Civilwar nations */
+      // Civilwar nations
       vec = secfile_lookup_str_vec(file, &dim, "%s.civilwar_nations",
                                    sec_name);
       for (j = 0; j < dim; j++) {
@@ -5137,7 +5137,7 @@ static bool load_ruleset_nations(struct section_file *file,
         break;
       }
 
-      /* Load nation specific initial items */
+      // Load nation specific initial items
       if (!lookup_tech_list(file, sec_name, "init_techs",
                             pnation->init_techs, filename)) {
         ok = false;
@@ -5180,7 +5180,7 @@ static bool load_ruleset_nations(struct section_file *file,
         }
       }
 
-      /* Read default city names. */
+      // Read default city names.
       if (!load_city_name_list(file, pnation, sec_name, "cities",
                                game.server.ruledit.allowed_terrains,
                                game.server.ruledit.at_count)) {
@@ -5204,7 +5204,7 @@ static bool load_ruleset_nations(struct section_file *file,
     sec = NULL;
   }
 
-  /* Clean up on aborted load */
+  // Clean up on aborted load
   if (sec) {
     fc_assert(!ok);
     section_list_destroy(sec);
@@ -5215,10 +5215,10 @@ static bool load_ruleset_nations(struct section_file *file,
   }
 
   if (ok) {
-    /* Update cached number of playable nations in the current set */
+    // Update cached number of playable nations in the current set
     count_playable_nations();
 
-    /* Sanity checks on all sets */
+    // Sanity checks on all sets
     nation_sets_iterate(pset)
     {
       int num_playable = 0, barb_land_count = 0, barb_sea_count = 0,
@@ -5240,7 +5240,7 @@ static bool load_ruleset_nations(struct section_file *file,
             barb_sea_count++;
             break;
           case ANIMAL_BARBARIAN:
-            /* Animals are optional */
+            // Animals are optional
             break;
           case LAND_AND_SEA_BARBARIAN:
             barb_both_count++;
@@ -5282,10 +5282,10 @@ static bool load_ruleset_nations(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load names of nation styles so other rulesets can refer to styles with
    their name.
- **************************************************************************/
+ */
 static bool load_style_names(struct section_file *file,
                              struct rscompat_info *compat)
 {
@@ -5298,8 +5298,8 @@ static bool load_style_names(struct section_file *file,
     return false;
   }
 
-  (void) secfile_entry_by_path(file, "datafile.description"); /* unused */
-  (void) secfile_entry_by_path(file, "datafile.ruledit");     /* unused */
+  (void) secfile_entry_by_path(file, "datafile.description"); // unused
+  (void) secfile_entry_by_path(file, "datafile.ruledit");     // unused
 
   sec = secfile_sections_by_name_prefix(file, STYLE_SECTION_PREFIX);
   if (NULL == sec) {
@@ -5324,7 +5324,7 @@ static bool load_style_names(struct section_file *file,
   section_list_destroy(sec);
 
   if (ok) {
-    /* The citystyle sections: */
+    // The citystyle sections:
     int i = 0;
 
     sec = secfile_sections_by_name_prefix(file, CITYSTYLE_SECTION_PREFIX);
@@ -5350,9 +5350,9 @@ static bool load_style_names(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load styles.ruleset file
- **************************************************************************/
+ */
 static bool load_ruleset_styles(struct section_file *file,
                                 struct rscompat_info *compat)
 {
@@ -5360,11 +5360,11 @@ static bool load_ruleset_styles(struct section_file *file,
   int i;
   bool ok = true;
 
-  /* City Styles ... */
+  // City Styles ...
 
   sec = secfile_sections_by_name_prefix(file, CITYSTYLE_SECTION_PREFIX);
 
-  /* Get rest: */
+  // Get rest:
   for (i = 0; i < game.control.styles_count; i++) {
     struct requirement_vector *reqs;
     const char *sec_name = section_name(section_list_get(sec, i));
@@ -5433,11 +5433,11 @@ static bool load_ruleset_styles(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load a list of unit type flags that must be absent from the actor unit
    if an action auto performer should be triggered into an action auto
    performer.
- **************************************************************************/
+ */
 static bool load_action_auto_uflag_block(struct section_file *file,
                                          struct action_auto_perf *auto_perf,
                                          const char *uflags_path,
@@ -5454,7 +5454,7 @@ static bool load_action_auto_uflag_block(struct section_file *file,
                                             "%s", uflags_path);
 
     if (!protecor_flag) {
-      /* Entity exists but couldn't read it. */
+      // Entity exists but couldn't read it.
       qCCritical(ruleset_category, "\"%s\": %s: bad unit type flag list.",
                  filename, uflags_path);
 
@@ -5474,16 +5474,16 @@ static bool load_action_auto_uflag_block(struct section_file *file,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Load the list of actions an action auto performer should try. The
    actions will be tried in the given order.
- **************************************************************************/
+ */
 static bool load_action_auto_actions(struct section_file *file,
                                      struct action_auto_perf *auto_perf,
                                      const char *actions_path,
                                      const char *filename)
 {
-  /* Read the alternative actions. */
+  // Read the alternative actions.
   if (secfile_entry_lookup(file, "%s", actions_path)) {
     enum gen_action *unit_acts;
     size_t asize;
@@ -5493,7 +5493,7 @@ static bool load_action_auto_actions(struct section_file *file,
                                         actions_path);
 
     if (!unit_acts) {
-      /* Entity exists but couldn't read it. */
+      // Entity exists but couldn't read it.
       qCCritical(ruleset_category, "\"%s\": %s: bad action list", filename,
                  actions_path);
 
@@ -5510,9 +5510,9 @@ static bool load_action_auto_actions(struct section_file *file,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Load missing unit upkeep ruleset settings as action auto performers.
- **************************************************************************/
+ */
 static bool load_muuk_as_action_auto(struct section_file *file,
                                      struct action_auto_perf *auto_perf,
                                      const char *item, const char *filename)
@@ -5530,9 +5530,9 @@ static bool load_muuk_as_action_auto(struct section_file *file,
       && load_action_auto_actions(file, auto_perf, action_path, filename));
 }
 
-/**********************************************************************/ /**
+/**
    Load cities.ruleset file
- **************************************************************************/
+ */
 static bool load_ruleset_cities(struct section_file *file,
                                 struct rscompat_info *compat)
 {
@@ -5546,10 +5546,10 @@ static bool load_ruleset_cities(struct section_file *file,
     return false;
   }
 
-  (void) secfile_entry_by_path(file, "datafile.description"); /* unused */
-  (void) secfile_entry_by_path(file, "datafile.ruledit");     /* unused */
+  (void) secfile_entry_by_path(file, "datafile.description"); // unused
+  (void) secfile_entry_by_path(file, "datafile.ruledit");     // unused
 
-  /* Specialist options */
+  // Specialist options
   sec = secfile_sections_by_name_prefix(file, SPECIALIST_SECTION_PREFIX);
   if (section_list_size(sec) >= SP_MAX) {
     qCCritical(ruleset_category,
@@ -5621,7 +5621,7 @@ static bool load_ruleset_cities(struct section_file *file,
   sec = NULL;
 
   if (ok) {
-    /* City Parameters */
+    // City Parameters
 
     game.info.celebratesize = secfile_lookup_int_default(
         file, GAME_DEFAULT_CELEBRATESIZE, "parameters.celebrate_size_limit");
@@ -5648,7 +5648,7 @@ static bool load_ruleset_cities(struct section_file *file,
   }
 
   if (ok) {
-    /* civ1 & 2 didn't reveal tiles */
+    // civ1 & 2 didn't reveal tiles
     game.server.vision_reveal_tiles =
         secfile_lookup_bool_default(file, GAME_DEFAULT_VISION_REVEAL_TILES,
                                     "parameters.vision_reveal_tiles");
@@ -5656,7 +5656,7 @@ static bool load_ruleset_cities(struct section_file *file,
     game.info.pop_report_zeroes =
         secfile_lookup_int_default(file, 1, "parameters.pop_report_zeroes");
 
-    /* Citizens configuration. */
+    // Citizens configuration.
     game.info.citizen_nationality = secfile_lookup_bool_default(
         file, GAME_DEFAULT_NATIONALITY, "citizen.nationality");
     game.info.citizen_convert_speed = secfile_lookup_int_default(
@@ -5668,19 +5668,19 @@ static bool load_ruleset_cities(struct section_file *file,
   }
 
   if (ok) {
-    /* Missing unit upkeep. */
+    // Missing unit upkeep.
     struct action_auto_perf *auto_perf;
 
-    /* Can't pay food upkeep! */
+    // Can't pay food upkeep!
     auto_perf = action_auto_perf_slot_number(ACTION_AUTO_UPKEEP_FOOD);
     auto_perf->cause = AAPC_UNIT_UPKEEP;
 
-    /* This is about food upkeep. */
+    // This is about food upkeep.
     requirement_vector_append(
         &auto_perf->reqs,
         req_from_str("OutputType", "Local", false, true, true, "Food"));
 
-    /* Internally represented as an action auto performer rule. */
+    // Internally represented as an action auto performer rule.
     if (!load_muuk_as_action_auto(file, auto_perf, "food", filename)) {
       ok = false;
     }
@@ -5688,16 +5688,16 @@ static bool load_ruleset_cities(struct section_file *file,
     game.info.muuk_food_wipe = secfile_lookup_bool_default(
         file, RS_DEFAULT_MUUK_FOOD_WIPE, "missing_unit_upkeep.food_wipe");
 
-    /* Can't pay gold upkeep! */
+    // Can't pay gold upkeep!
     auto_perf = action_auto_perf_slot_number(ACTION_AUTO_UPKEEP_GOLD);
     auto_perf->cause = AAPC_UNIT_UPKEEP;
 
-    /* This is about gold upkeep. */
+    // This is about gold upkeep.
     requirement_vector_append(
         &auto_perf->reqs,
         req_from_str("OutputType", "Local", false, true, true, "Gold"));
 
-    /* Internally represented as an action auto performer rule. */
+    // Internally represented as an action auto performer rule.
     if (!load_muuk_as_action_auto(file, auto_perf, "gold", filename)) {
       ok = false;
     }
@@ -5705,16 +5705,16 @@ static bool load_ruleset_cities(struct section_file *file,
     game.info.muuk_gold_wipe = secfile_lookup_bool_default(
         file, RS_DEFAULT_MUUK_GOLD_WIPE, "missing_unit_upkeep.gold_wipe");
 
-    /* Can't pay shield upkeep! */
+    // Can't pay shield upkeep!
     auto_perf = action_auto_perf_slot_number(ACTION_AUTO_UPKEEP_SHIELD);
     auto_perf->cause = AAPC_UNIT_UPKEEP;
 
-    /* This is about shield upkeep. */
+    // This is about shield upkeep.
     requirement_vector_append(
         &auto_perf->reqs,
         req_from_str("OutputType", "Local", false, true, true, "Shield"));
 
-    /* Internally represented as an action auto performer rule. */
+    // Internally represented as an action auto performer rule.
     if (!load_muuk_as_action_auto(file, auto_perf, "shield", filename)) {
       ok = false;
     }
@@ -5731,9 +5731,9 @@ static bool load_ruleset_cities(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Load effects.ruleset file
- **************************************************************************/
+ */
 static bool load_ruleset_effects(struct section_file *file,
                                  struct rscompat_info *compat)
 {
@@ -5748,10 +5748,10 @@ static bool load_ruleset_effects(struct section_file *file,
   if (compat->ver_effects <= 0) {
     return false;
   }
-  (void) secfile_entry_by_path(file, "datafile.description"); /* unused */
-  (void) secfile_entry_by_path(file, "datafile.ruledit");     /* unused */
+  (void) secfile_entry_by_path(file, "datafile.description"); // unused
+  (void) secfile_entry_by_path(file, "datafile.ruledit");     // unused
 
-  /* Parse effects and add them to the effects ruleset cache. */
+  // Parse effects and add them to the effects ruleset cache.
   sec = secfile_sections_by_name_prefix(file, EFFECT_SECTION_PREFIX);
   section_list_iterate(sec, psection)
   {
@@ -5843,9 +5843,9 @@ static bool load_ruleset_effects(struct section_file *file,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Print an error message if the value is out of range.
- **************************************************************************/
+ */
 static int secfile_lookup_int_default_min_max(struct section_file *file,
                                               int def, int min, int max,
                                               const char *path, ...)
@@ -5885,9 +5885,9 @@ static int secfile_lookup_int_default_min_max(struct section_file *file,
   return ival;
 }
 
-/**********************************************************************/ /**
+/**
    Load ui_name of one action
- **************************************************************************/
+ */
 static bool load_action_ui_name(struct section_file *file, int act,
                                 const char *entry_name)
 {
@@ -5900,9 +5900,9 @@ static bool load_action_ui_name(struct section_file *file, int act,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Load max range of an action
- **************************************************************************/
+ */
 static bool load_action_range_max(struct section_file *file, action_id act)
 {
   struct entry *pentry;
@@ -5918,7 +5918,7 @@ static bool load_action_range_max(struct section_file *file, action_id act)
 
     if (entry_type_get(pentry) == ENTRY_INT
         && entry_int_get(pentry, &max_range)) {
-      /* max_range already assigned */
+      // max_range already assigned
     } else if (entry_type_get(pentry) == ENTRY_STR
                && entry_str_get(pentry, &custom)
                && !fc_strcasecmp(custom, RS_ACTION_NO_MAX_DISTANCE)) {
@@ -5935,20 +5935,20 @@ static bool load_action_range_max(struct section_file *file, action_id act)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Load range of an action
- **************************************************************************/
+ */
 static bool load_action_range(struct section_file *file, action_id act)
 {
   if (action_max_range_ruleset_var_name(act) != NULL) {
-    /* Max range can be loaded from the ruleset. */
+    // Max range can be loaded from the ruleset.
     if (!load_action_range_max(file, act)) {
       return false;
     }
   }
 
   if (action_min_range_ruleset_var_name(act) != NULL) {
-    /* Min range can be loaded from the ruleset. */
+    // Min range can be loaded from the ruleset.
     action_by_number(act)->min_distance = secfile_lookup_int_default(
         file, action_min_range_default(act), "actions.%s",
         action_min_range_ruleset_var_name(act));
@@ -5957,13 +5957,13 @@ static bool load_action_range(struct section_file *file, action_id act)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Load kind of an action
- **************************************************************************/
+ */
 static bool load_action_kind(struct section_file *file, action_id act)
 {
   if (action_target_kind_ruleset_var_name(act) != NULL) {
-    /* Target kind can be loaded from the ruleset. */
+    // Target kind can be loaded from the ruleset.
     action_by_number(act)->target_kind =
         action_target_kind(secfile_lookup_enum_default(
             file, RS_DEFAULT_USER_ACTION_TARGET_KIND, action_target_kind,
@@ -5973,14 +5973,14 @@ static bool load_action_kind(struct section_file *file, action_id act)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Load if the action always consumes the actor
- **************************************************************************/
+ */
 static bool load_action_actor_consuming_always(struct section_file *file,
                                                action_id act)
 {
   if (action_actor_consuming_always_ruleset_var_name(act) != NULL) {
-    /* Actor consumption can be loaded from the ruleset. */
+    // Actor consumption can be loaded from the ruleset.
     action_by_number(act)->actor_consuming_always =
         secfile_lookup_bool_default(
             file, RS_DEFAULT_ACTION_ACTOR_CONSUMING_ALWAYS, "actions.%s",
@@ -5990,9 +5990,9 @@ static bool load_action_actor_consuming_always(struct section_file *file,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Load ruleset file.
- **************************************************************************/
+ */
 static bool load_ruleset_game(struct section_file *file, bool act,
                               struct rscompat_info *compat)
 {
@@ -6018,7 +6018,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     game.server.ruledit.description_file = fc_strdup(name);
   }
 
-  /* section: tileset */
+  // section: tileset
   pref_text = secfile_lookup_str_default(file, "", "tileset.prefered");
   if (pref_text[0] != '\0') {
     qCWarning(deprecations_category,
@@ -6028,14 +6028,14 @@ static bool load_ruleset_game(struct section_file *file, bool act,
   pref_text =
       secfile_lookup_str_default(file, pref_text, "tileset.preferred");
   if (pref_text[0] != '\0') {
-    /* There was tileset suggestion */
+    // There was tileset suggestion
     sz_strlcpy(game.control.preferred_tileset, pref_text);
   } else {
-    /* No tileset suggestions */
+    // No tileset suggestions
     game.control.preferred_tileset[0] = '\0';
   }
 
-  /* section: soundset */
+  // section: soundset
   pref_text = secfile_lookup_str_default(file, "", "soundset.prefered");
   if (pref_text[0] != '\0') {
     qCWarning(deprecations_category,
@@ -6045,14 +6045,14 @@ static bool load_ruleset_game(struct section_file *file, bool act,
   pref_text =
       secfile_lookup_str_default(file, pref_text, "soundset.preferred");
   if (pref_text[0] != '\0') {
-    /* There was soundset suggestion */
+    // There was soundset suggestion
     sz_strlcpy(game.control.preferred_soundset, pref_text);
   } else {
-    /* No soundset suggestions */
+    // No soundset suggestions
     game.control.preferred_soundset[0] = '\0';
   }
 
-  /* section: musicset */
+  // section: musicset
   pref_text = secfile_lookup_str_default(file, "", "musicset.prefered");
   if (pref_text[0] != '\0') {
     qCWarning(deprecations_category,
@@ -6062,14 +6062,14 @@ static bool load_ruleset_game(struct section_file *file, bool act,
   pref_text =
       secfile_lookup_str_default(file, pref_text, "musicset.preferred");
   if (pref_text[0] != '\0') {
-    /* There was musicset suggestion */
+    // There was musicset suggestion
     sz_strlcpy(game.control.preferred_musicset, pref_text);
   } else {
-    /* No musicset suggestions */
+    // No musicset suggestions
     game.control.preferred_musicset[0] = '\0';
   }
 
-  /* section: about */
+  // section: about
   pref_text = secfile_lookup_str(file, "about.name");
   /* Ruleset/modpack name found */
   sz_strlcpy(game.control.name, pref_text);
@@ -6079,16 +6079,16 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     /* Ruleset/modpack version found */
     sz_strlcpy(game.control.version, pref_text);
   } else {
-    /* No version information */
+    // No version information
     game.control.version[0] = '\0';
   }
 
   pref_text = secfile_lookup_str_default(file, "", "about.alt_dir");
   if (pref_text[0] != '\0') {
-    /* Alt directory definition found. */
+    // Alt directory definition found.
     sz_strlcpy(game.control.alt_dir, pref_text);
   } else {
-    /* No alt directory information */
+    // No alt directory information
     game.control.alt_dir[0] = '\0';
   }
 
@@ -6101,7 +6101,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     game.ruleset_summary = new char[len + 1];
     fc_strlcpy(game.ruleset_summary, pref_text, len + 1);
   } else {
-    /* No summary */
+    // No summary
     if (game.ruleset_summary != NULL) {
       free(game.ruleset_summary);
       game.ruleset_summary = NULL;
@@ -6118,7 +6118,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     fc_strlcpy(game.ruleset_description, pref_text, len + 1);
     game.control.desc_length = len;
   } else {
-    /* No description */
+    // No description
     if (game.ruleset_description != NULL) {
       free(game.ruleset_description);
       game.ruleset_description = NULL;
@@ -6137,7 +6137,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     game.ruleset_capabilities[0] = '\0';
   }
 
-  /* section: options */
+  // section: options
   if (!lookup_tech_list(file, "options", "global_init_techs",
                         game.rgame.global_init_techs, filename)) {
     ok = false;
@@ -6157,7 +6157,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     game.control.popup_tech_help =
         secfile_lookup_bool_default(file, false, "options.popup_tech_help");
 
-    /* section: civstyle */
+    // section: civstyle
     game.info.base_pollution = secfile_lookup_int_default(
         file, RS_DEFAULT_BASE_POLLUTION, "civstyle.base_pollution");
 
@@ -6207,15 +6207,15 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     game.info.paradrop_to_transport = secfile_lookup_bool_default(
         file, false, "civstyle.paradrop_to_transport");
 
-    /* TODO: move to global_unit_options */
+    // TODO: move to global_unit_options
     game.info.base_bribe_cost = secfile_lookup_int_default_min_max(
         file, RS_DEFAULT_BASE_BRIBE_COST, RS_MIN_BASE_BRIBE_COST,
         RS_MAX_BASE_BRIBE_COST, "civstyle.base_bribe_cost");
-    /* TODO: move to global_unit_options */
+    // TODO: move to global_unit_options
     game.server.ransom_gold = secfile_lookup_int_default_min_max(
         file, RS_DEFAULT_RANSOM_GOLD, RS_MIN_RANSOM_GOLD, RS_MAX_RANSOM_GOLD,
         "civstyle.ransom_gold");
-    /* TODO: move to global_unit_options */
+    // TODO: move to global_unit_options
     game.info.pillage_select = secfile_lookup_bool_default(
         file, RS_DEFAULT_PILLAGE_SELECT, "civstyle.pillage_select");
 
@@ -6234,11 +6234,11 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     game.info.tech_loss_allow_holes = secfile_lookup_bool_default(
         file, RS_DEFAULT_TECH_LOSS_HOLES, "civstyle.tech_loss_allow_holes");
 
-    /* TODO: move to global_unit_options */
+    // TODO: move to global_unit_options
     game.server.upgrade_veteran_loss = secfile_lookup_int_default_min_max(
         file, RS_DEFAULT_UPGRADE_VETERAN_LOSS, RS_MIN_UPGRADE_VETERAN_LOSS,
         RS_MAX_UPGRADE_VETERAN_LOSS, "civstyle.upgrade_veteran_loss");
-    /* TODO: move to global_unit_options */
+    // TODO: move to global_unit_options
     game.server.autoupgrade_veteran_loss =
         secfile_lookup_int_default_min_max(
             file, RS_DEFAULT_UPGRADE_VETERAN_LOSS,
@@ -6267,7 +6267,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     } else {
       int gi;
 
-      /* check for <= 0 entries */
+      // check for <= 0 entries
       for (gi = 0; gi < game.info.granary_num_inis; gi++) {
         if (food_ini[gi] <= 0) {
           if (gi == 0) {
@@ -6324,7 +6324,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     game.info.granularity =
         secfile_lookup_int_default(file, 1, "civstyle.output_granularity");
 
-    /* section: illness */
+    // section: illness
     game.info.illness_on = secfile_lookup_bool_default(
         file, RS_DEFAULT_ILLNESS_ON, "illness.illness_on");
     game.info.illness_base_factor = secfile_lookup_int_default_min_max(
@@ -6342,7 +6342,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
         file, RS_DEFAULT_ILLNESS_POLLUTION_PCT, RS_MIN_ILLNESS_POLLUTION_PCT,
         RS_MAX_ILLNESS_POLLUTION_PCT, "illness.illness_pollution_factor");
 
-    /* section: incite_cost */
+    // section: incite_cost
     game.server.base_incite_cost = secfile_lookup_int_default_min_max(
         file, RS_DEFAULT_INCITE_BASE_COST, RS_MIN_INCITE_BASE_COST,
         RS_MAX_INCITE_BASE_COST, "incite_cost.base_incite_cost");
@@ -6359,7 +6359,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
         RS_MAX_INCITE_TOTAL_FCT, "incite_cost.total_factor");
 
     if (ok) {
-      /* Auto attack. */
+      // Auto attack.
       struct action_auto_perf *auto_perf;
 
       /* Action auto performers aren't ready to be exposed in the ruleset
@@ -6391,7 +6391,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
 
       if (!load_action_auto_actions(
               file, auto_perf, "auto_attack.attack_actions", filename)) {
-        /* Failed to load auto attack actions */
+        // Failed to load auto attack actions
         qCCritical(ruleset_category, "\"%s\": %s: failed load %s.", filename,
                    "auto_attack", "attack_actions");
         ok = false;
@@ -6407,7 +6407,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
                                       "auto_attack.will_never");
 
           if (!protecor_flag) {
-            /* Entity exists but couldn't read it. */
+            // Entity exists but couldn't read it.
             qCCritical(ruleset_category,
                        "\"%s\": %s: bad unit type flag list.", filename,
                        "auto_attack.will_never");
@@ -6421,7 +6421,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
 
         if (!rscompat_auto_attack_3_1(compat, auto_perf, psize,
                                       protecor_flag)) {
-          /* Upgrade failed */
+          // Upgrade failed
           qCCritical(ruleset_category, "\"%s\": %s: failed to upgrade.",
                      filename, "auto_attack");
           ok = false;
@@ -6433,7 +6433,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
       }
     }
 
-    /* section: actions */
+    // section: actions
     if (ok) {
       int force_capture_units, force_bombard, force_explode_nuclear;
 
@@ -6518,7 +6518,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
                ACTION_BOMBARD3);
       }
 
-      /* Forbid attacking when it is legal to do explode nuclear. */
+      // Forbid attacking when it is legal to do explode nuclear.
       force_explode_nuclear =
           secfile_lookup_bool_default(file, RS_DEFAULT_FORCE_EXPLODE_NUCLEAR,
                                       "actions.force_explode_nuclear");
@@ -6593,7 +6593,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
                                                 "actions.quiet_actions");
 
         if (!quiet_actions) {
-          /* Entity exists but couldn't read it. */
+          // Entity exists but couldn't read it.
           qCCritical(ruleset_category,
                      "\"%s\": actions.quiet_actions: bad action list",
                      filename);
@@ -6602,7 +6602,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
         }
 
         for (j = 0; j < asize; j++) {
-          /* Don't auto generate help text for this action. */
+          // Don't auto generate help text for this action.
           action_by_number(quiet_actions[j])->quiet = true;
         }
 
@@ -6685,7 +6685,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
   if (ok) {
     const char *tus_text;
 
-    /* section: combat_rules */
+    // section: combat_rules
     game.info.tired_attack = secfile_lookup_bool_default(
         file, RS_DEFAULT_TIRED_ATTACK, "combat_rules.tired_attack");
 
@@ -6704,7 +6704,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
             RS_MAX_NUKE_DEFENDER_SURVIVAL_CHANCE_PCT,
             "combat_rules.nuke_defender_survival_chance_pct");
 
-    /* section: borders */
+    // section: borders
     game.info.border_city_radius_sq = secfile_lookup_int_default_min_max(
         file, RS_DEFAULT_BORDER_RADIUS_SQ_CITY, RS_MIN_BORDER_RADIUS_SQ_CITY,
         RS_MAX_BORDER_RADIUS_SQ_CITY, "borders.radius_sq_city");
@@ -6719,7 +6719,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
             RS_MAX_BORDER_RADIUS_SQ_CITY_PERMANENT,
             "borders.radius_sq_city_permanent");
 
-    /* section: research */
+    // section: research
     tus_text = secfile_lookup_str_default(file, RS_DEFAULT_TECH_COST_STYLE,
                                           "research.tech_cost_style");
     game.info.tech_cost_style =
@@ -6789,7 +6789,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
   if (ok) {
     int cf;
 
-    /* section: culture */
+    // section: culture
     game.info.culture_vic_points = secfile_lookup_int_default(
         file, RS_DEFAULT_CULTURE_VIC_POINTS, "culture.victory_min_points");
     game.info.culture_vic_lead = secfile_lookup_int_default(
@@ -6800,7 +6800,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
         secfile_lookup_int_default(file, RS_DEFAULT_HISTORY_INTEREST_PML,
                                    "culture.history_interest_pml");
 
-    /* section: calendar */
+    // section: calendar
     game.calendar.calendar_skip_0 = secfile_lookup_bool_default(
         file, RS_DEFAULT_CALENDAR_SKIP_0, "calendar.skip_year_0");
     game.server.start_year = secfile_lookup_int_default(
@@ -6834,11 +6834,11 @@ static bool load_ruleset_game(struct section_file *file, bool act,
   }
 
   if (ok) {
-    /* section playercolors */
+    // section playercolors
     struct rgbcolor *prgbcolor = NULL;
     bool color_read = true;
 
-    /* Check if the player list is defined and empty. */
+    // Check if the player list is defined and empty.
     if (playercolor_count() != 0) {
       ok = false;
     } else {
@@ -6875,7 +6875,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
   }
 
   if (ok) {
-    /* section: teams */
+    // section: teams
     svec = secfile_lookup_str_vec(file, &teams, "teams.names");
     if (team_slot_count() < teams) {
       teams = team_slot_count();
@@ -6889,7 +6889,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     sec = secfile_sections_by_name_prefix(file, DISASTER_SECTION_PREFIX);
     nval = (NULL != sec ? section_list_size(sec) : 0);
     if (nval > MAX_DISASTER_TYPES) {
-      int num = nval; /* No "size_t" to printf */
+      int num = nval; // No "size_t" to printf
 
       qCCritical(ruleset_category,
                  "\"%s\": Too many disaster types (%d, max %d)", filename,
@@ -7193,10 +7193,10 @@ static bool load_ruleset_game(struct section_file *file, bool act,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Send the units ruleset information (all individual unit classes) to the
    specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_unit_classes(struct conn_list *dest)
 {
   struct packet_ruleset_unit_class packet;
@@ -7246,10 +7246,10 @@ static void send_ruleset_unit_classes(struct conn_list *dest)
   unit_class_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the units ruleset information (all individual units) to the
    specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_units(struct conn_list *dest)
 {
   struct packet_ruleset_unit packet;
@@ -7336,10 +7336,10 @@ static void send_ruleset_units(struct conn_list *dest)
     packet.vlayer = u->vlayer;
 
     if (u->veteran == NULL) {
-      /* Use the default veteran system. */
+      // Use the default veteran system.
       packet.veteran_levels = 0;
     } else {
-      /* Per unit veteran system definition. */
+      // Per unit veteran system definition.
       packet.veteran_levels = utype_veteran_levels(u);
 
       for (i = 0; i < packet.veteran_levels; i++) {
@@ -7375,10 +7375,10 @@ static void send_ruleset_units(struct conn_list *dest)
   unit_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the specialists ruleset information (all individual specialist
    types) to the specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_specialists(struct conn_list *dest)
 {
   struct packet_ruleset_specialist packet;
@@ -7405,9 +7405,9 @@ static void send_ruleset_specialists(struct conn_list *dest)
   }
   specialist_type_iterate_end;
 }
-/**********************************************************************/ /**
+/**
    Send the techs class information to the specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_tech_classes(struct conn_list *dest)
 {
   struct packet_ruleset_tech_class packet;
@@ -7424,10 +7424,10 @@ static void send_ruleset_tech_classes(struct conn_list *dest)
   tech_class_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the techs ruleset information (all individual advances) to the
    specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_techs(struct conn_list *dest)
 {
   struct packet_ruleset_tech packet;
@@ -7471,7 +7471,7 @@ static void send_ruleset_techs(struct conn_list *dest)
     sz_strlcpy(packet.graphic_str, a->graphic_str);
     sz_strlcpy(packet.graphic_alt, a->graphic_alt);
 
-    /* Current size of the packet's research_reqs requirement vector. */
+    // Current size of the packet's research_reqs requirement vector.
     i = 0;
 
     /* The requirements req1 and req2 are needed to research a tech. Send
@@ -7519,10 +7519,10 @@ static void send_ruleset_techs(struct conn_list *dest)
   advance_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the buildings ruleset information (all individual improvements and
    wonders) to the specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_buildings(struct conn_list *dest)
 {
   improvement_iterate(b)
@@ -7560,10 +7560,10 @@ static void send_ruleset_buildings(struct conn_list *dest)
   improvement_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the terrain ruleset information (terrain_control, and the individual
    terrain types) to the specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_terrain(struct conn_list *dest)
 {
   struct packet_ruleset_terrain packet;
@@ -7670,9 +7670,9 @@ static void send_ruleset_terrain(struct conn_list *dest)
   terrain_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the resource ruleset information to the specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_resources(struct conn_list *dest)
 {
   struct packet_ruleset_resource packet;
@@ -7692,10 +7692,10 @@ static void send_ruleset_resources(struct conn_list *dest)
   extra_type_by_cause_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the extra ruleset information (all individual extra types) to the
    specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_extras(struct conn_list *dest)
 {
   struct packet_ruleset_extra packet;
@@ -7813,10 +7813,10 @@ static void send_ruleset_extras(struct conn_list *dest)
   extra_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the base ruleset information (all individual base types) to the
    specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_bases(struct conn_list *dest)
 {
   extra_type_by_cause_iterate(EC_BASE, pextra)
@@ -7839,10 +7839,10 @@ static void send_ruleset_bases(struct conn_list *dest)
   extra_type_by_cause_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the road ruleset information (all individual road types) to the
    specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_roads(struct conn_list *dest)
 {
   struct packet_ruleset_road packet;
@@ -7883,10 +7883,10 @@ static void send_ruleset_roads(struct conn_list *dest)
   extra_type_by_cause_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the goods ruleset information (all individual goods types) to the
    specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_goods(struct conn_list *dest)
 {
   struct packet_ruleset_goods packet;
@@ -7916,10 +7916,10 @@ static void send_ruleset_goods(struct conn_list *dest)
   goods_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the disaster ruleset information (all individual disaster types) to
  the specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_disasters(struct conn_list *dest)
 {
   struct packet_ruleset_disaster packet;
@@ -7947,10 +7947,10 @@ static void send_ruleset_disasters(struct conn_list *dest)
   disaster_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the achievement ruleset information (all individual achievement
  types) to the specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_achievements(struct conn_list *dest)
 {
   struct packet_ruleset_achievement packet;
@@ -7971,9 +7971,9 @@ static void send_ruleset_achievements(struct conn_list *dest)
   achievements_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send action ruleset information to the specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_actions(struct conn_list *dest)
 {
   struct packet_ruleset_action packet;
@@ -8002,9 +8002,9 @@ static void send_ruleset_actions(struct conn_list *dest)
   action_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the action enabler ruleset information to the specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_action_enablers(struct conn_list *dest)
 {
   int counter;
@@ -8035,10 +8035,10 @@ static void send_ruleset_action_enablers(struct conn_list *dest)
   action_enablers_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send action auto performer ruleset information to the specified
    connections.
- **************************************************************************/
+ */
 static void send_ruleset_action_auto_performers(struct conn_list *dest)
 {
   int counter;
@@ -8061,9 +8061,9 @@ static void send_ruleset_action_auto_performers(struct conn_list *dest)
     packet.reqs_count = counter;
 
     for (counter = 0;
-         /* Can't list more actions than all actions. */
+         // Can't list more actions than all actions.
          counter < NUM_ACTIONS
-         /* ACTION_NONE terminates the list. */
+         // ACTION_NONE terminates the list.
          && aperf->alternatives[counter] != ACTION_NONE;
          counter++) {
       packet.alternatives[counter] = aperf->alternatives[counter];
@@ -8075,10 +8075,10 @@ static void send_ruleset_action_auto_performers(struct conn_list *dest)
   action_auto_perf_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the trade route types ruleset information (all individual
    trade route types) to the specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_trade_routes(struct conn_list *dest)
 {
   struct packet_ruleset_trade packet;
@@ -8097,10 +8097,10 @@ static void send_ruleset_trade_routes(struct conn_list *dest)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Send the government ruleset information to the specified connections.
    One packet per government type, and for each type one per ruler title.
- **************************************************************************/
+ */
 static void send_ruleset_governments(struct conn_list *dest)
 {
   struct packet_ruleset_government gov;
@@ -8109,7 +8109,7 @@ static void send_ruleset_governments(struct conn_list *dest)
 
   governments_iterate(g)
   {
-    /* send one packet_government */
+    // send one packet_government
     gov.id = government_number(g);
 
     j = 0;
@@ -8125,7 +8125,7 @@ static void send_ruleset_governments(struct conn_list *dest)
 
     lsend_packet_ruleset_government(dest, &gov);
 
-    /* Send one packet_government_ruler_title per ruler title. */
+    // Send one packet_government_ruler_title per ruler title.
 
     for (auto *pruler_title : qAsConst(*government_ruler_titles(g))) {
       {
@@ -8144,10 +8144,10 @@ static void send_ruleset_governments(struct conn_list *dest)
   governments_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the nations ruleset information (info on each nation) to the
    specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_nations(struct conn_list *dest)
 {
   struct packet_ruleset_nation_sets sets_packet;
@@ -8251,7 +8251,7 @@ static void send_ruleset_nations(struct conn_list *dest)
               == ARRAY_SIZE(n->init_buildings));
     for (i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
       if (n->init_buildings[i] != B_LAST) {
-        /* Impr_type_id to int */
+        // Impr_type_id to int
         packet.init_buildings[i] = n->init_buildings[i];
       } else {
         break;
@@ -8263,14 +8263,14 @@ static void send_ruleset_nations(struct conn_list *dest)
   }
   nations_iterate_end;
 
-  /* Send initial values of is_pickable */
+  // Send initial values of is_pickable
   send_nation_availability(dest, false);
 }
 
-/**********************************************************************/ /**
+/**
    Send the nation style ruleset information (each style) to the specified
    connections.
- **************************************************************************/
+ */
 static void send_ruleset_styles(struct conn_list *dest)
 {
   struct packet_ruleset_style packet;
@@ -8286,9 +8286,9 @@ static void send_ruleset_styles(struct conn_list *dest)
   styles_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the clause type ruleset information to the specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_clauses(struct conn_list *dest)
 {
   struct packet_ruleset_clause packet;
@@ -8321,10 +8321,10 @@ static void send_ruleset_clauses(struct conn_list *dest)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Send the multiplier ruleset information to the specified
    connections.
- **************************************************************************/
+ */
 static void send_ruleset_multipliers(struct conn_list *dest)
 {
   multipliers_iterate(pmul)
@@ -8358,10 +8358,10 @@ static void send_ruleset_multipliers(struct conn_list *dest)
   multipliers_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send the city-style ruleset information (each style) to the specified
    connections.
- **************************************************************************/
+ */
 static void send_ruleset_cities(struct conn_list *dest)
 {
   struct packet_ruleset_city city_p;
@@ -8390,10 +8390,10 @@ static void send_ruleset_cities(struct conn_list *dest)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Send the music-style ruleset information (each style) to the specified
    connections.
- **************************************************************************/
+ */
 static void send_ruleset_musics(struct conn_list *dest)
 {
   struct packet_ruleset_music packet;
@@ -8420,10 +8420,10 @@ static void send_ruleset_musics(struct conn_list *dest)
   music_styles_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send information in packet_ruleset_game (miscellaneous rules) to the
    specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_game(struct conn_list *dest)
 {
   struct packet_ruleset_game misc_p;
@@ -8431,7 +8431,7 @@ static void send_ruleset_game(struct conn_list *dest)
 
   fc_assert_ret(game.veteran != NULL);
 
-  /* Per unit veteran system definition. */
+  // Per unit veteran system definition.
   misc_p.veteran_levels = game.veteran->levels;
 
   for (i = 0; i < misc_p.veteran_levels; i++) {
@@ -8461,7 +8461,7 @@ static void send_ruleset_game(struct conn_list *dest)
             == ARRAY_SIZE(game.rgame.global_init_buildings));
   for (i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
     if (game.rgame.global_init_buildings[i] != B_LAST) {
-      /* Impr_type_id to int */
+      // Impr_type_id to int
       misc_p.global_init_buildings[i] = game.rgame.global_init_buildings[i];
     } else {
       break;
@@ -8480,10 +8480,10 @@ static void send_ruleset_game(struct conn_list *dest)
   lsend_packet_ruleset_game(dest, &misc_p);
 }
 
-/**********************************************************************/ /**
+/**
    Send all team names defined in the ruleset file(s) to the
    specified connections.
- **************************************************************************/
+ */
 static void send_ruleset_team_names(struct conn_list *dest)
 {
   struct packet_team_name_info team_name_info_p;
@@ -8493,7 +8493,7 @@ static void send_ruleset_team_names(struct conn_list *dest)
     const char *name = team_slot_defined_name(tslot);
 
     if (NULL == name) {
-      /* End of defined names. */
+      // End of defined names.
       break;
     }
 
@@ -8505,17 +8505,17 @@ static void send_ruleset_team_names(struct conn_list *dest)
   team_slots_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Make it clear to everyone that requested ruleset has not been loaded.
- **************************************************************************/
+ */
 static void notify_ruleset_fallback(const char *msg)
 {
   notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning, "%s", msg);
 }
 
-/**********************************************************************/ /**
+/**
    Loads the rulesets.
- **************************************************************************/
+ */
 bool load_rulesets(const char *restore, const char *alt, bool compat_mode,
                    rs_conversion_logger logger, bool act, bool buffer_script,
                    bool load_luadata)
@@ -8534,7 +8534,7 @@ bool load_rulesets(const char *restore, const char *alt, bool compat_mode,
     }
   }
 
-  /* Fallback to previous one. */
+  // Fallback to previous one.
   if (restore != NULL) {
     if (load_rulesetdir(restore, compat_mode, logger, act, buffer_script,
                         true)) {
@@ -8550,7 +8550,7 @@ bool load_rulesets(const char *restore, const char *alt, bool compat_mode,
     }
   }
 
-  /* Fallback to default one, but not if that's what we tried already */
+  // Fallback to default one, but not if that's what we tried already
   if (strcmp(GAME_DEFAULT_RULESETDIR, game.server.rulesetdir)
       && (restore == NULL || strcmp(GAME_DEFAULT_RULESETDIR, restore))) {
     if (load_rulesetdir(GAME_DEFAULT_RULESETDIR, false, NULL, act,
@@ -8567,13 +8567,13 @@ bool load_rulesets(const char *restore, const char *alt, bool compat_mode,
     }
   }
 
-  /* Cannot load even default ruleset, we're in completely unusable state */
+  // Cannot load even default ruleset, we're in completely unusable state
   exit(EXIT_FAILURE);
 }
 
-/**********************************************************************/ /**
+/**
    Destroy secfile. Handle NULL parameter gracefully.
- **************************************************************************/
+ */
 static void nullcheck_secfile_destroy(struct section_file *file)
 {
   if (file != NULL) {
@@ -8581,20 +8581,20 @@ static void nullcheck_secfile_destroy(struct section_file *file)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Completely deinitialize ruleset system. Server is not in usable
    state after this.
- **************************************************************************/
+ */
 void rulesets_deinit()
 {
   script_server_free();
   requirement_vector_free(&reqs_list);
 }
 
-/**********************************************************************/ /**
+/**
    Loads the rulesets from directory.
    This may be called more than once and it will free any stale data.
- **************************************************************************/
+ */
 static bool load_rulesetdir(const char *rsdir, bool compat_mode,
                             rs_conversion_logger logger, bool act,
                             bool buffer_script, bool load_luadata)
@@ -8612,7 +8612,7 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
   compat_info.log_cb = logger;
 
   game_ruleset_free();
-  /* Reset the list of available player colors. */
+  // Reset the list of available player colors.
   playercolor_free();
   playercolor_init();
   game_ruleset_init();
@@ -8673,7 +8673,7 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
     ok = load_ruleset_governments(govfile, &compat_info);
   }
   if (ok) {
-    /* terrain must precede nations and units */
+    // terrain must precede nations and units
     ok = load_ruleset_terrain(terrfile, &compat_info);
   }
   if (ok) {
@@ -8693,13 +8693,13 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
   }
 
   if (ok) {
-    /* Init nations we just loaded. */
+    // Init nations we just loaded.
     update_nations_with_startpos();
 
-    /* Needed by role_unit_precalcs(). */
+    // Needed by role_unit_precalcs().
     unit_type_action_cache_init();
 
-    /* Prepare caches we want to sanity check. */
+    // Prepare caches we want to sanity check.
     role_unit_precalcs();
     road_integrators_cache_init();
     actions_rs_pre_san_gen();
@@ -8709,7 +8709,7 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
   }
 
   if (ok) {
-    /* Only load settings for a sane ruleset */
+    // Only load settings for a sane ruleset
     ok = settings_ruleset(gamefile, "settings", act);
 
     if (ok) {
@@ -8768,7 +8768,7 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
   }
 
   if (ok && act) {
-    /* Populate remaining caches. */
+    // Populate remaining caches.
     techs_precalc_data();
     improvement_feature_cache_init();
     unit_class_iterate(pclass) { set_unit_class_caches(pclass); }
@@ -8781,7 +8781,7 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
     unit_type_iterate_end;
     city_production_caravan_shields_init();
 
-    /* Build advisors unit class cache corresponding to loaded rulesets */
+    // Build advisors unit class cache corresponding to loaded rulesets
     adv_units_ruleset_init();
     CALL_FUNC_EACH_AI(units_ruleset_init);
 
@@ -8793,9 +8793,9 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Reload the game settings saved in the ruleset file.
- **************************************************************************/
+ */
 bool reload_rulesets_settings()
 {
   struct section_file *file;
@@ -8815,14 +8815,14 @@ bool reload_rulesets_settings()
   return ok;
 }
 
-/**********************************************************************/ /**
+/**
    Send all ruleset information to the specified connections.
- **************************************************************************/
+ */
 void send_rulesets(struct conn_list *dest)
 {
   conn_list_compression_freeze(dest);
 
-  /* ruleset_control also indicates to client that ruleset sending starts. */
+  // ruleset_control also indicates to client that ruleset sending starts.
   send_ruleset_control(dest);
 
   send_ruleset_game(dest);
@@ -8854,7 +8854,7 @@ void send_rulesets(struct conn_list *dest)
   send_ruleset_musics(dest);
   send_ruleset_cache(dest);
 
-  /* Indicate client that all rulesets have now been sent. */
+  // Indicate client that all rulesets have now been sent.
   lsend_packet_rulesets_ready(dest);
 
   /* changed game settings will be send in

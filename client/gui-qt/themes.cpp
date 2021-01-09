@@ -15,9 +15,9 @@
 #include <QStyle>
 #include <QStyleFactory>
 #include <QTextStream>
-/* utility */
+// utility
 #include "shared.h"
-/* client */
+// client
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "themes_common.h"
@@ -30,9 +30,9 @@ extern QString current_theme;
 Q_GLOBAL_STATIC(QString, def_app_style)
 Q_GLOBAL_STATIC(QString, stylestring)
 
-/*************************************************************************/ /**
+/**
    Loads a qt theme directory/theme_name
- *****************************************************************************/
+ */
 void qtg_gui_load_theme(const char *directory, const char *theme_name)
 {
   QString name;
@@ -59,7 +59,7 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
     }
     return;
   }
-  /* Stylesheet uses UNIX separators */
+  // Stylesheet uses UNIX separators
   fake_dir = data_dir;
   fake_dir.replace(DIR_SEPARATOR_CHAR, QLatin1String("/"));
   QTextStream in(&f);
@@ -89,13 +89,13 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   QApplication::setPalette(pal);
 }
 
-/*************************************************************************/ /**
+/**
    Clears a theme (sets default system theme)
- *****************************************************************************/
+ */
 void qtg_gui_clear_theme()
 {
   if (!load_theme(FC_QT_DEFAULT_THEME_NAME)) {
-    /* TRANS: No full stop after the URL, could cause confusion. */
+    // TRANS: No full stop after the URL, could cause confusion.
     qFatal(_("No Qt-client theme was found. For instructions on how to "
              "get one, please visit %s"),
            WIKI_URL);
@@ -103,12 +103,12 @@ void qtg_gui_clear_theme()
   }
 }
 
-/*************************************************************************/ /**
+/**
    Each gui has its own themes directories.
 
    Returns an array containing these strings and sets array size in count.
    The caller is responsible for freeing the array and the paths.
- *****************************************************************************/
+ */
 char **qtg_get_gui_specific_themes_directories(int *count)
 {
   const QStringList *data_dirs = get_data_dirs();
@@ -125,11 +125,11 @@ char **qtg_get_gui_specific_themes_directories(int *count)
   return directories;
 }
 
-/*************************************************************************/ /**
+/**
    Return an array of names of usable themes in the given directory.
    Array size is stored in count.
    The caller is responsible for freeing the array and the names
- *****************************************************************************/
+ */
 char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
 {
   QStringList sl, theme_list;
@@ -155,7 +155,7 @@ char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
   }
 
   qtheme_name = gui_options.gui_qt_default_theme_name;
-  /* move current theme on first position */
+  // move current theme on first position
   if (theme_list.contains(qtheme_name)) {
     theme_list.removeAll(qtheme_name);
     theme_list.prepend(qtheme_name);

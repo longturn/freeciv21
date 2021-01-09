@@ -13,13 +13,13 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "rand.h"
 
-/* common */
+// common
 #include "actions.h"
 #include "nation.h"
-/* server */
+// server
 #include "aiiface.h"
 #include "notify.h"
 #include "plrhand.h"
@@ -32,9 +32,9 @@ typedef void (*action_notify)(struct player *, const struct action *,
                               struct player *, struct player *,
                               const struct tile *, const char *);
 
-/**********************************************************************/ /**
+/**
    Wipe an actor if the action it successfully performed consumed it.
- **************************************************************************/
+ */
 static void action_success_actor_consume(struct action *paction,
                                          int actor_id, struct unit *actor)
 {
@@ -55,9 +55,9 @@ static void action_success_actor_consume(struct action *paction,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Pay the movement point cost of success.
- **************************************************************************/
+ */
 static void action_success_pay_mp(struct action *paction, int actor_id,
                                   struct unit *actor)
 {
@@ -68,9 +68,9 @@ static void action_success_pay_mp(struct action *paction, int actor_id,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Pay the movement point price of being the target of an action.
- **************************************************************************/
+ */
 void action_success_target_pay_mp(struct action *paction, int target_id,
                                   struct unit *target)
 {
@@ -86,9 +86,9 @@ void action_success_target_pay_mp(struct action *paction, int target_id,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Make the actor that successfully performed the action pay the price.
- **************************************************************************/
+ */
 void action_success_actor_price(struct action *paction, int actor_id,
                                 struct unit *actor)
 {
@@ -96,9 +96,9 @@ void action_success_actor_price(struct action *paction, int actor_id,
   action_success_pay_mp(paction, actor_id, actor);
 }
 
-/**********************************************************************/ /**
+/**
    Give the victim a casus belli against the offender.
- **************************************************************************/
+ */
 static void action_give_casus_belli(struct player *offender,
                                     struct player *victim_player,
                                     const bool int_outrage)
@@ -122,19 +122,19 @@ static void action_give_casus_belli(struct player *offender,
      * belli. If an actor nukes his own tile he is more than willing to
      * forgive him self. */
 
-    /* Give the victim player a casus belli. */
+    // Give the victim player a casus belli.
     player_diplstate_get(victim_player, offender)->has_reason_to_cancel = 2;
     player_update_last_war_action(victim_player);
   }
   player_update_last_war_action(offender);
 }
 
-/**********************************************************************/ /**
+/**
    Take care of any consequences (like casus belli) of the given action
    when the situation was as specified.
 
    victim_player can be NULL
- **************************************************************************/
+ */
 static void action_consequence_common(
     const struct action *paction, struct player *offender,
     struct player *victim_player, const struct tile *victim_tile,
@@ -155,7 +155,7 @@ static void action_consequence_common(
      * victim. */
     const bool int_outrage = (cbr == CBR_INTERNATIONAL_OUTRAGE);
 
-    /* Notify the involved players by sending them a message. */
+    // Notify the involved players by sending them a message.
     notify_actor(offender, paction, offender, victim_player, victim_tile,
                  victim_link);
     notify_victim(victim_player, paction, offender, victim_player,
@@ -172,42 +172,42 @@ static void action_consequence_common(
       players_iterate_end;
     }
 
-    /* Give casus belli. */
+    // Give casus belli.
     action_give_casus_belli(offender, victim_player, int_outrage);
 
-    /* Notify players controlled by the built in AI. */
+    // Notify players controlled by the built in AI.
     call_incident(INCIDENT_ACTION, cbr, paction, offender, victim_player);
 
-    /* Update the clients. */
+    // Update the clients.
     send_player_all_c(offender, NULL);
 
     if (victim_player != NULL && victim_player != offender) {
-      /* The actor player was just sent. */
-      /* An action against an ownerless tile is victimless. */
+      // The actor player was just sent.
+      // An action against an ownerless tile is victimless.
       send_player_all_c(victim_player, NULL);
     }
   }
 }
 
-/**********************************************************************/ /**
+/**
    Notify the actor that the failed action gave the victim a casus belli
    against the actor.
- **************************************************************************/
+ */
 static void
 notify_actor_caught(struct player *receiver, const struct action *paction,
                     struct player *offender, struct player *victim_player,
                     const struct tile *victim_tile, const char *victim_link)
 {
   if (!victim_player || offender == victim_player) {
-    /* There is no victim or the actor did this to him self. */
+    // There is no victim or the actor did this to him self.
     return;
   }
 
-  /* Custom message based on action type. */
+  // Custom message based on action type.
   switch (action_get_target_kind(paction)) {
   case ATK_CITY:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Suitcase Nuke ... San Francisco */
+                  // TRANS: Suitcase Nuke ... San Francisco
                   _("You have caused an incident getting caught"
                     " trying to do %s to %s."),
                   qUtf8Printable(action_name_translation(paction)),
@@ -216,7 +216,7 @@ notify_actor_caught(struct player *receiver, const struct action *paction,
   case ATK_UNIT:
   case ATK_UNITS:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Bribe Enemy Unit ... American ... Partisan */
+                  // TRANS: Bribe Enemy Unit ... American ... Partisan
                   _("You have caused an incident getting caught"
                     " trying to do %s to %s %s."),
                   qUtf8Printable(action_name_translation(paction)),
@@ -224,14 +224,14 @@ notify_actor_caught(struct player *receiver, const struct action *paction,
     break;
   case ATK_TILE:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Explode Nuclear ... (54, 26) */
+                  // TRANS: Explode Nuclear ... (54, 26)
                   _("You have caused an incident getting caught"
                     " trying to do %s at %s."),
                   qUtf8Printable(action_name_translation(paction)),
                   victim_link);
     break;
   case ATK_SELF:
-    /* Special actor notice not needed. Actor is victim. */
+    // Special actor notice not needed. Actor is victim.
     break;
   case ATK_COUNT:
     fc_assert(ATK_COUNT != ATK_COUNT);
@@ -239,25 +239,25 @@ notify_actor_caught(struct player *receiver, const struct action *paction,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Notify the victim that the failed action gave the victim a
    casus belli against the actor.
- **************************************************************************/
+ */
 static void
 notify_victim_caught(struct player *receiver, const struct action *paction,
                      struct player *offender, struct player *victim_player,
                      const struct tile *victim_tile, const char *victim_link)
 {
   if (!victim_player || offender == victim_player) {
-    /* There is no victim or the actor did this to him self. */
+    // There is no victim or the actor did this to him self.
     return;
   }
 
-  /* Custom message based on action type. */
+  // Custom message based on action type.
   switch (action_get_target_kind(paction)) {
   case ATK_CITY:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Europeans ... Suitcase Nuke ... San Francisco */
+                  // TRANS: Europeans ... Suitcase Nuke ... San Francisco
                   _("The %s have caused an incident getting caught"
                     " trying to do %s to %s."),
                   nation_plural_for_player(offender),
@@ -267,7 +267,7 @@ notify_victim_caught(struct player *receiver, const struct action *paction,
   case ATK_UNIT:
   case ATK_UNITS:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Europeans ... Bribe Enemy Unit ... Partisan */
+                  // TRANS: Europeans ... Bribe Enemy Unit ... Partisan
                   _("The %s have caused an incident getting caught"
                     " trying to do %s to your %s."),
                   nation_plural_for_player(offender),
@@ -276,7 +276,7 @@ notify_victim_caught(struct player *receiver, const struct action *paction,
     break;
   case ATK_TILE:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Europeans ... Explode Nuclear ... (54, 26) */
+                  // TRANS: Europeans ... Explode Nuclear ... (54, 26)
                   _("The %s have caused an incident getting caught"
                     " trying to do %s at %s."),
                   nation_plural_for_player(offender),
@@ -284,7 +284,7 @@ notify_victim_caught(struct player *receiver, const struct action *paction,
                   victim_link);
     break;
   case ATK_SELF:
-    /* Special victim notice not needed. Actor is victim. */
+    // Special victim notice not needed. Actor is victim.
     break;
   case ATK_COUNT:
     fc_assert(ATK_COUNT != ATK_COUNT);
@@ -292,10 +292,10 @@ notify_victim_caught(struct player *receiver, const struct action *paction,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Notify the world that the failed action gave the everyone a casus belli
    against the actor.
- **************************************************************************/
+ */
 static void
 notify_global_caught(struct player *receiver, const struct action *paction,
                      struct player *offender, struct player *victim_player,
@@ -303,27 +303,27 @@ notify_global_caught(struct player *receiver, const struct action *paction,
 {
   if (receiver == offender) {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Suitcase Nuke */
+                  // TRANS: Suitcase Nuke
                   _("Getting caught while trying to do %s gives "
                     "everyone a casus belli against you."),
                   qUtf8Printable(action_name_translation(paction)));
   } else if (receiver == victim_player) {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Suitcase Nuke ... Europeans */
+                  // TRANS: Suitcase Nuke ... Europeans
                   _("Getting caught while trying to do %s to you gives "
                     "everyone a casus belli against the %s."),
                   qUtf8Printable(action_name_translation(paction)),
                   nation_plural_for_player(offender));
   } else if (victim_player == NULL) {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Europeans ... Suitcase Nuke */
+                  // TRANS: Europeans ... Suitcase Nuke
                   _("You now have a casus belli against the %s. "
                     "They got caught trying to do %s."),
                   nation_plural_for_player(offender),
                   qUtf8Printable(action_name_translation(paction)));
   } else {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Europeans ... Suitcase Nuke ... Americans */
+                  // TRANS: Europeans ... Suitcase Nuke ... Americans
                   _("You now have a casus belli against the %s. "
                     "They got caught trying to do %s to the %s."),
                   nation_plural_for_player(offender),
@@ -332,12 +332,12 @@ notify_global_caught(struct player *receiver, const struct action *paction,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Take care of any consequences (like casus belli) of getting caught while
    trying to perform the given action.
 
    victim_player can be NULL
- **************************************************************************/
+ */
 void action_consequence_caught(const struct action *paction,
                                struct player *offender,
                                struct player *victim_player,
@@ -350,25 +350,25 @@ void action_consequence_caught(const struct action *paction,
                             EFT_CASUS_BELLI_CAUGHT);
 }
 
-/**********************************************************************/ /**
+/**
    Notify the actor that the performed action gave the victim a casus belli
    against the actor.
- **************************************************************************/
+ */
 static void
 notify_actor_success(struct player *receiver, const struct action *paction,
                      struct player *offender, struct player *victim_player,
                      const struct tile *victim_tile, const char *victim_link)
 {
   if (!victim_player || offender == victim_player) {
-    /* There is no victim or the actor did this to him self. */
+    // There is no victim or the actor did this to him self.
     return;
   }
 
-  /* Custom message based on action type. */
+  // Custom message based on action type.
   switch (action_get_target_kind(paction)) {
   case ATK_CITY:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Suitcase Nuke ... San Francisco */
+                  // TRANS: Suitcase Nuke ... San Francisco
                   _("You have caused an incident doing %s to %s."),
                   qUtf8Printable(action_name_translation(paction)),
                   victim_link);
@@ -376,20 +376,20 @@ notify_actor_success(struct player *receiver, const struct action *paction,
   case ATK_UNIT:
   case ATK_UNITS:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRAND: Bribe Enemy Unit ... American ... Partisan */
+                  // TRAND: Bribe Enemy Unit ... American ... Partisan
                   _("You have caused an incident doing %s to %s %s."),
                   qUtf8Printable(action_name_translation(paction)),
                   nation_adjective_for_player(victim_player), victim_link);
     break;
   case ATK_TILE:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Explode Nuclear ... (54, 26) */
+                  // TRANS: Explode Nuclear ... (54, 26)
                   _("You have caused an incident doing %s at %s."),
                   qUtf8Printable(action_name_translation(paction)),
                   victim_link);
     break;
   case ATK_SELF:
-    /* Special actor notice not needed. Actor is victim. */
+    // Special actor notice not needed. Actor is victim.
     break;
   case ATK_COUNT:
     fc_assert(ATK_COUNT != ATK_COUNT);
@@ -397,10 +397,10 @@ notify_actor_success(struct player *receiver, const struct action *paction,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Notify the victim that the performed action gave the victim a casus
    belli against the actor.
- **************************************************************************/
+ */
 static void notify_victim_success(struct player *receiver,
                                   const struct action *paction,
                                   struct player *offender,
@@ -409,15 +409,15 @@ static void notify_victim_success(struct player *receiver,
                                   const char *victim_link)
 {
   if (!victim_player || offender == victim_player) {
-    /* There is no victim or the actor did this to him self. */
+    // There is no victim or the actor did this to him self.
     return;
   }
 
-  /* Custom message based on action type. */
+  // Custom message based on action type.
   switch (action_get_target_kind(paction)) {
   case ATK_CITY:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Europeans ... Suitcase Nuke ... San Francisco */
+                  // TRANS: Europeans ... Suitcase Nuke ... San Francisco
                   _("The %s have caused an incident doing %s to %s."),
                   nation_plural_for_player(offender),
                   qUtf8Printable(action_name_translation(paction)),
@@ -426,7 +426,7 @@ static void notify_victim_success(struct player *receiver,
   case ATK_UNIT:
   case ATK_UNITS:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Europeans ... Bribe Enemy Unit ... Partisan */
+                  // TRANS: Europeans ... Bribe Enemy Unit ... Partisan
                   _("The %s have caused an incident doing "
                     "%s to your %s."),
                   nation_plural_for_player(offender),
@@ -435,14 +435,14 @@ static void notify_victim_success(struct player *receiver,
     break;
   case ATK_TILE:
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Europeans ... Explode Nuclear ... (54, 26) */
+                  // TRANS: Europeans ... Explode Nuclear ... (54, 26)
                   _("The %s have caused an incident doing %s at %s."),
                   nation_plural_for_player(offender),
                   qUtf8Printable(action_name_translation(paction)),
                   victim_link);
     break;
   case ATK_SELF:
-    /* Special victim notice not needed. Actor is victim. */
+    // Special victim notice not needed. Actor is victim.
     break;
   case ATK_COUNT:
     fc_assert(ATK_COUNT != ATK_COUNT);
@@ -450,10 +450,10 @@ static void notify_victim_success(struct player *receiver,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Notify the world that the performed action gave the everyone a casus
    belli against the actor.
- **************************************************************************/
+ */
 static void notify_global_success(struct player *receiver,
                                   const struct action *paction,
                                   struct player *offender,
@@ -463,26 +463,26 @@ static void notify_global_success(struct player *receiver,
 {
   if (receiver == offender) {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Suitcase Nuke */
+                  // TRANS: Suitcase Nuke
                   _("Doing %s gives everyone a casus belli against you."),
                   qUtf8Printable(action_name_translation(paction)));
   } else if (receiver == victim_player) {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Suitcase Nuke ... Europeans */
+                  // TRANS: Suitcase Nuke ... Europeans
                   _("Doing %s to you gives everyone a casus belli against "
                     "the %s."),
                   qUtf8Printable(action_name_translation(paction)),
                   nation_plural_for_player(offender));
   } else if (victim_player == NULL) {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Europeans ... Suitcase Nuke */
+                  // TRANS: Europeans ... Suitcase Nuke
                   _("You now have a casus belli against the %s. "
                     "They did %s."),
                   nation_plural_for_player(offender),
                   qUtf8Printable(action_name_translation(paction)));
   } else {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
-                  /* TRANS: Europeans ... Suitcase Nuke ... Americans */
+                  // TRANS: Europeans ... Suitcase Nuke ... Americans
                   _("You now have a casus belli against the %s. "
                     "They did %s to the %s."),
                   nation_plural_for_player(offender),
@@ -491,12 +491,12 @@ static void notify_global_success(struct player *receiver,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Take care of any consequences (like casus belli) of successfully
    performing the given action.
 
    victim_player can be NULL
- **************************************************************************/
+ */
 void action_consequence_success(const struct action *paction,
                                 struct player *offender,
                                 struct player *victim_player,
@@ -527,7 +527,7 @@ void action_consequence_complete(const struct action *paction,
                             EFT_CASUS_BELLI_COMPLETE);
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff, from the point of view of the owner of the actor unit,
    it looks like the actor unit may be able to do any action to the target
    city.
@@ -538,12 +538,12 @@ void action_consequence_complete(const struct action *paction,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
                                  bool accept_all_actions)
 {
   if (actor == NULL || target == NULL) {
-    /* Can't do any actions if actor or target are missing. */
+    // Can't do any actions if actor or target are missing.
     return false;
   }
 
@@ -551,12 +551,12 @@ static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
   {
     if (!(action_id_get_actor_kind(act) == AAK_UNIT
           && action_id_get_target_kind(act) == ATK_CITY)) {
-      /* Not a relevant action. */
+      // Not a relevant action.
       continue;
     }
 
     if (action_id_is_rare_pop_up(act) && !accept_all_actions) {
-      /* Not relevant since not accepted here. */
+      // Not relevant since not accepted here.
       continue;
     }
 
@@ -571,7 +571,7 @@ static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Find a city to target for an action on the specified tile.
 
    Returns NULL if no proper target is found.
@@ -579,21 +579,21 @@ static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 struct city *action_tgt_city(struct unit *actor, struct tile *target_tile,
                              bool accept_all_actions)
 {
   struct city *target = tile_city(target_tile);
 
   if (target && may_unit_act_vs_city(actor, target, accept_all_actions)) {
-    /* It may be possible to act against this city. */
+    // It may be possible to act against this city.
     return target;
   }
 
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff, from the point of view of the owner of the actor unit,
    it looks like the actor unit may be able to do any action to the target
    unit.
@@ -604,12 +604,12 @@ struct city *action_tgt_city(struct unit *actor, struct tile *target_tile,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
                                  bool accept_all_actions)
 {
   if (actor == NULL || target == NULL) {
-    /* Can't do any actions if actor or target are missing. */
+    // Can't do any actions if actor or target are missing.
     return false;
   }
 
@@ -617,12 +617,12 @@ static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
   {
     if (!(action_id_get_actor_kind(act) == AAK_UNIT
           && action_id_get_target_kind(act) == ATK_UNIT)) {
-      /* Not a relevant action. */
+      // Not a relevant action.
       continue;
     }
 
     if (action_id_is_rare_pop_up(act) && !accept_all_actions) {
-      /* Not relevant since not accepted here. */
+      // Not relevant since not accepted here.
       continue;
     }
 
@@ -637,7 +637,7 @@ static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Find a unit to target for an action at the specified tile.
 
    Returns the first unit found at the tile that the actor may act against
@@ -646,7 +646,7 @@ static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 struct unit *action_tgt_unit(struct unit *actor, struct tile *target_tile,
                              bool accept_all_actions)
 {
@@ -661,7 +661,7 @@ struct unit *action_tgt_unit(struct unit *actor, struct tile *target_tile,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the tile iff it, from the point of view of the owner of the
    actor unit, looks like a target tile.
 
@@ -674,13 +674,13 @@ struct unit *action_tgt_unit(struct unit *actor, struct tile *target_tile,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 struct tile *action_tgt_tile(struct unit *actor, struct tile *target,
                              const struct extra_type *target_extra,
                              bool accept_all_actions)
 {
   if (actor == NULL || target == NULL) {
-    /* Can't do any actions if actor or target are missing. */
+    // Can't do any actions if actor or target are missing.
     return NULL;
   }
 
@@ -689,12 +689,12 @@ struct tile *action_tgt_tile(struct unit *actor, struct tile *target,
     struct act_prob prob;
 
     if (action_id_get_actor_kind(act) != AAK_UNIT) {
-      /* Not a relevant action. */
+      // Not a relevant action.
       continue;
     }
 
     if (action_id_is_rare_pop_up(act) && !accept_all_actions) {
-      /* Not relevant since not accepted here. */
+      // Not relevant since not accepted here.
       continue;
     }
 
@@ -708,10 +708,10 @@ struct tile *action_tgt_tile(struct unit *actor, struct tile *target,
     case ATK_CITY:
     case ATK_UNIT:
     case ATK_SELF:
-      /* Target not specified by tile. */
+      // Target not specified by tile.
       continue;
     case ATK_COUNT:
-      /* Invalid target kind */
+      // Invalid target kind
       fc_assert(action_id_get_target_kind(act) != ATK_COUNT);
       continue;
     }
@@ -727,7 +727,7 @@ struct tile *action_tgt_tile(struct unit *actor, struct tile *target,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff, from the point of view of the owner of the actor unit,
    it looks like the actor unit may be able to do any action to the target
    extra located at the target tile.
@@ -738,14 +738,14 @@ struct tile *action_tgt_tile(struct unit *actor, struct tile *target,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 static bool may_unit_act_vs_tile_extra(const struct unit *actor,
                                        const struct tile *tgt_tile,
                                        const struct extra_type *tgt_extra,
                                        bool accept_all_actions)
 {
   if (actor == NULL || tgt_tile == NULL || tgt_extra == NULL) {
-    /* Can't do any actions if actor or target are missing. */
+    // Can't do any actions if actor or target are missing.
     return false;
   }
 
@@ -754,12 +754,12 @@ static bool may_unit_act_vs_tile_extra(const struct unit *actor,
     if (!(action_id_get_actor_kind(act) == AAK_UNIT
           && action_id_get_target_kind(act) == ATK_TILE
           && action_id_has_complex_target(act))) {
-      /* Not a relevant action. */
+      // Not a relevant action.
       continue;
     }
 
     if (action_id_is_rare_pop_up(act) && !accept_all_actions) {
-      /* Not relevant since not accepted here. */
+      // Not relevant since not accepted here.
       continue;
     }
 
@@ -775,7 +775,7 @@ static bool may_unit_act_vs_tile_extra(const struct unit *actor,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Find an extra to target for an action at the specified tile.
 
    Returns the first extra found that the actor may act against at the tile
@@ -786,7 +786,7 @@ static bool may_unit_act_vs_tile_extra(const struct unit *actor,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 struct extra_type *action_tgt_tile_extra(const struct unit *actor,
                                          const struct tile *target_tile,
                                          bool accept_all_actions)
@@ -803,9 +803,9 @@ struct extra_type *action_tgt_tile_extra(const struct unit *actor,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Find an sub target for the specified action.
- **************************************************************************/
+ */
 int action_sub_target_id_for_action(const struct action *paction,
                                     struct unit *actor_unit)
 {
@@ -816,24 +816,24 @@ int action_sub_target_id_for_action(const struct action *paction,
 
   switch (action_get_sub_target_kind(paction)) {
   case ASTK_NONE:
-    /* Should not be reached */
+    // Should not be reached
     fc_assert_ret_val(action_get_sub_target_kind(paction) != ASTK_NONE,
                       NO_TARGET);
     break;
   case ASTK_BUILDING:
-    /* Implement if a building sub targeted action becomes flexible */
+    // Implement if a building sub targeted action becomes flexible
     fc_assert_ret_val(paction->target_complexity == ACT_TGT_COMPL_FLEXIBLE,
                       NO_TARGET);
     break;
   case ASTK_TECH:
-    /* Implement if a tech sub targeted action becomes flexible */
+    // Implement if a tech sub targeted action becomes flexible
     fc_assert_ret_val(paction->target_complexity == ACT_TGT_COMPL_FLEXIBLE,
                       NO_TARGET);
     break;
   case ASTK_EXTRA:
   case ASTK_EXTRA_NOT_THERE:
     if (action_has_result(paction, ACTRES_PILLAGE)) {
-      /* Special treatment for "Pillage" */
+      // Special treatment for "Pillage"
       struct extra_type *pextra;
       enum unit_activity activity = action_get_activity(paction);
 
@@ -855,7 +855,7 @@ int action_sub_target_id_for_action(const struct action *paction,
     extra_type_re_active_iterate_end;
     break;
   case ASTK_COUNT:
-    /* Should not exist. */
+    // Should not exist.
     fc_assert_ret_val(action_get_sub_target_kind(paction) != ASTK_COUNT,
                       NO_TARGET);
     break;
@@ -864,11 +864,11 @@ int action_sub_target_id_for_action(const struct action *paction,
   return NO_TARGET;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the action auto performer that the specified cause can force the
    specified actor to perform. Returns NULL if no such action auto performer
    exists.
- **************************************************************************/
+ */
 const struct action_auto_perf *action_auto_perf_unit_sel(
     const enum action_auto_perf_cause cause, const struct unit *actor,
     const struct player *other_player, const struct output_type *output)
@@ -879,13 +879,13 @@ const struct action_auto_perf *action_auto_perf_unit_sel(
                         unit_tile(actor), actor, unit_type_get(actor),
                         output, NULL, NULL, &autoperformer->reqs,
                         RPT_CERTAIN)) {
-      /* Select this action auto performer. */
+      // Select this action auto performer.
       return autoperformer;
     }
   }
   action_auto_perf_by_cause_iterate_end;
 
-  /* Can't even try to force an action. */
+  // Can't even try to force an action.
   return NULL;
 }
 
@@ -900,14 +900,14 @@ const struct action_auto_perf *action_auto_perf_unit_sel(
       (target_unit ? target_unit                                            \
                    : action_tgt_unit(actor, unit_tile(actor), true));
 
-/**********************************************************************/ /**
+/**
    Make the specified actor unit perform an action because of cause.
 
    Returns the action the actor unit was forced to perform.
    Returns NULL if that didn't happen.
 
    Note that the return value doesn't say anything about survival.
- **************************************************************************/
+ */
 const struct action *action_auto_perf_unit_do(
     const enum action_auto_perf_cause cause, struct unit *actor,
     const struct player *other_player, const struct output_type *output,
@@ -924,19 +924,19 @@ const struct action *action_auto_perf_unit_do(
       action_auto_perf_unit_sel(cause, actor, other_player, output);
 
   if (!autoperf) {
-    /* No matching Action Auto Performer. */
+    // No matching Action Auto Performer.
     return NULL;
   }
 
   actor_id = actor->id;
 
-  /* Acquire the targets. */
+  // Acquire the targets.
   action_auto_perf_acquire_targets(target_extra);
 
   action_auto_perf_actions_iterate(autoperf, act)
   {
     if (action_id_get_actor_kind(act) == AAK_UNIT) {
-      /* This action can be done by units. */
+      // This action can be done by units.
 
 #define perform_action_to(act, actor, tgtid, tgt_extra)                     \
   if (unit_perform_action(unit_owner(actor), actor->id, tgtid, tgt_extra,   \
@@ -981,7 +981,7 @@ const struct action *action_auto_perf_unit_do(
       }
 
       if (!unit_is_alive(actor_id)) {
-        /* The unit is gone. Maybe it was killed in Lua? */
+        // The unit is gone. Maybe it was killed in Lua?
         return NULL;
       }
     }
@@ -991,10 +991,10 @@ const struct action *action_auto_perf_unit_do(
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the probability for the specified actor unit to be forced to
    perform an action by the specified cause.
- **************************************************************************/
+ */
 struct act_prob action_auto_perf_unit_prob(
     const enum action_auto_perf_cause cause, struct unit *actor,
     const struct player *other_player, const struct output_type *output,
@@ -1011,13 +1011,13 @@ struct act_prob action_auto_perf_unit_prob(
       action_auto_perf_unit_sel(cause, actor, other_player, output);
 
   if (!autoperf) {
-    /* No matching Action Auto Performer. */
+    // No matching Action Auto Performer.
     return ACTPROB_IMPOSSIBLE;
   }
 
   out = ACTPROB_IMPOSSIBLE;
 
-  /* Acquire the targets. */
+  // Acquire the targets.
   action_auto_perf_acquire_targets(target_extra);
 
   action_auto_perf_actions_iterate(autoperf, act)
@@ -1025,7 +1025,7 @@ struct act_prob action_auto_perf_unit_prob(
     struct act_prob current = ACTPROB_IMPOSSIBLE;
 
     if (action_id_get_actor_kind(act) == AAK_UNIT) {
-      /* This action can be done by units. */
+      // This action can be done by units.
 
       switch (action_id_get_target_kind(act)) {
       case ATK_UNITS:
@@ -1070,10 +1070,10 @@ struct act_prob action_auto_perf_unit_prob(
   return out;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE iff the spy/diplomat was caught outside of a diplomatic
    battle.
- ****************************************************************************/
+ */
 bool action_failed_dice_roll(const struct player *act_player,
                              const struct unit *act_unit,
                              const struct city *tgt_city,
@@ -1083,6 +1083,6 @@ bool action_failed_dice_roll(const struct player *act_player,
   int odds = action_dice_roll_odds(act_player, act_unit, tgt_city,
                                    tgt_player, paction);
 
-  /* Roll the dice. */
+  // Roll the dice.
   return fc_rand(100) >= odds;
 }

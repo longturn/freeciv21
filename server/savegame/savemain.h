@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "support.h"
 
 struct section_file;

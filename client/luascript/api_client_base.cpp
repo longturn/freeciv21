@@ -12,20 +12,20 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "featured_text.h"
 
 /* common/scriptcore */
 #include "luascript.h"
 
-/* client */
+// client
 #include "chatline_common.h"
 
 #include "api_client_base.h"
 
-/*************************************************************************/ /**
+/**
    Print a message in the chat window.
- *****************************************************************************/
+ */
 void api_client_chat_base(lua_State *L, const char *msg)
 {
   LUASCRIPT_CHECK_STATE(L);

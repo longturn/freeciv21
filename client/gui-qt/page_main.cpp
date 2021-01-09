@@ -42,7 +42,7 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
           [gui]() { gui->switch_page(PAGE_LOAD); });
 
   rev_ver = fc_git_revision();
-  /* TRANS: "version 2.6.0, Qt client" */
+  // TRANS: "version 2.6.0, Qt client"
   msgbuf =
       QString(_("%1%2, Qt client")).arg(word_version()).arg(VERSION_STRING);
   if (rev_ver != nullptr) {
@@ -50,7 +50,7 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   }
 #if IS_BETA_VERSION
   beta = beta_message();
-#endif /* IS_BETA_VERSION */
+#endif // IS_BETA_VERSION
   ui.lversion->setText(QString(msgbuf) + beta);
   setLayout(ui.gridLayout);
 }

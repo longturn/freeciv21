@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME road_flag_id
 #define SPECENUM_VALUE0 RF_RIVER
 /* TRANS: this and following strings are 'road flags', which may rarely
@@ -28,7 +28,7 @@
 #define SPECENUM_BITVECTOR bv_road_flags
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME road_move_mode
 #define SPECENUM_VALUE0 RMM_CARDINAL
 #define SPECENUM_VALUE0NAME "Cardinal"
@@ -40,7 +40,7 @@
 
 struct road_type;
 
-/* get 'struct road_type_list' and related functions: */
+// get 'struct road_type_list' and related functions:
 #define SPECLIST_TAG road_type
 #define SPECLIST_TYPE struct road_type
 #include "speclist.h"
@@ -76,7 +76,7 @@ struct road_type {
 
 #define ROAD_NONE (-1)
 
-/* General road type accessor functions. */
+// General road type accessor functions.
 Road_type_id road_count();
 Road_type_id road_number(const struct road_type *proad);
 
@@ -97,7 +97,7 @@ int count_river_type_near_tile(const struct tile *ptile,
                                const struct extra_type *priver,
                                bool percentage);
 
-/* Functions to operate on a road flag. */
+// Functions to operate on a road flag.
 bool road_has_flag(const struct road_type *proad, enum road_flag_id flag);
 bool is_road_flag_card_near(const struct tile *ptile,
                             enum road_flag_id flag);
@@ -119,11 +119,11 @@ bool is_cardinal_only_road(const struct extra_type *pextra);
 
 bool road_provides_move_bonus(const struct road_type *proad);
 
-/* Sorting */
+// Sorting
 int compare_road_move_cost(const struct extra_type *const *p,
                            const struct extra_type *const *q);
 
-/* Initialization and iteration */
+// Initialization and iteration
 void road_type_init(struct extra_type *pextra, int idx);
 void road_integrators_cache_init();
 void road_types_free();

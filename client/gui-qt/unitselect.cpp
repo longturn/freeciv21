@@ -31,9 +31,9 @@
 #include "page_game.h"
 #include "qtg_cxxside.h"
 
-/***********************************************************************/ /**
+/**
    Contructor for units_select
- ***************************************************************************/
+ */
 units_select::units_select(struct tile *ptile, QWidget *parent)
 {
   QPoint p, final_p;
@@ -66,9 +66,9 @@ units_select::units_select(struct tile *ptile, QWidget *parent)
   QTimer::singleShot(10, this, &units_select::update_img);
 }
 
-/***********************************************************************/ /**
+/**
    Destructor for unit select
- ***************************************************************************/
+ */
 units_select::~units_select()
 {
   delete h_pix;
@@ -76,9 +76,9 @@ units_select::~units_select()
   delete cw;
 }
 
-/***********************************************************************/ /**
+/**
    Create pixmap of whole widget except borders (pix)
- ***************************************************************************/
+ */
 void units_select::create_pixmap()
 {
   int a;
@@ -193,7 +193,7 @@ void units_select::create_pixmap()
                     move_points_text((rate * f) + punit->moves_left, false))
                 + ")";
         }
-        /* TRANS: MP = Movement points */
+        // TRANS: MP = Movement points
         str = QString(_("MP:")) + str;
         p.drawText(x, y + item_size.height() - 4, str);
       }
@@ -208,9 +208,9 @@ void units_select::create_pixmap()
   }
 }
 
-/***********************************************************************/ /**
+/**
    Event for mouse moving around units_select
- ***************************************************************************/
+ */
 void units_select::mouseMoveEvent(QMouseEvent *event)
 {
   int a, b;
@@ -233,11 +233,11 @@ void units_select::mouseMoveEvent(QMouseEvent *event)
   }
 }
 
-/***********************************************************************/ /**
+/**
    Mouse pressed event for units_select.
    Left Button - chooses units
    Right Button - closes widget
- ***************************************************************************/
+ */
 void units_select::mousePressEvent(QMouseEvent *event)
 {
   struct unit *punit;
@@ -259,19 +259,19 @@ void units_select::mousePressEvent(QMouseEvent *event)
   }
 }
 
-/***********************************************************************/ /**
+/**
    Update image, because in constructor theme colors
    are uninitialized in QPainter
- ***************************************************************************/
+ */
 void units_select::update_img()
 {
   create_pixmap();
   update();
 }
 
-/***********************************************************************/ /**
+/**
    Redirected paint event
- ***************************************************************************/
+ */
 void units_select::paint(QPainter *painter, QPaintEvent *event)
 {
   Q_UNUSED(event)
@@ -291,7 +291,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
   }
   if (highligh_num != -1 && highligh_num < unit_list.count()) {
     punit = unit_list.at(highligh_num);
-    /* TRANS: HP - hit points */
+    // TRANS: HP - hit points
     str2 = QString(_("%1 HP:%2/%3"))
                .arg(unit_activity_text(punit), QString::number(punit->hp),
                     QString::number(unit_type_get(punit)->hp));
@@ -319,7 +319,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
     if (highligh_num != -1 && highligh_num < unit_list.count()) {
       painter->drawText(10, height() - 5, str2);
     }
-    /* draw scroll */
+    // draw scroll
     if (more) {
       int maxl = ((unit_count - 1) / 4) + 1;
       float page_height = 3.0f / maxl;
@@ -342,9 +342,9 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
   cw->put_to_corner();
 }
 
-/***********************************************************************/ /**
+/**
    Paint event, redirects to paint(...)
- ***************************************************************************/
+ */
 void units_select::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
@@ -354,10 +354,10 @@ void units_select::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/***********************************************************************/ /**
+/**
    Function from abstract fcwidget to update menu, its not needed
    cause widget is easy closable via right mouse click
- ***************************************************************************/
+ */
 void units_select::update_menu()
 {
   was_destroyed = true;
@@ -365,9 +365,9 @@ void units_select::update_menu()
   destroy();
 }
 
-/***********************************************************************/ /**
+/**
    Updates unit list on tile
- ***************************************************************************/
+ */
 void units_select::update_units()
 {
   int i = 1;
@@ -403,18 +403,18 @@ void units_select::update_units()
   }
 }
 
-/***********************************************************************/ /**
+/**
    Close event for units_select, restores focus to map
- ***************************************************************************/
+ */
 void units_select::closeEvent(QCloseEvent *event)
 {
   queen()->mapview_wdg->setFocus();
   QWidget::closeEvent(event);
 }
 
-/***********************************************************************/ /**
+/**
    Mouse wheel event for units_select
- ***************************************************************************/
+ */
 void units_select::wheelEvent(QWheelEvent *event)
 {
   int nr;
@@ -436,9 +436,9 @@ void units_select::wheelEvent(QWheelEvent *event)
   event->accept();
 }
 
-/***********************************************************************/ /**
+/**
    Keyboard handler for units_select
- ***************************************************************************/
+ */
 void units_select::keyPressEvent(QKeyEvent *event)
 {
   if (event->key() == Qt::Key_Escape) {
@@ -449,9 +449,9 @@ void units_select::keyPressEvent(QKeyEvent *event)
   QWidget::keyPressEvent(event);
 }
 
-/************************************************************************/ /**
+/**
    Shows/closes unit selection widget
- ****************************************************************************/
+ */
 void toggle_unit_sel_widget(struct tile *ptile)
 {
   units_select *unit_sel = queen()->unit_selector;
@@ -466,9 +466,9 @@ void toggle_unit_sel_widget(struct tile *ptile)
   }
 }
 
-/************************************************************************/ /**
+/**
    Update unit selection widget if open
- ****************************************************************************/
+ */
 void update_unit_sel()
 {
   units_select *unit_sel = queen()->unit_selector;
@@ -479,9 +479,9 @@ void update_unit_sel()
   }
 }
 
-/************************************************************************/ /**
+/**
    Closes unit selection widget.
- ****************************************************************************/
+ */
 void popdown_unit_sel()
 {
   units_select *unit_sel = queen()->unit_selector;

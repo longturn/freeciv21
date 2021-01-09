@@ -17,7 +17,7 @@
 
 #include <sys/stat.h>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -26,10 +26,10 @@
 #include "registry.h"
 #include "support.h"
 
-/* common */
+// common
 #include "fc_interface.h"
 
-/* modinst */
+// modinst
 #include "mpdb.h"
 
 #include "modinst.h"
@@ -37,9 +37,9 @@
 static char main_ii_filename[500];
 static char scenario_ii_filename[500];
 
-/**********************************************************************/ /**
+/**
    Load all required install info lists.
- **************************************************************************/
+ */
 void load_install_info_lists(struct fcmp_params *fcmp)
 {
   char main_db_filename[500];
@@ -81,9 +81,9 @@ void load_install_info_lists(struct fcmp_params *fcmp)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialize modpack installer
- **************************************************************************/
+ */
 void fcmp_init()
 {
   init_nls();
@@ -93,9 +93,9 @@ void fcmp_init()
                            netfile_get_section_file() */
 }
 
-/**********************************************************************/ /**
+/**
    Deinitialize modpack installer
- **************************************************************************/
+ */
 void fcmp_deinit()
 {
   /* log_init() was not done by fcmp_init(); we assume the caller called

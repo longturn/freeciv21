@@ -54,7 +54,7 @@
 #include "tile.h"
 #define MAX_LEN_MAPDEF 256
 
-/* map image layers */
+// map image layers
 #define SPECENUM_NAME mapimg_layer
 #define SPECENUM_VALUE0 MAPIMG_LAYER_AREA
 #define SPECENUM_VALUE0NAME "a"
@@ -70,7 +70,7 @@
 #define SPECENUM_VALUE5NAME "t"
 #define SPECENUM_VALUE6 MAPIMG_LAYER_UNITS
 #define SPECENUM_VALUE6NAME "u"
-/* used a possible dummy value */
+// used a possible dummy value
 #define SPECENUM_COUNT MAPIMG_LAYER_COUNT
 #define SPECENUM_COUNTNAME "-"
 #include "specenum_gen.h"
@@ -87,7 +87,7 @@ typedef struct player *(*mapimg_tile_player_func)(
 typedef int (*mapimg_plrcolor_count_func)();
 typedef struct rgbcolor *(*mapimg_plrcolor_get_func)(int);
 
-/* map definition */
+// map definition
 struct mapdef;
 
 void mapimg_init(mapimg_tile_known_func mapimg_tile_known,

@@ -14,9 +14,9 @@
 #include "fonts.h"
 #include "qtg_cxxside.h"
 
-/*******************************************************************/ /**
+/**
    Setup the gui callback table.
- ***********************************************************************/
+ */
 void setup_gui_funcs()
 {
   struct gui_funcs *funcs = get_gui_funcs();

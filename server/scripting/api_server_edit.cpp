@@ -12,11 +12,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "rand.h"
 
-/* common */
+// common
 #include "map.h"
 #include "movement.h"
 #include "research.h"
@@ -26,15 +26,15 @@
 #include "api_game_find.h"
 #include "luascript.h"
 
-/* server */
+// server
 #include "aiiface.h"
 #include "barbarian.h"
 #include "citytools.h"
-#include "console.h" /* enum rfc_status */
+#include "console.h" // enum rfc_status
 #include "maphand.h"
 #include "notify.h"
 #include "plrhand.h"
-#include "srv_main.h" /* game_was_started() */
+#include "srv_main.h" // game_was_started()
 #include "stdinhand.h"
 #include "techtools.h"
 #include "unittools.h"
@@ -47,9 +47,9 @@
 
 #include "api_server_edit.h"
 
-/*************************************************************************/ /**
+/**
    Unleash barbarians on a tile, for example from a hut
- *****************************************************************************/
+ */
 bool api_edit_unleash_barbarians(lua_State *L, Tile *ptile)
 {
   LUASCRIPT_CHECK_STATE(L, false);
@@ -58,9 +58,9 @@ bool api_edit_unleash_barbarians(lua_State *L, Tile *ptile)
   return unleash_barbarians(ptile);
 }
 
-/*************************************************************************/ /**
+/**
    Place partisans for a player around a tile (normally around a city).
- *****************************************************************************/
+ */
 void api_edit_place_partisans(lua_State *L, Tile *ptile, Player *pplayer,
                               int count, int sq_radius)
 {
@@ -74,9 +74,9 @@ void api_edit_place_partisans(lua_State *L, Tile *ptile, Player *pplayer,
   return place_partisans(ptile, pplayer, count, sq_radius);
 }
 
-/*************************************************************************/ /**
+/**
    Create a new unit.
- *****************************************************************************/
+ */
 Unit *api_edit_create_unit(lua_State *L, Player *pplayer, Tile *ptile,
                            Unit_Type *ptype, int veteran_level,
                            City *homecity, int moves_left)
@@ -85,9 +85,9 @@ Unit *api_edit_create_unit(lua_State *L, Player *pplayer, Tile *ptile,
                                    homecity, moves_left, -1, NULL);
 }
 
-/*************************************************************************/ /**
+/**
    Create a new unit.
- *****************************************************************************/
+ */
 Unit *api_edit_create_unit_full(lua_State *L, Player *pplayer, Tile *ptile,
                                 Unit_Type *ptype, int veteran_level,
                                 City *homecity, int moves_left, int hp_left,
@@ -110,7 +110,7 @@ Unit *api_edit_create_unit_full(lua_State *L, Player *pplayer, Tile *ptile,
   }
 
   if (ptransport) {
-    /* Extensive check to see if transport and unit are compatible */
+    // Extensive check to see if transport and unit are compatible
     int ret;
     struct unit *pvirt =
         unit_virtual_create(pplayer, NULL, ptype, veteran_level);
@@ -154,9 +154,9 @@ Unit *api_edit_create_unit_full(lua_State *L, Player *pplayer, Tile *ptile,
                           ptransport);
 }
 
-/*************************************************************************/ /**
+/**
    Teleport unit to destination tile
- *****************************************************************************/
+ */
 bool api_edit_unit_teleport(lua_State *L, Unit *punit, Tile *dest)
 {
   bool alive;
@@ -166,7 +166,7 @@ bool api_edit_unit_teleport(lua_State *L, Unit *punit, Tile *dest)
   LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit, false);
   LUASCRIPT_CHECK_ARG_NIL(L, dest, 3, Tile, false);
 
-  /* Teleport first so destination is revealed even if unit dies */
+  // Teleport first so destination is revealed even if unit dies
   alive = unit_move(
       punit, dest, 0,
       /* Auto embark kept for backward compatibility. I have
@@ -201,9 +201,9 @@ bool api_edit_unit_teleport(lua_State *L, Unit *punit, Tile *dest)
   return alive;
 }
 
-/*************************************************************************/ /**
+/**
    Change unit orientation
- *****************************************************************************/
+ */
 void api_edit_unit_turn(lua_State *L, Unit *punit, Direction dir)
 {
   LUASCRIPT_CHECK_STATE(L);
@@ -218,9 +218,9 @@ void api_edit_unit_turn(lua_State *L, Unit *punit, Direction dir)
   }
 }
 
-/*************************************************************************/ /**
+/**
    Kill the unit.
- *****************************************************************************/
+ */
 void api_edit_unit_kill(lua_State *L, Unit *punit, const char *reason,
                         Player *killer)
 {
@@ -238,9 +238,9 @@ void api_edit_unit_kill(lua_State *L, Unit *punit, const char *reason,
   wipe_unit(punit, loss_reason, killer);
 }
 
-/*************************************************************************/ /**
+/**
    Change terrain on tile
- *****************************************************************************/
+ */
 bool api_edit_change_terrain(lua_State *L, Tile *ptile, Terrain *pterr)
 {
   struct terrain *old_terrain;
@@ -269,9 +269,9 @@ bool api_edit_change_terrain(lua_State *L, Tile *ptile, Terrain *pterr)
   return true;
 }
 
-/*************************************************************************/ /**
+/**
    Create a new city.
- *****************************************************************************/
+ */
 void api_edit_create_city(lua_State *L, Player *pplayer, Tile *ptile,
                           const char *name)
 {
@@ -283,13 +283,13 @@ void api_edit_create_city(lua_State *L, Player *pplayer, Tile *ptile,
     name = city_name_suggestion(pplayer, ptile);
   }
 
-  /* TODO: Allow initial citizen to be of nationality other than owner */
+  // TODO: Allow initial citizen to be of nationality other than owner
   create_city(pplayer, ptile, name, pplayer);
 }
 
-/*************************************************************************/ /**
+/**
    Create a new player.
- *****************************************************************************/
+ */
 Player *api_edit_create_player(lua_State *L, const char *username,
                                Nation_Type *pnation, const char *ai)
 {
@@ -321,9 +321,9 @@ Player *api_edit_create_player(lua_State *L, const char *username,
   return pplayer;
 }
 
-/*************************************************************************/ /**
+/**
    Change pplayer's gold by amount.
- *****************************************************************************/
+ */
 void api_edit_change_gold(lua_State *L, Player *pplayer, int amount)
 {
   LUASCRIPT_CHECK_STATE(L);
@@ -332,12 +332,12 @@ void api_edit_change_gold(lua_State *L, Player *pplayer, int amount)
   pplayer->economic.gold = MAX(0, pplayer->economic.gold + amount);
 }
 
-/*************************************************************************/ /**
+/**
    Give pplayer technology ptech. Quietly returns NULL if
    player already has this tech; otherwise returns the tech granted.
    Use NULL for ptech to grant a random tech.
    sends script signal "tech_researched" with the given reason
- *****************************************************************************/
+ */
 Tech_Type *api_edit_give_technology(lua_State *L, Player *pplayer,
                                     Tech_Type *ptech, int cost, bool notify,
                                     const char *reason)
@@ -403,9 +403,9 @@ Tech_Type *api_edit_give_technology(lua_State *L, Player *pplayer,
   }
 }
 
-/*************************************************************************/ /**
+/**
    Modify player's trait value.
- *****************************************************************************/
+ */
 bool api_edit_trait_mod_set(lua_State *L, Player *pplayer, const char *tname,
                             const int mod)
 {
@@ -424,9 +424,9 @@ bool api_edit_trait_mod_set(lua_State *L, Player *pplayer, const char *tname,
   return true;
 }
 
-/*************************************************************************/ /**
+/**
    Create a new owned extra.
- *****************************************************************************/
+ */
 void api_edit_create_owned_extra(lua_State *L, Tile *ptile, const char *name,
                                  Player *pplayer)
 {
@@ -447,34 +447,34 @@ void api_edit_create_owned_extra(lua_State *L, Tile *ptile, const char *name,
   }
 }
 
-/*************************************************************************/ /**
+/**
    Create a new extra.
- *****************************************************************************/
+ */
 void api_edit_create_extra(lua_State *L, Tile *ptile, const char *name)
 {
   api_edit_create_owned_extra(L, ptile, name, NULL);
 }
 
-/*************************************************************************/ /**
+/**
    Create a new base.
- *****************************************************************************/
+ */
 void api_edit_create_base(lua_State *L, Tile *ptile, const char *name,
                           Player *pplayer)
 {
   api_edit_create_owned_extra(L, ptile, name, pplayer);
 }
 
-/*************************************************************************/ /**
+/**
    Add a new road.
- *****************************************************************************/
+ */
 void api_edit_create_road(lua_State *L, Tile *ptile, const char *name)
 {
   api_edit_create_owned_extra(L, ptile, name, NULL);
 }
 
-/*************************************************************************/ /**
+/**
    Remove extra from tile, if present
- *****************************************************************************/
+ */
 void api_edit_remove_extra(lua_State *L, Tile *ptile, const char *name)
 {
   struct extra_type *pextra;
@@ -494,9 +494,9 @@ void api_edit_remove_extra(lua_State *L, Tile *ptile, const char *name)
   }
 }
 
-/*************************************************************************/ /**
+/**
    Set tile label text.
- *****************************************************************************/
+ */
 void api_edit_tile_set_label(lua_State *L, Tile *ptile, const char *label)
 {
   LUASCRIPT_CHECK_STATE(L);
@@ -509,9 +509,9 @@ void api_edit_tile_set_label(lua_State *L, Tile *ptile, const char *label)
   }
 }
 
-/*************************************************************************/ /**
+/**
    Global climate change.
- *****************************************************************************/
+ */
 void api_edit_climate_change(lua_State *L, enum climate_change_type type,
                              int effect)
 {
@@ -525,9 +525,9 @@ void api_edit_climate_change(lua_State *L, enum climate_change_type type,
   climate_change(type == CLIMATE_CHANGE_GLOBAL_WARMING, effect);
 }
 
-/*************************************************************************/ /**
+/**
    Provoke a civil war.
- *****************************************************************************/
+ */
 Player *api_edit_civil_war(lua_State *L, Player *pplayer, int probability)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -540,12 +540,12 @@ Player *api_edit_civil_war(lua_State *L, Player *pplayer, int probability)
   }
 
   if (probability == 0) {
-    /* Calculate chance with normal rules */
+    // Calculate chance with normal rules
     if (!civil_war_triggered(pplayer)) {
       return NULL;
     }
   } else {
-    /* Fixed chance specified by script */
+    // Fixed chance specified by script
     if (fc_rand(100) >= probability) {
       return NULL;
     }
@@ -554,9 +554,9 @@ Player *api_edit_civil_war(lua_State *L, Player *pplayer, int probability)
   return civil_war(pplayer);
 }
 
-/*************************************************************************/ /**
+/**
    Make player winner of the scenario
- *****************************************************************************/
+ */
 void api_edit_player_victory(lua_State *L, Player *pplayer)
 {
   LUASCRIPT_CHECK_STATE(L);
@@ -565,9 +565,9 @@ void api_edit_player_victory(lua_State *L, Player *pplayer)
   player_status_add(pplayer, PSTATUS_WINNER);
 }
 
-/*************************************************************************/ /**
+/**
    Move a unit.
- *****************************************************************************/
+ */
 bool api_edit_unit_move(lua_State *L, Unit *punit, Tile *ptile, int movecost)
 {
   struct city *pcity;
@@ -596,9 +596,9 @@ bool api_edit_unit_move(lua_State *L, Unit *punit, Tile *ptile, int movecost)
        && pplayers_at_war(unit_owner(punit), city_owner(pcity))));
 }
 
-/*************************************************************************/ /**
+/**
    Prohibit unit from moving
- *****************************************************************************/
+ */
 void api_edit_unit_moving_disallow(lua_State *L, Unit *punit)
 {
   LUASCRIPT_CHECK_STATE(L);
@@ -609,9 +609,9 @@ void api_edit_unit_moving_disallow(lua_State *L, Unit *punit)
   }
 }
 
-/*************************************************************************/ /**
+/**
    Allow unit to move
- *****************************************************************************/
+ */
 void api_edit_unit_moving_allow(lua_State *L, Unit *punit)
 {
   LUASCRIPT_CHECK_STATE(L);
@@ -622,9 +622,9 @@ void api_edit_unit_moving_allow(lua_State *L, Unit *punit)
   }
 }
 
-/*************************************************************************/ /**
+/**
    Add history to a city
- *****************************************************************************/
+ */
 void api_edit_city_add_history(lua_State *L, City *pcity, int amount)
 {
   LUASCRIPT_CHECK_STATE(L);
@@ -633,9 +633,9 @@ void api_edit_city_add_history(lua_State *L, City *pcity, int amount)
   pcity->history += amount;
 }
 
-/*************************************************************************/ /**
+/**
    Add history to a player
- *****************************************************************************/
+ */
 void api_edit_player_add_history(lua_State *L, Player *pplayer, int amount)
 {
   LUASCRIPT_CHECK_STATE(L);

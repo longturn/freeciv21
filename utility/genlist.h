@@ -33,14 +33,14 @@
   See also the speclist module.
 ****************************************************************************/
 
-/* utility */
+// utility
 #include "fcthread.h"
-#include "support.h" /* bool, fc__warn_unused_result */
+#include "support.h" // bool, fc__warn_unused_result
 
-/* A single element of a genlist, opaque type. */
+// A single element of a genlist, opaque type.
 struct genlist_link;
 
-/* Function type definitions. */
+// Function type definitions.
 typedef void (*genlist_free_fn_t)(void *);
 typedef void *(*genlist_copy_fn_t)(const void *);
 typedef bool (*genlist_cond_fn_t)(const void *);

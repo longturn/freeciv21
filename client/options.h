@@ -10,9 +10,9 @@
 **************************************************************************/
 #pragma once
 
-/* common */
+// common
 #include "events.h"
-#include "featured_text.h" /* struct ft_color */
+#include "featured_text.h" // struct ft_color
 #include "mapimg.h"
 
 #define DEFAULT_METASERVER_OPTION "default"
@@ -27,16 +27,16 @@ enum overview_layers {
   OLAYER_COUNT
 };
 
-/* Holds all information about the overview aka minimap. */
+// Holds all information about the overview aka minimap.
 struct overview {
-  /* The following fields are controlled by mapview_common.c. */
-  double map_x0, map_y0; /* Origin of the overview, in natural coords. */
-  int width, height;     /* Size in pixels. */
+  // The following fields are controlled by mapview_common.c.
+  double map_x0, map_y0; // Origin of the overview, in natural coords.
+  int width, height;     // Size in pixels.
 
-  /* Holds the map, unwrapped. */
+  // Holds the map, unwrapped.
   QPixmap *map;
 
-  /* A backing store for the window itself, wrapped. */
+  // A backing store for the window itself, wrapped.
   QPixmap *window;
 
   bool fog;
@@ -65,10 +65,10 @@ struct client_options {
   bool first_boot; /* There was no earlier options saved.
                     * This affects some migrations, but not all. */
   char
-      default_tileset_name[512]; /* pre-2.6 had just this one tileset name */
+      default_tileset_name[512]; // pre-2.6 had just this one tileset name
   char default_tileset_overhead_name[512]; /* 2.6 had separate tilesets for
                                               ... */
-  char default_tileset_iso_name[512]; /* ...overhead and iso topologies. */
+  char default_tileset_iso_name[512]; // ...overhead and iso topologies.
   bool gui_qt_migrated_from_2_5;
 
   bool migrate_fullscreen;
@@ -147,13 +147,13 @@ struct client_options {
   bool reqtree_show_icons;
   bool reqtree_curved_lines;
 
-  /* options for map images */
+  // options for map images
   char mapimg_format[64];
   int mapimg_zoom;
   bool mapimg_layer[MAPIMG_LAYER_COUNT];
   char mapimg_filename[512];
 
-/* gui-qt client specific options. */
+// gui-qt client specific options.
 #define FC_QT_DEFAULT_THEME_NAME "NightStalker"
   bool gui_qt_fullscreen;
   bool gui_qt_show_preview;
@@ -187,12 +187,12 @@ extern struct client_options gui_options;
 #define SPECENUM_VALUE6 OT_COLOR
 #include "specenum_gen.h"
 
-struct option;     /* Opaque type. */
-struct option_set; /* Opaque type. */
+struct option;     // Opaque type.
+struct option_set; // Opaque type.
 
 typedef void (*option_save_log_callback)(QtMsgType lvl, const QString &msg);
 
-/* Main functions. */
+// Main functions.
 void options_init();
 void options_free();
 void server_options_init();
@@ -200,7 +200,7 @@ void server_options_free();
 void options_load();
 void options_save(option_save_log_callback log_cb);
 
-/* Option sets. */
+// Option sets.
 extern const struct option_set *client_optset;
 extern const struct option_set *server_optset;
 
@@ -215,7 +215,7 @@ int optset_category_number(const struct option_set *poptset);
 const char *optset_category_name(const struct option_set *poptset,
                                  int category);
 
-/* Common option functions. */
+// Common option functions.
 const struct option_set *option_optset(const struct option *poption);
 int option_number(const struct option *poption);
 #define option_index option_number
@@ -233,32 +233,32 @@ void option_set_changed_callback(struct option *poption,
                                  void (*callback)(struct option *));
 void option_changed(struct option *poption);
 
-/* Option gui functions. */
+// Option gui functions.
 void option_set_gui_data(struct option *poption, void *data);
 void *option_get_gui_data(const struct option *poption);
 
-/* Callback assistance */
+// Callback assistance
 int option_get_cb_data(const struct option *poption);
 
-/* Option type OT_BOOLEAN functions. */
+// Option type OT_BOOLEAN functions.
 bool option_bool_get(const struct option *poption);
 bool option_bool_def(const struct option *poption);
 bool option_bool_set(struct option *poption, bool val);
 
-/* Option type OT_INTEGER functions. */
+// Option type OT_INTEGER functions.
 int option_int_get(const struct option *poption);
 int option_int_def(const struct option *poption);
 int option_int_min(const struct option *poption);
 int option_int_max(const struct option *poption);
 bool option_int_set(struct option *poption, int val);
 
-/* Option type OT_STRING functions. */
+// Option type OT_STRING functions.
 const char *option_str_get(const struct option *poption);
 const char *option_str_def(const struct option *poption);
 const QVector<QString> *option_str_values(const struct option *poption);
 bool option_str_set(struct option *poption, const char *str);
 
-/* Option type OT_ENUM functions. */
+// Option type OT_ENUM functions.
 int option_enum_str_to_int(const struct option *poption, const char *str);
 QString option_enum_int_to_str(const struct option *poption, int val);
 int option_enum_get_int(const struct option *poption);
@@ -269,20 +269,20 @@ const QVector<QString> *option_enum_values(const struct option *poption);
 bool option_enum_set_int(struct option *poption, int val);
 bool option_enum_set_str(struct option *poption, const char *str);
 
-/* Option type OT_BITWISE functions. */
+// Option type OT_BITWISE functions.
 unsigned option_bitwise_get(const struct option *poption);
 unsigned option_bitwise_def(const struct option *poption);
 unsigned option_bitwise_mask(const struct option *poption);
 const QVector<QString> *option_bitwise_values(const struct option *poption);
 bool option_bitwise_set(struct option *poption, unsigned val);
 
-/* Option type OT_FONT functions. */
+// Option type OT_FONT functions.
 const QString option_font_get(const struct option *poption);
 const QString option_font_def(const struct option *poption);
 const QString option_font_target(const struct option *poption);
 bool option_font_set(struct option *poption, const QString &font);
 
-/* Option type OT_COLOR functions. */
+// Option type OT_COLOR functions.
 struct ft_color option_color_get(const struct option *poption);
 struct ft_color option_color_def(const struct option *poption);
 bool option_color_set(struct option *poption, struct ft_color color);
@@ -308,13 +308,13 @@ void options_dialogs_set();
 
 /** Message Options: **/
 
-/* for specifying which event messages go where: */
+// for specifying which event messages go where:
 #define NUM_MW 3
-#define MW_OUTPUT 1 /* add to the output window */
-#define MW_MESSAGES 2 /* add to the messages window */
-#define MW_POPUP 4 /* popup an individual window */
+#define MW_OUTPUT 1 // add to the output window
+#define MW_MESSAGES 2 // add to the messages window
+#define MW_POPUP 4 // popup an individual window
 
-extern int messages_where[]; /* OR-ed MW_ values [E_COUNT] */
+extern int messages_where[]; // OR-ed MW_ values [E_COUNT]
 
 /** Client options **/
 

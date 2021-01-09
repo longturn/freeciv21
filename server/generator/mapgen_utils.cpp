@@ -14,13 +14,13 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
-#include "support.h" /* bool type */
+#include "support.h" // bool type
 
-/* common */
+// common
 #include "map.h"
 #include "packets.h"
 #include "terrain.h"
@@ -34,14 +34,14 @@
 **************************************************************************/
 static bool *placed_map;
 
-/**********************************************************************/ /**
+/**
    Return TRUE if initialized
- **************************************************************************/
+ */
 bool placed_map_is_initialized() { return placed_map != NULL; }
 
-/**********************************************************************/ /**
+/**
    Create a clean pmap
- **************************************************************************/
+ */
 void create_placed_map()
 {
   fc_assert_ret(!placed_map_is_initialized());
@@ -49,9 +49,9 @@ void create_placed_map()
   INITIALIZE_ARRAY(placed_map, MAP_INDEX_SIZE, false);
 }
 
-/**********************************************************************/ /**
+/**
    Free the pmap
- **************************************************************************/
+ */
 void destroy_placed_map()
 {
   fc_assert_ret(placed_map_is_initialized());
@@ -61,24 +61,24 @@ void destroy_placed_map()
 
 #define pmap(_tile) (placed_map[tile_index(_tile)])
 
-/**********************************************************************/ /**
+/**
    Checks if land has not yet been placed on pmap at (x, y)
- **************************************************************************/
+ */
 bool not_placed(const struct tile *ptile) { return !pmap(ptile); }
 
-/**********************************************************************/ /**
+/**
    Mark tile terrain as placed.
- **************************************************************************/
+ */
 void map_set_placed(struct tile *ptile) { pmap(ptile) = true; }
 
-/**********************************************************************/ /**
+/**
    Mark tile terrain as not placed.
- **************************************************************************/
+ */
 void map_unset_placed(struct tile *ptile) { pmap(ptile) = false; }
 
-/**********************************************************************/ /**
+/**
    Set all oceanics tiles in placed_map
- **************************************************************************/
+ */
 void set_all_ocean_tiles_placed()
 {
   whole_map_iterate(&(wld.map), ptile)
@@ -90,23 +90,23 @@ void set_all_ocean_tiles_placed()
   whole_map_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Set all nearby tiles as placed on pmap.
- **************************************************************************/
+ */
 void set_placed_near_pos(struct tile *ptile, int dist)
 {
   square_iterate(&(wld.map), ptile, dist, tile1) { map_set_placed(tile1); }
   square_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Change the values of the integer map, so that they contain ranking of each
    tile scaled to [0 .. int_map_max].
    The lowest 20% of tiles will have values lower than 0.2 * int_map_max.
 
    If filter is non-null then it only tiles for which filter(ptile, data) is
    TRUE will be considered.
- **************************************************************************/
+ */
 void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
                              bool (*filter)(const struct tile *ptile,
                                             const void *data))
@@ -114,7 +114,7 @@ void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
   int minval = 0, maxval = 0, total = 0;
   bool first = true;
 
-  /* Determine minimum and maximum value. */
+  // Determine minimum and maximum value.
   whole_map_iterate_filtered(ptile, data, filter)
   {
     if (first) {
@@ -149,13 +149,13 @@ void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
     }
     whole_map_iterate_filtered_end;
 
-    /* create the linearize function as "incremental" frequencies */
+    // create the linearize function as "incremental" frequencies
     for (i = 0; i < size; i++) {
       count += frequencies[i];
       frequencies[i] = (count * int_map_max) / total;
     }
 
-    /* apply the linearize function */
+    // apply the linearize function
     whole_map_iterate_filtered(ptile, data, filter)
     {
       int_map[tile_index(ptile)] = frequencies[int_map[tile_index(ptile)]];
@@ -164,21 +164,21 @@ void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Is given native position normal position
- **************************************************************************/
+ */
 bool is_normal_nat_pos(int x, int y)
 {
   NATIVE_TO_MAP_POS(&x, &y, x, y);
   return is_normal_map_pos(x, y);
 }
 
-/**********************************************************************/ /**
+/**
    Apply a Gaussian diffusion filter on the map. The size of the map is
    MAP_INDEX_SIZE and the map is indexed by native_pos_to_index function.
    If zeroes_at_edges is set, any unreal position on diffusion has 0 value
    if zeroes_at_edges in unset the unreal position are not counted.
- **************************************************************************/
+ */
 void smooth_int_map(int *int_map, bool zeroes_at_edges)
 {
   fc_assert_ret(NULL != int_map);
@@ -239,9 +239,9 @@ static Continent_id *lake_surrounders = NULL;
 static int *continent_sizes = NULL;
 static int *ocean_sizes = NULL;
 
-/**********************************************************************/ /**
+/**
    Calculate lake_surrounders[] array
- **************************************************************************/
+ */
 static void recalculate_lake_surrounders()
 {
   const size_t size = (wld.map.num_oceans + 1) * sizeof(*lake_surrounders);
@@ -278,14 +278,14 @@ static void recalculate_lake_surrounders()
   whole_map_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Number this tile and nearby tiles with the specified continent number
  'nr'. Due to the number of recursion for large maps a non-recursive
  algorithm is utilised.
 
    is_land tells us whether we are assigning continent numbers or ocean
    numbers.
- **************************************************************************/
+ */
 static void assign_continent_flood(struct tile *ptile, bool is_land, int nr)
 {
   struct tile_list *tlist = NULL;
@@ -299,15 +299,15 @@ static void assign_continent_flood(struct tile *ptile, bool is_land, int nr)
       tile_continent(ptile) == 0 && T_UNKNOWN != pterrain
       && XOR(is_land, terrain_type_terrain_class(pterrain) == TC_OCEAN));
 
-  /* Create tile list and insert the initial tile. */
+  // Create tile list and insert the initial tile.
   tlist = tile_list_new();
   tile_list_append(tlist, ptile);
 
   while (tile_list_size(tlist) > 0) {
-    /* Iterate over all unchecked tiles. */
+    // Iterate over all unchecked tiles.
     tile_list_iterate(tlist, ptile2)
     {
-      /* Iterate over the adjacent tiles. */
+      // Iterate over the adjacent tiles.
       adjc_iterate(&(wld.map), ptile2, ptile3)
       {
         pterrain = tile_terrain(ptile3);
@@ -319,17 +319,17 @@ static void assign_continent_flood(struct tile *ptile, bool is_land, int nr)
           continue;
         }
 
-        /* Add the tile to the list of tiles to check. */
+        // Add the tile to the list of tiles to check.
         if (!tile_list_search(tlist, ptile3)) {
           tile_list_append(tlist, ptile3);
         }
       }
       adjc_iterate_end;
 
-      /* Set the continent data and remove the tile from the list. */
+      // Set the continent data and remove the tile from the list.
       tile_set_continent(ptile2, nr);
       tile_list_remove(tlist, ptile2);
-      /* count the tile */
+      // count the tile
       if (nr < 0) {
         ocean_sizes[-nr]++;
       } else {
@@ -342,12 +342,12 @@ static void assign_continent_flood(struct tile *ptile, bool is_land, int nr)
   tile_list_destroy(tlist);
 }
 
-/**********************************************************************/ /**
+/**
    Regenerate all oceanic tiles for small water bodies as lakes.
    Assumes assign_continent_numbers() and recalculate_lake_surrounders()
    have already been done!
    FIXME: insufficiently generalized, use terrain property.
- **************************************************************************/
+ */
 void regenerate_lakes()
 {
   struct terrain *lake_for_ocean[2][wld.map.num_oceans];
@@ -418,62 +418,62 @@ void regenerate_lakes()
   whole_map_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Get continent surrounding lake, or -1 if there is multiple continents.
- **************************************************************************/
+ */
 int get_lake_surrounders(Continent_id cont)
 {
   return lake_surrounders[-cont];
 }
 
-/**********************************************************************/ /**
+/**
    Return size in tiles of the given continent (not ocean)
- **************************************************************************/
+ */
 int get_continent_size(Continent_id id)
 {
   fc_assert_ret_val(id > 0, -1);
   return continent_sizes[id];
 }
 
-/**********************************************************************/ /**
+/**
    Return size in tiles of the given ocean. You should use positive ocean
    number.
- **************************************************************************/
+ */
 int get_ocean_size(Continent_id id)
 {
   fc_assert_ret_val(id > 0, -1);
   return ocean_sizes[id];
 }
 
-/**********************************************************************/ /**
+/**
    Assigns continent and ocean numbers to all tiles, and set
    map.num_continents and map.num_oceans.  Recalculates continent and
    ocean sizes, and lake_surrounders[] arrays.
 
    Continents have numbers 1 to map.num_continents _inclusive_.
    Oceans have (negative) numbers -1 to -map.num_oceans _inclusive_.
- **************************************************************************/
+ */
 void assign_continent_numbers()
 {
-  /* Initialize */
+  // Initialize
   wld.map.num_continents = 0;
   wld.map.num_oceans = 0;
 
   whole_map_iterate(&(wld.map), ptile) { tile_set_continent(ptile, 0); }
   whole_map_iterate_end;
 
-  /* Assign new numbers */
+  // Assign new numbers
   whole_map_iterate(&(wld.map), ptile)
   {
     const struct terrain *pterrain = tile_terrain(ptile);
 
     if (tile_continent(ptile) != 0) {
-      /* Already assigned. */
+      // Already assigned.
       continue;
     }
 
     if (T_UNKNOWN == pterrain) {
-      continue; /* Can't assign this. */
+      continue; // Can't assign this.
     }
 
     if (terrain_type_terrain_class(pterrain) != TC_OCEAN) {
@@ -499,10 +499,10 @@ void assign_continent_numbers()
          wld.map.num_oceans);
 }
 
-/**********************************************************************/ /**
+/**
    Return most shallow ocean terrain type. Prefers not to return freshwater
    terrain, and will ignore 'frozen' rather than do so.
- **************************************************************************/
+ */
 struct terrain *most_shallow_ocean(bool frozen)
 {
   bool oceans = false, frozenmatch = false;
@@ -515,13 +515,13 @@ struct terrain *most_shallow_ocean(bool frozen)
       bool frozen_ok = terrain_has_flag(pterr, TER_FROZEN) == frozen;
 
       if (!oceans && nonfresh) {
-        /* First ocean type seen, reset even if frozenness doesn't match */
+        // First ocean type seen, reset even if frozenness doesn't match
         oceans = true;
         shallow = pterr;
         frozenmatch = frozen_ok;
         continue;
       } else if (oceans && !nonfresh) {
-        /* Dismiss any step backward on freshness */
+        // Dismiss any step backward on freshness
         continue;
       }
       if (!frozenmatch && frozen_ok) {
@@ -531,7 +531,7 @@ struct terrain *most_shallow_ocean(bool frozen)
         shallow = pterr;
         continue;
       } else if (frozenmatch && !frozen_ok) {
-        /* Dismiss any step backward on frozenness */
+        // Dismiss any step backward on frozenness
         continue;
       }
       if (!shallow
@@ -546,11 +546,11 @@ struct terrain *most_shallow_ocean(bool frozen)
   return shallow;
 }
 
-/**********************************************************************/ /**
+/**
    Picks an ocean terrain to match the given depth.
    Only considers terrains with/without Frozen flag depending on 'frozen'.
    Return NULL when there is no available ocean.
- **************************************************************************/
+ */
 struct terrain *pick_ocean(int depth, bool frozen)
 {
   struct terrain *best_terrain = NULL;
@@ -575,9 +575,9 @@ struct terrain *pick_ocean(int depth, bool frozen)
   return best_terrain;
 }
 
-/**********************************************************************/ /**
+/**
    Determines the minimal distance to the land.
- **************************************************************************/
+ */
 static int real_distance_to_land(const struct tile *ptile, int max)
 {
   square_dxy_iterate(&(wld.map), ptile, max, atile, dx, dy)
@@ -591,10 +591,10 @@ static int real_distance_to_land(const struct tile *ptile, int max)
   return max + 1;
 }
 
-/**********************************************************************/ /**
+/**
    Determines what is the most popular ocean type arround (need 2/3 of the
    adjcacent tiles).
- **************************************************************************/
+ */
 static struct terrain *most_adjacent_ocean_type(const struct tile *ptile)
 {
   const int need = 2 * wld.map.num_valid_dirs / 3;
@@ -620,11 +620,11 @@ static struct terrain *most_adjacent_ocean_type(const struct tile *ptile)
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Makes a simple depth map for all ocean tiles based on their proximity
    to any land tiles and reassignes ocean terrain types based on their
    MG_OCEAN_DEPTH property values.
- **************************************************************************/
+ */
 void smooth_water_depth()
 {
   const int OCEAN_DEPTH_STEP = 25;
@@ -633,7 +633,7 @@ void smooth_water_depth()
   struct terrain *ocean;
   int dist;
 
-  /* First, improve the coasts. */
+  // First, improve the coasts.
   whole_map_iterate(&(wld.map), ptile)
   {
     if (terrain_type_terrain_class(tile_terrain(ptile)) != TC_OCEAN) {
@@ -642,7 +642,7 @@ void smooth_water_depth()
 
     dist = real_distance_to_land(ptile, OCEAN_DIST_MAX);
     if (dist <= OCEAN_DIST_MAX) {
-      /* Overwrite the terrain (but preserve frozenness). */
+      // Overwrite the terrain (but preserve frozenness).
       ocean = pick_ocean(dist * OCEAN_DEPTH_STEP + fc_rand(OCEAN_DEPTH_RAND),
                          terrain_has_flag(tile_terrain(ptile), TER_FROZEN));
       if (NULL != ocean && ocean != tile_terrain(ptile)) {
@@ -656,7 +656,7 @@ void smooth_water_depth()
   }
   whole_map_iterate_end;
 
-  /* Now, try to have something more continuous. */
+  // Now, try to have something more continuous.
   whole_map_iterate(&(wld.map), ptile)
   {
     if (terrain_type_terrain_class(tile_terrain(ptile)) != TC_OCEAN) {
@@ -675,9 +675,9 @@ void smooth_water_depth()
   whole_map_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Free resources allocated by the generator.
- **************************************************************************/
+ */
 void generator_free()
 {
   if (lake_surrounders != NULL) {
@@ -694,10 +694,10 @@ void generator_free()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return a random terrain that has the specified flag.
    Returns T_UNKNOWN when there is no matching terrain.
- **************************************************************************/
+ */
 struct terrain *pick_terrain_by_flag(enum terrain_flag_id flag)
 {
   bool has_flag[terrain_count()];
@@ -728,7 +728,7 @@ struct terrain *pick_terrain_by_flag(enum terrain_flag_id flag)
   return T_UNKNOWN;
 }
 
-/**********************************************************************/ /**
+/**
    Pick a terrain based on the target property and a property to avoid.
 
    If the target property is given, then all terrains with that property
@@ -743,14 +743,14 @@ struct terrain *pick_terrain_by_flag(enum terrain_flag_id flag)
    property will be avoided.
 
    This function must always return a valid terrain.
- **************************************************************************/
+ */
 struct terrain *pick_terrain(enum mapgen_terrain_property target,
                              enum mapgen_terrain_property prefer,
                              enum mapgen_terrain_property avoid)
 {
   int sum = 0;
 
-  /* Find the total weight. */
+  // Find the total weight.
   terrain_type_iterate(pterrain)
   {
     if (!terrain_has_flag(pterrain, TER_NOT_GENERATED)) {
@@ -770,10 +770,10 @@ struct terrain *pick_terrain(enum mapgen_terrain_property target,
   }
   terrain_type_iterate_end;
 
-  /* Now pick. */
+  // Now pick.
   sum = fc_rand(sum);
 
-  /* Finally figure out which one we picked. */
+  // Finally figure out which one we picked.
   terrain_type_iterate(pterrain)
   {
     if (!terrain_has_flag(pterrain, TER_NOT_GENERATED)) {

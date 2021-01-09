@@ -12,19 +12,19 @@
 #include <fc_config.h>
 #endif
 
-#include <cstdlib> /* qsort */
+#include <cstdlib> // qsort
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "combat.h"
 #include "game.h"
 #include "unitlist.h"
 
-/* client */
+// client
 #include "chatline_common.h"
 #include "cityrep_g.h"
 #include "client_main.h"
@@ -41,11 +41,11 @@
 #include "overview_common.h"
 #include "tilespec.h"
 
-/* Selection Rectangle */
-static float rec_anchor_x, rec_anchor_y; /* canvas coordinates for anchor */
+// Selection Rectangle
+static float rec_anchor_x, rec_anchor_y; // canvas coordinates for anchor
 static struct tile *rec_canvas_center_tile;
-static int rec_corner_x, rec_corner_y; /* corner to iterate from */
-static int rec_w, rec_h;               /* width, heigth in pixels */
+static int rec_corner_x, rec_corner_y; // corner to iterate from
+static int rec_w, rec_h;               // width, heigth in pixels
 
 bool rbutton_down = false;
 bool rectangle_active = false;
@@ -54,15 +54,15 @@ bool rectangle_active = false;
    button in Area Selection mode. */
 bool tiles_hilited_cities = false;
 
-/* The mapcanvas clipboard */
+// The mapcanvas clipboard
 struct universal clipboard = {.value = {.building = NULL}, .kind = VUT_NONE};
 
-/* Goto with drag and drop. */
+// Goto with drag and drop.
 bool keyboardless_goto_button_down = false;
 bool keyboardless_goto_active = false;
 struct tile *keyboardless_goto_start_tile;
 
-/* Update the workers for a city on the map, when the update is received */
+// Update the workers for a city on the map, when the update is received
 struct city *city_workers_display = NULL;
 
 /*************************************************************************/
@@ -70,12 +70,12 @@ struct city *city_workers_display = NULL;
 static void clipboard_send_production_packet(struct city *pcity);
 static void define_tiles_within_rectangle(bool append);
 
-/**********************************************************************/ /**
+/**
    Called when Right Mouse Button is depressed. Record the canvas
    coordinates of the center of the tile, which may be unreal. This
    anchor is not the drawing start point, but is used to calculate
    width, height. Also record the current mapview centering.
- **************************************************************************/
+ */
 void anchor_selection_rectangle(int canvas_x, int canvas_y)
 {
   struct tile *ptile = canvas_pos_to_nearest_tile(canvas_x, canvas_y);
@@ -83,12 +83,12 @@ void anchor_selection_rectangle(int canvas_x, int canvas_y)
   tile_to_canvas_pos(&rec_anchor_x, &rec_anchor_y, ptile);
   rec_anchor_x += tileset_tile_width(tileset) / 2;
   rec_anchor_y += tileset_tile_height(tileset) / 2;
-  /* FIXME: This may be off-by-one. */
+  // FIXME: This may be off-by-one.
   rec_canvas_center_tile = get_center_tile_mapcanvas();
   rec_w = rec_h = 0;
 }
 
-/**********************************************************************/ /**
+/**
    Iterate over the pixel boundaries of the rectangle and pick the tiles
    whose center falls within. Axis pixel incrementation is half tile size to
    accomodate tilesets with varying tile shapes and proportions of X/Y.
@@ -101,7 +101,7 @@ void anchor_selection_rectangle(int canvas_x, int canvas_y)
 
    NB: At the end of this function the current selection rectangle will be
    erased (by being redrawn).
- **************************************************************************/
+ */
 static void define_tiles_within_rectangle(bool append)
 {
   const int W = tileset_tile_width(tileset), half_W = W / 2;
@@ -109,7 +109,7 @@ static void define_tiles_within_rectangle(bool append)
   const int segments_x = abs(rec_w / half_W);
   const int segments_y = abs(rec_h / half_H);
 
-  /* Iteration direction */
+  // Iteration direction
   const int inc_x = (rec_w > 0 ? half_W : -half_W);
   const int inc_y = (rec_h > 0 ? half_H : -half_H);
   int x, y, xx, yy;
@@ -175,13 +175,13 @@ static void define_tiles_within_rectangle(bool append)
   }
   unit_list_destroy(units);
 
-  /* Clear previous rectangle. */
+  // Clear previous rectangle.
   draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
 }
 
-/**********************************************************************/ /**
+/**
    Called when mouse pointer moves and rectangle is active.
- **************************************************************************/
+ */
 void update_selection_rectangle(float canvas_x, float canvas_y)
 {
   const int W = tileset_tile_width(tileset), half_W = W / 2;
@@ -201,7 +201,7 @@ void update_selection_rectangle(float canvas_x, float canvas_y)
   }
   rec_tile = ptile;
 
-  /* Clear previous rectangle. */
+  // Clear previous rectangle.
   draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
 
   /*  Fix canvas coords to the center of the tile.
@@ -210,10 +210,10 @@ void update_selection_rectangle(float canvas_x, float canvas_y)
   canvas_x += half_W;
   canvas_y += half_H;
 
-  rec_w = rec_anchor_x - canvas_x; /* width */
-  rec_h = rec_anchor_y - canvas_y; /* height */
+  rec_w = rec_anchor_x - canvas_x; // width
+  rec_h = rec_anchor_y - canvas_y; // height
 
-  /* FIXME: This may be off-by-one. */
+  // FIXME: This may be off-by-one.
   center_tile = get_center_tile_mapcanvas();
   map_distance_vector(&diff_x, &diff_y, center_tile, rec_canvas_center_tile);
 
@@ -224,7 +224,7 @@ void update_selection_rectangle(float canvas_x, float canvas_y)
       rec_w += (diff_x - diff_y) * half_W;
       rec_h += (diff_x + diff_y) * half_H;
 
-      /* Iso wrapping */
+      // Iso wrapping
       if (abs(rec_w) > wld.map.xsize * half_W / 2) {
         int wx = wld.map.xsize * half_W, wy = wld.map.xsize * half_H;
 
@@ -235,7 +235,7 @@ void update_selection_rectangle(float canvas_x, float canvas_y)
       rec_w += diff_x * W;
       rec_h += diff_y * H;
 
-      /* X wrapping */
+      // X wrapping
       if (abs(rec_w) > wld.map.xsize * half_W) {
         int wx = wld.map.xsize * W;
 
@@ -249,16 +249,16 @@ void update_selection_rectangle(float canvas_x, float canvas_y)
     return;
   }
 
-  /* It is currently drawn only to the screen, not backing store */
+  // It is currently drawn only to the screen, not backing store
   rectangle_active = true;
   draw_selection_rectangle(canvas_x, canvas_y, rec_w, rec_h);
   rec_corner_x = canvas_x;
   rec_corner_y = canvas_y;
 }
 
-/**********************************************************************/ /**
+/**
    Redraws the selection rectangle after a map flush.
- **************************************************************************/
+ */
 void redraw_selection_rectangle()
 {
   if (rectangle_active) {
@@ -266,24 +266,24 @@ void redraw_selection_rectangle()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Redraws the selection rectangle after a map flush.
- **************************************************************************/
+ */
 void cancel_selection_rectangle()
 {
   if (rectangle_active) {
     rectangle_active = false;
     rbutton_down = false;
 
-    /* Erase the previously drawn selection rectangle. */
+    // Erase the previously drawn selection rectangle.
     draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
   }
 }
 
-/**********************************************************************/ /**
+/**
    Action depends on whether the mouse pointer moved
    a tile between press and release.
- **************************************************************************/
+ */
 void release_right_button(int canvas_x, int canvas_y, bool shift)
 {
   if (rectangle_active) {
@@ -295,10 +295,10 @@ void release_right_button(int canvas_x, int canvas_y, bool shift)
   rbutton_down = false;
 }
 
-/**********************************************************************/ /**
+/**
    The user pressed the overlay-city button (t) while the mouse was at the
    given canvas position.
- **************************************************************************/
+ */
 void key_city_overlay(int canvas_x, int canvas_y)
 {
   struct tile *ptile = canvas_pos_to_tile(canvas_x, canvas_y);
@@ -335,10 +335,10 @@ void key_city_hide_open(struct city *pcity)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Shift-Left-Click on owned city or any visible unit to copy.
    Returns whether it found anything to try to copy.
- **************************************************************************/
+ */
 bool clipboard_copy_production(struct tile *ptile)
 {
   char buffer[256];
@@ -371,16 +371,16 @@ bool clipboard_copy_production(struct tile *ptile)
   upgrade_canvas_clipboard();
 
   create_event(
-      ptile, E_CITY_PRODUCTION_CHANGED, /* ? */
+      ptile, E_CITY_PRODUCTION_CHANGED, // ?
       ftc_client, _("Copy %s to clipboard."),
       universal_name_translation(&clipboard, buffer, sizeof(buffer)));
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    If City tiles are hilited, paste into all those cities.
    Otherwise paste into the one city under the mouse pointer.
- **************************************************************************/
+ */
 void clipboard_paste_production(struct city *pcity)
 {
   if (!can_client_issue_orders()) {
@@ -399,9 +399,9 @@ void clipboard_paste_production(struct city *pcity)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Send request to build production in clipboard to server.
- **************************************************************************/
+ */
 static void clipboard_send_production_packet(struct city *pcity)
 {
   if (are_universals_equal(&pcity->production, &clipboard)
@@ -413,10 +413,10 @@ static void clipboard_send_production_packet(struct city *pcity)
                            universal_number(&clipboard));
 }
 
-/**********************************************************************/ /**
+/**
    A newer technology may be available for units.
    Also called from packhand.c.
- **************************************************************************/
+ */
 void upgrade_canvas_clipboard()
 {
   if (!can_client_issue_orders()) {
@@ -432,9 +432,9 @@ void upgrade_canvas_clipboard()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Goto button has been released. Finish goto.
- **************************************************************************/
+ */
 void release_goto_button(int canvas_x, int canvas_y)
 {
   struct tile *ptile = canvas_pos_to_tile(canvas_x, canvas_y);
@@ -451,10 +451,10 @@ void release_goto_button(int canvas_x, int canvas_y)
   keyboardless_goto_start_tile = NULL;
 }
 
-/**********************************************************************/ /**
+/**
   The goto hover state is only activated when the mouse pointer moves
   beyond the tile where the button was depressed, to avoid mouse typos.
- **************************************************************************/
+ */
 void maybe_activate_keyboardless_goto(int canvas_x, int canvas_y)
 {
   struct tile *ptile = canvas_pos_to_tile(canvas_x, canvas_y);
@@ -467,9 +467,9 @@ void maybe_activate_keyboardless_goto(int canvas_x, int canvas_y)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return TRUE iff the turn done button should be enabled.
- **************************************************************************/
+ */
 bool get_turn_done_button_state()
 {
   return can_end_turn()
@@ -477,9 +477,9 @@ bool get_turn_done_button_state()
              || gui_options.ai_manual_turn_done);
 }
 
-/**********************************************************************/ /**
+/**
    Return TRUE iff client can end turn.
- **************************************************************************/
+ */
 bool can_end_turn()
 {
   struct option *opt;
@@ -495,10 +495,10 @@ bool can_end_turn()
           && governor::i()->hot());
 }
 
-/**********************************************************************/ /**
+/**
    Scroll the mapview half a screen in the given direction.  This is a GUI
    direction; i.e., DIR8_NORTH is "up" on the mapview.
- **************************************************************************/
+ */
 void scroll_mapview(enum direction8 gui_dir)
 {
   int gui_x = mapview.gui_x0, gui_y = mapview.gui_y0;
@@ -512,11 +512,11 @@ void scroll_mapview(enum direction8 gui_dir)
   set_mapview_origin(gui_x, gui_y);
 }
 
-/**********************************************************************/ /**
+/**
    Do some appropriate action when the "main" mouse button (usually
    left-click) is pressed.  For more sophisticated user control use (or
    write) a different xxx_button_pressed function.
- **************************************************************************/
+ */
 void action_button_pressed(int canvas_x, int canvas_y,
                            enum quickselect_type qtype)
 {
@@ -529,9 +529,9 @@ void action_button_pressed(int canvas_x, int canvas_y,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Wakeup sentried units on the tile of the specified location.
- **************************************************************************/
+ */
 void wakeup_button_pressed(int canvas_x, int canvas_y)
 {
   struct tile *ptile = canvas_pos_to_tile(canvas_x, canvas_y);
@@ -541,9 +541,9 @@ void wakeup_button_pressed(int canvas_x, int canvas_y)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Adjust the position of city workers from the mapview.
- **************************************************************************/
+ */
 void adjust_workers_button_pressed(int canvas_x, int canvas_y)
 {
   struct tile *ptile = canvas_pos_to_tile(canvas_x, canvas_y);
@@ -573,13 +573,13 @@ void adjust_workers_button_pressed(int canvas_x, int canvas_y)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Recenter the map on the canvas location, on user request.  Usually this
    is done with a right-click.
- **************************************************************************/
+ */
 void recenter_button_pressed(int canvas_x, int canvas_y)
 {
-  /* We use the "nearest" tile here so off-map clicks will still work. */
+  // We use the "nearest" tile here so off-map clicks will still work.
   struct tile *ptile = canvas_pos_to_nearest_tile(canvas_x, canvas_y);
 
   if (can_client_change_view() && ptile) {
@@ -587,9 +587,9 @@ void recenter_button_pressed(int canvas_x, int canvas_y)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Update the turn done button state.
- **************************************************************************/
+ */
 void update_turn_done_button_state()
 {
   bool turn_done_state = get_turn_done_button_state();
@@ -605,9 +605,9 @@ void update_turn_done_button_state()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Update the goto/patrol line to the given map canvas location.
- **************************************************************************/
+ */
 void update_line(int canvas_x, int canvas_y)
 {
   struct tile *ptile;
@@ -636,9 +636,9 @@ void update_line(int canvas_x, int canvas_y)
   };
 }
 
-/**********************************************************************/ /**
+/**
    Update the goto/patrol line to the given overview canvas location.
- **************************************************************************/
+ */
 void overview_update_line(int overview_x, int overview_y)
 {
   struct tile *ptile;
@@ -670,22 +670,22 @@ void overview_update_line(int overview_x, int overview_y)
   };
 }
 
-/**********************************************************************/ /**
+/**
    We sort according to the following logic:
 
    - Transported units should immediately follow their transporter (note that
      transporting may be recursive).
    - Otherwise we sort by ID (which is what the list is originally sorted
  by).
- **************************************************************************/
+ */
 static int unit_list_compare(const void *a, const void *b)
 {
   const struct unit *punit1 = *(struct unit **) a;
   const struct unit *punit2 = *(struct unit **) b;
 
   if (unit_transport_get(punit1) == unit_transport_get(punit2)) {
-    /* For units with the same transporter or no transporter: sort by id. */
-    /* Perhaps we should sort by name instead? */
+    // For units with the same transporter or no transporter: sort by id.
+    // Perhaps we should sort by name instead?
     return punit1->id - punit2->id;
   } else if (unit_transport_get(punit1) == punit2) {
     return 1;
@@ -708,14 +708,14 @@ static int unit_list_compare(const void *a, const void *b)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Fill and sort the list of units on the tile.
- **************************************************************************/
+ */
 void fill_tile_unit_list(const struct tile *ptile, struct unit **unit_list)
 {
   int i = 0;
 
-  /* First populate the unit list. */
+  // First populate the unit list.
   unit_list_iterate(ptile->units, punit)
   {
     unit_list[i] = punit;
@@ -723,6 +723,6 @@ void fill_tile_unit_list(const struct tile *ptile, struct unit **unit_list)
   }
   unit_list_iterate_end;
 
-  /* Then sort it. */
+  // Then sort it.
   qsort(unit_list, i, sizeof(*unit_list), unit_list_compare);
 }

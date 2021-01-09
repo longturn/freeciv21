@@ -27,9 +27,9 @@
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
 
-/************************************************************************/ /**
+/**
    Event filter for catching tooltip events
- ****************************************************************************/
+ */
 bool fc_tooltip::eventFilter(QObject *obj, QEvent *ev)
 {
   QHelpEvent *help_event;
@@ -74,10 +74,10 @@ bool fc_tooltip::eventFilter(QObject *obj, QEvent *ev)
 **************************************************************************/
 QString bold(const QString &text) { return QString("<b>" + text + "</b>"); }
 
-/************************************************************************/ /**
+/**
    Returns improvement properties to append in tooltip
    ext is used to get extra info from help
- ****************************************************************************/
+ */
 QString get_tooltip_improvement(const impr_type *building,
                                 struct city *pcity, bool ext)
 {
@@ -136,10 +136,10 @@ QString get_tooltip_improvement(const impr_type *building,
   return def_str;
 }
 
-/************************************************************************/ /**
+/**
    Returns unit properties to append in tooltip
    ext is used to get extra info from help
- ****************************************************************************/
+ */
 QString get_tooltip_unit(const struct unit_type *utype, bool ext)
 {
   QString def_str;
@@ -208,9 +208,9 @@ QString get_tooltip_unit(const struct unit_type *utype, bool ext)
   return def_str;
 };
 
-/************************************************************************/ /**
+/**
    Returns shortened help for given universal ( stored in qvar )
- ****************************************************************************/
+ */
 QString get_tooltip(const QVariant &qvar)
 {
   QString str, def_str, ret_str;
@@ -236,7 +236,7 @@ QString get_tooltip(const QVariant &qvar)
                             NULL, target->value.building);
   }
 
-  /* Remove all lines from help which has '*' in first 3 chars */
+  // Remove all lines from help which has '*' in first 3 chars
   ret_str = cut_helptext(str);
   ret_str = split_text(ret_str, true);
   ret_str = ret_str.trimmed();

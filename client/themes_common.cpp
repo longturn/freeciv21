@@ -18,7 +18,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-/* utility */
+// utility
 #include "log.h"
 #include "shared.h"
 #include "support.h"
@@ -26,7 +26,7 @@
 /* client/include */
 #include "themes_g.h"
 
-/* client */
+// client
 #include "options.h"
 #include "themes_common.h"
 
@@ -45,28 +45,28 @@ contains some data files. Each gui defines its own format in the
   get_useable_themes_in_directory() function.
 ****************************************************************************/
 
-/* A directory containing a list of usable themes */
+// A directory containing a list of usable themes
 struct theme_directory {
-  /* Path on the filesystem */
+  // Path on the filesystem
   char *path;
-  /* Array of theme names */
+  // Array of theme names
   char **themes;
-  /* Themes array length */
+  // Themes array length
   int num_themes;
 };
 
-/* List of all directories with themes */
+// List of all directories with themes
 static int num_directories;
 struct theme_directory *directories;
 
-/************************************************************************/ /**
+/**
    Initialized themes data
- ****************************************************************************/
+ */
 void init_themes()
 {
   int i;
 
-  /* get GUI-specific theme directories */
+  // get GUI-specific theme directories
   char **gui_directories =
       get_gui_specific_themes_directories(&num_directories);
 
@@ -75,16 +75,16 @@ void init_themes()
   for (i = 0; i < num_directories; i++) {
     directories[i].path = gui_directories[i];
 
-    /* get useable themes in this directory */
+    // get useable themes in this directory
     directories[i].themes = get_useable_themes_in_directory(
         directories[i].path, &(directories[i].num_themes));
   }
   delete[] gui_directories;
 }
 
-/************************************************************************/ /**
+/**
    Return a static string vector of useable theme names.
- ****************************************************************************/
+ */
 const QVector<QString> *get_themes_list(const struct option *poption)
 {
   if (themes_list->isEmpty()) {
@@ -109,10 +109,10 @@ const QVector<QString> *get_themes_list(const struct option *poption)
   return themes_list;
 }
 
-/************************************************************************/ /**
+/**
    Loads a theme with the given name. First matching directory will be used.
    If there's no such theme the function returns FALSE.
- ****************************************************************************/
+ */
 bool load_theme(const char *theme_name)
 {
   int i, j;
@@ -128,9 +128,9 @@ bool load_theme(const char *theme_name)
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Wrapper for load_theme. It's is used by local options dialog
- ****************************************************************************/
+ */
 void theme_reread_callback(struct option *poption)
 {
   const char *theme_name = option_str_get(poption);

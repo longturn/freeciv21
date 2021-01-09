@@ -12,10 +12,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "registry_ini.h"
 
-/* common */
+// common
 #include "game.h"
 
 /* common/scriptcore */
@@ -26,9 +26,9 @@
 
 #include "api_server_luadata.h"
 
-/*************************************************************************/ /**
+/**
    Get string value from luadata.
- *****************************************************************************/
+ */
 const char *api_luadata_get_str(lua_State *L, const char *field)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);

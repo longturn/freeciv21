@@ -12,18 +12,18 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
+// utility
+#include "support.h" // bool type
 
-/* common */
+// common
 #include "actions.h"
 #include "fc_types.h"
-#include "featured_text.h" /* struct text_tag_list */
-#include "nation.h"        /* Nation_type_id */
-#include "terrain.h"       /* enum tile_special_type */
+#include "featured_text.h" // struct text_tag_list
+#include "nation.h"        // Nation_type_id
+#include "terrain.h"       // enum tile_special_type
 #include "unitlist.h"
 
-/* client */
+// client
 #include "gui_proto_constructor.h"
 
 struct packet_nations_selected_info;
@@ -40,7 +40,7 @@ GUI_FUNC_PROTO(void, popup_races_dialog, struct player *pplayer)
 GUI_FUNC_PROTO(void, popdown_races_dialog, void)
 
 GUI_FUNC_PROTO(void, unit_select_dialog_popup, struct tile *ptile)
-void unit_select_dialog_update(); /* Defined in update_queue.c. */
+void unit_select_dialog_update(); // Defined in update_queue.c.
 GUI_FUNC_PROTO(void, unit_select_dialog_update_real, void *unused)
 
 GUI_FUNC_PROTO(void, races_toggles_set_sensitive, void)

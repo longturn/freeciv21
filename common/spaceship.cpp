@@ -15,12 +15,12 @@
 #include <fc_config.h>
 #endif
 
-#include "shared.h" /* TRUE, FALSE */
+#include "shared.h" // TRUE, FALSE
 
 #include "spaceship.h"
 
 const struct sship_part_info structurals_info[NUM_SS_STRUCTURALS] = {
-    {19, 13, -1}, /* -1 means none required */
+    {19, 13, -1}, // -1 means none required
     {19, 15, 0},  {19, 11, 0},  {19, 17, 1}, {19, 9, 2},   {19, 19, 3},
     {17, 9, 4},   {17, 19, 5},  {21, 11, 2}, {21, 17, 3},  {15, 9, 6},
     {15, 19, 7},  {23, 11, 8},  {23, 17, 9}, {13, 9, 10},  {13, 19, 11},
@@ -31,8 +31,8 @@ const struct sship_part_info structurals_info[NUM_SS_STRUCTURALS] = {
 
 const struct sship_part_info components_info[NUM_SS_COMPONENTS] = {
     {21, 13, 0},  {24, 13, 12}, {21, 15, 1},
-    {24, 15, 13}, {21, 9, 8},  /* or 4 */
-    {24, 9, 12},  {21, 19, 9}, /* or 5 */
+    {24, 15, 13}, {21, 9, 8},  // or 4
+    {24, 9, 12},  {21, 19, 9}, // or 5
     {24, 19, 13}, {21, 7, 22},  {24, 7, 28},
     {21, 21, 23}, {24, 21, 29}, {21, 3, 26},
     {24, 3, 28},  {21, 25, 27}, {24, 25, 29}};
@@ -42,10 +42,10 @@ const struct sship_part_info modules_info[NUM_SS_MODULES] = {
     {12, 12, 14}, {14, 22, 11}, {8, 12, 18}, {8, 16, 19},
     {6, 6, 20},   {4, 16, 31},  {4, 12, 30}, {6, 22, 21}};
 
-/*******************************************************************/ /**
+/**
    Initialize spaceship struct; could also be used to "cancel" a
    spaceship (eg, if/when capital-capture effect implemented).
- ***********************************************************************/
+ */
 void spaceship_init(struct player_spaceship *ship)
 {
   ship->structurals = ship->components = ship->modules = 0;
@@ -60,9 +60,9 @@ void spaceship_init(struct player_spaceship *ship)
       ship->travel_time = 0.0;
 }
 
-/*******************************************************************/ /**
+/**
    Count the number of structurals placed; that is, in ship->structure[]
- ***********************************************************************/
+ */
 int num_spaceship_structurals_placed(const struct player_spaceship *ship)
 {
   int i;
@@ -77,9 +77,9 @@ int num_spaceship_structurals_placed(const struct player_spaceship *ship)
   return num;
 }
 
-/*******************************************************************/ /**
+/**
    Find (default) place for next spaceship component.
- ***********************************************************************/
+ */
 bool next_spaceship_component(struct player *pplayer,
                               struct player_spaceship *ship,
                               struct spaceship_component *fill)
@@ -140,7 +140,7 @@ bool next_spaceship_component(struct player *pplayer,
     int i;
 
     if (!BV_ISSET(ship->structure, 0)) {
-      /* if we don't have the first structural, place that! */
+      // if we don't have the first structural, place that!
       fill->type = SSHIP_PLACE_STRUCTURAL;
       fill->num = 0;
       return true;
@@ -186,7 +186,7 @@ bool next_spaceship_component(struct player *pplayer,
         }
       }
     }
-    /* sanity: */
+    // sanity:
     fc_assert_ret_val(req >= 0, false);
     fc_assert(!BV_ISSET(ship->structure, req));
 

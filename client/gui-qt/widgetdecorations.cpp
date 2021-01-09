@@ -68,9 +68,9 @@ void scale_widget::mousePressEvent(QMouseEvent *event)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Constructor for move widget
- **************************************************************************/
+ */
 move_widget::move_widget(QWidget *parent) : QLabel()
 {
   QPixmap *pix;
@@ -83,14 +83,14 @@ move_widget::move_widget(QWidget *parent) : QLabel()
   setFixedSize(16, 16);
 }
 
-/**********************************************************************/ /**
+/**
    Puts move widget to left top corner
- **************************************************************************/
+ */
 void move_widget::put_to_corner() { move(0, 0); }
 
-/**********************************************************************/ /**
+/**
    Mouse handler for move widget (moves parent widget)
- **************************************************************************/
+ */
 void move_widget::mouseMoveEvent(QMouseEvent *event)
 {
   if (!king()->interface_locked) {
@@ -98,9 +98,9 @@ void move_widget::mouseMoveEvent(QMouseEvent *event)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Sets moving point for move widget;
- **************************************************************************/
+ */
 void move_widget::mousePressEvent(QMouseEvent *event)
 {
   if (!king()->interface_locked) {
@@ -109,9 +109,9 @@ void move_widget::mousePressEvent(QMouseEvent *event)
   update();
 }
 
-/**********************************************************************/ /**
+/**
    Constructor for resize widget
- **************************************************************************/
+ */
 resize_widget::resize_widget(QWidget *parent) : QLabel()
 {
   QPixmap *pix;
@@ -124,18 +124,18 @@ resize_widget::resize_widget(QWidget *parent) : QLabel()
   delete pix;
 }
 
-/**********************************************************************/ /**
+/**
    Puts resize widget to left top corner
- **************************************************************************/
+ */
 void resize_widget::put_to_corner()
 {
   move(parentWidget()->width() - width(),
        parentWidget()->height() - height());
 }
 
-/**********************************************************************/ /**
+/**
    Mouse handler for resize widget (resizes parent widget)
- **************************************************************************/
+ */
 void resize_widget::mouseMoveEvent(QMouseEvent *event)
 {
   QPoint qp, np;
@@ -151,9 +151,9 @@ void resize_widget::mouseMoveEvent(QMouseEvent *event)
   parentWidget()->resize(np.x(), np.y());
 }
 
-/**********************************************************************/ /**
+/**
    Sets moving point for resize widget;
- **************************************************************************/
+ */
 void resize_widget::mousePressEvent(QMouseEvent *event)
 {
   QPoint qp;
@@ -167,9 +167,9 @@ void resize_widget::mousePressEvent(QMouseEvent *event)
   update();
 }
 
-/**********************************************************************/ /**
+/**
    Constructor for close widget
- **************************************************************************/
+ */
 close_widget::close_widget(QWidget *parent) : QLabel()
 {
   QPixmap *pix;
@@ -182,17 +182,17 @@ close_widget::close_widget(QWidget *parent) : QLabel()
   delete pix;
 }
 
-/**********************************************************************/ /**
+/**
    Puts close widget to right top corner
- **************************************************************************/
+ */
 void close_widget::put_to_corner()
 {
   move(parentWidget()->width() - width(), 0);
 }
 
-/**********************************************************************/ /**
+/**
    Mouse handler for close widget, hides parent widget
- **************************************************************************/
+ */
 void close_widget::mousePressEvent(QMouseEvent *event)
 {
   if (king()->interface_locked) {
@@ -204,9 +204,9 @@ void close_widget::mousePressEvent(QMouseEvent *event)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Notifies parent to do custom action, parent is already hidden.
- **************************************************************************/
+ */
 void close_widget::notify_parent()
 {
   fcwidget *fcw;

@@ -48,4 +48,4 @@ void comment_nationgroups(struct section_file *sfile);
 void comment_nations(struct section_file *sfile);
 void comment_clauses(struct section_file *sfile);
 
-#endif /* FC__COMMENTS_H */
+#endif // FC__COMMENTS_H

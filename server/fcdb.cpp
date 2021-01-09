@@ -19,17 +19,17 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "connection.h"
 #include "packets.h"
 
-/* server */
+// server
 #include "connecthand.h"
 #include "notify.h"
 #include "sernet.h"
@@ -38,7 +38,7 @@
 /* server/scripting */
 #ifdef HAVE_FCDB
 #include "script_fcdb.h"
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB
 
 #include "fcdb.h"
 
@@ -47,9 +47,9 @@
 #ifdef HAVE_FCDB
 
 enum fcdb_option_source {
-  AOS_DEFAULT, /* Internal default, currently not used */
-  AOS_FILE,    /* Read from config file */
-  AOS_SET      /* Set, currently not used */
+  AOS_DEFAULT, // Internal default, currently not used
+  AOS_FILE,    // Read from config file
+  AOS_SET      // Set, currently not used
 };
 
 struct fcdb_option {
@@ -77,10 +77,10 @@ static bool fcdb_set_option(const char *key, const char *value,
                             enum fcdb_option_source source);
 static bool fcdb_load_config(const char *filename);
 
-/************************************************************************/ /**
+/**
    Set one fcdb option (or delete it if value == NULL).
    Replaces any previous setting.
- ****************************************************************************/
+ */
 static bool fcdb_set_option(const char *key, const char *value,
                             enum fcdb_option_source source)
 {
@@ -108,11 +108,11 @@ static bool fcdb_set_option(const char *key, const char *value,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Load fcdb configuration from file.
    We deliberately don't search datadirs for filename, as we don't want this
    overridden by modpacks etc.
- ****************************************************************************/
+ */
 static bool fcdb_load_config(const char *filename)
 {
   struct section_file *secfile;
@@ -148,9 +148,9 @@ static bool fcdb_load_config(const char *filename)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Initialize freeciv database system
- ****************************************************************************/
+ */
 bool fcdb_init(const char *conf_file)
 {
   fc_assert(fcdb_config == NULL);
@@ -167,9 +167,9 @@ bool fcdb_init(const char *conf_file)
   return script_fcdb_init(NULL);
 }
 
-/************************************************************************/ /**
+/**
    Return the selected fcdb config value.
- ****************************************************************************/
+ */
 const char *fcdb_option_get(const char *type)
 {
   struct fcdb_option *opt;
@@ -181,9 +181,9 @@ const char *fcdb_option_get(const char *type)
   }
 }
 
-/************************************************************************/ /**
+/**
    Free resources allocated by fcdb system.
- ****************************************************************************/
+ */
 void fcdb_free(void)
 {
   script_fcdb_free();
@@ -199,20 +199,20 @@ void fcdb_free(void)
   fcdb_config = NULL;
 }
 
-#else /* HAVE_FCDB */
+#else // HAVE_FCDB
 
-/************************************************************************/ /**
+/**
    Dummy function - Initialize freeciv database system
- ****************************************************************************/
+ */
 bool fcdb_init(const char *conf_file) { return true; }
 
-/************************************************************************/ /**
+/**
    Dummy function - Return the selected fcdb config value.
- ****************************************************************************/
+ */
 const char *fcdb_option_get(const char *type) { return NULL; }
 
-/************************************************************************/ /**
+/**
    Dummy function - Free resources allocated by fcdb system.
- ****************************************************************************/
+ */
 void fcdb_free() {}
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB

@@ -14,12 +14,12 @@
 #endif
 
 #include <vector>
-/* utility */
-#include "log.h" /* fc_assert */
+// utility
+#include "log.h" // fc_assert
 
 #include "distribute.h"
 
-/************************************************************************/ /**
+/**
    Distribute "number" elements into "groups" groups with ratios given by
    the elements in "ratios".  The resulting division is put into the "result"
    array.
@@ -29,7 +29,7 @@
    and ratios[3] = {sci_rate, tax_rate, lux_rate}.
 
    The algorithm used to determine the distribution is Hamilton's Method.
- ****************************************************************************/
+ */
 void distribute(int number, int groups, int *ratios, int *result)
 {
   int i, sum = 0, max_count, max;
@@ -59,17 +59,17 @@ void distribute(int number, int groups, int *ratios, int *result)
     sum += ratios[i];
   }
 
-  /* 1.  Distribute the whole-numbered part of the targets. */
+  // 1.  Distribute the whole-numbered part of the targets.
   for (i = 0; i < groups; i++) {
     result[i] = number * ratios[i] / sum;
   }
 
-  /* 2a.  Determine the remaining fractions. */
+  // 2a.  Determine the remaining fractions.
   for (i = 0; i < groups; i++) {
     rest[i] = number * ratios[i] - result[i] * sum;
   }
 
-  /* 2b. Find how much source is left to be distributed. */
+  // 2b. Find how much source is left to be distributed.
   for (i = 0; i < groups; i++) {
     number -= result[i];
   }
@@ -77,7 +77,7 @@ void distribute(int number, int groups, int *ratios, int *result)
   while (number > 0) {
     max = max_count = 0;
 
-    /* Find the largest remaining fraction(s). */
+    // Find the largest remaining fraction(s).
     for (i = 0; i < groups; i++) {
       if (rest[i] > max) {
         max_count = 1;
@@ -90,7 +90,7 @@ void distribute(int number, int groups, int *ratios, int *result)
     }
 
     if (max_count == 1) {
-      /* Give an extra source to the target with largest remainder. */
+      // Give an extra source to the target with largest remainder.
       result[max_groups[0]]++;
       rest[max_groups[0]] = 0;
       number--;
@@ -119,5 +119,5 @@ void distribute(int number, int groups, int *ratios, int *result)
     number -= result[i];
   }
   fc_assert(number == 0);
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 }

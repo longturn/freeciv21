@@ -22,11 +22,11 @@
 
 static const char **gfx_array_extensions = nullptr;
 
-/************************************************************************/ /**
+/**
    Return a NULL-terminated, permanently allocated array of possible
    graphics types extensions.  Extensions listed first will be checked
    first.
- ****************************************************************************/
+ */
 const char **gfx_fileextensions(void)
 {
   QList<QByteArray> gfx_ext;
@@ -50,11 +50,11 @@ const char **gfx_fileextensions(void)
   return gfx_array_extensions;
 }
 
-/************************************************************************/ /**
+/**
    Load the given graphics file into a sprite.  This function loads an
    entire image file, which may later be broken up into individual sprites
    with crop_sprite.
- ****************************************************************************/
+ */
 QPixmap *qtg_load_gfxfile(const char *filename)
 {
   QPixmap *entire = new QPixmap;
@@ -68,7 +68,7 @@ QPixmap *qtg_load_gfxfile(const char *filename)
   return entire;
 }
 
-/************************************************************************/ /**
+/**
    Create a new sprite by cropping and taking only the given portion of
    the image.
 
@@ -88,7 +88,7 @@ QPixmap *qtg_load_gfxfile(const char *filename)
    origin of the source image.  The pixel at (mask_offset_x,mask_offset_y)
    in the mask image will be used to clip pixel (0,0) in the source image
    which is pixel (-x,-y) in the new image.
- ****************************************************************************/
+ */
 QPixmap *qtg_crop_sprite(QPixmap *source, int x, int y, int width,
                          int height, QPixmap *mask, int mask_offset_x,
                          int mask_offset_y, float scale, bool smooth)
@@ -143,23 +143,23 @@ QPixmap *qtg_crop_sprite(QPixmap *source, int x, int y, int width,
   return cropped;
 }
 
-/************************************************************************/ /**
+/**
    Find the dimensions of the sprite.
- ****************************************************************************/
+ */
 void qtg_get_sprite_dimensions(QPixmap *sprite, int *width, int *height)
 {
   *width = sprite->width();
   *height = sprite->height();
 }
 
-/************************************************************************/ /**
+/**
    Free a sprite and all associated image data.
- ****************************************************************************/
+ */
 void qtg_free_sprite(QPixmap *s) { delete s; }
 
-/************************************************************************/ /**
+/**
    Create a new sprite with the given height, width and color.
- ****************************************************************************/
+ */
 QPixmap *qtg_create_sprite(int width, int height, QColor *pcolor)
 {
   QPixmap *created = new QPixmap;

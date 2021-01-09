@@ -12,13 +12,13 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "bitvector.h"
 
-/* common */
+// common
 #include "base.h"
 #include "fc_types.h"
-#include "terrain.h" /* enum tile_special_type */
+#include "terrain.h" // enum tile_special_type
 #include "unittype.h"
 #include "vision.h"
 #include "world_object.h"
@@ -29,17 +29,17 @@ struct unit_move_data; /* Actually defined in "server/unittools.c". */
 /* Changing this enum will break network compatibility.
  * Different orders take different parameters; see struct unit_order. */
 enum unit_orders {
-  /* Move without performing any action (dir) */
+  // Move without performing any action (dir)
   ORDER_MOVE = 0,
-  /* Perform activity (activity, extra) */
+  // Perform activity (activity, extra)
   ORDER_ACTIVITY = 1,
-  /* Pause to regain movement points (no parameters) */
+  // Pause to regain movement points (no parameters)
   ORDER_FULL_MP = 2,
   /* Move; if necessary prompt for action/target when order executed (dir) */
   ORDER_ACTION_MOVE = 3,
-  /* Perform pre-specified action (action, target, extra, dir) */
+  // Perform pre-specified action (action, target, extra, dir)
   ORDER_PERFORM_ACTION = 4,
-  /* and plenty more for later... */
+  // and plenty more for later...
   ORDER_LAST
 };
 
@@ -54,24 +54,24 @@ enum unit_upgrade_result {
   UU_NOT_IN_CITY,
   UU_NOT_CITY_OWNER,
   UU_NOT_ENOUGH_ROOM,
-  UU_NOT_TERRAIN,         /* The upgraded unit could not survive. */
-  UU_UNSUITABLE_TRANSPORT /* Can't upgrade inside current transport. */
+  UU_NOT_TERRAIN,         // The upgraded unit could not survive.
+  UU_UNSUITABLE_TRANSPORT // Can't upgrade inside current transport.
 };
 
 enum unit_airlift_result {
-  /* Codes treated as success: */
-  AR_OK,             /* This will definitely work */
-  AR_OK_SRC_UNKNOWN, /* Source city's airlift capability is unknown */
-  AR_OK_DST_UNKNOWN, /* Dest city's airlift capability is unknown */
-  /* Codes treated as failure: */
-  AR_NO_MOVES,       /* Unit has no moves left */
-  AR_WRONG_UNITTYPE, /* Can't airlift this type of unit */
-  AR_OCCUPIED,       /* Can't airlift units with passengers */
-  AR_NOT_IN_CITY,    /* Unit not in a city */
-  AR_BAD_SRC_CITY,   /* Can't airlift from this src city */
-  AR_BAD_DST_CITY,   /* Can't airlift to this dst city */
-  AR_SRC_NO_FLIGHTS, /* No flights available from src */
-  AR_DST_NO_FLIGHTS  /* No flights available to dst */
+  // Codes treated as success:
+  AR_OK,             // This will definitely work
+  AR_OK_SRC_UNKNOWN, // Source city's airlift capability is unknown
+  AR_OK_DST_UNKNOWN, // Dest city's airlift capability is unknown
+  // Codes treated as failure:
+  AR_NO_MOVES,       // Unit has no moves left
+  AR_WRONG_UNITTYPE, // Can't airlift this type of unit
+  AR_OCCUPIED,       // Can't airlift units with passengers
+  AR_NOT_IN_CITY,    // Unit not in a city
+  AR_BAD_SRC_CITY,   // Can't airlift from this src city
+  AR_BAD_DST_CITY,   // Can't airlift to this dst city
+  AR_SRC_NO_FLIGHTS, // No flights available from src
+  AR_DST_NO_FLIGHTS  // No flights available to dst
 };
 
 struct unit_adv {
@@ -80,18 +80,18 @@ struct unit_adv {
 
 struct unit_order {
   enum unit_orders order;
-  enum unit_activity activity; /* Only valid for ORDER_ACTIVITY. */
+  enum unit_activity activity; // Only valid for ORDER_ACTIVITY.
   /* Only valid for ORDER_PERFORM_ACTION. Validity and meaning depend on
    * 'action'. See action_target_kind and action_sub_target_kind */
   int target;
   int sub_target;
-  /* Only valid for ORDER_PERFORM_ACTION */
+  // Only valid for ORDER_PERFORM_ACTION
   int action;
-  /* Valid for ORDER_MOVE and ORDER_ACTION_MOVE. */
+  // Valid for ORDER_MOVE and ORDER_ACTION_MOVE.
   enum direction8 dir;
 };
 
-/* Used in the network protocol */
+// Used in the network protocol
 #define SPECENUM_NAME unit_ss_data_type
 /* The player wants to be reminded to ask what actions the unit can perform
  * to a certain target tile. */
@@ -104,7 +104,7 @@ struct unit_order {
 #define SPECENUM_VALUE2 USSDT_BATTLE_GROUP
 #include "specenum_gen.h"
 
-/* Used in the network protocol */
+// Used in the network protocol
 #define SPECENUM_NAME server_side_agent
 #define SPECENUM_VALUE0 SSA_NONE
 #define SPECENUM_VALUE0NAME N_("None")
@@ -119,23 +119,23 @@ struct unit;
 struct unit_list;
 
 struct unit {
-  const struct unit_type *utype; /* Cannot be NULL. */
+  const struct unit_type *utype; // Cannot be NULL.
   struct tile *tile;
   int refcount;
   enum direction8 facing;
-  struct player *owner; /* Cannot be NULL. */
+  struct player *owner; // Cannot be NULL.
   struct player *nationality;
   int id;
   int homecity;
 
-  int upkeep[O_LAST]; /* unit upkeep with regards to the homecity */
+  int upkeep[O_LAST]; // unit upkeep with regards to the homecity
 
   int moves_left;
   int hp;
   int veteran;
   int fuel;
 
-  struct tile *goto_tile; /* May be NULL. */
+  struct tile *goto_tile; // May be NULL.
 
   enum unit_activity activity;
 
@@ -163,12 +163,12 @@ struct unit {
    *   - Otherwise the unit is not done moving. */
   bool done_moving;
 
-  struct unit *transporter;       /* This unit is transported by ... */
-  struct unit_list *transporting; /* This unit transports ... */
+  struct unit *transporter;       // This unit is transported by ...
+  struct unit_list *transporting; // This unit transports ...
 
   struct goods_type *carrying;
 
-  /* The battlegroup ID: defined by the client but stored by the server. */
+  // The battlegroup ID: defined by the client but stored by the server.
 #define MAX_NUM_BATTLEGROUPS (4)
 #define BATTLEGROUP_NONE (-1)
   int battlegroup;
@@ -176,16 +176,16 @@ struct unit {
   bool has_orders;
   struct {
     int length, index;
-    bool repeat;   /* The path is to be repeated on completion. */
-    bool vigilant; /* Orders should be cleared if an enemy is met. */
+    bool repeat;   // The path is to be repeated on completion.
+    bool vigilant; // Orders should be cleared if an enemy is met.
     struct unit_order *list;
   } orders;
 
-  /* The unit may want the player to choose an action. */
+  // The unit may want the player to choose an action.
   enum action_decision action_decision_want;
   struct tile *action_decision_tile;
 
-  bool stay; /* Unit is prohibited from moving */
+  bool stay; // Unit is prohibited from moving
 
   union {
     struct {
@@ -196,15 +196,15 @@ struct unit {
       int transported_by; /* Used for unit_short_info packets where we can't
                            * be sure that the information about the
                            * transporter is known. */
-      bool occupied; /* TRUE if at least one cargo on the transporter. */
+      bool occupied; // TRUE if at least one cargo on the transporter.
 
-      /* Equivalent to pcity->client.color. Only for cityfounder units. */
+      // Equivalent to pcity->client.color. Only for cityfounder units.
       bool colored;
       int color_index;
 
       bool asking_city_name;
 
-      /* Used in a follow up question about a selected action. */
+      // Used in a follow up question about a selected action.
       struct act_prob *act_prob_cache;
     } client;
 
@@ -227,13 +227,13 @@ struct unit {
       int action_turn;
       struct unit_move_data *moving;
 
-      /* The unit is in the process of dying. */
+      // The unit is in the process of dying.
       bool dying;
 
-      /* Call back to run on unit removal. */
+      // Call back to run on unit removal.
       void (*removal_callback)(struct unit *punit);
 
-      /* The upkeep that actually was payed. */
+      // The upkeep that actually was payed.
       int upkeep_payed[O_LAST];
     } server;
   };
@@ -246,9 +246,9 @@ struct unit {
    fc_assert(player_by_number(player_index(unit_owner(punit)))              \
              == unit_owner(punit)),                                         \
    fc_assert(game_unit_by_number(punit->id) != NULL))
-#else /* FREECIV_DEBUG */
-#define CHECK_UNIT(punit) /* Do nothing */
-#endif /* FREECIV_DEBUG */
+#else // FREECIV_DEBUG
+#define CHECK_UNIT(punit) // Do nothing
+#endif // FREECIV_DEBUG
 
 void setup_real_activities_array();
 
@@ -264,7 +264,7 @@ extern Activity_type_id real_activities[ACTIVITY_LAST];
   }                                                                         \
   }
 
-/* Iterates over the types of unit activity. */
+// Iterates over the types of unit activity.
 #define activity_type_iterate(_act_)                                        \
   {                                                                         \
     activity_type_list_iterate(real_activities, _act_)
@@ -334,13 +334,13 @@ bool is_unit_activity_on_tile(enum unit_activity activity,
                               const struct tile *ptile);
 bv_extras get_unit_tile_pillage_set(const struct tile *ptile);
 bool is_attack_unit(const struct unit *punit);
-bool is_military_unit(const struct unit *punit); /* !set !dip !cara */
+bool is_military_unit(const struct unit *punit); // !set !dip !cara
 bool unit_can_do_action(const struct unit *punit, const action_id act_id);
 bool unit_can_do_action_result(const struct unit *punit,
                                enum action_result result);
 bool is_square_threatened(const struct player *pplayer,
                           const struct tile *ptile, bool omniscient);
-bool is_field_unit(const struct unit *punit); /* ships+aero */
+bool is_field_unit(const struct unit *punit); // ships+aero
 bool is_hiding_unit(const struct unit *punit);
 bool unit_can_add_or_build_city(const struct unit *punit);
 
@@ -428,7 +428,7 @@ int unit_transport_depth(const struct unit *ptrans);
 
 bool unit_is_cityfounder(const struct unit *punit);
 
-/* Iterate all transporters carrying '_pcargo', directly or indirectly. */
+// Iterate all transporters carrying '_pcargo', directly or indirectly.
 #define unit_transports_iterate(_pcargo, _ptrans)                           \
   {                                                                         \
     struct unit *_ptrans;                                                   \

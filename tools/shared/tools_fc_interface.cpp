@@ -15,17 +15,17 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "fc_interface.h"
 
-/* server */
+// server
 #include "srv_main.h"
 
 #include "tools_fc_interface.h"
 
-/***********************************************************************/ /**
+/**
    Unused but required by fc_interface_init()
- ***************************************************************************/
+ */
 static bool tool_player_tile_vision_get(const struct tile *ptile,
                                         const struct player *pplayer,
                                         enum vision_layer vision)
@@ -34,9 +34,9 @@ static bool tool_player_tile_vision_get(const struct tile *ptile,
   return false;
 }
 
-/***********************************************************************/ /**
+/**
    Unused but required by fc_interface_init()
- ***************************************************************************/
+ */
 static int tool_player_tile_city_id_get(const struct tile *ptile,
                                         const struct player *pplayer)
 {
@@ -44,22 +44,22 @@ static int tool_player_tile_city_id_get(const struct tile *ptile,
   return IDENTITY_NUMBER_ZERO;
 }
 
-/***********************************************************************/ /**
+/**
    Unused but required by fc_interface_init()
- ***************************************************************************/
+ */
 static void tool_gui_color_free(QColor *pcolor)
 {
   qCritical("Assumed unused function %s called.", __FUNCTION__);
 }
 
-/***********************************************************************/ /**
+/**
    Initialize tool specific functions.
- ***************************************************************************/
+ */
 void fc_interface_init_tool()
 {
   struct functions *funcs = fc_interface_funcs();
 
-  /* May be used when generating help texts */
+  // May be used when generating help texts
   funcs->server_setting_by_name = server_ss_by_name;
   funcs->server_setting_name_get = server_ss_name_get;
   funcs->server_setting_type_get = server_ss_type_get;
@@ -67,7 +67,7 @@ void fc_interface_init_tool()
   funcs->server_setting_val_int_get = server_ss_val_int_get;
   funcs->server_setting_val_bitwise_get = server_ss_val_bitwise_get;
 
-  /* Not used. Set to dummy functions. */
+  // Not used. Set to dummy functions.
   funcs->player_tile_vision_get = tool_player_tile_vision_get;
   funcs->player_tile_city_id_get = tool_player_tile_city_id_get;
   funcs->gui_color_free = tool_gui_color_free;

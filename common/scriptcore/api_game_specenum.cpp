@@ -22,11 +22,11 @@ extern "C" {
 #include "lualib.h"
 }
 
-/* utility */
+// utility
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "events.h"
 
 #include "api_game_specenum.h"
@@ -35,12 +35,12 @@ extern "C" {
 #define API_SPECENUM_CREATE_TABLE(L, type, name)                            \
   api_specenum_create_table((L), (name), API_SPECENUM_INDEX_NAME(type))
 
-/*************************************************************************/ /**
+/**
    Define a the __index (table, key) -> value  metamethod
    Return the enum value whose name is the concatenation of prefix and key.
    The fetched value is written back to the lua table, and further accesses
    will resolve there instead of this function.
- *****************************************************************************/
+ */
 #define API_SPECENUM_DEFINE_INDEX(type_name, prefix)                        \
   static int(API_SPECENUM_INDEX_NAME(type_name))(lua_State * L)             \
   {                                                                         \
@@ -63,9 +63,9 @@ extern "C" {
     return 1;                                                               \
   }
 
-/*************************************************************************/ /**
+/**
    Create a module table and set the member lookup function.
- *****************************************************************************/
+ */
 static void api_specenum_create_table(lua_State *L, const char *name,
                                       lua_CFunction findex)
 {
@@ -78,23 +78,23 @@ static void api_specenum_create_table(lua_State *L, const char *name,
     lua_setglobal(L, name);
   }
   fc_assert_ret(lua_istable(L, -1));
-  /* Create a metatable */
-  lua_newtable(L); /* stack: module mt */
+  // Create a metatable
+  lua_newtable(L); // stack: module mt
   lua_pushliteral(L, "__index");
-  lua_pushcfunction(L, findex); /* stack: module mt '__index' index */
-  lua_rawset(L, -3);            /* stack: module mt */
-  lua_setmetatable(L, -2);      /* stack: module */
+  lua_pushcfunction(L, findex); // stack: module mt '__index' index
+  lua_rawset(L, -3);            // stack: module mt
+  lua_setmetatable(L, -2);      // stack: module
   lua_pop(L, 1);
 }
 
-/*************************************************************************/ /**
+/**
    Define the __index function for each exported specenum type.
- *****************************************************************************/
+ */
 API_SPECENUM_DEFINE_INDEX(event_type, "E_")
 
-/*************************************************************************/ /**
+/**
    Load the specenum modules into Lua state L.
- *****************************************************************************/
+ */
 int api_specenum_open(lua_State *L)
 {
   API_SPECENUM_CREATE_TABLE(L, event_type, "E");

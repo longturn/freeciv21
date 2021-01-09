@@ -10,11 +10,11 @@
 **************************************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "bitvector.h"
-#include "support.h" /* bool type */
+#include "support.h" // bool type
 
-/* common */
+// common
 #include "fc_types.h"
 
 /**********************************************************************
@@ -81,30 +81,30 @@ enum spaceship_state {
   SSHIP_ARRIVED
 };
 
-#define NUM_SS_STRUCTURALS 32 /* Used in the network protocol. */
+#define NUM_SS_STRUCTURALS 32 // Used in the network protocol.
 #define NUM_SS_COMPONENTS 16
 #define NUM_SS_MODULES 12
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 BV_DEFINE(bv_spaceship_structure, NUM_SS_STRUCTURALS);
 
 struct player_spaceship {
-  /* how many of each part built, including any "unplaced": */
+  // how many of each part built, including any "unplaced":
   int structurals;
   int components;
   int modules;
-  /* which structurals placed: (array of booleans) */
+  // which structurals placed: (array of booleans)
   bv_spaceship_structure structure;
-  /* which components and modules placed: (may or may not be connected) */
+  // which components and modules placed: (may or may not be connected)
   int fuel;
   int propulsion;
   int habitation;
   int life_support;
   int solar_panels;
-  /* other stuff: */
+  // other stuff:
   enum spaceship_state state;
   int launch_year;
-  /* derived quantities: */
+  // derived quantities:
   int population;
   int mass;
   double support_rate;
@@ -114,8 +114,8 @@ struct player_spaceship {
 };
 
 struct sship_part_info {
-  int x, y;     /* position of tile centre */
-  int required; /* required for struct connection */
+  int x, y;     // position of tile centre
+  int required; // required for struct connection
 };
 
 extern const struct sship_part_info structurals_info[NUM_SS_STRUCTURALS];

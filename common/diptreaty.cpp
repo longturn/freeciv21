@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "diptreaty.h"
 #include "game.h"
 #include "nation.h"
@@ -26,9 +26,9 @@
 
 static struct clause_info clause_infos[CLAUSE_COUNT];
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff pplayer could do diplomancy in the game at all.
- **************************************************************************/
+ */
 bool diplomacy_possible(const struct player *pplayer1,
                         const struct player *pplayer2)
 {
@@ -54,9 +54,9 @@ bool diplomacy_possible(const struct player *pplayer1,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff pplayer could do diplomatic meetings with aplayer.
- **************************************************************************/
+ */
 bool could_meet_with_player(const struct player *pplayer,
                             const struct player *aplayer)
 {
@@ -72,9 +72,9 @@ bool could_meet_with_player(const struct player *pplayer,
                  > 0));
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff pplayer can get intelligence about aplayer.
- **************************************************************************/
+ */
 bool could_intel_with_player(const struct player *pplayer,
                              const struct player *aplayer)
 {
@@ -85,9 +85,9 @@ bool could_intel_with_player(const struct player *pplayer,
           || player_has_embassy(pplayer, aplayer)));
 }
 
-/**********************************************************************/ /**
+/**
    Initialize treaty structure between two players.
- **************************************************************************/
+ */
 void init_treaty(struct Treaty *ptreaty, struct player *plr0,
                  struct player *plr1)
 {
@@ -98,9 +98,9 @@ void init_treaty(struct Treaty *ptreaty, struct player *plr0,
   ptreaty->clauses = clause_list_new();
 }
 
-/**********************************************************************/ /**
+/**
    Free the clauses of a treaty.
- **************************************************************************/
+ */
 void clear_treaty(struct Treaty *ptreaty)
 {
   clause_list_iterate(ptreaty->clauses, pclause) { delete (pclause); }
@@ -108,9 +108,9 @@ void clear_treaty(struct Treaty *ptreaty)
   clause_list_destroy(ptreaty->clauses);
 }
 
-/**********************************************************************/ /**
+/**
    Remove clause from treaty
- **************************************************************************/
+ */
 bool remove_clause(struct Treaty *ptreaty, struct player *pfrom,
                    enum clause_type type, int val)
 {
@@ -132,9 +132,9 @@ bool remove_clause(struct Treaty *ptreaty, struct player *pfrom,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Add clause to treaty.
- **************************************************************************/
+ */
 bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
                 enum clause_type type, int val)
 {
@@ -159,7 +159,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
           || (ds == DS_ARMISTICE && type == CLAUSE_PEACE)
           || (ds == DS_ALLIANCE && type == CLAUSE_ALLIANCE)
           || (ds == DS_CEASEFIRE && type == CLAUSE_CEASEFIRE))) {
-    /* we already have this diplomatic state */
+    // we already have this diplomatic state
     qCritical("Illegal treaty suggested between %s and %s - they "
               "already have this treaty level.",
               nation_rule_name(nation_of_player(ptreaty->plr0)),
@@ -168,7 +168,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
   }
 
   if (type == CLAUSE_EMBASSY && player_has_real_embassy(pto, pfrom)) {
-    /* we already have embassy */
+    // we already have embassy
     qCritical("Illegal embassy clause: %s already have embassy with %s.",
               nation_rule_name(nation_of_player(pto)),
               nation_rule_name(nation_of_player(pfrom)));
@@ -191,11 +191,11 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
   {
     if (old_clause->type == type && old_clause->from == pfrom
         && old_clause->value == val) {
-      /* same clause already there */
+      // same clause already there
       return false;
     }
     if (is_pact_clause(type) && is_pact_clause(old_clause->type)) {
-      /* pact clause already there */
+      // pact clause already there
       ptreaty->accept0 = false;
       ptreaty->accept1 = false;
       old_clause->type = type;
@@ -203,7 +203,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
     }
     if (type == CLAUSE_GOLD && old_clause->type == CLAUSE_GOLD
         && old_clause->from == pfrom) {
-      /* gold clause there, different value */
+      // gold clause there, different value
       ptreaty->accept0 = false;
       ptreaty->accept1 = false;
       old_clause->value = val;
@@ -226,9 +226,9 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Initialize clause info structures.
- **************************************************************************/
+ */
 void clause_infos_init()
 {
   int i;
@@ -241,9 +241,9 @@ void clause_infos_init()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Free memory associated with clause infos.
- **************************************************************************/
+ */
 void clause_infos_free()
 {
   int i;
@@ -254,9 +254,9 @@ void clause_infos_free()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Free memory associated with clause infos.
- **************************************************************************/
+ */
 struct clause_info *clause_info_get(enum clause_type type)
 {
   fc_assert(type >= 0 && type < CLAUSE_COUNT);
@@ -264,14 +264,14 @@ struct clause_info *clause_info_get(enum clause_type type)
   return &clause_infos[type];
 }
 
-/**********************************************************************/ /**
+/**
    Is clause enabled in this game?
    Currently this does not consider clause requirements that may change
    during the game, but returned value is constant for the given clause type
    thought the game. Try not to rely on that, though, as the goal is to
    change this so that also non-constant requirements will be considered
    in the future.
- **************************************************************************/
+ */
 bool clause_enabled(enum clause_type type, struct player *from,
                     struct player *to)
 {

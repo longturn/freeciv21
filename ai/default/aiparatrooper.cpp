@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "city.h"
 #include "game.h"
 #include "player.h"
@@ -29,7 +29,7 @@
 /* common/aicore */
 #include "pf_tools.h"
 
-/* server */
+// server
 #include "citytools.h"
 #include "maphand.h"
 #include "srv_log.h"
@@ -42,7 +42,7 @@
 /* server/generator */
 #include "mapgen_utils.h"
 
-/* ai */
+// ai
 #include "handicaps.h"
 
 /* ai/default */
@@ -57,9 +57,9 @@
 
 #define LOGLEVEL_PARATROOPER LOG_DEBUG
 
-/*************************************************************************/ /**
+/**
    Find best tile the paratrooper should jump to.
- *****************************************************************************/
+ */
 static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
                                                   struct unit *punit)
 {
@@ -70,7 +70,7 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
   struct city *acity;
   struct player *pplayer = unit_owner(punit);
 
-  /* First, we search for undefended cities in danger */
+  // First, we search for undefended cities in danger
   square_iterate(&(wld.map), unit_tile(punit), range, ptile)
   {
     if (!map_is_known(ptile, pplayer)) {
@@ -98,7 +98,7 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
     return best_tile;
   }
 
-  /* Second, we search for undefended enemy cities */
+  // Second, we search for undefended enemy cities
   square_iterate(&(wld.map), unit_tile(punit), range, ptile)
   {
     acity = tile_city(ptile);
@@ -108,7 +108,7 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
           && has_handicap(pplayer, H_FOG)) {
         continue;
       }
-      /* Prefer big cities on other continents */
+      // Prefer big cities on other continents
       val = city_size_get(acity)
             + (tile_continent(unit_tile(punit)) != tile_continent(ptile));
       if (val > best) {
@@ -127,7 +127,7 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
     return best_tile;
   }
 
-  /* Jump to kill adjacent units */
+  // Jump to kill adjacent units
   square_iterate(&(wld.map), unit_tile(punit), range, ptile)
   {
     struct terrain *pterrain = tile_terrain(ptile);
@@ -144,7 +144,7 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
     if (!acity && unit_list_size(ptile->units) > 0) {
       continue;
     }
-    /* Iterate over adjacent tile to find good victim */
+    // Iterate over adjacent tile to find good victim
     adjc_iterate(&(wld.map), ptile, target)
     {
       if (unit_list_size(target->units) == 0
@@ -191,9 +191,9 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
   return best_tile;
 }
 
-/*************************************************************************/ /**
+/**
    This function does manage the paratrooper units of the AI.
- *****************************************************************************/
+ */
 void dai_manage_paratrooper(struct ai_type *ait, struct player *pplayer,
                             struct unit *punit)
 {
@@ -202,20 +202,20 @@ void dai_manage_paratrooper(struct ai_type *ait, struct player *pplayer,
 
   int sanity = punit->id;
 
-  /* defend attacking (and be opportunistic too) */
+  // defend attacking (and be opportunistic too)
   if (!dai_military_rampage(punit, RAMPAGE_ANYTHING,
                             RAMPAGE_FREE_CITY_OR_BETTER)) {
-    /* dead */
+    // dead
     return;
   }
 
-  /* check to recover hit points */
+  // check to recover hit points
   if ((punit->hp < unit_type_get(punit)->hp / 2) && pcity) {
     UNIT_LOG(LOGLEVEL_PARATROOPER, punit, "Recovering hit points.");
     return;
   }
 
-  /* nothing to do! */
+  // nothing to do!
   if (punit->moves_left == 0) {
     return;
   }
@@ -232,35 +232,35 @@ void dai_manage_paratrooper(struct ai_type *ait, struct player *pplayer,
       if (unit_perform_action(unit_owner(punit), punit->id,
                               tile_index(ptile_dest), 0, "", ACTION_PARADROP,
                               ACT_REQ_PLAYER)) {
-        /* successfull! */
+        // successfull!
         if (NULL == game_unit_by_number(sanity)) {
-          /* the unit did not survive the move */
+          // the unit did not survive the move
           return;
         }
-        /* and we attack the target */
+        // and we attack the target
         (void) dai_military_rampage(punit, RAMPAGE_ANYTHING,
                                     RAMPAGE_ANYTHING);
       }
     }
   } else {
-    /* we can't paradrop :-(  */
+    // we can't paradrop :-(
     struct city *acity = NULL;
 
-    /* we are in a city, so don't try to find another */
+    // we are in a city, so don't try to find another
     if (pcity) {
       UNIT_LOG(LOGLEVEL_PARATROOPER, punit,
                "waiting in a city for next turn.");
       return;
     }
 
-    /* find a city to go to recover and paradrop from */
+    // find a city to go to recover and paradrop from
     acity = find_nearest_safe_city(punit);
 
     if (acity) {
       UNIT_LOG(LOGLEVEL_PARATROOPER, punit, "Going to %s",
                city_name_get(acity));
       if (!dai_unit_goto(ait, punit, acity->tile)) {
-        /* die or unsuccessfull move */
+        // die or unsuccessfull move
         return;
       }
     } else {
@@ -271,10 +271,10 @@ void dai_manage_paratrooper(struct ai_type *ait, struct player *pplayer,
   }
 }
 
-/*************************************************************************/ /**
+/**
    Evaluate value of the unit.
    Idea: one paratrooper can scare/protect all cities in his range
- *****************************************************************************/
+ */
 static int calculate_want_for_paratrooper(struct unit *punit,
                                           struct tile *ptile_city)
 {
@@ -306,7 +306,7 @@ static int calculate_want_for_paratrooper(struct unit *punit,
     if (!is_ocean_tile(ptile)
         && tile_continent(ptile_city) != tile_continent(ptile)) {
       if (get_continent_size(tile_continent(ptile)) < 3) {
-        /* Tiny island are hard to conquer with traditional units */
+        // Tiny island are hard to conquer with traditional units
         multiplier = 10;
       } else {
         multiplier = 5;
@@ -343,9 +343,9 @@ static int calculate_want_for_paratrooper(struct unit *punit,
   return profit;
 }
 
-/*************************************************************************/ /**
+/**
    Chooses to build a paratroopers if necessary
- *****************************************************************************/
+ */
 void dai_choose_paratrooper(struct ai_type *ait, struct player *pplayer,
                             struct city *pcity, struct adv_choice *choice,
                             bool allow_gold_upkeep)
@@ -380,13 +380,13 @@ void dai_choose_paratrooper(struct ai_type *ait, struct player *pplayer,
       continue;
     }
 
-    /* Temporary hack because pathfinding can't handle Fighters. */
+    // Temporary hack because pathfinding can't handle Fighters.
     if (!utype_is_consumed_by_action_result(ACTRES_ATTACK, u_type)
         && 1 == utype_fuel(u_type)) {
       continue;
     }
 
-    /* assign tech for paratroopers */
+    // assign tech for paratroopers
     tech_req = advance_index(u_type->require_advance);
     if (tech_req != A_NONE && tech_req != A_UNSET) {
       for (i = 0; i < num_requirements; i++) {
@@ -400,21 +400,21 @@ void dai_choose_paratrooper(struct ai_type *ait, struct player *pplayer,
       }
     }
 
-    /* we only update choice struct if we can build it! */
+    // we only update choice struct if we can build it!
     if (!can_city_build_unit_now(pcity, u_type)) {
       continue;
     }
 
-    /* it's worth building that unit? */
+    // it's worth building that unit?
     virtual_unit = unit_virtual_create(
         pplayer, pcity, u_type,
         city_production_unit_veteran_level(pcity, u_type));
     profit = calculate_want_for_paratrooper(virtual_unit, pcity->tile);
     unit_virtual_destroy(virtual_unit);
 
-    /* update choice struct if it's worth */
+    // update choice struct if it's worth
     if (profit > choice->want) {
-      /* Update choice */
+      // Update choice
       choice->want = profit;
       choice->value.utype = u_type;
       choice->type = CT_ATTACKER;
@@ -426,7 +426,7 @@ void dai_choose_paratrooper(struct ai_type *ait, struct player *pplayer,
   }
   unit_type_iterate_end;
 
-  /* we raise want if the required tech is not known */
+  // we raise want if the required tech is not known
   presearch = research_get(pplayer);
   for (i = 0; i < num_requirements; i++) {
     tech_req = requirements[i];
@@ -438,7 +438,7 @@ void dai_choose_paratrooper(struct ai_type *ait, struct player *pplayer,
              advance_rule_name(advance_by_number(tech_req)), 2,
              plr_data->tech_want[tech_req]);
 
-    /* now, we raise want for prerequisites */
+    // now, we raise want for prerequisites
     advance_index_iterate(A_FIRST, k)
     {
       if (research_goal_tech_req(presearch, tech_req, k)) {

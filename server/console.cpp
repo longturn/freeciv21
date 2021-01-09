@@ -21,7 +21,7 @@
 
 #include <readline/readline.h>
 
-/* utility */
+// utility
 #include "deprecations.h"
 #include "fcbacktrace.h"
 #include "fciconv.h"
@@ -29,10 +29,10 @@
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "game.h"
 
-/* server */
+// server
 #include "notify.h"
 #include "srv_main.h"
 
@@ -47,9 +47,9 @@ namespace {
 static QString log_prefix();
 static QtMessageHandler original_handler = nullptr;
 
-/********************************************************************/ /**
+/**
    Function to handle log messages.
- ************************************************************************/
+ */
 static void console_handle_message(QtMsgType type,
                                    const QMessageLogContext &context,
                                    const QString &message)
@@ -60,7 +60,7 @@ static void console_handle_message(QtMsgType type,
     notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning, "%s",
                 qUtf8Printable(message));
   } else if (type == QtFatalMsg) {
-    /* Make sure that message is not left to buffers when server dies */
+    // Make sure that message is not left to buffers when server dies
     conn_list_iterate(game.est_connections, pconn)
     {
       pconn->send_buffer->do_buffer_sends = 0;
@@ -81,9 +81,9 @@ static void console_handle_message(QtMsgType type,
 }
 } // anonymous namespace
 
-/********************************************************************/ /**
+/**
  Print the prompt if it is not the last thing printed.
- ************************************************************************/
+ */
 static void con_update_prompt()
 {
   if (console_prompt_is_showing || !console_show_prompt) {
@@ -98,10 +98,10 @@ static void con_update_prompt()
   console_prompt_is_showing = true;
 }
 
-/********************************************************************/ /**
+/**
    Prefix for log messages saved to file. At the moment the turn and the
    current date and time are used.
- ************************************************************************/
+ */
 namespace {
 static QString log_prefix()
 {
@@ -111,17 +111,17 @@ static QString log_prefix()
 }
 } // anonymous namespace
 
-/********************************************************************/ /**
+/**
    Deprecation warning callback to send event to clients.
- ************************************************************************/
+ */
 static void depr_warn_callback(const char *msg)
 {
   notify_conn(NULL, NULL, E_DEPRECATION_WARNING, ftc_warning, "%s", msg);
 }
 
-/********************************************************************/ /**
+/**
    Initialize logging via console.
- ************************************************************************/
+ */
 void con_log_init(const QString &log_filename)
 {
   log_set_file(log_filename);
@@ -132,9 +132,9 @@ void con_log_init(const QString &log_filename)
   original_handler = qInstallMessageHandler(console_handle_message);
 }
 
-/********************************************************************/ /**
+/**
    Deinitialize logging
- ************************************************************************/
+ */
 void con_log_close()
 {
   backtrace_deinit();
@@ -148,12 +148,12 @@ void con_set_color(const char *col)
   console_prompt_is_showing = false;
   con_update_prompt();
 }
-/********************************************************************/ /**
+/**
    Write to console and add line-break, and show prompt if required.
- ************************************************************************/
+ */
 void con_write(enum rfc_status rfc_status, const char *message, ...)
 {
-  /* First buffer contains featured text tags */
+  // First buffer contains featured text tags
   static char buf1[(MAX_LEN_CONSOLE_LINE * 3) / 2];
   static char buf2[MAX_LEN_CONSOLE_LINE];
   va_list args;
@@ -162,18 +162,18 @@ void con_write(enum rfc_status rfc_status, const char *message, ...)
   fc_vsnprintf(buf1, sizeof(buf1), message, args);
   va_end(args);
 
-  /* remove all format tags */
+  // remove all format tags
   featured_text_to_plain_text(buf1, buf2, sizeof(buf2), NULL, false);
   con_puts(rfc_status, buf2);
 }
 
-/********************************************************************/ /**
+/**
    Write to console and add line-break, and show prompt if required.
    Same as con_write, but without the format string stuff.
    The real reason for this is because __attribute__ complained
    with con_write(C_COMMENT,"") of "warning: zero-length format string";
    this allows con_puts(C_COMMENT,"");
- ************************************************************************/
+ */
 void con_puts(enum rfc_status rfc_status, const char *str)
 {
   if (rfc_status > 0) {
@@ -192,14 +192,14 @@ void con_puts(enum rfc_status rfc_status, const char *str)
   con_set_color(CON_RESET);
 }
 
-/********************************************************************/ /**
+/**
    Ensure timely update.
- ************************************************************************/
+ */
 void con_flush() { fflush(stdout); }
 
-/********************************************************************/ /**
+/**
    Set style.
- ************************************************************************/
+ */
 void con_set_style(bool i)
 {
   console_rfcstyle = i;
@@ -210,14 +210,14 @@ void con_set_style(bool i)
   }
 }
 
-/********************************************************************/ /**
+/**
    Returns rfc-style.
- ************************************************************************/
+ */
 bool con_get_style() { return console_rfcstyle; }
 
-/********************************************************************/ /**
+/**
    Initialize prompt; display initial message.
- ************************************************************************/
+ */
 void con_prompt_init()
 {
   static bool first = true;
@@ -229,32 +229,32 @@ void con_prompt_init()
   }
 }
 
-/********************************************************************/ /**
+/**
    Make sure a prompt is printed, and re-printed after every message.
- ************************************************************************/
+ */
 void con_prompt_on()
 {
   console_show_prompt = true;
   con_update_prompt();
 }
 
-/********************************************************************/ /**
+/**
    Do not print a prompt after log messages.
- ************************************************************************/
+ */
 void con_prompt_off() { console_show_prompt = false; }
 
-/********************************************************************/ /**
+/**
    User pressed enter: will need a new prompt
- ************************************************************************/
+ */
 void con_prompt_enter()
 {
   console_prompt_is_showing = false;
   readline_received_enter = true;
 }
 
-/********************************************************************/ /**
+/**
    Clear "user pressed enter" state (used in special cases).
- ************************************************************************/
+ */
 void con_prompt_enter_clear()
 {
   console_prompt_is_showing = true;

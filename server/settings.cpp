@@ -13,7 +13,7 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "astring.h"
 #include "fcintl.h"
 #include "game.h"
@@ -21,11 +21,11 @@
 #include "registry.h"
 #include "shared.h"
 
-/* common */
+// common
 #include "map.h"
 #include "nation.h"
 
-/* server */
+// server
 #include "gamehand.h"
 #include "maphand.h"
 #include "meta.h"
@@ -81,7 +81,7 @@ struct setting {
   const char *name;
   enum sset_class sclass;
 
-  /* What access level viewing and setting the setting requires. */
+  // What access level viewing and setting the setting requires.
   enum cmdlevel access_level_read;
   enum cmdlevel access_level_write;
 
@@ -97,7 +97,7 @@ struct setting {
    */
   const char *extra_help;
 
-  /* help function */
+  // help function
   const help_callback_func_t help_func;
 
   enum sset_type stype;
@@ -154,13 +154,13 @@ struct setting {
     } bitwise;
   };
 
-  /* action function */
+  // action function
   const action_callback_func_t action;
 
-  /* ruleset lock for game settings */
+  // ruleset lock for game settings
   bool locked;
 
-  /* It's not "default", even if value is the same as default */
+  // It's not "default", even if value is the same as default
   enum setting_default_level setdef;
 };
 
@@ -204,9 +204,9 @@ static bool set_enum_value(struct setting *pset, int val);
     return &name;                                                           \
   }
 
-/************************************************************************/ /**
+/**
    Caravan bonus style setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *caravanbonusstyle_name(int caravanbonus)
 {
   switch (caravanbonus) {
@@ -216,10 +216,10 @@ static const struct sset_val_name *caravanbonusstyle_name(int caravanbonus)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Map size definition setting names accessor. This setting has an
    hard-coded depedence in "server/meta.c".
- ****************************************************************************/
+ */
 static const struct sset_val_name *mapsize_name(int mapsize)
 {
   switch (mapsize) {
@@ -230,9 +230,9 @@ static const struct sset_val_name *mapsize_name(int mapsize)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Topology setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *topology_name(int topology_bit)
 {
   switch (1 << topology_bit) {
@@ -244,9 +244,9 @@ static const struct sset_val_name *topology_name(int topology_bit)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Trade revenue style setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *traderevenuestyle_name(int revenue_style)
 {
   switch (revenue_style) {
@@ -256,9 +256,9 @@ static const struct sset_val_name *traderevenuestyle_name(int revenue_style)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Generator setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *generator_name(int generator)
 {
   switch (generator) {
@@ -272,9 +272,9 @@ static const struct sset_val_name *generator_name(int generator)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Start position setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *startpos_name(int startpos)
 {
   switch (startpos) {
@@ -290,9 +290,9 @@ static const struct sset_val_name *startpos_name(int startpos)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Team placement setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *teamplacement_name(int team_placement)
 {
   switch (team_placement) {
@@ -307,9 +307,9 @@ static const struct sset_val_name *teamplacement_name(int team_placement)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Persistentready setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *persistentready_name(int persistent_ready)
 {
   switch (persistent_ready) {
@@ -321,9 +321,9 @@ static const struct sset_val_name *persistentready_name(int persistent_ready)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Victory conditions setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *victory_conditions_name(int condition_bit)
 {
   switch (condition_bit) {
@@ -335,9 +335,9 @@ static const struct sset_val_name *victory_conditions_name(int condition_bit)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Autosaves setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *autosaves_name(int autosaves_bit)
 {
   switch (autosaves_bit) {
@@ -351,9 +351,9 @@ static const struct sset_val_name *autosaves_name(int autosaves_bit)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Borders setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *borders_name(int borders)
 {
   switch (borders) {
@@ -367,9 +367,9 @@ static const struct sset_val_name *borders_name(int borders)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Trait distribution setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *trait_dist_name(int trait_dist)
 {
   switch (trait_dist) {
@@ -379,9 +379,9 @@ static const struct sset_val_name *trait_dist_name(int trait_dist)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Player colors configuration setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *plrcol_name(int plrcol)
 {
   switch (plrcol) {
@@ -395,9 +395,9 @@ static const struct sset_val_name *plrcol_name(int plrcol)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Happyborders setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *happyborders_name(int happyborders)
 {
   switch (happyborders) {
@@ -408,9 +408,9 @@ static const struct sset_val_name *happyborders_name(int happyborders)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Diplomacy setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *diplomacy_name(int diplomacy)
 {
   switch (diplomacy) {
@@ -427,9 +427,9 @@ static const struct sset_val_name *diplomacy_name(int diplomacy)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    City names setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *citynames_name(int citynames)
 {
   switch (citynames) {
@@ -441,9 +441,9 @@ static const struct sset_val_name *citynames_name(int citynames)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Barbarian setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *barbarians_name(int barbarians)
 {
   switch (barbarians) {
@@ -456,9 +456,9 @@ static const struct sset_val_name *barbarians_name(int barbarians)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Revolution length type setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *revolentype_name(int revolentype)
 {
   switch (revolentype) {
@@ -472,9 +472,9 @@ static const struct sset_val_name *revolentype_name(int revolentype)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Revealmap setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *revealmap_name(int bit)
 {
   switch (1 << bit) {
@@ -484,9 +484,9 @@ static const struct sset_val_name *revealmap_name(int bit)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Airlifting style setting names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *airliftingstyle_name(int bit)
 {
   switch (1 << bit) {
@@ -502,9 +502,9 @@ static const struct sset_val_name *airliftingstyle_name(int bit)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Phase mode names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *phasemode_name(int phasemode)
 {
   switch (phasemode) {
@@ -516,9 +516,9 @@ static const struct sset_val_name *phasemode_name(int phasemode)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Scorelog level names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *
 scoreloglevel_name(enum scoreQtMsgType sl_level)
 {
@@ -529,9 +529,9 @@ scoreloglevel_name(enum scoreQtMsgType sl_level)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Savegame compress type names accessor.
- ****************************************************************************/
+ */
 static const struct sset_val_name *
 compresstype_name(enum compress_type compresstype)
 {
@@ -548,9 +548,9 @@ compresstype_name(enum compress_type compresstype)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Names accessor for boolean settings (disable/enable).
- ****************************************************************************/
+ */
 static const struct sset_val_name *bool_name(int enable)
 {
   switch (enable) {
@@ -566,14 +566,14 @@ static const struct sset_val_name *bool_name(int enable)
   Help callback functions.
 ****************************************************************************/
 
-/************************************************************************/ /**
+/**
    Help about phasemode setting
- ****************************************************************************/
+ */
 static const char *phasemode_help(const struct setting *pset)
 {
   static char pmhelp[512];
 
-  /* Translated here */
+  // Translated here
   fc_snprintf(
       pmhelp, sizeof(pmhelp),
       _("This setting controls whether players may make moves at the same "
@@ -584,15 +584,15 @@ static const char *phasemode_help(const struct setting *pset)
   return pmhelp;
 }
 
-/************************************************************************/ /**
+/**
    Help about huts setting
- ****************************************************************************/
+ */
 static const char *huts_help(const struct setting *pset)
 {
   if (wld.map.server.huts_absolute >= 0) {
     static char hutshelp[512];
 
-    /* Translated here */
+    // Translated here
     fc_snprintf(hutshelp, sizeof(hutshelp),
                 _("%s\n"
                   "Currently this setting is being overridden by an old "
@@ -611,9 +611,9 @@ static const char *huts_help(const struct setting *pset)
   Action callback functions.
 ****************************************************************************/
 
-/************************************************************************/ /**
+/**
    (De)initialze the score log.
- ****************************************************************************/
+ */
 static void scorelog_action(const struct setting *pset)
 {
   if (*pset->boolean.pvalue) {
@@ -623,9 +623,9 @@ static void scorelog_action(const struct setting *pset)
   }
 }
 
-/************************************************************************/ /**
+/**
    Create the selected number of AI's.
- ****************************************************************************/
+ */
 static void aifill_action(const struct setting *pset)
 {
   const char *msg = aifill(*pset->integer.pvalue);
@@ -636,12 +636,12 @@ static void aifill_action(const struct setting *pset)
   }
 }
 
-/************************************************************************/ /**
+/**
    Restrict to the selected nation set.
- ****************************************************************************/
+ */
 static void nationset_action(const struct setting *pset)
 {
-  /* If any player's existing selection is invalid, abort it */
+  // If any player's existing selection is invalid, abort it
   players_iterate(pplayer)
   {
     if (pplayer->nation != NULL) {
@@ -670,9 +670,9 @@ static void nationset_action(const struct setting *pset)
   send_nation_availability(game.est_connections, true);
 }
 
-/************************************************************************/ /**
+/**
    Clear any user-set player colors in modes other than PLRCOL_PLR_SET.
- ****************************************************************************/
+ */
 static void plrcol_action(const struct setting *pset)
 {
   if (!game_was_started()) {
@@ -680,14 +680,14 @@ static void plrcol_action(const struct setting *pset)
       players_iterate(pplayer) { server_player_set_color(pplayer, NULL); }
       players_iterate_end;
     }
-    /* Update clients with new color scheme. */
+    // Update clients with new color scheme.
     send_player_info_c(NULL, NULL);
   }
 }
 
-/************************************************************************/ /**
+/**
    Toggle player AI status.
- ****************************************************************************/
+ */
 static void autotoggle_action(const struct setting *pset)
 {
   if (*pset->boolean.pvalue) {
@@ -702,34 +702,34 @@ static void autotoggle_action(const struct setting *pset)
   }
 }
 
-/************************************************************************/ /**
+/**
    Enact a change in the 'timeout' server setting immediately, if the game
    is afoot.
- ****************************************************************************/
+ */
 static void timeout_action(const struct setting *pset)
 {
   if (S_S_RUNNING == server_state()) {
     int timeout = *pset->integer.pvalue;
 
     if (game.info.turn != 1 || game.info.first_timeout == -1) {
-      /* This may cause the current turn to end immediately. */
+      // This may cause the current turn to end immediately.
       game.tinfo.seconds_to_phasedone = timeout;
     }
     send_game_info(NULL);
   }
 }
 
-/************************************************************************/ /**
+/**
    Enact a change in the 'first_timeout' server setting immediately, if the
  game is afoot.
- ****************************************************************************/
+ */
 static void first_timeout_action(const struct setting *pset)
 {
   if (S_S_RUNNING == server_state()) {
     int timeout = *pset->integer.pvalue;
 
     if (game.info.turn == 1) {
-      /* This may cause the current turn to end immediately. */
+      // This may cause the current turn to end immediately.
       if (timeout != -1) {
         game.tinfo.seconds_to_phasedone = timeout;
       } else {
@@ -740,17 +740,17 @@ static void first_timeout_action(const struct setting *pset)
   }
 }
 
-/************************************************************************/ /**
+/**
    Clean out absolute number of huts when relative setting set.
- ****************************************************************************/
+ */
 static void huts_action(const struct setting *pset)
 {
   wld.map.server.huts_absolute = -1;
 }
 
-/************************************************************************/ /**
+/**
    Topology setting changed.
- ****************************************************************************/
+ */
 static void topology_action(const struct setting *pset)
 {
   struct packet_set_topology packet;
@@ -764,10 +764,10 @@ static void topology_action(const struct setting *pset)
   conn_list_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Update metaserver message string from changed user meta server message
    string.
- ****************************************************************************/
+ */
 static void metamessage_action(const struct setting *pset)
 {
   /* Set the metaserver message based on the new meta server user message. An
@@ -776,7 +776,7 @@ static void metamessage_action(const struct setting *pset)
   set_user_meta_message_string(pset->string.value);
 
   if (is_metaserver_open()) {
-    /* Update the meta server. */
+    // Update the meta server.
     send_server_info_to_metaserver(META_INFO);
   }
 }
@@ -785,9 +785,9 @@ static void metamessage_action(const struct setting *pset)
   Validation callback functions.
 ****************************************************************************/
 
-/************************************************************************/ /**
+/**
    Verify the selected savename definition.
- ****************************************************************************/
+ */
 static bool savename_validate(const char *value, struct connection *caller,
                               char *reject_msg, size_t reject_msg_len)
 {
@@ -806,10 +806,10 @@ static bool savename_validate(const char *value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Verify the value of the generator option (notably the MAPGEN_SCENARIO
    case).
- ****************************************************************************/
+ */
 static bool generator_validate(int value, struct connection *caller,
                                char *reject_msg, size_t reject_msg_len)
 {
@@ -832,9 +832,9 @@ static bool generator_validate(int value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Verify the name for the score log file.
- ****************************************************************************/
+ */
 static bool scorefile_validate(const char *value, struct connection *caller,
                                char *reject_msg, size_t reject_msg_len)
 {
@@ -847,10 +847,10 @@ static bool scorefile_validate(const char *value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Verify that a given demography string is valid. See
    game.demography.
- ****************************************************************************/
+ */
 static bool demography_callback(const char *value, struct connection *caller,
                                 char *reject_msg, size_t reject_msg_len)
 {
@@ -867,9 +867,9 @@ static bool demography_callback(const char *value, struct connection *caller,
   }
 }
 
-/************************************************************************/ /**
+/**
    Autosaves setting callback
- ****************************************************************************/
+ */
 static bool autosaves_callback(unsigned value, struct connection *caller,
                                char *reject_msg, size_t reject_msg_len)
 {
@@ -890,10 +890,10 @@ static bool autosaves_callback(unsigned value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Verify that a given allowtake string is valid.  See
    game.allow_take.
- ****************************************************************************/
+ */
 static bool allowtake_callback(const char *value, struct connection *caller,
                                char *reject_msg, size_t reject_msg_len)
 {
@@ -908,7 +908,7 @@ static bool allowtake_callback(const char *value, struct connection *caller,
    * character. */
 
   for (i = 0; i < len; i++) {
-    /* Check to see if the character is a primary label. */
+    // Check to see if the character is a primary label.
     if (strchr("HhAadbOo", value[i])) {
       havecharacter_state = true;
       continue;
@@ -921,7 +921,7 @@ static bool allowtake_callback(const char *value, struct connection *caller,
       continue;
     }
 
-    /* Looks like the character was invalid. */
+    // Looks like the character was invalid.
     settings_snprintf(reject_msg, reject_msg_len,
                       _("Allowed take string validation failed at "
                         "character: '%c'. Try \"/help allowtake\"."),
@@ -929,14 +929,14 @@ static bool allowtake_callback(const char *value, struct connection *caller,
     return false;
   }
 
-  /* All characters were valid. */
+  // All characters were valid.
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Verify that a given startunits string is valid. See
    game.server.start_units.
- ****************************************************************************/
+ */
 static bool startunits_callback(const char *value, struct connection *caller,
                                 char *reject_msg, size_t reject_msg_len)
 {
@@ -944,13 +944,13 @@ static bool startunits_callback(const char *value, struct connection *caller,
   Unit_Class_id first_role;
   bool firstnative = false;
 
-  /* We check each character individually to see if it's valid. */
+  // We check each character individually to see if it's valid.
   for (i = 0; i < len; i++) {
     if (strchr("cwxksfdDaA", value[i])) {
       continue;
     }
 
-    /* Looks like the character was invalid. */
+    // Looks like the character was invalid.
     settings_snprintf(reject_msg, reject_msg_len,
                       _("Starting units string validation failed at "
                         "character '%c'. Try \"/help startunits\"."),
@@ -958,7 +958,7 @@ static bool startunits_callback(const char *value, struct connection *caller,
     return false;
   }
 
-  /* Check the first character to make sure it can use a startpos. */
+  // Check the first character to make sure it can use a startpos.
   first_role = uclass_index(
       utype_class(get_role_unit(crole_to_role_id(value[0]), 0)));
   terrain_type_iterate(pterrain)
@@ -972,7 +972,7 @@ static bool startunits_callback(const char *value, struct connection *caller,
   terrain_type_iterate_end;
 
   if (!firstnative) {
-    /* Loading would cause an infinite loop hunting for a valid startpos. */
+    // Loading would cause an infinite loop hunting for a valid startpos.
     settings_snprintf(
         reject_msg, reject_msg_len,
         _("The first starting unit must be native to at least one "
@@ -980,18 +980,18 @@ static bool startunits_callback(const char *value, struct connection *caller,
     return false;
   }
 
-  /* Everything seems fine. */
+  // Everything seems fine.
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Verify that a given endturn is valid.
- ****************************************************************************/
+ */
 static bool endturn_callback(int value, struct connection *caller,
                              char *reject_msg, size_t reject_msg_len)
 {
   if (value < game.info.turn) {
-    /* Tried to set endturn earlier than current turn */
+    // Tried to set endturn earlier than current turn
     settings_snprintf(reject_msg, reject_msg_len,
                       _("Cannot set endturn earlier than current turn."));
     return false;
@@ -999,9 +999,9 @@ static bool endturn_callback(int value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Verify that a given maxplayers is valid.
- ****************************************************************************/
+ */
 static bool maxplayers_callback(int value, struct connection *caller,
                                 char *reject_msg, size_t reject_msg_len)
 {
@@ -1026,9 +1026,9 @@ static bool maxplayers_callback(int value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Validate the 'nationset' server setting.
- ****************************************************************************/
+ */
 static bool nationset_callback(const char *value, struct connection *caller,
                                char *reject_msg, size_t reject_msg_len)
 {
@@ -1038,7 +1038,7 @@ static bool nationset_callback(const char *value, struct connection *caller,
     return true;
   } else {
     settings_snprintf(reject_msg, reject_msg_len,
-                      /* TRANS: do not translate 'list nationsets' */
+                      // TRANS: do not translate 'list nationsets'
                       _("Unknown nation set \"%s\". See '%slist nationsets' "
                         "for possible values."),
                       value, caller ? "/" : "");
@@ -1046,13 +1046,13 @@ static bool nationset_callback(const char *value, struct connection *caller,
   }
 }
 
-/************************************************************************/ /**
+/**
    Validate the 'timeout' server setting.
- ****************************************************************************/
+ */
 static bool timeout_callback(int value, struct connection *caller,
                              char *reject_msg, size_t reject_msg_len)
 {
-  /* Disallow low timeout values for non-hack connections. */
+  // Disallow low timeout values for non-hack connections.
   if (caller && caller->access_level < ALLOW_HACK && value < 30
       && value != 0) {
     settings_snprintf(reject_msg, reject_msg_len,
@@ -1062,9 +1062,9 @@ static bool timeout_callback(int value, struct connection *caller,
   }
 
   if (value == -1 && game.server.unitwaittime != 0) {
-    /* autogame only with 'unitwaittime' = 0 */
+    // autogame only with 'unitwaittime' = 0
     settings_snprintf(reject_msg, reject_msg_len,
-                      /* TRANS: Do not translate setting names in ''. */
+                      // TRANS: Do not translate setting names in ''.
                       _("For autogames ('timeout' = -1) 'unitwaittime' "
                         "should be deactivated (= 0)."));
     return false;
@@ -1075,7 +1075,7 @@ static bool timeout_callback(int value, struct connection *caller,
      * 'unitwaittime' */
     settings_snprintf(
         reject_msg, reject_msg_len,
-        /* TRANS: Do not translate setting names in ''. */
+        // TRANS: Do not translate setting names in ''.
         _("'timeout' can not be lower than 3/2 of the 'unitwaittime' "
           "setting (= %d). Please change 'unitwaittime' first."),
         game.server.unitwaittime);
@@ -1085,13 +1085,13 @@ static bool timeout_callback(int value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Validate the 'first_timeout' server setting.
- ****************************************************************************/
+ */
 static bool first_timeout_callback(int value, struct connection *caller,
                                    char *reject_msg, size_t reject_msg_len)
 {
-  /* Disallow low timeout values for non-hack connections. */
+  // Disallow low timeout values for non-hack connections.
   if (caller && caller->access_level < ALLOW_HACK && value < 30
       && value != 0) {
     settings_snprintf(reject_msg, reject_msg_len,
@@ -1103,15 +1103,15 @@ static bool first_timeout_callback(int value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Check 'timeout' setting if 'unitwaittime' is changed.
- ****************************************************************************/
+ */
 static bool unitwaittime_callback(int value, struct connection *caller,
                                   char *reject_msg, size_t reject_msg_len)
 {
   if (game.info.timeout == -1 && value != 0) {
     settings_snprintf(reject_msg, reject_msg_len,
-                      /* TRANS: Do not translate setting names in ''. */
+                      // TRANS: Do not translate setting names in ''.
                       _("For autogames ('timeout' = -1) 'unitwaittime' "
                         "should be deactivated (= 0)."));
     return false;
@@ -1120,7 +1120,7 @@ static bool unitwaittime_callback(int value, struct connection *caller,
   if (game.info.timeout > 0 && value > game.info.timeout * 2 / 3) {
     settings_snprintf(
         reject_msg, reject_msg_len,
-        /* TRANS: Do not translate setting names in ''. */
+        // TRANS: Do not translate setting names in ''.
         _("'unitwaittime' has to be lower than 2/3 of the 'timeout' setting "
           "(= %d). Please change 'timeout' first."),
         game.info.timeout);
@@ -1130,9 +1130,9 @@ static bool unitwaittime_callback(int value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Mapsize setting validation callback.
- ****************************************************************************/
+ */
 static bool mapsize_callback(int value, struct connection *caller,
                              char *reject_msg, size_t reject_msg_len)
 {
@@ -1149,9 +1149,9 @@ static bool mapsize_callback(int value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    xsize setting validation callback.
- ****************************************************************************/
+ */
 static bool xsize_callback(int value, struct connection *caller,
                            char *reject_msg, size_t reject_msg_len)
 {
@@ -1174,9 +1174,9 @@ static bool xsize_callback(int value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    ysize setting validation callback.
- ****************************************************************************/
+ */
 static bool ysize_callback(int value, struct connection *caller,
                            char *reject_msg, size_t reject_msg_len)
 {
@@ -1207,9 +1207,9 @@ static bool ysize_callback(int value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Topology setting validation callback.
- ****************************************************************************/
+ */
 static bool topology_callback(unsigned value, struct connection *caller,
                               char *reject_msg, size_t reject_msg_len)
 {
@@ -1227,9 +1227,9 @@ static bool topology_callback(unsigned value, struct connection *caller,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Warn about deprecated compresstype selection.
- ****************************************************************************/
+ */
 static bool compresstype_callback(int value, struct connection *caller,
                                   char *reject_msg, size_t reject_msg_len)
 {
@@ -1238,14 +1238,14 @@ static bool compresstype_callback(int value, struct connection *caller,
     qWarning(
         _("Bzip2 is deprecated as compresstype. Consider other options."));
   }
-#endif /* FREECIV_HAVE_BZ2 */
+#endif // FREECIV_HAVE_BZ2
 
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Validate that the player color mode can be used.
- ****************************************************************************/
+ */
 static bool plrcol_validate(int value, struct connection *caller,
                             char *reject_msg, size_t reject_msg_len)
 {
@@ -1254,7 +1254,7 @@ static bool plrcol_validate(int value, struct connection *caller,
     nations_iterate(pnation)
     {
       if (nation_color(pnation)) {
-        /* At least one nation has a color. Allow this mode. */
+        // At least one nation has a color. Allow this mode.
         return true;
       }
     }
@@ -1328,11 +1328,11 @@ static bool plrcol_validate(int value, struct connection *caller,
         func_action, false                                                  \
   }
 
-/* game settings */
+// game settings
 static struct setting settings[] = {
-    /* These should be grouped by sclass */
+    // These should be grouped by sclass
 
-    /* Map size parameters: adjustable if we don't yet have a map */
+    // Map size parameters: adjustable if we don't yet have a map
     GEN_ENUM(
         "mapsize", wld.map.server.mapsize, SSET_MAP_SIZE, SSET_GEOLOGY,
         SSET_VITAL, ALLOW_NONE, ALLOW_BASIC, N_("Map size definition"),
@@ -1411,7 +1411,7 @@ static struct setting settings[] = {
     GEN_BITWISE(
         "topology", wld.map.topology_id, SSET_MAP_SIZE, SSET_GEOLOGY,
         SSET_VITAL, ALLOW_NONE, ALLOW_BASIC, N_("Map topology"),
-        /* TRANS: do not edit the ugly ASCII art */
+        // TRANS: do not edit the ugly ASCII art
         N_("Freeciv maps are always two-dimensional. They may wrap at the "
            "north-south and east-west directions to form a flat map, a "
            "cylinder, or a torus (donut). Individual tiles may be "
@@ -2793,7 +2793,7 @@ static struct setting settings[] = {
         "demography", game.server.demography, SSET_META, SSET_INTERNAL,
         SSET_SITUATIONAL, ALLOW_NONE, ALLOW_BASIC,
         N_("What is in the Demographics report"),
-        /* TRANS: The strings between double quotes should be translated. */
+        // TRANS: The strings between double quotes should be translated.
         N_("This should be a string of characters, each of which specifies "
            "the inclusion of a line of information in the Demographics "
            "report.\n"
@@ -2976,20 +2976,20 @@ static struct setting settings[] = {
 #undef GEN_ENUM
 #undef GEN_BITWISE
 
-/* The number of settings, not including the END. */
+// The number of settings, not including the END.
 static const int SETTINGS_NUM = ARRAY_SIZE(settings);
 
-/************************************************************************/ /**
+/**
    Returns the setting to the given id.
- ****************************************************************************/
+ */
 struct setting *setting_by_number(int id)
 {
   return (0 <= id && id < SETTINGS_NUM ? settings + id : NULL);
 }
 
-/************************************************************************/ /**
+/**
    Returns the setting to the given name.
- ****************************************************************************/
+ */
 struct setting *setting_by_name(const char *name)
 {
   fc_assert_ret_val(name, NULL);
@@ -3004,33 +3004,33 @@ struct setting *setting_by_name(const char *name)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Returns the id to the given setting.
- ****************************************************************************/
+ */
 int setting_number(const struct setting *pset)
 {
   fc_assert_ret_val(pset != NULL, 0);
   return pset - settings;
 }
 
-/************************************************************************/ /**
+/**
    Access function for the setting name.
- ****************************************************************************/
+ */
 const char *setting_name(const struct setting *pset) { return pset->name; }
 
-/************************************************************************/ /**
+/**
    Access function for the short help (not translated yet) of the setting.
- ****************************************************************************/
+ */
 const char *setting_short_help(const struct setting *pset)
 {
   return pset->short_help;
 }
 
-/************************************************************************/ /**
+/**
    Access function for the long (extra) help of the setting.
    If 'constant' is TRUE, static, not-yet-translated string is always
  returned.
- ****************************************************************************/
+ */
 const char *setting_extra_help(const struct setting *pset, bool constant)
 {
   if (!constant && pset->help_func != NULL) {
@@ -3040,35 +3040,35 @@ const char *setting_extra_help(const struct setting *pset, bool constant)
   return _(pset->extra_help);
 }
 
-/************************************************************************/ /**
+/**
    Access function for the setting type.
- ****************************************************************************/
+ */
 enum sset_type setting_type(const struct setting *pset)
 {
   return pset->stype;
 }
 
-/************************************************************************/ /**
+/**
    Access function for the setting level (used by the /show command).
- ****************************************************************************/
+ */
 enum sset_level setting_level(const struct setting *pset)
 {
   return pset->slevel;
 }
 
-/************************************************************************/ /**
+/**
    Access function for the setting category.
- ****************************************************************************/
+ */
 enum sset_category setting_category(const struct setting *pset)
 {
   return pset->scategory;
 }
 
-/************************************************************************/ /**
+/**
    Returns whether the specified server setting (option) can currently
    be changed without breaking data consistency (map dimension options
    can't change when map has already been created with certain dimensions)
- ****************************************************************************/
+ */
 static bool setting_is_free_to_change(const struct setting *pset,
                                       char *reject_msg,
                                       size_t reject_msg_len)
@@ -3076,7 +3076,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
   switch (pset->sclass) {
   case SSET_MAP_SIZE:
   case SSET_MAP_GEN:
-    /* Only change map options if we don't yet have a map: */
+    // Only change map options if we don't yet have a map:
     if (map_is_empty()) {
       return true;
     }
@@ -3097,7 +3097,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
 
     if (game.scenario.is_scenario && game.scenario.players
         && server_state() == S_S_INITIAL) {
-      /* Special case detected. */
+      // Special case detected.
       return true;
     }
 
@@ -3126,7 +3126,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
 
   case SSET_RULES_FLEXIBLE:
   case SSET_META:
-    /* These can always be changed: */
+    // These can always be changed:
     return true;
   }
 
@@ -3137,11 +3137,11 @@ static bool setting_is_free_to_change(const struct setting *pset,
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Returns whether the specified server setting (option) can currently
    be changed by the caller. If it returns FALSE, the reason of the failure
    is available by the function setting_error().
- ****************************************************************************/
+ */
 bool setting_is_changeable(const struct setting *pset,
                            struct connection *caller, char *reject_msg,
                            size_t reject_msg_len)
@@ -3154,7 +3154,7 @@ bool setting_is_changeable(const struct setting *pset,
   }
 
   if (setting_locked(pset)) {
-    /* setting is locked by the ruleset */
+    // setting is locked by the ruleset
     settings_snprintf(reject_msg, reject_msg_len,
                       _("The setting '%s' is locked by the ruleset."),
                       setting_name(pset));
@@ -3164,20 +3164,20 @@ bool setting_is_changeable(const struct setting *pset,
   return setting_is_free_to_change(pset, reject_msg, reject_msg_len);
 }
 
-/************************************************************************/ /**
+/**
    Returns whether the specified server setting (option) can be seen by a
    caller with the specified access level.
- ****************************************************************************/
+ */
 bool setting_is_visible_at_level(const struct setting *pset,
                                  enum cmdlevel plevel)
 {
   return (plevel >= pset->access_level_read);
 }
 
-/************************************************************************/ /**
+/**
    Returns whether the specified server setting (option) can be seen by the
    caller.
- ****************************************************************************/
+ */
 bool setting_is_visible(const struct setting *pset,
                         struct connection *caller)
 {
@@ -3185,12 +3185,12 @@ bool setting_is_visible(const struct setting *pset,
           || setting_is_visible_at_level(pset, caller->access_level));
 }
 
-/************************************************************************/ /**
+/**
    Convert the string prefix to an integer representation.
    NB: This function is used for SST_ENUM *and* SST_BITWISE.
 
    FIXME: this mostly duplicate match_prefix_full().
- ****************************************************************************/
+ */
 static enum m_pre_result
 setting_match_prefix_base(const val_name_func_t name_fn, const char *prefix,
                           int *ind_result, QVector<QString> &matches,
@@ -3232,10 +3232,10 @@ setting_match_prefix_base(const val_name_func_t name_fn, const char *prefix,
   }
 }
 
-/************************************************************************/ /**
+/**
    Convert the string prefix to an integer representation.
    NB: This function is used for SST_ENUM *and* SST_BITWISE.
- ****************************************************************************/
+ */
 static bool setting_match_prefix(const val_name_func_t name_fn,
                                  const char *prefix, int *pvalue,
                                  char *reject_msg, size_t reject_msg_len)
@@ -3248,7 +3248,7 @@ static bool setting_match_prefix(const val_name_func_t name_fn,
                                     &num_matches)) {
   case M_PRE_EXACT:
   case M_PRE_ONLY:
-    return true; /* Ok. */
+    return true; // Ok.
   case M_PRE_AMBIGUOUS: {
     fc_assert(2 <= num_matches);
     settings_snprintf(reject_msg, reject_msg_len,
@@ -3270,9 +3270,9 @@ static bool setting_match_prefix(const val_name_func_t name_fn,
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Compute the string representation of the value for this boolean setting.
- ****************************************************************************/
+ */
 static const char *setting_bool_to_str(const struct setting *pset,
                                        bool value, bool pretty, char *buf,
                                        size_t buf_len)
@@ -3287,13 +3287,13 @@ static const char *setting_bool_to_str(const struct setting *pset,
   return buf;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE if 'val' is a valid value for this setting. If it's not,
    the reason of the failure is available in the optionnal parameter
    'reject_msg'.
 
    FIXME: also check the access level of pconn.
- ****************************************************************************/
+ */
 static bool setting_bool_validate_base(const struct setting *pset,
                                        const char *val, int *pint_val,
                                        struct connection *caller,
@@ -3318,11 +3318,11 @@ static bool setting_bool_validate_base(const struct setting *pset,
                                         reject_msg_len)));
 }
 
-/************************************************************************/ /**
+/**
    Set the setting to 'val'. Returns TRUE on success. If it's not,
    the reason of the failure is available in the optionnal parameter
    'reject_msg'.
- ****************************************************************************/
+ */
 bool setting_bool_set(struct setting *pset, const char *val,
                       struct connection *caller, char *reject_msg,
                       size_t reject_msg_len)
@@ -3339,9 +3339,9 @@ bool setting_bool_set(struct setting *pset, const char *val,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Get value of boolean setting
- ****************************************************************************/
+ */
 bool setting_bool_get(struct setting *pset)
 {
   fc_assert(setting_type(pset) == SST_BOOL);
@@ -3349,11 +3349,11 @@ bool setting_bool_get(struct setting *pset)
   return *pset->boolean.pvalue;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE if 'val' is a valid value for this setting. If it's not,
    the reason of the failure is available in the optionnal parameter
    'reject_msg'.
- ****************************************************************************/
+ */
 bool setting_bool_validate(const struct setting *pset, const char *val,
                            struct connection *caller, char *reject_msg,
                            size_t reject_msg_len)
@@ -3364,10 +3364,10 @@ bool setting_bool_validate(const struct setting *pset, const char *val,
                                     reject_msg_len);
 }
 
-/************************************************************************/ /**
+/**
    Convert the integer to the long support string representation of a boolean
    setting. This function must match the secfile_enum_name_data_fn_t type.
- ****************************************************************************/
+ */
 static const char *setting_bool_secfile_str(secfile_data_t data, int val)
 {
   const struct sset_val_name *name =
@@ -3376,9 +3376,9 @@ static const char *setting_bool_secfile_str(secfile_data_t data, int val)
   return (NULL != name ? name->support : NULL);
 }
 
-/************************************************************************/ /**
+/**
    Compute the string representation of the value for this integer setting.
- ****************************************************************************/
+ */
 static const char *setting_int_to_str(const struct setting *pset, int value,
                                       bool pretty, char *buf, size_t buf_len)
 {
@@ -3386,28 +3386,28 @@ static const char *setting_int_to_str(const struct setting *pset, int value,
   return buf;
 }
 
-/************************************************************************/ /**
+/**
    Returns the minimal integer value for this setting.
- ****************************************************************************/
+ */
 int setting_int_min(const struct setting *pset)
 {
   fc_assert_ret_val(pset->stype == SST_INT, 0);
   return pset->integer.min_value;
 }
 
-/************************************************************************/ /**
+/**
    Returns the maximal integer value for this setting.
- ****************************************************************************/
+ */
 int setting_int_max(const struct setting *pset)
 {
   fc_assert_ret_val(pset->stype == SST_INT, 0);
   return pset->integer.max_value;
 }
 
-/************************************************************************/ /**
+/**
    Set the setting to 'val'. Returns TRUE on success. If it fails, the
    reason of the failure is available by the function setting_error().
- ****************************************************************************/
+ */
 bool setting_int_set(struct setting *pset, int val,
                      struct connection *caller, char *reject_msg,
                      size_t reject_msg_len)
@@ -3422,12 +3422,12 @@ bool setting_int_set(struct setting *pset, int val,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE if 'val' is a valid value for this setting. If it's not,
    the reason of the failure is available by the function setting_error().
 
    FIXME: also check the access level of pconn.
- ****************************************************************************/
+ */
 bool setting_int_validate(const struct setting *pset, int val,
                           struct connection *caller, char *reject_msg,
                           size_t reject_msg_len)
@@ -3450,9 +3450,9 @@ bool setting_int_validate(const struct setting *pset, int val,
       || pset->integer.validate(val, caller, reject_msg, reject_msg_len));
 }
 
-/************************************************************************/ /**
+/**
    Get value of integer setting
- ****************************************************************************/
+ */
 int setting_int_get(struct setting *pset)
 {
   fc_assert(setting_type(pset) == SST_INT);
@@ -3460,9 +3460,9 @@ int setting_int_get(struct setting *pset)
   return *pset->integer.pvalue;
 }
 
-/************************************************************************/ /**
+/**
    Compute the string representation of the value for this string setting.
- ****************************************************************************/
+ */
 static const char *setting_str_to_str(const struct setting *pset,
                                       const char *value, bool pretty,
                                       char *buf, size_t buf_len)
@@ -3475,10 +3475,10 @@ static const char *setting_str_to_str(const struct setting *pset,
   return buf;
 }
 
-/************************************************************************/ /**
+/**
    Set the setting to 'val'. Returns TRUE on success. If it fails, the
    reason of the failure is available by the function setting_error().
- ****************************************************************************/
+ */
 bool setting_str_set(struct setting *pset, const char *val,
                      struct connection *caller, char *reject_msg,
                      size_t reject_msg_len)
@@ -3493,12 +3493,12 @@ bool setting_str_set(struct setting *pset, const char *val,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE if 'val' is a valid value for this setting. If it's not,
    the reason of the failure is available by the function setting_error().
 
    FIXME: also check the access level of pconn.
- ****************************************************************************/
+ */
 bool setting_str_validate(const struct setting *pset, const char *val,
                           struct connection *caller, char *reject_msg,
                           size_t reject_msg_len)
@@ -3520,9 +3520,9 @@ bool setting_str_validate(const struct setting *pset, const char *val,
           || pset->string.validate(val, caller, reject_msg, reject_msg_len));
 }
 
-/************************************************************************/ /**
+/**
    Get value of string setting
- ****************************************************************************/
+ */
 char *setting_str_get(struct setting *pset)
 {
   fc_assert(setting_type(pset) == SST_STRING);
@@ -3530,10 +3530,10 @@ char *setting_str_get(struct setting *pset)
   return pset->string.value;
 }
 
-/************************************************************************/ /**
+/**
    Convert the integer to the long support string representation of an
    enumerator. This function must match the secfile_enum_name_data_fn_t type.
- ****************************************************************************/
+ */
 const char *setting_enum_secfile_str(secfile_data_t data, int val)
 {
   const struct sset_val_name *name =
@@ -3542,10 +3542,10 @@ const char *setting_enum_secfile_str(secfile_data_t data, int val)
   return (NULL != name ? name->support : NULL);
 }
 
-/************************************************************************/ /**
+/**
    Convert the integer to the string representation of an enumerator.
    Return NULL if 'val' is not a valid enumerator.
- ****************************************************************************/
+ */
 const char *setting_enum_val(const struct setting *pset, int val,
                              bool pretty)
 {
@@ -3562,10 +3562,10 @@ const char *setting_enum_val(const struct setting *pset, int val,
   }
 }
 
-/************************************************************************/ /**
+/**
    Compute the string representation of the value for this enumerator
    setting.
- ****************************************************************************/
+ */
 static const char *setting_enum_to_str(const struct setting *pset, int value,
                                        bool pretty, char *buf,
                                        size_t buf_len)
@@ -3581,13 +3581,13 @@ static const char *setting_enum_to_str(const struct setting *pset, int value,
   return buf;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE if 'val' is a valid value for this setting. If it's not,
    the reason of the failure is available in the optionnal parameter
    'reject_msg'.
 
    FIXME: also check the access level of pconn.
- ****************************************************************************/
+ */
 static bool setting_enum_validate_base(const struct setting *pset,
                                        const char *val, int *pint_val,
                                        struct connection *caller,
@@ -3612,9 +3612,9 @@ static bool setting_enum_validate_base(const struct setting *pset,
                                            reject_msg_len)));
 }
 
-/************************************************************************/ /**
+/**
    Helper function to write value to enumerator setting
- ****************************************************************************/
+ */
 static bool set_enum_value(struct setting *pset, int val)
 {
   switch (pset->enumerator.store_size) {
@@ -3640,9 +3640,9 @@ static bool set_enum_value(struct setting *pset, int val)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Helper function to read value from enumerator setting
- ****************************************************************************/
+ */
 int read_enum_value(const struct setting *pset)
 {
   int val;
@@ -3666,11 +3666,11 @@ int read_enum_value(const struct setting *pset)
   return val;
 }
 
-/************************************************************************/ /**
+/**
    Set the setting to 'val'. Returns TRUE on success. If it fails, the
    reason of the failure is available in the optionnal parameter
    'reject_msg'.
- ****************************************************************************/
+ */
 bool setting_enum_set(struct setting *pset, const char *val,
                       struct connection *caller, char *reject_msg,
                       size_t reject_msg_len)
@@ -3695,11 +3695,11 @@ bool setting_enum_set(struct setting *pset, const char *val,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE if 'val' is a valid value for this setting. If it's not,
    the reason of the failure is available in the optionnal parameter
    'reject_msg'.
- ****************************************************************************/
+ */
 bool setting_enum_validate(const struct setting *pset, const char *val,
                            struct connection *caller, char *reject_msg,
                            size_t reject_msg_len)
@@ -3710,10 +3710,10 @@ bool setting_enum_validate(const struct setting *pset, const char *val,
                                     reject_msg_len);
 }
 
-/************************************************************************/ /**
+/**
    Convert the integer to the long support string representation of an
    enumerator. This function must match the secfile_enum_name_data_fn_t type.
- ****************************************************************************/
+ */
 const char *setting_bitwise_secfile_str(secfile_data_t data, int bit)
 {
   const struct sset_val_name *name =
@@ -3722,10 +3722,10 @@ const char *setting_bitwise_secfile_str(secfile_data_t data, int bit)
   return (NULL != name ? name->support : NULL);
 }
 
-/************************************************************************/ /**
+/**
    Convert the bit number to its string representation.
    Return NULL if 'bit' is not a valid bit.
- ****************************************************************************/
+ */
 const char *setting_bitwise_bit(const struct setting *pset, int bit,
                                 bool pretty)
 {
@@ -3742,9 +3742,9 @@ const char *setting_bitwise_bit(const struct setting *pset, int bit,
   }
 }
 
-/************************************************************************/ /**
+/**
    Compute the string representation of the value for this bitwise setting.
- ****************************************************************************/
+ */
 static const char *setting_bitwise_to_str(const struct setting *pset,
                                           unsigned value, bool pretty,
                                           char *buf, size_t buf_len)
@@ -3760,16 +3760,16 @@ static const char *setting_bitwise_to_str(const struct setting *pset,
 
     for (bit = 0; (name = pset->bitwise.name(bit)); bit++) {
       if ((1 << bit) & value) {
-        /* TRANS: only emphasizing a string. */
+        // TRANS: only emphasizing a string.
         fc_snprintf(buf2, sizeof(buf2), _("\"%s\""), Q_(name->pretty));
         vec.append(buf2);
       }
     }
 
     if (0 == vec.count()) {
-      /* No value. */
+      // No value.
       fc_assert(0 == value);
-      /* TRANS: Bitwise setting has no bits set. */
+      // TRANS: Bitwise setting has no bits set.
       fc_strlcpy(buf, _("empty value"), buf_len);
       return buf;
     }
@@ -3780,7 +3780,7 @@ static const char *setting_bitwise_to_str(const struct setting *pset,
     buf_len -= len;
   }
 
-  /* Long support part. */
+  // Long support part.
   buf[0] = '\0';
   for (bit = 0; (name = pset->bitwise.name(bit)); bit++) {
     if ((1 << bit) & value) {
@@ -3797,13 +3797,13 @@ static const char *setting_bitwise_to_str(const struct setting *pset,
   return old_buf;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE if 'val' is a valid value for this setting. If it's not,
    the reason of the failure is available in the optionnal parameter
    'reject_msg'.
 
    FIXME: also check the access level of pconn.
- ****************************************************************************/
+ */
 static bool
 setting_bitwise_validate_base(const struct setting *pset, const char *val,
                               unsigned *pint_val, struct connection *caller,
@@ -3821,19 +3821,19 @@ setting_bitwise_validate_base(const struct setting *pset, const char *val,
 
   *pint_val = 0;
 
-  /* Value names are separated by '|'. */
+  // Value names are separated by '|'.
   do {
     p = strchr(val, '|');
     if (NULL != p) {
       p++;
       fc_strlcpy(buf, val, MIN(p - val, sizeof(buf)));
     } else {
-      /* Last segment, full copy. */
+      // Last segment, full copy.
       sz_strlcpy(buf, val);
     }
     remove_leading_trailing_spaces(buf);
     if (NULL == p && '\0' == buf[0] && 0 == *pint_val) {
-      /* Empty string = value 0. */
+      // Empty string = value 0.
       break;
     } else if (!setting_match_prefix(pset->bitwise.name, buf, &bit,
                                      reject_msg, reject_msg_len)) {
@@ -3848,11 +3848,11 @@ setting_bitwise_validate_base(const struct setting *pset, const char *val,
                                     reject_msg_len));
 }
 
-/************************************************************************/ /**
+/**
    Set the setting to 'val'. Returns TRUE on success. If it fails, the
    reason of the failure is available in the optionnal parameter
    'reject_msg'.
- ****************************************************************************/
+ */
 bool setting_bitwise_set(struct setting *pset, const char *val,
                          struct connection *caller, char *reject_msg,
                          size_t reject_msg_len)
@@ -3869,11 +3869,11 @@ bool setting_bitwise_set(struct setting *pset, const char *val,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE if 'val' is a valid value for this setting. If it's not,
    the reason of the failure is available in the optionnal parameter
    'reject_msg'.
- ****************************************************************************/
+ */
 bool setting_bitwise_validate(const struct setting *pset, const char *val,
                               struct connection *caller, char *reject_msg,
                               size_t reject_msg_len)
@@ -3884,9 +3884,9 @@ bool setting_bitwise_validate(const struct setting *pset, const char *val,
                                        reject_msg, reject_msg_len);
 }
 
-/************************************************************************/ /**
+/**
    Get value of bitwise setting
- ****************************************************************************/
+ */
 int setting_bitwise_get(struct setting *pset)
 {
   fc_assert(setting_type(pset) == SST_BITWISE);
@@ -3894,9 +3894,9 @@ int setting_bitwise_get(struct setting *pset)
   return *pset->bitwise.pvalue;
 }
 
-/************************************************************************/ /**
+/**
    Compute the name of the current value of the setting.
- ****************************************************************************/
+ */
 const char *setting_value_name(const struct setting *pset, bool pretty,
                                char *buf, size_t buf_len)
 {
@@ -3921,7 +3921,7 @@ const char *setting_value_name(const struct setting *pset, bool pretty,
     return setting_bitwise_to_str(pset, *pset->bitwise.pvalue, pretty, buf,
                                   buf_len);
   case SST_COUNT:
-    /* Error logged below. */
+    // Error logged below.
     break;
   }
 
@@ -3930,9 +3930,9 @@ const char *setting_value_name(const struct setting *pset, bool pretty,
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Compute the name of the default value of the setting.
- ****************************************************************************/
+ */
 const char *setting_default_name(const struct setting *pset, bool pretty,
                                  char *buf, size_t buf_len)
 {
@@ -3957,7 +3957,7 @@ const char *setting_default_name(const struct setting *pset, bool pretty,
     return setting_bitwise_to_str(pset, pset->bitwise.default_value, pretty,
                                   buf, buf_len);
   case SST_COUNT:
-    /* Error logged below. */
+    // Error logged below.
     break;
   }
 
@@ -3966,9 +3966,9 @@ const char *setting_default_name(const struct setting *pset, bool pretty,
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Update the setting to the default value
- ****************************************************************************/
+ */
 void setting_set_to_default(struct setting *pset)
 {
   switch (pset->stype) {
@@ -3996,9 +3996,9 @@ void setting_set_to_default(struct setting *pset)
   pset->setdef = SETDEF_INTERNAL;
 }
 
-/************************************************************************/ /**
+/**
    Execute the action callback if needed.
- ****************************************************************************/
+ */
 void setting_action(const struct setting *pset)
 {
   if (pset->action != NULL) {
@@ -4006,16 +4006,16 @@ void setting_action(const struct setting *pset)
   }
 }
 
-/************************************************************************/ /**
+/**
    Load game settings from ruleset file 'game.ruleset'.
- ****************************************************************************/
+ */
 bool settings_ruleset(struct section_file *file, const char *section,
                       bool act)
 {
   const char *name;
   int j;
 
-  /* Unlock all settings. */
+  // Unlock all settings.
   settings_iterate(SSET_ALL, pset)
   {
     setting_lock_set(pset, false);
@@ -4023,9 +4023,9 @@ bool settings_ruleset(struct section_file *file, const char *section,
   }
   settings_iterate_end;
 
-  /* settings */
+  // settings
   if (NULL == secfile_section_by_name(file, section)) {
-    /* no settings in ruleset file */
+    // no settings in ruleset file
     qDebug("no [%s] section for game settings in %s", section,
            secfile_name(file));
   } else {
@@ -4050,15 +4050,15 @@ bool settings_ruleset(struct section_file *file, const char *section,
 
   autolock_settings();
 
-  /* send game settings */
+  // send game settings
   send_server_settings(NULL);
 
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Set one setting from the game.ruleset file.
- ****************************************************************************/
+ */
 static bool setting_ruleset_one(struct section_file *file, const char *name,
                                 const char *path)
 {
@@ -4076,7 +4076,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
   settings_iterate_end;
 
   if (pset == NULL) {
-    /* no setting found */
+    // no setting found
     return false;
   }
 
@@ -4190,11 +4190,11 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
 
   pset->setdef = SETDEF_RULESET;
 
-  /* set lock */
+  // set lock
   lock = secfile_lookup_bool_default(file, false, "%s.lock", path);
 
   if (lock) {
-    /* set lock */
+    // set lock
     setting_lock_set(pset, lock);
     qInfo(_("Ruleset: '%s' has been locked by the ruleset."),
           setting_name(pset));
@@ -4203,9 +4203,9 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns whether the setting has non-default value.
- ****************************************************************************/
+ */
 bool setting_non_default(const struct setting *pset)
 {
   switch (setting_type(pset)) {
@@ -4220,7 +4220,7 @@ bool setting_non_default(const struct setting *pset)
   case SST_BITWISE:
     return (*pset->bitwise.pvalue != pset->bitwise.default_value);
   case SST_COUNT:
-    /* Error logged below. */
+    // Error logged below.
     break;
   }
 
@@ -4229,22 +4229,22 @@ bool setting_non_default(const struct setting *pset)
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Returns if the setting is locked by the ruleset.
- ****************************************************************************/
+ */
 bool setting_locked(const struct setting *pset) { return pset->locked; }
 
-/************************************************************************/ /**
+/**
    Set the value for the lock of a setting.
- ****************************************************************************/
+ */
 void setting_lock_set(struct setting *pset, bool lock)
 {
   pset->locked = lock;
 }
 
-/************************************************************************/ /**
+/**
    Save the setting value of the current game.
- ****************************************************************************/
+ */
 static void setting_game_set(struct setting *pset, bool init)
 {
   switch (setting_type(pset)) {
@@ -4278,9 +4278,9 @@ static void setting_game_set(struct setting *pset, bool init)
   }
 }
 
-/************************************************************************/ /**
+/**
    Free the memory used for the settings at game start.
- ****************************************************************************/
+ */
 static void setting_game_free(struct setting *pset)
 {
   if (setting_type(pset) == SST_STRING) {
@@ -4289,9 +4289,9 @@ static void setting_game_free(struct setting *pset)
   }
 }
 
-/************************************************************************/ /**
+/**
    Restore the setting to the value used at the start of the current game.
- ****************************************************************************/
+ */
 static void setting_game_restore(struct setting *pset)
 {
   char reject_msg[256] = "", buf[256];
@@ -4349,21 +4349,21 @@ static void setting_game_restore(struct setting *pset)
   }
 }
 
-/************************************************************************/ /**
+/**
    Save setting values at the start of  the game.
- ****************************************************************************/
+ */
 void settings_game_start()
 {
   settings_iterate(SSET_ALL, pset) { setting_game_set(pset, false); }
   settings_iterate_end;
 
-  /* Settings from the start of the game are saved. */
+  // Settings from the start of the game are saved.
   game.server.settings_gamestart_valid = true;
 }
 
-/************************************************************************/ /**
+/**
    Save game settings.
- ****************************************************************************/
+ */
 void settings_game_save(struct section_file *file, const char *section)
 {
   int set_count = 0;
@@ -4372,7 +4372,7 @@ void settings_game_save(struct section_file *file, const char *section)
   {
     char errbuf[200];
 
-    if (/* It's explicitly set to some value to save */
+    if (// It's explicitly set to some value to save
         setting_get_setdef(pset) == SETDEF_CHANGED
         /* It must be same at loading time as it was saving time, even if
            freeciv's default has changed. */
@@ -4432,27 +4432,27 @@ void settings_game_save(struct section_file *file, const char *section)
                       "%s.gamestart_valid", section);
 }
 
-/************************************************************************/ /**
+/**
    Restore all settings from a savegame.
- ****************************************************************************/
+ */
 void settings_game_load(struct section_file *file, const char *section)
 {
   const char *name;
   char reject_msg[256], buf[256];
   int i, set_count;
   int oldcitymindist =
-      game.info.citymindist; /* backwards compat, see below */
+      game.info.citymindist; // backwards compat, see below
 
   /* Compatibility with savegames created with older versions is usually
    * handled as conversions in savecompat.c compat_load_<version>() */
 
   if (!secfile_lookup_int(file, &set_count, "%s.set_count", section)) {
-    /* Old savegames and scenarios doesn't contain this, not an error. */
+    // Old savegames and scenarios doesn't contain this, not an error.
     qDebug("Can't read the number of settings in the save file.");
     return;
   }
 
-  /* Check if the saved settings are valid settings from game start. */
+  // Check if the saved settings are valid settings from game start.
   game.server.settings_gamestart_valid = secfile_lookup_bool_default(
       file, false, "%s.gamestart_valid", section);
 
@@ -4465,7 +4465,7 @@ void settings_game_load(struct section_file *file, const char *section)
         continue;
       }
 
-      /* Load the current value of the setting. */
+      // Load the current value of the setting.
       switch (pset->stype) {
       case SST_BOOL: {
         bool val;
@@ -4629,7 +4629,7 @@ void settings_game_load(struct section_file *file, const char *section)
       }
 
       if (game.server.settings_gamestart_valid) {
-        /* Load the value of the setting at the start of the game. */
+        // Load the value of the setting at the start of the game.
         switch (pset->stype) {
         case SST_BOOL:
           pset->boolean.game_value = secfile_lookup_bool_default(
@@ -4691,9 +4691,9 @@ void settings_game_load(struct section_file *file, const char *section)
   settings_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Reset all settings to the values at game start.
- ****************************************************************************/
+ */
 bool settings_game_reset()
 {
   if (!game.server.settings_gamestart_valid) {
@@ -4707,9 +4707,9 @@ bool settings_game_reset()
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Initialize stuff related to this code module.
- ****************************************************************************/
+ */
 void settings_init(bool act)
 {
   settings_list_init();
@@ -4728,9 +4728,9 @@ void settings_init(bool act)
   settings_list_update();
 }
 
-/************************************************************************/ /**
+/**
    Reset all settings iff they are changeable.
- ****************************************************************************/
+ */
 void settings_reset()
 {
   settings_iterate(SSET_ALL, pset)
@@ -4743,17 +4743,17 @@ void settings_reset()
   settings_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Update stuff every turn that is related to this code module. Run this
    on turn end.
- ****************************************************************************/
+ */
 void settings_turn()
-{ /* Nothing at the moment. */
+{ // Nothing at the moment.
 }
 
-/************************************************************************/ /**
+/**
    Deinitialize stuff related to this code module.
- ****************************************************************************/
+ */
 void settings_free()
 {
   settings_iterate(SSET_ALL, pset) { setting_game_free(pset); }
@@ -4762,15 +4762,15 @@ void settings_free()
   settings_list_free();
 }
 
-/************************************************************************/ /**
+/**
    Returns the total number of settings.
- ****************************************************************************/
+ */
 int settings_number() { return SETTINGS_NUM; }
 
-/************************************************************************/ /**
+/**
    Tell the client about just one server setting.  Call this after a setting
    is saved.
- ****************************************************************************/
+ */
 void send_server_setting(struct conn_list *dest, const struct setting *pset)
 {
   if (!dest) {
@@ -4843,7 +4843,7 @@ void send_server_setting(struct conn_list *dest, const struct setting *pset)
         packet.default_val = pset->enumerator.default_value;
         for (i = 0; (val_name = pset->enumerator.name(i)); i++) {
           sz_strlcpy(packet.support_names[i], val_name->support);
-          /* Send untranslated string */
+          // Send untranslated string
           sz_strlcpy(packet.pretty_names[i], val_name->pretty);
         }
         packet.values_num = i;
@@ -4867,7 +4867,7 @@ void send_server_setting(struct conn_list *dest, const struct setting *pset)
         packet.default_val = pset->bitwise.default_value;
         for (i = 0; (val_name = pset->bitwise.name(i)); i++) {
           sz_strlcpy(packet.support_names[i], val_name->support);
-          /* Send untranslated string */
+          // Send untranslated string
           sz_strlcpy(packet.pretty_names[i], val_name->pretty);
         }
         packet.bits_num = i;
@@ -4887,20 +4887,20 @@ void send_server_setting(struct conn_list *dest, const struct setting *pset)
 #undef PACKET_INIT
 }
 
-/************************************************************************/ /**
+/**
    Tell the client about all server settings.
- ****************************************************************************/
+ */
 void send_server_settings(struct conn_list *dest)
 {
   settings_iterate(SSET_ALL, pset) { send_server_setting(dest, pset); }
   settings_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Send the server settings that got a different visibility or changability
    after a connection access level change. Usually called when the access
    level of the user changes.
- ****************************************************************************/
+ */
 void send_server_access_level_settings(struct conn_list *dest,
                                        enum cmdlevel old_level,
                                        enum cmdlevel new_level)
@@ -4932,9 +4932,9 @@ void send_server_access_level_settings(struct conn_list *dest,
   settings_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Tell the client about all server settings.
- ****************************************************************************/
+ */
 void send_server_setting_control(struct connection *pconn)
 {
   struct packet_server_setting_control control;
@@ -4943,24 +4943,24 @@ void send_server_setting_control(struct connection *pconn)
 
   control.settings_num = SETTINGS_NUM;
 
-  /* Fill in the category strings. */
+  // Fill in the category strings.
   fc_assert(SSET_NUM_CATEGORIES <= ARRAY_SIZE(control.category_names));
   control.categories_num = SSET_NUM_CATEGORIES;
   for (i = 0; i < SSET_NUM_CATEGORIES; i++) {
-    /* Send untranslated name */
+    // Send untranslated name
     sz_strlcpy(control.category_names[i],
                sset_category_name(sset_category(i)));
   }
 
-  /* Send off the control packet. */
+  // Send off the control packet.
   send_packet_server_setting_control(pconn, &control);
 
-  /* Send the constant and common part of the settings. */
+  // Send the constant and common part of the settings.
   settings_iterate(SSET_ALL, pset)
   {
     setting.id = setting_number(pset);
     sz_strlcpy(setting.name, setting_name(pset));
-    /* Send untranslated strings to client */
+    // Send untranslated strings to client
     sz_strlcpy(setting.short_help, setting_short_help(pset));
     sz_strlcpy(setting.extra_help, setting_extra_help(pset, true));
     setting.category = pset->scategory;
@@ -4970,9 +4970,9 @@ void send_server_setting_control(struct connection *pconn)
   settings_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Initialise sorted settings.
- ****************************************************************************/
+ */
 static void settings_list_init()
 {
   struct setting *pset;
@@ -4980,24 +4980,24 @@ static void settings_list_init()
 
   fc_assert_ret(setting_sorted.init == false);
 
-  /* Do it for all values of enum sset_level. */
+  // Do it for all values of enum sset_level.
   for (i = 0; i < OLEVELS_NUM; i++) {
     setting_sorted.level[i] = setting_list_new();
   }
 
   for (i = 0; (pset = setting_by_number(i)); i++) {
-    /* Add the setting to the list of all settings. */
+    // Add the setting to the list of all settings.
     setting_list_append(setting_sorted.level[SSET_ALL], pset);
 
     switch (setting_level(pset)) {
     case SSET_NONE:
-      /* No setting should be in this level. */
+      // No setting should be in this level.
       fc_assert_msg(setting_level(pset) != SSET_NONE,
                     "No setting level defined for '%s'.",
                     setting_name(pset));
       break;
     case SSET_ALL:
-      /* Done above - list of all settings. */
+      // Done above - list of all settings.
       break;
     case SSET_VITAL:
       setting_list_append(setting_sorted.level[SSET_VITAL], pset);
@@ -5010,10 +5010,10 @@ static void settings_list_init()
       break;
     case SSET_CHANGED:
     case SSET_LOCKED:
-      /* This is done in settings_list_update. */
+      // This is done in settings_list_update.
       break;
     case OLEVELS_NUM:
-      /* No setting should be in this level. */
+      // No setting should be in this level.
       fc_assert_msg(setting_level(pset) != OLEVELS_NUM,
                     "Invalid setting level for '%s' (%s).",
                     setting_name(pset),
@@ -5022,7 +5022,7 @@ static void settings_list_init()
     }
   }
 
-  /* Sort the lists. */
+  // Sort the lists.
   for (i = 0; i < OLEVELS_NUM; i++) {
     setting_list_sort(setting_sorted.level[i], settings_list_cmp);
   }
@@ -5030,9 +5030,9 @@ static void settings_list_init()
   setting_sorted.init = true;
 }
 
-/************************************************************************/ /**
+/**
    Update sorted settings (changed and locked values).
- ****************************************************************************/
+ */
 void settings_list_update()
 {
   struct setting *pset;
@@ -5040,11 +5040,11 @@ void settings_list_update()
 
   fc_assert_ret(setting_sorted.init == true);
 
-  /* Clear the lists for changed and locked values. */
+  // Clear the lists for changed and locked values.
   setting_list_clear(setting_sorted.level[SSET_CHANGED]);
   setting_list_clear(setting_sorted.level[SSET_LOCKED]);
 
-  /* Refill them. */
+  // Refill them.
   for (i = 0; (pset = setting_by_number(i)); i++) {
     if (setting_non_default(pset)) {
       setting_list_append(setting_sorted.level[SSET_CHANGED], pset);
@@ -5054,14 +5054,14 @@ void settings_list_update()
     }
   }
 
-  /* Sort them. */
+  // Sort them.
   setting_list_sort(setting_sorted.level[SSET_CHANGED], settings_list_cmp);
   setting_list_sort(setting_sorted.level[SSET_LOCKED], settings_list_cmp);
 }
 
-/************************************************************************/ /**
+/**
    Update sorted settings (changed and locked values).
- ****************************************************************************/
+ */
 int settings_list_cmp(const struct setting *const *ppset1,
                       const struct setting *const *ppset2)
 {
@@ -5071,10 +5071,10 @@ int settings_list_cmp(const struct setting *const *ppset1,
   return fc_strcasecmp(setting_name(pset1), setting_name(pset2));
 }
 
-/************************************************************************/ /**
+/**
    Get a settings list of a certain level. Call settings_list_update() before
    if something was changed.
- ****************************************************************************/
+ */
 struct setting_list *settings_list_get(enum sset_level level)
 {
   fc_assert_ret_val(setting_sorted.init == true, NULL);
@@ -5084,16 +5084,16 @@ struct setting_list *settings_list_get(enum sset_level level)
   return setting_sorted.level[level];
 }
 
-/************************************************************************/ /**
+/**
    Free sorted settings.
- ****************************************************************************/
+ */
 static void settings_list_free()
 {
   int i;
 
   fc_assert_ret(setting_sorted.init == true);
 
-  /* Free the lists. */
+  // Free the lists.
   for (i = 0; i < OLEVELS_NUM; i++) {
     setting_list_destroy(setting_sorted.level[i]);
   }
@@ -5101,14 +5101,14 @@ static void settings_list_free()
   setting_sorted.init = false;
 }
 
-/************************************************************************/ /**
+/**
    Mark setting changed
- ****************************************************************************/
+ */
 void setting_changed(struct setting *pset) { pset->setdef = SETDEF_CHANGED; }
 
-/************************************************************************/ /**
+/**
    Is the setting in changed state, or the default
- ****************************************************************************/
+ */
 enum setting_default_level setting_get_setdef(const struct setting *pset)
 {
   return pset->setdef;

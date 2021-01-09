@@ -14,10 +14,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "rand.h"
 
-/* common */
+// common
 #include "map.h"
 
 /* server/generator */
@@ -44,13 +44,13 @@ typedef struct {
   int elevation;
 } map_landmass;
 
-/* Landmass: a chunk of rock with common properties */
+// Landmass: a chunk of rock with common properties
 static map_landmass *landmass;
 static map_point *fracture_points;
 
-/**********************************************************************/ /**
+/**
    Fracture map generator
- **************************************************************************/
+ */
 void make_fracture_map()
 {
   int nn, mm;
@@ -94,7 +94,7 @@ void make_fracture_map()
     fracture_points[nn].y = y;
   }
 
-  /* pick remaining points randomly */
+  // pick remaining points randomly
   mm = nn;
   for (; nn < mm + num_landmass; nn++) {
     fracture_points[nn].x = fc_rand(wld.map.xsize - 6) + 3;
@@ -111,9 +111,9 @@ void make_fracture_map()
     ptile1->continent = nn + 1;
   }
 
-  /* Assign a base elevation to the landmass */
+  // Assign a base elevation to the landmass
   for (nn = 0; nn < mm + num_landmass; nn++) {
-    if (nn < mm) { /* sink the border masses */
+    if (nn < mm) { // sink the border masses
       landmass[nn].elevation = 0;
     } else {
       landmass[nn].elevation = fc_rand(1000);
@@ -129,7 +129,7 @@ void make_fracture_map()
     }
   }
 
-  /* put in some random fuzz */
+  // put in some random fuzz
   whole_map_iterate(&(wld.map), ptile)
   {
     if (hmap(ptile) > hmap_shore_level) {
@@ -146,11 +146,11 @@ void make_fracture_map()
   delete[] fracture_points;
 }
 
-/**********************************************************************/ /**
+/**
    An expanding circle from the fracture point is used to determine the
     midpoint between fractures. The cells must be assigned to landmasses
     anyway.
- **************************************************************************/
+ */
 static void circle_bresenham(int xc, int yc, int r, int nn)
 {
   int x = 0;
@@ -162,14 +162,14 @@ static void circle_bresenham(int xc, int yc, int r, int nn)
   }
 
   while (y >= x) {                 /* only formulate 1/8 of circle */
-    fmfill(xc - x, yc - y, nn, r); /* upper left left */
-    fmfill(xc - y, yc - x, nn, r); /* upper upper left */
-    fmfill(xc + y, yc - x, nn, r); /* upper upper right */
-    fmfill(xc + x, yc - y, nn, r); /* upper right right */
-    fmfill(xc - x, yc + y, nn, r); /* lower left left */
-    fmfill(xc - y, yc + x, nn, r); /* lower lower left */
-    fmfill(xc + y, yc + x, nn, r); /* lower lower right */
-    fmfill(xc + x, yc + y, nn, r); /* lower right right */
+    fmfill(xc - x, yc - y, nn, r); // upper left left
+    fmfill(xc - y, yc - x, nn, r); // upper upper left
+    fmfill(xc + y, yc - x, nn, r); // upper upper right
+    fmfill(xc + x, yc - y, nn, r); // upper right right
+    fmfill(xc - x, yc + y, nn, r); // lower left left
+    fmfill(xc - y, yc + x, nn, r); // lower lower left
+    fmfill(xc + y, yc + x, nn, r); // lower lower right
+    fmfill(xc + x, yc + y, nn, r); // lower right right
     if (p < 0) {
       p += 4 * x++ + 6;
     } else {
@@ -178,10 +178,10 @@ static void circle_bresenham(int xc, int yc, int r, int nn)
   }
 }
 
-/**********************************************************************/ /**
+/**
     Assign landmass in 3x3 area increments to avoid "holes" created by the
     circle algorithm.
- **************************************************************************/
+ */
 static void fmfill(int x, int y, int c, int r)
 {
   int x_less, x_more, y_less, y_more;
@@ -265,10 +265,10 @@ static void fmfill(int x, int y, int c, int r)
   }
 }
 
-/**********************************************************************/ /**
+/**
      Determine the local average elevation. Used to determine where hills
      and mountains are.
- **************************************************************************/
+ */
 static int local_ave_elevation(struct tile *ptile)
 {
   int ele;
@@ -287,14 +287,14 @@ static int local_ave_elevation(struct tile *ptile)
   return ele;
 }
 
-/**********************************************************************/ /**
+/**
    make_fracture_relief() Goes through a couple of iterations.
    The first iteration chooses mountains and hills based on how much the
    tile exceeds the elevation of the surrounding tiles. This will typically
    causes hills and mountains to be placed along the edges of landmasses.
    It can generate mountain ranges where there a differences in elevation
    between landmasses.
- **************************************************************************/
+ */
 void make_fracture_relief()
 {
   bool choose_mountain;
@@ -303,7 +303,7 @@ void make_fracture_relief()
   int total_mtns;
   int iter;
 
-  /* compute the land area */
+  // compute the land area
   landarea = 0;
   whole_map_iterate(&(wld.map), ptile)
   {
@@ -320,8 +320,8 @@ void make_fracture_relief()
   whole_map_iterate(&(wld.map), ptile)
   {
     if (not_placed(ptile)
-        && hmap(ptile) > hmap_shore_level) { /* place on land only */
-      /* mountains */
+        && hmap(ptile) > hmap_shore_level) { // place on land only
+      // mountains
       choose_mountain =
           (hmap(ptile) > local_ave_elevation(ptile) * 1.20)
           || (area_is_too_flat(ptile, hmap_mountain_level, hmap(ptile))
@@ -343,7 +343,7 @@ void make_fracture_relief()
                          pick_terrain(MG_MOUNTAINOUS, MG_UNUSED, MG_GREEN));
         map_set_placed(ptile);
       } else if (choose_hill) {
-        /* hills */
+        // hills
         total_mtns++;
         tile_set_terrain(ptile,
                          pick_terrain(MG_MOUNTAINOUS, MG_GREEN, MG_UNUSED));
@@ -364,7 +364,7 @@ void make_fracture_relief()
     whole_map_iterate(&(wld.map), ptile)
     {
       if (not_placed(ptile)
-          && hmap(ptile) > hmap_shore_level) { /* place on land only */
+          && hmap(ptile) > hmap_shore_level) { // place on land only
         choose_mountain = fc_rand(10000) < 10;
         choose_hill = fc_rand(10000) < 10;
         if (choose_mountain) {
@@ -373,7 +373,7 @@ void make_fracture_relief()
               ptile, pick_terrain(MG_MOUNTAINOUS, MG_UNUSED, MG_GREEN));
           map_set_placed(ptile);
         } else if (choose_hill) {
-          /* hills */
+          // hills
           total_mtns++;
           tile_set_terrain(
               ptile, pick_terrain(MG_MOUNTAINOUS, MG_GREEN, MG_UNUSED));

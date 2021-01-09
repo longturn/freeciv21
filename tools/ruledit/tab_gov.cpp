@@ -39,9 +39,9 @@
 
 #include "tab_gov.h"
 
-/**********************************************************************/ /**
+/**
    Setup tab_gov object
- **************************************************************************/
+ */
 tab_gov::tab_gov(ruledit_gui *ui_in) : QWidget()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
@@ -113,9 +113,9 @@ tab_gov::tab_gov(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the information.
- **************************************************************************/
+ */
 void tab_gov::refresh()
 {
   gov_list->clear();
@@ -132,9 +132,9 @@ void tab_gov::refresh()
   governments_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Update info of the government
- **************************************************************************/
+ */
 void tab_gov::update_gov_info(struct government *pgov)
 {
   selected = pgov;
@@ -160,9 +160,9 @@ void tab_gov::update_gov_info(struct government *pgov)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User selected government from the list.
- **************************************************************************/
+ */
 void tab_gov::select_gov()
 {
   QList<QListWidgetItem *> select_list = gov_list->selectedItems();
@@ -175,9 +175,9 @@ void tab_gov::select_gov()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User entered name for the government
- **************************************************************************/
+ */
 void tab_gov::name_given()
 {
   if (selected != nullptr) {
@@ -208,9 +208,9 @@ void tab_gov::name_given()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User requested government deletion
- **************************************************************************/
+ */
 void tab_gov::delete_now()
 {
   if (selected != 0) {
@@ -229,9 +229,9 @@ void tab_gov::delete_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialize new government for use.
- **************************************************************************/
+ */
 bool tab_gov::initialize_new_gov(struct government *pgov)
 {
   if (government_by_rule_name("New Government") != nullptr) {
@@ -243,9 +243,9 @@ bool tab_gov::initialize_new_gov(struct government *pgov)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    User requested new government
- **************************************************************************/
+ */
 void tab_gov::add_now()
 {
   struct government *new_gov;
@@ -282,9 +282,9 @@ void tab_gov::add_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Toggled whether rule_name and name should be kept identical
- **************************************************************************/
+ */
 void tab_gov::same_name_toggle(bool checked)
 {
   name->setEnabled(!checked);
@@ -293,9 +293,9 @@ void tab_gov::same_name_toggle(bool checked)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit reqs
- **************************************************************************/
+ */
 void tab_gov::edit_reqs()
 {
   if (selected != nullptr) {
@@ -304,9 +304,9 @@ void tab_gov::edit_reqs()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit effects
- **************************************************************************/
+ */
 void tab_gov::edit_effects()
 {
   if (selected != nullptr) {

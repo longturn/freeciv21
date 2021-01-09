@@ -17,17 +17,17 @@
 
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "connection.h"
 #include "game.h"
 #include "nation.h"
 
-/* client */
+// client
 #include "client_main.h"
 #include "climisc.h"
 #include "options.h"
@@ -38,50 +38,50 @@
 
 #include "plrdlg_common.h"
 
-/************************************************************************/ /**
+/**
    The player-name (aka nation leader) column of the plrdlg.
- ****************************************************************************/
+ */
 static QString col_name(const struct player *player)
 {
   return player_name(player);
 }
 
-/************************************************************************/ /**
+/**
    Compares the names of two players in players dialog.
- ****************************************************************************/
+ */
 static int cmp_name(const struct player *pplayer1,
                     const struct player *pplayer2)
 {
   return fc_stricoll(player_name(pplayer1), player_name(pplayer2));
 }
 
-/************************************************************************/ /**
+/**
    The username (connection name) column of the plrdlg.
- ****************************************************************************/
+ */
 static QString col_username(const struct player *player)
 {
   return player->username;
 }
 
-/************************************************************************/ /**
+/**
    The name of the player's nation for the plrdlg.
- ****************************************************************************/
+ */
 static QString col_nation(const struct player *player)
 {
   return nation_adjective_for_player(player);
 }
 
-/************************************************************************/ /**
+/**
    The name of the player's team (or empty) for the plrdlg.
- ****************************************************************************/
+ */
 static QString col_team(const struct player *player)
 {
   return team_name_translation(player->team);
 }
 
-/************************************************************************/ /**
+/**
    TRUE if the player is AI-controlled.
- ****************************************************************************/
+ */
 static bool col_ai(const struct player *plr)
 {
   /* TODO: Currently is_ai() is a macro so we can't have it
@@ -90,19 +90,19 @@ static bool col_ai(const struct player *plr)
   return is_ai(plr);
 }
 
-/************************************************************************/ /**
+/**
    Returns a translated string giving the embassy status
    (none/with us/with them/both).
- ****************************************************************************/
+ */
 static QString col_embassy(const struct player *player)
 {
   return get_embassy_status(client.conn.playing, player);
 }
 
-/************************************************************************/ /**
+/**
    Returns a translated string giving the diplomatic status
    ("war" or "ceasefire (5)").
- ****************************************************************************/
+ */
 static QString col_diplstate(const struct player *player)
 {
   static char buf[100];
@@ -123,12 +123,12 @@ static QString col_diplstate(const struct player *player)
   }
 }
 
-/************************************************************************/ /**
+/**
    Return a numerical value suitable for ordering players by
    their diplomatic status in the players dialog
 
    A lower value stands for more friendly diplomatic status.
- ****************************************************************************/
+ */
 static int diplstate_value(const struct player *plr)
 {
   /* these values are scaled so that adding/subtracting
@@ -162,18 +162,18 @@ static int diplstate_value(const struct player *plr)
   return ds_value;
 }
 
-/************************************************************************/ /**
+/**
    Compares diplomatic status of two players in players dialog
- ****************************************************************************/
+ */
 static int cmp_diplstate(const struct player *player1,
                          const struct player *player2)
 {
   return diplstate_value(player1) - diplstate_value(player2);
 }
 
-/************************************************************************/ /**
+/**
    Return a string displaying the AI's love (or not) for you...
- ****************************************************************************/
+ */
 static QString col_love(const struct player *player)
 {
   if (NULL == client.conn.playing || player == client.conn.playing
@@ -185,9 +185,9 @@ static QString col_love(const struct player *player)
   }
 }
 
-/************************************************************************/ /**
+/**
    Compares ai's attitude toward the player
- ****************************************************************************/
+ */
 static int cmp_love(const struct player *player1,
                     const struct player *player2)
 {
@@ -212,23 +212,23 @@ static int cmp_love(const struct player *player1,
   return love1 - love2;
 }
 
-/************************************************************************/ /**
+/**
    Returns a translated string giving our shared-vision status.
- ****************************************************************************/
+ */
 static QString col_vision(const struct player *player)
 {
   return get_vision_status(client.conn.playing, player);
 }
 
-/************************************************************************/ /**
+/**
    Returns a translated string giving the player's "state".
 
    FIXME: These terms aren't very intuitive for new players.
- ****************************************************************************/
+ */
 QString plrdlg_col_state(const struct player *plr)
 {
   if (!plr->is_alive) {
-    /* TRANS: Dead -- Rest In Peace -- Reqia In Pace */
+    // TRANS: Dead -- Rest In Peace -- Reqia In Pace
     return _("R.I.P.");
   } else if (!plr->is_connected) {
     struct option *opt;
@@ -244,7 +244,7 @@ QString plrdlg_col_state(const struct player *plr)
     }
 
     if (!consider_tb) {
-      /* TRANS: No connection */
+      // TRANS: No connection
       return _("noconn");
     }
 
@@ -253,7 +253,7 @@ QString plrdlg_col_state(const struct player *plr)
     } else if (plr->phase_done) {
       return _("done");
     } else {
-      /* TRANS: Turnblocking & player not connected */
+      // TRANS: Turnblocking & player not connected
       return _("blocking");
     }
   } else {
@@ -267,18 +267,18 @@ QString plrdlg_col_state(const struct player *plr)
   }
 }
 
-/************************************************************************/ /**
+/**
    Returns a string telling the player's client's hostname (the
    machine from which he is connecting).
- ****************************************************************************/
+ */
 static QString col_host(const struct player *player)
 {
   return player_addr_hack(player);
 }
 
-/************************************************************************/ /**
+/**
    Returns a string telling how many turns the player has been idle.
- ****************************************************************************/
+ */
 static QString col_idle(const struct player *plr)
 {
   int idle;
@@ -293,9 +293,9 @@ static QString col_idle(const struct player *plr)
   return buf;
 }
 
-/************************************************************************/ /**
+/**
   Compares score of two players in players dialog
- ****************************************************************************/
+ */
 static int cmp_score(const struct player *player1,
                      const struct player *player2)
 {
@@ -329,14 +329,14 @@ struct player_dlg_column player_dlg_columns[] = {
 
 const int num_player_dlg_columns = ARRAY_SIZE(player_dlg_columns);
 
-/************************************************************************/ /**
+/**
    Return default player dlg sorting column.
- ****************************************************************************/
+ */
 int player_dlg_default_sort_column() { return 3; }
 
-/************************************************************************/ /**
+/**
    Translate all titles
- ****************************************************************************/
+ */
 void init_player_dlg_common()
 {
   int i;
@@ -346,7 +346,7 @@ void init_player_dlg_common()
   }
 }
 
-/************************************************************************/ /**
+/**
    The only place where this is used is the player dialog.
    Eventually this should go the way of the dodo with everything here
    moved into col_host above, but some of the older clients (+win32) still
@@ -355,7 +355,7 @@ void init_player_dlg_common()
    This code in this function is only really needed so that the host is
    kept as a blank address if no one is controlling a player, but there are
    observers.
- ****************************************************************************/
+ */
 QString player_addr_hack(const struct player *pplayer)
 {
   conn_list_iterate(pplayer->connections, pconn)

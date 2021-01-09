@@ -21,9 +21,9 @@
 // gui-qt
 #include "fc_client.h"
 
-/***********************************************************************/ /**
+/**
    Constructor for pregamevote
- ***************************************************************************/
+ */
 pregamevote::pregamevote(QWidget *parent)
 {
   setParent(parent);
@@ -57,9 +57,9 @@ pregamevote::pregamevote(QWidget *parent)
           &pregamevote::v_abstain);
 }
 
-/***********************************************************************/ /**
+/**
    Slot vote abstain
- ***************************************************************************/
+ */
 void pregamevote::v_abstain()
 {
   struct voteinfo *vi;
@@ -71,9 +71,9 @@ void pregamevote::v_abstain()
   voteinfo_do_vote(vi->vote_no, CVT_ABSTAIN);
 }
 
-/***********************************************************************/ /**
+/**
    Slot vote no
- ***************************************************************************/
+ */
 void pregamevote::v_no()
 {
   struct voteinfo *vi;
@@ -85,9 +85,9 @@ void pregamevote::v_no()
   voteinfo_do_vote(vi->vote_no, CVT_NO);
 }
 
-/***********************************************************************/ /**
+/**
    Slot vote yes
- ***************************************************************************/
+ */
 void pregamevote::v_yes()
 {
   struct voteinfo *vi;
@@ -99,9 +99,9 @@ void pregamevote::v_yes()
   voteinfo_do_vote(vi->vote_no, CVT_YES);
 }
 
-/***********************************************************************/ /**
+/**
    Updates text on vote
- ***************************************************************************/
+ */
 void pregamevote::update_vote()
 {
   int vote_count, index;
@@ -113,15 +113,15 @@ void pregamevote::update_vote()
   vote_count = voteinfo_queue_size();
   vi = voteinfo_queue_get_current(&index);
   if (vi != NULL && vi->resolved && vi->passed) {
-    /* TRANS: Describing a vote that passed. */
+    // TRANS: Describing a vote that passed.
     fc_snprintf(status, sizeof(status), _("[passed]"));
     sz_strlcpy(color, "green");
   } else if (vi != NULL && vi->resolved && !vi->passed) {
-    /* TRANS: Describing a vote that failed. */
+    // TRANS: Describing a vote that failed.
     fc_snprintf(status, sizeof(status), _("[failed]"));
     sz_strlcpy(color, "red");
   } else if (vi != NULL && vi->remove_time > 0) {
-    /* TRANS: Describing a vote that was removed. */
+    // TRANS: Describing a vote that was removed.
     fc_snprintf(status, sizeof(status), _("[removed]"));
     sz_strlcpy(color, "grey");
   } else {
@@ -166,14 +166,14 @@ void pregamevote::update_vote()
   update();
 }
 
-/***********************************************************************/ /**
+/**
    Destructor for pregamevote
- ***************************************************************************/
+ */
 pregamevote::~pregamevote() = default;
 
-/***********************************************************************/ /**
+/**
    pregamevote class used for displaying vote bar in PAGE START
- ***************************************************************************/
+ */
 xvote::xvote(QWidget *parent) : pregamevote(parent)
 {
   QPalette palette;
@@ -189,9 +189,9 @@ xvote::xvote(QWidget *parent) : pregamevote(parent)
   voters->setPalette(palette);
 }
 
-/***********************************************************************/ /**
+/**
    Paints frames for xvote
- ***************************************************************************/
+ */
 void xvote::paint(QPainter *painter, QPaintEvent *event)
 {
   Q_UNUSED(event)
@@ -201,9 +201,9 @@ void xvote::paint(QPainter *painter, QPaintEvent *event)
   painter->drawRect(5, 5, width() - 10, height() - 10);
 }
 
-/***********************************************************************/ /**
+/**
    Paint event for xvote
- ***************************************************************************/
+ */
 void xvote::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
@@ -213,10 +213,10 @@ void xvote::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/***********************************************************************/ /**
+/**
    Refresh all vote related GUI widgets. Called by the voteinfo module when
    the client receives new vote information from the server.
- ***************************************************************************/
+ */
 void voteinfo_gui_update(void)
 {
   if (king()->current_page() == PAGE_START) {

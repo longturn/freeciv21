@@ -17,12 +17,12 @@
 
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 
-/* common */
+// common
 #include "calendar.h"
 #include "events.h"
 #include "game.h"
@@ -30,23 +30,23 @@
 #include "packets.h"
 #include "spaceship.h"
 
-/* server */
+// server
 #include "notify.h"
 #include "plrhand.h"
 #include "srv_main.h"
 
 #include "spacerace.h"
 
-/**********************************************************************/ /**
+/**
    Calculate and fill in the derived quantities about the spaceship.
    Data reverse engineered from Civ1. --dwp
    This could be in common, but its better for the client to take
    the values the server calculates, in case things change.
- **************************************************************************/
+ */
 void spaceship_calc_derived(struct player_spaceship *ship)
 {
   int i;
-  /* these are how many are connected: */
+  // these are how many are connected:
   int fuel = 0;
   int propulsion = 0;
   int habitation = 0;
@@ -121,11 +121,11 @@ void spaceship_calc_derived(struct player_spaceship *ship)
                       / (200.0 * MIN(propulsion, fuel) + 20.0);
 }
 
-/**********************************************************************/ /**
+/**
    Send details of src's spaceship (or spaceships of all players
    if src is NULL) to specified destinations.  If dest is NULL then
    game.est_connections is used.
- **************************************************************************/
+ */
 void send_spaceship_info(struct player *src, struct conn_list *dest)
 {
   if (!dest) {
@@ -163,9 +163,9 @@ void send_spaceship_info(struct player *src, struct conn_list *dest)
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Handle spaceship launch request.
- **************************************************************************/
+ */
 void handle_spaceship_launch(struct player *pplayer)
 {
   struct player_spaceship *ship = &pplayer->spaceship;
@@ -200,18 +200,18 @@ void handle_spaceship_launch(struct player *pplayer)
   send_spaceship_info(pplayer, NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Handle spaceship part placement request
- **************************************************************************/
+ */
 void handle_spaceship_place(struct player *pplayer,
                             enum spaceship_place_type type, int num)
 {
   (void) do_spaceship_place(pplayer, ACT_REQ_PLAYER, type, num);
 }
 
-/**********************************************************************/ /**
+/**
    Place a spaceship part
- **************************************************************************/
+ */
 bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                         enum spaceship_place_type type, int num)
 {
@@ -414,9 +414,9 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Handle spaceship arrival.
- **************************************************************************/
+ */
 void spaceship_arrived(struct player *pplayer)
 {
   notify_player(NULL, NULL, E_SPACESHIP, ftc_server,
@@ -425,9 +425,9 @@ void spaceship_arrived(struct player *pplayer)
   pplayer->spaceship.state = SSHIP_ARRIVED;
 }
 
-/**********************************************************************/ /**
+/**
    Handle spaceship loss.
- **************************************************************************/
+ */
 void spaceship_lost(struct player *pplayer)
 {
   notify_player(NULL, NULL, E_SPACESHIP, ftc_server,
@@ -438,11 +438,11 @@ void spaceship_lost(struct player *pplayer)
   send_spaceship_info(pplayer, NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Return arrival year of player's spaceship (fractional, as one spaceship
    may arrive before another in a given year).
    Only meaningful if spaceship has been launched.
- **************************************************************************/
+ */
 double spaceship_arrival(const struct player *pplayer)
 {
   const struct player_spaceship *ship = &pplayer->spaceship;
@@ -450,13 +450,13 @@ double spaceship_arrival(const struct player *pplayer)
   return ship->launch_year + ship->travel_time;
 }
 
-/**********************************************************************/ /**
+/**
    Rank launched player spaceships in order of arrival.
    'result' is an array big enough to hold all the players.
    Returns number of launched spaceships, having filled the start of
    'result' with that many players in order of predicted arrival.
    Uses shuffled player order in case of a tie.
- **************************************************************************/
+ */
 int rank_spaceship_arrival(struct player **result)
 {
   int n = 0, i;

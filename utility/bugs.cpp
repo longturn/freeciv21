@@ -17,6 +17,6 @@ Q_LOGGING_CATEGORY(bugs_category, "freeciv.bugs")
 
 #if 0
   // Kept for reference
-  /* TRANS: No full stop after the URL, could cause confusion. */
+  // TRANS: No full stop after the URL, could cause confusion.
   qCritical(_("Please report this message at %s"), BUG_URL);
 #endif

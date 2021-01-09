@@ -154,7 +154,7 @@
 // KArchive
 #include <KFilterDev>
 
-/* utility */
+// utility
 #include "bugs.h"
 #include "deprecations.h"
 #include "fcintl.h"
@@ -169,7 +169,7 @@
 
 #define MAX_LEN_SECPATH 1024
 
-/* Set to FALSE for old-style savefiles. */
+// Set to FALSE for old-style savefiles.
 #define SAVE_TABLES true
 
 static inline bool entry_used(const struct entry *pentry);
@@ -184,31 +184,31 @@ static void entry_from_inf_token(struct section *psection,
  * See enum entry_type in registry.h.
  */
 struct entry {
-  struct section *psection; /* Parent section. */
-  char *name;               /* Name, not including section prefix. */
-  enum entry_type type;     /* The type of the entry. */
-  int used;                 /* Number of times entry looked up. */
-  char *comment;            /* Comment, may be NULL. */
+  struct section *psection; // Parent section.
+  char *name;               // Name, not including section prefix.
+  enum entry_type type;     // The type of the entry.
+  int used;                 // Number of times entry looked up.
+  char *comment;            // Comment, may be NULL.
 
   union {
-    /* ENTRY_BOOL */
+    // ENTRY_BOOL
     struct {
       bool value;
     } boolean;
-    /* ENTRY_INT */
+    // ENTRY_INT
     struct {
       int value;
     } integer;
-    /* ENTRY_FLOAT */
+    // ENTRY_FLOAT
     struct {
       float value;
     } floating;
-    /* ENTRY_STR */
+    // ENTRY_STR
     struct {
-      char *value;     /* Malloced string. */
-      bool escaped;    /* " or $. Usually TRUE */
-      bool raw;        /* Do not add anything. */
-      bool gt_marking; /* Save with gettext marking. */
+      char *value;     // Malloced string.
+      bool escaped;    // " or $. Usually TRUE
+      bool raw;        // Do not add anything.
+      bool gt_marking; // Save with gettext marking.
     } string;
   };
 };
@@ -217,17 +217,17 @@ static struct entry *
 section_entry_filereference_new(struct section *psection, const char *name,
                                 const char *value);
 
-/**********************************************************************/ /**
+/**
    Simplification of fileinfoname().
- **************************************************************************/
+ */
 static QString datafilename(const QString &filename)
 {
   return fileinfoname(get_data_dirs(), qPrintable(filename));
 }
 
-/**********************************************************************/ /**
+/**
    Ensure name is correct to use it as section or entry name.
- **************************************************************************/
+ */
 static bool is_secfile_entry_name_valid(const QString &name)
 {
   static const auto allowed = QStringLiteral("_.,-[]");
@@ -240,9 +240,9 @@ static bool is_secfile_entry_name_valid(const QString &name)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Insert an entry into the hash table.  Returns TRUE on success.
- **************************************************************************/
+ */
 static bool secfile_hash_insert(struct section_file *secfile,
                                 struct entry *pentry)
 {
@@ -270,9 +270,9 @@ static bool secfile_hash_insert(struct section_file *secfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Delete an entry from the hash table.  Returns TRUE on success.
- **************************************************************************/
+ */
 static bool secfile_hash_delete(struct section_file *secfile,
                                 struct entry *pentry)
 {
@@ -289,9 +289,9 @@ static bool secfile_hash_delete(struct section_file *secfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Base function to load a section file.  Note it closes the inputfile.
- **************************************************************************/
+ */
 static struct section_file *secfile_from_input_file(struct inputfile *inf,
                                                     const QString &filename,
                                                     const QString &section,
@@ -300,13 +300,13 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
   struct section_file *secfile;
   struct section *psection = NULL;
   struct section *single_section = NULL;
-  bool table_state = false; /* TRUE when within tabular format. */
-  int table_lineno = 0;     /* Row number in tabular, 0 top data row. */
+  bool table_state = false; // TRUE when within tabular format.
+  int table_lineno = 0;     // Row number in tabular, 0 top data row.
   QString tok;
   int i;
-  QString base_name; /* for table or single entry */
+  QString base_name; // for table or single entry
   QString field_name;
-  QVector<QString> columns; /* qstrings for column headings */
+  QVector<QString> columns; // qstrings for column headings
   bool found_my_section = false;
   bool error = false;
 
@@ -314,7 +314,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
     return NULL;
   }
 
-  /* Assign the real value later, to speed up the creation of new entries. */
+  // Assign the real value later, to speed up the creation of new entries.
   secfile = secfile_new(true);
   if (!filename.isEmpty()) {
     secfile->name = fc_strdup(qUtf8Printable(filename));
@@ -333,7 +333,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       continue;
     }
     if (inf_at_eof(inf)) {
-      /* may only realise at eof after trying to read eol above */
+      // may only realise at eof after trying to read eol above
       break;
     }
     tok = inf_token(inf, INF_TOK_SECTION_NAME);
@@ -403,7 +403,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
         int num_columns = columns.size();
 
         i++;
-        inf_discard_tokens(inf, INF_TOK_EOL); /* allow newlines */
+        inf_discard_tokens(inf, INF_TOK_EOL); // allow newlines
         if ((tok = inf_token(inf, INF_TOK_VALUE)).isEmpty()) {
           SECFILE_LOG(secfile, psection, "%s",
                       qPrintable(inf_log_str(inf, "Expected value")));
@@ -440,16 +440,16 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       goto END;
     }
 
-    /* need to store tok before next calls: */
+    // need to store tok before next calls:
     base_name = tok;
 
-    inf_discard_tokens(inf, INF_TOK_EOL); /* allow newlines */
+    inf_discard_tokens(inf, INF_TOK_EOL); // allow newlines
 
     if (!inf_token(inf, INF_TOK_TABLE_START).isEmpty()) {
       i = -1;
       do {
         i++;
-        inf_discard_tokens(inf, INF_TOK_EOL); /* allow newlines */
+        inf_discard_tokens(inf, INF_TOK_EOL); // allow newlines
         if ((tok = inf_token(inf, INF_TOK_VALUE)).isEmpty()) {
           SECFILE_LOG(secfile, psection, "%s",
                       qPrintable(inf_log_str(inf, "Expected value")));
@@ -476,11 +476,11 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       table_lineno = 0;
       continue;
     }
-    /* ordinary value: */
+    // ordinary value:
     i = -1;
     do {
       i++;
-      inf_discard_tokens(inf, INF_TOK_EOL); /* allow newlines */
+      inf_discard_tokens(inf, INF_TOK_EOL); // allow newlines
       if ((tok = inf_token(inf, INF_TOK_VALUE)).isEmpty()) {
         SECFILE_LOG(secfile, psection, "%s",
                     qPrintable(inf_log_str(inf, "Expected value")));
@@ -517,7 +517,7 @@ END:
       return NULL;
     }
 
-    /* Build the entry hash table with single section information */
+    // Build the entry hash table with single section information
     secfile->allow_duplicates = allow_duplicates;
     entry_list_iterate(section_entries(single_section), pentry)
     {
@@ -532,7 +532,7 @@ END:
   }
 
   if (!error) {
-    /* Build the entry hash table. */
+    // Build the entry hash table.
     secfile->allow_duplicates = allow_duplicates;
     secfile->hash.entries = new QMultiHash<QString, struct entry *>;
     section_list_iterate(secfile->sections, hashing_section)
@@ -559,10 +559,10 @@ END:
   }
 }
 
-/**********************************************************************/ /**
+/**
    Create a section file from a file, read only one particular section.
    Returns NULL on error.
- **************************************************************************/
+ */
 struct section_file *secfile_load_section(const QString &filename,
                                           const QString &section,
                                           bool allow_duplicates)
@@ -574,9 +574,9 @@ struct section_file *secfile_load_section(const QString &filename,
                                  filename, section, allow_duplicates);
 }
 
-/**********************************************************************/ /**
+/**
    Create a section file from a stream.  Returns NULL on error.
- **************************************************************************/
+ */
 struct section_file *secfile_from_stream(QIODevice *stream,
                                          bool allow_duplicates)
 {
@@ -584,15 +584,15 @@ struct section_file *secfile_from_stream(QIODevice *stream,
                                  NULL, allow_duplicates);
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the character is legal in a table entry name.
- **************************************************************************/
+ */
 static bool is_legal_table_entry_name(char c, bool num)
 {
   return (num ? QChar::isLetterOrNumber(c) : QChar::isLetter(c)) || c == '_';
 }
 
-/**********************************************************************/ /**
+/**
    Save the previously filled in section_file to disk.
 
    There is now limited ability to save in the new tabular format
@@ -605,7 +605,7 @@ static bool is_legal_table_entry_name(char c, bool num)
    This should be followed by the other column values for u0,
    and then subsequent u1, u2, etc, in strict order with no omissions,
    and with all of the columns for all uN in the same order as for u0.
- **************************************************************************/
+ */
 bool secfile_save(const struct section_file *secfile, QString filename)
 {
   char real_filename[1024];
@@ -693,7 +693,7 @@ bool secfile_save(const struct section_file *secfile, QString filename)
             break;
           }
           for (; *c != '\0' && is_legal_table_entry_name(*c, false); c++) {
-            /* nothing */
+            // nothing
           }
           if (0 != strncmp(c, "0.", 2)) {
             break;
@@ -715,7 +715,7 @@ bool secfile_save(const struct section_file *secfile, QString filename)
            */
           save_iter = ent_iter;
 
-          /* write the column names, and calculate ncol: */
+          // write the column names, and calculate ncol:
           ncol = 0;
           col_iter = save_iter;
           for (; (col_pentry = entry_list_link_data(col_iter));
@@ -739,7 +739,7 @@ bool secfile_save(const struct section_file *secfile, QString filename)
           irow = icol = 0;
           col_iter = save_iter;
           for (;;) {
-            char expect[128]; /* pentry->name we're expecting */
+            char expect[128]; // pentry->name we're expecting
 
             pentry = entry_list_link_data(ent_iter);
             col_pentry = entry_list_link_data(col_iter);
@@ -747,7 +747,7 @@ bool secfile_save(const struct section_file *secfile, QString filename)
             fc_snprintf(expect, sizeof(expect), "%s%d.%s", base, irow,
                         entry_name(col_pentry) + offset);
 
-            /* break out of tabular if doesn't match: */
+            // break out of tabular if doesn't match:
             if ((!pentry) || (strcmp(entry_name(pentry), expect) != 0)) {
               if (icol != 0) {
                 /* If the second or later row of a table is missing some
@@ -797,13 +797,13 @@ bool secfile_save(const struct section_file *secfile, QString filename)
           break;
         }
 
-        /* Classic entry. */
+        // Classic entry.
         col_entry_name = entry_name(pentry);
         fc_assert_ret_val(fs->write(col_entry_name), false);
         fc_assert_ret_val(fs->write("="), false);
         fc_assert_ret_val(entry_to_file(pentry, fs), false);
 
-        /* Check for vector. */
+        // Check for vector.
         for (i = 1;; i++) {
           col_iter = entry_list_link_next(ent_iter);
           col_pentry = entry_list_link_data(col_iter);
@@ -849,13 +849,13 @@ bool secfile_save(const struct section_file *secfile, QString filename)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Print log messages for any entries in the file which have
    not been looked up -- ie, unused or unrecognised entries.
    To mark an entry as used without actually doing anything with it,
    you could do something like:
       section_file_lookup(&file, "foo.bar");  / * unused * /
- **************************************************************************/
+ */
 void secfile_check_unused(const struct section_file *secfile)
 {
   bool any = false;
@@ -879,12 +879,12 @@ void secfile_check_unused(const struct section_file *secfile)
   section_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Return the filename the section file was loaded as, or "(anonymous)"
    if this sectionfile was created rather than loaded from file.
    The memory is managed internally, and should not be altered,
    nor used after secfile_destroy() called for the section file.
- **************************************************************************/
+ */
 const char *secfile_name(const struct section_file *secfile)
 {
   if (NULL == secfile) {
@@ -896,9 +896,9 @@ const char *secfile_name(const struct section_file *secfile)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Seperates the section and entry names.  Create the section if missing.
- **************************************************************************/
+ */
 static struct section *secfile_insert_base(struct section_file *secfile,
                                            const char *path,
                                            const char **pent_name)
@@ -916,7 +916,7 @@ static struct section *secfile_insert_base(struct section_file *secfile,
     return NULL;
   }
 
-  /* Separates section and entry names. */
+  // Separates section and entry names.
   *ent_name = '\0';
   *pent_name = path + (ent_name - fullpath) + 1;
   psection = secfile_section_by_name(secfile, fullpath);
@@ -927,9 +927,9 @@ static struct section *secfile_insert_base(struct section_file *secfile,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Insert a boolean entry.
- **************************************************************************/
+ */
 struct entry *secfile_insert_bool_full(struct section_file *secfile,
                                        bool value, const char *comment,
                                        bool allow_replace, const char *path,
@@ -977,10 +977,10 @@ struct entry *secfile_insert_bool_full(struct section_file *secfile,
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Insert 'dim' boolean entries at 'path,0', 'path,1' etc.  Returns
    the number of entries inserted or replaced.
- **************************************************************************/
+ */
 size_t secfile_insert_bool_vec_full(struct section_file *secfile,
                                     const bool *values, size_t dim,
                                     const char *comment, bool allow_replace,
@@ -1016,9 +1016,9 @@ size_t secfile_insert_bool_vec_full(struct section_file *secfile,
   return ret;
 }
 
-/**********************************************************************/ /**
+/**
    Insert a integer entry.
- **************************************************************************/
+ */
 struct entry *secfile_insert_int_full(struct section_file *secfile,
                                       int value, const char *comment,
                                       bool allow_replace, const char *path,
@@ -1066,10 +1066,10 @@ struct entry *secfile_insert_int_full(struct section_file *secfile,
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Insert 'dim' integer entries at 'path,0', 'path,1' etc.  Returns
    the number of entries inserted or replaced.
- **************************************************************************/
+ */
 size_t secfile_insert_int_vec_full(struct section_file *secfile,
                                    const int *values, size_t dim,
                                    const char *comment, bool allow_replace,
@@ -1105,9 +1105,9 @@ size_t secfile_insert_int_vec_full(struct section_file *secfile,
   return ret;
 }
 
-/**********************************************************************/ /**
+/**
    Insert a floating entry.
- **************************************************************************/
+ */
 struct entry *secfile_insert_float_full(struct section_file *secfile,
                                         float value, const char *comment,
                                         bool allow_replace, const char *path,
@@ -1155,9 +1155,9 @@ struct entry *secfile_insert_float_full(struct section_file *secfile,
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Insert a include entry.
- **************************************************************************/
+ */
 struct section *secfile_insert_include(struct section_file *secfile,
                                        const char *filename)
 {
@@ -1168,20 +1168,20 @@ struct section *secfile_insert_include(struct section_file *secfile,
 
   fc_assert_ret_val(secfile_section_by_name(secfile, buffer) == NULL, NULL);
 
-  /* Create include section. */
+  // Create include section.
   psection = secfile_section_new(secfile, buffer);
   psection->special = EST_INCLUDE;
 
-  /* Then add string entry "file" to it. */
+  // Then add string entry "file" to it.
   secfile_insert_str_full(secfile, filename, NULL, false, false, EST_INCLUDE,
                           "%s.file", buffer);
 
   return psection;
 }
 
-/**********************************************************************/ /**
+/**
    Insert a long comment entry.
- **************************************************************************/
+ */
 struct section *secfile_insert_long_comment(struct section_file *secfile,
                                             const char *comment)
 {
@@ -1193,20 +1193,20 @@ struct section *secfile_insert_long_comment(struct section_file *secfile,
 
   fc_assert_ret_val(secfile_section_by_name(secfile, buffer) == NULL, NULL);
 
-  /* Create long comment section. */
+  // Create long comment section.
   psection = secfile_section_new(secfile, buffer);
   psection->special = EST_COMMENT;
 
-  /* Then add string entry "comment" to it. */
+  // Then add string entry "comment" to it.
   secfile_insert_str_full(secfile, comment, NULL, false, true, EST_COMMENT,
                           "%s.comment", buffer);
 
   return psection;
 }
 
-/**********************************************************************/ /**
+/**
    Insert a string entry.
- **************************************************************************/
+ */
 struct entry *secfile_insert_str_full(struct section_file *secfile,
                                       const char *str, const char *comment,
                                       bool allow_replace, bool no_escape,
@@ -1264,10 +1264,10 @@ struct entry *secfile_insert_str_full(struct section_file *secfile,
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Insert 'dim' string entries at 'path,0', 'path,1' etc. Returns
    the number of entries inserted or replaced.
- **************************************************************************/
+ */
 size_t secfile_insert_str_vec_full(struct section_file *secfile,
                                    const char *const *strings, size_t dim,
                                    const char *comment, bool allow_replace,
@@ -1304,9 +1304,9 @@ size_t secfile_insert_str_vec_full(struct section_file *secfile,
   return ret;
 }
 
-/**********************************************************************/ /**
+/**
    Insert a read-from-a-file string entry
- **************************************************************************/
+ */
 struct entry *secfile_insert_filereference(struct section_file *secfile,
                                            const char *filename,
                                            const char *path, ...)
@@ -1340,9 +1340,9 @@ struct entry *secfile_insert_filereference(struct section_file *secfile,
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Insert a enumerator entry.
- **************************************************************************/
+ */
 struct entry *secfile_insert_plain_enum_full(struct section_file *secfile,
                                              int enumerator,
                                              secfile_enum_name_fn_t name_fn,
@@ -1396,10 +1396,10 @@ struct entry *secfile_insert_plain_enum_full(struct section_file *secfile,
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Insert 'dim' string entries at 'path,0', 'path,1' etc.  Returns
    the number of entries inserted or replaced.
- **************************************************************************/
+ */
 size_t secfile_insert_plain_enum_vec_full(struct section_file *secfile,
                                           const int *enumurators, size_t dim,
                                           secfile_enum_name_fn_t name_fn,
@@ -1439,9 +1439,9 @@ size_t secfile_insert_plain_enum_vec_full(struct section_file *secfile,
   return ret;
 }
 
-/**********************************************************************/ /**
+/**
    Insert a bitwise value entry.
- **************************************************************************/
+ */
 struct entry *secfile_insert_bitwise_enum_full(
     struct section_file *secfile, int bitwise_val,
     secfile_enum_name_fn_t name_fn, secfile_enum_iter_fn_t begin_fn,
@@ -1461,8 +1461,8 @@ struct entry *secfile_insert_bitwise_enum_full(
   SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != end_fn, NULL);
   SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != next_fn, NULL);
 
-  /* Compute a string containing all the values separated by '|'. */
-  str[0] = '\0'; /* Insert at least an empty string. */
+  // Compute a string containing all the values separated by '|'.
+  str[0] = '\0'; // Insert at least an empty string.
   if (0 != bitwise_val) {
     for (i = begin_fn(); i != end_fn(); i = next_fn(i)) {
       if (i & bitwise_val) {
@@ -1509,10 +1509,10 @@ struct entry *secfile_insert_bitwise_enum_full(
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Insert 'dim' string entries at 'path,0', 'path,1' etc.  Returns
    the number of entries inserted or replaced.
- **************************************************************************/
+ */
 size_t secfile_insert_bitwise_enum_vec_full(
     struct section_file *secfile, const int *bitwise_vals, size_t dim,
     secfile_enum_name_fn_t name_fn, secfile_enum_iter_fn_t begin_fn,
@@ -1555,10 +1555,10 @@ size_t secfile_insert_bitwise_enum_vec_full(
   return ret;
 }
 
-/**********************************************************************/ /**
+/**
    Insert an enumerator value entry that we only have a name accessor
    function.
- **************************************************************************/
+ */
 struct entry *secfile_insert_enum_data_full(
     struct section_file *secfile, int value, bool bitwise,
     secfile_enum_name_data_fn_t name_fn, secfile_data_t data,
@@ -1575,8 +1575,8 @@ struct entry *secfile_insert_enum_data_full(
   SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != name_fn, NULL);
 
   if (bitwise) {
-    /* Compute a string containing all the values separated by '|'. */
-    str[0] = '\0'; /* Insert at least an empty string. */
+    // Compute a string containing all the values separated by '|'.
+    str[0] = '\0'; // Insert at least an empty string.
     if (0 != value) {
       for (i = 0; (val_name = name_fn(data, i)); i++) {
         if ((1 << i) & value) {
@@ -1630,10 +1630,10 @@ struct entry *secfile_insert_enum_data_full(
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Insert 'dim' entries at 'path,0', 'path,1' etc.  Returns the number of
    entries inserted or replaced.
- **************************************************************************/
+ */
 size_t secfile_insert_enum_vec_data_full(
     struct section_file *secfile, const int *values, size_t dim,
     bool bitwise, secfile_enum_name_data_fn_t name_fn, secfile_data_t data,
@@ -1671,9 +1671,9 @@ size_t secfile_insert_enum_vec_data_full(
   return ret;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the entry by the name or NULL if not matched.
- **************************************************************************/
+ */
 struct entry *secfile_entry_by_path(const struct section_file *secfile,
                                     const char *path)
 {
@@ -1686,7 +1686,7 @@ struct entry *secfile_entry_by_path(const struct section_file *secfile,
 
   sz_strlcpy(fullpath, path);
 
-  /* treat "sec.foo,0" as "sec.foo": */
+  // treat "sec.foo,0" as "sec.foo":
   len = qstrlen(fullpath);
   if (len > 2 && fullpath[len - 2] == ',' && fullpath[len - 1] == '0') {
     fullpath[len - 2] = '\0';
@@ -1708,7 +1708,7 @@ struct entry *secfile_entry_by_path(const struct section_file *secfile,
     return NULL;
   }
 
-  /* Separates section and entry names. */
+  // Separates section and entry names.
   *ent_name++ = '\0';
   psection = secfile_section_by_name(secfile, fullpath);
   if (psection) {
@@ -1718,9 +1718,9 @@ struct entry *secfile_entry_by_path(const struct section_file *secfile,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Delete an entry.
- **************************************************************************/
+ */
 bool secfile_entry_delete(struct section_file *secfile, const char *path,
                           ...)
 {
@@ -1744,9 +1744,9 @@ bool secfile_entry_delete(struct section_file *secfile, const char *path,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the entry at "fullpath" or NULL if not matched.
- **************************************************************************/
+ */
 struct entry *secfile_entry_lookup(const struct section_file *secfile,
                                    const char *path, ...)
 {
@@ -1762,9 +1762,9 @@ struct entry *secfile_entry_lookup(const struct section_file *secfile,
   return secfile_entry_by_path(secfile, fullpath);
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a boolean value in the secfile.  Returns TRUE on success.
- **************************************************************************/
+ */
 bool secfile_lookup_bool(const struct section_file *secfile, bool *bval,
                          const char *path, ...)
 {
@@ -1786,10 +1786,10 @@ bool secfile_lookup_bool(const struct section_file *secfile, bool *bval,
   return entry_bool_get(pentry, bval);
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a boolean value in the secfile.  On failure, use the default
    value.
- **************************************************************************/
+ */
 bool secfile_lookup_bool_default(const struct section_file *secfile,
                                  bool def, const char *path, ...)
 {
@@ -1815,9 +1815,9 @@ bool secfile_lookup_bool_default(const struct section_file *secfile,
   return def;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a integer value in the secfile.  Returns TRUE on success.
- **************************************************************************/
+ */
 bool secfile_lookup_int(const struct section_file *secfile, int *ival,
                         const char *path, ...)
 {
@@ -1839,10 +1839,10 @@ bool secfile_lookup_int(const struct section_file *secfile, int *ival,
   return entry_int_get(pentry, ival);
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a integer value in the secfile.  On failure, use the default
    value.
- **************************************************************************/
+ */
 int secfile_lookup_int_default(const struct section_file *secfile, int def,
                                const char *path, ...)
 {
@@ -1868,11 +1868,11 @@ int secfile_lookup_int_default(const struct section_file *secfile, int def,
   return def;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a integer value in the secfile.  The value will be arranged to
    match the interval [minval, maxval].  On failure, use the default
    value.
- **************************************************************************/
+ */
 int secfile_lookup_int_def_min_max(const struct section_file *secfile,
                                    int defval, int minval, int maxval,
                                    const char *path, ...)
@@ -1915,11 +1915,11 @@ int secfile_lookup_int_def_min_max(const struct section_file *secfile,
   return value;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a integer vector in the secfile.  Returns NULL on error.  This
    vector is not owned by the registry module, and should be free by the
    user.
- **************************************************************************/
+ */
 int *secfile_lookup_int_vec(const struct section_file *secfile, size_t *dim,
                             const char *path, ...)
 {
@@ -1935,7 +1935,7 @@ int *secfile_lookup_int_vec(const struct section_file *secfile, size_t *dim,
   fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
   va_end(args);
 
-  /* Check size. */
+  // Check size.
   while (NULL
          != secfile_entry_lookup(secfile, "%s,%d", fullpath,
                                  static_cast<int>(i))) {
@@ -1944,7 +1944,7 @@ int *secfile_lookup_int_vec(const struct section_file *secfile, size_t *dim,
   *dim = i;
 
   if (0 == i) {
-    /* Doesn't exist. */
+    // Doesn't exist.
     SECFILE_LOG(secfile, NULL, "\"%s\" entry doesn't exist.", fullpath);
     return NULL;
   }
@@ -1965,9 +1965,9 @@ int *secfile_lookup_int_vec(const struct section_file *secfile, size_t *dim,
   return vec;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a floating point value in the secfile.  Returns TRUE on success.
- **************************************************************************/
+ */
 bool secfile_lookup_float(const struct section_file *secfile, float *fval,
                           const char *path, ...)
 {
@@ -1989,10 +1989,10 @@ bool secfile_lookup_float(const struct section_file *secfile, float *fval,
   return entry_float_get(pentry, fval);
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a floating point value in the secfile. On failure, use the default
    value.
- **************************************************************************/
+ */
 float secfile_lookup_float_default(const struct section_file *secfile,
                                    float def, const char *path, ...)
 {
@@ -2018,9 +2018,9 @@ float secfile_lookup_float_default(const struct section_file *secfile,
   return def;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a string value in the secfile.  Returns NULL on error.
- **************************************************************************/
+ */
 const char *secfile_lookup_str(const struct section_file *secfile,
                                const char *path, ...)
 {
@@ -2047,10 +2047,10 @@ const char *secfile_lookup_str(const struct section_file *secfile,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a string value in the secfile.  On failure, use the default
    value.
- **************************************************************************/
+ */
 const char *secfile_lookup_str_default(const struct section_file *secfile,
                                        const char *def, const char *path,
                                        ...)
@@ -2077,12 +2077,12 @@ const char *secfile_lookup_str_default(const struct section_file *secfile,
   return def;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a string vector in the secfile.  Returns NULL on error.  This
    vector is not owned by the registry module, and should be free by the
    user, but the string pointers stored inside the vector shouldn't be
    free.
- **************************************************************************/
+ */
 const char **secfile_lookup_str_vec(const struct section_file *secfile,
                                     size_t *dim, const char *path, ...)
 {
@@ -2098,7 +2098,7 @@ const char **secfile_lookup_str_vec(const struct section_file *secfile,
   fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
   va_end(args);
 
-  /* Check size. */
+  // Check size.
   while (NULL
          != secfile_entry_lookup(secfile, "%s,%d", fullpath,
                                  static_cast<int>(i))) {
@@ -2107,7 +2107,7 @@ const char **secfile_lookup_str_vec(const struct section_file *secfile,
   *dim = i;
 
   if (0 == i) {
-    /* Doesn't exist. */
+    // Doesn't exist.
     SECFILE_LOG(secfile, NULL, "\"%s\" entry doesn't exist.", fullpath);
     return NULL;
   }
@@ -2128,9 +2128,9 @@ const char **secfile_lookup_str_vec(const struct section_file *secfile,
   return vec;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup an enumerator value in the secfile.  Returns FALSE on error.
- **************************************************************************/
+ */
 bool secfile_lookup_plain_enum_full(const struct section_file *secfile,
                                     int *penumerator,
                                     secfile_enum_is_valid_fn_t is_valid_fn,
@@ -2170,9 +2170,9 @@ bool secfile_lookup_plain_enum_full(const struct section_file *secfile,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup an enumerator value in the secfile.  Returns 'defval' on error.
- **************************************************************************/
+ */
 int secfile_lookup_plain_enum_default_full(
     const struct section_file *secfile, int defval,
     secfile_enum_is_valid_fn_t is_valid_fn,
@@ -2208,11 +2208,11 @@ int secfile_lookup_plain_enum_default_full(
   }
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a enumerator vector in the secfile.  Returns NULL on error.  This
    vector is not owned by the registry module, and should be free by the
    user.
- **************************************************************************/
+ */
 int *secfile_lookup_plain_enum_vec_full(
     const struct section_file *secfile, size_t *dim,
     secfile_enum_is_valid_fn_t is_valid_fn,
@@ -2232,7 +2232,7 @@ int *secfile_lookup_plain_enum_vec_full(
   fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
   va_end(args);
 
-  /* Check size. */
+  // Check size.
   while (NULL
          != secfile_entry_lookup(secfile, "%s,%d", fullpath,
                                  static_cast<int>(i))) {
@@ -2241,7 +2241,7 @@ int *secfile_lookup_plain_enum_vec_full(
   *dim = i;
 
   if (0 == i) {
-    /* Doesn't exist. */
+    // Doesn't exist.
     SECFILE_LOG(secfile, NULL, "\"%s\" entry doesn't exist.", fullpath);
     return NULL;
   }
@@ -2263,9 +2263,9 @@ int *secfile_lookup_plain_enum_vec_full(
   return vec;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a bitwise enumerator value in the secfile.  Returns FALSE on error.
- **************************************************************************/
+ */
 bool secfile_lookup_bitwise_enum_full(const struct section_file *secfile,
                                       int *penumerator,
                                       secfile_enum_is_valid_fn_t is_valid_fn,
@@ -2299,18 +2299,18 @@ bool secfile_lookup_bitwise_enum_full(const struct section_file *secfile,
 
   *penumerator = 0;
   if ('\0' == str[0]) {
-    /* Empty string = no value. */
+    // Empty string = no value.
     return true;
   }
 
-  /* Value names are separated by '|'. */
+  // Value names are separated by '|'.
   do {
     p = strchr(str, '|');
     if (NULL != p) {
       p++;
       fc_strlcpy(val_name, str, p - str);
     } else {
-      /* Last segment, full copy. */
+      // Last segment, full copy.
       sz_strlcpy(val_name, str);
     }
     remove_leading_trailing_spaces(val_name);
@@ -2328,9 +2328,9 @@ bool secfile_lookup_bitwise_enum_full(const struct section_file *secfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup an enumerator value in the secfile.  Returns 'defval' on error.
- **************************************************************************/
+ */
 int secfile_lookup_bitwise_enum_default_full(
     const struct section_file *secfile, int defval,
     secfile_enum_is_valid_fn_t is_valid_fn,
@@ -2360,11 +2360,11 @@ int secfile_lookup_bitwise_enum_default_full(
   }
 
   if ('\0' == str[0]) {
-    /* Empty string = no value. */
+    // Empty string = no value.
     return 0;
   }
 
-  /* Value names are separated by '|'. */
+  // Value names are separated by '|'.
   full_val = 0;
   do {
     p = strchr(str, '|');
@@ -2372,7 +2372,7 @@ int secfile_lookup_bitwise_enum_default_full(
       p++;
       fc_strlcpy(val_name, str, p - str);
     } else {
-      /* Last segment, full copy. */
+      // Last segment, full copy.
       sz_strlcpy(val_name, str);
     }
     remove_leading_trailing_spaces(val_name);
@@ -2387,11 +2387,11 @@ int secfile_lookup_bitwise_enum_default_full(
   return full_val;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a enumerator vector in the secfile.  Returns NULL on error.  This
    vector is not owned by the registry module, and should be free by the
    user.
- **************************************************************************/
+ */
 int *secfile_lookup_bitwise_enum_vec_full(
     const struct section_file *secfile, size_t *dim,
     secfile_enum_is_valid_fn_t is_valid_fn,
@@ -2411,7 +2411,7 @@ int *secfile_lookup_bitwise_enum_vec_full(
   fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
   va_end(args);
 
-  /* Check size. */
+  // Check size.
   while (NULL
          != secfile_entry_lookup(secfile, "%s,%d", fullpath,
                                  static_cast<int>(i))) {
@@ -2420,7 +2420,7 @@ int *secfile_lookup_bitwise_enum_vec_full(
   *dim = i;
 
   if (0 == i) {
-    /* Doesn't exist. */
+    // Doesn't exist.
     SECFILE_LOG(secfile, NULL, "\"%s\" entry doesn't exist.", fullpath);
     return NULL;
   }
@@ -2443,9 +2443,9 @@ int *secfile_lookup_bitwise_enum_vec_full(
   return vec;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a value saved as string in the secfile.  Returns FALSE on error.
- **************************************************************************/
+ */
 bool secfile_lookup_enum_data(const struct section_file *secfile,
                               int *pvalue, bool bitwise,
                               secfile_enum_name_data_fn_t name_fn,
@@ -2478,18 +2478,18 @@ bool secfile_lookup_enum_data(const struct section_file *secfile,
   if (bitwise) {
     *pvalue = 0;
     if ('\0' == str[0]) {
-      /* Empty string = no value. */
+      // Empty string = no value.
       return true;
     }
 
-    /* Value names are separated by '|'. */
+    // Value names are separated by '|'.
     do {
       p = strchr(str, '|');
       if (NULL != p) {
         p++;
         fc_strlcpy(val_name, str, p - str);
       } else {
-        /* Last segment, full copy. */
+        // Last segment, full copy.
         sz_strlcpy(val_name, str);
       }
       remove_leading_trailing_spaces(val_name);
@@ -2525,9 +2525,9 @@ bool secfile_lookup_enum_data(const struct section_file *secfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a value saved as string in the secfile.  Returns 'defval' on error.
- **************************************************************************/
+ */
 int secfile_lookup_enum_default_data(const struct section_file *secfile,
                                      int defval, bool bitwise,
                                      secfile_enum_name_data_fn_t name_fn,
@@ -2560,18 +2560,18 @@ int secfile_lookup_enum_default_data(const struct section_file *secfile,
   value = 0;
   if (bitwise) {
     if ('\0' == str[0]) {
-      /* Empty string = no value. */
+      // Empty string = no value.
       return value;
     }
 
-    /* Value names are separated by '|'. */
+    // Value names are separated by '|'.
     do {
       p = strchr(str, '|');
       if (NULL != p) {
         p++;
         fc_strlcpy(val_name, str, p - str);
       } else {
-        /* Last segment, full copy. */
+        // Last segment, full copy.
         sz_strlcpy(val_name, str);
       }
       remove_leading_trailing_spaces(val_name);
@@ -2607,10 +2607,10 @@ int secfile_lookup_enum_default_data(const struct section_file *secfile,
   return value;
 }
 
-/**********************************************************************/ /**
+/**
    Lookup a vector in the secfile.  Returns NULL on error.  This vector
    is not owned by the registry module, and should be free by the user.
- **************************************************************************/
+ */
 int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
                                   size_t *dim, bool bitwise,
                                   secfile_enum_name_data_fn_t name_fn,
@@ -2629,7 +2629,7 @@ int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
   fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
   va_end(args);
 
-  /* Check size. */
+  // Check size.
   while (NULL
          != secfile_entry_lookup(secfile, "%s,%d", fullpath,
                                  static_cast<int>(i))) {
@@ -2638,7 +2638,7 @@ int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
   *dim = i;
 
   if (0 == i) {
-    /* Doesn't exist. */
+    // Doesn't exist.
     SECFILE_LOG(secfile, NULL, "\"%s\" entry doesn't exist.", fullpath);
     return NULL;
   }
@@ -2659,9 +2659,9 @@ int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
   return vec;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the first section matching the name.
- **************************************************************************/
+ */
 struct section *secfile_section_by_name(const struct section_file *secfile,
                                         const QString &name)
 {
@@ -2678,9 +2678,9 @@ struct section *secfile_section_by_name(const struct section_file *secfile,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Find a section by path.
- **************************************************************************/
+ */
 struct section *secfile_section_lookup(const struct section_file *secfile,
                                        const char *path, ...)
 {
@@ -2696,21 +2696,21 @@ struct section *secfile_section_lookup(const struct section_file *secfile,
   return secfile_section_by_name(secfile, fullpath);
 }
 
-/**********************************************************************/ /**
+/**
    Returns the list of sections.  This list is owned by the registry module
    and shouldn't be modified and destroyed.
- **************************************************************************/
+ */
 const struct section_list *
 secfile_sections(const struct section_file *secfile)
 {
   return (NULL != secfile ? secfile->sections : NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Returns the list of sections which match the name prefix.  Returns NULL
    if no section was found.  This list is not owned by the registry module
    and the user must destroy it when he finished to work with it.
- **************************************************************************/
+ */
 struct section_list *
 secfile_sections_by_name_prefix(const struct section_file *secfile,
                                 const char *prefix)
@@ -2740,9 +2740,9 @@ secfile_sections_by_name_prefix(const struct section_file *secfile,
   return matches;
 }
 
-/**********************************************************************/ /**
+/**
    Create a new section in the secfile.
- **************************************************************************/
+ */
 struct section *secfile_section_new(struct section_file *secfile,
                                     const QString &name)
 {
@@ -2774,7 +2774,7 @@ struct section *secfile_section_new(struct section_file *secfile,
   psection->name = qstrdup(qPrintable(name));
   psection->entries = entry_list_new_full(entry_destroy);
 
-  /* Append to secfile. */
+  // Append to secfile.
   psection->secfile = secfile;
   section_list_append(secfile->sections, psection);
 
@@ -2785,9 +2785,9 @@ struct section *secfile_section_new(struct section_file *secfile,
   return psection;
 }
 
-/**********************************************************************/ /**
+/**
    Remove this section from the secfile.
- **************************************************************************/
+ */
 void section_destroy(struct section *psection)
 {
   struct section_file *secfile;
@@ -2797,9 +2797,9 @@ void section_destroy(struct section *psection)
   section_clear_all(psection);
 
   if ((secfile = psection->secfile)) {
-    /* Detach from secfile. */
+    // Detach from secfile.
     if (section_list_remove(secfile->sections, psection)) {
-      /* This has called section_destroy() already then. */
+      // This has called section_destroy() already then.
       return;
     }
     if (NULL != secfile->hash.sections) {
@@ -2812,14 +2812,14 @@ void section_destroy(struct section *psection)
   delete psection;
 }
 
-/**********************************************************************/ /**
+/**
    Remove all entries.
- **************************************************************************/
+ */
 void section_clear_all(struct section *psection)
 {
   SECFILE_RETURN_IF_FAIL(NULL, psection, NULL != psection);
 
-  /* This include the removing of the hash datas. */
+  // This include the removing of the hash datas.
   entry_list_clear(psection->entries);
 
   if (0 < entry_list_size(psection->entries)) {
@@ -2829,9 +2829,9 @@ void section_clear_all(struct section *psection)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Change the section name.  Returns TRUE on success.
- **************************************************************************/
+ */
 bool section_set_name(struct section *psection, const char *name)
 {
   struct section_file *secfile;
@@ -2856,12 +2856,12 @@ bool section_set_name(struct section *psection, const char *name)
 
   if ((pother = secfile_section_by_name(secfile, name))
       && pother != psection) {
-    /* We cannot duplicate sections in any case! */
+    // We cannot duplicate sections in any case!
     SECFILE_LOG(secfile, psection, "Section \"%s\" already exists.", name);
     return false;
   }
 
-  /* Remove old references in the hash tables. */
+  // Remove old references in the hash tables.
   if (NULL != secfile->hash.sections) {
     secfile->hash.sections->remove(psection->name);
   }
@@ -2873,11 +2873,11 @@ bool section_set_name(struct section *psection, const char *name)
     entry_list_iterate_end;
   }
 
-  /* Really rename. */
+  // Really rename.
   free(psection->name);
   psection->name = fc_strdup(name);
 
-  /* Reinsert new references into the hash tables. */
+  // Reinsert new references into the hash tables.
   if (NULL != secfile->hash.sections) {
     secfile->hash.sections->insert(psection->name, psection);
   }
@@ -2892,18 +2892,18 @@ bool section_set_name(struct section *psection, const char *name)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns a list containing all the entries.  This list is owned by the
    secfile, so don't modify or destroy it.
- **************************************************************************/
+ */
 const struct entry_list *section_entries(const struct section *psection)
 {
   return (NULL != psection ? psection->entries : NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Returns the first entry matching the name.
- **************************************************************************/
+ */
 struct entry *section_entry_by_name(const struct section *psection,
                                     const QString &name)
 {
@@ -2921,9 +2921,9 @@ struct entry *section_entry_by_name(const struct section *psection,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the entry matching the path.
- **************************************************************************/
+ */
 struct entry *section_entry_lookup(const struct section *psection,
                                    const char *path, ...)
 {
@@ -2941,19 +2941,19 @@ struct entry *section_entry_lookup(const struct section *psection,
     return pentry;
   }
 
-  /* Try with full path. */
+  // Try with full path.
   if ((pentry = secfile_entry_by_path(psection->secfile, fullpath))
       && psection == entry_section(pentry)) {
-    /* Unsure this is really owned by this section. */
+    // Unsure this is really owned by this section.
     return pentry;
   }
 
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Returns a new entry.
- **************************************************************************/
+ */
 static entry *entry_new(struct section *psection, const QString &name)
 {
   struct section_file *secfile;
@@ -2986,20 +2986,20 @@ static entry *entry_new(struct section *psection, const QString &name)
   pentry->used = 0;
   pentry->comment = NULL;
 
-  /* Append to section. */
+  // Append to section.
   pentry->psection = psection;
   entry_list_append(psection->entries, pentry);
 
-  /* Notify secfile. */
+  // Notify secfile.
   secfile->num_entries++;
   secfile_hash_insert(secfile, pentry);
 
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Returns a new entry of type ENTRY_INT.
- **************************************************************************/
+ */
 struct entry *section_entry_int_new(struct section *psection,
                                     const QString &name, int value)
 {
@@ -3013,9 +3013,9 @@ struct entry *section_entry_int_new(struct section *psection,
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Returns a new entry of type ENTRY_BOOL.
- **************************************************************************/
+ */
 struct entry *section_entry_bool_new(struct section *psection,
                                      const QString &name, bool value)
 {
@@ -3029,9 +3029,9 @@ struct entry *section_entry_bool_new(struct section *psection,
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Returns a new entry of type ENTRY_FLOAT.
- **************************************************************************/
+ */
 struct entry *section_entry_float_new(struct section *psection,
                                       const QString &name, float value)
 {
@@ -3045,9 +3045,9 @@ struct entry *section_entry_float_new(struct section *psection,
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Returns a new entry of type ENTRY_STR.
- **************************************************************************/
+ */
 struct entry *section_entry_str_new(struct section *psection,
                                     const QString &name,
                                     const QString &value, bool escaped)
@@ -3065,9 +3065,9 @@ struct entry *section_entry_str_new(struct section *psection,
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Returns a new entry of type ENTRY_FILEREFERENCE.
- **************************************************************************/
+ */
 static struct entry *
 section_entry_filereference_new(struct section *psection, const char *name,
                                 const char *value)
@@ -3082,9 +3082,9 @@ section_entry_filereference_new(struct section *psection, const char *name,
   return pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Entry structure destructor.
- **************************************************************************/
+ */
 void entry_destroy(struct entry *pentry)
 {
   struct section_file *secfile;
@@ -3095,19 +3095,19 @@ void entry_destroy(struct entry *pentry)
   }
 
   if ((psection = pentry->psection)) {
-    /* Detach from section. */
+    // Detach from section.
     if (entry_list_remove(psection->entries, pentry)) {
-      /* This has called entry_destroy() already then. */
+      // This has called entry_destroy() already then.
       return;
     }
     if ((secfile = psection->secfile)) {
-      /* Detach from secfile. */
+      // Detach from secfile.
       secfile->num_entries--;
       secfile_hash_delete(secfile, pentry);
     }
   }
 
-  /* Specific type free. */
+  // Specific type free.
   switch (pentry->type) {
   case ENTRY_BOOL:
   case ENTRY_INT:
@@ -3124,31 +3124,31 @@ void entry_destroy(struct entry *pentry)
     break;
   }
 
-  /* Common free. */
+  // Common free.
   delete[] pentry->name;
   NFCPP_FREE(pentry->comment);
   delete pentry;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the parent section of this entry.
- **************************************************************************/
+ */
 struct section *entry_section(const struct entry *pentry)
 {
   return (NULL != pentry ? pentry->psection : NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Returns the type of this entry or ENTRY_ILLEGAL or error.
- **************************************************************************/
+ */
 enum entry_type entry_type_get(const struct entry *pentry)
 {
   return (NULL != pentry ? pentry->type : ENTRY_ILLEGAL);
 }
 
-/**********************************************************************/ /**
+/**
    Build the entry path.  Returns like snprintf().
- **************************************************************************/
+ */
 int entry_path(const struct entry *pentry, char *buf, size_t buf_len)
 {
   return fc_snprintf(buf, buf_len, "%s.%s",
@@ -3156,17 +3156,17 @@ int entry_path(const struct entry *pentry, char *buf, size_t buf_len)
                      entry_name(pentry));
 }
 
-/**********************************************************************/ /**
+/**
    Returns the name of this entry.
- **************************************************************************/
+ */
 const char *entry_name(const struct entry *pentry)
 {
   return (NULL != pentry ? pentry->name : NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Sets the name of the entry.  Returns TRUE on success.
- **************************************************************************/
+ */
 bool entry_set_name(struct entry *pentry, const char *name)
 {
   struct section *psection;
@@ -3200,29 +3200,29 @@ bool entry_set_name(struct entry *pentry, const char *name)
     }
   }
 
-  /* Remove from hash table the old path. */
+  // Remove from hash table the old path.
   secfile_hash_delete(secfile, pentry);
 
-  /* Really rename the entry. */
+  // Really rename the entry.
   free(pentry->name);
   pentry->name = fc_strdup(name);
 
-  /* Insert into hash table the new path. */
+  // Insert into hash table the new path.
   secfile_hash_insert(secfile, pentry);
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the comment associated to this entry.
- **************************************************************************/
+ */
 const char *entry_comment(const struct entry *pentry)
 {
   return (NULL != pentry ? pentry->comment : NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Sets a comment for the entry.  Pass NULL to remove the current one.
- **************************************************************************/
+ */
 void entry_set_comment(struct entry *pentry, const QString &comment)
 {
   if (NULL == pentry) {
@@ -3233,23 +3233,23 @@ void entry_set_comment(struct entry *pentry, const QString &comment)
       (!comment.isEmpty() ? fc_strdup(qUtf8Printable(comment)) : NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if this entry has been used.
- **************************************************************************/
+ */
 static inline bool entry_used(const struct entry *pentry)
 {
   return (0 < pentry->used);
 }
 
-/**********************************************************************/ /**
+/**
    Increase the used count.
- **************************************************************************/
+ */
 static inline void entry_use(struct entry *pentry) { pentry->used++; }
 
-/**********************************************************************/ /**
+/**
    Gets an boolean value.  Returns TRUE on success.
    On old saved files, 0 and 1 can also be considered as bool.
- **************************************************************************/
+ */
 bool entry_bool_get(const struct entry *pentry, bool *value)
 {
   SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
@@ -3272,9 +3272,9 @@ bool entry_bool_get(const struct entry *pentry, bool *value)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Sets an boolean value.  Returns TRUE on success.
- **************************************************************************/
+ */
 bool entry_bool_set(struct entry *pentry, bool value)
 {
   SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
@@ -3285,9 +3285,9 @@ bool entry_bool_set(struct entry *pentry, bool value)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Gets an floating value. Returns TRUE on success.
- **************************************************************************/
+ */
 bool entry_float_get(const struct entry *pentry, float *value)
 {
   SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
@@ -3301,9 +3301,9 @@ bool entry_float_get(const struct entry *pentry, float *value)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Sets an floating value. Returns TRUE on success.
- **************************************************************************/
+ */
 bool entry_float_set(struct entry *pentry, float value)
 {
   SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
@@ -3315,9 +3315,9 @@ bool entry_float_set(struct entry *pentry, float value)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Gets an integer value.  Returns TRUE on success.
- **************************************************************************/
+ */
 bool entry_int_get(const struct entry *pentry, int *value)
 {
   SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
@@ -3330,9 +3330,9 @@ bool entry_int_get(const struct entry *pentry, int *value)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Sets an integer value.  Returns TRUE on success.
- **************************************************************************/
+ */
 bool entry_int_set(struct entry *pentry, int value)
 {
   SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
@@ -3343,9 +3343,9 @@ bool entry_int_set(struct entry *pentry, int value)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Gets an string value.  Returns TRUE on success.
- **************************************************************************/
+ */
 bool entry_str_get(const struct entry *pentry, const char **value)
 {
   SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
@@ -3358,9 +3358,9 @@ bool entry_str_get(const struct entry *pentry, const char **value)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Sets an string value.  Returns TRUE on success.
- **************************************************************************/
+ */
 bool entry_str_set(struct entry *pentry, const char *value)
 {
   char *old_val;
@@ -3379,9 +3379,9 @@ bool entry_str_set(struct entry *pentry, const char *value)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns if the string would be escaped.
- **************************************************************************/
+ */
 bool entry_str_escaped(const struct entry *pentry)
 {
   SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
@@ -3391,9 +3391,9 @@ bool entry_str_escaped(const struct entry *pentry)
   return pentry->string.escaped;
 }
 
-/**********************************************************************/ /**
+/**
    Sets if the string would be escaped.  Returns TRUE on success.
- **************************************************************************/
+ */
 bool entry_str_set_escaped(struct entry *pentry, bool escaped)
 {
   SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
@@ -3404,9 +3404,9 @@ bool entry_str_set_escaped(struct entry *pentry, bool escaped)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Sets if the string should get gettext marking. Returns TRUE on success.
- **************************************************************************/
+ */
 bool entry_str_set_gt_marking(struct entry *pentry, bool gt_marking)
 {
   SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
@@ -3418,9 +3418,9 @@ bool entry_str_set_gt_marking(struct entry *pentry, bool gt_marking)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Push an entry into a file stream.
- **************************************************************************/
+ */
 static bool entry_to_file(const struct entry *pentry, QIODevice *fs)
 {
   static char buf[8192];
@@ -3471,9 +3471,9 @@ static bool entry_to_file(const struct entry *pentry, QIODevice *fs)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Creates a new entry from the token.
- **************************************************************************/
+ */
 static void entry_from_inf_token(struct section *psection,
                                  const QString &name, const QString &tok,
                                  struct inputfile *inf)

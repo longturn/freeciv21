@@ -12,7 +12,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "city.h"
 #include "effects.h"
 #include "game.h"
@@ -26,20 +26,20 @@
 #include "traderoutes.h"
 #include "victory.h"
 
-/* server */
+// server
 #include "plrhand.h"
 
 /* server/advisors */
 #include "advdata.h"
 #include "advtools.h"
 
-/* ai */
+// ai
 #include "aitraits.h"
 #include "handicaps.h"
 
 #include "daieffects.h"
 
-/**********************************************************************/ /**
+/**
    Return the number of "luxury specialists".  This is the number of
    specialists who provide at least HAPPY_COST luxury, being the number of
    luxuries needed to make one citizen content or happy.
@@ -52,7 +52,7 @@
    This is a very bad model if the abilities of specialists are changed.
    But as long as the civ2 model of specialists is used it will continue
    to work okay.
- **************************************************************************/
+ */
 static int get_entertainers(const struct city *pcity)
 {
   int providers = 0;
@@ -68,10 +68,10 @@ static int get_entertainers(const struct city *pcity)
   return providers;
 }
 
-/**********************************************************************/ /**
+/**
    How desirable particular effect making people content is for a
    particular city?
- **************************************************************************/
+ */
 adv_want dai_content_effect_value(const struct player *pplayer,
                                   const struct city *pcity, int amount,
                                   int num_cities, int happiness_step)
@@ -82,7 +82,7 @@ adv_want dai_content_effect_value(const struct player *pplayer,
     int i;
     int max_converted = pcity->feel[CITIZEN_UNHAPPY][FEELING_FINAL];
 
-    /* See if some step of happiness calculation gets capped */
+    // See if some step of happiness calculation gets capped
     for (i = happiness_step; i < FEELING_FINAL; i++) {
       max_converted = MIN(max_converted, pcity->feel[CITIZEN_UNHAPPY][i]);
     }
@@ -93,7 +93,7 @@ adv_want dai_content_effect_value(const struct player *pplayer,
   if (num_cities > 1) {
     int factor = 2;
 
-    /* Try to build wonders to offset empire size unhappiness */
+    // Try to build wonders to offset empire size unhappiness
     if (city_list_size(pplayer->cities)
         > get_player_bonus(pplayer, EFT_EMPIRE_SIZE_BASE)) {
       if (get_player_bonus(pplayer, EFT_EMPIRE_SIZE_BASE) > 0) {
@@ -108,9 +108,9 @@ adv_want dai_content_effect_value(const struct player *pplayer,
   return v;
 }
 
-/**********************************************************************/ /**
+/**
    Number of AI stats units affected by effect
- **************************************************************************/
+ */
 static int num_affected_units(const struct effect *peffect,
                               const struct adv_data *ai)
 {
@@ -127,10 +127,10 @@ static int num_affected_units(const struct effect *peffect,
   return unit_count;
 }
 
-/**********************************************************************/ /**
+/**
    How desirable is a particular effect for a particular city,
    given the number of cities in range (c).
- **************************************************************************/
+ */
 adv_want dai_effect_value(struct player *pplayer, struct government *gov,
                           const struct adv_data *adv,
                           const struct city *pcity, const bool capital,
@@ -166,7 +166,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
   }
 
   switch (peffect->type) {
-  /* These effects have already been evaluated in base_want() */
+  // These effects have already been evaluated in base_want()
   case EFT_CAPITAL_CITY:
   case EFT_GOV_CENTER:
   case EFT_UPKEEP_FREE:
@@ -201,10 +201,10 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
   case EFT_TURN_YEARS:
   case EFT_TURN_FRAGMENTS:
   case EFT_SLOW_DOWN_TIMELINE:
-    /* AI doesn't care about these. */
+    // AI doesn't care about these.
     break;
 
-    /* WAG evaluated effects */
+    // WAG evaluated effects
   case EFT_INCITE_COST_PCT:
     v += c * amount / 100;
     break;
@@ -214,12 +214,12 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
          * 5 * amount;
     if (city_list_size(pplayer->cities)
         > get_player_bonus(pplayer, EFT_EMPIRE_SIZE_BASE)) {
-      v += c * amount; /* offset large empire size */
+      v += c * amount; // offset large empire size
     }
     v += c * amount;
     break;
   case EFT_UNIT_RECOVER:
-    /* TODO */
+    // TODO
     break;
   case EFT_NO_UNHAPPY:
     v += (get_entertainers(pcity)
@@ -278,7 +278,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     value = value * (100 - game.server.freecost) * (nplayers - amount)
             / (nplayers * amount * 100);
 
-    /* WAG */
+    // WAG
     value /= 3;
 
     v += value;
@@ -294,7 +294,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     v += c * 4 + (amount / 7) * pcity->surplus[O_FOOD];
     break;
   case EFT_HEALTH_PCT:
-    /* Is plague possible */
+    // Is plague possible
     if (game.info.illness_on) {
       v += c * 5 + (amount / 5) * pcity->server.illness;
     }
@@ -313,7 +313,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     }
     break;
   case EFT_ENABLE_NUKE:
-    /* Treat nuke as a Cruise Missile upgrade */
+    // Treat nuke as a Cruise Missile upgrade
     v += 20 + adv->stats.units.suicide_attackers * 5;
     break;
   case EFT_ENABLE_SPACE:
@@ -350,7 +350,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     break;
   case EFT_REVEAL_CITIES:
   case EFT_NO_ANARCHY:
-    break; /* Useless for AI */
+    break; // Useless for AI
   case EFT_NUKE_PROOF:
     if (adv->threats.nuclear) {
       v += city_size_get(pcity) * unit_list_size(pcity->tile->units)
@@ -370,10 +370,10 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
      * be avoided... */
     if (amount > 0) {
       if (get_city_bonus(pcity, EFT_SIZE_UNLIMIT) <= 0) {
-        amount = 20; /* really big city */
+        amount = 20; // really big city
       }
     } else {
-      /* Effect trying to remove unlimit. */
+      // Effect trying to remove unlimit.
       v -= 30 * c * adv->food_priority;
       break;
     }
@@ -415,7 +415,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     break;
   case EFT_SPY_RESISTANT:
   case EFT_SABOTEUR_RESISTANT:
-    /* Uhm, problem: City Wall has -50% here!! */
+    // Uhm, problem: City Wall has -50% here!!
     break;
   case EFT_MOVE_BONUS:
     num = num_affected_units(peffect, adv);
@@ -433,7 +433,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     v += (2 * c + num);
     break;
   case EFT_VETERAN_BUILD:
-    /* FIXME: check other reqs (e.g., unitflag) */
+    // FIXME: check other reqs (e.g., unitflag)
     num = num_affected_units(peffect, adv);
     v += amount * (3 * c + num);
     break;
@@ -456,7 +456,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     break;
   case EFT_DEFEND_BONUS:
     if (has_handicap(pplayer, H_DEFENSIVE)) {
-      v += amount / 10; /* make AI slow */
+      v += amount / 10; // make AI slow
     }
 
     /* TODO: Really should consider how many affected enemy units there is.
@@ -472,7 +472,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
         }
       }
       if (affects_sea_capable_units && affects_land_capable_units) {
-        /* Don't bother searching more if we already know enough. */
+        // Don't bother searching more if we already know enough.
         break;
       }
     }
@@ -495,7 +495,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
         adjc_iterate_end;
       }
     }
-    v += (amount / 25 + adv->threats.invasions - 1) * c; /* for wonder */
+    v += (amount / 25 + adv->threats.invasions - 1) * c; // for wonder
     if (capital || affects_land_capable_units) {
       Continent_id place = tile_continent(pcity->tile);
 
@@ -534,10 +534,10 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     players_iterate_end;
     break;
   case EFT_UPGRADE_PRICE_PCT:
-    /* This is based on average base upgrade price of 50. */
+    // This is based on average base upgrade price of 50.
     v -= adv->stats.units.upgradeable * amount / 2;
     break;
-  /* Currently not supported for building AI - wait for modpack users */
+  // Currently not supported for building AI - wait for modpack users
   case EFT_CITY_UNHAPPY_SIZE:
   case EFT_UNHAPPY_FACTOR:
   case EFT_UPKEEP_FACTOR:
@@ -572,7 +572,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
   case EFT_MAPS_STOLEN_PCT:
   case EFT_UNIT_SHIELD_VALUE_PCT:
     break;
-    /* This has no effect for AI */
+    // This has no effect for AI
   case EFT_VISIBLE_WALLS:
   case EFT_CITY_IMAGE:
   case EFT_SHIELD2GOLD_FACTOR:
@@ -584,7 +584,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     break;
   case EFT_HISTORY:
   case EFT_NATION_HISTORY:
-    /* ...and history effect to accumulate those points for 50 turns. */
+    // ...and history effect to accumulate those points for 50 turns.
     v += amount * 5;
     break;
   case EFT_TECH_COST_FACTOR:
@@ -599,13 +599,13 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     v -= amount * 25;
     break;
   case EFT_CITY_RADIUS_SQ:
-    v += amount * 10; /* AI wants bigger city radii */
+    v += amount * 10; // AI wants bigger city radii
     break;
   case EFT_CITY_BUILD_SLOTS:
     v += amount * 10;
     break;
   case EFT_MIGRATION_PCT:
-    /* Consider all foreign cities within set distance */
+    // Consider all foreign cities within set distance
     iterate_outward(&(wld.map), city_tile(pcity),
                     game.server.mgr_distance
                         + (int) sqrt(MAX(city_map_radius_sq_get(pcity), 0)),
@@ -614,11 +614,11 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
       struct city *acity = tile_city(ptile);
 
       if (!acity || acity == pcity || city_owner(acity) == pplayer) {
-        /* No city, the city in the center, or our own city */
+        // No city, the city in the center, or our own city
         continue;
       }
 
-      v += amount; /* AI wants migration into its cities! */
+      v += amount; // AI wants migration into its cities!
     }
     iterate_outward_end;
     break;
@@ -632,7 +632,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
          * trait / TRAIT_DEFAULT_VALUE;
     if (city_num_trade_routes(pcity) >= max_trade_routes(pcity)
         && amount > 0) {
-      /* Has no free trade routes before this */
+      // Has no free trade routes before this
       v += trait;
     }
     break;
@@ -651,7 +651,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
 
     if (city_num_trade_routes(pcity) < max_trade_routes(pcity)
         && amount > 0) {
-      /* Space for future routes */
+      // Space for future routes
       v += trait * 5 / TRAIT_DEFAULT_VALUE;
     }
   } break;
@@ -667,10 +667,10 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     break;
   case EFT_ACTION_SUCCESS_MOVE_COST:
   case EFT_ACTION_SUCCESS_TARGET_MOVE_COST: {
-    /* Taking MAX_MOVE_FRAGS takes all the move fragments. */
+    // Taking MAX_MOVE_FRAGS takes all the move fragments.
     adv_want move_fragment_cost = MIN(MAX_MOVE_FRAGS, amount);
 
-    /* Lose all movement => 1. */
+    // Lose all movement => 1.
     v -= move_fragment_cost / static_cast<adv_want>(MAX_MOVE_FRAGS);
   } break;
   case EFT_INFRA_POINTS:
@@ -684,9 +684,9 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
   return v;
 }
 
-/**********************************************************************/ /**
+/**
    Checks recursively to see if the player already has a better government
- **************************************************************************/
+ */
 static bool have_better_government(const struct player *pplayer,
                                    const struct government *pgov)
 {
@@ -699,7 +699,7 @@ static bool have_better_government(const struct player *pplayer,
   }
   return false;
 }
-/**********************************************************************/ /**
+/**
    Does the AI expect to ever be able to meet this requirement.
 
    The return value of this function is unreliable for requirements
@@ -708,21 +708,21 @@ static bool have_better_government(const struct player *pplayer,
    be met in the future.
 
    City may be NULL, so request pplayer separately.
- **************************************************************************/
+ */
 bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
                                         const struct player *pplayer,
                                         const struct city *pcity)
 {
   switch (preq->source.kind) {
   case VUT_GOVERNMENT:
-    /* We can't meet a government requirement if we have a better one. */
+    // We can't meet a government requirement if we have a better one.
     return !have_better_government(pplayer, preq->source.value.govern);
 
   case VUT_IMPROVEMENT: {
     const struct impr_type *pimprove = preq->source.value.building;
 
     if (preq->present && improvement_obsolete(pplayer, pimprove, pcity)) {
-      /* Would need to unobsolete a building, which is too hard. */
+      // Would need to unobsolete a building, which is too hard.
       return false;
     } else if (!preq->present && pcity != NULL
                && I_NEVER < pcity->built[improvement_index(pimprove)].turn
@@ -740,7 +740,7 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
       requirement_vector_iterate_end;
     }
     break;
-  } /* VUT_IMPROVEMENT inline block */
+  } // VUT_IMPROVEMENT inline block
 
   case VUT_SPECIALIST:
     if (preq->present) {
@@ -752,11 +752,11 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
         }
       }
       requirement_vector_iterate_end;
-    } /* It is always possible to remove a specialist. */
+    } // It is always possible to remove a specialist.
     break;
 
   case VUT_NATIONALITY:
-    /* Crude, but the right answer needs to consider civil wars. */
+    // Crude, but the right answer needs to consider civil wars.
     return nation_is_in_current_set(preq->source.value.nation);
 
   case VUT_CITYSTATUS:
@@ -792,24 +792,24 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
   case VUT_ACHIEVEMENT:
   case VUT_MINCULTURE:
   case VUT_MINTECHS:
-    /* No way to remove once present. */
+    // No way to remove once present.
     return preq->present;
 
   case VUT_MINFOREIGNPCT:
-    /* No way to add once lost. */
+    // No way to add once lost.
     return !preq->present;
 
   case VUT_NATION:
   case VUT_NATIONGROUP:
   case VUT_AI_LEVEL:
   case VUT_SERVERSETTING:
-    /* Beyond player control. */
+    // Beyond player control.
     return false;
 
   case VUT_OTYPE:
   case VUT_CITYTILE:
   case VUT_IMPR_GENUS:
-    /* Can always be achieved. */
+    // Can always be achieved.
     return true;
 
   case VUT_NONE:
@@ -829,7 +829,7 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
   case VUT_GOOD:
   case VUT_MINCALFRAG:
   case VUT_COUNT:
-    /* No sensible implementation possible with data available. */
+    // No sensible implementation possible with data available.
     break;
   }
   return true;

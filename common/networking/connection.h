@@ -10,7 +10,7 @@
 **************************************************************************/
 #pragma once
 
-#include <ctime> /* time_t */
+#include <ctime> // time_t
 
 /**************************************************************************
   The connection struct and related stuff.
@@ -21,12 +21,12 @@
 #include <QList>
 #include <QString>
 
-/* utility */
-#include "shared.h"  /* MAX_LEN_ADDR */
-#include "support.h" /* bool type */
+// utility
+#include "shared.h"  // MAX_LEN_ADDR
+#include "support.h" // bool type
 #include "timing.h"
 
-/* common */
+// common
 #include "fc_types.h"
 
 // Forward declarations
@@ -36,7 +36,7 @@ struct conn_pattern_list;
 struct genhash;
 struct packet_handlers;
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define MAX_LEN_PACKET 4096
 #define MAX_LEN_CAPSTR 512
 #define MAX_LEN_PASSWORD                                                    \
@@ -52,23 +52,23 @@ struct packet_handlers;
   Used in the network protocol.
 ****************************************************************************/
 #define SPECENUM_NAME cmdlevel
-/* User may issue no commands at all. */
+// User may issue no commands at all.
 #define SPECENUM_VALUE0 ALLOW_NONE
 #define SPECENUM_VALUE0NAME "none"
-/* Informational or observer commands only. */
+// Informational or observer commands only.
 #define SPECENUM_VALUE1 ALLOW_INFO
 #define SPECENUM_VALUE1NAME "info"
-/* User may issue basic player commands. */
+// User may issue basic player commands.
 #define SPECENUM_VALUE2 ALLOW_BASIC
 #define SPECENUM_VALUE2NAME "basic"
 /* User may issue commands that affect game & users
  * (starts a vote if the user's level is 'basic'). */
 #define SPECENUM_VALUE3 ALLOW_CTRL
 #define SPECENUM_VALUE3NAME "ctrl"
-/* User may issue commands that affect the server. */
+// User may issue commands that affect the server.
 #define SPECENUM_VALUE4 ALLOW_ADMIN
 #define SPECENUM_VALUE4NAME "admin"
-/* User may issue *all* commands - dangerous! */
+// User may issue *all* commands - dangerous!
 #define SPECENUM_VALUE5 ALLOW_HACK
 #define SPECENUM_VALUE5NAME "hack"
 #define SPECENUM_COUNT CMDLEVEL_COUNT
@@ -79,7 +79,7 @@ struct packet_handlers;
   see doc/HACKING
 ***************************************************************************/
 
-/* where the connection is in the authentication process */
+// where the connection is in the authentication process
 enum auth_status {
   AS_NOT_ESTABLISHED = 0,
   AS_FAILED,
@@ -88,7 +88,7 @@ enum auth_status {
   AS_ESTABLISHED
 };
 
-/* get 'struct conn_list' and related functions: */
+// get 'struct conn_list' and related functions:
 /* do this with forward definition of struct connection, so that
  * connection struct can contain a struct conn_list */
 struct connection;
@@ -112,8 +112,8 @@ struct socket_packet_buffer {
 };
 
 struct packet_header {
-  unsigned int length : 4; /* Actually 'enum data_type' */
-  unsigned int type : 4;   /* Actually 'enum data_type' */
+  unsigned int length : 4; // Actually 'enum data_type'
+  unsigned int type : 4;   // Actually 'enum data_type'
 };
 
 #define SPECVEC_TAG byte
@@ -128,7 +128,7 @@ struct connection {
   int id; /* used for server/client communication */
   QTcpSocket *sock = nullptr;
   bool used;
-  bool established; /* have negotiated initial packets */
+  bool established; // have negotiated initial packets
   struct packet_header packet_header;
   QString closing_reason;
 
@@ -147,7 +147,7 @@ struct connection {
 
   double ping_time;
 
-  struct conn_list *self; /* list with this connection as single element */
+  struct conn_list *self; // list with this connection as single element
   char username[MAX_LEN_NAME];
   QString addr;
 
@@ -170,10 +170,10 @@ struct connection {
 
   union {
     struct {
-      /* Increases for every packet send to the server. */
+      // Increases for every packet send to the server.
       int last_request_id_used;
 
-      /* Increases for every received PACKET_PROCESSING_FINISHED packet. */
+      // Increases for every received PACKET_PROCESSING_FINISHED packet.
       int last_processed_request_id_seen;
 
       /* Holds the id of the request which caused this packet. Can be zero.
@@ -182,17 +182,17 @@ struct connection {
     } client;
 
     struct {
-      /* Holds the id of the request which is processed now. Can be zero. */
+      // Holds the id of the request which is processed now. Can be zero.
       int currently_processed_request_id;
 
-      /* Will increase for every received packet. */
+      // Will increase for every received packet.
       int last_request_id_seen;
 
       /* The start times of the PACKET_CONN_PING which have been sent but
        * weren't PACKET_CONN_PONGed yet? */
       QList<civtimer *> *ping_timers;
 
-      /* Holds number of tries for authentication from client. */
+      // Holds number of tries for authentication from client.
       int auth_tries;
 
       /* the time that the server will respond after receiving an auth reply.
@@ -205,13 +205,13 @@ struct connection {
       enum auth_status status;
       char password[MAX_LEN_PASSWORD];
 
-      /* for reverse lookup and blacklisting in db */
+      // for reverse lookup and blacklisting in db
       char ipaddr[MAX_LEN_ADDR];
 
-      /* The access level initially given to the client upon connection. */
+      // The access level initially given to the client upon connection.
       enum cmdlevel granted_access_level;
 
-      /* The list of ignored connection patterns. */
+      // The list of ignored connection patterns.
       struct conn_pattern_list *ignore_list;
 
       /* Something has occurred that means the connection should be closed,
@@ -221,7 +221,7 @@ struct connection {
       /* If we use delegation the original player (playing) is replaced. Save
        * it here to easily restore it. */
       struct {
-        bool status; /* TRUE if player currently delegated to us */
+        bool status; // TRUE if player currently delegated to us
         struct player *playing;
         bool observer;
       } delegation;
@@ -307,7 +307,7 @@ int get_next_request_id(int old_request_id);
 
 extern const char blank_addr_str[];
 
-/* Connection patterns. */
+// Connection patterns.
 struct conn_pattern;
 
 #define SPECLIST_TAG conn_pattern

@@ -19,7 +19,7 @@
 #include <QString>
 #include <QTcpSocket>
 
-/* utility */
+// utility
 #include "capstr.h"
 #include "dataio.h"
 #include "fcintl.h"
@@ -27,22 +27,22 @@
 #include "registry.h"
 #include "support.h"
 
-/* common */
+// common
 #include "game.h"
 #include "packets.h"
 #include "version.h"
 
-/* client */
+// client
 #include "attribute.h"
 #include "chatline_g.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "connectdlg_common.h"
 #include "connectdlg_g.h"
-#include "dialogs_g.h" /* popdown_races_dialog() */
+#include "dialogs_g.h" // popdown_races_dialog()
 #include "governor.h"
-#include "gui_main_g.h"     /* add_net_input(), remove_net_input() */
-#include "mapview_common.h" /* unqueue_mapview_update */
+#include "gui_main_g.h"     // add_net_input(), remove_net_input()
+#include "mapview_common.h" // unqueue_mapview_update
 #include "menu_g.h"
 #include "messagewin_g.h"
 #include "options.h"
@@ -53,16 +53,16 @@
 
 #include "clinet.h"
 
-/* In autoconnect mode, try to connect to once a second */
+// In autoconnect mode, try to connect to once a second
 #define AUTOCONNECT_INTERVAL 500
 
-/* In autoconnect mode, try to connect 100 times */
+// In autoconnect mode, try to connect 100 times
 #define MAX_AUTOCONNECT_ATTEMPTS 100
 
-/**********************************************************************/ /**
+/**
    Close socket and cleanup.  This one doesn't print a message, so should
    do so before-hand if necessary.
- **************************************************************************/
+ */
 static void close_socket_nomessage(struct connection *pc)
 {
   connection_common_close(pc);
@@ -73,10 +73,10 @@ static void close_socket_nomessage(struct connection *pc)
   set_client_state(C_S_DISCONNECTED);
 }
 
-/**********************************************************************/ /**
+/**
    Client connection close socket callback. It shouldn't be called directy.
    Use connection_close() instead.
- **************************************************************************/
+ */
 static void client_conn_close_callback(struct connection *pconn)
 {
   QString reason;
@@ -88,14 +88,14 @@ static void client_conn_close_callback(struct connection *pconn)
   }
 
   close_socket_nomessage(pconn);
-  /* If we lost connection to the internal server - kill it. */
+  // If we lost connection to the internal server - kill it.
   client_kill_server(true);
   qCritical("Lost connection to server: %s.", qPrintable(reason));
   output_window_printf(ftc_client, _("Lost connection to server (%s)!"),
                        qUtf8Printable(reason));
 }
 
-/**********************************************************************/ /**
+/**
    Try to connect to a server:
     - try to create a TCP socket to the given hostname and port (default to
       localhost:DEFAULT_SOCK_PORT) and connect it to `names'.
@@ -106,7 +106,7 @@ static void client_conn_close_callback(struct connection *pconn)
     - if unable to create the connection, close the socket, put an error
       message in ERRBUF and return the Unix error code (ie., errno, which
       will be non-zero).
- **************************************************************************/
+ */
 static int try_to_connect(QString &hostname, int port, QString &username,
                           char *errbuf, int errbufsize)
 {
@@ -121,7 +121,7 @@ static int try_to_connect(QString &hostname, int port, QString &username,
 
   connections_set_close_callback(client_conn_close_callback);
 
-  /* connection in progress? wait. */
+  // connection in progress? wait.
   if (client.conn.used) {
     (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
     return -1;
@@ -151,10 +151,10 @@ static int try_to_connect(QString &hostname, int port, QString &username,
   return 0;
 }
 
-/**********************************************************************/ /**
+/**
    Connect to a freeciv-server instance -- or at least try to.  On success,
    return 0; on failure, put an error message in ERRBUF and return -1.
- **************************************************************************/
+ */
 int connect_to_server(QString &username, QString &hostname, int port,
                       char *errbuf, int errbufsize)
 {
@@ -175,9 +175,9 @@ int connect_to_server(QString &username, QString &hostname, int port,
   return 0;
 }
 
-/**********************************************************************/ /**
+/**
    Called after a connection is completed (e.g., in try_to_connect).
- **************************************************************************/
+ */
 void make_connection(QTcpSocket *sock, QString &username)
 {
   struct packet_server_join_req req;
@@ -190,10 +190,10 @@ void make_connection(QTcpSocket *sock, QString &username)
   client.conn.incoming_packet_notify = notify_about_incoming_packet;
   client.conn.outgoing_packet_notify = notify_about_outgoing_packet;
 
-  /* call gui-dependent stuff in gui_main.c */
+  // call gui-dependent stuff in gui_main.c
   add_net_input(client.conn.sock);
 
-  /* now send join_request package */
+  // now send join_request package
 
   req.major_version = MAJOR_VERSION;
   req.minor_version = MINOR_VERSION;
@@ -205,10 +205,10 @@ void make_connection(QTcpSocket *sock, QString &username)
   send_packet_server_join_req(&client.conn, &req);
 }
 
-/**********************************************************************/ /**
+/**
    Get rid of server connection. This also kills internal server if it's
    used.
- **************************************************************************/
+ */
 void disconnect_from_server()
 {
   const bool force = !client.conn.used;
@@ -233,7 +233,7 @@ void disconnect_from_server()
   }
 }
 
-/**********************************************************************/ /**
+/**
    A wrapper around read_socket_data() which also handles the case the
    socket becomes writeable and there is still data which should be sent
    to the server.
@@ -243,7 +243,7 @@ void disconnect_from_server()
      -2  :  the connection was closed
      >0  :  number of bytes read
      =0  :  no data read, would block
- **************************************************************************/
+ */
 static int read_from_connection(struct connection *pc, bool block)
 {
   QTcpSocket *socket = pc->sock;
@@ -283,10 +283,10 @@ static int read_from_connection(struct connection *pc, bool block)
   return ret;
 }
 
-/**********************************************************************/ /**
+/**
    This function is called when the client received a new input from the
    server.
- **************************************************************************/
+ */
 void input_from_server(QTcpSocket *sock)
 {
   int nb;
@@ -325,10 +325,10 @@ void input_from_server(QTcpSocket *sock)
 }
 
 static bool autoconnecting = false;
-/**********************************************************************/ /**
+/**
    Make an attempt to autoconnect to the server.
    It returns number of seconds it should be called again.
- **************************************************************************/
+ */
 double try_to_autoconnect()
 {
   char errbuf[512];
@@ -366,13 +366,13 @@ double try_to_autoconnect()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Start trying to autoconnect to freeciv-server.  Calls
    get_server_address(), then arranges for try_to_autoconnect(), which
    calls try_to_connect(), to be called roughly every
    AUTOCONNECT_INTERVAL milliseconds, until success, fatal error or
    user intervention.
- **************************************************************************/
+ */
 void start_autoconnecting_to_server()
 {
   output_window_printf(

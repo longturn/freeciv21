@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
+// common
 #include "player.h"
 
 struct player;

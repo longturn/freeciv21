@@ -12,8 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
-#include "events.h" /* enum event_type */
+// common
+#include "events.h" // enum event_type
 #include "packets.h"
 #include "unitlist.h"
 #include "workertask.h"
@@ -92,7 +92,7 @@ void city_thaw_workers(struct city *pcity);
 void city_freeze_workers_queue(struct city *pcity);
 void city_thaw_workers_queue();
 
-/* city map functions */
+// city map functions
 void city_map_update_empty(struct city *pcity, struct tile *ptile);
 void city_map_update_worker(struct city *pcity, struct tile *ptile);
 

@@ -15,7 +15,7 @@
 
 struct lua_State;
 
-/* Game */
+// Game
 int api_methods_game_turn(lua_State *L);
 int api_methods_game_turn_deprecated(lua_State *L);
 int api_methods_game_year(lua_State *L);
@@ -24,7 +24,7 @@ const char *api_methods_game_year_text(lua_State *L);
 const char *api_methods_game_rulesetdir(lua_State *L);
 const char *api_methods_game_ruleset_name(lua_State *L);
 
-/* Building Type */
+// Building Type
 bool api_methods_building_type_is_wonder(lua_State *L,
                                          Building_Type *pbuilding);
 bool api_methods_building_type_is_great_wonder(lua_State *L,
@@ -39,7 +39,7 @@ const char *
 api_methods_building_type_name_translation(lua_State *L,
                                            Building_Type *pbuilding);
 
-/* City */
+// City
 bool api_methods_city_has_building(lua_State *L, City *pcity,
                                    Building_Type *building);
 int api_methods_city_map_sq_radius(lua_State *L, City *pcity);
@@ -56,13 +56,13 @@ bool api_methods_is_city_celebrating(lua_State *L, City *pcity);
 bool api_methods_is_gov_center(lua_State *L, City *pcity);
 bool api_methods_is_capital(lua_State *L, City *pcity);
 
-/* Government */
+// Government
 const char *api_methods_government_rule_name(lua_State *L,
                                              Government *pgovernment);
 const char *api_methods_government_name_translation(lua_State *L,
                                                     Government *pgovernment);
 
-/* Nation */
+// Nation
 const char *api_methods_nation_type_rule_name(lua_State *L,
                                               Nation_Type *pnation);
 const char *api_methods_nation_type_name_translation(lua_State *L,
@@ -70,7 +70,7 @@ const char *api_methods_nation_type_name_translation(lua_State *L,
 const char *api_methods_nation_type_plural_translation(lua_State *L,
                                                        Nation_Type *pnation);
 
-/* Player */
+// Player
 const char *api_methods_player_controlling_gui(lua_State *L,
                                                Player *pplayer);
 bool api_methods_player_has_wonder(lua_State *L, Player *pplayer,
@@ -95,33 +95,33 @@ int api_methods_player_culture_get(lua_State *L, Player *pplayer);
 bool api_methods_player_has_flag(lua_State *L, Player *pplayer,
                                  const char *flag);
 
-/* Tech Type */
+// Tech Type
 const char *api_methods_tech_type_rule_name(lua_State *L, Tech_Type *ptech);
 const char *api_methods_tech_type_name_translation(lua_State *L,
                                                    Tech_Type *ptech);
 
-/* Terrain */
+// Terrain
 const char *api_methods_terrain_rule_name(lua_State *L, Terrain *pterrain);
 const char *api_methods_terrain_name_translation(lua_State *L,
                                                  Terrain *pterrain);
 const char *api_methods_terrain_class_name(lua_State *L, Terrain *pterrain);
 
-/* Disaster */
+// Disaster
 const char *api_methods_disaster_rule_name(lua_State *L, Disaster *pdis);
 const char *api_methods_disaster_name_translation(lua_State *L,
                                                   Disaster *pdis);
 
-/* Achievement */
+// Achievement
 const char *api_methods_achievement_rule_name(lua_State *L,
                                               Achievement *pach);
 const char *api_methods_achievement_name_translation(lua_State *L,
                                                      Achievement *pach);
 
-/* Action */
+// Action
 const char *api_methods_action_rule_name(lua_State *L, Action *pact);
 const char *api_methods_action_name_translation(lua_State *L, Action *pact);
 
-/* Tile */
+// Tile
 int api_methods_tile_nat_x(lua_State *L, Tile *ptile);
 int api_methods_tile_nat_y(lua_State *L, Tile *ptile);
 int api_methods_tile_map_x(lua_State *L, Tile *ptile);
@@ -143,7 +143,7 @@ Tile *api_methods_private_tile_for_outward_index(lua_State *L, Tile *pstart,
 Unit_List_Link *api_methods_private_tile_unit_list_head(lua_State *L,
                                                         Tile *ptile);
 
-/* Unit */
+// Unit
 bool api_methods_unit_city_can_be_built_here(lua_State *L, Unit *punit);
 Tile *api_methods_unit_tile_get(lua_State *L, Unit *punit);
 const Direction *api_methods_unit_orientation_get(lua_State *L, Unit *punit);
@@ -151,7 +151,7 @@ Unit *api_methods_unit_transporter(lua_State *L, Unit *punit);
 Unit_List_Link *api_methods_private_unit_cargo_list_head(lua_State *L,
                                                          Unit *punit);
 
-/* Unit Type */
+// Unit Type
 bool api_methods_unit_type_has_flag(lua_State *L, Unit_Type *punit_type,
                                     const char *flag);
 bool api_methods_unit_type_has_role(lua_State *L, Unit_Type *punit_type,
@@ -164,12 +164,12 @@ const char *api_methods_unit_type_rule_name(lua_State *L,
 const char *api_methods_unit_type_name_translation(lua_State *L,
                                                    Unit_Type *punit_type);
 
-/* Unit_List_Link Type */
+// Unit_List_Link Type
 Unit *api_methods_unit_list_link_data(lua_State *L, Unit_List_Link *link);
 Unit_List_Link *api_methods_unit_list_next_link(lua_State *L,
                                                 Unit_List_Link *link);
 
-/* City_List_Link Type */
+// City_List_Link Type
 City *api_methods_city_list_link_data(lua_State *L, City_List_Link *link);
 City_List_Link *api_methods_city_list_next_link(lua_State *L,
                                                 City_List_Link *link);

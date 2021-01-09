@@ -40,9 +40,9 @@
 
 #include "tab_good.h"
 
-/**********************************************************************/ /**
+/**
    Setup tab_good object
- **************************************************************************/
+ */
 tab_good::tab_good(ruledit_gui *ui_in) : QWidget()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
@@ -114,9 +114,9 @@ tab_good::tab_good(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the information.
- **************************************************************************/
+ */
 void tab_good::refresh()
 {
   good_list->clear();
@@ -133,9 +133,9 @@ void tab_good::refresh()
   goods_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Update info of the good
- **************************************************************************/
+ */
 void tab_good::update_good_info(struct goods_type *pgood)
 {
   selected = pgood;
@@ -161,9 +161,9 @@ void tab_good::update_good_info(struct goods_type *pgood)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User selected good from the list.
- **************************************************************************/
+ */
 void tab_good::select_good()
 {
   QList<QListWidgetItem *> select_list = good_list->selectedItems();
@@ -176,9 +176,9 @@ void tab_good::select_good()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User entered name for the good
- **************************************************************************/
+ */
 void tab_good::name_given()
 {
   if (selected != nullptr) {
@@ -208,9 +208,9 @@ void tab_good::name_given()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User requested good deletion
- **************************************************************************/
+ */
 void tab_good::delete_now()
 {
   if (selected != 0) {
@@ -228,9 +228,9 @@ void tab_good::delete_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialize new good for use.
- **************************************************************************/
+ */
 bool tab_good::initialize_new_good(struct goods_type *pgood)
 {
   if (goods_by_rule_name("New Good") != nullptr) {
@@ -242,9 +242,9 @@ bool tab_good::initialize_new_good(struct goods_type *pgood)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    User requested new good
- **************************************************************************/
+ */
 void tab_good::add_now()
 {
   struct goods_type *new_good;
@@ -281,9 +281,9 @@ void tab_good::add_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Toggled whether rule_name and name should be kept identical
- **************************************************************************/
+ */
 void tab_good::same_name_toggle(bool checked)
 {
   name->setEnabled(!checked);
@@ -292,9 +292,9 @@ void tab_good::same_name_toggle(bool checked)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit reqs
- **************************************************************************/
+ */
 void tab_good::edit_reqs()
 {
   if (selected != nullptr) {
@@ -305,9 +305,9 @@ void tab_good::edit_reqs()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit effects
- **************************************************************************/
+ */
 void tab_good::edit_effects()
 {
   if (selected != nullptr) {

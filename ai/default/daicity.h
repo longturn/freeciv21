@@ -12,8 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
-#include "effects.h" /* enum effect_type */
+// common
+#include "effects.h" // enum effect_type
 #include "fc_types.h"
 
 /* server/advisors */
@@ -22,29 +22,29 @@
 struct adv_data;
 struct tech_vector;
 
-struct ai_activity_cache; /* defined and only used within aicity.c */
+struct ai_activity_cache; // defined and only used within aicity.c
 
-/* Who's coming to kill us, for attack co-ordination */
+// Who's coming to kill us, for attack co-ordination
 struct ai_invasion {
-  int attack; /* Units capable of attacking city */
-  int occupy; /* Units capable of occupying city */
+  int attack; // Units capable of attacking city
+  int occupy; // Units capable of occupying city
 };
 
 struct ai_city {
-  adv_want worth; /* Cache city worth here, sum of all weighted incomes */
+  adv_want worth; // Cache city worth here, sum of all weighted incomes
 
-  int building_turn; /* only recalculate every Nth turn */
-  int building_wait; /* for weighting values */
+  int building_turn; // only recalculate every Nth turn
+  int building_wait; // for weighting values
 #define BUILDING_WAIT_MINIMUM (1)
 
-  struct adv_choice choice; /* to spend gold in the right place only */
+  struct adv_choice choice; // to spend gold in the right place only
 
   struct ai_invasion invasion;
   int attack, bcost; /* This is also for invasion - total power and value of
                       * all units coming to kill us. */
 
-  int danger;       /* danger to be compared to assess_defense */
-  int grave_danger; /* danger, should show positive feedback */
+  int danger;       // danger to be compared to assess_defense
+  int grave_danger; // danger, should show positive feedback
   int urgency;      /* how close the danger is; if zero,
                                 bodyguards can leave */
   int wallvalue;             /* how much it helps for defenders to be
@@ -53,15 +53,15 @@ struct ai_city {
   int distance_to_wonder_city; /* wondercity will set this for us,
                                   avoiding paradox */
 
-  bool celebrate;       /* try to celebrate in this city */
-  bool diplomat_threat; /* enemy diplomat or spy is near the city */
-  bool has_diplomat;    /* this city has diplomat or spy defender */
+  bool celebrate;       // try to celebrate in this city
+  bool diplomat_threat; // enemy diplomat or spy is near the city
+  bool has_diplomat;    // this city has diplomat or spy defender
 
   /* These values are for builder (UTYF_SETTLERS) and founder (UTYF_CITIES)
    * units. Negative values indicate that the city needs a boat first;
    * -value is the degree of want in that case. */
-  bool founder_boat; /* city founder will need a boat */
-  int founder_turn;  /* only recalculate every Nth turn */
+  bool founder_boat; // city founder will need a boat
+  int founder_turn;  // only recalculate every Nth turn
   int founder_want;
   int worker_want;
   struct unit_type *worker_type;

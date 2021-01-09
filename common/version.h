@@ -22,12 +22,12 @@
 #define NEXT_RELEASE_MONTH (month[FREECIV_RELEASE_MONTH])
 #endif
 
-/* version informational strings */
+// version informational strings
 const char *freeciv_name_version();
 const char *word_version();
 const char *fc_git_revision();
 const char *fc_comparable_version();
 const char *freeciv_datafile_version();
 
-/* If returns NULL, not a beta version. */
+// If returns NULL, not a beta version.
 const char *beta_message();

@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
+// common
 #include "fc_types.h"
 
 struct adv_choice *domestic_advisor_choose_build(struct ai_type *ait,

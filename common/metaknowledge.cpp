@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "diptreaty.h"
 #include "game.h"
 #include "map.h"
@@ -23,19 +23,19 @@
 #include "tile.h"
 #include "traderoutes.h"
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the target_tile it self and all tiles cardinally
    adjacent to it are seen by pow_player.
- **************************************************************************/
+ */
 static bool is_tile_seen_cadj(const struct player *pow_player,
                               const struct tile *target_tile)
 {
-  /* The tile it self is unseen. */
+  // The tile it self is unseen.
   if (!tile_is_seen(target_tile, pow_player)) {
     return false;
   }
 
-  /* A cardinally adjacent tile is unseen. */
+  // A cardinally adjacent tile is unseen.
   cardinal_adjc_iterate(&(wld.map), target_tile, ptile)
   {
     if (!tile_is_seen(ptile, pow_player)) {
@@ -44,23 +44,23 @@ static bool is_tile_seen_cadj(const struct player *pow_player,
   }
   cardinal_adjc_iterate_end;
 
-  /* They are all seen. */
+  // They are all seen.
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the target_tile it self and all tiles adjacent to it
    are seen by pow_player.
- **************************************************************************/
+ */
 static bool is_tile_seen_adj(const struct player *pow_player,
                              const struct tile *target_tile)
 {
-  /* The tile it self is unseen. */
+  // The tile it self is unseen.
   if (!tile_is_seen(target_tile, pow_player)) {
     return false;
   }
 
-  /* An adjacent tile is unseen. */
+  // An adjacent tile is unseen.
   adjc_iterate(&(wld.map), target_tile, ptile)
   {
     if (!tile_is_seen(ptile, pow_player)) {
@@ -69,22 +69,22 @@ static bool is_tile_seen_adj(const struct player *pow_player,
   }
   adjc_iterate_end;
 
-  /* They are all seen. */
+  // They are all seen.
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff all tiles of a city are seen by pow_player.
- **************************************************************************/
+ */
 static bool is_tile_seen_city(const struct player *pow_player,
                               const struct city *target_city)
 {
-  /* Don't know the city radius. */
+  // Don't know the city radius.
   if (!can_player_see_city_internals(pow_player, target_city)) {
     return false;
   }
 
-  /* A tile of the city is unseen */
+  // A tile of the city is unseen
   city_tile_iterate(city_map_radius_sq_get(target_city),
                     city_tile(target_city), ptile)
   {
@@ -94,28 +94,28 @@ static bool is_tile_seen_city(const struct player *pow_player,
   }
   city_tile_iterate_end;
 
-  /* They are all seen. */
+  // They are all seen.
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff all the tiles of a city and all the tiles of its trade
    partners are seen by pow_player.
- **************************************************************************/
+ */
 static bool is_tile_seen_traderoute(const struct player *pow_player,
                                     const struct city *target_city)
 {
-  /* Don't know who the trade routes will go to. */
+  // Don't know who the trade routes will go to.
   if (!can_player_see_city_internals(pow_player, target_city)) {
     return false;
   }
 
-  /* A tile of the city is unseen */
+  // A tile of the city is unseen
   if (!is_tile_seen_city(pow_player, target_city)) {
     return false;
   }
 
-  /* A tile of a trade parter is unseen */
+  // A tile of a trade parter is unseen
   trade_partners_iterate(target_city, trade_partner)
   {
     if (!is_tile_seen_city(pow_player, trade_partner)) {
@@ -124,43 +124,43 @@ static bool is_tile_seen_traderoute(const struct player *pow_player,
   }
   trade_partners_iterate_end;
 
-  /* They are all seen. */
+  // They are all seen.
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff pplayer can see all the symmetric diplomatic
    relationships of tplayer.
- **************************************************************************/
+ */
 static bool can_plr_see_all_sym_diplrels_of(const struct player *pplayer,
                                             const struct player *tplayer)
 {
   if (pplayer == tplayer) {
-    /* Can see own relationships. */
+    // Can see own relationships.
     return true;
   }
 
   if (player_has_embassy(pplayer, tplayer)) {
-    /* Gets reports from the embassy. */
+    // Gets reports from the embassy.
     return true;
   }
 
   if (player_diplstate_get(pplayer, tplayer)->contact_turns_left > 0) {
-    /* Can see relationships during contact turns. */
+    // Can see relationships during contact turns.
     return true;
   }
 
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Is an evaluation of the requirement accurate when pow_player evaluates
    it?
 
    TODO: Move the data to a data file. That will
          - let non programmers help complete it and/or fix what is wrong
          - let clients not written in C use the data
- **************************************************************************/
+ */
 static bool is_req_knowable(
     const struct player *pow_player, const struct player *target_player,
     const struct player *other_player, const struct city *target_city,
@@ -218,16 +218,16 @@ static bool is_req_knowable(
     case USP_TRANSPORTING:
     case USP_NATIVE_TILE:
     case USP_NATIVE_EXTRA:
-      /* Known if the unit is seen by the player. */
+      // Known if the unit is seen by the player.
       return target_unit && can_player_see_unit(pow_player, target_unit);
     case USP_HAS_HOME_CITY:
     case USP_MOVED_THIS_TURN:
-      /* Known to the unit's owner. */
+      // Known to the unit's owner.
       return target_unit && unit_owner(target_unit) == pow_player;
     case USP_COUNT:
       fc_assert_msg(req->source.value.unit_state != USP_COUNT,
                     "Invalid unit state property.");
-      /* Invalid property is unknowable. */
+      // Invalid property is unknowable.
       return false;
     }
   }
@@ -244,7 +244,7 @@ static bool is_req_knowable(
 
     switch (req->range) {
     case REQ_RANGE_LOCAL:
-      /* The owner can see if his unit has move fragments left. */
+      // The owner can see if his unit has move fragments left.
       return unit_owner(target_unit) == pow_player;
     case REQ_RANGE_CADJACENT:
     case REQ_RANGE_ADJACENT:
@@ -256,7 +256,7 @@ static bool is_req_knowable(
     case REQ_RANGE_ALLIANCE:
     case REQ_RANGE_WORLD:
     case REQ_RANGE_COUNT:
-      /* Invalid range */
+      // Invalid range
       return false;
     }
   }
@@ -277,7 +277,7 @@ static bool is_req_knowable(
 
     if (req->source.value.activity != ACTIVITY_EXPLORE
         && (req->source.value.activity != ACTIVITY_GOTO)) {
-      /* Sent in package_short_unit() */
+      // Sent in package_short_unit()
       return can_player_see_unit(pow_player, target_unit);
     }
   }
@@ -300,7 +300,7 @@ static bool is_req_knowable(
         return true;
       }
 
-      /* TODO: Non symmetric diplomatic relationships. */
+      // TODO: Non symmetric diplomatic relationships.
       break;
     case REQ_RANGE_PLAYER:
       if (target_player == NULL) {
@@ -317,16 +317,16 @@ static bool is_req_knowable(
         return true;
       }
 
-      /* TODO: Non symmetric diplomatic relationships. */
+      // TODO: Non symmetric diplomatic relationships.
       break;
     case REQ_RANGE_TEAM:
-      /* TODO */
+      // TODO
       break;
     case REQ_RANGE_ALLIANCE:
-      /* TODO */
+      // TODO
       break;
     case REQ_RANGE_WORLD:
-      /* TODO */
+      // TODO
       break;
     case REQ_RANGE_CADJACENT:
     case REQ_RANGE_ADJACENT:
@@ -334,7 +334,7 @@ static bool is_req_knowable(
     case REQ_RANGE_TRADEROUTE:
     case REQ_RANGE_CONTINENT:
     case REQ_RANGE_COUNT:
-      /* Invalid range */
+      // Invalid range
       return false;
       break;
     }
@@ -363,21 +363,21 @@ static bool is_req_knowable(
 
     switch (req->range) {
     case REQ_RANGE_LOCAL:
-      /* Known because the tile is seen */
+      // Known because the tile is seen
       if (tile_is_seen(target_tile, pow_player)) {
         return true;
       }
 
-      /* The player knows its city even if he can't see it */
+      // The player knows its city even if he can't see it
       pcity = tile_city(target_tile);
       return pcity && city_owner(pcity) == pow_player;
     case REQ_RANGE_CADJACENT:
-      /* Known because the tile is seen */
+      // Known because the tile is seen
       if (is_tile_seen_cadj(pow_player, target_tile)) {
         return true;
       }
 
-      /* The player knows its city even if he can't see it */
+      // The player knows its city even if he can't see it
       cardinal_adjc_iterate(&(wld.map), target_tile, ptile)
       {
         pcity = tile_city(ptile);
@@ -387,15 +387,15 @@ static bool is_req_knowable(
       }
       cardinal_adjc_iterate_end;
 
-      /* Unknown */
+      // Unknown
       return false;
     case REQ_RANGE_ADJACENT:
-      /* Known because the tile is seen */
+      // Known because the tile is seen
       if (is_tile_seen_adj(pow_player, target_tile)) {
         return true;
       }
 
-      /* The player knows its city even if he can't see it */
+      // The player knows its city even if he can't see it
       adjc_iterate(&(wld.map), target_tile, ptile)
       {
         pcity = tile_city(ptile);
@@ -405,7 +405,7 @@ static bool is_req_knowable(
       }
       adjc_iterate_end;
 
-      /* Unknown */
+      // Unknown
       return false;
     case REQ_RANGE_CITY:
     case REQ_RANGE_TRADEROUTE:
@@ -415,13 +415,13 @@ static bool is_req_knowable(
     case REQ_RANGE_ALLIANCE:
     case REQ_RANGE_WORLD:
     case REQ_RANGE_COUNT:
-      /* Invalid range */
+      // Invalid range
       return false;
     }
   }
 
   if (req->source.kind == VUT_IMPR_GENUS) {
-    /* The only legal range when this was written was local. */
+    // The only legal range when this was written was local.
     fc_assert(req->range == REQ_RANGE_LOCAL);
 
     if (!target_city) {
@@ -430,7 +430,7 @@ static bool is_req_knowable(
       return prob_type == RPT_CERTAIN;
     }
 
-    /* Local BuildingGenus could be about city production. */
+    // Local BuildingGenus could be about city production.
     return can_player_see_city_internals(pow_player, target_city);
   }
 
@@ -472,12 +472,12 @@ static bool is_req_knowable(
         return true;
       }
 
-      /* No way to know if a city has an improvement */
+      // No way to know if a city has an improvement
       return false;
     case REQ_RANGE_CADJACENT:
     case REQ_RANGE_ADJACENT:
     case REQ_RANGE_COUNT:
-      /* Not supported by the requirement type. */
+      // Not supported by the requirement type.
       return false;
     }
   }
@@ -565,7 +565,7 @@ static bool is_req_knowable(
     case REQ_RANGE_ALLIANCE:
     case REQ_RANGE_WORLD:
     case REQ_RANGE_COUNT:
-      /* Non existing. */
+      // Non existing.
       return false;
     }
   }
@@ -610,30 +610,30 @@ static bool is_req_knowable(
     case REQ_RANGE_TEAM:
     case REQ_RANGE_WORLD:
     case REQ_RANGE_COUNT:
-      /* Non existing range for requirement types. */
+      // Non existing range for requirement types.
       return false;
     }
   }
 
   if (req->source.kind == VUT_ACTION || req->source.kind == VUT_OTYPE) {
-    /* This requirement type is intended to specify the situation. */
+    // This requirement type is intended to specify the situation.
     return true;
   }
 
   if (req->source.kind == VUT_SERVERSETTING) {
-    /* Only visible server settings can be requirements. */
+    // Only visible server settings can be requirements.
     return true;
   }
 
-  /* Uncertain or no support added yet. */
+  // Uncertain or no support added yet.
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Evaluate a single requirement given pow_player's knowledge.
 
    Note: Assumed to use pow_player's data.
- **************************************************************************/
+ */
 enum fc_tristate mke_eval_req(
     const struct player *pow_player, const struct player *target_player,
     const struct player *other_player, const struct city *target_city,
@@ -666,11 +666,11 @@ enum fc_tristate mke_eval_req(
   }
 }
 
-/**********************************************************************/ /**
+/**
    Evaluate a requirement vector given pow_player's knowledge.
 
    Note: Assumed to use pow_player's data.
- **************************************************************************/
+ */
 enum fc_tristate mke_eval_reqs(
     const struct player *pow_player, const struct player *target_player,
     const struct player *other_player, const struct city *target_city,
@@ -701,9 +701,9 @@ enum fc_tristate mke_eval_reqs(
   return result;
 }
 
-/**********************************************************************/ /**
+/**
    Can pow_player see the techs of target player?
- **************************************************************************/
+ */
 bool can_see_techs_of_target(const struct player *pow_player,
                              const struct player *target_player)
 {

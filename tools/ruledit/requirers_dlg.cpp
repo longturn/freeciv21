@@ -24,9 +24,9 @@
 
 #include "requirers_dlg.h"
 
-/**********************************************************************/ /**
+/**
    Setup requirers_dlg object
- **************************************************************************/
+ */
 requirers_dlg::requirers_dlg(ruledit_gui *ui_in) : QDialog()
 {
   QGridLayout *main_layout = new QGridLayout(this);
@@ -48,9 +48,9 @@ requirers_dlg::requirers_dlg(ruledit_gui *ui_in) : QDialog()
   setLayout(main_layout);
 }
 
-/**********************************************************************/ /**
+/**
    Clear text area
- **************************************************************************/
+ */
 void requirers_dlg::clear(const char *title)
 {
   char buffer[256];
@@ -61,9 +61,9 @@ void requirers_dlg::clear(const char *title)
   area->clear();
 }
 
-/**********************************************************************/ /**
+/**
    Add requirer entry
- **************************************************************************/
+ */
 void requirers_dlg::add(const char *msg)
 {
   char buffer[2048];
@@ -75,7 +75,7 @@ void requirers_dlg::add(const char *msg)
   area->append(QString::fromUtf8(buffer));
 }
 
-/**********************************************************************/ /**
+/**
    User pushed close button
- **************************************************************************/
+ */
 void requirers_dlg::close_now() { done(0); }

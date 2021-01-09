@@ -10,15 +10,15 @@
 **************************************************************************/
 #pragma once
 
-/* Utility */
-#include "support.h" /* bool type */
+// Utility
+#include "support.h" // bool type
 
 typedef uint32_t RANDOM_TYPE;
 
 typedef struct {
   RANDOM_TYPE v[56];
   int j, k, x;
-  bool is_init; /* initially 0 for static storage */
+  bool is_init; // initially 0 for static storage
 } RANDOM_STATE;
 
 #define fc_rand(_size) fc_rand_debug((_size), "fc_rand", __LINE__, __FILE__)

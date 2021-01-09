@@ -15,16 +15,16 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "fc_types.h"
 #include "game.h"
 #include "player.h"
 
 #include "mood.h"
 
-/**********************************************************************/ /**
+/**
    What is the player mood?
- **************************************************************************/
+ */
 enum mood_type player_mood(struct player *pplayer)
 {
   if (pplayer->last_war_action >= 0

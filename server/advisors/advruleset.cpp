@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "base.h"
 #include "effects.h"
 #include "map.h"
@@ -27,29 +27,29 @@
 
 #include "advruleset.h"
 
-/**********************************************************************/ /**
+/**
    Initialise the unit data from the ruleset for the advisors.
- **************************************************************************/
+ */
 void adv_units_ruleset_init()
 {
   unit_class_iterate(pclass)
   {
-    bool move_land_enabled = false;  /* Can move at some land terrains */
-    bool move_land_disabled = false; /* Cannot move at some land terrains */
-    bool move_sea_enabled = false;   /* Can move at some ocean terrains */
-    bool move_sea_disabled = false;  /* Cannot move at some ocean terrains */
+    bool move_land_enabled = false;  // Can move at some land terrains
+    bool move_land_disabled = false; // Cannot move at some land terrains
+    bool move_sea_enabled = false;   // Can move at some ocean terrains
+    bool move_sea_disabled = false;  // Cannot move at some ocean terrains
 
     terrain_type_iterate(pterrain)
     {
       if (is_native_to_class(pclass, pterrain, NULL)) {
-        /* Can move at terrain */
+        // Can move at terrain
         if (is_ocean(pterrain)) {
           move_sea_enabled = true;
         } else {
           move_land_enabled = true;
         }
       } else {
-        /* Cannot move at terrain */
+        // Cannot move at terrain
         if (is_ocean(pterrain)) {
           move_sea_disabled = true;
         } else {
@@ -106,6 +106,6 @@ void adv_units_ruleset_init()
   }
   unit_type_iterate_end;
 
-  /* Initialize autosettlers actions */
+  // Initialize autosettlers actions
   auto_settlers_ruleset_init();
 }

@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "shared.h"
 
-/* common */
+// common
 #include "player.h"
 #include "tile.h"
 #include "vision.h"
@@ -30,16 +30,16 @@
    ./server/srv_main.c:init_server_functions(). */
 struct functions fc_functions;
 
-/* The functions are accessed via this pointer. */
+// The functions are accessed via this pointer.
 const struct functions *fc_funcs = NULL;
 /* After this is set to TRUE (in interface_init()), the functions are
    available via fc_funcs. */
 bool fc_funcs_defined = false;
 
-/************************************************************************/ /**
+/**
    Return the function pointer. Only possible before interface_init() was
    called (fc_funcs_defined == FALSE).
- ****************************************************************************/
+ */
 struct functions *fc_interface_funcs()
 {
   fc_assert_exit(fc_funcs_defined == false);
@@ -47,15 +47,15 @@ struct functions *fc_interface_funcs()
   return &fc_functions;
 }
 
-/************************************************************************/ /**
+/**
    Test and initialize the functions. The existence of all functions should
    be checked!
- ****************************************************************************/
+ */
 void fc_interface_init()
 {
   fc_funcs = &fc_functions;
 
-  /* Test the existence of each required function here! */
+  // Test the existence of each required function here!
   fc_assert_exit(fc_funcs->server_setting_by_name);
   fc_assert_exit(fc_funcs->server_setting_name_get);
   fc_assert_exit(fc_funcs->server_setting_type_get);
@@ -71,9 +71,9 @@ void fc_interface_init()
   setup_real_activities_array();
 }
 
-/************************************************************************/ /**
+/**
    Free misc resources allocated for libfreeciv.
- ****************************************************************************/
+ */
 void free_libfreeciv()
 {
   diplrel_mess_close();

@@ -17,16 +17,16 @@
 
 #include <QHash>
 
-/* utility */
+// utility
 #include "dataio.h"
 #include "fcintl.h"
-#include "genhash.h" /* genhash_val_t */
+#include "genhash.h" // genhash_val_t
 #include "log.h"
 
-/* common */
+// common
 #include "packets.h"
 
-/* client */
+// client
 #include "client_main.h"
 
 #include "attribute.h"
@@ -65,14 +65,14 @@ inline uint qHash(const attr_key &pkey, uint seed)
 typedef QHash<attr_key, void *> attributeHash;
 Q_GLOBAL_STATIC(attributeHash, attribute_hash)
 
-/************************************************************************/ /**
+/**
    Initializes the attribute module.
- ****************************************************************************/
+ */
 void attribute_init() {}
 
-/************************************************************************/ /**
+/**
    Frees the attribute module.
- ****************************************************************************/
+ */
 void attribute_free()
 {
   for (auto *at : qAsConst(*attribute_hash)) {
@@ -81,9 +81,9 @@ void attribute_free()
   attribute_hash->clear();
 }
 
-/************************************************************************/ /**
+/**
    Serialize an attribute hash for network/storage.
- ****************************************************************************/
+ */
 static enum attribute_serial serialize_hash(attributeHash *hash,
                                             void **pdata, int *pdata_length)
 {
@@ -114,10 +114,10 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
    * Step 1: loop through all keys and fill value_lengths and calculate
    * the total_length.
    */
-  /* preamble */
+  // preamble
   total_length = 4 + 1 + 4 + 4;
-  /* body */
-  total_length += entries * (4 + 4 + 4 + 2 + 2); /* value_size + key */
+  // body
+  total_length += entries * (4 + 4 + 4 + 2 + 2); // value_size + key
   i = 0;
 
   for (auto *pvalue : qAsConst(*hash)) {
@@ -182,12 +182,12 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
   return A_SERIAL_OK;
 }
 
-/************************************************************************/ /**
+/**
    This data was serialized (above), sent as an opaque data packet to the
    server, stored in a savegame, retrieved from the savegame, sent as an
    opaque data packet back to the client, and now is ready to be restored.
    Check everything!
- ****************************************************************************/
+ */
 static enum attribute_serial
 unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
 {
@@ -240,7 +240,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
                   "uint32 %lu value_length",
                   (long unsigned) value_length);
 
-    /* next 12 bytes */
+    // next 12 bytes
     if (!dio_get_uint32_raw(&din, &key.key)
         || !dio_get_uint32_raw(&din, &key.id)
         || !dio_get_sint16_raw(&din, &key.x)
@@ -283,10 +283,10 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
   return A_SERIAL_OK;
 }
 
-/************************************************************************/ /**
+/**
    Send current state to the server. Note that the current
    implementation will send all attributes to the server.
- ****************************************************************************/
+ */
 void attribute_flush()
 {
   struct player *pplayer = client_player();
@@ -309,10 +309,10 @@ void attribute_flush()
   send_attribute_block(pplayer, &client.conn);
 }
 
-/************************************************************************/ /**
+/**
    Recreate the attribute set from the player's
    attribute_block. Shouldn't be used by normal code.
- ****************************************************************************/
+ */
 void attribute_restore()
 {
   struct player *pplayer = client_player();
@@ -337,10 +337,10 @@ void attribute_restore()
   };
 }
 
-/************************************************************************/ /**
+/**
    Low-level function to set an attribute.  If data_length is zero the
    attribute is removed.
- ****************************************************************************/
+ */
 void attribute_set(int key, int id, int x, int y, size_t data_length,
                    const void *const data)
 {
@@ -366,13 +366,13 @@ void attribute_set(int key, int id, int x, int y, size_t data_length,
   }
 }
 
-/************************************************************************/ /**
+/**
    Low-level function to get an attribute. If data hasn't enough space
    to hold the attribute data isn't set to the attribute. Returns the
    actual size of the attribute. Can be zero if the attribute is
    unset. To get the size of an attribute use
      size = attribute_get(key, id, x, y, 0, NULL)
- *****************************************************************************/
+ */
 size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
                      void *data)
 {
@@ -404,104 +404,104 @@ size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
   return length;
 }
 
-/************************************************************************/ /**
+/**
    Set unit related attribute
- ****************************************************************************/
+ */
 void attr_unit_set(enum attr_unit what, int unit_id, size_t data_length,
                    const void *const data)
 {
   attribute_set(what, unit_id, -1, -2, data_length, data);
 }
 
-/************************************************************************/ /**
+/**
    Get unit related attribute
- ****************************************************************************/
+ */
 size_t attr_unit_get(enum attr_unit what, int unit_id,
                      size_t max_data_length, void *data)
 {
   return attribute_get(what, unit_id, -1, -2, max_data_length, data);
 }
 
-/************************************************************************/ /**
+/**
    Set unit related integer attribute
- ****************************************************************************/
+ */
 void attr_unit_set_int(enum attr_unit what, int unit_id, int data)
 {
   attr_unit_set(what, unit_id, sizeof(int), &data);
 }
 
-/************************************************************************/ /**
+/**
    Get unit related integer attribute
- ****************************************************************************/
+ */
 size_t attr_unit_get_int(enum attr_unit what, int unit_id, int *data)
 {
   return attr_unit_get(what, unit_id, sizeof(int), data);
 }
 
-/************************************************************************/ /**
+/**
    Set city related attribute
- ****************************************************************************/
+ */
 void attr_city_set(enum attr_city what, int city_id, size_t data_length,
                    const void *const data)
 {
   attribute_set(what, city_id, -1, -1, data_length, data);
 }
 
-/************************************************************************/ /**
+/**
    Get city related attribute
- ****************************************************************************/
+ */
 size_t attr_city_get(enum attr_city what, int city_id,
                      size_t max_data_length, void *data)
 {
   return attribute_get(what, city_id, -1, -1, max_data_length, data);
 }
 
-/************************************************************************/ /**
+/**
    Set city related integer attribute
- ****************************************************************************/
+ */
 void attr_city_set_int(enum attr_city what, int city_id, int data)
 {
   attr_city_set(what, city_id, sizeof(int), &data);
 }
 
-/************************************************************************/ /**
+/**
    Get city related integer attribute
- ****************************************************************************/
+ */
 size_t attr_city_get_int(enum attr_city what, int city_id, int *data)
 {
   return attr_city_get(what, city_id, sizeof(int), data);
 }
 
-/************************************************************************/ /**
+/**
    Set player related attribute
- ****************************************************************************/
+ */
 void attr_player_set(enum attr_player what, int player_id,
                      size_t data_length, const void *const data)
 {
   attribute_set(what, player_id, -1, -1, data_length, data);
 }
 
-/************************************************************************/ /**
+/**
    Get player related attribute
- ****************************************************************************/
+ */
 size_t attr_player_get(enum attr_player what, int player_id,
                        size_t max_data_length, void *data)
 {
   return attribute_get(what, player_id, -1, -1, max_data_length, data);
 }
 
-/************************************************************************/ /**
+/**
    Set tile related attribute
- ****************************************************************************/
+ */
 void attr_tile_set(enum attr_tile what, int x, int y, size_t data_length,
                    const void *const data)
 {
   attribute_set(what, -1, x, y, data_length, data);
 }
 
-/************************************************************************/ /**
+/**
    Get tile related attribute
- ****************************************************************************/
+ */
 size_t attr_tile_get(enum attr_tile what, int x, int y,
                      size_t max_data_length, void *data)
 {

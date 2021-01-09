@@ -15,21 +15,21 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "government.h"
 #include "packets.h"
 #include "spaceship.h"
 
-/* server */
+// server
 #include "spacerace.h"
 
 #include "advspace.h"
 
-/************************************************************************/ /**
+/**
    Place all available spaceship components.
 
    Returns TRUE iff at least one part was placed.
- ****************************************************************************/
+ */
 bool adv_spaceship_autoplace(struct player *pplayer,
                              struct player_spaceship *ship)
 {
@@ -47,7 +47,7 @@ bool adv_spaceship_autoplace(struct player *pplayer,
          * parts will fail. */
         retval = true;
       } else {
-        /* Unable to place this part. Don't try to place it again. */
+        // Unable to place this part. Don't try to place it again.
         break;
       }
     }

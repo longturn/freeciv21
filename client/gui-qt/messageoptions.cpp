@@ -25,9 +25,9 @@
 #include "page_game.h"
 
 extern QApplication *qapp;
-/**********************************************************************/ /**
+/**
    Message widget constructor
- **************************************************************************/
+ */
 message_dlg::message_dlg()
 {
   int index;
@@ -86,17 +86,17 @@ message_dlg::message_dlg()
   but2->setFixedWidth(len / 3);
 }
 
-/**********************************************************************/ /**
+/**
    Message widget destructor
- **************************************************************************/
+ */
 message_dlg::~message_dlg()
 {
   queen()->removeRepoDlg(QStringLiteral("MSD"));
 }
 
-/**********************************************************************/ /**
+/**
    Fills column in table
- **************************************************************************/
+ */
 void message_dlg::fill_data()
 {
   int i, j;
@@ -127,16 +127,16 @@ void message_dlg::fill_data()
   msgtab->resizeColumnsToContents();
 }
 
-/**********************************************************************/ /**
+/**
    Apply changes and closes widget
- **************************************************************************/
+ */
 void message_dlg::apply_changes()
 {
   int i, j;
   QTableWidgetItem *item;
   Qt::CheckState state;
   for (i = 0; i <= event_type_max(); i++) {
-    /* Include possible undefined messages. */
+    // Include possible undefined messages.
     messages_where[i] = 0;
   }
   i = 0;
@@ -158,14 +158,14 @@ void message_dlg::apply_changes()
   close();
 }
 
-/**********************************************************************/ /**
+/**
    Closes widget
- **************************************************************************/
+ */
 void message_dlg::cancel_changes() { close(); }
 
-/**********************************************************************/ /**
+/**
    Popup a window to let the user edit their message options.
- **************************************************************************/
+ */
 void popup_messageopt_dialog(void)
 {
   message_dlg *mdlg;

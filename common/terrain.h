@@ -12,11 +12,11 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "shared.h"
 
-/* common */
+// common
 #include "fc_types.h"
 #include "name_translation.h"
 #include "unittype.h"
@@ -24,7 +24,7 @@
 struct base_type;
 struct rgbcolor;
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 enum special_river_move {
   RMV_NORMAL = 0,
   RMV_FAST_STRICT = 1,
@@ -32,25 +32,25 @@ enum special_river_move {
   RMV_FAST_ALWAYS = 3,
 };
 
-/* === */
+// ===
 
 struct resource_type {
 
-  char id_old_save; /* Single-character identifier used in old savegames. */
+  char id_old_save; // Single-character identifier used in old savegames.
 #define RESOURCE_NULL_IDENTIFIER '\0'
 #define RESOURCE_NONE_IDENTIFIER ' '
 
-  int output[O_LAST]; /* Amount added by this resource. */
+  int output[O_LAST]; // Amount added by this resource.
 
   struct extra_type *self;
 };
 
-/* === */
+// ===
 
-#define T_NONE (NULL) /* A special flag meaning no terrain type. */
-#define T_UNKNOWN (NULL) /* An unknown terrain. */
+#define T_NONE (NULL) // A special flag meaning no terrain type.
+#define T_UNKNOWN (NULL) // An unknown terrain.
 
-/* The first terrain value. */
+// The first terrain value.
 #define T_FIRST 0
 
 /* A hard limit on the number of terrains; useful for static arrays.
@@ -60,13 +60,13 @@ struct resource_type {
  * Used in the network protocol. */
 #define MAX_RESOURCE_TYPES (MAX_NUM_TERRAINS / 2)
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME terrain_class
 #define SPECENUM_VALUE0 TC_LAND
-/* TRANS: terrain class: used adjectivally */
+// TRANS: terrain class: used adjectivally
 #define SPECENUM_VALUE0NAME N_("Land")
 #define SPECENUM_VALUE1 TC_OCEAN
-/* TRANS: terrain class: used adjectivally */
+// TRANS: terrain class: used adjectivally
 #define SPECENUM_VALUE1NAME N_("Oceanic")
 #define SPECENUM_COUNT TC_COUNT
 #include "specenum_gen.h"
@@ -77,13 +77,13 @@ struct resource_type {
  *
  * Used in the network protocol. */
 #define SPECENUM_NAME terrain_alteration
-/* Can build irrigation without changing terrain */
+// Can build irrigation without changing terrain
 #define SPECENUM_VALUE0 TA_CAN_IRRIGATE
 /* TRANS: this and following strings may rarely be presented to the player
  * in ruleset help text, to denote the set of terrains which can be altered
  * in a particular way */
 #define SPECENUM_VALUE0NAME N_("CanIrrigate")
-/* Can build mine without changing terrain */
+// Can build mine without changing terrain
 #define SPECENUM_VALUE1 TA_CAN_MINE
 #define SPECENUM_VALUE1NAME N_("CanMine")
 /* Can build roads and/or railroads */
@@ -92,35 +92,35 @@ struct resource_type {
 #define SPECENUM_COUNT TA_COUNT
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME terrain_flag_id
-/* No barbarians summoned on this terrain. */
+// No barbarians summoned on this terrain.
 #define SPECENUM_VALUE0 TER_NO_BARBS
 /* TRANS: this and following strings are 'terrain flags', which may rarely
  * be presented to the player in ruleset help text */
 #define SPECENUM_VALUE0NAME N_("NoBarbs")
-/* No cities on this terrain. */
+// No cities on this terrain.
 #define SPECENUM_VALUE1 TER_NO_CITIES
 #define SPECENUM_VALUE1NAME N_("NoCities")
-/* Players will start on this terrain type. */
+// Players will start on this terrain type.
 #define SPECENUM_VALUE2 TER_STARTER
 #define SPECENUM_VALUE2NAME N_("Starter")
-/* Terrains with this type can have road with "River" flag on them. */
+// Terrains with this type can have road with "River" flag on them.
 #define SPECENUM_VALUE3 TER_CAN_HAVE_RIVER
 #define SPECENUM_VALUE3NAME N_("CanHaveRiver")
 /*this tile is not safe as coast, (all ocean / ice) */
 #define SPECENUM_VALUE4 TER_UNSAFE_COAST
 #define SPECENUM_VALUE4NAME N_("UnsafeCoast")
-/* Fresh water terrain */
+// Fresh water terrain
 #define SPECENUM_VALUE5 TER_FRESHWATER
 #define SPECENUM_VALUE5NAME N_("FreshWater")
-/* Map generator does not place this terrain */
+// Map generator does not place this terrain
 #define SPECENUM_VALUE6 TER_NOT_GENERATED
 #define SPECENUM_VALUE6NAME N_("NotGenerated")
-/* Units on this terrain are not generating or subject to zoc */
+// Units on this terrain are not generating or subject to zoc
 #define SPECENUM_VALUE7 TER_NO_ZOC
 #define SPECENUM_VALUE7NAME N_("NoZoc")
-/* Ice-covered terrain (affects minimap) */
+// Ice-covered terrain (affects minimap)
 #define SPECENUM_VALUE8 TER_FROZEN
 #define SPECENUM_VALUE8NAME N_("Frozen")
 #define SPECENUM_VALUE9 TER_USER_1
@@ -170,11 +170,11 @@ struct resource_type {
 struct terrain {
   int item_number;
   struct name_translation name;
-  bool ruledit_disabled; /* Does not really exist - hole in terrain array */
-  char graphic_str[MAX_LEN_NAME]; /* add tile_ prefix */
+  bool ruledit_disabled; // Does not really exist - hole in terrain array
+  char graphic_str[MAX_LEN_NAME]; // add tile_ prefix
   char graphic_alt[MAX_LEN_NAME];
 
-  char identifier; /* Single-character identifier used in games saved. */
+  char identifier; // Single-character identifier used in games saved.
   char identifier_load; /* Single-character identifier that was used in the
                          * savegame loaded. */
 
@@ -182,12 +182,12 @@ struct terrain {
 
   enum terrain_class tclass;
 
-  int movement_cost; /* whole MP, not scaled by SINGLE_MOVE */
-  int defense_bonus; /* % defense bonus - defaults to zero */
+  int movement_cost; // whole MP, not scaled by SINGLE_MOVE
+  int defense_bonus; // % defense bonus - defaults to zero
 
   int output[O_LAST];
 
-  struct extra_type **resources; /* NULL-terminated */
+  struct extra_type **resources; // NULL-terminated
 
   int road_output_incr_pct[O_LAST];
   int base_time;
@@ -215,7 +215,7 @@ struct terrain {
 
   const struct unit_type *animal;
 
-  /* May be NULL if the transformation is impossible. */
+  // May be NULL if the transformation is impossible.
   struct terrain *warmer_wetter_result, *warmer_drier_result;
   struct terrain *cooler_wetter_result, *cooler_drier_result;
 
@@ -242,7 +242,7 @@ struct terrain {
   QVector<QString> *helptext;
 };
 
-/* General terrain accessor functions. */
+// General terrain accessor functions.
 Terrain_type_id terrain_count();
 Terrain_type_id terrain_index(const struct terrain *pterrain);
 Terrain_type_id terrain_number(const struct terrain *pterrain);
@@ -258,7 +258,7 @@ char terrain_identifier(const struct terrain *pterrain);
 const char *terrain_rule_name(const struct terrain *pterrain);
 const char *terrain_name_translation(const struct terrain *pterrain);
 
-/* Functions to operate on a terrain flag. */
+// Functions to operate on a terrain flag.
 #define terrain_has_flag(terr, flag) BV_ISSET((terr)->flags, flag)
 
 bool is_terrain_flag_card_near(const struct tile *ptile,
@@ -274,7 +274,7 @@ void set_user_terrain_flag_name(enum terrain_flag_id id, const char *name,
                                 const char *helptxt);
 const char *terrain_flag_helptxt(enum terrain_flag_id id);
 
-/* Terrain-specific functions. */
+// Terrain-specific functions.
 #define is_ocean(pterrain)                                                  \
   ((pterrain) != T_UNKNOWN                                                  \
    && terrain_type_terrain_class(pterrain) == TC_OCEAN)
@@ -283,7 +283,7 @@ const char *terrain_flag_helptxt(enum terrain_flag_id id);
 bool terrain_has_resource(const struct terrain *pterrain,
                           const struct extra_type *presource);
 
-/* Functions to operate on a general terrain type. */
+// Functions to operate on a general terrain type.
 bool is_terrain_card_near(const struct tile *ptile,
                           const struct terrain *pterrain, bool check_self);
 bool is_terrain_near_tile(const struct tile *ptile,
@@ -304,7 +304,7 @@ void resource_types_free();
 
 struct extra_type *resource_extra_get(const struct resource_type *presource);
 
-/* Special helper functions */
+// Special helper functions
 const char *get_infrastructure_text(bv_extras extras);
 struct extra_type *get_preferred_pillage(bv_extras extras);
 
@@ -315,7 +315,7 @@ int terrain_extra_removal_time(const struct terrain *pterrain,
                                enum unit_activity activity,
                                const struct extra_type *tgt);
 
-/* Functions to operate on a terrain class. */
+// Functions to operate on a terrain class.
 const char *terrain_class_name_translation(enum terrain_class tclass);
 
 enum terrain_class
@@ -328,11 +328,11 @@ int count_terrain_class_near_tile(const struct tile *ptile,
                                   bool cardinal_only, bool percentage,
                                   enum terrain_class tclass);
 
-/* Functions to deal with possible terrain alterations. */
+// Functions to deal with possible terrain alterations.
 bool terrain_can_support_alteration(const struct terrain *pterrain,
                                     enum terrain_alteration talter);
 
-/* Initialization and iteration */
+// Initialization and iteration
 void terrains_init();
 void terrains_free();
 

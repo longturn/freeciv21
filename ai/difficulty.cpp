@@ -16,15 +16,15 @@
 #endif
 
 #include <QBitArray>
-/* utility */
+// utility
 #include "astring.h"
 #include "fcintl.h"
 #include "rand.h"
 
-/* common */
+// common
 #include "player.h"
 
-/* ai */
+// ai
 #include "handicaps.h"
 
 #include "difficulty.h"
@@ -34,9 +34,9 @@ static int fuzzy_of_skill_level(enum ai_level level);
 static int science_cost_of_skill_level(enum ai_level level);
 static int expansionism_of_skill_level(enum ai_level level);
 
-/**********************************************************************/ /**
+/**
    Set an AI level and related quantities, with no feedback.
- **************************************************************************/
+ */
 void set_ai_level_directer(struct player *pplayer, enum ai_level level)
 {
   handicaps_set(pplayer, handicap_of_skill_level(level));
@@ -46,9 +46,9 @@ void set_ai_level_directer(struct player *pplayer, enum ai_level level)
   pplayer->ai_common.skill_level = level;
 }
 
-/**********************************************************************/ /**
+/**
    Returns handicap bitvector for given AI skill level
- **************************************************************************/
+ */
 static QBitArray *handicap_of_skill_level(enum ai_level level)
 {
   QBitArray *handicap = new QBitArray(H_LAST);
@@ -110,13 +110,13 @@ static QBitArray *handicap_of_skill_level(enum ai_level level)
   case AI_LEVEL_EXPERIMENTAL:
     handicap->setBit(H_EXPERIMENTAL);
     break;
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
   case AI_LEVEL_CHEATING:
     handicap->setBit(H_RATES);
     break;
   case AI_LEVEL_HARD:
-    /* No handicaps */
+    // No handicaps
     break;
   case AI_LEVEL_COUNT:
     fc_assert(level != AI_LEVEL_COUNT);
@@ -126,10 +126,10 @@ static QBitArray *handicap_of_skill_level(enum ai_level level)
   return handicap;
 }
 
-/**********************************************************************/ /**
+/**
    Return the AI fuzziness (0 to 1000) corresponding to a given skill
    level (1 to 10).  See ai_fuzzy() in common/player.c
- **************************************************************************/
+ */
 static int fuzzy_of_skill_level(enum ai_level level)
 {
   fc_assert(ai_level_is_valid(level));
@@ -147,7 +147,7 @@ static int fuzzy_of_skill_level(enum ai_level level)
   case AI_LEVEL_CHEATING:
 #ifdef FREECIV_DEBUG
   case AI_LEVEL_EXPERIMENTAL:
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
     return 0;
   case AI_LEVEL_COUNT:
     fc_assert(level != AI_LEVEL_COUNT);
@@ -157,13 +157,13 @@ static int fuzzy_of_skill_level(enum ai_level level)
   return 0;
 }
 
-/**********************************************************************/ /**
+/**
    Return the AI's science development cost; a science development cost of
  100 means that the AI develops science at the same speed as a human; a
  science development cost of 200 means that the AI develops science at half
  the speed of a human, and a science development cost of 50 means that the AI
  develops science twice as fast as the human.
- **************************************************************************/
+ */
 static int science_cost_of_skill_level(enum ai_level level)
 {
   fc_assert(ai_level_is_valid(level));
@@ -180,7 +180,7 @@ static int science_cost_of_skill_level(enum ai_level level)
   case AI_LEVEL_CHEATING:
 #ifdef FREECIV_DEBUG
   case AI_LEVEL_EXPERIMENTAL:
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
     return 100;
   case AI_LEVEL_COUNT:
     fc_assert(level != AI_LEVEL_COUNT);
@@ -190,11 +190,11 @@ static int science_cost_of_skill_level(enum ai_level level)
   return 100;
 }
 
-/**********************************************************************/ /**
+/**
    Return the AI expansion tendency, a percentage factor to value new cities,
    compared to defaults.  0 means _never_ build new cities, > 100 means to
    (over?)value them even more than the default (already expansionistic) AI.
- **************************************************************************/
+ */
 static int expansionism_of_skill_level(enum ai_level level)
 {
   fc_assert(ai_level_is_valid(level));
@@ -211,7 +211,7 @@ static int expansionism_of_skill_level(enum ai_level level)
   case AI_LEVEL_CHEATING:
 #ifdef FREECIV_DEBUG
   case AI_LEVEL_EXPERIMENTAL:
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
     return 100;
   case AI_LEVEL_COUNT:
     fc_assert(level != AI_LEVEL_COUNT);
@@ -221,14 +221,14 @@ static int expansionism_of_skill_level(enum ai_level level)
   return 100;
 }
 
-/**********************************************************************/ /**
+/**
    Helper function for skill level command help.
    'cmdname' is a server command name.
    Caller must free returned string.
- **************************************************************************/
+ */
 char *ai_level_help(const char *cmdname)
 {
-  /* Translate cmdname to AI level. */
+  // Translate cmdname to AI level.
   enum ai_level level = ai_level_by_name(cmdname, fc_strcasecmp);
   QString help, features;
   QBitArray *handicaps;
@@ -237,12 +237,12 @@ char *ai_level_help(const char *cmdname)
   fc_assert(ai_level_is_valid(level));
 
   if (level == AI_LEVEL_AWAY) {
-    /* Special case */
+    // Special case
     help = _("Toggles 'away' mode for your nation. In away mode, "
              "the AI will govern your nation but make only minimal "
              "changes.");
   } else {
-    /* TRANS: %s is a (translated) skill level ('Novice', 'Hard', etc) */
+    // TRANS: %s is a (translated) skill level ('Novice', 'Hard', etc)
     help = QString(_("With no arguments, sets all AI players to skill level "
                      "'%1', and sets the default level for any new AI "
                      "players to '%2'. With an argument, sets the skill "
@@ -274,23 +274,23 @@ char *ai_level_help(const char *cmdname)
   }
   if (expansionism_of_skill_level(level) < 100) {
     features += _("Has reduced appetite for expansion.");
-  } /* no level currently has >100, so no string yet */
+  } // no level currently has >100, so no string yet
 
   switch (level) {
   case AI_LEVEL_HANDICAPPED:
-    /* TRANS: describing an AI skill level */
+    // TRANS: describing an AI skill level
     help += _("\nThis skill level has the same features as 'Novice', "
               "but may suffer additional ruleset-defined penalties.")
             + qendl();
     break;
   case AI_LEVEL_CHEATING:
-    /* TRANS: describing an AI skill level */
+    // TRANS: describing an AI skill level
     help += _("\nThis skill level has the same features as 'Hard', "
               "but may enjoy additional ruleset-defined bonuses.")
             + qendl();
     break;
   default:
-    /* TRANS: describing an AI skill level */
+    // TRANS: describing an AI skill level
     help += _("\nThis skill level's features include the following. "
               "(Some rulesets may define extra level-specific "
               "behavior.)")
@@ -303,7 +303,7 @@ char *ai_level_help(const char *cmdname)
   return qstrdup(const_cast<char *>(qUtf8Printable(help)));
 }
 
-/**********************************************************************/ /**
+/**
    Return the value normal_decision (a boolean), except if the AI is fuzzy,
    then sometimes flip the value.  The intention of this is that instead of
      if (condition) { action }
@@ -318,7 +318,7 @@ char *ai_level_help(const char *cmdname)
    the "ai_fuzzy(pplayer," part, and read the previous example as:
      if (condition && 1) { action }
    --dwp
- **************************************************************************/
+ */
 bool ai_fuzzy(const struct player *pplayer, bool normal_decision)
 {
   if (!is_ai(pplayer) || pplayer->ai_common.fuzzy == 0) {

@@ -15,16 +15,16 @@
 #include <fc_config.h>
 #endif
 
-#include <cstdlib> /* getenv() */
+#include <cstdlib> // getenv()
 
-/* gen_headers */
+// gen_headers
 #include "fc_version.h"
 
-/* utility */
+// utility
 #include "support.h"
 
-/* common */
-#include "connection.h" /* MAX_LEN_CAPSTR */
+// common
+#include "connection.h" // MAX_LEN_CAPSTR
 
 #include "capstr.h"
 
@@ -81,9 +81,9 @@ const char *const our_capability = our_capability_internal;
  * The actual capability string is now defined in fc_version.
  */
 
-/**********************************************************************/ /**
+/**
    Setup our internal network capability string.
- **************************************************************************/
+ */
 void init_our_capability()
 {
   const char *s;

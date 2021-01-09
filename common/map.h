@@ -12,18 +12,18 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <cmath> /* sqrt */
+#include <cmath> // sqrt
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "iterator.h"
-#include "log.h" /* fc_assert */
+#include "log.h" // fc_assert
 
-/* common */
+// common
 #include "game.h"
 #include "map_types.h"
 
-/* Parameters for terrain counting functions. */
+// Parameters for terrain counting functions.
 static const bool C_ADJACENT = false;
 static const bool C_CARDINAL = true;
 static const bool C_NUMBER = false;
@@ -61,7 +61,7 @@ int get_direction_for_step(const struct civ_map *nmap,
                            const struct tile *src_tile,
                            const struct tile *dst_tile);
 
-/* Specific functions for start positions. */
+// Specific functions for start positions.
 struct startpos *map_startpos_by_number(int id);
 int startpos_number(const struct startpos *psp);
 
@@ -83,13 +83,13 @@ bool startpos_is_excluding(const struct startpos *psp);
 QSet<const struct nation_type *> *
 startpos_raw_nations(const struct startpos *psp);
 
-/* General map start positions functions. */
+// General map start positions functions.
 int map_startpos_count();
 struct startpos *map_startpos_new(struct tile *ptile);
 struct startpos *map_startpos_get(const struct tile *ptile);
 bool map_startpos_remove(struct tile *ptile);
 
-/* Number of index coordinates (for sanity checks and allocations) */
+// Number of index coordinates (for sanity checks and allocations)
 #define MAP_INDEX_SIZE (wld.map.xsize * wld.map.ysize)
 
 #ifdef FREECIV_DEBUG
@@ -99,11 +99,11 @@ bool map_startpos_remove(struct tile *ptile);
             && (y) < wld.map.ysize)
 #define CHECK_INDEX(mindex)                                                 \
   fc_assert((mindex) >= 0 && (mindex) < MAP_INDEX_SIZE)
-#else /* FREECIV_DEBUG */
+#else // FREECIV_DEBUG
 #define CHECK_MAP_POS(x, y) ((void) 0)
 #define CHECK_NATIVE_POS(x, y) ((void) 0)
 #define CHECK_INDEX(mindex) ((void) 0)
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
 #define native_pos_to_index_nocheck(nat_x, nat_y)                           \
   ((nat_x) + (nat_y) *wld.map.xsize)
@@ -168,18 +168,18 @@ bool map_startpos_remove(struct tile *ptile);
   }                                                                         \
   }
 
-/* Width and height of the map, in native coordinates. */
+// Width and height of the map, in native coordinates.
 #define NATIVE_WIDTH wld.map.xsize
 #define NATIVE_HEIGHT wld.map.ysize
 
-/* Width and height of the map, in natural coordinates. */
+// Width and height of the map, in natural coordinates.
 #define NATURAL_WIDTH (MAP_IS_ISOMETRIC ? 2 * wld.map.xsize : wld.map.xsize)
 #define NATURAL_HEIGHT wld.map.ysize
 
 static inline int map_pos_to_index(struct civ_map *nmap, int map_x,
                                    int map_y);
 
-/* index_to_map_pos(int *, int *, int) inverts map_pos_to_index */
+// index_to_map_pos(int *, int *, int) inverts map_pos_to_index
 #define index_to_map_pos(pmap_x, pmap_y, mindex)                            \
   (CHECK_INDEX(mindex), index_to_native_pos(pmap_x, pmap_y, mindex),        \
    NATIVE_TO_MAP_POS(pmap_x, pmap_y, *(pmap_x), *(pmap_y)))
@@ -305,7 +305,7 @@ extern struct terrain_misc terrain_control;
   }                                                                         \
   }
 
-/* See iterate_outward_dxy() */
+// See iterate_outward_dxy()
 #define iterate_outward(nmap, start_tile, max_dist, itr_tile)               \
   iterate_outward_dxy(nmap, start_tile, max_dist, itr_tile, _dx_itr, _dy_itr)
 
@@ -382,14 +382,14 @@ extern struct terrain_misc terrain_control;
   adjc_dir_iterate_end;                                                     \
   }
 
-/* As adjc_iterate() but also set direction8 iterator variable dir_itr */
+// As adjc_iterate() but also set direction8 iterator variable dir_itr
 #define adjc_dir_iterate(nmap, center_tile, itr_tile, dir_itr)              \
   adjc_dirlist_iterate(nmap, center_tile, itr_tile, dir_itr,                \
                        wld.map.valid_dirs, wld.map.num_valid_dirs)
 
 #define adjc_dir_iterate_end adjc_dirlist_iterate_end
 
-/* Only set direction8 dir_itr (not tile) */
+// Only set direction8 dir_itr (not tile)
 #define adjc_dir_base_iterate(nmap, center_tile, dir_itr)                   \
   adjc_dirlist_base_iterate(nmap, center_tile, dir_itr, wld.map.valid_dirs, \
                             wld.map.num_valid_dirs)
@@ -405,14 +405,14 @@ extern struct terrain_misc terrain_control;
 
 #define cardinal_adjc_iterate_end adjc_dirlist_iterate_end
 
-/* As cardinal_adjc_iterate but also set direction8 variable dir_itr */
+// As cardinal_adjc_iterate but also set direction8 variable dir_itr
 #define cardinal_adjc_dir_iterate(nmap, center_tile, itr_tile, dir_itr)     \
   adjc_dirlist_iterate(nmap, center_tile, itr_tile, dir_itr,                \
                        wld.map.cardinal_dirs, wld.map.num_cardinal_dirs)
 
 #define cardinal_adjc_dir_iterate_end adjc_dirlist_iterate_end
 
-/* Only set direction8 dir_itr (not tile) */
+// Only set direction8 dir_itr (not tile)
 #define cardinal_adjc_dir_base_iterate(nmap, center_tile, dir_itr)          \
   adjc_dirlist_base_iterate(nmap, center_tile, dir_itr,                     \
                             wld.map.cardinal_dirs,                          \
@@ -420,7 +420,7 @@ extern struct terrain_misc terrain_control;
 
 #define cardinal_adjc_dir_base_iterate_end adjc_dirlist_base_iterate_end
 
-/* Iterate through all tiles cardinally adjacent to both tile1 and tile2 */
+// Iterate through all tiles cardinally adjacent to both tile1 and tile2
 #define cardinal_between_iterate(nmap, tile1, tile2, between)               \
   cardinal_adjc_iterate(nmap, tile1, between)                               \
   {                                                                         \
@@ -465,7 +465,7 @@ extern struct terrain_misc terrain_control;
   }                                                                         \
   }
 
-/* Same as above but without setting the tile. */
+// Same as above but without setting the tile.
 #define adjc_dirlist_base_iterate(nmap, center_tile, _dir, dirlist,         \
                                   dircount)                                 \
   {                                                                         \
@@ -505,7 +505,7 @@ extern struct terrain_misc terrain_control;
 
 BV_DEFINE(dir_vector, 8);
 
-/* return the reverse of the direction */
+// return the reverse of the direction
 #define DIR_REVERSE(dir) ((enum direction8)(7 - (dir)))
 
 enum direction8 dir_cw(enum direction8 dir);
@@ -518,7 +518,7 @@ bool is_cardinal_dir(enum direction8 dir);
 extern const int DIR_DX[8];
 extern const int DIR_DY[8];
 
-/* Used for network transmission; do not change. */
+// Used for network transmission; do not change.
 #define MAP_TILE_OWNER_NULL MAX_UINT8
 
 #define MAP_DEFAULT_HUTS 15
@@ -538,7 +538,7 @@ extern const int DIR_DY[8];
 #define MAP_MIN_SIZE 0
 #define MAP_MAX_SIZE 2048
 
-/* We communicate through the network with signed 32-bits integers. */
+// We communicate through the network with signed 32-bits integers.
 FC_STATIC_ASSERT((long unsigned) MAP_MAX_SIZE * 1000 < (long unsigned) 1
                                                            << 31,
                  map_too_big_for_network);
@@ -547,7 +547,7 @@ FC_STATIC_ASSERT((long unsigned) MAP_MAX_SIZE * 1000 < (long unsigned) 1
 #define MAP_MIN_TILESPERPLAYER 1
 #define MAP_MAX_TILESPERPLAYER 1000
 
-/* This defines the maximum linear size in _native_ coordinates. */
+// This defines the maximum linear size in _native_ coordinates.
 #define MAP_DEFAULT_LINEAR_SIZE 64
 #define MAP_MAX_LINEAR_SIZE (MAP_MAX_SIZE * 1000 / MAP_MIN_LINEAR_SIZE)
 #define MAP_MIN_LINEAR_SIZE 16
@@ -618,7 +618,7 @@ moves. Includes MAP_MAX_LINEAR_SIZE because a map can be non wrapping. */
 static inline int map_pos_to_index(struct civ_map *nmap, int map_x,
                                    int map_y)
 {
-  /* Note: writing this as a macro is hard; it needs temp variables. */
+  // Note: writing this as a macro is hard; it needs temp variables.
   int nat_x, nat_y;
   Q_UNUSED(nmap)
   CHECK_MAP_POS(map_x, map_y);
@@ -628,7 +628,7 @@ static inline int map_pos_to_index(struct civ_map *nmap, int map_x,
 
 static inline int index_to_map_pos_x(int mindex)
 {
-  /* Note: writing this as a macro is hard; it needs temp variables. */
+  // Note: writing this as a macro is hard; it needs temp variables.
   int map_x, map_y;
 
   index_to_map_pos(&map_x, &map_y, mindex);
@@ -637,7 +637,7 @@ static inline int index_to_map_pos_x(int mindex)
 
 static inline int index_to_map_pos_y(int mindex)
 {
-  /* Note: writing this as a macro is hard; it needs temp variables. */
+  // Note: writing this as a macro is hard; it needs temp variables.
   int map_x, map_y;
 
   index_to_map_pos(&map_x, &map_y, mindex);

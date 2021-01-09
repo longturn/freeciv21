@@ -13,7 +13,7 @@
 
 #pragma once
 
-/* common */
+// common
 #include "city.h"
 #include "fc_types.h"
 

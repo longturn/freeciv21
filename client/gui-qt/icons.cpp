@@ -18,14 +18,14 @@ QString current_theme;
 fcIcons *fcIcons::m_instance = nullptr;
 hIcon *hIcon::m_instance = nullptr;
 
-/************************************************************************/ /**
+/**
    Icon provider constructor
- ****************************************************************************/
+ */
 fcIcons::fcIcons() = default;
 
-/************************************************************************/ /**
+/**
    Returns instance of fc_icons
- ****************************************************************************/
+ */
 fcIcons *fcIcons::instance()
 {
   if (!m_instance) {
@@ -34,14 +34,14 @@ fcIcons *fcIcons::instance()
   return m_instance;
 }
 
-/************************************************************************/ /**
+/**
    Deletes fc_icons instance
- ****************************************************************************/
+ */
 void fcIcons::drop() { NFCN_FREE(m_instance); }
 
-/************************************************************************/ /**
+/**
    Returns icon by given name
- ****************************************************************************/
+ */
 QIcon fcIcons::getIcon(const QString &id)
 {
   QIcon icon;
@@ -50,14 +50,14 @@ QIcon fcIcons::getIcon(const QString &id)
   QByteArray png_bytes;
 
   str = QStringLiteral("themes") + DIR_SEPARATOR + "gui-qt" + DIR_SEPARATOR;
-  /* Try custom icon from theme */
+  // Try custom icon from theme
   pn_bytes = str.toLocal8Bit();
   png_bytes =
       QString(pn_bytes.data() + current_theme + DIR_SEPARATOR + id + ".png")
           .toLocal8Bit();
   icon.addFile(fileinfoname(get_data_dirs(), png_bytes.data()));
   str = str + "icons" + DIR_SEPARATOR;
-  /* Try icon from icons dir */
+  // Try icon from icons dir
   if (icon.isNull()) {
     pn_bytes = str.toLocal8Bit();
     png_bytes = QString(pn_bytes.data() + id + ".png").toLocal8Bit();
@@ -67,9 +67,9 @@ QIcon fcIcons::getIcon(const QString &id)
   return QIcon(icon);
 }
 
-/************************************************************************/ /**
+/**
    Returns pixmap by given name, pixmap needs to be deleted by someone else
- ****************************************************************************/
+ */
 QPixmap *fcIcons::getPixmap(const QString &id)
 {
   QPixmap *pm;
@@ -96,9 +96,9 @@ QPixmap *fcIcons::getPixmap(const QString &id)
   return pm;
 }
 
-/************************************************************************/ /**
+/**
    Returns path for icon
- ****************************************************************************/
+ */
 QString fcIcons::getPath(const QString &id)
 {
   QString str;

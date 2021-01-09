@@ -13,10 +13,10 @@
 #ifndef FC__MPDB_H
 #define FC__MPDB_H
 
-/* common */
+// common
 #include "fc_types.h"
 
-/* modinst */
+// modinst
 #include "download.h"
 
 struct install_info {
@@ -33,7 +33,7 @@ struct install_info {
   TYPED_LIST_ITERATE(struct install_info, ii_list, item)
 #define install_info_list_iterate_end LIST_ITERATE_END
 
-/* Backward compatibility to pre-sqlite database versions */
+// Backward compatibility to pre-sqlite database versions
 void load_install_info_list(const char *filename);
 
 void create_mpdb(const char *filename, bool scenario_db);
@@ -44,4 +44,4 @@ bool mpdb_update_modpack(const char *name, enum modpack_type type,
                          const char *version);
 const char *mpdb_installed_version(const char *name, enum modpack_type type);
 
-#endif /* FC__MPDB_H */
+#endif // FC__MPDB_H

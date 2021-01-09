@@ -36,9 +36,9 @@
 
 #include "req_edit.h"
 
-/**********************************************************************/ /**
+/**
    Setup req_edit object
- **************************************************************************/
+ */
 req_edit::req_edit(ruledit_gui *ui_in, const QString &target,
                    struct requirement_vector *preqs)
     : QDialog()
@@ -150,9 +150,9 @@ req_edit::req_edit(ruledit_gui *ui_in, const QString &target,
   setWindowTitle(target);
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the information.
- **************************************************************************/
+ */
 void req_edit::refresh()
 {
   int i = 0;
@@ -186,9 +186,9 @@ void req_edit::refresh()
   fill_active();
 }
 
-/**********************************************************************/ /**
+/**
    The selected requirement has changed.
- **************************************************************************/
+ */
 void req_edit::update_selected()
 {
   if (selected != nullptr) {
@@ -196,9 +196,9 @@ void req_edit::update_selected()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Unselect the currently selected requirement.
- **************************************************************************/
+ */
 void req_edit::clear_selected()
 {
   selected = nullptr;
@@ -211,18 +211,18 @@ void req_edit::clear_selected()
   selected_values.quiet = false;
 }
 
-/**********************************************************************/ /**
+/**
    User pushed close button
- **************************************************************************/
+ */
 void req_edit::close_now()
 {
   ui->unregister_req_edit(this);
   done(0);
 }
 
-/**********************************************************************/ /**
+/**
    User selected requirement from the list.
- **************************************************************************/
+ */
 void req_edit::select_req()
 {
   int i = 0;
@@ -248,9 +248,9 @@ struct uvb_data {
   struct universal *univ;
 };
 
-/**********************************************************************/ /**
+/**
    Callback for filling menu values
- **************************************************************************/
+ */
 static void universal_value_cb(const char *value, bool current, void *cbdata)
 {
   struct uvb_data *data = (struct uvb_data *) cbdata;
@@ -270,9 +270,9 @@ static void universal_value_cb(const char *value, bool current, void *cbdata)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Fill active menus from selected req.
- **************************************************************************/
+ */
 void req_edit::fill_active()
 {
   if (selected != nullptr) {
@@ -296,9 +296,9 @@ void req_edit::fill_active()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User selected type for the requirement.
- **************************************************************************/
+ */
 void req_edit::req_type_menu(QAction *action)
 {
   QByteArray un_bytes = action->text().toUtf8();
@@ -316,9 +316,9 @@ void req_edit::req_type_menu(QAction *action)
   emit rec_vec_may_have_changed(req_vector);
 }
 
-/**********************************************************************/ /**
+/**
    User selected range for the requirement.
- **************************************************************************/
+ */
 void req_edit::req_range_menu(QAction *action)
 {
   QByteArray un_bytes = action->text().toUtf8();
@@ -334,9 +334,9 @@ void req_edit::req_range_menu(QAction *action)
   emit rec_vec_may_have_changed(req_vector);
 }
 
-/**********************************************************************/ /**
+/**
    User selected 'present' value for the requirement.
- **************************************************************************/
+ */
 void req_edit::req_present_menu(QAction *action)
 {
   if (selected != nullptr) {
@@ -349,9 +349,9 @@ void req_edit::req_present_menu(QAction *action)
   emit rec_vec_may_have_changed(req_vector);
 }
 
-/**********************************************************************/ /**
+/**
    User selected value for the requirement.
- **************************************************************************/
+ */
 void req_edit::univ_value_enum_menu(QAction *action)
 {
   if (selected != nullptr) {
@@ -366,9 +366,9 @@ void req_edit::univ_value_enum_menu(QAction *action)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User entered numerical requirement value.
- **************************************************************************/
+ */
 void req_edit::univ_value_edit()
 {
   if (selected != nullptr) {
@@ -383,9 +383,9 @@ void req_edit::univ_value_edit()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User requested new requirement
- **************************************************************************/
+ */
 void req_edit::add_now()
 {
   struct requirement new_req;
@@ -400,9 +400,9 @@ void req_edit::add_now()
   emit rec_vec_may_have_changed(req_vector);
 }
 
-/**********************************************************************/ /**
+/**
    User requested requirement deletion
- **************************************************************************/
+ */
 void req_edit::delete_now()
 {
   if (selected != nullptr) {
@@ -423,14 +423,14 @@ void req_edit::delete_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    The requirement vector may have been changed.
    @param vec the requirement vector that may have been changed.
- **************************************************************************/
+ */
 void req_edit::incoming_rec_vec_change(const requirement_vector *vec)
 {
   if (req_vector == vec) {
-    /* The selected requirement may be gone */
+    // The selected requirement may be gone
 
     selected = nullptr;
     requirement_vector_iterate(req_vector, preq)
@@ -443,7 +443,7 @@ void req_edit::incoming_rec_vec_change(const requirement_vector *vec)
     requirement_vector_iterate_end;
 
     if (selected == nullptr) {
-      /* The currently selected requirement was deleted. */
+      // The currently selected requirement was deleted.
       clear_selected();
     }
 
@@ -451,9 +451,9 @@ void req_edit::incoming_rec_vec_change(const requirement_vector *vec)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User clicked windows close button.
- **************************************************************************/
+ */
 void req_edit::closeEvent(QCloseEvent *event)
 {
   ui->unregister_req_edit(this);

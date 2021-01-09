@@ -13,20 +13,20 @@
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
-#endif /* HAVE_CONFIG_H */
+#endif // HAVE_CONFIG_H
 
 #include <QLoggingCategory>
 #include <sstream>
 
 #include <backward.hpp>
 
-/* utility */
+// utility
 #include "log.h"
 #include "shared.h"
 
 #include "fcbacktrace.h"
 
-/* We don't want backtrace-spam to testmatic logs */
+// We don't want backtrace-spam to testmatic logs
 #if defined(FREECIV_DEBUG) && !defined(FREECIV_TESTMATIC)
 #define BACKTRACE_ACTIVE 1
 #endif
@@ -43,11 +43,11 @@ static void backtrace_log(QtMsgType type, const QMessageLogContext &context,
                           const QString &message);
 void backtrace_print(QtMsgType type, const QMessageLogContext &context);
 } // anonymous namespace
-#endif /* BACKTRACE_ACTIVE */
+#endif // BACKTRACE_ACTIVE
 
-/********************************************************************/ /**
+/**
    Take backtrace log callback to use
- ************************************************************************/
+ */
 void backtrace_init()
 {
 #ifdef BACKTRACE_ACTIVE
@@ -55,20 +55,20 @@ void backtrace_init()
 #endif
 }
 
-/********************************************************************/ /**
+/**
    Remove backtrace log callback from use
- ************************************************************************/
+ */
 void backtrace_deinit()
 {
 #ifdef BACKTRACE_ACTIVE
   qInstallMessageHandler(previous);
-#endif /* BACKTRACE_ACTIVE */
+#endif // BACKTRACE_ACTIVE
 }
 
 #ifdef BACKTRACE_ACTIVE
-/********************************************************************/ /**
+/**
    Main backtrace callback called from logging code.
- ************************************************************************/
+ */
 namespace {
 static void backtrace_log(QtMsgType type, const QMessageLogContext &context,
                           const QString &message)
@@ -86,9 +86,9 @@ static void backtrace_log(QtMsgType type, const QMessageLogContext &context,
 } // anonymous namespace
 
 namespace {
-/********************************************************************/ /**
+/**
    Print backtrace
- ************************************************************************/
+ */
 void backtrace_print(QtMsgType type, const QMessageLogContext &context)
 {
   if (!stack_category().isEnabled(QtDebugMsg)) {
@@ -125,4 +125,4 @@ void backtrace_print(QtMsgType type, const QMessageLogContext &context)
 }
 
 } // anonymous namespace
-#endif /* BACKTRACE_ACTIVE */
+#endif // BACKTRACE_ACTIVE

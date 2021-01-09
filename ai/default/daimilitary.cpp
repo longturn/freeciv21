@@ -17,10 +17,10 @@
 
 #include <cstring>
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "combat.h"
 #include "game.h"
 #include "government.h"
@@ -33,7 +33,7 @@
 /* common/aicore */
 #include "pf_tools.h"
 
-/* server */
+// server
 #include "citytools.h"
 #include "cityturn.h"
 #include "srv_log.h"
@@ -45,9 +45,9 @@
 #include "advdata.h"
 #include "advtools.h"
 #include "autosettlers.h"
-#include "infracache.h" /* adv_city */
+#include "infracache.h" // adv_city
 
-/* ai */
+// ai
 #include "aitraits.h"
 #include "difficulty.h"
 #include "handicaps.h"
@@ -74,9 +74,9 @@ static int assess_danger(struct ai_type *ait, struct city *pcity,
                          const struct civ_map *dmap,
                          player_unit_list_getter ul_cb);
 
-/**********************************************************************/ /**
+/**
    Choose the best unit the city can build to defend against attacker v.
- **************************************************************************/
+ */
 struct unit_type *dai_choose_defender_versus(struct city *pcity,
                                              struct unit *attacker)
 {
@@ -119,25 +119,25 @@ struct unit_type *dai_choose_defender_versus(struct city *pcity,
   return bestunit;
 }
 
-/**********************************************************************/ /**
+/**
    This function should assign a value to choice and want, where want is a
  value between 1 and 100.
 
    If choice is A_UNSET, this advisor doesn't want any particular tech
    researched at the moment.
- **************************************************************************/
+ */
 void military_advisor_choose_tech(struct player *pplayer,
                                   struct adv_choice *choice)
 {
-  /* This function hasn't been implemented yet. */
+  // This function hasn't been implemented yet.
   adv_init_choice(choice);
 }
 
-/**********************************************************************/ /**
+/**
    Choose best attacker based on movement type. It chooses based on unit
    desirability without regard to cost, unless costs are equal. This is
    very wrong. FIXME, use amortize on time to build.
- **************************************************************************/
+ */
 static struct unit_type *dai_choose_attacker(struct ai_type *ait,
                                              struct city *pcity,
                                              enum terrain_class tc,
@@ -176,14 +176,14 @@ static struct unit_type *dai_choose_attacker(struct ai_type *ait,
   return bestid;
 }
 
-/**********************************************************************/ /**
+/**
    Choose best defender based on movement type. It chooses based on unit
    desirability without regard to cost, unless costs are equal. This is
    very wrong. FIXME, use amortize on time to build.
 
    We should only be passed with L_DEFEND_GOOD role for now, since this
    is the only role being considered worthy of bodyguarding in findjob.
- **************************************************************************/
+ */
 static struct unit_type *dai_choose_bodyguard(struct ai_type *ait,
                                               struct city *pcity,
                                               enum terrain_class tc,
@@ -196,7 +196,7 @@ static struct unit_type *dai_choose_bodyguard(struct ai_type *ait,
 
   simple_ai_unit_type_iterate(putype)
   {
-    /* Only consider units of given role, or any if invalid given */
+    // Only consider units of given role, or any if invalid given
     if (unit_role_id_is_valid(role)) {
       if (!utype_has_role(putype, role)) {
         continue;
@@ -211,14 +211,14 @@ static struct unit_type *dai_choose_bodyguard(struct ai_type *ait,
       continue;
     }
 
-    /* Only consider units of same move type */
+    // Only consider units of same move type
     if ((tc == TC_LAND && utype_class(putype)->adv.land_move == MOVE_NONE)
         || (tc == TC_OCEAN
             && utype_class(putype)->adv.sea_move == MOVE_NONE)) {
       continue;
     }
 
-    /* Now find best */
+    // Now find best
     if (can_city_build_unit_now(pcity, putype)) {
       const int desire = dai_unit_defence_desirability(ait, putype);
 
@@ -236,9 +236,9 @@ static struct unit_type *dai_choose_bodyguard(struct ai_type *ait,
   return bestid;
 }
 
-/**********************************************************************/ /**
+/**
    Helper for assess_defense_quadratic and assess_defense_unit.
- **************************************************************************/
+ */
 static int base_assess_defense_unit(struct city *pcity, struct unit *punit,
                                     bool igwall, bool quadratic,
                                     int wall_value)
@@ -252,7 +252,7 @@ static int base_assess_defense_unit(struct city *pcity, struct unit *punit,
 
   defense = get_fortified_defense_power(NULL, punit) * punit->hp;
   if (unit_has_type_flag(punit, UTYF_BADCITYDEFENDER)) {
-    /* Attacker firepower doubled, defender firepower set to 1 */
+    // Attacker firepower doubled, defender firepower set to 1
     defense /= 2;
   } else {
     defense *= unit_type_get(punit)->firepower;
@@ -278,13 +278,13 @@ static int base_assess_defense_unit(struct city *pcity, struct unit *punit,
   return defense;
 }
 
-/**********************************************************************/ /**
+/**
    Need positive feedback in m_a_c_b and bodyguard routines. -- Syela
- **************************************************************************/
+ */
 int assess_defense_quadratic(struct ai_type *ait, struct city *pcity)
 {
   int defense = 0, walls = 0;
-  /* This can be an arg if needed, but we don't need to change it now. */
+  // This can be an arg if needed, but we don't need to change it now.
   const bool igwall = false;
   struct ai_city *city_data = def_ai_city_data(pcity, ait);
 
@@ -308,17 +308,17 @@ int assess_defense_quadratic(struct ai_type *ait, struct city *pcity)
              " %d",
              defense);
     if (defense > 1 << 15) {
-      defense = 1 << 15; /* more defense than we know what to do with! */
+      defense = 1 << 15; // more defense than we know what to do with!
     }
   }
 
   return defense * defense;
 }
 
-/**********************************************************************/ /**
+/**
    One unit only, mostly for findjob; handling boats correctly. 980803 --
  Syela
- **************************************************************************/
+ */
 int assess_defense_unit(struct ai_type *ait, struct city *pcity,
                         struct unit *punit, bool igwall)
 {
@@ -326,18 +326,18 @@ int assess_defense_unit(struct ai_type *ait, struct city *pcity,
                                   def_ai_city_data(pcity, ait)->wallvalue);
 }
 
-/**********************************************************************/ /**
+/**
    Most of the time we don't need/want positive feedback. -- Syela
 
    It's unclear whether this should treat settlers/caravans as defense. --
  Syela
    TODO: It looks like this is never used while deciding if we should attack
    pcity, if we have pcity defended properly, so I think it should. --pasky
- **************************************************************************/
+ */
 static int assess_defense_backend(struct ai_type *ait, struct city *pcity,
                                   bool igwall)
 {
-  /* Estimate of our total city defensive might */
+  // Estimate of our total city defensive might
   int defense = 0;
 
   unit_list_iterate(pcity->tile->units, punit)
@@ -349,26 +349,26 @@ static int assess_defense_backend(struct ai_type *ait, struct city *pcity,
   return defense;
 }
 
-/**********************************************************************/ /**
+/**
    Estimate defense strength of city
- **************************************************************************/
+ */
 int assess_defense(struct ai_type *ait, struct city *pcity)
 {
   return assess_defense_backend(ait, pcity, false);
 }
 
-/**********************************************************************/ /**
+/**
    Estimate defense strength of city without considering how buildings
    help defense
- **************************************************************************/
+ */
 static int assess_defense_igwall(struct ai_type *ait, struct city *pcity)
 {
   return assess_defense_backend(ait, pcity, true);
 }
 
-/**********************************************************************/ /**
+/**
    How dangerous and far a unit is for a city?
- **************************************************************************/
+ */
 static int assess_danger_unit(const struct city *pcity,
                               struct pf_reverse_map *pcity_map,
                               const struct unit *punit, int *move_time)
@@ -429,15 +429,15 @@ static int assess_danger_unit(const struct city *pcity,
   return danger * 100 / MAX(mod, 1);
 }
 
-/**********************************************************************/ /**
+/**
    Call assess_danger() for all cities owned by pplayer.
 
    This is necessary to initialize some ai data before some ai calculations.
- **************************************************************************/
+ */
 void dai_assess_danger_player(struct ai_type *ait, struct player *pplayer,
                               const struct civ_map *dmap)
 {
-  /* Do nothing if game is not running */
+  // Do nothing if game is not running
   if (S_S_RUNNING == server_state()) {
     city_list_iterate(pplayer->cities, pcity)
     {
@@ -447,7 +447,7 @@ void dai_assess_danger_player(struct ai_type *ait, struct player *pplayer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Set (overwrite) our want for a building. Syela tries to explain:
 
      My first attempt to allow ng_wa >= 200 led to stupidity in cities
@@ -465,7 +465,7 @@ void dai_assess_danger_player(struct ai_type *ait, struct player *pplayer,
 
    This algorithm is very strange. But I created it by nesting up
    Syela's convoluted if ... else logic, and it seems to work. -- Per
- **************************************************************************/
+ */
 static void dai_reevaluate_building(struct city *pcity, adv_want *value,
                                     int urgency, int danger, int defense)
 {
@@ -473,7 +473,7 @@ static void dai_reevaluate_building(struct city *pcity, adv_want *value,
     return;
   }
 
-  *value = MAX(*value, 100 + urgency); /* default */
+  *value = MAX(*value, 100 + urgency); // default
 
   if (urgency > 0 && danger > defense * 2) {
     *value += 100;
@@ -482,7 +482,7 @@ static void dai_reevaluate_building(struct city *pcity, adv_want *value,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Create cached information about danger, urgency and grave danger to our
    cities.
 
@@ -499,7 +499,7 @@ static void dai_reevaluate_building(struct city *pcity, adv_want *value,
    FIXME: Due to the nature of assess_distance, a city will only be
    afraid of a boat laden with enemies if it stands on the coast (i.e.
    is directly reachable by this boat).
- **************************************************************************/
+ */
 static int assess_danger(struct ai_type *ait, struct city *pcity,
                          const struct civ_map *dmap,
                          player_unit_list_getter ul_cb)
@@ -521,10 +521,10 @@ static int assess_danger(struct ai_type *ait, struct city *pcity,
 
   TIMING_LOG(AIT_DANGER, TIMER_START);
 
-  /* Initialize data. */
+  // Initialize data.
   memset(&danger_reduced, 0, sizeof(danger_reduced));
   if (has_handicap(pplayer, H_DANGER)) {
-    /* Always thinks that city is in grave danger */
+    // Always thinks that city is in grave danger
     city_data->grave_danger = 1;
   } else {
     city_data->grave_danger = 0;
@@ -580,7 +580,7 @@ static int assess_danger(struct ai_type *ait, struct city *pcity,
 
   omnimap = !has_handicap(pplayer, H_MAP);
 
-  /* Check. */
+  // Check.
   players_iterate(aplayer)
   {
     struct pf_reverse_map *pcity_map;
@@ -610,7 +610,7 @@ static int assess_danger(struct ai_type *ait, struct city *pcity,
           static_cast<unit_type_ai *>(utype_ai_data(utype, ait));
 
       if (!utai->carries_occupiers && !utype_acts_hostile(utype)) {
-        /* Harmless unit. */
+        // Harmless unit.
         continue;
       }
 
@@ -643,7 +643,7 @@ static int assess_danger(struct ai_type *ait, struct city *pcity,
         city_data->diplomat_threat = true;
       }
 
-      vulnerability *= vulnerability; /* positive feedback */
+      vulnerability *= vulnerability; // positive feedback
       if (1 < move_time) {
         vulnerability /= move_time;
       }
@@ -681,7 +681,7 @@ static int assess_danger(struct ai_type *ait, struct city *pcity,
   }
 
   if (0 < city_data->grave_danger) {
-    /* really, REALLY urgent to defend */
+    // really, REALLY urgent to defend
     urgency += 10 * city_data->grave_danger;
   }
 
@@ -712,10 +712,10 @@ static int assess_danger(struct ai_type *ait, struct city *pcity,
   return urgency;
 }
 
-/**********************************************************************/ /**
+/**
    How much we would want that unit to defend a city? (Do not use this
    function to find bodyguards for ships or air units.)
- **************************************************************************/
+ */
 int dai_unit_defence_desirability(struct ai_type *ait,
                                   const struct unit_type *punittype)
 {
@@ -743,15 +743,15 @@ int dai_unit_defence_desirability(struct ai_type *ait,
   }
   desire += desire * maxbonus_pct / 100;
   if (utype_has_flag(punittype, UTYF_GAMELOSS)) {
-    desire /= 10; /* but might actually be worth it */
+    desire /= 10; // but might actually be worth it
   }
 
   return desire;
 }
 
-/**********************************************************************/ /**
+/**
    How much we would want that unit to attack with?
- **************************************************************************/
+ */
 int dai_unit_attack_desirability(struct ai_type *ait,
                                  const struct unit_type *punittype)
 {
@@ -767,7 +767,7 @@ int dai_unit_attack_desirability(struct ai_type *ait,
     desire += desire / 2;
   }
   if (utype_has_flag(punittype, UTYF_GAMELOSS)) {
-    desire /= 10; /* but might actually be worth it */
+    desire /= 10; // but might actually be worth it
   }
   if (utype_has_flag(punittype, UTYF_CITYBUSTER)) {
     desire += desire / 2;
@@ -781,11 +781,11 @@ int dai_unit_attack_desirability(struct ai_type *ait,
   return desire;
 }
 
-/**********************************************************************/ /**
+/**
    What would be the best defender for that city? Records the best defender
    type in choice. Also sets the technology want for the units we can't
    build yet.
- **************************************************************************/
+ */
 bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
                                struct city *pcity, int danger,
                                struct adv_choice *choice)
@@ -796,9 +796,9 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
    * any specific attacker.  The actual danger may not be mitigated
    * by the defense selected... */
   bool walls = city_got_defense_effect(pcity, NULL);
-  /* Technologies we would like to have. */
+  // Technologies we would like to have.
   int tech_desire[U_LAST];
-  /* Our favourite unit. */
+  // Our favourite unit.
   int best = -1;
   struct unit_type *best_unit_type = NULL;
   int best_unit_cost = 1;
@@ -809,7 +809,7 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
 
   simple_ai_unit_type_iterate(punittype)
   {
-    int desire; /* How much we want the unit? */
+    int desire; // How much we want the unit?
 
     /* Only consider proper defenders - otherwise waste CPU and
      * bump tech want needlessly. */
@@ -821,7 +821,7 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
     desire = dai_unit_defence_desirability(ait, punittype);
 
     if (!utype_has_role(punittype, L_DEFEND_GOOD)) {
-      desire /= 2; /* not good, just ok */
+      desire /= 2; // not good, just ok
     }
 
     if (utype_has_flag(punittype, UTYF_FIELDUNIT)) {
@@ -830,18 +830,18 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
       desire /= 2;
     }
 
-    desire /= POWER_DIVIDER / 2; /* Good enough, no rounding errors. */
+    desire /= POWER_DIVIDER / 2; // Good enough, no rounding errors.
     desire *= desire;
 
     if (can_city_build_unit_now(pcity, punittype)) {
-      /* We can build the unit now... */
+      // We can build the unit now...
 
       int build_cost = utype_build_shield_cost(pcity, punittype);
       int limit_cost = pcity->shield_stock + 40;
 
       if (walls && !utype_has_flag(punittype, UTYF_BADCITYDEFENDER)) {
         desire *= city_data->wallvalue;
-        /* TODO: More use of POWER_FACTOR ! */
+        // TODO: More use of POWER_FACTOR !
         desire /= POWER_FACTOR;
       }
 
@@ -849,16 +849,16 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
           || ((desire > best
                || (desire == best && build_cost <= best_unit_cost))
               && (best_unit_type == NULL
-                  /* In case all units are more expensive than limit_cost */
+                  // In case all units are more expensive than limit_cost
                   || limit_cost <= pcity->shield_stock + 40))) {
         best = desire;
         best_unit_type = punittype;
         best_unit_cost = build_cost;
       }
     } else if (can_city_build_unit_later(pcity, punittype)) {
-      /* We first need to develop the tech required by the unit... */
+      // We first need to develop the tech required by the unit...
 
-      /* Cost (shield equivalent) of gaining these techs. */
+      // Cost (shield equivalent) of gaining these techs.
       /* FIXME? Katvrr advises that this should be weighted more heavily in
        * big danger. */
       int notzero = city_list_size(pplayer->cities);
@@ -875,8 +875,8 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
         desire /= POWER_FACTOR;
       }
 
-      /* Yes, there's some similarity with kill_desire(). */
-      /* TODO: Explain what shield cost has to do with tech want. */
+      // Yes, there's some similarity with kill_desire().
+      // TODO: Explain what shield cost has to do with tech want.
       tech_desire[utype_index(punittype)] =
           (desire * danger
            / (utype_build_shield_cost(pcity, punittype) + tech_cost));
@@ -900,10 +900,10 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
   }
 
   if (best <= 0) {
-    best = 1; /* Avoid division by zero below. */
+    best = 1; // Avoid division by zero below.
   }
 
-  /* Update tech_want for appropriate techs for units we want to build. */
+  // Update tech_want for appropriate techs for units we want to build.
   simple_ai_unit_type_iterate(punittype)
   {
     if (tech_desire[utype_index(punittype)] > 0) {
@@ -931,7 +931,7 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    This function decides, what unit would be best for erasing enemy. It is
    called, when we just want to kill something, we've found it but we don't
    have the unit for killing that built yet - here we'll choose the type of
@@ -947,7 +947,7 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
    'ptile' is location of the target.
    best_choice is pre-filled with our current choice, we only
    consider units who can move in all the same terrains for best_choice.
- **************************************************************************/
+ */
 static void
 process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
                       const struct unit_type *victim_unit_type,
@@ -958,7 +958,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
 {
   struct player *pplayer = city_owner(pcity);
   const struct research *presearch = research_get(pplayer);
-  /* The enemy city.  acity == NULL means stray enemy unit */
+  // The enemy city.  acity == NULL means stray enemy unit
   struct city *acity = tile_city(ptile);
   struct pf_parameter parameter;
   struct pf_map *pfm;
@@ -969,7 +969,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
   bool unhap = dai_assess_military_unhappiness(pcity);
   struct ai_plr *plr_data = def_ai_player_data(pplayer, ait);
 
-  /* Has to be initialized to make gcc happy */
+  // Has to be initialized to make gcc happy
   struct ai_city *acity_data = NULL;
 
   if (acity != NULL) {
@@ -978,7 +978,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
 
   if (utype_class(orig_utype)->adv.sea_move == MOVE_NONE && !boat
       && boattype) {
-    /* cost of ferry */
+    // cost of ferry
     needferry = utype_build_shield_cost(pcity, boattype);
   }
 
@@ -998,7 +998,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
         && (U_NOT_OBSOLETED == punittype->obsoleted_by
             || !can_city_build_unit_direct(pcity, punittype->obsoleted_by))
         && punittype->attack_strength > 0 /* or we'll get SIGFPE */) {
-      /* Values to be computed */
+      // Values to be computed
       int desire;
       adv_want want;
       int move_time;
@@ -1006,7 +1006,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
       int veteran_level = get_target_bonus_effects(
           NULL, pplayer, NULL, pcity, NULL, city_tile(pcity), NULL,
           punittype, NULL, NULL, NULL, EFT_VETERAN_BUILD);
-      /* Cost (shield equivalent) of gaining these techs. */
+      // Cost (shield equivalent) of gaining these techs.
       /* FIXME? Katvrr advises that this should be weighted more heavily in
        * big danger. */
       int notzero = city_list_size(pplayer->cities);
@@ -1014,12 +1014,12 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
       int tech_cost =
           research_goal_bulbs_required(presearch, tech_req) / 4 / notzero;
       int bcost_balanced = build_cost_balanced(punittype);
-      /* See description of kill_desire() for info about this variables. */
+      // See description of kill_desire() for info about this variables.
       int bcost = utype_build_shield_cost(pcity, punittype);
       int attack = adv_unittype_att_rating(punittype, veteran_level,
                                            SINGLE_MOVE, punittype->hp);
 
-      /* Take into account reinforcements strength */
+      // Take into account reinforcements strength
       if (acity) {
         attack += acity_data->attack;
       }
@@ -1037,7 +1037,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
       parameter.omniscience = !has_handicap(pplayer, H_MAP);
       pfm = pf_map_new(&parameter);
 
-      /* Set the move_time appropriatelly. */
+      // Set the move_time appropriatelly.
       move_time = -1;
       if (NULL != ferry_map) {
         struct tile *dest_tile;
@@ -1054,7 +1054,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
               move_time += pos.turn;
               break;
             } else if (atile == ptile) {
-              /* Reaching directly seems better. */
+              // Reaching directly seems better.
               pf_map_iter_position(pfm, &pos);
               move_time = pos.turn;
               break;
@@ -1074,7 +1074,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
       }
       pf_map_destroy(pfm);
 
-      /* Estimate strength of the enemy. */
+      // Estimate strength of the enemy.
 
       if (victim_unit_type) {
         vuln = unittype_def_rating_squared(punittype, victim_unit_type,
@@ -1115,7 +1115,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
           int kd;
           int city_attack = acity_data->attack * acity_data->attack;
 
-          /* See aiunit.c:find_something_to_kill() for comments. */
+          // See aiunit.c:find_something_to_kill() for comments.
           kd = kill_desire(value, attack, (bcost + acity_data->bcost), vuln,
                            victim_count);
 
@@ -1131,7 +1131,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
       desire -= tech_cost * SHIELD_WEIGHTING;
       /* We can be possibly making some people of our homecity unhappy - then
        * we don't want to travel too far away to our victims. */
-      /* TODO: Unify the 'unhap' dependency to some common function. */
+      // TODO: Unify the 'unhap' dependency to some common function.
       desire -= move_time
                 * (unhap ? SHIELD_WEIGHTING + 2 * TRADE_WEIGHTING
                          : SHIELD_WEIGHTING);
@@ -1141,7 +1141,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
 
       if (want > 0) {
         if (tech_dist > 0) {
-          /* This is a future unit, tell the scientist how much we need it */
+          // This is a future unit, tell the scientist how much we need it
           plr_data->tech_want[advance_index(punittype->require_advance)] +=
               want;
           TECH_LOG(ait, LOG_DEBUG, pplayer, punittype->require_advance,
@@ -1154,7 +1154,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
           const struct impr_type *impr_req;
 
           if (can_city_build_unit_now(pcity, punittype)) {
-            /* This is a real unit and we really want it */
+            // This is a real unit and we really want it
 
             CITY_LOG(LOG_DEBUG, pcity,
                      "overriding %s(" ADV_WANT_PRINTF
@@ -1182,7 +1182,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
             best_choice->want = want;
             best_choice->type = CT_BUILDING;
           } else {
-            /* This should never happen? */
+            // This should never happen?
             CITY_LOG(LOG_DEBUG, pcity, "cannot build %s or unit %s",
                      improvement_rule_name(impr_req),
                      utype_rule_name(punittype));
@@ -1194,7 +1194,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
   simple_ai_unit_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    This function
    1. receives (in myunit) a first estimate of what we would like to build.
    2. finds a potential victim for it.
@@ -1204,29 +1204,29 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
    5. if we still want to attack, records the best attacker in choice.
    If the target is overseas, the function might suggest building a ferry
    to carry a land attack unit, instead of the land attack unit itself.
- **************************************************************************/
+ */
 static struct adv_choice *kill_something_with(struct ai_type *ait,
                                               struct player *pplayer,
                                               struct city *pcity,
                                               struct unit *myunit,
                                               struct adv_choice *choice)
 {
-  /* Our attack rating (with reinforcements) */
+  // Our attack rating (with reinforcements)
   int attack;
-  /* Benefit from fighting the target */
+  // Benefit from fighting the target
   int benefit;
   /* Defender of the target city/tile */
   struct unit *pdef;
   const struct unit_type *def_type;
   struct player *def_owner;
-  int def_vet; /* Is the defender veteran? */
-  /* Target coordinates */
+  int def_vet; // Is the defender veteran?
+  // Target coordinates
   struct tile *ptile;
-  /* Our transport */
+  // Our transport
   struct unit *ferryboat;
-  /* Our target */
+  // Our target
   struct city *acity;
-  /* Type of the boat (real or a future one) */
+  // Type of the boat (real or a future one)
   const struct unit_type *boattype;
   struct pf_map *ferry_map = NULL;
   int move_time;
@@ -1244,7 +1244,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
                     choice);
 
   if (city_data->danger != 0 && assess_defense(ait, pcity) == 0) {
-    /* Defence comes first! */
+    // Defence comes first!
     goto cleanup;
   }
 
@@ -1271,11 +1271,11 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
   attack *= attack;
 
   if (NULL != acity) {
-    /* Rating of enemy defender */
+    // Rating of enemy defender
     int vulnerability;
 
     if (!POTENTIALLY_HOSTILE_PLAYER(ait, pplayer, city_owner(acity))) {
-      /* Not a valid target */
+      // Not a valid target
       goto cleanup;
     }
 
@@ -1307,7 +1307,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
       }
     }
     if (unit_can_take_over(myunit) || acity_data->invasion.occupy > 0) {
-      /* Bonus for getting the city */
+      // Bonus for getting the city
       int owner_size = city_list_size(city_owner(acity)->cities);
       float finishing_factor = 1;
 
@@ -1318,7 +1318,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
       benefit += acity_data->worth * finishing_factor / 3;
     }
 
-    /* end dealing with cities */
+    // end dealing with cities
   } else {
     if (NULL != ferry_map) {
       pf_map_destroy(ferry_map);
@@ -1327,7 +1327,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
 
     pdef = get_defender(myunit, ptile);
     if (!pdef) {
-      /* Nobody to attack! */
+      // Nobody to attack!
       goto cleanup;
     }
 
@@ -1336,14 +1336,14 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
     def_type = unit_type_get(pdef);
     def_vet = pdef->veteran;
     def_owner = unit_owner(pdef);
-    /* end dealing with units */
+    // end dealing with units
   }
 
   if (NULL == ferry_map) {
     process_attacker_want(ait, pcity, benefit, def_type, def_owner, def_vet,
                           ptile, best_choice, NULL, NULL, NULL);
   } else {
-    /* Attract a boat to our city or retain the one that's already here */
+    // Attract a boat to our city or retain the one that's already here
     fc_assert_ret_val(unit_class_get(myunit)->adv.sea_move != MOVE_FULL,
                       choice);
     best_choice->need_boat = true;
@@ -1353,7 +1353,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
   }
 
   if (best_choice->want > choice->want) {
-    /* We want attacker more than what we have selected before */
+    // We want attacker more than what we have selected before
     adv_free_choice(choice);
     choice = best_choice;
     CITY_LOG(LOG_DEBUG, pcity,
@@ -1362,7 +1362,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
              city_name_get(pcity), utype_rule_name(best_choice->value.utype),
              best_choice->want);
 
-    if (NULL != ferry_map && !ferryboat) { /* need a new ferry */
+    if (NULL != ferry_map && !ferryboat) { // need a new ferry
       /* We might need a new boat even if there are boats free,
        * if they are blockaded or in inland seas*/
       fc_assert_ret_val(unit_class_get(myunit)->adv.sea_move != MOVE_FULL,
@@ -1377,10 +1377,10 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
                   "%s, want=" ADV_WANT_PRINTF ", %d of %d free",
                   city_name_get(pcity), utype_rule_name(choice->value.utype),
                   choice->want, ai->stats.available_boats, ai->stats.boats);
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
         adv_choice_set_use(choice, "attacker ferry");
-      } /* else can not build ferries yet */
+      } // else can not build ferries yet
     }
   }
 
@@ -1398,11 +1398,11 @@ cleanup:
   return choice;
 }
 
-/**********************************************************************/ /**
+/**
    This function should assign a value to choice and want and type,
    where want is a value between 1 and 100.
    if want is 0 this advisor doesn't want anything
- **************************************************************************/
+ */
 static void dai_unit_consider_bodyguard(struct ai_type *ait,
                                         struct city *pcity,
                                         struct unit_type *punittype,
@@ -1431,27 +1431,27 @@ static void dai_unit_consider_bodyguard(struct ai_type *ait,
   unit_virtual_destroy(virtualunit);
 }
 
-/**********************************************************************/ /**
+/**
    Before building a military unit, AI builds a barracks/port/airport
    NB: It is assumed this function isn't called in an emergency
    situation, when we need a defender _now_.
 
    TODO: something more sophisticated, like estimating future demand
    for military units, considering Sun Tzu instead.
- **************************************************************************/
+ */
 static void adjust_ai_unit_choice(struct city *pcity,
                                   struct adv_choice *choice)
 {
   Impr_type_id id;
 
-  /* Sanity */
+  // Sanity
   if (!is_unit_choice_type(choice->type)
       || utype_has_flag(choice->value.utype, UTYF_CIVILIAN)
       || city_production_unit_veteran_level(pcity, choice->value.utype)) {
     return;
   }
 
-  /*  N.B.: have to check that we haven't already built the building --mck */
+  //  N.B.: have to check that we haven't already built the building --mck
   if ((id = dai_find_source_building(pcity, EFT_VETERAN_BUILD,
                                      choice->value.utype))
           != B_LAST
@@ -1467,11 +1467,11 @@ static void adjust_ai_unit_choice(struct city *pcity,
   }
 }
 
-/**********************************************************************/ /**
+/**
    This function selects either a defender or an attacker to be built.
    It records its choice into adv_choice struct.
    If 'choice->want' is 0 this advisor doesn't want anything.
- **************************************************************************/
+ */
 struct adv_choice *military_advisor_choose_build(
     struct ai_type *ait, struct player *pplayer, struct city *pcity,
     const struct civ_map *mamap, player_unit_list_getter ul_cb)
@@ -1490,7 +1490,7 @@ struct adv_choice *military_advisor_choose_build(
   urgency = assess_danger(ait, pcity, mamap, ul_cb);
   /* Changing to quadratic to stop AI from building piles
    * of small units -- Syela */
-  /* It has to be AFTER assess_danger thanks to wallvalue. */
+  // It has to be AFTER assess_danger thanks to wallvalue.
   our_def = assess_defense_quadratic(ait, pcity);
 
   dai_choose_diplomat_defensive(ait, pplayer, pcity, choice, our_def);
@@ -1521,7 +1521,7 @@ struct adv_choice *military_advisor_choose_build(
         FEELING_FINAL);
   }
 
-  /* Otherwise no need to defend yet */
+  // Otherwise no need to defend yet
   if (city_data->danger != 0 || martial_value > 0) {
     struct impr_type *pimprove;
     int num_defenders = unit_list_size(ptile->units);
@@ -1533,7 +1533,7 @@ struct adv_choice *military_advisor_choose_build(
      * defensive strength, capped at 200 + urgency */
     if (qdanger >= our_def) {
       if (urgency == 0) {
-        /* don't waste money */
+        // don't waste money
         danger = 100;
       } else if (our_def == 0) {
         danger = 200 + urgency;
@@ -1544,7 +1544,7 @@ struct adv_choice *military_advisor_choose_build(
       danger = 100 * qdanger / our_def;
     }
     if (pcity->surplus[O_SHIELD] <= 0 && our_def != 0) {
-      /* Won't be able to support anything */
+      // Won't be able to support anything
       danger = 0;
     }
 
@@ -1585,9 +1585,9 @@ struct adv_choice *military_advisor_choose_build(
                          pcity, pimprove, pcity->shield_stock)))
           && ai_fuzzy(pplayer, true)) {
         if (pcity->server.adv->building_want[wall_id] > 0) {
-          /* NB: great wall is under domestic */
+          // NB: great wall is under domestic
           choice->value.building = pimprove;
-          /* building_want is hacked by assess_danger */
+          // building_want is hacked by assess_danger
           choice->want = pcity->server.adv->building_want[wall_id];
           choice->want =
               choice->want
@@ -1613,14 +1613,14 @@ struct adv_choice *military_advisor_choose_build(
 
         adv_init_choice(&uchoice);
 
-        /* Consider building defensive units */
+        // Consider building defensive units
         if (dai_process_defender_want(ait, pplayer, pcity, danger,
                                       &uchoice)) {
-          /* Potential defender found */
+          // Potential defender found
           if (urgency == 0 && uchoice.value.utype->defense_strength == 1) {
-            /* FIXME: check other reqs (unit class?) */
+            // FIXME: check other reqs (unit class?)
             if (get_city_bonus(pcity, EFT_HP_REGEN) > 0) {
-              /* unlikely */
+              // unlikely
               uchoice.want = MIN(49, danger);
             } else {
               uchoice.want = MIN(25, danger);
@@ -1647,7 +1647,7 @@ struct adv_choice *military_advisor_choose_build(
         CITY_LOG(LOG_DEBUG, pcity, "m_a_c_d does not want defenders");
       }
     }
-  } /* ok, don't need to defend */
+  } // ok, don't need to defend
 
   if (pcity->surplus[O_SHIELD] <= 0
       || pcity->feel[CITIZEN_UNHAPPY][FEELING_FINAL]
@@ -1668,7 +1668,7 @@ struct adv_choice *military_advisor_choose_build(
     allow_gold_upkeep = false;
   }
 
-  /* Consider making a land bodyguard */
+  // Consider making a land bodyguard
   punittype = dai_choose_bodyguard(ait, pcity, TC_LAND, L_DEFEND_GOOD,
                                    allow_gold_upkeep);
   if (punittype) {
@@ -1686,21 +1686,21 @@ struct adv_choice *military_advisor_choose_build(
     return choice;
   }
 
-  /* Consider making an offensive diplomat */
+  // Consider making an offensive diplomat
   dai_choose_diplomat_offensive(ait, pplayer, pcity, choice);
 
-  /* Consider making a sea bodyguard */
+  // Consider making a sea bodyguard
   punittype = dai_choose_bodyguard(ait, pcity, TC_OCEAN, L_DEFEND_GOOD,
                                    allow_gold_upkeep);
   if (punittype) {
     dai_unit_consider_bodyguard(ait, pcity, punittype, choice);
   }
 
-  /* Consider making an airplane */
+  // Consider making an airplane
   (void) dai_choose_attacker_air(ait, pplayer, pcity, choice,
                                  allow_gold_upkeep);
 
-  /* Consider making a paratrooper */
+  // Consider making a paratrooper
   dai_choose_paratrooper(ait, pplayer, pcity, choice, allow_gold_upkeep);
 
   /* Check if we want a sailing attacker. Have to put sailing first
@@ -1724,10 +1724,10 @@ struct adv_choice *military_advisor_choose_build(
     unit_virtual_destroy(virtualunit);
   }
 
-  /* Consider a hunter */
+  // Consider a hunter
   dai_hunter_choice(ait, pplayer, pcity, choice, allow_gold_upkeep);
 
-  /* Consider veteran level enhancing buildings before non-urgent units */
+  // Consider veteran level enhancing buildings before non-urgent units
   adjust_ai_unit_choice(pcity, choice);
 
   if (choice->want <= 0) {

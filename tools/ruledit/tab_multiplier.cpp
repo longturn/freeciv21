@@ -40,9 +40,9 @@
 
 #include "tab_multiplier.h"
 
-/**********************************************************************/ /**
+/**
    Setup tab_multiplier object
- **************************************************************************/
+ */
 tab_multiplier::tab_multiplier(ruledit_gui *ui_in) : QWidget()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
@@ -112,9 +112,9 @@ tab_multiplier::tab_multiplier(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the information.
- **************************************************************************/
+ */
 void tab_multiplier::refresh()
 {
   mpr_list->clear();
@@ -131,9 +131,9 @@ void tab_multiplier::refresh()
   multipliers_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Update info of the multiplier
- **************************************************************************/
+ */
 void tab_multiplier::update_multiplier_info(struct multiplier *pmul)
 {
   selected = pmul;
@@ -159,9 +159,9 @@ void tab_multiplier::update_multiplier_info(struct multiplier *pmul)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User selected multiplier from the list.
- **************************************************************************/
+ */
 void tab_multiplier::select_multiplier()
 {
   QList<QListWidgetItem *> select_list = mpr_list->selectedItems();
@@ -174,9 +174,9 @@ void tab_multiplier::select_multiplier()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User entered name for the multiplier
- **************************************************************************/
+ */
 void tab_multiplier::name_given()
 {
   if (selected != nullptr) {
@@ -207,9 +207,9 @@ void tab_multiplier::name_given()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User requested multiplier deletion
- **************************************************************************/
+ */
 void tab_multiplier::delete_now()
 {
   if (selected != 0) {
@@ -228,9 +228,9 @@ void tab_multiplier::delete_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialize new multiplier for use.
- **************************************************************************/
+ */
 bool tab_multiplier::initialize_new_multiplier(struct multiplier *pmul)
 {
   if (multiplier_by_rule_name("New Multiplier") != nullptr) {
@@ -242,9 +242,9 @@ bool tab_multiplier::initialize_new_multiplier(struct multiplier *pmul)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    User requested new multiplier
- **************************************************************************/
+ */
 void tab_multiplier::add_now()
 {
   struct multiplier *new_multiplier;
@@ -281,9 +281,9 @@ void tab_multiplier::add_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Toggled whether rule_name and name should be kept identical
- **************************************************************************/
+ */
 void tab_multiplier::same_name_toggle(bool checked)
 {
   name->setEnabled(!checked);
@@ -292,9 +292,9 @@ void tab_multiplier::same_name_toggle(bool checked)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit reqs
- **************************************************************************/
+ */
 void tab_multiplier::edit_reqs()
 {
   if (selected != nullptr) {

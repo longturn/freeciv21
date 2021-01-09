@@ -10,7 +10,7 @@
 **************************************************************************/
 #pragma once
 
-#include "support.h" /* bool type */
+#include "support.h" // bool type
 
 struct connection;
 struct conn_list;

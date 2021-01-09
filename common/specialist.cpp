@@ -14,11 +14,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 
-/* common */
+// common
 #include "city.h"
 #include "effects.h"
 #include "game.h"
@@ -28,9 +28,9 @@
 struct specialist specialists[SP_MAX];
 int default_specialist;
 
-/**********************************************************************/ /**
+/**
    Initialize data for specialists.
- **************************************************************************/
+ */
 void specialists_init()
 {
   int i;
@@ -45,9 +45,9 @@ void specialists_init()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Free data for specialists.
- **************************************************************************/
+ */
 void specialists_free()
 {
   int i;
@@ -60,38 +60,38 @@ void specialists_free()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return the number of specialist_types.
- **************************************************************************/
+ */
 Specialist_type_id specialist_count()
 {
   return game.control.num_specialist_types;
 }
 
-/**********************************************************************/ /**
+/**
    Return the specialist index.
 
    Currently same as specialist_number(), paired with specialist_count()
    indicates use as an array index.
- **************************************************************************/
+ */
 Specialist_type_id specialist_index(const struct specialist *sp)
 {
   fc_assert_ret_val(NULL != sp, 0);
   return sp - specialists;
 }
 
-/**********************************************************************/ /**
+/**
    Return the specialist item_number.
- **************************************************************************/
+ */
 Specialist_type_id specialist_number(const struct specialist *sp)
 {
   fc_assert_ret_val(NULL != sp, 0);
   return sp->item_number;
 }
 
-/**********************************************************************/ /**
+/**
    Return the specialist pointer for the given number.
- **************************************************************************/
+ */
 struct specialist *specialist_by_number(const Specialist_type_id id)
 {
   if (id < 0 || id >= game.control.num_specialist_types) {
@@ -100,10 +100,10 @@ struct specialist *specialist_by_number(const Specialist_type_id id)
   return &specialists[id];
 }
 
-/**********************************************************************/ /**
+/**
    Return the specialist type with the given (untranslated!) rule name.
    Returns NULL if none match.
- **************************************************************************/
+ */
 struct specialist *specialist_by_rule_name(const char *name)
 {
   const char *qname = Qn_(name);
@@ -120,10 +120,10 @@ struct specialist *specialist_by_rule_name(const char *name)
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Return the specialist type with the given (translated, plural) name.
    Returns NULL if none match.
- **************************************************************************/
+ */
 struct specialist *specialist_by_translated_name(const char *name)
 {
   specialist_type_iterate(i)
@@ -138,38 +138,38 @@ struct specialist *specialist_by_translated_name(const char *name)
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Return the (untranslated) rule name of the specialist type.
    You don't have to free the return pointer.
- **************************************************************************/
+ */
 const char *specialist_rule_name(const struct specialist *sp)
 {
   return rule_name_get(&sp->name);
 }
 
-/**********************************************************************/ /**
+/**
    Return the (translated, plural) name of the specialist type.
    You don't have to free the return pointer.
- **************************************************************************/
+ */
 const char *specialist_plural_translation(const struct specialist *sp)
 {
   return name_translation_get(&sp->name);
 }
 
-/**********************************************************************/ /**
+/**
    Return the (translated) abbreviation of the specialist type.
    You don't have to free the return pointer.
- **************************************************************************/
+ */
 const char *specialist_abbreviation_translation(const struct specialist *sp)
 {
   return name_translation_get(&sp->abbreviation);
 }
 
-/**********************************************************************/ /**
+/**
    Return a string containing all the specialist abbreviations, for instance
    "E/S/T".
    You don't have to free the return pointer.
- **************************************************************************/
+ */
 const char *specialists_abbreviation_string()
 {
   static char buf[5 * SP_MAX];
@@ -189,7 +189,7 @@ const char *specialists_abbreviation_string()
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Return a string showing the number of specialists in the array.
 
    For instance with a city with (0,3,1) specialists call
@@ -197,7 +197,7 @@ const char *specialists_abbreviation_string()
      specialists_string(pcity->specialists);
 
    and you'll get "0/3/1".
- **************************************************************************/
+ */
 const char *specialists_string(const citizens *specialist_list)
 {
   static char buf[5 * SP_MAX];
@@ -215,9 +215,9 @@ const char *specialists_string(const citizens *specialist_list)
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Return the output for the specialist type with this output type.
- **************************************************************************/
+ */
 int get_specialist_output(const struct city *pcity, Specialist_type_id sp,
                           Output_type_id otype)
 {

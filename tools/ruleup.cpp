@@ -25,14 +25,14 @@
 #include <QCommandLineParser>
 #include <QCoreApplication>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "registry.h"
 
-/* common */
+// common
 #include "fc_interface.h"
 
-/* server */
+// server
 #include "ruleset.h"
 #include "sernet.h"
 #include "settings.h"
@@ -47,9 +47,9 @@
 static QString rs_selected;
 static QString od_selected;
 
-/**********************************************************************/ /**
+/**
    Parse freeciv-ruleup commandline parameters.
- **************************************************************************/
+ */
 static void rup_parse_cmdline(const QCoreApplication &app)
 {
   QCommandLineParser parser;
@@ -96,14 +96,14 @@ static void rup_parse_cmdline(const QCoreApplication &app)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Conversion log callback
- **************************************************************************/
+ */
 static void conv_log(const char *msg) { qInfo("%s", msg); }
 
-/**********************************************************************/ /**
+/**
    Main entry point for freeciv-ruleup
- **************************************************************************/
+ */
 int main(int argc, char **argv)
 {
   QCoreApplication app(argc, argv);
@@ -124,16 +124,16 @@ int main(int argc, char **argv)
   game_init(false);
   i_am_tool();
 
-  /* Initialize the fc_interface functions needed to understand rules. */
+  // Initialize the fc_interface functions needed to understand rules.
   fc_interface_init_tool();
 
-  /* Set ruleset user requested to use */
+  // Set ruleset user requested to use
   if (rs_selected == NULL) {
     rs_selected = GAME_DEFAULT_RULESETDIR;
   }
   sz_strlcpy(game.server.rulesetdir, qUtf8Printable(rs_selected));
 
-  /* Reset aifill to zero */
+  // Reset aifill to zero
   game.info.aifill = 0;
 
   if (load_rulesets(NULL, NULL, true, conv_log, false, true, true)) {

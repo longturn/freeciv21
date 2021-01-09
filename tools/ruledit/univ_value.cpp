@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "achievements.h"
 #include "game.h"
 #include "government.h"
@@ -26,23 +26,23 @@
 #include "style.h"
 #include "tech.h"
 #include "traderoutes.h"
-/* server */
+// server
 #include "rssanity.h"
 #include "settings.h"
 
 #include "univ_value.h"
 
-/********************************************************************/ /**
+/**
    Initialize universal value with a value suitable for the kind.
 
    Returns TRUE iff there's any values universal kind can have with
    current ruleset.
- ************************************************************************/
+ */
 bool universal_value_initial(struct universal *src)
 {
   switch (src->kind) {
   case VUT_NONE:
-    /* Value of None should never be used */
+    // Value of None should never be used
     return true;
   case VUT_ADVANCE:
     if (game.control.num_tech_types <= 0) {
@@ -224,9 +224,9 @@ bool universal_value_initial(struct universal *src)
   return false;
 }
 
-/********************************************************************/ /**
+/**
    Call cb for each value possible for the universal kind.
- ************************************************************************/
+ */
 void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
                            void *data)
 {
@@ -478,7 +478,7 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
   case VUT_MINHP:
   case VUT_AGE:
   case VUT_MINTECHS:
-    /* Requirement types having numerical value */
+    // Requirement types having numerical value
     cb(NULL, false, data);
     break;
   case VUT_COUNT:

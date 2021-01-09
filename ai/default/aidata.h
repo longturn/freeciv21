@@ -10,10 +10,10 @@
 #pragma once
 
 #include <QHash>
-/* utility */
+// utility
 #include "support.h"
 
-/* common */
+// common
 #include "fc_types.h"
 #include "tech.h"
 
@@ -23,10 +23,10 @@
 struct player;
 
 enum winning_strategy {
-  WIN_OPEN,   /* still undetermined */
-  WIN_WAR,    /* we have no other choice than to crush all opposition */
-  WIN_SPACE,  /* we will race for space, peace very important */
-  WIN_CAPITAL /* we cannot win unless we take war_target's capital */
+  WIN_OPEN,   // still undetermined
+  WIN_WAR,    // we have no other choice than to crush all opposition
+  WIN_SPACE,  // we will race for space, peace very important
+  WIN_CAPITAL // we cannot win unless we take war_target's capital
 };
 
 #define SPECENUM_NAME war_reason
@@ -45,19 +45,19 @@ enum winning_strategy {
 #include "specenum_gen.h"
 
 struct ai_dip_intel {
-  /* Remember one example of each for text spam purposes. */
+  // Remember one example of each for text spam purposes.
   struct player *is_allied_with_enemy;
   struct player *at_war_with_ally;
   struct player *is_allied_with_ally;
 
-  signed char spam; /* timer to avoid spamming a player with chat */
-  int distance;     /* average distance to that player's cities */
-  int countdown;    /* we're on a countdown to war declaration */
-  enum war_reason war_reason;        /* why we declare war */
-  signed char ally_patience;         /* we EXPECT our allies to help us! */
-  signed char asked_about_peace;     /* don't ask again */
-  signed char asked_about_alliance;  /* don't nag! */
-  signed char asked_about_ceasefire; /* don't ... you get the point */
+  signed char spam; // timer to avoid spamming a player with chat
+  int distance;     // average distance to that player's cities
+  int countdown;    // we're on a countdown to war declaration
+  enum war_reason war_reason;        // why we declare war
+  signed char ally_patience;         // we EXPECT our allies to help us!
+  signed char asked_about_peace;     // don't ask again
+  signed char asked_about_alliance;  // don't nag!
+  signed char asked_about_ceasefire; // don't ... you get the point
   signed char warned_about_space;
 };
 
@@ -68,31 +68,31 @@ struct ai_plr {
   int last_num_oceans;
 
   struct {
-    int passengers; /* number of passengers waiting for boats */
+    int passengers; // number of passengers waiting for boats
     int boats;
     int available_boats;
 
-    int *workers; /* cities to workers on continent */
+    int *workers; // cities to workers on continent
     int *ocean_workers;
 
     QSet<int> diplomat_reservations;
   } stats;
 
-  /* AI diplomacy and opinions on other players */
+  // AI diplomacy and opinions on other players
   struct {
     const struct ai_dip_intel **player_intel_slots;
     enum winning_strategy strategy;
-    int timer;       /* pursue our goals with some stubbornness, in turns */
-    char love_coeff; /* Reduce love with this % each turn */
-    char love_incr;  /* Modify love with this fixed amount */
+    int timer;       // pursue our goals with some stubbornness, in turns
+    char love_coeff; // Reduce love with this % each turn
+    char love_incr;  // Modify love with this fixed amount
     int req_love_for_peace;
     int req_love_for_alliance;
   } diplomacy;
 
-  /* Cache map for AI settlers; defined in aisettler.c. */
+  // Cache map for AI settlers; defined in aisettler.c.
   struct ai_settler *settler;
 
-  /* The units of tech_want seem to be shields */
+  // The units of tech_want seem to be shields
   adv_want tech_want[A_LAST + 1];
 };
 

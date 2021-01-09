@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 
-/* common */
+// common
 #include "game.h"
 #include "map.h"
 #include "tile.h"
@@ -27,9 +27,9 @@
 
 #include "borders.h"
 
-/*********************************************************************/ /**
+/**
    Border radius sq from given border source tile.
- *************************************************************************/
+ */
 int tile_border_source_radius_sq(struct tile *ptile)
 {
   struct city *pcity;
@@ -63,9 +63,9 @@ int tile_border_source_radius_sq(struct tile *ptile)
   return radius_sq;
 }
 
-/*********************************************************************/ /**
+/**
    Border source strength
- *************************************************************************/
+ */
 int tile_border_source_strength(struct tile *ptile)
 {
   struct city *pcity;
@@ -95,9 +95,9 @@ int tile_border_source_strength(struct tile *ptile)
   return strength;
 }
 
-/*********************************************************************/ /**
+/**
    Border source strength at tile
- *************************************************************************/
+ */
 int tile_border_strength(struct tile *ptile, struct tile *source)
 {
   int full_strength = tile_border_source_strength(source);
@@ -110,9 +110,9 @@ int tile_border_strength(struct tile *ptile, struct tile *source)
   }
 }
 
-/*********************************************************************/ /**
+/**
    Is given tile source to borders.
- *************************************************************************/
+ */
 bool is_border_source(struct tile *ptile)
 {
   if (tile_city(ptile)) {

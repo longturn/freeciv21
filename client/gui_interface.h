@@ -16,7 +16,7 @@
 // Forward declarations
 class QTcpSocket;
 
-/* common */
+// common
 #include "fc_types.h"
 #include "featured_text.h"
 #include "tile.h"
@@ -25,7 +25,7 @@ class QTcpSocket;
 #include "canvas_g.h"
 #include "pages_g.h"
 
-/* client */
+// client
 #include "tilespec.h"
 
 struct gui_funcs {

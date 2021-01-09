@@ -12,21 +12,21 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "featured_text.h"
 #include "research.h"
 
 /* common/scriptcore */
 #include "luascript.h"
 
-/* server */
+// server
 #include "notify.h"
 
 #include "api_server_notify.h"
 
-/*************************************************************************/ /**
+/**
    Notify players which have embassies with pplayer with the given message.
- *****************************************************************************/
+ */
 void api_notify_embassies_msg(lua_State *L, Player *pplayer, Tile *ptile,
                               int event, const char *message)
 {
@@ -36,9 +36,9 @@ void api_notify_embassies_msg(lua_State *L, Player *pplayer, Tile *ptile,
                    "%s", message);
 }
 
-/*************************************************************************/ /**
+/**
    Notify pplayer of a complex event.
- *****************************************************************************/
+ */
 void api_notify_event_msg(lua_State *L, Player *pplayer, Tile *ptile,
                           int event, const char *message)
 {
@@ -48,9 +48,9 @@ void api_notify_event_msg(lua_State *L, Player *pplayer, Tile *ptile,
                 "%s", message);
 }
 
-/*************************************************************************/ /**
+/**
    Notify players sharing research with the player.
- *****************************************************************************/
+ */
 void api_notify_research_msg(lua_State *L, Player *pplayer, bool include_plr,
                              int event, const char *message)
 {
@@ -64,9 +64,9 @@ void api_notify_research_msg(lua_State *L, Player *pplayer, bool include_plr,
                   static_cast<event_type>(event), ftc_any, "%s", message);
 }
 
-/*************************************************************************/ /**
+/**
    Notify players sharing research with the player.
- *****************************************************************************/
+ */
 void api_notify_research_embassies_msg(lua_State *L, Player *pplayer,
                                        int event, const char *message)
 {

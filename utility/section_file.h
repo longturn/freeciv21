@@ -15,22 +15,22 @@
  * not care about. This header should be included by source files
  * implementing registry itself. */
 
-/* utility */
+// utility
 #include "log.h"
 #include "registry_ini.h"
 #include "support.h"
 
-/* Section structure. */
+// Section structure.
 struct section {
-  struct section_file *secfile; /* Parent structure. */
+  struct section_file *secfile; // Parent structure.
   enum entry_special_type special;
-  char *name;                 /* Name of the section. */
-  struct entry_list *entries; /* The list of the children. */
+  char *name;                 // Name of the section.
+  struct entry_list *entries; // The list of the children.
 };
 
-/* The section file struct itself. */
+// The section file struct itself.
 struct section_file {
-  char *name; /* Can be NULL. */
+  char *name; // Can be NULL.
   size_t num_entries;
   /* num_includes should be size_t, but as there's no truly portable
    * printf format for size_t and we need to construct string containing

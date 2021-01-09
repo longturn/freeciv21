@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
+// common
 #include "fc_types.h"
 #include "map.h"
 

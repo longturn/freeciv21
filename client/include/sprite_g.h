@@ -15,7 +15,7 @@
 #include "gui_proto_constructor.h"
 #include "support.h"
 
-class QPixmap; /* opaque type, real type is gui-dep */
+class QPixmap; // opaque type, real type is gui-dep
 struct color;
 
 GUI_FUNC_PROTO(const char **, gfx_fileextensions, void)

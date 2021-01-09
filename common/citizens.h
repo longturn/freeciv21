@@ -12,7 +12,7 @@
 *****************************************************************************/
 #pragma once
 
-/* common */
+// common
 #include "fc_types.h"
 
 struct player_slot;
@@ -35,7 +35,7 @@ void citizens_nation_move(struct city *pcity,
 citizens citizens_count(const struct city *pcity);
 struct player_slot *citizens_random(const struct city *pcity);
 
-/* Iterates over all player slots (nationalities) with citizens. */
+// Iterates over all player slots (nationalities) with citizens.
 #define citizens_iterate(_pcity, _pslot, _nationality)                      \
   player_slots_iterate(_pslot)                                              \
   {                                                                         \
@@ -47,7 +47,7 @@ struct player_slot *citizens_random(const struct city *pcity);
   }                                                                         \
   player_slots_iterate_end;
 
-/* Like above but only foreign citizens. */
+// Like above but only foreign citizens.
 #define citizens_foreign_iterate(_pcity, _pslot, _nationality)              \
   citizens_iterate(_pcity, _pslot, _nationality)                            \
   {                                                                         \

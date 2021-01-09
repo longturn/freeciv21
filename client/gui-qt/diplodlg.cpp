@@ -44,9 +44,9 @@ typedef advance *p_advance;
 typedef city *p_city;
 extern QApplication *qapp;
 
-/************************************************************************/ /**
+/**
    Constructor for diplomacy widget
- ****************************************************************************/
+ */
 diplo_wdg::diplo_wdg(int counterpart, int initiated_from)
     : QWidget(), active_menu(0), curr_player(0), index(0)
 {
@@ -232,14 +232,14 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from)
   update_wdg();
 }
 
-/************************************************************************/ /**
+/**
    Destructor for diplomacy widget
- ****************************************************************************/
+ */
 diplo_wdg::~diplo_wdg() = default;
 
-/************************************************************************/ /**
+/**
    Double click on treaty list - it removes clicked clause from list
- ****************************************************************************/
+ */
 void diplo_wdg::dbl_click(QTableWidgetItem *item)
 {
   int i, r;
@@ -259,9 +259,9 @@ void diplo_wdg::dbl_click(QTableWidgetItem *item)
   clause_list_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Received event about diplomacy widget being closed
- ****************************************************************************/
+ */
 void diplo_wdg::closeEvent(QCloseEvent *event)
 {
   if (C_S_RUNNING == client_state()) {
@@ -270,27 +270,27 @@ void diplo_wdg::closeEvent(QCloseEvent *event)
   event->accept();
 }
 
-/************************************************************************/ /**
+/**
    Gold changed on first spinner
- ****************************************************************************/
+ */
 void diplo_wdg::gold_changed1(int val)
 {
   dsend_packet_diplomacy_create_clause_req(&client.conn, player2, player2,
                                            CLAUSE_GOLD, val);
 }
 
-/************************************************************************/ /**
+/**
    Gold changed on second spinner
- ****************************************************************************/
+ */
 void diplo_wdg::gold_changed2(int val)
 {
   dsend_packet_diplomacy_create_clause_req(&client.conn, player2, player1,
                                            CLAUSE_GOLD, val);
 }
 
-/************************************************************************/ /**
+/**
    Shows popup menu with available clauses to create
- ****************************************************************************/
+ */
 void diplo_wdg::show_menu(int player)
 {
   int other_player;
@@ -316,7 +316,7 @@ void diplo_wdg::show_menu(int player)
   pgiver = player_by_number(player);
   pother = player_by_number(other_player);
 
-  /* Maps */
+  // Maps
   map_menu = menu->addMenu(_("Maps"));
   world_map = new QAction(_("World-map"), this);
   connect(world_map, &QAction::triggered, this,
@@ -326,7 +326,7 @@ void diplo_wdg::show_menu(int player)
   connect(sea_map, &QAction::triggered, this, &diplo_wdg::sea_map_clause);
   map_menu->addAction(sea_map);
 
-  /* Trading: advances */
+  // Trading: advances
   if (game.info.trading_tech) {
     const struct research *gresearch = research_get(pgiver);
     const struct research *oresearch = research_get(pother);
@@ -346,14 +346,14 @@ void diplo_wdg::show_menu(int player)
     }
     advance_iterate_end;
 
-    /* All advances */
+    // All advances
     all_advancs = new QAction(_("All advances"), this);
     connect(all_advancs, &QAction::triggered, this,
             &diplo_wdg::all_advances);
     adv_menu->addAction(all_advancs);
     adv_menu->addSeparator();
 
-    /* QMap is sorted by default when iterating */
+    // QMap is sorted by default when iterating
     adv_iter = adv_list.constBegin();
     if (adv_list.count() > 0) {
       while (adv_iter != adv_list.constEnd()) {
@@ -368,7 +368,7 @@ void diplo_wdg::show_menu(int player)
     }
   }
 
-  /* Trading: cities. */
+  // Trading: cities.
   if (game.info.trading_city) {
     city_menu = menu->addMenu(_("Cities"));
 
@@ -406,7 +406,7 @@ void diplo_wdg::show_menu(int player)
     some_action->setDisabled(true);
   }
 
-  /* Pacts */
+  // Pacts
   if (player_by_number(curr_player) == client_player()) {
     pacts_menu = menu->addMenu(_("Pacts"));
     ds = player_diplstate_get(pgiver, pother)->type;
@@ -432,14 +432,14 @@ void diplo_wdg::show_menu(int player)
     }
   }
 
-  /* Check user response for not defined responses in slots */
+  // Check user response for not defined responses in slots
   menu->setAttribute(Qt::WA_DeleteOnClose);
   menu->popup(QCursor::pos());
 }
 
-/************************************************************************/ /**
+/**
    Give embassy menu activated
- ****************************************************************************/
+ */
 void diplo_wdg::give_embassy()
 {
   dsend_packet_diplomacy_create_clause_req(&client.conn,
@@ -447,9 +447,9 @@ void diplo_wdg::give_embassy()
                                            curr_player, CLAUSE_EMBASSY, 0);
 }
 
-/************************************************************************/ /**
+/**
    Give shared vision menu activated
- ****************************************************************************/
+ */
 void diplo_wdg::give_shared_vision()
 {
   dsend_packet_diplomacy_create_clause_req(&client.conn,
@@ -457,9 +457,9 @@ void diplo_wdg::give_shared_vision()
                                            curr_player, CLAUSE_VISION, 0);
 }
 
-/************************************************************************/ /**
+/**
    Create alliance menu activated
- ****************************************************************************/
+ */
 void diplo_wdg::pact_allianze()
 {
   dsend_packet_diplomacy_create_clause_req(&client.conn,
@@ -467,9 +467,9 @@ void diplo_wdg::pact_allianze()
                                            curr_player, CLAUSE_ALLIANCE, 0);
 }
 
-/************************************************************************/ /**
+/**
    Ceasefire pact menu activated
- ****************************************************************************/
+ */
 void diplo_wdg::pact_ceasfire()
 {
   dsend_packet_diplomacy_create_clause_req(&client.conn,
@@ -477,9 +477,9 @@ void diplo_wdg::pact_ceasfire()
                                            curr_player, CLAUSE_CEASEFIRE, 0);
 }
 
-/************************************************************************/ /**
+/**
    Peace pact menu activated
- ****************************************************************************/
+ */
 void diplo_wdg::pact_peace()
 {
   dsend_packet_diplomacy_create_clause_req(&client.conn,
@@ -487,9 +487,9 @@ void diplo_wdg::pact_peace()
                                            curr_player, CLAUSE_PEACE, 0);
 }
 
-/************************************************************************/ /**
+/**
    Sea map menu activated
- ****************************************************************************/
+ */
 void diplo_wdg::sea_map_clause()
 {
   dsend_packet_diplomacy_create_clause_req(&client.conn,
@@ -497,18 +497,18 @@ void diplo_wdg::sea_map_clause()
                                            curr_player, CLAUSE_SEAMAP, 0);
 }
 
-/************************************************************************/ /**
+/**
    World map menu activated
- ****************************************************************************/
+ */
 void diplo_wdg::world_map_clause()
 {
   dsend_packet_diplomacy_create_clause_req(
       &client.conn, player_number(treaty.plr0), curr_player, CLAUSE_MAP, 0);
 }
 
-/************************************************************************/ /**
+/**
    Give city menu activated
- ****************************************************************************/
+ */
 void diplo_wdg::give_city(int city_num)
 {
   int giver, dest, other;
@@ -530,9 +530,9 @@ void diplo_wdg::give_city(int city_num)
                                            CLAUSE_CITY, city_num);
 }
 
-/************************************************************************/ /**
+/**
    Give advance menu activated
- ****************************************************************************/
+ */
 void diplo_wdg::give_advance(int tech)
 {
   int giver, dest, other;
@@ -554,9 +554,9 @@ void diplo_wdg::give_advance(int tech)
                                            CLAUSE_ADVANCE, tech);
 }
 
-/************************************************************************/ /**
+/**
    Give all advances menu activated
- ****************************************************************************/
+ */
 void diplo_wdg::all_advances()
 {
   int giver, dest, other;
@@ -575,7 +575,7 @@ void diplo_wdg::all_advances()
     other = giver;
   }
 
-  /* All techs. */
+  // All techs.
   struct player *pgiver = player_by_number(giver);
   struct player *pdest = player_by_number(dest);
 
@@ -602,29 +602,29 @@ void diplo_wdg::all_advances()
   advance_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Show menu for second player
- ****************************************************************************/
+ */
 void diplo_wdg::show_menu_p2() { show_menu(player2); }
 
-/************************************************************************/ /**
+/**
    Show menu for first player
- ****************************************************************************/
+ */
 void diplo_wdg::show_menu_p1() { show_menu(player1); }
 
-/************************************************************************/ /**
+/**
    Sets index in QTabWidget
- ****************************************************************************/
+ */
 void diplo_wdg::set_index(int ind) { index = ind; }
 
-/************************************************************************/ /**
+/**
    Sets index in QTabWidget
- ****************************************************************************/
+ */
 int diplo_wdg::get_index() { return index; }
 
-/************************************************************************/ /**
+/**
    Updates diplomacy widget - updates clauses and redraws pixmaps
- ****************************************************************************/
+ */
 void diplo_wdg::update_wdg()
 {
   bool blank;
@@ -677,9 +677,9 @@ void diplo_wdg::update_wdg()
   }
 }
 
-/************************************************************************/ /**
+/**
    Restores original nations pixmap
- ****************************************************************************/
+ */
 void diplo_wdg::restore_pixmap()
 {
   queen()->sw_diplo->setPixmap(
@@ -690,9 +690,9 @@ void diplo_wdg::restore_pixmap()
   queen()->sw_diplo->updateFinalPixmap();
 }
 
-/************************************************************************/ /**
+/**
    Button 'Accept treaty' has been clicked
- ****************************************************************************/
+ */
 void diplo_wdg::response_accept()
 {
   restore_pixmap();
@@ -700,9 +700,9 @@ void diplo_wdg::response_accept()
                                            player_number(treaty.plr0));
 }
 
-/************************************************************************/ /**
+/**
    Button 'Cancel treaty' has been clicked
- ****************************************************************************/
+ */
 void diplo_wdg::response_cancel()
 {
   restore_pixmap();
@@ -710,18 +710,18 @@ void diplo_wdg::response_cancel()
                                             player_number(treaty.plr0));
 }
 
-/************************************************************************/ /**
+/**
    Constructor for diplomacy dialog
- ****************************************************************************/
+ */
 diplo_dlg::diplo_dlg(int counterpart, int initiated_from) : QTabWidget()
 {
   add_widget(counterpart, initiated_from);
   setFocusPolicy(Qt::ClickFocus);
 }
 
-/************************************************************************/ /**
+/**
    Creates new diplomacy widget and adds to diplomacy dialog
- ****************************************************************************/
+ */
 void diplo_dlg::add_widget(int counterpart, int initiated_from)
 {
   diplo_wdg *dw;
@@ -744,9 +744,9 @@ void diplo_dlg::add_widget(int counterpart, int initiated_from)
   }
 }
 
-/************************************************************************/ /**
+/**
    Sets given widget as active in current dialog
- ****************************************************************************/
+ */
 void diplo_dlg::make_active(int party)
 {
   QWidget *w;
@@ -758,9 +758,9 @@ void diplo_dlg::make_active(int party)
   setCurrentWidget(w);
 }
 
-/************************************************************************/ /**
+/**
    Initializes some data for diplomacy dialog
- ****************************************************************************/
+ */
 bool diplo_dlg::init(bool raise)
 {
   Q_UNUSED(raise)
@@ -778,9 +778,9 @@ bool diplo_dlg::init(bool raise)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Destructor for diplomacy dialog
- ****************************************************************************/
+ */
 diplo_dlg::~diplo_dlg()
 {
   QMapIterator<int, diplo_wdg *> i(treaty_list);
@@ -797,17 +797,17 @@ diplo_dlg::~diplo_dlg()
   queen()->game_tab_widget->setCurrentIndex(0);
 }
 
-/************************************************************************/ /**
+/**
    Finds diplomacy widget in current dialog
- ****************************************************************************/
+ */
 diplo_wdg *diplo_dlg::find_widget(int counterpart)
 {
   return treaty_list.value(counterpart);
 }
 
-/************************************************************************/ /**
+/**
    Closes given diplomacy widget
- ****************************************************************************/
+ */
 void diplo_dlg::close_widget(int counterpart)
 {
   diplo_wdg *dw;
@@ -820,9 +820,9 @@ void diplo_dlg::close_widget(int counterpart)
   }
 }
 
-/************************************************************************/ /**
+/**
    Updates all diplomacy widgets in current dialog
- ****************************************************************************/
+ */
 void diplo_dlg::update_dlg()
 {
   QMapIterator<int, diplo_wdg *> i(treaty_list);
@@ -835,10 +835,10 @@ void diplo_dlg::update_dlg()
   }
 }
 
-/************************************************************************/ /**
+/**
    Update a player's acceptance status of a treaty (traditionally shown
    with the thumbs-up/thumbs-down sprite).
- ****************************************************************************/
+ */
 void handle_diplomacy_accept_treaty(int counterpart, bool I_accepted,
                                     bool other_accepted)
 {
@@ -860,10 +860,10 @@ void handle_diplomacy_accept_treaty(int counterpart, bool I_accepted,
   dw->update_wdg();
 }
 
-/************************************************************************/ /**
+/**
    Handle the start of a diplomacy meeting - usually by poping up a
    diplomacy dialog.
- ****************************************************************************/
+ */
 void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
 {
   int i;
@@ -926,15 +926,15 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   }
   dd->make_active(counterpart);
 
-  /* Bring it to front if user requested meeting */
+  // Bring it to front if user requested meeting
   if (player_by_number(initiated_from) == client.conn.playing) {
     queen()->game_tab_widget->setCurrentIndex(i);
   }
 }
 
-/************************************************************************/ /**
+/**
    Update the diplomacy dialog by adding a clause.
- ****************************************************************************/
+ */
 void handle_diplomacy_create_clause(int counterpart, int giver,
                                     enum clause_type type, int value)
 {
@@ -955,10 +955,10 @@ void handle_diplomacy_create_clause(int counterpart, int giver,
   dw->update_wdg();
 }
 
-/************************************************************************/ /**
+/**
    Update the diplomacy dialog when the meeting is canceled (the dialog
    should be closed).
- ****************************************************************************/
+ */
 void handle_diplomacy_cancel_meeting(int counterpart, int initiated_from)
 {
   int i;
@@ -975,9 +975,9 @@ void handle_diplomacy_cancel_meeting(int counterpart, int initiated_from)
   dd->close_widget(counterpart);
 }
 
-/************************************************************************/ /**
+/**
    Update the diplomacy dialog by removing a clause.
- ****************************************************************************/
+ */
 void handle_diplomacy_remove_clause(int counterpart, int giver,
                                     enum clause_type type, int value)
 {
@@ -998,11 +998,11 @@ void handle_diplomacy_remove_clause(int counterpart, int giver,
   dw->update_wdg();
 }
 
-/************************************************************************/ /**
+/**
    Close all open diplomacy dialogs.
 
    Called when the client disconnects from game.
- ****************************************************************************/
+ */
 void close_all_diplomacy_dialogs()
 {
   int i;

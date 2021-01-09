@@ -25,9 +25,9 @@
 #include "page_game.h"
 #include "qtg_cxxside.h"
 
-/**********************************************************************/ /**
+/**
    Constructor for minimap
- **************************************************************************/
+ */
 minimap_view::minimap_view(QWidget *parent) : fcwidget()
 {
   setParent(parent);
@@ -46,14 +46,14 @@ minimap_view::minimap_view(QWidget *parent) : fcwidget()
           &minimap_view::update_pixmap);
 }
 
-/**********************************************************************/ /**
+/**
    Minimap_view destructor
- **************************************************************************/
+ */
 minimap_view::~minimap_view() { NFC_FREE(pix); }
 
-/**********************************************************************/ /**
+/**
    Paint event for minimap
- **************************************************************************/
+ */
 void minimap_view::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
@@ -63,9 +63,9 @@ void minimap_view::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/**********************************************************************/ /**
+/**
    Sets scaling factor for minimap
- **************************************************************************/
+ */
 void minimap_view::scale(double factor)
 {
   scale_factor *= factor;
@@ -75,31 +75,31 @@ void minimap_view::scale(double factor)
   update_image();
 }
 
-/**********************************************************************/ /**
+/**
    Called by close widget, cause widget has been hidden. Updates menu.
- **************************************************************************/
+ */
 void minimap_view::update_menu()
 {
   ::king()->menu_bar->minimap_status->setChecked(false);
 }
 
-/**********************************************************************/ /**
+/**
    Minimap is being moved, position is being remembered
- **************************************************************************/
+ */
 void minimap_view::moveEvent(QMoveEvent *event) { position = event->pos(); }
 
-/**********************************************************************/ /**
+/**
    Minimap is just unhidden, old position is restored
- **************************************************************************/
+ */
 void minimap_view::showEvent(QShowEvent *event)
 {
   move(position);
   event->setAccepted(true);
 }
 
-/**********************************************************************/ /**
+/**
    Draws viewport on minimap
- **************************************************************************/
+ */
 void minimap_view::draw_viewport(QPainter *painter)
 {
   int i, x[4], y[4];
@@ -133,9 +133,9 @@ void minimap_view::draw_viewport(QPainter *painter)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Scales point from real overview coords to scaled overview coords.
- **************************************************************************/
+ */
 void minimap_view::scale_point(int &x, int &y)
 {
   int ax, bx;
@@ -151,9 +151,9 @@ void minimap_view::scale_point(int &x, int &y)
   y = y - dy;
 }
 
-/**********************************************************************/ /**
+/**
    Scales point from scaled overview coords to real overview coords.
- **************************************************************************/
+ */
 void unscale_point(double scale_factor, int &x, int &y)
 {
   int ax, bx;
@@ -169,28 +169,28 @@ void unscale_point(double scale_factor, int &x, int &y)
   y = qRound(y / scale_factor);
 }
 
-/**********************************************************************/ /**
+/**
    Sets minimap scale to default
- **************************************************************************/
+ */
 void minimap_view::reset() { scale_factor = 1; }
 
-/**********************************************************************/ /**
+/**
    Slot for updating pixmap from thread's image
- **************************************************************************/
+ */
 void minimap_view::update_pixmap(const QImage &image)
 {
   *pix = QPixmap::fromImage(image);
   update();
 }
 
-/**********************************************************************/ /**
+/**
    Minimap thread's contructor
- **************************************************************************/
+ */
 minimap_thread::minimap_thread(QObject *parent) : QThread(parent) {}
 
-/**********************************************************************/ /**
+/**
    Minimap thread's desctructor
- **************************************************************************/
+ */
 minimap_thread::~minimap_thread()
 {
   mutex.lock();
@@ -200,9 +200,9 @@ minimap_thread::~minimap_thread()
   wait();
 }
 
-/**********************************************************************/ /**
+/**
    Starts thread
- **************************************************************************/
+ */
 void minimap_thread::render(double scale_factor, int width, int height)
 {
   threadrestart = false;
@@ -218,9 +218,9 @@ void minimap_thread::render(double scale_factor, int width, int height)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Updates minimap's image in thread
- **************************************************************************/
+ */
 void minimap_thread::run()
 {
   forever
@@ -282,9 +282,9 @@ void minimap_thread::run()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Updates minimap's pixmap
- **************************************************************************/
+ */
 void minimap_view::update_image()
 {
   if (isHidden()) {
@@ -295,9 +295,9 @@ void minimap_view::update_image()
   thread.render(scale_factor, width(), height());
 }
 
-/**********************************************************************/ /**
+/**
    Redraws visible map using stored pixmap
- **************************************************************************/
+ */
 void minimap_view::paint(QPainter *painter, QPaintEvent *event)
 {
   int x, y, ix, iy;
@@ -321,9 +321,9 @@ void minimap_view::paint(QPainter *painter, QPaintEvent *event)
   rw->put_to_corner();
 }
 
-/**********************************************************************/ /**
+/**
    Called when minimap has been resized
- **************************************************************************/
+ */
 void minimap_view::resizeEvent(QResizeEvent *event)
 {
   QSize size;
@@ -341,9 +341,9 @@ void minimap_view::resizeEvent(QResizeEvent *event)
   update_image();
 }
 
-/**********************************************************************/ /**
+/**
    Wheel event for minimap - zooms it in or out
- **************************************************************************/
+ */
 void minimap_view::wheelEvent(QWheelEvent *event)
 {
   if (event->angleDelta().y() > 0) {
@@ -354,9 +354,9 @@ void minimap_view::wheelEvent(QWheelEvent *event)
   event->accept();
 }
 
-/**********************************************************************/ /**
+/**
    Sets scale factor to scale minimap 20% up
- **************************************************************************/
+ */
 void minimap_view::zoom_in()
 {
   if (scale_factor < double(gui_options.overview.width) / 8) {
@@ -364,17 +364,17 @@ void minimap_view::zoom_in()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Sets scale factor to scale minimap 20% down
- **************************************************************************/
+ */
 void minimap_view::zoom_out() { scale(0.833); }
 
-/**********************************************************************/ /**
+/**
    Mouse Handler for minimap_view
    Left button - moves minimap
    Right button - recenters on some point
    For wheel look mouseWheelEvent
- **************************************************************************/
+ */
 void minimap_view::mousePressEvent(QMouseEvent *event)
 {
   int fx, fy;
@@ -408,9 +408,9 @@ void minimap_view::mousePressEvent(QMouseEvent *event)
   event->setAccepted(true);
 }
 
-/**********************************************************************/ /**
+/**
    Called when mouse button was pressed. Used to moving minimap.
- **************************************************************************/
+ */
 void minimap_view::mouseMoveEvent(QMouseEvent *event)
 {
   if (king()->interface_locked) {
@@ -430,27 +430,27 @@ void minimap_view::mouseMoveEvent(QMouseEvent *event)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Called when mouse button unpressed. Restores cursor.
- **************************************************************************/
+ */
 void minimap_view::mouseReleaseEvent(QMouseEvent *event)
 {
   setCursor(Qt::CrossCursor);
 }
 
-/**********************************************************************/ /**
+/**
    Return a canvas that is the overview window.
- **************************************************************************/
+ */
 void update_minimap() { queen()->minimapview_wdg->update_image(); }
 
-/**********************************************************************/ /**
+/**
    Called when the map size changes. This may be used to change the
    size of the GUI element holding the overview canvas. The
    overview.width and overview.height are updated if this function is
    called.
    It's used for first creation of overview only, later overview stays the
    same size, scaled by qt-specific function.
- **************************************************************************/
+ */
 void overview_size_changed()
 {
   queen()->minimapview_wdg->resize(0, 0);

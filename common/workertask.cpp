@@ -15,17 +15,17 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "city.h"
 
 #include "workertask.h"
 
-/************************************************************************/ /**
+/**
    Initialize empty worker_task.
- ****************************************************************************/
+ */
 void worker_task_init(struct worker_task *ptask)
 {
   ptask->ptile = NULL;

@@ -62,9 +62,9 @@
 static ruledit_gui *gui;
 static conversion_log *convlog;
 
-/**********************************************************************/ /**
+/**
    Display requirer list.
- **************************************************************************/
+ */
 void ruledit_qt_display_requirers(const char *msg, void *data)
 {
   requirers_dlg *requirers = (requirers_dlg *) data;
@@ -72,9 +72,9 @@ void ruledit_qt_display_requirers(const char *msg, void *data)
   gui->show_required(requirers, msg);
 }
 
-/**********************************************************************/ /**
+/**
    Setup GUI object
- **************************************************************************/
+ */
 ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
 {
   QVBoxLayout *full_layout = new QVBoxLayout();
@@ -179,9 +179,9 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
   effect_edits = effect_edit_list_new();
 }
 
-/**********************************************************************/ /**
+/**
    Destructor
- **************************************************************************/
+ */
 ruledit_gui::~ruledit_gui()
 {
   req_edit_list_destroy(req_edits);
@@ -189,14 +189,14 @@ ruledit_gui::~ruledit_gui()
   effect_edit_list_destroy(effect_edits);
 }
 
-/**********************************************************************/ /**
+/**
    Ruleset conversion log callback
- **************************************************************************/
+ */
 static void conversion_log_cb(const char *msg) { convlog->add(msg); }
 
-/**********************************************************************/ /**
+/**
    User entered savedir
- **************************************************************************/
+ */
 void ruledit_gui::launch_now()
 {
   QByteArray rn_bytes;
@@ -210,7 +210,7 @@ void ruledit_gui::launch_now()
                     true)) {
     display_msg(R__("Ruleset loaded"));
 
-    /* Make freeable copy */
+    // Make freeable copy
     if (game.server.ruledit.nationlist != NULL) {
       data.nationlist = fc_strdup(game.server.ruledit.nationlist);
     } else {
@@ -234,26 +234,26 @@ void ruledit_gui::launch_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    A requirement vector may have been changed.
    @param vec the requirement vector that may have been changed.
- **************************************************************************/
+ */
 void ruledit_gui::incoming_rec_vec_change(const requirement_vector *vec)
 {
   emit rec_vec_may_have_changed(vec);
 }
 
-/**********************************************************************/ /**
+/**
    Display status message
- **************************************************************************/
+ */
 void ruledit_gui::display_msg(const char *msg)
 {
   msg_dspl->setText(QString::fromUtf8(msg));
 }
 
-/**********************************************************************/ /**
+/**
    Create requirers dlg.
- **************************************************************************/
+ */
 requirers_dlg *ruledit_gui::create_requirers(const char *title)
 {
   requirers_dlg *requirers;
@@ -265,9 +265,9 @@ requirers_dlg *ruledit_gui::create_requirers(const char *title)
   return requirers;
 }
 
-/**********************************************************************/ /**
+/**
    Add entry to requirers dlg.
- **************************************************************************/
+ */
 void ruledit_gui::show_required(requirers_dlg *requirers, const char *msg)
 {
   requirers->add(msg);
@@ -276,14 +276,14 @@ void ruledit_gui::show_required(requirers_dlg *requirers, const char *msg)
   requirers->show();
 }
 
-/**********************************************************************/ /**
+/**
    Flush information from widgets to stores where it can be saved from.
- **************************************************************************/
+ */
 void ruledit_gui::flush_widgets() { nation->flush_widgets(); }
 
-/**********************************************************************/ /**
+/**
    Open req_edit dialog
- **************************************************************************/
+ */
 void ruledit_gui::open_req_edit(const QString &target,
                                 struct requirement_vector *preqs)
 {
@@ -308,17 +308,17 @@ void ruledit_gui::open_req_edit(const QString &target,
   req_edit_list_append(req_edits, redit);
 }
 
-/**********************************************************************/ /**
+/**
    Unregisted closed req_edit dialog
- **************************************************************************/
+ */
 void ruledit_gui::unregister_req_edit(class req_edit *redit)
 {
   req_edit_list_remove(req_edits, redit);
 }
 
-/**********************************************************************/ /**
+/**
    Open req_vec_fix dialog.
- **************************************************************************/
+ */
 void ruledit_gui::open_req_vec_fix(req_vec_fix_item *item_info)
 {
   req_vec_fix *fixer;
@@ -328,7 +328,7 @@ void ruledit_gui::open_req_vec_fix(req_vec_fix_item *item_info)
     if (old_fixer->item() == item_info->item()) {
       item_info->close();
 
-      /* Already open */
+      // Already open
       return;
     }
   }
@@ -345,17 +345,17 @@ void ruledit_gui::open_req_vec_fix(req_vec_fix_item *item_info)
   req_vec_fix_list_append(req_vec_fixers, fixer);
 }
 
-/**********************************************************************/ /**
+/**
    Unregister closed req_vec_fix dialog.
- **************************************************************************/
+ */
 void ruledit_gui::unregister_req_vec_fix(req_vec_fix *fixer)
 {
   req_vec_fix_list_remove(req_vec_fixers, fixer);
 }
 
-/**********************************************************************/ /**
+/**
    Open effect_edit dialog
- **************************************************************************/
+ */
 void ruledit_gui::open_effect_edit(const QString &target,
                                    struct universal *uni,
                                    enum effect_filter_main_class efmc)
@@ -385,26 +385,26 @@ void ruledit_gui::open_effect_edit(const QString &target,
   effect_edit_list_append(effect_edits, e_edit);
 }
 
-/**********************************************************************/ /**
+/**
    Unregisted closed effect_edit dialog
- **************************************************************************/
+ */
 void ruledit_gui::unregister_effect_edit(class effect_edit *e_edit)
 {
   effect_edit_list_remove(effect_edits, e_edit);
 }
 
-/**********************************************************************/ /**
+/**
    Refresh all effect edit dialogs
- **************************************************************************/
+ */
 void ruledit_gui::refresh_effect_edits()
 {
   effect_edit_list_iterate(effect_edits, e_edit) { e_edit->refresh(); }
   effect_edit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Main window constructor
- **************************************************************************/
+ */
 ruledit_main::ruledit_main() : QMainWindow()
 {
   const QString title = QString::fromUtf8(R__("Freeciv Ruleset Editor"));
@@ -412,9 +412,9 @@ ruledit_main::ruledit_main() : QMainWindow()
   setWindowTitle(title);
 }
 
-/**********************************************************************/ /**
+/**
    User clicked windows close button.
- **************************************************************************/
+ */
 void ruledit_main::closeEvent(QCloseEvent *cevent)
 {
   // Ask for confirmation

@@ -17,20 +17,20 @@
 
 #include <cstdarg>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "registry.h"
 
-/* common */
+// common
 #include "fc_interface.h"
 #include "game.h"
 
 #include "rgbcolor.h"
 
-/************************************************************************/ /**
+/**
    Allocate new rgbcolor structure.
- ****************************************************************************/
+ */
 struct rgbcolor *rgbcolor_new(int r, int g, int b)
 {
   struct rgbcolor *prgbcolor;
@@ -44,10 +44,10 @@ struct rgbcolor *rgbcolor_new(int r, int g, int b)
   return prgbcolor;
 }
 
-/************************************************************************/ /**
+/**
    Allocate new rgbcolor structure and make it copy of one given as input.
    Return new one.
- ****************************************************************************/
+ */
 struct rgbcolor *rgbcolor_copy(const struct rgbcolor *prgbcolor)
 {
   fc_assert_ret_val(prgbcolor != NULL, NULL);
@@ -55,10 +55,10 @@ struct rgbcolor *rgbcolor_copy(const struct rgbcolor *prgbcolor)
   return rgbcolor_new(prgbcolor->r, prgbcolor->g, prgbcolor->b);
 }
 
-/************************************************************************/ /**
+/**
    Test whether two rgbcolor structures represent the exact same color value.
    (Does not attempt to determine whether they are visually distinguishable.)
- ****************************************************************************/
+ */
 bool rgbcolors_are_equal(const struct rgbcolor *c1,
                          const struct rgbcolor *c2)
 {
@@ -69,9 +69,9 @@ bool rgbcolors_are_equal(const struct rgbcolor *c1,
   return (c1->r == c2->r && c1->g == c2->g && c1->b == c2->b);
 }
 
-/************************************************************************/ /**
+/**
    Free rgbcolor structure.
- ****************************************************************************/
+ */
 void rgbcolor_destroy(struct rgbcolor *prgbcolor)
 {
   if (!prgbcolor) {
@@ -84,10 +84,10 @@ void rgbcolor_destroy(struct rgbcolor *prgbcolor)
   delete[] prgbcolor;
 }
 
-/************************************************************************/ /**
+/**
    Lookup an RGB color definition (<colorpath>.red, <colorpath>.green and
    <colorpath>.blue). Returns TRUE on success and FALSE on error.
- ****************************************************************************/
+ */
 bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
                    const char *path, ...)
 {
@@ -105,7 +105,7 @@ bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
   if (!secfile_lookup_int(file, &r, "%s.r", colorpath)
       || !secfile_lookup_int(file, &g, "%s.g", colorpath)
       || !secfile_lookup_int(file, &b, "%s.b", colorpath)) {
-    /* One color value (red, green or blue) is missing. */
+    // One color value (red, green or blue) is missing.
     return false;
   }
 
@@ -115,10 +115,10 @@ bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Save an RGB color definition (<colorpath>.red, <colorpath>.green and
    <colorpath>.blue).
- ****************************************************************************/
+ */
 void rgbcolor_save(struct section_file *file,
                    const struct rgbcolor *prgbcolor, const char *path, ...)
 {
@@ -137,14 +137,14 @@ void rgbcolor_save(struct section_file *file,
   secfile_insert_int(file, prgbcolor->b, "%s.b", colorpath);
 }
 
-/************************************************************************/ /**
+/**
    Convert a rgb color to a hex string (like 0xff0000 for red [255,  0,  0]).
- ****************************************************************************/
+ */
 bool rgbcolor_to_hex(const struct rgbcolor *prgbcolor, char *hex,
                      size_t hex_len)
 {
   fc_assert_ret_val(prgbcolor != NULL, false);
-  /* Needs a length greater than 7 ('#' + 6 hex digites and '\0'). */
+  // Needs a length greater than 7 ('#' + 6 hex digites and '/* Needs a length greater than 7 ('#' + 6 hex digites and '\0'). */').
   fc_assert_ret_val(hex_len > 7, false);
 
   fc_assert_ret_val(0 <= prgbcolor->r && prgbcolor->r <= 255, false);
@@ -157,9 +157,9 @@ bool rgbcolor_to_hex(const struct rgbcolor *prgbcolor, char *hex,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Convert a hex string into a rgb color
- ****************************************************************************/
+ */
 bool rgbcolor_from_hex(struct rgbcolor **prgbcolor, const char *hex)
 {
   int rgb, r, g, b;
@@ -190,10 +190,10 @@ bool rgbcolor_from_hex(struct rgbcolor **prgbcolor, const char *hex)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Return a number indicating the perceptual brightness of this color
    relative to others (larger is brighter).
- ****************************************************************************/
+ */
 int rgbcolor_brightness_score(struct rgbcolor *prgbcolor)
 {
   /* This simple scoring system taken from W3C "Techniques For Accessibility

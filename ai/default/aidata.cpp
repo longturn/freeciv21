@@ -12,17 +12,17 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "game.h"
 #include "government.h"
 #include "map.h"
 #include "multipliers.h"
 #include "research.h"
 
-/* aicore */
+// aicore
 #include "aiactions.h"
 
-/* server */
+// server
 #include "cityturn.h"
 #include "plrhand.h"
 
@@ -49,9 +49,9 @@ static void dai_diplomacy_destroy(struct ai_type *ait,
                                   const struct player *plr1,
                                   const struct player *plr2);
 
-/************************************************************************/ /**
+/**
    Initialize ai data structure
- ****************************************************************************/
+ */
 void dai_data_init(struct ai_type *ait, struct player *pplayer)
 {
   struct ai_plr *ai = def_ai_player_data(pplayer, ait);
@@ -73,10 +73,10 @@ void dai_data_init(struct ai_type *ait, struct player *pplayer)
 
   players_iterate(aplayer)
   {
-    /* create ai diplomacy states for all other players */
+    // create ai diplomacy states for all other players
     dai_diplomacy_new(ait, pplayer, aplayer);
     dai_diplomacy_defaults(ait, pplayer, aplayer);
-    /* create ai diplomacy state of this player */
+    // create ai diplomacy state of this player
     if (aplayer != pplayer) {
       dai_diplomacy_new(ait, aplayer, pplayer);
       dai_diplomacy_defaults(ait, aplayer, pplayer);
@@ -86,20 +86,20 @@ void dai_data_init(struct ai_type *ait, struct player *pplayer)
 
   ai->diplomacy.strategy = WIN_OPEN;
   ai->diplomacy.timer = 0;
-  ai->diplomacy.love_coeff = 4; /* 4% */
+  ai->diplomacy.love_coeff = 4; // 4%
   ai->diplomacy.love_incr = MAX_AI_LOVE * 3 / 100;
   ai->diplomacy.req_love_for_peace = MAX_AI_LOVE / 8;
   ai->diplomacy.req_love_for_alliance = MAX_AI_LOVE / 4;
 
   ai->settler = NULL;
 
-  /* Initialise autosettler. */
+  // Initialise autosettler.
   dai_auto_settler_init(ai);
 }
 
-/************************************************************************/ /**
+/**
    Deinitialize ai data structure
- ****************************************************************************/
+ */
 void dai_data_close(struct ai_type *ait, struct player *pplayer)
 {
   struct ai_plr *ai = def_ai_player_data(pplayer, ait);
@@ -108,15 +108,15 @@ void dai_data_close(struct ai_type *ait, struct player *pplayer)
    * open/finish cycle */
   dai_data_phase_finished(ait, pplayer);
 
-  /* Free autosettler. */
+  // Free autosettler.
   dai_auto_settler_free(ai);
 
   if (ai->diplomacy.player_intel_slots != NULL) {
     players_iterate(aplayer)
     {
-      /* destroy the ai diplomacy states of this player with others ... */
+      // destroy the ai diplomacy states of this player with others ...
       dai_diplomacy_destroy(ait, pplayer, aplayer);
-      /* and of others with this player. */
+      // and of others with this player.
       if (aplayer != pplayer) {
         dai_diplomacy_destroy(ait, aplayer, pplayer);
       }
@@ -126,10 +126,10 @@ void dai_data_close(struct ai_type *ait, struct player *pplayer)
   }
 }
 
-/************************************************************************/ /**
+/**
    Return whether data phase is currently open. Data phase is open
    between dai_data_phase_begin() and dai_data_phase_finished() calls.
- ****************************************************************************/
+ */
 bool is_ai_data_phase_open(struct ai_type *ait, struct player *pplayer)
 {
   struct ai_plr *ai = def_ai_player_data(pplayer, ait);
@@ -137,9 +137,9 @@ bool is_ai_data_phase_open(struct ai_type *ait, struct player *pplayer)
   return ai->phase_initialized;
 }
 
-/************************************************************************/ /**
+/**
    Make and cache lots of calculations needed for other functions.
- ****************************************************************************/
+ */
 void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
                           bool is_new_phase)
 {
@@ -236,7 +236,7 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
         struct city *pcity = tile_city(punit->goto_tile);
 
         if (pcity != NULL) {
-          /* Heading somewhere on a mission, reserve target. */
+          // Heading somewhere on a mission, reserve target.
           ai->stats.diplomat_reservations.insert(pcity->id);
         }
       }
@@ -262,7 +262,7 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
       struct unit_ai *unit_data = def_ai_unit_data(punit, ait);
 
       if (!unit_data->cur_pos) {
-        /* Start tracking */
+        // Start tracking
         unit_data->cur_pos = &unit_data->cur_struct;
         unit_data->prev_pos = NULL;
       } else {
@@ -280,9 +280,9 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
   }
 }
 
-/************************************************************************/ /**
+/**
    Clean up ai data after phase finished.
- ****************************************************************************/
+ */
 void dai_data_phase_finished(struct ai_type *ait, struct player *pplayer)
 {
   struct ai_plr *ai = def_ai_player_data(pplayer, ait);
@@ -300,12 +300,12 @@ void dai_data_phase_finished(struct ai_type *ait, struct player *pplayer)
   ai->phase_initialized = false;
 }
 
-/************************************************************************/ /**
+/**
    Get current default ai data related to player.
    If close is set, data phase will be opened even if it's currently closed,
    and the boolean will be set accordingly to tell caller that phase needs
    closing.
- ****************************************************************************/
+ */
 struct ai_plr *dai_plr_data_get(struct ai_type *ait, struct player *pplayer,
                                 bool *caller_closes)
 {
@@ -325,14 +325,14 @@ struct ai_plr *dai_plr_data_get(struct ai_type *ait, struct player *pplayer,
 
   if (ai->last_num_continents != wld.map.num_continents
       || ai->last_num_oceans != wld.map.num_oceans) {
-    /* We have discovered more continents, recalculate! */
+    // We have discovered more continents, recalculate!
 
-    /* See adv_data_get() */
+    // See adv_data_get()
     if (ai->phase_initialized) {
       dai_data_phase_finished(ait, pplayer);
       dai_data_phase_begin(ait, pplayer, false);
     } else {
-      /* wrong order */
+      // wrong order
       log_debug("%s ai data phase closed when dai_plr_data_get() called",
                 player_name(pplayer));
       dai_data_phase_begin(ait, pplayer, false);
@@ -352,9 +352,9 @@ struct ai_plr *dai_plr_data_get(struct ai_type *ait, struct player *pplayer,
   return ai;
 }
 
-/************************************************************************/ /**
+/**
    Allocate new ai diplomacy slot
- ****************************************************************************/
+ */
 static void dai_diplomacy_new(struct ai_type *ait, const struct player *plr1,
                               const struct player *plr2)
 {
@@ -373,9 +373,9 @@ static void dai_diplomacy_new(struct ai_type *ait, const struct player *plr1,
   *player_intel_slot = player_intel;
 }
 
-/************************************************************************/ /**
+/**
    Set diplomacy data between two players to its default values.
- ****************************************************************************/
+ */
 static void dai_diplomacy_defaults(struct ai_type *ait,
                                    const struct player *plr1,
                                    const struct player *plr2)
@@ -384,7 +384,7 @@ static void dai_diplomacy_defaults(struct ai_type *ait,
 
   fc_assert_ret(player_intel != NULL);
 
-  /* pseudorandom value */
+  // pseudorandom value
   player_intel->spam = (player_index(plr1) + player_index(plr2)) % 5;
   player_intel->countdown = -1;
   player_intel->war_reason = DAI_WR_NONE;
@@ -396,9 +396,9 @@ static void dai_diplomacy_defaults(struct ai_type *ait,
   player_intel->warned_about_space = 0;
 }
 
-/************************************************************************/ /**
+/**
    Returns diplomatic state type between two players
- ****************************************************************************/
+ */
 struct ai_dip_intel *dai_diplomacy_get(struct ai_type *ait,
                                        const struct player *plr1,
                                        const struct player *plr2)
@@ -415,9 +415,9 @@ struct ai_dip_intel *dai_diplomacy_get(struct ai_type *ait,
   return const_cast<struct ai_dip_intel *>(*player_intel_slot);
 }
 
-/************************************************************************/ /**
+/**
    Free resources allocated for diplomacy information between two players.
- ****************************************************************************/
+ */
 static void dai_diplomacy_destroy(struct ai_type *ait,
                                   const struct player *plr1,
                                   const struct player *plr2)
@@ -436,9 +436,9 @@ static void dai_diplomacy_destroy(struct ai_type *ait,
   *player_intel_slot = NULL;
 }
 
-/************************************************************************/ /**
+/**
    Adjust multiplier values.
- ****************************************************************************/
+ */
 void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
 {
   bool needs_back_rearrange = false;
@@ -460,7 +460,7 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
       }
       city_list_iterate_end;
 
-      /* Consider reducing policy value */
+      // Consider reducing policy value
       if (mp_val > ppol->start) {
         int new_value = 0;
 
@@ -479,7 +479,7 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
         city_list_iterate_end;
 
         if (new_value > orig_value) {
-          /* This is step to right direction, leave it in effect. */
+          // This is step to right direction, leave it in effect.
           pplayer->multipliers_target[pidx] = pplayer->multipliers[pidx];
 
           needs_back_rearrange = false;
@@ -487,7 +487,7 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
         }
       }
 
-      /* Consider increasing policy value */
+      // Consider increasing policy value
       if (!better_found && mp_val < ppol->stop) {
         int new_value = 0;
 
@@ -506,7 +506,7 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
         city_list_iterate_end;
 
         if (new_value > orig_value) {
-          /* This is step to right direction, leave it in effect. */
+          // This is step to right direction, leave it in effect.
           pplayer->multipliers_target[pidx] = pplayer->multipliers[pidx];
 
           needs_back_rearrange = false;
@@ -515,7 +515,7 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
       }
 
       if (!better_found) {
-        /* Restore original multiplier value */
+        // Restore original multiplier value
         pplayer->multipliers[pidx] = mp_val;
         needs_back_rearrange = true;
       }
@@ -532,23 +532,23 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
   }
 }
 
-/************************************************************************/ /**
+/**
    Set value of the government.
- ****************************************************************************/
+ */
 void dai_gov_value(struct ai_type *ait, struct player *pplayer,
                    struct government *gov, adv_want *val, bool *override)
 {
   int dist;
-  int bonus = 0; /* in percentage */
+  int bonus = 0; // in percentage
   int revolution_turns;
   struct universal source = {.value = {.govern = gov},
                              .kind = VUT_GOVERNMENT};
   struct adv_data *adv;
-  int turns = 9999; /* TODO: Set to correct value */
+  int turns = 9999; // TODO: Set to correct value
   int nplayers;
   const struct research *presearch;
 
-  /* Use default handling of no-cities case */
+  // Use default handling of no-cities case
   if (city_list_size(pplayer->cities) == 0) {
     *override = false;
     return;
@@ -589,7 +589,7 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
         if (!is_req_active(pplayer, NULL, pcity, NULL, NULL, NULL, NULL,
                            NULL, NULL, NULL, preq, RPT_POSSIBLE)) {
           active = false;
-          break; /* presence doesn't matter for inactive effects. */
+          break; // presence doesn't matter for inactive effects.
         }
       }
       requirement_vector_iterate_end;
@@ -601,7 +601,7 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
                               peffect, 1, nplayers);
 
         if (!present) {
-          /* Tech removes the effect */
+          // Tech removes the effect
           *val -= v1;
         } else {
           *val += v1;
@@ -619,7 +619,7 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
 
   *val += (*val * bonus) / 100;
 
-  /* FIXME: handle reqs other than technologies. */
+  // FIXME: handle reqs other than technologies.
   dist = 0;
   requirement_vector_iterate(&gov->reqs, preq)
   {

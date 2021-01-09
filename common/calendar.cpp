@@ -15,18 +15,18 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "game.h"
 #include "victory.h"
 
 #include "calendar.h"
 
-/************************************************************************/ /**
+/**
    Advance the calendar in the passed game_info structure
    (may only be a copy of the real one).
    FIXME: would be nice to pass a struct containing just the
    calendar, not the whole game_info struct.
- ****************************************************************************/
+ */
 void game_next_year(struct packet_game_info *info)
 {
   int increase = get_world_bonus(EFT_TURN_YEARS);
@@ -36,7 +36,7 @@ void game_next_year(struct packet_game_info *info)
   int fragment_years;
 
   if (info->year_0_hack) {
-    /* hacked it to get rid of year 0 */
+    // hacked it to get rid of year 0
     info->year = 0;
     info->year_0_hack = false;
   }
@@ -87,19 +87,19 @@ void game_next_year(struct packet_game_info *info)
   }
 }
 
-/************************************************************************/ /**
+/**
    Advance the game year.
- ****************************************************************************/
+ */
 void game_advance_year()
 {
   game_next_year(&game.info);
   game.info.turn++;
 }
 
-/************************************************************************/ /**
+/**
    Produce a statically allocated textual representation of the given
    calendar fragment.
- ****************************************************************************/
+ */
 const char *textcalfrag(int frag)
 {
   static char buf[MAX_LEN_NAME];
@@ -109,26 +109,26 @@ const char *textcalfrag(int frag)
     fc_snprintf(buf, sizeof(buf), "%s",
                 _(game.calendar.calendar_fragment_name[frag]));
   } else {
-    /* Human readable fragment count starts from 1, not 0 */
+    // Human readable fragment count starts from 1, not 0
     fc_snprintf(buf, sizeof(buf), "%d", frag + 1);
   }
   return buf;
 }
 
-/************************************************************************/ /**
+/**
    Produce a statically allocated textual representation of the given
    year.
- ****************************************************************************/
+ */
 const char *textyear(int year)
 {
   static char y[32];
 
   if (year < 0) {
-    /* TRANS: <year> <label> -> "1000 BC" */
+    // TRANS: <year> <label> -> "1000 BC"
     fc_snprintf(y, sizeof(y), _("%d %s"), -year,
                 _(game.calendar.negative_year_label));
   } else {
-    /* TRANS: <year> <label> -> "1000 AD" */
+    // TRANS: <year> <label> -> "1000 AD"
     fc_snprintf(y, sizeof(y), _("%d %s"), year,
                 _(game.calendar.positive_year_label));
   }
@@ -136,10 +136,10 @@ const char *textyear(int year)
   return y;
 }
 
-/************************************************************************/ /**
+/**
    Produce a statically allocated textual representation of the current
    calendar time.
- ****************************************************************************/
+ */
 const char *calendar_text()
 {
   if (game.calendar.calendar_fragments) {

@@ -11,7 +11,7 @@
 
 #pragma once
 
-/* common */
+// common
 #include "fc_types.h"
 
 /* Range of requirements.
@@ -45,7 +45,7 @@
 #define SPECENUM_VALUE8NAME "Alliance"
 #define SPECENUM_VALUE9 REQ_RANGE_WORLD
 #define SPECENUM_VALUE9NAME "World"
-#define SPECENUM_COUNT REQ_RANGE_COUNT /* keep this last */
+#define SPECENUM_COUNT REQ_RANGE_COUNT // keep this last
 #include "specenum_gen.h"
 
 #define req_range_iterate(_range_)                                          \
@@ -65,11 +65,11 @@
  * active.
  * Used in the network protocol. */
 struct requirement {
-  struct universal source; /* requirement source */
-  enum req_range range;    /* requirement range */
+  struct universal source; // requirement source
+  enum req_range range;    // requirement range
   bool survives;           /* set if destroyed sources satisfy the req*/
-  bool present;            /* set if the requirement is to be present */
-  bool quiet;              /* do not list this in helptext */
+  bool present;            // set if the requirement is to be present
+  bool quiet;              // do not list this in helptext
 };
 
 #define SPECVEC_TAG requirement
@@ -79,7 +79,7 @@ struct requirement {
   TYPED_VECTOR_ITERATE(struct requirement, req_vec, preq)
 #define requirement_vector_iterate_end VECTOR_ITERATE_END
 
-/* General requirement functions. */
+// General requirement functions.
 struct requirement req_from_str(const char *type, const char *range,
                                 bool survives, bool present, bool quiet,
                                 const char *value);
@@ -138,35 +138,35 @@ bool req_vec_wants_type(const struct requirement_vector *reqs,
  */
 typedef signed char req_vec_num_in_item;
 
-/**********************************************************************/ /**
+/**
    Returns the requirement vector number of the specified requirement
    vector in the specified parent item or -1 if the vector doesn't belong to
    the parent item.
    @param parent_item the item that may own the vector.
    @param vec the requirement vector to number.
    @return the requirement vector number the vector has in the parent item.
- **************************************************************************/
+ */
 typedef req_vec_num_in_item (*requirement_vector_number)(
     const void *parent_item, const struct requirement_vector *vec);
 
-/********************************************************************/ /**
+/**
    Returns a writable pointer to the specified requirement vector in the
    specified parent item or NULL if the parent item doesn't have a
    requirement vector with that requirement vector number.
    @param parent_item the item that should have the requirement vector.
    @param number the item's requirement vector number.
    @return a pointer to the specified requirement vector.
- ************************************************************************/
+ */
 typedef struct requirement_vector *(*requirement_vector_by_number)(
     const void *parent_item, req_vec_num_in_item number);
 
-/*********************************************************************/ /**
+/**
    Returns the name of the specified requirement vector number in the
    parent item or NULL if parent items of the kind this function is for
    don't have a requirement vector with that number.
    @param number the requirement vector to name
    @return the requirement vector name or NULL.
- **************************************************************************/
+ */
 typedef const char *(*requirement_vector_namer)(req_vec_num_in_item number);
 
 req_vec_num_in_item
@@ -218,7 +218,7 @@ req_vec_get_first_contradiction(const struct requirement_vector *vec,
                                 requirement_vector_number get_num,
                                 const void *parent_item);
 
-/* General universal functions. */
+// General universal functions.
 int universal_number(const struct universal *source);
 
 struct universal universal_by_number(const enum universals_n kind,
@@ -248,7 +248,7 @@ bool universal_replace_in_req_vec(struct requirement_vector *reqs,
 bool universal_is_mentioned_by_requirements(
     const struct requirement_vector *reqs, const struct universal *psource);
 
-/* An item contradicts, fulfills or is irrelevant to the requirement */
+// An item contradicts, fulfills or is irrelevant to the requirement
 enum req_item_found { ITF_NO, ITF_YES, ITF_NOT_APPLICABLE };
 
 void universal_found_functions_init();
@@ -277,7 +277,7 @@ bool universal_is_relevant_to_requirement(const struct requirement *req,
 /* Accessors to determine if a universal fulfills a requirement vector.
  * When adding an additional accessor, be sure to add the appropriate
  * item_found function in universal_found_functions_init(). */
-/* XXX Some versions of g++ can't cope with the struct literals */
+// XXX Some versions of g++ can't cope with the struct literals
 #define requirement_fulfilled_by_government(_gov_, _rqs_)                   \
   sv_universal_fulfills_requirements(                                       \
       false, (_rqs_),                                                       \

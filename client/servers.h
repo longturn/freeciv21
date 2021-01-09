@@ -79,8 +79,8 @@ struct server {
 struct server_scan;
 
 enum server_scan_type {
-  SERVER_SCAN_LOCAL,  /* Local servers, detected through a LAN scan */
-  SERVER_SCAN_GLOBAL, /* Global servers, read from the metaserver */
+  SERVER_SCAN_LOCAL,  // Local servers, detected through a LAN scan
+  SERVER_SCAN_GLOBAL, // Global servers, read from the metaserver
   SERVER_SCAN_LAST
 };
 

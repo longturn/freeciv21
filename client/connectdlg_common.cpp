@@ -28,7 +28,7 @@
 #include <windows.h>
 #endif
 
-/* utility */
+// utility
 #include "capability.h"
 #include "deprecations.h"
 #include "fciconv.h"
@@ -40,17 +40,17 @@
 #include "shared.h"
 #include "support.h"
 
-/* client */
+// client
 #include "chatline_common.h"
 #include "client_main.h"
 #include "climisc.h"
-#include "clinet.h" /* connect_to_server() */
+#include "clinet.h" // connect_to_server()
 #include "connectdlg_common.h"
 #include "connectdlg_g.h"
 #include "packhand_gen.h"
 #include "tilespec.h"
 
-#define WAIT_BETWEEN_TRIES 100000 /* usecs */
+#define WAIT_BETWEEN_TRIES 100000 // usecs
 #define NUMBER_OF_TRIES 500
 
 bool server_quitting = false;
@@ -73,7 +73,7 @@ private:
 };
 serverProcess *serverProcess::m_instance = 0;
 
-/* Server process constructor */
+// Server process constructor
 serverProcess::serverProcess()
 {
   connect(this,
@@ -84,7 +84,7 @@ serverProcess::serverProcess()
             drop();
           });
 }
-/* Server process instance */
+// Server process instance
 serverProcess *serverProcess::i()
 {
   if (!m_instance) {
@@ -92,7 +92,7 @@ serverProcess *serverProcess::i()
   }
   return m_instance;
 }
-/* Removes server process */
+// Removes server process
 void serverProcess::drop()
 {
   if (m_instance) {
@@ -126,9 +126,9 @@ then:
          the game.
 **************************************************************************/
 
-/**********************************************************************/ /**
+/**
    Tests if the client has started the server.
- **************************************************************************/
+ */
 bool is_server_running()
 {
   if (server_quitting) {
@@ -137,18 +137,18 @@ bool is_server_running()
   return serverProcess::i()->state();
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if the client has hack access.
- **************************************************************************/
+ */
 bool can_client_access_hack() { return client_has_hack; }
 
-/**********************************************************************/ /**
+/**
    Kills the server if the client has started it.
 
    If the 'force' parameter is unset, we just do a /quit.  If it's set, then
    we'll send a signal to the server to kill it (use this when the socket
    is disconnected already).
- **************************************************************************/
+ */
 void client_kill_server(bool force)
 {
   if (is_server_running()) {
@@ -179,9 +179,9 @@ void client_kill_server(bool force)
   client_has_hack = false;
 }
 
-/*********************************************************************/ /**
+/**
    Finds the next (lowest) free port.
- *************************************************************************/
+ */
 static int find_next_free_port(int starting_port, int highest_port)
 {
   // Make sure it's destroyed and resources are cleaned up on return
@@ -197,10 +197,10 @@ static int find_next_free_port(int starting_port, int highest_port)
   return -1;
 }
 
-/**********************************************************************/ /**
+/**
    Forks a server if it can. Returns FALSE if we find we
    couldn't start the server.
- **************************************************************************/
+ */
 bool client_start_server()
 {
   QStringList arguments;
@@ -208,13 +208,13 @@ bool client_start_server()
   char buf[512];
   int connect_tries = 0;
 
-  /* only one server (forked from this client) shall be running at a time */
-  /* This also resets client_has_hack. */
+  // only one server (forked from this client) shall be running at a time
+  // This also resets client_has_hack.
   client_kill_server(true);
 
   output_window_append(ftc_client, _("Starting local server..."));
 
-  /* find a free port */
+  // find a free port
   /* Mitigate the risk of ending up with the port already
    * used by standalone server on Windows where this is known to be buggy
    * by not starting from DEFAULT_SOCK_PORT but from one higher. */
@@ -239,7 +239,7 @@ bool client_start_server()
 
   ruleset = QString::fromUtf8(tileset_what_ruleset(tileset));
 
-  /* Set up the command-line parameters. */
+  // Set up the command-line parameters.
   port_buf = QString::number(internal_server_port);
   savesdir = QStringLiteral("%1%2saves").arg(storage, DIR_SEPARATOR);
   scensdir = QStringLiteral("%1%2scenarios").arg(storage, DIR_SEPARATOR);
@@ -292,7 +292,7 @@ bool client_start_server()
   // Wait for the server to print its welcome screen
   serverProcess::i()->waitForReadyRead();
   server_quitting = false;
-  /* a reasonable number of tries */
+  // a reasonable number of tries
   QString srv = QStringLiteral("localhost");
   while (connect_to_server(
              user_name, srv, internal_server_port, buf,
@@ -307,7 +307,7 @@ bool client_start_server()
   /* weird, but could happen, if server doesn't support new startup stuff
    * capabilities won't help us here... */
   if (!client.conn.used || serverProcess::i()->processId() == 0) {
-    /* possible that server is still running. kill it, kill it with Igni */
+    // possible that server is still running. kill it, kill it with Igni
     client_kill_server(true);
 
     qCritical("Failed to connect to spawned server!");
@@ -361,9 +361,9 @@ bool client_start_server()
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Generate a random string.
- **************************************************************************/
+ */
 static void randomize_string(char *str, size_t n)
 {
   const char chars[] =
@@ -376,14 +376,14 @@ static void randomize_string(char *str, size_t n)
   str[i] = '\0';
 }
 
-/**********************************************************************/ /**
+/**
    If the client is capable of 'wanting hack', then the server will
    send the client a filename in the packet_join_game_reply packet.
 
    This function creates the file with a suitably random string in it
    and then sends the string to the server. If the server can open
    and read the string, then the client is given hack access.
- **************************************************************************/
+ */
 void send_client_wants_hack(const char *filename)
 {
   if (filename[0] != '\0') {
@@ -404,7 +404,7 @@ void send_client_wants_hack(const char *filename)
     fc_snprintf(challenge_fullname, sizeof(challenge_fullname), "%s%c%s",
                 sdir, DIR_SEPARATOR_CHAR, filename);
 
-    /* generate an authentication token */
+    // generate an authentication token
     randomize_string(req.token, sizeof(req.token));
 
     file = secfile_new(false);
@@ -415,17 +415,17 @@ void send_client_wants_hack(const char *filename)
     }
     secfile_destroy(file);
 
-    /* tell the server what we put into the file */
+    // tell the server what we put into the file
     send_packet_single_want_hack_req(&client.conn, &req);
   }
 }
 
-/**********************************************************************/ /**
+/**
    Handle response (by the server) if the client has got hack or not.
- **************************************************************************/
+ */
 void handle_single_want_hack_reply(bool you_have_hack)
 {
-  /* remove challenge file */
+  // remove challenge file
   if (challenge_fullname[0] != '\0') {
     if (fc_remove(challenge_fullname) == -1) {
       qCritical("Couldn't remove temporary file: %s", challenge_fullname);
@@ -439,7 +439,7 @@ void handle_single_want_hack_reply(bool you_have_hack)
                            "You have command access level 'hack'."));
     client_has_hack = true;
   } else if (is_server_running()) {
-    /* only output this if we started the server and we NEED hack */
+    // only output this if we started the server and we NEED hack
     output_window_append(ftc_client,
                          _("Failed to obtain the required access "
                            "level to take control of the server. "
@@ -448,9 +448,9 @@ void handle_single_want_hack_reply(bool you_have_hack)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Send server command to save game.
- **************************************************************************/
+ */
 void send_save_game(const char *filename)
 {
   if (filename) {
@@ -460,9 +460,9 @@ void send_save_game(const char *filename)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Handle the list of rulesets sent by the server.
- **************************************************************************/
+ */
 void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
 {
   char **rulesets = new char *[packet->ruleset_count];
@@ -487,10 +487,10 @@ void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
   delete[] rulesets;
 }
 
-/**********************************************************************/ /**
+/**
    Called by the GUI code when the user sets the ruleset.  The ruleset
    passed in here should match one of the strings given to set_rulesets().
- **************************************************************************/
+ */
 void set_ruleset(const char *ruleset)
 {
   char buf[4096];

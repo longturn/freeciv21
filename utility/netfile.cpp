@@ -25,16 +25,16 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "registry.h"
 
 #include "netfile.h"
 
-/*******************************************************************/ /**
+/**
    Fetch file from given URL to given file stream. This is core
    function of netfile module.
- ***********************************************************************/
+ */
 static bool netfile_download_file_core(const QUrl &url, QIODevice *out,
                                        const nf_errmsg &cb)
 {
@@ -89,9 +89,9 @@ static bool netfile_download_file_core(const QUrl &url, QIODevice *out,
   return retval;
 }
 
-/*******************************************************************/ /**
+/**
    Fetch section file from net
- ***********************************************************************/
+ */
 section_file *netfile_get_section_file(const QUrl &url, const nf_errmsg &cb)
 {
   QBuffer buffer;
@@ -106,9 +106,9 @@ section_file *netfile_get_section_file(const QUrl &url, const nf_errmsg &cb)
   return nullptr;
 }
 
-/*******************************************************************/ /**
+/**
    Fetch file from given URL and save as given filename.
- ***********************************************************************/
+ */
 bool netfile_download_file(const QUrl &url, const char *filename,
                            const nf_errmsg &cb)
 {

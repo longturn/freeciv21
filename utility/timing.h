@@ -17,13 +17,13 @@
 Q_DECLARE_LOGGING_CATEGORY(timers_category)
 
 enum timer_timetype {
-  TIMER_CPU, /* time spent by the CPU */
-  TIMER_USER /* time as seen by the user ("wall clock") */
+  TIMER_CPU, // time spent by the CPU
+  TIMER_USER // time as seen by the user ("wall clock")
 };
 
 enum timer_use {
-  TIMER_ACTIVE, /* use this timer */
-  TIMER_IGNORE  /* ignore this timer */
+  TIMER_ACTIVE, // use this timer
+  TIMER_IGNORE  // ignore this timer
 };
 /*
  * TIMER_IGNORE is to leave a timer in the code, but not actually

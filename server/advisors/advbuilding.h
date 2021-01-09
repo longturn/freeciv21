@@ -22,7 +22,7 @@
     8 is too low
    18 is too high
  */
-#define POLLUTION_WEIGHTING 20 /* tentative */
+#define POLLUTION_WEIGHTING 20 // tentative
 #define INFRA_WEIGHTING (TRADE_WEIGHTING * 0.75)
 #define WARMING_FACTOR 50
 #define COOLING_FACTOR WARMING_FACTOR

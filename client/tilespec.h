@@ -19,12 +19,12 @@
 
 #include "options.h"
 
-class QPixmap; /* opaque; gui-dep */
+class QPixmap; // opaque; gui-dep
 
 struct base_type;
 struct resource_type;
 
-/* Create the sprite_vector type. */
+// Create the sprite_vector type.
 #define SPECVEC_TAG sprite
 #define SPECVEC_TYPE QPixmap *
 #include "specvec.h"
@@ -42,19 +42,19 @@ struct resource_type;
 #include "specenum_gen.h"
 
 #define SPECENUM_NAME fog_style
-/* Fog is automatically appended by the code. */
+// Fog is automatically appended by the code.
 #define SPECENUM_VALUE0 FOG_AUTO
 #define SPECENUM_VALUE0NAME "Auto"
-/* A single fog sprite is provided by the tileset (tx.fog). */
+// A single fog sprite is provided by the tileset (tx.fog).
 #define SPECENUM_VALUE1 FOG_SPRITE
 #define SPECENUM_VALUE1NAME "Sprite"
-/* No fog, or fog derived from darkness style. */
+// No fog, or fog derived from darkness style.
 #define SPECENUM_VALUE2 FOG_DARKNESS
 #define SPECENUM_VALUE2NAME "Darkness"
 #include "specenum_gen.h"
 
 #define SPECENUM_NAME darkness_style
-/* No darkness sprites are drawn. */
+// No darkness sprites are drawn.
 #define SPECENUM_VALUE0 DARKNESS_NONE
 #define SPECENUM_VALUE0NAME "None"
 /* 1 sprite that is split into 4 parts and treated as a darkness4.  Only
@@ -69,7 +69,7 @@ struct resource_type;
  * there's darkness in _each_ of the cardinal directions. */
 #define SPECENUM_VALUE3 DARKNESS_CARD_FULL
 #define SPECENUM_VALUE3NAME "CardinalFull"
-/* Corner darkness & fog.  3^4 = 81 sprites. */
+// Corner darkness & fog.  3^4 = 81 sprites.
 #define SPECENUM_VALUE4 DARKNESS_CORNER
 #define SPECENUM_VALUE4NAME "Corner"
 #include "specenum_gen.h"
@@ -77,8 +77,8 @@ struct resource_type;
 /* An edge is the border between two tiles.  This structure represents one
  * edge.  The tiles are given in the same order as the enumeration name. */
 enum edge_type {
-  EDGE_NS, /* North and south */
-  EDGE_WE, /* West and east */
+  EDGE_NS, // North and south
+  EDGE_WE, // West and east
   EDGE_UD, /* Up and down (nw/se), for hex_width tilesets */
   EDGE_LR, /* Left and right (ne/sw), for hex_height tilesets */
   EDGE_COUNT
@@ -97,9 +97,9 @@ struct tile_corner {
 };
 
 struct drawn_sprite {
-  bool foggable; /* Set to FALSE for sprites that are never fogged. */
+  bool foggable; // Set to FALSE for sprites that are never fogged.
   QPixmap *sprite;
-  int offset_x, offset_y; /* offset from tile origin */
+  int offset_x, offset_y; // offset from tile origin
 };
 
 /* Items on the mapview are drawn in layers.  Each entry below represents
@@ -109,7 +109,7 @@ struct drawn_sprite {
 #define SPECENUM_NAME mapview_layer
 #define SPECENUM_VALUE0 LAYER_BACKGROUND
 #define SPECENUM_VALUE0NAME "Background"
-/* Adjust also TERRAIN_LAYER_COUNT if changing these */
+// Adjust also TERRAIN_LAYER_COUNT if changing these
 #define SPECENUM_VALUE1 LAYER_TERRAIN1
 #define SPECENUM_VALUE1NAME "Terrain1"
 #define SPECENUM_VALUE2 LAYER_DARKNESS
@@ -173,11 +173,11 @@ struct drawn_sprite {
   }                                                                         \
   }
 
-/* Layer categories can be used to only render part of a tile. */
+// Layer categories can be used to only render part of a tile.
 enum layer_category {
-  LAYER_CATEGORY_CITY, /* Render cities */
-  LAYER_CATEGORY_TILE, /* Render terrain only */
-  LAYER_CATEGORY_UNIT  /* Render units only */
+  LAYER_CATEGORY_CITY, // Render cities
+  LAYER_CATEGORY_TILE, // Render terrain only
+  LAYER_CATEGORY_UNIT  // Render units only
 };
 
 #define NUM_TILES_PROGRESS 8
@@ -229,13 +229,13 @@ void tileset_player_init(struct tileset *t, struct player *pplayer);
 void tileset_background_init(struct tileset *t);
 void tileset_background_free(struct tileset *t);
 
-/* Layer order */
+// Layer order
 
 enum mapview_layer tileset_get_layer(const struct tileset *t, int n);
 bool tileset_layer_in_category(enum mapview_layer layer,
                                enum layer_category cat);
 
-/* Gfx support */
+// Gfx support
 
 int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
                       enum mapview_layer layer, const struct tile *ptile,
@@ -359,7 +359,7 @@ QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
 struct color_system;
 struct color_system *get_color_system(const struct tileset *t);
 
-/* Tileset accessor functions. */
+// Tileset accessor functions.
 struct tileset *get_tileset();
 const char *tileset_basename(const struct tileset *t);
 bool tileset_is_isometric(const struct tileset *t);

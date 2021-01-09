@@ -16,9 +16,9 @@
 #include "hudwidget.h"
 #include "page_game.h"
 
-/************************************************************************/ /**
+/**
    Constructor for economy report
- ****************************************************************************/
+ */
 eco_report::eco_report() : QWidget()
 {
   ui.setupUi(this);
@@ -48,19 +48,19 @@ eco_report::eco_report() : QWidget()
   index = queen()->addGameTab(this);
 }
 
-/************************************************************************/ /**
+/**
    Destructor for economy report
- ****************************************************************************/
+ */
 eco_report::~eco_report() { queen()->removeRepoDlg(QStringLiteral("ECO")); }
 
-/************************************************************************/ /**
+/**
    Initializes place in tab for economy report
- ****************************************************************************/
+ */
 void eco_report::init() { queen()->game_tab_widget->setCurrentIndex(index); }
 
-/************************************************************************/ /**
+/**
    Refresh all widgets for economy report
- ****************************************************************************/
+ */
 void eco_report::update_report()
 {
   struct improvement_entry building_entries[B_LAST];
@@ -180,9 +180,9 @@ void eco_report::update_report()
   ui.eco_widget->resizeColumnsToContents();
 }
 
-/************************************************************************/ /**
+/**
    Action for selection changed in economy report
- ****************************************************************************/
+ */
 void eco_report::selection_changed(const QItemSelection &sl,
                                    const QItemSelection &ds)
 {
@@ -228,9 +228,9 @@ void eco_report::selection_changed(const QItemSelection &sl,
   }
 }
 
-/************************************************************************/ /**
+/**
    Disband pointed units (in economy report)
- ****************************************************************************/
+ */
 void eco_report::disband_units()
 {
   struct universal selected;
@@ -264,9 +264,9 @@ void eco_report::disband_units()
   });
 }
 
-/************************************************************************/ /**
+/**
    Sell all pointed builings
- ****************************************************************************/
+ */
 void eco_report::sell_buildings()
 {
   struct universal selected;
@@ -307,9 +307,9 @@ void eco_report::sell_buildings()
   });
 }
 
-/************************************************************************/ /**
+/**
    Sells redundant buildings
- ****************************************************************************/
+ */
 void eco_report::sell_redundant()
 {
   struct universal selected;
@@ -349,9 +349,9 @@ void eco_report::sell_redundant()
   });
 }
 
-/************************************************************************/ /**
+/**
    Update the economy report.
- ****************************************************************************/
+ */
 void real_economy_report_dialog_update(void *unused)
 {
   int i;
@@ -369,10 +369,10 @@ void real_economy_report_dialog_update(void *unused)
   queen()->updateSidebarTooltips();
 }
 
-/************************************************************************/ /**
+/**
    Display the economy report.  Optionally raise it.
    Typically triggered by F5.
- ****************************************************************************/
+ */
 void economy_report_dialog_popup(bool raise)
 {
   int i;
@@ -396,9 +396,9 @@ void economy_report_dialog_popup(bool raise)
   }
 }
 
-/************************************************************************/ /**
+/**
    Closes economy report
- ****************************************************************************/
+ */
 void popdown_economy_report()
 {
   int i;

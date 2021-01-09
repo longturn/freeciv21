@@ -26,18 +26,18 @@
 #include <QNetworkReply>
 #include <QUrlQuery>
 
-/* dependencies */
+// dependencies
 #include "cvercmp.h"
 
-/* utility */
+// utility
 #include "net_types.h"
 
-/* common */
+// common
 #include "capstr.h"
 #include "dataio.h"
 #include "version.h"
 
-/* client */
+// client
 #include "chatline_g.h"
 #include "client_main.h"
 
@@ -48,7 +48,7 @@ struct server_scan {
   struct server_list *servers;
   int sock;
 
-  /* Only used for metaserver */
+  // Only used for metaserver
   struct {
     enum server_scan_status status;
 
@@ -105,11 +105,11 @@ void fcUdpScan::sockError(QAbstractSocket::SocketError socketError)
 **************************************************************************/
 void fcUdpScan::drop() { NFCN_FREE(m_instance); }
 
-/**********************************************************************/ /**
+/**
    Broadcast an UDP package to all servers on LAN, requesting information
    about the server. The packet is send to all Freeciv servers in the same
    multicast group as the client.
- **************************************************************************/
+ */
 bool fcUdpScan::begin_scan(struct server_scan *scan)
 {
   const char *group;
@@ -120,7 +120,7 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
 
   fcudp_scan = scan;
   if (announce == ANNOUNCE_NONE) {
-    /* Succeeded in doing nothing */
+    // Succeeded in doing nothing
     return true;
   }
   group = get_multicast_group(announce == ANNOUNCE_IPV6);
@@ -169,10 +169,10 @@ void fcUdpScan::readPendingDatagrams()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Listens for UDP packets broadcasted from a server that responded
    to the request-packet sent from the client.
- **************************************************************************/
+ */
 enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
 {
   int type;
@@ -241,10 +241,10 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
   return SCAN_STATUS_WAITING;
 }
 
-/**********************************************************************/ /**
+/**
    The server sends a stream in a registry 'ini' type format.
    Read it using secfile functions and fill the server_list structs.
- **************************************************************************/
+ */
 static struct server_list *parse_metaserver_data(QIODevice *f)
 {
   struct server_list *server_list;
@@ -253,7 +253,7 @@ static struct server_list *parse_metaserver_data(QIODevice *f)
   const char *latest_ver;
   const char *comment;
 
-  /* This call closes f. */
+  // This call closes f.
   if (!(file = secfile_from_stream(f, true))) {
     return NULL;
   }
@@ -358,9 +358,9 @@ static struct server_list *parse_metaserver_data(QIODevice *f)
   return server_list;
 }
 
-/**********************************************************************/ /**
+/**
    Read the reply string from the metaserver.
- **************************************************************************/
+ */
 static bool meta_read_response(struct server_scan *scan)
 {
   char str[4096];
@@ -368,11 +368,11 @@ static bool meta_read_response(struct server_scan *scan)
 
   auto *f = new QBuffer(&scan->meta.mem);
 
-  /* parse message body */
+  // parse message body
   srvrs = parse_metaserver_data(f);
   scan->servers = srvrs;
 
-  /* 'f' (hence 'meta.mem') was closed in parse_metaserver_data(). */
+  // 'f' (hence 'meta.mem') was closed in parse_metaserver_data().
   scan->meta.mem.clear();
 
   if (NULL == srvrs) {
@@ -388,9 +388,9 @@ static bool meta_read_response(struct server_scan *scan)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Metaserver scan thread entry point
- **************************************************************************/
+ */
 static void metaserver_scan(void *arg)
 {
   struct server_scan *scan = static_cast<server_scan *>(arg);
@@ -408,12 +408,12 @@ static void metaserver_scan(void *arg)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Begin a metaserver scan for servers.
 
    Returns FALSE on error (in which case errbuf will contain an error
    message).
- **************************************************************************/
+ */
 static bool begin_metaserver_scan(struct server_scan *scan)
 {
   // Create a network manager
@@ -461,11 +461,11 @@ static bool begin_metaserver_scan(struct server_scan *scan)
   return retval;
 }
 
-/**********************************************************************/ /**
+/**
    Frees everything associated with a server list including
    the server list itself (so the server_list is no longer
    valid after calling this function)
- **************************************************************************/
+ */
 static void delete_server_list(struct server_list *server_list)
 {
   if (!server_list) {
@@ -499,7 +499,7 @@ static void delete_server_list(struct server_list *server_list)
   server_list_destroy(server_list);
 }
 
-/**********************************************************************/ /**
+/**
    Creates a new server scan and returns it, or NULL if impossible.
 
    Depending on 'type' the scan will look for either local or internet
@@ -510,7 +510,7 @@ static void delete_server_list(struct server_list *server_list)
 
    NB: You must call server_scan_finish() when you are done with the
    scan to free the memory and resources allocated by it.
- **************************************************************************/
+ */
 struct server_scan *server_scan_begin(enum server_scan_type type,
                                       ServerScanErrorFunc error_func)
 {
@@ -534,10 +534,10 @@ struct server_scan *server_scan_begin(enum server_scan_type type,
   return scan;
 }
 
-/**********************************************************************/ /**
+/**
    A simple query function to determine the type of a server scan (previously
    allocated in server_scan_begin).
- **************************************************************************/
+ */
 enum server_scan_type server_scan_get_type(const struct server_scan *scan)
 {
   if (!scan) {
@@ -546,7 +546,7 @@ enum server_scan_type server_scan_get_type(const struct server_scan *scan)
   return scan->type;
 }
 
-/**********************************************************************/ /**
+/**
    A function to query servers of the server scan. This will check any
    pending network data and update the server list.
 
@@ -560,7 +560,7 @@ enum server_scan_type server_scan_get_type(const struct server_scan *scan)
                            Get the servers with server_scan_get_list(), and
                            stop calling this function.
      SCAN_STATUS_ABORT   - The scan has been aborted
- **************************************************************************/
+ */
 enum server_scan_status server_scan_poll(struct server_scan *scan)
 {
   if (!scan) {
@@ -583,9 +583,9 @@ enum server_scan_status server_scan_poll(struct server_scan *scan)
   return SCAN_STATUS_ERROR;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the srv_list currently held by the scan (may be NULL).
- **************************************************************************/
+ */
 struct server_list *server_scan_get_list(struct server_scan *scan)
 {
   if (!scan) {
@@ -595,10 +595,10 @@ struct server_list *server_scan_get_list(struct server_scan *scan)
   return scan->servers;
 }
 
-/**********************************************************************/ /**
+/**
    Closes the socket listening on the scan, frees the list of servers, and
    frees the memory allocated for 'scan' by server_scan_begin().
- **************************************************************************/
+ */
 void server_scan_finish(struct server_scan *scan)
 {
   if (!scan) {
@@ -606,7 +606,7 @@ void server_scan_finish(struct server_scan *scan)
   }
 
   if (scan->type == SERVER_SCAN_GLOBAL) {
-    /* Signal metaserver scan thread to stop */
+    // Signal metaserver scan thread to stop
     scan->meta.status = SCAN_STATUS_ABORT;
 
     if (scan->servers) {

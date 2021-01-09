@@ -12,10 +12,10 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "fcthread.h"
 
-/* common */
+// common
 #include "player.h"
 
 /* ai/default */
@@ -37,7 +37,7 @@ struct tai_reqs {
 };
 
 struct tai_plr {
-  struct ai_plr defai; /* Keep this first so default ai finds it */
+  struct ai_plr defai; // Keep this first so default ai finds it
 };
 
 void tai_init_threading(void);

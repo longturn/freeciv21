@@ -18,7 +18,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
@@ -51,7 +51,7 @@ static const char *event_sections[] = {
     N_("Technology: %s"), N_("Improvement: %s"), N_("City: %s"),
     N_("Diplomat Action: %s"), N_("Enemy Diplomat: %s"), N_("Global: %s"),
     N_("Hut: %s"), N_("Nation: %s"), N_("Treaty: %s"), N_("Unit: %s"),
-    /* TRANS: "Vote" as a process */
+    // TRANS: "Vote" as a process
     N_("Vote: %s"), N_("Wonder: %s"), NULL};
 
 #define GEN_EV(event, section, descr)                                       \
@@ -176,11 +176,11 @@ static struct {
     GEN_EV(E_UNIT_DID_EXPEL, E_S_UNIT, N_("Did Expel")),
     GEN_EV(E_UNIT_ACTION_FAILED, E_S_UNIT, N_("Action failed")),
     GEN_EV(E_UNIT_WAKE, E_S_UNIT, N_("Sentried units awaken")),
-    /* TRANS: "vote" as a process */
+    // TRANS: "vote" as a process
     GEN_EV(E_VOTE_NEW, E_S_VOTE, N_("New vote")),
-    /* TRANS: "Vote" as a process */
+    // TRANS: "Vote" as a process
     GEN_EV(E_VOTE_RESOLVED, E_S_VOTE, N_("Vote resolved")),
-    /* TRANS: "Vote" as a process */
+    // TRANS: "Vote" as a process
     GEN_EV(E_VOTE_ABORTED, E_S_VOTE, N_("Vote canceled")),
     GEN_EV(E_WONDER_BUILD, E_S_WONDER, N_("Finished")),
     GEN_EV(E_WONDER_OBSOLETE, E_S_WONDER, N_("Made Obsolete")),
@@ -206,7 +206,7 @@ static struct {
     GEN_EV(E_SETTING, E_S_XYZZY, N_("Server settings changed")),
     GEN_EV(E_TURN_BELL, E_S_XYZZY, N_("Turn Bell")),
     GEN_EV(E_SCRIPT, E_S_XYZZY, N_("Scenario/ruleset script message")),
-    /* TRANS: Event name for when the game year changes. */
+    // TRANS: Event name for when the game year changes.
     GEN_EV(E_NEXT_YEAR, E_S_XYZZY, N_("Year Advance")),
     GEN_EV(E_DEPRECATION_WARNING, E_S_XYZZY,
            N_("Deprecated Modpack syntax warnings")),
@@ -234,9 +234,9 @@ static int event_to_index[E_COUNT];
 
 enum event_type sorted_events[E_COUNT];
 
-/**********************************************************************/ /**
+/**
    Returns the translated description of the given event.
- **************************************************************************/
+ */
 const char *get_event_message_text(enum event_type event)
 {
   fc_assert_ret_val(event_type_is_valid(event), NULL);
@@ -250,10 +250,10 @@ const char *get_event_message_text(enum event_type event)
                            * we get non-translated in log message. */
 }
 
-/**********************************************************************/ /**
+/**
    Comparison function for qsort; i1 and i2 are pointers to an event
    (enum event_type).
- **************************************************************************/
+ */
 static int compar_event_message_texts(const void *i1, const void *i2)
 {
   const enum event_type *j1 = static_cast<const event_type *>(i1);
@@ -263,9 +263,9 @@ static int compar_event_message_texts(const void *i1, const void *i2)
                        get_event_message_text(*j2));
 }
 
-/**********************************************************************/ /**
+/**
    Returns a string for the sound to be used for this message type.
- **************************************************************************/
+ */
 const char *get_event_tag(enum event_type event)
 {
   fc_assert_ret_val(event_type_is_valid(event), NULL);
@@ -277,10 +277,10 @@ const char *get_event_tag(enum event_type event)
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
   If is_city_event is FALSE this event doesn't effect a city even if
   there is a city at the event location.
- **************************************************************************/
+ */
 bool is_city_event(enum event_type event)
 {
   switch (event) {
@@ -319,10 +319,10 @@ bool is_city_event(enum event_type event)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialize events.
    Now also initialise sorted_events[].
- **************************************************************************/
+ */
 void events_init()
 {
   int i;
@@ -343,7 +343,7 @@ void events_init()
       fc_snprintf(tmp, l, event_format, _(events[i].descr_orig));
       events[i].full_descr = tmp;
     } else {
-      /* No section part */
+      // No section part
       events[i].full_descr = _(events[i].descr_orig);
     }
 
@@ -360,23 +360,23 @@ void events_init()
   }
 
   for (i = 0; i <= event_type_max(); i++) {
-    /* Initialise sorted list of all (even possble missing) events. */
+    // Initialise sorted list of all (even possble missing) events.
     sorted_events[i] = event_type(i);
   }
   qsort(sorted_events, event_type_max() + 1, sizeof(*sorted_events),
         compar_event_message_texts);
 }
 
-/**********************************************************************/ /**
+/**
    Free events.
- **************************************************************************/
+ */
 void events_free()
 {
   int i;
 
   for (i = 0; i <= event_type_max(); i++) {
     if (E_S_XYZZY > events[i].esn) {
-      /* We have allocated memory for this event */
+      // We have allocated memory for this event
       delete[] events[i].full_descr;
       events[i].full_descr = NULL;
     }

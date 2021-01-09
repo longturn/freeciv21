@@ -40,9 +40,9 @@
 
 #include "tab_terrains.h"
 
-/**********************************************************************/ /**
+/**
    Setup tab_terrains object
- **************************************************************************/
+ */
 tab_terrains::tab_terrains(ruledit_gui *ui_in) : QWidget()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
@@ -108,9 +108,9 @@ tab_terrains::tab_terrains(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the information.
- **************************************************************************/
+ */
 void tab_terrains::refresh()
 {
   terrain_list->clear();
@@ -127,9 +127,9 @@ void tab_terrains::refresh()
   terrain_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Update info of the terrain
- **************************************************************************/
+ */
 void tab_terrains::update_terrain_info(struct terrain *pterr)
 {
   selected = pterr;
@@ -155,9 +155,9 @@ void tab_terrains::update_terrain_info(struct terrain *pterr)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User selected terrain from the list.
- **************************************************************************/
+ */
 void tab_terrains::select_terrain()
 {
   QList<QListWidgetItem *> select_list = terrain_list->selectedItems();
@@ -170,9 +170,9 @@ void tab_terrains::select_terrain()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User entered name for the terrain
- **************************************************************************/
+ */
 void tab_terrains::name_given()
 {
   if (selected != nullptr) {
@@ -203,9 +203,9 @@ void tab_terrains::name_given()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User requested terrain deletion
- **************************************************************************/
+ */
 void tab_terrains::delete_now()
 {
   if (selected != nullptr) {
@@ -224,9 +224,9 @@ void tab_terrains::delete_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialize new terrain for use.
- **************************************************************************/
+ */
 bool tab_terrains::initialize_new_terrain(struct terrain *pterr)
 {
   if (terrain_by_rule_name("New Terrain") != nullptr) {
@@ -238,9 +238,9 @@ bool tab_terrains::initialize_new_terrain(struct terrain *pterr)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    User requested new terrain
- **************************************************************************/
+ */
 void tab_terrains::add_now()
 {
   struct terrain *new_terr;
@@ -277,9 +277,9 @@ void tab_terrains::add_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Toggled whether rule_name and name should be kept identical
- **************************************************************************/
+ */
 void tab_terrains::same_name_toggle(bool checked)
 {
   name->setEnabled(!checked);
@@ -288,9 +288,9 @@ void tab_terrains::same_name_toggle(bool checked)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit effects
- **************************************************************************/
+ */
 void tab_terrains::edit_effects()
 {
   if (selected != nullptr) {

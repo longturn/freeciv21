@@ -54,7 +54,7 @@ struct terrain *pick_terrain(enum mapgen_terrain_property target,
  to dist around the center_tile
  _index : the position in the interval of iteration (from -dist to dist)
  _tile : the tile pointer
- ***************************************************************************/
+ */
 #define axis_iterate(nmap, center_tile, _tile, _index, dist, is_X_axis)     \
   {                                                                         \
     int _tile##_x, _tile##_y;                                               \
@@ -99,7 +99,7 @@ struct terrain *pick_terrain(enum mapgen_terrain_property target,
 
 bool is_normal_nat_pos(int x, int y);
 
-/* int maps tools */
+// int maps tools
 void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
                              bool (*filter)(const struct tile *ptile,
                                             const void *data));
@@ -109,7 +109,7 @@ void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
       (bool (*)(const struct tile *ptile, const void *data)) NULL)
 void smooth_int_map(int *int_map, bool zeroes_at_edges);
 
-/* placed_map tool */
+// placed_map tool
 void create_placed_map();
 void destroy_placed_map();
 void map_set_placed(struct tile *ptile);

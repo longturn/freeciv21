@@ -30,9 +30,9 @@
 
 #include "edit_utype.h"
 
-/**********************************************************************/ /**
+/**
    Setup edit_utype object
- **************************************************************************/
+ */
 edit_utype::edit_utype(ruledit_gui *ui_in, struct unit_type *utype_in)
     : QDialog()
 {
@@ -66,17 +66,17 @@ edit_utype::edit_utype(ruledit_gui *ui_in, struct unit_type *utype_in)
   setLayout(main_layout);
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the information.
- **************************************************************************/
+ */
 void edit_utype::refresh()
 {
   req_button->setText(tab_tech::tech_name(utype->require_advance));
 }
 
-/**********************************************************************/ /**
+/**
    User selected tech to be req of utype
- **************************************************************************/
+ */
 void edit_utype::req_menu(QAction *action)
 {
   struct advance *padv;

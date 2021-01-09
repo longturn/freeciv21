@@ -22,17 +22,17 @@
 #include <QString>
 #include <QUrl>
 
-/* dependencies */
+// dependencies
 #include "cvercmp.h"
 
-/* utility */
+// utility
 #include "capability.h"
 #include "fcintl.h"
 #include "log.h"
 #include "netfile.h"
 #include "registry.h"
 
-/* tools */
+// tools
 #include "mpdb.h"
 
 #include "download.h"
@@ -43,9 +43,9 @@ static const char *download_modpack_recursive(const char *URL,
                                               const dl_pb_callback &pbcb,
                                               int recursion);
 
-/**********************************************************************/ /**
+/**
    Download modpack from a given URL
- **************************************************************************/
+ */
 const char *download_modpack(const char *URL, const struct fcmp_params *fcmp,
                              const dl_msg_callback &mcb,
                              const dl_pb_callback &pbcb)
@@ -53,9 +53,9 @@ const char *download_modpack(const char *URL, const struct fcmp_params *fcmp,
   return download_modpack_recursive(URL, fcmp, mcb, pbcb, 0);
 }
 
-/**********************************************************************/ /**
+/**
    Download modpack and its recursive dependencies.
- **************************************************************************/
+ */
 static const char *download_modpack_recursive(const char *URL,
                                               const struct fcmp_params *fcmp,
                                               const dl_msg_callback &mcb,
@@ -96,7 +96,7 @@ static const char *download_modpack_recursive(const char *URL,
 
   for (start_idx = qstrlen(URL) - qstrlen(MODPACKDL_SUFFIX);
        start_idx > 0 && URL[start_idx - 1] != '/'; start_idx--) {
-    /* Nothing */
+    // Nothing
   }
 
   qInfo(_("Installing modpack %s from %s"), URL + start_idx, URL);
@@ -108,7 +108,7 @@ static const char *download_modpack_recursive(const char *URL,
   if (mcb != NULL) {
     char buf[2048];
 
-    /* TRANS: %s is a filename with suffix '.modpack' */
+    // TRANS: %s is a filename with suffix '.modpack'
     fc_snprintf(buf, sizeof(buf), _("Downloading \"%s\" control file."),
                 URL + start_idx);
     mcb(QString::fromUtf8(buf));
@@ -255,7 +255,7 @@ static const char *download_modpack_recursive(const char *URL,
   } while (src_name != NULL);
 
   if (pbcb != NULL) {
-    /* Control file already downloaded */
+    // Control file already downloaded
     pbcb(1, total_files + 1);
   }
 
@@ -265,9 +265,9 @@ static const char *download_modpack_recursive(const char *URL,
 
 #ifndef DIR_SEPARATOR_IS_DEFAULT
     char *dest_name_copy;
-#else /* DIR_SEPARATOR_IS_DEFAULT */
+#else // DIR_SEPARATOR_IS_DEFAULT
 #define dest_name_copy dest_name
-#endif /* DIR_SEPARATOR_IS_DEFAULT */
+#endif // DIR_SEPARATOR_IS_DEFAULT
 
     int i;
     bool illegal_filename = false;
@@ -279,13 +279,13 @@ static const char *download_modpack_recursive(const char *URL,
                                            "files.list%d.dest", filenbr);
 
     if (dest_name == NULL || dest_name[0] == '\0') {
-      /* Missing dest name is ok, we just default to src_name */
+      // Missing dest name is ok, we just default to src_name
       dest_name = src_name;
     }
 
 #ifndef DIR_SEPARATOR_IS_DEFAULT
     dest_name_copy = new char[strlen(dest_name) + 1];
-#endif /* DIR_SEPARATOR_IS_DEFAULT */
+#endif // DIR_SEPARATOR_IS_DEFAULT
 
     for (i = 0; dest_name[i] != '\0'; i++) {
       if (dest_name[i] == '.' && dest_name[i + 1] == '.') {
@@ -305,12 +305,12 @@ static const char *download_modpack_recursive(const char *URL,
       } else {
         dest_name_copy[i] = dest_name[i];
       }
-#endif /* DIR_SEPARATOR_IS_DEFAULT */
+#endif // DIR_SEPARATOR_IS_DEFAULT
     }
 
 #ifndef DIR_SEPARATOR_IS_DEFAULT
     dest_name_copy[i] = '\0';
-#endif /* DIR_SEPARATOR_IS_DEFAULT */
+#endif // DIR_SEPARATOR_IS_DEFAULT
 
     if (!illegal_filename) {
       fc_snprintf(local_name, sizeof(local_name), "%s%c%s", local_dir,
@@ -318,11 +318,11 @@ static const char *download_modpack_recursive(const char *URL,
 
 #ifndef DIR_SEPARATOR_IS_DEFAULT
       free(dest_name_copy);
-#endif /* DIR_SEPARATOR_IS_DEFAULT */
+#endif // DIR_SEPARATOR_IS_DEFAULT
 
       for (i = qstrlen(local_name) - 1; local_name[i] != DIR_SEPARATOR_CHAR;
            i--) {
-        /* Nothing */
+        // Nothing
       }
       local_name[i] = '\0';
       log_debug("Create directory \"%s\"", local_name);
@@ -356,11 +356,11 @@ static const char *download_modpack_recursive(const char *URL,
     } else {
 #ifndef DIR_SEPARATOR_IS_DEFAULT
       free(dest_name_copy);
-#endif /* DIR_SEPARATOR_IS_DEFAULT */
+#endif // DIR_SEPARATOR_IS_DEFAULT
     }
 
     if (pbcb != NULL) {
-      /* Count download of control file also */
+      // Count download of control file also
       pbcb(filenbr + 2, total_files + 1);
     }
   }
@@ -378,9 +378,9 @@ static const char *download_modpack_recursive(const char *URL,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Download modpack list
- **************************************************************************/
+ */
 const char *download_modpack_list(const struct fcmp_params *fcmp,
                                   const modpack_list_setup_cb &cb,
                                   const dl_msg_callback &mcb)

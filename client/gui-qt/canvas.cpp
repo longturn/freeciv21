@@ -36,24 +36,24 @@
 #include "qtg_cxxside.h"
 #include "sprite.h"
 
-/************************************************************************/ /**
+/**
    Create a canvas of the given size.
- ****************************************************************************/
+ */
 QPixmap *qtg_canvas_create(int width, int height)
 {
   QPixmap *store = new QPixmap(width, height);
   return store;
 }
 
-/************************************************************************/ /**
+/**
    Free any resources associated with this canvas and the canvas struct
    itself.
- ****************************************************************************/
+ */
 void qtg_canvas_free(QPixmap *store) { delete store; }
 
-/************************************************************************/ /**
+/**
    Copies an area from the source canvas to the destination canvas.
- ****************************************************************************/
+ */
 void qtg_canvas_copy(QPixmap *dest, QPixmap *src, int src_x, int src_y,
                      int dest_x, int dest_y, int width, int height)
 {
@@ -70,9 +70,9 @@ void qtg_canvas_copy(QPixmap *dest, QPixmap *src, int src_x, int src_y,
   p.end();
 }
 
-/************************************************************************/ /**
+/**
    Copies an area from the source pixmap to the destination pixmap.
- ****************************************************************************/
+ */
 void pixmap_copy(QPixmap *dest, QPixmap *src, int src_x, int src_y,
                  int dest_x, int dest_y, int width, int height)
 {
@@ -89,9 +89,9 @@ void pixmap_copy(QPixmap *dest, QPixmap *src, int src_x, int src_y,
   p.end();
 }
 
-/************************************************************************/ /**
+/**
    Copies an area from the source image to the destination image.
- ****************************************************************************/
+ */
 void image_copy(QImage *dest, QImage *src, int src_x, int src_y, int dest_x,
                 int dest_y, int width, int height)
 {
@@ -108,9 +108,9 @@ void image_copy(QImage *dest, QImage *src, int src_x, int src_y, int dest_x,
   p.end();
 }
 
-/************************************************************************/ /**
+/**
    Draw some or all of a sprite onto the canvas.
- ****************************************************************************/
+ */
 void qtg_canvas_put_sprite(QPixmap *pcanvas, int canvas_x, int canvas_y,
                            QPixmap *sprite, int offset_x, int offset_y,
                            int width, int height)
@@ -123,9 +123,9 @@ void qtg_canvas_put_sprite(QPixmap *pcanvas, int canvas_x, int canvas_y,
   p.end();
 }
 
-/************************************************************************/ /**
+/**
    Draw a full sprite onto the canvas.
- ****************************************************************************/
+ */
 void qtg_canvas_put_sprite_full(QPixmap *pcanvas, int canvas_x, int canvas_y,
                                 QPixmap *sprite)
 {
@@ -136,10 +136,10 @@ void qtg_canvas_put_sprite_full(QPixmap *pcanvas, int canvas_x, int canvas_y,
                     height);
 }
 
-/************************************************************************/ /**
+/**
    Draw a full sprite onto the canvas.  If "fog" is specified draw it with
    fog.
- ****************************************************************************/
+ */
 void qtg_canvas_put_sprite_fogged(QPixmap *pcanvas, int canvas_x,
                                   int canvas_y, QPixmap *psprite, bool fog,
                                   int fog_x, int fog_y)
@@ -163,7 +163,7 @@ void qtg_canvas_put_sprite_fogged(QPixmap *pcanvas, int canvas_x,
 
 /*****************************************************************************
    Draw fog outside city map when city is opened
- ****************************************************************************/
+ */
 void qtg_canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x,
                                     int canvas_y, QPixmap *psprite, bool fog,
                                     int fog_x, int fog_y)
@@ -181,7 +181,7 @@ void qtg_canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x,
 
 /*****************************************************************************
    Put unit in city area when city dialog is open
- ****************************************************************************/
+ */
 void canvas_put_unit_fogged(QPixmap *pcanvas, int canvas_x, int canvas_y,
                             QPixmap *psprite, bool fog, int fog_x, int fog_y)
 {
@@ -194,9 +194,9 @@ void canvas_put_unit_fogged(QPixmap *pcanvas, int canvas_x, int canvas_y,
   p.drawPixmap(canvas_x, canvas_y, *psprite);
   p.end();
 }
-/************************************************************************/ /**
+/**
    Draw a filled-in colored rectangle onto canvas.
- ****************************************************************************/
+ */
 void qtg_canvas_put_rectangle(QPixmap *pcanvas, QColor *pcolor, int canvas_x,
                               int canvas_y, int width, int height)
 {
@@ -220,9 +220,9 @@ void qtg_canvas_put_rectangle(QPixmap *pcanvas, QColor *pcolor, int canvas_x,
   p.end();
 }
 
-/************************************************************************/ /**
+/**
    Fill the area covered by the sprite with the given color.
- ****************************************************************************/
+ */
 void qtg_canvas_fill_sprite_area(QPixmap *pcanvas, QPixmap *psprite,
                                  QColor *pcolor, int canvas_x, int canvas_y)
 {
@@ -233,9 +233,9 @@ void qtg_canvas_fill_sprite_area(QPixmap *pcanvas, QPixmap *psprite,
                            height);
 }
 
-/************************************************************************/ /**
+/**
    Draw a 1-pixel-width colored line onto the canvas.
- ****************************************************************************/
+ */
 void qtg_canvas_put_line(QPixmap *pcanvas, QColor *pcolor,
                          enum line_type ltype, int start_x, int start_y,
                          int dx, int dy)
@@ -271,9 +271,9 @@ void qtg_canvas_put_line(QPixmap *pcanvas, QColor *pcolor,
   p.end();
 }
 
-/************************************************************************/ /**
+/**
    Draw a 1-pixel-width colored curved line onto the canvas.
- ****************************************************************************/
+ */
 void qtg_canvas_put_curved_line(QPixmap *pcanvas, QColor *pcolor,
                                 enum line_type ltype, int start_x,
                                 int start_y, int dx, int dy)
@@ -314,11 +314,11 @@ void qtg_canvas_put_curved_line(QPixmap *pcanvas, QColor *pcolor,
   p.end();
 }
 
-/************************************************************************/ /**
+/**
    Return the size of the given text in the given font.  This size should
    include the ascent and descent of the text.  Either of width or height
    may be NULL in which case those values simply shouldn't be filled out.
- ****************************************************************************/
+ */
 void qtg_get_text_size(int *width, int *height, enum client_font font,
                        const QString &text)
 {
@@ -337,11 +337,11 @@ void qtg_get_text_size(int *width, int *height, enum client_font font,
   delete fm;
 }
 
-/************************************************************************/ /**
+/**
    Draw the text onto the canvas in the given color and font.  The canvas
    position does not account for the ascent of the text; this function must
    take care of this manually.  The text will not be NULL but may be empty.
- ****************************************************************************/
+ */
 void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
                          enum client_font font, QColor *pcolor,
                          const QString &text)
@@ -363,9 +363,9 @@ void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
   delete fm;
 }
 
-/************************************************************************/ /**
+/**
    Returns given font
- ****************************************************************************/
+ */
 QFont *get_font(client_font font)
 {
   QFont *qf;
@@ -403,9 +403,9 @@ QFont *get_font(client_font font)
   return qf;
 }
 
-/************************************************************************/ /**
+/**
    Return rectangle containing pure image (crops transparency)
- ****************************************************************************/
+ */
 QRect zealous_crop_rect(QImage &p)
 {
   int r, t, b, l;

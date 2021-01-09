@@ -155,9 +155,9 @@ fc_shortcut default_shortcuts[] = {
     {SC_GOJOINCITY, Qt::Key_J, Qt::AllButtons, Qt::ShiftModifier,
      _("Go And Join City")}};
 
-/**********************************************************************/ /**
+/**
    Returns shortcut as string (eg. for menu)
- **************************************************************************/
+ */
 QString shortcut_to_string(fc_shortcut *sc)
 {
   QString ret, m, bn, k;
@@ -179,23 +179,23 @@ QString shortcut_to_string(fc_shortcut *sc)
   return ret;
 }
 
-/**********************************************************************/ /**
+/**
    fc_shortcuts contructor
- **************************************************************************/
+ */
 fc_shortcuts::fc_shortcuts() { init_default(true); }
 
-/**********************************************************************/ /**
+/**
    fc_shortcuts destructor
- **************************************************************************/
+ */
 fc_shortcuts::~fc_shortcuts()
 {
   qDeleteAll(hash.begin(), hash.end());
   hash.clear();
 }
 
-/**********************************************************************/ /**
+/**
    Returns description for given shortcut
- **************************************************************************/
+ */
 QString fc_shortcuts::get_desc(shortcut_id id)
 {
   fc_shortcut *s;
@@ -207,9 +207,9 @@ QString fc_shortcuts::get_desc(shortcut_id id)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns shortcut for given id
- **************************************************************************/
+ */
 fc_shortcut *fc_shortcuts::get_shortcut(shortcut_id id)
 {
   fc_shortcut *s;
@@ -217,14 +217,14 @@ fc_shortcut *fc_shortcuts::get_shortcut(shortcut_id id)
   return s;
 }
 
-/**********************************************************************/ /**
+/**
    Returns id for given shortcut
- **************************************************************************/
+ */
 shortcut_id fc_shortcuts::get_id(fc_shortcut *sc) { return hash.key(sc); }
 
-/**********************************************************************/ /**
+/**
    Sets given shortcut
- **************************************************************************/
+ */
 void fc_shortcuts::set_shortcut(fc_shortcut *s)
 {
   fc_shortcut *sc;
@@ -235,14 +235,14 @@ void fc_shortcuts::set_shortcut(fc_shortcut *s)
   sc->mouse = s->mouse;
 }
 
-/**********************************************************************/ /**
+/**
    Deletes current instance
- **************************************************************************/
+ */
 void fc_shortcuts::drop() { NFCN_FREE(m_instance); }
 
-/**********************************************************************/ /**
+/**
    Returns given instance
- **************************************************************************/
+ */
 fc_shortcuts *fc_shortcuts::sc()
 {
   if (!m_instance) {
@@ -251,9 +251,9 @@ fc_shortcuts *fc_shortcuts::sc()
   return m_instance;
 }
 
-/**********************************************************************/ /**
+/**
    Inits defaults shortcuts or reads from settings
- **************************************************************************/
+ */
 void fc_shortcuts::init_default(bool read)
 {
   int i;
@@ -277,9 +277,9 @@ void fc_shortcuts::init_default(bool read)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Constructor for setting shortcuts
- **************************************************************************/
+ */
 fc_shortcut_popup::fc_shortcut_popup(QWidget *parent) : QDialog()
 {
   QVBoxLayout *vb = new QVBoxLayout;
@@ -291,18 +291,18 @@ fc_shortcut_popup::fc_shortcut_popup(QWidget *parent) : QDialog()
   sc = nullptr;
 }
 
-/**********************************************************************/ /**
+/**
    Custom line edit contructor
- **************************************************************************/
+ */
 line_edit::line_edit() : QLineEdit()
 {
   setContextMenuPolicy(Qt::NoContextMenu);
   setWindowModality(Qt::WindowModal);
 }
 
-/**********************************************************************/ /**
+/**
    Mouse press event for line edit
- **************************************************************************/
+ */
 void line_edit::mousePressEvent(QMouseEvent *event)
 {
   fc_shortcut_popup *fcp;
@@ -315,9 +315,9 @@ void line_edit::mousePressEvent(QMouseEvent *event)
   parentWidget()->close();
 }
 
-/**********************************************************************/ /**
+/**
    Key release event for line edit
- **************************************************************************/
+ */
 void line_edit::keyReleaseEvent(QKeyEvent *event)
 {
   fc_shortcut_popup *fcp;
@@ -331,9 +331,9 @@ void line_edit::keyReleaseEvent(QKeyEvent *event)
   parentWidget()->close();
 }
 
-/**********************************************************************/ /**
+/**
    Popups line edit for setting shortcut
- **************************************************************************/
+ */
 void fc_shortcut_popup::run(fc_shortcut *s)
 {
   QPoint p(50, 20);
@@ -345,9 +345,9 @@ void fc_shortcut_popup::run(fc_shortcut *s)
   show();
 }
 
-/**********************************************************************/ /**
+/**
    Closes given popup and sets shortcut
- **************************************************************************/
+ */
 void fc_shortcut_popup::closeEvent(QCloseEvent *ev)
 {
   fc_sc_button *scp;
@@ -363,10 +363,10 @@ void fc_shortcut_popup::closeEvent(QCloseEvent *ev)
   QDialog::closeEvent(ev);
 }
 
-/**********************************************************************/ /**
+/**
    Checks is shortcut is already assigned and popups hud box then
    or return false if is not assigned
- **************************************************************************/
+ */
 bool fc_shortcut_popup::check_if_exist()
 {
   QString desc;
@@ -399,9 +399,9 @@ bool fc_shortcut_popup::check_if_exist()
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Returns mouse button name
- **************************************************************************/
+ */
 QString button_name(Qt::MouseButton bt)
 {
   switch (bt) {
@@ -466,15 +466,15 @@ QString button_name(Qt::MouseButton bt)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Constructor and destructor for button setting shortcut
- **************************************************************************/
+ */
 fc_sc_button::fc_sc_button() : QPushButton() { sc = new fc_shortcut; }
 fc_sc_button::~fc_sc_button() { delete sc; }
 
-/**********************************************************************/ /**
+/**
    Constructor setting given shortcut
- **************************************************************************/
+ */
 fc_sc_button::fc_sc_button(fc_shortcut *s) : QPushButton()
 {
   sc_orig = s;
@@ -487,32 +487,32 @@ fc_sc_button::fc_sc_button(fc_shortcut *s) : QPushButton()
   setText(shortcut_to_string(sc));
 }
 
-/**********************************************************************/ /**
+/**
    Executes slot to show information about assigned shortcut
- **************************************************************************/
+ */
 void fc_sc_button::show_info(const QString &str)
 {
   err_message = str;
   popup_error();
 }
 
-/**********************************************************************/ /**
+/**
    Shows information about assigned shortcut
- **************************************************************************/
+ */
 void fc_sc_button::popup_error()
 {
   hud_message_box *scinfo;
   QList<fc_shortcut_popup *> fsb_list;
   QString title;
 
-  /* wait until shortcut popup is destroyed */
+  // wait until shortcut popup is destroyed
   fsb_list = findChildren<fc_shortcut_popup *>();
   if (fsb_list.count() > 0) {
     QTimer::singleShot(20, this, &fc_sc_button::popup_error);
     return;
   }
 
-  /* TRANS: Given shortcut(%1) is already assigned */
+  // TRANS: Given shortcut(%1) is already assigned
   title =
       QString(_("%1 is already assigned to")).arg(shortcut_to_string(sc));
   scinfo = new hud_message_box(king()->central_wdg);
@@ -523,9 +523,9 @@ void fc_sc_button::popup_error()
   scinfo->show();
 }
 
-/**********************************************************************/ /**
+/**
    Contructor for shortcut dialog
- **************************************************************************/
+ */
 fc_shortcuts_dialog::fc_shortcuts_dialog(QWidget *parent) : QDialog(parent)
 {
   setWindowTitle(_("Shortcuts options"));
@@ -533,14 +533,14 @@ fc_shortcuts_dialog::fc_shortcuts_dialog(QWidget *parent) : QDialog(parent)
   init();
 }
 
-/**********************************************************************/ /**
+/**
    Destructor for shortcut dialog
- **************************************************************************/
+ */
 fc_shortcuts_dialog::~fc_shortcuts_dialog() = default;
 
-/**********************************************************************/ /**
+/**
    Inits shortcut dialog layout
- **************************************************************************/
+ */
 void fc_shortcuts_dialog::init()
 {
   QPushButton *but;
@@ -605,9 +605,9 @@ void fc_shortcuts_dialog::init()
   setAttribute(Qt::WA_DeleteOnClose);
 }
 
-/**********************************************************************/ /**
+/**
    Adds shortcut option for dialog
- **************************************************************************/
+ */
 void fc_shortcuts_dialog::add_option(fc_shortcut *sc)
 {
   QHBoxLayout *hb;
@@ -627,9 +627,9 @@ void fc_shortcuts_dialog::add_option(fc_shortcut *sc)
   scroll_layout->addLayout(hb);
 }
 
-/**********************************************************************/ /**
+/**
    Slot for editing shortcut
- **************************************************************************/
+ */
 void fc_shortcuts_dialog::edit_shortcut()
 {
   fc_sc_button *pb;
@@ -638,9 +638,9 @@ void fc_shortcuts_dialog::edit_shortcut()
   sb->run(pb->sc);
 }
 
-/**********************************************************************/ /**
+/**
    Reinitializes layout
- **************************************************************************/
+ */
 void fc_shortcuts_dialog::refresh()
 {
   QLayout *layout;
@@ -662,9 +662,9 @@ void fc_shortcuts_dialog::refresh()
   init();
 }
 
-/**********************************************************************/ /**
+/**
    Slot for buttons on bottom of shortcut dialog
- **************************************************************************/
+ */
 void fc_shortcuts_dialog::apply_option(int response)
 {
   switch (response) {
@@ -692,18 +692,18 @@ void fc_shortcuts_dialog::apply_option(int response)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Popups shortcut dialog
- **************************************************************************/
+ */
 void popup_shortcuts_dialog()
 {
   fc_shortcuts_dialog *sh = new fc_shortcuts_dialog(king());
   sh->show();
 }
 
-/**********************************************************************/ /**
+/**
    Make deep copy of shortcut map
- **************************************************************************/
+ */
 QMap<shortcut_id, fc_shortcut *> *
 hash_copy(QMap<shortcut_id, fc_shortcut *> *h)
 {
@@ -733,9 +733,9 @@ hash_copy(QMap<shortcut_id, fc_shortcut *> *h)
   return new_hash;
 }
 
-/**********************************************************************/ /**
+/**
    Writes shortcuts to file
- **************************************************************************/
+ */
 void write_shortcuts()
 {
   fc_shortcut *sc;
@@ -755,9 +755,9 @@ void write_shortcuts()
   s.endArray();
 }
 
-/**********************************************************************/ /**
+/**
    Reads shortcuts from file. Returns false if failed.
- **************************************************************************/
+ */
 bool read_shortcuts()
 {
   int num, i;

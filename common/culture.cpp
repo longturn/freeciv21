@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "city.h"
 #include "effects.h"
 #include "game.h"
@@ -23,26 +23,26 @@
 
 #include "culture.h"
 
-/************************************************************************/ /**
+/**
    Return current culture score of the city.
- ****************************************************************************/
+ */
 int city_culture(const struct city *pcity)
 {
   return pcity->history + get_city_bonus(pcity, EFT_PERFORMANCE);
 }
 
-/************************************************************************/ /**
+/**
    How much history city gains this turn.
- ****************************************************************************/
+ */
 int city_history_gain(const struct city *pcity)
 {
   return get_city_bonus(pcity, EFT_HISTORY)
          + pcity->history * game.info.history_interest_pml / 1000;
 }
 
-/************************************************************************/ /**
+/**
    Return current culture score of the player.
- ****************************************************************************/
+ */
 int player_culture(const struct player *plr)
 {
   int culture = plr->history + get_player_bonus(plr, EFT_NATION_PERFORMANCE);
@@ -53,10 +53,10 @@ int player_culture(const struct player *plr)
   return culture;
 }
 
-/************************************************************************/ /**
+/**
    How much nation-wide history player gains this turn. Does NOT include
    history gains of individual cities.
- ****************************************************************************/
+ */
 int nation_history_gain(const struct player *pplayer)
 {
   return get_player_bonus(pplayer, EFT_NATION_HISTORY)

@@ -12,16 +12,16 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <cstring> /* memset */
+#include <cstring> // memset
 
-/* utility */
+// utility
 #include "log.h"
 
-/* Yields TRUE iff the bit bit_no is set in val. */
+// Yields TRUE iff the bit bit_no is set in val.
 #define TEST_BIT(val, bit_no)                                               \
   (((val) & (1u << (bit_no))) == (1u << (bit_no)))
 
-/* Static bitvectors. */
+// Static bitvectors.
 #define _BV_BYTES(bits) ((((bits) -1) / 8) + 1)
 #define _BV_BYTE_INDEX(bits) ((bits) / 8)
 #define _BV_BITMASK(bit) (1u << ((bit) &0x7))
@@ -91,7 +91,7 @@ void bv_clr_all_from(unsigned char *vec_to, const unsigned char *vec_from,
   bv_clr_all_from((vec_to).vec, (vec_from).vec, sizeof((vec_to).vec),       \
                   sizeof((vec_from).vec))
 
-/* Used to make a BV typedef. Such types are usually called "bv_foo". */
+// Used to make a BV typedef. Such types are usually called "bv_foo".
 #define BV_DEFINE(name, bits)                                               \
   typedef struct {                                                          \
     unsigned char vec[_BV_BYTES(bits)];                                     \

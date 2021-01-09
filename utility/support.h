@@ -31,7 +31,7 @@
 #define fc__attribute(x)
 #endif
 
-/* __attribute__((warn_unused_result)) requires at least gcc 3.4 */
+// __attribute__((warn_unused_result)) requires at least gcc 3.4
 #if defined(__GNUC__)
 #if (__GNUC__ > 3) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)
 #define fc__warn_unused_result __attribute__((warn_unused_result))
@@ -141,7 +141,7 @@ char *fc_strrep_resize(char *str, size_t *len, const char *search,
 size_t fc_strlcpy(char *dest, const char *src, size_t n);
 size_t fc_strlcat(char *dest, const char *src, size_t n);
 
-/* convenience macros for use when dest is a char ARRAY: */
+// convenience macros for use when dest is a char ARRAY:
 #define sz_strlcpy(dest, src)                                               \
   ((void) fc_strlcpy((dest), (src), sizeof(dest)))
 #define sz_strlcat(dest, src)                                               \

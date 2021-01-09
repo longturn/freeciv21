@@ -28,9 +28,9 @@
 
 class QGridLayout;
 
-/************************************************************************/ /**
+/**
    Constructor for spaceship report
- ****************************************************************************/
+ */
 ss_report::ss_report(struct player *pplayer)
 {
   int w, h;
@@ -54,18 +54,18 @@ ss_report::ss_report(struct player *pplayer)
   update_report();
 }
 
-/************************************************************************/ /**
+/**
    Destructor for spaceship report
- ****************************************************************************/
+ */
 ss_report::~ss_report()
 {
   queen()->removeRepoDlg(QStringLiteral("SPS"));
   qtg_canvas_free(can);
 }
 
-/************************************************************************/ /**
+/**
    Initializes widget on game_tab_widget
- ****************************************************************************/
+ */
 void ss_report::init()
 {
   int index;
@@ -75,9 +75,9 @@ void ss_report::init()
   update_report();
 }
 
-/************************************************************************/ /**
+/**
    Updates spaceship report
- ****************************************************************************/
+ */
 void ss_report::update_report()
 {
   QString ch;
@@ -98,14 +98,14 @@ void ss_report::update_report()
   update();
 }
 
-/************************************************************************/ /**
+/**
    Launch spaceship
- ****************************************************************************/
+ */
 void ss_report::launch() { send_packet_spaceship_launch(&client.conn); }
 
-/************************************************************************/ /**
+/**
    Popup (or raise) the spaceship dialog for the given player.
- ****************************************************************************/
+ */
 void popup_spaceship_dialog(struct player *pplayer)
 {
   ss_report *ss_rep;
@@ -130,16 +130,16 @@ void popup_spaceship_dialog(struct player *pplayer)
   }
 }
 
-/************************************************************************/ /**
+/**
    Close the spaceship dialog for the given player.
- ****************************************************************************/
+ */
 void popdown_spaceship_dialog(struct player *pplayer)
-{ /* PORTME */
+{ // PORTME
 }
 
-/************************************************************************/ /**
+/**
    Refresh (update) the spaceship dialog for the given player.
- ****************************************************************************/
+ */
 void refresh_spaceship_dialog(struct player *pplayer)
 {
   int i;
@@ -158,9 +158,9 @@ void refresh_spaceship_dialog(struct player *pplayer)
   }
 }
 
-/************************************************************************/ /**
+/**
    Close all spaceships dialogs
- ****************************************************************************/
+ */
 void popdown_all_spaceships_dialogs()
 {
   int i;

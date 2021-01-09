@@ -15,13 +15,13 @@
 
 struct section_file;
 
-/* callback invocation function. */
+// callback invocation function.
 bool script_client_callback_invoke(const char *callback_name, int nargs,
                                    enum api_types *parg_types, va_list args);
 
 void script_client_remove_exported_object(void *object);
 
-/* script functions. */
+// script functions.
 bool script_client_init();
 void script_client_free();
 bool script_client_do_string(const char *str);
@@ -31,7 +31,7 @@ bool script_client_do_file(const char *filename);
 void script_client_state_load(struct section_file *file);
 void script_client_state_save(struct section_file *file);
 
-/* Signals. */
+// Signals.
 void script_client_signal_connect(const char *signal_name,
                                   const char *callback_name);
 void script_client_signal_emit(const char *signal_name, ...);

@@ -31,10 +31,10 @@ void real_sanity_check_tile(struct tile *ptile, const char *file,
 #define sanity_check() real_sanity_check(__FILE__, __FUNCTION__, __FC_LINE__)
 void real_sanity_check(const char *file, const char *function, int line);
 
-#else /* SANITY_CHECKING */
+#else // SANITY_CHECKING
 
 #define sanity_check_city(x) (void) 0
 #define sanity_check_tile(x) (void) 0
 #define sanity_check() (void) 0
 
-#endif /* SANITY_CHECKING */
+#endif // SANITY_CHECKING

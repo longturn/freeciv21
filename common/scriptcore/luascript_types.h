@@ -9,10 +9,10 @@
 **************************************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "genlist.h"
 
-/* common */
+// common
 #include "achievements.h"
 #include "actions.h"
 #include "city.h"
@@ -30,7 +30,7 @@
 #include "unit.h"
 #include "unittype.h"
 
-/* Classes. */
+// Classes.
 /* If a new class is defined, an entry should be added to the enum api_types
  * below and the class name should be added to the api_types list in
  * tolua_common_z.pkg. */

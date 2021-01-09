@@ -16,4 +16,4 @@ class QCoreApplication;
 
 void fcmp_parse_cmdline(const QCoreApplication &app);
 
-#endif /* FC__MPCMDLINE_H */
+#endif // FC__MPCMDLINE_H

@@ -41,17 +41,17 @@ extern QString get_tooltip_improvement(impr_type *building,
 extern QString get_tooltip_unit(struct unit_type *unit, bool ext);
 extern QApplication *qapp;
 
-/************************************************************************/ /**
+/**
    Compare unit_items (used for techs) by name
- ****************************************************************************/
+ */
 bool comp_less_than(const qlist_item &q1, const qlist_item &q2)
 {
   return (q1.tech_str < q2.tech_str);
 }
 
-/************************************************************************/ /**
+/**
    Constructor for research diagram
- ****************************************************************************/
+ */
 research_diagram::research_diagram(QWidget *parent) : QWidget(parent)
 {
   pcanvas = NULL;
@@ -60,9 +60,9 @@ research_diagram::research_diagram(QWidget *parent) : QWidget(parent)
   setMouseTracking(true);
 }
 
-/************************************************************************/ /**
+/**
    Destructor for research diagram
- ****************************************************************************/
+ */
 research_diagram::~research_diagram()
 {
   canvas_free(pcanvas);
@@ -71,14 +71,14 @@ research_diagram::~research_diagram()
   tt_help.clear();
 }
 
-/************************************************************************/ /**
+/**
    Constructor for req_tooltip_help
- ****************************************************************************/
+ */
 req_tooltip_help::req_tooltip_help() {}
 
-/************************************************************************/ /**
+/**
    Create list of rectangles for showing tooltips
- ****************************************************************************/
+ */
 void research_diagram::create_tooltip_help()
 {
   int i, j;
@@ -194,9 +194,9 @@ void research_diagram::create_tooltip_help()
   }
 }
 
-/************************************************************************/ /**
+/**
    Recreates whole diagram and schedules update
- ****************************************************************************/
+ */
 void research_diagram::update_reqtree()
 {
   reset();
@@ -205,9 +205,9 @@ void research_diagram::update_reqtree()
   update();
 }
 
-/************************************************************************/ /**
+/**
    Initializes research diagram
- ****************************************************************************/
+ */
 void research_diagram::reset()
 {
   timer_active = false;
@@ -224,9 +224,9 @@ void research_diagram::reset()
   resize(width, height);
 }
 
-/************************************************************************/ /**
+/**
    Mouse handler for research_diagram
- ****************************************************************************/
+ */
 void research_diagram::mousePressEvent(QMouseEvent *event)
 {
   Tech_type_id tech = get_tech_on_reqtree(req, event->x(), event->y());
@@ -271,9 +271,9 @@ void research_diagram::mousePressEvent(QMouseEvent *event)
   }
 }
 
-/************************************************************************/ /**
+/**
    Mouse move handler for research_diagram - for showing tooltips
- ****************************************************************************/
+ */
 void research_diagram::mouseMoveEvent(QMouseEvent *event)
 {
   req_tooltip_help *rttp;
@@ -331,9 +331,9 @@ void research_diagram::mouseMoveEvent(QMouseEvent *event)
   }
 }
 
-/************************************************************************/ /**
+/**
    Slot for timer used to show tooltip
- ****************************************************************************/
+ */
 void research_diagram::show_tooltip()
 {
   QPoint cp;
@@ -346,9 +346,9 @@ void research_diagram::show_tooltip()
   }
 }
 
-/************************************************************************/ /**
+/**
    Paint event for research_diagram
- ****************************************************************************/
+ */
 void research_diagram::paintEvent(QPaintEvent *event)
 {
   Q_UNUSED(event)
@@ -359,9 +359,9 @@ void research_diagram::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/************************************************************************/ /**
+/**
    Returns size of research_diagram
- ****************************************************************************/
+ */
 QSize research_diagram::size()
 {
   QSize s;
@@ -372,9 +372,9 @@ QSize research_diagram::size()
   return s;
 }
 
-/************************************************************************/ /**
+/**
    Consctructor for science_report
- ****************************************************************************/
+ */
 science_report::science_report() : QWidget()
 {
   QSize size;
@@ -420,11 +420,11 @@ science_report::science_report() : QWidget()
   setLayout(sci_layout);
 }
 
-/************************************************************************/ /**
+/**
    Destructor for science report
    Removes "SCI" string marking it as closed
    And frees given index on list marking it as ready for new widget
- ****************************************************************************/
+ */
 science_report::~science_report()
 {
   NFC_FREE(curr_list);
@@ -432,11 +432,11 @@ science_report::~science_report()
   queen()->removeRepoDlg(QStringLiteral("SCI"));
 }
 
-/************************************************************************/ /**
+/**
    Updates science_report and marks it as opened
    It has to be called soon after constructor.
    It could be in constructor but compiler will yell about not used variable
- ****************************************************************************/
+ */
 void science_report::init(bool raise)
 {
   Q_UNUSED(raise)
@@ -446,14 +446,14 @@ void science_report::init(bool raise)
   update_report();
 }
 
-/************************************************************************/ /**
+/**
    Schedules paint event in some qt queue
- ****************************************************************************/
+ */
 void science_report::redraw() { update(); }
 
-/************************************************************************/ /**
+/**
    Recalculates research diagram again and updates science report
- ****************************************************************************/
+ */
 void science_report::reset_tree()
 {
   QSize size;
@@ -463,9 +463,9 @@ void science_report::reset_tree()
   update();
 }
 
-/************************************************************************/ /**
+/**
    Updates all important widgets on science_report
- ****************************************************************************/
+ */
 void science_report::update_report()
 {
   struct research *research = research_get(client_player());
@@ -612,14 +612,14 @@ void science_report::update_report()
   update_reqtree();
 }
 
-/************************************************************************/ /**
+/**
    Calls update for research_diagram
- ****************************************************************************/
+ */
 void science_report::update_reqtree() { res_diag->update_reqtree(); }
 
-/************************************************************************/ /**
+/**
    Slot used when combo box with current tech changes
- ****************************************************************************/
+ */
 void science_report::current_tech_changed(int changed_index)
 {
   QVariant qvar;
@@ -633,9 +633,9 @@ void science_report::current_tech_changed(int changed_index)
   }
 }
 
-/************************************************************************/ /**
+/**
    Slot used when combo box with goal have been changed
- ****************************************************************************/
+ */
 void science_report::goal_tech_changed(int changed_index)
 {
   QVariant qvar;
@@ -649,9 +649,9 @@ void science_report::goal_tech_changed(int changed_index)
   }
 }
 
-/************************************************************************/ /**
+/**
    Update the science report.
- ****************************************************************************/
+ */
 void real_science_report_dialog_update(void *unused)
 {
   Q_UNUSED(unused)
@@ -702,9 +702,9 @@ void real_science_report_dialog_update(void *unused)
   }
 }
 
-/************************************************************************/ /**
+/**
    Closes science report
- ****************************************************************************/
+ */
 void popdown_science_report()
 {
   int i;
@@ -720,9 +720,9 @@ void popdown_science_report()
   }
 }
 
-/************************************************************************/ /**
+/**
    Resize and redraw the requirement tree.
- ****************************************************************************/
+ */
 void science_report_dialog_redraw(void)
 {
   int i;
@@ -739,10 +739,10 @@ void science_report_dialog_redraw(void)
   }
 }
 
-/************************************************************************/ /**
+/**
    Display the science report.  Optionally raise it.
    Typically triggered by F6.
- ****************************************************************************/
+ */
 void science_report_dialog_popup(bool raise)
 {
   science_report *sci_rep;

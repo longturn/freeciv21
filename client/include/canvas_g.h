@@ -12,22 +12,22 @@
 ***********************************************************************/
 #pragma once
 
-#include "support.h" /* bool type */
+#include "support.h" // bool type
 
 #include "gui_proto_constructor.h"
 
 struct QColor;
 class QFont;
 class QString;
-class QPixmap; /* opaque type, real type is gui-dep */
+class QPixmap; // opaque type, real type is gui-dep
 
 enum line_type { LINE_NORMAL, LINE_BORDER, LINE_TILE_FRAME, LINE_GOTO };
 
-/* Creator and destructor */
+// Creator and destructor
 GUI_FUNC_PROTO(QPixmap *, canvas_create, int width, int height)
 GUI_FUNC_PROTO(void, canvas_free, QPixmap *store)
 
-/* Drawing functions */
+// Drawing functions
 GUI_FUNC_PROTO(void, canvas_copy, QPixmap *dest, QPixmap *src, int src_x,
                int src_y, int dest_x, int dest_y, int width, int height)
 GUI_FUNC_PROTO(void, canvas_put_sprite, QPixmap *pcanvas, int canvas_x,
@@ -54,7 +54,7 @@ GUI_FUNC_PROTO(void, canvas_put_curved_line, QPixmap *pcanvas,
 void canvas_put_unit_fogged(QPixmap *pcanvas, int canvas_x, int canvas_y,
                             QPixmap *psprite, bool fog, int fog_x,
                             int fog_y);
-/* Text drawing functions */
+// Text drawing functions
 enum client_font {
   FONT_CITY_NAME,
   FONT_CITY_PROD,

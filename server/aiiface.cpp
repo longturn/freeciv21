@@ -19,10 +19,10 @@
 #include <ltdl.h>
 #endif
 
-/* utility */
+// utility
 #include "support.h"
 
-/* common */
+// common
 #include "ai.h"
 #include "player.h"
 
@@ -49,9 +49,9 @@ bool fc_ai_stub_setup(struct ai_type *ai);
 static struct ai_type *default_ai = NULL;
 
 #ifdef AI_MODULES
-/**********************************************************************/ /**
+/**
    Return string describing module loading error. Never returns NULL.
- **************************************************************************/
+ */
 static const char *fc_module_error(void)
 {
   static char def_err[] = "Unknown error";
@@ -64,9 +64,9 @@ static const char *fc_module_error(void)
   return errtxt;
 }
 
-/**********************************************************************/ /**
+/**
    Load ai module from file.
- **************************************************************************/
+ */
 bool load_ai_module(const char *modname)
 {
   struct ai_type *ai = ai_type_alloc();
@@ -126,18 +126,18 @@ bool load_ai_module(const char *modname)
 
   return TRUE;
 }
-#endif /* AI_MODULES */
+#endif // AI_MODULES
 
-/**********************************************************************/ /**
+/**
    Initialize ai stuff
- **************************************************************************/
+ */
 void ai_init()
 {
   bool failure = false;
 #if !defined(AI_MODULES) || defined(AI_MOD_STATIC_CLASSIC)                  \
     || defined(AI_MOD_STATIC_THREADED) || defined(AI_MOD_STATIC_TEX)        \
     || defined(AI_MOD_STATIC_STUB)
-  /* First !defined(AI_MODULES) case is for default ai support. */
+  // First !defined(AI_MODULES) case is for default ai support.
   struct ai_type *ai;
 #endif
 
@@ -159,12 +159,12 @@ void ai_init()
       fc_snprintf(buf, sizeof(buf), "ai/%s", moduledirs[i]);
       lt_dladdsearchdir(buf);
     }
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
-    /* Then search ai modules from their installation directory. */
+    // Then search ai modules from their installation directory.
     lt_dladdsearchdir(AI_MODULEDIR);
   }
-#endif /* AI_MODULES */
+#endif // AI_MODULES
 
 #ifdef AI_MOD_STATIC_CLASSIC
   ai = ai_type_alloc();
@@ -175,7 +175,7 @@ void ai_init()
       ai_type_dealloc();
     }
   }
-#endif /* AI_MOD_STATIC_CLASSIC */
+#endif // AI_MOD_STATIC_CLASSIC
 
 #ifdef AI_MOD_STATIC_THREADED
   ai = ai_type_alloc();
@@ -186,7 +186,7 @@ void ai_init()
       ai_type_dealloc();
     }
   }
-#endif /* AI_MOD_STATIC_THREADED */
+#endif // AI_MOD_STATIC_THREADED
 
 #ifdef AI_MOD_STATIC_TEX
   ai = ai_type_alloc();
@@ -197,7 +197,7 @@ void ai_init()
       ai_type_dealloc();
     }
   }
-#endif /* AI_MOD_STATIC_TEX */
+#endif // AI_MOD_STATIC_TEX
 
 #ifdef AI_MOD_STATIC_STUB
   ai = ai_type_alloc();
@@ -208,12 +208,12 @@ void ai_init()
       ai_type_dealloc();
     }
   }
-#endif /* AI_MOD_STATIC_STUB */
+#endif // AI_MOD_STATIC_STUB
 
   default_ai = ai_type_by_name(AI_MOD_DEFAULT);
 #ifdef AI_MODULES
   if (default_ai == NULL) {
-    /* Wasn't among statically linked. Try to load dynamic module. */
+    // Wasn't among statically linked. Try to load dynamic module.
     if (!failure && !load_ai_module(AI_MOD_DEFAULT)) {
       failure = TRUE;
     }
@@ -221,7 +221,7 @@ void ai_init()
       default_ai = ai_type_by_name(AI_MOD_DEFAULT);
     }
   }
-#endif /* AI_MODULES */
+#endif // AI_MODULES
   if (default_ai == NULL || failure) {
     qCritical(
         _("Failed to setup default AI module \"%s\", cannot continue."),
@@ -230,9 +230,9 @@ void ai_init()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Call incident function of victim.
- **************************************************************************/
+ */
 void call_incident(enum incident_type type, enum casus_belli_range scope,
                    const struct action *paction, struct player *violator,
                    struct player *victim)
@@ -251,16 +251,16 @@ void call_incident(enum incident_type type, enum casus_belli_range scope,
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Call ai refresh() callback for all players.
- **************************************************************************/
+ */
 void call_ai_refresh()
 {
   players_iterate(pplayer) { CALL_PLR_AI_FUNC(refresh, pplayer, pplayer); }
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Return name of default ai type.
- **************************************************************************/
+ */
 const char *default_ai_type_name() { return default_ai->name; }

@@ -13,13 +13,13 @@
 #include <fc_config.h>
 #endif
 
-#include <cmath> /* log */
+#include <cmath> // log
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "log.h"
 
-/* common */
+// common
 #include "ai.h"
 #include "map.h"
 #include "movement.h"
@@ -30,32 +30,32 @@
 #include "path_finding.h"
 #include "pf_tools.h"
 
-/* server */
+// server
 #include "maphand.h"
 #include "srv_log.h"
 
 /* server/advisors */
 #include "advgoto.h"
 
-/* ai */
+// ai
 #include "handicaps.h"
 
 #include "autoexplorer.h"
 
-/**********************************************************************/ /**
+/**
    Determine if a tile is likely to be native, given information that
    the player actually has. Return the % certainty that it's native
    (100 = certain, 50 = no idea, 0 = certainly not).
- **************************************************************************/
+ */
 static int likely_native(struct tile *ptile, struct player *pplayer,
                          struct unit_class *pclass)
 {
   int native = 0;
   int foreign = 0;
 
-  /* We do not check H_MAP here, it should be done by map_is_known() */
+  // We do not check H_MAP here, it should be done by map_is_known()
   if (map_is_known(ptile, pplayer)) {
-    /* we've seen the tile already. */
+    // we've seen the tile already.
     return (is_native_tile_to_class(pclass, ptile) ? 100 : 0);
   }
 
@@ -76,27 +76,27 @@ static int likely_native(struct tile *ptile, struct player *pplayer,
   return 50 + (50 / wld.map.num_valid_dirs * (native - foreign));
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if a unit owned by the given player can safely "explore" the
    given tile. This mainly takes care that military units do not try to
    move into another player's territory in violation of a treaty.
- **************************************************************************/
+ */
 static bool player_may_explore(const struct tile *ptile,
                                const struct player *pplayer,
                                const struct unit_type *punittype)
 {
-  /* Don't allow military units to cross borders. */
+  // Don't allow military units to cross borders.
   if (!utype_has_flag(punittype, UTYF_CIVILIAN)
       && !player_can_invade_tile(pplayer, ptile)) {
     return false;
   }
 
-  /* Can't visit tiles with non-allied units. */
+  // Can't visit tiles with non-allied units.
   if (is_non_allied_unit_tile(ptile, pplayer)) {
     return false;
   }
 
-  /* Non-allied cities are taboo even if no units are inside. */
+  // Non-allied cities are taboo even if no units are inside.
   if (tile_city(ptile)
       && !pplayers_allied(city_owner(tile_city(ptile)), pplayer)) {
     return false;
@@ -105,9 +105,9 @@ static bool player_may_explore(const struct tile *ptile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    TB function used by explorer_goto().
- **************************************************************************/
+ */
 static enum tile_behavior explorer_tb(const struct tile *ptile,
                                       enum known_type k,
                                       const struct pf_parameter *param)
@@ -118,9 +118,9 @@ static enum tile_behavior explorer_tb(const struct tile *ptile,
   return TB_NORMAL;
 }
 
-/**********************************************************************/ /**
+/**
    Constrained goto using player_may_explore().
- **************************************************************************/
+ */
 static bool explorer_goto(struct unit *punit, struct tile *ptile)
 {
   struct pf_parameter parameter;
@@ -136,7 +136,7 @@ static bool explorer_goto(struct unit *punit, struct tile *ptile)
   adv_avoid_risks(&parameter, &risk_cost, punit,
                   NORMAL_STACKING_FEARFULNESS);
 
-  /* Show the destination in the client */
+  // Show the destination in the client
   punit->goto_tile = ptile;
 
   UNIT_LOG(LOG_DEBUG, punit, "explorer_goto to %d,%d", TILE_XY(ptile));
@@ -154,7 +154,7 @@ static bool explorer_goto(struct unit *punit, struct tile *ptile)
   return alive;
 }
 
-/**********************************************************************/ /**
+/**
    Return a value indicating how desirable it is to explore the given tile.
    In general, we want to discover unknown terrain of the opposite kind to
    our natural terrain, i.e. pedestrians like ocean and boats like land.
@@ -163,7 +163,7 @@ static bool explorer_goto(struct unit *punit, struct tile *ptile)
    We also would like discovering tiles which can be harvested by our cities
  -- because that improves citizen placement. We do not currently do this, see
    comment below.
- **************************************************************************/
+ */
 #define SAME_TER_SCORE 21
 #define DIFF_TER_SCORE 81
 #define KNOWN_SAME_TER_SCORE 0
@@ -209,12 +209,12 @@ static int explorer_desirable(struct tile *ptile, struct player *pplayer,
 
   /* First do some checks that would make a tile completely non-desirable.
    * If we're a barbarian and the tile has a hut, don't go there. */
-  /* FIXME: HUT_NOTHING ok */
+  // FIXME: HUT_NOTHING ok
   if (is_barbarian(pplayer) && hut_on_tile(ptile)) {
     return 0;
   }
 
-  /* Do no try to cross borders and break a treaty, etc. */
+  // Do no try to cross borders and break a treaty, etc.
   if (!player_may_explore(ptile, punit->owner, unit_type_get(punit))) {
     return 0;
   }
@@ -248,7 +248,7 @@ static int explorer_desirable(struct tile *ptile, struct player *pplayer,
   circle_iterate_end;
 
   if (unknown <= 0) {
-    /* We make sure we'll uncover at least one unexplored tile. */
+    // We make sure we'll uncover at least one unexplored tile.
     desirable = 0;
   }
 
@@ -257,14 +257,14 @@ static int explorer_desirable(struct tile *ptile, struct player *pplayer,
       && unit_can_displace_hut(punit, ptile)) {
     /* we want to explore huts whenever we can,
      * even if doing so will not uncover any tiles. */
-    /* FIXME: should HUT_FRIGHTEN explorer strive to destroy huts? */
+    // FIXME: should HUT_FRIGHTEN explorer strive to destroy huts?
     desirable += HUT_SCORE;
   }
 
   return desirable;
 }
 
-/**********************************************************************/ /**
+/**
    Handle eXplore mode of a unit (explorers are always in eXplore mode
    for AI) - explores unknown territory, finds huts.
 
@@ -272,11 +272,11 @@ static int explorer_desirable(struct tile *ptile, struct player *pplayer,
    MR_DEATH: unit died.
    MR_PAUSE: unit cannot explore further now.
    Other results: unit cannot explore further.
- **************************************************************************/
+ */
 enum unit_move_result manage_auto_explorer(struct unit *punit)
 {
   struct player *pplayer = unit_owner(punit);
-  /* Loop prevention */
+  // Loop prevention
   const struct tile *init_tile = unit_tile(punit);
 
   /* The log of the want of the most desirable tile,
@@ -294,7 +294,7 @@ enum unit_move_result manage_auto_explorer(struct unit *punit)
   struct tile *best_tile = NULL;
   int best_MC = FC_INFINITY;
 
-  /* Path-finding stuff */
+  // Path-finding stuff
   struct pf_map *pfm;
   struct pf_parameter parameter;
 
@@ -307,14 +307,14 @@ enum unit_move_result manage_auto_explorer(struct unit *punit)
 
   if (!is_human(pplayer) && unit_has_type_flag(punit, UTYF_GAMELOSS)) {
     UNIT_LOG(LOG_DEBUG, punit, "exploration too dangerous!");
-    return MR_BAD_ACTIVITY; /* too dangerous */
+    return MR_BAD_ACTIVITY; // too dangerous
   }
 
   TIMING_LOG(AIT_EXPLORER, TIMER_START);
 
   pft_fill_unit_parameter(&parameter, punit);
   parameter.get_TB = no_fights_or_unknown;
-  /* When exploring, even AI should pretend to not cheat. */
+  // When exploring, even AI should pretend to not cheat.
   parameter.omniscience = false;
 
   pfm = pf_map_new(&parameter);
@@ -323,17 +323,17 @@ enum unit_move_result manage_auto_explorer(struct unit *punit)
     int desirable;
     double log_desirable;
 
-    /* Our callback should insure this. */
+    // Our callback should insure this.
     fc_assert_action(map_is_known(ptile, pplayer), continue);
 
     desirable = explorer_desirable(ptile, pplayer, punit);
 
     if (desirable <= 0) {
-      /* Totally non-desirable tile. No need to continue. */
+      // Totally non-desirable tile. No need to continue.
       continue;
     }
 
-    /* take the natural log */
+    // take the natural log
     log_desirable = log(desirable);
 
     /* Ok, the way we calculate goodness is taking the base tile
@@ -369,7 +369,7 @@ enum unit_move_result manage_auto_explorer(struct unit *punit)
       max_dist = best_MC + (log_most_desirable - logBPS) / logDF;
     }
 
-    /* let's not go further than this */
+    // let's not go further than this
     if (move_cost > max_dist) {
       break;
     }
@@ -379,7 +379,7 @@ enum unit_move_result manage_auto_explorer(struct unit *punit)
 
   TIMING_LOG(AIT_EXPLORER, TIMER_STOP);
 
-  /* Go to the best tile found. */
+  // Go to the best tile found.
   if (best_tile != NULL) {
     /* TODO: read the path off the map we made.  Then we can make a path
      * which goes beside the unknown, with a good EC callback... */
@@ -393,12 +393,12 @@ enum unit_move_result manage_auto_explorer(struct unit *punit)
       return MR_NOT_ALLOWED;
     }
     if (!explorer_goto(punit, best_tile)) {
-      /* Died?  Strange... */
+      // Died?  Strange...
       return MR_DEATH;
     }
     UNIT_LOG(LOG_DEBUG, punit, "exploration GOTO succeeded");
     if (punit->moves_left > 0) {
-      /* We can still move on... */
+      // We can still move on...
       if (!same_pos(init_tile, unit_tile(punit))) {
         /* At least we moved (and maybe even got to where we wanted).
          * Let's do more exploring.
@@ -414,7 +414,7 @@ enum unit_move_result manage_auto_explorer(struct unit *punit)
     UNIT_LOG(LOG_DEBUG, punit, "done exploring (but more go go)...");
     return MR_OK;
   } else {
-    /* Didn't find anything. */
+    // Didn't find anything.
     UNIT_LOG(LOG_DEBUG, punit, "failed to explore more");
     return MR_BAD_MAP_POSITION;
   }

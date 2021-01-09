@@ -16,12 +16,12 @@
 
 #pragma once
 
-/* utility */
-#include "log.h"     /* QtMsgType */
-#include "support.h" /* bool type and fc__attribute */
+// utility
+#include "log.h"     // QtMsgType
+#include "support.h" // bool type and fc__attribute
 
 struct QIODevice;
-struct inputfile; /* opaque */
+struct inputfile; // opaque
 
 using datafilename_fn_t = QString (*)(const QString &filename);
 

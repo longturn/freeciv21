@@ -17,7 +17,7 @@
 #include "timing.h"
 #include <QElapsedTimer>
 
-/* utility */
+// utility
 #include "log.h"
 
 Q_LOGGING_CATEGORY(timers_category, "freeciv.timers")
@@ -42,7 +42,7 @@ civtimer::civtimer(enum timer_timetype ttype, enum timer_use tuse)
 
 /***********************************************************************
    Allocate a new timer with specified "type" and "use".
- ***********************************************************************/
+ */
 civtimer *timer_new(enum timer_timetype type, enum timer_use use)
 {
   return timer_renew(NULL, type, use);
@@ -50,7 +50,7 @@ civtimer *timer_new(enum timer_timetype type, enum timer_use use)
 
 /************************************************************************
    Allocate a new timer, or reuse t, with specified "type" and "use".
- ***********************************************************************/
+ */
 civtimer *timer_renew(civtimer *t, enum timer_timetype type,
                       enum timer_use use)
 {
@@ -63,22 +63,22 @@ civtimer *timer_renew(civtimer *t, enum timer_timetype type,
   return t;
 }
 
-/*******************************************************************/ /**
+/**
    Deletes timer
- ***********************************************************************/
+ */
 void timer_destroy(civtimer *t) { NFC_FREE(t); }
 
-/*******************************************************************/ /**
+/**
    Return whether timer is in use.
    t may be NULL, in which case returns 0
- ***********************************************************************/
+ */
 bool timer_in_use(civtimer *t) { return (t && t->use != TIMER_IGNORE); }
 
-/*******************************************************************/ /**
+/**
    Reset accumulated time to zero, and stop timer if going.
    That is, this may be called whether t is started or stopped;
    in either case the timer is in the stopped state after this function.
- ***********************************************************************/
+ */
 void timer_clear(civtimer *t)
 {
   fc_assert_ret(NULL != t);
@@ -87,10 +87,10 @@ void timer_clear(civtimer *t)
   t->msec = 0;
 }
 
-/*******************************************************************/ /**
+/**
    Start timing, adding to previous accumulated time if timer has not
    been cleared.  A warning is printed if the timer is already started.
- ***********************************************************************/
+ */
 void timer_start(civtimer *t)
 {
   fc_assert_ret(NULL != t);
@@ -106,12 +106,12 @@ void timer_start(civtimer *t)
   t->restart();
 }
 
-/*******************************************************************/ /**
+/**
    Stop timing, and accumulate time so far.
    (The current time is stored in t->start, so that timer_read_seconds
    can call this to take a point reading if the timer is active.)
    A warning is printed if the timer is already stopped.
- ***********************************************************************/
+ */
 void timer_stop(civtimer *t)
 {
   fc_assert_ret(NULL != t);
@@ -128,11 +128,11 @@ void timer_stop(civtimer *t)
   t->state = TIMER_STOPPED;
 }
 
-/*******************************************************************/ /**
+/**
    Read value from timer.  If the timer is not stopped, this stops the
    timer, reads it (and accumulates), and then restarts it.
    Returns 0.0 for unused timers.
- ***********************************************************************/
+ */
 double timer_read_seconds(civtimer *t)
 {
   fc_assert_ret_val(NULL != t, -1.0);

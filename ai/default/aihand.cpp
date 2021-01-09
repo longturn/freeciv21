@@ -15,13 +15,13 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "distribute.h"
 #include "log.h"
 #include "shared.h"
 #include "timing.h"
 
-/* common */
+// common
 #include "city.h"
 #include "game.h"
 #include "government.h"
@@ -36,7 +36,7 @@
 /* common/aicore */
 #include "cm.h"
 
-/* server */
+// server
 #include "citytools.h"
 #include "cityturn.h"
 #include "plrhand.h"
@@ -50,7 +50,7 @@
 #include "advspace.h"
 #include "advtools.h"
 
-/* ai */
+// ai
 #include "handicaps.h"
 
 /* ai/default */
@@ -93,16 +93,16 @@
 #define PCT_DELTA_TAX 50
 #define PCT_DELTA_SCI 10
 
-/*************************************************************************/ /**
+/**
    Handle spaceship related stuff
- *****************************************************************************/
+ */
 static void dai_manage_spaceship(struct player *pplayer)
 {
   if (victory_enabled(VC_SPACERACE)) {
     if (pplayer->spaceship.state == SSHIP_STARTED) {
       adv_spaceship_autoplace(pplayer, &pplayer->spaceship);
 
-      /* if we have built the best possible spaceship  -- AJS 19990610 */
+      // if we have built the best possible spaceship  -- AJS 19990610
       if ((pplayer->spaceship.structurals == NUM_SS_STRUCTURALS)
           && (pplayer->spaceship.components == NUM_SS_COMPONENTS)
           && (pplayer->spaceship.modules == NUM_SS_MODULES)) {
@@ -112,10 +112,10 @@ static void dai_manage_spaceship(struct player *pplayer)
   }
 }
 
-/*************************************************************************/ /**
+/**
    Returns the total amount of trade generated (trade) and total amount of
    gold needed as upkeep (expenses).
- *****************************************************************************/
+ */
 void dai_calc_data(const struct player *pplayer, int *trade, int *expenses,
                    int *income)
 {
@@ -129,7 +129,7 @@ void dai_calc_data(const struct player *pplayer, int *trade, int *expenses,
     *income = 0;
   }
 
-  /* Find total trade surplus and gold expenses */
+  // Find total trade surplus and gold expenses
   city_list_iterate(pplayer->cities, pcity)
   {
     if (NULL != trade) {
@@ -151,7 +151,7 @@ void dai_calc_data(const struct player *pplayer, int *trade, int *expenses,
     break;
   case GOLD_UPKEEP_MIXED:
   case GOLD_UPKEEP_NATION:
-    /* Account for units with gold upkeep paid for by the nation. */
+    // Account for units with gold upkeep paid for by the nation.
     unit_list_iterate(pplayer->units, punit)
     {
       *expenses += punit->upkeep[O_GOLD];
@@ -178,7 +178,7 @@ enum celebration {
   MAX(0, 100 - _rates[AI_RATE_SCI] - _rates[AI_RATE_TAX]                    \
              - _rates[AI_RATE_LUX])
 
-/*************************************************************************/ /**
+/**
    Set tax/science/luxury rates.
 
    TODO: Add general support for luxuries: select the luxury rate at which
@@ -206,7 +206,7 @@ enum celebration {
 
    At the end the remaining is divided on science/gold/luxury depending on
  the AI settings.
- *****************************************************************************/
+ */
 static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
 {
   int maxrate = (has_handicap(pplayer, H_RATES)
@@ -216,10 +216,10 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
   enum celebration celebrate = AI_CELEBRATION_UNCHECKED;
   struct adv_data *ai = adv_data_get(pplayer, NULL);
   int can_celebrate = 0, total_cities = 0;
-  int trade = 0;         /* total amount of trade generated */
-  int expenses = 0;      /* total amount of gold upkeep */
-  int income = 0;        /* total amount of gold income */
-  int turns_for_rapture; /* additional reserve needed for rapture */
+  int trade = 0;         // total amount of trade generated
+  int expenses = 0;      // total amount of gold upkeep
+  int income = 0;        // total amount of gold income
+  int turns_for_rapture; // additional reserve needed for rapture
   int rates_save[AI_RATE_COUNT], rates[AI_RATE_COUNT], result[AI_RATE_COUNT];
   int rate_tax_min = RATE_NOT_SET;
   int rate_tax_balance = RATE_NOT_SET;
@@ -233,21 +233,21 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
   struct cm_parameter cmp;
 
   if (!game.info.changable_tax) {
-    return; /* This ruleset does not support changing tax rates. */
+    return; // This ruleset does not support changing tax rates.
   }
 
   maxrate = CLIP(34, maxrate, 100);
 
   if (government_of_player(pplayer) == game.government_during_revolution) {
-    return; /* This government does not support changing tax rates. */
+    return; // This government does not support changing tax rates.
   }
 
   taxtimer = timer_new(TIMER_CPU, TIMER_DEBUG);
   timer_start(taxtimer);
 
-  /* City parameters needed for celebrations. */
+  // City parameters needed for celebrations.
   cm_init_parameter(&cmp);
-  cmp.require_happy = true; /* note this one */
+  cmp.require_happy = true; // note this one
   cmp.allow_disorder = false;
   cmp.allow_specialists = true;
   cmp.factor[O_FOOD] = 20;
@@ -258,7 +258,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
 
   log_base(LOGLEVEL_TAX, "%s [max] rate=%d", player_name(pplayer), maxrate);
 
-  /* Save AI rates. */
+  // Save AI rates.
   rates_save[AI_RATE_SCI] = pplayer->economic.science;
   rates_save[AI_RATE_TAX] = pplayer->economic.tax;
   rates_save[AI_RATE_LUX] = pplayer->economic.luxury;
@@ -267,13 +267,13 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
            player_name(pplayer), rates_save[AI_RATE_SCI],
            rates_save[AI_RATE_LUX], rates_save[AI_RATE_TAX]);
 
-  /* Get some data for the AI player. */
+  // Get some data for the AI player.
   dai_calc_data(pplayer, &trade, &expenses, &income);
 
-  /* Get the estimates for tax with the current rates. */
+  // Get the estimates for tax with the current rates.
   distribute(trade, AI_RATE_COUNT, rates_save, result);
 
-  /* The delta between the estimate and the real value. */
+  // The delta between the estimate and the real value.
   delta_tax = (result[AI_RATE_TAX] - expenses) - income;
 
   log_base(LOGLEVEL_TAX, "%s [tax] estimated=%d real=%d (delta=%d)",
@@ -287,11 +287,11 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
    * distribute total income accordingly. This is a simplification that
    * speeds up the code significantly. */
 
-  /* === Gold === */
+  // === Gold ===
 
-  /* First set tax (gold) to the minimal available number */
-  rates[AI_RATE_SCI] = maxrate; /* Assume we want science here */
-  rates[AI_RATE_TAX] = MAX(0, 100 - maxrate * 2); /* If maxrate < 50% */
+  // First set tax (gold) to the minimal available number
+  rates[AI_RATE_SCI] = maxrate; // Assume we want science here
+  rates[AI_RATE_TAX] = MAX(0, 100 - maxrate * 2); // If maxrate < 50%
   rates[AI_RATE_LUX] = (100 - rates[AI_RATE_SCI] - rates[AI_RATE_TAX]);
 
   /* Now find the minimum tax with positive gold balance
@@ -318,14 +318,14 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
              rates[AI_RATE_TAX], balance_tax);
 
     if (!RATE_VALID(rate_tax_min) && balance_tax > balance_tax_min) {
-      /* Just slightly negative; we can afford that for a while */
+      // Just slightly negative; we can afford that for a while
       rate_tax_min = rates[AI_RATE_TAX];
     }
 
     if (expenses == 0 || balance_tax > 0) {
-      /* Ok, got no expenses or positive balance */
+      // Ok, got no expenses or positive balance
       if (refill_coffers && rates[AI_RATE_TAX] < maxrate) {
-        /* Need to refill coffers, increase tax a bit */
+        // Need to refill coffers, increase tax a bit
         rates[AI_RATE_TAX] += 10;
         if (rates[AI_RATE_LUX] > 0) {
           rates[AI_RATE_LUX] -= 10;
@@ -337,14 +337,14 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
                  player_name(pplayer), rates[AI_RATE_TAX]);
       }
 
-      /* This is the minimum rate for a balanced treasury (gold). */
+      // This is the minimum rate for a balanced treasury (gold).
       rate_tax_balance = rates[AI_RATE_TAX];
 
-      /* Done! Break the while loop */
+      // Done! Break the while loop
       break;
     }
 
-    /* Negative balance. Unacceptable - increase tax. */
+    // Negative balance. Unacceptable - increase tax.
     rates[AI_RATE_TAX] += 10;
     if (rates[AI_RATE_LUX] > 0) {
       rates[AI_RATE_LUX] -= 10;
@@ -353,20 +353,20 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
     }
   }
 
-  /* If no minimum value was found for the tax use the maximum tax rate. */
+  // If no minimum value was found for the tax use the maximum tax rate.
   rate_tax_min = RATE_VALID(rate_tax_min) ? rate_tax_min : maxrate;
 
   log_base(LOGLEVEL_TAX, "%s [tax] min=%d balanced=%d", player_name(pplayer),
            rate_tax_min, rate_tax_balance);
 
-  /* === Science === */
+  // === Science ===
 
   if (game.info.tech_upkeep_style != TECH_UPKEEP_NONE) {
-    /* Tech upkeep activated. */
+    // Tech upkeep activated.
     int tech_upkeep = player_tech_upkeep(pplayer);
     int bulbs_researched = research->bulbs_researched;
 
-    /* The delta between the estimate and the real value. */
+    // The delta between the estimate and the real value.
     delta_sci = (result[AI_RATE_SCI] - tech_upkeep)
                 - pplayer->server.bulbs_last_turn;
     log_base(LOGLEVEL_TAX, "%s [sci] estimated=%d real=%d (delta=%d)",
@@ -377,7 +377,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
              player_name(pplayer), trade, research->bulbs_researched,
              tech_upkeep);
 
-    rates[AI_RATE_TAX] = maxrate; /* Assume we want gold here */
+    rates[AI_RATE_TAX] = maxrate; // Assume we want gold here
     rates[AI_RATE_SCI] = MAX(0, 100 - maxrate * 2);
     rates[AI_RATE_LUX] = (100 - rates[AI_RATE_SCI] - rates[AI_RATE_TAX]);
 
@@ -400,15 +400,15 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
                player_name(pplayer), rates[AI_RATE_SCI], balance_sci);
 
       if (!RATE_VALID(rate_sci_min) && balance_sci > balance_sci_min) {
-        /* Just slightly negative, if we can afford that for a while */
+        // Just slightly negative, if we can afford that for a while
         rate_sci_min = rates[AI_RATE_SCI];
       }
 
       if (tech_upkeep == 0 || balance_sci > 0) {
-        /* Ok, got no expenses or positive balance */
+        // Ok, got no expenses or positive balance
         rate_sci_balance = rates[AI_RATE_SCI];
 
-        /* Done! Break the while loop */
+        // Done! Break the while loop
         break;
       }
 
@@ -428,17 +428,17 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
     log_base(LOGLEVEL_TAX, "%s [sci] min=%d balanced=%d",
              player_name(pplayer), rate_sci_min, rate_sci_balance);
   } else {
-    /* No tech upkeep - minimum science value is 0. */
+    // No tech upkeep - minimum science value is 0.
     rate_sci_min = 0;
   }
 
-  /* === Luxury === */
+  // === Luxury ===
 
-  /* Should (and can) we celebrate? */
+  // Should (and can) we celebrate?
   /* TODO: In the future, we should check if we should
    * celebrate for other reasons than growth. Currently
    * this is ignored. Maybe we need ruleset AI hints. */
-  /* TODO: Allow celebrate individual cities? No modpacks use this yet. */
+  // TODO: Allow celebrate individual cities? No modpacks use this yet.
   if (get_player_bonus(pplayer, EFT_RAPTURE_GROW) > 0
       && !has_handicap(pplayer, H_AWAY)
       && 100 > rate_tax_min + rate_sci_min) {
@@ -457,18 +457,18 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
     rates[AI_RATE_SCI] =
         MIN(maxrate, rates[AI_RATE_SCI] + RATE_REMAINS(rates));
 
-    /* Temporary set the new rates. */
+    // Temporary set the new rates.
     pplayer->economic.luxury = rates[AI_RATE_LUX];
     pplayer->economic.tax = rates[AI_RATE_TAX];
     pplayer->economic.science = rates[AI_RATE_SCI];
 
-    /* Check if we celebrate - the city state must be restored at the end! */
+    // Check if we celebrate - the city state must be restored at the end!
     city_list_iterate(pplayer->cities, pcity)
     {
       struct cm_result *cmr = cm_result_new(pcity);
       struct ai_city *city_data = def_ai_city_data(pcity, ait);
 
-      cm_query_result(pcity, &cmp, cmr, false); /* burn some CPU */
+      cm_query_result(pcity, &cmp, cmr, false); // burn some CPU
 
       total_cities++;
 
@@ -484,7 +484,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
     }
     city_list_iterate_end;
 
-    /* If more than half our cities can celebrate, go for it! */
+    // If more than half our cities can celebrate, go for it!
     if (can_celebrate * 2 > total_cities) {
       celebrate = AI_CELEBRATION_YES;
       rate_lux_min_celebrate = pplayer->economic.luxury;
@@ -504,17 +504,17 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
      *       Add general luxury code here. */
   }
 
-  /* === Set the rates. === */
+  // === Set the rates. ===
 
-  /* Reset rates values. */
+  // Reset rates values.
   rates[AI_RATE_SCI] = 0;
   rates[AI_RATE_TAX] = 0;
   rates[AI_RATE_LUX] = 0;
 
-  /* Now decide that to do ... */
+  // Now decide that to do ...
   if (celebrate == AI_CELEBRATION_YES
       && rate_tax_min + rate_sci_min + rate_lux_min_celebrate <= 100) {
-    /* Celebration! */
+    // Celebration!
     rates[AI_RATE_SCI] = rate_sci_min;
     rates[AI_RATE_TAX] = rate_tax_min;
     rates[AI_RATE_LUX] = rate_lux_min_celebrate;
@@ -523,14 +523,14 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
              player_name(pplayer), rates[AI_RATE_SCI], rates[AI_RATE_LUX],
              rates[AI_RATE_TAX]);
   } else {
-    /* No celebration */
+    // No celebration
     celebrate =
         (celebrate == AI_CELEBRATION_YES) ? AI_CELEBRATION_NO : celebrate;
 
     if (RATE_VALID(rate_tax_balance)) {
       if (RATE_VALID(rate_sci_balance)) {
         if (100 >= rate_tax_balance + rate_sci_balance) {
-          /* A balanced treasury and research. */
+          // A balanced treasury and research.
           rates[AI_RATE_SCI] = rate_sci_balance;
           rates[AI_RATE_TAX] = rate_tax_balance;
 
@@ -539,7 +539,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
                    player_name(pplayer), rates[AI_RATE_SCI],
                    rates[AI_RATE_LUX], rates[AI_RATE_TAX]);
         } else {
-          /* Try to keep all tech and get as much gold as possible. */
+          // Try to keep all tech and get as much gold as possible.
           rates[AI_RATE_SCI] = rate_sci_balance;
           rates[AI_RATE_TAX] = MIN(maxrate, RATE_REMAINS(rates));
 
@@ -550,7 +550,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
                    rates[AI_RATE_LUX], rates[AI_RATE_TAX]);
         }
       } else {
-        /* A balanced tax and as much science as possible. */
+        // A balanced tax and as much science as possible.
         rates[AI_RATE_TAX] = rate_tax_balance;
         rates[AI_RATE_SCI] = MIN(maxrate, RATE_REMAINS(rates));
 
@@ -561,7 +561,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
                  rates[AI_RATE_LUX], rates[AI_RATE_TAX]);
       }
     } else if (RATE_VALID(rate_sci_balance)) {
-      /* Try to keep all techs and get as much gold as possible. */
+      // Try to keep all techs and get as much gold as possible.
       rates[AI_RATE_SCI] = rate_sci_balance;
       rates[AI_RATE_TAX] = MIN(maxrate, RATE_REMAINS(rates));
 
@@ -571,7 +571,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
                player_name(pplayer), rates[AI_RATE_SCI], rates[AI_RATE_LUX],
                rates[AI_RATE_TAX]);
     } else {
-      /* We need more trade to get a positive gold and science balance. */
+      // We need more trade to get a positive gold and science balance.
       if (!adv_wants_science(pplayer) || dai_on_war_footing(ait, pplayer)) {
         /* Go for gold (improvements and units) and risk the loss of a
          * tech. */
@@ -584,7 +584,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
                  player_name(pplayer), rates[AI_RATE_SCI],
                  rates[AI_RATE_LUX], rates[AI_RATE_TAX]);
       } else {
-        /* Go for science and risk the loss of improvements or units. */
+        // Go for science and risk the loss of improvements or units.
         rates[AI_RATE_SCI] = MAX(maxrate, rate_sci_min);
         rates[AI_RATE_TAX] = MIN(maxrate, RATE_REMAINS(rates));
 
@@ -597,7 +597,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
     }
   }
 
-  /* Put the remaining to tax or science. */
+  // Put the remaining to tax or science.
   if (!adv_wants_science(pplayer)) {
     rates[AI_RATE_TAX] =
         MIN(maxrate, rates[AI_RATE_TAX] + RATE_REMAINS(rates));
@@ -621,7 +621,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
         MIN(maxrate, rates[AI_RATE_LUX] + RATE_REMAINS(rates));
   }
 
-  /* Check and set the calculated rates. */
+  // Check and set the calculated rates.
   fc_assert_ret(0 <= rates[AI_RATE_SCI] && rates[AI_RATE_SCI] <= maxrate);
   fc_assert_ret(0 <= rates[AI_RATE_TAX] && rates[AI_RATE_TAX] <= maxrate);
   fc_assert_ret(0 <= rates[AI_RATE_LUX] && rates[AI_RATE_LUX] <= maxrate);
@@ -636,16 +636,16 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
   pplayer->economic.tax = rates[AI_RATE_TAX];
   pplayer->economic.luxury = rates[AI_RATE_LUX];
 
-  /* === Cleanup === */
+  // === Cleanup ===
 
-  /* Cancel all celebrations from the last turn. */
+  // Cancel all celebrations from the last turn.
   ai->celebrate = false;
 
-  /* Now do celebrate or reset the city states if needed. */
+  // Now do celebrate or reset the city states if needed.
   if (celebrate == AI_CELEBRATION_YES) {
     log_base(LOGLEVEL_TAX, "*** %s CELEBRATES! ***", player_name(pplayer));
 
-    /* We do celebrate! */
+    // We do celebrate!
     ai->celebrate = true;
 
     city_list_iterate(pplayer->cities, pcity)
@@ -694,9 +694,9 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
 #undef RATE_VALID
 #undef RATE_REMAINS
 
-/*************************************************************************/ /**
+/**
    Change the government form, if it can and there is a good reason.
- *****************************************************************************/
+ */
 static void dai_manage_government(struct ai_type *ait,
                                   struct player *pplayer)
 {
@@ -707,14 +707,14 @@ static void dai_manage_government(struct ai_type *ait,
   }
 
   if (adv->goal.revolution != government_of_player(pplayer)) {
-    dai_government_change(pplayer, adv->goal.revolution); /* change */
+    dai_government_change(pplayer, adv->goal.revolution); // change
   }
 
-  /* Crank up tech want */
+  // Crank up tech want
   if (adv->goal.govt.req == A_UNSET
       || research_invention_state(research_get(pplayer), adv->goal.govt.req)
              == TECH_KNOWN) {
-    return; /* already got it! */
+    return; // already got it!
   } else if (adv->goal.govt.val > 0) {
     /* We have few cities in the beginning, compensate for this to ensure
      * that we are sufficiently forward-looking. */
@@ -735,10 +735,10 @@ static void dai_manage_government(struct ai_type *ait,
   }
 }
 
-/*************************************************************************/ /**
+/**
    Activities to be done by AI _before_ human turn.  Here we just move the
    units intelligently.
- *****************************************************************************/
+ */
 void dai_do_first_activities(struct ai_type *ait, struct player *pplayer)
 {
   TIMING_LOG(AIT_ALL, TIMER_START);
@@ -750,21 +750,21 @@ void dai_do_first_activities(struct ai_type *ait, struct player *pplayer)
   TIMING_LOG(AIT_UNITS, TIMER_START);
   dai_manage_units(ait, pplayer);
   TIMING_LOG(AIT_UNITS, TIMER_STOP);
-  /* STOP.  Everything else is at end of turn. */
+  // STOP.  Everything else is at end of turn.
 
   TIMING_LOG(AIT_ALL, TIMER_STOP);
 
-  flush_packets(); /* AIs can be such spammers... */
+  flush_packets(); // AIs can be such spammers...
 }
 
-/*************************************************************************/ /**
+/**
    Activities to be done by AI _after_ human turn.  Here we respond to
    dangers created by human and AI opposition by ordering defenders in
    cities and setting taxes accordingly.  We also do other duties.
 
    We do _not_ move units here, otherwise humans complain that AI moves
    twice.
- *****************************************************************************/
+ */
 void dai_do_last_activities(struct ai_type *ait, struct player *pplayer)
 {
   TIMING_LOG(AIT_ALL, TIMER_START);

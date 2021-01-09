@@ -27,4 +27,4 @@ bool is_multiplier_needed(struct multiplier *pmul, requirers_cb cb,
                           void *data);
 bool is_terrain_needed(struct terrain *pterr, requirers_cb cb, void *data);
 
-#endif /* FC__VALIDITY_H */
+#endif // FC__VALIDITY_H
