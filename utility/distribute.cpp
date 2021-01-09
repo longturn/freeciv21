@@ -19,7 +19,7 @@
 
 #include "distribute.h"
 
-/************************************************************************/ /**
+/**
    Distribute "number" elements into "groups" groups with ratios given by
    the elements in "ratios".  The resulting division is put into the "result"
    array.
@@ -29,7 +29,7 @@
    and ratios[3] = {sci_rate, tax_rate, lux_rate}.
 
    The algorithm used to determine the distribution is Hamilton's Method.
- ****************************************************************************/
+ */
 void distribute(int number, int groups, int *ratios, int *result)
 {
   int i, sum = 0, max_count, max;

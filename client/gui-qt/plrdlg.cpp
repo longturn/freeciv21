@@ -32,9 +32,9 @@
 #include "page_game.h"
 #include "sprite.h"
 
-/**********************************************************************/ /**
+/**
    Help function to draw checkbox inside delegate
- **************************************************************************/
+ */
 static QRect
 check_box_rect(const QStyleOptionViewItem &view_item_style_options)
 {
@@ -50,9 +50,9 @@ check_box_rect(const QStyleOptionViewItem &view_item_style_options)
   return QRect(check_box_point, check_box_rect.size());
 }
 
-/**********************************************************************/ /**
+/**
    Slighty increase deafult cell height
- **************************************************************************/
+ */
 QSize plr_item_delegate::sizeHint(const QStyleOptionViewItem &option,
                                   const QModelIndex &index) const
 {
@@ -63,9 +63,9 @@ QSize plr_item_delegate::sizeHint(const QStyleOptionViewItem &option,
   return r;
 }
 
-/**********************************************************************/ /**
+/**
    Paint evenet for custom player item delegation
- **************************************************************************/
+ */
 void plr_item_delegate::paint(QPainter *painter,
                               const QStyleOptionViewItem &option,
                               const QModelIndex &index) const
@@ -127,26 +127,26 @@ void plr_item_delegate::paint(QPainter *painter,
   painter->restore();
 }
 
-/**********************************************************************/ /**
+/**
    Constructor for plr_item
- **************************************************************************/
+ */
 plr_item::plr_item(struct player *pplayer) : QObject()
 {
   ipplayer = pplayer;
 }
 
-/**********************************************************************/ /**
+/**
    Sets data for plr_item (not used)
- **************************************************************************/
+ */
 bool plr_item::setData(int column, const QVariant &value, int role)
 {
   Q_UNUSED(role)
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Returns data from item
- **************************************************************************/
+ */
 QVariant plr_item::data(int column, int role) const
 {
   QFont f;
@@ -193,26 +193,26 @@ QVariant plr_item::data(int column, int role) const
   }
 }
 
-/**********************************************************************/ /**
+/**
    Constructor for player model
- **************************************************************************/
+ */
 plr_model::plr_model(QObject *parent) : QAbstractListModel(parent)
 {
   populate();
 }
 
-/**********************************************************************/ /**
+/**
    Destructor for player model
- **************************************************************************/
+ */
 plr_model::~plr_model()
 {
   qDeleteAll(plr_list);
   plr_list.clear();
 }
 
-/**********************************************************************/ /**
+/**
    Returns data from model
- **************************************************************************/
+ */
 QVariant plr_model::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid()) {
@@ -225,9 +225,9 @@ QVariant plr_model::data(const QModelIndex &index, int role) const
   return QVariant();
 }
 
-/**********************************************************************/ /**
+/**
    Returns header data from model
- **************************************************************************/
+ */
 QVariant plr_model::headerData(int section, Qt::Orientation orientation,
                                int role) const
 {
@@ -241,9 +241,9 @@ QVariant plr_model::headerData(int section, Qt::Orientation orientation,
   return QVariant();
 }
 
-/**********************************************************************/ /**
+/**
    Sets data in model
- **************************************************************************/
+ */
 bool plr_model::setData(const QModelIndex &index, const QVariant &value,
                         int role)
 {
@@ -262,17 +262,17 @@ bool plr_model::setData(const QModelIndex &index, const QVariant &value,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Notifies that row has been changed
- **************************************************************************/
+ */
 void plr_model::notify_plr_changed(int row)
 {
   emit dataChanged(index(row, 0), index(row, columnCount() - 1));
 }
 
-/**********************************************************************/ /**
+/**
    Fills model with data
- **************************************************************************/
+ */
 void plr_model::populate()
 {
   plr_item *pi;
@@ -292,9 +292,9 @@ void plr_model::populate()
   endResetModel();
 }
 
-/**********************************************************************/ /**
+/**
    Constructor for plr_widget
- **************************************************************************/
+ */
 plr_widget::plr_widget(QWidget *widget) : QTreeView(widget)
 {
   other_player = NULL;
@@ -324,9 +324,9 @@ plr_widget::plr_widget(QWidget *widget) : QTreeView(widget)
 }
 
 void plr_widget::set_pr_rep(plr_report *pr) { plr = pr; }
-/**********************************************************************/ /**
+/**
    Restores selection of previously selected nation
- **************************************************************************/
+ */
 void plr_widget::restore_selection()
 {
   QItemSelection selection;
@@ -353,9 +353,9 @@ void plr_widget::restore_selection()
                                | QItemSelectionModel::SelectCurrent);
 }
 
-/**********************************************************************/ /**
+/**
    Displays menu on header by right clicking
- **************************************************************************/
+ */
 void plr_widget::display_header_menu(const QPoint)
 {
   QMenu *hideshow_column = new QMenu(this);
@@ -392,9 +392,9 @@ void plr_widget::display_header_menu(const QPoint)
   hideshow_column->popup(QCursor::pos());
 }
 
-/**********************************************************************/ /**
+/**
    Returns information about column if hidden
- **************************************************************************/
+ */
 QVariant plr_model::hide_data(int section) const
 {
   struct player_dlg_column *pcol;
@@ -402,9 +402,9 @@ QVariant plr_model::hide_data(int section) const
   return pcol->show;
 }
 
-/**********************************************************************/ /**
+/**
    Hides columns in plr widget, depending on info from plr_list
- **************************************************************************/
+ */
 void plr_widget::hide_columns()
 {
   int col;
@@ -416,9 +416,9 @@ void plr_widget::hide_columns()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Slot for selecting player/nation
- **************************************************************************/
+ */
 void plr_widget::nation_selected(const QItemSelection &sl,
                                  const QItemSelection &ds)
 {
@@ -643,14 +643,14 @@ void plr_widget::nation_selected(const QItemSelection &sl,
   plr->update_report(false);
 }
 
-/**********************************************************************/ /**
+/**
    Returns model used in widget
- **************************************************************************/
+ */
 plr_model *plr_widget::get_model() const { return list_model; }
 
-/**********************************************************************/ /**
+/**
    Destructor for player widget
- **************************************************************************/
+ */
 plr_widget::~plr_widget()
 {
   delete pid;
@@ -661,9 +661,9 @@ plr_widget::~plr_widget()
   king()->qt_settings.player_report_sort = header()->sortIndicatorOrder();
 }
 
-/**********************************************************************/ /**
+/**
    Constructor for plr_report
- **************************************************************************/
+ */
 plr_report::plr_report() : QWidget()
 {
   ui.setupUi(this);
@@ -690,14 +690,14 @@ plr_report::plr_report() : QWidget()
   ui.plr_wdg->set_pr_rep(this);
 }
 
-/**********************************************************************/ /**
+/**
    Destructor for plr_report
- **************************************************************************/
+ */
 plr_report::~plr_report() { queen()->removeRepoDlg(QStringLiteral("PLR")); }
 
-/**********************************************************************/ /**
+/**
    Adds plr_report to tab widget
- **************************************************************************/
+ */
 void plr_report::init()
 {
   queen()->gimmePlace(this, QStringLiteral("PLR"));
@@ -705,9 +705,9 @@ void plr_report::init()
   queen()->game_tab_widget->setCurrentIndex(index);
 }
 
-/**********************************************************************/ /**
+/**
    Public function to call meeting
- **************************************************************************/
+ */
 void plr_report::call_meeting()
 {
   if (ui.meet_but->isEnabled()) {
@@ -715,36 +715,36 @@ void plr_report::call_meeting()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Slot for canceling threaty
- **************************************************************************/
+ */
 void plr_report::plr_cancel_threaty()
 {
   dsend_packet_diplomacy_cancel_pact(
       &client.conn, player_number(other_player), CLAUSE_CEASEFIRE);
 }
 
-/**********************************************************************/ /**
+/**
    Slot for meeting request
- **************************************************************************/
+ */
 void plr_report::req_meeeting()
 {
   dsend_packet_diplomacy_init_meeting_req(&client.conn,
                                           player_number(other_player));
 }
 
-/**********************************************************************/ /**
+/**
    Slot for withdrawing vision
- **************************************************************************/
+ */
 void plr_report::plr_withdraw_vision()
 {
   dsend_packet_diplomacy_cancel_pact(
       &client.conn, player_number(other_player), CLAUSE_VISION);
 }
 
-/**********************************************************************/ /**
+/**
    Slot for changing AI mode
- **************************************************************************/
+ */
 void plr_report::toggle_ai_mode()
 {
   QAction *toggle_ai_act;
@@ -785,9 +785,9 @@ void plr_report::toggle_ai_mode()
   ai_menu->popup(QCursor::pos());
 }
 
-/**********************************************************************/ /**
+/**
    Handle mouse click
- **************************************************************************/
+ */
 void plr_widget::mousePressEvent(QMouseEvent *event)
 {
   QModelIndex index = this->indexAt(event->pos());
@@ -798,9 +798,9 @@ void plr_widget::mousePressEvent(QMouseEvent *event)
   QTreeView::mousePressEvent(event);
 }
 
-/**********************************************************************/ /**
+/**
    Updates widget
- **************************************************************************/
+ */
 void plr_report::update_report(bool update_selection)
 {
   QModelIndex qmi;
@@ -860,9 +860,9 @@ void plr_report::update_report(bool update_selection)
   ui.plr_wdg->restore_selection();
 }
 
-/**********************************************************************/ /**
+/**
    Display the player list dialog.  Optionally raise it.
- **************************************************************************/
+ */
 void popup_players_dialog(bool raise)
 {
   Q_UNUSED(raise)
@@ -889,9 +889,9 @@ void popup_players_dialog(bool raise)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Update all information in the player list dialog.
- **************************************************************************/
+ */
 void real_players_dialog_update(void *unused)
 {
   Q_UNUSED(unused)
@@ -909,9 +909,9 @@ void real_players_dialog_update(void *unused)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Closes players report
- **************************************************************************/
+ */
 void popdown_players_report()
 {
   int i;
@@ -926,12 +926,12 @@ void popdown_players_report()
     pr->deleteLater();
   }
 }
-/**********************************************************************/ /**
+/**
    Update the intelligence dialog for the given player.  This is called by
    the core client code when that player's information changes.
- **************************************************************************/
+ */
 void update_intel_dialog(struct player *p) { real_players_dialog_update(p); }
-/**********************************************************************/ /**
+/**
    Close an intelligence dialog for the given player.
- **************************************************************************/
+ */
 void close_intel_dialog(struct player *p) { real_players_dialog_update(p); }

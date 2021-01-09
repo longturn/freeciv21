@@ -56,10 +56,10 @@
   }                                                                         \
   QCoreApplication::exit(EXIT_SUCCESS);
 
-/**********************************************************************/ /**
+/**
    This function is called when a SIGINT (ctrl-c) is received.  It will exit
    only if two SIGINTs are received within a second.
- **************************************************************************/
+ */
 static void signal_handler(int sig)
 {
   static civtimer *timer = NULL;
@@ -108,11 +108,11 @@ static void signal_handler(int sig)
   }
 }
 
-/**********************************************************************/ /**
+/**
   Entry point for Freeciv server.  Basically, does two things:
    1. Parses command-line arguments (possibly dialog, on mac).
    2. Calls the main server-loop routine.
- **************************************************************************/
+ */
 int main(int argc, char *argv[])
 {
   if (SIG_ERR == signal(SIGINT, signal_handler)) {

@@ -75,9 +75,9 @@ helpList *help_nodes;
    latter can be FALSE even after call, eg if couldn't find helpdata.txt.
 */
 
-/************************************************************************/ /**
+/**
    Free all allocations associated with help_nodes.
- ****************************************************************************/
+ */
 void free_help_texts()
 {
   if (!help_nodes) {
@@ -91,19 +91,19 @@ void free_help_texts()
   FC_FREE(help_nodes);
 }
 
-/************************************************************************/ /**
+/**
    Returns whether we should show help for this nation.
- ****************************************************************************/
+ */
 static bool show_help_for_nation(const struct nation_type *pnation)
 {
   return client_nation_is_in_current_set(pnation);
 }
 
-/************************************************************************/ /**
+/**
    Insert fixed-width table describing veteran system.
    If only one veteran level, inserts 'nolevels' if non-NULL.
    Otherwise, insert 'intro' then a table.
- ****************************************************************************/
+ */
 static bool insert_veteran_help(char *outbuf, size_t outlen,
                                 const struct veteran_system *veteran,
                                 const char *intro, const char *nolevels)
@@ -167,10 +167,10 @@ static const char *terrtrans2char(struct terrain *result,
              ? ""
              : terrain_name_translation(result);
 }
-/************************************************************************/ /**
+/**
    Insert generated text for the helpdata "name".
    Returns TRUE if anything was added.
- ****************************************************************************/
+ */
 static bool insert_generated_text(char *outbuf, size_t outlen,
                                   const char *name)
 {
@@ -488,13 +488,13 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Append text to 'buf' if the given requirements list 'subjreqs' contains
    'psource', implying that ability to build the subject 'subjstr' is
    affected by 'psource'.
    'strs' is an array of (possibly i18n-qualified) format strings covering
    the various cases where additional requirements apply.
- ****************************************************************************/
+ */
 static void insert_allows_single(struct universal *psource,
                                  struct requirement_vector *psubjreqs,
                                  const char *subjstr,
@@ -563,7 +563,7 @@ static void insert_allows_single(struct universal *psource,
   delete[] buf2;
 }
 
-/************************************************************************/ /**
+/**
    Generate text for what this requirement source allows.  Something like
 
      "Allows Communism (with University).\n"
@@ -578,7 +578,7 @@ static void insert_allows_single(struct universal *psource,
    NB: This function overwrites any existing buffer contents by writing the
    generated text to the start of the given 'buf' pointer (i.e. it does
    NOT append like cat_snprintf).
- ****************************************************************************/
+ */
 static void insert_allows(struct universal *psource, char *buf, size_t bufsz,
                           const char *prefix)
 {
@@ -642,9 +642,9 @@ static void insert_allows(struct universal *psource, char *buf, size_t bufsz,
   unit_type_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Allocate and initialize new help item
- ****************************************************************************/
+ */
 static struct help_item *new_help_item(int type)
 {
   struct help_item *pitem = new help_item;
@@ -654,10 +654,10 @@ static struct help_item *new_help_item(int type)
   return pitem;
 }
 
-/************************************************************************/ /**
+/**
    For help_list_sort(); sort by topic via compare_strings()
    (sort topics with more leading spaces after those with fewer)
- ****************************************************************************/
+ */
 static int help_item_compar(const struct help_item *v1,
                             const struct help_item *v2)
 {
@@ -668,9 +668,9 @@ static int help_item_compar(const struct help_item *v1,
   }
 }
 
-/************************************************************************/ /**
+/**
    pplayer may be NULL.
- ****************************************************************************/
+ */
 void boot_help_texts()
 {
   static bool booted = false;
@@ -1111,11 +1111,11 @@ void boot_help_texts()
   interface.
 ****************************************************************************/
 
-/************************************************************************/ /**
+/**
    Return pointer to given help_item.
    Returns NULL for 1 past end.
    Returns NULL and prints error message for other out-of bounds.
- ****************************************************************************/
+ */
 const struct help_item *get_help_item(int pos)
 {
   int size;
@@ -1131,12 +1131,12 @@ const struct help_item *get_help_item(int pos)
   return help_nodes->at(pos);
 }
 
-/************************************************************************/ /**
+/**
    Find help item by name and type.
    Returns help item, and sets (*pos) to position in list.
    If no item, returns pointer to static internal item with
    some faked data, and sets (*pos) to -1.
- ****************************************************************************/
+ */
 const struct help_item *
 get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
 {
@@ -1194,13 +1194,13 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
   have been built (or are being built and by who/where?)
 ****************************************************************************/
 
-/************************************************************************/ /**
+/**
    Write dynamic text for buildings (including wonders).  This includes
    the ruleset helptext as well as any automatically generated text.
 
    pplayer may be NULL.
    user_text, if non-NULL, will be appended to the text.
- ****************************************************************************/
+ */
 char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                         const char *user_text,
                         const struct impr_type *pimprove)
@@ -1617,12 +1617,12 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
   return buf;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE iff the specified unit type is able to perform an action
    that allows it to escape to the closest closest domestic city once done.
 
    See diplomat_escape() for more.
- ****************************************************************************/
+ */
 static bool utype_may_do_escape_action(const struct unit_type *utype)
 {
   action_iterate(act_id)
@@ -1654,12 +1654,12 @@ static bool utype_may_do_escape_action(const struct unit_type *utype)
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Append misc dynamic text for units.
    Transport capacity, unit flags, fuel.
 
    pplayer may be NULL.
- ****************************************************************************/
+ */
 char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                     const char *user_text, const struct unit_type *utype)
 {
@@ -2905,11 +2905,11 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   return buf;
 }
 
-/************************************************************************/ /**
+/**
    Append misc dynamic text for advance/technology.
 
    pplayer may be NULL.
- ****************************************************************************/
+ */
 void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
                       const char *user_text, int i)
 {
@@ -3140,9 +3140,9 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
   }
 }
 
-/************************************************************************/ /**
+/**
    Append text for terrain.
- ****************************************************************************/
+ */
 void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
                       const char *user_text, struct terrain *pterrain)
 {
@@ -3250,13 +3250,13 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
   }
 }
 
-/************************************************************************/ /**
+/**
    Return a textual representation of the F/P/T bonus a road provides to a
    terrain if supplied, or the terrain-independent bonus if pterrain == NULL.
    e.g. "0/0/+1", "0/+50%/0", or for a complex road "+2/+1+50%/0".
    Returns a pointer to a static string, so caller should not free
    (or NULL if there is no effect at all).
- ****************************************************************************/
+ */
 const char *helptext_road_bonus_str(const struct terrain *pterrain,
                                     const struct road_type *proad)
 {
@@ -3305,12 +3305,12 @@ const char *helptext_road_bonus_str(const struct terrain *pterrain,
   return has_effect ? str : NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Calculate any fixed food/prod/trade bonus that 'pextra' will always add
    to terrain type, independent of any other modifications. Does not
    consider percentage bonuses.
    Result written into 'bonus' which should hold 3 ints (F/P/T).
- **************************************************************************/
+ */
 static void extra_bonus_for_terrain(struct extra_type *pextra,
                                     struct terrain *pterrain, int *bonus)
 {
@@ -3383,12 +3383,12 @@ static void extra_bonus_for_terrain(struct extra_type *pextra,
   output_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Return a brief description specific to the extra and terrain, when
    extra is built by cause 'act'.
    Returns number of turns to build, and selected bonuses.
    Returns a pointer to a static string, so caller should not free.
- **************************************************************************/
+ */
 const char *helptext_extra_for_terrain_str(struct extra_type *pextra,
                                            struct terrain *pterrain,
                                            enum unit_activity act)
@@ -3417,12 +3417,12 @@ const char *helptext_extra_for_terrain_str(struct extra_type *pextra,
   return buffer;
 }
 
-/************************************************************************/ /**
+/**
    Append misc dynamic text for extras.
    Assumes build time and conflicts are handled in the GUI front-end.
 
    pplayer may be NULL.
- ****************************************************************************/
+ */
 void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
                     const char *user_text, struct extra_type *pextra)
 {
@@ -3880,12 +3880,12 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   }
 }
 
-/************************************************************************/ /**
+/**
    Append misc dynamic text for goods.
    Assumes effects are described in the help text.
 
    pplayer may be NULL.
- ****************************************************************************/
+ */
 void helptext_goods(char *buf, size_t bufsz, struct player *pplayer,
                     const char *user_text, struct goods_type *pgood)
 {
@@ -3932,12 +3932,12 @@ void helptext_goods(char *buf, size_t bufsz, struct player *pplayer,
   CATLSTR(buf, bufsz, user_text);
 }
 
-/************************************************************************/ /**
+/**
    Append misc dynamic text for specialists.
    Assumes effects are described in the help text.
 
    pplayer may be NULL.
- ****************************************************************************/
+ */
 void helptext_specialist(char *buf, size_t bufsz, struct player *pplayer,
                          const char *user_text, struct specialist *pspec)
 {
@@ -3967,14 +3967,14 @@ void helptext_specialist(char *buf, size_t bufsz, struct player *pplayer,
   CATLSTR(buf, bufsz, user_text);
 }
 
-/************************************************************************/ /**
+/**
    Append text for government.
 
    pplayer may be NULL.
 
    TODO: Generalize the effects code for use elsewhere. Add
    other requirements.
- ****************************************************************************/
+ */
 void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                          const char *user_text, struct government *gov)
 {
@@ -4643,9 +4643,9 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
   }
 }
 
-/************************************************************************/ /**
+/**
    Returns pointer to static string with eg: "1 shield, 1 unhappy"
- ****************************************************************************/
+ */
 char *helptext_unit_upkeep_str(const struct unit_type *utype)
 {
   static char buf[128];
@@ -4685,9 +4685,9 @@ char *helptext_unit_upkeep_str(const struct unit_type *utype)
   return buf;
 }
 
-/************************************************************************/ /**
+/**
    Returns nation legend and characteristics
- ****************************************************************************/
+ */
 void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
                      const char *user_text)
 {

@@ -36,10 +36,10 @@ const struct functions *fc_funcs = NULL;
    available via fc_funcs. */
 bool fc_funcs_defined = false;
 
-/************************************************************************/ /**
+/**
    Return the function pointer. Only possible before interface_init() was
    called (fc_funcs_defined == FALSE).
- ****************************************************************************/
+ */
 struct functions *fc_interface_funcs()
 {
   fc_assert_exit(fc_funcs_defined == false);
@@ -47,10 +47,10 @@ struct functions *fc_interface_funcs()
   return &fc_functions;
 }
 
-/************************************************************************/ /**
+/**
    Test and initialize the functions. The existence of all functions should
    be checked!
- ****************************************************************************/
+ */
 void fc_interface_init()
 {
   fc_funcs = &fc_functions;
@@ -71,9 +71,9 @@ void fc_interface_init()
   setup_real_activities_array();
 }
 
-/************************************************************************/ /**
+/**
    Free misc resources allocated for libfreeciv.
- ****************************************************************************/
+ */
 void free_libfreeciv()
 {
   diplrel_mess_close();

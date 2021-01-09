@@ -130,9 +130,9 @@ page_network::page_network(QWidget *parent, fc_client *gui)
 
 page_network::~page_network() = default;
 
-/**********************************************************************/ /**
+/**
    Update network page connection state.
- **************************************************************************/
+ */
 void page_network::set_connection_state(enum connection_state state)
 {
   switch (state) {
@@ -166,9 +166,9 @@ void page_network::set_connection_state(enum connection_state state)
   connection_status = state;
 }
 
-/**********************************************************************/ /**
+/**
    Updates list of servers in network page in proper QTableViews
- **************************************************************************/
+ */
 void page_network::update_server_list(enum server_scan_type sstype,
                                       const struct server_list *list)
 {
@@ -267,9 +267,9 @@ void page_network::update_server_list(enum server_scan_type sstype,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Callback function for when there's an error in the server scan.
- **************************************************************************/
+ */
 void server_scan_error(struct server_scan *scan, const char *message)
 {
   Q_UNUSED(scan)
@@ -279,9 +279,9 @@ void server_scan_error(struct server_scan *scan, const char *message)
       ->destroy_server_scans();
 }
 
-/**********************************************************************/ /**
+/**
    Free the server scans.
- **************************************************************************/
+ */
 void page_network::destroy_server_scans()
 {
   if (meta_scan) {
@@ -307,9 +307,9 @@ void page_network::destroy_server_scans()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Stop and restart the metaserver and lan server scans.
- **************************************************************************/
+ */
 void page_network::update_network_lists()
 {
   destroy_server_scans();
@@ -327,9 +327,9 @@ void page_network::update_network_lists()
   meta_scan_timer->start(800);
 }
 
-/**********************************************************************/ /**
+/**
    This function updates the list of servers every so often.
- **************************************************************************/
+ */
 bool page_network::check_server_scan(server_scan *scan_data)
 {
   struct server_scan *scan = scan_data;
@@ -353,9 +353,9 @@ bool page_network::check_server_scan(server_scan *scan_data)
   return !(stat == SCAN_STATUS_ERROR || stat == SCAN_STATUS_DONE);
 }
 
-/**********************************************************************/ /**
+/**
    Executes lan scan network
- **************************************************************************/
+ */
 void page_network::slot_lan_scan()
 {
   if (lan_scan_timer == NULL) {
@@ -364,9 +364,9 @@ void page_network::slot_lan_scan()
   check_server_scan(lan_scan);
 }
 
-/**********************************************************************/ /**
+/**
    Executes metaserver scan network
- **************************************************************************/
+ */
 void page_network::slot_meta_scan()
 {
   if (meta_scan_timer == NULL) {
@@ -374,10 +374,10 @@ void page_network::slot_meta_scan()
   }
   check_server_scan(meta_scan);
 }
-/**********************************************************************/ /**
+/**
    Configure the dialog depending on what type of authentication request the
    server is making.
- **************************************************************************/
+ */
 void page_network::handle_authentication_req(enum authentication_type type,
                                              const char *message)
 {
@@ -411,11 +411,11 @@ void page_network::handle_authentication_req(enum authentication_type type,
   qCritical("Unsupported authentication type %d: %s.", type, message);
 }
 
-/**********************************************************************/ /**
+/**
    If on the network page, switch page to the login page (with new server
    and port). if on the login page, send connect and/or authentication
    requests to the server.
- **************************************************************************/
+ */
 void page_network::slot_connect()
 {
   char errbuf[512];
@@ -466,9 +466,9 @@ void page_network::slot_connect()
   qCritical("Unsupported connection status: %d", connection_status);
 }
 
-/**********************************************************************/ /**
+/**
 
- **************************************************************************/
+ */
 void page_network::slot_selection_changed(const QItemSelection &selected,
                                           const QItemSelection &deselected)
 {

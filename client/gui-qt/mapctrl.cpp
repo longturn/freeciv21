@@ -40,10 +40,10 @@ extern void sidebarDisableEndturn(bool do_restore);
 extern void qload_lua_script();
 extern void qreload_lua_script();
 
-/**********************************************************************/ /**
+/**
    Popup a dialog to ask for the name of a new city.  The given string
    should be used as a suggestion.
- **************************************************************************/
+ */
 void popup_newcity_dialog(struct unit *punit, const char *suggestname)
 {
   hud_input_box *ask = new hud_input_box(king()->central_wdg);
@@ -65,15 +65,15 @@ void popup_newcity_dialog(struct unit *punit, const char *suggestname)
   ask->show();
 }
 
-/**********************************************************************/ /**
+/**
    A turn done button should be provided for the player.  This function
    is called to toggle it between active/inactive.
- **************************************************************************/
+ */
 void set_turn_done_button_state(bool state) { sidebarDisableEndturn(state); }
 
-/**********************************************************************/ /**
+/**
    Draw a goto or patrol line at the current mouse position.
- **************************************************************************/
+ */
 void create_line_at_mouse_pos(void)
 {
   QPoint global_pos, local_pos;
@@ -89,17 +89,17 @@ void create_line_at_mouse_pos(void)
   }
 }
 
-/**********************************************************************/ /**
+/**
    The Area Selection rectangle. Called by center_tile_mapcanvas() and
    when the mouse pointer moves.
- **************************************************************************/
+ */
 void update_rect_at_mouse_pos(void)
 { /* PLS DONT PORT IT */
 }
 
-/**********************************************************************/ /**
+/**
    Keyboard handler for map_view
- **************************************************************************/
+ */
 void map_view::keyPressEvent(QKeyEvent *event)
 {
   Qt::KeyboardModifiers key_mod = QApplication::keyboardModifiers();
@@ -192,9 +192,9 @@ void map_view::keyPressEvent(QKeyEvent *event)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Pressed mouse or keyboard
- **************************************************************************/
+ */
 void map_view::shortcut_pressed(int key)
 {
   Qt::MouseButtons bt;
@@ -425,9 +425,9 @@ void map_view::shortcut_pressed(int key)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Released mouse buttons
- **************************************************************************/
+ */
 void map_view::shortcut_released(Qt::MouseButton bt)
 {
   QPoint pos;
@@ -466,22 +466,22 @@ void map_view::shortcut_released(Qt::MouseButton bt)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Mouse buttons handler for map_view
- **************************************************************************/
+ */
 void map_view::mousePressEvent(QMouseEvent *event) { shortcut_pressed(0); }
 
-/**********************************************************************/ /**
+/**
    Mouse release event for map_view
- **************************************************************************/
+ */
 void map_view::mouseReleaseEvent(QMouseEvent *event)
 {
   shortcut_released(event->button());
 }
 
-/**********************************************************************/ /**
+/**
    Mouse movement handler for map_view
- **************************************************************************/
+ */
 void map_view::mouseMoveEvent(QMouseEvent *event)
 {
   update_line(event->pos().x(), event->pos().y());

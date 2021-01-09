@@ -48,9 +48,9 @@ typedef struct {
 static map_landmass *landmass;
 static map_point *fracture_points;
 
-/**********************************************************************/ /**
+/**
    Fracture map generator
- **************************************************************************/
+ */
 void make_fracture_map()
 {
   int nn, mm;
@@ -146,11 +146,11 @@ void make_fracture_map()
   delete[] fracture_points;
 }
 
-/**********************************************************************/ /**
+/**
    An expanding circle from the fracture point is used to determine the
     midpoint between fractures. The cells must be assigned to landmasses
     anyway.
- **************************************************************************/
+ */
 static void circle_bresenham(int xc, int yc, int r, int nn)
 {
   int x = 0;
@@ -178,10 +178,10 @@ static void circle_bresenham(int xc, int yc, int r, int nn)
   }
 }
 
-/**********************************************************************/ /**
+/**
     Assign landmass in 3x3 area increments to avoid "holes" created by the
     circle algorithm.
- **************************************************************************/
+ */
 static void fmfill(int x, int y, int c, int r)
 {
   int x_less, x_more, y_less, y_more;
@@ -265,10 +265,10 @@ static void fmfill(int x, int y, int c, int r)
   }
 }
 
-/**********************************************************************/ /**
+/**
      Determine the local average elevation. Used to determine where hills
      and mountains are.
- **************************************************************************/
+ */
 static int local_ave_elevation(struct tile *ptile)
 {
   int ele;
@@ -287,14 +287,14 @@ static int local_ave_elevation(struct tile *ptile)
   return ele;
 }
 
-/**********************************************************************/ /**
+/**
    make_fracture_relief() Goes through a couple of iterations.
    The first iteration chooses mountains and hills based on how much the
    tile exceeds the elevation of the surrounding tiles. This will typically
    causes hills and mountains to be placed along the edges of landmasses.
    It can generate mountain ranges where there a differences in elevation
    between landmasses.
- **************************************************************************/
+ */
 void make_fracture_relief()
 {
   bool choose_mountain;

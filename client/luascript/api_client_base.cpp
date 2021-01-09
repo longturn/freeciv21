@@ -23,9 +23,9 @@
 
 #include "api_client_base.h"
 
-/*************************************************************************/ /**
+/**
    Print a message in the chat window.
- *****************************************************************************/
+ */
 void api_client_chat_base(lua_State *L, const char *msg)
 {
   LUASCRIPT_CHECK_STATE(L);

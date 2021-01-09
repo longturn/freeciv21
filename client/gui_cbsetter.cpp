@@ -35,9 +35,9 @@
 
 #include "gui_cbsetter.h"
 
-/**********************************************************************/ /**
+/**
    Setup the gui callback table.
- **************************************************************************/
+ */
 void setup_gui_funcs(void)
 {
   struct gui_funcs *funcs = get_gui_funcs();

@@ -36,9 +36,9 @@
 
 #include "mpgui_qt_worker.h"
 
-/**********************************************************************/ /**
+/**
    Run download thread
- **************************************************************************/
+ */
 void mpqt_worker::run()
 {
   auto url_bytes = m_url.toEncoded();
@@ -54,9 +54,9 @@ void mpqt_worker::run()
   m_gui->refresh_list_versions_thr();
 }
 
-/**********************************************************************/ /**
+/**
    Start thread to download and install given modpack.
- **************************************************************************/
+ */
 void mpqt_worker::download(const QUrl &url, class mpgui *gui,
                            struct fcmp_params *fcmp,
                            const dl_msg_callback &msg_callback,

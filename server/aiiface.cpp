@@ -49,9 +49,9 @@ bool fc_ai_stub_setup(struct ai_type *ai);
 static struct ai_type *default_ai = NULL;
 
 #ifdef AI_MODULES
-/**********************************************************************/ /**
+/**
    Return string describing module loading error. Never returns NULL.
- **************************************************************************/
+ */
 static const char *fc_module_error(void)
 {
   static char def_err[] = "Unknown error";
@@ -64,9 +64,9 @@ static const char *fc_module_error(void)
   return errtxt;
 }
 
-/**********************************************************************/ /**
+/**
    Load ai module from file.
- **************************************************************************/
+ */
 bool load_ai_module(const char *modname)
 {
   struct ai_type *ai = ai_type_alloc();
@@ -128,9 +128,9 @@ bool load_ai_module(const char *modname)
 }
 #endif /* AI_MODULES */
 
-/**********************************************************************/ /**
+/**
    Initialize ai stuff
- **************************************************************************/
+ */
 void ai_init()
 {
   bool failure = false;
@@ -230,9 +230,9 @@ void ai_init()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Call incident function of victim.
- **************************************************************************/
+ */
 void call_incident(enum incident_type type, enum casus_belli_range scope,
                    const struct action *paction, struct player *violator,
                    struct player *victim)
@@ -251,16 +251,16 @@ void call_incident(enum incident_type type, enum casus_belli_range scope,
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Call ai refresh() callback for all players.
- **************************************************************************/
+ */
 void call_ai_refresh()
 {
   players_iterate(pplayer) { CALL_PLR_AI_FUNC(refresh, pplayer, pplayer); }
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Return name of default ai type.
- **************************************************************************/
+ */
 const char *default_ai_type_name() { return default_ai->name; }

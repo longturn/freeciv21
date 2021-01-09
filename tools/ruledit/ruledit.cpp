@@ -55,9 +55,9 @@ static void re_parse_cmdline(const QCoreApplication &app);
 
 struct ruledit_arguments reargs;
 
-/**********************************************************************/ /**
+/**
    Main entry point for freeciv-ruledit
- **************************************************************************/
+ */
 int main(int argc, char **argv)
 {
   QApplication app(argc, argv);
@@ -117,9 +117,9 @@ int main(int argc, char **argv)
   return EXIT_SUCCESS;
 }
 
-/**********************************************************************/ /**
+/**
    Parse freeciv-ruledit commandline.
- **************************************************************************/
+ */
 static void re_parse_cmdline(const QCoreApplication &app)
 {
   QCommandLineParser parser;
@@ -153,9 +153,9 @@ static void re_parse_cmdline(const QCoreApplication &app)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Show widget if experimental features enabled, hide otherwise
- **************************************************************************/
+ */
 void show_experimental(QWidget *wdg)
 {
 #ifdef RULEDIT_EXPERIMENTAL

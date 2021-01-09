@@ -39,11 +39,11 @@
 
 static bool adv_unit_move(struct unit *punit, struct tile *ptile);
 
-/**********************************************************************/ /**
+/**
    Move a unit along a path without disturbing its activity, role
    or assigned destination
    Return FALSE iff we died.
- **************************************************************************/
+ */
 bool adv_follow_path(struct unit *punit, struct pf_path *path,
                      struct tile *ptile)
 {
@@ -72,13 +72,13 @@ bool adv_follow_path(struct unit *punit, struct pf_path *path,
   return alive;
 }
 
-/**********************************************************************/ /**
+/**
    This is a function to execute paths returned by the path-finding engine,
    for units controlled by advisors.
 
    Brings our bodyguard along.
    Returns FALSE only if died.
- **************************************************************************/
+ */
 bool adv_unit_execute_path(struct unit *punit, struct pf_path *path)
 {
   const bool is_plr_ai = is_ai(unit_owner(punit));
@@ -121,14 +121,14 @@ bool adv_unit_execute_path(struct unit *punit, struct pf_path *path)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Move a unit. Do not attack. Do not leave bodyguard.
    For advisor controlled units.
 
    This function returns only when we have a reply from the server and
    we can tell the calling function what happened to the move request.
    (Right now it is not a big problem, since we call the server directly.)
- **************************************************************************/
+ */
 static bool adv_unit_move(struct unit *punit, struct tile *ptile)
 {
   struct action *paction;
@@ -216,13 +216,13 @@ static bool adv_unit_move(struct unit *punit, struct tile *ptile)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Similar to is_my_zoc(), but with some changes:
    - destination (x0,y0) need not be adjacent?
    - don't care about some directions?
 
    Fix to bizarre did-not-find bug.  Thanks, Katvrr -- Syela
- **************************************************************************/
+ */
 static bool adv_could_be_my_zoc(struct unit *myunit, struct tile *ptile)
 {
   if (same_pos(ptile, unit_tile(myunit))) {
@@ -245,14 +245,14 @@ static bool adv_could_be_my_zoc(struct unit *myunit, struct tile *ptile)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    returns:
      0 if can't move
      1 if zoc_ok
     -1 if zoc could be ok?
 
    see also unithand can_unit_move_to_tile_with_notify()
- **************************************************************************/
+ */
 int adv_could_unit_move_to_tile(struct unit *punit, struct tile *dest_tile)
 {
   enum unit_move_result reason = unit_move_to_tile_test(
@@ -275,9 +275,9 @@ int adv_could_unit_move_to_tile(struct unit *punit, struct tile *dest_tile)
   return 0;
 }
 
-/**********************************************************************/ /**
+/**
    Attack rating of this kind of unit.
- **************************************************************************/
+ */
 int adv_unittype_att_rating(const struct unit_type *punittype, int veteran,
                             int moves_left, int hp)
 {
@@ -285,29 +285,29 @@ int adv_unittype_att_rating(const struct unit_type *punittype, int veteran,
          * punittype->firepower / POWER_DIVIDER;
 }
 
-/**********************************************************************/ /**
+/**
    Attack rating of this particular unit assuming that it has a
    complete move left.
- **************************************************************************/
+ */
 int adv_unit_att_rating(const struct unit *punit)
 {
   return adv_unittype_att_rating(unit_type_get(punit), punit->veteran,
                                  SINGLE_MOVE, punit->hp);
 }
 
-/**********************************************************************/ /**
+/**
    Basic (i.e. not taking attacker specific corections into account)
    defense rating of this particular unit.
- **************************************************************************/
+ */
 int adv_unit_def_rating_basic(const struct unit *punit)
 {
   return base_get_defense_power(punit) * punit->hp
          * unit_type_get(punit)->firepower / POWER_DIVIDER;
 }
 
-/**********************************************************************/ /**
+/**
    Square of the previous function - used in actual computations.
- **************************************************************************/
+ */
 int adv_unit_def_rating_basic_squared(const struct unit *punit)
 {
   int v = adv_unit_def_rating_basic(punit);
@@ -315,9 +315,9 @@ int adv_unit_def_rating_basic_squared(const struct unit *punit)
   return v * v;
 }
 
-/**********************************************************************/ /**
+/**
    Are there dangerous enemies at or adjacent to the tile 'ptile'?
- **************************************************************************/
+ */
 bool adv_danger_at(struct unit *punit, struct tile *ptile)
 {
   int a = 0, d, db;
@@ -372,9 +372,9 @@ bool adv_danger_at(struct unit *punit, struct tile *ptile)
   return false; /* as good a quick'n'dirty should be -- Syela */
 }
 
-/**********************************************************************/ /**
+/**
    The value of the units belonging to a given player on a given tile.
- **************************************************************************/
+ */
 static int stack_value(const struct tile *ptile,
                        const struct player *pplayer)
 {
@@ -393,7 +393,7 @@ static int stack_value(const struct tile *ptile,
   return cost;
 }
 
-/**********************************************************************/ /**
+/**
    How dangerous would it be stop on a particular tile,
    because of enemy attacks,
    expressed as the probability of being killed.
@@ -402,7 +402,7 @@ static int stack_value(const struct tile *ptile,
    probability using the movemap.
    Also, we should take into account the reduced probability of death
    if we have a bodyguard travelling with us.
- **************************************************************************/
+ */
 static double chance_killed_at(const struct tile *ptile,
                                struct adv_risk_cost *risk_cost,
                                const struct pf_parameter *param)
@@ -429,7 +429,7 @@ static double chance_killed_at(const struct tile *ptile,
   return p;
 }
 
-/**********************************************************************/ /**
+/**
    PF stack risk cost. How undesirable is passing through a tile
    because of risks?
    Weight by the cost of destruction, for risks that can kill the unit.
@@ -443,7 +443,7 @@ static double chance_killed_at(const struct tile *ptile,
    - The cost of replacing them will be their build cost.
    - Therefore the total (re)build cost is a good representation of the
      the cost of destruction.
- **************************************************************************/
+ */
 static int stack_risk(const struct tile *ptile,
                       struct adv_risk_cost *risk_cost,
                       const struct pf_parameter *param)
@@ -472,13 +472,13 @@ static int stack_risk(const struct tile *ptile,
   return risk;
 }
 
-/**********************************************************************/ /**
+/**
    PF extra cost call back to avoid creating tall stacks or
    crossing dangerous tiles.
    By setting this as an extra-cost call-back, paths will avoid tall stacks.
    Avoiding tall stacks *all* along a path is useful because a unit following
  a path might have to stop early because of ZoCs.
- **************************************************************************/
+ */
 static int prefer_short_stacks(const struct tile *ptile,
                                enum known_type known,
                                const struct pf_parameter *param)
@@ -487,10 +487,10 @@ static int prefer_short_stacks(const struct tile *ptile,
                     param);
 }
 
-/**********************************************************************/ /**
+/**
    Set PF callbacks to favour paths that do not create tall stacks
    or cross dangerous tiles.
- **************************************************************************/
+ */
 void adv_avoid_risks(struct pf_parameter *parameter,
                      struct adv_risk_cost *risk_cost, struct unit *punit,
                      const double fearfulness)

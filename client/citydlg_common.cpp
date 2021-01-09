@@ -44,19 +44,19 @@
 
 static int citydlg_map_width, citydlg_map_height;
 
-/**********************************************************************/ /**
+/**
    Return the width of the city dialog canvas.
- **************************************************************************/
+ */
 int get_citydlg_canvas_width() { return citydlg_map_width; }
 
-/**********************************************************************/ /**
+/**
    Return the height of the city dialog canvas.
- **************************************************************************/
+ */
 int get_citydlg_canvas_height() { return citydlg_map_height; }
 
-/**********************************************************************/ /**
+/**
    Calculate the citydlg width and height.
- **************************************************************************/
+ */
 void generate_citydlg_dimensions()
 {
   int min_x = 0, max_x = 0, min_y = 0, max_y = 0;
@@ -81,10 +81,10 @@ void generate_citydlg_dimensions()
   citydlg_map_height = max_y - min_y + tileset_tile_height(get_tileset());
 }
 
-/**********************************************************************/ /**
+/**
    Converts a (cartesian) city position to citymap canvas coordinates.
    Returns TRUE if the city position is valid.
- **************************************************************************/
+ */
 bool city_to_canvas_pos(float *canvas_x, float *canvas_y, int city_x,
                         int city_y, int city_radius_sq)
 {
@@ -103,10 +103,10 @@ bool city_to_canvas_pos(float *canvas_x, float *canvas_y, int city_x,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Converts a citymap canvas position to a (cartesian) city coordinate
    position.  Returns TRUE iff the city position is valid.
- **************************************************************************/
+ */
 bool canvas_to_city_pos(int *city_x, int *city_y, int city_radius_sq,
                         int canvas_x, int canvas_y)
 {
@@ -176,10 +176,10 @@ bool canvas_to_city_pos(int *city_x, int *city_y, int city_radius_sq,
   gui_rect_iterate_coord_end;                                               \
   }
 
-/**********************************************************************/ /**
+/**
    Return a string describing the cost for the production of the city
    considerung several build slots for units.
- **************************************************************************/
+ */
 char *city_production_cost_str(const struct city *pcity)
 {
   static char cost_str[50];
@@ -210,12 +210,12 @@ char *city_production_cost_str(const struct city *pcity)
   return cost_str;
 }
 
-/**********************************************************************/ /**
+/**
    Find the city dialog city production text for the given city, and
    place it into the buffer.  This will check the
    concise_city_production option.  pcity may be NULL; in this case a
    filler string is returned.
- **************************************************************************/
+ */
 void get_city_dialog_production(struct city *pcity, char *buffer,
                                 size_t buffer_len)
 {
@@ -269,11 +269,11 @@ void get_city_dialog_production(struct city *pcity, char *buffer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Helper structure to accumulate a breakdown of the constributions
    to some numeric city property. Contributions are returned in order,
    with duplicates merged.
- **************************************************************************/
+ */
 struct msum {
   /* The net value that is accumulated. */
   double value;
@@ -295,12 +295,12 @@ struct city_sum {
   QVector<msum> sums;
 };
 
-/**********************************************************************/ /**
+/**
    Create a new city_sum.
    'format' is how to print each contribution, of the form "%+4.0f : %s"
    (the first item is the numeric value and must have a 'f' conversion
    spec; the second is the description).
- **************************************************************************/
+ */
 static struct city_sum *city_sum_new(const char *format)
 {
   struct city_sum *sum = new city_sum();
@@ -312,11 +312,11 @@ static struct city_sum *city_sum_new(const char *format)
   return sum;
 }
 
-/**********************************************************************/ /**
+/**
    Helper: add a new contribution to the city_sum.
    If 'posdesc'/'negdesc' and other properties match an existing entry,
    'value' is added to the existing entry, else a new one is appended.
- **************************************************************************/
+ */
 static void city_sum_add_real(struct city_sum *sum, double value,
                               bool suppress_if_zero, const QString &auxfmt,
                               double aux, const QString &posdesc,
@@ -348,7 +348,7 @@ static void city_sum_add_real(struct city_sum *sum, double value,
   sum->n++;
 }
 
-/**********************************************************************/ /**
+/**
    Add a new contribution to the city_sum (complex).
     - Allows different descriptions for net positive and negative
       contributions (posfmt/negfmt);
@@ -358,7 +358,7 @@ static void city_sum_add_real(struct city_sum *sum, double value,
       Marketplace+Luxury (+50%)")
     - Allows control over whether the item will be discarded if its
       net value is zero (suppress_if_zero).
- **************************************************************************/
+ */
 static void fc__attribute((__format__(__printf__, 6, 8)))
     fc__attribute((__format__(__printf__, 7, 8)))
         fc__attribute((nonnull(1, 6, 7)))
@@ -382,13 +382,13 @@ static void fc__attribute((__format__(__printf__, 6, 8)))
                     negdesc);
 }
 
-/**********************************************************************/ /**
+/**
    Add a new contribution to the city_sum (simple).
    Compared to city_sum_add_full():
     - description does not depend on net value
     - not suppressed if net value is zero (compare city_sum_add_nonzero())
     - no auxiliary number
- **************************************************************************/
+ */
 static void fc__attribute((__format__(__printf__, 3, 4)))
     fc__attribute((nonnull(1, 3)))
         city_sum_add(struct city_sum *sum, double value, const char *descfmt,
@@ -405,13 +405,13 @@ static void fc__attribute((__format__(__printf__, 3, 4)))
   city_sum_add_real(sum, value, false, NULL, 0, desc, desc);
 }
 
-/**********************************************************************/ /**
+/**
    Add a new contribution to the city_sum (simple).
    Compared to city_sum_add_full():
     - description does not depend on net value
     - suppressed if net value is zero (compare city_sum_add())
     - no auxiliary number
- **************************************************************************/
+ */
 static void fc__attribute((__format__(__printf__, 3, 4)))
     fc__attribute((nonnull(1, 3)))
         city_sum_add_if_nonzero(struct city_sum *sum, double value,
@@ -428,9 +428,9 @@ static void fc__attribute((__format__(__printf__, 3, 4)))
   city_sum_add_real(sum, value, true, NULL, 0, desc, desc);
 }
 
-/**********************************************************************/ /**
+/**
    Return the net total accumulated in the sum so far.
- **************************************************************************/
+ */
 static double city_sum_total(struct city_sum *sum)
 {
   size_t i;
@@ -442,12 +442,12 @@ static double city_sum_total(struct city_sum *sum)
   return total;
 }
 
-/**********************************************************************/ /**
+/**
    Compare two values, taking care of floating point comparison issues.
      -1: val1 <  val2
       0: val1 == val2 (approximately)
      +1: val1 >  val2
- **************************************************************************/
+ */
 static inline int city_sum_compare(double val1, double val2)
 {
   /* Fudgey epsilon -- probably the numbers we're dealing with have at
@@ -458,13 +458,13 @@ static inline int city_sum_compare(double val1, double val2)
   return (val1 > val2 ? +1 : -1);
 }
 
-/**********************************************************************/ /**
+/**
    Print out the sum, including total, and free the city_sum.
    totalfmt's first format string must be some kind of %f, and first
    argument must be a double (if account_for_unknown).
    account_for_unknown is optional, as not every sum wants it (consider
    pollution's clipping).
- **************************************************************************/
+ */
 static void fc__attribute((__format__(__printf__, 5, 6)))
     fc__attribute((nonnull(1, 2, 5)))
         city_sum_print(struct city_sum *sum, char *buf, size_t bufsz,
@@ -515,9 +515,9 @@ static void fc__attribute((__format__(__printf__, 5, 6)))
   FC_FREE(sum);
 }
 
-/**********************************************************************/ /**
+/**
    Return text describing the production output.
- **************************************************************************/
+ */
 void get_city_dialog_output_text(const struct city *pcity,
                                  Output_type_id otype, char *buf,
                                  size_t bufsz)
@@ -676,9 +676,9 @@ void get_city_dialog_output_text(const struct city *pcity,
                  static_cast<double>(pcity->surplus[otype]));
 }
 
-/**********************************************************************/ /**
+/**
    Return text describing the chance for a plague.
- **************************************************************************/
+ */
 void get_city_dialog_illness_text(const struct city *pcity, char *buf,
                                   size_t bufsz)
 {
@@ -750,9 +750,9 @@ void get_city_dialog_illness_text(const struct city *pcity, char *buf,
                  (static_cast<double>(illness) / 10.0));
 }
 
-/**********************************************************************/ /**
+/**
    Return text describing the pollution output.
- **************************************************************************/
+ */
 void get_city_dialog_pollution_text(const struct city *pcity, char *buf,
                                     size_t bufsz)
 {
@@ -776,9 +776,9 @@ void get_city_dialog_pollution_text(const struct city *pcity, char *buf,
                  static_cast<double>(pollu));
 }
 
-/**********************************************************************/ /**
+/**
    Return text describing the culture output.
- **************************************************************************/
+ */
 void get_city_dialog_culture_text(const struct city *pcity, char *buf,
                                   size_t bufsz)
 {
@@ -829,9 +829,9 @@ void get_city_dialog_culture_text(const struct city *pcity, char *buf,
                  static_cast<double>(pcity->client.culture));
 }
 
-/**********************************************************************/ /**
+/**
    Return text describing airlift capacity.
- **************************************************************************/
+ */
 void get_city_dialog_airlift_text(const struct city *pcity, char *buf,
                                   size_t bufsz)
 {
@@ -903,9 +903,9 @@ void get_city_dialog_airlift_text(const struct city *pcity, char *buf,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return airlift capacity.
- **************************************************************************/
+ */
 void get_city_dialog_airlift_value(const struct city *pcity, char *buf,
                                    size_t bufsz)
 {
@@ -965,12 +965,12 @@ void get_city_dialog_airlift_value(const struct city *pcity, char *buf,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Provide a list of all citizens in the city, in order.  "index"
    should be the happiness index (currently [0..4]; 4 = final
    happiness).  "citizens" should be an array large enough to hold all
    citizens (use MAX_CITY_SIZE to be on the safe side).
- **************************************************************************/
+ */
 int get_city_citizen_types(struct city *pcity, enum citizen_feeling idx,
                            enum citizen_category *categories)
 {
@@ -1008,9 +1008,9 @@ int get_city_citizen_types(struct city *pcity, enum citizen_feeling idx,
   return i;
 }
 
-/**********************************************************************/ /**
+/**
    Rotate the given specialist citizen to the next type of citizen.
- **************************************************************************/
+ */
 void city_rotate_specialist(struct city *pcity, int citizen_index)
 {
   enum citizen_category categories[MAX_CITY_SIZE];
@@ -1037,33 +1037,33 @@ void city_rotate_specialist(struct city *pcity, int citizen_index)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Change the production of a given city.  Return the request ID.
- **************************************************************************/
+ */
 int city_change_production(struct city *pcity, struct universal *target)
 {
   return dsend_packet_city_change(&client.conn, pcity->id, target->kind,
                                   universal_number(target));
 }
 
-/**********************************************************************/ /**
+/**
    Set the worklist for a given city.  Return the request ID.
 
    Note that the worklist does NOT include the current production.
- **************************************************************************/
+ */
 int city_set_worklist(struct city *pcity, const struct worklist *pworklist)
 {
   return dsend_packet_city_worklist(&client.conn, pcity->id, pworklist);
 }
 
-/**********************************************************************/ /**
+/**
    Insert an item into the city's queue.  This function will send new
    production requests to the server but will NOT send the new worklist
    to the server - the caller should call city_set_worklist() if the
    function returns TRUE.
 
    Note that the queue DOES include the current production.
- **************************************************************************/
+ */
 static bool base_city_queue_insert(struct city *pcity, int position,
                                    struct universal *item)
 {
@@ -1101,11 +1101,11 @@ static bool base_city_queue_insert(struct city *pcity, int position,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Insert an item into the city's queue.
 
    Note that the queue DOES include the current production.
- **************************************************************************/
+ */
 bool city_queue_insert(struct city *pcity, int position,
                        struct universal *item)
 {
@@ -1116,12 +1116,12 @@ bool city_queue_insert(struct city *pcity, int position,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Clear the queue (all entries except the first one since that can't be
    cleared).
 
    Note that the queue DOES include the current production.
- **************************************************************************/
+ */
 bool city_queue_clear(struct city *pcity)
 {
   worklist_init(&pcity->worklist);
@@ -1129,11 +1129,11 @@ bool city_queue_clear(struct city *pcity)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Insert the worklist into the city's queue at the given position.
 
    Note that the queue DOES include the current production.
- **************************************************************************/
+ */
 bool city_queue_insert_worklist(struct city *pcity, int position,
                                 const struct worklist *worklist)
 {
@@ -1163,9 +1163,9 @@ bool city_queue_insert_worklist(struct city *pcity, int position,
   return success;
 }
 
-/**********************************************************************/ /**
+/**
    Get the city current production and the worklist, like it should be.
- **************************************************************************/
+ */
 void city_get_queue(struct city *pcity, struct worklist *pqueue)
 {
   worklist_copy(pqueue, &pcity->worklist);
@@ -1180,9 +1180,9 @@ void city_get_queue(struct city *pcity, struct worklist *pqueue)
   worklist_insert(pqueue, &pcity->production, 0);
 }
 
-/**********************************************************************/ /**
+/**
    Set the city current production and the worklist, like it should be.
- **************************************************************************/
+ */
 bool city_set_queue(struct city *pcity, const struct worklist *pqueue)
 {
   struct worklist copy;
@@ -1217,9 +1217,9 @@ bool city_set_queue(struct city *pcity, const struct worklist *pqueue)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Return TRUE iff the city can buy.
- **************************************************************************/
+ */
 bool city_can_buy(const struct city *pcity)
 {
   /* See really_handle_city_buy() in the server.  However this function
@@ -1235,25 +1235,25 @@ bool city_can_buy(const struct city *pcity)
           && pcity->client.buy_cost > 0);
 }
 
-/**********************************************************************/ /**
+/**
    Change the production of a given city.  Return the request ID.
- **************************************************************************/
+ */
 int city_sell_improvement(struct city *pcity, Impr_type_id sell_id)
 {
   return dsend_packet_city_sell(&client.conn, pcity->id, sell_id);
 }
 
-/**********************************************************************/ /**
+/**
    Buy the current production item in a given city.  Return the request ID.
- **************************************************************************/
+ */
 int city_buy_production(struct city *pcity)
 {
   return dsend_packet_city_buy(&client.conn, pcity->id);
 }
 
-/**********************************************************************/ /**
+/**
    Change a specialist in the given city.  Return the request ID.
- **************************************************************************/
+ */
 int city_change_specialist(struct city *pcity, Specialist_type_id from,
                            Specialist_type_id to)
 {
@@ -1261,10 +1261,10 @@ int city_change_specialist(struct city *pcity, Specialist_type_id from,
                                              to);
 }
 
-/**********************************************************************/ /**
+/**
    Toggle a worker<->specialist at the given city tile.  Return the
    request ID.
- **************************************************************************/
+ */
 int city_toggle_worker(struct city *pcity, int city_x, int city_y)
 {
   int city_radius_sq;
@@ -1292,9 +1292,9 @@ int city_toggle_worker(struct city *pcity, int city_x, int city_y)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Tell the server to rename the city.  Return the request ID.
- **************************************************************************/
+ */
 int city_rename(struct city *pcity, const char *name)
 {
   return dsend_packet_city_rename(&client.conn, pcity->id, name);

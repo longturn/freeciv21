@@ -41,9 +41,9 @@
 
 Q_GLOBAL_STATIC(fcThread, save_thread);
 
-/************************************************************************/ /**
+/**
    Main entry point for loading a game.
- ****************************************************************************/
+ */
 void savegame_load(struct section_file *sfile)
 {
   const char *savefile_options;
@@ -97,9 +97,9 @@ void savegame_load(struct section_file *sfile)
   timer_destroy(loadtimer);
 }
 
-/************************************************************************/ /**
+/**
    Main entry point for saving a game.
- ****************************************************************************/
+ */
 void savegame_save(struct section_file *sfile, const char *save_reason,
                    bool scenario)
 {
@@ -112,9 +112,9 @@ struct save_thread_data {
   compress_type save_compress_type;
 };
 
-/************************************************************************/ /**
+/**
    Run game saving thread.
- ****************************************************************************/
+ */
 static void save_thread_run(void *arg)
 {
   struct save_thread_data *stdata =
@@ -133,10 +133,10 @@ static void save_thread_run(void *arg)
   delete stdata;
 }
 
-/************************************************************************/ /**
+/**
    Unconditionally save the game, with specified filename.
    Always prints a message: either save ok, or failed.
- ****************************************************************************/
+ */
 void save_game(const char *orig_filename, const char *save_reason,
                bool scenario)
 {
@@ -276,7 +276,7 @@ void save_game(const char *orig_filename, const char *save_reason,
   timer_destroy(timer_cpu);
 }
 
-/************************************************************************/ /**
+/**
    Close saving system.
- ****************************************************************************/
+ */
 void save_system_close() { save_thread->wait(); }

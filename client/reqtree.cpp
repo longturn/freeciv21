@@ -67,9 +67,9 @@ enum reqtree_edge_type {
   REQTREE_GOAL_EDGE /* Dest node is part of goal "future visited" */
 };
 
-/*********************************************************************/ /**
+/**
    Add requirement edge to node and provide edge to req
- *************************************************************************/
+ */
 static void add_requirement(struct tree_node *node, struct tree_node *req)
 {
   fc_assert_ret(node != NULL);
@@ -86,9 +86,9 @@ static void add_requirement(struct tree_node *node, struct tree_node *req)
   req->nprovide++;
 }
 
-/*********************************************************************/ /**
+/**
    Allocate and initialize new tree node
- *************************************************************************/
+ */
 static struct tree_node *new_tree_node()
 {
   struct tree_node *node = new tree_node();
@@ -102,10 +102,10 @@ static struct tree_node *new_tree_node()
   return node;
 }
 
-/*********************************************************************/ /**
+/**
    Return minimum size of the rectangle in pixels on the diagram which
    corresponds to the given node
- *************************************************************************/
+ */
 static void node_rectangle_minimum_size(struct tree_node *node, int *width,
                                         int *height)
 {
@@ -186,10 +186,10 @@ static void node_rectangle_minimum_size(struct tree_node *node, int *width,
   }
 }
 
-/*********************************************************************/ /**
+/**
    Move nodes up and down without changing order but making it more
    symetrical. Gravitate towards parents average position.
- *************************************************************************/
+ */
 static void symmetrize(struct reqtree *tree)
 {
   int layer;
@@ -242,10 +242,10 @@ static void symmetrize(struct reqtree *tree)
   }
 }
 
-/*********************************************************************/ /**
+/**
    Calculate rectangles position and size from the tree.
    Logical order should already be calculated.
- *************************************************************************/
+ */
 static void calculate_diagram_layout(struct reqtree *tree)
 {
   int i, layer, layer_offs;
@@ -337,13 +337,13 @@ static void calculate_diagram_layout(struct reqtree *tree)
   }
 }
 
-/*********************************************************************/ /**
+/**
    Create a "dummy" tech tree from current ruleset.  This tree is then
    fleshed out further (see create_reqtree). This tree doesn't include
    dummy edges. Layering and ordering isn't done also.
 
    If pplayer is given, add only techs reachable by that player to tree.
- *************************************************************************/
+ */
 static struct reqtree *create_dummy_reqtree(struct player *pplayer,
                                             bool show_all)
 {
@@ -427,9 +427,9 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
   return tree;
 }
 
-/*********************************************************************/ /**
+/**
    Free all memory used by tech_tree struct
- *************************************************************************/
+ */
 void destroy_reqtree(struct reqtree *tree)
 {
   int i;
@@ -451,10 +451,10 @@ void destroy_reqtree(struct reqtree *tree)
   delete tree;
 }
 
-/*********************************************************************/ /**
+/**
    Compute the longest path from this tree_node to the node with
    no requirements. Store the result in node->layer.
- *************************************************************************/
+ */
 static int longest_path(struct tree_node *node)
 {
   int max, i;
@@ -470,9 +470,9 @@ static int longest_path(struct tree_node *node)
   return node->layer;
 }
 
-/*********************************************************************/ /**
+/**
    Compute longest_path for all nodes, thus prepare longest path layering
- *************************************************************************/
+ */
 static void longest_path_layering(struct reqtree *tree)
 {
   int i;
@@ -484,9 +484,9 @@ static void longest_path_layering(struct reqtree *tree)
   }
 }
 
-/*********************************************************************/ /**
+/**
    Find the largest value of layer amongst children of the given node
- *************************************************************************/
+ */
 static int max_provide_layer(struct tree_node *node)
 {
   int i;
@@ -500,10 +500,10 @@ static int max_provide_layer(struct tree_node *node)
   return max;
 }
 
-/*********************************************************************/ /**
+/**
    Create new tree which has dummy nodes added. The source tree is
    completely copied, you can freely deallocate it.
- *************************************************************************/
+ */
 static struct reqtree *add_dummy_nodes(struct reqtree *tree)
 {
   struct reqtree *new_tree;
@@ -590,11 +590,11 @@ static struct reqtree *add_dummy_nodes(struct reqtree *tree)
   return new_tree;
 }
 
-/*********************************************************************/ /**
+/**
    Calculate layers[] and layer_size[] fields of tree.
    There should be layer value calculated for each node.
    Nodes will be put into layers in no particular order.
- *************************************************************************/
+ */
 static void set_layers(struct reqtree *tree)
 {
   int i;
@@ -640,18 +640,18 @@ struct node_and_float {
   float value;
 };
 
-/*********************************************************************/ /**
+/**
    Comparison function used by barycentric_sort.
- *************************************************************************/
+ */
 static int cmp_func(const node_and_float &a, const node_and_float &b)
 {
   return a.value < b.value;
 }
 
-/*********************************************************************/ /**
+/**
    Simple heuristic: Sort nodes on the given layer by the average x-value
    of its' parents.
- *************************************************************************/
+ */
 static void barycentric_sort(struct reqtree *tree, int layer)
 {
   std::vector<struct node_and_float> T;
@@ -681,9 +681,9 @@ static void barycentric_sort(struct reqtree *tree, int layer)
   }
 }
 
-/*********************************************************************/ /**
+/**
    Calculate number of edge crossings beetwen layer and layer+1
- *************************************************************************/
+ */
 static int count_crossings(struct reqtree *tree, int layer)
 {
   int layer1_size = tree->layer_size[layer];
@@ -713,9 +713,9 @@ static int count_crossings(struct reqtree *tree, int layer)
   return sum;
 }
 
-/*********************************************************************/ /**
+/**
    Swap positions of two nodes on the same layer
- *************************************************************************/
+ */
 static void swap(struct reqtree *tree, int layer, int order1, int order2)
 {
   struct tree_node *node1 = tree->layers[layer][order1];
@@ -727,10 +727,10 @@ static void swap(struct reqtree *tree, int layer, int order1, int order2)
   node2->order = order1;
 }
 
-/*********************************************************************/ /**
+/**
    Try to reduce the number of crossings by swapping two nodes and checking
    if it improves the situation.
- *************************************************************************/
+ */
 static void improve(struct reqtree *tree)
 {
   std::vector<int> crossings;
@@ -780,12 +780,12 @@ static void improve(struct reqtree *tree)
   }
 }
 
-/*********************************************************************/ /**
+/**
    Generate optimized tech_tree from current ruleset.
    You should free it by destroy_reqtree.
 
    If pplayer is not NULL, techs unreachable to that player are not shown.
- *************************************************************************/
+ */
 struct reqtree *create_reqtree(struct player *pplayer, bool show_all)
 {
   struct reqtree *tree1, *tree2;
@@ -814,9 +814,9 @@ struct reqtree *create_reqtree(struct player *pplayer, bool show_all)
   return tree2;
 }
 
-/*********************************************************************/ /**
+/**
    Give the dimensions of the reqtree.
- *************************************************************************/
+ */
 void get_reqtree_dimensions(struct reqtree *reqtree, int *width, int *height)
 {
   if (width) {
@@ -827,9 +827,9 @@ void get_reqtree_dimensions(struct reqtree *reqtree, int *width, int *height)
   }
 }
 
-/*********************************************************************/ /**
+/**
    Return a background color of node's rectangle
- *************************************************************************/
+ */
 static QColor *node_color(struct tree_node *node)
 {
   if (!node->is_dummy) {
@@ -877,10 +877,10 @@ static QColor *node_color(struct tree_node *node)
   }
 }
 
-/*********************************************************************/ /**
+/**
    Return the type for an edge between two nodes
    if node is a dummy, dest_node can be NULL
- *************************************************************************/
+ */
 static enum reqtree_edge_type get_edge_type(struct tree_node *node,
                                             struct tree_node *dest_node)
 {
@@ -948,10 +948,10 @@ static enum reqtree_edge_type get_edge_type(struct tree_node *node,
   return REQTREE_EDGE;
 }
 
-/*********************************************************************/ /**
+/**
    Return a stroke color for an edge between two nodes
    if node is a dummy, dest_node can be NULL
- *************************************************************************/
+ */
 static QColor *edge_color(struct tree_node *node,
                           struct tree_node *dest_node)
 {
@@ -972,12 +972,12 @@ static QColor *edge_color(struct tree_node *node,
   };
 }
 
-/*********************************************************************/ /**
+/**
    Draw the reqtree diagram!
 
    This draws the given portion of the reqtree diagram (given by
    (tt_x,tt_y) and (w,h) onto the canvas at position (canvas_x, canvas_y).
- *************************************************************************/
+ */
 void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
                   int canvas_y, int tt_x, int tt_y, int w, int h)
 {
@@ -1116,9 +1116,9 @@ void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
   }
 }
 
-/*********************************************************************/ /**
+/**
    Return the tech ID at the given position of the reqtree (or A_NONE).
- *************************************************************************/
+ */
 Tech_type_id get_tech_on_reqtree(struct reqtree *tree, int x, int y)
 {
   int i;

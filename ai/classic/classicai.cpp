@@ -45,24 +45,24 @@ const char *fc_ai_classic_capstr();
 
 static struct ai_type *self = NULL;
 
-/**********************************************************************/ /**
+/**
    Set pointer to ai type of the classic ai.
- **************************************************************************/
+ */
 static void classic_ai_set_self(struct ai_type *ai) { self = ai; }
 
-/**********************************************************************/ /**
+/**
    Get pointer to ai type of the classic ai.
- **************************************************************************/
+ */
 static struct ai_type *classic_ai_get_self() { return self; }
 
-/**********************************************************************/ /**
+/**
    Return module capability string
- **************************************************************************/
+ */
 const char *fc_ai_classic_capstr() { return FC_AI_MOD_CAPSTR; }
 
-/**********************************************************************/ /**
+/**
    Free resources allocated by the classic AI module
- **************************************************************************/
+ */
 static void cai_module_close()
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -70,9 +70,9 @@ static void cai_module_close()
   delete static_cast<dai_private_data *>(deftype->pprivate);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_player_alloc(struct player *pplayer)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -80,9 +80,9 @@ static void cai_player_alloc(struct player *pplayer)
   dai_player_alloc(deftype, pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_player_free(struct player *pplayer)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -90,10 +90,10 @@ static void cai_player_free(struct player *pplayer)
   dai_player_free(deftype, pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
    Classicai stores information to "ai" like the default ai common code.
- **************************************************************************/
+ */
 static void cai_player_save_relations(struct player *pplayer,
                                       struct player *other,
                                       struct section_file *file, int plrno)
@@ -103,9 +103,9 @@ static void cai_player_save_relations(struct player *pplayer,
   dai_player_save_relations(deftype, "ai", pplayer, other, file, plrno);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_player_load_relations(struct player *pplayer,
                                       struct player *other,
                                       const struct section_file *file,
@@ -116,9 +116,9 @@ static void cai_player_load_relations(struct player *pplayer,
   dai_player_load_relations(deftype, "ai", pplayer, other, file, plrno);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_gained_control(struct player *pplayer)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -126,9 +126,9 @@ static void cai_gained_control(struct player *pplayer)
   dai_gained_control(deftype, pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_split_by_civil_war(struct player *original,
                                    struct player *created)
 {
@@ -137,9 +137,9 @@ static void cai_split_by_civil_war(struct player *original,
   dai_assess_danger_player(deftype, original, &(wld.map));
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_created_by_civil_war(struct player *original,
                                      struct player *created)
 {
@@ -148,9 +148,9 @@ static void cai_created_by_civil_war(struct player *original,
   dai_player_copy(deftype, original, created);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_data_phase_begin(struct player *pplayer, bool is_new_phase)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -158,9 +158,9 @@ static void cai_data_phase_begin(struct player *pplayer, bool is_new_phase)
   dai_data_phase_begin(deftype, pplayer, is_new_phase);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_data_phase_finished(struct player *pplayer)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -168,9 +168,9 @@ static void cai_data_phase_finished(struct player *pplayer)
   dai_data_phase_finished(deftype, pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_city_alloc(struct city *pcity)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -178,9 +178,9 @@ static void cai_city_alloc(struct city *pcity)
   dai_city_alloc(deftype, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_city_free(struct city *pcity)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -188,9 +188,9 @@ static void cai_city_free(struct city *pcity)
   dai_city_free(deftype, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_city_save(struct section_file *file,
                           const struct city *pcity, const char *citystr)
 {
@@ -199,9 +199,9 @@ static void cai_city_save(struct section_file *file,
   dai_city_save(deftype, "ai", file, pcity, citystr);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_city_load(const struct section_file *file,
                           struct city *pcity, const char *citystr)
 {
@@ -210,9 +210,9 @@ static void cai_city_load(const struct section_file *file,
   dai_city_load(deftype, "ai", file, pcity, citystr);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_build_adv_override(struct city *pcity,
                                    struct adv_choice *choice)
 {
@@ -221,9 +221,9 @@ static void cai_build_adv_override(struct city *pcity,
   dai_build_adv_override(deftype, pcity, choice);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_wonder_city_distance(struct player *pplayer,
                                      struct adv_data *adv)
 {
@@ -232,9 +232,9 @@ static void cai_wonder_city_distance(struct player *pplayer,
   dai_wonder_city_distance(deftype, pplayer, adv);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_build_adv_init(struct player *pplayer)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -242,9 +242,9 @@ static void cai_build_adv_init(struct player *pplayer)
   dai_build_adv_init(deftype, pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_build_adv_adjust(struct player *pplayer,
                                  struct city *wonder_city)
 {
@@ -253,9 +253,9 @@ static void cai_build_adv_adjust(struct player *pplayer,
   dai_build_adv_adjust(deftype, pplayer, wonder_city);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_gov_value(struct player *pplayer, struct government *gov,
                           adv_want *val, bool *override)
 {
@@ -264,9 +264,9 @@ static void cai_gov_value(struct player *pplayer, struct government *gov,
   dai_gov_value(deftype, pplayer, gov, val, override);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_units_ruleset_init()
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -274,9 +274,9 @@ static void cai_units_ruleset_init()
   dai_units_ruleset_init(deftype);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_units_ruleset_close()
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -284,9 +284,9 @@ static void cai_units_ruleset_close()
   dai_units_ruleset_close(deftype);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_unit_init(struct unit *punit)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -294,9 +294,9 @@ static void cai_unit_init(struct unit *punit)
   dai_unit_init(deftype, punit);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_unit_close(struct unit *punit)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -304,9 +304,9 @@ static void cai_unit_close(struct unit *punit)
   dai_unit_close(deftype, punit);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_ferry_init_ferry(struct unit *ferry)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -314,9 +314,9 @@ static void cai_ferry_init_ferry(struct unit *ferry)
   dai_ferry_init_ferry(deftype, ferry);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_ferry_transformed(struct unit *ferry,
                                   const struct unit_type *old)
 {
@@ -325,9 +325,9 @@ static void cai_ferry_transformed(struct unit *ferry,
   dai_ferry_transformed(deftype, ferry, old);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_ferry_lost(struct unit *punit)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -335,9 +335,9 @@ static void cai_ferry_lost(struct unit *punit)
   dai_ferry_lost(deftype, punit);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_unit_turn_end(struct unit *punit)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -345,9 +345,9 @@ static void cai_unit_turn_end(struct unit *punit)
   dai_unit_turn_end(deftype, punit);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_unit_move_or_attack(struct unit *punit, struct tile *ptile,
                                     struct pf_path *path, int step)
 {
@@ -356,9 +356,9 @@ static void cai_unit_move_or_attack(struct unit *punit, struct tile *ptile,
   dai_unit_move_or_attack(deftype, punit, ptile, path, step);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_unit_new_adv_task(struct unit *punit,
                                   enum adv_unit_task task,
                                   struct tile *ptile)
@@ -368,9 +368,9 @@ static void cai_unit_new_adv_task(struct unit *punit,
   dai_unit_new_adv_task(deftype, punit, task, ptile);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_unit_save(struct section_file *file,
                           const struct unit *punit, const char *unitstr)
 {
@@ -379,9 +379,9 @@ static void cai_unit_save(struct section_file *file,
   dai_unit_save(deftype, "", file, punit, unitstr);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_unit_load(const struct section_file *file,
                           struct unit *punit, const char *unitstr)
 {
@@ -390,9 +390,9 @@ static void cai_unit_load(const struct section_file *file,
   dai_unit_load(deftype, "", file, punit, unitstr);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_auto_settler_reset(struct player *pplayer)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -400,9 +400,9 @@ static void cai_auto_settler_reset(struct player *pplayer)
   dai_auto_settler_reset(deftype, pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_auto_settler_run(struct player *pplayer, struct unit *punit,
                                  struct settlermap *state)
 {
@@ -411,9 +411,9 @@ static void cai_auto_settler_run(struct player *pplayer, struct unit *punit,
   dai_auto_settler_run(deftype, pplayer, punit, state);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_auto_settler_cont(struct player *pplayer, struct unit *punit,
                                   struct settlermap *state)
 {
@@ -422,9 +422,9 @@ static void cai_auto_settler_cont(struct player *pplayer, struct unit *punit,
   dai_auto_settler_cont(deftype, pplayer, punit, state);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_switch_to_explore(struct unit *punit, struct tile *target,
                                   enum override_bool *allow)
 {
@@ -433,9 +433,9 @@ static void cai_switch_to_explore(struct unit *punit, struct tile *target,
   dai_switch_to_explore(deftype, punit, target, allow);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_do_first_activities(struct player *pplayer)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -445,17 +445,17 @@ static void cai_do_first_activities(struct player *pplayer)
   pplayer->ai_phase_done = true;
 }
 
-/**********************************************************************/ /**
+/**
    Mark turn done as we have already done everything before game was saved.
- **************************************************************************/
+ */
 static void cai_restart_phase(struct player *pplayer)
 {
   pplayer->ai_phase_done = true;
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_diplomacy_actions(struct player *pplayer)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -463,9 +463,9 @@ static void cai_diplomacy_actions(struct player *pplayer)
   dai_diplomacy_actions(deftype, pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_do_last_activities(struct player *pplayer)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -473,9 +473,9 @@ static void cai_do_last_activities(struct player *pplayer)
   dai_do_last_activities(deftype, pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_treaty_evaluate(struct player *pplayer,
                                 struct player *aplayer,
                                 struct Treaty *ptreaty)
@@ -485,9 +485,9 @@ static void cai_treaty_evaluate(struct player *pplayer,
   dai_treaty_evaluate(deftype, pplayer, aplayer, ptreaty);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_treaty_accepted(struct player *pplayer,
                                 struct player *aplayer,
                                 struct Treaty *ptreaty)
@@ -497,9 +497,9 @@ static void cai_treaty_accepted(struct player *pplayer,
   dai_treaty_accepted(deftype, pplayer, aplayer, ptreaty);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_diplomacy_first_contact(struct player *pplayer,
                                         struct player *aplayer)
 {
@@ -508,9 +508,9 @@ static void cai_diplomacy_first_contact(struct player *pplayer,
   dai_diplomacy_first_contact(deftype, pplayer, aplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_incident(enum incident_type type,
                          enum casus_belli_range scope,
                          const struct action *paction,
@@ -522,9 +522,9 @@ static void cai_incident(enum incident_type type,
   dai_incident(deftype, type, scope, paction, receiver, violator, victim);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_city_log(char *buffer, int buflength,
                          const struct city *pcity)
 {
@@ -533,9 +533,9 @@ static void cai_city_log(char *buffer, int buflength,
   dai_city_log(deftype, buffer, buflength, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_unit_log(char *buffer, int buflength,
                          const struct unit *punit)
 {
@@ -544,9 +544,9 @@ static void cai_unit_log(char *buffer, int buflength,
   dai_unit_log(deftype, buffer, buflength, punit);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_consider_plr_dangerous(struct player *plr1,
                                        struct player *plr2,
                                        enum override_bool *result)
@@ -556,9 +556,9 @@ static void cai_consider_plr_dangerous(struct player *plr1,
   dai_consider_plr_dangerous(deftype, plr1, plr2, result);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_consider_tile_dangerous(struct tile *ptile,
                                         struct unit *punit,
                                         enum override_bool *result)
@@ -568,9 +568,9 @@ static void cai_consider_tile_dangerous(struct tile *ptile,
   dai_consider_tile_dangerous(deftype, ptile, punit, result);
 }
 
-/**********************************************************************/ /**
+/**
    Call default ai with classic ai type as parameter.
- **************************************************************************/
+ */
 static void cai_consider_wonder_city(struct city *pcity, bool *result)
 {
   struct ai_type *deftype = classic_ai_get_self();
@@ -578,9 +578,9 @@ static void cai_consider_wonder_city(struct city *pcity, bool *result)
   dai_consider_wonder_city(deftype, pcity, result);
 }
 
-/**********************************************************************/ /**
+/**
    Setup player ai_funcs function pointers.
- **************************************************************************/
+ */
 bool fc_ai_classic_setup(struct ai_type *ai)
 {
   struct dai_private_data *pprivate;

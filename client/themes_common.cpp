@@ -59,9 +59,9 @@ struct theme_directory {
 static int num_directories;
 struct theme_directory *directories;
 
-/************************************************************************/ /**
+/**
    Initialized themes data
- ****************************************************************************/
+ */
 void init_themes()
 {
   int i;
@@ -82,9 +82,9 @@ void init_themes()
   delete[] gui_directories;
 }
 
-/************************************************************************/ /**
+/**
    Return a static string vector of useable theme names.
- ****************************************************************************/
+ */
 const QVector<QString> *get_themes_list(const struct option *poption)
 {
   if (themes_list->isEmpty()) {
@@ -109,10 +109,10 @@ const QVector<QString> *get_themes_list(const struct option *poption)
   return themes_list;
 }
 
-/************************************************************************/ /**
+/**
    Loads a theme with the given name. First matching directory will be used.
    If there's no such theme the function returns FALSE.
- ****************************************************************************/
+ */
 bool load_theme(const char *theme_name)
 {
   int i, j;
@@ -128,9 +128,9 @@ bool load_theme(const char *theme_name)
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Wrapper for load_theme. It's is used by local options dialog
- ****************************************************************************/
+ */
 void theme_reread_callback(struct option *poption)
 {
   const char *theme_name = option_str_get(poption);

@@ -36,9 +36,9 @@
 
 #include "effect_edit.h"
 
-/**********************************************************************/ /**
+/**
    Setup effect_edit object
- **************************************************************************/
+ */
 effect_edit::effect_edit(ruledit_gui *ui_in, const QString &target,
                          struct universal *filter_in,
                          enum effect_filter_main_class efmc_in)
@@ -114,14 +114,14 @@ effect_edit::effect_edit(ruledit_gui *ui_in, const QString &target,
   setWindowTitle(target);
 }
 
-/**********************************************************************/ /**
+/**
    Effect edit destructor
- **************************************************************************/
+ */
 effect_edit::~effect_edit() { effect_list_destroy(effects); }
 
-/**********************************************************************/ /**
+/**
    Callback to fill effects list from iterate_effect_cache()
- **************************************************************************/
+ */
 static bool effect_list_fill_cb(struct effect *peffect, void *data)
 {
   struct effect_list_fill_data *cbdata =
@@ -145,9 +145,9 @@ static bool effect_list_fill_cb(struct effect *peffect, void *data)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the information.
- **************************************************************************/
+ */
 void effect_edit::refresh()
 {
   struct effect_list_fill_data cb_data;
@@ -164,9 +164,9 @@ void effect_edit::refresh()
   fill_active();
 }
 
-/**********************************************************************/ /**
+/**
    Add entry to effect list.
- **************************************************************************/
+ */
 void effect_edit::add_effect_to_list(struct effect *peffect,
                                      struct effect_list_fill_data *data)
 {
@@ -184,23 +184,23 @@ void effect_edit::add_effect_to_list(struct effect *peffect,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Getter for filter
- **************************************************************************/
+ */
 struct universal *effect_edit::filter_get() { return &filter; }
 
-/**********************************************************************/ /**
+/**
    User pushed close button
- **************************************************************************/
+ */
 void effect_edit::close_now()
 {
   ui->unregister_effect_edit(this);
   done(0);
 }
 
-/**********************************************************************/ /**
+/**
    User selected effect from the list.
- **************************************************************************/
+ */
 void effect_edit::select_effect()
 {
   int i = 0;
@@ -219,9 +219,9 @@ void effect_edit::select_effect()
   effect_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Fill active menus from selected effect.
- **************************************************************************/
+ */
 void effect_edit::fill_active()
 {
   if (selected != nullptr) {
@@ -230,9 +230,9 @@ void effect_edit::fill_active()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User selected type for the effect.
- **************************************************************************/
+ */
 void effect_edit::effect_type_menu(QAction *action)
 {
   QByteArray en_bytes = action->text().toUtf8();
@@ -246,9 +246,9 @@ void effect_edit::effect_type_menu(QAction *action)
   ui->refresh_effect_edits();
 }
 
-/**********************************************************************/ /**
+/**
    Read value from spinbox to effect
- **************************************************************************/
+ */
 void effect_edit::set_value(int value)
 {
   if (selected != nullptr) {
@@ -258,9 +258,9 @@ void effect_edit::set_value(int value)
   ui->refresh_effect_edits();
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit requirements
- **************************************************************************/
+ */
 void effect_edit::edit_reqs()
 {
   if (selected != nullptr) {
@@ -275,9 +275,9 @@ void effect_edit::edit_reqs()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User clicked windows close button.
- **************************************************************************/
+ */
 void effect_edit::closeEvent(QCloseEvent *event)
 {
   ui->unregister_effect_edit(this);

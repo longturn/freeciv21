@@ -40,17 +40,17 @@
 
 #include "animals.h"
 
-/************************************************************************/ /**
+/**
    Return suitable animal type for the terrain
- ****************************************************************************/
+ */
 static const struct unit_type *animal_for_terrain(struct terrain *pterr)
 {
   return pterr->animal;
 }
 
-/************************************************************************/ /**
+/**
    Try to add one animal to the map.
- ****************************************************************************/
+ */
 static void place_animal(struct player *plr)
 {
   struct tile *ptile = rand_map_pos(&(wld.map));
@@ -91,9 +91,9 @@ static void place_animal(struct player *plr)
   }
 }
 
-/************************************************************************/ /**
+/**
    Create animal kingdom player and his units.
- ****************************************************************************/
+ */
 void create_animals()
 {
   struct nation_type *anination;

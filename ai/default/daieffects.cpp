@@ -39,7 +39,7 @@
 
 #include "daieffects.h"
 
-/**********************************************************************/ /**
+/**
    Return the number of "luxury specialists".  This is the number of
    specialists who provide at least HAPPY_COST luxury, being the number of
    luxuries needed to make one citizen content or happy.
@@ -52,7 +52,7 @@
    This is a very bad model if the abilities of specialists are changed.
    But as long as the civ2 model of specialists is used it will continue
    to work okay.
- **************************************************************************/
+ */
 static int get_entertainers(const struct city *pcity)
 {
   int providers = 0;
@@ -68,10 +68,10 @@ static int get_entertainers(const struct city *pcity)
   return providers;
 }
 
-/**********************************************************************/ /**
+/**
    How desirable particular effect making people content is for a
    particular city?
- **************************************************************************/
+ */
 adv_want dai_content_effect_value(const struct player *pplayer,
                                   const struct city *pcity, int amount,
                                   int num_cities, int happiness_step)
@@ -108,9 +108,9 @@ adv_want dai_content_effect_value(const struct player *pplayer,
   return v;
 }
 
-/**********************************************************************/ /**
+/**
    Number of AI stats units affected by effect
- **************************************************************************/
+ */
 static int num_affected_units(const struct effect *peffect,
                               const struct adv_data *ai)
 {
@@ -127,10 +127,10 @@ static int num_affected_units(const struct effect *peffect,
   return unit_count;
 }
 
-/**********************************************************************/ /**
+/**
    How desirable is a particular effect for a particular city,
    given the number of cities in range (c).
- **************************************************************************/
+ */
 adv_want dai_effect_value(struct player *pplayer, struct government *gov,
                           const struct adv_data *adv,
                           const struct city *pcity, const bool capital,
@@ -684,9 +684,9 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
   return v;
 }
 
-/**********************************************************************/ /**
+/**
    Checks recursively to see if the player already has a better government
- **************************************************************************/
+ */
 static bool have_better_government(const struct player *pplayer,
                                    const struct government *pgov)
 {
@@ -699,7 +699,7 @@ static bool have_better_government(const struct player *pplayer,
   }
   return false;
 }
-/**********************************************************************/ /**
+/**
    Does the AI expect to ever be able to meet this requirement.
 
    The return value of this function is unreliable for requirements
@@ -708,7 +708,7 @@ static bool have_better_government(const struct player *pplayer,
    be met in the future.
 
    City may be NULL, so request pplayer separately.
- **************************************************************************/
+ */
 bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
                                         const struct player *pplayer,
                                         const struct city *pcity)

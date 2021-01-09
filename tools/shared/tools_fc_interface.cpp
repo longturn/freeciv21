@@ -23,9 +23,9 @@
 
 #include "tools_fc_interface.h"
 
-/***********************************************************************/ /**
+/**
    Unused but required by fc_interface_init()
- ***************************************************************************/
+ */
 static bool tool_player_tile_vision_get(const struct tile *ptile,
                                         const struct player *pplayer,
                                         enum vision_layer vision)
@@ -34,9 +34,9 @@ static bool tool_player_tile_vision_get(const struct tile *ptile,
   return false;
 }
 
-/***********************************************************************/ /**
+/**
    Unused but required by fc_interface_init()
- ***************************************************************************/
+ */
 static int tool_player_tile_city_id_get(const struct tile *ptile,
                                         const struct player *pplayer)
 {
@@ -44,17 +44,17 @@ static int tool_player_tile_city_id_get(const struct tile *ptile,
   return IDENTITY_NUMBER_ZERO;
 }
 
-/***********************************************************************/ /**
+/**
    Unused but required by fc_interface_init()
- ***************************************************************************/
+ */
 static void tool_gui_color_free(QColor *pcolor)
 {
   qCritical("Assumed unused function %s called.", __FUNCTION__);
 }
 
-/***********************************************************************/ /**
+/**
    Initialize tool specific functions.
- ***************************************************************************/
+ */
 void fc_interface_init_tool()
 {
   struct functions *funcs = fc_interface_funcs();

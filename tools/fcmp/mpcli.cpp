@@ -40,17 +40,17 @@ struct fcmp_params fcmp = {
     QUrl::fromUserInput(QStringLiteral(MODPACK_LIST_URL)), QLatin1String(),
     QLatin1String()};
 
-/**********************************************************************/ /**
+/**
    Progress indications from downloader
- **************************************************************************/
+ */
 static void msg_callback(const QString &msg)
 {
   qInfo("%s", msg.toLocal8Bit().data());
 }
 
-/**********************************************************************/ /**
+/**
    Build main modpack list view
- **************************************************************************/
+ */
 static void setup_modpack_list(const char *name, const char *URL,
                                const char *version, const char *license,
                                enum modpack_type type, const char *subtype,
@@ -91,9 +91,9 @@ static void setup_modpack_list(const char *name, const char *URL,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Entry point of the freeciv-modpack program
- **************************************************************************/
+ */
 int main(int argc, char *argv[])
 {
   QCoreApplication app(argc, argv);

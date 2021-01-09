@@ -51,7 +51,7 @@
  */
 static RANDOM_STATE rand_state;
 
-/*********************************************************************/ /**
+/**
    Returns a new random value from the sequence, in the interval 0 to
    (size-1) inclusive, and updates global state for next call.
    This means that if size <= 1 the function will always return 0.
@@ -77,7 +77,7 @@ static RANDOM_STATE rand_state;
    as above is complicated by fact that (MAX_UINT32+1) may not be
    directly representable in type RANDOM_TYPE, so we do instead:
           divisor = MAX_UINT32/size
- *************************************************************************/
+ */
 RANDOM_TYPE fc_rand_debug(RANDOM_TYPE size, const char *called_as, int line,
                           const char *file)
 {
@@ -130,9 +130,9 @@ RANDOM_TYPE fc_rand_debug(RANDOM_TYPE size, const char *called_as, int line,
   return new_rand;
 }
 
-/*********************************************************************/ /**
+/**
    Initialize the generator; see comment at top of file.
- *************************************************************************/
+ */
 void fc_srand(RANDOM_TYPE seed)
 {
   int i;
@@ -151,19 +151,19 @@ void fc_srand(RANDOM_TYPE seed)
   fc_rand(MAX_UINT32);
 }
 
-/*********************************************************************/ /**
+/**
    Mark fc_rand state uninitialized.
- *************************************************************************/
+ */
 void fc_rand_uninit() { rand_state.is_init = false; }
 
-/*********************************************************************/ /**
+/**
    Return whether the current state has been initialized.
- *************************************************************************/
+ */
 bool fc_rand_is_init() { return rand_state.is_init; }
 
-/*********************************************************************/ /**
+/**
    Return a copy of the current rand_state; eg for save/restore.
- *************************************************************************/
+ */
 RANDOM_STATE fc_rand_state()
 {
   int i;
@@ -181,10 +181,10 @@ RANDOM_STATE fc_rand_state()
   return rand_state;
 }
 
-/*********************************************************************/ /**
+/**
    Replace current rand_state with user-supplied; eg for save/restore.
    Caller should take care to set state.is_init beforehand if necessary.
- *************************************************************************/
+ */
 void fc_rand_set_state(RANDOM_STATE &state)
 {
   int i;
@@ -202,13 +202,13 @@ void fc_rand_set_state(RANDOM_STATE &state)
   }
 }
 
-/*********************************************************************/ /**
+/**
    Test one aspect of randomness, using n numbers.
    Reports results to LOG_TEST; with good randomness, behaviourchange
    and behavioursame should be about the same size.
    Tests current random state; saves and restores state, so can call
    without interrupting current sequence.
- *************************************************************************/
+ */
 void test_random1(int n)
 {
   RANDOM_STATE saved_state;
@@ -241,13 +241,13 @@ void test_random1(int n)
   fc_rand_set_state(saved_state);
 }
 
-/*********************************************************************/ /**
+/**
    Local pseudo-random function for repeatedly reaching the same result,
    instead of fc_rand().  Primarily needed for tiles.
 
    Use an invariant equation for seed.
    Result is 0 to (size - 1).
- *************************************************************************/
+ */
 RANDOM_TYPE fc_randomly_debug(RANDOM_TYPE seed, RANDOM_TYPE size,
                               const char *called_as, int line,
                               const char *file)

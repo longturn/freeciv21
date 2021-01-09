@@ -49,9 +49,9 @@
  */
 #define FORMAT_VERSION 20
 
-/**********************************************************************/ /**
+/**
    Create new ruleset section file with common header.
- **************************************************************************/
+ */
 static struct section_file *create_ruleset_file(const char *rsname,
                                                 const char *rstype)
 {
@@ -74,9 +74,9 @@ static struct section_file *create_ruleset_file(const char *rsname,
   return sfile;
 }
 
-/**********************************************************************/ /**
+/**
    Save int value that has default applied upon loading.
- **************************************************************************/
+ */
 static bool save_default_int(struct section_file *sfile, int value,
                              int default_value, const char *path,
                              const char *entry)
@@ -92,9 +92,9 @@ static bool save_default_int(struct section_file *sfile, int value,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save bool value that has default applied upon loading.
- **************************************************************************/
+ */
 static bool save_default_bool(struct section_file *sfile, bool value,
                               bool default_value, const char *path,
                               const char *entry)
@@ -110,9 +110,9 @@ static bool save_default_bool(struct section_file *sfile, bool value,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save name of the object.
- **************************************************************************/
+ */
 static bool save_name_translation(struct section_file *sfile,
                                   struct name_translation *name,
                                   const char *path)
@@ -130,9 +130,9 @@ static bool save_name_translation(struct section_file *sfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save vector of requirements
- **************************************************************************/
+ */
 static bool save_reqs_vector(struct section_file *sfile,
                              const struct requirement_vector *reqs,
                              const char *path, const char *entry)
@@ -188,9 +188,9 @@ static bool save_reqs_vector(struct section_file *sfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save techs vector. Input is A_LAST terminated array of techs to save.
- **************************************************************************/
+ */
 static bool save_tech_list(struct section_file *sfile, int *input,
                            const char *path, const char *entry)
 {
@@ -211,9 +211,9 @@ static bool save_tech_list(struct section_file *sfile, int *input,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save tech reference
- **************************************************************************/
+ */
 static bool save_tech_ref(struct section_file *sfile,
                           const struct advance *padv, const char *path,
                           const char *entry)
@@ -227,9 +227,9 @@ static bool save_tech_ref(struct section_file *sfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save terrain reference
- **************************************************************************/
+ */
 static bool save_terrain_ref(struct section_file *sfile,
                              const struct terrain *save,
                              const struct terrain *pthis, const char *path,
@@ -246,9 +246,9 @@ static bool save_terrain_ref(struct section_file *sfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save government reference
- **************************************************************************/
+ */
 static bool save_gov_ref(struct section_file *sfile,
                          const struct government *gov, const char *path,
                          const char *entry)
@@ -258,10 +258,10 @@ static bool save_gov_ref(struct section_file *sfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save buildings vector. Input is B_LAST terminated array of buildings
    to save.
- **************************************************************************/
+ */
 static bool save_building_list(struct section_file *sfile, int *input,
                                const char *path, const char *entry)
 {
@@ -283,10 +283,10 @@ static bool save_building_list(struct section_file *sfile, int *input,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save units vector. Input is NULL terminated array of units
    to save.
- **************************************************************************/
+ */
 static bool save_unit_list(struct section_file *sfile,
                            struct unit_type **input, const char *path,
                            const char *entry)
@@ -308,9 +308,9 @@ static bool save_unit_list(struct section_file *sfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save vector of unit class names based on bitvector bits
- **************************************************************************/
+ */
 static bool save_uclass_vec(struct section_file *sfile,
                             bv_unit_classes *bits, const char *path,
                             const char *entry, bool unreachable_only)
@@ -335,9 +335,9 @@ static bool save_uclass_vec(struct section_file *sfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save strvec as ruleset vector of strings
- **************************************************************************/
+ */
 static bool save_strvec(struct section_file *sfile,
                         QVector<QString> *to_save, const char *path,
                         const char *entry)
@@ -358,18 +358,18 @@ static bool save_strvec(struct section_file *sfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save ruleset file.
- **************************************************************************/
+ */
 static bool save_ruleset_file(struct section_file *sfile,
                               const char *filename)
 {
   return secfile_save(sfile, filename);
 }
 
-/**********************************************************************/ /**
+/**
    Save buildings.ruleset
- **************************************************************************/
+ */
 static bool save_buildings_ruleset(const char *filename, const char *name)
 {
   struct section_file *sfile = create_ruleset_file(name, "building");
@@ -437,9 +437,9 @@ static bool save_buildings_ruleset(const char *filename, const char *name)
   return save_ruleset_file(sfile, filename);
 }
 
-/**********************************************************************/ /**
+/**
    Save styles.ruleset
- **************************************************************************/
+ */
 static bool save_styles_ruleset(const char *filename, const char *name)
 {
   struct section_file *sfile = create_ruleset_file(name, "styles");
@@ -509,12 +509,12 @@ static bool save_styles_ruleset(const char *filename, const char *name)
   return save_ruleset_file(sfile, filename);
 }
 
-/**********************************************************************/ /**
+/**
    Save an action auto performer's !present utype reqs as a regular setting.
    This is done because the Action Auto Perform rules system isn't ready to
    be exposed to the ruleset yet. The setting is a list of utype flags that
    prevents the auto action performer.
- **************************************************************************/
+ */
 static bool save_action_auto_uflag_block(
     struct section_file *sfile, const int aap, const char *uflags_path,
     bool (*unexpected_req)(const struct requirement *preq))
@@ -555,12 +555,12 @@ static bool save_action_auto_uflag_block(
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save an action auto performer's action list as a regular setting. This
    is done because the Action Auto Perform rules system isn't ready to be
    exposed to the ruleset yet. The setting is a list of actions in the
    order they should be tried.
- **************************************************************************/
+ */
 static bool save_action_auto_actions(struct section_file *sfile,
                                      const int aap, const char *actions_path)
 {
@@ -588,20 +588,20 @@ static bool save_action_auto_actions(struct section_file *sfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Missing unit upkeep should only contain output type and absence of
    blocking unit type flag requirements.
- **************************************************************************/
+ */
 static bool unexpected_non_otype(const struct requirement *req)
 {
   return !(req->source.kind == VUT_OTYPE && req->present);
 }
 
-/**********************************************************************/ /**
+/**
    Save the action a unit should perform when its missing food, gold or
    shield upkeep. Save as regular settings since the Action Auto Perform
    rules system isn't ready to be exposed to the ruleset yet.
- **************************************************************************/
+ */
 static bool save_muuk_action_auto(struct section_file *sfile, const int aap,
                                   const char *item)
 {
@@ -618,9 +618,9 @@ static bool save_muuk_action_auto(struct section_file *sfile, const int aap,
           && save_action_auto_actions(sfile, aap, action_path));
 }
 
-/**********************************************************************/ /**
+/**
    Save cities.ruleset
- **************************************************************************/
+ */
 static bool save_cities_ruleset(const char *filename, const char *name)
 {
   struct section_file *sfile = create_ruleset_file(name, "cities");
@@ -740,9 +740,9 @@ typedef struct {
   struct section_file *sfile;
 } effect_cb_data;
 
-/**********************************************************************/ /**
+/**
    Save one effect. Callback called for each effect in cache.
- **************************************************************************/
+ */
 static bool effect_save(struct effect *peffect, void *data)
 {
   effect_cb_data *cbdata = (effect_cb_data *) data;
@@ -759,9 +759,9 @@ static bool effect_save(struct effect *peffect, void *data)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save effects.ruleset
- **************************************************************************/
+ */
 static bool save_effects_ruleset(const char *filename, const char *name)
 {
   struct section_file *sfile = create_ruleset_file(name, "effect");
@@ -783,9 +783,9 @@ static bool save_effects_ruleset(const char *filename, const char *name)
   return save_ruleset_file(sfile, filename);
 }
 
-/**********************************************************************/ /**
+/**
    Save ui_name of one action.
- **************************************************************************/
+ */
 static bool save_action_ui_name(struct section_file *sfile, int act,
                                 const char *entry_name)
 {
@@ -798,9 +798,9 @@ static bool save_action_ui_name(struct section_file *sfile, int act,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save max range of an action.
- **************************************************************************/
+ */
 static bool save_action_max_range(struct section_file *sfile, action_id act)
 {
   if (action_by_number(act)->max_distance == ACTION_DISTANCE_UNLIMITED) {
@@ -814,9 +814,9 @@ static bool save_action_max_range(struct section_file *sfile, action_id act)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Save range of an action.
- **************************************************************************/
+ */
 static bool save_action_range(struct section_file *sfile, action_id act)
 {
   if (action_min_range_ruleset_var_name(act) != NULL) {
@@ -836,9 +836,9 @@ static bool save_action_range(struct section_file *sfile, action_id act)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save details of an action.
- **************************************************************************/
+ */
 static bool save_action_kind(struct section_file *sfile, action_id act)
 {
   if (action_target_kind_ruleset_var_name(act) != NULL) {
@@ -858,9 +858,9 @@ static bool save_action_kind(struct section_file *sfile, action_id act)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save if an action always will consume the actor.
- **************************************************************************/
+ */
 static bool save_action_actor_consuming_always(struct section_file *sfile,
                                                action_id act)
 {
@@ -879,9 +879,9 @@ static bool save_action_actor_consuming_always(struct section_file *sfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save game.ruleset
- **************************************************************************/
+ */
 static bool save_game_ruleset(const char *filename, const char *name)
 {
   struct section_file *sfile = create_ruleset_file(name, "game");
@@ -1470,9 +1470,9 @@ static bool save_game_ruleset(const char *filename, const char *name)
   return save_ruleset_file(sfile, filename);
 }
 
-/**********************************************************************/ /**
+/**
    Save governments.ruleset
- **************************************************************************/
+ */
 static bool save_governments_ruleset(const char *filename, const char *name)
 {
   struct section_file *sfile = create_ruleset_file(name, "government");
@@ -1553,9 +1553,9 @@ static bool save_governments_ruleset(const char *filename, const char *name)
   return save_ruleset_file(sfile, filename);
 }
 
-/**********************************************************************/ /**
+/**
    Save list of AI traits
- **************************************************************************/
+ */
 static bool save_traits(struct trait_limits *traits,
                         struct trait_limits *default_traits,
                         struct section_file *sfile, const char *secname,
@@ -1594,9 +1594,9 @@ static bool save_traits(struct trait_limits *traits,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save a single nation.
- **************************************************************************/
+ */
 static bool save_nation(struct section_file *sfile, struct nation_type *pnat,
                         int sect_idx)
 {
@@ -1802,9 +1802,9 @@ static bool save_nation(struct section_file *sfile, struct nation_type *pnat,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save nations.ruleset
- **************************************************************************/
+ */
 static bool save_nations_ruleset(const char *filename, const char *name,
                                  struct rule_data *data)
 {
@@ -1931,9 +1931,9 @@ static bool save_nations_ruleset(const char *filename, const char *name,
   return save_ruleset_file(sfile, filename);
 }
 
-/**********************************************************************/ /**
+/**
    Save techs.ruleset
- **************************************************************************/
+ */
 static bool save_techs_ruleset(const char *filename, const char *name)
 {
   struct section_file *sfile = create_ruleset_file(name, "tech");
@@ -2035,9 +2035,9 @@ static bool save_techs_ruleset(const char *filename, const char *name)
   return save_ruleset_file(sfile, filename);
 }
 
-/**********************************************************************/ /**
+/**
    Save terrain.ruleset
- **************************************************************************/
+ */
 static bool save_terrain_ruleset(const char *filename, const char *name)
 {
   struct section_file *sfile = create_ruleset_file(name, "terrain");
@@ -2624,9 +2624,9 @@ static bool save_terrain_ruleset(const char *filename, const char *name)
   return save_ruleset_file(sfile, filename);
 }
 
-/**********************************************************************/ /**
+/**
    Save one veteran system.
- **************************************************************************/
+ */
 static bool save_veteran_system(struct section_file *sfile, const char *path,
                                 struct veteran_system *vsystem)
 {
@@ -2659,9 +2659,9 @@ static bool save_veteran_system(struct section_file *sfile, const char *path,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save unit combat bonuses list.
- **************************************************************************/
+ */
 static bool save_combat_bonuses(struct section_file *sfile,
                                 struct unit_type *put, char *path)
 {
@@ -2698,9 +2698,9 @@ static bool save_combat_bonuses(struct section_file *sfile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save units.ruleset
- **************************************************************************/
+ */
 static bool save_units_ruleset(const char *filename, const char *name)
 {
   struct section_file *sfile = create_ruleset_file(name, "unit");
@@ -2977,9 +2977,9 @@ static bool save_units_ruleset(const char *filename, const char *name)
   return save_ruleset_file(sfile, filename);
 }
 
-/**********************************************************************/ /**
+/**
    Save script.lua
- **************************************************************************/
+ */
 static bool save_script_lua(const char *filename, const char *name,
                             const char *buffer)
 {
@@ -3003,9 +3003,9 @@ static bool save_script_lua(const char *filename, const char *name,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save luadata.txt
- **************************************************************************/
+ */
 static bool save_luadata(const char *filename)
 {
   if (game.server.luadata != NULL) {
@@ -3015,9 +3015,9 @@ static bool save_luadata(const char *filename)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save ruleset to directory given.
- **************************************************************************/
+ */
 bool save_ruleset(const char *path, const char *name, struct rule_data *data)
 {
   if (make_dir(path)) {

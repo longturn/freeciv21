@@ -54,7 +54,7 @@ struct terrain *pick_terrain(enum mapgen_terrain_property target,
  to dist around the center_tile
  _index : the position in the interval of iteration (from -dist to dist)
  _tile : the tile pointer
- ***************************************************************************/
+ */
 #define axis_iterate(nmap, center_tile, _tile, _index, dist, is_X_axis)     \
   {                                                                         \
     int _tile##_x, _tile##_y;                                               \

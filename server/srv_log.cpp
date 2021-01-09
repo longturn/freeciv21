@@ -44,10 +44,10 @@ static int recursion[AIT_LAST];
 
 /* General AI logging functions */
 
-/**********************************************************************/ /**
+/**
    Log a city, it will appear like this
      Polish Romenna(5,35) [s1 d106 u11 g1]
- **************************************************************************/
+ */
 QString city_log_prefix(const city *pcity)
 {
   char aibuf[500] = "\0";
@@ -60,12 +60,12 @@ QString city_log_prefix(const city *pcity)
                            city_size_get(pcity), aibuf);
 }
 
-/**********************************************************************/ /**
+/**
    Log a unit, it will appear like this
      Polish Archers[139] (5,35)->(0,0){0,0}
    where [] is unit id, ()->() are coordinates present and goto, and
    {,} contains bodyguard and ferryboat ids.
- **************************************************************************/
+ */
 QString unit_log_prefix(const unit *punit)
 {
   int gx, gy;
@@ -87,10 +87,10 @@ QString unit_log_prefix(const unit *punit)
                            TILE_XY(unit_tile(punit)), gx, gy, aibuf);
 }
 
-/**********************************************************************/ /**
+/**
    Measure the time between the calls.  Used to see where in the AI too
    much CPU is being used.
- **************************************************************************/
+ */
 void timing_log_real(enum ai_timer timer, enum ai_timer_activity activity)
 {
   static int turn = -1;
@@ -116,9 +116,9 @@ void timing_log_real(enum ai_timer timer, enum ai_timer_activity activity)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Print results
- **************************************************************************/
+ */
 void timing_results_real()
 {
   char buf[200];
@@ -165,9 +165,9 @@ void timing_results_real()
   AILOG_OUT("Tech", AIT_TECH);
 }
 
-/**********************************************************************/ /**
+/**
    Initialize AI timing system
- **************************************************************************/
+ */
 void timing_log_init()
 {
   int i;
@@ -179,9 +179,9 @@ void timing_log_init()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Free AI timing system resources
- **************************************************************************/
+ */
 void timing_log_free()
 {
   int i;

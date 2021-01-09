@@ -38,28 +38,28 @@
 
 #include "idex.h"
 
-/**********************************************************************/ /**
+/**
     Initialize.  Should call this at the start before use.
- **************************************************************************/
+ */
 void idex_init(struct world *iworld)
 {
   iworld->cities = new QHash<int, const struct city *>;
   iworld->units = new QHash<int, const struct unit *>;
 }
 
-/**********************************************************************/ /**
+/**
     Free the hashs.
- **************************************************************************/
+ */
 void idex_free(struct world *iworld)
 {
   FC_FREE(iworld->cities);
   FC_FREE(iworld->units);
 }
 
-/**********************************************************************/ /**
+/**
     Register a city into idex, with current pcity->id.
     Call this when pcity created.
- **************************************************************************/
+ */
 void idex_register_city(struct world *iworld, struct city *pcity)
 {
   const struct city *old;
@@ -74,10 +74,10 @@ void idex_register_city(struct world *iworld, struct city *pcity)
   iworld->cities->insert(pcity->id, pcity);
 }
 
-/**********************************************************************/ /**
+/**
     Register a unit into idex, with current punit->id.
     Call this when punit created.
- **************************************************************************/
+ */
 void idex_register_unit(struct world *iworld, struct unit *punit)
 {
   const struct unit *old;
@@ -92,10 +92,10 @@ void idex_register_unit(struct world *iworld, struct unit *punit)
   iworld->units->insert(punit->id, punit);
 }
 
-/**********************************************************************/ /**
+/**
     Remove a city from idex, with current pcity->id.
     Call this when pcity deleted.
- **************************************************************************/
+ */
 void idex_unregister_city(struct world *iworld, struct city *pcity)
 {
   const struct city *old;
@@ -113,10 +113,10 @@ void idex_unregister_city(struct world *iworld, struct city *pcity)
   iworld->cities->remove(pcity->id);
 }
 
-/**********************************************************************/ /**
+/**
     Remove a unit from idex, with current punit->id.
     Call this when punit deleted.
- **************************************************************************/
+ */
 void idex_unregister_unit(struct world *iworld, struct unit *punit)
 {
   const struct unit *old;
@@ -134,10 +134,10 @@ void idex_unregister_unit(struct world *iworld, struct unit *punit)
   iworld->units->remove(punit->id);
 }
 
-/**********************************************************************/ /**
+/**
     Lookup city with given id.
     Returns NULL if the city is not registered (which is not an error).
- **************************************************************************/
+ */
 struct city *idex_lookup_city(struct world *iworld, int id)
 {
   const struct city *pcity;
@@ -147,10 +147,10 @@ struct city *idex_lookup_city(struct world *iworld, int id)
   return const_cast<struct city *>(pcity);
 }
 
-/**********************************************************************/ /**
+/**
     Lookup unit with given id.
     Returns NULL if the unit is not registered (which is not an error).
- **************************************************************************/
+ */
 struct unit *idex_lookup_unit(struct world *iworld, int id)
 {
   const struct unit *punit;

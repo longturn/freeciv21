@@ -63,10 +63,10 @@ struct claim_map {
 
 #if LAND_AREA_DEBUG >= 2
 
-/**********************************************************************/ /**
+/**
    Return one character representation of the turn number 'when'.
    If value of 'when' is out of supported range, '?' is returned.
- **************************************************************************/
+ */
 static char when_char(int when)
 {
   static char list[] = {
@@ -104,9 +104,9 @@ static char when_char(int when)
     }                                                                       \
   }
 
-/**********************************************************************/ /**
+/**
    Prints the landarea map to stdout (a debugging tool).
- **************************************************************************/
+ */
 static void print_landarea_map(struct claim_map *pcmap, int turn)
 {
   int p;
@@ -157,9 +157,9 @@ static void print_landarea_map(struct claim_map *pcmap, int turn)
 
 #endif /* LAND_AREA_DEBUG > 2 */
 
-/**********************************************************************/ /**
+/**
    Count landarea, settled area, and claims map for all players.
- **************************************************************************/
+ */
 static void build_landarea_map(struct claim_map *pcmap)
 {
   bv_player *claims = new bv_player[MAP_INDEX_SIZE]();
@@ -222,9 +222,9 @@ static void build_landarea_map(struct claim_map *pcmap)
 #endif
 }
 
-/**********************************************************************/ /**
+/**
    Returns the given player's land and settled areas from a claim map.
- **************************************************************************/
+ */
 static void get_player_landarea(struct claim_map *pcmap,
                                 struct player *pplayer, int *return_landarea,
                                 int *return_settledarea)
@@ -253,9 +253,9 @@ static void get_player_landarea(struct claim_map *pcmap,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Calculates the civilization score for the player.
- **************************************************************************/
+ */
 void calc_civ_score(struct player *pplayer)
 {
   const struct research *presearch;
@@ -352,17 +352,17 @@ void calc_civ_score(struct player *pplayer)
   pplayer->score.game = get_civ_score(pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Return the score given by the units stats.
- **************************************************************************/
+ */
 static int get_units_score(const struct player *pplayer)
 {
   return (pplayer->score.units_built / 10 + pplayer->score.units_killed / 3);
 }
 
-/**********************************************************************/ /**
+/**
    Return the civilization score (a numerical value) for the player.
- **************************************************************************/
+ */
 int get_civ_score(const struct player *pplayer)
 {
   /* We used to count pplayer->score.happy here too, but this is too easily
@@ -372,9 +372,9 @@ int get_civ_score(const struct player *pplayer)
           + get_units_score(pplayer) + pplayer->score.culture / 50);
 }
 
-/**********************************************************************/ /**
+/**
    Return the spaceship score
- **************************************************************************/
+ */
 static int get_spaceship_score(const struct player *pplayer)
 {
   if (pplayer->score.spaceship == SSHIP_ARRIVED) {
@@ -388,9 +388,9 @@ static int get_spaceship_score(const struct player *pplayer)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return the total number of citizens in the player's nation.
- **************************************************************************/
+ */
 int total_player_citizens(const struct player *pplayer)
 {
   int count = (pplayer->score.happy + pplayer->score.content
@@ -402,7 +402,7 @@ int total_player_citizens(const struct player *pplayer)
   return count;
 }
 
-/**********************************************************************/ /**
+/**
    At the end of a game, figure the winners and losers of the game and
    output to a suitable place.
 
@@ -422,7 +422,7 @@ int total_player_citizens(const struct player *pplayer)
 
    If interrupt is true, rank players by team score rather than by alive/dead
    status.
- **************************************************************************/
+ */
 void rank_users(bool interrupt)
 {
   FILE *fp;

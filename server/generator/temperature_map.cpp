@@ -32,9 +32,9 @@ static int *temperature_map;
 
 #define tmap(_tile) (temperature_map[tile_index(_tile)])
 
-/**********************************************************************/ /**
+/**
    Returns one line (given by the y coordinate) of the temperature map.
- **************************************************************************/
+ */
 #ifdef FREECIV_DEBUG
 static char *tmap_y2str(int ycoor)
 {
@@ -71,22 +71,22 @@ static char *tmap_y2str(int ycoor)
 }
 #endif /* FREECIV_DEBUG */
 
-/**********************************************************************/ /**
+/**
    Return TRUE if temperateure_map is initialized
- **************************************************************************/
+ */
 bool temperature_is_initialized() { return temperature_map != NULL; }
 
-/**********************************************************************/ /**
+/**
    Return true if the tile has tt temperature type
- **************************************************************************/
+ */
 bool tmap_is(const struct tile *ptile, temperature_type tt)
 {
   return BOOL_VAL(tmap(ptile) & (tt));
 }
 
-/**********************************************************************/ /**
+/**
    Return true if at least one tile has tt temperature type
- **************************************************************************/
+ */
 bool is_temperature_type_near(const struct tile *ptile, temperature_type tt)
 {
   adjc_iterate(&(wld.map), ptile, tile1)
@@ -100,20 +100,20 @@ bool is_temperature_type_near(const struct tile *ptile, temperature_type tt)
   return false;
 }
 
-/**********************************************************************/ /**
+/**
     Free the tmap
- **************************************************************************/
+ */
 void destroy_tmap()
 {
   fc_assert_ret(NULL != temperature_map);
   FCPP_FREE(temperature_map);
 }
 
-/**********************************************************************/ /**
+/**
    Initialize the temperature_map
    if arg is FALSE, create a dummy tmap == map_colatitude
    to be used if hmap or oceans are not placed gen 2-4
- **************************************************************************/
+ */
 void create_tmap(bool real)
 {
   int i;

@@ -27,9 +27,9 @@
 int *height_map = NULL;
 int hmap_shore_level = 0, hmap_mountain_level = 0;
 
-/**********************************************************************/ /**
+/**
    Factor by which to lower height map near poles in normalize_hmap_poles
- **************************************************************************/
+ */
 static float hmap_pole_factor(struct tile *ptile)
 {
   float factor = 1.0;
@@ -54,12 +54,12 @@ static float hmap_pole_factor(struct tile *ptile)
   return factor;
 }
 
-/**********************************************************************/ /**
+/**
    Lower the land near the map edges and (optionally) the polar region to
    avoid too much land there.
 
    See also renormalize_hmap_poles
- **************************************************************************/
+ */
 void normalize_hmap_poles()
 {
   whole_map_iterate(&(wld.map), ptile)
@@ -74,10 +74,10 @@ void normalize_hmap_poles()
   whole_map_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Invert (most of) the effects of normalize_hmap_poles so that we have
    accurate heights for texturing the poles.
- **************************************************************************/
+ */
 void renormalize_hmap_poles()
 {
   whole_map_iterate(&(wld.map), ptile)
@@ -96,10 +96,10 @@ void renormalize_hmap_poles()
   whole_map_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Create uncorrelated rand map and do some call to smoth to correlate
    it a little and create randoms shapes
- **************************************************************************/
+ */
 void make_random_hmap(int smooth)
 {
   int i = 0;
@@ -114,11 +114,11 @@ void make_random_hmap(int smooth)
   adjust_int_map(height_map, hmap_max_level);
 }
 
-/**********************************************************************/ /**
+/**
    Recursive function which does the work for generator 5.
 
    All (x0,y0) and (x1,y1) are in native coordinates.
- **************************************************************************/
+ */
 static void gen5rec(int step, int xl, int yt, int xr, int yb)
 {
   int val[2][2];
@@ -186,7 +186,7 @@ static void gen5rec(int step, int xl, int yt, int xr, int yb)
   gen5rec(2 * step / 3, (xr + xl) / 2, (yb + yt) / 2, xr, yb);
 }
 
-/**********************************************************************/ /**
+/**
  Generator 5 makes earthlike worlds with one or more large continents and
  a scattering of smaller islands. It does so by dividing the world into
  blocks and on each block raising or lowering the corners, then the
@@ -199,7 +199,7 @@ static void gen5rec(int step, int xl, int yt, int xr, int yb)
 
    extra_div can be increased to break the world up into more, smaller
    islands.  This is used in conjunction with the startpos setting.
- **************************************************************************/
+ */
 void make_pseudofractal1_hmap(int extra_div)
 {
   const bool xnowrap = !current_topo_has_flag(TF_WRAPX);
@@ -269,14 +269,14 @@ void make_pseudofractal1_hmap(int extra_div)
   adjust_int_map(height_map, hmap_max_level);
 }
 
-/**********************************************************************/ /**
+/**
    We don't want huge areas of grass/plains,
    so we put in a hill here and there, where it gets too 'clean'
 
    Return TRUE if the terrain around the given map position is "clean".  This
    means that all the terrain for 2 squares around it is not mountain or
  hill.
- **************************************************************************/
+ */
 bool area_is_too_flat(struct tile *ptile, int thill, int my_height)
 {
   int higher_than_me = 0;

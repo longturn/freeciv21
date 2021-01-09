@@ -147,10 +147,10 @@ static bool do_city_migration(struct city *pcity_from,
                               struct city *pcity_to);
 static bool check_city_migrations_player(const struct player *pplayer);
 
-/**********************************************************************/ /**
+/**
    Updates unit upkeeps and city internal cached data. Returns whether
    city radius has changed.
- **************************************************************************/
+ */
 bool city_refresh(struct city *pcity)
 {
   bool retval;
@@ -170,10 +170,10 @@ bool city_refresh(struct city *pcity)
   return retval;
 }
 
-/**********************************************************************/ /**
+/**
    Called on government change or wonder completion or stuff like that
    -- Syela
- **************************************************************************/
+ */
 void city_refresh_for_player(struct player *pplayer)
 {
   conn_list_do_buffer(pplayer->connections);
@@ -188,9 +188,9 @@ void city_refresh_for_player(struct player *pplayer)
   conn_list_do_unbuffer(pplayer->connections);
 }
 
-/**********************************************************************/ /**
+/**
    Queue pending city_refresh() for later.
- **************************************************************************/
+ */
 void city_refresh_queue_add(struct city *pcity)
 {
   if (NULL == city_refresh_queue) {
@@ -203,10 +203,10 @@ void city_refresh_queue_add(struct city *pcity)
   pcity->server.needs_refresh = true;
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the listed cities.
    Called after significant changes to borders, and arranging workers.
- **************************************************************************/
+ */
 void city_refresh_queue_processing()
 {
   if (NULL == city_refresh_queue) {
@@ -228,9 +228,9 @@ void city_refresh_queue_processing()
   city_refresh_queue = NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Automatically sells obsolete buildings from city.
- **************************************************************************/
+ */
 void remove_obsolete_buildings_city(struct city *pcity, bool refresh)
 {
   struct player *pplayer = city_owner(pcity);
@@ -263,9 +263,9 @@ void remove_obsolete_buildings_city(struct city *pcity, bool refresh)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Sell obsolete buildings from all cities of the player
- **************************************************************************/
+ */
 void remove_obsolete_buildings(struct player *pplayer)
 {
   city_list_iterate(pplayer->cities, pcity)
@@ -310,9 +310,9 @@ void apply_cmresult_to_city(struct city *pcity, const struct cm_result *cmr)
   specialist_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Set default city manager parameter for the city.
- **************************************************************************/
+ */
 static void set_default_city_manager(struct cm_parameter *cmp,
                                      struct city *pcity)
 {
@@ -358,9 +358,9 @@ static void set_default_city_manager(struct cm_parameter *cmp,
   cmp->minimal_surplus[O_SCIENCE] = 0;
 }
 
-/**********************************************************************/ /**
+/**
    Call sync_cities() to send the affected cities to the clients.
- **************************************************************************/
+ */
 void auto_arrange_workers(struct city *pcity)
 {
   struct cm_parameter cmp;
@@ -462,9 +462,9 @@ void auto_arrange_workers(struct city *pcity)
   TIMING_LOG(AIT_CITIZEN_ARRANGE, TIMER_STOP);
 }
 
-/**********************************************************************/ /**
+/**
    Notices about cities that should be sent to all players.
- **************************************************************************/
+ */
 static void city_global_turn_notify(struct conn_list *dest)
 {
   cities_iterate(pcity)
@@ -483,10 +483,10 @@ static void city_global_turn_notify(struct conn_list *dest)
   cities_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send turn notifications for specified city to specified connections.
    If 'pplayer' is not NULL, the message will be cached for this player.
- **************************************************************************/
+ */
 static void city_turn_notify(const struct city *pcity,
                              struct conn_list *dest,
                              const struct player *cache_for_player)
@@ -548,10 +548,10 @@ static void city_turn_notify(const struct city *pcity,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Send global and player specific city turn notifications. If 'pconn' is
    NULL, it will send to all connections and cache the events.
- **************************************************************************/
+ */
 void send_city_turn_notifications(struct connection *pconn)
 {
   if (NULL != pconn) {
@@ -581,9 +581,9 @@ void send_city_turn_notifications(struct connection *pconn)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Update all cities of one nation (costs for buildings, unit upkeep, ...).
- **************************************************************************/
+ */
 void update_city_activities(struct player *pplayer)
 {
   char buf[4 * MAX_LEN_NAME];
@@ -706,7 +706,7 @@ void update_city_activities(struct player *pplayer)
   city_refresh_queue_processing();
 }
 
-/**********************************************************************/ /**
+/**
    Try to get rid of a unit because of missing upkeep.
 
    Won't try to get rid of a unit without any action auto performers for
@@ -717,7 +717,7 @@ void update_city_activities(struct player *pplayer)
    the selected action auto performer.
 
    Returns TRUE if the unit went away.
- **************************************************************************/
+ */
 static bool upkeep_kill_unit(struct unit *punit, Output_type_id outp,
                              enum unit_loss_reason wipe_reason,
                              bool wipe_in_the_end)
@@ -745,10 +745,10 @@ static bool upkeep_kill_unit(struct unit *punit, Output_type_id outp,
   return !unit_is_alive(punit_id);
 }
 
-/**********************************************************************/ /**
+/**
    Reduce the city specialists by some (positive) value.
    Return the amount of reduction.
- **************************************************************************/
+ */
 static citizens city_reduce_specialists(struct city *pcity, citizens change)
 {
   citizens want = change;
@@ -767,10 +767,10 @@ static citizens city_reduce_specialists(struct city *pcity, citizens change)
   return change - want;
 }
 
-/**********************************************************************/ /**
+/**
    Reduce the city workers by some (positive) value.
    Return the amount of reduction.
- **************************************************************************/
+ */
 static citizens city_reduce_workers(struct city *pcity, citizens change)
 {
   struct tile *pcenter = city_tile(pcity);
@@ -791,10 +791,10 @@ static citizens city_reduce_workers(struct city *pcity, citizens change)
   return change - want;
 }
 
-/**********************************************************************/ /**
+/**
    Reduce the city size.  Return TRUE if the city survives the population
    loss.
- **************************************************************************/
+ */
 bool city_reduce_size(struct city *pcity, citizens pop_loss,
                       struct player *destroyer, const char *reason)
 {
@@ -872,10 +872,10 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Repair the city population without affecting city size.
    Used by savegame.c and sanitycheck.c
- **************************************************************************/
+ */
 void city_repair_size(struct city *pcity, int change)
 {
   if (change > 0) {
@@ -893,12 +893,12 @@ void city_repair_size(struct city *pcity, int change)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return the percentage of food that is lost in this city.
 
    Normally this value is 0% but this can be increased by EFT_GROWTH_FOOD
    effects.
- **************************************************************************/
+ */
 static int granary_savings(const struct city *pcity)
 {
   int savings = get_city_bonus(pcity, EFT_GROWTH_FOOD);
@@ -906,12 +906,12 @@ static int granary_savings(const struct city *pcity)
   return CLIP(0, savings, 100);
 }
 
-/**********************************************************************/ /**
+/**
    Reset the foodbox, usually when a city grows or shrinks.
    By default it is reset to zero, but this can be increased by Growth_Food
    effects.
    Usually this should be called before the city changes size.
- **************************************************************************/
+ */
 static void city_reset_foodbox(struct city *pcity, int new_size)
 {
   fc_assert_ret(pcity != NULL);
@@ -919,11 +919,11 @@ static void city_reset_foodbox(struct city *pcity, int new_size)
       (city_granary_size(new_size) * granary_savings(pcity)) / 100;
 }
 
-/**********************************************************************/ /**
+/**
    Increase city size by one. We do not refresh borders or send info about
    the city to the clients as part of this function. There might be several
    calls to this function at once, and those actions are needed only once.
- **************************************************************************/
+ */
 static bool city_increase_size(struct city *pcity,
                                struct player *nationality)
 {
@@ -1031,9 +1031,9 @@ static bool city_increase_size(struct city *pcity,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Change the city size.  Return TRUE iff the city is still alive afterwards.
- **************************************************************************/
+ */
 bool city_change_size(struct city *pcity, citizens size,
                       struct player *nationality, const char *reason)
 {
@@ -1073,10 +1073,10 @@ bool city_change_size(struct city *pcity, citizens size,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Check whether the population can be increased or
    if the city is unable to support a 'settler'...
- **************************************************************************/
+ */
 static void city_populate(struct city *pcity, struct player *nationality)
 {
   int saved_id = pcity->id;
@@ -1143,12 +1143,12 @@ static void city_populate(struct city *pcity, struct player *nationality)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Examine an unbuildable build target from a city's worklist to see if it
    can be postponed. Returns FALSE if it never can't be build and should be
    cancelled or if the city is gone. Handles the postponing and returns TRUE
    if the item can be posponed.
- **************************************************************************/
+ */
 static bool worklist_item_postpone_req_vec(struct universal *target,
                                            struct city *pcity,
                                            struct player *pplayer,
@@ -1852,12 +1852,12 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
   return success;
 }
 
-/**********************************************************************/ /**
+/**
    Examine the worklist and change the build target.  Return 0 if no
    targets are available to change to.  Otherwise return non-zero.  Has
    the side-effect of removing from the worklist any no-longer-available
    targets as well as the target actually selected, if any.
- **************************************************************************/
+ */
 static bool worklist_change_build_target(struct player *pplayer,
                                          struct city *pcity)
 {
@@ -2046,11 +2046,11 @@ static bool worklist_change_build_target(struct player *pplayer,
   return success;
 }
 
-/**********************************************************************/ /**
+/**
    Assuming we just finished building something, find something new to
    build.  The policy is: use the worklist if we can; if not, try not
    changing; if we must change, get desparate and use the AI advisor.
- **************************************************************************/
+ */
 void choose_build_target(struct player *pplayer, struct city *pcity)
 {
   /* Pick the next thing off the worklist. */
@@ -2093,11 +2093,11 @@ void choose_build_target(struct player *pplayer, struct city *pcity)
   log_debug("Advisor_choose_build didn't kill us.");
 }
 
-/**********************************************************************/ /**
+/**
    Follow the list of replacement buildings until we hit something that
    we can build.  Returns NULL if we can't upgrade at all (including if the
    original building is unbuildable).
- **************************************************************************/
+ */
 static const struct impr_type *
 building_upgrades_to(struct city *pcity, const struct impr_type *pimprove)
 {
@@ -2116,9 +2116,9 @@ building_upgrades_to(struct city *pcity, const struct impr_type *pimprove)
   return best_upgrade;
 }
 
-/**********************************************************************/ /**
+/**
    Try to upgrade production in pcity.
- **************************************************************************/
+ */
 static void upgrade_building_prod(struct city *pcity)
 {
   const struct impr_type *producing = pcity->production.value.building;
@@ -2134,14 +2134,14 @@ static void upgrade_building_prod(struct city *pcity)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Follow the list of obsoleted_by units until we hit something that
    we can build.  Return NULL when we can't upgrade at all.  NB:  returning
    something doesn't guarantee that pcity really _can_ build it; just that
    pcity can't build whatever _obsoletes_ it.
 
    FIXME: this function is a duplicate of can_upgrade_unittype.
- **************************************************************************/
+ */
 static const struct unit_type *
 unit_upgrades_to(struct city *pcity, const struct unit_type *punittype)
 {
@@ -2160,9 +2160,9 @@ unit_upgrades_to(struct city *pcity, const struct unit_type *punittype)
   return best_upgrade;
 }
 
-/**********************************************************************/ /**
+/**
    Try to upgrade production in pcity.
- **************************************************************************/
+ */
 static void upgrade_unit_prod(struct city *pcity)
 {
   const struct unit_type *producing = pcity->production.value.utype;
@@ -2177,10 +2177,10 @@ static void upgrade_unit_prod(struct city *pcity)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Disband units if we don't have enough shields to support them.  Returns
    FALSE if the _city_ is disbanded as a result.
- **************************************************************************/
+ */
 static bool city_distribute_surplus_shields(struct player *pplayer,
                                             struct city *pcity)
 {
@@ -2242,9 +2242,9 @@ static bool city_distribute_surplus_shields(struct player *pplayer,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns FALSE when the city is removed, TRUE otherwise.
- **************************************************************************/
+ */
 static bool city_build_building(struct player *pplayer, struct city *pcity)
 {
   bool space_part;
@@ -2389,13 +2389,13 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Helper function to create one unit in a city.
    Doesn't make any announcements.
    This might destroy the city due to scripts (but not otherwise; in
    particular, pop_cost is the caller's problem).
    Returns the new unit (if it survived scripts).
- **************************************************************************/
+ */
 static struct unit *city_create_unit(struct city *pcity,
                                      const struct unit_type *utype)
 {
@@ -2429,11 +2429,11 @@ static struct unit *city_create_unit(struct city *pcity,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Build city units. Several units can be built in one turn if the effect
    City_Build_Slots is used.
    Returns FALSE when the city is removed, TRUE otherwise.
- **************************************************************************/
+ */
 static bool city_build_unit(struct player *pplayer, struct city *pcity)
 {
   const struct unit_type *utype;
@@ -2574,9 +2574,9 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
   return city_exist(saved_city_id);
 }
 
-/**********************************************************************/ /**
+/**
    Returns FALSE when the city is removed, TRUE otherwise.
- **************************************************************************/
+ */
 static bool city_build_stuff(struct player *pplayer, struct city *pcity)
 {
   if (!city_distribute_surplus_shields(pplayer, pcity)) {
@@ -2599,7 +2599,7 @@ static bool city_build_stuff(struct player *pplayer, struct city *pcity)
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Randomly sell a building from the given list. Returns TRUE if a building
    was sold.
 
@@ -2608,7 +2608,7 @@ static bool city_build_stuff(struct player *pplayer, struct city *pcity)
    to the player.
    NB: The contents of 'imprs' are usually mangled by this function.
    NB: It is assumed that all buildings in 'imprs' can be sold.
- **************************************************************************/
+ */
 static bool sell_random_building(struct player *pplayer,
                                  struct cityimpr_list *imprs)
 {
@@ -2648,14 +2648,14 @@ static bool sell_random_building(struct player *pplayer,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Call back for when a unit in uk_rem_gold dies.
 
    A unit can die as a side effect of an action another unit in the list is
    forced to perform. This isn't limited to "Explode Nuclear". A Lua call
    back for another action could cause more collateral damage than "Explode
    Nuclear".
- **************************************************************************/
+ */
 static void uk_rem_gold_callback(struct unit *punit)
 {
   int gold_upkeep;
@@ -2673,10 +2673,10 @@ static void uk_rem_gold_callback(struct unit *punit)
   unit_owner(punit)->economic.gold += gold_upkeep;
 }
 
-/**********************************************************************/ /**
+/**
    Add a unit to uk_rem_gold and make the unit remove it self from it if
    it dies before it is processed.
- **************************************************************************/
+ */
 static void uk_rem_gold_append(struct unit *punit)
 {
   /* Make the unit aware that it is on the uk_rem_gold list. */
@@ -2686,10 +2686,10 @@ static void uk_rem_gold_append(struct unit *punit)
   unit_list_append(uk_rem_gold, punit);
 }
 
-/**********************************************************************/ /**
+/**
    Destroy a unit list and make the units it contains aware that it no
    longer refers to them.
- **************************************************************************/
+ */
 static void unit_list_referred_destroy(struct unit_list *punitlist)
 {
   unit_list_iterate(punitlist, punit)
@@ -2703,7 +2703,7 @@ static void unit_list_referred_destroy(struct unit_list *punitlist)
   unit_list_destroy(punitlist);
 }
 
-/**********************************************************************/ /**
+/**
    Randomly "sell" a unit from the given list. Returns pointer to sold unit.
    This pointer is not valid any more, but can be removed from the lists.
 
@@ -2712,7 +2712,7 @@ static void unit_list_referred_destroy(struct unit_list *punitlist)
    player.
    NB: The contents of 'units' are usually mangled by this function.
    NB: It is assumed that all units in 'units' have positive gold upkeep.
- **************************************************************************/
+ */
 static struct unit *sell_random_unit(struct player *pplayer,
                                      struct unit_list *punitlist)
 {
@@ -2791,9 +2791,9 @@ static struct unit *sell_random_unit(struct player *pplayer,
   return punit;
 }
 
-/**********************************************************************/ /**
+/**
    Balance the gold of a nation by selling some random units and buildings.
- **************************************************************************/
+ */
 static bool
 player_balance_treasury_units_and_buildings(struct player *pplayer)
 {
@@ -2860,9 +2860,9 @@ player_balance_treasury_units_and_buildings(struct player *pplayer)
   return pplayer->economic.gold >= 0;
 }
 
-/**********************************************************************/ /**
+/**
    Balance the gold of a nation by selling some units which need gold upkeep.
- **************************************************************************/
+ */
 static bool player_balance_treasury_units(struct player *pplayer)
 {
   if (!pplayer) {
@@ -2900,9 +2900,9 @@ static bool player_balance_treasury_units(struct player *pplayer)
   return pplayer->economic.gold >= 0;
 }
 
-/**********************************************************************/ /**
+/**
    Balance the gold of one city by randomly selling some buildings.
- **************************************************************************/
+ */
 static bool city_balance_treasury_buildings(struct city *pcity)
 {
   struct player *pplayer;
@@ -2943,14 +2943,14 @@ static bool city_balance_treasury_buildings(struct city *pcity)
   return pplayer->economic.gold >= 0;
 }
 
-/**********************************************************************/ /**
+/**
    Balance the gold of one city by randomly selling some units which need
    gold upkeep.
 
    NB: This function adds the gold upkeep of disbanded units back to the
    player's gold. Hence it assumes that this gold was previously taken
    from the player (i.e. in update_city_activity()).
- **************************************************************************/
+ */
 static bool city_balance_treasury_units(struct city *pcity)
 {
   struct player *pplayer;
@@ -2985,9 +2985,9 @@ static bool city_balance_treasury_units(struct city *pcity)
   return pplayer->economic.gold >= 0;
 }
 
-/**********************************************************************/ /**
+/**
   Add some Pollution if we have waste
- **************************************************************************/
+ */
 static bool place_pollution(struct city *pcity, enum extra_cause cause)
 {
   struct tile *ptile;
@@ -3024,9 +3024,9 @@ static bool place_pollution(struct city *pcity, enum extra_cause cause)
   return false;
 }
 
-/**********************************************************************/ /**
+/**
   Add some Pollution if we have waste
- **************************************************************************/
+ */
 static void check_pollution(struct city *pcity)
 {
   if (fc_rand(100) < pcity->pollution) {
@@ -3037,13 +3037,13 @@ static void check_pollution(struct city *pcity)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the cost to incite a city. This depends on the size of the city,
    the number of happy, unhappy and angry citizens, whether it is
    celebrating, how close it is to a capital, how many units it has and
    upkeeps, presence of courthouse, its buildings and wonders, and who
    originally built it.
- **************************************************************************/
+ */
 int city_incite_cost(struct player *pplayer, struct city *pcity)
 {
   int dist, size;
@@ -3129,9 +3129,9 @@ int city_incite_cost(struct player *pplayer, struct city *pcity)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Called every turn, at beginning of turn, for every city.
- **************************************************************************/
+ */
 static void define_orig_production_values(struct city *pcity)
 {
   /* Remember what this city is building last turn, so that on the next turn
@@ -3150,28 +3150,28 @@ static void define_orig_production_values(struct city *pcity)
             pcity->before_change_shields);
 }
 
-/**********************************************************************/ /**
+/**
    Let the advisor set up city building target.
- **************************************************************************/
+ */
 static void nullify_caravan_and_disband_plus(struct city *pcity)
 {
   pcity->disbanded_shields = 0;
   pcity->caravan_shields = 0;
 }
 
-/**********************************************************************/ /**
+/**
    Initialize all variables containing information about production
    before it was changed.
- **************************************************************************/
+ */
 void nullify_prechange_production(struct city *pcity)
 {
   nullify_caravan_and_disband_plus(pcity);
   pcity->before_change_shields = 0;
 }
 
-/**********************************************************************/ /**
+/**
    Called every turn, at end of turn, for every city.
- **************************************************************************/
+ */
 static void update_city_activity(struct city *pcity)
 {
   struct player *pplayer;
@@ -3336,18 +3336,18 @@ static void update_city_activity(struct city *pcity)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Check if city suffers from a plague. Return TRUE if it does, FALSE if not.
- **************************************************************************/
+ */
 static bool city_illness_check(const struct city *pcity)
 {
   return fc_rand(1000) < pcity->server.illness;
 }
 
-/**********************************************************************/ /**
+/**
    Disband a city into the built unit, supported by the closest city.
    Returns TRUE if the city was disbanded.
- **************************************************************************/
+ */
 static bool disband_city(struct city *pcity)
 {
   struct player *pplayer = city_owner(pcity);
@@ -3408,7 +3408,7 @@ static bool disband_city(struct city *pcity)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Helper function to calculate a "score" of a city. The score is used to get
    an estimate of the "migration desirability" of the city. The higher the
    score the more likely citizens will migrate to it.
@@ -3455,7 +3455,7 @@ static bool disband_city(struct city *pcity)
    * if the city has at least one wonder a factor of 1.25 is added
    * for the capital an additional factor of 1.25 is used
    * the score is also modified by the effect EFT_MIGRATION_PCT
- **************************************************************************/
+ */
 static float city_migration_score(struct city *pcity)
 {
   float score = 0.0;
@@ -3549,12 +3549,12 @@ static float city_migration_score(struct city *pcity)
   return score;
 }
 
-/**********************************************************************/ /**
+/**
    Do the migrations between the cities that overlap, if the growth of the
    target city is not blocked due to a missing improvement or missing food.
 
    Returns TRUE if migration occurred.
- **************************************************************************/
+ */
 static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
 {
   struct player *pplayer_from, *pplayer_to, *pplayer_citizen;
@@ -3787,7 +3787,7 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Check for citizens who want to migrate between the cities that overlap.
    Migrants go to the city with higher score, if the growth of the target
    city is not blocked due to a missing improvement.
@@ -3807,7 +3807,7 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
    nations.
 
    Returns TRUE iff there has been INTERNATIONAL migration.
- **************************************************************************/
+ */
 bool check_city_migrations()
 {
   bool internat = false;
@@ -3838,10 +3838,10 @@ bool check_city_migrations()
   return internat;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the city's food stock was emptied. Should empty the
    food stock unless it already is empty.
- **************************************************************************/
+ */
 bool city_empty_food_stock(struct city *pcity)
 {
   struct player *pplayer = city_owner(pcity);
@@ -3862,9 +3862,9 @@ bool city_empty_food_stock(struct city *pcity)
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Disaster has hit a city. Apply its effects.
- **************************************************************************/
+ */
 static void apply_disaster(struct city *pcity, struct disaster_type *pdis)
 {
   struct player *pplayer = city_owner(pcity);
@@ -3970,9 +3970,9 @@ static void apply_disaster(struct city *pcity, struct disaster_type *pdis)
   script_server_signal_emit("disaster", pdis, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Check for any disasters hitting any city, and apply those disasters.
- **************************************************************************/
+ */
 void check_disasters()
 {
   if (game.info.disasters == 0) {
@@ -4008,14 +4008,14 @@ void check_disasters()
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Check for migration for each city of one player.
 
    For each city of the player do:
    * check each tile within GAME_MAX_MGR_DISTANCE for a city
    * if a city is found check the distance
    * compare the migration score
- **************************************************************************/
+ */
 static bool check_city_migrations_player(const struct player *pplayer)
 {
   char city_link_text[MAX_LEN_LINK];
@@ -4181,9 +4181,9 @@ static bool check_city_migrations_player(const struct player *pplayer)
   return internat;
 }
 
-/**********************************************************************/ /**
+/**
    Recheck and store style of the city.
- **************************************************************************/
+ */
 void city_style_refresh(struct city *pcity)
 {
   pcity->style = city_style(pcity);

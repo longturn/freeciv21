@@ -73,9 +73,9 @@ static bool is_cardinal_dir_calculate(enum direction8 dir);
 static bool restrict_infra(const struct player *pplayer,
                            const struct tile *t1, const struct tile *t2);
 
-/*******************************************************************/ /**
+/**
    Return a bitfield of the extras on the tile that are infrastructure.
- ***********************************************************************/
+ */
 bv_extras get_tile_infrastructure_set(const struct tile *ptile, int *pcount)
 {
   bv_extras pspresent;
@@ -121,17 +121,17 @@ bv_extras get_tile_infrastructure_set(const struct tile *ptile, int *pcount)
   return pspresent;
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE if we are at a stage of the game where the map
    has not yet been generated/loaded.
    (To be precise, returns TRUE if map_allocate() has not yet been
    called.)
- ***********************************************************************/
+ */
 bool map_is_empty() { return wld.map.tiles == NULL; }
 
-/*******************************************************************/ /**
+/**
    Put some sensible values into the map structure
- ***********************************************************************/
+ */
 void map_init(struct civ_map *imap, bool server_side)
 {
   imap->topology_id = MAP_DEFAULT_TOPO;
@@ -173,9 +173,9 @@ void map_init(struct civ_map *imap, bool server_side)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Fill the iterate_outwards_indices array.  This may depend on the topology.
- ***********************************************************************/
+ */
 static void generate_map_indices()
 {
   int i = 0, nat_x, nat_y, tiles;
@@ -272,13 +272,13 @@ static void generate_map_indices()
   wld.map.num_iterate_outwards_indices = tiles;
 }
 
-/*******************************************************************/ /**
+/**
    map_init_topology needs to be called after map.topology_id is changed.
 
    map.xsize and map.ysize must be set before calling map_init_topology().
    This is done by the map generator code (server), when loading a savegame
    or a scenario with map (server), and packhand code (client).
- ***********************************************************************/
+ */
 void map_init_topology()
 {
   /* sanity check for iso topologies*/
@@ -322,9 +322,9 @@ void map_init_topology()
             && wld.map.num_cardinal_dirs <= wld.map.num_valid_dirs);
 }
 
-/*******************************************************************/ /**
+/**
    Initialize tile structure
- ***********************************************************************/
+ */
 static void tile_init(struct tile *ptile)
 {
   ptile->continent = 0;
@@ -341,10 +341,10 @@ static void tile_init(struct tile *ptile)
   ptile->spec_sprite = NULL;
 }
 
-/*******************************************************************/ /**
+/**
    Step from the given tile in the given direction.  The new tile is
  returned, or NULL if the direction is invalid or leads off the map.
- ***********************************************************************/
+ */
 struct tile *mapstep(const struct civ_map *nmap, const struct tile *ptile,
                      enum direction8 dir)
 {
@@ -364,12 +364,12 @@ struct tile *mapstep(const struct civ_map *nmap, const struct tile *ptile,
   return map_pos_to_tile(&(wld.map), tile_x, tile_y);
 }
 
-/*******************************************************************/ /**
+/**
    Return the tile for the given native position, with wrapping.
 
    This is a backend function used by map_pos_to_tile and native_pos_to_tile.
    It is called extremely often so it is made inline.
- ***********************************************************************/
+ */
 static inline struct tile *
 base_native_pos_to_tile(const struct civ_map *nmap, int nat_x, int nat_y)
 {
@@ -391,9 +391,9 @@ base_native_pos_to_tile(const struct civ_map *nmap, int nat_x, int nat_y)
   return nmap->tiles + native_pos_to_index_nocheck(nat_x, nat_y);
 }
 
-/*******************************************************************/ /**
+/**
    Return the tile for the given cartesian (map) position.
- ***********************************************************************/
+ */
 struct tile *map_pos_to_tile(const struct civ_map *nmap, int map_x,
                              int map_y)
 {
@@ -416,9 +416,9 @@ struct tile *map_pos_to_tile(const struct civ_map *nmap, int map_x,
 #undef nat_y
 }
 
-/*******************************************************************/ /**
+/**
    Return the tile for the given native position.
- ***********************************************************************/
+ */
 struct tile *native_pos_to_tile(const struct civ_map *nmap, int nat_x,
                                 int nat_y)
 {
@@ -429,9 +429,9 @@ struct tile *native_pos_to_tile(const struct civ_map *nmap, int nat_x,
   return base_native_pos_to_tile(nmap, nat_x, nat_y);
 }
 
-/*******************************************************************/ /**
+/**
    Return the tile for the given index position.
- ***********************************************************************/
+ */
 struct tile *index_to_tile(const struct civ_map *imap, int mindex)
 {
   if (!imap->tiles) {
@@ -447,9 +447,9 @@ struct tile *index_to_tile(const struct civ_map *imap, int mindex)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Free memory associated with one tile.
- ***********************************************************************/
+ */
 static void tile_free(struct tile *ptile)
 {
   unit_list_destroy(ptile->units);
@@ -465,10 +465,10 @@ static void tile_free(struct tile *ptile)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Allocate space for map, and initialise the tiles.
    Uses current map.xsize and map.ysize.
- ***********************************************************************/
+ */
 void map_allocate(struct civ_map *amap)
 {
   log_debug("map_allocate (was %p) (%d,%d)", (void *) amap->tiles,
@@ -491,9 +491,9 @@ void map_allocate(struct civ_map *amap)
   amap->startpos_table = new QHash<struct tile *, struct startpos *>;
 }
 
-/*******************************************************************/ /**
+/**
    Allocate main map and related global structures.
- ***********************************************************************/
+ */
 void main_map_allocate()
 {
   map_allocate(&(wld.map));
@@ -502,9 +502,9 @@ void main_map_allocate()
   CALL_FUNC_EACH_AI(map_alloc);
 }
 
-/*******************************************************************/ /**
+/**
    Frees the allocated memory of the map.
- ***********************************************************************/
+ */
 void map_free(struct civ_map *fmap)
 {
   if (fmap->tiles) {
@@ -526,19 +526,19 @@ void map_free(struct civ_map *fmap)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Free main map and related global structures.
- ***********************************************************************/
+ */
 void main_map_free()
 {
   map_free(&(wld.map));
   CALL_FUNC_EACH_AI(map_free);
 }
 
-/*******************************************************************/ /**
+/**
    Return the "distance" (which is really the Manhattan distance, and should
    rarely be used) for a given vector.
- ***********************************************************************/
+ */
 static int map_vector_to_distance(int dx, int dy)
 {
   if (current_topo_has_flag(TF_HEX)) {
@@ -550,9 +550,9 @@ static int map_vector_to_distance(int dx, int dy)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Return the "real" distance for a given vector.
- ***********************************************************************/
+ */
 int map_vector_to_real_distance(int dx, int dy)
 {
   const int absdx = abs(dx), absdy = abs(dy);
@@ -584,9 +584,9 @@ int map_vector_to_real_distance(int dx, int dy)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Return the sq_distance for a given vector.
- ***********************************************************************/
+ */
 int map_vector_to_sq_distance(int dx, int dy)
 {
   if (current_topo_has_flag(TF_HEX)) {
@@ -600,9 +600,9 @@ int map_vector_to_sq_distance(int dx, int dy)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Return real distance between two tiles.
- ***********************************************************************/
+ */
 int real_map_distance(const struct tile *tile0, const struct tile *tile1)
 {
   int dx, dy;
@@ -611,9 +611,9 @@ int real_map_distance(const struct tile *tile0, const struct tile *tile1)
   return map_vector_to_real_distance(dx, dy);
 }
 
-/*******************************************************************/ /**
+/**
    Return squared distance between two tiles.
- ***********************************************************************/
+ */
 int sq_map_distance(const struct tile *tile0, const struct tile *tile1)
 {
   /* We assume map_distance_vector gives us the vector with the
@@ -624,9 +624,9 @@ int sq_map_distance(const struct tile *tile0, const struct tile *tile1)
   return map_vector_to_sq_distance(dx, dy);
 }
 
-/*******************************************************************/ /**
+/**
    Return Manhattan distance between two tiles.
- ***********************************************************************/
+ */
 int map_distance(const struct tile *tile0, const struct tile *tile1)
 {
   /* We assume map_distance_vector gives us the vector with the
@@ -637,9 +637,9 @@ int map_distance(const struct tile *tile0, const struct tile *tile1)
   return map_vector_to_distance(dx, dy);
 }
 
-/*******************************************************************/ /**
+/**
    Return TRUE if this ocean terrain is adjacent to a safe coastline.
- ***********************************************************************/
+ */
 bool is_safe_ocean(const struct civ_map *nmap, const struct tile *ptile)
 {
   adjc_iterate(nmap, ptile, adjc_tile)
@@ -654,11 +654,11 @@ bool is_safe_ocean(const struct civ_map *nmap, const struct tile *ptile)
   return false;
 }
 
-/*******************************************************************/ /**
+/**
    This function returns true if the tile at the given location can be
    "reclaimed" from ocean into land.  This is the case only when there are
    a sufficient number of adjacent tiles that are not ocean.
- ***********************************************************************/
+ */
 bool can_reclaim_ocean(const struct tile *ptile)
 {
   int land_tiles =
@@ -667,11 +667,11 @@ bool can_reclaim_ocean(const struct tile *ptile)
   return land_tiles >= terrain_control.ocean_reclaim_requirement_pct;
 }
 
-/*******************************************************************/ /**
+/**
    This function returns true if the tile at the given location can be
    "channeled" from land into ocean.  This is the case only when there are
    a sufficient number of adjacent tiles that are ocean.
- ***********************************************************************/
+ */
 bool can_channel_land(const struct tile *ptile)
 {
   int ocean_tiles =
@@ -680,11 +680,11 @@ bool can_channel_land(const struct tile *ptile)
   return ocean_tiles >= terrain_control.land_channel_requirement_pct;
 }
 
-/*******************************************************************/ /**
+/**
    Returns true if the tile at the given location can be thawed from
    terrain with a 'Frozen' flag to terrain without. This requires a
    sufficient number of adjacent unfrozen tiles.
- ***********************************************************************/
+ */
 bool can_thaw_terrain(const struct tile *ptile)
 {
   int unfrozen_tiles =
@@ -693,11 +693,11 @@ bool can_thaw_terrain(const struct tile *ptile)
   return unfrozen_tiles >= terrain_control.terrain_thaw_requirement_pct;
 }
 
-/*******************************************************************/ /**
+/**
    Returns true if the tile at the given location can be turned from
    terrain without a 'Frozen' flag to terrain with. This requires a
    sufficient number of adjacent frozen tiles.
- ***********************************************************************/
+ */
 bool can_freeze_terrain(const struct tile *ptile)
 {
   int frozen_tiles =
@@ -706,10 +706,10 @@ bool can_freeze_terrain(const struct tile *ptile)
   return frozen_tiles >= terrain_control.terrain_freeze_requirement_pct;
 }
 
-/*******************************************************************/ /**
+/**
    Returns FALSE if a terrain change to 'pterrain' would be prevented by not
    having enough similar terrain surrounding ptile.
- ***********************************************************************/
+ */
 bool terrain_surroundings_allow_change(const struct tile *ptile,
                                        const struct terrain *pterrain)
 {
@@ -738,7 +738,7 @@ bool terrain_surroundings_allow_change(const struct tile *ptile,
   return ret;
 }
 
-/*******************************************************************/ /**
+/**
    The basic cost to move punit from tile t1 to tile t2.
    That is, tile_move_cost(), with pre-calculated tile pointers;
    the tiles are assumed to be adjacent, and the (x,y)
@@ -746,7 +746,7 @@ bool terrain_surroundings_allow_change(const struct tile *ptile,
 
    May also be used with punit == NULL, in which case punit
    tests are not done (for unit-independent results).
- ***********************************************************************/
+ */
 int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
                         const struct unit_type *punittype,
                         const struct player *pplayer, const struct tile *t1,
@@ -871,12 +871,12 @@ int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
   return cost;
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE if there is a restriction with regard to the infrastructure,
    i.e. at least one of the tiles t1 and t2 is claimed by a unfriendly
    nation. This means that one can not use of the infrastructure (road,
    railroad) on this tile.
- ***********************************************************************/
+ */
 static bool restrict_infra(const struct player *pplayer,
                            const struct tile *t1, const struct tile *t2)
 {
@@ -890,18 +890,18 @@ static bool restrict_infra(const struct player *pplayer,
          || (plr2 && pplayers_at_war(plr2, pplayer));
 }
 
-/*******************************************************************/ /**
+/**
    Are two tiles adjacent to each other.
- ***********************************************************************/
+ */
 bool is_tiles_adjacent(const struct tile *tile0, const struct tile *tile1)
 {
   return real_map_distance(tile0, tile1) == 1;
 }
 
-/*******************************************************************/ /**
+/**
    Are (x1,y1) and (x2,y2) really the same when adjusted?
    This function might be necessary ALOT of places...
- ***********************************************************************/
+ */
 bool same_pos(const struct tile *tile1, const struct tile *tile2)
 {
   fc_assert_ret_val(tile1 != NULL && tile2 != NULL, false);
@@ -911,20 +911,20 @@ bool same_pos(const struct tile *tile1, const struct tile *tile2)
   return (tile1->index == tile2->index);
 }
 
-/*******************************************************************/ /**
+/**
    Is given position real position
- ***********************************************************************/
+ */
 bool is_real_map_pos(const struct civ_map *nmap, int x, int y)
 {
   return normalize_map_pos(nmap, &x, &y);
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE iff the map position is normal. "Normal" here means that
    it is both a real/valid coordinate set and that the coordinates are in
    their canonical/proper form. In plain English: the coordinates must be
    on the map.
- ***********************************************************************/
+ */
 bool is_normal_map_pos(int x, int y)
 {
   int nat_x, nat_y;
@@ -934,14 +934,14 @@ bool is_normal_map_pos(int x, int y)
          && nat_y < wld.map.ysize;
 }
 
-/*******************************************************************/ /**
+/**
    If the position is real, it will be normalized and TRUE will be returned.
    If the position is unreal, it will be left unchanged and FALSE will be
    returned.
 
    Note, we need to leave x and y with sane values even in the unreal case.
    Some callers may for instance call nearest_real_pos on these values.
- ***********************************************************************/
+ */
 bool normalize_map_pos(const struct civ_map *nmap, int *x, int *y)
 {
   struct tile *ptile = map_pos_to_tile(nmap, *x, *y);
@@ -954,10 +954,10 @@ bool normalize_map_pos(const struct civ_map *nmap, int *x, int *y)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Twiddle *x and *y to point to the nearest real tile, and ensure that the
    position is normalized.
- ***********************************************************************/
+ */
 struct tile *nearest_real_tile(const struct civ_map *nmap, int x, int y)
 {
   int nat_x, nat_y;
@@ -974,16 +974,16 @@ struct tile *nearest_real_tile(const struct civ_map *nmap, int x, int y)
   return map_pos_to_tile(nmap, x, y);
 }
 
-/*******************************************************************/ /**
+/**
    Returns the total number of (real) positions (or tiles) on the map.
- ***********************************************************************/
+ */
 int map_num_tiles() { return wld.map.xsize * wld.map.ysize; }
 
-/*******************************************************************/ /**
+/**
    Finds the difference between the two (unnormalized) positions, in
    cartesian (map) coordinates.  Most callers should use map_distance_vector
    instead.
- ***********************************************************************/
+ */
 void base_map_distance_vector(int *dx, int *dy, int x0dv, int y0dv, int x1dv,
                               int y1dv)
 {
@@ -1019,7 +1019,7 @@ void base_map_distance_vector(int *dx, int *dy, int x0dv, int y0dv, int x1dv,
   *dy = y1dv - y0dv;
 }
 
-/*******************************************************************/ /**
+/**
    Topology function to find the vector which has the minimum "real"
    distance between the map positions (x0, y0) and (x1, y1).  If there is
    more than one vector with equal distance, no guarantee is made about
@@ -1034,7 +1034,7 @@ void base_map_distance_vector(int *dx, int *dy, int x0dv, int y0dv, int x1dv,
    With the standard topology the ranges of the return value are:
      -map.xsize/2 <= dx <= map.xsize/2
      -map.ysize   <  dy <  map.ysize
- ***********************************************************************/
+ */
 void map_distance_vector(int *dx, int *dy, const struct tile *tile0,
                          const struct tile *tile1)
 {
@@ -1045,9 +1045,9 @@ void map_distance_vector(int *dx, int *dy, const struct tile *tile0,
   base_map_distance_vector(dx, dy, tx0, ty0, tx1, ty1);
 }
 
-/*******************************************************************/ /**
+/**
    Random neighbouring square.
- ***********************************************************************/
+ */
 struct tile *rand_neighbour(const struct civ_map *nmap,
                             const struct tile *ptile)
 {
@@ -1081,10 +1081,10 @@ struct tile *rand_neighbour(const struct civ_map *nmap,
   return NULL;
 }
 
-/*******************************************************************/ /**
+/**
    Random square anywhere on the map.  Only normal positions (for which
    is_normal_map_pos returns true) will be found.
- ***********************************************************************/
+ */
 struct tile *rand_map_pos(const struct civ_map *nmap)
 {
   int nat_x = fc_rand(wld.map.xsize), nat_y = fc_rand(wld.map.ysize);
@@ -1092,12 +1092,12 @@ struct tile *rand_map_pos(const struct civ_map *nmap)
   return native_pos_to_tile(nmap, nat_x, nat_y);
 }
 
-/*******************************************************************/ /**
+/**
    Give a random tile anywhere on the map for which the 'filter' function
    returns TRUE.  Return FALSE if none can be found.  The filter may be
    NULL if any position is okay; if non-NULL it shouldn't have any side
    effects.
- ***********************************************************************/
+ */
 struct tile *rand_map_pos_filtered(const struct civ_map *nmap, void *data,
                                    bool (*filter)(const struct tile *ptile,
                                                   const void *data))
@@ -1140,9 +1140,9 @@ struct tile *rand_map_pos_filtered(const struct civ_map *nmap, void *data,
   return ptile;
 }
 
-/*******************************************************************/ /**
+/**
    Return the debugging name of the direction.
- ***********************************************************************/
+ */
 const char *dir_get_name(enum direction8 dir)
 {
   /* a switch statement is used so the ordering can be changed easily */
@@ -1168,9 +1168,9 @@ const char *dir_get_name(enum direction8 dir)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Returns the next direction clock-wise.
- ***********************************************************************/
+ */
 enum direction8 dir_cw(enum direction8 dir)
 {
   /* a switch statement is used so the ordering can be changed easily */
@@ -1197,9 +1197,9 @@ enum direction8 dir_cw(enum direction8 dir)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Returns the next direction counter-clock-wise.
- ***********************************************************************/
+ */
 enum direction8 dir_ccw(enum direction8 dir)
 {
   /* a switch statement is used so the ordering can be changed easily */
@@ -1226,10 +1226,10 @@ enum direction8 dir_ccw(enum direction8 dir)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE iff the given direction is a valid one. Does not use
    value from the cache, but can be used to calculate the cache.
- ***********************************************************************/
+ */
 static bool is_valid_dir_calculate(enum direction8 dir)
 {
   switch (dir) {
@@ -1252,12 +1252,12 @@ static bool is_valid_dir_calculate(enum direction8 dir)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE iff the given direction is a valid one.
 
    If the direction could be out of range you should use
    map_untrusted_dir_is_valid() in stead.
- ***********************************************************************/
+ */
 bool is_valid_dir(enum direction8 dir)
 {
   fc_assert_ret_val(dir <= direction8_invalid(), false);
@@ -1265,12 +1265,12 @@ bool is_valid_dir(enum direction8 dir)
   return dir_validity[dir];
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE iff the given direction is a valid one.
 
    Doesn't trust the input. Can be used to validate a direction from an
    untrusted source.
- ***********************************************************************/
+ */
 bool map_untrusted_dir_is_valid(enum direction8 dir)
 {
   if (!direction8_is_valid(dir)) {
@@ -1281,13 +1281,13 @@ bool map_untrusted_dir_is_valid(enum direction8 dir)
   return is_valid_dir(dir);
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE iff the given direction is a cardinal one. Does not use
    value from the cache, but can be used to calculate the cache.
 
    Cardinal directions are those in which adjacent tiles share an edge not
    just a vertex.
- ***********************************************************************/
+ */
 static bool is_cardinal_dir_calculate(enum direction8 dir)
 {
   switch (dir) {
@@ -1308,12 +1308,12 @@ static bool is_cardinal_dir_calculate(enum direction8 dir)
   return false;
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE iff the given direction is a cardinal one.
 
    Cardinal directions are those in which adjacent tiles share an edge not
    just a vertex.
- ***********************************************************************/
+ */
 bool is_cardinal_dir(enum direction8 dir)
 {
   fc_assert_ret_val(dir <= direction8_invalid(), false);
@@ -1321,11 +1321,11 @@ bool is_cardinal_dir(enum direction8 dir)
   return dir_cardinality[dir];
 }
 
-/*******************************************************************/ /**
+/**
    Return TRUE and sets dir to the direction of the step if (end_x,
    end_y) can be reached from (start_x, start_y) in one step. Return
    FALSE otherwise (value of dir is unchanged in this case).
- ***********************************************************************/
+ */
 bool base_get_direction_for_step(const struct civ_map *nmap,
                                  const struct tile *start_tile,
                                  const struct tile *end_tile,
@@ -1343,10 +1343,10 @@ bool base_get_direction_for_step(const struct civ_map *nmap,
   return false;
 }
 
-/*******************************************************************/ /**
+/**
    Return the direction which is needed for a step on the map from
   (start_x, start_y) to (end_x, end_y).
- ***********************************************************************/
+ */
 int get_direction_for_step(const struct civ_map *nmap,
                            const struct tile *start_tile,
                            const struct tile *end_tile)
@@ -1361,10 +1361,10 @@ int get_direction_for_step(const struct civ_map *nmap,
   return 0;
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE iff the move from the position (start_x,start_y) to
    (end_x,end_y) is a cardinal one.
- ***********************************************************************/
+ */
 bool is_move_cardinal(const struct civ_map *nmap,
                       const struct tile *start_tile,
                       const struct tile *end_tile)
@@ -1380,14 +1380,14 @@ bool is_move_cardinal(const struct civ_map *nmap,
   return false;
 }
 
-/*******************************************************************/ /**
+/**
    A "SINGULAR" position is any map position that has an abnormal number of
    tiles in the radius of dist.
 
    (map_x, map_y) must be normalized.
 
    dist is the "real" map distance.
- ***********************************************************************/
+ */
 bool is_singular_tile(const struct tile *ptile, int dist)
 {
   int tile_x, tile_y;
@@ -1406,9 +1406,9 @@ bool is_singular_tile(const struct tile *ptile, int dist)
   do_in_natural_pos_end;
 }
 
-/*******************************************************************/ /**
+/**
    Create a new, empty start position.
- ***********************************************************************/
+ */
 static struct startpos *startpos_new(struct tile *ptile)
 {
   auto *psp = new startpos;
@@ -1420,9 +1420,9 @@ static struct startpos *startpos_new(struct tile *ptile)
   return psp;
 }
 
-/*******************************************************************/ /**
+/**
    Free all memory allocated by the start position.
- ***********************************************************************/
+ */
 static void startpos_destroy(struct startpos *psp)
 {
   fc_assert_ret(NULL != psp);
@@ -1430,28 +1430,28 @@ static void startpos_destroy(struct startpos *psp)
   delete psp;
 }
 
-/*******************************************************************/ /**
+/**
    Returns the start position associated to the given ID.
- ***********************************************************************/
+ */
 struct startpos *map_startpos_by_number(int id)
 {
   return map_startpos_get(index_to_tile(&(wld.map), id));
 }
 
-/*******************************************************************/ /**
+/**
    Returns the unique ID number for this start position. This is just the
    tile index of the tile where this start position is located.
- ***********************************************************************/
+ */
 int startpos_number(const struct startpos *psp)
 {
   fc_assert_ret_val(NULL != psp, 0);
   return tile_index(psp->location);
 }
 
-/*******************************************************************/ /**
+/**
    Allow the nation to start at the start position.
    NB: in "excluding" mode, this remove the nation from the excluded list.
- ***********************************************************************/
+ */
 bool startpos_allow(struct startpos *psp, struct nation_type *pnation)
 {
   fc_assert_ret_val(NULL != psp, false);
@@ -1465,10 +1465,10 @@ bool startpos_allow(struct startpos *psp, struct nation_type *pnation)
   return ret;
 }
 
-/*******************************************************************/ /**
+/**
    Disallow the nation to start at the start position.
    NB: in "excluding" mode, this add the nation to the excluded list.
- ***********************************************************************/
+ */
 bool startpos_disallow(struct startpos *psp, struct nation_type *pnation)
 {
   fc_assert_ret_val(NULL != psp, false);
@@ -1483,18 +1483,18 @@ bool startpos_disallow(struct startpos *psp, struct nation_type *pnation)
   return ret;
 }
 
-/*******************************************************************/ /**
+/**
    Returns the tile where this start position is located.
- ***********************************************************************/
+ */
 struct tile *startpos_tile(const struct startpos *psp)
 {
   fc_assert_ret_val(NULL != psp, NULL);
   return psp->location;
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE if the given nation can start here.
- ***********************************************************************/
+ */
 bool startpos_nation_allowed(const struct startpos *psp,
                              const struct nation_type *pnation)
 {
@@ -1503,19 +1503,19 @@ bool startpos_nation_allowed(const struct startpos *psp,
   return XOR(psp->exclude, psp->nations->contains(pnation));
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE if any nation can start here.
- ***********************************************************************/
+ */
 bool startpos_allows_all(const struct startpos *psp)
 {
   fc_assert_ret_val(NULL != psp, false);
   return (psp->nations->isEmpty());
 }
 
-/*******************************************************************/ /**
+/**
    Fills the packet with all of the information at this start position.
    Returns TRUE if the packet can be sent.
- ***********************************************************************/
+ */
 bool startpos_pack(const struct startpos *psp,
                    struct packet_edit_startpos_full *packet)
 {
@@ -1532,10 +1532,10 @@ bool startpos_pack(const struct startpos *psp,
   return true;
 }
 
-/*******************************************************************/ /**
+/**
    Fills the start position with the nation information in the packet.
    Returns TRUE if the start position was changed.
- ***********************************************************************/
+ */
 bool startpos_unpack(struct startpos *psp,
                      const struct packet_edit_startpos_full *packet)
 {
@@ -1558,25 +1558,25 @@ bool startpos_unpack(struct startpos *psp,
   return true;
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE if the nations returned by startpos_raw_nations()
    are actually excluded from the nations allowed to start at this position.
 
    FIXME: This function exposes the internal implementation and should be
    removed when no longer needed by the property editor system.
- ***********************************************************************/
+ */
 bool startpos_is_excluding(const struct startpos *psp)
 {
   fc_assert_ret_val(NULL != psp, false);
   return psp->exclude;
 }
 
-/*******************************************************************/ /**
+/**
    Return a the nations hash, used for the property editor.
 
    FIXME: This function exposes the internal implementation and should be
    removed when no longer needed by the property editor system.
- ***********************************************************************/
+ */
 QSet<const struct nation_type *> *
 startpos_raw_nations(const struct startpos *psp)
 {
@@ -1584,9 +1584,9 @@ startpos_raw_nations(const struct startpos *psp)
   return psp->nations;
 }
 
-/*******************************************************************/ /**
+/**
    Is there start positions set for map
- ***********************************************************************/
+ */
 int map_startpos_count()
 {
   if (NULL != wld.map.startpos_table) {
@@ -1596,10 +1596,10 @@ int map_startpos_count()
   }
 }
 
-/*******************************************************************/ /**
+/**
    Create a new start position at the given tile and return it. If a start
    position already exists there, it is first removed.
- ***********************************************************************/
+ */
 struct startpos *map_startpos_new(struct tile *ptile)
 {
   struct startpos *psp;
@@ -1613,10 +1613,10 @@ struct startpos *map_startpos_new(struct tile *ptile)
   return psp;
 }
 
-/*******************************************************************/ /**
+/**
    Returns the start position at the given tile, or NULL if none exists
    there.
- ***********************************************************************/
+ */
 struct startpos *map_startpos_get(const struct tile *ptile)
 {
   struct startpos *psp;
@@ -1630,10 +1630,10 @@ struct startpos *map_startpos_get(const struct tile *ptile)
   return psp;
 }
 
-/*******************************************************************/ /**
+/**
    Remove the start position at the given tile. Returns TRUE if the start
    position was removed.
- ***********************************************************************/
+ */
 bool map_startpos_remove(struct tile *ptile)
 {
   bool ret;
@@ -1647,17 +1647,17 @@ bool map_startpos_remove(struct tile *ptile)
   return ret;
 }
 
-/*******************************************************************/ /**
+/**
    Return random direction that is valid in current map.
- ***********************************************************************/
+ */
 enum direction8 rand_direction()
 {
   return wld.map.valid_dirs[fc_rand(wld.map.num_valid_dirs)];
 }
 
-/*******************************************************************/ /**
+/**
    Return direction that is opposite to given one.
- ***********************************************************************/
+ */
 enum direction8 opposite_direction(enum direction8 dir)
 {
   return direction8(direction8_max() - dir);

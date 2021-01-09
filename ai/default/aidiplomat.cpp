@@ -84,9 +84,9 @@ static void find_city_to_diplomat(struct player *pplayer, struct unit *punit,
                                   struct city **ctarget, int *move_dist,
                                   struct pf_map *pfm);
 
-/**************************************************************************/ /**
+/**
    Number of techs that we don't have and the enemy (tplayer) does.
- ******************************************************************************/
+ */
 static int count_stealable_techs(struct player *pplayer,
                                  struct player *tplayer)
 {
@@ -106,11 +106,11 @@ static int count_stealable_techs(struct player *pplayer,
   return count;
 }
 
-/**************************************************************************/ /**
+/**
    Calculates our need for diplomats as defensive units. May replace
    values in choice. The values 16000 and 3000 used below are totally
    arbitrary but seem to work.
- ******************************************************************************/
+ */
 void dai_choose_diplomat_defensive(struct ai_type *ait,
                                    struct player *pplayer,
                                    struct city *pcity,
@@ -154,10 +154,10 @@ void dai_choose_diplomat_defensive(struct ai_type *ait,
   }
 }
 
-/**************************************************************************/ /**
+/**
    Calculates our need for diplomats as offensive units. May replace
    values in choice.
- ******************************************************************************/
+ */
 void dai_choose_diplomat_offensive(struct ai_type *ait,
                                    struct player *pplayer,
                                    struct city *pcity,
@@ -299,7 +299,7 @@ void dai_choose_diplomat_offensive(struct ai_type *ait,
   }
 }
 
-/**************************************************************************/ /**
+/**
    Check if something is on our receiving end for some nasty diplomat
    business! Note that punit may die or be moved during this function. We
    must be adjacent to target city.
@@ -307,7 +307,7 @@ void dai_choose_diplomat_offensive(struct ai_type *ait,
    We try to make embassy first, and abort if we already have one and target
    is allied. Then we steal, incite, sabotage or poison the city, in that
    order of priority.
- ******************************************************************************/
+ */
 static void dai_diplomat_city(struct ai_type *ait, struct unit *punit,
                               struct city *ctarget)
 {
@@ -391,10 +391,10 @@ static void dai_diplomat_city(struct ai_type *ait, struct unit *punit,
   dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
 }
 
-/**************************************************************************/ /**
+/**
    Check if we have a diplomat / spy near a given city. This is used to
  prevent a stack of such units next to a foreign city.
- ******************************************************************************/
+ */
 static bool is_city_surrounded_by_our_spies(struct player *pplayer,
                                             struct city *enemy_city)
 {
@@ -419,10 +419,10 @@ static bool is_city_surrounded_by_our_spies(struct player *pplayer,
   return false;
 }
 
-/**************************************************************************/ /**
+/**
    Returns (in ctarget) the closest city to send diplomats against, or NULL
    if none available on this continent.  punit can be virtual.
- ******************************************************************************/
+ */
 static void find_city_to_diplomat(struct player *pplayer, struct unit *punit,
                                   struct city **ctarget, int *move_dist,
                                   struct pf_map *pfm)
@@ -501,9 +501,9 @@ static void find_city_to_diplomat(struct player *pplayer, struct unit *punit,
   pf_map_move_costs_iterate_end;
 }
 
-/**************************************************************************/ /**
+/**
    Go to nearest/most threatened city (can be the current city too).
- ******************************************************************************/
+ */
 static struct city *dai_diplomat_defend(struct ai_type *ait,
                                         struct player *pplayer,
                                         struct unit *punit,
@@ -568,11 +568,11 @@ static struct city *dai_diplomat_defend(struct ai_type *ait,
   return ctarget;
 }
 
-/**************************************************************************/ /**
+/**
    Find units that we can reach, and bribe them. Returns TRUE if survived
    the ordeal, FALSE if not or we expended all our movement.
    Will try to bribe a ship on the coast as well as land stuff.
- ******************************************************************************/
+ */
 static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
                                       struct player *pplayer,
                                       struct unit *punit, struct pf_map *pfm)
@@ -691,7 +691,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
   return (punit->moves_left > 0);
 }
 
-/**************************************************************************/ /**
+/**
    If we are the only diplomat in a threatened city, defend against enemy
    actions. The passive defense is set by game.diplchance.  The active
    defense is to bribe units which end their move nearby. Our next trick is
@@ -700,7 +700,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
    FIXME: It is important to establish contact with all civilizations, so
    we should send diplomats by boat eventually. I just don't know how that
    part of the code works, yet - Per
- ******************************************************************************/
+ */
 void dai_manage_diplomat(struct ai_type *ait, struct player *pplayer,
                          struct unit *punit)
 {

@@ -46,9 +46,9 @@ static void send_chat_msg(struct connection *pconn,
                           const struct ft_color color, const char *format,
                           ...) fc__attribute((__format__(__printf__, 4, 5)));
 
-/**********************************************************************/ /**
+/**
    Returns whether 'dest' is ignoring the 'sender' connection.
- **************************************************************************/
+ */
 static inline bool conn_is_ignored(const struct connection *sender,
                                    const struct connection *dest)
 {
@@ -59,11 +59,11 @@ static inline bool conn_is_ignored(const struct connection *sender,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Formulate a name for this connection, prefering the player name when
    available and unambiguous (since this is the "standard" case), else
    use the username.
- **************************************************************************/
+ */
 static void form_chat_name(struct connection *pconn, char *buffer,
                            size_t len)
 {
@@ -77,9 +77,9 @@ static void form_chat_name(struct connection *pconn, char *buffer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Send a chat message packet.
- **************************************************************************/
+ */
 static void send_chat_msg(struct connection *pconn,
                           const struct connection *sender,
                           const struct ft_color color, const char *format,
@@ -95,11 +95,11 @@ static void send_chat_msg(struct connection *pconn,
   send_packet_chat_msg(pconn, &packet);
 }
 
-/**********************************************************************/ /**
+/**
    Complain to sender that name was ambiguous.
    'player_conn' is 0 for player names, 1 for connection names,
    2 for attempt to send to an anonymous player.
- **************************************************************************/
+ */
 static void complain_ambiguous(struct connection *pconn, const char *name,
                                int player_conn)
 {
@@ -121,9 +121,9 @@ static void complain_ambiguous(struct connection *pconn, const char *name,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Send private message to single connection.
- **************************************************************************/
+ */
 static void chat_msg_to_conn(struct connection *sender,
                              struct connection *dest, char *msg)
 {
@@ -150,9 +150,9 @@ static void chat_msg_to_conn(struct connection *sender,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Send private message to multi-connected player.
- **************************************************************************/
+ */
 static void chat_msg_to_player(struct connection *sender,
                                struct player *pdest, char *msg)
 {
@@ -220,9 +220,9 @@ static void chat_msg_to_player(struct connection *sender,
   event_cache_add_for_players(&packet, players);
 }
 
-/**********************************************************************/ /**
+/**
    Send private message to player allies.
- **************************************************************************/
+ */
 static void chat_msg_to_allies(struct connection *sender, char *msg)
 {
   struct packet_chat_msg packet;
@@ -256,9 +256,9 @@ static void chat_msg_to_allies(struct connection *sender, char *msg)
   event_cache_add_for_players(&packet, players);
 }
 
-/**********************************************************************/ /**
+/**
    Send private message to all global observers.
- **************************************************************************/
+ */
 static void chat_msg_to_global_observers(struct connection *sender,
                                          char *msg)
 {
@@ -284,9 +284,9 @@ static void chat_msg_to_global_observers(struct connection *sender,
   event_cache_add_for_global_observers(&packet);
 }
 
-/**********************************************************************/ /**
+/**
    Send private message to all connections.
- **************************************************************************/
+ */
 static void chat_msg_to_all(struct connection *sender, char *msg)
 {
   struct packet_chat_msg packet;
@@ -304,7 +304,7 @@ static void chat_msg_to_all(struct connection *sender, char *msg)
   event_cache_add_for_all(&packet);
 }
 
-/**********************************************************************/ /**
+/**
    Handle a chat message packet from client:
    1. Work out whether it is a server command and if so run it;
    2. Otherwise work out whether it is directed to a single player, or
@@ -326,7 +326,7 @@ static void chat_msg_to_all(struct connection *sender, char *msg)
    Message is also echoed back to sender (with different format),
    avoiding sending both original and echo if sender is in destination
    set.
- **************************************************************************/
+ */
 void handle_chat_msg_req(struct connection *pconn, const char *message)
 {
   char real_message[MAX_LEN_MSG], *cp;

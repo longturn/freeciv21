@@ -33,9 +33,9 @@
 
 #include "tab_nation.h"
 
-/**********************************************************************/ /**
+/**
    Setup tab_nation object
- **************************************************************************/
+ */
 tab_nation::tab_nation(ruledit_gui *ui_in) : QWidget()
 {
   QGridLayout *main_layout = new QGridLayout(this);
@@ -62,9 +62,9 @@ tab_nation::tab_nation(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the information.
- **************************************************************************/
+ */
 void tab_nation::refresh()
 {
   if (ui->data.nationlist == NULL) {
@@ -77,9 +77,9 @@ void tab_nation::refresh()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Flush information from widgets to stores where it can be saved from.
- **************************************************************************/
+ */
 void tab_nation::flush_widgets()
 {
   FC_FREE(ui->data.nationlist);
@@ -94,9 +94,9 @@ void tab_nation::flush_widgets()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Toggled nationlist include setting
- **************************************************************************/
+ */
 void tab_nation::nationlist_toggle(bool checked)
 {
   if (checked) {

@@ -22,9 +22,9 @@
 
 #include "mood.h"
 
-/**********************************************************************/ /**
+/**
    What is the player mood?
- **************************************************************************/
+ */
 enum mood_type player_mood(struct player *pplayer)
 {
   if (pplayer->last_war_action >= 0

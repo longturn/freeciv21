@@ -51,10 +51,10 @@ static int *citymap = NULL;
 
 #define log_citymap log_debug
 
-/**********************************************************************/ /**
+/**
    Initialize citymap by reserving worked tiles and establishing the
    crowdedness of (virtual) cities.
- **************************************************************************/
+ */
 void citymap_turn_init(struct player *pplayer)
 {
   /* The citymap is reinitialized at the start of ever turn.  This includes
@@ -108,9 +108,9 @@ void citymap_turn_init(struct player *pplayer)
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Free resources allocated for citymap.
- **************************************************************************/
+ */
 void citymap_free()
 {
   if (citymap != NULL) {
@@ -118,11 +118,11 @@ void citymap_free()
   }
 }
 
-/**********************************************************************/ /**
+/**
    This function reserves a single tile for a (possibly virtual) city with
    a settler's or a city's id. Then it 'crowds' tiles that this city can
    use to make them less attractive to other cities we may consider making.
- **************************************************************************/
+ */
 void citymap_reserve_city_spot(struct tile *ptile, int id)
 {
 #ifdef FREECIV_DEBUG
@@ -148,9 +148,9 @@ void citymap_reserve_city_spot(struct tile *ptile, int id)
   citymap[tile_index(ptile)] = -(id);
 }
 
-/**********************************************************************/ /**
+/**
    Reverse any reservations we have made in the surrounding area.
- **************************************************************************/
+ */
 void citymap_free_city_spot(struct tile *ptile, int id)
 {
   city_tile_iterate(CITY_MAP_DEFAULT_RADIUS_SQ, ptile, ptile1)
@@ -164,10 +164,10 @@ void citymap_free_city_spot(struct tile *ptile, int id)
   city_tile_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Reserve additional tiles as desired (eg I would reserve best available
    food tile in addition to adjacent tiles)
- **************************************************************************/
+ */
 void citymap_reserve_tile(struct tile *ptile, int id)
 {
 #ifdef FREECIV_DEBUG
@@ -177,17 +177,17 @@ void citymap_reserve_tile(struct tile *ptile, int id)
   citymap[tile_index(ptile)] = -id;
 }
 
-/**********************************************************************/ /**
+/**
    Returns a positive value if within a city radius, which is 1 x number of
    cities you are within the radius of, or zero or less if not. A negative
    value means this tile is reserved by a city and should not be taken.
- **************************************************************************/
+ */
 int citymap_read(struct tile *ptile) { return citymap[tile_index(ptile)]; }
 
-/**********************************************************************/ /**
+/**
    A tile is reserved if it contains a city or unit id, or a worker is
    assigned to it.
- **************************************************************************/
+ */
 bool citymap_is_reserved(struct tile *ptile)
 {
   if (NULL != tile_worked(ptile) /*|| tile_city(ptile)*/) {

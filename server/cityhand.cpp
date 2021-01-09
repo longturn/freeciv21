@@ -50,11 +50,11 @@
 
 #include "cityhand.h"
 
-/**********************************************************************/ /**
+/**
    Send city_name_suggestion packet back to requesting conn, with
    suggested name and with same id which was passed in (either unit id
    for city builder or existing city id for rename, we don't care here).
- **************************************************************************/
+ */
 void handle_city_name_suggestion_req(struct player *pplayer, int unit_id)
 {
   struct unit *punit = player_unit_by_number(pplayer, unit_id);
@@ -85,9 +85,9 @@ void handle_city_name_suggestion_req(struct player *pplayer, int unit_id)
                      unit_tile(punit), NULL, NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Handle request to change specialist type
- **************************************************************************/
+ */
 void handle_city_change_specialist(struct player *pplayer, int city_id,
                                    Specialist_type_id from,
                                    Specialist_type_id to)
@@ -115,9 +115,9 @@ void handle_city_change_specialist(struct player *pplayer, int city_id,
   send_city_info(pplayer, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Handle request to change city worker in to specialist.
- **************************************************************************/
+ */
 void handle_city_make_specialist(struct player *pplayer, int city_id,
                                  int tile_id)
 {
@@ -158,11 +158,11 @@ void handle_city_make_specialist(struct player *pplayer, int city_id,
   sync_cities();
 }
 
-/**********************************************************************/ /**
+/**
    Handle request to turn specialist in to city worker. Client cannot
    tell which kind of specialist is to be taken, but this just makes worker
    from first available specialist.
- **************************************************************************/
+ */
 void handle_city_make_worker(struct player *pplayer, int city_id,
                              int tile_id)
 {
@@ -227,10 +227,10 @@ void handle_city_make_worker(struct player *pplayer, int city_id,
   sync_cities();
 }
 
-/**********************************************************************/ /**
+/**
    Handle improvement selling request. Caller is responsible to validate
    input before passing to this function if it comes from untrusted source.
- **************************************************************************/
+ */
 void really_handle_city_sell(struct player *pplayer, struct city *pcity,
                              struct impr_type *pimprove)
 {
@@ -265,10 +265,10 @@ void really_handle_city_sell(struct player *pplayer, struct city *pcity,
   send_player_info_c(pplayer, pplayer->connections);
 }
 
-/**********************************************************************/ /**
+/**
    Handle improvement selling request. This function does check its
    parameters as they may come from untrusted source over the network.
- **************************************************************************/
+ */
 void handle_city_sell(struct player *pplayer, int city_id, int build_id)
 {
   struct city *pcity = player_city_by_number(pplayer, city_id);
@@ -280,10 +280,10 @@ void handle_city_sell(struct player *pplayer, int city_id, int build_id)
   really_handle_city_sell(pplayer, pcity, pimprove);
 }
 
-/**********************************************************************/ /**
+/**
    Handle buying request. Caller is responsible to validate input before
    passing to this function if it comes from untrusted source.
- **************************************************************************/
+ */
 void really_handle_city_buy(struct player *pplayer, struct city *pcity)
 {
   int cost, total;
@@ -372,9 +372,9 @@ void really_handle_city_buy(struct player *pplayer, struct city *pcity)
   conn_list_do_unbuffer(pplayer->connections);
 }
 
-/**********************************************************************/ /**
+/**
    Handle city worklist update request
- **************************************************************************/
+ */
 void handle_city_worklist(struct player *pplayer, int city_id,
                           const struct worklist *worklist)
 {
@@ -389,10 +389,10 @@ void handle_city_worklist(struct player *pplayer, int city_id,
   send_city_info(pplayer, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Handle buying request. This function does properly check its input as
    it may come from untrusted source over the network.
- **************************************************************************/
+ */
 void handle_city_buy(struct player *pplayer, int city_id)
 {
   struct city *pcity = player_city_by_number(pplayer, city_id);
@@ -404,9 +404,9 @@ void handle_city_buy(struct player *pplayer, int city_id)
   really_handle_city_buy(pplayer, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Handle city refresh request
- **************************************************************************/
+ */
 void handle_city_refresh(struct player *pplayer, int city_id)
 {
   if (city_id != 0) {
@@ -423,9 +423,9 @@ void handle_city_refresh(struct player *pplayer, int city_id)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Handle request to change current production.
- **************************************************************************/
+ */
 void handle_city_change(struct player *pplayer, int city_id,
                         int production_kind, int production_value)
 {
@@ -472,9 +472,9 @@ void handle_city_change(struct player *pplayer, int city_id,
   send_city_info(pplayer, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    'struct packet_city_rename' handler.
- **************************************************************************/
+ */
 void handle_city_rename(struct player *pplayer, int city_id,
                         const char *name)
 {
@@ -496,10 +496,10 @@ void handle_city_rename(struct player *pplayer, int city_id,
   send_city_info(NULL, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Handles a packet from the client that requests the city options for the
    given city be changed.
- **************************************************************************/
+ */
 void handle_city_options_req(struct player *pplayer, int city_id,
                              bv_city_options options)
 {
@@ -514,9 +514,9 @@ void handle_city_options_req(struct player *pplayer, int city_id,
   send_city_info(pplayer, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Handles a request to set city rally point for new units.
- **************************************************************************/
+ */
 void handle_city_rally_point(struct player *pplayer, int city_id, int length,
                              bool persistent, bool vigilant,
                              const struct unit_order *orders)
@@ -561,9 +561,9 @@ void handle_city_rally_point(struct player *pplayer, int city_id, int length,
   send_city_info(pplayer, pcity);
 }
 
-/**********************************************************************/ /**
+/**
    Handles a request to set city manager parameter.
- **************************************************************************/
+ */
 void handle_city_manager(struct player *pplayer, int city_id, bool enabled,
                          struct cm_parameter parameter)
 {

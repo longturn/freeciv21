@@ -111,12 +111,12 @@ static int shuffled_order[MAX_NUM_PLAYER_SLOTS];
 /* Used by player_info_freeze() and player_info_thaw(). */
 static int player_info_frozen_level = 0;
 
-/**********************************************************************/ /**
+/**
    Murder a player in cold blood.
 
    Called from srv_main kill_dying_players() and edit packet handler
    handle_edit_player_remove().
- **************************************************************************/
+ */
 void kill_player(struct player *pplayer)
 {
   bool save_palace;
@@ -267,9 +267,9 @@ void kill_player(struct player *pplayer)
   send_player_info_c(pplayer, game.est_connections);
 }
 
-/**********************************************************************/ /**
+/**
    Return player maxrate in legal range.
- **************************************************************************/
+ */
 static int get_player_maxrate(struct player *pplayer)
 {
   int maxrate = get_player_bonus(pplayer, EFT_MAX_RATES);
@@ -282,10 +282,10 @@ static int get_player_maxrate(struct player *pplayer)
   return CLIP(34, maxrate, 100);
 }
 
-/**********************************************************************/ /**
+/**
    Handle a client or AI request to change the tax/luxury/science rates.
    This function does full sanity checking.
- **************************************************************************/
+ */
 void handle_player_rates(struct player *pplayer, int tax, int luxury,
                          int science)
 {
@@ -331,11 +331,11 @@ void handle_player_rates(struct player *pplayer, int tax, int luxury,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Finish the revolution and set the player's government.  Call this as soon
    as the player has set a target_government and the revolution_finishes
    turn has arrived.
- **************************************************************************/
+ */
 void government_change(struct player *pplayer, struct government *gov,
                        bool revolution_finished)
 {
@@ -401,9 +401,9 @@ void government_change(struct player *pplayer, struct government *gov,
   send_research_info(presearch, NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Get length of a revolution.
- **************************************************************************/
+ */
 int revolution_length(struct government *gov, struct player *plr)
 {
   int turns;
@@ -438,9 +438,9 @@ int revolution_length(struct government *gov, struct player *plr)
   return turns;
 }
 
-/**********************************************************************/ /**
+/**
    Called by the client or AI to change government.
- **************************************************************************/
+ */
 void handle_player_change_government(struct player *pplayer,
                                      Government_type_id government)
 {
@@ -537,10 +537,10 @@ void handle_player_change_government(struct player *pplayer,
             game.info.turn, pplayer->revolution_finishes);
 }
 
-/**********************************************************************/ /**
+/**
    See if the player has finished their revolution. This function should
    be called at the beginning of a player's phase.
- **************************************************************************/
+ */
 void update_revolution(struct player *pplayer)
 {
   struct government *current_gov;
@@ -601,9 +601,9 @@ void update_revolution(struct player *pplayer)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Recalculate what city is the named capital
- **************************************************************************/
+ */
 void update_capital(struct player *pplayer)
 {
   int max_value = 0;
@@ -646,11 +646,11 @@ void update_capital(struct player *pplayer)
   }
 }
 
-/**********************************************************************/ /**
+/**
    The following checks that government rates are acceptable for the present
    form of government. Has to be called when switching governments or when
    toggling from AI to human.
- **************************************************************************/
+ */
 void check_player_max_rates(struct player *pplayer)
 {
   struct player_economic old_econ = pplayer->economic;
@@ -670,7 +670,7 @@ void check_player_max_rates(struct player *pplayer)
   }
 }
 
-/**********************************************************************/ /**
+/**
    After the alliance is breaken, we need to do two things:
    - Inform clients that they cannot see units inside the former's ally
      cities
@@ -678,7 +678,7 @@ void check_player_max_rates(struct player *pplayer)
    Note that you shouldn't use the units listed in 'pplayer_seen_units'
    and 'pplayer2_seen_units' after calling this function because these
    units might have died during the process.
- **************************************************************************/
+ */
 void update_players_after_alliance_breakup(
     struct player *pplayer, struct player *pplayer2,
     const struct unit_list *pplayer_seen_units,
@@ -693,9 +693,9 @@ void update_players_after_alliance_breakup(
   resolve_unit_stacks(pplayer, pplayer2, true);
 }
 
-/**********************************************************************/ /**
+/**
    If there's any units of new_owner on tile, they claim bases.
- **************************************************************************/
+ */
 static void maybe_claim_base(struct tile *ptile, struct player *new_owner,
                              struct player *old_owner)
 {
@@ -722,9 +722,9 @@ static void maybe_claim_base(struct tile *ptile, struct player *new_owner,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Two players enter war.
- **************************************************************************/
+ */
 void enter_war(struct player *pplayer, struct player *pplayer2)
 {
   /* Claim bases where units are already standing */
@@ -741,16 +741,16 @@ void enter_war(struct player *pplayer, struct player *pplayer2)
   whole_map_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Update last war action timestamp (affects player mood).
- **************************************************************************/
+ */
 void player_update_last_war_action(struct player *pplayer)
 {
   pplayer->last_war_action = game.info.turn;
   send_player_info_c(pplayer, NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Handles a player cancelling a "pact" with another player.
 
    packet.id is id of player we want to cancel a pact with
@@ -758,7 +758,7 @@ void player_update_last_war_action(struct player *pplayer)
      to break. If this is CLAUSE_VISION we break shared vision. If it is
      a pact treaty type, we break one pact level. If it is CLAUSE_LAST
      we break _all_ treaties and go straight to war.
- **************************************************************************/
+ */
 void handle_diplomacy_cancel_pact(struct player *pplayer,
                                   int other_player_id,
                                   enum clause_type clause)
@@ -929,9 +929,9 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
   players_iterate_alive_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send information about removed (unused) players.
- **************************************************************************/
+ */
 static void send_player_remove_info_c(const struct player_slot *pslot,
                                       struct conn_list *dest)
 {
@@ -948,18 +948,18 @@ static void send_player_remove_info_c(const struct player_slot *pslot,
   conn_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Do not compute and send PACKET_PLAYER_INFO or PACKET_NATION_AVAILABILITY
    until a call to player_info_thaw(). This is used during savegame load
    or ruleset (re)load cycles, to avoid sending infos to the client that
    depend on ruleset data it does not yet have.
- **************************************************************************/
+ */
 void player_info_freeze() { player_info_frozen_level++; }
 
-/**********************************************************************/ /**
+/**
    If the frozen level is back to 0, send all players' infos, and nation
    availability, to all connections.
- **************************************************************************/
+ */
 void player_info_thaw()
 {
   if (0 == --player_info_frozen_level) {
@@ -969,7 +969,7 @@ void player_info_thaw()
   fc_assert(0 <= player_info_frozen_level);
 }
 
-/**********************************************************************/ /**
+/**
    Send all information about a player (player_info and all
    player_diplstates) to the given connections.
 
@@ -978,14 +978,14 @@ void player_info_thaw()
    This function also sends the diplstate of the player. So take care, that
    all players are defined in the client and in the server. To create a
    player without sending the diplstate, use send_player_info_c().
- **************************************************************************/
+ */
 void send_player_all_c(struct player *src, struct conn_list *dest)
 {
   send_player_info_c(src, dest);
   send_player_diplstate_c(src, dest);
 }
 
-/**********************************************************************/ /**
+/**
    Send information about player slot 'src', or all valid (i.e. used and
    initialized) players if 'src' is NULL, to specified clients 'dest'.
    If 'dest' is NULL, it is treated as game.est_connections.
@@ -995,7 +995,7 @@ void send_player_all_c(struct player *src, struct conn_list *dest)
    NB: If 'src' is NULL (meaning send information about all players) this
    function will only send info for used players, i.e. player slots with
    a player defined.
- **************************************************************************/
+ */
 void send_player_info_c(struct player *src, struct conn_list *dest)
 {
   if (0 < player_info_frozen_level) {
@@ -1011,10 +1011,10 @@ void send_player_info_c(struct player *src, struct conn_list *dest)
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Really send information. If 'dest' is NULL, then it is set to
    game.est_connections.
- **************************************************************************/
+ */
 static void send_player_info_c_real(struct player *src,
                                     struct conn_list *dest)
 {
@@ -1044,7 +1044,7 @@ static void send_player_info_c_real(struct player *src,
   conn_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Identical to send_player_info_c(), but sends the diplstate of the
    player.
 
@@ -1052,7 +1052,7 @@ static void send_player_info_c_real(struct player *src,
    diplstate. It can only be send if the player exists at the destination.
    Thus, this function should be called after the player(s) exists on both
    sides of the connection.
- **************************************************************************/
+ */
 void send_player_diplstate_c(struct player *src, struct conn_list *dest)
 {
   if (src != NULL) {
@@ -1064,10 +1064,10 @@ void send_player_diplstate_c(struct player *src, struct conn_list *dest)
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Really send information. If 'dest' is NULL, then it is set to
    game.est_connections.
- **************************************************************************/
+ */
 static void send_player_diplstate_c_real(struct player *plr1,
                                          struct conn_list *dest)
 {
@@ -1101,9 +1101,9 @@ static void send_player_diplstate_c_real(struct player *plr1,
   conn_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Package player information that is always sent.
- **************************************************************************/
+ */
 static void package_player_common(struct player *plr,
                                   struct packet_player_info *packet)
 {
@@ -1153,7 +1153,7 @@ static void package_player_common(struct player *plr,
   packet->science_cost = plr->ai_common.science_cost;
 }
 
-/**********************************************************************/ /**
+/**
    Package player info depending on info_level. We send everything to
    plr's connections, we send almost everything to players with embassy
    to plr, we send a little to players we are in contact with and almost
@@ -1161,7 +1161,7 @@ static void package_player_common(struct player *plr,
 
    Receiver may be NULL in which cases dummy values are sent for some
    fields.
- **************************************************************************/
+ */
 static void package_player_info(struct player *plr,
                                 struct packet_player_info *packet,
                                 struct player *receiver,
@@ -1323,7 +1323,7 @@ static void package_player_info(struct player *plr,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Package player diplstate depending on info_level. We send everything to
    plr's connections, we send almost everything to players with embassy
    to plr, we send a little to players we are in contact with and almost
@@ -1331,7 +1331,7 @@ static void package_player_info(struct player *plr,
 
    Receiver may be NULL in which cases dummy values are sent for some
    fields.
- **************************************************************************/
+ */
 static void
 package_player_diplstate(struct player *plr1, struct player *plr2,
                          struct packet_player_diplstate *packet_ds,
@@ -1372,9 +1372,9 @@ package_player_diplstate(struct player *plr1, struct player *plr2,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return level of information player should receive about another.
- **************************************************************************/
+ */
 static enum plr_info_level player_info_level(struct player *plr,
                                              struct player *receiver)
 {
@@ -1393,26 +1393,26 @@ static enum plr_info_level player_info_level(struct player *plr,
   return INFO_MINIMUM;
 }
 
-/**********************************************************************/ /**
+/**
    Convenience function to return "reply" destination connection list
    for player: pplayer->current_conn if set, else pplayer->connections.
- **************************************************************************/
+ */
 struct conn_list *player_reply_dest(struct player *pplayer)
 {
   return (pplayer->current_conn ? pplayer->current_conn->self
                                 : pplayer->connections);
 }
 
-/**********************************************************************/ /**
+/**
    Call first_contact function if such is defined for player
- **************************************************************************/
+ */
 static void call_first_contact(struct player *pplayer,
                                struct player *aplayer)
 {
   CALL_PLR_AI_FUNC(first_contact, pplayer, pplayer, aplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Initialize ANY newly-created player on the server.
 
    The initmap option is used because we don't want to initialize the map
@@ -1421,7 +1421,7 @@ static void call_first_contact(struct player *pplayer,
 
    The needs_team options should be set for players who should be assigned
    a team.  They will be put on their own newly-created team.
- **************************************************************************/
+ */
 void server_player_init(struct player *pplayer, bool initmap,
                         bool needs_team)
 {
@@ -1470,11 +1470,11 @@ void server_player_init(struct player *pplayer, bool initmap,
   handicaps_init(pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    If a player's color will be predictable when colors are assigned (or
    assignment has already happened), return that color. Otherwise (if the
    player's color is yet to be assigned randomly), return NULL.
- **************************************************************************/
+ */
 const struct rgbcolor *player_preferred_color(struct player *pplayer)
 {
   if (pplayer->rgb) {
@@ -1513,11 +1513,11 @@ const struct rgbcolor *player_preferred_color(struct player *pplayer)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return whether a player's color can currently be set with the
    '/playercolor' command. If not, give a reason why not, if 'reason' is
    not NULL (need not be freed).
- **************************************************************************/
+ */
 bool player_color_changeable(const struct player *pplayer,
                              const char **reason)
 {
@@ -1531,11 +1531,11 @@ bool player_color_changeable(const struct player *pplayer,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Permanently assign colors to any players that don't already have them.
    First assign preferred colors, then assign the rest randomly, trying to
    avoid clashes.
- **************************************************************************/
+ */
 void assign_player_colors()
 {
   struct rgbcolor_list *spare_colors =
@@ -1630,10 +1630,10 @@ void assign_player_colors()
   rgbcolor_list_destroy(spare_colors);
 }
 
-/**********************************************************************/ /**
+/**
    Set the player's color. If 'prgbcolor' is not NULL the caller should free
    the pointer, as player_set_color() copies the data.
- **************************************************************************/
+ */
 void server_player_set_color(struct player *pplayer,
                              const struct rgbcolor *prgbcolor)
 {
@@ -1649,11 +1649,11 @@ void server_player_set_color(struct player *pplayer,
   send_player_info_c(pplayer, NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Return the player color as featured text string.
    (In pregame, this uses the color the player will take, if known, even if
    not assigned yet.)
- **************************************************************************/
+ */
 const char *player_color_ftstr(struct player *pplayer)
 {
   static char buf[64];
@@ -1676,10 +1676,10 @@ const char *player_color_ftstr(struct player *pplayer)
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Gives units that every player should have. Usually called for
    players created midgame.
- **************************************************************************/
+ */
 void give_midgame_initial_units(struct player *pplayer, struct tile *ptile)
 {
   int sucount = qstrlen(game.server.start_units);
@@ -1697,13 +1697,13 @@ void give_midgame_initial_units(struct player *pplayer, struct tile *ptile)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Creates a new, uninitialized, used player slot. You should probably
    call server_player_init() to initialize it, and send_player_info_c()
    later to tell clients about it.
 
    May return NULL if creation was not possible.
- **************************************************************************/
+ */
 struct player *server_create_player(int player_id, const char *ai_tname,
                                     struct rgbcolor *prgbcolor,
                                     bool allow_ai_type_fallbacking)
@@ -1747,12 +1747,12 @@ struct player *server_create_player(int player_id, const char *ai_tname,
   return pplayer;
 }
 
-/**********************************************************************/ /**
+/**
    This function does _not_ close any connections attached to this
    player. The function cut_connection() is used for that. Be sure
    to send_player_slot_info_c() afterwards to tell clients that the
    player slot has become unused.
- **************************************************************************/
+ */
 void server_remove_player(struct player *pplayer)
 {
   const struct player_slot *pslot;
@@ -1858,7 +1858,7 @@ void server_remove_player(struct player *pplayer)
   map_calculate_borders();
 }
 
-/**********************************************************************/ /**
+/**
    The following limits a player's rates to those that are acceptable for the
    present form of government.  If a rate exceeds maxrate for this
  government, it adjusts rates automatically adding the extra to the 2nd
@@ -1867,7 +1867,7 @@ void server_remove_player(struct player *pplayer)
 
    Returns actual max rate used. This function should be called after team
    information are defined.
- **************************************************************************/
+ */
 struct player_economic player_limit_to_max_rates(struct player *pplayer)
 {
   int maxrate, surplus;
@@ -1916,10 +1916,10 @@ struct player_economic player_limit_to_max_rates(struct player *pplayer)
   return economic;
 }
 
-/**********************************************************************/ /**
+/**
    Check if this name is allowed for the player. Fill out the error message
    (a translated string to be sent to the client) if not.
- **************************************************************************/
+ */
 static bool server_player_name_is_allowed(const struct connection *caller,
                                           const struct player *pplayer,
                                           const struct nation_type *pnation,
@@ -1980,10 +1980,10 @@ static bool server_player_name_is_allowed(const struct connection *caller,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Try to set the player name to 'name'. Else, find a default name. Returns
    TRUE on success.
- **************************************************************************/
+ */
 bool server_player_set_name_full(const struct connection *caller,
                                  struct player *pplayer,
                                  const struct nation_type *pnation,
@@ -2081,9 +2081,9 @@ bool server_player_set_name_full(const struct connection *caller,
   return false; /* Let's say it's a failure. */
 }
 
-/**********************************************************************/ /**
+/**
    Try to set the player name to 'name'. Else, find a default name.
- **************************************************************************/
+ */
 void server_player_set_name(struct player *pplayer, const char *name)
 {
   bool ret;
@@ -2092,12 +2092,12 @@ void server_player_set_name(struct player *pplayer, const char *name)
   fc_assert(true == ret);
 }
 
-/**********************************************************************/ /**
+/**
    Returns the default diplomatic state between 2 players.
 
    Mainly, this returns DS_WAR, but it can also return DS_PEACE if both
    players are allied with the same third player.
- **************************************************************************/
+ */
 static enum diplstate_type
 get_default_diplstate(const struct player *pplayer1,
                       const struct player *pplayer2)
@@ -2115,9 +2115,9 @@ get_default_diplstate(const struct player *pplayer1,
   return DS_WAR;
 }
 
-/**********************************************************************/ /**
+/**
    Update contact info.
- **************************************************************************/
+ */
 void make_contact(struct player *pplayer1, struct player *pplayer2,
                   struct tile *ptile)
 {
@@ -2171,9 +2171,9 @@ void make_contact(struct player *pplayer1, struct player *pplayer2,
   send_player_all_c(pplayer2, pplayer2->connections);
 }
 
-/**********************************************************************/ /**
+/**
    Check if we make contact with anyone.
- **************************************************************************/
+ */
 void maybe_make_contact(struct tile *ptile, struct player *pplayer)
 {
   square_iterate(&(wld.map), ptile, 1, tile1)
@@ -2191,9 +2191,9 @@ void maybe_make_contact(struct tile *ptile, struct player *pplayer)
   square_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Shuffle or reshuffle the player order, storing in static variables above.
- **************************************************************************/
+ */
 void shuffle_players()
 {
   /* shuffled_order is defined global */
@@ -2216,9 +2216,9 @@ void shuffle_players()
 #endif /* FREECIV_DEBUG */
 }
 
-/**********************************************************************/ /**
+/**
    Initialize the shuffled players list (as from a loaded savegame).
- **************************************************************************/
+ */
 void set_shuffled_players(int *shuffled_players)
 {
   int i;
@@ -2232,11 +2232,11 @@ void set_shuffled_players(int *shuffled_players)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the i'th shuffled player, or NULL.
 
    NB: You should never need to call this function directly.
- **************************************************************************/
+ */
 struct player *shuffled_player(int i)
 {
   struct player *pplayer;
@@ -2247,7 +2247,7 @@ struct player *shuffled_player(int i)
   return pplayer;
 }
 
-/**********************************************************************/ /**
+/**
    This function returns a random-ish nation that is suitable for 'barb_type'
    and is usable (not already in use by an existing player, and if
    needs_startpos is set, would not be prohibited from starting on the map
@@ -2268,7 +2268,7 @@ struct player *shuffled_player(int i)
    All other things being equal, prefers to pick a nation which returns a
    high score from nations_match() relative to any nations already in the
    game.
- **************************************************************************/
+ */
 struct nation_type *pick_a_nation(const struct nation_list *choices,
                                   bool ignore_conflicts, bool needs_startpos,
                                   enum barbarian_type barb_type)
@@ -2406,27 +2406,27 @@ struct nation_type *pick_a_nation(const struct nation_list *choices,
   return NO_NATION_SELECTED;
 }
 
-/**********************************************************************/ /**
+/**
    Return the nationset currently in effect.
- **************************************************************************/
+ */
 static struct nation_set *current_nationset()
 {
   return nation_set_by_setting_value(game.server.nationset);
 }
 
-/**********************************************************************/ /**
+/**
    Is the nation in the currently selected nationset?
    If not, it's not allowed to appear in the game.
- **************************************************************************/
+ */
 bool nation_is_in_current_set(const struct nation_type *pnation)
 {
   return nation_is_in_set(pnation, current_nationset());
 }
 
-/**********************************************************************/ /**
+/**
    Update the server's cached number of playable nations.
    Call when the nationset changes.
- **************************************************************************/
+ */
 void count_playable_nations()
 {
   server.playable_nations = 0;
@@ -2439,11 +2439,11 @@ void count_playable_nations()
   allowed_nations_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Return whether a nation is "pickable" -- whether players can select it
    at game start.
    (is_nation_pickable() is the equivalent function on the client.)
- **************************************************************************/
+ */
 bool client_can_pick_nation(const struct nation_type *pnation)
 {
   fc_assert_ret_val(pnation != NULL, false);
@@ -2452,9 +2452,9 @@ bool client_can_pick_nation(const struct nation_type *pnation)
              || !pnation->server.no_startpos);
 }
 
-/**********************************************************************/ /**
+/**
    Helper doing the actual work for send_nation_availability() (q.v.).
- **************************************************************************/
+ */
 static void send_nation_availability_real(struct conn_list *dest,
                                           bool nationset_change)
 {
@@ -2471,9 +2471,9 @@ static void send_nation_availability_real(struct conn_list *dest,
   lsend_packet_nation_availability(dest, &packet);
 }
 
-/**********************************************************************/ /**
+/**
    Tell clients which nations can be picked given current server settings.
- **************************************************************************/
+ */
 void send_nation_availability(struct conn_list *dest, bool nationset_change)
 {
   if (0 < player_info_frozen_level) {
@@ -2483,11 +2483,11 @@ void send_nation_availability(struct conn_list *dest, bool nationset_change)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Try to select a nation set that fits the current players' nations, or
    failing that, unset the nations of some of the players.
    To be called when loading an old savegame that predates nationsets.
- **************************************************************************/
+ */
 void fit_nationset_to_players()
 {
   int misfits[nation_set_count()];
@@ -2555,9 +2555,9 @@ void fit_nationset_to_players()
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Called when something is changed; this resets everyone's readiness.
- **************************************************************************/
+ */
 void reset_all_start_commands(bool plrchange)
 {
   if (S_S_INITIAL != server_state()) {
@@ -2588,12 +2588,12 @@ void reset_all_start_commands(bool plrchange)
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    This function creates a new player and copies all of it's science
    research etc.  Players are both thrown into anarchy and gold is
    split between both players.
                                 - Kris Bubendorfer
- **************************************************************************/
+ */
 static struct player *split_player(struct player *pplayer)
 {
   struct research *new_research, *old_research;
@@ -2735,14 +2735,14 @@ static struct player *split_player(struct player *pplayer)
   return cplayer;
 }
 
-/**********************************************************************/ /**
+/**
    Check if civil war is possible for a player.
    If conquering_city is TRUE, one of the cities currently in the empire
    will shortly not be and shouldn't be considered.
    honour_server_option controls whether we honour the 'civilwarsize'
    server option. (If we don't, we still enforce a minimum empire size, to
    avoid the risk of creating a new player with no cities.)
- **************************************************************************/
+ */
 bool civil_war_possible(struct player *pplayer, bool conquering_city,
                         bool honour_server_option)
 {
@@ -2765,7 +2765,7 @@ bool civil_war_possible(struct player *pplayer, bool conquering_city,
   }
 }
 
-/**********************************************************************/ /**
+/**
    civil_war_triggered:
     * The capture of a primary capital is not a sure fire way to throw
    and empire into civil war.  Some governments are more susceptible
@@ -2789,7 +2789,7 @@ bool civil_war_possible(struct player *pplayer, bool conquering_city,
     * This routine calculates these probabilities and returns true
    if a civil war is triggered.
                                     - Kris Bubendorfer
- **************************************************************************/
+ */
 bool civil_war_triggered(struct player *pplayer)
 {
   /* Get base probabilities */
@@ -2814,7 +2814,7 @@ bool civil_war_triggered(struct player *pplayer)
   return (dice < prob);
 }
 
-/**********************************************************************/ /**
+/**
    Capturing a nation's primary capital is a devastating blow. This function
    creates a new AI player, and randomly splits the original players
    city list into two.  Of course this results in a real mix up of
@@ -2841,7 +2841,7 @@ bool civil_war_triggered(struct player *pplayer)
    ensures that each side gets roughly half, which ones is still
    determined randomly.
                                     - Kris Bubendorfer
- **************************************************************************/
+ */
 struct player *civil_war(struct player *pplayer)
 {
   int i, j;
@@ -2996,9 +2996,9 @@ struct player *civil_war(struct player *pplayer)
   return cplayer;
 }
 
-/**********************************************************************/ /**
+/**
    The client has send as a chunk of the attribute block.
- **************************************************************************/
+ */
 void handle_player_attribute_chunk(
     struct player *pplayer,
     const struct packet_player_attribute_chunk *chunk)
@@ -3006,18 +3006,18 @@ void handle_player_attribute_chunk(
   generic_handle_player_attribute_chunk(pplayer, chunk);
 }
 
-/**********************************************************************/ /**
+/**
    The client request an attribute block.
- **************************************************************************/
+ */
 void handle_player_attribute_block(struct player *pplayer)
 {
   send_attribute_block(pplayer, pplayer->current_conn);
 }
 
-/**********************************************************************/ /**
+/**
    (Hmm, how should "turn done" work for multi-connected non-observer
  players?)
- **************************************************************************/
+ */
 void handle_player_phase_done(struct player *pplayer, int turn)
 {
   if (turn != game.info.turn) {
@@ -3033,44 +3033,44 @@ void handle_player_phase_done(struct player *pplayer, int turn)
   send_player_all_c(pplayer, NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Return the number of barbarian players.
- **************************************************************************/
+ */
 int barbarian_count() { return server.nbarbarians; }
 
-/**********************************************************************/ /**
+/**
    Return the number of non-barbarian players.
- **************************************************************************/
+ */
 int normal_player_count() { return player_count() - server.nbarbarians; }
 
-/**********************************************************************/ /**
+/**
    Add a status flag to a player.
- **************************************************************************/
+ */
 void player_status_add(struct player *plr, enum player_status pstatus)
 {
   BV_SET(plr->server.status, pstatus);
 }
 
-/**********************************************************************/ /**
+/**
    Check player status flag.
- **************************************************************************/
+ */
 bool player_status_check(struct player *plr, enum player_status pstatus)
 {
   return BV_ISSET(plr->server.status, pstatus);
 }
 
-/**********************************************************************/ /**
+/**
    Reset player status to 'normal'.
- **************************************************************************/
+ */
 void player_status_reset(struct player *plr)
 {
   BV_CLR_ALL(plr->server.status);
   player_status_add(plr, PSTATUS_NORMAL);
 }
 
-/**********************************************************************/ /**
+/**
    Returns the username that control of the player is delegated to, if any.
- **************************************************************************/
+ */
 const char *player_delegation_get(const struct player *pplayer)
 {
   if (pplayer == NULL || qstrlen(pplayer->server.delegate_to) == 0) {
@@ -3081,9 +3081,9 @@ const char *player_delegation_get(const struct player *pplayer)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Define a delegation. NULL for no delegate.
- **************************************************************************/
+ */
 void player_delegation_set(struct player *pplayer, const char *username)
 {
   fc_assert_ret(pplayer != NULL);
@@ -3095,19 +3095,19 @@ void player_delegation_set(struct player *pplayer, const char *username)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if a delegation is active.
    This means that either the player is controlled by a delegate, or the
    player has been temporarily 'put aside' by a delegate.
- **************************************************************************/
+ */
 bool player_delegation_active(const struct player *pplayer)
 {
   return (pplayer && qstrlen(pplayer->server.orig_username) != 0);
 }
 
-/**********************************************************************/ /**
+/**
    Send information about delegations to reconnecting users.
- **************************************************************************/
+ */
 void send_delegation_info(const struct connection *pconn)
 {
   if (game.info.is_new_game) {
@@ -3148,11 +3148,11 @@ void send_delegation_info(const struct connection *pconn)
   }
 }
 
-/**********************************************************************/ /**
+/**
    For a given user, if there is some player that the user originally
    controlled but is currently delegated to another user, return that player.
    See also player_by_user().
- **************************************************************************/
+ */
 struct player *player_by_user_delegated(const char *name)
 {
   players_iterate(pplayer)
@@ -3167,18 +3167,18 @@ struct player *player_by_user_delegated(const char *name)
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Initialise the player colors.
- **************************************************************************/
+ */
 void playercolor_init()
 {
   fc_assert_ret(game.server.plr_colors == NULL);
   game.server.plr_colors = rgbcolor_list_new();
 }
 
-/**********************************************************************/ /**
+/**
    Free the memory allocated for the player color.
- **************************************************************************/
+ */
 void playercolor_free()
 {
   if (game.server.plr_colors == NULL) {
@@ -3197,9 +3197,9 @@ void playercolor_free()
   game.server.plr_colors = NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Add a color to the list of all available player colors.
- **************************************************************************/
+ */
 void playercolor_add(struct rgbcolor *prgbcolor)
 {
   fc_assert_ret(game.server.plr_colors != NULL);
@@ -3207,9 +3207,9 @@ void playercolor_add(struct rgbcolor *prgbcolor)
   rgbcolor_list_append(game.server.plr_colors, prgbcolor);
 }
 
-/**********************************************************************/ /**
+/**
    Get the player color with the index 'id'.
- **************************************************************************/
+ */
 struct rgbcolor *playercolor_get(int id)
 {
   fc_assert_ret_val(game.server.plr_colors != NULL, NULL);
@@ -3217,9 +3217,9 @@ struct rgbcolor *playercolor_get(int id)
   return rgbcolor_list_get(game.server.plr_colors, id);
 }
 
-/**********************************************************************/ /**
+/**
    Number of player colors defined.
- **************************************************************************/
+ */
 int playercolor_count()
 {
   fc_assert_ret_val(game.server.plr_colors != NULL, 0);
@@ -3227,9 +3227,9 @@ int playercolor_count()
   return rgbcolor_list_size(game.server.plr_colors);
 }
 
-/**********************************************************************/ /**
+/**
    Sets player's multipliers.
- **************************************************************************/
+ */
 void handle_player_multiplier(struct player *pplayer, int count,
                               const int *multipliers)
 {
@@ -3267,9 +3267,9 @@ void handle_player_multiplier(struct player *pplayer, int count,
   send_player_info_c(pplayer, NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Toggle player to AI mode.
- **************************************************************************/
+ */
 void player_set_to_ai_mode(struct player *pplayer, enum ai_level skill_level)
 {
   set_as_ai(pplayer);
@@ -3289,9 +3289,9 @@ void player_set_to_ai_mode(struct player *pplayer, enum ai_level skill_level)
   fc_assert(pplayer->ai_common.skill_level == skill_level);
 }
 
-/**********************************************************************/ /**
+/**
    Toggle player under human control.
- **************************************************************************/
+ */
 void player_set_under_human_control(struct player *pplayer)
 {
   set_as_human(pplayer);

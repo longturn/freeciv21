@@ -32,9 +32,9 @@
 #include "page_game.h"
 #include "sprite.h"
 
-/***********************************************************************/ /**
+/**
    Constructor for goto_dialog
- ***************************************************************************/
+ */
 goto_dialog::goto_dialog(QWidget *parent)
 {
   QStringList headers_lst;
@@ -92,9 +92,9 @@ goto_dialog::goto_dialog(QWidget *parent)
   setFocus();
 }
 
-/***********************************************************************/ /**
+/**
    Sets variables which must be destroyed later
- ***************************************************************************/
+ */
 void goto_dialog::init()
 {
   if (original_tile) {
@@ -103,9 +103,9 @@ void goto_dialog::init()
   original_tile = tile_virtual_new(get_center_tile_mapcanvas());
 }
 
-/***********************************************************************/ /**
+/**
    Destructor for goto dialog
- ***************************************************************************/
+ */
 goto_dialog::~goto_dialog()
 {
   if (original_tile) {
@@ -113,18 +113,18 @@ goto_dialog::~goto_dialog()
   }
 }
 
-/***********************************************************************/ /**
+/**
    Slot for checkbox 'all nations'
- ***************************************************************************/
+ */
 void goto_dialog::checkbox_changed(int state)
 {
   Q_UNUSED(state);
   update_dlg();
 }
 
-/***********************************************************************/ /**
+/**
    User has chosen some city on table
- ***************************************************************************/
+ */
 void goto_dialog::item_selected(const QItemSelection &sl,
                                 const QItemSelection &ds)
 {
@@ -163,17 +163,17 @@ void goto_dialog::item_selected(const QItemSelection &sl,
   }
 }
 
-/***********************************************************************/ /**
+/**
    Sorts dialog by default column (0)
- ***************************************************************************/
+ */
 void goto_dialog::sort_def()
 {
   goto_tab->sortByColumn(0, Qt::AscendingOrder);
 }
 
-/***********************************************************************/ /**
+/**
    Shows and moves widget
- ***************************************************************************/
+ */
 void goto_dialog::show_me()
 {
   QPoint p, final_p;
@@ -191,9 +191,9 @@ void goto_dialog::show_me()
   show();
 }
 
-/***********************************************************************/ /**
+/**
    Updates table in widget
- ***************************************************************************/
+ */
 void goto_dialog::update_dlg()
 {
   goto_tab->clearContents();
@@ -211,9 +211,9 @@ void goto_dialog::update_dlg()
   goto_tab->horizontalHeader()->setStretchLastSection(true);
 }
 
-/***********************************************************************/ /**
+/**
    Helper for function for filling table
- ***************************************************************************/
+ */
 void goto_dialog::fill_tab(player *pplayer)
 {
   int i;
@@ -264,9 +264,9 @@ void goto_dialog::fill_tab(player *pplayer)
   city_list_iterate_end;
 }
 
-/***********************************************************************/ /**
+/**
    Slot for airlifting unit
- ***************************************************************************/
+ */
 void goto_dialog::airlift_to()
 {
   struct city *pdest;
@@ -287,9 +287,9 @@ void goto_dialog::airlift_to()
   }
 }
 
-/***********************************************************************/ /**
+/**
    Slot for goto for city
- ***************************************************************************/
+ */
 void goto_dialog::go_to_city()
 {
   struct city *pdest;
@@ -309,18 +309,18 @@ void goto_dialog::go_to_city()
   }
 }
 
-/***********************************************************************/ /**
+/**
    Slot for hiding dialog
- ***************************************************************************/
+ */
 void goto_dialog::close_dlg()
 {
   center_tile_mapcanvas(original_tile);
   hide();
 }
 
-/***********************************************************************/ /**
+/**
    Paints rectangles for goto_dialog
- ***************************************************************************/
+ */
 void goto_dialog::paint(QPainter *painter, QPaintEvent *event)
 {
   Q_UNUSED(event)
@@ -330,9 +330,9 @@ void goto_dialog::paint(QPainter *painter, QPaintEvent *event)
   painter->drawRect(5, 5, width() - 10, height() - 10);
 }
 
-/***********************************************************************/ /**
+/**
    Paint event for goto_dialog
- ***************************************************************************/
+ */
 void goto_dialog::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
@@ -342,9 +342,9 @@ void goto_dialog::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/***********************************************************************/ /*
+/*
    Popup a dialog to have the focus unit goto to a city.
- **************************************************************************/
+ */
 void popup_goto_dialog(void)
 {
   if (C_S_RUNNING != client_state()) {

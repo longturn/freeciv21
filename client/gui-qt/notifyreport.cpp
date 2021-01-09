@@ -20,9 +20,9 @@
 #include "mapview.h"
 #include "page_game.h"
 
-/***********************************************************************/ /**
+/**
    Constructor for notify dialog
- ***************************************************************************/
+ */
 notify_dialog::notify_dialog(const char *caption, const char *headline,
                              const char *lines, QWidget *parent)
     : fcwidget(), label(nullptr), layout(nullptr)
@@ -53,9 +53,9 @@ notify_dialog::notify_dialog(const char *caption, const char *headline,
   was_destroyed = false;
 }
 
-/***********************************************************************/ /**
+/**
    Starts new copy of notify dialog and closes current one
- ***************************************************************************/
+ */
 void notify_dialog::restart()
 {
   QString s, q;
@@ -79,9 +79,9 @@ void notify_dialog::restart()
   destroy();
 }
 
-/***********************************************************************/ /**
+/**
    Calculates size of notify dialog
- ***************************************************************************/
+ */
 void notify_dialog::calc_size(int &x, int &y)
 {
   QFontMetrics fm(small_font);
@@ -99,9 +99,9 @@ void notify_dialog::calc_size(int &x, int &y)
   x = x + 15;
 }
 
-/***********************************************************************/ /**
+/**
    Paint Event for notify dialog
- ***************************************************************************/
+ */
 void notify_dialog::paintEvent(QPaintEvent *paint_event)
 {
   Q_UNUSED(paint_event)
@@ -122,9 +122,9 @@ void notify_dialog::paintEvent(QPaintEvent *paint_event)
   cw->put_to_corner();
 }
 
-/***********************************************************************/ /**
+/**
    Called when mouse button was pressed, just to close on right click
- ***************************************************************************/
+ */
 void notify_dialog::mousePressEvent(QMouseEvent *event)
 {
   cursor = event->globalPos() - geometry().topLeft();
@@ -134,47 +134,47 @@ void notify_dialog::mousePressEvent(QMouseEvent *event)
   }
 }
 
-/***********************************************************************/ /**
+/**
    Called when mouse button was pressed and moving around
- ***************************************************************************/
+ */
 void notify_dialog::mouseMoveEvent(QMouseEvent *event)
 {
   move(event->globalPos() - cursor);
   setCursor(Qt::SizeAllCursor);
 }
 
-/***********************************************************************/ /**
+/**
    Called when mouse button unpressed. Restores cursor.
- ***************************************************************************/
+ */
 void notify_dialog::mouseReleaseEvent(QMouseEvent *event)
 {
   Q_UNUSED(event)
   setCursor(Qt::ArrowCursor);
 }
 
-/***********************************************************************/ /**
+/**
    Called when close button was pressed
- ***************************************************************************/
+ */
 void notify_dialog::update_menu()
 {
   was_destroyed = true;
   destroy();
 }
 
-/***********************************************************************/ /**
+/**
    Destructor for notify dialog, notice that somehow object is not destroyed
    immediately, so it can be still visible for parent, check boolean
    was_destroyed if u suspect it could not be destroyed yet
- ***************************************************************************/
+ */
 notify_dialog::~notify_dialog()
 {
   was_destroyed = true;
   destroy();
 }
 
-/***********************************************************************/ /**
+/**
    Restarts all notify dialogs
- ***************************************************************************/
+ */
 void restart_notify_reports()
 {
   QList<notify_dialog *> nd_list;

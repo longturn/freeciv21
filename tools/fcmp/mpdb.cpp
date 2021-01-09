@@ -36,9 +36,9 @@ static sqlite3 *scenario_handle = NULL;
 
 static int mpdb_query(sqlite3 *handle, const char *query);
 
-/**********************************************************************/ /**
+/**
    Construct install info list from file.
- **************************************************************************/
+ */
 void load_install_info_list(const char *filename)
 {
   struct section_file *file;
@@ -103,9 +103,9 @@ void load_install_info_list(const char *filename)
   }
 }
 
-/**********************************************************************/ /**
+/**
    SQL query to database
- **************************************************************************/
+ */
 static int mpdb_query(sqlite3 *handle, const char *query)
 {
   int ret;
@@ -128,9 +128,9 @@ static int mpdb_query(sqlite3 *handle, const char *query)
   return ret;
 }
 
-/**********************************************************************/ /**
+/**
    Create modpack database
- **************************************************************************/
+ */
 void create_mpdb(const char *filename, bool scenario_db)
 {
   sqlite3 **handle;
@@ -180,9 +180,9 @@ void create_mpdb(const char *filename, bool scenario_db)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Open existing database
- **************************************************************************/
+ */
 void open_mpdb(const char *filename, bool scenario_db)
 {
   sqlite3 **handle;
@@ -201,9 +201,9 @@ void open_mpdb(const char *filename, bool scenario_db)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Close open databases
- **************************************************************************/
+ */
 void close_mpdbs()
 {
   sqlite3_close(main_handle);
@@ -212,9 +212,9 @@ void close_mpdbs()
   scenario_handle = NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Update modpack information in database
- **************************************************************************/
+ */
 bool mpdb_update_modpack(const char *name, enum modpack_type type,
                          const char *version)
 {
@@ -253,9 +253,9 @@ bool mpdb_update_modpack(const char *name, enum modpack_type type,
   return ret != SQLITE_OK;
 }
 
-/**********************************************************************/ /**
+/**
    Return version of modpack.
- **************************************************************************/
+ */
 const char *mpdb_installed_version(const char *name, enum modpack_type type)
 {
   sqlite3 **handle;

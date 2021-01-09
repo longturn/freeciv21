@@ -78,9 +78,9 @@ static void progress_callback_thr(int downloaded, int max);
 
 static void gui_download_modpack(const QString &url);
 
-/**********************************************************************/ /**
+/**
    Entry point for whole freeciv-mp-qt program.
- **************************************************************************/
+ */
 int main(int argc, char **argv)
 {
   QApplication app(argc, argv);
@@ -135,30 +135,30 @@ int main(int argc, char **argv)
   return EXIT_SUCCESS;
 }
 
-/**********************************************************************/ /**
+/**
    Progress indications from downloader
- **************************************************************************/
+ */
 static void msg_callback(const QString &msg) { gui->display_msg(msg); }
 
-/**********************************************************************/ /**
+/**
    Progress indications from downloader thread
- **************************************************************************/
+ */
 static void msg_callback_thr(const QString &msg)
 {
   gui->display_msg_thr(msg);
 }
 
-/**********************************************************************/ /**
+/**
    Progress indications from downloader
- **************************************************************************/
+ */
 static void progress_callback_thr(int downloaded, int max)
 {
   gui->progress_thr(downloaded, max);
 }
 
-/**********************************************************************/ /**
+/**
    Setup GUI object
- **************************************************************************/
+ */
 void mpgui::setup(QWidget *central, struct fcmp_params *params)
 {
 #define URL_LABEL_TEXT N_("Modpack URL")
@@ -249,9 +249,9 @@ void mpgui::setup(QWidget *central, struct fcmp_params *params)
   central->setLayout(main_layout);
 }
 
-/**********************************************************************/ /**
+/**
    Display status message
- **************************************************************************/
+ */
 void mpgui::display_msg(const QString &msg)
 {
   QByteArray msg_bytes = msg.toLocal8Bit();
@@ -260,34 +260,34 @@ void mpgui::display_msg(const QString &msg)
   msg_dspl->setText(msg);
 }
 
-/**********************************************************************/ /**
+/**
    Display status message from another thread
- **************************************************************************/
+ */
 void mpgui::display_msg_thr(const QString &msg)
 {
   emit display_msg_thr_signal(msg);
 }
 
-/**********************************************************************/ /**
+/**
    Update progress bar
- **************************************************************************/
+ */
 void mpgui::progress(int downloaded, int max)
 {
   bar->setMaximum(max);
   bar->setValue(downloaded);
 }
 
-/**********************************************************************/ /**
+/**
    Update progress bar from another thread
- **************************************************************************/
+ */
 void mpgui::progress_thr(int downloaded, int max)
 {
   emit progress_thr_signal(downloaded, max);
 }
 
-/**********************************************************************/ /**
+/**
    Download modpack from given URL
- **************************************************************************/
+ */
 static void gui_download_modpack(const QString &URL)
 {
   if (worker != nullptr) {
@@ -303,14 +303,14 @@ static void gui_download_modpack(const QString &URL)
                    progress_callback_thr);
 }
 
-/**********************************************************************/ /**
+/**
    User entered URL
- **************************************************************************/
+ */
 void mpgui::URL_given() { gui_download_modpack(URLedit->text()); }
 
-/**********************************************************************/ /**
+/**
    Refresh display of modpack list modpack versions
- **************************************************************************/
+ */
 void mpgui::refresh_list_versions()
 {
   for (int i = 0; i < mpcount; i++) {
@@ -336,17 +336,17 @@ void mpgui::refresh_list_versions()
   mplist_table->resizeColumnsToContents();
 }
 
-/**********************************************************************/ /**
+/**
    Refresh display of modpack list modpack versions from another thread
- **************************************************************************/
+ */
 void mpgui::refresh_list_versions_thr()
 {
   emit refresh_list_versions_thr_signal();
 }
 
-/**********************************************************************/ /**
+/**
    Build main modpack list view
- **************************************************************************/
+ */
 void mpgui::setup_list(const char *name, const char *URL,
                        const char *version, const char *license,
                        enum modpack_type type, const char *subtype,
@@ -410,9 +410,9 @@ void mpgui::setup_list(const char *name, const char *URL,
   mpcount++;
 }
 
-/**********************************************************************/ /**
+/**
    Build main modpack list view
- **************************************************************************/
+ */
 static void setup_modpack_list(const char *name, const char *URL,
                                const char *version, const char *license,
                                enum modpack_type type, const char *subtype,
@@ -422,9 +422,9 @@ static void setup_modpack_list(const char *name, const char *URL,
   gui->setup_list(name, URL, version, license, type, subtype, notes);
 }
 
-/**********************************************************************/ /**
+/**
    User activated another table row
- **************************************************************************/
+ */
 void mpgui::row_selected(int row, int column)
 {
   QString URL = mplist_table->item(row, ML_COL_URL)->text();
@@ -432,9 +432,9 @@ void mpgui::row_selected(int row, int column)
   URLedit->setText(URL);
 }
 
-/**********************************************************************/ /**
+/**
    User activated another table row
- **************************************************************************/
+ */
 void mpgui::row_download(const QModelIndex &index)
 {
   QString URL = mplist_table->item(index.row(), ML_COL_URL)->text();
@@ -444,9 +444,9 @@ void mpgui::row_download(const QModelIndex &index)
   URL_given();
 }
 
-/**********************************************************************/ /**
+/**
    Main window constructor
- **************************************************************************/
+ */
 mpgui_main::mpgui_main(QApplication *qapp_in, QWidget *central_in)
     : QMainWindow()
 {
@@ -454,9 +454,9 @@ mpgui_main::mpgui_main(QApplication *qapp_in, QWidget *central_in)
   central = central_in;
 }
 
-/**********************************************************************/ /**
+/**
    Open dialog to confirm that user wants to quit modpack installer.
- **************************************************************************/
+ */
 void mpgui_main::popup_quit_dialog()
 {
   QMessageBox ask(central);
@@ -480,9 +480,9 @@ void mpgui_main::popup_quit_dialog()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User clicked windows close button.
- **************************************************************************/
+ */
 void mpgui_main::closeEvent(QCloseEvent *event)
 {
   if (worker != nullptr && worker->isRunning()) {

@@ -54,28 +54,28 @@ static void apply_notify_font(struct option *poption);
 static void apply_sidebar(struct option *poption);
 static void apply_titlebar(struct option *poption);
 
-/**********************************************************************/ /**
+/**
    Return fc_client instance
- **************************************************************************/
+ */
 class fc_client *king() { return freeciv_qt; }
 
-/**********************************************************************/ /**
+/**
    Do any necessary pre-initialization of the UI, if necessary.
- **************************************************************************/
+ */
 void qtg_ui_init() {}
 
-/**********************************************************************/ /**
+/**
    Entry point for whole freeciv client program.
- **************************************************************************/
+ */
 int main(int argc, char **argv)
 {
   setup_gui_funcs();
   return client_main(argc, argv);
 }
 
-/**********************************************************************/ /**
+/**
    Migrate Qt client specific options from freeciv-2.5 options
- **************************************************************************/
+ */
 static void migrate_options_from_2_5()
 {
   qInfo(_("Migrating Qt-client options from freeciv-2.5 options."));
@@ -85,10 +85,10 @@ static void migrate_options_from_2_5()
   gui_options.gui_qt_migrated_from_2_5 = true;
 }
 
-/**********************************************************************/ /**
+/**
    The main loop for the UI.  This is called from main(), and when it
    exits the client will exit.
- **************************************************************************/
+ */
 void qtg_ui_main()
 {
   if (true) {
@@ -116,14 +116,14 @@ void qtg_ui_main()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return the running QApplication.
- **************************************************************************/
+ */
 QApplication *current_app() { return qApp; }
 
-/**********************************************************************/ /**
+/**
    Extra initializers for client options.
- **************************************************************************/
+ */
 void qtg_options_extra_init()
 {
   struct option *poption;
@@ -146,14 +146,14 @@ void qtg_options_extra_init()
 #undef option_var_set_callback
 }
 
-/**********************************************************************/ /**
+/**
    Do any necessary UI-specific cleanup
- **************************************************************************/
+ */
 void qtg_ui_exit() { delete freeciv_qt; }
 
-/**********************************************************************/ /**
+/**
    Update the connected users list at pregame state.
- **************************************************************************/
+ */
 void qtg_real_conn_list_dialog_update(void *unused)
 {
   if (qtg_get_current_client_page() == PAGE_NETWORK) {
@@ -163,33 +163,33 @@ void qtg_real_conn_list_dialog_update(void *unused)
       ->update_start_page();
 }
 
-/**********************************************************************/ /**
+/**
    Make a bell noise (beep).  This provides low-level sound alerts even
    if there is no real sound support.
- **************************************************************************/
+ */
 void qtg_sound_bell()
 {
   QApplication::beep();
   QApplication::alert(king()->central_wdg);
 }
 
-/**********************************************************************/ /**
+/**
    Wait for data on the given socket.  Call input_from_server() when data
    is ready to be read.
 
    This function is called after the client succesfully has connected
    to the server.
- **************************************************************************/
+ */
 void qtg_add_net_input(QTcpSocket *sock) { king()->add_server_source(sock); }
 
-/**********************************************************************/ /**
+/**
    Stop waiting for any server network data.  See add_net_input().
 
    This function is called if the client disconnects from the server.
- **************************************************************************/
+ */
 void qtg_remove_net_input() {}
 
-/**********************************************************************/ /**
+/**
    Set one of the unit icons (specified by idx) in the information area
    based on punit.
 
@@ -199,28 +199,28 @@ void qtg_remove_net_input() {}
    idx specified which icon should be modified. Use idx == -1 to indicate
    the icon for the active unit. Or idx in [0..num_units_below-1] for
    secondary (inactive) units on the same tile.
- **************************************************************************/
+ */
 void qtg_set_unit_icon(int idx, struct unit *punit)
 { /* PORTME */
 }
 
-/**********************************************************************/ /**
+/**
    Most clients use an arrow (e.g., sprites.right_arrow) to indicate when
    the units_below will not fit. This function is called to activate or
    deactivate the arrow.
 
    Is disabled by default.
- **************************************************************************/
+ */
 void qtg_set_unit_icons_more_arrow(bool onoff)
 { /* PORTME */
 }
 
-/**********************************************************************/ /**
+/**
    Called when the set of units in focus (get_units_in_focus()) changes.
    Standard updates like update_unit_info_label() are handled in the
  platform- independent code, so some clients will not need to do anything
  here.
- **************************************************************************/
+ */
 void qtg_real_focus_units_changed()
 {
   units_select *unit_sel = queen()->unit_selector;
@@ -229,11 +229,11 @@ void qtg_real_focus_units_changed()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Enqueue a callback to be called during an idle moment.  The 'callback'
    function should be called sometimes soon, and passed the 'data' pointer
    as its data.
- **************************************************************************/
+ */
 void qtg_add_idle_callback(void(callback)(void *), void *data)
 {
   call_me_back *cb = new call_me_back; /* removed in mr_idler:idling() */
@@ -243,9 +243,9 @@ void qtg_add_idle_callback(void(callback)(void *), void *data)
   mrIdle::idlecb()->addCallback(cb);
 }
 
-/**********************************************************************/ /**
+/**
    Shows/Hides titlebar
- **************************************************************************/
+ */
 void apply_titlebar(struct option *poption)
 {
   bool val;
@@ -272,17 +272,17 @@ void apply_titlebar(struct option *poption)
   king()->show();
 }
 
-/**********************************************************************/ /**
+/**
    Change sidebar position
- **************************************************************************/
+ */
 void apply_sidebar(struct option *poption)
 {
   queen()->updateSidebarPosition();
 }
 
-/**********************************************************************/ /**
+/**
    Change the given font.
- **************************************************************************/
+ */
 void gui_qt_apply_font(struct option *poption)
 {
   QFont *f;
@@ -306,9 +306,9 @@ void gui_qt_apply_font(struct option *poption)
   apply_help_font(poption);
 }
 
-/**********************************************************************/ /**
+/**
    Applies help font
- **************************************************************************/
+ */
 static void apply_help_font(struct option *poption)
 {
   QFont *f;
@@ -327,9 +327,9 @@ static void apply_help_font(struct option *poption)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Applies help font
- **************************************************************************/
+ */
 static void apply_notify_font(struct option *poption)
 {
   if (king()) {
@@ -344,44 +344,44 @@ static void apply_notify_font(struct option *poption)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Stub for editor function
- **************************************************************************/
+ */
 void qtg_editgui_tileset_changed() {}
 
-/**********************************************************************/ /**
+/**
    Stub for editor function
- **************************************************************************/
+ */
 void qtg_editgui_refresh() {}
 
-/**********************************************************************/ /**
+/**
    Stub for editor function
- **************************************************************************/
+ */
 void qtg_editgui_popup_properties(const struct tile_list *tiles, int objtype)
 {
 }
 
-/**********************************************************************/ /**
+/**
    Stub for editor function
- **************************************************************************/
+ */
 void qtg_editgui_popdown_all() {}
 
-/**********************************************************************/ /**
+/**
    Stub for editor function
- **************************************************************************/
+ */
 void qtg_editgui_notify_object_changed(int objtype, int object_id,
                                        bool removal)
 {
 }
 
-/**********************************************************************/ /**
+/**
    Stub for editor function
- **************************************************************************/
+ */
 void qtg_editgui_notify_object_created(int tag, int id) {}
 
-/**********************************************************************/ /**
+/**
    Updates a gui font style.
- **************************************************************************/
+ */
 void qtg_gui_update_font(const QString &font_name, const QString &font_value)
 {
   QFont *f;
@@ -403,21 +403,21 @@ void gui_update_allfonts()
   gui_options.gui_qt_increase_fonts = 0;
 }
 
-/**********************************************************************/ /**
+/**
    Returns gui type of the client
- **************************************************************************/
+ */
 enum gui_type qtg_get_gui_type() { return GUI_QT; }
 
-/**********************************************************************/ /**
+/**
    Called when the tileset is changed to reset the unit pixmap table.
- **************************************************************************/
+ */
 void reset_unit_table()
 { /* FIXME */
 }
 
-/**********************************************************************/ /**
+/**
    Open dialog to confirm that user wants to quit client.
- **************************************************************************/
+ */
 void popup_quit_dialog()
 {
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
@@ -437,9 +437,9 @@ void popup_quit_dialog()
   ask->show();
 }
 
-/**********************************************************************/ /**
+/**
    Insert build information to help
- **************************************************************************/
+ */
 void qtg_insert_client_build_info(char *outbuf, size_t outlen)
 {
   /* There's also an separate entry about Qt in help menu. */

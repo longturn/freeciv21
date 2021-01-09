@@ -27,14 +27,14 @@
 
 int ice_base_colatitude = 0;
 
-/************************************************************************/ /**
+/**
    Returns the colatitude of this map position.  This is a value in the
    range of 0 to MAX_COLATITUDE (inclusive).
    This function is wanted to concentrate the topology information
    all generator code has to use  colatitude and others topology safe
    functions instead (x,y) coordinate to place terrains
    colatitude is 0 at poles and MAX_COLATITUDE at equator
- ****************************************************************************/
+ */
 int map_colatitude(const struct tile *ptile)
 {
   double x, y;
@@ -170,19 +170,19 @@ int map_colatitude(const struct tile *ptile)
             + 1.5 * (x * x + y * y));
 }
 
-/************************************************************************/ /**
+/**
    Return TRUE if the map in a typical city radius is SINGULAR.  This is
    used to avoid putting (non-polar) land near the edge of the map.
- ****************************************************************************/
+ */
 bool near_singularity(const struct tile *ptile)
 {
   return is_singular_tile(ptile, CITY_MAP_DEFAULT_RADIUS);
 }
 
-/************************************************************************/ /**
+/**
    Set the map xsize and ysize based on a base size and ratio (in natural
    coordinates).
- ****************************************************************************/
+ */
 static void set_sizes(double size, int Xratio, int Yratio)
 {
   /* Some code in generator assumes even dimension, so this is set to 2.
@@ -252,12 +252,12 @@ static void set_sizes(double size, int Xratio, int Yratio)
         static_cast<int>(size));
 }
 
-/************************************************************************/ /**
+/**
    Return the default ratios for known topologies.
 
   The factor x_ratio * y_ratio determines the accuracy of the size.
   Small ratios work better than large ones; 3:2 is not the same as 6:4
- ****************************************************************************/
+ */
 static void get_ratios(int *x_ratio, int *y_ratio)
 {
   if (current_topo_has_flag(TF_WRAPX)) {
@@ -283,11 +283,11 @@ static void get_ratios(int *x_ratio, int *y_ratio)
   }
 }
 
-/************************************************************************/ /**
+/**
    This function sets sizes in a topology-specific way then calls
    map_init_topology(). Set 'autosize' to TRUE if the xsize/ysize should be
    calculated.
- ****************************************************************************/
+ */
 void generator_init_topology(bool autosize)
 {
   int sqsize;
@@ -399,9 +399,9 @@ void generator_init_topology(bool autosize)
   map_init_topology();
 }
 
-/************************************************************************/ /**
+/**
    An estimate of the linear (1-dimensional) size of the map.
- ****************************************************************************/
+ */
 int get_sqsize()
 {
   int sqsize = sqrt(MAP_INDEX_SIZE / 1000);

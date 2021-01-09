@@ -37,9 +37,9 @@ struct effect_list_cb_data {
   void *requirers_data;
 };
 
-/**********************************************************************/ /**
+/**
    Callback to check if effect needs universal.
- **************************************************************************/
+ */
 static bool effect_list_universal_needed_cb(struct effect *peffect,
                                             void *data)
 {
@@ -54,9 +54,9 @@ static bool effect_list_universal_needed_cb(struct effect *peffect,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Check if anything in ruleset needs universal
- **************************************************************************/
+ */
 static bool is_universal_needed(struct universal *uni, requirers_cb cb,
                                 void *data)
 {
@@ -170,9 +170,9 @@ static bool is_universal_needed(struct universal *uni, requirers_cb cb,
   return needed;
 }
 
-/**********************************************************************/ /**
+/**
    Check if anything in ruleset needs tech
- **************************************************************************/
+ */
 bool is_tech_needed(struct advance *padv, requirers_cb cb, void *data)
 {
   struct universal uni = {.value = {.advance = padv}, .kind = VUT_ADVANCE};
@@ -215,9 +215,9 @@ bool is_tech_needed(struct advance *padv, requirers_cb cb, void *data)
   return needed;
 }
 
-/**********************************************************************/ /**
+/**
    Check if anything in ruleset needs building
- **************************************************************************/
+ */
 bool is_building_needed(struct impr_type *pimpr, requirers_cb cb, void *data)
 {
   struct universal uni = {.value = {.building = pimpr},
@@ -229,9 +229,9 @@ bool is_building_needed(struct impr_type *pimpr, requirers_cb cb, void *data)
   return needed;
 }
 
-/**********************************************************************/ /**
+/**
    Check if anything in ruleset needs unit type
- **************************************************************************/
+ */
 bool is_utype_needed(struct unit_type *ptype, requirers_cb cb, void *data)
 {
   struct universal uni = {.value = {.utype = ptype}, .kind = VUT_UTYPE};
@@ -242,9 +242,9 @@ bool is_utype_needed(struct unit_type *ptype, requirers_cb cb, void *data)
   return needed;
 }
 
-/**********************************************************************/ /**
+/**
    Check if anything in ruleset needs goods type
- **************************************************************************/
+ */
 bool is_good_needed(struct goods_type *pgood, requirers_cb cb, void *data)
 {
   struct universal uni = {.value = {.good = pgood}, .kind = VUT_GOOD};
@@ -255,9 +255,9 @@ bool is_good_needed(struct goods_type *pgood, requirers_cb cb, void *data)
   return needed;
 }
 
-/**********************************************************************/ /**
+/**
    Check if anything in ruleset needs extra type
- **************************************************************************/
+ */
 bool is_extra_needed(struct extra_type *pextra, requirers_cb cb, void *data)
 {
   struct universal uni = {.value = {.extra = pextra}, .kind = VUT_EXTRA};
@@ -286,9 +286,9 @@ bool is_extra_needed(struct extra_type *pextra, requirers_cb cb, void *data)
   return needed;
 }
 
-/**********************************************************************/ /**
+/**
    Check if anything in ruleset needs terrain type
- **************************************************************************/
+ */
 bool is_terrain_needed(struct terrain *pterr, requirers_cb cb, void *data)
 {
   struct universal uni = {.value = {.terrain = pterr}, .kind = VUT_TERRAIN};
@@ -299,9 +299,9 @@ bool is_terrain_needed(struct terrain *pterr, requirers_cb cb, void *data)
   return needed;
 }
 
-/**********************************************************************/ /**
+/**
    Check if anything in ruleset needs government
- **************************************************************************/
+ */
 bool is_government_needed(struct government *pgov, requirers_cb cb,
                           void *data)
 {
@@ -320,9 +320,9 @@ struct effect_list_multiplier_data {
   void *requirers_data;
 };
 
-/**********************************************************************/ /**
+/**
    Callback to check if effect needs universal.
- **************************************************************************/
+ */
 static bool effect_list_multiplier_cb(struct effect *peffect, void *data)
 {
   struct effect_list_multiplier_data *cbdata =
@@ -337,9 +337,9 @@ static bool effect_list_multiplier_cb(struct effect *peffect, void *data)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Check if anything in ruleset needs multiplier
- **************************************************************************/
+ */
 bool is_multiplier_needed(struct multiplier *pmul, requirers_cb cb,
                           void *data)
 {

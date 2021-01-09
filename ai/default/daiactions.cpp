@@ -34,9 +34,9 @@
 
 #define LOG_DIPLOMAT LOG_DEBUG
 
-/**************************************************************************/ /**
+/**
    Number of improvements that can be sabotaged in pcity.
- ******************************************************************************/
+ */
 static int count_sabotagable_improvements(struct city *pcity)
 {
   int count = 0;
@@ -52,11 +52,11 @@ static int count_sabotagable_improvements(struct city *pcity)
   return count;
 }
 
-/**************************************************************************/ /**
+/**
    Pick a tech for actor_player to steal from target_player.
 
    TODO: Make a smarter choice than picking the first stealable tech found.
- ******************************************************************************/
+ */
 static Tech_type_id choose_tech_to_steal(const struct player *actor_player,
                                          const struct player *target_player)
 {
@@ -86,11 +86,11 @@ static Tech_type_id choose_tech_to_steal(const struct player *actor_player,
   return A_UNSET;
 }
 
-/***********************************************************************/ /**
+/**
    Returns the utility of having the specified unit perform the specified
    action to the specified city target with the specified sub target.
    The sub target id is encoded like it is in the network protocol.
- ***************************************************************************/
+ */
 adv_want dai_action_value_unit_vs_city(struct action *paction,
                                        struct unit *actor_unit,
                                        struct city *target_city,
@@ -295,10 +295,10 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
   return MAX(0, utility);
 }
 
-/***********************************************************************/ /**
+/**
    Returns the sub target id of the sub target chosen for the specified
    action performed by the specified unit to the specified target city.
- ***************************************************************************/
+ */
 int dai_action_choose_sub_tgt_unit_vs_city(struct action *paction,
                                            struct unit *actor_unit,
                                            struct city *target_city)

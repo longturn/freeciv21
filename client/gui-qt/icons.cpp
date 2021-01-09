@@ -18,14 +18,14 @@ QString current_theme;
 fcIcons *fcIcons::m_instance = nullptr;
 hIcon *hIcon::m_instance = nullptr;
 
-/************************************************************************/ /**
+/**
    Icon provider constructor
- ****************************************************************************/
+ */
 fcIcons::fcIcons() = default;
 
-/************************************************************************/ /**
+/**
    Returns instance of fc_icons
- ****************************************************************************/
+ */
 fcIcons *fcIcons::instance()
 {
   if (!m_instance) {
@@ -34,14 +34,14 @@ fcIcons *fcIcons::instance()
   return m_instance;
 }
 
-/************************************************************************/ /**
+/**
    Deletes fc_icons instance
- ****************************************************************************/
+ */
 void fcIcons::drop() { NFCN_FREE(m_instance); }
 
-/************************************************************************/ /**
+/**
    Returns icon by given name
- ****************************************************************************/
+ */
 QIcon fcIcons::getIcon(const QString &id)
 {
   QIcon icon;
@@ -67,9 +67,9 @@ QIcon fcIcons::getIcon(const QString &id)
   return QIcon(icon);
 }
 
-/************************************************************************/ /**
+/**
    Returns pixmap by given name, pixmap needs to be deleted by someone else
- ****************************************************************************/
+ */
 QPixmap *fcIcons::getPixmap(const QString &id)
 {
   QPixmap *pm;
@@ -96,9 +96,9 @@ QPixmap *fcIcons::getPixmap(const QString &id)
   return pm;
 }
 
-/************************************************************************/ /**
+/**
    Returns path for icon
- ****************************************************************************/
+ */
 QString fcIcons::getPath(const QString &id)
 {
   QString str;

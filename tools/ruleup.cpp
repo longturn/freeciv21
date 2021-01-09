@@ -47,9 +47,9 @@
 static QString rs_selected;
 static QString od_selected;
 
-/**********************************************************************/ /**
+/**
    Parse freeciv-ruleup commandline parameters.
- **************************************************************************/
+ */
 static void rup_parse_cmdline(const QCoreApplication &app)
 {
   QCommandLineParser parser;
@@ -96,14 +96,14 @@ static void rup_parse_cmdline(const QCoreApplication &app)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Conversion log callback
- **************************************************************************/
+ */
 static void conv_log(const char *msg) { qInfo("%s", msg); }
 
-/**********************************************************************/ /**
+/**
    Main entry point for freeciv-ruleup
- **************************************************************************/
+ */
 int main(int argc, char **argv)
 {
   QCoreApplication app(argc, argv);

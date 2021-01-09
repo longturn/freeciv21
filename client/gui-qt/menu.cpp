@@ -73,22 +73,22 @@ static QKeySequence shortcut2key(enum shortcut_id s);
 
 extern "C" void option_dialog_popup(const char *name,
                                     const struct option_set *poptset);
-/**********************************************************************/ /**
+/**
    Constructor for units used in delayed orders
- **************************************************************************/
+ */
 qfc_units_list::qfc_units_list() {}
 
-/**********************************************************************/ /**
+/**
    Adds givent unit to list
- **************************************************************************/
+ */
 void qfc_units_list::add(qfc_delayed_unit_item *fui)
 {
   unit_list.append(fui);
 }
 
-/**********************************************************************/ /**
+/**
    Clears list of units
- **************************************************************************/
+ */
 void qfc_units_list::clear() { unit_list.clear(); }
 
 QKeySequence shortcut2key(enum shortcut_id s)
@@ -97,10 +97,10 @@ QKeySequence shortcut2key(enum shortcut_id s)
       shortcut_to_string(fc_shortcuts::sc()->get_shortcut(s)));
 }
 
-/**********************************************************************/ /**
+/**
    Initialize menus (sensitivity, name, etc.) based on the
    current state and current ruleset, etc.  Call menus_update().
- **************************************************************************/
+ */
 void real_menus_init(void)
 {
   if (!game.client.ruleset_ready) {
@@ -115,10 +115,10 @@ void real_menus_init(void)
   go_act_menu::reset_all();
 }
 
-/**********************************************************************/ /**
+/**
    Update all of the menus (sensitivity, name, etc.) based on the
    current state.
- **************************************************************************/
+ */
 void real_menus_update(void)
 {
   if (C_S_RUNNING <= client_state()) {
@@ -137,11 +137,11 @@ void real_menus_update(void)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return the text for the tile, changed by the activity.
    Should only be called for irrigation, mining, or transformation, and
    only when the activity changes the base terrain type.
- **************************************************************************/
+ */
 static const char *get_tile_change_menu_text(struct tile *ptile,
                                              enum unit_activity activity)
 {
@@ -155,9 +155,9 @@ static const char *get_tile_change_menu_text(struct tile *ptile,
   return text;
 }
 
-/**********************************************************************/ /**
+/**
    Creates a new government menu.
- **************************************************************************/
+ */
 gov_menu::gov_menu(QWidget *parent) : QMenu(_("Government"), parent)
 {
   // Register ourselves to get updates for free.
@@ -165,18 +165,18 @@ gov_menu::gov_menu(QWidget *parent) : QMenu(_("Government"), parent)
   setAttribute(Qt::WA_TranslucentBackground);
 }
 
-/**********************************************************************/ /**
+/**
    Destructor.
- **************************************************************************/
+ */
 gov_menu::~gov_menu()
 {
   qDeleteAll(actions);
   instances.remove(this);
 }
 
-/**********************************************************************/ /**
+/**
    Creates the menu once the government list is known.
- **************************************************************************/
+ */
 void gov_menu::create()
 {
   QAction *action;
@@ -214,9 +214,9 @@ void gov_menu::create()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Updates the menu to take gov availability into account.
- **************************************************************************/
+ */
 void gov_menu::update()
 {
   struct government *gov, *revol_gov;
@@ -239,17 +239,17 @@ void gov_menu::update()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Shows the dialog asking for confirmation before starting a revolution.
- **************************************************************************/
+ */
 void gov_menu::revolution()
 {
   popup_revolution_dialog(game.government_during_revolution);
 }
 
-/**********************************************************************/ /**
+/**
    Shows the dialog asking for confirmation before starting a revolution.
- **************************************************************************/
+ */
 void gov_menu::change_gov(int target_gov)
 {
   popup_revolution_dialog(government_by_number(target_gov));
@@ -260,9 +260,9 @@ void gov_menu::change_gov(int target_gov)
 **************************************************************************/
 QSet<gov_menu *> gov_menu::instances = QSet<gov_menu *>();
 
-/**********************************************************************/ /**
+/**
    Updates all gov_menu instances.
- **************************************************************************/
+ */
 void gov_menu::create_all()
 {
   for (gov_menu *m : qAsConst(instances)) {
@@ -270,9 +270,9 @@ void gov_menu::create_all()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Updates all gov_menu instances.
- **************************************************************************/
+ */
 void gov_menu::update_all()
 {
   for (gov_menu *m : qAsConst(instances)) {
@@ -280,27 +280,27 @@ void gov_menu::update_all()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Instantiate a new goto and act sub menu.
- **************************************************************************/
+ */
 go_act_menu::go_act_menu(QWidget *parent) : QMenu(_("Go to and..."), parent)
 {
   /* Will need auto updates etc. */
   instances << this;
 }
 
-/**********************************************************************/ /**
+/**
    Destructor.
- **************************************************************************/
+ */
 go_act_menu::~go_act_menu()
 {
   /* Updates are no longer needed. */
   instances.remove(this);
 }
 
-/**********************************************************************/ /**
+/**
    Empty a menu of all its items and sub menues.
- **************************************************************************/
+ */
 static void reset_menu_and_sub_menues(QMenu *menu)
 {
   QList<QAction *> actions = menu->actions();
@@ -317,9 +317,9 @@ static void reset_menu_and_sub_menues(QMenu *menu)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Reset the goto and act menu so it will be recreated.
- **************************************************************************/
+ */
 void go_act_menu::reset()
 {
   /* Clear menu item to action ID mapping. */
@@ -329,9 +329,9 @@ void go_act_menu::reset()
   reset_menu_and_sub_menues(this);
 }
 
-/**********************************************************************/ /**
+/**
    Fill the new goto and act sub menu with menu items.
- **************************************************************************/
+ */
 void go_act_menu::create()
 {
   QAction *item;
@@ -438,9 +438,9 @@ void go_act_menu::create()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Update the goto and act menu based on the selected unit(s)
- **************************************************************************/
+ */
 void go_act_menu::update()
 {
   bool can_do_something = false;
@@ -478,9 +478,9 @@ void go_act_menu::update()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Activate the goto system
- **************************************************************************/
+ */
 void go_act_menu::start_go_act(int act_id, int sub_tgt_id)
 {
   request_unit_goto(ORDER_PERFORM_ACTION, act_id, sub_tgt_id);
@@ -491,9 +491,9 @@ void go_act_menu::start_go_act(int act_id, int sub_tgt_id)
 **************************************************************************/
 QSet<go_act_menu *> go_act_menu::instances;
 
-/**********************************************************************/ /**
+/**
    Reset all goto and act menu instances.
- **************************************************************************/
+ */
 void go_act_menu::reset_all()
 {
   for (go_act_menu *m : qAsConst(instances)) {
@@ -501,9 +501,9 @@ void go_act_menu::reset_all()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Update all goto and act menu instances
- **************************************************************************/
+ */
 void go_act_menu::update_all()
 {
   for (go_act_menu *m : qAsConst(instances)) {
@@ -511,9 +511,9 @@ void go_act_menu::update_all()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Predicts last unit position
- **************************************************************************/
+ */
 struct tile *mr_menu::find_last_unit_pos(unit *punit, int pos)
 {
   struct tile *ptile = nullptr;
@@ -552,16 +552,16 @@ struct tile *mr_menu::find_last_unit_pos(unit *punit, int pos)
   return nullptr;
 }
 
-/**********************************************************************/ /**
+/**
    Constructor for global menubar in gameview
- **************************************************************************/
+ */
 mr_menu::mr_menu() : QMenuBar() {}
 
-/**********************************************************************/ /**
+/**
    Initializes menu system, and add custom enum(munit) for most of options
    Notice that if you set option for QAction->setChecked(option) it will
    check/uncheck automatically without any intervention
- **************************************************************************/
+ */
 void mr_menu::setup_menus()
 {
   QAction *act;
@@ -1258,9 +1258,9 @@ void mr_menu::setup_menus()
   initialized = true;
 }
 
-/**********************************************************************/ /**
+/**
    Sets given tile for delayed order
- **************************************************************************/
+ */
 void mr_menu::set_tile_for_order(tile *ptile)
 {
   for (int i = 0; i < units_list.nr_units; i++) {
@@ -1269,9 +1269,9 @@ void mr_menu::set_tile_for_order(tile *ptile)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Finds QAction bounded to given shortcut and triggers it
- **************************************************************************/
+ */
 void mr_menu::execute_shortcut(int sid)
 {
   QList<QMenu *> menu_list;
@@ -1298,9 +1298,9 @@ void mr_menu::execute_shortcut(int sid)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns string assigned to shortcut or empty string if doesnt exist
- **************************************************************************/
+ */
 QString mr_menu::shortcut_exist(fc_shortcut *fcs)
 {
   QList<QMenu *> menu_list;
@@ -1320,9 +1320,9 @@ QString mr_menu::shortcut_exist(fc_shortcut *fcs)
   return QString();
 }
 
-/**********************************************************************/ /**
+/**
    Returns string bounded to given shortcut
- **************************************************************************/
+ */
 QString mr_menu::shortcut_2_menustring(int sid)
 {
   QList<QMenu *> menu_list;
@@ -1345,9 +1345,9 @@ QString mr_menu::shortcut_2_menustring(int sid)
   return QString();
 }
 
-/**********************************************************************/ /**
+/**
    Updates airlift menu
- **************************************************************************/
+ */
 void mr_menu::update_airlift_menu()
 {
   Unit_type_id utype_id;
@@ -1548,9 +1548,9 @@ static struct extra_type *next_extra(struct unit_list *punits,
   return pextra;
 }
 
-/**********************************************************************/ /**
+/**
    Enables/disables menu items and renames them depending on key in menu_list
- **************************************************************************/
+ */
 void mr_menu::menus_sensitive()
 {
   QList<munit> keys;
@@ -1943,14 +1943,14 @@ void mr_menu::menus_sensitive()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Slot for showing research tab
- **************************************************************************/
+ */
 void mr_menu::slot_show_research_tab() { science_report_dialog_popup(true); }
 
-/**********************************************************************/ /**
+/**
    Slot for showing spaceship
- **************************************************************************/
+ */
 void mr_menu::slot_spaceship()
 {
   if (NULL != client.conn.playing) {
@@ -1958,37 +1958,37 @@ void mr_menu::slot_spaceship()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Slot for showing economy tab
- **************************************************************************/
+ */
 void mr_menu::slot_show_eco_report() { economy_report_dialog_popup(false); }
 
-/**********************************************************************/ /**
+/**
    Changes tab to mapview
- **************************************************************************/
+ */
 void mr_menu::slot_show_map()
 {
   ::queen()->game_tab_widget->setCurrentIndex(0);
 }
 
-/**********************************************************************/ /**
+/**
    Slot for showing units tab
- **************************************************************************/
+ */
 void mr_menu::slot_show_units_report() { toggle_units_report(true); }
 
-/**********************************************************************/ /**
+/**
    Slot for showing nations report
- **************************************************************************/
+ */
 void mr_menu::slot_show_nations() { popup_players_dialog(false); }
 
-/**********************************************************************/ /**
+/**
    Slot for showing cities report
- **************************************************************************/
+ */
 void mr_menu::slot_show_cities() { city_report_dialog_popup(false); }
 
-/**********************************************************************/ /**
+/**
    Action "BUILD_CITY"
- **************************************************************************/
+ */
 void mr_menu::slot_build_city()
 {
   unit_list_iterate(get_units_in_focus(), punit)
@@ -2007,14 +2007,14 @@ void mr_menu::slot_build_city()
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Action "CLEAN FALLOUT"
- **************************************************************************/
+ */
 void mr_menu::slot_clean_fallout() { key_unit_fallout(); }
 
-/**********************************************************************/ /**
+/**
    Action "CLEAN POLLUTION and PARADROP"
- **************************************************************************/
+ */
 void mr_menu::slot_clean_pollution()
 {
   unit_list_iterate(get_units_in_focus(), punit)
@@ -2036,9 +2036,9 @@ void mr_menu::slot_clean_pollution()
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Action "CONNECT WITH IRRIGATION"
- **************************************************************************/
+ */
 void mr_menu::slot_conn_irrigation()
 {
   struct extra_type_list *extras = extra_type_list_by_cause(EC_IRRIGATION);
@@ -2052,9 +2052,9 @@ void mr_menu::slot_conn_irrigation()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Action "CONNECT WITH RAILROAD"
- **************************************************************************/
+ */
 void mr_menu::slot_conn_rail()
 {
   struct road_type *prail = road_by_compat_special(ROCO_RAILROAD);
@@ -2067,19 +2067,19 @@ void mr_menu::slot_conn_rail()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Action "BUILD FORTRESS"
- **************************************************************************/
+ */
 void mr_menu::slot_unit_fortress() { key_unit_fortress(); }
 
-/**********************************************************************/ /**
+/**
    Action "BUILD AIRBASE"
- **************************************************************************/
+ */
 void mr_menu::slot_unit_airbase() { key_unit_airbase(); }
 
-/**********************************************************************/ /**
+/**
    Action "CONNECT WITH ROAD"
- **************************************************************************/
+ */
 void mr_menu::slot_conn_road()
 {
   struct road_type *proad = road_by_compat_special(ROCO_ROAD);
@@ -2092,29 +2092,29 @@ void mr_menu::slot_conn_road()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Action "TRANSFROM TERRAIN"
- **************************************************************************/
+ */
 void mr_menu::slot_transform() { key_unit_transform(); }
 
-/**********************************************************************/ /**
+/**
    Action "PILLAGE"
- **************************************************************************/
+ */
 void mr_menu::slot_pillage() { key_unit_pillage(); }
 
-/**********************************************************************/ /**
+/**
    Do... the selected action
- **************************************************************************/
+ */
 void mr_menu::slot_action() { key_unit_action_select_tgt(); }
 
-/**********************************************************************/ /**
+/**
    Action "AUTO_SETTLER"
- **************************************************************************/
+ */
 void mr_menu::slot_auto_settler() { key_unit_auto_settle(); }
 
-/**********************************************************************/ /**
+/**
    Action "BUILD_ROAD"
- **************************************************************************/
+ */
 void mr_menu::slot_build_road()
 {
   unit_list_iterate(get_units_in_focus(), punit)
@@ -2138,87 +2138,87 @@ void mr_menu::slot_build_road()
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Action "BUILD_IRRIGATION"
- **************************************************************************/
+ */
 void mr_menu::slot_build_irrigation() { key_unit_irrigate(); }
 
-/**********************************************************************/ /**
+/**
    Action "CULTIVATE"
- **************************************************************************/
+ */
 void mr_menu::slot_cultivate() { key_unit_cultivate(); }
 
-/**********************************************************************/ /**
+/**
    Action "BUILD_MINE"
- **************************************************************************/
+ */
 void mr_menu::slot_build_mine() { key_unit_mine(); }
 
-/**********************************************************************/ /**
+/**
    Action "PLANT"
- **************************************************************************/
+ */
 void mr_menu::slot_plant() { key_unit_plant(); }
 
-/**********************************************************************/ /**
+/**
    Action "FORTIFY"
- **************************************************************************/
+ */
 void mr_menu::slot_unit_fortify() { key_unit_fortify(); }
 
-/**********************************************************************/ /**
+/**
    Action "SENTRY"
- **************************************************************************/
+ */
 void mr_menu::slot_unit_sentry() { key_unit_sentry(); }
 
-/**********************************************************************/ /**
+/**
    Action "CONVERT"
- **************************************************************************/
+ */
 void mr_menu::slot_convert() { key_unit_convert(); }
 
-/**********************************************************************/ /**
+/**
    Action "DISBAND UNIT"
- **************************************************************************/
+ */
 void mr_menu::slot_disband() { popup_disband_dialog(get_units_in_focus()); }
 
-/**********************************************************************/ /**
+/**
    Clears delayed orders
- **************************************************************************/
+ */
 void mr_menu::slot_orders_clear()
 {
   delayed_order = false;
   units_list.clear();
 }
 
-/**********************************************************************/ /**
+/**
    Sets/unset rally point
- **************************************************************************/
+ */
 void mr_menu::slot_rally()
 {
   king()->rallies.hover_tile = false;
   king()->rallies.hover_city = true;
 }
 
-/**********************************************************************/ /**
+/**
    Adds one city to trade planning
- **************************************************************************/
+ */
 void mr_menu::slot_trade_city() { king()->trade_gen.hover_city = true; }
 
-/**********************************************************************/ /**
+/**
    Adds all cities to trade planning
- **************************************************************************/
+ */
 void mr_menu::slot_trade_add_all() { king()->trade_gen.add_all_cities(); }
 
-/**********************************************************************/ /**
+/**
    Trade calculation slot
- **************************************************************************/
+ */
 void mr_menu::slot_calculate() { king()->trade_gen.calculate(); }
 
-/**********************************************************************/ /**
+/**
    Slot for clearing trade routes
- **************************************************************************/
+ */
 void mr_menu::slot_clear_trade() { king()->trade_gen.clear_trade_planing(); }
 
-/**********************************************************************/ /**
+/**
    Sends automatic caravan
- **************************************************************************/
+ */
 void mr_menu::slot_autocaravan()
 {
   struct unit *punit;
@@ -2257,9 +2257,9 @@ void mr_menu::slot_autocaravan()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Slot for setting quick airlift
- **************************************************************************/
+ */
 void mr_menu::slot_quickairlift_set()
 {
   QVariant v;
@@ -2270,9 +2270,9 @@ void mr_menu::slot_quickairlift_set()
   airlift_type_id = v.toInt();
 }
 
-/**********************************************************************/ /**
+/**
    Slot for choosing default action vs unit
- **************************************************************************/
+ */
 void mr_menu::slot_action_vs_unit()
 {
   QAction *act;
@@ -2281,9 +2281,9 @@ void mr_menu::slot_action_vs_unit()
   qdef_act::action()->vs_unit_set(act->data().toInt());
 }
 
-/**********************************************************************/ /**
+/**
    Slot for choosing default action vs city
- **************************************************************************/
+ */
 void mr_menu::slot_action_vs_city()
 {
   QAction *act;
@@ -2292,14 +2292,14 @@ void mr_menu::slot_action_vs_city()
   qdef_act::action()->vs_city_set(act->data().toInt());
 }
 
-/**********************************************************************/ /**
+/**
    Slot for quick airlifting
- **************************************************************************/
+ */
 void mr_menu::slot_quickairlift() { quick_airlifting = true; }
 
-/**********************************************************************/ /**
+/**
    Delayed goto
- **************************************************************************/
+ */
 void mr_menu::slot_delayed_goto()
 {
   qfc_delayed_unit_item *unit_item;
@@ -2330,9 +2330,9 @@ void mr_menu::slot_delayed_goto()
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Executes stored orders
- **************************************************************************/
+ */
 void mr_menu::slot_execute_orders()
 {
   struct unit *punit;
@@ -2363,9 +2363,9 @@ void mr_menu::slot_execute_orders()
   units_list.clear();
 }
 
-/**********************************************************************/ /**
+/**
    Action "LOAD INTO TRANSPORTER"
- **************************************************************************/
+ */
 void mr_menu::slot_load()
 {
   unit_list_iterate(get_units_in_focus(), punit)
@@ -2375,14 +2375,14 @@ void mr_menu::slot_load()
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Action "UNIT PATROL"
- **************************************************************************/
+ */
 void mr_menu::slot_patrol() { key_unit_patrol(); }
 
-/**********************************************************************/ /**
+/**
    Action "RETURN TO NEAREST CITY"
- **************************************************************************/
+ */
 void mr_menu::slot_return_to_city()
 {
   unit_list_iterate(get_units_in_focus(), punit)
@@ -2392,19 +2392,19 @@ void mr_menu::slot_return_to_city()
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Action "GOTO/AIRLIFT TO CITY"
- **************************************************************************/
+ */
 void mr_menu::slot_airlift() { popup_goto_dialog(); }
 
-/**********************************************************************/ /**
+/**
    Action "SET HOMECITY"
- **************************************************************************/
+ */
 void mr_menu::slot_set_home() { key_unit_homecity(); }
 
-/**********************************************************************/ /**
+/**
    Action "UNLOAD FROM TRANSPORTED"
- **************************************************************************/
+ */
 void mr_menu::slot_unload()
 {
   unit_list_iterate(get_units_in_focus(), punit)
@@ -2414,39 +2414,39 @@ void mr_menu::slot_unload()
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Action "UNLOAD ALL UNITS FROM TRANSPORTER"
- **************************************************************************/
+ */
 void mr_menu::slot_unload_all() { key_unit_unload_all(); }
 
-/**********************************************************************/ /**
+/**
    Action "UNSENTRY(WAKEUP) ALL UNITS"
- **************************************************************************/
+ */
 void mr_menu::slot_unsentry() { key_unit_wakeup_others(); }
 
-/**********************************************************************/ /**
+/**
    Action "UPGRADE UNITS"
- **************************************************************************/
+ */
 void mr_menu::slot_upgrade() { popup_upgrade_dialog(get_units_in_focus()); }
 
-/**********************************************************************/ /**
+/**
    Action "GOTO"
- **************************************************************************/
+ */
 void mr_menu::slot_unit_goto() { key_unit_goto(); }
 
-/**********************************************************************/ /**
+/**
    Action "EXPLORE"
- **************************************************************************/
+ */
 void mr_menu::slot_unit_explore() { key_unit_auto_explore(); }
 
-/**********************************************************************/ /**
+/**
    Action "CENTER VIEW"
- **************************************************************************/
+ */
 void mr_menu::slot_center_view() { request_center_focus_unit(); }
 
-/**********************************************************************/ /**
+/**
    Action "Lock interface"
- **************************************************************************/
+ */
 void mr_menu::slot_lock()
 {
   if (king()->interface_locked) {
@@ -2457,9 +2457,9 @@ void mr_menu::slot_lock()
   king()->interface_locked = !king()->interface_locked;
 }
 
-/**********************************************************************/ /**
+/**
    Helper function to hide/show widgets
- **************************************************************************/
+ */
 void enable_interface(bool enable)
 {
   QList<close_widget *> lc;
@@ -2482,9 +2482,9 @@ void enable_interface(bool enable)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Action "SET FULLSCREEN"
- **************************************************************************/
+ */
 void mr_menu::slot_fullscreen()
 {
   if (!gui_options.gui_qt_fullscreen) {
@@ -2498,9 +2498,9 @@ void mr_menu::slot_fullscreen()
   gui_options.gui_qt_fullscreen = !gui_options.gui_qt_fullscreen;
 }
 
-/**********************************************************************/ /**
+/**
    Action "VIEW/HIDE MINIMAP"
- **************************************************************************/
+ */
 void mr_menu::slot_minimap_view()
 {
   if (minimap_status->isChecked()) {
@@ -2510,54 +2510,54 @@ void mr_menu::slot_minimap_view()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Action "Show/Dont show new turn info"
- **************************************************************************/
+ */
 void mr_menu::slot_show_new_turn_text()
 {
   king()->qt_settings.show_new_turn_text = osd_status->isChecked();
 }
 
-/**********************************************************************/ /**
+/**
    Action "Show/Dont battle log"
- **************************************************************************/
+ */
 void mr_menu::slot_battlelog()
 {
   king()->qt_settings.show_battle_log = btlog_status->isChecked();
 }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW BORDERS"
- **************************************************************************/
+ */
 void mr_menu::slot_borders() { key_map_borders_toggle(); }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW NATIVE TILES"
- **************************************************************************/
+ */
 void mr_menu::slot_native_tiles() { key_map_native_toggle(); }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW BUY COST"
- **************************************************************************/
+ */
 void mr_menu::slot_city_buycost() { key_city_buycost_toggle(); }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW CITY GROWTH"
- **************************************************************************/
+ */
 void mr_menu::slot_city_growth() { key_city_growth_toggle(); }
 
-/**********************************************************************/ /**
+/**
    Action "RELOAD ZOOMED IN TILESET"
- **************************************************************************/
+ */
 void mr_menu::zoom_in()
 {
   king()->map_scale = king()->map_scale * 1.2f;
   tilespec_reread(tileset_basename(tileset), true, king()->map_scale);
 }
 
-/**********************************************************************/ /**
+/**
    Action "RESET ZOOM TO DEFAULT"
- **************************************************************************/
+ */
 void mr_menu::zoom_reset()
 {
   QFont *qf;
@@ -2570,9 +2570,9 @@ void mr_menu::zoom_reset()
   tilespec_reread(tileset_basename(tileset), true, king()->map_scale);
 }
 
-/**********************************************************************/ /**
+/**
    Action "SCALE FONTS WHEN SCALING MAP"
- ***************************************************************************/
+ */
 void mr_menu::zoom_scale_fonts()
 {
   QFont *qf;
@@ -2589,28 +2589,28 @@ void mr_menu::zoom_scale_fonts()
   update_city_descriptions();
 }
 
-/**********************************************************************/ /**
+/**
    Action "RELOAD ZOOMED OUT TILESET"
- **************************************************************************/
+ */
 void mr_menu::zoom_out()
 {
   king()->map_scale = king()->map_scale / 1.2f;
   tilespec_reread(tileset_basename(tileset), true, king()->map_scale);
 }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW CITY NAMES"
- **************************************************************************/
+ */
 void mr_menu::slot_city_names() { key_city_names_toggle(); }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW CITY OUTLINES"
- **************************************************************************/
+ */
 void mr_menu::slot_city_outlines() { key_city_outlines_toggle(); }
 
 /**************************************************************************
    Action "Citybar changed"
- **************************************************************************/
+ */
 void mr_menu::slot_set_citybar()
 {
   for (auto *a : action_citybar->actions()) {
@@ -2630,79 +2630,79 @@ void mr_menu::slot_set_citybar()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW CITY OUTPUT"
- **************************************************************************/
+ */
 void mr_menu::slot_city_output() { key_city_output_toggle(); }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW CITY PRODUCTION"
- **************************************************************************/
+ */
 void mr_menu::slot_city_production() { key_city_productions_toggle(); }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW CITY TRADEROUTES"
- **************************************************************************/
+ */
 void mr_menu::slot_city_traderoutes() { key_city_trade_routes_toggle(); }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW MAP GRID"
- **************************************************************************/
+ */
 void mr_menu::slot_map_grid() { key_map_grid_toggle(); }
 
-/**********************************************************************/ /**
+/**
    Action "DONE MOVING"
- **************************************************************************/
+ */
 void mr_menu::slot_done_moving() { key_unit_done(); }
 
-/**********************************************************************/ /**
+/**
    Action "SELECT ALL UNITS ON TILE"
- **************************************************************************/
+ */
 void mr_menu::slot_select_all_tile()
 {
   request_unit_select(get_units_in_focus(), SELTYPE_ALL, SELLOC_TILE);
 }
 
-/**********************************************************************/ /**
+/**
    Action "SELECT ONE UNITS/DESELECT OTHERS"
- **************************************************************************/
+ */
 void mr_menu::slot_select_one()
 {
   request_unit_select(get_units_in_focus(), SELTYPE_SINGLE, SELLOC_TILE);
 }
 
-/**********************************************************************/ /**
+/**
    Action "SELLECT SAME UNITS ON CONTINENT"
- **************************************************************************/
+ */
 void mr_menu::slot_select_same_continent()
 {
   request_unit_select(get_units_in_focus(), SELTYPE_SAME, SELLOC_CONT);
 }
 
-/**********************************************************************/ /**
+/**
    Action "SELECT SAME TYPE EVERYWHERE"
- **************************************************************************/
+ */
 void mr_menu::slot_select_same_everywhere()
 {
   request_unit_select(get_units_in_focus(), SELTYPE_SAME, SELLOC_WORLD);
 }
 
-/**********************************************************************/ /**
+/**
    Action "SELECT SAME TYPE ON TILE"
- **************************************************************************/
+ */
 void mr_menu::slot_select_same_tile()
 {
   request_unit_select(get_units_in_focus(), SELTYPE_SAME, SELLOC_TILE);
 }
 
-/**********************************************************************/ /**
+/**
    Action "WAIT"
- **************************************************************************/
+ */
 void mr_menu::slot_wait() { key_unit_wait(); }
 
-/**********************************************************************/ /**
+/**
    Shows units filter
- **************************************************************************/
+ */
 void mr_menu::slot_unit_filter()
 {
   unit_hud_selector *uhs;
@@ -2710,43 +2710,43 @@ void mr_menu::slot_unit_filter()
   uhs->show_me();
 }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW DEMOGRAPGHICS REPORT"
- **************************************************************************/
+ */
 void mr_menu::slot_demographics()
 {
   send_report_request(REPORT_DEMOGRAPHIC);
 }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW ACHIEVEMENTS REPORT"
- **************************************************************************/
+ */
 void mr_menu::slot_achievements()
 {
   send_report_request(REPORT_ACHIEVEMENTS);
 }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW ENDGAME REPORT"
- **************************************************************************/
+ */
 void mr_menu::slot_endgame() { popup_endgame_report(); }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW TOP FIVE CITIES"
- **************************************************************************/
+ */
 void mr_menu::slot_top_five() { send_report_request(REPORT_TOP_5_CITIES); }
 
-/**********************************************************************/ /**
+/**
    Action "SHOW WONDERS REPORT"
- **************************************************************************/
+ */
 void mr_menu::slot_traveler()
 {
   send_report_request(REPORT_WONDERS_OF_THE_WORLD);
 }
 
-/**********************************************************************/ /**
+/**
    Shows rulesets to load
- **************************************************************************/
+ */
 void mr_menu::tileset_custom_load()
 {
   QDialog *dialog = new QDialog(this);
@@ -2786,9 +2786,9 @@ void mr_menu::tileset_custom_load()
   dialog->show();
 }
 
-/**********************************************************************/ /**
+/**
    Slot for loading new tileset
- **************************************************************************/
+ */
 void mr_menu::load_new_tileset()
 {
   QPushButton *but;
@@ -2801,24 +2801,24 @@ void mr_menu::load_new_tileset()
   but->parentWidget()->close();
 }
 
-/**********************************************************************/ /**
+/**
    Action "Calculate trade routes"
- **************************************************************************/
+ */
 void mr_menu::calc_trade_routes() { king()->trade_gen.calculate(); }
 
-/**********************************************************************/ /**
+/**
    Action "TAX RATES"
- **************************************************************************/
+ */
 void mr_menu::slot_popup_tax_rates() { popup_rates_dialog(); }
 
-/**********************************************************************/ /**
+/**
    Action "MULTIPLERS RATES"
- **************************************************************************/
+ */
 void mr_menu::slot_popup_mult_rates() { popup_multiplier_dialog(); }
 
-/**********************************************************************/ /**
+/**
    Actions "HELP_*"
- **************************************************************************/
+ */
 void mr_menu::slot_help(const QString &topic)
 {
   popup_help_dialog_typed(Q_(topic.toStdString().c_str()), HELP_ANY);
@@ -2863,42 +2863,42 @@ void mr_menu::slot_build_base(int id)
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Invoke dialog with local options
- **************************************************************************/
+ */
 void mr_menu::local_options() { popup_client_options(); }
 
-/**********************************************************************/ /**
+/**
    Invoke dialog with shortcut options
- **************************************************************************/
+ */
 void mr_menu::shortcut_options() { popup_shortcuts_dialog(); }
 
-/**********************************************************************/ /**
+/**
    Invoke dialog with server options
- **************************************************************************/
+ */
 void mr_menu::server_options()
 {
   option_dialog_popup(_("Set server options"), server_optset);
 }
 
-/**********************************************************************/ /**
+/**
    Invoke dialog with server options
- **************************************************************************/
+ */
 void mr_menu::messages_options() { popup_messageopt_dialog(); }
 
-/**********************************************************************/ /**
+/**
    Menu Save Options Now
- **************************************************************************/
+ */
 void mr_menu::save_options_now() { options_save(NULL); }
 
-/**********************************************************************/ /**
+/**
    Invoke popup for quiting game
- **************************************************************************/
+ */
 void mr_menu::quit_game() { popup_quit_dialog(); }
 
-/**********************************************************************/ /**
+/**
    Menu Save Map Image
- **************************************************************************/
+ */
 void mr_menu::save_image()
 {
   int current_width, current_height;
@@ -2946,14 +2946,14 @@ void mr_menu::save_image()
   saved->show();
 }
 
-/**********************************************************************/ /**
+/**
    Menu Save Game
- **************************************************************************/
+ */
 void mr_menu::save_game() { send_save_game(NULL); }
 
-/**********************************************************************/ /**
+/**
    Menu Save Game As...
- **************************************************************************/
+ */
 void mr_menu::save_game_as()
 {
   QString str;
@@ -2977,9 +2977,9 @@ void mr_menu::save_game_as()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Back to Main Menu
- **************************************************************************/
+ */
 void mr_menu::back_to_menu()
 {
   hud_message_box *ask;
@@ -3003,9 +3003,9 @@ void mr_menu::back_to_menu()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Airlift unit type to city acity from each city
- **************************************************************************/
+ */
 void multiairlift(struct city *acity, Unit_type_id ut)
 {
   struct tile *ptile;

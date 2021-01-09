@@ -32,9 +32,9 @@ typedef void (*action_notify)(struct player *, const struct action *,
                               struct player *, struct player *,
                               const struct tile *, const char *);
 
-/**********************************************************************/ /**
+/**
    Wipe an actor if the action it successfully performed consumed it.
- **************************************************************************/
+ */
 static void action_success_actor_consume(struct action *paction,
                                          int actor_id, struct unit *actor)
 {
@@ -55,9 +55,9 @@ static void action_success_actor_consume(struct action *paction,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Pay the movement point cost of success.
- **************************************************************************/
+ */
 static void action_success_pay_mp(struct action *paction, int actor_id,
                                   struct unit *actor)
 {
@@ -68,9 +68,9 @@ static void action_success_pay_mp(struct action *paction, int actor_id,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Pay the movement point price of being the target of an action.
- **************************************************************************/
+ */
 void action_success_target_pay_mp(struct action *paction, int target_id,
                                   struct unit *target)
 {
@@ -86,9 +86,9 @@ void action_success_target_pay_mp(struct action *paction, int target_id,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Make the actor that successfully performed the action pay the price.
- **************************************************************************/
+ */
 void action_success_actor_price(struct action *paction, int actor_id,
                                 struct unit *actor)
 {
@@ -96,9 +96,9 @@ void action_success_actor_price(struct action *paction, int actor_id,
   action_success_pay_mp(paction, actor_id, actor);
 }
 
-/**********************************************************************/ /**
+/**
    Give the victim a casus belli against the offender.
- **************************************************************************/
+ */
 static void action_give_casus_belli(struct player *offender,
                                     struct player *victim_player,
                                     const bool int_outrage)
@@ -129,12 +129,12 @@ static void action_give_casus_belli(struct player *offender,
   player_update_last_war_action(offender);
 }
 
-/**********************************************************************/ /**
+/**
    Take care of any consequences (like casus belli) of the given action
    when the situation was as specified.
 
    victim_player can be NULL
- **************************************************************************/
+ */
 static void action_consequence_common(
     const struct action *paction, struct player *offender,
     struct player *victim_player, const struct tile *victim_tile,
@@ -189,10 +189,10 @@ static void action_consequence_common(
   }
 }
 
-/**********************************************************************/ /**
+/**
    Notify the actor that the failed action gave the victim a casus belli
    against the actor.
- **************************************************************************/
+ */
 static void
 notify_actor_caught(struct player *receiver, const struct action *paction,
                     struct player *offender, struct player *victim_player,
@@ -239,10 +239,10 @@ notify_actor_caught(struct player *receiver, const struct action *paction,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Notify the victim that the failed action gave the victim a
    casus belli against the actor.
- **************************************************************************/
+ */
 static void
 notify_victim_caught(struct player *receiver, const struct action *paction,
                      struct player *offender, struct player *victim_player,
@@ -292,10 +292,10 @@ notify_victim_caught(struct player *receiver, const struct action *paction,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Notify the world that the failed action gave the everyone a casus belli
    against the actor.
- **************************************************************************/
+ */
 static void
 notify_global_caught(struct player *receiver, const struct action *paction,
                      struct player *offender, struct player *victim_player,
@@ -332,12 +332,12 @@ notify_global_caught(struct player *receiver, const struct action *paction,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Take care of any consequences (like casus belli) of getting caught while
    trying to perform the given action.
 
    victim_player can be NULL
- **************************************************************************/
+ */
 void action_consequence_caught(const struct action *paction,
                                struct player *offender,
                                struct player *victim_player,
@@ -350,10 +350,10 @@ void action_consequence_caught(const struct action *paction,
                             EFT_CASUS_BELLI_CAUGHT);
 }
 
-/**********************************************************************/ /**
+/**
    Notify the actor that the performed action gave the victim a casus belli
    against the actor.
- **************************************************************************/
+ */
 static void
 notify_actor_success(struct player *receiver, const struct action *paction,
                      struct player *offender, struct player *victim_player,
@@ -397,10 +397,10 @@ notify_actor_success(struct player *receiver, const struct action *paction,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Notify the victim that the performed action gave the victim a casus
    belli against the actor.
- **************************************************************************/
+ */
 static void notify_victim_success(struct player *receiver,
                                   const struct action *paction,
                                   struct player *offender,
@@ -450,10 +450,10 @@ static void notify_victim_success(struct player *receiver,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Notify the world that the performed action gave the everyone a casus
    belli against the actor.
- **************************************************************************/
+ */
 static void notify_global_success(struct player *receiver,
                                   const struct action *paction,
                                   struct player *offender,
@@ -491,12 +491,12 @@ static void notify_global_success(struct player *receiver,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Take care of any consequences (like casus belli) of successfully
    performing the given action.
 
    victim_player can be NULL
- **************************************************************************/
+ */
 void action_consequence_success(const struct action *paction,
                                 struct player *offender,
                                 struct player *victim_player,
@@ -527,7 +527,7 @@ void action_consequence_complete(const struct action *paction,
                             EFT_CASUS_BELLI_COMPLETE);
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff, from the point of view of the owner of the actor unit,
    it looks like the actor unit may be able to do any action to the target
    city.
@@ -538,7 +538,7 @@ void action_consequence_complete(const struct action *paction,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
                                  bool accept_all_actions)
 {
@@ -571,7 +571,7 @@ static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Find a city to target for an action on the specified tile.
 
    Returns NULL if no proper target is found.
@@ -579,7 +579,7 @@ static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 struct city *action_tgt_city(struct unit *actor, struct tile *target_tile,
                              bool accept_all_actions)
 {
@@ -593,7 +593,7 @@ struct city *action_tgt_city(struct unit *actor, struct tile *target_tile,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff, from the point of view of the owner of the actor unit,
    it looks like the actor unit may be able to do any action to the target
    unit.
@@ -604,7 +604,7 @@ struct city *action_tgt_city(struct unit *actor, struct tile *target_tile,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
                                  bool accept_all_actions)
 {
@@ -637,7 +637,7 @@ static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Find a unit to target for an action at the specified tile.
 
    Returns the first unit found at the tile that the actor may act against
@@ -646,7 +646,7 @@ static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 struct unit *action_tgt_unit(struct unit *actor, struct tile *target_tile,
                              bool accept_all_actions)
 {
@@ -661,7 +661,7 @@ struct unit *action_tgt_unit(struct unit *actor, struct tile *target_tile,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the tile iff it, from the point of view of the owner of the
    actor unit, looks like a target tile.
 
@@ -674,7 +674,7 @@ struct unit *action_tgt_unit(struct unit *actor, struct tile *target_tile,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 struct tile *action_tgt_tile(struct unit *actor, struct tile *target,
                              const struct extra_type *target_extra,
                              bool accept_all_actions)
@@ -727,7 +727,7 @@ struct tile *action_tgt_tile(struct unit *actor, struct tile *target,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff, from the point of view of the owner of the actor unit,
    it looks like the actor unit may be able to do any action to the target
    extra located at the target tile.
@@ -738,7 +738,7 @@ struct tile *action_tgt_tile(struct unit *actor, struct tile *target,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 static bool may_unit_act_vs_tile_extra(const struct unit *actor,
                                        const struct tile *tgt_tile,
                                        const struct extra_type *tgt_extra,
@@ -775,7 +775,7 @@ static bool may_unit_act_vs_tile_extra(const struct unit *actor,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Find an extra to target for an action at the specified tile.
 
    Returns the first extra found that the actor may act against at the tile
@@ -786,7 +786,7 @@ static bool may_unit_act_vs_tile_extra(const struct unit *actor,
    If the only action(s) that can be performed against a target has the
    rare_pop_up property the target will only be considered valid if the
    accept_all_actions argument is TRUE.
- **************************************************************************/
+ */
 struct extra_type *action_tgt_tile_extra(const struct unit *actor,
                                          const struct tile *target_tile,
                                          bool accept_all_actions)
@@ -803,9 +803,9 @@ struct extra_type *action_tgt_tile_extra(const struct unit *actor,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Find an sub target for the specified action.
- **************************************************************************/
+ */
 int action_sub_target_id_for_action(const struct action *paction,
                                     struct unit *actor_unit)
 {
@@ -864,11 +864,11 @@ int action_sub_target_id_for_action(const struct action *paction,
   return NO_TARGET;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the action auto performer that the specified cause can force the
    specified actor to perform. Returns NULL if no such action auto performer
    exists.
- **************************************************************************/
+ */
 const struct action_auto_perf *action_auto_perf_unit_sel(
     const enum action_auto_perf_cause cause, const struct unit *actor,
     const struct player *other_player, const struct output_type *output)
@@ -900,14 +900,14 @@ const struct action_auto_perf *action_auto_perf_unit_sel(
       (target_unit ? target_unit                                            \
                    : action_tgt_unit(actor, unit_tile(actor), true));
 
-/**********************************************************************/ /**
+/**
    Make the specified actor unit perform an action because of cause.
 
    Returns the action the actor unit was forced to perform.
    Returns NULL if that didn't happen.
 
    Note that the return value doesn't say anything about survival.
- **************************************************************************/
+ */
 const struct action *action_auto_perf_unit_do(
     const enum action_auto_perf_cause cause, struct unit *actor,
     const struct player *other_player, const struct output_type *output,
@@ -991,10 +991,10 @@ const struct action *action_auto_perf_unit_do(
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the probability for the specified actor unit to be forced to
    perform an action by the specified cause.
- **************************************************************************/
+ */
 struct act_prob action_auto_perf_unit_prob(
     const enum action_auto_perf_cause cause, struct unit *actor,
     const struct player *other_player, const struct output_type *output,
@@ -1070,10 +1070,10 @@ struct act_prob action_auto_perf_unit_prob(
   return out;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE iff the spy/diplomat was caught outside of a diplomatic
    battle.
- ****************************************************************************/
+ */
 bool action_failed_dice_roll(const struct player *act_player,
                              const struct unit *act_unit,
                              const struct city *tgt_city,

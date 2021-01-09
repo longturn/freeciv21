@@ -51,7 +51,7 @@ struct ai_tech_choice {
                           * or is our current goal */
 };
 
-/**********************************************************************/ /**
+/**
    Massage the numbers provided to us by ai.tech_want into unrecognizable
    pulp.
 
@@ -64,7 +64,7 @@ struct ai_tech_choice {
    3. ai.tech_want is usually upped by each city, so it is divided by number
    of cities here.
    4. A tech isn't a requirement of itself.
- **************************************************************************/
+ */
 static void dai_select_tech(struct ai_type *ait, struct player *pplayer,
                             struct ai_tech_choice *choice,
                             struct ai_tech_choice *goal)
@@ -208,10 +208,10 @@ static void dai_select_tech(struct ai_type *ait, struct player *pplayer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Calculates want for some techs by actually adding the tech and
    measuring the effect.
- **************************************************************************/
+ */
 static adv_want dai_tech_base_want(struct ai_type *ait,
                                    struct player *pplayer,
                                    struct city *pcity, struct advance *padv)
@@ -236,9 +236,9 @@ static adv_want dai_tech_base_want(struct ai_type *ait,
   return final_want - orig_want;
 }
 
-/**********************************************************************/ /**
+/**
    Add effect values in to tech wants.
- **************************************************************************/
+ */
 static void dai_tech_effect_values(struct ai_type *ait,
                                    struct player *pplayer)
 {
@@ -330,10 +330,10 @@ static void dai_tech_effect_values(struct ai_type *ait,
   advance_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Key AI research function. Disable if we are in a team with human team
    mates in a research pool.
- **************************************************************************/
+ */
 void dai_manage_tech(struct ai_type *ait, struct player *pplayer)
 {
   struct ai_tech_choice choice, goal;
@@ -387,11 +387,11 @@ void dai_manage_tech(struct ai_type *ait, struct player *pplayer)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the best defense multiplier unit we can build, or NULL if none.
    Assigns tech wants for techs to get better units, but only for the
    cheapest to research.
- **************************************************************************/
+ */
 struct unit_type *dai_wants_defender_against(struct ai_type *ait,
                                              struct player *pplayer,
                                              struct city *pcity,
@@ -507,12 +507,12 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
   return best_avl;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the best unit we can build, or NULL if none.  "Best" here
    means last in the unit list as defined in the ruleset.  Assigns tech
    wants for techs to get better units with given role, but only for the
    cheapest to research "next" unit up the "chain".
- **************************************************************************/
+ */
 struct unit_type *dai_wants_role_unit(struct ai_type *ait,
                                       struct player *pplayer,
                                       struct city *pcity, int role, int want)
@@ -596,9 +596,9 @@ struct unit_type *dai_wants_role_unit(struct ai_type *ait,
   return build_unit;
 }
 
-/**********************************************************************/ /**
+/**
    Zero player tech wants
- **************************************************************************/
+ */
 void dai_clear_tech_wants(struct ai_type *ait, struct player *pplayer)
 {
   struct ai_plr *plr_data = def_ai_player_data(pplayer, ait);

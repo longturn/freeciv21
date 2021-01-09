@@ -44,13 +44,13 @@ typedef enum req_item_found (*universal_found)(const struct requirement *,
                                                const struct universal *);
 static universal_found universal_found_function[VUT_COUNT] = {NULL};
 
-/**********************************************************************/ /**
+/**
    Parse requirement type (kind) and value strings into a universal
    structure.  Passing in a NULL type is considered VUT_NONE (not an error).
 
    Pass this some values like "Building", "Factory".
    FIXME: ensure that every caller checks error return!
- **************************************************************************/
+ */
 struct universal universal_by_rule_name(const char *kind, const char *value)
 {
   struct universal source;
@@ -65,10 +65,10 @@ struct universal universal_by_rule_name(const char *kind, const char *value)
   return source;
 }
 
-/**********************************************************************/ /**
+/**
    Parse requirement value strings into a universal
    structure.
- **************************************************************************/
+ */
 void universal_value_from_str(struct universal *source, const char *value)
 {
   /* Finally scan the value string based on the type of the source. */
@@ -359,11 +359,11 @@ void universal_value_from_str(struct universal *source, const char *value)
   source->kind = universals_n_invalid();
 }
 
-/**********************************************************************/ /**
+/**
    Combine values into a universal structure.  This is for serialization
    and is the opposite of universal_extraction().
    FIXME: ensure that every caller checks error return!
- **************************************************************************/
+ */
 struct universal universal_by_number(const enum universals_n kind,
                                      const int value)
 {
@@ -563,10 +563,10 @@ struct universal universal_by_number(const enum universals_n kind,
   return source;
 }
 
-/**********************************************************************/ /**
+/**
    Extract universal structure into its components for serialization;
    the opposite of universal_by_number().
- **************************************************************************/
+ */
 void universal_extraction(const struct universal *source, int *kind,
                           int *value)
 {
@@ -574,9 +574,9 @@ void universal_extraction(const struct universal *source, int *kind,
   *value = universal_number(source);
 }
 
-/**********************************************************************/ /**
+/**
    Return the universal number of the constituent.
- **************************************************************************/
+ */
 int universal_number(const struct universal *source)
 {
   switch (source->kind) {
@@ -682,10 +682,10 @@ int universal_number(const struct universal *source)
   return 0;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the given requirement as a formatted string ready for printing.
    Does not care about the 'quiet' property.
- **************************************************************************/
+ */
 QString req_to_fstring(const struct requirement *req)
 {
   QString printable_req =
@@ -697,13 +697,13 @@ QString req_to_fstring(const struct requirement *req)
   return printable_req;
 }
 
-/**********************************************************************/ /**
+/**
    Parse a requirement type and value string into a requirement structure.
    Returns the invalid element for enum universal_n on error. Passing in a
    NULL type is considered VUT_NONE (not an error).
 
    Pass this some values like "Building", "Factory".
- **************************************************************************/
+ */
 struct requirement req_from_str(const char *type, const char *range,
                                 bool survives, bool present, bool quiet,
                                 const char *value)
@@ -971,10 +971,10 @@ struct requirement req_from_str(const char *type, const char *range,
   return req;
 }
 
-/**********************************************************************/ /**
+/**
    Set the values of a req from serializable integers.  This is the opposite
    of req_get_values.
- **************************************************************************/
+ */
 struct requirement req_from_values(int type, int range, bool survives,
                                    bool present, bool quiet, int value)
 {
@@ -989,10 +989,10 @@ struct requirement req_from_values(int type, int range, bool survives,
   return req;
 }
 
-/**********************************************************************/ /**
+/**
    Return the value of a req as a serializable integer.  This is the opposite
    of req_set_value.
- **************************************************************************/
+ */
 void req_get_values(const struct requirement *req, int *type, int *range,
                     bool *survives, bool *present, bool *quiet, int *value)
 {
@@ -1003,10 +1003,10 @@ void req_get_values(const struct requirement *req, int *type, int *range,
   *quiet = req->quiet;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if req1 and req2 are equal.
    Does not care if one is quiet and the other not.
- **************************************************************************/
+ */
 bool are_requirements_equal(const struct requirement *req1,
                             const struct requirement *req2)
 {
@@ -1015,9 +1015,9 @@ bool are_requirements_equal(const struct requirement *req1,
           && req1->present == req2->present);
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if req1 and req2 directly negate each other.
- **************************************************************************/
+ */
 static bool are_requirements_opposites(const struct requirement *req1,
                                        const struct requirement *req2)
 {
@@ -1026,10 +1026,10 @@ static bool are_requirements_opposites(const struct requirement *req1,
           && req1->present != req2->present);
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if the specified building requirement contradicts the
    specified building genus requirement.
- **************************************************************************/
+ */
 static bool impr_contra_genus(const struct requirement *impr_req,
                               const struct requirement *genus_req)
 {
@@ -1058,10 +1058,10 @@ static bool impr_contra_genus(const struct requirement *impr_req,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if the specified nation requirement contradicts the
    specified nation group requirement.
- **************************************************************************/
+ */
 static bool nation_contra_group(const struct requirement *nation_req,
                                 const struct requirement *group_req)
 {
@@ -1084,13 +1084,13 @@ static bool nation_contra_group(const struct requirement *nation_req,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if req1 and req2 contradicts each other.
 
    TODO: If information about what entity each requirement type will be
    evaluated against is passed it will become possible to detect stuff like
    that an unclaimed tile contradicts all DiplRel requirements against it.
- **************************************************************************/
+ */
 bool are_requirements_contradictions(const struct requirement *req1,
                                      const struct requirement *req2)
 {
@@ -1179,10 +1179,10 @@ bool are_requirements_contradictions(const struct requirement *req1,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if the given requirement contradicts the given requirement
    vector.
- **************************************************************************/
+ */
 bool does_req_contradicts_reqs(const struct requirement *req,
                                const struct requirement_vector *vec)
 {
@@ -1201,9 +1201,9 @@ bool does_req_contradicts_reqs(const struct requirement *req,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if players are in the same requirements range.
- **************************************************************************/
+ */
 static inline bool players_in_same_range(const struct player *pplayer1,
                                          const struct player *pplayer2,
                                          enum req_range range)
@@ -1231,10 +1231,10 @@ static inline bool players_in_same_range(const struct player *pplayer1,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the number of total world buildings (this includes buildings
    that have been destroyed).
- **************************************************************************/
+ */
 static int num_world_buildings_total(const struct impr_type *building)
 {
   if (is_great_wonder(building)) {
@@ -1248,9 +1248,9 @@ static int num_world_buildings_total(const struct impr_type *building)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the number of buildings of a certain type in the world.
- **************************************************************************/
+ */
 static int num_world_buildings(const struct impr_type *building)
 {
   if (is_great_wonder(building)) {
@@ -1261,7 +1261,7 @@ static int num_world_buildings(const struct impr_type *building)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns whether a building of a certain type has ever been built by
    pplayer, even if it has subsequently been destroyed.
 
@@ -1271,7 +1271,7 @@ static int num_world_buildings(const struct impr_type *building)
    many times, requiring return of values >1, but there's no record kept
    to support that. Fortunately, the only current caller doesn't need the
    exact number.
- **************************************************************************/
+ */
 static bool player_has_ever_built(const struct player *pplayer,
                                   const struct impr_type *building)
 {
@@ -1284,9 +1284,9 @@ static bool player_has_ever_built(const struct player *pplayer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the number of buildings of a certain type owned by plr.
- **************************************************************************/
+ */
 static int num_player_buildings(const struct player *pplayer,
                                 const struct impr_type *building)
 {
@@ -1298,9 +1298,9 @@ static int num_player_buildings(const struct player *pplayer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the number of buildings of a certain type on a continent.
- **************************************************************************/
+ */
 static int num_continent_buildings(const struct player *pplayer,
                                    int continent,
                                    const struct impr_type *building)
@@ -1318,16 +1318,16 @@ static int num_continent_buildings(const struct player *pplayer,
   return 0;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the number of buildings of a certain type in a city.
- **************************************************************************/
+ */
 static int num_city_buildings(const struct city *pcity,
                               const struct impr_type *building)
 {
   return (city_has_building(pcity, building) ? 1 : 0);
 }
 
-/**********************************************************************/ /**
+/**
    Are there any source buildings within range of the target that are not
    obsolete?
 
@@ -1341,7 +1341,7 @@ static int num_city_buildings(const struct city *pcity,
    living buildings are counted.
 
    source gives the building type of the source in question.
- **************************************************************************/
+ */
 static enum fc_tristate is_building_in_range(
     const struct player *target_player, const struct city *target_city,
     const struct impr_type *target_building, enum req_range range,
@@ -1472,9 +1472,9 @@ static enum fc_tristate is_building_in_range(
   return TRI_NO;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a source tech within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate is_tech_in_range(const struct player *target_player,
                                          enum req_range range, bool survives,
                                          Tech_type_id tech)
@@ -1527,9 +1527,9 @@ static enum fc_tristate is_tech_in_range(const struct player *target_player,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a tech with the given flag within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_techflag_in_range(const struct player *target_player,
                      enum req_range range, enum tech_flag_id techflag)
@@ -1582,9 +1582,9 @@ is_techflag_in_range(const struct player *target_player,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is city or player with at least minculture culture in range?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_minculture_in_range(const struct city *target_city,
                        const struct player *target_player,
@@ -1642,9 +1642,9 @@ is_minculture_in_range(const struct city *target_city,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is city with at least min_foreign_pct foreigners in range?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_minforeignpct_in_range(const struct city *target_city,
                           enum req_range range, int min_foreign_pct)
@@ -1693,9 +1693,9 @@ is_minforeignpct_in_range(const struct city *target_city,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a tile with max X units within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_tile_units_in_range(const struct tile *target_tile, enum req_range range,
                        int max_units)
@@ -1753,9 +1753,9 @@ is_tile_units_in_range(const struct tile *target_tile, enum req_range range,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a source extra type within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_extra_type_in_range(const struct tile *target_tile,
                        const struct city *target_city, enum req_range range,
@@ -1837,9 +1837,9 @@ is_extra_type_in_range(const struct tile *target_tile,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a source goods type within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_goods_type_in_range(const struct tile *target_tile,
                        const struct city *target_city, enum req_range range,
@@ -1872,9 +1872,9 @@ is_goods_type_in_range(const struct tile *target_tile,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a source tile within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate is_terrain_in_range(const struct tile *target_tile,
                                             const struct city *target_city,
                                             enum req_range range,
@@ -1958,9 +1958,9 @@ static enum fc_tristate is_terrain_in_range(const struct tile *target_tile,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a source terrain class within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate is_terrain_class_in_range(
     const struct tile *target_tile, const struct city *target_city,
     enum req_range range, bool survives, enum terrain_class pclass)
@@ -2050,9 +2050,9 @@ static enum fc_tristate is_terrain_class_in_range(
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a terrain with the given flag within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_terrainflag_in_range(const struct tile *target_tile,
                         const struct city *target_city, enum req_range range,
@@ -2140,9 +2140,9 @@ is_terrainflag_in_range(const struct tile *target_tile,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a base with the given flag within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate is_baseflag_in_range(const struct tile *target_tile,
                                              const struct city *target_city,
                                              enum req_range range,
@@ -2226,9 +2226,9 @@ static enum fc_tristate is_baseflag_in_range(const struct tile *target_tile,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a road with the given flag within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate is_roadflag_in_range(const struct tile *target_tile,
                                              const struct city *target_city,
                                              enum req_range range,
@@ -2312,9 +2312,9 @@ static enum fc_tristate is_roadflag_in_range(const struct tile *target_tile,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there an extra with the given flag within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate is_extraflag_in_range(const struct tile *target_tile,
                                               const struct city *target_city,
                                               enum req_range range,
@@ -2399,10 +2399,10 @@ static enum fc_tristate is_extraflag_in_range(const struct tile *target_tile,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a terrain which can support the specified infrastructure
    within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_terrain_alter_possible_in_range(const struct tile *target_tile,
                                    enum req_range range, bool survives,
@@ -2435,9 +2435,9 @@ is_terrain_alter_possible_in_range(const struct tile *target_tile,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a nation within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_nation_in_range(const struct player *target_player, enum req_range range,
                    bool survives, const struct nation_type *nation)
@@ -2485,9 +2485,9 @@ is_nation_in_range(const struct player *target_player, enum req_range range,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a nation group within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_nation_group_in_range(const struct player *target_player,
                          enum req_range range, bool survives,
@@ -2532,9 +2532,9 @@ is_nation_group_in_range(const struct player *target_player,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a nationality within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_nationality_in_range(const struct city *target_city, enum req_range range,
                         const struct nation_type *nationality)
@@ -2595,9 +2595,9 @@ is_nationality_in_range(const struct city *target_city, enum req_range range,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is the diplomatic state within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_diplrel_in_range(const struct player *target_player,
                     const struct player *other_player, enum req_range range,
@@ -2645,9 +2645,9 @@ is_diplrel_in_range(const struct player *target_player,
   return TRI_MAYBE;
 }
 
-/**********************************************************************/ /**
+/**
    Is there a unit of the given type within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_unittype_in_range(const struct unit_type *target_unittype,
                      enum req_range range, bool survives,
@@ -2662,9 +2662,9 @@ is_unittype_in_range(const struct unit_type *target_unittype,
       && (!target_unittype || target_unittype == punittype));
 }
 
-/**********************************************************************/ /**
+/**
    Is there a unit with the given flag within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_unitflag_in_range(const struct unit_type *target_unittype,
                      enum req_range range, bool survives,
@@ -2684,9 +2684,9 @@ is_unitflag_in_range(const struct unit_type *target_unittype,
   return BOOL_TO_TRISTATE(utype_has_flag(target_unittype, unitflag));
 }
 
-/**********************************************************************/ /**
+/**
    Is there a unit with the given flag within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_unitclass_in_range(const struct unit_type *target_unittype,
                       enum req_range range, bool survives,
@@ -2701,9 +2701,9 @@ is_unitclass_in_range(const struct unit_type *target_unittype,
       && (!target_unittype || utype_class(target_unittype) == pclass));
 }
 
-/**********************************************************************/ /**
+/**
    Is there a unit with the given flag within range of the target?
- **************************************************************************/
+ */
 static enum fc_tristate
 is_unitclassflag_in_range(const struct unit_type *target_unittype,
                           enum req_range range, bool survives,
@@ -2719,9 +2719,9 @@ is_unitclassflag_in_range(const struct unit_type *target_unittype,
           || uclass_has_flag(utype_class(target_unittype), ucflag)));
 }
 
-/**********************************************************************/ /**
+/**
    Is the given property of the unit state true?
- **************************************************************************/
+ */
 static enum fc_tristate is_unit_state(const struct unit *target_unit,
                                       enum req_range range, bool survives,
                                       enum ustate_prop uprop)
@@ -2772,9 +2772,9 @@ static enum fc_tristate is_unit_state(const struct unit *target_unit,
   return TRI_NO;
 }
 
-/**********************************************************************/ /**
+/**
    Is center of given city in tile. If city is NULL, any city will do.
- **************************************************************************/
+ */
 static bool is_city_in_tile(const struct tile *ptile,
                             const struct city *pcity)
 {
@@ -2785,9 +2785,9 @@ static bool is_city_in_tile(const struct tile *ptile,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Is center of given city in range. If city is NULL, any city will do.
- **************************************************************************/
+ */
 static enum fc_tristate is_citytile_in_range(const struct tile *target_tile,
                                              const struct city *target_city,
                                              enum req_range range,
@@ -2892,9 +2892,9 @@ static enum fc_tristate is_citytile_in_range(const struct tile *target_tile,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Is city with specific status in range. If city is NULL, any city will do.
- **************************************************************************/
+ */
 static enum fc_tristate
 is_citystatus_in_range(const struct city *target_city, enum req_range range,
                        enum citystatus_type citystatus)
@@ -2940,9 +2940,9 @@ is_citystatus_in_range(const struct city *target_city, enum req_range range,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Has achievement been claimed by someone in range.
- **************************************************************************/
+ */
 static enum fc_tristate
 is_achievement_in_range(const struct player *target_player,
                         enum req_range range,
@@ -2975,7 +2975,7 @@ is_achievement_in_range(const struct player *target_player,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Checks the requirement to see if it is active on the given target.
 
    target gives the type of the target
@@ -2985,7 +2985,7 @@ is_achievement_in_range(const struct player *target_player,
    Make sure you give all aspects of the target when calling this function:
    for instance if you have TARGET_CITY pass the city's owner as the target
    player as well as the city itself as the target city.
- **************************************************************************/
+ */
 bool is_req_active(
     const struct player *target_player, const struct player *other_player,
     const struct city *target_city, const struct impr_type *target_building,
@@ -3346,7 +3346,7 @@ bool is_req_active(
   }
 }
 
-/**********************************************************************/ /**
+/**
    Checks the requirement(s) to see if they are active on the given target.
 
    target gives the type of the target
@@ -3358,7 +3358,7 @@ bool is_req_active(
    Make sure you give all aspects of the target when calling this function:
    for instance if you have TARGET_CITY pass the city's owner as the target
    player as well as the city itself as the target city.
- **************************************************************************/
+ */
 bool are_reqs_active(const struct player *target_player,
                      const struct player *other_player,
                      const struct city *target_city,
@@ -3385,7 +3385,7 @@ bool are_reqs_active(const struct player *target_player,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Return TRUE if this is an "unchanging" requirement.  This means that
    if a target can't meet the requirement now, it probably won't ever be able
    to do so later.  This can be used to do requirement filtering when
@@ -3394,7 +3394,7 @@ bool are_reqs_active(const struct player *target_player,
    Note this isn't absolute.  Returning TRUE here just means that the
    requirement probably can't be met.  In some cases (particularly terrains)
    it may be wrong.
- ***************************************************************************/
+ */
 bool is_req_unchanging(const struct requirement *req)
 {
   switch (req->source.kind) {
@@ -3461,10 +3461,10 @@ bool is_req_unchanging(const struct requirement *req)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the requirement vector vec contains the requirement
    req.
- **************************************************************************/
+ */
 bool is_req_in_vec(const struct requirement *req,
                    const struct requirement_vector *vec)
 {
@@ -3479,12 +3479,12 @@ bool is_req_in_vec(const struct requirement *req,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the specified requirement vector has a positive
    requirement of the specified requirement type.
    @param reqs the requirement vector to look in
    @param kind the requirement type to look for
- **************************************************************************/
+ */
 bool req_vec_wants_type(const struct requirement_vector *reqs,
                         enum universals_n kind)
 {
@@ -3498,13 +3498,13 @@ bool req_vec_wants_type(const struct requirement_vector *reqs,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the requirement vector number of the specified requirement
    vector in the specified requirement vector.
    @param parent_item the item that may own the vector.
    @param vec the requirement vector to number.
    @return the requirement vector number the vector has in the parent item.
- **************************************************************************/
+ */
 req_vec_num_in_item
 req_vec_vector_number(const void *parent_item,
                       const struct requirement_vector *vec)
@@ -3517,14 +3517,14 @@ req_vec_vector_number(const void *parent_item,
   }
 }
 
-/********************************************************************/ /**
+/**
    Returns a writable pointer to the specified requirement vector in the
    specified requirement vector or NULL if the parent item doesn't have a
    requirement vector with that requirement vector number.
    @param parent_item the item that should have the requirement vector.
    @param number the item's requirement vector number.
    @return a pointer to the specified requirement vector.
- ************************************************************************/
+ */
 struct requirement_vector *req_vec_by_number(const void *parent_item,
                                              req_vec_num_in_item number)
 {
@@ -3532,7 +3532,7 @@ struct requirement_vector *req_vec_by_number(const void *parent_item,
   return (struct requirement_vector *) parent_item;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the specified requirement vector change as a translated string
    ready for use in the user interface.
    N.B.: The returned string is static, so every call to this function
@@ -3541,7 +3541,7 @@ struct requirement_vector *req_vec_by_number(const void *parent_item,
    @param namer a function that returns a description of the vector to
                 change for the item the vector belongs to.
    @return the specified requirement vector change
- **************************************************************************/
+ */
 const char *req_vec_change_translation(const struct req_vec_change *change,
                                        const requirement_vector_namer namer)
 {
@@ -3600,7 +3600,7 @@ const char *req_vec_change_translation(const struct req_vec_change *change,
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the specified requirement vector modification was
    successfully applied to the specified target requirement vector.
    @param modification the requirement vector change
@@ -3609,7 +3609,7 @@ const char *req_vec_change_translation(const struct req_vec_change *change,
                  item and the vectors number in the item.
    @param parent_item the item to apply the change to.
    @return if the specified modification was successfully applied
- **************************************************************************/
+ */
 bool req_vec_change_apply(const struct req_vec_change *modification,
                           requirement_vector_by_number getter,
                           const void *parent_item)
@@ -3640,14 +3640,14 @@ bool req_vec_change_apply(const struct req_vec_change *modification,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Returns a new requirement vector problem with the specified number of
    suggested solutions and the specified description. The suggestions are
    added by the caller. The description
    @param num_suggested_solutions the number of suggested solutions.
    @param descr the description of the problem as a format string
    @return the new requirement vector problem.
- **************************************************************************/
+ */
 struct req_vec_problem *req_vec_problem_new(int num_suggested_solutions,
                                             const char *descr, ...)
 {
@@ -3675,11 +3675,11 @@ struct req_vec_problem *req_vec_problem_new(int num_suggested_solutions,
   return out;
 }
 
-/**********************************************************************/ /**
+/**
    De-allocates resources associated with the given requirement vector
    problem.
    @param issue the no longer needed problem.
- **************************************************************************/
+ */
 void req_vec_problem_free(struct req_vec_problem *issue)
 {
   delete[] issue->suggested_solutions;
@@ -3688,7 +3688,7 @@ void req_vec_problem_free(struct req_vec_problem *issue)
   delete issue;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the first self contradiction found in the specified requirement
    vector with suggested solutions or NULL if no contradiction was found.
    It is the responsibility of the caller to free the suggestion when it is
@@ -3698,7 +3698,7 @@ void req_vec_problem_free(struct req_vec_problem *issue)
                   the parent item.
    @param parent_item the item that owns the vector.
    @return the first self contradiction found.
- **************************************************************************/
+ */
 struct req_vec_problem *
 req_vec_get_first_contradiction(const struct requirement_vector *vec,
                                 requirement_vector_number get_num,
@@ -3750,10 +3750,10 @@ req_vec_get_first_contradiction(const struct requirement_vector *vec,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Return TRUE iff the two sources are equivalent.  Note this isn't the
    same as an == or memcmp check.
- ***************************************************************************/
+ */
 bool are_universals_equal(const struct universal *psource1,
                           const struct universal *psource2)
 {
@@ -3862,10 +3862,10 @@ bool are_universals_equal(const struct universal *psource1,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Return the (untranslated) rule name of the universal.
    You don't have to free the return pointer.
- ***************************************************************************/
+ */
 const char *universal_rule_name(const struct universal *psource)
 {
   static char buffer[10];
@@ -3996,14 +3996,14 @@ const char *universal_rule_name(const struct universal *psource)
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Make user-friendly text for the source.  The text is put into a user
    buffer which is also returned.
    This should be short, as it's used in lists like "Aqueduct+Size 8" when
    explaining a calculated value. It just needs to be enough to remind the
    player of rules they already know, not a complete explanation (use
    insert_requirement() for that).
- **************************************************************************/
+ */
 const char *universal_name_translation(const struct universal *psource,
                                        char *buf, size_t bufsz)
 {
@@ -4295,17 +4295,17 @@ const char *universal_name_translation(const struct universal *psource,
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Return untranslated name of the universal source name.
- **************************************************************************/
+ */
 const char *universal_type_rule_name(const struct universal *psource)
 {
   return universals_n_name(psource->kind);
 }
 
-/**********************************************************************/ /**
+/**
    Return the number of shields it takes to build this universal.
- **************************************************************************/
+ */
 int universal_build_shield_cost(const struct city *pcity,
                                 const struct universal *target)
 {
@@ -4320,11 +4320,11 @@ int universal_build_shield_cost(const struct city *pcity,
   return FC_INFINITY;
 }
 
-/**********************************************************************/ /**
+/**
    Replaces all instances of the universal to_replace with replacement in
    the requirement vector reqs and returns TRUE iff any requirements were
    replaced.
- **************************************************************************/
+ */
 bool universal_replace_in_req_vec(struct requirement_vector *reqs,
                                   const struct universal *to_replace,
                                   const struct universal *replacement)
@@ -4343,10 +4343,10 @@ bool universal_replace_in_req_vec(struct requirement_vector *reqs,
   return changed;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the universal 'psource' is directly mentioned by any of
    the requirements in 'reqs'.
- **************************************************************************/
+ */
 bool universal_is_mentioned_by_requirements(
     const struct requirement_vector *reqs, const struct universal *psource)
 {
@@ -4361,9 +4361,9 @@ bool universal_is_mentioned_by_requirements(
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Will the universal 'source' fulfill this requirement?
- **************************************************************************/
+ */
 enum req_item_found
 universal_fulfills_requirement(const struct requirement *preq,
                                const struct universal *source)
@@ -4375,7 +4375,7 @@ universal_fulfills_requirement(const struct requirement *preq,
   return (*universal_found_function[source->kind])(preq, source);
 }
 
-/**********************************************************************/ /**
+/**
    Will the universal 'source' fulfill the requirements in the list?
    If 'check_necessary' is FALSE: are there no requirements that 'source'
      would actively prevent the fulfilment of?
@@ -4384,7 +4384,7 @@ universal_fulfills_requirement(const struct requirement *preq,
      would be sufficient; for instance, if 'source' is a specific terrain
      type, we can return TRUE even if the requirement is only for something
      vague like a TerrainClass.)
- **************************************************************************/
+ */
 bool universal_fulfills_requirements(bool check_necessary,
                                      const struct requirement_vector *reqs,
                                      const struct universal *source)
@@ -4419,10 +4419,10 @@ bool universal_fulfills_requirements(bool check_necessary,
   return (!check_necessary || necessary);
 }
 
-/**********************************************************************/ /**
+/**
    Version of universal_fulfills_requirements that takes the universal by
    value.
- **************************************************************************/
+ */
 bool sv_universal_fulfills_requirements(
     bool check_necessary, const struct requirement_vector *reqs,
     const struct universal source)
@@ -4430,10 +4430,10 @@ bool sv_universal_fulfills_requirements(
   return universal_fulfills_requirements(check_necessary, reqs, &source);
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the specified universal is relevant to fulfilling the
    specified requirement.
- **************************************************************************/
+ */
 bool universal_is_relevant_to_requirement(const struct requirement *req,
                                           const struct universal *source)
 {
@@ -4449,9 +4449,9 @@ bool universal_is_relevant_to_requirement(const struct requirement *req,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Find if a nation fulfills a requirement
- **************************************************************************/
+ */
 static enum req_item_found nation_found(const struct requirement *preq,
                                         const struct universal *source)
 {
@@ -4473,9 +4473,9 @@ static enum req_item_found nation_found(const struct requirement *preq,
   return ITF_NOT_APPLICABLE;
 }
 
-/**********************************************************************/ /**
+/**
    Find if a government fulfills a requirement
- **************************************************************************/
+ */
 static enum req_item_found government_found(const struct requirement *preq,
                                             const struct universal *source)
 {
@@ -4489,9 +4489,9 @@ static enum req_item_found government_found(const struct requirement *preq,
   return ITF_NOT_APPLICABLE;
 }
 
-/**********************************************************************/ /**
+/**
    Find if an improvement fulfills a requirement
- **************************************************************************/
+ */
 static enum req_item_found improvement_found(const struct requirement *preq,
                                              const struct universal *source)
 {
@@ -4520,9 +4520,9 @@ static enum req_item_found improvement_found(const struct requirement *preq,
   return ITF_NOT_APPLICABLE;
 }
 
-/**********************************************************************/ /**
+/**
    Find if a unit class fulfills a requirement
- **************************************************************************/
+ */
 static enum req_item_found unit_class_found(const struct requirement *preq,
                                             const struct universal *source)
 {
@@ -4545,9 +4545,9 @@ static enum req_item_found unit_class_found(const struct requirement *preq,
   };
 }
 
-/**********************************************************************/ /**
+/**
    Find if a unit type fulfills a requirement
- **************************************************************************/
+ */
 static enum req_item_found unit_type_found(const struct requirement *preq,
                                            const struct universal *source)
 {
@@ -4577,9 +4577,9 @@ static enum req_item_found unit_type_found(const struct requirement *preq,
   };
 }
 
-/**********************************************************************/ /**
+/**
    Find if a unit activity fulfills a requirement
- **************************************************************************/
+ */
 static enum req_item_found
 unit_activity_found(const struct requirement *preq,
                     const struct universal *source)
@@ -4597,9 +4597,9 @@ unit_activity_found(const struct requirement *preq,
   };
 }
 
-/**********************************************************************/ /**
+/**
    Find if a terrain type fulfills a requirement
- **************************************************************************/
+ */
 static enum req_item_found terrain_type_found(const struct requirement *preq,
                                               const struct universal *source)
 {
@@ -4625,9 +4625,9 @@ static enum req_item_found terrain_type_found(const struct requirement *preq,
   };
 }
 
-/**********************************************************************/ /**
+/**
    Find if a tile state fulfills a requirement
- **************************************************************************/
+ */
 static enum req_item_found city_tile_found(const struct requirement *preq,
                                            const struct universal *source)
 {
@@ -4646,9 +4646,9 @@ static enum req_item_found city_tile_found(const struct requirement *preq,
   };
 }
 
-/**********************************************************************/ /**
+/**
    Find if an extra type fulfills a requirement
- **************************************************************************/
+ */
 static enum req_item_found extra_type_found(const struct requirement *preq,
                                             const struct universal *source)
 {
@@ -4681,9 +4681,9 @@ static enum req_item_found extra_type_found(const struct requirement *preq,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Find if an action fulfills a requirement
- **************************************************************************/
+ */
 static enum req_item_found action_found(const struct requirement *preq,
                                         const struct universal *source)
 {
@@ -4697,9 +4697,9 @@ static enum req_item_found action_found(const struct requirement *preq,
   return ITF_NOT_APPLICABLE;
 }
 
-/**********************************************************************/ /**
+/**
    Find if a diplrel fulfills a requirement
- **************************************************************************/
+ */
 static enum req_item_found diplrel_found(const struct requirement *preq,
                                          const struct universal *source)
 {
@@ -4739,9 +4739,9 @@ static enum req_item_found diplrel_found(const struct requirement *preq,
   return ITF_NOT_APPLICABLE;
 }
 
-/**********************************************************************/ /**
+/**
    Find if an output type fulfills a requirement
- **************************************************************************/
+ */
 static enum req_item_found output_type_found(const struct requirement *preq,
                                              const struct universal *source)
 {
@@ -4756,9 +4756,9 @@ static enum req_item_found output_type_found(const struct requirement *preq,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialise universal_found_function array.
- **************************************************************************/
+ */
 void universal_found_functions_init()
 {
   universal_found_function[VUT_GOVERNMENT] = &government_found;
@@ -4775,14 +4775,14 @@ void universal_found_functions_init()
   universal_found_function[VUT_DIPLREL] = &diplrel_found;
 }
 
-/**********************************************************************/ /**
+/**
    Returns (the position of) the given requirement's enumerator in the
    enumeration of all possible requirements of its requirement kind.
 
    Note: Since this isn't used for any requirement type that supports
    surviving requirements those aren't supported. Add support if a user
    appears.
- **************************************************************************/
+ */
 int requirement_kind_ereq(const int value, const enum req_range range,
                           const bool present, const int max_value)
 {

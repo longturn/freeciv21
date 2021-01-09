@@ -78,9 +78,9 @@ static const char *HISTORY_FILENAME = "freeciv-server_history";
 static const int HISTORY_LENGTH = 100;
 
 namespace {
-/*************************************************************************/ /**
+/**
    Readline callback for input.
- *****************************************************************************/
+ */
 void handle_readline_input_callback(char *line)
 {
   if (line == nullptr) {
@@ -98,9 +98,9 @@ void handle_readline_input_callback(char *line)
   free(line);
 }
 
-/**********************************************************************/ /**
+/**
    Initialize server specific functions.
- **************************************************************************/
+ */
 void fc_interface_init_server()
 {
   struct functions *funcs = fc_interface_funcs();
@@ -122,9 +122,9 @@ void fc_interface_init_server()
   fc_interface_init();
 }
 
-/**********************************************************************/ /**
+/**
    Server initialization.
- **************************************************************************/
+ */
 QTcpServer *srv_prepare()
 {
 #ifdef HAVE_FCDB
@@ -227,9 +227,9 @@ QTcpServer *srv_prepare()
 
 } // anonymous namespace
 
-/*************************************************************************/ /**
+/**
    Creates a server. It starts working as soon as there is an event loop.
- *****************************************************************************/
+ */
 server::server()
 
 {
@@ -295,9 +295,9 @@ server::server()
   connect(m_pulse_timer, &QTimer::timeout, this, &server::pulse);
 }
 
-/*************************************************************************/ /**
+/**
    Shut down a server.
- *****************************************************************************/
+ */
 server::~server()
 {
   if (m_interactive) {
@@ -323,9 +323,9 @@ server::~server()
   server_quit();
 }
 
-/*************************************************************************/ /**
+/**
    Initializes interactive handling of stdin with libreadline.
- *****************************************************************************/
+ */
 void server::init_interactive()
 {
   // Read the history file
@@ -343,16 +343,16 @@ void server::init_interactive()
   rl_attempted_completion_function = freeciv_completion;
 }
 
-/*************************************************************************/ /**
+/**
    Checks if the server is ready for the event loop to start. In practice,
    this is only false if opening the port failed.
- *****************************************************************************/
+ */
 bool server::is_ready() const { return m_tcp_server->isListening(); }
 
-/*************************************************************************/ /**
+/**
    Server accepts connections from client:
    Low level socket stuff, and basic-initialize the connection struct.
- *****************************************************************************/
+ */
 void server::accept_connections()
 {
   // There may be several connections available.
@@ -432,9 +432,9 @@ void server::accept_connections()
   }
 }
 
-/*************************************************************************/ /**
+/**
    Sends pings to clients if needed.
- *****************************************************************************/
+ */
 void server::send_pings()
 {
   // Pinging around for statistics
@@ -469,9 +469,9 @@ void server::send_pings()
   }
 }
 
-/*************************************************************************/ /**
+/**
    Called when there was an error on a socket.
- *****************************************************************************/
+ */
 void server::error_on_socket()
 {
   // Get the socket
@@ -494,9 +494,9 @@ void server::error_on_socket()
   update_game_state();
 }
 
-/*************************************************************************/ /**
+/**
    Called when there's something to read on a socket.
- *****************************************************************************/
+ */
 void server::input_on_socket()
 {
   // Get the socket
@@ -528,9 +528,9 @@ void server::input_on_socket()
   update_game_state();
 }
 
-/*************************************************************************/ /**
+/**
    Called when there's something to read on stdin.
- *****************************************************************************/
+ */
 void server::input_on_stdin()
 {
   if (m_interactive) {
@@ -559,9 +559,9 @@ void server::input_on_stdin()
   update_game_state();
 }
 
-/*************************************************************************/ /**
+/**
    Prepares for a new game.
- *****************************************************************************/
+ */
 void server::prepare_game()
 {
   set_server_state(S_S_INITIAL);
@@ -586,9 +586,9 @@ void server::prepare_game()
   }
 }
 
-/*************************************************************************/ /**
+/**
    Do everything needed to start a new turn on top of calling begin_turn.
- *****************************************************************************/
+ */
 void server::begin_turn()
 {
   ::begin_turn(m_is_new_turn);
@@ -597,9 +597,9 @@ void server::begin_turn()
   begin_phase();
 }
 
-/*************************************************************************/ /**
+/**
    Do everything needed to start a new phase on top of calling begin_phase.
- *****************************************************************************/
+ */
 void server::begin_phase()
 {
   log_debug("Starting phase %d/%d.", game.info.phase,
@@ -666,9 +666,9 @@ void server::begin_phase()
   QTimer::singleShot(0, this, &server::update_game_state);
 }
 
-/*************************************************************************/ /**
+/**
    Do everything needed to end a phase on top of calling end_phase.
- *****************************************************************************/
+ */
 void server::end_phase()
 {
   m_between_turns_timer =
@@ -705,9 +705,9 @@ void server::end_phase()
   }
 }
 
-/*************************************************************************/ /**
+/**
    Do everything needed to end a turn on top of calling end_turn.
- *****************************************************************************/
+ */
 void server::end_turn()
 {
   ::end_turn();
@@ -755,9 +755,9 @@ void server::end_turn()
   }
 }
 
-/*************************************************************************/ /**
+/**
    Checks if the game state has changed and take action if appropriate.
- *****************************************************************************/
+ */
 void server::update_game_state()
 {
   // Set in the following cases:
@@ -829,10 +829,10 @@ void server::update_game_state()
   }
 }
 
-/*************************************************************************/ /**
+/**
    Shuts a game down when all players have left. Returns whether a new game
    should be started.
- *****************************************************************************/
+ */
 bool server::shut_game_down()
 {
   /* Close it even between games. */
@@ -854,10 +854,10 @@ bool server::shut_game_down()
   return true;
 }
 
-/*************************************************************************/ /**
+/**
    Quit because we're idle (ie no one was connected in the last
    srvarg.quitidle seconds).
- *****************************************************************************/
+ */
 void server::quit_idle()
 {
   m_quitidle_timer = nullptr;
@@ -883,9 +883,9 @@ void server::quit_idle()
   }
 }
 
-/*************************************************************************/ /**
+/**
    Called every second.
- *****************************************************************************/
+ */
 void server::pulse()
 {
   send_pings();

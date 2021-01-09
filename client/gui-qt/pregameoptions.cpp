@@ -45,9 +45,9 @@
 
 extern "C" void option_dialog_popup(const char *name,
                                     const struct option_set *poptset);
-/************************************************************************/ /**
+/**
    Pregame options contructor
- ****************************************************************************/
+ */
 pregame_options::pregame_options(QWidget *parent) : QWidget(parent)
 {
   int level;
@@ -86,9 +86,9 @@ pregame_options::pregame_options(QWidget *parent) : QWidget(parent)
   update_buttons();
 }
 
-/************************************************************************/ /**
+/**
    Update the ruleset list
- ****************************************************************************/
+ */
 void pregame_options::set_rulesets(int num_rulesets, char **rulesets)
 {
   int i;
@@ -108,10 +108,10 @@ void pregame_options::set_rulesets(int num_rulesets, char **rulesets)
   ui.cruleset->blockSignals(false);
 }
 
-/************************************************************************/ /**
+/**
    Sets the value of the "aifill" option. Doesn't send the new value to the
    server
- ****************************************************************************/
+ */
 void pregame_options::set_aifill(int aifill)
 {
   ui.max_players->blockSignals(true);
@@ -119,9 +119,9 @@ void pregame_options::set_aifill(int aifill)
   ui.max_players->blockSignals(false);
 }
 
-/************************************************************************/ /**
+/**
    Updates the buttons whenever the game state has changed
- ****************************************************************************/
+ */
 void pregame_options::update_buttons()
 {
   QPixmap *psprite = nullptr;
@@ -147,9 +147,9 @@ void pregame_options::update_buttons()
   }
 }
 
-/************************************************************************/ /**
+/**
    Updates the AI skill level control
- ****************************************************************************/
+ */
 void pregame_options::update_ai_level()
 {
   enum ai_level level = server_ai_level();
@@ -163,17 +163,17 @@ void pregame_options::update_ai_level()
   }
 }
 
-/************************************************************************/ /**
+/**
    Slot for changing aifill value
- ****************************************************************************/
+ */
 void pregame_options::max_players_change(int i)
 {
   option_int_set(optset_option_by_name(server_optset, "aifill"), i);
 }
 
-/************************************************************************/ /**
+/**
    Slot for changing level of AI
- ****************************************************************************/
+ */
 void pregame_options::ailevel_change(int i)
 {
   Q_UNUSED(i)
@@ -191,9 +191,9 @@ void pregame_options::ailevel_change(int i)
   }
 }
 
-/************************************************************************/ /**
+/**
    Slot for changing ruleset
- ****************************************************************************/
+ */
 void pregame_options::ruleset_change(int i)
 {
   Q_UNUSED(i)
@@ -205,7 +205,7 @@ void pregame_options::ruleset_change(int i)
   }
 }
 
-/************************************************************************/ /**
+/**
    Slot for picking a nation
- ****************************************************************************/
+ */
 void pregame_options::pick_nation() { popup_races_dialog(client_player()); }

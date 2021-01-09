@@ -223,9 +223,9 @@ struct option_set {
   const char *(*category_name)(int);
 };
 
-/************************************************************************/ /**
+/**
    Returns the option corresponding of the number in this option set.
- ****************************************************************************/
+ */
 struct option *optset_option_by_number(const struct option_set *poptset,
                                        int id)
 {
@@ -234,9 +234,9 @@ struct option *optset_option_by_number(const struct option_set *poptset,
   return poptset->option_by_number(id);
 }
 
-/************************************************************************/ /**
+/**
    Returns the option corresponding of the name in this option set.
- ****************************************************************************/
+ */
 struct option *optset_option_by_name(const struct option_set *poptset,
                                      const char *name)
 {
@@ -252,9 +252,9 @@ struct option *optset_option_by_name(const struct option_set *poptset,
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Returns the first option of this option set.
- ****************************************************************************/
+ */
 struct option *optset_option_first(const struct option_set *poptset)
 {
   fc_assert_ret_val(NULL != poptset, NULL);
@@ -262,9 +262,9 @@ struct option *optset_option_first(const struct option_set *poptset)
   return poptset->option_first();
 }
 
-/************************************************************************/ /**
+/**
    Returns the number of categories of this option set.
- ****************************************************************************/
+ */
 int optset_category_number(const struct option_set *poptset)
 {
   fc_assert_ret_val(NULL != poptset, 0);
@@ -272,9 +272,9 @@ int optset_category_number(const struct option_set *poptset)
   return poptset->category_number();
 }
 
-/************************************************************************/ /**
+/**
    Returns the name (translated) of the category of this option set.
- ****************************************************************************/
+ */
 const char *optset_category_name(const struct option_set *poptset,
                                  int category)
 {
@@ -413,9 +413,9 @@ struct option {
   OPTION_INIT(optset, OT_COLOR, color_vtable, common_table, color_table,    \
               changed_cb, 0)
 
-/************************************************************************/ /**
+/**
    Returns the option set owner of this option.
- ****************************************************************************/
+ */
 const struct option_set *option_optset(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -423,9 +423,9 @@ const struct option_set *option_optset(const struct option *poption)
   return poption->poptset;
 }
 
-/************************************************************************/ /**
+/**
    Returns the number of the option.
- ****************************************************************************/
+ */
 int option_number(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, 0);
@@ -433,9 +433,9 @@ int option_number(const struct option *poption)
   return poption->common_vtable->number(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the name of the option.
- ****************************************************************************/
+ */
 const char *option_name(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -443,9 +443,9 @@ const char *option_name(const struct option *poption)
   return poption->common_vtable->name(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the description (translated) of the option.
- ****************************************************************************/
+ */
 const char *option_description(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -453,9 +453,9 @@ const char *option_description(const struct option *poption)
   return poption->common_vtable->description(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the help text (translated) of the option.
- ****************************************************************************/
+ */
 QString option_help_text(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -463,9 +463,9 @@ QString option_help_text(const struct option *poption)
   return poption->common_vtable->help_text(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the type of the option.
- ****************************************************************************/
+ */
 enum option_type option_type(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, static_cast<enum option_type>(0));
@@ -473,9 +473,9 @@ enum option_type option_type(const struct option *poption)
   return poption->type;
 }
 
-/************************************************************************/ /**
+/**
    Returns the category of the option.
- ****************************************************************************/
+ */
 int option_category(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, 0);
@@ -483,9 +483,9 @@ int option_category(const struct option *poption)
   return poption->common_vtable->category(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the name (translated) of the category of the option.
- ****************************************************************************/
+ */
 QString option_category_name(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -494,9 +494,9 @@ QString option_category_name(const struct option *poption)
                               poption->common_vtable->category(poption));
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE if this option can be modified.
- ****************************************************************************/
+ */
 bool option_is_changeable(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, false);
@@ -504,9 +504,9 @@ bool option_is_changeable(const struct option *poption)
   return poption->common_vtable->is_changeable(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the next option or NULL if this is the last.
- ****************************************************************************/
+ */
 struct option *option_next(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -514,9 +514,9 @@ struct option *option_next(const struct option *poption)
   return poption->common_vtable->next(poption);
 }
 
-/************************************************************************/ /**
+/**
    Set the option to its default value.  Returns TRUE if the option changed.
- ****************************************************************************/
+ */
 bool option_reset(struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, false);
@@ -540,9 +540,9 @@ bool option_reset(struct option *poption)
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Set the function to call every time this option changes.  Can be NULL.
- ****************************************************************************/
+ */
 void option_set_changed_callback(struct option *poption,
                                  void (*callback)(struct option *))
 {
@@ -551,9 +551,9 @@ void option_set_changed_callback(struct option *poption,
   poption->changed_callback = callback;
 }
 
-/************************************************************************/ /**
+/**
    Force to use the option changed callback.
- ****************************************************************************/
+ */
 void option_changed(struct option *poption)
 {
   fc_assert_ret(NULL != poption);
@@ -570,9 +570,9 @@ void option_changed(struct option *poption)
   option_gui_update(poption);
 }
 
-/************************************************************************/ /**
+/**
    Set the gui data for this option.
- ****************************************************************************/
+ */
 void option_set_gui_data(struct option *poption, void *data)
 {
   fc_assert_ret(NULL != poption);
@@ -580,9 +580,9 @@ void option_set_gui_data(struct option *poption, void *data)
   poption->gui_data = data;
 }
 
-/************************************************************************/ /**
+/**
    Returns the gui data of this option.
- ****************************************************************************/
+ */
 void *option_get_gui_data(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -590,9 +590,9 @@ void *option_get_gui_data(const struct option *poption)
   return poption->gui_data;
 }
 
-/************************************************************************/ /**
+/**
    Returns the callback data of this option.
- ****************************************************************************/
+ */
 int option_get_cb_data(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, 0);
@@ -600,9 +600,9 @@ int option_get_cb_data(const struct option *poption)
   return poption->callback_data;
 }
 
-/************************************************************************/ /**
+/**
    Returns the current value of this boolean option.
- ****************************************************************************/
+ */
 bool option_bool_get(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, false);
@@ -611,9 +611,9 @@ bool option_bool_get(const struct option *poption)
   return poption->bool_vtable->get(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this boolean option.
- ****************************************************************************/
+ */
 bool option_bool_def(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, false);
@@ -622,9 +622,9 @@ bool option_bool_def(const struct option *poption)
   return poption->bool_vtable->def(poption);
 }
 
-/************************************************************************/ /**
+/**
    Sets the value of this boolean option. Returns TRUE if the value changed.
- ****************************************************************************/
+ */
 bool option_bool_set(struct option *poption, bool val)
 {
   fc_assert_ret_val(NULL != poption, false);
@@ -637,9 +637,9 @@ bool option_bool_set(struct option *poption, bool val)
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Returns the current value of this integer option.
- ****************************************************************************/
+ */
 int option_int_get(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, 0);
@@ -648,9 +648,9 @@ int option_int_get(const struct option *poption)
   return poption->int_vtable->get(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this integer option.
- ****************************************************************************/
+ */
 int option_int_def(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, 0);
@@ -659,9 +659,9 @@ int option_int_def(const struct option *poption)
   return poption->int_vtable->def(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the minimal value of this integer option.
- ****************************************************************************/
+ */
 int option_int_min(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, 0);
@@ -670,9 +670,9 @@ int option_int_min(const struct option *poption)
   return poption->int_vtable->minimum(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the maximal value of this integer option.
- ****************************************************************************/
+ */
 int option_int_max(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, 0);
@@ -681,9 +681,9 @@ int option_int_max(const struct option *poption)
   return poption->int_vtable->maximum(poption);
 }
 
-/************************************************************************/ /**
+/**
    Sets the value of this integer option. Returns TRUE if the value changed.
- ****************************************************************************/
+ */
 bool option_int_set(struct option *poption, int val)
 {
   fc_assert_ret_val(NULL != poption, false);
@@ -696,9 +696,9 @@ bool option_int_set(struct option *poption, int val)
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Returns the current value of this string option.
- ****************************************************************************/
+ */
 const char *option_str_get(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -707,9 +707,9 @@ const char *option_str_get(const struct option *poption)
   return poption->str_vtable->get(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this string option.
- ****************************************************************************/
+ */
 const char *option_str_def(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -718,9 +718,9 @@ const char *option_str_def(const struct option *poption)
   return poption->str_vtable->def(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the possible string values of this string option.
- ****************************************************************************/
+ */
 const QVector<QString> *option_str_values(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -729,9 +729,9 @@ const QVector<QString> *option_str_values(const struct option *poption)
   return poption->str_vtable->values(poption);
 }
 
-/************************************************************************/ /**
+/**
    Sets the value of this string option. Returns TRUE if the value changed.
- ****************************************************************************/
+ */
 bool option_str_set(struct option *poption, const char *str)
 {
   fc_assert_ret_val(NULL != poption, false);
@@ -745,10 +745,10 @@ bool option_str_set(struct option *poption, const char *str)
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Returns the value corresponding to the user-visible (translatable but not
    translated) string. Returns -1 if not matched.
- ****************************************************************************/
+ */
 int option_enum_str_to_int(const struct option *poption, const char *str)
 {
   const QVector<QString> *values;
@@ -768,10 +768,10 @@ int option_enum_str_to_int(const struct option *poption, const char *str)
   return -1;
 }
 
-/************************************************************************/ /**
+/**
    Returns the user-visible (translatable but not translated) string
    corresponding to the value. Returns NULL on error.
- ****************************************************************************/
+ */
 QString option_enum_int_to_str(const struct option *poption, int val)
 {
   const QVector<QString> *values;
@@ -788,9 +788,9 @@ QString option_enum_int_to_str(const struct option *poption, int val)
   }
 }
 
-/************************************************************************/ /**
+/**
    Returns the current value of this enum option (as an integer).
- ****************************************************************************/
+ */
 int option_enum_get_int(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, -1);
@@ -799,10 +799,10 @@ int option_enum_get_int(const struct option *poption)
   return poption->enum_vtable->get(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the current value of this enum option as a user-visible
    (translatable but not translated) string.
- ****************************************************************************/
+ */
 QString option_enum_get_str(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -812,9 +812,9 @@ QString option_enum_get_str(const struct option *poption)
       poption->enum_vtable->get(poption));
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this enum option (as an integer).
- ****************************************************************************/
+ */
 int option_enum_def_int(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, -1);
@@ -823,10 +823,10 @@ int option_enum_def_int(const struct option *poption)
   return poption->enum_vtable->def(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this enum option as a user-visible
    (translatable but not translated) string.
- ****************************************************************************/
+ */
 QString option_enum_def_str(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -836,10 +836,10 @@ QString option_enum_def_str(const struct option *poption)
       poption->enum_vtable->def(poption));
 }
 
-/************************************************************************/ /**
+/**
    Returns the possible string values of this enum option, as user-visible
    (translatable but not translated) strings.
- ****************************************************************************/
+ */
 const QVector<QString> *option_enum_values(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -848,9 +848,9 @@ const QVector<QString> *option_enum_values(const struct option *poption)
   return poption->enum_vtable->values(poption);
 }
 
-/************************************************************************/ /**
+/**
    Sets the value of this enum option. Returns TRUE if the value changed.
- ****************************************************************************/
+ */
 bool option_enum_set_int(struct option *poption, int val)
 {
   fc_assert_ret_val(NULL != poption, false);
@@ -863,11 +863,11 @@ bool option_enum_set_int(struct option *poption, int val)
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Sets the value of this enum option from a string, which is matched as a
    user-visible (translatable but not translated) string. Returns TRUE if the
    value changed.
- ****************************************************************************/
+ */
 bool option_enum_set_str(struct option *poption, const char *str)
 {
   fc_assert_ret_val(NULL != poption, false);
@@ -882,9 +882,9 @@ bool option_enum_set_str(struct option *poption, const char *str)
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Returns the current value of this bitwise option.
- ****************************************************************************/
+ */
 unsigned option_bitwise_get(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, 0);
@@ -893,9 +893,9 @@ unsigned option_bitwise_get(const struct option *poption)
   return poption->bitwise_vtable->get(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this bitwise option.
- ****************************************************************************/
+ */
 unsigned option_bitwise_def(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, 0);
@@ -904,9 +904,9 @@ unsigned option_bitwise_def(const struct option *poption)
   return poption->bitwise_vtable->def(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the mask of this bitwise option.
- ****************************************************************************/
+ */
 unsigned option_bitwise_mask(const struct option *poption)
 {
   const QVector<QString> *values;
@@ -920,10 +920,10 @@ unsigned option_bitwise_mask(const struct option *poption)
   return (1 << values->count()) - 1;
 }
 
-/************************************************************************/ /**
+/**
    Returns a vector of strings describing every bit of this option, as
    user-visible (translatable but not translated) strings.
- ****************************************************************************/
+ */
 const QVector<QString> *option_bitwise_values(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -932,9 +932,9 @@ const QVector<QString> *option_bitwise_values(const struct option *poption)
   return poption->bitwise_vtable->values(poption);
 }
 
-/************************************************************************/ /**
+/**
    Sets the value of this bitwise option. Returns TRUE if the value changed.
- ****************************************************************************/
+ */
 bool option_bitwise_set(struct option *poption, unsigned val)
 {
   fc_assert_ret_val(NULL != poption, false);
@@ -949,9 +949,9 @@ bool option_bitwise_set(struct option *poption, unsigned val)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns the current value of this font option.
- ****************************************************************************/
+ */
 const QString option_font_get(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -960,9 +960,9 @@ const QString option_font_get(const struct option *poption)
   return poption->font_vtable->get(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this font option.
- ****************************************************************************/
+ */
 const QString option_font_def(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -971,9 +971,9 @@ const QString option_font_def(const struct option *poption)
   return poption->font_vtable->def(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the target style name of this font option.
- ****************************************************************************/
+ */
 const QString option_font_target(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
@@ -982,9 +982,9 @@ const QString option_font_target(const struct option *poption)
   return poption->font_vtable->target(poption);
 }
 
-/************************************************************************/ /**
+/**
    Sets the value of this font option. Returns TRUE if the value changed.
- ****************************************************************************/
+ */
 bool option_font_set(struct option *poption, const QString &font)
 {
   fc_assert_ret_val(NULL != poption, false);
@@ -998,9 +998,9 @@ bool option_font_set(struct option *poption, const QString &font)
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Returns the current value of this color option.
- ****************************************************************************/
+ */
 struct ft_color option_color_get(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, ft_color_construct(NULL, NULL));
@@ -1010,9 +1010,9 @@ struct ft_color option_color_get(const struct option *poption)
   return poption->color_vtable->get(poption);
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this color option.
- ****************************************************************************/
+ */
 struct ft_color option_color_def(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, ft_color_construct(NULL, NULL));
@@ -1022,10 +1022,10 @@ struct ft_color option_color_def(const struct option *poption)
   return poption->color_vtable->def(poption);
 }
 
-/************************************************************************/ /**
+/**
    Sets the value of this color option. Returns TRUE if the value
    changed.
- ****************************************************************************/
+ */
 bool option_color_set(struct option *poption, struct ft_color color)
 {
   fc_assert_ret_val(NULL != poption, false);
@@ -2122,9 +2122,9 @@ static const int client_options_num = ARRAY_SIZE(client_options);
   }                                                                         \
   }
 
-/************************************************************************/ /**
+/**
    Returns the next valid option pointer for the current gui type.
- ****************************************************************************/
+ */
 static struct client_option *
 client_option_next_valid(struct client_option *poption)
 {
@@ -2140,9 +2140,9 @@ client_option_next_valid(struct client_option *poption)
   return (poption < max ? poption : NULL);
 }
 
-/************************************************************************/ /**
+/**
    Returns the option corresponding to this id.
- ****************************************************************************/
+ */
 static struct option *client_optset_option_by_number(int id)
 {
   if (0 > id || id > client_options_num) {
@@ -2151,22 +2151,22 @@ static struct option *client_optset_option_by_number(int id)
   return OPTION(client_options + id);
 }
 
-/************************************************************************/ /**
+/**
    Returns the first valid option pointer for the current gui type.
- ****************************************************************************/
+ */
 static struct option *client_optset_option_first()
 {
   return OPTION(client_option_next_valid(client_options));
 }
 
-/************************************************************************/ /**
+/**
    Returns the number of client option categories.
- ****************************************************************************/
+ */
 static int client_optset_category_number() { return COC_MAX; }
 
-/************************************************************************/ /**
+/**
    Returns the name (translated) of the option class.
- ****************************************************************************/
+ */
 static const char *client_optset_category_name(int category)
 {
   switch (category) {
@@ -2194,83 +2194,83 @@ static const char *client_optset_category_name(int category)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Returns the number of this client option.
- ****************************************************************************/
+ */
 static int client_option_number(const struct option *poption)
 {
   return CLIENT_OPTION(poption) - client_options;
 }
 
-/************************************************************************/ /**
+/**
    Returns the name of this client option.
- ****************************************************************************/
+ */
 static const char *client_option_name(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->name;
 }
 
-/************************************************************************/ /**
+/**
    Returns the description of this client option.
- ****************************************************************************/
+ */
 static const char *client_option_description(const struct option *poption)
 {
   return _(CLIENT_OPTION(poption)->description);
 }
 
-/************************************************************************/ /**
+/**
    Returns the help text for this client option.
- ****************************************************************************/
+ */
 static const char *client_option_help_text(const struct option *poption)
 {
   return _(CLIENT_OPTION(poption)->help_text);
 }
 
-/************************************************************************/ /**
+/**
    Returns the category of this client option.
- ****************************************************************************/
+ */
 static int client_option_category(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->category;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE if this client option can be modified.
- ****************************************************************************/
+ */
 static bool client_option_is_changeable(const struct option *poption)
 {
   Q_UNUSED(poption)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns the next valid option pointer for the current gui type.
- ****************************************************************************/
+ */
 static struct option *client_option_next(const struct option *poption)
 {
   return OPTION(client_option_next_valid(CLIENT_OPTION(poption) + 1));
 }
 
-/************************************************************************/ /**
+/**
    Returns the value of this client option of type OT_BOOLEAN.
- ****************************************************************************/
+ */
 static bool client_option_bool_get(const struct option *poption)
 {
   return *(CLIENT_OPTION(poption)->boolean.pvalue);
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this client option of type OT_BOOLEAN.
- ****************************************************************************/
+ */
 static bool client_option_bool_def(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->boolean.def;
 }
 
-/************************************************************************/ /**
+/**
    Set the value of this client option of type OT_BOOLEAN.  Returns TRUE if
    the value changed.
- ****************************************************************************/
+ */
 static bool client_option_bool_set(struct option *poption, bool val)
 {
   struct client_option *pcoption = CLIENT_OPTION(poption);
@@ -2283,42 +2283,42 @@ static bool client_option_bool_set(struct option *poption, bool val)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns the value of this client option of type OT_INTEGER.
- ****************************************************************************/
+ */
 static int client_option_int_get(const struct option *poption)
 {
   return *(CLIENT_OPTION(poption)->integer.pvalue);
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this client option of type OT_INTEGER.
- ****************************************************************************/
+ */
 static int client_option_int_def(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->integer.def;
 }
 
-/************************************************************************/ /**
+/**
    Returns the minimal value for this client option of type OT_INTEGER.
- ****************************************************************************/
+ */
 static int client_option_int_min(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->integer.min;
 }
 
-/************************************************************************/ /**
+/**
    Returns the maximal value for this client option of type OT_INTEGER.
- ****************************************************************************/
+ */
 static int client_option_int_max(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->integer.max;
 }
 
-/************************************************************************/ /**
+/**
    Set the value of this client option of type OT_INTEGER.  Returns TRUE if
    the value changed.
- ****************************************************************************/
+ */
 static bool client_option_int_set(struct option *poption, int val)
 {
   struct client_option *pcoption = CLIENT_OPTION(poption);
@@ -2332,26 +2332,26 @@ static bool client_option_int_set(struct option *poption, int val)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns the value of this client option of type OT_STRING.
- ****************************************************************************/
+ */
 static const char *client_option_str_get(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->string.pvalue;
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this client option of type OT_STRING.
- ****************************************************************************/
+ */
 static const char *client_option_str_def(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->string.def;
 }
 
-/************************************************************************/ /**
+/**
    Returns the possible string values of this client option of type
    OT_STRING.
- ****************************************************************************/
+ */
 static const QVector<QString> *
 client_option_str_values(const struct option *poption)
 {
@@ -2360,10 +2360,10 @@ client_option_str_values(const struct option *poption)
               : NULL);
 }
 
-/************************************************************************/ /**
+/**
    Set the value of this client option of type OT_STRING.  Returns TRUE if
    the value changed.
- ****************************************************************************/
+ */
 static bool client_option_str_set(struct option *poption, const char *str)
 {
   struct client_option *pcoption = CLIENT_OPTION(poption);
@@ -2377,11 +2377,11 @@ static bool client_option_str_set(struct option *poption, const char *str)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns the "support" name of the value for this client option of type
    OT_ENUM (a string suitable for saving in a file).
    The prototype must match the 'secfile_enum_name_data_fn_t' type.
- ****************************************************************************/
+ */
 static const char *client_option_enum_secfile_str(secfile_data_t data,
                                                   int val)
 {
@@ -2392,11 +2392,11 @@ static const char *client_option_enum_secfile_str(secfile_data_t data,
                                            : NULL);
 }
 
-/************************************************************************/ /**
+/**
    Returns the "support" name of a single value for this client option of
  type OT_BITWISE (a string suitable for saving in a file). The prototype must
  match the 'secfile_enum_name_data_fn_t' type.
- ****************************************************************************/
+ */
 static const char *client_option_bitwise_secfile_str(secfile_data_t data,
                                                      int val)
 {
@@ -2406,34 +2406,34 @@ static const char *client_option_bitwise_secfile_str(secfile_data_t data,
                                            : NULL);
 }
 
-/************************************************************************/ /**
+/**
    Returns the value of this client option of type OT_FONT.
- ****************************************************************************/
+ */
 static const char *client_option_font_get(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->font.pvalue;
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this client option of type OT_FONT.
- ****************************************************************************/
+ */
 static const char *client_option_font_def(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->font.def;
 }
 
-/************************************************************************/ /**
+/**
    Returns the target style name of this client option of type OT_FONT.
- ****************************************************************************/
+ */
 static const char *client_option_font_target(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->font.target;
 }
 
-/************************************************************************/ /**
+/**
    Set the value of this client option of type OT_FONT.  Returns TRUE if
    the value changed.
- ****************************************************************************/
+ */
 static bool client_option_font_set(struct option *poption, const char *font)
 {
   struct client_option *pcoption = CLIENT_OPTION(poption);
@@ -2447,26 +2447,26 @@ static bool client_option_font_set(struct option *poption, const char *font)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns the value of this client option of type OT_COLOR.
- ****************************************************************************/
+ */
 static struct ft_color client_option_color_get(const struct option *poption)
 {
   return *CLIENT_OPTION(poption)->color.pvalue;
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this client option of type OT_COLOR.
- ****************************************************************************/
+ */
 static struct ft_color client_option_color_def(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->color.def;
 }
 
-/************************************************************************/ /**
+/**
    Set the value of this client option of type OT_COLOR.  Returns TRUE if
    the value changed.
- ****************************************************************************/
+ */
 static bool client_option_color_set(struct option *poption,
                                     struct ft_color color)
 {
@@ -2499,9 +2499,9 @@ static bool client_option_color_set(struct option *poption,
   return changed;
 }
 
-/************************************************************************/ /**
+/**
    Load the option from a file.  Returns TRUE if the option changed.
- ****************************************************************************/
+ */
 static bool client_option_load(struct option *poption,
                                struct section_file *sf)
 {
@@ -2565,9 +2565,9 @@ static bool client_option_load(struct option *poption,
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Save the option to a file.
- ****************************************************************************/
+ */
 static void client_option_save(struct option *poption,
                                struct section_file *sf)
 {
@@ -2767,9 +2767,9 @@ struct server_option {
 
 static void desired_settable_option_send(struct option *poption);
 
-/************************************************************************/ /**
+/**
    Initialize the server options (not received yet).
- ****************************************************************************/
+ */
 void server_options_init()
 {
   fc_assert(NULL == server_options_categories);
@@ -2778,9 +2778,9 @@ void server_options_init()
   fc_assert(0 == server_options_num);
 }
 
-/************************************************************************/ /**
+/**
    Free one server option.
- ****************************************************************************/
+ */
 static void server_option_free(struct server_option *poption)
 {
   switch (poption->base_option.type) {
@@ -2815,9 +2815,9 @@ static void server_option_free(struct server_option *poption)
   NFCN_FREE(poption->help_text);
 }
 
-/************************************************************************/ /**
+/**
    Free the server options, if already received.
- ****************************************************************************/
+ */
 void server_options_free()
 {
   int i;
@@ -2846,9 +2846,9 @@ void server_options_free()
   }
 }
 
-/************************************************************************/ /**
+/**
    Allocate the server options and categories.
- ****************************************************************************/
+ */
 void handle_server_setting_control(
     const struct packet_server_setting_control *packet)
 {
@@ -2878,9 +2878,9 @@ void handle_server_setting_control(
   }
 }
 
-/************************************************************************/ /**
+/**
    Receive a server setting info packet.
- ****************************************************************************/
+ */
 void handle_server_setting_const(
     const struct packet_server_setting_const *packet)
 {
@@ -2934,9 +2934,9 @@ void handle_server_setting_const(
     option_gui_update(poption);                                             \
   }
 
-/************************************************************************/ /**
+/**
    Receive a boolean server setting info packet.
- ****************************************************************************/
+ */
 void handle_server_setting_bool(
     const struct packet_server_setting_bool *packet)
 {
@@ -2969,9 +2969,9 @@ void handle_server_setting_bool(
   handle_server_setting_common(psoption, packet);
 }
 
-/************************************************************************/ /**
+/**
    Receive a integer server setting info packet.
- ****************************************************************************/
+ */
 void handle_server_setting_int(
     const struct packet_server_setting_int *packet)
 {
@@ -3006,9 +3006,9 @@ void handle_server_setting_int(
   handle_server_setting_common(psoption, packet);
 }
 
-/************************************************************************/ /**
+/**
    Receive a string server setting info packet.
- ****************************************************************************/
+ */
 void handle_server_setting_str(
     const struct packet_server_setting_str *packet)
 {
@@ -3051,9 +3051,9 @@ void handle_server_setting_str(
   handle_server_setting_common(psoption, packet);
 }
 
-/************************************************************************/ /**
+/**
    Receive an enumerator server setting info packet.
- ****************************************************************************/
+ */
 void handle_server_setting_enum(
     const struct packet_server_setting_enum *packet)
 {
@@ -3140,9 +3140,9 @@ void handle_server_setting_enum(
   handle_server_setting_common(psoption, packet);
 }
 
-/************************************************************************/ /**
+/**
    Receive a bitwise server setting info packet.
- ****************************************************************************/
+ */
 void handle_server_setting_bitwise(
     const struct packet_server_setting_bitwise *packet)
 {
@@ -3227,9 +3227,9 @@ void handle_server_setting_bitwise(
   handle_server_setting_common(psoption, packet);
 }
 
-/************************************************************************/ /**
+/**
    Returns the next valid option pointer for the current gui type.
- ****************************************************************************/
+ */
 static struct server_option *
 server_option_next_valid(struct server_option *poption)
 {
@@ -3243,9 +3243,9 @@ server_option_next_valid(struct server_option *poption)
   return (poption < max ? poption : NULL);
 }
 
-/************************************************************************/ /**
+/**
    Returns the server option associated to the number
- ****************************************************************************/
+ */
 struct option *server_optset_option_by_number(int id)
 {
   if (0 > id || id > server_options_num) {
@@ -3254,22 +3254,22 @@ struct option *server_optset_option_by_number(int id)
   return OPTION(server_options + id);
 }
 
-/************************************************************************/ /**
+/**
    Returns the first valid (visible) option pointer.
- ****************************************************************************/
+ */
 struct option *server_optset_option_first()
 {
   return OPTION(server_option_next_valid(server_options));
 }
 
-/************************************************************************/ /**
+/**
    Returns the number of server option categories.
- ****************************************************************************/
+ */
 int server_optset_category_number() { return server_options_categories_num; }
 
-/************************************************************************/ /**
+/**
    Returns the name (translated) of the server option category.
- ****************************************************************************/
+ */
 const char *server_optset_category_name(int category)
 {
   if (0 > category || category >= server_options_categories_num) {
@@ -3279,82 +3279,82 @@ const char *server_optset_category_name(int category)
   return server_options_categories[category];
 }
 
-/************************************************************************/ /**
+/**
    Returns the number of this server option.
- ****************************************************************************/
+ */
 static int server_option_number(const struct option *poption)
 {
   return SERVER_OPTION(poption) - server_options;
 }
 
-/************************************************************************/ /**
+/**
    Returns the name of this server option.
- ****************************************************************************/
+ */
 static const char *server_option_name(const struct option *poption)
 {
   return SERVER_OPTION(poption)->name;
 }
 
-/************************************************************************/ /**
+/**
    Returns the (translated) description of this server option.
- ****************************************************************************/
+ */
 static const char *server_option_description(const struct option *poption)
 {
   return SERVER_OPTION(poption)->description;
 }
 
-/************************************************************************/ /**
+/**
    Returns the (translated) help text for this server option.
- ****************************************************************************/
+ */
 static const char *server_option_help_text(const struct option *poption)
 {
   return SERVER_OPTION(poption)->help_text;
 }
 
-/************************************************************************/ /**
+/**
    Returns the category of this server option.
- ****************************************************************************/
+ */
 static int server_option_category(const struct option *poption)
 {
   return SERVER_OPTION(poption)->category;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE if this client option can be modified.
- ****************************************************************************/
+ */
 static bool server_option_is_changeable(const struct option *poption)
 {
   return SERVER_OPTION(poption)->is_changeable;
 }
 
-/************************************************************************/ /**
+/**
    Returns the next valid (visible) option pointer.
- ****************************************************************************/
+ */
 static struct option *server_option_next(const struct option *poption)
 {
   return OPTION(server_option_next_valid(SERVER_OPTION(poption) + 1));
 }
 
-/************************************************************************/ /**
+/**
    Returns the value of this server option of type OT_BOOLEAN.
- ****************************************************************************/
+ */
 static bool server_option_bool_get(const struct option *poption)
 {
   return SERVER_OPTION(poption)->boolean.value;
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this server option of type OT_BOOLEAN.
- ****************************************************************************/
+ */
 static bool server_option_bool_def(const struct option *poption)
 {
   return SERVER_OPTION(poption)->boolean.def;
 }
 
-/************************************************************************/ /**
+/**
    Set the value of this server option of type OT_BOOLEAN.  Returns TRUE if
    the value changed.
- ****************************************************************************/
+ */
 static bool server_option_bool_set(struct option *poption, bool val)
 {
   struct server_option *psoption = SERVER_OPTION(poption);
@@ -3368,42 +3368,42 @@ static bool server_option_bool_set(struct option *poption, bool val)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns the value of this server option of type OT_INTEGER.
- ****************************************************************************/
+ */
 static int server_option_int_get(const struct option *poption)
 {
   return SERVER_OPTION(poption)->integer.value;
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this server option of type OT_INTEGER.
- ****************************************************************************/
+ */
 static int server_option_int_def(const struct option *poption)
 {
   return SERVER_OPTION(poption)->integer.def;
 }
 
-/************************************************************************/ /**
+/**
    Returns the minimal value for this server option of type OT_INTEGER.
- ****************************************************************************/
+ */
 static int server_option_int_min(const struct option *poption)
 {
   return SERVER_OPTION(poption)->integer.min;
 }
 
-/************************************************************************/ /**
+/**
    Returns the maximal value for this server option of type OT_INTEGER.
- ****************************************************************************/
+ */
 static int server_option_int_max(const struct option *poption)
 {
   return SERVER_OPTION(poption)->integer.max;
 }
 
-/************************************************************************/ /**
+/**
    Set the value of this server option of type OT_INTEGER.  Returns TRUE if
    the value changed.
- ****************************************************************************/
+ */
 static bool server_option_int_set(struct option *poption, int val)
 {
   struct server_option *psoption = SERVER_OPTION(poption);
@@ -3417,26 +3417,26 @@ static bool server_option_int_set(struct option *poption, int val)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns the value of this server option of type OT_STRING.
- ****************************************************************************/
+ */
 static const char *server_option_str_get(const struct option *poption)
 {
   return SERVER_OPTION(poption)->string.value;
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this server option of type OT_STRING.
- ****************************************************************************/
+ */
 static const char *server_option_str_def(const struct option *poption)
 {
   return SERVER_OPTION(poption)->string.def;
 }
 
-/************************************************************************/ /**
+/**
    Returns the possible string values of this server option of type
    OT_STRING.
- ****************************************************************************/
+ */
 static const QVector<QString> *
 server_option_str_values(const struct option *poption)
 {
@@ -3444,10 +3444,10 @@ server_option_str_values(const struct option *poption)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Set the value of this server option of type OT_STRING.  Returns TRUE if
    the value changed.
- ****************************************************************************/
+ */
 static bool server_option_str_set(struct option *poption, const char *str)
 {
   struct server_option *psoption = SERVER_OPTION(poption);
@@ -3460,36 +3460,36 @@ static bool server_option_str_set(struct option *poption, const char *str)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns the current value of this server option of type OT_ENUM.
- ****************************************************************************/
+ */
 static int server_option_enum_get(const struct option *poption)
 {
   return SERVER_OPTION(poption)->enumerator.value;
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this server option of type OT_ENUM.
- ****************************************************************************/
+ */
 static int server_option_enum_def(const struct option *poption)
 {
   return SERVER_OPTION(poption)->enumerator.def;
 }
 
-/************************************************************************/ /**
+/**
    Returns the user-visible, translatable (but untranslated) "pretty" names
    of this server option of type OT_ENUM.
- ****************************************************************************/
+ */
 static const QVector<QString> *
 server_option_enum_pretty(const struct option *poption)
 {
   return SERVER_OPTION(poption)->enumerator.pretty_names;
 }
 
-/************************************************************************/ /**
+/**
    Set the value of this server option of type OT_ENUM.  Returns TRUE if
    the value changed.
- ****************************************************************************/
+ */
 static bool server_option_enum_set(struct option *poption, int val)
 {
   struct server_option *psoption = SERVER_OPTION(poption);
@@ -3507,10 +3507,10 @@ static bool server_option_enum_set(struct option *poption, int val)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Returns the long support names of the values of the server option of type
    OT_ENUM.
- ****************************************************************************/
+ */
 static void server_option_enum_support_name(const struct option *poption,
                                             const char **pvalue,
                                             const char **pdefault)
@@ -3526,35 +3526,35 @@ static void server_option_enum_support_name(const struct option *poption,
   }
 }
 
-/************************************************************************/ /**
+/**
    Returns the current value of this server option of type OT_BITWISE.
- ****************************************************************************/
+ */
 static unsigned server_option_bitwise_get(const struct option *poption)
 {
   return SERVER_OPTION(poption)->bitwise.value;
 }
 
-/************************************************************************/ /**
+/**
    Returns the default value of this server option of type OT_BITWISE.
- ****************************************************************************/
+ */
 static unsigned server_option_bitwise_def(const struct option *poption)
 {
   return SERVER_OPTION(poption)->bitwise.def;
 }
 
-/************************************************************************/ /**
+/**
    Returns the user-visible, translatable (but untranslated) "pretty" names
    of this server option of type OT_BITWISE.
- ****************************************************************************/
+ */
 static const QVector<QString> *
 server_option_bitwise_pretty(const struct option *poption)
 {
   return SERVER_OPTION(poption)->bitwise.pretty_names;
 }
 
-/************************************************************************/ /**
+/**
    Compute the long support names of a value.
- ****************************************************************************/
+ */
 static void
 server_option_bitwise_support_base(const QVector<QString> *values,
                                    unsigned val, char *buf, size_t buf_len)
@@ -3572,10 +3572,10 @@ server_option_bitwise_support_base(const QVector<QString> *values,
   }
 }
 
-/************************************************************************/ /**
+/**
    Set the value of this server option of type OT_BITWISE.  Returns TRUE if
    the value changed.
- ****************************************************************************/
+ */
 static bool server_option_bitwise_set(struct option *poption, unsigned val)
 {
   struct server_option *psoption = SERVER_OPTION(poption);
@@ -3591,10 +3591,10 @@ static bool server_option_bitwise_set(struct option *poption, unsigned val)
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Compute the long support names of the values of the server option of type
    OT_BITWISE.
- ****************************************************************************/
+ */
 static void server_option_bitwise_support_name(const struct option *poption,
                                                char *val_buf, size_t val_len,
                                                char *def_buf, size_t def_len)
@@ -3616,10 +3616,10 @@ static void server_option_bitwise_support_name(const struct option *poption,
 
 int messages_where[E_COUNT];
 
-/************************************************************************/ /**
+/**
    These could be a static table initialisation, except
    its easier to do it this way.
- ****************************************************************************/
+ */
 static void message_options_init()
 {
   int none[] = {E_IMP_BUY,
@@ -3657,15 +3657,15 @@ static void message_options_init()
   events_init();
 }
 
-/************************************************************************/ /**
+/**
    Free resources allocated for message options system
- ****************************************************************************/
+ */
 static void message_options_free() { events_free(); }
 
-/************************************************************************/ /**
+/**
    Load the message options; use the function defined by
    specnum.h (see also events.h).
- ****************************************************************************/
+ */
 static void message_options_load(struct section_file *file,
                                  const char *prefix)
 {
@@ -3814,10 +3814,10 @@ static void message_options_load(struct section_file *file,
   }
 }
 
-/************************************************************************/ /**
+/**
    Save the message options; use the function defined by
    specnum.h (see also events.h).
- ****************************************************************************/
+ */
 static void message_options_save(struct section_file *file,
                                  const char *prefix)
 {
@@ -3836,9 +3836,9 @@ static void message_options_save(struct section_file *file,
   secfile_insert_int(file, i, "messages.count");
 }
 
-/************************************************************************/ /**
+/**
    Does heavy lifting for looking up a preset.
- ****************************************************************************/
+ */
 static void load_cma_preset(struct section_file *file, int i)
 {
   struct cm_parameter parameter;
@@ -3863,9 +3863,9 @@ static void load_cma_preset(struct section_file *file, int i)
   cmafec_preset_add(name, &parameter);
 }
 
-/************************************************************************/ /**
+/**
    Does heavy lifting for inserting a preset.
- ****************************************************************************/
+ */
 static void save_cma_preset(struct section_file *file, int i)
 {
   const struct cm_parameter *const pparam = cmafec_preset_get_parameter(i);
@@ -3887,9 +3887,9 @@ static void save_cma_preset(struct section_file *file, int i)
                      i);
 }
 
-/************************************************************************/ /**
+/**
    Insert all cma presets.
- ****************************************************************************/
+ */
 static void save_cma_presets(struct section_file *file)
 {
   int i;
@@ -3929,13 +3929,13 @@ static void save_cma_presets(struct section_file *file)
 #define FIRST_MAJOR_NEW_BOOLEAN 2
 #define FIRST_MINOR_NEW_BOOLEAN 3
 
-/************************************************************************/ /**
+/**
    Returns pointer to static memory containing name of the current
    option file.  Usually used for saving.
    Ie, based on FREECIV_OPT env var, and freeciv storage root dir.
    (or a OPTION_FILE_NAME define defined in fc_config.h)
    Or NULL if problem.
- ****************************************************************************/
+ */
 static const char *get_current_option_file_name()
 {
   static char name_buffer[256];
@@ -3963,14 +3963,14 @@ static const char *get_current_option_file_name()
   return name_buffer;
 }
 
-/************************************************************************/ /**
+/**
    Check the last option file we saved. Usually used to load. Ie, based on
    FREECIV_OPT env var, and home dir. (or a OPTION_FILE_NAME define defined
    in fc_config.h), or NULL if not found.
 
    Set in allow_digital_boolean if we should look for old boolean values
    (saved as 0 and 1), so if the rc file version is older than 2.3.0.
- ****************************************************************************/
+ */
 static const char *get_last_option_file_name(bool *allow_digital_boolean)
 {
   static char name_buffer[256];
@@ -4085,9 +4085,9 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
 
 Q_GLOBAL_STATIC(optionsHash, settable_options)
 
-/************************************************************************/ /**
+/**
    Load the server options.
- ****************************************************************************/
+ */
 static void settable_options_load(struct section_file *sf)
 {
   char buf[64];
@@ -4148,9 +4148,9 @@ static void settable_options_load(struct section_file *sf)
   entry_list_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Save the desired server options.
- ****************************************************************************/
+ */
 static void settable_options_save(struct section_file *sf)
 {
   optionsHash::const_iterator it = settable_options->constBegin();
@@ -4182,10 +4182,10 @@ static void settable_options_save(struct section_file *sf)
   }
 }
 
-/************************************************************************/ /**
+/**
    Update the desired settable options hash table from the current
    setting configuration.
- ****************************************************************************/
+ */
 void desired_settable_options_update()
 {
   char val_buf[1024], def_buf[1024];
@@ -4246,10 +4246,10 @@ void desired_settable_options_update()
   options_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Update a desired settable option in the hash table from a value
    which can be different of the current configuration.
- ****************************************************************************/
+ */
 void desired_settable_option_update(const char *op_name,
                                     const char *op_value, bool allow_replace)
 {
@@ -4257,10 +4257,10 @@ void desired_settable_option_update(const char *op_name,
   settable_options->insert(op_name, op_value);
 }
 
-/************************************************************************/ /**
+/**
    Convert old integer to new values (Freeciv 2.2.x to Freeciv 2.3.x).
    Very ugly hack. TODO: Remove this later.
- ****************************************************************************/
+ */
 static bool settable_option_upgrade_value(const struct option *poption,
                                           int old_value, char *buf,
                                           size_t buf_len)
@@ -4298,9 +4298,9 @@ static bool settable_option_upgrade_value(const struct option *poption,
   return false;
 }
 
-/************************************************************************/ /**
+/**
    Send the desired server options to the server.
- ****************************************************************************/
+ */
 static void desired_settable_option_send(struct option *poption)
 {
   const char *desired;
@@ -4381,9 +4381,9 @@ static void desired_settable_option_send(struct option *poption)
 
 Q_GLOBAL_STATIC(dialOptionsHash, dialog_options)
 
-/************************************************************************/ /**
+/**
    Load the city and player report dialog options.
- ****************************************************************************/
+ */
 static void options_dialogs_load(struct section_file *sf)
 {
   const struct entry_list *entries;
@@ -4409,9 +4409,9 @@ static void options_dialogs_load(struct section_file *sf)
   }
 }
 
-/************************************************************************/ /**
+/**
    Save the city and player report dialog options.
- ****************************************************************************/
+ */
 static void options_dialogs_save(struct section_file *sf)
 {
   fc_assert_ret(NULL != dialog_options);
@@ -4425,11 +4425,11 @@ static void options_dialogs_save(struct section_file *sf)
   }
 }
 
-/************************************************************************/ /**
+/**
    This set the city and player report dialog options to the
    current ones.  It's called when the client goes to
    C_S_DISCONNECTED state.
- ****************************************************************************/
+ */
 void options_dialogs_update()
 {
   char buf[64];
@@ -4452,10 +4452,10 @@ void options_dialogs_update()
   }
 }
 
-/************************************************************************/ /**
+/**
    This set the city and player report dialog options.  It's called
    when the client goes to C_S_RUNNING state.
- ****************************************************************************/
+ */
 void options_dialogs_set()
 {
   char buf[64];
@@ -4480,12 +4480,12 @@ void options_dialogs_set()
   }
 }
 
-/************************************************************************/ /**
+/**
    Load from the rc file any options that are not ruleset specific.
    It is called after ui_init(), yet before ui_main().
    Unfortunately, this means that some clients cannot display.
    Instead, use log_*().
- ****************************************************************************/
+ */
 void options_load()
 {
   struct section_file *sf;
@@ -4605,9 +4605,9 @@ void options_load()
   options_fully_initialized = true;
 }
 
-/************************************************************************/ /**
+/**
    Write messages from option saving to the output window.
- ****************************************************************************/
+ */
 static void option_save_output_window_callback(QtMsgType lvl,
                                                const QString &msg)
 {
@@ -4615,9 +4615,9 @@ static void option_save_output_window_callback(QtMsgType lvl,
   output_window_append(ftc_client, qUtf8Printable(msg));
 }
 
-/************************************************************************/ /**
+/**
    Save all options.
- ****************************************************************************/
+ */
 void options_save(option_save_log_callback log_cb)
 {
   struct section_file *sf;
@@ -4698,9 +4698,9 @@ void options_save(option_save_log_callback log_cb)
   secfile_destroy(sf);
 }
 
-/************************************************************************/ /**
+/**
    Initialize lists of names for a client option.
- ****************************************************************************/
+ */
 static void options_init_names(const struct copt_val_name *(*acc)(int),
                                QVector<QString> **support,
                                QVector<QString> **pretty)
@@ -4716,9 +4716,9 @@ static void options_init_names(const struct copt_val_name *(*acc)(int),
   }
 }
 
-/************************************************************************/ /**
+/**
    Initialize the option module.
- ****************************************************************************/
+ */
 void options_init()
 {
   message_options_init();
@@ -4809,9 +4809,9 @@ void options_init()
   client_options_iterate_all_end;
 }
 
-/************************************************************************/ /**
+/**
    Free the option module.
- ****************************************************************************/
+ */
 void options_free()
 {
   client_options_iterate_all(poption)
@@ -4850,19 +4850,19 @@ void options_free()
   global_worklists_free();
 }
 
-/************************************************************************/ /**
+/**
    Callback when the reqtree show icons option is changed. The tree is
    recalculated.
- ****************************************************************************/
+ */
 static void reqtree_show_icons_callback(struct option *poption)
 {
   Q_UNUSED(poption)
   science_report_dialog_redraw();
 }
 
-/************************************************************************/ /**
+/**
    Callback for when any view option is changed.
- ****************************************************************************/
+ */
 static void view_option_changed_callback(struct option *poption)
 {
   Q_UNUSED(poption)
@@ -4870,9 +4870,9 @@ static void view_option_changed_callback(struct option *poption)
   update_map_canvas_visible();
 }
 
-/************************************************************************/ /**
+/**
    Callback for when ai_manual_turn_done is changed.
- ****************************************************************************/
+ */
 static void manual_turn_done_callback(struct option *poption)
 {
   Q_UNUSED(poption)
@@ -4893,18 +4893,18 @@ static void sound_volume_callback(struct option *poption)
   audio_set_volume(gui_options.sound_effects_volume / 100.0);
 }
 
-/************************************************************************/ /**
+/**
    Callback for when any voteinfo bar option is changed.
- ****************************************************************************/
+ */
 static void voteinfo_bar_callback(struct option *poption)
 {
   Q_UNUSED(poption)
   voteinfo_gui_update();
 }
 
-/************************************************************************/ /**
+/**
    Callback for font options.
- ****************************************************************************/
+ */
 static void allfont_changed_callback(struct option *poption)
 {
   Q_UNUSED(poption)
@@ -4917,18 +4917,18 @@ static void sidebar_changed_callback(struct option *poption)
   gui_update_sidebar();
 }
 
-/************************************************************************/ /**
+/**
    Callback for font options.
- ****************************************************************************/
+ */
 static void font_changed_callback(struct option *poption)
 {
   fc_assert_ret(OT_FONT == option_type(OPTION(poption)));
   gui_update_font(option_font_target(poption), option_font_get(poption));
 }
 
-/************************************************************************/ /**
+/**
    Callback for mapimg options.
- ****************************************************************************/
+ */
 static void mapimg_changed_callback(struct option *poption)
 {
   if (!mapimg_client_define()) {
@@ -4949,9 +4949,9 @@ static void mapimg_changed_callback(struct option *poption)
   }
 }
 
-/************************************************************************/ /**
+/**
    Callback for music enabling option.
- ****************************************************************************/
+ */
 static void game_music_enable_callback(struct option *poption)
 {
   Q_UNUSED(poption)
@@ -4964,9 +4964,9 @@ static void game_music_enable_callback(struct option *poption)
   }
 }
 
-/************************************************************************/ /**
+/**
    Callback for music enabling option.
- ****************************************************************************/
+ */
 static void menu_music_enable_callback(struct option *poption)
 {
   Q_UNUSED(poption)
@@ -4979,9 +4979,9 @@ static void menu_music_enable_callback(struct option *poption)
   }
 }
 
-/************************************************************************/ /**
+/**
    Option framework wrapper for mapimg_get_format_list()
- ****************************************************************************/
+ */
 static const QVector<QString> *
 get_mapimg_format_list(const struct option *poption)
 {
@@ -4989,9 +4989,9 @@ get_mapimg_format_list(const struct option *poption)
   return mapimg_get_format_list();
 }
 
-/************************************************************************/ /**
+/**
    What is the user defined tileset for the given topology
- ****************************************************************************/
+ */
 const char *tileset_name_for_topology(int topology_id)
 {
   const char *tsn = NULL;
@@ -5016,9 +5016,9 @@ const char *tileset_name_for_topology(int topology_id)
   return tsn;
 }
 
-/************************************************************************/ /**
+/**
    Set given tileset as the default for suitable topology
- ****************************************************************************/
+ */
 void option_set_default_ts(struct tileset *t)
 {
   const char *optname = "<not set>";
@@ -5053,9 +5053,9 @@ void option_set_default_ts(struct tileset *t)
   option_gui_update(opt);
 }
 
-/************************************************************************/ /**
+/**
    Does topology-specific tileset option lack value?
- ****************************************************************************/
+ */
 static bool is_ts_option_unset(const char *optname)
 {
   struct option *opt;
@@ -5072,9 +5072,9 @@ static bool is_ts_option_unset(const char *optname)
   return val == NULL || val[0] == '\0';
 }
 
-/************************************************************************/ /**
+/**
    Fill default tilesets for topology-specific settings.
- ****************************************************************************/
+ */
 void fill_topo_ts_default()
 {
   if (is_ts_option_unset("default_tileset_square_name")) {

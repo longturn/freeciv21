@@ -85,9 +85,9 @@
 
 /* ========= managing statistics and boat/passanger assignments ======== */
 
-/**********************************************************************/ /**
+/**
    Call to initialize the ferryboat statistics
- **************************************************************************/
+ */
 void aiferry_init_stats(struct ai_type *ait, struct player *pplayer)
 {
   /* def_ai_player_data() instead of dai_plr_data_get() is deliberate.
@@ -121,9 +121,9 @@ void aiferry_init_stats(struct ai_type *ait, struct player *pplayer)
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Print the list of boats of pplayer.
- **************************************************************************/
+ */
 #ifdef LOGLEVEL_FERRY_STATS
 static void aiferry_print_stats(struct ai_type *ait, struct player *pplayer)
 {
@@ -147,9 +147,9 @@ static void aiferry_print_stats(struct ai_type *ait, struct player *pplayer)
 }
 #endif /* LOGLEVEL_FERRY_STATS */
 
-/**********************************************************************/ /**
+/**
    Should unit type be considered a ferry?
- **************************************************************************/
+ */
 bool dai_is_ferry_type(const struct unit_type *pferry, struct ai_type *ait)
 {
   struct unit_type_ai *utai =
@@ -158,17 +158,17 @@ bool dai_is_ferry_type(const struct unit_type *pferry, struct ai_type *ait)
   return utai->ferry;
 }
 
-/**********************************************************************/ /**
+/**
    Should unit be considered a ferry?
- **************************************************************************/
+ */
 bool dai_is_ferry(struct unit *pferry, struct ai_type *ait)
 {
   return dai_is_ferry_type(unit_type_get(pferry), ait);
 }
 
-/**********************************************************************/ /**
+/**
    Initialize new ferry when player gets it
- **************************************************************************/
+ */
 void dai_ferry_init_ferry(struct ai_type *ait, struct unit *ferry)
 {
   if (dai_is_ferry(ferry, ait)) {
@@ -187,9 +187,9 @@ void dai_ferry_init_ferry(struct ai_type *ait, struct unit *ferry)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Update ferry system when unit is transformed.
- **************************************************************************/
+ */
 void dai_ferry_transformed(struct ai_type *ait, struct unit *ferry,
                            const struct unit_type *old)
 {
@@ -219,9 +219,9 @@ void dai_ferry_transformed(struct ai_type *ait, struct unit *ferry,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Close ferry when player loses it
- **************************************************************************/
+ */
 void dai_ferry_lost(struct ai_type *ait, struct unit *punit)
 {
   /* Ignore virtual units. */
@@ -249,9 +249,9 @@ void dai_ferry_lost(struct ai_type *ait, struct unit *punit)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Use on a unit which no longer needs a boat.
- **************************************************************************/
+ */
 void aiferry_clear_boat(struct ai_type *ait, struct unit *punit)
 {
   struct unit_ai *unit_data = def_ai_unit_data(punit, ait);
@@ -285,10 +285,10 @@ void aiferry_clear_boat(struct ai_type *ait, struct unit *punit)
   unit_data->ferryboat = FERRY_NONE;
 }
 
-/**********************************************************************/ /**
+/**
    Request a boat for the unit.  Should only be used if the unit is on the
    coast, otherwise ferries will not see it.
- **************************************************************************/
+ */
 static void aiferry_request_boat(struct ai_type *ait, struct unit *punit)
 {
   struct ai_plr *ai = dai_plr_data_get(ait, unit_owner(punit), NULL);
@@ -312,9 +312,9 @@ static void aiferry_request_boat(struct ai_type *ait, struct unit *punit)
   unit_data->done = true;
 }
 
-/**********************************************************************/ /**
+/**
    Assign the passenger to the boat and vice versa.
- **************************************************************************/
+ */
 static void aiferry_psngr_meet_boat(struct ai_type *ait, struct unit *punit,
                                     struct unit *pferry)
 {
@@ -337,9 +337,9 @@ static void aiferry_psngr_meet_boat(struct ai_type *ait, struct unit *punit,
   ferry_data->passenger = punit->id;
 }
 
-/**********************************************************************/ /**
+/**
    Mark the ferry as available and update the statistics.
- **************************************************************************/
+ */
 static void aiferry_make_available(struct ai_type *ait, struct unit *pferry)
 {
   struct unit_ai *ferry_data = def_ai_unit_data(pferry, ait);
@@ -350,10 +350,10 @@ static void aiferry_make_available(struct ai_type *ait, struct unit *pferry)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the number of available boats.  A simple accessor made to perform
    debug checks.
- **************************************************************************/
+ */
 int aiferry_avail_boats(struct ai_type *ait, struct player *pplayer)
 {
   struct ai_plr *ai = dai_plr_data_get(ait, pplayer, NULL);
@@ -384,7 +384,7 @@ int aiferry_avail_boats(struct ai_type *ait, struct player *pplayer)
 
 /* ================== functions to find a boat ========================= */
 
-/**********************************************************************/ /**
+/**
    Combined cost function for a land unit looking for a ferry.  The path
    finding first goes over the continent and then into the ocean where we
    actually look for ferry.  Thus moves land-to-sea are allowed and moves
@@ -396,7 +396,7 @@ int aiferry_avail_boats(struct ai_type *ait, struct player *pplayer)
    For movements sea-to-sea the cost is collected via the extra cost
    call-back.  Doesn't care for enemy/neutral tiles, these should be
    excluded using a TB call-back.
- **************************************************************************/
+ */
 static int combined_land_sea_move(const struct tile *src_tile,
                                   enum pf_move_scope src_scope,
                                   const struct tile *tgt_tile,
@@ -420,10 +420,10 @@ static int combined_land_sea_move(const struct tile *src_tile,
   return move_cost;
 }
 
-/**********************************************************************/ /**
+/**
    EC callback to account for the cost of sea moves by a ferry hurrying to
    pick our unit up.
- **************************************************************************/
+ */
 static int sea_move(const struct tile *ptile, enum known_type known,
                     const struct pf_parameter *param)
 {
@@ -437,10 +437,10 @@ static int sea_move(const struct tile *ptile, enum known_type known,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Runs a few checks to determine if "boat" is a free boat that can carry
    "cap" units of the same type as "punit" over sea.
- **************************************************************************/
+ */
 bool is_boat_free(struct ai_type *ait, struct unit *boat, struct unit *punit,
                   int cap)
 {
@@ -470,9 +470,9 @@ bool is_boat_free(struct ai_type *ait, struct unit *boat, struct unit *punit,
       && (ferry_type->fuel == 0 || utype_has_flag(ferry_type, UTYF_COAST)));
 }
 
-/**********************************************************************/ /**
+/**
    Check if unit is boss in ferry
- **************************************************************************/
+ */
 bool is_boss_of_boat(struct ai_type *ait, struct unit *punit)
 {
   if (!unit_transported(punit)) {
@@ -485,14 +485,14 @@ bool is_boss_of_boat(struct ai_type *ait, struct unit *punit)
                 == punit->id;
 }
 
-/**********************************************************************/ /**
+/**
    Proper and real PF function for finding a boat.  If you don't require
    the path to the ferry, pass path=NULL.
    Return the unit ID of the boat; punit is the passenger.
 
    WARNING: Due to the nature of this function and PF (see the comment of
    combined_land_sea_move), the path won't lead onto the boat itself.
- **************************************************************************/
+ */
 int aiferry_find_boat(struct ai_type *ait, struct unit *punit, int cap,
                       struct pf_path **path)
 {
@@ -585,9 +585,9 @@ int aiferry_find_boat(struct ai_type *ait, struct unit *punit, int cap,
   return best_id;
 }
 
-/**********************************************************************/ /**
+/**
    Find a boat within one move from us (i.e. a one we can board).
- **************************************************************************/
+ */
 static int aiferry_find_boat_nearby(struct ai_type *ait, struct unit *punit,
                                     int cap)
 {
@@ -610,11 +610,11 @@ static int aiferry_find_boat_nearby(struct ai_type *ait, struct unit *punit,
 
 /* ============================= go by boat ============================== */
 
-/**********************************************************************/ /**
+/**
    Manage the passengers on a ferry, even if they are asleep.
    This is suitable for when the commander of a ferry has left;
    it gives a chance for another passenger to take control.
- **************************************************************************/
+ */
 static void dai_activate_passengers(struct ai_type *ait, struct unit *ferry)
 {
   struct player *ferry_owner = unit_owner(ferry);
@@ -634,13 +634,13 @@ static void dai_activate_passengers(struct ai_type *ait, struct unit *ferry)
   unit_list_iterate_safe_end;
 }
 
-/**********************************************************************/ /**
+/**
    Move a passenger on a ferry to a specified destination.
    The passenger is assumed to be on the given ferry.
    The destination may be inland, in which case the passenger will ride
    the ferry to a beach head, disembark, then continue on land.
    Return FALSE iff we died.
- **************************************************************************/
+ */
 bool dai_amphibious_goto_constrained(struct ai_type *ait, struct unit *ferry,
                                      struct unit *passenger,
                                      struct tile *ptile,
@@ -730,10 +730,10 @@ bool dai_amphibious_goto_constrained(struct ai_type *ait, struct unit *ferry,
   return alive;
 }
 
-/**********************************************************************/ /**
+/**
    Move a passenger on a ferry to a specified destination.
    Return FALSE iff we died.
- **************************************************************************/
+ */
 bool aiferry_goto_amphibious(struct ai_type *ait, struct unit *ferry,
                              struct unit *passenger, struct tile *ptile)
 {
@@ -759,7 +759,7 @@ bool aiferry_goto_amphibious(struct ai_type *ait, struct unit *ferry,
                                          &parameter);
 }
 
-/**********************************************************************/ /**
+/**
    This function is to be called if punit needs to use a boat to get to the
    destination.
 
@@ -768,7 +768,7 @@ bool aiferry_goto_amphibious(struct ai_type *ait, struct unit *ferry,
    TODO: A big one is rendezvous points between units and boats.  When this
  is implemented, we won't have to be at the coast to ask for a boat to come
    to us.
- **************************************************************************/
+ */
 bool aiferry_gobyboat(struct ai_type *ait, struct player *pplayer,
                       struct unit *punit, struct tile *dest_tile,
                       bool with_bodyguard)
@@ -918,13 +918,13 @@ bool aiferry_gobyboat(struct ai_type *ait, struct player *pplayer,
 
 /* ===================== boat management ================================= */
 
-/**********************************************************************/ /**
+/**
    A helper for ai_manage_ferryboat.  Finds a passenger for the ferry.
    Potential passengers signal the boats by setting their ai.ferry field to
    FERRY_WANTED.
 
    TODO: lift the path off the map
- **************************************************************************/
+ */
 static bool aiferry_findcargo(struct ai_type *ait, struct unit *pferry)
 {
   /* Path-finding stuff */
@@ -981,7 +981,7 @@ static bool aiferry_findcargo(struct ai_type *ait, struct unit *pferry)
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    A helper for ai_manage_ferryboat.  Finds a city that wants a ferry.  It
    might signal for the ferry using pcity->server.ai.choice.need_boat field
  or it might simply be building a ferry of it's own.
@@ -992,7 +992,7 @@ static bool aiferry_findcargo(struct ai_type *ait, struct unit *pferry)
    TODO (possible): put this and ai_ferry_findcargo into one PF-loop.  This
    will save some code lines but will be faster in the rare cases when there
    passengers that can not be reached ("false positive").
- **************************************************************************/
+ */
 static bool aiferry_find_interested_city(struct ai_type *ait,
                                          struct unit *pferry)
 {
@@ -1082,7 +1082,7 @@ static bool aiferry_find_interested_city(struct ai_type *ait,
   return needed;
 }
 
-/**********************************************************************/ /**
+/**
    It's about 12 feet square and has a capacity of almost 1000 pounds.
    It is well constructed of teak, and looks seaworthy.
 
@@ -1091,7 +1091,7 @@ static bool aiferry_find_interested_city(struct ai_type *ait,
 
    If there is no one aboard, look for potential cargo.  If none found,
    explore and then go to the nearest port.
- **************************************************************************/
+ */
 void dai_manage_ferryboat(struct ai_type *ait, struct player *pplayer,
                           struct unit *punit)
 {

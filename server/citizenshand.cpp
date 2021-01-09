@@ -34,11 +34,11 @@
 
 #define log_citizens log_debug
 
-/*************************************************************************/ /**
+/**
    Update the nationality according to the city size. New citiens are added
    using the nationality of the owner. If the city size is reduced, the
    citizens are removed first from the foreign citizens.
- *****************************************************************************/
+ */
 #define log_citizens_add(_pcity, _delta, _pplayer)                          \
   log_citizens("%s (size %d; %s): %+d citizen(s) for %s (now: %d)",         \
                city_name_get(_pcity), city_size_get(_pcity),                \
@@ -142,9 +142,9 @@ void citizens_update(struct city *pcity, struct player *plr)
 }
 #undef log_citizens_add
 
-/*************************************************************************/ /**
+/**
    Print the data about the citizens.
- *****************************************************************************/
+ */
 void citizens_print(const struct city *pcity)
 {
   fc_assert_ret(pcity);
@@ -171,17 +171,17 @@ void citizens_print(const struct city *pcity)
   citizens_iterate_end;
 }
 
-/*************************************************************************/ /**
+/**
    Return whether citizen should be converted this turn.
- *****************************************************************************/
+ */
 static bool citizen_convert_check(struct city *pcity)
 {
   return fc_rand(1000) + 1 <= game.info.citizen_convert_speed;
 }
 
-/*************************************************************************/ /**
+/**
    Convert one (random) foreign citizen to the nationality of the owner.
- *****************************************************************************/
+ */
 void citizens_convert(struct city *pcity)
 {
   struct player_slot *city_nations[MAX_NUM_PLAYER_SLOTS] = {nullptr}, *pslot;
@@ -224,9 +224,9 @@ void citizens_convert(struct city *pcity)
   citizens_nation_move(pcity, pslot, city_owner(pcity)->slot, 1);
 }
 
-/*************************************************************************/ /**
+/**
    Convert citizens to the nationality of the one conquering the city.
- *****************************************************************************/
+ */
 void citizens_convert_conquest(struct city *pcity)
 {
   struct player_slot *conqueror;

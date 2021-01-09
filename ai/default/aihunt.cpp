@@ -57,10 +57,10 @@
 
 #include "aihunt.h"
 
-/**********************************************************************/ /**
+/**
    We don't need a hunter in this city if we already have one. Return
    existing hunter if any.
- **************************************************************************/
+ */
 static struct unit *dai_hunter_find(struct player *pplayer,
                                     struct city *pcity)
 {
@@ -82,9 +82,9 @@ static struct unit *dai_hunter_find(struct player *pplayer,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Guess best hunter unit type.
- **************************************************************************/
+ */
 static struct unit_type *dai_hunter_guess_best(struct city *pcity,
                                                enum terrain_class tc,
                                                struct ai_type *ait,
@@ -152,9 +152,9 @@ static struct unit_type *dai_hunter_guess_best(struct city *pcity,
   return bestid;
 }
 
-/**********************************************************************/ /**
+/**
    Check if we want to build a missile for our hunter.
- **************************************************************************/
+ */
 static void dai_hunter_missile_want(struct player *pplayer,
                                     struct city *pcity,
                                     struct adv_choice *choice)
@@ -239,9 +239,9 @@ static void dai_hunter_missile_want(struct player *pplayer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Support function for ai_hunter_choice()
- **************************************************************************/
+ */
 static void eval_hunter_want(struct ai_type *ait, struct player *pplayer,
                              struct city *pcity, struct adv_choice *choice,
                              struct unit_type *best_type, int veteran)
@@ -262,9 +262,9 @@ static void eval_hunter_want(struct ai_type *ait, struct player *pplayer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Check if we want to build a hunter.
- **************************************************************************/
+ */
 void dai_hunter_choice(struct ai_type *ait, struct player *pplayer,
                        struct city *pcity, struct adv_choice *choice,
                        bool allow_gold_upkeep)
@@ -297,9 +297,9 @@ void dai_hunter_choice(struct ai_type *ait, struct player *pplayer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Does this unit qualify as a hunter?
- **************************************************************************/
+ */
 bool dai_hunter_qualify(struct player *pplayer, struct unit *punit)
 {
   if (is_barbarian(pplayer) || unit_owner(punit) != pplayer) {
@@ -308,11 +308,11 @@ bool dai_hunter_qualify(struct player *pplayer, struct unit *punit)
   return unit_has_type_role(punit, L_HUNTER);
 }
 
-/**********************************************************************/ /**
+/**
    Try to shoot our target with a missile. Also shoot down anything that
    might attempt to intercept _us_. We assign missiles to a hunter in
    ai_unit_new_role().
- **************************************************************************/
+ */
 static void dai_hunter_try_launch(struct ai_type *ait,
                                   struct player *pplayer, struct unit *punit,
                                   struct unit *target)
@@ -406,9 +406,9 @@ static void dai_hunter_try_launch(struct ai_type *ait,
   unit_list_iterate_safe_end;
 }
 
-/**********************************************************************/ /**
+/**
    Calculate desire to crush this target.
- **************************************************************************/
+ */
 static void dai_hunter_juiciness(struct player *pplayer, struct unit *punit,
                                  struct unit *target, int *stackthreat,
                                  int *stackcost)
@@ -436,7 +436,7 @@ static void dai_hunter_juiciness(struct player *pplayer, struct unit *punit,
   *stackthreat += *stackcost;
 }
 
-/**********************************************************************/ /**
+/**
    Manage a (possibly virtual) hunter. Return the want for building a
    hunter like this. If we return 0, then we have nothing to do with
    the hunter. If we return -1, then we succeeded, and can try again.
@@ -447,7 +447,7 @@ static void dai_hunter_juiciness(struct player *pplayer, struct unit *punit,
    snatch up closer targets if they are better.
 
    We set punit->server.ai->target to target's id.
- **************************************************************************/
+ */
 int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
                       struct unit *punit)
 {

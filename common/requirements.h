@@ -138,35 +138,35 @@ bool req_vec_wants_type(const struct requirement_vector *reqs,
  */
 typedef signed char req_vec_num_in_item;
 
-/**********************************************************************/ /**
+/**
    Returns the requirement vector number of the specified requirement
    vector in the specified parent item or -1 if the vector doesn't belong to
    the parent item.
    @param parent_item the item that may own the vector.
    @param vec the requirement vector to number.
    @return the requirement vector number the vector has in the parent item.
- **************************************************************************/
+ */
 typedef req_vec_num_in_item (*requirement_vector_number)(
     const void *parent_item, const struct requirement_vector *vec);
 
-/********************************************************************/ /**
+/**
    Returns a writable pointer to the specified requirement vector in the
    specified parent item or NULL if the parent item doesn't have a
    requirement vector with that requirement vector number.
    @param parent_item the item that should have the requirement vector.
    @param number the item's requirement vector number.
    @return a pointer to the specified requirement vector.
- ************************************************************************/
+ */
 typedef struct requirement_vector *(*requirement_vector_by_number)(
     const void *parent_item, req_vec_num_in_item number);
 
-/*********************************************************************/ /**
+/**
    Returns the name of the specified requirement vector number in the
    parent item or NULL if parent items of the kind this function is for
    don't have a requirement vector with that number.
    @param number the requirement vector to name
    @return the requirement vector name or NULL.
- **************************************************************************/
+ */
 typedef const char *(*requirement_vector_namer)(req_vec_num_in_item number);
 
 req_vec_num_in_item

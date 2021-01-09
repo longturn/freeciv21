@@ -50,9 +50,9 @@ static struct {
   char *clauses;
 } comments_storage;
 
-/**********************************************************************/ /**
+/**
    Load comments to add to the saved rulesets.
- **************************************************************************/
+ */
 bool comments_load()
 {
   struct section_file *comment_file;
@@ -124,14 +124,14 @@ bool comments_load()
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Free comments.
- **************************************************************************/
+ */
 void comments_free() { free(comments_storage.file_header); }
 
-/**********************************************************************/ /**
+/**
    Generic comment writing function with some error checking.
- **************************************************************************/
+ */
 static void comment_write(struct section_file *sfile, const char *comment,
                           const char *name)
 {
@@ -143,209 +143,209 @@ static void comment_write(struct section_file *sfile, const char *comment,
   secfile_insert_long_comment(sfile, comment);
 }
 
-/**********************************************************************/ /**
+/**
    Write file header.
- **************************************************************************/
+ */
 void comment_file_header(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.file_header, "File header");
 }
 
-/**********************************************************************/ /**
+/**
    Write buildings header.
- **************************************************************************/
+ */
 void comment_buildings(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.buildings, "Buildings");
 }
 
-/**********************************************************************/ /**
+/**
    Write tech classess header.
- **************************************************************************/
+ */
 void comment_tech_classes(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.tech_classes, "Tech Classes");
 }
 
-/**********************************************************************/ /**
+/**
    Write techs header.
- **************************************************************************/
+ */
 void comment_techs(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.techs, "Techs");
 }
 
-/**********************************************************************/ /**
+/**
    Write governments header.
- **************************************************************************/
+ */
 void comment_govs(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.govs, "Governments");
 }
 
-/**********************************************************************/ /**
+/**
    Write policies header.
- **************************************************************************/
+ */
 void comment_policies(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.policies, "Policies");
 }
 
-/**********************************************************************/ /**
+/**
    Write unit classes header.
- **************************************************************************/
+ */
 void comment_uclasses(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.uclasses, "Unit classes");
 }
 
-/**********************************************************************/ /**
+/**
    Write unit types header.
- **************************************************************************/
+ */
 void comment_utypes(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.utypes, "Unit types");
 }
 
-/**********************************************************************/ /**
+/**
    Write terrains header.
- **************************************************************************/
+ */
 void comment_terrains(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.terrains, "Terrains");
 }
 
-/**********************************************************************/ /**
+/**
    Write resources header.
- **************************************************************************/
+ */
 void comment_resources(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.resources, "Resources");
 }
 
-/**********************************************************************/ /**
+/**
    Write extras header.
- **************************************************************************/
+ */
 void comment_extras(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.extras, "Extras");
 }
 
-/**********************************************************************/ /**
+/**
    Write bases header.
- **************************************************************************/
+ */
 void comment_bases(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.bases, "Bases");
 }
 
-/**********************************************************************/ /**
+/**
    Write roads header.
- **************************************************************************/
+ */
 void comment_roads(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.roads, "Roads");
 }
 
-/**********************************************************************/ /**
+/**
    Write styles header.
- **************************************************************************/
+ */
 void comment_styles(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.styles, "Styles");
 }
 
-/**********************************************************************/ /**
+/**
    Write city styles header.
- **************************************************************************/
+ */
 void comment_citystyles(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.citystyles, "City Styles");
 }
 
-/**********************************************************************/ /**
+/**
    Write music styles header.
- **************************************************************************/
+ */
 void comment_musicstyles(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.musicstyles, "Music Styles");
 }
 
-/**********************************************************************/ /**
+/**
    Write effects header.
- **************************************************************************/
+ */
 void comment_effects(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.effects, "Effects");
 }
 
-/**********************************************************************/ /**
+/**
    Write disasters header.
- **************************************************************************/
+ */
 void comment_disasters(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.disasters, "Disasters");
 }
 
-/**********************************************************************/ /**
+/**
    Write achievements header.
- **************************************************************************/
+ */
 void comment_achievements(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.achievements, "Achievements");
 }
 
-/**********************************************************************/ /**
+/**
    Write goods header.
- **************************************************************************/
+ */
 void comment_goods(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.goods, "Goods");
 }
 
-/**********************************************************************/ /**
+/**
    Write action enablers header.
- **************************************************************************/
+ */
 void comment_enablers(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.enablers, "Action Enablers");
 }
 
-/**********************************************************************/ /**
+/**
    Write specialists header.
- **************************************************************************/
+ */
 void comment_specialists(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.specialists, "Specialists");
 }
 
-/**********************************************************************/ /**
+/**
    Write nations header.
- **************************************************************************/
+ */
 void comment_nations(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.nations, "Nations");
 }
 
-/**********************************************************************/ /**
+/**
    Write nationgroups header.
- **************************************************************************/
+ */
 void comment_nationgroups(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.nationgroups, "Nationgroups");
 }
 
-/**********************************************************************/ /**
+/**
    Write nationsets header.
- **************************************************************************/
+ */
 void comment_nationsets(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.nationsets, "Nationsets");
 }
 
-/**********************************************************************/ /**
+/**
    Write clauses header.
- **************************************************************************/
+ */
 void comment_clauses(struct section_file *sfile)
 {
   comment_write(sfile, comments_storage.clauses, "Clauses");

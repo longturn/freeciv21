@@ -55,14 +55,14 @@ static bool connection_attach_real(struct connection *pconn,
                                    struct player *pplayer, bool observing,
                                    bool connecting);
 
-/**********************************************************************/ /**
+/**
    Set the access level of a connection, and re-send some needed info.  If
    granted is TRUE, then it will overwrite the granted_access_level too.
    Else, it will affect only the current access level.
 
    NB: This function does not send updated connection information to other
    clients, you need to do that yourself afterwards.
- **************************************************************************/
+ */
 void conn_set_access(struct connection *pconn, enum cmdlevel new_level,
                      bool granted)
 {
@@ -78,13 +78,13 @@ void conn_set_access(struct connection *pconn, enum cmdlevel new_level,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Restore access level for the given connection (user). Used when taking
    a player, observing, or detaching.
 
    NB: This function does not send updated connection information to other
    clients, you need to do that yourself afterwards.
- **************************************************************************/
+ */
 static void restore_access_level(struct connection *pconn)
 {
   /* Restore previous privileges. */
@@ -100,7 +100,7 @@ static void restore_access_level(struct connection *pconn)
   conn_set_access(pconn, level, false);
 }
 
-/**********************************************************************/ /**
+/**
    This is used when a new player joins a server, before the game
    has started.  If pconn is NULL, is an AI, else a client.
 
@@ -117,7 +117,7 @@ static void restore_access_level(struct connection *pconn)
    - connections infos.
    - running vote infos.
    ... and additionnal packets if the game already started.
- **************************************************************************/
+ */
 void establish_new_connection(struct connection *pconn)
 {
   struct conn_list *dest = pconn->self;
@@ -314,9 +314,9 @@ void establish_new_connection(struct connection *pconn)
   conn_compression_thaw(pconn);
 }
 
-/**********************************************************************/ /**
+/**
    send the rejection packet to the client.
- **************************************************************************/
+ */
 void reject_new_connection(const char *msg, struct connection *pconn)
 {
   struct packet_server_join_reply packet;
@@ -334,10 +334,10 @@ void reject_new_connection(const char *msg, struct connection *pconn)
   flush_connection_send_buffer_all(pconn);
 }
 
-/**********************************************************************/ /**
+/**
    Returns FALSE if the clients gets rejected and the connection should be
    closed. Returns TRUE if the client get accepted.
- **************************************************************************/
+ */
 bool handle_login_request(struct connection *pconn,
                           struct packet_server_join_req *req)
 {
@@ -468,14 +468,14 @@ bool handle_login_request(struct connection *pconn,
   }
 }
 
-/**********************************************************************/ /**
+/**
    High-level server stuff when connection to client is closed or lost.
    Reports loss to log, and to other players if the connection was a
    player. Also removes player in pregame, applies auto_toggle, and
    does check for turn done (since can depend on connection/ai status).
    Note you shouldn't this function directly. You should use
    server_break_connection() if you want to close the connection.
- **************************************************************************/
+ */
 void lost_connection_to_client(struct connection *pconn)
 {
   const char *desc = conn_description(pconn);
@@ -496,9 +496,9 @@ void lost_connection_to_client(struct connection *pconn)
   check_for_full_turn_done();
 }
 
-/**********************************************************************/ /**
+/**
    Fill in packet_conn_info from full connection struct.
- **************************************************************************/
+ */
 static void package_conn_info(struct connection *pconn,
                               struct packet_conn_info *packet)
 {
@@ -516,11 +516,11 @@ static void package_conn_info(struct connection *pconn,
   sz_strlcpy(packet->capability, pconn->capability);
 }
 
-/**********************************************************************/ /**
+/**
    Handle both send_conn_info() and send_conn_info_removed(), depending
    on 'remove' arg.  Sends conn_info packets for 'src' to 'dest', turning
    off 'used' if 'remove' is specified.
- **************************************************************************/
+ */
 static void send_conn_info_arg(struct conn_list *src, struct conn_list *dest,
                                bool remove_conn)
 {
@@ -541,27 +541,27 @@ static void send_conn_info_arg(struct conn_list *src, struct conn_list *dest,
   conn_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send conn_info packets to tell 'dest' connections all about
    'src' connections.
- **************************************************************************/
+ */
 void send_conn_info(struct conn_list *src, struct conn_list *dest)
 {
   send_conn_info_arg(src, dest, false);
 }
 
-/**********************************************************************/ /**
+/**
    Like send_conn_info(), but turn off the 'used' bits to tell clients
    to remove info about these connections instead of adding it.
- **************************************************************************/
+ */
 void send_conn_info_remove(struct conn_list *src, struct conn_list *dest)
 {
   send_conn_info_arg(src, dest, true);
 }
 
-/**********************************************************************/ /**
+/**
    Search for first uncontrolled player
- **************************************************************************/
+ */
 struct player *find_uncontrolled_player()
 {
   players_iterate(played)
@@ -575,7 +575,7 @@ struct player *find_uncontrolled_player()
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Setup pconn as a client connected to pplayer or observer:
    Updates pconn->playing, pplayer->connections, pplayer->is_connected
    and pconn->observer.
@@ -590,7 +590,7 @@ struct player *find_uncontrolled_player()
    Note take_command() needs to know if this function will success before
         it's time to call this. Keep take_command() checks in sync when
         modifying this.
- **************************************************************************/
+ */
 static bool connection_attach_real(struct connection *pconn,
                                    struct player *pplayer, bool observing,
                                    bool connecting)
@@ -740,16 +740,16 @@ static bool connection_attach_real(struct connection *pconn,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Setup pconn as a client connected to pplayer or observer.
- **************************************************************************/
+ */
 bool connection_attach(struct connection *pconn, struct player *pplayer,
                        bool observing)
 {
   return connection_attach_real(pconn, pplayer, observing, false);
 }
 
-/**********************************************************************/ /**
+/**
    Remove pconn as a client connected to pplayer:
    Updates pconn->playing, pconn->playing->connections,
    pconn->playing->is_connected and pconn->observer.
@@ -758,7 +758,7 @@ bool connection_attach(struct connection *pconn, struct player *pplayer,
 
    If remove_unused_player is TRUE, may remove a player left with no
    controlling connection (only in pregame, and not if explicitly /created).
- **************************************************************************/
+ */
 void connection_detach(struct connection *pconn, bool remove_unused_player)
 {
   struct player *pplayer;
@@ -835,9 +835,9 @@ void connection_detach(struct connection *pconn, bool remove_unused_player)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Use a delegation to get control over another player.
- **************************************************************************/
+ */
 bool connection_delegate_take(struct connection *pconn,
                               struct player *dplayer)
 {
@@ -888,12 +888,12 @@ bool connection_delegate_take(struct connection *pconn,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Restore the original status of a delegate connection pconn after
  potentially using a delegation. pconn is detached from the delegated player,
  and reattached to its previous view (e.g. observer), if any. (Reattaching
  the original user to the delegated player is not handled here.)
- **************************************************************************/
+ */
 bool connection_delegate_restore(struct connection *pconn)
 {
   struct player *dplayer;
@@ -953,10 +953,10 @@ bool connection_delegate_restore(struct connection *pconn)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Close a connection. Use this in the server to take care of delegation
  stuff (reset the username of the controlled connection).
- **************************************************************************/
+ */
 void connection_close_server(struct connection *pconn, const char *reason)
 {
   /* Restore possible delegations before the connection is closed. */

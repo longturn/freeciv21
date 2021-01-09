@@ -24,9 +24,9 @@
 
 #include "conversion_log.h"
 
-/**********************************************************************/ /**
+/**
    Setup conversion_log object
- **************************************************************************/
+ */
 conversion_log::conversion_log() : QDialog()
 {
   QGridLayout *main_layout = new QGridLayout(this);
@@ -49,16 +49,16 @@ conversion_log::conversion_log() : QDialog()
   setVisible(false);
 }
 
-/**********************************************************************/ /**
+/**
    Add entry
- **************************************************************************/
+ */
 void conversion_log::add(const char *msg)
 {
   area->append(QString::fromUtf8(msg));
   setVisible(true);
 }
 
-/**********************************************************************/ /**
+/**
    User pushed close button
- **************************************************************************/
+ */
 void conversion_log::close_now() { done(0); }

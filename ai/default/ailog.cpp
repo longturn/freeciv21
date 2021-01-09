@@ -32,9 +32,9 @@
 
 Q_LOGGING_CATEGORY(ai_category, "freeciv.ai")
 
-/**********************************************************************/ /**
+/**
    Produce logline fragment for srv_log.
- **************************************************************************/
+ */
 void dai_city_log(struct ai_type *ait, char *buffer, int buflength,
                   const struct city *pcity)
 {
@@ -44,9 +44,9 @@ void dai_city_log(struct ai_type *ait, char *buffer, int buflength,
               city_data->urgency, city_data->grave_danger);
 }
 
-/**********************************************************************/ /**
+/**
    Produce logline fragment for srv_log.
- **************************************************************************/
+ */
 void dai_unit_log(struct ai_type *ait, char *buffer, int buflength,
                   const struct unit *punit)
 {
@@ -56,9 +56,9 @@ void dai_unit_log(struct ai_type *ait, char *buffer, int buflength,
               unit_data->ferryboat);
 }
 
-/**********************************************************************/ /**
+/**
    Log player tech messages.
- **************************************************************************/
+ */
 QString tech_log_prefix(ai_type *ait, const player *pplayer,
                         advance *padvance)
 {
@@ -76,11 +76,11 @@ QString tech_log_prefix(ai_type *ait, const player *pplayer,
                                   advance_number(padvance)));
 }
 
-/**********************************************************************/ /**
+/**
    Log player messages, they will appear like this
 
    where ti is timer, co countdown and lo love for target, who is e.
- **************************************************************************/
+ */
 QString diplo_log_prefix(ai_type *ait, const player *pplayer,
                          const player *aplayer)
 {
@@ -96,11 +96,11 @@ QString diplo_log_prefix(ai_type *ait, const player *pplayer,
                                  : (adip->at_war_with_ally ? "!" : ""));
 }
 
-/**********************************************************************/ /**
+/**
    Log message for bodyguards. They will appear like this
      Polish Mech. Inf.[485] bodyguard (38,22){Riflemen:574@37,23}
    note that these messages are likely to wrap if long.
- **************************************************************************/
+ */
 QString bodyguard_log_prefix(ai_type *ait, const unit *punit)
 {
   const struct unit *pcharge;

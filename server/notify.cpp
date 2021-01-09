@@ -39,7 +39,7 @@
 
 #include "notify.h"
 
-/**********************************************************************/ /**
+/**
    Fill a packet_chat_msg structure.
 
    packet: A pointer to the packet.
@@ -51,7 +51,7 @@
      ft_color().
    format: The format of the message.
    vargs: The extra arguments to build the message.
- **************************************************************************/
+ */
 static void package_event_full(struct packet_chat_msg *packet,
                                const struct tile *ptile,
                                enum event_type event,
@@ -90,7 +90,7 @@ static void package_event_full(struct packet_chat_msg *packet,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Fill a packet_chat_msg structure for a chat message.
 
    packet: A pointer to the packet.
@@ -100,7 +100,7 @@ static void package_event_full(struct packet_chat_msg *packet,
      ft_color().
    format: The format of the message.
    vargs: The extra arguments to build the message.
- **************************************************************************/
+ */
 void vpackage_chat_msg(struct packet_chat_msg *packet,
                        const struct connection *sender,
                        const struct ft_color color, const char *format,
@@ -109,7 +109,7 @@ void vpackage_chat_msg(struct packet_chat_msg *packet,
   package_event_full(packet, NULL, E_CHAT_MSG, sender, color, format, vargs);
 }
 
-/**********************************************************************/ /**
+/**
    Fill a packet_chat_msg structure for a chat message.
 
    packet: A pointer to the packet.
@@ -119,7 +119,7 @@ void vpackage_chat_msg(struct packet_chat_msg *packet,
      ft_color().
    format: The format of the message.
    ...: The extra arguments to build the message.
- **************************************************************************/
+ */
 void package_chat_msg(struct packet_chat_msg *packet,
                       const struct connection *sender,
                       const struct ft_color color, const char *format, ...)
@@ -131,7 +131,7 @@ void package_chat_msg(struct packet_chat_msg *packet,
   va_end(args);
 }
 
-/**********************************************************************/ /**
+/**
    Fill a packet_chat_msg structure for common server event.
 
    packet: A pointer to the packet.
@@ -142,7 +142,7 @@ void package_chat_msg(struct packet_chat_msg *packet,
      ft_color().
    format: The format of the message.
    vargs: The extra arguments to build the message.
- **************************************************************************/
+ */
 void vpackage_event(struct packet_chat_msg *packet, const struct tile *ptile,
                     enum event_type event, const struct ft_color color,
                     const char *format, va_list vargs)
@@ -150,7 +150,7 @@ void vpackage_event(struct packet_chat_msg *packet, const struct tile *ptile,
   package_event_full(packet, ptile, event, NULL, color, format, vargs);
 }
 
-/**********************************************************************/ /**
+/**
    Fill a packet_chat_msg structure for common server event.
 
    packet: A pointer to the packet.
@@ -161,7 +161,7 @@ void vpackage_event(struct packet_chat_msg *packet, const struct tile *ptile,
      ft_color().
    format: The format of the message.
    ...: The extra arguments to build the message.
- **************************************************************************/
+ */
 void package_event(struct packet_chat_msg *packet, const struct tile *ptile,
                    enum event_type event, const struct ft_color color,
                    const char *format, ...)
@@ -173,7 +173,7 @@ void package_event(struct packet_chat_msg *packet, const struct tile *ptile,
   va_end(args);
 }
 
-/**********************************************************************/ /**
+/**
    This is the basis for following notify_* functions. It uses the struct
    packet_chat_msg as defined by vpackage_event().
 
@@ -183,7 +183,7 @@ void package_event(struct packet_chat_msg *packet, const struct tile *ptile,
    NULL == pconn->playing && pconn->observer).  If coords are not required,
    caller should specify (x,y) = (-1,-1); otherwise make sure that the
    coordinates have been normalized.
- **************************************************************************/
+ */
 static void notify_conn_packet(struct conn_list *dest,
                                const struct packet_chat_msg *packet,
                                bool early)
@@ -230,9 +230,9 @@ static void notify_conn_packet(struct conn_list *dest,
   conn_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    See notify_conn_packet - this is just the "non-v" version, with varargs.
- **************************************************************************/
+ */
 void notify_conn(struct conn_list *dest, const struct tile *ptile,
                  enum event_type event, const struct ft_color color,
                  const char *format, ...)
@@ -252,10 +252,10 @@ void notify_conn(struct conn_list *dest, const struct tile *ptile,
   }
 }
 
-/**********************************************************************/ /**
+/**
    See notify_conn_packet - this is just the "non-v" version, with varargs.
    Use for early connecting protocol messages.
- **************************************************************************/
+ */
 void notify_conn_early(struct conn_list *dest, const struct tile *ptile,
                        enum event_type event, const struct ft_color color,
                        const char *format, ...)
@@ -275,13 +275,13 @@ void notify_conn_early(struct conn_list *dest, const struct tile *ptile,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Similar to notify_conn_packet (see also), but takes player as
  "destination". If player != NULL, sends to all connections for that player.
    If player == NULL, sends to all game connections, to support
    old code, but this feature may go away - should use notify_conn(NULL)
    instead.
- **************************************************************************/
+ */
 void notify_player(const struct player *pplayer, const struct tile *ptile,
                    enum event_type event, const struct ft_color color,
                    const char *format, ...)
@@ -300,10 +300,10 @@ void notify_player(const struct player *pplayer, const struct tile *ptile,
   event_cache_add_for_player(&genmsg, pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Send message to all players who have an embassy with pplayer,
    but excluding pplayer and specified player.
- **************************************************************************/
+ */
 void notify_embassies(const struct player *pplayer, const struct tile *ptile,
                       enum event_type event, const struct ft_color color,
                       const char *format, ...)
@@ -330,10 +330,10 @@ void notify_embassies(const struct player *pplayer, const struct tile *ptile,
   event_cache_add_for_players(&genmsg, players);
 }
 
-/**********************************************************************/ /**
+/**
    Sends a message to all players on pplayer's team. If 'pplayer' is NULL,
    sends to all players.
- **************************************************************************/
+ */
 void notify_team(const struct player *pplayer, const struct tile *ptile,
                  enum event_type event, const struct ft_color color,
                  const char *format, ...)
@@ -378,12 +378,12 @@ void notify_team(const struct player *pplayer, const struct tile *ptile,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Sends a message to all players that share research.
 
    Unlike other notify functions this one does not take a tile argument. We
    assume no research message will have a tile associated.
- **************************************************************************/
+ */
 void notify_research(const struct research *presearch,
                      const struct player *exclude, enum event_type event,
                      const struct ft_color color, const char *format, ...)
@@ -409,7 +409,7 @@ void notify_research(const struct research *presearch,
   event_cache_add_for_players(&genmsg, players);
 }
 
-/**********************************************************************/ /**
+/**
    Sends a message to all players that have embassies with someone who
    shares research.
 
@@ -423,7 +423,7 @@ void notify_research(const struct research *presearch,
           members of the research group, should really exclude ones having
           embassy with the exclude -one as the use-case for exclusion is that
           different message is being sent to those excluded here.
- **************************************************************************/
+ */
 void notify_research_embassies(const struct research *presearch,
                                const struct player *exclude,
                                enum event_type event,
@@ -492,18 +492,18 @@ static struct event_cache_data_list *event_cache = NULL;
  * event cache */
 static bool event_cache_status = false;
 
-/**********************************************************************/ /**
+/**
    Callback for freeing event cache data
- **************************************************************************/
+ */
 static void event_cache_data_free(struct event_cache_data *data)
 {
   delete data;
 }
 
-/**********************************************************************/ /**
+/**
    Creates a new event_cache_data, appened to the list.  It mays remove an
    old entry if needed.
- **************************************************************************/
+ */
 static struct event_cache_data *
 event_cache_data_new(const struct packet_chat_msg *packet, time_t timestamp,
                      enum server_states server_status,
@@ -557,9 +557,9 @@ event_cache_data_new(const struct packet_chat_msg *packet, time_t timestamp,
   return pdata;
 }
 
-/**********************************************************************/ /**
+/**
    Initializes the event cache.
- **************************************************************************/
+ */
 void event_cache_init()
 {
   if (event_cache != NULL) {
@@ -569,9 +569,9 @@ void event_cache_init()
   event_cache_status = true;
 }
 
-/**********************************************************************/ /**
+/**
    Frees the event cache.
- **************************************************************************/
+ */
 void event_cache_free()
 {
   if (event_cache != NULL) {
@@ -581,14 +581,14 @@ void event_cache_free()
   event_cache_status = false;
 }
 
-/**********************************************************************/ /**
+/**
    Remove all events from the cache.
- **************************************************************************/
+ */
 void event_cache_clear() { event_cache_data_list_clear(event_cache); }
 
-/**********************************************************************/ /**
+/**
    Remove the old events from the cache.
- **************************************************************************/
+ */
 void event_cache_remove_old()
 {
   struct event_cache_data *current;
@@ -604,9 +604,9 @@ void event_cache_remove_old()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Add an event to the cache for all connections.
- **************************************************************************/
+ */
 void event_cache_add_for_all(const struct packet_chat_msg *packet)
 {
   if (0 < game.server.event_cache.turns) {
@@ -615,9 +615,9 @@ void event_cache_add_for_all(const struct packet_chat_msg *packet)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Add an event to the cache for all global observers.
- **************************************************************************/
+ */
 void event_cache_add_for_global_observers(
     const struct packet_chat_msg *packet)
 {
@@ -627,13 +627,13 @@ void event_cache_add_for_global_observers(
   }
 }
 
-/**********************************************************************/ /**
+/**
    Add an event to the cache for one player.
 
    N.B.: event_cache_add_for_player(&packet, NULL) will have the same effect
          as event_cache_add_for_all(&packet).
    N.B.: in pregame, this will never success, because players are not fixed.
- **************************************************************************/
+ */
 void event_cache_add_for_player(const struct packet_chat_msg *packet,
                                 const struct player *pplayer)
 {
@@ -653,13 +653,13 @@ void event_cache_add_for_player(const struct packet_chat_msg *packet,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Add an event to the cache for selected players.  See
    event_cache_player_add() to see how to select players.  This also
    free the players pointer argument.
 
    N.B.: in pregame, this will never success, because players are not fixed.
- **************************************************************************/
+ */
 void event_cache_add_for_players(const struct packet_chat_msg *packet,
                                  struct event_cache_players *players)
 {
@@ -675,7 +675,7 @@ void event_cache_add_for_players(const struct packet_chat_msg *packet,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Select players for event_cache_add_for_players().  Pass NULL as players
    argument to create a new selection.  Usually the usage of this function
    would look to:
@@ -689,7 +689,7 @@ void event_cache_add_for_players(const struct packet_chat_msg *packet,
    } players_iterate_end;
    // Now add to the cache.
    event_cache_add_for_players(&packet, players); // Free players.
- **************************************************************************/
+ */
 struct event_cache_players *
 event_cache_player_add(struct event_cache_players *players,
                        const struct player *pplayer)
@@ -706,9 +706,9 @@ event_cache_player_add(struct event_cache_players *players,
   return players;
 }
 
-/**********************************************************************/ /**
+/**
    Returns whether the event may be displayed for the connection.
- **************************************************************************/
+ */
 static bool event_cache_match(const struct event_cache_data *pdata,
                               const struct player *pplayer,
                               bool is_global_observer, bool include_public)
@@ -736,10 +736,10 @@ static bool event_cache_match(const struct event_cache_data *pdata,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Send all available events.  If include_public is TRUE, also fully global
    message will be sent.
- **************************************************************************/
+ */
 void send_pending_events(struct connection *pconn, bool include_public)
 {
   const struct player *pplayer = conn_get_player(pconn);
@@ -767,9 +767,9 @@ void send_pending_events(struct connection *pconn, bool include_public)
   event_cache_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Load the event cache from a savefile.
- **************************************************************************/
+ */
 void event_cache_load(struct section_file *file, const char *section)
 {
   struct packet_chat_msg packet;
@@ -888,9 +888,9 @@ void event_cache_load(struct section_file *file, const char *section)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Save the event cache into the savegame.
- **************************************************************************/
+ */
 void event_cache_save(struct section_file *file, const char *section)
 {
   int event_count = 0;
@@ -966,9 +966,9 @@ void event_cache_save(struct section_file *file, const char *section)
   event_cache_status = true;
 }
 
-/**********************************************************************/ /**
+/**
    Mark all existing phase values in event cache invalid.
- **************************************************************************/
+ */
 void event_cache_phases_invalidate()
 {
   event_cache_iterate(pdata)

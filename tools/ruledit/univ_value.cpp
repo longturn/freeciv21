@@ -32,12 +32,12 @@
 
 #include "univ_value.h"
 
-/********************************************************************/ /**
+/**
    Initialize universal value with a value suitable for the kind.
 
    Returns TRUE iff there's any values universal kind can have with
    current ruleset.
- ************************************************************************/
+ */
 bool universal_value_initial(struct universal *src)
 {
   switch (src->kind) {
@@ -224,9 +224,9 @@ bool universal_value_initial(struct universal *src)
   return false;
 }
 
-/********************************************************************/ /**
+/**
    Call cb for each value possible for the universal kind.
- ************************************************************************/
+ */
 void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
                            void *data)
 {

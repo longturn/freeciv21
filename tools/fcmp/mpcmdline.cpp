@@ -33,7 +33,7 @@
 
 extern struct fcmp_params fcmp;
 
-/**********************************************************************/ /**
+/**
    Parse commandline parameters. Modified argv[] so it contains only
    ui-specific options afterwards. Number of those ui-specific options is
    returned.
@@ -42,7 +42,7 @@ extern struct fcmp_params fcmp;
    this returns with value -1 in case program should be shut down instead
    of exiting itself. Callers are prepared for such implementation.
    This call initialises the log system.
- **************************************************************************/
+ */
 void fcmp_parse_cmdline(const QCoreApplication &app)
 {
   QCommandLineParser parser;

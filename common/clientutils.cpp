@@ -37,12 +37,12 @@ struct actcalc {
   int activity_turns[ACTIVITY_LAST];
 };
 
-/************************************************************************/ /**
+/**
    Calculate completion time for all unit activities on tile.
    If pmodunit is supplied, take into account the effect if it changed to
    doing new_act on new_tgt instead of whatever it's currently doing (if
    anything).
- ****************************************************************************/
+ */
 static void calc_activity(struct actcalc *calc, const struct tile *ptile,
                           const struct unit *pmodunit,
                           Activity_type_id new_act,
@@ -182,12 +182,12 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
   FCPP_FREE(t);
 }
 
-/************************************************************************/ /**
+/**
    How many turns until the activity 'act' on target 'tgt' at 'ptile' would
    be complete, taking into account existing units and possible contribution
    from 'pmodunit' if it were also to help with the activity ('pmodunit' may
    be NULL to just account for current activities).
- ****************************************************************************/
+ */
 int turns_to_activity_done(const struct tile *ptile, Activity_type_id act,
                            const struct extra_type *tgt,
                            const struct unit *pmodunit)
@@ -216,9 +216,9 @@ int turns_to_activity_done(const struct tile *ptile, Activity_type_id act,
   return turns;
 }
 
-/************************************************************************/ /**
+/**
    Creates the activity progress text for the given tile.
- ****************************************************************************/
+ */
 QString concat_tile_activity_text(struct tile *ptile)
 {
   auto *calc = new actcalc;

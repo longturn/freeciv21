@@ -48,18 +48,18 @@ struct new_flags {
 #define UCF_LAST_USER_FLAG_3_0 UCF_USER_FLAG_8
 #define TER_LAST_USER_FLAG_3_0 TER_USER_8
 
-/**********************************************************************/ /**
+/**
    Initialize rscompat information structure
- **************************************************************************/
+ */
 void rscompat_init_info(struct rscompat_info *info)
 {
   memset(info, 0, sizeof(*info));
 }
 
-/**********************************************************************/ /**
+/**
    Ruleset files should have a capabilities string datafile.options
    This checks the string and that the required capabilities are satisfied.
- **************************************************************************/
+ */
 int rscompat_check_capabilities(struct section_file *file,
                                 const char *filename,
                                 struct rscompat_info *info)
@@ -128,12 +128,12 @@ int rscompat_check_capabilities(struct section_file *file,
   return format;
 }
 
-/**********************************************************************/ /**
+/**
    Add all hard obligatory requirements to an action enabler or disable it.
    @param ae the action enabler to add requirements to.
    @return TRUE iff adding obligatory hard reqs for the enabler's action
                 needs to restart - say if an enabler was added or removed.
- **************************************************************************/
+ */
 static bool
 rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
 {
@@ -232,10 +232,10 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
   return needs_restart;
 }
 
-/**********************************************************************/ /**
+/**
    Update existing action enablers for new hard obligatory requirements.
    Disable those that can't be upgraded.
- **************************************************************************/
+ */
 void rscompat_enablers_add_obligatory_hard_reqs()
 {
   action_iterate(act_id)
@@ -263,10 +263,10 @@ void rscompat_enablers_add_obligatory_hard_reqs()
   action_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Find and return the first unused unit type user flag. If all unit type
    user flags are taken MAX_NUM_USER_UNIT_FLAGS is returned.
- **************************************************************************/
+ */
 static int first_free_unit_type_user_flag()
 {
   int flag;
@@ -283,10 +283,10 @@ static int first_free_unit_type_user_flag()
   return MAX_NUM_USER_UNIT_FLAGS;
 }
 
-/**********************************************************************/ /**
+/**
    Find and return the first unused unit class user flag. If all unit class
    user flags are taken MAX_NUM_USER_UCLASS_FLAGS is returned.
- **************************************************************************/
+ */
 static int first_free_unit_class_user_flag()
 {
   int flag;
@@ -304,10 +304,10 @@ static int first_free_unit_class_user_flag()
   return MAX_NUM_USER_UCLASS_FLAGS;
 }
 
-/**********************************************************************/ /**
+/**
    Find and return the first unused terrain user flag. If all terrain
    user flags are taken MAX_NUM_USER_TER_FLAGS is returned.
- **************************************************************************/
+ */
 static int first_free_terrain_user_flag()
 {
   int flag;
@@ -324,7 +324,7 @@ static int first_free_terrain_user_flag()
   return MAX_NUM_USER_TER_FLAGS;
 }
 
-/**********************************************************************/ /**
+/**
    Do compatibility things with names before they are referred to. Runs
    after names are loaded from the ruleset but before the ruleset objects
    that may refer to them are loaded.
@@ -333,7 +333,7 @@ static int first_free_terrain_user_flag()
    the ruleset them self becomes ruleset defined.
 
    Returns FALSE if an error occurs.
- **************************************************************************/
+ */
 bool rscompat_names(struct rscompat_info *info)
 {
   if (info->ver_units < 20) {
@@ -469,7 +469,7 @@ bool rscompat_names(struct rscompat_info *info)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Handle a universal being separated from an original universal.
 
    A universal may be split into two new universals. An effect may mention
@@ -480,7 +480,7 @@ bool rscompat_names(struct rscompat_info *info)
    Check if the original universal is mentioned in the requirement list of
    peffect. Handle creating one effect for the original and one for the
    universal that has been separated out if it is.
- **************************************************************************/
+ */
 static bool effect_handle_split_universal(struct effect *peffect,
                                           struct universal original,
                                           struct universal separated)
@@ -497,9 +497,9 @@ static bool effect_handle_split_universal(struct effect *peffect,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Adjust effects
- **************************************************************************/
+ */
 static bool effect_list_compat_cb(struct effect *peffect, void *data)
 {
   struct rscompat_info *info = static_cast<struct rscompat_info *>(data);
@@ -560,9 +560,9 @@ static bool effect_list_compat_cb(struct effect *peffect, void *data)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Turn old effect to an action enabler.
- **************************************************************************/
+ */
 static void effect_to_enabler(action_id action, struct section_file *file,
                               const char *sec_name,
                               struct rscompat_info *compat, const char *type)
@@ -612,10 +612,10 @@ static void effect_to_enabler(action_id action, struct section_file *file,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Check if effect name refers to one of the removed effects, and handle it
    if it does. Returns TRUE iff name was a valid old name.
- **************************************************************************/
+ */
 bool rscompat_old_effect_3_1(const char *type, struct section_file *file,
                              const char *sec_name,
                              struct rscompat_info *compat)
@@ -647,9 +647,9 @@ bool rscompat_old_effect_3_1(const char *type, struct section_file *file,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Do compatibility things after regular ruleset loading.
- **************************************************************************/
+ */
 void rscompat_postprocess(struct rscompat_info *info)
 {
   if (!info->compat_mode) {
@@ -1084,9 +1084,9 @@ void rscompat_postprocess(struct rscompat_info *info)
   autoadjust_ruleset_data();
 }
 
-/**********************************************************************/ /**
+/**
    Replace deprecated auto_attack configuration.
- **************************************************************************/
+ */
 bool rscompat_auto_attack_3_1(struct rscompat_info *compat,
                               struct action_auto_perf *auto_perf,
                               size_t psize,
@@ -1122,9 +1122,9 @@ bool rscompat_auto_attack_3_1(struct rscompat_info *compat,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Replace slow_invasions and friends.
- **************************************************************************/
+ */
 bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
                                      bool slow_invasions)
 {
@@ -1344,12 +1344,12 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Replace deprecated requirement type names with currently valid ones.
 
    The extra arguments are for situation where some, but not all, instances
    of a requirement type should become something else.
- **************************************************************************/
+ */
 const char *rscompat_req_type_name_3_1(const char *old_type,
                                        const char *old_range,
                                        bool old_survives, bool old_present,
@@ -1358,12 +1358,12 @@ const char *rscompat_req_type_name_3_1(const char *old_type,
   return old_type;
 }
 
-/**********************************************************************/ /**
+/**
    Replace deprecated requirement type names with currently valid ones.
 
    The extra arguments are for situation where some, but not all, instances
    of a requirement type should become something else.
- **************************************************************************/
+ */
 const char *rscompat_req_name_3_1(const char *type, const char *old_name)
 {
   if (!fc_strcasecmp("DiplRel", type)
@@ -1374,18 +1374,18 @@ const char *rscompat_req_name_3_1(const char *type, const char *old_name)
   return old_name;
 }
 
-/**********************************************************************/ /**
+/**
    Replace deprecated unit type flag names with currently valid ones.
- **************************************************************************/
+ */
 const char *rscompat_utype_flag_name_3_1(struct rscompat_info *compat,
                                          const char *old_type)
 {
   return old_type;
 }
 
-/**********************************************************************/ /**
+/**
    Adjust freeciv-3.0 ruleset extra definitions to freeciv-3.1
- **************************************************************************/
+ */
 void rscompat_extra_adjust_3_1(struct rscompat_info *compat,
                                struct extra_type *pextra)
 {

@@ -24,9 +24,9 @@
 
 #include "handicaps.h"
 
-/**********************************************************************/ /**
+/**
    Initialize handicaps for player
- **************************************************************************/
+ */
 void handicaps_init(struct player *pplayer)
 {
   if (pplayer->ai_common.handicaps != NULL) {
@@ -35,9 +35,9 @@ void handicaps_init(struct player *pplayer)
   pplayer->ai_common.handicaps = new QBitArray(H_LAST);
 }
 
-/**********************************************************************/ /**
+/**
    Free resources associated with player handicaps.
- **************************************************************************/
+ */
 void handicaps_close(struct player *pplayer)
 {
   if (pplayer->ai_common.handicaps == NULL) {
@@ -48,21 +48,21 @@ void handicaps_close(struct player *pplayer)
   pplayer->ai_common.handicaps = NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Set player handicaps
- **************************************************************************/
+ */
 void handicaps_set(struct player *pplayer, QBitArray *handicaps)
 {
   *(pplayer->ai_common.handicaps) = *handicaps;
   delete handicaps;
 }
 
-/**********************************************************************/ /**
+/**
    AI players may have handicaps - allowing them to cheat or preventing
    them from using certain algorithms.  This function returns whether the
    player has the given handicap.  Human players are assumed to have no
    handicaps.
- **************************************************************************/
+ */
 bool has_handicap(const struct player *pplayer, enum handicap_type htype)
 {
   if (is_human(pplayer)) {
@@ -72,11 +72,11 @@ bool has_handicap(const struct player *pplayer, enum handicap_type htype)
   return pplayer->ai_common.handicaps->at(htype);
 }
 
-/**********************************************************************/ /**
+/**
    Return a short (translated) string describing the handicap, for help.
    In some cases it's better to describe what happens if the handicap is
    absent; 'inverted' is set TRUE in these cases.
- **************************************************************************/
+ */
 const char *handicap_desc(enum handicap_type htype, bool *inverted)
 {
   *inverted = false;

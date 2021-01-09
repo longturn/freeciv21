@@ -70,9 +70,9 @@ static void global_worklist_save(const struct global_worklist *pgwl,
                                  const char *path, ...)
     fc__attribute((__format__(__printf__, 4, 5)));
 
-/*******************************************************************/ /**
+/**
    Initialize the client global worklists.
- ***********************************************************************/
+ */
 void global_worklists_init()
 {
   if (!client.worklists) {
@@ -80,9 +80,9 @@ void global_worklists_init()
   }
 }
 
-/*******************************************************************/ /**
+/**
    Free the client global worklists.
- ***********************************************************************/
+ */
 void global_worklists_free()
 {
   if (client.worklists) {
@@ -93,9 +93,9 @@ void global_worklists_free()
   }
 }
 
-/*******************************************************************/ /**
+/**
    Check if the global worklists are valid or not for the ruleset.
- ***********************************************************************/
+ */
 void global_worklists_build()
 {
   global_worklists_iterate_all(pgwl)
@@ -140,9 +140,9 @@ void global_worklists_build()
   global_worklists_iterate_all_end;
 }
 
-/*******************************************************************/ /**
+/**
    Convert the universal pointers to strings to work out-ruleset.
- ***********************************************************************/
+ */
 void global_worklists_unbuild()
 {
   global_worklists_iterate_all(pgwl)
@@ -169,10 +169,10 @@ void global_worklists_unbuild()
   global_worklists_iterate_all_end;
 }
 
-/*******************************************************************/ /**
+/**
    Returns the number of valid global worklists.
    N.B.: This counts only the valid global worklists.
- ***********************************************************************/
+ */
 int global_worklists_number()
 {
   int count = 0;
@@ -183,9 +183,9 @@ int global_worklists_number()
   return count;
 }
 
-/*******************************************************************/ /**
+/**
    Returns a new created global worklist structure.
- ***********************************************************************/
+ */
 static struct global_worklist *
 global_worklist_alloc(enum global_worklist_status type)
 {
@@ -210,9 +210,9 @@ global_worklist_alloc(enum global_worklist_status type)
   return pgwl;
 }
 
-/*******************************************************************/ /**
+/**
    Destroys a glocal worklist.
- ***********************************************************************/
+ */
 void global_worklist_destroy(struct global_worklist *pgwl)
 {
   fc_assert_ret(NULL != pgwl);
@@ -240,9 +240,9 @@ void global_worklist_destroy(struct global_worklist *pgwl)
   delete[] pgwl;
 }
 
-/*******************************************************************/ /**
+/**
    Creates a new global worklist form a normal worklist.
- ***********************************************************************/
+ */
 struct global_worklist *global_worklist_new(const char *name)
 {
   struct global_worklist *pgwl = global_worklist_alloc(STATUS_WORKLIST);
@@ -251,17 +251,17 @@ struct global_worklist *global_worklist_new(const char *name)
   return pgwl;
 }
 
-/*******************************************************************/ /**
+/**
    Returns TRUE if this global worklist is valid.
- ***********************************************************************/
+ */
 bool global_worklist_is_valid(const struct global_worklist *pgwl)
 {
   return pgwl && pgwl->status == STATUS_WORKLIST;
 }
 
-/*******************************************************************/ /**
+/**
    Sets the worklist. Return TRUE on success.
- ***********************************************************************/
+ */
 bool global_worklist_set(struct global_worklist *pgwl,
                          const struct worklist *pwl)
 {
@@ -272,9 +272,9 @@ bool global_worklist_set(struct global_worklist *pgwl,
   return false;
 }
 
-/*******************************************************************/ /**
+/**
    Returns the worklist of this global worklist or NULL if it's not valid.
- ***********************************************************************/
+ */
 const struct worklist *
 global_worklist_get(const struct global_worklist *pgwl)
 {
@@ -285,19 +285,19 @@ global_worklist_get(const struct global_worklist *pgwl)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Returns the id of the global worklist.
- ***********************************************************************/
+ */
 int global_worklist_id(const struct global_worklist *pgwl)
 {
   fc_assert_ret_val(NULL != pgwl, 0);
   return pgwl->id;
 }
 
-/*******************************************************************/ /**
+/**
    Returns the global worklist corresponding to this id.
    N.B.: It can returns an invalid glocbal worklist.
- ***********************************************************************/
+ */
 struct global_worklist *global_worklist_by_id(int id)
 {
   global_worklists_iterate_all(pgwl)
@@ -311,9 +311,9 @@ struct global_worklist *global_worklist_by_id(int id)
   return NULL;
 }
 
-/*******************************************************************/ /**
+/**
    Sets the name of this global worklist.
- ***********************************************************************/
+ */
 void global_worklist_set_name(struct global_worklist *pgwl, const char *name)
 {
   if (name) {
@@ -321,19 +321,19 @@ void global_worklist_set_name(struct global_worklist *pgwl, const char *name)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Return the name of the global worklist.
- ***********************************************************************/
+ */
 const char *global_worklist_name(const struct global_worklist *pgwl)
 {
   fc_assert_ret_val(NULL != pgwl, NULL);
   return pgwl->name;
 }
 
-/*******************************************************************/ /**
+/**
    Load a global worklist form a section file.  Returns FALSE if we
    reached the end of the array.
- ***********************************************************************/
+ */
 static bool global_worklist_load(struct section_file *file, const char *path,
                                  ...)
 {
@@ -386,9 +386,9 @@ static bool global_worklist_load(struct section_file *file, const char *path,
   return true;
 }
 
-/*******************************************************************/ /**
+/**
    Load all global worklist from a section file.
- ***********************************************************************/
+ */
 void global_worklists_load(struct section_file *file)
 {
   int i;
@@ -407,9 +407,9 @@ void global_worklists_load(struct section_file *file)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Save one global worklist into a section file.
- ***********************************************************************/
+ */
 static void global_worklist_save(const struct global_worklist *pgwl,
                                  struct section_file *file, int fill_until,
                                  const char *path, ...)
@@ -459,9 +459,9 @@ static void global_worklist_save(const struct global_worklist *pgwl,
   }
 }
 
-/*******************************************************************/ /**
+/**
    Save all global worklist into a section file.
- ***********************************************************************/
+ */
 void global_worklists_save(struct section_file *file)
 {
   int max_length = 0;

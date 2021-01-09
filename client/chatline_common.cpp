@@ -39,18 +39,18 @@
 
 Q_GLOBAL_STATIC(QMutex, ow_mutex);
 
-/**********************************************************************/ /**
+/**
    Send the message as a chat to the server.
- **************************************************************************/
+ */
 int send_chat(const char *message)
 {
   return dsend_packet_chat_msg_req(&client.conn, message);
 }
 
-/**********************************************************************/ /**
+/**
    Send the message as a chat to the server. Message is constructed
    in printf style.
- **************************************************************************/
+ */
 int send_chat_printf(const char *format, ...)
 {
   struct packet_chat_msg_req packet;
@@ -67,30 +67,30 @@ int send_chat_printf(const char *format, ...)
   return send_packet_chat_msg_req(&client.conn, &packet);
 }
 
-/**********************************************************************/ /**
+/**
    Allocate output window mutex
- **************************************************************************/
+ */
 void fc_allocate_ow_mutex() { ow_mutex->lock(); }
 
-/**********************************************************************/ /**
+/**
    Release output window mutex
- **************************************************************************/
+ */
 void fc_release_ow_mutex() { ow_mutex->unlock(); }
 
-/**********************************************************************/ /**
+/**
    Initialize output window mutex
- **************************************************************************/
+ */
 void fc_init_ow_mutex() {}
 
-/**********************************************************************/ /**
+/**
    Destroy output window mutex
- **************************************************************************/
+ */
 void fc_destroy_ow_mutex() {}
 
-/**********************************************************************/ /**
+/**
    Add a line of text to the output ("chatline") window, like puts() would
    do it in the console.
- **************************************************************************/
+ */
 void output_window_append(const struct ft_color color,
                           const char *featured_text)
 {
@@ -122,10 +122,10 @@ void output_window_append(const struct ft_color color,
   text_tag_list_destroy(tags);
 }
 
-/**********************************************************************/ /**
+/**
    Add a line of text to the output ("chatline") window.  The text is
    constructed in printf style.
- **************************************************************************/
+ */
 void output_window_vprintf(const struct ft_color color, const char *format,
                            va_list args)
 {
@@ -135,10 +135,10 @@ void output_window_vprintf(const struct ft_color color, const char *format,
   output_window_append(color, featured_text);
 }
 
-/**********************************************************************/ /**
+/**
    Add a line of text to the output ("chatline") window.  The text is
    constructed in printf style.
- **************************************************************************/
+ */
 void output_window_printf(const struct ft_color color, const char *format,
                           ...)
 {
@@ -149,9 +149,9 @@ void output_window_printf(const struct ft_color color, const char *format,
   va_end(args);
 }
 
-/**********************************************************************/ /**
+/**
    Add a line of text to the output ("chatline") window from server event.
- **************************************************************************/
+ */
 void output_window_event(const char *plain_text,
                          const struct text_tag_list *tags, int conn_id)
 {
@@ -160,9 +160,9 @@ void output_window_event(const char *plain_text,
   fc_release_ow_mutex();
 }
 
-/**********************************************************************/ /**
+/**
    Standard welcome message.
- **************************************************************************/
+ */
 void chat_welcome_message(bool gui_has_copying_mitem)
 {
   output_window_append(ftc_any, _("Freeciv is free software and you are "

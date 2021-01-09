@@ -42,11 +42,11 @@
 
 #include "autoexplorer.h"
 
-/**********************************************************************/ /**
+/**
    Determine if a tile is likely to be native, given information that
    the player actually has. Return the % certainty that it's native
    (100 = certain, 50 = no idea, 0 = certainly not).
- **************************************************************************/
+ */
 static int likely_native(struct tile *ptile, struct player *pplayer,
                          struct unit_class *pclass)
 {
@@ -76,11 +76,11 @@ static int likely_native(struct tile *ptile, struct player *pplayer,
   return 50 + (50 / wld.map.num_valid_dirs * (native - foreign));
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if a unit owned by the given player can safely "explore" the
    given tile. This mainly takes care that military units do not try to
    move into another player's territory in violation of a treaty.
- **************************************************************************/
+ */
 static bool player_may_explore(const struct tile *ptile,
                                const struct player *pplayer,
                                const struct unit_type *punittype)
@@ -105,9 +105,9 @@ static bool player_may_explore(const struct tile *ptile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    TB function used by explorer_goto().
- **************************************************************************/
+ */
 static enum tile_behavior explorer_tb(const struct tile *ptile,
                                       enum known_type k,
                                       const struct pf_parameter *param)
@@ -118,9 +118,9 @@ static enum tile_behavior explorer_tb(const struct tile *ptile,
   return TB_NORMAL;
 }
 
-/**********************************************************************/ /**
+/**
    Constrained goto using player_may_explore().
- **************************************************************************/
+ */
 static bool explorer_goto(struct unit *punit, struct tile *ptile)
 {
   struct pf_parameter parameter;
@@ -154,7 +154,7 @@ static bool explorer_goto(struct unit *punit, struct tile *ptile)
   return alive;
 }
 
-/**********************************************************************/ /**
+/**
    Return a value indicating how desirable it is to explore the given tile.
    In general, we want to discover unknown terrain of the opposite kind to
    our natural terrain, i.e. pedestrians like ocean and boats like land.
@@ -163,7 +163,7 @@ static bool explorer_goto(struct unit *punit, struct tile *ptile)
    We also would like discovering tiles which can be harvested by our cities
  -- because that improves citizen placement. We do not currently do this, see
    comment below.
- **************************************************************************/
+ */
 #define SAME_TER_SCORE 21
 #define DIFF_TER_SCORE 81
 #define KNOWN_SAME_TER_SCORE 0
@@ -264,7 +264,7 @@ static int explorer_desirable(struct tile *ptile, struct player *pplayer,
   return desirable;
 }
 
-/**********************************************************************/ /**
+/**
    Handle eXplore mode of a unit (explorers are always in eXplore mode
    for AI) - explores unknown territory, finds huts.
 
@@ -272,7 +272,7 @@ static int explorer_desirable(struct tile *ptile, struct player *pplayer,
    MR_DEATH: unit died.
    MR_PAUSE: unit cannot explore further now.
    Other results: unit cannot explore further.
- **************************************************************************/
+ */
 enum unit_move_result manage_auto_explorer(struct unit *punit)
 {
   struct player *pplayer = unit_owner(punit);

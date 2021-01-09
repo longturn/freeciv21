@@ -25,14 +25,14 @@ static char error_buffer[MAX_LEN_ERRORBUF] = "\0";
 /* Debug function for every new entry. */
 #define DEBUG_ENTRIES(...) /* log_debug(__VA_ARGS__); */
 
-/**********************************************************************/ /**
+/**
    Returns the last error which occurred in a string.  It never returns NULL.
- **************************************************************************/
+ */
 const char *secfile_error() { return error_buffer; }
 
-/**********************************************************************/ /**
+/**
    Edit the error_buffer.
- **************************************************************************/
+ */
 void secfile_log(const struct section_file *secfile,
                  const struct section *psection, const char *file,
                  const char *function, int line, const char *format, ...)
@@ -50,17 +50,17 @@ void secfile_log(const struct section_file *secfile,
               psection != NULL ? section_name(psection) : "NULL", message);
 }
 
-/**********************************************************************/ /**
+/**
    Returns the section name.
- **************************************************************************/
+ */
 const char *section_name(const struct section *psection)
 {
   return (NULL != psection ? psection->name : NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Create a new empty section file.
- **************************************************************************/
+ */
 struct section_file *secfile_new(bool allow_duplicates)
 {
   section_file *secfile = new section_file;
@@ -80,9 +80,9 @@ struct section_file *secfile_new(bool allow_duplicates)
   return secfile;
 }
 
-/**********************************************************************/ /**
+/**
    Free a section file.
- **************************************************************************/
+ */
 void secfile_destroy(struct section_file *secfile)
 {
   SECFILE_RETURN_IF_FAIL(secfile, NULL, secfile != NULL);
@@ -98,11 +98,11 @@ void secfile_destroy(struct section_file *secfile)
   delete secfile;
 }
 
-/**********************************************************************/ /**
+/**
    Set if we could consider values 0 and 1 as boolean. By default, this is
    not allowed, but we need to keep compatibility with old Freeciv version
    for savegames, ruleset etc.
- **************************************************************************/
+ */
 void secfile_allow_digital_boolean(struct section_file *secfile,
                                    bool allow_digital_boolean)
 {
@@ -110,9 +110,9 @@ void secfile_allow_digital_boolean(struct section_file *secfile,
   secfile->allow_digital_boolean = allow_digital_boolean;
 }
 
-/**********************************************************************/ /**
+/**
    Add entry to section from token.
- **************************************************************************/
+ */
 bool entry_from_token(struct section *psection, const QString &name,
                       const QString &tok)
 {

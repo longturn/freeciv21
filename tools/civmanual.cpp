@@ -189,50 +189,50 @@ const char *client_string = "freeciv-manual";
 
 static QString ruleset;
 
-/**********************************************************************/ /**
+/**
    Client stub
- **************************************************************************/
+ */
 void popup_help_dialog_string(const char *item)
 { /* Empty stub. */
 }
 
-/**********************************************************************/ /**
+/**
    Client stub
- **************************************************************************/
+ */
 void popdown_help_dialog(void)
 { /* Empty stub. */
 }
 
 struct tileset *tileset;
 
-/**********************************************************************/ /**
+/**
    Client stub
- **************************************************************************/
+ */
 const char *tileset_name_get(struct tileset *t) { return NULL; }
 
-/**********************************************************************/ /**
+/**
    Client stub
- **************************************************************************/
+ */
 const char *tileset_version(struct tileset *t) { return NULL; }
 
-/**********************************************************************/ /**
+/**
    Client stub
- **************************************************************************/
+ */
 const char *tileset_summary(struct tileset *t) { return NULL; }
 
-/**********************************************************************/ /**
+/**
    Client stub
- **************************************************************************/
+ */
 const char *tileset_description(struct tileset *t) { return NULL; }
 
-/**********************************************************************/ /**
+/**
    Mostly a client stub.
- **************************************************************************/
+ */
 enum client_states client_state() { return C_S_INITIAL; }
 
-/**********************************************************************/ /**
+/**
    Mostly a client stub.
- **************************************************************************/
+ */
 bool client_nation_is_in_current_set(const struct nation_type *pnation)
 {
   /* Currently, there is no way to select a nation set for freeciv-manual.
@@ -240,9 +240,9 @@ bool client_nation_is_in_current_set(const struct nation_type *pnation)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Write a server manual, then quit.
- **************************************************************************/
+ */
 static bool manual_command(struct tag_types *tag_info)
 {
   FILE *doc;
@@ -728,9 +728,9 @@ static bool manual_command(struct tag_types *tag_info)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Entry point of whole freeciv-manual program
- **************************************************************************/
+ */
 int main(int argc, char **argv)
 {
   int retval = EXIT_SUCCESS;
@@ -827,9 +827,9 @@ int main(int argc, char **argv)
   return retval;
 }
 
-/**********************************************************************/ /**
+/**
    Empty function required by helpdata
- **************************************************************************/
+ */
 void insert_client_build_info(char *outbuf, size_t outlen)
 {
   /* Nothing here */

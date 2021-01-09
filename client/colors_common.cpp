@@ -36,12 +36,12 @@ struct color_system {
   struct rgbcolor **stdcolors;
 };
 
-/************************************************************************/ /**
+/**
    Called when the client first starts to allocate the default colors.
 
    Currently this must be called in ui_main, generally after UI
    initialization.
- ****************************************************************************/
+ */
 struct color_system *color_system_read(struct section_file *file)
 {
   struct color_system *colors = new color_system;
@@ -65,9 +65,9 @@ struct color_system *color_system_read(struct section_file *file)
   return colors;
 }
 
-/************************************************************************/ /**
+/**
    Called when the client first starts to free any allocated colors.
- ****************************************************************************/
+ */
 void color_system_free(struct color_system *colors)
 {
   enum color_std stdcolor;
@@ -81,9 +81,9 @@ void color_system_free(struct color_system *colors)
   delete colors;
 }
 
-/************************************************************************/ /**
+/**
    Return the RGB color, allocating it if necessary.
- ****************************************************************************/
+ */
 QColor *ensure_color(struct rgbcolor *rgb)
 {
   fc_assert_ret_val(rgb != NULL, NULL);
@@ -94,9 +94,9 @@ QColor *ensure_color(struct rgbcolor *rgb)
   return rgb->color;
 }
 
-/************************************************************************/ /**
+/**
    Return a pointer to the given "standard" color.
- ****************************************************************************/
+ */
 QColor *get_color(const struct tileset *t, enum color_std stdcolor)
 {
   struct color_system *colors = get_color_system(t);
@@ -106,10 +106,10 @@ QColor *get_color(const struct tileset *t, enum color_std stdcolor)
   return ensure_color(*(colors->stdcolors + stdcolor));
 }
 
-/************************************************************************/ /**
+/**
    Return whether the player has a color assigned yet.
    Should only be FALSE in pregame.
- ****************************************************************************/
+ */
 bool player_has_color(const struct tileset *t, const struct player *pplayer)
 {
   Q_UNUSED(t)
@@ -118,11 +118,11 @@ bool player_has_color(const struct tileset *t, const struct player *pplayer)
   return pplayer->rgb != NULL;
 }
 
-/************************************************************************/ /**
+/**
    Return the color of the player.
    In pregame, callers should check player_has_color() before calling
    this.
- ****************************************************************************/
+ */
 QColor *get_player_color(const struct tileset *t,
                          const struct player *pplayer)
 {
@@ -133,9 +133,9 @@ QColor *get_player_color(const struct tileset *t,
   return ensure_color(pplayer->rgb);
 }
 
-/************************************************************************/ /**
+/**
    Return a pointer to the given "terrain" color.
- ****************************************************************************/
+ */
 QColor *get_terrain_color(const struct tileset *t,
                           const struct terrain *pterrain)
 {
@@ -146,10 +146,10 @@ QColor *get_terrain_color(const struct tileset *t,
   return ensure_color(pterrain->rgb);
 }
 
-/************************************************************************/ /**
+/**
    Find the colour from 'candidates' with the best perceptual contrast from
    'subject'.
- ****************************************************************************/
+ */
 QColor *color_best_contrast(QColor *subject, QColor **candidates,
                             int ncandidates)
 {

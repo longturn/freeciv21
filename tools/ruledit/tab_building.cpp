@@ -39,9 +39,9 @@
 
 #include "tab_building.h"
 
-/**********************************************************************/ /**
+/**
    Setup tab_building object
- **************************************************************************/
+ */
 tab_building::tab_building(ruledit_gui *ui_in) : QWidget()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
@@ -114,9 +114,9 @@ tab_building::tab_building(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************/ /**
+/**
    Refresh the information.
- **************************************************************************/
+ */
 void tab_building::refresh()
 {
   bldg_list->clear();
@@ -133,9 +133,9 @@ void tab_building::refresh()
   improvement_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Update info of the building
- **************************************************************************/
+ */
 void tab_building::update_bldg_info(struct impr_type *pimpr)
 {
   selected = pimpr;
@@ -161,9 +161,9 @@ void tab_building::update_bldg_info(struct impr_type *pimpr)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User selected building from the list.
- **************************************************************************/
+ */
 void tab_building::select_bldg()
 {
   QList<QListWidgetItem *> select_list = bldg_list->selectedItems();
@@ -176,9 +176,9 @@ void tab_building::select_bldg()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User entered name for the building
- **************************************************************************/
+ */
 void tab_building::name_given()
 {
   if (selected != nullptr) {
@@ -209,9 +209,9 @@ void tab_building::name_given()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User requested building deletion
- **************************************************************************/
+ */
 void tab_building::delete_now()
 {
   if (selected != 0) {
@@ -230,9 +230,9 @@ void tab_building::delete_now()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialize new tech for use.
- **************************************************************************/
+ */
 bool tab_building::initialize_new_bldg(struct impr_type *pimpr)
 {
   if (improvement_by_rule_name("New Building") != nullptr) {
@@ -243,9 +243,9 @@ bool tab_building::initialize_new_bldg(struct impr_type *pimpr)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    User requested new building
- **************************************************************************/
+ */
 void tab_building::add_now2()
 {
   struct impr_type *new_bldg;
@@ -282,9 +282,9 @@ void tab_building::add_now2()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Toggled whether rule_name and name should be kept identical
- **************************************************************************/
+ */
 void tab_building::same_name_toggle(bool checked)
 {
   name->setEnabled(!checked);
@@ -293,9 +293,9 @@ void tab_building::same_name_toggle(bool checked)
   }
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit reqs
- **************************************************************************/
+ */
 void tab_building::edit_reqs()
 {
   if (selected != nullptr) {
@@ -304,9 +304,9 @@ void tab_building::edit_reqs()
   }
 }
 
-/**********************************************************************/ /**
+/**
    User wants to edit effects
- **************************************************************************/
+ */
 void tab_building::edit_effects()
 {
   if (selected != nullptr) {

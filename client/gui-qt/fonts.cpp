@@ -17,14 +17,14 @@
 #include "gui_main.h"
 #include "options.h"
 
-/************************************************************************/ /**
+/**
    Font provider constructor
- ****************************************************************************/
+ */
 fcFont::fcFont() {}
 
-/************************************************************************/ /**
+/**
    Returns instance of fc_font
- ****************************************************************************/
+ */
 fcFont *fcFont::instance()
 {
   if (!m_instance) {
@@ -33,9 +33,9 @@ fcFont *fcFont::instance()
   return m_instance;
 }
 
-/************************************************************************/ /**
+/**
    Deletes fc_icons instance
- ****************************************************************************/
+ */
 void fcFont::drop()
 {
   if (m_instance) {
@@ -45,9 +45,9 @@ void fcFont::drop()
   }
 }
 
-/************************************************************************/ /**
+/**
    Returns desired font
- ****************************************************************************/
+ */
 QFont *fcFont::getFont(const QString &name)
 {
   /**
@@ -61,9 +61,9 @@ QFont *fcFont::getFont(const QString &name)
   }
 }
 
-/************************************************************************/ /**
+/**
    Initiazlizes fonts from client options
- ****************************************************************************/
+ */
 void fcFont::initFonts()
 {
   QFont *f;
@@ -94,7 +94,7 @@ void fcFont::initFonts()
 
 /*****************************************************************************
    Increases/decreases all fonts sizes
- ****************************************************************************/
+ */
 void fcFont::setSizeAll(int new_size)
 {
   options_iterate(client_optset, poption)
@@ -113,9 +113,9 @@ void fcFont::setSizeAll(int new_size)
   options_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Deletes all fonts
- ****************************************************************************/
+ */
 void fcFont::releaseFonts()
 {
   for (QFont *f : qAsConst(font_map)) {
@@ -123,26 +123,26 @@ void fcFont::releaseFonts()
   }
 }
 
-/************************************************************************/ /**
+/**
    Stores default font sizes
- ****************************************************************************/
+ */
 void fcFont::getMapfontSize()
 {
   city_fontsize = getFont(fonts::city_names)->pointSize();
   prod_fontsize = getFont(fonts::city_productions)->pointSize();
 }
 
-/************************************************************************/ /**
+/**
    Adds new font or overwrite old one
- ****************************************************************************/
+ */
 void fcFont::setFont(const QString &name, QFont *qf)
 {
   font_map.insert(name, qf);
 }
 
-/************************************************************************/ /**
+/**
    Tries to choose good fonts for freeciv-qt
- ****************************************************************************/
+ */
 void configure_fonts()
 {
   int max, default_size;
@@ -229,9 +229,9 @@ void configure_fonts()
   }
 }
 
-/************************************************************************/ /**
+/**
    Returns long font name, sets given for for use
- ****************************************************************************/
+ */
 QString configure_font(const QString &font_name, const QStringList &sl,
                        int size, bool bold)
 {

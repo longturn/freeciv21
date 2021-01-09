@@ -24,7 +24,7 @@ class QSlider;
 
 /**************************************************************************
  * Custom slider with two settable values
- *************************************************************************/
+ */
 class fc_double_edge : public QWidget {
   Q_OBJECT
 
@@ -52,7 +52,7 @@ protected:
 
 /**************************************************************************
  * Dialog used to change tax rates
- *************************************************************************/
+ */
 class tax_rates_dialog : public qfc_dialog {
   Q_OBJECT
 
@@ -69,7 +69,7 @@ private slots:
 
 /**************************************************************************
  * Dialog used to change policies
- *************************************************************************/
+ */
 class multipler_rates_dialog : public QDialog {
   Q_OBJECT
 

@@ -132,13 +132,13 @@ static struct compatibility compat[] = {
 static const int compat_num = ARRAY_SIZE(compat);
 #define compat_current (compat_num - 1)
 
-/************************************************************************/ /**
+/**
    Compatibility functions for loaded game.
 
    This function is called at the beginning of loading a savegame. The data
  in loading->file should be change such, that the current loading functions
  can be executed without errors.
- ****************************************************************************/
+ */
 void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
 {
   int i;
@@ -180,7 +180,7 @@ void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
 #endif /* FREECIV_DEV_SAVE_COMPAT */
 }
 
-/************************************************************************/ /**
+/**
    Compatibility functions for loaded game that needs game state.
 
    Some compatibility needs access to game state not available in
@@ -189,7 +189,7 @@ void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
    This function is called after a savegame has loaded the game state. The
    data should be changed in the game state since the game already is done
    loading. Prefer using sg_load_compat() when possible.
- ****************************************************************************/
+ */
 void sg_load_post_load_compat(struct loaddata *loading,
                               enum sgf_version format_class)
 {
@@ -216,28 +216,28 @@ void sg_load_post_load_compat(struct loaddata *loading,
 #endif /* FREECIV_DEV_SAVE_COMPAT */
 }
 
-/************************************************************************/ /**
+/**
    Return current compatibility version
- ****************************************************************************/
+ */
 int current_compat_ver() { return compat[compat_current].version; }
 
-/************************************************************************/ /**
+/**
    This returns an ascii hex value of the given half-byte of the binary
    integer. See ascii_hex2bin().
    example: bin2ascii_hex(0xa00, 2) == 'a'
- ****************************************************************************/
+ */
 char bin2ascii_hex(int value, int halfbyte_wanted)
 {
   return hex_chars[((value) >> ((halfbyte_wanted) *4)) & 0xf];
 }
 
-/************************************************************************/ /**
+/**
    This returns a binary integer value of the ascii hex char, offset by the
    given number of half-bytes. See bin2ascii_hex().
    example: ascii_hex2bin('a', 2) == 0xa00
    This is only used in loading games, and it requires some error checking so
    it's done as a function.
- ****************************************************************************/
+ */
 int ascii_hex2bin(char ch, int halfbyte)
 {
   const char *pch;
@@ -259,10 +259,10 @@ int ascii_hex2bin(char ch, int halfbyte)
 static const char num_chars[] =
     "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-+";
 
-/************************************************************************/ /**
+/**
    Converts single character into numerical value. This is not hex
  conversion.
- ****************************************************************************/
+ */
 int char2num(char ch)
 {
   const char *pch;
@@ -275,9 +275,9 @@ int char2num(char ch)
   return pch - num_chars;
 }
 
-/************************************************************************/ /**
+/**
    Return the special with the given name, or S_LAST.
- ****************************************************************************/
+ */
 enum tile_special_type special_by_rule_name(const char *name)
 {
   int i;
@@ -291,9 +291,9 @@ enum tile_special_type special_by_rule_name(const char *name)
   return S_LAST;
 }
 
-/************************************************************************/ /**
+/**
    Return the untranslated name of the given special.
- ****************************************************************************/
+ */
 const char *special_rule_name(enum tile_special_type type)
 {
   fc_assert(type >= 0 && type < S_LAST);
@@ -301,9 +301,9 @@ const char *special_rule_name(enum tile_special_type type)
   return special_names[type];
 }
 
-/************************************************************************/ /**
+/**
    Get extra of the given special
- ****************************************************************************/
+ */
 struct extra_type *special_extra_get(int spe)
 {
   struct extra_type_list *elist =
@@ -316,10 +316,10 @@ struct extra_type *special_extra_get(int spe)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Return the resource type matching the identifier, or NULL when none
  matches.
- ****************************************************************************/
+ */
 struct extra_type *resource_by_identifier(const char identifier)
 {
   extra_type_by_cause_iterate(EC_RESOURCE, presource)
@@ -337,9 +337,9 @@ struct extra_type *resource_by_identifier(const char identifier)
  * Compatibility functions for loading a game.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Translate savegame secfile data from 2.3.x to 2.4.0 format.
- ****************************************************************************/
+ */
 static void compat_load_020400(struct loaddata *loading,
                                enum sgf_version format_class)
 {
@@ -552,9 +552,9 @@ static void compat_load_020400(struct loaddata *loading,
   }
 }
 
-/************************************************************************/ /**
+/**
    Callback to get name of old killcitizen setting bit.
- ****************************************************************************/
+ */
 static const char *killcitizen_enum_str(secfile_data_t data, int bit)
 {
   switch (bit) {
@@ -569,9 +569,9 @@ static const char *killcitizen_enum_str(secfile_data_t data, int bit)
   return NULL;
 }
 
-/************************************************************************/ /**
+/**
    Translate savegame secfile data from 2.4.x to 2.5.0 format.
- ****************************************************************************/
+ */
 static void compat_load_020500(struct loaddata *loading,
                                enum sgf_version format_class)
 {
@@ -660,9 +660,9 @@ static void compat_load_020500(struct loaddata *loading,
   }
 }
 
-/************************************************************************/ /**
+/**
    Return string representation of revolentype
- ****************************************************************************/
+ */
 static const char *revolentype_str(enum revolen_type type)
 {
   switch (type) {
@@ -679,9 +679,9 @@ static const char *revolentype_str(enum revolen_type type)
   return "";
 }
 
-/************************************************************************/ /**
+/**
    Translate savegame secfile data from 2.5.x to 2.6.0 format.
- ****************************************************************************/
+ */
 static void compat_load_020600(struct loaddata *loading,
                                enum sgf_version format_class)
 {
@@ -1280,9 +1280,9 @@ static void compat_load_020600(struct loaddata *loading,
   player_slots_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Increase turn value in secfile by one.
- ****************************************************************************/
+ */
 static int increase_secfile_turn_int(struct loaddata *loading,
                                      const char *key, int old_def,
                                      bool keep_default)
@@ -1299,12 +1299,12 @@ static int increase_secfile_turn_int(struct loaddata *loading,
   return value;
 }
 
-/************************************************************************/ /**
+/**
    Translate savegame secfile data from 2.6.x to 3.0.0 format.
    Note that even after 2.6 savegame has gone through this compatibility
    function, it's still 2.6 savegame in the sense that savegame2.c, and not
    savegame3.c, handles it.
- ****************************************************************************/
+ */
 static void compat_load_030000(struct loaddata *loading,
                                enum sgf_version format_class)
 {
@@ -1407,9 +1407,9 @@ static void compat_load_030000(struct loaddata *loading,
   secfile_replace_int(loading->file, num_settings, "settings.set_count");
 }
 
-/************************************************************************/ /*
+/*
    Insert server side agent information.
- ***************************************************************************/
+ */
 static void insert_server_side_agent(struct loaddata *loading,
                                      enum sgf_version format_class)
 {
@@ -1491,12 +1491,12 @@ static void insert_server_side_agent(struct loaddata *loading,
   player_slots_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Translate savegame secfile data from 3.0.x to 3.1.0 format.
    Note that even after 2.6 savegame has gone through all the compatibility
    functions, it's still 2.6 savegame in the sense that savegame2.c, and not
    savegame3.c, handles it.
- ****************************************************************************/
+ */
 static void compat_load_030100(struct loaddata *loading,
                                enum sgf_version format_class)
 {
@@ -1563,9 +1563,9 @@ static void compat_load_030100(struct loaddata *loading,
   insert_server_side_agent(loading, format_class);
 }
 
-/**********************************************************************/ /**
+/**
    Upgrade unit activity orders to unit action orders.
- **************************************************************************/
+ */
 static void unit_order_activity_to_action(struct unit *act_unit)
 {
   int i;
@@ -1623,9 +1623,9 @@ static void unit_order_activity_to_action(struct unit *act_unit)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Returns the opposite direction.
- ***********************************************************************/
+ */
 static enum direction8 dir_opposite(enum direction8 dir)
 {
   switch (dir) {
@@ -1650,9 +1650,9 @@ static enum direction8 dir_opposite(enum direction8 dir)
   return DIR8_ORIGIN;
 }
 
-/**********************************************************************/ /**
+/**
    Upgrade unit action order target encoding.
- **************************************************************************/
+ */
 static void upgrade_unit_order_targets(struct unit *act_unit)
 {
   int i;
@@ -1719,9 +1719,9 @@ static void upgrade_unit_order_targets(struct unit *act_unit)
   }
 }
 
-/************************************************************************/ /*
+/*
    Correct the server side agent information.
- ***************************************************************************/
+ */
 static void upgrade_server_side_agent(struct loaddata *loading)
 {
   players_iterate_alive(pplayer)
@@ -1737,9 +1737,9 @@ static void upgrade_server_side_agent(struct loaddata *loading)
   players_iterate_alive_end;
 }
 
-/************************************************************************/ /**
+/**
    Update loaded game data from 3.0.x to something usable by 3.1.0.
- ****************************************************************************/
+ */
 static void compat_post_load_030100(struct loaddata *loading,
                                     enum sgf_version format_class)
 {
@@ -1841,10 +1841,10 @@ static void compat_post_load_030100(struct loaddata *loading,
   players_iterate_alive_end;
 }
 
-/************************************************************************/ /**
+/**
    Translate savegame secfile data from earlier development version format
    to current one.
- ****************************************************************************/
+ */
 #ifdef FREECIV_DEV_SAVE_COMPAT
 static void compat_load_dev(struct loaddata *loading)
 {
@@ -2137,10 +2137,10 @@ static void compat_load_dev(struct loaddata *loading)
 #endif /* FREECIV_DEV_SAVE_COMPAT_3_1 */
 }
 
-/************************************************************************/ /**
+/**
    Update loaded game data from earlier development version to something
    usable by current Freeciv.
- ****************************************************************************/
+ */
 static void compat_post_load_dev(struct loaddata *loading)
 {
   int game_version;
@@ -2223,9 +2223,9 @@ static void compat_post_load_dev(struct loaddata *loading)
 }
 #endif /* FREECIV_DEV_SAVE_COMPAT */
 
-/************************************************************************/ /**
+/**
    Convert old ai level value to ai_level
- ****************************************************************************/
+ */
 enum ai_level ai_level_convert(int old_level)
 {
   switch (old_level) {
@@ -2252,9 +2252,9 @@ enum ai_level ai_level_convert(int old_level)
   return ai_level_invalid();
 }
 
-/************************************************************************/ /**
+/**
    Convert old barbarian type value to barbarian_type
- ****************************************************************************/
+ */
 enum barbarian_type barb_type_convert(int old_type)
 {
   switch (old_type) {
@@ -2269,25 +2269,25 @@ enum barbarian_type barb_type_convert(int old_type)
   return barbarian_type_invalid();
 }
 
-/**********************************************************************/ /**
+/**
    Assign a new base building task to unit
- **************************************************************************/
+ */
 void set_unit_activity_base(struct unit *punit, Base_type_id base)
 {
   set_unit_activity_targeted(punit, ACTIVITY_BASE,
                              base_extra_get(base_by_number(base)));
 }
 
-/**********************************************************************/ /**
+/**
    Assign a new road building task to unit
- **************************************************************************/
+ */
 void set_unit_activity_road(struct unit *punit, Road_type_id road)
 {
   set_unit_activity_targeted(punit, ACTIVITY_GEN_ROAD,
                              road_extra_get(road_by_number(road)));
 }
 
-/************************************************************************/ /**
+/**
    Returns the action id corresponding to the specified order id. If no
    corresponding action is found ACTION_NONE is returned.
 
@@ -2306,7 +2306,7 @@ void set_unit_activity_road(struct unit *punit, Road_type_id road)
 
    Should never be called from savegame3 after the 3.0 development version
    internal save game compatibility is removed.
- ****************************************************************************/
+ */
 int sg_order_to_action(int order, struct unit *act_unit,
                        struct tile *tgt_tile)
 {

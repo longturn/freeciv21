@@ -34,13 +34,13 @@
            named bv_* and the macros BV_* are defined.
  */
 
-/***********************************************************************/ /**
+/**
    Return whether two vectors: vec1 and vec2 have common
    bits. I.e. (vec1 & vec2) != 0.
 
    Don't call this function directly, use BV_CHECK_MASK macro
    instead. Don't call this function with two different bitvectors.
- ***************************************************************************/
+ */
 bool bv_check_mask(const unsigned char *vec1, const unsigned char *vec2,
                    size_t size1, size_t size2)
 {
@@ -57,10 +57,10 @@ bool bv_check_mask(const unsigned char *vec1, const unsigned char *vec2,
   return false;
 }
 
-/***********************************************************************/ /**
+/**
    Compares elements of two bitvectors. Both vectors are expected to have
    same number of elements, i.e. , size1 must be equal to size2.
- ***************************************************************************/
+ */
 bool bv_are_equal(const unsigned char *vec1, const unsigned char *vec2,
                   size_t size1, size_t size2)
 {
@@ -77,7 +77,7 @@ bool bv_are_equal(const unsigned char *vec1, const unsigned char *vec2,
   return true;
 }
 
-/***********************************************************************/ /**
+/**
    Set everything that is true in vec_from in vec_to. Stuff that already is
    true in vec_to aren't touched. (Bitwise inclusive OR assignment)
 
@@ -86,7 +86,7 @@ bool bv_are_equal(const unsigned char *vec1, const unsigned char *vec2,
 
    Don't call this function directly, use BV_SET_ALL_FROM macro
    instead.
- ***************************************************************************/
+ */
 void bv_set_all_from(unsigned char *vec_to, const unsigned char *vec_from,
                      size_t size_to, size_t size_from)
 {
@@ -99,7 +99,7 @@ void bv_set_all_from(unsigned char *vec_to, const unsigned char *vec_from,
   }
 }
 
-/***********************************************************************/ /**
+/**
    Clear everything that is true in vec_from in vec_to. Stuff that already
    is false in vec_to aren't touched.
 
@@ -108,7 +108,7 @@ void bv_set_all_from(unsigned char *vec_to, const unsigned char *vec_from,
 
    Don't call this function directly, use BV_CLR_ALL_FROM macro
    instead.
- ***************************************************************************/
+ */
 void bv_clr_all_from(unsigned char *vec_to, const unsigned char *vec_from,
                      size_t size_to, size_t size_from)
 {

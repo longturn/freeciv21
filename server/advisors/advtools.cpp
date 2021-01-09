@@ -19,13 +19,13 @@
 
 #include "advtools.h"
 
-/**********************************************************************/ /**
+/**
    Amortize means gradually paying off a cost or debt over time. In freeciv
    terms this means we calculate how much less worth something is to us
    depending on how long it will take to complete.
 
    This is based on a global interest rate as defined by the MORT value.
- **************************************************************************/
+ */
 adv_want amortize(adv_want benefit, int delay)
 {
   double discount = 1.0 - 1.0 / (static_cast<double>(MORT));

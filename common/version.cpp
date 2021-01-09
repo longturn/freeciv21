@@ -29,9 +29,9 @@
 #include "fc_gitrev_gen.h"
 #endif /* GITREV */
 
-/*******************************************************************/ /**
+/**
    Return string containing both name of Freeciv and version.
- ***********************************************************************/
+ */
 const char *freeciv_name_version()
 {
   static char msgbuf[256];
@@ -50,9 +50,9 @@ const char *freeciv_name_version()
   return msgbuf;
 }
 
-/*******************************************************************/ /**
+/**
    Return string describing version type.
- ***********************************************************************/
+ */
 const char *word_version()
 {
 #if IS_BETA_VERSION
@@ -62,10 +62,10 @@ const char *word_version()
 #endif
 }
 
-/*******************************************************************/ /**
+/**
    Returns string with git revision information if it is possible to
    determine. Can return also some fallback string or even NULL.
- ***********************************************************************/
+ */
 const char *fc_git_revision()
 {
 #if defined(GITREV) && !defined(FC_GITREV_OFF)
@@ -81,17 +81,17 @@ const char *fc_git_revision()
 #endif /* FC_GITREV_OFF */
 }
 
-/*******************************************************************/ /**
+/**
    Returns version string that can be used to compare two freeciv builds.
    This does not handle git revisions, as there's no way to compare
    which of the two commits is "higher".
- ***********************************************************************/
+ */
 const char *fc_comparable_version() { return VERSION_STRING; }
 
-/*******************************************************************/ /**
+/**
    Return the BETA message.
    If returns NULL, not a beta version.
- ***********************************************************************/
+ */
 const char *beta_message()
 {
 #if IS_BETA_VERSION
@@ -121,10 +121,10 @@ const char *beta_message()
 #endif /* IS_BETA_VERSION */
 }
 
-/*******************************************************************/ /**
+/**
    Return version string in a format suitable to be written to created
    datafiles as human readable information.
- ***********************************************************************/
+ */
 const char *freeciv_datafile_version()
 {
   static char buf[500] = {'\0'};

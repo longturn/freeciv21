@@ -26,9 +26,9 @@
 
 #include "aitraits.h"
 
-/**********************************************************************/ /**
+/**
    Initialize ai traits for player
- **************************************************************************/
+ */
 void ai_traits_init(struct player *pplayer)
 {
   enum trait tr;
@@ -53,9 +53,9 @@ void ai_traits_init(struct player *pplayer)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Free resources associated with player ai traits.
- **************************************************************************/
+ */
 void ai_traits_close(struct player *pplayer)
 {
   free(pplayer->ai_common.traits); // realloc
@@ -63,9 +63,9 @@ void ai_traits_close(struct player *pplayer)
   pplayer->ai_common.traits = NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Get current value of player trait
- **************************************************************************/
+ */
 int ai_trait_get_value(enum trait tr, struct player *pplayer)
 {
   int val =

@@ -36,14 +36,14 @@
 
 #include "reqtext.h"
 
-/*************************************************************/ /**
+/**
    Append text for the requirement. Something like
 
      "Requires knowledge of the technology Communism."
 
    pplayer may be NULL. Note that it must be updated everytime
    a new requirement type or range is defined.
- *****************************************************************/
+ */
 bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
                      const struct requirement *preq, enum rt_verbosity verb,
                      const char *prefix)
@@ -2854,9 +2854,9 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
   return false;
 }
 
-/*************************************************************/ /**
+/**
    Append text for the requirement. Added line ends to a newline.
- *****************************************************************/
+ */
 bool req_text_insert_nl(char *buf, size_t bufsz, struct player *pplayer,
                         const struct requirement *preq,
                         enum rt_verbosity verb, const char *prefix)

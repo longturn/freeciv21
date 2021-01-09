@@ -70,9 +70,9 @@
 static void check_city_feelings(const struct city *pcity, const char *file,
                                 const char *function, int line);
 
-/**********************************************************************/ /**
+/**
    Sanity checking on map (tile) specials.
- **************************************************************************/
+ */
 static void check_specials(const char *file, const char *function, int line)
 {
   whole_map_iterate(&(wld.map), ptile)
@@ -112,9 +112,9 @@ static void check_specials(const char *file, const char *function, int line)
   whole_map_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Sanity checking on fog-of-war (visibility, shared vision, etc.).
- **************************************************************************/
+ */
 static void check_fow(const char *file, const char *function, int line)
 {
   if (!game_was_started()) {
@@ -153,9 +153,9 @@ static void check_fow(const char *file, const char *function, int line)
       == government_by_number(game.info.government_during_revolution_id));
 }
 
-/**********************************************************************/ /**
+/**
    Miscellaneous sanity checks.
- **************************************************************************/
+ */
 static void check_misc(const char *file, const char *function, int line)
 {
   int nplayers = 0, nbarbs = 0;
@@ -180,9 +180,9 @@ static void check_misc(const char *file, const char *function, int line)
   SANITY_CHECK(normal_player_count() <= game.server.max_players);
 }
 
-/**********************************************************************/ /**
+/**
    Sanity checks on the map itself.  See also check_specials.
- **************************************************************************/
+ */
 static void check_map(const char *file, const char *function, int line)
 {
   whole_map_iterate(&(wld.map), ptile)
@@ -243,9 +243,9 @@ static void check_map(const char *file, const char *function, int line)
   whole_map_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Verify that the city itself has sane values.
- **************************************************************************/
+ */
 static bool check_city_good(struct city *pcity, const char *file,
                             const char *function, int line)
 {
@@ -334,9 +334,9 @@ static bool check_city_good(struct city *pcity, const char *file,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Sanity check city size versus worker and specialist counts.
- **************************************************************************/
+ */
 static void check_city_size(struct city *pcity, const char *file,
                             const char *function, int line)
 {
@@ -372,10 +372,10 @@ static void check_city_size(struct city *pcity, const char *file,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Verify that the number of people with feelings + specialists equal
    city size.
- **************************************************************************/
+ */
 static void check_city_feelings(const struct city *pcity, const char *file,
                                 const char *function, int line)
 {
@@ -400,9 +400,9 @@ static void check_city_feelings(const struct city *pcity, const char *file,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Verify that the city has sane values.
- **************************************************************************/
+ */
 void real_sanity_check_city(struct city *pcity, const char *file,
                             const char *function, int line)
 {
@@ -412,9 +412,9 @@ void real_sanity_check_city(struct city *pcity, const char *file,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Sanity checks on all cities in the world.
- **************************************************************************/
+ */
 static void check_cities(const char *file, const char *function, int line)
 {
   players_iterate(pplayer)
@@ -430,9 +430,9 @@ static void check_cities(const char *file, const char *function, int line)
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Sanity checks on all units in the world.
- **************************************************************************/
+ */
 static void check_units(const char *file, const char *function, int line)
 {
   players_iterate(pplayer)
@@ -536,9 +536,9 @@ static void check_units(const char *file, const char *function, int line)
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Sanity checks on all players.
- **************************************************************************/
+ */
 static void check_players(const char *file, const char *function, int line)
 {
   players_iterate(pplayer)
@@ -643,9 +643,9 @@ static void check_players(const char *file, const char *function, int line)
   teams_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Sanity checking on teams.
- **************************************************************************/
+ */
 static void check_teams(const char *file, const char *function, int line)
 {
   int count[MAX_NUM_TEAM_SLOTS];
@@ -673,9 +673,9 @@ static void check_teams(const char *file, const char *function, int line)
   team_slots_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Sanity checks on all players.
- **************************************************************************/
+ */
 static void check_researches(const char *file, const char *function,
                              int line)
 {
@@ -693,9 +693,9 @@ static void check_researches(const char *file, const char *function,
   researches_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Sanity checking on connections.
- **************************************************************************/
+ */
 static void check_connections(const char *file, const char *function,
                               int line)
 {
@@ -704,7 +704,7 @@ static void check_connections(const char *file, const char *function,
                >= conn_list_size(game.est_connections));
 }
 
-/**********************************************************************/ /**
+/**
    Do sanity checks on the server state.  Call this once per turn or
    whenever you feel like it.
 
@@ -712,7 +712,7 @@ static void check_connections(const char *file, const char *function,
    at some times the server isn't supposed to be in a sane state so you
    can't call it in the middle of an operation that is supposed to be
    atomic.
- **************************************************************************/
+ */
 void real_sanity_check(const char *file, const char *function, int line)
 {
   if (!map_is_empty()) {
@@ -731,10 +731,10 @@ void real_sanity_check(const char *file, const char *function, int line)
   check_connections(file, function, line);
 }
 
-/**********************************************************************/ /**
+/**
    Verify that the tile has sane values. This should be called after the
    terrain is changed.
- **************************************************************************/
+ */
 void real_sanity_check_tile(struct tile *ptile, const char *file,
                             const char *function, int line)
 {

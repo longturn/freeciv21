@@ -136,18 +136,18 @@ static bool read_a_line(struct inputfile *inf);
 
 Q_LOGGING_CATEGORY(inf_category, "freeciv.inputfile")
 
-/*******************************************************************/ /**
+/**
    Return true if c is a 'comment' character: '#' or ';'
- ***********************************************************************/
+ */
 template <class Char> static bool is_comment(Char c)
 {
   return (c == '#' || c == ';');
 }
 
-/*******************************************************************/ /**
+/**
    Set values to zeros; should have free'd/closed everything before
    this if appropriate.
- ***********************************************************************/
+ */
 static void init_zeros(struct inputfile *inf)
 {
   fc_assert_ret(NULL != inf);
@@ -165,9 +165,9 @@ static void init_zeros(struct inputfile *inf)
   inf->partial.reserve(200);
 }
 
-/*******************************************************************/ /**
+/**
    Check sensible values for an opened inputfile.
- ***********************************************************************/
+ */
 static bool inf_sanity_check(struct inputfile *inf)
 {
   fc_assert_ret_val(NULL != inf, false);
@@ -186,10 +186,10 @@ static bool inf_sanity_check(struct inputfile *inf)
   return true;
 }
 
-/*******************************************************************/ /**
+/**
    Return the filename the inputfile was loaded as, or "(anonymous)"
    if this inputfile was loaded from a stream rather than from a file.
- ***********************************************************************/
+ */
 static QString inf_filename(struct inputfile *inf)
 {
   if (inf->filename.isEmpty()) {
@@ -199,10 +199,10 @@ static QString inf_filename(struct inputfile *inf)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Open the file, and return an allocated, initialized structure.
    Returns NULL if the file could not be opened.
- ***********************************************************************/
+ */
 struct inputfile *inf_from_file(const QString &filename,
                                 datafilename_fn_t datafn)
 {
@@ -222,10 +222,10 @@ struct inputfile *inf_from_file(const QString &filename,
   return inf;
 }
 
-/*******************************************************************/ /**
+/**
    Open the stream, and return an allocated, initialized structure.
    Returns NULL if the file could not be opened.
- ***********************************************************************/
+ */
 struct inputfile *inf_from_stream(QIODevice *stream,
                                   datafilename_fn_t datafn)
 {
@@ -243,12 +243,12 @@ struct inputfile *inf_from_stream(QIODevice *stream,
   return inf;
 }
 
-/*******************************************************************/ /**
+/**
    Close the file and free associated memory, but don't recurse
    included_from files, and don't free the actual memory where
    the inf record is stored (ie, the memory where the users pointer
    points to).  This is used when closing an included file.
- ***********************************************************************/
+ */
 static void inf_close_partial(struct inputfile *inf)
 {
   fc_assert_ret(inf_sanity_check(inf));
@@ -274,12 +274,12 @@ static void inf_close_partial(struct inputfile *inf)
   qCDebug(inf_category) << "sub-closed ok";
 }
 
-/*******************************************************************/ /**
+/**
    Close the file and free associated memory, included any partially
    recursed included files, and the memory allocated for 'inf' itself.
    Should only be used on an actually open inputfile.
    After this, the pointer should not be used.
- ***********************************************************************/
+ */
 void inf_close(struct inputfile *inf)
 {
   fc_assert_ret(inf_sanity_check(inf));
@@ -293,9 +293,9 @@ void inf_close(struct inputfile *inf)
   qCDebug(inf_category) << "closed ok";
 }
 
-/*******************************************************************/ /**
+/**
    Return TRUE if have data for current line.
- ***********************************************************************/
+ */
 static bool have_line(struct inputfile *inf)
 {
   fc_assert_ret_val(inf_sanity_check(inf), false);
@@ -303,9 +303,9 @@ static bool have_line(struct inputfile *inf)
   return !inf->cur_line.isEmpty();
 }
 
-/*******************************************************************/ /**
+/**
    Return TRUE if current pos is at end of current line.
- ***********************************************************************/
+ */
 static bool at_eol(struct inputfile *inf)
 {
   fc_assert_ret_val(inf_sanity_check(inf), true);
@@ -314,9 +314,9 @@ static bool at_eol(struct inputfile *inf)
   return inf->cur_line_pos >= inf->cur_line.length();
 }
 
-/*******************************************************************/ /**
+/**
    Return TRUE if current pos is at end of file.
- ***********************************************************************/
+ */
 bool inf_at_eof(struct inputfile *inf)
 {
   fc_assert_ret_val(inf_sanity_check(inf), true);
@@ -325,14 +325,14 @@ bool inf_at_eof(struct inputfile *inf)
          && inf->cur_line_pos >= inf->cur_line.length();
 }
 
-/*******************************************************************/ /**
+/**
    Check for an include command, which is an isolated line with:
       *include "filename"
    If a file is included via this mechanism, returns 1, and sets up
    data appropriately: (*inf) will now correspond to the new file,
    which is opened but no data read, and inf->included_from is set
    to newly malloced memory which corresponds to the old file.
- ***********************************************************************/
+ */
 static bool check_include(struct inputfile *inf)
 {
   struct inputfile *new_inf, temp;
@@ -423,12 +423,12 @@ static bool check_include(struct inputfile *inf)
   return true;
 }
 
-/*******************************************************************/ /**
+/**
    Read a new line into cur_line.
    Increments line_num and cur_line_pos.
    Returns 0 if didn't read or other problem: treat as EOF.
    Strips newline from input.
- ***********************************************************************/
+ */
 static bool read_a_line(struct inputfile *inf)
 {
   fc_assert_ret_val(inf_sanity_check(inf), false);
@@ -464,11 +464,11 @@ static bool read_a_line(struct inputfile *inf)
   }
 }
 
-/*******************************************************************/ /**
+/**
    Return a detailed log message, including information on current line
    number etc. Message can be NULL: then just logs information on where
    we are in the file.
- ***********************************************************************/
+ */
 QString inf_log_str(struct inputfile *inf, const char *message, ...)
 {
   fc_assert_ret_val(inf_sanity_check(inf), NULL);
@@ -508,9 +508,9 @@ QString inf_log_str(struct inputfile *inf, const char *message, ...)
   return str;
 }
 
-/*******************************************************************/ /**
+/**
    Returns token of given type from given inputfile.
- ***********************************************************************/
+ */
 QString inf_token(struct inputfile *inf, enum inf_token_type type)
 {
   fc_assert_ret_val(inf_sanity_check(inf), NULL);
@@ -534,10 +534,10 @@ QString inf_token(struct inputfile *inf, enum inf_token_type type)
   return s;
 }
 
-/*******************************************************************/ /**
+/**
    Read as many tokens of specified type as possible, discarding
    the results; returns number of such tokens read and discarded.
- ***********************************************************************/
+ */
 int inf_discard_tokens(struct inputfile *inf, enum inf_token_type type)
 {
   int count = 0;
@@ -549,11 +549,11 @@ int inf_discard_tokens(struct inputfile *inf, enum inf_token_type type)
   return count;
 }
 
-/*******************************************************************/ /**
+/**
    Returns section name in current position of inputfile. Returns NULL
    if there is no section name on that position. Sets inputfile position
    after section name.
- ***********************************************************************/
+ */
 static QString get_token_section_name(struct inputfile *inf)
 {
   fc_assert_ret_val(have_line(inf), "");
@@ -574,10 +574,10 @@ static QString get_token_section_name(struct inputfile *inf)
   return inf->token;
 }
 
-/*******************************************************************/ /**
+/**
    Returns next entry name from inputfile. Skips white spaces and
    comments. Sets inputfile position after entry name.
- ***********************************************************************/
+ */
 static QString get_token_entry_name(struct inputfile *inf)
 {
   fc_assert_ret_val(have_line(inf), "");
@@ -624,10 +624,10 @@ static QString get_token_entry_name(struct inputfile *inf)
   return inf->token;
 }
 
-/*******************************************************************/ /**
+/**
    If inputfile is at end-of-line, frees current line, and returns " ".
    If there is still something on that line, returns "".
- ***********************************************************************/
+ */
 static QString get_token_eol(struct inputfile *inf)
 {
   fc_assert_ret_val(have_line(inf), "");
@@ -650,10 +650,10 @@ static QString get_token_eol(struct inputfile *inf)
   return inf->token;
 }
 
-/*******************************************************************/ /**
+/**
    Get a flag token of a single character, with optional
    preceeding whitespace.
- ***********************************************************************/
+ */
 static QString get_token_white_char(struct inputfile *inf, char target)
 {
   fc_assert_ret_val(have_line(inf), NULL);
@@ -672,33 +672,33 @@ static QString get_token_white_char(struct inputfile *inf, char target)
   return inf->token;
 }
 
-/*******************************************************************/ /**
+/**
    Get flag token for table start, or NULL if that is not next token.
- ***********************************************************************/
+ */
 static QString get_token_table_start(struct inputfile *inf)
 {
   return get_token_white_char(inf, '{');
 }
 
-/*******************************************************************/ /**
+/**
    Get flag token for table end, or NULL if that is not next token.
- ***********************************************************************/
+ */
 static QString get_token_table_end(struct inputfile *inf)
 {
   return get_token_white_char(inf, '}');
 }
 
-/*******************************************************************/ /**
+/**
    Get flag token comma, or NULL if that is not next token.
- ***********************************************************************/
+ */
 static QString get_token_comma(struct inputfile *inf)
 {
   return get_token_white_char(inf, ',');
 }
 
-/*******************************************************************/ /**
+/**
    This one is more complicated; note that it may read in multiple lines.
- ***********************************************************************/
+ */
 static QString get_token_value(struct inputfile *inf)
 {
   fc_assert_ret_val(have_line(inf), NULL);

@@ -26,9 +26,9 @@
 
 static struct clause_info clause_infos[CLAUSE_COUNT];
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff pplayer could do diplomancy in the game at all.
- **************************************************************************/
+ */
 bool diplomacy_possible(const struct player *pplayer1,
                         const struct player *pplayer2)
 {
@@ -54,9 +54,9 @@ bool diplomacy_possible(const struct player *pplayer1,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff pplayer could do diplomatic meetings with aplayer.
- **************************************************************************/
+ */
 bool could_meet_with_player(const struct player *pplayer,
                             const struct player *aplayer)
 {
@@ -72,9 +72,9 @@ bool could_meet_with_player(const struct player *pplayer,
                  > 0));
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff pplayer can get intelligence about aplayer.
- **************************************************************************/
+ */
 bool could_intel_with_player(const struct player *pplayer,
                              const struct player *aplayer)
 {
@@ -85,9 +85,9 @@ bool could_intel_with_player(const struct player *pplayer,
           || player_has_embassy(pplayer, aplayer)));
 }
 
-/**********************************************************************/ /**
+/**
    Initialize treaty structure between two players.
- **************************************************************************/
+ */
 void init_treaty(struct Treaty *ptreaty, struct player *plr0,
                  struct player *plr1)
 {
@@ -98,9 +98,9 @@ void init_treaty(struct Treaty *ptreaty, struct player *plr0,
   ptreaty->clauses = clause_list_new();
 }
 
-/**********************************************************************/ /**
+/**
    Free the clauses of a treaty.
- **************************************************************************/
+ */
 void clear_treaty(struct Treaty *ptreaty)
 {
   clause_list_iterate(ptreaty->clauses, pclause) { delete (pclause); }
@@ -108,9 +108,9 @@ void clear_treaty(struct Treaty *ptreaty)
   clause_list_destroy(ptreaty->clauses);
 }
 
-/**********************************************************************/ /**
+/**
    Remove clause from treaty
- **************************************************************************/
+ */
 bool remove_clause(struct Treaty *ptreaty, struct player *pfrom,
                    enum clause_type type, int val)
 {
@@ -132,9 +132,9 @@ bool remove_clause(struct Treaty *ptreaty, struct player *pfrom,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Add clause to treaty.
- **************************************************************************/
+ */
 bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
                 enum clause_type type, int val)
 {
@@ -226,9 +226,9 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Initialize clause info structures.
- **************************************************************************/
+ */
 void clause_infos_init()
 {
   int i;
@@ -241,9 +241,9 @@ void clause_infos_init()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Free memory associated with clause infos.
- **************************************************************************/
+ */
 void clause_infos_free()
 {
   int i;
@@ -254,9 +254,9 @@ void clause_infos_free()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Free memory associated with clause infos.
- **************************************************************************/
+ */
 struct clause_info *clause_info_get(enum clause_type type)
 {
   fc_assert(type >= 0 && type < CLAUSE_COUNT);
@@ -264,14 +264,14 @@ struct clause_info *clause_info_get(enum clause_type type)
   return &clause_infos[type];
 }
 
-/**********************************************************************/ /**
+/**
    Is clause enabled in this game?
    Currently this does not consider clause requirements that may change
    during the game, but returned value is constant for the given clause type
    thought the game. Try not to rely on that, though, as the goal is to
    change this so that also non-constant requirements will be considered
    in the future.
- **************************************************************************/
+ */
 bool clause_enabled(enum clause_type type, struct player *from,
                     struct player *to)
 {

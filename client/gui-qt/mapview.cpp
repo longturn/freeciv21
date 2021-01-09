@@ -62,17 +62,17 @@ extern int last_center_capital;
 extern int last_center_player_city;
 extern int last_center_enemy_city;
 
-/**********************************************************************/ /**
+/**
    Check if point x, y is in area (px -> pxe, py - pye)
- **************************************************************************/
+ */
 bool is_point_in_area(int x, int y, int px, int py, int pxe, int pye)
 {
   return x >= px && y >= py && x <= pxe && y <= pye;
 }
 
-/**********************************************************************/ /**
+/**
    Draws calculated trade routes
- **************************************************************************/
+ */
 void draw_calculated_trade_routes(QPainter *painter)
 {
   int dx, dy;
@@ -136,9 +136,9 @@ void draw_calculated_trade_routes(QPainter *painter)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Constructor for map
- **************************************************************************/
+ */
 map_view::map_view() : QWidget()
 {
   menu_click = false;
@@ -153,9 +153,9 @@ map_view::map_view() : QWidget()
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 }
 
-/**********************************************************************/ /**
+/**
    Updates cursor
- **************************************************************************/
+ */
 void map_view::update_cursor(enum cursor_type ct)
 {
   int i;
@@ -171,9 +171,9 @@ void map_view::update_cursor(enum cursor_type ct)
   setCursor(*(king()->fc_cursors[i][0]));
 }
 
-/**********************************************************************/ /**
+/**
    Hides all fcwidgets (reports etc). Used to make room for the city dialog.
- **************************************************************************/
+ */
 void map_view::hide_all_fcwidgets()
 {
   QList<fcwidget *> fcl = this->findChildren<fcwidget *>();
@@ -185,9 +185,9 @@ void map_view::hide_all_fcwidgets()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Shows all fcwidgets (reports etc). Used when closing the city dialog.
- **************************************************************************/
+ */
 void map_view::show_all_fcwidgets()
 {
   for (auto *widget : m_hidden_fcwidgets) {
@@ -196,9 +196,9 @@ void map_view::show_all_fcwidgets()
   m_hidden_fcwidgets.clear();
 }
 
-/**********************************************************************/ /**
+/**
    Timer for cursor
- **************************************************************************/
+ */
 void map_view::timer_event()
 {
   if (queen()->infotab->underMouse()
@@ -217,9 +217,9 @@ void map_view::timer_event()
   setCursor(*(king()->fc_cursors[cursor][cursor_frame]));
 }
 
-/**********************************************************************/ /**
+/**
    Updates fonts
- **************************************************************************/
+ */
 void map_view::update_font(const QString &name, const QFont &font)
 {
   if (name == fonts::city_names || name == fonts::city_productions) {
@@ -227,27 +227,27 @@ void map_view::update_font(const QString &name, const QFont &font)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Focus lost event
- **************************************************************************/
+ */
 void map_view::focusOutEvent(QFocusEvent *event)
 {
   Q_UNUSED(event)
   update_cursor(CURSOR_DEFAULT);
 }
 
-/**********************************************************************/ /**
+/**
    Leave event
- **************************************************************************/
+ */
 void map_view::leaveEvent(QEvent *event)
 {
   Q_UNUSED(event);
   update_cursor(CURSOR_DEFAULT);
 }
 
-/**********************************************************************/ /**
+/**
    Slot inherited from QPixamp
- **************************************************************************/
+ */
 void map_view::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
@@ -257,18 +257,18 @@ void map_view::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/**********************************************************************/ /**
+/**
    Redraws given rectangle on map
- **************************************************************************/
+ */
 void map_view::paint(QPainter *painter, QPaintEvent *event)
 {
   painter->drawPixmap(event->rect(), *mapview.store, event->rect());
   draw_calculated_trade_routes(painter);
 }
 
-/**********************************************************************/ /**
+/**
    Sets new point for new search
- **************************************************************************/
+ */
 void map_view::resume_searching(int pos_x, int pos_y, int &w, int &h,
                                 int wdth, int hght, int recursive_nr)
 {
@@ -290,12 +290,12 @@ void map_view::resume_searching(int pos_x, int pos_y, int &w, int &h,
   find_place(new_pos_x, new_pos_y, w, h, wdth, hght, recursive_nr);
 }
 
-/**********************************************************************/ /**
+/**
    Searches place for widget with size w and height h
    Starts looking from position pos_x, pos_y, going clockwork
    Returns position as (w,h)
    Along with resume_searching its recursive function.
- **************************************************************************/
+ */
 void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
                           int hght, int recursive_nr)
 {
@@ -351,7 +351,7 @@ void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Update the information label which gives info on the current unit
    and the tile under the current unit, for specified unit.  Note that
    in practice punit is always the focus unit.
@@ -362,7 +362,7 @@ void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
    related because the info label may includes "select destination"
    prompt etc).  And it may call update_unit_pix_label() to update the
    icons for units on this tile.
- **************************************************************************/
+ */
 void update_unit_info_label(struct unit_list *punitlist)
 {
   if (queen()->unitinfo_wdg->isVisible()) {
@@ -370,31 +370,31 @@ void update_unit_info_label(struct unit_list *punitlist)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Update the mouse cursor. Cursor type depends on what user is doing and
    pointing.
- **************************************************************************/
+ */
 void update_mouse_cursor(enum cursor_type new_cursor_type)
 {
   queen()->mapview_wdg->update_cursor(new_cursor_type);
 }
 
-/**********************************************************************/ /**
+/**
    Update the timeout display.  The timeout is the time until the turn
    ends, in seconds.
- **************************************************************************/
+ */
 void qtg_update_timeout_label()
 {
   queen()->sw_endturn->setCustomLabels(QString(get_timeout_label_text()));
   queen()->sw_endturn->updateFinalPixmap();
 }
 
-/**********************************************************************/ /**
+/**
    If do_restore is false it should change the turn button style (to
    draw the user's attention to it).  If called regularly from a timer
    this will give a blinking turn done button.  If do_restore is true
    this should reset the turn done button to the default style.
- **************************************************************************/
+ */
 void update_turn_done_button(bool do_restore)
 {
   if (!get_turn_done_button_state()) {
@@ -403,21 +403,21 @@ void update_turn_done_button(bool do_restore)
   sidebarBlinkEndturn(do_restore);
 }
 
-/**********************************************************************/ /**
+/**
    Set information for the indicator icons typically shown in the main
    client window.  The parameters tell which sprite to use for the
    indicator.
- **************************************************************************/
+ */
 void set_indicator_icons(QPixmap *bulb, QPixmap *sol, QPixmap *flake,
                          QPixmap *gov)
 {
   queen()->sw_indicators->updateFinalPixmap();
 }
 
-/**********************************************************************/ /**
+/**
    Flush the given part of the canvas buffer (if there is one) to the
    screen.
- **************************************************************************/
+ */
 static void flush_mapcanvas(int canvas_x, int canvas_y, int pixel_width,
                             int pixel_height)
 {
@@ -425,10 +425,10 @@ static void flush_mapcanvas(int canvas_x, int canvas_y, int pixel_width,
                                 pixel_height);
 }
 
-/**********************************************************************/ /**
+/**
    Mark the rectangular region as "dirty" so that we know to flush it
    later.
- **************************************************************************/
+ */
 void dirty_rect(int canvas_x, int canvas_y, int pixel_width,
                 int pixel_height)
 {
@@ -444,9 +444,9 @@ void dirty_rect(int canvas_x, int canvas_y, int pixel_width,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Mark the entire screen area as "dirty" so that we can flush it later.
- **************************************************************************/
+ */
 void dirty_all(void)
 {
   if (mapview_is_frozen()) {
@@ -455,11 +455,11 @@ void dirty_all(void)
   num_dirty_rects = MAX_DIRTY_RECTS;
 }
 
-/**********************************************************************/ /**
+/**
    Flush all regions that have been previously marked as dirty.  See
    dirty_rect and dirty_all.  This function is generally called after we've
    processed a batch of drawing operations.
- **************************************************************************/
+ */
 void flush_dirty(void)
 {
   if (mapview_is_frozen()) {
@@ -479,27 +479,27 @@ void flush_dirty(void)
   num_dirty_rects = 0;
 }
 
-/**********************************************************************/ /**
+/**
    Do any necessary synchronization to make sure the screen is up-to-date.
    The canvas should have already been flushed to screen via flush_dirty -
    all this function does is make sure the hardware has caught up.
- **************************************************************************/
+ */
 void gui_flush(void) { queen()->mapview_wdg->update(); }
 
-/**********************************************************************/ /**
+/**
    Update (refresh) the locations of the mapview scrollbars (if it uses
    them).
- **************************************************************************/
+ */
 void update_map_canvas_scrollbars(void) { queen()->mapview_wdg->update(); }
 
-/**********************************************************************/ /**
+/**
    Update (refresh) all city descriptions on the mapview.
- **************************************************************************/
+ */
 void update_city_descriptions(void) { update_map_canvas_visible(); }
 
-/**********************************************************************/ /**
+/**
    Put overlay tile to pixmap
- **************************************************************************/
+ */
 void pixmap_put_overlay_tile(int canvas_x, int canvas_y, QPixmap *ssprite)
 {
   if (!ssprite) {
@@ -509,9 +509,9 @@ void pixmap_put_overlay_tile(int canvas_x, int canvas_y, QPixmap *ssprite)
   /* PORTME */
 }
 
-/**********************************************************************/ /**
+/**
    Draw a cross-hair overlay on a tile.
- **************************************************************************/
+ */
 void put_cross_overlay_tile(struct tile *ptile)
 {
   float canvas_x, canvas_y;
@@ -522,17 +522,17 @@ void put_cross_overlay_tile(struct tile *ptile)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Area Selection
- **************************************************************************/
+ */
 void draw_selection_rectangle(int canvas_x, int canvas_y, int w, int h)
 {
   /* DON'T PORTME */
 }
 
-/**********************************************************************/ /**
+/**
    This function is called when the tileset is changed.
- **************************************************************************/
+ */
 void tileset_changed(void)
 {
   int i;
@@ -553,19 +553,19 @@ void tileset_changed(void)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return whether the map should be drawn or not.
- **************************************************************************/
+ */
 bool mapview_is_frozen() { return (0 < mapview_frozen_level); }
 
-/**********************************************************************/ /**
+/**
    Freeze the drawing of the map.
- **************************************************************************/
+ */
 void mapview_freeze() { mapview_frozen_level++; }
 
-/**********************************************************************/ /**
+/**
    Thaw the drawing of the map.
- **************************************************************************/
+ */
 void mapview_thaw()
 {
   if (1 < mapview_frozen_level) {
@@ -577,9 +577,9 @@ void mapview_thaw()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Constructor for info_tile
- **************************************************************************/
+ */
 info_tile::info_tile(struct tile *ptile, QWidget *parent) : QLabel(parent)
 {
   setParent(parent);
@@ -588,9 +588,9 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent) : QLabel(parent)
   calc_size();
 }
 
-/**********************************************************************/ /**
+/**
    Calculates size of info_tile and moves it to be fully visible
- **************************************************************************/
+ */
 void info_tile::calc_size()
 {
   QFontMetrics fm(info_font);
@@ -624,9 +624,9 @@ void info_tile::calc_size()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Redirected paint event for info_tile
- **************************************************************************/
+ */
 void info_tile::paint(QPainter *painter, QPaintEvent *event)
 {
   Q_UNUSED(event)
@@ -642,9 +642,9 @@ void info_tile::paint(QPainter *painter, QPaintEvent *event)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Paint event for info_tile
- **************************************************************************/
+ */
 void info_tile::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
@@ -654,9 +654,9 @@ void info_tile::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/**********************************************************************/ /**
+/**
    Updates fonts
- **************************************************************************/
+ */
 void info_tile::update_font(const QString &name, const QFont &font)
 {
   if (name == fonts::notify_label) {
@@ -666,14 +666,14 @@ void info_tile::update_font(const QString &name, const QFont &font)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Deletes current instance
- **************************************************************************/
+ */
 void info_tile::drop() { NFCN_FREE(m_instance); }
 
-/**********************************************************************/ /**
+/**
    Returns given instance
- **************************************************************************/
+ */
 info_tile *info_tile::i(struct tile *p)
 {
   if (!m_instance && p) {
@@ -682,9 +682,9 @@ info_tile *info_tile::i(struct tile *p)
   return m_instance;
 }
 
-/**********************************************************************/ /**
+/**
    Popups information label tile
- **************************************************************************/
+ */
 void popup_tile_info(struct tile *ptile)
 {
   struct unit *punit = nullptr;
@@ -702,9 +702,9 @@ void popup_tile_info(struct tile *ptile)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Popdowns information label tile
- **************************************************************************/
+ */
 void popdown_tile_info()
 {
   mapdeco_clear_crosshairs();
@@ -712,9 +712,9 @@ void popdown_tile_info()
   info_tile::i()->drop();
 }
 
-/**********************************************************************/ /**
+/**
    New turn callback
- **************************************************************************/
+ */
 void qtg_start_turn()
 {
   show_new_turn_info();
@@ -724,7 +724,7 @@ void qtg_start_turn()
   last_center_enemy_city = 0;
 }
 
-/************************************************************************/ /**
+/**
    Draw a description for the given city.  This description may include the
    name, turns-to-grow, production, and city turns-to-build (depending on
    client options).
@@ -735,7 +735,7 @@ void qtg_start_turn()
    while (*width, *height) should be set by show_city_desc to contain the
    width and height of the text block (centered directly underneath the
    city's tile).
- ****************************************************************************/
+ */
 void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
                     struct city *pcity, int *width, int *height)
 {

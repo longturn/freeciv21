@@ -74,9 +74,9 @@ static int assess_danger(struct ai_type *ait, struct city *pcity,
                          const struct civ_map *dmap,
                          player_unit_list_getter ul_cb);
 
-/**********************************************************************/ /**
+/**
    Choose the best unit the city can build to defend against attacker v.
- **************************************************************************/
+ */
 struct unit_type *dai_choose_defender_versus(struct city *pcity,
                                              struct unit *attacker)
 {
@@ -119,13 +119,13 @@ struct unit_type *dai_choose_defender_versus(struct city *pcity,
   return bestunit;
 }
 
-/**********************************************************************/ /**
+/**
    This function should assign a value to choice and want, where want is a
  value between 1 and 100.
 
    If choice is A_UNSET, this advisor doesn't want any particular tech
    researched at the moment.
- **************************************************************************/
+ */
 void military_advisor_choose_tech(struct player *pplayer,
                                   struct adv_choice *choice)
 {
@@ -133,11 +133,11 @@ void military_advisor_choose_tech(struct player *pplayer,
   adv_init_choice(choice);
 }
 
-/**********************************************************************/ /**
+/**
    Choose best attacker based on movement type. It chooses based on unit
    desirability without regard to cost, unless costs are equal. This is
    very wrong. FIXME, use amortize on time to build.
- **************************************************************************/
+ */
 static struct unit_type *dai_choose_attacker(struct ai_type *ait,
                                              struct city *pcity,
                                              enum terrain_class tc,
@@ -176,14 +176,14 @@ static struct unit_type *dai_choose_attacker(struct ai_type *ait,
   return bestid;
 }
 
-/**********************************************************************/ /**
+/**
    Choose best defender based on movement type. It chooses based on unit
    desirability without regard to cost, unless costs are equal. This is
    very wrong. FIXME, use amortize on time to build.
 
    We should only be passed with L_DEFEND_GOOD role for now, since this
    is the only role being considered worthy of bodyguarding in findjob.
- **************************************************************************/
+ */
 static struct unit_type *dai_choose_bodyguard(struct ai_type *ait,
                                               struct city *pcity,
                                               enum terrain_class tc,
@@ -236,9 +236,9 @@ static struct unit_type *dai_choose_bodyguard(struct ai_type *ait,
   return bestid;
 }
 
-/**********************************************************************/ /**
+/**
    Helper for assess_defense_quadratic and assess_defense_unit.
- **************************************************************************/
+ */
 static int base_assess_defense_unit(struct city *pcity, struct unit *punit,
                                     bool igwall, bool quadratic,
                                     int wall_value)
@@ -278,9 +278,9 @@ static int base_assess_defense_unit(struct city *pcity, struct unit *punit,
   return defense;
 }
 
-/**********************************************************************/ /**
+/**
    Need positive feedback in m_a_c_b and bodyguard routines. -- Syela
- **************************************************************************/
+ */
 int assess_defense_quadratic(struct ai_type *ait, struct city *pcity)
 {
   int defense = 0, walls = 0;
@@ -315,10 +315,10 @@ int assess_defense_quadratic(struct ai_type *ait, struct city *pcity)
   return defense * defense;
 }
 
-/**********************************************************************/ /**
+/**
    One unit only, mostly for findjob; handling boats correctly. 980803 --
  Syela
- **************************************************************************/
+ */
 int assess_defense_unit(struct ai_type *ait, struct city *pcity,
                         struct unit *punit, bool igwall)
 {
@@ -326,14 +326,14 @@ int assess_defense_unit(struct ai_type *ait, struct city *pcity,
                                   def_ai_city_data(pcity, ait)->wallvalue);
 }
 
-/**********************************************************************/ /**
+/**
    Most of the time we don't need/want positive feedback. -- Syela
 
    It's unclear whether this should treat settlers/caravans as defense. --
  Syela
    TODO: It looks like this is never used while deciding if we should attack
    pcity, if we have pcity defended properly, so I think it should. --pasky
- **************************************************************************/
+ */
 static int assess_defense_backend(struct ai_type *ait, struct city *pcity,
                                   bool igwall)
 {
@@ -349,26 +349,26 @@ static int assess_defense_backend(struct ai_type *ait, struct city *pcity,
   return defense;
 }
 
-/**********************************************************************/ /**
+/**
    Estimate defense strength of city
- **************************************************************************/
+ */
 int assess_defense(struct ai_type *ait, struct city *pcity)
 {
   return assess_defense_backend(ait, pcity, false);
 }
 
-/**********************************************************************/ /**
+/**
    Estimate defense strength of city without considering how buildings
    help defense
- **************************************************************************/
+ */
 static int assess_defense_igwall(struct ai_type *ait, struct city *pcity)
 {
   return assess_defense_backend(ait, pcity, true);
 }
 
-/**********************************************************************/ /**
+/**
    How dangerous and far a unit is for a city?
- **************************************************************************/
+ */
 static int assess_danger_unit(const struct city *pcity,
                               struct pf_reverse_map *pcity_map,
                               const struct unit *punit, int *move_time)
@@ -429,11 +429,11 @@ static int assess_danger_unit(const struct city *pcity,
   return danger * 100 / MAX(mod, 1);
 }
 
-/**********************************************************************/ /**
+/**
    Call assess_danger() for all cities owned by pplayer.
 
    This is necessary to initialize some ai data before some ai calculations.
- **************************************************************************/
+ */
 void dai_assess_danger_player(struct ai_type *ait, struct player *pplayer,
                               const struct civ_map *dmap)
 {
@@ -447,7 +447,7 @@ void dai_assess_danger_player(struct ai_type *ait, struct player *pplayer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Set (overwrite) our want for a building. Syela tries to explain:
 
      My first attempt to allow ng_wa >= 200 led to stupidity in cities
@@ -465,7 +465,7 @@ void dai_assess_danger_player(struct ai_type *ait, struct player *pplayer,
 
    This algorithm is very strange. But I created it by nesting up
    Syela's convoluted if ... else logic, and it seems to work. -- Per
- **************************************************************************/
+ */
 static void dai_reevaluate_building(struct city *pcity, adv_want *value,
                                     int urgency, int danger, int defense)
 {
@@ -482,7 +482,7 @@ static void dai_reevaluate_building(struct city *pcity, adv_want *value,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Create cached information about danger, urgency and grave danger to our
    cities.
 
@@ -499,7 +499,7 @@ static void dai_reevaluate_building(struct city *pcity, adv_want *value,
    FIXME: Due to the nature of assess_distance, a city will only be
    afraid of a boat laden with enemies if it stands on the coast (i.e.
    is directly reachable by this boat).
- **************************************************************************/
+ */
 static int assess_danger(struct ai_type *ait, struct city *pcity,
                          const struct civ_map *dmap,
                          player_unit_list_getter ul_cb)
@@ -712,10 +712,10 @@ static int assess_danger(struct ai_type *ait, struct city *pcity,
   return urgency;
 }
 
-/**********************************************************************/ /**
+/**
    How much we would want that unit to defend a city? (Do not use this
    function to find bodyguards for ships or air units.)
- **************************************************************************/
+ */
 int dai_unit_defence_desirability(struct ai_type *ait,
                                   const struct unit_type *punittype)
 {
@@ -749,9 +749,9 @@ int dai_unit_defence_desirability(struct ai_type *ait,
   return desire;
 }
 
-/**********************************************************************/ /**
+/**
    How much we would want that unit to attack with?
- **************************************************************************/
+ */
 int dai_unit_attack_desirability(struct ai_type *ait,
                                  const struct unit_type *punittype)
 {
@@ -781,11 +781,11 @@ int dai_unit_attack_desirability(struct ai_type *ait,
   return desire;
 }
 
-/**********************************************************************/ /**
+/**
    What would be the best defender for that city? Records the best defender
    type in choice. Also sets the technology want for the units we can't
    build yet.
- **************************************************************************/
+ */
 bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
                                struct city *pcity, int danger,
                                struct adv_choice *choice)
@@ -931,7 +931,7 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    This function decides, what unit would be best for erasing enemy. It is
    called, when we just want to kill something, we've found it but we don't
    have the unit for killing that built yet - here we'll choose the type of
@@ -947,7 +947,7 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
    'ptile' is location of the target.
    best_choice is pre-filled with our current choice, we only
    consider units who can move in all the same terrains for best_choice.
- **************************************************************************/
+ */
 static void
 process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
                       const struct unit_type *victim_unit_type,
@@ -1194,7 +1194,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
   simple_ai_unit_type_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    This function
    1. receives (in myunit) a first estimate of what we would like to build.
    2. finds a potential victim for it.
@@ -1204,7 +1204,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
    5. if we still want to attack, records the best attacker in choice.
    If the target is overseas, the function might suggest building a ferry
    to carry a land attack unit, instead of the land attack unit itself.
- **************************************************************************/
+ */
 static struct adv_choice *kill_something_with(struct ai_type *ait,
                                               struct player *pplayer,
                                               struct city *pcity,
@@ -1398,11 +1398,11 @@ cleanup:
   return choice;
 }
 
-/**********************************************************************/ /**
+/**
    This function should assign a value to choice and want and type,
    where want is a value between 1 and 100.
    if want is 0 this advisor doesn't want anything
- **************************************************************************/
+ */
 static void dai_unit_consider_bodyguard(struct ai_type *ait,
                                         struct city *pcity,
                                         struct unit_type *punittype,
@@ -1431,14 +1431,14 @@ static void dai_unit_consider_bodyguard(struct ai_type *ait,
   unit_virtual_destroy(virtualunit);
 }
 
-/**********************************************************************/ /**
+/**
    Before building a military unit, AI builds a barracks/port/airport
    NB: It is assumed this function isn't called in an emergency
    situation, when we need a defender _now_.
 
    TODO: something more sophisticated, like estimating future demand
    for military units, considering Sun Tzu instead.
- **************************************************************************/
+ */
 static void adjust_ai_unit_choice(struct city *pcity,
                                   struct adv_choice *choice)
 {
@@ -1467,11 +1467,11 @@ static void adjust_ai_unit_choice(struct city *pcity,
   }
 }
 
-/**********************************************************************/ /**
+/**
    This function selects either a defender or an attacker to be built.
    It records its choice into adv_choice struct.
    If 'choice->want' is 0 this advisor doesn't want anything.
- **************************************************************************/
+ */
 struct adv_choice *military_advisor_choose_build(
     struct ai_type *ait, struct player *pplayer, struct city *pcity,
     const struct civ_map *mamap, player_unit_list_getter ul_cb)

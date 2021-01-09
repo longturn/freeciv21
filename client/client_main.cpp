@@ -160,10 +160,10 @@ bool hackless = false;
 
 static bool client_quitting = false;
 
-/**********************************************************************/ /**
+/**
    Convert a text string from the internal to the data encoding, when it
    is written to the network.
- **************************************************************************/
+ */
 static char *put_conv(const char *src, size_t *length)
 {
   char *out = internal_to_data_string_malloc(src);
@@ -177,11 +177,11 @@ static char *put_conv(const char *src, size_t *length)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Convert a text string from the data to the internal encoding when it is
    first read from the network.  Returns FALSE if the destination isn't
    large enough or the source was bad.
- **************************************************************************/
+ */
 static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
 {
   Q_UNUSED(nsrc)
@@ -208,24 +208,24 @@ static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
   return ret;
 }
 
-/**********************************************************************/ /**
+/**
    Set up charsets for the client.
- **************************************************************************/
+ */
 static void charsets_init()
 {
   dio_set_put_conv_callback(put_conv);
   dio_set_get_conv_callback(get_conv);
 }
 
-/**********************************************************************/ /**
+/**
    This is called at program exit in any emergency. This is registered
    as at_quick_exit() callback, so no destructor kind of actions here
- **************************************************************************/
+ */
 static void emergency_exit() { client_kill_server(true); }
 
-/**********************************************************************/ /**
+/**
    This is called at program exit.
- **************************************************************************/
+ */
 static void at_exit()
 {
   emergency_exit();
@@ -234,9 +234,9 @@ static void at_exit()
   fc_destroy_ow_mutex();
 }
 
-/**********************************************************************/ /**
+/**
    Called only by set_client_state() below.
- **************************************************************************/
+ */
 static void client_game_init()
 {
   client.conn.playing = NULL;
@@ -255,9 +255,9 @@ static void client_game_init()
               mapimg_client_plrcolor_get);
 }
 
-/**********************************************************************/ /**
+/**
    Called by set_client_state() and client_exit() below.
- **************************************************************************/
+ */
 static void client_game_free()
 {
   editgui_popdown_all();
@@ -283,10 +283,10 @@ static void client_game_free()
   client.conn.observer = false;
 }
 
-/**********************************************************************/ /**
+/**
    Called only by set_client_state() below.  Just free what is needed to
    change view (player target).
- **************************************************************************/
+ */
 static void client_game_reset()
 {
   editgui_popdown_all();
@@ -305,9 +305,9 @@ static void client_game_reset()
   link_marks_init();
 }
 
-/**********************************************************************/ /**
+/**
    Entry point for common client code.
- **************************************************************************/
+ */
 int client_main(int argc, char *argv[])
 {
   QApplication app(argc, argv);
@@ -595,9 +595,9 @@ int client_main(int argc, char *argv[])
   return EXIT_SUCCESS;
 }
 
-/**********************************************************************/ /**
+/**
    Write messages from option saving to the log.
- **************************************************************************/
+ */
 static void log_option_save_msg(QtMsgType lvl, const QString &msg)
 {
   switch (lvl) {
@@ -619,10 +619,10 @@ static void log_option_save_msg(QtMsgType lvl, const QString &msg)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Main client execution stop function. This calls ui_exit() and not the
    other way around.
- **************************************************************************/
+ */
 void client_exit()
 {
   if (client_state() >= C_S_PREPARING) {
@@ -662,9 +662,9 @@ void client_exit()
   exit(EXIT_SUCCESS);
 }
 
-/**********************************************************************/ /**
+/**
    Handle packet received from server.
- **************************************************************************/
+ */
 void client_packet_input(void *packet, int type)
 {
   if (!client.conn.established && PACKET_CONN_PING != type
@@ -683,14 +683,14 @@ void client_packet_input(void *packet, int type)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Handle user ending his/her turn.
- **************************************************************************/
+ */
 void user_ended_turn() { send_turn_done(); }
 
-/**********************************************************************/ /**
+/**
    Send information about player having finished his/her turn to server.
- **************************************************************************/
+ */
 void send_turn_done()
 {
   log_debug("send_turn_done() can_end_turn=%d", can_end_turn());
@@ -717,17 +717,17 @@ void send_turn_done()
   update_turn_done_button_state();
 }
 
-/**********************************************************************/ /**
+/**
    Send request for some report to server
- **************************************************************************/
+ */
 void send_report_request(enum report_type type)
 {
   dsend_packet_report_req(&client.conn, type);
 }
 
-/**********************************************************************/ /**
+/**
    Change client state.
- **************************************************************************/
+ */
 void set_client_state(enum client_states newstate)
 {
   enum client_states oldstate = civclient_state;
@@ -908,14 +908,14 @@ void set_client_state(enum client_states newstate)
   set_server_busy(false);
 }
 
-/**********************************************************************/ /**
+/**
    Return current client state.
- **************************************************************************/
+ */
 enum client_states client_state() { return civclient_state; }
 
-/**********************************************************************/ /**
+/**
    Remove pconn from all connection lists in client, then free it.
- **************************************************************************/
+ */
 void client_remove_cli_conn(struct connection *pconn)
 {
   fc_assert_msg(pconn != NULL, "Trying to remove a non existing connection");
@@ -929,10 +929,10 @@ void client_remove_cli_conn(struct connection *pconn)
   delete pconn;
 }
 
-/**********************************************************************/ /**
+/**
    Remove (and free) all connections from all connection lists in client.
    Assumes game.all_connections is properly maintained with all connections.
- **************************************************************************/
+ */
 void client_remove_all_cli_conn()
 {
   fc_assert_msg(game.all_connections != NULL, "Connection list missing");
@@ -943,17 +943,17 @@ void client_remove_all_cli_conn()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Send attribute block.
- **************************************************************************/
+ */
 void send_attribute_block_request()
 {
   send_packet_player_attribute_block(&client.conn);
 }
 
-/**********************************************************************/ /**
+/**
    Returns whether client is observer.
- **************************************************************************/
+ */
 bool client_is_observer()
 {
   return client.conn.established && client.conn.observer;
@@ -975,12 +975,12 @@ static bool waiting_turn_change = false;
 static int seconds_shown_to_turndone;
 static int seconds_shown_to_new_turn;
 
-/**********************************************************************/ /**
+/**
    Reset the number of seconds to turndone from an "authentic" source.
 
    The seconds are taken as a double even though most callers will just
    know an integer value.
- **************************************************************************/
+ */
 void set_miliseconds_to_turndone(int miliseconds)
 {
   if (current_turn_timeout() > 0) {
@@ -994,14 +994,14 @@ void set_miliseconds_to_turndone(int miliseconds)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Are we in turn-change wait state?
- **************************************************************************/
+ */
 bool is_waiting_turn_change() { return waiting_turn_change; }
 
-/**********************************************************************/ /**
+/**
    Start waiting of the server turn change activities.
- **************************************************************************/
+ */
 void start_turn_change_wait()
 {
   seconds_shown_to_new_turn = ceil(game.tinfo.last_turn_change_time) + 0.1;
@@ -1010,19 +1010,19 @@ void start_turn_change_wait()
   waiting_turn_change = true;
 }
 
-/**********************************************************************/ /**
+/**
    Server is responsive again
- **************************************************************************/
+ */
 void stop_turn_change_wait()
 {
   waiting_turn_change = false;
   update_timeout_label();
 }
 
-/**********************************************************************/ /**
+/**
    Return the number of seconds until turn-done. Don't call this unless
    current_turn_timeout() != 0.
- **************************************************************************/
+ */
 int get_seconds_to_turndone()
 {
   if (current_turn_timeout() > 0) {
@@ -1033,17 +1033,17 @@ int get_seconds_to_turndone()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return the number of seconds until turn-done.  Don't call this unless
    current_turn_timeout() != 0.
- **************************************************************************/
+ */
 int get_seconds_to_new_turn() { return seconds_shown_to_new_turn; }
 
-/**********************************************************************/ /**
+/**
    This function should be called at least once per second.  It does various
    updates (idle animations and timeout updates).  It returns the number of
    seconds until it should be called again.
- **************************************************************************/
+ */
 double real_timer_callback()
 {
   double time_until_next_call = 1.0;
@@ -1107,28 +1107,28 @@ double real_timer_callback()
   return MAX(time_until_next_call, 0.05);
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the client can control player.
- **************************************************************************/
+ */
 bool can_client_control()
 {
   return (NULL != client.conn.playing && !client_is_observer());
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the client can issue orders (such as giving unit
    commands).  This function should be called each time before allowing the
    user to give an order.
- **************************************************************************/
+ */
 bool can_client_issue_orders()
 {
   return (can_client_control() && C_S_RUNNING == client_state());
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the client can do diplomatic meetings with another
    given player.
- **************************************************************************/
+ */
 bool can_meet_with_player(const struct player *pplayer)
 {
   return (can_client_issue_orders()
@@ -1136,10 +1136,10 @@ bool can_meet_with_player(const struct player *pplayer)
           && could_meet_with_player(client.conn.playing, pplayer));
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the client can get intelligence from another
    given player.
- **************************************************************************/
+ */
 bool can_intel_with_player(const struct player *pplayer)
 {
   return (client_is_observer()
@@ -1147,21 +1147,21 @@ bool can_intel_with_player(const struct player *pplayer)
               && could_intel_with_player(client.conn.playing, pplayer)));
 }
 
-/**********************************************************************/ /**
+/**
    Return TRUE if the client can change the view; i.e. if the mapview is
    active.  This function should be called each time before allowing the
    user to do mapview actions.
- **************************************************************************/
+ */
 bool can_client_change_view()
 {
   return ((NULL != client.conn.playing || client_is_observer())
           && (C_S_RUNNING == client_state() || C_S_OVER == client_state()));
 }
 
-/**********************************************************************/ /**
+/**
    Sets if server is considered busy. Currently it is considered busy
    between turns.
- **************************************************************************/
+ */
 void set_server_busy(bool busy)
 {
   if (busy != server_busy) {
@@ -1173,22 +1173,22 @@ void set_server_busy(bool busy)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns if server is considered busy at the moment
- **************************************************************************/
+ */
 bool is_server_busy() { return server_busy; }
 
-/**********************************************************************/ /**
+/**
    Returns whether client is global observer
- **************************************************************************/
+ */
 bool client_is_global_observer()
 {
   return client.conn.playing == NULL && client.conn.observer;
 }
 
-/**********************************************************************/ /**
+/**
    Returns number of player attached to client.
- **************************************************************************/
+ */
 int client_player_number()
 {
   if (client.conn.playing == NULL) {
@@ -1197,20 +1197,20 @@ int client_player_number()
   return player_number(client.conn.playing);
 }
 
-/**********************************************************************/ /**
+/**
    Either controlling or observing.
- **************************************************************************/
+ */
 bool client_has_player() { return client.conn.playing != NULL; }
 
-/**********************************************************************/ /**
+/**
    Either controlling or observing.
- **************************************************************************/
+ */
 struct player *client_player() { return client.conn.playing; }
 
-/**********************************************************************/ /**
+/**
    Return the vision of the player on a tile. Client version of
    ./server/maphand/map_is_known_and_seen().
- **************************************************************************/
+ */
 bool client_map_is_known_and_seen(const struct tile *ptile,
                                   const struct player *pplayer,
                                   enum vision_layer vlayer)
@@ -1218,9 +1218,9 @@ bool client_map_is_known_and_seen(const struct tile *ptile,
   return pplayer->client.tile_vision[vlayer]->at(tile_index(ptile));
 }
 
-/**********************************************************************/ /**
+/**
    Returns the id of the city the player believes exists at 'ptile'.
- **************************************************************************/
+ */
 static int client_plr_tile_city_id_get(const struct tile *ptile,
                                        const struct player *pplayer)
 {
@@ -1232,9 +1232,9 @@ static int client_plr_tile_city_id_get(const struct tile *ptile,
   return pcity ? pcity->id : IDENTITY_NUMBER_ZERO;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the id of the server setting with the specified name.
- **************************************************************************/
+ */
 static server_setting_id client_ss_by_name(const char *name)
 {
   struct option *pset = optset_option_by_name(server_optset, name);
@@ -1247,9 +1247,9 @@ static server_setting_id client_ss_by_name(const char *name)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the name of the server setting with the specified id.
- **************************************************************************/
+ */
 static const char *client_ss_name_get(server_setting_id id)
 {
   struct option *pset = optset_option_by_number(server_optset, id);
@@ -1262,9 +1262,9 @@ static const char *client_ss_name_get(server_setting_id id)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the type of the server setting with the specified id.
- **************************************************************************/
+ */
 static enum sset_type client_ss_type_get(server_setting_id id)
 {
   enum option_type opt_type;
@@ -1303,9 +1303,9 @@ static enum sset_type client_ss_type_get(server_setting_id id)
   return static_cast<enum sset_type>(opt_type);
 }
 
-/**********************************************************************/ /**
+/**
    Returns the value of the boolean server setting with the specified id.
- **************************************************************************/
+ */
 static bool client_ss_val_bool_get(server_setting_id id)
 {
   struct option *pset = optset_option_by_number(server_optset, id);
@@ -1318,9 +1318,9 @@ static bool client_ss_val_bool_get(server_setting_id id)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the value of the integer server setting with the specified id.
- **************************************************************************/
+ */
 static int client_ss_val_int_get(server_setting_id id)
 {
   struct option *pset = optset_option_by_number(server_optset, id);
@@ -1333,9 +1333,9 @@ static int client_ss_val_int_get(server_setting_id id)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the value of the bitwise server setting with the specified id.
- **************************************************************************/
+ */
 static unsigned int client_ss_val_bitwise_get(server_setting_id id)
 {
   struct option *pset = optset_option_by_number(server_optset, id);
@@ -1348,9 +1348,9 @@ static unsigned int client_ss_val_bitwise_get(server_setting_id id)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Initialize client specific functions.
- **************************************************************************/
+ */
 static void fc_interface_init_client()
 {
   struct functions *funcs = fc_interface_funcs();
@@ -1372,9 +1372,9 @@ static void fc_interface_init_client()
   fc_interface_init();
 }
 
-/**********************************************************************/ /**
+/**
    Helper function for the mapimg module - tile knowledge.
- **************************************************************************/
+ */
 static enum known_type mapimg_client_tile_known(const struct tile *ptile,
                                                 const struct player *pplayer,
                                                 bool knowledge)
@@ -1387,9 +1387,9 @@ static enum known_type mapimg_client_tile_known(const struct tile *ptile,
   return tile_get_known(ptile, pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Helper function for the mapimg module - tile terrain.
- **************************************************************************/
+ */
 static struct terrain *
 mapimg_client_tile_terrain(const struct tile *ptile,
                            const struct player *pplayer, bool knowledge)
@@ -1399,9 +1399,9 @@ mapimg_client_tile_terrain(const struct tile *ptile,
   return tile_terrain(ptile);
 }
 
-/**********************************************************************/ /**
+/**
    Helper function for the mapimg module - tile owner.
- **************************************************************************/
+ */
 static struct player *mapimg_client_tile_owner(const struct tile *ptile,
                                                const struct player *pplayer,
                                                bool knowledge)
@@ -1411,9 +1411,9 @@ static struct player *mapimg_client_tile_owner(const struct tile *ptile,
   return tile_owner(ptile);
 }
 
-/**********************************************************************/ /**
+/**
    Helper function for the mapimg module - city owner.
- **************************************************************************/
+ */
 static struct player *mapimg_client_tile_city(const struct tile *ptile,
                                               const struct player *pplayer,
                                               bool knowledge)
@@ -1429,9 +1429,9 @@ static struct player *mapimg_client_tile_city(const struct tile *ptile,
   return city_owner(tile_city(ptile));
 }
 
-/**********************************************************************/ /**
+/**
    Helper function for the mapimg module - unit owner.
- **************************************************************************/
+ */
 static struct player *mapimg_client_tile_unit(const struct tile *ptile,
                                               const struct player *pplayer,
                                               bool knowledge)
@@ -1447,15 +1447,15 @@ static struct player *mapimg_client_tile_unit(const struct tile *ptile,
   return unit_owner(unit_list_get(ptile->units, 0));
 }
 
-/**********************************************************************/ /**
+/**
    Helper function for the mapimg module - number of player colors.
- **************************************************************************/
+ */
 static int mapimg_client_plrcolor_count() { return player_count(); }
 
-/**********************************************************************/ /**
+/**
    Helper function for the mapimg module - one player color. For the client
    only the colors of the defined players are shown.
- **************************************************************************/
+ */
 static struct rgbcolor *mapimg_client_plrcolor_get(int i)
 {
   int count = 0;
@@ -1476,12 +1476,12 @@ static struct rgbcolor *mapimg_client_plrcolor_get(int i)
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Is the client marked as one going down?
- **************************************************************************/
+ */
 bool is_client_quitting() { return client_quitting; }
 
-/**********************************************************************/ /**
+/**
    Mark client as one going to quit as soon as possible,
- **************************************************************************/
+ */
 void start_quitting() { client_quitting = true; }

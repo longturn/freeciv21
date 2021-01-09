@@ -23,10 +23,10 @@
 #include "tile.h"
 #include "traderoutes.h"
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the target_tile it self and all tiles cardinally
    adjacent to it are seen by pow_player.
- **************************************************************************/
+ */
 static bool is_tile_seen_cadj(const struct player *pow_player,
                               const struct tile *target_tile)
 {
@@ -48,10 +48,10 @@ static bool is_tile_seen_cadj(const struct player *pow_player,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the target_tile it self and all tiles adjacent to it
    are seen by pow_player.
- **************************************************************************/
+ */
 static bool is_tile_seen_adj(const struct player *pow_player,
                              const struct tile *target_tile)
 {
@@ -73,9 +73,9 @@ static bool is_tile_seen_adj(const struct player *pow_player,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff all tiles of a city are seen by pow_player.
- **************************************************************************/
+ */
 static bool is_tile_seen_city(const struct player *pow_player,
                               const struct city *target_city)
 {
@@ -98,10 +98,10 @@ static bool is_tile_seen_city(const struct player *pow_player,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff all the tiles of a city and all the tiles of its trade
    partners are seen by pow_player.
- **************************************************************************/
+ */
 static bool is_tile_seen_traderoute(const struct player *pow_player,
                                     const struct city *target_city)
 {
@@ -128,10 +128,10 @@ static bool is_tile_seen_traderoute(const struct player *pow_player,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff pplayer can see all the symmetric diplomatic
    relationships of tplayer.
- **************************************************************************/
+ */
 static bool can_plr_see_all_sym_diplrels_of(const struct player *pplayer,
                                             const struct player *tplayer)
 {
@@ -153,14 +153,14 @@ static bool can_plr_see_all_sym_diplrels_of(const struct player *pplayer,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Is an evaluation of the requirement accurate when pow_player evaluates
    it?
 
    TODO: Move the data to a data file. That will
          - let non programmers help complete it and/or fix what is wrong
          - let clients not written in C use the data
- **************************************************************************/
+ */
 static bool is_req_knowable(
     const struct player *pow_player, const struct player *target_player,
     const struct player *other_player, const struct city *target_city,
@@ -629,11 +629,11 @@ static bool is_req_knowable(
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Evaluate a single requirement given pow_player's knowledge.
 
    Note: Assumed to use pow_player's data.
- **************************************************************************/
+ */
 enum fc_tristate mke_eval_req(
     const struct player *pow_player, const struct player *target_player,
     const struct player *other_player, const struct city *target_city,
@@ -666,11 +666,11 @@ enum fc_tristate mke_eval_req(
   }
 }
 
-/**********************************************************************/ /**
+/**
    Evaluate a requirement vector given pow_player's knowledge.
 
    Note: Assumed to use pow_player's data.
- **************************************************************************/
+ */
 enum fc_tristate mke_eval_reqs(
     const struct player *pow_player, const struct player *target_player,
     const struct player *other_player, const struct city *target_city,
@@ -701,9 +701,9 @@ enum fc_tristate mke_eval_reqs(
   return result;
 }
 
-/**********************************************************************/ /**
+/**
    Can pow_player see the techs of target player?
- **************************************************************************/
+ */
 bool can_see_techs_of_target(const struct player *pow_player,
                              const struct player *target_player)
 {

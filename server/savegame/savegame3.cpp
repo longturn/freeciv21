@@ -410,9 +410,9 @@ static void sg_save_mapimg(struct savedata *saving);
 static void sg_load_sanitycheck(struct loaddata *loading);
 static void sg_save_sanitycheck(struct savedata *saving);
 
-/************************************************************************/ /**
+/**
    Main entry point for saving a game in savegame3 format.
- ****************************************************************************/
+ */
 void savegame3_save(struct section_file *sfile, const char *save_reason,
                     bool scenario)
 {
@@ -434,9 +434,9 @@ void savegame3_save(struct section_file *sfile, const char *save_reason,
  * Basic load / save functions.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Really loading the savegame.
- ****************************************************************************/
+ */
 void savegame3_load(struct section_file *file)
 {
   struct loaddata *loading;
@@ -501,9 +501,9 @@ void savegame3_load(struct section_file *file)
   }
 }
 
-/************************************************************************/ /**
+/**
    Really save the game to a file.
- ****************************************************************************/
+ */
 static void savegame3_save_real(struct section_file *file,
                                 const char *save_reason, bool scenario)
 {
@@ -555,9 +555,9 @@ static void savegame3_save_real(struct section_file *file,
   }
 }
 
-/************************************************************************/ /**
+/**
    Create new loaddata item for given section file.
- ****************************************************************************/
+ */
 static struct loaddata *loaddata_new(struct section_file *file)
 {
   struct loaddata *loading = new loaddata[1]();
@@ -592,9 +592,9 @@ static struct loaddata *loaddata_new(struct section_file *file)
   return loading;
 }
 
-/************************************************************************/ /**
+/**
    Free resources allocated for loaddata item.
- ****************************************************************************/
+ */
 static void loaddata_destroy(struct loaddata *loading)
 {
   NFCPP_FREE(loading->improvement.order);
@@ -611,9 +611,9 @@ static void loaddata_destroy(struct loaddata *loading)
   delete[] loading;
 }
 
-/************************************************************************/ /**
+/**
    Create new savedata item for given file.
- ****************************************************************************/
+ */
 static struct savedata *savedata_new(struct section_file *file,
                                      const char *save_reason, bool scenario)
 {
@@ -630,18 +630,18 @@ static struct savedata *savedata_new(struct section_file *file,
   return saving;
 }
 
-/************************************************************************/ /**
+/**
    Free resources allocated for savedata item
- ****************************************************************************/
+ */
 static void savedata_destroy(struct savedata *saving) { free(saving); }
 
 /* =======================================================================
  * Helper functions.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Returns an order for a character identifier.  See also order2char.
- ****************************************************************************/
+ */
 static enum unit_orders char2order(char order)
 {
   switch (order) {
@@ -666,9 +666,9 @@ static enum unit_orders char2order(char order)
   return ORDER_LAST;
 }
 
-/************************************************************************/ /**
+/**
    Returns a character identifier for an order.  See also char2order.
- ****************************************************************************/
+ */
 static char order2char(enum unit_orders order)
 {
   switch (order) {
@@ -690,9 +690,9 @@ static char order2char(enum unit_orders order)
   return '?';
 }
 
-/************************************************************************/ /**
+/**
    Returns a direction for a character identifier.  See also dir2char.
- ****************************************************************************/
+ */
 static enum direction8 char2dir(char dir)
 {
   /* Numberpad values for the directions. */
@@ -719,9 +719,9 @@ static enum direction8 char2dir(char dir)
   return direction8_invalid();
 }
 
-/************************************************************************/ /**
+/**
    Returns a character identifier for a direction.  See also char2dir.
- ****************************************************************************/
+ */
 static char dir2char(enum direction8 dir)
 {
   /* Numberpad values for the directions. */
@@ -748,9 +748,9 @@ static char dir2char(enum direction8 dir)
   return '?';
 }
 
-/************************************************************************/ /**
+/**
    Returns a character identifier for an activity.  See also char2activity.
- ****************************************************************************/
+ */
 static char activity2char(enum unit_activity activity)
 {
   switch (activity) {
@@ -807,9 +807,9 @@ static char activity2char(enum unit_activity activity)
   return '?';
 }
 
-/************************************************************************/ /**
+/**
    Returns an activity for a character identifier.  See also activity2char.
- ****************************************************************************/
+ */
 static enum unit_activity char2activity(char activity)
 {
   int a;
@@ -826,11 +826,11 @@ static enum unit_activity char2activity(char activity)
   return ACTIVITY_LAST;
 }
 
-/************************************************************************/ /**
+/**
    Quote the memory block denoted by data and length so it consists only of
    " a-f0-9:". The returned string has to be freed by the caller using
  free().
- ****************************************************************************/
+ */
 static char *quote_block(const void *const data, int length)
 {
   char *buffer = new char[length * 3 + 10];
@@ -847,11 +847,11 @@ static char *quote_block(const void *const data, int length)
   return buffer;
 }
 
-/************************************************************************/ /**
+/**
    Unquote a string. The unquoted data is written into dest. If the unquoted
    data will be larger than dest_length the function aborts. It returns the
    actual length of the unquoted block.
- ****************************************************************************/
+ */
 static int unquote_block(const char *const quoted_, void *dest,
                          int dest_length)
 {
@@ -880,10 +880,10 @@ static int unquote_block(const char *const quoted_, void *dest,
   return length;
 }
 
-/************************************************************************/ /**
+/**
    Load the worklist elements specified by path to the worklist pointed to
    by 'pwl'. 'pwl' should be a pointer to an existing worklist.
- ****************************************************************************/
+ */
 static void worklist_load(struct section_file *file, struct worklist *pwl,
                           const char *path, ...)
 {
@@ -920,10 +920,10 @@ static void worklist_load(struct section_file *file, struct worklist *pwl,
   }
 }
 
-/************************************************************************/ /**
+/**
    Save the worklist elements specified by path from the worklist pointed to
    by 'pwl'. 'pwl' should be a pointer to an existing worklist.
- ****************************************************************************/
+ */
 static void worklist_save(struct section_file *file,
                           const struct worklist *pwl, int max_length,
                           const char *path, ...)
@@ -958,10 +958,10 @@ static void worklist_save(struct section_file *file,
   }
 }
 
-/************************************************************************/ /**
+/**
    Assign values to ord_city and ord_map for each unit, so the values can be
    saved.
- ****************************************************************************/
+ */
 static void unit_ordering_calc()
 {
   int j;
@@ -993,10 +993,10 @@ static void unit_ordering_calc()
   whole_map_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    For each city and tile, sort unit lists according to ord_city and ord_map
    values.
- ****************************************************************************/
+ */
 static void unit_ordering_apply()
 {
   players_iterate(pplayer)
@@ -1016,13 +1016,13 @@ static void unit_ordering_apply()
   whole_map_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Helper function for loading extras from a savegame.
 
    'ch' gives the character loaded from the savegame. Extras are packed
    in four to a character in hex notation. 'index' is a mapping of
    savegame bit -> base bit.
- ****************************************************************************/
+ */
 static void sg_extras_set(bv_extras *extras, char ch,
                           struct extra_type **idx)
 {
@@ -1050,12 +1050,12 @@ static void sg_extras_set(bv_extras *extras, char ch,
   }
 }
 
-/************************************************************************/ /**
+/**
    Helper function for saving extras into a savegame.
 
    Extras are packed in four to a character in hex notation. 'index'
    specifies which set of extras are included in this character.
- ****************************************************************************/
+ */
 static char sg_extras_get(bv_extras extras, struct extra_type *presource,
                           const int *idx)
 {
@@ -1081,10 +1081,10 @@ static char sg_extras_get(bv_extras extras, struct extra_type *presource,
   return hex_chars[bin];
 }
 
-/************************************************************************/ /**
+/**
    Dereferences the terrain character.  See terrains[].identifier
      example: char2terrain('a') => T_ARCTIC
- ****************************************************************************/
+ */
 static struct terrain *char2terrain(char ch)
 {
   /* terrain_by_identifier plus fatal error */
@@ -1103,10 +1103,10 @@ static struct terrain *char2terrain(char ch)
   exit(EXIT_FAILURE);
 }
 
-/************************************************************************/ /**
+/**
    References the terrain character.  See terrains[].identifier
      example: terrain2char(T_ARCTIC) => 'a'
- ****************************************************************************/
+ */
 static char terrain2char(const struct terrain *pterrain)
 {
   if (pterrain == T_UNKNOWN) {
@@ -1116,10 +1116,10 @@ static char terrain2char(const struct terrain *pterrain)
   }
 }
 
-/************************************************************************/ /**
+/**
    Load technology from path_name and if doesn't exist (because savegame
    is too old) load from path.
- ****************************************************************************/
+ */
 static Tech_type_id technology_load(struct section_file *file,
                                     const char *path, int plrno)
 {
@@ -1152,9 +1152,9 @@ static Tech_type_id technology_load(struct section_file *file,
   return advance_number(padvance);
 }
 
-/************************************************************************/ /**
+/**
    Save technology in secfile entry called path_name.
- ****************************************************************************/
+ */
 static void technology_save(struct section_file *file, const char *path,
                             int plrno, Tech_type_id tech)
 {
@@ -1188,9 +1188,9 @@ static void technology_save(struct section_file *file, const char *path,
  * Load / save savefile data.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[savefile]'.
- ****************************************************************************/
+ */
 static void sg_load_savefile(struct loaddata *loading)
 {
   int i;
@@ -1563,9 +1563,9 @@ static void sg_load_savefile(struct loaddata *loading)
   terrain_type_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Save '[savefile]'.
- ****************************************************************************/
+ */
 static void sg_save_savefile(struct savedata *saving)
 {
   int i;
@@ -1847,9 +1847,9 @@ static void sg_save_savefile(struct savedata *saving)
   terrain_type_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Save options for this savegame. sg_load_savefile_options() is not defined.
- ****************************************************************************/
+ */
 static void sg_save_savefile_options(struct savedata *saving,
                                      const char *option)
 {
@@ -1870,9 +1870,9 @@ static void sg_save_savefile_options(struct savedata *saving,
  * Load / save game status.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[ruledata]'.
- ****************************************************************************/
+ */
 static void sg_load_ruledata(struct loaddata *loading)
 {
   int i;
@@ -1893,9 +1893,9 @@ static void sg_load_ruledata(struct loaddata *loading)
   }
 }
 
-/************************************************************************/ /**
+/**
    Load '[game]'.
- ****************************************************************************/
+ */
 static void sg_load_game(struct loaddata *loading)
 {
   const char *str;
@@ -2047,9 +2047,9 @@ static void sg_load_game(struct loaddata *loading)
       / 100;
 }
 
-/************************************************************************/ /**
+/**
    Save '[ruledata]'.
- ****************************************************************************/
+ */
 static void sg_save_ruledata(struct savedata *saving)
 {
   int set_count = 0;
@@ -2068,9 +2068,9 @@ static void sg_save_ruledata(struct savedata *saving)
   governments_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Save '[game]'.
- ****************************************************************************/
+ */
 static void sg_save_game(struct savedata *saving)
 {
   enum server_states srv_state;
@@ -2201,9 +2201,9 @@ static void sg_save_game(struct savedata *saving)
  * Load / save random status.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[random]'.
- ****************************************************************************/
+ */
 static void sg_load_random(struct loaddata *loading)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -2245,9 +2245,9 @@ static void sg_load_random(struct loaddata *loading)
   }
 }
 
-/************************************************************************/ /**
+/**
    Save '[random]'.
- ****************************************************************************/
+ */
 static void sg_save_random(struct savedata *saving)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -2283,9 +2283,9 @@ static void sg_save_random(struct savedata *saving)
  * Load / save lua script data.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[script]'.
- ****************************************************************************/
+ */
 static void sg_load_script(struct loaddata *loading)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -2294,9 +2294,9 @@ static void sg_load_script(struct loaddata *loading)
   script_server_state_load(loading->file);
 }
 
-/************************************************************************/ /**
+/**
    Save '[script]'.
- ****************************************************************************/
+ */
 static void sg_save_script(struct savedata *saving)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -2309,9 +2309,9 @@ static void sg_save_script(struct savedata *saving)
  * Load / save scenario data.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[scenario]'.
- ****************************************************************************/
+ */
 static void sg_load_scenario(struct loaddata *loading)
 {
   const char *buf;
@@ -2389,9 +2389,9 @@ static void sg_load_scenario(struct loaddata *loading)
                  game.scenario.players ? "saved" : "not saved");
 }
 
-/************************************************************************/ /**
+/**
    Save '[scenario]'.
- ****************************************************************************/
+ */
 static void sg_save_scenario(struct savedata *saving)
 {
   struct entry *mod_entry;
@@ -2471,9 +2471,9 @@ static void sg_save_scenario(struct savedata *saving)
  * Load / save game settings.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[settings]'.
- ****************************************************************************/
+ */
 static void sg_load_settings(struct loaddata *loading)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -2487,9 +2487,9 @@ static void sg_load_settings(struct loaddata *loading)
   /* Add all compatibility settings here. */
 }
 
-/************************************************************************/ /**
+/**
    Save [settings].
- ****************************************************************************/
+ */
 static void sg_save_settings(struct savedata *saving)
 {
   enum map_generator real_generator = wld.map.server.generator;
@@ -2512,9 +2512,9 @@ static void sg_save_settings(struct savedata *saving)
  * Load / save the main map.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[map'].
- ****************************************************************************/
+ */
 static void sg_load_map(struct loaddata *loading)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -2558,9 +2558,9 @@ static void sg_load_map(struct loaddata *loading)
   sg_load_map_worked(loading);
 }
 
-/************************************************************************/ /**
+/**
    Save 'map'.
- ****************************************************************************/
+ */
 static void sg_save_map(struct savedata *saving)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -2597,9 +2597,9 @@ static void sg_save_map(struct savedata *saving)
   sg_save_map_known(saving);
 }
 
-/************************************************************************/ /**
+/**
    Load tiles of the map.
- ****************************************************************************/
+ */
 static void sg_load_map_tiles(struct loaddata *loading)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -2639,9 +2639,9 @@ static void sg_load_map_tiles(struct loaddata *loading)
   whole_map_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Save all map tiles
- ****************************************************************************/
+ */
 static void sg_save_map_tiles(struct savedata *saving)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -2669,9 +2669,9 @@ static void sg_save_map_tiles(struct savedata *saving)
   whole_map_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Load extras to map
- ****************************************************************************/
+ */
 static void sg_load_map_tiles_extras(struct loaddata *loading)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -2708,9 +2708,9 @@ static void sg_load_map_tiles_extras(struct loaddata *loading)
   }
 }
 
-/************************************************************************/ /**
+/**
    Save information about extras on map
- ****************************************************************************/
+ */
 static void sg_save_map_tiles_extras(struct savedata *saving)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -2735,10 +2735,10 @@ static void sg_save_map_tiles_extras(struct savedata *saving)
   halfbyte_iterate_extras_end;
 }
 
-/************************************************************************/ /**
+/**
    Load starting positions for the players from a savegame file. There should
    be at least enough for every player.
- ****************************************************************************/
+ */
 static void sg_load_map_startpos(struct loaddata *loading)
 {
   struct nation_type *pnation;
@@ -2823,9 +2823,9 @@ static void sg_load_map_startpos(struct loaddata *loading)
   update_nations_with_startpos();
 }
 
-/************************************************************************/ /**
+/**
    Save the map start positions.
- ****************************************************************************/
+ */
 static void sg_save_map_startpos(struct savedata *saving)
 {
   struct tile *ptile;
@@ -2880,9 +2880,9 @@ static void sg_save_map_startpos(struct savedata *saving)
   fc_assert(map_startpos_count() == i);
 }
 
-/************************************************************************/ /**
+/**
    Load tile owner information
- ****************************************************************************/
+ */
 static void sg_load_map_owner(struct loaddata *loading)
 {
   int x, y;
@@ -3003,9 +3003,9 @@ static void sg_load_map_owner(struct loaddata *loading)
   }
 }
 
-/************************************************************************/ /**
+/**
    Save tile owner information
- ****************************************************************************/
+ */
 static void sg_save_map_owner(struct savedata *saving)
 {
   int x, y;
@@ -3128,9 +3128,9 @@ static void sg_save_map_owner(struct savedata *saving)
   }
 }
 
-/************************************************************************/ /**
+/**
    Load worked tiles information
- ****************************************************************************/
+ */
 static void sg_load_map_worked(struct loaddata *loading)
 {
   int x, y;
@@ -3172,9 +3172,9 @@ static void sg_load_map_worked(struct loaddata *loading)
   }
 }
 
-/************************************************************************/ /**
+/**
    Save worked tiles information
- ****************************************************************************/
+ */
 static void sg_save_map_worked(struct savedata *saving)
 {
   int x, y;
@@ -3211,9 +3211,9 @@ static void sg_save_map_worked(struct savedata *saving)
   }
 }
 
-/************************************************************************/ /**
+/**
    Load tile known status
- ****************************************************************************/
+ */
 static void sg_load_map_known(struct loaddata *loading)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -3273,9 +3273,9 @@ static void sg_load_map_known(struct loaddata *loading)
   }
 }
 
-/************************************************************************/ /**
+/**
    Save tile known status for whole map and all players
- ****************************************************************************/
+ */
 static void sg_save_map_known(struct savedata *saving)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -3343,9 +3343,9 @@ static void sg_save_map_known(struct savedata *saving)
  * defined.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[player]' (basic data).
- ****************************************************************************/
+ */
 static void sg_load_players_basic(struct loaddata *loading)
 {
   int i, k, nplayers;
@@ -3604,9 +3604,9 @@ static void sg_load_players_basic(struct loaddata *loading)
   }
 }
 
-/************************************************************************/ /**
+/**
    Load '[player]'.
- ****************************************************************************/
+ */
 static void sg_load_players(struct loaddata *loading)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -3793,9 +3793,9 @@ static void sg_load_players(struct loaddata *loading)
   }
 }
 
-/************************************************************************/ /**
+/**
    Save '[player]'.
- ****************************************************************************/
+ */
 static void sg_save_players(struct savedata *saving)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -3857,9 +3857,9 @@ static void sg_save_players(struct savedata *saving)
   players_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Main player data loading function
- ****************************************************************************/
+ */
 static void sg_load_player_main(struct loaddata *loading, struct player *plr)
 {
   const char **slist;
@@ -4302,9 +4302,9 @@ static void sg_load_player_main(struct loaddata *loading, struct player *plr)
                                                 "player%d.hut_count", plrno);
 }
 
-/************************************************************************/ /**
+/**
    Main player data saving function.
- ****************************************************************************/
+ */
 static void sg_save_player_main(struct savedata *saving, struct player *plr)
 {
   int i, k, plrno = player_number(plr);
@@ -4601,9 +4601,9 @@ static void sg_save_player_main(struct savedata *saving, struct player *plr)
                       "player%d.border_vision", plrno);
 }
 
-/************************************************************************/ /**
+/**
    Load city data
- ****************************************************************************/
+ */
 static void sg_load_player_cities(struct loaddata *loading,
                                   struct player *plr)
 {
@@ -4722,9 +4722,9 @@ static void sg_load_player_cities(struct loaddata *loading,
   }
 }
 
-/************************************************************************/ /**
+/**
    Load data for one city. sg_save_player_city() is not defined.
- ****************************************************************************/
+ */
 static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
                                 struct city *pcity, const char *citystr)
 {
@@ -5118,9 +5118,9 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Load nationality data for one city.
- ****************************************************************************/
+ */
 static void sg_load_player_city_citizens(struct loaddata *loading,
                                          struct player *plr,
                                          struct city *pcity,
@@ -5168,9 +5168,9 @@ static void sg_load_player_city_citizens(struct loaddata *loading,
   }
 }
 
-/************************************************************************/ /**
+/**
    Save cities data
- ****************************************************************************/
+ */
 static void sg_save_player_cities(struct savedata *saving,
                                   struct player *plr)
 {
@@ -5554,9 +5554,9 @@ static void sg_save_player_cities(struct savedata *saving,
   city_list_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Load unit data
- ****************************************************************************/
+ */
 static void sg_load_player_units(struct loaddata *loading,
                                  struct player *plr)
 {
@@ -5625,9 +5625,9 @@ static void sg_load_player_units(struct loaddata *loading,
   }
 }
 
-/************************************************************************/ /**
+/**
    Load one unit. sg_save_player_unit() is not defined.
- ****************************************************************************/
+ */
 static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
                                 struct unit *punit, const char *unitstr)
 {
@@ -6124,10 +6124,10 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Load the transport status of all units. This is seperated from the other
    code as all units must be known.
- ****************************************************************************/
+ */
 static void sg_load_player_units_transport(struct loaddata *loading,
                                            struct player *plr)
 {
@@ -6173,9 +6173,9 @@ static void sg_load_player_units_transport(struct loaddata *loading,
   }
 }
 
-/************************************************************************/ /**
+/**
    Save unit data
- ****************************************************************************/
+ */
 static void sg_save_player_units(struct savedata *saving, struct player *plr)
 {
   int i = 0;
@@ -6424,9 +6424,9 @@ static void sg_save_player_units(struct savedata *saving, struct player *plr)
   unit_list_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Load player (client) attributes data
- ****************************************************************************/
+ */
 static void sg_load_player_attributes(struct loaddata *loading,
                                       struct player *plr)
 {
@@ -6498,9 +6498,9 @@ static void sg_load_player_attributes(struct loaddata *loading,
   }
 }
 
-/************************************************************************/ /**
+/**
    Save player (client) attributes data.
- ****************************************************************************/
+ */
 static void sg_save_player_attributes(struct savedata *saving,
                                       struct player *plr)
 {
@@ -6580,9 +6580,9 @@ static void sg_save_player_attributes(struct savedata *saving,
 #undef PART_SIZE
 }
 
-/************************************************************************/ /**
+/**
    Load vision data
- ****************************************************************************/
+ */
 static void sg_load_player_vision(struct loaddata *loading,
                                   struct player *plr)
 {
@@ -6761,9 +6761,9 @@ static void sg_load_player_vision(struct loaddata *loading,
   whole_map_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Load data for one seen city. sg_save_player_vision_city() is not defined.
- ****************************************************************************/
+ */
 static bool sg_load_player_vision_city(struct loaddata *loading,
                                        struct player *plr,
                                        struct vision_site *pdcity,
@@ -6867,9 +6867,9 @@ static bool sg_load_player_vision_city(struct loaddata *loading,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    Save vision data
- ****************************************************************************/
+ */
 static void sg_save_player_vision(struct savedata *saving,
                                   struct player *plr)
 {
@@ -7040,9 +7040,9 @@ static void sg_save_player_vision(struct savedata *saving,
  * Load / save the researches.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[research]'.
- ****************************************************************************/
+ */
 static void sg_load_researches(struct loaddata *loading)
 {
   struct research *presearch;
@@ -7139,9 +7139,9 @@ static void sg_load_researches(struct loaddata *loading)
   researches_iterate_end;
 }
 
-/************************************************************************/ /**
+/**
    Save '[research]'.
- ****************************************************************************/
+ */
 static void sg_save_researches(struct savedata *saving)
 {
   char invs[A_LAST];
@@ -7211,9 +7211,9 @@ static void sg_save_researches(struct savedata *saving)
  * Load / save the event cache. Should be the last thing to do.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[event_cache]'.
- ****************************************************************************/
+ */
 static void sg_load_event_cache(struct loaddata *loading)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -7222,9 +7222,9 @@ static void sg_load_event_cache(struct loaddata *loading)
   event_cache_load(loading->file, "event_cache");
 }
 
-/************************************************************************/ /**
+/**
    Save '[event_cache]'.
- ****************************************************************************/
+ */
 static void sg_save_event_cache(struct savedata *saving)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -7242,9 +7242,9 @@ static void sg_save_event_cache(struct savedata *saving)
  * Load / save the open treaties
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[treaty_xxx]'.
- ****************************************************************************/
+ */
 static void sg_load_treaties(struct loaddata *loading)
 {
   int tidx;
@@ -7323,9 +7323,9 @@ static void sg_load_treaties(struct loaddata *loading)
   }
 }
 
-/************************************************************************/ /**
+/**
    Save '[treaty_xxx]'.
- ****************************************************************************/
+ */
 static void sg_save_treaties(struct savedata *saving)
 {
   struct treaty_list *treaties = get_all_treaties();
@@ -7366,9 +7366,9 @@ static void sg_save_treaties(struct savedata *saving)
  * Load / save the history report
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[history]'.
- ****************************************************************************/
+ */
 static void sg_load_history(struct loaddata *loading)
 {
   struct history_report *hist = history_report_get();
@@ -7392,9 +7392,9 @@ static void sg_load_history(struct loaddata *loading)
   }
 }
 
-/************************************************************************/ /**
+/**
    Save '[history]'.
- ****************************************************************************/
+ */
 static void sg_save_history(struct savedata *saving)
 {
   struct history_report *hist = history_report_get();
@@ -7411,9 +7411,9 @@ static void sg_save_history(struct savedata *saving)
  * Load / save the mapimg definitions.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Load '[mapimg]'.
- ****************************************************************************/
+ */
 static void sg_load_mapimg(struct loaddata *loading)
 {
   int mapdef_count, i;
@@ -7451,9 +7451,9 @@ static void sg_load_mapimg(struct loaddata *loading)
   }
 }
 
-/************************************************************************/ /**
+/**
    Save '[mapimg]'.
- ****************************************************************************/
+ */
 static void sg_save_mapimg(struct savedata *saving)
 {
   /* Check status and return if not OK (sg_success != TRUE). */
@@ -7476,9 +7476,9 @@ static void sg_save_mapimg(struct savedata *saving)
  * Sanity checks for loading / saving a game.
  * ======================================================================= */
 
-/************************************************************************/ /**
+/**
    Sanity check for loaded game.
- ****************************************************************************/
+ */
 static void sg_load_sanitycheck(struct loaddata *loading)
 {
   int players;
@@ -7649,9 +7649,9 @@ static void sg_load_sanitycheck(struct loaddata *loading)
   sanity_check();
 }
 
-/************************************************************************/ /**
+/**
    Sanity check for saved game.
- ****************************************************************************/
+ */
 static void sg_save_sanitycheck(struct savedata *saving)
 {
   /* Check status and return if not OK (sg_success != TRUE). */

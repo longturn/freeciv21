@@ -30,9 +30,9 @@
 
 #include "aisupport.h"
 
-/*******************************************************************/ /**
+/**
    Find who is leading the space race. Returns NULL if nobody is.
- ***********************************************************************/
+ */
 struct player *player_leading_spacerace()
 {
   struct player *best = NULL;
@@ -66,10 +66,10 @@ struct player *player_leading_spacerace()
   return best;
 }
 
-/*******************************************************************/ /**
+/**
    Calculate average distances to other players. We calculate the
    average distance from all of our cities to the closest enemy city.
- ***********************************************************************/
+ */
 int player_distance_to_player(struct player *pplayer, struct player *target)
 {
   int cities = 0;
@@ -103,9 +103,9 @@ int player_distance_to_player(struct player *pplayer, struct player *target)
   return MAX(dists / qMax(cities, 1), 1);
 }
 
-/*******************************************************************/ /**
+/**
    Rough calculation of the worth of pcity in gold.
- ***********************************************************************/
+ */
 int city_gold_worth(struct city *pcity)
 {
   struct player *pplayer = city_owner(pcity);

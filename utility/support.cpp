@@ -73,10 +73,10 @@
 
 #include "support.h"
 
-/******************************************************************/ /**
+/**
    Function used by fc_strdup macro, strdup() replacement
    No need to check return value.
- **********************************************************************/
+ */
 char *real_fc_strdup(const char *str, const char *called_as, int line,
                      const char *file)
 {
@@ -88,9 +88,9 @@ char *real_fc_strdup(const char *str, const char *called_as, int line,
   return dest;
 }
 
-/************************************************************************/ /**
+/**
    Compare strings like strcmp(), but ignoring case.
- ****************************************************************************/
+ */
 int fc_strcasecmp(const char *str0, const char *str1)
 {
   auto left = QString::fromUtf8(str0);
@@ -98,10 +98,10 @@ int fc_strcasecmp(const char *str0, const char *str1)
   return left.compare(right, Qt::CaseInsensitive);
 }
 
-/************************************************************************/ /**
+/**
    Compare strings like strncmp(), but ignoring case.
    ie, only compares first n chars.
- ****************************************************************************/
+ */
 int fc_strncasecmp(const char *str0, const char *str1, size_t n)
 {
   auto left = QString::fromUtf8(str0);
@@ -109,13 +109,13 @@ int fc_strncasecmp(const char *str0, const char *str1, size_t n)
   return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
 }
 
-/************************************************************************/ /**
+/**
    Copies a string and convert the following characters:
    - '\n' to "\\n".
    - '\\' to "\\\\".
    - '\"' to "\\\"".
    See also remove_escapes().
- ****************************************************************************/
+ */
 void make_escapes(const char *str, char *buf, size_t buf_len)
 {
   char *dest = buf;
@@ -142,7 +142,7 @@ void make_escapes(const char *str, char *buf, size_t buf_len)
   *dest = 0;
 }
 
-/************************************************************************/ /**
+/**
    Copies a string. Backslash followed by a genuine newline always
    removes the newline.
    If full_escapes is TRUE:
@@ -150,7 +150,7 @@ void make_escapes(const char *str, char *buf, size_t buf_len)
      - Other '\c' sequences (any character 'c') are just passed
        through with the '\' removed (eg, includes '\\', '\"').
    See also make_escapes().
- ****************************************************************************/
+ */
 QString remove_escapes(const QString &str, bool full_escapes)
 {
   QString copy;
@@ -188,9 +188,9 @@ QString remove_escapes(const QString &str, bool full_escapes)
   return copy;
 }
 
-/************************************************************************/ /**
+/**
    Count length of string without possible surrounding quotes.
- ****************************************************************************/
+ */
 size_t effectivestrlenquote(const char *str)
 {
   int len;
@@ -207,10 +207,10 @@ size_t effectivestrlenquote(const char *str)
   return len;
 }
 
-/************************************************************************/ /**
+/**
    Compare strings like strncasecmp() but ignoring surrounding
    quotes in either string.
- ****************************************************************************/
+ */
 int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
 {
   auto left = QString::fromUtf8(str0);
@@ -226,17 +226,17 @@ int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
   return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
 }
 
-/************************************************************************/ /**
+/**
    Wrapper function for strcoll().
- ****************************************************************************/
+ */
 int fc_strcoll(const char *str0, const char *str1)
 {
   return strcoll(str0, str1);
 }
 
-/************************************************************************/ /**
+/**
    Wrapper function for stricoll().
- ****************************************************************************/
+ */
 int fc_stricoll(const char *str0, const char *str1)
 {
   /* We prefer _stricoll() over stricoll() since
@@ -253,10 +253,10 @@ int fc_stricoll(const char *str0, const char *str1)
 #endif
 }
 
-/************************************************************************/ /**
+/**
    Wrapper function for fopen() with filename conversion to local
    encoding on Windows.
- ****************************************************************************/
+ */
 FILE *fc_fopen(const char *filename, const char *opentype)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -272,10 +272,10 @@ FILE *fc_fopen(const char *filename, const char *opentype)
 #endif /* FREECIV_MSWINDOWS */
 }
 
-/************************************************************************/ /**
+/**
    Wrapper function for gzopen() with filename conversion to local
    encoding on Windows.
- ****************************************************************************/
+ */
 gzFile fc_gzopen(const char *filename, const char *opentype)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -291,10 +291,10 @@ gzFile fc_gzopen(const char *filename, const char *opentype)
 #endif /* FREECIV_MSWINDOWS */
 }
 
-/************************************************************************/ /**
+/**
    Wrapper function for remove() with filename conversion to local
    encoding on Windows.
- ****************************************************************************/
+ */
 int fc_remove(const char *filename)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -310,10 +310,10 @@ int fc_remove(const char *filename)
 #endif /* FREECIV_MSWINDOWS */
 }
 
-/************************************************************************/ /**
+/**
    Wrapper function for stat() with filename conversion to local
    encoding on Windows.
- ****************************************************************************/
+ */
 int fc_stat(const char *filename, struct stat *buf)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -329,9 +329,9 @@ int fc_stat(const char *filename, struct stat *buf)
 #endif /* FREECIV_MSWINDOWS */
 }
 
-/************************************************************************/ /**
+/**
    Returns last error code.
- ****************************************************************************/
+ */
 fc_errno fc_get_errno()
 {
 #ifdef FREECIV_MSWINDOWS
@@ -341,14 +341,14 @@ fc_errno fc_get_errno()
 #endif /* FREECIV_MSWINDOWS */
 }
 
-/************************************************************************/ /**
+/**
    Return a string which describes a given error (errno-style.)
    The string is converted as necessary from the local_encoding
    to internal_encoding, for inclusion in translations.  May be
    subsequently converted back to local_encoding for display.
 
    Note that this is not the reentrant form.
- ****************************************************************************/
+ */
 const char *fc_strerror(fc_errno err)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -367,16 +367,16 @@ const char *fc_strerror(fc_errno err)
 #endif /* FREECIV_MSWINDOWS */
 }
 
-/************************************************************************/ /**
+/**
    Suspend execution for the specified number of microseconds.
- ****************************************************************************/
+ */
 void fc_usleep(unsigned long usec) { QThread::usleep(usec); }
 
-/************************************************************************/ /**
+/**
    Replace 'search' by 'replace' within 'str'. If needed 'str' is resized
    using realloc() to fit the modified string. The new pointer to the string
    is returned.
- ****************************************************************************/
+ */
 char *fc_strrep_resize(char *str, size_t *len, const char *search,
                        const char *replace)
 {
@@ -409,11 +409,11 @@ char *fc_strrep_resize(char *str, size_t *len, const char *search,
   return str;
 }
 
-/************************************************************************/ /**
+/**
    Replace 'search' by 'replace' within 'str'. sizeof(str) should be large
    enough for the modified value of 'str'. Returns TRUE if the replacement
    was successful.
- ****************************************************************************/
+ */
 bool fc_strrep(char *str, size_t len, const char *search,
                const char *replace)
 {
@@ -449,7 +449,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
   return true;
 }
 
-/************************************************************************/ /**
+/**
    fc_strlcpy() provides utf-8 version of (non-standard) function strlcpy()
    It is intended as more user-friendly version of strncpy(), in particular
    easier to use safely and correctly, and ensuring nul-terminated results
@@ -469,7 +469,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
    trying to ensure correct behaviour on strange inputs.
    In particular note that n == 0 is prohibited (e.g., since there
    must at least be room for a nul); could consider other options.
- ****************************************************************************/
+ */
 size_t fc_strlcpy(char *dest, const char *src, size_t n)
 {
   fc_assert_ret_val(NULL != dest, -1);
@@ -500,12 +500,12 @@ size_t fc_strlcpy(char *dest, const char *src, size_t n)
   }
 }
 
-/************************************************************************/ /**
+/**
    fc_strlcat() provides utf-8 version of (non-standard) function strlcat()
    It is intended as more user-friendly version of strncat(), in particular
    easier to use safely and correctly, and ensuring nul-terminated results
    while being able to detect truncation.
- ****************************************************************************/
+ */
 size_t fc_strlcat(char *dest, const char *src, size_t n)
 {
   size_t start;
@@ -517,7 +517,7 @@ size_t fc_strlcat(char *dest, const char *src, size_t n)
   return fc_strlcpy(dest + start, src, n - start) + start;
 }
 
-/************************************************************************/ /**
+/**
    vsnprintf() replacement using a big malloc()ed internal buffer,
    originally by David Pfitzner <dwp@mso.anu.edu.au>
 
@@ -566,7 +566,7 @@ size_t fc_strlcat(char *dest, const char *src, size_t n)
    any tricks to go through the va_list twice.
 
    See also fc_utf8_vsnprintf_trunc(), fc_utf8_vsnprintf_rep().
- ****************************************************************************/
+ */
 
 /* "64k should be big enough for anyone" ;-) */
 #define VSNP_BUF_SIZE (64 * 1024)
@@ -592,9 +592,9 @@ int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
   return r;
 }
 
-/************************************************************************/ /**
+/**
    See also fc_utf8_snprintf_trunc(), fc_utf8_snprintf_rep().
- ****************************************************************************/
+ */
 int fc_snprintf(char *str, size_t n, const char *format, ...)
 {
   int ret;
@@ -608,7 +608,7 @@ int fc_snprintf(char *str, size_t n, const char *format, ...)
   return ret;
 }
 
-/************************************************************************/ /**
+/**
    cat_snprintf is like a combination of fc_snprintf and fc_strlcat;
    it does snprintf to the end of an existing string.
 
@@ -621,7 +621,7 @@ int fc_snprintf(char *str, size_t n, const char *format, ...)
    I.e., if return is >= n, truncation occurred.
 
    See also cat_utf8_snprintf(), cat_utf8_snprintf_rep().
- ****************************************************************************/
+ */
 int cat_snprintf(char *str, size_t n, const char *format, ...)
 {
   size_t len;
@@ -641,9 +641,9 @@ int cat_snprintf(char *str, size_t n, const char *format, ...)
   return (-1 == ret ? -1 : ret + len);
 }
 
-/************************************************************************/ /**
+/**
    Call gethostname() if supported, else just returns -1.
- ****************************************************************************/
+ */
 int fc_gethostname(char *buf, size_t len)
 {
   auto name = QHostInfo::localHostName();
@@ -651,10 +651,10 @@ int fc_gethostname(char *buf, size_t len)
   return 0;
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE iff the file is a regular file or a link to a regular
    file or write_access is TRUE and the file doesn't exists yet.
- ****************************************************************************/
+ */
 bool is_reg_file_for_access(const char *name, bool write_access)
 {
   struct stat tmp;
@@ -666,10 +666,10 @@ bool is_reg_file_for_access(const char *name, bool write_access)
   }
 }
 
-/************************************************************************/ /**
+/**
    Replace the spaces by line breaks when the line lenght is over the desired
    one. 'str' is modified. Returns number of lines in modified s.
- ****************************************************************************/
+ */
 int fc_break_lines(char *str, size_t desired_len)
 {
   size_t slen = static_cast<size_t>(qstrlen(str));
@@ -739,21 +739,21 @@ int fc_break_lines(char *str, size_t desired_len)
   part of a multibyte sequence is non-ASCII.
 ****************************************************************************/
 
-/************************************************************************/ /**
+/**
    basename() replacement that always takes const parameter.
    POSIX basename() modifies its parameter, GNU one does not.
    Ideally we would like to use GNU one, when available, directly
    without extra string copies.
- ****************************************************************************/
+ */
 const char *fc_basename(const char *path)
 {
   QFileInfo fi(path);
   return fc_strdup(fi.fileName().toUtf8().constData());
 }
 
-/************************************************************************/ /**
+/**
    Set quick_exit() callback if possible.
- ****************************************************************************/
+ */
 int fc_at_quick_exit(void (*func)())
 {
 #ifdef HAVE_AT_QUICK_EXIT

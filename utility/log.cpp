@@ -55,11 +55,11 @@ static QtMessageHandler original_handler = nullptr;
 static QFile *log_file = nullptr;
 } // anonymous namespace
 
-/**********************************************************************/ /**
+/**
   Parses a log level string as provided by the user on the command line, and
   installs the corresponding Qt log filters. Prints a warning and returns
   false if the log level name isn't known.
- **************************************************************************/
+ */
 bool log_init(const QString &level_str)
 {
   // Even if it's invalid.
@@ -119,10 +119,10 @@ bool log_init(const QString &level_str)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Prints a message, handling Freeciv-specific stuff before passing to
    the Qt handler.
- **************************************************************************/
+ */
 namespace {
 static void handle_message(QtMsgType type, const QMessageLogContext &context,
                            const QString &message)
@@ -145,10 +145,10 @@ static void handle_message(QtMsgType type, const QMessageLogContext &context,
 }
 } // anonymous namespace
 
-/**********************************************************************/ /**
+/**
    Redirects the log to a file. It will still be shown on standard error.
    This function is *not* thread-safe.
- **************************************************************************/
+ */
 void log_set_file(const QString &path)
 {
   // Don't try to open null file names
@@ -176,16 +176,16 @@ void log_set_file(const QString &path)
   log_file = new_file;
 }
 
-/**********************************************************************/ /**
+/**
    Retrieves the log level passed to log_init (even if log_init failed).
    This can be overridden from the environment, so it's only useful when
    passing it to the server from the client.
- **************************************************************************/
+ */
 const QString &log_get_level() { return log_level; }
 
-/**********************************************************************/ /**
+/**
     Deinitialize logging module.
- **************************************************************************/
+ */
 void log_close()
 {
   QMutexLocker locker(&mutex);
@@ -195,20 +195,20 @@ void log_close()
   qInstallMessageHandler(original_handler);
 }
 
-/**********************************************************************/ /**
+/**
    Set what signal the assert* macros should raise on failed assertion
    (-1 to disable).
- **************************************************************************/
+ */
 void fc_assert_set_fatal(bool fatal) { fatal_assertions = fatal; }
 
-/**********************************************************************/ /**
+/**
    Checks whether the fc_assert* macros should raise on failed assertion.
- **************************************************************************/
+ */
 bool fc_assert_are_fatal() { return fatal_assertions; }
 
-/**********************************************************************/ /**
+/**
    Handles a failed assertion.
- **************************************************************************/
+ */
 void fc_assert_handle_failure(const char *condition, const char *file,
                               int line, const char *function,
                               const QString &message)

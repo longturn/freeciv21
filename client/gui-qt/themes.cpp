@@ -30,9 +30,9 @@ extern QString current_theme;
 Q_GLOBAL_STATIC(QString, def_app_style)
 Q_GLOBAL_STATIC(QString, stylestring)
 
-/*************************************************************************/ /**
+/**
    Loads a qt theme directory/theme_name
- *****************************************************************************/
+ */
 void qtg_gui_load_theme(const char *directory, const char *theme_name)
 {
   QString name;
@@ -89,9 +89,9 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   QApplication::setPalette(pal);
 }
 
-/*************************************************************************/ /**
+/**
    Clears a theme (sets default system theme)
- *****************************************************************************/
+ */
 void qtg_gui_clear_theme()
 {
   if (!load_theme(FC_QT_DEFAULT_THEME_NAME)) {
@@ -103,12 +103,12 @@ void qtg_gui_clear_theme()
   }
 }
 
-/*************************************************************************/ /**
+/**
    Each gui has its own themes directories.
 
    Returns an array containing these strings and sets array size in count.
    The caller is responsible for freeing the array and the paths.
- *****************************************************************************/
+ */
 char **qtg_get_gui_specific_themes_directories(int *count)
 {
   const QStringList *data_dirs = get_data_dirs();
@@ -125,11 +125,11 @@ char **qtg_get_gui_specific_themes_directories(int *count)
   return directories;
 }
 
-/*************************************************************************/ /**
+/**
    Return an array of names of usable themes in the given directory.
    Array size is stored in count.
    The caller is responsible for freeing the array and the names
- *****************************************************************************/
+ */
 char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
 {
   QStringList sl, theme_list;

@@ -214,18 +214,18 @@ static const char *ranking[] = {
     N_("%2d: The Wretched %s"),
 };
 
-/**********************************************************************/ /**
+/**
    Compare two player score entries. Used as callback for qsort.
- **************************************************************************/
+ */
 static int secompare(const void *a, const void *b)
 {
   return ((static_cast<const struct player_score_entry *>(b))->value
           - (static_cast<const struct player_score_entry *>(a))->value);
 }
 
-/**********************************************************************/ /**
+/**
    Construct Historian Report
- **************************************************************************/
+ */
 static void historian_generic(struct history_report *report,
                               enum historian_type which_news)
 {
@@ -283,9 +283,9 @@ static void historian_generic(struct history_report *report,
               _(historian_name[fc_rand(ARRAY_SIZE(historian_name))]));
 }
 
-/**********************************************************************/ /**
+/**
    Send history report of this turn.
- **************************************************************************/
+ */
 void send_current_history_report(struct conn_list *dest)
 {
   /* History report is actually constructed at the end of previous turn. */
@@ -296,9 +296,9 @@ void send_current_history_report(struct conn_list *dest)
   }
 }
 
-/**********************************************************************/ /**
+/**
   Returns the number of wonders the given city has.
- **************************************************************************/
+ */
 static int nr_wonders(struct city *pcity)
 {
   int result = 0;
@@ -314,9 +314,9 @@ static int nr_wonders(struct city *pcity)
   return result;
 }
 
-/**********************************************************************/ /**
+/**
    Send report listing the "best" 5 cities in the world.
- **************************************************************************/
+ */
 void report_top_five_cities(struct conn_list *dest)
 {
   const int NUM_BEST_CITIES = 5;
@@ -392,10 +392,10 @@ void report_top_five_cities(struct conn_list *dest)
             _("The Five Greatest Cities in the World!"), buffer);
 }
 
-/**********************************************************************/ /**
+/**
    Send report listing all built and destroyed wonders, and wonders
    currently being built.
- **************************************************************************/
+ */
 void report_wonders_of_the_world(struct conn_list *dest)
 {
   char buffer[4096];
@@ -478,105 +478,105 @@ void report_wonders_of_the_world(struct conn_list *dest)
  Helper functions which return the value for the given player.
 **************************************************************************/
 
-/**********************************************************************/ /**
+/**
    Population of player
- **************************************************************************/
+ */
 static int get_population(const struct player *pplayer)
 {
   return pplayer->score.population;
 }
 
-/**********************************************************************/ /**
+/**
    Number of citizen units of player
- **************************************************************************/
+ */
 static int get_pop(const struct player *pplayer)
 {
   return total_player_citizens(pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Number of citizens of player
- **************************************************************************/
+ */
 static int get_real_pop(const struct player *pplayer)
 {
   return 1000 * get_pop(pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Land area controlled by player
- **************************************************************************/
+ */
 static int get_landarea(const struct player *pplayer)
 {
   return pplayer->score.landarea;
 }
 
-/**********************************************************************/ /**
+/**
    Area settled.
- **************************************************************************/
+ */
 static int get_settledarea(const struct player *pplayer)
 {
   return pplayer->score.settledarea;
 }
 
-/**********************************************************************/ /**
+/**
    Research speed
- **************************************************************************/
+ */
 static int get_research(const struct player *pplayer)
 {
   return pplayer->score.techout;
 }
 
-/**********************************************************************/ /**
+/**
    Production of player
- **************************************************************************/
+ */
 static int get_production(const struct player *pplayer)
 {
   return pplayer->score.mfg;
 }
 
-/**********************************************************************/ /**
+/**
    BNP of player
- **************************************************************************/
+ */
 static int get_economics(const struct player *pplayer)
 {
   return pplayer->score.bnp;
 }
 
-/**********************************************************************/ /**
+/**
    Pollution of player
- **************************************************************************/
+ */
 static int get_pollution(const struct player *pplayer)
 {
   return pplayer->score.pollution;
 }
 
-/**********************************************************************/ /**
+/**
    Military service length
- **************************************************************************/
+ */
 static int get_mil_service(const struct player *pplayer)
 {
   return (pplayer->score.units * 5000) / (10 + civ_population(pplayer));
 }
 
-/**********************************************************************/ /**
+/**
    Number of cities
- **************************************************************************/
+ */
 static int get_cities(const struct player *pplayer)
 {
   return pplayer->score.cities;
 }
 
-/**********************************************************************/ /**
+/**
    Number of techs
- **************************************************************************/
+ */
 static int get_techs(const struct player *pplayer)
 {
   return pplayer->score.techs;
 }
 
-/**********************************************************************/ /**
+/**
    Number of military units
- **************************************************************************/
+ */
 static int get_munits(const struct player *pplayer)
 {
   int result = 0;
@@ -593,9 +593,9 @@ static int get_munits(const struct player *pplayer)
   return result;
 }
 
-/**********************************************************************/ /**
+/**
    Number of city building units.
- **************************************************************************/
+ */
 static int get_settlers(const struct player *pplayer)
 {
   int result = 0;
@@ -614,98 +614,98 @@ static int get_settlers(const struct player *pplayer)
   return result;
 }
 
-/**********************************************************************/ /**
+/**
    Wonder score
- **************************************************************************/
+ */
 static int get_wonders(const struct player *pplayer)
 {
   return pplayer->score.wonders;
 }
 
-/**********************************************************************/ /**
+/**
    Technology output
- **************************************************************************/
+ */
 static int get_techout(const struct player *pplayer)
 {
   return pplayer->score.techout;
 }
 
-/**********************************************************************/ /**
+/**
    Literacy score calculated one way. See also get_literacy() to see
    alternative way.
- **************************************************************************/
+ */
 static int get_literacy2(const struct player *pplayer)
 {
   return pplayer->score.literacy;
 }
 
-/**********************************************************************/ /**
+/**
    Spaceship score
- **************************************************************************/
+ */
 static int get_spaceship(const struct player *pplayer)
 {
   return pplayer->score.spaceship;
 }
 
-/**********************************************************************/ /**
+/**
    Number of units built
- **************************************************************************/
+ */
 static int get_units_built(const struct player *pplayer)
 {
   return pplayer->score.units_built;
 }
 
-/**********************************************************************/ /**
+/**
    Number of units killed
- **************************************************************************/
+ */
 static int get_units_killed(const struct player *pplayer)
 {
   return pplayer->score.units_killed;
 }
 
-/**********************************************************************/ /**
+/**
    Number of units lost
- **************************************************************************/
+ */
 static int get_units_lost(const struct player *pplayer)
 {
   return pplayer->score.units_lost;
 }
 
-/**********************************************************************/ /**
+/**
    Amount of gold.
- **************************************************************************/
+ */
 static int get_gold(const struct player *pplayer)
 {
   return pplayer->economic.gold;
 }
 
-/**********************************************************************/ /**
+/**
    Tax rate
- **************************************************************************/
+ */
 static int get_taxrate(const struct player *pplayer)
 {
   return pplayer->economic.tax;
 }
 
-/**********************************************************************/ /**
+/**
    Science rate
- **************************************************************************/
+ */
 static int get_scirate(const struct player *pplayer)
 {
   return pplayer->economic.science;
 }
 
-/**********************************************************************/ /**
+/**
    Luxury rate
- **************************************************************************/
+ */
 static int get_luxrate(const struct player *pplayer)
 {
   return pplayer->economic.luxury;
 }
 
-/**********************************************************************/ /**
+/**
    Number of rioting cities
- **************************************************************************/
+ */
 static int get_riots(const struct player *pplayer)
 {
   int result = 0;
@@ -721,33 +721,33 @@ static int get_riots(const struct player *pplayer)
   return result;
 }
 
-/**********************************************************************/ /**
+/**
    Number of happy citizens
- **************************************************************************/
+ */
 static int get_happypop(const struct player *pplayer)
 {
   return pplayer->score.happy;
 }
 
-/**********************************************************************/ /**
+/**
    Number of content citizens
- **************************************************************************/
+ */
 static int get_contentpop(const struct player *pplayer)
 {
   return pplayer->score.content;
 }
 
-/**********************************************************************/ /**
+/**
    Number of unhappy citizens
- **************************************************************************/
+ */
 static int get_unhappypop(const struct player *pplayer)
 {
   return pplayer->score.unhappy;
 }
 
-/**********************************************************************/ /**
+/**
    Number of specialists.
- **************************************************************************/
+ */
 static int get_specialists(const struct player *pplayer)
 {
   int count = 0;
@@ -758,17 +758,17 @@ static int get_specialists(const struct player *pplayer)
   return count;
 }
 
-/**********************************************************************/ /**
+/**
    Current government
- **************************************************************************/
+ */
 static int get_gov(const struct player *pplayer)
 {
   return static_cast<int>(government_number(government_of_player(pplayer)));
 }
 
-/**********************************************************************/ /**
+/**
    Total corruption
- **************************************************************************/
+ */
 static int get_corruption(const struct player *pplayer)
 {
   int result = 0;
@@ -782,25 +782,25 @@ static int get_corruption(const struct player *pplayer)
   return result;
 }
 
-/**********************************************************************/ /**
+/**
    Total score
- **************************************************************************/
+ */
 static int get_total_score(const struct player *pplayer)
 {
   return pplayer->score.game;
 }
 
-/**********************************************************************/ /**
+/**
    Culture score
- **************************************************************************/
+ */
 static int get_culture(const struct player *pplayer)
 {
   return pplayer->score.culture;
 }
 
-/**********************************************************************/ /**
+/**
    Construct string containing value and its unit.
- **************************************************************************/
+ */
 static const char *value_units(int val, const char *uni)
 {
   static char buf[64];
@@ -812,29 +812,29 @@ static const char *value_units(int val, const char *uni)
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Helper functions which transform the given value to a string
    depending on the unit.
- **************************************************************************/
+ */
 static const char *area_to_text(int value)
 {
   /* TRANS: abbreviation of "square miles" */
   return value_units(value, PL_(" sq. mi.", " sq. mi.", value));
 }
 
-/**********************************************************************/ /**
+/**
    Construct string containing value followed by '%'. So value is already
    considered to be in units of 1/100.
- **************************************************************************/
+ */
 static const char *percent_to_text(int value)
 {
   return value_units(value, "%");
 }
 
-/**********************************************************************/ /**
+/**
    Construct string containing value followed by unit suitable for
    production stats.
- **************************************************************************/
+ */
 static const char *production_to_text(int value)
 {
   int clip = MAX(0, value);
@@ -842,56 +842,56 @@ static const char *production_to_text(int value)
   return value_units(clip, PL_(" M tons", " M tons", clip));
 }
 
-/**********************************************************************/ /**
+/**
    Construct string containing value followed by unit suitable for
    economics stats.
- **************************************************************************/
+ */
 static const char *economics_to_text(int value)
 {
   /* TRANS: "M goods" = million goods, so always plural */
   return value_units(value, PL_(" M goods", " M goods", value));
 }
 
-/**********************************************************************/ /**
+/**
    Construct string containing value followed by unit suitable for
    science stats.
- **************************************************************************/
+ */
 static const char *science_to_text(int value)
 {
   return value_units(value, PL_(" bulb", " bulbs", value));
 }
 
-/**********************************************************************/ /**
+/**
    Construct string containing value followed by unit suitable for
    military service stats.
- **************************************************************************/
+ */
 static const char *mil_service_to_text(int value)
 {
   return value_units(value, PL_(" month", " months", value));
 }
 
-/**********************************************************************/ /**
+/**
    Construct string containing value followed by unit suitable for
    pollution stats.
- **************************************************************************/
+ */
 static const char *pollution_to_text(int value)
 {
   return value_units(value, PL_(" ton", " tons", value));
 }
 
-/**********************************************************************/ /**
+/**
    Construct string containing value followed by unit suitable for
    culture stats.
- **************************************************************************/
+ */
 static const char *culture_to_text(int value)
 {
   /* TRANS: Unit(s) of culture */
   return value_units(value, PL_(" point", " points", value));
 }
 
-/**********************************************************************/ /**
+/**
    Construct one demographics line.
- **************************************************************************/
+ */
 static void dem_line_item(char *outptr, size_t out_size,
                           struct player *pplayer, struct dem_row *prow,
                           bv_cols selcols)
@@ -953,14 +953,14 @@ static void dem_line_item(char *outptr, size_t out_size,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Verify that a given demography string is valid.  See
    game.demography. If the string is not valid the index of the _first_
    invalid character is return as 'error'.
 
    Other settings callback functions are in settings.c, but this one uses
    static values from this file so it's done separately.
- **************************************************************************/
+ */
 bool is_valid_demography(const char *demography, int *error)
 {
   int len = qstrlen(demography), i;
@@ -1004,10 +1004,10 @@ bool is_valid_demography(const char *demography, int *error)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Send demographics report; what gets reported depends on value of
    demographics server option.
- **************************************************************************/
+ */
 void report_demographics(struct connection *pconn)
 {
   char civbuf[1024];
@@ -1067,9 +1067,9 @@ void report_demographics(struct connection *pconn)
   page_conn(pconn->self, _("Demographics Report:"), civbuf, buffer);
 }
 
-/**********************************************************************/ /**
+/**
    Send achievements list
- **************************************************************************/
+ */
 void report_achievements(struct connection *pconn)
 {
   char civbuf[1024];
@@ -1098,9 +1098,9 @@ void report_achievements(struct connection *pconn)
   page_conn(pconn->self, _("Achievements List:"), civbuf, buffer);
 }
 
-/**********************************************************************/ /**
+/**
    Allocate and initialize plrdata slot.
- **************************************************************************/
+ */
 static void plrdata_slot_init(struct plrdata_slot *plrdata, const char *name)
 {
   fc_assert_ret(plrdata->name == NULL);
@@ -1109,9 +1109,9 @@ static void plrdata_slot_init(struct plrdata_slot *plrdata, const char *name)
   plrdata_slot_replace(plrdata, name);
 }
 
-/**********************************************************************/ /**
+/**
    Replace plrdata slot with new one named according to input parameter.
- **************************************************************************/
+ */
 static void plrdata_slot_replace(struct plrdata_slot *plrdata,
                                  const char *name)
 {
@@ -1120,21 +1120,21 @@ static void plrdata_slot_replace(struct plrdata_slot *plrdata,
   fc_strlcpy(plrdata->name, name, MAX_LEN_NAME);
 }
 
-/**********************************************************************/ /**
+/**
    Free resources allocated for plrdata slot.
- **************************************************************************/
+ */
 static void plrdata_slot_free(struct plrdata_slot *plrdata)
 {
   NFCN_FREE(plrdata->name);
 }
 
-/**********************************************************************/ /**
+/**
    Reads the whole file denoted by fp. Sets last_turn and id to the
    values contained in the file. Returns the player_names indexed by
    player_no at the end of the log file.
 
    Returns TRUE iff the file had read successfully.
- **************************************************************************/
+ */
 static bool scan_score_log(char *id)
 {
   int line_nr, turn, plr_no, spaces;
@@ -1279,9 +1279,9 @@ static bool scan_score_log(char *id)
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Initialize score logging system
- **************************************************************************/
+ */
 void log_civ_score_init()
 {
   if (score_log != NULL) {
@@ -1303,9 +1303,9 @@ void log_civ_score_init()
   latest_history_report.turn = -2;
 }
 
-/**********************************************************************/ /**
+/**
    Free resources allocated for score logging system
- **************************************************************************/
+ */
 void log_civ_score_free()
 {
   if (!score_log) {
@@ -1333,9 +1333,9 @@ void log_civ_score_free()
   score_log = NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Create a log file of the civilizations so you can see what was happening.
- **************************************************************************/
+ */
 void log_civ_score_now()
 {
   enum { SL_CREATE, SL_APPEND, SL_UNSPEC } oper = SL_UNSPEC;
@@ -1546,9 +1546,9 @@ log_civ_score_disable:
   log_civ_score_free();
 }
 
-/**********************************************************************/ /**
+/**
    Produce random history report if it's time for one.
- **************************************************************************/
+ */
 void make_history_report()
 {
   if (player_count() == 1) {
@@ -1568,10 +1568,10 @@ void make_history_report()
   send_current_history_report(game.est_connections);
 }
 
-/**********************************************************************/ /**
+/**
    Inform clients about player scores and statistics when the game ends.
    Called only from server/srv_main.c srv_scores()
- **************************************************************************/
+ */
 void report_final_scores(struct conn_list *dest)
 {
   static const struct {
@@ -1650,16 +1650,16 @@ void report_final_scores(struct conn_list *dest)
   }
 }
 
-/**********************************************************************/ /**
+/**
    This function pops up a non-modal message dialog on the player's desktop
- **************************************************************************/
+ */
 void page_conn(struct conn_list *dest, const char *caption,
                const char *headline, const char *lines)
 {
   page_conn_etype(dest, caption, headline, lines, E_REPORT);
 }
 
-/**********************************************************************/ /**
+/**
    This function pops up a non-modal message dialog on the player's desktop
 
    event == E_REPORT: message should not be ignored by clients watching
@@ -1669,7 +1669,7 @@ void page_conn(struct conn_list *dest, const char *caption,
    event == E_BROADCAST_REPORT: message can safely be ignored by clients
                       watching AI players with ai_popup_windows off. For
                       example: Herodot's report... and similar messages.
- **************************************************************************/
+ */
 static void page_conn_etype(struct conn_list *dest, const char *caption,
                             const char *headline, const char *lines,
                             enum event_type event)
@@ -1705,9 +1705,9 @@ static void page_conn_etype(struct conn_list *dest, const char *caption,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return current history report
- **************************************************************************/
+ */
 struct history_report *history_report_get()
 {
   return &latest_history_report;

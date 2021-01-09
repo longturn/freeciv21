@@ -161,9 +161,9 @@ static bool do_action_activity_targeted(struct unit *punit,
                                         const struct action *paction,
                                         struct extra_type **new_target);
 
-/**********************************************************************/ /**
+/**
    Upgrade all units of a given type.
- **************************************************************************/
+ */
 void handle_unit_type_upgrade(struct player *pplayer, Unit_type_id uti)
 {
   const struct unit_type *to_unittype;
@@ -229,12 +229,12 @@ void handle_unit_type_upgrade(struct player *pplayer, Unit_type_id uti)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Upgrade the unit to a newer unit type.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_unit_upgrade(struct player *pplayer, struct unit *punit,
                             struct city *pcity,
                             enum action_requester ordered_by,
@@ -258,12 +258,12 @@ static bool do_unit_upgrade(struct player *pplayer, struct unit *punit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Capture all the units at pdesttile using punit.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_capture_units(struct player *pplayer, struct unit *punit,
                              struct tile *pdesttile,
                              const struct action *paction)
@@ -368,12 +368,12 @@ static bool do_capture_units(struct player *pplayer, struct unit *punit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Expel the target unit to his owner's capital.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_expel_unit(struct player *pplayer, struct unit *actor,
                           struct unit *target, const struct action *paction)
 {
@@ -454,12 +454,12 @@ static bool do_expel_unit(struct player *pplayer, struct unit *actor,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Restore some of the target unit's hit points.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_heal_unit(struct player *act_player, struct unit *act_unit,
                          struct unit *tgt_unit, const struct action *paction)
 {
@@ -535,12 +535,12 @@ static bool do_heal_unit(struct player *act_player, struct unit *act_unit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Unload actor unit from target unit.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_unit_alight(struct player *act_player, struct unit *act_unit,
                            struct unit *tgt_unit,
                            const struct action *paction)
@@ -551,14 +551,14 @@ static bool do_unit_alight(struct player *act_player, struct unit *act_unit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Have the actor unit board the target unit.
 
    Assumes that all checks for action legality has been done.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_unit_board(struct player *act_player, struct unit *act_unit,
                           struct unit *tgt_unit,
                           const struct action *paction)
@@ -573,12 +573,12 @@ static bool do_unit_board(struct player *act_player, struct unit *act_unit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Unload target unit from actor unit.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_unit_unload(struct player *act_player, struct unit *act_unit,
                            struct unit *tgt_unit,
                            const struct action *paction)
@@ -589,12 +589,12 @@ static bool do_unit_unload(struct player *act_player, struct unit *act_unit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Disembark actor unit from target unit to target tile.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_disembark(struct player *act_player, struct unit *act_unit,
                          struct tile *tgt_tile, const struct action *paction)
 {
@@ -611,14 +611,14 @@ static bool do_disembark(struct player *act_player, struct unit *act_unit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Have the actor unit embark the target unit.
 
    Assumes that all checks for action legality has been done.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_unit_embark(struct player *act_player, struct unit *act_unit,
                            struct unit *tgt_unit,
                            const struct action *paction)
@@ -645,13 +645,13 @@ static bool do_unit_embark(struct player *act_player, struct unit *act_unit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the player is able to change his diplomatic
    relationship to the other player to war.
 
    Note that the player can't declare war on someone he already is at war
    with.
- **************************************************************************/
+ */
 static bool rel_may_become_war(const struct player *pplayer,
                                const struct player *oplayer)
 {
@@ -668,12 +668,12 @@ static bool rel_may_become_war(const struct player *pplayer,
          && ds != DS_TEAM && pplayer != oplayer;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the first player that may enable the specified action if war is
    declared.
 
    Helper for need_war_player(). Use it in stead.
- **************************************************************************/
+ */
 static struct player *need_war_player_hlp(const struct unit *actor,
                                           const action_id act,
                                           const struct tile *target_tile,
@@ -873,11 +873,11 @@ static struct player *need_war_player_hlp(const struct unit *actor,
   return target_player;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the first player that may enable the specified action if war is
    declared. If the specified action is ACTION_ANY the first player that
    may enable any action at all if war is declared will be returned.
- **************************************************************************/
+ */
 static struct player *need_war_player(const struct unit *actor,
                                       const action_id act_id,
                                       const struct tile *target_tile,
@@ -909,11 +909,11 @@ static struct player *need_war_player(const struct unit *actor,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the specified terrain type blocks the specified action.
 
    If the "action" is ACTION_ANY all actions are checked.
- **************************************************************************/
+ */
 static bool does_terrain_block_action(const action_id act_id, bool is_target,
                                       struct unit *actor_unit,
                                       struct terrain *pterrain)
@@ -954,11 +954,11 @@ static bool does_terrain_block_action(const action_id act_id, bool is_target,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE iff the specified nation blocks the specified action.
 
    If the "action" is ACTION_ANY all actions are checked.
- **************************************************************************/
+ */
 static bool does_nation_block_action(const action_id act_id, bool is_target,
                                      struct unit *actor_unit,
                                      struct nation_type *pnation)
@@ -999,10 +999,10 @@ static bool does_nation_block_action(const action_id act_id, bool is_target,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Returns an explaination why punit can't perform the specified action
    based on the current game state.
- **************************************************************************/
+ */
 static struct ane_expl *expl_act_not_enabl(struct unit *punit,
                                            const action_id act_id,
                                            const struct tile *target_tile,
@@ -1408,9 +1408,9 @@ static struct ane_expl *expl_act_not_enabl(struct unit *punit,
   return explnat;
 }
 
-/**********************************************************************/ /**
+/**
    Give the reason kind why an action isn't enabled.
- **************************************************************************/
+ */
 enum ane_kind action_not_enabled_reason(struct unit *punit, action_id act_id,
                                         const struct tile *target_tile,
                                         const struct city *target_city,
@@ -1425,10 +1425,10 @@ enum ane_kind action_not_enabled_reason(struct unit *punit, action_id act_id,
   return out;
 }
 
-/**********************************************************************/ /**
+/**
    Explain why punit can't perform any action at all based on its current
    game state.
- **************************************************************************/
+ */
 static void explain_why_no_action_enabled(struct unit *punit,
                                           const struct tile *target_tile,
                                           const struct city *target_city,
@@ -1692,14 +1692,14 @@ static void explain_why_no_action_enabled(struct unit *punit,
   delete explnat;
 }
 
-/**********************************************************************/ /**
+/**
    Handle a query for what actions a unit may do.
 
    MUST always send a reply so the client can move on in the queue. This
    includes when the client give invalid input. That the acting unit died
    before the server received a request for what actions it could do should
    not stop the client from processing the next unit in the queue.
- **************************************************************************/
+ */
 void handle_unit_get_actions(struct connection *pc, const int actor_unit_id,
                              const int target_unit_id_client,
                              const int target_tile_id,
@@ -1939,13 +1939,13 @@ void handle_unit_get_actions(struct connection *pc, const int actor_unit_id,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Try to explain to the player why an action is illegal.
 
    Event type should be E_BAD_COMMAND if the player should know that the
    action is illegal or E_UNIT_ILLEGAL_ACTION if new information potentially
    is being revealed to the player.
- **************************************************************************/
+ */
 void illegal_action_msg(struct player *pplayer, const enum event_type event,
                         struct unit *actor, const action_id stopped_action,
                         const struct tile *target_tile,
@@ -2357,7 +2357,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
   delete explnat;
 }
 
-/**********************************************************************/ /**
+/**
    Punish a player for trying to perform an action that turned out to be
    illegal. The punishment, if any at all, is specified by the ruleset.
    @param pplayer the player to punish.
@@ -2369,7 +2369,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
    @param tgt_tile the tile of the target of the action.
    @param requester who ordered the action performed?
    @return TRUE iff player was punished for trying to do the illegal action.
- **************************************************************************/
+ */
 static bool illegal_action_pay_price(
     struct player *pplayer, bool information_revealed, struct unit *act_unit,
     struct action *stopped_action, struct player *tgt_player,
@@ -2475,11 +2475,11 @@ static bool illegal_action_pay_price(
   return punishment_mp != 0 || punishment_hp != 0;
 }
 
-/**********************************************************************/ /**
+/**
    Tell the client that the action it requested is illegal. This can be
    caused by the player (and therefore the client) not knowing that some
    condition of an action no longer is true.
- **************************************************************************/
+ */
 static void
 illegal_action(struct player *pplayer, struct unit *actor,
                action_id stopped_action_id, struct player *tgt_player,
@@ -2527,9 +2527,9 @@ illegal_action(struct player *pplayer, struct unit *actor,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Inform the client that something went wrong during a unit diplomat query
- **************************************************************************/
+ */
 static void unit_query_impossible(struct connection *pc, const int actor_id,
                                   const int target_id, bool disturb_player)
 {
@@ -2537,13 +2537,13 @@ static void unit_query_impossible(struct connection *pc, const int actor_id,
                                   disturb_player);
 }
 
-/**********************************************************************/ /**
+/**
    Tell the client the cost of bribing a unit, inciting a revolt, or
    any other parameters needed for action.
 
    Only send result back to the requesting connection, not all
    connections for that player.
- **************************************************************************/
+ */
 void handle_unit_action_query(struct connection *pc, const int actor_id,
                               const int target_id,
                               const action_id action_type,
@@ -2642,11 +2642,11 @@ void handle_unit_action_query(struct connection *pc, const int actor_id,
   };
 }
 
-/**********************************************************************/ /**
+/**
    Handle a request to do an action.
 
    action_type must be a valid action.
- **************************************************************************/
+ */
 void handle_unit_do_action(struct player *pplayer, const int actor_id,
                            const int target_id, const int sub_tgt_id,
                            const char *name, const action_id action_type)
@@ -2655,11 +2655,11 @@ void handle_unit_do_action(struct player *pplayer, const int actor_id,
                              action_type, ACT_REQ_PLAYER);
 }
 
-/**********************************************************************/ /**
+/**
    Handle unit action
 
    action_type must be a valid action.
- **************************************************************************/
+ */
 void unit_do_action(struct player *pplayer, const int actor_id,
                     const int target_id, const int sub_tgt_id,
                     const char *name, const action_id action_type)
@@ -2670,7 +2670,7 @@ void unit_do_action(struct player *pplayer, const int actor_id,
   Q_UNUSED(unused);
 }
 
-/**********************************************************************/ /**
+/**
    Execute a request to perform an action and let the caller know if it was
    performed or not.
 
@@ -2678,7 +2678,7 @@ void unit_do_action(struct player *pplayer, const int actor_id,
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 bool unit_perform_action(struct player *pplayer, const int actor_id,
                          const int target_id, const int sub_tgt_id_incoming,
                          const char *name, const action_id action_type,
@@ -3174,13 +3174,13 @@ bool unit_perform_action(struct player *pplayer, const int actor_id,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Transfer a unit from one city (and possibly player) to another.
    If 'rehome' is not set, only change the player which owns the unit
    (the new owner is new_pcity's owner). Otherwise the new unit will be
    given a homecity, even if it was homeless before.
    This new homecity must be valid for this unit.
- **************************************************************************/
+ */
 void unit_change_homecity_handling(struct unit *punit,
                                    struct city *new_pcity, bool rehome)
 {
@@ -3274,11 +3274,11 @@ void unit_change_homecity_handling(struct unit *punit,
   fc_assert(unit_owner(punit) == city_owner(new_pcity));
 }
 
-/**********************************************************************/ /**
+/**
    Change a unit's home city.
 
    Returns TRUE iff the action could be done, FALSE if it couldn't.
- **************************************************************************/
+ */
 static bool do_unit_change_homecity(struct unit *punit, struct city *pcity,
                                     const struct action *paction)
 {
@@ -3304,13 +3304,13 @@ static bool do_unit_change_homecity(struct unit *punit, struct city *pcity,
   return punit->homecity == pcity->id;
 }
 
-/**********************************************************************/ /**
+/**
    This function assumes that the target city is valid. It should only be
    called after checking that the unit legally can join the target city.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool city_add_unit(struct player *pplayer, struct unit *punit,
                           struct city *pcity, const struct action *paction)
 {
@@ -3357,7 +3357,7 @@ static bool city_add_unit(struct player *pplayer, struct unit *punit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    This function assumes a certain level of consistency checking: There
    is no city under punit->(x,y), and that location is a valid one on
    which to build a city. It should only be called after a call to a
@@ -3365,7 +3365,7 @@ static bool city_add_unit(struct player *pplayer, struct unit *punit,
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool city_build(struct player *pplayer, struct unit *punit,
                        struct tile *ptile, const char *name,
                        const struct action *paction)
@@ -3408,9 +3408,9 @@ static bool city_build(struct player *pplayer, struct unit *punit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Handle change in unit activity.
- **************************************************************************/
+ */
 static void
 handle_unit_change_activity_real(struct player *pplayer, int unit_id,
                                  enum unit_activity activity,
@@ -3457,9 +3457,9 @@ handle_unit_change_activity_real(struct player *pplayer, int unit_id,
   unit_activity_handling_targeted(punit, activity, &activity_target);
 }
 
-/**********************************************************************/ /**
+/**
    Handle change in unit activity.
- **************************************************************************/
+ */
 void handle_unit_change_activity(struct player *pplayer, int unit_id,
                                  enum unit_activity activity, int target_id)
 {
@@ -3475,9 +3475,9 @@ void handle_unit_change_activity(struct player *pplayer, int unit_id,
                                    activity_target);
 }
 
-/**********************************************************************/ /**
+/**
    Make sure everyone who can see combat does.
- **************************************************************************/
+ */
 static void see_combat(struct unit *pattacker, struct unit *pdefender)
 {
   struct packet_unit_short_info unit_att_short_packet, unit_def_short_packet;
@@ -3533,9 +3533,9 @@ static void see_combat(struct unit *pattacker, struct unit *pdefender)
   conn_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Send combat info to players.
- **************************************************************************/
+ */
 static void send_combat(struct unit *pattacker, struct unit *pdefender,
                         int att_veteran, int def_veteran, int bombard)
 {
@@ -3582,13 +3582,13 @@ static void send_combat(struct unit *pattacker, struct unit *pdefender,
   conn_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    This function assumes the bombard is legal. The calling function should
    have already made all necessary checks.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool unit_bombard(struct unit *punit, struct tile *ptile,
                          const struct action *paction)
 {
@@ -3683,7 +3683,7 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Do a "regular" nuclear attack.
 
    Can be stopped by an EFT_NUKE_PROOF (SDI defended) city.
@@ -3693,7 +3693,7 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool unit_nuke(struct player *pplayer, struct unit *punit,
                       struct tile *def_tile, const struct action *paction)
 {
@@ -3749,7 +3749,7 @@ static bool unit_nuke(struct player *pplayer, struct unit *punit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Destroy the target city.
 
    This function assumes the destruction is legal. The calling function
@@ -3757,7 +3757,7 @@ static bool unit_nuke(struct player *pplayer, struct unit *punit,
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool unit_do_destroy_city(struct player *act_player,
                                  struct unit *act_unit,
                                  struct city *tgt_city,
@@ -3832,7 +3832,7 @@ static bool unit_do_destroy_city(struct player *act_player,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Do a "regular" attack.
 
    This function assumes the attack is legal. The calling function should
@@ -3840,7 +3840,7 @@ static bool unit_do_destroy_city(struct player *act_player,
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_attack(struct unit *punit, struct tile *def_tile,
                       const struct action *paction)
 {
@@ -4069,7 +4069,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Have the unit perform a surgical strike against the current production
    in the target city.
 
@@ -4078,7 +4078,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_unit_strike_city_production(const struct player *act_player,
                                            struct unit *act_unit,
                                            struct city *tgt_city,
@@ -4139,7 +4139,7 @@ static bool do_unit_strike_city_production(const struct player *act_player,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Have the unit perform a surgical strike against a building in the target
    city.
 
@@ -4148,7 +4148,7 @@ static bool do_unit_strike_city_production(const struct player *act_player,
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_unit_strike_city_building(const struct player *act_player,
                                          struct unit *act_unit,
                                          struct city *tgt_city,
@@ -4224,7 +4224,7 @@ static bool do_unit_strike_city_building(const struct player *act_player,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Have the unit conquer a city.
 
    This function assumes the attack is legal. The calling function should
@@ -4232,7 +4232,7 @@ static bool do_unit_strike_city_building(const struct player *act_player,
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_unit_conquer_city(struct player *act_player,
                                  struct unit *act_unit,
                                  struct city *tgt_city,
@@ -4262,9 +4262,9 @@ static bool do_unit_conquer_city(struct player *act_player,
   return success;
 }
 
-/**********************************************************************/ /**
+/**
    See also aiunit could_unit_move_to_tile()
- **************************************************************************/
+ */
 static bool can_unit_move_to_tile_with_notify(struct unit *punit,
                                               struct tile *dest_tile,
                                               bool igzoc,
@@ -4329,7 +4329,7 @@ static bool can_unit_move_to_tile_with_notify(struct unit *punit,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Will try to move to/attack the tile dest_x,dest_y.  Returns TRUE if this
    was done, FALSE if it wasn't for some reason. Even if this returns TRUE,
    the unit may have died upon arrival to new tile.
@@ -4347,7 +4347,7 @@ static bool can_unit_move_to_tile_with_notify(struct unit *punit,
    controlled action) to pdesttile the game will try to explain why.
 
    FIXME: This function needs a good cleaning.
- **************************************************************************/
+ */
 bool unit_move_handling(struct unit *punit, struct tile *pdesttile,
                         bool igzoc, bool move_do_not_act)
 {
@@ -4479,7 +4479,7 @@ bool unit_move_handling(struct unit *punit, struct tile *pdesttile,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Help build the current production in a city.
 
    The amount of shields used to build the unit added to the city's shield
@@ -4488,7 +4488,7 @@ bool unit_move_handling(struct unit *punit, struct tile *pdesttile,
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool unit_do_help_build(struct player *pplayer, struct unit *punit,
                                struct city *pcity_dest,
                                const struct action *paction)
@@ -4584,13 +4584,13 @@ static bool unit_do_help_build(struct player *pplayer, struct unit *punit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Handle request to establish traderoute. If pcity_dest is NULL, assumes
    that unit is inside target city.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_unit_establish_trade(struct player *pplayer,
                                     struct unit *punit,
                                     struct city *pcity_dest,
@@ -4944,14 +4944,14 @@ static bool do_unit_establish_trade(struct player *pplayer,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Change various unit server side client state.
 
    The server keeps various unit state that is owned by the client. The only
    consequence this state has for the game is how the client reacts to it.
    The state may be server side because the server writes to it or simply to
    have it end up in the save game.
- **************************************************************************/
+ */
 void handle_unit_sscs_set(struct player *pplayer, int unit_id,
                           enum unit_ss_data_type type, int value)
 {
@@ -5013,9 +5013,9 @@ void handle_unit_sscs_set(struct player *pplayer, int unit_id,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Delete a unit's current plans.
- **************************************************************************/
+ */
 static void unit_plans_clear(struct unit *punit)
 {
   /* Remove city spot reservations for AI settlers on city founding
@@ -5029,9 +5029,9 @@ static void unit_plans_clear(struct unit *punit)
   punit->goto_tile = NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Handle request to change controlling server side agent.
- **************************************************************************/
+ */
 void handle_unit_server_side_agent_set(struct player *pplayer, int unit_id,
                                        enum server_side_agent agent)
 {
@@ -5074,10 +5074,10 @@ void handle_unit_server_side_agent_set(struct player *pplayer, int unit_id,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Change controlling server side agent.
    @returns TRUE iff the server side agent was changed.
- **************************************************************************/
+ */
 bool unit_server_side_agent_set(struct player *pplayer, struct unit *punit,
                                 enum server_side_agent agent)
 {
@@ -5109,10 +5109,10 @@ bool unit_server_side_agent_set(struct player *pplayer, struct unit *punit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Update everything that needs changing when unit activity changes from
    old activity to new one.
- **************************************************************************/
+ */
 static void unit_activity_dependencies(struct unit *punit,
                                        enum unit_activity old_activity,
                                        struct extra_type *old_target)
@@ -5158,12 +5158,12 @@ static void unit_activity_dependencies(struct unit *punit,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Perform an action that is an activity.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_action_activity(struct unit *punit,
                                const struct action *paction)
 {
@@ -5175,9 +5175,9 @@ static bool do_action_activity(struct unit *punit,
   return unit_activity_internal(punit, new_activity);
 }
 
-/**********************************************************************/ /**
+/**
    Handle request for changing activity.
- **************************************************************************/
+ */
 bool unit_activity_handling(struct unit *punit,
                             enum unit_activity new_activity)
 {
@@ -5199,12 +5199,12 @@ bool unit_activity_handling(struct unit *punit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Handle request for changing activity.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool unit_activity_internal(struct unit *punit,
                                    enum unit_activity new_activity)
 {
@@ -5222,12 +5222,12 @@ static bool unit_activity_internal(struct unit *punit,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Perform an action that is an activity.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool do_action_activity_targeted(struct unit *punit,
                                         const struct action *paction,
                                         struct extra_type **new_target)
@@ -5241,9 +5241,9 @@ static bool do_action_activity_targeted(struct unit *punit,
   return unit_activity_targeted_internal(punit, new_activity, new_target);
 }
 
-/**********************************************************************/ /**
+/**
    Handle request for targeted activity.
- **************************************************************************/
+ */
 bool unit_activity_handling_targeted(struct unit *punit,
                                      enum unit_activity new_activity,
                                      struct extra_type **new_target)
@@ -5259,12 +5259,12 @@ bool unit_activity_handling_targeted(struct unit *punit,
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Handle request for targeted activity.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
    this returns TRUE, unit may have died during the action.
- **************************************************************************/
+ */
 static bool unit_activity_targeted_internal(struct unit *punit,
                                             enum unit_activity new_activity,
                                             struct extra_type **new_target)
@@ -5302,9 +5302,9 @@ static bool unit_activity_targeted_internal(struct unit *punit,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Receives route packages.
- **************************************************************************/
+ */
 void handle_unit_orders(struct player *pplayer,
                         const struct packet_unit_orders *packet)
 {
@@ -5411,9 +5411,9 @@ void handle_unit_orders(struct player *pplayer,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Handle worker task assigned to the city
- **************************************************************************/
+ */
 void handle_worker_task(struct player *pplayer,
                         const struct packet_worker_task *packet)
 {

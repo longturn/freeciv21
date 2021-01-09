@@ -72,10 +72,10 @@ static void finish_processing_request(struct connection *pconn);
 
 static void send_lanserver_response();
 
-/*************************************************************************/ /**
+/**
    Close the connection (very low-level). See also
    server_conn_close_callback().
- *****************************************************************************/
+ */
 static void close_connection(struct connection *pconn)
 {
   if (!pconn) {
@@ -109,10 +109,10 @@ static void close_connection(struct connection *pconn)
   send_updated_vote_totals(NULL);
 }
 
-/*************************************************************************/ /**
+/**
    Close all network stuff: connections, listening sockets, metaserver
    connection...
- *****************************************************************************/
+ */
 void close_connections_and_socket()
 {
   int i;
@@ -143,10 +143,10 @@ void close_connections_and_socket()
   packets_deinit();
 }
 
-/*************************************************************************/ /**
+/**
    Now really close connections marked as 'is_closing'.
    Do this here to avoid recursive sending.
- *****************************************************************************/
+ */
 void really_close_connections()
 {
   struct connection *closing[MAX_NUM_CONNECTIONS];
@@ -180,20 +180,20 @@ void really_close_connections()
   } while (0 < num); /* May some errors occurred, let's check. */
 }
 
-/*************************************************************************/ /**
+/**
    Break a client connection. You should almost always use
    connection_close_server() instead of calling this function directly.
- *****************************************************************************/
+ */
 static void server_conn_close_callback(struct connection *pconn)
 {
   /* Do as little as possible here to avoid recursive evil. */
   pconn->server.is_closing = true;
 }
 
-/*************************************************************************/ /**
+/**
    Attempt to flush all information in the send buffers for upto 'netwait'
    seconds.
- *****************************************************************************/
+ */
 void flush_packets()
 {
   for (auto &i : connections) { // check for freaky players
@@ -221,9 +221,9 @@ struct packet_to_handle {
   enum packet_type type;
 };
 
-/*************************************************************************/ /**
+/**
    Simplify a loop by wrapping get_packet_from_connection.
- *****************************************************************************/
+ */
 static bool get_packet(struct connection *pconn,
                        struct packet_to_handle *ppacket)
 {
@@ -232,11 +232,11 @@ static bool get_packet(struct connection *pconn,
   return NULL != ppacket->data;
 }
 
-/*************************************************************************/ /**
+/**
    Handle all incoming packets on a client connection.
    Precondition - we have read_socket_data.
    Postcondition - there are no more packets to handle on this connection.
- *****************************************************************************/
+ */
 void incoming_client_packets(struct connection *pconn)
 {
   struct packet_to_handle packet;
@@ -285,14 +285,14 @@ void incoming_client_packets(struct connection *pconn)
 #endif /* PROCESSING_TIME_STATISTICS */
 }
 
-/*************************************************************************/ /**
+/**
    Make up a name for the connection, before we get any data from
    it to use as a sensible name.  Name will be 'c' + integer,
    guaranteed not to be the same as any other connection name,
    nor player name nor user name, nor connection id (avoid possible
    confusions).   Returns pointer to static buffer, and fills in
    (*id) with chosen value.
- *****************************************************************************/
+ */
 static const char *makeup_connection_name(int *id)
 {
   static unsigned short i = 0;
@@ -312,12 +312,12 @@ static const char *makeup_connection_name(int *id)
   }
 }
 
-/*************************************************************************/ /**
+/**
    Server accepts connection from client:
    Low level socket stuff, and basic-initialize the connection struct.
    Returns 0 on success, -1 on failure (bad accept(), or too many
    connections).
- *****************************************************************************/
+ */
 int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
 {
   civtimer *timer;
@@ -373,10 +373,10 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
   return -1;
 }
 
-/*************************************************************************/ /**
+/**
    Open server socket to be used to accept client connections
    and open a server socket for server LAN announcements.
- *****************************************************************************/
+ */
 QTcpServer *server_open_socket()
 {
   auto *server = new QTcpServer;
@@ -438,10 +438,10 @@ QTcpServer *server_open_socket()
   return server;
 }
 
-/*************************************************************************/ /**
+/**
    Initialize connection related stuff. Attention: Logging is not
    available within this functions!
- *****************************************************************************/
+ */
 void init_connections()
 {
   int i;
@@ -459,9 +459,9 @@ void init_connections()
   }
 }
 
-/*************************************************************************/ /**
+/**
    Starts processing of request packet from client.
- *****************************************************************************/
+ */
 static void start_processing_request(struct connection *pconn,
                                      int request_id)
 {
@@ -474,9 +474,9 @@ static void start_processing_request(struct connection *pconn,
   pconn->server.currently_processed_request_id = request_id;
 }
 
-/*************************************************************************/ /**
+/**
    Finish processing of request packet from client.
- *****************************************************************************/
+ */
 static void finish_processing_request(struct connection *pconn)
 {
   if (!pconn || !pconn->used) {
@@ -490,9 +490,9 @@ static void finish_processing_request(struct connection *pconn)
   conn_compression_thaw(pconn);
 }
 
-/*************************************************************************/ /**
+/**
    Ping a connection.
- *****************************************************************************/
+ */
 void connection_ping(struct connection *pconn)
 {
   civtimer *timer = timer_new(TIMER_USER, TIMER_ACTIVE);
@@ -504,9 +504,9 @@ void connection_ping(struct connection *pconn)
   send_packet_conn_ping(pconn);
 }
 
-/*************************************************************************/ /**
+/**
    Handle response to ping.
- *****************************************************************************/
+ */
 void handle_conn_pong(struct connection *pconn)
 {
   civtimer *timer;
@@ -526,17 +526,17 @@ void handle_conn_pong(struct connection *pconn)
                .arg(pconn->ping_time));
 }
 
-/*************************************************************************/ /**
+/**
    Handle client's regular hearbeat
- *****************************************************************************/
+ */
 void handle_client_heartbeat(struct connection *pconn)
 {
   log_debug("Received heartbeat");
 }
 
-/*************************************************************************/ /**
+/**
    Send ping time info about all connections to all connections.
- *****************************************************************************/
+ */
 void send_ping_times_to_all()
 {
   struct packet_conn_ping_info packet;
@@ -559,10 +559,10 @@ void send_ping_times_to_all()
   lsend_packet_conn_ping_info(game.est_connections, &packet);
 }
 
-/*************************************************************************/ /**
+/**
    Listen for UDP packets multicasted from clients requesting
    announcement of servers on the LAN.
- *****************************************************************************/
+ */
 void get_lanserver_announcement()
 {
   struct data_in din;
@@ -586,10 +586,10 @@ void get_lanserver_announcement()
   }
 }
 
-/*************************************************************************/ /**
+/**
    This function broadcasts an UDP packet to clients with
    that requests information about the server state.
- *****************************************************************************/
+ */
 /* We would need a raw network connection for broadcast messages */
 static void send_lanserver_response()
 {

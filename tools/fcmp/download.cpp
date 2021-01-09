@@ -43,9 +43,9 @@ static const char *download_modpack_recursive(const char *URL,
                                               const dl_pb_callback &pbcb,
                                               int recursion);
 
-/**********************************************************************/ /**
+/**
    Download modpack from a given URL
- **************************************************************************/
+ */
 const char *download_modpack(const char *URL, const struct fcmp_params *fcmp,
                              const dl_msg_callback &mcb,
                              const dl_pb_callback &pbcb)
@@ -53,9 +53,9 @@ const char *download_modpack(const char *URL, const struct fcmp_params *fcmp,
   return download_modpack_recursive(URL, fcmp, mcb, pbcb, 0);
 }
 
-/**********************************************************************/ /**
+/**
    Download modpack and its recursive dependencies.
- **************************************************************************/
+ */
 static const char *download_modpack_recursive(const char *URL,
                                               const struct fcmp_params *fcmp,
                                               const dl_msg_callback &mcb,
@@ -378,9 +378,9 @@ static const char *download_modpack_recursive(const char *URL,
   return NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Download modpack list
- **************************************************************************/
+ */
 const char *download_modpack_list(const struct fcmp_params *fcmp,
                                   const modpack_list_setup_cb &cb,
                                   const dl_msg_callback &mcb)

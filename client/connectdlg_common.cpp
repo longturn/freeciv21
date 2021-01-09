@@ -126,9 +126,9 @@ then:
          the game.
 **************************************************************************/
 
-/**********************************************************************/ /**
+/**
    Tests if the client has started the server.
- **************************************************************************/
+ */
 bool is_server_running()
 {
   if (server_quitting) {
@@ -137,18 +137,18 @@ bool is_server_running()
   return serverProcess::i()->state();
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if the client has hack access.
- **************************************************************************/
+ */
 bool can_client_access_hack() { return client_has_hack; }
 
-/**********************************************************************/ /**
+/**
    Kills the server if the client has started it.
 
    If the 'force' parameter is unset, we just do a /quit.  If it's set, then
    we'll send a signal to the server to kill it (use this when the socket
    is disconnected already).
- **************************************************************************/
+ */
 void client_kill_server(bool force)
 {
   if (is_server_running()) {
@@ -179,9 +179,9 @@ void client_kill_server(bool force)
   client_has_hack = false;
 }
 
-/*********************************************************************/ /**
+/**
    Finds the next (lowest) free port.
- *************************************************************************/
+ */
 static int find_next_free_port(int starting_port, int highest_port)
 {
   // Make sure it's destroyed and resources are cleaned up on return
@@ -197,10 +197,10 @@ static int find_next_free_port(int starting_port, int highest_port)
   return -1;
 }
 
-/**********************************************************************/ /**
+/**
    Forks a server if it can. Returns FALSE if we find we
    couldn't start the server.
- **************************************************************************/
+ */
 bool client_start_server()
 {
   QStringList arguments;
@@ -361,9 +361,9 @@ bool client_start_server()
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Generate a random string.
- **************************************************************************/
+ */
 static void randomize_string(char *str, size_t n)
 {
   const char chars[] =
@@ -376,14 +376,14 @@ static void randomize_string(char *str, size_t n)
   str[i] = '\0';
 }
 
-/**********************************************************************/ /**
+/**
    If the client is capable of 'wanting hack', then the server will
    send the client a filename in the packet_join_game_reply packet.
 
    This function creates the file with a suitably random string in it
    and then sends the string to the server. If the server can open
    and read the string, then the client is given hack access.
- **************************************************************************/
+ */
 void send_client_wants_hack(const char *filename)
 {
   if (filename[0] != '\0') {
@@ -420,9 +420,9 @@ void send_client_wants_hack(const char *filename)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Handle response (by the server) if the client has got hack or not.
- **************************************************************************/
+ */
 void handle_single_want_hack_reply(bool you_have_hack)
 {
   /* remove challenge file */
@@ -448,9 +448,9 @@ void handle_single_want_hack_reply(bool you_have_hack)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Send server command to save game.
- **************************************************************************/
+ */
 void send_save_game(const char *filename)
 {
   if (filename) {
@@ -460,9 +460,9 @@ void send_save_game(const char *filename)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Handle the list of rulesets sent by the server.
- **************************************************************************/
+ */
 void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
 {
   char **rulesets = new char *[packet->ruleset_count];
@@ -487,10 +487,10 @@ void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
   delete[] rulesets;
 }
 
-/**********************************************************************/ /**
+/**
    Called by the GUI code when the user sets the ruleset.  The ruleset
    passed in here should match one of the strings given to set_rulesets().
- **************************************************************************/
+ */
 void set_ruleset(const char *ruleset)
 {
   char buf[4096];

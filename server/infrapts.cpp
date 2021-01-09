@@ -23,9 +23,9 @@
 #include "notify.h"
 #include "plrhand.h"
 
-/************************************************************************/ /**
+/**
    Handle player_place_infra packet
- ****************************************************************************/
+ */
 void handle_player_place_infra(struct player *pplayer, int tile, int extra)
 {
   struct tile *ptile;

@@ -50,9 +50,9 @@
 
 static int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs);
 
-/************************************************************************/ /**
+/**
    Return a (static) string with a tile's food/prod/trade
- ****************************************************************************/
+ */
 const QString get_tile_output_text(const struct tile *ptile)
 {
   QString str;
@@ -85,10 +85,10 @@ const QString get_tile_output_text(const struct tile *ptile)
   return qUtf8Printable(str);
 }
 
-/************************************************************************/ /**
+/**
    For AIs, fill the buffer with their player name prefixed with "AI". For
    humans, just fill it with their username.
- ****************************************************************************/
+ */
 static inline void get_full_username(char *buf, int buflen,
                                      const struct player *pplayer)
 {
@@ -109,10 +109,10 @@ static inline void get_full_username(char *buf, int buflen,
   }
 }
 
-/************************************************************************/ /**
+/**
    Fill the buffer with the player's nation name (in adjective form) and
    optionally add the player's team name.
- ****************************************************************************/
+ */
 static inline void get_full_nation(char *buf, int buflen,
                                    const struct player *pplayer)
 {
@@ -135,9 +135,9 @@ static inline void get_full_nation(char *buf, int buflen,
   }
 }
 
-/************************************************************************/ /**
+/**
    Text to popup on a middle-click in the mapview.
- ****************************************************************************/
+ */
 const QString popup_info_text(struct tile *ptile)
 {
   QString activity_text;
@@ -515,9 +515,9 @@ const QString popup_info_text(struct tile *ptile)
 }
 
 #define FAR_CITY_SQUARE_DIST (2 * (6 * 6))
-/************************************************************************/ /**
+/**
    Returns the text describing the city and its distance.
- ****************************************************************************/
+ */
 const QString get_nearest_city_text(struct city *pcity, int sq_dist)
 {
   if (!pcity) {
@@ -541,13 +541,13 @@ const QString get_nearest_city_text(struct city *pcity, int sq_dist)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Returns the unit description.
    Used in e.g. city report tooltips.
 
    FIXME: This function is not re-entrant because it returns a pointer to
    static data.
- ****************************************************************************/
+ */
 const QString unit_description(struct unit *punit)
 {
   int pcity_near_dist;
@@ -600,7 +600,7 @@ const QString unit_description(struct unit *punit)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Describe the airlift capacity of a city for the given units (from their
    current positions).
    If pdest is non-NULL, describe its capacity as a destination, otherwise
@@ -610,7 +610,7 @@ const QString unit_description(struct unit *punit)
    If not all of the listed units can be airlifted, return the description
    for those that can.
    Returns NULL if an airlift is not possible for any of the units.
- ****************************************************************************/
+ */
 const QString get_airlift_text(const struct unit_list *punits,
                                const struct city *pdest)
 {
@@ -712,9 +712,9 @@ const QString get_airlift_text(const struct unit_list *punits,
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Return total expected bulbs.
- ****************************************************************************/
+ */
 static int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs)
 {
   const struct research *presearch;
@@ -759,9 +759,9 @@ static int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs)
   return ours + theirs;
 }
 
-/************************************************************************/ /**
+/**
    Return turns until research complete. -1 for never.
- ****************************************************************************/
+ */
 static int turns_to_research_done(const struct research *presearch,
                                   int per_turn)
 {
@@ -774,10 +774,10 @@ static int turns_to_research_done(const struct research *presearch,
   }
 }
 
-/************************************************************************/ /**
+/**
    Return turns per advance (based on currently researched advance).
    -1 for no progress.
- ****************************************************************************/
+ */
 static int turns_per_advance(const struct research *presearch, int per_turn)
 {
   if (per_turn > 0) {
@@ -788,10 +788,10 @@ static int turns_per_advance(const struct research *presearch, int per_turn)
   }
 }
 
-/************************************************************************/ /**
+/**
    Return turns until an advance is lost due to tech upkeep.
    -1 if we're not on the way to losing an advance.
- ****************************************************************************/
+ */
 static int turns_to_tech_loss(const struct research *presearch, int per_turn)
 {
   if (per_turn >= 0 || game.info.techloss_forgiveness == -1) {
@@ -807,9 +807,9 @@ static int turns_to_tech_loss(const struct research *presearch, int per_turn)
   }
 }
 
-/************************************************************************/ /**
+/**
    Returns the text to display in the science dialog.
- ****************************************************************************/
+ */
 const QString science_dialog_text()
 {
   bool team;
@@ -880,7 +880,7 @@ const QString science_dialog_text()
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Get the short science-target text.  This is usually shown directly in
    the progress bar.
 
@@ -888,7 +888,7 @@ const QString science_dialog_text()
 
    The "percent" value, if given, will be set to the completion percentage
    of the research target (actually it's a [0,1] scale not a percent).
- ****************************************************************************/
+ */
 const QString get_science_target_text(double *percent)
 {
   struct research *research = research_get(client_player());
@@ -933,9 +933,9 @@ const QString get_science_target_text(double *percent)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Set the science-goal-label text as if we're researching the given goal.
- ****************************************************************************/
+ */
 const QString get_science_goal_text(Tech_type_id goal)
 {
   const struct research *research = research_get(client_player());
@@ -970,12 +970,12 @@ const QString get_science_goal_text(Tech_type_id goal)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Return the text for the label on the info panel.  (This is traditionally
    shown to the left of the mapview.)
 
    Clicking on this text should bring up the get_info_label_text_popup text.
- ****************************************************************************/
+ */
 const QString get_info_label_text(bool moreinfo)
 {
   QString str;
@@ -1032,11 +1032,11 @@ const QString get_info_label_text(bool moreinfo)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Return the text for the popup label on the info panel.  (This is
    traditionally done as a popup whenever the regular info text is clicked
    on.)
- ****************************************************************************/
+ */
 const QString get_info_label_text_popup()
 {
   QString str;
@@ -1139,11 +1139,11 @@ const QString get_info_label_text_popup()
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Return the title text for the unit info shown in the info panel.
 
    FIXME: this should be renamed.
- ****************************************************************************/
+ */
 const QString get_unit_info_label_text1(struct unit_list *punits)
 {
   QString str;
@@ -1161,11 +1161,11 @@ const QString get_unit_info_label_text1(struct unit_list *punits)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Return the text body for the unit info shown in the info panel.
 
    FIXME: this should be renamed.
- ****************************************************************************/
+ */
 const QString get_unit_info_label_text2(struct unit_list *punits,
                                         int linebreaks)
 {
@@ -1361,11 +1361,11 @@ const QString get_unit_info_label_text2(struct unit_list *punits,
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Return text about upgrading these unit lists.
 
    Returns TRUE iff any units can be upgraded.
- ****************************************************************************/
+ */
 bool get_units_upgrade_info(char *buf, size_t bufsz,
                             struct unit_list *punits)
 {
@@ -1429,11 +1429,11 @@ bool get_units_upgrade_info(char *buf, size_t bufsz,
   }
 }
 
-/************************************************************************/ /**
+/**
    Return text about disbanding these units.
 
    Returns TRUE iff any units can be disbanded.
- ****************************************************************************/
+ */
 bool get_units_disband_info(char *buf, size_t bufsz,
                             struct unit_list *punits)
 {
@@ -1473,10 +1473,10 @@ bool get_units_disband_info(char *buf, size_t bufsz,
   }
 }
 
-/************************************************************************/ /**
+/**
    Get a tooltip text for the info panel research indicator.  See
    client_research_sprite().
- ****************************************************************************/
+ */
 const QString get_bulb_tooltip()
 {
   QString str = _("Shows your progress in "
@@ -1523,10 +1523,10 @@ const QString get_bulb_tooltip()
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Get a tooltip text for the info panel global warning indicator.  See also
    client_warming_sprite().
- ****************************************************************************/
+ */
 const QString get_global_warming_tooltip()
 {
   QString str;
@@ -1548,10 +1548,10 @@ const QString get_global_warming_tooltip()
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Get a tooltip text for the info panel nuclear winter indicator.  See also
    client_cooling_sprite().
- ****************************************************************************/
+ */
 const QString get_nuclear_winter_tooltip()
 {
   QString str;
@@ -1573,10 +1573,10 @@ const QString get_nuclear_winter_tooltip()
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Get a tooltip text for the info panel government indicator.  See also
    government_by_number(...)->sprite.
- ****************************************************************************/
+ */
 const QString get_government_tooltip()
 {
   QString str;
@@ -1592,10 +1592,10 @@ const QString get_government_tooltip()
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Returns a description of the given spaceship.  If there is no spaceship
    (pship is NULL) then text with dummy values is returned.
- ****************************************************************************/
+ */
 const QString get_spaceship_descr(struct player_spaceship *pship)
 {
   struct player_spaceship ship;
@@ -1657,10 +1657,10 @@ const QString get_spaceship_descr(struct player_spaceship *pship)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Get the text showing the timeout.  This is generally disaplyed on the info
    panel.
- ****************************************************************************/
+ */
 const QString get_timeout_label_text()
 {
   QString str;
@@ -1686,12 +1686,12 @@ const QString get_timeout_label_text()
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Format a duration, in seconds, so it comes up in minutes or hours if
    that would be more meaningful.
 
    (7 characters, maximum.  Enough for, e.g., "99h 59m".)
- ****************************************************************************/
+ */
 const QString format_duration(int duration)
 {
   QString str;
@@ -1733,10 +1733,10 @@ const QString format_duration(int duration)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Return text giving the ping time for the player.  This is generally used
    used in the playerdlg.  This should only be used in playerdlg_common.c.
- ****************************************************************************/
+ */
 QString get_ping_time_text(const struct player *pplayer)
 {
   QString str;
@@ -1763,10 +1763,10 @@ QString get_ping_time_text(const struct player *pplayer)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Return text giving the score of the player. This should only be used
    in playerdlg_common.c.
- ****************************************************************************/
+ */
 QString get_score_text(const struct player *pplayer)
 {
   QString str;
@@ -1781,11 +1781,11 @@ QString get_score_text(const struct player *pplayer)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Get the title for a "report".  This may include the city, economy,
    military, trade, player, etc., reports.  Some clients may generate the
    text themselves to get a better GUI layout.
- ****************************************************************************/
+ */
 const QString get_report_title(const char *report_name)
 {
   QString str;
@@ -1816,10 +1816,10 @@ const QString get_report_title(const char *report_name)
   return str.trimmed();
 }
 
-/**********************************************************************/ /**
+/**
    Returns custom part of the action selection dialog button text for the
    specified action (given that the action is possible).
- **************************************************************************/
+ */
 const QString get_act_sel_action_custom_text(struct action *paction,
                                              const struct act_prob prob,
                                              const struct unit *actor_unit,
@@ -1872,11 +1872,11 @@ const QString get_act_sel_action_custom_text(struct action *paction,
   return custom;
 }
 
-/**********************************************************************/ /**
+/**
    Get information about starting the action in the current situation.
    Suitable for a tool tip for the button that starts it.
    @return an explanation of a tool tip button suitable for a tool tip
- **************************************************************************/
+ */
 const QString act_sel_action_tool_tip(const struct action *paction,
                                       const struct act_prob prob)
 {
@@ -1884,9 +1884,9 @@ const QString act_sel_action_tool_tip(const struct action *paction,
   return action_prob_explain(prob);
 }
 
-/************************************************************************/ /**
+/**
    Describing buildings that affect happiness.
- ****************************************************************************/
+ */
 QString text_happiness_buildings(const struct city *pcity)
 {
   struct effect_list *plist = effect_list_new();
@@ -1905,9 +1905,9 @@ QString text_happiness_buildings(const struct city *pcity)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Describing nationality effects that affect happiness.
- ****************************************************************************/
+ */
 const QString text_happiness_nationality(const struct city *pcity)
 {
   QString str;
@@ -1945,9 +1945,9 @@ const QString text_happiness_nationality(const struct city *pcity)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Describing wonders that affect happiness.
- ****************************************************************************/
+ */
 QString text_happiness_wonders(const struct city *pcity)
 {
   struct effect_list *plist = effect_list_new();
@@ -1969,9 +1969,9 @@ QString text_happiness_wonders(const struct city *pcity)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Describing city factors that affect happiness.
- ****************************************************************************/
+ */
 const QString text_happiness_cities(const struct city *pcity)
 {
   struct player *pplayer = city_owner(pcity);
@@ -2106,9 +2106,9 @@ const QString text_happiness_cities(const struct city *pcity)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Describing units that affect happiness.
- ****************************************************************************/
+ */
 const QString text_happiness_units(const struct city *pcity)
 {
   int mlmax = get_city_bonus(pcity, EFT_MARTIAL_LAW_MAX);
@@ -2147,9 +2147,9 @@ const QString text_happiness_units(const struct city *pcity)
   return str.trimmed();
 }
 
-/************************************************************************/ /**
+/**
    Describing luxuries that affect happiness.
- ****************************************************************************/
+ */
 const QString text_happiness_luxuries(const struct city *pcity)
 {
   return QString(_("Luxury: %1 total."))

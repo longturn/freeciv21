@@ -295,7 +295,7 @@ bool cma_yoloswag::apply_result(struct city *pcity,
   }
 }
 
-/************************************************************************/ /**
+/**
  Change the actual city setting to the given result. Returns TRUE iff
  the actual data matches the calculated one.
 ****************************************************************************/
@@ -537,10 +537,10 @@ void cma_yoloswag::set_parameter(enum attr_city attr, int city_id,
   attr_city_set(attr, city_id, SAVED_PARAMETER_SIZE, buffer);
 }
 
-/************************************************************************/ /**
+/**
    Returns TRUE if the city is valid for CMA. Fills parameter if TRUE
    is returned. Parameter can be NULL.
- ****************************************************************************/
+ */
 struct city *cma_yoloswag::check_city(int city_id,
                                       struct cm_parameter *parameter)
 {
@@ -564,11 +564,11 @@ struct city *cma_yoloswag::check_city(int city_id,
   return pcity;
 }
 
-/************************************************************************/ /**
+/**
    The given city has changed. handle_city ensures that either the city
    follows the set CMA goal or that the CMA detaches itself from the
    city.
- ****************************************************************************/
+ */
 void cma_yoloswag::handle_city(struct city *pcity)
 {
   struct cm_result *result = cm_result_new(pcity);
@@ -651,62 +651,62 @@ static void city_changed(int city_id)
   }
 }
 
-/************************************************************************/ /**
+/**
    Apply result on server if it's valid
- ****************************************************************************/
+ */
 bool cma_apply_result(struct city *pcity, const struct cm_result *result)
 {
   return gimb->apply_result(pcity, result);
 }
 
-/************************************************************************/ /**
+/**
    Put city under governor control
- ****************************************************************************/
+ */
 void cma_put_city_under_agent(struct city *pcity,
                               const struct cm_parameter *const parameter)
 {
   gimb->put_city_under_agent(pcity, parameter);
 }
 
-/************************************************************************/ /**
+/**
    Release city from governor control.
- ****************************************************************************/
+ */
 void cma_release_city(struct city *pcity) { gimb->release_city(pcity); }
 
-/************************************************************************/ /**
+/**
    Check whether city is under governor control, and fill parameter if it is.
- ****************************************************************************/
+ */
 bool cma_is_city_under_agent(const struct city *pcity,
                              struct cm_parameter *parameter)
 {
   return gimb->is_city_under_agent(pcity, parameter);
 }
 
-/************************************************************************/ /**
+/**
    Get the parameter.
 
    Don't bother to cm_init_parameter, since we set all the fields anyway.
    But leave the comment here so we can find this place when searching
    for all the creators of a parameter.
- ****************************************************************************/
+ */
 bool cma_get_parameter(enum attr_city attr, int city_id,
                        struct cm_parameter *parameter)
 {
   return gimb->get_parameter(attr, city_id, parameter);
 }
 
-/************************************************************************/ /**
+/**
    Set attribute block for city from parameter.
- ****************************************************************************/
+ */
 void cma_set_parameter(enum attr_city attr, int city_id,
                        const struct cm_parameter *parameter)
 {
   gimb->set_parameter(attr, city_id, parameter);
 }
 
-/**********************************************************************/ /**
+/**
    Initialize the presets if there are no presets loaded on startup.
- **************************************************************************/
+ */
 void cmafec_init()
 {
   if (preset_list == NULL) {
@@ -714,9 +714,9 @@ void cmafec_init()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Free resources allocated for presets system.
- **************************************************************************/
+ */
 void cmafec_free()
 {
   while (cmafec_preset_num() > 0) {
@@ -725,19 +725,19 @@ void cmafec_free()
   preset_list_destroy(preset_list);
 }
 
-/**********************************************************************/ /**
+/**
    Sets the front-end parameter.
- **************************************************************************/
+ */
 void cmafec_set_fe_parameter(struct city *pcity,
                              const struct cm_parameter *const parameter)
 {
   cma_set_parameter(ATTR_CITY_CMAFE_PARAMETER, pcity->id, parameter);
 }
 
-/**********************************************************************/ /**
+/**
    Return the front-end parameter for the given city. Returns a dummy
    parameter if no parameter was set.
- **************************************************************************/
+ */
 void cmafec_get_fe_parameter(struct city *pcity, struct cm_parameter *dest)
 {
   struct cm_parameter parameter;
@@ -756,9 +756,9 @@ void cmafec_get_fe_parameter(struct city *pcity, struct cm_parameter *dest)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Adds a preset.
- **************************************************************************/
+ */
 void cmafec_preset_add(const char *descr_name, struct cm_parameter *pparam)
 {
   struct cma_preset *ppreset = new cma_preset;
@@ -773,9 +773,9 @@ void cmafec_preset_add(const char *descr_name, struct cm_parameter *pparam)
   preset_list_prepend(preset_list, ppreset);
 }
 
-/**********************************************************************/ /**
+/**
    Removes a preset.
- **************************************************************************/
+ */
 void cmafec_preset_remove(int idx)
 {
   struct cma_preset *ppreset;
@@ -789,9 +789,9 @@ void cmafec_preset_remove(int idx)
   delete ppreset;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the indexed preset's description.
- **************************************************************************/
+ */
 char *cmafec_preset_get_descr(int idx)
 {
   struct cma_preset *ppreset;
@@ -802,9 +802,9 @@ char *cmafec_preset_get_descr(int idx)
   return ppreset->descr;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the indexed preset's parameter.
- **************************************************************************/
+ */
 const struct cm_parameter *cmafec_preset_get_parameter(int idx)
 {
   struct cma_preset *ppreset;
@@ -815,10 +815,10 @@ const struct cm_parameter *cmafec_preset_get_parameter(int idx)
   return &ppreset->parameter;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the index of the preset which matches the given
    parameter. Returns -1 if no preset could be found.
- **************************************************************************/
+ */
 int cmafec_preset_get_index_of_parameter(
     const struct cm_parameter *const parameter)
 {
@@ -833,14 +833,14 @@ int cmafec_preset_get_index_of_parameter(
   return -1;
 }
 
-/**********************************************************************/ /**
+/**
    Returns the total number of presets.
- **************************************************************************/
+ */
 int cmafec_preset_num() { return preset_list_size(preset_list); }
 
-/**********************************************************************/ /**
+/**
    Return short description of city governor preset
- **************************************************************************/
+ */
 const char *cmafec_get_short_descr_of_city(const struct city *pcity)
 {
   struct cm_parameter parameter;
@@ -852,10 +852,10 @@ const char *cmafec_get_short_descr_of_city(const struct city *pcity)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the description of the matching preset or "custom" if no
    preset could be found.
- **************************************************************************/
+ */
 const char *
 cmafec_get_short_descr(const struct cm_parameter *const parameter)
 {
@@ -868,9 +868,9 @@ cmafec_get_short_descr(const struct cm_parameter *const parameter)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Create default cma presets for a new user (or without configuration file)
- **************************************************************************/
+ */
 void create_default_cma_presets()
 {
   int i;

@@ -148,9 +148,9 @@ pageGame::pageGame(QWidget *parent)
 
 pageGame::~pageGame() = default;
 
-/**********************************************************************/ /**
+/**
    Reloads sidebar icons (useful on theme change)
- **************************************************************************/
+ */
 void pageGame::reloadSidebarIcons()
 {
   sw_map->setPixmap(fcIcons::instance()->getPixmap(QStringLiteral("view")));
@@ -169,9 +169,9 @@ void pageGame::reloadSidebarIcons()
   sidebar_wdg->resizeMe(game_tab_widget->height(), true);
 }
 
-/**********************************************************************/ /**
+/**
    Update position
- **************************************************************************/
+ */
 void pageGame::updateSidebarPosition()
 {
   QGridLayout *l = qobject_cast<QGridLayout *>(layout());
@@ -183,9 +183,9 @@ void pageGame::updateSidebarPosition()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Real update, updates only once per 300 ms.
- **************************************************************************/
+ */
 void pageGame::updateInfoLabel()
 {
   if (king()->current_page() != PAGE_GAME) {
@@ -244,9 +244,9 @@ void pageGame::updateInfoLabelTimeout()
   FC_FREE(update_info_timer);
 }
 
-/**********************************************************************/ /**
+/**
    Updates sidebar tooltips
- **************************************************************************/
+ */
 void pageGame::updateSidebarTooltips()
 {
   QString str;
@@ -300,9 +300,9 @@ void pageGame::updateSidebarTooltips()
   sw_indicators->setTooltip(QString(get_info_label_text_popup()));
 }
 
-/**********************************************************************/ /**
+/**
    Centers next enemy city on view
- **************************************************************************/
+ */
 void center_next_enemy_city()
 {
   bool center_next = false;
@@ -340,9 +340,9 @@ void center_next_enemy_city()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Centers next player city on view
- **************************************************************************/
+ */
 void center_next_player_city()
 {
   bool center_next = false;
@@ -380,9 +380,9 @@ void center_next_player_city()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Centers next enemy capital
- **************************************************************************/
+ */
 void center_next_player_capital()
 {
   struct city *capital;
@@ -423,9 +423,9 @@ void center_next_player_capital()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Center on next enemy unit
- **************************************************************************/
+ */
 void cycle_enemy_units()
 {
   bool center_next = false;
@@ -468,23 +468,23 @@ pageGame *queen()
   return qobject_cast<pageGame *>(king()->pages[PAGE_GAME]);
 }
 
-/************************************************************************/ /**
+/**
    Game tab widget constructor
- ****************************************************************************/
+ */
 fc_game_tab_widget::fc_game_tab_widget() : QStackedWidget() {}
 
-/************************************************************************/ /**
+/**
    Init default settings for game_tab_widget
- ****************************************************************************/
+ */
 void fc_game_tab_widget::init()
 {
   connect(this, &QStackedWidget::currentChanged, this,
           &fc_game_tab_widget::current_changed);
 }
 
-/************************************************************************/ /**
+/**
    Resize event for all game tab widgets
- ****************************************************************************/
+ */
 void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
 {
   QSize size;
@@ -520,9 +520,9 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
   event->setAccepted(true);
 }
 
-/************************************************************************/ /**
+/**
    Tab has been changed
- ****************************************************************************/
+ */
 void fc_game_tab_widget::current_changed(int index)
 {
   QList<sidebarWidget *> objs;
@@ -545,9 +545,9 @@ void fc_game_tab_widget::current_changed(int index)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Inserts tab widget to game view page
- **************************************************************************/
+ */
 int pageGame::addGameTab(QWidget *widget)
 {
   int i;
@@ -557,17 +557,17 @@ int pageGame::addGameTab(QWidget *widget)
   return i;
 }
 
-/**********************************************************************/ /**
+/**
    Removes given tab widget from game page
- **************************************************************************/
+ */
 void pageGame::rmGameTab(int index)
 {
   game_tab_widget->removeWidget(queen()->game_tab_widget->widget(index));
 }
 
-/************************************************************************/ /**
+/**
    Finds not used index on game_view_tab and returns it
- ****************************************************************************/
+ */
 void pageGame::gimmePlace(QWidget *widget, const QString &str)
 {
   QString x;
@@ -581,9 +581,9 @@ void pageGame::gimmePlace(QWidget *widget, const QString &str)
   qCritical("Failed to find place for new tab widget");
 }
 
-/************************************************************************/ /**
+/**
    Returns index on game tab page of given report dialog
- ****************************************************************************/
+ */
 int pageGame::gimmeIndexOf(const QString &str)
 {
   int i;
@@ -598,9 +598,9 @@ int pageGame::gimmeIndexOf(const QString &str)
   return i;
 }
 
-/************************************************************************/ /**
+/**
    Removes report dialog string from the list marking it as closed
- ****************************************************************************/
+ */
 void pageGame::removeRepoDlg(const QString &str)
 {
   /* if app is closing opened_repo_dlg is already deleted */
@@ -609,11 +609,11 @@ void pageGame::removeRepoDlg(const QString &str)
   }
 }
 
-/************************************************************************/ /**
+/**
    Checks if given report is opened, if you create new report as tab on game
    page, figure out some original string and put in in repodlg.h as comment
  to that QWidget class.
- ****************************************************************************/
+ */
 bool pageGame::isRepoDlgOpen(const QString &str)
 {
   QWidget *w;
@@ -623,9 +623,9 @@ bool pageGame::isRepoDlgOpen(const QString &str)
   return w != NULL;
 }
 
-/**********************************************************************/ /**
+/**
    Typically an info box is provided to tell the player about the state
    of their civilization.  This function is called when the label is
    changed.
- **************************************************************************/
+ */
 void update_info_label(void) { queen()->updateInfoLabel(); }

@@ -28,10 +28,10 @@
 
 static struct terrain *char2terrain(char ch);
 
-/**********************************************************************/ /**
+/**
    Helper function for drawing map of savegames. Converts stored map char in
    savefile to proper terrain.
- **************************************************************************/
+ */
 static struct terrain *char2terrain(char ch)
 {
   if (ch == TERRAIN_UNKNOWN_IDENTIFIER) {
@@ -104,9 +104,9 @@ page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
 
 page_load::~page_load() = default;
 
-/**********************************************************************/ /**
+/**
    Updates saves to load and updates in tableview = saves_load
- **************************************************************************/
+ */
 void page_load::update_load_page()
 {
   struct fileinfo_list *files;
@@ -137,9 +137,9 @@ void page_load::update_load_page()
   fileinfo_list_destroy(files);
 }
 
-/**********************************************************************/ /**
+/**
    Starts game from chosen save - chosen_file (save or scenario)
- **************************************************************************/
+ */
 void page_load::start_from_save()
 {
   if (!is_server_running()) {
@@ -155,9 +155,9 @@ void page_load::start_from_save()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Browse saves directory
- **************************************************************************/
+ */
 void page_load::browse_saves()
 {
   QString str;
@@ -170,9 +170,9 @@ void page_load::browse_saves()
   }
 }
 
-/**********************************************************************/ /**
+/**
    State of preview has been changed
- **************************************************************************/
+ */
 void page_load::state_preview(int new_state)
 {
   Q_UNUSED(new_state)

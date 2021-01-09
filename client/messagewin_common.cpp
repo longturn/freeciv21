@@ -40,9 +40,9 @@ static struct message **messages = NULL;
 static int messages_total = 0;
 static int messages_alloc = 0;
 
-/************************************************************************/ /**
+/**
    Update the message dialog if needed.
- ****************************************************************************/
+ */
 static void meswin_dialog_update()
 {
   if (!can_client_change_view()) {
@@ -51,9 +51,9 @@ static void meswin_dialog_update()
   update_queue::uq()->add(real_meswin_dialog_update, NULL);
 }
 
-/************************************************************************/ /**
+/**
    Clear all messages.
- ****************************************************************************/
+ */
 void meswin_clear_older(int turn, int phase)
 {
   int i;
@@ -86,9 +86,9 @@ void meswin_clear_older(int turn, int phase)
   meswin_dialog_update();
 }
 
-/************************************************************************/ /**
+/**
    Add a message.
- ****************************************************************************/
+ */
 void meswin_add(const char *message, const struct text_tag_list *tags,
                 struct tile *ptile, enum event_type event, int turn,
                 int phase)
@@ -142,9 +142,9 @@ void meswin_add(const char *message, const struct text_tag_list *tags,
   meswin_dialog_update();
 }
 
-/************************************************************************/ /**
+/**
    Returns the pointer to a message.  Returns NULL on error.
- ****************************************************************************/
+ */
 const struct message *meswin_get_message(int message_index)
 {
   if (message_index >= 0 && message_index < messages_total) {
@@ -155,14 +155,14 @@ const struct message *meswin_get_message(int message_index)
   }
 }
 
-/************************************************************************/ /**
+/**
    Returns the number of message in the window.
- ****************************************************************************/
+ */
 int meswin_get_num_messages() { return messages_total; }
 
-/************************************************************************/ /**
+/**
    Sets the visited-state of a message
- ****************************************************************************/
+ */
 void meswin_set_visited_state(int message_index, bool state)
 {
   fc_assert_ret(0 <= message_index && message_index < messages_total);
@@ -170,9 +170,9 @@ void meswin_set_visited_state(int message_index, bool state)
   messages[message_index]->visited = state;
 }
 
-/************************************************************************/ /**
+/**
    Called from messagewin.c if the user clicks on the popup-city button.
- ****************************************************************************/
+ */
 void meswin_popup_city(int message_index)
 {
   fc_assert_ret(0 <= message_index && message_index < messages_total);
@@ -198,9 +198,9 @@ void meswin_popup_city(int message_index)
   }
 }
 
-/************************************************************************/ /**
+/**
    Called from messagewin.c if the user clicks on the goto button.
- ****************************************************************************/
+ */
 void meswin_goto(int message_index)
 {
   fc_assert_ret(0 <= message_index && message_index < messages_total);

@@ -21,10 +21,10 @@
 #include "pages_g.h"
 #include "qtg_cxxside.h"
 
-/**********************************************************************/ /**
+/**
    Close and destroy the dialog. But only if we don't have a local
    server running (that we started).
- **************************************************************************/
+ */
 void qtg_close_connection_dialog()
 {
   if (king()->current_page() != PAGE_NETWORK) {
@@ -32,10 +32,10 @@ void qtg_close_connection_dialog()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Configure the dialog depending on what type of authentication request the
    server is making.
- **************************************************************************/
+ */
 void handle_authentication_req(enum authentication_type type,
                                const char *message)
 {
@@ -43,12 +43,12 @@ void handle_authentication_req(enum authentication_type type,
       ->handle_authentication_req(type, message);
 }
 
-/**********************************************************************/ /**
+/**
    Provide a packet handler for packet_game_load.
 
    This regenerates the player information from a loaded game on the
    server.
- **************************************************************************/
+ */
 void handle_game_load(bool load_successful, const char *filename)
 {
   Q_UNUSED(filename)

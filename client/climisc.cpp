@@ -67,9 +67,9 @@
 #include "tilespec.h"
 
 extern void flush_dirty_overview();
-/**********************************************************************/ /**
+/**
    Remove unit, client end version
- **************************************************************************/
+ */
 void client_remove_unit(struct unit *punit)
 {
   struct city *pcity;
@@ -133,9 +133,9 @@ void client_remove_unit(struct unit *punit)
   flush_dirty_overview();
 }
 
-/**********************************************************************/ /**
+/**
    Remove city, client end version.
- **************************************************************************/
+ */
 void client_remove_city(struct city *pcity)
 {
   bool effect_update;
@@ -165,10 +165,10 @@ void client_remove_city(struct city *pcity)
   refresh_city_mapcanvas(&old_city, ptile, true, false);
 }
 
-/**********************************************************************/ /**
+/**
    Change all cities building X to building Y, if possible.  X and Y
    could be improvements or units. X and Y are compound ids.
- **************************************************************************/
+ */
 void client_change_all(struct universal *from, struct universal *to)
 {
   if (!can_client_issue_orders()) {
@@ -197,9 +197,9 @@ void client_change_all(struct universal *from, struct universal *to)
   connection_do_unbuffer(&client.conn);
 }
 
-/**********************************************************************/ /**
+/**
    Return a string indicating one nation's embassy status with another
- **************************************************************************/
+ */
 const char *get_embassy_status(const struct player *me,
                                const struct player *them)
 {
@@ -222,9 +222,9 @@ const char *get_embassy_status(const struct player *me,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return a string indicating one nation's shaed vision status with another
- **************************************************************************/
+ */
 const char *get_vision_status(const struct player *me,
                               const struct player *them)
 {
@@ -241,9 +241,9 @@ const char *get_vision_status(const struct player *me,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Copy a string that describes the given clause into the return buffer.
- **************************************************************************/
+ */
 void client_diplomacy_clause_string(char *buf, int bufsiz,
                                     struct Clause *pclause)
 {
@@ -306,11 +306,11 @@ void client_diplomacy_clause_string(char *buf, int bufsiz,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return global catastrophe chance and rate of change, scaled to some
    maximum (e.g. 100 gives percentages).
    This mirrors the logic in update_environmental_upset().
- **************************************************************************/
+ */
 static void catastrophe_scaled(int *chance, int *rate, int max, int current,
                                int accum, int level)
 {
@@ -327,27 +327,27 @@ static void catastrophe_scaled(int *chance, int *rate, int max, int current,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return global warming chance and rate of change, scaled to max.
- **************************************************************************/
+ */
 void global_warming_scaled(int *chance, int *rate, int max)
 {
   return catastrophe_scaled(chance, rate, max, game.info.heating,
                             game.info.globalwarming, game.info.warminglevel);
 }
 
-/**********************************************************************/ /**
+/**
    Return nuclear winter chance and rate of change, scaled to max.
- **************************************************************************/
+ */
 void nuclear_winter_scaled(int *chance, int *rate, int max)
 {
   return catastrophe_scaled(chance, rate, max, game.info.cooling,
                             game.info.nuclearwinter, game.info.coolinglevel);
 }
 
-/**********************************************************************/ /**
+/**
    Return the sprite for the research indicator.
- **************************************************************************/
+ */
 QPixmap *client_research_sprite()
 {
   if (NULL != client.conn.playing && can_client_change_view()) {
@@ -368,9 +368,9 @@ QPixmap *client_research_sprite()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Return the sprite for the global-warming indicator.
- **************************************************************************/
+ */
 QPixmap *client_warming_sprite()
 {
   int idx;
@@ -385,9 +385,9 @@ QPixmap *client_warming_sprite()
   return get_indicator_sprite(tileset, INDICATOR_WARMING, idx);
 }
 
-/**********************************************************************/ /**
+/**
    Return the sprite for the global-cooling indicator.
- **************************************************************************/
+ */
 QPixmap *client_cooling_sprite()
 {
   int idx;
@@ -402,9 +402,9 @@ QPixmap *client_cooling_sprite()
   return get_indicator_sprite(tileset, INDICATOR_COOLING, idx);
 }
 
-/**********************************************************************/ /**
+/**
    Return the sprite for the government indicator.
- **************************************************************************/
+ */
 QPixmap *client_government_sprite()
 {
   if (NULL != client.conn.playing && can_client_change_view()
@@ -419,10 +419,10 @@ QPixmap *client_government_sprite()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Find something sensible to display. This is used to overwrite the
    intro gfx.
- **************************************************************************/
+ */
 void center_on_something()
 {
   struct city *pcity;
@@ -474,9 +474,9 @@ void center_on_something()
   can_slide = true;
 }
 
-/**********************************************************************/ /**
+/**
    Encode a CID for the target production.
- **************************************************************************/
+ */
 cid cid_encode(struct universal target)
 {
   return VUT_UTYPE == target.kind
@@ -484,9 +484,9 @@ cid cid_encode(struct universal target)
              : improvement_number(target.value.building);
 }
 
-/**********************************************************************/ /**
+/**
    Encode a CID for the target unit type.
- **************************************************************************/
+ */
 cid cid_encode_unit(const struct unit_type *punittype)
 {
   struct universal target = {.value = {.utype = punittype},
@@ -495,9 +495,9 @@ cid cid_encode_unit(const struct unit_type *punittype)
   return cid_encode(target);
 }
 
-/**********************************************************************/ /**
+/**
    Encode a CID for the target building.
- **************************************************************************/
+ */
 cid cid_encode_building(const struct impr_type *pimprove)
 {
   struct universal target = {.value = {.building = pimprove},
@@ -506,17 +506,17 @@ cid cid_encode_building(const struct impr_type *pimprove)
   return cid_encode(target);
 }
 
-/**********************************************************************/ /**
+/**
    Encode a CID for the target city's production.
- **************************************************************************/
+ */
 cid cid_encode_from_city(const struct city *pcity)
 {
   return cid_encode(pcity->production);
 }
 
-/**********************************************************************/ /**
+/**
    Decode the CID into a city_production structure.
- **************************************************************************/
+ */
 struct universal cid_decode(cid id)
 {
   struct universal target;
@@ -532,10 +532,10 @@ struct universal cid_decode(cid id)
   return target;
 }
 
-/**********************************************************************/ /**
+/**
    Return TRUE if the city supports at least one unit of the given
    production type (returns FALSE if the production is a building).
- **************************************************************************/
+ */
 bool city_unit_supported(const struct city *pcity,
                          const struct universal *target)
 {
@@ -553,10 +553,10 @@ bool city_unit_supported(const struct city *pcity,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Return TRUE if the city has present at least one unit of the given
    production type (returns FALSE if the production is a building).
- **************************************************************************/
+ */
 bool city_unit_present(const struct city *pcity,
                        const struct universal *target)
 {
@@ -574,9 +574,9 @@ bool city_unit_present(const struct city *pcity,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    A TestCityFunc to tell whether the item is a building and is present.
- **************************************************************************/
+ */
 bool city_building_present(const struct city *pcity,
                            const struct universal *target)
 {
@@ -584,9 +584,9 @@ bool city_building_present(const struct city *pcity,
          && city_has_building(pcity, target->value.building);
 }
 
-/**********************************************************************/ /**
+/**
    Return the numerical "section" of an item.  This is used for sorting.
- **************************************************************************/
+ */
 static int target_get_section(struct universal target)
 {
   if (VUT_UTYPE == target.kind) {
@@ -608,9 +608,9 @@ static int target_get_section(struct universal target)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Helper for name_and_sort_items().
- **************************************************************************/
+ */
 static int fc_cmp(const void *p1, const void *p2)
 {
   const struct item *i1 = static_cast<const item *>(p1),
@@ -624,7 +624,7 @@ static int fc_cmp(const void *p1, const void *p2)
   return s1 - s2;
 }
 
-/**********************************************************************/ /**
+/**
    Takes an array of compound ids (cids). It will fill out an array of
    struct items and also sort it.
 
@@ -634,7 +634,7 @@ static int fc_cmp(const void *p1, const void *p2)
    section 3: other units
    section 4: small wonders
    section 5: great wonders
- **************************************************************************/
+ */
 void name_and_sort_items(struct universal *targets, int num_targets,
                          struct item *items, bool show_cost,
                          struct city *pcity)
@@ -682,11 +682,11 @@ void name_and_sort_items(struct universal *targets, int num_targets,
   qsort(items, num_targets, sizeof(struct item), fc_cmp);
 }
 
-/**********************************************************************/ /**
+/**
    Return possible production targets for the current player's cities.
 
    FIXME: this should probably take a pplayer argument.
- **************************************************************************/
+ */
 int collect_production_targets(struct universal *targets,
                                struct city **selected_cities,
                                int num_selected_cities, bool append_units,
@@ -736,12 +736,12 @@ int collect_production_targets(struct universal *targets,
   return items_used;
 }
 
-/**********************************************************************/ /**
+/**
    Collect the cids of all targets (improvements and units) which are
    currently built in a city.
 
    FIXME: this should probably take a pplayer argument.
- **************************************************************************/
+ */
 int collect_currently_building_targets(struct universal *targets)
 {
   bool mapping[MAX_NUM_PRODUCTION_TARGETS];
@@ -769,12 +769,12 @@ int collect_currently_building_targets(struct universal *targets)
   return cids_used;
 }
 
-/**********************************************************************/ /**
+/**
    Collect the cids of all targets (improvements and units) which can
    be build in a city.
 
    FIXME: this should probably take a pplayer argument.
- **************************************************************************/
+ */
 int collect_buildable_targets(struct universal *targets)
 {
   int cids_used = 0;
@@ -806,10 +806,10 @@ int collect_buildable_targets(struct universal *targets)
       return cids_used;
 }
 
-/**********************************************************************/ /**
+/**
    Collect the cids of all targets which can be build by this city or
    in general.
- **************************************************************************/
+ */
 int collect_eventually_buildable_targets(struct universal *targets,
                                          struct city *pcity,
                                          bool advanced_tech)
@@ -912,9 +912,9 @@ int collect_eventually_buildable_targets(struct universal *targets,
   return cids_used;
 }
 
-/**********************************************************************/ /**
+/**
    Collect the cids of all improvements which are built in the given city.
- **************************************************************************/
+ */
 int collect_already_built_targets(struct universal *targets,
                                   struct city *pcity)
 {
@@ -933,10 +933,10 @@ int collect_already_built_targets(struct universal *targets,
   return cids_used;
 }
 
-/**********************************************************************/ /**
+/**
    Returns number of units known to be supported by city. This might not real
    number of units in case of enemy city.
- **************************************************************************/
+ */
 int num_supported_units_in_city(struct city *pcity)
 {
   struct unit_list *plist;
@@ -951,10 +951,10 @@ int num_supported_units_in_city(struct city *pcity)
   return unit_list_size(plist);
 }
 
-/**********************************************************************/ /**
+/**
    Returns number of units known to be in city. This might not real
    number of units in case of enemy city.
- **************************************************************************/
+ */
 int num_present_units_in_city(struct city *pcity)
 {
   struct unit_list *plist;
@@ -969,9 +969,9 @@ int num_present_units_in_city(struct city *pcity)
   return unit_list_size(plist);
 }
 
-/**********************************************************************/ /**
+/**
    Handles a chat or event message.
- **************************************************************************/
+ */
 void handle_event(const char *featured_text, struct tile *ptile,
                   enum event_type event, int turn, int phase, int conn_id)
 {
@@ -1093,10 +1093,10 @@ void handle_event(const char *featured_text, struct tile *ptile,
   text_tag_list_destroy(tags);
 }
 
-/**********************************************************************/ /**
+/**
    Creates a struct packet_generic_message packet and injects it via
    handle_chat_msg.
- **************************************************************************/
+ */
 void create_event(struct tile *ptile, enum event_type event,
                   const struct ft_color color, const char *format, ...)
 {
@@ -1119,11 +1119,11 @@ void create_event(struct tile *ptile, enum event_type event,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Find city nearest to given unit and optionally return squared city
    distance Parameter sq_dist may be NULL. Returns NULL only if no city is
    known. Favors punit owner's cities over other cities if equally distant.
- **************************************************************************/
+ */
 struct city *get_nearest_city(const struct unit *punit, int *sq_dist)
 {
   struct city *pcity_near = tile_city(unit_tile(punit));
@@ -1158,11 +1158,11 @@ struct city *get_nearest_city(const struct unit *punit, int *sq_dist)
   return pcity_near;
 }
 
-/**********************************************************************/ /**
+/**
    Called when the "Buy" button is pressed in the city report for every
    selected city. Checks for coinage and sufficient funds or request the
    purchase if everything is ok.
- **************************************************************************/
+ */
 void cityrep_buy(struct city *pcity)
 {
   int value;
@@ -1197,9 +1197,9 @@ void cityrep_buy(struct city *pcity)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if any of the units can do the connect activity.
- **************************************************************************/
+ */
 bool can_units_do_connect(struct unit_list *punits,
                           enum unit_activity activity,
                           struct extra_type *tgt)
@@ -1215,10 +1215,10 @@ bool can_units_do_connect(struct unit_list *punits,
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Initialize the action probability cache. Shouldn't be kept around
    permanently. Its data is quickly outdated.
- **************************************************************************/
+ */
 void client_unit_init_act_prob_cache(struct unit *punit)
 {
   /* A double init would cause a leak. */
@@ -1227,9 +1227,9 @@ void client_unit_init_act_prob_cache(struct unit *punit)
   punit->client.act_prob_cache = new act_prob[NUM_ACTIONS]();
 }
 
-/**********************************************************************/ /**
+/**
    Set focus status of all player units to FOCUS_AVAIL.
- **************************************************************************/
+ */
 void unit_focus_set_status(struct player *pplayer)
 {
   unit_list_iterate(pplayer->units, punit)
@@ -1239,9 +1239,9 @@ void unit_focus_set_status(struct player *pplayer)
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Initialize a player on the client side.
- **************************************************************************/
+ */
 void client_player_init(struct player *pplayer)
 {
   vision_layer_iterate(v)
@@ -1251,9 +1251,9 @@ void client_player_init(struct player *pplayer)
   vision_layer_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Reset the private maps of all players.
- **************************************************************************/
+ */
 void client_player_maps_reset()
 {
   players_iterate(pplayer)
@@ -1280,9 +1280,9 @@ void client_player_maps_reset()
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Create a map image definition on the client.
- **************************************************************************/
+ */
 bool mapimg_client_define()
 {
   char str[MAX_LEN_MAPDEF];
@@ -1337,9 +1337,9 @@ bool mapimg_client_define()
   return true;
 }
 
-/**********************************************************************/ /**
+/**
    Save map image.
- **************************************************************************/
+ */
 bool mapimg_client_createmap(const char *filename)
 {
   struct mapdef *pmapdef;
@@ -1363,9 +1363,9 @@ bool mapimg_client_createmap(const char *filename)
   return mapimg_create(pmapdef, true, mapimgfile, NULL);
 }
 
-/**********************************************************************/ /**
+/**
    Returns the nation set in use.
- **************************************************************************/
+ */
 struct nation_set *client_current_nation_set()
 {
   struct option *poption = optset_option_by_name(server_optset, "nationset");
@@ -1378,19 +1378,19 @@ struct nation_set *client_current_nation_set()
   return nation_set_by_setting_value(setting_str);
 }
 
-/**********************************************************************/ /**
+/**
    Returns Whether 'pnation' is in the current nation set.
- **************************************************************************/
+ */
 bool client_nation_is_in_current_set(const struct nation_type *pnation)
 {
   return nation_is_in_set(pnation, client_current_nation_set());
 }
 
-/**********************************************************************/ /**
+/**
    Returns the current AI skill level on the server, if the same level is
    currently used for all current AI players and will be for new ones;
    else return ai_level_invalid() to indicate inconsistency.
- **************************************************************************/
+ */
 enum ai_level server_ai_level()
 {
   enum ai_level lvl = static_cast<ai_level>(game.info.skill_level);

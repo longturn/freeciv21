@@ -24,10 +24,10 @@
 
 #include "fc_cmdline.h"
 
-/**********************************************************************/ /**
+/**
    Like strcspn but also handles quotes, i.e. *reject chars are
    ignored if they are inside single or double quotes.
- **************************************************************************/
+ */
 static size_t fc_strcspn(const char *s, const char *reject)
 {
   bool in_single_quotes = false, in_double_quotes = false;
@@ -52,7 +52,7 @@ static size_t fc_strcspn(const char *s, const char *reject)
   return i;
 }
 
-/**********************************************************************/ /**
+/**
    Splits the string into tokens. The individual tokens are
    returned. The delimiterset can freely be chosen.
 
@@ -71,7 +71,7 @@ static size_t fc_strcspn(const char *s, const char *reject)
 
    The user has the responsiblity to free the memory allocated by
    **tokens using free_tokens().
- **************************************************************************/
+ */
 unsigned int get_tokens(const char *str, char **tokens, size_t num_tokens,
                         const char *delimiterset)
 {
@@ -106,9 +106,9 @@ unsigned int get_tokens(const char *str, char **tokens, size_t num_tokens,
   return token;
 }
 
-/**********************************************************************/ /**
+/**
    Frees a set of tokens created by get_tokens().
- **************************************************************************/
+ */
 void free_tokens(char **tokens, size_t ntokens)
 {
   size_t i;

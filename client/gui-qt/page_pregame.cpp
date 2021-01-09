@@ -85,10 +85,10 @@ void page_pregame::set_rulesets(int num_rulesets, char **rulesets)
 }
 
 void page_pregame::update_vote() { ui.pre_vote->update_vote(); }
-/**********************************************************************/ /**
+/**
    Updates start page (start page = client connected to server, but game not
    started)
- **************************************************************************/
+ */
 void page_pregame::update_start_page()
 {
   int conn_num, i;
@@ -331,9 +331,9 @@ void page_pregame::update_start_page()
   update_buttons();
 }
 
-/**********************************************************************/ /**
+/**
    Updates observe button in case user started observing manually
- **************************************************************************/
+ */
 void page_pregame::update_buttons()
 {
   bool sensitive;
@@ -401,9 +401,9 @@ void page_pregame::update_buttons()
   ui.pr_options->update_ai_level();
 }
 
-/**********************************************************************/ /**
+/**
    Context menu on some player, arg Qpoint specifies some pixel on screen
- **************************************************************************/
+ */
 void page_pregame::start_page_menu(QPoint pos)
 {
   QAction *action;
@@ -583,17 +583,17 @@ void page_pregame::start_page_menu(QPoint pos)
   menu->popup(global_pos);
 }
 
-/************************************************************************/ /**
+/**
    Slot to send fake chat messages. Do not use in new code.
- ****************************************************************************/
+ */
 void page_pregame::send_fake_chat_message(const QString &message)
 {
   send_chat_message(message);
 }
 
-/************************************************************************/ /**
+/**
    Appends text to chat window
- ****************************************************************************/
+ */
 void page_pregame::chat_message_received(const QString &message,
                                          const struct text_tag_list *tags)
 {
@@ -607,9 +607,9 @@ void page_pregame::chat_message_received(const QString &message,
   }
 }
 
-/************************************************************************/ /**
+/**
    User clicked Observe button in START_PAGE
- ****************************************************************************/
+ */
 void page_pregame::slot_pregame_observe()
 {
   if (client_is_observer() || client_is_global_observer()) {
@@ -625,9 +625,9 @@ void page_pregame::slot_pregame_observe()
   }
 }
 
-/************************************************************************/ /**
+/**
    User clicked Start in START_PAGE
- ****************************************************************************/
+ */
 void page_pregame::slot_pregame_start()
 {
   if (can_client_control()) {
@@ -638,9 +638,9 @@ void page_pregame::slot_pregame_start()
   }
 }
 
-/**********************************************************************/ /**
+/**
    Calls dialg selecting nations
- **************************************************************************/
+ */
 void page_pregame::slot_pick_nation()
 {
   popup_races_dialog(client_player());

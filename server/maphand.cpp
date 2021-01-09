@@ -84,9 +84,9 @@ static inline int map_get_own_seen(const struct player *pplayer,
 static bool is_claimable_ocean(struct tile *ptile, struct tile *source,
                                struct player *pplayer);
 
-/**********************************************************************/ /**
+/**
    Used only in global_warming() and nuclear_winter() below.
- **************************************************************************/
+ */
 static bool is_terrain_ecologically_wet(struct tile *ptile)
 {
   return (is_terrain_class_near_tile(ptile, TC_OCEAN)
@@ -94,9 +94,9 @@ static bool is_terrain_ecologically_wet(struct tile *ptile)
           || count_river_near_tile(ptile, NULL) > 0);
 }
 
-/**********************************************************************/ /**
+/**
    Wrapper for climate_change().
- **************************************************************************/
+ */
 void global_warming(int effect)
 {
   climate_change(true, effect);
@@ -107,9 +107,9 @@ void global_warming(int effect)
                   "ranges of grassland have become deserts."));
 }
 
-/**********************************************************************/ /**
+/**
    Wrapper for climate_change().
- **************************************************************************/
+ */
 void nuclear_winter(int effect)
 {
   climate_change(false, effect);
@@ -120,10 +120,10 @@ void nuclear_winter(int effect)
                   "ranges of grassland have become tundra."));
 }
 
-/**********************************************************************/ /**
+/**
    Do a climate change. Global warming occurred if 'warming' is TRUE, else
    there is a nuclear winter.
- **************************************************************************/
+ */
 void climate_change(bool warming, int effect)
 {
   int k = map_num_tiles();
@@ -217,10 +217,10 @@ void climate_change(bool warming, int effect)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Check city for extra upgrade. Returns whether anything was done.
    *gained will be set if there's exactly one kind of extra added.
- **************************************************************************/
+ */
 bool upgrade_city_extras(struct city *pcity, struct extra_type **gained)
 {
   struct tile *ptile = pcity->tile;
@@ -251,13 +251,13 @@ bool upgrade_city_extras(struct city *pcity, struct extra_type **gained)
   return upgradet;
 }
 
-/**********************************************************************/ /**
+/**
    To be called when a player gains some better extra building tech
    for the first time.  Sends a message, and upgrades all city
    squares to new extras.  "discovery" just affects the message: set to
       1 if the tech is a "discovery",
       0 if otherwise acquired (conquer/trade/GLib).        --dwp
- **************************************************************************/
+ */
 void upgrade_all_city_extras(struct player *pplayer, bool discovery)
 {
   int cities_upgradet = 0;
@@ -329,17 +329,17 @@ void upgrade_all_city_extras(struct player *pplayer, bool discovery)
   conn_list_do_unbuffer(pplayer->connections);
 }
 
-/**********************************************************************/ /**
+/**
    Return TRUE iff the player me really gives shared vision to player them.
- **************************************************************************/
+ */
 bool really_gives_vision(struct player *me, struct player *them)
 {
   return BV_ISSET(me->server.really_gives_vision, player_index(them));
 }
 
-/**********************************************************************/ /**
+/**
    Start buffering shared vision
- **************************************************************************/
+ */
 static void buffer_shared_vision(struct player *pplayer)
 {
   players_iterate(pplayer2)
@@ -354,9 +354,9 @@ static void buffer_shared_vision(struct player *pplayer)
   conn_list_do_buffer(pplayer->connections);
 }
 
-/**********************************************************************/ /**
+/**
    Stop buffering shared vision
- **************************************************************************/
+ */
 static void unbuffer_shared_vision(struct player *pplayer)
 {
   players_iterate(pplayer2)
@@ -371,10 +371,10 @@ static void unbuffer_shared_vision(struct player *pplayer)
   conn_list_compression_thaw(pplayer->connections);
 }
 
-/**********************************************************************/ /**
+/**
    Give information about whole map (all tiles) from player to player.
    Takes care of shared vision chains.
- **************************************************************************/
+ */
 void give_map_from_player_to_player(struct player *pfrom,
                                     struct player *pdest)
 {
@@ -391,9 +391,9 @@ void give_map_from_player_to_player(struct player *pfrom,
   sync_cities();
 }
 
-/**********************************************************************/ /**
+/**
    Give information about all oceanic tiles from player to player
- **************************************************************************/
+ */
 void give_seamap_from_player_to_player(struct player *pfrom,
                                        struct player *pdest)
 {
@@ -412,9 +412,9 @@ void give_seamap_from_player_to_player(struct player *pfrom,
   sync_cities();
 }
 
-/**********************************************************************/ /**
+/**
    Give information about tiles within city radius from player to player
- **************************************************************************/
+ */
 void give_citymap_from_player_to_player(struct city *pcity,
                                         struct player *pfrom,
                                         struct player *pdest)
@@ -434,7 +434,7 @@ void give_citymap_from_player_to_player(struct city *pcity,
   sync_cities();
 }
 
-/**********************************************************************/ /**
+/**
    Send all tiles known to specified clients.
    If dest is NULL means game.est_connections.
 
@@ -442,7 +442,7 @@ void give_citymap_from_player_to_player(struct city *pcity,
    for single player.  This is ok, because "sent" data is just optimised
    calculations, so it will be correct before this, for each connection
    during this, and at end.
- **************************************************************************/
+ */
 void send_all_known_tiles(struct conn_list *dest)
 {
   int tiles_sent;
@@ -473,9 +473,9 @@ void send_all_known_tiles(struct conn_list *dest)
   flush_packets();
 }
 
-/**********************************************************************/ /**
+/**
    Suppress send_tile_info() during game_load()
- **************************************************************************/
+ */
 bool send_tile_suppression(bool now)
 {
   bool formerly = send_tile_suppressed;
@@ -484,14 +484,14 @@ bool send_tile_suppression(bool now)
   return formerly;
 }
 
-/**********************************************************************/ /**
+/**
    Send tile information to all the clients in dest which know and see
    the tile. If dest is NULL, sends to all clients (game.est_connections)
    which know and see tile.
 
    Note that this function does not update the playermap.  For that call
    update_tile_knowledge().
- **************************************************************************/
+ */
 void send_tile_info(struct conn_list *dest, struct tile *ptile,
                     bool send_unknown)
 {
@@ -618,18 +618,18 @@ void send_tile_info(struct conn_list *dest, struct tile *ptile,
   conn_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Assumption: Each unit type is visible on only one layer.
- **************************************************************************/
+ */
 static bool unit_is_visible_on_layer(const struct unit *punit,
                                      enum vision_layer vlayer)
 {
   return XOR(vlayer == V_MAIN, is_hiding_unit(punit));
 }
 
-/**********************************************************************/ /**
+/**
    Send basic map information: map size, topology, and is_earth.
- **************************************************************************/
+ */
 void send_map_info(struct conn_list *dest)
 {
   struct packet_map_info minfo;
@@ -641,10 +641,10 @@ void send_map_info(struct conn_list *dest)
   lsend_packet_map_info(dest, &minfo);
 }
 
-/**********************************************************************/ /**
+/**
    Change the seen count of a tile for a pplayer. It will automatically
    handle the shared visions.
- **************************************************************************/
+ */
 static void shared_vision_change_seen(struct player *pplayer,
                                       struct tile *ptile,
                                       const v_radius_t change,
@@ -662,9 +662,9 @@ static void shared_vision_change_seen(struct player *pplayer,
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    There doesn't have to be a city.
- **************************************************************************/
+ */
 void map_vision_update(struct player *pplayer, struct tile *ptile,
                        const v_radius_t old_radius_sq,
                        const v_radius_t new_radius_sq, bool can_reveal_tiles)
@@ -722,11 +722,11 @@ void map_vision_update(struct player *pplayer, struct tile *ptile,
   unbuffer_shared_vision(pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Turn a players ability to see inside his borders on or off.
 
    It is safe to set the current value.
- **************************************************************************/
+ */
 void map_set_border_vision(struct player *pplayer, const bool is_enabled)
 {
   const v_radius_t radius_sq = V_RADIUS(is_enabled ? 1 : -1, 0, 0);
@@ -750,12 +750,12 @@ void map_set_border_vision(struct player *pplayer, const bool is_enabled)
   whole_map_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Shows the area to the player.  Unless the tile is "seen", it will remain
    fogged and units will be hidden.
 
    Callers may wish to buffer_shared_vision before calling this function.
- **************************************************************************/
+ */
 void map_show_tile(struct player *src_player, struct tile *ptile)
 {
   static int recurse = 0;
@@ -810,11 +810,11 @@ void map_show_tile(struct player *src_player, struct tile *ptile)
   recurse--;
 }
 
-/**********************************************************************/ /**
+/**
    Hides the area to the player.
 
    Callers may wish to buffer_shared_vision before calling this function.
- **************************************************************************/
+ */
 void map_hide_tile(struct player *src_player, struct tile *ptile)
 {
   static int recurse = 0;
@@ -861,10 +861,10 @@ void map_hide_tile(struct player *src_player, struct tile *ptile)
   recurse--;
 }
 
-/**********************************************************************/ /**
+/**
    Shows the area to the player.  Unless the tile is "seen", it will remain
    fogged and units will be hidden.
- **************************************************************************/
+ */
 void map_show_circle(struct player *pplayer, struct tile *ptile,
                      int radius_sq)
 {
@@ -879,10 +879,10 @@ void map_show_circle(struct player *pplayer, struct tile *ptile,
   unbuffer_shared_vision(pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Shows the area to the player.  Unless the tile is "seen", it will remain
    fogged and units will be hidden.
- **************************************************************************/
+ */
 void map_show_all(struct player *pplayer)
 {
   buffer_shared_vision(pplayer);
@@ -893,19 +893,19 @@ void map_show_all(struct player *pplayer)
   unbuffer_shared_vision(pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Return whether the player knows the tile.  Knowing a tile means you've
    seen it once (as opposed to seeing a tile which means you can see it now).
- **************************************************************************/
+ */
 bool map_is_known(const struct tile *ptile, const struct player *pplayer)
 {
   return pplayer->tile_known->at(tile_index(ptile));
 }
 
-/**********************************************************************/ /**
+/**
    Returns whether the layer 'vlayer' of the tile 'ptile' is known and seen
    by the player 'pplayer'.
- **************************************************************************/
+ */
 bool map_is_known_and_seen(const struct tile *ptile,
                            const struct player *pplayer,
                            enum vision_layer vlayer)
@@ -914,13 +914,13 @@ bool map_is_known_and_seen(const struct tile *ptile,
           && 0 < map_get_seen(pplayer, ptile, vlayer));
 }
 
-/**********************************************************************/ /**
+/**
    Return whether the player can see the tile.  Seeing a tile means you have
    vision of it now (as opposed to knowing a tile which means you've seen it
    before).  Note that a tile can be seen but not known (currently this only
    happens when a city is founded with some unknown tiles in its radius); in
    this case the tile is unknown (but map_get_seen will still return TRUE).
- **************************************************************************/
+ */
 static inline int map_get_seen(const struct player *pplayer,
                                const struct tile *ptile,
                                enum vision_layer vlayer)
@@ -928,12 +928,12 @@ static inline int map_get_seen(const struct player *pplayer,
   return map_get_player_tile(ptile, pplayer)->seen_count[vlayer];
 }
 
-/**********************************************************************/ /**
+/**
    This function changes the seen state of one player for all vision layers
    of a tile. It reveals the tiles if needed and controls the fog of war.
 
    See also map_change_own_seen(), shared_vision_change_seen().
- **************************************************************************/
+ */
 void map_change_seen(struct player *pplayer, struct tile *ptile,
                      const v_radius_t change, bool can_reveal_tiles)
 {
@@ -1106,12 +1106,12 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns the own seen count of a tile for a player. It doesn't count the
    shared vision.
 
    See also map_get_seen().
- **************************************************************************/
+ */
 static inline int map_get_own_seen(const struct player *pplayer,
                                    const struct tile *ptile,
                                    enum vision_layer vlayer)
@@ -1119,9 +1119,9 @@ static inline int map_get_own_seen(const struct player *pplayer,
   return map_get_player_tile(ptile, pplayer)->own_seen[vlayer];
 }
 
-/**********************************************************************/ /**
+/**
    Changes the own seen count of a tile for a player.
- **************************************************************************/
+ */
 static void map_change_own_seen(struct player *pplayer, struct tile *ptile,
                                 const v_radius_t change)
 {
@@ -1131,9 +1131,9 @@ static void map_change_own_seen(struct player *pplayer, struct tile *ptile,
   vision_layer_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
   Changes site information for player tile.
- **************************************************************************/
+ */
 void change_playertile_site(struct player_tile *ptile,
                             struct vision_site *new_site)
 {
@@ -1150,27 +1150,27 @@ void change_playertile_site(struct player_tile *ptile,
   ptile->site = new_site;
 }
 
-/**********************************************************************/ /**
+/**
    Set known status of the tile.
- **************************************************************************/
+ */
 void map_set_known(struct tile *ptile, struct player *pplayer)
 {
   pplayer->tile_known->setBit(tile_index(ptile));
 }
 
-/**********************************************************************/ /**
+/**
    Clear known status of the tile.
- **************************************************************************/
+ */
 void map_clear_known(struct tile *ptile, struct player *pplayer)
 {
   pplayer->tile_known->setBit(tile_index(ptile), false);
 }
 
-/**********************************************************************/ /**
+/**
    Call this function to unfog all tiles.  This should only be called when
    a player dies or at the end of the game as it will result in permanent
    vision of the whole map.
- **************************************************************************/
+ */
 void map_know_and_see_all(struct player *pplayer)
 {
   const v_radius_t radius_sq = V_RADIUS(1, 1, 1);
@@ -1184,19 +1184,19 @@ void map_know_and_see_all(struct player *pplayer)
   unbuffer_shared_vision(pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Unfogs all tiles for all players.  See map_know_and_see_all.
- **************************************************************************/
+ */
 void show_map_to_all()
 {
   players_iterate(pplayer) { map_know_and_see_all(pplayer); }
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Allocate space for map, and initialise the tiles.
    Uses current map.xsize and map.ysize.
- **************************************************************************/
+ */
 void player_map_init(struct player *pplayer)
 {
   pplayer->server.private_map = static_cast<player_tile *>(
@@ -1209,9 +1209,9 @@ void player_map_init(struct player *pplayer)
   pplayer->tile_known->resize(MAP_INDEX_SIZE);
 }
 
-/**********************************************************************/ /**
+/**
    Free a player's private map.
- **************************************************************************/
+ */
 void player_map_free(struct player *pplayer)
 {
   if (!pplayer->server.private_map) {
@@ -1226,11 +1226,11 @@ void player_map_free(struct player *pplayer)
   pplayer->tile_known->clear();
 }
 
-/**********************************************************************/ /**
+/**
    Remove all knowledge of a player from main map and other players'
    private maps, and send updates to connected clients.
    Frees all vision_sites associated with that player.
- **************************************************************************/
+ */
 void remove_player_from_maps(struct player *pplayer)
 {
   /* only after removing borders! */
@@ -1301,10 +1301,10 @@ void remove_player_from_maps(struct player *pplayer)
   conn_list_do_unbuffer(game.est_connections);
 }
 
-/**********************************************************************/ /**
+/**
    We need to use fogofwar_old here, so the player's tiles get
    in the same state as the other players' tiles.
- **************************************************************************/
+ */
 static void player_tile_init(struct tile *ptile, struct player *pplayer)
 {
   struct player_tile *plrtile = map_get_player_tile(ptile, pplayer);
@@ -1327,9 +1327,9 @@ static void player_tile_init(struct tile *ptile, struct player *pplayer)
   memcpy(plrtile->own_seen, plrtile->seen_count, sizeof(v_radius_t));
 }
 
-/**********************************************************************/ /**
+/**
    Free the memory stored into the player tile.
- **************************************************************************/
+ */
 static void player_tile_free(struct tile *ptile, struct player *pplayer)
 {
   struct player_tile *plrtile = map_get_player_tile(ptile, pplayer);
@@ -1339,9 +1339,9 @@ static void player_tile_free(struct tile *ptile, struct player *pplayer)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Returns city located at given tile from player map.
- **************************************************************************/
+ */
 struct vision_site *map_get_player_city(const struct tile *ptile,
                                         const struct player *pplayer)
 {
@@ -1352,20 +1352,20 @@ struct vision_site *map_get_player_city(const struct tile *ptile,
   return psite;
 }
 
-/**********************************************************************/ /**
+/**
    Returns site located at given tile from player map.
- **************************************************************************/
+ */
 struct vision_site *map_get_player_site(const struct tile *ptile,
                                         const struct player *pplayer)
 {
   return map_get_player_tile(ptile, pplayer)->site;
 }
 
-/**********************************************************************/ /**
+/**
    Players' information of tiles is tracked so that fogged area can be kept
    consistent even when the client disconnects.  This function returns the
    player tile information for the given tile and player.
- **************************************************************************/
+ */
 struct player_tile *map_get_player_tile(const struct tile *ptile,
                                         const struct player *pplayer)
 {
@@ -1374,14 +1374,14 @@ struct player_tile *map_get_player_tile(const struct tile *ptile,
   return pplayer->server.private_map + tile_index(ptile);
 }
 
-/**********************************************************************/ /**
+/**
    Give pplayer the correct knowledge about tile; return TRUE iff
    knowledge changed.
 
    Note that unlike update_tile_knowledge, this function will not send any
    packets to the client.  Callers may want to call send_tile_info() if this
    function returns TRUE.
- **************************************************************************/
+ */
 bool update_player_tile_knowledge(struct player *pplayer, struct tile *ptile)
 {
   struct player_tile *plrtile = map_get_player_tile(ptile, pplayer);
@@ -1411,7 +1411,7 @@ bool update_player_tile_knowledge(struct player *pplayer, struct tile *ptile)
   return false;
 }
 
-/**********************************************************************/ /**
+/**
    Update playermap knowledge for everybody who sees the tile, and send a
    packet to everyone whose info is changed.
 
@@ -1419,7 +1419,7 @@ bool update_player_tile_knowledge(struct player *pplayer, struct tile *ptile)
    for the tile, since these are the only values held in the playermap.
 
    A tile's owner always can see terrain changes in his or her territory.
- **************************************************************************/
+ */
 void update_tile_knowledge(struct tile *ptile)
 {
   if (server_state() == S_S_INITIAL) {
@@ -1449,9 +1449,9 @@ void update_tile_knowledge(struct tile *ptile)
   conn_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Remember that tile was last seen this year.
- **************************************************************************/
+ */
 void update_player_tile_last_seen(struct player *pplayer, struct tile *ptile)
 {
   if (!game.server.last_updated_year) {
@@ -1461,9 +1461,9 @@ void update_player_tile_last_seen(struct player *pplayer, struct tile *ptile)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Give tile information from one player to one player.
- **************************************************************************/
+ */
 static void really_give_tile_info_from_player_to_player(struct player *pfrom,
                                                         struct player *pdest,
                                                         struct tile *ptile)
@@ -1527,10 +1527,10 @@ static void really_give_tile_info_from_player_to_player(struct player *pfrom,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Give information about whole map (all tiles) from player to player.
    Does not take care of shared vision; caller is assumed to do that.
- **************************************************************************/
+ */
 static void really_give_map_from_player_to_player(struct player *pfrom,
                                                   struct player *pdest)
 {
@@ -1544,10 +1544,10 @@ static void really_give_map_from_player_to_player(struct player *pfrom,
   sync_cities();
 }
 
-/**********************************************************************/ /**
+/**
    Give tile information from player to player. Handles chains of
    shared vision so that receiver may give information forward.
- **************************************************************************/
+ */
 static void give_tile_info_from_player_to_player(struct player *pfrom,
                                                  struct player *pdest,
                                                  struct tile *ptile)
@@ -1563,11 +1563,11 @@ static void give_tile_info_from_player_to_player(struct player *pfrom,
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    This updates all players' really_gives_vision field.
    If p1 gives p2 shared vision and p2 gives p3 shared vision p1
    should also give p3 shared vision.
- **************************************************************************/
+ */
 static void create_vision_dependencies()
 {
   int added;
@@ -1607,9 +1607,9 @@ static void create_vision_dependencies()
   } while (added > 0);
 }
 
-/**********************************************************************/ /**
+/**
    Starts shared vision between two players.
- **************************************************************************/
+ */
 void give_shared_vision(struct player *pfrom, struct player *pto)
 {
   bv_player save_vision[player_slot_count()];
@@ -1673,9 +1673,9 @@ void give_shared_vision(struct player *pfrom, struct player *pto)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Removes shared vision from between two players.
- **************************************************************************/
+ */
 void remove_shared_vision(struct player *pfrom, struct player *pto)
 {
   bv_player save_vision[player_slot_count()];
@@ -1734,9 +1734,9 @@ void remove_shared_vision(struct player *pfrom, struct player *pto)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Turns FoW on for player
- **************************************************************************/
+ */
 void enable_fog_of_war_player(struct player *pplayer)
 {
   const v_radius_t radius_sq = V_RADIUS(-1, 0, 0);
@@ -1750,18 +1750,18 @@ void enable_fog_of_war_player(struct player *pplayer)
   unbuffer_shared_vision(pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Turns FoW on for everyone.
- **************************************************************************/
+ */
 void enable_fog_of_war()
 {
   players_iterate(pplayer) { enable_fog_of_war_player(pplayer); }
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Turns FoW off for player
- **************************************************************************/
+ */
 void disable_fog_of_war_player(struct player *pplayer)
 {
   const v_radius_t radius_sq = V_RADIUS(1, 0, 0);
@@ -1775,16 +1775,16 @@ void disable_fog_of_war_player(struct player *pplayer)
   unbuffer_shared_vision(pplayer);
 }
 
-/**********************************************************************/ /**
+/**
    Turns FoW off for everyone
- **************************************************************************/
+ */
 void disable_fog_of_war()
 {
   players_iterate(pplayer) { disable_fog_of_war_player(pplayer); }
   players_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Set the tile to be a river if required.
    It's required if one of the tiles nearby would otherwise be part of a
    river to nowhere.
@@ -1792,7 +1792,7 @@ void disable_fog_of_war()
    transformed away, but this is relatively unlikely.)
    For simplicity, I'm assuming that this is the only exit of the river,
    so I don't need to trace it across the continent.  --CJM
- **************************************************************************/
+ */
 static void ocean_to_land_fix_rivers(struct tile *ptile)
 {
   cardinal_adjc_iterate(&(wld.map), ptile, tile1)
@@ -1823,10 +1823,10 @@ static void ocean_to_land_fix_rivers(struct tile *ptile)
   cardinal_adjc_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Helper function for bounce_units_on_terrain_change() that checks units
    on a single tile.
- **************************************************************************/
+ */
 static void check_units_single_tile(struct tile *ptile)
 {
   unit_list_iterate_safe(ptile->units, punit)
@@ -1879,11 +1879,11 @@ static void check_units_single_tile(struct tile *ptile)
   unit_list_iterate_safe_end;
 }
 
-/**********************************************************************/ /**
+/**
    Check ptile and nearby tiles to see if all units can remain at their
    current locations, and move or disband any that cannot. Call this after
    terrain or specials change on ptile.
- **************************************************************************/
+ */
 void bounce_units_on_terrain_change(struct tile *ptile)
 {
   /* Check this tile for direct effect on its units */
@@ -1897,10 +1897,10 @@ void bounce_units_on_terrain_change(struct tile *ptile)
   adjc_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Returns TRUE if the terrain change from 'oldter' to 'newter' may require
    expensive reassignment of continents.
- **************************************************************************/
+ */
 bool need_to_reassign_continents(const struct terrain *oldter,
                                  const struct terrain *newter)
 {
@@ -1916,9 +1916,9 @@ bool need_to_reassign_continents(const struct terrain *oldter,
   return (old_is_ocean && !new_is_ocean) || (!old_is_ocean && new_is_ocean);
 }
 
-/**********************************************************************/ /**
+/**
    Handle local side effects for a terrain change.
- **************************************************************************/
+ */
 void terrain_changed(struct tile *ptile)
 {
   struct city *pcity = tile_city(ptile);
@@ -1931,13 +1931,13 @@ void terrain_changed(struct tile *ptile)
   bounce_units_on_terrain_change(ptile);
 }
 
-/**********************************************************************/ /**
+/**
    Handles local side effects for a terrain change (tile and its
    surroundings). Does *not* handle global side effects (such as reassigning
    continents).
    For in-game terrain changes 'extend_rivers' should be TRUE; for edits it
    should be FALSE.
- **************************************************************************/
+ */
 void fix_tile_on_terrain_change(struct tile *ptile, struct terrain *oldter,
                                 bool extend_rivers)
 {
@@ -1951,12 +1951,12 @@ void fix_tile_on_terrain_change(struct tile *ptile, struct terrain *oldter,
   terrain_changed(ptile);
 }
 
-/**********************************************************************/ /**
+/**
    Handles local and global side effects for a terrain change for a single
    tile.
    Call this in the server immediately after calling tile_change_terrain.
    Assumes an in-game terrain change (e.g., by workers/engineers).
- **************************************************************************/
+ */
 void check_terrain_change(struct tile *ptile, struct terrain *oldter)
 {
   struct terrain *newter = tile_terrain(ptile);
@@ -2024,7 +2024,7 @@ void check_terrain_change(struct tile *ptile, struct terrain *oldter)
   sanity_check_tile(ptile);
 }
 
-/**********************************************************************/ /**
+/**
    Ocean tile can be claimed iff one of the following conditions stands:
    a) it is an inland lake not larger than MAXIMUM_OCEAN_SIZE
    b) it is adjacent to only one continent and not more than two ocean tiles
@@ -2034,7 +2034,7 @@ void check_terrain_change(struct tile *ptile, struct terrain *oldter)
  Claim_Ocean_Limited flag The source which claims the ocean has to be placed
  on the correct continent. in case a) The continent which surrounds the
  inland lake in case b) The only continent which is adjacent to the tile
- **************************************************************************/
+ */
 static bool is_claimable_ocean(struct tile *ptile, struct tile *source,
                                struct player *pplayer)
 {
@@ -2085,9 +2085,9 @@ static bool is_claimable_ocean(struct tile *ptile, struct tile *source,
   return !other_continent && ocean_tiles <= 2;
 }
 
-/**********************************************************************/ /**
+/**
    For each unit at the tile, queue any unique home city.
- **************************************************************************/
+ */
 static void map_unit_homecity_enqueue(struct tile *ptile)
 {
   unit_list_iterate(ptile->units, punit)
@@ -2103,9 +2103,9 @@ static void map_unit_homecity_enqueue(struct tile *ptile)
   unit_list_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Claim ownership of a single tile.
- **************************************************************************/
+ */
 static void map_claim_border_ownership(struct tile *ptile,
                                        struct player *powner,
                                        struct tile *psource)
@@ -2149,9 +2149,9 @@ static void map_claim_border_ownership(struct tile *ptile,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Claim ownership of a single tile.
- **************************************************************************/
+ */
 void map_claim_ownership(struct tile *ptile, struct player *powner,
                          struct tile *psource, bool claim_bases)
 {
@@ -2162,9 +2162,9 @@ void map_claim_ownership(struct tile *ptile, struct player *powner,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Claim ownership of bases on single tile.
- **************************************************************************/
+ */
 void tile_claim_bases(struct tile *ptile, struct player *powner)
 {
   struct player *base_loser = extra_owner(ptile);
@@ -2181,9 +2181,9 @@ void tile_claim_bases(struct tile *ptile, struct player *powner)
   extra_type_by_cause_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Remove border for this source.
- **************************************************************************/
+ */
 void map_clear_border(struct tile *ptile)
 {
   int radius_sq = tile_border_source_radius_sq(ptile);
@@ -2199,10 +2199,10 @@ void map_clear_border(struct tile *ptile)
   circle_dxyr_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Update borders for this source. Changes the radius without temporary
    clearing.
- **************************************************************************/
+ */
 void map_update_border(struct tile *ptile, struct player *owner,
                        int old_radius_sq, int new_radius_sq)
 {
@@ -2232,11 +2232,11 @@ void map_update_border(struct tile *ptile, struct player *owner,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Update borders for this source. Call this for each new source.
 
    If radius_sq is -1, get value from the border source on tile.
- **************************************************************************/
+ */
 void map_claim_border(struct tile *ptile, struct player *owner,
                       int radius_sq)
 {
@@ -2323,9 +2323,9 @@ void map_claim_border(struct tile *ptile, struct player *owner,
   circle_dxyr_iterate_end;
 }
 
-/**********************************************************************/ /**
+/**
    Update borders for all sources. Call this on turn end.
- **************************************************************************/
+ */
 void map_calculate_borders()
 {
   if (BORDERS_DISABLED == game.info.borders) {
@@ -2352,9 +2352,9 @@ void map_calculate_borders()
   city_refresh_queue_processing();
 }
 
-/**********************************************************************/ /**
+/**
    Claim base to player's ownership.
- **************************************************************************/
+ */
 void map_claim_base(struct tile *ptile, struct extra_type *pextra,
                     struct player *powner, struct player *ploser)
 {
@@ -2459,12 +2459,12 @@ void map_claim_base(struct tile *ptile, struct extra_type *pextra,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Change the sight points for the vision source, fogging or unfogging tiles
    as needed.
 
    See documentation in vision.h.
- **************************************************************************/
+ */
 void vision_change_sight(struct vision *vision, const v_radius_t radius_sq)
 {
   map_vision_update(vision->player, vision->tile, vision->radius_sq,
@@ -2472,11 +2472,11 @@ void vision_change_sight(struct vision *vision, const v_radius_t radius_sq)
   memcpy(vision->radius_sq, radius_sq, sizeof(v_radius_t));
 }
 
-/**********************************************************************/ /**
+/**
    Clear all sight points from this vision source.
 
    See documentation in vision.h.
- **************************************************************************/
+ */
 void vision_clear_sight(struct vision *vision)
 {
   const v_radius_t vision_radius_sq = V_RADIUS(-1, -1, -1);
@@ -2484,9 +2484,9 @@ void vision_clear_sight(struct vision *vision)
   vision_change_sight(vision, vision_radius_sq);
 }
 
-/**********************************************************************/ /**
+/**
    Create extra to tile.
- **************************************************************************/
+ */
 void create_extra(struct tile *ptile, struct extra_type *pextra,
                   struct player *pplayer)
 {
@@ -2557,9 +2557,9 @@ void create_extra(struct tile *ptile, struct extra_type *pextra,
   }
 }
 
-/**********************************************************************/ /**
+/**
    Remove extra from tile.
- **************************************************************************/
+ */
 void destroy_extra(struct tile *ptile, struct extra_type *pextra)
 {
   bv_player base_seen;
@@ -2633,13 +2633,13 @@ void destroy_extra(struct tile *ptile, struct extra_type *pextra)
   }
 }
 
-/**********************************************************************/ /**
+/**
    Transfer (random parts of) player pfrom's world map to pto.
    @param pfrom         player that is the source of the map
    @param pto           player that receives the map
    @param prob          probability for the transfer each known tile
    @param reveal_cities if the map of all known cities should be transferred
- **************************************************************************/
+ */
 void give_distorted_map(struct player *pfrom, struct player *pto, int prob,
                         bool reveal_cities)
 {
