@@ -16,7 +16,7 @@
 #endif
 
 #ifdef FREECIV_MSWINDOWS
-#include <windows.h> /* LoadLibrary() */
+#include <windows.h> // LoadLibrary()
 #endif
 
 #include <cmath>
@@ -30,7 +30,7 @@
 #include <QGlobalStatic>
 #include <QTimer>
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "capstr.h"
 #include "dataio.h"
@@ -43,7 +43,7 @@
 #include "registry.h"
 #include "support.h"
 
-/* common */
+// common
 #include "ai.h"
 #include "diptreaty.h"
 #include "fc_interface.h"
@@ -76,18 +76,18 @@
 #include "repodlgs_g.h"
 #include "voteinfo_bar_g.h"
 
-/* client */
+// client
 #include "attribute.h"
 #include "audio.h"
 #include "cityrepdata.h"
 #include "climisc.h"
 #include "clinet.h"
-#include "connectdlg_common.h" /* client_kill_server() */
+#include "connectdlg_common.h" // client_kill_server()
 #include "control.h"
 #include "editor.h"
 #include "global_worklist.h"
 #include "governor.h"
-#include "helpdata.h" /* boot_help_texts() */
+#include "helpdata.h" // boot_help_texts()
 #include "mapview_common.h"
 #include "music.h"
 #include "options.h"
@@ -138,15 +138,15 @@ char password[MAX_LEN_PASSWORD] = "\0";
 QString cmd_metaserver;
 int server_port = -1;
 bool auto_connect =
-    false;               /* TRUE = skip "Connect to Freeciv Server" dialog */
-bool auto_spawn = false; /* TRUE = skip main menu, start local server */
+    false;               // TRUE = skip "Connect to Freeciv Server" dialog
+bool auto_spawn = false; // TRUE = skip main menu, start local server
 enum announce_type announce;
 
 struct civclient client;
 
 static enum client_states civclient_state = C_S_INITIAL;
 
-/* TRUE if an end turn request is blocked by busy agents */
+// TRUE if an end turn request is blocked by busy agents
 bool waiting_for_end_turn = false;
 
 /*
@@ -313,7 +313,7 @@ int client_main(int argc, char *argv[])
   QApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(VERSION_STRING);
 
-  i_am_client(); /* Tell to libfreeciv that we are client */
+  i_am_client(); // Tell to libfreeciv that we are client
 
   fc_interface_init_client();
 
@@ -362,7 +362,7 @@ int client_main(int argc, char *argv[])
 #ifdef FREECIV_DEBUG
        {{"H", "Hackless"},
         _("Do not request hack access to local, but not spawned, server")},
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
        {{"l", "log"},
         _("Use FILE as logfile (spawned server also uses this)"),
         "FILE"},
@@ -466,19 +466,19 @@ int client_main(int argc, char *argv[])
   }
 
   if (auto_spawn && auto_connect) {
-    /* TRANS: don't translate option names */
+    // TRANS: don't translate option names
     fc_fprintf(stderr, _("-f/--file and -a/--autoconnect options are "
                          "incompatible\n"));
     exit(EXIT_FAILURE);
   }
 
-  /* disallow running as root -- too dangerous */
+  // disallow running as root -- too dangerous
   dont_run_as_root(argv[0], "freeciv_client");
 
   log_set_file(logfile);
   backtrace_init();
 
-  /* after log_init: */
+  // after log_init:
 
   (void) user_username(gui_options.default_user_name, MAX_LEN_NAME);
   if (!is_valid_username(gui_options.default_user_name)) {
@@ -494,7 +494,7 @@ int client_main(int argc, char *argv[])
     }
   }
 
-  /* initialization */
+  // initialization
 
   game.all_connections = conn_list_new();
   game.est_connections = conn_list_new();
@@ -505,7 +505,7 @@ int client_main(int argc, char *argv[])
 
   fc_init_ow_mutex();
 
-  /* register exit handler */
+  // register exit handler
   atexit(at_exit);
   fc_at_quick_exit(emergency_exit);
 
@@ -536,7 +536,7 @@ int client_main(int argc, char *argv[])
     user_name = gui_options.default_user_name;
   }
   if (cmd_metaserver.isEmpty()) {
-    /* FIXME: Find a cleaner way to achieve this. */
+    // FIXME: Find a cleaner way to achieve this.
     /* www.cazfi.net/freeciv/metaserver/ was default metaserver
      * over one release when meta.freeciv.org was unavailable. */
     const char *oldaddr = "http://www.cazfi.net/freeciv/metaserver/";
@@ -585,13 +585,13 @@ int client_main(int argc, char *argv[])
 
   editor_init();
 
-  /* run gui-specific client */
+  // run gui-specific client
   ui_main();
 
-  /* termination */
+  // termination
   client_exit();
 
-  /* not reached */
+  // not reached
   return EXIT_SUCCESS;
 }
 
@@ -748,13 +748,13 @@ void set_client_state(enum client_states newstate)
       exit(EXIT_FAILURE);
     } else {
       start_autoconnecting_to_server();
-      auto_connect = false; /* Don't try this again. */
+      auto_connect = false; // Don't try this again.
     }
   }
 
   if (C_S_PREPARING == newstate
       && (client_has_player() || client_is_observer())) {
-    /* Reset the delta-state. */
+    // Reset the delta-state.
     conn_reset_delta_state(&client.conn);
   }
 
@@ -766,7 +766,7 @@ void set_client_state(enum client_states newstate)
     stop_style_music();
 
     if (!is_client_quitting()) {
-      /* Back to menu */
+      // Back to menu
       start_menu_music(QStringLiteral("music_menu"), NULL);
     }
   }
@@ -824,7 +824,7 @@ void set_client_state(enum client_states newstate)
   case C_S_RUNNING:
     if (oldstate == C_S_PREPARING) {
       popdown_races_dialog();
-      stop_menu_music(); /* stop intro sound loop. */
+      stop_menu_music(); // stop intro sound loop.
     }
 
     init_city_report_game_data();
@@ -834,13 +834,13 @@ void set_client_state(enum client_states newstate)
       research_update(research_get(pplayer));
     }
     role_unit_precalcs();
-    boot_help_texts(); /* reboot with player */
+    boot_help_texts(); // reboot with player
     global_worklists_build();
     can_slide = false;
     unit_focus_update();
     can_slide = true;
     set_client_page(PAGE_GAME);
-    /* Find something sensible to display instead of the intro gfx. */
+    // Find something sensible to display instead of the intro gfx.
     center_on_something();
     free_intro_radar_sprites();
     editgui_tileset_changed();
@@ -848,7 +848,7 @@ void set_client_state(enum client_states newstate)
 
     refresh_overview_canvas();
 
-    update_info_label(); /* get initial population right */
+    update_info_label(); // get initial population right
     unit_focus_update();
     update_unit_info_label(get_units_in_focus());
 
@@ -860,7 +860,7 @@ void set_client_state(enum client_states newstate)
 
   case C_S_OVER:
     if (C_S_RUNNING == oldstate) {
-      /* Extra kludge for end-game handling of the CMA. */
+      // Extra kludge for end-game handling of the CMA.
       if (pplayer && pplayer->cities) {
         city_list_iterate(pplayer->cities, pcity)
         {
@@ -875,14 +875,14 @@ void set_client_state(enum client_states newstate)
       popdown_all_game_dialogs();
       unit_focus_set(NULL);
     } else {
-      /* From C_S_PREPARING. */
+      // From C_S_PREPARING.
       init_city_report_game_data();
       options_dialogs_set();
       if (pplayer) {
         research_update(research_get(pplayer));
       }
       role_unit_precalcs();
-      boot_help_texts(); /* reboot */
+      boot_help_texts(); // reboot
       global_worklists_build();
       unit_focus_set(NULL);
       set_client_page(PAGE_GAME);
@@ -904,7 +904,7 @@ void set_client_state(enum client_states newstate)
     update_map_canvas_visible();
   }
 
-  /* If turn was going to change, that is now aborted. */
+  // If turn was going to change, that is now aborted.
   set_server_busy(false);
 }
 
@@ -1028,7 +1028,7 @@ int get_seconds_to_turndone()
   if (current_turn_timeout() > 0) {
     return seconds_shown_to_turndone;
   } else {
-    /* This shouldn't happen. */
+    // This shouldn't happen.
     return FC_INFINITY;
   }
 }
@@ -1084,7 +1084,7 @@ double real_timer_callback()
   if (waiting_turn_change) {
     double seconds =
         game.tinfo.last_turn_change_time - between_turns->elapsed() / 1000;
-    int iseconds = ceil(seconds) + 0.1; /* Turn should end right on 0. */
+    int iseconds = ceil(seconds) + 0.1; // Turn should end right on 0.
 
     if (iseconds < game.tinfo.last_turn_change_time) {
       seconds_shown_to_new_turn = iseconds;
@@ -1132,7 +1132,7 @@ bool can_client_issue_orders()
 bool can_meet_with_player(const struct player *pplayer)
 {
   return (can_client_issue_orders()
-          /* && NULL != client.conn.playing (above) */
+          // && NULL != client.conn.playing (above)
           && could_meet_with_player(client.conn.playing, pplayer));
 }
 
@@ -1165,10 +1165,10 @@ bool can_client_change_view()
 void set_server_busy(bool busy)
 {
   if (busy != server_busy) {
-    /* server_busy value will change */
+    // server_busy value will change
     server_busy = busy;
 
-    /* This may mean that we have to change from or to wait cursor */
+    // This may mean that we have to change from or to wait cursor
     control_mouse_cursor(NULL);
   }
 }
@@ -1226,7 +1226,7 @@ static int client_plr_tile_city_id_get(const struct tile *ptile,
 {
   struct city *pcity = tile_city(ptile);
 
-  /* Can't look up what other players think. */
+  // Can't look up what other players think.
   fc_assert(pplayer == client_player());
 
   return pcity ? pcity->id : IDENTITY_NUMBER_ZERO;
@@ -1277,14 +1277,14 @@ static enum sset_type client_ss_type_get(server_setting_id id)
 
   opt_type = option_type(pset);
 
-  /* The option type isn't client only. */
+  // The option type isn't client only.
   fc_assert_ret_val_msg((opt_type != OT_FONT && opt_type != OT_COLOR),
                         sset_type_invalid(),
                         "%s is a client option type but not a server "
                         "setting type",
                         option_type_name(option_type(pset)));
 
-  /* The option type is valid. */
+  // The option type is valid.
   fc_assert_ret_val(sset_type_is_valid((enum sset_type) opt_type),
                     sset_type_invalid());
 

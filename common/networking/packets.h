@@ -15,15 +15,15 @@
 struct connection;
 struct data_in;
 
-/* utility */
-#include "shared.h" /* MAX_LEN_ADDR */
+// utility
+#include "shared.h" // MAX_LEN_ADDR
 
-/* common */
-#include "connection.h" /* struct connection, MAX_LEN_* */
+// common
+#include "connection.h" // struct connection, MAX_LEN_*
 #include "diptreaty.h"
 #include "effects.h"
 #include "events.h"
-#include "improvement.h" /* bv_imprs */
+#include "improvement.h" // bv_imprs
 #include "player.h"
 #include "requirements.h"
 #include "spaceship.h"
@@ -33,7 +33,7 @@ struct data_in;
 #include "unittype.h"
 #include "worklist.h"
 
-/* Used in network protocol. */
+// Used in network protocol.
 #define MAX_LEN_MSG 1536
 #define MAX_LEN_ROUTE 2000 /* MAX_LEN_PACKET / 2 - header */
 
@@ -48,7 +48,7 @@ struct data_in;
  */
 #define ATTRIBUTE_CHUNK_SIZE (1400)
 
-/* Used in network protocol. */
+// Used in network protocol.
 enum report_type {
   REPORT_WONDERS_OF_THE_WORLD,
   REPORT_TOP_5_CITIES,
@@ -56,18 +56,18 @@ enum report_type {
   REPORT_ACHIEVEMENTS
 };
 
-/* Used in network protocol. */
+// Used in network protocol.
 enum unit_info_use {
   UNIT_INFO_IDENTITY,
   UNIT_INFO_CITY_SUPPORTED,
   UNIT_INFO_CITY_PRESENT
 };
 
-/* Used in network protocol. */
+// Used in network protocol.
 enum authentication_type {
-  AUTH_LOGIN_FIRST,   /* request a password for a returning user */
-  AUTH_NEWUSER_FIRST, /* request a password for a new user */
-  AUTH_LOGIN_RETRY,   /* inform the client to try a different password */
+  AUTH_LOGIN_FIRST,   // request a password for a returning user
+  AUTH_NEWUSER_FIRST, // request a password for a new user
+  AUTH_LOGIN_RETRY,   // inform the client to try a different password
   AUTH_NEWUSER_RETRY  /* inform the client to try a different [new] password
                        */
 };

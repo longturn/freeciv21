@@ -17,16 +17,16 @@
 
 #include <QHash>
 
-/* utility */
+// utility
 #include "dataio.h"
 #include "fcintl.h"
-#include "genhash.h" /* genhash_val_t */
+#include "genhash.h" // genhash_val_t
 #include "log.h"
 
-/* common */
+// common
 #include "packets.h"
 
-/* client */
+// client
 #include "client_main.h"
 
 #include "attribute.h"
@@ -114,10 +114,10 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
    * Step 1: loop through all keys and fill value_lengths and calculate
    * the total_length.
    */
-  /* preamble */
+  // preamble
   total_length = 4 + 1 + 4 + 4;
-  /* body */
-  total_length += entries * (4 + 4 + 4 + 2 + 2); /* value_size + key */
+  // body
+  total_length += entries * (4 + 4 + 4 + 2 + 2); // value_size + key
   i = 0;
 
   for (auto *pvalue : qAsConst(*hash)) {
@@ -240,7 +240,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
                   "uint32 %lu value_length",
                   (long unsigned) value_length);
 
-    /* next 12 bytes */
+    // next 12 bytes
     if (!dio_get_uint32_raw(&din, &key.key)
         || !dio_get_uint32_raw(&din, &key.id)
         || !dio_get_sint16_raw(&din, &key.x)

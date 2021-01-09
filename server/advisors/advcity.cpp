@@ -13,7 +13,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "city.h"
 #include "fc_types.h"
 
@@ -41,7 +41,7 @@ int adv_eval_calc_city(struct city *pcity, struct adv_data *adv)
        - pcity->pollution * adv->pollution_priority);
 
   if (pcity->surplus[O_FOOD] < 0 || pcity->surplus[O_SHIELD] < 0) {
-    /* The city is unmaintainable, it can't be good */
+    // The city is unmaintainable, it can't be good
     i = MIN(i, 0);
   }
 

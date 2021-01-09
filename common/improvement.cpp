@@ -15,13 +15,13 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
-#include "shared.h" /* ARRAY_SIZE */
+#include "shared.h" // ARRAY_SIZE
 #include "support.h"
 
-/* common */
+// common
 #include "game.h"
 #include "map.h"
 #include "tech.h"
@@ -206,7 +206,7 @@ const struct impr_type *valid_improvement(const struct impr_type *pimprove)
       && (building_has_effect(pimprove, EFT_SS_STRUCTURAL)
           || building_has_effect(pimprove, EFT_SS_COMPONENT)
           || building_has_effect(pimprove, EFT_SS_MODULE))) {
-    /* This assumes that space parts don't have any other effects. */
+    // This assumes that space parts don't have any other effects.
     return NULL;
   }
 
@@ -298,7 +298,7 @@ int impr_buy_gold_cost(const struct city *pcity,
       impr_build_shield_cost(pcity, pimprove) - shields_in_stock;
 
   if (improvement_has_flag(pimprove, IF_GOLD)) {
-    /* Can't buy capitalization. */
+    // Can't buy capitalization.
     return 0;
   }
 
@@ -429,7 +429,7 @@ bool improvement_obsolete(const struct player *pplayer,
 static bool impr_provides_buildable_units(const struct city *pcity,
                                           const struct impr_type *pimprove)
 {
-  /* Fast check */
+  // Fast check
   if (!pimprove->allows_units) {
     return false;
   }
@@ -452,7 +452,7 @@ static bool impr_provides_buildable_units(const struct city *pcity,
 static bool impr_provides_buildable_extras(const struct city *pcity,
                                            const struct impr_type *pimprove)
 {
-  /* Fast check */
+  // Fast check
   if (!pimprove->allows_extras) {
     return false;
   }
@@ -481,7 +481,7 @@ static bool impr_provides_buildable_extras(const struct city *pcity,
 static bool impr_prevents_disaster(const struct city *pcity,
                                    const struct impr_type *pimprove)
 {
-  /* Fast check */
+  // Fast check
   if (!pimprove->prevents_disaster) {
     return false;
   }
@@ -507,7 +507,7 @@ static bool impr_prevents_disaster(const struct city *pcity,
 static bool impr_protects_vs_actions(const struct city *pcity,
                                      const struct impr_type *pimprove)
 {
-  /* Fast check */
+  // Fast check
   if (!pimprove->protects_vs_actions) {
     return false;
   }
@@ -605,12 +605,12 @@ bool is_improvement_productive(const struct city *pcity,
 bool is_improvement_redundant(const struct city *pcity,
                               const struct impr_type *pimprove)
 {
-  /* A capitalization production is never redundant. */
+  // A capitalization production is never redundant.
   if (improvement_has_flag(pimprove, IF_GOLD)) {
     return false;
   }
 
-  /* If an improvement has side effects, don't claim it's redundant. */
+  // If an improvement has side effects, don't claim it's redundant.
   if (improvement_has_side_effects(pcity, pimprove)) {
     return false;
   }
@@ -671,7 +671,7 @@ bool can_player_build_improvement_direct(const struct player *p,
   }
 
   if (is_great_wonder(pimprove)) {
-    /* Can't build wonder if already built */
+    // Can't build wonder if already built
     if (!great_wonder_is_available(pimprove)) {
       return false;
     }
@@ -711,7 +711,7 @@ bool can_player_build_improvement_later(const struct player *p,
     return false;
   }
   if (is_great_wonder(pimprove) && !great_wonder_is_available(pimprove)) {
-    /* Can't build wonder if already built */
+    // Can't build wonder if already built
     return false;
   }
 
@@ -854,7 +854,7 @@ struct city *city_from_wonder(const struct player *pplayer,
 
 #ifdef FREECIV_DEBUG
   if (is_server()) {
-    /* On client side, this info is not always known. */
+    // On client side, this info is not always known.
     struct city *pcity = player_city_by_number(pplayer, city_id);
 
     if (NULL == pcity) {
@@ -875,7 +875,7 @@ struct city *city_from_wonder(const struct player *pplayer,
 
     return pcity;
   }
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
   return player_city_by_number(pplayer, city_id);
 }
@@ -939,7 +939,7 @@ struct city *city_from_great_wonder(const struct impr_type *pimprove)
     return pcity;
 #else
     return city_from_wonder(player_by_number(player_id), pimprove);
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
   } else {
     return NULL;
   }
@@ -982,7 +982,7 @@ struct city *city_from_small_wonder(const struct player *pplayer,
   fc_assert_ret_val(is_small_wonder(pimprove), NULL);
 
   if (NULL == pplayer) {
-    return NULL; /* Used in some places in the client. */
+    return NULL; // Used in some places in the client.
   } else {
     return city_from_wonder(pplayer, pimprove);
   }
@@ -1014,7 +1014,7 @@ enum test_result
 test_player_sell_building_now(struct player *pplayer, struct city *pcity,
                               const struct impr_type *pimprove)
 {
-  /* Check if player can sell anything from this city */
+  // Check if player can sell anything from this city
   if (pcity->owner != pplayer) {
     return TR_OTHER_FAILURE;
   }
@@ -1023,7 +1023,7 @@ test_player_sell_building_now(struct player *pplayer, struct city *pcity,
     return TR_ALREADY_SOLD;
   }
 
-  /* Check if particular building can be solt */
+  // Check if particular building can be solt
   if (pimprove != NULL && !can_city_sell_building(pcity, pimprove)) {
     return TR_OTHER_FAILURE;
   }

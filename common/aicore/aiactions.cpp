@@ -13,7 +13,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "unittype.h"
 
 #include "aiactions.h"

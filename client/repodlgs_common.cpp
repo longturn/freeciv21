@@ -15,12 +15,12 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
-#include "support.h" /* fc_snprintf() */
+#include "support.h" // fc_snprintf()
 
-/* common */
+// common
 #include "game.h"
 #include "government.h"
 #include "unitlist.h"
@@ -29,9 +29,9 @@
 #include "citydlg_common.h"
 #include "repodlgs_g.h"
 
-/* client */
+// client
 #include "client_main.h"
-#include "connectdlg_common.h" /* is_server_running() */
+#include "connectdlg_common.h" // is_server_running()
 #include "control.h"
 #include "options.h"
 #include "packhand_gen.h"
@@ -123,7 +123,7 @@ void get_economy_report_units_data(struct unit_entry *entries,
     cost = utype_upkeep_cost(unittype, client.conn.playing, O_GOLD);
 
     if (cost == 0) {
-      /* Short-circuit all of the following checks. */
+      // Short-circuit all of the following checks.
       continue;
     }
 
@@ -189,7 +189,7 @@ void sell_all_improvements(const struct impr_type *pimprove,
   city_list_iterate_end;
 
   if (count > 0) {
-    /* FIXME: plurality of count is ignored! */
+    // FIXME: plurality of count is ignored!
     /* TRANS: "Sold 3 Harbor for 90 gold." (Pluralisation is in gold --
      * second %d -- not in buildings.) */
     fc_snprintf(
@@ -215,7 +215,7 @@ void disband_all_units(const struct unit_type *punittype,
   int count = 0;
 
   if (!can_client_issue_orders()) {
-    /* TRANS: Obscure observer error. */
+    // TRANS: Obscure observer error.
     fc_snprintf(message, message_sz, _("You cannot disband units."));
     return;
   }

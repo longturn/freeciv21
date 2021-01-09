@@ -22,7 +22,7 @@ QString shortcut_to_string(fc_shortcut *sc);
 void write_shortcuts();
 bool read_shortcuts();
 
-/* Assing numbers for casting */
+// Assing numbers for casting
 enum shortcut_id {
   SC_NONE = 0,
   SC_SCROLL_MAP = 1,

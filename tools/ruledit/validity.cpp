@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "support.h"
 
-/* common */
+// common
 #include "disaster.h"
 #include "game.h"
 #include "government.h"
@@ -50,7 +50,7 @@ static bool effect_list_universal_needed_cb(struct effect *peffect,
     cbdata->needed = true;
   }
 
-  /* Always continue to next until all effects checked */
+  // Always continue to next until all effects checked
   return true;
 }
 
@@ -333,7 +333,7 @@ static bool effect_list_multiplier_cb(struct effect *peffect, void *data)
     cbdata->needed = true;
   }
 
-  /* Always continue to next until all effects checked */
+  // Always continue to next until all effects checked
   return true;
 }
 

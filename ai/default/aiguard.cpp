@@ -13,17 +13,17 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "game.h"
 #include "unit.h"
 
-/* server */
+// server
 #include "srv_log.h"
 
-/* ai */
+// ai
 #include "ailog.h"
 #include "aiplayer.h"
 #include "aitools.h"
@@ -51,7 +51,7 @@ void aiguard_check_guard(struct ai_type *ait, const struct unit *guard)
   struct unit_ai *charge_data = NULL;
 
   fc_assert_ret(BODYGUARD_NONE <= guard_data->charge);
-  /* IDs always distinct */
+  // IDs always distinct
   fc_assert_ret(charge_unit == NULL || charge_city == NULL);
 
   if (charge_unit) {
@@ -67,10 +67,10 @@ void aiguard_check_guard(struct ai_type *ait, const struct unit *guard)
     BODYGUARD_LOG(ait, LOG_DEBUG, guard, "dangling guard reference");
   }
   if (charge_owner && pplayers_at_war(charge_owner, guard_owner)) {
-    /* Probably due to civil war */
+    // Probably due to civil war
     BODYGUARD_LOG(ait, LOG_DEBUG, guard, "enemy charge");
   } else if (charge_owner && charge_owner != guard_owner) {
-    /* Probably sold a city with its supported units. */
+    // Probably sold a city with its supported units.
     BODYGUARD_LOG(ait, LOG_DEBUG, guard, "foreign charge");
   }
 }
@@ -117,7 +117,7 @@ void aiguard_clear_charge(struct ai_type *ait, struct unit *guard)
   struct unit *charge_unit = game_unit_by_number(guard_data->charge);
   struct city *charge_city = game_city_by_number(guard_data->charge);
 
-  /* IDs always distinct */
+  // IDs always distinct
   fc_assert_ret(charge_unit == NULL || charge_city == NULL);
 
   if (charge_unit) {
@@ -126,7 +126,7 @@ void aiguard_clear_charge(struct ai_type *ait, struct unit *guard)
   } else if (charge_city) {
     BODYGUARD_LOG(ait, LOGLEVEL_BODYGUARD, guard, "unassigned (city)");
   }
-  /* else not assigned or charge was destroyed */
+  // else not assigned or charge was destroyed
   guard_data->charge = BODYGUARD_NONE;
 
   CHECK_GUARD(ait, guard);
@@ -151,7 +151,7 @@ void aiguard_clear_guard(struct ai_type *ait, struct unit *charge)
       struct unit_ai *guard_data = def_ai_unit_data(guard, ait);
 
       if (guard_data->charge == charge->id) {
-        /* charge doesn't want us anymore */
+        // charge doesn't want us anymore
         guard_data->charge = BODYGUARD_NONE;
       }
     }
@@ -175,7 +175,7 @@ void aiguard_assign_guard_unit(struct ai_type *ait, struct unit *charge,
   fc_assert_ret(charge != guard);
   fc_assert_ret(unit_owner(charge) == unit_owner(guard));
 
-  /* Remove previous assignment: */
+  // Remove previous assignment:
   aiguard_clear_charge(ait, guard);
   aiguard_clear_guard(ait, charge);
 
@@ -202,13 +202,13 @@ void aiguard_assign_guard_city(struct ai_type *ait, struct city *charge,
    */
 
   if (0 < guard_data->charge && guard_data->charge != charge->id) {
-    /* Remove previous assignment: */
+    // Remove previous assignment:
     aiguard_clear_charge(ait, guard);
   }
 
   guard_data->charge = charge->id;
   if (city_owner(charge) != unit_owner(guard)) {
-    /* Peculiar, but not always an error */
+    // Peculiar, but not always an error
     BODYGUARD_LOG(ait, LOGLEVEL_BODYGUARD, guard, "assigned foreign charge");
   } else {
     BODYGUARD_LOG(ait, LOGLEVEL_BODYGUARD, guard, "assigned charge");
@@ -222,7 +222,7 @@ void aiguard_assign_guard_city(struct ai_type *ait, struct city *charge,
  */
 void aiguard_request_guard(struct ai_type *ait, struct unit *punit)
 {
-  /* Remove previous assignment */
+  // Remove previous assignment
   aiguard_clear_guard(ait, punit);
 
   UNIT_LOG(LOGLEVEL_BODYGUARD, punit, "requests a guard");
@@ -302,7 +302,7 @@ void aiguard_update_charge(struct ai_type *ait, struct unit *guard)
   const struct player *charge_owner = NULL;
 
   fc_assert_ret(BODYGUARD_NONE <= guard_data->charge);
-  /* IDs always distinct */
+  // IDs always distinct
   fc_assert_ret(charge_unit == NULL || charge_city == NULL);
 
   if (charge_unit) {

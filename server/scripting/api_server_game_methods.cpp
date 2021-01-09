@@ -13,14 +13,14 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 
 /* common/scriptcore */
 #include "luascript.h"
 
-/* ai */
-#include "aitraits.h" /* ai_trait_get_value() */
+// ai
+#include "aitraits.h" // ai_trait_get_value()
 
 /* server/scripting */
 #include "script_server.h"

@@ -15,7 +15,7 @@
 
 #pragma once
 
-/* Which protocol will be used for LAN announcements */
+// Which protocol will be used for LAN announcements
 enum announce_type { ANNOUNCE_NONE, ANNOUNCE_IPV4, ANNOUNCE_IPV6 };
 
 #define ANNOUNCE_DEFAULT ANNOUNCE_IPV4

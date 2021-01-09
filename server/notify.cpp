@@ -17,13 +17,13 @@
 
 #include <cstdarg>
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
 #include "registry.h"
 
-/* common */
+// common
 #include "connection.h"
 #include "events.h"
 #include "featured_text.h"
@@ -33,7 +33,7 @@
 #include "research.h"
 #include "tile.h"
 
-/* server */
+// server
 #include "maphand.h"
 #include "srv_main.h"
 
@@ -81,7 +81,7 @@ static void package_event_full(struct packet_chat_msg *packet,
     featured_text_apply_tag(str, packet->message, sizeof(packet->message),
                             TTT_COLOR, 0, FT_OFFSET_UNSET, color);
   } else {
-    /* Simple case */
+    // Simple case
     sz_strlcpy(packet->message, str);
   }
 
@@ -206,16 +206,16 @@ static void notify_conn_packet(struct conn_list *dest,
       continue;
     }
 
-    if (S_S_RUNNING <= server_state() && ptile /* special case, see above */
+    if (S_S_RUNNING <= server_state() && ptile // special case, see above
         && ((NULL == pconn->playing && pconn->observer)
             || (NULL != pconn->playing
                 && map_is_known(ptile, pconn->playing)))) {
-      /* tile info is OK; see above. */
+      // tile info is OK; see above.
       /* FIXME: in the case this is a city event, we should check if the
        * city is really known. */
       real_packet.tile = tile;
     } else {
-      /* No tile info. */
+      // No tile info.
       real_packet.tile = -1;
     }
 
@@ -247,7 +247,7 @@ void notify_conn(struct conn_list *dest, const struct tile *ptile,
   notify_conn_packet(dest, &genmsg, false);
 
   if (!dest || dest == game.est_connections) {
-    /* Add to the cache */
+    // Add to the cache
     event_cache_add_for_all(&genmsg);
   }
 }
@@ -270,7 +270,7 @@ void notify_conn_early(struct conn_list *dest, const struct tile *ptile,
   notify_conn_packet(dest, &genmsg, true);
 
   if (!dest || dest == game.est_connections) {
-    /* Add to the cache */
+    // Add to the cache
     event_cache_add_for_all(&genmsg);
   }
 }
@@ -296,7 +296,7 @@ void notify_player(const struct player *pplayer, const struct tile *ptile,
 
   notify_conn_packet(dest, &genmsg, false);
 
-  /* Add to the cache */
+  // Add to the cache
   event_cache_add_for_player(&genmsg, pplayer);
 }
 
@@ -326,7 +326,7 @@ void notify_embassies(const struct player *pplayer, const struct tile *ptile,
   }
   players_iterate_end;
 
-  /* Add to the cache */
+  // Add to the cache
   event_cache_add_for_players(&genmsg, players);
 }
 
@@ -363,11 +363,11 @@ void notify_team(const struct player *pplayer, const struct tile *ptile,
     }
     players_iterate_end;
 
-    /* Add to the cache */
+    // Add to the cache
     event_cache_add_for_players(&genmsg, players);
 
   } else {
-    /* Add to the cache for all players. */
+    // Add to the cache for all players.
     event_cache_add_for_all(&genmsg);
   }
 
@@ -405,7 +405,7 @@ void notify_research(const struct research *presearch,
   }
   research_players_iterate_end;
 
-  /* Add to the cache */
+  // Add to the cache
   event_cache_add_for_players(&genmsg, players);
 }
 
@@ -456,7 +456,7 @@ void notify_research_embassies(const struct research *presearch,
   }
   players_iterate_end;
 
-  /* Add to the cache */
+  // Add to the cache
   event_cache_add_for_players(&genmsg, players);
 }
 
@@ -465,13 +465,13 @@ void notify_research_embassies(const struct research *presearch,
 **************************************************************************/
 enum event_cache_target { ECT_ALL, ECT_PLAYERS, ECT_GLOBAL_OBSERVERS };
 
-/* Events are saved in that structure. */
+// Events are saved in that structure.
 struct event_cache_data {
   struct packet_chat_msg packet;
   time_t timestamp;
   enum server_states server_state;
   enum event_cache_target target_type;
-  bv_player target; /* Used if target_type == ECT_PLAYERS. */
+  bv_player target; // Used if target_type == ECT_PLAYERS.
 };
 
 #define SPECLIST_TAG event_cache_data
@@ -485,7 +485,7 @@ struct event_cache_players {
   bv_player vector;
 };
 
-/* The full list of the events. */
+// The full list of the events.
 static struct event_cache_data_list *event_cache = NULL;
 
 /* Event cache status: ON(TRUE) / OFF(FALSE); used for saving the
@@ -521,16 +521,16 @@ event_cache_data_new(const struct packet_chat_msg *packet, time_t timestamp,
   fc_assert_ret_val(NULL != packet, NULL);
 
   if (packet->event == E_MESSAGE_WALL) {
-    /* No popups at save game load. */
+    // No popups at save game load.
     return NULL;
   }
 
   if (!game.server.event_cache.chat && packet->event == E_CHAT_MSG) {
-    /* chat messages should _not_ be saved */
+    // chat messages should _not_ be saved
     return NULL;
   }
 
-  /* check if cache is active */
+  // check if cache is active
   if (!event_cache_status) {
     return NULL;
   }
@@ -593,7 +593,7 @@ void event_cache_remove_old()
 {
   struct event_cache_data *current;
 
-  /* This assumes that entries are in order, the ones to be removed first. */
+  // This assumes that entries are in order, the ones to be removed first.
   current = event_cache_data_list_get(event_cache, 0);
 
   while (current != NULL
@@ -752,7 +752,7 @@ void send_pending_events(struct connection *pconn, bool include_public)
     if (event_cache_match(pdata, pplayer, is_global_observer,
                           include_public)) {
       if (game.server.event_cache.info) {
-        /* add turn and time to the message */
+        // add turn and time to the message
         strftime(timestr, sizeof(timestr), "%H:%M:%S",
                  localtime(&pdata->timestamp));
         pcm = pdata->packet;
@@ -792,7 +792,7 @@ void event_cache_load(struct section_file *file, const char *section)
     int turn;
     int phase;
 
-    /* restore packet */
+    // restore packet
     x = secfile_lookup_int_default(file, -1, "%s.events%d.x", section, i);
     y = secfile_lookup_int_default(file, -1, "%s.events%d.y", section, i);
     packet.tile =
@@ -817,7 +817,7 @@ void event_cache_load(struct section_file *file, const char *section)
     }
     sz_strlcpy(packet.message, p);
 
-    /* restore event cache data */
+    // restore event cache data
     turn =
         secfile_lookup_int_default(file, 0, "%s.events%d.turn", section, i);
     packet.turn = turn;
@@ -858,7 +858,7 @@ void event_cache_load(struct section_file *file, const char *section)
         if ('1' == *q) {
           players = event_cache_player_add(players, pplayer);
         } else if ('0' != *q) {
-          /* a value not '0' or '1' means a corruption of the savegame */
+          // a value not '0' or '1' means a corruption of the savegame
           valid = false;
           break;
         }
@@ -875,12 +875,12 @@ void event_cache_load(struct section_file *file, const char *section)
       }
     }
 
-    /* insert event into the cache */
+    // insert event into the cache
     (void) event_cache_data_new(&packet, timestamp, server_status,
                                 target_type, players);
 
     if (NULL != players) {
-      /* free the event cache player selection */
+      // free the event cache player selection
       FC_FREE(players);
     }
 
@@ -958,7 +958,7 @@ void event_cache_save(struct section_file *file, const char *section)
   }
   event_cache_iterate_end;
 
-  /* save the number of events in the event cache */
+  // save the number of events in the event cache
   secfile_insert_int(file, event_count, "%s.count", section);
 
   qDebug("Events saved: %d.", event_count);

@@ -15,7 +15,7 @@
 // utility
 #include "fcintl.h"
 
-/* common */
+// common
 #include "idex.h"
 #include "map.h"
 #include "movement.h"

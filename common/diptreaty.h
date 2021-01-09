@@ -12,10 +12,10 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "requirements.h"
 
-/* Used in the network protocol */
+// Used in the network protocol
 #define SPECENUM_NAME clause_type
 #define SPECENUM_VALUE0 CLAUSE_ADVANCE
 #define SPECENUM_VALUE0NAME "Advance"
@@ -50,7 +50,7 @@ struct clause_info {
   struct requirement_vector receiver_reqs;
 };
 
-/* For when we need to iterate over treaties */
+// For when we need to iterate over treaties
 struct Clause;
 #define SPECLIST_TAG clause
 #define SPECLIST_TYPE struct Clause

@@ -21,11 +21,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 #endif
-/* utility */
+// utility
 #include "log.h"
 #include "support.h"
 
-/* client */
+// client
 #include "audio.h"
 
 #include "audio_sdl.h"
@@ -77,18 +77,18 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
   }
 
   if (repeat) {
-    /* unload previous */
+    // unload previous
     Mix_HaltMusic();
     Mix_FreeMusic(mus);
 
-    /* load music file */
+    // load music file
     mus = Mix_LoadMUS(qUtf8Printable(fullpath));
     if (mus == NULL) {
       qCritical("Can't open file \"%s\"", qUtf8Printable(fullpath));
     }
 
     if (cb == NULL) {
-      Mix_PlayMusic(mus, -1); /* -1 means loop forever */
+      Mix_PlayMusic(mus, -1); // -1 means loop forever
     } else {
       Mix_PlayMusic(mus, 0);
       Mix_HookMusicFinished(cb);
@@ -99,7 +99,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
     Mix_VolumeMusic(sdl_audio_volume * MIX_MAX_VOLUME);
 
   } else {
-    /* see if we can cache on this one */
+    // see if we can cache on this one
     for (j = 0; j < MIX_CHANNELS; j++) {
       if (samples[j].tag && samples[j].tag == qUtf8Printable(tag)) {
         log_debug("Playing file \"%s\" from cache (slot %d)",
@@ -107,9 +107,9 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
         Mix_PlayChannel(-1, samples[j].wave, 0);
         return true;
       }
-    } /* guess not */
+    } // guess not
 
-    /* load wave */
+    // load wave
     wave = Mix_LoadWAV(qUtf8Printable(fullpath));
     if (wave == NULL) {
       qCritical("Can't open file \"%s\"", qUtf8Printable(fullpath));
@@ -130,7 +130,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
       Mix_FreeChunk(samples[i].wave);
       samples[i].wave = NULL;
     }
-    /* remember for cacheing */
+    // remember for cacheing
     samples[i].wave = wave;
     samples[i].tag = qUtf8Printable(tag);
   }
@@ -142,7 +142,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
  */
 static void sdl_audio_stop()
 {
-  /* fade out over 2 sec */
+  // fade out over 2 sec
   Mix_FadeOutMusic(2000);
 }
 
@@ -198,7 +198,7 @@ static void sdl_audio_shutdown()
   sdl_audio_stop();
   sdl_audio_wait();
 
-  /* remove all buffers */
+  // remove all buffers
   for (i = 0; i < MIX_CHANNELS; i++) {
     if (samples[i].wave) {
       Mix_FreeChunk(samples[i].wave);
@@ -216,7 +216,7 @@ static void sdl_audio_shutdown()
  */
 static bool sdl_audio_init()
 {
-  /* Initialize variables */
+  // Initialize variables
   const int audio_rate = MIX_DEFAULT_FREQUENCY;
   const int audio_format = MIX_DEFAULT_FORMAT;
   const int audio_channels = 2;
@@ -229,7 +229,7 @@ static bool sdl_audio_init()
   if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, buf_size)
       < 0) {
     qCritical("Error calling Mix_OpenAudio");
-    /* try something else */
+    // try something else
     quit_sdl_audio();
     return false;
   }
@@ -238,7 +238,7 @@ static bool sdl_audio_init()
   for (i = 0; i < MIX_CHANNELS; i++) {
     samples[i].wave = NULL;
   }
-  /* sanity check, for now; add volume controls later */
+  // sanity check, for now; add volume controls later
   sdl_audio_set_volume(sdl_audio_volume);
   return true;
 }

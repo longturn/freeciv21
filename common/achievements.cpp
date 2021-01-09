@@ -17,13 +17,13 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
 #include "shared.h"
 
-/* common */
+// common
 #include "citizens.h"
 #include "city.h"
 #include "culture.h"
@@ -156,7 +156,7 @@ struct player *achievement_plr(struct achievement *ach,
   players_iterate_end;
 
   if (ach->first != NULL) {
-    /* Already have first one credited. */
+    // Already have first one credited.
     return NULL;
   }
 
@@ -169,11 +169,11 @@ struct player *achievement_plr(struct achievement *ach,
     ach->first = credited;
 
     if (ach->unique) {
-      /* For !ach->unique achievements culture was already added above. */
+      // For !ach->unique achievements culture was already added above.
       credited->history += ach->culture;
     }
 
-    /* Mark the selected player as the only one having the achievement */
+    // Mark the selected player as the only one having the achievement
     BV_SET(ach->achievers, player_index(credited));
   }
 
@@ -187,7 +187,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
 {
   if ((ach->unique && ach->first != NULL)
       || (BV_ISSET(ach->achievers, player_index(pplayer)))) {
-    /* It was already achieved */
+    // It was already achieved
     return false;
   }
 
@@ -221,7 +221,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
           this_is_known = true;
         }
       } else {
-        /* Client */
+        // Client
         if (ptile->terrain != T_UNKNOWN) {
           this_is_known = true;
         }
@@ -259,7 +259,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
           BV_SET(seen_citizens, idx);
           count++;
           if (count >= ach->value) {
-            /* There's at least value different nationalities. */
+            // There's at least value different nationalities.
             return true;
           }
         }
@@ -315,7 +315,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
           this_is_known = true;
         }
       } else {
-        /* Client */
+        // Client
         if (ptile->terrain != T_UNKNOWN) {
           this_is_known = true;
         }

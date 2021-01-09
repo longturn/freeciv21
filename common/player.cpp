@@ -16,13 +16,13 @@
 #endif
 
 #include <QBitArray>
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "ai.h"
 #include "city.h"
 #include "fc_interface.h"
@@ -68,19 +68,19 @@ static void player_diplstate_destroy(const struct player *plr1,
 enum diplstate_type cancel_pact_result(enum diplstate_type oldstate)
 {
   switch (oldstate) {
-  case DS_NO_CONTACT: /* possible if someone declares war on our ally */
-  case DS_WAR:        /* no change */
+  case DS_NO_CONTACT: // possible if someone declares war on our ally
+  case DS_WAR:        // no change
   case DS_ARMISTICE:
   case DS_CEASEFIRE:
   case DS_PEACE:
     return DS_WAR;
   case DS_ALLIANCE:
     return DS_ARMISTICE;
-  case DS_TEAM: /* no change */
+  case DS_TEAM: // no change
     return DS_TEAM;
   default:
     qCritical("non-pact diplstate %d in cancel_pact_result", oldstate);
-    return DS_WAR; /* arbitrary */
+    return DS_WAR; // arbitrary
   }
 }
 
@@ -131,7 +131,7 @@ static bool is_valid_alliance(const struct player *p1,
     enum diplstate_type ds = player_diplstate_get(p1, pplayer)->type;
 
     if (pplayer != p1 && pplayer != p2
-        && ds == DS_WAR /* do not count 'never met' as war here */
+        && ds == DS_WAR // do not count 'never met' as war here
         && pplayers_allied(p2, pplayer)) {
       return false;
     }
@@ -157,7 +157,7 @@ enum dipl_reason pplayer_can_make_treaty(const struct player *p1,
   enum diplstate_type existing = player_diplstate_get(p1, p2)->type;
 
   if (players_on_same_team(p1, p2)) {
-    /* This includes the case p1 == p2 */
+    // This includes the case p1 == p2
     return DIPL_ERROR;
   }
   if (get_player_bonus(p1, EFT_NO_DIPLOMACY) > 0
@@ -166,10 +166,10 @@ enum dipl_reason pplayer_can_make_treaty(const struct player *p1,
   }
   if (treaty == DS_WAR || treaty == DS_NO_CONTACT || treaty == DS_ARMISTICE
       || treaty == DS_TEAM || treaty == DS_LAST) {
-    return DIPL_ERROR; /* these are not negotiable treaties */
+    return DIPL_ERROR; // these are not negotiable treaties
   }
   if (treaty == DS_CEASEFIRE && existing != DS_WAR) {
-    return DIPL_ERROR; /* only available from war */
+    return DIPL_ERROR; // only available from war
   }
   if (treaty == DS_PEACE
       && (existing != DS_WAR && existing != DS_CEASEFIRE)) {
@@ -177,14 +177,14 @@ enum dipl_reason pplayer_can_make_treaty(const struct player *p1,
   }
   if (treaty == DS_ALLIANCE) {
     if (!is_valid_alliance(p1, p2)) {
-      /* Our war with a third party prevents entry to alliance. */
+      // Our war with a third party prevents entry to alliance.
       return DIPL_ALLIANCE_PROBLEM_US;
     } else if (!is_valid_alliance(p2, p1)) {
-      /* Their war with a third party prevents entry to alliance. */
+      // Their war with a third party prevents entry to alliance.
       return DIPL_ALLIANCE_PROBLEM_THEM;
     }
   }
-  /* this check must be last: */
+  // this check must be last:
   if (treaty == existing) {
     return DIPL_ERROR;
   }
@@ -328,7 +328,7 @@ void player_slots_init()
 {
   int i;
 
-  /* Init player slots. */
+  // Init player slots.
   player_slots.pslots = new player_slot[player_slot_count()]();
   /* Can't use the defined functions as the needed data will be
    * defined here. */
@@ -405,7 +405,7 @@ bool player_slot_is_used(const struct player_slot *pslot)
 {
   fc_assert_ret_val(NULL != pslot, false);
 
-  /* No player slot available, if the game is not initialised. */
+  // No player slot available, if the game is not initialised.
   if (!player_slots_initialised()) {
     return false;
   }
@@ -469,7 +469,7 @@ struct player *player_new(struct player_slot *pslot)
     return pslot->player;
   }
 
-  /* Now create the player. */
+  // Now create the player.
   log_debug("Create player for slot %d.", player_slot_index(pslot));
   pplayer = new player[1]();
   pplayer->slot = pslot;
@@ -487,19 +487,19 @@ struct player *player_new(struct player_slot *pslot)
 
   players_iterate(aplayer)
   {
-    /* Create diplomatic states for all other players. */
+    // Create diplomatic states for all other players.
     player_diplstate_new(pplayer, aplayer);
-    /* Create diplomatic state of this player. */
+    // Create diplomatic state of this player.
     if (aplayer != pplayer) {
       player_diplstate_new(aplayer, pplayer);
     }
   }
   players_iterate_end;
 
-  /* Set default values. */
+  // Set default values.
   player_defaults(pplayer);
 
-  /* Increase number of players. */
+  // Increase number of players.
   player_slots.used_slots++;
 
   return pplayer;
@@ -538,9 +538,9 @@ static void player_defaults(struct player *pplayer)
   BV_CLR_ALL(pplayer->real_embassy);
   players_iterate(aplayer)
   {
-    /* create diplomatic states for all other players */
+    // create diplomatic states for all other players
     player_diplstate_defaults(pplayer, aplayer);
-    /* create diplomatic state of this player */
+    // create diplomatic state of this player
     if (aplayer != pplayer) {
       player_diplstate_defaults(aplayer, pplayer);
     }
@@ -548,7 +548,7 @@ static void player_defaults(struct player *pplayer)
   players_iterate_end;
 
   pplayer->style = 0;
-  pplayer->music_style = -1; /* even getting value 0 triggers change */
+  pplayer->music_style = -1; // even getting value 0 triggers change
   pplayer->cities = city_list_new();
   pplayer->units = unit_list_new();
 
@@ -635,17 +635,17 @@ void player_clear(struct player *pplayer, bool full)
 
   NFCNPP_FREE(pplayer->savegame_ai_type_name);
 
-  /* Clears the attribute blocks. */
+  // Clears the attribute blocks.
   VOIDNFCN_FREE(pplayer->attribute_block.data);
   pplayer->attribute_block.length = 0;
 
   VOIDNFCN_FREE(pplayer->attribute_block_buffer.data);
   pplayer->attribute_block_buffer.length = 0;
 
-  /* Clears units and cities. */
+  // Clears units and cities.
   unit_list_iterate(pplayer->units, punit)
   {
-    /* Unload all cargos. */
+    // Unload all cargos.
     unit_list_iterate(unit_transport_cargo(punit), pcargo)
     {
       unit_transport_unload(pcargo);
@@ -654,7 +654,7 @@ void player_clear(struct player *pplayer, bool full)
       }
     }
     unit_list_iterate_end;
-    /* Unload the unit. */
+    // Unload the unit.
     unit_transport_unload(punit);
     if (client) {
       punit->client.transported_by = -1;
@@ -714,7 +714,7 @@ void player_destroy(struct player *pplayer)
     }
     vision_layer_iterate_end;
   }
-  /* Remove all that is game-dependent in the player structure. */
+  // Remove all that is game-dependent in the player structure.
   player_clear(pplayer, true);
 
   fc_assert(0 == unit_list_size(pplayer->units));
@@ -727,9 +727,9 @@ void player_destroy(struct player *pplayer)
 
   players_iterate(aplayer)
   {
-    /* destroy the diplomatics states of this player with others ... */
+    // destroy the diplomatics states of this player with others ...
     player_diplstate_destroy(pplayer, aplayer);
-    /* and of others with this player. */
+    // and of others with this player.
     if (aplayer != pplayer) {
       player_diplstate_destroy(aplayer, pplayer);
     }
@@ -737,7 +737,7 @@ void player_destroy(struct player *pplayer)
   players_iterate_end;
   delete[] pplayer->diplstates;
 
-  /* Clear player color. */
+  // Clear player color.
   if (pplayer->rgb) {
     rgbcolor_destroy(pplayer->rgb);
   }
@@ -903,13 +903,13 @@ int player_age(const struct player *pplayer)
 bool player_can_trust_tile_has_no_units(const struct player *pplayer,
                                         const struct tile *ptile)
 {
-  /* Can't see invisible units. */
+  // Can't see invisible units.
   if (!fc_funcs->player_tile_vision_get(ptile, pplayer, V_INVIS)
       || !fc_funcs->player_tile_vision_get(ptile, pplayer, V_SUBSURFACE)) {
     return false;
   }
 
-  /* Units within some extras may be hidden. */
+  // Units within some extras may be hidden.
   if (!pplayers_allied(pplayer, ptile->extras_owner)) {
     extra_type_list_iterate(extra_type_list_of_unit_hiders(), pextra)
     {
@@ -934,23 +934,23 @@ bool can_player_see_hypotetic_units_at(const struct player *pplayer,
   struct city *pcity;
 
   if (!player_can_trust_tile_has_no_units(pplayer, ptile)) {
-    /* The existance of any units at all is hidden from the player. */
+    // The existance of any units at all is hidden from the player.
     return false;
   }
 
-  /* Can't see city units. */
+  // Can't see city units.
   pcity = tile_city(ptile);
   if (pcity && !can_player_see_units_in_city(pplayer, pcity)
       && unit_list_size(ptile->units) > 0) {
     return false;
   }
 
-  /* Can't see non allied units in transports. */
+  // Can't see non allied units in transports.
   unit_list_iterate(ptile->units, punit)
   {
     if (unit_type_get(punit)->transport_capacity > 0
         && unit_owner(punit) != pplayer) {
-      /* An ally could transport a non ally */
+      // An ally could transport a non ally
       if (unit_list_size(punit->transporting) > 0) {
         return false;
       }
@@ -976,7 +976,7 @@ bool can_player_see_unit_at(const struct player *pplayer,
 {
   struct city *pcity;
 
-  /* If the player can't even see the tile... */
+  // If the player can't even see the tile...
   if (TILE_KNOWN_SEEN != tile_get_known(ptile, pplayer)) {
     return false;
   }
@@ -989,13 +989,13 @@ bool can_player_see_unit_at(const struct player *pplayer,
     return false;
   }
 
-  /* Units in cities may be hidden. */
+  // Units in cities may be hidden.
   pcity = tile_city(ptile);
   if (pcity && !can_player_see_units_in_city(pplayer, pcity)) {
     return false;
   }
 
-  /* Units within some extras may be hidden. */
+  // Units within some extras may be hidden.
   if (!pplayers_allied(pplayer, ptile->extras_owner)) {
     const struct unit_type *ptype = unit_type_get(punit);
 
@@ -1009,13 +1009,13 @@ bool can_player_see_unit_at(const struct player *pplayer,
     extra_type_list_iterate_end;
   }
 
-  /* Allied or non-hiding units are always seen. */
+  // Allied or non-hiding units are always seen.
   if (pplayers_allied(unit_owner(punit), pplayer)
       || !is_hiding_unit(punit)) {
     return true;
   }
 
-  /* Hiding units are only seen by the V_INVIS fog layer. */
+  // Hiding units are only seen by the V_INVIS fog layer.
   return fc_funcs->player_tile_vision_get(ptile, pplayer,
                                           unit_type_get(punit)->vlayer);
 
@@ -1092,12 +1092,12 @@ bool player_can_see_city_externals(const struct player *pow_player,
   fc_assert_ret_val(pow_player, false);
 
   if (can_player_see_city_internals(pow_player, target_city)) {
-    /* City internals includes city externals. */
+    // City internals includes city externals.
     return true;
   }
 
   if (tile_is_seen(city_tile(target_city), pow_player)) {
-    /* The tile is being observed. */
+    // The tile is being observed.
     return true;
   }
 
@@ -1106,7 +1106,7 @@ bool player_can_see_city_externals(const struct player *pow_player,
   trade_partners_iterate(target_city, trade_city)
   {
     if (city_owner(trade_city) == pow_player) {
-      /* Revealed because of the trade route. */
+      // Revealed because of the trade route.
       return true;
     }
   }
@@ -1126,7 +1126,7 @@ bool player_can_see_city_externals(const struct player *pow_player,
  */
 struct city *player_city_by_number(const struct player *pplayer, int city_id)
 {
-  /* We call idex directly. Should use game_city_by_number() instead? */
+  // We call idex directly. Should use game_city_by_number() instead?
   struct city *pcity = idex_lookup_city(&wld, city_id);
 
   if (!pcity) {
@@ -1134,7 +1134,7 @@ struct city *player_city_by_number(const struct player *pplayer, int city_id)
   }
 
   if (!pplayer || (city_owner(pcity) == pplayer)) {
-    /* Correct owner */
+    // Correct owner
     return pcity;
   }
 
@@ -1152,7 +1152,7 @@ struct city *player_city_by_number(const struct player *pplayer, int city_id)
  */
 struct unit *player_unit_by_number(const struct player *pplayer, int unit_id)
 {
-  /* We call idex directly. Should use game_unit_by_number() instead? */
+  // We call idex directly. Should use game_unit_by_number() instead?
   struct unit *punit = idex_lookup_unit(&wld, unit_id);
 
   if (!punit) {
@@ -1160,7 +1160,7 @@ struct unit *player_unit_by_number(const struct player *pplayer, int unit_id)
   }
 
   if (!pplayer || (unit_owner(punit) == pplayer)) {
-    /* Correct owner */
+    // Correct owner
     return punit;
   }
 
@@ -1212,7 +1212,7 @@ int player_get_expected_income(const struct player *pplayer)
   /* City income/expenses. */
   city_list_iterate(pplayer->cities, pcity)
   {
-    /* Gold suplus accounts for imcome plus building and unit upkeep. */
+    // Gold suplus accounts for imcome plus building and unit upkeep.
     income += pcity->surplus[O_GOLD];
 
     /* Gold upkeep for buildings and units is defined by the setting
@@ -1226,16 +1226,16 @@ int player_get_expected_income(const struct player *pplayer)
     case GOLD_UPKEEP_CITY:
       break;
     case GOLD_UPKEEP_NATION:
-      /* Nation pays for buildings (and units). */
+      // Nation pays for buildings (and units).
       income -= city_total_impr_gold_upkeep(pcity);
-      fc__fallthrough; /* No break. */
+      fc__fallthrough; // No break.
     case GOLD_UPKEEP_MIXED:
-      /* Nation pays for units. */
+      // Nation pays for units.
       income -= city_total_unit_gold_upkeep(pcity);
       break;
     }
 
-    /* Capitalization income. */
+    // Capitalization income.
     if (city_production_has_flag(pcity, IF_GOLD)) {
       income += pcity->shield_stock + pcity->surplus[O_SHIELD];
     }
@@ -1263,7 +1263,7 @@ struct city *player_primary_capital(const struct player *pplayer)
   struct city *capital;
 
   if (!pplayer) {
-    /* The client depends on this behavior in some places. */
+    // The client depends on this behavior in some places.
     return NULL;
   }
 
@@ -1431,7 +1431,7 @@ bool is_diplrel_between(const struct player *player1,
   fc_assert(player1 != NULL);
   fc_assert(player2 != NULL);
 
-  /* No relationship to it self. */
+  // No relationship to it self.
   if (player1 == player2 && diplrel != DRO_FOREIGN) {
     return false;
   }
@@ -1493,14 +1493,14 @@ bool is_diplrel_to_other(const struct player *pplayer, int diplrel)
  */
 int diplrel_by_rule_name(const char *value)
 {
-  /* Look for asymmetric diplomatic relations */
+  // Look for asymmetric diplomatic relations
   int diplrel = diplrel_other_by_name(value, fc_strcasecmp);
 
   if (diplrel != diplrel_other_invalid()) {
     return diplrel;
   }
 
-  /* Look for symmetric diplomatic relations */
+  // Look for symmetric diplomatic relations
   diplrel = diplstate_type_by_name(value, fc_strcasecmp);
 
   /*
@@ -1593,26 +1593,26 @@ enum casus_belli_range casus_belli_range_for(const struct player *offender,
  */
 static bv_diplrel_all_reqs *diplrel_mess_gen()
 {
-  /* The ranges supported by the DiplRel requiremnt type. */
+  // The ranges supported by the DiplRel requiremnt type.
   const enum req_range legal_ranges[] = {REQ_RANGE_LOCAL, REQ_RANGE_PLAYER,
                                          REQ_RANGE_ALLIANCE, REQ_RANGE_TEAM,
                                          REQ_RANGE_WORLD};
 
-  /* Iterators. */
+  // Iterators.
   int rel;
   int i;
   int j;
 
-  /* Storage for the mutually exclusive requirement sets. */
+  // Storage for the mutually exclusive requirement sets.
   bv_diplrel_all_reqs *mess = new bv_diplrel_all_reqs[DIPLREL_MESS_SIZE];
 
-  /* Position in mess. */
+  // Position in mess.
   int mess_pos = 0;
 
-  /* The first mutually exclusive set is about local diplstate. */
+  // The first mutually exclusive set is about local diplstate.
   BV_CLR_ALL(mess[mess_pos]);
 
-  /* It is not possible to have more than one diplstate to a nation. */
+  // It is not possible to have more than one diplstate to a nation.
   BV_SET(mess[mess_pos],
          requirement_diplrel_ereq(DS_ARMISTICE, REQ_RANGE_LOCAL, true));
   BV_SET(mess[mess_pos],
@@ -1628,13 +1628,13 @@ static bv_diplrel_all_reqs *diplrel_mess_gen()
   BV_SET(mess[mess_pos],
          requirement_diplrel_ereq(DS_TEAM, REQ_RANGE_LOCAL, true));
 
-  /* It is not possible to have a diplstate to your self. */
+  // It is not possible to have a diplstate to your self.
   BV_SET(mess[mess_pos],
          requirement_diplrel_ereq(DRO_FOREIGN, REQ_RANGE_LOCAL, false));
 
   mess_pos++;
 
-  /* Having a real embassy excludes not having an embassy. */
+  // Having a real embassy excludes not having an embassy.
   BV_CLR_ALL(mess[mess_pos]);
 
   BV_SET(mess[mess_pos], requirement_diplrel_ereq(DRO_HAS_REAL_EMBASSY,
@@ -1644,7 +1644,7 @@ static bv_diplrel_all_reqs *diplrel_mess_gen()
 
   mess_pos++;
 
-  /* Hosting a real embassy excludes not hosting an embassy. */
+  // Hosting a real embassy excludes not hosting an embassy.
   BV_CLR_ALL(mess[mess_pos]);
 
   BV_SET(mess[mess_pos], requirement_diplrel_ereq(DRO_HOSTS_REAL_EMBASSY,
@@ -1654,7 +1654,7 @@ static bv_diplrel_all_reqs *diplrel_mess_gen()
 
   mess_pos++;
 
-  /* Loop over diplstate_type and diplrel_other. */
+  // Loop over diplstate_type and diplrel_other.
   for (rel = 0; rel < DRO_LAST; rel++) {
     /* The presence of a DiplRel at a more local range proves that it can't
      * be absent in a more global range. (The alliance range includes the
@@ -1673,7 +1673,7 @@ static bv_diplrel_all_reqs *diplrel_mess_gen()
     }
   }
 
-  /* No uninitialized element exists. */
+  // No uninitialized element exists.
   fc_assert(mess_pos == DIPLREL_MESS_SIZE);
 
   return mess;
@@ -1690,7 +1690,7 @@ static bv_diplrel_all_reqs *diplrel_mess = NULL;
 static bv_diplrel_all_reqs *diplrel_mess_get()
 {
   if (diplrel_mess == NULL) {
-    /* This is the first call. Initialize diplrel_mess. */
+    // This is the first call. Initialize diplrel_mess.
     diplrel_mess = diplrel_mess_gen();
   }
 
@@ -1721,11 +1721,11 @@ bv_diplrel_all_reqs diplrel_req_contradicts(const struct requirement *req)
   bv_diplrel_all_reqs known;
   int set;
 
-  /* Nothing is known to contradict the requirement yet. */
+  // Nothing is known to contradict the requirement yet.
   BV_CLR_ALL(known);
 
   if (req->source.kind != VUT_DIPLREL) {
-    /* No known contradiction of a requirement of any other kind. */
+    // No known contradiction of a requirement of any other kind.
     fc_assert(req->source.kind == VUT_DIPLREL);
 
     return known;
@@ -1736,10 +1736,10 @@ bv_diplrel_all_reqs diplrel_req_contradicts(const struct requirement *req)
   diplrel_req_num = requirement_diplrel_ereq(req->source.value.diplrel,
                                              req->range, req->present);
 
-  /* Get the mutually exclusive requirement sets for DiplRel. */
+  // Get the mutually exclusive requirement sets for DiplRel.
   mess = diplrel_mess_get();
 
-  /* Add all known contradictions. */
+  // Add all known contradictions.
   for (set = 0; set < DIPLREL_MESS_SIZE; set++) {
     if (BV_ISSET(mess[set], diplrel_req_num)) {
       /* The requirement req is mentioned in the set. It is therefore known
@@ -1779,7 +1779,7 @@ int player_in_territory(const struct player *pplayer,
     struct player *owner = tile_owner(unit_tile(punit));
 
     if (owner == pplayer && can_player_see_unit(pplayer, punit)) {
-      /* Found one! */
+      // Found one!
       in_territory += 1;
     }
   }
@@ -1805,7 +1805,7 @@ bool is_valid_username(const char *name)
 bool is_settable_ai_level(enum ai_level level)
 {
   if (level == AI_LEVEL_AWAY) {
-    /* Cannot set away level for AI */
+    // Cannot set away level for AI
     return false;
   }
 
@@ -1817,7 +1817,7 @@ bool is_settable_ai_level(enum ai_level level)
  */
 int number_of_ai_levels()
 {
-  return AI_LEVEL_COUNT - 1; /* AI_LEVEL_AWAY is not real AI */
+  return AI_LEVEL_COUNT - 1; // AI_LEVEL_AWAY is not real AI
 }
 
 /**

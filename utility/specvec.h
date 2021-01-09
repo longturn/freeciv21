@@ -40,7 +40,7 @@
    which _is_ itself protected against multiple inclusions.
 */
 
-#include <cstring> /* for memcpy */
+#include <cstring> // for memcpy
 
 #ifndef SPECVEC_TAG
 #error Must define a SPECVEC_TAG to use this header
@@ -58,7 +58,7 @@
 
 SPECVEC_VECTOR
 {
-  /* Users are allowed to access the data pointer directly. */
+  // Users are allowed to access the data pointer directly.
   SPECVEC_TYPE *p;
 
   size_t size, size_alloc;
@@ -100,7 +100,7 @@ static inline SPECVEC_TYPE *
   }
 }
 
-/* You must _init "*to" before using this function */
+// You must _init "*to" before using this function
 static inline void SPECVEC_FOO(_vector_copy)(SPECVEC_VECTOR *to,
                                              const SPECVEC_VECTOR *from)
 {
@@ -142,7 +142,7 @@ static inline void SPECVEC_FOO(_vector_remove)(SPECVEC_VECTOR *tthis,
   fc_assert_ret(rmpos < SPECVEC_FOO(_vector_size)(tthis));
 
   for (i = rmpos; (i + 1) < SPECVEC_FOO(_vector_size)(tthis); i++) {
-    /* Relocate the elements following the deleted element. */
+    // Relocate the elements following the deleted element.
     tthis->p[i] = tthis->p[i + 1];
   }
 
@@ -156,7 +156,7 @@ static inline void SPECVEC_FOO(_vector_remove)(SPECVEC_VECTOR *tthis,
     for (myiter##var = 0; myiter##var < (vector)->size; myiter##var++) {    \
       var = &(vector)->p[myiter##var];
 
-/* Balance for above: */
+// Balance for above:
 #define VECTOR_ITERATE_END                                                  \
   }                                                                         \
   }

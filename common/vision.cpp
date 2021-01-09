@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
 #include "shared.h"
 
-/* common */
+// common
 #include "game.h"
 #include "player.h"
 #include "tile.h"
@@ -105,7 +105,7 @@ struct vision_site *vision_site_new_from_city(const struct city *pcity)
 void vision_site_update_from_city(struct vision_site *psite,
                                   const struct city *pcity)
 {
-  /* should be same identity and location */
+  // should be same identity and location
   fc_assert_ret(psite->identity == pcity->id);
   fc_assert_ret(psite->location == pcity->tile);
 

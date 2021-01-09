@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "ai.h"
 #include "player.h"
 
@@ -595,20 +595,20 @@ bool fc_ai_classic_setup(struct ai_type *ai)
 
   ai->funcs.module_close = cai_module_close;
 
-  /* ai->funcs.map_alloc = NULL; */
-  /* ai->funcs.map_ready = NULL; */
-  /* ai->funcs.map_free = NULL; */
-  /* ai->funcs.game_start = NULL; */
-  /* ai->funcs.game_free = NULL; */
+  // ai->funcs.map_alloc = NULL;
+  // ai->funcs.map_ready = NULL;
+  // ai->funcs.map_free = NULL;
+  // ai->funcs.game_start = NULL;
+  // ai->funcs.game_free = NULL;
 
   ai->funcs.player_alloc = cai_player_alloc;
   ai->funcs.player_free = cai_player_free;
-  /* ai->funcs.player_save = NULL; */
-  /* ai->funcs.player_load = NULL; */
+  // ai->funcs.player_save = NULL;
+  // ai->funcs.player_load = NULL;
   ai->funcs.player_save_relations = cai_player_save_relations;
   ai->funcs.player_load_relations = cai_player_load_relations;
   ai->funcs.gained_control = cai_gained_control;
-  /* ai->funcs.lost_control = NULL; */
+  // ai->funcs.lost_control = NULL;
   ai->funcs.split_by_civil_war = cai_split_by_civil_war;
   ai->funcs.created_by_civil_war = cai_created_by_civil_war;
 
@@ -656,7 +656,7 @@ bool fc_ai_classic_setup(struct ai_type *ai)
 
   ai->funcs.unit_turn_end = cai_unit_turn_end;
   ai->funcs.unit_move = cai_unit_move_or_attack;
-  /* ai->funcs.unit_move_seen = NULL; */
+  // ai->funcs.unit_move_seen = NULL;
   ai->funcs.unit_task = cai_unit_new_adv_task;
 
   ai->funcs.unit_save = cai_unit_save;
@@ -684,11 +684,11 @@ bool fc_ai_classic_setup(struct ai_type *ai)
   ai->funcs.consider_tile_dangerous = cai_consider_tile_dangerous;
   ai->funcs.consider_wonder_city = cai_consider_wonder_city;
 
-  /* ai->funcs.refresh = NULL; */
+  // ai->funcs.refresh = NULL;
 
-  /* ai->funcs.tile_info = NULL; */
-  /* ai->funcs.city_info = NULL; */
-  /* ai->funcs.unit_info = NULL; */
+  // ai->funcs.tile_info = NULL;
+  // ai->funcs.city_info = NULL;
+  // ai->funcs.unit_info = NULL;
 
   return true;
 }

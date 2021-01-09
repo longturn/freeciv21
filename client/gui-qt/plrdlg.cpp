@@ -806,7 +806,7 @@ void plr_report::update_report(bool update_selection)
   QModelIndex qmi;
   int player_count = 0;
 
-  /* Force updating selected player information */
+  // Force updating selected player information
   if (update_selection) {
     qmi = ui.plr_wdg->currentIndex();
     if (qmi.isValid()) {

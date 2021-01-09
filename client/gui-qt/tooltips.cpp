@@ -236,7 +236,7 @@ QString get_tooltip(const QVariant &qvar)
                             NULL, target->value.building);
   }
 
-  /* Remove all lines from help which has '*' in first 3 chars */
+  // Remove all lines from help which has '*' in first 3 chars
   ret_str = cut_helptext(str);
   ret_str = split_text(ret_str, true);
   ret_str = ret_str.trimmed();

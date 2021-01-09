@@ -12,14 +12,14 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "featured_text.h"
 #include "research.h"
 
 /* common/scriptcore */
 #include "luascript.h"
 
-/* server */
+// server
 #include "notify.h"
 
 #include "api_server_notify.h"

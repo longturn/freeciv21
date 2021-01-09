@@ -22,7 +22,7 @@
 #include <cstdio>
 #include <cstring>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -85,7 +85,7 @@ void init_character_encodings(const char *my_internal_encoding,
 #ifdef FREECIV_DEBUG
   fprintf(stderr, "Encodings: Data=%s, Local=%s, Internal=%s\n",
           data_encoding, local_encoding, internal_encoding);
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 }
 
 /**

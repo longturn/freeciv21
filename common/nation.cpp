@@ -19,11 +19,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "support.h"
 
-/* common */
+// common
 #include "connection.h"
 #include "game.h"
 #include "government.h"
@@ -33,7 +33,7 @@
 
 #include "nation.h"
 
-/* Nation set structure. */
+// Nation set structure.
 struct nation_set {
   struct name_translation name;
   char description[MAX_LEN_MSG];
@@ -76,9 +76,9 @@ static bool nation_check(const nation_type *pnation)
   return true;
 }
 
-#else /* FREECIV_DEBUG */
-#define NATION_CHECK(pnation, action) /* Do Nothing. */
-#endif /* FREECIV_DEBUG */
+#else // FREECIV_DEBUG
+#define NATION_CHECK(pnation, action) // Do Nothing.
+#endif // FREECIV_DEBUG
 
 /**
    Returns the nation that has the given (translated) plural noun.
@@ -560,7 +560,7 @@ static void nation_init(struct nation_type *pnation)
     pnation->server.civilwar_nations = nation_list_new();
     pnation->server.parent_nations = nation_list_new();
     pnation->server.conflicts_with = nation_list_new();
-    /* server.rgb starts out NULL */
+    // server.rgb starts out NULL
     pnation->server.traits = new trait_limits[TRAIT_COUNT];
   }
 }
@@ -695,7 +695,7 @@ struct nation_set *nation_set_new(const char *set_name,
     return NULL;
   }
 
-  /* Print the name and truncate if needed. */
+  // Print the name and truncate if needed.
   pset = nation_sets + num_nation_sets;
   names_set(&pset->name, NULL, set_name, set_rule_name);
   (void) sz_loud_strlcpy(
@@ -925,7 +925,7 @@ struct nation_group *nation_group_new(const char *name)
     return NULL;
   }
 
-  /* Print the name and truncate if needed. */
+  // Print the name and truncate if needed.
   pgroup = nation_groups + num_nation_groups;
   name_set(&pgroup->name, NULL, name);
   if (NULL != nation_group_by_rule_name(rule_name_get(&pgroup->name))) {
@@ -1164,7 +1164,7 @@ int nations_match(const struct nation_type *pnation1,
     {
       if (pnation0 == pnation2) {
         in_conflict = true;
-        sum = 1; /* Be sure to returns something negative. */
+        sum = 1; // Be sure to returns something negative.
         break;
       }
     }
@@ -1175,7 +1175,7 @@ int nations_match(const struct nation_type *pnation1,
       {
         if (pnation0 == pnation1) {
           in_conflict = true;
-          sum = 1; /* Be sure to returns something negative. */
+          sum = 1; // Be sure to returns something negative.
           break;
         }
       }

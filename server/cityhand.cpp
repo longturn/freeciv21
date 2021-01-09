@@ -19,13 +19,13 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
 #include "support.h"
 
-/* common */
+// common
 #include "city.h"
 #include "events.h"
 #include "game.h"
@@ -39,7 +39,7 @@
 /* common/aicore */
 #include "cm.h"
 
-/* server */
+// server
 #include "citytools.h"
 #include "cityturn.h"
 #include "notify.h"
@@ -60,7 +60,7 @@ void handle_city_name_suggestion_req(struct player *pplayer, int unit_id)
   struct unit *punit = player_unit_by_number(pplayer, unit_id);
 
   if (NULL == punit) {
-    /* Probably died or bribed. */
+    // Probably died or bribed.
     qDebug("handle_city_name_suggestion_req() invalid unit %d", unit_id);
     return;
   }
@@ -73,7 +73,7 @@ void handle_city_name_suggestion_req(struct player *pplayer, int unit_id)
         pplayer->connections, unit_id,
         city_name_suggestion(pplayer, unit_tile(punit)));
 
-    /* The rest of this function is error handling. */
+    // The rest of this function is error handling.
     return;
   }
 
@@ -125,7 +125,7 @@ void handle_city_make_specialist(struct player *pplayer, int city_id,
   struct city *pcity = player_city_by_number(pplayer, city_id);
 
   if (NULL == pcity) {
-    /* Probably lost. */
+    // Probably lost.
     qDebug("handle_city_make_specialist() bad city number %d.", city_id);
     return;
   }
@@ -170,7 +170,7 @@ void handle_city_make_worker(struct player *pplayer, int city_id,
   struct city *pcity = player_city_by_number(pplayer, city_id);
 
   if (NULL == pcity) {
-    /* Probably lost. */
+    // Probably lost.
     qDebug("handle_city_make_worker() bad city number %d.", city_id);
     return;
   }
@@ -260,7 +260,7 @@ void really_handle_city_sell(struct player *pplayer, struct city *pcity,
 
   city_refresh(pcity);
 
-  /* If we sold the walls the other players should see it */
+  // If we sold the walls the other players should see it
   send_city_info(NULL, pcity);
   send_player_info_c(pplayer, pplayer->connections);
 }
@@ -288,7 +288,7 @@ void really_handle_city_buy(struct player *pplayer, struct city *pcity)
 {
   int cost, total;
 
-  /* This function corresponds to city_can_buy() in the client. */
+  // This function corresponds to city_can_buy() in the client.
 
   fc_assert_ret(pcity && player_owns_city(pplayer, pcity));
 
@@ -321,12 +321,12 @@ void really_handle_city_buy(struct player *pplayer, struct city *pcity)
   total = city_production_build_shield_cost(pcity);
   cost = city_production_buy_gold_cost(pcity);
   if (cost <= 0) {
-    return; /* sanity */
+    return; // sanity
   }
   if (cost > pplayer->economic.gold) {
     /* In case something changed while player tried to buy, or player
      * tried to cheat! */
-    /* Split into two to allow localization of two pluralisations. */
+    // Split into two to allow localization of two pluralisations.
     char buf[MAX_LEN_MSG];
     /* TRANS: This whole string is only ever used when included in one
      * other string (search for this string to find it). */
@@ -346,14 +346,14 @@ void really_handle_city_buy(struct player *pplayer, struct city *pcity)
     /* As we never put penalty on disbanded_shields, we can
      * fully well add the missing shields there. */
     pcity->disbanded_shields += total - pcity->shield_stock;
-    pcity->shield_stock = total; /* AI wants this -- Syela */
-    pcity->did_buy = true;       /* !PS: no need to set buy flag otherwise */
+    pcity->shield_stock = total; // AI wants this -- Syela
+    pcity->did_buy = true;       // !PS: no need to set buy flag otherwise
   }
   city_refresh(pcity);
 
   if (VUT_UTYPE == pcity->production.kind) {
     notify_player(pplayer, pcity->tile, E_UNIT_BUY, ftc_server,
-                  /* TRANS: bought an unit. */
+                  // TRANS: bought an unit.
                   Q_("?unit:You bought %s in %s."),
                   utype_name_translation(pcity->production.value.utype),
                   city_name_get(pcity));
@@ -452,7 +452,7 @@ void handle_city_change(struct player *pplayer, int city_id,
   }
 
   if (are_universals_equal(&pcity->production, &prod)) {
-    /* The client probably shouldn't send such a packet. */
+    // The client probably shouldn't send such a packet.
     return;
   }
 
@@ -525,13 +525,13 @@ void handle_city_rally_point(struct player *pplayer, int city_id, int length,
   struct unit_order *checked_orders;
 
   if (NULL == pcity) {
-    /* Probably lost. */
+    // Probably lost.
     qDebug("handle_city_rally_point() bad city number %d.", city_id);
     return;
   }
 
   if (0 > length || MAX_LEN_ROUTE < length) {
-    /* Shouldn't happen */
+    // Shouldn't happen
     qCritical("handle_city_rally_point() invalid packet length %d (max %d)",
               length, MAX_LEN_ROUTE);
     return;
@@ -570,7 +570,7 @@ void handle_city_manager(struct player *pplayer, int city_id, bool enabled,
   struct city *pcity = player_city_by_number(pplayer, city_id);
 
   if (NULL == pcity) {
-    /* Probably lost. */
+    // Probably lost.
     qDebug("handle_city_manager() bad city number %d.", city_id);
     return;
   }

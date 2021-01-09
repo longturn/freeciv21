@@ -21,7 +21,7 @@
 
 #include <readline/readline.h>
 
-/* utility */
+// utility
 #include "deprecations.h"
 #include "fcbacktrace.h"
 #include "fciconv.h"
@@ -29,10 +29,10 @@
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "game.h"
 
-/* server */
+// server
 #include "notify.h"
 #include "srv_main.h"
 
@@ -60,7 +60,7 @@ static void console_handle_message(QtMsgType type,
     notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning, "%s",
                 qUtf8Printable(message));
   } else if (type == QtFatalMsg) {
-    /* Make sure that message is not left to buffers when server dies */
+    // Make sure that message is not left to buffers when server dies
     conn_list_iterate(game.est_connections, pconn)
     {
       pconn->send_buffer->do_buffer_sends = 0;
@@ -153,7 +153,7 @@ void con_set_color(const char *col)
  */
 void con_write(enum rfc_status rfc_status, const char *message, ...)
 {
-  /* First buffer contains featured text tags */
+  // First buffer contains featured text tags
   static char buf1[(MAX_LEN_CONSOLE_LINE * 3) / 2];
   static char buf2[MAX_LEN_CONSOLE_LINE];
   va_list args;
@@ -162,7 +162,7 @@ void con_write(enum rfc_status rfc_status, const char *message, ...)
   fc_vsnprintf(buf1, sizeof(buf1), message, args);
   va_end(args);
 
-  /* remove all format tags */
+  // remove all format tags
   featured_text_to_plain_text(buf1, buf2, sizeof(buf2), NULL, false);
   con_puts(rfc_status, buf2);
 }

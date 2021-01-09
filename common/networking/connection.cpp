@@ -18,14 +18,14 @@
 // Qt
 #include <QTcpSocket>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "genhash.h"
 #include "log.h"
-#include "support.h" /* fc_str(n)casecmp */
+#include "support.h" // fc_str(n)casecmp
 
-/* common */
-#include "game.h" /* game.all_connections */
+// common
+#include "game.h" // game.all_connections
 #include "packets.h"
 
 #include "connection.h"
@@ -74,7 +74,7 @@ void connection_close(struct connection *pconn, const char *reason)
   fc_assert_ret(NULL != pconn);
 
   if (NULL != reason && pconn->closing_reason.isEmpty()) {
-    /* NB: we don't overwrite the original reason. */
+    // NB: we don't overwrite the original reason.
     pconn->closing_reason = QString::fromUtf8(reason);
   }
 
@@ -88,9 +88,9 @@ void connection_close(struct connection *pconn, const char *reason)
 static bool buffer_ensure_free_extra_space(struct socket_packet_buffer *buf,
                                            int extra_space)
 {
-  /* room for more? */
+  // room for more?
   if (buf->nsize - buf->ndata < extra_space) {
-    /* added this check so we don't gobble up too much mem */
+    // added this check so we don't gobble up too much mem
     if (buf->ndata + extra_space > MAX_LEN_BUFFER) {
       return false;
     }
@@ -438,17 +438,17 @@ const char *conn_description(const struct connection *pconn)
     cat_snprintf(buffer, sizeof(buffer), _(" (%s)"),
                  qUtf8Printable(pconn->closing_reason));
   } else if (!pconn->established) {
-    /* TRANS: preserve leading space. */
+    // TRANS: preserve leading space.
     sz_strlcat(buffer, _(" (connection incomplete)"));
     return buffer;
   }
   if (NULL != pconn->playing) {
-    /* TRANS: preserve leading space. */
+    // TRANS: preserve leading space.
     cat_snprintf(buffer, sizeof(buffer), _(" (player %s)"),
                  player_name(pconn->playing));
   }
   if (pconn->observer) {
-    /* TRANS: preserve leading space. */
+    // TRANS: preserve leading space.
     sz_strlcat(buffer, _(" (observer)"));
   }
 
@@ -697,7 +697,7 @@ struct player *conn_get_player(const struct connection *pconn)
 enum cmdlevel conn_get_access(const struct connection *pconn)
 {
   if (!pconn) {
-    return ALLOW_NONE; /* Would not want to give hack on error... */
+    return ALLOW_NONE; // Would not want to give hack on error...
   }
   return pconn->access_level;
 }
@@ -806,9 +806,9 @@ struct conn_pattern *conn_pattern_from_string(const char *pattern,
   enum conn_pattern_type type = conn_pattern_type_invalid();
   const char *p;
 
-  /* Determine pattern type. */
+  // Determine pattern type.
   if ((p = strchr(pattern, '='))) {
-    /* Special character to separate the type of the pattern. */
+    // Special character to separate the type of the pattern.
     QString pattern_type;
 
     pattern_type = QString(pattern).trimmed();
@@ -823,7 +823,7 @@ struct conn_pattern *conn_pattern_from_string(const char *pattern,
       return NULL;
     }
   } else {
-    /* Use 'prefer' type. */
+    // Use 'prefer' type.
     p = pattern;
     type = prefer;
     if (!conn_pattern_type_is_valid(type)) {
@@ -834,7 +834,7 @@ struct conn_pattern *conn_pattern_from_string(const char *pattern,
     }
   }
 
-  /* Remove leading spaces. */
+  // Remove leading spaces.
   while (QChar::isSpace(*p)) {
     p++;
   }

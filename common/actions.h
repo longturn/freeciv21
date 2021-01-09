@@ -13,7 +13,7 @@
 
 #pragma once
 
-/* common */
+// common
 #include "fc_types.h"
 #include "metaknowledge.h"
 #include "requirements.h"
@@ -33,13 +33,13 @@
 #define SPECENUM_VALUE2NAME N_("unit stacks")
 #define SPECENUM_VALUE3 ATK_TILE
 #define SPECENUM_VALUE3NAME N_("tiles")
-/* No target except the actor itself. */
+// No target except the actor itself.
 #define SPECENUM_VALUE4 ATK_SELF
 #define SPECENUM_VALUE4NAME N_("itself")
 #define SPECENUM_COUNT ATK_COUNT
 #include "specenum_gen.h"
 
-/* Values used in the network protocol. */
+// Values used in the network protocol.
 #define SPECENUM_NAME action_sub_target_kind
 #define SPECENUM_VALUE0 ASTK_NONE
 #define SPECENUM_VALUE0NAME N_("nothing")
@@ -54,8 +54,8 @@
 #define SPECENUM_COUNT ASTK_COUNT
 #include "specenum_gen.h"
 
-/* Values used in the network protocol. */
-/* Names used in file formats but not normally shown to users. */
+// Values used in the network protocol.
+// Names used in file formats but not normally shown to users.
 #define SPECENUM_NAME gen_action
 #define SPECENUM_VALUE0 ACTION_ESTABLISH_EMBASSY
 #define SPECENUM_VALUE0NAME "Establish Embassy"
@@ -215,13 +215,13 @@
 #define SPECENUM_COUNT ACTION_COUNT
 #include "specenum_gen.h"
 
-/* Fake action id used in searches to signal "any action at all". */
+// Fake action id used in searches to signal "any action at all".
 #define ACTION_ANY ACTION_COUNT
 
-/* Fake action id used to signal the absence of any actions. */
+// Fake action id used to signal the absence of any actions.
 #define ACTION_NONE ACTION_COUNT
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define MAX_NUM_ACTIONS ACTION_COUNT
 #define NUM_ACTIONS MAX_NUM_ACTIONS
 
@@ -238,7 +238,7 @@
 #define SPECENUM_COUNT ABK_COUNT
 #include "specenum_gen.h"
 
-/* Describes how a unit sucessfully performing an action will move it. */
+// Describes how a unit sucessfully performing an action will move it.
 #define SPECENUM_NAME moves_actor_kind
 #define SPECENUM_VALUE0 MAK_STAYS
 #define SPECENUM_VALUE0NAME N_("stays")
@@ -254,18 +254,18 @@
 #define SPECENUM_VALUE5NAME N_("unrepresentable")
 #include "specenum_gen.h"
 
-/* Who ordered the action to be performed? */
+// Who ordered the action to be performed?
 #define SPECENUM_NAME action_requester
-/* The player ordered it directly. */
+// The player ordered it directly.
 #define SPECENUM_VALUE0 ACT_REQ_PLAYER
 #define SPECENUM_VALUE0NAME N_("the player")
-/* The game it self because the rules requires it. */
+// The game it self because the rules requires it.
 #define SPECENUM_VALUE1 ACT_REQ_RULES
 #define SPECENUM_VALUE1NAME N_("the game rules")
-/* A server side autonomous agent working for the player. */
+// A server side autonomous agent working for the player.
 #define SPECENUM_VALUE2 ACT_REQ_SS_AGENT
 #define SPECENUM_VALUE2NAME N_("a server agent")
-/* Number of action requesters. */
+// Number of action requesters.
 #define SPECENUM_COUNT ACT_REQ_COUNT
 #include "specenum_gen.h"
 
@@ -277,12 +277,12 @@
  * server's MAP_DISTANCE_MAX. A static assertion in actions.c makes sure
  * that it can cover the whole map. */
 #define ACTION_DISTANCE_LAST_NON_SIGNAL 128016
-/* No action max distance to target limit. */
+// No action max distance to target limit.
 #define ACTION_DISTANCE_UNLIMITED (ACTION_DISTANCE_LAST_NON_SIGNAL + 1)
-/* No action max distance can be bigger than this. */
+// No action max distance can be bigger than this.
 #define ACTION_DISTANCE_MAX ACTION_DISTANCE_UNLIMITED
 
-/* Action target complexity */
+// Action target complexity
 #define SPECENUM_NAME act_tgt_compl
 /* The action's target is just the primary target. (Just the tile, unit,
  * city, etc). */
@@ -313,7 +313,7 @@ struct action {
   enum action_target_kind target_kind;
   enum action_sub_target_kind sub_target_kind;
 
-  /* Sub target policy. */
+  // Sub target policy.
   enum act_tgt_compl target_complexity;
 
   /* Limits on the distance on the map between the actor and the target.
@@ -321,7 +321,7 @@ struct action {
    * a value in between. */
   int min_distance, max_distance;
 
-  /* The name of the action shown in the UI */
+  // The name of the action shown in the UI
   char ui_name[MAX_LEN_NAME];
 
   /* Suppress automatic help text generation about what enables and/or
@@ -351,7 +351,7 @@ struct action {
        * wrong action. */
       bool rare_pop_up;
 
-      /* The unitwaittime setting blocks this action when done too soon. */
+      // The unitwaittime setting blocks this action when done too soon.
       bool unitwaittime_controlled;
 
       /* How successfully performing the specified action always will move
@@ -431,16 +431,16 @@ struct action_enabler {
   action_iterate_end;                                                       \
   }
 
-/* The reason why an action should be auto performed. */
+// The reason why an action should be auto performed.
 #define SPECENUM_NAME action_auto_perf_cause
-/* Can't pay the unit's upkeep. */
-/* (Can be triggered by food, shield or gold upkeep) */
+// Can't pay the unit's upkeep.
+// (Can be triggered by food, shield or gold upkeep)
 #define SPECENUM_VALUE0 AAPC_UNIT_UPKEEP
 #define SPECENUM_VALUE0NAME N_("Unit Upkeep")
-/* A unit moved to an adjacent tile (auto attack). */
+// A unit moved to an adjacent tile (auto attack).
 #define SPECENUM_VALUE1 AAPC_UNIT_MOVED_ADJ
 #define SPECENUM_VALUE1NAME N_("Moved Adjacent")
-/* Number of forced action auto performer causes. */
+// Number of forced action auto performer causes.
 #define SPECENUM_COUNT AAPC_COUNT
 #include "specenum_gen.h"
 
@@ -455,7 +455,7 @@ struct action_enabler {
  *   performed. The system won't try to select another auto performer.
  */
 struct action_auto_perf {
-  /* The reason for trying to auto perform an action. */
+  // The reason for trying to auto perform an action.
   enum action_auto_perf_cause cause;
 
   /* Must be fulfilled if the game should try to force an action from this
@@ -505,7 +505,7 @@ struct action_auto_perf {
 #define ACTION_AUTO_UPKEEP_SHIELD 2
 #define ACTION_AUTO_MOVED_ADJ 3
 
-/* Initialization */
+// Initialization
 void actions_init();
 void actions_rs_pre_san_gen();
 void actions_free();
@@ -746,7 +746,7 @@ struct act_prob action_prob_new_certain();
 #define ACTPROB_NOT_IMPLEMENTED action_prob_new_not_impl()
 #define ACTPROB_NOT_KNOWN action_prob_new_unknown()
 
-/* ACTION_ODDS_PCT_DICE_ROLL_NA must be above 100%. */
+// ACTION_ODDS_PCT_DICE_ROLL_NA must be above 100%.
 #define ACTION_ODDS_PCT_DICE_ROLL_NA 110
 int action_dice_roll_initial_odds(const struct action *paction);
 int action_dice_roll_odds(const struct player *act_player,
@@ -758,7 +758,7 @@ int action_dice_roll_odds(const struct player *act_player,
 bool action_actor_utype_hard_reqs_ok(enum action_result result,
                                      const struct unit_type *actor_unittype);
 
-/* Reasoning about actions */
+// Reasoning about actions
 bool action_univs_not_blocking(const struct action *paction,
                                struct universal *actor_uni,
                                struct universal *target_uni);
@@ -777,11 +777,11 @@ bool action_maybe_possible_actor_unit(const action_id wanted_action,
 bool action_mp_full_makes_legal(const struct unit *actor,
                                 const action_id act_id);
 
-/* Action lists */
+// Action lists
 void action_list_end(action_id *act_list, int size);
 void action_list_add_all_by_result(action_id *act_list, int *position,
                                    enum action_result result);
 
-/* Action auto performers */
+// Action auto performers
 const struct action_auto_perf *action_auto_perf_by_number(const int num);
 struct action_auto_perf *action_auto_perf_slot_number(const int num);

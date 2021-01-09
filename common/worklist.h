@@ -19,7 +19,7 @@
 #define MAX_LEN_WORKLIST 64
 #define MAX_NUM_WORKLISTS 16
 
-/* a worklist */
+// a worklist
 struct worklist {
   int length;
   struct universal entries[MAX_LEN_WORKLIST];
@@ -42,7 +42,7 @@ bool worklist_insert(struct worklist *pwl, const struct universal *prod,
 bool are_worklists_equal(const struct worklist *wlist1,
                          const struct worklist *wlist2);
 
-/* Iterate over all entries in the worklist. */
+// Iterate over all entries in the worklist.
 #define worklist_iterate(_list, _p)                                         \
   {                                                                         \
     struct universal _p;                                                    \

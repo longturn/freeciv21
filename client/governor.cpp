@@ -11,7 +11,7 @@
 
 #include <QElapsedTimer>
 
-/* utility */
+// utility
 #include "bugs.h"
 #include "fciconv.h"
 
@@ -21,22 +21,22 @@
 #include "featured_text.h"
 #include "nation.h"
 #include "specialist.h"
-/* client */
+// client
 #include "attribute.h"
 #include "client_main.h"
 #include "climisc.h"
 
-/* include */
+// include
 #include "citydlg_g.h"
 #include "cityrep_g.h"
 #include "mapctrl_g.h"
 
 #include "governor.h"
 
-#define log_request_ids(...) /* log_test(__VA_ARGS__) */
-#define log_todo_lists(...)  /* log_test(__VA_ARGS__) */
+#define log_request_ids(...) // log_test(__VA_ARGS__)
+#define log_todo_lists(...)  // log_test(__VA_ARGS__)
 #define log_meta_callback(...) log_debug(__VA_ARGS__)
-#define log_debug_freeze(...) /* log_test(__VA_ARGS__) */
+#define log_debug_freeze(...) // log_test(__VA_ARGS__)
 #define log_apply_result log_debug
 #define log_handle_city log_debug
 #define log_handle_city2 log_debug
@@ -255,7 +255,7 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
     }
   }
 
-  /* Return. */
+  // Return.
   cm_result_from_main_map(cma_state_result, pcity);
 
   success = (*cma_state_result == *cma_result_got);
@@ -272,7 +272,7 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
     log_test("apply_result_on_server(city %d=\"%s\") want:", pcity->id,
              city_name_get(pcity));
     cm_print_result(cma_result_got);
-#endif /* SHOW_APPLY_RESULT_ON_SERVER_ERRORS */
+#endif // SHOW_APPLY_RESULT_ON_SERVER_ERRORS
   }
   cm_result_destroy(cma_state_result);
   cm_result_destroy(const_cast<cm_result *>(cma_result_got));
@@ -315,7 +315,7 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
     stats.apply_result_ignored++;
     return true;
   }
-  /* Do checks */
+  // Do checks
   if (city_size_get(pcity) != cm_result_citizens(result)) {
     qCritical("apply_result_on_server(city %d=\"%s\") bad result!",
               pcity->id, city_name_get(pcity));
@@ -331,7 +331,7 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
 
   connection_do_buffer(&client.conn);
 
-  /* Remove all surplus workers */
+  // Remove all surplus workers
   city_tile_iterate_skip_free_worked(city_radius_sq, pcenter, ptile, idx, x,
                                      y)
   {
@@ -347,7 +347,7 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
   }
   city_tile_iterate_skip_free_worked_end;
 
-  /* Change the excess non-default specialists to default. */
+  // Change the excess non-default specialists to default.
   specialist_type_iterate(sp)
   {
     if (sp == DEFAULT_SPECIALIST) {
@@ -366,9 +366,9 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
   }
   specialist_type_iterate_end;
 
-  /* now all surplus people are DEFAULT_SPECIALIST */
+  // now all surplus people are DEFAULT_SPECIALIST
 
-  /* Set workers */
+  // Set workers
   /* FIXME: This code assumes that any toggled worker will turn into a
    * DEFAULT_SPECIALIST! */
   city_tile_iterate_skip_free_worked(city_radius_sq, pcenter, ptile, idx, x,
@@ -501,7 +501,7 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
   fc_assert_ret_val(dio_get_sint16_raw(&din, &parameter->happy_factor),
                     false);
   fc_assert_ret_val(dio_get_uint8_raw(&din, &dummy),
-                    false); /* Dummy value; used to be factor_target. */
+                    false); // Dummy value; used to be factor_target.
   fc_assert_ret_val(dio_get_bool8_raw(&din, &parameter->require_happy),
                     false);
 
@@ -529,7 +529,7 @@ void cma_yoloswag::set_parameter(enum attr_city attr, int city_id,
   output_type_iterate_end;
 
   dio_put_sint16_raw(&dout, parameter->happy_factor);
-  dio_put_uint8_raw(&dout, 0); /* Dummy value; used to be factor_target. */
+  dio_put_uint8_raw(&dout, 0); // Dummy value; used to be factor_target.
   dio_put_bool8_raw(&dout, parameter->require_happy);
 
   fc_assert(dio_output_used(&dout) == SAVED_PARAMETER_SIZE);
@@ -616,7 +616,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
         }
       } else {
         log_handle_city2("  ok");
-        /* Everything ok */
+        // Everything ok
         handled = true;
         break;
       }
@@ -742,15 +742,15 @@ void cmafec_get_fe_parameter(struct city *pcity, struct cm_parameter *dest)
 {
   struct cm_parameter parameter;
 
-  /* our fe_parameter could be stale. our agents parameter is uptodate */
+  // our fe_parameter could be stale. our agents parameter is uptodate
   if (cma_is_city_under_agent(pcity, &parameter)) {
     cm_copy_parameter(dest, &parameter);
     cmafec_set_fe_parameter(pcity, dest);
   } else {
-    /* Create a dummy parameter to return. */
+    // Create a dummy parameter to return.
     cm_init_parameter(dest);
     if (!cma_get_parameter(ATTR_CITY_CMAFE_PARAMETER, pcity->id, dest)) {
-      /* We haven't seen this city before; store the dummy. */
+      // We haven't seen this city before; store the dummy.
       cmafec_set_fe_parameter(pcity, dest);
     }
   }
@@ -875,35 +875,35 @@ void create_default_cma_presets()
 {
   int i;
   struct cm_parameter parameters[] = {
-      {/* very happy */
+      {// very happy
        .minimal_surplus = {0, 0, 0, -20, 0, 0},
        .require_happy = false,
        .allow_disorder = false,
        .allow_specialists = true,
        .factor = {10, 5, 0, 4, 0, 4},
        .happy_factor = 25},
-      {/* prefer food */
+      {// prefer food
        .minimal_surplus = {-20, 0, 0, -20, 0, 0},
        .require_happy = false,
        .allow_disorder = false,
        .allow_specialists = true,
        .factor = {25, 5, 0, 4, 0, 4},
        .happy_factor = 0},
-      {/* prefer prod */
+      {// prefer prod
        .minimal_surplus = {0, -20, 0, -20, 0, 0},
        .require_happy = false,
        .allow_disorder = false,
        .allow_specialists = true,
        .factor = {10, 25, 0, 4, 0, 4},
        .happy_factor = 0},
-      {/* prefer gold */
+      {// prefer gold
        .minimal_surplus = {0, 0, 0, -20, 0, 0},
        .require_happy = false,
        .allow_disorder = false,
        .allow_specialists = true,
        .factor = {10, 5, 0, 25, 0, 4},
        .happy_factor = 0},
-      {/* prefer science */
+      {// prefer science
        .minimal_surplus = {0, 0, 0, -20, 0, 0},
        .require_happy = false,
        .allow_disorder = false,

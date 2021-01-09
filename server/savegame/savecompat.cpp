@@ -15,16 +15,16 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "capability.h"
 #include "fcintl.h"
 #include "log.h"
 
-/* common */
+// common
 #include "map.h"
 #include "specialist.h"
 
-/* server */
+// server
 #include "aiiface.h"
 #include "unittools.h"
 
@@ -85,7 +85,7 @@ static void compat_post_load_030100(struct loaddata *loading,
 #ifdef FREECIV_DEV_SAVE_COMPAT
 static void compat_load_dev(struct loaddata *loading);
 static void compat_post_load_dev(struct loaddata *loading);
-#endif /* FREECIV_DEV_SAVE_COMPAT */
+#endif // FREECIV_DEV_SAVE_COMPAT
 
 typedef void (*load_version_func_t)(struct loaddata *loading,
                                     enum sgf_version format_class);
@@ -109,21 +109,21 @@ struct compatibility {
 /* While developing freeciv 3.1.0, add the compatibility functions to
  * - compat_load_030100 to load old savegame. */
 static struct compatibility compat[] = {
-    /* dummy; equal to the current version (last element) */
+    // dummy; equal to the current version (last element)
     {0, NULL, NULL},
-    /* version 1 and 2 is not used */
+    // version 1 and 2 is not used
     /* version 3: first savegame2 format, so no compat functions for
      * translation from previous format */
     {3, NULL, NULL},
-    /* version 4 to 9 are reserved for possible changes in 2.3.x */
+    // version 4 to 9 are reserved for possible changes in 2.3.x
     {10, compat_load_020400, NULL},
-    /* version 11 to 19 are reserved for possible changes in 2.4.x */
+    // version 11 to 19 are reserved for possible changes in 2.4.x
     {20, compat_load_020500, NULL},
-    /* version 21 to 29 are reserved for possible changes in 2.5.x */
+    // version 21 to 29 are reserved for possible changes in 2.5.x
     {30, compat_load_020600, NULL},
-    /* version 31 to 39 are reserved for possible changes in 2.6.x */
+    // version 31 to 39 are reserved for possible changes in 2.6.x
     {40, compat_load_030000, NULL},
-    /* version 41 to 49 are reserved for possible changes in 3.0.x */
+    // version 41 to 49 are reserved for possible changes in 3.0.x
     {50, compat_load_030100, compat_post_load_030100},
     /* Current savefile version is listed above this line; it corresponds to
        the definitions in this file. */
@@ -143,7 +143,7 @@ void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
 {
   int i;
 
-  /* Check status and return if not OK (sg_success != TRUE). */
+  // Check status and return if not OK (sg_success != TRUE).
   sg_check_ret();
 
   loading->version =
@@ -152,16 +152,16 @@ void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
   sg_failure_ret(0 < loading->version,
                  "Invalid savefile format version (%d).", loading->version);
   if (loading->version > compat[compat_current].version) {
-    /* Debug build can (TRY TO!) load newer versions but ... */
+    // Debug build can (TRY TO!) load newer versions but ...
     qCritical("Savegame version newer than this build found (%d > %d). "
               "Trying to load the game nevertheless ...",
               loading->version, compat[compat_current].version);
   }
-#else /* FREECIV_DEBUG */
+#else // FREECIV_DEBUG
   sg_failure_ret(0 < loading->version
                      && loading->version <= compat[compat_current].version,
                  "Unknown savefile format version (%d).", loading->version);
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
   for (i = 0; i < compat_num; i++) {
     if (loading->version < compat[i].version && compat[i].load != NULL) {
@@ -177,7 +177,7 @@ void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
   if (loading->version == compat[compat_current].version) {
     compat_load_dev(loading);
   }
-#endif /* FREECIV_DEV_SAVE_COMPAT */
+#endif // FREECIV_DEV_SAVE_COMPAT
 }
 
 /**
@@ -195,7 +195,7 @@ void sg_load_post_load_compat(struct loaddata *loading,
 {
   int i;
 
-  /* Check status and return if not OK (sg_success != TRUE). */
+  // Check status and return if not OK (sg_success != TRUE).
   sg_check_ret();
 
   for (i = 0; i < compat_num; i++) {
@@ -213,7 +213,7 @@ void sg_load_post_load_compat(struct loaddata *loading,
   if (loading->version == compat[compat_current].version) {
     compat_post_load_dev(loading);
   }
-#endif /* FREECIV_DEV_SAVE_COMPAT */
+#endif // FREECIV_DEV_SAVE_COMPAT
 }
 
 /**
@@ -343,12 +343,12 @@ struct extra_type *resource_by_identifier(const char identifier)
 static void compat_load_020400(struct loaddata *loading,
                                enum sgf_version format_class)
 {
-  /* Check status and return if not OK (sg_success != TRUE). */
+  // Check status and return if not OK (sg_success != TRUE).
   sg_check_ret();
 
   log_debug("Upgrading data from savegame to version 2.4.0");
 
-  /* Add the default player AI. */
+  // Add the default player AI.
   player_slots_iterate(pslot)
   {
     int ncities, i, plrno = player_slot_index(pslot);
@@ -397,7 +397,7 @@ static void compat_load_020400(struct loaddata *loading,
         {
           const char *name = entry_name(pentry);
           if (strncmp(name, "kvb", 3) == 0) {
-            /* Rename the "kvb..." entry to "k..." */
+            // Rename the "kvb..." entry to "k..."
             char *name2 = fc_strdup(name), *newname = name2 + 2;
             *newname = 'k';
             /* Savefile probably contains existing "k" entries, which are
@@ -414,16 +414,16 @@ static void compat_load_020400(struct loaddata *loading,
     } else {
       /* This savefile only contains known information in the broken
        * format. Try to recover it to a sane format. */
-      /* MAX_NUM_PLAYER_SLOTS in 2.3.x was 128 */
-      /* MAP_MAX_LINEAR_SIZE in 2.3.x was 512 */
+      // MAX_NUM_PLAYER_SLOTS in 2.3.x was 128
+      // MAP_MAX_LINEAR_SIZE in 2.3.x was 512
       const int maxslots = 128, maxmapsize = 512;
       const int lines = maxslots / 32;
       int xsize = 0, y, l, j, x;
       unsigned int known_row_old[lines * maxmapsize],
           known_row[lines * maxmapsize];
-      /* Process a map row at a time */
+      // Process a map row at a time
       for (y = 0; y < maxmapsize; y++) {
-        /* Look for broken info to convert */
+        // Look for broken info to convert
         bool found = false;
         memset(known_row_old, 0, sizeof(known_row_old));
         for (l = 0; l < lines; l++) {
@@ -447,10 +447,10 @@ static void compat_load_020400(struct loaddata *loading,
         if (found) {
           /* At least one entry found for this row. Let's hope they were
            * all there. */
-          /* Attempt to munge into sane format */
+          // Attempt to munge into sane format
           int p;
           memset(known_row, 0, sizeof(known_row));
-          /* Iterate over possible player slots */
+          // Iterate over possible player slots
           for (p = 0; p < maxslots; p++) {
             l = p / 32;
             for (x = 0; x < xsize; x++) {
@@ -482,7 +482,7 @@ static void compat_load_020400(struct loaddata *loading,
     }
   }
 
-  /* Server setting migration. */
+  // Server setting migration.
   {
     int set_count;
     if (secfile_lookup_int(loading->file, &set_count,
@@ -510,10 +510,10 @@ static void compat_load_020400(struct loaddata *loading,
           if (secfile_lookup_int(loading->file, &nturns,
                                  "settings.set%d.value", i)) {
             if (nturns == 0) {
-              /* Invent a new "autosaves" setting */
+              // Invent a new "autosaves" setting
               secfile_insert_str(loading->file, nosave,
                                  "settings.set%d.value", new_opt);
-              /* Pick something valid for saveturns */
+              // Pick something valid for saveturns
               secfile_replace_int(loading->file, GAME_DEFAULT_SAVETURNS,
                                   "settings.set%d.value", i);
             } else {
@@ -527,10 +527,10 @@ static void compat_load_020400(struct loaddata *loading,
             if (secfile_lookup_int(loading->file, &nturns,
                                    "settings.set%d.gamestart", i)) {
               if (nturns == 0) {
-                /* Invent a new "autosaves" setting */
+                // Invent a new "autosaves" setting
                 secfile_insert_str(loading->file, nosave,
                                    "settings.set%d.gamestart", new_opt);
-                /* Pick something valid for saveturns */
+                // Pick something valid for saveturns
                 secfile_replace_int(loading->file, GAME_DEFAULT_SAVETURNS,
                                     "settings.set%d.gamestart", i);
               } else {
@@ -585,7 +585,7 @@ static void compat_load_020500(struct loaddata *loading,
       "Unused",   "Unused Airbase",  "Fortifying",
       "Fallout",  "Unused Patrol",   "Base"};
 
-  /* Check status and return if not OK (sg_success != TRUE). */
+  // Check status and return if not OK (sg_success != TRUE).
   sg_check_ret();
 
   log_debug("Upgrading data from savegame to version 2.5.0");
@@ -599,7 +599,7 @@ static void compat_load_020500(struct loaddata *loading,
   secfile_insert_str_vec(loading->file, old_activities_names, 19,
                          "savefile.activities_vector");
 
-  /* Server setting migration. */
+  // Server setting migration.
   {
     int set_count;
 
@@ -690,7 +690,7 @@ static void compat_load_020600(struct loaddata *loading,
   int ti;
   int turn;
 
-  /* Check status and return if not OK (sg_success != TRUE). */
+  // Check status and return if not OK (sg_success != TRUE).
   sg_check_ret();
 
   log_debug("Upgrading data from savegame to version 2.6.0");
@@ -711,7 +711,7 @@ static void compat_load_020600(struct loaddata *loading,
   }
   terrain_type_iterate_end;
 
-  /* Server setting migration. */
+  // Server setting migration.
   {
     int set_count;
 
@@ -798,7 +798,7 @@ static void compat_load_020600(struct loaddata *loading,
 
           if (secfile_lookup_int(loading->file, &value,
                                  "settings.set%d.value", i)) {
-            /* 0 meant RANDOM 1-5 */
+            // 0 meant RANDOM 1-5
             if (value == 0) {
               rlt = REVOLEN_RANDOM;
               secfile_replace_int(loading->file, 5, "settings.set%d.value",
@@ -811,7 +811,7 @@ static void compat_load_020600(struct loaddata *loading,
           }
           if (secfile_lookup_int(loading->file, &value,
                                  "settings.set%d.gamestart", i)) {
-            /* 0 meant RANDOM 1-5 */
+            // 0 meant RANDOM 1-5
             if (value == 0) {
               gsrlt = REVOLEN_RANDOM;
               secfile_replace_int(loading->file, 5,
@@ -857,7 +857,7 @@ static void compat_load_020600(struct loaddata *loading,
                                       "settings.set%d.value", i),
                   "%s", secfile_error());
         } else if (!fc_strcasecmp("diplcost", name)) {
-          /* Old 'diplcost' split to 'diplbulbcost' and 'diplgoldcost' */
+          // Old 'diplcost' split to 'diplbulbcost' and 'diplgoldcost'
           if (secfile_lookup_int(loading->file, &dcost,
                                  "settings.set%d.value", i)) {
           } else {
@@ -870,7 +870,7 @@ static void compat_load_020600(struct loaddata *loading,
             log_sg("Setting '%s': %s", name, secfile_error());
           }
         } else if (!fc_strcasecmp("huts", name)) {
-          /* Scale of 'huts' changed. */
+          // Scale of 'huts' changed.
           int hcount;
 
           if (secfile_lookup_int(loading->file, &hcount,
@@ -879,12 +879,12 @@ static void compat_load_020600(struct loaddata *loading,
             log_sg("Setting '%s': %s", name, secfile_error());
           }
 
-          /* Store old-style absolute value. */
+          // Store old-style absolute value.
           wld.map.server.huts_absolute = hcount;
         }
       }
 
-      new_set_count = set_count + 2; /* 'victories' and 'revolentype' */
+      new_set_count = set_count + 2; // 'victories' and 'revolentype'
 
       if (dcost >= 0) {
         new_set_count += 2;
@@ -950,14 +950,14 @@ static void compat_load_020600(struct loaddata *loading,
       continue;
     }
 
-    /* Renamed 'capital' to 'got_first_city'. */
+    // Renamed 'capital' to 'got_first_city'.
     if (secfile_lookup_bool(loading->file, &got_first_city,
                             "player%d.capital", plrno)) {
       secfile_insert_bool(loading->file, got_first_city,
                           "player%d.got_first_city", plrno);
     }
 
-    /* Add 'anonymous' qualifiers for user names */
+    // Add 'anonymous' qualifiers for user names
     name = secfile_lookup_str_default(loading->file, "", "player%d.username",
                                       plrno);
     secfile_insert_bool(loading->file, (!strcmp(name, ANON_USER_NAME)),
@@ -968,7 +968,7 @@ static void compat_load_020600(struct loaddata *loading,
     secfile_insert_bool(loading->file, (!strcmp(name, ANON_USER_NAME)),
                         "player%d.unassigned_ranked", plrno);
 
-    /* Convert numeric barbarian type to textual */
+    // Convert numeric barbarian type to textual
     old_barb_type = secfile_lookup_int_default(
         loading->file, 0, "player%d.ai.is_barbarian", plrno);
     new_barb_type = barb_type_convert(old_barb_type);
@@ -979,10 +979,10 @@ static void compat_load_020600(struct loaddata *loading,
      * to assume they lived from the start of the game until last turn */
     secfile_insert_int(loading->file, turn, "player%d.turns_alive", plrno);
 
-    /* As if there never has been a war. */
+    // As if there never has been a war.
     secfile_insert_int(loading->file, -1, "player%d.last_war", plrno);
 
-    /* Assume people were playing until current reload */
+    // Assume people were playing until current reload
     secfile_insert_int(loading->file, 0, "player%d.idle_turns", plrno);
 
     for (i = 0; i < tsize; i++) {
@@ -1021,7 +1021,7 @@ static void compat_load_020600(struct loaddata *loading,
       secfile_insert_int(loading->file, score, "score%d.units_lost", plrno);
     }
 
-    /* Units orders. */
+    // Units orders.
     units_num = secfile_lookup_int_default(loading->file, 0,
                                            "player%d.nunits", plrno);
 
@@ -1045,7 +1045,7 @@ static void compat_load_020600(struct loaddata *loading,
                                    "player%d.u%d.orders_list", plrno, i));
         if ((p = strrchr(orders_str, 'm'))
             || (p = strrchr(orders_str, 'M'))) {
-          *p = 'x'; /* ORDER_MOVE -> ORDER_ACTION_MOVE */
+          *p = 'x'; // ORDER_MOVE -> ORDER_ACTION_MOVE
           secfile_replace_str(loading->file, orders_str,
                               "player%d.u%d.orders_list", plrno, i);
         }
@@ -1076,7 +1076,7 @@ static void compat_load_020600(struct loaddata *loading,
     delete[] modname;
   }
 
-  /* Replace all city specialist count fields with correct names */
+  // Replace all city specialist count fields with correct names
   player_slots_iterate(pslot)
   {
     int plrno = player_slot_index(pslot);
@@ -1112,7 +1112,7 @@ static void compat_load_020600(struct loaddata *loading,
   }
   player_slots_iterate_end;
 
-  /* Build [research]. */
+  // Build [research].
   {
     const struct {
       const char *name;
@@ -1143,7 +1143,7 @@ static void compat_load_020600(struct loaddata *loading,
         continue;
       }
 
-      /* Get the research number. */
+      // Get the research number.
       if (team_pooled_research) {
         i = secfile_lookup_int_default(loading->file, plrno,
                                        "player%d.team_no", plrno);
@@ -1154,16 +1154,16 @@ static void compat_load_020600(struct loaddata *loading,
       sg_failure_ret(i >= 0 && i < ARRAY_SIZE(researches),
                      "Research out of bounds (%d)!", i);
 
-      /* Find the index in [research] section. */
+      // Find the index in [research] section.
       if (researches[i] == -1) {
-        /* This is the first player for this research. */
+        // This is the first player for this research.
         secfile_insert_int(loading->file, i, "research.r%d.number", count);
         researches[i] = count;
         count++;
       }
       i = researches[i];
 
-      /* Move entries. */
+      // Move entries.
       for (j = 0; j < ARRAY_SIZE(entries); j++) {
         switch (entries[j].type) {
         case ENTRY_BOOL:
@@ -1207,7 +1207,7 @@ static void compat_load_020600(struct loaddata *loading,
     secfile_insert_int(loading->file, count, "research.count");
   }
 
-  /* Add diplstate type order. */
+  // Add diplstate type order.
   secfile_insert_int(loading->file, DS_LAST, "savefile.diplstate_type_size");
   if (DS_LAST > 0) {
     const char **modname;
@@ -1249,11 +1249,11 @@ static void compat_load_020600(struct loaddata *loading,
 
       fc_snprintf(buf, sizeof(buf), "player%d.diplstate%d", plrno, i);
 
-      /* Read the current diplomatic state. */
+      // Read the current diplomatic state.
       current = secfile_lookup_int_default(loading->file, DS_NO_CONTACT,
                                            "%s.type", buf);
 
-      /* Read the closest diplomatic state. */
+      // Read the closest diplomatic state.
       closest = secfile_lookup_int_default(loading->file, DS_NO_CONTACT,
                                            "%s.max_state", buf);
 
@@ -1313,7 +1313,7 @@ static void compat_load_030000(struct loaddata *loading,
   bool started;
   int old_turn;
 
-  /* Check status and return if not OK (sg_success != TRUE). */
+  // Check status and return if not OK (sg_success != TRUE).
   sg_check_ret();
 
   log_debug("Upgrading data from savegame to version 3.0.0");
@@ -1325,7 +1325,7 @@ static void compat_load_030000(struct loaddata *loading,
     secfile_insert_bool(loading->file, randsaved, "random.saved");
   }
 
-  /* Already started games should have their turn counts increased by 1 */
+  // Already started games should have their turn counts increased by 1
   if (secfile_lookup_bool_default(loading->file, true,
                                   "game.save_players")) {
     started = true;
@@ -1382,11 +1382,11 @@ static void compat_load_030000(struct loaddata *loading,
   }
   player_slots_iterate_end;
 
-  /* Settings */
+  // Settings
   num_settings =
       secfile_lookup_int_default(loading->file, 0, "settings.set_count");
 
-  /* User meta server message is now a setting. */
+  // User meta server message is now a setting.
   if (secfile_lookup_bool_default(loading->file, false,
                                   "game.meta_usermessage")) {
     const char *metamessage;
@@ -1394,7 +1394,7 @@ static void compat_load_030000(struct loaddata *loading,
     metamessage =
         secfile_lookup_str_default(loading->file, "", "game.meta_message");
 
-    /* Insert the meta message as a setting */
+    // Insert the meta message as a setting
     secfile_insert_str(loading->file, "metamessage", "settings.set%d.name",
                        num_settings);
     secfile_insert_str(loading->file, metamessage, "settings.set%d.value",
@@ -1416,7 +1416,7 @@ static void insert_server_side_agent(struct loaddata *loading,
   int ssa_size;
 
   if (format_class == SAVEGAME_2) {
-    /* Handled in savegame2 */
+    // Handled in savegame2
     return;
   }
 
@@ -1424,11 +1424,11 @@ static void insert_server_side_agent(struct loaddata *loading,
                                         "savefile.server_side_agent_size");
 
   if (ssa_size != 0) {
-    /* Already inserted. */
+    // Already inserted.
     return;
   }
 
-  /* Add server side agent order. */
+  // Add server side agent order.
   secfile_insert_int(loading->file, SSA_COUNT,
                      "savefile.server_side_agent_size");
   if (SSA_COUNT > 0) {
@@ -1449,7 +1449,7 @@ static void insert_server_side_agent(struct loaddata *loading,
     delete[] modname;
   }
 
-  /* Insert server_side_agent unit field. */
+  // Insert server_side_agent unit field.
   player_slots_iterate(pslot)
   {
     int unit;
@@ -1460,7 +1460,7 @@ static void insert_server_side_agent(struct loaddata *loading,
       continue;
     }
 
-    /* Number of units the player has. */
+    // Number of units the player has.
     units_num = secfile_lookup_int_default(loading->file, 0,
                                            "player%d.nunits", plrno);
 
@@ -1470,7 +1470,7 @@ static void insert_server_side_agent(struct loaddata *loading,
       if (secfile_section_lookup(
               loading->file, "player%d.u%d.server_side_agent", plrno, unit)
           != NULL) {
-        /* Already updated? */
+        // Already updated?
         continue;
       }
 
@@ -1500,12 +1500,12 @@ static void insert_server_side_agent(struct loaddata *loading,
 static void compat_load_030100(struct loaddata *loading,
                                enum sgf_version format_class)
 {
-  /* Check status and return if not OK (sg_success != TRUE). */
+  // Check status and return if not OK (sg_success != TRUE).
   sg_check_ret();
 
   log_debug("Upgrading data from savegame to version 3.1.0");
 
-  /* Actions are now stored by number. */
+  // Actions are now stored by number.
   player_slots_iterate(pslot)
   {
     int unit;
@@ -1516,7 +1516,7 @@ static void compat_load_030100(struct loaddata *loading,
       continue;
     }
 
-    /* Number of units the player has. */
+    // Number of units the player has.
     units_num = secfile_lookup_int_default(loading->file, 0,
                                            "player%d.nunits", plrno);
 
@@ -1545,7 +1545,7 @@ static void compat_load_030100(struct loaddata *loading,
           }
 
           if (order_num == 0) {
-            /* The start of a vector has no number. */
+            // The start of a vector has no number.
             secfile_insert_int(loading->file, unconverted_action_id,
                                "player%d.u%d.action_vec", plrno, unit);
           } else {
@@ -1559,7 +1559,7 @@ static void compat_load_030100(struct loaddata *loading,
   }
   player_slots_iterate_end;
 
-  /* Explicit server side agent was new in 3.1 */
+  // Explicit server side agent was new in 3.1
   insert_server_side_agent(loading, format_class);
 }
 
@@ -1603,7 +1603,7 @@ static void unit_order_activity_to_action(struct unit *act_unit)
       action_iterate_end;
       break;
     case ACTIVITY_SENTRY:
-      /* Not an action */
+      // Not an action
       break;
     case ACTIVITY_EXPLORE:
     case ACTIVITY_IDLE:
@@ -1663,10 +1663,10 @@ static void upgrade_unit_order_targets(struct unit *act_unit)
     return;
   }
 
-  /* The order index is for the unit at its current tile. */
+  // The order index is for the unit at its current tile.
   current_tile = unit_tile(act_unit);
 
-  /* Rewind to the beginning of the orders */
+  // Rewind to the beginning of the orders
   for (i = act_unit->orders.index; i > 0; i--) {
     struct unit_order *prev_order = &act_unit->orders.list[i - 1];
 
@@ -1679,22 +1679,22 @@ static void upgrade_unit_order_targets(struct unit *act_unit)
     }
   }
 
-  /* Upgrade to explicit target tile */
+  // Upgrade to explicit target tile
   for (i = 0; i < act_unit->orders.length; i++) {
     struct unit_order *order = &act_unit->orders.list[i];
 
     if (order->order == ORDER_PERFORM_ACTION && order->target != NO_TARGET) {
-      /* The target is already specified in the new format. */
+      // The target is already specified in the new format.
       tgt_tile = index_to_tile(&(wld.map), order->target);
       fc_assert(tgt_tile != NULL);
       return;
     }
 
     if (!direction8_is_valid(order->dir)) {
-      /* The target of the action is on the actor's tile. */
+      // The target of the action is on the actor's tile.
       tgt_tile = current_tile;
     } else {
-      /* The target of the action is on a tile next to the actor. */
+      // The target of the action is on a tile next to the actor.
       tgt_tile = mapstep(&(wld.map), current_tile, order->dir);
     }
 
@@ -1702,7 +1702,7 @@ static void upgrade_unit_order_targets(struct unit *act_unit)
       struct action *paction = action_by_number(order->action);
 
       order->target = tgt_tile->index;
-      /* Leave no traces. */
+      // Leave no traces.
       order->dir = DIR8_ORIGIN;
 
       if (!utype_is_unmoved_by_action(paction, unit_type_get(act_unit))) {
@@ -1743,12 +1743,12 @@ static void upgrade_server_side_agent(struct loaddata *loading)
 static void compat_post_load_030100(struct loaddata *loading,
                                     enum sgf_version format_class)
 {
-  /* Check status and return if not OK (sg_success != TRUE). */
+  // Check status and return if not OK (sg_success != TRUE).
   sg_check_ret();
 
-  /* Action orders were new in 3.0 */
+  // Action orders were new in 3.0
   if (format_class == SAVEGAME_3) {
-    /* Only 3.0 savegames may have "Attack" action orders. */
+    // Only 3.0 savegames may have "Attack" action orders.
     players_iterate_alive(pplayer)
     {
       unit_list_iterate(pplayer->units, punit)
@@ -1764,7 +1764,7 @@ static void compat_post_load_030100(struct loaddata *loading,
                          continue);
 
         for (i = 0; i < punit->orders.length; i++) {
-          /* "Attack" was split in "Suicide Attack" and "Attack" in 3.1. */
+          // "Attack" was split in "Suicide Attack" and "Attack" in 3.1.
           if (punit->orders.list[i].order == ORDER_PERFORM_ACTION
               && punit->orders.list[i].action == ACTION_ATTACK
               && !unit_can_do_action(punit, ACTION_ATTACK)
@@ -1802,10 +1802,10 @@ static void compat_post_load_030100(struct loaddata *loading,
     players_iterate_alive_end;
   }
 
-  /* Explicit server side agent was new in 3.1 */
+  // Explicit server side agent was new in 3.1
   upgrade_server_side_agent(loading);
 
-  /* Some activities should only be ordered in action orders. */
+  // Some activities should only be ordered in action orders.
   players_iterate_alive(pplayer)
   {
     unit_list_iterate(pplayer->units, punit)
@@ -1816,7 +1816,7 @@ static void compat_post_load_030100(struct loaddata *loading,
   }
   players_iterate_alive_end;
 
-  /* Unit order action target isn't dir anymore */
+  // Unit order action target isn't dir anymore
   players_iterate_alive(pplayer)
   {
     unit_list_iterate(pplayer->units, punit)
@@ -1850,7 +1850,7 @@ static void compat_load_dev(struct loaddata *loading)
 {
   int game_version;
 
-  /* Check status and return if not OK (sg_success != TRUE). */
+  // Check status and return if not OK (sg_success != TRUE).
   sg_check_ret();
 
   log_debug("Upgrading data between development revisions");
@@ -1863,9 +1863,9 @@ static void compat_load_dev(struct loaddata *loading)
 #ifdef FREECIV_DEV_SAVE_COMPAT_3_1
 
   if (game_version < 3009200) {
-    /* Before version number bump to 3.0.92, beginning of 2020 */
+    // Before version number bump to 3.0.92, beginning of 2020
 
-    /* Renamed actions. */
+    // Renamed actions.
     loading->action.size =
         secfile_lookup_int_default(loading->file, 0, "savefile.action_size");
     if (loading->action.size) {
@@ -1892,7 +1892,7 @@ static void compat_load_dev(struct loaddata *loading)
       delete[] modname;
     }
 
-    /* Old unit order tgt_vec refers to order sub targets */
+    // Old unit order tgt_vec refers to order sub targets
     player_slots_iterate(pslot)
     {
       int unit;
@@ -1903,7 +1903,7 @@ static void compat_load_dev(struct loaddata *loading)
         continue;
       }
 
-      /* Number of units the player has. */
+      // Number of units the player has.
       units_num = secfile_lookup_int_default(loading->file, 0,
                                              "player%d.nunits", plrno);
 
@@ -1934,7 +1934,7 @@ static void compat_load_dev(struct loaddata *loading)
         continue;
       }
 
-      /* Number of units the player has. */
+      // Number of units the player has.
       units_num = secfile_lookup_int_default(loading->file, 0,
                                              "player%d.nunits", plrno);
 
@@ -2017,7 +2017,7 @@ static void compat_load_dev(struct loaddata *loading)
       }
     }
 
-    /* Actions are now stored by number. */
+    // Actions are now stored by number.
     player_slots_iterate(pslot)
     {
       int unit;
@@ -2028,7 +2028,7 @@ static void compat_load_dev(struct loaddata *loading)
         continue;
       }
 
-      /* Number of units the player has. */
+      // Number of units the player has.
       units_num = secfile_lookup_int_default(loading->file, 0,
                                              "player%d.nunits", plrno);
 
@@ -2057,7 +2057,7 @@ static void compat_load_dev(struct loaddata *loading)
             }
 
             if (order_num == 0) {
-              /* The start of a vector has no number. */
+              // The start of a vector has no number.
               secfile_insert_int(loading->file, unconverted_action_id,
                                  "player%d.u%d.action_vec", plrno, unit);
             } else {
@@ -2080,7 +2080,7 @@ static void compat_load_dev(struct loaddata *loading)
         continue;
       }
 
-      /* Number of cities the player has. */
+      // Number of cities the player has.
       city_num = secfile_lookup_int_default(loading->file, 0,
                                             "player%d.ncities", plrno);
 
@@ -2111,7 +2111,7 @@ static void compat_load_dev(struct loaddata *loading)
             }
 
             if (order_num == 0) {
-              /* The start of a vector has no number. */
+              // The start of a vector has no number.
               secfile_insert_int(loading->file, unconverted_action_id,
                                  "player%d.c%d.rally_point_action_vec",
                                  plrno, city);
@@ -2125,16 +2125,16 @@ static void compat_load_dev(struct loaddata *loading)
       }
     }
     player_slots_iterate_end;
-  } /* Version < 3.0.92 */
+  } // Version < 3.0.92
 
   if (game_version < 3009300) {
-    /* Before version number bump to 3.0.93 */
+    // Before version number bump to 3.0.93
 
-    /* Explicit server side agent was new in 3.1 */
+    // Explicit server side agent was new in 3.1
     insert_server_side_agent(loading, SAVEGAME_3);
-  } /* Version < 3.0.93 */
+  } // Version < 3.0.93
 
-#endif /* FREECIV_DEV_SAVE_COMPAT_3_1 */
+#endif // FREECIV_DEV_SAVE_COMPAT_3_1
 }
 
 /**
@@ -2145,7 +2145,7 @@ static void compat_post_load_dev(struct loaddata *loading)
 {
   int game_version;
 
-  /* Check status and return if not OK (sg_success != TRUE). */
+  // Check status and return if not OK (sg_success != TRUE).
   sg_check_ret();
 
   if (!secfile_lookup_int(loading->file, &game_version,
@@ -2169,7 +2169,7 @@ static void compat_post_load_dev(struct loaddata *loading)
                          continue);
 
         for (i = 0; i < punit->orders.length; i++) {
-          /* "Attack" was split in "Suicide Attack" and "Attack" in 3.1. */
+          // "Attack" was split in "Suicide Attack" and "Attack" in 3.1.
           if (punit->orders.list[i].order == ORDER_PERFORM_ACTION
               && punit->orders.list[i].action == ACTION_ATTACK
               && !unit_can_do_action(punit, ACTION_ATTACK)
@@ -2182,10 +2182,10 @@ static void compat_post_load_dev(struct loaddata *loading)
     }
     players_iterate_alive_end;
 
-    /* Explicit server side agent was new in 3.1 */
+    // Explicit server side agent was new in 3.1
     upgrade_server_side_agent(loading);
 
-    /* Some activities should only be ordered in action orders. */
+    // Some activities should only be ordered in action orders.
     players_iterate_alive(pplayer)
     {
       unit_list_iterate(pplayer->units, punit)
@@ -2196,7 +2196,7 @@ static void compat_post_load_dev(struct loaddata *loading)
     }
     players_iterate_alive_end;
 
-    /* Unit order action target isn't dir anymore */
+    // Unit order action target isn't dir anymore
     players_iterate_alive(pplayer)
     {
       unit_list_iterate(pplayer->units, punit)
@@ -2219,9 +2219,9 @@ static void compat_post_load_dev(struct loaddata *loading)
       unit_list_iterate_end;
     }
     players_iterate_alive_end;
-  } /* Version < 3.0.93 */
+  } // Version < 3.0.93
 }
-#endif /* FREECIV_DEV_SAVE_COMPAT */
+#endif // FREECIV_DEV_SAVE_COMPAT
 
 /**
    Convert old ai level value to ai_level
@@ -2244,9 +2244,9 @@ enum ai_level ai_level_convert(int old_level)
   case 10:
 #ifdef FREECIV_DEBUG
     return AI_LEVEL_EXPERIMENTAL;
-#else /* FREECIV_DEBUG */
+#else // FREECIV_DEBUG
     return AI_LEVEL_HARD;
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
   }
 
   return ai_level_invalid();
@@ -2320,14 +2320,14 @@ int sg_order_to_action(int order, struct unit *act_unit,
        * City order if it targets a domestic city. */
       return ACTION_JOIN_CITY;
     } else {
-      /* Assume that the intention was to found a new city. */
+      // Assume that the intention was to found a new city.
       return ACTION_FOUND_CITY;
     }
   case ORDER_OLD_BUILD_WONDER:
-    /* Maps one to one with each other. */
+    // Maps one to one with each other.
     return ACTION_HELP_WONDER;
   case ORDER_OLD_TRADE_ROUTE:
-    /* Maps one to one with each other. */
+    // Maps one to one with each other.
     return ACTION_TRADE_ROUTE;
   case ORDER_OLD_DISBAND:
     /* Added to the order system in the same commit as Help Wonder. Assume
@@ -2341,6 +2341,6 @@ int sg_order_to_action(int order, struct unit *act_unit,
     return ACTION_HOME_CITY;
   }
 
-  /* The order hasn't been replaced by an action. */
+  // The order hasn't been replaced by an action.
   return ACTION_NONE;
 }

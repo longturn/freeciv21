@@ -77,24 +77,24 @@
 // KArchive
 #include <KFilterDev>
 
-/* utility */
+// utility
 #include "fcintl.h"
 
 #include "inputfile.h"
 
-#define INF_MAGIC (0xabdc0132) /* arbitrary */
+#define INF_MAGIC (0xabdc0132) // arbitrary
 
 struct inputfile {
-  unsigned int magic;        /* memory check */
-  QString filename;          /* filename as passed to fopen */
-  QIODevice *fp;             /* read from this */
-  QString cur_line;          /* data from current line */
-  unsigned int cur_line_pos; /* position in current line */
-  unsigned int line_num;     /* line number from file in cur_line */
+  unsigned int magic;        // memory check
+  QString filename;          // filename as passed to fopen
+  QIODevice *fp;             // read from this
+  QString cur_line;          // data from current line
+  unsigned int cur_line_pos; // position in current line
+  unsigned int line_num;     // line number from file in cur_line
   QString partial;           /* used in accumulating multi-line strings;
                                 used only in get_token_value, but put
                                 here so it gets freed when file closed */
-  QString token;             /* data returned to user */
+  QString token;             // data returned to user
   datafilename_fn_t datafn;  /* function like datafilename(); use a
                                 function pointer just to keep this
                                 inputfile module "generic" */
@@ -108,7 +108,7 @@ struct inputfile {
                                       has been included from */
 };
 
-/* A function to get a specific token type: */
+// A function to get a specific token type:
 typedef QString (*get_token_fn_t)(struct inputfile *inf);
 
 static QString get_token_section_name(struct inputfile *inf);
@@ -181,7 +181,7 @@ static bool inf_sanity_check(struct inputfile *inf)
   if (inf->included_from && !inf_sanity_check(inf->included_from)) {
     return false;
   }
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
   return true;
 }
@@ -267,7 +267,7 @@ static void inf_close_partial(struct inputfile *inf)
   delete inf->fp;
   inf->fp = nullptr;
 
-  /* assign zeros for safety if accidentally re-use etc: */
+  // assign zeros for safety if accidentally re-use etc:
   init_zeros(inf);
   inf->magic = ~INF_MAGIC;
 
@@ -522,7 +522,7 @@ QString inf_token(struct inputfile *inf, enum inf_token_type type)
   QString s;
   if (func) {
     while (!have_line(inf) && read_a_line(inf)) {
-      /* Nothing. */
+      // Nothing.
     }
     if (have_line(inf)) {
       s = func(inf);
@@ -725,7 +725,7 @@ static QString get_token_value(struct inputfile *inf)
       // Take
     }
     if (*c == '.') {
-      /* Float maybe */
+      // Float maybe
       c++;
       for (; c != end && c->isDigit(); ++c) {
         // Take
@@ -806,7 +806,7 @@ static QString get_token_value(struct inputfile *inf)
     for (; c->isLetterOrNumber(); ++c) {
       // Skip
     }
-    /* check that the trailing stuff is ok: */
+    // check that the trailing stuff is ok:
     if (!(c == end || *c == ',' || c->isSpace() || is_comment(*c))) {
       return NULL;
     }
@@ -830,7 +830,7 @@ static QString get_token_value(struct inputfile *inf)
      lines is placed in partial.
   */
 
-  /* prepare for possibly multi-line string: */
+  // prepare for possibly multi-line string:
   inf->string_start_line = inf->line_num;
   inf->in_string = true;
   inf->partial.clear();
@@ -848,14 +848,14 @@ static QString get_token_value(struct inputfile *inf)
     }
 
     if (*c == border_character) {
-      /* Found end of string */
+      // Found end of string
       break;
     }
 
     inf->partial += QStringLiteral("%1\n").arg(start);
 
     if (!read_a_line(inf)) {
-      /* shouldn't happen */
+      // shouldn't happen
       qCCritical(inf_category,
                  "Bad return for multi-line string from read_a_line");
       return "";
@@ -865,11 +865,11 @@ static QString get_token_value(struct inputfile *inf)
     c = start = begin;
   }
 
-  /* found end of string */
+  // found end of string
   inf->cur_line_pos = c + 1 - begin;
   inf->token = inf->partial + inf->cur_line.mid(start - begin, c - start);
 
-  /* check gettext tag at end: */
+  // check gettext tag at end:
   if (has_i18n_marking) {
     if (*++c == ')') {
       inf->cur_line_pos++;

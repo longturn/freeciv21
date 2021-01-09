@@ -11,7 +11,7 @@
 
 #pragma once
 
-/* utility */
+// utility
 #include "bitvector.h"
 
 /* This file serves to reduce the cross-inclusion of header files which
@@ -21,45 +21,45 @@
  * Nothing in this file should require anything else from the common/
  * directory! */
 
-#define MAX_NUM_PLAYER_SLOTS 512 /* Used in the network protocol. */
+#define MAX_NUM_PLAYER_SLOTS 512 // Used in the network protocol.
                                  /* Must be divisable by 32 or iterations
                                   * in savegame2.c needs to be changed */
-#define MAX_NUM_BARBARIANS 12    /* 3, but slots reserved for future use. */
+#define MAX_NUM_BARBARIANS 12    // 3, but slots reserved for future use.
 #define MAX_NUM_PLAYERS MAX_NUM_PLAYER_SLOTS - MAX_NUM_BARBARIANS
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define MAX_NUM_CONNECTIONS (2 * (MAX_NUM_PLAYER_SLOTS))
-/* e.g. unit_types. Used in the network protocol. */
+// e.g. unit_types. Used in the network protocol.
 #define MAX_NUM_ITEMS 200
-#define MAX_NUM_ADVANCES 250     /* Used in the network protocol. */
-#define MAX_NUM_UNITS 250        /* Used in the network protocol. */
-#define MAX_NUM_BUILDINGS 200    /* Used in the network protocol. */
-#define MAX_NUM_TECH_LIST 10     /* Used in the network protocol. */
-#define MAX_NUM_UNIT_LIST 10     /* Used in the network protocol. */
-#define MAX_NUM_BUILDING_LIST 10 /* Used in the network protocol. */
+#define MAX_NUM_ADVANCES 250     // Used in the network protocol.
+#define MAX_NUM_UNITS 250        // Used in the network protocol.
+#define MAX_NUM_BUILDINGS 200    // Used in the network protocol.
+#define MAX_NUM_TECH_LIST 10     // Used in the network protocol.
+#define MAX_NUM_UNIT_LIST 10     // Used in the network protocol.
+#define MAX_NUM_BUILDING_LIST 10 // Used in the network protocol.
 #define MAX_LEN_VET_SHORT_NAME 8
-/* Used in the network protocol. See diplomat_success_vs_defender() */
+// Used in the network protocol. See diplomat_success_vs_defender()
 #define MAX_VET_LEVELS 20
-#define MAX_EXTRA_TYPES 128            /* Used in the network protocol. */
-#define MAX_BASE_TYPES MAX_EXTRA_TYPES /* Used in the network protocol. */
-#define MAX_ROAD_TYPES MAX_EXTRA_TYPES /* Used in the network protocol. */
+#define MAX_EXTRA_TYPES 128            // Used in the network protocol.
+#define MAX_BASE_TYPES MAX_EXTRA_TYPES // Used in the network protocol.
+#define MAX_ROAD_TYPES MAX_EXTRA_TYPES // Used in the network protocol.
 #define MAX_GOODS_TYPES 25
 #define MAX_DISASTER_TYPES 10
 #define MAX_ACHIEVEMENT_TYPES 40
 #define MAX_NUM_ACTION_AUTO_PERFORMERS 4
 #define MAX_NUM_MULTIPLIERS 15
-#define MAX_NUM_LEADERS MAX_NUM_ITEMS /* Used in the network protocol. */
+#define MAX_NUM_LEADERS MAX_NUM_ITEMS // Used in the network protocol.
 #define MAX_NUM_NATION_SETS                                                        \
   32                              /* Used in the network protocol.                 \
                                    * RULESET_NATION_SETS packet may become too big \
                                    * if increased */
-#define MAX_NUM_NATION_GROUPS 128 /* Used in the network protocol. */
-/* Used in the network protocol -- nation count is a UINT16 */
+#define MAX_NUM_NATION_GROUPS 128 // Used in the network protocol.
+// Used in the network protocol -- nation count is a UINT16
 #define MAX_NUM_NATIONS MAX_UINT16
-#define MAX_NUM_STARTPOS_NATIONS 1024 /* Used in the network protocol. */
-#define MAX_CALENDAR_FRAGMENTS 52     /* Used in the network protocol. */
-#define MAX_NUM_TECH_CLASSES 16       /* Used in the network protocol. */
+#define MAX_NUM_STARTPOS_NATIONS 1024 // Used in the network protocol.
+#define MAX_CALENDAR_FRAGMENTS 52     // Used in the network protocol.
+#define MAX_NUM_TECH_CLASSES 16       // Used in the network protocol.
 
-/* Changing these will probably break network compatability. */
+// Changing these will probably break network compatability.
 #define MAX_LEN_NAME 48
 #define MAX_LEN_CITYNAME 80
 #define MAX_LEN_MAP_LABEL 64
@@ -74,15 +74,15 @@
  */
 #define LINE_BREAK 70
 
-/* symbol to flag missing numbers for better debugging */
+// symbol to flag missing numbers for better debugging
 #define IDENTITY_NUMBER_ZERO (0)
 
 enum override_bool { OVERRIDE_TRUE, OVERRIDE_FALSE, NO_OVERRIDE };
 
-/* A bitvector for all player slots. Used in the network protocol. */
+// A bitvector for all player slots. Used in the network protocol.
 BV_DEFINE(bv_player, MAX_NUM_PLAYER_SLOTS);
 
-/* Changing this breaks network compatibility. */
+// Changing this breaks network compatibility.
 enum output_type_id {
   O_FOOD,
   O_SHIELD,
@@ -93,7 +93,7 @@ enum output_type_id {
   O_LAST
 };
 
-/* Changing this enum will break savegame and network compatability. */
+// Changing this enum will break savegame and network compatability.
 /* When changing this, also update list of valid requirement "Activity"
  * values in doc/README.effects. */
 #define SPECENUM_NAME unit_activity
@@ -146,7 +146,7 @@ enum output_type_id {
 #define SPECENUM_COUNT ACTIVITY_LAST
 #include "specenum_gen.h"
 
-/* Values used in the network protocol. */
+// Values used in the network protocol.
 #define SPECENUM_NAME action_result
 #define SPECENUM_VALUE0 ACTRES_ESTABLISH_EMBASSY
 #define SPECENUM_VALUE0NAME "Establish Embassy"
@@ -260,11 +260,11 @@ enum output_type_id {
 #define SPECENUM_VALUE54NAME "Spread Plague"
 #define SPECENUM_VALUE55 ACTRES_SPY_ATTACK
 #define SPECENUM_VALUE55NAME "Spy Attack"
-/* All consequences are handled as (ruleset) action data. */
+// All consequences are handled as (ruleset) action data.
 #define SPECENUM_COUNT ACTRES_NONE
 #include "specenum_gen.h"
 
-/* Happens at once, not during turn change. */
+// Happens at once, not during turn change.
 #define ACT_TIME_INSTANTANEOUS (-1)
 
 /* Symbol used to flag no (sub) target of an action or for an activity.
@@ -272,15 +272,15 @@ enum output_type_id {
  * certain (sub) targets. */
 #define NO_TARGET (-1)
 
-/* How "large" a Casus Belli is. */
+// How "large" a Casus Belli is.
 #define SPECENUM_NAME casus_belli_range
-/* No one gets a Casus Belli. */
+// No one gets a Casus Belli.
 #define SPECENUM_VALUE0 CBR_NONE
 #define SPECENUM_VALUE0NAME N_("No Casus Belli")
-/* Only the victim player gets a Casus Belli. */
+// Only the victim player gets a Casus Belli.
 #define SPECENUM_VALUE1 CBR_VICTIM_ONLY
 #define SPECENUM_VALUE1NAME N_("Victim Casus Belli")
-/* Every other player, including the victim, gets a Casus Belli. */
+// Every other player, including the victim, gets a Casus Belli.
 #define SPECENUM_VALUE2 CBR_INTERNATIONAL_OUTRAGE
 #define SPECENUM_VALUE2NAME N_("International Outrage")
 #define SPECENUM_COUNT CBR_LAST
@@ -322,16 +322,16 @@ struct unit;
 struct achievement;
 struct action;
 
-/* Changing these will break network compatibility. */
+// Changing these will break network compatibility.
 #define SP_MAX 20
 #define MAX_NUM_REQS 20
 
-#define MAX_NUM_RULESETS 63 /* Used in the network protocol. */
-#define MAX_RULESET_NAME_LENGTH 64 /* Used in the network protocol. */
+#define MAX_NUM_RULESETS 63 // Used in the network protocol.
+#define MAX_RULESET_NAME_LENGTH 64 // Used in the network protocol.
 #define RULESET_SUFFIX ".serv"
 
-/* Unit Class List, also 32-bit vector? */
-#define UCL_LAST 32 /* Used in the network protocol. */
+// Unit Class List, also 32-bit vector?
+#define UCL_LAST 32 // Used in the network protocol.
 typedef int Unit_Class_id;
 
 /* The direction8 gives the 8 possible directions.  These may be used in
@@ -348,7 +348,7 @@ typedef int Unit_Class_id;
  * last 4 (in no particular order).  See client/goto.c and
  * map.c:opposite_direction(). */
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME direction8
 #define SPECENUM_VALUE0 DIR8_NORTHWEST
 #define SPECENUM_VALUE0NAME "Northwest"
@@ -373,7 +373,7 @@ typedef int Unit_Class_id;
  * been relative to. */
 #define DIR8_ORIGIN direction8_invalid()
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME free_tech_method
 #define SPECENUM_VALUE0 FTM_GOAL
 #define SPECENUM_VALUE0NAME "Goal"
@@ -400,7 +400,7 @@ typedef int Unit_Class_id;
  * compatibility code to server/rscompat.c. */
 #define CASUS_BELLI_OUTRAGE 1000
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 /* server/commands.c must match these */
 #define SPECENUM_NAME ai_level
 #define SPECENUM_VALUE0 AI_LEVEL_AWAY
@@ -421,12 +421,12 @@ typedef int Unit_Class_id;
 #ifdef FREECIV_DEBUG
 #define SPECENUM_VALUE7 AI_LEVEL_EXPERIMENTAL
 #define SPECENUM_VALUE7NAME N_("Experimental")
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
 #define SPECENUM_COUNT AI_LEVEL_COUNT
 #include "specenum_gen.h"
 
-/* pplayer->ai.barbarian_type and nations use this enum. */
+// pplayer->ai.barbarian_type and nations use this enum.
 #define SPECENUM_NAME barbarian_type
 #define SPECENUM_VALUE0 NOT_A_BARBARIAN
 #define SPECENUM_VALUE0NAME "None"
@@ -504,7 +504,7 @@ typedef int Unit_Class_id;
 #define TOPO_FLAG_BITS 4
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME impr_genus_id
 #define SPECENUM_VALUE0 IG_GREAT_WONDER
 #define SPECENUM_VALUE0NAME "GreatWonder"
@@ -517,7 +517,7 @@ typedef int Unit_Class_id;
 #define SPECENUM_COUNT IG_COUNT
 #include "specenum_gen.h"
 
-/* A server setting + its value. */
+// A server setting + its value.
 typedef int ssetv;
 
 /* Sometimes we don't know (or don't care) if some requirements for effect
@@ -525,8 +525,8 @@ typedef int ssetv;
  * how to handle uncertain requirements.
  */
 enum req_problem_type {
-  RPT_POSSIBLE, /* We want to know if it is possible that effect is active */
-  RPT_CERTAIN   /* We want to know if it is certain that effect is active  */
+  RPT_POSSIBLE, // We want to know if it is possible that effect is active
+  RPT_CERTAIN   // We want to know if it is certain that effect is active
 };
 
 #define REVERSED_RPT(x) (x == RPT_CERTAIN ? RPT_POSSIBLE : RPT_CERTAIN)
@@ -560,14 +560,14 @@ typedef union {
   int minyear;
   int mincalfrag;
   Output_type_id outputtype;
-  int terrainclass;  /* enum terrain_class */
-  int terrainalter;  /* enum terrain_alteration */
-  int unitclassflag; /* enum unit_class_flag_id */
-  int unitflag;      /* enum unit_flag_id */
-  int terrainflag;   /* enum terrain_flag_id */
-  int techflag;      /* enum tech_flag_id */
-  int baseflag;      /* enum base_flag_id */
-  int roadflag;      /* enum road_flag_id */
+  int terrainclass;  // enum terrain_class
+  int terrainalter;  // enum terrain_alteration
+  int unitclassflag; // enum unit_class_flag_id
+  int unitflag;      // enum unit_flag_id
+  int terrainflag;   // enum terrain_flag_id
+  int techflag;      // enum tech_flag_id
+  int baseflag;      // enum base_flag_id
+  int roadflag;      // enum road_flag_id
   int extraflag;
   int diplrel; /* enum diplstate_type or
                   enum diplrel_other */
@@ -612,21 +612,21 @@ typedef union {
 #define SPECENUM_VALUE10NAME "OutputType"
 #define SPECENUM_VALUE11 VUT_SPECIALIST
 #define SPECENUM_VALUE11NAME "Specialist"
-/* Minimum size: at city range means city size */
+// Minimum size: at city range means city size
 #define SPECENUM_VALUE12 VUT_MINSIZE
 #define SPECENUM_VALUE12NAME "MinSize"
-/* AI level of the player */
+// AI level of the player
 #define SPECENUM_VALUE13 VUT_AI_LEVEL
 #define SPECENUM_VALUE13NAME "AI"
-/* More generic terrain type currently "Land" or "Ocean" */
+// More generic terrain type currently "Land" or "Ocean"
 #define SPECENUM_VALUE14 VUT_TERRAINCLASS
 #define SPECENUM_VALUE14NAME "TerrainClass"
 #define SPECENUM_VALUE15 VUT_MINYEAR
 #define SPECENUM_VALUE15NAME "MinYear"
-/* Terrain alterations that are possible */
+// Terrain alterations that are possible
 #define SPECENUM_VALUE16 VUT_TERRAINALTER
 #define SPECENUM_VALUE16NAME "TerrainAlter"
-/* Target tile is used by city. */
+// Target tile is used by city.
 #define SPECENUM_VALUE17 VUT_CITYTILE
 #define SPECENUM_VALUE17NAME "CityTile"
 #define SPECENUM_VALUE18 VUT_GOOD
@@ -685,26 +685,26 @@ typedef union {
 #define SPECENUM_VALUE44NAME "MinForeignPct"
 #define SPECENUM_VALUE45 VUT_ACTIVITY
 #define SPECENUM_VALUE45NAME "Activity"
-/* Keep this last. */
+// Keep this last.
 #define SPECENUM_COUNT VUT_COUNT
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 struct universal {
   universals_u value;
-  enum universals_n kind; /* formerly .type and .is_unit */
+  enum universals_n kind; // formerly .type and .is_unit
 };
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 BV_DEFINE(bv_extras, MAX_EXTRA_TYPES);
 BV_DEFINE(bv_special, MAX_EXTRA_TYPES);
 BV_DEFINE(bv_bases, MAX_BASE_TYPES);
 BV_DEFINE(bv_roads, MAX_ROAD_TYPES);
 BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME gui_type
-/* Used for options which do not belong to any gui. */
+// Used for options which do not belong to any gui.
 #define SPECENUM_VALUE0 GUI_STUB
 #define SPECENUM_VALUE0NAME "stub"
 /* GUI_GTK2 remains for now for keeping client options alive until
@@ -729,14 +729,14 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 #define SPECENUM_VALUE8NAME "gtk3x"
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME airlifting_style
 #define SPECENUM_BITWISE
-/* Like classical Freeciv.  One unit per turn. */
+// Like classical Freeciv.  One unit per turn.
 #define SPECENUM_ZERO AIRLIFTING_CLASSICAL
-/* Allow airlifting from allied cities. */
+// Allow airlifting from allied cities.
 #define SPECENUM_VALUE0 AIRLIFTING_ALLIED_SRC
-/* Allow airlifting to allied cities. */
+// Allow airlifting to allied cities.
 #define SPECENUM_VALUE1 AIRLIFTING_ALLIED_DEST
 /* Unlimited units to airlift from the source (but always needs an Airport
  * or equivalent). */
@@ -746,7 +746,7 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 #define SPECENUM_VALUE3 AIRLIFTING_UNLIMITED_DEST
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME caravan_bonus_style
 #define SPECENUM_VALUE0 CBS_CLASSIC
 #define SPECENUM_VALUE0NAME "Classic"
@@ -754,7 +754,7 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 #define SPECENUM_VALUE1NAME "Logarithmic"
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME persistent_ready
 #define SPECENUM_VALUE0 PERSISTENTR_DISABLED
 #define SPECENUM_VALUE0NAME "Disabled"
@@ -764,44 +764,44 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 
 #define SPECENUM_NAME reveal_map
 #define SPECENUM_BITWISE
-/* Reveal only the area around the first units at the beginning. */
+// Reveal only the area around the first units at the beginning.
 #define SPECENUM_ZERO REVEAL_MAP_NONE
-/* Reveal the (fogged) map at the beginning of the game. */
+// Reveal the (fogged) map at the beginning of the game.
 #define SPECENUM_VALUE0 REVEAL_MAP_START
-/* Reveal (and unfog) the map for dead players. */
+// Reveal (and unfog) the map for dead players.
 #define SPECENUM_VALUE1 REVEAL_MAP_DEAD
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME gameloss_style
 #define SPECENUM_BITWISE
-/* Like classical Freeciv. No special effects. */
+// Like classical Freeciv. No special effects.
 #define SPECENUM_ZERO GAMELOSS_STYLE_CLASSICAL
-/* Remaining cities are taken by barbarians. */
+// Remaining cities are taken by barbarians.
 #define SPECENUM_VALUE0 GAMELOSS_STYLE_BARB
 #define SPECENUM_VALUE0NAME "Barbarians"
-/* Try civil war. */
+// Try civil war.
 #define SPECENUM_VALUE1 GAMELOSS_STYLE_CWAR
 #define SPECENUM_VALUE1NAME "CivilWar"
-/* Do some looting */
+// Do some looting
 #define SPECENUM_VALUE2 GAMELOSS_STYLE_LOOT
 #define SPECENUM_VALUE2NAME "Loot"
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME tech_upkeep_style
-/* No upkeep */
+// No upkeep
 #define SPECENUM_VALUE0 TECH_UPKEEP_NONE
 #define SPECENUM_VALUE0NAME "None"
-/* Normal tech upkeep */
+// Normal tech upkeep
 #define SPECENUM_VALUE1 TECH_UPKEEP_BASIC
 #define SPECENUM_VALUE1NAME "Basic"
-/* Tech upkeep multiplied by number of cities */
+// Tech upkeep multiplied by number of cities
 #define SPECENUM_VALUE2 TECH_UPKEEP_PER_CITY
 #define SPECENUM_VALUE2NAME "Cities"
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME trade_revenue_style
 #define SPECENUM_VALUE0 TRS_CLASSIC
 #define SPECENUM_VALUE0NAME "Classic"
@@ -809,8 +809,8 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 #define SPECENUM_VALUE1NAME "Simple"
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
-/* Numerical values used in savegames */
+// Used in the network protocol.
+// Numerical values used in savegames
 #define SPECENUM_NAME phase_mode_type
 #define SPECENUM_VALUE0 PMT_CONCURRENT
 #define SPECENUM_VALUE0NAME "Concurrent"
@@ -820,12 +820,12 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 #define SPECENUM_VALUE2NAME "Teams Alternate"
 #include "specenum_gen.h"
 
-/* Phase mode change has changed meaning of the phase numbers */
+// Phase mode change has changed meaning of the phase numbers
 #define PHASE_INVALIDATED -1
-/* Phase was never known */
+// Phase was never known
 #define PHASE_UNKNOWN -2
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 enum borders_mode {
   BORDERS_DISABLED = 0,
   BORDERS_ENABLED,
@@ -835,7 +835,7 @@ enum borders_mode {
 
 enum trait_dist_mode { TDM_FIXED = 0, TDM_EVEN };
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 enum diplomacy_mode {
   DIPLO_FOR_ALL,
   DIPLO_FOR_HUMANS,
@@ -846,7 +846,7 @@ enum diplomacy_mode {
   DIPLO_DISABLED,
 };
 
-/* Server setting types. */
+// Server setting types.
 #define SPECENUM_NAME sset_type
 #define SPECENUM_VALUE0 SST_BOOL
 #define SPECENUM_VALUE1 SST_INT
@@ -856,10 +856,10 @@ enum diplomacy_mode {
 #define SPECENUM_COUNT SST_COUNT
 #include "specenum_gen.h"
 
-/* Mark server setting id's. */
+// Mark server setting id's.
 typedef int server_setting_id;
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME extra_category
 #define SPECENUM_VALUE0 ECAT_INFRA
 #define SPECENUM_VALUE0NAME "Infra"
@@ -875,7 +875,7 @@ typedef int server_setting_id;
 #include "specenum_gen.h"
 #define ECAT_NONE ECAT_COUNT
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME extra_cause
 #define SPECENUM_VALUE0 EC_IRRIGATION
 #define SPECENUM_VALUE0NAME "Irrigation"
@@ -904,10 +904,10 @@ typedef int server_setting_id;
 #define EC_NATURAL_DEFENSIVE ((enum extra_cause)(EC_NONE + 3))
 #define EC_LAST ((enum extra_cause)(EC_NONE + 4))
 
-/* struct extra_type reserve 16 bits (0-15) for these. */
+// struct extra_type reserve 16 bits (0-15) for these.
 FC_STATIC_ASSERT(EC_COUNT < 16, extra_causes_over_limit);
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME extra_rmcause
 #define SPECENUM_VALUE0 ERM_PILLAGE
 #define SPECENUM_VALUE0NAME "Pillage"
@@ -924,7 +924,7 @@ FC_STATIC_ASSERT(EC_COUNT < 16, extra_causes_over_limit);
 #include "specenum_gen.h"
 #define ERM_NONE ERM_COUNT
 
-/* struct extra_type reserve 8 bits (0-7) for these. */
+// struct extra_type reserve 8 bits (0-7) for these.
 FC_STATIC_ASSERT(ERM_COUNT < 8, extra_rmcauses_over_limit);
 
 #define SPECENUM_NAME extra_unit_seen_type
@@ -934,7 +934,7 @@ FC_STATIC_ASSERT(ERM_COUNT < 8, extra_rmcauses_over_limit);
 #define SPECENUM_VALUE1NAME "Hidden"
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME achievement_type
 #define SPECENUM_VALUE0 ACHIEVEMENT_SPACESHIP
 #define SPECENUM_VALUE0NAME "Spaceship"
@@ -959,7 +959,7 @@ FC_STATIC_ASSERT(ERM_COUNT < 8, extra_rmcauses_over_limit);
 #define SPECENUM_COUNT ACHIEVEMENT_COUNT
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME mood_type
 #define SPECENUM_VALUE0 MOOD_PEACEFUL
 #define SPECENUM_VALUE0NAME "Peaceful"
@@ -968,15 +968,15 @@ FC_STATIC_ASSERT(ERM_COUNT < 8, extra_rmcauses_over_limit);
 #define SPECENUM_COUNT MOOD_COUNT
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME action_decision
-/* Doesn't need the player to decide what action to take. */
+// Doesn't need the player to decide what action to take.
 #define SPECENUM_VALUE0 ACT_DEC_NOTHING
 #define SPECENUM_VALUE0NAME N_("nothing")
-/* Wants a decision because of something done to the actor. */
+// Wants a decision because of something done to the actor.
 #define SPECENUM_VALUE1 ACT_DEC_PASSIVE
 #define SPECENUM_VALUE1NAME N_("passive")
-/* Wants a decision because of something the actor did. */
+// Wants a decision because of something the actor did.
 #define SPECENUM_VALUE2 ACT_DEC_ACTIVE
 #define SPECENUM_VALUE2NAME N_("active")
 #define SPECENUM_COUNT ACT_DEC_COUNT
@@ -1039,7 +1039,7 @@ enum road_compat { ROCO_ROAD, ROCO_RAILROAD, ROCO_RIVER, ROCO_NONE };
  */
 #define MAX_TRADE_ROUTES 5
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME goods_selection_method
 #define SPECENUM_VALUE0 GSM_LEAVING
 #define SPECENUM_VALUE0NAME "Leaving"
@@ -1060,7 +1060,7 @@ enum revolen_type {
 
 enum happyborders_type { HB_DISABLED = 0, HB_NATIONAL, HB_ALLIANCE };
 
-/* Used in network protocol. */
+// Used in network protocol.
 enum spaceship_place_type {
   SSHIP_PLACE_STRUCTURAL,
   SSHIP_PLACE_FUEL,
@@ -1070,7 +1070,7 @@ enum spaceship_place_type {
   SSHIP_PLACE_SOLAR_PANELS
 };
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME tech_cost_style
 #define SPECENUM_VALUE0 TECH_COST_CIV1CIV2
 #define SPECENUM_VALUE0NAME "Civ I|II"
@@ -1086,7 +1086,7 @@ enum spaceship_place_type {
 #define SPECENUM_VALUE5NAME "Linear"
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME tech_leakage_style
 #define SPECENUM_VALUE0 TECH_LEAKAGE_NONE
 #define SPECENUM_VALUE0NAME "None"
@@ -1098,7 +1098,7 @@ enum spaceship_place_type {
 #define SPECENUM_VALUE3NAME "Normal Players"
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME gold_upkeep_style
 #define SPECENUM_VALUE0 GOLD_UPKEEP_CITY
 #define SPECENUM_VALUE0NAME "City"
@@ -1108,7 +1108,7 @@ enum spaceship_place_type {
 #define SPECENUM_VALUE2NAME "Nation"
 #include "specenum_gen.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME vision_layer
 #define SPECENUM_VALUE0 V_MAIN
 #define SPECENUM_VALUE0NAME "Main"
@@ -1128,7 +1128,7 @@ enum setting_default_level {
   SETDEF_CHANGED
 };
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME capital_type
 #define SPECENUM_VALUE0 CAPITAL_NOT
 #define SPECENUM_VALUE0NAME "Not"

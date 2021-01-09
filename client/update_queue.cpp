@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
-#include "support.h" /* bool */
+#include "support.h" // bool
 
-/* common */
+// common
 #include "city.h"
 #include "connection.h"
 #include "player.h"
@@ -36,7 +36,7 @@
 #include "ratesdlg_g.h"
 #include "repodlgs_g.h"
 
-/* client */
+// client
 #include "client_main.h"
 #include "connectdlg_common.h"
 #include "options.h"
@@ -95,7 +95,7 @@ void update_queue::wq_data_destroy(struct waiting_queue_data *wq_data)
 {
   fc_assert_ret(NULL != wq_data);
   if (NULL != wq_data->uq_data) {
-    /* May be NULL, see waiting_queue_data_extract(). */
+    // May be NULL, see waiting_queue_data_extract().
     data_destroy(wq_data->uq_data);
   }
   delete wq_data;
@@ -204,14 +204,14 @@ void update_queue::update_unqueue()
 {
   updatePair pair;
   if (is_frozen() || !tileset_is_fully_loaded()) {
-    /* Cannot update now, let's add it again. */
+    // Cannot update now, let's add it again.
     has_idle_cb = false;
     return;
   }
 
   has_idle_cb = false;
 
-  /* Invoke callbacks. */
+  // Invoke callbacks.
   while (!queue.isEmpty()) {
     pair = queue.dequeue();
     auto callback = pair.first;
@@ -413,12 +413,12 @@ static void cities_update_callback(void *data)
     action;                                                                 \
     need_update = static_cast<city_updates>(need_update & ~city_update);    \
   }
-#else /* FREECIV_DEBUG */
+#else // FREECIV_DEBUG
 #define NEED_UPDATE(city_update, action)                                    \
   if (city_update & need_update) {                                          \
     action;                                                                 \
   }
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
   cities_iterate(pcity)
   {
@@ -428,7 +428,7 @@ static void cities_update_callback(void *data)
       continue;
     }
 
-    /* Clear all updates. */
+    // Clear all updates.
     pcity->client.need_updates = CU_NO_UPDATE;
 
     NEED_UPDATE(CU_UPDATE_REPORT, real_city_report_update_city(pcity));
@@ -441,7 +441,7 @@ static void cities_update_callback(void *data)
                 "for city %s (id %d): %d left.",
                 city_name_get(pcity), pcity->id, need_update);
     }
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
   }
   cities_iterate_end;
 #undef NEED_UPDATE

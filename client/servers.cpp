@@ -26,18 +26,18 @@
 #include <QNetworkReply>
 #include <QUrlQuery>
 
-/* dependencies */
+// dependencies
 #include "cvercmp.h"
 
-/* utility */
+// utility
 #include "net_types.h"
 
-/* common */
+// common
 #include "capstr.h"
 #include "dataio.h"
 #include "version.h"
 
-/* client */
+// client
 #include "chatline_g.h"
 #include "client_main.h"
 
@@ -48,7 +48,7 @@ struct server_scan {
   struct server_list *servers;
   int sock;
 
-  /* Only used for metaserver */
+  // Only used for metaserver
   struct {
     enum server_scan_status status;
 
@@ -120,7 +120,7 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
 
   fcudp_scan = scan;
   if (announce == ANNOUNCE_NONE) {
-    /* Succeeded in doing nothing */
+    // Succeeded in doing nothing
     return true;
   }
   group = get_multicast_group(announce == ANNOUNCE_IPV6);
@@ -253,7 +253,7 @@ static struct server_list *parse_metaserver_data(QIODevice *f)
   const char *latest_ver;
   const char *comment;
 
-  /* This call closes f. */
+  // This call closes f.
   if (!(file = secfile_from_stream(f, true))) {
     return NULL;
   }
@@ -368,11 +368,11 @@ static bool meta_read_response(struct server_scan *scan)
 
   auto *f = new QBuffer(&scan->meta.mem);
 
-  /* parse message body */
+  // parse message body
   srvrs = parse_metaserver_data(f);
   scan->servers = srvrs;
 
-  /* 'f' (hence 'meta.mem') was closed in parse_metaserver_data(). */
+  // 'f' (hence 'meta.mem') was closed in parse_metaserver_data().
   scan->meta.mem.clear();
 
   if (NULL == srvrs) {
@@ -606,7 +606,7 @@ void server_scan_finish(struct server_scan *scan)
   }
 
   if (scan->type == SERVER_SCAN_GLOBAL) {
-    /* Signal metaserver scan thread to stop */
+    // Signal metaserver scan thread to stop
     scan->meta.status = SCAN_STATUS_ABORT;
 
     if (scan->servers) {

@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "shared.h"
 
-/* common */
+// common
 #include "player.h"
 #include "tile.h"
 #include "vision.h"
@@ -30,7 +30,7 @@
    ./server/srv_main.c:init_server_functions(). */
 struct functions fc_functions;
 
-/* The functions are accessed via this pointer. */
+// The functions are accessed via this pointer.
 const struct functions *fc_funcs = NULL;
 /* After this is set to TRUE (in interface_init()), the functions are
    available via fc_funcs. */
@@ -55,7 +55,7 @@ void fc_interface_init()
 {
   fc_funcs = &fc_functions;
 
-  /* Test the existence of each required function here! */
+  // Test the existence of each required function here!
   fc_assert_exit(fc_funcs->server_setting_by_name);
   fc_assert_exit(fc_funcs->server_setting_name_get);
   fc_assert_exit(fc_funcs->server_setting_type_get);

@@ -13,15 +13,15 @@
 #pragma once
 
 #include <QHash>
-/* utility */
+// utility
 #include "iterator.h"
 #include "shared.h"
-/* common */
+// common
 #include "fc_types.h"
 #include "name_translation.h"
 #include "requirements.h"
 
-struct ruler_title; /* Opaque type. */
+struct ruler_title; // Opaque type.
 
 /* G_LAST is a value guaranteed to be larger than any valid
  * Government_type_id. It defines the maximum number of governments
@@ -43,13 +43,13 @@ struct government {
   int changed_to_times;
   QVector<QString> *helptext;
 
-  /* AI cached data for this government. */
+  // AI cached data for this government.
   struct {
-    struct government *better; /* hint: a better government (or NULL) */
+    struct government *better; // hint: a better government (or NULL)
   } ai;
 };
 
-/* General government accessor functions. */
+// General government accessor functions.
 Government_type_id government_count();
 Government_type_id government_index(const struct government *pgovern);
 Government_type_id government_number(const struct government *pgovern);
@@ -65,7 +65,7 @@ const char *government_rule_name(const struct government *pgovern);
 const char *government_name_translation(const struct government *pgovern);
 const char *government_name_for_player(const struct player *pplayer);
 
-/* Ruler titles. */
+// Ruler titles.
 QHash<const struct nation_type *, struct ruler_title *> *
 government_ruler_titles(const struct government *pgovern);
 struct ruler_title *government_ruler_title_new(
@@ -82,11 +82,11 @@ ruler_title_female_untranslated_name(const struct ruler_title *pruler_title);
 const char *ruler_title_for_player(const struct player *pplayer, char *buf,
                                    size_t buf_len);
 
-/* Ancillary routines */
+// Ancillary routines
 bool can_change_to_government(struct player *pplayer,
                               const struct government *pgovern);
 
-/* Initialization and iteration */
+// Initialization and iteration
 void governments_alloc(int num);
 void governments_free();
 
@@ -94,7 +94,7 @@ struct government_iter;
 size_t government_iter_sizeof();
 struct iterator *government_iter_init(struct government_iter *it);
 
-/* Iterate over government types. */
+// Iterate over government types.
 #define governments_iterate(NAME_pgov)                                      \
   generic_iterate(struct government_iter, struct government *, NAME_pgov,   \
                   government_iter_sizeof, government_iter_init)

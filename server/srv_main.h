@@ -12,31 +12,31 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
-#include "log.h"       /* QtMsgType */
-#include "net_types.h" /* announce_type */
+// utility
+#include "log.h"       // QtMsgType
+#include "net_types.h" // announce_type
 
-/* common */
+// common
 #include "fc_types.h"
 #include "game.h"
 
 struct conn_list;
 
 struct server_arguments {
-  /* metaserver information */
+  // metaserver information
   bool metaserver_no_send;
   QString metaserver_addr;
   bool metaconnection_persistent;
   QString identity_name;
   unsigned short int metaserver_port;
-  /* address this server is to listen on (NULL => INADDR_ANY) */
+  // address this server is to listen on (NULL => INADDR_ANY)
   QString bind_addr;
-  /* this server's listen port */
+  // this server's listen port
   int port;
   bool user_specified_port;
-  /* address to bind when connecting to the metaserver (NULL => bind_addr) */
+  // address to bind when connecting to the metaserver (NULL => bind_addr)
   QString bind_meta_addr;
-  /* filenames */
+  // filenames
   QString log_filename;
   QString ranklog_filename;
   QString load_filename;
@@ -45,21 +45,21 @@ struct server_arguments {
   QString scenarios_pathname;
   QString ruleset;
   QString serverid;
-  /* quit if there no players after a given time interval */
+  // quit if there no players after a given time interval
   int quitidle;
-  /* exit the server on game ending */
+  // exit the server on game ending
   bool exit_on_end;
-  bool timetrack; /* defaults to FALSE */
-  /* authentication options */
-  bool fcdb_enabled;        /* defaults to FALSE */
-  QString fcdb_conf;        /* freeciv database configuration file */
-  bool auth_enabled;        /* defaults to FALSE */
-  bool auth_allow_guests;   /* defaults to FALSE */
-  bool auth_allow_newusers; /* defaults to FALSE */
+  bool timetrack; // defaults to FALSE
+  // authentication options
+  bool fcdb_enabled;        // defaults to FALSE
+  QString fcdb_conf;        // freeciv database configuration file
+  bool auth_enabled;        // defaults to FALSE
+  bool auth_allow_guests;   // defaults to FALSE
+  bool auth_allow_newusers; // defaults to FALSE
   enum announce_type announce;
 };
 
-/* used in savegame values */
+// used in savegame values
 #define SPECENUM_NAME server_states
 #define SPECENUM_VALUE0 S_S_INITIAL
 #define SPECENUM_VALUE1 S_S_RUNNING

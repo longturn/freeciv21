@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
+// common
 #include "traits.h"
 
 int ai_trait_get_value(enum trait tr, struct player *pplayer);

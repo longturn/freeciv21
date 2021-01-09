@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
+// common
 #include "vision.h"
 
 struct player;
@@ -20,7 +20,7 @@ struct tile;
 struct color;
 struct extra_type;
 
-/* The existence of each function should be checked in interface_init()! */
+// The existence of each function should be checked in interface_init()!
 struct functions {
   server_setting_id (*server_setting_by_name)(const char *name);
   const char *(*server_setting_name_get)(server_setting_id id);

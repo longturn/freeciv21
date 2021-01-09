@@ -21,7 +21,7 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "capability.h"
 #include "fcintl.h"
 #include "log.h"
@@ -30,7 +30,7 @@
 #include "shared.h"
 #include "support.h"
 
-/* client */
+// client
 #include "audio_none.h"
 #ifdef AUDIO_SDL
 #include "audio_sdl.h"
@@ -47,7 +47,7 @@
 #define SOUNDSPEC_CAPSTR "+Freeciv-3.0-soundset"
 #define MUSICSPEC_CAPSTR "+Freeciv-2.6-musicset"
 
-/* keep it open throughout */
+// keep it open throughout
 static struct section_file *ss_tagfile = NULL;
 static struct section_file *ms_tagfile = NULL;
 
@@ -220,7 +220,7 @@ static const QString audiospec_fullname(const QString &audioset_name,
   }
 
   if (audioset_name == audioset_default) {
-    /* avoid endless recursion */
+    // avoid endless recursion
     return NULL;
   }
 
@@ -278,14 +278,14 @@ void audio_real_init(const QString &soundset_name,
   const QString us_ms_capstr = MUSICSPEC_CAPSTR;
 
   if (preferred_plugin_name == QLatin1String("none")) {
-    /* We explicitly choose none plugin, silently skip the code below */
+    // We explicitly choose none plugin, silently skip the code below
     qDebug("Proceeding with sound support disabled.");
     ss_tagfile = NULL;
     ms_tagfile = NULL;
     return;
   }
   if (num_plugins_used == 1) {
-    /* We only have the dummy plugin, skip the code but issue an advertise */
+    // We only have the dummy plugin, skip the code but issue an advertise
     qInfo(_("No real audio plugin present."));
     qInfo(_("Proceeding with sound support disabled."));
     qInfo(_("For sound support, install SDL2_mixer"));
@@ -361,7 +361,7 @@ void audio_real_init(const QString &soundset_name,
 void audio_restart(const QString &soundset_name,
                    const QString &musicset_name)
 {
-  audio_stop(); /* Fade down old one */
+  audio_stop(); // Fade down old one
 
   sound_set_name = soundset_name;
   music_set_name = musicset_name;
@@ -429,7 +429,7 @@ static int audio_play_tag(struct section_file *sfile, const QString &tag,
 
         if (ftmp == NULL) {
           if (excluded != -1 && j == 0) {
-            /* Cannot exclude the only track */
+            // Cannot exclude the only track
             excluded = -1;
             j++;
           }
@@ -511,7 +511,7 @@ void audio_play_sound(const QString &tag, const QString &alt_tag)
     log_debug("audio_play_sound('%s', '%s')", qUtf8Printable(tag),
               qUtf8Printable(pretty_alt_tag));
 
-    /* try playing primary tag first, if not go to alternative tag */
+    // try playing primary tag first, if not go to alternative tag
     if (!audio_play_sound_tag(tag, false)
         && !audio_play_sound_tag(alt_tag, false)) {
       qDebug("Neither of tags %s or %s found", qUtf8Printable(tag),
@@ -534,7 +534,7 @@ static void real_audio_play_music(const QString &tag, const QString &alt_tag,
   log_debug("audio_play_music('%s', '%s')", qUtf8Printable(tag),
             qUtf8Printable(pretty_alt_tag));
 
-  /* try playing primary tag first, if not go to alternative tag */
+  // try playing primary tag first, if not go to alternative tag
   current_track = audio_play_music_tag(tag, true, keepstyle);
 
   if (current_track < 0) {
@@ -600,7 +600,7 @@ void audio_set_volume(double volume)
  */
 void audio_shutdown()
 {
-  /* avoid infinite loop at end of game */
+  // avoid infinite loop at end of game
   audio_stop();
 
   audio_play_sound(QStringLiteral("e_game_quit"), NULL);

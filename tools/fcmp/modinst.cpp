@@ -17,7 +17,7 @@
 
 #include <sys/stat.h>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -26,10 +26,10 @@
 #include "registry.h"
 #include "support.h"
 
-/* common */
+// common
 #include "fc_interface.h"
 
-/* modinst */
+// modinst
 #include "mpdb.h"
 
 #include "modinst.h"

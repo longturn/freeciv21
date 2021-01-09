@@ -39,7 +39,7 @@
 
 #include <QCryptographicHash>
 
-/* utility */
+// utility
 #include "log.h"
 #include "registry.h"
 
@@ -50,14 +50,14 @@
 #include "tolua_common_z_gen.h"
 #include "tolua_game_gen.h"
 
-/* server */
+// server
 #include "console.h"
 #include "stdinhand.h"
 
 /* server/scripting */
 #ifdef HAVE_FCDB
 #include "tolua_fcdb_gen.h"
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB
 
 #include "script_fcdb.h"
 
@@ -170,7 +170,7 @@ static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
 
   switch (level) {
   case LOG_FATAL:
-    /* Special case - will quit the server. */
+    // Special case - will quit the server.
     qFatal("%s", buf);
     break;
   case LOG_ERROR:
@@ -213,7 +213,7 @@ static int md5sum(lua_State *L)
   lua_pushstring(L, sum);
   return 1;
 }
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB
 
 /**
    Initialize the scripting state. Returns the status of the freeciv database
@@ -229,7 +229,7 @@ bool script_fcdb_init(const char *fcdb_luafile)
   }
 
   if (!fcdb_luafile) {
-    /* Use default freeciv database lua file. */
+    // Use default freeciv database lua file.
     fcdb_luafile = FC_CONF_PATH "/" SCRIPT_FCDB_LUA_FILE;
   }
 
@@ -263,7 +263,7 @@ bool script_fcdb_init(const char *fcdb_luafile)
 
   luascript_func_init(fcl);
 
-  /* Define the prototypes for the needed lua functions. */
+  // Define the prototypes for the needed lua functions.
   script_fcdb_functions_define();
 
   if (luascript_do_file(fcl, fcdb_luafile)
@@ -279,7 +279,7 @@ bool script_fcdb_init(const char *fcdb_luafile)
     script_fcdb_free();
     return false;
   }
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB
 
   return true;
 }
@@ -300,7 +300,7 @@ bool script_fcdb_call(const char *func_name, ...)
 
   success = luascript_func_call_valist(fcl, func_name, args);
   va_end(args);
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB
 
   return success;
 }
@@ -316,11 +316,11 @@ void script_fcdb_free()
   }
 
   if (fcl) {
-    /* luascript_func_free() is called by luascript_destroy(). */
+    // luascript_func_free() is called by luascript_destroy().
     luascript_destroy(fcl);
     fcl = NULL;
   }
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB
 }
 
 /**
@@ -343,12 +343,12 @@ bool script_fcdb_do_string(struct connection *caller, const char *str)
 
   status = luascript_do_string(fcl, str, "cmd");
 
-  /* Reset the changes. */
+  // Reset the changes.
   fcl->caller = save_caller;
   fcl->output_fct = save_output_fct;
 
   return (status == 0);
 #else
   return true;
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB
 }

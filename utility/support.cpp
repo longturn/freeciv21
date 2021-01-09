@@ -43,7 +43,7 @@
 
 #include <cctype>
 #include <cerrno>
-#include <cmath> /* ceil() */
+#include <cmath> // ceil()
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
@@ -53,7 +53,7 @@
 #ifdef FREECIV_MSWINDOWS
 #include <process.h>
 #include <windows.h>
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
@@ -66,7 +66,7 @@
 #include <QString>
 #include <QThread>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -133,7 +133,7 @@ void make_escapes(const char *str, char *buf, size_t buf_len)
     case '\\':
     case '\"':
       *dest++ = '\\';
-      /* Fallthrough. */
+      // Fallthrough.
     default:
       *dest++ = *str++;
       break;
@@ -267,9 +267,9 @@ FILE *fc_fopen(const char *filename, const char *opentype)
   result = fopen(filename_in_local_encoding, opentype);
   free(filename_in_local_encoding);
   return result;
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   return fopen(filename, opentype);
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 }
 
 /**
@@ -286,9 +286,9 @@ gzFile fc_gzopen(const char *filename, const char *opentype)
   result = gzopen(filename_in_local_encoding, opentype);
   free(filename_in_local_encoding);
   return result;
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   return gzopen(filename, opentype);
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 }
 
 /**
@@ -305,9 +305,9 @@ int fc_remove(const char *filename)
   result = remove(filename_in_local_encoding);
   free(filename_in_local_encoding);
   return result;
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   return remove(filename);
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 }
 
 /**
@@ -324,9 +324,9 @@ int fc_stat(const char *filename, struct stat *buf)
   result = stat(filename_in_local_encoding, buf);
   free(filename_in_local_encoding);
   return result;
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   return stat(filename, buf);
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 }
 
 /**
@@ -336,9 +336,9 @@ fc_errno fc_get_errno()
 {
 #ifdef FREECIV_MSWINDOWS
   return GetLastError();
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   return errno;
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 }
 
 /**
@@ -361,10 +361,10 @@ const char *fc_strerror(fc_errno err)
                 err);
   }
   return buf;
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   static char buf[256];
   return local_to_internal_string_buffer(strerror(err), buf, sizeof(buf));
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 }
 
 /**
@@ -400,7 +400,7 @@ char *fc_strrep_resize(char *str, size_t *len, const char *search,
   }
 
   success = fc_strrep(str, (*len), search, replace);
-  /* should never happen */
+  // should never happen
   fc_assert_ret_val_msg(success == true, NULL,
                         "Can't replace '%s' by '%s' in '%s'. To small "
                         "size after reallocation: %lu.",
@@ -432,12 +432,12 @@ bool fc_strrep(char *str, size_t len, const char *search,
   while (s != NULL) {
     p = strstr(s, search);
     if (p == NULL) {
-      /* nothing found */
+      // nothing found
       break;
     }
 
     if (len < (strlen(str) + len_replace - len_search + 1)) {
-      /* sizeof(str) not large enough to do the replacement */
+      // sizeof(str) not large enough to do the replacement
       return false;
     }
 
@@ -568,7 +568,7 @@ size_t fc_strlcat(char *dest, const char *src, size_t n)
    See also fc_utf8_vsnprintf_trunc(), fc_utf8_vsnprintf_rep().
  */
 
-/* "64k should be big enough for anyone" ;-) */
+// "64k should be big enough for anyone" ;-)
 #define VSNP_BUF_SIZE (64 * 1024)
 int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
 {
@@ -584,7 +584,7 @@ int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
   r = vsnprintf(str, n, format, ap);
   str[n - 1] = 0;
 
-  /* Convert C99 return value to C89.  */
+  // Convert C99 return value to C89.
   if (r >= n) {
     return -1;
   }
@@ -684,7 +684,7 @@ int fc_break_lines(char *str, size_t desired_len)
 
       num_lines++;
 
-      /* check if there is already a newline: */
+      // check if there is already a newline:
       for (c = str; c < str + desired_len; c++) {
         if (*c == '\n') {
           slen -= c + 1 - str;
@@ -697,7 +697,7 @@ int fc_break_lines(char *str, size_t desired_len)
         continue;
       }
 
-      /* find space and break: */
+      // find space and break:
       for (c = str + desired_len; c > str; c--) {
         if (QChar::isSpace(*c)) {
           *c = '\n';
@@ -711,7 +711,7 @@ int fc_break_lines(char *str, size_t desired_len)
         continue;
       }
 
-      /* couldn't find a good break; settle for a bad one... */
+      // couldn't find a good break; settle for a bad one...
       for (c = str + desired_len + 1; *c != '\0'; c++) {
         if (QChar::isSpace(*c)) {
           *c = '\n';
@@ -758,7 +758,7 @@ int fc_at_quick_exit(void (*func)())
 {
 #ifdef HAVE_AT_QUICK_EXIT
   return at_quick_exit(func);
-#else /* HAVE_AT_QUICK_EXIT */
+#else // HAVE_AT_QUICK_EXIT
   return -1;
-#endif /* HAVE_AT_QUICK_EXIT */
+#endif // HAVE_AT_QUICK_EXIT
 }

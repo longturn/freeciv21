@@ -22,7 +22,7 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "rand.h"

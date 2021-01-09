@@ -18,10 +18,10 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QTableWidget>
-/* common */
+// common
 #include "game.h"
 #include "nation.h"
-/* client */
+// client
 #include "client_main.h"
 #include "control.h"
 #include "goto.h"

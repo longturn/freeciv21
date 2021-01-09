@@ -136,7 +136,7 @@ void message_dlg::apply_changes()
   QTableWidgetItem *item;
   Qt::CheckState state;
   for (i = 0; i <= event_type_max(); i++) {
-    /* Include possible undefined messages. */
+    // Include possible undefined messages.
     messages_where[i] = 0;
   }
   i = 0;

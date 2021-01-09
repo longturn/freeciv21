@@ -26,13 +26,13 @@
 
 #ifdef FREECIV_MSWINDOWS
 #define ALWAYS_ROOT
-#include <lmcons.h> /* UNLEN */
+#include <lmcons.h> // UNLEN
 #include <shlobj.h>
 #include <windows.h>
 #ifdef HAVE_DIRECT_H
 #include <direct.h>
-#endif /* HAVE_DIRECT_H */
-#endif /* FREECIV_MSWINDOWS */
+#endif // HAVE_DIRECT_H
+#endif // FREECIV_MSWINDOWS
 
 // Qt
 #include <QDateTime>
@@ -40,7 +40,7 @@
 #include <QString>
 #include <QtGlobal>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -48,7 +48,7 @@
 
 #include "shared.h"
 
-/* environment */
+// environment
 #ifndef FREECIV_DATA_PATH
 #define FREECIV_DATA_PATH "FREECIV_DATA_PATH"
 #endif
@@ -133,7 +133,7 @@ enum fc_tristate fc_tristate_and(enum fc_tristate one, enum fc_tristate two)
 const char *big_int_to_text(unsigned int mantissa, unsigned int exponent)
 {
   static char
-      buf[64]; /* Note that we'll be filling this in right to left. */
+      buf[64]; // Note that we'll be filling this in right to left.
   char *grp = grouping;
   char *ptr;
   unsigned int cnt = 0;
@@ -146,7 +146,7 @@ const char *big_int_to_text(unsigned int mantissa, unsigned int exponent)
   local_to_internal_string_buffer(grouping_sep, sep, sizeof(sep));
   seplen = qstrlen(sep);
 
-#if 0 /* Not needed while the values are unsigned. */
+#if 0 // Not needed while the values are unsigned.
   fc_assert_ret_val(0 <= mantissa, NULL);
   fc_assert_ret_val(0 <= exponent, NULL);
 #endif
@@ -164,12 +164,12 @@ const char *big_int_to_text(unsigned int mantissa, unsigned int exponent)
     int dig;
 
     if (ptr <= buf + seplen) {
-      /* Avoid a buffer overflow. */
+      // Avoid a buffer overflow.
       fc_assert_ret_val(ptr > buf + seplen, NULL);
       return ptr;
     }
 
-    /* Add on another character. */
+    // Add on another character.
     if (exponent > 0) {
       dig = 0;
       exponent--;
@@ -193,7 +193,7 @@ const char *big_int_to_text(unsigned int mantissa, unsigned int exponent)
       fc_assert_ret_val(ptr >= buf, NULL);
       memcpy(ptr, sep, seplen);
       if (*(grp + 1) != 0) {
-        /* Zero means to repeat the present group-size indefinitely. */
+        // Zero means to repeat the present group-size indefinitely.
         grp++;
       }
     }
@@ -216,7 +216,7 @@ const char *int_to_text(unsigned int number)
  */
 static bool is_ascii(char ch)
 {
-  /* this works with both signed and unsigned char's. */
+  // this works with both signed and unsigned char's.
   return ch >= ' ' && ch <= '~';
 }
 
@@ -228,7 +228,7 @@ bool is_safe_filename(const char *name)
 {
   int i = 0;
 
-  /* must not be NULL or empty */
+  // must not be NULL or empty
   if (!name || *name == '\0') {
     return false;
   }
@@ -239,12 +239,12 @@ bool is_safe_filename(const char *name)
     }
   }
 
-  /* we don't allow the filename to ascend directories */
+  // we don't allow the filename to ascend directories
   if (strstr(name, PARENT_DIR_OPERATOR)) {
     return false;
   }
 
-  /* Otherwise, it is okay... */
+  // Otherwise, it is okay...
   return true;
 }
 
@@ -259,12 +259,12 @@ bool is_ascii_name(const char *name)
   const char illegal_chars[] = {'|', '%', '"', ',', '*', '<', '>', '\0'};
   int i, j;
 
-  /* must not be NULL or empty */
+  // must not be NULL or empty
   if (!name || *name == '\0') {
     return false;
   }
 
-  /* must begin and end with some non-space character */
+  // must begin and end with some non-space character
   if ((*name == ' ') || (*(strchr(name, '\0') - 1) == ' ')) {
     return false;
   }
@@ -282,7 +282,7 @@ bool is_ascii_name(const char *name)
     }
   }
 
-  /* otherwise, it's okay... */
+  // otherwise, it's okay...
   return true;
 }
 
@@ -293,7 +293,7 @@ bool is_base64url(const char *s)
 {
   size_t i = 0;
 
-  /* must not be NULL or empty */
+  // must not be NULL or empty
   if (NULL == s || '\0' == *s) {
     return false;
   }
@@ -314,7 +314,7 @@ void randomize_base64url_string(char *s, size_t n)
 {
   size_t i = 0;
 
-  /* must not be NULL or too short */
+  // must not be NULL or too short
   if (NULL == s || 1 > n) {
     return;
   }
@@ -444,7 +444,7 @@ char *end_of_strn(char *str, int *nleft)
 {
   int len = qstrlen(str);
   *nleft -= len;
-  fc_assert_ret_val(0 < (*nleft), NULL); /* space for the terminating nul */
+  fc_assert_ret_val(0 < (*nleft), NULL); // space for the terminating nul
   return str + len;
 }
 
@@ -480,22 +480,22 @@ bool str_to_int(const char *str, int *pint)
   fc_assert_ret_val(NULL != str, false);
 
   while (QChar::isSpace(*str)) {
-    /* Skip leading spaces. */
+    // Skip leading spaces.
     str++;
   }
 
   start = str;
   if ('-' == *str || '+' == *str) {
-    /* Handle sign. */
+    // Handle sign.
     str++;
   }
   while (QChar::isDigit(*str)) {
-    /* Digits. */
+    // Digits.
     str++;
   }
 
   while (QChar::isSpace(*str)) {
-    /* Ignore trailing spaces. */
+    // Ignore trailing spaces.
     str++;
   }
 
@@ -513,22 +513,22 @@ bool str_to_uint(const char *str, unsigned int *pint)
   fc_assert_ret_val(NULL != str, false);
 
   while (QChar::isSpace(*str)) {
-    /* Skip leading spaces. */
+    // Skip leading spaces.
     str++;
   }
 
   start = str;
   if ('+' == *str) {
-    /* Handle sign. */
+    // Handle sign.
     str++;
   }
   while (QChar::isDigit(*str)) {
-    /* Digits. */
+    // Digits.
     str++;
   }
 
   while (QChar::isSpace(*str)) {
-    /* Ignore trailing spaces. */
+    // Ignore trailing spaces.
     str++;
   }
 
@@ -547,18 +547,18 @@ bool str_to_float(const char *str, float *pfloat)
   fc_assert_ret_val(NULL != str, false);
 
   while (QChar::isSpace(*str)) {
-    /* Skip leading spaces. */
+    // Skip leading spaces.
     str++;
   }
 
   start = str;
 
   if ('-' == *str || '+' == *str) {
-    /* Handle sign. */
+    // Handle sign.
     str++;
   }
   while (QChar::isDigit(*str)) {
-    /* Digits. */
+    // Digits.
     str++;
   }
 
@@ -567,7 +567,7 @@ bool str_to_float(const char *str, float *pfloat)
     str++;
 
     while (QChar::isDigit(*str)) {
-      /* Digits. */
+      // Digits.
       str++;
     }
   } else {
@@ -575,7 +575,7 @@ bool str_to_float(const char *str, float *pfloat)
   }
 
   while (QChar::isSpace(*str)) {
-    /* Ignore trailing spaces. */
+    // Ignore trailing spaces.
     str++;
   }
 
@@ -623,7 +623,7 @@ char *user_username(char *buf, size_t bufsz)
    * truncating a sane name can leave you with an insane name under some
    * charsets. */
 
-  /* If the environment variable $USER is present and sane, use it. */
+  // If the environment variable $USER is present and sane, use it.
   {
     char *env = getenv("USER");
 
@@ -648,7 +648,7 @@ char *user_username(char *buf, size_t bufsz)
 #endif
 
 #ifdef FREECIV_MSWINDOWS
-  /* On windows the GetUserName function will give us the login name. */
+  // On windows the GetUserName function will give us the login name.
   {
     char name[UNLEN + 1];
     DWORD length = sizeof(name);
@@ -661,7 +661,7 @@ char *user_username(char *buf, size_t bufsz)
       }
     }
   }
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 
 #ifdef ALWAYS_ROOT
   fc_strlcpy(buf, "name", bufsz);
@@ -685,9 +685,9 @@ char *user_username(char *buf, size_t bufsz)
  */
 static char *expand_dir(char *tok_in, bool ok_to_free)
 {
-  int i; /* qstrlen(tok), or -1 as flag */
+  int i; // qstrlen(tok), or -1 as flag
   char *tok;
-  char **ret = &tok; /* Return tok by default */
+  char **ret = &tok; // Return tok by default
   char *allocated;
 
   tok = skip_leading_spaces(tok_in);
@@ -702,7 +702,7 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
       qCritical("For \"%s\" in path cannot expand '~'"
                 " except as '~%c'; ignoring",
                 tok, DIR_SEPARATOR_CHAR);
-      i = 0; /* skip this one */
+      i = 0; // skip this one
     } else {
       QString home = QDir::homePath();
 
@@ -710,13 +710,13 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
         qDebug("No HOME, skipping path component %s", tok);
         i = 0;
       } else {
-        int len = home.length() + i; /* +1 -1 */
+        int len = home.length() + i; // +1 -1
 
         allocated = new char[len];
         ret = &allocated;
 
         fc_snprintf(allocated, len, "%s%s", qUtf8Printable(home), tok + 1);
-        i = -1; /* flag to free tok below */
+        i = -1; // flag to free tok below
       }
     }
   }
@@ -777,7 +777,7 @@ const QStringList *get_data_dirs()
     const char *path;
 
     if ((path = getenv(FREECIV_DATA_PATH)) && '\0' == path[0]) {
-      /* TRANS: <FREECIV_DATA_PATH> configuration error */
+      // TRANS: <FREECIV_DATA_PATH> configuration error
       qCritical(_("\"%s\" is set but empty; using default "
                   "data directories instead."),
                 FREECIV_DATA_PATH);
@@ -814,7 +814,7 @@ const QStringList *get_save_dirs()
     const char *path;
 
     if ((path = getenv(FREECIV_SAVE_PATH)) && '\0' == path[0]) {
-      /* TRANS: <FREECIV_SAVE_PATH> configuration error */
+      // TRANS: <FREECIV_SAVE_PATH> configuration error
       qCritical(_("\"%s\" is set but empty; using default"
                   "save directories instead."),
                 FREECIV_SAVE_PATH);
@@ -852,7 +852,7 @@ const QStringList *get_scenario_dirs()
     const char *path;
 
     if ((path = getenv(FREECIV_SCENARIO_PATH)) && '\0' == path[0]) {
-      /* TRANS: <FREECIV_SCENARIO_PATH> configuration error */
+      // TRANS: <FREECIV_SCENARIO_PATH> configuration error
       qCritical(_("\"%s\" is set but empty; using default "
                   "scenario directories instead."),
                 FREECIV_SCENARIO_PATH);
@@ -888,7 +888,7 @@ struct QVector<QString> *fileinfolist(const QStringList *dirs,
     return files;
   }
 
-  /* First assemble a full list of names. */
+  // First assemble a full list of names.
   for (const auto &dirname : *dirs) {
     QDir dir(dirname);
 
@@ -932,9 +932,9 @@ fileinfoname(const QStringList *dirs, const char *filename)
 #ifndef DIR_SEPARATOR_IS_DEFAULT
   char fnbuf[filename != NULL ? qstrlen(filename) + 1 : 1];
   int i;
-#else /* DIR_SEPARATOR_IS_DEFAULT */
+#else // DIR_SEPARATOR_IS_DEFAULT
   const char *fnbuf = filename;
-#endif /* DIR_SEPARATOR_IS_DEFAULT */
+#endif // DIR_SEPARATOR_IS_DEFAULT
 
   if (NULL == dirs) {
     return NULL;
@@ -965,10 +965,10 @@ fileinfoname(const QStringList *dirs, const char *filename)
     }
   }
   fnbuf[i] = '\0';
-#endif /* DIR_SEPARATOR_IS_DEFAULT */
+#endif // DIR_SEPARATOR_IS_DEFAULT
 
   for (const auto &dirname : *dirs) {
-    struct stat buf; /* see if we can open the file or directory */
+    struct stat buf; // see if we can open the file or directory
 
     *realfile = QStringLiteral("%1%2%3").arg(
         dirname, QString(DIR_SEPARATOR_CHAR), fnbuf);
@@ -1048,7 +1048,7 @@ struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
 
   auto infix_str = QString::fromUtf8(infix);
 
-  /* First assemble a full list of names. */
+  // First assemble a full list of names.
   for (const auto &dirname : *dirs) {
     QDir dir(dirname);
 
@@ -1074,14 +1074,14 @@ struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
     }
   }
 
-  /* Sort the list by name. */
+  // Sort the list by name.
   fileinfo_list_sort(res, compare_file_name_ptrs);
 
   if (nodups) {
     fileinfo_list_unique_full(res, compare_fileinfo_name);
   }
 
-  /* Sort the list by last modification time. */
+  // Sort the list by last modification time.
   fileinfo_list_sort(res, compare_file_mtime_ptrs);
 
   return res;
@@ -1098,7 +1098,7 @@ char *setup_langname()
   langname = getenv("LANG");
 
 #ifdef FREECIV_MSWINDOWS
-  /* set LANG by hand if it is not set */
+  // set LANG by hand if it is not set
   if (!langname) {
     switch (PRIMARYLANGID(GetUserDefaultLangID())) {
     case LANG_ARABIC:
@@ -1208,8 +1208,8 @@ char *setup_langname()
       putenv(envstr);
     }
   }
-#endif /* FREECIV_MSWINDOWS */
-#endif /* ENABLE_NLS */
+#endif // FREECIV_MSWINDOWS
+#endif // ENABLE_NLS
 
   return langname;
 }
@@ -1238,7 +1238,7 @@ static void autocap_update(void)
 
   capitalization_opt_in(ac_enabled);
 }
-#endif /* FREECIV_ENABLE_NLS */
+#endif // FREECIV_ENABLE_NLS
 
 /**
    Switch to specified LANG
@@ -1254,9 +1254,9 @@ void switch_lang(const char *lang)
   autocap_update();
 
   qInfo("LANG set to %s", lang);
-#else /* FREECIV_ENABLE_NLS */
+#else // FREECIV_ENABLE_NLS
   fc_assert(false);
-#endif /* FREECIV_ENABLE_NLS */
+#endif // FREECIV_ENABLE_NLS
 }
 
 /**
@@ -1275,8 +1275,8 @@ void init_nls()
 #ifdef ENABLE_NLS
 
 #ifdef FREECIV_MSWINDOWS
-  setup_langname(); /* Makes sure LANG env variable has been set */
-#endif /* FREECIV_MSWINDOWS */
+  setup_langname(); // Makes sure LANG env variable has been set
+#endif // FREECIV_MSWINDOWS
 
   (void) setlocale(LC_ALL, "");
   (void) bindtextdomain("freeciv-core", get_locale_dir());
@@ -1295,7 +1295,7 @@ void init_nls()
     struct lconv *lc = localeconv();
 
     if (lc->grouping[0] == '\0') {
-      /* This actually indicates no grouping at all. */
+      // This actually indicates no grouping at all.
       char *m = new char;
       *m = CHAR_MAX;
       grouping = m;
@@ -1304,7 +1304,7 @@ void init_nls()
       for (len = 0;
            lc->grouping[len] != '\0' && lc->grouping[len] != CHAR_MAX;
            len++) {
-        /* nothing */
+        // nothing
       }
       len++;
       delete[] grouping;
@@ -1317,7 +1317,7 @@ void init_nls()
 
   autocap_update();
 
-#endif /* ENABLE_NLS */
+#endif // ENABLE_NLS
 }
 
 /**
@@ -1352,7 +1352,7 @@ void dont_run_as_root(const char *argv0, const char *fallback)
     fc_fprintf(stderr, _("Use a non-privileged account instead.\n"));
     exit(EXIT_FAILURE);
   }
-#endif /* ALWAYS_ROOT */
+#endif // ALWAYS_ROOT
 }
 
 /**
@@ -1427,7 +1427,7 @@ enum m_pre_result match_prefix_full(m_pre_accessor_fn_t accessor_fn,
         return M_PRE_EXACT;
       }
       if (nmatches == 0) {
-        *ind_result = i; /* first match */
+        *ind_result = i; // first match
       }
       if (matches != NULL && nmatches < max_matches) {
         matches[nmatches] = i;
@@ -1456,7 +1456,7 @@ enum m_pre_result match_prefix_full(m_pre_accessor_fn_t accessor_fn,
 char *get_multicast_group(bool ipv6_preferred)
 {
   static const char *default_multicast_group_ipv4 = "225.1.1.1";
-  /* TODO: Get useful group (this is node local) */
+  // TODO: Get useful group (this is node local)
   static const char *default_multicast_group_ipv6 = "FF31::8000:15B4";
 
   if (mc_group == NULL) {
@@ -1571,11 +1571,11 @@ bool path_is_absolute(const char *filename)
   if (strchr(filename, ':')) {
     return true;
   }
-#else /* FREECIV_MSWINDOWS */
+#else // FREECIV_MSWINDOWS
   if (filename[0] == '/') {
     return true;
   }
-#endif /* FREECIV_MSWINDOWS */
+#endif // FREECIV_MSWINDOWS
 
   return false;
 }
@@ -1618,7 +1618,7 @@ char scanin(char **buf, char *delimiters, char *dest, int size)
     remove_leading_trailing_spaces(dest);
     ptr = strpbrk(dest, delimiters);
   } else {
-    /* Just skip ahead. */
+    // Just skip ahead.
     ptr = strpbrk(*buf, delimiters);
   }
   if (ptr != NULL) {
@@ -1631,7 +1631,7 @@ char scanin(char **buf, char *delimiters, char *dest, int size)
     }
     *buf = strpbrk(*buf, delimiters);
     if (*buf != NULL) {
-      (*buf)++; /* skip delimiter */
+      (*buf)++; // skip delimiter
     } else {
     }
   } else {
@@ -1708,12 +1708,12 @@ static bool wildcard_asterisk_fit(const char *pattern, const char *test)
 {
   char jump_to;
 
-  /* Jump over the leading asterisks. */
+  // Jump over the leading asterisks.
   pattern++;
   while (true) {
     switch (*pattern) {
     case '\0':
-      /* It is a leading asterisk. */
+      // It is a leading asterisk.
       return true;
     case '*':
       pattern++;
@@ -1742,10 +1742,10 @@ static bool wildcard_asterisk_fit(const char *pattern, const char *test)
 
   while ('\0' != *test) {
     if ('\0' != jump_to) {
-      /* Jump to next matching charather. */
+      // Jump to next matching charather.
       test = strchr(test, jump_to);
       if (NULL == test) {
-        /* No match. */
+        // No match.
         return false;
       }
     }
@@ -1771,21 +1771,21 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
   bool negation;
 
   if ('\0' == **test) {
-    /* Need one character. */
+    // Need one character.
     return false;
   }
 
-  /* Find the end of the pattern. */
+  // Find the end of the pattern.
   while (true) {
     *pattern = strchr(*pattern, ']');
     if (NULL == *pattern) {
-      /* Wildcard format error. */
+      // Wildcard format error.
       return false;
     } else if (*(*pattern - 1) != '\\') {
-      /* This is the end. */
+      // This is the end.
       break;
     } else {
-      /* Try again. */
+      // Try again.
       (*pattern)++;
     }
   }
@@ -1802,16 +1802,16 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
 
   for (; start < *pattern; start++) {
     if ('-' == *start || '!' == *start) {
-      /* Wildcard format error. */
+      // Wildcard format error.
       return false;
     } else if (start < *pattern - 2 && '-' == *(start + 1)) {
-      /* Case range. */
+      // Case range.
       if (*start <= testc && testc <= *(start + 2)) {
         return !negation;
       }
       start += 2;
     } else if (*start == testc) {
-      /* Single character. */
+      // Single character.
       return !negation;
     }
   }
@@ -1835,10 +1835,10 @@ bool wildcard_fit_string(const char *pattern, const char *test)
   while (true) {
     switch (*pattern) {
     case '\0':
-      /* '\0' != test. */
+      // '/* '\0' != test. */' != test.
       return '\0' == *test;
     case '*':
-      return wildcard_asterisk_fit(pattern, test); /* Maybe recursive. */
+      return wildcard_asterisk_fit(pattern, test); // Maybe recursive.
     case '[':
       if (!wildcard_range_fit(&pattern, &test)) {
         return false;
@@ -1851,7 +1851,7 @@ bool wildcard_fit_string(const char *pattern, const char *test)
       break;
     case '\\':
       pattern++;
-      fc__fallthrough; /* No break */
+      fc__fallthrough; // No break
     default:
       if (*pattern != *test) {
         return false;
@@ -1891,7 +1891,7 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
   int i, j;
 
   if (static_cast<size_t>(-1) == sequences_num) {
-    /* Find the number of sequences. */
+    // Find the number of sequences.
     sequences_num = 0;
     for (pseq = sequences; CF_LAST != pseq->type; pseq++) {
       sequences_num++;
@@ -1900,17 +1900,17 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
 
   while ('\0' != *f) {
     if ('%' == *f) {
-      /* Sequence. */
+      // Sequence.
 
       f++;
       if ('%' == *f) {
-        /* Double '%'. */
+        // Double '%'.
         *b++ = '%';
         f++;
         continue;
       }
 
-      /* Make format. */
+      // Make format.
       c = cformat;
       *c++ = '%';
       for (; !QChar::isLetter(*f) && '\0' != *f && '%' != *f && cmax > c;
@@ -1984,7 +1984,7 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
             break;
           }
           if (-1 == j) {
-            /* Full! */
+            // Full!
             return -1;
           }
           f++;
@@ -1993,7 +1993,7 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
         }
       }
       if (i >= sequences_num) {
-        /* Format not supported. */
+        // Format not supported.
         *c = '\0';
         j = fc_snprintf(b, max - b + 1, "%s%c", cformat, *f);
         if (-1 == j) {
@@ -2003,11 +2003,11 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
         b += j;
       }
     } else {
-      /* Not a sequence. */
+      // Not a sequence.
       *b++ = *f++;
     }
     if (max <= b) {
-      /* Too long. */
+      // Too long.
       *max = '\0';
       return -1;
     }
@@ -2034,7 +2034,7 @@ int fc_snprintcf(char *buf, size_t buf_len, const char *format, ...)
   size_t sequences_num = 0;
   va_list args;
 
-  /* Collect sequence array. */
+  // Collect sequence array.
   va_start(args, format);
   do {
     sequences[sequences_num] = va_arg(args, struct cf_sequence);
@@ -2077,7 +2077,7 @@ static size_t extract_escapes(const char *format, char *escapes,
   while (NULL != format) {
     format++;
     if ('%' == *format) {
-      /* Double, not a sequence. */
+      // Double, not a sequence.
       continue;
     } else if (QChar::isDigit(*format)) {
       const char *start = format;
@@ -2086,7 +2086,7 @@ static size_t extract_escapes(const char *format, char *escapes,
         format++;
       } while (QChar::isDigit(*format));
       if ('$' == *format) {
-        /* Strings are reordered. */
+        // Strings are reordered.
         if (1 != sscanf(start, "%d", &idx)) {
           reordered = true;
         } else {
@@ -2100,7 +2100,7 @@ static size_t extract_escapes(const char *format, char *escapes,
     }
     escapes[idx] = *format;
 
-    /* Increase the read count. */
+    // Increase the read count.
     if (reordered) {
       if (idx > num) {
         num = idx;
@@ -2112,7 +2112,7 @@ static size_t extract_escapes(const char *format, char *escapes,
 
     if ('*' != *format) {
       format = strchr(format, '%');
-    } /* else we didn't have found the real sequence. */
+    } // else we didn't have found the real sequence.
   }
   return num;
 }

@@ -103,7 +103,7 @@ void pregame_options::set_rulesets(int num_rulesets, char **rulesets)
     }
   }
 
-  /* HACK: HAXXOR WAS HERE : server should tell us the current ruleset. */
+  // HACK: HAXXOR WAS HERE : server should tell us the current ruleset.
   ui.cruleset->setCurrentIndex(def_idx);
   ui.cruleset->blockSignals(false);
 }
@@ -182,7 +182,7 @@ void pregame_options::ailevel_change(int i)
   if (v.isValid()) {
     enum ai_level k = static_cast<ai_level>(v.toInt());
 
-    /* Suppress changes provoked by server rather than local user */
+    // Suppress changes provoked by server rather than local user
     if (server_ai_level() != k) {
       const char *name = ai_level_cmd(k);
 

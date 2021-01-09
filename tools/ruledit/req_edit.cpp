@@ -430,7 +430,7 @@ void req_edit::delete_now()
 void req_edit::incoming_rec_vec_change(const requirement_vector *vec)
 {
   if (req_vector == vec) {
-    /* The selected requirement may be gone */
+    // The selected requirement may be gone
 
     selected = nullptr;
     requirement_vector_iterate(req_vector, preq)
@@ -443,7 +443,7 @@ void req_edit::incoming_rec_vec_change(const requirement_vector *vec)
     requirement_vector_iterate_end;
 
     if (selected == nullptr) {
-      /* The currently selected requirement was deleted. */
+      // The currently selected requirement was deleted.
       clear_selected();
     }
 

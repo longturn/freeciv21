@@ -9,11 +9,11 @@
 **************************************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "bitvector.h"
-#include "support.h" /* bool type */
+#include "support.h" // bool type
 
-/* common */
+// common
 #include "fc_types.h"
 #include "improvement.h"
 
@@ -27,78 +27,78 @@
  */
 
 enum adv_improvement_status {
-  ADV_IMPR_CALCULATE,      /* Calculate exactly its effect */
-  ADV_IMPR_CALCULATE_FULL, /* Calculate including tile changes */
-  ADV_IMPR_ESTIMATE,       /* Estimate its effect using wild guesses */
+  ADV_IMPR_CALCULATE,      // Calculate exactly its effect
+  ADV_IMPR_CALCULATE_FULL, // Calculate including tile changes
+  ADV_IMPR_ESTIMATE,       // Estimate its effect using wild guesses
   ADV_IMPR_LAST
 };
 
 struct adv_dipl {
-  /* Remember one example of each for text spam purposes. */
+  // Remember one example of each for text spam purposes.
   bool allied_with_enemy;
 };
 
 struct adv_data {
-  /* Whether adv_data_phase_init() has been called or not. */
+  // Whether adv_data_phase_init() has been called or not.
   bool phase_is_initialized;
 
-  /* The Wonder City */
+  // The Wonder City
   int wonder_city;
 
-  /* Precalculated info about city improvements */
+  // Precalculated info about city improvements
   enum adv_improvement_status impr_calc[B_LAST];
   enum req_range impr_range[B_LAST];
 
-  /* Long-term threats, not to be confused with short-term danger */
+  // Long-term threats, not to be confused with short-term danger
   struct {
-    bool invasions;      /* check if we need to consider invasions */
-    bool *continent;     /* non-allied cities on continent? */
-    bool *ocean;         /* non-allied offensive ships in ocean? */
-    bool suicide_attack; /* check for non-allied missiles */
-    int nuclear;         /* nuke check: 0=no, 1=capability, 2=built */
-    bool igwall;         /* enemies have igwall units */
+    bool invasions;      // check if we need to consider invasions
+    bool *continent;     // non-allied cities on continent?
+    bool *ocean;         // non-allied offensive ships in ocean?
+    bool suicide_attack; // check for non-allied missiles
+    int nuclear;         // nuke check: 0=no, 1=capability, 2=built
+    bool igwall;         // enemies have igwall units
   } threats;
 
-  /* Keeps track of which continents are fully explored already */
+  // Keeps track of which continents are fully explored already
   struct {
-    bool *ocean;     /* are we done exploring this ocean? */
-    bool *continent; /* are we done exploring this continent? */
-    bool land_done;  /* nothing more on land to explore anywhere */
-    bool sea_done;   /* nothing more to explore at sea */
+    bool *ocean;     // are we done exploring this ocean?
+    bool *continent; // are we done exploring this continent?
+    bool land_done;  // nothing more on land to explore anywhere
+    bool sea_done;   // nothing more to explore at sea
   } explore;
 
   /* This struct is used for statistical unit building, eg to ensure
    * that we don't build too few or too many units of a given type. */
   struct {
-    /* Counts of specific types of units. */
+    // Counts of specific types of units.
     struct {
-      /* Unit-flag counts. */
+      // Unit-flag counts.
       int coast_strict;
 
-      /* Unit can do action counts. */
+      // Unit can do action counts.
       int suicide_attackers, paratroopers, airliftable;
 
       int byclass[UCL_LAST];
 
-      /* Upgradeable units */
+      // Upgradeable units
       int upgradeable;
     } units;
-    int *cities;       /* Number of cities we have on continent */
-    int *ocean_cities; /* Number of cities we have on ocean */
+    int *cities;       // Number of cities we have on continent
+    int *ocean_cities; // Number of cities we have on ocean
     int average_production;
   } stats;
 
   struct {
     struct adv_dipl **adv_dipl_slots;
 
-    struct player *spacerace_leader; /* who is leading the space pack */
+    struct player *spacerace_leader; // who is leading the space pack
     struct player *production_leader;
   } dipl;
 
-  int num_continents; /* last time we updated our continent data */
-  int num_oceans;     /* last time we updated our continent data */
+  int num_continents; // last time we updated our continent data
+  int num_oceans;     // last time we updated our continent data
 
-  /* Dynamic weights used in addition to Syela's hardcoded weights */
+  // Dynamic weights used in addition to Syela's hardcoded weights
   int shield_priority;
   int food_priority;
   int luxury_priority;
@@ -110,27 +110,27 @@ struct adv_data {
   int pollution_priority;
   int infra_priority;
 
-  /* Government data */
+  // Government data
   adv_want *government_want;
   short govt_reeval;
 
-  /* Goals */
+  // Goals
   struct {
     struct {
-      struct government *gov; /* The ideal government */
-      adv_want val;           /* Its value (relative to the current gov) */
-      int req;                /* The tech requirement for the ideal gov */
+      struct government *gov; // The ideal government
+      adv_want val;           // Its value (relative to the current gov)
+      int req;                // The tech requirement for the ideal gov
     } govt;
-    struct government *revolution; /* The best gov of the now available */
+    struct government *revolution; // The best gov of the now available
   } goal;
 
-  /* Whether science would benefit player at all */
+  // Whether science would benefit player at all
   bool wants_science;
 
-  /* If the AI celebrates. */
+  // If the AI celebrates.
   bool celebrate;
 
-  /* AI doesn't like having more than this number of cities */
+  // AI doesn't like having more than this number of cities
   int max_num_cities;
 };
 

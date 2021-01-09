@@ -16,19 +16,19 @@
 
 #include <cstdarg>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "registry.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "fc_types.h"
 #include "requirements.h"
 #include "worklist.h"
 
-/* client */
+// client
 #include "client_main.h"
 
 #include "global_worklist.h"
@@ -39,7 +39,7 @@ enum global_worklist_status {
    * case, we use the unbuilt part and not the worklist one. */
   STATUS_UNBUILT,
 
-  /* Means this worklist is plainly usable at running time. */
+  // Means this worklist is plainly usable at running time.
   STATUS_WORKLIST
 };
 
@@ -48,7 +48,7 @@ struct uni_name {
   char *name;
 };
 
-/* The global worklist structure. */
+// The global worklist structure.
 struct global_worklist {
   int id;
   char name[MAX_LEN_NAME];
@@ -105,7 +105,7 @@ void global_worklists_build()
       struct uni_name *puni_name;
       int i;
 
-      /* Build a worklist. */
+      // Build a worklist.
       worklist_init(&worklist);
       for (i = 0; i < pgwl->unbuilt.length; i++) {
         struct universal source;
@@ -127,7 +127,7 @@ void global_worklists_build()
         continue;
       }
 
-      /* Now the worklist is built, change status. */
+      // Now the worklist is built, change status.
       for (i = 0; i < pgwl->unbuilt.length; i++) {
         puni_name = pgwl->unbuilt.entries + i;
         delete[] puni_name->kind;
@@ -152,7 +152,7 @@ void global_worklists_unbuild()
       struct uni_name *puni_name;
       int i;
 
-      /* Copy before over-write. */
+      // Copy before over-write.
       worklist_copy(&worklist, &pgwl->worklist);
       pgwl->status = STATUS_UNBUILT;
 
@@ -195,10 +195,10 @@ global_worklist_alloc(enum global_worklist_status type)
   pgwl->id = ++last_id;
   pgwl->status = type;
 
-  /* Specific initializer. */
+  // Specific initializer.
   switch (pgwl->status) {
   case STATUS_UNBUILT:
-    /* All members set to 0 by fc_calloc. */
+    // All members set to 0 by fc_calloc.
     break;
   case STATUS_WORKLIST:
     worklist_init(&pgwl->worklist);
@@ -219,7 +219,7 @@ void global_worklist_destroy(struct global_worklist *pgwl)
 
   global_worklist_list_remove(client.worklists, pgwl);
 
-  /* Specific descturctor. */
+  // Specific descturctor.
   switch (pgwl->status) {
   case STATUS_UNBUILT: {
     struct uni_name *puni_name;
@@ -352,7 +352,7 @@ static bool global_worklist_load(struct section_file *file, const char *path,
 
   length = secfile_lookup_int_default(file, -1, "%s.wl_length", path_str);
   if (length == -1) {
-    /* Not set. */
+    // Not set.
     return false;
   }
   length = MIN(length, MAX_LEN_WORKLIST);
@@ -366,7 +366,7 @@ static bool global_worklist_load(struct section_file *file, const char *path,
         secfile_lookup_str_default(file, NULL, "%s.wl_kind%d", path_str, i);
 
     if (!kind) {
-      /* before 2.2.0 unit production was indicated by flag. */
+      // before 2.2.0 unit production was indicated by flag.
       bool is_unit = secfile_lookup_bool_default(
           file, false, "%s.wl_is_unit%d", path_str, i);
       kind = universals_n_name(is_unit ? VUT_UTYPE : VUT_IMPROVEMENT);
@@ -393,16 +393,16 @@ void global_worklists_load(struct section_file *file)
 {
   int i;
 
-  /* Clear the current global worklists. */
+  // Clear the current global worklists.
   global_worklists_iterate_all(pgwl) { global_worklist_destroy(pgwl); }
   global_worklists_iterate_all_end;
 
   for (i = 0; global_worklist_load(file, "worklists.worklist%d", i); i++) {
-    /* Nothing to do more. */
+    // Nothing to do more.
   }
 
   if (C_S_RUNNING <= client_state()) {
-    /* We need to build the worklists immediately. */
+    // We need to build the worklists immediately.
     global_worklists_build();
   }
 }

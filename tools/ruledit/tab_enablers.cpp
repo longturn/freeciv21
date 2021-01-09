@@ -225,13 +225,13 @@ void tab_enabler::update_enabler_info(struct action_enabler *enabler)
 
     switch (enabler_problem_level(selected)) {
     case RVPS_REPAIR:
-      /* Offer to repair the enabler if it has a problem. */
-      /* TRANS: Fix an error in an action enabler. */
+      // Offer to repair the enabler if it has a problem.
+      // TRANS: Fix an error in an action enabler.
       repair_button->setText(QString::fromUtf8(R__("Repair Enabler")));
       repair_button->setEnabled(true);
       break;
     case RVPS_IMPROVE:
-      /* TRANS: Fix a non error issue in an action enabler. */
+      // TRANS: Fix a non error issue in an action enabler.
       repair_button->setText(QString::fromUtf8(R__("Improve Enabler")));
       repair_button->setEnabled(true);
       break;
@@ -253,7 +253,7 @@ void tab_enabler::update_enabler_info(struct action_enabler *enabler)
     delete_button->setEnabled(false);
   }
 
-  /* The enabler may have gotten (rid of) a problem. */
+  // The enabler may have gotten (rid of) a problem.
   action_enablers_iterate(enabler)
   {
     QListWidgetItem *item = enabler_list->item(i++);
@@ -349,7 +349,7 @@ void tab_enabler::add_now()
 void tab_enabler::repair_now()
 {
   if (selected == nullptr) {
-    /* Nothing to repair */
+    // Nothing to repair
     return;
   }
 
@@ -383,12 +383,12 @@ void tab_enabler::edit_type(QAction *action)
   paction = action_by_rule_name(an_bytes.data());
 
   if (selected != nullptr && paction != nullptr) {
-    /* Must remove and add back because enablers are stored by action. */
+    // Must remove and add back because enablers are stored by action.
     action_enabler_remove(selected);
     selected->action = paction->id;
     action_enabler_add(selected);
 
-    /* Show the changes. */
+    // Show the changes.
     update_enabler_info(selected);
     refresh();
   }
@@ -433,11 +433,11 @@ fix_enabler_item::fix_enabler_item(struct action_enabler *enabler)
   fc_snprintf(buf, sizeof(buf), R__("action enabler for %s"),
               action_rule_name(paction));
 
-  /* Don't modify the original until the user accepts */
+  // Don't modify the original until the user accepts
   local_copy = action_enabler_copy(enabler);
   current_enabler = enabler;
 
-  /* As precise a title as possible */
+  // As precise a title as possible
   my_name = QString(buf);
 }
 
@@ -494,7 +494,7 @@ struct req_vec_problem *fix_enabler_item::find_next_problem()
  */
 void fix_enabler_item::apply_accepted_changes()
 {
-  /* The user has approved the solution */
+  // The user has approved the solution
   current_enabler->action = local_copy->action;
   requirement_vector_copy(&current_enabler->actor_reqs,
                           &local_copy->actor_reqs);
@@ -509,7 +509,7 @@ void fix_enabler_item::apply_accepted_changes()
  */
 void fix_enabler_item::undo_accepted_changes()
 {
-  /* The user has rejected all solutions */
+  // The user has rejected all solutions
   local_copy->action = current_enabler->action;
   requirement_vector_copy(&local_copy->actor_reqs,
                           &current_enabler->actor_reqs);

@@ -17,12 +17,12 @@
 
 #include <sqlite3.h>
 
-/* utility */
+// utility
 #include "capability.h"
 #include "fcintl.h"
 #include "registry.h"
 
-/* modinst */
+// modinst
 #include "download.h"
 
 #include "mpdb.h"
@@ -141,7 +141,7 @@ void create_mpdb(const char *filename, bool scenario_db)
 
   qstrncpy(local_name, filename, llen);
   for (i = llen - 1; local_name[i] != DIR_SEPARATOR_CHAR; i--) {
-    /* Nothing */
+    // Nothing
   }
   local_name[i] = '\0';
   if (!make_dir(local_name)) {
@@ -239,7 +239,7 @@ bool mpdb_update_modpack(const char *name, enum modpack_type type,
                      modpack_type_name(type), version, name);
     ret = mpdb_query(*handle, qbuf);
   } else {
-    /* Completely new modpack */
+    // Completely new modpack
     sqlite3_snprintf(sizeof(qbuf), qbuf,
                      "insert into modpacks values ('%q', '%q', '%q');", name,
                      modpack_type_name(type), version);

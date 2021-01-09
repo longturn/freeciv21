@@ -21,13 +21,13 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "nation.h"
 #include "support.h"
 
-/* common */
+// common
 #include "city.h"
 #include "culture.h"
 #include "game.h"
@@ -35,8 +35,8 @@
 #include "specialist.h"
 #include "unitlist.h"
 
-/* client */
-#include "citydlg_common.h" /* city_production_cost_str() */
+// client
+#include "citydlg_common.h" // city_production_cost_str()
 #include "governor.h"
 #include "options.h"
 
@@ -270,7 +270,7 @@ static const char *cr_entry_attack(const struct city *pcity,
 
   unit_list_iterate(pcity->tile->units, punit)
   {
-    /* What about allied units?  Should we just count them? */
+    // What about allied units?  Should we just count them?
     attack_best[3] = unit_type_get(punit)->attack_strength;
 
     /* Now that the element is appended to the end of the list, we simply
@@ -309,7 +309,7 @@ static const char *cr_entry_defense(const struct city *pcity,
 
   unit_list_iterate(pcity->tile->units, punit)
   {
-    /* What about allied units?  Should we just count them? */
+    // What about allied units?  Should we just count them?
     defense_best[3] = unit_type_get(punit)->defense_strength;
 
     /* Now that the element is appended to the end of the list, we simply
@@ -493,10 +493,10 @@ static const char *cr_entry_growturns(const struct city *pcity,
   static char buf[32];
 
   if (turns == FC_INFINITY) {
-    /* 'never' wouldn't be easily translatable here. */
+    // 'never' wouldn't be easily translatable here.
     fc_snprintf(buffer, sizeof(buffer), "---");
   } else {
-    /* Shrinking cities get a negative value. */
+    // Shrinking cities get a negative value.
     fc_snprintf(buffer, sizeof(buffer), "%4d", turns);
   }
   fc_snprintf(buf, sizeof(buf), "%s (%d/%d)", buffer, pcity->food_stock,
@@ -695,7 +695,7 @@ static const char *cr_entry_cma(const struct city *pcity, const void *data)
  * - add an entry in the base_city_report_specs[] table
  */
 
-/* This generates the function name and the tagname: */
+// This generates the function name and the tagname:
 #define FUNC_TAG(var) cr_entry_##var, #var
 
 static const struct city_report_spec base_city_report_specs[] = {
@@ -727,15 +727,15 @@ static const struct city_report_spec base_city_report_specs[] = {
     {false, 8, 1, N_("Best"), N_("defense"), N_("Best defending units"),
      NULL, FUNC_TAG(defense)},
     {false, 2, 1, N_("Units"),
-     /* TRANS: Header "Number of units inside city" */
+     // TRANS: Header "Number of units inside city"
      N_("?Present (units):Here"), N_("Number of units present"), NULL,
      FUNC_TAG(present)},
     {false, 2, 1, N_("Units"),
-     /* TRANS: Header "Number of units supported by given city" */
+     // TRANS: Header "Number of units supported by given city"
      N_("?Supported (units):Owned"), N_("Number of units supported"), NULL,
      FUNC_TAG(supported)},
 
-    {/* TRANS: Header "It will take this many turns before city grows" */
+    {// TRANS: Header "It will take this many turns before city grows"
      true, 14, 1, N_("?food (population):Grow"),
      N_("?Stock/Target:(Have/Need)"), N_("Turns until growth/famine"), NULL,
      FUNC_TAG(growturns)},
@@ -779,7 +779,7 @@ static const struct city_report_spec base_city_report_specs[] = {
     {true, 15, 1, NULL, N_("?cma:Governor"), N_("Citizen Governor"), NULL,
      FUNC_TAG(cma)},
 
-    /* TRANS: "BS" = "build slots" */
+    // TRANS: "BS" = "build slots"
     {false, 3, 1, NULL, N_("BS"), N_("Maximum units buildable per turn"),
      NULL, FUNC_TAG(build_slots)},
     {true, 9, 1, N_("Production"), N_("Turns/Buy"),
@@ -854,7 +854,7 @@ void init_city_report_game_data()
   }
   specialist_type_iterate_end;
 
-  /* Summary column for all specialists. */
+  // Summary column for all specialists.
   {
     static char sp_summary[128];
 
@@ -967,7 +967,7 @@ static int datum_compare(const struct datum *a, const struct datum *b)
       } else if (a->val.numeric_value > b->val.numeric_value) {
         return +1;
       } else {
-        return 0; /* shrug */
+        return 0; // shrug
       }
     } else {
       return strcmp(a->val.string_value, b->val.string_value);
@@ -1020,7 +1020,7 @@ static void split_string(struct datum_vector *data, const char *str)
     errno = 0;
     value = strtof(str, &endptr);
     if (errno != 0 || endptr == str || !std::isfinite(value)) {
-      /* that wasn't a sensible number; go on */
+      // that wasn't a sensible number; go on
       str++;
     } else {
       /* that was a number, so stop the string we were parsing, add
@@ -1035,12 +1035,12 @@ static void split_string(struct datum_vector *data, const char *str)
       init_datum_number(&d, value);
       datum_vector_append(data, d);
 
-      /* finally, update the string position pointers */
+      // finally, update the string position pointers
       string_start = str = endptr;
     }
   }
 
-  /* if we have anything leftover then it's a string */
+  // if we have anything leftover then it's a string
   if (str != string_start) {
     struct datum d;
 

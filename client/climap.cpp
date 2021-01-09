@@ -12,14 +12,14 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "map.h"
 #include "shared.h"
 
-/* client */
+// client
 #include "client_main.h"
 #include "climap.h"
-#include "tilespec.h" /* tileset_is_isometric(tileset) */
+#include "tilespec.h" // tileset_is_isometric(tileset)
 
 /**
    A tile's "known" field is used by the server to store whether _each_
@@ -92,7 +92,7 @@ struct tile *client_city_tile(const struct city *pcity)
   }
 
   if (NULL != city_tile(pcity)) {
-    /* Normal city case. */
+    // Normal city case.
     return city_tile(pcity);
   }
 

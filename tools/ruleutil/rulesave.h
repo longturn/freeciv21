@@ -19,4 +19,4 @@ struct rule_data {
 bool save_ruleset(const char *path, const char *name,
                   struct rule_data *data);
 
-#endif /* FC__RULESAVE_H */
+#endif // FC__RULESAVE_H

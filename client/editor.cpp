@@ -18,19 +18,19 @@
 #include <cstdarg>
 #include <cstring>
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "game.h"
 #include "map.h"
 #include "movement.h"
 #include "packets.h"
 
-/* client */
+// client
 #include "client_main.h"
 #include "climap.h"
 #include "control.h"
@@ -126,7 +126,7 @@ static void tool_set_init_value(enum editor_tool_type ett)
           break;
         }
       } else {
-        /* Considers extras that are neither bases or roads, specials */
+        // Considers extras that are neither bases or roads, specials
         first = pextra;
         break;
       }
@@ -587,7 +587,7 @@ static void editor_grab_tool(const struct tile *ptile)
     }
     extra_type_by_cause_iterate_end;
 
-    /* Grab specials in reverse order of enum tile_special_type. */
+    // Grab specials in reverse order of enum tile_special_type.
 
     for (i = count - 1; i >= 0; i--) {
       if (tile_has_extra(ptile, specials_array[i])) {
@@ -845,7 +845,7 @@ static void editor_resize_selection_rectangle(int canvas_x, int canvas_y)
     yb = editor->selrect_start_y;
   }
 
-  /* Erase the previously drawn rectangle. */
+  // Erase the previously drawn rectangle.
   editor_draw_selrect();
 
   if (xl == xr || yt == yb) {
@@ -1749,7 +1749,7 @@ void edit_buffer_paste(struct edit_buffer *ebuf, const struct tile *dest)
     return;
   }
 
-  /* Calculate vector. */
+  // Calculate vector.
   origin = edit_buffer_get_origin(ebuf);
   fc_assert_ret(origin != NULL);
   map_distance_vector(&dx, &dy, origin, dest);

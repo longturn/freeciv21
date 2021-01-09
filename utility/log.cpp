@@ -30,7 +30,7 @@
 #include <QMutexLocker>
 #include <QString>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "fcthread.h"
@@ -219,7 +219,7 @@ void fc_assert_handle_failure(const char *condition, const char *file,
   if (!message.isEmpty()) {
     logger.critical().noquote() << message;
   }
-  logger.critical().noquote() /* TRANS: No full stop after the URL. */
+  logger.critical().noquote() // TRANS: No full stop after the URL.
       << QString(_("Please report this message at %1")).arg(BUG_URL);
   if (fc_assert_are_fatal()) {
     logger.fatal("%s", _("Assertion failed"));

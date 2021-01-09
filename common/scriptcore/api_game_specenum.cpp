@@ -22,11 +22,11 @@ extern "C" {
 #include "lualib.h"
 }
 
-/* utility */
+// utility
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "events.h"
 
 #include "api_game_specenum.h"
@@ -78,12 +78,12 @@ static void api_specenum_create_table(lua_State *L, const char *name,
     lua_setglobal(L, name);
   }
   fc_assert_ret(lua_istable(L, -1));
-  /* Create a metatable */
-  lua_newtable(L); /* stack: module mt */
+  // Create a metatable
+  lua_newtable(L); // stack: module mt
   lua_pushliteral(L, "__index");
-  lua_pushcfunction(L, findex); /* stack: module mt '__index' index */
-  lua_rawset(L, -3);            /* stack: module mt */
-  lua_setmetatable(L, -2);      /* stack: module */
+  lua_pushcfunction(L, findex); // stack: module mt '__index' index
+  lua_rawset(L, -3);            // stack: module mt
+  lua_setmetatable(L, -2);      // stack: module
   lua_pop(L, 1);
 }
 

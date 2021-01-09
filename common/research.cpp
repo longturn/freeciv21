@@ -14,14 +14,14 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "iterator.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "fc_types.h"
 #include "game.h"
 #include "name_translation.h"
@@ -63,7 +63,7 @@ void researches_init()
 {
   int i;
 
-  /* Ensure we have enough space for players or teams. */
+  // Ensure we have enough space for players or teams.
   fc_assert(ARRAY_SIZE(research_array) >= team_slot_count());
   fc_assert(ARRAY_SIZE(research_array) >= player_slot_count());
 
@@ -83,8 +83,8 @@ void researches_init()
 
   game.info.global_advances[A_NONE] = true;
 
-  /* Set technology names. */
-  /* TRANS: "None" tech */
+  // Set technology names.
+  // TRANS: "None" tech
   name_set(&advance_unset_name, NULL, N_("?tech:None"));
   name_set(&advance_future_name, NULL, N_("Future Tech."));
   /* TRANS: "Unknown" advance/technology */
@@ -125,7 +125,7 @@ struct research *research_by_number(int number)
 struct research *research_get(const struct player *pplayer)
 {
   if (NULL == pplayer) {
-    /* Special case used at client side. */
+    // Special case used at client side.
     return NULL;
   } else if (game.info.team_pooled_research) {
     return &research_array[team_number(pplayer->team)];
@@ -218,14 +218,14 @@ static const char *research_future_set_name(QVector<QString> *psv, int no,
                                             const char *new_name)
 {
   if (psv->count() <= no) {
-    /* Increase the size of the vector if needed. */
+    // Increase the size of the vector if needed.
     psv->resize(no + 1);
   }
 
-  /* Set in vector. */
+  // Set in vector.
   psv->replace(no, new_name);
 
-  /* Return duplicate of 'new_name'. */
+  // Return duplicate of 'new_name'.
   return qstrdup(qUtf8Printable(psv->at(no)));
 }
 
@@ -246,7 +246,7 @@ const char *research_advance_rule_name(const struct research *presearch,
     if (name == NULL) {
       char buffer[256];
 
-      /* NB: 'presearch->future_tech == 0' means "Future Tech. 1". */
+      // NB: 'presearch->future_tech == 0' means "Future Tech. 1".
       fc_snprintf(buffer, sizeof(buffer), "%s %d",
                   rule_name_get(&advance_future_name), no + 1);
       name = research_future_set_name(future_rule_name, no, buffer);
@@ -275,13 +275,13 @@ research_advance_name_translation(const struct research *presearch,
     QString name;
 
     if (no < future_name_translation->count()) {
-      /* FIXME remove check to read outside vector */
+      // FIXME remove check to read outside vector
       name = future_name_translation->at(no);
     }
     if (name.isEmpty()) {
       char buffer[256];
 
-      /* NB: 'presearch->future_tech == 0' means "Future Tech. 1". */
+      // NB: 'presearch->future_tech == 0' means "Future Tech. 1".
       fc_snprintf(buffer, sizeof(buffer), _("Future Tech. %d"), no + 1);
       name = research_future_set_name(future_name_translation, no, buffer);
     }
@@ -354,7 +354,7 @@ static bool research_allowed(
   adv = valid_advance_by_number(tech);
 
   if (adv == NULL) {
-    /* Not a valid advance. */
+    // Not a valid advance.
     return false;
   }
 
@@ -432,7 +432,7 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
       return false;
     }
 
-    /* Check if required techs are research_reqs reachable. */
+    // Check if required techs are research_reqs reachable.
     for (int req = 0; req < AR_SIZE; req++) {
       Tech_type_id req_tech = advance_required(techs[i], tech_req(req));
 
@@ -485,7 +485,7 @@ static bool research_get_reachable(const struct research *presearch,
     advance_root_req_iterate_end;
   }
 
-  /* Check research reqs reachability. */
+  // Check research reqs reachability.
   return research_get_reachable_rreqs(presearch, tech);
 }
 
@@ -535,7 +535,7 @@ void research_update(struct research *presearch)
 
     if (reachable) {
       if (state != TECH_KNOWN) {
-        /* Update state. */
+        // Update state.
         state =
             (root_reqs_known
                      && (presearch->inventions[advance_required(i, AR_ONE)]
@@ -555,7 +555,7 @@ void research_update(struct research *presearch)
     presearch->inventions[i].reachable = reachable;
     presearch->inventions[i].root_reqs_known = root_reqs_known;
 
-    /* Updates required_techs, num_required_techs and bulbs_required. */
+    // Updates required_techs, num_required_techs and bulbs_required.
     BV_CLR_ALL(presearch->inventions[i].required_techs);
     presearch->inventions[i].num_required_techs = 0;
     presearch->inventions[i].bulbs_required = 0;
@@ -615,10 +615,10 @@ void research_update(struct research *presearch)
               qUtf8Printable(buf));
   }
   advance_index_iterate_end;
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
   for (int flag = 0; flag <= tech_flag_id_max(); flag++) {
-    /* Iterate over all possible tech flags (0..max). */
+    // Iterate over all possible tech flags (0..max).
     presearch->num_known_tech_with_flag[flag] = 0;
 
     advance_index_iterate(A_NONE, i)
@@ -894,12 +894,12 @@ int research_total_bulbs_required(const struct research *presearch,
 
   if (!loss_value && NULL != presearch && !is_future_tech(tech)
       && research_invention_state(presearch, tech) == TECH_KNOWN) {
-    /* A non-future tech which is already known costs nothing. */
+    // A non-future tech which is already known costs nothing.
     return 0;
   }
 
   if (is_future_tech(tech)) {
-    /* Future techs use style TECH_COST_CIV1CIV2. */
+    // Future techs use style TECH_COST_CIV1CIV2.
     tech_cost_style = TECH_COST_CIV1CIV2;
   }
 
@@ -914,7 +914,7 @@ int research_total_bulbs_required(const struct research *presearch,
     }
 
     fc_assert(presearch != NULL);
-    fc__fallthrough; /* No break; Fallback to using preset cost. */
+    fc__fallthrough; // No break; Fallback to using preset cost.
   case TECH_COST_CLASSIC:
   case TECH_COST_CLASSIC_PRESET:
   case TECH_COST_EXPERIMENTAL:
@@ -925,7 +925,7 @@ int research_total_bulbs_required(const struct research *presearch,
     if (NULL != padvance) {
       base_cost = padvance->cost;
     } else {
-      fc_assert(NULL != padvance); /* Always fails. */
+      fc_assert(NULL != padvance); // Always fails.
     }
   } break;
   }
@@ -950,7 +950,7 @@ int research_total_bulbs_required(const struct research *presearch,
                 "Invalid tech_leakage %d", game.info.tech_leakage);
   switch (game.info.tech_leakage) {
   case TECH_LEAKAGE_NONE:
-    /* no change */
+    // no change
     break;
 
   case TECH_LEAKAGE_EMBASSIES: {
@@ -1090,11 +1090,11 @@ int player_tech_upkeep(const struct player *pplayer)
   }
   research_players_iterate_end;
   if (0 == members) {
-    /* No player still alive. */
+    // No player still alive.
     return 0;
   }
 
-  /* Upkeep cost for 'normal' techs (t). */
+  // Upkeep cost for 'normal' techs (t).
   fc_assert_msg(tech_cost_style_is_valid(game.info.tech_cost_style),
                 "Invalid tech_cost_style %d", game.info.tech_cost_style);
   switch (game.info.tech_cost_style) {
@@ -1331,7 +1331,7 @@ struct iterator *research_player_iter_init(struct research_player_iter *it,
                            : NULL);
   }
 
-  /* Ensure we have consistent data. */
+  // Ensure we have consistent data.
   if (!research_player_iter_valid_state(base)) {
     iterator_next(base);
   }

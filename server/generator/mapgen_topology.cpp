@@ -14,12 +14,12 @@
 #include <fc_config.h>
 #endif
 
-#include <cmath> /* sqrt */
+#include <cmath> // sqrt
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "game.h"
 #include "map.h"
 
@@ -63,7 +63,7 @@ int map_colatitude(const struct tile *ptile)
       }
     }
 
-    /* Otherwise a wrapping map is assumed to be a global planetary map. */
+    // Otherwise a wrapping map is assumed to be a global planetary map.
 
     /* we fold the map to get the base symmetries
      *
@@ -217,7 +217,7 @@ static void set_sizes(double size, int Xratio, int Yratio)
            / static_cast<float>(Xratio * Yratio * iso * even * even))
       + 0.49;
 
-  /* Now build xsize and ysize value as described above. */
+  // Now build xsize and ysize value as described above.
   wld.map.xsize = Xratio * i_size * even;
   wld.map.ysize = Yratio * i_size * even * iso;
 
@@ -235,7 +235,7 @@ static void set_sizes(double size, int Xratio, int Yratio)
   /* If the ratio is too big for some topology the simplest way to avoid
    * this error is to set the maximum size smaller for all topologies! */
   if (wld.map.server.size * 1000 > size + 900.0) {
-    /* Warning when size is set uselessly big */
+    // Warning when size is set uselessly big
     qCritical("Requested size of %d is too big for this topology.",
               wld.map.server.size);
   }
@@ -262,21 +262,21 @@ static void get_ratios(int *x_ratio, int *y_ratio)
 {
   if (current_topo_has_flag(TF_WRAPX)) {
     if (current_topo_has_flag(TF_WRAPY)) {
-      /* Ratios for torus map. */
+      // Ratios for torus map.
       *x_ratio = 1;
       *y_ratio = 1;
     } else {
-      /* Ratios for classic map. */
+      // Ratios for classic map.
       *x_ratio = 3;
       *y_ratio = 2;
     }
   } else {
     if (current_topo_has_flag(TF_WRAPY)) {
-      /* Ratios for uranus map. */
+      // Ratios for uranus map.
       *x_ratio = 2;
       *y_ratio = 3;
     } else {
-      /* Ratios for flat map. */
+      // Ratios for flat map.
       *x_ratio = 1;
       *y_ratio = 1;
     }
@@ -345,7 +345,7 @@ void generator_init_topology(bool autosize)
       break;
 
     case MAPSIZE_FULLSIZE:
-      /* Set map.xsize and map.ysize based on map.size. */
+      // Set map.xsize and map.ysize based on map.size.
       get_ratios(&x_ratio, &y_ratio);
       set_sizes(wld.map.server.size * 1000, x_ratio, y_ratio);
       wld.map.server.tilesperplayer =
@@ -363,7 +363,7 @@ void generator_init_topology(bool autosize)
 
   sqsize = get_sqsize();
 
-  /* initialize the ICE_BASE_LEVEL */
+  // initialize the ICE_BASE_LEVEL
 
   /* if maps has strip like poles we get smaller poles
    * (less playables than island poles)
@@ -371,18 +371,18 @@ void generator_init_topology(bool autosize)
    *   2% for big ones, if map.server.temperature == 50
    * except if separate poles is set */
   if (wld.map.server.separatepoles) {
-    /* with separatepoles option strip poles are useless */
+    // with separatepoles option strip poles are useless
     ice_base_colatitude = (MAX(0, 100 * COLD_LEVEL / 3 - 1 * MAX_COLATITUDE)
                            + 1 * MAX_COLATITUDE * sqsize)
                           / (100 * sqsize);
   } else {
-    /* any way strip poles are not so playable as isle poles */
+    // any way strip poles are not so playable as isle poles
     ice_base_colatitude = (MAX(0, 100 * COLD_LEVEL / 3 - 2 * MAX_COLATITUDE)
                            + 2 * MAX_COLATITUDE * sqsize)
                           / (100 * sqsize);
   }
 
-  /* correction for single pole (Flat Earth) */
+  // correction for single pole (Flat Earth)
   if (wld.map.server.single_pole) {
     if (!current_topo_has_flag(TF_WRAPY)
         || !current_topo_has_flag(TF_WRAPX)) {

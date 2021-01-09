@@ -14,7 +14,7 @@
 
 #include <QHash>
 
-/* common */
+// common
 #include "map_types.h"
 
 struct world {

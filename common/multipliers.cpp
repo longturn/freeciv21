@@ -18,7 +18,7 @@
 // utility
 #include "fcintl.h"
 
-/* common */
+// common
 #include "game.h"
 
 #include "multipliers.h"

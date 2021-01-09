@@ -235,7 +235,7 @@ void help_dialog::make_tree()
     int last;
     title = pitem->topic;
     for (s = pitem->topic; *s == ' '; s++) {
-      /* nothing */
+      // nothing
     }
 
     item = new QTreeWidgetItem(QStringList(title));
@@ -894,7 +894,7 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
       QLabel *tb;
 
       tb = set_properties(this);
-      /* TRANS: this and similar literal strings interpreted as (Qt) HTML */
+      // TRANS: this and similar literal strings interpreted as (Qt) HTML
       str = _("Requires");
       str = "<b>" + str + "</b> "
             + link_me(advance_name_translation(tech), HELP_TECH);
@@ -1393,7 +1393,7 @@ void help_widget::set_topic_terrain(const help_item *topic,
     if (pterrain->irrigation_result == pterrain
         && pterrain->irrigation_time != 0
         && action_id_univs_not_blocking(ACTION_IRRIGATE, NULL, &for_terr)) {
-      /* TRANS: this and similar literal strings interpreted as (Qt) HTML */
+      // TRANS: this and similar literal strings interpreted as (Qt) HTML
       add_extras_of_act_for_terrain(pterrain, ACTIVITY_IRRIGATE,
                                     _("Build as irrigation"));
     }

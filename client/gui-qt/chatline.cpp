@@ -609,7 +609,7 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
       }
 
       if (!pcolor) {
-        break; /* Not a valid link type case. */
+        break; // Not a valid link type case.
       }
       color = pcolor->name(QColor::HexRgb);
       str_col = QStringLiteral("<font color=\"%1\">").arg(color);
@@ -626,7 +626,7 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
   }
   text_tag_list_iterate_end;
 
-  /* insert html starting from last items */
+  // insert html starting from last items
   last_i = str.count();
   QMultiMap<int, QString>::const_iterator i = mm.constEnd();
   QMultiMap<int, QString>::const_iterator j = mm.constEnd();
@@ -671,14 +671,14 @@ static bool is_plain_public_message(const QString &s)
     return false;
   }
 
-  /* Search for private message */
+  // Search for private message
   if (!str.contains(CHAT_DIRECT_PREFIX)) {
     return true;
   }
   i = str.indexOf(CHAT_DIRECT_PREFIX);
   str = str.left(i);
 
-  /* Compare all players and connections looking for match */
+  // Compare all players and connections looking for match
   conn_list_iterate(game.all_connections, pconn)
   {
     s1 = pconn->username;

@@ -16,13 +16,13 @@
 
 #include <cmath>
 
-/* utilities */
+// utilities
 #include "deprecations.h"
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
 
-/* common */
+// common
 #include "map.h"
 #include "version.h"
 

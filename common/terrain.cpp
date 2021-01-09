@@ -13,14 +13,14 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
-#include "log.h" /* fc_assert */
+#include "log.h" // fc_assert
 #include "rand.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "extras.h"
 #include "game.h"
 #include "map.h"
@@ -40,7 +40,7 @@ void terrains_init()
   int i;
 
   for (i = 0; i < ARRAY_SIZE(civ_terrains); i++) {
-    /* Can't use terrain_by_number here because it does a bounds check. */
+    // Can't use terrain_by_number here because it does a bounds check.
     civ_terrains[i].item_number = i;
     civ_terrains[i].ruledit_disabled = false;
     civ_terrains[i].rgb = NULL;
@@ -130,7 +130,7 @@ Terrain_type_id terrain_number(const struct terrain *pterrain)
 struct terrain *terrain_by_number(const Terrain_type_id type)
 {
   if (type < 0 || type >= game.control.terrain_count) {
-    /* This isn't an error; some T_UNKNOWN callers depend on it. */
+    // This isn't an error; some T_UNKNOWN callers depend on it.
     return NULL;
   }
   return &civ_terrains[type];
@@ -267,7 +267,7 @@ struct resource_type *resource_type_init(struct extra_type *pextra)
  */
 void resource_types_free()
 {
-  /* Resource structure itself is freed as part of extras destruction. */
+  // Resource structure itself is freed as part of extras destruction.
 }
 
 /**
@@ -556,7 +556,7 @@ const char *get_infrastructure_text(bv_extras extras)
  */
 struct extra_type *get_preferred_pillage(bv_extras extras)
 {
-  /* Semi-arbitrary preference order reflecting previous behavior */
+  // Semi-arbitrary preference order reflecting previous behavior
   static const enum extra_cause prefs[] = {
       EC_IRRIGATION, EC_MINE,      EC_BASE,    EC_ROAD,     EC_HUT,
       EC_APPEARANCE, EC_POLLUTION, EC_FALLOUT, EC_RESOURCE, EC_NONE};
@@ -701,7 +701,7 @@ int terrain_extra_build_time(const struct terrain *pterrain,
   int factor;
 
   if (tgt != NULL && tgt->build_time != 0) {
-    /* Extra specific build time */
+    // Extra specific build time
     return tgt->build_time;
   }
 
@@ -711,7 +711,7 @@ int terrain_extra_build_time(const struct terrain *pterrain,
     factor = tgt->build_time_factor;
   }
 
-  /* Terrain and activity specific build time */
+  // Terrain and activity specific build time
   switch (activity) {
   case ACTIVITY_BASE:
     return pterrain->base_time * factor;
@@ -737,7 +737,7 @@ int terrain_extra_removal_time(const struct terrain *pterrain,
   int factor;
 
   if (tgt != NULL && tgt->removal_time != 0) {
-    /* Extra specific removal time */
+    // Extra specific removal time
     return tgt->removal_time;
   }
 
@@ -747,7 +747,7 @@ int terrain_extra_removal_time(const struct terrain *pterrain,
     factor = tgt->removal_time_factor;
   }
 
-  /* Terrain and activity specific removal time */
+  // Terrain and activity specific removal time
   switch (activity) {
   case ACTIVITY_POLLUTION:
     return pterrain->clean_pollution_time * factor;

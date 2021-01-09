@@ -21,15 +21,15 @@
 #include <QCoreApplication>
 #include <QString>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
 
-/* common */
+// common
 #include "version.h"
 
-/* modinst */
+// modinst
 #include "download.h"
 #include "mpcmdline.h"
 #include "mpdb.h"
@@ -63,14 +63,14 @@ static void setup_modpack_list(const char *name, const char *URL,
   if (modpack_type_is_valid(type)) {
     type_str = _(modpack_type_name(type));
   } else {
-    /* TRANS: Unknown modpack type */
+    // TRANS: Unknown modpack type
     type_str = _("?");
   }
 
   if (license != NULL) {
     lic_str = license;
   } else {
-    /* TRANS: License of modpack is not known */
+    // TRANS: License of modpack is not known
     lic_str = Q_("?license:Unknown");
   }
 

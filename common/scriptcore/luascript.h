@@ -14,9 +14,9 @@
 /* dependencies/tolua */
 #include "tolua.h"
 
-/* utility */
+// utility
 #include "log.h"
-#include "support.h" /* fc__attribute() */
+#include "support.h" // fc__attribute()
 
 /* common/scriptcore */
 #include "luascript_func.h"
@@ -38,7 +38,7 @@ struct fc_lua {
   lua_State *state;
 
   luascript_log_func_t output_fct;
-  /* This is needed for server 'lua' and 'luafile' commands. */
+  // This is needed for server 'lua' and 'luafile' commands.
   struct connection *caller;
 
   QHash<QString, struct luascript_func *> *funcs;
@@ -47,7 +47,7 @@ struct fc_lua {
   QVector<QString> *signal_names;
 };
 
-/* Error functions for lua scripts. */
+// Error functions for lua scripts.
 int luascript_error(lua_State *L, const char *format, ...)
     fc__attribute((__format__(__printf__, 2, 3)));
 int luascript_error_vargs(lua_State *L, const char *format, va_list vargs);
@@ -76,7 +76,7 @@ int luascript_do_string(struct fc_lua *fcl, const char *str,
                         const char *name);
 int luascript_do_file(struct fc_lua *fcl, const char *filename);
 
-/* Callback invocation function. */
+// Callback invocation function.
 bool luascript_callback_invoke(struct fc_lua *fcl, const char *callback_name,
                                int nargs, enum api_types *parg_types,
                                va_list args);
@@ -91,10 +91,10 @@ void luascript_vars_load(struct fc_lua *fcl, struct section_file *file,
 
 const Direction *luascript_dir(enum direction8);
 
-/* Returns additional arguments on failure. */
+// Returns additional arguments on failure.
 #define LUASCRIPT_ASSERT_CAT(str1, str2) str1##str2
 
-/* Script assertion (for debugging only) */
+// Script assertion (for debugging only)
 #ifdef FREECIV_DEBUG
 #define LUASCRIPT_ASSERT(L, check, ...)                                     \
   if (!(check)) {                                                           \
@@ -112,21 +112,21 @@ const Direction *luascript_dir(enum direction8);
     return LUASCRIPT_ASSERT_CAT(, __VA_ARGS__);                             \
   }
 
-/* script_error on failed check */
+// script_error on failed check
 #define LUASCRIPT_CHECK(L, check, msg, ...)                                 \
   if (!(check)) {                                                           \
     luascript_error(L, msg);                                                \
     return LUASCRIPT_ASSERT_CAT(, __VA_ARGS__);                             \
   }
 
-/* script_arg_error on failed check */
+// script_arg_error on failed check
 #define LUASCRIPT_CHECK_ARG(L, check, narg, msg, ...)                       \
   if (!(check)) {                                                           \
     luascript_arg_error(L, narg, msg);                                      \
     return LUASCRIPT_ASSERT_CAT(, __VA_ARGS__);                             \
   }
 
-/* script_arg_error on nil value */
+// script_arg_error on nil value
 #define LUASCRIPT_CHECK_ARG_NIL(L, value, narg, type, ...)                  \
   if ((value) == NULL) {                                                    \
     luascript_arg_error(L, narg, "got 'nil', '" #type "' expected");        \

@@ -34,21 +34,21 @@ struct tree_node {
   bool is_dummy;
   Tech_type_id tech;
 
-  /* Incoming edges */
+  // Incoming edges
   int nrequire;
   struct tree_node **require;
 
-  /* Outgoing edges */
+  // Outgoing edges
   int nprovide;
   struct tree_node **provide;
 
-  /* logical position on the diagram */
+  // logical position on the diagram
   int order, layer;
 
-  /* Coordinates of the rectangle on the diagram in pixels */
+  // Coordinates of the rectangle on the diagram in pixels
   int node_x, node_y, node_width, node_height;
 
-  /* for general purpose */
+  // for general purpose
   int number;
 };
 
@@ -61,11 +61,11 @@ struct reqtree {
   struct tree_node **nodes;
 
   int num_layers;
-  /* size of each layer */
+  // size of each layer
   int *layer_size;
   struct tree_node ***layers;
 
-  /* in pixels */
+  // in pixels
   int diagram_width, diagram_height;
 };
 

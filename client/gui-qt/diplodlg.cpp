@@ -316,7 +316,7 @@ void diplo_wdg::show_menu(int player)
   pgiver = player_by_number(player);
   pother = player_by_number(other_player);
 
-  /* Maps */
+  // Maps
   map_menu = menu->addMenu(_("Maps"));
   world_map = new QAction(_("World-map"), this);
   connect(world_map, &QAction::triggered, this,
@@ -326,7 +326,7 @@ void diplo_wdg::show_menu(int player)
   connect(sea_map, &QAction::triggered, this, &diplo_wdg::sea_map_clause);
   map_menu->addAction(sea_map);
 
-  /* Trading: advances */
+  // Trading: advances
   if (game.info.trading_tech) {
     const struct research *gresearch = research_get(pgiver);
     const struct research *oresearch = research_get(pother);
@@ -346,14 +346,14 @@ void diplo_wdg::show_menu(int player)
     }
     advance_iterate_end;
 
-    /* All advances */
+    // All advances
     all_advancs = new QAction(_("All advances"), this);
     connect(all_advancs, &QAction::triggered, this,
             &diplo_wdg::all_advances);
     adv_menu->addAction(all_advancs);
     adv_menu->addSeparator();
 
-    /* QMap is sorted by default when iterating */
+    // QMap is sorted by default when iterating
     adv_iter = adv_list.constBegin();
     if (adv_list.count() > 0) {
       while (adv_iter != adv_list.constEnd()) {
@@ -368,7 +368,7 @@ void diplo_wdg::show_menu(int player)
     }
   }
 
-  /* Trading: cities. */
+  // Trading: cities.
   if (game.info.trading_city) {
     city_menu = menu->addMenu(_("Cities"));
 
@@ -406,7 +406,7 @@ void diplo_wdg::show_menu(int player)
     some_action->setDisabled(true);
   }
 
-  /* Pacts */
+  // Pacts
   if (player_by_number(curr_player) == client_player()) {
     pacts_menu = menu->addMenu(_("Pacts"));
     ds = player_diplstate_get(pgiver, pother)->type;
@@ -432,7 +432,7 @@ void diplo_wdg::show_menu(int player)
     }
   }
 
-  /* Check user response for not defined responses in slots */
+  // Check user response for not defined responses in slots
   menu->setAttribute(Qt::WA_DeleteOnClose);
   menu->popup(QCursor::pos());
 }
@@ -575,7 +575,7 @@ void diplo_wdg::all_advances()
     other = giver;
   }
 
-  /* All techs. */
+  // All techs.
   struct player *pgiver = player_by_number(giver);
   struct player *pdest = player_by_number(dest);
 
@@ -926,7 +926,7 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   }
   dd->make_active(counterpart);
 
-  /* Bring it to front if user requested meeting */
+  // Bring it to front if user requested meeting
   if (player_by_number(initiated_from) == client.conn.playing) {
     queen()->game_tab_widget->setCurrentIndex(i);
   }

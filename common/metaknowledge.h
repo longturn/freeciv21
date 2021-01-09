@@ -13,7 +13,7 @@
 
 #pragma once
 
-/* common */
+// common
 #include "requirements.h"
 
 enum fc_tristate mke_eval_req(

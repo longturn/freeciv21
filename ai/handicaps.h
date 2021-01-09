@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* See handicap_desc() for what these do. */
+// See handicap_desc() for what these do.
 enum handicap_type {
   H_DIPLOMAT = 0,
   H_AWAY,

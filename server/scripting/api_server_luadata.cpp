@@ -12,10 +12,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "registry_ini.h"
 
-/* common */
+// common
 #include "game.h"
 
 /* common/scriptcore */

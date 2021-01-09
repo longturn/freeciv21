@@ -10,13 +10,13 @@
 **************************************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
+// utility
+#include "support.h" // bool type
 
-/* common */
+// common
 #include "fc_types.h"
 
-/* client */
+// client
 #include "mapctrl_common.h"
 
 #include "gui_proto_constructor.h"

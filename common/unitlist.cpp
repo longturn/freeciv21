@@ -13,10 +13,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "game.h"
 #include "movement.h"
 #include "unitlist.h"
@@ -110,7 +110,7 @@ bool can_units_do(const struct unit_list *punits,
 bool can_units_do_activity(const struct unit_list *punits,
                            enum unit_activity activity)
 {
-  /* Make sure nobody uses these old activities any more */
+  // Make sure nobody uses these old activities any more
   fc_assert_ret_val(
       activity != ACTIVITY_FORTRESS && activity != ACTIVITY_AIRBASE, false);
 
@@ -177,7 +177,7 @@ bool can_units_do_base_gui(const struct unit_list *punits,
         get_base_by_gui_type(base_gui, punit, unit_tile(punit));
 
     if (pbase) {
-      /* Some unit can build base of given gui_type */
+      // Some unit can build base of given gui_type
       return true;
     }
   }

@@ -10,10 +10,10 @@
 **************************************************************************/
 #pragma once
 
-/* common */
-#include "fc_types.h" /* MAX_LEN_NAME */
+// common
+#include "fc_types.h" // MAX_LEN_NAME
 
-/* Don't allow other modules to access directly to the fields. */
+// Don't allow other modules to access directly to the fields.
 #define vernacular _private_vernacular_
 #define rulename _private_rulename_
 #define translated _private_translated_
@@ -21,14 +21,14 @@
 /* Ruleset strings (such as names) are kept in their original vernacular
  * as well as being translated to the current locale. */
 struct name_translation {
-  const char *translated;        /* String doesn't need freeing. */
+  const char *translated;        // String doesn't need freeing.
   char vernacular[MAX_LEN_NAME]; /* Original string,
                                   * used for comparisons. */
   char rulename[MAX_LEN_NAME];   /* Name used in savefiles etc.
                                     Often the same as 'vernacular'. */
 };
 
-/* Inititalization macro. */
+// Inititalization macro.
 #define NAME_INIT                                                           \
   {                                                                         \
     NULL, "\0", "\0"                                                        \
@@ -60,7 +60,7 @@ static inline void names_set(struct name_translation *ptrans,
                          name_too_long);
 
   if (ptrans->vernacular[0] != '\0') {
-    /* Translate now. */
+    // Translate now.
     if (domain == NULL) {
       ptrans->translated = Q_(ptrans->vernacular);
     } else {
@@ -114,7 +114,7 @@ name_translation_get(const struct name_translation *ptrans)
   return ptrans->translated;
 }
 
-/* Don't allow other modules to access directly to the fields. */
+// Don't allow other modules to access directly to the fields.
 #undef vernacular
 #undef rulename
 #undef translated

@@ -15,16 +15,16 @@
 #endif
 
 #include <QSet>
-#include <climits> /* USHRT_MAX */
+#include <climits> // USHRT_MAX
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "events.h"
 #include "game.h"
 #include "government.h"
@@ -35,7 +35,7 @@
 #include "terrain.h"
 #include "unitlist.h"
 
-/* server */
+// server
 #include "aiiface.h"
 #include "citytools.h"
 #include "cityturn.h"
@@ -109,7 +109,7 @@ void edithand_send_initial_packets(struct conn_list *dest)
     dest = game.est_connections;
   }
 
-  /* Send map start positions. */
+  // Send map start positions.
   for (auto *psp : qAsConst(*wld.map.startpos_table)) {
     if (psp->exclude) {
       continue;
@@ -147,7 +147,7 @@ static void check_edited_tile_terrains()
   for (const auto *ptile : *modified_tile_table) {
     sanity_check_tile(const_cast<struct tile *>(ptile));
   }
-#endif /* SANITY_CHECKING */
+#endif // SANITY_CHECKING
   modified_tile_table->clear();
 }
 
@@ -171,7 +171,7 @@ static void check_leaving_edit_mode()
   }
   players_iterate_end;
 
-  /* Clear the whole array. */
+  // Clear the whole array.
   memset(unfogged_players, 0, player_slot_count() * sizeof(bool));
 
   check_edited_tile_terrains();
@@ -188,7 +188,7 @@ void handle_edit_mode(struct connection *pc, bool is_edit_mode)
   }
 
   if (!game.info.is_edit_mode && is_edit_mode) {
-    /* Someone could be cheating! Warn people. */
+    // Someone could be cheating! Warn people.
     notify_conn(NULL, NULL, E_SETTING, ftc_editor,
                 _(" *** Server set to edit mode by %s! *** "),
                 conn_description(pc));
@@ -300,7 +300,7 @@ void handle_edit_tile_terrain(struct connection *pc, int tile,
   pterrain = terrain_by_number(terrain);
   if (!pterrain) {
     notify_conn(pc->self, ptile_center, E_BAD_COMMAND, ftc_editor,
-                /* TRANS: ..." the tile <tile-coordinates> because"... */
+                // TRANS: ..." the tile <tile-coordinates> because"...
                 _("Cannot modify terrain for the tile %s because "
                   "%d is not a valid terrain id."),
                 tile_link(ptile_center), terrain);
@@ -339,7 +339,7 @@ void handle_edit_tile_extra(struct connection *pc, int tile, int id,
 
   if (id < 0 || id >= game.control.num_extra_types) {
     notify_conn(pc->self, ptile_center, E_BAD_COMMAND, ftc_editor,
-                /* TRANS: ..." the tile <tile-coordinates> because"... */
+                // TRANS: ..." the tile <tile-coordinates> because"...
                 _("Cannot modify extras for the tile %s because "
                   "%d is not a valid extra id."),
                 tile_link(ptile_center), id);
@@ -387,7 +387,7 @@ void handle_edit_tile(struct connection *pc,
     eowner = NULL;
   }
 
-  /* Handle changes in extras. */
+  // Handle changes in extras.
   if (!BV_ARE_EQUAL(packet->extras, ptile->extras)) {
     extra_type_iterate(pextra)
     {
@@ -405,14 +405,14 @@ void handle_edit_tile(struct connection *pc,
     changed = true;
   }
 
-  /* Handle changes in label */
+  // Handle changes in label
   if (tile_set_label(ptile, packet->label)) {
     changed = true;
   }
 
-  /* TODO: Handle more property edits. */
+  // TODO: Handle more property edits.
 
-  /* Send the new state to all affected. */
+  // Send the new state to all affected.
   if (changed) {
     update_tile_knowledge(ptile);
     send_tile_info(NULL, ptile, false);
@@ -445,7 +445,7 @@ void handle_edit_unit_create(struct connection *pc, int owner, int tile,
   punittype = utype_by_number(utid);
   if (!punittype) {
     notify_conn(pc->self, ptile, E_BAD_COMMAND, ftc_editor,
-                /* TRANS: ..." at <tile-coordinates> because"... */
+                // TRANS: ..." at <tile-coordinates> because"...
                 _("Cannot create a unit at %s because the "
                   "given unit type id %d is invalid."),
                 tile_link(ptile), utid);
@@ -455,7 +455,7 @@ void handle_edit_unit_create(struct connection *pc, int owner, int tile,
   pplayer = player_by_number(owner);
   if (!pplayer) {
     notify_conn(pc->self, ptile, E_BAD_COMMAND, ftc_editor,
-                /* TRANS: ..." type <unit-type> at <tile-coordinates>"... */
+                // TRANS: ..." type <unit-type> at <tile-coordinates>"...
                 _("Cannot create a unit of type %s at %s "
                   "because the given owner's player id %d is "
                   "invalid."),
@@ -531,7 +531,7 @@ void handle_edit_unit_remove(struct connection *pc, int owner, int tile,
   punittype = utype_by_number(utid);
   if (!punittype) {
     notify_conn(pc->self, ptile, E_BAD_COMMAND, ftc_editor,
-                /* TRANS: ..." at <tile-coordinates> because"... */
+                // TRANS: ..." at <tile-coordinates> because"...
                 _("Cannot remove a unit at %s because the "
                   "given unit type id %d is invalid."),
                 tile_link(ptile), utid);
@@ -648,9 +648,9 @@ void handle_edit_unit(struct connection *pc,
     changed = true;
   }
 
-  /* TODO: Handle more property edits. */
+  // TODO: Handle more property edits.
 
-  /* Send the new state to all affected. */
+  // Send the new state to all affected.
   if (changed) {
     send_unit_info(NULL, punit);
   }
@@ -679,7 +679,7 @@ void handle_edit_city_create(struct connection *pc, int owner, int tile,
   pplayer = player_by_number(owner);
   if (!pplayer) {
     notify_conn(pc->self, ptile, E_BAD_COMMAND, ftc_editor,
-                /* TRANS: ..." at <tile-coordinates> because"... */
+                // TRANS: ..." at <tile-coordinates> because"...
                 _("Cannot create a city at %s because the "
                   "given owner's player id %d is invalid"),
                 tile_link(ptile), owner);
@@ -689,7 +689,7 @@ void handle_edit_city_create(struct connection *pc, int owner, int tile,
   if (is_enemy_unit_tile(ptile, pplayer) != NULL
       || !city_can_be_built_here(ptile, NULL)) {
     notify_conn(pc->self, ptile, E_BAD_COMMAND, ftc_editor,
-                /* TRANS: ..." at <tile-coordinates>." */
+                // TRANS: ..." at <tile-coordinates>."
                 _("A city may not be built at %s."), tile_link(ptile));
     return;
   }
@@ -706,7 +706,7 @@ void handle_edit_city_create(struct connection *pc, int owner, int tile,
   pcity = tile_city(ptile);
 
   if (size > 1) {
-    /* FIXME: Slow and inefficient for large size changes. */
+    // FIXME: Slow and inefficient for large size changes.
     city_change_size(pcity, CLIP(1, size, MAX_CITY_SIZE), pplayer, NULL);
     send_city_info(NULL, pcity);
   }
@@ -744,7 +744,7 @@ void handle_edit_city(struct connection *pc,
   ptile = city_tile(pcity);
   BV_CLR_ALL(need_player_info);
 
-  /* Handle name change. */
+  // Handle name change.
   if (0 != strcmp(pcity->name, packet->name)) {
     if (!is_allowed_city_name(pplayer, packet->name, buf, sizeof(buf))) {
       notify_conn(pc->self, ptile, E_BAD_COMMAND, ftc_editor,
@@ -755,14 +755,14 @@ void handle_edit_city(struct connection *pc,
     }
   }
 
-  /* Handle size change. */
+  // Handle size change.
   if (packet->size != city_size_get(pcity)) {
     if (!(0 < packet->size && packet->size <= MAX_CITY_SIZE)) {
       notify_conn(pc->self, ptile, E_BAD_COMMAND, ftc_editor,
                   _("Invalid city size %d for city %s."), packet->size,
                   city_link(pcity));
     } else {
-      /* FIXME: Slow and inefficient for large size changes. */
+      // FIXME: Slow and inefficient for large size changes.
       city_change_size(pcity, packet->size, NULL, NULL);
       changed = true;
     }
@@ -773,7 +773,7 @@ void handle_edit_city(struct connection *pc,
     changed = true;
   }
 
-  /* Handle city improvement changes. */
+  // Handle city improvement changes.
   improvement_iterate(pimprove)
   {
     oldcity = NULL;
@@ -803,7 +803,7 @@ void handle_edit_city(struct connection *pc,
           BV_SET(need_player_info, player_index(pplayer));
         }
         if (NULL != oldcity && city_owner(oldcity) != pplayer) {
-          /* Great wonders make more changes. */
+          // Great wonders make more changes.
           need_game_info = true;
           BV_SET(need_player_info, player_index(city_owner(oldcity)));
         }
@@ -825,7 +825,7 @@ void handle_edit_city(struct connection *pc,
   }
   improvement_iterate_end;
 
-  /* Handle food stock change. */
+  // Handle food stock change.
   if (packet->food_stock != pcity->food_stock) {
     int max = city_granary_size(city_size_get(pcity));
     if (!(0 <= packet->food_stock && packet->food_stock <= max)) {
@@ -839,9 +839,9 @@ void handle_edit_city(struct connection *pc,
     }
   }
 
-  /* Handle shield stock change. */
+  // Handle shield stock change.
   if (packet->shield_stock != pcity->shield_stock) {
-    int max = USHRT_MAX; /* Limited to uint16 by city info packet. */
+    int max = USHRT_MAX; // Limited to uint16 by city info packet.
     if (!(0 <= packet->shield_stock && packet->shield_stock <= max)) {
       notify_conn(pc->self, ptile, E_BAD_COMMAND, ftc_editor,
                   _("Invalid city shield stock amount %d for city %s "
@@ -853,20 +853,20 @@ void handle_edit_city(struct connection *pc,
     }
   }
 
-  /* TODO: Handle more property edits. */
+  // TODO: Handle more property edits.
 
   if (changed) {
     city_refresh_queue_add(pcity);
     conn_list_do_buffer(game.est_connections);
     city_refresh_queue_processing();
 
-    /* FIXME: city_refresh_queue_processing only sends to city owner? */
+    // FIXME: city_refresh_queue_processing only sends to city owner?
     send_city_info(NULL, pcity);
 
     conn_list_do_unbuffer(game.est_connections);
   }
 
-  /* Update wonder infos. */
+  // Update wonder infos.
   if (need_game_info) {
     send_game_info(NULL);
   }
@@ -874,7 +874,7 @@ void handle_edit_city(struct connection *pc,
     players_iterate(aplayer)
     {
       if (BV_ISSET(need_player_info, player_index(aplayer))) {
-        /* No need to send to detached connections. */
+        // No need to send to detached connections.
         send_player_info_c(aplayer, NULL);
       }
     }
@@ -925,7 +925,7 @@ void handle_edit_player_create(struct connection *pc, int tag)
 
   player_nation_defaults(pplayer, pnation, true);
   if (game_was_started()) {
-    /* Find a color for the new player. */
+    // Find a color for the new player.
     assign_player_colors();
   }
   sz_strlcpy(pplayer->username, _(ANON_USER_NAME));
@@ -997,7 +997,7 @@ void handle_edit_player(struct connection *pc,
 
   research = research_get(pplayer);
 
-  /* Handle player name change. */
+  // Handle player name change.
   if (0 != strcmp(packet->name, player_name(pplayer))) {
     char error_buf[256];
 
@@ -1012,7 +1012,7 @@ void handle_edit_player(struct connection *pc,
     }
   }
 
-  /* Handle nation change. */
+  // Handle nation change.
   pnation = nation_by_number(packet->nation);
   if (nation_of_player(pplayer) != pnation) {
     if (pnation == NULL) {
@@ -1051,14 +1051,14 @@ void handle_edit_player(struct connection *pc,
     }
   }
 
-  /* Handle a change in research progress. */
+  // Handle a change in research progress.
   if (packet->bulbs_researched != research->bulbs_researched) {
     research->bulbs_researched = packet->bulbs_researched;
     changed = true;
     update_research = true;
   }
 
-  /* Handle a change in known inventions. */
+  // Handle a change in known inventions.
   advance_index_iterate(A_FIRST, tech)
   {
     known = research_invention_state(research, tech);
@@ -1067,7 +1067,7 @@ void handle_edit_player(struct connection *pc,
       continue;
     }
     if (packet->inventions[tech]) {
-      /* FIXME: Side-effect modifies game.info.global_advances. */
+      // FIXME: Side-effect modifies game.info.global_advances.
       research_invention_set(research, tech, TECH_KNOWN);
       research->techs_researched++;
     } else {
@@ -1079,7 +1079,7 @@ void handle_edit_player(struct connection *pc,
   }
   advance_index_iterate_end;
 
-  /* Handle a change in the player's gold. */
+  // Handle a change in the player's gold.
   if (packet->gold != pplayer->economic.gold) {
     if (!(0 <= packet->gold && packet->gold <= 1000000)) {
       notify_conn(pc->self, NULL, E_BAD_COMMAND, ftc_editor,
@@ -1093,7 +1093,7 @@ void handle_edit_player(struct connection *pc,
     }
   }
 
-  /* Handle player government change */
+  // Handle player government change
   gov = government_by_number(packet->government);
   if (gov != pplayer->government) {
     if (gov != game.government_during_revolution) {
@@ -1122,14 +1122,14 @@ void handle_edit_player(struct connection *pc,
     }
   }
 
-  /* TODO: Handle more property edits. */
+  // TODO: Handle more property edits.
 
   if (update_research) {
     Tech_type_id current, goal;
 
     research_update(research);
 
-    /* FIXME: Modifies struct research directly. */
+    // FIXME: Modifies struct research directly.
 
     current = research->researching;
     goal = research->tech_goal;
@@ -1141,7 +1141,7 @@ void handle_edit_player(struct connection *pc,
           research->researching = A_UNSET;
         }
       } else {
-        /* Future Tech is legal only if all techs are known */
+        // Future Tech is legal only if all techs are known
         advance_index_iterate(A_FIRST, tech_i)
         {
           known = research_invention_state(research, tech_i);
@@ -1163,7 +1163,7 @@ void handle_edit_player(struct connection *pc,
     }
     changed = true;
 
-    /* Inform everybody about global advances */
+    // Inform everybody about global advances
     send_game_info(NULL);
     send_research_info(research, NULL);
   }
@@ -1194,7 +1194,7 @@ void handle_edit_player_vision(struct connection *pc, int plr_no, int tile,
   pplayer = player_by_number(plr_no);
   if (!pplayer) {
     notify_conn(pc->self, ptile_center, E_BAD_COMMAND, ftc_editor,
-                /* TRANS: ..." at <tile-coordinates> because"... */
+                // TRANS: ..." at <tile-coordinates> because"...
                 _("Cannot edit vision for the tile at %s because "
                   "given player id %d is invalid."),
                 tile_link(ptile_center), plr_no);
@@ -1330,14 +1330,14 @@ void handle_edit_startpos(struct connection *pconn,
   struct tile *ptile = index_to_tile(&(wld.map), packet->id);
   bool changed;
 
-  /* Check. */
+  // Check.
   if (NULL == ptile) {
     notify_conn(pconn->self, NULL, E_BAD_COMMAND, ftc_editor,
                 _("Invalid tile index %d for start position."), packet->id);
     return;
   }
 
-  /* Handle. */
+  // Handle.
   if (packet->removal) {
     changed = map_startpos_remove(ptile);
   } else {
@@ -1349,7 +1349,7 @@ void handle_edit_startpos(struct connection *pconn,
     }
   }
 
-  /* Notify. */
+  // Notify.
   if (changed) {
     conn_list_iterate(game.est_connections, aconn)
     {
@@ -1370,7 +1370,7 @@ void handle_edit_startpos_full(
   struct tile *ptile = index_to_tile(&(wld.map), packet->id);
   struct startpos *psp;
 
-  /* Check. */
+  // Check.
   if (NULL == ptile) {
     notify_conn(pconn->self, NULL, E_BAD_COMMAND, ftc_editor,
                 _("Invalid tile index %d for start position."), packet->id);
@@ -1386,9 +1386,9 @@ void handle_edit_startpos_full(
     return;
   }
 
-  /* Handle. */
+  // Handle.
   if (startpos_unpack(psp, packet)) {
-    /* Notify. */
+    // Notify.
     conn_list_iterate(game.est_connections, aconn)
     {
       if (can_conn_edit(aconn)) {
@@ -1486,13 +1486,13 @@ void handle_save_scenario(struct connection *pc, const char *name)
   }
 
   if (!game.scenario.is_scenario) {
-    /* Scenario information not available */
+    // Scenario information not available
     notify_conn(pc->self, NULL, E_BAD_COMMAND, ftc_editor,
                 _("Scenario information not set. Cannot save scenario."));
     return;
   }
 
-  /* Client initiated scenario saving is not handmade */
+  // Client initiated scenario saving is not handmade
   game.scenario.handmade = false;
 
   save_game(name, "Scenario", true);

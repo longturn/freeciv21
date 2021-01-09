@@ -10,7 +10,7 @@
 
 #pragma once
 
-/* utility */
+// utility
 #include "support.h"
 
 /* common/scriptcore */
@@ -21,7 +21,7 @@ struct connection;
 
 void script_server_remove_exported_object(void *object);
 
-/* Script functions. */
+// Script functions.
 bool script_server_init();
 void script_server_free();
 
@@ -38,8 +38,8 @@ bool script_server_unsafe_do_file(struct connection *caller,
 void script_server_state_load(struct section_file *file);
 void script_server_state_save(struct section_file *file);
 
-/* Signals. */
+// Signals.
 void script_server_signal_emit(const char *signal_name, ...);
 
-/* Functions */
+// Functions
 bool script_server_call(const char *func_name, ...);

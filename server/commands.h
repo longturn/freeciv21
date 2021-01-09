@@ -13,11 +13,11 @@
 
 #pragma once
 
-#include "connection.h" /* enum cmdlevel */
+#include "connection.h" // enum cmdlevel
 
 enum cmd_echo {
   CMD_ECHO_NONE = 0,
-  CMD_ECHO_ADMINS, /* i.e. all with 'admin' access and above. */
+  CMD_ECHO_ADMINS, // i.e. all with 'admin' access and above.
   CMD_ECHO_ALL,
 };
 
@@ -31,21 +31,21 @@ enum cmd_echo {
      eg accidently removing a player in a running game.
 */
 enum command_id {
-  /* old one-letter commands: */
+  // old one-letter commands:
   CMD_START_GAME = 0,
   CMD_HELP,
   CMD_LIST,
   CMD_QUIT,
   CMD_CUT,
 
-  /* completely non-harmful: */
+  // completely non-harmful:
   CMD_EXPLAIN,
   CMD_SHOW,
   CMD_WALL,
   CMD_CONNECTMSG,
   CMD_VOTE,
 
-  /* mostly non-harmful: */
+  // mostly non-harmful:
   CMD_DEBUG,
   CMD_SET,
   CMD_TEAM,
@@ -78,9 +78,9 @@ enum command_id {
   CMD_PLAYERCOLOR,
   CMD_PLAYERNATION,
 
-  /* potentially harmful: */
+  // potentially harmful:
   CMD_END_GAME,
-  CMD_SURRENDER, /* not really harmful, info level */
+  CMD_SURRENDER, // not really harmful, info level
   CMD_REMOVE,
   CMD_SAVE,
   CMD_SCENSAVE,
@@ -96,14 +96,14 @@ enum command_id {
   CMD_FCDB,
   CMD_MAPIMG,
 
-  /* undocumented */
+  // undocumented
   CMD_RFCSTYLE,
   CMD_SRVID,
 
-  /* pseudo-commands: */
-  CMD_NUM,          /* the number of commands - for iterations */
-  CMD_UNRECOGNIZED, /* used as a possible iteration result */
-  CMD_AMBIGUOUS     /* used as a possible iteration result */
+  // pseudo-commands:
+  CMD_NUM,          // the number of commands - for iterations
+  CMD_UNRECOGNIZED, // used as a possible iteration result
+  CMD_AMBIGUOUS     // used as a possible iteration result
 };
 
 const struct command *command_by_number(int i);

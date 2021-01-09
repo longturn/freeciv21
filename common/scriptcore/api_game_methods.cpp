@@ -12,11 +12,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "deprecations.h"
 #include "fcintl.h"
 
-/* common */
+// common
 #include "achievements.h"
 #include "actions.h"
 #include "calendar.h"
@@ -265,7 +265,7 @@ int api_methods_city_inspire_partisans(lua_State *L, City *self,
           inspired = true;
         }
       }
-      /* else is_client() -> don't consider inspired by default. */
+      // else is_client() -> don't consider inspired by default.
     } else if (self->original == inspirer) {
       inspired = true;
     }
@@ -301,7 +301,7 @@ bool api_methods_is_city_happy(lua_State *L, City *pcity)
   LUASCRIPT_CHECK_STATE(L, false);
   LUASCRIPT_CHECK_SELF(L, pcity, false);
 
-  /* Note: if clients ever have virtual cities or sth, needs amending */
+  // Note: if clients ever have virtual cities or sth, needs amending
   return is_server() ? city_happy(pcity) : pcity->client.happy;
 }
 
@@ -313,7 +313,7 @@ bool api_methods_is_city_unhappy(lua_State *L, City *pcity)
   LUASCRIPT_CHECK_STATE(L, false);
   LUASCRIPT_CHECK_SELF(L, pcity, false);
 
-  /* Note: if clients ever have virtual cities or sth, needs amending */
+  // Note: if clients ever have virtual cities or sth, needs amending
   return is_server() ? city_unhappy(pcity) : pcity->client.unhappy;
 }
 

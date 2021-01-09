@@ -16,18 +16,18 @@
 #endif
 
 #include <QBitArray>
-#include <cmath> /* sqrt, HUGE_VAL */
+#include <cmath> // sqrt, HUGE_VAL
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 
-/* common */
+// common
 #include "game.h"
 #include "map.h"
 #include "movement.h"
 
-/* server */
+// server
 #include "maphand.h"
 
 /* server/generator */
@@ -104,7 +104,7 @@ static int get_tile_value(struct tile *ptile)
 
   nextra = next_extra_for_tile(roaded, EC_MINE, NULL, NULL);
 
-  /* Same set of roads used with mine as with irrigation. */
+  // Same set of roads used with mine as with irrigation.
   if (nextra != NULL) {
     struct tile *vtile;
 
@@ -141,10 +141,10 @@ struct start_filter_data {
 static bool check_native_area(const struct unit_type *utype,
                               const struct tile *ptile, int min_area)
 {
-  int tiles = 1; /* There's the central tile already. */
+  int tiles = 1; // There's the central tile already.
   struct tile_list *tlist = tile_list_new();
   struct tile *central =
-      tile_virtual_new(ptile); /* Non-const virtual tile */
+      tile_virtual_new(ptile); // Non-const virtual tile
   QBitArray handled(MAP_INDEX_SIZE);
 
   tile_list_append(tlist, central);
@@ -161,7 +161,7 @@ static bool check_native_area(const struct unit_type *utype,
           tile_list_append(tlist, ptile3);
           handled.setBit(idx);
           if (tiles >= min_area) {
-            /* Break out when we already know that area is sufficient. */
+            // Break out when we already know that area is sufficient.
             break;
           }
         }
@@ -171,7 +171,7 @@ static bool check_native_area(const struct unit_type *utype,
       tile_list_remove(tlist, ptile2);
 
       if (tiles >= min_area) {
-        /* Break out when we already know that area is sufficient. */
+        // Break out when we already know that area is sufficient.
         break;
       }
     }
@@ -202,7 +202,7 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
   struct islands_data_type *island;
   int cont_size, cont = tile_continent(ptile);
 
-  /* Only start on certain terrain types. */
+  // Only start on certain terrain types.
   if (pdata->value[tile_index(ptile)] < pdata->min_value) {
     return false;
   }
@@ -212,18 +212,18 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
     return false;
   }
 
-  /* Don't start on a hut. */
-  /* FIXME: for HUT_NOTHING might be valid */
+  // Don't start on a hut.
+  // FIXME: for HUT_NOTHING might be valid
   if (hut_on_tile(ptile)) {
     return false;
   }
 
-  /* Has to be native tile for initial unit */
+  // Has to be native tile for initial unit
   if (!is_native_tile(pdata->initial_unit, ptile)) {
     return false;
   }
 
-  /* Check native area size. */
+  // Check native area size.
   if (!check_native_area(pdata->initial_unit, ptile,
                          terrain_control.min_start_native_area)) {
     return false;
@@ -242,7 +242,7 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
     return false;
   }
 
-  /* Don't start too close to someone else. */
+  // Don't start too close to someone else.
   cont_size = get_continent_size(cont);
   island = islands + islands_index[cont];
   for (auto *psp : qAsConst(*wld.map.startpos_table)) {
@@ -283,7 +283,7 @@ static void initialize_isle_data()
   islands = new islands_data_type[wld.map.num_continents + 1];
   islands_index = new int[wld.map.num_continents + 1];
 
-  /* islands[0] is unused. */
+  // islands[0] is unused.
   for (nr = 1; nr <= wld.map.num_continents; nr++) {
     islands[nr].id = nr;
     islands[nr].size = get_continent_size(nr);
@@ -323,7 +323,7 @@ bool create_start_positions(enum map_startpos mode,
   int *tile_value = NULL;
   int min_goodies_per_player = 1500;
   int total_goodies = 0;
-  /* this is factor is used to maximize land used in extreme little maps */
+  // this is factor is used to maximize land used in extreme little maps
   float efactor =
       static_cast<float>(player_count()) / float(map_size_checked()) / 4;
   bool failure = false;
@@ -345,7 +345,7 @@ bool create_start_positions(enum map_startpos mode,
     create_tmap(false);
   }
 
-  /* If the default is given, just use MAPSTARTPOS_VARIABLE. */
+  // If the default is given, just use MAPSTARTPOS_VARIABLE.
   if (MAPSTARTPOS_DEFAULT == mode) {
     qDebug("Using startpos=VARIABLE");
     mode = MAPSTARTPOS_VARIABLE;
@@ -354,20 +354,20 @@ bool create_start_positions(enum map_startpos mode,
   tile_value_aux = new int[MAP_INDEX_SIZE]();
   tile_value = new int[MAP_INDEX_SIZE]();
 
-  /* get the tile value */
+  // get the tile value
   whole_map_iterate(&(wld.map), value_tile)
   {
     tile_value_aux[tile_index(value_tile)] = get_tile_value(value_tile);
   }
   whole_map_iterate_end;
 
-  /* select the best tiles */
+  // select the best tiles
   whole_map_iterate(&(wld.map), value_tile)
   {
     int this_tile_value = tile_value_aux[tile_index(value_tile)];
     int lcount = 0, bcount = 0;
 
-    /* check all tiles within the default city radius */
+    // check all tiles within the default city radius
     city_tile_iterate(CITY_MAP_DEFAULT_RADIUS_SQ, value_tile, ptile1)
     {
       if (this_tile_value > tile_value_aux[tile_index(ptile1)]) {
@@ -384,18 +384,18 @@ bool create_start_positions(enum map_startpos mode,
     tile_value[tile_index(value_tile)] = 100 * this_tile_value;
   }
   whole_map_iterate_end;
-  /* get an average value */
+  // get an average value
   smooth_int_map(tile_value, true);
 
   initialize_isle_data();
 
-  /* Only consider tiles marked as 'starter terrains' by ruleset */
+  // Only consider tiles marked as 'starter terrains' by ruleset
   whole_map_iterate(&(wld.map), starter_tile)
   {
     if (!filter_starters(starter_tile, NULL)) {
       tile_value[tile_index(starter_tile)] = 0;
     } else {
-      /* Oceanic terrain cannot be starter terrain currently */
+      // Oceanic terrain cannot be starter terrain currently
       fc_assert_action(tile_continent(starter_tile) > 0, continue);
       islands[tile_continent(starter_tile)].goodies +=
           tile_value[tile_index(starter_tile)];
@@ -404,7 +404,7 @@ bool create_start_positions(enum map_startpos mode,
   }
   whole_map_iterate_end;
 
-  /* evaluate the best places on the map */
+  // evaluate the best places on the map
   adjust_int_map_filtered(tile_value, 1000, NULL, filter_starters);
 
   /* Sort the islands so the best ones come first.  Note that islands[0] is
@@ -434,7 +434,7 @@ bool create_start_positions(enum map_startpos mode,
     mode = MAPSTARTPOS_VARIABLE;
   }
 
-  /* the variable way is the last possibility */
+  // the variable way is the last possibility
   if (MAPSTARTPOS_VARIABLE == mode) {
     min_goodies_per_player = total_goodies * (0.65 + 0.8 * efactor)
                              / (1 + efactor) / player_count();
@@ -443,7 +443,7 @@ bool create_start_positions(enum map_startpos mode,
   {
     int nr, to_place = player_count(), first = 1;
 
-    /* inizialize islands_index */
+    // inizialize islands_index
     for (nr = 1; nr <= wld.map.num_continents; nr++) {
       islands_index[islands[nr].id] = nr;
     }
@@ -472,7 +472,7 @@ bool create_start_positions(enum map_startpos mode,
       }
     }
 
-    /* set starters per isle */
+    // set starters per isle
     if (MAPSTARTPOS_ALL == mode) {
       islands[1].starters = to_place;
       islands[1].total = to_place;
@@ -509,7 +509,7 @@ bool create_start_positions(enum map_startpos mode,
   }
   fc_assert_ret_val(player_count() <= sum, false);
 
-  /* now search for the best place and set start_positions */
+  // now search for the best place and set start_positions
   while (map_startpos_count() < player_count()) {
     if ((ptile =
              rand_map_pos_filtered(&(wld.map), &data, is_valid_start_pos))) {

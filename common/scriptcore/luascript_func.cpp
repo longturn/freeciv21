@@ -33,11 +33,11 @@ static struct luascript_func *func_new(bool required, int nargs,
 static void func_destroy(struct luascript_func *pfunc);
 
 struct luascript_func {
-  bool required;                /* if this function is required */
-  int nargs;                    /* number of arguments to pass */
-  int nreturns;                 /* number of return values to accept */
-  enum api_types *arg_types;    /* argument types */
-  enum api_types *return_types; /* return types */
+  bool required;                // if this function is required
+  int nargs;                    // number of arguments to pass
+  int nreturns;                 // number of return values to accept
+  enum api_types *arg_types;    // argument types
+  enum api_types *return_types; // return types
 };
 
 /**
@@ -174,7 +174,7 @@ void luascript_func_init(struct fc_lua *fcl)
   fc_assert_ret(fcl != NULL);
 
   if (fcl->funcs == NULL) {
-    /* Define the prototypes for the needed lua functions. */
+    // Define the prototypes for the needed lua functions.
     fcl->funcs = new QHash<QString, luascript_func *>;
   }
 }
@@ -204,12 +204,12 @@ bool luascript_func_call_valist(struct fc_lua *fcl, const char *func_name,
     return false;
   }
   pfunc = fcl->funcs->value(func_name);
-  /* The function name */
+  // The function name
   lua_getglobal(fcl->state, func_name);
 
   if (!lua_isfunction(fcl->state, -1)) {
     if (pfunc->required) {
-      /* This function is required. Thus, this is an error. */
+      // This function is required. Thus, this is an error.
       luascript_log(fcl, LOG_ERROR, "Unknown lua function '%s'", func_name);
       lua_pop(fcl->state, 1);
     }
@@ -218,9 +218,9 @@ bool luascript_func_call_valist(struct fc_lua *fcl, const char *func_name,
 
   luascript_push_args(fcl, pfunc->nargs, pfunc->arg_types, args);
 
-  /* Call the function with nargs arguments, return 1 results */
+  // Call the function with nargs arguments, return 1 results
   if (luascript_call(fcl, pfunc->nargs, pfunc->nreturns, NULL) == 0) {
-    /* Successful call to the script. */
+    // Successful call to the script.
     success = true;
 
     luascript_pop_returns(fcl, func_name, pfunc->nreturns,

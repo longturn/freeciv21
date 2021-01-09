@@ -50,14 +50,14 @@ QIcon fcIcons::getIcon(const QString &id)
   QByteArray png_bytes;
 
   str = QStringLiteral("themes") + DIR_SEPARATOR + "gui-qt" + DIR_SEPARATOR;
-  /* Try custom icon from theme */
+  // Try custom icon from theme
   pn_bytes = str.toLocal8Bit();
   png_bytes =
       QString(pn_bytes.data() + current_theme + DIR_SEPARATOR + id + ".png")
           .toLocal8Bit();
   icon.addFile(fileinfoname(get_data_dirs(), png_bytes.data()));
   str = str + "icons" + DIR_SEPARATOR;
-  /* Try icon from icons dir */
+  // Try icon from icons dir
   if (icon.isNull()) {
     pn_bytes = str.toLocal8Bit();
     png_bytes = QString(pn_bytes.data() + id + ".png").toLocal8Bit();

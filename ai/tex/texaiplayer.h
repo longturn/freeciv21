@@ -14,10 +14,10 @@
 
 #include <QMutex>
 #include <QWaitCondition>
-/* utility */
+// utility
 #include "fcthread.h"
 
-/* common */
+// common
 #include "player.h"
 
 /* ai/default */
@@ -39,11 +39,11 @@ struct texai_reqs {
 };
 
 struct texai_plr {
-  struct ai_plr defai; /* Keep this first so default ai finds it */
+  struct ai_plr defai; // Keep this first so default ai finds it
   struct unit_list *units;
 };
 
-struct ai_type *texai_get_self(void); /* Actually in texai.c */
+struct ai_type *texai_get_self(void); // Actually in texai.c
 
 void texai_init_threading(void);
 

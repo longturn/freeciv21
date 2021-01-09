@@ -19,17 +19,17 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "connection.h"
 #include "packets.h"
 
-/* server */
+// server
 #include "connecthand.h"
 #include "notify.h"
 #include "sernet.h"
@@ -38,7 +38,7 @@
 /* server/scripting */
 #ifdef HAVE_FCDB
 #include "script_fcdb.h"
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB
 
 #include "fcdb.h"
 
@@ -47,9 +47,9 @@
 #ifdef HAVE_FCDB
 
 enum fcdb_option_source {
-  AOS_DEFAULT, /* Internal default, currently not used */
-  AOS_FILE,    /* Read from config file */
-  AOS_SET      /* Set, currently not used */
+  AOS_DEFAULT, // Internal default, currently not used
+  AOS_FILE,    // Read from config file
+  AOS_SET      // Set, currently not used
 };
 
 struct fcdb_option {
@@ -199,7 +199,7 @@ void fcdb_free(void)
   fcdb_config = NULL;
 }
 
-#else /* HAVE_FCDB */
+#else // HAVE_FCDB
 
 /**
    Dummy function - Initialize freeciv database system
@@ -215,4 +215,4 @@ const char *fcdb_option_get(const char *type) { return NULL; }
    Dummy function - Free resources allocated by fcdb system.
  */
 void fcdb_free() {}
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB

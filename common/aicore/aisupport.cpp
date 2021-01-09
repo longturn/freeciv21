@@ -13,12 +13,12 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "city.h"
 #include "game.h"
 #include "map.h"
@@ -81,7 +81,7 @@ int player_distance_to_player(struct player *pplayer, struct player *target)
     return 1;
   }
 
-  /* For all our cities, find the closest distance to an enemy city. */
+  // For all our cities, find the closest distance to an enemy city.
   city_list_iterate(pplayer->cities, pcity)
   {
     int min_dist = FC_INFINITY;
@@ -118,10 +118,10 @@ int city_gold_worth(struct city *pcity)
   }
 
   if (u != NULL) {
-    worth += utype_buy_gold_cost(pcity, u, 0); /* cost of settler */
+    worth += utype_buy_gold_cost(pcity, u, 0); // cost of settler
   }
   for (i = 1; i < city_size_get(pcity); i++) {
-    worth += city_granary_size(i); /* cost of growing city */
+    worth += city_granary_size(i); // cost of growing city
   }
   output_type_iterate(o) { worth += pcity->prod[o] * 10; }
   output_type_iterate_end;
@@ -131,11 +131,11 @@ int city_gold_worth(struct city *pcity)
       const struct unit_type *punittype = unit_type_get(punit)->obsoleted_by;
 
       if (punittype && can_city_build_unit_direct(pcity, punittype)) {
-        /* obsolete, candidate for disbanding */
+        // obsolete, candidate for disbanding
         worth += unit_shield_value(punit, unit_type_get(punit),
                                    action_by_number(ACTION_RECYCLE_UNIT));
       } else {
-        worth += unit_build_shield_cost(pcity, punit); /* good stuff */
+        worth += unit_build_shield_cost(pcity, punit); // good stuff
       }
     }
   }
@@ -144,9 +144,9 @@ int city_gold_worth(struct city *pcity)
   {
     if (improvement_obsolete(pplayer, pimprove, pcity)) {
       worth +=
-          impr_sell_gold(pimprove); /* obsolete, candidate for selling */
+          impr_sell_gold(pimprove); // obsolete, candidate for selling
     } else if (!is_wonder(pimprove)) {
-      /* Buy cost, with nonzero shield amount */
+      // Buy cost, with nonzero shield amount
       worth += impr_build_shield_cost(pcity, pimprove) * 2;
     } else {
       worth += impr_build_shield_cost(pcity, pimprove) * 4;

@@ -12,13 +12,13 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "featured_text.h"
 
 /* common/scriptcore */
 #include "luascript.h"
 
-/* client */
+// client
 #include "chatline_common.h"
 
 #include "api_client_base.h"

@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* ANSI */
+// ANSI
 #include <cstdlib>
 
 #include <csignal>
@@ -28,24 +28,24 @@
 #include <QApplication>
 #include <QCommandLineParser>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
 #include "registry.h"
 
-/* common */
+// common
 #include "fc_interface.h"
 #include "version.h"
 
-/* server */
+// server
 #include "sernet.h"
 #include "settings.h"
 
 /* tools/shared */
 #include "tools_fc_interface.h"
 
-/* ruledit */
+// ruledit
 #include "comments.h"
 #include "ruledit_qt.h"
 
@@ -76,20 +76,20 @@ int main(int argc, char **argv)
   bind_textdomain_codeset("freeciv-ruledit", get_internal_encoding());
 #endif
 
-  /* Initialize command line arguments. */
+  // Initialize command line arguments.
   re_parse_cmdline(app);
 
   init_connections();
 
   settings_init(false);
 
-  /* Reset aifill to zero */
+  // Reset aifill to zero
   game.info.aifill = 0;
 
   game_init(false);
   i_am_tool();
 
-  /* Initialize the fc_interface functions needed to understand rules. */
+  // Initialize the fc_interface functions needed to understand rules.
   fc_interface_init_tool();
 
   if (comments_load()) {

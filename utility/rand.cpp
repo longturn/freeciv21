@@ -35,10 +35,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
 #include "shared.h"
-#include "support.h" /* TRUE, FALSE */
+#include "support.h" // TRUE, FALSE
 
 #include "rand.h"
 
@@ -90,7 +90,7 @@ RANDOM_TYPE fc_rand_debug(RANDOM_TYPE size, const char *called_as, int line,
     divisor = MAX_UINT32 / size;
     max = size * divisor - 1;
   } else {
-    /* size == 0 || size == 1 */
+    // size == 0 || size == 1
 
     /*
      * These assignments are only here to make the compiler
@@ -217,13 +217,13 @@ void test_random1(int n)
   int behaviourchange = 0, behavioursame = 0;
 
   saved_state = fc_rand_state();
-  /* fc_srand(time(NULL)); */ /* use current state */
+  /* fc_srand(time(NULL)); */ // use current state
 
   for (i = 0; i < n + 2; i++) {
     new_value = fc_rand(2);
-    if (i > 0) { /* have old */
+    if (i > 0) { // have old
       didchange = (new_value != old_value);
-      if (i > 1) { /* have olddidchange */
+      if (i > 1) { // have olddidchange
         if (didchange != olddidchange) {
           behaviourchange++;
         } else {
@@ -237,7 +237,7 @@ void test_random1(int n)
   log_test("test_random1(%d) same: %d, change: %d", n, behavioursame,
            behaviourchange);
 
-  /* restore state: */
+  // restore state:
   fc_rand_set_state(saved_state);
 }
 
@@ -257,7 +257,7 @@ RANDOM_TYPE fc_randomly_debug(RANDOM_TYPE seed, RANDOM_TYPE size,
 #define LARGE_PRIME (10007)
 #define SMALL_PRIME (1009)
 
-  /* Check for overflow and underflow */
+  // Check for overflow and underflow
   fc_assert_ret_val(seed < MAX_UINT32 / LARGE_PRIME, 0);
   fc_assert_ret_val(size < SMALL_PRIME, 0);
   fc_assert_ret_val(size > 0, 0);

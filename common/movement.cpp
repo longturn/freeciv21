@@ -17,14 +17,14 @@
 
 #include <QBitArray>
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "base.h"
 #include "effects.h"
 #include "fc_types.h"
@@ -63,7 +63,7 @@ int utype_move_rate(const struct unit_type *utype, const struct tile *ptile,
   move_rate = base_move_rate;
 
   if (uclass_has_flag(uclass, UCF_DAMAGE_SLOWS)) {
-    /* Scale the MP based on how many HP the unit has. */
+    // Scale the MP based on how many HP the unit has.
     move_rate = (move_rate * hitpoints) / utype->hp;
   }
 
@@ -106,14 +106,14 @@ int utype_unknown_move_cost(const struct unit_type *utype)
   int move_cost;
 
   if (!uclass_has_flag(uclass, UCF_TERRAIN_SPEED)) {
-    /* Unit is not subject to terrain movement costs. */
+    // Unit is not subject to terrain movement costs.
     move_cost = SINGLE_MOVE;
   } else if (utype_has_flag(utype, UTYF_IGTER)) {
-    /* All terrain movement costs are equal! */
+    // All terrain movement costs are equal!
     move_cost = MOVE_COST_IGTER;
   } else {
-    /* Unit is subject to terrain movement costs. */
-    move_cost = 1; /* Arbitrary minimum. */
+    // Unit is subject to terrain movement costs.
+    move_cost = 1; // Arbitrary minimum.
     terrain_type_iterate(pterrain)
     {
       if (is_native_to_class(uclass, pterrain, NULL)
@@ -124,7 +124,7 @@ int utype_unknown_move_cost(const struct unit_type *utype)
       }
     }
     terrain_type_iterate_end;
-    move_cost *= SINGLE_MOVE; /* Real value. */
+    move_cost *= SINGLE_MOVE; // Real value.
   }
 
   /* Let's see if we can cross over all terrain types, else apply a malus.
@@ -134,7 +134,7 @@ int utype_unknown_move_cost(const struct unit_type *utype)
   {
     if (BV_ISSET_ANY(pterrain->native_to)
         && !is_native_to_class(uclass, pterrain, NULL)) {
-      /* Units that may encounter unsuitable terrain explore less. */
+      // Units that may encounter unsuitable terrain explore less.
       move_cost *= 2;
       break;
     }
@@ -159,7 +159,7 @@ bool unit_can_defend_here(const struct civ_map *nmap,
    * if this is their native terrain. */
   return (can_unit_exist_at_tile(nmap, punit, unit_tile(punit))
           && (ptrans == NULL
-              /* Don't care if unloaded by the transport or alight itself */
+              // Don't care if unloaded by the transport or alight itself
               /* FIXME: should being able to be unloaded by the transport
                * count as being able to defend (like it does now) or should
                * a unit that can't alight be considered useless as a
@@ -227,7 +227,7 @@ bool is_city_channel_tile(const struct unit_class *punitclass,
     adjc_iterate_end;
 
     if (found || 0 == tile_list_size(process_queue)) {
-      break; /* No more tile to process. */
+      break; // No more tile to process.
     } else {
       ptile = tile_list_front(process_queue);
       tile_list_pop_front(process_queue);
@@ -301,7 +301,7 @@ bool is_native_to_class(const struct unit_class *punitclass,
                         const bv_extras *extras)
 {
   if (!pterrain) {
-    /* Unknown is considered native terrain */
+    // Unknown is considered native terrain
     return true;
   }
 
@@ -334,10 +334,10 @@ bool is_native_move(const struct unit_class *punitclass,
   const struct road_type *proad;
 
   if (is_native_to_class(punitclass, tile_terrain(dst_tile), NULL)) {
-    /* We aren't using extras to make the destination native. */
+    // We aren't using extras to make the destination native.
     return true;
   } else if (!is_native_tile_to_class(punitclass, src_tile)) {
-    /* Disembarking or leaving port, so ignore road connectivity. */
+    // Disembarking or leaving port, so ignore road connectivity.
     return true;
   } else if (is_native_to_class(punitclass, tile_terrain(src_tile), NULL)) {
     /* Native source terrain depends entirely on destination tile nativity.
@@ -345,7 +345,7 @@ bool is_native_move(const struct unit_class *punitclass,
     return is_native_tile_to_class(punitclass, dst_tile);
   }
 
-  /* Check for non-road native extras on the source tile. */
+  // Check for non-road native extras on the source tile.
   extra_type_list_iterate(punitclass->cache.native_tile_extras, pextra)
   {
     if (tile_has_extra(src_tile, pextra)
@@ -363,7 +363,7 @@ bool is_native_move(const struct unit_class *punitclass,
     if (!tile_has_extra(dst_tile, pextra)) {
       continue;
     } else if (!is_extra_caused_by(pextra, EC_ROAD)) {
-      /* The destination is native because of a non-road extra. */
+      // The destination is native because of a non-road extra.
       return true;
     }
 
@@ -387,22 +387,22 @@ bool is_native_move(const struct unit_class *punitclass,
         continue;
       }
       if (ALL_DIRECTIONS_CARDINAL()) {
-        /* move_mode does not matter as all of them accept cardinal move */
+        // move_mode does not matter as all of them accept cardinal move
         return true;
       }
       switch (extra_road_get(iextra)->move_mode) {
       case RMM_FAST_ALWAYS:
-        /* Road connects source and destination, so we're fine. */
+        // Road connects source and destination, so we're fine.
         return true;
       case RMM_CARDINAL:
-        /* Road connects source and destination if cardinal move. */
+        // Road connects source and destination if cardinal move.
         if (is_move_cardinal(&(wld.map), src_tile, dst_tile)) {
           return true;
         }
         break;
       case RMM_RELAXED:
         if (is_move_cardinal(&(wld.map), src_tile, dst_tile)) {
-          /* Cardinal moves have no between tiles, so connected. */
+          // Cardinal moves have no between tiles, so connected.
           return true;
         }
         cardinal_between_iterate(&(wld.map), src_tile, dst_tile, between)
@@ -470,22 +470,22 @@ bool can_unit_survive_at_tile(const struct civ_map *nmap,
   }
 
   if (tile_has_refuel_extra(ptile, unit_type_get(punit))) {
-    /* Unit can always survive at refueling base */
+    // Unit can always survive at refueling base
     return true;
   }
 
   if (unit_has_type_flag(punit, UTYF_COAST) && is_safe_ocean(nmap, ptile)) {
-    /* Refueling coast */
+    // Refueling coast
     return true;
   }
 
   if (utype_fuel(unit_type_get(punit))) {
-    /* Unit requires fuel and this is not refueling tile */
+    // Unit requires fuel and this is not refueling tile
     return false;
   }
 
   if (is_losing_hp(punit)) {
-    /* Unit is losing HP over time in this tile (no city or native base) */
+    // Unit is losing HP over time in this tile (no city or native base)
     return false;
   }
 
@@ -580,37 +580,37 @@ unit_move_to_tile_test(const struct civ_map *nmap, const struct unit *punit,
   const struct unit_type *punittype = unit_type_get(punit);
   const struct player *puowner = unit_owner(punit);
 
-  /* 1) */
+  // 1)
   if (activity != ACTIVITY_IDLE && activity != ACTIVITY_GOTO) {
-    /* For other activities the unit must be stationary. */
+    // For other activities the unit must be stationary.
     return MR_BAD_ACTIVITY;
   }
 
-  /* 2) */
+  // 2)
   if (punit->stay) {
     return MR_UNIT_STAY;
   }
 
-  /* 3) */
+  // 3)
   if (!is_tiles_adjacent(src_tile, dst_tile)) {
-    /* Of course you can only move to adjacent positions. */
+    // Of course you can only move to adjacent positions.
     return MR_BAD_DESTINATION;
   }
 
-  /* 4) */
+  // 4)
   if (is_non_allied_unit_tile(dst_tile, puowner)) {
     /* You can't move onto a tile with non-allied units on it (try
      * attacking instead). */
     return MR_DESTINATION_OCCUPIED_BY_NON_ALLIED_UNIT;
   }
 
-  /* 5) */
+  // 5)
   if (puowner->ai_common.barbarian_type == ANIMAL_BARBARIAN
       && dst_tile->terrain->animal != punittype) {
     return MR_ANIMAL_DISALLOWED;
   }
 
-  /* 6) */
+  // 6)
   if (embark_to != NULL) {
     if (!could_unit_load(punit, embark_to)) {
       return MR_NO_TRANSPORTER_CAPACITY;
@@ -620,7 +620,7 @@ unit_move_to_tile_test(const struct civ_map *nmap, const struct unit *punit,
     return MR_NO_TRANSPORTER_CAPACITY;
   }
 
-  /* 7) */
+  // 7)
   if (is_non_attack_unit_tile(dst_tile, puowner)) {
     /* You can't move into a non-allied tile.
      *
@@ -629,7 +629,7 @@ unit_move_to_tile_test(const struct civ_map *nmap, const struct unit *punit,
     return MR_NO_WAR;
   }
 
-  /* 8) */
+  // 8)
   if ((pcity = tile_city(dst_tile))) {
     if (enter_enemy_city) {
       if (pplayers_non_attack(city_owner(pcity), puowner)) {
@@ -647,36 +647,36 @@ unit_move_to_tile_test(const struct civ_map *nmap, const struct unit *punit,
     }
   }
 
-  /* 9) */
+  // 9)
   zoc = igzoc
         || can_step_taken_wrt_to_zoc(punittype, puowner, src_tile, dst_tile,
                                      nmap);
   if (!zoc) {
-    /* The move is illegal because of zones of control. */
+    // The move is illegal because of zones of control.
     return MR_ZOC;
   }
 
-  /* 10) */
+  // 10)
   if (utype_has_flag(punittype, UTYF_COAST_STRICT)
       && !is_safe_ocean(&(wld.map), dst_tile)) {
     return MR_TRIREME;
   }
 
-  /* 11) */
+  // 11)
   if (!utype_has_flag(punittype, UTYF_CIVILIAN)
       && !player_can_invade_tile(puowner, dst_tile)) {
     return MR_PEACE;
   }
 
-  /* 12) */
+  // 12)
   if (unit_transported(punit)
       && !can_unit_unload(punit, unit_transport_get(punit))) {
     return MR_CANNOT_DISEMBARK;
   }
 
-  /* 13) */
+  // 13)
   if (!(is_native_move(utype_class(punittype), src_tile, dst_tile)
-        /* Allow non-native moves into cities or boarding transport. */
+        // Allow non-native moves into cities or boarding transport.
         || pcity || unit_could_load_at(punit, dst_tile))) {
     return MR_NON_NATIVE_MOVE;
   }
@@ -719,7 +719,7 @@ bool can_unit_type_transport(const struct unit_type *transporter,
 bool unit_can_load(const struct unit *punit)
 {
   if (unit_transported(punit)) {
-    /* In another transport already. Can it unload first? */
+    // In another transport already. Can it unload first?
     if (!can_unit_unload(punit, punit->transporter)) {
       return false;
     }
@@ -794,24 +794,24 @@ const char *move_points_text_full(int mp, bool reduce, const char *prefix,
     prefix = "";
   }
   if ((mp == 0 && none) || SINGLE_MOVE == 0) {
-    /* No movement points, and we have a special representation to use */
+    // No movement points, and we have a special representation to use
     /* (Also used when SINGLE_MOVE == 0, to avoid dividing by zero, which is
      * important for client before ruleset has been received. Doesn't much
      * matter what we print in this case.) */
     str = QStringLiteral("%1").arg(none ? none : "");
   } else if ((mp % SINGLE_MOVE) == 0) {
-    /* Integer move points */
+    // Integer move points
     str = QStringLiteral("%1%2%3").arg(
         prefix, QString::number(mp / SINGLE_MOVE), "");
   } else {
-    /* Fractional part */
+    // Fractional part
     int cancel;
 
     fc_assert(SINGLE_MOVE > 1);
     if (reduce) {
-      /* Reduce to lowest terms */
+      // Reduce to lowest terms
       int gcd = mp;
-      /* Calculate greatest common divisor with Euclid's algorithm */
+      // Calculate greatest common divisor with Euclid's algorithm
       int b = SINGLE_MOVE;
 
       while (b != 0) {
@@ -821,16 +821,16 @@ const char *move_points_text_full(int mp, bool reduce, const char *prefix,
       }
       cancel = gcd;
     } else {
-      /* No cancellation */
+      // No cancellation
       cancel = 1;
     }
     if (mp < SINGLE_MOVE) {
-      /* Fractional move points */
+      // Fractional move points
       str += QStringLiteral("%1%2/%3").arg(
           prefix, QString::number((mp % SINGLE_MOVE) / cancel),
           QString::number(SINGLE_MOVE / cancel));
     } else {
-      /* Integer + fractional move points */
+      // Integer + fractional move points
       str += QStringLiteral("%1%2 %3/%4")
                  .arg(prefix, QString::number(mp / SINGLE_MOVE),
                       QString::number((mp % SINGLE_MOVE) / cancel),

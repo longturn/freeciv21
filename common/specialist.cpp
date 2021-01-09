@@ -14,11 +14,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 
-/* common */
+// common
 #include "city.h"
 #include "effects.h"
 #include "game.h"

@@ -12,10 +12,10 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <ctime> /* time_t */
+#include <ctime> // time_t
 
-/* common */
-#include "connection.h" /* struct conn_list */
+// common
+#include "connection.h" // struct conn_list
 #include "packets.h"
 #include "player.h"
 
@@ -36,7 +36,7 @@ enum barbarians_rate {
   BARBS_HORDES
 };
 
-/* (Possibly) supported methods (depending on what KArchive supports). */
+// (Possibly) supported methods (depending on what KArchive supports).
 enum compress_type {
   COMPRESS_PLAIN = 0,
   COMPRESS_ZLIB,
@@ -78,14 +78,14 @@ struct civ_game {
   struct packet_calendar_info calendar;
   struct packet_timeout_info tinfo;
 
-  struct government *default_government; /* may be overridden by nation */
+  struct government *default_government; // may be overridden by nation
   struct government *government_during_revolution;
 
-  struct conn_list *all_connections; /* including not yet established */
-  struct conn_list *est_connections; /* all established client conns */
-  struct conn_list *glob_observers;  /* global observers */
+  struct conn_list *all_connections; // including not yet established
+  struct conn_list *est_connections; // all established client conns
+  struct conn_list *glob_observers;  // global observers
 
-  struct veteran_system *veteran; /* veteran system */
+  struct veteran_system *veteran; // veteran system
 
   struct rgbcolor *plr_bg_color;
 
@@ -107,9 +107,9 @@ struct civ_game {
     struct {
       /* Only used in the server (./ai/ and ./server/). */
 
-      /* Defined in the ruleset. */
+      // Defined in the ruleset.
 
-      /* Game settings & other data. */
+      // Game settings & other data.
 
       enum city_names_mode allowed_city_names;
       enum plrcolor_mode plrcolormode;
@@ -138,7 +138,7 @@ struct civ_game {
       int incite_unit_factor;
       int init_vis_radius_sq;
       int kick_time;
-      int killunhomed; /* slowly killing unhomed units */
+      int killunhomed; // slowly killing unhomed units
       int maxconnectionsperhost;
       int max_players;
       char nationset[MAX_LEN_NAME];
@@ -181,23 +181,23 @@ struct civ_game {
       int tcptimeout;
       int techpenalty;
       bool turnblock;
-      int unitwaittime; /* minimal time between two movements of a unit */
+      int unitwaittime; // minimal time between two movements of a unit
       int upgrade_veteran_loss;
       bool vision_reveal_tiles;
 
       bool debug[DEBUG_LAST];
-      int timeoutint;     /* increase timeout every N turns... */
-      int timeoutinc;     /* ... by this amount ... */
+      int timeoutint;     // increase timeout every N turns...
+      int timeoutinc;     // ... by this amount ...
       int timeoutincmult; /* ... and multiply timeoutinc by this amount ...
                            */
-      int timeoutintinc;  /* ... and increase timeoutint by this amount */
+      int timeoutintinc;  // ... and increase timeoutint by this amount
       int timeoutcounter; /* timeoutcounter - timeoutint = turns to next inc.
                            */
       int timeoutaddenemymove; /* minimum timeout after an enemy move is seen
                                 */
 
       time_t last_ping;
-      civtimer *phase_timer; /* Time since seconds_to_phase_done was set. */
+      civtimer *phase_timer; // Time since seconds_to_phase_done was set.
       int additional_phase_seconds;
       /* The game.info.phase_mode value indicates the phase mode currently in
        * use. The "stored" value is a value the player can change; it won't
@@ -210,7 +210,7 @@ struct civ_game {
       bool scorelog;
       enum scoreQtMsgType scoreloglevel;
       char scorefile[MAX_LEN_NAME];
-      int scoreturn; /* next make_history_report() */
+      int scoreturn; // next make_history_report()
       int seed_setting;
       int seed;
 
@@ -228,7 +228,7 @@ struct civ_game {
       char allow_take[MAX_LEN_ALLOW_TAKE];
 
       bool
-          settings_gamestart_valid; /* Valid settings from the game start. */
+          settings_gamestart_valid; // Valid settings from the game start.
 
       struct rgbcolor_list *plr_colors;
 
@@ -241,12 +241,12 @@ struct civ_game {
         bool info;
       } event_cache;
 
-      /* used by the map editor to control game_save. */
+      // used by the map editor to control game_save.
       struct {
         bool save_known;       /* loading will just reveal the squares around
                                 * cities and units */
-        bool save_starts;      /* start positions will be auto generated */
-        bool save_private_map; /* FoW map; will be created if not saved */
+        bool save_starts;      // start positions will be auto generated
+        bool save_private_map; // FoW map; will be created if not saved
       } save_options;
 
       struct {
@@ -280,7 +280,7 @@ struct civ_game {
   };
 
   struct {
-    /* Function to be called in game_remove_unit when a unit is deleted. */
+    // Function to be called in game_remove_unit when a unit is deleted.
     void (*unit_deallocate)(int unit_id);
   } callbacks;
 };
@@ -290,7 +290,7 @@ void i_am_server();
 void i_am_client();
 static inline void i_am_tool()
 {
-  i_am_server(); /* No difference between a tool and server at the moment */
+  i_am_server(); // No difference between a tool and server at the moment
 }
 
 void game_init(bool keep_ruleset_value);
@@ -448,7 +448,7 @@ extern struct world wld;
 #define GAME_MAX_CITYMINDIST 11
 
 #define GAME_DEFAULT_CIVILWARSIZE 10
-#define GAME_MIN_CIVILWARSIZE 2 /* can't split an empire of 1 city */
+#define GAME_MIN_CIVILWARSIZE 2 // can't split an empire of 1 city
 #define GAME_MAX_CIVILWARSIZE 1000
 
 #define GAME_DEFAULT_RESTRICTINFRA false
@@ -462,7 +462,7 @@ extern struct world wld;
 
 #define GAME_DEFAULT_RAPTUREDELAY 1
 #define GAME_MIN_RAPTUREDELAY 1
-#define GAME_MAX_RAPTUREDELAY 99 /* 99 practicaly disables rapturing */
+#define GAME_MAX_RAPTUREDELAY 99 // 99 practicaly disables rapturing
 
 #define GAME_DEFAULT_DISASTERS 10
 #define GAME_MIN_DISASTERS 0
@@ -646,8 +646,8 @@ extern struct world wld;
 
 #define GAME_DEFAULT_SKILL_LEVEL AI_LEVEL_EASY
 #define GAME_HARDCODED_DEFAULT_SKILL_LEVEL                                  \
-  3 /* that was 'easy' in old saves */
-#define GAME_OLD_DEFAULT_SKILL_LEVEL 5 /* normal; for oldest save games */
+  3 // that was 'easy' in old saves
+#define GAME_OLD_DEFAULT_SKILL_LEVEL 5 // normal; for oldest save games
 
 #define GAME_DEFAULT_DEMOGRAPHY "NASRLPEMOCqrb"
 #define GAME_DEFAULT_ALLOW_TAKE "HAhadOo"
@@ -684,25 +684,25 @@ extern struct world wld;
 #define GAME_DEFAULT_AIRLIFTINGSTYLE AIRLIFTING_CLASSICAL
 #define GAME_DEFAULT_PERSISTENTREADY PERSISTENTR_DISABLED
 
-#define GAME_MAX_READ_RECURSION 10 /* max recursion for the read command */
+#define GAME_MAX_READ_RECURSION 10 // max recursion for the read command
 
-#define GAME_DEFAULT_KICK_TIME 1800 /* 1800 seconds = 30 minutes. */
-#define GAME_MIN_KICK_TIME 0 /* 0 = disabling. */
-#define GAME_MAX_KICK_TIME 86400 /* 86400 seconds = 24 hours. */
+#define GAME_DEFAULT_KICK_TIME 1800 // 1800 seconds = 30 minutes.
+#define GAME_MIN_KICK_TIME 0 // 0 = disabling.
+#define GAME_MAX_KICK_TIME 86400 // 86400 seconds = 24 hours.
 
-/* Max distance from the capital used to calculat the bribe cost. */
+// Max distance from the capital used to calculat the bribe cost.
 #define GAME_UNIT_BRIBE_DIST_MAX 32
 
-/* Max number of recursive transports. */
+// Max number of recursive transports.
 #define GAME_TRANSPORT_MAX_RECURSIVE 5
 
-/* ruleset settings */
+// ruleset settings
 
 #define RS_MAX_VALUE 1000000
 
-/* TRANS: year label (Anno Domini) */
+// TRANS: year label (Anno Domini)
 #define RS_DEFAULT_POS_YEAR_LABEL N_("AD")
-/* TRANS: year label (Before Christ) */
+// TRANS: year label (Before Christ)
 #define RS_DEFAULT_NEG_YEAR_LABEL N_("BC")
 
 #define RS_DEFAULT_ILLNESS_ON false
@@ -725,9 +725,9 @@ extern struct world wld;
 
 #define RS_DEFAULT_CALENDAR_SKIP_0 true
 
-#define RS_DEFAULT_BORDER_RADIUS_SQ_CITY 17 /* city radius 4 */
+#define RS_DEFAULT_BORDER_RADIUS_SQ_CITY 17 // city radius 4
 #define RS_MIN_BORDER_RADIUS_SQ_CITY 0
-#define RS_MAX_BORDER_RADIUS_SQ_CITY 401 /* city radius 20 */
+#define RS_MAX_BORDER_RADIUS_SQ_CITY 401 // city radius 20
 
 #define RS_DEFAULT_BORDER_SIZE_EFFECT 1
 #define RS_MIN_BORDER_SIZE_EFFECT 0
@@ -735,7 +735,7 @@ extern struct world wld;
 
 #define RS_DEFAULT_BORDER_RADIUS_SQ_CITY_PERMANENT 0
 #define RS_MIN_BORDER_RADIUS_SQ_CITY_PERMANENT (-CITY_MAP_MAX_RADIUS_SQ)
-#define RS_MAX_BORDER_RADIUS_SQ_CITY_PERMANENT 401 /* city radius 20 */
+#define RS_MAX_BORDER_RADIUS_SQ_CITY_PERMANENT 401 // city radius 20
 
 #define RS_DEFAULT_INCITE_BASE_COST 1000
 #define RS_MIN_INCITE_BASE_COST 0
@@ -767,14 +767,14 @@ extern struct world wld;
 #define RS_MIN_CITIES_MIN_DIST 1
 #define RS_MAX_CITIES_MIN_DIST RS_MAX_VALUE
 
-/* the constants CITY_MAP_*_RADIUS are defined in city.c */
+// the constants CITY_MAP_*_RADIUS are defined in city.c
 #define RS_DEFAULT_CITY_RADIUS_SQ CITY_MAP_DEFAULT_RADIUS_SQ
 #define RS_MIN_CITY_RADIUS_SQ CITY_MAP_MIN_RADIUS_SQ
 #define RS_MAX_CITY_RADIUS_SQ CITY_MAP_MAX_RADIUS_SQ
 
-#define RS_DEFAULT_VIS_RADIUS_SQ 5 /* city radius 2 */
+#define RS_DEFAULT_VIS_RADIUS_SQ 5 // city radius 2
 #define RS_MIN_VIS_RADIUS_SQ 0
-#define RS_MAX_VIS_RADIUS_SQ 401 /* city radius 20 */
+#define RS_MAX_VIS_RADIUS_SQ 401 // city radius 20
 
 #define RS_DEFAULT_BASE_POLLUTION -20
 /* no min / max values as it can be set to high negative values to

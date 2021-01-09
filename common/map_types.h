@@ -14,7 +14,7 @@
 
 #include <QHash>
 
-/* common */
+// common
 #include "fc_types.h"
 
 /****************************************************************
@@ -22,7 +22,7 @@
 *****************************************************************/
 #define terrain_misc packet_ruleset_terrain_control
 
-/* Some types used below. */
+// Some types used below.
 struct nation_hash;
 struct nation_type;
 struct packet_edit_startpos_full;
@@ -38,7 +38,7 @@ enum mapsize_type {
   MAPSIZE_PLAYER,       /* Define the number of (land) tiles per player;
                          * the setting 'landmass' and the number of players
                          * are used to calculate the map size. */
-  MAPSIZE_XYSIZE        /* 'xsize' and 'ysize' are defined. */
+  MAPSIZE_XYSIZE        // 'xsize' and 'ysize' are defined.
 };
 
 enum map_generator {
@@ -51,11 +51,11 @@ enum map_generator {
 };
 
 enum map_startpos {
-  MAPSTARTPOS_DEFAULT = 0, /* Generator's choice. */
-  MAPSTARTPOS_SINGLE,      /* One player per continent. */
-  MAPSTARTPOS_2or3,        /* Two on three players per continent. */
-  MAPSTARTPOS_ALL,         /* All players on a single continent. */
-  MAPSTARTPOS_VARIABLE,    /* Depending on size of continents. */
+  MAPSTARTPOS_DEFAULT = 0, // Generator's choice.
+  MAPSTARTPOS_SINGLE,      // One player per continent.
+  MAPSTARTPOS_2or3,        // Two on three players per continent.
+  MAPSTARTPOS_ALL,         // All players on a single continent.
+  MAPSTARTPOS_VARIABLE,    // Depending on size of continents.
 };
 
 #define SPECENUM_NAME team_placement
@@ -72,17 +72,17 @@ struct civ_map {
   int num_valid_dirs, num_cardinal_dirs;
   struct iter_index *iterate_outwards_indices;
   int num_iterate_outwards_indices;
-  int xsize, ysize; /* native dimensions */
+  int xsize, ysize; // native dimensions
   int num_continents;
-  int num_oceans; /* not updated at the client */
+  int num_oceans; // not updated at the client
   struct tile *tiles;
   QHash<struct tile *, struct startpos *> *startpos_table;
 
   union {
     struct {
-      enum mapsize_type mapsize; /* how the map size is defined */
-      int size;                  /* used to calculate [xy]size */
-      int tilesperplayer; /* tiles per player; used to calculate size */
+      enum mapsize_type mapsize; // how the map size is defined
+      int size;                  // used to calculate [xy]size
+      int tilesperplayer; // tiles per player; used to calculate size
       int seed_setting;
       int seed;
       int riches;
@@ -101,12 +101,12 @@ struct civ_map {
       int temperature;
       int wetness;
       int steepness;
-      bool ocean_resources; /* Resources in the middle of the ocean */
+      bool ocean_resources; // Resources in the middle of the ocean
       bool have_huts;
       bool have_resources;
       enum team_placement team_placement;
     } server;
 
-    /* Add client side when needed */
+    // Add client side when needed
   };
 };

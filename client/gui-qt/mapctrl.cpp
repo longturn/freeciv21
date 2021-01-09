@@ -94,7 +94,7 @@ void create_line_at_mouse_pos(void)
    when the mouse pointer moves.
  */
 void update_rect_at_mouse_pos(void)
-{ /* PLS DONT PORT IT */
+{ // PLS DONT PORT IT
 }
 
 /**
@@ -217,7 +217,7 @@ void map_view::shortcut_pressed(int key)
     pcity = nullptr;
   }
 
-  /* Trade Generator - skip */
+  // Trade Generator - skip
   sc = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
   if (bt == sc->mouse && md == sc->mod && king()->trade_gen.hover_city) {
     ptile = canvas_pos_to_tile(pos.x(), pos.y());
@@ -226,7 +226,7 @@ void map_view::shortcut_pressed(int key)
     return;
   }
 
-  /* Rally point - select city - skip */
+  // Rally point - select city - skip
   if (bt == sc->mouse && md == sc->mod && king()->rallies.hover_city) {
     char text[1024];
 
@@ -245,7 +245,7 @@ void map_view::shortcut_pressed(int key)
     return;
   }
 
-  /* Rally point - select tile  - skip */
+  // Rally point - select tile  - skip
   if (bt == Qt::LeftButton && king()->rallies.hover_tile && ptile != NULL) {
     char text[1024];
 
@@ -291,7 +291,7 @@ void map_view::shortcut_pressed(int key)
     king()->menu_bar->quick_airlifting = false;
     return;
   }
-  /* Check configured shortcuts */
+  // Check configured shortcuts
   if (!king()->menu_bar->delayed_order) {
     sc = fc_shortcuts::sc()->get_shortcut(SC_QUICK_SELECT);
     if (((key && key == sc->key) || bt == sc->mouse) && md == sc->mod
@@ -453,7 +453,7 @@ void map_view::shortcut_released(Qt::MouseButton bt)
       menu_click = false;
       return;
     }
-    /* FIXME that mail fail for other cases below */
+    // FIXME that mail fail for other cases below
     if (queen()->city_overlay->isVisible()) {
       return;
     }

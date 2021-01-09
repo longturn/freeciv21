@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "log.h"
 
-/* common */
+// common
 #include "city.h"
 #include "game.h"
 #include "government.h"
@@ -33,9 +33,9 @@
 #include "unit.h"
 #include "unitlist.h"
 
-/* server */
+// server
 #include "citytools.h"
-#include "cityturn.h" /* city_repair_size() */
+#include "cityturn.h" // city_repair_size()
 #include "maphand.h"
 #include "plrhand.h"
 #include "srv_main.h"
@@ -118,7 +118,7 @@ static void check_specials(const char *file, const char *function, int line)
 static void check_fow(const char *file, const char *function, int line)
 {
   if (!game_was_started()) {
-    /* The private map of the players is only allocated at game start. */
+    // The private map of the players is only allocated at game start.
     return;
   }
 
@@ -130,14 +130,14 @@ static void check_fow(const char *file, const char *function, int line)
 
       vision_layer_iterate(v)
       {
-        /* underflow of unsigned int */
+        // underflow of unsigned int
         SANITY_TILE(ptile, plr_tile->seen_count[v] < 30000);
         SANITY_TILE(ptile, plr_tile->own_seen[v] < 30000);
         SANITY_TILE(ptile, plr_tile->own_seen[v] <= plr_tile->seen_count[v]);
       }
       vision_layer_iterate_end;
 
-      /* Lots of server bits depend on this. */
+      // Lots of server bits depend on this.
       SANITY_TILE(ptile, plr_tile->seen_count[V_INVIS]
                              <= plr_tile->seen_count[V_MAIN]);
       SANITY_TILE(ptile,
@@ -160,7 +160,7 @@ static void check_misc(const char *file, const char *function, int line)
 {
   int nplayers = 0, nbarbs = 0;
 
-  /* Do not use player_slots_iterate as we want to check the index! */
+  // Do not use player_slots_iterate as we want to check the index!
   player_slots_iterate(pslot)
   {
     if (player_slot_is_used(pslot)) {
@@ -198,7 +198,7 @@ static void check_map(const char *file, const char *function, int line)
     }
 
     if (NULL == pcity && BORDERS_DISABLED == game.info.borders) {
-      /* Only city tiles are claimed when borders are disabled */
+      // Only city tiles are claimed when borders are disabled
       SANITY_TILE(ptile, tile_owner(ptile) == NULL);
     }
 
@@ -226,7 +226,7 @@ static void check_map(const char *file, const char *function, int line)
     {
       SANITY_TILE(ptile, same_pos(unit_tile(punit), ptile));
 
-      /* Check diplomatic status of stacked units. */
+      // Check diplomatic status of stacked units.
       unit_list_iterate(ptile->units, punit2)
       {
         SANITY_TILE(ptile,
@@ -253,7 +253,7 @@ static bool check_city_good(struct city *pcity, const char *file,
   struct tile *pcenter = city_tile(pcity);
 
   if (NULL == pcenter) {
-    /* Editor! */
+    // Editor!
     SANITY_FAIL("(----,----) city has no tile (skipping remaining tests), "
                 "at %s \"%s\"[%d]%s",
                 nation_rule_name(nation_of_player(pplayer)),
@@ -455,7 +455,7 @@ static void check_units(const char *file, const char *function, int line)
         }
       }
 
-      /* Unit in the correct player list? */
+      // Unit in the correct player list?
       SANITY_CHECK(player_unit_by_number(unit_owner(punit), punit->id)
                    != NULL);
 
@@ -483,11 +483,11 @@ static void check_units(const char *file, const char *function, int line)
       SANITY_CHECK(punit->moves_left >= 0);
       SANITY_CHECK(punit->hp > 0);
 
-      /* Check for ground units in the ocean. */
+      // Check for ground units in the ocean.
       SANITY_CHECK(can_unit_exist_at_tile(&(wld.map), punit, ptile)
                    || ptrans != NULL);
 
-      /* Check for over-full transports. */
+      // Check for over-full transports.
       SANITY_CHECK(get_transporter_occupancy(punit)
                    <= get_transporter_capacity(punit));
 
@@ -497,24 +497,24 @@ static void check_units(const char *file, const char *function, int line)
         struct unit *plevel = punit;
         int level = 0;
 
-        /* Make sure the transporter is on the tile. */
+        // Make sure the transporter is on the tile.
         SANITY_CHECK(same_pos(unit_tile(punit), unit_tile(ptrans)));
 
-        /* Can punit be cargo for its transporter? */
+        // Can punit be cargo for its transporter?
         SANITY_CHECK(unit_transport_check(punit, ptrans));
 
-        /* Check that the unit is listed as transported. */
+        // Check that the unit is listed as transported.
         SANITY_CHECK(unit_list_search(unit_transport_cargo(ptrans), punit)
                      != NULL);
 
-        /* Check the depth of the transportation. */
+        // Check the depth of the transportation.
         while (ptrans) {
           struct unit_list *pcargos = unit_transport_cargo(ptrans);
 
           SANITY_CHECK(pcargos != NULL);
           SANITY_CHECK(level < GAME_TRANSPORT_MAX_RECURSIVE);
 
-          /* Check for next level. */
+          // Check for next level.
           plevel = ptrans;
           ptrans = unit_transport_get(plevel);
           level++;
@@ -524,7 +524,7 @@ static void check_units(const char *file, const char *function, int line)
          * is checked */
       }
 
-      /* Check that cargo is marked as transported with this unit */
+      // Check that cargo is marked as transported with this unit
       unit_list_iterate(unit_transport_cargo(punit), pcargo)
       {
         SANITY_CHECK(unit_transport_get(pcargo) == punit);
@@ -546,7 +546,7 @@ static void check_players(const char *file, const char *function, int line)
     int found_primary_capital = 0;
 
     if (!pplayer->is_alive) {
-      /* Dead players' units and cities are disbanded in kill_player(). */
+      // Dead players' units and cities are disbanded in kill_player().
       SANITY_CHECK(unit_list_size(pplayer->units) == 0);
       SANITY_CHECK(city_list_size(pplayer->cities) == 0);
 
@@ -574,7 +574,7 @@ static void check_players(const char *file, const char *function, int line)
       struct player_diplstate *state1, *state2;
 
       if (pplayer2 == pplayer) {
-        break; /* Do diplomatic sanity check only once per player couple. */
+        break; // Do diplomatic sanity check only once per player couple.
       }
 
       state1 = player_diplstate_get(pplayer, pplayer2);
@@ -621,7 +621,7 @@ static void check_players(const char *file, const char *function, int line)
        * call is made.  No better check is possible. */
     }
 
-    /* Dying players shouldn't be left around.  But they are. */
+    // Dying players shouldn't be left around.  But they are.
     SANITY_CHECK(!BV_ISSET(pplayer->server.status, PSTATUS_DYING));
   }
   players_iterate_end;
@@ -653,7 +653,7 @@ static void check_teams(const char *file, const char *function, int line)
   memset(count, 0, sizeof(count));
   players_iterate(pplayer)
   {
-    /* For the moment, all players have teams. */
+    // For the moment, all players have teams.
     SANITY_CHECK(pplayer->team != NULL);
     if (pplayer->team) {
       count[team_index(pplayer->team)]++;
@@ -699,7 +699,7 @@ static void check_researches(const char *file, const char *function,
 static void check_connections(const char *file, const char *function,
                               int line)
 {
-  /* est_connections is a subset of all_connections */
+  // est_connections is a subset of all_connections
   SANITY_CHECK(conn_list_size(game.all_connections)
                >= conn_list_size(game.est_connections));
 }
@@ -755,4 +755,4 @@ void real_sanity_check_tile(struct tile *ptile, const char *file,
   unit_list_iterate_end;
 }
 
-#endif /* SANITY_CHECKING */
+#endif // SANITY_CHECKING

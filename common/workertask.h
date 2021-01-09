@@ -19,7 +19,7 @@ struct worker_task {
   int want;
 };
 
-/* get 'struct worker_task_list' and related functions: */
+// get 'struct worker_task_list' and related functions:
 #define SPECLIST_TAG worker_task
 #define SPECLIST_TYPE struct worker_task
 #include "speclist.h"

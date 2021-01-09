@@ -28,13 +28,13 @@ struct fcmp_params {
   "http://files.freeciv.org/modinst/" DATASUBDIR "/modpack.list"
 #endif
 #define DEFAULT_URL_START "http://files.freeciv.org/modinst/" DATASUBDIR "/"
-#else /* IS_DEVEL_VERSION */
+#else // IS_DEVEL_VERSION
 #ifndef MODPACK_LIST_URL
 #define MODPACK_LIST_URL                                                    \
   "http://modpack.freeciv.org/" DATASUBDIR "/modpack.list"
 #endif
 #define DEFAULT_URL_START "http://modpack.freeciv.org/" DATASUBDIR "/"
-#endif /* IS_DEVEL_VERSION */
+#endif // IS_DEVEL_VERSION
 
 #define EXAMPLE_URL DEFAULT_URL_START "ancients.modpack"
 
@@ -60,4 +60,4 @@ void fcmp_deinit();
 
 void load_install_info_lists(struct fcmp_params *fcmp);
 
-#endif /* FC__MODINST_H */
+#endif // FC__MODINST_H

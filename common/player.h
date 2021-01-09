@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
+// common
 #include "city.h"
 #include "effects.h"
 #include "spaceship.h"
@@ -58,15 +58,15 @@ struct player_economic {
 };
 
 #define SPECENUM_NAME player_status
-/* 'normal' status */
+// 'normal' status
 #define SPECENUM_VALUE0 PSTATUS_NORMAL
-/* set once the player is in the process of dying */
+// set once the player is in the process of dying
 #define SPECENUM_VALUE1 PSTATUS_DYING
-/* this player is winner in scenario game */
+// this player is winner in scenario game
 #define SPECENUM_VALUE2 PSTATUS_WINNER
-/* has indicated willingness to surrender */
+// has indicated willingness to surrender
 #define SPECENUM_VALUE3 PSTATUS_SURRENDER
-/* keep this last */
+// keep this last
 #define SPECENUM_COUNT PSTATUS_COUNT
 #include "specenum_gen.h"
 
@@ -83,7 +83,7 @@ struct player_score {
   int techout;
   int landarea;
   int settledarea;
-  int population; /* in thousand of citizen */
+  int population; // in thousand of citizen
   int cities;
   int units;
   int pollution;
@@ -91,20 +91,20 @@ struct player_score {
   int bnp;
   int mfg;
   int spaceship;
-  int units_built;  /* Number of units this player produced. */
-  int units_killed; /* Number of enemy units killed. */
+  int units_built;  // Number of units this player produced.
+  int units_killed; // Number of enemy units killed.
   int units_lost;   /* Number of own units that died,
                      * by combat or otherwise. */
   int culture;
-  int game; /* Total score you get in player dialog. */
+  int game; // Total score you get in player dialog.
 };
 
 struct player_ai {
   int maxbuycost;
   QBitArray *handicaps;
   enum ai_level skill_level; /* 0-10 value for save/load/display */
-  int fuzzy;                 /* chance in 1000 to mis-decide */
-  int expand;                /* percentage factor to value new cities */
+  int fuzzy;                 // chance in 1000 to mis-decide
+  int expand;                // percentage factor to value new cities
   int science_cost;          /* Cost in bulbs to get new tech, relative
                                 to non-AI players (100: Equal cost) */
   int warmth, frost;         /* threat of global warming / nuclear winter */
@@ -139,7 +139,7 @@ struct player_ai {
 #define SPECENUM_VALUE6NAME N_("?diplomatic_state:Team")
 /* When adding or removing entries, note that first value
  * of diplrel_other should be next to last diplstate_type */
-#define SPECENUM_COUNT DS_LAST /* leave this last */
+#define SPECENUM_COUNT DS_LAST // leave this last
 #include "specenum_gen.h"
 
 /* Other diplomatic relation properties.
@@ -171,7 +171,7 @@ struct player_ai {
 #include "specenum_gen.h"
 
 BV_DEFINE(bv_diplrel_all_reqs,
-          /* Reserve a location for each possible DiplRel requirement. */
+          // Reserve a location for each possible DiplRel requirement.
           ((DRO_LAST - 1) * 2) * REQ_RANGE_COUNT);
 
 enum dipl_reason {
@@ -182,16 +182,16 @@ enum dipl_reason {
   DIPL_ALLIANCE_PROBLEM_THEM
 };
 
-/* the following are for "pacts" */
+// the following are for "pacts"
 struct player_diplstate {
-  enum diplstate_type type; /* this player's disposition towards other */
-  enum diplstate_type max_state; /* maximum treaty level ever had */
-  int first_contact_turn;   /* turn we had first contact with this player */
-  int turns_left;           /* until pact (e.g., cease-fire) ends */
-  int has_reason_to_cancel; /* 0: no, 1: this turn, 2: this or next turn */
-  int contact_turns_left;   /* until contact ends */
+  enum diplstate_type type; // this player's disposition towards other
+  enum diplstate_type max_state; // maximum treaty level ever had
+  int first_contact_turn;   // turn we had first contact with this player
+  int turns_left;           // until pact (e.g., cease-fire) ends
+  int has_reason_to_cancel; // 0: no, 1: this turn, 2: this or next turn
+  int contact_turns_left;   // until contact ends
 
-  int auto_cancel_turn; /* used to avoid asymmetric turns_left */
+  int auto_cancel_turn; // used to avoid asymmetric turns_left
 };
 
 /***************************************************************************
@@ -210,7 +210,7 @@ BV_DEFINE(bv_debug, PLAYER_DEBUG_LAST);
 struct attribute_block_s {
   void *data;
   int length;
-#define MAX_ATTRIBUTE_BLOCK (256 * 1024) /* largest attribute block */
+#define MAX_ATTRIBUTE_BLOCK (256 * 1024) // largest attribute block
 };
 
 struct ai_type;
@@ -228,17 +228,17 @@ struct player {
   char name[MAX_LEN_NAME];
   char username[MAX_LEN_NAME];
   bool unassigned_user;
-  char ranked_username[MAX_LEN_NAME]; /* the user who will be ranked */
+  char ranked_username[MAX_LEN_NAME]; // the user who will be ranked
   bool unassigned_ranked;
-  int user_turns; /* number of turns this user has played */
+  int user_turns; // number of turns this user has played
   bool is_male;
-  struct government *government;        /* may be NULL in pregame */
-  struct government *target_government; /* may be NULL */
+  struct government *government;        // may be NULL in pregame
+  struct government *target_government; // may be NULL
   struct nation_type *nation;
   struct team *team;
-  bool is_ready;      /* Did the player click "start" yet? */
-  bool phase_done;    /* Has human player finished */
-  bool ai_phase_done; /* Has AI type finished */
+  bool is_ready;      // Did the player click "start" yet?
+  bool phase_done;    // Has human player finished
+  bool ai_phase_done; // Has AI type finished
   int nturns_idle;
   int turns_alive; /* Number of turns this player has spent alive;
                     * 0 when created, increment at the end of each turn */
@@ -246,7 +246,7 @@ struct player {
   bool is_winner;
   int last_war_action;
 
-  /* Turn in which the player's revolution is over; see update_revolution. */
+  // Turn in which the player's revolution is over; see update_revolution.
   int revolution_finishes;
 
   int primary_capital_id;
@@ -271,8 +271,8 @@ struct player {
   bool was_created; /* if the player was /created */
   bool random_name;
   bool is_connected;
-  struct connection *current_conn; /* non-null while handling packet */
-  struct conn_list *connections;   /* will replace conn */
+  struct connection *current_conn; // non-null while handling packet
+  struct conn_list *connections;   // will replace conn
   bv_player gives_shared_vision;   /* bitvector those that give you
                                     * shared vision */
   int wonders[B_LAST];             /* contains city id's, WONDER_NOT_BUILT,
@@ -284,9 +284,9 @@ struct player {
 
   struct rgbcolor *rgb;
 
-  /* Values currently in force. */
+  // Values currently in force.
   int multipliers[MAX_NUM_MULTIPLIERS];
-  /* Values to be used next turn. */
+  // Values to be used next turn.
   int multipliers_target[MAX_NUM_MULTIPLIERS];
 
   int history; /* National level culture - does not include culture of
@@ -303,7 +303,7 @@ struct player {
 
       struct player_tile *private_map;
 
-      /* Player can see inside his borders. */
+      // Player can see inside his borders.
       bool border_vision;
 
       bv_player really_gives_vision; /* takes into account that p3 may see
@@ -315,7 +315,7 @@ struct player {
 
       void *ais[FREECIV_AI_MOD_LAST];
 
-      /* This user is allowed to take over the player. */
+      // This user is allowed to take over the player.
       char delegate_to[MAX_LEN_NAME];
       /* This is set when a player is 'involved' in a delegation.
        * There are two cases:
@@ -326,9 +326,9 @@ struct player {
        *    (In this case orig_username == username.) */
       char orig_username[MAX_LEN_NAME];
 
-      int huts; /* How many huts this player has found */
+      int huts; // How many huts this player has found
 
-      int bulbs_last_turn; /* Number of bulbs researched last turn only. */
+      int bulbs_last_turn; // Number of bulbs researched last turn only.
     } server;
 
     struct {
@@ -348,7 +348,7 @@ struct player {
   };
 };
 
-/* Initialization and iteration */
+// Initialization and iteration
 void player_slots_init();
 bool player_slots_initialised();
 void player_slots_free();
@@ -356,7 +356,7 @@ void player_slots_free();
 struct player_slot *player_slot_first();
 struct player_slot *player_slot_next(struct player_slot *pslot);
 
-/* A player slot contains a possibly uninitialized player. */
+// A player slot contains a possibly uninitialized player.
 int player_slot_count();
 int player_slot_index(const struct player_slot *pslot);
 struct player *player_slot_get_player(const struct player_slot *pslot);
@@ -364,7 +364,7 @@ bool player_slot_is_used(const struct player_slot *pslot);
 struct player_slot *player_slot_by_number(int player_id);
 int player_slot_max_used_number();
 
-/* General player accessor functions. */
+// General player accessor functions.
 struct player *player_new(struct player_slot *pslot);
 void player_set_color(struct player *pplayer,
                       const struct rgbcolor *prgbcolor);
@@ -492,7 +492,7 @@ int player_multiplier_effect_value(const struct player *pplayer,
 int player_multiplier_target_value(const struct player *pplayer,
                                    const struct multiplier *pmul);
 
-/* iterate over all player slots */
+// iterate over all player slots
 #define player_slots_iterate(_pslot)                                        \
   if (player_slots_initialised()) {                                         \
     struct player_slot *_pslot = player_slot_first();                       \
@@ -501,7 +501,7 @@ int player_multiplier_target_value(const struct player *pplayer,
   }                                                                         \
   }
 
-/* iterate over all players, which are used at the moment */
+// iterate over all players, which are used at the moment
 #define players_iterate(_pplayer)                                           \
   player_slots_iterate(_pslot##_pplayer)                                    \
   {                                                                         \
@@ -513,7 +513,7 @@ int player_multiplier_target_value(const struct player *pplayer,
   }                                                                         \
   player_slots_iterate_end;
 
-/* iterate over all players, which are used at the moment and are alive */
+// iterate over all players, which are used at the moment and are alive
 #define players_iterate_alive(_pplayer)                                     \
   players_iterate(_pplayer)                                                 \
   {                                                                         \
@@ -524,7 +524,7 @@ int player_multiplier_target_value(const struct player *pplayer,
   }                                                                         \
   players_iterate_end;
 
-/* get 'struct player_list' and related functions: */
+// get 'struct player_list' and related functions:
 #define SPECLIST_TAG player
 #define SPECLIST_TYPE struct player
 #include "speclist.h"
@@ -533,10 +533,10 @@ int player_multiplier_target_value(const struct player *pplayer,
   TYPED_LIST_ITERATE(struct player, playerlist, pplayer)
 #define player_list_iterate_end LIST_ITERATE_END
 
-/* ai love values should be in range [-MAX_AI_LOVE..MAX_AI_LOVE] */
+// ai love values should be in range [-MAX_AI_LOVE..MAX_AI_LOVE]
 #define MAX_AI_LOVE 1000
 
-/* User functions. */
+// User functions.
 bool is_valid_username(const char *name);
 
 #define ai_level_cmd(_level_) ai_level_name(_level_)

@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "fc_interface.h"
 
 #include "server_settings.h"

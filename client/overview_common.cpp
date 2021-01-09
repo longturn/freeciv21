@@ -15,13 +15,13 @@
 #include <fc_config.h>
 #endif
 
-#include <cmath> /* floor */
+#include <cmath> // floor
 
-/* utility */
+// utility
 #include "log.h"
 
-/* client */
-#include "client_main.h" /* can_client_change_view() */
+// client
+#include "client_main.h" // can_client_change_view()
 #include "climap.h"
 #include "control.h"
 #include "mapview_g.h"
@@ -32,7 +32,7 @@
 int OVERVIEW_TILE_SIZE = 2;
 #if 0
 struct overview overview = {
-  /* These are the default values.  All others are zeroed automatically. */
+  // These are the default values.  All others are zeroed automatically.
   .fog = TRUE,
   .layers = {[OLAYER_BACKGROUND] = TRUE,
 	     [OLAYER_UNITS] = TRUE,
@@ -63,7 +63,7 @@ static void gui_to_natural_pos(const struct tileset *t, double *ntl_x,
   /* First convert to map positions.  This ignores hex conversions; we're
    * not looking for an exact tile. */
   if (tileset_is_isometric(t)) {
-    /* Includes hex cases. */
+    // Includes hex cases.
     map_x = (gui_xd * H + gui_yd * W) / (W * H);
     map_y = (gui_yd * W - gui_xd * H) / (W * H);
   } else {
@@ -86,11 +86,11 @@ void gui_to_overview_pos(const struct tileset *t, int *ovr_x, int *ovr_y,
 
   gui_to_natural_pos(t, &ntl_x, &ntl_y, gui_x, gui_y);
 
-  /* Now convert straight to overview coordinates. */
+  // Now convert straight to overview coordinates.
   *ovr_x = floor((ntl_x - gui_options.overview.map_x0) * OVERVIEW_TILE_SIZE);
   *ovr_y = floor((ntl_y - gui_options.overview.map_y0) * OVERVIEW_TILE_SIZE);
 
-  /* Now do additional adjustments.  See map_to_overview_pos(). */
+  // Now do additional adjustments.  See map_to_overview_pos().
   if (current_topo_has_flag(TF_WRAPX)) {
     *ovr_x = FC_WRAP(*ovr_x, NATURAL_WIDTH * OVERVIEW_TILE_SIZE);
   } else {
@@ -121,7 +121,7 @@ static QColor *overview_tile_color(struct tile *ptile)
           || city_owner(pcity) == client.conn.playing) {
         return get_color(tileset, COLOR_OVERVIEW_MY_CITY);
       } else if (pplayers_allied(city_owner(pcity), client.conn.playing)) {
-        /* Includes teams. */
+        // Includes teams.
         return get_color(tileset, COLOR_OVERVIEW_ALLIED_CITY);
       } else {
         return get_color(tileset, COLOR_OVERVIEW_ENEMY_CITY);
@@ -136,7 +136,7 @@ static QColor *overview_tile_color(struct tile *ptile)
           || unit_owner(punit) == client.conn.playing) {
         return get_color(tileset, COLOR_OVERVIEW_MY_UNIT);
       } else if (pplayers_allied(unit_owner(punit), client.conn.playing)) {
-        /* Includes teams. */
+        // Includes teams.
         return get_color(tileset, COLOR_OVERVIEW_ALLIED_UNIT);
       } else {
         return get_color(tileset, COLOR_OVERVIEW_ENEMY_UNIT);
@@ -334,12 +334,12 @@ void overview_to_map_pos(int *map_x, int *map_y, int overview_x,
   int ntl_y = overview_y / OVERVIEW_TILE_SIZE + gui_options.overview.map_y0;
 
   if (MAP_IS_ISOMETRIC && !current_topo_has_flag(TF_WRAPX)) {
-    /* Clip half tile left and right.  See comment in map_to_overview_pos. */
+    // Clip half tile left and right.  See comment in map_to_overview_pos.
     ntl_x++;
   }
 
   NATURAL_TO_MAP_POS(map_x, map_y, ntl_x, ntl_y);
-  /* All positions on the overview should be valid. */
+  // All positions on the overview should be valid.
   fc_assert(normalize_map_pos(&(wld.map), map_x, map_y));
 }
 
@@ -422,9 +422,9 @@ void calculate_overview_dimensions()
   int w, h;
   int xfact = MAP_IS_ISOMETRIC ? 2 : 1;
 
-  static int recursion = 0; /* Just to be safe. */
+  static int recursion = 0; // Just to be safe.
 
-  /* Clip half tile left and right.  See comment in map_to_overview_pos. */
+  // Clip half tile left and right.  See comment in map_to_overview_pos.
   int shift =
       (MAP_IS_ISOMETRIC && !current_topo_has_flag(TF_WRAPX)) ? -1 : 0;
 

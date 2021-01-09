@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
+// common
 #include "combat.h"
 #include "fc_types.h"
 #include "unittype.h"
@@ -37,18 +37,18 @@ enum ai_unit_task {
 };
 
 struct unit_ai {
-  /* The following are unit ids or special indicator values (<=0) */
-  int ferryboat; /* the ferryboat assigned to us */
-  int passenger; /* the unit assigned to this ferryboat */
-  int bodyguard; /* the unit bodyguarding us */
-  int charge;    /* the unit this unit is bodyguarding */
+  // The following are unit ids or special indicator values (<=0)
+  int ferryboat; // the ferryboat assigned to us
+  int passenger; // the unit assigned to this ferryboat
+  int bodyguard; // the unit bodyguarding us
+  int charge;    // the unit this unit is bodyguarding
 
   struct tile *prev_struct, *cur_struct;
   struct tile **prev_pos, **cur_pos;
 
-  int target;       /* target we hunt */
-  bv_player hunted; /* if a player is hunting us, set by that player */
-  bool done;        /* we are done controlling this unit this turn */
+  int target;       // target we hunt
+  bv_player hunted; // if a player is hunting us, set by that player
+  bool done;        // we are done controlling this unit this turn
 
   enum ai_unit_task task;
 };
@@ -61,7 +61,7 @@ struct unit_type_ai {
   struct unit_type_list *potential_charges;
 };
 
-/* Simple military macros */
+// Simple military macros
 
 /* pplayers_at_war() thinks no contacts equals war, which often is
  * very annoying. */
@@ -81,7 +81,7 @@ struct unit_type_ai {
   (ut->pop_cost * 3 + ut->happy_cost + ut->upkeep[O_SHIELD]                 \
    + ut->upkeep[O_FOOD] + ut->upkeep[O_GOLD])
 
-/* Invasion types */
+// Invasion types
 #define INVASION_OCCUPY 0
 #define INVASION_ATTACK 1
 

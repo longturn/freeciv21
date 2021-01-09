@@ -20,13 +20,13 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "capability.h"
 #include "fcintl.h"
 #include "log.h"
 #include "support.h"
 
-/* commmon */
+// commmon
 #include "dataio.h"
 #include "events.h"
 #include "game.h"
@@ -76,7 +76,7 @@ static int stat_size_no_compression = 0;
  */
 static inline int get_compression_level()
 {
-  static int level = -2; /* Magic not initialized, see below. */
+  static int level = -2; // Magic not initialized, see below.
 
   if (-2 == level) {
     const char *s = getenv("FREECIV_COMPRESSION_LEVEL");
@@ -110,7 +110,7 @@ static bool conn_compression_flush(struct connection *pconn)
   fc_assert_ret_val(
       data_type_size(data_type(pconn->packet_header.length)) == 2, false);
 
-  /* Include normal length field in decision */
+  // Include normal length field in decision
   jumbo = (compressed_size + 2 >= JUMBO_BORDER);
 
   compressed_packet_len = compressed_size + (jumbo ? 6 : 2);
@@ -183,7 +183,7 @@ bool conn_compression_thaw(struct connection *pconn)
 int send_packet_data(struct connection *pc, unsigned char *data, int len,
                      enum packet_type packet_type)
 {
-  /* default for the server */
+  // default for the server
   int result = 0;
 
   log_packet("sending packet type=%s(%d) len=%d to %s",
@@ -324,7 +324,7 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
       delta_stats_reset();
     }
   }
-#endif /* PACKET_SIZE_STATISTICS */
+#endif // PACKET_SIZE_STATISTICS
 
   return result;
 }
@@ -350,19 +350,19 @@ void *get_packet_from_connection_raw(struct connection *pc,
   void *(*receive_handler)(struct connection *);
 
   if (!pc->used) {
-    return NULL; /* connection was closed, stop reading */
+    return NULL; // connection was closed, stop reading
   }
 
   if (pc->buffer->ndata
       < data_type_size(data_type(pc->packet_header.length))) {
-    /* Not got enough for a length field yet */
+    // Not got enough for a length field yet
     return NULL;
   }
 
   dio_input_init(&din, pc->buffer->data, pc->buffer->ndata);
   dio_get_type_raw(&din, data_type(pc->packet_header.length), &len_read);
 
-  /* The non-compressed case */
+  // The non-compressed case
   whole_packet_len = len_read;
 
   /* Compression signalling currently assumes a 2-byte packet length; if that
@@ -376,7 +376,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
       log_compress("COMPRESS: got a jumbo packet of size %d",
                    whole_packet_len);
     } else {
-      /* to return NULL below */
+      // to return NULL below
       whole_packet_len = 6;
     }
   } else if (len_read >= COMPRESSION_BORDER) {
@@ -388,7 +388,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
   }
 
   if (static_cast<unsigned>(whole_packet_len) > pc->buffer->ndata) {
-    return NULL; /* not all data has been read */
+    return NULL; // not all data has been read
   }
 
   if (whole_packet_len < header_size) {
@@ -544,7 +544,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
              sum, packet_counter, sum / packet_counter);
     }
   }
-#endif /* PACKET_SIZE_STATISTICS */
+#endif // PACKET_SIZE_STATISTICS
   data = receive_handler(pc);
   if (!data) {
     connection_close(pc, _("incompatible packet contents"));
@@ -588,7 +588,7 @@ void packet_header_init(struct packet_header *packet_header)
  */
 static inline void packet_header_set(struct packet_header *packet_header)
 {
-  /* Ensure we have values initialized in packet_header_init(). */
+  // Ensure we have values initialized in packet_header_init().
   fc_assert(packet_header->length == DIOT_UINT16);
   fc_assert(packet_header->type == DIOT_UINT8);
 
@@ -657,13 +657,13 @@ void generic_handle_player_attribute_chunk(
   if (chunk->total_length < 0 || chunk->chunk_length < 0
       || chunk->total_length >= MAX_ATTRIBUTE_BLOCK || chunk->offset < 0
       || chunk->offset
-             > chunk->total_length /* necessary check on 32 bit systems */
+             > chunk->total_length // necessary check on 32 bit systems
       || chunk->chunk_length > chunk->total_length
       || chunk->offset + chunk->chunk_length > chunk->total_length
       || (chunk->offset != 0
           && chunk->total_length
                  != pplayer->attribute_block_buffer.length)) {
-    /* wrong attribute data */
+    // wrong attribute data
     if (pplayer->attribute_block_buffer.data) {
       free(pplayer->attribute_block_buffer.data);
       pplayer->attribute_block_buffer.data = NULL;
@@ -672,7 +672,7 @@ void generic_handle_player_attribute_chunk(
     qCritical("Received wrong attribute chunk");
     return;
   }
-  /* first one in a row */
+  // first one in a row
   if (chunk->offset == 0) {
     if (pplayer->attribute_block_buffer.data) {
       free(pplayer->attribute_block_buffer.data);
@@ -686,7 +686,7 @@ void generic_handle_player_attribute_chunk(
          chunk->data, chunk->chunk_length);
 
   if (chunk->offset + chunk->chunk_length == chunk->total_length) {
-    /* Received full attribute block */
+    // Received full attribute block
     if (pplayer->attribute_block.data != NULL) {
       free(pplayer->attribute_block.data);
     }
@@ -754,7 +754,7 @@ void pre_send_packet_player_attribute_chunk(
   Q_UNUSED(pc)
   fc_assert(packet->total_length > 0
             && packet->total_length < MAX_ATTRIBUTE_BLOCK);
-  /* 500 bytes header, just to be sure */
+  // 500 bytes header, just to be sure
   fc_assert(packet->chunk_length > 0
             && packet->chunk_length < MAX_LEN_PACKET - 500);
   fc_assert(packet->chunk_length <= packet->total_length);
@@ -797,7 +797,7 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
 
   fc_assert(strlen(capability) < sizeof(functional_capability));
 
-  /* Get functional network capability string. */
+  // Get functional network capability string.
   tokens = QString(capability).split(QStringLiteral(" \t\n,"));
   tokens.sort();
 
@@ -811,7 +811,7 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
     sz_strlcat(functional_capability, qUtf8Printable(str));
   }
 
-  /* Lookup handlers for the capabilities or create new handlers. */
+  // Lookup handlers for the capabilities or create new handlers.
   if (!packet_handlers_hash->contains(functional_capability)) {
     phandlers = new struct packet_handlers;
     memcpy(phandlers, packet_handlers_initial(), sizeof(*phandlers));

@@ -13,10 +13,10 @@
 
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
+// utility
+#include "support.h" // bool type
 
-/* common */
+// common
 #include "fc_types.h"
 
 #define MIN_UNREST_DIST 5
@@ -24,7 +24,7 @@
 
 #define UPRISE_CIV_SIZE 10
 
-#define MAP_FACTOR 2000 /* adjust this to get a good uprising frequency */
+#define MAP_FACTOR 2000 // adjust this to get a good uprising frequency
 
 #define BARBARIAN_MIN_LIFESPAN 5
 

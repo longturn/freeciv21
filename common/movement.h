@@ -16,7 +16,7 @@
 
 #define SINGLE_MOVE (terrain_control.move_fragments)
 #define MOVE_COST_IGTER (terrain_control.igter_cost)
-/* packets.def MOVEFRAGS */
+// packets.def MOVEFRAGS
 #define MAX_MOVE_FRAGS 65535
 
 struct unit_type;
@@ -26,8 +26,8 @@ enum unit_move_result {
   MR_OK,
   MR_DEATH,
   MR_PAUSE,
-  MR_NO_WAR, /* Can't move here without declaring war. */
-  MR_PEACE,  /* Can't move here because of a peace treaty. */
+  MR_NO_WAR, // Can't move here without declaring war.
+  MR_PEACE,  // Can't move here because of a peace treaty.
   MR_ZOC,
   MR_BAD_ACTIVITY,
   MR_BAD_DESTINATION,
@@ -37,7 +37,7 @@ enum unit_move_result {
   MR_NO_TRANSPORTER_CAPACITY,
   MR_TRIREME,
   MR_CANNOT_DISEMBARK,
-  MR_NON_NATIVE_MOVE, /* Usually RMM_RELAXED road diagonally without link */
+  MR_NON_NATIVE_MOVE, // Usually RMM_RELAXED road diagonally without link
   MR_ANIMAL_DISALLOWED,
   MR_UNIT_STAY,
   MR_NOT_ALLOWED

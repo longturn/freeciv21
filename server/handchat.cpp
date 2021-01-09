@@ -19,19 +19,19 @@
 #include <cstdio>
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "chat.h"
 #include "game.h"
 #include "packets.h"
 #include "player.h"
 
-/* server */
+// server
 #include "console.h"
 #include "notify.h"
 #include "stdinhand.h"
@@ -39,7 +39,7 @@
 #include "handchat.h"
 
 #define MAX_LEN_CHAT_NAME                                                   \
-  (2 * MAX_LEN_NAME + 10) /* for form_chat_name() names */
+  (2 * MAX_LEN_NAME + 10) // for form_chat_name() names
 
 static void send_chat_msg(struct connection *pconn,
                           const struct connection *sender,
@@ -158,22 +158,22 @@ static void chat_msg_to_player(struct connection *sender,
 {
   struct packet_chat_msg packet;
   char sender_name[MAX_LEN_CHAT_NAME];
-  struct connection *dest = NULL; /* The 'pdest' user. */
+  struct connection *dest = NULL; // The 'pdest' user.
   struct event_cache_players *players = event_cache_player_add(NULL, pdest);
 
   msg = skip_leading_spaces(msg);
   form_chat_name(sender, sender_name, sizeof(sender_name));
 
-  /* Find the user of the player 'pdest'. */
+  // Find the user of the player 'pdest'.
   conn_list_iterate(pdest->connections, pconn)
   {
     if (!pconn->observer) {
-      /* Found it! */
+      // Found it!
       if (conn_is_ignored(sender, pconn)) {
         send_chat_msg(sender, NULL, ftc_warning,
                       _("You cannot send messages to %s; you are ignored."),
                       player_name(pdest));
-        return; /* NB: stop here, don't send to observers. */
+        return; // NB: stop here, don't send to observers.
       }
       dest = pconn;
       break;
@@ -181,17 +181,17 @@ static void chat_msg_to_player(struct connection *sender,
   }
   conn_list_iterate_end;
 
-  /* Repeat the message for the sender. */
+  // Repeat the message for the sender.
   send_chat_msg(sender, sender, ftc_chat_private, "->{%s} %s",
                 player_name(pdest), msg);
 
-  /* Send the message to destination. */
+  // Send the message to destination.
   if (NULL != dest && dest != sender) {
     send_chat_msg(dest, sender, ftc_chat_private, "{%s} %s", sender_name,
                   msg);
   }
 
-  /* Send the message to player observers. */
+  // Send the message to player observers.
   package_chat_msg(&packet, sender, ftc_chat_private, "{%s -> %s} %s",
                    sender_name, player_name(pdest), msg);
   conn_list_iterate(pdest->connections, pconn)
@@ -204,7 +204,7 @@ static void chat_msg_to_player(struct connection *sender,
   conn_list_iterate_end;
   if (NULL != sender->playing && !sender->observer
       && sender->playing != pdest) {
-    /* The sender is another player. */
+    // The sender is another player.
     conn_list_iterate(sender->playing->connections, pconn)
     {
       if (pconn != sender && !conn_is_ignored(sender, pconn)) {
@@ -213,7 +213,7 @@ static void chat_msg_to_player(struct connection *sender,
     }
     conn_list_iterate_end;
 
-    /* Add player to event cache. */
+    // Add player to event cache.
     players = event_cache_player_add(players, sender->playing);
   }
 
@@ -252,7 +252,7 @@ static void chat_msg_to_allies(struct connection *sender, char *msg)
   }
   players_iterate_end;
 
-  /* Add to the event cache. */
+  // Add to the event cache.
   event_cache_add_for_players(&packet, players);
 }
 
@@ -280,7 +280,7 @@ static void chat_msg_to_global_observers(struct connection *sender,
   }
   conn_list_iterate_end;
 
-  /* Add to the event cache. */
+  // Add to the event cache.
   event_cache_add_for_global_observers(&packet);
 }
 
@@ -300,7 +300,7 @@ static void chat_msg_to_all(struct connection *sender, char *msg)
   con_write(C_COMMENT, "%s", packet.message);
   lsend_packet_chat_msg(game.est_connections, &packet);
 
-  /* Add to the event cache. */
+  // Add to the event cache.
   event_cache_add_for_all(&packet);
 }
 
@@ -350,14 +350,14 @@ void handle_chat_msg_req(struct connection *pconn, const char *message)
      or change it in chat.h - rp
   */
   if (real_message[0] == SERVER_COMMAND_PREFIX) {
-    /* pass it to the command parser, which will chop the prefix off */
+    // pass it to the command parser, which will chop the prefix off
     (void) handle_stdin_input(pconn, real_message);
     return;
   }
 
-  /* Send to allies command */
+  // Send to allies command
   if (real_message[0] == CHAT_ALLIES_PREFIX) {
-    /* this won't work if we aren't attached to a player */
+    // this won't work if we aren't attached to a player
     if (NULL == pconn->playing && !pconn->observer) {
       notify_conn(pconn->self, NULL, E_CHAT_ERROR, ftc_server,
                   _("You are not attached to a player."));
@@ -419,7 +419,7 @@ void handle_chat_msg_req(struct connection *pconn, const char *message)
         return;
       }
     } else {
-      /* single colon */
+      // single colon
       pdest = player_by_name_prefix(name, &match_result_player);
       if (match_result_player == M_PRE_AMBIGUOUS) {
         complain_ambiguous(pconn, name, 0);
@@ -432,7 +432,7 @@ void handle_chat_msg_req(struct connection *pconn, const char *message)
       if (pdest && match_result_player < M_PRE_AMBIGUOUS) {
         chat_msg_to_player(pconn, pdest, cp + 1);
         return;
-        /* else try for connection name match before complaining */
+        // else try for connection name match before complaining
       }
       conn_dest = conn_by_user_prefix(name, &match_result_conn);
       if (match_result_conn == M_PRE_AMBIGUOUS) {
@@ -460,6 +460,6 @@ void handle_chat_msg_req(struct connection *pconn, const char *message)
       return;
     }
   }
-  /* global message: */
+  // global message:
   chat_msg_to_all(pconn, real_message);
 }

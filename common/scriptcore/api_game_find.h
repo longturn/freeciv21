@@ -15,7 +15,7 @@
 /* common/scriptcore */
 #include "luascript_types.h"
 
-/* Object find module. */
+// Object find module.
 Player *api_find_player(lua_State *L, int player_id);
 
 City *api_find_city(lua_State *L, Player *pplayer, int city_id);

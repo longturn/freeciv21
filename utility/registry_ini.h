@@ -12,16 +12,16 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type and fc__attribute */
+// utility
+#include "support.h" // bool type and fc__attribute
 
-/* Opaque types. */
+// Opaque types.
 struct QIODevice;
 struct section_file;
 struct section;
 struct entry;
 
-/* Typedefs. */
+// Typedefs.
 typedef const void *secfile_data_t;
 
 typedef bool (*secfile_enum_is_valid_fn_t)(int enumerator);
@@ -34,7 +34,7 @@ typedef int (*secfile_enum_next_fn_t)(int enumerator);
 typedef const char *(*secfile_enum_name_data_fn_t)(secfile_data_t data,
                                                    int enumerator);
 
-/* Create a 'struct section_list' and related functions: */
+// Create a 'struct section_list' and related functions:
 #define SPECLIST_TAG section
 #include "speclist.h"
 #define section_list_iterate(seclist, psection)                             \
@@ -44,14 +44,14 @@ typedef const char *(*secfile_enum_name_data_fn_t)(secfile_data_t data,
   TYPED_LIST_ITERATE_REV(struct section, seclist, psection)
 #define section_list_iterate_rev_end LIST_ITERATE_REV_END
 
-/* Create a 'struct entry_list' and related functions: */
+// Create a 'struct entry_list' and related functions:
 #define SPECLIST_TAG entry
 #include "speclist.h"
 #define entry_list_iterate(entlist, pentry)                                 \
   TYPED_LIST_ITERATE(struct entry, entlist, pentry)
 #define entry_list_iterate_end LIST_ITERATE_END
 
-/* Main functions. */
+// Main functions.
 struct section_file *secfile_load_section(const QString &filename,
                                           const QString &section,
                                           bool allow_duplicates);
@@ -64,7 +64,7 @@ const char *secfile_name(const struct section_file *secfile);
 
 enum entry_special_type { EST_NORMAL, EST_INCLUDE, EST_COMMENT };
 
-/* Insertion functions. */
+// Insertion functions.
 struct entry *secfile_insert_bool_full(struct section_file *secfile,
                                        bool value, const char *comment,
                                        bool allow_replace, const char *path,
@@ -344,11 +344,11 @@ struct entry *secfile_insert_filereference(struct section_file *secfile,
                                            const char *path, ...)
     fc__attribute((__format__(__printf__, 3, 4)));
 
-/* Deletion function. */
+// Deletion function.
 bool secfile_entry_delete(struct section_file *secfile, const char *path,
                           ...) fc__attribute((__format__(__printf__, 2, 3)));
 
-/* Lookup functions. */
+// Lookup functions.
 struct entry *secfile_entry_by_path(const struct section_file *secfile,
                                     const char *path);
 struct entry *secfile_entry_lookup(const struct section_file *secfile,
@@ -490,7 +490,7 @@ int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
                                   ...) fc__warn_unused_result
     fc__attribute((__format__(__printf__, 6, 7)));
 
-/* Sections functions. */
+// Sections functions.
 struct section *secfile_section_by_name(const struct section_file *secfile,
                                         const QString &section_name);
 struct section *secfile_section_lookup(const struct section_file *secfile,
@@ -504,13 +504,13 @@ secfile_sections_by_name_prefix(const struct section_file *secfile,
 struct section *secfile_section_new(struct section_file *secfile,
                                     const QString &section_name);
 
-/* Independant section functions. */
+// Independant section functions.
 void section_destroy(struct section *psection);
 void section_clear_all(struct section *psection);
 
 bool section_set_name(struct section *psection, const char *section_name);
 
-/* Entry functions. */
+// Entry functions.
 const struct entry_list *section_entries(const struct section *psection);
 struct entry *section_entry_by_name(const struct section *psection,
                                     const QString &entry_name);
@@ -528,7 +528,7 @@ struct entry *section_entry_str_new(struct section *psection,
                                     const QString &entry_name,
                                     const QString &value, bool escaped);
 
-/* Independant entry functions. */
+// Independant entry functions.
 enum entry_type {
   ENTRY_BOOL,
   ENTRY_INT,

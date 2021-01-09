@@ -16,15 +16,15 @@
 #endif
 
 #include <QBitArray>
-/* utility */
+// utility
 #include "astring.h"
 #include "fcintl.h"
 #include "rand.h"
 
-/* common */
+// common
 #include "player.h"
 
-/* ai */
+// ai
 #include "handicaps.h"
 
 #include "difficulty.h"
@@ -110,13 +110,13 @@ static QBitArray *handicap_of_skill_level(enum ai_level level)
   case AI_LEVEL_EXPERIMENTAL:
     handicap->setBit(H_EXPERIMENTAL);
     break;
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
   case AI_LEVEL_CHEATING:
     handicap->setBit(H_RATES);
     break;
   case AI_LEVEL_HARD:
-    /* No handicaps */
+    // No handicaps
     break;
   case AI_LEVEL_COUNT:
     fc_assert(level != AI_LEVEL_COUNT);
@@ -147,7 +147,7 @@ static int fuzzy_of_skill_level(enum ai_level level)
   case AI_LEVEL_CHEATING:
 #ifdef FREECIV_DEBUG
   case AI_LEVEL_EXPERIMENTAL:
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
     return 0;
   case AI_LEVEL_COUNT:
     fc_assert(level != AI_LEVEL_COUNT);
@@ -180,7 +180,7 @@ static int science_cost_of_skill_level(enum ai_level level)
   case AI_LEVEL_CHEATING:
 #ifdef FREECIV_DEBUG
   case AI_LEVEL_EXPERIMENTAL:
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
     return 100;
   case AI_LEVEL_COUNT:
     fc_assert(level != AI_LEVEL_COUNT);
@@ -211,7 +211,7 @@ static int expansionism_of_skill_level(enum ai_level level)
   case AI_LEVEL_CHEATING:
 #ifdef FREECIV_DEBUG
   case AI_LEVEL_EXPERIMENTAL:
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
     return 100;
   case AI_LEVEL_COUNT:
     fc_assert(level != AI_LEVEL_COUNT);
@@ -228,7 +228,7 @@ static int expansionism_of_skill_level(enum ai_level level)
  */
 char *ai_level_help(const char *cmdname)
 {
-  /* Translate cmdname to AI level. */
+  // Translate cmdname to AI level.
   enum ai_level level = ai_level_by_name(cmdname, fc_strcasecmp);
   QString help, features;
   QBitArray *handicaps;
@@ -237,12 +237,12 @@ char *ai_level_help(const char *cmdname)
   fc_assert(ai_level_is_valid(level));
 
   if (level == AI_LEVEL_AWAY) {
-    /* Special case */
+    // Special case
     help = _("Toggles 'away' mode for your nation. In away mode, "
              "the AI will govern your nation but make only minimal "
              "changes.");
   } else {
-    /* TRANS: %s is a (translated) skill level ('Novice', 'Hard', etc) */
+    // TRANS: %s is a (translated) skill level ('Novice', 'Hard', etc)
     help = QString(_("With no arguments, sets all AI players to skill level "
                      "'%1', and sets the default level for any new AI "
                      "players to '%2'. With an argument, sets the skill "
@@ -274,23 +274,23 @@ char *ai_level_help(const char *cmdname)
   }
   if (expansionism_of_skill_level(level) < 100) {
     features += _("Has reduced appetite for expansion.");
-  } /* no level currently has >100, so no string yet */
+  } // no level currently has >100, so no string yet
 
   switch (level) {
   case AI_LEVEL_HANDICAPPED:
-    /* TRANS: describing an AI skill level */
+    // TRANS: describing an AI skill level
     help += _("\nThis skill level has the same features as 'Novice', "
               "but may suffer additional ruleset-defined penalties.")
             + qendl();
     break;
   case AI_LEVEL_CHEATING:
-    /* TRANS: describing an AI skill level */
+    // TRANS: describing an AI skill level
     help += _("\nThis skill level has the same features as 'Hard', "
               "but may enjoy additional ruleset-defined bonuses.")
             + qendl();
     break;
   default:
-    /* TRANS: describing an AI skill level */
+    // TRANS: describing an AI skill level
     help += _("\nThis skill level's features include the following. "
               "(Some rulesets may define extra level-specific "
               "behavior.)")

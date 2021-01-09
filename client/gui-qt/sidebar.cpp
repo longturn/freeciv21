@@ -530,7 +530,7 @@ void sidebar::resizeMe(int hght, bool force)
 
   h = h - non_std;
   h = h / (objects.count() - non_std_count) - 2;
-  /* resize all standard sidewidgets */
+  // resize all standard sidewidgets
   for (sidebarWidget *sw : qAsConst(objects)) {
     if (sw->standard == SW_STD) {
       sw->resizePixmap(w, h);

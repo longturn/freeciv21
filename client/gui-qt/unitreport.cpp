@@ -366,7 +366,7 @@ void units_reports::update_units(bool show)
 
   clear_layout();
   memset(&unit_totals, '\0', sizeof(unit_totals));
-  /* Count units. */
+  // Count units.
   players_iterate(pplayer)
   {
     if (client_has_player() && pplayer != client_player()) {
@@ -388,9 +388,9 @@ void units_reports::update_units(bool show)
       if (VUT_UTYPE == pcity->production.kind) {
         int num_units;
         info = unit_array + utype_index(pcity->production.value.utype);
-        /* Account for build slots in city */
+        // Account for build slots in city
         (void) city_production_build_units(pcity, true, &num_units);
-        /* Unit is in progress even if it won't be done this turn */
+        // Unit is in progress even if it won't be done this turn
         num_units = MAX(num_units, 1);
         info->building_count += num_units;
       }
@@ -406,7 +406,7 @@ void units_reports::update_units(bool show)
     upgradable = client_has_player()
                  && nullptr != can_upgrade_unittype(client_player(), utype);
     if (0 == info->active_count && 0 == info->building_count) {
-      continue; /* We don't need a row for this type. */
+      continue; // We don't need a row for this type.
     }
     ui = new unittype_item(this, utype);
     ui->label_info_active.setText("⚔:"

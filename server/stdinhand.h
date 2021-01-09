@@ -14,12 +14,12 @@
 
 #include <QString>
 #include <QVector>
-/* common */
-#include "chat.h"       /* SERVER_COMMAND_PREFIX */
-#include "connection.h" /* enum cmdlevel */
+// common
+#include "chat.h"       // SERVER_COMMAND_PREFIX
+#include "connection.h" // enum cmdlevel
 #include "fc_types.h"
 
-/* server */
+// server
 #include "commands.h"
 #include "console.h"
 
@@ -54,7 +54,7 @@ bool start_command(struct connection *caller, bool check, bool notify);
 void toggle_ai_player_direct(struct connection *caller,
                              struct player *pplayer);
 
-/* for sernet.c in initing a new connection */
+// for sernet.c in initing a new connection
 enum cmdlevel access_level_for_next_connection();
 
 void notify_if_first_access_level_is_available();

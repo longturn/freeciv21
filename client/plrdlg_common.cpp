@@ -17,17 +17,17 @@
 
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "connection.h"
 #include "game.h"
 #include "nation.h"
 
-/* client */
+// client
 #include "client_main.h"
 #include "climisc.h"
 #include "options.h"
@@ -228,7 +228,7 @@ static QString col_vision(const struct player *player)
 QString plrdlg_col_state(const struct player *plr)
 {
   if (!plr->is_alive) {
-    /* TRANS: Dead -- Rest In Peace -- Reqia In Pace */
+    // TRANS: Dead -- Rest In Peace -- Reqia In Pace
     return _("R.I.P.");
   } else if (!plr->is_connected) {
     struct option *opt;
@@ -244,7 +244,7 @@ QString plrdlg_col_state(const struct player *plr)
     }
 
     if (!consider_tb) {
-      /* TRANS: No connection */
+      // TRANS: No connection
       return _("noconn");
     }
 
@@ -253,7 +253,7 @@ QString plrdlg_col_state(const struct player *plr)
     } else if (plr->phase_done) {
       return _("done");
     } else {
-      /* TRANS: Turnblocking & player not connected */
+      // TRANS: Turnblocking & player not connected
       return _("blocking");
     }
   } else {

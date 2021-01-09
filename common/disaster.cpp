@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 
-/* common */
+// common
 #include "fc_types.h"
 #include "game.h"
 #include "name_translation.h"

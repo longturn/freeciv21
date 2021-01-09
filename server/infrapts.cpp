@@ -14,10 +14,10 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "map.h"
 
-/* server */
+// server
 #include "hand_gen.h"
 #include "maphand.h"
 #include "notify.h"

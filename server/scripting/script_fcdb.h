@@ -10,13 +10,13 @@
 
 #pragma once
 
-/* utility */
-#include "support.h" /* fc__attribute() */
+// utility
+#include "support.h" // fc__attribute()
 
-/* server */
+// server
 #include "fcdb.h"
 
-/* fcdb script functions. */
+// fcdb script functions.
 bool script_fcdb_init(const char *fcdb_luafile);
 bool script_fcdb_call(const char *func_name, ...);
 void script_fcdb_free();

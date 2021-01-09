@@ -17,12 +17,12 @@
 
 #include <cstdarg>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "city.h"
 #include "culture.h"
 #include "game.h"
@@ -33,14 +33,14 @@
 #include "citydlg_g.h"
 #include "mapview_g.h"
 
-/* client */
+// client
 #include "citydlg_common.h"
-#include "client_main.h" /* for can_client_issue_orders() */
+#include "client_main.h" // for can_client_issue_orders()
 #include "climap.h"
 #include "control.h"
 #include "mapview_common.h"
-#include "options.h"  /* for concise_city_production */
-#include "tilespec.h" /* for tileset_is_isometric(tileset) */
+#include "options.h"  // for concise_city_production
+#include "tilespec.h" // for tileset_is_isometric(tileset)
 
 static int citydlg_map_width, citydlg_map_height;
 
@@ -62,7 +62,7 @@ void generate_citydlg_dimensions()
   int min_x = 0, max_x = 0, min_y = 0, max_y = 0;
   int max_rad = rs_max_city_radius_sq();
 
-  /* use maximum possible squared city radius. */
+  // use maximum possible squared city radius.
   city_map_iterate_without_index(max_rad, city_x, city_y)
   {
     float canvas_x, canvas_y;
@@ -91,7 +91,7 @@ bool city_to_canvas_pos(float *canvas_x, float *canvas_y, int city_x,
   const int width = get_citydlg_canvas_width();
   const int height = get_citydlg_canvas_height();
 
-  /* The citymap is centered over the center of the citydlg canvas. */
+  // The citymap is centered over the center of the citydlg canvas.
   map_to_gui_vector(tileset, canvas_x, canvas_y, CITY_ABS2REL(city_x),
                     CITY_ABS2REL(city_y));
   *canvas_x += (width - tileset_tile_width(tileset)) / 2;
@@ -116,7 +116,7 @@ bool canvas_to_city_pos(int *city_x, int *city_y, int city_radius_sq,
   const int width = get_citydlg_canvas_width();
   const int height = get_citydlg_canvas_height();
 
-  /* The citymap is centered over the center of the citydlg canvas. */
+  // The citymap is centered over the center of the citydlg canvas.
   canvas_x -= (width - tileset_tile_width(get_tileset())) / 2;
   canvas_y -= (height - tileset_tile_height(get_tileset())) / 2;
 
@@ -189,21 +189,21 @@ char *city_production_cost_str(const struct city *pcity)
 
   if (build_slots > 1
       && city_production_build_units(pcity, true, &num_units)) {
-    /* the city could build more than one unit of the selected type */
+    // the city could build more than one unit of the selected type
     if (num_units == 0) {
-      /* no unit will be finished this turn but one is build */
+      // no unit will be finished this turn but one is build
       num_units++;
     }
 
     if (build_slots > num_units) {
-      /* some build slots for units will be unused */
+      // some build slots for units will be unused
       fc_snprintf(cost_str, sizeof(cost_str), "{%d*%d}", num_units, cost);
     } else {
-      /* maximal number of units will be build */
+      // maximal number of units will be build
       fc_snprintf(cost_str, sizeof(cost_str), "[%d*%d]", num_units, cost);
     }
   } else {
-    /* nothing special */
+    // nothing special
     fc_snprintf(cost_str, sizeof(cost_str), "%3d", cost);
   }
 
@@ -231,7 +231,7 @@ void get_city_dialog_production(struct city *pcity, char *buffer,
      * be extended to return the longer of the two; in the meantime
      * translators can fudge it by changing this "filler" string.
      */
-    /* TRANS: Use longer of "XXX turns" and "never" */
+    // TRANS: Use longer of "XXX turns" and "never"
     fc_strlcpy(buffer, Q_("?filler:XXX/XXX XXX turns"), buffer_len);
 
     return;
@@ -275,17 +275,17 @@ void get_city_dialog_production(struct city *pcity, char *buffer,
    with duplicates merged.
  */
 struct msum {
-  /* The net value that is accumulated. */
+  // The net value that is accumulated.
   double value;
   /* Description; compared for duplicate-merging.
    * Both of these are maintained/compared until the net 'value' is known;
    * then posdesc is used if value>=0, negdesc if value<0 */
   QString posdesc, negdesc;
-  /* Whether posdesc is printed for total==0 */
+  // Whether posdesc is printed for total==0
   bool suppress_if_zero;
-  /* An auxiliary value that is also accumulated, but not tested */
+  // An auxiliary value that is also accumulated, but not tested
   double aux;
-  /* ...and the format string for the net aux value (appended to *desc) */
+  // ...and the format string for the net aux value (appended to *desc)
   QString auxfmt;
 } * sums;
 
@@ -324,12 +324,12 @@ static void city_sum_add_real(struct city_sum *sum, double value,
 {
   size_t i;
 
-  /* likely to lead to quadratic behaviour, but who cares: */
+  // likely to lead to quadratic behaviour, but who cares:
   for (i = 0; i < sum->n; i++) {
     if (sum->sums[i].posdesc == posdesc && sum->sums[i].negdesc == negdesc
         && (sum->sums[i].auxfmt == auxfmt || sum->sums[i].auxfmt == auxfmt)
         && sum->sums[i].suppress_if_zero == suppress_if_zero) {
-      /* Looks like we already have an entry like this. Accumulate values. */
+      // Looks like we already have an entry like this. Accumulate values.
       sum->sums[i].value += value;
       sum->sums[i].aux += aux;
 
@@ -337,7 +337,7 @@ static void city_sum_add_real(struct city_sum *sum, double value,
     }
   }
 
-  /* Didn't find description already, so add it to the end. */
+  // Didn't find description already, so add it to the end.
   sum->sums.resize(sum->n + 1);
   sum->sums[sum->n].value = value;
   sum->sums[sum->n].posdesc = posdesc;
@@ -369,12 +369,12 @@ static void fc__attribute((__format__(__printf__, 6, 8)))
 {
   va_list args;
 
-  /* Format both descriptions */
-  va_start(args, negfmt); /* sic -- arguments follow negfmt */
+  // Format both descriptions
+  va_start(args, negfmt); // sic -- arguments follow negfmt
   auto posdesc = QString::vasprintf(posfmt, args);
   va_end(args);
 
-  va_start(args, negfmt); /* sic -- arguments follow negfmt */
+  va_start(args, negfmt); // sic -- arguments follow negfmt
   auto negdesc = QString::vasprintf(negfmt, args);
   va_end(args);
 
@@ -396,12 +396,12 @@ static void fc__attribute((__format__(__printf__, 3, 4)))
 {
   va_list args;
 
-  /* Format description (same used for positive or negative net value) */
+  // Format description (same used for positive or negative net value)
   va_start(args, descfmt);
   auto desc = QString::vasprintf(descfmt, args);
   va_end(args);
 
-  /* Descriptions will be freed individually, so need to strdup */
+  // Descriptions will be freed individually, so need to strdup
   city_sum_add_real(sum, value, false, NULL, 0, desc, desc);
 }
 
@@ -419,12 +419,12 @@ static void fc__attribute((__format__(__printf__, 3, 4)))
 {
   va_list args;
 
-  /* Format description (same used for positive or negative net value) */
+  // Format description (same used for positive or negative net value)
   va_start(args, descfmt);
   auto desc = QString::vasprintf(descfmt, args);
   va_end(args);
 
-  /* Descriptions will be freed individually, so need to strdup */
+  // Descriptions will be freed individually, so need to strdup
   city_sum_add_real(sum, value, true, NULL, 0, desc, desc);
 }
 
@@ -534,7 +534,7 @@ void get_city_dialog_output_text(const struct city *pcity,
   city_sum_add(sum, pcity->citizen_base[otype],
                Q_("?city_surplus:Citizens"));
 
-  /* Hack to get around the ugliness of add_tax_income. */
+  // Hack to get around the ugliness of add_tax_income.
   memset(tax, 0, O_LAST * sizeof(*tax));
   add_tax_income(city_owner(pcity), pcity->prod[O_TRADE], tax);
   city_sum_add_if_nonzero(sum, tax[otype],
@@ -548,7 +548,7 @@ void get_city_dialog_output_text(const struct city *pcity,
       /* NB: (proute->value == 0) is valid case.  The trade route
        * is established but doesn't give trade surplus. */
       struct city *trade_city = game_city_by_number(proute->partner);
-      /* TRANS: Trade partner unknown to client */
+      // TRANS: Trade partner unknown to client
       const char *name =
           trade_city ? city_name_get(trade_city) : _("(unknown)");
       int value = proute->value
@@ -632,7 +632,7 @@ void get_city_dialog_output_text(const struct city *pcity,
      * set_city_production() does not */
     if (city_waste(pcity, otype, city_sum_total(sum), wastetypes)
         == pcity->waste[otype]) {
-      /* Our calculation matches the server's, so we trust our breakdown. */
+      // Our calculation matches the server's, so we trust our breakdown.
       city_sum_add_if_nonzero(sum, -wastetypes[OLOSS_SIZE],
                               Q_("?city_surplus:Size penalty"));
       regular_waste = wastetypes[OLOSS_WASTE];
@@ -647,7 +647,7 @@ void get_city_dialog_output_text(const struct city *pcity,
       const char *fmt;
       switch (otype) {
       case O_SHIELD:
-      default: /* FIXME other output types? */
+      default: // FIXME other output types?
         /* TRANS: %s is normally empty, but becomes '?' if client is
          * uncertain about its accounting (should never happen) */
         fmt = Q_("?city_surplus:Waste%s");
@@ -816,7 +816,7 @@ void get_city_dialog_culture_text(const struct city *pcity, char *buf,
     }
 
     value = (peffect->value * mul) / 100;
-    /* TRANS: text describing source of culture bonus ("Library+Republic") */
+    // TRANS: text describing source of culture bonus ("Library+Republic")
     city_sum_add_if_nonzero(sum, value, Q_("?city_culture:%s"), buf2);
   }
   effect_list_iterate_end;
@@ -872,7 +872,7 @@ void get_city_dialog_airlift_text(const struct city *pcity, char *buf,
 
     unlimited++;
 
-    /* TRANS: airlift. Possible landings text. */
+    // TRANS: airlift. Possible landings text.
     fc_snprintf(dest, sizeof(dest), _("unlimited landings"));
   } else {
     fc_snprintf(dest, sizeof(dest),
@@ -884,7 +884,7 @@ void get_city_dialog_airlift_text(const struct city *pcity, char *buf,
 
   switch (unlimited) {
   case 2:
-    /* TRANS: airlift take offs and landings */
+    // TRANS: airlift take offs and landings
     fc_snprintf(buf, bufsz, _("unlimited take offs and landings"));
     break;
   case 1:
@@ -941,16 +941,16 @@ void get_city_dialog_airlift_value(const struct city *pcity, char *buf,
 
     unlimited++;
 
-    /* TRANS: airlift. Possible landings text. */
+    // TRANS: airlift. Possible landings text.
     fc_snprintf(dest, sizeof(dest), _("∞"));
   } else {
-    /* TRANS: airlift. Possible landings text. */
+    // TRANS: airlift. Possible landings text.
     fc_snprintf(dest, sizeof(dest), _("%d"), pcity->airlift);
   }
 
   switch (unlimited) {
   case 2:
-    /* TRANS: unlimited airlift take offs and landings */
+    // TRANS: unlimited airlift take offs and landings
     fc_snprintf(buf, bufsz, _("∞"));
     break;
   case 1:
@@ -959,7 +959,7 @@ void get_city_dialog_airlift_value(const struct city *pcity, char *buf,
     fc_snprintf(buf, bufsz, _("s: %s d: %s"), src, dest);
     break;
   default:
-    /* TRANS: airlift take offs or landings, no unlimited */
+    // TRANS: airlift take offs or landings, no unlimited
     fc_snprintf(buf, bufsz, _("%s"), src);
     break;
   }
@@ -1070,7 +1070,7 @@ static bool base_city_queue_insert(struct city *pcity, int position,
   if (position == 0) {
     struct universal old = pcity->production;
 
-    /* Insert as current production. */
+    // Insert as current production.
     if (!can_city_build_direct(pcity, item)) {
       return false;
     }
@@ -1082,7 +1082,7 @@ static bool base_city_queue_insert(struct city *pcity, int position,
     city_change_production(pcity, item);
   } else if (position >= 1
              && position <= worklist_length(&pcity->worklist)) {
-    /* Insert into middle. */
+    // Insert into middle.
     if (!can_city_build_later(pcity, item)) {
       return false;
     }
@@ -1090,7 +1090,7 @@ static bool base_city_queue_insert(struct city *pcity, int position,
       return false;
     }
   } else {
-    /* Insert at end. */
+    // Insert at end.
     if (!can_city_build_later(pcity, item)) {
       return false;
     }
@@ -1174,7 +1174,7 @@ void city_get_queue(struct city *pcity, struct worklist *pqueue)
      worklist API wants it out for reasons unknown. Perhaps someone enjoyed
      making things more complicated than necessary? So I dance around it. */
 
-  /* We want the current production to be in the queue. Always. */
+  // We want the current production to be in the queue. Always.
   worklist_remove(pqueue, MAX_LEN_WORKLIST - 1);
 
   worklist_insert(pqueue, &pcity->production, 0);
@@ -1206,7 +1206,7 @@ bool city_set_queue(struct city *pcity, const struct worklist *pqueue)
     city_set_worklist(pcity, &copy);
     city_change_production(pcity, &target);
   } else {
-    /* You naughty boy, you can't erase the current production. Nyah! */
+    // You naughty boy, you can't erase the current production. Nyah!
     if (worklist_is_empty(&pcity->worklist)) {
       refresh_city_dialog(pcity);
     } else {

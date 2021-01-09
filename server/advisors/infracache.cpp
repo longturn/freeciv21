@@ -15,14 +15,14 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "city.h"
 #include "game.h"
 #include "map.h"
 #include "player.h"
 #include "tile.h"
 
-/* server */
+// server
 #include "maphand.h"
 
 /* server/advisors */
@@ -31,7 +31,7 @@
 
 #include "infracache.h"
 
-/* cache activities within the city map */
+// cache activities within the city map
 struct worker_activity_cache {
   int act[ACTIVITY_LAST];
   int extra[MAX_EXTRA_TYPES];
@@ -73,7 +73,7 @@ static int adv_calc_irrigate_transform(const struct city *pcity,
     struct tile *vtile;
 
     if (tile_city(ptile) && terrain_has_flag(new_terrain, TER_NO_CITIES)) {
-      /* Not a valid activity. */
+      // Not a valid activity.
       return -1;
     }
     /* Irrigation would change the terrain type, clearing conflicting
@@ -113,7 +113,7 @@ static int adv_calc_mine_transform(const struct city *pcity,
     struct tile *vtile;
 
     if (tile_city(ptile) && terrain_has_flag(new_terrain, TER_NO_CITIES)) {
-      /* Not a valid activity. */
+      // Not a valid activity.
       return -1;
     }
     /* Mining would change the terrain type, clearing conflicting
@@ -155,7 +155,7 @@ static int adv_calc_transform(const struct city *pcity,
   }
 
   if (!terrain_surroundings_allow_change(ptile, new_terrain)) {
-    /* Can't do this terrain conversion here. */
+    // Can't do this terrain conversion here.
     return -1;
   }
 
@@ -480,7 +480,7 @@ void adv_city_update(struct city *pcity)
   fc_assert_ret(NULL != pcity);
   fc_assert_ret(NULL != pcity->server.adv);
 
-  /* initialize act_cache if needed */
+  // initialize act_cache if needed
   if (pcity->server.adv->act_cache == NULL
       || pcity->server.adv->act_cache_radius_sq == -1
       || pcity->server.adv->act_cache_radius_sq != radius_sq) {
@@ -488,7 +488,7 @@ void adv_city_update(struct city *pcity)
         fc_realloc(pcity->server.adv->act_cache,
                    city_map_tiles(radius_sq)
                        * sizeof(*(pcity->server.adv->act_cache))));
-    /* initialize with 0 */
+    // initialize with 0
     memset(pcity->server.adv->act_cache, 0,
            city_map_tiles(radius_sq)
                * sizeof(*(pcity->server.adv->act_cache)));
@@ -504,7 +504,7 @@ void adv_city_alloc(struct city *pcity)
   pcity->server.adv = new adv_city[1]();
   pcity->server.adv->act_cache = NULL;
   pcity->server.adv->act_cache_radius_sq = -1;
-  /* allocate memory for pcity->ai->act_cache */
+  // allocate memory for pcity->ai->act_cache
   adv_city_update(pcity);
 }
 

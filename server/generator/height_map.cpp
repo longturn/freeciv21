@@ -12,10 +12,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "rand.h"
 
-/* common */
+// common
 #include "map.h"
 
 /* server/generator */
@@ -67,7 +67,7 @@ void normalize_hmap_poles()
     if (map_colatitude(ptile) <= 2.5 * ICE_BASE_LEVEL) {
       hmap(ptile) *= hmap_pole_factor(ptile);
     } else if (near_singularity(ptile)) {
-      /* Near map edge but not near pole. */
+      // Near map edge but not near pole.
       hmap(ptile) = 0;
     }
   }
@@ -83,12 +83,12 @@ void renormalize_hmap_poles()
   whole_map_iterate(&(wld.map), ptile)
   {
     if (hmap(ptile) == 0) {
-      /* Nothing left to restore. */
+      // Nothing left to restore.
     } else if (map_colatitude(ptile) <= 2.5 * ICE_BASE_LEVEL) {
       float factor = hmap_pole_factor(ptile);
 
       if (factor > 0) {
-        /* Invert the previously applied function */
+        // Invert the previously applied function
         hmap(ptile) /= factor;
       }
     }
@@ -122,10 +122,10 @@ void make_random_hmap(int smooth)
 static void gen5rec(int step, int xl, int yt, int xr, int yb)
 {
   int val[2][2];
-  int x1wrap = xr; /* to wrap correctly */
+  int x1wrap = xr; // to wrap correctly
   int y1wrap = yb;
 
-  /* All x and y values are native. */
+  // All x and y values are native.
 
   if (((yb - yt <= 0) || (xr - xl <= 0))
       || ((yb - yt == 1) && (xr - xl == 1))) {
@@ -144,8 +144,8 @@ static void gen5rec(int step, int xl, int yt, int xr, int yb)
   val[1][0] = hmap(native_pos_to_tile(&(wld.map), x1wrap, yt));
   val[1][1] = hmap(native_pos_to_tile(&(wld.map), x1wrap, y1wrap));
 
-  /* set midpoints of sides to avg of side's vertices plus a random factor */
-  /* unset points are zero, don't reset if set */
+  // set midpoints of sides to avg of side's vertices plus a random factor
+  // unset points are zero, don't reset if set
 #define set_midpoints(X, Y, V)                                              \
   {                                                                         \
     struct tile *ptile = native_pos_to_tile(&(wld.map), (X), (Y));          \
@@ -172,14 +172,14 @@ static void gen5rec(int step, int xl, int yt, int xr, int yb)
                 (val[1][0] + val[1][1]) / 2 + (int) fc_rand(step)
                     - step / 2);
 
-  /* set middle to average of midpoints plus a random factor, if not set */
+  // set middle to average of midpoints plus a random factor, if not set
   set_midpoints((xl + xr) / 2, (yt + yb) / 2,
                 ((val[0][0] + val[0][1] + val[1][0] + val[1][1]) / 4
                  + (int) fc_rand(step) - step / 2));
 
 #undef set_midpoints
 
-  /* now call recursively on the four subrectangles */
+  // now call recursively on the four subrectangles
   gen5rec(2 * step / 3, xl, yt, (xr + xl) / 2, (yb + yt) / 2);
   gen5rec(2 * step / 3, xl, (yb + yt) / 2, (xr + xl) / 2, yb);
   gen5rec(2 * step / 3, (xr + xl) / 2, yt, xr, (yb + yt) / 2);
@@ -218,32 +218,32 @@ void make_pseudofractal1_hmap(int extra_div)
   int xmax = wld.map.xsize - (xnowrap ? 1 : 0);
   int ymax = wld.map.ysize - (ynowrap ? 1 : 0);
   int x_current, y_current;
-  /* just need something > log(max(xsize, ysize)) for the recursion */
+  // just need something > log(max(xsize, ysize)) for the recursion
   int step = wld.map.xsize + wld.map.ysize;
-  /* edges are avoided more strongly as this increases */
+  // edges are avoided more strongly as this increases
   int avoidedge = (100 - wld.map.server.landpercent) * step / 100 + step / 3;
 
   height_map = new int[MAP_INDEX_SIZE];
 
-  /* initialize map */
+  // initialize map
   INITIALIZE_ARRAY(height_map, MAP_INDEX_SIZE, 0);
 
-  /* set initial points */
+  // set initial points
   for (x_current = 0; x_current < xdiv2; x_current++) {
     for (y_current = 0; y_current < ydiv2; y_current++) {
       do_in_map_pos(&(wld.map), ptile, (x_current * xmax / xdiv),
                     (y_current * ymax / ydiv))
       {
-        /* set initial points */
+        // set initial points
         hmap(ptile) = fc_rand(2 * step) - (2 * step) / 2;
 
         if (near_singularity(ptile)) {
-          /* avoid edges (topological singularities) */
+          // avoid edges (topological singularities)
           hmap(ptile) -= avoidedge;
         }
 
         if (map_colatitude(ptile) <= ICE_BASE_LEVEL / 2) {
-          /* separate poles and avoid too much land at poles */
+          // separate poles and avoid too much land at poles
           hmap(ptile) -= fc_rand(avoidedge * wld.map.server.flatpoles / 100);
         }
       }
@@ -251,7 +251,7 @@ void make_pseudofractal1_hmap(int extra_div)
     }
   }
 
-  /* calculate recursively on each block */
+  // calculate recursively on each block
   for (x_current = 0; x_current < xdiv; x_current++) {
     for (y_current = 0; y_current < ydiv; y_current++) {
       gen5rec(step, x_current * xmax / xdiv, y_current * ymax / ydiv,
@@ -259,7 +259,7 @@ void make_pseudofractal1_hmap(int extra_div)
     }
   }
 
-  /* put in some random fuzz */
+  // put in some random fuzz
   whole_map_iterate(&(wld.map), ptile)
   {
     hmap(ptile) = 8 * hmap(ptile) + fc_rand(4) - 2;

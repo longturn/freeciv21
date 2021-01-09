@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "fc_types.h"
 #include "game.h"
 #include "player.h"

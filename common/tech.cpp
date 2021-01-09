@@ -16,17 +16,17 @@
 #endif
 
 #include <cmath>
-#include <cstdlib> /* exit */
+#include <cstdlib> // exit
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "iterator.h"
 #include "log.h"
-#include "shared.h" /* ARRAY_SIZE */
+#include "shared.h" // ARRAY_SIZE
 #include "support.h"
 
-/* common */
+// common
 #include "game.h"
 #include "research.h"
 
@@ -102,7 +102,7 @@ struct advance *advance_by_number(const Tech_type_id atype)
 {
   if (atype != A_FUTURE
       && (atype < 0 || atype >= game.control.num_tech_types)) {
-    /* This isn't an error; some callers depend on it. */
+    // This isn't an error; some callers depend on it.
     return NULL;
   }
 
@@ -117,7 +117,7 @@ Tech_type_id advance_required(const Tech_type_id tech, enum tech_req require)
   fc_assert_ret_val(require >= 0 && require < AR_SIZE, 0);
   fc_assert_ret_val(tech >= A_NONE && tech < A_LAST, 0);
   if (A_NEVER == advances[tech].require[require]) {
-    /* out of range */
+    // out of range
     return A_LAST;
   }
   return advance_number(advances[tech].require[require]);
@@ -223,7 +223,7 @@ void techs_precalc_data()
 
     advance_req_iterate(padvance, preq)
     {
-      (void) preq; /* Compiler wants us to do something with 'preq'. */
+      (void) preq; // Compiler wants us to do something with 'preq'.
       num_reqs++;
     }
     advance_req_iterate_end;
@@ -239,7 +239,7 @@ void techs_precalc_data()
         min_req = false;
         break;
       }
-      fc__fallthrough; /* No break. */
+      fc__fallthrough; // No break.
     case TECH_COST_CLASSIC:
       padvance->cost = game.info.base_tech_cost * (1.0 + num_reqs)
                        * sqrt(1.0 + num_reqs) / 2;
@@ -249,7 +249,7 @@ void techs_precalc_data()
         min_req = false;
         break;
       }
-      fc__fallthrough; /* No break. */
+      fc__fallthrough; // No break.
     case TECH_COST_EXPERIMENTAL:
       padvance->cost =
           game.info.base_tech_cost
@@ -261,7 +261,7 @@ void techs_precalc_data()
       padvance->cost = game.info.base_tech_cost;
     }
 
-    /* Class cost */
+    // Class cost
     if (padvance->tclass != NULL) {
       padvance->cost = padvance->cost * padvance->tclass->cost_pct / 100;
     }
@@ -457,8 +457,8 @@ void techs_init()
     requirement_vector_init(&(advances[i].research_reqs));
   }
 
-  /* Initialize dummy tech A_NONE */
-  /* TRANS: "None" tech */
+  // Initialize dummy tech A_NONE
+  // TRANS: "None" tech
   name_set(&a_none->name, NULL, N_("?tech:None"));
   a_none->require[AR_ONE] = a_none;
   a_none->require[AR_TWO] = a_none;
@@ -623,13 +623,13 @@ static void advance_root_req_iter_next(struct iterator *it)
             *iter->current = preq;
             is_new = true;
           } else {
-            *iter->end++ = preq; /* make a note for later */
+            *iter->end++ = preq; // make a note for later
           }
         }
       }
     }
     if (!is_new) {
-      /* Didn't find an interesting new subtree. */
+      // Didn't find an interesting new subtree.
       iter->current++;
     }
     /* Precondition: *current has been moved on from where we started, and
@@ -639,9 +639,9 @@ static void advance_root_req_iter_next(struct iterator *it)
       Tech_type_id root =
           advance_required(advance_number(*iter->current), AR_ROOT);
       if (!BV_ISSET(iter->rootdone, root)) {
-        /* A previously unseen root_req. Stop and yield it. */
+        // A previously unseen root_req. Stop and yield it.
         break;
-      } /* else keep looking */
+      } // else keep looking
     }
   }
 }
@@ -667,7 +667,7 @@ struct iterator *advance_root_req_iter_init(struct advance_root_req_iter *it,
     *it->current = goal;
     it->end = it->current + 1;
   } else {
-    /* No root_reqs -- go straight to invalid state */
+    // No root_reqs -- go straight to invalid state
     it->end = it->current;
   }
 

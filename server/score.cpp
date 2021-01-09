@@ -19,12 +19,12 @@
 // Qt
 #include <QString>
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "log.h"
 #include "shared.h"
 
-/* common */
+// common
 #include "culture.h"
 #include "game.h"
 #include "improvement.h"
@@ -35,7 +35,7 @@
 #include "unit.h"
 #include "unitlist.h"
 
-/* server */
+// server
 #include "plrhand.h"
 #include "score.h"
 #include "srv_main.h"
@@ -155,7 +155,7 @@ static void print_landarea_map(struct claim_map *pcmap, int turn)
                  when_char(pcmap->claims[map_pos_to_index(x, y)].when));
 }
 
-#endif /* LAND_AREA_DEBUG > 2 */
+#endif // LAND_AREA_DEBUG > 2
 
 /**
    Count landarea, settled area, and claims map for all players.
@@ -166,7 +166,7 @@ static void build_landarea_map(struct claim_map *pcmap)
 
   memset(pcmap, 0, sizeof(*pcmap));
 
-  /* First calculate claims: which tiles are owned by each player. */
+  // First calculate claims: which tiles are owned by each player.
   players_iterate(pplayer)
   {
     city_list_iterate(pplayer->cities, pcity)
@@ -189,7 +189,7 @@ static void build_landarea_map(struct claim_map *pcmap)
     bv_player *pclaim = &claims[tile_index(ptile)];
 
     if (is_ocean_tile(ptile)) {
-      /* Nothing. */
+      // Nothing.
     } else if (NULL != tile_city(ptile)) {
       owner = city_owner(tile_city(ptile));
       pcmap->player[player_index(owner)].settledarea++;
@@ -197,7 +197,7 @@ static void build_landarea_map(struct claim_map *pcmap)
       owner = city_owner(tile_worked(ptile));
       pcmap->player[player_index(owner)].settledarea++;
     } else if (unit_list_size(ptile->units) > 0) {
-      /* Because of allied stacking these calculations are a bit off. */
+      // Because of allied stacking these calculations are a bit off.
       owner = unit_owner(unit_list_get(ptile->units, 0));
       if (BV_ISSET(*pclaim, player_index(owner))) {
         pcmap->player[player_index(owner)].settledarea++;
@@ -432,26 +432,26 @@ void rank_users(bool interrupt)
   struct player *spacerace_winner = NULL;
   struct team *t_winner = NULL;
 
-  /* don't output ranking info if we haven't enabled it via cmdline */
+  // don't output ranking info if we haven't enabled it via cmdline
   if (srvarg.ranklog_filename.isNull()) {
     return;
   }
 
   fp = fc_fopen(srvarg.ranklog_filename.toUtf8().constData(), "w");
 
-  /* don't fail silently, at least print an error */
+  // don't fail silently, at least print an error
   if (!fp) {
     qCritical("couldn't open ranking log file: \"%s\"",
               qUtf8Printable(srvarg.ranklog_filename));
     return;
   }
 
-  /* initialize plr_state */
+  // initialize plr_state
   for (i = 0; i < player_slot_count(); i++) {
     plr_state[i] = VS_NONE;
   }
 
-  /* do we have a spacerace winner? */
+  // do we have a spacerace winner?
   players_iterate(pplayer)
   {
     if (pplayer->spaceship.state == SSHIP_ARRIVED) {
@@ -474,7 +474,7 @@ void rank_users(bool interrupt)
   }
 
   if (!interrupt) {
-    /* game ended for a victory condition */
+    // game ended for a victory condition
 
     /* first pass: locate those alive who haven't surrendered, set them to
      * win; barbarians won't count, and everybody else is a loser for now. */
@@ -491,7 +491,7 @@ void rank_users(bool interrupt)
     }
     players_iterate_end;
 
-    /* second pass: find the teammates of those winners, they win too. */
+    // second pass: find the teammates of those winners, they win too.
     players_iterate(pplayer)
     {
       if (plr_state[player_index(pplayer)] == VS_WINNER) {
@@ -506,8 +506,8 @@ void rank_users(bool interrupt)
     }
     players_iterate_end;
   } else {
-    /* game ended via endturn */
-    /* i) determine the winner team */
+    // game ended via endturn
+    // i) determine the winner team
     teams_iterate(pteam)
     {
       int t_score = 0;
@@ -542,7 +542,7 @@ void rank_users(bool interrupt)
     players_iterate_end;
   }
 
-  /* write out ranking information to file */
+  // write out ranking information to file
   fprintf(fp, "turns: %d\n", game.info.turn);
   fprintf(fp, "winners: ");
   players_iterate(pplayer)

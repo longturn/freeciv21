@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "extras.h"
 #include "game.h"
 #include "map.h"

@@ -31,7 +31,7 @@ struct conn_list;
 
 typedef void (*rs_conversion_logger)(const char *msg);
 
-/* functions */
+// functions
 bool load_rulesets(const char *restore, const char *alt, bool compat_mode,
                    rs_conversion_logger logger, bool act, bool buffer_script,
                    bool load_luadata);
@@ -43,7 +43,7 @@ void rulesets_deinit();
 char *get_script_buffer();
 char *get_parser_buffer();
 
-/* Default ruleset values that are not settings (in game.h) */
+// Default ruleset values that are not settings (in game.h)
 
 #define GAME_DEFAULT_ADDTOSIZE 9
 #define GAME_DEFAULT_CHANGABLE_TAX true

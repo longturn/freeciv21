@@ -12,13 +12,13 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
+// utility
+#include "support.h" // bool type
 
 /* client/include */
 #include "sprite_g.h"
 
-/* client */
+// client
 #include "tilespec.h"
 
 #include "gui_proto_constructor.h"

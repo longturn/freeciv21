@@ -15,14 +15,14 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "iterator.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "game.h"
 #include "nation.h"
 #include "player.h"
@@ -176,7 +176,7 @@ bool can_change_to_government(struct player *pplayer,
   }
 
   if (get_player_bonus(pplayer, EFT_ANY_GOVERNMENT) > 0) {
-    /* Note, this may allow govs that are on someone else's "tech tree". */
+    // Note, this may allow govs that are on someone else's "tech tree".
     return true;
   }
 
@@ -382,9 +382,9 @@ const char *ruler_title_for_player(const struct player *pplayer, char *buf,
   fc_assert_ret_val(NULL != buf, NULL);
   fc_assert_ret_val(0 < buf_len, NULL);
 
-  /* Try specific nation rule title. */
+  // Try specific nation rule title.
   if (!pgovern->ruler_titles->contains(pnation)
-      /* Try default rule title. */
+      // Try default rule title.
       && !pgovern->ruler_titles->contains(nullptr)) {
     qCritical("Missing title for government \"%s\" (nb %d) "
               "nation \"%s\" (nb %d).",

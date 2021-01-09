@@ -13,10 +13,10 @@
 // Forward declarations
 class QTcpSocket;
 
-/* utility */
-#include "support.h" /* bool type */
+// utility
+#include "support.h" // bool type
 
-/* common */
+// common
 #include "fc_types.h"
 
 #include "gui_proto_constructor.h"
@@ -45,6 +45,6 @@ GUI_FUNC_PROTO(void, gui_update_font, const QString &font_name,
 
 extern const char *client_string;
 
-/* Actually defined in update_queue.c */
+// Actually defined in update_queue.c
 void gui_update_allfonts();
 void conn_list_dialog_update();

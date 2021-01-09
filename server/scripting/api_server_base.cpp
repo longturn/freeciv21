@@ -15,7 +15,7 @@
 /* common/scriptcore */
 #include "luascript.h"
 
-/* server */
+// server
 #include "score.h"
 #include "settings.h"
 #include "srv_main.h"
@@ -56,7 +56,7 @@ bool api_server_save(lua_State *L, const char *filename)
 {
   LUASCRIPT_CHECK_STATE(L, false);
 
-  /* Limit the allowed characters in the filename. */
+  // Limit the allowed characters in the filename.
   if (filename != NULL && !is_safe_filename(filename)) {
     return false;
   }

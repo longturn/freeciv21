@@ -8,7 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 #pragma once
-/* utility */
+// utility
 #include "support.h"
 
 #include "luascript_types.h"
@@ -16,17 +16,17 @@ struct fc_lua;
 
 typedef char *signal_deprecator;
 
-/* Signal callback datastructure. */
+// Signal callback datastructure.
 struct signal_callback {
-  char *name; /* callback function name */
+  char *name; // callback function name
 };
 
-/* Signal datastructure. */
+// Signal datastructure.
 struct signal {
-  int nargs;                           /* number of arguments to pass */
-  enum api_types *arg_types;           /* argument types */
-  QList<signal_callback *> *callbacks; /* connected callbacks */
-  char *depr_msg; /* deprecation message to show if handler added */
+  int nargs;                           // number of arguments to pass
+  enum api_types *arg_types;           // argument types
+  QList<signal_callback *> *callbacks; // connected callbacks
+  char *depr_msg; // deprecation message to show if handler added
 };
 
 void luascript_signal_init(struct fc_lua *fcl);

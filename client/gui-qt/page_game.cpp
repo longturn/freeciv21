@@ -211,7 +211,7 @@ void pageGame::updateInfoLabelTimeout()
   if (head_of_units_in_focus() != nullptr) {
     real_menus_update();
   }
-  /* TRANS: T is shortcut from Turn */
+  // TRANS: T is shortcut from Turn
   s = QString(_("%1 \nT:%2"))
           .arg(calendar_text(), QString::number(game.info.turn));
 
@@ -514,7 +514,7 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
     queen()->mapview_wdg->resize(event->size().width(), size.height());
     queen()->city_overlay->resize(queen()->mapview_wdg->size());
     queen()->unitinfo_wdg->update_actions(nullptr);
-    /* It could be resized before mapview, so delayed it a bit */
+    // It could be resized before mapview, so delayed it a bit
     QTimer::singleShot(20, [] { queen()->infotab->restore_chat(); });
   }
   event->setAccepted(true);
@@ -538,7 +538,7 @@ void fc_game_tab_widget::current_changed(int index)
   currentWidget()->hide();
   widget(index)->show();
 
-  /* Set focus to map instead sidebar */
+  // Set focus to map instead sidebar
   if (queen()->mapview_wdg && king()->current_page() == PAGE_GAME
       && index == 0) {
     queen()->mapview_wdg->setFocus();
@@ -603,7 +603,7 @@ int pageGame::gimmeIndexOf(const QString &str)
  */
 void pageGame::removeRepoDlg(const QString &str)
 {
-  /* if app is closing opened_repo_dlg is already deleted */
+  // if app is closing opened_repo_dlg is already deleted
   if (!king()->is_closing()) {
     opened_repo_dlgs.remove(str);
   }

@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 
-/* common */
+// common
 #include "game.h"
 #include "map.h"
 #include "tile.h"

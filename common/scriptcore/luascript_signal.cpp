@@ -37,7 +37,7 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "deprecations.h"
 
 /* common/scriptcore */
@@ -246,7 +246,7 @@ void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,
 
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
-    /* check for a duplicate callback */
+    // check for a duplicate callback
     for (auto *pcallback : qAsConst(*psignal->callbacks)) {
       if (!strcmp(pcallback->name, callback_name)) {
         pcallback_found = pcallback;
@@ -292,7 +292,7 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
 
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
-    /* check for a duplicate callback */
+    // check for a duplicate callback
     for (auto *pcallback : qAsConst(*psignal->callbacks)) {
       if (!strcmp(pcallback->name, callback_name)) {
         return true;

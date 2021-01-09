@@ -13,7 +13,7 @@
 /* common/scriptcore */
 #include "luascript_types.h"
 
-/* server */
+// server
 #include "fcdb.h"
 
 struct lua_State;

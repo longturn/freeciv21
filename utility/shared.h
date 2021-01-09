@@ -14,12 +14,12 @@
 
 #include <QDir>
 
-/* utility */
+// utility
 #include "log.h"
-#include "support.h" /* bool, fc__attribute */
+#include "support.h" // bool, fc__attribute
 
-/* Changing these will break network compatability! */
-#define MAX_LEN_ADDR 256 /* see also MAXHOSTNAMELEN and RFC 1123 2.1 */
+// Changing these will break network compatability!
+#define MAX_LEN_ADDR 256 // see also MAXHOSTNAMELEN and RFC 1123 2.1
 #define MAX_LEN_PATH 4095
 
 /* Use FC_INFINITY to denote that a certain event will never occur or
@@ -30,9 +30,9 @@
 /* Initialize something for the sole purpose of silencing false compiler
  * warning about variable possibly used uninitialized. */
 #define BAD_HEURISTIC_INIT(_ini_val_) = _ini_val_
-#else /* FREECIV_TESTMATIC */
+#else // FREECIV_TESTMATIC
 #define BAD_HEURISTIC_INIT(_ini_val_)
-#endif /* FREECIV_TESTMATIC */
+#endif // FREECIV_TESTMATIC
 
 enum fc_tristate { TRI_NO, TRI_YES, TRI_MAYBE };
 #define BOOL_TO_TRISTATE(tri) ((tri) ? TRI_YES : TRI_NO)
@@ -50,7 +50,7 @@ enum fc_tristate fc_tristate_and(enum fc_tristate one, enum fc_tristate two);
 #define ABS(x) (((x) >= 0) ? (x) : -(x))
 #endif
 
-/* Note: Solaris already has a WRAP macro that is completely different. */
+// Note: Solaris already has a WRAP macro that is completely different.
 #define FC_WRAP(value, range)                                               \
   ((value) < 0 ? ((value) % (range) != 0 ? (value) % (range) + (range) : 0) \
                : ((value) >= (range) ? (value) % (range) : (value)))
@@ -128,7 +128,7 @@ void remove_leading_trailing_spaces(char *s);
 bool check_strlen(const char *str, size_t len, const char *errmsg);
 size_t loud_strlcpy(char *buffer, const char *str, size_t len,
                     const char *errmsg);
-/* Convenience macro. */
+// Convenience macro.
 #define sz_loud_strlcpy(buffer, str, errmsg)                                \
   loud_strlcpy(buffer, str, sizeof(buffer), errmsg)
 
@@ -142,9 +142,9 @@ bool str_to_float(const char *str, float *pfloat);
 ...
 **************************************************************************/
 struct fileinfo {
-  char *name;     /* descriptive file name string */
-  char *fullname; /* full absolute filename */
-  time_t mtime;   /* last modification time  */
+  char *name;     // descriptive file name string
+  char *fullname; // full absolute filename
+  time_t mtime;   // last modification time
 };
 
 #define SPECLIST_TAG fileinfo
@@ -181,24 +181,24 @@ void dont_run_as_root(const char *argv0, const char *fallback);
 /*** matching prefixes: ***/
 
 enum m_pre_result {
-  M_PRE_EXACT,     /* matches with exact length */
-  M_PRE_ONLY,      /* only matching prefix */
-  M_PRE_AMBIGUOUS, /* first of multiple matching prefixes */
-  M_PRE_EMPTY,     /* prefix is empty string (no match) */
-  M_PRE_LONG,      /* prefix is too long (no match) */
-  M_PRE_FAIL,      /* no match at all */
-  M_PRE_LAST       /* flag value */
+  M_PRE_EXACT,     // matches with exact length
+  M_PRE_ONLY,      // only matching prefix
+  M_PRE_AMBIGUOUS, // first of multiple matching prefixes
+  M_PRE_EMPTY,     // prefix is empty string (no match)
+  M_PRE_LONG,      // prefix is too long (no match)
+  M_PRE_FAIL,      // no match at all
+  M_PRE_LAST       // flag value
 };
 
 const char *m_pre_description(enum m_pre_result result);
 
-/* function type to access a name from an index: */
+// function type to access a name from an index:
 typedef const char *(*m_pre_accessor_fn_t)(int);
 
-/* function type to compare prefix: */
+// function type to compare prefix:
 typedef int (*m_pre_strncmp_fn_t)(const char *, const char *, size_t n);
 
-/* function type to calculate effective string length: */
+// function type to calculate effective string length:
 typedef size_t(m_strlen_fn_t)(const char *str);
 
 enum m_pre_result match_prefix(m_pre_accessor_fn_t accessor_fn,
@@ -230,16 +230,16 @@ void format_time_duration(time_t t, char *buf, int maxlen);
 
 bool wildcard_fit_string(const char *pattern, const char *test);
 
-/* Custom format strings. */
+// Custom format strings.
 struct cf_sequence;
 
 int fc_snprintcf(char *buf, size_t buf_len, const char *format, ...)
-    fc__attribute((nonnull(1, 3))); /* Not a printf format. */
+    fc__attribute((nonnull(1, 3))); // Not a printf format.
 int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
                   const struct cf_sequence *sequences, size_t sequences_num)
     fc__attribute((nonnull(1, 3, 4)));
 
-/* Tools for fc_snprintcf(). */
+// Tools for fc_snprintcf().
 static inline struct cf_sequence cf_bool_seq(char letter, bool value);
 static inline struct cf_sequence cf_trans_bool_seq(char letter, bool value);
 static inline struct cf_sequence cf_char_seq(char letter, char value);

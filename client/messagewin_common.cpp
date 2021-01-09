@@ -17,10 +17,10 @@
 
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 
-/* common */
+// common
 #include "featured_text.h"
 #include "map.h"
 
@@ -29,7 +29,7 @@
 #include "mapview_g.h"
 #include "messagewin_g.h"
 
-/* client */
+// client
 #include "client_main.h"
 #include "options.h"
 #include "update_queue.h"
@@ -150,7 +150,7 @@ const struct message *meswin_get_message(int message_index)
   if (message_index >= 0 && message_index < messages_total) {
     return messages[message_index];
   } else {
-    /* Can happen in turn change... */
+    // Can happen in turn change...
     return NULL;
   }
 }

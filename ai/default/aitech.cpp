@@ -17,17 +17,17 @@
 
 #include <cstring>
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "game.h"
 #include "government.h"
 #include "player.h"
 #include "research.h"
 #include "tech.h"
 
-/* server */
+// server
 #include "plrhand.h"
 #include "srv_log.h"
 #include "techtools.h"
@@ -45,8 +45,8 @@
 #include "aitech.h"
 
 struct ai_tech_choice {
-  Tech_type_id choice;   /* The id of the most needed tech */
-  adv_want want;         /* Want of the most needed tech */
+  Tech_type_id choice;   // The id of the most needed tech
+  adv_want want;         // Want of the most needed tech
   adv_want current_want; /* Want of the tech which is currently researched
                           * or is our current goal */
 };
@@ -105,7 +105,7 @@ static void dai_select_tech(struct ai_type *ait, struct player *pplayer,
     if (valid_advance_by_number(i)) {
       int steps = research_goal_unknown_techs(presearch, i);
 
-      /* We only want it if we haven't got it (so AI is human after all) */
+      // We only want it if we haven't got it (so AI is human after all)
       if (steps > 0) {
         values[i] += plr_data->tech_want[i];
         advance_index_iterate(A_FIRST, k)
@@ -120,14 +120,14 @@ static void dai_select_tech(struct ai_type *ait, struct player *pplayer,
   }
   advance_index_iterate_end;
 
-  /* Fill in the values for the tech goals */
+  // Fill in the values for the tech goals
   advance_index_iterate(A_FIRST, i)
   {
     if (valid_advance_by_number(i)) {
       int steps = research_goal_unknown_techs(presearch, i);
 
       if (steps == 0) {
-        /* Can't be set as a goal any more */
+        // Can't be set as a goal any more
         goal_values[i] = -1;
         continue;
       }
@@ -181,7 +181,7 @@ static void dai_select_tech(struct ai_type *ait, struct player *pplayer,
     }
   }
   advance_index_iterate_end;
-#endif /* REALLY_DEBUG_THIS */
+#endif // REALLY_DEBUG_THIS
   if (choice) {
     choice->choice = newtech;
     choice->want = values[newtech] / num_cities_nonzero;
@@ -248,10 +248,10 @@ static void dai_tech_effect_values(struct ai_type *ait,
   struct government *gov = government_of_player(pplayer);
   struct adv_data *adv = adv_data_get(pplayer, NULL);
   struct ai_plr *aip = def_ai_player_data(pplayer, ait);
-  int turns = 9999; /* TODO: Set to correct value */
+  int turns = 9999; // TODO: Set to correct value
   int nplayers = normal_player_count();
 
-  /* Remove team members from the equation */
+  // Remove team members from the equation
   players_iterate(aplayer)
   {
     if (aplayer->team && aplayer->team == pplayer->team
@@ -298,7 +298,7 @@ static void dai_tech_effect_values(struct ai_type *ait,
             if (!is_req_active(pplayer, NULL, pcity, NULL, NULL, NULL, NULL,
                                NULL, NULL, NULL, preq, RPT_POSSIBLE)) {
               active = false;
-              break; /* presence doesn't matter for inactive effects. */
+              break; // presence doesn't matter for inactive effects.
             }
           }
           requirement_vector_iterate_end;
@@ -310,7 +310,7 @@ static void dai_tech_effect_values(struct ai_type *ait,
                                   peffect, 1, nplayers);
 
             if (!present) {
-              /* Tech removes the effect */
+              // Tech removes the effect
               v -= v1;
             } else {
               v += v1;
@@ -319,7 +319,7 @@ static void dai_tech_effect_values(struct ai_type *ait,
         }
         effect_list_iterate_end;
 
-        /* Same conversion factor as in want_tech_for_improvement_effect() */
+        // Same conversion factor as in want_tech_for_improvement_effect()
         tech_want = v * 14 / 8;
 
         aip->tech_want[advance_index(padv)] += tech_want;
@@ -338,14 +338,14 @@ void dai_manage_tech(struct ai_type *ait, struct player *pplayer)
 {
   struct ai_tech_choice choice, goal;
   struct research *research = research_get(pplayer);
-  /* Penalty for switching research */
+  // Penalty for switching research
   int penalty = (research->got_tech ? 0 : research->bulbs_researched);
 
   /* Even when we let human to do the final decision, we keep our
    * wants correctly calculated. Add effect values in */
   dai_tech_effect_values(ait, pplayer);
 
-  /* If there are humans in our team, they will choose the techs */
+  // If there are humans in our team, they will choose the techs
   players_iterate(aplayer)
   {
     const struct player_diplstate *ds =
@@ -359,7 +359,7 @@ void dai_manage_tech(struct ai_type *ait, struct player *pplayer)
 
   dai_select_tech(ait, pplayer, &choice, &goal);
   if (choice.choice != research->researching) {
-    /* changing */
+    // changing
     if (choice.want - choice.current_want > penalty
         && (penalty + research->bulbs_researched
             <= research_total_bulbs_required(research, research->researching,
@@ -372,7 +372,7 @@ void dai_manage_tech(struct ai_type *ait, struct player *pplayer)
     }
   }
 
-  /* crossing my fingers on this one! -- Syela (seems to have worked!) */
+  // crossing my fingers on this one! -- Syela (seems to have worked!)
   /* It worked, in particular, because the value it sets
    * (research->tech_goal) is practically never used, see the comment for
    * ai_next_tech_goal */
@@ -434,7 +434,7 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
     if (def_values[utype_index(deftype)] > best_avl_def
         && !can_city_build_unit_now(pcity, deftype)
         && can_city_build_unit_later(pcity, deftype)) {
-      /* It would be better than current best. Consider researching tech */
+      // It would be better than current best. Consider researching tech
       const struct impr_type *building;
       int cost = 0;
       struct advance *itech = deftype->require_advance;
@@ -443,7 +443,7 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
       if (A_NEVER != itech
           && research_invention_state(presearch, advance_number(itech))
                  != TECH_KNOWN) {
-        /* See if we want to invent this. */
+        // See if we want to invent this.
         cost =
             research_goal_bulbs_required(presearch, advance_number(itech));
       }
@@ -491,7 +491,7 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
   if (A_NEVER != best_tech) {
     struct ai_plr *plr_data = def_ai_player_data(pplayer, ait);
 
-    /* Crank up chosen tech want */
+    // Crank up chosen tech want
     if (best_avl != NULL
         && def_values[utype_index(best_unit)] <= 1.5 * best_avl_def) {
       /* We already have almost as good unit suitable for defending against
@@ -539,7 +539,7 @@ struct unit_type *dai_wants_role_unit(struct ai_type *ait,
       if (A_NEVER != itech
           && research_invention_state(presearch, advance_number(itech))
                  != TECH_KNOWN) {
-        /* See if we want to invent this. */
+        // See if we want to invent this.
         cost =
             research_goal_bulbs_required(presearch, advance_number(itech));
       }
@@ -583,9 +583,9 @@ struct unit_type *dai_wants_role_unit(struct ai_type *ait,
   if (A_NEVER != best_tech) {
     struct ai_plr *plr_data = def_ai_player_data(pplayer, ait);
 
-    /* Crank up chosen tech want */
+    // Crank up chosen tech want
     if (build_unit != NULL) {
-      /* We already have a role unit of this kind */
+      // We already have a role unit of this kind
       want /= 2;
     }
     plr_data->tech_want[advance_index(best_tech)] += want;

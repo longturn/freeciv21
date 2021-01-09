@@ -134,7 +134,7 @@ void popup_spaceship_dialog(struct player *pplayer)
    Close the spaceship dialog for the given player.
  */
 void popdown_spaceship_dialog(struct player *pplayer)
-{ /* PORTME */
+{ // PORTME
 }
 
 /**

@@ -14,12 +14,12 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 
-/* common */
+// common
 #include "player.h"
 #include "rgbcolor.h"
 #include "terrain.h"
@@ -27,7 +27,7 @@
 /* client/include */
 #include "colors_g.h"
 
-/* client */
+// client
 #include "tilespec.h"
 
 #include "colors_common.h"

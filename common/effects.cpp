@@ -17,14 +17,14 @@
 #include <cctype>
 #include <cstring>
 
-/* utility */
+// utility
 #include "astring.h"
 #include "fcintl.h"
 #include "log.h"
-#include "shared.h" /* ARRAY_SIZE */
+#include "shared.h" // ARRAY_SIZE
 #include "support.h"
 
-/* common */
+// common
 #include "city.h"
 #include "game.h"
 #include "government.h"
@@ -102,7 +102,7 @@ static bool initialized = false;
   is organized to enable fast queries.
 **************************************************************************/
 static struct {
-  /* A single list containing every effect. */
+  // A single list containing every effect.
   struct effect_list *tracker;
 
   /* This array provides a full list of the effects of this type
@@ -110,11 +110,11 @@ static struct {
   struct effect_list *effects[EFT_COUNT];
 
   struct {
-    /* This cache shows for each building, which effects it provides. */
+    // This cache shows for each building, which effects it provides.
     struct effect_list *buildings[B_LAST];
-    /* Same for governments */
+    // Same for governments
     struct effect_list *govs[G_LAST];
-    /* ...advances... */
+    // ...advances...
     struct effect_list *advances[A_LAST];
   } reqs;
 } ruleset_cache;
@@ -168,7 +168,7 @@ struct effect_list *get_req_source_effects(struct universal *psource)
 struct effect *effect_new(enum effect_type type, int value,
                           struct multiplier *pmul)
 {
-  /* Create the effect. */
+  // Create the effect.
   auto *peffect = new effect;
   peffect->type = type;
   peffect->value = value;
@@ -176,7 +176,7 @@ struct effect *effect_new(enum effect_type type, int value,
 
   requirement_vector_init(&peffect->reqs);
 
-  /* Now add the effect to the ruleset cache. */
+  // Now add the effect to the ruleset cache.
   effect_list_append(ruleset_cache.tracker, peffect);
   effect_list_append(get_effects(type), peffect);
 
@@ -397,21 +397,21 @@ int effect_value_from_universals(enum effect_type type,
            * to another source in our template). Keep looking. */
           break;
         case ITF_NO:
-          req_mentioned_a_source = true; /* this req matched this source */
+          req_mentioned_a_source = true; // this req matched this source
           if (preq->present) {
-            /* Requirement contradicts template. Effect doesn't apply. */
+            // Requirement contradicts template. Effect doesn't apply.
             effect_applies = false;
-          } /* but negative req doesn't count for first_source_mentioned */
+          } // but negative req doesn't count for first_source_mentioned
           break;
         case ITF_YES:
-          req_mentioned_a_source = true; /* this req matched this source */
+          req_mentioned_a_source = true; // this req matched this source
           if (preq->present) {
             if (i == 0) {
               first_source_mentioned = true;
             }
-            /* keep looking */
+            // keep looking
           } else /* !present */ {
-            /* Requirement contradicts template. Effect doesn't apply. */
+            // Requirement contradicts template. Effect doesn't apply.
             effect_applies = false;
           }
           break;
@@ -423,7 +423,7 @@ int effect_value_from_universals(enum effect_type type,
         effect_applies = false;
       }
       if (!effect_applies) {
-        /* Already known to be irrelevant, bail out early */
+        // Already known to be irrelevant, bail out early
         break;
       }
     }
@@ -480,7 +480,7 @@ void send_ruleset_cache(struct conn_list *dest)
       effect_packet.multiplier = multiplier_number(peffect->multiplier);
     } else {
       effect_packet.has_multiplier = false;
-      effect_packet.multiplier = 0; /* arbitrary */
+      effect_packet.multiplier = 0; // arbitrary
     }
 
     counter = 0;
@@ -508,7 +508,7 @@ bool building_has_effect(const struct impr_type *pimprove,
                          enum effect_type effect_type)
 {
   struct universal source = {
-      /* just to bamboozle the annoying compiler warning */
+      // just to bamboozle the annoying compiler warning
       .value = {.building =
                     improvement_by_number(improvement_number(pimprove))},
       .kind = VUT_IMPROVEMENT};
@@ -576,7 +576,7 @@ bool is_building_replaced(const struct city *pcity,
 
   plist = get_req_source_effects(&source);
 
-  /* A building with no effects and no flags is always redundant! */
+  // A building with no effects and no flags is always redundant!
   if (!plist) {
     return true;
   }
@@ -621,10 +621,10 @@ int get_target_bonus_effects(
 {
   int bonus = 0;
 
-  /* Loop over all effects of this type. */
+  // Loop over all effects of this type.
   effect_list_iterate(get_effects(effect_type), peffect)
   {
-    /* For each effect, see if it is active. */
+    // For each effect, see if it is active.
     if (are_reqs_active(target_player, other_player, target_city,
                         target_building, target_tile, target_unit,
                         target_unittype, target_output, target_specialist,

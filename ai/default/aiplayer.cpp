@@ -15,13 +15,13 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "ai.h"
 #include "city.h"
 #include "game.h"
 #include "multipliers.h"
 #include "unit.h"
-/* server */
+// server
 #include "citytools.h"
 
 /* ai/default */
@@ -180,7 +180,7 @@ void dai_gained_control(struct ai_type *ait, struct player *pplayer)
     }
     multipliers_iterate_end;
 
-    /* Clear worker tasks, some AIs (e.g. classic) does not use those */
+    // Clear worker tasks, some AIs (e.g. classic) does not use those
     city_list_iterate(pplayer->cities, pcity) { clear_worker_tasks(pcity); }
     city_list_iterate_end;
   }

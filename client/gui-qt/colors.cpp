@@ -9,7 +9,7 @@
 **************************************************************************/
 
 #include <QPainter>
-/* utility */
+// utility
 #include "rgbcolor.h"
 // gui-qt
 #include "colors.h"

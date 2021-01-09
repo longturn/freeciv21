@@ -18,15 +18,15 @@
 // Qt
 #include <QCommandLineParser>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "support.h"
 
-/* common */
+// common
 #include "version.h"
 
-/* modinst */
+// modinst
 #include "modinst.h"
 
 #include "mpcmdline.h"

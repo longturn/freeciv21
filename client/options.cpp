@@ -21,7 +21,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-/* utility */
+// utility
 #include "deprecations.h"
 #include "fcintl.h"
 #include "log.h"
@@ -29,7 +29,7 @@
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "events.h"
 #include "version.h"
 
@@ -43,7 +43,7 @@
 #include "repodlgs_g.h"
 #include "voteinfo_bar_g.h"
 
-/* client */
+// client
 #include "audio.h"
 #include "citybar.h"
 #include "cityrepdata.h"
@@ -139,7 +139,7 @@ struct client_options gui_options = {
     true, //.sound_enable_menu_music =
     true, //.sound_enable_game_music =
 
-    /* This option is currently set by the client - not by the user. */
+    // This option is currently set by the client - not by the user.
 
     true,  //.draw_city_outlines =
     false, //.draw_city_output =
@@ -171,22 +171,22 @@ struct client_options gui_options = {
     false, // SOMETHING ?
 
     // sveinung - this wasnt here
-    "png", /*  .mapimg_format, */
-    /* options for map images */
+    "png", //  .mapimg_format,
+    // options for map images
     2, //.mapimg_zoom =
     {
         //.mapimg_layer =
-        false, /* a - MAPIMG_LAYER_AREA */
-        true,  /* b - MAPIMG_LAYER_BORDERS */
-        true,  /* c - MAPIMG_LAYER_CITIES */
-        true,  /* f - MAPIMG_LAYER_FOGOFWAR */
-        true,  /* k - MAPIMG_LAYER_KNOWLEDGE */
-        true,  /* t - MAPIMG_LAYER_TERRAIN */
-        true   /* u - MAPIMG_LAYER_UNITS */
+        false, // a - MAPIMG_LAYER_AREA
+        true,  // b - MAPIMG_LAYER_BORDERS
+        true,  // c - MAPIMG_LAYER_CITIES
+        true,  // f - MAPIMG_LAYER_FOGOFWAR
+        true,  // k - MAPIMG_LAYER_KNOWLEDGE
+        true,  // t - MAPIMG_LAYER_TERRAIN
+        true   // u - MAPIMG_LAYER_UNITS
     },
     "mapimage filename",
 
-    /* gui-qt client specific options. */
+    // gui-qt client specific options.
     false, //.gui_qt_fullscreen =
     true,  //.gui_qt_show_preview =
     true,  //.gui_qt_allied_chat_only =
@@ -306,14 +306,14 @@ struct option_int_vtable {
   int (*maximum)(const struct option *);
   bool (*set)(struct option *, int);
 };
-/* Specific string accessors (OT_STRING == type). */
+// Specific string accessors (OT_STRING == type).
 struct option_str_vtable {
   const char *(*get)(const struct option *);
   const char *(*def)(const struct option *);
   const QVector<QString> *(*values)(const struct option *);
   bool (*set)(struct option *, const char *);
 };
-/* Specific enum accessors (OT_ENUM == type). */
+// Specific enum accessors (OT_ENUM == type).
 struct option_enum_vtable {
   int (*get)(const struct option *);
   int (*def)(const struct option *);
@@ -321,21 +321,21 @@ struct option_enum_vtable {
   bool (*set)(struct option *, int);
   int (*cmp)(const char *, const char *);
 };
-/* Specific bitwise accessors (OT_BITWISE == type). */
+// Specific bitwise accessors (OT_BITWISE == type).
 struct option_bitwise_vtable {
   unsigned (*get)(const struct option *);
   unsigned (*def)(const struct option *);
   const QVector<QString> *(*values)(const struct option *);
   bool (*set)(struct option *, unsigned);
 };
-/* Specific font accessors (OT_FONT == type). */
+// Specific font accessors (OT_FONT == type).
 struct option_font_vtable {
   const char *(*get)(const struct option *);
   const char *(*def)(const struct option *);
   const char *(*target)(const struct option *);
   bool (*set)(struct option *, const char *);
 };
-/* Specific color accessors (OT_COLOR == type). */
+// Specific color accessors (OT_COLOR == type).
 struct option_color_vtable {
   struct ft_color (*get)(const struct option *);
   struct ft_color (*def)(const struct option *);
@@ -346,37 +346,37 @@ struct option_color_vtable {
   The base class for options.
 ****************************************************************************/
 struct option {
-  /* A link to the option set. */
+  // A link to the option set.
   const struct option_set *poptset;
-  /* Type of the option. */
+  // Type of the option.
   enum option_type type;
 
-  /* Common accessors. */
-  /* Common accessors. */
+  // Common accessors.
+  // Common accessors.
   const struct option_common_vtable *common_vtable;
-  /* Specific typed accessors. */
+  // Specific typed accessors.
   union {
-    /* Specific boolean accessors (OT_BOOLEAN == type). */
+    // Specific boolean accessors (OT_BOOLEAN == type).
     const struct option_bool_vtable *bool_vtable;
-    /* Specific integer accessors (OT_INTEGER == type). */
+    // Specific integer accessors (OT_INTEGER == type).
     const struct option_int_vtable *int_vtable;
-    /* Specific string accessors (OT_STRING == type). */
+    // Specific string accessors (OT_STRING == type).
     const struct option_str_vtable *str_vtable;
-    /* Specific enum accessors (OT_ENUM == type). */
+    // Specific enum accessors (OT_ENUM == type).
     const struct option_enum_vtable *enum_vtable;
-    /* Specific bitwise accessors (OT_BITWISE == type). */
+    // Specific bitwise accessors (OT_BITWISE == type).
     const struct option_bitwise_vtable *bitwise_vtable;
-    /* Specific font accessors (OT_FONT == type). */
+    // Specific font accessors (OT_FONT == type).
     const struct option_font_vtable *font_vtable;
-    /* Specific color accessors (OT_COLOR == type). */
+    // Specific color accessors (OT_COLOR == type).
     const struct option_color_vtable *color_vtable;
   };
-  /* Called after the value changed. */
+  // Called after the value changed.
   void (*changed_callback)(struct option *option);
 
   int callback_data;
 
-  /* Volatile. */
+  // Volatile.
   void *gui_data;
 };
 
@@ -559,7 +559,7 @@ void option_changed(struct option *poption)
   fc_assert_ret(NULL != poption);
 
   if (!options_fully_initialized) {
-    /* Prevent to use non-initialized datas. */
+    // Prevent to use non-initialized datas.
     return;
   }
 
@@ -1150,26 +1150,26 @@ enum client_option_category {
   Derived class client option, inherinting of base class option.
 ****************************************************************************/
 struct client_option {
-  struct option base_option; /* Base structure, must be the first! */
+  struct option base_option; // Base structure, must be the first!
 
-  const char *name;        /* Short name - used as an identifier */
-  const char *description; /* One-line description */
-  const char *help_text;   /* Paragraph-length help text */
+  const char *name;        // Short name - used as an identifier
+  const char *description; // One-line description
+  const char *help_text;   // Paragraph-length help text
   enum client_option_category category;
-  enum gui_type specific; /* GUI_STUB for common options. */
+  enum gui_type specific; // GUI_STUB for common options.
 
   union {
-    /* OT_BOOLEAN type option. */
+    // OT_BOOLEAN type option.
     struct {
       bool *const pvalue;
       const bool def;
     } boolean;
-    /* OT_INTEGER type option. */
+    // OT_INTEGER type option.
     struct {
       int *const pvalue;
       const int def, min, max;
     } integer;
-    /* OT_STRING type option. */
+    // OT_STRING type option.
     struct {
       char *const pvalue;
       const size_t size;
@@ -1180,28 +1180,28 @@ struct client_option {
        */
       const QVector<QString> *(*const val_accessor)(const struct option *);
     } string;
-    /* OT_ENUM type option. */
+    // OT_ENUM type option.
     struct {
       int *const pvalue;
       const int def;
-      QVector<QString> *support_names, *pretty_names; /* untranslated */
+      QVector<QString> *support_names, *pretty_names; // untranslated
       const struct copt_val_name *(*const name_accessor)(int value);
     } enumerator;
-    /* OT_BITWISE type option. */
+    // OT_BITWISE type option.
     struct {
       unsigned *const pvalue;
       const unsigned def;
-      QVector<QString> *support_names, *pretty_names; /* untranslated */
+      QVector<QString> *support_names, *pretty_names; // untranslated
       const struct copt_val_name *(*const name_accessor)(int value);
     } bitwise;
-    /* OT_FONT type option. */
+    // OT_FONT type option.
     struct {
       char *const pvalue;
       const size_t size;
       const char *const def;
       const char *const target;
     } font;
-    /* OT_COLOR type option. */
+    // OT_COLOR type option.
     struct {
       struct ft_color *const pvalue;
       const struct ft_color def;
@@ -1471,7 +1471,7 @@ struct client_option {
   Enumerator name accessors.
 ****************************************************************************/
 
-/* Some changed callbacks. */
+// Some changed callbacks.
 static void reqtree_show_icons_callback(struct option *poption);
 static void view_option_changed_callback(struct option *poption);
 static void manual_turn_done_callback(struct option *poption);
@@ -1993,7 +1993,7 @@ static struct client_option client_options[] = {
                        "overview."),
                     COC_OVERVIEW, GUI_STUB, true, overview_redraw_callback),
 
-    /* options for map images */
+    // options for map images
     GEN_STR_LIST_OPTION(mapimg_format, N_("Image format"),
                         N_("The image toolkit and file format used for "
                            "map images."),
@@ -2035,7 +2035,7 @@ static struct client_option client_options[] = {
            "be appended."),
         COC_MAPIMG, GUI_STUB, GUI_DEFAULT_MAPIMG_FILENAME, NULL, 0),
 
-    /* gui-qt client specific options. */
+    // gui-qt client specific options.
     GEN_BOOL_OPTION(gui_qt_fullscreen, N_("Fullscreen"),
                     N_("If this option is set the client will use the "
                        "whole screen area for drawing."),
@@ -2108,7 +2108,7 @@ static struct client_option client_options[] = {
         COC_INTERFACE, GUI_QT, true, NULL)};
 static const int client_options_num = ARRAY_SIZE(client_options);
 
-/* Iteration loop, including invalid options for the current gui type. */
+// Iteration loop, including invalid options for the current gui type.
 #define client_options_iterate_all(poption)                                 \
   {                                                                         \
     const struct client_option *const poption##_max =                       \
@@ -2173,7 +2173,7 @@ static const char *client_optset_category_name(int category)
   case COC_GRAPHICS:
     return _("Graphics");
   case COC_OVERVIEW:
-    /* TRANS: Options section for overview map (mini-map) */
+    // TRANS: Options section for overview map (mini-map)
     return Q_("?map:Overview");
   case COC_SOUND:
     return _("Sound");
@@ -2719,11 +2719,11 @@ static const struct option_bitwise_vtable server_option_bitwise_vtable = {
   Derived class server option, inheriting from base class option.
 ****************************************************************************/
 struct server_option {
-  struct option base_option; /* Base structure, must be the first! */
+  struct option base_option; // Base structure, must be the first!
 
-  char *name;        /* Short name - used as an identifier */
-  char *description; /* One-line description */
-  char *help_text;   /* Paragraph-length help text */
+  char *name;        // Short name - used as an identifier
+  char *description; // One-line description
+  char *help_text;   // Paragraph-length help text
   unsigned char category;
   bool desired_sent;
   bool is_changeable;
@@ -2731,34 +2731,34 @@ struct server_option {
   enum setting_default_level setdef;
 
   union {
-    /* OT_BOOLEAN type option. */
+    // OT_BOOLEAN type option.
     struct {
       bool value;
       bool def;
     } boolean;
-    /* OT_INTEGER type option. */
+    // OT_INTEGER type option.
     struct {
       int value;
       int def, min, max;
     } integer;
-    /* OT_STRING type option. */
+    // OT_STRING type option.
     struct {
       char *value;
       char *def;
     } string;
-    /* OT_ENUM type option. */
+    // OT_ENUM type option.
     struct {
       int value;
       int def;
       QVector<QString> *support_names;
-      QVector<QString> *pretty_names; /* untranslated */
+      QVector<QString> *pretty_names; // untranslated
     } enumerator;
-    /* OT_BITWISE type option. */
+    // OT_BITWISE type option.
     struct {
       unsigned value;
       unsigned def;
       QVector<QString> *support_names;
-      QVector<QString> *pretty_names; /* untranslated */
+      QVector<QString> *pretty_names; // untranslated
     } bitwise;
   };
 };
@@ -2822,10 +2822,10 @@ void server_options_free()
 {
   int i;
 
-  /* Don't keep this dialog open. */
+  // Don't keep this dialog open.
   option_dialog_popdown(server_optset);
 
-  /* Free the options themselves. */
+  // Free the options themselves.
   if (NULL != server_options) {
     for (i = 0; i < server_options_num; i++) {
       server_option_free(server_options + i);
@@ -2834,7 +2834,7 @@ void server_options_free()
     server_options_num = 0;
   }
 
-  /* Free the categories. */
+  // Free the categories.
   if (NULL != server_options_categories) {
     for (i = 0; i < server_options_categories_num; i++) {
       if (NULL != server_options_categories[i]) {
@@ -2854,24 +2854,24 @@ void handle_server_setting_control(
 {
   int i;
 
-  /* This packet should be received only once. */
+  // This packet should be received only once.
   fc_assert_ret(NULL == server_options_categories);
   fc_assert_ret(NULL == server_options);
   fc_assert_ret(0 == server_options_categories_num);
   fc_assert_ret(0 == server_options_num);
 
-  /* Allocate server option categories. */
+  // Allocate server option categories.
   if (0 < packet->categories_num) {
     server_options_categories_num = packet->categories_num;
     server_options_categories = new char *[server_options_categories_num]();
 
     for (i = 0; i < server_options_categories_num; i++) {
-      /* NB: Translate now. */
+      // NB: Translate now.
       server_options_categories[i] = fc_strdup(_(packet->category_names[i]));
     }
   }
 
-  /* Allocate server options. */
+  // Allocate server options.
   if (0 < packet->settings_num) {
     server_options_num = packet->settings_num;
     server_options = new server_option[server_options_num]();
@@ -2892,10 +2892,10 @@ void handle_server_setting_const(
   fc_assert(NULL == psoption->name);
   psoption->name = fc_strdup(packet->name);
   fc_assert(NULL == psoption->description);
-  /* NB: Translate now. */
+  // NB: Translate now.
   psoption->description = fc_strdup(_(packet->short_help));
   fc_assert(NULL == psoption->help_text);
-  /* NB: Translate now. */
+  // NB: Translate now.
   psoption->help_text = fc_strdup(_(packet->extra_help));
   psoption->category = packet->category;
 }
@@ -2948,7 +2948,7 @@ void handle_server_setting_bool(
   fc_assert_ret(NULL != poption);
 
   if (NULL == poption->common_vtable) {
-    /* Not initialized yet. */
+    // Not initialized yet.
     poption->poptset = server_optset;
     poption->common_vtable = &server_option_common_vtable;
     poption->type = OT_BOOLEAN;
@@ -2983,7 +2983,7 @@ void handle_server_setting_int(
   fc_assert_ret(NULL != poption);
 
   if (NULL == poption->common_vtable) {
-    /* Not initialized yet. */
+    // Not initialized yet.
     poption->poptset = server_optset;
     poption->common_vtable = &server_option_common_vtable;
     poption->type = OT_INTEGER;
@@ -3020,7 +3020,7 @@ void handle_server_setting_str(
   fc_assert_ret(NULL != poption);
 
   if (NULL == poption->common_vtable) {
-    /* Not initialized yet. */
+    // Not initialized yet.
     poption->poptset = server_optset;
     poption->common_vtable = &server_option_common_vtable;
     poption->type = OT_STRING;
@@ -3065,7 +3065,7 @@ void handle_server_setting_enum(
   fc_assert_ret(NULL != poption);
 
   if (NULL == poption->common_vtable) {
-    /* Not initialized yet. */
+    // Not initialized yet.
     poption->poptset = server_optset;
     poption->common_vtable = &server_option_common_vtable;
     poption->type = OT_ENUM;
@@ -3085,7 +3085,7 @@ void handle_server_setting_enum(
     psoption->enumerator.def = packet->default_val;
 
     if (NULL == psoption->enumerator.support_names) {
-      /* First time we get this packet. */
+      // First time we get this packet.
       fc_assert(NULL == psoption->enumerator.pretty_names);
       psoption->enumerator.support_names = new QVector<QString>;
       psoption->enumerator.support_names->resize(packet->values_num);
@@ -3094,7 +3094,7 @@ void handle_server_setting_enum(
       for (i = 0; i < packet->values_num; i++) {
         psoption->enumerator.support_names->replace(
             i, packet->support_names[i]);
-        /* Store untranslated string from server. */
+        // Store untranslated string from server.
         psoption->enumerator.pretty_names->replace(i,
                                                    packet->pretty_names[i]);
       }
@@ -3109,7 +3109,7 @@ void handle_server_setting_enum(
       for (i = 0; i < packet->values_num; i++) {
         psoption->enumerator.support_names->replace(
             i, packet->support_names[i]);
-        /* Store untranslated string from server. */
+        // Store untranslated string from server.
         psoption->enumerator.pretty_names->replace(i,
                                                    packet->pretty_names[i]);
       }
@@ -3123,7 +3123,7 @@ void handle_server_setting_enum(
       for (i = 0; i < packet->values_num; i++) {
         str = psoption->enumerator.pretty_names->at(i);
         if (str.isEmpty() || (str == packet->pretty_names[i])) {
-          /* Store untranslated string from server. */
+          // Store untranslated string from server.
           psoption->enumerator.pretty_names->replace(
               i, packet->pretty_names[i]);
           need_gui_remove = true;
@@ -3154,7 +3154,7 @@ void handle_server_setting_bitwise(
   fc_assert_ret(NULL != poption);
 
   if (NULL == poption->common_vtable) {
-    /* Not initialized yet. */
+    // Not initialized yet.
     poption->poptset = server_optset;
     poption->common_vtable = &server_option_common_vtable;
     poption->type = OT_BITWISE;
@@ -3174,7 +3174,7 @@ void handle_server_setting_bitwise(
     psoption->bitwise.def = packet->default_val;
 
     if (NULL == psoption->bitwise.support_names) {
-      /* First time we get this packet. */
+      // First time we get this packet.
       fc_assert(NULL == psoption->bitwise.pretty_names);
       psoption->bitwise.support_names = new QVector<QString>;
       psoption->bitwise.support_names->resize(packet->bits_num);
@@ -3183,7 +3183,7 @@ void handle_server_setting_bitwise(
       for (i = 0; i < packet->bits_num; i++) {
         psoption->bitwise.support_names->replace(i,
                                                  packet->support_names[i]);
-        /* Store untranslated string from server. */
+        // Store untranslated string from server.
         psoption->bitwise.pretty_names->replace(i, packet->pretty_names[i]);
       }
     } else if (psoption->bitwise.support_names->count()
@@ -3197,7 +3197,7 @@ void handle_server_setting_bitwise(
       for (i = 0; i < packet->bits_num; i++) {
         psoption->bitwise.support_names->replace(i,
                                                  packet->support_names[i]);
-        /* Store untranslated string from server. */
+        // Store untranslated string from server.
         psoption->bitwise.pretty_names->replace(i, packet->pretty_names[i]);
       }
       need_gui_remove = true;
@@ -3210,7 +3210,7 @@ void handle_server_setting_bitwise(
       for (i = 0; i < packet->bits_num; i++) {
         str = psoption->bitwise.pretty_names->at(i);
         if (str.isEmpty() || (str == packet->pretty_names[i])) {
-          /* Store untranslated string from server. */
+          // Store untranslated string from server.
           psoption->bitwise.pretty_names->replace(i,
                                                   packet->pretty_names[i]);
           need_gui_remove = true;
@@ -3641,7 +3641,7 @@ static void message_options_init()
   int i;
 
   for (i = 0; i <= event_type_max(); i++) {
-    /* Include possible undefined values. */
+    // Include possible undefined values.
     messages_where[i] = MW_MESSAGES;
   }
   for (i = 0; i < ARRAY_SIZE(none); i++) {
@@ -3674,8 +3674,8 @@ static void message_options_load(struct section_file *file,
   const char *p;
 
   if (!secfile_lookup_int(file, &num_events, "messages.count")) {
-    /* version < 2.2 */
-    /* Order of the events in 2.1. */
+    // version < 2.2
+    // Order of the events in 2.1.
     const enum event_type old_events[] = {E_CITY_CANTBUILD,
                                           E_CITY_LOST,
                                           E_CITY_LOVE,
@@ -3794,7 +3794,7 @@ static void message_options_load(struct section_file *file,
                 secfile_error());
       continue;
     }
-    /* Compatibility: Before 3.0 E_UNIT_WIN_DEF was called E_UNIT_WIN. */
+    // Compatibility: Before 3.0 E_UNIT_WIN_DEF was called E_UNIT_WIN.
     if (!fc_strcasecmp("E_UNIT_WIN", p)) {
       qCWarning(deprecations_category,
                 _("Deprecated event type E_UNIT_WIN in client options."));
@@ -3903,29 +3903,29 @@ static void save_cma_presets(struct section_file *file)
   }
 }
 
-/* Old rc file name. */
+// Old rc file name.
 #define OLD_OPTION_FILE_NAME ".civclientrc"
-/* New rc file name. */
+// New rc file name.
 #define MID_OPTION_FILE_NAME ".freeciv-client-rc-%d.%d"
 #define NEW_OPTION_FILE_NAME "freeciv-client-rc-%d.%d"
 #if MINOR_VERSION >= 90
 #define MAJOR_NEW_OPTION_FILE_NAME (MAJOR_VERSION + 1)
 #define MINOR_NEW_OPTION_FILE_NAME 0
-#else /* MINOR_VERSION < 90 */
+#else // MINOR_VERSION < 90
 #define MAJOR_NEW_OPTION_FILE_NAME MAJOR_VERSION
 #if IS_DEVEL_VERSION && !IS_FREEZE_VERSION
 #define MINOR_NEW_OPTION_FILE_NAME (MINOR_VERSION + 1)
 #else
 #define MINOR_NEW_OPTION_FILE_NAME MINOR_VERSION
-#endif /* IS_DEVEL_VERSION */
-#endif /* MINOR_VERSION >= 90 */
-/* The first version the new option name appeared (2.6). */
+#endif // IS_DEVEL_VERSION
+#endif // MINOR_VERSION >= 90
+// The first version the new option name appeared (2.6).
 #define FIRST_MAJOR_NEW_OPTION_FILE_NAME 2
 #define FIRST_MINOR_NEW_OPTION_FILE_NAME 6
-/* The first version the mid option name appeared (2.2). */
+// The first version the mid option name appeared (2.2).
 #define FIRST_MAJOR_MID_OPTION_FILE_NAME 2
 #define FIRST_MINOR_MID_OPTION_FILE_NAME 2
-/* The first version the new boolean values appeared (2.3). */
+// The first version the new boolean values appeared (2.3).
 #define FIRST_MAJOR_NEW_BOOLEAN 2
 #define FIRST_MINOR_NEW_BOOLEAN 3
 
@@ -3957,7 +3957,7 @@ static const char *get_current_option_file_name()
     fc_snprintf(name_buffer, sizeof(name_buffer),
                 "%s%cfreeciv-client-rc-%d.%d", name, DIR_SEPARATOR_CHAR,
                 MAJOR_NEW_OPTION_FILE_NAME, MINOR_NEW_OPTION_FILE_NAME);
-#endif /* OPTION_FILE_NAME */
+#endif // OPTION_FILE_NAME
   }
   qDebug("settings file is %s", name_buffer);
   return name_buffer;
@@ -3976,9 +3976,9 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
   static char name_buffer[256];
   const char *name;
   static int last_minors[] = {
-      0,  /* There was no 0.x releases */
-      14, /* 1.14 */
-      7   /* 2.7 */
+      0,  // There was no 0.x releases
+      14, // 1.14
+      7   // 2.7
   };
 
 #if MINOR_VERSION >= 90
@@ -4056,7 +4056,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
       }
     }
 
-    /* Try with the old one. */
+    // Try with the old one.
     fc_snprintf(name_buffer, sizeof(name_buffer), "%s%c%s", name,
                 DIR_SEPARATOR_CHAR, OLD_OPTION_FILE_NAME);
     if (0 == fc_stat(name_buffer, &buf)) {
@@ -4069,7 +4069,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     } else {
       return NULL;
     }
-#endif /* OPTION_FILE_NAME */
+#endif // OPTION_FILE_NAME
   }
   qDebug("settings file is %s", name_buffer);
   return name_buffer;
@@ -4101,7 +4101,7 @@ static void settable_options_load(struct section_file *sf)
 
   psection = secfile_section_by_name(sf, "server");
   if (NULL == psection) {
-    /* Does not exist! */
+    // Does not exist!
     return;
   }
 
@@ -4130,7 +4130,7 @@ static void settable_options_load(struct section_file *sf)
 
     case ENTRY_FLOAT:
     case ENTRY_FILEREFERENCE:
-      /* Not supported yet */
+      // Not supported yet
       break;
     case ENTRY_ILLEGAL:
       fc_assert(entry_type_get(pentry) != ENTRY_ILLEGAL);
@@ -4157,7 +4157,7 @@ static void settable_options_save(struct section_file *sf)
   while (it != settable_options->constEnd()) {
     if (!it.key().compare(QLatin1String("gameseed"))
         || !it.key().compare(QLatin1String("mapseed"))) {
-      /* Do not save mapseed or gameseed. */
+      // Do not save mapseed or gameseed.
       it++;
       continue;
     }
@@ -4236,10 +4236,10 @@ void desired_settable_options_update()
     }
 
     if (0 == strcmp(value, def_val)) {
-      /* Not set, using default... */
+      // Not set, using default...
       settable_options->remove(option_name(poption));
     } else {
-      /* Really desired. */
+      // Really desired.
       settable_options->insert(option_name(poption), value);
     }
   }
@@ -4307,7 +4307,7 @@ static void desired_settable_option_send(struct option *poption)
   int value;
 
   if (!settable_options->contains(option_name(poption))) {
-    /* No change explicitly  desired. */
+    // No change explicitly  desired.
     return;
   }
   QByteArray qval =
@@ -4339,7 +4339,7 @@ static void desired_settable_option_send(struct option *poption)
     char desired_buf[256];
     const char *value_str;
 
-    /* Handle old values. */
+    // Handle old values.
     if (str_to_int(desired, &value)
         && settable_option_upgrade_value(poption, value, desired_buf,
                                          sizeof(desired_buf))) {
@@ -4355,7 +4355,7 @@ static void desired_settable_option_send(struct option *poption)
   case OT_BITWISE: {
     char desired_buf[256], value_buf[256];
 
-    /* Handle old values. */
+    // Handle old values.
     if (str_to_int(desired, &value)
         && settable_option_upgrade_value(poption, value, desired_buf,
                                          sizeof(desired_buf))) {
@@ -4437,14 +4437,14 @@ void options_dialogs_update()
 
   fc_assert_ret(NULL != dialog_options);
 
-  /* Player report dialog options. */
+  // Player report dialog options.
   for (i = 1; i < num_player_dlg_columns; i++) {
     fc_snprintf(buf, sizeof(buf), "player_dlg_%s",
                 player_dlg_columns[i].tagname);
     dialog_options->insert(buf, player_dlg_columns[i].show);
   }
 
-  /* City report dialog options. */
+  // City report dialog options.
   for (i = 0; i < num_city_report_spec(); i++) {
     fc_snprintf(buf, sizeof(buf), "city_report_%s",
                 city_report_spec_tagname(i));
@@ -4461,7 +4461,7 @@ void options_dialogs_set()
   char buf[64];
   int i;
 
-  /* Player report dialog options. */
+  // Player report dialog options.
   for (i = 1; i < num_player_dlg_columns; i++) {
     fc_snprintf(buf, sizeof(buf), "player_dlg_%s",
                 player_dlg_columns[i].tagname);
@@ -4470,7 +4470,7 @@ void options_dialogs_set()
     }
   }
 
-  /* City report dialog options. */
+  // City report dialog options.
   for (i = 0; i < num_city_report_spec(); i++) {
     fc_snprintf(buf, sizeof(buf), "city_report_%s",
                 city_report_spec_tagname(i));
@@ -4505,7 +4505,7 @@ void options_load()
   }
   if (!(sf = secfile_load(name, true))) {
     log_debug("Error loading option file '%s':\n%s", name, secfile_error());
-    /* try to create the rc file */
+    // try to create the rc file
     sf = secfile_new(true);
     secfile_insert_str(sf, VERSION_STRING, "client.version");
 
@@ -4513,7 +4513,7 @@ void options_load()
     gui_options.first_boot = true;
     save_cma_presets(sf);
 
-    /* FIXME: need better messages */
+    // FIXME: need better messages
     if (!secfile_save(sf, name)) {
       qCritical(_("Save failed, cannot write to file %s"), name);
     } else {
@@ -4525,7 +4525,7 @@ void options_load()
   }
   secfile_allow_digital_boolean(sf, allow_digital_boolean);
 
-  /* a "secret" option for the lazy. TODO: make this saveable */
+  // a "secret" option for the lazy. TODO: make this saveable
   sz_strlcpy(password,
              secfile_lookup_str_default(sf, "", "%s.password", prefix));
 
@@ -4567,11 +4567,11 @@ void options_load()
   /* Backwards compatibility for removed options replaced by entirely "new"
    * options. The equivalent "new" option will override these, if set. */
 
-  /* Renamed in 2.6 */
+  // Renamed in 2.6
   gui_options.popup_actor_arrival = secfile_lookup_bool_default(
       sf, true, "%s.popup_caravan_arrival", prefix);
 
-  /* Load all the regular options */
+  // Load all the regular options
   client_options_iterate_all(poption) { client_option_load(poption, sf); }
   client_options_iterate_all_end;
 
@@ -4579,7 +4579,7 @@ void options_load()
    * folded into then-existing options. Here, the backwards-compatibility
    * behaviour overrides the "destination" option. */
 
-  /* Removed in 2.4 */
+  // Removed in 2.4
   if (!secfile_lookup_bool_default(sf, true, "%s.do_combat_animation",
                                    prefix)) {
     gui_options.smooth_combat_step_msec = 0;
@@ -4626,7 +4626,7 @@ void options_save(option_save_log_callback log_cb)
   int i;
 
   if (log_cb == NULL) {
-    /* Default callback */
+    // Default callback
     log_cb = option_save_output_window_callback;
   }
 
@@ -4648,7 +4648,7 @@ void options_save(option_save_log_callback log_cb)
 
   // prevent saving that option
   gui_options.gui_qt_increase_fonts = 0;
-  /* gui-enabled options */
+  // gui-enabled options
   client_options_iterate_all(poption)
   {
     if ((client_poption->specific != GUI_SDL)
@@ -4669,25 +4669,25 @@ void options_save(option_save_log_callback log_cb)
   message_options_save(sf, "client");
   options_dialogs_save(sf);
 
-  /* server settings */
+  // server settings
   save_cma_presets(sf);
   settable_options_save(sf);
 
-  /* insert global worklists */
+  // insert global worklists
   global_worklists_save(sf);
 
-  /* Directory name */
+  // Directory name
   sz_strlcpy(dir_name, name);
   for (i = qstrlen(dir_name) - 1;
        i >= 0 && dir_name[i] != DIR_SEPARATOR_CHAR; i--) {
-    /* Nothing */
+    // Nothing
   }
   if (i > 0) {
     dir_name[i] = '\0';
     make_dir(dir_name);
   }
 
-  /* save to disk */
+  // save to disk
   if (!secfile_save(sf, name)) {
     log_cb(LOG_ERROR, QString::asprintf(
                           _("Save failed, cannot write to file %s"), name));
@@ -4748,7 +4748,7 @@ void options_init()
 
     case OT_STRING:
       if (gui_options.default_user_name == option_str_get(poption)) {
-        /* Hack to get a default value. */
+        // Hack to get a default value.
         *(const_cast<const char **>(&(pcoption->string.def))) =
             fc_strdup(gui_options.default_user_name);
       }
@@ -4787,7 +4787,7 @@ void options_init()
       break;
 
     case OT_COLOR: {
-      /* Duplicate the string pointers. */
+      // Duplicate the string pointers.
       struct ft_color *pcolor = pcoption->color.pvalue;
 
       if (NULL != pcolor->foreground) {
@@ -4803,7 +4803,7 @@ void options_init()
       break;
     }
 
-    /* Set to default. */
+    // Set to default.
     option_reset(poption);
   }
   client_options_iterate_all_end;
@@ -4938,7 +4938,7 @@ static void mapimg_changed_callback(struct option *poption)
           "value.",
           option_name(poption), mapimg_error());
 
-    /* Reset the value to the default value. */
+    // Reset the value to the default value.
     success = option_reset(poption);
     fc_assert_msg(success == true, "Failed to reset the option \"%s\".",
                   option_name(poption));
@@ -5026,15 +5026,15 @@ void option_set_default_ts(struct tileset *t)
 
   switch (tileset_topo_index(t)) {
   case TS_TOPO_SQUARE:
-    /* Overhead */
+    // Overhead
     optname = "default_tileset_square_name";
     break;
   case TS_TOPO_HEX:
-    /* Hex */
+    // Hex
     optname = "default_tileset_hex_name";
     break;
   case TS_TOPO_ISOHEX:
-    /* Isohex */
+    // Isohex
     optname = "default_tileset_isohex_name";
     break;
   }

@@ -9,7 +9,7 @@
 **************************************************************************/
 #pragma once
 
-#include "support.h" /* bool type */
+#include "support.h" // bool type
 
 #include "fc_types.h"
 

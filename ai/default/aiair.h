@@ -12,10 +12,10 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
+// utility
+#include "support.h" // bool type
 
-/* common */
+// common
 #include "fc_types.h"
 
 void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,

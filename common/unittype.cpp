@@ -15,17 +15,17 @@
 #include <fc_config.h>
 #endif
 
-#include <cmath> /* ceil */
+#include <cmath> // ceil
 #include <cstring>
 
-/* utility */
+// utility
 #include "astring.h"
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "ai.h"
 #include "combat.h"
 #include "game.h"
@@ -131,7 +131,7 @@ int utype_upkeep_cost(const struct unit_type *ut, struct player *pplayer,
 
   if (BV_ISSET(ut->flags, UTYF_FANATIC)
       && get_player_bonus(pplayer, EFT_FANATICS) > 0) {
-    /* Special case: fanatics have no upkeep under fanaticism. */
+    // Special case: fanatics have no upkeep under fanaticism.
     return 0;
   }
 
@@ -213,12 +213,12 @@ bool utype_can_create_extra(const struct unit_type *putype,
     struct action *paction = action_by_number(act_id);
 
     if (!utype_can_do_action(putype, act_id)) {
-      /* Not relevant. */
+      // Not relevant.
       continue;
     }
 
     if (action_creates_extra(paction, pextra)) {
-      /* Can create */
+      // Can create
       return true;
     }
   }
@@ -239,12 +239,12 @@ bool utype_can_remove_extra(const struct unit_type *putype,
     struct action *paction = action_by_number(act_id);
 
     if (!utype_can_do_action(putype, act_id)) {
-      /* Not relevant. */
+      // Not relevant.
       continue;
     }
 
     if (action_removes_extra(paction, pextra)) {
-      /* Can remove */
+      // Can remove
       return true;
     }
   }
@@ -366,19 +366,19 @@ static bool action_is_hostile(action_id act_id)
   case ACTRES_TRANSPORT_EMBARK:
     return false;
   case ACTRES_NONE:
-    /* Assume they are up to something. */
+    // Assume they are up to something.
     return true;
   }
 
-  /* Should not be reached. */
+  // Should not be reached.
   fc_assert(false);
   return false;
 }
 
-/* Fake action id representing any hostile action. */
+// Fake action id representing any hostile action.
 #define ACTION_HOSTILE ACTION_COUNT + 1
 
-/* Number of real and fake actions. */
+// Number of real and fake actions.
 #define ACTION_AND_FAKES ACTION_HOSTILE + 1
 
 /* Cache of what generalized (ruleset defined) action enabler controlled
@@ -393,7 +393,7 @@ static bv_unit_types unit_can_act_cache[ACTION_AND_FAKES];
  */
 static void unit_can_act_cache_set(struct unit_type *putype)
 {
-  /* Clear old values. */
+  // Clear old values.
   action_iterate(act_id)
   {
     BV_CLR(unit_can_act_cache[act_id], utype_index(putype));
@@ -506,13 +506,13 @@ BV_DEFINE(bv_ustate_act_cache, USP_COUNT * 2);
  */
 BV_DEFINE(bv_citytile_cache, CITYT_LAST * 2);
 
-/* Cache position lookup functions */
+// Cache position lookup functions
 #define requirement_unit_state_ereq(_id_, _present_)                        \
   requirement_kind_ereq(_id_, REQ_RANGE_LOCAL, _present_, USP_COUNT)
 #define requirement_citytile_ereq(_id_, _present_)                          \
   requirement_kind_ereq(_id_, REQ_RANGE_LOCAL, _present_, CITYT_LAST)
 
-/* Caches for each unit type */
+// Caches for each unit type
 static bv_ustate_act_cache ustate_act_cache[U_LAST][ACTION_AND_FAKES];
 static bv_diplrel_all_reqs dipl_rel_action_cache[U_LAST][ACTION_AND_FAKES];
 static bv_citytile_cache ctile_tgt_act_cache[U_LAST][ACTION_AND_FAKES];
@@ -535,11 +535,11 @@ static void unit_state_action_cache_set(struct unit_type *putype)
   BV_CLR_ALL(ustate_act_cache[uidx][ACTION_HOSTILE]);
 
   if (!utype_may_act_at_all(putype)) {
-    /* Not an actor unit. */
+    // Not an actor unit.
     return;
   }
 
-  /* Common for every situation */
+  // Common for every situation
   req.range = REQ_RANGE_LOCAL;
   req.survives = false;
   req.source.kind = VUT_UNITSTATE;
@@ -558,7 +558,7 @@ static void unit_state_action_cache_set(struct unit_type *putype)
           && action_id_get_actor_kind(enabler->action) == AAK_UNIT) {
         bool present = true;
         do {
-          /* OK if not mentioned */
+          // OK if not mentioned
           req.present = present;
           if (!is_req_in_vec(&req, &(enabler->actor_reqs))) {
             BV_SET(ustate_act_cache[utype_index(putype)][enabler->action],
@@ -603,23 +603,23 @@ static void local_dipl_rel_action_cache_set(struct unit_type *putype)
   BV_CLR_ALL(dipl_rel_action_cache[uidx][ACTION_HOSTILE]);
 
   if (!utype_may_act_at_all(putype)) {
-    /* Not an actor unit. */
+    // Not an actor unit.
     return;
   }
 
-  /* Tile is claimed as a requirement. */
+  // Tile is claimed as a requirement.
   tile_is_claimed.range = REQ_RANGE_LOCAL;
   tile_is_claimed.survives = false;
   tile_is_claimed.source.kind = VUT_CITYTILE;
   tile_is_claimed.present = true;
   tile_is_claimed.source.value.citytile = CITYT_CLAIMED;
 
-  /* Common for every situation */
+  // Common for every situation
   req.range = REQ_RANGE_LOCAL;
   req.survives = false;
   req.source.kind = VUT_DIPLREL;
 
-  /* DiplRel starts with diplstate_type and ends with diplrel_other */
+  // DiplRel starts with diplstate_type and ends with diplrel_other
   for (req.source.value.diplrel = diplstate_type_begin();
        req.source.value.diplrel != DRO_LAST; req.source.value.diplrel++) {
     /* No action will ever be possible in a specific diplomatic relation if
@@ -632,7 +632,7 @@ static void local_dipl_rel_action_cache_set(struct unit_type *putype)
       if (requirement_fulfilled_by_unit_type(putype, &(enabler->actor_reqs))
           && action_id_get_actor_kind(enabler->action) == AAK_UNIT
           && (action_id_get_target_kind(enabler->action) != ATK_TILE
-              /* No diplomatic relation to Nature */
+              // No diplomatic relation to Nature
               || !does_req_contradicts_reqs(&tile_is_claimed,
                                             &enabler->target_reqs))) {
         bool present = true;
@@ -677,11 +677,11 @@ static void tgt_citytile_act_cache_set(struct unit_type *putype)
   BV_CLR_ALL(ctile_tgt_act_cache[uidx][ACTION_HOSTILE]);
 
   if (!utype_may_act_at_all(putype)) {
-    /* Not an actor unit. */
+    // Not an actor unit.
     return;
   }
 
-  /* Common for every situation */
+  // Common for every situation
   req.range = REQ_RANGE_LOCAL;
   req.survives = false;
   req.source.kind = VUT_CITYTILE;
@@ -701,7 +701,7 @@ static void tgt_citytile_act_cache_set(struct unit_type *putype)
           && action_id_get_actor_kind(enabler->action) == AAK_UNIT) {
         bool present = true;
         do {
-          /* OK if not mentioned */
+          // OK if not mentioned
           req.present = present;
           if (!is_req_in_vec(&req, &(enabler->target_reqs))) {
             BV_SET(ctile_tgt_act_cache[utype_index(putype)][enabler->action],
@@ -866,22 +866,22 @@ bool utype_may_act_move_frags(const struct unit_type *punit_type,
   fc_assert(action_id_exists(act_id) || act_id == ACTION_ANY);
 
   if (!utype_may_act_at_all(punit_type)) {
-    /* Not an actor unit. */
+    // Not an actor unit.
     return false;
   }
 
   if (act_id == ACTION_ANY) {
-    /* Any action is OK. */
+    // Any action is OK.
     action_iterate(alt_act)
     {
       if (utype_may_act_move_frags(punit_type, alt_act, move_fragments)) {
-        /* It only has to be true for one action. */
+        // It only has to be true for one action.
         return true;
       }
     }
     action_iterate_end;
 
-    /* No action enabled. */
+    // No action enabled.
     return false;
   }
 
@@ -895,7 +895,7 @@ bool utype_may_act_move_frags(const struct unit_type *punit_type,
   {
     if (!requirement_fulfilled_by_unit_type(punit_type,
                                             &(enabler->actor_reqs))) {
-      /* This action enabler isn't for this unit type at all. */
+      // This action enabler isn't for this unit type at all.
       continue;
     }
 
@@ -903,7 +903,7 @@ bool utype_may_act_move_frags(const struct unit_type *punit_type,
     if (ml_range->min <= move_fragments
         && (ml_range->max == MOVES_LEFT_INFINITY
             || ml_range->max > move_fragments)) {
-      /* The number of move fragments is in range of the action enabler. */
+      // The number of move fragments is in range of the action enabler.
       delete ml_range;
       return true;
     }
@@ -931,22 +931,22 @@ bool utype_may_act_tgt_city_tile(const struct unit_type *punit_type,
   struct requirement req;
 
   if (!utype_may_act_at_all(punit_type)) {
-    /* Not an actor unit. */
+    // Not an actor unit.
     return false;
   }
 
   if (act_id == ACTION_ANY) {
-    /* Any action is OK. */
+    // Any action is OK.
     action_iterate(alt_act)
     {
       if (utype_may_act_tgt_city_tile(punit_type, alt_act, prop, is_there)) {
-        /* It only has to be true for one action. */
+        // It only has to be true for one action.
         return true;
       }
     }
     action_iterate_end;
 
-    /* No action enabled. */
+    // No action enabled.
     return false;
   }
 
@@ -956,27 +956,27 @@ bool utype_may_act_tgt_city_tile(const struct unit_type *punit_type,
     return false;
   }
 
-  /* Common for every situation */
+  // Common for every situation
   req.range = REQ_RANGE_LOCAL;
   req.survives = false;
   req.source.kind = VUT_CITYTILE;
 
-  /* Will only check for the specified is_there */
+  // Will only check for the specified is_there
   req.present = is_there;
 
-  /* Will only check the specified property */
+  // Will only check the specified property
   req.source.value.citytile = prop;
 
   action_enabler_list_iterate(action_enablers_for_action(act_id), enabler)
   {
     if (!requirement_fulfilled_by_unit_type(punit_type,
                                             &(enabler->actor_reqs))) {
-      /* This action enabler isn't for this unit type at all. */
+      // This action enabler isn't for this unit type at all.
       continue;
     }
 
     if (!does_req_contradicts_reqs(&req, &(enabler->target_reqs))) {
-      /* This action isn't blocked by the given target tile property. */
+      // This action isn't blocked by the given target tile property.
       return true;
     }
   }
@@ -1034,23 +1034,23 @@ bool utype_is_moved_to_tgt_by_action(const struct action *paction,
 
   switch (paction->actor.is_unit.moves_actor) {
   case MAK_STAYS:
-    /* Stays at the tile were it was. */
+    // Stays at the tile were it was.
     return false;
   case MAK_REGULAR:
     /* A "regular" move. Does it charge the move cost of a regular move?
      * Update utype_pays_for_regular_move_to_tgt() if yes. */
     return true;
   case MAK_TELEPORT:
-    /* A teleporting move. */
+    // A teleporting move.
     return true;
   case MAK_FORCED:
-    /* Tries a forced move under certain conditions. */
+    // Tries a forced move under certain conditions.
     return false;
   case MAK_ESCAPE:
-    /* May die, may be teleported to a safe city. */
+    // May die, may be teleported to a safe city.
     return false;
   case MAK_UNREPRESENTABLE:
-    /* Too complex to determine. */
+    // Too complex to determine.
     return false;
   }
 
@@ -1069,29 +1069,29 @@ bool utype_is_unmoved_by_action(const struct action *paction,
   fc_assert_ret_val(action_get_actor_kind(paction) == AAK_UNIT, false);
 
   if (paction->actor_consuming_always) {
-    /* Dead counts as moved off the board */
+    // Dead counts as moved off the board
     return false;
   }
 
   switch (paction->actor.is_unit.moves_actor) {
   case MAK_STAYS:
-    /* Stays at the tile were it was. */
+    // Stays at the tile were it was.
     return true;
   case MAK_REGULAR:
     /* A "regular" move. Does it charge the move cost of a regular move?
      * Update utype_pays_for_regular_move_to_tgt() if yes. */
     return false;
   case MAK_TELEPORT:
-    /* A teleporting move. */
+    // A teleporting move.
     return false;
   case MAK_FORCED:
-    /* Tries a forced move under certain conditions. */
+    // Tries a forced move under certain conditions.
     return false;
   case MAK_ESCAPE:
-    /* May die, may be teleported to a safe city. */
+    // May die, may be teleported to a safe city.
     return false;
   case MAK_UNREPRESENTABLE:
-    /* Too complex to determine. */
+    // Too complex to determine.
     return false;
   }
 
@@ -1109,22 +1109,22 @@ bool utype_pays_for_regular_move_to_tgt(const struct action *paction,
                                         const struct unit_type *utype)
 {
   if (!utype_is_moved_to_tgt_by_action(paction, utype)) {
-    /* Not even a move. */
+    // Not even a move.
     return false;
   }
 
   if (action_has_result(paction, ACTRES_CONQUER_CITY)) {
-    /* Moves into the city to occupy it. */
+    // Moves into the city to occupy it.
     return true;
   }
 
   if (action_has_result(paction, ACTRES_TRANSPORT_DISEMBARK)) {
-    /* Moves out of the transport to disembark. */
+    // Moves out of the transport to disembark.
     return true;
   }
 
   if (action_has_result(paction, ACTRES_TRANSPORT_EMBARK)) {
-    /* Moves into the transport to embark. */
+    // Moves into the transport to embark.
     return true;
   }
 
@@ -1175,7 +1175,7 @@ int utype_pays_mp_for_action_estimate(const struct action *paction,
   }
 
   if (utype_pays_for_regular_move_to_tgt(paction, putype)) {
-    /* Add the cost from the move. */
+    // Add the cost from the move.
     mpco +=
         map_move_cost(&(wld.map), act_player, putype, act_tile, tgt_tile);
   }
@@ -1348,7 +1348,7 @@ const char *utype_values_string(const struct unit_type *punittype)
 {
   static char buffer[256];
 
-  /* Print in two parts as move_points_text() returns a static buffer */
+  // Print in two parts as move_points_text() returns a static buffer
   fc_snprintf(buffer, sizeof(buffer), "%d/%d/%s", punittype->attack_strength,
               punittype->defense_strength,
               move_points_text(punittype->move_rate, true));
@@ -1655,7 +1655,7 @@ bool utype_player_already_has_this_unique(const struct player *pplayer,
                                           const struct unit_type *putype)
 {
   if (!utype_has_flag(putype, UTYF_UNIQUE)) {
-    /* This isn't a unique unit type. */
+    // This isn't a unique unit type.
     return false;
   }
 
@@ -1671,7 +1671,7 @@ bool utype_player_already_has_this_unique(const struct player *pplayer,
   }
   unit_list_iterate_end;
 
-  /* The player doesn't already have one. */
+  // The player doesn't already have one.
   return false;
 }
 
@@ -1687,7 +1687,7 @@ bool can_player_build_unit_direct(const struct player *p,
 
   if (is_barbarian(p) && !utype_has_role(punittype, L_BARBARIAN_BUILD)
       && !utype_has_role(punittype, L_BARBARIAN_BUILD_TECH)) {
-    /* Barbarians can build only role units */
+    // Barbarians can build only role units
     return false;
   }
 
@@ -1725,7 +1725,7 @@ bool can_player_build_unit_direct(const struct player *p,
       if (is_great_wonder(preq->source.value.building)
           && (great_wonder_is_built(preq->source.value.building)
               || great_wonder_is_destroyed(preq->source.value.building))) {
-        /* It's already built great wonder */
+        // It's already built great wonder
         if (great_wonder_owner(preq->source.value.building) != p) {
           /* Not owned by this player. Either destroyed or owned by somebody
            * else. */
@@ -1739,7 +1739,7 @@ bool can_player_build_unit_direct(const struct player *p,
       }
     }
     if (preq->range < REQ_RANGE_PLAYER) {
-      /* The question *here* is if the *player* can build this unit */
+      // The question *here* is if the *player* can build this unit
       continue;
     }
     if (!is_req_active(p, NULL, NULL, NULL, NULL, NULL, punittype, NULL,
@@ -1758,7 +1758,7 @@ bool can_player_build_unit_direct(const struct player *p,
       return false;
     }
     if (!utype_has_role(punittype, L_BARBARIAN_BUILD)) {
-      /* Even barbarian cannot build this unit without tech */
+      // Even barbarian cannot build this unit without tech
 
       /* Unit has to have L_BARBARIAN_BUILD_TECH role
        * In the beginning of this function we checked that
@@ -1775,14 +1775,14 @@ bool can_player_build_unit_direct(const struct player *p,
 
       if (!game.info
                .global_advances[advance_index(punittype->require_advance)]) {
-        /* Nobody knows required tech */
+        // Nobody knows required tech
         return false;
       }
     }
   }
 
   if (utype_player_already_has_this_unique(p, punittype)) {
-    /* A player can only have one unit of each unique unit type. */
+    // A player can only have one unit of each unique unit type.
     return false;
   }
 
@@ -1847,7 +1847,7 @@ static void precalc_one(int i,
 {
   int j;
 
-  /* Count: */
+  // Count:
   fc_assert(n_with_role[i] == 0);
   unit_type_iterate(u)
   {
@@ -2005,7 +2005,7 @@ struct unit_type *best_role_unit(const struct city *pcity, int role)
     if ((1 != utype_fuel(u)
          || utype_is_consumed_by_action_result(ACTRES_ATTACK, u))
         && can_city_build_unit_now(pcity, u)) {
-      /* Allow fuel == 1 units when pathfinding can handle them. */
+      // Allow fuel == 1 units when pathfinding can handle them.
       return u;
     }
   }
@@ -2180,7 +2180,7 @@ Unit_Class_id uclass_index(const struct unit_class *pclass)
   fc_assert_ret_val(pclass, 0);
   return pclass - unit_classes;
 }
-#endif /* uclass_index */
+#endif // uclass_index
 
 /**
    Return the unit_class index.
@@ -2211,7 +2211,7 @@ struct unit_class *utype_class(const struct unit_type *punittype)
   fc_assert(NULL != punittype->uclass);
   return punittype->uclass;
 }
-#endif /* utype_class */
+#endif // utype_class
 
 /**
    Returns unit class pointer for a unit.
@@ -2349,7 +2349,7 @@ struct veteran_system *veteran_system_new(int count)
 {
   struct veteran_system *vsystem;
 
-  /* There must be at least one level. */
+  // There must be at least one level.
   fc_assert_ret_val(count > 0, NULL);
 
   vsystem = new veteran_system[1]();
@@ -2513,7 +2513,7 @@ static enum unit_move_type move_type_from_extra(struct extra_type *pextra,
 
   if (is_extra_caused_by(pextra, EC_ROAD)
       && road_has_flag(extra_road_get(pextra), RF_RIVER)) {
-    /* Natural rivers are created to land only */
+    // Natural rivers are created to land only
     sea_allowed = false;
   }
 
@@ -2604,7 +2604,7 @@ void set_unit_move_type(struct unit_class *puclass)
   } else if (sea_moving) {
     puclass->move_type = UMT_SEA;
   } else {
-    /* If unit has no native terrains, it is considered land moving */
+    // If unit has no native terrains, it is considered land moving
     puclass->move_type = UMT_LAND;
   }
 }
@@ -2615,7 +2615,7 @@ void set_unit_move_type(struct unit_class *puclass)
 bool utype_is_cityfounder(const struct unit_type *utype)
 {
   if (game.scenario.prevent_new_cities) {
-    /* No unit is allowed to found new cities */
+    // No unit is allowed to found new cities
     return false;
   }
 

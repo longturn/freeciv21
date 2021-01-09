@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include "support.h" /* bool */
+#include "support.h" // bool
 
 struct city;
 struct city_list;
@@ -20,17 +20,17 @@ struct city_list;
 /* What to do with previously established traderoutes that are now illegal.
  * Used in the network protocol. */
 enum traderoute_illegal_cancelling {
-  TRI_ACTIVE = 0,   /* Keep them active */
-  TRI_INACTIVE = 1, /* They are inactive */
-  TRI_CANCEL = 2,   /* Completely cancel them */
+  TRI_ACTIVE = 0,   // Keep them active
+  TRI_INACTIVE = 1, // They are inactive
+  TRI_CANCEL = 2,   // Completely cancel them
   TRI_LAST = 3
 };
 
 enum trade_route_type {
   TRT_NATIONAL = 0,
-  TRT_NATIONAL_IC = 1, /* Intercontinental */
+  TRT_NATIONAL_IC = 1, // Intercontinental
   TRT_IN = 2,
-  TRT_IN_IC = 3, /* International intercontinental */
+  TRT_IN_IC = 3, // International intercontinental
   TRT_ALLY = 4,
   TRT_ALLY_IC = 5,
   TRT_ENEMY = 6,
@@ -75,7 +75,7 @@ struct trade_route {
   struct goods_type *goods;
 };
 
-/* get 'struct trade_route_list' and related functions: */
+// get 'struct trade_route_list' and related functions:
 #define SPECLIST_TAG trade_route
 #define SPECLIST_TYPE struct trade_route
 #include "speclist.h"
@@ -161,7 +161,7 @@ int city_trade_removable(const struct city *pcity,
   while (false)                                                             \
     ;
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME goods_flag_id
 #define SPECENUM_VALUE0 GF_BIDIRECTIONAL
 #define SPECENUM_VALUE0NAME "Bidirectional"
@@ -174,7 +174,7 @@ int city_trade_removable(const struct city *pcity,
 struct goods_type {
   int id;
   struct name_translation name;
-  bool ruledit_disabled; /* Does not really exist - hole in goods array */
+  bool ruledit_disabled; // Does not really exist - hole in goods array
 
   struct requirement_vector reqs;
 

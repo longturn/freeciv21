@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "support.h"
 
-/* common */
+// common
 #include "improvement.h"
 #include "requirements.h"
 #include "unittype.h"
@@ -37,7 +37,7 @@ void adv_init_choice(struct adv_choice *choice)
 #ifdef ADV_CHOICE_TRACK
   choice->use = NULL;
   choice->log_if_chosen = FALSE;
-#endif /* ADV_CHOICE_TRACK */
+#endif // ADV_CHOICE_TRACK
 }
 
 /**
@@ -50,7 +50,7 @@ void adv_deinit_choice(struct adv_choice *choice)
     free(choice->use);
     choice->use = NULL;
   }
-#endif /* ADV_CHOICE_TRACK */
+#endif // ADV_CHOICE_TRACK
 }
 
 /**
@@ -74,7 +74,7 @@ void adv_free_choice(struct adv_choice *choice)
   if (choice->use != NULL) {
     free(choice->use);
   }
-#endif /* ADV_CHOICE_TRACK */
+#endif // ADV_CHOICE_TRACK
   delete choice;
 }
 
@@ -199,4 +199,4 @@ const char *adv_choice_get_use(const struct adv_choice *choice)
   return choice->use;
 }
 
-#endif /* ADV_CHOICE_TRACK */
+#endif // ADV_CHOICE_TRACK

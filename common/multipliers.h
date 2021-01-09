@@ -18,10 +18,10 @@ struct multiplier {
   struct name_translation name;
   bool ruledit_disabled; /* Does not really exist - hole in multipliers array
                           */
-  int start;             /* display units */
-  int stop;              /* display units */
-  int step;              /* display units */
-  int def;               /* default value, in display units */
+  int start;             // display units
+  int stop;              // display units
+  int step;              // display units
+  int def;               // default value, in display units
   int offset;
   int factor;
   struct requirement_vector reqs;

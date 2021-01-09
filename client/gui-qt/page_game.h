@@ -56,7 +56,7 @@ public:
   void reloadSidebarIcons();
   void updateSidebarTooltips();
   int addGameTab(QWidget *widget);
-  void rmGameTab(int index); /* doesn't delete widget */
+  void rmGameTab(int index); // doesn't delete widget
   void gimmePlace(QWidget *widget, const QString &str);
   int gimmeIndexOf(const QString &str);
   void removeRepoDlg(const QString &str);

@@ -25,7 +25,7 @@ extern "C" {
 /* dependencies/tolua */
 #include "tolua.h"
 }
-/* utility */
+// utility
 #include "log.h"
 #include "registry.h"
 
@@ -38,7 +38,7 @@ extern "C" {
 #include "tolua_common_z_gen.h"
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
-/* server */
+// server
 #include "console.h"
 #include "stdinhand.h"
 
@@ -95,7 +95,7 @@ static bool script_server_do_string_shared(struct fc_lua *fcl,
 
   status = luascript_do_string(fcl, str, "cmd");
 
-  /* Reset the changes. */
+  // Reset the changes.
   fcl->caller = save_caller;
   fcl->output_fct = save_output_fct;
 
@@ -171,7 +171,7 @@ static bool script_server_do_file_shared(struct fc_lua *fcl,
 
   status = luascript_do_file(fcl, filename);
 
-  /* Reset the changes. */
+  // Reset the changes.
   fcl->caller = save_caller;
   fcl->output_fct = save_output_fct;
 
@@ -211,14 +211,14 @@ void script_server_remove_exported_object(void *object)
    Initialize the game script variables.
  */
 static void script_server_vars_init()
-{ /* nothing */
+{ // nothing
 }
 
 /**
    Free the game script variables.
  */
 static void script_server_vars_free()
-{ /* nothing */
+{ // nothing
 }
 
 /**
@@ -314,7 +314,7 @@ bool script_server_init()
   luascript_func_init(fcl_main);
   script_server_functions_define();
 
-  /* Add the unsafe instance. */
+  // Add the unsafe instance.
   fcl_unsafe = luascript_new(NULL, false);
   if (fcl_unsafe == NULL) {
     luascript_destroy(fcl_unsafe);
@@ -346,13 +346,13 @@ void script_server_free()
     script_server_code_free();
     script_server_vars_free();
 
-    /* luascript_signal_free() is called by luascript_destroy(). */
+    // luascript_signal_free() is called by luascript_destroy().
     luascript_destroy(fcl_main);
     fcl_main = NULL;
   }
 
   if (fcl_unsafe != NULL) {
-    /* luascript_signal_free() is called by luascript_destroy(). */
+    // luascript_signal_free() is called by luascript_destroy().
     luascript_destroy(fcl_unsafe);
     fcl_unsafe = NULL;
   }
@@ -410,7 +410,7 @@ static void script_server_signals_create()
   luascript_signal_create(fcl_main, "unit_moved", 3, API_TYPE_UNIT,
                           API_TYPE_TILE, API_TYPE_TILE);
 
-  /* Includes all newly-built cities. */
+  // Includes all newly-built cities.
   luascript_signal_create(fcl_main, "city_built", 1, API_TYPE_CITY);
 
   luascript_signal_create(fcl_main, "city_size_change", 3, API_TYPE_CITY,
@@ -422,7 +422,7 @@ static void script_server_signals_create()
                                  API_TYPE_INT);
   deprecate_signal(depr, "city_growth", "city_size_change", "2.6");
 
-  /* Only includes units built in cities, for now. */
+  // Only includes units built in cities, for now.
   luascript_signal_create(fcl_main, "unit_built", 2, API_TYPE_UNIT,
                           API_TYPE_CITY);
   luascript_signal_create(fcl_main, "building_built", 2,
@@ -454,11 +454,11 @@ static void script_server_signals_create()
   luascript_signal_create(fcl_main, "tech_researched", 3, API_TYPE_TECH_TYPE,
                           API_TYPE_PLAYER, API_TYPE_STRING);
 
-  /* First player is city owner, second is enemy. */
+  // First player is city owner, second is enemy.
   luascript_signal_create(fcl_main, "city_destroyed", 3, API_TYPE_CITY,
                           API_TYPE_PLAYER, API_TYPE_PLAYER);
 
-  /* First player is former owner, second new one. */
+  // First player is former owner, second new one.
   luascript_signal_create(fcl_main, "city_transferred", 4, API_TYPE_CITY,
                           API_TYPE_PLAYER, API_TYPE_PLAYER, API_TYPE_STRING);
 
@@ -556,7 +556,7 @@ static void script_server_cmd_reply(struct fc_lua *fcl, QtMsgType level,
 
   switch (level) {
   case LOG_FATAL:
-    /* Special case - will quit the server. */
+    // Special case - will quit the server.
     qFatal("%s", buf);
     break;
   case LOG_ERROR:

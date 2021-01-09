@@ -17,23 +17,23 @@
 
 #include <ctime>
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "packets.h"
 
 /* client/include */
 #include "voteinfo_bar_g.h"
 
-/* client */
+// client
 #include "client_main.h"
 #include "clinet.h"
 #include "options.h"
 
 #include "voteinfo.h"
 
-/* Define struct voteinfo_list type. */
+// Define struct voteinfo_list type.
 #define SPECLIST_TAG voteinfo
 #define SPECLIST_TYPE struct voteinfo
 #include "speclist.h"

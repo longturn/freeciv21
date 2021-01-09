@@ -29,7 +29,7 @@
 #include <QTcpSocket>
 #include <QUdpSocket>
 
-/* utility */
+// utility
 #include "capability.h"
 #include "fciconv.h"
 #include "fcintl.h"
@@ -38,7 +38,7 @@
 #include "support.h"
 #include "timing.h"
 
-/* common */
+// common
 #include "dataio.h"
 #include "events.h"
 #include "game.h"
@@ -47,7 +47,7 @@
 /* server/scripting */
 #include "script_server.h"
 
-/* server */
+// server
 #include "aiiface.h"
 #include "auth.h"
 #include "connecthand.h"
@@ -96,7 +96,7 @@ static void close_connection(struct connection *pconn)
   conn_pattern_list_destroy(pconn->server.ignore_list);
   pconn->server.ignore_list = NULL;
 
-  /* safe to do these even if not in lists: */
+  // safe to do these even if not in lists:
   conn_list_remove(game.glob_observers, pconn);
   conn_list_remove(game.all_connections, pconn);
   conn_list_remove(game.est_connections, pconn);
@@ -126,7 +126,7 @@ void close_connections_and_socket()
     conn_list_destroy(connections[i].self);
   }
 
-  /* Remove the game connection lists and make sure they are empty. */
+  // Remove the game connection lists and make sure they are empty.
   conn_list_destroy(game.glob_observers);
   conn_list_destroy(game.all_connections);
   conn_list_destroy(game.est_connections);
@@ -172,12 +172,12 @@ void really_close_connections()
     }
 
     for (i = 0; i < num; i++) {
-      /* Now really close them. */
+      // Now really close them.
       pconn = closing[i];
       lost_connection_to_client(pconn);
       close_connection(pconn);
     }
-  } while (0 < num); /* May some errors occurred, let's check. */
+  } while (0 < num); // May some errors occurred, let's check.
 }
 
 /**
@@ -186,7 +186,7 @@ void really_close_connections()
  */
 static void server_conn_close_callback(struct connection *pconn)
 {
-  /* Do as little as possible here to avoid recursive evil. */
+  // Do as little as possible here to avoid recursive evil.
   pconn->server.is_closing = true;
 }
 
@@ -252,14 +252,14 @@ void incoming_client_packets(struct connection *pconn)
 
     request_time = timer_renew(request_time, TIMER_USER, TIMER_ACTIVE);
     timer_start(request_time);
-#endif /* PROCESSING_TIME_STATISTICS */
+#endif // PROCESSING_TIME_STATISTICS
 
     pconn->server.last_request_id_seen =
         get_next_request_id(pconn->server.last_request_id_seen);
 
 #if PROCESSING_TIME_STATISTICS
     request_id = pconn->server.last_request_id_seen;
-#endif /* PROCESSING_TIME_STATISTICS */
+#endif // PROCESSING_TIME_STATISTICS
 
     connection_do_buffer(pconn);
     start_processing_request(pconn, pconn->server.last_request_id_seen);
@@ -273,7 +273,7 @@ void incoming_client_packets(struct connection *pconn)
 #if PROCESSING_TIME_STATISTICS
     qDebug("processed request %d in %gms", request_id,
            timer_read_seconds(request_time) * 1000.0);
-#endif /* PROCESSING_TIME_STATISTICS */
+#endif // PROCESSING_TIME_STATISTICS
 
     if (!command_ok) {
       connection_close_server(pconn, _("rejected"));
@@ -282,7 +282,7 @@ void incoming_client_packets(struct connection *pconn)
 
 #if PROCESSING_TIME_STATISTICS
   timer_destroy(request_time);
-#endif /* PROCESSING_TIME_STATISTICS */
+#endif // PROCESSING_TIME_STATISTICS
 }
 
 /**
@@ -300,7 +300,7 @@ static const char *makeup_connection_name(int *id)
 
   for (;;) {
     if (i == static_cast<unsigned short>(-1)) {
-      /* don't use 0 */
+      // don't use 0
       i++;
     }
     fc_snprintf(name, sizeof(name), "c%u", static_cast<unsigned int>(++i));
@@ -420,7 +420,7 @@ QTcpServer *server_open_socket()
   default:
     address_type = QHostAddress::AnyIPv4;
   }
-  /* Create socket for server LAN announcements */
+  // Create socket for server LAN announcements
   udp_socket = new QUdpSocket();
 
   if (!udp_socket->bind(address_type, SERVER_LAN_PORT,
@@ -590,7 +590,7 @@ void get_lanserver_announcement()
    This function broadcasts an UDP packet to clients with
    that requests information about the server state.
  */
-/* We would need a raw network connection for broadcast messages */
+// We would need a raw network connection for broadcast messages
 static void send_lanserver_response()
 {
   char buffer[MAX_LEN_PACKET];
@@ -607,7 +607,7 @@ static void send_lanserver_response()
   enum QHostAddress::SpecialAddress address_type;
   QUdpSocket lockal_udpsock;
 
-  /* Set the UDP Multicast group IP address of the packet. */
+  // Set the UDP Multicast group IP address of the packet.
   group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
   switch (srvarg.announce) {
   case ANNOUNCE_IPV6:
@@ -621,7 +621,7 @@ static void send_lanserver_response()
                       QAbstractSocket::ReuseAddressHint);
 
   lockal_udpsock.joinMulticastGroup(QHostAddress(group));
-  /* Create a description of server state to send to clients.  */
+  // Create a description of server state to send to clients.
   if (!srvarg.identity_name.isEmpty()) {
     sz_strlcpy(hostname, qUtf8Printable(srvarg.identity_name));
   } else if (fc_gethostname(hostname, sizeof(hostname)) != 0) {
@@ -633,15 +633,15 @@ static void send_lanserver_response()
 
   switch (server_state()) {
   case S_S_INITIAL:
-    /* TRANS: Game state for local server */
+    // TRANS: Game state for local server
     fc_snprintf(status, sizeof(status), _("Pregame"));
     break;
   case S_S_RUNNING:
-    /* TRANS: Game state for local server */
+    // TRANS: Game state for local server
     fc_snprintf(status, sizeof(status), _("Running"));
     break;
   case S_S_OVER:
-    /* TRANS: Game state for local server */
+    // TRANS: Game state for local server
     fc_snprintf(status, sizeof(status), _("Game over"));
     break;
   }

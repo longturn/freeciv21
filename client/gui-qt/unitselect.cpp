@@ -193,7 +193,7 @@ void units_select::create_pixmap()
                     move_points_text((rate * f) + punit->moves_left, false))
                 + ")";
         }
-        /* TRANS: MP = Movement points */
+        // TRANS: MP = Movement points
         str = QString(_("MP:")) + str;
         p.drawText(x, y + item_size.height() - 4, str);
       }
@@ -291,7 +291,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
   }
   if (highligh_num != -1 && highligh_num < unit_list.count()) {
     punit = unit_list.at(highligh_num);
-    /* TRANS: HP - hit points */
+    // TRANS: HP - hit points
     str2 = QString(_("%1 HP:%2/%3"))
                .arg(unit_activity_text(punit), QString::number(punit->hp),
                     QString::number(unit_type_get(punit)->hp));
@@ -319,7 +319,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
     if (highligh_num != -1 && highligh_num < unit_list.count()) {
       painter->drawText(10, height() - 5, str2);
     }
-    /* draw scroll */
+    // draw scroll
     if (more) {
       int maxl = ((unit_count - 1) / 4) + 1;
       float page_height = 3.0f / maxl;

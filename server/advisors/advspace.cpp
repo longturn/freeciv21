@@ -15,12 +15,12 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "government.h"
 #include "packets.h"
 #include "spaceship.h"
 
-/* server */
+// server
 #include "spacerace.h"
 
 #include "advspace.h"
@@ -47,7 +47,7 @@ bool adv_spaceship_autoplace(struct player *pplayer,
          * parts will fail. */
         retval = true;
       } else {
-        /* Unable to place this part. Don't try to place it again. */
+        // Unable to place this part. Don't try to place it again.
         break;
       }
     }

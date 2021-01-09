@@ -361,14 +361,14 @@ void mpgui::setup_list(const char *name, const char *URL,
   if (modpack_type_is_valid(type)) {
     type_str = _(modpack_type_name(type));
   } else {
-    /* TRANS: Unknown modpack type */
+    // TRANS: Unknown modpack type
     type_str = _("?");
   }
 
   if (license != nullptr) {
     lic_str = license;
   } else {
-    /* TRANS: License of modpack is not known */
+    // TRANS: License of modpack is not known
     lic_str = Q_("?license:Unknown");
   }
 

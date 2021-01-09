@@ -12,8 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
-#include "fc_types.h" /* MAX_LEN_NAME */
+// common
+#include "fc_types.h" // MAX_LEN_NAME
 
 /* Update this capability string when ever there is changes to ai_type
  * structure below. When changing mandatory capability part, check that
@@ -21,10 +21,10 @@
  * taking to use without need to bump mandatory capability again. */
 #define FC_AI_MOD_CAPSTR "+Freeciv-3.1-ai-module-2019.Feb.16"
 
-/* Timers for all AI activities. Define it to get statistics about the AI. */
+// Timers for all AI activities. Define it to get statistics about the AI.
 #ifdef FREECIV_DEBUG
 #undef DEBUG_AITIMERS
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
 struct Treaty;
 struct player;
@@ -45,37 +45,37 @@ struct ai_type {
   void *pprivate;
 
   struct {
-    /* Called for every AI type when server quits. */
+    // Called for every AI type when server quits.
     void (*module_close)();
 
     /* Called for every AI type when game starts. Game is not necessarily new
        one, it can also be an old game loaded from a savegame. */
     void (*game_start)();
 
-    /* Called for every AI type when game has ended. */
+    // Called for every AI type when game has ended.
     void (*game_free)();
 
-    /* Called for every AI type when map tiles are allocated. */
+    // Called for every AI type when map tiles are allocated.
     void (*map_alloc)();
 
     /* Called for every AI type when the game map is ready, either generated
      * or, in case of scenario, loaded. */
     void (*map_ready)();
 
-    /* Called for every AI type when map tiles are freed. */
+    // Called for every AI type when map tiles are freed.
     void (*map_free)();
 
-    /* Called for every AI type when new player is added to game. */
+    // Called for every AI type when new player is added to game.
     void (*player_alloc)(struct player *pplayer);
 
-    /* Called for every AI type when player is freed from game. */
+    // Called for every AI type when player is freed from game.
     void (*player_free)(struct player *pplayer);
 
-    /* Called for every AI type for each player in game when game saved. */
+    // Called for every AI type for each player in game when game saved.
     void (*player_save)(struct player *pplayer, struct section_file *file,
                         int plrno);
 
-    /* Called for every AI type for each player in game when game loaded. */
+    // Called for every AI type for each player in game when game loaded.
     void (*player_load)(struct player *pplayer,
                         const struct section_file *file, int plrno);
 
@@ -96,20 +96,20 @@ struct ai_type {
                                   const struct section_file *file,
                                   int plrno);
 
-    /* AI console. */
+    // AI console.
     void (*player_console)(struct player *pplayer, const char *cmd);
 
-    /* Called for AI type that gains control of player. */
+    // Called for AI type that gains control of player.
     void (*gained_control)(struct player *pplayer);
 
-    /* Called for AI type that loses control of player. */
+    // Called for AI type that loses control of player.
     void (*lost_control)(struct player *pplayer);
 
-    /* Called for AI type of the player who gets split to two. */
+    // Called for AI type of the player who gets split to two.
     void (*split_by_civil_war)(struct player *original,
                                struct player *created);
 
-    /* Called for AI type of the player who got created from the split. */
+    // Called for AI type of the player who got created from the split.
     void (*created_by_civil_war)(struct player *original,
                                  struct player *created);
 
@@ -117,7 +117,7 @@ struct ai_type {
      * beginning of phase setup. See also first_activities. */
     void (*phase_begin)(struct player *pplayer, bool new_phase);
 
-    /* Called for player AI type when player phase ends. */
+    // Called for player AI type when player phase ends.
     void (*phase_finished)(struct player *pplayer);
 
     /* Called for every AI type when new city is added to game. Called even
@@ -136,17 +136,17 @@ struct ai_type {
      * for real cities only. */
     void (*city_destroyed)(struct city *pcity);
 
-    /* Called for player AI type when player gains control of city. */
+    // Called for player AI type when player gains control of city.
     void (*city_got)(struct player *pplayer, struct city *pcity);
 
-    /* Called for player AI type when player loses control of city. */
+    // Called for player AI type when player loses control of city.
     void (*city_lost)(struct player *pplayer, struct city *pcity);
 
-    /* Called for every AI type for each city in game when game saved. */
+    // Called for every AI type for each city in game when game saved.
     void (*city_save)(struct section_file *file, const struct city *pcity,
                       const char *citystr);
 
-    /* Called for every AI type for each city in game when game loaded. */
+    // Called for every AI type for each city in game when game loaded.
     void (*city_load)(const struct section_file *file, struct city *pcity,
                       const char *citystr);
 
@@ -168,14 +168,14 @@ struct ai_type {
     void (*build_adv_adjust_want)(struct player *pplayer,
                                   struct city *wonder_city);
 
-    /* Called for player AI when evaluating governments. */
+    // Called for player AI when evaluating governments.
     void (*gov_value)(struct player *pplayer, struct government *gov,
                       adv_want *val, bool *override);
 
-    /* Called for every AI type when unit ruleset has been loaded. */
+    // Called for every AI type when unit ruleset has been loaded.
     void (*units_ruleset_init)();
 
-    /* Called for every AI type before unit ruleset gets reloaded. */
+    // Called for every AI type before unit ruleset gets reloaded.
     void (*units_ruleset_close)();
 
     /* Called for every AI type when new unit is added to game. Called even
@@ -194,24 +194,24 @@ struct ai_type {
      * real units only. */
     void (*unit_destroyed)(struct unit *punit);
 
-    /* Called for player AI type when player gains control of unit. */
+    // Called for player AI type when player gains control of unit.
     void (*unit_got)(struct unit *punit);
 
-    /* Called for player AI type when unit changes type. */
+    // Called for player AI type when unit changes type.
     void (*unit_transformed)(struct unit *punit,
                              const struct unit_type *old_type);
 
-    /* Called for player AI type when player loses control of unit. */
+    // Called for player AI type when player loses control of unit.
     void (*unit_lost)(struct unit *punit);
 
-    /* Called for unit owner AI type for each unit when turn ends. */
+    // Called for unit owner AI type for each unit when turn ends.
     void (*unit_turn_end)(struct unit *punit);
 
-    /* Called for unit owner AI type when advisors goto moves unit. */
+    // Called for unit owner AI type when advisors goto moves unit.
     void (*unit_move)(struct unit *punit, struct tile *ptile,
                       struct pf_path *path, int step);
 
-    /* Called for all AI types when ever unit has moved. */
+    // Called for all AI types when ever unit has moved.
     void (*unit_move_seen)(struct unit *punit);
 
     /* Called for unit owner AI type when new advisor task is set for unit.
@@ -219,11 +219,11 @@ struct ai_type {
     void (*unit_task)(struct unit *punit, enum adv_unit_task task,
                       struct tile *ptile);
 
-    /* Called for every AI type for each unit in game when game saved. */
+    // Called for every AI type for each unit in game when game saved.
     void (*unit_save)(struct section_file *file, const struct unit *punit,
                       const char *unitstr);
 
-    /* Called for every AI type for each unit in game when game loaded. */
+    // Called for every AI type for each unit in game when game loaded.
     void (*unit_load)(const struct section_file *file, struct unit *punit,
                       const char *unitstr);
 
@@ -231,7 +231,7 @@ struct ai_type {
      * turn. */
     void (*settler_reset)(struct player *pplayer);
 
-    /* Called for player AI type when autosettlers should find new work. */
+    // Called for player AI type when autosettlers should find new work.
     void (*settler_run)(struct player *pplayer, struct unit *punit,
                         struct settlermap *state);
 
@@ -257,7 +257,7 @@ struct ai_type {
      * barbarian players. */
     void (*diplomacy_actions)(struct player *pplayer);
 
-    /* Called for player AI type in the end of player phase. */
+    // Called for player AI type in the end of player phase.
     void (*last_activities)(struct player *pplayer);
 
     /* Called for player AI type when diplomatic treaty requires evaluation.
@@ -292,7 +292,7 @@ struct ai_type {
     void (*log_fragment_unit)(char *buffer, int buflength,
                               const struct unit *punit);
 
-    /* Called for player AI type to decide if another player is dangerous. */
+    // Called for player AI type to decide if another player is dangerous.
     void (*consider_plr_dangerous)(struct player *plr1, struct player *plr2,
                                    enum override_bool *result);
 
@@ -305,10 +305,10 @@ struct ai_type {
      * city for building advisor. */
     void (*consider_wonder_city)(struct city *pcity, bool *result);
 
-    /* Called for player AI type with short internval */
+    // Called for player AI type with short internval
     void (*refresh)(struct player *pplayer);
 
-    /* Called for every AI type when tile has changed */
+    // Called for every AI type when tile has changed
     void (*tile_info)(struct tile *ptile);
 
     /* Called for every AI type when certain kind of city change has taken
@@ -364,7 +364,7 @@ void ai_timer_player_stop(const struct player *pplayer);
 #define ai_timer_stop(...) (void) 0
 #define ai_timer_player_start(...) (void) 0
 #define ai_timer_player_stop(...) (void) 0
-#endif /* DEBUG_AITIMERS */
+#endif // DEBUG_AITIMERS
 
 #define ai_type_iterate(NAME_ai)                                            \
   do {                                                                      \
@@ -379,7 +379,7 @@ void ai_timer_player_stop(const struct player *pplayer);
   while (false)                                                             \
     ;
 
-/* FIXME: This should also check if player is ai controlled */
+// FIXME: This should also check if player is ai controlled
 #define CALL_PLR_AI_FUNC(_func, _player, ...)                               \
   do {                                                                      \
     struct player *_plr_ = _player; /* _player expanded just once */        \

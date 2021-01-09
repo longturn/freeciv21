@@ -57,7 +57,7 @@ tax_rates_dialog::tax_rates_dialog(QWidget *parent) : qfc_dialog(parent)
     max = 100;
   }
 
-  /* Trans: Government - max rate (of taxes) x% */
+  // Trans: Government - max rate (of taxes) x%
   str = QString(_("%1 - max rate: %2%"))
             .arg(government_name_for_player(client.conn.playing),
                  QString::number(max));
@@ -266,7 +266,7 @@ void popup_rates_dialog()
    Update multipliers (policies) dialog.
  */
 void real_multipliers_dialog_update(void *unused)
-{ /* PORTME */
+{ // PORTME
   Q_UNUSED(unused)
 }
 

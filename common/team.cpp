@@ -16,23 +16,23 @@
 
 #include <cstdlib>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "game.h"
 #include "player.h"
 #include "team.h"
 
 struct team_slot {
   struct team *team;
-  char *defined_name; /* Defined by the ruleset. */
-  char *rule_name;    /* Usable untranslated name. */
+  char *defined_name; // Defined by the ruleset.
+  char *rule_name;    // Usable untranslated name.
 #ifdef FREECIV_ENABLE_NLS
-  char *name_translation; /* Translated name. */
+  char *name_translation; // Translated name.
 #endif
 };
 
@@ -53,7 +53,7 @@ void team_slots_init()
 {
   int i;
 
-  /* Init team slots and names. */
+  // Init team slots and names.
   team_slots.tslots = new team_slot[team_slot_count()]();
   /* Can't use the defined functions as the needed data will be
    * defined here. */
@@ -90,7 +90,7 @@ void team_slots_free()
 
 #ifdef FREECIV_ENABLE_NLS
     NFCPP_FREE(tslot->name_translation);
-#endif /* FREECIV_ENABLE_NLS */
+#endif // FREECIV_ENABLE_NLS
   }
   team_slots_iterate_end;
   delete[] team_slots.tslots;
@@ -147,7 +147,7 @@ struct team *team_slot_get_team(const struct team_slot *tslot)
  */
 bool team_slot_is_used(const struct team_slot *tslot)
 {
-  /* No team slot available, if the game is not initialised. */
+  // No team slot available, if the game is not initialised.
   if (!team_slots_initialised()) {
     return false;
   }
@@ -200,7 +200,7 @@ static inline void team_slot_create_default_name(struct team_slot *tslot)
   fc_assert(NULL == tslot->rule_name);
 #ifdef FREECIV_ENABLE_NLS
   fc_assert(NULL == tslot->name_translation);
-#endif /* FREECIV_ENABLE_NLS */
+#endif // FREECIV_ENABLE_NLS
 
   fc_snprintf(buf, sizeof(buf), "Team %d", team_slot_index(tslot) + 1);
   tslot->rule_name = fc_strdup(buf);
@@ -208,7 +208,7 @@ static inline void team_slot_create_default_name(struct team_slot *tslot)
 #ifdef FREECIV_ENABLE_NLS
   fc_snprintf(buf, sizeof(buf), _("Team %d"), team_slot_index(tslot) + 1);
   tslot->name_translation = fc_strdup(buf);
-#endif /* FREECIV_ENABLE_NLS */
+#endif // FREECIV_ENABLE_NLS
 
   qDebug("No name defined for team %d! Creating a default name: %s.",
          team_slot_index(tslot), tslot->rule_name);
@@ -224,7 +224,7 @@ const char *team_slot_rule_name(const struct team_slot *tslot)
   fc_assert_ret_val(NULL != tslot, NULL);
 
   if (NULL == tslot->rule_name) {
-    /* Get the team slot as changeable (not _const_) struct. */
+    // Get the team slot as changeable (not _const_) struct.
     struct team_slot *changeable =
         team_slot_by_number(team_slot_index(tslot));
     team_slot_create_default_name(changeable);
@@ -245,7 +245,7 @@ const char *team_slot_name_translation(const struct team_slot *tslot)
   fc_assert_ret_val(NULL != tslot, NULL);
 
   if (NULL == tslot->name_translation) {
-    /* Get the team slot as changeable (not _const_) struct. */
+    // Get the team slot as changeable (not _const_) struct.
     struct team_slot *changeable =
         team_slot_by_number(team_slot_index(tslot));
     team_slot_create_default_name(changeable);
@@ -253,9 +253,9 @@ const char *team_slot_name_translation(const struct team_slot *tslot)
   }
 
   return tslot->name_translation;
-#else /* FREECIV_ENABLE_NLS */
+#else // FREECIV_ENABLE_NLS
   return team_slot_rule_name(tslot);
-#endif /* FREECIV_ENABLE_NLS */
+#endif // FREECIV_ENABLE_NLS
 }
 
 /**
@@ -289,7 +289,7 @@ void team_slot_set_defined_name(struct team_slot *tslot,
 #ifdef FREECIV_ENABLE_NLS
   NFCPP_FREE(tslot->name_translation);
   tslot->name_translation = fc_strdup(Q_(team_name));
-#endif /* FREECIV_ENABLE_NLS */
+#endif // FREECIV_ENABLE_NLS
 }
 
 /**
@@ -317,16 +317,16 @@ struct team *team_new(struct team_slot *tslot)
     return tslot->team;
   }
 
-  /* Now create the team. */
+  // Now create the team.
   log_debug("Create team for slot %d.", team_slot_index(tslot));
   pteam = new team[1]();
   pteam->slot = tslot;
   tslot->team = pteam;
 
-  /* Set default values. */
+  // Set default values.
   pteam->plrlist = player_list_new();
 
-  /* Increase number of teams. */
+  // Increase number of teams.
   team_slots.used_slots++;
 
   return pteam;
@@ -410,7 +410,7 @@ int team_pretty_name(const struct team *pteam, QString &buf)
 {
   if (NULL != pteam) {
     if (NULL != pteam->slot->defined_name) {
-      /* TRANS: %s is ruleset-chosen team name (e.g. "Red") */
+      // TRANS: %s is ruleset-chosen team name (e.g. "Red")
       buf =
           QString(_("team %1")).arg(team_slot_name_translation(pteam->slot));
       return 1;
@@ -420,7 +420,7 @@ int team_pretty_name(const struct team *pteam, QString &buf)
     }
   }
 
-  /* No need to translate, it's an error. */
+  // No need to translate, it's an error.
   buf = QStringLiteral("(null team)");
   return -1;
 }
@@ -450,17 +450,17 @@ void team_add_player(struct player *pplayer, struct team *pteam)
   fc_assert_ret(pteam != NULL);
 
   if (pteam == pplayer->team) {
-    /* It is the team of the player. */
+    // It is the team of the player.
     return;
   }
 
   log_debug("Adding player %d/%s to team %s.", player_number(pplayer),
             pplayer->username, team_rule_name(pteam));
 
-  /* Remove the player from the old team, if any. */
+  // Remove the player from the old team, if any.
   team_remove_player(pplayer);
 
-  /* Put the player on the new team. */
+  // Put the player on the new team.
   pplayer->team = pteam;
   player_list_append(pteam->plrlist, pplayer);
 }

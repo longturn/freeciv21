@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-/* Any client that contains this file is using callback interface */
+// Any client that contains this file is using callback interface
 #define GUI_CB_MODE 1
 
-/* client */
+// client
 #include "gui_interface.h"
 
 /* client/include */

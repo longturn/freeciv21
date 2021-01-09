@@ -17,9 +17,9 @@
 #include <fc_config.h>
 #endif
 #include <QSet>
-#include <cstring> /* qstrlen */
+#include <cstring> // qstrlen
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "iterator.h"
 #include "log.h"
@@ -27,7 +27,7 @@
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "ai.h"
 #include "city.h"
 #include "game.h"
@@ -43,7 +43,7 @@
 static struct startpos *startpos_new(struct tile *ptile);
 static void startpos_destroy(struct startpos *psp);
 
-/* these are initialized from the terrain ruleset */
+// these are initialized from the terrain ruleset
 struct terrain_misc terrain_control;
 
 /* used to compute neighboring tiles.
@@ -64,8 +64,8 @@ struct terrain_misc terrain_control;
 const int DIR_DX[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
 const int DIR_DY[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
 
-static bool dir_cardinality[9]; /* Including invalid one */
-static bool dir_validity[9];    /* Including invalid one */
+static bool dir_cardinality[9]; // Including invalid one
+static bool dir_validity[9];    // Including invalid one
 
 static bool is_valid_dir_calculate(enum direction8 dir);
 static bool is_cardinal_dir_calculate(enum direction8 dir);
@@ -295,12 +295,12 @@ void map_init_topology()
 
   wld.map.num_valid_dirs = wld.map.num_cardinal_dirs = 0;
 
-  /* Values for direction8_invalid() */
+  // Values for direction8_invalid()
   fc_assert(direction8_invalid() == 8);
   dir_validity[8] = false;
   dir_cardinality[8] = false;
 
-  /* Values for actual directions */
+  // Values for actual directions
   for (int dir = 0; dir < 8; dir++) {
     if (is_valid_dir_calculate(direction8(dir))) {
       wld.map.valid_dirs[wld.map.num_valid_dirs] = direction8(dir);
@@ -333,11 +333,11 @@ static void tile_init(struct tile *ptile)
   ptile->resource = NULL;
   ptile->terrain = T_UNKNOWN;
   ptile->units = unit_list_new();
-  ptile->owner = NULL; /* Not claimed by any player. */
+  ptile->owner = NULL; // Not claimed by any player.
   ptile->extras_owner = NULL;
   ptile->placing = NULL;
   ptile->claimer = NULL;
-  ptile->worked = NULL; /* No city working here. */
+  ptile->worked = NULL; // No city working here.
   ptile->spec_sprite = NULL;
 }
 
@@ -373,7 +373,7 @@ struct tile *mapstep(const struct civ_map *nmap, const struct tile *ptile,
 static inline struct tile *
 base_native_pos_to_tile(const struct civ_map *nmap, int nat_x, int nat_y)
 {
-  /* Wrap in X and Y directions, as needed. */
+  // Wrap in X and Y directions, as needed.
   /* If the position is out of range in a non-wrapping direction, it is
    * unreal. */
   if (current_topo_has_flag(TF_WRAPX)) {
@@ -387,7 +387,7 @@ base_native_pos_to_tile(const struct civ_map *nmap, int nat_x, int nat_y)
     return NULL;
   }
 
-  /* We already checked legality of native pos above, don't repeat */
+  // We already checked legality of native pos above, don't repeat
   return nmap->tiles + native_pos_to_index_nocheck(nat_x, nat_y);
 }
 
@@ -408,7 +408,7 @@ struct tile *map_pos_to_tile(const struct civ_map *nmap, int map_x,
     return NULL;
   }
 
-  /* Normalization is best done in native coordinates. */
+  // Normalization is best done in native coordinates.
   MAP_TO_NATIVE_POS(&nat_x, &nat_y, map_x, map_y);
   return base_native_pos_to_tile(nmap, nat_x, nat_y);
 
@@ -508,7 +508,7 @@ void main_map_allocate()
 void map_free(struct civ_map *fmap)
 {
   if (fmap->tiles) {
-    /* it is possible that map_init was called but not map_allocate */
+    // it is possible that map_init was called but not map_allocate
 
     whole_map_iterate(fmap, ptile) { tile_free(ptile); }
     whole_map_iterate_end;
@@ -559,23 +559,23 @@ int map_vector_to_real_distance(int dx, int dy)
 
   if (current_topo_has_flag(TF_HEX)) {
     if (current_topo_has_flag(TF_ISO)) {
-      /* Iso-hex: you can't move NE or SW. */
+      // Iso-hex: you can't move NE or SW.
       if ((dx < 0 && dy > 0) || (dx > 0 && dy < 0)) {
         /* Diagonal moves in this direction aren't allowed, so it will take
          * the full number of moves. */
         return absdx + absdy;
       } else {
-        /* Diagonal moves in this direction *are* allowed. */
+        // Diagonal moves in this direction *are* allowed.
         return MAX(absdx, absdy);
       }
     } else {
-      /* Hex: you can't move SE or NW. */
+      // Hex: you can't move SE or NW.
       if ((dx > 0 && dy > 0) || (dx < 0 && dy < 0)) {
         /* Diagonal moves in this direction aren't allowed, so it will take
          * the full number of moves. */
         return absdx + absdy;
       } else {
-        /* Diagonal moves in this direction *are* allowed. */
+        // Diagonal moves in this direction *are* allowed.
         return MAX(absdx, absdy);
       }
     }
@@ -759,9 +759,9 @@ int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
   bool cardinal_move BAD_HEURISTIC_INIT(false);
   bool ri;
 
-  /* Try to exit early for detectable conditions */
+  // Try to exit early for detectable conditions
   if (!uclass_has_flag(pclass, UCF_TERRAIN_SPEED)) {
-    /* units without UCF_TERRAIN_SPEED have a constant cost. */
+    // units without UCF_TERRAIN_SPEED have a constant cost.
     return SINGLE_MOVE;
 
   } else if (!is_native_tile_to_class(pclass, t2)
@@ -769,13 +769,13 @@ int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
     if (tile_city(t1) == NULL) {
       /* Loading to/disembarking from transport. */
 
-      /* UTYF_IGTER units get move benefit. */
+      // UTYF_IGTER units get move benefit.
       return (utype_has_flag(punittype, UTYF_IGTER) ? MOVE_COST_IGTER
                                                     : SINGLE_MOVE);
     } else {
       /* Entering/leaving port. */
 
-      /* UTYF_IGTER units get move benefit. */
+      // UTYF_IGTER units get move benefit.
       return (utype_has_flag(punittype, UTYF_IGTER) ? MOVE_COST_IGTER
                                                     : SINGLE_MOVE);
     }
@@ -839,7 +839,7 @@ int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
                 break;
               case RMM_FAST_ALWAYS:
                 fc_assert(proad->move_mode
-                          != RMM_FAST_ALWAYS); /* Already handled above */
+                          != RMM_FAST_ALWAYS); // Already handled above
                 cost = proad->move_cost;
                 break;
               }
@@ -852,7 +852,7 @@ int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
   }
   extra_type_list_iterate_end;
 
-  /* UTYF_IGTER units have a maximum move cost per step. */
+  // UTYF_IGTER units have a maximum move cost per step.
   if (utype_has_flag(punittype, UTYF_IGTER) && MOVE_COST_IGTER < cost) {
     cost = MOVE_COST_IGTER;
   }
@@ -864,7 +864,7 @@ int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
     }
     if (!cardinal_move) {
       return cost * 181
-             >> 7; /* == (int) (cost * 1.41421356f) if cost < 99 */
+             >> 7; // == (int) (cost * 1.41421356f) if cost < 99
     }
   }
 
@@ -988,7 +988,7 @@ void base_map_distance_vector(int *dx, int *dy, int x0dv, int y0dv, int x1dv,
                               int y1dv)
 {
   if (current_topo_has_flag(TF_WRAPX) || current_topo_has_flag(TF_WRAPY)) {
-    /* Wrapping is done in native coordinates. */
+    // Wrapping is done in native coordinates.
     MAP_TO_NATIVE_POS(&x0dv, &y0dv, x0dv, y0dv);
     MAP_TO_NATIVE_POS(&x1dv, &y1dv, x1dv, y1dv);
 
@@ -1007,14 +1007,14 @@ void base_map_distance_vector(int *dx, int *dy, int x0dv, int y0dv, int x1dv,
             - wld.map.ysize / 2;
     }
 
-    /* Convert the native delta vector back to a pair of map positions. */
+    // Convert the native delta vector back to a pair of map positions.
     x1dv = x0dv + *dx;
     y1dv = y0dv + *dy;
     NATIVE_TO_MAP_POS(&x0dv, &y0dv, x0dv, y0dv);
     NATIVE_TO_MAP_POS(&x1dv, &y1dv, x1dv, y1dv);
   }
 
-  /* Find the final (map) vector. */
+  // Find the final (map) vector.
   *dx = x1dv - x0dv;
   *dy = y1dv - y0dv;
 }
@@ -1066,7 +1066,7 @@ struct tile *rand_neighbour(const struct civ_map *nmap,
   for (n = 8; n > 0; n--) {
     enum direction8 choice = static_cast<enum direction8>(fc_rand(n));
 
-    /* this neighbour's OK */
+    // this neighbour's OK
     tile1 = mapstep(nmap, ptile, dirs[choice]);
     if (tile1) {
       return tile1;
@@ -1077,7 +1077,7 @@ struct tile *rand_neighbour(const struct civ_map *nmap,
     dirs[choice] = dirs[n - 1];
   }
 
-  fc_assert(false); /* Are we on a 1x1 map with no wrapping??? */
+  fc_assert(false); // Are we on a 1x1 map with no wrapping???
   return NULL;
 }
 
@@ -1145,7 +1145,7 @@ struct tile *rand_map_pos_filtered(const struct civ_map *nmap, void *data,
  */
 const char *dir_get_name(enum direction8 dir)
 {
-  /* a switch statement is used so the ordering can be changed easily */
+  // a switch statement is used so the ordering can be changed easily
   switch (dir) {
   case DIR8_NORTH:
     return "N";
@@ -1173,7 +1173,7 @@ const char *dir_get_name(enum direction8 dir)
  */
 enum direction8 dir_cw(enum direction8 dir)
 {
-  /* a switch statement is used so the ordering can be changed easily */
+  // a switch statement is used so the ordering can be changed easily
   switch (dir) {
   case DIR8_NORTH:
     return DIR8_NORTHEAST;
@@ -1202,7 +1202,7 @@ enum direction8 dir_cw(enum direction8 dir)
  */
 enum direction8 dir_ccw(enum direction8 dir)
 {
-  /* a switch statement is used so the ordering can be changed easily */
+  // a switch statement is used so the ordering can be changed easily
   switch (dir) {
   case DIR8_NORTH:
     return DIR8_NORTHWEST;
@@ -1235,12 +1235,12 @@ static bool is_valid_dir_calculate(enum direction8 dir)
   switch (dir) {
   case DIR8_SOUTHEAST:
   case DIR8_NORTHWEST:
-    /* These directions are invalid in hex topologies. */
+    // These directions are invalid in hex topologies.
     return !(current_topo_has_flag(TF_HEX)
              && !current_topo_has_flag(TF_ISO));
   case DIR8_NORTHEAST:
   case DIR8_SOUTHWEST:
-    /* These directions are invalid in iso-hex topologies. */
+    // These directions are invalid in iso-hex topologies.
     return !(current_topo_has_flag(TF_HEX) && current_topo_has_flag(TF_ISO));
   case DIR8_NORTH:
   case DIR8_EAST:
@@ -1274,7 +1274,7 @@ bool is_valid_dir(enum direction8 dir)
 bool map_untrusted_dir_is_valid(enum direction8 dir)
 {
   if (!direction8_is_valid(dir)) {
-    /* Isn't even in range of direction8. */
+    // Isn't even in range of direction8.
     return false;
   }
 
@@ -1298,11 +1298,11 @@ static bool is_cardinal_dir_calculate(enum direction8 dir)
     return true;
   case DIR8_SOUTHEAST:
   case DIR8_NORTHWEST:
-    /* These directions are cardinal in iso-hex topologies. */
+    // These directions are cardinal in iso-hex topologies.
     return current_topo_has_flag(TF_HEX) && current_topo_has_flag(TF_ISO);
   case DIR8_NORTHEAST:
   case DIR8_SOUTHWEST:
-    /* These directions are cardinal in hexagonal topologies. */
+    // These directions are cardinal in hexagonal topologies.
     return current_topo_has_flag(TF_HEX) && !current_topo_has_flag(TF_ISO);
   }
   return false;
@@ -1395,7 +1395,7 @@ bool is_singular_tile(const struct tile *ptile, int dist)
   index_to_map_pos(&tile_x, &tile_y, tile_index(ptile));
   do_in_natural_pos(ntl_x, ntl_y, tile_x, tile_y)
   {
-    /* Iso-natural coordinates are doubled in scale. */
+    // Iso-natural coordinates are doubled in scale.
     dist *= MAP_IS_ISOMETRIC ? 2 : 1;
 
     return ((!current_topo_has_flag(TF_WRAPX)
@@ -1459,7 +1459,7 @@ bool startpos_allow(struct startpos *psp, struct nation_type *pnation)
   bool ret = psp->nations->contains(pnation);
   psp->nations->remove(pnation);
   if (0 == psp->nations->size() || !psp->exclude) {
-    psp->exclude = false; /* Disable "excluding" mode. */
+    psp->exclude = false; // Disable "excluding" mode.
     psp->nations->insert(pnation);
   }
   return ret;
@@ -1476,7 +1476,7 @@ bool startpos_disallow(struct startpos *psp, struct nation_type *pnation)
   bool ret = psp->nations->contains(pnation);
   psp->nations->remove(pnation);
   if (0 == psp->nations->size() || psp->exclude) {
-    psp->exclude = true; /* Enable "excluding" mode. */
+    psp->exclude = true; // Enable "excluding" mode.
   } else {
     psp->nations->insert(pnation);
   }

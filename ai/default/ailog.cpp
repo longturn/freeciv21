@@ -14,12 +14,12 @@
 
 #include <cstdarg>
 
-/* common */
+// common
 #include "map.h"
 #include "nation.h"
 #include "player.h"
 #include "research.h"
-/* server */
+// server
 #include "notify.h"
 
 /* ai/default */
@@ -85,7 +85,7 @@ QString diplo_log_prefix(ai_type *ait, const player *pplayer,
                          const player *aplayer)
 {
   // FIXME const-correctness of the arguments
-  /* Don't use ai_data_get since it can have side effects. */
+  // Don't use ai_data_get since it can have side effects.
   auto *adip = dai_diplomacy_get(ait, pplayer, aplayer);
 
   return QString::asprintf(
@@ -125,7 +125,7 @@ QString bodyguard_log_prefix(ai_type *ait, const unit *punit)
     type = "cityguard";
     s = city_name_get(pcity);
   }
-  /* else perhaps the charge died */
+  // else perhaps the charge died
 
   return QString::asprintf(
       "%s %s[%d] %s (%d,%d){%s:%d@%d,%d} ",

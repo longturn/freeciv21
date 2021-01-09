@@ -85,7 +85,7 @@ void draw_calculated_trade_routes(QPainter *painter)
     return;
   }
   pcolor = get_color(tileset, COLOR_MAPVIEW_TRADE_ROUTES_NO_BUILT);
-  /* Draw calculated trade routes */
+  // Draw calculated trade routes
   if (gui_options.draw_city_trade_routes) {
     for (auto qgilles : qAsConst(king()->trade_gen.lines)) {
       base_map_distance_vector(&dx, &dy, TILE_XY(qgilles.t1),
@@ -95,7 +95,7 @@ void draw_calculated_trade_routes(QPainter *painter)
       tile_to_canvas_pos(&x1, &y1, qgilles.t1);
       tile_to_canvas_pos(&x2, &y2, qgilles.t2);
 
-      /* Dont draw if route was already established */
+      // Dont draw if route was already established
       if (tile_city(qgilles.t1) && tile_city(qgilles.t2)
           && have_cities_trade_route(tile_city(qgilles.t1),
                                      tile_city(qgilles.t2))) {
@@ -124,7 +124,7 @@ void draw_calculated_trade_routes(QPainter *painter)
                         y2 + tileset_tile_height(tileset) / 2 - h);
     }
   }
-  /* Draw virtual cities */
+  // Draw virtual cities
   for (auto *pcity : qAsConst(king()->trade_gen.virtual_cities)) {
     float canvas_x, canvas_y;
     if (pcity->tile != nullptr
@@ -506,7 +506,7 @@ void pixmap_put_overlay_tile(int canvas_x, int canvas_y, QPixmap *ssprite)
     return;
   }
 
-  /* PORTME */
+  // PORTME
 }
 
 /**
@@ -527,7 +527,7 @@ void put_cross_overlay_tile(struct tile *ptile)
  */
 void draw_selection_rectangle(int canvas_x, int canvas_y, int w, int h)
 {
-  /* DON'T PORTME */
+  // DON'T PORTME
 }
 
 /**
@@ -541,7 +541,7 @@ void tileset_changed(void)
 
   update_unit_info_label(get_units_in_focus());
   destroy_city_dialog();
-  /* Update science report if open */
+  // Update science report if open
   if (queen()->isRepoDlgOpen(QStringLiteral("SCI"))) {
     i = queen()->gimmeIndexOf(QStringLiteral("SCI"));
     fc_assert(i != -1);

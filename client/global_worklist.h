@@ -10,8 +10,8 @@
 **************************************************************************/
 #pragma once
 
-struct global_worklist;      /* Opaque type. */
-struct global_worklist_list; /* Opaque type. */
+struct global_worklist;      // Opaque type.
+struct global_worklist_list; // Opaque type.
 
 void global_worklists_init();
 void global_worklists_free();
@@ -41,7 +41,7 @@ const char *global_worklist_name(const struct global_worklist *pgwl);
 #define SPECLIST_TYPE struct global_worklist
 #include "speclist.h"
 
-/* Iterates all global worklists, include the ones which are not valid. */
+// Iterates all global worklists, include the ones which are not valid.
 #define global_worklists_iterate_all(pgwl)                                  \
   if (client.worklists) {                                                   \
   TYPED_LIST_ITERATE(struct global_worklist, client.worklists, pgwl)
@@ -49,7 +49,7 @@ const char *global_worklist_name(const struct global_worklist *pgwl);
   LIST_ITERATE_END                                                          \
   }
 
-/* Iterates all valid global worklists. */
+// Iterates all valid global worklists.
 #define global_worklists_iterate(pgwl)                                      \
   global_worklists_iterate_all(pgwl)                                        \
   {                                                                         \

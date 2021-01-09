@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "rand.h"
 
-/* common */
+// common
 #include "game.h"
 #include "nation.h"
 #include "player.h"

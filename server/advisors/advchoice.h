@@ -12,8 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
-/* Uncomment to have choice information tracked */
-/* #define ADV_CHOICE_TRACK */
+// Uncomment to have choice information tracked
+// #define ADV_CHOICE_TRACK
 
 #ifdef ADV_CHOICE_TRACK
 #define ADV_CHOICE_QtMsgType LOG_NORMAL
@@ -30,13 +30,13 @@ enum choice_type {
 
 struct adv_choice {
   enum choice_type type;
-  universals_u value; /* what the advisor wants */
-  adv_want want;      /* how much it wants it */
-  bool need_boat;     /* unit being built wants a boat */
+  universals_u value; // what the advisor wants
+  adv_want want;      // how much it wants it
+  bool need_boat;     // unit being built wants a boat
 #ifdef ADV_CHOICE_TRACK
   char *use;
   bool log_if_chosen;
-#endif /* ADV_CHOICE_TRACK */
+#endif // ADV_CHOICE_TRACK
 };
 
 void adv_init_choice(struct adv_choice *choice);
@@ -58,7 +58,7 @@ void adv_choice_set_use(struct adv_choice *choice, const char *use);
 void adv_choice_log_info(struct adv_choice *choice, const char *loc1,
                          const char *loc2);
 const char *adv_choice_get_use(const struct adv_choice *choice);
-#else /* ADV_CHOICE_TRACK */
+#else // ADV_CHOICE_TRACK
 static inline void adv_choice_copy(struct adv_choice *dest,
                                    struct adv_choice *src)
 {
@@ -72,7 +72,7 @@ static inline const char *adv_choice_get_use(const struct adv_choice *choice)
 {
   return "(unknown)";
 }
-#endif /* ADV_CHOICE_TRACK */
+#endif // ADV_CHOICE_TRACK
 
 #define ADV_CHOICE_ASSERT(c)                                                \
   do {                                                                      \

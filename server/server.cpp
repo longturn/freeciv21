@@ -91,7 +91,7 @@ void handle_readline_input_callback(char *line)
     add_history(line);
   }
 
-  con_prompt_enter(); /* just got an 'Enter' hit */
+  con_prompt_enter(); // just got an 'Enter' hit
   auto *line_internal = local_to_internal_string_malloc(line);
   (void) handle_stdin_input(NULL, line_internal);
   delete[] line_internal;
@@ -133,15 +133,15 @@ QTcpServer *srv_prepare()
                            "authentication support, but it's currently not "
                            "in use."));
   }
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB
 
-  /* make sure it's initialized */
+  // make sure it's initialized
   srv_init();
 
-  /* must be before con_log_init() */
+  // must be before con_log_init()
   init_connections();
   con_log_init(srvarg.log_filename);
-  /* logging available after this point */
+  // logging available after this point
 
   auto *tcp_server = server_open_socket();
   if (!tcp_server->isListening()) {
@@ -182,7 +182,7 @@ QTcpServer *srv_prepare()
       return tcp_server;
     }
   }
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB
 
   if (srvarg.ruleset != NULL) {
     QString testfilename;
@@ -198,7 +198,7 @@ QTcpServer *srv_prepare()
     sz_strlcpy(game.server.rulesetdir, qUtf8Printable(srvarg.ruleset));
   }
 
-  /* load a saved game */
+  // load a saved game
   if (srvarg.load_filename.isEmpty()
       || !load_command(NULL, qUtf8Printable(srvarg.load_filename), false,
                        true)) {
@@ -212,7 +212,7 @@ QTcpServer *srv_prepare()
   if (!(srvarg.metaserver_no_send)) {
     qInfo(_("Sending info to metaserver <%s>."),
           qPrintable(meta_addr_port()));
-    /* Open socket for meta server */
+    // Open socket for meta server
     if (!server_open_meta(srvarg.metaconnection_persistent)
         || !send_server_info_to_metaserver(META_INFO)) {
       con_write(C_FAIL, _("Not starting without explicitly requested "
@@ -511,12 +511,12 @@ void server::input_on_socket()
     if (pconn->sock == socket && !pconn->server.is_closing) {
       auto nb = read_socket_data(pconn->sock, pconn->buffer);
       if (0 <= nb) {
-        /* We read packets; now handle them. */
+        // We read packets; now handle them.
         incoming_client_packets(pconn);
       } else if (-2 == nb) {
         connection_close_server(pconn, _("client disconnected"));
       } else {
-        /* Read failure; the connection is closed. */
+        // Read failure; the connection is closed.
         connection_close_server(pconn, _("read error"));
       }
       break;
@@ -566,9 +566,9 @@ void server::prepare_game()
 {
   set_server_state(S_S_INITIAL);
 
-  /* Load a script file. */
+  // Load a script file.
   if (NULL != srvarg.script_filename) {
-    /* Adding an error message more here will duplicate them. */
+    // Adding an error message more here will duplicate them.
     (void) read_init_script(NULL, qUtf8Printable(srvarg.script_filename),
                             true, false);
   }
@@ -675,7 +675,7 @@ void server::end_phase()
       timer_renew(m_between_turns_timer, TIMER_USER, TIMER_ACTIVE);
   timer_start(m_between_turns_timer);
 
-  /* After sniff, re-zero the timer: (read-out above on next loop) */
+  // After sniff, re-zero the timer: (read-out above on next loop)
   timer_clear(m_eot_timer);
   timer_start(m_eot_timer);
 
@@ -835,16 +835,16 @@ void server::update_game_state()
  */
 bool server::shut_game_down()
 {
-  /* Close it even between games. */
+  // Close it even between games.
   save_system_close();
 
   if (game.info.timeout == -1 || srvarg.exit_on_end) {
-    /* For autogames or if the -e option is specified, exit the server. */
+    // For autogames or if the -e option is specified, exit the server.
     deleteLater();
     return false;
   }
 
-  /* Reset server */
+  // Reset server
   server_game_free();
   fc_rand_uninit();
   server_game_init(false);

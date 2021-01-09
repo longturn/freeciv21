@@ -87,15 +87,15 @@
  * of the target.
  */
 
-/* Offset type (in bytes). */
+// Offset type (in bytes).
 typedef int ft_offset_t;
-/* Unset offset value. */
+// Unset offset value.
 #define FT_OFFSET_UNSET ((ft_offset_t) -1)
 
-/* Opaque type. */
+// Opaque type.
 struct text_tag;
 
-/* Define struct text_tag_list. */
+// Define struct text_tag_list.
 #define SPECLIST_TAG text_tag
 #define SPECLIST_TYPE struct text_tag
 #include "speclist.h"
@@ -125,10 +125,10 @@ enum text_link_type {
   TLT_INVALID,
 };
 
-/* Default maximal link size */
+// Default maximal link size
 #define MAX_LEN_LINK 128
 
-/* Simplification for colors. */
+// Simplification for colors.
 struct ft_color {
   const char *foreground;
   const char *background;
@@ -157,7 +157,7 @@ static inline bool ft_color_requested(const struct ft_color color)
           || (NULL != color.background && '\0' != color.background[0]));
 }
 
-/* Predefined colors. */
+// Predefined colors.
 extern const struct ft_color ftc_any;
 
 extern const struct ft_color ftc_warning;
@@ -190,7 +190,7 @@ extern const struct ft_color ftc_luaconsole_warn;
 extern const struct ft_color ftc_luaconsole_normal;
 extern const struct ft_color ftc_luaconsole_verbose;
 
-/* Main functions. */
+// Main functions.
 size_t featured_text_to_plain_text(const char *featured_text,
                                    char *plain_text, size_t plain_text_len,
                                    struct text_tag_list **tags,
@@ -201,12 +201,12 @@ size_t featured_text_apply_tag(const char *text_source, char *featured_text,
                                ft_offset_t start_offset,
                                ft_offset_t stop_offset, ...);
 
-/* Text tag list functions. NB: Overwrite the ones defined in speclist.h. */
+// Text tag list functions. NB: Overwrite the ones defined in speclist.h.
 #define text_tag_list_new() text_tag_list_new_full(text_tag_destroy)
 #define text_tag_list_copy(tags)                                            \
   text_tag_list_copy_full(tags, text_tag_copy, text_tag_destroy)
 
-/* Text tag functions. */
+// Text tag functions.
 struct text_tag *text_tag_new(enum text_tag_type tag_type,
                               ft_offset_t start_offset,
                               ft_offset_t stop_offset, ...);
@@ -217,15 +217,15 @@ enum text_tag_type text_tag_type(const struct text_tag *ptag);
 ft_offset_t text_tag_start_offset(const struct text_tag *ptag);
 ft_offset_t text_tag_stop_offset(const struct text_tag *ptag);
 
-/* Specific TTT_COLOR text tag type functions. */
+// Specific TTT_COLOR text tag type functions.
 const char *text_tag_color_foreground(const struct text_tag *ptag);
 const char *text_tag_color_background(const struct text_tag *ptag);
 
-/* Specific TTT_LINK text tag type functions. */
+// Specific TTT_LINK text tag type functions.
 enum text_link_type text_tag_link_type(const struct text_tag *ptag);
 int text_tag_link_id(const struct text_tag *ptag);
 
-/* Tools. */
+// Tools.
 const char *city_link(const struct city *pcity);
 const char *city_tile_link(const struct city *pcity);
 const char *tile_link(const struct tile *ptile);

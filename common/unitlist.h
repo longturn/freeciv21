@@ -12,10 +12,10 @@
 #pragma once
 
 #include "fc_types.h"
-#include "unit.h"     /* for diplomat_actions */
-#include "unittype.h" /* for unit_type_flag_id */
+#include "unit.h"     // for diplomat_actions
+#include "unittype.h" // for unit_type_flag_id
 
-/* get 'struct unit_list' and related functions: */
+// get 'struct unit_list' and related functions:
 #define SPECLIST_TAG unit
 #define SPECLIST_TYPE struct unit
 #include "speclist.h"

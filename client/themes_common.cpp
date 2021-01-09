@@ -18,7 +18,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-/* utility */
+// utility
 #include "log.h"
 #include "shared.h"
 #include "support.h"
@@ -26,7 +26,7 @@
 /* client/include */
 #include "themes_g.h"
 
-/* client */
+// client
 #include "options.h"
 #include "themes_common.h"
 
@@ -45,17 +45,17 @@ contains some data files. Each gui defines its own format in the
   get_useable_themes_in_directory() function.
 ****************************************************************************/
 
-/* A directory containing a list of usable themes */
+// A directory containing a list of usable themes
 struct theme_directory {
-  /* Path on the filesystem */
+  // Path on the filesystem
   char *path;
-  /* Array of theme names */
+  // Array of theme names
   char **themes;
-  /* Themes array length */
+  // Themes array length
   int num_themes;
 };
 
-/* List of all directories with themes */
+// List of all directories with themes
 static int num_directories;
 struct theme_directory *directories;
 
@@ -66,7 +66,7 @@ void init_themes()
 {
   int i;
 
-  /* get GUI-specific theme directories */
+  // get GUI-specific theme directories
   char **gui_directories =
       get_gui_specific_themes_directories(&num_directories);
 
@@ -75,7 +75,7 @@ void init_themes()
   for (i = 0; i < num_directories; i++) {
     directories[i].path = gui_directories[i];
 
-    /* get useable themes in this directory */
+    // get useable themes in this directory
     directories[i].themes = get_useable_themes_in_directory(
         directories[i].path, &(directories[i].num_themes));
   }

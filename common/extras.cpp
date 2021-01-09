@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "rand.h"
 
-/* common */
+// common
 #include "base.h"
 #include "game.h"
 #include "map.h"
@@ -148,7 +148,7 @@ int extra_index(const struct extra_type *pextra)
 
   return pextra - extras;
 }
-#endif /* extra_index */
+#endif // extra_index
 
 /**
    Return extras type of given id.
@@ -355,12 +355,12 @@ bool extra_can_be_built(const struct extra_type *pextra,
                         const struct tile *ptile)
 {
   if (!pextra->buildable) {
-    /* Extra type not buildable */
+    // Extra type not buildable
     return false;
   }
 
   if (tile_has_extra(ptile, pextra)) {
-    /* Extra exist already */
+    // Extra exist already
     return false;
   }
 
@@ -398,7 +398,7 @@ bool can_build_extra_base(const struct extra_type *pextra,
     extra_type_list_iterate(pextra->bridged, pbridged)
     {
       if (tile_has_extra(ptile, pbridged)) {
-        /* Tile has extra that would require bridging over. */
+        // Tile has extra that would require bridging over.
         return false;
       }
     }
@@ -436,12 +436,12 @@ bool player_can_place_extra(const struct extra_type *pextra,
   }
 
   if (ptile->placing != NULL) {
-    /* Already placing something */
+    // Already placing something
     return false;
   }
 
   if (tile_terrain(ptile)->placing_time <= 0) {
-    /* Can't place to this terrain */
+    // Can't place to this terrain
     return false;
   }
 
@@ -457,7 +457,7 @@ bool player_can_place_extra(const struct extra_type *pextra,
     }
   }
 
-  /* Placing extras is not allowed to tiles where also workers do changes. */
+  // Placing extras is not allowed to tiles where also workers do changes.
   unit_list_iterate(ptile->units, punit)
   {
     tile_changing_activities_iterate(act)
@@ -498,7 +498,7 @@ static bool can_extra_be_removed(const struct extra_type *pextra,
 {
   struct city *pcity = tile_city(ptile);
 
-  /* Cannot remove EF_ALWAYS_ON_CITY_CENTER extras from city center. */
+  // Cannot remove EF_ALWAYS_ON_CITY_CENTER extras from city center.
   if (pcity != NULL) {
     if (extra_has_flag(pextra, EF_ALWAYS_ON_CITY_CENTER)) {
       return false;
@@ -506,7 +506,7 @@ static bool can_extra_be_removed(const struct extra_type *pextra,
     if (extra_has_flag(pextra, EF_AUTO_ON_CITY_CENTER)) {
       struct tile *vtile = tile_virtual_new(ptile);
 
-      /* Would extra get rebuilt if removed */
+      // Would extra get rebuilt if removed
       tile_remove_extra(vtile, pextra);
       if (player_can_build_extra(pextra, city_owner(pcity), vtile)) {
         /* No need to worry about conflicting extras - extra would had
@@ -534,7 +534,7 @@ bool player_can_remove_extra(const struct extra_type *pextra,
     return false;
   }
 
-  /* For huts, it's not checked if player has any non-HUT_NOTHING units */
+  // For huts, it's not checked if player has any non-HUT_NOTHING units
   return are_reqs_active(pplayer, tile_owner(ptile), NULL, NULL, ptile, NULL,
                          NULL, NULL, NULL, NULL, &pextra->rmreqs,
                          RPT_POSSIBLE);
@@ -694,7 +694,7 @@ struct extra_type *next_extra_for_tile(const struct tile *ptile,
     struct terrain *pterrain = tile_terrain(ptile);
 
     if (pterrain->irrigation_result != pterrain) {
-      /* No extra can be created by irrigation the tile */
+      // No extra can be created by irrigation the tile
       return NULL;
     }
   }
@@ -702,7 +702,7 @@ struct extra_type *next_extra_for_tile(const struct tile *ptile,
     struct terrain *pterrain = tile_terrain(ptile);
 
     if (pterrain->mining_result != pterrain) {
-      /* No extra can be created by mining the tile */
+      // No extra can be created by mining the tile
       return NULL;
     }
   }
@@ -715,7 +715,7 @@ struct extra_type *next_extra_for_tile(const struct tile *ptile,
           return pextra;
         }
       } else {
-        /* punit is certainly NULL, pplayer can be too */
+        // punit is certainly NULL, pplayer can be too
         if (player_can_build_extra(pextra, pplayer, ptile)) {
           return pextra;
         }
@@ -929,7 +929,7 @@ bool extra_causes_env_upset(struct extra_type *pextra,
  */
 bool is_extra_caused_by_worker_action(const struct extra_type *pextra)
 {
-  /* Is any of the worker build action bits set? */
+  // Is any of the worker build action bits set?
   return (
       pextra->causes
       & (1 << EC_IRRIGATION | 1 << EC_MINE | 1 << EC_BASE | 1 << EC_ROAD));
@@ -940,7 +940,7 @@ bool is_extra_caused_by_worker_action(const struct extra_type *pextra)
  */
 bool is_extra_removed_by_worker_action(const struct extra_type *pextra)
 {
-  /* Is any of the worker remove action bits set? */
+  // Is any of the worker remove action bits set?
   return (pextra->rmcauses
           & (1 << ERM_CLEANPOLLUTION | 1 << ERM_CLEANFALLOUT
              | 1 << ERM_PILLAGE));

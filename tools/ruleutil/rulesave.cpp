@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "registry.h"
 
-/* common */
+// common
 #include "achievements.h"
 #include "game.h"
 #include "government.h"
@@ -32,7 +32,7 @@
 #include "unittype.h"
 #include "version.h"
 
-/* server */
+// server
 #include "ruleset.h"
 #include "settings.h"
 
@@ -41,7 +41,7 @@
 
 #include "rulesave.h"
 
-/* Ruleset format version */
+// Ruleset format version
 /*
  * 1  - Freeciv-2.6
  * 10 - Freeciv-3.0
@@ -820,14 +820,14 @@ static bool save_action_max_range(struct section_file *sfile, action_id act)
 static bool save_action_range(struct section_file *sfile, action_id act)
 {
   if (action_min_range_ruleset_var_name(act) != NULL) {
-    /* Min range can be loaded from the ruleset. */
+    // Min range can be loaded from the ruleset.
     save_default_int(sfile, action_by_number(act)->min_distance,
                      action_min_range_default(act), "actions",
                      action_min_range_ruleset_var_name(act));
   }
 
   if (action_max_range_ruleset_var_name(act) != NULL) {
-    /* Max range can be loaded from the ruleset. */
+    // Max range can be loaded from the ruleset.
     if (!save_action_max_range(sfile, act)) {
       return false;
     }
@@ -842,11 +842,11 @@ static bool save_action_range(struct section_file *sfile, action_id act)
 static bool save_action_kind(struct section_file *sfile, action_id act)
 {
   if (action_target_kind_ruleset_var_name(act) != NULL) {
-    /* Target kind can be loaded from the ruleset. */
+    // Target kind can be loaded from the ruleset.
     if ((action_by_number(act)->target_kind
          == RS_DEFAULT_USER_ACTION_TARGET_KIND)
         && action_enabler_list_size(action_enablers_for_action(act)) == 0) {
-      /* Don't save the default for actions that aren't enabled. */
+      // Don't save the default for actions that aren't enabled.
       return true;
     }
 
@@ -865,9 +865,9 @@ static bool save_action_actor_consuming_always(struct section_file *sfile,
                                                action_id act)
 {
   if (action_actor_consuming_always_ruleset_var_name(act) != NULL) {
-    /* Actor consumption can be loaded from the ruleset. */
+    // Actor consumption can be loaded from the ruleset.
     if (action_enabler_list_size(action_enablers_for_action(act)) == 0) {
-      /* Don't save value for actions that aren't enabled. */
+      // Don't save value for actions that aren't enabled.
       return true;
     }
 
@@ -1357,7 +1357,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
     }
   }
 
-  /* Goods */
+  // Goods
   comment_goods(sfile);
 
   sect_idx = 0;
@@ -1392,7 +1392,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
   }
   goods_type_re_active_iterate_end;
 
-  /* Clauses */
+  // Clauses
   comment_clauses(sfile);
 
   sect_idx = 0;
@@ -2161,9 +2161,9 @@ static bool save_terrain_ruleset(const char *filename, const char *name)
     }
     output_type_iterate_end;
 
-    /* Check resource count */
+    // Check resource count
     for (r = 0; pterr->resources[r] != NULL; r++) {
-      /* Just increasing r as long as there is resources */
+      // Just increasing r as long as there is resources
     }
 
     {

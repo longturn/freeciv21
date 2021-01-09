@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
+// common
 #include "events.h"
 #include "fc_types.h"
 
@@ -92,7 +92,7 @@ int collect_eventually_buildable_targets(struct universal *targets,
 int collect_already_built_targets(struct universal *targets,
                                   struct city *pcity);
 
-/* the number of units in city */
+// the number of units in city
 int num_present_units_in_city(struct city *pcity);
 int num_supported_units_in_city(struct city *pcity);
 

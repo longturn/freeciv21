@@ -15,16 +15,16 @@
    See comments in "genhash.c".
 ****************************************************************************/
 
-/* utility */
+// utility
 #include "iterator.h"
-#include "support.h" /* bool type */
+#include "support.h" // bool type
 
-struct genhash; /* opaque */
+struct genhash; // opaque
 
-/* Hash value type. */
+// Hash value type.
 typedef unsigned int genhash_val_t;
 
-/* Function typedefs: */
+// Function typedefs:
 typedef genhash_val_t (*genhash_val_fn_t)(const void *);
 typedef bool (*genhash_comp_fn_t)(const void *, const void *);
 typedef void *(*genhash_copy_fn_t)(const void *);
@@ -34,11 +34,11 @@ typedef void (*genhash_free_fn_t)(void *);
  * keys being normal nul-terminated strings: */
 genhash_val_t genhash_str_val_func(const char *vkey);
 bool genhash_str_comp_func(const char *vkey1, const char *vkey2);
-/* and malloc'ed strings: */
+// and malloc'ed strings:
 char *genhash_str_copy_func(const char *vkey);
 void genhash_str_free_func(char *vkey);
 
-/* General functions: */
+// General functions:
 struct genhash *
 genhash_new(genhash_val_fn_t key_val_func,
             genhash_comp_fn_t key_comp_func) fc__warn_unused_result;
@@ -86,7 +86,7 @@ bool genhashs_are_equal_full(const struct genhash *pgenhash1,
                              const struct genhash *pgenhash2,
                              genhash_comp_fn_t data_comp_func);
 
-/* Iteration. */
+// Iteration.
 struct genhash_iter;
 size_t genhash_iter_sizeof();
 

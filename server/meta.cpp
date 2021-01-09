@@ -29,14 +29,14 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "fcthread.h"
 #include "log.h"
 #include "support.h"
 #include "timing.h"
 
-/* common */
+// common
 #include "capstr.h"
 #include "connection.h"
 #include "dataio.h"
@@ -45,7 +45,7 @@
 #include "nation.h"
 #include "version.h"
 
-/* server */
+// server
 #include "console.h"
 #include "plrhand.h"
 #include "settings.h"
@@ -74,13 +74,13 @@ const char *default_meta_message_string()
 {
 #if IS_BETA_VERSION
   return "unstable pre-" NEXT_STABLE_VERSION ": beware";
-#else /* IS_BETA_VERSION */
+#else // IS_BETA_VERSION
 #if IS_DEVEL_VERSION
   return "development version: beware";
-#else /* IS_DEVEL_VERSION */
+#else // IS_DEVEL_VERSION
   return "-";
-#endif /* IS_DEVEL_VERSION */
-#endif /* IS_BETA_VERSION */
+#endif // IS_DEVEL_VERSION
+#endif // IS_BETA_VERSION
 }
 
 /**
@@ -130,7 +130,7 @@ void maybe_automatic_meta_message(const char *automatic)
   user_message = get_user_meta_message_string();
 
   if (user_message == NULL) {
-    /* No user message */
+    // No user message
     if (automatic != NULL) {
       set_meta_message_string(automatic);
     }
@@ -165,7 +165,7 @@ void set_user_meta_message_string(const char *string)
     sz_strlcpy(game.server.meta_info.user_message, string);
     set_meta_message_string(string);
   } else {
-    /* Remove user meta message. We will use automatic messages instead */
+    // Remove user meta message. We will use automatic messages instead
     game.server.meta_info.user_message[0] = '\0';
     set_meta_message_string(default_meta_message_string());
   }
@@ -275,7 +275,7 @@ static bool send_to_metaserver(enum meta_flag flag)
     break;
   }
 
-  /* get hostname */
+  // get hostname
   if (!srvarg.identity_name.isEmpty()) {
     sz_strlcpy(host, qUtf8Printable(srvarg.identity_name));
   } else if (fc_gethostname(host, sizeof(host)) != 0) {
@@ -316,11 +316,11 @@ static bool send_to_metaserver(enum meta_flag flag)
     post->addQueryItem(QStringLiteral("message"),
                        QString::fromUtf8(get_meta_message_string()));
 
-    /* NOTE: send info for ALL players or none at all. */
+    // NOTE: send info for ALL players or none at all.
     if (normal_player_count() == 0) {
       post->addQueryItem(QStringLiteral("dropplrs"), QStringLiteral("1"));
     } else {
-      players = 0; /* a counter for players_available */
+      players = 0; // a counter for players_available
       humans = 0;
 
       players_iterate(plr)
@@ -390,14 +390,14 @@ static bool send_to_metaserver(enum meta_flag flag)
       }
       players_iterate_end;
 
-      /* send the number of available players. */
+      // send the number of available players.
       post->addQueryItem(QStringLiteral("available"),
                          QStringLiteral("%1").arg(players));
       post->addQueryItem(QStringLiteral("humans"),
                          QStringLiteral("%1").arg(humans));
     }
 
-    /* Send some variables: should be listed in inverted order? */
+    // Send some variables: should be listed in inverted order?
     {
       static const char *settings[] = {"timeout",    "endturn", "minplayers",
                                        "maxplayers", "aifill",  "allowtake",
@@ -408,7 +408,7 @@ static bool send_to_metaserver(enum meta_flag flag)
         meta_insert_setting(post, settings[i]);
       }
 
-      /* HACK: send the most determinant setting for the map size. */
+      // HACK: send the most determinant setting for the map size.
       switch (wld.map.server.mapsize) {
       case MAPSIZE_FULLSIZE:
         meta_insert_setting(post, "size");
@@ -423,7 +423,7 @@ static bool send_to_metaserver(enum meta_flag flag)
       }
     }
 
-    /* Turn and year. */
+    // Turn and year.
     post->addQueryItem(QStringLiteral("vn[]"), QStringLiteral("turn"));
     post->addQueryItem(QStringLiteral("vv[]"),
                        QStringLiteral("%1").arg(game.info.turn));
@@ -438,7 +438,7 @@ static bool send_to_metaserver(enum meta_flag flag)
     }
   }
 
-  /* Send POST in new thread */
+  // Send POST in new thread
   meta_srv_thread->set_func(send_metaserver_post, post);
   meta_srv_thread->start(QThread::NormalPriority);
 
@@ -490,7 +490,7 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
     return false;
   }
 
-  /* Persistent connection temporary failures handling */
+  // Persistent connection temporary failures handling
   if (meta_retry_wait > 0) {
     if (meta_retry_wait++ > 5) {
       meta_retry_wait = 0;
@@ -499,7 +499,7 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
     }
   }
 
-  /* if we're bidding farewell, ignore all timers */
+  // if we're bidding farewell, ignore all timers
   if (flag == META_GOODBYE) {
     if (last_send_timer) {
       timer_destroy(last_send_timer);
@@ -513,12 +513,12 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
     return true;
   }
 
-  /* don't allow the user to spam the metaserver with updates */
+  // don't allow the user to spam the metaserver with updates
   if (last_send_timer
       && (timer_read_seconds(last_send_timer)
           < METASERVER_MIN_UPDATE_INTERVAL)) {
     if (flag == META_INFO) {
-      want_update = true; /* we couldn't update now, but update a.s.a.p. */
+      want_update = true; // we couldn't update now, but update a.s.a.p.
     }
     return false;
   }
@@ -531,7 +531,7 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
     return false;
   }
 
-  /* start a new timer if we haven't already */
+  // start a new timer if we haven't already
   if (!last_send_timer) {
     last_send_timer = timer_new(TIMER_USER, TIMER_ACTIVE);
   }

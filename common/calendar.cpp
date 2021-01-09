@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "game.h"
 #include "victory.h"
 
@@ -36,7 +36,7 @@ void game_next_year(struct packet_game_info *info)
   int fragment_years;
 
   if (info->year_0_hack) {
-    /* hacked it to get rid of year 0 */
+    // hacked it to get rid of year 0
     info->year = 0;
     info->year_0_hack = false;
   }
@@ -109,7 +109,7 @@ const char *textcalfrag(int frag)
     fc_snprintf(buf, sizeof(buf), "%s",
                 _(game.calendar.calendar_fragment_name[frag]));
   } else {
-    /* Human readable fragment count starts from 1, not 0 */
+    // Human readable fragment count starts from 1, not 0
     fc_snprintf(buf, sizeof(buf), "%d", frag + 1);
   }
   return buf;
@@ -124,11 +124,11 @@ const char *textyear(int year)
   static char y[32];
 
   if (year < 0) {
-    /* TRANS: <year> <label> -> "1000 BC" */
+    // TRANS: <year> <label> -> "1000 BC"
     fc_snprintf(y, sizeof(y), _("%d %s"), -year,
                 _(game.calendar.negative_year_label));
   } else {
-    /* TRANS: <year> <label> -> "1000 AD" */
+    // TRANS: <year> <label> -> "1000 AD"
     fc_snprintf(y, sizeof(y), _("%d %s"), year,
                 _(game.calendar.positive_year_label));
   }

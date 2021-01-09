@@ -10,6 +10,6 @@
 **************************************************************************/
 #pragma once
 
-#include "support.h" /* bool type */
+#include "support.h" // bool type
 
 bool map_fractal_generate(bool autosize, struct unit_type *initial_unit);

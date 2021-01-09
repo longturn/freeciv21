@@ -13,7 +13,7 @@
 #include "name_translation.h"
 #include "requirements.h"
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME disaster_effect_id
 #define SPECENUM_VALUE0 DE_DESTROY_BUILDING
 #define SPECENUM_VALUE0NAME "DestroyBuilding"
@@ -49,11 +49,11 @@ struct disaster_type {
   bv_disaster_effects effects;
 };
 
-/* Initialization and iteration */
+// Initialization and iteration
 void disaster_types_init();
 void disaster_types_free();
 
-/* General disaster type accessor functions. */
+// General disaster type accessor functions.
 Disaster_type_id disaster_count();
 Disaster_type_id disaster_index(const struct disaster_type *pdis);
 Disaster_type_id disaster_number(const struct disaster_type *pdis);

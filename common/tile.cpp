@@ -15,12 +15,12 @@
 #endif
 
 #include <QBitArray>
-/* utility */
+// utility
 #include "bitvector.h"
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "fc_interface.h"
 #include "game.h"
 #include "map.h"
@@ -64,7 +64,7 @@ void tile_set_owner(struct tile *ptile, struct player *pplayer,
                     struct tile *claimer)
 {
   if (BORDERS_DISABLED != game.info.borders
-      /* City tiles are always owned by the city owner. */
+      // City tiles are always owned by the city owner.
       || (tile_city(ptile) != NULL || ptile->owner != NULL)) {
     ptile->owner = pplayer;
     ptile->claimer = claimer;
@@ -368,7 +368,7 @@ const struct resource_type *tile_resource(const struct tile *ptile)
 void tile_set_resource(struct tile *ptile, struct extra_type *presource)
 {
   if (presource == ptile->resource) {
-    return; /* No change */
+    return; // No change
   }
 
   if (ptile->resource != NULL) {
@@ -439,7 +439,7 @@ int tile_activity_time(enum unit_activity activity, const struct tile *ptile,
 {
   struct terrain *pterrain = tile_terrain(ptile);
 
-  /* Make sure nobody uses old activities */
+  // Make sure nobody uses old activities
   fc_assert_ret_val(activity != ACTIVITY_FORTRESS
                         && activity != ACTIVITY_AIRBASE,
                     FC_INFINITY);
@@ -473,7 +473,7 @@ int tile_activity_time(enum unit_activity activity, const struct tile *ptile,
 static void tile_create_extra(struct tile *ptile, struct extra_type *pextra)
 {
   if (fc_funcs->create_extra != NULL) {
-    /* Assume callback calls tile_add_extra() itself. */
+    // Assume callback calls tile_add_extra() itself.
     fc_funcs->create_extra(ptile, pextra, NULL);
   } else {
     tile_add_extra(ptile, pextra);
@@ -486,7 +486,7 @@ static void tile_create_extra(struct tile *ptile, struct extra_type *pextra)
 static void tile_destroy_extra(struct tile *ptile, struct extra_type *pextra)
 {
   if (fc_funcs->destroy_extra != NULL) {
-    /* Assume callback calls tile_remove_extra() itself. */
+    // Assume callback calls tile_remove_extra() itself.
     fc_funcs->destroy_extra(ptile, pextra);
   } else {
     tile_remove_extra(ptile, pextra);
@@ -502,7 +502,7 @@ void tile_change_terrain(struct tile *ptile, struct terrain *pterrain)
 {
   tile_set_terrain(ptile, pterrain);
 
-  /* Remove unsupported extras */
+  // Remove unsupported extras
   extra_type_iterate(pextra)
   {
     if (tile_has_extra(ptile, pextra)
@@ -521,11 +521,11 @@ static bool add_recursive_extras(struct tile *ptile,
                                  struct extra_type *pextra, int rec)
 {
   if (rec > MAX_EXTRA_TYPES) {
-    /* Infinite recursion */
+    // Infinite recursion
     return false;
   }
 
-  /* First place dependency extras */
+  // First place dependency extras
   extra_deps_iterate(&(pextra->reqs), pdep)
   {
     if (!tile_has_extra(ptile, pdep)) {
@@ -534,7 +534,7 @@ static bool add_recursive_extras(struct tile *ptile,
   }
   extra_deps_iterate_end;
 
-  /* Is tile native for extra after that? */
+  // Is tile native for extra after that?
   if (!is_native_tile_to_extra(pextra, ptile)) {
     return false;
   }
@@ -551,7 +551,7 @@ static bool rm_recursive_extras(struct tile *ptile,
                                 struct extra_type *pextra, int rec)
 {
   if (rec > MAX_EXTRA_TYPES) {
-    /* Infinite recursion */
+    // Infinite recursion
     return false;
   }
 
@@ -561,7 +561,7 @@ static bool rm_recursive_extras(struct tile *ptile,
       extra_deps_iterate(&(pdepending->reqs), pdep)
       {
         if (pdep == pextra) {
-          /* Depends on what we are going to remove */
+          // Depends on what we are going to remove
           if (!rm_recursive_extras(ptile, pdepending, rec + 1)) {
             return false;
           }
@@ -587,12 +587,12 @@ static bool rm_recursive_extras(struct tile *ptile,
  */
 bool tile_extra_apply(struct tile *ptile, struct extra_type *tgt)
 {
-  /* Add extra with its dependencies */
+  // Add extra with its dependencies
   if (!add_recursive_extras(ptile, tgt, 0)) {
     return false;
   }
 
-  /* Remove conflicting extras */
+  // Remove conflicting extras
   extra_type_iterate(pextra)
   {
     if (tile_has_extra(ptile, pextra) && !can_extras_coexist(pextra, tgt)) {
@@ -614,7 +614,7 @@ bool tile_extra_apply(struct tile *ptile, struct extra_type *tgt)
  */
 bool tile_extra_rm_apply(struct tile *ptile, struct extra_type *tgt)
 {
-  /* Remove extra with everything depending on it. */
+  // Remove extra with everything depending on it.
   return rm_recursive_extras(ptile, tgt, 0);
 }
 
@@ -746,7 +746,7 @@ bool tile_apply_activity(struct tile *ptile, Activity_type_id act,
   case ACTIVITY_GEN_ROAD:
   case ACTIVITY_POLLUTION:
   case ACTIVITY_FALLOUT:
-    /* do nothing  - not implemented */
+    // do nothing  - not implemented
     return false;
 
   case ACTIVITY_IDLE:
@@ -816,7 +816,7 @@ const char *tile_get_info_text(const struct tile *ptile,
 
   sz_strlcpy(s, terrain_name_translation(tile_terrain(ptile)));
   if (linebreaks & TILE_LB_TERRAIN_RIVER) {
-    /* Linebreak needed before next text */
+    // Linebreak needed before next text
     lb = true;
   }
 
@@ -835,7 +835,7 @@ const char *tile_get_info_text(const struct tile *ptile,
   }
   extra_type_iterate_end;
   if (linebreaks & TILE_LB_RIVER_RESOURCE) {
-    /* New linebreak requested */
+    // New linebreak requested
     lb = true;
   }
 
@@ -850,7 +850,7 @@ const char *tile_get_info_text(const struct tile *ptile,
                  extra_name_translation(ptile->resource));
   }
   if (linebreaks & TILE_LB_RESOURCE_POLL) {
-    /* New linebreak requested */
+    // New linebreak requested
     lb = true;
   }
 
@@ -893,7 +893,7 @@ bool tile_has_road(const struct tile *ptile, const struct road_type *proad)
  */
 bool tile_has_river(const struct tile *ptile)
 {
-  /* TODO: Have a list of rivers and iterate only that */
+  // TODO: Have a list of rivers and iterate only that
   extra_type_by_cause_iterate(EC_ROAD, priver)
   {
     if (tile_has_extra(ptile, priver)
@@ -1034,7 +1034,7 @@ struct tile *tile_virtual_new(const struct tile *ptile)
 
   vtile = new tile[1]();
 
-  /* initialise some values */
+  // initialise some values
   vtile->index = TILE_INDEX_NONE;
   vtile->continent = -1;
 
@@ -1054,7 +1054,7 @@ struct tile *tile_virtual_new(const struct tile *ptile)
      * they deserve. */
     vtile->index = tile_index(ptile);
 
-    /* Copy all but the unit list. */
+    // Copy all but the unit list.
     extra_type_iterate(pextra)
     {
       if (BV_ISSET(ptile->extras, extra_number(pextra))) {
@@ -1137,7 +1137,7 @@ bool tile_set_label(struct tile *ptile, const char *label)
 {
   bool changed = false;
 
-  /* Handle empty label as NULL label */
+  // Handle empty label as NULL label
   if (label != NULL && label[0] == '\0') {
     label = NULL;
   }

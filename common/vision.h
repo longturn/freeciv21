@@ -12,10 +12,10 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
+// common
 #include "fc_types.h"
 
-#include "improvement.h" /* bv_imprs */
+#include "improvement.h" // bv_imprs
 
 /****************************************************************************
   Vision for cities and units:
@@ -81,16 +81,16 @@
 typedef short int v_radius_t[V_COUNT];
 
 struct vision {
-  /* These values cannot be changed after initialization. */
+  // These values cannot be changed after initialization.
   struct player *player;
   struct tile *tile;
   bool can_reveal_tiles;
 
-  /* The radius of the vision source. */
+  // The radius of the vision source.
   v_radius_t radius_sq;
 };
 
-/* Initialize a vision radius array. */
+// Initialize a vision radius array.
 #define V_RADIUS(main_sq, invis_sq, subs_sq)                                \
   {                                                                         \
     (short) (main_sq), (short) (invis_sq), (short) (subs_sq)                \
@@ -112,11 +112,11 @@ bool vision_reveal_tiles(struct vision *vision, bool reveal_tiles);
  */
 struct vision_site {
   char name[MAX_LEN_NAME];
-  struct tile *location; /* Cannot be NULL */
-  struct player *owner;  /* May be NULL, always check! */
+  struct tile *location; // Cannot be NULL
+  struct player *owner;  // May be NULL, always check!
 
-  int identity;  /* city > IDENTITY_NUMBER_ZERO */
-  citizens size; /* city size (0 <= size <= MAX_CITY_SIZE) */
+  int identity;  // city > IDENTITY_NUMBER_ZERO
+  citizens size; // city size (0 <= size <= MAX_CITY_SIZE)
 
   bool occupied;
   bool walls;

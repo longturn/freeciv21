@@ -22,12 +22,12 @@ extern "C" {
 #include "lualib.h"
 }
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "registry.h"
 
-/* common */
+// common
 #include "map.h"
 
 /* common/scriptcore */
@@ -43,7 +43,7 @@ extern "C" {
 #define LUASCRIPT_MAX_EXECUTION_TIME_SEC 5.0
 #define LUASCRIPT_CHECKINTERVAL 10000
 
-/* The name used for the freeciv lua struct saved in the lua state. */
+// The name used for the freeciv lua struct saved in the lua state.
 #define LUASCRIPT_GLOBAL_VAR_NAME "__fcl"
 
 /*****************************************************************************
@@ -82,7 +82,7 @@ static const char *luascript_unsafe_symbols_permissive[] = {
 *****************************************************************************/
 #if LUA_VERSION_NUM == 503 || LUA_VERSION_NUM == 504
 static luaL_Reg luascript_lualibs_secure[] = {
-    /* Using default libraries excluding: package, io, os, and bit32 */
+    // Using default libraries excluding: package, io, os, and bit32
     {"_G", luaopen_base},
     {LUA_COLIBNAME, luaopen_coroutine},
     {LUA_TABLIBNAME, luaopen_table},
@@ -93,7 +93,7 @@ static luaL_Reg luascript_lualibs_secure[] = {
     {NULL, NULL}};
 
 static luaL_Reg luascript_lualibs_permissive[] = {
-    /* Using default libraries excluding: package, io, and bit32 */
+    // Using default libraries excluding: package, io, and bit32
     {"_G", luaopen_base},
     {LUA_COLIBNAME, luaopen_coroutine},
     {LUA_TABLIBNAME, luaopen_table},
@@ -103,9 +103,9 @@ static luaL_Reg luascript_lualibs_permissive[] = {
     {LUA_DBLIBNAME, luaopen_debug},
     {LUA_OSLIBNAME, luaopen_os},
     {NULL, NULL}};
-#else /* LUA_VERSION_NUM */
+#else // LUA_VERSION_NUM
 #error "Unsupported lua version"
-#endif /* LUA_VERSION_NUM */
+#endif // LUA_VERSION_NUM
 
 static int luascript_report(struct fc_lua *fcl, int status,
                             const char *code);
@@ -133,7 +133,7 @@ static int luascript_report(struct fc_lua *fcl, int status, const char *code)
       msg = "(error with no message)";
     }
 
-    /* Add error message. */
+    // Add error message.
     str = QStringLiteral("lua error:");
     str += QStringLiteral("\t%s").arg(msg);
 
@@ -149,13 +149,13 @@ static int luascript_report(struct fc_lua *fcl, int status, const char *code)
  */
 static void luascript_traceback_func_save(lua_State *L)
 {
-  /* Find the debug.traceback function, if available */
+  // Find the debug.traceback function, if available
   lua_getglobal(L, "debug");
   if (lua_istable(L, -1)) {
     lua_getfield(L, -1, "traceback");
     lua_setfield(L, LUA_REGISTRYINDEX, "freeciv_traceback");
   }
-  lua_pop(L, 1); /* pop debug */
+  lua_pop(L, 1); // pop debug
 }
 
 /**
@@ -189,7 +189,7 @@ static void luascript_exec_check(lua_State *L, lua_Debug *ar)
 static void luascript_hook_start(lua_State *L)
 {
 #if LUASCRIPT_CHECKINTERVAL
-  /* Store clock timestamp in the registry */
+  // Store clock timestamp in the registry
   lua_pushnumber(L, clock());
   lua_setfield(L, LUA_REGISTRYINDEX, "freeciv_exec_clock");
   lua_sethook(L, luascript_exec_check, LUA_MASKCOUNT,
@@ -212,10 +212,10 @@ static void luascript_hook_end(lua_State *L)
  */
 static void luascript_openlibs(lua_State *L, const luaL_Reg *llib)
 {
-  /* set results to global table */
+  // set results to global table
   for (; llib->func; llib++) {
     luaL_requiref(L, llib->name, llib->func, 1);
-    lua_pop(L, 1); /* remove lib */
+    lua_pop(L, 1); // remove lib
   }
 }
 
@@ -298,7 +298,7 @@ struct fc_lua *luascript_new(luascript_log_func_t output_fct,
     luascript_blacklist(fcl->state, luascript_unsafe_symbols_permissive);
   }
 
-  /* Save the freeciv lua struct in the lua state. */
+  // Save the freeciv lua struct in the lua state.
   lua_pushstring(fcl->state, LUASCRIPT_GLOBAL_VAR_NAME);
   lua_pushlightuserdata(fcl->state, fcl);
   lua_settable(fcl->state, LUA_REGISTRYINDEX);
@@ -315,12 +315,12 @@ struct fc_lua *luascript_get_fcl(lua_State *L)
 
   fc_assert_ret_val(L, NULL);
 
-  /* Get the freeciv lua struct from the lua state. */
+  // Get the freeciv lua struct from the lua state.
   lua_pushstring(L, LUASCRIPT_GLOBAL_VAR_NAME);
   lua_gettable(L, LUA_REGISTRYINDEX);
   fcl = static_cast<fc_lua *>(lua_touserdata(L, -1));
 
-  /* This is an error! */
+  // This is an error!
   fc_assert_ret_val(fcl != NULL, NULL);
 
   return fcl;
@@ -334,15 +334,15 @@ void luascript_destroy(struct fc_lua *fcl)
   if (fcl) {
     fc_assert_ret(fcl->caller == NULL);
 
-    /* Free function data. */
+    // Free function data.
     luascript_func_free(fcl);
 
-    /* Free signal data. */
+    // Free signal data.
     luascript_signal_free(fcl);
 
-    /* Free lua state. */
+    // Free lua state.
     if (fcl->state) {
-      lua_gc(fcl->state, LUA_GCCOLLECT, 0); /* Collected garbage */
+      lua_gc(fcl->state, LUA_GCCOLLECT, 0); // Collected garbage
       lua_close(fcl->state);
     }
     delete[] fcl;
@@ -507,21 +507,21 @@ bool luascript_check_function(struct fc_lua *fcl, const char *funcname)
 int luascript_call(struct fc_lua *fcl, int narg, int nret, const char *code)
 {
   int status;
-  int base;          /* Index of function to call */
-  int traceback = 0; /* Index of traceback function  */
+  int base;          // Index of function to call
+  int traceback = 0; // Index of traceback function
 
   fc_assert_ret_val(fcl, 0);
   fc_assert_ret_val(fcl->state, 0);
 
   base = lua_gettop(fcl->state) - narg;
 
-  /* Find the traceback function, if available */
+  // Find the traceback function, if available
   luascript_traceback_func_push(fcl->state);
   if (lua_isfunction(fcl->state, -1)) {
-    lua_insert(fcl->state, base); /* insert traceback before function */
+    lua_insert(fcl->state, base); // insert traceback before function
     traceback = base;
   } else {
-    lua_pop(fcl->state, 1); /* pop non-function traceback */
+    lua_pop(fcl->state, 1); // pop non-function traceback
   }
 
   luascript_hook_start(fcl->state);
@@ -590,7 +590,7 @@ bool luascript_callback_invoke(struct fc_lua *fcl, const char *callback_name,
   fc_assert_ret_val(fcl, false);
   fc_assert_ret_val(fcl->state, false);
 
-  /* The function name */
+  // The function name
   lua_getglobal(fcl->state, callback_name);
 
   if (!lua_isfunction(fcl->state, -1)) {
@@ -604,16 +604,16 @@ bool luascript_callback_invoke(struct fc_lua *fcl, const char *callback_name,
 
   luascript_push_args(fcl, nargs, parg_types, args);
 
-  /* Call the function with nargs arguments, return 1 results */
+  // Call the function with nargs arguments, return 1 results
   if (luascript_call(fcl, nargs, 1, NULL)) {
     return false;
   }
 
-  /* Shall we stop the emission of this signal? */
+  // Shall we stop the emission of this signal?
   if (lua_isboolean(fcl->state, -1)) {
     stop_emission = lua_toboolean(fcl->state, -1);
   }
-  lua_pop(fcl->state, 1); /* pop return value */
+  lua_pop(fcl->state, 1); // pop return value
 
   return stop_emission;
 }
@@ -630,27 +630,27 @@ void luascript_remove_exported_object(struct fc_lua *fcl, void *object)
 
     /* The following is similar to tolua_release(..) in src/lib/tolua_map.c
      */
-    /* Find the userdata representing 'object' */
+    // Find the userdata representing 'object'
     lua_pushstring(fcl->state, "tolua_ubox");
-    /* stack: ubox */
+    // stack: ubox
     lua_rawget(fcl->state, LUA_REGISTRYINDEX);
-    /* stack: ubox u */
+    // stack: ubox u
     lua_pushlightuserdata(fcl->state, object);
-    /* stack: ubox ubox[u] */
+    // stack: ubox ubox[u]
     lua_rawget(fcl->state, -2);
 
     if (!lua_isnil(fcl->state, -1)) {
       fc_assert(object == tolua_tousertype(fcl->state, -1, NULL));
-      /* Change API type to 'Nonexistent' */
-      /* stack: ubox ubox[u] mt */
+      // Change API type to 'Nonexistent'
+      // stack: ubox ubox[u] mt
       tolua_getmetatable(fcl->state, "Nonexistent");
       lua_setmetatable(fcl->state, -2);
-      /* Set the userdata payload to NULL */
+      // Set the userdata payload to NULL
       *(static_cast<void **>(lua_touserdata(fcl->state, -1))) = NULL;
-      /* Remove from ubox */
-      /* stack: ubox ubox[u] u */
+      // Remove from ubox
+      // stack: ubox ubox[u] u
       lua_pushlightuserdata(fcl->state, object);
-      /* stack: ubox ubox[u] u nil */
+      // stack: ubox ubox[u] u nil
       lua_pushnil(fcl->state);
       lua_rawset(fcl->state, -4);
     }
@@ -679,7 +679,7 @@ void luascript_vars_save(struct fc_lua *fcl, struct section_file *file,
       secfile_insert_str_noescape(file, vars, "%s", section);
     }
   } else {
-    /* _freeciv_state_dump in tolua_game.pkg is busted */
+    // _freeciv_state_dump in tolua_game.pkg is busted
     luascript_log(fcl, LOG_ERROR, "lua error: Failed to dump variables");
   }
 }

@@ -17,7 +17,7 @@
    id values to unit and city pointers.
 ***************************************************************************/
 
-/* common */
+// common
 #include "world_object.h"
 
 void idex_init(struct world *iworld);

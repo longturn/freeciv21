@@ -12,7 +12,7 @@
 
 #pragma once
 
-/* common */
+// common
 #include "actions.h"
 #include "fc_types.h"
 

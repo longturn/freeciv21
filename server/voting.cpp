@@ -17,18 +17,18 @@
 
 #include <cmath>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "capability.h"
 #include "connection.h"
 #include "packets.h"
 #include "player.h"
 
-/* server */
+// server
 #include "commands.h"
 #include "console.h"
 #include "hand_gen.h"
@@ -284,7 +284,7 @@ bool conn_can_see_vote(const struct connection *pconn,
   }
 
   if (conn_is_global_observer(pconn)) {
-    /* All is visible for global observer. */
+    // All is visible for global observer.
     return true;
   }
 
@@ -356,10 +356,10 @@ struct vote *vote_new(struct connection *caller, const char *allargs,
     return NULL;
   }
 
-  /* Cancel previous vote */
+  // Cancel previous vote
   remove_vote(get_vote_by_caller(caller));
 
-  /* Make a new vote */
+  // Make a new vote
   pvote = new vote;
   pvote->caller_id = caller->id;
   pvote->command_id = command_id;
@@ -482,7 +482,7 @@ static void check_vote(struct vote *pvote)
   flags = pvote->flags;
   need_pc = pvote->need_pc;
 
-  /* Check if we should resolve the vote. */
+  // Check if we should resolve the vote.
   if (num_voters > 0) {
     /* Players that abstain essentially remove themselves from
      * the voting pool. */
@@ -492,7 +492,7 @@ static void check_vote(struct vote *pvote)
       yes_pc = static_cast<double>(pvote->yes) / base;
       no_pc = static_cast<double>(pvote->no) / base;
 
-      /* The fraction of people who have not voted at all. */
+      // The fraction of people who have not voted at all.
       rem_pc = static_cast<double>(num_voters - num_cast) / base;
     }
 
@@ -501,29 +501,29 @@ static void check_vote(struct vote *pvote)
     }
 
     if (!resolve) {
-      resolve = (/* We have enough yes votes. */
+      resolve = (// We have enough yes votes.
                  (yes_pc - need_pc > MY_EPSILON)
-                 /* We have too many no votes. */
+                 // We have too many no votes.
                  || (no_pc - 1.0 + need_pc > MY_EPSILON
                      || fabs(no_pc - 1.0 + need_pc) < MY_EPSILON)
-                 /* We can't get enough no votes. */
+                 // We can't get enough no votes.
                  || (no_pc + rem_pc - 1.0 + need_pc < -MY_EPSILON)
-                 /* We can't get enough yes votes. */
+                 // We can't get enough yes votes.
                  || (yes_pc + rem_pc - need_pc < -MY_EPSILON
                      || fabs(yes_pc + rem_pc - need_pc) < MY_EPSILON));
     }
 
-    /* Resolve if everyone voted already. */
+    // Resolve if everyone voted already.
     if (!resolve && fabs(rem_pc) < MY_EPSILON) {
       resolve = true;
     }
 
-    /* Resolve this vote if it has been around long enough. */
+    // Resolve this vote if it has been around long enough.
     if (!resolve && pvote->turn_count > 1) {
       resolve = true;
     }
 
-    /* Resolve this vote if everyone tries to abstain. */
+    // Resolve this vote if everyone tries to abstain.
     if (!resolve && fabs(base) < MY_EPSILON) {
       resolve = true;
     }
@@ -548,19 +548,19 @@ static void check_vote(struct vote *pvote)
   if (vote_is_team_only(pvote)) {
     const struct connection *caller;
 
-    /* TRANS: "Vote" as a process. Used as part of a sentence. */
+    // TRANS: "Vote" as a process. Used as part of a sentence.
     title = _("Teamvote");
     caller = vote_get_caller(pvote);
     callplr = conn_get_player(caller);
   } else {
-    /* TRANS: "Vote" as a process. Used as part of a sentence. */
+    // TRANS: "Vote" as a process. Used as part of a sentence.
     title = _("Vote");
     callplr = NULL;
   }
 
   if (passed) {
     notify_team(callplr, NULL, E_VOTE_RESOLVED, ftc_vote_passed,
-                /* TRANS: "[Vote|Teamvote] 3 \"proposed change\" is ..." */
+                // TRANS: "[Vote|Teamvote] 3 \"proposed change\" is ..."
                 _("%s %d \"%s\" is passed %d to %d with "
                   "%d abstentions and %d who did not vote."),
                 title, pvote->vote_no, pvote->cmdline, pvote->yes, pvote->no,
@@ -568,7 +568,7 @@ static void check_vote(struct vote *pvote)
   } else {
     notify_team(
         callplr, NULL, E_VOTE_RESOLVED, ftc_vote_failed,
-        /* TRANS: "[Vote|Teamvote] 3 \"proposed change\" failed ..." */
+        // TRANS: "[Vote|Teamvote] 3 \"proposed change\" failed ..."
         _("%s %d \"%s\" failed with %d against, %d for, "
           "%d abstentions and %d who did not vote."),
         title, pvote->vote_no, pvote->cmdline, pvote->no, pvote->yes,
@@ -672,7 +672,7 @@ static void remove_vote_cast(struct vote *pvote, struct vote_cast *pvc)
 
   vote_cast_list_remove(pvote->votes_cast, pvc);
   free(pvc);
-  check_vote(pvote); /* Maybe can pass */
+  check_vote(pvote); // Maybe can pass
 }
 
 /**
@@ -687,14 +687,14 @@ void connection_vote(struct connection *pconn, struct vote *pvote,
     return;
   }
 
-  /* Try to find a previous vote */
+  // Try to find a previous vote
   if ((pvc = vote_cast_find(pvote, pconn->id))) {
     pvc->vote_cast = type;
   } else if ((pvc = vote_cast_new(pvote))) {
     pvc->vote_cast = type;
     pvc->conn_id = pconn->id;
   } else {
-    /* Must never happen */
+    // Must never happen
     qCritical("Failed to create a vote cast for connection %s.",
               pconn->username);
     return;
@@ -770,7 +770,7 @@ int describe_vote(struct vote *pvote, char *buf, int buflen)
 {
   int ret = 0;
 
-  /* NB We don't handle votes with multiple flags here. */
+  // NB We don't handle votes with multiple flags here.
 
   if (pvote->flags & VCF_NODISSENT) {
     ret =

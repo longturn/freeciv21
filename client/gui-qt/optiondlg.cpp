@@ -37,7 +37,7 @@ enum {
   RESPONSE_SAVE
 };
 
-/* global value to store pointers to opened config dialogs */
+// global value to store pointers to opened config dialogs
 QHash<const struct option_set *, option_dialog *> dialog_list;
 
 /**
@@ -90,7 +90,7 @@ QString cut_helptext(const QString &text)
   QStringList sl;
   QString ret_str;
 
-  /* Remove all lines from help which has '*' in first 3 chars */
+  // Remove all lines from help which has '*' in first 3 chars
   sl = text.split('\n');
   for (const QString &s : qAsConst(sl)) {
     if (s.count() > 2) {
@@ -650,7 +650,7 @@ void option_dialog::add_option(struct option *poption)
       if (s.isEmpty()) {
         break;
       }
-      /* we store enum value in QVariant */
+      // we store enum value in QVariant
       combo->addItem(_(qUtf8Printable(s)), i);
       i++;
     }

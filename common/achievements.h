@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
+// common
 #include "fc_types.h"
 #include "name_translation.h"
 #include "player.h"
@@ -28,7 +28,7 @@ struct achievement {
   struct player *first;
   bv_player achievers;
 
-  /* Messages at server side only */
+  // Messages at server side only
   char *first_msg;
   char *cons_msg;
 };

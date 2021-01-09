@@ -29,7 +29,7 @@
 #include <QCommandLineParser>
 #include <QCoreApplication>
 
-/* utility */
+// utility
 #include "deprecations.h"
 #include "fciconv.h"
 #include "fcintl.h"
@@ -37,12 +37,12 @@
 #include "support.h"
 #include "timing.h"
 
-/* common */
+// common
 #include "capstr.h"
 #include "game.h"
 #include "version.h"
 
-/* server */
+// server
 #include "aiiface.h"
 #include "console.h"
 #include "meta.h"
@@ -86,7 +86,7 @@ static void signal_handler(int sig)
   case SIGHUP:
     save_and_exit(SIGHUP);
     break;
-#endif /* SIGHUP */
+#endif // SIGHUP
 
   case SIGTERM:
     save_and_exit(SIGTERM);
@@ -104,7 +104,7 @@ static void signal_handler(int sig)
       _exit(EXIT_FAILURE);
     }
     break;
-#endif /* SIGPIPE */
+#endif // SIGPIPE
   }
 }
 
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
                fc_strerror(fc_get_errno()));
     exit(EXIT_FAILURE);
   }
-#endif /* SIGHUP */
+#endif // SIGHUP
 
   if (SIG_ERR == signal(SIGTERM, signal_handler)) {
     fc_fprintf(stderr, _("Failed to install SIGTERM handler: %s\n"),
@@ -143,15 +143,15 @@ int main(int argc, char *argv[])
                fc_strerror(fc_get_errno()));
     exit(EXIT_FAILURE);
   }
-#endif /* SIGPIPE */
+#endif // SIGPIPE
 
   QCoreApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(VERSION_STRING);
 
-  /* initialize server */
+  // initialize server
   srv_init();
 
-  /* parse command-line arguments... */
+  // parse command-line arguments...
   srvarg.announce = ANNOUNCE_DEFAULT;
 
   game.server.meta_info.type[0] = '\0';
@@ -385,7 +385,7 @@ int main(int argc, char *argv[])
 
   con_write(C_VERSION, _("This is the server for %s"),
             freeciv_name_version());
-  /* TRANS: No full stop after the URL, could cause confusion. */
+  // TRANS: No full stop after the URL, could cause confusion.
   con_write(C_COMMENT, _("You can learn a lot about Freeciv at %s"),
             WIKI_URL);
 #ifdef HAVE_FCDB
@@ -394,14 +394,14 @@ int main(int argc, char *argv[])
                          "but no --Database given\n"));
     exit(EXIT_FAILURE);
   }
-#endif /* HAVE_FCDB */
+#endif // HAVE_FCDB
 
-  /* disallow running as root -- too dangerous */
+  // disallow running as root -- too dangerous
   dont_run_as_root(argv[0], "freeciv_server");
 
   init_our_capability();
 
-  /* have arguments, call the main server loop... */
+  // have arguments, call the main server loop...
   auto *server = new freeciv::server;
   if (!server->is_ready()) {
     delete server;

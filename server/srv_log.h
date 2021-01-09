@@ -14,11 +14,11 @@
 #include <QString>
 #include <QtGlobal>
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "support.h"
 
-/* common */
+// common
 #include "fc_types.h"
 
 // server
@@ -119,7 +119,7 @@ void timing_results_real();
 #ifdef FREECIV_DEBUG
 #define TIMING_LOG(timer, activity) timing_log_real(timer, activity)
 #define TIMING_RESULTS() timing_results_real()
-#else /* FREECIV_DEBUG */
+#else // FREECIV_DEBUG
 #define TIMING_LOG(timer, activity)
 #define TIMING_RESULTS()
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG

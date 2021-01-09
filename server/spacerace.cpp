@@ -17,12 +17,12 @@
 
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 
-/* common */
+// common
 #include "calendar.h"
 #include "events.h"
 #include "game.h"
@@ -30,7 +30,7 @@
 #include "packets.h"
 #include "spaceship.h"
 
-/* server */
+// server
 #include "notify.h"
 #include "plrhand.h"
 #include "srv_main.h"
@@ -46,7 +46,7 @@
 void spaceship_calc_derived(struct player_spaceship *ship)
 {
   int i;
-  /* these are how many are connected: */
+  // these are how many are connected:
   int fuel = 0;
   int propulsion = 0;
   int habitation = 0;

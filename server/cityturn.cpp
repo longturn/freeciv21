@@ -15,12 +15,12 @@
 #include <fc_config.h>
 #endif
 
-#include <cmath> /* exp, sqrt */
+#include <cmath> // exp, sqrt
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
@@ -30,7 +30,7 @@
 /* common/aicore */
 #include "cm.h"
 
-/* common */
+// common
 #include "achievements.h"
 #include "actiontools.h"
 #include "borders.h"
@@ -57,7 +57,7 @@
 /* common/scriptcore */
 #include "luascript_types.h"
 
-/* server */
+// server
 #include "citizenshand.h"
 #include "citytools.h"
 #include "cityturn.h"
@@ -80,7 +80,7 @@
 /* server/scripting */
 #include "script_server.h"
 
-/* Queue for pending city_refresh() */
+// Queue for pending city_refresh()
 static struct city_list *city_refresh_queue = NULL;
 
 /* The game is currently considering to remove the listed units because of
@@ -107,7 +107,7 @@ static const struct unit_type *unit_upgrades_to(struct city *pcity,
                                                 const struct unit_type *id);
 static void upgrade_unit_prod(struct city *pcity);
 
-/* Helper struct for associating a building to a city. */
+// Helper struct for associating a building to a city.
 struct cityimpr {
   struct city *pcity;
   struct impr_type *pimprove;
@@ -158,12 +158,12 @@ bool city_refresh(struct city *pcity)
   pcity->server.needs_refresh = false;
 
   retval = city_map_update_radius_sq(pcity);
-  city_units_upkeep(pcity); /* update unit upkeep */
+  city_units_upkeep(pcity); // update unit upkeep
   city_refresh_from_main_map(pcity, NULL);
   city_style_refresh(pcity);
 
   if (retval) {
-    /* Force a sync of the city after the change. */
+    // Force a sync of the city after the change.
     send_city_info(city_owner(pcity), pcity);
   }
 
@@ -259,7 +259,7 @@ void remove_obsolete_buildings_city(struct city *pcity, bool refresh)
       auto_arrange_workers(pcity);
     }
     send_city_info(pplayer, pcity);
-    send_player_info_c(pplayer, NULL); /* Send updated gold to all */
+    send_player_info_c(pplayer, NULL); // Send updated gold to all
   }
 }
 
@@ -283,7 +283,7 @@ void apply_cmresult_to_city(struct city *pcity, const struct cm_result *cmr)
 {
   struct tile *pcenter = city_tile(pcity);
 
-  /* Now apply results */
+  // Now apply results
   city_tile_iterate_skip_free_worked(city_map_radius_sq_get(pcity), pcenter,
                                      ptile, idx, x, y)
   {
@@ -329,20 +329,20 @@ static void set_default_city_manager(struct cm_parameter *cmp,
       cmp->factor[O_FOOD] = 15;
     } else {
       if (city_granary_size(city_size_get(pcity)) == pcity->food_stock) {
-        /* We don't need more food if the granary is full. */
+        // We don't need more food if the granary is full.
         cmp->factor[O_FOOD] = 0;
       } else {
         cmp->factor[O_FOOD] = 10;
       }
     }
   } else {
-    /* Growing to size 2 is the highest priority. */
+    // Growing to size 2 is the highest priority.
     cmp->factor[O_FOOD] = 20;
   }
   cmp->factor[O_SHIELD] = 5;
   cmp->factor[O_TRADE] = 0; /* Trade only provides gold/science. */
   cmp->factor[O_GOLD] = 2;
-  cmp->factor[O_LUXURY] = 0; /* Luxury only influences happiness. */
+  cmp->factor[O_LUXURY] = 0; // Luxury only influences happiness.
   cmp->factor[O_SCIENCE] = 2;
   cmp->happy_factor = 0;
 
@@ -385,7 +385,7 @@ void auto_arrange_workers(struct city *pcity)
   pcity->server.needs_arrange = false;
   city_thaw_workers(pcity);
 
-  /* Now start actually rearranging. */
+  // Now start actually rearranging.
   city_refresh(pcity);
 
   sanity_check_city(pcity);
@@ -405,7 +405,7 @@ void auto_arrange_workers(struct city *pcity)
 
   if (!cmr->found_a_valid) {
     if (pcity->cm_parameter) {
-      /* If player-defined parameters fail, cancel and notify player. */
+      // If player-defined parameters fail, cancel and notify player.
       free(pcity->cm_parameter);
       pcity->cm_parameter = NULL;
 
@@ -415,7 +415,7 @@ void auto_arrange_workers(struct city *pcity)
                       "for %s. Passing back control."),
                     city_link(pcity));
     }
-    /* Drop surpluses and try again. */
+    // Drop surpluses and try again.
     cmp.minimal_surplus[O_FOOD] = 0;
     cmp.minimal_surplus[O_SHIELD] = 0;
     cmp.minimal_surplus[O_GOLD] = -FC_INFINITY;
@@ -445,7 +445,7 @@ void auto_arrange_workers(struct city *pcity)
   apply_cmresult_to_city(pcity, cmr);
 
   if (pcity->server.debug) {
-    /* Print debug output if requested. */
+    // Print debug output if requested.
     cm_print_city(pcity);
     cm_print_result(cmr);
   }
@@ -504,7 +504,7 @@ static void city_turn_notify(const struct city *pcity,
         && 0 < get_current_construction_bonus(pcity, EFT_GROWTH_FOOD,
                                               RPT_CERTAIN)
         && 0 < pcity->surplus[O_SHIELD]) {
-      /* From the check above, the surplus must always be positive. */
+      // From the check above, the surplus must always be positive.
       turns_granary =
           (impr_build_shield_cost(pcity, pimprove) - pcity->shield_stock)
           / pcity->surplus[O_SHIELD];
@@ -604,7 +604,7 @@ void update_city_activities(struct player *pplayer)
     {
       citizens_convert(pcity);
 
-      /* Cancel traderoutes that cannot exist any more */
+      // Cancel traderoutes that cannot exist any more
       trade_routes_iterate_safe(pcity, proute)
       {
         struct city *tcity = game_city_by_number(proute->partner);
@@ -639,7 +639,7 @@ void update_city_activities(struct player *pplayer)
       }
       trade_routes_iterate_safe_end;
 
-      /* Add cities to array for later random order handling */
+      // Add cities to array for later random order handling
       cities[i++] = pcity;
     }
     city_list_iterate_end;
@@ -655,10 +655,10 @@ void update_city_activities(struct player *pplayer)
      *                     the treasury is not balance units and buildings
      *                     are sold. */
 
-    /* Iterate over cities in a random order. */
+    // Iterate over cities in a random order.
     while (i > 0) {
       r = fc_rand(i);
-      /* update unit upkeep */
+      // update unit upkeep
       city_units_upkeep(cities[r]);
       update_city_activity(cities[r]);
       cities[r] = cities[--i];
@@ -673,17 +673,17 @@ void update_city_activities(struct player *pplayer)
       case GOLD_UPKEEP_CITY:
         break;
       case GOLD_UPKEEP_MIXED:
-        /* Nation pays for units. */
+        // Nation pays for units.
         player_balance_treasury_units(pplayer);
         break;
       case GOLD_UPKEEP_NATION:
-        /* Nation pays for units and buildings. */
+        // Nation pays for units and buildings.
         player_balance_treasury_units_and_buildings(pplayer);
         break;
       }
     }
 
-    /* Should not happen. */
+    // Should not happen.
     fc_assert(pplayer->economic.gold >= 0);
   }
 
@@ -697,7 +697,7 @@ void update_city_activities(struct player *pplayer)
   }
 
 #if 0
-  /* Uncomment to unbalance the game, like in civ1 (CLG). */
+  // Uncomment to unbalance the game, like in civ1 (CLG).
   if (pplayer->got_tech && pplayer->research->researched > 0) {
     pplayer->research->researched = 0;
   }
@@ -733,12 +733,12 @@ static bool upkeep_kill_unit(struct unit *punit, Output_type_id outp,
 
   punit_id = punit->id;
 
-  /* Try to perform this unit's can't upkeep actions. */
+  // Try to perform this unit's can't upkeep actions.
   action_auto_perf_unit_do(AAPC_UNIT_UPKEEP, punit, NULL,
                            get_output_type(outp), NULL, NULL, NULL, NULL);
 
   if (wipe_in_the_end && unit_is_alive(punit_id)) {
-    /* No forced action was able to kill the unit. Finish the job. */
+    // No forced action was able to kill the unit. Finish the job.
     wipe_unit(punit, wipe_reason, NULL);
   }
 
@@ -817,20 +817,20 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
   map_update_border(pcity->tile, pcity->owner, old_radius_sq,
                     tile_border_source_radius_sq(pcity->tile));
 
-  /* Cap the food stock at the new granary size. */
+  // Cap the food stock at the new granary size.
   if (pcity->food_stock > city_granary_size(city_size_get(pcity))) {
     pcity->food_stock = city_granary_size(city_size_get(pcity));
   }
 
-  /* First try to kill off the specialists */
+  // First try to kill off the specialists
   loss_remain = pop_loss - city_reduce_specialists(pcity, pop_loss);
 
   if (loss_remain > 0) {
-    /* Take it out on workers */
+    // Take it out on workers
     loss_remain -= city_reduce_workers(pcity, loss_remain);
   }
 
-  /* Update citizens. */
+  // Update citizens.
   citizens_update(pcity, NULL);
 
   /* Update number of people in each feelings category.
@@ -839,7 +839,7 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
 
   auto_arrange_workers(pcity);
 
-  /* Send city data. */
+  // Send city data.
   sync_cities();
 
   fc_assert_ret_val_msg(0 == loss_remain, true,
@@ -848,7 +848,7 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
                         loss_remain, pop_loss, city_name_get(pcity),
                         city_size_get(pcity));
 
-  /* Update cities that have trade routes with us */
+  // Update cities that have trade routes with us
   trade_partners_iterate(pcity, pcity2)
   {
     if (city_refresh(pcity2)) {
@@ -931,14 +931,14 @@ static bool city_increase_size(struct city *pcity,
   int savings_pct = granary_savings(pcity);
   bool have_square = false;
   bool rapture_grow =
-      city_rapture_grow(pcity); /* check before size increase! */
+      city_rapture_grow(pcity); // check before size increase!
   struct tile *pcenter = city_tile(pcity);
   struct player *powner = city_owner(pcity);
   const struct impr_type *pimprove = pcity->production.value.building;
   int saved_id = pcity->id;
 
   if (!city_can_grow_to(pcity, city_size_get(pcity) + 1)) {
-    /* need improvement */
+    // need improvement
     if (get_current_construction_bonus(pcity, EFT_SIZE_ADJ, RPT_CERTAIN) > 0
         || get_current_construction_bonus(pcity, EFT_SIZE_UNLIMIT,
                                           RPT_CERTAIN)
@@ -952,7 +952,7 @@ static bool city_increase_size(struct city *pcity,
                     _("%s needs an improvement to grow beyond size %d."),
                     city_link(pcity), city_size_get(pcity));
     }
-    /* Granary can only hold so much */
+    // Granary can only hold so much
     new_food =
         (city_granary_size(city_size_get(pcity))
          * (100 * 100 - game.server.aqueductloss * (100 - savings_pct))
@@ -963,7 +963,7 @@ static bool city_increase_size(struct city *pcity,
 
   city_size_add(pcity, 1);
 
-  /* Do not empty food stock if city is growing by celebrating */
+  // Do not empty food stock if city is growing by celebrating
   if (rapture_grow) {
     new_food = city_granary_size(city_size_get(pcity));
   } else {
@@ -974,11 +974,11 @@ static bool city_increase_size(struct city *pcity,
   /* If there is enough food, and the city is big enough,
    * make new citizens into scientists or taxmen -- Massimo */
 
-  /* Ignore food if no square can be worked */
+  // Ignore food if no square can be worked
   city_tile_iterate_skip_free_worked(city_map_radius_sq_get(pcity), pcenter,
                                      ptile, _index, _x, _y)
   {
-    if (tile_worked(ptile) != pcity /* quick test */
+    if (tile_worked(ptile) != pcity // quick test
         && city_can_work_tile(pcity, ptile)) {
       have_square = true;
     }
@@ -992,18 +992,18 @@ static bool city_increase_size(struct city *pcity,
              && is_city_option_set(pcity, CITYO_GOLD_SPECIALISTS)) {
     pcity->specialists[best_specialist(O_GOLD, pcity)]++;
   } else {
-    pcity->specialists[DEFAULT_SPECIALIST]++; /* or else city is !sane */
+    pcity->specialists[DEFAULT_SPECIALIST]++; // or else city is !sane
   }
 
-  /* Update citizens. */
+  // Update citizens.
   citizens_update(pcity, nationality);
 
-  /* Refresh the city data; this also checks the squared city radius. */
+  // Refresh the city data; this also checks the squared city radius.
   city_refresh(pcity);
 
   auto_arrange_workers(pcity);
 
-  /* Update cities that have trade routes with us */
+  // Update cities that have trade routes with us
   trade_partners_iterate(pcity, pcity2)
   {
     if (city_refresh(pcity2)) {
@@ -1023,7 +1023,7 @@ static bool city_increase_size(struct city *pcity,
    * increase. */
   script_server_signal_emit("city_growth", pcity, city_size_get(pcity));
   if (city_exist(saved_id)) {
-    /* Script didn't destroy this city */
+    // Script didn't destroy this city
     sanity_check_city(pcity);
   }
   sync_cities();
@@ -1043,10 +1043,10 @@ bool city_change_size(struct city *pcity, citizens size,
     int old_size = city_size_get(pcity);
     int real_change;
 
-    /* Increase city size until size reached, or increase fails */
+    // Increase city size until size reached, or increase fails
     while (size > city_size_get(pcity)
            && city_increase_size(pcity, nationality)) {
-      /* city_increase_size() does all the work. */
+      // city_increase_size() does all the work.
     }
 
     real_change = city_size_get(pcity) - old_size;
@@ -1089,7 +1089,7 @@ static void city_populate(struct city *pcity, struct player *nationality)
                     ftc_server,
                     _("A recent plague outbreak prevents growth in %s."),
                     city_link(pcity));
-      /* Lose excess food */
+      // Lose excess food
       pcity->food_stock = MIN(pcity->food_stock, granary_size);
     } else {
       bool success;
@@ -1202,7 +1202,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
           script_server_signal_emit(signal_name, ptarget, pcity,
                                     "need_tech");
         } else {
-          /* While techs can be unlearned, this isn't useful feedback */
+          // While techs can be unlearned, this isn't useful feedback
           success = false;
         }
         break;
@@ -1218,7 +1218,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
           script_server_signal_emit(signal_name, ptarget, pcity,
                                     "need_techflag");
         } else {
-          /* While techs can be unlearned, this isn't useful feedback */
+          // While techs can be unlearned, this isn't useful feedback
           success = false;
         }
         break;
@@ -1298,7 +1298,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
           script_server_signal_emit(signal_name, ptarget, pcity,
                                     "need_achievement");
         } else {
-          /* Can't unachieve things. */
+          // Can't unachieve things.
           success = false;
         }
         break;
@@ -1366,11 +1366,11 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
         }
         break;
       case VUT_NATION:
-        /* Nation can be required at Alliance range, which may change. */
+        // Nation can be required at Alliance range, which may change.
         if (preq->present) {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
-              /* TRANS: "%s nation" is adjective */
+              // TRANS: "%s nation" is adjective
               Q_("?nation:%s can't build %s from the worklist; "
                  "%s nation is required. Postponing..."),
               city_link(pcity), tgt_name,
@@ -1394,7 +1394,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
         if (preq->present) {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
-              /* TRANS: "%s nation" is adjective */
+              // TRANS: "%s nation" is adjective
               Q_("?ngroup:%s can't build %s from the worklist; "
                  "%s nation is required. Postponing..."),
               city_link(pcity), tgt_name,
@@ -1442,7 +1442,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
         if (preq->present) {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
-              /* TRANS: Latter %s is citizen nationality */
+              // TRANS: Latter %s is citizen nationality
               _("%s can't build %s from the worklist; "
                 "only city with %s may build this. Postponing..."),
               city_link(pcity), tgt_name,
@@ -1452,7 +1452,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
-              /* TRANS: Latter %s is citizen nationality */
+              // TRANS: Latter %s is citizen nationality
               _("%s can't build %s from the worklist; "
                 "only city without %s may build this. Postponing..."),
               city_link(pcity), tgt_name,
@@ -1518,7 +1518,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
           script_server_signal_emit(signal_name, ptarget, pcity,
                                     "need_minculture");
         } else {
-          /* What has been written may not be unwritten. */
+          // What has been written may not be unwritten.
           success = false;
         }
         break;
@@ -1586,7 +1586,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
         }
         break;
       case VUT_AI_LEVEL:
-        /* Can't change AI level. */
+        // Can't change AI level.
         success = false;
         break;
       case VUT_TERRAINCLASS:
@@ -1722,17 +1722,17 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
       case VUT_ACTION:
       case VUT_OTYPE:
       case VUT_SPECIALIST:
-      case VUT_TERRAINALTER: /* XXX could do this in principle */
+      case VUT_TERRAINALTER: // XXX could do this in principle
       case VUT_CITYTILE:
       case VUT_CITYSTATUS:
-        /* Will only happen with a bogus ruleset. */
+        // Will only happen with a bogus ruleset.
         qCritical("worklist_change_build_target() has bogus preq");
         break;
       case VUT_MINYEAR:
         if (preq->present) {
           notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
                         ftc_server,
-                        /* TRANS: last %s is a date */
+                        // TRANS: last %s is a date
                         _("%s can't build %s from the worklist; "
                           "only available from %s. Postponing..."),
                         city_link(pcity), tgt_name,
@@ -1740,7 +1740,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
           script_server_signal_emit(signal_name, ptarget, pcity,
                                     "need_minyear");
         } else {
-          /* Can't go back in time. */
+          // Can't go back in time.
           success = false;
         }
         break;
@@ -1803,7 +1803,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           preq->source.value.ssetval, preq->present)));
         script_server_signal_emit(signal_name, ptarget, pcity,
                                   "need_setting");
-        /* Don't assume that the server setting will be changed. */
+        // Don't assume that the server setting will be changed.
         success = false;
         break;
       case VUT_AGE:
@@ -1815,7 +1815,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                         city_link(pcity), tgt_name, preq->source.value.age);
           script_server_signal_emit(signal_name, ptarget, pcity, "need_age");
         } else {
-          /* Can't go back in time. */
+          // Can't go back in time.
           success = false;
         }
         break;
@@ -1832,9 +1832,9 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
       break;
     }
 
-    /* Almost all cases emit signal in the end, so city check needed. */
+    // Almost all cases emit signal in the end, so city check needed.
     if (!city_exist(saved_id)) {
-      /* Some script has removed city */
+      // Some script has removed city
       return false;
     }
   }
@@ -1866,11 +1866,11 @@ static bool worklist_change_build_target(struct player *pplayer,
   int i;
   int saved_id = pcity->id;
   bool city_checked =
-      true; /* This is used to avoid spurious city_exist() calls */
+      true; // This is used to avoid spurious city_exist() calls
   struct worklist *pwl = &pcity->worklist;
 
   if (worklist_is_empty(pwl)) {
-    /* Nothing in the worklist; bail now. */
+    // Nothing in the worklist; bail now.
     return false;
   }
 
@@ -1893,7 +1893,7 @@ static bool worklist_change_build_target(struct player *pplayer,
     i++;
 
     if (success) {
-      break; /* while */
+      break; // while
     }
 
     switch (target.kind) {
@@ -1904,7 +1904,7 @@ static bool worklist_change_build_target(struct player *pplayer,
       /* Maybe we can just upgrade the target to what the city /can/ build.
        */
       if (U_NOT_OBSOLETED == pupdate) {
-        /* Nope, we're stuck.  Skip this item from the worklist. */
+        // Nope, we're stuck.  Skip this item from the worklist.
         if (ptarget->require_advance != NULL
             && TECH_KNOWN
                    != research_invention_state(
@@ -1919,7 +1919,7 @@ static bool worklist_change_build_target(struct player *pplayer,
           script_server_signal_emit("unit_cant_be_built", ptarget, pcity,
                                     "need_tech");
         } else {
-          /* Unknown or requirement from vector. */
+          // Unknown or requirement from vector.
           success = worklist_item_postpone_req_vec(&target, pcity, pplayer,
                                                    saved_id);
         }
@@ -1942,14 +1942,14 @@ static bool worklist_change_build_target(struct player *pplayer,
                                   "never");
         if (city_exist(saved_id)) {
           city_checked = true;
-          /* Purge this worklist item. */
+          // Purge this worklist item.
           i--;
           worklist_remove(pwl, i);
         } else {
           city_checked = false;
         }
       } else {
-        /* Yep, we can go after pupdate instead.  Joy! */
+        // Yep, we can go after pupdate instead.  Joy!
         notify_player(pplayer, city_tile(pcity), E_WORKLIST, ftc_server,
                       _("Production of %s is upgraded to %s in %s."),
                       utype_name_translation(ptarget),
@@ -1962,15 +1962,15 @@ static bool worklist_change_build_target(struct player *pplayer,
       const struct impr_type *ptarget = target.value.building;
       const struct impr_type *pupdate = building_upgrades_to(pcity, ptarget);
 
-      /* If the city can never build this improvement, drop it. */
+      // If the city can never build this improvement, drop it.
       success = can_city_build_improvement_later(pcity, pupdate);
 
       /* Maybe this improvement has been obsoleted by something that
          we can build. */
       if (!success) {
-        /* Nope, no use.  *sigh*  */
+        // Nope, no use.  *sigh*
 
-        /* Can it be postponed? */
+        // Can it be postponed?
         if (can_city_build_improvement_later(pcity, ptarget)) {
           success = worklist_item_postpone_req_vec(&target, pcity, pplayer,
                                                    saved_id);
@@ -1978,16 +1978,16 @@ static bool worklist_change_build_target(struct player *pplayer,
           /* Almost all cases emit signal in the end, so city check needed.
            */
           if (!city_exist(saved_id)) {
-            /* Some script has removed city */
+            // Some script has removed city
             return false;
           }
           city_checked = true;
         } else {
-          /* Can't be built later. */
+          // Can't be built later.
           success = false;
         }
       } else if (success) {
-        /* Hey, we can upgrade the improvement! */
+        // Hey, we can upgrade the improvement!
         notify_player(pplayer, city_tile(pcity), E_WORKLIST, ftc_server,
                       _("Production of %s is upgraded to %s in %s."),
                       city_improvement_name_translation(pcity, ptarget),
@@ -1998,7 +1998,7 @@ static bool worklist_change_build_target(struct player *pplayer,
       }
 
       if (!success) {
-        /* Never in a million years. */
+        // Never in a million years.
         notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
                       ftc_server,
                       _("%s can't build %s from the worklist. Purging..."),
@@ -2008,7 +2008,7 @@ static bool worklist_change_build_target(struct player *pplayer,
                                   "never");
         if (city_exist(saved_id)) {
           city_checked = true;
-          /* Purge this worklist item. */
+          // Purge this worklist item.
           i--;
           worklist_remove(pwl, i);
         } else {
@@ -2018,16 +2018,16 @@ static bool worklist_change_build_target(struct player *pplayer,
       break;
     }
     default:
-      /* skip useless target */
+      // skip useless target
       qCritical("worklist_change_build_target() has unrecognized "
                 "target kind (%d)",
                 target.kind);
       break;
     };
-  } /* while */
+  } // while
 
   if (success) {
-    /* All okay.  Switch targets. */
+    // All okay.  Switch targets.
     change_build_target(pplayer, pcity, &target, E_WORKLIST);
 
     /* i is the index immediately _after_ the item we're changing to.
@@ -2039,7 +2039,7 @@ static bool worklist_change_build_target(struct player *pplayer,
     /* There *was* something in the worklist, but it's empty now.  Bug the
        player about it. */
     notify_player(pplayer, city_tile(pcity), E_WORKLIST, ftc_server,
-                  /* TRANS: The <city> worklist .... */
+                  // TRANS: The <city> worklist ....
                   _("The %s worklist is now empty."), city_link(pcity));
   }
 
@@ -2053,7 +2053,7 @@ static bool worklist_change_build_target(struct player *pplayer,
  */
 void choose_build_target(struct player *pplayer, struct city *pcity)
 {
-  /* Pick the next thing off the worklist. */
+  // Pick the next thing off the worklist.
   if (worklist_change_build_target(pplayer, pcity)) {
     return;
   }
@@ -2075,7 +2075,7 @@ void choose_build_target(struct player *pplayer, struct city *pcity)
   case VUT_IMPROVEMENT:
     if (can_city_build_improvement_now(pcity,
                                        pcity->production.value.building)) {
-      /* We can build space and coinage again, and possibly others. */
+      // We can build space and coinage again, and possibly others.
       log_base(LOG_BUILD_TARGET, "%s repeats building %s",
                city_name_get(pcity),
                improvement_rule_name(pcity->production.value.building));
@@ -2083,11 +2083,11 @@ void choose_build_target(struct player *pplayer, struct city *pcity)
     }
     break;
   default:
-    /* fallthru */
+    // fallthru
     break;
   };
 
-  /* Find *something* to do! */
+  // Find *something* to do!
   log_debug("Trying advisor_choose_build.");
   advisor_choose_build(pplayer, pcity);
   log_debug("Advisor_choose_build didn't kill us.");
@@ -2201,7 +2201,7 @@ static bool city_distribute_surplus_shields(struct player *pplayer,
                         city_link(pcity), punit_link);
         }
 
-        /* pcity->surplus[O_SHIELD] is automatically updated. */
+        // pcity->surplus[O_SHIELD] is automatically updated.
       }
     }
     unit_list_iterate_safe_end;
@@ -2227,14 +2227,14 @@ static bool city_distribute_surplus_shields(struct player *pplayer,
           return false;
         }
 
-        /* No upkeep for the unit this turn. */
+        // No upkeep for the unit this turn.
         pcity->surplus[O_SHIELD] += upkeep;
       }
     }
     unit_list_iterate_safe_end;
   }
 
-  /* Now we confirm changes made last turn. */
+  // Now we confirm changes made last turn.
   pcity->shield_stock += pcity->surplus[O_SHIELD];
   pcity->before_change_shields = pcity->shield_stock;
   pcity->last_turns_shield_surplus = pcity->surplus[O_SHIELD];
@@ -2307,7 +2307,7 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
     pcity->before_change_shields -= cost;
     pcity->shield_stock -= cost;
     pcity->turn_last_built = game.info.turn;
-    /* to eliminate micromanagement */
+    // to eliminate micromanagement
     if (is_great_wonder(pimprove)) {
       notify_player(NULL, city_tile(pcity), E_WONDER_BUILD, ftc_server,
                     _("The %s have finished building %s in %s."),
@@ -2322,7 +2322,7 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
     script_server_signal_emit("building_built", pimprove, pcity);
 
     if (!city_exist(saved_id)) {
-      /* Script removed city */
+      // Script removed city
       return false;
     }
 
@@ -2353,7 +2353,7 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
 
         give_immediate_free_tech(presearch, tech);
         notify_research(presearch, NULL, E_TECH_GAIN, ftc_server,
-                        /* TRANS: Tech from building (Darwin's Voyage) */
+                        // TRANS: Tech from building (Darwin's Voyage)
                         Q_("?frombldg:Acquired %s from %s."),
                         qUtf8Printable(adv_name), provider);
 
@@ -2373,16 +2373,16 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
       pplayer->spaceship.state = SSHIP_STARTED;
     }
     if (space_part) {
-      /* space ship part build */
+      // space ship part build
       send_spaceship_info(pplayer, NULL);
     } else {
-      /* Update city data. */
+      // Update city data.
       if (city_refresh(pcity)) {
         auto_arrange_workers(pcity);
       }
     }
 
-    /* Move to the next thing in the worklist */
+    // Move to the next thing in the worklist
     choose_build_target(pplayer, pcity);
   }
 
@@ -2409,7 +2409,7 @@ static struct unit *city_create_unit(struct city *pcity,
   pplayer->score.units_built++;
   saved_unit_id = punit->id;
 
-  /* If city has a rally point set, give the unit a move order. */
+  // If city has a rally point set, give the unit a move order.
   if (pcity->rally_point.length) {
     punit->has_orders = true;
     punit->orders.length = pcity->rally_point.length;
@@ -2463,7 +2463,7 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
                   _("%s is building %s, which is no longer available."),
                   city_link(pcity), utype_name_translation(utype));
 
-    /* Log before signal emitting, so pointers are certainly valid */
+    // Log before signal emitting, so pointers are certainly valid
     qDebug("%s %s tried to build %s, which is not available.",
            nation_rule_name(nation_of_city(pcity)), city_name_get(pcity),
            utype_rule_name(utype));
@@ -2476,7 +2476,7 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
     int pop_cost = utype_pop_value(utype);
     struct unit *punit;
 
-    /* Should we disband the city? -- Massimo */
+    // Should we disband the city? -- Massimo
     if (city_size_get(pcity) == pop_cost
         && is_city_option_set(pcity, CITYO_DISBAND)) {
       return !disband_city(pcity);
@@ -2484,7 +2484,7 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
 
     if (city_size_get(pcity) <= pop_cost) {
       notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
-                    /* TRANS: city ... utype ... size ... pop_cost */
+                    // TRANS: city ... utype ... size ... pop_cost
                     _("%s can't build %s yet. "
                       "(city size: %d, unit population cost: %d)"),
                     city_link(pcity), utype_name_translation(utype),
@@ -2496,13 +2496,13 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
 
     fc_assert(pop_cost == 0 || city_size_get(pcity) >= pop_cost);
 
-    /* don't update turn_last_built if we returned above */
+    // don't update turn_last_built if we returned above
     pcity->turn_last_built = game.info.turn;
 
-    /* check if we can build more than one unit (effect City_Build_Slots) */
+    // check if we can build more than one unit (effect City_Build_Slots)
     (void) city_production_build_units(pcity, false, &num_units);
 
-    /* We should be able to build at least one (by checks above) */
+    // We should be able to build at least one (by checks above)
     fc_assert(num_units >= 1);
 
     for (i = 0; i < num_units; i++) {
@@ -2534,12 +2534,12 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
         }
       }
 
-      /* to eliminate micromanagement, we only subtract the unit's cost */
+      // to eliminate micromanagement, we only subtract the unit's cost
       pcity->before_change_shields -= unit_shield_cost;
       pcity->shield_stock -= unit_shield_cost;
 
       if (pop_cost > 0) {
-        /* Additional message if the unit has population cost. */
+        // Additional message if the unit has population cost.
         notify_player(
             pplayer, city_tile(pcity), E_UNIT_BUILT_POP_COST, ftc_server,
             /* TRANS: "<unit> cost... <city> shrinks..."
@@ -2566,7 +2566,7 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
         FCPP_FREE(pcity->rally_point.orders);
       }
 
-      /* Done building this unit; time to move on to the next. */
+      // Done building this unit; time to move on to the next.
       choose_build_target(pplayer, pcity);
     }
   }
@@ -2592,7 +2592,7 @@ static bool city_build_stuff(struct player *pplayer, struct city *pcity)
   case VUT_UTYPE:
     return city_build_unit(pplayer, pcity);
   default:
-    /* must never happen! */
+    // must never happen!
     fc_assert(false);
     break;
   };
@@ -2637,7 +2637,7 @@ static bool sell_random_building(struct player *pplayer,
 
   cityimpr_list_remove(imprs, pcityimpr);
 
-  /* Get back the gold upkeep that was already paid this turn. */
+  // Get back the gold upkeep that was already paid this turn.
   pplayer->economic.gold +=
       city_improvement_upkeep(pcityimpr->pcity, pcityimpr->pimprove);
 
@@ -2660,16 +2660,16 @@ static void uk_rem_gold_callback(struct unit *punit)
 {
   int gold_upkeep;
 
-  /* Remove the unit from uk_rem_gold. */
+  // Remove the unit from uk_rem_gold.
   unit_list_remove(uk_rem_gold, punit);
 
   gold_upkeep = punit->server.upkeep_payed[O_GOLD];
 
-  /* All units in uk_rem_gold should have gold upkeep! */
+  // All units in uk_rem_gold should have gold upkeep!
   fc_assert_ret_msg(gold_upkeep > 0, "%s has %d gold upkeep",
                     unit_rule_name(punit), gold_upkeep);
 
-  /* Get the upkeep gold back. */
+  // Get the upkeep gold back.
   unit_owner(punit)->economic.gold += gold_upkeep;
 }
 
@@ -2679,10 +2679,10 @@ static void uk_rem_gold_callback(struct unit *punit)
  */
 static void uk_rem_gold_append(struct unit *punit)
 {
-  /* Make the unit aware that it is on the uk_rem_gold list. */
+  // Make the unit aware that it is on the uk_rem_gold list.
   unit_set_removal_callback(punit, uk_rem_gold_callback);
 
-  /* Add the unit to the list. */
+  // Add the unit to the list.
   unit_list_append(uk_rem_gold, punit);
 }
 
@@ -2694,12 +2694,12 @@ static void unit_list_referred_destroy(struct unit_list *punitlist)
 {
   unit_list_iterate(punitlist, punit)
   {
-    /* Clear the unit's knowledge of the list. */
+    // Clear the unit's knowledge of the list.
     unit_unset_removal_callback(punit);
   }
   unit_list_iterate_end;
 
-  /* Destroy the list it self. */
+  // Destroy the list it self.
   unit_list_destroy(punitlist);
 }
 
@@ -2769,7 +2769,7 @@ static struct unit *sell_random_unit(struct player *pplayer,
     const char *punit_link = unit_tile_link(punit);
 #ifdef FREECIV_DEBUG
     const char *punit_logname = unit_name_translation(punit);
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
     struct tile *utile = unit_tile(punit);
 
     if (upkeep_kill_unit(punit, O_GOLD, ULR_SOLD,
@@ -2783,7 +2783,7 @@ static struct unit *sell_random_unit(struct player *pplayer,
                     _("Not enough gold. %s disbanded."), punit_link);
       log_debug("%s: unit sold (%s)", player_name(pplayer), punit_logname);
     } else {
-      /* Not able to get rid of punit */
+      // Not able to get rid of punit
       return NULL;
     }
   }
@@ -2843,7 +2843,7 @@ player_balance_treasury_units_and_buildings(struct player *pplayer)
     sell_unit = !sell_unit;
   }
 
-  /* Free remaining entries from list */
+  // Free remaining entries from list
   cityimpr_list_iterate(pimprlist, pimpr) { FC_FREE(pimpr); }
   cityimpr_list_iterate_end;
 
@@ -2885,7 +2885,7 @@ static bool player_balance_treasury_units(struct player *pplayer)
 
   while (pplayer->economic.gold < 0
          && sell_random_unit(pplayer, uk_rem_gold)) {
-    /* all done in sell_random_unit() */
+    // all done in sell_random_unit()
   }
 
   if (pplayer->economic.gold < 0) {
@@ -2915,7 +2915,7 @@ static bool city_balance_treasury_buildings(struct city *pcity)
   pplayer = city_owner(pcity);
   pimprlist = cityimpr_list_new();
 
-  /* Create a vector of all buildings that can be sold. */
+  // Create a vector of all buildings that can be sold.
   city_built_iterate(pcity, pimprove)
   {
     if (can_city_sell_building(pcity, pimprove)) {
@@ -2928,13 +2928,13 @@ static bool city_balance_treasury_buildings(struct city *pcity)
   }
   city_built_iterate_end;
 
-  /* Try to sell some buildings. */
+  // Try to sell some buildings.
   while (pplayer->economic.gold < 0
          && sell_random_building(pplayer, pimprlist)) {
-    /* all done in sell_random_building */
+    // all done in sell_random_building
   }
 
-  /* Free remaining entries from list */
+  // Free remaining entries from list
   cityimpr_list_iterate(pimprlist, pimpr) { FC_FREE(pimpr); }
   cityimpr_list_iterate_end;
 
@@ -2962,7 +2962,7 @@ static bool city_balance_treasury_units(struct city *pcity)
   pplayer = city_owner(pcity);
   uk_rem_gold = unit_list_new();
 
-  /* Create a vector of all supported units with gold upkeep. */
+  // Create a vector of all supported units with gold upkeep.
   unit_list_iterate(pcity->units_supported, punit)
   {
     if (punit->server.upkeep_payed[O_GOLD] > 0) {
@@ -2971,10 +2971,10 @@ static bool city_balance_treasury_units(struct city *pcity)
   }
   unit_list_iterate_end;
 
-  /* Still not enough gold, so try "selling" some units. */
+  // Still not enough gold, so try "selling" some units.
   while (pplayer->economic.gold < 0
          && sell_random_unit(pplayer, uk_rem_gold)) {
-    /* all done in sell_random_unit() */
+    // all done in sell_random_unit()
   }
 
   /* If we get here the player has negative gold, but hopefully
@@ -2996,7 +2996,7 @@ static bool place_pollution(struct city *pcity, enum extra_cause cause)
   int k = 100;
 
   while (k > 0) {
-    /* place pollution on a random city tile */
+    // place pollution on a random city tile
     int cx, cy;
     int tile_id = fc_rand(city_map_tiles(city_radius_sq));
     struct extra_type *pextra;
@@ -3004,7 +3004,7 @@ static bool place_pollution(struct city *pcity, enum extra_cause cause)
     fc_assert_ret_val(
         city_tile_index_to_xy(&cx, &cy, tile_id, city_radius_sq), false);
 
-    /* check for a a real map position */
+    // check for a a real map position
     if (!(ptile = city_map_to_tile(pcenter, city_radius_sq, cx, cy))) {
       continue;
     }
@@ -3047,9 +3047,9 @@ static void check_pollution(struct city *pcity)
 int city_incite_cost(struct player *pplayer, struct city *pcity)
 {
   int dist, size;
-  double cost; /* Intermediate values can get very large */
+  double cost; // Intermediate values can get very large
 
-  /* Gold factor */
+  // Gold factor
   cost = city_owner(pcity)->economic.gold + game.server.base_incite_cost;
 
   unit_list_iterate(pcity->tile->units, punit)
@@ -3059,7 +3059,7 @@ int city_incite_cost(struct player *pplayer, struct city *pcity)
   }
   unit_list_iterate_end;
 
-  /* Buildings */
+  // Buildings
   city_built_iterate(pcity, pimprove)
   {
     cost += impr_build_shield_cost(pcity, pimprove)
@@ -3067,7 +3067,7 @@ int city_incite_cost(struct player *pplayer, struct city *pcity)
   }
   city_built_iterate_end;
 
-  /* Stability bonuses */
+  // Stability bonuses
   if (!city_unhappy(pcity)) {
     cost *= 2;
   }
@@ -3075,18 +3075,18 @@ int city_incite_cost(struct player *pplayer, struct city *pcity)
     cost *= 2;
   }
 
-  /* Buy back is cheap, conquered cities are also cheap */
+  // Buy back is cheap, conquered cities are also cheap
   if (!game.info.citizen_nationality) {
     if (city_owner(pcity) != pcity->original) {
       if (pplayer == pcity->original) {
-        cost /= 2; /* buy back: 50% price reduction */
+        cost /= 2; // buy back: 50% price reduction
       } else {
-        cost = cost * 2 / 3; /* buy conquered: 33% price reduction */
+        cost = cost * 2 / 3; // buy conquered: 33% price reduction
       }
     }
   }
 
-  /* Distance from capital */
+  // Distance from capital
   /* Max penalty. Applied if there is no capital, or it's even further away.
    */
   dist = 32;
@@ -3200,7 +3200,7 @@ static void update_city_activity(struct city *pcity)
 
     pcity->history += city_history_gain(pcity);
 
-    /* History can decrease, but never go below zero */
+    // History can decrease, but never go below zero
     pcity->history = MAX(pcity->history, 0);
 
     /* Keep old behaviour when building new improvement could keep
@@ -3225,7 +3225,7 @@ static void update_city_activity(struct city *pcity)
     }
     pcity->was_happy = is_happy;
 
-    /* Handle the illness. */
+    // Handle the illness.
     if (game.info.illness_on) {
       /* recalculate city illness; illness due to trade has to be saved
        * within the city struct as the client has not all data to
@@ -3238,7 +3238,7 @@ static void update_city_activity(struct city *pcity)
       }
     }
 
-    /* City population updated here, after the rapture stuff above. --Jing */
+    // City population updated here, after the rapture stuff above. --Jing
     saved_id = pcity->id;
     city_populate(pcity, pplayer);
     if (NULL == player_city_by_number(pplayer, saved_id)) {
@@ -3253,12 +3253,12 @@ static void update_city_activity(struct city *pcity)
     pplayer->economic.infra_points +=
         get_city_bonus(pcity, EFT_INFRA_POINTS);
 
-    /* Update the treasury. */
+    // Update the treasury.
     pplayer->economic.gold += pcity->prod[O_GOLD];
     pplayer->economic.gold -= city_total_impr_gold_upkeep(pcity);
     pplayer->economic.gold -= city_total_unit_gold_upkeep(pcity);
 
-    /* Remember how much gold upkeep each unit was payed. */
+    // Remember how much gold upkeep each unit was payed.
     unit_list_iterate(pcity->units_supported, punit)
     {
       punit->server.upkeep_payed[O_GOLD] = punit->upkeep[O_GOLD];
@@ -3292,7 +3292,7 @@ static void update_city_activity(struct city *pcity)
 
       pcity->anarchy++;
       if (pcity->anarchy == revolution_turns) {
-        /* Revolution next turn if not dealt with */
+        // Revolution next turn if not dealt with
         /* TRANS: preserve leading space; this string will be appended to
          * another sentence */
         revomsg = _(" Unrest threatens to spread beyond the city.");
@@ -3301,12 +3301,12 @@ static void update_city_activity(struct city *pcity)
       }
       if (pcity->anarchy == 1) {
         notify_player(pplayer, city_tile(pcity), E_CITY_DISORDER, ftc_server,
-                      /* TRANS: second %s is an optional extra sentence */
+                      // TRANS: second %s is an optional extra sentence
                       _("Civil disorder in %s.%s"), city_link(pcity),
                       revomsg);
       } else {
         notify_player(pplayer, city_tile(pcity), E_CITY_DISORDER, ftc_server,
-                      /* TRANS: second %s is an optional extra sentence */
+                      // TRANS: second %s is an optional extra sentence
                       _("CIVIL DISORDER CONTINUES in %s.%s"),
                       city_link(pcity), revomsg);
       }
@@ -3323,7 +3323,7 @@ static void update_city_activity(struct city *pcity)
 
     if (revolution_turns > 0 && pcity->anarchy > revolution_turns) {
       notify_player(pplayer, city_tile(pcity), E_ANARCHY, ftc_server,
-                    /* TRANS: %s - government form, e.g., Democracy */
+                    // TRANS: %s - government form, e.g., Democracy
                     _("The people have overthrown your %s, "
                       "your country is in turmoil."),
                     government_name_translation(gov));
@@ -3357,12 +3357,12 @@ static bool disband_city(struct city *pcity)
   struct unit *punit;
   int saved_id = pcity->id;
 
-  /* find closest city other than pcity */
+  // find closest city other than pcity
   rcity = find_closest_city(ptile, pcity, pplayer, false, false, false, true,
                             false, NULL);
 
   if (!rcity) {
-    /* What should we do when we try to disband our only city? */
+    // What should we do when we try to disband our only city?
     notify_player(pplayer, ptile, E_CITY_CANTBUILD, ftc_server,
                   _("%s can't build %s yet, "
                     "as we can't disband our only city."),
@@ -3370,7 +3370,7 @@ static bool disband_city(struct city *pcity)
     script_server_signal_emit("unit_cant_be_built", utype, pcity,
                               "pop_cost");
     if (!city_exist(saved_id)) {
-      /* Script decided to remove even the last city */
+      // Script decided to remove even the last city
       return true;
     } else {
       return false;
@@ -3392,7 +3392,7 @@ static bool disband_city(struct city *pcity)
 
     if (punit) {
       notify_player(pplayer, ptile, E_UNIT_BUILT, ftc_server,
-                    /* TRANS: "<city> is disbanded into Settler." */
+                    // TRANS: "<city> is disbanded into Settler."
                     _("%s is disbanded into %s."), city_tile_link(pcity),
                     utype_name_translation(utype));
     }
@@ -3467,44 +3467,44 @@ static float city_migration_score(struct city *pcity)
   }
 
   if (pcity->server.mgr_score_calc_turn == game.info.turn) {
-    /* up-to-date migration score */
+    // up-to-date migration score
     return pcity->server.migration_score;
   }
 
-  /* feeling of the citizens */
+  // feeling of the citizens
   score = (city_size_get(pcity)
            + 1.00 * pcity->feel[CITIZEN_HAPPY][FEELING_FINAL]
            + 0.00 * pcity->feel[CITIZEN_CONTENT][FEELING_FINAL]
            - 0.25 * pcity->feel[CITIZEN_UNHAPPY][FEELING_FINAL]
            - 0.50 * pcity->feel[CITIZEN_ANGRY][FEELING_FINAL]);
 
-  /* calculate shield build cost for all buildings */
+  // calculate shield build cost for all buildings
   city_built_iterate(pcity, pimprove)
   {
     build_shield_cost += impr_build_shield_cost(pcity, pimprove);
     if (is_wonder(pimprove)) {
-      /* this city has a wonder */
+      // this city has a wonder
       has_wonder = true;
     }
   }
   city_built_iterate_end;
 
-  /* take shield costs of all buidings into account; normalized by 1000 */
+  // take shield costs of all buidings into account; normalized by 1000
   score *= (1
             + (1 - exp(-static_cast<float> MAX(0, build_shield_cost) / 1000))
                   / 5);
-  /* take trade into account; normalized by 100 */
+  // take trade into account; normalized by 100
   score *=
       (1
        + (1 - exp(-static_cast<float> MAX(0, pcity->surplus[O_TRADE]) / 100))
              / 5);
-  /* take luxury into account; normalized by 100 */
+  // take luxury into account; normalized by 100
   score *=
       (1
        + (1
           - exp(-static_cast<float> MAX(0, pcity->surplus[O_LUXURY]) / 100))
              / 5);
-  /* take science into account; normalized by 100 */
+  // take science into account; normalized by 100
   score *=
       (1
        + (1
@@ -3527,23 +3527,23 @@ static float city_migration_score(struct city *pcity)
              / 25);
 
   if (has_wonder) {
-    /* people like wonders */
+    // people like wonders
     score *= 1.25;
   }
 
   if (is_capital(pcity)) {
-    /* the capital is a magnet for the citizens */
+    // the capital is a magnet for the citizens
     score *= 1.25;
   }
 
-  /* take into account effects */
+  // take into account effects
   score *= (1.0 + get_city_bonus(pcity, EFT_MIGRATION_PCT) / 100.0);
 
   log_debug("[M] %s score: %.3f", city_name_get(pcity), score);
 
-  /* set migration score for the city */
+  // set migration score for the city
   pcity->server.migration_score = score;
-  /* set the turn, when the score was calculated */
+  // set the turn, when the score was calculated
   pcity->server.mgr_score_calc_turn = game.info.turn;
 
   return score;
@@ -3572,7 +3572,7 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
   pplayer_from = city_owner(pcity_from);
   pplayer_citizen = pplayer_from;
   pplayer_to = city_owner(pcity_to);
-  /* We copy that, because city_link always returns the same pointer. */
+  // We copy that, because city_link always returns the same pointer.
   sz_strlcpy(name_from, city_link(pcity_from));
   sz_strlcpy(name_to, city_link(pcity_to));
   nation_from = nation_adjective_for_player(pplayer_from);
@@ -3580,7 +3580,7 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
   ptile_from = city_tile(pcity_from);
   ptile_to = city_tile(pcity_to);
 
-  /* check food supply in the receiver city */
+  // check food supply in the receiver city
   if (game.server.mgr_foodneeded) {
     bool migration = false;
 
@@ -3590,7 +3590,7 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
       /* check if there is a free tile for the new citizen which, when
        * worked,
        * leads to zero or positive food surplus for the enlarged city */
-      int max_food_tile = -1; /* no free tile */
+      int max_food_tile = -1; // no free tile
       city_tile_iterate(city_map_radius_sq_get(pcity_to),
                         city_tile(pcity_to), ptile)
       {
@@ -3612,25 +3612,25 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
     }
 
     if (!migration) {
-      /* insufficiency food in receiver city; no additional citizens */
+      // insufficiency food in receiver city; no additional citizens
       if (pplayer_from == pplayer_to) {
-        /* migration between one nation */
+        // migration between one nation
         notify_player(pplayer_to, ptile_to, E_CITY_TRANSFER, ftc_server,
-                      /* TRANS: From <city1> to <city2>. */
+                      // TRANS: From <city1> to <city2>.
                       _("Migrants from %s can't go to %s because there is "
                         "not enough food available!"),
                       name_from, name_to);
       } else {
-        /* migration between different nations */
+        // migration between different nations
         notify_player(
             pplayer_from, ptile_to, E_CITY_TRANSFER, ftc_server,
-            /* TRANS: From <city1> to <city2> (<city2 nation adjective>). */
+            // TRANS: From <city1> to <city2> (<city2 nation adjective>).
             _("Migrants from %s can't go to %s (%s) because there "
               "is not enough food available!"),
             name_from, name_to, nation_to);
         notify_player(
             pplayer_to, ptile_to, E_CITY_TRANSFER, ftc_server,
-            /* TRANS: From <city1> (<city1 nation adjective>) to <city2>. */
+            // TRANS: From <city1> (<city1 nation adjective>) to <city2>.
             _("Migrants from %s (%s) can't go to %s because there "
               "is not enough food available!"),
             name_from, nation_from, name_to);
@@ -3641,25 +3641,25 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
   }
 
   if (!city_can_grow_to(pcity_to, city_size_get(pcity_to) + 1)) {
-    /* receiver city can't grow  */
+    // receiver city can't grow
     if (pplayer_from == pplayer_to) {
-      /* migration between one nation */
+      // migration between one nation
       notify_player(pplayer_to, ptile_to, E_CITY_TRANSFER, ftc_server,
-                    /* TRANS: From <city1> to <city2>. */
+                    // TRANS: From <city1> to <city2>.
                     _("Migrants from %s can't go to %s because it needs "
                       "an improvement to grow!"),
                     name_from, name_to);
     } else {
-      /* migration between different nations */
+      // migration between different nations
       notify_player(
           pplayer_from, ptile_to, E_CITY_TRANSFER, ftc_server,
-          /* TRANS: From <city1> to <city2> of <city2 nation adjective>. */
+          // TRANS: From <city1> to <city2> of <city2 nation adjective>.
           _("Migrants from %s can't go to %s (%s) because it "
             "needs an improvement to grow!"),
           name_from, name_to, nation_to);
       notify_player(
           pplayer_to, ptile_to, E_CITY_TRANSFER, ftc_server,
-          /* TRANS: From <city1> (<city1 nation adjective>) to <city2>. */
+          // TRANS: From <city1> (<city1 nation adjective>) to <city2>.
           _("Migrants from %s (%s) can't go to %s because it "
             "needs an improvement to grow!"),
           name_from, nation_from, name_to);
@@ -3668,14 +3668,14 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
     return false;
   }
 
-  /* reduce size of giver */
+  // reduce size of giver
   if (city_size_get(pcity_from) == 1) {
     if (game.info.citizen_nationality) {
-      /* Preserve nationality of city's only citizen */
+      // Preserve nationality of city's only citizen
       pplayer_citizen = player_slot_get_player(citizens_random(pcity_from));
     }
 
-    /* do not destroy wonders */
+    // do not destroy wonders
     city_built_iterate(pcity_from, pimprove)
     {
       if (is_wonder(pimprove)) {
@@ -3684,14 +3684,14 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
     }
     city_built_iterate_end;
 
-    /* find closest city other of the same player than pcity_from */
+    // find closest city other of the same player than pcity_from
     rcity = find_closest_city(ptile_from, pcity_from, pplayer_from, false,
                               false, false, true, false, NULL);
 
     if (rcity) {
       int id = pcity_from->id;
 
-      /* transfer all units to the closest city */
+      // transfer all units to the closest city
       transfer_city_units(pplayer_from, pplayer_from,
                           pcity_from->units_supported, rcity, pcity_from, -1,
                           true);
@@ -3712,7 +3712,7 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
       notify_player(pplayer_from, ptile_from, E_CITY_LOST, ftc_server,
                     _("%s was disbanded by its citizens."), name_from);
     } else {
-      /* it's the only city of the nation */
+      // it's the only city of the nation
       return false;
     }
   } else {
@@ -3726,12 +3726,12 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
       if (citizens_nation_get(pcity_from, pplayer_to->slot) > 0) {
         pplayer_citizen = pplayer_to;
       } else if (!citizens_nation_get(pcity_from, pplayer_citizen->slot)) {
-        /* No native citizens at all in the city, choose random foreigner */
+        // No native citizens at all in the city, choose random foreigner
         struct player_slot *cit_slot = citizens_random(pcity_from);
 
         pplayer_citizen = player_slot_get_player(cit_slot);
       }
-      /* This should be followed by city_reduce_size(). */
+      // This should be followed by city_reduce_size().
       citizens_nation_add(pcity_from, pplayer_citizen->slot, -1);
     }
     city_reduce_size(pcity_from, 1, pplayer_from, "migration_from");
@@ -3744,29 +3744,29 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
   /* This should be _before_ the size of the city is increased. Thus, the
    * order of the messages is correct (1: migration; 2: increased size). */
   if (pplayer_from == pplayer_to) {
-    /* migration between one nation */
+    // migration between one nation
     notify_player(pplayer_from, ptile_to, E_CITY_TRANSFER, ftc_server,
-                  /* TRANS: From <city1> to <city2>. */
+                  // TRANS: From <city1> to <city2>.
                   _("Migrants from %s moved to %s in search of a better "
                     "life."),
                   name_from, name_to);
   } else {
-    /* migration between different nations */
+    // migration between different nations
     notify_player(
         pplayer_from, ptile_to, E_CITY_TRANSFER, ftc_server,
-        /* TRANS: From <city1> to <city2> (<city2 nation adjective>). */
+        // TRANS: From <city1> to <city2> (<city2 nation adjective>).
         _("Migrants from %s moved to %s (%s) in search of a "
           "better life."),
         name_from, name_to, nation_to);
     notify_player(
         pplayer_to, ptile_to, E_CITY_TRANSFER, ftc_server,
-        /* TRANS: From <city1> (<city1 nation adjective>) to <city2>. */
+        // TRANS: From <city1> (<city1 nation adjective>) to <city2>.
         _("Migrants from %s (%s) moved to %s in search of a "
           "better life."),
         name_from, nation_from, name_to);
   }
 
-  /* raise size of receiver city */
+  // raise size of receiver city
   if (city_exist(to_id)) {
     incr_success = city_increase_size(pcity_to, pplayer_citizen);
     if (city_exist(to_id)) {
@@ -3822,7 +3822,7 @@ bool check_city_migrations()
     return false;
   }
 
-  /* check for migration */
+  // check for migration
   players_iterate(pplayer)
   {
     if (!pplayer->cities) {
@@ -3853,7 +3853,7 @@ bool city_empty_food_stock(struct city *pcity)
     pcity->food_stock = 0;
 
     notify_player(pplayer, ptile, E_DISASTER, ftc_server,
-                  /* TRANS: %s is a city name */
+                  // TRANS: %s is a city name
                   _("All stored food destroyed in %s."), city_link(pcity));
 
     return true;
@@ -3874,7 +3874,7 @@ static void apply_disaster(struct city *pcity, struct disaster_type *pdis)
   log_debug("%s at %s", disaster_rule_name(pdis), city_name_get(pcity));
 
   notify_player(pplayer, ptile, E_DISASTER, ftc_server,
-                /* TRANS: Disasters such as Earthquake */
+                // TRANS: Disasters such as Earthquake
                 _("%s was hit by %s."), city_name_get(pcity),
                 disaster_name_translation(pdis));
 
@@ -3899,13 +3899,13 @@ static void apply_disaster(struct city *pcity, struct disaster_type *pdis)
     if (!city_reduce_size(pcity, 1, NULL, "disaster")) {
       notify_player(
           pplayer, ptile, E_DISASTER, ftc_server,
-          /* TRANS: "Industrial Accident destroys Bogota entirely." */
+          // TRANS: "Industrial Accident destroys Bogota entirely."
           _("%s destroys %s entirely."), disaster_name_translation(pdis),
           city_link(pcity));
       pcity = NULL;
     } else {
       notify_player(pplayer, ptile, E_DISASTER, ftc_server,
-                    /* TRANS: "Nuclear Accident ... Montreal." */
+                    // TRANS: "Nuclear Accident ... Montreal."
                     _("%s causes population loss in %s."),
                     disaster_name_translation(pdis), city_link(pcity));
     }
@@ -3933,7 +3933,7 @@ static void apply_disaster(struct city *pcity, struct disaster_type *pdis)
 
       notify_player(
           pplayer, ptile, E_DISASTER, ftc_server,
-          /* TRANS: second %s is the name of a city improvement */
+          // TRANS: second %s is the name of a city improvement
           _("%s destroys %s in %s."), disaster_name_translation(pdis),
           improvement_name_translation(imprs[num]), city_link(pcity));
 
@@ -3953,12 +3953,12 @@ static void apply_disaster(struct city *pcity, struct disaster_type *pdis)
 
       pcity->shield_stock = 0;
       nullify_prechange_production(
-          pcity); /* Make it impossible to recover */
+          pcity); // Make it impossible to recover
 
       universal_name_translation(&pcity->production, prod, sizeof(prod));
       notify_player(
           pplayer, ptile, E_DISASTER, ftc_server,
-          /* TRANS: "Production of Colossus in Rhodes destroyed." */
+          // TRANS: "Production of Colossus in Rhodes destroyed."
           _("Production of %s in %s destroyed."), prod, city_link(pcity));
 
       had_internal_effect = true;
@@ -3976,13 +3976,13 @@ static void apply_disaster(struct city *pcity, struct disaster_type *pdis)
 void check_disasters()
 {
   if (game.info.disasters == 0) {
-    /* Shortcut out as no disaster is possible. */
+    // Shortcut out as no disaster is possible.
     return;
   }
 
   players_iterate(pplayer)
   {
-    /* Safe city iterator needed as disaster may destroy city */
+    // Safe city iterator needed as disaster may destroy city
     city_list_iterate_safe(pplayer->cities, pcity)
     {
       int id = pcity->id;
@@ -3990,7 +3990,7 @@ void check_disasters()
       disaster_type_iterate(pdis)
       {
         if (city_exist(id)) {
-          /* City survived earlier disasters. */
+          // City survived earlier disasters.
           int probability = game.info.disasters * pdis->frequency;
           int result = fc_rand(DISASTER_BASE_RARITY);
 
@@ -4030,7 +4030,7 @@ static bool check_city_migrations_player(const struct player *pplayer)
    * remove one city from the list */
   city_list_iterate_safe(pplayer->cities, pcity)
   {
-    /* no migration out of the capital */
+    // no migration out of the capital
     if (is_capital(pcity)) {
       continue;
     }
@@ -4065,7 +4065,7 @@ static bool check_city_migrations_player(const struct player *pplayer)
       acity = tile_city(ptile);
 
       if (!acity || acity == pcity) {
-        /* no city or the city in the center */
+        // no city or the city in the center
         continue;
       }
 
@@ -4077,15 +4077,15 @@ static bool check_city_migrations_player(const struct player *pplayer)
                      city_map_radius_sq_get(acity), 0)))
                  + game.server.mgr_distance;
 
-      /* distance between the two cities */
+      // distance between the two cities
       dist = real_map_distance(city_tile(pcity), city_tile(acity));
 
       if (dist > mgr_dist) {
-        /* to far away */
+        // to far away
         continue;
       }
 
-      /* score of the second city, weighted by the distance */
+      // score of the second city, weighted by the distance
       weight = (static_cast<float>(mgr_dist + 1 - dist)
                 / static_cast<float>(mgr_dist + 1));
       score_tmp = city_migration_score(acity) * weight;
@@ -4096,9 +4096,9 @@ static bool check_city_migrations_player(const struct player *pplayer)
                 player_name(city_owner(acity)), dist, mgr_dist, score_tmp);
 
       if (game.server.mgr_nationchance > 0 && city_owner(acity) == pplayer) {
-        /* migration between cities of the same owner */
+        // migration between cities of the same owner
         if (score_tmp > score_from && score_tmp > best_city_player_score) {
-          /* select the best! */
+          // select the best!
           best_city_player_score = score_tmp;
           best_city_player = acity;
 
@@ -4110,7 +4110,7 @@ static bool check_city_migrations_player(const struct player *pplayer)
         }
       } else if (game.server.mgr_worldchance > 0
                  && city_owner(acity) != pplayer) {
-        /* migration between cities of different owners */
+        // migration between cities of different owners
         if (game.info.citizen_nationality) {
           /* Modify the score if citizens could migrate to a city of their
            * original nation. */
@@ -4120,7 +4120,7 @@ static bool check_city_migrations_player(const struct player *pplayer)
         }
 
         if (score_tmp > score_from && score_tmp > best_city_world_score) {
-          /* select the best! */
+          // select the best!
           best_city_world_score = score_tmp;
           best_city_world = acity;
 
@@ -4135,10 +4135,10 @@ static bool check_city_migrations_player(const struct player *pplayer)
     iterate_outward_end;
 
     if (best_city_player_score > 0) {
-      /* first, do the migration within one nation */
+      // first, do the migration within one nation
       if (fc_rand(100) >= game.server.mgr_nationchance) {
-        /* no migration */
-        /* N.B.: city_link always returns the same pointer. */
+        // no migration
+        // N.B.: city_link always returns the same pointer.
         sz_strlcpy(city_link_text, city_link(pcity));
         notify_player(pplayer, city_tile(pcity), E_CITY_TRANSFER, ftc_server,
                       _("Citizens of %s are thinking about migrating to %s "
@@ -4148,22 +4148,22 @@ static bool check_city_migrations_player(const struct player *pplayer)
         do_city_migration(pcity, best_city_player);
       }
 
-      /* stop here */
+      // stop here
       continue;
     }
 
     if (best_city_world_score > 0) {
-      /* second, do the migration between all nations */
+      // second, do the migration between all nations
       if (fc_rand(100) >= game.server.mgr_worldchance) {
         const char *nname;
 
         nname = nation_adjective_for_player(city_owner(best_city_world));
-        /* no migration */
-        /* N.B.: city_link always returns the same pointer. */
+        // no migration
+        // N.B.: city_link always returns the same pointer.
         sz_strlcpy(city_link_text, city_link(pcity));
         notify_player(
             pplayer, city_tile(pcity), E_CITY_TRANSFER, ftc_server,
-            /* TRANS: <city1> to <city2> (<city2 nation adjective>). */
+            // TRANS: <city1> to <city2> (<city2 nation adjective>).
             _("Citizens of %s are thinking about migrating to %s "
               "(%s) for a better life."),
             city_link_text, city_link(best_city_world), nname);
@@ -4172,7 +4172,7 @@ static bool check_city_migrations_player(const struct player *pplayer)
         internat = true;
       }
 
-      /* stop here */
+      // stop here
       continue;
     }
   }

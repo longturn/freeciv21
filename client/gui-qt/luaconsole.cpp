@@ -29,7 +29,7 @@ QString qlua_filename;
    Popup the lua console inside the main-window, and optionally raise it.
  */
 void luaconsole_dialog_popup(bool raise)
-{ /* lua output is in chat */
+{ // lua output is in chat
 }
 
 /**

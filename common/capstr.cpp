@@ -15,16 +15,16 @@
 #include <fc_config.h>
 #endif
 
-#include <cstdlib> /* getenv() */
+#include <cstdlib> // getenv()
 
-/* gen_headers */
+// gen_headers
 #include "fc_version.h"
 
-/* utility */
+// utility
 #include "support.h"
 
-/* common */
-#include "connection.h" /* MAX_LEN_CAPSTR */
+// common
+#include "connection.h" // MAX_LEN_CAPSTR
 
 #include "capstr.h"
 

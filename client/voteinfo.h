@@ -17,7 +17,7 @@
 enum client_vote_type { CVT_NONE = 0, CVT_YES, CVT_NO, CVT_ABSTAIN };
 
 struct voteinfo {
-  /* Set by the server via packets. */
+  // Set by the server via packets.
   int vote_no;
   char user[MAX_LEN_NAME];
   char desc[512];

@@ -24,10 +24,10 @@ extern "C" {
 /* dependencies/tolua */
 #include "tolua.h"
 }
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "featured_text.h"
 
 /* common/scriptcore */
@@ -39,7 +39,7 @@ extern "C" {
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
 
-/* client */
+// client
 #include "luaconsole_common.h"
 
 /* client/luascript */
@@ -116,14 +116,14 @@ void script_client_remove_exported_object(void *object)
    Initialize the game script variables.
  */
 static void script_client_vars_init()
-{ /* nothing */
+{ // nothing
 }
 
 /**
    Free the game script variables.
  */
 static void script_client_vars_free()
-{ /* nothing */
+{ // nothing
 }
 
 /**
@@ -190,7 +190,7 @@ bool script_client_init()
 
   main_fcl = luascript_new(script_client_output, true);
   if (main_fcl == NULL) {
-    luascript_destroy(main_fcl); /* TODO: main_fcl is NULL here... */
+    luascript_destroy(main_fcl); // TODO: main_fcl is NULL here...
     main_fcl = NULL;
 
     return false;
@@ -206,9 +206,9 @@ bool script_client_init()
    * and we can't pass it a basename where the original
    * 'tolua_' has been stripped when generating from meson. */
   tolua_tolua_client_open(main_fcl->state);
-#else /* MESON_BUILD */
+#else // MESON_BUILD
   tolua_client_open(main_fcl->state);
-#endif /* MESON_BUILD */
+#endif // MESON_BUILD
 
   tolua_common_z_open(main_fcl->state);
 
@@ -233,7 +233,7 @@ static void script_client_output(struct fc_lua *fcl, QtMsgType level,
 
   switch (level) {
   case LOG_FATAL:
-    /* Special case - will quit the client. */
+    // Special case - will quit the client.
     {
       char buf[1024];
 

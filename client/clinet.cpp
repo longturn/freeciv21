@@ -19,7 +19,7 @@
 #include <QString>
 #include <QTcpSocket>
 
-/* utility */
+// utility
 #include "capstr.h"
 #include "dataio.h"
 #include "fcintl.h"
@@ -27,22 +27,22 @@
 #include "registry.h"
 #include "support.h"
 
-/* common */
+// common
 #include "game.h"
 #include "packets.h"
 #include "version.h"
 
-/* client */
+// client
 #include "attribute.h"
 #include "chatline_g.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "connectdlg_common.h"
 #include "connectdlg_g.h"
-#include "dialogs_g.h" /* popdown_races_dialog() */
+#include "dialogs_g.h" // popdown_races_dialog()
 #include "governor.h"
-#include "gui_main_g.h"     /* add_net_input(), remove_net_input() */
-#include "mapview_common.h" /* unqueue_mapview_update */
+#include "gui_main_g.h"     // add_net_input(), remove_net_input()
+#include "mapview_common.h" // unqueue_mapview_update
 #include "menu_g.h"
 #include "messagewin_g.h"
 #include "options.h"
@@ -53,10 +53,10 @@
 
 #include "clinet.h"
 
-/* In autoconnect mode, try to connect to once a second */
+// In autoconnect mode, try to connect to once a second
 #define AUTOCONNECT_INTERVAL 500
 
-/* In autoconnect mode, try to connect 100 times */
+// In autoconnect mode, try to connect 100 times
 #define MAX_AUTOCONNECT_ATTEMPTS 100
 
 /**
@@ -88,7 +88,7 @@ static void client_conn_close_callback(struct connection *pconn)
   }
 
   close_socket_nomessage(pconn);
-  /* If we lost connection to the internal server - kill it. */
+  // If we lost connection to the internal server - kill it.
   client_kill_server(true);
   qCritical("Lost connection to server: %s.", qPrintable(reason));
   output_window_printf(ftc_client, _("Lost connection to server (%s)!"),
@@ -121,7 +121,7 @@ static int try_to_connect(QString &hostname, int port, QString &username,
 
   connections_set_close_callback(client_conn_close_callback);
 
-  /* connection in progress? wait. */
+  // connection in progress? wait.
   if (client.conn.used) {
     (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
     return -1;
@@ -190,10 +190,10 @@ void make_connection(QTcpSocket *sock, QString &username)
   client.conn.incoming_packet_notify = notify_about_incoming_packet;
   client.conn.outgoing_packet_notify = notify_about_outgoing_packet;
 
-  /* call gui-dependent stuff in gui_main.c */
+  // call gui-dependent stuff in gui_main.c
   add_net_input(client.conn.sock);
 
-  /* now send join_request package */
+  // now send join_request package
 
   req.major_version = MAJOR_VERSION;
   req.minor_version = MINOR_VERSION;

@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
 #include "rand.h"
 
-/* common */
+// common
 #include "city.h"
 #include "game.h"
 #include "player.h"
@@ -45,7 +45,7 @@ void citizens_init(struct city *pcity)
     /* Allocate the memory*/
     pcity->nationality = new citizens[MAX_NUM_PLAYER_SLOTS]();
   } else {
-    /* Reset the nationality information. */
+    // Reset the nationality information.
     memset(pcity->nationality, 0,
            MAX_NUM_PLAYER_SLOTS * sizeof(*pcity->nationality));
   }
@@ -160,7 +160,7 @@ void citizens_nation_set(struct city *pcity, const struct player_slot *pslot,
  */
 citizens citizens_count(const struct city *pcity)
 {
-  /* Use int here to check for an possible overflow at the end. */
+  // Use int here to check for an possible overflow at the end.
   int count = 0;
 
   if (!game.info.citizen_nationality) {

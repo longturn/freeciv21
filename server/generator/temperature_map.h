@@ -12,8 +12,8 @@
 ***********************************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
+// utility
+#include "support.h" // bool type
 
 /*
  *  temperature_map[] stores the temperature of each tile

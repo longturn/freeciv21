@@ -271,7 +271,7 @@ void progress_bar::paintEvent(QPaintEvent *event)
   c = palette().color(QPalette::Window);
   p.fillRect(r2, c);
 
-  /* draw icon */
+  // draw icon
   if (pix != nullptr) {
     p.setCompositionMode(QPainter::CompositionMode_SourceOver);
     p.drawPixmap(
@@ -279,7 +279,7 @@ void progress_bar::paintEvent(QPaintEvent *event)
         pix_width, *pix, 0, 0, pix->width(), pix->height());
   }
 
-  /* draw text */
+  // draw text
   c = palette().color(QPalette::Text);
   p.setPen(c);
   sfont->setCapitalization(QFont::AllUppercase);
@@ -1075,7 +1075,7 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
     AIRLIFT = 28,
   };
 
-  /* fill the buffers with the necessary info */
+  // fill the buffers with the necessary info
   fc_snprintf(buf[FOOD], sizeof(buf[FOOD]), "%3d (%+4d)",
               pcity->prod[O_FOOD], pcity->surplus[O_FOOD]);
   fc_snprintf(buf[SHIELD], sizeof(buf[SHIELD]), "%3d (%+4d)",
@@ -1115,15 +1115,15 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
   granaryturns = city_turns_to_grow(pcity);
 
   if (granaryturns == 0) {
-    /* TRANS: city growth is blocked.  Keep short. */
+    // TRANS: city growth is blocked.  Keep short.
     fc_snprintf(buf[GROWTH], sizeof(buf[GROWTH]), _("blocked"));
   } else if (granaryturns == FC_INFINITY) {
-    /* TRANS: city is not growing.  Keep short. */
+    // TRANS: city is not growing.  Keep short.
     fc_snprintf(buf[GROWTH], sizeof(buf[GROWTH]), _("never"));
   } else {
     /* A negative value means we'll have famine in that many turns.
        But that's handled down below. */
-    /* TRANS: city growth turns.  Keep short. */
+    // TRANS: city growth turns.  Keep short.
     fc_snprintf(buf[GROWTH], sizeof(buf[GROWTH]),
                 PL_("%d turn", "%d turns", abs(granaryturns)),
                 abs(granaryturns));
@@ -1141,7 +1141,7 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
     fc_snprintf(buf[ILLNESS], sizeof(buf[ILLNESS]), " -.-");
   } else {
     illness = city_illness_calc(pcity, NULL, NULL, NULL, NULL);
-    /* illness is in tenth of percent */
+    // illness is in tenth of percent
     fc_snprintf(buf[ILLNESS], sizeof(buf[ILLNESS]), "%4.1f%%",
                 static_cast<float>(illness) / 10.0);
   }
@@ -1389,7 +1389,7 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
           &QItemSelectionModel::selectionChanged, this,
           &city_dialog::item_selected);
 
-  /* governor tab */
+  // governor tab
   ui.qgbox->setTitle(_("Presets:"));
   ui.qsliderbox->setTitle(_("Governor settings"));
 
@@ -1824,7 +1824,7 @@ void city_dialog::update_cma_tab()
     pix = pix.scaled(2 * pix.width(), 2 * pix.height(),
                      Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     ui.cma_result_pix->setPixmap(pix);
-    /* TRANS: %1 is custom string chosen by player */
+    // TRANS: %1 is custom string chosen by player
     ui.cma_result->setText(QString(_("<h3>Governor Enabled<br>(%1)</h3>"))
                                .arg(s.toHtmlEscaped()));
     ui.cma_result->setAlignment(Qt::AlignCenter);
@@ -2808,22 +2808,22 @@ void city_dialog::update_title()
           .replace(QLatin1String("&"), QLatin1String("&&")));
 
   if (city_unhappy(pcity)) {
-    /* TRANS: city dialog title */
+    // TRANS: city dialog title
     buf = QString(_("%1 - %2 citizens - DISORDER"))
               .arg(city_name_get(pcity),
                    population_to_text(city_population(pcity)));
   } else if (city_celebrating(pcity)) {
-    /* TRANS: city dialog title */
+    // TRANS: city dialog title
     buf = QString(_("%1 - %2 citizens - celebrating"))
               .arg(city_name_get(pcity),
                    population_to_text(city_population(pcity)));
   } else if (city_happy(pcity)) {
-    /* TRANS: city dialog title */
+    // TRANS: city dialog title
     buf = QString(_("%1 - %2 citizens - happy"))
               .arg(city_name_get(pcity),
                    population_to_text(city_population(pcity)));
   } else {
-    /* TRANS: city dialog title */
+    // TRANS: city dialog title
     buf = QString(_("%1 - %2 citizens"))
               .arg(city_name_get(pcity),
                    population_to_text(city_population(pcity)));
@@ -3145,7 +3145,7 @@ production_item::production_item(struct universal *ptarget, QObject *parent)
  */
 production_item::~production_item()
 {
-  /* allocated as renegade in model */
+  // allocated as renegade in model
   NFC_FREE(target);
 }
 
@@ -3205,7 +3205,7 @@ QVariant city_production_model::data(const QModelIndex &index,
     c = index.column();
     t = r * 3 + c;
     new_index = t / 3 + rowCount() * c;
-    /* Exception, shift whole column */
+    // Exception, shift whole column
     if ((c == 2) && city_target_list.count() % 3 == 1) {
       new_index = t / 3 + rowCount() * c - 1;
     }
@@ -3247,7 +3247,7 @@ void city_production_model::populate()
     if (future_t || can_city_build_now(mcity, &items[item].item)) {
       renegade = new universal(items[item].item);
 
-      /* renagade deleted in production_item destructor */
+      // renagade deleted in production_item destructor
       if (VUT_UTYPE == renegade->kind) {
         str = utype_name_translation(renegade->value.utype);
         sh.setX(qMax(sh.x(), fm.horizontalAdvance(str)));
@@ -3444,7 +3444,7 @@ void production_widget::prod_selected(const QItemSelection &sl,
   if (target != NULL) {
     city_get_queue(pw_city, &queue);
     switch (when_change) {
-    case 0: /* Change current target */
+    case 0: // Change current target
       city_change_production(pw_city, target);
       if (city_can_buy(pw_city) && buy_it) {
         city_buy_production(pw_city);
@@ -3461,7 +3461,7 @@ void production_widget::prod_selected(const QItemSelection &sl,
       }
       break;
 
-    case 2: /* Insert before */
+    case 2: // Insert before
       if (curr_selection < 0 || curr_selection > worklist_length(&queue)) {
         curr_selection = 0;
       }
@@ -3471,7 +3471,7 @@ void production_widget::prod_selected(const QItemSelection &sl,
       city_set_queue(pw_city, &queue);
       break;
 
-    case 3: /* Insert after */
+    case 3: // Insert after
       if (curr_selection < 0 || curr_selection > worklist_length(&queue)) {
         city_queue_insert(pw_city, -1, target);
         break;
@@ -3481,7 +3481,7 @@ void production_widget::prod_selected(const QItemSelection &sl,
       city_set_queue(pw_city, &queue);
       break;
 
-    case 4: /* Add last */
+    case 4: // Add last
       city_queue_insert(pw_city, -1, target);
       break;
 

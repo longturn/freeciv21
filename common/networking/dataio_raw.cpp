@@ -33,13 +33,13 @@
 // Qt
 #include <QtEndian>
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "capability.h"
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "events.h"
 #include "player.h"
 #include "requirements.h"
@@ -57,8 +57,8 @@ static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc);
 static DIO_PUT_CONV_FUN put_conv_callback = NULL;
 static DIO_GET_CONV_FUN get_conv_callback = get_conv;
 
-/* Uncomment to make field range tests to asserts, fatal with -F */
-/* #define FIELD_RANGE_ASSERT */
+// Uncomment to make field range tests to asserts, fatal with -F
+// #define FIELD_RANGE_ASSERT
 
 #if defined(FREECIV_TESTMATIC) && !defined(FIELD_RANGE_ASSERT)
 #define FIELD_RANGE_ASSERT
@@ -73,12 +73,12 @@ static DIO_GET_CONV_FUN get_conv_callback = get_conv;
   if (_test_) {                                                             \
     _action_ qCritical(_format_, ##__VA_ARGS__);                            \
   }
-#else /* FIELD_RANGE_ASSERT */
+#else // FIELD_RANGE_ASSERT
 #define FIELD_RANGE_TEST(_test_, _action_, _format_, ...)                   \
   if (_test_) {                                                             \
     _action_ qCritical(_format_, ##__VA_ARGS__);                            \
   }
-#endif /* FIELD_RANGE_ASSERT */
+#endif // FIELD_RANGE_ASSERT
 
 /**
    Sets string conversion callback to be used when putting text.
@@ -94,7 +94,7 @@ void dio_set_put_conv_callback(DIO_PUT_CONV_FUN fun)
  */
 static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
 {
-  size_t len = nsrc; /* length to copy, not including null */
+  size_t len = nsrc; // length to copy, not including null
   bool ret = true;
 
   if (ndst > 0 && len >= ndst) {
@@ -421,7 +421,7 @@ void dio_put_uint8_vec8_raw(struct raw_data_out *dout, int *values,
   size_t count;
 
   for (count = 0; values[count] != stop_value; count++) {
-    /* nothing */
+    // nothing
   }
 
   if (enough_space(dout, 1 + count)) {
@@ -446,7 +446,7 @@ void dio_put_uint16_vec8_raw(struct raw_data_out *dout, int *values,
   size_t count;
 
   for (count = 0; values[count] != stop_value; count++) {
-    /* nothing */
+    // nothing
   }
 
   if (enough_space(dout, 1 + 2 * count)) {
@@ -798,9 +798,9 @@ bool dio_get_string_raw(struct data_in *din, char *dest,
   remaining = dio_input_remaining(din);
   c = static_cast<char *>(ADD_TO_POINTER(din->src, din->current));
 
-  /* avoid using qstrlen (or qstrcpy) on an (unsigned char*)  --dwp */
+  // avoid using qstrlen (or qstrcpy) on an (unsigned char*)  --dwp
   for (offset = 0; offset < remaining && c[offset] != '\0'; offset++) {
-    /* nothing */
+    // nothing
   }
 
   if (offset >= remaining) {
@@ -860,7 +860,7 @@ bool dio_get_cm_parameter_raw(struct data_in *din,
  */
 bool dio_get_unit_order_raw(struct data_in *din, struct unit_order *order)
 {
-  /* These fields are enums */
+  // These fields are enums
   int iorder, iactivity, idir;
 
   if (!dio_get_uint8_raw(din, &iorder) || !dio_get_uint8_raw(din, &iactivity)

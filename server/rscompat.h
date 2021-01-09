@@ -12,10 +12,10 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "support.h"
 
-/* server */
+// server
 #include "ruleset.h"
 
 #define RULESET_COMPAT_CAP "+Freeciv-3.0-ruleset"
@@ -49,13 +49,13 @@ void rscompat_postprocess(struct rscompat_info *info);
  * corner case handling. */
 void rscompat_enablers_add_obligatory_hard_reqs();
 
-/* Functions from ruleset.c made visible to rscompat.c */
+// Functions from ruleset.c made visible to rscompat.c
 struct requirement_vector *lookup_req_list(struct section_file *file,
                                            struct rscompat_info *compat,
                                            const char *sec, const char *sub,
                                            const char *rfor);
 
-/* Functions specific to 3.0 -> 3.1 transition */
+// Functions specific to 3.0 -> 3.1 transition
 bool rscompat_auto_attack_3_1(struct rscompat_info *compat,
                               struct action_auto_perf *auto_perf,
                               size_t psize,

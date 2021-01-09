@@ -19,12 +19,12 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "connection.h"
 #include "log.h"
 #include "nation.h"
 #include "style.h"
-/* client */
+// client
 #include "audio.h"
 #include "client_main.h"
 #include "options.h"
@@ -37,7 +37,7 @@
 void start_style_music()
 {
   if (client_state() != C_S_RUNNING) {
-    /* Style music plays in running game only */
+    // Style music plays in running game only
     return;
   }
 
@@ -60,7 +60,7 @@ void start_style_music()
       switch (client.conn.playing->client.mood) {
       case MOOD_COUNT:
         fc_assert(client.conn.playing->client.mood != MOOD_COUNT);
-        fc__fallthrough; /* No break but use default tag */
+        fc__fallthrough; // No break but use default tag
       case MOOD_PEACEFUL:
         tag = pms->music_peaceful;
         break;
@@ -103,7 +103,7 @@ void stop_menu_music() { audio_stop_usage(); }
 void play_single_track(const QString &tag)
 {
   if (client_state() != C_S_RUNNING) {
-    /* Only in running game */
+    // Only in running game
     return;
   }
 
@@ -119,7 +119,7 @@ void musicspec_reread_callback(struct option *poption)
 
   audio_restart(sound_set_name, musicset_name);
 
-  /* Start suitable music from the new set */
+  // Start suitable music from the new set
   if (client_state() != C_S_RUNNING) {
     start_menu_music(QStringLiteral("music_menu"), NULL);
   } else {

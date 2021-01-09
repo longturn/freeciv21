@@ -14,13 +14,13 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
-#include "support.h" /* bool type */
+#include "support.h" // bool type
 
-/* common */
+// common
 #include "map.h"
 #include "packets.h"
 #include "terrain.h"
@@ -114,7 +114,7 @@ void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
   int minval = 0, maxval = 0, total = 0;
   bool first = true;
 
-  /* Determine minimum and maximum value. */
+  // Determine minimum and maximum value.
   whole_map_iterate_filtered(ptile, data, filter)
   {
     if (first) {
@@ -149,13 +149,13 @@ void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
     }
     whole_map_iterate_filtered_end;
 
-    /* create the linearize function as "incremental" frequencies */
+    // create the linearize function as "incremental" frequencies
     for (i = 0; i < size; i++) {
       count += frequencies[i];
       frequencies[i] = (count * int_map_max) / total;
     }
 
-    /* apply the linearize function */
+    // apply the linearize function
     whole_map_iterate_filtered(ptile, data, filter)
     {
       int_map[tile_index(ptile)] = frequencies[int_map[tile_index(ptile)]];
@@ -299,15 +299,15 @@ static void assign_continent_flood(struct tile *ptile, bool is_land, int nr)
       tile_continent(ptile) == 0 && T_UNKNOWN != pterrain
       && XOR(is_land, terrain_type_terrain_class(pterrain) == TC_OCEAN));
 
-  /* Create tile list and insert the initial tile. */
+  // Create tile list and insert the initial tile.
   tlist = tile_list_new();
   tile_list_append(tlist, ptile);
 
   while (tile_list_size(tlist) > 0) {
-    /* Iterate over all unchecked tiles. */
+    // Iterate over all unchecked tiles.
     tile_list_iterate(tlist, ptile2)
     {
-      /* Iterate over the adjacent tiles. */
+      // Iterate over the adjacent tiles.
       adjc_iterate(&(wld.map), ptile2, ptile3)
       {
         pterrain = tile_terrain(ptile3);
@@ -319,17 +319,17 @@ static void assign_continent_flood(struct tile *ptile, bool is_land, int nr)
           continue;
         }
 
-        /* Add the tile to the list of tiles to check. */
+        // Add the tile to the list of tiles to check.
         if (!tile_list_search(tlist, ptile3)) {
           tile_list_append(tlist, ptile3);
         }
       }
       adjc_iterate_end;
 
-      /* Set the continent data and remove the tile from the list. */
+      // Set the continent data and remove the tile from the list.
       tile_set_continent(ptile2, nr);
       tile_list_remove(tlist, ptile2);
-      /* count the tile */
+      // count the tile
       if (nr < 0) {
         ocean_sizes[-nr]++;
       } else {
@@ -455,25 +455,25 @@ int get_ocean_size(Continent_id id)
  */
 void assign_continent_numbers()
 {
-  /* Initialize */
+  // Initialize
   wld.map.num_continents = 0;
   wld.map.num_oceans = 0;
 
   whole_map_iterate(&(wld.map), ptile) { tile_set_continent(ptile, 0); }
   whole_map_iterate_end;
 
-  /* Assign new numbers */
+  // Assign new numbers
   whole_map_iterate(&(wld.map), ptile)
   {
     const struct terrain *pterrain = tile_terrain(ptile);
 
     if (tile_continent(ptile) != 0) {
-      /* Already assigned. */
+      // Already assigned.
       continue;
     }
 
     if (T_UNKNOWN == pterrain) {
-      continue; /* Can't assign this. */
+      continue; // Can't assign this.
     }
 
     if (terrain_type_terrain_class(pterrain) != TC_OCEAN) {
@@ -515,13 +515,13 @@ struct terrain *most_shallow_ocean(bool frozen)
       bool frozen_ok = terrain_has_flag(pterr, TER_FROZEN) == frozen;
 
       if (!oceans && nonfresh) {
-        /* First ocean type seen, reset even if frozenness doesn't match */
+        // First ocean type seen, reset even if frozenness doesn't match
         oceans = true;
         shallow = pterr;
         frozenmatch = frozen_ok;
         continue;
       } else if (oceans && !nonfresh) {
-        /* Dismiss any step backward on freshness */
+        // Dismiss any step backward on freshness
         continue;
       }
       if (!frozenmatch && frozen_ok) {
@@ -531,7 +531,7 @@ struct terrain *most_shallow_ocean(bool frozen)
         shallow = pterr;
         continue;
       } else if (frozenmatch && !frozen_ok) {
-        /* Dismiss any step backward on frozenness */
+        // Dismiss any step backward on frozenness
         continue;
       }
       if (!shallow
@@ -633,7 +633,7 @@ void smooth_water_depth()
   struct terrain *ocean;
   int dist;
 
-  /* First, improve the coasts. */
+  // First, improve the coasts.
   whole_map_iterate(&(wld.map), ptile)
   {
     if (terrain_type_terrain_class(tile_terrain(ptile)) != TC_OCEAN) {
@@ -642,7 +642,7 @@ void smooth_water_depth()
 
     dist = real_distance_to_land(ptile, OCEAN_DIST_MAX);
     if (dist <= OCEAN_DIST_MAX) {
-      /* Overwrite the terrain (but preserve frozenness). */
+      // Overwrite the terrain (but preserve frozenness).
       ocean = pick_ocean(dist * OCEAN_DEPTH_STEP + fc_rand(OCEAN_DEPTH_RAND),
                          terrain_has_flag(tile_terrain(ptile), TER_FROZEN));
       if (NULL != ocean && ocean != tile_terrain(ptile)) {
@@ -656,7 +656,7 @@ void smooth_water_depth()
   }
   whole_map_iterate_end;
 
-  /* Now, try to have something more continuous. */
+  // Now, try to have something more continuous.
   whole_map_iterate(&(wld.map), ptile)
   {
     if (terrain_type_terrain_class(tile_terrain(ptile)) != TC_OCEAN) {
@@ -750,7 +750,7 @@ struct terrain *pick_terrain(enum mapgen_terrain_property target,
 {
   int sum = 0;
 
-  /* Find the total weight. */
+  // Find the total weight.
   terrain_type_iterate(pterrain)
   {
     if (!terrain_has_flag(pterrain, TER_NOT_GENERATED)) {
@@ -770,10 +770,10 @@ struct terrain *pick_terrain(enum mapgen_terrain_property target,
   }
   terrain_type_iterate_end;
 
-  /* Now pick. */
+  // Now pick.
   sum = fc_rand(sum);
 
-  /* Finally figure out which one we picked. */
+  // Finally figure out which one we picked.
   terrain_type_iterate(pterrain)
   {
     if (!terrain_has_flag(pterrain, TER_NOT_GENERATED)) {

@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* Used in the network protocol. */
+// Used in the network protocol.
 #define SPECENUM_NAME event_type
 #define SPECENUM_VALUE0 E_CITY_CANTBUILD
 #define SPECENUM_VALUE1 E_CITY_LOST
@@ -107,40 +107,40 @@
 #define SPECENUM_VALUE90 E_WONDER_WILL_BE_BUILT
 #define SPECENUM_VALUE91 E_DIPLOMACY
 #define SPECENUM_VALUE92 E_TREATY_EMBASSY
-/* Illegal command sent from client. */
+// Illegal command sent from client.
 #define SPECENUM_VALUE93 E_BAD_COMMAND
-/* Messages for changed server settings */
+// Messages for changed server settings
 #define SPECENUM_VALUE94 E_SETTING
-/* Chatline messages */
+// Chatline messages
 #define SPECENUM_VALUE95 E_CHAT_MSG
-/* Message from server operator */
+// Message from server operator
 #define SPECENUM_VALUE96 E_MESSAGE_WALL
-/* Chatline errors (bad syntax, etc.) */
+// Chatline errors (bad syntax, etc.)
 #define SPECENUM_VALUE97 E_CHAT_ERROR
-/* Messages about acquired or lost connections */
+// Messages about acquired or lost connections
 #define SPECENUM_VALUE98 E_CONNECTION
-/* AI debugging messages */
+// AI debugging messages
 #define SPECENUM_VALUE99 E_AI_DEBUG
-/* Warning messages */
+// Warning messages
 #define SPECENUM_VALUE100 E_LOG_ERROR
 #define SPECENUM_VALUE101 E_LOG_FATAL
-/* Changed tech goal */
+// Changed tech goal
 #define SPECENUM_VALUE102 E_TECH_GOAL
-/* Non-battle unit deaths */
+// Non-battle unit deaths
 #define SPECENUM_VALUE103 E_UNIT_LOST_MISC
-/* Plague within a city */
+// Plague within a city
 #define SPECENUM_VALUE104 E_CITY_PLAGUE
 #define SPECENUM_VALUE105 E_VOTE_NEW
 #define SPECENUM_VALUE106 E_VOTE_RESOLVED
 #define SPECENUM_VALUE107 E_VOTE_ABORTED
-/* Change of the city radius */
+// Change of the city radius
 #define SPECENUM_VALUE108 E_CITY_RADIUS_SQ
-/* A unit with population cost was built; the city shrinks. */
+// A unit with population cost was built; the city shrinks.
 #define SPECENUM_VALUE109 E_UNIT_BUILT_POP_COST
 #define SPECENUM_VALUE110 E_DISASTER
 #define SPECENUM_VALUE111 E_ACHIEVEMENT
 #define SPECENUM_VALUE112 E_TECH_LOST
-/* Used to notify tech events for foreigner players. */
+// Used to notify tech events for foreigner players.
 #define SPECENUM_VALUE113 E_TECH_EMBASSY
 #define SPECENUM_VALUE114 E_MY_SPY_STEAL_GOLD
 #define SPECENUM_VALUE115 E_ENEMY_SPY_STEAL_GOLD
@@ -155,7 +155,7 @@
 #define SPECENUM_VALUE124 E_UNIT_ACTION_FAILED
 #define SPECENUM_VALUE125 E_UNIT_ESCAPED
 #define SPECENUM_VALUE126 E_DEPRECATION_WARNING
-/* Used for messages about things experienced players already know. */
+// Used for messages about things experienced players already know.
 #define SPECENUM_VALUE127 E_BEGINNER_HELP
 #define SPECENUM_VALUE128 E_MY_UNIT_DID_HEAL
 #define SPECENUM_VALUE129 E_MY_UNIT_WAS_HEALED
@@ -175,7 +175,7 @@
 /* The sound system also generates "e_game_quit", although there's no
  * corresponding identifier E_GAME_QUIT. */
 #include "specenum_gen.h"
-/* the maximum number of enumerators is set in generate_specenum.py */
+// the maximum number of enumerators is set in generate_specenum.py
 
 extern enum event_type sorted_events[]; /* [E_COUNT], sorted by the
                                            translated message text */
@@ -188,7 +188,7 @@ bool is_city_event(enum event_type event);
 void events_init();
 void events_free();
 
-/* Iterates over all events, sorted by the message text string. */
+// Iterates over all events, sorted by the message text string.
 #define sorted_event_iterate(event)                                         \
   {                                                                         \
     enum event_type event;                                                  \

@@ -15,11 +15,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "deprecations.h"
 #include "fcintl.h"
 
-/* common */
+// common
 #include "achievements.h"
 #include "actions.h"
 #include "effects.h"
@@ -35,7 +35,7 @@
 #include "style.h"
 #include "tech.h"
 
-/* server */
+// server
 #include "ruleset.h"
 #include "settings.h"
 
@@ -65,7 +65,7 @@ static bool nation_has_initial_tech(struct nation_type *pnation,
 {
   int i;
 
-  /* See if it's given as global init tech */
+  // See if it's given as global init tech
   for (i = 0;
        i < MAX_NUM_TECH_LIST && game.rgame.global_init_techs[i] != A_LAST;
        i++) {
@@ -74,7 +74,7 @@ static bool nation_has_initial_tech(struct nation_type *pnation,
     }
   }
 
-  /* See if it's given as national init tech */
+  // See if it's given as national init tech
   for (i = 0; i < MAX_NUM_TECH_LIST && pnation->init_techs[i] != A_LAST;
        i++) {
     if (pnation->init_techs[i] == advance_number(tech)) {
@@ -102,7 +102,7 @@ static bool sanity_check_setting_is_game_rule(struct setting *pset)
 {
   if ((setting_category(pset) == SSET_INTERNAL
        || setting_category(pset) == SSET_NETWORK)
-      /* White list for SSET_INTERNAL and SSET_NETWORK settings. */
+      // White list for SSET_INTERNAL and SSET_NETWORK settings.
       && !(pset == setting_by_name("phasemode")
            || pset == setting_by_name("timeout")
            || pset == setting_by_name("timeaddenemymove")
@@ -114,7 +114,7 @@ static bool sanity_check_setting_is_game_rule(struct setting *pset)
   }
 
   if (pset == setting_by_name("naturalcitynames")) {
-    /* This setting is about "look", not rules. */
+    // This setting is about "look", not rules.
     return false;
   }
 
@@ -136,7 +136,7 @@ bool sanity_check_server_setting_value_in_req(ssetv ssetval)
   fc_assert_ret_val(server_setting_exists(id), false);
 
   if (server_setting_type_get(id) != SST_BOOL) {
-    /* Not supported yet. */
+    // Not supported yet.
     return false;
   }
 
@@ -250,12 +250,12 @@ static bool sanity_check_req_set(int reqs_of_type[],
   }
 
   if (!conjunctive) {
-    /* All the checks below are only meaningful for conjunctive lists. */
-    /* FIXME: we could add checks suitable for disjunctive lists. */
+    // All the checks below are only meaningful for conjunctive lists.
+    // FIXME: we could add checks suitable for disjunctive lists.
     return true;
   }
 
-  /* Add to counter for positive requirements. */
+  // Add to counter for positive requirements.
   if (preq->present) {
     reqs_of_type[preq->source.kind]++;
   }
@@ -287,7 +287,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
   }
 
   if (rc > 1 && preq->present) {
-    /* Multiple requirements of the same type */
+    // Multiple requirements of the same type
     switch (preq->source.kind) {
     case VUT_GOVERNMENT:
     case VUT_UTYPE:
@@ -296,15 +296,15 @@ static bool sanity_check_req_set(int reqs_of_type[],
     case VUT_ACTIVITY:
     case VUT_OTYPE:
     case VUT_SPECIALIST:
-    case VUT_MINSIZE: /* Breaks nothing, but has no sense either */
+    case VUT_MINSIZE: // Breaks nothing, but has no sense either
     case VUT_MINFOREIGNPCT:
-    case VUT_MINMOVES:   /* Breaks nothing, but has no sense either */
-    case VUT_MINVETERAN: /* Breaks nothing, but has no sense either */
-    case VUT_MINHP:      /* Breaks nothing, but has no sense either */
+    case VUT_MINMOVES:   // Breaks nothing, but has no sense either
+    case VUT_MINVETERAN: // Breaks nothing, but has no sense either
+    case VUT_MINHP:      // Breaks nothing, but has no sense either
     case VUT_MINYEAR:
     case VUT_MINCALFRAG:
     case VUT_AI_LEVEL:
-    case VUT_TERRAINALTER: /* Local range only */
+    case VUT_TERRAINALTER: // Local range only
     case VUT_STYLE:
     case VUT_IMPR_GENUS:
     case VUT_CITYSTATUS:
@@ -319,7 +319,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
       break;
 
     case VUT_TERRAIN:
-      /* There can be only up to max_tiles requirements of these types */
+      // There can be only up to max_tiles requirements of these types
       if (max_tiles != -1 && rc > max_tiles) {
         qCritical("%s: Requirement list has more %s requirements than "
                   "can ever be fulfilled.",
@@ -338,7 +338,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
       break;
 
     case VUT_AGE:
-      /* There can be age of the city, unit, and player */
+      // There can be age of the city, unit, and player
       if (rc > 3) {
         qCritical("%s: Requirement list has more %s requirements than "
                   "can ever be fulfilled.",
@@ -348,7 +348,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
       break;
 
     case VUT_MINTECHS:
-      /* At ranges 'Player' and 'World' */
+      // At ranges 'Player' and 'World'
       if (rc > 2) {
         qCritical("%s: Requirement list has more %s requirements than "
                   "can ever be fulfilled.",
@@ -358,7 +358,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
       break;
 
     case VUT_SERVERSETTING:
-      /* Can have multiple, since there are many settings. */
+      // Can have multiple, since there are many settings.
     case VUT_TOPO:
       /* Can have multiple, since it's flag based (iso & wrapx & wrapy & hex)
        */
@@ -369,7 +369,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
     case VUT_NATION:
       /* Can require multiple nations at Team/Alliance/World range. */
     case VUT_NATIONGROUP:
-      /* Nations can be in multiple groups. */
+      // Nations can be in multiple groups.
     case VUT_NONE:
     case VUT_ADVANCE:
     case VUT_TECHFLAG:
@@ -377,7 +377,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
     case VUT_UNITSTATE:
     case VUT_CITYTILE:
     case VUT_GOOD:
-      /* Can check different properties. */
+      // Can check different properties.
     case VUT_UTFLAG:
     case VUT_UCFLAG:
     case VUT_TERRFLAG:
@@ -388,10 +388,10 @@ static bool sanity_check_req_set(int reqs_of_type[],
     case VUT_MINCULTURE:
     case VUT_ACHIEVEMENT:
     case VUT_DIPLREL:
-      /* Can have multiple requirements of these types */
+      // Can have multiple requirements of these types
       break;
     case VUT_COUNT:
-      /* Should never be in requirement vector */
+      // Should never be in requirement vector
       fc_assert(false);
       return false;
       break;
@@ -428,7 +428,7 @@ static bool sanity_check_req_vec(const struct requirement_vector *preqs,
   int reqs_of_type[VUT_COUNT];
   int local_reqs_of_type[VUT_COUNT];
 
-  /* Initialize requirement counters */
+  // Initialize requirement counters
   memset(reqs_of_type, 0, sizeof(reqs_of_type));
   memset(local_reqs_of_type, 0, sizeof(local_reqs_of_type));
 
@@ -461,7 +461,7 @@ static bool effect_list_sanity_cb(struct effect *peffect, void *data)
                       *       -1 disables checking */
 
   if (peffect->type == EFT_ACTION_SUCCESS_TARGET_MOVE_COST) {
-    /* Only unit targets can pay in move fragments. */
+    // Only unit targets can pay in move fragments.
     requirement_vector_iterate(&peffect->reqs, preq)
     {
       if (preq->source.kind == VUT_ACTION) {
@@ -482,7 +482,7 @@ static bool effect_list_sanity_cb(struct effect *peffect, void *data)
     }
     requirement_vector_iterate_end;
   } else if (peffect->type == EFT_ACTION_SUCCESS_MOVE_COST) {
-    /* Only unit actors can pay in move fragments. */
+    // Only unit actors can pay in move fragments.
     requirement_vector_iterate(&peffect->reqs, preq)
     {
       if (preq->source.kind == VUT_ACTION && preq->present) {
@@ -498,7 +498,7 @@ static bool effect_list_sanity_cb(struct effect *peffect, void *data)
     }
     requirement_vector_iterate_end;
   } else if (peffect->type == EFT_ACTION_ODDS_PCT) {
-    /* Catch trying to set Action_Odds_Pct for non supported actions. */
+    // Catch trying to set Action_Odds_Pct for non supported actions.
     requirement_vector_iterate(&peffect->reqs, preq)
     {
       if (preq->source.kind == VUT_ACTION && preq->present) {
@@ -602,7 +602,7 @@ static bool rs_barbarian_units()
  */
 static bool rs_common_units()
 {
-  /* Check some required flags and roles etc: */
+  // Check some required flags and roles etc:
   if (num_role_units(UTYF_SETTLERS) == 0) {
     qCCritical(ruleset_category, "No flag Settler units");
     return false;
@@ -654,7 +654,7 @@ static bool rs_common_units()
  */
 static bool rs_buildings()
 {
-  /* Special Genus */
+  // Special Genus
   improvement_iterate(pimprove)
   {
     if (improvement_has_flag(pimprove, IF_GOLD)
@@ -738,14 +738,14 @@ bool sanity_check_ruleset_data(bool ignore_retired)
     ok = false;
   }
 
-  /* Advances. */
+  // Advances.
   advance_iterate(A_FIRST, padvance)
   {
     for (i = AR_ONE; i < AR_SIZE; i++) {
       const struct advance *preq;
 
       if (i == AR_ROOT) {
-        /* Self rootreq is a feature. */
+        // Self rootreq is a feature.
         continue;
       }
 
@@ -822,12 +822,12 @@ bool sanity_check_ruleset_data(bool ignore_retired)
     default_gov_failed = true;
   }
 
-  /* Check that all players can have their initial techs */
+  // Check that all players can have their initial techs
   nations_iterate(pnation)
   {
     int techi;
 
-    /* Check global initial techs */
+    // Check global initial techs
     for (techi = 0; techi < MAX_NUM_TECH_LIST
                     && game.rgame.global_init_techs[techi] != A_LAST;
          techi++) {
@@ -842,7 +842,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
         ok = false;
       } else if (advance_by_number(A_NONE) != a->require[AR_ROOT]
                  && !nation_has_initial_tech(pnation, a->require[AR_ROOT])) {
-        /* Nation has no root_req for tech */
+        // Nation has no root_req for tech
         qCCritical(ruleset_category,
                    "Tech %s is initial for everyone, but %s has "
                    "no root_req for it.",
@@ -851,7 +851,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       }
     }
 
-    /* Check national initial techs */
+    // Check national initial techs
     for (techi = 0;
          techi < MAX_NUM_TECH_LIST && pnation->init_techs[techi] != A_LAST;
          techi++) {
@@ -866,7 +866,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
         ok = false;
       } else if (advance_by_number(A_NONE) != a->require[AR_ROOT]
                  && !nation_has_initial_tech(pnation, a->require[AR_ROOT])) {
-        /* Nation has no root_req for tech */
+        // Nation has no root_req for tech
         qCCritical(ruleset_category,
                    "Tech %s is initial for %s, but they have "
                    "no root_req for it.",
@@ -875,7 +875,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       }
     }
 
-    /* Check national initial buildings */
+    // Check national initial buildings
     if (nation_barbarian_type(pnation) != NOT_A_BARBARIAN
         && pnation->init_buildings[0] != B_LAST) {
       qCCritical(ruleset_category,
@@ -897,7 +897,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   nations_iterate_end;
 
-  /* Check against unit upgrade loops */
+  // Check against unit upgrade loops
   num_utypes = game.control.num_unit_types;
   unit_type_iterate(putype)
   {
@@ -936,12 +936,12 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   unit_type_iterate_end;
 
-  /* Check that unit type fields are in range. */
+  // Check that unit type fields are in range.
   unit_type_iterate(putype)
   {
     if (putype->paratroopers_range < 0
         || putype->paratroopers_range > UNIT_MAX_PARADROP_RANGE) {
-      /* Paradrop range is limited by the network protocol. */
+      // Paradrop range is limited by the network protocol.
       qCCritical(ruleset_category,
                  "The paratroopers_range of the unit type '%s' is %d. "
                  "That is out of range. Max range is %d.",
@@ -964,9 +964,9 @@ bool sanity_check_ruleset_data(bool ignore_retired)
     ok = false;
   }
 
-  /* Others use requirement vectors */
+  // Others use requirement vectors
 
-  /* Disasters */
+  // Disasters
   disaster_type_iterate(pdis)
   {
     if (!sanity_check_req_vec(&pdis->reqs, true, -1,
@@ -978,7 +978,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   disaster_type_iterate_end;
 
-  /* Goods */
+  // Goods
   goods_type_iterate(pgood)
   {
     if (!sanity_check_req_vec(&pgood->reqs, true, -1,
@@ -990,7 +990,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   goods_type_iterate_end;
 
-  /* Buildings */
+  // Buildings
   improvement_iterate(pimprove)
   {
     if (!sanity_check_req_vec(&pimprove->reqs, true, -1,
@@ -1008,7 +1008,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   improvement_iterate_end;
 
-  /* Governments */
+  // Governments
   governments_iterate(pgov)
   {
     if (!sanity_check_req_vec(&pgov->reqs, true, -1,
@@ -1020,7 +1020,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   governments_iterate_end;
 
-  /* Specialists */
+  // Specialists
   specialist_type_iterate(sp)
   {
     struct specialist *psp = specialist_by_number(sp);
@@ -1034,7 +1034,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   specialist_type_iterate_end;
 
-  /* Extras */
+  // Extras
   extra_type_iterate(pextra)
   {
     if (!sanity_check_req_vec(&pextra->reqs, true, -1,
@@ -1060,7 +1060,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   extra_type_iterate_end;
 
-  /* Roads */
+  // Roads
   extra_type_by_cause_iterate(EC_ROAD, pextra)
   {
     struct road_type *proad = extra_road_get(pextra);
@@ -1071,7 +1071,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       int pnbr = road_number(proad);
 
       if (pnbr != road_number(iroad) && !BV_ISSET(iroad->integrates, pnbr)) {
-        /* We don't support non-symmetric integrator relationships yet. */
+        // We don't support non-symmetric integrator relationships yet.
         qCCritical(ruleset_category,
                    "Road '%s' integrates with '%s' but not vice versa!",
                    extra_rule_name(pextra), extra_rule_name(iextra));
@@ -1082,20 +1082,20 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   extra_type_by_cause_iterate_end;
 
-  /* Bases */
+  // Bases
   extra_type_by_cause_iterate(EC_BASE, pextra)
   {
     int bfi;
     struct base_type *pbase = extra_base_get(pextra);
 
     if (ignore_retired) {
-      /* Base flags haven't been updated yet. */
+      // Base flags haven't been updated yet.
       break;
     }
 
     for (bfi = 0; bfi < BF_COUNT; bfi++) {
       if (!base_flag_is_retired(base_flag_id(bfi))) {
-        /* Still valid. */
+        // Still valid.
         continue;
       }
 
@@ -1109,7 +1109,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   extra_type_by_cause_iterate_end;
 
-  /* City styles */
+  // City styles
   for (i = 0; i < game.control.styles_count; i++) {
     if (!sanity_check_req_vec(&city_styles[i].reqs, true, -1,
                               city_style_rule_name(i))) {
@@ -1119,7 +1119,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
     }
   }
 
-  /* Actions */
+  // Actions
   action_iterate(act)
   {
     struct action *paction = action_by_number(act);
@@ -1184,7 +1184,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       }
 
       if (action_id_get_target_kind(enabler->action) == ATK_SELF) {
-        /* Special test for self targeted actions. */
+        // Special test for self targeted actions.
 
         if (requirement_vector_size(&(enabler->target_reqs)) > 0) {
           /* Shouldn't have target requirements since the action doesn't
@@ -1232,7 +1232,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 
         problem = action_enabler_suggest_improvement(enabler);
         if (problem != NULL) {
-          /* There is a potential for improving this enabler. */
+          // There is a potential for improving this enabler.
           qCWarning(deprecations_category, "%s", problem->description);
         }
       }
@@ -1241,7 +1241,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   action_iterate_end;
 
-  /* Auto attack */
+  // Auto attack
   {
     struct action_auto_perf *auto_perf;
 
@@ -1268,7 +1268,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
     action_auto_perf_actions_iterate_end;
   }
 
-  /* There must be basic city style for each nation style to start with */
+  // There must be basic city style for each nation style to start with
   styles_iterate(pstyle)
   {
     if (basic_city_style_for_style(pstyle) < 0) {
@@ -1280,7 +1280,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   styles_iterate_end;
 
-  /* Music styles */
+  // Music styles
   music_styles_iterate(pmus)
   {
     if (!sanity_check_req_vec(&pmus->reqs, true, -1, "Music Style")) {
@@ -1305,7 +1305,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   terrain_type_iterate_end;
 
-  /* Check that all unit classes can exist somewhere */
+  // Check that all unit classes can exist somewhere
   unit_class_iterate(pclass)
   {
     if (!uclass_has_flag(pclass, UCF_BUILD_ANYWHERE)) {
@@ -1413,7 +1413,7 @@ bool autoadjust_ruleset_data()
   }
   extra_type_by_cause_iterate_end;
 
-  /* Hard coded action blocking. */
+  // Hard coded action blocking.
   {
     const struct {
       const enum action_result blocked;

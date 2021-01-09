@@ -63,13 +63,13 @@
 #define SPECPQ_CELL_ struct SPECPQ_PASTE(SPECPQ_TAG, _cell_private_)
 #define SPECPQ_FOO(suffix) SPECPQ_PASTE(SPECPQ_TAG, suffix)
 
-/* Dummy type. Actually a SPECPQ_PQ_, and not defined anywhere. */
+// Dummy type. Actually a SPECPQ_PQ_, and not defined anywhere.
 SPECPQ_PQ;
 
-/* Function related typedefs. */
+// Function related typedefs.
 typedef void (*SPECPQ_FOO(_pq_data_free_fn_t))(SPECPQ_DATA_TYPE);
 
-/* Private. */
+// Private.
 SPECPQ_CELL_
 {
   SPECPQ_DATA_TYPE data;
@@ -143,7 +143,7 @@ static inline void SPECPQ_FOO(_pq_insert)(SPECPQ_PQ *_pq,
   SPECPQ_PQ_ *pq = reinterpret_cast<SPECPQ_PQ_ *>(_pq);
   int i, j;
 
-  /* Allocate more memory if necessary. */
+  // Allocate more memory if necessary.
   if (pq->size >= pq->avail) {
     int newsize = pq->size + pq->step;
 
@@ -152,7 +152,7 @@ static inline void SPECPQ_FOO(_pq_insert)(SPECPQ_PQ *_pq,
     pq->avail = newsize;
   }
 
-  /* Insert item. */
+  // Insert item.
   i = pq->size++;
   while (i > 1 && (j = i / 2) && pq->cells[j].priority < priority) {
     pq->cells[i] = pq->cells[j];
@@ -172,7 +172,7 @@ static inline void SPECPQ_FOO(_pq_replace)(SPECPQ_PQ *_pq,
   SPECPQ_PQ_ *pq = reinterpret_cast<SPECPQ_PQ_ *>(_pq);
   int i, j;
 
-  /* Lookup for 'data'... */
+  // Lookup for 'data'...
   for (i = pq->size - 1; i >= 1; i--) {
     if (pq->cells[i].data == data) {
       break;
@@ -180,10 +180,10 @@ static inline void SPECPQ_FOO(_pq_replace)(SPECPQ_PQ *_pq,
   }
 
   if (i == 0) {
-    /* Not found, insert. */
+    // Not found, insert.
     SPECPQ_FOO(_pq_insert)(_pq, data, priority);
   } else if (pq->cells[i].priority < priority) {
-    /* Found, percolate-up. */
+    // Found, percolate-up.
     while ((j = i / 2) && pq->cells[j].priority < priority) {
       pq->cells[i] = pq->cells[j];
       i = j;

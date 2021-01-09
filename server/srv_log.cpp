@@ -17,12 +17,12 @@
 
 #include <cstdarg>
 
-/* utility */
+// utility
 #include "shared.h"
 #include "support.h"
 #include "timing.h"
 
-/* common */
+// common
 #include "ai.h"
 #include "city.h"
 #include "game.h"
@@ -30,7 +30,7 @@
 #include "nation.h"
 #include "unit.h"
 
-/* server */
+// server
 #include "notify.h"
 #include "srv_main.h"
 
@@ -42,7 +42,7 @@
 static civtimer *aitimer[AIT_LAST][2];
 static int recursion[AIT_LAST];
 
-/* General AI logging functions */
+// General AI logging functions
 
 /**
    Log a city, it will appear like this

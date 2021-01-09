@@ -14,19 +14,19 @@
 
 #include "fc_types.h"
 
-/* Number of city report columns: have to set this manually now... */
+// Number of city report columns: have to set this manually now...
 #define NUM_CREPORT_COLS (num_city_report_spec())
 
 struct city_report_spec {
-  bool show;               /* modify this to customize */
-  int width;               /* 0 means variable; rightmost only */
-  int space;               /* number of leading spaces (see below) */
-  const char *title1;      /* already translated or NULL */
-  const char *title2;      /* already translated or NULL */
-  const char *explanation; /* already translated */
+  bool show;               // modify this to customize
+  int width;               // 0 means variable; rightmost only
+  int space;               // number of leading spaces (see below)
+  const char *title1;      // already translated or NULL
+  const char *title2;      // already translated or NULL
+  const char *explanation; // already translated
   void *data;
   const char *(*func)(const struct city *pcity, const void *data);
-  const char *tagname; /* for save_options */
+  const char *tagname; // for save_options
 };
 
 extern struct city_report_spec *city_report_specs;

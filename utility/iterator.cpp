@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "shared.h"
 
 #include "iterator.h"
@@ -24,7 +24,7 @@
    'next' function implementation for an "invalid" iterator.
  */
 static void invalid_iter_next(struct iterator *it)
-{ /* Do nothing. */
+{ // Do nothing.
 }
 
 /**

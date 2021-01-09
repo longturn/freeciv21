@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "extras.h"
 #include "fc_types.h"
 #include "game.h"
@@ -76,11 +76,11 @@ int compare_road_move_cost(const struct extra_type *const *p,
   const struct road_type *qroad = extra_road_get(*q);
 
   if (proad->move_cost > qroad->move_cost) {
-    return -1; /* q is faster */
+    return -1; // q is faster
   } else if (proad->move_cost == qroad->move_cost) {
     return 0;
   } else {
-    return 1; /* p is faster */
+    return 1; // p is faster
   }
 }
 
@@ -110,7 +110,7 @@ void road_integrators_cache_init()
     struct road_type *proad = extra_road_get(pextra);
 
     proad->integrators = extra_type_list_new();
-    /* Roads always integrate with themselves. */
+    // Roads always integrate with themselves.
     extra_type_list_append(proad->integrators, pextra);
     extra_type_by_cause_iterate(EC_ROAD, oextra)
     {
@@ -183,12 +183,12 @@ bool road_can_be_built(const struct road_type *proad,
                        const struct tile *ptile)
 {
   if (!(road_extra_get(proad)->buildable)) {
-    /* Road type not buildable. */
+    // Road type not buildable.
     return false;
   }
 
   if (tile_has_road(ptile, proad)) {
-    /* Road exist already */
+    // Road exist already
     return false;
   }
 
@@ -328,10 +328,10 @@ int count_river_near_tile(const struct tile *ptile,
   cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (priver == NULL && tile_has_river(adjc_tile)) {
-      /* Some river */
+      // Some river
       count++;
     } else if (priver != NULL && tile_has_extra(adjc_tile, priver)) {
-      /* Specific river */
+      // Specific river
       count++;
     }
   }

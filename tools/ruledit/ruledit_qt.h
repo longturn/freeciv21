@@ -53,7 +53,7 @@ protected:
   void closeEvent(QCloseEvent *cevent) override;
 };
 
-/* get 'struct req_edit_list' and related functions: */
+// get 'struct req_edit_list' and related functions:
 #define SPECLIST_TAG req_edit
 #define SPECLIST_TYPE class req_edit
 #include "speclist.h"
@@ -62,7 +62,7 @@ protected:
   TYPED_LIST_ITERATE(class req_edit, reqeditlist, preqedit)
 #define req_edit_list_iterate_end LIST_ITERATE_END
 
-/* get 'struct effect_edit_list' and related functions: */
+// get 'struct effect_edit_list' and related functions:
 #define SPECLIST_TAG effect_edit
 #define SPECLIST_TYPE class effect_edit
 #include "speclist.h"
@@ -71,7 +71,7 @@ protected:
   TYPED_LIST_ITERATE(class effect_edit, effecteditlist, peffectedit)
 #define effect_edit_list_iterate_end LIST_ITERATE_END
 
-/* get 'struct req_vec_fix_list' and related functions: */
+// get 'struct req_vec_fix_list' and related functions:
 #define SPECLIST_TAG req_vec_fix
 #define SPECLIST_TYPE class req_vec_fix
 #include "speclist.h"

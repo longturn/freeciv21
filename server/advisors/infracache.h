@@ -21,7 +21,7 @@ struct adv_city {
   struct worker_activity_cache *act_cache;
   int act_cache_radius_sq;
 
-  /* building desirabilities - easiest to handle them here -- Syela */
+  // building desirabilities - easiest to handle them here -- Syela
   /* The units of building_want are output
    * (shields/gold/luxuries) multiplied by a priority
    * (SHIELD_WEIGHTING, etc or ai->shields_priority, etc)

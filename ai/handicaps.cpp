@@ -16,10 +16,10 @@
 #endif
 
 #include <QBitArray>
-/* utility */
+// utility
 #include "shared.h"
 
-/* common */
+// common
 #include "player.h"
 
 #include "handicaps.h"
@@ -84,7 +84,7 @@ const char *handicap_desc(enum handicap_type htype, bool *inverted)
   case H_DIPLOMAT:
     return _("Doesn't build offensive diplomatic units.");
   case H_AWAY:
-    return NULL; /* AI_LEVEL_AWAY has its own description */
+    return NULL; // AI_LEVEL_AWAY has its own description
   case H_LIMITEDHUTS:
     return _("Gets reduced bonuses from huts.");
   case H_DEFENSIVE:
@@ -132,10 +132,10 @@ const char *handicap_desc(enum handicap_type htype, bool *inverted)
     return _("Limits the distance to search for threatening enemy units.");
 #endif
   case H_LAST:
-    break; /* fall through -- should never see this */
+    break; // fall through -- should never see this
   }
 
-  /* Should never reach here */
+  // Should never reach here
   fc_assert(false);
   return nullptr;
 }

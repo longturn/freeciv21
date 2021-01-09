@@ -11,10 +11,10 @@
 
 #pragma once
 
-/* utility */
+// utility
 #include "shared.h"
 
-/* common */
+// common
 #include "game.h"
 #include "server_settings.h"
 
@@ -42,11 +42,11 @@ struct sset_val_name {
 #define SPECENUM_VALUE5NAME N_("Internal")
 #define SPECENUM_VALUE6 SSET_NETWORK
 #define SPECENUM_VALUE6NAME N_("Networking")
-/* keep this last */
+// keep this last
 #define SPECENUM_COUNT SSET_NUM_CATEGORIES
 #include "specenum_gen.h"
 
-/* Levels allow options to be subdivided and thus easier to navigate */
+// Levels allow options to be subdivided and thus easier to navigate
 #define SPECENUM_NAME sset_level
 #define SPECENUM_VALUE0 SSET_NONE
 #define SPECENUM_VALUE0NAME N_("?ssetlevel:None")
@@ -62,11 +62,11 @@ struct sset_val_name {
 #define SPECENUM_VALUE5NAME N_("Changed")
 #define SPECENUM_VALUE6 SSET_LOCKED
 #define SPECENUM_VALUE6NAME N_("Locked")
-/* keep this last */
+// keep this last
 #define SPECENUM_COUNT OLEVELS_NUM
 #include "specenum_gen.h"
 
-/* forward declaration */
+// forward declaration
 struct setting;
 
 struct setting *setting_by_number(int id);
@@ -99,7 +99,7 @@ int read_enum_value(const struct setting *pset);
 const char *setting_enum_secfile_str(secfile_data_t data, int val);
 const char *setting_bitwise_secfile_str(secfile_data_t data, int bit);
 
-/* Type SST_BOOL setting functions. */
+// Type SST_BOOL setting functions.
 bool setting_bool_set(struct setting *pset, const char *val,
                       struct connection *caller, char *reject_msg,
                       size_t reject_msg_len);
@@ -108,7 +108,7 @@ bool setting_bool_validate(const struct setting *pset, const char *val,
                            size_t reject_msg_len);
 bool setting_bool_get(struct setting *pset);
 
-/* Type SST_INT setting functions. */
+// Type SST_INT setting functions.
 int setting_int_min(const struct setting *pset);
 int setting_int_max(const struct setting *pset);
 bool setting_int_set(struct setting *pset, int val,
@@ -119,7 +119,7 @@ bool setting_int_validate(const struct setting *pset, int val,
                           size_t reject_msg_len);
 int setting_int_get(struct setting *pset);
 
-/* Type SST_STRING setting functions. */
+// Type SST_STRING setting functions.
 bool setting_str_set(struct setting *pset, const char *val,
                      struct connection *caller, char *reject_msg,
                      size_t reject_msg_len);
@@ -128,7 +128,7 @@ bool setting_str_validate(const struct setting *pset, const char *val,
                           size_t reject_msg_len);
 char *setting_str_get(struct setting *pset);
 
-/* Type SST_ENUM setting functions. */
+// Type SST_ENUM setting functions.
 const char *setting_enum_val(const struct setting *pset, int val,
                              bool pretty);
 bool setting_enum_set(struct setting *pset, const char *val,
@@ -138,7 +138,7 @@ bool setting_enum_validate(const struct setting *pset, const char *val,
                            struct connection *caller, char *reject_msg,
                            size_t reject_msg_len);
 
-/* Type SST_BITWISE setting functions. */
+// Type SST_BITWISE setting functions.
 const char *setting_bitwise_bit(const struct setting *pset, int bit,
                                 bool pretty);
 bool setting_bitwise_set(struct setting *pset, const char *val,
@@ -155,7 +155,7 @@ bool setting_non_default(const struct setting *pset);
 bool setting_locked(const struct setting *pset);
 void setting_lock_set(struct setting *pset, bool lock);
 
-/* get 'struct setting_list' and related functions: */
+// get 'struct setting_list' and related functions:
 #define SPECLIST_TAG setting
 #define SPECLIST_TYPE struct setting
 #include "speclist.h"

@@ -28,7 +28,7 @@
 #include <windows.h>
 #endif
 
-/* utility */
+// utility
 #include "capability.h"
 #include "deprecations.h"
 #include "fciconv.h"
@@ -40,17 +40,17 @@
 #include "shared.h"
 #include "support.h"
 
-/* client */
+// client
 #include "chatline_common.h"
 #include "client_main.h"
 #include "climisc.h"
-#include "clinet.h" /* connect_to_server() */
+#include "clinet.h" // connect_to_server()
 #include "connectdlg_common.h"
 #include "connectdlg_g.h"
 #include "packhand_gen.h"
 #include "tilespec.h"
 
-#define WAIT_BETWEEN_TRIES 100000 /* usecs */
+#define WAIT_BETWEEN_TRIES 100000 // usecs
 #define NUMBER_OF_TRIES 500
 
 bool server_quitting = false;
@@ -73,7 +73,7 @@ private:
 };
 serverProcess *serverProcess::m_instance = 0;
 
-/* Server process constructor */
+// Server process constructor
 serverProcess::serverProcess()
 {
   connect(this,
@@ -84,7 +84,7 @@ serverProcess::serverProcess()
             drop();
           });
 }
-/* Server process instance */
+// Server process instance
 serverProcess *serverProcess::i()
 {
   if (!m_instance) {
@@ -92,7 +92,7 @@ serverProcess *serverProcess::i()
   }
   return m_instance;
 }
-/* Removes server process */
+// Removes server process
 void serverProcess::drop()
 {
   if (m_instance) {
@@ -208,13 +208,13 @@ bool client_start_server()
   char buf[512];
   int connect_tries = 0;
 
-  /* only one server (forked from this client) shall be running at a time */
-  /* This also resets client_has_hack. */
+  // only one server (forked from this client) shall be running at a time
+  // This also resets client_has_hack.
   client_kill_server(true);
 
   output_window_append(ftc_client, _("Starting local server..."));
 
-  /* find a free port */
+  // find a free port
   /* Mitigate the risk of ending up with the port already
    * used by standalone server on Windows where this is known to be buggy
    * by not starting from DEFAULT_SOCK_PORT but from one higher. */
@@ -239,7 +239,7 @@ bool client_start_server()
 
   ruleset = QString::fromUtf8(tileset_what_ruleset(tileset));
 
-  /* Set up the command-line parameters. */
+  // Set up the command-line parameters.
   port_buf = QString::number(internal_server_port);
   savesdir = QStringLiteral("%1%2saves").arg(storage, DIR_SEPARATOR);
   scensdir = QStringLiteral("%1%2scenarios").arg(storage, DIR_SEPARATOR);
@@ -292,7 +292,7 @@ bool client_start_server()
   // Wait for the server to print its welcome screen
   serverProcess::i()->waitForReadyRead();
   server_quitting = false;
-  /* a reasonable number of tries */
+  // a reasonable number of tries
   QString srv = QStringLiteral("localhost");
   while (connect_to_server(
              user_name, srv, internal_server_port, buf,
@@ -307,7 +307,7 @@ bool client_start_server()
   /* weird, but could happen, if server doesn't support new startup stuff
    * capabilities won't help us here... */
   if (!client.conn.used || serverProcess::i()->processId() == 0) {
-    /* possible that server is still running. kill it, kill it with Igni */
+    // possible that server is still running. kill it, kill it with Igni
     client_kill_server(true);
 
     qCritical("Failed to connect to spawned server!");
@@ -404,7 +404,7 @@ void send_client_wants_hack(const char *filename)
     fc_snprintf(challenge_fullname, sizeof(challenge_fullname), "%s%c%s",
                 sdir, DIR_SEPARATOR_CHAR, filename);
 
-    /* generate an authentication token */
+    // generate an authentication token
     randomize_string(req.token, sizeof(req.token));
 
     file = secfile_new(false);
@@ -415,7 +415,7 @@ void send_client_wants_hack(const char *filename)
     }
     secfile_destroy(file);
 
-    /* tell the server what we put into the file */
+    // tell the server what we put into the file
     send_packet_single_want_hack_req(&client.conn, &req);
   }
 }
@@ -425,7 +425,7 @@ void send_client_wants_hack(const char *filename)
  */
 void handle_single_want_hack_reply(bool you_have_hack)
 {
-  /* remove challenge file */
+  // remove challenge file
   if (challenge_fullname[0] != '\0') {
     if (fc_remove(challenge_fullname) == -1) {
       qCritical("Couldn't remove temporary file: %s", challenge_fullname);
@@ -439,7 +439,7 @@ void handle_single_want_hack_reply(bool you_have_hack)
                            "You have command access level 'hack'."));
     client_has_hack = true;
   } else if (is_server_running()) {
-    /* only output this if we started the server and we NEED hack */
+    // only output this if we started the server and we NEED hack
     output_window_append(ftc_client,
                          _("Failed to obtain the required access "
                            "level to take control of the server. "

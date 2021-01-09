@@ -17,12 +17,12 @@
 
 #include <cstring>
 
-/* utility */
+// utility
 #include "fcintl.h"
-#include "log.h" /* fc_assert */
+#include "log.h" // fc_assert
 #include "timing.h"
 
-/* common */
+// common
 #include "ai.h"
 #include "player.h"
 
@@ -127,7 +127,7 @@ const char *ai_type_name_or_fallback(const char *orig_name)
     fb = ai_type_by_name("classic");
 
     if (fb != NULL) {
-      /* Get pointer to persistent name of the ai_type */
+      // Get pointer to persistent name of the ai_type
       return ai_name(fb);
     }
   }

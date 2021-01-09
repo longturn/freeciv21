@@ -15,13 +15,13 @@
 #include <fc_config.h>
 #endif
 
-/* utilities */
+// utilities
 #include "log.h"
 
-/* common */
+// common
 #include "map.h"
 
-/* generator */
+// generator
 #include "height_map.h"
 #include "mapgen_topology.h"
 #include "mapgen_utils.h"
@@ -51,16 +51,16 @@ static char *tmap_y2str(int ycoor)
 
     switch (temperature_map[idx]) {
     case TT_TROPICAL:
-      *p++ = 't'; /* tropical */
+      *p++ = 't'; // tropical
       break;
     case TT_TEMPERATE:
-      *p++ = 'm'; /* medium */
+      *p++ = 'm'; // medium
       break;
     case TT_COLD:
-      *p++ = 'c'; /* cold */
+      *p++ = 'c'; // cold
       break;
     case TT_FROZEN:
-      *p++ = 'f'; /* frozen */
+      *p++ = 'f'; // frozen
       break;
     }
   }
@@ -69,7 +69,7 @@ static char *tmap_y2str(int ycoor)
 
   return buf;
 }
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
 /**
    Return TRUE if temperateure_map is initialized
@@ -118,24 +118,24 @@ void create_tmap(bool real)
 {
   int i;
 
-  /* if map is defined this is not changed */
-  /* TODO: load if from scenario game with tmap */
-  /* to debug, never load a this time */
+  // if map is defined this is not changed
+  // TODO: load if from scenario game with tmap
+  // to debug, never load a this time
   fc_assert_ret(NULL == temperature_map);
 
   temperature_map = new int[MAP_INDEX_SIZE];
   whole_map_iterate(&(wld.map), ptile)
   {
-    /* the base temperature is equal to base map_colatitude */
+    // the base temperature is equal to base map_colatitude
     int t = map_colatitude(ptile);
 
     if (!real) {
       tmap(ptile) = t;
     } else {
-      /* high land can be 30% cooler */
+      // high land can be 30% cooler
       float height = -0.3 * MAX(0, hmap(ptile) - hmap_shore_level)
                      / (hmap_max_level - hmap_shore_level);
-      /* near ocean temperature can be 15% more "temperate" */
+      // near ocean temperature can be 15% more "temperate"
       float temperate =
           (0.15 * (wld.map.server.temperature / 100 - t / MAX_COLATITUDE) * 2
            * MIN(50,
@@ -146,14 +146,14 @@ void create_tmap(bool real)
     }
   }
   whole_map_iterate_end;
-  /* adjust to get well sizes frequencies */
+  // adjust to get well sizes frequencies
   /* Notice: if colatitude is loaded from a scenario never call adjust.
              Scenario may have an odd colatitude distribution and adjust will
              break it */
   if (!wld.map.server.alltemperate) {
     adjust_int_map(temperature_map, MAX_COLATITUDE);
   }
-  /* now simplify to 4 base values */
+  // now simplify to 4 base values
   for (i = 0; i < MAP_INDEX_SIZE; i++) {
     int t = temperature_map[i];
 

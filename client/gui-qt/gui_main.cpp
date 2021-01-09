@@ -10,7 +10,7 @@
 
 #ifdef AUDIO_SDL
 #include <SDL2/SDL.h>
-#endif /* AUDIO_SDL */
+#endif // AUDIO_SDL
 
 #include "gui_main.h"
 #include <cstdio>
@@ -201,7 +201,7 @@ void qtg_remove_net_input() {}
    secondary (inactive) units on the same tile.
  */
 void qtg_set_unit_icon(int idx, struct unit *punit)
-{ /* PORTME */
+{ // PORTME
 }
 
 /**
@@ -212,7 +212,7 @@ void qtg_set_unit_icon(int idx, struct unit *punit)
    Is disabled by default.
  */
 void qtg_set_unit_icons_more_arrow(bool onoff)
-{ /* PORTME */
+{ // PORTME
 }
 
 /**
@@ -236,7 +236,7 @@ void qtg_real_focus_units_changed()
  */
 void qtg_add_idle_callback(void(callback)(void *), void *data)
 {
-  call_me_back *cb = new call_me_back; /* removed in mr_idler:idling() */
+  call_me_back *cb = new call_me_back; // removed in mr_idler:idling()
 
   cb->callback = callback;
   cb->data = data;
@@ -412,7 +412,7 @@ enum gui_type qtg_get_gui_type() { return GUI_QT; }
    Called when the tileset is changed to reset the unit pixmap table.
  */
 void reset_unit_table()
-{ /* FIXME */
+{ // FIXME
 }
 
 /**
@@ -442,14 +442,14 @@ void popup_quit_dialog()
  */
 void qtg_insert_client_build_info(char *outbuf, size_t outlen)
 {
-  /* There's also an separate entry about Qt in help menu. */
+  // There's also an separate entry about Qt in help menu.
 
   cat_snprintf(outbuf, outlen, _("\nBuilt against Qt %s, using %s"),
                QT_VERSION_STR, qVersion());
 
 #ifdef FC_QT6_MODE
   cat_snprintf(outbuf, outlen, _("\nBuilt in Qt5x mode."));
-#else /* FC_QT6_MODE */
+#else // FC_QT6_MODE
   cat_snprintf(outbuf, outlen, _("\nBuilt in Qt5 mode."));
-#endif /* FC_QT6_MODE */
+#endif // FC_QT6_MODE
 }

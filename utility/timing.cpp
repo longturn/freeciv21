@@ -17,7 +17,7 @@
 #include "timing.h"
 #include <QElapsedTimer>
 
-/* utility */
+// utility
 #include "log.h"
 
 Q_LOGGING_CATEGORY(timers_category, "freeciv.timers")

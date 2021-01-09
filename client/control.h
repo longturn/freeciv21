@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-/* common */
+// common
 #include "unitlist.h"
 
 enum cursor_hover_state {
@@ -25,7 +25,7 @@ enum cursor_hover_state {
   HOVER_GOTO_SEL_TGT,
 };
 
-/* Selecting unit from a stack without popup. */
+// Selecting unit from a stack without popup.
 enum quickselect_type {
   SELECT_POPUP = 0,
   SELECT_SEA,
@@ -112,13 +112,13 @@ void request_unit_wakeup(struct unit *punit);
 enum unit_select_type_mode { SELTYPE_SINGLE, SELTYPE_SAME, SELTYPE_ALL };
 
 enum unit_select_location_mode {
-  SELLOC_UNITS, /* Units on tile. */
-  SELLOC_TILE,  /* Tile. */
-  SELLOC_CONT,  /* Continent. */
-  SELLOC_LAND,  /* Move type: land. */
-  SELLOC_SEA,   /* Move type: sea. */
-  SELLOC_BOTH,  /* Move type: both. */
-  SELLOC_WORLD, /* World. */
+  SELLOC_UNITS, // Units on tile.
+  SELLOC_TILE,  // Tile.
+  SELLOC_CONT,  // Continent.
+  SELLOC_LAND,  // Move type: land.
+  SELLOC_SEA,   // Move type: sea.
+  SELLOC_BOTH,  // Move type: both.
+  SELLOC_WORLD, // World.
   SELLOC_COUNT
 };
 

@@ -17,5 +17,5 @@
 GUI_FUNC_PROTO(void, popup_players_dialog, bool raise)
 GUI_FUNC_PROTO(void, real_players_dialog_update, void *)
 
-/* Actually defined in update_queue.c */
+// Actually defined in update_queue.c
 void players_dialog_update();

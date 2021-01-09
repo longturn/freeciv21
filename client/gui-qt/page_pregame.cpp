@@ -339,14 +339,14 @@ void page_pregame::update_buttons()
   bool sensitive;
   QString text;
 
-  /* Observe button */
+  // Observe button
   if (client_is_observer() || client_is_global_observer()) {
     ui.bops->setText(_("Don't Observe"));
   } else {
     ui.bops->setText(_("Observe"));
   }
 
-  /* Ready button */
+  // Ready button
   if (can_client_control()) {
     sensitive = true;
     if (client_player()->is_ready) {
@@ -391,7 +391,7 @@ void page_pregame::update_buttons()
   ui.bstart->setEnabled(sensitive);
   ui.bstart->setText(text);
 
-  /* Nation button */
+  // Nation button
   sensitive = game.info.is_new_game && can_client_control();
   ui.bpick->setEnabled(sensitive);
 

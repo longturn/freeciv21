@@ -17,12 +17,12 @@
 
 #include <cstdarg>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "registry.h"
 
-/* common */
+// common
 #include "fc_interface.h"
 #include "game.h"
 
@@ -105,7 +105,7 @@ bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
   if (!secfile_lookup_int(file, &r, "%s.r", colorpath)
       || !secfile_lookup_int(file, &g, "%s.g", colorpath)
       || !secfile_lookup_int(file, &b, "%s.b", colorpath)) {
-    /* One color value (red, green or blue) is missing. */
+    // One color value (red, green or blue) is missing.
     return false;
   }
 
@@ -144,7 +144,7 @@ bool rgbcolor_to_hex(const struct rgbcolor *prgbcolor, char *hex,
                      size_t hex_len)
 {
   fc_assert_ret_val(prgbcolor != NULL, false);
-  /* Needs a length greater than 7 ('#' + 6 hex digites and '\0'). */
+  // Needs a length greater than 7 ('#' + 6 hex digites and '/* Needs a length greater than 7 ('#' + 6 hex digites and '\0'). */').
   fc_assert_ret_val(hex_len > 7, false);
 
   fc_assert_ret_val(0 <= prgbcolor->r && prgbcolor->r <= 255, false);

@@ -20,4 +20,4 @@ bool universal_value_initial(struct universal *src);
 void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
                            void *data);
 
-#endif /* FC__UNIV_VALUE_H */
+#endif // FC__UNIV_VALUE_H

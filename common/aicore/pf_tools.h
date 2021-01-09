@@ -25,10 +25,10 @@
  * for finding the path.
  */
 struct pft_amphibious {
-  /* The caller must initialize these. */
+  // The caller must initialize these.
   struct pf_parameter land, sea;
 
-  /* Initialized in pft_fill_amphibious_parameter; do not touch. */
+  // Initialized in pft_fill_amphibious_parameter; do not touch.
   int land_scale, sea_scale;
   struct pf_parameter combined;
 };

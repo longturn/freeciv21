@@ -24,7 +24,7 @@
 #include <QCommandLineParser>
 #include <QCoreApplication>
 
-/* utility */
+// utility
 #include "astring.h"
 #include "capability.h"
 #include "fciconv.h"
@@ -33,12 +33,12 @@
 #include "registry.h"
 #include "support.h"
 
-/* common */
+// common
 #include "capstr.h"
 #include "connection.h"
 #include "events.h"
 #include "fc_interface.h"
-#include "fc_types.h" /* LINE_BREAK */
+#include "fc_types.h" // LINE_BREAK
 #include "game.h"
 #include "government.h"
 #include "improvement.h"
@@ -47,14 +47,14 @@
 #include "player.h"
 #include "version.h"
 
-/* client */
+// client
 #include "client_main.h"
 #include "climisc.h"
 #include "helpdata.h"
 #include "helpdlg_g.h"
 #include "tilespec.h"
 
-/* server */
+// server
 #include "citytools.h"
 #include "commands.h"
 #include "connecthand.h"
@@ -101,90 +101,90 @@ struct tag_types {
 };
 
 struct tag_types html_tags = {
-    /* file extension */
+    // file extension
     "html",
 
-    /* header */
+    // header
     "<html><head><link rel=\"stylesheet\" type=\"text/css\" "
     "href=\"manual.css\"/><meta http-equiv=\"Content-Type\" "
     "content=\"text/html; charset=UTF-8\"/></head><body>\n\n",
 
-    /* title begin */
+    // title begin
     "<h1>",
 
-    /* title end */
+    // title end
     "</h1>",
 
-    /* section title begin */
+    // section title begin
     "<h3 class='section'>",
 
-    /* section title end */
+    // section title end
     "</h3>",
 
-    /* image begin */
+    // image begin
     "<img src=\"",
 
-    /* image end */
+    // image end
     ".png\">",
 
-    /* item begin */
+    // item begin
     "<div class='item' id='%s%d'>\n",
 
-    /* item end */
+    // item end
     "</div>\n",
 
-    /* subitem begin */
+    // subitem begin
     "<pre class='%s'>",
 
-    /* subitem end */
+    // subitem end
     "</pre>\n",
 
-    /* tail */
+    // tail
     "</body></html>"};
 
 struct tag_types wiki_tags = {
-    /* file extension */
+    // file extension
     "mediawiki",
 
-    /* header */
+    // header
     " ",
 
-    /* title begin */
+    // title begin
     "=",
 
-    /* title end */
+    // title end
     "=",
 
-    /* section title begin */
+    // section title begin
     "===",
 
-    /* section title end */
+    // section title end
     "===",
 
-    /* image begin */
+    // image begin
     "[[Image:",
 
-    /* image end */
+    // image end
     ".png]]",
 
-    /* item begin */
+    // item begin
     "----\n<!-- %s %d -->\n",
 
-    /* item end */
+    // item end
     "\n",
 
-    /* subitem begin */
+    // subitem begin
     "<!-- %s -->\n",
 
-    /* subitem end */
+    // subitem end
     "\n",
 
-    /* tail */
+    // tail
     " "};
 
 void insert_client_build_info(char *outbuf, size_t outlen);
 
-/* Needed for "About Freeciv" help */
+// Needed for "About Freeciv" help
 const char *client_string = "freeciv-manual";
 
 static QString ruleset;
@@ -193,14 +193,14 @@ static QString ruleset;
    Client stub
  */
 void popup_help_dialog_string(const char *item)
-{ /* Empty stub. */
+{ // Empty stub.
 }
 
 /**
    Client stub
  */
 void popdown_help_dialog(void)
-{ /* Empty stub. */
+{ // Empty stub.
 }
 
 struct tileset *tileset;
@@ -249,15 +249,15 @@ static bool manual_command(struct tag_types *tag_info)
   char filename[40];
   struct connection my_conn;
 
-  /* Default client access. */
+  // Default client access.
   connection_common_init(&my_conn);
   my_conn.access_level = ALLOW_CTRL;
 
-  /* Reset aifill to zero */
+  // Reset aifill to zero
   game.info.aifill = 0;
 
   if (!load_rulesets(NULL, NULL, false, NULL, false, false, false)) {
-    /* Failed to load correct ruleset */
+    // Failed to load correct ruleset
     return false;
   }
 
@@ -281,7 +281,7 @@ static bool manual_command(struct tag_types *tag_info)
 
     switch (manuals) {
     case MANUAL_SETTINGS:
-      /* TRANS: markup ... Freeciv version ... ruleset name ... markup */
+      // TRANS: markup ... Freeciv version ... ruleset name ... markup
       fprintf(doc, _("%sFreeciv %s server options (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
@@ -366,7 +366,7 @@ static bool manual_command(struct tag_types *tag_info)
       break;
 
     case MANUAL_COMMANDS:
-      /* TRANS: markup ... Freeciv version ... markup */
+      // TRANS: markup ... Freeciv version ... markup
       fprintf(doc, _("%sFreeciv %s server commands%s\n\n"),
               tag_info->title_begin, VERSION_STRING, tag_info->title_end);
       for (i = 0; i < CMD_NUM; i++) {
@@ -402,7 +402,7 @@ static bool manual_command(struct tag_types *tag_info)
       break;
 
     case MANUAL_TERRAIN:
-      /* TRANS: markup ... Freeciv version ... ruleset name ... markup */
+      // TRANS: markup ... Freeciv version ... ruleset name ... markup
       fprintf(doc, _("%sFreeciv %s terrain help (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
@@ -413,7 +413,7 @@ static bool manual_command(struct tag_types *tag_info)
       fprintf(doc, "<th>%s<br/>%s<br/>%s<br/>%s<br/>%s<br/>%s<br/>(%s)</th>",
               _("Irrigation"), _("Cultivate"), _("Mining"), _("Plant"),
               _("Transform"),
-              /* xgettext:no-c-format */
+              // xgettext:no-c-format
               _("% of Road bonus"), _("turns"));
       fprintf(doc, "<th>%s<br/>%s</th>", _("Clean pollution"),
               _("Clean fallout"));
@@ -426,7 +426,7 @@ static bool manual_command(struct tag_types *tag_info)
         if (++ri < game.control.num_road_types) {
           fprintf(doc, "%s<br/>", extra_name_translation(pextra));
         } else {
-          /* Last one */
+          // Last one
           fprintf(doc, "%s</th>", extra_name_translation(pextra));
         }
       }
@@ -437,7 +437,7 @@ static bool manual_command(struct tag_types *tag_info)
         struct extra_type **r;
 
         if (0 == qstrlen(terrain_rule_name(pterrain))) {
-          /* Must be a disabled piece of terrain */
+          // Must be a disabled piece of terrain
           continue;
         }
 
@@ -539,12 +539,12 @@ static bool manual_command(struct tag_types *tag_info)
     case MANUAL_BUILDINGS:
     case MANUAL_WONDERS:
       if (manuals == MANUAL_BUILDINGS) {
-        /* TRANS: markup ... Freeciv version ... ruleset name ... markup */
+        // TRANS: markup ... Freeciv version ... ruleset name ... markup
         fprintf(doc, _("%sFreeciv %s buildings help (%s)%s\n\n"),
                 tag_info->title_begin, VERSION_STRING, game.control.name,
                 tag_info->title_end);
       } else {
-        /* TRANS: markup ... Freeciv version ... ruleset name ... markup */
+        // TRANS: markup ... Freeciv version ... ruleset name ... markup
         fprintf(doc, _("%sFreeciv %s wonders help (%s)%s\n\n"),
                 tag_info->title_begin, VERSION_STRING, game.control.name,
                 tag_info->title_end);
@@ -580,7 +580,7 @@ static bool manual_command(struct tag_types *tag_info)
           char text[512], text2[512];
           fc_snprintf(
               text2, sizeof(text2),
-              /* TRANS: improvement requires a feature to be absent. */
+              // TRANS: improvement requires a feature to be absent.
               req->present ? "%s" : _("no %s"),
               VUT_NONE != req->source.kind ? universal_name_translation(
                   &req->source, text, sizeof(text))
@@ -610,8 +610,8 @@ static bool manual_command(struct tag_types *tag_info)
     case MANUAL_GOVS:
       /* Freeciv-web uses (parts of) the government HTML output in its own
        * manual pages. */
-      /* FIXME: this doesn't resemble the wiki manual at all. */
-      /* TRANS: markup ... Freeciv version ... ruleset name ... markup */
+      // FIXME: this doesn't resemble the wiki manual at all.
+      // TRANS: markup ... Freeciv version ... ruleset name ... markup
       fprintf(doc, _("%sFreeciv %s governments help (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
@@ -633,8 +633,8 @@ static bool manual_command(struct tag_types *tag_info)
     case MANUAL_UNITS:
       /* Freeciv-web uses (parts of) the unit type HTML output in its own
        * manual pages. */
-      /* FIXME: this doesn't resemble the wiki manual at all. */
-      /* TRANS: markup ... Freeciv version ... ruleset name ... markup */
+      // FIXME: this doesn't resemble the wiki manual at all.
+      // TRANS: markup ... Freeciv version ... ruleset name ... markup
       fprintf(doc, _("%sFreeciv %s unit types help (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
@@ -690,8 +690,8 @@ static bool manual_command(struct tag_types *tag_info)
       break;
 
     case MANUAL_TECHS:
-      /* FIXME: this doesn't resemble the wiki manual at all. */
-      /* TRANS: markup ... Freeciv version ... ruleset name ... markup */
+      // FIXME: this doesn't resemble the wiki manual at all.
+      // TRANS: markup ... Freeciv version ... ruleset name ... markup
       fprintf(doc, _("%sFreeciv %s tech help (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
@@ -718,12 +718,12 @@ static bool manual_command(struct tag_types *tag_info)
     case MANUAL_COUNT:
       Q_UNREACHABLE();
       break;
-    } /* switch */
+    } // switch
 
     fprintf(doc, "%s", tag_info->tail);
     fclose(doc);
     qInfo(_("Manual file %s successfully written."), filename);
-  } /* manuals */
+  } // manuals
 
   return true;
 }
@@ -794,22 +794,22 @@ int main(int argc, char **argv)
 
   init_our_capability();
 
-  /* must be before con_log_init() */
+  // must be before con_log_init()
   init_connections();
   con_log_init(srvarg.log_filename);
-  /* logging available after this point */
+  // logging available after this point
 
-  /* Get common code to treat us as a tool. */
+  // Get common code to treat us as a tool.
   i_am_tool();
 
   /* Initialize the fc_interface functions needed to generate the help
    * text. */
   fc_interface_init_tool();
 
-  /* Initialize game with default values */
+  // Initialize game with default values
   game_init(false);
 
-  /* Set ruleset user requested in to use */
+  // Set ruleset user requested in to use
   if (!ruleset.isEmpty()) {
     sz_strlcpy(game.server.rulesetdir, qPrintable(ruleset));
   }
@@ -832,5 +832,5 @@ int main(int argc, char **argv)
  */
 void insert_client_build_info(char *outbuf, size_t outlen)
 {
-  /* Nothing here */
+  // Nothing here
 }

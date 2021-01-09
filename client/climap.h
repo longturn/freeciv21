@@ -10,8 +10,8 @@
 
 #pragma once
 
-/* common */
-#include "fc_types.h" /* enum direction8, struct tile */
+// common
+#include "fc_types.h" // enum direction8, struct tile
 
 enum known_type client_tile_get_known(const struct tile *ptile);
 

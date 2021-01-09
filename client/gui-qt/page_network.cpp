@@ -260,7 +260,7 @@ void page_network::update_server_list(enum server_scan_type sstype,
   }
   server_list_iterate_end;
 
-  /* Remove unneeded rows, if there are any */
+  // Remove unneeded rows, if there are any
   while (old_row_count - row > 0) {
     sel->removeRow(old_row_count - 1);
     old_row_count--;

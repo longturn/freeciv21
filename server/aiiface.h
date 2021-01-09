@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include "ai.h" /* incident_type */
+#include "ai.h" // incident_type
 
 void ai_init();
 

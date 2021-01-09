@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include "helpdlg_g.h" /* enum help_page_type */
+#include "helpdlg_g.h" // enum help_page_type
 
 struct help_item {
   char *topic, *text;

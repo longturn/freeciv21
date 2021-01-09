@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include "packets.h" /* enum report_type */
+#include "packets.h" // enum report_type
 
 /*
  * Every TIMER_INTERVAL milliseconds real_timer_callback is
@@ -75,15 +75,15 @@ extern bool waiting_for_end_turn;
 
 #ifdef FREECIV_DEBUG
 extern bool hackless;
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
-struct global_worklist_list; /* Defined in global_worklist.[ch]. */
+struct global_worklist_list; // Defined in global_worklist.[ch].
 
 /* Structure for holding global client data.
  *
  * TODO: Lots more variables could be added here. */
 extern struct civclient {
-  /* this is the client's connection to the server */
+  // this is the client's connection to the server
   struct connection conn;
   struct global_worklist_list *worklists;
 } client;
@@ -114,6 +114,6 @@ void client_exit();
 bool is_client_quitting();
 void start_quitting();
 
-/* Set in GUI code. */
+// Set in GUI code.
 extern const char *const gui_character_encoding;
 extern const bool gui_use_transliteration;

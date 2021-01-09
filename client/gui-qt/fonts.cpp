@@ -177,7 +177,7 @@ void configure_fonts()
     fn_bytes = font_name.toLocal8Bit();
     fc_strlcpy(gui_options.gui_qt_font_city_names, fn_bytes.data(), 512);
   }
-  /* default for help text */
+  // default for help text
   font_name = configure_font(fonts::help_text, sl, default_size);
   if (!font_name.isEmpty()) {
     fn_bytes = font_name.toLocal8Bit();
@@ -185,7 +185,7 @@ void configure_fonts()
   }
   sl.clear();
 
-  /* notify */
+  // notify
   sl << QStringLiteral("Cousine") << QStringLiteral("Liberation Mono")
      << QStringLiteral("Source Code Pro")
      << QStringLiteral("Source Code Pro [ADBO]")
@@ -197,14 +197,14 @@ void configure_fonts()
     fc_strlcpy(gui_options.gui_qt_font_notify_label, fn_bytes.data(), 512);
   }
 
-  /* standard for chat */
+  // standard for chat
   font_name = configure_font(fonts::chatline, sl, default_size);
   if (!font_name.isEmpty()) {
     fn_bytes = font_name.toLocal8Bit();
     fc_strlcpy(gui_options.gui_qt_font_chatline, fn_bytes.data(), 512);
   }
 
-  /* City production */
+  // City production
   sl.clear();
   sl << QStringLiteral("Arimo") << QStringLiteral("Play")
      << QStringLiteral("Tinos") << QStringLiteral("Ubuntu")
@@ -217,7 +217,7 @@ void configure_fonts()
     fc_strlcpy(gui_options.gui_qt_font_city_productions, fn_bytes.data(),
                512);
   }
-  /* Reqtree */
+  // Reqtree
   sl.clear();
   sl << QStringLiteral("Papyrus") << QStringLiteral("Segoe Script")
      << QStringLiteral("Comic Sans MS") << QStringLiteral("Droid Sans")

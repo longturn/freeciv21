@@ -15,7 +15,7 @@
 // utility
 #include "fcintl.h"
 
-/* common */
+// common
 #include "effects.h"
 
 /* common/scriptcore */

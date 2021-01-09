@@ -9,10 +9,10 @@
 **************************************************************************/
 #pragma once
 
-/* common */
-#include "city.h" /* CITY_MAP_MAX_SIZE */
+// common
+#include "city.h" // CITY_MAP_MAX_SIZE
 
-/* A description of the goal. */
+// A description of the goal.
 struct cm_parameter {
   int minimal_surplus[O_LAST];
   bool max_growth;
@@ -24,7 +24,7 @@ struct cm_parameter {
   int happy_factor;
 };
 
-/* A result which can examined. */
+// A result which can examined.
 struct cm_result {
   bool aborted;
   bool found_a_valid, disorder, happy;

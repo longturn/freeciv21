@@ -217,7 +217,7 @@ void fc_client::switch_page(int new_pg)
     // Uncommenting will fix some resizing errors but will cause some
     // problems with no focus caused by update_queue or something
     // QCoreApplication::processEvents();
-    /* For MS Windows, it might ingore first */
+    // For MS Windows, it might ingore first
     showMaximized();
     queen()->infotab->chtwdg->update_widgets();
     status_bar->setVisible(false);

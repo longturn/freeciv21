@@ -17,7 +17,7 @@
 
 #include <string.h>
 
-/* utility */
+// utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "support.h"
@@ -82,7 +82,7 @@ unsigned int get_tokens(const char *str, char **tokens, size_t num_tokens,
   for (token = 0; token < num_tokens && *str != '\0'; token++) {
     size_t len, padlength = 0;
 
-    /* skip leading delimiters */
+    // skip leading delimiters
     str += strspn(str, delimiterset);
 
     len = fc_strcspn(str, delimiterset);
@@ -92,13 +92,13 @@ unsigned int get_tokens(const char *str, char **tokens, size_t num_tokens,
       if ((str[0] == '"' && str[len - 1] == '"')
           || (str[0] == '\'' && str[len - 1] == '\'')) {
         len -= 2;
-        padlength = 1; /* to set the string past the end quote */
+        padlength = 1; // to set the string past the end quote
         str++;
       }
     }
 
     tokens[token] = static_cast<char *>(fc_malloc(len + 1));
-    (void) fc_strlcpy(tokens[token], str, len + 1); /* adds the '\0' */
+    (void) fc_strlcpy(tokens[token], str, len + 1); // adds the '/* adds the '\0' */'
 
     str += len + padlength;
   }

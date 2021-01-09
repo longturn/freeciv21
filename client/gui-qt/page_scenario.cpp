@@ -148,7 +148,7 @@ void page_scenario::update_scenarios_page()
         fcver *= 100;
       }
       fcver -=
-          (fcver % 10000); /* Patch level does not affect compatibility */
+          (fcver % 10000); // Patch level does not affect compatibility
       sname = secfile_lookup_str_default(sf, NULL, "scenario.name");
       sdescription =
           secfile_lookup_str_default(sf, NULL, "scenario.description");
@@ -171,7 +171,7 @@ void page_scenario::update_scenarios_page()
           min = fcver / 10000;
           version = QStringLiteral("%1.%2").arg(maj).arg(min);
         } else {
-          /* TRANS: Unknown scenario format */
+          // TRANS: Unknown scenario format
           version = QString(_("pre-2.6"));
         }
 

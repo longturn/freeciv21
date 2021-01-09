@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "diptreaty.h"
 #include "game.h"
 #include "nation.h"
@@ -159,7 +159,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
           || (ds == DS_ARMISTICE && type == CLAUSE_PEACE)
           || (ds == DS_ALLIANCE && type == CLAUSE_ALLIANCE)
           || (ds == DS_CEASEFIRE && type == CLAUSE_CEASEFIRE))) {
-    /* we already have this diplomatic state */
+    // we already have this diplomatic state
     qCritical("Illegal treaty suggested between %s and %s - they "
               "already have this treaty level.",
               nation_rule_name(nation_of_player(ptreaty->plr0)),
@@ -168,7 +168,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
   }
 
   if (type == CLAUSE_EMBASSY && player_has_real_embassy(pto, pfrom)) {
-    /* we already have embassy */
+    // we already have embassy
     qCritical("Illegal embassy clause: %s already have embassy with %s.",
               nation_rule_name(nation_of_player(pto)),
               nation_rule_name(nation_of_player(pfrom)));
@@ -191,11 +191,11 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
   {
     if (old_clause->type == type && old_clause->from == pfrom
         && old_clause->value == val) {
-      /* same clause already there */
+      // same clause already there
       return false;
     }
     if (is_pact_clause(type) && is_pact_clause(old_clause->type)) {
-      /* pact clause already there */
+      // pact clause already there
       ptreaty->accept0 = false;
       ptreaty->accept1 = false;
       old_clause->type = type;
@@ -203,7 +203,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
     }
     if (type == CLAUSE_GOLD && old_clause->type == CLAUSE_GOLD
         && old_clause->from == pfrom) {
-      /* gold clause there, different value */
+      // gold clause there, different value
       ptreaty->accept0 = false;
       ptreaty->accept1 = false;
       old_clause->value = val;

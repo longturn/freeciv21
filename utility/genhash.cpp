@@ -61,15 +61,15 @@
 
 #include <cstring>
 
-/* utility */
+// utility
 #include "log.h"
-#include "shared.h" /* ARRAY_SIZE */
+#include "shared.h" // ARRAY_SIZE
 #include "support.h"
 
 #include "genhash.h"
 
-#define FULL_RATIO 0.75 /* consider expanding when above this */
-#define MIN_RATIO 0.24  /* shrink when below this */
+#define FULL_RATIO 0.75 // consider expanding when above this
+#define MIN_RATIO 0.24  // shrink when below this
 
 struct genhash_entry {
   void *key;
@@ -78,7 +78,7 @@ struct genhash_entry {
   struct genhash_entry *next;
 };
 
-/* Contents of the opaque type: */
+// Contents of the opaque type:
 struct genhash {
   struct genhash_entry **buckets;
   genhash_val_fn_t key_val_func;
@@ -89,7 +89,7 @@ struct genhash {
   genhash_free_fn_t data_free_func;
   size_t num_buckets;
   size_t num_entries;
-  bool no_shrink; /* Do not auto-shrink when set. */
+  bool no_shrink; // Do not auto-shrink when set.
 };
 
 struct genhash_iter {
@@ -112,7 +112,7 @@ genhash_val_t genhash_str_val_func(const char *vkey)
     result *= 5;
     result += *vkey;
   }
-  result &= 0xFFFFFFFF; /* To make results independent of sizeof(long) */
+  result &= 0xFFFFFFFF; // To make results independent of sizeof(long)
   return result;
 }
 
@@ -156,7 +156,7 @@ void genhash_str_free_func(char *vkey)
    This one is more of a recommendation, to ensure enough free space:
    * genhash_calc_num_buckets(x) >= 2 * x.
  */
-#define MIN_BUCKETS 29 /* Historical purposes. */
+#define MIN_BUCKETS 29 // Historical purposes.
 static size_t genhash_calc_num_buckets(size_t num_entries)
 {
   /* A bunch of prime numbers close to successive elements of the sequence
@@ -171,7 +171,7 @@ static size_t genhash_calc_num_buckets(size_t num_entries)
   const size_t *pframe = sizes, *pmid;
   int fsize = ARRAY_SIZE(sizes) - 1, lpart;
 
-  num_entries <<= 1; /* breathing room */
+  num_entries <<= 1; // breathing room
 
   while (fsize > 0) {
     lpart = fsize >> 1;
@@ -546,13 +546,13 @@ struct genhash *genhash_copy(const struct genhash *pgenhash)
 
   new_genhash = new genhash;
 
-  /* Copy fields. */
+  // Copy fields.
   *new_genhash = *pgenhash;
 
-  /* But make fresh buckets. */
+  // But make fresh buckets.
   new_genhash->buckets = new genhash_entry *[new_genhash->num_buckets]();
 
-  /* Let's re-insert all data */
+  // Let's re-insert all data
   src_bucket = pgenhash->buckets;
   end = src_bucket + pgenhash->num_buckets;
   dest_bucket = new_genhash->buckets;
@@ -609,7 +609,7 @@ bool genhash_insert(struct genhash *pgenhash, const void *key,
     return false;
   } else {
     if (genhash_maybe_expand(pgenhash)) {
-      /* Recalculate slot. */
+      // Recalculate slot.
       slot = pgenhash->buckets + (hash_val % pgenhash->num_buckets);
     }
     genhash_slot_create(pgenhash, slot, key, data, hash_val);
@@ -652,14 +652,14 @@ bool genhash_replace_full(struct genhash *pgenhash, const void *key,
   hash_val = genhash_val_calc(pgenhash, key);
   slot = genhash_slot_lookup(pgenhash, key, hash_val);
   if (NULL != *slot) {
-    /* Replace. */
+    // Replace.
     genhash_slot_get(slot, old_pkey, old_pdata);
     genhash_slot_set(pgenhash, slot, key, data);
     return true;
   } else {
-    /* Insert. */
+    // Insert.
     if (genhash_maybe_expand(pgenhash)) {
-      /* Recalculate slot. */
+      // Recalculate slot.
       slot = pgenhash->buckets + (hash_val % pgenhash->num_buckets);
     }
     genhash_default_get(old_pkey, old_pdata);
@@ -748,14 +748,14 @@ bool genhashs_are_equal_full(const struct genhash *pgenhash1,
   struct genhash_entry *const *bucket1, *const *max1, *const *slot2;
   const struct genhash_entry *iter1;
 
-  /* Check pointers. */
+  // Check pointers.
   if (pgenhash1 == pgenhash2) {
     return true;
   } else if (NULL == pgenhash1 || NULL == pgenhash2) {
     return false;
   }
 
-  /* General check. */
+  // General check.
   if (pgenhash1->num_entries != pgenhash2->num_entries
       /* If the key functions is not the same, we cannot know if the
        * keys are equals. */
@@ -764,7 +764,7 @@ bool genhashs_are_equal_full(const struct genhash *pgenhash1,
     return false;
   }
 
-  /* Compare buckets. */
+  // Compare buckets.
   bucket1 = pgenhash1->buckets;
   max1 = bucket1 + pgenhash1->num_buckets;
   for (; bucket1 < max1; bucket1++) {
@@ -862,7 +862,7 @@ genhash_iter_init_common(struct genhash_iter *iter,
   iter->bucket = pgenhash->buckets;
   iter->end = pgenhash->buckets + pgenhash->num_buckets;
 
-  /* Seek to the first used bucket. */
+  // Seek to the first used bucket.
   for (; iter->bucket < iter->end; iter->bucket++) {
     if (NULL != *iter->bucket) {
       iter->iterator = *iter->bucket;

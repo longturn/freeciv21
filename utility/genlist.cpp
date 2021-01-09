@@ -17,10 +17,10 @@
 
 #include <cstdlib>
 
-/* utility */
+// utility
 #include "fcthread.h"
 #include "log.h"
-#include "shared.h" /* array_shuffle */
+#include "shared.h" // array_shuffle
 
 #include "genlist.h"
 
@@ -129,11 +129,11 @@ genlist_link_at_pos(const struct genlist *pgenlist, int pos)
     return NULL;
   }
 
-  if (pos < pgenlist->nelements / 2) { /* fastest to do forward search */
+  if (pos < pgenlist->nelements / 2) { // fastest to do forward search
     for (plink = pgenlist->head_link; pos != 0; pos--) {
       plink = plink->next;
     }
-  } else { /* fastest to do backward search */
+  } else { // fastest to do backward search
     for (plink = pgenlist->tail_link, pos = pgenlist->nelements - pos - 1;
          pos != 0; pos--) {
       plink = plink->prev;
@@ -295,7 +295,7 @@ void genlist_unique_full(struct genlist *pgenlist,
         plink2 = plink->next;
         if (NULL != plink2
             && comp_data_func(plink->dataptr, plink2->dataptr)) {
-          /* Remove this element. */
+          // Remove this element.
           genlist_link_destroy(pgenlist, plink);
         }
       } while ((plink = plink2) != NULL);
@@ -303,7 +303,7 @@ void genlist_unique_full(struct genlist *pgenlist,
       do {
         plink2 = plink->next;
         if (NULL != plink2 && plink->dataptr == plink2->dataptr) {
-          /* Remove this element. */
+          // Remove this element.
           genlist_link_destroy(pgenlist, plink);
         }
       } while ((plink = plink2) != NULL);
@@ -472,16 +472,16 @@ void genlist_insert(struct genlist *pgenlist, void *data, int pos)
   fc_assert_ret(NULL != pgenlist);
 
   if (0 == pgenlist->nelements) {
-    /* List is empty, ignore pos. */
+    // List is empty, ignore pos.
     genlist_link_new(pgenlist, data, NULL, NULL);
   } else if (0 == pos) {
-    /* Prepend. */
+    // Prepend.
     genlist_link_new(pgenlist, data, NULL, pgenlist->head_link);
   } else if (-1 >= pos || pos >= pgenlist->nelements) {
-    /* Append. */
+    // Append.
     genlist_link_new(pgenlist, data, pgenlist->tail_link, NULL);
   } else {
-    /* Insert before plink. */
+    // Insert before plink.
     struct genlist_link *plink = genlist_link_at_pos(pgenlist, pos);
 
     fc_assert_ret(NULL != plink);
@@ -636,14 +636,14 @@ void genlist_shuffle(struct genlist *pgenlist)
   myiter = genlist_head(pgenlist);
   for (i = 0; i < n; i++, myiter = myiter->next) {
     sortbuf[i] = myiter->dataptr;
-    /* also create the shuffle list */
+    // also create the shuffle list
     shuffle[i] = i;
   }
 
-  /* randomize it */
+  // randomize it
   std::random_shuffle(shuffle.begin(), shuffle.end());
 
-  /* create the shuffled list */
+  // create the shuffled list
   myiter = genlist_head(pgenlist);
   for (i = 0; i < n; i++, myiter = myiter->next) {
     myiter->dataptr = sortbuf[shuffle[i]];
@@ -663,7 +663,7 @@ void genlist_reverse(struct genlist *pgenlist)
   head = pgenlist->head_link;
   tail = pgenlist->tail_link;
   for (counter = pgenlist->nelements / 2; 0 < counter; counter--) {
-    /* Swap. */
+    // Swap.
     void *temp = head->dataptr;
     head->dataptr = tail->dataptr;
     tail->dataptr = temp;

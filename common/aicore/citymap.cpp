@@ -16,11 +16,11 @@
 #include <cstdio>
 #include <cstring>
 
-/* utility */
+// utility
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "city.h"
 #include "game.h"
 #include "map.h"
@@ -70,7 +70,7 @@ void citymap_turn_init(struct player *pplayer)
     {
       struct tile *pcenter = city_tile(pcity);
 
-      /* reserve at least the default (squared) city radius */
+      // reserve at least the default (squared) city radius
       city_tile_iterate(
           MAX(city_map_radius_sq_get(pcity), CITY_MAP_DEFAULT_RADIUS_SQ),
           pcenter, ptile)
@@ -93,7 +93,7 @@ void citymap_turn_init(struct player *pplayer)
   {
     if (unit_is_cityfounder(punit)
         && punit->server.adv->task == AUT_BUILD_CITY) {
-      /* use default (squared) city radius */
+      // use default (squared) city radius
       city_tile_iterate(CITY_MAP_DEFAULT_RADIUS_SQ, punit->goto_tile, ptile)
       {
         if (citymap[tile_index(ptile)] >= 0) {
@@ -129,7 +129,7 @@ void citymap_reserve_city_spot(struct tile *ptile, int id)
   log_citymap("id %d reserving (%d, %d), was %d", id, TILE_XY(ptile),
               citymap[tile_index(ptile)]);
   fc_assert_ret(0 <= citymap[tile_index(ptile)]);
-#endif /* FREECIV_DEBUG */
+#endif // FREECIV_DEBUG
 
   /* Tiles will now be "reserved" by actual workers, so free excess
    * reservations. Also mark tiles for city overlapping, or 'crowding'.

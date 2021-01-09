@@ -18,7 +18,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
@@ -51,7 +51,7 @@ static const char *event_sections[] = {
     N_("Technology: %s"), N_("Improvement: %s"), N_("City: %s"),
     N_("Diplomat Action: %s"), N_("Enemy Diplomat: %s"), N_("Global: %s"),
     N_("Hut: %s"), N_("Nation: %s"), N_("Treaty: %s"), N_("Unit: %s"),
-    /* TRANS: "Vote" as a process */
+    // TRANS: "Vote" as a process
     N_("Vote: %s"), N_("Wonder: %s"), NULL};
 
 #define GEN_EV(event, section, descr)                                       \
@@ -176,11 +176,11 @@ static struct {
     GEN_EV(E_UNIT_DID_EXPEL, E_S_UNIT, N_("Did Expel")),
     GEN_EV(E_UNIT_ACTION_FAILED, E_S_UNIT, N_("Action failed")),
     GEN_EV(E_UNIT_WAKE, E_S_UNIT, N_("Sentried units awaken")),
-    /* TRANS: "vote" as a process */
+    // TRANS: "vote" as a process
     GEN_EV(E_VOTE_NEW, E_S_VOTE, N_("New vote")),
-    /* TRANS: "Vote" as a process */
+    // TRANS: "Vote" as a process
     GEN_EV(E_VOTE_RESOLVED, E_S_VOTE, N_("Vote resolved")),
-    /* TRANS: "Vote" as a process */
+    // TRANS: "Vote" as a process
     GEN_EV(E_VOTE_ABORTED, E_S_VOTE, N_("Vote canceled")),
     GEN_EV(E_WONDER_BUILD, E_S_WONDER, N_("Finished")),
     GEN_EV(E_WONDER_OBSOLETE, E_S_WONDER, N_("Made Obsolete")),
@@ -206,7 +206,7 @@ static struct {
     GEN_EV(E_SETTING, E_S_XYZZY, N_("Server settings changed")),
     GEN_EV(E_TURN_BELL, E_S_XYZZY, N_("Turn Bell")),
     GEN_EV(E_SCRIPT, E_S_XYZZY, N_("Scenario/ruleset script message")),
-    /* TRANS: Event name for when the game year changes. */
+    // TRANS: Event name for when the game year changes.
     GEN_EV(E_NEXT_YEAR, E_S_XYZZY, N_("Year Advance")),
     GEN_EV(E_DEPRECATION_WARNING, E_S_XYZZY,
            N_("Deprecated Modpack syntax warnings")),
@@ -343,7 +343,7 @@ void events_init()
       fc_snprintf(tmp, l, event_format, _(events[i].descr_orig));
       events[i].full_descr = tmp;
     } else {
-      /* No section part */
+      // No section part
       events[i].full_descr = _(events[i].descr_orig);
     }
 
@@ -360,7 +360,7 @@ void events_init()
   }
 
   for (i = 0; i <= event_type_max(); i++) {
-    /* Initialise sorted list of all (even possble missing) events. */
+    // Initialise sorted list of all (even possble missing) events.
     sorted_events[i] = event_type(i);
   }
   qsort(sorted_events, event_type_max() + 1, sizeof(*sorted_events),
@@ -376,7 +376,7 @@ void events_free()
 
   for (i = 0; i <= event_type_max(); i++) {
     if (E_S_XYZZY > events[i].esn) {
-      /* We have allocated memory for this event */
+      // We have allocated memory for this event
       delete[] events[i].full_descr;
       events[i].full_descr = NULL;
     }

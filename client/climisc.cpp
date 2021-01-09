@@ -26,13 +26,13 @@
 #include <cstdlib>
 #include <cstring>
 
-/* utility */
+// utility
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "city.h"
 #include "diptreaty.h"
 #include "featured_text.h"
@@ -53,7 +53,7 @@
 #include "gui_main_g.h"
 #include "mapview_g.h"
 
-/* client */
+// client
 #include "client_main.h"
 #include "climap.h"
 #include "climisc.h"
@@ -85,7 +85,7 @@ void client_remove_unit(struct unit *punit)
 
   update = (get_focus_unit_on_tile(unit_tile(punit)) != NULL);
 
-  /* Check transport status. */
+  // Check transport status.
   unit_transport_unload(punit);
   if (get_transporter_occupancy(punit) > 0) {
     unit_list_iterate(unit_transport_cargo(punit), pcargo)
@@ -156,7 +156,7 @@ void client_remove_city(struct city *pcity)
   city_built_iterate_end;
 
   if (effect_update) {
-    /* nothing yet */
+    // nothing yet
   }
 
   popdown_city_dialog(pcity);
@@ -314,7 +314,7 @@ void client_diplomacy_clause_string(char *buf, int bufsiz,
 static void catastrophe_scaled(int *chance, int *rate, int max, int current,
                                int accum, int level)
 {
-  /* 20 from factor in update_environmental_upset() */
+  // 20 from factor in update_environmental_upset()
   int numer = 20 * max;
   int denom = map_num_tiles();
 
@@ -376,7 +376,7 @@ QPixmap *client_warming_sprite()
   int idx;
 
   if (can_client_change_view()) {
-    /* Highest sprite kicks in at about 25% risk */
+    // Highest sprite kicks in at about 25% risk
     global_warming_scaled(&idx, NULL, (NUM_TILES_PROGRESS - 1) * 4);
     idx = CLIP(0, idx, NUM_TILES_PROGRESS - 1);
   } else {
@@ -393,7 +393,7 @@ QPixmap *client_cooling_sprite()
   int idx;
 
   if (can_client_change_view()) {
-    /* Highest sprite kicks in at about 25% risk */
+    // Highest sprite kicks in at about 25% risk
     nuclear_winter_scaled(&idx, NULL, (NUM_TILES_PROGRESS - 1) * 4);
     idx = CLIP(0, idx, NUM_TILES_PROGRESS - 1);
   } else {
@@ -437,17 +437,17 @@ void center_on_something()
     center_tile_mapcanvas(unit_tile(head_of_units_in_focus()));
   } else if (client_has_player()
              && NULL != (pcity = player_primary_capital(client_player()))) {
-    /* Else focus on the capital. */
+    // Else focus on the capital.
     center_tile_mapcanvas(pcity->tile);
   } else if (NULL != client.conn.playing
              && 0 < city_list_size(client.conn.playing->cities)) {
-    /* Just focus on any city. */
+    // Just focus on any city.
     pcity = city_list_get(client.conn.playing->cities, 0);
     fc_assert_ret(pcity != NULL);
     center_tile_mapcanvas(pcity->tile);
   } else if (NULL != client.conn.playing
              && 0 < unit_list_size(client.conn.playing->units)) {
-    /* Just focus on any unit. */
+    // Just focus on any unit.
     punit = unit_list_get(client.conn.playing->units, 0);
     fc_assert_ret(punit != NULL);
     center_tile_mapcanvas(unit_tile(punit));
@@ -455,7 +455,7 @@ void center_on_something()
     struct tile *ctile =
         native_pos_to_tile(&(wld.map), wld.map.xsize / 2, wld.map.ysize / 2);
 
-    /* Just any known tile will do; search near the middle first. */
+    // Just any known tile will do; search near the middle first.
     /* Iterate outward from the center tile.  We have to give a radius that
      * is guaranteed to be larger than the map will be.  Although this is
      * a misuse of map.xsize and map.ysize (which are native dimensions),
@@ -823,17 +823,17 @@ int collect_eventually_buildable_targets(struct universal *targets,
     bool can_eventually_build;
 
     if (NULL != pcity) {
-      /* Can the city build? */
+      // Can the city build?
       can_build = can_city_build_improvement_now(pcity, pimprove);
       can_eventually_build =
           can_city_build_improvement_later(pcity, pimprove);
     } else if (NULL != pplayer) {
-      /* Can our player build? */
+      // Can our player build?
       can_build = can_player_build_improvement_now(pplayer, pimprove);
       can_eventually_build =
           can_player_build_improvement_later(pplayer, pimprove);
     } else {
-      /* Global observer case: can any player build? */
+      // Global observer case: can any player build?
       can_build = false;
       players_iterate(aplayer)
       {
@@ -870,15 +870,15 @@ int collect_eventually_buildable_targets(struct universal *targets,
     bool can_eventually_build;
 
     if (NULL != pcity) {
-      /* Can the city build? */
+      // Can the city build?
       can_build = can_city_build_unit_now(pcity, punittype);
       can_eventually_build = can_city_build_unit_later(pcity, punittype);
     } else if (NULL != pplayer) {
-      /* Can our player build? */
+      // Can our player build?
       can_build = can_player_build_unit_now(pplayer, punittype);
       can_eventually_build = can_player_build_unit_later(pplayer, punittype);
     } else {
-      /* Global observer case: can any player build? */
+      // Global observer case: can any player build?
       can_build = false;
       players_iterate(aplayer)
       {
@@ -942,7 +942,7 @@ int num_supported_units_in_city(struct city *pcity)
   struct unit_list *plist;
 
   if (can_player_see_city_internals(client.conn.playing, pcity)) {
-    /* Other players don't see inside the city (but observers do). */
+    // Other players don't see inside the city (but observers do).
     plist = pcity->client.info_units_supported;
   } else {
     plist = pcity->units_supported;
@@ -960,7 +960,7 @@ int num_present_units_in_city(struct city *pcity)
   struct unit_list *plist;
 
   if (can_player_see_units_in_city(client.conn.playing, pcity)) {
-    /* Other players don't see inside the city (but observers do). */
+    // Other players don't see inside the city (but observers do).
     plist = pcity->client.info_units_present;
   } else {
     plist = pcity->tile->units;
@@ -977,23 +977,23 @@ void handle_event(const char *featured_text, struct tile *ptile,
 {
   char plain_text[MAX_LEN_MSG];
   struct text_tag_list *tags;
-  int where = MW_OUTPUT;        /* where to display the message */
+  int where = MW_OUTPUT;        // where to display the message
   bool fallback_needed = false; /* we want fallback if actual 'where' is not
                                  * usable */
-  bool shown = false;           /* Message displayed somewhere at least */
+  bool shown = false;           // Message displayed somewhere at least
 
   if (!event_type_is_valid(event)) {
-    /* Server may have added a new event; leave as MW_OUTPUT */
+    // Server may have added a new event; leave as MW_OUTPUT
     qDebug("Unknown event type %d!", event);
   } else {
     where = messages_where[event];
   }
 
-  /* Get the original text. */
+  // Get the original text.
   featured_text_to_plain_text(featured_text, plain_text, sizeof(plain_text),
                               &tags, conn_id != -1);
 
-  /* Display link marks when an user is pointed us something. */
+  // Display link marks when an user is pointed us something.
   if (conn_id != -1) {
     text_tag_list_iterate(tags, ptag)
     {
@@ -1033,7 +1033,7 @@ void handle_event(const char *featured_text, struct tile *ptile,
         fc_assert(ptag != NULL);
 
         if (ptag != NULL) {
-          /* Appends to be sure it will be applied at last. */
+          // Appends to be sure it will be applied at last.
           text_tag_list_append(tags, ptag);
         }
       } else if (NULL != playername
@@ -1045,14 +1045,14 @@ void handle_event(const char *featured_text, struct tile *ptile,
         fc_assert(ptag != NULL);
 
         if (ptag != NULL) {
-          /* Appends to be sure it will be applied at last. */
+          // Appends to be sure it will be applied at last.
           text_tag_list_append(tags, ptag);
         }
       }
     }
   }
 
-  /* Popup */
+  // Popup
   if (BOOL_VAL(where & MW_POPUP)) {
     /* Popups are usually not shown if player is under AI control.
      * Server operator messages are shown always. */
@@ -1068,19 +1068,19 @@ void handle_event(const char *featured_text, struct tile *ptile,
     }
   }
 
-  /* Message window */
+  // Message window
   if (BOOL_VAL(where & MW_MESSAGES)) {
-    /* When the game isn't running, the messages dialog isn't present. */
+    // When the game isn't running, the messages dialog isn't present.
     if (C_S_RUNNING <= client_state()) {
       meswin_add(plain_text, tags, ptile, event, turn, phase);
       shown = true;
     } else {
-      /* Force to chatline instead. */
+      // Force to chatline instead.
       fallback_needed = true;
     }
   }
 
-  /* Chatline */
+  // Chatline
   if (BOOL_VAL(where & MW_OUTPUT) || (fallback_needed && !shown)) {
     output_window_event(plain_text, tags, conn_id);
   }
@@ -1089,7 +1089,7 @@ void handle_event(const char *featured_text, struct tile *ptile,
     play_sound_for_event(event);
   }
 
-  /* Free tags */
+  // Free tags
   text_tag_list_destroy(tags);
 }
 
@@ -1179,7 +1179,7 @@ void cityrep_buy(struct city *pcity)
   if (city_owner(pcity)->economic.gold >= value) {
     city_buy_production(pcity);
   } else {
-    /* Split into two to allow localization of two pluralisations. */
+    // Split into two to allow localization of two pluralisations.
     char buf[MAX_LEN_MSG];
     /* TRANS: %s is a production type; this whole string is a sentence
      * fragment that is only ever included in one other string
@@ -1221,7 +1221,7 @@ bool can_units_do_connect(struct unit_list *punits,
  */
 void client_unit_init_act_prob_cache(struct unit *punit)
 {
-  /* A double init would cause a leak. */
+  // A double init would cause a leak.
   fc_assert_ret(punit->client.act_prob_cache == NULL);
 
   punit->client.act_prob_cache = new act_prob[NUM_ACTIONS]();
@@ -1290,28 +1290,28 @@ bool mapimg_client_define()
   enum mapimg_layer layer;
   int map_pos = 0;
 
-  /* Only one definition allowed. */
+  // Only one definition allowed.
   while (mapimg_count() != 0) {
     mapimg_delete(0);
   }
 
-  /* Map image definition: zoom, turns */
+  // Map image definition: zoom, turns
   fc_snprintf(str, sizeof(str), "zoom=%d:turns=0:format=%s",
               gui_options.mapimg_zoom, gui_options.mapimg_format);
 
-  /* Map image definition: show */
+  // Map image definition: show
   if (client_is_global_observer()) {
     cat_snprintf(str, sizeof(str), ":show=all");
-    /* use all available knowledge */
+    // use all available knowledge
     gui_options.mapimg_layer[MAPIMG_LAYER_KNOWLEDGE] = false;
   } else {
     cat_snprintf(str, sizeof(str), ":show=plrid:plrid=%d",
                  player_index(client.conn.playing));
-    /* use only player knowledge */
+    // use only player knowledge
     gui_options.mapimg_layer[MAPIMG_LAYER_KNOWLEDGE] = true;
   }
 
-  /* Map image definition: map */
+  // Map image definition: map
   for (layer = mapimg_layer_begin(); layer != mapimg_layer_end();
        layer = mapimg_layer_next(layer)) {
     if (gui_options.mapimg_layer[layer]) {
@@ -1321,7 +1321,7 @@ bool mapimg_client_define()
   mi_map[map_pos] = '\0';
 
   if (map_pos == 0) {
-    /* no value set - use dummy setting */
+    // no value set - use dummy setting
     sz_strlcpy(mi_map, "-");
   }
   cat_snprintf(str, sizeof(str), ":map=%s", mi_map);

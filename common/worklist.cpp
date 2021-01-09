@@ -18,11 +18,11 @@
 #include <cstdarg>
 #include <cstring>
 
-/* utility */
+// utility
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "city.h"
 #include "requirements.h"
 #include "unit.h"
@@ -41,9 +41,9 @@ void worklist_init(struct worklist *pwl)
   pwl->length = 0;
 
   for (i = 0; i < MAX_LEN_WORKLIST; i++) {
-    /* just setting the entry to zero: */
+    // just setting the entry to zero:
     pwl->entries[i].kind = VUT_NONE;
-    /* all the union pointers should be in the same place: */
+    // all the union pointers should be in the same place:
     pwl->entries[i].value.building = NULL;
   }
 }
@@ -85,7 +85,7 @@ bool worklist_peek(const struct worklist *pwl, struct universal *prod)
 bool worklist_peek_ith(const struct worklist *pwl, struct universal *prod,
                        int idx)
 {
-  /* Out of possible bounds. */
+  // Out of possible bounds.
   if (idx < 0 || pwl->length <= idx) {
     prod->kind = VUT_NONE;
     prod->value.building = NULL;
@@ -119,18 +119,18 @@ void worklist_remove(struct worklist *pwl, int idx)
 {
   int i;
 
-  /* Don't try to remove something way outside of the worklist. */
+  // Don't try to remove something way outside of the worklist.
   if (idx < 0 || pwl->length <= idx) {
     return;
   }
 
-  /* Slide everything up one spot. */
+  // Slide everything up one spot.
   for (i = idx; i < pwl->length - 1; i++) {
     pwl->entries[i] = pwl->entries[i + 1];
   }
-  /* just setting the entry to zero: */
+  // just setting the entry to zero:
   pwl->entries[pwl->length - 1].kind = VUT_NONE;
-  /* all the union pointers should be in the same place: */
+  // all the union pointers should be in the same place:
   pwl->entries[pwl->length - 1].value.building = NULL;
   pwl->length--;
 }

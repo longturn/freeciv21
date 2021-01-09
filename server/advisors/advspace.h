@@ -10,10 +10,10 @@
 **************************************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "shared.h"
 
-/* common */
+// common
 #include "fc_types.h"
 
 struct player_spaceship;

@@ -12,16 +12,16 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "log.h"
 
-/* common */
+// common
 #include "connection.h"
 
 /* common/scriptcore */
 #include "luascript.h"
 
-/* server */
+// server
 #include "auth.h"
 
 /* server/scripting */

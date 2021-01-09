@@ -9,7 +9,7 @@
 **************************************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "support.h"
 
 struct fc_lua;

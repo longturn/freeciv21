@@ -15,10 +15,10 @@
 #include <fc_config.h>
 #endif
 
-/* common */
+// common
 #include "extras.h"
 #include "fc_types.h"
-#include "game.h" /* FIXME it's extra_type_iterate that needs this really */
+#include "game.h" // FIXME it's extra_type_iterate that needs this really
 #include "tile.h"
 
 #include "clientutils.h"
@@ -48,7 +48,7 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
                           Activity_type_id new_act,
                           const struct extra_type *new_tgt)
 {
-  /* This temporary working state is a bit big to allocate on the stack */
+  // This temporary working state is a bit big to allocate on the stack
   struct tmp_state {
     int extra_total[MAX_EXTRA_TYPES][ACTIVITY_LAST];
     int extra_units[MAX_EXTRA_TYPES][ACTIVITY_LAST];
@@ -61,13 +61,13 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
   t = new tmp_state[1]();
   memset(calc, 0, sizeof(*calc));
 
-  /* Contributions from real units */
+  // Contributions from real units
   unit_list_iterate(ptile->units, punit)
   {
     Activity_type_id act = punit->activity;
 
     if (punit == pmodunit) {
-      /* We'll account for this one later */
+      // We'll account for this one later
       continue;
     }
 
@@ -122,7 +122,7 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
     }
   }
 
-  /* Turn activity counts into turn estimates */
+  // Turn activity counts into turn estimates
   activity_type_iterate(act)
   {
     int remains, turns;
@@ -140,7 +140,7 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
           if (remains > 0) {
             turns = 1 + (remains + units_total - 1) / units_total;
           } else {
-            /* extra will be finished this turn */
+            // extra will be finished this turn
             turns = 1;
           }
           calc->extra_turns[ei][act] = turns;
@@ -155,7 +155,7 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
           if (remains > 0) {
             turns = 1 + (remains + units_total - 1) / units_total;
           } else {
-            /* extra will be removed this turn */
+            // extra will be removed this turn
             turns = 1;
           }
           calc->rmextra_turns[ei][act] = turns;
@@ -172,7 +172,7 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
       if (remains > 0) {
         turns = 1 + (remains + units_total - 1) / units_total;
       } else {
-        /* activity will be finished this turn */
+        // activity will be finished this turn
         turns = 1;
       }
       calc->activity_turns[act] = turns;
@@ -195,11 +195,11 @@ int turns_to_activity_done(const struct tile *ptile, Activity_type_id act,
   auto *calc = new actcalc;
   int turns;
 
-  /* Calculate time for _all_ tile activities */
-  /* XXX: this is quite expensive */
+  // Calculate time for _all_ tile activities
+  // XXX: this is quite expensive
   calc_activity(calc, ptile, pmodunit, act, tgt);
 
-  /* ...and extract just the one we want. */
+  // ...and extract just the one we want.
   if (is_build_activity(act, ptile)) {
     int tgti = extra_index(tgt);
 

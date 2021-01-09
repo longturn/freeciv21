@@ -12,11 +12,11 @@
 ****************************************************************************/
 #pragma once
 
-/* utility */
+// utility
 #include "iterator.h"
 #include "support.h"
 
-/* common */
+// common
 #include "fc_types.h"
 #include "tech.h"
 
@@ -60,11 +60,11 @@ struct research {
   /* If the player completed a research this turn, this value is turned on
    * and changing targets may be done without penalty. */
   bool got_tech;
-  /* The same as got_tech but flipped back in choose_tech() */
+  // The same as got_tech but flipped back in choose_tech()
   bool got_tech_multi;
 
   struct research_invention {
-    /* One of TECH_UNKNOWN, TECH_KNOWN or TECH_PREREQS_KNOWN. */
+    // One of TECH_UNKNOWN, TECH_KNOWN or TECH_PREREQS_KNOWN.
     enum tech_state state;
 
     /* Following fields are cached values. They are updated by
@@ -85,7 +85,7 @@ struct research {
   int num_known_tech_with_flag[TF_COUNT];
 
   union {
-    /* Add server side when needed */
+    // Add server side when needed
 
     struct {
       /* Only used at the client (the server is omniscient; ./client/). */
@@ -96,7 +96,7 @@ struct research {
   };
 };
 
-/* Common functions. */
+// Common functions.
 void researches_init();
 void researches_free();
 
@@ -115,7 +115,7 @@ const QString
 research_advance_name_translation(const struct research *presearch,
                                   Tech_type_id tech);
 
-/* Ancillary routines */
+// Ancillary routines
 void research_update(struct research *presearch);
 
 enum tech_state research_invention_state(const struct research *presearch,
@@ -142,7 +142,7 @@ int research_total_bulbs_required(const struct research *presearch,
 
 int player_tech_upkeep(const struct player *pplayer);
 
-/* Iterating utilities. */
+// Iterating utilities.
 struct research_iter;
 
 size_t research_iter_sizeof();

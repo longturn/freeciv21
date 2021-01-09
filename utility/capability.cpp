@@ -17,9 +17,9 @@
 
 #include <cstring>
 
-/* utility */
-#include "shared.h"  /* TRUE, FALSE */
-#include "support.h" /* fc_is* */
+// utility
+#include "shared.h"  // TRUE, FALSE
+#include "support.h" // fc_is*
 
 #include "capability.h"
 

@@ -23,7 +23,7 @@ GUI_FUNC_PROTO(void, real_city_dialog_refresh, struct city *pcity)
 GUI_FUNC_PROTO(void, refresh_unit_city_dialogs, struct unit *punit)
 GUI_FUNC_PROTO(bool, city_dialog_is_open, struct city *pcity)
 
-/* Actually defined in update_queue.c */
+// Actually defined in update_queue.c
 void popup_city_dialog(struct city *pcity);
 void refresh_city_dialog(struct city *pcity);
 struct city *is_any_city_dialog_open();

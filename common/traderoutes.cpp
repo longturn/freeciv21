@@ -15,12 +15,12 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
 
-/* common */
+// common
 #include "city.h"
 #include "effects.h"
 #include "game.h"
@@ -230,7 +230,7 @@ int city_trade_removable(const struct city *pcity,
   struct trade_route *sorted[MAX_TRADE_ROUTES];
   int num, i, j;
 
-  /* Sort trade route values. */
+  // Sort trade route values.
   num = 0;
   trade_routes_iterate(pcity, proute)
   {
@@ -242,18 +242,18 @@ int city_trade_removable(const struct city *pcity,
   }
   trade_routes_iterate_end;
 
-  /* No trade routes at all. */
+  // No trade routes at all.
   if (0 == num) {
     return 0;
   }
 
-  /* Adjust number of concerned trade routes. */
+  // Adjust number of concerned trade routes.
   num += 1 - max_trade_routes(pcity);
   if (0 >= num) {
     num = 1;
   }
 
-  /* Return values. */
+  // Return values.
   for (i = j = 0; i < num; i++) {
     j += sorted[i]->value;
     if (NULL != would_remove) {
@@ -282,7 +282,7 @@ bool can_establish_trade_route(const struct city *pc1,
     return false;
   }
 
-  /* First check if cities can have trade routes at all. */
+  // First check if cities can have trade routes at all.
   maxpc1 = max_trade_routes(pc1);
   if (maxpc1 <= 0) {
     return false;
@@ -294,7 +294,7 @@ bool can_establish_trade_route(const struct city *pc1,
 
   if (city_num_trade_routes(pc1) >= maxpc1) {
     trade = trade_base_between_cities(pc1, pc2);
-    /* can we replace trade route? */
+    // can we replace trade route?
     if (city_trade_removable(pc1, NULL) >= trade) {
       return false;
     }
@@ -304,7 +304,7 @@ bool can_establish_trade_route(const struct city *pc1,
     if (trade == -1) {
       trade = trade_base_between_cities(pc1, pc2);
     }
-    /* can we replace trade route? */
+    // can we replace trade route?
     if (city_trade_removable(pc2, NULL) >= trade) {
       return false;
     }
@@ -326,7 +326,7 @@ int trade_base_between_cities(const struct city *pc1, const struct city *pc2)
   }
 
   if (game.info.trade_revenue_style == TRS_CLASSIC) {
-    /* Classic Freeciv */
+    // Classic Freeciv
     int real_dist = real_map_distance(pc1->tile, pc2->tile);
     int weighted_distance =
         ((100 - game.info.trade_world_rel_pct) * real_dist
@@ -336,7 +336,7 @@ int trade_base_between_cities(const struct city *pc1, const struct city *pc2)
 
     bonus = weighted_distance + city_size_get(pc1) + city_size_get(pc2);
   } else if (game.info.trade_revenue_style == TRS_SIMPLE) {
-    /* Simple revenue style */
+    // Simple revenue style
     bonus =
         (pc1->citizen_base[O_TRADE] + pc2->citizen_base[O_TRADE] + 4) * 3;
   }
@@ -424,10 +424,10 @@ static int max_tile_trade(const struct city *pcity)
  */
 static int max_trade_prod(const struct city *pcity)
 {
-  /* Trade tile base */
+  // Trade tile base
   int trade_prod = max_tile_trade(pcity);
 
-  /* Add trade routes values */
+  // Add trade routes values
   trade_partners_iterate(pcity, partner)
   {
     trade_prod += trade_base_between_cities(pcity, partner);
@@ -455,11 +455,11 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
   int tb = 0, bonus = 0;
 
   if (game.info.caravan_bonus_style == CBS_CLASSIC) {
-    /* Should this be real_map_distance? */
+    // Should this be real_map_distance?
     tb = map_distance(pc1->tile, pc2->tile) + 10;
     tb = (tb * (pc1->surplus[O_TRADE] + pc2->surplus[O_TRADE])) / 24;
   } else if (game.info.caravan_bonus_style == CBS_LOGARITHMIC) {
-    /* Logarithmic bonus */
+    // Logarithmic bonus
     bonus = pow(log(real_map_distance(pc1->tile, pc2->tile) + 20
                     + max_trade_prod(pc1) + max_trade_prod(pc2))
                     * 2,
@@ -471,7 +471,7 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
     tb = tb * pgood->onetime_pct / 100;
   }
 
-  /* Trade_revenue_bonus increases revenue by power of 2 in milimes */
+  // Trade_revenue_bonus increases revenue by power of 2 in milimes
   bonus = get_target_bonus_effects(
       NULL, city_owner(pc1), city_owner(pc2), pc1, NULL, city_tile(pc1),
       /* TODO: Should unit requirements be
@@ -485,7 +485,7 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
                                        : ACTION_MARKETPLACE),
       EFT_TRADE_REVENUE_BONUS);
 
-  /* Be mercy full to players with small amounts. Round up. */
+  // Be mercy full to players with small amounts. Round up.
   tb = ceil(static_cast<float>(tb)
             * pow(2.0, static_cast<double>(bonus) / 1000.0));
 

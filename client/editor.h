@@ -147,7 +147,7 @@ enum edit_buffer_types {
   EBT_UNIT = 1 << 5,
   EBT_CITY = 1 << 6,
 
-  /* Equal to the bitwise OR of all preceding flags. */
+  // Equal to the bitwise OR of all preceding flags.
   EBT_ALL = (1 << 7) - 1
 };
 
@@ -165,7 +165,7 @@ void edit_buffer_paste(struct edit_buffer *ebuf, const struct tile *dest);
 int edit_buffer_get_status_string(const struct edit_buffer *ebuf, char *buf,
                                   int buflen);
 
-/* Iterates over all type flags set for the given buffer. */
+// Iterates over all type flags set for the given buffer.
 #define edit_buffer_type_iterate(ARG_ebuf, NAME_type)                       \
   do {                                                                      \
     int NAME_type;                                                          \

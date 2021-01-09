@@ -17,11 +17,11 @@
 
 #include <cmath>
 
-/* common */
+// common
 #include "game.h"
 #include "traderoutes.h"
 
-/* aicore */
+// aicore
 #include "path_finding.h"
 #include "pf_tools.h"
 
@@ -36,7 +36,7 @@ void caravan_parameter_init_default(struct caravan_parameter *parameter)
   parameter->discount = 0.95;
   parameter->consider_windfall = true;
   parameter->consider_trade = true;
-  parameter->consider_wonders = true; /* see also init_from_unit */
+  parameter->consider_wonders = true; // see also init_from_unit
   parameter->account_for_broken_routes = true;
   parameter->allow_foreign_trade = FTL_NATIONAL_ONLY;
   parameter->ignore_transit_time = false;
@@ -74,12 +74,12 @@ bool caravan_parameter_is_legal(const struct caravan_parameter *parameter)
     return false;
   }
 
-  /* a negative discount doesn't converge */
+  // a negative discount doesn't converge
   if (parameter->discount < 0.0) {
     return false;
   }
 
-  /* infinite horizon with no discount gives infinite reward. */
+  // infinite horizon with no discount gives infinite reward.
   if (parameter->horizon == FC_INFINITY && parameter->discount == 1.0) {
     return false;
   }
@@ -132,7 +132,7 @@ int caravan_result_compare(const struct caravan_result *a,
   } else if (a->value < b->value) {
     return -1;
   } else {
-    /* faster time is better, so reverse-sort on time. */
+    // faster time is better, so reverse-sort on time.
     return b->arrival_time - a->arrival_time;
   }
 }
@@ -161,7 +161,7 @@ static void caravan_search_from(const struct unit *caravan,
 
   end_time = param->horizon - turns_before;
 
-  /* Initialize the pf run. */
+  // Initialize the pf run.
   pft_fill_unit_parameter(&pfparam, const_cast<struct unit *>(caravan));
   pfparam.start_tile = start_tile;
   pfparam.moves_left_initially = moves_left_before;
@@ -211,7 +211,7 @@ static double windfall_benefit(const struct unit *caravan,
     int bonus =
         get_caravan_enter_city_trade_bonus(src, dest, NULL, can_establish);
 
-    /* bonus goes to both sci and gold. */
+    // bonus goes to both sci and gold.
     bonus *= 2;
 
     return bonus;
@@ -239,7 +239,7 @@ static int one_city_trade_benefit(const struct city *pcity,
   }
 
   if (city_num_trade_routes(pcity) < max_trade_routes(pcity)) {
-    /* if the city can handle this route, we don't break any old routes */
+    // if the city can handle this route, we don't break any old routes
     losttrade = 0;
   } else {
     struct trade_route_list *would_remove =
@@ -274,7 +274,7 @@ static int one_city_trade_benefit(const struct city *pcity,
     }
   }
 
-  /* find the increase or decrease in trade we benefit from */
+  // find the increase or decrease in trade we benefit from
   return newtrade - losttrade;
 }
 
@@ -287,12 +287,12 @@ static double trade_benefit(const struct player *caravan_owner,
                             const struct city *src, const struct city *dest,
                             const struct caravan_parameter *param)
 {
-  /* do we care about trade at all? */
+  // do we care about trade at all?
   if (!param->consider_trade) {
     return 0;
   }
 
-  /* first, see if a new route is made. */
+  // first, see if a new route is made.
   if (!can_cities_trade(src, dest)
       || !can_establish_trade_route(src, dest)) {
     return 0;
@@ -311,7 +311,7 @@ static double trade_benefit(const struct player *caravan_owner,
            + one_city_trade_benefit(dest, caravan_owner, countloser,
                                     newtrade);
   } else {
-    /* Always fails. */
+    // Always fails.
     fc_assert_msg(false == param->convert_trade,
                   "Unimplemented functionality: "
                   "using CM to calculate trade.");
@@ -334,10 +334,10 @@ static double wonder_benefit(const struct unit *caravan, int arrival_time,
   int shields_at_arrival;
 
   if (!param->consider_wonders
-      /* TODO: Should helping an ally to build be considered when legal? */
+      // TODO: Should helping an ally to build be considered when legal?
       || unit_owner(caravan) != city_owner(dest)
       || !city_production_gets_caravan_shields(&dest->production)
-      /* TODO: Should helping to build a unit be considered when legal? */
+      // TODO: Should helping to build a unit be considered when legal?
       || VUT_UTYPE == dest->production.kind
       /* TODO: Should helping to build an improvement be considered when
        * legal? */
@@ -433,7 +433,7 @@ static bool get_discounted_reward(const struct unit *caravan,
   bool consider_trade;
   bool consider_windfall;
 
-  /* if no foreign trade is allowed, just quit. */
+  // if no foreign trade is allowed, just quit.
   if (!does_foreign_trade_param_allow(parameter, pplayer_src,
                                       pplayer_dest)) {
     caravan_result_init_zero(result);
@@ -454,7 +454,7 @@ static bool get_discounted_reward(const struct unit *caravan,
           ACTION_MARKETPLACE, caravan, src, city_tile(dest), true, dest));
 
   if (!consider_wonder && !consider_trade && !consider_windfall) {
-    /* No caravan action is possible against this target. */
+    // No caravan action is possible against this target.
     caravan_result_init_zero(result);
 
     return false;
@@ -464,7 +464,7 @@ static bool get_discounted_reward(const struct unit *caravan,
   windfall = windfall_benefit(caravan, src, dest, parameter);
   if (consider_wonder) {
     wonder = wonder_benefit(caravan, arrival_time, dest, parameter);
-    /* we want to aid for wonder building */
+    // we want to aid for wonder building
     wonder *= 2;
 
     wonder = presentvalue(wonder, arrival_time, discount);
@@ -644,7 +644,7 @@ static bool cfbdw_callback(void *vdata, const struct city *dest,
     *data->best = current;
   }
 
-  return false; /* don't stop. */
+  return false; // don't stop.
 }
 
 /**
@@ -760,13 +760,13 @@ static bool cowt_callback(void *vdata, const struct city *pcity,
   caravan_result_init(&current, game_city_by_number(caravan->homecity),
                       pcity, arrival_time);
 
-  /* first, see what benefit we'd get from not changing home city */
+  // first, see what benefit we'd get from not changing home city
   get_discounted_reward(caravan, data->param, &current);
   if (caravan_result_compare(&current, data->best) > 0) {
     *data->best = current;
   }
 
-  /* next, try changing home city (if we're allowed to) */
+  // next, try changing home city (if we're allowed to)
   if (city_owner(pcity) == unit_owner(caravan)) {
     caravan_find_best_destination_withtransit(caravan, data->param, pcity,
                                               arrival_time, moves_left,
@@ -776,7 +776,7 @@ static bool cowt_callback(void *vdata, const struct city *pcity,
     }
   }
 
-  return false; /* don't stop searching */
+  return false; // don't stop searching
 }
 
 /**

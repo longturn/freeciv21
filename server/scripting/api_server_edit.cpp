@@ -12,11 +12,11 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "rand.h"
 
-/* common */
+// common
 #include "map.h"
 #include "movement.h"
 #include "research.h"
@@ -26,15 +26,15 @@
 #include "api_game_find.h"
 #include "luascript.h"
 
-/* server */
+// server
 #include "aiiface.h"
 #include "barbarian.h"
 #include "citytools.h"
-#include "console.h" /* enum rfc_status */
+#include "console.h" // enum rfc_status
 #include "maphand.h"
 #include "notify.h"
 #include "plrhand.h"
-#include "srv_main.h" /* game_was_started() */
+#include "srv_main.h" // game_was_started()
 #include "stdinhand.h"
 #include "techtools.h"
 #include "unittools.h"
@@ -110,7 +110,7 @@ Unit *api_edit_create_unit_full(lua_State *L, Player *pplayer, Tile *ptile,
   }
 
   if (ptransport) {
-    /* Extensive check to see if transport and unit are compatible */
+    // Extensive check to see if transport and unit are compatible
     int ret;
     struct unit *pvirt =
         unit_virtual_create(pplayer, NULL, ptype, veteran_level);
@@ -166,7 +166,7 @@ bool api_edit_unit_teleport(lua_State *L, Unit *punit, Tile *dest)
   LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit, false);
   LUASCRIPT_CHECK_ARG_NIL(L, dest, 3, Tile, false);
 
-  /* Teleport first so destination is revealed even if unit dies */
+  // Teleport first so destination is revealed even if unit dies
   alive = unit_move(
       punit, dest, 0,
       /* Auto embark kept for backward compatibility. I have
@@ -283,7 +283,7 @@ void api_edit_create_city(lua_State *L, Player *pplayer, Tile *ptile,
     name = city_name_suggestion(pplayer, ptile);
   }
 
-  /* TODO: Allow initial citizen to be of nationality other than owner */
+  // TODO: Allow initial citizen to be of nationality other than owner
   create_city(pplayer, ptile, name, pplayer);
 }
 
@@ -540,12 +540,12 @@ Player *api_edit_civil_war(lua_State *L, Player *pplayer, int probability)
   }
 
   if (probability == 0) {
-    /* Calculate chance with normal rules */
+    // Calculate chance with normal rules
     if (!civil_war_triggered(pplayer)) {
       return NULL;
     }
   } else {
-    /* Fixed chance specified by script */
+    // Fixed chance specified by script
     if (fc_rand(100) >= probability) {
       return NULL;
     }

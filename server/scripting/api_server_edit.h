@@ -15,7 +15,7 @@
 
 struct lua_State;
 
-/* type of clima change */
+// type of clima change
 enum climate_change_type {
   CLIMATE_CHANGE_GLOBAL_WARMING,
   CLIMATE_CHANGE_NUCLEAR_WINTER

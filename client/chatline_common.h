@@ -10,8 +10,8 @@
 **************************************************************************/
 #pragma once
 
-/* common */
-#include "featured_text.h" /* struct text_tag_list, struct ft_color */
+// common
+#include "featured_text.h" // struct text_tag_list, struct ft_color
 
 int send_chat(const char *message);
 int send_chat_printf(const char *format, ...)

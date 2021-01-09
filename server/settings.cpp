@@ -13,7 +13,7 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "astring.h"
 #include "fcintl.h"
 #include "game.h"
@@ -21,11 +21,11 @@
 #include "registry.h"
 #include "shared.h"
 
-/* common */
+// common
 #include "map.h"
 #include "nation.h"
 
-/* server */
+// server
 #include "gamehand.h"
 #include "maphand.h"
 #include "meta.h"
@@ -81,7 +81,7 @@ struct setting {
   const char *name;
   enum sset_class sclass;
 
-  /* What access level viewing and setting the setting requires. */
+  // What access level viewing and setting the setting requires.
   enum cmdlevel access_level_read;
   enum cmdlevel access_level_write;
 
@@ -97,7 +97,7 @@ struct setting {
    */
   const char *extra_help;
 
-  /* help function */
+  // help function
   const help_callback_func_t help_func;
 
   enum sset_type stype;
@@ -154,13 +154,13 @@ struct setting {
     } bitwise;
   };
 
-  /* action function */
+  // action function
   const action_callback_func_t action;
 
-  /* ruleset lock for game settings */
+  // ruleset lock for game settings
   bool locked;
 
-  /* It's not "default", even if value is the same as default */
+  // It's not "default", even if value is the same as default
   enum setting_default_level setdef;
 };
 
@@ -573,7 +573,7 @@ static const char *phasemode_help(const struct setting *pset)
 {
   static char pmhelp[512];
 
-  /* Translated here */
+  // Translated here
   fc_snprintf(
       pmhelp, sizeof(pmhelp),
       _("This setting controls whether players may make moves at the same "
@@ -592,7 +592,7 @@ static const char *huts_help(const struct setting *pset)
   if (wld.map.server.huts_absolute >= 0) {
     static char hutshelp[512];
 
-    /* Translated here */
+    // Translated here
     fc_snprintf(hutshelp, sizeof(hutshelp),
                 _("%s\n"
                   "Currently this setting is being overridden by an old "
@@ -641,7 +641,7 @@ static void aifill_action(const struct setting *pset)
  */
 static void nationset_action(const struct setting *pset)
 {
-  /* If any player's existing selection is invalid, abort it */
+  // If any player's existing selection is invalid, abort it
   players_iterate(pplayer)
   {
     if (pplayer->nation != NULL) {
@@ -680,7 +680,7 @@ static void plrcol_action(const struct setting *pset)
       players_iterate(pplayer) { server_player_set_color(pplayer, NULL); }
       players_iterate_end;
     }
-    /* Update clients with new color scheme. */
+    // Update clients with new color scheme.
     send_player_info_c(NULL, NULL);
   }
 }
@@ -712,7 +712,7 @@ static void timeout_action(const struct setting *pset)
     int timeout = *pset->integer.pvalue;
 
     if (game.info.turn != 1 || game.info.first_timeout == -1) {
-      /* This may cause the current turn to end immediately. */
+      // This may cause the current turn to end immediately.
       game.tinfo.seconds_to_phasedone = timeout;
     }
     send_game_info(NULL);
@@ -729,7 +729,7 @@ static void first_timeout_action(const struct setting *pset)
     int timeout = *pset->integer.pvalue;
 
     if (game.info.turn == 1) {
-      /* This may cause the current turn to end immediately. */
+      // This may cause the current turn to end immediately.
       if (timeout != -1) {
         game.tinfo.seconds_to_phasedone = timeout;
       } else {
@@ -776,7 +776,7 @@ static void metamessage_action(const struct setting *pset)
   set_user_meta_message_string(pset->string.value);
 
   if (is_metaserver_open()) {
-    /* Update the meta server. */
+    // Update the meta server.
     send_server_info_to_metaserver(META_INFO);
   }
 }
@@ -908,7 +908,7 @@ static bool allowtake_callback(const char *value, struct connection *caller,
    * character. */
 
   for (i = 0; i < len; i++) {
-    /* Check to see if the character is a primary label. */
+    // Check to see if the character is a primary label.
     if (strchr("HhAadbOo", value[i])) {
       havecharacter_state = true;
       continue;
@@ -921,7 +921,7 @@ static bool allowtake_callback(const char *value, struct connection *caller,
       continue;
     }
 
-    /* Looks like the character was invalid. */
+    // Looks like the character was invalid.
     settings_snprintf(reject_msg, reject_msg_len,
                       _("Allowed take string validation failed at "
                         "character: '%c'. Try \"/help allowtake\"."),
@@ -929,7 +929,7 @@ static bool allowtake_callback(const char *value, struct connection *caller,
     return false;
   }
 
-  /* All characters were valid. */
+  // All characters were valid.
   return true;
 }
 
@@ -944,13 +944,13 @@ static bool startunits_callback(const char *value, struct connection *caller,
   Unit_Class_id first_role;
   bool firstnative = false;
 
-  /* We check each character individually to see if it's valid. */
+  // We check each character individually to see if it's valid.
   for (i = 0; i < len; i++) {
     if (strchr("cwxksfdDaA", value[i])) {
       continue;
     }
 
-    /* Looks like the character was invalid. */
+    // Looks like the character was invalid.
     settings_snprintf(reject_msg, reject_msg_len,
                       _("Starting units string validation failed at "
                         "character '%c'. Try \"/help startunits\"."),
@@ -958,7 +958,7 @@ static bool startunits_callback(const char *value, struct connection *caller,
     return false;
   }
 
-  /* Check the first character to make sure it can use a startpos. */
+  // Check the first character to make sure it can use a startpos.
   first_role = uclass_index(
       utype_class(get_role_unit(crole_to_role_id(value[0]), 0)));
   terrain_type_iterate(pterrain)
@@ -972,7 +972,7 @@ static bool startunits_callback(const char *value, struct connection *caller,
   terrain_type_iterate_end;
 
   if (!firstnative) {
-    /* Loading would cause an infinite loop hunting for a valid startpos. */
+    // Loading would cause an infinite loop hunting for a valid startpos.
     settings_snprintf(
         reject_msg, reject_msg_len,
         _("The first starting unit must be native to at least one "
@@ -980,7 +980,7 @@ static bool startunits_callback(const char *value, struct connection *caller,
     return false;
   }
 
-  /* Everything seems fine. */
+  // Everything seems fine.
   return true;
 }
 
@@ -991,7 +991,7 @@ static bool endturn_callback(int value, struct connection *caller,
                              char *reject_msg, size_t reject_msg_len)
 {
   if (value < game.info.turn) {
-    /* Tried to set endturn earlier than current turn */
+    // Tried to set endturn earlier than current turn
     settings_snprintf(reject_msg, reject_msg_len,
                       _("Cannot set endturn earlier than current turn."));
     return false;
@@ -1038,7 +1038,7 @@ static bool nationset_callback(const char *value, struct connection *caller,
     return true;
   } else {
     settings_snprintf(reject_msg, reject_msg_len,
-                      /* TRANS: do not translate 'list nationsets' */
+                      // TRANS: do not translate 'list nationsets'
                       _("Unknown nation set \"%s\". See '%slist nationsets' "
                         "for possible values."),
                       value, caller ? "/" : "");
@@ -1052,7 +1052,7 @@ static bool nationset_callback(const char *value, struct connection *caller,
 static bool timeout_callback(int value, struct connection *caller,
                              char *reject_msg, size_t reject_msg_len)
 {
-  /* Disallow low timeout values for non-hack connections. */
+  // Disallow low timeout values for non-hack connections.
   if (caller && caller->access_level < ALLOW_HACK && value < 30
       && value != 0) {
     settings_snprintf(reject_msg, reject_msg_len,
@@ -1062,9 +1062,9 @@ static bool timeout_callback(int value, struct connection *caller,
   }
 
   if (value == -1 && game.server.unitwaittime != 0) {
-    /* autogame only with 'unitwaittime' = 0 */
+    // autogame only with 'unitwaittime' = 0
     settings_snprintf(reject_msg, reject_msg_len,
-                      /* TRANS: Do not translate setting names in ''. */
+                      // TRANS: Do not translate setting names in ''.
                       _("For autogames ('timeout' = -1) 'unitwaittime' "
                         "should be deactivated (= 0)."));
     return false;
@@ -1075,7 +1075,7 @@ static bool timeout_callback(int value, struct connection *caller,
      * 'unitwaittime' */
     settings_snprintf(
         reject_msg, reject_msg_len,
-        /* TRANS: Do not translate setting names in ''. */
+        // TRANS: Do not translate setting names in ''.
         _("'timeout' can not be lower than 3/2 of the 'unitwaittime' "
           "setting (= %d). Please change 'unitwaittime' first."),
         game.server.unitwaittime);
@@ -1091,7 +1091,7 @@ static bool timeout_callback(int value, struct connection *caller,
 static bool first_timeout_callback(int value, struct connection *caller,
                                    char *reject_msg, size_t reject_msg_len)
 {
-  /* Disallow low timeout values for non-hack connections. */
+  // Disallow low timeout values for non-hack connections.
   if (caller && caller->access_level < ALLOW_HACK && value < 30
       && value != 0) {
     settings_snprintf(reject_msg, reject_msg_len,
@@ -1111,7 +1111,7 @@ static bool unitwaittime_callback(int value, struct connection *caller,
 {
   if (game.info.timeout == -1 && value != 0) {
     settings_snprintf(reject_msg, reject_msg_len,
-                      /* TRANS: Do not translate setting names in ''. */
+                      // TRANS: Do not translate setting names in ''.
                       _("For autogames ('timeout' = -1) 'unitwaittime' "
                         "should be deactivated (= 0)."));
     return false;
@@ -1120,7 +1120,7 @@ static bool unitwaittime_callback(int value, struct connection *caller,
   if (game.info.timeout > 0 && value > game.info.timeout * 2 / 3) {
     settings_snprintf(
         reject_msg, reject_msg_len,
-        /* TRANS: Do not translate setting names in ''. */
+        // TRANS: Do not translate setting names in ''.
         _("'unitwaittime' has to be lower than 2/3 of the 'timeout' setting "
           "(= %d). Please change 'timeout' first."),
         game.info.timeout);
@@ -1238,7 +1238,7 @@ static bool compresstype_callback(int value, struct connection *caller,
     qWarning(
         _("Bzip2 is deprecated as compresstype. Consider other options."));
   }
-#endif /* FREECIV_HAVE_BZ2 */
+#endif // FREECIV_HAVE_BZ2
 
   return true;
 }
@@ -1254,7 +1254,7 @@ static bool plrcol_validate(int value, struct connection *caller,
     nations_iterate(pnation)
     {
       if (nation_color(pnation)) {
-        /* At least one nation has a color. Allow this mode. */
+        // At least one nation has a color. Allow this mode.
         return true;
       }
     }
@@ -1328,11 +1328,11 @@ static bool plrcol_validate(int value, struct connection *caller,
         func_action, false                                                  \
   }
 
-/* game settings */
+// game settings
 static struct setting settings[] = {
-    /* These should be grouped by sclass */
+    // These should be grouped by sclass
 
-    /* Map size parameters: adjustable if we don't yet have a map */
+    // Map size parameters: adjustable if we don't yet have a map
     GEN_ENUM(
         "mapsize", wld.map.server.mapsize, SSET_MAP_SIZE, SSET_GEOLOGY,
         SSET_VITAL, ALLOW_NONE, ALLOW_BASIC, N_("Map size definition"),
@@ -1411,7 +1411,7 @@ static struct setting settings[] = {
     GEN_BITWISE(
         "topology", wld.map.topology_id, SSET_MAP_SIZE, SSET_GEOLOGY,
         SSET_VITAL, ALLOW_NONE, ALLOW_BASIC, N_("Map topology"),
-        /* TRANS: do not edit the ugly ASCII art */
+        // TRANS: do not edit the ugly ASCII art
         N_("Freeciv maps are always two-dimensional. They may wrap at the "
            "north-south and east-west directions to form a flat map, a "
            "cylinder, or a torus (donut). Individual tiles may be "
@@ -2793,7 +2793,7 @@ static struct setting settings[] = {
         "demography", game.server.demography, SSET_META, SSET_INTERNAL,
         SSET_SITUATIONAL, ALLOW_NONE, ALLOW_BASIC,
         N_("What is in the Demographics report"),
-        /* TRANS: The strings between double quotes should be translated. */
+        // TRANS: The strings between double quotes should be translated.
         N_("This should be a string of characters, each of which specifies "
            "the inclusion of a line of information in the Demographics "
            "report.\n"
@@ -2976,7 +2976,7 @@ static struct setting settings[] = {
 #undef GEN_ENUM
 #undef GEN_BITWISE
 
-/* The number of settings, not including the END. */
+// The number of settings, not including the END.
 static const int SETTINGS_NUM = ARRAY_SIZE(settings);
 
 /**
@@ -3076,7 +3076,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
   switch (pset->sclass) {
   case SSET_MAP_SIZE:
   case SSET_MAP_GEN:
-    /* Only change map options if we don't yet have a map: */
+    // Only change map options if we don't yet have a map:
     if (map_is_empty()) {
       return true;
     }
@@ -3097,7 +3097,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
 
     if (game.scenario.is_scenario && game.scenario.players
         && server_state() == S_S_INITIAL) {
-      /* Special case detected. */
+      // Special case detected.
       return true;
     }
 
@@ -3126,7 +3126,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
 
   case SSET_RULES_FLEXIBLE:
   case SSET_META:
-    /* These can always be changed: */
+    // These can always be changed:
     return true;
   }
 
@@ -3154,7 +3154,7 @@ bool setting_is_changeable(const struct setting *pset,
   }
 
   if (setting_locked(pset)) {
-    /* setting is locked by the ruleset */
+    // setting is locked by the ruleset
     settings_snprintf(reject_msg, reject_msg_len,
                       _("The setting '%s' is locked by the ruleset."),
                       setting_name(pset));
@@ -3248,7 +3248,7 @@ static bool setting_match_prefix(const val_name_func_t name_fn,
                                     &num_matches)) {
   case M_PRE_EXACT:
   case M_PRE_ONLY:
-    return true; /* Ok. */
+    return true; // Ok.
   case M_PRE_AMBIGUOUS: {
     fc_assert(2 <= num_matches);
     settings_snprintf(reject_msg, reject_msg_len,
@@ -3760,16 +3760,16 @@ static const char *setting_bitwise_to_str(const struct setting *pset,
 
     for (bit = 0; (name = pset->bitwise.name(bit)); bit++) {
       if ((1 << bit) & value) {
-        /* TRANS: only emphasizing a string. */
+        // TRANS: only emphasizing a string.
         fc_snprintf(buf2, sizeof(buf2), _("\"%s\""), Q_(name->pretty));
         vec.append(buf2);
       }
     }
 
     if (0 == vec.count()) {
-      /* No value. */
+      // No value.
       fc_assert(0 == value);
-      /* TRANS: Bitwise setting has no bits set. */
+      // TRANS: Bitwise setting has no bits set.
       fc_strlcpy(buf, _("empty value"), buf_len);
       return buf;
     }
@@ -3780,7 +3780,7 @@ static const char *setting_bitwise_to_str(const struct setting *pset,
     buf_len -= len;
   }
 
-  /* Long support part. */
+  // Long support part.
   buf[0] = '\0';
   for (bit = 0; (name = pset->bitwise.name(bit)); bit++) {
     if ((1 << bit) & value) {
@@ -3821,19 +3821,19 @@ setting_bitwise_validate_base(const struct setting *pset, const char *val,
 
   *pint_val = 0;
 
-  /* Value names are separated by '|'. */
+  // Value names are separated by '|'.
   do {
     p = strchr(val, '|');
     if (NULL != p) {
       p++;
       fc_strlcpy(buf, val, MIN(p - val, sizeof(buf)));
     } else {
-      /* Last segment, full copy. */
+      // Last segment, full copy.
       sz_strlcpy(buf, val);
     }
     remove_leading_trailing_spaces(buf);
     if (NULL == p && '\0' == buf[0] && 0 == *pint_val) {
-      /* Empty string = value 0. */
+      // Empty string = value 0.
       break;
     } else if (!setting_match_prefix(pset->bitwise.name, buf, &bit,
                                      reject_msg, reject_msg_len)) {
@@ -3921,7 +3921,7 @@ const char *setting_value_name(const struct setting *pset, bool pretty,
     return setting_bitwise_to_str(pset, *pset->bitwise.pvalue, pretty, buf,
                                   buf_len);
   case SST_COUNT:
-    /* Error logged below. */
+    // Error logged below.
     break;
   }
 
@@ -3957,7 +3957,7 @@ const char *setting_default_name(const struct setting *pset, bool pretty,
     return setting_bitwise_to_str(pset, pset->bitwise.default_value, pretty,
                                   buf, buf_len);
   case SST_COUNT:
-    /* Error logged below. */
+    // Error logged below.
     break;
   }
 
@@ -4015,7 +4015,7 @@ bool settings_ruleset(struct section_file *file, const char *section,
   const char *name;
   int j;
 
-  /* Unlock all settings. */
+  // Unlock all settings.
   settings_iterate(SSET_ALL, pset)
   {
     setting_lock_set(pset, false);
@@ -4023,9 +4023,9 @@ bool settings_ruleset(struct section_file *file, const char *section,
   }
   settings_iterate_end;
 
-  /* settings */
+  // settings
   if (NULL == secfile_section_by_name(file, section)) {
-    /* no settings in ruleset file */
+    // no settings in ruleset file
     qDebug("no [%s] section for game settings in %s", section,
            secfile_name(file));
   } else {
@@ -4050,7 +4050,7 @@ bool settings_ruleset(struct section_file *file, const char *section,
 
   autolock_settings();
 
-  /* send game settings */
+  // send game settings
   send_server_settings(NULL);
 
   return true;
@@ -4076,7 +4076,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
   settings_iterate_end;
 
   if (pset == NULL) {
-    /* no setting found */
+    // no setting found
     return false;
   }
 
@@ -4190,11 +4190,11 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
 
   pset->setdef = SETDEF_RULESET;
 
-  /* set lock */
+  // set lock
   lock = secfile_lookup_bool_default(file, false, "%s.lock", path);
 
   if (lock) {
-    /* set lock */
+    // set lock
     setting_lock_set(pset, lock);
     qInfo(_("Ruleset: '%s' has been locked by the ruleset."),
           setting_name(pset));
@@ -4220,7 +4220,7 @@ bool setting_non_default(const struct setting *pset)
   case SST_BITWISE:
     return (*pset->bitwise.pvalue != pset->bitwise.default_value);
   case SST_COUNT:
-    /* Error logged below. */
+    // Error logged below.
     break;
   }
 
@@ -4357,7 +4357,7 @@ void settings_game_start()
   settings_iterate(SSET_ALL, pset) { setting_game_set(pset, false); }
   settings_iterate_end;
 
-  /* Settings from the start of the game are saved. */
+  // Settings from the start of the game are saved.
   game.server.settings_gamestart_valid = true;
 }
 
@@ -4372,7 +4372,7 @@ void settings_game_save(struct section_file *file, const char *section)
   {
     char errbuf[200];
 
-    if (/* It's explicitly set to some value to save */
+    if (// It's explicitly set to some value to save
         setting_get_setdef(pset) == SETDEF_CHANGED
         /* It must be same at loading time as it was saving time, even if
            freeciv's default has changed. */
@@ -4441,18 +4441,18 @@ void settings_game_load(struct section_file *file, const char *section)
   char reject_msg[256], buf[256];
   int i, set_count;
   int oldcitymindist =
-      game.info.citymindist; /* backwards compat, see below */
+      game.info.citymindist; // backwards compat, see below
 
   /* Compatibility with savegames created with older versions is usually
    * handled as conversions in savecompat.c compat_load_<version>() */
 
   if (!secfile_lookup_int(file, &set_count, "%s.set_count", section)) {
-    /* Old savegames and scenarios doesn't contain this, not an error. */
+    // Old savegames and scenarios doesn't contain this, not an error.
     qDebug("Can't read the number of settings in the save file.");
     return;
   }
 
-  /* Check if the saved settings are valid settings from game start. */
+  // Check if the saved settings are valid settings from game start.
   game.server.settings_gamestart_valid = secfile_lookup_bool_default(
       file, false, "%s.gamestart_valid", section);
 
@@ -4465,7 +4465,7 @@ void settings_game_load(struct section_file *file, const char *section)
         continue;
       }
 
-      /* Load the current value of the setting. */
+      // Load the current value of the setting.
       switch (pset->stype) {
       case SST_BOOL: {
         bool val;
@@ -4629,7 +4629,7 @@ void settings_game_load(struct section_file *file, const char *section)
       }
 
       if (game.server.settings_gamestart_valid) {
-        /* Load the value of the setting at the start of the game. */
+        // Load the value of the setting at the start of the game.
         switch (pset->stype) {
         case SST_BOOL:
           pset->boolean.game_value = secfile_lookup_bool_default(
@@ -4748,7 +4748,7 @@ void settings_reset()
    on turn end.
  */
 void settings_turn()
-{ /* Nothing at the moment. */
+{ // Nothing at the moment.
 }
 
 /**
@@ -4843,7 +4843,7 @@ void send_server_setting(struct conn_list *dest, const struct setting *pset)
         packet.default_val = pset->enumerator.default_value;
         for (i = 0; (val_name = pset->enumerator.name(i)); i++) {
           sz_strlcpy(packet.support_names[i], val_name->support);
-          /* Send untranslated string */
+          // Send untranslated string
           sz_strlcpy(packet.pretty_names[i], val_name->pretty);
         }
         packet.values_num = i;
@@ -4867,7 +4867,7 @@ void send_server_setting(struct conn_list *dest, const struct setting *pset)
         packet.default_val = pset->bitwise.default_value;
         for (i = 0; (val_name = pset->bitwise.name(i)); i++) {
           sz_strlcpy(packet.support_names[i], val_name->support);
-          /* Send untranslated string */
+          // Send untranslated string
           sz_strlcpy(packet.pretty_names[i], val_name->pretty);
         }
         packet.bits_num = i;
@@ -4943,24 +4943,24 @@ void send_server_setting_control(struct connection *pconn)
 
   control.settings_num = SETTINGS_NUM;
 
-  /* Fill in the category strings. */
+  // Fill in the category strings.
   fc_assert(SSET_NUM_CATEGORIES <= ARRAY_SIZE(control.category_names));
   control.categories_num = SSET_NUM_CATEGORIES;
   for (i = 0; i < SSET_NUM_CATEGORIES; i++) {
-    /* Send untranslated name */
+    // Send untranslated name
     sz_strlcpy(control.category_names[i],
                sset_category_name(sset_category(i)));
   }
 
-  /* Send off the control packet. */
+  // Send off the control packet.
   send_packet_server_setting_control(pconn, &control);
 
-  /* Send the constant and common part of the settings. */
+  // Send the constant and common part of the settings.
   settings_iterate(SSET_ALL, pset)
   {
     setting.id = setting_number(pset);
     sz_strlcpy(setting.name, setting_name(pset));
-    /* Send untranslated strings to client */
+    // Send untranslated strings to client
     sz_strlcpy(setting.short_help, setting_short_help(pset));
     sz_strlcpy(setting.extra_help, setting_extra_help(pset, true));
     setting.category = pset->scategory;
@@ -4980,24 +4980,24 @@ static void settings_list_init()
 
   fc_assert_ret(setting_sorted.init == false);
 
-  /* Do it for all values of enum sset_level. */
+  // Do it for all values of enum sset_level.
   for (i = 0; i < OLEVELS_NUM; i++) {
     setting_sorted.level[i] = setting_list_new();
   }
 
   for (i = 0; (pset = setting_by_number(i)); i++) {
-    /* Add the setting to the list of all settings. */
+    // Add the setting to the list of all settings.
     setting_list_append(setting_sorted.level[SSET_ALL], pset);
 
     switch (setting_level(pset)) {
     case SSET_NONE:
-      /* No setting should be in this level. */
+      // No setting should be in this level.
       fc_assert_msg(setting_level(pset) != SSET_NONE,
                     "No setting level defined for '%s'.",
                     setting_name(pset));
       break;
     case SSET_ALL:
-      /* Done above - list of all settings. */
+      // Done above - list of all settings.
       break;
     case SSET_VITAL:
       setting_list_append(setting_sorted.level[SSET_VITAL], pset);
@@ -5010,10 +5010,10 @@ static void settings_list_init()
       break;
     case SSET_CHANGED:
     case SSET_LOCKED:
-      /* This is done in settings_list_update. */
+      // This is done in settings_list_update.
       break;
     case OLEVELS_NUM:
-      /* No setting should be in this level. */
+      // No setting should be in this level.
       fc_assert_msg(setting_level(pset) != OLEVELS_NUM,
                     "Invalid setting level for '%s' (%s).",
                     setting_name(pset),
@@ -5022,7 +5022,7 @@ static void settings_list_init()
     }
   }
 
-  /* Sort the lists. */
+  // Sort the lists.
   for (i = 0; i < OLEVELS_NUM; i++) {
     setting_list_sort(setting_sorted.level[i], settings_list_cmp);
   }
@@ -5040,11 +5040,11 @@ void settings_list_update()
 
   fc_assert_ret(setting_sorted.init == true);
 
-  /* Clear the lists for changed and locked values. */
+  // Clear the lists for changed and locked values.
   setting_list_clear(setting_sorted.level[SSET_CHANGED]);
   setting_list_clear(setting_sorted.level[SSET_LOCKED]);
 
-  /* Refill them. */
+  // Refill them.
   for (i = 0; (pset = setting_by_number(i)); i++) {
     if (setting_non_default(pset)) {
       setting_list_append(setting_sorted.level[SSET_CHANGED], pset);
@@ -5054,7 +5054,7 @@ void settings_list_update()
     }
   }
 
-  /* Sort them. */
+  // Sort them.
   setting_list_sort(setting_sorted.level[SSET_CHANGED], settings_list_cmp);
   setting_list_sort(setting_sorted.level[SSET_LOCKED], settings_list_cmp);
 }
@@ -5093,7 +5093,7 @@ static void settings_list_free()
 
   fc_assert_ret(setting_sorted.init == true);
 
-  /* Free the lists. */
+  // Free the lists.
   for (i = 0; i < OLEVELS_NUM; i++) {
     setting_list_destroy(setting_sorted.level[i]);
   }

@@ -15,19 +15,19 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "shared.h"
 #include "support.h"
 
-/* common */
+// common
 #include "fc_types.h"
 
 #include "version.h"
 
 #ifdef GITREV
 #include "fc_gitrev_gen.h"
-#endif /* GITREV */
+#endif // GITREV
 
 /**
    Return string containing both name of Freeciv and version.
@@ -75,10 +75,10 @@ const char *fc_git_revision()
   fc_snprintf(buf, sizeof(buf), "%s%s",
               translate ? _(FC_GITREV1) : FC_GITREV1, FC_GITREV2);
 
-  return buf; /* Either revision, or modified revision */
-#else /* FC_GITREV_OFF */
+  return buf; // Either revision, or modified revision
+#else // FC_GITREV_OFF
   return NULL;
-#endif /* FC_GITREV_OFF */
+#endif // FC_GITREV_OFF
 }
 
 /**
@@ -105,7 +105,7 @@ const char *beta_message()
   if (FREECIV_RELEASE_MONTH > 0) {
     fc_snprintf(
         msgbuf, sizeof(msgbuf),
-        /* TRANS: No full stop after the URL, could cause confusion. */
+        // TRANS: No full stop after the URL, could cause confusion.
         _("THIS IS A BETA VERSION\n"
           "Freeciv %s will be released in %s, at %s"),
         NEXT_STABLE_VERSION, _(NEXT_RELEASE_MONTH), WIKI_URL);
@@ -116,9 +116,9 @@ const char *beta_message()
                 NEXT_STABLE_VERSION, WIKI_URL);
   }
   return msgbuf;
-#else /* IS_BETA_VERSION */
+#else // IS_BETA_VERSION
   return NULL;
-#endif /* IS_BETA_VERSION */
+#endif // IS_BETA_VERSION
 }
 
 /**

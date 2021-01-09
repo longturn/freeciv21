@@ -25,7 +25,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "registry.h"
 

@@ -15,16 +15,16 @@
 #include <fc_config.h>
 #endif
 
-/* utility */
+// utility
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 
-/* aicore */
+// aicore
 #include "cm.h"
 
-/* common */
+// common
 #include "achievements.h"
 #include "actions.h"
 #include "ai.h"
@@ -177,7 +177,7 @@ void game_remove_city(struct world *gworld, struct city *pcity)
   struct player *powner = city_owner(pcity);
 
   if (NULL != powner) {
-    /* always unlink before clearing data */
+    // always unlink before clearing data
     city_list_remove(powner->cities, pcity);
   }
 
@@ -210,7 +210,7 @@ static void game_defaults(bool keep_ruleset_value)
 {
   int i;
 
-  /* The control packet. */
+  // The control packet.
   game.control.government_count = 0;
   game.control.nation_count = 0;
   game.control.num_base_types = 0;
@@ -235,7 +235,7 @@ static void game_defaults(bool keep_ruleset_value)
   game.ruleset_description = NULL;
   game.ruleset_capabilities = NULL;
 
-  /* The info packet. */
+  // The info packet.
   game.info.aifill = GAME_DEFAULT_AIFILL;
   game.info.airlifting_style = GAME_DEFAULT_AIRLIFTINGSTYLE;
   game.info.angrycitizen = GAME_DEFAULT_ANGRYCITIZEN;
@@ -245,18 +245,18 @@ static void game_defaults(bool keep_ruleset_value)
   game.info.celebratesize = GAME_DEFAULT_CELEBRATESIZE;
   game.info.citymindist = GAME_DEFAULT_CITYMINDIST;
   game.info.cooling = 0;
-  game.info.coolinglevel = 0; /* set later */
+  game.info.coolinglevel = 0; // set later
   game.info.diplomacy = GAME_DEFAULT_DIPLOMACY;
   game.info.fogofwar = GAME_DEFAULT_FOGOFWAR;
   game.info.foodbox = GAME_DEFAULT_FOODBOX;
   game.info.fulltradesize = GAME_DEFAULT_FULLTRADESIZE;
   game.info.global_advance_count = 0;
   for (i = 0; i < A_LAST; i++) {
-    /* game.num_tech_types = 0 here */
+    // game.num_tech_types = 0 here
     game.info.global_advances[i] = false;
   }
   for (i = 0; i < B_LAST; i++) {
-    /* game.num_impr_types = 0 here */
+    // game.num_impr_types = 0 here
     game.info.great_wonder_owners[i] = WONDER_NOT_OWNED;
   }
   game.info.globalwarming = 0;
@@ -293,11 +293,11 @@ static void game_defaults(bool keep_ruleset_value)
   game.info.trading_gold = GAME_DEFAULT_TRADING_GOLD;
   game.info.trading_tech = GAME_DEFAULT_TRADING_TECH;
   game.info.turn = 0;
-  game.info.warminglevel = 0; /* set later */
+  game.info.warminglevel = 0; // set later
   game.info.year_0_hack = false;
   game.info.year = GAME_START_YEAR;
 
-  /* The scenario packets. */
+  // The scenario packets.
   game.scenario.is_scenario = false;
   game.scenario.name[0] = '\0';
   game.scenario.authors[0] = '\0';
@@ -313,10 +313,10 @@ static void game_defaults(bool keep_ruleset_value)
 
   game.scenario_desc.description[0] = '\0';
 
-  /* Veteran system. */
+  // Veteran system.
   game.veteran = NULL;
 
-  /* player colors */
+  // player colors
   game.plr_bg_color = NULL;
 
   if (is_server()) {
@@ -416,7 +416,7 @@ static void game_defaults(bool keep_ruleset_value)
     game.server.unitwaittime = GAME_DEFAULT_UNITWAITTIME;
     game.server.plr_colors = NULL;
   } else {
-    /* Client side takes care of itself in client_main() */
+    // Client side takes care of itself in client_main()
   }
 }
 
@@ -477,7 +477,7 @@ void game_reset()
     game_free();
     game_init(false);
   } else {
-    /* Reset the players infos. */
+    // Reset the players infos.
     players_iterate(pplayer) { player_clear(pplayer, false); }
     players_iterate_end;
 
@@ -578,11 +578,11 @@ void game_ruleset_free()
   multipliers_free();
   clause_infos_free();
 
-  /* Destroy the default veteran system. */
+  // Destroy the default veteran system.
   veteran_system_destroy(game.veteran);
   game.veteran = NULL;
 
-  /* Player colors. */
+  // Player colors.
   if (game.plr_bg_color != NULL) {
     rgbcolor_destroy(game.plr_bg_color);
     game.plr_bg_color = NULL;
@@ -722,7 +722,7 @@ static char *year_suffix()
     suffix = game.calendar.positive_year_label;
   }
 
-  /* Remove all non alphanumeric characters from the year suffix. */
+  // Remove all non alphanumeric characters from the year suffix.
   for (; '\0' != *suffix && c < max; suffix++) {
     if (QChar::isLetterOrNumber(*suffix)) {
       *c++ = *suffix;

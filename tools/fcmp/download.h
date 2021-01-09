@@ -20,7 +20,7 @@
 
 #include "netfile.h"
 
-/* modinst */
+// modinst
 #include "modinst.h"
 
 #define MODPACKDL_SUFFIX ".mpdl"
@@ -46,4 +46,4 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
                                   const modpack_list_setup_cb &cb,
                                   const dl_msg_callback &mcb);
 
-#endif /* FC__MODPACK_DOWNLOAD_H */
+#endif // FC__MODPACK_DOWNLOAD_H

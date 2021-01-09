@@ -10,7 +10,7 @@
 **************************************************************************/
 #pragma once
 
-/* common */
+// common
 #include "fc_types.h"
 
 #define MORT 24
