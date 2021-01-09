@@ -492,7 +492,7 @@ int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
 
 /* Sections functions. */
 struct section *secfile_section_by_name(const struct section_file *secfile,
-                                        const char *section_name);
+                                        const QString &section_name);
 struct section *secfile_section_lookup(const struct section_file *secfile,
                                        const char *path, ...)
     fc__attribute((__format__(__printf__, 2, 3)));
@@ -502,7 +502,7 @@ struct section_list *
 secfile_sections_by_name_prefix(const struct section_file *secfile,
                                 const char *prefix);
 struct section *secfile_section_new(struct section_file *secfile,
-                                    const char *section_name);
+                                    const QString &section_name);
 
 /* Independant section functions. */
 void section_destroy(struct section *psection);
@@ -513,19 +513,20 @@ bool section_set_name(struct section *psection, const char *section_name);
 /* Entry functions. */
 const struct entry_list *section_entries(const struct section *psection);
 struct entry *section_entry_by_name(const struct section *psection,
-                                    const char *entry_name);
+                                    const QString &entry_name);
 struct entry *section_entry_lookup(const struct section *psection,
                                    const char *path, ...)
     fc__attribute((__format__(__printf__, 2, 3)));
 struct entry *section_entry_int_new(struct section *psection,
-                                    const char *entry_name, int value);
+                                    const QString &entry_name, int value);
 struct entry *section_entry_bool_new(struct section *psection,
-                                     const char *entry_name, bool value);
+                                     const QString &entry_name, bool value);
 struct entry *section_entry_float_new(struct section *psection,
-                                      const char *entry_name, float value);
+                                      const QString &entry_name,
+                                      float value);
 struct entry *section_entry_str_new(struct section *psection,
-                                    const char *entry_name,
-                                    const char *value, bool escaped);
+                                    const QString &entry_name,
+                                    const QString &value, bool escaped);
 
 /* Independant entry functions. */
 enum entry_type {

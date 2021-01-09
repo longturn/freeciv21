@@ -151,27 +151,41 @@ void make_escapes(const char *str, char *buf, size_t buf_len)
        through with the '\' removed (eg, includes '\\', '\"').
    See also make_escapes().
  ****************************************************************************/
-void remove_escapes(const char *str, bool full_escapes, char *buf,
-                    size_t buf_len)
+QString remove_escapes(const QString &str, bool full_escapes)
 {
-  char *dest = buf;
-  const char *const max = buf + buf_len - 1;
+  QString copy;
 
-  while (*str != '\0' && dest < max) {
-    if (*str == '\\' && *(str + 1) == '\n') {
-      /* Escape followed by newline. Skip both */
-      str += 2;
-    } else if (full_escapes && *str == '\\') {
-      str++;
-      if (*str == 'n') {
-        *dest++ = '\n';
-        str++;
+  if (full_escapes) {
+    // Replace most everything
+    copy.reserve(str.length());
+
+    bool escape = false;
+    for (const auto &c : str) {
+      if (escape && full_escapes) {
+        switch (c.unicode()) {
+        case 'n':
+          copy += '\n';
+          break;
+        case '\n':
+          // Remove the newline
+          break;
+        default:
+          copy += c;
+        }
+        escape = false;
+      } else if (c == '\\') {
+        escape = true;
+      } else {
+        copy += c;
       }
-    } else {
-      *dest++ = *str++;
     }
+  } else {
+    // Replace only escaped newlines
+    copy = str;
+    copy.replace("\\\n", "\n");
   }
-  *dest = '\0';
+
+  return copy;
 }
 
 /************************************************************************/ /**

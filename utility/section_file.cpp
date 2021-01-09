@@ -113,53 +113,51 @@ void secfile_allow_digital_boolean(struct section_file *secfile,
 /**********************************************************************/ /**
    Add entry to section from token.
  **************************************************************************/
-bool entry_from_token(struct section *psection, const char *name,
-                      const char *tok)
+bool entry_from_token(struct section *psection, const QString &name,
+                      const QString &tok)
 {
   if ('*' == tok[0]) {
-    char *buf = new char[strlen(tok) + 1];
-    remove_escapes(tok + 1, false, buf, strlen(tok) + 1);
+    auto buf = remove_escapes(tok.mid(1), false);
     (void) section_entry_str_new(psection, name, buf, false);
-    DEBUG_ENTRIES("entry %s '%s'", name, buf);
-    delete[] buf;
+    DEBUG_ENTRIES("entry %s '%s'", name, qPrintable(buf));
     return true;
   }
 
   if ('$' == tok[0] || '"' == tok[0]) {
-    char *buf = new char[strlen(tok) + 1];
     bool escaped = ('"' == tok[0]);
-
-    remove_escapes(tok + 1, escaped, buf, strlen(tok) + 1);
+    auto buf = remove_escapes(tok.mid(1), escaped);
     (void) section_entry_str_new(psection, name, buf, escaped);
-    DEBUG_ENTRIES("entry %s '%s'", name, buf);
-    delete[] buf;
+    DEBUG_ENTRIES("entry %s '%s'", name, qPrintable(buf));
     return true;
   }
 
-  if (QChar::isDigit(tok[0])
-      || (('-' == tok[0] || '+' == tok[0]) && QChar::isDigit(tok[1]))) {
-    float fvalue;
-
-    if (str_to_float(tok, &fvalue)) {
-      (void) section_entry_float_new(psection, name, fvalue);
-      DEBUG_ENTRIES("entry %s %d", name, fvalue);
-
-      return true;
+  if (tok[0].isDigit()
+      || (('-' == tok[0] || '+' == tok[0]) && tok[1].isDigit())) {
+    if (tok.contains('.')) {
+      bool ok;
+      auto fvalue = tok.toFloat(&ok);
+      if (ok) {
+        (void) section_entry_float_new(psection, name, fvalue);
+        DEBUG_ENTRIES("entry %s %d", name, fvalue);
+        return true;
+      }
     } else {
-      int ivalue;
-
-      if (str_to_int(tok, &ivalue)) {
+      bool ok;
+      auto ivalue = tok.toInt(&ok, 0);
+      if (ok) {
         (void) section_entry_int_new(psection, name, ivalue);
         DEBUG_ENTRIES("entry %s %d", name, ivalue);
 
         return true;
       }
     }
+    return false;
   }
 
-  if (0 == fc_strncasecmp(tok, "FALSE", 5)
-      || 0 == fc_strncasecmp(tok, "TRUE", 4)) {
-    bool value = (0 == fc_strncasecmp(tok, "TRUE", 4));
+  if (tok.compare(QStringLiteral("FALSE"), Qt::CaseInsensitive) == 0
+      || tok.compare(QStringLiteral("TRUE"), Qt::CaseInsensitive) == 0) {
+    bool value =
+        (tok.compare(QStringLiteral("TRUE"), Qt::CaseInsensitive) == 0);
 
     (void) section_entry_bool_new(psection, name, value);
     DEBUG_ENTRIES("entry %s %s", name, value ? "TRUE" : "FALSE");

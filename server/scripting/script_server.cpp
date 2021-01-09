@@ -26,7 +26,6 @@ extern "C" {
 #include "tolua.h"
 }
 /* utility */
-#include "astring.h"
 #include "log.h"
 #include "registry.h"
 

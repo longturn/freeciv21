@@ -78,14 +78,9 @@
 #include <KFilterDev>
 
 /* utility */
-#include "astring.h"
 #include "fcintl.h"
-#include "support.h"
 
 #include "inputfile.h"
-
-#define INF_DEBUG_FOUND false
-#define INF_DEBUG_NOT_FOUND false
 
 #define INF_MAGIC (0xabdc0132) /* arbitrary */
 
@@ -93,14 +88,13 @@ struct inputfile {
   unsigned int magic;        /* memory check */
   QString filename;          /* filename as passed to fopen */
   QIODevice *fp;             /* read from this */
-  bool at_eof;               /* flag for end-of-file */
-  struct astring cur_line;   /* data from current line */
+  QString cur_line;          /* data from current line */
   unsigned int cur_line_pos; /* position in current line */
   unsigned int line_num;     /* line number from file in cur_line */
-  struct astring token;      /* data returned to user */
   QString partial;           /* used in accumulating multi-line strings;
-                                       used only in get_token_value, but put
-                                       here so it gets freed when file closed */
+                                used only in get_token_value, but put
+                                here so it gets freed when file closed */
+  QString token;             /* data returned to user */
   datafilename_fn_t datafn;  /* function like datafilename(); use a
                                 function pointer just to keep this
                                 inputfile module "generic" */
@@ -115,15 +109,15 @@ struct inputfile {
 };
 
 /* A function to get a specific token type: */
-typedef const char *(*get_token_fn_t)(struct inputfile *inf);
+typedef QString (*get_token_fn_t)(struct inputfile *inf);
 
-static const char *get_token_section_name(struct inputfile *inf);
-static const char *get_token_entry_name(struct inputfile *inf);
-static const char *get_token_eol(struct inputfile *inf);
-static const char *get_token_table_start(struct inputfile *inf);
-static const char *get_token_table_end(struct inputfile *inf);
-static const char *get_token_comma(struct inputfile *inf);
-static const char *get_token_value(struct inputfile *inf);
+static QString get_token_section_name(struct inputfile *inf);
+static QString get_token_entry_name(struct inputfile *inf);
+static QString get_token_eol(struct inputfile *inf);
+static QString get_token_table_start(struct inputfile *inf);
+static QString get_token_table_end(struct inputfile *inf);
+static QString get_token_comma(struct inputfile *inf);
+static QString get_token_value(struct inputfile *inf);
 
 static struct {
   const char *name;
@@ -145,7 +139,10 @@ Q_LOGGING_CATEGORY(inf_category, "freeciv.inputfile")
 /*******************************************************************/ /**
    Return true if c is a 'comment' character: '#' or ';'
  ***********************************************************************/
-static bool is_comment(int c) { return (c == '#' || c == ';'); }
+template <class Char> static bool is_comment(Char c)
+{
+  return (c == '#' || c == ';');
+}
 
 /*******************************************************************/ /**
    Set values to zeros; should have free'd/closed everything before
@@ -160,10 +157,11 @@ static void init_zeros(struct inputfile *inf)
   inf->datafn = NULL;
   inf->included_from = NULL;
   inf->line_num = inf->cur_line_pos = 0;
-  inf->at_eof = inf->in_string = false;
+  inf->in_string = false;
   inf->string_start_line = 0;
-  astr_init(&inf->cur_line);
-  astr_init(&inf->token);
+  inf->cur_line.clear();
+  inf->token.clear();
+  inf->partial.clear();
   inf->partial.reserve(200);
 }
 
@@ -175,7 +173,6 @@ static bool inf_sanity_check(struct inputfile *inf)
   fc_assert_ret_val(NULL != inf, false);
   fc_assert_ret_val(INF_MAGIC == inf->magic, false);
   fc_assert_ret_val(NULL != inf->fp, false);
-  fc_assert_ret_val(false == inf->at_eof || true == inf->at_eof, false);
   fc_assert_ret_val(false == inf->in_string || true == inf->in_string,
                     false);
 
@@ -195,10 +192,10 @@ static bool inf_sanity_check(struct inputfile *inf)
  ***********************************************************************/
 static QString inf_filename(struct inputfile *inf)
 {
-  if (!inf->filename.isEmpty()) {
-    return inf->filename;
-  } else {
+  if (inf->filename.isEmpty()) {
     return QStringLiteral("(anonymous)");
+  } else {
+    return inf->filename;
   }
 }
 
@@ -219,7 +216,7 @@ struct inputfile *inf_from_file(const QString &filename,
     delete fp;
     return NULL;
   }
-  log_debug("inputfile: opened \"%s\" ok", qUtf8Printable(filename));
+  qCDebug(inf_category) << "opened" << filename << "ok";
   inf = inf_from_stream(fp, datafn);
   inf->filename = filename;
   return inf;
@@ -242,8 +239,7 @@ struct inputfile *inf_from_stream(QIODevice *stream,
   inf->fp = stream;
   inf->datafn = datafn;
 
-  log_debug("inputfile: opened \"%s\" ok",
-            qUtf8Printable(inf_filename(inf)));
+  qCDebug(inf_category) << "opened" << inf_filename(inf) << "ok";
   return inf;
 }
 
@@ -257,8 +253,7 @@ static void inf_close_partial(struct inputfile *inf)
 {
   fc_assert_ret(inf_sanity_check(inf));
 
-  log_debug("inputfile: sub-closing \"%s\"",
-            qUtf8Printable(inf_filename(inf)));
+  qCDebug(inf_category) << "sub-closing" << inf_filename(inf);
 
   bool error = !inf->fp->errorString().isEmpty();
   // KFilterDev returns "Unknown error" even when there's no error
@@ -266,22 +261,17 @@ static void inf_close_partial(struct inputfile *inf)
     error = qobject_cast<KFilterDev *>(inf->fp)->error() != 0;
   }
   if (error) {
-    qCritical("Error before closing %s: %s",
-              qUtf8Printable(inf_filename(inf)),
-              qPrintable(inf->fp->errorString()));
+    qCCritical(inf_category) << "Error before closing" << inf_filename(inf)
+                             << ":" << inf->fp->errorString();
   }
   delete inf->fp;
   inf->fp = nullptr;
 
-  inf->filename.clear();
-  astr_free(&inf->cur_line);
-  astr_free(&inf->token);
-
-  /* assign zeros for safety if accidently re-use etc: */
+  /* assign zeros for safety if accidentally re-use etc: */
   init_zeros(inf);
   inf->magic = ~INF_MAGIC;
 
-  log_debug("inputfile: sub-closed ok");
+  qCDebug(inf_category) << "sub-closed ok";
 }
 
 /*******************************************************************/ /**
@@ -294,13 +284,13 @@ void inf_close(struct inputfile *inf)
 {
   fc_assert_ret(inf_sanity_check(inf));
 
-  log_debug("inputfile: closing \"%s\"", qUtf8Printable(inf_filename(inf)));
+  qCDebug(inf_category) << "closing" << inf_filename(inf);
   if (inf->included_from) {
     inf_close(inf->included_from);
   }
   inf_close_partial(inf);
   delete inf;
-  log_debug("inputfile: closed ok");
+  qCDebug(inf_category) << "closed ok";
 }
 
 /*******************************************************************/ /**
@@ -310,7 +300,7 @@ static bool have_line(struct inputfile *inf)
 {
   fc_assert_ret_val(inf_sanity_check(inf), false);
 
-  return !astr_empty(&inf->cur_line);
+  return !inf->cur_line.isEmpty();
 }
 
 /*******************************************************************/ /**
@@ -319,9 +309,9 @@ static bool have_line(struct inputfile *inf)
 static bool at_eol(struct inputfile *inf)
 {
   fc_assert_ret_val(inf_sanity_check(inf), true);
-  fc_assert_ret_val(inf->cur_line_pos <= astr_len(&inf->cur_line), true);
+  fc_assert_ret_val(inf->cur_line_pos <= inf->cur_line.length(), true);
 
-  return (inf->cur_line_pos >= astr_len(&inf->cur_line));
+  return inf->cur_line_pos >= inf->cur_line.length();
 }
 
 /*******************************************************************/ /**
@@ -330,7 +320,9 @@ static bool at_eol(struct inputfile *inf)
 bool inf_at_eof(struct inputfile *inf)
 {
   fc_assert_ret_val(inf_sanity_check(inf), true);
-  return inf->at_eof;
+
+  return inf->included_from == nullptr && inf->fp->atEnd()
+         && inf->cur_line_pos >= inf->cur_line.length();
 }
 
 /*******************************************************************/ /**
@@ -343,86 +335,75 @@ bool inf_at_eof(struct inputfile *inf)
  ***********************************************************************/
 static bool check_include(struct inputfile *inf)
 {
-  const char *include_prefix = "*include";
-  static size_t len = 0;
-  size_t bare_name_len;
-  char *bare_name;
-  const char *c, *bare_name_start;
-  QString full_name;
   struct inputfile *new_inf, temp;
 
-  if (len == 0) {
-    len = qstrlen(include_prefix);
-  }
   fc_assert_ret_val(inf_sanity_check(inf), false);
-  if (inf->in_string || astr_len(&inf->cur_line) <= len
-      || inf->cur_line_pos > 0) {
+  if (inf->in_string || inf->cur_line_pos > 0) {
     return false;
   }
-  if (strncmp(astr_str(&inf->cur_line), include_prefix, len) != 0) {
+
+  QString include_prefix = QStringLiteral("*include");
+  if (!inf->cur_line.startsWith(include_prefix)) {
     return false;
   }
-  /* from here, the include-line must be well formed */
-  /* keep inf->cur_line_pos accurate just so error messages are useful */
 
-  /* skip any whitespace: */
-  inf->cur_line_pos = len;
-  c = astr_str(&inf->cur_line) + len;
-  while (*c != '\0' && QChar::isSpace(*c)) {
-    c++;
+  // From here, the include-line must be well formed
+  // Skip any whitespace
+  for (inf->cur_line_pos = include_prefix.length();
+       inf->cur_line_pos < inf->cur_line.length(); ++inf->cur_line_pos) {
+    if (!inf->cur_line[inf->cur_line_pos].isSpace()) {
+      break;
+    }
   }
 
-  if (*c != '\"') {
+  // Check that we've got the opening ", and not EOL
+  if (inf->cur_line_pos >= inf->cur_line.length()
+      || inf->cur_line[inf->cur_line_pos] != '\"') {
     qCCritical(inf_category,
                "Did not find opening doublequote for '*include' line");
     return false;
   }
-  c++;
-  inf->cur_line_pos = c - astr_str(&inf->cur_line);
 
-  bare_name_start = c;
-  while (*c != '\0' && *c != '\"') {
-    c++;
-  }
-  if (*c != '\"') {
+  // First char after the "
+  auto start = inf->cur_line_pos + 1;
+
+  // Find the closing "
+  auto end = inf->cur_line.indexOf('\"', start);
+  if (end < 0) {
     qCCritical(inf_category,
                "Did not find closing doublequote for '*include' line");
     return false;
   }
-  c++;
-  bare_name_len = c - bare_name_start;
-  bare_name = new char[bare_name_len + 1];
-  qstrncpy(bare_name, bare_name_start, bare_name_len);
-  bare_name[bare_name_len - 1] = '\0';
-  inf->cur_line_pos = c - astr_str(&inf->cur_line);
 
-  /* check rest of line is well-formed: */
-  while (*c != '\0' && QChar::isSpace(*c) && !is_comment(*c)) {
-    c++;
-  }
-  if (!(*c == '\0' || is_comment(*c))) {
-    qCCritical(inf_category, "Junk after filename for '*include' line");
-    delete[] bare_name;
-    return false;
-  }
-  inf->cur_line_pos = astr_len(&inf->cur_line) - 1;
+  auto name = inf->cur_line.mid(start, end - start);
 
-  full_name = inf->datafn(bare_name);
+  // Check that the rest of line is well-formed
+  for (int i = end + 1; i < inf->cur_line.length(); ++i) {
+    auto c = inf->cur_line[i];
+    if (is_comment(c)) {
+      // Ignore the rest of the line
+      break;
+    } else if (!c.isSpace()) {
+      qCCritical(inf_category, "Junk after filename for '*include' line");
+      return false;
+    }
+  }
+
+  inf->cur_line_pos = inf->cur_line.length() - 1;
+  auto full_name = inf->datafn(name);
   if (full_name.isEmpty()) {
-    qCritical("Could not find included file \"%s\"", bare_name);
-    delete[] bare_name;
+    qCCritical(inf_category) << "Could not find included file» <<" << name;
     return false;
   }
-  delete[] bare_name;
 
-  /* avoid recursion: (first filename may not have the same path,
-   * but will at least stop infinite recursion) */
+  // Avoid recursion (first filename may not have the same path, but will at
+  // east stop infinite recursion)
   {
     struct inputfile *inc = inf;
     do {
-      if (!inc->filename.isEmpty() && full_name == QString(inc->filename)) {
-        qCritical("Recursion trap on '*include' for \"%s\"",
-                  qUtf8Printable(full_name));
+      if (full_name == inc->filename) {
+        qCCritical(inf_category)
+            << "Recursion trap on '*include' for" << full_name;
         return false;
       }
     } while ((inc = inc->included_from));
@@ -450,90 +431,36 @@ static bool check_include(struct inputfile *inf)
  ***********************************************************************/
 static bool read_a_line(struct inputfile *inf)
 {
-  struct astring *line;
-  int pos;
-
   fc_assert_ret_val(inf_sanity_check(inf), false);
 
-  if (inf->at_eof) {
+  bool eof = inf->fp->atEnd() && inf->cur_line_pos >= inf->cur_line.length();
+  if (eof && inf->included_from == nullptr) {
+    qCDebug(inf_category) << "eof in:" << inf->filename;
     return false;
   }
 
-  /* abbreviation: */
-  line = &inf->cur_line;
+  // Read a full line. Only ASCII line separators are valid.
+  inf->cur_line = QString::fromUtf8(inf->fp->readLine());
+  inf->cur_line_pos = 0;
+  inf->line_num++;
 
-  /* minimum initial line length: */
-  astr_reserve(line, 80);
-  astr_clear(line);
-  pos = 0;
-
-  /* Read until we get a full line:
-   * At start of this loop, pos is index to trailing null
-   * (or first position) in line.
-   */
-  for (;;) {
-    auto ret = inf->fp->readLine(const_cast<char *>(astr_str(line)) + pos,
-                                 astr_capacity(line) - pos);
-
-    if (ret < 0) {
-      /* readLine failed */
-      if (pos > 0) {
-        qCCritical(inf_category, _("End-of-file not in line of its own"));
-      }
-      inf->at_eof = true;
-      if (inf->in_string) {
-        /* Note: Don't allow multi-line strings to cross "include"
-         * boundaries */
-        qCCritical(inf_category, "Multi-line string went to end-of-file");
-        return false;
-      }
-      break;
-    }
-
-    /* Cope with \n\r line endings if not caught by library:
-     * strip off any leading \r */
-    if (0 == pos && 0 < astr_len(line) && astr_str(line)[0] == '\r') {
-      memmove(const_cast<char *>(astr_str(line)), astr_str(line) + 1,
-              astr_len(line));
-    }
-
-    pos = astr_len(line);
-
-    if (0 < pos && astr_str(line)[pos - 1] == '\n') {
-      int end;
-      /* Cope with \r\n line endings if not caught by library:
-       * strip off any trailing \r */
-      if (1 < pos && astr_str(line)[pos - 2] == '\r') {
-        end = pos - 2;
-      } else {
-        end = pos - 1;
-      }
-      *(const_cast<char *>(astr_str(line)) + end) = '\0';
-      break;
-    }
-    astr_reserve(line, pos * 2);
-  }
-
-  if (!inf->at_eof) {
-    inf->line_num++;
-    inf->cur_line_pos = 0;
-
+  if (eof) {
+    qCDebug(inf_category) << "*include end:" << inf->filename;
+    // Pop the include, and get next line from file above instead.
+    struct inputfile *inc = inf->included_from;
+    inf_close_partial(inf);
+    // So the user pointer in still valid (and inf pointers in calling
+    // functions)
+    *inf = std::move(*inc);
+    delete inc;
+    qCDebug(inf_category) << "back to:" << inf->filename;
+    return read_a_line(inf);
+  } else {
+    // Normal behavior
     if (check_include(inf)) {
       return read_a_line(inf);
     }
     return true;
-  } else {
-    astr_clear(line);
-    if (inf->included_from) {
-      /* Pop the include, and get next line from file above instead. */
-      struct inputfile *inc = inf->included_from;
-      inf_close_partial(inf);
-      *inf = *inc; /* so the user pointer in still valid
-                    * (and inf pointers in calling functions) */
-      delete inc;
-      return read_a_line(inf);
-    }
-    return false;
   }
 }
 
@@ -542,38 +469,40 @@ static bool read_a_line(struct inputfile *inf)
    number etc. Message can be NULL: then just logs information on where
    we are in the file.
  ***********************************************************************/
-char *inf_log_str(struct inputfile *inf, const char *message, ...)
+QString inf_log_str(struct inputfile *inf, const char *message, ...)
 {
-  va_list args;
-  static char str[512];
-
   fc_assert_ret_val(inf_sanity_check(inf), NULL);
 
+  QString str;
+
   if (message) {
+    va_list args;
     va_start(args, message);
-    fc_vsnprintf(str, sizeof(str), message, args);
+    str = QString::vasprintf(message, args);
     va_end(args);
-    sz_strlcat(str, "\n");
-  } else {
-    str[0] = '\0';
   }
 
-  cat_snprintf(str, sizeof(str), "  file \"%s\", line %d, pos %d%s",
-               qUtf8Printable(inf_filename(inf)), inf->line_num,
-               inf->cur_line_pos, (inf->at_eof ? ", EOF" : ""));
+  str += QStringLiteral("\n");
+  str += QStringLiteral("  file \"%1\", line %2, pos %3")
+             .arg(inf_filename(inf))
+             .arg(inf->line_num)
+             .arg(inf->cur_line_pos);
+  if (inf_at_eof(inf)) {
+    str += QStringLiteral(", EOF");
+  }
 
-  if (!astr_empty(&inf->cur_line)) {
-    cat_snprintf(str, sizeof(str), "\n  looking at: '%s'",
-                 astr_str(&inf->cur_line) + inf->cur_line_pos);
+  if (!inf->cur_line.isEmpty()) {
+    str += QStringLiteral("\n  looking at: '%1'")
+               .arg(inf->cur_line.mid(inf->cur_line_pos));
   }
   if (inf->in_string) {
-    cat_snprintf(str, sizeof(str),
-                 "\n  processing string starting at line %d",
-                 inf->string_start_line);
+    str += QStringLiteral("\n  processing string starting at line %1")
+               .arg(inf->string_start_line);
   }
-  while ((inf = inf->included_from)) { /* local pointer assignment */
-    cat_snprintf(str, sizeof(str), "\n  included from file \"%s\", line %d",
-                 qUtf8Printable(inf_filename(inf)), inf->line_num);
+  while ((inf = inf->included_from)) { // local pointer assignment
+    str += QStringLiteral("\n  included from file \"%1\", line %2")
+               .arg(inf_filename(inf))
+               .arg(inf->line_num);
   }
 
   return str;
@@ -582,35 +511,27 @@ char *inf_log_str(struct inputfile *inf, const char *message, ...)
 /*******************************************************************/ /**
    Returns token of given type from given inputfile.
  ***********************************************************************/
-const char *inf_token(struct inputfile *inf, enum inf_token_type type)
+QString inf_token(struct inputfile *inf, enum inf_token_type type)
 {
-  const char *c;
-  const char *name;
-  get_token_fn_t func;
-
   fc_assert_ret_val(inf_sanity_check(inf), NULL);
   fc_assert_ret_val(INF_TOK_FIRST <= type && INF_TOK_LAST > type, NULL);
 
-  name = tok_tab[type].name ? tok_tab[type].name : "(unnamed)";
-  func = tok_tab[type].func;
+  auto name = tok_tab[type].name ? tok_tab[type].name : "(unnamed)";
+  auto func = tok_tab[type].func;
 
-  if (!func) {
-    qCritical("token type %d (%s) not supported yet", type, name);
-    c = NULL;
-  } else {
+  QString s;
+  if (func) {
     while (!have_line(inf) && read_a_line(inf)) {
       /* Nothing. */
     }
-    if (!have_line(inf)) {
-      c = NULL;
-    } else {
-      c = func(inf);
+    if (have_line(inf)) {
+      s = func(inf);
     }
+  } else {
+    qCCritical(inf_category)
+        << "token type" << type << "(" << name << ") not supported yet";
   }
-  if (c && INF_DEBUG_FOUND) {
-    log_debug("inputfile: found %s '%s'", name, astr_str(&inf->token));
-  }
-  return c;
+  return s;
 }
 
 /*******************************************************************/ /**
@@ -621,7 +542,7 @@ int inf_discard_tokens(struct inputfile *inf, enum inf_token_type type)
 {
   int count = 0;
 
-  while (inf_token(inf, type)) {
+  while (!inf_token(inf, type).isEmpty()) {
     count++;
   }
 
@@ -633,124 +554,128 @@ int inf_discard_tokens(struct inputfile *inf, enum inf_token_type type)
    if there is no section name on that position. Sets inputfile position
    after section name.
  ***********************************************************************/
-static const char *get_token_section_name(struct inputfile *inf)
+static QString get_token_section_name(struct inputfile *inf)
 {
-  const char *c, *start;
+  fc_assert_ret_val(have_line(inf), "");
 
-  fc_assert_ret_val(have_line(inf), NULL);
+  auto start = inf->cur_line_pos;
+  if (start >= inf->cur_line.length() || inf->cur_line[start] != '[') {
+    return "";
+  }
+  ++start; // Skip the [
+  auto end = inf->cur_line.indexOf(']', start);
+  if (end < 0) {
+    return "";
+  }
 
-  c = astr_str(&inf->cur_line) + inf->cur_line_pos;
-  if (*c++ != '[') {
-    return NULL;
-  }
-  start = c;
-  while (*c != '\0' && *c != ']') {
-    c++;
-  }
-  if (*c != ']') {
-    return NULL;
-  }
-  *(const_cast<char *>(c)) = '\0'; /* Tricky. */
-  astr_set(&inf->token, "%s", start);
-  *(const_cast<char *>(c)) = ']'; /* Revert. */
-  inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
-  return astr_str(&inf->token);
+  // Extract the name
+  inf->token = inf->cur_line.mid(start, end - start);
+  inf->cur_line_pos = end + 1;
+  return inf->token;
 }
 
 /*******************************************************************/ /**
    Returns next entry name from inputfile. Skips white spaces and
    comments. Sets inputfile position after entry name.
  ***********************************************************************/
-static const char *get_token_entry_name(struct inputfile *inf)
+static QString get_token_entry_name(struct inputfile *inf)
 {
-  const char *c, *start, *end;
-  char trailing;
+  fc_assert_ret_val(have_line(inf), "");
 
-  fc_assert_ret_val(have_line(inf), NULL);
+  // Skip whitespace
+  auto i = inf->cur_line_pos;
+  for (; i < inf->cur_line.length(); ++i) {
+    if (!inf->cur_line[i].isSpace()) {
+      break;
+    }
+  }
+  if (i >= inf->cur_line.length()) {
+    return "";
+  }
+  auto start = i;
 
-  c = astr_str(&inf->cur_line) + inf->cur_line_pos;
-  while (*c != '\0' && QChar::isSpace(*c)) {
-    c++;
+  // Find the end of the name
+  for (; i < inf->cur_line.length(); ++i) {
+    auto c = inf->cur_line[i];
+    if (c.isSpace() || c == '=') {
+      break;
+    }
   }
-  if (*c == '\0') {
-    return NULL;
+  if (i >= inf->cur_line.length()) {
+    return "";
   }
-  start = c;
-  while (*c != '\0' && !QChar::isSpace(*c) && *c != '=' && !is_comment(*c)) {
-    c++;
+  auto end = i;
+
+  // Find the equal sign
+  auto eq = inf->cur_line.indexOf('=', end);
+  if (eq < 0) {
+    return "";
   }
-  if (!(*c != '\0' && (QChar::isSpace(*c) || *c == '='))) {
-    return NULL;
+
+  // Check that we didn't eat a comment in the middle
+  auto ref = inf->cur_line.midRef(inf->cur_line_pos, eq - inf->cur_line_pos);
+  if (ref.contains(';') || ref.contains('#')) {
+    return "";
   }
-  end = c;
-  while (*c != '\0' && *c != '=' && !is_comment(*c)) {
-    c++;
-  }
-  if (*c != '=') {
-    return NULL;
-  }
-  trailing = *end;
-  *(const_cast<char *>(end)) = '\0'; /* Tricky. */
-  astr_set(&inf->token, "%s", start);
-  *(const_cast<char *>(end)) = trailing; /* Revert. */
-  inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
-  return astr_str(&inf->token);
+
+  inf->cur_line_pos = eq + 1;
+  inf->token = inf->cur_line.mid(start, end - start);
+
+  return inf->token;
 }
 
 /*******************************************************************/ /**
    If inputfile is at end-of-line, frees current line, and returns " ".
-   If there is still something on that line, returns NULL.
+   If there is still something on that line, returns "".
  ***********************************************************************/
-static const char *get_token_eol(struct inputfile *inf)
+static QString get_token_eol(struct inputfile *inf)
 {
-  const char *c;
-
-  fc_assert_ret_val(have_line(inf), NULL);
+  fc_assert_ret_val(have_line(inf), "");
 
   if (!at_eol(inf)) {
-    c = astr_str(&inf->cur_line) + inf->cur_line_pos;
-    while (*c != '\0' && QChar::isSpace(*c)) {
-      c++;
+    auto it = inf->cur_line.cbegin() + inf->cur_line_pos;
+    for (; it < inf->cur_line.cend() && it->isSpace(); ++it) {
+      // Skip
     }
-    if (*c != '\0' && !is_comment(*c)) {
-      return NULL;
+    if (it != inf->cur_line.cend() && !is_comment(*it)) {
+      return "";
     }
   }
 
-  /* finished with this line: say that we don't have it any more: */
-  astr_clear(&inf->cur_line);
+  // finished with this line: say that we don't have it any more
+  inf->cur_line.clear();
   inf->cur_line_pos = 0;
 
-  astr_set(&inf->token, " ");
-  return astr_str(&inf->token);
+  inf->token = QStringLiteral(" ");
+  return inf->token;
 }
 
 /*******************************************************************/ /**
    Get a flag token of a single character, with optional
    preceeding whitespace.
  ***********************************************************************/
-static const char *get_token_white_char(struct inputfile *inf, char target)
+static QString get_token_white_char(struct inputfile *inf, char target)
 {
-  const char *c;
-
   fc_assert_ret_val(have_line(inf), NULL);
 
-  c = astr_str(&inf->cur_line) + inf->cur_line_pos;
-  while (*c != '\0' && QChar::isSpace(*c)) {
-    c++;
+  // Skip whitespace
+  auto it = inf->cur_line.cbegin() + inf->cur_line_pos;
+  for (; it != inf->cur_line.cend() && it->isSpace(); ++it) {
+    // Skip
   }
-  if (*c != target) {
-    return NULL;
+  if (it == inf->cur_line.cend() || *it != target) {
+    return "";
   }
-  inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
-  astr_set(&inf->token, "%c", target);
-  return astr_str(&inf->token);
+
+  inf->cur_line_pos = it - inf->cur_line.cbegin() + 1;
+  inf->token = target;
+  return inf->token;
 }
 
 /*******************************************************************/ /**
    Get flag token for table start, or NULL if that is not next token.
  ***********************************************************************/
-static const char *get_token_table_start(struct inputfile *inf)
+static QString get_token_table_start(struct inputfile *inf)
 {
   return get_token_white_char(inf, '{');
 }
@@ -758,7 +683,7 @@ static const char *get_token_table_start(struct inputfile *inf)
 /*******************************************************************/ /**
    Get flag token for table end, or NULL if that is not next token.
  ***********************************************************************/
-static const char *get_token_table_end(struct inputfile *inf)
+static QString get_token_table_end(struct inputfile *inf)
 {
   return get_token_white_char(inf, '}');
 }
@@ -766,7 +691,7 @@ static const char *get_token_table_end(struct inputfile *inf)
 /*******************************************************************/ /**
    Get flag token comma, or NULL if that is not next token.
  ***********************************************************************/
-static const char *get_token_comma(struct inputfile *inf)
+static QString get_token_comma(struct inputfile *inf)
 {
   return get_token_white_char(inf, ',');
 }
@@ -774,150 +699,122 @@ static const char *get_token_comma(struct inputfile *inf)
 /*******************************************************************/ /**
    This one is more complicated; note that it may read in multiple lines.
  ***********************************************************************/
-static const char *get_token_value(struct inputfile *inf)
+static QString get_token_value(struct inputfile *inf)
 {
-  const char *c, *start;
-  char trailing;
-  bool has_i18n_marking = false;
-  char border_character = '\"';
-
   fc_assert_ret_val(have_line(inf), NULL);
 
-  c = astr_str(&inf->cur_line) + inf->cur_line_pos;
-  while (*c != '\0' && QChar::isSpace(*c)) {
-    c++;
+  auto begin = inf->cur_line.cbegin();
+  auto end = inf->cur_line.cend();
+
+  // Skip whitespace
+  auto c = begin + inf->cur_line_pos;
+  for (; c != end && c->isSpace(); ++c) {
+    // Skip
   }
-  if (*c == '\0') {
-    return NULL;
+  if (c == end) {
+    return "";
   }
 
-  if (*c == '-' || *c == '+' || QChar::isDigit(*c)) {
-    /* a number: */
-    start = c++;
-    while (*c != '\0' && QChar::isDigit(*c)) {
-      c++;
+  // Advance
+  inf->cur_line_pos = c - begin;
+
+  if (*c == '-' || *c == '+' || c->isDigit()) {
+    // A number
+    auto start = c++;
+    for (; c != end && c->isDigit(); ++c) {
+      // Take
     }
     if (*c == '.') {
       /* Float maybe */
       c++;
-      while (*c != '\0' && QChar::isDigit(*c)) {
-        c++;
+      for (; c != end && c->isDigit(); ++c) {
+        // Take
       }
     }
-    /* check that the trailing stuff is ok: */
-    if (!(*c == '\0' || *c == ',' || QChar::isSpace(*c) || is_comment(*c))) {
-      return NULL;
+    // check that the trailing stuff is ok
+    if (!(c == end || *c == ',' || c->isSpace() || is_comment(*c))) {
+      return "";
     }
-    /* If its a comma, we don't want to obliterate it permanently,
-     * so remember it: */
-    trailing = *c;
-    *(const_cast<char *>(c)) = '\0'; /* Tricky. */
 
-    inf->cur_line_pos = c - astr_str(&inf->cur_line);
-    astr_set(&inf->token, "%s", start);
+    inf->token = inf->cur_line.mid(start - begin, c - start);
+    inf->cur_line_pos = c - begin;
 
-    *(const_cast<char *>(c)) = trailing; /* Revert. */
-    return astr_str(&inf->token);
+    return inf->token;
   }
 
-  /* allow gettext marker: */
+  // Allow gettext marker
+  bool has_i18n_marking = false;
   if (*c == '_' && *(c + 1) == '(') {
     has_i18n_marking = true;
     c += 2;
-    while (*c != '\0' && QChar::isSpace(*c)) {
+    while (c != end && c->isSpace()) {
       c++;
     }
-    if (*c == '\0') {
+    if (c == end) {
       return NULL;
     }
   }
 
-  border_character = *c;
-
+  auto border_character = *c;
   if (border_character == '*') {
-    QString rfname;
-    bool eof;
-    int pos;
+    // File included as string
+    auto first = c - begin + 1; // Switch to indexes
 
-    c++;
-
-    start = c;
-    while (*c != '*') {
-      if (*c == '\0' || *c == '\n') {
-        return NULL;
-      }
-      c++;
+    // Find the closing *
+    auto last = inf->cur_line.indexOf('*', first);
+    if (last < 0) {
+      return "";
     }
-    c++;
-    /* check that the trailing stuff is ok: */
-    if (!(*c == '\0' || *c == ',' || QChar::isSpace(*c) || is_comment(*c))) {
-      return NULL;
+    // Check that the trailing stuff is ok
+    c += last - first + 2;
+    if (!(c == end || *c == ',' || c->isSpace() || is_comment(*c))) {
+      return "";
     }
-    /* We don't want to obliterate ending '*' permanently,
-     * so remember it: */
-    trailing = *(c - 1);
-    *(const_cast<char *>(c - 1)) = '\0'; /* Tricky. */
 
-    rfname = fileinfoname(get_data_dirs(), start);
+    // File name without *
+    auto name = inf->cur_line.mid(first, last - first);
+    auto rfname = inf->datafn(name);
     if (rfname == NULL) {
-      qCCritical(inf_category, _("Cannot find stringfile \"%s\"."), start);
-      *(const_cast<char *>(c)) = trailing; /* Revert. */
-      return NULL;
+
+      qCCritical(inf_category, _("Cannot find stringfile \"%s\"."),
+                 qPrintable(name));
+      return "";
     }
-    *(const_cast<char *>(c)) = trailing; /* Revert. */
-    auto *fp = new KFilterDev(rfname);
+    auto fp = new KFilterDev(rfname);
     fp->open(QIODevice::ReadOnly);
     if (!fp->isOpen()) {
       qCCritical(inf_category, _("Cannot open stringfile \"%s\"."),
-                 qUtf8Printable(rfname));
+                 qPrintable(rfname));
       delete fp;
-      return NULL;
+      return "";
     }
-    log_debug("Stringfile \"%s\" opened ok", start);
-    *(const_cast<char *>(c - 1)) = trailing; /* Revert. */
-    astr_set(&inf->token, "*"); /* Mark as a string read from a file */
+    qCDebug(inf_category) << "Stringfile" << name << "opened ok";
 
-    eof = false;
-    pos = 1; /* Past 'filestring' marker */
-    while (!eof) {
-      auto ret =
-          fp->readLine(const_cast<char *>(astr_str(&inf->token)) + pos,
-                       astr_capacity(&inf->token) - pos);
-      if (ret < 0 || fp->atEnd()) {
-        eof = true;
-      } else {
-        pos = astr_len(&inf->token);
-        astr_reserve(&inf->token, pos + 200);
-      }
-    }
+    inf->token = QStringLiteral("*"); // Mark as a string read from a file
+    inf->token += QString::fromUtf8(fp->readAll());
 
     delete fp;
     fp = nullptr;
 
-    inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
+    inf->cur_line_pos = c + 1 - begin;
 
-    return astr_str(&inf->token);
+    return inf->token;
   } else if (border_character != '\"' && border_character != '\''
              && border_character != '$') {
-    /* A one-word string: maybe FALSE or TRUE. */
-    start = c;
-    while (QChar::isLetterOrNumber(*c)) {
-      c++;
+    // A one-word string: maybe FALSE or TRUE.
+    auto start = c;
+    for (; c->isLetterOrNumber(); ++c) {
+      // Skip
     }
     /* check that the trailing stuff is ok: */
-    if (!(*c == '\0' || *c == ',' || QChar::isSpace(*c) || is_comment(*c))) {
+    if (!(c == end || *c == ',' || c->isSpace() || is_comment(*c))) {
       return NULL;
     }
-    /* If its a comma, we don't want to obliterate it permanently,
-     * so remember it: */
-    trailing = *c;
-    *(const_cast<char *>(c)) = '\0'; /* Tricky. */
 
-    inf->cur_line_pos = c - astr_str(&inf->cur_line);
-    astr_set(&inf->token, "%s", start);
+    inf->cur_line_pos = c - begin;
+    inf->token = inf->cur_line.mid(start - begin, c - start);
 
-    *(const_cast<char *>(c)) = trailing; /* Revert. */
-    return astr_str(&inf->token);
+    return inf->token;
   }
 
   /* From here, we know we have a string, we just have to find the
@@ -938,13 +835,13 @@ static const char *get_token_value(struct inputfile *inf)
   inf->in_string = true;
   inf->partial.clear();
 
-  start = c++; /* start includes the initial \", to
-                * distinguish from a number */
+  auto start = c++; /* start includes the initial \", to
+                     * distinguish from a number */
   for (;;) {
-    while (*c != '\0' && *c != border_character) {
+    while (c != end && *c != border_character) {
       /* skip over escaped chars, including backslash-doublequote,
        * and backslash-backslash: */
-      if (*c == '\\' && *(c + 1) != '\0') {
+      if (*c == '\\' && (c + 1) != end) {
         c++;
       }
       c++;
@@ -961,19 +858,16 @@ static const char *get_token_value(struct inputfile *inf)
       /* shouldn't happen */
       qCCritical(inf_category,
                  "Bad return for multi-line string from read_a_line");
-      return NULL;
+      return "";
     }
-    c = start = astr_str(&inf->cur_line);
+    begin = inf->cur_line.cbegin();
+    end = inf->cur_line.cend();
+    c = start = begin;
   }
 
   /* found end of string */
-  trailing = *c;
-  *(const_cast<char *>(c)) = '\0'; /* Tricky. */
-
-  inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
-  astr_set(&inf->token, "%s%s", qUtf8Printable(inf->partial), start);
-
-  *(const_cast<char *>(c)) = trailing; /* Revert. */
+  inf->cur_line_pos = c + 1 - begin;
+  inf->token = inf->partial + inf->cur_line.mid(start - begin, c - start);
 
   /* check gettext tag at end: */
   if (has_i18n_marking) {
@@ -984,5 +878,5 @@ static const char *get_token_value(struct inputfile *inf)
     }
   }
   inf->in_string = false;
-  return astr_str(&inf->token);
+  return inf->token;
 }

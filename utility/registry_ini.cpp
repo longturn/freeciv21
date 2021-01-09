@@ -176,8 +176,9 @@ static inline bool entry_used(const struct entry *pentry);
 static inline void entry_use(struct entry *pentry);
 
 static bool entry_to_file(const struct entry *pentry, QIODevice *fs);
-static void entry_from_inf_token(struct section *psection, const char *name,
-                                 const char *tok, struct inputfile *file);
+static void entry_from_inf_token(struct section *psection,
+                                 const QString &name, const QString &tok,
+                                 struct inputfile *file);
 
 /* An 'entry' is a string, integer, boolean or string vector;
  * See enum entry_type in registry.h.
@@ -219,23 +220,22 @@ section_entry_filereference_new(struct section *psection, const char *name,
 /**********************************************************************/ /**
    Simplification of fileinfoname().
  **************************************************************************/
-static QString datafilename(const char *filename)
+static QString datafilename(const QString &filename)
 {
-  return fileinfoname(get_data_dirs(), filename);
+  return fileinfoname(get_data_dirs(), qPrintable(filename));
 }
 
 /**********************************************************************/ /**
    Ensure name is correct to use it as section or entry name.
  **************************************************************************/
-static bool is_secfile_entry_name_valid(const char *name)
+static bool is_secfile_entry_name_valid(const QString &name)
 {
-  static const char *const allowed = "_.,-[]";
+  static const auto allowed = QStringLiteral("_.,-[]");
 
-  while ('\0' != *name) {
-    if (!QChar::isLetterOrNumber(*name) && NULL == strchr(allowed, *name)) {
+  for (const auto &c : name) {
+    if (!c.isLetterOrNumber() && !allowed.contains(c)) {
       return false;
     }
-    name++;
   }
   return true;
 }
@@ -302,7 +302,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
   struct section *single_section = NULL;
   bool table_state = false; /* TRUE when within tabular format. */
   int table_lineno = 0;     /* Row number in tabular, 0 top data row. */
-  const char *tok;
+  QString tok;
   int i;
   QString base_name; /* for table or single entry */
   QString field_name;
@@ -329,7 +329,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
   }
 
   while (!inf_at_eof(inf)) {
-    if (inf_token(inf, INF_TOK_EOL)) {
+    if (!inf_token(inf, INF_TOK_EOL).isEmpty()) {
       continue;
     }
     if (inf_at_eof(inf)) {
@@ -337,7 +337,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       break;
     }
     tok = inf_token(inf, INF_TOK_SECTION_NAME);
-    if (tok) {
+    if (!tok.isEmpty()) {
       if (found_my_section) {
         /* This shortcut will stop any further loading after the requested
          * section has been loaded (i.e., at the start of a new section).
@@ -346,12 +346,14 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
          * normally a section may be split up, and that will no longer
          * work here because it will be short-cut. */
         SECFILE_LOG(secfile, psection, "%s",
-                    inf_log_str(inf, "Found requested section; finishing"));
+                    qPrintable(inf_log_str(
+                        inf, "Found requested section; finishing")));
         goto END;
       }
       if (table_state) {
-        SECFILE_LOG(secfile, psection, "%s",
-                    inf_log_str(inf, "New section during table"));
+        SECFILE_LOG(
+            secfile, psection, "%s",
+            qPrintable(inf_log_str(inf, "New section during table")));
         error = true;
         goto END;
       }
@@ -362,7 +364,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       */
       psection = secfile_section_by_name(secfile, tok);
       if (!psection) {
-        if (section.isEmpty() || (QString(tok) == section)) {
+        if (section.isEmpty() || tok == section) {
           psection = secfile_section_new(secfile, tok);
           if (!section.isEmpty()) {
             single_section = psection;
@@ -370,27 +372,28 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
           }
         }
       }
-      if (!inf_token(inf, INF_TOK_EOL)) {
+      if (inf_token(inf, INF_TOK_EOL).isEmpty()) {
         SECFILE_LOG(secfile, psection, "%s",
-                    inf_log_str(inf, "Expected end of line"));
+                    qPrintable(inf_log_str(inf, "Expected end of line")));
         error = true;
         goto END;
       }
       continue;
     }
-    if (inf_token(inf, INF_TOK_TABLE_END)) {
+    if (!inf_token(inf, INF_TOK_TABLE_END).isEmpty()) {
       if (!table_state) {
         SECFILE_LOG(secfile, psection, "%s",
-                    inf_log_str(inf, "Misplaced \"}\""));
+                    qPrintable(inf_log_str(inf, "Misplaced \"}\"")));
         error = true;
         goto END;
       }
-      if (!inf_token(inf, INF_TOK_EOL)) {
+      if (inf_token(inf, INF_TOK_EOL).isEmpty()) {
         SECFILE_LOG(secfile, psection, "%s",
-                    inf_log_str(inf, "Expected end of line"));
+                    qPrintable(inf_log_str(inf, "Expected end of line")));
         error = true;
         goto END;
       }
+      columns.clear();
       table_state = false;
       continue;
     }
@@ -401,9 +404,9 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
 
         i++;
         inf_discard_tokens(inf, INF_TOK_EOL); /* allow newlines */
-        if (!(tok = inf_token(inf, INF_TOK_VALUE))) {
+        if ((tok = inf_token(inf, INF_TOK_VALUE)).isEmpty()) {
           SECFILE_LOG(secfile, psection, "%s",
-                      inf_log_str(inf, "Expected value"));
+                      qPrintable(inf_log_str(inf, "Expected value")));
           error = true;
           goto END;
         }
@@ -417,12 +420,12 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
                                 columns.at(num_columns - 1),
                                 QString::number((i - num_columns + 1)));
         }
-        entry_from_inf_token(psection, qUtf8Printable(field_name), tok, inf);
-      } while (inf_token(inf, INF_TOK_COMMA));
+        entry_from_inf_token(psection, field_name, tok, inf);
+      } while (!inf_token(inf, INF_TOK_COMMA).isEmpty());
 
-      if (!inf_token(inf, INF_TOK_EOL)) {
+      if (inf_token(inf, INF_TOK_EOL).isEmpty()) {
         SECFILE_LOG(secfile, psection, "%s",
-                    inf_log_str(inf, "Expected end of line"));
+                    qPrintable(inf_log_str(inf, "Expected end of line")));
         error = true;
         goto END;
       }
@@ -430,9 +433,9 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       continue;
     }
 
-    if (!(tok = inf_token(inf, INF_TOK_ENTRY_NAME))) {
+    if ((tok = inf_token(inf, INF_TOK_ENTRY_NAME)).isEmpty()) {
       SECFILE_LOG(secfile, psection, "%s",
-                  inf_log_str(inf, "Expected entry name"));
+                  qPrintable(inf_log_str(inf, "Expected entry name")));
       error = true;
       goto END;
     }
@@ -442,30 +445,30 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
 
     inf_discard_tokens(inf, INF_TOK_EOL); /* allow newlines */
 
-    if (inf_token(inf, INF_TOK_TABLE_START)) {
+    if (!inf_token(inf, INF_TOK_TABLE_START).isEmpty()) {
       i = -1;
       do {
         i++;
         inf_discard_tokens(inf, INF_TOK_EOL); /* allow newlines */
-        if (!(tok = inf_token(inf, INF_TOK_VALUE))) {
+        if ((tok = inf_token(inf, INF_TOK_VALUE)).isEmpty()) {
           SECFILE_LOG(secfile, psection, "%s",
-                      inf_log_str(inf, "Expected value"));
+                      qPrintable(inf_log_str(inf, "Expected value")));
           error = true;
           goto END;
         }
         if (tok[0] != '\"') {
           SECFILE_LOG(secfile, psection, "%s",
-                      inf_log_str(inf, "Table column header non-string"));
+                      qPrintable(inf_log_str(
+                          inf, "Table column header non-string")));
           error = true;
           goto END;
         }
-        columns.resize(i + 1);
-        columns[i] = QStringLiteral("%1").arg(tok + 1);
-      } while (inf_token(inf, INF_TOK_COMMA));
+        columns.append(tok.mid(1));
+      } while (!inf_token(inf, INF_TOK_COMMA).isEmpty());
 
-      if (!inf_token(inf, INF_TOK_EOL)) {
+      if (inf_token(inf, INF_TOK_EOL).isEmpty()) {
         SECFILE_LOG(secfile, psection, "%s",
-                    inf_log_str(inf, "Expected end of line"));
+                    qPrintable(inf_log_str(inf, "Expected end of line")));
         error = true;
         goto END;
       }
@@ -478,9 +481,9 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
     do {
       i++;
       inf_discard_tokens(inf, INF_TOK_EOL); /* allow newlines */
-      if (!(tok = inf_token(inf, INF_TOK_VALUE))) {
+      if ((tok = inf_token(inf, INF_TOK_VALUE)).isEmpty()) {
         SECFILE_LOG(secfile, psection, "%s",
-                    inf_log_str(inf, "Expected value"));
+                    qPrintable(inf_log_str(inf, "Expected value")));
         error = true;
         goto END;
       }
@@ -491,10 +494,10 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
             QStringLiteral("%1,%2").arg(base_name, QString::number(i));
         entry_from_inf_token(psection, qUtf8Printable(field_name), tok, inf);
       }
-    } while (inf_token(inf, INF_TOK_COMMA));
-    if (!inf_token(inf, INF_TOK_EOL)) {
+    } while (!inf_token(inf, INF_TOK_COMMA).isEmpty());
+    if (inf_token(inf, INF_TOK_EOL).isEmpty()) {
       SECFILE_LOG(secfile, psection, "%s",
-                  inf_log_str(inf, "Expected end of line"));
+                  qPrintable(inf_log_str(inf, "Expected end of line")));
       error = true;
       goto END;
     }
@@ -2660,13 +2663,13 @@ int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
    Returns the first section matching the name.
  **************************************************************************/
 struct section *secfile_section_by_name(const struct section_file *secfile,
-                                        const char *name)
+                                        const QString &name)
 {
   SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, NULL);
 
   section_list_iterate(secfile->sections, psection)
   {
-    if (0 == strcmp(section_name(psection), name)) {
+    if (section_name(psection) == name) {
       return psection;
     }
   }
@@ -2741,7 +2744,7 @@ secfile_sections_by_name_prefix(const struct section_file *secfile,
    Create a new section in the secfile.
  **************************************************************************/
 struct section *secfile_section_new(struct section_file *secfile,
-                                    const char *name)
+                                    const QString &name)
 {
   struct section *psection;
 
@@ -2753,20 +2756,22 @@ struct section *secfile_section_new(struct section_file *secfile,
   }
 
   if (!is_secfile_entry_name_valid(name)) {
-    SECFILE_LOG(secfile, NULL, "\"%s\" is not a valid section name.", name);
+    SECFILE_LOG(secfile, NULL, "\"%s\" is not a valid section name.",
+                qPrintable(name));
     return NULL;
   }
 
   if (NULL != secfile_section_by_name(secfile, name)) {
     /* We cannot duplicate sections in any case! Not even if one is
      * include -section and the other not. */
-    SECFILE_LOG(secfile, NULL, "Section \"%s\" already exists.", name);
+    SECFILE_LOG(secfile, NULL, "Section \"%s\" already exists.",
+                qPrintable(name));
     return NULL;
   }
 
   psection = new section;
   psection->special = EST_NORMAL;
-  psection->name = fc_strdup(name);
+  psection->name = qstrdup(qPrintable(name));
   psection->entries = entry_list_new_full(entry_destroy);
 
   /* Append to secfile. */
@@ -2900,13 +2905,13 @@ const struct entry_list *section_entries(const struct section *psection)
    Returns the first entry matching the name.
  **************************************************************************/
 struct entry *section_entry_by_name(const struct section *psection,
-                                    const char *name)
+                                    const QString &name)
 {
   SECFILE_RETURN_VAL_IF_FAIL(NULL, psection, NULL != psection, NULL);
 
   entry_list_iterate(psection->entries, pentry)
   {
-    if (0 == strcmp(entry_name(pentry), name)) {
+    if (entry_name(pentry) == name) {
       entry_use(pentry);
       return pentry;
     }
@@ -2949,7 +2954,7 @@ struct entry *section_entry_lookup(const struct section *psection,
 /**********************************************************************/ /**
    Returns a new entry.
  **************************************************************************/
-static struct entry *entry_new(struct section *psection, const char *name)
+static entry *entry_new(struct section *psection, const QString &name)
 {
   struct section_file *secfile;
   struct entry *pentry;
@@ -2964,18 +2969,19 @@ static struct entry *entry_new(struct section *psection, const char *name)
 
   if (!is_secfile_entry_name_valid(name)) {
     SECFILE_LOG(secfile, psection, "\"%s\" is not a valid entry name.",
-                name);
+                qPrintable(name));
     return NULL;
   }
 
   if (!secfile->allow_duplicates
       && NULL != section_entry_by_name(psection, name)) {
-    SECFILE_LOG(secfile, psection, "Entry \"%s\" already exists.", name);
+    SECFILE_LOG(secfile, psection, "Entry \"%s\" already exists.",
+                qPrintable(name));
     return NULL;
   }
 
   pentry = new entry;
-  pentry->name = fc_strdup(name);
+  pentry->name = qstrdup(qPrintable(name));
   pentry->type = ENTRY_ILLEGAL; // Invalid case
   pentry->used = 0;
   pentry->comment = NULL;
@@ -2995,7 +3001,7 @@ static struct entry *entry_new(struct section *psection, const char *name)
    Returns a new entry of type ENTRY_INT.
  **************************************************************************/
 struct entry *section_entry_int_new(struct section *psection,
-                                    const char *name, int value)
+                                    const QString &name, int value)
 {
   struct entry *pentry = entry_new(psection, name);
 
@@ -3011,7 +3017,7 @@ struct entry *section_entry_int_new(struct section *psection,
    Returns a new entry of type ENTRY_BOOL.
  **************************************************************************/
 struct entry *section_entry_bool_new(struct section *psection,
-                                     const char *name, bool value)
+                                     const QString &name, bool value)
 {
   struct entry *pentry = entry_new(psection, name);
 
@@ -3027,7 +3033,7 @@ struct entry *section_entry_bool_new(struct section *psection,
    Returns a new entry of type ENTRY_FLOAT.
  **************************************************************************/
 struct entry *section_entry_float_new(struct section *psection,
-                                      const char *name, float value)
+                                      const QString &name, float value)
 {
   struct entry *pentry = entry_new(psection, name);
 
@@ -3043,14 +3049,14 @@ struct entry *section_entry_float_new(struct section *psection,
    Returns a new entry of type ENTRY_STR.
  **************************************************************************/
 struct entry *section_entry_str_new(struct section *psection,
-                                    const char *name, const char *value,
-                                    bool escaped)
+                                    const QString &name,
+                                    const QString &value, bool escaped)
 {
   struct entry *pentry = entry_new(psection, name);
 
   if (NULL != pentry) {
     pentry->type = ENTRY_STR;
-    pentry->string.value = fc_strdup(NULL != value ? value : "");
+    pentry->string.value = qstrdup(qPrintable(value));
     pentry->string.escaped = escaped;
     pentry->string.raw = false;
     pentry->string.gt_marking = false;
@@ -3468,10 +3474,13 @@ static bool entry_to_file(const struct entry *pentry, QIODevice *fs)
 /**********************************************************************/ /**
    Creates a new entry from the token.
  **************************************************************************/
-static void entry_from_inf_token(struct section *psection, const char *name,
-                                 const char *tok, struct inputfile *inf)
+static void entry_from_inf_token(struct section *psection,
+                                 const QString &name, const QString &tok,
+                                 struct inputfile *inf)
 {
   if (!entry_from_token(psection, name, tok)) {
-    qCritical("%s", inf_log_str(inf, "Entry value not recognized: %s", tok));
+    qCritical("%s",
+              qPrintable(inf_log_str(inf, "Entry value not recognized: %s",
+                                     qPrintable(tok))));
   }
 }
