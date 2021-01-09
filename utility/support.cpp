@@ -63,7 +63,6 @@
 // Qt
 #include <QFileInfo>
 #include <QHostInfo>
-#include <QRegularExpression>
 #include <QString>
 #include <QThread>
 
@@ -154,12 +153,39 @@ void make_escapes(const char *str, char *buf, size_t buf_len)
  ****************************************************************************/
 QString remove_escapes(const QString &str, bool full_escapes)
 {
-  static const QRegularExpression newline(QStringLiteral("([^\\\\])\\n"));
-  static const QRegularExpression other(
-      QStringLiteral("([^\\\\])\\\\([^\\\\])"));
+  QString copy;
 
-  auto copy = str;
-  return copy.replace(newline, "\\1\n").replace(other, "\\1\\2");
+  if (full_escapes) {
+    // Replace most everything
+    copy.reserve(str.length());
+
+    bool escape = false;
+    for (const auto &c : str) {
+      if (escape && full_escapes) {
+        switch (c.unicode()) {
+        case 'n':
+          copy += '\n';
+          break;
+        case '\n':
+          // Remove the newline
+          break;
+        default:
+          copy += c;
+        }
+        escape = false;
+      } else if (c == '\\') {
+        escape = true;
+      } else {
+        copy += c;
+      }
+    }
+  } else {
+    // Replace only escaped newlines
+    copy = str;
+    copy.replace("\\\n", "\n");
+  }
+
+  return copy;
 }
 
 /************************************************************************/ /**
