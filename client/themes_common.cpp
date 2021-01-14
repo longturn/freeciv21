@@ -16,7 +16,6 @@
 
 #include <cstring>
 #include <sys/stat.h>
-#include <unistd.h>
 
 // utility
 #include "log.h"
