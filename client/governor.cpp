@@ -50,6 +50,8 @@
 #define MAX_LEN_PRESET_NAME 80
 #define SAVED_PARAMETER_SIZE 29
 
+#define CMA_NUM_PARAMS 5
+
 #define SPECLIST_TAG preset
 #define SPECLIST_TYPE struct cma_preset
 #include "speclist.h"
@@ -874,7 +876,7 @@ cmafec_get_short_descr(const struct cm_parameter *const parameter)
 void create_default_cma_presets()
 {
   int i;
-  struct cm_parameter parameters[] = {
+  struct cm_parameter parameters[CMA_NUM_PARAMS] = {
       {// very happy
        .minimal_surplus = {0, 0, 0, -20, 0, 0},
        .require_happy = false,
@@ -910,12 +912,12 @@ void create_default_cma_presets()
        .allow_specialists = true,
        .factor = {10, 5, 0, 4, 0, 25},
        .happy_factor = 0}};
-  const char *names[ARRAY_SIZE(parameters)] = {
+  const char *names[CMA_NUM_PARAMS] = {
       N_("?cma:Very happy"), N_("?cma:Prefer food"),
       N_("?cma:Prefer production"), N_("?cma:Prefer gold"),
       N_("?cma:Prefer science")};
 
-  for (i = ARRAY_SIZE(parameters) - 1; i >= 0; i--) {
+  for (i = CMA_NUM_PARAMS - 1; i >= 0; i--) {
     cmafec_preset_add(Q_(names[i]), &parameters[i]);
   }
 }
