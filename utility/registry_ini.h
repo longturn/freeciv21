@@ -16,7 +16,7 @@
 #include "support.h" // bool type and fc__attribute
 
 // Opaque types.
-struct QIODevice;
+class QIODevice;
 struct section_file;
 struct section;
 struct entry;

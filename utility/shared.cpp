@@ -132,8 +132,7 @@ enum fc_tristate fc_tristate_and(enum fc_tristate one, enum fc_tristate two)
  */
 const char *big_int_to_text(unsigned int mantissa, unsigned int exponent)
 {
-  static char
-      buf[64]; // Note that we'll be filling this in right to left.
+  static char buf[64]; // Note that we'll be filling this in right to left.
   char *grp = grouping;
   char *ptr;
   unsigned int cnt = 0;
@@ -879,8 +878,8 @@ const QStringList *get_scenario_dirs()
    The suffixes are removed from the filenames before the list is
    returned.
  */
-struct QVector<QString> *fileinfolist(const QStringList *dirs,
-                                      const char *suffix) {
+class QVector<QString> *fileinfolist(const QStringList *dirs,
+                                     const char *suffix) {
   fc_assert_ret_val(!strchr(suffix, DIR_SEPARATOR_CHAR), NULL);
 
   QVector<QString> *files = new QVector<QString>();
@@ -932,7 +931,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
 #ifndef DIR_SEPARATOR_IS_DEFAULT
   char fnbuf[filename != NULL ? qstrlen(filename) + 1 : 1];
   int i;
-#else // DIR_SEPARATOR_IS_DEFAULT
+#else  // DIR_SEPARATOR_IS_DEFAULT
   const char *fnbuf = filename;
 #endif // DIR_SEPARATOR_IS_DEFAULT
 
@@ -1254,7 +1253,7 @@ void switch_lang(const char *lang)
   autocap_update();
 
   qInfo("LANG set to %s", lang);
-#else // FREECIV_ENABLE_NLS
+#else  // FREECIV_ENABLE_NLS
   fc_assert(false);
 #endif // FREECIV_ENABLE_NLS
 }
@@ -1276,7 +1275,7 @@ void init_nls()
 
 #ifdef FREECIV_MSWINDOWS
   setup_langname(); // Makes sure LANG env variable has been set
-#endif // FREECIV_MSWINDOWS
+#endif              // FREECIV_MSWINDOWS
 
   (void) setlocale(LC_ALL, "");
   (void) bindtextdomain("freeciv-core", get_locale_dir());
@@ -1346,9 +1345,7 @@ void dont_run_as_root(const char *argv0, const char *fallback)
   if (getuid() == 0 || geteuid() == 0) {
     fc_fprintf(stderr,
                _("%s: Fatal error: you're trying to run me as superuser!\n"),
-               (argv0      ? argv0
-                : fallback ? fallback
-                           : "freeciv"));
+               (argv0 ? argv0 : fallback ? fallback : "freeciv"));
     fc_fprintf(stderr, _("Use a non-privileged account instead.\n"));
     exit(EXIT_FAILURE);
   }
@@ -1571,7 +1568,7 @@ bool path_is_absolute(const char *filename)
   if (strchr(filename, ':')) {
     return true;
   }
-#else // FREECIV_MSWINDOWS
+#else  // FREECIV_MSWINDOWS
   if (filename[0] == '/') {
     return true;
   }

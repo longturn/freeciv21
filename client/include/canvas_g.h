@@ -16,10 +16,10 @@
 
 #include "gui_proto_constructor.h"
 
-struct QColor;
+class QColor;
 class QFont;
-class QString;
 class QPixmap; // opaque type, real type is gui-dep
+class QString;
 
 enum line_type { LINE_NORMAL, LINE_BORDER, LINE_TILE_FRAME, LINE_GOTO };
 
