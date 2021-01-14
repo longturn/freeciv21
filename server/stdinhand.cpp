@@ -307,14 +307,15 @@ static void cmd_reply_line(enum command_id cmd, struct connection *caller,
                            enum rfc_status rfc_status, const char *prefix,
                            const char *line)
 {
-  const char *cmdname = cmd < CMD_NUM ? command_name_by_number(cmd)
-                        : cmd == CMD_AMBIGUOUS
-                            // TRANS: ambiguous command
-                            ? _("(ambiguous)")
-                            : cmd == CMD_UNRECOGNIZED
-                                  // TRANS: unrecognized command
-                                  ? _("(unknown)")
-                                  : "(?!?)"; // this case is a bug!
+  const char *cmdname = cmd < CMD_NUM
+                            ? command_name_by_number(cmd)
+                            : cmd == CMD_AMBIGUOUS
+                                  // TRANS: ambiguous command
+                                  ? _("(ambiguous)")
+                                  : cmd == CMD_UNRECOGNIZED
+                                        // TRANS: unrecognized command
+                                        ? _("(unknown)")
+                                        : "(?!?)"; // this case is a bug!
 
   if (caller) {
     notify_conn(caller->self, NULL, E_SETTING, ftc_command, "/%s: %s%s",
@@ -1183,7 +1184,7 @@ static bool read_init_script_real(struct connection *caller,
   log_testmatic_alt(LOG_NORMAL, _("Loading script file '%s'."),
                     qUtf8Printable(real_filename));
 
-  if (is_reg_file_for_access(qUtf8Printable(real_filename), false)
+  if (QFile::exists(real_filename)
       && (script_file = fc_fopen(qUtf8Printable(real_filename), "r"))) {
     char buffer[MAX_LEN_CONSOLE_LINE];
 
@@ -1232,7 +1233,7 @@ static void write_init_script(char *script_filename)
 
   interpret_tilde(real_filename, sizeof(real_filename), script_filename);
 
-  if (is_reg_file_for_access(real_filename, true)
+  if (QFile::exists(real_filename)
       && (script_file = fc_fopen(real_filename, "w"))) {
     fprintf(script_file, "#FREECIV SERVER COMMAND FILE, version %s\n",
             VERSION_STRING);
@@ -2424,16 +2425,15 @@ static void show_votes(struct connection *caller)
       /* TRANS: "Vote" or "Teamvote" is voting-as-a-process. Used as
        * part of a sentence. */
       title = vote_is_team_only(pvote) ? _("Teamvote") : _("Vote");
-      cmd_reply(
-          CMD_VOTE, caller, C_COMMENT,
-          // TRANS: "[Vote|Teamvote] 3 \"proposed change\" (needs ..."
-          _("%s %d \"%s\" (needs %0.0f%%%s): %d for, "
-            "%d against, and %d abstained out of %d players."),
-          title, pvote->vote_no, pvote->cmdline,
-          MIN(100, pvote->need_pc * 100 + 1),
-          // TRANS: preserve leading space
-          pvote->flags & VCF_NODISSENT ? _(" no dissent") : "", pvote->yes,
-          pvote->no, pvote->abstain, count_voters(pvote));
+      cmd_reply(CMD_VOTE, caller, C_COMMENT,
+                // TRANS: "[Vote|Teamvote] 3 \"proposed change\" (needs ..."
+                _("%s %d \"%s\" (needs %0.0f%%%s): %d for, "
+                  "%d against, and %d abstained out of %d players."),
+                title, pvote->vote_no, pvote->cmdline,
+                MIN(100, pvote->need_pc * 100 + 1),
+                // TRANS: preserve leading space
+                pvote->flags & VCF_NODISSENT ? _(" no dissent") : "",
+                pvote->yes, pvote->no, pvote->abstain, count_voters(pvote));
       count++;
     }
     vote_list_iterate_end;
@@ -3559,8 +3559,7 @@ static bool take_command(struct connection *caller, char *str, bool check)
     cmd_reply(CMD_TAKE, caller, C_OK, _("%s now controls %s (%s, %s)."),
               pconn->username, player_name(pplayer),
               is_barbarian(pplayer) ? _("Barbarian")
-              : is_ai(pplayer)      ? _("AI")
-                                    : _("Human"),
+                                    : is_ai(pplayer) ? _("AI") : _("Human"),
               pplayer->is_alive ? _("Alive") : _("Dead"));
   } else {
     cmd_reply(CMD_TAKE, caller, C_FAIL,
@@ -5017,7 +5016,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     cmd_reply(CMD_LUA, caller, C_COMMENT,
               _("Loading Freeciv script file '%s'."), real_filename);
 
-    if (is_reg_file_for_access(real_filename, false)
+    if (QFile::exists(real_filename)
         && (script_file = fc_fopen(real_filename, "r"))) {
       ret = script_server_do_file(caller, real_filename);
       fclose(script_file);
@@ -5032,7 +5031,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     cmd_reply(CMD_LUA, caller, C_COMMENT,
               _("Loading Freeciv script file '%s'."), real_filename);
 
-    if (is_reg_file_for_access(real_filename, false)
+    if (QFile::exists(real_filename)
         && (script_file = fc_fopen(real_filename, "r"))) {
       fclose(script_file);
       ret = script_server_unsafe_do_file(caller, real_filename);
@@ -7176,9 +7175,9 @@ static char *cmdlevel_arg1_generator(const char *text, int state)
  */
 static const char *cmdlevel_arg2_accessor(int idx)
 {
-  return ((idx == 0)   ? "first"
-          : (idx == 1) ? "new"
-                       : connection_name_accessor(idx - 2));
+  return ((idx == 0)
+              ? "first"
+              : (idx == 1) ? "new" : connection_name_accessor(idx - 2));
 }
 
 /**

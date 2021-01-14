@@ -13,6 +13,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QFile>
 #include <cassert>
 #include <csignal>
 #include <cstdarg>
@@ -269,7 +270,7 @@ static bool manual_command(struct tag_types *tag_info)
     fc_snprintf(filename, sizeof(filename), "%s%d.%s",
                 game.server.rulesetdir, manuals + 1, tag_info->file_ext);
 
-    if (!is_reg_file_for_access(filename, true)
+    if (QFile::exists(filename, true)
         || !(doc = fc_fopen(filename, "w"))) {
       qCritical(_("Could not write manual file %s."), filename);
       return false;

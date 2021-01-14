@@ -41,6 +41,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QFile>
 #include <cctype>
 #include <cerrno>
 #include <cmath> // ceil()
@@ -649,21 +650,6 @@ int fc_gethostname(char *buf, size_t len)
   auto name = QHostInfo::localHostName();
   fc_strlcpy(buf, name.toUtf8().data(), len);
   return 0;
-}
-
-/**
-   Returns TRUE iff the file is a regular file or a link to a regular
-   file or write_access is TRUE and the file doesn't exists yet.
- */
-bool is_reg_file_for_access(const char *name, bool write_access)
-{
-  struct stat tmp;
-
-  if (fc_stat(name, &tmp) == 0) {
-    return S_ISREG(tmp.st_mode);
-  } else {
-    return write_access && errno == ENOENT;
-  }
 }
 
 /**
