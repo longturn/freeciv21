@@ -496,7 +496,7 @@ void update_infra_dialog(void) { funcs.update_infra_dialog(); }
 /**
    Call gui_load_theme callback
  */
-void gui_load_theme(const char *directory, const char *theme_name)
+void gui_load_theme(QString &directory, QString &theme_name)
 {
   funcs.gui_load_theme(directory, theme_name);
 }
@@ -509,7 +509,7 @@ void gui_clear_theme(void) { funcs.gui_clear_theme(); }
 /**
    Call get_gui_specific_themes_directories callback
  */
-char **get_gui_specific_themes_directories(int *count)
+QStringList get_gui_specific_themes_directories(int *count)
 {
   return funcs.get_gui_specific_themes_directories(count);
 }
@@ -517,7 +517,7 @@ char **get_gui_specific_themes_directories(int *count)
 /**
    Call get_useable_themes_in_directory callback
  */
-char **get_useable_themes_in_directory(const char *directory, int *count)
+QStringList get_useable_themes_in_directory(QString &directory, int *count)
 {
   return funcs.get_useable_themes_in_directory(directory, count);
 }

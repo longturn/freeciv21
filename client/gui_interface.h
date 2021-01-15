@@ -132,10 +132,10 @@ struct gui_funcs {
 
   void (*update_infra_dialog)();
 
-  void (*gui_load_theme)(const char *directory, const char *theme_name);
+  void (*gui_load_theme)(QString &directory, QString &theme_name);
   void (*gui_clear_theme)();
-  char **(*get_gui_specific_themes_directories)(int *count);
-  char **(*get_useable_themes_in_directory)(const char *directory,
+  QStringList (*get_gui_specific_themes_directories)(int *count);
+  QStringList (*get_useable_themes_in_directory)(QString &directory,
                                             int *count);
 };
 

@@ -33,7 +33,7 @@ Q_GLOBAL_STATIC(QString, stylestring)
 /**
    Loads a qt theme directory/theme_name
  */
-void qtg_gui_load_theme(const char *directory, const char *theme_name)
+void qtg_gui_load_theme(QString &directory, QString &theme_name)
 {
   QString name;
   QString path;
@@ -109,17 +109,14 @@ void qtg_gui_clear_theme()
    Returns an array containing these strings and sets array size in count.
    The caller is responsible for freeing the array and the paths.
  */
-char **qtg_get_gui_specific_themes_directories(int *count)
+QStringList qtg_get_gui_specific_themes_directories(int *count)
 {
   const QStringList *data_dirs = get_data_dirs();
-  char **directories = new char *[data_dirs->size()];
-  int i = 0;
+  QStringList directories;
 
   *count = data_dirs->size();
   for (const auto &data_dir : *data_dirs) {
-    QString buf = QStringLiteral("%1/themes/gui-qt").arg(data_dir);
-
-    directories[i++] = qstrdup(qUtf8Printable(buf));
+    directories.append(QStringLiteral("%1/themes/gui-qt").arg(data_dir));
   }
 
   return directories;
@@ -130,10 +127,10 @@ char **qtg_get_gui_specific_themes_directories(int *count)
    Array size is stored in count.
    The caller is responsible for freeing the array and the names
  */
-char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
+QStringList qtg_get_useable_themes_in_directory(QString &directory,
+                                                int *count)
 {
-  QStringList sl, theme_list;
-  char **array;
+  QStringList sl, theme_list, array;
   char *data;
   QByteArray qba;
   QString name;
@@ -160,7 +157,6 @@ char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
     theme_list.removeAll(qtheme_name);
     theme_list.prepend(qtheme_name);
   }
-  array = new char *[theme_list.count()];
   *count = theme_list.count();
 
   for (int i = 0; i < *count; i++) {
@@ -170,7 +166,7 @@ char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
     data = new char[theme_list[i].toLocal8Bit().count() + 1];
     tn_bytes = theme_list[i].toLocal8Bit();
     qstrcpy(data, tn_bytes.data());
-    array[i] = data;
+    array.append(data);
   }
 
   return array;

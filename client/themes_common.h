@@ -15,5 +15,5 @@
 void init_themes();
 class QStringList;
 const QVector<QString> *get_themes_list(const struct option *poption);
-bool load_theme(const char *theme_name);
+bool load_theme(const QString &theme_name);
 void theme_reread_callback(struct option *option);
