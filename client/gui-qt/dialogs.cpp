@@ -2998,8 +2998,7 @@ static void act_sel_keep_moving(QVariant data1, QVariant data2)
 void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
                          const struct action *paction)
 {
-  char buf[1024];
-  char buf2[1024];
+  QString buf, buf2;
   int diplomat_id = actor->id;
   int diplomat_target_id = tcity->id;
   const int action_id = paction->id;
@@ -3007,16 +3006,16 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
   // Should be set before sending request to the server.
   fc_assert(is_more_user_input_needed);
 
-  fc_snprintf(buf, ARRAY_SIZE(buf),
-              PL_("Treasury contains %d gold.", "Treasury contains %d gold.",
-                  client_player()->economic.gold),
-              client_player()->economic.gold);
+  buf = QString::asprintf(PL_("Treasury contains %d gold.",
+                              "Treasury contains %d gold.",
+                              client_player()->economic.gold),
+                          client_player()->economic.gold);
 
   if (INCITE_IMPOSSIBLE_COST == cost) {
     hud_message_box *impossible = new hud_message_box(king()->central_wdg);
 
-    fc_snprintf(buf2, ARRAY_SIZE(buf2),
-                _("You can't incite a revolt in %s."), city_name_get(tcity));
+    buf2 = QString::asprintf(_("You can't incite a revolt in %s."),
+                             city_name_get(tcity));
     impossible->set_text_title(buf2, QStringLiteral("!"));
     impossible->setStandardButtons(QMessageBox::Ok);
     impossible->setAttribute(Qt::WA_DeleteOnClose);
@@ -3024,10 +3023,9 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
   } else if (cost <= client_player()->economic.gold) {
     hud_message_box *ask = new hud_message_box(king()->central_wdg);
 
-    fc_snprintf(buf2, ARRAY_SIZE(buf2),
-                PL_("Incite a revolt for %d gold?\n%s",
-                    "Incite a revolt for %d gold?\n%s", cost),
-                cost, buf);
+    buf2 = QString(PL_("Incite a revolt for %1 gold?\n%2",
+                       "Incite a revolt for %1 gold?\n%2", cost))
+               .arg(QString::number(cost), buf);
     ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
     ask->setDefaultButton(QMessageBox::Cancel);
     ask->set_text_title(buf2, _("Incite a Revolt!"));
@@ -3041,10 +3039,9 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
   } else {
     hud_message_box *too_much = new hud_message_box(king()->central_wdg);
 
-    fc_snprintf(buf2, ARRAY_SIZE(buf2),
-                PL_("Inciting a revolt costs %d gold.\n%s",
-                    "Inciting a revolt costs %d gold.\n%s", cost),
-                cost, buf);
+    buf2 = QString(PL_("Inciting a revolt costs %1 gold.\n%2",
+                       "Inciting a revolt costs %1 gold.\n%2", cost))
+               .arg(QString::number(cost), buf);
     too_much->set_text_title(buf2, QStringLiteral("!"));
     too_much->setStandardButtons(QMessageBox::Ok);
     too_much->setAttribute(Qt::WA_DeleteOnClose);
@@ -3062,8 +3059,7 @@ void popup_bribe_dialog(struct unit *actor, struct unit *tunit, int cost,
                         const struct action *paction)
 {
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
-  char buf[1024];
-  char buf2[1024];
+  QString buf, buf2;
   int diplomat_id = actor->id;
   int diplomat_target_id = tunit->id;
   const int action_id = paction->id;
@@ -3071,16 +3067,15 @@ void popup_bribe_dialog(struct unit *actor, struct unit *tunit, int cost,
   // Should be set before sending request to the server.
   fc_assert(is_more_user_input_needed);
 
-  fc_snprintf(buf, ARRAY_SIZE(buf),
-              PL_("Treasury contains %d gold.", "Treasury contains %d gold.",
-                  client_player()->economic.gold),
-              client_player()->economic.gold);
+  buf = QString::asprintf(PL_("Treasury contains %d gold.",
+                              "Treasury contains %d gold.",
+                              client_player()->economic.gold),
+                          client_player()->economic.gold);
 
   if (cost <= client_player()->economic.gold) {
-    fc_snprintf(buf2, ARRAY_SIZE(buf2),
-                PL_("Bribe unit for %d gold?\n%s",
-                    "Bribe unit for %d gold?\n%s", cost),
-                cost, buf);
+    buf2 = QString(PL_("Bribe unit for %1 gold?\n%2",
+                       "Bribe unit for %1 gold?\n%2", cost))
+               .arg(QString::number(cost), buf);
     ask->set_text_title(buf2, _("Bribe Enemy Unit"));
     ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
     ask->setDefaultButton(QMessageBox::Cancel);
@@ -3092,10 +3087,9 @@ void popup_bribe_dialog(struct unit *actor, struct unit *tunit, int cost,
     ask->show();
     return;
   } else {
-    fc_snprintf(buf2, ARRAY_SIZE(buf2),
-                PL_("Bribing the unit costs %d gold.\n%s",
-                    "Bribing the unit costs %d gold.\n%s", cost),
-                cost, buf);
+    buf2 = QString(PL_("Bribing the unit costs %1 gold.\n%2",
+                       "Bribing the unit costs %1 gold.\n%2", cost))
+               .arg(QString::number(cost), buf);
     ask->set_text_title(buf2, _("Traitors Demand Too Much!"));
     ask->setAttribute(Qt::WA_DeleteOnClose);
     ask->show();

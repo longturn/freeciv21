@@ -575,7 +575,7 @@ void impr_info::update_buildings()
 void impr_item::mouseDoubleClickEvent(QMouseEvent *event)
 {
   hud_message_box *ask;
-  char buf[256];
+  QString buf;
   int price;
   const int impr_id = improvement_number(impr);
   const int city_id = pcity->id;
@@ -592,9 +592,9 @@ void impr_item::mouseDoubleClickEvent(QMouseEvent *event)
     }
 
     price = impr_sell_gold(impr);
-    fc_snprintf(buf, ARRAY_SIZE(buf),
-                PL_("Sell %s for %d gold?", "Sell %s for %d gold?", price),
-                city_improvement_name_translation(pcity, impr), price);
+    buf = QString(PL_("Sell %1 for %2 gold?", "Sell %1 for %2 gold?", price))
+              .arg(city_improvement_name_translation(pcity, impr),
+                   QString::number(price));
 
     ask->set_text_title(buf, (_("Sell improvement?")));
     ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);

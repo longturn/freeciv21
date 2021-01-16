@@ -736,7 +736,7 @@ version_message_event::version_message_event(const QString &msg)
 /**
    Got version message from metaserver thread.
  */
-void qtg_version_message(const char *vertext)
+void qtg_version_message(const QString &vertext)
 {
   current_app()->postEvent(king(), new version_message_event(vertext));
 }
