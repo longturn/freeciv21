@@ -324,25 +324,6 @@ void randomize_base64url_string(char *s, size_t n)
   s[i] = '\0';
 }
 
-/**
-   Compares two strings, in the collating order of the current locale,
-   given pointers to the two strings (i.e., given "char *"s).
-   Case-sensitive.  Designed to be called from qsort().
- */
-int compare_strings(const void *first, const void *second)
-{
-  return fc_strcoll((const char *) first, (const char *) second);
-}
-
-/**
-   Compares two strings, in the collating order of the current locale,
-   given pointers to the two string pointers (i.e., given "char **"s).
-   Case-sensitive.  Designed to be called from qsort().
- */
-int compare_strings_ptrs(const void *first, const void *second)
-{
-  return fc_strcoll(*((const char **) first), *((const char **) second));
-}
 
 /**
    Returns 's' incremented to first non-space character.

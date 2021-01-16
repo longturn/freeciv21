@@ -117,9 +117,6 @@ bool is_base64url(const char *s);
 bool is_safe_filename(const char *name);
 void randomize_base64url_string(char *s, size_t n);
 
-int compare_strings(const void *first, const void *second);
-int compare_strings_ptrs(const void *first, const void *second);
-
 char *skip_leading_spaces(char *s);
 void remove_leading_spaces(char *s);
 void remove_trailing_spaces(char *s);

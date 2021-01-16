@@ -1392,7 +1392,7 @@ static QPixmap *load_gfx_file(const char *gfx_filename)
   for (auto gfx_fileext : QImageReader::supportedImageFormats()) {
     QString real_full_name;
     QString full_name =
-        QStringLiteral("%1.%2").arg(gfx_filename, gfx_fileext);
+        QStringLiteral("%1.%2").arg(gfx_filename, gfx_fileext.data());
 
     real_full_name =
         fileinfoname(get_data_dirs(), qUtf8Printable(full_name));
@@ -1625,8 +1625,8 @@ static char *tilespec_gfx_filename(const char *gfx_filename)
 {
   for (auto gfx_current_fileext : QImageReader::supportedImageFormats()) {
     QString real_full_name;
-    QString full_name =
-        QStringLiteral("%1.%2").arg(gfx_filename, gfx_current_fileext);
+    QString full_name = QStringLiteral("%1.%2").arg(
+        gfx_filename, gfx_current_fileext.data());
 
     real_full_name =
         fileinfoname(get_data_dirs(), qUtf8Printable(full_name));
