@@ -33,20 +33,13 @@
 
 #include "governor.h"
 
-#define log_request_ids(...) // log_test(__VA_ARGS__)
-#define log_todo_lists(...)  // log_test(__VA_ARGS__)
-#define log_meta_callback(...) log_debug(__VA_ARGS__)
-#define log_debug_freeze(...) // log_test(__VA_ARGS__)
 #define log_apply_result log_debug
 #define log_handle_city log_debug
 #define log_handle_city2 log_debug
 #define log_results_are_equal log_debug
 
-#define SHOW_TIME_STATS false
 #define SHOW_APPLY_RESULT_ON_SERVER_ERRORS false
 #define ALWAYS_APPLY_AT_SERVER false
-#define RESULT_COLUMNS 10
-#define BUFFER_SIZE 100
 #define MAX_LEN_PRESET_NAME 80
 #define SAVED_PARAMETER_SIZE 29
 
@@ -55,10 +48,6 @@
 #define SPECLIST_TAG preset
 #define SPECLIST_TYPE struct cma_preset
 #include "speclist.h"
-
-#define preset_list_iterate(presetlist, ppreset)                            \
-  TYPED_LIST_ITERATE(struct cma_preset, presetlist, ppreset)
-#define preset_list_iterate_end LIST_ITERATE_END
 
 static struct preset_list *preset_list = NULL;
 

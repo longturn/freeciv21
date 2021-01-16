@@ -438,7 +438,6 @@ struct tileset {
   int unit_upkeep_small_offset_y;
 
 #define NUM_CORNER_DIRS 4
-#define TILES_PER_CORNER 4
   int num_valid_tileset_dirs, num_cardinal_tileset_dirs;
   int num_index_valid, num_index_cardinal;
   enum direction8 valid_tileset_dirs[8], cardinal_tileset_dirs[8];

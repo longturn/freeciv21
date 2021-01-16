@@ -893,7 +893,6 @@ struct city *settler_evaluate_city_requests(struct unit *punit,
 /**
    Find some work for our settlers and/or workers.
  */
-#define LOG_SETTLER LOG_DEBUG
 void auto_settler_findwork(struct player *pplayer, struct unit *punit,
                            struct settlermap *state, int recursion)
 {
