@@ -276,7 +276,7 @@ void canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
 /**
    Call set_rulesets callback
  */
-void set_rulesets(int num_rulesets, char **rulesets)
+void set_rulesets(int num_rulesets, QStringList rulesets)
 {
   funcs.set_rulesets(num_rulesets, rulesets);
 }

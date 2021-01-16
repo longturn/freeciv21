@@ -89,18 +89,20 @@ pregame_options::pregame_options(QWidget *parent) : QWidget(parent)
 /**
    Update the ruleset list
  */
-void pregame_options::set_rulesets(int num_rulesets, char **rulesets)
+void pregame_options::set_rulesets(int num_rulesets, QStringList rulesets)
 {
-  int i;
+  int i = 0;
   int def_idx = -1;
 
   ui.cruleset->clear();
   ui.cruleset->blockSignals(true);
-  for (i = 0; i < num_rulesets; i++) {
-    ui.cruleset->addItem(rulesets[i], i);
-    if (!strcmp("default", rulesets[i])) {
+
+  for (auto r: rulesets) {
+    ui.cruleset->addItem(r, i);
+    if (QString("default") == r) {
       def_idx = i;
     }
+    i++;
   }
 
   // HACK: HAXXOR WAS HERE : server should tell us the current ruleset.

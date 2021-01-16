@@ -26,7 +26,7 @@ public:
   page_pregame(QWidget *, fc_client *);
   ~page_pregame() override;
   void update_start_page();
-  void set_rulesets(int num_rulesets, char **rulesets);
+  void set_rulesets(int num_rulesets, QStringList rulesets);
   void update_vote();
 private slots:
   void slot_pick_nation();

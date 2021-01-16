@@ -569,7 +569,7 @@ void qtg_real_set_client_page(enum client_pages page)
    "default", and if the user changes this then set_ruleset() should be
    called.
  */
-void qtg_set_rulesets(int num_rulesets, char **rulesets)
+void qtg_set_rulesets(int num_rulesets, QStringList rulesets)
 {
   qobject_cast<page_pregame *>(king()->pages[PAGE_START])
       ->set_rulesets(num_rulesets, rulesets);

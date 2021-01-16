@@ -24,7 +24,7 @@ class pregame_options : public QWidget {
 public:
   pregame_options(QWidget *parent);
 
-  void set_rulesets(int num_rulesets, char **rulesets);
+  void set_rulesets(int num_rulesets, QStringList rulesets);
   void set_aifill(int aifill);
   void update_ai_level();
   void update_buttons();

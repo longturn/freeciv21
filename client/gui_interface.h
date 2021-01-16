@@ -88,7 +88,7 @@ struct gui_funcs {
                           enum client_font font, QColor *pcolor,
                           const QString &);
 
-  void (*set_rulesets)(int num_rulesets, char **rulesets);
+  void (*set_rulesets)(int num_rulesets, QStringList rulesets);
   void (*options_extra_init)();
   void (*add_net_input)(QTcpSocket *sock);
   void (*remove_net_input)();

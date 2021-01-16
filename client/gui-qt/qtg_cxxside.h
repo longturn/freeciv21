@@ -79,7 +79,7 @@ void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
                          enum client_font font, QColor *pcolor,
                          const QString &text);
 
-void qtg_set_rulesets(int num_rulesets, char **rulesets);
+void qtg_set_rulesets(int num_rulesets, QStringList rulesets);
 void qtg_options_extra_init();
 void qtg_add_net_input(QTcpSocket *sock);
 void qtg_remove_net_input();

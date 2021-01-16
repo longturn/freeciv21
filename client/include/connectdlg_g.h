@@ -15,4 +15,4 @@
 #include "gui_proto_constructor.h"
 
 GUI_FUNC_PROTO(void, close_connection_dialog, void)
-GUI_FUNC_PROTO(void, set_rulesets, int num_rulesets, char **rulesets)
+void set_rulesets(int num_rulesets, QStringList rulesets);

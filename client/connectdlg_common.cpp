@@ -465,26 +465,19 @@ void send_save_game(const char *filename)
  */
 void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
 {
-  char **rulesets = new char *[packet->ruleset_count];
+  QStringList rulesets;
   int i;
-  size_t suf_len = qstrlen(RULESET_SUFFIX);
 
   for (i = 0; i < packet->ruleset_count; i++) {
-    size_t len = qstrlen(packet->rulesets[i]);
+    QString r = packet->rulesets[i];
 
-    rulesets[i] = fc_strdup(packet->rulesets[i]);
-
-    if (len > suf_len
-        && strcmp(rulesets[i] + len - suf_len, RULESET_SUFFIX) == 0) {
-      rulesets[i][len - suf_len] = '\0';
+    int id = r.lastIndexOf(RULESET_SUFFIX);
+    if (id >= 0) {
+      r = r.left(id);
     }
+    rulesets.append(r);
   }
   set_rulesets(packet->ruleset_count, rulesets);
-
-  for (i = 0; i < packet->ruleset_count; i++) {
-    delete[] rulesets[i];
-  }
-  delete[] rulesets;
 }
 
 /**
