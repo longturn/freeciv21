@@ -12,6 +12,8 @@
 
 #include "canvas_g.h"
 
+class QRect;
+
 /* Requirements Tree
  *
  * This file provides functions for drawing a tree-like graph of
@@ -69,12 +71,26 @@ struct reqtree {
   int diagram_width, diagram_height;
 };
 
+/****************************************************************************
+  Helper item for research diagram, about drawn rectangles and what
+  tech/unit/improvement they point to.
+****************************************************************************/
+class req_tooltip_help {
+public:
+  req_tooltip_help() = default;
+  QRect rect;
+  Tech_type_id tech_id{-1};
+  struct unit_type *tunit{nullptr};
+  struct impr_type *timpr{nullptr};
+  struct government *tgov{nullptr};
+};
+
 struct reqtree *create_reqtree(struct player *pplayer, bool show_all);
 void destroy_reqtree(struct reqtree *tree);
 
 void get_reqtree_dimensions(struct reqtree *tree, int *width, int *height);
 
-void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
+QList<req_tooltip_help *> * draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
                   int canvas_y, int tt_x, int tt_y, int w, int h);
 
 Tech_type_id get_tech_on_reqtree(struct reqtree *tree, int x, int y);

@@ -13,6 +13,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QRect>
 #include <cstdarg>
 #include <cstring>
 
@@ -978,8 +979,10 @@ static QColor *edge_color(struct tree_node *node,
    This draws the given portion of the reqtree diagram (given by
    (tt_x,tt_y) and (w,h) onto the canvas at position (canvas_x, canvas_y).
  */
-void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
-                  int canvas_y, int tt_x, int tt_y, int w, int h)
+QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
+                                        QPixmap *pcanvas, int canvas_x,
+                                        int canvas_y, int tt_x, int tt_y,
+                                        int w, int h)
 {
   Q_UNUSED(h)
   Q_UNUSED(w)
@@ -991,6 +994,9 @@ void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
   int swidth, sheight;
   QPixmap *sprite;
   QColor *color;
+  req_tooltip_help *rttp;
+
+  QList<req_tooltip_help *> *tt_help = new QList<req_tooltip_help *>;
 
   // draw the diagram
   for (i = 0; i < tree->num_layers; i++) {
@@ -1024,6 +1030,11 @@ void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
          */
 
         get_text_size(&text_w, &text_h, FONT_REQTREE_TEXT, text);
+        rttp = new req_tooltip_help();
+        rttp->rect =
+            QRect(startx + (width - text_w) / 2, starty + 4, text_w, text_h);
+        rttp->tech_id = node->tech;
+        tt_help->append(rttp);
 
         canvas_put_text(pcanvas, startx + (width - text_w) / 2, starty + 4,
                         FONT_REQTREE_TEXT,
@@ -1039,6 +1050,13 @@ void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
             sprite =
                 get_unittype_sprite(tileset, unit, direction8_invalid());
             get_sprite_dimensions(sprite, &swidth, &sheight);
+            rttp = new req_tooltip_help();
+            rttp->rect = QRect(icon_startx,
+                               starty + text_h + 4
+                                   + (height - text_h - 4 - sheight) / 2,
+                               swidth, sheight);
+            rttp->tunit = unit;
+            tt_help->append(rttp);
             canvas_put_sprite_full(pcanvas, icon_startx,
                                    starty + text_h + 4
                                        + (height - text_h - 4 - sheight) / 2,
@@ -1058,6 +1076,14 @@ void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
                 // Improvement icons are not guaranteed to exist
                 if (sprite) {
                   get_sprite_dimensions(sprite, &swidth, &sheight);
+                  rttp = new req_tooltip_help();
+                  rttp->rect =
+                      QRect(icon_startx,
+                            starty + text_h + 4
+                                + (height - text_h - 4 - sheight) / 2,
+                            swidth, sheight);
+                  rttp->timpr = pimprove;
+                  tt_help->append(rttp);
                   canvas_put_sprite_full(
                       pcanvas, icon_startx,
                       starty + text_h + 4
@@ -1080,6 +1106,13 @@ void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
                          == node->tech) {
                 sprite = get_government_sprite(tileset, gov);
                 get_sprite_dimensions(sprite, &swidth, &sheight);
+                rttp = new req_tooltip_help();
+                rttp->rect = QRect(icon_startx,
+                                   starty + text_h + 4
+                                       + (height - text_h - 4 - sheight) / 2,
+                                   swidth, sheight);
+                rttp->tgov = gov;
+                tt_help->append(rttp);
                 canvas_put_sprite_full(pcanvas, icon_startx,
                                        starty + text_h + 4
                                            + (height - text_h - 4 - sheight)
@@ -1114,6 +1147,7 @@ void draw_reqtree(struct reqtree *tree, QPixmap *pcanvas, int canvas_x,
       }
     }
   }
+  return tt_help;
 }
 
 /**
