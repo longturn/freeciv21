@@ -677,7 +677,8 @@ void option_dialog::add_option(struct option *poption)
     qlist = qstr.split(QStringLiteral(","));
     button->setFont(qf);
     button->setText(qlist[0] + " " + qlist[1]);
-    connect(button, SIGNAL(clicked()), this, SLOT(set_font()));
+    connect(button, &QAbstractButton::clicked, this,
+            QOverload<>::of(&option_dialog::set_font));
     widget = button;
     break;
 
@@ -687,7 +688,8 @@ void option_dialog::add_option(struct option *poption)
     button->setObjectName(QStringLiteral("text_color"));
     button->setAutoFillBackground(true);
     button->setAutoDefault(false);
-    connect(button, SIGNAL(clicked()), this, SLOT(set_color()));
+    connect(button, &QAbstractButton::clicked, this,
+            QOverload<>::of(&option_dialog::set_color));
     hbox_layout = new QHBoxLayout();
     hbox_layout->addWidget(button);
     button = new QPushButton();
@@ -695,7 +697,8 @@ void option_dialog::add_option(struct option *poption)
     button->setObjectName(QStringLiteral("text_background"));
     button->setAutoFillBackground(true);
     button->setAutoDefault(false);
-    connect(button, SIGNAL(clicked()), this, SLOT(set_color()));
+    connect(button, &QAbstractButton::clicked, this,
+            QOverload<>::of(&option_dialog::set_color));
     hbox_layout->addWidget(button);
     widget = new QWidget();
     widget->setLayout(hbox_layout);

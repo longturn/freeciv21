@@ -39,10 +39,8 @@ eco_report::eco_report() : QWidget()
   connect(ui.bredun, &QAbstractButton::pressed, this,
           &eco_report::sell_redundant);
   connect(ui.eco_widget->selectionModel(),
-          SIGNAL(selectionChanged(const QItemSelection &,
-                                  const QItemSelection &)),
-          SLOT(selection_changed(const QItemSelection &,
-                                 const QItemSelection &)));
+          &QItemSelectionModel::selectionChanged, this,
+          &eco_report::selection_changed);
   setLayout(ui.eco_layout);
   queen()->gimmePlace(this, QStringLiteral("ECO"));
   index = queen()->addGameTab(this);

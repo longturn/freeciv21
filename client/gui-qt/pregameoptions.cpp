@@ -67,12 +67,12 @@ pregame_options::pregame_options(QWidget *parent) : QWidget(parent)
     }
   }
   ui.ailevel->setCurrentIndex(-1);
-  connect(ui.max_players, SIGNAL(valueChanged(int)),
-          SLOT(max_players_change(int)));
-  connect(ui.ailevel, SIGNAL(currentIndexChanged(int)),
-          SLOT(ailevel_change(int)));
-  connect(ui.cruleset, SIGNAL(currentIndexChanged(int)),
-          SLOT(ruleset_change(int)));
+  connect(ui.max_players, QOverload<int>::of(&QSpinBox::valueChanged), this,
+          &pregame_options::max_players_change);
+  connect(ui.ailevel, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+          &pregame_options::ailevel_change);
+  connect(ui.cruleset, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+          &pregame_options::ruleset_change);
   ui.qserveroptions->setText(_("More Game Options"));
   ui.qserveroptions->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("preferences-other")));

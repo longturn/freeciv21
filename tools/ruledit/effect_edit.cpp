@@ -91,7 +91,8 @@ effect_edit::effect_edit(ruledit_gui *ui_in, const QString &target,
   active_layout->addWidget(lbl, 2);
   value_box = new QSpinBox(this);
   active_layout->addWidget(value_box, 3);
-  connect(value_box, SIGNAL(valueChanged(int)), this, SLOT(set_value(int)));
+  connect(value_box, QOverload<int>::of(&QSpinBox::valueChanged), this,
+          &effect_edit::set_value);
 
   main_layout->addLayout(active_layout);
 

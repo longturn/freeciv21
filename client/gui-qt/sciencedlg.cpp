@@ -65,10 +65,10 @@ research_diagram::research_diagram(QWidget *parent) : QWidget(parent)
  */
 research_diagram::~research_diagram()
 {
+  NFCN_FREE(tt_help);
   canvas_free(pcanvas);
   destroy_reqtree(req);
 }
-
 
 /**
    Recreates whole diagram and schedules update
@@ -76,7 +76,7 @@ research_diagram::~research_diagram()
 void research_diagram::update_reqtree()
 {
   reset();
-  NFCNPP_FREE(tt_help);
+  NFCN_FREE(tt_help);
   tt_help = draw_reqtree(req, pcanvas, 0, 0, 0, 0, width, height);
   update();
 }
@@ -287,11 +287,13 @@ science_report::science_report() : QWidget()
   scroll->setSizePolicy(size_expanding_policy);
   sci_layout->addWidget(scroll, 4, 0, 1, 10);
 
-  QObject::connect(researching_combo, SIGNAL(currentIndexChanged(int)),
-                   SLOT(current_tech_changed(int)));
+  QObject::connect(researching_combo,
+                   QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+                   &science_report::current_tech_changed);
 
-  QObject::connect(goal_combo, SIGNAL(currentIndexChanged(int)),
-                   SLOT(goal_tech_changed(int)));
+  QObject::connect(goal_combo,
+                   QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+                   &science_report::goal_tech_changed);
 
   setLayout(sci_layout);
 }

@@ -170,8 +170,10 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from)
     gold_edit2->setMaximum(player_by_number(player1)->economic.gold);
     gold_edit1->setMaximum(player_by_number(player2)->economic.gold);
   }
-  connect(gold_edit1, SIGNAL(valueChanged(int)), SLOT(gold_changed1(int)));
-  connect(gold_edit2, SIGNAL(valueChanged(int)), SLOT(gold_changed2(int)));
+  connect(gold_edit1, qOverload<int>(&QSpinBox::valueChanged), this,
+          &diplo_wdg::gold_changed1);
+  connect(gold_edit2, qOverload<int>(&QSpinBox::valueChanged), this,
+          &diplo_wdg::gold_changed2);
   add_clause1 = new QPushButton(style()->standardIcon(QStyle::SP_ArrowRight),
                                 _("Add Clause..."));
   add_clause2 = new QPushButton(style()->standardIcon(QStyle::SP_ArrowRight),
