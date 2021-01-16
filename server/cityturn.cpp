@@ -1159,7 +1159,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
   const struct requirement_vector *build_reqs;
   const char *signal_name;
 
-  bool success = true;
+  bool purge = false;
   bool known = false;
 
   switch (target->kind) {
@@ -1203,7 +1203,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                                     "need_tech");
         } else {
           // While techs can be unlearned, this isn't useful feedback
-          success = false;
+          purge = true;
         }
         break;
       case VUT_TECHFLAG:
@@ -1219,7 +1219,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                                     "need_techflag");
         } else {
           // While techs can be unlearned, this isn't useful feedback
-          success = false;
+          purge = true;
         }
         break;
       case VUT_IMPROVEMENT:
@@ -1299,7 +1299,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                                     "need_achievement");
         } else {
           // Can't unachieve things.
-          success = false;
+          purge = true;
         }
         break;
       case VUT_EXTRA:
@@ -1519,7 +1519,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                                     "need_minculture");
         } else {
           // What has been written may not be unwritten.
-          success = false;
+          purge = true;
         }
         break;
       case VUT_MINFOREIGNPCT:
@@ -1552,7 +1552,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
           script_server_signal_emit(signal_name, ptarget, pcity,
                                     "need_mintechs");
         } else {
-          success = false;
+          purge = true;
         }
         break;
       case VUT_MAXTILEUNITS:
@@ -1587,7 +1587,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
         break;
       case VUT_AI_LEVEL:
         // Can't change AI level.
-        success = false;
+        purge = true;
         break;
       case VUT_TERRAINCLASS:
         if (preq->present) {
@@ -1741,7 +1741,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                                     "need_minyear");
         } else {
           // Can't go back in time.
-          success = false;
+          purge = true;
         }
         break;
       case VUT_MINCALFRAG:
@@ -1785,7 +1785,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
           script_server_signal_emit(signal_name, ptarget, pcity,
                                     "need_topo");
         }
-        success = false;
+        purge = true;
         break;
       case VUT_SERVERSETTING:
         notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
@@ -1804,7 +1804,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
         script_server_signal_emit(signal_name, ptarget, pcity,
                                   "need_setting");
         // Don't assume that the server setting will be changed.
-        success = false;
+        purge = true;
         break;
       case VUT_AGE:
         if (preq->present) {
@@ -1816,7 +1816,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
           script_server_signal_emit(signal_name, ptarget, pcity, "need_age");
         } else {
           // Can't go back in time.
-          success = false;
+          purge = true;
         }
         break;
       case VUT_NONE:
@@ -1835,7 +1835,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
     // Almost all cases emit signal in the end, so city check needed.
     if (!city_exist(saved_id)) {
       // Some script has removed city
-      return false;
+      return true;
     }
   }
   requirement_vector_iterate_end;
@@ -1849,7 +1849,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                   city_link(pcity), tgt_name);
   }
 
-  return success;
+  return purge;
 }
 
 /**
@@ -1900,7 +1900,7 @@ static bool worklist_change_build_target(struct player *pplayer,
     case VUT_UTYPE: {
       const struct unit_type *ptarget = target.value.utype;
       const struct unit_type *pupdate = unit_upgrades_to(pcity, ptarget);
-
+      bool purge;
       /* Maybe we can just upgrade the target to what the city /can/ build.
        */
       if (U_NOT_OBSOLETED == pupdate) {
@@ -1920,14 +1920,16 @@ static bool worklist_change_build_target(struct player *pplayer,
                                     "need_tech");
         } else {
           // Unknown or requirement from vector.
-          success = worklist_item_postpone_req_vec(&target, pcity, pplayer,
-                                                   saved_id);
+          purge = worklist_item_postpone_req_vec(&target, pcity, pplayer,
+                                                 saved_id);
         }
         city_checked = false;
         break;
+        } else {
+        purge = !can_city_build_unit_later(pcity, pupdate);
       }
       success = can_city_build_unit_later(pcity, pupdate);
-      if (!success) {
+      if (purge) {
         /* If the city can never build this unit or its descendants,
          * drop it. */
         notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
@@ -1961,10 +1963,10 @@ static bool worklist_change_build_target(struct player *pplayer,
     case VUT_IMPROVEMENT: {
       const struct impr_type *ptarget = target.value.building;
       const struct impr_type *pupdate = building_upgrades_to(pcity, ptarget);
-
+      bool purge;
       // If the city can never build this improvement, drop it.
       success = can_city_build_improvement_later(pcity, pupdate);
-
+      purge = !success;
       /* Maybe this improvement has been obsoleted by something that
          we can build. */
       if (!success) {
@@ -1982,9 +1984,6 @@ static bool worklist_change_build_target(struct player *pplayer,
             return false;
           }
           city_checked = true;
-        } else {
-          // Can't be built later.
-          success = false;
         }
       } else if (success) {
         // Hey, we can upgrade the improvement!
@@ -1994,10 +1993,9 @@ static bool worklist_change_build_target(struct player *pplayer,
                       city_improvement_name_translation(pcity, pupdate),
                       city_link(pcity));
         target.value.building = pupdate;
-        success = true;
       }
 
-      if (!success) {
+      if (purge) {
         // Never in a million years.
         notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
                       ftc_server,
