@@ -274,20 +274,6 @@ void fc_client::add_server_source(QTcpSocket *sock)
   input_from_server(sock);
 }
 
-/**
-   Event handler
- */
-bool fc_client::event(QEvent *event)
-{
-  if (event->type() == QEvent::User) {
-    version_message_event vmevt =
-        dynamic_cast<version_message_event &>(*event);
-    set_status_bar(vmevt.get_message());
-    return true;
-  } else {
-    return QMainWindow::event(event);
-  }
-}
 
 /**
    Closes main window

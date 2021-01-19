@@ -725,18 +725,11 @@ void qtg_real_output_window_append(const QString &astring,
                         tags);
 }
 
-/**
-   Version message event constructor.
- */
-version_message_event::version_message_event(const QString &msg)
-    : QEvent(QEvent::User), message(msg)
-{
-}
 
 /**
-   Got version message from metaserver thread.
+   Got version message from metaserver
  */
 void qtg_version_message(const QString &vertext)
 {
-  current_app()->postEvent(king(), new version_message_event(vertext));
+  king()->set_status_bar(vertext);
 }

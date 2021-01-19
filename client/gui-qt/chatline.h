@@ -136,11 +136,3 @@ private:
   QPushButton *remove_links;
   QCheckBox *cb;
 };
-
-class version_message_event : public QEvent {
-  QString message;
-
-public:
-  explicit version_message_event(const QString &msg);
-  QString get_message() const { return message; }
-};
