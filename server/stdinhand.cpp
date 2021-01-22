@@ -6778,6 +6778,7 @@ static void show_scenarios(struct connection *caller)
       fc_snprintf(buf, sizeof(buf), "%s", pfile->name);
       cmd_reply(CMD_LIST, caller, C_COMMENT, "%s", buf);
     }
+    secfile_destroy(sf);
   }
   fileinfo_list_iterate_end;
   fileinfo_list_destroy(files);

@@ -623,17 +623,16 @@ static int naval_bonus(const struct cityresult *result)
 static void print_cityresult(struct player *pplayer,
                              const struct cityresult *cr)
 {
-  int *city_map_reserved, *city_map_food, *city_map_shield, *city_map_trade;
   int tiles = city_map_tiles(cr->city_radius_sq);
   const struct tile_data_cache *ptdc;
 
   fc_assert_ret(cr->tdc_hash != NULL);
   fc_assert_ret(tiles > 0);
 
-  city_map_reserved = new int[tiles]();
-  city_map_food = new int[tiles]();
-  city_map_shield = new int[tiles]();
-  city_map_trade = new int[tiles]();
+  QScopedArrayPointer<int> city_map_reserved(new int[tiles]());
+  QScopedArrayPointer<int> city_map_food(new int[tiles]());
+  QScopedArrayPointer<int> city_map_shield(new int[tiles]());
+  QScopedArrayPointer<int> city_map_trade(new int[tiles]());
 
   city_map_iterate(cr->city_radius_sq, cindex, x, y)
   {
@@ -649,27 +648,22 @@ static void print_cityresult(struct player *pplayer,
   // print reservations
   log_test("cityresult for (x,y,radius_sq) = (%d, %d, %d) - Reservations:",
            TILE_XY(cr->tile), cr->city_radius_sq);
-  citylog_map_data(LOG_TEST, cr->city_radius_sq, city_map_reserved);
+  citylog_map_data(LOG_TEST, cr->city_radius_sq, city_map_reserved.data());
 
   //  print food
   log_test("cityresult for (x,y,radius_sq) = (%d, %d, %d) - Food:",
            TILE_XY(cr->tile), cr->city_radius_sq);
-  citylog_map_data(LOG_TEST, cr->city_radius_sq, city_map_food);
+  citylog_map_data(LOG_TEST, cr->city_radius_sq, city_map_food.data());
 
   // print shield
   log_test("cityresult for (x,y,radius_sq) = (%d, %d, %d) - Shield:",
            TILE_XY(cr->tile), cr->city_radius_sq);
-  citylog_map_data(LOG_TEST, cr->city_radius_sq, city_map_shield);
+  citylog_map_data(LOG_TEST, cr->city_radius_sq, city_map_shield.data());
 
   // print trade
   log_test("cityresult for (x,y,radius_sq) = (%d, %d, %d) - Trade:",
            TILE_XY(cr->tile), cr->city_radius_sq);
-  citylog_map_data(LOG_TEST, cr->city_radius_sq, city_map_trade);
-
-  delete[] city_map_reserved;
-  delete[] city_map_food;
-  delete[] city_map_shield;
-  delete[] city_map_trade;
+  citylog_map_data(LOG_TEST, cr->city_radius_sq, city_map_trade.data());
 
   log_test("city center (%d, %d) %d + best other (abs: %d, %d)"
            " (cindex: %d) %d",
@@ -846,8 +840,7 @@ static struct cityresult *settler_map_iterate(struct ai_type *ait,
      * we don't block the establishment of a better city just one
      * further step away. */
     if (best && best->result > RESULT_IS_ENOUGH
-        && turns
-               > parameter->move_rate // sic -- yeah what an explanation!
+        && turns > parameter->move_rate // sic -- yeah what an explanation!
         && best_turn < turns /*+ game.info.min_dist_bw_cities*/) {
       break;
     }

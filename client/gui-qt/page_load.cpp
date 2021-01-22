@@ -341,6 +341,9 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
       }
       ui.load_pix->setFixedSize(ui.load_pix->pixmap()->width(),
                                 ui.load_pix->pixmap()->height());
+      if (sf) {
+        secfile_destroy(sf);
+      }
       sf = secfile_load_section(fn_bytes.data(), QStringLiteral("research"),
                                 true);
       if (sf) {

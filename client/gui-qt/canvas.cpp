@@ -322,11 +322,9 @@ void qtg_canvas_put_curved_line(QPixmap *pcanvas, QColor *pcolor,
 void qtg_get_text_size(int *width, int *height, enum client_font font,
                        const QString &text)
 {
-  QFont *afont;
-  QFontMetrics *fm;
+  QFont *afont = get_font(font);
+  QScopedPointer<QFontMetrics> fm(new QFontMetrics(*afont));
 
-  afont = get_font(font);
-  fm = new QFontMetrics(*afont);
   if (width) {
     *width = fm->horizontalAdvance(text);
   }
@@ -334,7 +332,6 @@ void qtg_get_text_size(int *width, int *height, enum client_font font,
   if (height) {
     *height = fm->height();
   }
-  delete fm;
 }
 
 /**
@@ -348,19 +345,15 @@ void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
 {
   QPainter p;
   QPen pen;
-  QFont *afont;
-  QFontMetrics *fm;
+  QFont *afont = get_font(font);
+  QScopedPointer<QFontMetrics> fm(new QFontMetrics(*afont));
 
-  afont = get_font(font);
   pen.setColor(*pcolor);
-  fm = new QFontMetrics(*afont);
-
   p.begin(pcanvas);
   p.setPen(pen);
   p.setFont(*afont);
   p.drawText(canvas_x, canvas_y + fm->ascent(), text);
   p.end();
-  delete fm;
 }
 
 /**
