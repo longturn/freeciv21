@@ -248,7 +248,6 @@ static void client_game_init()
   link_marks_init();
   voteinfo_queue_init();
   server_options_init();
-  update_queue::uq()->init();
   mapimg_init(mapimg_client_tile_known, mapimg_client_tile_terrain,
               mapimg_client_tile_owner, mapimg_client_tile_city,
               mapimg_client_tile_unit, mapimg_client_plrcolor_count,
