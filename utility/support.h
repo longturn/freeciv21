@@ -158,8 +158,6 @@ int cat_snprintf(char *str, size_t n, const char *format, ...)
 
 int fc_gethostname(char *buf, size_t len);
 
-bool is_reg_file_for_access(const char *name, bool write_access);
-
 int fc_break_lines(char *str, size_t desired_len);
 
 const char *fc_basename(const char *path);

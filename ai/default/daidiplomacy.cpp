@@ -65,7 +65,6 @@
 
 #include "daidiplomacy.h"
 
-#define LOG_DIPL LOG_DEBUG
 #define LOG_DIPL2 LOG_DEBUG
 
 /* One hundred thousand. Basically a number of gold that no player is

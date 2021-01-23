@@ -483,7 +483,9 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
     // Units in city
     if (can_player_see_units_in_city(client.conn.playing, pcity)) {
       unsigned long count = unit_list_size(pcity->tile->units);
-      count = qBound(0UL, count, citybar->occupancy.size - 1);
+      count =
+          qBound(0UL, count,
+                 static_cast<unsigned long>(citybar->occupancy.size - 1));
       first.add_icon(citybar->occupancy.p[count]);
     } else {
       if (pcity->client.occupied) {
@@ -707,7 +709,8 @@ QRect polished_citybar_painter::paint(QPainter &painter,
   // Occupied indicator
   if (can_player_see_units_in_city(client.conn.playing, pcity)) {
     unsigned long count = unit_list_size(pcity->tile->units);
-    count = qBound(0UL, count, citybar->occupancy.size - 1);
+    count = qBound(0UL, count,
+                   static_cast<unsigned long>(citybar->occupancy.size - 1));
     line.add_icon(citybar->occupancy.p[count]);
   } else {
     if (pcity->client.occupied) {

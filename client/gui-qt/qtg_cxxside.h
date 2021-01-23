@@ -29,7 +29,7 @@ enum gui_type qtg_get_gui_type();
 void qtg_insert_client_build_info(char *outbuf, size_t outlen);
 void qtg_adjust_default_options();
 
-void qtg_version_message(const char *vertext);
+void qtg_version_message(const QString &vertext);
 void qtg_real_output_window_append(const QString &astring,
                                    const struct text_tag_list *tags,
                                    int conn_id);
@@ -79,7 +79,7 @@ void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
                          enum client_font font, QColor *pcolor,
                          const QString &text);
 
-void qtg_set_rulesets(int num_rulesets, char **rulesets);
+void qtg_set_rulesets(int num_rulesets, QStringList rulesets);
 void qtg_options_extra_init();
 void qtg_add_net_input(QTcpSocket *sock);
 void qtg_remove_net_input();
@@ -123,8 +123,8 @@ bool qtg_request_transport(struct unit *pcargo, struct tile *ptile);
 
 void qtg_update_infra_dialog();
 
-void qtg_gui_load_theme(const char *directory, const char *theme_name);
+void qtg_gui_load_theme(QString &directory, QString &theme_name);
 void qtg_gui_clear_theme();
-char **qtg_get_gui_specific_themes_directories(int *count);
-char **qtg_get_useable_themes_in_directory(const char *directory,
-                                           int *count);
+QStringList qtg_get_gui_specific_themes_directories(int *count);
+QStringList qtg_get_useable_themes_in_directory(QString &directory,
+                                                int *count);

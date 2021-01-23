@@ -22,6 +22,7 @@
 #endif
 
 #include <QHash>
+#include <QImageReader>
 #include <QSet>
 #include <QString>
 #include <QVector>
@@ -437,7 +438,6 @@ struct tileset {
   int unit_upkeep_small_offset_y;
 
 #define NUM_CORNER_DIRS 4
-#define TILES_PER_CORNER 4
   int num_valid_tileset_dirs, num_cardinal_tileset_dirs;
   int num_index_valid, num_index_cardinal;
   enum direction8 valid_tileset_dirs[8], cardinal_tileset_dirs[8];
@@ -1385,14 +1385,13 @@ void tilespec_reread_frozen_refresh(const char *tname)
  */
 static QPixmap *load_gfx_file(const char *gfx_filename)
 {
-  const char **gfx_fileexts = gfx_fileextensions(), *gfx_fileext;
   QPixmap *s;
 
   // Try out all supported file extensions to find one that works.
-  while ((gfx_fileext = *gfx_fileexts++)) {
+  for (auto gfx_fileext : QImageReader::supportedImageFormats()) {
     QString real_full_name;
     QString full_name =
-        QStringLiteral("%1.%2").arg(gfx_filename, gfx_fileext);
+        QStringLiteral("%1.%2").arg(gfx_filename, gfx_fileext.data());
 
     real_full_name =
         fileinfoname(get_data_dirs(), qUtf8Printable(full_name));
@@ -1623,13 +1622,10 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
  */
 static char *tilespec_gfx_filename(const char *gfx_filename)
 {
-  const char *gfx_current_fileext;
-  const char **gfx_fileexts = gfx_fileextensions();
-
-  while ((gfx_current_fileext = *gfx_fileexts++)) {
+  for (auto gfx_current_fileext : QImageReader::supportedImageFormats()) {
     QString real_full_name;
-    QString full_name =
-        QStringLiteral("%1.%2").arg(gfx_filename, gfx_current_fileext);
+    QString full_name = QStringLiteral("%1.%2").arg(
+        gfx_filename, gfx_current_fileext.data());
 
     real_full_name =
         fileinfoname(get_data_dirs(), qUtf8Printable(full_name));

@@ -18,7 +18,6 @@
 class QPixmap; // opaque type, real type is gui-dep
 struct color;
 
-GUI_FUNC_PROTO(const char **, gfx_fileextensions, void)
 
 GUI_FUNC_PROTO(QPixmap *, load_gfxfile, const char *filename)
 GUI_FUNC_PROTO(QPixmap *, crop_sprite, QPixmap *source, int x, int y,

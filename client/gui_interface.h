@@ -36,7 +36,7 @@ struct gui_funcs {
   enum gui_type (*get_gui_type)();
   void (*insert_client_build_info)(char *outbuf, size_t outlen);
 
-  void (*version_message)(const char *vertext);
+  void (*version_message)(const QString &vertext);
   void (*real_output_window_append)(const QString &astring,
                                     const struct text_tag_list *tags,
                                     int conn_id);
@@ -88,7 +88,7 @@ struct gui_funcs {
                           enum client_font font, QColor *pcolor,
                           const QString &);
 
-  void (*set_rulesets)(int num_rulesets, char **rulesets);
+  void (*set_rulesets)(int num_rulesets, QStringList rulesets);
   void (*options_extra_init)();
   void (*add_net_input)(QTcpSocket *sock);
   void (*remove_net_input)();
@@ -132,10 +132,10 @@ struct gui_funcs {
 
   void (*update_infra_dialog)();
 
-  void (*gui_load_theme)(const char *directory, const char *theme_name);
+  void (*gui_load_theme)(QString &directory, QString &theme_name);
   void (*gui_clear_theme)();
-  char **(*get_gui_specific_themes_directories)(int *count);
-  char **(*get_useable_themes_in_directory)(const char *directory,
+  QStringList (*get_gui_specific_themes_directories)(int *count);
+  QStringList (*get_useable_themes_in_directory)(QString &directory,
                                             int *count);
 };
 

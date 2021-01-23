@@ -34,7 +34,6 @@
 #include <windows.h>
 #else
 #include <QtCore/QSocketNotifier>
-#include <unistd.h> // STDIN_FILENO
 #endif
 
 // Readline

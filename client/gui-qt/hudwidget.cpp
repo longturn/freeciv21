@@ -1183,12 +1183,9 @@ hud_unit_loader::hud_unit_loader(struct unit *pcargo, struct tile *ptile)
   horizontalHeader()->setVisible(false);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  connect(selectionModel(),
-          SIGNAL(selectionChanged(const QItemSelection &,
-                                  const QItemSelection &)),
-          this,
-          SLOT(selection_changed(const QItemSelection &,
-                                 const QItemSelection &)));
+
+  connect(selectionModel(), &QItemSelectionModel::selectionChanged, this,
+          &hud_unit_loader::selection_changed);
   cargo = pcargo;
   qtile = ptile;
 }
@@ -1312,10 +1309,12 @@ unit_hud_selector::unit_hud_selector(QWidget *parent) : QFrame(parent)
   this_type = new QRadioButton(_("Selected type"), no_name);
   this_type->setChecked(true);
   any_type = new QRadioButton(_("All types"), no_name);
-  connect(unit_sel_type, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(select_units(int)));
-  connect(this_type, SIGNAL(toggled(bool)), this, SLOT(select_units(bool)));
-  connect(any_type, SIGNAL(toggled(bool)), this, SLOT(select_units(bool)));
+  connect(unit_sel_type, qOverload<int>(&QComboBox::currentIndexChanged),
+          this, qOverload<int>(&unit_hud_selector::select_units));
+  connect(this_type, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
+  connect(any_type, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
   groupbox_layout = new QVBoxLayout;
   groupbox_layout->addWidget(unit_sel_type);
   groupbox_layout->addWidget(this_type);
@@ -1331,11 +1330,14 @@ unit_hud_selector::unit_hud_selector(QWidget *parent) : QFrame(parent)
   fortified = new QRadioButton(_("Fortified"), no_name);
   idle = new QRadioButton(_("Idle"), no_name);
   sentried = new QRadioButton(_("Sentried"), no_name);
-  connect(any_activity, SIGNAL(toggled(bool)), this,
-          SLOT(select_units(bool)));
-  connect(idle, SIGNAL(toggled(bool)), this, SLOT(select_units(bool)));
-  connect(fortified, SIGNAL(toggled(bool)), this, SLOT(select_units(bool)));
-  connect(sentried, SIGNAL(toggled(bool)), this, SLOT(select_units(bool)));
+  connect(any_activity, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
+  connect(idle, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
+  connect(fortified, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
+  connect(sentried, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
   groupbox_layout = new QVBoxLayout;
   groupbox_layout->addWidget(any_activity);
   groupbox_layout->addWidget(idle);
@@ -1352,10 +1354,14 @@ unit_hud_selector::unit_hud_selector(QWidget *parent) : QFrame(parent)
   full_mp = new QRadioButton(_("Full MP"), no_name);
   full_hp_mp = new QRadioButton(_("Full HP and MP"), no_name);
   full_hp_mp->setChecked(true);
-  connect(any, SIGNAL(toggled(bool)), this, SLOT(select_units(bool)));
-  connect(full_hp, SIGNAL(toggled(bool)), this, SLOT(select_units(bool)));
-  connect(full_mp, SIGNAL(toggled(bool)), this, SLOT(select_units(bool)));
-  connect(full_hp_mp, SIGNAL(toggled(bool)), this, SLOT(select_units(bool)));
+  connect(any, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
+  connect(full_hp, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
+  connect(full_mp, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
+  connect(full_hp_mp, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
   groupbox_layout = new QVBoxLayout;
   groupbox_layout->addWidget(any);
   groupbox_layout->addWidget(full_hp);
@@ -1392,12 +1398,14 @@ unit_hud_selector::unit_hud_selector(QWidget *parent) : QFrame(parent)
 
   select = new QPushButton(_("Select"));
   cancel = new QPushButton(_("Cancel"));
-  connect(anywhere, SIGNAL(toggled(bool)), this, SLOT(select_units(bool)));
-  connect(this_tile, SIGNAL(toggled(bool)), this, SLOT(select_units(bool)));
-  connect(this_continent, SIGNAL(toggled(bool)), this,
-          SLOT(select_units(bool)));
-  connect(main_continent, SIGNAL(toggled(bool)), this,
-          SLOT(select_units(bool)));
+  connect(anywhere, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
+  connect(this_tile, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
+  connect(this_continent, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
+  connect(main_continent, &QRadioButton::toggled, this,
+          qOverload<bool>(&unit_hud_selector::select_units));
   connect(select, &QAbstractButton::clicked, this,
           &unit_hud_selector::uhs_select);
   connect(cancel, &QAbstractButton::clicked, this,

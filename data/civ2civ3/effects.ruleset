@@ -1464,6 +1464,9 @@ reqs    =
       "Gov", "Anarchy", "Player", TRUE, TRUE
       "Building", "Pyramids", "Player", FALSE, FALSE
       "Tech", "Railroad", "Player", FALSE, FALSE
+      "OutputType", "Gold", "Local", FALSE, TRUE
+      "OutputType", "Luxury", "Local", FALSE, TRUE
+      "OutputType", "Science", "Local", FALSE, TRUE
     }
 
 [effect_gov_tile_penalty_tribal]
@@ -1474,6 +1477,9 @@ reqs    =
       "Gov", "Tribal", "Player", TRUE, TRUE
       "Building", "Pyramids", "Player", FALSE, FALSE
       "Tech", "Railroad", "Player", FALSE, FALSE
+      "OutputType", "Gold", "Local", FALSE, TRUE
+      "OutputType", "Luxury", "Local", FALSE, TRUE
+      "OutputType", "Science", "Local", FALSE, TRUE
     }
 
 [effect_gov_tile_penalty_despotism]
@@ -1484,6 +1490,9 @@ reqs    =
       "Gov", "Despotism", "Player", TRUE, TRUE
       "Building", "Pyramids", "Player", FALSE, FALSE
       "Tech", "Railroad", "Player", FALSE, FALSE
+      "OutputType", "Gold", "Local", FALSE, TRUE
+      "OutputType", "Luxury", "Local", FALSE, TRUE
+      "OutputType", "Science", "Local", FALSE, TRUE
     }
 
 [effect_gov_tile_bonus_republic]

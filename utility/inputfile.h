@@ -20,7 +20,7 @@
 #include "log.h"     // QtMsgType
 #include "support.h" // bool type and fc__attribute
 
-struct QIODevice;
+class QIODevice;
 struct inputfile; // opaque
 
 using datafilename_fn_t = QString (*)(const QString &filename);

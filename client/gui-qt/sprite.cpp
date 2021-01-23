@@ -20,36 +20,6 @@
 #include "qtg_cxxside.h"
 #include "sprite.h"
 
-static const char **gfx_array_extensions = nullptr;
-
-/**
-   Return a NULL-terminated, permanently allocated array of possible
-   graphics types extensions.  Extensions listed first will be checked
-   first.
- */
-const char **gfx_fileextensions(void)
-{
-  QList<QByteArray> gfx_ext;
-  QByteArray cp;
-  int j = 0;
-
-  if (gfx_array_extensions != nullptr) {
-    return gfx_array_extensions;
-  }
-
-  gfx_ext = QImageReader::supportedImageFormats();
-
-  gfx_array_extensions = new const char *[gfx_ext.count() + 1];
-  while (!gfx_ext.isEmpty()) {
-    cp = gfx_ext.takeFirst();
-    gfx_array_extensions[j] = fc_strdup(cp.data());
-    j++;
-  }
-  gfx_array_extensions[j] = NULL;
-
-  return gfx_array_extensions;
-}
-
 /**
    Load the given graphics file into a sprite.  This function loads an
    entire image file, which may later be broken up into individual sprites

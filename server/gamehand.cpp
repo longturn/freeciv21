@@ -285,8 +285,6 @@ static void do_team_placement(const struct team_placement_config *pconfig,
 {
   const size_t state_array_size =
       (sizeof(*pbest_state->startpos) * pconfig->total_startpos_num);
-  struct team_placement_pq *pqueue =
-      team_placement_pq_new(pconfig->total_startpos_num * 4);
   int (*distance)(const struct tile *, const struct tile *) = NULL;
   const struct tile *ptile1, *ptile2;
   long base_delta, delta;
@@ -314,6 +312,8 @@ static void do_team_placement(const struct team_placement_config *pconfig,
   fc_assert_ret_msg(distance != NULL, "Wrong team_placement variant (%d)",
                     wld.map.server.team_placement);
 
+  struct team_placement_pq *pqueue =
+      team_placement_pq_new(pconfig->total_startpos_num * 4);
   // Initialize starting state.
   auto *pstate = new team_placement_state;
   pstate->startpos = new int[pconfig->total_startpos_num];

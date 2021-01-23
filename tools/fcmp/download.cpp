@@ -16,7 +16,6 @@
 #endif
 
 #include <cerrno>
-#include <unistd.h>
 
 // Qt
 #include <QString>

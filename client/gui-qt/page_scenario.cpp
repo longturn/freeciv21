@@ -227,8 +227,8 @@ void page_scenario::update_scenarios_page()
           ui.scenarios_load->setItem(i, 0, item);
         }
       }
-      secfile_destroy(sf);
     }
+    secfile_destroy(sf);
   }
   fileinfo_list_iterate_end;
   fileinfo_list_destroy(files);

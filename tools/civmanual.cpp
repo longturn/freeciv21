@@ -13,6 +13,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QFile>
 #include <cassert>
 #include <csignal>
 #include <cstdarg>
@@ -269,8 +270,7 @@ static bool manual_command(struct tag_types *tag_info)
     fc_snprintf(filename, sizeof(filename), "%s%d.%s",
                 game.server.rulesetdir, manuals + 1, tag_info->file_ext);
 
-    if (!is_reg_file_for_access(filename, true)
-        || !(doc = fc_fopen(filename, "w"))) {
+    if (QFile::exists(filename) || !(doc = fc_fopen(filename, "w"))) {
       qCritical(_("Could not write manual file %s."), filename);
       return false;
     }
@@ -578,13 +578,13 @@ static bool manual_command(struct tag_types *tag_info)
         requirement_vector_iterate(&pimprove->reqs, req)
         {
           char text[512], text2[512];
-          fc_snprintf(
-              text2, sizeof(text2),
-              // TRANS: improvement requires a feature to be absent.
-              req->present ? "%s" : _("no %s"),
-              VUT_NONE != req->source.kind ? universal_name_translation(
-                  &req->source, text, sizeof(text))
-                                           : Q_("?req:None"));
+          fc_snprintf(text2, sizeof(text2),
+                      // TRANS: improvement requires a feature to be absent.
+                      req->present ? "%s" : _("no %s"),
+                      VUT_NONE != req->source.kind
+                          ? universal_name_translation(&req->source, text,
+                                                       sizeof(text))
+                          : Q_("?req:None"));
           fprintf(doc, "%s<br/>", text2);
         }
         requirement_vector_iterate_end;

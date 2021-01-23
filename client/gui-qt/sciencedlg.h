@@ -13,6 +13,7 @@
 #include "fc_types.h"
 // client
 #include "repodlgs_g.h"
+#include "reqtree.h"
 
 class QComboBox;
 class QGridLayout;
@@ -22,20 +23,6 @@ class QObject;
 class QPaintEvent;
 class QScrollArea;
 class progress_bar;
-
-/****************************************************************************
-  Helper item for research diagram, about drawn rectangles and what
-  tech/unit/improvement they point to.
-****************************************************************************/
-class req_tooltip_help {
-public:
-  req_tooltip_help();
-  QRect rect;
-  Tech_type_id tech_id{-1};
-  struct unit_type *tunit{nullptr};
-  struct impr_type *timpr{nullptr};
-  struct government *tgov{nullptr};
-};
 
 /****************************************************************************
   Custom widget representing research diagram in science_report
@@ -56,13 +43,12 @@ private:
   void mousePressEvent(QMouseEvent *event) override;
   void mouseMoveEvent(QMouseEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
-  void create_tooltip_help();
   QPixmap *pcanvas;
   struct reqtree *req;
   bool timer_active;
   int width;
   int height;
-  QList<req_tooltip_help *> tt_help;
+  QList<req_tooltip_help *> *tt_help{nullptr};
   QPoint tooltip_pos;
   QString tooltip_text;
   QRect tooltip_rect;

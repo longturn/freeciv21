@@ -106,7 +106,6 @@ public:
   QWidget *pages[static_cast<int>(PAGE_GAME) + 2];
   void fc_main(QApplication *);
   void add_server_source(QTcpSocket *socket);
-  bool event(QEvent *event) override;
 
   enum client_pages current_page();
 

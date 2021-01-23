@@ -33,30 +33,21 @@
 
 #include "governor.h"
 
-#define log_request_ids(...) // log_test(__VA_ARGS__)
-#define log_todo_lists(...)  // log_test(__VA_ARGS__)
-#define log_meta_callback(...) log_debug(__VA_ARGS__)
-#define log_debug_freeze(...) // log_test(__VA_ARGS__)
 #define log_apply_result log_debug
 #define log_handle_city log_debug
 #define log_handle_city2 log_debug
 #define log_results_are_equal log_debug
 
-#define SHOW_TIME_STATS false
 #define SHOW_APPLY_RESULT_ON_SERVER_ERRORS false
 #define ALWAYS_APPLY_AT_SERVER false
-#define RESULT_COLUMNS 10
-#define BUFFER_SIZE 100
 #define MAX_LEN_PRESET_NAME 80
 #define SAVED_PARAMETER_SIZE 29
+
+#define CMA_NUM_PARAMS 5
 
 #define SPECLIST_TAG preset
 #define SPECLIST_TYPE struct cma_preset
 #include "speclist.h"
-
-#define preset_list_iterate(presetlist, ppreset)                            \
-  TYPED_LIST_ITERATE(struct cma_preset, presetlist, ppreset)
-#define preset_list_iterate_end LIST_ITERATE_END
 
 static struct preset_list *preset_list = NULL;
 
@@ -874,7 +865,7 @@ cmafec_get_short_descr(const struct cm_parameter *const parameter)
 void create_default_cma_presets()
 {
   int i;
-  struct cm_parameter parameters[] = {
+  struct cm_parameter parameters[CMA_NUM_PARAMS] = {
       {// very happy
        .minimal_surplus = {0, 0, 0, -20, 0, 0},
        .require_happy = false,
@@ -910,12 +901,12 @@ void create_default_cma_presets()
        .allow_specialists = true,
        .factor = {10, 5, 0, 4, 0, 25},
        .happy_factor = 0}};
-  const char *names[ARRAY_SIZE(parameters)] = {
+  const char *names[CMA_NUM_PARAMS] = {
       N_("?cma:Very happy"), N_("?cma:Prefer food"),
       N_("?cma:Prefer production"), N_("?cma:Prefer gold"),
       N_("?cma:Prefer science")};
 
-  for (i = ARRAY_SIZE(parameters) - 1; i >= 0; i--) {
+  for (i = CMA_NUM_PARAMS - 1; i >= 0; i--) {
     cmafec_preset_add(Q_(names[i]), &parameters[i]);
   }
 }

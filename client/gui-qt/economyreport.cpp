@@ -39,10 +39,8 @@ eco_report::eco_report() : QWidget()
   connect(ui.bredun, &QAbstractButton::pressed, this,
           &eco_report::sell_redundant);
   connect(ui.eco_widget->selectionModel(),
-          SIGNAL(selectionChanged(const QItemSelection &,
-                                  const QItemSelection &)),
-          SLOT(selection_changed(const QItemSelection &,
-                                 const QItemSelection &)));
+          &QItemSelectionModel::selectionChanged, this,
+          &eco_report::selection_changed);
   setLayout(ui.eco_layout);
   queen()->gimmePlace(this, QStringLiteral("ECO"));
   index = queen()->addGameTab(this);
@@ -66,7 +64,7 @@ void eco_report::update_report()
   struct improvement_entry building_entries[B_LAST];
   struct unit_entry unit_entries[U_LAST];
   int entries_used, building_total, unit_total, tax, i, j;
-  char buf[256];
+  QString buf;
   QTableWidgetItem *item;
   QFont f = QApplication::font();
   int h;
@@ -173,8 +171,9 @@ void eco_report::update_report()
     }
   }
   max_row = max_row + i;
-  fc_snprintf(buf, sizeof(buf), _("Income: %d    Total Costs: %d"), tax,
-              building_total + unit_total);
+  buf = QString(_("Income: %1    Total Costs: %2"))
+            .arg(QString::number(tax),
+                 QString::number(building_total + unit_total));
   ui.eco_label->setText(buf);
   // ui.eco_widget->resizeRowsToContents();
   ui.eco_widget->resizeColumnsToContents();
@@ -234,15 +233,15 @@ void eco_report::selection_changed(const QItemSelection &sl,
 void eco_report::disband_units()
 {
   struct universal selected;
-  char buf[1024];
+  QString buf;
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
   Unit_type_id utype;
 
   selected = cid_decode(uid);
   utype = utype_number(selected.value.utype);
-  fc_snprintf(buf, ARRAY_SIZE(buf),
-              _("Do you really wish to disband every %s (%d total)?"),
-              utype_name_translation(utype_by_number(utype)), counter);
+  buf = QString(_("Do you really wish to disband every %1 (%2 total)?"))
+            .arg(utype_name_translation(utype_by_number(utype)),
+                 QString::number(counter));
 
   ask->set_text_title(buf, _("Disband Units"));
   ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
@@ -270,7 +269,7 @@ void eco_report::disband_units()
 void eco_report::sell_buildings()
 {
   struct universal selected;
-  char buf[1024];
+  QString buf;
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
   const struct impr_type *pimprove;
   Impr_type_id impr_id;
@@ -279,10 +278,10 @@ void eco_report::sell_buildings()
   pimprove = selected.value.building;
   impr_id = improvement_number(pimprove);
 
-  fc_snprintf(buf, ARRAY_SIZE(buf),
-              _("Do you really wish to sell "
-                "every %s (%d total)?"),
-              improvement_name_translation(pimprove), counter);
+  buf = QString(_("Do you really wish to sell "
+                  "every %1 (%2 total)?"))
+            .arg(improvement_name_translation(pimprove),
+                 QString::number(counter));
 
   ask->set_text_title(buf, _("Sell Improvements"));
   ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);

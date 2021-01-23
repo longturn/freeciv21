@@ -19,8 +19,6 @@
 #include <cstdio>
 #include <cstring>
 
-#include <readline/readline.h>
-
 // utility
 #include "deprecations.h"
 #include "fcbacktrace.h"
@@ -29,6 +27,8 @@
 #include "log.h"
 #include "support.h"
 
+// ms clang wants readline to included here
+#include <readline/readline.h>
 // common
 #include "game.h"
 

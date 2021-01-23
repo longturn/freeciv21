@@ -1787,6 +1787,7 @@ void send_connect_route(enum unit_activity activity, struct extra_type *tgt)
 
     request_unit_ssa_set(punit, SSA_NONE);
     send_packet_unit_orders(&client.conn, &p);
+    NFCN_FREE(path);
   }
   goto_map_unit_iterate_end;
 }

@@ -16,7 +16,6 @@
 
 #include <cstring>
 #include <sys/stat.h>
-#include <unistd.h>
 
 // utility
 #include "log.h"
@@ -48,9 +47,9 @@ contains some data files. Each gui defines its own format in the
 // A directory containing a list of usable themes
 struct theme_directory {
   // Path on the filesystem
-  char *path;
+  QString path;
   // Array of theme names
-  char **themes;
+  QStringList themes;
   // Themes array length
   int num_themes;
 };
@@ -67,19 +66,18 @@ void init_themes()
   int i;
 
   // get GUI-specific theme directories
-  char **gui_directories =
+  QStringList gui_directories =
       get_gui_specific_themes_directories(&num_directories);
 
   directories = new theme_directory[num_directories];
 
   for (i = 0; i < num_directories; i++) {
-    directories[i].path = gui_directories[i];
+    directories[i].path = gui_directories.at(i);
 
     // get useable themes in this directory
     directories[i].themes = get_useable_themes_in_directory(
         directories[i].path, &(directories[i].num_themes));
   }
-  delete[] gui_directories;
 }
 
 /**
@@ -93,9 +91,7 @@ const QVector<QString> *get_themes_list(const struct option *poption)
     for (i = 0; i < num_directories; i++) {
       for (j = 0; j < directories[i].num_themes; j++) {
         for (k = 0; k < themes_list->count(); k++) {
-          if (strcmp(qUtf8Printable(themes_list->at(k)),
-                     directories[i].themes[j])
-              == 0) {
+          if (themes_list->at(k) == directories[i].themes.at(j)) {
             break;
           }
         }
@@ -113,13 +109,13 @@ const QVector<QString> *get_themes_list(const struct option *poption)
    Loads a theme with the given name. First matching directory will be used.
    If there's no such theme the function returns FALSE.
  */
-bool load_theme(const char *theme_name)
+bool load_theme(const QString &theme_name)
 {
   int i, j;
 
   for (i = 0; i < num_directories; i++) {
     for (j = 0; j < directories[i].num_themes; j++) {
-      if (strcmp(theme_name, directories[i].themes[j]) == 0) {
+      if (theme_name == directories[i].themes[j]) {
         gui_load_theme(directories[i].path, directories[i].themes[j]);
         return true;
       }
