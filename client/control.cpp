@@ -1944,7 +1944,7 @@ static void do_disband_alternative(void *p)
     // A request was sent.
 
     // Check if it worked. Move on if it didn't.
-    update_queue::uq()->connect_processing_finished_full(
+    update_queue_connect_processing_finished_full(
         client.conn.client.last_request_id_used, do_disband_alternative,
         next, client_disband_unit_data_destroy);
   } else {

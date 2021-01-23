@@ -5063,7 +5063,7 @@ void handle_processing_started()
   fc_assert(client.conn.client.request_id_of_currently_handled_packet == 0);
   client.conn.client.request_id_of_currently_handled_packet =
       get_next_request_id(client.conn.client.last_processed_request_id_seen);
-  update_queue::uq()->processing_started(
+  update_queue_processing_started(
       client.conn.client.request_id_of_currently_handled_packet);
 
   log_debug("start processing packet %d",
@@ -5082,7 +5082,7 @@ void handle_processing_finished()
 
   client.conn.client.last_processed_request_id_seen =
       client.conn.client.request_id_of_currently_handled_packet;
-  update_queue::uq()->processing_finished(
+  update_queue_processing_finished(
       client.conn.client.last_processed_request_id_seen);
 
   client.conn.client.request_id_of_currently_handled_packet = 0;
