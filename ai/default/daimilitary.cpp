@@ -1234,14 +1234,14 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
   struct ai_city *city_data = def_ai_city_data(pcity, ait);
   struct ai_city *acity_data;
 
+  fc_assert_ret_val(is_military_unit(myunit)
+                        && !utype_fuel(unit_type_get(myunit)),
+                    choice);
+
   best_choice = adv_new_choice();
   best_choice->value.utype = unit_type_get(myunit);
   best_choice->type = CT_ATTACKER;
   adv_choice_set_use(best_choice, "attacker");
-
-  fc_assert_ret_val(is_military_unit(myunit)
-                        && !utype_fuel(unit_type_get(myunit)),
-                    choice);
 
   if (city_data->danger != 0 && assess_defense(ait, pcity) == 0) {
     // Defence comes first!

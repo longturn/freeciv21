@@ -189,6 +189,7 @@ void page_scenario::update_scenarios_page()
           sl = item->data(Qt::UserRole).toStringList();
           found_ver = sl.at(3).toInt();
           if (found_ver < fcver) {
+            secfile_destroy(sf);
             continue;
           }
           add_item = false;
