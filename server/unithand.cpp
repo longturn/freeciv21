@@ -2703,7 +2703,7 @@ bool unit_perform_action(struct player *pplayer, const int actor_id,
   paction = action_by_number(action_type);
 
   // Server side sub target assignment
-  if (paction->target_complexity == ACT_TGT_COMPL_FLEXIBLE
+  if (actor_unit && paction->target_complexity == ACT_TGT_COMPL_FLEXIBLE
       && sub_tgt_id_incoming == NO_TARGET) {
     sub_tgt_id = action_sub_target_id_for_action(paction, actor_unit);
   } else {
@@ -5397,9 +5397,9 @@ void handle_unit_orders(struct player *pplayer,
               dir_get_name(packet->orders[i].dir),
               packet->orders[i].order == ORDER_PERFORM_ACTION
                   ? action_id_rule_name(packet->orders[i].action)
-              : packet->orders[i].order == ORDER_ACTIVITY
-                  ? unit_activity_name(packet->orders[i].activity)
-                  : "no action/activity required",
+                  : packet->orders[i].order == ORDER_ACTIVITY
+                        ? unit_activity_name(packet->orders[i].activity)
+                        : "no action/activity required",
               packet->orders[i].target, packet->orders[i].sub_target);
   }
 #endif // FREECIV_DEBUG

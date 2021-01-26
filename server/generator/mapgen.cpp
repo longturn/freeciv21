@@ -1262,6 +1262,10 @@ static void print_mapgen_map()
   qDebug("  %-20s :      %5d%%", "swamp_pct", swamp_pct);
 
   qDebug("map statistics:");
+
+  // avoid div by 0
+  total = qMax(1, total);
+  ocean = qMax(1, ocean);
   terrain_type_iterate(pterrain)
   {
     if (is_ocean(pterrain)) {
@@ -1316,7 +1320,7 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
 #ifdef FREECIV_TESTMATIC
     // Log command to reproduce the mapseed
     log_testmatic("set mapseed %d", wld.map.server.seed);
-#else // FREECIV_TESTMATICE
+#else  // FREECIV_TESTMATICE
     log_debug("Setting map.seed:%d", wld.map.server.seed);
 #endif // FREECIV_TESTMATIC
   } else {

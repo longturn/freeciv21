@@ -7121,14 +7121,13 @@ static void sg_load_researches(struct loaddata *loading)
     if (game.server.multiresearch) {
       vlist_research = secfile_lookup_int_vec(loading->file, &count_res,
                                               "research.r%d.vbs", i);
+      fc_assert_ret(vlist_research);
       advance_index_iterate(A_FIRST, o)
       {
         presearch->inventions[o].bulbs_researched_saved = vlist_research[o];
       }
       advance_index_iterate_end;
-      if (vlist_research) {
-        delete[] vlist_research;
-      }
+      NFCPP_FREE(vlist_research);
     }
   }
 
@@ -7175,9 +7174,7 @@ static void sg_save_researches(struct savedata *saving)
         secfile_insert_int_vec(saving->file, vlist_research,
                                game.control.num_tech_types,
                                "research.r%d.vbs", i);
-        if (vlist_research) {
-          delete[] vlist_research;
-        }
+        NFCPP_FREE(vlist_research);
       }
       technology_save(saving->file, "research.r%d.saved", i,
                       presearch->researching_saved);

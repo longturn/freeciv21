@@ -1652,6 +1652,7 @@ bool show_unit_orders(struct unit *punit)
 
       switch (order->order) {
       case ORDER_MOVE:
+        fc_assert_ret_val(ptile, false);
         draw_segment(ptile, order->dir);
         ptile = mapstep(&(wld.map), ptile, order->dir);
         if (!ptile) {
