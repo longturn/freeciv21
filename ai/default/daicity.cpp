@@ -581,7 +581,7 @@ static void dai_spend_gold(struct ai_type *ait, struct player *pplayer)
     city_list_iterate_end;
 
     // We found nothing, so we're done
-    if (bestchoice.want == 0) {
+    if (bestchoice.want == 0 || pcity == nullptr) {
       break;
     }
 

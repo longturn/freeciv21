@@ -4939,7 +4939,7 @@ void handle_unit_actions(const struct packet_unit_actions *packet)
   } else {
     // This was a background request.
 
-    if (action_selection_actor_unit() == actor_unit->id) {
+    if (actor_unit && action_selection_actor_unit() == actor_unit->id) {
       // The situation may have changed.
       action_selection_refresh(actor_unit, target_city, target_unit,
                                target_tile, target_extra, act_probs);

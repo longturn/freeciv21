@@ -6269,7 +6269,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
 
       // check for <= 0 entries
       for (gi = 0; gi < game.info.granary_num_inis; gi++) {
-        if (food_ini[gi] <= 0) {
+        if (food_ini && food_ini[gi] <= 0) {
           if (gi == 0) {
             food_ini[gi] = RS_DEFAULT_GRANARY_FOOD_INI;
           } else {

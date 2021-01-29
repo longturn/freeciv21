@@ -313,6 +313,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
           if (pterr != NULL) {
             const char *iptr = secfile_lookup_str_default(
                 sf, NULL, "savefile.terrident%d.identifier", ii);
+            fc_assert_ret(iptr != nullptr);
             pterr->identifier_load = *iptr;
           }
           ii++;
@@ -353,6 +354,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
           final_str = final_str + "<b>" + _("Researching") + ":</b> "
                       + QString(sname).toHtmlEscaped();
         }
+        secfile_destroy(sf);
       }
     }
     ui.load_save_text->setText(final_str);

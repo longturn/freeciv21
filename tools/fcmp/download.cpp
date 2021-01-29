@@ -468,5 +468,6 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
     modpack_count++;
   } while (mp_name != NULL);
 
+  secfile_destroy(list_file);
   return NULL;
 }

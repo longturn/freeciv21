@@ -382,7 +382,7 @@ struct vote *vote_new(struct connection *caller, const char *allargs,
 
   if (pvote->flags & VCF_NOPASSALONE) {
     int num_voters = count_voters(pvote);
-    double min_pc = 1.0 / static_cast<double>(num_voters);
+    double min_pc = 1.0 / qMax(static_cast<double>(num_voters), 1.0);
 
     if (num_voters > 1 && min_pc > pvote->need_pc) {
       pvote->need_pc = MIN(0.5, 2.0 * min_pc);

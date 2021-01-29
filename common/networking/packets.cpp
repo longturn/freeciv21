@@ -97,11 +97,11 @@ static bool conn_compression_flush(struct connection *pconn)
   int compression_level = get_compression_level();
   uLongf compressed_size = 12 + 1.001 * pconn->compression.queue.size;
   int error;
-  Bytef *compressed = new Bytef[compressed_size];
+  QScopedArrayPointer<Bytef> compressed(new Bytef[compressed_size]);
   bool jumbo;
   unsigned long compressed_packet_len;
 
-  error = compress2(compressed, &compressed_size, pconn->compression.queue.p,
+  error = compress2(compressed.data(), &compressed_size, pconn->compression.queue.p,
                     pconn->compression.queue.size, compression_level);
   fc_assert_ret_val(error == Z_OK, false);
 
@@ -133,7 +133,7 @@ static bool conn_compression_flush(struct connection *pconn)
       dio_output_init(&dout, header, sizeof(header));
       dio_put_uint16_raw(&dout, 2 + compressed_size + COMPRESSION_BORDER);
       connection_send_data(pconn, header, sizeof(header));
-      connection_send_data(pconn, compressed, compressed_size);
+      connection_send_data(pconn, compressed.data(), compressed_size);
     } else {
       unsigned char header[6];
       FC_STATIC_ASSERT(JUMBO_SIZE >= JUMBO_BORDER + COMPRESSION_BORDER,
@@ -144,7 +144,7 @@ static bool conn_compression_flush(struct connection *pconn)
       dio_put_uint16_raw(&dout, JUMBO_SIZE);
       dio_put_uint32_raw(&dout, 6 + compressed_size);
       connection_send_data(pconn, header, sizeof(header));
-      connection_send_data(pconn, compressed, compressed_size);
+      connection_send_data(pconn, compressed.data(), compressed_size);
     }
   } else {
     log_compress("COMPRESS: would enlarge %lu bytes to %ld; "
@@ -155,7 +155,6 @@ static bool conn_compression_flush(struct connection *pconn)
                          pconn->compression.queue.size);
     stat_size_no_compression += pconn->compression.queue.size;
   }
-  delete[] compressed;
   return pconn->used;
 }
 
