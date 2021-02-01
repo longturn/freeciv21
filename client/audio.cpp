@@ -598,12 +598,12 @@ void audio_stop_usage()
 }
 
 /**
-   Stop looping sound. Music should die down in a few seconds.
+   Get sound volume currently in use.
  */
 double audio_get_volume() { return plugins[selected_plugin].get_volume(); }
 
 /**
-   Stop looping sound. Music should die down in a few seconds.
+   Set sound volume to use.
  */
 void audio_set_volume(double volume)
 {
