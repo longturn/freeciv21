@@ -119,8 +119,15 @@ static void dai_manage_spaceship(struct player *pplayer)
 void dai_calc_data(const struct player *pplayer, int *trade, int *expenses,
                    int *income)
 {
-  if (!income || !trade || !expenses ) {
-    fc_assert_ret_msg(false, "Dai calc data - null pointer dereference");
+  int d0;
+  if (!income) { // assign dummy instead null
+    income = &d0;
+  };
+  if (!trade) {
+    trade = &d0;
+  };
+  if (!expenses) {
+    expenses= &d0;
   }
   *trade = 0;
   *expenses = 0;
@@ -129,17 +136,9 @@ void dai_calc_data(const struct player *pplayer, int *trade, int *expenses,
   // Find total trade surplus and gold expenses
   city_list_iterate(pplayer->cities, pcity)
   {
-    if (NULL != trade) {
-      *trade += pcity->surplus[O_TRADE];
-    }
-
-    if (NULL != expenses) {
-      *expenses += pcity->usage[O_GOLD];
-    }
-
-    if (NULL != income) {
-      *income += pcity->surplus[O_GOLD];
-    }
+    *trade += pcity->surplus[O_TRADE];
+    *expenses += pcity->usage[O_GOLD];
+    *income += pcity->surplus[O_GOLD];
   }
   city_list_iterate_end;
 
