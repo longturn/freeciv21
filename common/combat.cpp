@@ -473,7 +473,7 @@ int base_get_attack_power(const struct unit_type *punittype, int veteran,
   power =
       punittype->attack_strength * POWER_FACTOR * vlevel->power_fact / 100;
 
-  if (game.info.tired_attack && moves_left < SINGLE_MOVE) {
+  if (is_tired_attack(moves_left)) {
     power = (power * moves_left) / SINGLE_MOVE;
   }
 
@@ -896,4 +896,12 @@ int combat_bonus_against(const struct combat_bonus_list *list,
   combat_bonus_list_iterate_end;
 
   return value;
+}
+
+/*******************************************************************//**
+ Returns if the attack is going to be a tired attack
+***********************************************************************/
+bool is_tired_attack(int moves_left)
+{
+  return game.info.tired_attack && moves_left < SINGLE_MOVE;
 }
