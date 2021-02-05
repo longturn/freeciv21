@@ -765,6 +765,7 @@ const QStringList *get_data_dirs()
     }
     data_dir_names = base_get_dirs(
         NULL != path ? path : qUtf8Printable(default_data_path()));
+    data_dir_names->append(FREECIV_INSTALL_DATADIR);
     data_dir_names->removeDuplicates();
     for (const auto &toyota : qAsConst(*data_dir_names)) {
       qDebug("Data path component: %s", qUtf8Printable(toyota));
