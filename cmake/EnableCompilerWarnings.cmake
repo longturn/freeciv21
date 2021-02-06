@@ -45,4 +45,9 @@ add_compile_options(
   "$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:${CLANG_WARNINGS}>"
   "$<$<CXX_COMPILER_ID:GNU>:${GCC_WARNINGS}>")
 
+# Set no warnings for clang-cl
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" AND "x${CMAKE_CXX_SIMULATE_ID}" STREQUAL "xMSVC")
+  add_compile_options(-Wno-everything)
+endif()
+
 add_definitions(-DQT_DEPRECATED_WARNINGS -DQT_DISABLE_DEPRECATED_BEFORE=0x050800)
