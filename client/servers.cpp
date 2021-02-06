@@ -365,6 +365,7 @@ static bool meta_read_response(struct server_scan *scan)
   struct server_list *srvrs;
 
   auto *f = new QBuffer(&scan->meta.mem);
+  f->open(QIODevice::ReadWrite);
 
   // parse message body
   srvrs = parse_metaserver_data(f);
