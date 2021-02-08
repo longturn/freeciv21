@@ -85,4 +85,4 @@ install(
   doc/README.scorelog
   doc/README.sound
   doc/TODO
-  TYPE DOC)
+  DESTINATION ${CMAKE_INSTALL_DOCDIR})
