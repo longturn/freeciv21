@@ -97,5 +97,5 @@ if(FREECIV_ENABLE_CLIENT)
   target_link_libraries(freeciv-qt gui-qt)
   add_dependencies(freeciv-qt freeciv_translations)
   install(TARGETS freeciv-qt
-          RUNTIME DESTINATION bin)
+          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
