@@ -835,8 +835,8 @@ bool secfile_save(const struct section_file *secfile, QString filename)
 
   bool error = !fs->errorString().isEmpty();
   // KFilterDev returns "Unknown error" even when there's no error
-  if (qobject_cast<KFilterDev *>(fs)) {
-    error = qobject_cast<KFilterDev *>(fs)->error() != 0;
+  if (reinterpret_cast<KFilterDev *>(fs)) {
+    error = reinterpret_cast<KFilterDev *>(fs)->error() != 0;
   }
   if (error) {
     SECFILE_LOG(secfile, NULL, "Error before closing %s: %s", real_filename,
