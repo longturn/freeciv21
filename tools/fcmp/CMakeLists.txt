@@ -16,7 +16,8 @@ target_link_libraries(freeciv_modpack PRIVATE SQLite::SQLite3)
 if (FREECIV_ENABLE_FCMP_CLI)
   add_executable(freeciv-modpack mpcli.cpp)
   target_link_libraries(freeciv-modpack PRIVATE freeciv_modpack)
-  install(TARGETS freeciv-modpack)
+  install(TARGETS freeciv-modpack
+          RUNTIME DESTINATION bin)
 endif()
 
 if (FREECIV_ENABLE_FCMP_QT)
@@ -27,5 +28,6 @@ if (FREECIV_ENABLE_FCMP_QT)
   )
   target_link_libraries(freeciv-modpack-qt PRIVATE freeciv_modpack)
   target_link_libraries(freeciv-modpack-qt PRIVATE Qt5::Widgets)
-  install(TARGETS freeciv-modpack-qt)
+  install(TARGETS freeciv-modpack-qt
+          RUNTIME DESTINATION bin)
 endif()

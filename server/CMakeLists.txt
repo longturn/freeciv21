@@ -113,4 +113,5 @@ endif()
 add_executable(freeciv-server null.c)
 target_link_libraries(freeciv-server server)
 add_dependencies(freeciv-server freeciv_translations)
-install(TARGETS freeciv-server)
+install(TARGETS freeciv-server
+        RUNTIME DESTINATION bin)
