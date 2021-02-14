@@ -6,12 +6,6 @@ This document is about building Freeciv Windows Installer packages
 using MSYS2 from http://msys2.github.io
 
 
- Status
-====================================
-
-- Buildable clients are gtk3, gtk3.22, sdl2, and Qt
-
-
  Setup
 ====================================
 
@@ -65,7 +59,7 @@ using MSYS2 from http://msys2.github.io
 
 2.1.2) Arch-specific packages needed for building freeciv
 
-2.1.2.1) Arch-specific packages for building common parts
+2.1.2.1) Arch-specific packages for building common parts (i686 or x86_64, not both)
  - mingw-w64-i686-gcc / mingw-w64-x86_64-gcc
  - mingw-w64-i686-icu / mingw-w64-x86_64-icu
  - mingw-w64-i686-curl / mingw-w64-x86_64-curl
@@ -74,18 +68,18 @@ using MSYS2 from http://msys2.github.io
  - mingw-w64-i686-imagemagick / mingw-w64-x86_64-imagemagick
  - mingw-w64-i686-SDL2_mixer / mingw-w64-x86_64-SDL2_mixer
 
-2.1.2.1.2) Arch-specific optional packages for building common parts
+2.1.2.1.2) Arch-specific optional packages for building common parts (i686 or x86_64, not both)
  - mingw-w64-i686-drmingw / mingw-w64-x86_64-drmingw
  - mingw-w64-i686-meson / mingw-w64-x86_64-meson
  - mingw-w64-i686-tolua / mingw-w64-x86_64-tolua
 
-2.1.2.2) Arch-specific packages for building gtk3-client
+2.1.2.2) Arch-specific packages for building gtk3-client (i686 or x86_64, not both)
  - mingw-w64-i686-gtk3 / mingw-w64-x86_64-gtk3
 
-2.1.2.3) Arch-specific packages for buildind Qt-client and/or Ruledit
+2.1.2.3) Arch-specific packages for buildind Qt-client and/or Ruledit (i686 or x86_64, not both)
  - mingw-w64-i686-qt5 / mingw-w64-x86_64-qt5
 
-2.1.2.4) Arch-specific packages for building sdl2-client
+2.1.2.4) Arch-specific packages for building sdl2-client (i686 or x86_64, not both)
  - mingw-w64-i686-SDL2_image / mingw-w64-x86_64-SDL2_image
  - mingw-w64-i686-SDL2_ttf / mingw-w64-x86_64-SDL2_ttf
  - mingw-w64-i686-SDL2_gfx / mingw-w64-x86_64-SDL2_gfx
@@ -95,7 +89,7 @@ using MSYS2 from http://msys2.github.io
  building step already.
 
 2.2.1) Arch-specific packages needed for building installer
- package
+ package (i686 or x86_64, not both)
 
  - mingw-w64-i686-nsis / mingw-w64-x86_64-nsis
 
@@ -187,15 +181,4 @@ somehow. Some options are:
  setting suitable make parameter to MAKE_PARAMS variable, e,g,
  MAKE_PARAMS="-j3". The default is "-j2".
 
-
- Problems
-====================================
-
-- Freeciv linked against readline in msys2 does not work.
-  Configure freeciv with --without-readline
-
-
- TODO
-====================================
-
-- Readline support
+** END **
