@@ -1,4 +1,4 @@
-=====================
+===================
 Installing Freeciv21:
 =====================
 
@@ -29,8 +29,8 @@ Msys2 and Cygwin are supported. However, Msys2 is more supported by the Freeciv2
 Freeciv21 is written in very portable C and C++.  Both 32- and 64-bit machines are supported.  You cannot use a "K&R
 C" compiler, or a C++ compiler. The C++ compiler must support C++ 14.
 
-Development of Freeciv21 is primarily done with "gcc", the GNU project's excellent C and C++ compiler. Windows MS Visual C support
-is under development.
+Development of Freeciv21 is primarily done with "gcc", the GNU project's excellent C and C++ compiler. Microsoft Windows MS Visual C
+support is under development.
 
  - A "cmake" program.
 
@@ -161,7 +161,7 @@ At this point follow the steps in section 2 above.
 4. Windows notes:
 =================
 
-Windows version of Freeciv21 can be built with Msys2. Microsoft Visual C is under development.
+Windows versions of Freeciv21 cannot be built at this time. Microsoft Windows Visual C and Msys2 are both under development.
 
 Build instructions for Msys2 versions are documented on doc/README.msys2. Alternately you can visit
 https://github.com/jwrober/freeciv-msys2 for ready make scripts.
