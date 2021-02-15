@@ -13,7 +13,7 @@ This document is about building Freeciv21 Windows Installer packages using MSYS2
 1) Install MSYS2 following the documentation on their homepage
 
 1.1) Download
- https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-x86_64-202001109.exe for win64 host
+ https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-x86_64-20201109.exe for win64 host
 
 1.2) Run it to install MSYS2 on build system
 
@@ -50,6 +50,9 @@ always needed for building freeciv21.
  - mingw-w64-i686-readline / mingw-w64-x86_64-readline
  - mingw-w64-i686-imagemagick / mingw-w64-x86_64-imagemagick
  - mingw-w64-i686-SDL2_mixer / mingw-w64-x86_64-SDL2_mixer
+ - mingw-w64-i686-cmake / mingw-w64-x86_64-cmake
+ - mingw-w64-i686-ninga / mingw-w64-x86_64-ninja
+ - mingw-w64-i686-libunwind / mingw-w64-x86_64-libunwind
 
 2.1.2.2) Arch-specific optional packages for building common parts (i686 or x86_64, not both)
  - mingw-w64-i686-drmingw / mingw-w64-x86_64-drmingw
@@ -57,6 +60,7 @@ always needed for building freeciv21.
 
 2.1.2.3) Arch-specific packages for buildind Qt-client and/or Ruledit (i686 or x86_64, not both)
  - mingw-w64-i686-qt5 / mingw-w64-x86_64-qt5
+ - mingq-w64-i686-karchive-qt5 / mingw-w64-x86_64-karchive-qt5
 
 2.1.2.4) Arch-specific packages for building sdl2-client (i686 or x86_64, not both)
  - mingw-w64-i686-SDL2_image / mingw-w64-x86_64-SDL2_image
@@ -72,23 +76,17 @@ always needed for building freeciv21.
  Premade environment
 ====================================
 
-Visit https://github.com/jwrober/freeciv-msys2 to get a set of scripts and instructions to quickly build an environment. This is and
-x86_64 environment.
+Visit https://github.com/jwrober/freeciv-msys2 to get a set of scripts and instructions to quickly build an environment. The scripts
+create an x86_64 environment.
 
  Build
 ====================================
 
 Launch msys2 shell. Get the freeciv21 sources there
 somehow. Some options are:
-1) Download freeciv21 tarball within msys2 shell with wget
-2) Use git within msys2 shell to get them from version control
-3) Copy them from Windows folder where they are to a directory that
-   is within msys2
+1) Use git within msys2 shell to get them from version control
+2) Copy them from Windows folder where they are to a directory that is within msys2
 
-> cd windows/installer_msys2
-> make qt-installer
-
- It's possible to set number of make jobs used in the build by setting suitable make parameter to MAKE_PARAMS variable, e,g,
-MAKE_PARAMS="-j3". The default is "-j2".
+Follow the steps in ../INSTALL
 
 ** END **
