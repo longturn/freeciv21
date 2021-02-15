@@ -53,10 +53,8 @@ add_subdirectory(tools)
 install(
   FILES
   AUTHORS
-  ChangeLog
   COPYING
   INSTALL
-  NEWS
   doc/BUGS
   doc/CodingStyle
   doc/FAQ
