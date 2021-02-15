@@ -56,11 +56,11 @@ is under development.
 
    Especially the xgettext program is required to create the *.gmo files which aren't included in the git tree.
 
- - libkf5aarchive
+ - libkf5archive
 
  - libSDL2 Mixer
 
- - python3
+ - Python 3
 
 
 1. Prerequisites for the Qt client:
@@ -86,10 +86,10 @@ directory:
 To customize the compile, cmake requires the use of command line parameters.  cmake calls them directives and they start with -D.
 
   -DFREECIV_ENABLE_TOOLS={ON/OFF}     -- Enables all the tools with one parameter (Ruledit, FCMP, Ruleup, and Manual)
-  -DFREECIV_ENABLE_SERVER={ON/OFF}    -- Enables the server. Should typically set to YES to be able to play AI games
+  -DFREECIV_ENABLE_SERVER={ON/OFF}    -- Enables the server. Should typically set to ON to be able to play AI games
   -DFREECIV_ENABLE_NLS={ON/OFF}       -- Enables Native Language Support
   -DFREECIV_ENABLE_CIVMANUAL={ON/OFF} -- Enables the Freeciv Manual application
-  -DFREECIV_ENABLE_CLIENT={ON/OFF}    -- Enables the Qt client. Should typically set to YES unless you only want the server
+  -DFREECIV_ENABLE_CLIENT={ON/OFF}    -- Enables the Qt client. Should typically set to ON unless you only want the server
   -DFREECIV_ENABLE_FCMP_CLI={ON/OFF}  -- Enables the command line version of the Freeciv21 Modpack Installer
   -DFREECIV_ENABLE_FCMP_QT={ON/OFF}   -- Enables the Qt version of the Freeciv21 Modpack Installer (recommended)
   -DFREECIV_ENABLE_RULEDIT={ON/OFF}   -- Enables the Ruleset Editor
@@ -102,10 +102,10 @@ For more information on other cmake directives see https://cmake.org/cmake/help/
 Once the command line directives are determined, the appropriate command looks like this:
 
    cmake . -B build -G Ninja \
-     -DFREECIV_ENABLE_TOOLS=NO \
-     -DFREECIV_ENABLE_SERVER=YES \
+     -DFREECIV_ENABLE_TOOLS=OFF \
+     -DFREECIV_ENABLE_SERVER=ON \
      -DCMAKE_BUILD_TYPE=Release \
-     -DFREECIV_ENABLE_NLS=NO \
+     -DFREECIV_ENABLE_NLS=OFF \
      -DCMAKE_INSTALL_PREFIX=$HOME/Install/Freeciv21
 
 Once the build files have been written, then compile with this command:
