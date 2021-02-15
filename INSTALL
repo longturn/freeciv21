@@ -85,15 +85,15 @@ directory:
 
 To customize the compile, cmake requires the use of command line parameters.  cmake calls them directives and they start with -D.
 
-  -DFREECIV_ENABLE_TOOLS={YES/NO}     -- Enables all the tools with one parameter (Ruledit, FCMP, Ruleup, and Manual)
-  -DFREECIV_ENABLE_SERVER={YES/NO}    -- Enables the server. Should typically set to YES to be able to play AI games
-  -DFREECIV_ENABLE_NLS={YES/NO}       -- Enables Native Language Support
-  -DFREECIV_ENABLE_CIVMANUAL={YES/NO} -- Enables the Freeciv Manual application
-  -DFREECIV_ENABLE_CLIENT={YES/NO}    -- Enables the Qt client. Should typically set to YES unless you only want the server
-  -DFREECIV_ENABLE_FCMP_CLI={YES/NO}  -- Enables the command line version of the Freeciv21 Modpack Installer
-  -DFREECIV_ENABLE_FCMP_QT={YES/NO}   -- Enables the Qt version of the Freeciv21 Modpack Installer (recommended)
-  -DFREECIV_ENABLE_RULEDIT={YES/NO}   -- Enables the Ruleset Editor
-  -DFREECIV_ENABLE_RULEUP={YES/NO}    -- Enables the Ruleset upgrade tool
+  -DFREECIV_ENABLE_TOOLS={ON/OFF}     -- Enables all the tools with one parameter (Ruledit, FCMP, Ruleup, and Manual)
+  -DFREECIV_ENABLE_SERVER={ON/OFF}    -- Enables the server. Should typically set to YES to be able to play AI games
+  -DFREECIV_ENABLE_NLS={ON/OFF}       -- Enables Native Language Support
+  -DFREECIV_ENABLE_CIVMANUAL={ON/OFF} -- Enables the Freeciv Manual application
+  -DFREECIV_ENABLE_CLIENT={ON/OFF}    -- Enables the Qt client. Should typically set to YES unless you only want the server
+  -DFREECIV_ENABLE_FCMP_CLI={ON/OFF}  -- Enables the command line version of the Freeciv21 Modpack Installer
+  -DFREECIV_ENABLE_FCMP_QT={ON/OFF}   -- Enables the Qt version of the Freeciv21 Modpack Installer (recommended)
+  -DFREECIV_ENABLE_RULEDIT={ON/OFF}   -- Enables the Ruleset Editor
+  -DFREECIV_ENABLE_RULEUP={ON/OFF}    -- Enables the Ruleset upgrade tool
   -DCMAKE_BUILD_TYPE={Release/Debug}  -- Changes the Build Type. Most people will pick Release
   -DCMAKE_INSTALL_PREFIX=/some/path   -- Allows an alternative install path. Default is /usr/local/share/freeciv21
 
