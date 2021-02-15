@@ -19,44 +19,32 @@ This document contains sections and subsections as follows:
 Freeciv21 has a number of prerequisites.  Note, that apart from the first prerequisite, the Freeciv21 configuration process is smart
 enough to work out whether your system is suitable.  If in doubt, just try it.
 
- - Unix (or similar)
+ - An operating system that support Qt.
 
-The Unix operating system, a work-alike such as Linux or FreeBSD, or some OS that provides a very Unix-like personality or mode,
-like EMX under OS/2 or the Cygnus Cygwin toolkit under Windows.  (See https://www.cygwin.com/).  Support for BSD-style TCP/IP
-sockets is essential, as is a Bourne-shell compatible shell, such as GNU "bash".  (Most Unixes fit the bill...)
+Any modern operating system that support Qt is required. As of this writing this is Linux, Windows and Mac OS X. On Windows both
+Msys2 and Cygwin are supported. However, Msys2 is more supported by the Freeciv21 team.
 
- - An ANSI C and C++ compiler.
+ - A C and C++ 14 compiler.
 
-Freeciv21 is written in very portable (almost) ANSI C and C++.  Both 32- and 64-bit machines are supported.  You cannot use a "K&R
-C" compiler, or a C++ compiler.
+Freeciv21 is written in very portable C and C++.  Both 32- and 64-bit machines are supported.  You cannot use a "K&R
+C" compiler, or a C++ compiler. The C++ compiler must support C++ 14.
 
-Development of Freeciv21 is primarily done with "gcc", the GNU project's excellent C compiler, or on Windows MS Visual C.
+Development of Freeciv21 is primarily done with "gcc", the GNU project's excellent C and C++ compiler. Windows MS Visual C support
+is under development.
 
  - A "cmake" program.
 
    Freeciv21 developers generally use "cmake", the Kitware make program.
 
-   Officially released versions of Freeciv21 are designed to have makefiles which work with most cmake programs.
-
    You can check if you have GNU make installed on your system by typing:
 
        % cmake --version
 
-   The output should include "Kitware cmake" somewhere.
+   The output should include "Kitware cmake" somewhere and the version should be >=3.12.
 
  - Ninja cmake build program
 
  - libtool version 2.2 or better
-
- - libcurl version 7.15.4 or better
-
-   Libcurl takes care of http communication with the metaserver, and file transfers of modpack installers.  http://curl.haxx.se/
-
- - libicu
-
-   Libicu helps handling UTF-8 texts. 
-
-   http://site.icu-project.org/
 
  - libsqlite3
 
@@ -90,17 +78,26 @@ Qt-client is written in C++, so you need appropriate compiler. In Freeciv21 deve
 2. Compiling and Installing Freeciv21:
 ======================================
 
-Compiling Freeciv21 requires the use of the cmake program. cmake does require the use of command line parameters to function
-appropriately.  This section will outline the major use case scenarios.
+Compiling Freeciv21 requires the use of the cmake program. To build with defaults enter the following commmand from the freeciv21
+directory:
 
-First, let's start with describing a few command line parameters. cmake calls the directives and they start with -D.
+   cmake . -B build -G Ninja
 
-  -DFREECIV_ENABLE_TOOLS={YES/NO}     -- Enables tools such as the Modpack Installer
+To customize the compile, cmake requires the use of command line parameters.  cmake calls them directives and they start with -D.
+
+  -DFREECIV_ENABLE_TOOLS={YES/NO}     -- Enables all the tools with one parameter (Ruledit, FCMP, Ruleup, and Manual)
   -DFREECIV_ENABLE_SERVER={YES/NO}    -- Enables the server. Should typically set to YES to be able to play AI games
-  -DFREECIV_ENABLE_NLS={YES/NO}       -- Enabled Native Language Support
+  -DFREECIV_ENABLE_NLS={YES/NO}       -- Enables Native Language Support
+  -DFREECIV_ENABLE_CIVMANUAL={YES/NO} -- Enables the Freeciv Manual application
+  -DFREECIV_ENABLE_CLIENT={YES/NO}    -- Enables the Qt client. Should typically set to YES unless you only want the server
+  -DFREECIV_ENABLE_FCMP_CLI={YES/NO}  -- Enables the command line version of the Freeciv21 Modpack Installer
+  -DFREECIV_ENABLE_FCMP_QT={YES/NO}   -- Enables the Qt version of the Freeciv21 Modpack Installer (recommended)
+  -DFREECIV_ENABLE_RULEDIT={YES/NO}   -- Enables the Ruleset Editor
+  -DFREECIV_ENABLE_RULEUP={YES/NO}    -- Enables the Ruleset upgrade tool
   -DCMAKE_BUILD_TYPE={Release/Debug}  -- Changes the Build Type. Most people will pick Release
-  -DCMAKE_INSTALL_PREFIX=/some/path   -- Allows an alternative install path. Default is /usr/freeciv
-  -DCMAKE_CXX_FLAGS="-O9"             -- Typical CXX Flags to optimize binaries
+  -DCMAKE_INSTALL_PREFIX=/some/path   -- Allows an alternative install path. Default is /usr/local/share/freeciv21
+
+For more information on other cmake directives see https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html.
 
 Once the command line directives are determined, the appropriate command looks like this:
 
@@ -109,7 +106,6 @@ Once the command line directives are determined, the appropriate command looks l
      -DFREECIV_ENABLE_SERVER=YES \
      -DCMAKE_BUILD_TYPE=Release \
      -DFREECIV_ENABLE_NLS=NO \
-     -DCMAKE_CXX_FLAGS="-O9" \
      -DCMAKE_INSTALL_PREFIX=$HOME/Install/Freeciv21
 
 Once the build files have been written, then compile with this command:
@@ -165,12 +161,9 @@ At this point follow the steps in section 2 above.
 4. Windows notes:
 =================
 
-Windows version of Freeciv21 can be built either with Msys2 or MSVC.
+Windows version of Freeciv21 can be built with Msys2. Microsoft Visual C is under development.
 
 Build instructions for Msys2 versions are documented on doc/README.msys2. Alternately you can visit
 https://github.com/jwrober/freeciv-msys2 for ready make scripts.
-
-For MS Visual C, open Visual Studio and open the Freeciv21 folder and compile from there.
-
 
 ** END **

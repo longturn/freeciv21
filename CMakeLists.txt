@@ -61,8 +61,6 @@ install(
   doc/CodingStyle
   doc/FAQ
   doc/HACKING
-  doc/INSTALL.Cygwin
-  doc/INSTALL.meson
   doc/HOWTOPLAY
   doc/README.achievements
   doc/README.actions
