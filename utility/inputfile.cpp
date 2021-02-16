@@ -257,8 +257,8 @@ static void inf_close_partial(struct inputfile *inf)
 
   bool error = !inf->fp->errorString().isEmpty();
   // KFilterDev returns "Unknown error" even when there's no error
-  if (reinterpret_cast<KFilterDev *>(inf->fp)) {
-    error = reinterpret_cast<KFilterDev *>(inf->fp)->error() != 0;
+  if (dynamic_cast<KFilterDev *>(inf->fp)) {
+    error = dynamic_cast<KFilterDev *>(inf->fp)->error() != 0;
   }
   if (error) {
     qCCritical(inf_category) << "Error before closing" << inf_filename(inf)
