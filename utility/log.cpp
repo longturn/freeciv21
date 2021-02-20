@@ -30,6 +30,11 @@
 #include <QMutexLocker>
 #include <QString>
 
+// Windows
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
 // utility
 #include "fciconv.h"
 #include "fcintl.h"
@@ -39,8 +44,6 @@
 
 #include "deprecations.h"
 #include "log.h"
-
-#define MAX_LEN_LOG_LINE 5120
 
 Q_LOGGING_CATEGORY(assert_category, "freeciv.assert")
 
@@ -67,6 +70,20 @@ bool log_init(const QString &level_str)
 
   // Install our handler
   original_handler = qInstallMessageHandler(&handle_message);
+
+#ifdef Q_OS_WIN
+  {
+    // Enable VT-100 mode in cmd.exe
+    auto handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (handle != INVALID_HANDLE_VALUE) {
+      DWORD mode = 0;
+      if (GetConsoleMode(handle, &mode)) {
+        mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        SetConsoleMode(handle, mode);
+      }
+    }
+  }
+#endif
 
   // Set the default format (override with QT_MESSAGE_PATTERN)
   qSetMessagePattern(
