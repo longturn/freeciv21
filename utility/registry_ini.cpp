@@ -3056,7 +3056,7 @@ struct entry *section_entry_str_new(struct section *psection,
 
   if (NULL != pentry) {
     pentry->type = ENTRY_STR;
-    pentry->string.value = qstrdup(qPrintable(value));
+    pentry->string.value = qstrdup(qUtf8Printable(value));
     pentry->string.escaped = escaped;
     pentry->string.raw = false;
     pentry->string.gt_marking = false;
