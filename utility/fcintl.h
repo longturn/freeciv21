@@ -24,6 +24,17 @@
  * we don't want defined when nls is disabled. */
 #ifdef FREECIV_HAVE_LIBINTL_H
 #include <libintl.h>
+
+// MSYS libintl redefines asprintf/vasprintf as macros, and this clashes with
+// QString::asprintf and QString::vasprintf.
+#ifdef asprintf
+#undef asprintf
+#endif
+
+#ifdef vasprintf
+#undef vasprintf
+#endif
+
 #endif
 
 // Core freeciv
