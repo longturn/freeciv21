@@ -3955,7 +3955,7 @@ static const char *get_current_option_file_name()
       return NULL;
     }
     fc_snprintf(name_buffer, sizeof(name_buffer),
-                "%s%cfreeciv-client-rc-%d.%d", name, DIR_SEPARATOR_CHAR,
+                "%s/freeciv-client-rc-%d.%d", name,
                 MAJOR_NEW_OPTION_FILE_NAME, MINOR_NEW_OPTION_FILE_NAME);
 #endif // OPTION_FILE_NAME
   }
@@ -4015,8 +4015,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
                   : minor >= 0);
            minor--) {
         fc_snprintf(name_buffer, sizeof(name_buffer),
-                    "%s%cfreeciv-client-rc-%d.%d", name, DIR_SEPARATOR_CHAR,
-                    major, minor);
+                    "%s/freeciv-client-rc-%d.%d", name, major, minor);
         if (0 == fc_stat(name_buffer, &buf)) {
           if (MAJOR_NEW_OPTION_FILE_NAME != major
               || MINOR_NEW_OPTION_FILE_NAME != minor) {
@@ -4040,9 +4039,8 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
         minor = FIRST_MINOR_NEW_OPTION_FILE_NAME;
          minor >= FIRST_MINOR_MID_OPTION_FILE_NAME; minor--) {
       fc_snprintf(name_buffer, sizeof(name_buffer),
-                  "%s%c.freeciv-client-rc-%d.%d",
-                  qUtf8Printable(QDir::homePath()), DIR_SEPARATOR_CHAR,
-                  major, minor);
+                  "%s/.freeciv-client-rc-%d.%d",
+                  qUtf8Printable(QDir::homePath()), major, minor);
       if (0 == fc_stat(name_buffer, &buf)) {
         qInfo(_("Didn't find '%s' option file, "
                 "loading from '%s' instead."),
@@ -4057,8 +4055,8 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     }
 
     // Try with the old one.
-    fc_snprintf(name_buffer, sizeof(name_buffer), "%s%c%s", name,
-                DIR_SEPARATOR_CHAR, OLD_OPTION_FILE_NAME);
+    fc_snprintf(name_buffer, sizeof(name_buffer), "%s/%s", name,
+                OLD_OPTION_FILE_NAME);
     if (0 == fc_stat(name_buffer, &buf)) {
       qInfo(_("Didn't find '%s' option file, "
               "loading from '%s' instead."),
@@ -4679,7 +4677,7 @@ void options_save(option_save_log_callback log_cb)
   // Directory name
   sz_strlcpy(dir_name, name);
   for (i = qstrlen(dir_name) - 1;
-       i >= 0 && dir_name[i] != DIR_SEPARATOR_CHAR; i--) {
+       i >= 0 && dir_name[i] != '/'; i--) {
     // Nothing
   }
   if (i > 0) {

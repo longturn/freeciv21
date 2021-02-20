@@ -100,13 +100,6 @@ enum fc_tristate fc_tristate_and(enum fc_tristate one, enum fc_tristate two);
     }                                                                       \
   }
 
-#define DIR_SEPARATOR qUtf8Printable(QDir::separator())
-#define DIR_SEPARATOR_CHAR QDir::separator().toLatin1()
-
-#ifndef FREECIV_MSWINDOWS
-#define DIR_SEPARATOR_IS_DEFAULT
-#endif
-
 #define PARENT_DIR_OPERATOR ".."
 
 const char *big_int_to_text(unsigned int mantissa, unsigned int exponent);

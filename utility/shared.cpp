@@ -61,26 +61,24 @@
 
 static QString default_data_path()
 {
-  QString path = QStringLiteral(".%1data%1%2%3%4")
+  QString path = QStringLiteral(".%1data%1%2/%3")
                      .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR,
-                          QDir::separator(), DATASUBDIR);
+                          DATASUBDIR);
   return path;
 }
 
 static QString default_save_path()
 {
-  QString path = QStringLiteral(".%1%2%3saves")
-                     .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR,
-                          QDir::separator());
+  QString path = QStringLiteral(".%1%2/saves")
+                     .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR);
   return path;
 }
 
 static QString default_scenario_path()
 {
   QString path =
-      QStringLiteral(".%1data%3scenarios%1%2%3%4%3scenarios%1%2%3scenarios")
-          .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR, QDir::separator(),
-               DATASUBDIR);
+      QStringLiteral(".%1data/scenarios%1%2/%3/scenarios%1%2/scenarios")
+          .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR, DATASUBDIR);
   return path;
 }
 
@@ -672,16 +670,16 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
 
   tok = skip_leading_spaces(tok_in);
   remove_trailing_spaces(tok);
-  if (strcmp(tok, DIR_SEPARATOR) != 0) {
-    remove_trailing_char(tok, DIR_SEPARATOR_CHAR);
+  if (strcmp(tok, "/") != 0) {
+    remove_trailing_char(tok, '/');
   }
 
   i = qstrlen(tok);
   if (tok[0] == '~') {
-    if (i > 1 && tok[1] != DIR_SEPARATOR_CHAR) {
+    if (i > 1 && tok[1] != '/') {
       qCritical("For \"%s\" in path cannot expand '~'"
-                " except as '~%c'; ignoring",
-                tok, DIR_SEPARATOR_CHAR);
+                " except as '~/'; ignoring",
+                tok);
       i = 0; // skip this one
     } else {
       QString home = QDir::homePath();
@@ -862,7 +860,7 @@ const QStringList *get_scenario_dirs()
  */
 class QVector<QString> *fileinfolist(const QStringList *dirs,
                                      const char *suffix) {
-  fc_assert_ret_val(!strchr(suffix, DIR_SEPARATOR_CHAR), NULL);
+  fc_assert_ret_val(!strchr(suffix, '/'), NULL);
 
   QVector<QString> *files = new QVector<QString>();
   if (NULL == dirs) {
@@ -910,13 +908,6 @@ class QVector<QString> *fileinfolist(const QStringList *dirs,
 QString
 fileinfoname(const QStringList *dirs, const char *filename)
 {
-#ifndef DIR_SEPARATOR_IS_DEFAULT
-  char fnbuf[filename != NULL ? qstrlen(filename) + 1 : 1];
-  int i;
-#else  // DIR_SEPARATOR_IS_DEFAULT
-  const char *fnbuf = filename;
-#endif // DIR_SEPARATOR_IS_DEFAULT
-
   if (NULL == dirs) {
     return NULL;
   }
@@ -937,22 +928,10 @@ fileinfoname(const QStringList *dirs, const char *filename)
     return *realfile;
   }
 
-#ifndef DIR_SEPARATOR_IS_DEFAULT
-  for (i = 0; filename[i] != '\0'; i++) {
-    if (filename[i] == '/') {
-      fnbuf[i] = '/';
-    } else {
-      fnbuf[i] = filename[i];
-    }
-  }
-  fnbuf[i] = '\0';
-#endif // DIR_SEPARATOR_IS_DEFAULT
-
   for (const auto &dirname : *dirs) {
     struct stat buf; // see if we can open the file or directory
 
-    *realfile = QStringLiteral("%1%2%3").arg(
-        dirname, QString(DIR_SEPARATOR_CHAR), fnbuf);
+    *realfile = QStringLiteral("%1/%2").arg(dirname, filename);
     if (fc_stat(qUtf8Printable(*realfile), &buf) == 0) {
       return *realfile;
     }
@@ -1470,8 +1449,7 @@ void free_multicast_group() { NFCNPP_FREE(mc_group); }
 void interpret_tilde(char *buf, size_t buf_size, const QString &filename)
 {
   if (filename.startsWith(QLatin1String("~/"))) {
-    fc_snprintf(buf, buf_size, "%s%c%s", qUtf8Printable(QDir::homePath()),
-                DIR_SEPARATOR_CHAR,
+    fc_snprintf(buf, buf_size, "%s/%s", qUtf8Printable(QDir::homePath()),
                 qUtf8Printable(filename.right(filename.length() - 2)));
   } else if (filename == QLatin1String("~")) {
     qstrncpy(buf, qUtf8Printable(QDir::homePath()), buf_size);
@@ -1488,7 +1466,7 @@ void interpret_tilde(char *buf, size_t buf_size, const QString &filename)
  */
 char *interpret_tilde_alloc(const char *filename)
 {
-  if (filename[0] == '~' && filename[1] == DIR_SEPARATOR_CHAR) {
+  if (filename[0] == '~' && filename[1] == '/') {
     QString home = QDir::homePath();
     size_t sz;
     char *buf;
@@ -1515,7 +1493,7 @@ char *skip_to_basename(char *filepath)
   fc_assert_ret_val(NULL != filepath, NULL);
 
   for (j = qstrlen(filepath); j >= 0; j--) {
-    if (filepath[j] == DIR_SEPARATOR_CHAR) {
+    if (filepath[j] == '/') {
       return &filepath[j + 1];
     }
   }

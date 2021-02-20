@@ -140,7 +140,7 @@ void create_mpdb(const char *filename, bool scenario_db)
   int i;
 
   qstrncpy(local_name, filename, llen);
-  for (i = llen - 1; local_name[i] != DIR_SEPARATOR_CHAR; i--) {
+  for (i = llen - 1; local_name[i] != '/'; i--) {
     // Nothing
   }
   local_name[i] = '\0';
