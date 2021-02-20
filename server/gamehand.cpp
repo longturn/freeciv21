@@ -1093,8 +1093,7 @@ static const char *get_challenge_fullname(struct connection *pc)
     return NULL;
   }
 
-  fc_snprintf(fullname, sizeof(fullname), "%s%c%s", sdir, DIR_SEPARATOR_CHAR,
-              cname);
+  fc_snprintf(fullname, sizeof(fullname), "%s/%s", sdir, cname);
 
   return fullname;
 }

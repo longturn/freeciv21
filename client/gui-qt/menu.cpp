@@ -2926,12 +2926,12 @@ void mr_menu::save_image()
   storage_path = freeciv_storage_dir();
   path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
   if (!storage_path.isEmpty() && QDir(storage_path).isReadable()) {
-    img_name = storage_path + DIR_SEPARATOR + img_name;
+    img_name = storage_path + "/" + img_name;
   } else if (!path.isEmpty()) {
-    img_name = path + DIR_SEPARATOR + img_name;
+    img_name = path + "/" + img_name;
   } else {
     img_name = QStandardPaths::writableLocation(QStandardPaths::HomeLocation)
-               + DIR_SEPARATOR + img_name;
+               + "/" + img_name;
   }
   map_saved = mapview.store->save(img_name, "png");
   map_canvas_resized(current_width, current_height);

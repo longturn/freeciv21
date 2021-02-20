@@ -152,11 +152,11 @@ static const char *download_modpack_recursive(const char *URL,
   }
 
   if (type == MPT_SCENARIO) {
-    fc_snprintf(local_dir, sizeof(local_dir), "%s%cscenarios",
-                qPrintable(fcmp->inst_prefix), DIR_SEPARATOR_CHAR);
+    fc_snprintf(local_dir, sizeof(local_dir), "%s/scenarios",
+                qPrintable(fcmp->inst_prefix));
   } else {
-    fc_snprintf(local_dir, sizeof(local_dir), "%s%c" DATASUBDIR,
-                qPrintable(fcmp->inst_prefix), DIR_SEPARATOR_CHAR);
+    fc_snprintf(local_dir, sizeof(local_dir), "%s/" DATASUBDIR,
+                qPrintable(fcmp->inst_prefix));
   }
 
   baseURLpart = secfile_lookup_str(control, "info.baseURL");
@@ -262,12 +262,6 @@ static const char *download_modpack_recursive(const char *URL,
   for (filenbr = 0; filenbr < total_files; filenbr++) {
     const char *dest_name;
 
-#ifndef DIR_SEPARATOR_IS_DEFAULT
-    char *dest_name_copy;
-#else // DIR_SEPARATOR_IS_DEFAULT
-#define dest_name_copy dest_name
-#endif // DIR_SEPARATOR_IS_DEFAULT
-
     int i;
     bool illegal_filename = false;
 
@@ -282,10 +276,6 @@ static const char *download_modpack_recursive(const char *URL,
       dest_name = src_name;
     }
 
-#ifndef DIR_SEPARATOR_IS_DEFAULT
-    dest_name_copy = new char[strlen(dest_name) + 1];
-#endif // DIR_SEPARATOR_IS_DEFAULT
-
     for (i = 0; dest_name[i] != '\0'; i++) {
       if (dest_name[i] == '.' && dest_name[i + 1] == '.') {
         if (mcb != NULL) {
@@ -297,30 +287,13 @@ static const char *download_modpack_recursive(const char *URL,
         partial_failure = true;
         illegal_filename = true;
       }
-
-#ifndef DIR_SEPARATOR_IS_DEFAULT
-      if (dest_name[i] == '/') {
-        dest_name_copy[i] = DIR_SEPARATOR_CHAR;
-      } else {
-        dest_name_copy[i] = dest_name[i];
-      }
-#endif // DIR_SEPARATOR_IS_DEFAULT
     }
 
-#ifndef DIR_SEPARATOR_IS_DEFAULT
-    dest_name_copy[i] = '\0';
-#endif // DIR_SEPARATOR_IS_DEFAULT
-
     if (!illegal_filename) {
-      fc_snprintf(local_name, sizeof(local_name), "%s%c%s", local_dir,
-                  DIR_SEPARATOR_CHAR, dest_name_copy);
+      fc_snprintf(local_name, sizeof(local_name), "%s/%s", local_dir,
+                  dest_name);
 
-#ifndef DIR_SEPARATOR_IS_DEFAULT
-      free(dest_name_copy);
-#endif // DIR_SEPARATOR_IS_DEFAULT
-
-      for (i = qstrlen(local_name) - 1; local_name[i] != DIR_SEPARATOR_CHAR;
-           i--) {
+      for (i = qstrlen(local_name) - 1; local_name[i] != '/'; i--) {
         // Nothing
       }
       local_name[i] = '\0';
@@ -329,7 +302,7 @@ static const char *download_modpack_recursive(const char *URL,
         secfile_destroy(control);
         return _("Cannot create required directories");
       }
-      local_name[i] = DIR_SEPARATOR_CHAR;
+      local_name[i] = '/';
 
       if (mcb != NULL) {
         char buf[2048];
@@ -352,10 +325,6 @@ static const char *download_modpack_recursive(const char *URL,
         }
         partial_failure = true;
       }
-    } else {
-#ifndef DIR_SEPARATOR_IS_DEFAULT
-      free(dest_name_copy);
-#endif // DIR_SEPARATOR_IS_DEFAULT
     }
 
     if (pbcb != NULL) {

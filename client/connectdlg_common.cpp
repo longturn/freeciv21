@@ -241,8 +241,8 @@ bool client_start_server()
 
   // Set up the command-line parameters.
   port_buf = QString::number(internal_server_port);
-  savesdir = QStringLiteral("%1%2saves").arg(storage, DIR_SEPARATOR);
-  scensdir = QStringLiteral("%1%2scenarios").arg(storage, DIR_SEPARATOR);
+  savesdir = QStringLiteral("%1/saves").arg(storage);
+  scensdir = QStringLiteral("%1/scenarios").arg(storage);
 
   arguments << QStringLiteral("-p") << port_buf << QStringLiteral("--bind")
             << QStringLiteral("localhost") << QStringLiteral("-q")
@@ -401,8 +401,8 @@ void send_client_wants_hack(const char *filename)
 
     make_dir(sdir);
 
-    fc_snprintf(challenge_fullname, sizeof(challenge_fullname), "%s%c%s",
-                sdir, DIR_SEPARATOR_CHAR, filename);
+    fc_snprintf(challenge_fullname, sizeof(challenge_fullname), "%s/%s",
+                sdir, filename);
 
     // generate an authentication token
     randomize_string(req.token, sizeof(req.token));

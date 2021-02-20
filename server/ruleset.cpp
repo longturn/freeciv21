@@ -207,16 +207,16 @@ static QString valid_ruleset_filename(const char *subdir, const char *name,
 
   fc_assert_ret_val(subdir && name && extension, NULL);
 
-  fc_snprintf(filename, sizeof(filename), "%s%c%s.%s", subdir,
-              DIR_SEPARATOR_CHAR, name, extension);
+  fc_snprintf(filename, sizeof(filename), "%s/%s.%s", subdir, name, 
+              extension);
   qCDebug(ruleset_category, "Trying \"%s\".", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
   if (!dfilename.isEmpty()) {
     return dfilename;
   }
 
-  fc_snprintf(filename, sizeof(filename), "default%c%s.%s",
-              DIR_SEPARATOR_CHAR, name, extension);
+  fc_snprintf(filename, sizeof(filename), "default/%s.%s", name, 
+              extension);
   qCDebug(ruleset_category, "Trying \"%s\": default ruleset directory.",
           filename);
   dfilename = fileinfoname(get_data_dirs(), filename);

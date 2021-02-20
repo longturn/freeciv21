@@ -35,8 +35,6 @@ Q_GLOBAL_STATIC(QString, stylestring)
  */
 void qtg_gui_load_theme(QString &directory, QString &theme_name)
 {
-  QString name;
-  QString path;
   QString fake_dir;
   QString data_dir;
   QFile f;
@@ -49,9 +47,7 @@ void qtg_gui_load_theme(QString &directory, QString &theme_name)
 
   data_dir = QString(directory);
 
-  path = data_dir + DIR_SEPARATOR + theme_name + DIR_SEPARATOR;
-  name = path + "resource.qss";
-  f.setFileName(name);
+  f.setFileName(data_dir + "/" + theme_name + "/resource.qss");
 
   if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
     if (QString(theme_name) != QStringLiteral(FC_QT_DEFAULT_THEME_NAME)) {
@@ -61,7 +57,6 @@ void qtg_gui_load_theme(QString &directory, QString &theme_name)
   }
   // Stylesheet uses UNIX separators
   fake_dir = data_dir;
-  fake_dir.replace(DIR_SEPARATOR_CHAR, QLatin1String("/"));
   QTextStream in(&f);
   *stylestring = in.readAll();
   stylestring->replace(lnb, fake_dir + "/" + theme_name + "/");
@@ -143,8 +138,7 @@ QStringList qtg_get_useable_themes_in_directory(QString &directory,
   name = QString(directory);
 
   for (auto const &str : qAsConst(sl)) {
-    f.setFileName(name + DIR_SEPARATOR + str + DIR_SEPARATOR
-                  + "resource.qss");
+    f.setFileName(name + "/" + str + "/resource.qss");
     if (!f.exists()) {
       continue;
     }
