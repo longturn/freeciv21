@@ -532,6 +532,29 @@ void server::input_on_socket()
  */
 void server::input_on_stdin()
 {
+#ifdef Q_OS_WIN
+  {
+    // Spurious events may occur because readline consumes only key down
+    // events. Clear the buffer if there's no key down event in the queue
+    // (rl_callback_read_char blocks if  there's no such event, which also
+    // blocks the event thread).
+    std::array<INPUT_RECORD, 8> records;
+    HANDLE h_in = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD count;
+    if (PeekConsoleInput(h_in, records.data(), records.size(), &count)) {
+      if (count <= 0
+          || !std::any_of(records.begin(), records.begin() + count,
+                          [](const auto &record) {
+                            return record.EventType == KEY_EVENT
+                                   && record.Event.KeyEvent.bKeyDown;
+                          })) {
+        ReadConsoleInput(h_in, records.data(), records.size(), &count);
+        return;
+      }
+    }
+  }
+#endif
+
   if (m_interactive) {
     // Readline does everything nicely in interactive sessions
     rl_callback_read_char();
