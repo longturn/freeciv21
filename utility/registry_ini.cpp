@@ -622,13 +622,12 @@ bool secfile_save(const struct section_file *secfile, QString filename)
   }
 
   interpret_tilde(real_filename, sizeof(real_filename), filename);
-  auto *fs = new KFilterDev(real_filename);
+  auto fs = std::make_unique<KFilterDev>(real_filename);
   fs->open(QIODevice::WriteOnly);
 
   if (!fs->isOpen()) {
     SECFILE_LOG(secfile, NULL, _("Could not open %s for writing"),
                 real_filename);
-    delete fs;
     return false;
   }
 
@@ -641,7 +640,7 @@ bool secfile_save(const struct section_file *secfile, QString filename)
         fc_assert(!strcmp(entry_name(pentry), "file"));
 
         fc_assert_ret_val(fs->write("*include ") > 0, false);
-        fc_assert_ret_val(entry_to_file(pentry, fs), false);
+        fc_assert_ret_val(entry_to_file(pentry, fs.get()), false);
         fc_assert_ret_val(fs->write("\n") > 0, false);
       }
     } else if (psection->special == EST_COMMENT) {
@@ -650,7 +649,7 @@ bool secfile_save(const struct section_file *secfile, QString filename)
            ent_iter = entry_list_link_next(ent_iter)) {
         fc_assert(!strcmp(entry_name(pentry), "comment"));
 
-        fc_assert_ret_val(entry_to_file(pentry, fs), false);
+        fc_assert_ret_val(entry_to_file(pentry, fs.get()), false);
         fc_assert_ret_val(fs->write("\n") > 0, false);
       }
     } else {
@@ -776,7 +775,7 @@ bool secfile_save(const struct section_file *secfile, QString filename)
             if (icol > 0) {
               fc_assert_ret_val(fs->write(",") > 0, false);
             }
-            fc_assert_ret_val(entry_to_file(pentry, fs), false);
+            fc_assert_ret_val(entry_to_file(pentry, fs.get()), false);
 
             ent_iter = entry_list_link_next(ent_iter);
             col_iter = entry_list_link_next(col_iter);
@@ -801,7 +800,7 @@ bool secfile_save(const struct section_file *secfile, QString filename)
         col_entry_name = entry_name(pentry);
         fc_assert_ret_val(fs->write(col_entry_name), false);
         fc_assert_ret_val(fs->write("="), false);
-        fc_assert_ret_val(entry_to_file(pentry, fs), false);
+        fc_assert_ret_val(entry_to_file(pentry, fs.get()), false);
 
         // Check for vector.
         for (i = 1;; i++) {
@@ -816,7 +815,7 @@ bool secfile_save(const struct section_file *secfile, QString filename)
             break;
           }
           fc_assert_ret_val(fs->write(",") > 0, false);
-          fc_assert_ret_val(entry_to_file(col_pentry, fs), false);
+          fc_assert_ret_val(entry_to_file(col_pentry, fs.get()), false);
           ent_iter = col_iter;
         }
 
@@ -833,19 +832,12 @@ bool secfile_save(const struct section_file *secfile, QString filename)
   }
   section_list_iterate_end;
 
-  bool error = !fs->errorString().isEmpty();
-  // KFilterDev returns "Unknown error" even when there's no error
-  if (dynamic_cast<KFilterDev *>(fs)) {
-    error = dynamic_cast<KFilterDev *>(fs)->error() != 0;
-  }
-  if (error) {
+  if (fs->error() != 0) {
     SECFILE_LOG(secfile, NULL, "Error before closing %s: %s", real_filename,
                 qPrintable(fs->errorString()));
-    delete fs;
     return false;
   }
 
-  delete fs;
   return true;
 }
 
