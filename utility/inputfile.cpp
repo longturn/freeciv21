@@ -255,8 +255,8 @@ static void inf_close_partial(struct inputfile *inf)
 
   qCDebug(inf_category) << "sub-closing" << inf_filename(inf);
 
-  bool error = !inf->fp->errorString().isEmpty();
-  // KFilterDev returns "Unknown error" even when there's no error
+  // No way to determine whether a generic QIODevice has error'ed :(
+  bool error = false;
   if (dynamic_cast<KFilterDev *>(inf->fp)) {
     error = dynamic_cast<KFilterDev *>(inf->fp)->error() != 0;
   }
