@@ -107,10 +107,10 @@ target_link_libraries(server PRIVATE ai_classic)
 
 # Create an empty file to build the server from. srv_main.cpp is needed by ruledit
 # so it has to be in the freeciv_server library.
-if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/null.c)
-  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/null.c "")
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/null.cpp)
+  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/null.cpp "")
 endif()
-add_executable(freeciv-server null.c)
+add_executable(freeciv-server null.cpp)
 target_link_libraries(freeciv-server server)
 add_dependencies(freeciv-server freeciv_translations)
 install(TARGETS freeciv-server
