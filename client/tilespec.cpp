@@ -1388,7 +1388,13 @@ static QPixmap *load_gfx_file(const char *gfx_filename)
   QPixmap *s;
 
   // Try out all supported file extensions to find one that works.
-  for (auto gfx_fileext : QImageReader::supportedImageFormats()) {
+  auto supported = QImageReader::supportedImageFormats();
+
+  // Make sure we try png first (it's the most common and Qt always supports
+  // it). This dramatically improves tileset loading performance on Windows.
+  supported.prepend("png");
+
+  for (auto gfx_fileext : qAsConst(supported)) {
     QString real_full_name;
     QString full_name =
         QStringLiteral("%1.%2").arg(gfx_filename, gfx_fileext.data());
