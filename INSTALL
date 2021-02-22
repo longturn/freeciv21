@@ -146,6 +146,7 @@ Start with ensuring your have a source repository (deb-src) turned on in apt sou
      qt5-default \
      libkf5archive-dev \
      libmagickwand-dev \
+     libsdl2-mixer-dev \
      libunwind-dev \
      libdw-dev
 
