@@ -30,6 +30,8 @@
 
 // Stuff to wait for input on stdin.
 #ifdef Q_OS_WIN
+#include <io.h>
+#include <array>
 #include <QtCore/QWinEventNotifier>
 #include <windows.h>
 #else
