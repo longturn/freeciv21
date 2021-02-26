@@ -14,7 +14,7 @@ set(scenarios
     tileset-demo
 )
 
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.18)
+if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.19)
   # Built-in compression support available in CMake
   set(compression GZip)
   set(compression_ext gz)
