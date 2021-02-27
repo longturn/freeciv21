@@ -137,9 +137,8 @@ QString user_name;
 char password[MAX_LEN_PASSWORD] = "\0";
 QString cmd_metaserver;
 int server_port = -1;
-bool auto_connect =
-    false;               // TRUE = skip "Connect to Freeciv Server" dialog
-bool auto_spawn = false; // TRUE = skip main menu, start local server
+bool auto_connect = false; // TRUE = skip "Connect to Freeciv Server" dialog
+bool auto_spawn = false;   // TRUE = skip main menu, start local server
 enum announce_type announce;
 
 struct civclient client;
@@ -309,6 +308,7 @@ static void client_game_reset()
  */
 int client_main(int argc, char *argv[])
 {
+  QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
   QApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(VERSION_STRING);
 
