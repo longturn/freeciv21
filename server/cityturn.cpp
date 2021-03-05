@@ -3244,6 +3244,7 @@ static void update_city_activity(struct city *pcity)
     }
 
     pcity->did_sell = false;
+    pcity->did_buy_prevturn = pcity->did_buy;
     pcity->did_buy = false;
     pcity->airlift = city_airlift_max(pcity);
     update_bulbs(pplayer, pcity->prod[O_SCIENCE], false);

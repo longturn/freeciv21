@@ -2582,6 +2582,7 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
 
   packet->airlift = pcity->airlift;
   packet->did_buy = pcity->did_buy;
+  packet->did_buy_prevturn = pcity->did_buy_prevturn;
   packet->did_sell = pcity->did_sell;
   packet->was_happy = pcity->was_happy;
 

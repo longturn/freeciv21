@@ -731,7 +731,7 @@ PACKET_CITY_INFO = 31; sc, lsend, is-game-info, force, cancel(PACKET_CITY_SHORT_
   UINT16 last_turns_shield_surplus;
 
   UINT8 airlift;
-  BOOL did_buy, did_sell, was_happy;
+  BOOL did_buy, did_buy_prevturn, did_sell, was_happy;
 
   BOOL diplomat_investigate;
   UINT8 walls;
@@ -2239,6 +2239,7 @@ PACKET_EDIT_CITY = 213; cs, handle-per-conn, handle-via-packet
   BOOL airlift;
   BOOL debug;
   BOOL did_buy;
+  BOOL did_buy_prevturn;
   BOOL did_sell;
   BOOL was_happy;
   UINT8 anarchy;
