@@ -4839,6 +4839,10 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
   sg_warn_ret_val(secfile_lookup_bool(loading->file, &pcity->did_buy,
                                       "%s.did_buy", citystr),
                   false, "%s", secfile_error());
+  sg_warn_ret_val(secfile_lookup_bool(loading->file,
+                                      &pcity->did_buy_production,
+                                      "%s.did_buy_production", citystr),
+                  false, "%s", secfile_error());
   sg_warn_ret_val(secfile_lookup_bool(loading->file, &pcity->did_sell,
                                       "%s.did_sell", citystr),
                   false, "%s", secfile_error());
@@ -5290,6 +5294,8 @@ static void sg_save_player_cities(struct savedata *saving,
     secfile_insert_int(saving->file, pcity->turn_founded, "%s.turn_founded",
                        buf);
     secfile_insert_bool(saving->file, pcity->did_buy, "%s.did_buy", buf);
+    secfile_insert_bool(saving->file, pcity->did_buy_production,
+                        "%s.did_buy_production", buf);
     secfile_insert_bool(saving->file, pcity->did_sell, "%s.did_sell", buf);
     secfile_insert_int(saving->file, pcity->turn_last_built,
                        "%s.turn_last_built", buf);

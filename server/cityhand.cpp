@@ -348,6 +348,7 @@ void really_handle_city_buy(struct player *pplayer, struct city *pcity)
     pcity->disbanded_shields += total - pcity->shield_stock;
     pcity->shield_stock = total; // AI wants this -- Syela
     pcity->did_buy = true;       // !PS: no need to set buy flag otherwise
+    pcity->did_buy_production = true;
   }
   city_refresh(pcity);
 

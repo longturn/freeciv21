@@ -2305,6 +2305,7 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
     pcity->before_change_shields -= cost;
     pcity->shield_stock -= cost;
     pcity->turn_last_built = game.info.turn;
+    pcity->did_buy_production = false;
     // to eliminate micromanagement
     if (is_great_wonder(pimprove)) {
       notify_player(NULL, city_tile(pcity), E_WONDER_BUILD, ftc_server,
@@ -2496,7 +2497,7 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
 
     // don't update turn_last_built if we returned above
     pcity->turn_last_built = game.info.turn;
-
+    pcity->did_buy_production = false;
     // check if we can build more than one unit (effect City_Build_Slots)
     (void) city_production_build_units(pcity, false, &num_units);
 
