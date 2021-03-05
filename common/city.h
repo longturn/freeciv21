@@ -337,6 +337,7 @@ struct city {
   // turn states
   int airlift;
   bool did_buy;
+  bool did_buy_production;
   bool did_sell;
   bool was_happy;
 
