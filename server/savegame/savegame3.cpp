@@ -4839,10 +4839,10 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
   sg_warn_ret_val(secfile_lookup_bool(loading->file, &pcity->did_buy,
                                       "%s.did_buy", citystr),
                   false, "%s", secfile_error());
-  sg_warn_ret_val(secfile_lookup_bool(loading->file,
-                                      &pcity->did_buy_production,
-                                      "%s.did_buy_production", citystr),
-                  false, "%s", secfile_error());
+  sg_warn_ret_val(
+      secfile_lookup_bool_default(loading->file, &pcity->did_buy_production,
+                                  "%s.did_buy_production", citystr),
+      false, "%s", secfile_error());
   sg_warn_ret_val(secfile_lookup_bool(loading->file, &pcity->did_sell,
                                       "%s.did_sell", citystr),
                   false, "%s", secfile_error());
