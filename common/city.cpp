@@ -1870,12 +1870,10 @@ int city_change_production_penalty(const struct city *pcity,
     penalized_shields = pcity->before_change_shields;
   }
 
-  // Penalize 50% if you buy last turn but didnt built
-  if ((pcity->did_buy_production && ((target->kind == VUT_UTYPE
-            && target->value.utype != pcity->changed_from.value.utype)
-           || (target->kind == VUT_IMPROVEMENT
-               && target->value.building
-                      != pcity->changed_from.value.building)))) {
+  // Penalize 50% if you buy unit last turn but didnt built
+  if ((pcity->did_buy_production
+       && ((target->kind == VUT_UTYPE
+            && target->value.utype != pcity->changed_from.value.utype)))) {
     unpenalized_shields = 0;
     penalized_shields = pcity->before_change_shields;
   }
