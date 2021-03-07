@@ -858,8 +858,7 @@ const QStringList *get_scenario_dirs()
    The suffixes are removed from the filenames before the list is
    returned.
  */
-class QVector<QString> *fileinfolist(const QStringList *dirs,
-                                     const char *suffix) {
+QVector<QString> *fileinfolist(const QStringList *dirs, const char *suffix) {
   fc_assert_ret_val(!strchr(suffix, '/'), NULL);
 
   QVector<QString> *files = new QVector<QString>();

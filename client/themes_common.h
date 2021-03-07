@@ -10,8 +10,10 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 ***********************************************************************/
 #pragma once
 
+#include <QString>
+#include <QVector>
+
 void init_themes();
-class QStringList;
 const QVector<QString> *get_themes_list(const struct option *poption);
 bool load_theme(const QString &theme_name);
 void theme_reread_callback(struct option *option);
