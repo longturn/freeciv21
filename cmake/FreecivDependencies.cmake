@@ -10,7 +10,7 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 # Language support
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED TRUE)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 # Should be available in C++11 but not all systems have it
