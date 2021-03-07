@@ -13,12 +13,14 @@
 
 #include <memory>
 
+// Qt
+#include <QStringList>
+
 // Forward declarations
 class QPainter;
 class QPointF;
 class QRect;
 class QString;
-class QStringList;
 class QTextDocument;
 
 struct city;

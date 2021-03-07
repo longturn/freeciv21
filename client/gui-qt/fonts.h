@@ -11,9 +11,9 @@
 
 // Qt
 #include <QMap>
+#include <QStringList>
 
 class QFont;
-class QStringList;
 
 namespace fonts {
 const char *const default_font = "gui_qt_font_default";

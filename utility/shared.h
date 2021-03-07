@@ -154,8 +154,7 @@ const QStringList *get_scenario_dirs();
 
 void free_data_dir_names();
 
-class QVector<QString> *fileinfolist(const QStringList *dirs,
-                                     const char *suffix);
+QVector<QString> *fileinfolist(const QStringList *dirs, const char *suffix);
 struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
                                          const char *infix, bool nodups);
 QString fileinfoname(const QStringList *dirs, const char *filename);
