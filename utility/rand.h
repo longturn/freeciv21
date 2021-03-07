@@ -43,3 +43,28 @@ void test_random1(int n);
 RANDOM_TYPE fc_randomly_debug(RANDOM_TYPE seed, RANDOM_TYPE size,
                               const char *called_as, int line,
                               const char *file);
+
+namespace freeciv {
+
+/**
+ * A UniformRandomBitGenerator class usable with STL algorithms and using the
+ * Freeciv RNG under the hood.
+ */
+class random_generator {
+public:
+  using result_type = RANDOM_TYPE;
+
+  static constexpr auto min() { return 0; }
+
+  static constexpr auto max()
+  {
+    return std::numeric_limits<result_type>::max() - 1;
+  }
+
+  auto operator()()
+  {
+    return fc_rand(std::numeric_limits<result_type>::max());
+  }
+};
+
+} // namespace freeciv
