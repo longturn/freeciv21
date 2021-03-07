@@ -20,6 +20,7 @@
 // utility
 #include "fcthread.h"
 #include "log.h"
+#include "rand.h"
 #include "shared.h" // array_shuffle
 
 #include "genlist.h"
@@ -641,7 +642,7 @@ void genlist_shuffle(struct genlist *pgenlist)
   }
 
   // randomize it
-  std::random_shuffle(shuffle.begin(), shuffle.end());
+  std::shuffle(shuffle.begin(), shuffle.end(), freeciv::random_generator());
 
   // create the shuffled list
   myiter = genlist_head(pgenlist);
