@@ -628,8 +628,10 @@ QRect polished_citybar_painter::paint(QPainter &painter,
   QColor owner_color = *get_player_color(tileset, city_owner(pcity));
   QColor *textcolors[2] = {get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
                            get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
-  QColor text_color =
-      *color_best_contrast(&owner_color, textcolors, ARRAY_SIZE(textcolors));
+  QColor text_color = pcity->owner == client_player()
+                          ? *get_color(tileset, COLOR_MAPVIEW_CITYTEXT)
+                          : *color_best_contrast(&owner_color, textcolors,
+                                                 ARRAY_SIZE(textcolors));
 
   // Decide on the target height. It's the max of the font sizes and the
   // occupied indicator (we assume all indicators have the same size).
