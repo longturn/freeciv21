@@ -57,7 +57,7 @@ jobs:
           - ninja
           - python3
           - gettext
-          - qt
+          - qt@5
           - kde-karchive
           - readline
           - sqlite
