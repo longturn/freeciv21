@@ -564,4 +564,5 @@ install(
   zimbabwean.ruleset
   zulu.ruleset
   DESTINATION
-  "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/nation")
+  "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/nation"
+  COMPONENT freeciv21)

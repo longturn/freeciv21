@@ -18,7 +18,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 include(FreecivBuildOptions)
 
-project(freeciv21 VERSION 3.1.0 LANGUAGES C CXX)
+set(FREECIV21_VERSION_MAJOR 3)
+set(FREECIV21_VERSION_MINOR 1)
+set(FREECIV21_VERSION_PATCH 0)
+set(FREECIV21_VERSION "${FREECIV21_VERSION_MAJOR}.${FREECIV21_VERSION_MINOR}.${FREECIV21_VERSION_PATCH}")
+project(freeciv21 VERSION ${FREECIV21_VERSION} LANGUAGES C CXX)
 
 if (NOT ${CMAKE_BUILD_TYPE} EQUAL "Release")
   add_compile_definitions(FREECIV_DEBUG)
@@ -81,4 +85,62 @@ install(
   doc/README.scorelog
   doc/README.sound
   doc/TODO
-  DESTINATION ${CMAKE_INSTALL_DOCDIR})
+  DESTINATION ${CMAKE_INSTALL_DOCDIR}
+  COMPONENT freeciv21)
+
+# -----------------------------------------------------------------------------
+# Uninstall Target
+# -----------------------------------------------------------------------------
+#if(WIN32 OR MSYS OR MINGW)
+
+
+#    add_custom_target(uninstall
+#        "${CMAKE_COMMAND}" -E remove_directory "${CMAKE_INSTALL_PREFIX}")
+#else()
+#    configure_file(
+#        "${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+#        "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+#        @ONLY)
+#    add_custom_target(uninstall
+#        "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+#endif()
+
+# -----------------------------------------------------------------------------
+# Packaging (CPack)
+# -----------------------------------------------------------------------------
+include(cmake/CPackConfig.cmake)
+
+# ----------------------------------------------------------------------
+# Information Summary
+# ----------------------------------------------------------------------
+message("")
+message("------------------------------------------------------------------------")
+message("Configuration Summary")
+message("------------------------------------------------------------------------")
+# project info
+message("PROJECT_NAME:                ${PROJECT_NAME}")
+message("FREECIV21_VERSION:           ${FREECIV21_VERSION}")
+message("")
+
+# cmake info
+message("CMAKE_BINARY_DIR:            ${CMAKE_BINARY_DIR}")
+message("CMAKE_INSTALL_PREFIX:        ${CMAKE_INSTALL_PREFIX}")
+message("CMAKE_INSTALL_LIBDIR:        ${CMAKE_INSTALL_LIBDIR}")
+message("PACKAGE_LOCALE_DIR           ${PACKAGE_LOCALE_DIR}")
+message("CMAKE_SYSTEM_NAME:           ${CMAKE_SYSTEM_NAME}")
+message("CMAKE_SYSTEM_VERSION:        ${CMAKE_SYSTEM_VERSION}")
+message("CMAKE_SYSTEM_PROCESSOR:      ${CMAKE_SYSTEM_PROCESSOR}")
+message("CMAKE_C_COMPILER:            ${CMAKE_C_COMPILER}")
+message("CMAKE_CXX_COMPILER:          ${CMAKE_CXX_COMPILER}")
+message("CMAKE_BUILD_TYPE:            ${CMAKE_BUILD_TYPE}")
+message("")
+
+if(WIN32 OR MSYS OR MINGW)
+  message("CMAKE_PREFIX_PATH:           ${CMAKE_PREFIX_PATH}")
+  message("CMAKE_FIND_LIBRARY_PREFIXES: ${CMAKE_FIND_LIBRARY_PREFIXES}")
+  message("CMAKE_FIND_LIBRARY_SUFFIXES: ${CMAKE_FIND_LIBRARY_SUFFIXES}")
+  message("CPACK_GENERATOR:             ${CPACK_GENERATOR}")
+  message("CPACK_SYSTEM_NAME:           ${CPACK_SYSTEM_NAME}")
+  message("")
+endif()
+message("------------------------------------------------------------------------")

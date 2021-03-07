@@ -114,4 +114,5 @@ add_executable(freeciv-server null.cpp)
 target_link_libraries(freeciv-server server)
 add_dependencies(freeciv-server freeciv_translations)
 install(TARGETS freeciv-server
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+		COMPONENT freeciv21)
