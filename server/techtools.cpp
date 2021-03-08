@@ -384,6 +384,11 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
     had_embassies[i] = get_player_bonus(aplayer, EFT_HAVE_EMBASSIES);
 
     if (presearch != research_get(aplayer)) {
+      governments_iterate(pgov)
+      {
+        could_switch[i][government_index(pgov)] = false;
+      }
+      governments_iterate_end;
       continue;
     }
 
