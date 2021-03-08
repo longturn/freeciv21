@@ -69,7 +69,7 @@ private:
   struct effect_list *effects;
 
   struct effect *selected;
-  int selected_nbr;
+  int selected_nbr = -1;
 
   QToolButton *edit_type_button;
   QSpinBox *value_box;
