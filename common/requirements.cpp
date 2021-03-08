@@ -57,6 +57,7 @@ struct universal universal_by_rule_name(const char *kind, const char *value)
 
   source.kind = universals_n_by_name(kind, fc_strcasecmp);
   if (!universals_n_is_valid(source.kind)) {
+    source.value.advance = nullptr; // Avoid uninitialized warning
     return source;
   }
 
