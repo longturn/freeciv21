@@ -88,7 +88,7 @@ jobs:
         #notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL (Travis settings)
         build_command_prepend: cmake . -B covbuild -G Ninja
         build_command: cmake --build covbuild
-        branch_pattern: coverity_scan
+        branch_pattern: coverity_scan|master
     script:
       - echo "No build script when doing a Coverity build"
 
