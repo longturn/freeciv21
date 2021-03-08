@@ -374,7 +374,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
     };
   } break;
   case TTT_INVALID:
-    fc_assert_ret_val(type != TTT_INVALID, false);
+    fc_assert(type != TTT_INVALID); // return below
   };
   return false;
 }
