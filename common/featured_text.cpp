@@ -471,7 +471,7 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
     };
   } break;
   case TTT_INVALID:
-    fc_assert_ret_val(type != TTT_INVALID, false);
+    fc_assert(type != TTT_INVALID); // return below
   };
   return false;
 }
@@ -551,7 +551,7 @@ static size_t text_tag_start_sequence(const struct text_tag *ptag, char *buf,
     return ret + fc_snprintf(buf + ret, len - ret, "%c", SEQ_STOP);
   }
   case TTT_INVALID:
-    fc_assert_ret_val(ptag->type != TTT_INVALID, false);
+    fc_assert(ptag->type != TTT_INVALID); // return below
   };
   return 0;
 }
