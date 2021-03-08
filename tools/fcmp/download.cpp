@@ -265,6 +265,7 @@ static const char *download_modpack_recursive(const char *URL,
 
     src_name = secfile_lookup_str_default(control.get(), NULL,
                                           "files.list%d.src", filenbr);
+    fc_assert_ret_val(src_name != nullptr, nullptr);
 
     dest_name = secfile_lookup_str_default(control.get(), NULL,
                                            "files.list%d.dest", filenbr);
