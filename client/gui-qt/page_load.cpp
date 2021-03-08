@@ -313,7 +313,10 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
           if (pterr != NULL) {
             const char *iptr = secfile_lookup_str_default(
                 sf, NULL, "savefile.terrident%d.identifier", ii);
-            fc_assert_ret(iptr != nullptr);
+            if (iptr != nullptr) {
+              secfile_destroy(sf);
+              fc_assert_ret(iptr != nullptr);
+            }
             pterr->identifier_load = *iptr;
           }
           ii++;
