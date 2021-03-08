@@ -207,7 +207,7 @@ static QString valid_ruleset_filename(const char *subdir, const char *name,
 
   fc_assert_ret_val(subdir && name && extension, NULL);
 
-  fc_snprintf(filename, sizeof(filename), "%s/%s.%s", subdir, name, 
+  fc_snprintf(filename, sizeof(filename), "%s/%s.%s", subdir, name,
               extension);
   qCDebug(ruleset_category, "Trying \"%s\".", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
@@ -215,7 +215,7 @@ static QString valid_ruleset_filename(const char *subdir, const char *name,
     return dfilename;
   }
 
-  fc_snprintf(filename, sizeof(filename), "default/%s.%s", name, 
+  fc_snprintf(filename, sizeof(filename), "default/%s.%s", name,
               extension);
   qCDebug(ruleset_category, "Trying \"%s\": default ruleset directory.",
           filename);
@@ -5834,7 +5834,10 @@ static bool load_ruleset_effects(struct section_file *file,
     }
   }
   section_list_iterate_end;
-  section_list_destroy(sec);
+
+  if (sec != nullptr) {
+    section_list_destroy(sec);
+  }
 
   if (ok) {
     secfile_check_unused(file);
@@ -6003,7 +6006,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
   size_t teams;
   const char *pref_text;
   size_t gni_tmp;
-  struct section_list *sec;
+  struct section_list *sec = nullptr;
   size_t nval;
   const char *name;
   bool ok = true;
