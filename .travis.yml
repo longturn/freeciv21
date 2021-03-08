@@ -66,7 +66,7 @@ jobs:
     before_script:
       - brew link gettext --force
   - name: "coverity"
-    if: branch = coverity_scan
+    if: branch = coverity_scan OR type = cron
     dist: focal
     compiler: gcc
     addons:
