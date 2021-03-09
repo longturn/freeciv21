@@ -14,12 +14,15 @@
 #include <functional>
 
 // Forward declarations
+class QJsonDocument;
 class QString;
 class QUrl;
 
 struct section_file;
 
 using nf_errmsg = std::function<void(const QString &message)>;
+
+QJsonDocument netfile_get_json_file(const QUrl &url, const nf_errmsg &cb);
 
 section_file *netfile_get_section_file(const QUrl &url, const nf_errmsg &cb);
 
