@@ -38,9 +38,9 @@ const char *download_modpack(const char *URL, const struct fcmp_params *fcmp,
                              const dl_pb_callback &pbcb);
 
 using modpack_list_setup_cb = std::function<void(
-    const char *name, const char *URL, const char *version,
-    const char *license, enum modpack_type type, const char *subtype,
-    const char *notes)>;
+    const QString &name, const QUrl &url, const QString &version,
+    const QString &license, enum modpack_type type, const QString &subtype,
+    const QString &notes)>;
 
 const char *download_modpack_list(const struct fcmp_params *fcmp,
                                   const modpack_list_setup_cb &cb,

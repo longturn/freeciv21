@@ -425,8 +425,7 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
                           ? fcmp->list_url.resolved(from_list)
                           : from_list;
 
-      cb(mp_name, qPrintable(resolved.toString()), mpver, mplic, type,
-         _(mp_subtype), mp_notes);
+      cb(mp_name, resolved, mpver, mplic, type, _(mp_subtype), mp_notes);
     }
     modpack_count++;
   } while (mp_name != NULL);

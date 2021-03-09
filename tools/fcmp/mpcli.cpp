@@ -51,43 +51,31 @@ static void msg_callback(const QString &msg)
 /**
    Build main modpack list view
  */
-static void setup_modpack_list(const char *name, const char *URL,
-                               const char *version, const char *license,
-                               enum modpack_type type, const char *subtype,
-                               const char *notes)
+static void setup_modpack_list(const QString &name, const QUrl &url,
+                               const QString &version,
+                               const QString &license,
+                               enum modpack_type type,
+                               const QString &subtype, const QString &notes)
 {
-  const char *type_str;
-  const char *lic_str;
-  const char *inst_str;
+  // TRANS: Unknown modpack type
+  QString type_str =
+      modpack_type_is_valid(type) ? (modpack_type_name(type)) : _("?");
 
-  if (modpack_type_is_valid(type)) {
-    type_str = _(modpack_type_name(type));
-  } else {
-    // TRANS: Unknown modpack type
-    type_str = _("?");
-  }
+  // TRANS: License of modpack is not known
+  QString lic_str = license.isEmpty() ? Q_("?license:Unknown") : license;
 
-  if (license != NULL) {
-    lic_str = license;
-  } else {
-    // TRANS: License of modpack is not known
-    lic_str = Q_("?license:Unknown");
-  }
+  const char *tmp = mpdb_installed_version(qUtf8Printable(name), type);
+  QString inst_str = tmp ? tmp : _("Not installed");
 
-  inst_str = mpdb_installed_version(name, type);
-  if (inst_str == NULL) {
-    inst_str = _("Not installed");
-  }
-
-  qInfo("%s", "");
-  qInfo(_("Name=\"%s\""), name);
-  qInfo(_("Version=\"%s\""), version);
-  qInfo(_("Installed=\"%s\""), inst_str);
-  qInfo(_("Type=\"%s\" / \"%s\""), type_str, subtype);
-  qInfo(_("License=\"%s\""), lic_str);
-  qInfo(_("URL=\"%s\""), URL);
-  if (notes != NULL) {
-    qInfo(_("Comment=\"%s\""), notes);
+  qInfo();
+  qInfo() << _("Name=") << name;
+  qInfo() << _("Version=") << version;
+  qInfo() << _("Installed=") << inst_str;
+  qInfo() << _("Type=") << type_str << "/" << subtype;
+  qInfo() << _("License=") << lic_str;
+  qInfo() << _("URL=") << url.toDisplayString();
+  if (!notes.isEmpty()) {
+    qInfo() << _("Comment=") << notes;
   }
 }
 
