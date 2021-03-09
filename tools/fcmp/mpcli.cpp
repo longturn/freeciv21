@@ -108,7 +108,10 @@ int main(int argc, char *argv[])
   qInfo("%s", "");
 
   if (fcmp.autoinstall == NULL) {
-    download_modpack_list(&fcmp, setup_modpack_list, msg_callback);
+    if (auto msg =
+            download_modpack_list(&fcmp, setup_modpack_list, msg_callback)) {
+      qCritical() << msg;
+    }
   } else {
     const char *errmsg;
 
