@@ -18,6 +18,9 @@
 #include <cerrno>
 
 // Qt
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QString>
 #include <QUrl>
 
@@ -347,89 +350,119 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
                                   const modpack_list_setup_cb &cb,
                                   const dl_msg_callback &mcb)
 {
-  struct section_file *list_file;
-  const char *list_capstr;
-  int modpack_count;
-  const char *msg;
-  const char *mp_name;
-
-  list_file = netfile_get_section_file(fcmp->list_url, mcb);
-
-  if (list_file == NULL) {
+  auto json = netfile_get_json_file(fcmp->list_url, mcb);
+  if (!json.isObject()) {
     return _("Cannot fetch and parse modpack list");
   }
 
-  list_capstr = secfile_lookup_str(list_file, "info.options");
-  if (list_capstr == NULL) {
-    secfile_destroy(list_file);
-    return _("Modpack list has no capability string");
+  auto info = json["info"];
+  if (!info.isObject()) {
+    // TRANS: Do not translate "info"
+    return _("\"info\" is not an object");
   }
 
-  if (!has_capabilities(MODLIST_CAPSTR, list_capstr)) {
-    qCritical("Incompatible modpack list file:");
-    qCritical("  list file options: %s", list_capstr);
-    qCritical("  supported options: %s", MODLIST_CAPSTR);
+  if (!info["options"].isString()) {
+    // TRANS: Do not translate "info.options"
+    return _("\"info.options\" is not a string");
+  }
 
-    secfile_destroy(list_file);
+  auto list_capstr = info["options"].toString();
+
+  if (!has_capabilities(MODLIST_CAPSTR, qUtf8Printable(list_capstr))) {
+    qCritical() << "Incompatible modpack list file:";
+    qCritical() << "  list file options:" << list_capstr;
+    qCritical() << "  supported options:" << MODLIST_CAPSTR;
 
     return _("Modpack list is incompatible");
   }
 
-  msg = secfile_lookup_str_default(list_file, NULL, "info.message");
-
-  if (msg != NULL) {
-    mcb(msg);
+  if (info["message"].isString()) {
+    mcb(info["message"].toString());
   }
 
-  modpack_count = 0;
-  do {
-    const char *mpURL;
-    const char *mpver;
-    const char *mplic;
-    const char *mp_type_str;
-    const char *mp_subtype;
-    const char *mp_notes;
+  auto modpacks = json["modpacks"];
+  if (!modpacks.isArray()) {
+    // TRANS: Do not translate "modpacks"
+    return _("\"modpacks\" is not an array");
+  }
 
-    mp_name = secfile_lookup_str_default(
-        list_file, NULL, "modpacks.list%d.name", modpack_count);
-    mpver = secfile_lookup_str_default(
-        list_file, NULL, "modpacks.list%d.version", modpack_count);
-    mplic = secfile_lookup_str_default(
-        list_file, NULL, "modpacks.list%d.license", modpack_count);
-    mp_type_str = secfile_lookup_str_default(
-        list_file, NULL, "modpacks.list%d.type", modpack_count);
-    mp_subtype = secfile_lookup_str_default(
-        list_file, NULL, "modpacks.list%d.subtype", modpack_count);
-    mpURL = secfile_lookup_str_default(list_file, NULL,
-                                       "modpacks.list%d.URL", modpack_count);
-    mp_notes = secfile_lookup_str_default(
-        list_file, NULL, "modpacks.list%d.notes", modpack_count);
-
-    if (mp_name != NULL && mpURL != NULL) {
-      enum modpack_type type =
-          modpack_type_by_name(mp_type_str, fc_strcasecmp);
-
-      if (!modpack_type_is_valid(type)) {
-        qCritical("Illegal modpack type \"%s\"",
-                  mp_type_str ? mp_type_str : "NULL");
-      }
-      if (mpver == NULL) {
-        mpver = "-";
-      }
-      if (mp_subtype == NULL) {
-        mp_subtype = "-";
-      }
-
-      QUrl from_list = QUrl::fromUserInput(mpURL);
-      QUrl resolved = from_list.isRelative()
-                          ? fcmp->list_url.resolved(from_list)
-                          : from_list;
-
-      cb(mp_name, resolved, mpver, mplic, type, _(mp_subtype), mp_notes);
+  for (const auto &mpref : modpacks.toArray()) {
+    // QJsonValueRef doesn't support operator[], convert to a QJsonObject
+    if (!mpref.isObject()) {
+      // TRANS: Do not translate "modpacks"
+      return _("\"modpacks\" contains a non-object");
     }
-    modpack_count++;
-  } while (mp_name != NULL);
+    auto mp = mpref.toObject();
 
-  secfile_destroy(list_file);
-  return NULL;
+    // Modpack name (required)
+    if (!mp["name"].isString()) {
+      // TRANS: Do not translate "name"
+      return _("Modpack \"name\" is missing or is not a string");
+    }
+    auto name = mp["name"].toString();
+    if (name.isEmpty()) {
+      return _("Modpack name is empty");
+    }
+
+    // Modpack version (required, can be empty)
+    if (!mp["version"].isString()) {
+      // TRANS: Do not translate "version"
+      return _("Modpack \"version\" is missing or is not a string");
+    }
+    auto version = mp["version"].toString();
+
+    // Modpack license (required, can be empty)
+    if (!mp["license"].isString()) {
+      // TRANS: Do not translate "license"
+      return _("Modpack \"license\" is missing or is not a string");
+    }
+    auto license = mp["license"].toString();
+
+    // Modpack type (required, validated)
+    if (!mp["type"].isString()) {
+      // TRANS: Do not translate "type"
+      return _("Modpack \"type\" is missing or is not a string");
+    }
+    auto type_str = mp["type"].toString();
+
+    auto type =
+        modpack_type_by_name(qUtf8Printable(type_str), fc_strcasecmp);
+    if (!modpack_type_is_valid(type)) {
+      qCritical() << "Illegal modpack type" << type_str;
+      return _("Illegal modpack type");
+    }
+
+    // Modpack subtype (optional, free text)
+    if (mp.contains("subtype") && !mp["subtype"].isString()) {
+      // TRANS: Do not translate "subtype"
+      return _("Modpack \"subtype\" is not a string");
+    }
+    auto subtype = mp["subtype"].toString(QStringLiteral("-"));
+
+    // Modpack URL (optional, validated)
+    if (!mp["url"].isString()) {
+      // TRANS: Do not translate "url"
+      return _("Modpack \"url\" is missing or is not a string");
+    }
+    auto url = QUrl::fromUserInput(mp["url"].toString());
+    if (!url.isValid()) {
+      qCritical() << "Invalid URL" << mp["url"].toString() << ":"
+                  << url.errorString();
+      return _("Invalid URL");
+    }
+    auto resolved = url.isRelative() ? fcmp->list_url.resolved(url) : url;
+
+    // Modpack notes (optional)
+    if (mp.contains("notes") && !mp["notes"].isString()) {
+      // TRANS: Do not translate "notes"
+      return _("Modpack \"notes\" is not a string");
+    }
+    auto notes = mp["notes"].toString(QStringLiteral(""));
+
+    // Call the callback with the modpack info we just parsed
+    cb(name, resolved, version, license, type,
+       QString::fromUtf8(_(qPrintable(subtype))), notes);
+  }
+
+  return nullptr;
 }
