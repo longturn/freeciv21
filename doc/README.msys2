@@ -13,7 +13,7 @@ This document is about building Freeciv21 Windows Installer packages using MSYS2
 1) Install MSYS2 following the documentation on their homepage
 
 1.1) Download
- https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-x86_64-20201109.exe for win64 host
+ https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-x86_64-20210228.exe for win64 host
 
 1.2) Run it to install MSYS2 on build system
 
@@ -23,7 +23,7 @@ This document is about building Freeciv21 Windows Installer packages using MSYS2
 2) Install following packages with 'pacman -Su'
 
 2.1) Packages needed for building freeciv21
- These packages are needed even if you don't plan to make installer,  but only build freeciv21 for local use.
+ These packages are needed even if you don't plan to make the installer, but only build freeciv21 for local use.
 
 2.1.1) Arch independent packages needed for building freeciv21
 

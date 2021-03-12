@@ -20,7 +20,7 @@ if (FREECIV_ENABLE_CIVMANUAL)
   target_link_libraries(freeciv-manual tools_shared)
   install(TARGETS freeciv-manual
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-		  COMPONENT tool-manual)
+		  COMPONENT tool_manual)
 endif()
 
 if (FREECIV_ENABLE_RULEUP)
@@ -30,6 +30,6 @@ if (FREECIV_ENABLE_RULEUP)
   target_link_libraries(freeciv-ruleup tools_ruleutil)
   install(TARGETS freeciv-ruleup
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-		  COMPONENT tool-ruleup)
+		  COMPONENT tool_ruleup)
 endif()
 

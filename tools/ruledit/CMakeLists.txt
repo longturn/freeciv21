@@ -35,4 +35,4 @@ add_dependencies(freeciv-ruledit freeciv_translations)
 
 install(TARGETS freeciv-ruledit
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-		  COMPONENT tool-ruledit)
+		  COMPONENT tool_ruledit)

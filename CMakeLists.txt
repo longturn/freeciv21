@@ -16,13 +16,70 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 # Always generate the compilation database by default
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-include(FreecivBuildOptions)
+# Set the build defaults
+include(cmake/FreecivBuildOptions.cmake)
 
+# Set some project variables to reuse later
 set(FREECIV21_VERSION_MAJOR 3)
 set(FREECIV21_VERSION_MINOR 1)
 set(FREECIV21_VERSION_PATCH 0)
 set(FREECIV21_VERSION "${FREECIV21_VERSION_MAJOR}.${FREECIV21_VERSION_MINOR}.${FREECIV21_VERSION_PATCH}")
+
+# Set project
 project(freeciv21 VERSION ${FREECIV21_VERSION} LANGUAGES C CXX)
+
+# Gather all the things we need for Windows builds early.
+if(WIN32 OR MSYS OR MINGW)
+  set(CMAKE_INSTALL_DATAROOTDIR "./")
+  set(CMAKE_INSTALL_BINDIR "./")
+  set(PROJECT_NAME "data")
+  set(CMAKE_INSTALL_DOCDIR "${CMAKE_INSTALL_DATAROOTDIR}/doc/")
+
+  get_filename_component(MINGW_PATH ${CMAKE_CXX_COMPILER} PATH)
+  set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS 
+    ${MINGW_PATH}/libgcc_s_seh-1.dll 
+	${MINGW_PATH}/zlib1.dll
+	${MINGW_PATH}/libzstd.dll
+	${MINGW_PATH}/libwinpthread-1.dll
+	${MINGW_PATH}/libvorbisfile-3.dll
+	${MINGW_PATH}/libvorbis-0.dll
+	${MINGW_PATH}/libtermcap-0.dll
+	${MINGW_PATH}/libstdc++-6.dll 
+	${MINGW_PATH}/libsqlite3-0.dll
+	${MINGW_PATH}/libreadline8.dll
+	${MINGW_PATH}/libpng16-16.dll
+	${MINGW_PATH}/libpcre2-16-0.dll
+	${MINGW_PATH}/libpcre-1.dll
+	${MINGW_PATH}/libopusfile-0.dll
+	${MINGW_PATH}/libopus-0.dll
+	${MINGW_PATH}/libogg-0.dll
+	${MINGW_PATH}/libmpg123-0.dll
+	${MINGW_PATH}/liblzma-5.dll
+	${MINGW_PATH}/libintl-8.dll 
+	${MINGW_PATH}/libicuuc68.dll
+	${MINGW_PATH}/libicuin68.dll
+	${MINGW_PATH}/libicudt68.dll
+	${MINGW_PATH}/libiconv-2.dll
+	${MINGW_PATH}/libharfbuzz-0.dll
+	${MINGW_PATH}/libgraphite2.dll
+	${MINGW_PATH}/libglib-2.0-0.dll
+	${MINGW_PATH}/libfreetype-6.dll
+	${MINGW_PATH}/libdouble-conversion.dll
+	${MINGW_PATH}/libbz2-1.dll
+	${MINGW_PATH}/libbrotlidec.dll
+	${MINGW_PATH}/libbrotlicommon.dll
+	${MINGW_PATH}/libKF5Archive.dll
+	${MINGW_PATH}/libFLAC-8.dll
+	${MINGW_PATH}/SDL2_mixer.dll
+	${MINGW_PATH}/SDL2.dll
+	${MINGW_PATH}/Qt5Widgets.dll
+	${MINGW_PATH}/Qt5Network.dll
+	${MINGW_PATH}/Qt5Gui.dll
+	${MINGW_PATH}/Qt5Core.dll
+	)
+  set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT "freeciv21")
+  include(InstallRequiredSystemLibraries)
+endif()
 
 if (NOT ${CMAKE_BUILD_TYPE} EQUAL "Release")
   add_compile_definitions(FREECIV_DEBUG)
@@ -31,6 +88,7 @@ endif()
 # After project() because the list of languages has to be known
 include(FreecivDependencies)
 include(FreecivHelpers)
+
 # Put all executables at the root of the build tree
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -88,59 +146,30 @@ install(
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   COMPONENT freeciv21)
 
-# -----------------------------------------------------------------------------
-# Uninstall Target
-# -----------------------------------------------------------------------------
-#if(WIN32 OR MSYS OR MINGW)
-
-
-#    add_custom_target(uninstall
-#        "${CMAKE_COMMAND}" -E remove_directory "${CMAKE_INSTALL_PREFIX}")
-#else()
-#    configure_file(
-#        "${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
-#        "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
-#        @ONLY)
-#    add_custom_target(uninstall
-#        "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
-#endif()
-
-# -----------------------------------------------------------------------------
-# Packaging (CPack)
-# -----------------------------------------------------------------------------
-include(cmake/CPackConfig.cmake)
-
-# ----------------------------------------------------------------------
-# Information Summary
-# ----------------------------------------------------------------------
-message("")
-message("------------------------------------------------------------------------")
-message("Configuration Summary")
-message("------------------------------------------------------------------------")
-# project info
-message("PROJECT_NAME:                ${PROJECT_NAME}")
-message("FREECIV21_VERSION:           ${FREECIV21_VERSION}")
-message("")
-
-# cmake info
-message("CMAKE_BINARY_DIR:            ${CMAKE_BINARY_DIR}")
-message("CMAKE_INSTALL_PREFIX:        ${CMAKE_INSTALL_PREFIX}")
-message("CMAKE_INSTALL_LIBDIR:        ${CMAKE_INSTALL_LIBDIR}")
-message("PACKAGE_LOCALE_DIR           ${PACKAGE_LOCALE_DIR}")
-message("CMAKE_SYSTEM_NAME:           ${CMAKE_SYSTEM_NAME}")
-message("CMAKE_SYSTEM_VERSION:        ${CMAKE_SYSTEM_VERSION}")
-message("CMAKE_SYSTEM_PROCESSOR:      ${CMAKE_SYSTEM_PROCESSOR}")
-message("CMAKE_C_COMPILER:            ${CMAKE_C_COMPILER}")
-message("CMAKE_CXX_COMPILER:          ${CMAKE_CXX_COMPILER}")
-message("CMAKE_BUILD_TYPE:            ${CMAKE_BUILD_TYPE}")
-message("")
-
 if(WIN32 OR MSYS OR MINGW)
-  message("CMAKE_PREFIX_PATH:           ${CMAKE_PREFIX_PATH}")
-  message("CMAKE_FIND_LIBRARY_PREFIXES: ${CMAKE_FIND_LIBRARY_PREFIXES}")
-  message("CMAKE_FIND_LIBRARY_SUFFIXES: ${CMAKE_FIND_LIBRARY_SUFFIXES}")
-  message("CPACK_GENERATOR:             ${CPACK_GENERATOR}")
-  message("CPACK_SYSTEM_NAME:           ${CPACK_SYSTEM_NAME}")
-  message("")
+  # Install the libraries compiled in the section above
+  install(
+    PROGRAMS 
+	${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} 
+	DESTINATION ${CMAKE_INSTALL_BINDIR} 
+	COMPONENT freeciv21)
+  
+  # Custom command files to run the applications
+  install(
+	FILES
+	${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv-qt.cmd
+	${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv-modpack-qt.cmd
+	DESTINATION ${CMAKE_INSTALL_BINDIR}
+	COMPONENT freeciv21)
+	
+  # Qt5 Plugins -- this is a hack
+  install(
+    DIRECTORY ${MINGW_PATH}/../share/qt5/plugins/platforms
+	DESTINATION ${CMAKE_INSTALL_BINDIR}/plugins
+	COMPONENT freeciv21
+	FILES_MATCHING PATTERN *.dll)
+
 endif()
-message("------------------------------------------------------------------------")
+
+# Packaging (CPack)
+include(CPackConfig)

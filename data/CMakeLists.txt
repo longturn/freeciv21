@@ -127,11 +127,29 @@ if (FREECIV_ENABLE_CLIENT)
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
 	FILES_MATCHING PATTERN *.png)
+  install(
+    FILES stdsounds.soundspec
+	DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    COMPONENT freeciv21)
+  install(
+    DIRECTORY stdsounds
+	DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    COMPONENT freeciv21
+	FILES_MATCHING PATTERN *.ogg)
+  install(
+    FILES stdmusic.musicspec
+	DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    COMPONENT freeciv21)
+  install(
+    DIRECTORY stdmusic
+	DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    COMPONENT freeciv21
+	FILES_MATCHING PATTERN *.ogg)
 endif()
 
 if (FREECIV_ENABLE_RULEDIT)
   install(
     FILES ruledit/comments-3.1.txt
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/ruledit"
-	COMPONENT tool-ruledit)
+	COMPONENT tool_ruledit)
 endif()
