@@ -34,7 +34,7 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.19)
     install(
       FILES "${CMAKE_CURRENT_BINARY_DIR}/${scenario}.sav.${compression_ext}"
       DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/scenarios"
-	  COMPONENT freeciv21)
+      COMPONENT freeciv21)
   endforeach()
 
   list(TRANSFORM scenarios PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
@@ -61,7 +61,7 @@ else()
       install(
         FILES "${CMAKE_CURRENT_BINARY_DIR}/${scenario}.sav.${compression_ext}"
         DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/scenarios"
-		COMPONENT freeciv21)
+        COMPONENT freeciv21)
     endforeach()
 
     list(TRANSFORM scenarios PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
@@ -73,7 +73,7 @@ else()
       install(
         FILES "${CMAKE_CURRENT_SOURCE_DIR}/${scenario}.sav"
         DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/scenarios"
-		COMPONENT freeciv21)
+        COMPONENT freeciv21)
     endforeach()
   endif()
 endif()

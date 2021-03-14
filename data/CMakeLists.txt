@@ -4,13 +4,13 @@ function(add_ruleset)
     install(
       FILES "${ARG_NAME}.serv"
       DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
-	  COMPONENT freeciv21)
+      COMPONENT freeciv21)
   endif()
   if (ARG_README)
     install(
       FILES "${ARG_NAME}/${ARG_README}"
       DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/${ARG_NAME}"
-	  COMPONENT freeciv21)
+      COMPONENT freeciv21)
   endif()
   install(
     FILES
@@ -28,7 +28,7 @@ function(add_ruleset)
     ${ARG_NAME}/units.ruleset
     DESTINATION
     "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/${ARG_NAME}"
-	COMPONENT freeciv21)
+    COMPONENT freeciv21)
 endfunction()
 
 function(add_tileset)
@@ -36,12 +36,12 @@ function(add_tileset)
   install(
     FILES ${ARG_NAME}.tilespec
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
-	COMPONENT freeciv21)
+    COMPONENT freeciv21)
   install(
     DIRECTORY ${ARG_NAME}
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
-	FILES_MATCHING PATTERN *.png PATTERN *.spec PATTERN README.*)
+    FILES_MATCHING PATTERN *.png PATTERN *.spec PATTERN README.*)
 endfunction()
 
 if (FREECIV_ENABLE_SERVER OR FREECIV_ENABLE_RULEDIT)
@@ -61,7 +61,7 @@ if (FREECIV_ENABLE_SERVER OR FREECIV_ENABLE_RULEDIT)
   install(
     FILES default.serv
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
-	COMPONENT freeciv21)
+    COMPONENT freeciv21)
   install(
     FILES
     default/ai_effects.ruleset
@@ -69,11 +69,11 @@ if (FREECIV_ENABLE_SERVER OR FREECIV_ENABLE_RULEDIT)
     default/nationlist.ruleset
     DESTINATION
     "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/default"
-	COMPONENT freeciv21)
+    COMPONENT freeciv21)
   install(
     FILES override/nation.ruleset
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/override"
-	COMPONENT freeciv21)
+    COMPONENT freeciv21)
 endif()
 
 if (FREECIV_ENABLE_SERVER)
@@ -96,60 +96,60 @@ if (FREECIV_ENABLE_CLIENT)
   install(
     FILES helpdata.txt
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
-	COMPONENT freeciv21)
+    COMPONENT freeciv21)
   install(
     DIRECTORY buildings
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
-	FILES_MATCHING PATTERN *.png)
+    FILES_MATCHING PATTERN *.png)
   install(
     DIRECTORY flags
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
-	FILES_MATCHING PATTERN *.png)
+    FILES_MATCHING PATTERN *.png)
   install(
     DIRECTORY misc
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
-	FILES_MATCHING PATTERN *.png PATTERN *.tilespec PATTERN *.spec)
+    FILES_MATCHING PATTERN *.png PATTERN *.tilespec PATTERN *.spec)
   install(
     DIRECTORY override
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
-	FILES_MATCHING PATTERN *.png PATTERN *.spec)
+    FILES_MATCHING PATTERN *.png PATTERN *.spec)
   install(
     DIRECTORY themes/gui-qt
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/themes"
     COMPONENT freeciv21
-	FILES_MATCHING PATTERN *.jpg PATTERN *.png PATTERN *.qss)
+    FILES_MATCHING PATTERN *.jpg PATTERN *.png PATTERN *.qss)
   install(
     DIRECTORY wonders
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
-	FILES_MATCHING PATTERN *.png)
+    FILES_MATCHING PATTERN *.png)
   install(
     FILES stdsounds.soundspec
-	DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21)
   install(
     DIRECTORY stdsounds
-	DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
-	FILES_MATCHING PATTERN *.ogg)
+    FILES_MATCHING PATTERN *.ogg)
   install(
     FILES stdmusic.musicspec
-	DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21)
   install(
     DIRECTORY stdmusic
-	DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
-	FILES_MATCHING PATTERN *.ogg)
+    FILES_MATCHING PATTERN *.ogg)
 endif()
 
 if (FREECIV_ENABLE_RULEDIT)
   install(
     FILES ruledit/comments-3.1.txt
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/ruledit"
-	COMPONENT tool_ruledit)
+    COMPONENT tool_ruledit)
 endif()

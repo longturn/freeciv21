@@ -18,7 +18,7 @@ if (FREECIV_ENABLE_FCMP_CLI)
   target_link_libraries(freeciv-modpack PRIVATE freeciv_modpack)
   install(TARGETS freeciv-modpack
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-		  COMPONENT tool_fcmp_cli)
+          COMPONENT tool_fcmp_cli)
 endif()
 
 if (FREECIV_ENABLE_FCMP_QT)
@@ -31,5 +31,5 @@ if (FREECIV_ENABLE_FCMP_QT)
   target_link_libraries(freeciv-modpack-qt PRIVATE Qt5::Widgets)
   install(TARGETS freeciv-modpack-qt
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-		  COMPONENT freeciv21)
+          COMPONENT freeciv21)
 endif()

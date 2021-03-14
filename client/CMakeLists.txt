@@ -98,5 +98,5 @@ if(FREECIV_ENABLE_CLIENT)
   add_dependencies(freeciv-qt freeciv_translations)
   install(TARGETS freeciv-qt
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-		  COMPONENT freeciv21)
+          COMPONENT freeciv21)
 endif()
