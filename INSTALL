@@ -91,12 +91,12 @@ The defaults are marked with * (e.g. *ON*).
   -DFREECIV_ENABLE_NLS={*ON*/OFF}       -- Enables Native Language Support
   -DFREECIV_ENABLE_CIVMANUAL={*ON*/OFF} -- Enables the Freeciv Manual application
   -DFREECIV_ENABLE_CLIENT={*ON*/OFF}    -- Enables the Qt client. Should typically set to ON unless you only want the server
-  -DFREECIV_ENABLE_FCMP_CLI={ON/OFF}  -- Enables the command line version of the Freeciv21 Modpack Installer
-  -DFREECIV_ENABLE_FCMP_QT={ON/OFF}   -- Enables the Qt version of the Freeciv21 Modpack Installer (recommended)
-  -DFREECIV_ENABLE_RULEDIT={ON/OFF}   -- Enables the Ruleset Editor
-  -DFREECIV_ENABLE_RULEUP={ON/OFF}    -- Enables the Ruleset upgrade tool
+  -DFREECIV_ENABLE_FCMP_CLI={ON/OFF}    -- Enables the command line version of the Freeciv21 Modpack Installer
+  -DFREECIV_ENABLE_FCMP_QT={ON/OFF}     -- Enables the Qt version of the Freeciv21 Modpack Installer (recommended)
+  -DFREECIV_ENABLE_RULEDIT={ON/OFF}     -- Enables the Ruleset Editor
+  -DFREECIV_ENABLE_RULEUP={ON/OFF}      -- Enables the Ruleset upgrade tool
   -DCMAKE_BUILD_TYPE={*Release*/Debug}  -- Changes the Build Type. Most people will pick Release
-  -DCMAKE_INSTALL_PREFIX=/some/path   -- Allows an alternative install path. Default is /usr/local/share/freeciv21
+  -DCMAKE_INSTALL_PREFIX=/some/path     -- Allows an alternative install path. Default is /usr/local/share/freeciv21
 
 For more information on other cmake directives see https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html.
 
@@ -164,9 +164,24 @@ At this point follow the steps in section 2 above.
 4. Windows notes:
 =================
 
-Windows versions of Freeciv21 cannot be built at this time. Microsoft Windows Visual C and Msys2 are both under development.
+Msys2 is an available environment for compiling Freeciv21. Microsoft Windows Visual C is under development.
 
-Build instructions for Msys2 versions are documented on doc/README.msys2. Alternately you can visit
+Freeciv21 currently supports building and installing using the Msys2 environment. Build instructions for 
+Msys2 versions are documented in doc/README.msys2. Alternately you can visit
 https://github.com/jwrober/freeciv-msys2 for ready make scripts.
+
+Follow the steps in Chapter 2. Compiling and Installing Freeciv21.
+
+Instead of using this command to install:
+
+    cmake --install build
+    
+Run these commands to create the Windows Installer:
+
+    cd build
+    
+    ninja package
+    
+When the Ninja command is finished running, you will find an installer in build/Windows-${arch} 
 
 ** END **
