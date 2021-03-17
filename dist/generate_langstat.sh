@@ -20,13 +20,13 @@ fi
 
 "$2/translations/stats.sh" $1 | (
     while read CODE PRCT ; do
-        NLANG=$(grep "^$CODE " "$2/bootstrap/langnames.txt" 2>/dev/null | sed "s/$CODE //")
+        NLANG=$(grep "^$CODE " "$2/dist/langnames.txt" 2>/dev/null | sed "s/$CODE //")
         echo "$CODE $PRCT $NLANG"
-    done ) > "$3/bootstrap/langstat_${1}.txt.tmp"
+    done ) > "$3/dist/langstat_${1}.txt.tmp"
 
-if ! test -f "$2/bootstrap/langstat_${1}.txt" ||
-   ! cmp "$2/bootstrap/langstat_${1}.txt" "$3/bootstrap/langstat_${1}.txt.tmp" ; then
-    mv "$3/bootstrap/langstat_${1}.txt.tmp" "$2/bootstrap/langstat_${1}.txt"
+if ! test -f "$2/dist/langstat_${1}.txt" ||
+   ! cmp "$2/dist/langstat_${1}.txt" "$3/dist/langstat_${1}.txt.tmp" ; then
+    mv "$3/dist/langstat_${1}.txt.tmp" "$2/dist/langstat_${1}.txt"
 else
-    rm -f "$3/bootstrap/langstat_${1}.txt.tmp"
+    rm -f "$3/dist/langstat_${1}.txt.tmp"
 fi

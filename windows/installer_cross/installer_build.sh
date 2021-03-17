@@ -136,14 +136,14 @@ INSTDIR="freeciv-$SETUP-${VERREV}-${GUI}"
 
 if test "x$GUI" = "xruledit" ; then
   if ! make -C build-${SETUP}-${GUI}/translations/ruledit update-po ||
-     ! make -C build-${SETUP}-${GUI}/bootstrap langstat_ruledit.txt
+     ! make -C build-${SETUP}-${GUI}/dist langstat_ruledit.txt
   then
     echo "Langstat creation failed!" >&2
     exit 1
   fi
 else
   if ! make -C build-${SETUP}-${GUI}/translations/core update-po ||
-     ! make -C build-${SETUP}-${GUI}/bootstrap langstat_core.txt
+     ! make -C build-${SETUP}-${GUI}/dist langstat_core.txt
   then
     echo "Langstat creation failed!" >&2
     exit 1

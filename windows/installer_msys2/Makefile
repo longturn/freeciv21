@@ -59,7 +59,7 @@ ruledit-installer:
 # launched from this target will pick correct value.
 snapshot:
 	cd ../.. ; ./autogen.sh --no-configure-run
-	make VERSION_REVTYPE="git" EXTRA_CONFIG="--enable-gitrev --with-project-definition=../../../bootstrap/snapshot.project" all
+	make VERSION_REVTYPE="git" EXTRA_CONFIG="--enable-gitrev --with-project-definition=../../../dist/snapshot.project" all
 
 
 # configure Freeciv
@@ -81,7 +81,7 @@ configure-freeciv-ruledit:
 install-freeciv-common: configure-freeciv-common
 	# make langstat files
 	make -C build-$(WINARCH)-$(GUI)/translations/core update-po
-	make -C build-$(WINARCH)-$(GUI)/bootstrap langstat_core.txt
+	make -C build-$(WINARCH)-$(GUI)/dist langstat_core.txt
 	# make install
 	make -C build-$(WINARCH)-$(GUI) DESTDIR=`pwd`/install-$(WINARCH)-$(GUI) $(MAKE_PARAMS) install
 	# reorder directory layout
@@ -117,7 +117,7 @@ install-ruledit-dir:
 install-ruledit: configure-freeciv-ruledit install-ruledit-dir
 	# make langstat files
 	make -C build-$(WINARCH)-ruledit/translations/ruledit update-po
-	make -C build-$(WINARCH)-ruledit/bootstrap langstat_ruledit.txt
+	make -C build-$(WINARCH)-ruledit/dist langstat_ruledit.txt
 	# make install
 	make -C build-$(WINARCH)-ruledit DESTDIR=`pwd`/install-$(WINARCH)-ruledit/ $(MAKE_PARAMS) install
 	# reorder directory layout

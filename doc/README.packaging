@@ -57,7 +57,7 @@ Project definition file
 -----------------------
 Project definition file contains information about the project
 infrastructure, needed at freeciv build time. The default project
-file of the freeciv project itself is bootstrap/freeciv.project.
+file of the freeciv project itself is dist/freeciv.project.
 Comments on that default file document the contents of such a
 project definition file. Once you have made definition file for a
 freeciv fork project, you can build freeciv using it by giving
