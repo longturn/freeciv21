@@ -288,7 +288,7 @@ macro(GettextTranslate)
     install(FILES ${GMO_FILE_NAME} DESTINATION
       ${LOCALEDIR}/${lang}/LC_MESSAGES
       RENAME ${MAKEVAR_DOMAIN}.mo
-	  COMPONENT translations
+      COMPONENT translations
     )
 
   endforeach()
