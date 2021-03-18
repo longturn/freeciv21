@@ -11,7 +11,7 @@
 
 # Absolete paths
 SRCROOT="$(cd "$1" ; pwd)"
-INPUTDIR="$(cd "$1/bootstrap" ; pwd)"
+INPUTDIR="$(cd "$1/dist" ; pwd)"
 OUTPUTDIR="$(cd "$2/common" ; pwd)"
 
 REVSTATE="OFF"

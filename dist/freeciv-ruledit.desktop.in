@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Freeciv21 Ruleset Editor
+Name[ru]=Редактор наборов правил Freeciv21
+Comment=Edit Freeciv game rules
+Comment[ru]=Меняйте любые правила Freeciv21 и создавайте новые
+Exec=freeciv-ruledit
+Icon=freeciv-qt
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Qt;Game;StrategyGame;Simulation
+Keywords=strategy;simulation;civilization;tiles;history;mankind;multiplayer;editor;

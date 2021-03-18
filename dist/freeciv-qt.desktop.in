@@ -1,11 +1,11 @@
 [Desktop Entry]
-Name=Freeciv (Qt)
-Name[ca]=Freeciv (Qt)
-Name[es]=Freeciv (Qt)
-Name[fr]=Freeciv (Qt)
-Name[nb]=Freeciv (Qt)
-Name[pt]=Freeciv (Qt)
-Name[ru]=Freeciv (Qt)
+Name=Freeciv21 (Qt)
+Name[ca]=Freeciv21 (Qt)
+Name[es]=Freeciv21 (Qt)
+Name[fr]=Freeciv21 (Qt)
+Name[nb]=Freeciv21 (Qt)
+Name[pt]=Freeciv21 (Qt)
+Name[ru]=Freeciv21 (Qt)
 Comment=Turn-based strategy game inspired by the history of human civilization
 Comment[ca]=Joc d'estratègia inspirat en la història de la civilització humana
 Comment[da]=Strategispil inspireret af den menneskelige civilisations historie
@@ -20,5 +20,5 @@ Icon=freeciv-client
 StartupNotify=true
 Terminal=false
 Type=Application
-Categories=Qt;Game;StrategyGame;
+Categories=Qt;Game;StrategyGame;Simulation
 Keywords=strategy;simulation;civilization;tiles;history;mankind;multiplayer;

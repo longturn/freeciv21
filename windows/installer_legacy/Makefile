@@ -62,7 +62,7 @@ build-freeciv-common:
 	# make
 	make -C build-$(GUI)
 	make -C build-$(GUI)/translations/core update-po
-	make -C build-$(GUI)/bootstrap langstat_core.txt
+	make -C build-$(GUI)/dist langstat_core.txt
 
 build-freeciv-ruledit:
 	# create build directory
@@ -72,7 +72,7 @@ build-freeciv-ruledit:
 	# make
 	make -C build-ruledit
 	make -C build-ruledit/translations/ruledit update-po
-	make -C build-ruledit/bootstrap langstat_ruledit.txt
+	make -C build-ruledit/dist langstat_ruledit.txt
 
 build-freeciv-gtk3: build-freeciv-common
 

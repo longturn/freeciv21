@@ -1,11 +1,11 @@
 [Desktop Entry]
-Name=Freeciv server
-Name[ca]=Freeciv server
-Name[es]=Freeciv server
-Name[fr]=Freeciv server
-Name[nb]=Freeciv server
-Name[pt]=Freeciv server
-Name[ru]=Сервер Freeciv
+Name=Freeciv21 server
+Name[ca]=Freeciv21 server
+Name[es]=Freeciv21 server
+Name[fr]=Freeciv21 server
+Name[nb]=Freeciv21 server
+Name[pt]=Freeciv21 server
+Name[ru]=Сервер Freeciv21
 Comment=Turn-based strategy game inspired by the history of human civilization
 Comment[ca]=Joc d'estratègia inspirat en la història de la civilització humana
 Comment[da]=Strategispil inspireret af den menneskelige civilisations historie
@@ -20,5 +20,5 @@ Icon=freeciv-server
 StartupNotify=true
 Terminal=true
 Type=Application
-Categories=ConsoleOnly;Game;StrategyGame;
+Categories=ConsoleOnly;Game;StrategyGame;Simulation
 Keywords=strategy;simulation;civilization;tiles;history;mankind;multiplayer;
