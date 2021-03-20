@@ -3939,23 +3939,22 @@ static void save_cma_presets(struct section_file *file)
 static const char *get_current_option_file_name()
 {
   static char name_buffer[256];
-  const char *name;
 
-  name = getenv("FREECIV_OPT");
+  auto name = QString::fromLocal8Bit(qgetenv("FREECIV_OPT"));
 
-  if (name) {
-    sz_strlcpy(name_buffer, name);
+  if (!name.isEmpty()) {
+    sz_strlcpy(name_buffer, qUtf8Printable(name));
   } else {
 #ifdef OPTION_FILE_NAME
     fc_strlcpy(name_buffer, OPTION_FILE_NAME, sizeof(name_buffer));
 #else
     name = freeciv_storage_dir();
-    if (!name) {
+    if (name.isEmpty()) {
       qCritical(_("Cannot find freeciv storage directory"));
       return NULL;
     }
     fc_snprintf(name_buffer, sizeof(name_buffer),
-                "%s/freeciv-client-rc-%d.%d", name,
+                "%s/freeciv-client-rc-%d.%d", qUtf8Printable(name),
                 MAJOR_NEW_OPTION_FILE_NAME, MINOR_NEW_OPTION_FILE_NAME);
 #endif // OPTION_FILE_NAME
   }
@@ -3974,7 +3973,6 @@ static const char *get_current_option_file_name()
 static const char *get_last_option_file_name(bool *allow_digital_boolean)
 {
   static char name_buffer[256];
-  const char *name;
   static int last_minors[] = {
       0,  // There was no 0.x releases
       14, // 1.14
@@ -3990,9 +3988,11 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
 #endif
 
   *allow_digital_boolean = false;
-  name = getenv("FREECIV_OPT");
-  if (name) {
-    sz_strlcpy(name_buffer, name);
+
+  auto name = QString::fromLocal8Bit(qgetenv("FREECIV_OPT"));
+
+  if (!name.isEmpty()) {
+    sz_strlcpy(name_buffer, qUtf8Printable(name));
   } else {
 #ifdef OPTION_FILE_NAME
     fc_strlcpy(name_buffer, OPTION_FILE_NAME, sizeof(name_buffer));
@@ -4001,7 +4001,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     struct stat buf;
 
     name = freeciv_storage_dir();
-    if (name == NULL) {
+    if (name.isEmpty()) {
       qCritical(_("Cannot find freeciv storage directory"));
 
       return NULL;
@@ -4015,14 +4015,14 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
                   : minor >= 0);
            minor--) {
         fc_snprintf(name_buffer, sizeof(name_buffer),
-                    "%s/freeciv-client-rc-%d.%d", name, major, minor);
+                    "%s/freeciv-client-rc-%d.%d", qUtf8Printable(name), major, minor);
         if (0 == fc_stat(name_buffer, &buf)) {
           if (MAJOR_NEW_OPTION_FILE_NAME != major
               || MINOR_NEW_OPTION_FILE_NAME != minor) {
             qInfo(_("Didn't find '%s' option file, "
                     "loading from '%s' instead."),
-                  get_current_option_file_name() + qstrlen(name) + 1,
-                  name_buffer + qstrlen(name) + 1);
+                  get_current_option_file_name(),
+                  name_buffer);
           }
 
           return name_buffer;
@@ -4045,7 +4045,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
         qInfo(_("Didn't find '%s' option file, "
                 "loading from '%s' instead."),
               get_current_option_file_name() + qstrlen(qUtf8Printable(QDir::homePath())) + 1,
-              name_buffer + qstrlen(name) + 1);
+              name_buffer);
 
         if (FIRST_MINOR_NEW_BOOLEAN > minor) {
           *allow_digital_boolean = true;
@@ -4055,12 +4055,12 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     }
 
     // Try with the old one.
-    fc_snprintf(name_buffer, sizeof(name_buffer), "%s/%s", name,
+    fc_snprintf(name_buffer, sizeof(name_buffer), "%s/%s", qUtf8Printable(name),
                 OLD_OPTION_FILE_NAME);
     if (0 == fc_stat(name_buffer, &buf)) {
       qInfo(_("Didn't find '%s' option file, "
               "loading from '%s' instead."),
-            get_current_option_file_name() + qstrlen(name) + 1,
+            get_current_option_file_name(),
             OLD_OPTION_FILE_NAME);
       *allow_digital_boolean = true;
       return name_buffer;

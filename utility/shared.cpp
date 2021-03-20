@@ -566,7 +566,7 @@ bool str_to_float(const char *str, float *pfloat)
    Gets value once, and then caches result.
    Note the caller should not mess with the returned string.
  */
-char *freeciv_storage_dir()
+QString freeciv_storage_dir()
 {
   if (storage_dir_freeciv == NULL) {
     storage_dir_freeciv = new char[strlen(FREECIV_STORAGE_DIR) + 1];
