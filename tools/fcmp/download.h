@@ -33,7 +33,7 @@
 using dl_msg_callback = nf_errmsg;
 using dl_pb_callback = std::function<void(int downloaded, int max)>;
 
-const char *download_modpack(const char *URL, const struct fcmp_params *fcmp,
+const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
                              const dl_msg_callback &mcb,
                              const dl_pb_callback &pbcb);
 

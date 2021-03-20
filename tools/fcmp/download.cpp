@@ -39,7 +39,7 @@
 
 #include "download.h"
 
-static const char *download_modpack_recursive(const char *URL,
+static const char *download_modpack_recursive(const QUrl &url,
                                               const struct fcmp_params *fcmp,
                                               const dl_msg_callback &mcb,
                                               const dl_pb_callback &pbcb,
@@ -48,17 +48,17 @@ static const char *download_modpack_recursive(const char *URL,
 /**
    Download modpack from a given URL
  */
-const char *download_modpack(const char *URL, const struct fcmp_params *fcmp,
+const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
                              const dl_msg_callback &mcb,
                              const dl_pb_callback &pbcb)
 {
-  return download_modpack_recursive(URL, fcmp, mcb, pbcb, 0);
+  return download_modpack_recursive(url, fcmp, mcb, pbcb, 0);
 }
 
 /**
    Download modpack and its recursive dependencies.
  */
-static const char *download_modpack_recursive(const char *URL,
+static const char *download_modpack_recursive(const QUrl &url,
                                               const struct fcmp_params *fcmp,
                                               const dl_msg_callback &mcb,
                                               const dl_pb_callback &pbcb,
@@ -66,7 +66,6 @@ static const char *download_modpack_recursive(const char *URL,
 {
   char local_dir[2048];
   char local_name[2048];
-  int start_idx;
   int filenbr, total_files;
   const char *control_capstr;
   const char *baseURLpart;
@@ -85,39 +84,30 @@ static const char *download_modpack_recursive(const char *URL,
     return _("Recursive dependencies too deep");
   }
 
-  if (URL == NULL || URL[0] == '\0') {
-    return _("No URL given");
+  if (!url.isValid()) {
+    return _("No valid URL given");
   }
 
-  if (strlen(URL) < qstrlen(MODPACKDL_SUFFIX)
-      || strcmp(URL + qstrlen(URL) - qstrlen(MODPACKDL_SUFFIX),
-                MODPACKDL_SUFFIX)) {
+  if (!url.fileName().endsWith(QStringLiteral(MODPACKDL_SUFFIX))) {
     return _("This does not look like modpack URL");
   }
 
-  for (start_idx = qstrlen(URL) - qstrlen(MODPACKDL_SUFFIX);
-       start_idx > 0 && URL[start_idx - 1] != '/'; start_idx--) {
-    // Nothing
-  }
-
-  qInfo(_("Installing modpack %s from %s"), URL + start_idx, URL);
+  qInfo().noquote() << QString::fromUtf8(_("Installing modpack %1 from %2"))
+                           .arg(url.fileName())
+                           .arg(url.toString());
 
   if (fcmp->inst_prefix == NULL) {
     return _("Cannot install to given directory hierarchy");
   }
 
   if (mcb != NULL) {
-    char buf[2048];
-
     // TRANS: %s is a filename with suffix '.modpack'
-    fc_snprintf(buf, sizeof(buf), _("Downloading \"%s\" control file."),
-                URL + start_idx);
-    mcb(QString::fromUtf8(buf));
+    mcb(QString::fromUtf8(_("Downloading \"%1\" control file."))
+            .arg(url.fileName()));
   }
 
   std::unique_ptr<section_file, void (*)(section_file *)> control(
-      netfile_get_section_file(QUrl::fromUserInput(QString::fromUtf8(URL)),
-                               mcb),
+      netfile_get_section_file(url, mcb),
       // Make sure the control file is destroyed properly
       [](section_file *section) { secfile_destroy(section); });
 
@@ -163,14 +153,9 @@ static const char *download_modpack_recursive(const char *URL,
 
   baseURLpart = secfile_lookup_str(control.get(), "info.baseURL");
 
-  if (baseURLpart[0] == '.') {
-    char URLstart[start_idx];
-
-    qstrncpy(URLstart, URL, start_idx - 1);
-    URLstart[start_idx - 1] = '\0';
-    fc_snprintf(baseURL, sizeof(baseURL), "%s%s", URLstart, baseURLpart + 1);
-  } else {
-    sz_strlcpy(baseURL, baseURLpart);
+  auto base_url = QUrl::fromUserInput(baseURLpart);
+  if (base_url.isRelative()) {
+    base_url = url.resolved(base_url);
   }
 
   dep = 0;
@@ -213,7 +198,6 @@ static const char *download_modpack_recursive(const char *URL,
 
       if (needed) {
         const char *msg;
-        char dep_URL_full[2048];
 
         log_debug("Dependency modpack \"%s\" needed.", dep_name);
 
@@ -221,18 +205,12 @@ static const char *download_modpack_recursive(const char *URL,
           mcb(_("Download dependency modpack"));
         }
 
-        if (dep_URL[0] == '.') {
-          char URLstart[start_idx];
-
-          qstrncpy(URLstart, URL, start_idx - 1);
-          URLstart[start_idx - 1] = '\0';
-          fc_snprintf(dep_URL_full, sizeof(dep_URL_full), "%s%s", URLstart,
-                      dep_URL + 1);
-        } else {
-          sz_strlcpy(dep_URL_full, dep_URL);
+        auto dep_url = QUrl::fromUserInput(dep_URL);
+        if (dep_url.isRelative()) {
+          dep_url = url.resolved(dep_url);
         }
 
-        msg = download_modpack_recursive(dep_URL_full, fcmp, mcb, pbcb,
+        msg = download_modpack_recursive(dep_url, fcmp, mcb, pbcb,
                                          recursion + 1);
 
         if (msg != NULL) {

@@ -107,16 +107,14 @@ int main(int argc, char *argv[])
 
   qInfo("%s", "");
 
-  if (fcmp.autoinstall == NULL) {
+  if (fcmp.autoinstall.isEmpty()) {
     if (auto msg =
             download_modpack_list(&fcmp, setup_modpack_list, msg_callback)) {
       qCritical() << msg;
     }
   } else {
-    const char *errmsg;
-
-    errmsg = download_modpack(qPrintable(fcmp.autoinstall), &fcmp,
-                              msg_callback, NULL);
+    auto errmsg =
+        download_modpack(fcmp.autoinstall, &fcmp, msg_callback, nullptr);
 
     if (errmsg == NULL) {
       qInfo(_("Modpack installed successfully"));
