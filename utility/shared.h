@@ -145,7 +145,7 @@ struct fileinfo {
 #define fileinfo_list_iterate_end LIST_ITERATE_END
 
 char *user_username(char *buf, size_t bufsz);
-char *freeciv_storage_dir();
+QString freeciv_storage_dir();
 void free_freeciv_storage_dir();
 
 const QStringList *get_data_dirs();

@@ -303,7 +303,7 @@ server::~server()
 {
   if (m_interactive) {
     // Save history
-    auto history_file = QString::fromUtf8(freeciv_storage_dir())
+    auto history_file = freeciv_storage_dir()
                         + QStringLiteral("/")
                         + QLatin1String(HISTORY_FILENAME);
     auto history_file_encoded = history_file.toLocal8Bit();
@@ -330,7 +330,7 @@ server::~server()
 void server::init_interactive()
 {
   // Read the history file
-  auto storage_dir = QString::fromUtf8(freeciv_storage_dir());
+  auto storage_dir = freeciv_storage_dir();
   if (QDir().mkpath(storage_dir)) {
     auto history_file =
         storage_dir + QStringLiteral("/") + QLatin1String(HISTORY_FILENAME);

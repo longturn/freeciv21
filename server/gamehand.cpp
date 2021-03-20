@@ -1080,7 +1080,7 @@ static const char *get_challenge_filename(struct connection *pc)
 static const char *get_challenge_fullname(struct connection *pc)
 {
   static char fullname[MAX_LEN_PATH];
-  const char *sdir = freeciv_storage_dir();
+  auto sdir = freeciv_storage_dir();
   const char *cname;
 
   if (sdir == NULL) {
@@ -1093,7 +1093,7 @@ static const char *get_challenge_fullname(struct connection *pc)
     return NULL;
   }
 
-  fc_snprintf(fullname, sizeof(fullname), "%s/%s", sdir, cname);
+  fc_snprintf(fullname, sizeof(fullname), "%s/%s", qUtf8Printable(sdir), cname);
 
   return fullname;
 }

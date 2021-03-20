@@ -228,7 +228,7 @@ bool client_start_server()
     return false;
   }
 
-  storage = QString::fromUtf8(freeciv_storage_dir());
+  storage = freeciv_storage_dir();
   if (storage == NULL) {
     output_window_append(ftc_client,
                          _("Cannot find freeciv storage directory"));
@@ -389,9 +389,9 @@ void send_client_wants_hack(const char *filename)
   if (filename[0] != '\0') {
     struct packet_single_want_hack_req req;
     struct section_file *file;
-    const char *sdir = freeciv_storage_dir();
+    auto sdir = freeciv_storage_dir();
 
-    if (sdir == NULL) {
+    if (sdir.isEmpty()) {
       return;
     }
 
@@ -399,10 +399,10 @@ void send_client_wants_hack(const char *filename)
       return;
     }
 
-    make_dir(sdir);
+    QDir().mkpath(sdir);
 
     fc_snprintf(challenge_fullname, sizeof(challenge_fullname), "%s/%s",
-                sdir, filename);
+                qPrintable(sdir), filename);
 
     // generate an authentication token
     randomize_string(req.token, sizeof(req.token));
