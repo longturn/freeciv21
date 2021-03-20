@@ -92,10 +92,10 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
 
   auto list_capstr = info["options"].toString();
 
-  if (!has_capabilities(MODLIST_CAPSTR, qUtf8Printable(list_capstr))) {
+  if (!has_capabilities(MODPACK_CAPSTR, qUtf8Printable(list_capstr))) {
     qCritical() << "Incompatible control file:";
     qCritical() << "  control file options:" << list_capstr;
-    qCritical() << "  supported options:" << MODLIST_CAPSTR;
+    qCritical() << "  supported options:" << MODPACK_CAPSTR;
 
     return _("Modpack control file is incompatible");
   }

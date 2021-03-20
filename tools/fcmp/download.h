@@ -25,8 +25,8 @@
 
 #define MODPACKDL_SUFFIX ".json"
 
-#define MODPACK_CAPSTR "+Freeciv-mpdl-Devel-3.1-2019.Jul.15"
-#define MODLIST_CAPSTR "+Freeciv-modlist-Devel-3.1-2019.Jul.15"
+#define MODPACK_CAPSTR "+modpack-1.0"
+#define MODLIST_CAPSTR "+modpack-index-1.0"
 
 #define FCMP_CONTROLD ".control"
 
