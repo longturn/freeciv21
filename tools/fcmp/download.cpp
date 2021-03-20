@@ -39,47 +39,14 @@
 
 #include "download.h"
 
-static const char *download_modpack_recursive(const QUrl &url,
-                                              const struct fcmp_params *fcmp,
-                                              const dl_msg_callback &mcb,
-                                              const dl_pb_callback &pbcb,
-                                              int recursion);
-
 /**
    Download modpack from a given URL
  */
 const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
                              const dl_msg_callback &mcb,
-                             const dl_pb_callback &pbcb)
+                             const dl_pb_callback &pbcb,
+                             int recursion)
 {
-  return download_modpack_recursive(url, fcmp, mcb, pbcb, 0);
-}
-
-/**
-   Download modpack and its recursive dependencies.
- */
-static const char *download_modpack_recursive(const QUrl &url,
-                                              const struct fcmp_params *fcmp,
-                                              const dl_msg_callback &mcb,
-                                              const dl_pb_callback &pbcb,
-                                              int recursion)
-{
-  char local_dir[2048];
-  char local_name[2048];
-  int filenbr, total_files;
-  const char *control_capstr;
-  const char *baseURLpart;
-  enum modpack_type type;
-  const char *typestr;
-  const char *mpname;
-  const char *mpver;
-  char baseURL[2048];
-  char fileURL[2048];
-  const char *src_name;
-  bool partial_failure = false;
-  int dep;
-  const char *dep_name;
-
   if (recursion > 5) {
     return _("Recursive dependencies too deep");
   }
@@ -96,7 +63,7 @@ static const char *download_modpack_recursive(const QUrl &url,
                            .arg(url.fileName())
                            .arg(url.toString());
 
-  if (fcmp->inst_prefix == NULL) {
+  if (fcmp->inst_prefix.isEmpty()) {
     return _("Cannot install to given directory hierarchy");
   }
 
@@ -106,217 +73,275 @@ static const char *download_modpack_recursive(const QUrl &url,
             .arg(url.fileName()));
   }
 
-  std::unique_ptr<section_file, void (*)(section_file *)> control(
-      netfile_get_section_file(url, mcb),
-      // Make sure the control file is destroyed properly
-      [](section_file *section) { secfile_destroy(section); });
-
-  if (control == nullptr) {
-    return _("Failed to get and parse modpack control file");
+  auto json = netfile_get_json_file(url, mcb);
+  if (!json.isObject()) {
+    return _("Cannot fetch and parse modpack list");
   }
 
-  control_capstr = secfile_lookup_str(control.get(), "info.options");
-  if (control_capstr == NULL) {
-    return _("Modpack control file has no capability string");
+  auto info_value = json["info"];
+  if (!info_value.isObject()) {
+    // TRANS: Do not translate "info"
+    return _("\"info\" is not an object");
+  }
+  auto info = info_value.toObject();
+
+  if (!info["options"].isString()) {
+    // TRANS: Do not translate "info.options"
+    return _("\"info.options\" is not a string");
   }
 
-  if (!has_capabilities(MODPACK_CAPSTR, control_capstr)) {
-    qCritical("Incompatible control file:");
-    qCritical("  control file options: %s", control_capstr);
-    qCritical("  supported options:    %s", MODPACK_CAPSTR);
+  auto list_capstr = info["options"].toString();
+
+  if (!has_capabilities(MODLIST_CAPSTR, qUtf8Printable(list_capstr))) {
+    qCritical() << "Incompatible control file:";
+    qCritical() << "  control file options:" << list_capstr;
+    qCritical() << "  supported options:" << MODLIST_CAPSTR;
 
     return _("Modpack control file is incompatible");
   }
 
-  mpname = secfile_lookup_str(control.get(), "info.name");
-  if (mpname == NULL) {
-    return _("Modpack name not defined in control file");
+  if (!info["name"].isString()) {
+    // TRANS: Do not translate "info.name"
+    return _("\"info.name\" is not a string");
   }
-  mpver = secfile_lookup_str(control.get(), "info.version");
-  if (mpver == NULL) {
-    return _("Modpack version not defined in control file");
+  auto mpname = info["name"].toString();
+  if (mpname.isEmpty()) {
+    return _("Modpack name is empty");
   }
 
-  typestr = secfile_lookup_str(control.get(), "info.type");
-  type = modpack_type_by_name(typestr, fc_strcasecmp);
+  if (!info["version"].isString()) {
+    // TRANS: Do not translate "info.version"
+    return _("\"info.version\" is not a string");
+  }
+  auto mpver = info["version"].toString();
+
+  if (!info["type"].isString()) {
+    // TRANS: Do not translate "info.type"
+    return _("\"info.type\" is not a string");
+  }
+  auto mptype = info["type"].toString();
+  auto type = modpack_type_by_name(qUtf8Printable(mptype), fc_strcasecmp);
   if (!modpack_type_is_valid(type)) {
     return _("Illegal modpack type");
   }
 
-  if (type == MPT_SCENARIO) {
-    fc_snprintf(local_dir, sizeof(local_dir), "%s/scenarios",
-                qPrintable(fcmp->inst_prefix));
-  } else {
-    fc_snprintf(local_dir, sizeof(local_dir), "%s/" DATASUBDIR,
-                qPrintable(fcmp->inst_prefix));
+  if (!info["base_url"].isString()) {
+    // TRANS: Do not translate "info.type"
+    return _("\"info.base_url\" is not a string");
   }
-
-  baseURLpart = secfile_lookup_str(control.get(), "info.baseURL");
-
-  auto base_url = QUrl::fromUserInput(baseURLpart);
+  auto base_url = QUrl::fromUserInput(info["base_url"].toString());
   if (base_url.isRelative()) {
     base_url = url.resolved(base_url);
   }
+  // Make sure the url is treated as a directory by resolved()
+  base_url.setPath(base_url.path(QUrl::FullyEncoded) + "/");
 
-  dep = 0;
-  do {
-    dep_name = secfile_lookup_str_default(
-        control.get(), NULL, "dependencies.list%d.modpack", dep);
-    if (dep_name != NULL) {
-      const char *dep_URL;
-      const char *inst_ver;
-      const char *dep_typestr;
-      enum modpack_type dep_type;
-      bool needed = true;
+  /*
+   * Fetch dependencies
+   */
+  auto deps = json["dependencies"];
+  if (!deps.isNull()) {
+    if (!deps.isArray()) {
+      // TRANS: Do not translate "dependencies"
+      return _("\"dependencies\" is not an array");
+    }
 
-      dep_URL = secfile_lookup_str_default(control.get(), NULL,
-                                           "dependencies.list%d.URL", dep);
-
-      if (dep_URL == NULL) {
-        return _("Dependency has no download URL");
+    for (const auto &depref : deps.toArray()) {
+      if (!depref.isObject()) {
+        // TRANS: Do not translate "dependencies"
+        return _("\"dependencies\" contains a non-object");
       }
 
-      dep_typestr =
-          secfile_lookup_str(control.get(), "dependencies.list%d.type", dep);
-      dep_type = modpack_type_by_name(dep_typestr, fc_strcasecmp);
-      if (!modpack_type_is_valid(dep_type)) {
-        return _("Illegal dependency modpack type");
+      // QJsonValueRef doesn't support operator[], convert to a QJsonObject
+      auto obj = depref.toObject();
+
+      if (!obj.contains("url") || !obj["url"].isString()) {
+        // TRANS: Do not translate "url"
+        return _("Dependency has no \"url\" field or it is not a string");
+      }
+      auto dep_url = obj["url"].toString();
+
+      if (!obj.contains("modpack") || !obj["modpack"].isString()) {
+        // TRANS: Do not translate "modpack"
+        return _("Dependency has no \"modpack\" field or it is not a string");
+      }
+      auto dep_name = obj["modpack"].toString();
+
+      if (!obj.contains("type") || !obj["type"].isString()) {
+        // TRANS: Do not translate "modpack"
+        return _("Dependency has no \"type\" field or it is not a string");
+      }
+      auto dep_type_str = obj["type"].toString();
+
+      auto dep_type =
+          modpack_type_by_name(qUtf8Printable(dep_type_str), fc_strcasecmp);
+      if (!modpack_type_is_valid(type)) {
+        qCritical() << "Illegal modpack type" << dep_type_str;
+        return _("Illegal modpack type");
       }
 
-      inst_ver = mpdb_installed_version(dep_name, type);
 
-      if (inst_ver != NULL) {
-        const char *dep_ver;
-
-        dep_ver = secfile_lookup_str_default(
-            control.get(), NULL, "dependencies.list%d.version", dep);
-
-        if (dep_ver != NULL && cvercmp_max(dep_ver, inst_ver)) {
-          needed = false;
-        }
+      if (!obj.contains("version") || !obj["version"].isString()) {
+        // TRANS: Do not translate "version"
+        return _("Dependency has no \"version\" field or it is not a string");
       }
+      auto dep_version = obj["version"].toString();
 
-      if (needed) {
-        const char *msg;
+      // We have everything
+      auto inst_ver = mpdb_installed_version(qUtf8Printable(dep_name),
+                                             dep_type);
+      if (inst_ver != nullptr) {
+        if (!cvercmp_max(qUtf8Printable(dep_version), inst_ver)) {
+          log_debug() << "Dependency modpack" << dep_name <<  "needed.";
 
-        log_debug("Dependency modpack \"%s\" needed.", dep_name);
+          if (mcb != nullptr) {
+            mcb(_("Download dependency modpack"));
+          }
 
-        if (mcb != NULL) {
-          mcb(_("Download dependency modpack"));
+          auto dep_qurl = QUrl::fromUserInput(dep_url);
+          if (dep_qurl.isRelative()) {
+            dep_qurl = url.resolved(dep_qurl);
+          }
+
+          auto msg = download_modpack(dep_url, fcmp, mcb, pbcb,
+                                      recursion + 1);
+
+          if (msg != nullptr) {
+            return msg;
         }
-
-        auto dep_url = QUrl::fromUserInput(dep_URL);
-        if (dep_url.isRelative()) {
-          dep_url = url.resolved(dep_url);
-        }
-
-        msg = download_modpack_recursive(dep_url, fcmp, mcb, pbcb,
-                                         recursion + 1);
-
-        if (msg != NULL) {
-          return msg;
         }
       }
     }
-
-    dep++;
-  } while (dep_name != NULL);
-
-  total_files = 0;
-  do {
-    src_name = secfile_lookup_str_default(control.get(), NULL,
-                                          "files.list%d.src", total_files);
-
-    if (src_name != NULL) {
-      total_files++;
-    }
-  } while (src_name != NULL);
-
-  if (pbcb != NULL) {
-    // Control file already downloaded
-    pbcb(1, total_files + 1);
   }
 
-  filenbr = 0;
-  for (filenbr = 0; filenbr < total_files; filenbr++) {
-    const char *dest_name;
+  /*
+   * Get the list of files
+   */
+  struct file_info {
+    QString source, destination;
+  };
+  std::vector<file_info> required_files;
 
-    int i;
-    bool illegal_filename = false;
+  auto files = json["files"];
+  if (!files.isArray()) {
+    // TRANS: Do not translate "files"
+    return _("\"files\" is not an array");
+  }
 
-    src_name = secfile_lookup_str_default(control.get(), NULL,
-                                          "files.list%d.src", filenbr);
-    fc_assert_ret_val(src_name != nullptr, nullptr);
+  for (const auto &fref : files.toArray()) {
+    if (fref.isString()) {
+      // Option 1: source and destination of the same name
+      required_files.push_back({fref.toString(), fref.toString()});
+    } else if (fref.isObject()) {
+      // Option 2: source and destination separately
+      // QJsonValueRef doesn't support operator[], convert to a QJsonObject
+      auto obj = fref.toObject();
 
-    dest_name = secfile_lookup_str_default(control.get(), NULL,
-                                           "files.list%d.dest", filenbr);
+      file_info info;
 
-    if (dest_name == NULL || dest_name[0] == '\0') {
-      // Missing dest name is ok, we just default to src_name
-      dest_name = src_name;
+      if (!obj.contains("dest") || !obj["dest"].isString()) {
+        // TRANS: Do not translate "dest"
+        return _("File has no destination (\"dest\")");
+      }
+      info.destination = obj["dest"].toString();
+
+      if (obj.contains("url") && obj["url"].isString()) {
+        info.source = obj["url"].toString();
+      } else if (obj.contains("url")) {
+        // TRANS: Do not translate "url"
+        return _("File url is not a string");
+      } else {
+        info.source = info.destination;
+      }
+
+      required_files.emplace_back(info);
+    } else {
+      // TRANS: Do not translate "files"
+      return _("Unsupported value in \"files\"");
+    }
+  }
+
+  /*
+   * Download files
+   */
+  // Prevent illegal names. The server will sanitize illegal source paths.
+  for (auto info : required_files) {
+    if (info.destination.isEmpty()) {
+      // Probably a mistake. Don't accept it.
+      mcb(_("Empty path"));
+      return _("Empty path");
+    } else if (info.destination.contains("..")) {
+      // Big no, might overwrite system files...
+      char buf[2048];
+
+      fc_snprintf(buf, sizeof(buf), _("Illegal path for %s"),
+                  qUtf8Printable(info.destination));
+      mcb(buf);
+
+      // Trying to trick us. Don't even try to download the rest.
+      return _("Illegal file name");
+    }
+  }
+
+  // Control file already downloaded
+  int downloaded = 1;
+  if (pbcb != NULL) {
+    pbcb(downloaded, required_files.size() + 1);
+  }
+
+  // Where to install?
+  auto local_dir = fcmp->inst_prefix
+                   + ((type == MPT_SCENARIO) ? QStringLiteral("/scenarios/")
+                                             : QStringLiteral("/"));
+
+  // Download and install
+  bool full_success = true;
+  for (auto info : required_files) {
+    auto destination = QFileInfo(local_dir + info.destination);
+
+    // Create the destination directory if needed
+    log_debug() << "Create directory:" << destination.absolutePath();
+    if (!destination.absoluteDir().mkpath(".")) {
+      return _("Cannot create required directories");
     }
 
-    for (i = 0; dest_name[i] != '\0'; i++) {
-      if (dest_name[i] == '.' && dest_name[i + 1] == '.') {
-        if (mcb != NULL) {
-          char buf[2048];
+    if (mcb != NULL) {
+      char buf[2048];
 
-          fc_snprintf(buf, sizeof(buf), _("Illegal path for %s"), dest_name);
-          mcb(buf);
-        }
-        partial_failure = true;
-        illegal_filename = true;
-      }
+      fc_snprintf(buf, sizeof(buf), _("Downloading %s"),
+                  qUtf8Printable(info.source));
+      mcb(buf);
     }
 
-    if (!illegal_filename) {
-      fc_snprintf(local_name, sizeof(local_name), "%s/%s", local_dir,
-                  dest_name);
+    // Resolve the URL
+    auto source = base_url.resolved(info.source);
+    log_debug() << "Download" << source.toDisplayString() << "to"
+                << destination.absoluteFilePath();
 
-      for (i = qstrlen(local_name) - 1; local_name[i] != '/'; i--) {
-        // Nothing
-      }
-      local_name[i] = '\0';
-      log_debug("Create directory \"%s\"", local_name);
-      if (!make_dir(local_name)) {
-        return _("Cannot create required directories");
-      }
-      local_name[i] = '/';
-
+    if (!netfile_download_file(
+            source, qUtf8Printable(destination.absoluteFilePath()), mcb)) {
       if (mcb != NULL) {
         char buf[2048];
 
-        fc_snprintf(buf, sizeof(buf), _("Downloading %s"), src_name);
+        fc_snprintf(buf, sizeof(buf), _("Failed to download %s"),
+                    qUtf8Printable(info.source));
         mcb(buf);
       }
-
-      fc_snprintf(fileURL, sizeof(fileURL), "%s/%s", baseURL, src_name);
-      log_debug("Download \"%s\" as \"%s\".", fileURL, local_name);
-      if (!netfile_download_file(
-              QUrl::fromUserInput(QString::fromUtf8(fileURL)), local_name,
-              mcb)) {
-        if (mcb != NULL) {
-          char buf[2048];
-
-          fc_snprintf(buf, sizeof(buf), _("Failed to download %s"),
-                      src_name);
-          mcb(buf);
-        }
-        partial_failure = true;
-      }
+      full_success = false;
     }
 
     if (pbcb != NULL) {
       // Count download of control file also
-      pbcb(filenbr + 2, total_files + 1);
+      downloaded++;
+      pbcb(downloaded, required_files.size() + 1);
     }
   }
 
-  if (partial_failure) {
+  if (!full_success) {
     return _("Some parts of the modpack failed to install.");
   }
 
-  mpdb_update_modpack(mpname, type, mpver);
+  mpdb_update_modpack(qUtf8Printable(mpname), type, qUtf8Printable(mpver));
 
   return NULL;
 }

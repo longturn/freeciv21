@@ -35,7 +35,8 @@ using dl_pb_callback = std::function<void(int downloaded, int max)>;
 
 const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
                              const dl_msg_callback &mcb,
-                             const dl_pb_callback &pbcb);
+                             const dl_pb_callback &pbcb,
+                             int recursion = 0);
 
 using modpack_list_setup_cb = std::function<void(
     const QString &name, const QUrl &url, const QString &version,
