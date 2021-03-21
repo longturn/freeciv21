@@ -315,7 +315,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
                 sf, NULL, "savefile.terrident%d.identifier", ii);
             if (!iptr) {
               secfile_destroy(sf);
-              fc_assert_ret(iptr != nullptr);
+              fc_assert_ret(!iptr);
             }
             pterr->identifier_load = *iptr;
           }
