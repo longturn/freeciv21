@@ -260,7 +260,7 @@ The "info" section has overall control information:
      absolute (in which case the files can be on some web server
      different to where the .json file lives).
 
-The "files" list defineds the individual files comprising your modpack.
+The "files" list defines the individual files comprising your modpack.
 (It must list every file individually; any files in the same directory
 on the webserver that are not listed will not be downloaded.)
 Entries can be strings as shown above, in which case the same file name
@@ -311,7 +311,7 @@ Some advice on the structure of files in modpacks:
    of "rulesetdir <name>", as this is needed for the server to enumerate
    the available rulesets.
 
-In some cases, a modpacks may depend on other modpacks, for instance if
+In some cases, a modpack may depend on other modpacks, for instance if
 it reuses some of their files. This can be handled by declaring a
 dependency with respect to the other modpack. Dependencies are listed in
 the optional "dependencies" list of the JSON file. Each entry in that list
