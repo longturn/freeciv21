@@ -50,21 +50,11 @@
 
 #include "shared.h"
 
-// environment
-#ifndef FREECIV_DATA_PATH
-#define FREECIV_DATA_PATH "FREECIV_DATA_PATH"
-#endif
-#ifndef FREECIV_SAVE_PATH
-#define FREECIV_SAVE_PATH "FREECIV_SAVE_PATH"
-#endif
-#ifndef FREECIV_SCENARIO_PATH
-#define FREECIV_SCENARIO_PATH "FREECIV_SCENARIO_PATH"
-#endif
-
 static QStringList default_data_path()
 {
   return {QStringLiteral("."), QStringLiteral("data"),
-          freeciv_storage_dir() + QStringLiteral("/" DATASUBDIR)};
+          freeciv_storage_dir() + QStringLiteral("/" DATASUBDIR),
+          QStringLiteral(FREECIV_INSTALL_DATADIR)};
 }
 
 static QStringList default_save_path()
@@ -666,10 +656,9 @@ const QStringList &get_data_dirs()
    * allocate the directory listing.  Subsequently we will already
    * know the list and can just return it. */
   if (data_dir_names.isEmpty()) {
-    data_dir_names = base_get_dirs(FREECIV_DATA_PATH);
+    data_dir_names = base_get_dirs("FREECIV_DATA_PATH");
     if (data_dir_names.isEmpty()) {
       data_dir_names = default_data_path();
-      data_dir_names.append(FREECIV_INSTALL_DATADIR);
       data_dir_names.removeDuplicates();
     }
     for (const auto &name : qAsConst(data_dir_names)) {
@@ -697,7 +686,7 @@ const QStringList &get_save_dirs()
    * allocate the directory listing.  Subsequently we will already
    * know the list and can just return it. */
   if (save_dir_names.isEmpty()) {
-    save_dir_names = base_get_dirs(FREECIV_SAVE_PATH);
+    save_dir_names = base_get_dirs("FREECIV_SAVE_PATH");
     if (save_dir_names.isEmpty()) {
       save_dir_names = default_save_path();
       save_dir_names.removeDuplicates();
@@ -728,7 +717,7 @@ const QStringList &get_scenario_dirs()
    * allocate the directory listing.  Subsequently we will already
    * know the list and can just return it. */
   if (scenario_dir_names.isEmpty()) {
-    scenario_dir_names = base_get_dirs(FREECIV_SCENARIO_PATH);
+    scenario_dir_names = base_get_dirs("FREECIV_SCENARIO_PATH");
     if (scenario_dir_names.isEmpty()) {
       scenario_dir_names = default_scenario_path();
       scenario_dir_names.removeDuplicates();
