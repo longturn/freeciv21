@@ -49,8 +49,10 @@ namespace /* anonymous */ {
     /// Constructs a file_info from the source and destination file names
     file_info(const QString &source, const QString &destination) :
       m_source(source),
-      m_destination(destination)
+      m_destination(destination),
+      m_error()
     {
+      validate();
     }
 
     /// Constructs a file_info with the same source and destination names
@@ -65,9 +67,28 @@ namespace /* anonymous */ {
     /// Where to save the file
     QString destination() const { return m_destination; }
 
+    /// Was there an error?
+    bool is_valid() const { return m_error.isEmpty(); }
+
+    /// Translated error string
+    QString error() const { return m_error; }
+
   private:
+    /// Validates the source and destination
+    void validate()
+    {
+      if (destination().isEmpty()) {
+        // Probably a mistake. Don't accept it.
+        m_error = QString::fromUtf8(_("Empty path"));
+      } else if (destination().contains(QStringLiteral(".."))) {
+        // Big no, might overwrite system files...
+        m_error = QString::fromUtf8(_("Illegal path \"%1\"")).arg(destination());
+      }
+    }
+
     QString m_source;
     QString m_destination;
+    QString m_error;
   };
 }
 
@@ -291,19 +312,9 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
    */
   // Prevent illegal names. The server will sanitize illegal source paths.
   for (auto info : required_files) {
-    if (info.destination().isEmpty()) {
+    if (!info.is_valid()) {
       // Probably a mistake. Don't accept it.
-      mcb(_("Empty path"));
-      return _("Empty path");
-    } else if (info.destination().contains("..")) {
-      // Big no, might overwrite system files...
-      char buf[2048];
-
-      fc_snprintf(buf, sizeof(buf), _("Illegal path for %s"),
-                  qUtf8Printable(info.destination()));
-      mcb(buf);
-
-      // Trying to trick us. Don't even try to download the rest.
+      mcb(info.error());
       return _("Illegal file name");
     }
   }
