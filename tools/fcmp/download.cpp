@@ -39,6 +39,17 @@
 
 #include "download.h"
 
+namespace /* anonymous */ {
+  /**
+   * Information about a file to download: from where it should be downloaded
+   * and where it should be saved.
+   */
+  struct file_info {
+    QString source;
+    QString destination;
+  };
+}
+
 /**
    Download modpack from a given URL
  */
@@ -217,9 +228,6 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
   /*
    * Get the list of files
    */
-  struct file_info {
-    QString source, destination;
-  };
   std::vector<file_info> required_files;
 
   auto files = json["files"];
