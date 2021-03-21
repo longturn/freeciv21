@@ -130,9 +130,6 @@
 /* lzma compression is available in KArchive */
 #cmakedefine FREECIV_HAVE_LZMA
 
-/* Location for freeciv to store its information */
-#cmakedefine FREECIV_STORAGE_DIR "${FREECIV_STORAGE_DIR}"
-
 /* Max number of AI modules */
 #cmakedefine FREECIV_AI_MOD_LAST ${FREECIV_AI_MOD_LAST}
 
