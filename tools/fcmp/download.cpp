@@ -46,6 +46,32 @@ namespace /* anonymous */ {
  */
 class file_info {
 public:
+  /// Where to download the file from
+  QString source() const { return m_source; }
+
+  /// Where to save the file
+  QString destination() const { return m_destination; }
+
+  /// Was there an error?
+  bool is_valid() const { return m_error.isEmpty(); }
+
+  /// Translated error string
+  QString error() const { return m_error; }
+
+  /**
+   * Constructs a file_info from a JSON value as found in the modpack control
+   * file.
+   */
+  static file_info from_json(const QJsonValue &input);
+
+private:
+  /// Constructs an invalid file_info
+  file_info()
+      : m_source(), m_destination(),
+        m_error(QString::fromUtf8(_("Invalid file")))
+  {
+  }
+
   /// Constructs a file_info from the source and destination file names
   file_info(const QString &source, const QString &destination)
       : m_source(source), m_destination(destination), m_error()
@@ -59,29 +85,19 @@ public:
   {
   }
 
-  /// Where to download the file from
-  QString source() const { return m_source; }
+  /// Sets the error string
+  void set_error(const QString &error) { m_error = error; }
 
-  /// Where to save the file
-  QString destination() const { return m_destination; }
-
-  /// Was there an error?
-  bool is_valid() const { return m_error.isEmpty(); }
-
-  /// Translated error string
-  QString error() const { return m_error; }
-
-private:
   /// Validates the source and destination
   void validate()
   {
     if (destination().isEmpty()) {
       // Probably a mistake. Don't accept it.
-      m_error = QString::fromUtf8(_("Empty path"));
+      set_error(QString::fromUtf8(_("Empty path")));
     } else if (destination().contains(QStringLiteral(".."))) {
       // Big no, might overwrite system files...
-      m_error =
-          QString::fromUtf8(_("Illegal path \"%1\"")).arg(destination());
+      set_error(
+          QString::fromUtf8(_("Illegal path \"%1\"")).arg(destination()));
     }
   }
 
@@ -89,7 +105,44 @@ private:
   QString m_destination;
   QString m_error;
 };
-} // namespace
+
+file_info file_info::from_json(const QJsonValue &input)
+{
+  if (input.isString()) {
+    // Option 1: source and destination of the same name
+    return file_info(input.toString());
+  } else if (input.isObject()) {
+    // Option 2: source and destination separately
+    // Convert to a QJsonObject
+    auto obj = input.toObject();
+
+    if (!obj.contains("dest") || !obj["dest"].isString()) {
+      auto err = file_info();
+      // TRANS: Do not translate "dest" (stands for "destination")
+      err.set_error(QString::fromUtf8(_("Missing \"dest\" field")));
+      return err;
+    }
+    auto destination = obj["dest"].toString();
+
+    if (obj.contains("url")) {
+      if (obj["url"].isString()) {
+        return file_info(obj["url"].toString(), destination);
+      } else {
+        auto err = file_info();
+        // TRANS: Do not translate "url"
+        err.set_error(QString::fromUtf8(_("\"url\" field is not a string")));
+        return err;
+      }
+    } else {
+      return file_info(destination);
+    }
+  } else {
+    // Invalid
+    return file_info();
+  }
+}
+
+} // anonymous namespace
 
 /**
    Download modpack from a given URL
@@ -278,32 +331,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
   }
 
   for (const auto &fref : files.toArray()) {
-    if (fref.isString()) {
-      // Option 1: source and destination of the same name
-      required_files.emplace_back(fref.toString());
-    } else if (fref.isObject()) {
-      // Option 2: source and destination separately
-      // QJsonValueRef doesn't support operator[], convert to a QJsonObject
-      auto obj = fref.toObject();
-
-      if (!obj.contains("dest") || !obj["dest"].isString()) {
-        // TRANS: Do not translate "dest"
-        return _("File has no destination (\"dest\")");
-      }
-      auto destination = obj["dest"].toString();
-
-      if (obj.contains("url") && obj["url"].isString()) {
-        required_files.emplace_back(obj["url"].toString(), destination);
-      } else if (obj.contains("url")) {
-        // TRANS: Do not translate "url"
-        return _("File url is not a string");
-      } else {
-        required_files.emplace_back(destination);
-      }
-    } else {
-      // TRANS: Do not translate "files"
-      return _("Unsupported value in \"files\"");
-    }
+    required_files.push_back(file_info::from_json(fref));
   }
 
   /*
