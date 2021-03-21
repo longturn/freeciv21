@@ -44,9 +44,30 @@ namespace /* anonymous */ {
    * Information about a file to download: from where it should be downloaded
    * and where it should be saved.
    */
-  struct file_info {
-    QString source;
-    QString destination;
+  class file_info {
+  public:
+    /// Constructs a file_info from the source and destination file names
+    file_info(const QString &source, const QString &destination) :
+      m_source(source),
+      m_destination(destination)
+    {
+    }
+
+    /// Constructs a file_info with the same source and destination names
+    file_info(const QString &source_destination) :
+      file_info(source_destination, source_destination)
+    {
+    }
+
+    /// Where to download the file from
+    QString source() const { return m_source; }
+
+    /// Where to save the file
+    QString destination() const { return m_destination; }
+
+  private:
+    QString m_source;
+    QString m_destination;
   };
 }
 
@@ -239,30 +260,26 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
   for (const auto &fref : files.toArray()) {
     if (fref.isString()) {
       // Option 1: source and destination of the same name
-      required_files.push_back({fref.toString(), fref.toString()});
+      required_files.emplace_back(fref.toString());
     } else if (fref.isObject()) {
       // Option 2: source and destination separately
       // QJsonValueRef doesn't support operator[], convert to a QJsonObject
       auto obj = fref.toObject();
 
-      file_info info;
-
       if (!obj.contains("dest") || !obj["dest"].isString()) {
         // TRANS: Do not translate "dest"
         return _("File has no destination (\"dest\")");
       }
-      info.destination = obj["dest"].toString();
+      auto destination = obj["dest"].toString();
 
       if (obj.contains("url") && obj["url"].isString()) {
-        info.source = obj["url"].toString();
+        required_files.emplace_back(obj["url"].toString(), destination);
       } else if (obj.contains("url")) {
         // TRANS: Do not translate "url"
         return _("File url is not a string");
       } else {
-        info.source = info.destination;
+        required_files.emplace_back(destination);
       }
-
-      required_files.emplace_back(info);
     } else {
       // TRANS: Do not translate "files"
       return _("Unsupported value in \"files\"");
@@ -274,16 +291,16 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
    */
   // Prevent illegal names. The server will sanitize illegal source paths.
   for (auto info : required_files) {
-    if (info.destination.isEmpty()) {
+    if (info.destination().isEmpty()) {
       // Probably a mistake. Don't accept it.
       mcb(_("Empty path"));
       return _("Empty path");
-    } else if (info.destination.contains("..")) {
+    } else if (info.destination().contains("..")) {
       // Big no, might overwrite system files...
       char buf[2048];
 
       fc_snprintf(buf, sizeof(buf), _("Illegal path for %s"),
-                  qUtf8Printable(info.destination));
+                  qUtf8Printable(info.destination()));
       mcb(buf);
 
       // Trying to trick us. Don't even try to download the rest.
@@ -305,7 +322,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
   // Download and install
   bool full_success = true;
   for (auto info : required_files) {
-    auto destination = QFileInfo(local_dir + info.destination);
+    auto destination = QFileInfo(local_dir + info.destination());
 
     // Create the destination directory if needed
     qDebug() << "Create directory:" << destination.absolutePath();
@@ -317,12 +334,12 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
       char buf[2048];
 
       fc_snprintf(buf, sizeof(buf), _("Downloading %s"),
-                  qUtf8Printable(info.source));
+                  qUtf8Printable(info.source()));
       mcb(buf);
     }
 
     // Resolve the URL
-    auto source = base_url.resolved(info.source);
+    auto source = base_url.resolved(info.source());
     qDebug() << "Download" << source.toDisplayString() << "to"
              << destination.absoluteFilePath();
 
@@ -332,7 +349,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
         char buf[2048];
 
         fc_snprintf(buf, sizeof(buf), _("Failed to download %s"),
-                    qUtf8Printable(info.source));
+                    qUtf8Printable(info.source()));
         mcb(buf);
       }
       full_success = false;
