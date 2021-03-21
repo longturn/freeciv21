@@ -330,20 +330,23 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
     return _("\"files\" is not an array");
   }
 
+  std::size_t i = 0;
   for (const auto &fref : files.toArray()) {
-    required_files.push_back(file_info::from_json(fref));
-  }
-
-  /*
-   * Download files
-   */
-  // Prevent illegal names. The server will sanitize illegal source paths.
-  for (auto info : required_files) {
+    auto info = file_info::from_json(fref);
     if (!info.is_valid()) {
-      // Probably a mistake. Don't accept it.
-      mcb(info.error());
-      return _("Illegal file name");
+      // This doesn't look like a valid file
+      auto error = info.error();
+      qWarning().noquote() <<
+        QString::fromUtf8(_("Error parsing modpack control file: file %1:")).arg(i);
+      qWarning().noquote() << error;
+      if (mcb) {
+        mcb(error);
+      }
+      return _("Error parsing modpack control file");
     }
+
+    required_files.push_back(info);
+    i++;
   }
 
   // Control file already downloaded
