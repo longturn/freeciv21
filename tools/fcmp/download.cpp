@@ -341,11 +341,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
     }
 
     if (mcb != NULL) {
-      char buf[2048];
-
-      fc_snprintf(buf, sizeof(buf), _("Downloading %s"),
-                  qUtf8Printable(info.source()));
-      mcb(buf);
+      mcb(QString::fromUtf8(_("Downloading %1")).arg(info.source()));
     }
 
     // Resolve the URL
@@ -356,11 +352,8 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
     if (!netfile_download_file(
             source, qUtf8Printable(destination.absoluteFilePath()), mcb)) {
       if (mcb != NULL) {
-        char buf[2048];
-
-        fc_snprintf(buf, sizeof(buf), _("Failed to download %s"),
-                    qUtf8Printable(info.source()));
-        mcb(buf);
+        mcb(QString::fromUtf8(_("Failed to download %1"))
+                .arg(info.source()));
       }
       full_success = false;
     }
