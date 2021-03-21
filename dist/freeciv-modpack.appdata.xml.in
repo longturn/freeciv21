@@ -16,7 +16,7 @@
         </p>
     </description>
     <launchable type="desktop-id">org.longturn.freeciv_modpack_qt.desktop</launchable>
-    <icon type=remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv-modpack.png</icon>
+    <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv-modpack.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
     <screenshots>
