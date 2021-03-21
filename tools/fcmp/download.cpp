@@ -40,65 +40,63 @@
 #include "download.h"
 
 namespace /* anonymous */ {
-  /**
-   * Information about a file to download: from where it should be downloaded
-   * and where it should be saved.
-   */
-  class file_info {
-  public:
-    /// Constructs a file_info from the source and destination file names
-    file_info(const QString &source, const QString &destination) :
-      m_source(source),
-      m_destination(destination),
-      m_error()
-    {
-      validate();
+/**
+ * Information about a file to download: from where it should be downloaded
+ * and where it should be saved.
+ */
+class file_info {
+public:
+  /// Constructs a file_info from the source and destination file names
+  file_info(const QString &source, const QString &destination)
+      : m_source(source), m_destination(destination), m_error()
+  {
+    validate();
+  }
+
+  /// Constructs a file_info with the same source and destination names
+  file_info(const QString &source_destination)
+      : file_info(source_destination, source_destination)
+  {
+  }
+
+  /// Where to download the file from
+  QString source() const { return m_source; }
+
+  /// Where to save the file
+  QString destination() const { return m_destination; }
+
+  /// Was there an error?
+  bool is_valid() const { return m_error.isEmpty(); }
+
+  /// Translated error string
+  QString error() const { return m_error; }
+
+private:
+  /// Validates the source and destination
+  void validate()
+  {
+    if (destination().isEmpty()) {
+      // Probably a mistake. Don't accept it.
+      m_error = QString::fromUtf8(_("Empty path"));
+    } else if (destination().contains(QStringLiteral(".."))) {
+      // Big no, might overwrite system files...
+      m_error =
+          QString::fromUtf8(_("Illegal path \"%1\"")).arg(destination());
     }
+  }
 
-    /// Constructs a file_info with the same source and destination names
-    file_info(const QString &source_destination) :
-      file_info(source_destination, source_destination)
-    {
-    }
-
-    /// Where to download the file from
-    QString source() const { return m_source; }
-
-    /// Where to save the file
-    QString destination() const { return m_destination; }
-
-    /// Was there an error?
-    bool is_valid() const { return m_error.isEmpty(); }
-
-    /// Translated error string
-    QString error() const { return m_error; }
-
-  private:
-    /// Validates the source and destination
-    void validate()
-    {
-      if (destination().isEmpty()) {
-        // Probably a mistake. Don't accept it.
-        m_error = QString::fromUtf8(_("Empty path"));
-      } else if (destination().contains(QStringLiteral(".."))) {
-        // Big no, might overwrite system files...
-        m_error = QString::fromUtf8(_("Illegal path \"%1\"")).arg(destination());
-      }
-    }
-
-    QString m_source;
-    QString m_destination;
-    QString m_error;
-  };
-}
+  QString m_source;
+  QString m_destination;
+  QString m_error;
+};
+} // namespace
 
 /**
    Download modpack from a given URL
  */
 const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
                              const dl_msg_callback &mcb,
-                             const dl_pb_callback &pbcb,
-                             int recursion)
+                             const dl_pb_callback &pbcb, int recursion)
 {
   if (recursion > 5) {
     return _("Recursive dependencies too deep");
@@ -216,7 +214,8 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
 
       if (!obj.contains("modpack") || !obj["modpack"].isString()) {
         // TRANS: Do not translate "modpack"
-        return _("Dependency has no \"modpack\" field or it is not a string");
+        return _(
+            "Dependency has no \"modpack\" field or it is not a string");
       }
       auto dep_name = obj["modpack"].toString();
 
@@ -233,16 +232,16 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
         return _("Illegal modpack type");
       }
 
-
       if (!obj.contains("version") || !obj["version"].isString()) {
         // TRANS: Do not translate "version"
-        return _("Dependency has no \"version\" field or it is not a string");
+        return _(
+            "Dependency has no \"version\" field or it is not a string");
       }
       auto dep_version = obj["version"].toString();
 
       // We have everything
-      auto inst_ver = mpdb_installed_version(qUtf8Printable(dep_name),
-                                             dep_type);
+      auto inst_ver =
+          mpdb_installed_version(qUtf8Printable(dep_name), dep_type);
       if (inst_ver != nullptr) {
         if (!cvercmp_max(qUtf8Printable(dep_version), inst_ver)) {
           qDebug() << "Dependency modpack" << dep_name << "needed.";
@@ -256,12 +255,12 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
             dep_qurl = url.resolved(dep_qurl);
           }
 
-          auto msg = download_modpack(dep_url, fcmp, mcb, pbcb,
-                                      recursion + 1);
+          auto msg =
+              download_modpack(dep_url, fcmp, mcb, pbcb, recursion + 1);
 
           if (msg != nullptr) {
             return msg;
-        }
+          }
         }
       }
     }
