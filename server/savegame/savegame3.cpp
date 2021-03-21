@@ -1281,18 +1281,13 @@ static void sg_load_savefile(struct loaddata *loading)
     if (!fc_strcasecmp("none", game.scenario.datafile)) {
       game.server.luadata = NULL;
     } else {
-      const QStringList *pathes[] = {get_scenario_dirs(), NULL};
-      const QStringList **path;
-      QString found;
       char testfile[MAX_LEN_PATH];
       struct section_file *secfile;
 
-      for (path = pathes; found == NULL && *path != NULL; path++) {
-        fc_snprintf(testfile, sizeof(testfile), "%s.luadata",
-                    game.scenario.datafile);
+      fc_snprintf(testfile, sizeof(testfile), "%s.luadata",
+                  game.scenario.datafile);
 
-        found = fileinfoname(*path, testfile);
-      }
+      auto found = fileinfoname(get_scenario_dirs(), testfile);
 
       if (found.isEmpty()) {
         qCritical(_("Can't find scenario luadata file %s.luadata."),

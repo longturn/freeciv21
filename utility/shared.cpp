@@ -35,8 +35,10 @@
 #endif // FREECIV_MSWINDOWS
 
 // Qt
+#include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
+#include <QStandardPaths>
 #include <QString>
 #include <QtGlobal>
 
@@ -59,27 +61,24 @@
 #define FREECIV_SCENARIO_PATH "FREECIV_SCENARIO_PATH"
 #endif
 
-static QString default_data_path()
+static QStringList default_data_path()
 {
-  QString path = QStringLiteral(".%1data%1%2/%3")
-                     .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR,
-                          DATASUBDIR);
-  return path;
+  return {QStringLiteral("."), QStringLiteral("data"),
+          freeciv_storage_dir() + QStringLiteral("/" DATASUBDIR)};
 }
 
-static QString default_save_path()
+static QStringList default_save_path()
 {
-  QString path = QStringLiteral(".%1%2/saves")
-                     .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR);
-  return path;
+  return {QStringLiteral("."),
+          freeciv_storage_dir() + QStringLiteral("/saves")};
 }
 
-static QString default_scenario_path()
+static QStringList default_scenario_path()
 {
-  QString path =
-      QStringLiteral(".%1data/scenarios%1%2/%3/scenarios%1%2/scenarios")
-          .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR, DATASUBDIR);
-  return path;
+  return {QStringLiteral("."), QStringLiteral("data/scenarios"),
+          freeciv_storage_dir()
+              + QStringLiteral("/" DATASUBDIR "/scenarios"),
+          freeciv_storage_dir() + QStringLiteral("/scenarios")};
 }
 
 /* Both of these are stored in the local encoding.  The grouping_sep must
@@ -92,19 +91,16 @@ static char *grouping_sep = NULL;
 static const char base64url[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
-static QStringList *data_dir_names = NULL;
-static QStringList *save_dir_names = NULL;
-static QStringList *scenario_dir_names = NULL;
+static QStringList data_dir_names = {};
+static QStringList save_dir_names = {};
+static QStringList scenario_dir_names = {};
 
 static char *mc_group = NULL;
-static char *storage_dir_freeciv = NULL;
 
 Q_GLOBAL_STATIC(QString, realfile);
 
 static int compare_file_mtime_ptrs(const struct fileinfo *const *ppa,
                                    const struct fileinfo *const *ppb);
-
-static char *expand_dir(char *tok_in, bool ok_to_free);
 
 /**
    An AND function for fc_tristate.
@@ -389,22 +385,6 @@ void remove_leading_trailing_spaces(char *s)
 }
 
 /**
-   As remove_trailing_spaces(), for specified char.
- */
-static void remove_trailing_char(char *s, char trailing)
-{
-  char *t;
-
-  fc_assert_ret(NULL != s);
-
-  t = s + qstrlen(s) - 1;
-  while (t >= s && (*t) == trailing) {
-    *t = '\0';
-    t--;
-  }
-}
-
-/**
    Returns pointer to '\0' at end of string 'str', and decrements
    *nleft by the length of 'str'.  This is intended to be useful to
    allow strcat-ing without traversing the whole string each time,
@@ -568,23 +548,20 @@ bool str_to_float(const char *str, float *pfloat)
  */
 QString freeciv_storage_dir()
 {
-  if (storage_dir_freeciv == NULL) {
-    storage_dir_freeciv = new char[strlen(FREECIV_STORAGE_DIR) + 1];
+  static QString storage_dir;
+  if (storage_dir.isEmpty()) {
+    // Make sure that all exe get the same directory.
+    auto app_name = QCoreApplication::applicationName();
+    QCoreApplication::setApplicationName("freeciv21");
+    storage_dir =
+        QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QCoreApplication::setApplicationName(app_name);
 
-    qstrcpy(storage_dir_freeciv, FREECIV_STORAGE_DIR);
-
-    storage_dir_freeciv = expand_dir(storage_dir_freeciv, true);
-
-    qDebug(_("Storage dir is \"%s\"."), storage_dir_freeciv);
+    qDebug() << _("Storage dir:") << storage_dir;
   }
 
-  return storage_dir_freeciv;
+  return storage_dir;
 }
-
-/**
-   Free freeciv storage directory information
- */
-void free_freeciv_storage_dir() { NFCNPP_FREE(storage_dir_freeciv); }
 
 /**
    Returns string which gives user's username, as specified by $USER or
@@ -652,87 +629,24 @@ char *user_username(char *buf, size_t bufsz)
 }
 
 /**
-   Return tok_in directory name with "~/" expanded as user home directory.
-   The function might return tok_in, or a new string. In either case caller
-   should free() the returned string eventually. Also, tok_in should be
-   something expand_dir() can free itself if it decides to return newly
-   created string (so caller can always free() just the returned string, not
-   to care if it's same as tok_in or not). If ok_to_free is FALSE,
-   expand_dir() never frees original but can still return either it or a
-   newly allocated string.
- */
-static char *expand_dir(char *tok_in, bool ok_to_free)
-{
-  int i; // qstrlen(tok), or -1 as flag
-  char *tok;
-  char **ret = &tok; // Return tok by default
-  char *allocated;
-
-  tok = skip_leading_spaces(tok_in);
-  remove_trailing_spaces(tok);
-  if (strcmp(tok, "/") != 0) {
-    remove_trailing_char(tok, '/');
-  }
-
-  i = qstrlen(tok);
-  if (tok[0] == '~') {
-    if (i > 1 && tok[1] != '/') {
-      qCritical("For \"%s\" in path cannot expand '~'"
-                " except as '~/'; ignoring",
-                tok);
-      i = 0; // skip this one
-    } else {
-      QString home = QDir::homePath();
-
-      if (home.isEmpty()) {
-        qDebug("No HOME, skipping path component %s", tok);
-        i = 0;
-      } else {
-        int len = home.length() + i; // +1 -1
-
-        allocated = new char[len];
-        ret = &allocated;
-
-        fc_snprintf(allocated, len, "%s%s", qUtf8Printable(home), tok + 1);
-        i = -1; // flag to free tok below
-      }
-    }
-  }
-
-  if (i != 0) {
-    /* We could check whether the directory exists and
-     * is readable etc?  Don't currently. */
-    if (i == -1 && ok_to_free) {
-      delete[] tok;
-      tok = NULL;
-    }
-  }
-
-  return *ret;
-}
-
-/**
    Returns a list of directory paths, in the order in which they should
    be searched.  Base function for get_data_dirs(), get_save_dirs(),
    get_scenario_dirs()
  */
-static QStringList *base_get_dirs(const char *dir_list)
+static QStringList base_get_dirs(const char *env_var)
 {
-  QStringList *dirs = new QStringList;
-  *dirs = QString(dir_list).split(QDir::listSeparator(),
-                                  QString::SkipEmptyParts);
-
-  return dirs;
-}
-
-/**
-   Free data dir name vectors.
- */
-void free_data_dir_names()
-{
-  NFCN_FREE(data_dir_names);
-  NFCN_FREE(save_dir_names);
-  NFCN_FREE(scenario_dir_names);
+  if (qEnvironmentVariableIsSet(env_var)
+      && qEnvironmentVariableIsEmpty(env_var)) {
+    qCritical(_("\"%s\" is set but empty; using default "
+                "data directories instead."),
+              env_var);
+    return {};
+  } else if (qEnvironmentVariableIsSet(env_var)) {
+    return QString(qEnvironmentVariable(env_var))
+        .split(QDir::listSeparator(), QString::SkipEmptyParts);
+  } else {
+    return {};
+  }
 }
 
 /**
@@ -746,27 +660,20 @@ void free_data_dir_names()
    The returned pointer is static and shouldn't be modified, nor destroyed
    by the user caller.
  */
-const QStringList *get_data_dirs()
+const QStringList &get_data_dirs()
 {
   /* The first time this function is called it will search and
    * allocate the directory listing.  Subsequently we will already
    * know the list and can just return it. */
-  if (NULL == data_dir_names) {
-    const char *path;
-
-    if ((path = getenv(FREECIV_DATA_PATH)) && '\0' == path[0]) {
-      // TRANS: <FREECIV_DATA_PATH> configuration error
-      qCritical(_("\"%s\" is set but empty; using default "
-                  "data directories instead."),
-                FREECIV_DATA_PATH);
-      path = NULL;
+  if (data_dir_names.isEmpty()) {
+    data_dir_names = base_get_dirs(FREECIV_DATA_PATH);
+    if (data_dir_names.isEmpty()) {
+      data_dir_names = default_data_path();
+      data_dir_names.append(FREECIV_INSTALL_DATADIR);
+      data_dir_names.removeDuplicates();
     }
-    data_dir_names = base_get_dirs(
-        NULL != path ? path : qUtf8Printable(default_data_path()));
-    data_dir_names->append(FREECIV_INSTALL_DATADIR);
-    data_dir_names->removeDuplicates();
-    for (const auto &toyota : qAsConst(*data_dir_names)) {
-      qDebug("Data path component: %s", qUtf8Printable(toyota));
+    for (const auto &name : qAsConst(data_dir_names)) {
+      qDebug() << "Data path component:" << name;
     }
   }
 
@@ -784,26 +691,19 @@ const QStringList *get_data_dirs()
    The returned pointer is static and shouldn't be modified, nor destroyed
    by the user caller.
  */
-const QStringList *get_save_dirs()
+const QStringList &get_save_dirs()
 {
   /* The first time this function is called it will search and
    * allocate the directory listing.  Subsequently we will already
    * know the list and can just return it. */
-  if (NULL == save_dir_names) {
-    const char *path;
-
-    if ((path = getenv(FREECIV_SAVE_PATH)) && '\0' == path[0]) {
-      // TRANS: <FREECIV_SAVE_PATH> configuration error
-      qCritical(_("\"%s\" is set but empty; using default"
-                  "save directories instead."),
-                FREECIV_SAVE_PATH);
-      path = NULL;
+  if (save_dir_names.isEmpty()) {
+    save_dir_names = base_get_dirs(FREECIV_SAVE_PATH);
+    if (save_dir_names.isEmpty()) {
+      save_dir_names = default_save_path();
+      save_dir_names.removeDuplicates();
     }
-    save_dir_names = base_get_dirs(
-        NULL != path ? path : qUtf8Printable(default_save_path()));
-    save_dir_names->removeDuplicates();
-    for (const auto &mercedes : qAsConst(*save_dir_names)) {
-      qDebug("Save path component: %s", qUtf8Printable(mercedes));
+    for (const auto &name : qAsConst(save_dir_names)) {
+      qDebug() << "Save path component:" << name;
     }
   }
 
@@ -822,26 +722,19 @@ const QStringList *get_save_dirs()
    The returned pointer is static and shouldn't be modified, nor destroyed
    by the user caller.
  */
-const QStringList *get_scenario_dirs()
+const QStringList &get_scenario_dirs()
 {
   /* The first time this function is called it will search and
    * allocate the directory listing.  Subsequently we will already
    * know the list and can just return it. */
-  if (NULL == scenario_dir_names) {
-    const char *path;
-
-    if ((path = getenv(FREECIV_SCENARIO_PATH)) && '\0' == path[0]) {
-      // TRANS: <FREECIV_SCENARIO_PATH> configuration error
-      qCritical(_("\"%s\" is set but empty; using default "
-                  "scenario directories instead."),
-                FREECIV_SCENARIO_PATH);
-      path = NULL;
+  if (scenario_dir_names.isEmpty()) {
+    scenario_dir_names = base_get_dirs(FREECIV_SCENARIO_PATH);
+    if (scenario_dir_names.isEmpty()) {
+      scenario_dir_names = default_scenario_path();
+      scenario_dir_names.removeDuplicates();
     }
-    scenario_dir_names = base_get_dirs(
-        NULL != path ? path : qUtf8Printable(default_scenario_path()));
-    scenario_dir_names->removeDuplicates();
-    for (const auto &tesla : qAsConst(*scenario_dir_names)) {
-      qDebug("Scenario path component: %s", qUtf8Printable(tesla));
+    for (const auto &name : qAsConst(scenario_dir_names)) {
+      qDebug() << "Scenario path component:" << name;
     }
   }
 
@@ -858,16 +751,17 @@ const QStringList *get_scenario_dirs()
    The suffixes are removed from the filenames before the list is
    returned.
  */
-QVector<QString> *fileinfolist(const QStringList *dirs, const char *suffix) {
+QVector<QString> *fileinfolist(const QStringList &dirs, const char *suffix)
+{
   fc_assert_ret_val(!strchr(suffix, '/'), NULL);
 
   QVector<QString> *files = new QVector<QString>();
-  if (NULL == dirs) {
+  if (dirs.isEmpty()) {
     return files;
   }
 
   // First assemble a full list of names.
-  for (const auto &dirname : *dirs) {
+  for (const auto &dirname : dirs) {
     QDir dir(dirname);
 
     if (!dir.exists()) {
@@ -904,18 +798,17 @@ QVector<QString> *fileinfolist(const QStringList *dirs, const char *suffix) {
 
    TODO: Make this re-entrant
  */
-QString
-fileinfoname(const QStringList *dirs, const char *filename)
+QString fileinfoname(const QStringList &dirs, const char *filename)
 {
-  if (NULL == dirs) {
-    return NULL;
+  if (dirs.isEmpty()) {
+    return QString();
   }
 
   if (!filename) {
     bool first = true;
 
     realfile->clear();
-    for (const auto &dirname : *dirs) {
+    for (const auto &dirname : dirs) {
       if (first) {
         *realfile += QStringLiteral("/%1").arg(dirname);
         first = false;
@@ -927,7 +820,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
     return *realfile;
   }
 
-  for (const auto &dirname : *dirs) {
+  for (const auto &dirname : dirs) {
     struct stat buf; // see if we can open the file or directory
 
     *realfile = QStringLiteral("%1/%2").arg(dirname, filename);
@@ -940,11 +833,6 @@ fileinfoname(const QStringList *dirs, const char *filename)
 
   return NULL;
 }
-
-/**
-   Free resources allocated for fileinfoname service
- */
-void free_fileinfo_data() {}
 
 /**
    Destroys the file info structure.
@@ -994,12 +882,12 @@ static bool compare_fileinfo_name(const struct fileinfo *pa,
    second.  Returned "name"s will be truncated starting at the "infix"
    substring.  The returned list must be freed with fileinfo_list_destroy().
  */
-struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
+struct fileinfo_list *fileinfolist_infix(const QStringList &dirs,
                                          const char *infix, bool nodups)
 {
   struct fileinfo_list *res;
 
-  if (NULL == dirs) {
+  if (dirs.isEmpty()) {
     return NULL;
   }
 
@@ -1008,7 +896,7 @@ struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
   auto infix_str = QString::fromUtf8(infix);
 
   // First assemble a full list of names.
-  for (const auto &dirname : *dirs) {
+  for (const auto &dirname : dirs) {
     QDir dir(dirname);
 
     if (!dir.exists()) {

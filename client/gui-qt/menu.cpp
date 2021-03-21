@@ -2960,7 +2960,7 @@ void mr_menu::save_game_as()
   QString current_file;
   QString location;
 
-  for (const auto &dirname : *get_save_dirs()) {
+  for (const auto &dirname : get_save_dirs()) {
     location = dirname;
     // choose last location
   }
