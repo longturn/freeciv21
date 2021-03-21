@@ -192,7 +192,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
                                              dep_type);
       if (inst_ver != nullptr) {
         if (!cvercmp_max(qUtf8Printable(dep_version), inst_ver)) {
-          log_debug() << "Dependency modpack" << dep_name <<  "needed.";
+          qDebug() << "Dependency modpack" << dep_name << "needed.";
 
           if (mcb != nullptr) {
             mcb(_("Download dependency modpack"));
@@ -300,7 +300,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
     auto destination = QFileInfo(local_dir + info.destination);
 
     // Create the destination directory if needed
-    log_debug() << "Create directory:" << destination.absolutePath();
+    qDebug() << "Create directory:" << destination.absolutePath();
     if (!destination.absoluteDir().mkpath(".")) {
       return _("Cannot create required directories");
     }
@@ -315,8 +315,8 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
 
     // Resolve the URL
     auto source = base_url.resolved(info.source);
-    log_debug() << "Download" << source.toDisplayString() << "to"
-                << destination.absoluteFilePath();
+    qDebug() << "Download" << source.toDisplayString() << "to"
+             << destination.absoluteFilePath();
 
     if (!netfile_download_file(
             source, qUtf8Printable(destination.absoluteFilePath()), mcb)) {
