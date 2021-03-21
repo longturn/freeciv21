@@ -146,19 +146,15 @@ struct fileinfo {
 
 char *user_username(char *buf, size_t bufsz);
 QString freeciv_storage_dir();
-void free_freeciv_storage_dir();
 
-const QStringList *get_data_dirs();
-const QStringList *get_save_dirs();
-const QStringList *get_scenario_dirs();
+const QStringList &get_data_dirs();
+const QStringList &get_save_dirs();
+const QStringList &get_scenario_dirs();
 
-void free_data_dir_names();
-
-QVector<QString> *fileinfolist(const QStringList *dirs, const char *suffix);
-struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
+QVector<QString> *fileinfolist(const QStringList &dirs, const char *suffix);
+struct fileinfo_list *fileinfolist_infix(const QStringList &dirs,
                                          const char *infix, bool nodups);
-QString fileinfoname(const QStringList *dirs, const char *filename);
-void free_fileinfo_data();
+QString fileinfoname(const QStringList &dirs, const char *filename);
 
 void init_nls();
 void free_nls();

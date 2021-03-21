@@ -106,11 +106,11 @@ void qtg_gui_clear_theme()
  */
 QStringList qtg_get_gui_specific_themes_directories(int *count)
 {
-  const QStringList *data_dirs = get_data_dirs();
+  auto data_dirs = get_data_dirs();
   QStringList directories;
 
-  *count = data_dirs->size();
-  for (const auto &data_dir : *data_dirs) {
+  *count = data_dirs.size();
+  for (const auto &data_dir : data_dirs) {
     directories.append(QStringLiteral("%1/themes/gui-qt").arg(data_dir));
   }
 

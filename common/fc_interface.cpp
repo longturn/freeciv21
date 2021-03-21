@@ -75,8 +75,5 @@ void fc_interface_init()
 void free_libfreeciv()
 {
   diplrel_mess_close();
-  free_data_dir_names();
   free_multicast_group();
-  free_freeciv_storage_dir();
-  free_fileinfo_data();
 }

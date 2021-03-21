@@ -3686,7 +3686,6 @@ bool load_command(struct connection *caller, const char *filename,
 {
   civtimer *loadtimer, *uloadtimer;
   struct section_file *file;
-  char arg[MAX_LEN_PATH];
   struct conn_list *global_observers;
 
   if (!filename || filename[0] == '\0') {
@@ -3706,16 +3705,13 @@ bool load_command(struct connection *caller, const char *filename,
     return false;
   }
 
+  QString arg;
+
   {
     // it is a normal savegame or maybe a scenario
-    char testfile[MAX_LEN_PATH];
-    const QStringList *pathes[] = {get_save_dirs(), get_scenario_dirs(),
-                                   NULL};
-    const char *exts[] = {"sav",    "gz",      "bz2",    "xz",
-                          "sav.gz", "sav.bz2", "sav.xz", NULL};
-    const char **ext;
-    QString found;
-    const QStringList **path;
+    const auto paths = {get_save_dirs(), get_scenario_dirs()};
+    bool found = false;
+    QString file;
 
     if (cmdline_load) {
       /* Allow plain names being loaded with '--file' option, but not
@@ -3724,44 +3720,58 @@ bool load_command(struct connection *caller, const char *filename,
        * looking any path with an extension, i.e., prefer plain name file
        * in later directory over file with extension in name in earlier
        * directory. */
-      for (path = pathes; found.isEmpty() && *path; path++) {
-        found = fileinfoname(*path, filename);
-        if (!found.isEmpty()) {
-          sz_strlcpy(arg, qUtf8Printable(found));
+      for (const auto &path : paths) {
+        auto file = fileinfoname(path, filename);
+        if (!file.isEmpty()) {
+          arg = file;
+          found = true;
+          break;
         }
       }
     }
 
-    for (path = pathes; found.isEmpty() && *path; path++) {
-      for (ext = exts; found.isEmpty() && *ext; ext++) {
-        fc_snprintf(testfile, sizeof(testfile), "%s.%s", filename, *ext);
-        found = fileinfoname(*path, testfile);
-        if (!found.isEmpty()) {
-          sz_strlcpy(arg, qUtf8Printable(found));
+    if (!found) {
+      for (const auto &path : paths) {
+        const auto exts = {
+            QStringLiteral("sav"),    QStringLiteral("gz"),
+            QStringLiteral("bz2"),    QStringLiteral("xz"),
+            QStringLiteral("sav.gz"), QStringLiteral("sav.bz2"),
+            QStringLiteral("sav.xz")};
+        for (const auto &ext : exts) {
+          QString name = filename + QStringLiteral(".") + ext;
+          auto file = fileinfoname(path, qUtf8Printable(name));
+          if (!file.isEmpty()) {
+            arg = file;
+            found = true;
+            break;
+          }
+        }
+        if (found) {
+          break;
         }
       }
     }
 
-    if (is_restricted(caller) && found.isEmpty()) {
+    if (is_restricted(caller) && !found) {
       cmd_reply(CMD_LOAD, caller, C_FAIL,
-                _("Cannot find savegame or "
-                  "scenario with the name \"%s\"."),
+                _("Cannot find savegame or scenario with the name \"%s\"."),
                 filename);
       return false;
     }
 
-    if (found.isEmpty()) {
-      sz_strlcpy(arg, filename);
+    if (!found) {
+      arg = filename;
     }
   }
 
   // attempt to parse the file
 
   if (!(file = secfile_load(arg, false))) {
-    qCritical("Error loading savefile '%s': %s", arg, secfile_error());
+    qCritical("Error loading savefile '%s': %s", qUtf8Printable(arg),
+              secfile_error());
     cmd_reply(CMD_LOAD, caller, C_FAIL, _("Could not load savefile: %s"),
-              arg);
-    dlsend_packet_game_load(game.est_connections, true, arg);
+              qUtf8Printable(arg));
+    dlsend_packet_game_load(game.est_connections, true, qUtf8Printable(arg));
     return false;
   }
 
@@ -3797,7 +3807,7 @@ bool load_command(struct connection *caller, const char *filename,
   uloadtimer = timer_new(TIMER_USER, TIMER_ACTIVE);
   timer_start(uloadtimer);
 
-  srvarg.load_filename = QString::fromUtf8(arg);
+  srvarg.load_filename = arg;
 
   savegame_load(file);
   secfile_check_unused(file);
