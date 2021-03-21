@@ -50,7 +50,10 @@ public:
   QString source() const { return m_source; }
 
   /// Where to save the file
-  QString destination() const { return m_destination; }
+  QFileInfo destination(const QString &prefix) const
+  {
+    return QFileInfo(prefix + m_destination);
+  }
 
   /// Was there an error?
   bool is_valid() const { return m_error.isEmpty(); }
@@ -91,13 +94,13 @@ private:
   /// Validates the source and destination
   void validate()
   {
-    if (destination().isEmpty()) {
+    if (m_destination.isEmpty()) {
       // Probably a mistake. Don't accept it.
       set_error(QString::fromUtf8(_("Empty path")));
-    } else if (destination().contains(QStringLiteral(".."))) {
+    } else if (m_destination.contains(QStringLiteral(".."))) {
       // Big no, might overwrite system files...
       set_error(
-          QString::fromUtf8(_("Illegal path \"%1\"")).arg(destination()));
+          QString::fromUtf8(_("Illegal path \"%1\"")).arg(m_destination));
     }
   }
 
@@ -363,7 +366,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
   // Download and install
   bool full_success = true;
   for (auto info : required_files) {
-    auto destination = QFileInfo(local_dir + info.destination());
+    auto destination = info.destination(local_dir);
 
     // Create the destination directory if needed
     qDebug() << "Create directory:" << destination.absolutePath();
