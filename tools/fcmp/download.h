@@ -23,24 +23,25 @@
 // modinst
 #include "modinst.h"
 
-#define MODPACKDL_SUFFIX ".mpdl"
+#define MODPACKDL_SUFFIX ".json"
 
-#define MODPACK_CAPSTR "+Freeciv-mpdl-Devel-3.1-2019.Jul.15"
-#define MODLIST_CAPSTR "+Freeciv-modlist-Devel-3.1-2019.Jul.15"
+#define MODPACK_CAPSTR "+modpack-1.0"
+#define MODLIST_CAPSTR "+modpack-index-1.0"
 
 #define FCMP_CONTROLD ".control"
 
 using dl_msg_callback = nf_errmsg;
 using dl_pb_callback = std::function<void(int downloaded, int max)>;
 
-const char *download_modpack(const char *URL, const struct fcmp_params *fcmp,
+const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
                              const dl_msg_callback &mcb,
-                             const dl_pb_callback &pbcb);
+                             const dl_pb_callback &pbcb,
+                             int recursion = 0);
 
 using modpack_list_setup_cb = std::function<void(
-    const char *name, const char *URL, const char *version,
-    const char *license, enum modpack_type type, const char *subtype,
-    const char *notes)>;
+    const QString &name, const QUrl &url, const QString &version,
+    const QString &license, enum modpack_type type, const QString &subtype,
+    const QString &notes)>;
 
 const char *download_modpack_list(const struct fcmp_params *fcmp,
                                   const modpack_list_setup_cb &cb,

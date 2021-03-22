@@ -68,10 +68,11 @@ static int mpcount = 0;
 
 #define ML_COL_COUNT 8
 
-static void setup_modpack_list(const char *name, const char *URL,
-                               const char *version, const char *license,
-                               enum modpack_type type, const char *subtype,
-                               const char *notes);
+static void setup_modpack_list(const QString &name, const QUrl &url,
+                               const QString &version,
+                               const QString &license,
+                               enum modpack_type type,
+                               const QString &subtype, const QString &notes);
 static void msg_callback(const QString &msg);
 static void msg_callback_thr(const QString &msg);
 static void progress_callback_thr(int downloaded, int max);
@@ -347,58 +348,46 @@ void mpgui::refresh_list_versions_thr()
 /**
    Build main modpack list view
  */
-void mpgui::setup_list(const char *name, const char *URL,
-                       const char *version, const char *license,
-                       enum modpack_type type, const char *subtype,
-                       const char *notes)
+void mpgui::setup_list(const QString &name, const QUrl &url,
+                       const QString &version, const QString &license,
+                       enum modpack_type type, const QString &subtype,
+                       const QString &notes)
 {
-  const char *type_str;
-  const char *lic_str;
-  const char *inst_str;
+  // TRANS: Unknown modpack type
+  QString type_str =
+      modpack_type_is_valid(type) ? (modpack_type_name(type)) : _("?");
+
+  // TRANS: License of modpack is not known
+  QString lic_str = license.isEmpty() ? Q_("?license:Unknown") : license;
+
+  const char *tmp = mpdb_installed_version(qUtf8Printable(name), type);
+  QString inst_str = tmp ? tmp : _("Not installed");
+
   QString type_nbr;
   QTableWidgetItem *item;
 
-  if (modpack_type_is_valid(type)) {
-    type_str = _(modpack_type_name(type));
-  } else {
-    // TRANS: Unknown modpack type
-    type_str = _("?");
-  }
-
-  if (license != nullptr) {
-    lic_str = license;
-  } else {
-    // TRANS: License of modpack is not known
-    lic_str = Q_("?license:Unknown");
-  }
-
-  inst_str = mpdb_installed_version(name, type);
-  if (inst_str == nullptr) {
-    inst_str = _("Not installed");
-  }
-
   mplist_table->setRowCount(mpcount + 1);
 
-  item = new QTableWidgetItem(QString::fromUtf8(name));
-  item->setToolTip(QString::fromUtf8(notes));
+  item = new QTableWidgetItem(name);
+  item->setToolTip(notes);
   mplist_table->setItem(mpcount, ML_COL_NAME, item);
-  item = new QTableWidgetItem(QString::fromUtf8(version));
-  item->setToolTip(QString::fromUtf8(notes));
+  item = new QTableWidgetItem(version);
+  item->setToolTip(notes);
   mplist_table->setItem(mpcount, ML_COL_VER, item);
-  item = new QTableWidgetItem(QString::fromUtf8(inst_str));
-  item->setToolTip(QString::fromUtf8(notes));
+  item = new QTableWidgetItem(inst_str);
+  item->setToolTip(notes);
   mplist_table->setItem(mpcount, ML_COL_INST, item);
-  item = new QTableWidgetItem(QString::fromUtf8(type_str));
-  item->setToolTip(QString::fromUtf8(notes));
+  item = new QTableWidgetItem(type_str);
+  item->setToolTip(notes);
   mplist_table->setItem(mpcount, ML_COL_TYPE, item);
-  item = new QTableWidgetItem(QString::fromUtf8(subtype));
-  item->setToolTip(QString::fromUtf8(notes));
+  item = new QTableWidgetItem(subtype);
+  item->setToolTip(notes);
   mplist_table->setItem(mpcount, ML_COL_SUBTYPE, item);
-  item = new QTableWidgetItem(QString::fromUtf8(lic_str));
-  item->setToolTip(QString::fromUtf8(notes));
+  item = new QTableWidgetItem(lic_str);
+  item->setToolTip(notes);
   mplist_table->setItem(mpcount, ML_COL_LIC, item);
-  item = new QTableWidgetItem(QString::fromUtf8(URL));
-  item->setToolTip(QString::fromUtf8(notes));
+  item = new QTableWidgetItem(url.toDisplayString());
+  item->setToolTip(notes);
   mplist_table->setItem(mpcount, ML_COL_URL, item);
 
   type_nbr.setNum(type);
@@ -413,13 +402,14 @@ void mpgui::setup_list(const char *name, const char *URL,
 /**
    Build main modpack list view
  */
-static void setup_modpack_list(const char *name, const char *URL,
-                               const char *version, const char *license,
-                               enum modpack_type type, const char *subtype,
-                               const char *notes)
+static void setup_modpack_list(const QString &name, const QUrl &url,
+                               const QString &version,
+                               const QString &license,
+                               enum modpack_type type,
+                               const QString &subtype, const QString &notes)
 {
   // Just call setup_list for gui singleton
-  gui->setup_list(name, URL, version, license, type, subtype, notes);
+  gui->setup_list(name, url, version, license, type, subtype, notes);
 }
 
 /**

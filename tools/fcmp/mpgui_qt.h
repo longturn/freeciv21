@@ -50,9 +50,10 @@ public:
   void setup(QWidget *central, struct fcmp_params *fcmp);
   void display_msg_thr(const QString &msg);
   void progress_thr(int downloaded, int max);
-  void setup_list(const char *name, const char *URL, const char *version,
-                  const char *license, enum modpack_type type,
-                  const char *subtype, const char *notes);
+  void setup_list(const QString &name, const QUrl &url,
+                  const QString &version, const QString &license,
+                  enum modpack_type type, const QString &subtype,
+                  const QString &notes);
   void refresh_list_versions_thr();
 
 signals:

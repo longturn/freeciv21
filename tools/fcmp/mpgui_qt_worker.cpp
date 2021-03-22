@@ -41,9 +41,8 @@
  */
 void mpqt_worker::run()
 {
-  auto url_bytes = m_url.toEncoded();
-  const char *errmsg = download_modpack(url_bytes.data(), m_fcmp,
-                                        m_msg_callback, m_pb_callback);
+  auto errmsg =
+      download_modpack(m_url, m_fcmp, m_msg_callback, m_pb_callback);
 
   if (errmsg != nullptr) {
     m_msg_callback(errmsg);

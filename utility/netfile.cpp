@@ -21,6 +21,7 @@
 #include <QBuffer>
 #include <QEventLoop>
 #include <QFile>
+#include <QJsonDocument>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -87,6 +88,30 @@ static bool netfile_download_file_core(const QUrl &url, QIODevice *out,
   loop.exec();
 
   return retval;
+}
+
+/**
+ * Fetch a JSON file from the net
+ */
+QJsonDocument netfile_get_json_file(const QUrl &url, const nf_errmsg &cb)
+{
+  QBuffer buffer;
+  buffer.open(QIODevice::WriteOnly);
+
+  // Try to download into the buffer
+  if (netfile_download_file_core(url, &buffer, cb)) {
+    // Parse
+    QJsonParseError error;
+    auto document = QJsonDocument::fromJson(buffer.data(), &error);
+    if (error.error != QJsonParseError::NoError) {
+      cb(QString::fromUtf8(_("Error parsing JSON: %1"))
+             .arg(error.errorString()));
+      return QJsonDocument();
+    }
+    return document;
+  }
+
+  return QJsonDocument();
 }
 
 /**
