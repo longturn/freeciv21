@@ -25,18 +25,18 @@ struct fcmp_params {
 #if IS_DEVEL_VERSION && !IS_FREEZE_VERSION
 #ifndef MODPACK_LIST_URL
 #define MODPACK_LIST_URL                                                    \
-  "http://files.freeciv.org/modinst/" DATASUBDIR "/modpack.list"
+  "https://raw.githubusercontent.com/longturn/modpacks/main/index.json"
 #endif
-#define DEFAULT_URL_START "http://files.freeciv.org/modinst/" DATASUBDIR "/"
+#define DEFAULT_URL_START                                                   \
+  "https://raw.githubusercontent.com/longturn/modpacks/main/mods/"
 #else // IS_DEVEL_VERSION
 #ifndef MODPACK_LIST_URL
 #define MODPACK_LIST_URL                                                    \
-  "http://modpack.freeciv.org/" DATASUBDIR "/modpack.list"
+  "https://raw.githubusercontent.com/longturn/modpacks/main/index.json"
 #endif
-#define DEFAULT_URL_START "http://modpack.freeciv.org/" DATASUBDIR "/"
+#define DEFAULT_URL_START                                                   \
+  "https://raw.githubusercontent.com/longturn/modpacks/main/mods/"
 #endif // IS_DEVEL_VERSION
-
-#define EXAMPLE_URL DEFAULT_URL_START "ancients.modpack"
 
 #define SPECENUM_NAME modpack_type
 #define SPECENUM_VALUE0 MPT_RULESET
