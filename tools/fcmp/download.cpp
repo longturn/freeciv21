@@ -236,7 +236,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
     // TRANS: Do not translate "info.type"
     return _("\"info.base_url\" is not a string");
   }
-  auto base_url = QUrl::fromUserInput(info["base_url"].toString());
+  auto base_url = QUrl(info["base_url"].toString());
   if (base_url.isRelative()) {
     base_url = url.resolved(base_url);
   }
@@ -306,7 +306,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
             mcb(_("Download dependency modpack"));
           }
 
-          auto dep_qurl = QUrl::fromUserInput(dep_url);
+          auto dep_qurl = QUrl(dep_url);
           if (dep_qurl.isRelative()) {
             dep_qurl = url.resolved(dep_qurl);
           }
@@ -509,7 +509,7 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
       // TRANS: Do not translate "url"
       return _("Modpack \"url\" is missing or is not a string");
     }
-    auto url = QUrl::fromUserInput(mp["url"].toString());
+    auto url = QUrl(mp["url"].toString());
     if (!url.isValid()) {
       qCritical() << "Invalid URL" << mp["url"].toString() << ":"
                   << url.errorString();
