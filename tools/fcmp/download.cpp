@@ -247,7 +247,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
    * Fetch dependencies
    */
   auto deps = json["dependencies"];
-  if (!deps.isNull()) {
+  if (!deps.isUndefined()) {
     if (!deps.isArray()) {
       // TRANS: Do not translate "dependencies"
       return _("\"dependencies\" is not an array");
