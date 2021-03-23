@@ -1,5 +1,5 @@
 /**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
   ( oo )        General Public License  as published by the Free Software
@@ -10,61 +10,29 @@
 **************************************************************************/
 #pragma once
 
-// Utility
-#include "support.h" // bool type
-
-typedef uint32_t RANDOM_TYPE;
-
-typedef struct {
-  RANDOM_TYPE v[56];
-  int j, k, x;
-  bool is_init; // initially 0 for static storage
-} RANDOM_STATE;
+#include <random>
 
 #define fc_rand(_size) fc_rand_debug((_size), "fc_rand", __LINE__, __FILE__)
 
-RANDOM_TYPE fc_rand_debug(RANDOM_TYPE size, const char *called_as, int line,
-                          const char *file);
+std::uint_fast32_t fc_rand_debug(std::uint_fast32_t size,
+                                 const char *called_as, int line,
+                                 const char *file);
 
-void fc_srand(RANDOM_TYPE seed);
+void fc_srand(std::uint_fast32_t seed);
+void fc_rand_seed(std::mt19937 &gen);
 
-void fc_rand_uninit();
 bool fc_rand_is_init();
-RANDOM_STATE fc_rand_state();
-void fc_rand_set_state(RANDOM_STATE &state);
+void fc_rand_set_init(bool init);
 
-void test_random1(int n);
+std::mt19937 &fc_rand_state();
+void fc_rand_set_state(const std::mt19937 &state);
 
 /*===*/
 
 #define fc_randomly(_seed, _size)                                           \
   fc_randomly_debug((_seed), (_size), "fc_randomly", __LINE__, __FILE__)
 
-RANDOM_TYPE fc_randomly_debug(RANDOM_TYPE seed, RANDOM_TYPE size,
-                              const char *called_as, int line,
-                              const char *file);
-
-namespace freeciv {
-
-/**
- * A UniformRandomBitGenerator class usable with STL algorithms and using the
- * Freeciv RNG under the hood.
- */
-class random_generator {
-public:
-  using result_type = RANDOM_TYPE;
-
-  static constexpr auto min() { return 0; }
-
-  static constexpr auto max()
-  {
-    return std::numeric_limits<result_type>::max() - 1;
-  }
-
-  auto operator()()
-  {
-    return fc_rand(std::numeric_limits<result_type>::max());
-  }
-};
-
-} // namespace freeciv
+std::uint_fast32_t fc_randomly_debug(std::uint_fast32_t seed,
+                                     std::uint_fast32_t size,
+                                     const char *called_as, int line,
+                                     const char *file);

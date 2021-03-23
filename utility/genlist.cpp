@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2021 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -642,7 +642,7 @@ void genlist_shuffle(struct genlist *pgenlist)
   }
 
   // randomize it
-  std::shuffle(shuffle.begin(), shuffle.end(), freeciv::random_generator());
+  std::shuffle(shuffle.begin(), shuffle.end(), fc_rand_state());
 
   // create the shuffled list
   myiter = genlist_head(pgenlist);

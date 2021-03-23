@@ -489,7 +489,7 @@ int client_main(int argc, char *argv[])
     } else {
       fc_snprintf(gui_options.default_user_name,
                   sizeof(gui_options.default_user_name), "player%d",
-                  fc_rand(10000));
+                  (int) fc_rand(10000));
     }
   }
 

@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2021 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -126,7 +126,7 @@ struct loaddata {
   enum server_states server_state;
 
   // loaded in sg_load_random(); needed in sg_load_sanitycheck()
-  RANDOM_STATE rstate;
+  std::mt19937 rstate;
 
   // loaded in sg_load_map_worked(); needed in sg_load_player_cities()
   int *worked_tiles;

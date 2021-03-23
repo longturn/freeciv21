@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2021 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -160,20 +160,11 @@ static civtimer *between_turns = NULL;
 void init_game_seed()
 {
   if (game.server.seed_setting == 0) {
-    /* We strip the high bit for now because neither game file nor
-       server options can handle unsigned ints yet. - Cedric */
-    game.server.seed = time(NULL) & (MAX_UINT32 >> 1);
-#ifdef FREECIV_TESTMATIC
-    // Log command to reproduce the gameseed
-    log_testmatic("set gameseed %d", game.server.seed);
-#else // FREECIV_TESTMATIC
-    log_debug("Setting game.seed:%d", game.server.seed);
-#endif // FREECIV_TESTMATIC
+    game.server.seed = 0;
+    fc_rand_seed(fc_rand_state());
+    fc_rand_set_init(true);
   } else {
     game.server.seed = game.server.seed_setting;
-  }
-
-  if (!fc_rand_is_init()) {
     fc_srand(game.server.seed);
   }
 }

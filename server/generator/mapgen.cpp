@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2021 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -1305,31 +1305,15 @@ static void print_mapgen_map()
  */
 bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
 {
-  // save the current random state:
-  RANDOM_STATE rstate;
-  RANDOM_TYPE seed_rand;
-
-  /* Call fc_rand() even when result is not needed to make sure
-   * random state proceeds equally for random seeds and explicitly
-   * set seed. */
-  seed_rand = fc_rand(MAX_UINT32);
+  auto rstate = fc_rand_state();
 
   if (wld.map.server.seed_setting == 0) {
-    // Create a "random" map seed.
-    wld.map.server.seed = seed_rand & (MAX_UINT32 >> 1);
-#ifdef FREECIV_TESTMATIC
-    // Log command to reproduce the mapseed
-    log_testmatic("set mapseed %d", wld.map.server.seed);
-#else  // FREECIV_TESTMATICE
-    log_debug("Setting map.seed:%d", wld.map.server.seed);
-#endif // FREECIV_TESTMATIC
+    // Create a random map seed.
+    fc_rand_seed(fc_rand_state());
   } else {
-    wld.map.server.seed = wld.map.server.seed_setting;
+    fc_srand(wld.map.server.seed_setting);
   }
-
-  rstate = fc_rand_state();
-
-  fc_srand(wld.map.server.seed);
+  wld.map.server.seed = wld.map.server.seed_setting;
 
   /* don't generate tiles with mapgen == MAPGEN_SCENARIO as we've loaded *
      them from file.
