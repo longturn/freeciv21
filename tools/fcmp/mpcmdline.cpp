@@ -77,7 +77,7 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
   parser.process(app);
 
   // Process the parsed options
-  if (log_init(parser.value(QStringLiteral("debug")))) {
+  if (!log_init(parser.value(QStringLiteral("debug")))) {
     exit(EXIT_FAILURE);
   }
   if (parser.isSet(QStringLiteral("List"))) {
