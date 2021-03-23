@@ -117,7 +117,7 @@ set={"name","value","gamestart"
 "temperature",50,50
 "tilesperplayer",100,100
 "tinyisles",FALSE,FALSE
-"topology","","WRAPX|ISO|HEX"
+"topology","","WRAPX|ISO"
 "victories","","SPACERACE|ALLIED"
 "wetness",50,50
 "xsize",177,64

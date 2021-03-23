@@ -89,7 +89,7 @@ saved=FALSE
 
 [script]
 code=$
-function has_unit_type_name(unit, utype_name) 
+function has_unit_type_name(unit, utype_name)
   return (unit.utype.id == find.unit_type(utype_name).id)
 end
 function has_tile_terrain_name(tile, terrain_name)
@@ -137,7 +137,7 @@ function tutorial_unit_moved_callback(unit, src_tile, dst_tile)
     if citiesbuilt == 0
       and has_unit_type_name(unit, 'Settlers')
       and (has_tile_terrain_name(dst_tile, 'Grassland')
-           or has_tile_terrain_name(dst_tile, 'Plains')) then  
+           or has_tile_terrain_name(dst_tile, 'Plains')) then
       notify.event(unit.owner, dst_tile, E.SCRIPT,
 _("This looks like a good place to build a city.  The next time this\nunit gets a chance to move, press (b) to found a city.\n\nIn general you want to build cities on open ground near water.  Food\nis the most important resource for any city.  Grassland and plains\nprovide plenty of food."))
     end
@@ -361,7 +361,7 @@ set={"name","value","gamestart"
 "mapsize","FULLSIZE","FULLSIZE"
 "revolentype","RANDOM","RANDOM"
 "size",1,1
-"topology","WRAPX|ISO|HEX","WRAPX|ISO|HEX"
+"topology","WRAPX|ISO","WRAPX|ISO"
 "victories","",""
 }
 set_count=6
