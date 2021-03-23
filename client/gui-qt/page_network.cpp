@@ -97,8 +97,8 @@ page_network::page_network(QWidget *parent, fc_client *gui)
 
   ui.lhost->setText(_("Connect"));
   ui.lport->setText(_("Port"));
-  ui.lname->setText(_("Password"));
-  ui.lpass->setText(_("Connect"));
+  ui.lname->setText(_("Username"));
+  ui.lpass->setText(_("Password"));
   ui.lconfpass->setText(_("Confirm Password"));
 
   ui.refresh_button->setText(_("Refresh"));
