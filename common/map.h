@@ -558,7 +558,7 @@ moves. Includes MAP_MAX_LINEAR_SIZE because a map can be non wrapping. */
 #define MAP_DISTANCE_MAX (MAP_MAX_LINEAR_SIZE + MAP_MIN_LINEAR_SIZE)
 
 #define MAP_ORIGINAL_TOPO TF_WRAPX
-#define MAP_DEFAULT_TOPO (TF_WRAPX | TF_ISO | TF_HEX)
+#define MAP_DEFAULT_TOPO (TF_WRAPX | TF_ISO)
 
 #define MAP_DEFAULT_SEED 0
 #define MAP_MIN_SEED 0
