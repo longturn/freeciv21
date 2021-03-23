@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 The Freeciv21 contributors
+ * (c) Copyright 2021 The Freeciv21 contributors
  *
  * This file is part of Freeciv21.
  *
@@ -870,7 +870,7 @@ bool server::shut_game_down()
 
   // Reset server
   server_game_free();
-  fc_rand_uninit();
+  fc_rand_set_init(false);
   server_game_init(false);
   mapimg_reset();
   load_rulesets(NULL, NULL, false, NULL, true, false, true);

@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2021 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -67,6 +67,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <sstream>
 
 // utility
 #include "bitvector.h"
@@ -1605,9 +1606,6 @@ static void sg_load_random(struct loaddata *loading)
   sg_check_ret();
 
   if (secfile_lookup_bool_default(loading->file, false, "random.saved")) {
-    const char *string;
-    int i;
-
     /* Since random state was previously saved, save it also when resaving.
      * This affects only pre-2.6 scenarios where scenario.save_random
      * is not defined.
@@ -1623,26 +1621,23 @@ static void sg_load_random(struct loaddata *loading)
       game.scenario.save_random = true;
     }
 
-    sg_failure_ret(secfile_lookup_int(loading->file, &loading->rstate.j,
-                                      "random.index_J"),
-                   "%s", secfile_error());
-    sg_failure_ret(secfile_lookup_int(loading->file, &loading->rstate.k,
-                                      "random.index_K"),
-                   "%s", secfile_error());
-    sg_failure_ret(secfile_lookup_int(loading->file, &loading->rstate.x,
-                                      "random.index_X"),
-                   "%s", secfile_error());
-
-    for (i = 0; i < 8; i++) {
-      string = secfile_lookup_str(loading->file, "random.table%d", i);
-      sg_failure_ret(NULL != string, "%s", secfile_error());
-      sscanf(string, "%8x %8x %8x %8x %8x %8x %8x",
-             &loading->rstate.v[7 * i], &loading->rstate.v[7 * i + 1],
-             &loading->rstate.v[7 * i + 2], &loading->rstate.v[7 * i + 3],
-             &loading->rstate.v[7 * i + 4], &loading->rstate.v[7 * i + 5],
-             &loading->rstate.v[7 * i + 6]);
+    if (secfile_lookup_int(loading->file, nullptr, "random.index_J")) {
+      qWarning().noquote() << QString::fromUtf8(
+          _("Cannot load old random generator state. Seeding a new one."));
+      fc_rand_seed(loading->rstate);
+    } else if (auto *state =
+                   secfile_lookup_str(loading->file, "random.state")) {
+      // In theory this doesn't exist in old saves, but why not.
+      std::stringstream ss;
+      ss.imbue(std::locale::classic());
+      ss.str(state);
+      ss >> loading->rstate;
+      if (ss.fail()) {
+        qWarning().noquote() << QString::fromUtf8(
+            _("Cannot load the random generator state. Seeding a new one."));
+        fc_rand_seed(loading->rstate);
+      }
     }
-    loading->rstate.is_init = true;
     fc_rand_set_state(loading->rstate);
   } else {
     // No random values - mark the setting.
