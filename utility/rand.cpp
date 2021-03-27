@@ -47,7 +47,7 @@ std::uint_fast32_t fc_rand_debug(std::uint_fast32_t size,
                                  const char *called_as, int line,
                                  const char *file)
 {
-  std::uniform_int_distribution<std::uint_fast32_t> uniform(0, size + 1);
+  std::uniform_int_distribution<std::uint_fast32_t> uniform(0, size - 1);
 
   auto random = uniform(generator);
   qCDebug(random_category, "%s(%lu) = %lu at %s:%d", called_as,
