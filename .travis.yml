@@ -46,12 +46,18 @@ jobs:
     if: branch != coverity_scan
     os: windows
     script:
-      - $mingw64 pacman -Syu
-      - $mingw64 pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
-                           mingw-w64-x86_64-gcc mingw-w64-x86_64-libunwind
-                           mingw-w64-x86_64-readline mingw-w64-x86_64-SDL2_mixer
-                           mingw-w64-x86_64-tolua mingw-w64-x86_64-qt5
-                           mingw-w64-x86_64-karchive-qt5 mingw-w64-x86_64-nsis
+      - $mingw64 pacman -Syu --noconfirm
+      - $mingw64 pacman -S --noconfirm
+          mingw-w64-x86_64-cmake
+          mingw-w64-x86_64-ninja
+          mingw-w64-x86_64-nsis
+          mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-tolua
+          mingw-w64-x86_64-libunwind
+          mingw-w64-x86_64-readline
+          mingw-w64-x86_64-SDL2_mixer
+          mingw-w64-x86_64-qt5
+          mingw-w64-x86_64-karchive-qt5
       - $mingw64 cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
       - $mingw64 cmake --build build
       - $mingw64 cd build; ninja package
