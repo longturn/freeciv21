@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="console-application">
-    <id type="desktop">net.longturn.freeciv_server</id>
+    <id type="desktop">net.longturn.freeciv21.server</id>
     <metadata_license>CC0</metadata_license>
     <project_license>GPL-3.0+</project_license>
     <name>Freeciv21 server</name>
@@ -27,7 +27,7 @@
     <update_contact>longturn.net@gmail.com</update_contact>
     <developer_name>Longturn.net Community</developer_name>
     <provides>
-      <binary>freeciv-server</binary>
+      <binary>freeciv21-server</binary>
     </provides>
     <categories>
       <category>Game</category>

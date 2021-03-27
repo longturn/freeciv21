@@ -183,7 +183,7 @@ void srv_init()
   // NLS init
   init_nls();
 #ifdef ENABLE_NLS
-  (void) bindtextdomain("freeciv-nations", get_locale_dir());
+  (void) bindtextdomain("freeciv21-nations", get_locale_dir());
 #endif
 
   // We want this before any AI stuff
@@ -219,7 +219,7 @@ void srv_init()
   // init character encodings.
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);
 #ifdef ENABLE_NLS
-  bind_textdomain_codeset("freeciv-nations", get_internal_encoding());
+  bind_textdomain_codeset("freeciv21-nations", get_internal_encoding());
 #endif
 
   // Initialize callbacks.

@@ -1,7 +1,7 @@
 set(CMAKE_AUTOMOC ON)
 
 add_executable(
-  freeciv-ruledit
+  freeciv21-ruledit
   conversion_log.cpp
   req_edit.cpp
   req_vec_fix.cpp
@@ -27,12 +27,12 @@ add_executable(
   validity.cpp
 )
 
-target_link_libraries(freeciv-ruledit server)
-target_link_libraries(freeciv-ruledit tools_ruleutil)
-target_link_libraries(freeciv-ruledit tools_shared)
-target_link_libraries(freeciv-ruledit Qt5::Widgets)
-add_dependencies(freeciv-ruledit freeciv_translations)
+target_link_libraries(freeciv21-ruledit server)
+target_link_libraries(freeciv21-ruledit tools_ruleutil)
+target_link_libraries(freeciv21-ruledit tools_shared)
+target_link_libraries(freeciv21-ruledit Qt5::Widgets)
+add_dependencies(freeciv21-ruledit freeciv_translations)
 
-install(TARGETS freeciv-ruledit
+install(TARGETS freeciv21-ruledit
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         COMPONENT tool_ruledit)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-    <id type="desktop">net.longturn.freeciv_modpack_qt</id>
+    <id type="desktop">net.longturn.freeciv21.modpack_qt</id>
     <metadata_license>CC0</metadata_license>
     <project_license>GPL-3.0+</project_license>
     <name>Freeciv21 Qt modpack installer</name>
@@ -11,12 +11,12 @@
             mission is to lead your tribe from the Stone Age to the Space Age...
         </p>
         <p>
-            Freeciv21 modpack utility can be used to automatically download and install custom rulesets, tilesets, soundsets, musicsets and maps for freeciv21 to use. 
+            Freeciv21 modpack utility can be used to automatically download and install custom rulesets, tilesets, soundsets, musicsets and maps for freeciv21 to use.
             It is based on the Qt framework.
         </p>
     </description>
-    <launchable type="desktop-id">org.longturn.freeciv_modpack_qt.desktop</launchable>
-    <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv-modpack.png</icon>
+    <launchable type="desktop-id">org.longturn.freeciv21.modpack_qt.desktop</launchable>
+    <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv21-modpack.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
     <screenshots>
@@ -28,7 +28,7 @@
     <update_contact>longturn.net@gmail.com</update_contact>
     <developer_name>Longturn.net Community</developer_name>
     <provides>
-      <binary>freeciv-modpack-qt</binary>
+      <binary>freeciv21-modpack-qt</binary>
     </provides>
     <categories>
       <category>Game</category>

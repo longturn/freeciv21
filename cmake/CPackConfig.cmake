@@ -34,7 +34,7 @@ if(WIN32 OR MSYS OR MINGW)
   set(CPACK_PACKAGE_INSTALL_DIRECTORY "Freeciv21 v${FREECIV21_VERSION}")
   set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION})
   set(CPACK_OUTPUT_FILE_PREFIX ${CPACK_PACKAGE_DIRECTORY})
-  set(CPACK_PACKAGE_EXECUTABLES "freeciv-qt.cmd;Freeciv21 Qt Client;freeciv-modpack-qt.cmd;Freeciv21 Qt Modpack Installer")
+  set(CPACK_PACKAGE_EXECUTABLES "freeciv21-qt.cmd;Freeciv21 Qt Client;freeciv21-modpack-qt.cmd;Freeciv21 Qt Modpack Installer")
 
   ## Component definition
   #  - variable names are UPPER CASE, even if component names are lower case
