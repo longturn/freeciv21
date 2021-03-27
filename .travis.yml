@@ -52,7 +52,6 @@ jobs:
           mingw-w64-x86_64-ninja
           mingw-w64-x86_64-nsis
           mingw-w64-x86_64-gcc
-          mingw-w64-x86_64-tolua
           mingw-w64-x86_64-libunwind
           mingw-w64-x86_64-readline
           mingw-w64-x86_64-SDL2_mixer
