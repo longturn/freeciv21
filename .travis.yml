@@ -57,12 +57,12 @@ jobs:
           mingw-w64-x86_64-SDL2_mixer
           mingw-w64-x86_64-qt5
           mingw-w64-x86_64-karchive-qt5
-      # Disable NLS for now, see 383
+      # Disable NLS for now, see #383
       - $mingw64 cmake . -B build -G Ninja
           -DCMAKE_INSTALL_PREFIX=$PWD/build/install
           -DFREECIV_ENABLE_NLS=OFF
       - $mingw64 cmake --build build
-      - $mingw64 cd build; ninja package
+      - $mingw64 cmake --build build --target package
   - name: "os_x"
     if: branch != coverity_scan
     os: osx

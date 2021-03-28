@@ -166,22 +166,16 @@ At this point follow the steps in section 2 above.
 
 Msys2 is an available environment for compiling Freeciv21. Microsoft Windows Visual C is under development.
 
-Freeciv21 currently supports building and installing using the Msys2 environment. Build instructions for 
+Freeciv21 currently supports building and installing using the Msys2 environment. Build instructions for
 Msys2 versions are documented in doc/README.msys2. Alternately you can visit
 https://github.com/jwrober/freeciv-msys2 for ready make scripts.
 
 Follow the steps in Chapter 2. Compiling and Installing Freeciv21.
 
-Instead of using this command to install:
+Instead of using this command to install and create the Windows Installer:
 
-    cmake --install build
-    
-Run these commands to create the Windows Installer:
+    cmake --build build --target package
 
-    cd build
-    
-    ninja package
-    
-When the Ninja command is finished running, you will find an installer in build/Windows-${arch} 
+When the Ninja command is finished running, you will find an installer in build/Windows-${arch}
 
 ** END **
