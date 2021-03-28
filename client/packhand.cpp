@@ -255,7 +255,8 @@ static struct unit *unpackage_unit(const struct packet_unit_info *packet)
     memcpy(punit->orders.list, packet->orders,
            punit->orders.length * sizeof(*punit->orders.list));
   }
-
+  punit->action_turn = packet->action_turn;
+  punit->action_timestamp = ((time_t)packet->action_timestamp32) << 32 | packet->action_timestamp64;
   punit->action_decision_want = packet->action_decision_want;
   punit->action_decision_tile =
       index_to_tile(&(wld.map), packet->action_decision_tile);
@@ -1814,6 +1815,8 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
     editgui_notify_object_changed(OBJTYPE_UNIT, punit->id, false);
 
     punit->action_decision_tile = packet_unit->action_decision_tile;
+    punit->action_timestamp = packet_unit->action_timestamp;
+    punit->action_turn = packet_unit->action_turn;
     if (punit->action_decision_want != packet_unit->action_decision_want
         && should_ask_server_for_actions(packet_unit)) {
       // The unit wants the player to decide.

@@ -369,11 +369,18 @@ const QString popup_info_text(struct tile *ptile)
     get_full_username(username, sizeof(username), owner);
     get_full_nation(nation, sizeof(nation), owner);
 
+    time_t dt = time(NULL) - punit->action_timestamp;
+    if (dt < 0 && !can_unit_move_now(punit)) {
+      char buf[64];
+      format_time_duration(- dt, buf, sizeof(buf));
+      str += _("Can move in ") + QString(buf) + qendl();
+    }
+
     if (!client_player() || owner == client_player()) {
       struct city *hcity = player_city_by_number(owner, punit->homecity);
 
       // TRANS: "Unit: <unit type> | <username> (<nation + team>)"
-      str = str
+      str += str
             + QString(_("Unit: %1 | %2 (%3)"))
                   .arg(utype_name_translation(ptype), username, nation)
             + qendl();

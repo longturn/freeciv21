@@ -1048,6 +1048,9 @@ PACKET_UNIT_INFO = 63; sc, lsend, is-game-info, cancel(PACKET_UNIT_SHORT_INFO)
 
   ACTION_DECISION action_decision_want;
   TILE action_decision_tile;
+  SINT16 action_turn;
+  SINT32 action_timestamp32;
+  SINT32 action_timestamp64;
 end
 
 PACKET_UNIT_SHORT_INFO = 64; sc, lsend, is-game-info, force, cancel(PACKET_UNIT_INFO)
