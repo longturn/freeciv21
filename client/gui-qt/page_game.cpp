@@ -519,7 +519,9 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
     queen()->mapview_wdg->resize(event->size().width(), size.height());
     queen()->city_overlay->resize(queen()->mapview_wdg->size());
     queen()->unitinfo_wdg->update_actions(nullptr);
-    queen()->civ_status->move(0, 0);
+    queen()->civ_status->move(
+        qRound(king()->qt_settings.civstatus_x * mapview.width),
+        qRound(king()->qt_settings.civstatus_y * mapview.height));
     // It could be resized before mapview, so delayed it a bit
     QTimer::singleShot(20, [] { queen()->infotab->restore_chat(); });
   }

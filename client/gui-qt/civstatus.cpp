@@ -17,7 +17,10 @@
 #include "tilespec.h"
 #include "unitlist.h"
 #include "canvas.h"
+#include "mapview.h"
 #include "fonts.h"
+#include "fc_client.h"
+#include "page_game.h"
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -76,6 +79,17 @@ civstatus::civstatus(QWidget *parent) : fcwidget()
   mw = new move_widget(this);
   timer->start(1000);
   updateInfo();
+}
+
+void civstatus::moveEvent(QMoveEvent *event)
+{
+  QPoint p;
+
+  p = pos();
+  king()->qt_settings.civstatus_x =
+      static_cast<float>(p.x()) / queen()->mapview_wdg->width();
+  king()->qt_settings.civstatus_y =
+      static_cast<float>(p.y()) / queen()->mapview_wdg->height();
 }
 
 void civstatus::update_menu() {}
