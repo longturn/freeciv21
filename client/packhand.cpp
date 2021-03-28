@@ -256,7 +256,7 @@ static struct unit *unpackage_unit(const struct packet_unit_info *packet)
            punit->orders.length * sizeof(*punit->orders.list));
   }
   punit->action_turn = packet->action_turn;
-  punit->action_timestamp = ((time_t)packet->action_timestamp32) << 32 | packet->action_timestamp64;
+  punit->action_timestamp = packet->action_timestamp;
   punit->action_decision_want = packet->action_decision_want;
   punit->action_decision_tile =
       index_to_tile(&(wld.map), packet->action_decision_tile);

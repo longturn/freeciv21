@@ -2598,10 +2598,9 @@ void package_unit(struct unit *punit, struct packet_unit_info *packet)
     // No need to initialize array.
   }
   packet->action_turn = punit->action_turn;
-  // client doesnt have access to game.server.unitwaittime ???
+  // client doesnt have access to game.server.unitwaittime, so use release time
   time_t gotime = game.server.unitwaittime + punit->action_timestamp;
-  packet->action_timestamp32 = (int)((gotime & 0xFFFFFFFF00000000LL) >> 32);
-  packet->action_timestamp64 = (int)(gotime & 0xFFFFFFFFLL);
+  packet->action_timestamp = gotime;
   packet->action_decision_want = punit->action_decision_want;
   packet->action_decision_tile =
       (punit->action_decision_tile ? tile_index(punit->action_decision_tile)
