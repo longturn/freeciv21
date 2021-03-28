@@ -24,6 +24,7 @@ public:
 private slots:
   void updateInfo();
 private:
+  move_widget *mw;
   QHBoxLayout *layout;
   QLabel economyLabel;
   QLabel scienceLabel;

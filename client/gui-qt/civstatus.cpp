@@ -73,6 +73,7 @@ civstatus::civstatus(QWidget *parent) : fcwidget()
 
   QTimer *timer = new QTimer(this);
   connect(timer, &QTimer::timeout, this, &civstatus::updateInfo);
+  mw = new move_widget(this);
   timer->start(1000);
   updateInfo();
 }
