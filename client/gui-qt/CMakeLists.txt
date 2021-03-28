@@ -8,6 +8,7 @@ add_library(
   chatline.cpp
   citydlg.cpp
   cityrep.cpp
+  civstatus.cpp
   colors.cpp
   connectdlg.cpp
   dialogs.cpp

@@ -48,7 +48,7 @@
 
 #include "text.h"
 
-static int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs);
+int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs);
 
 /**
    Return a (static) string with a tile's food/prod/trade
@@ -722,7 +722,7 @@ const QString get_airlift_text(const struct unit_list *punits,
 /**
    Return total expected bulbs.
  */
-static int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs)
+int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs)
 {
   const struct research *presearch;
   int ours = 0, theirs = 0;
