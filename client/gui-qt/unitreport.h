@@ -25,8 +25,19 @@ class QHBoxLayout; // lines 25-25
 class QObject;
 class QPaintEvent;
 class QScrollArea;
+class QTableWidget;
 class QWheelEvent;
 struct unit_type;
+
+class units_waiting : public QWidget {
+  Q_OBJECT
+public:
+  units_waiting(QWidget *parent = nullptr);
+  ~units_waiting();
+private:
+  void update_units();
+  QTableWidget *waiting_units;
+};
 
 class unittype_item : public QFrame {
   Q_OBJECT
@@ -70,7 +81,7 @@ class units_reports : public fcwidget {
   QScrollArea *scroll;
   QWidget scroll_widget;
   static units_reports *m_instance;
-
+  units_waiting *uw;
 public:
   ~units_reports() override;
   static units_reports *instance();

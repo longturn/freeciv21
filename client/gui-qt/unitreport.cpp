@@ -11,6 +11,7 @@
 #include "unitreport.h"
 // Qt
 #include <QHBoxLayout>
+#include <QHeaderView>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QScrollArea>
@@ -21,10 +22,54 @@
 #include "canvas.h"
 #include "fc_client.h"
 #include "fonts.h"
+#include "goto.h"
 #include "hudwidget.h"
 #include "page_game.h"
 
 units_reports *units_reports::m_instance = nullptr;
+
+units_waiting::units_waiting(QWidget *parent)
+{
+  setParent(parent);
+  setAttribute(Qt::WA_DeleteOnClose);
+  waiting_units = new QTableWidget();
+  QVBoxLayout *vb = new QVBoxLayout;
+
+  waiting_units->setColumnCount(1);
+  waiting_units->setProperty("showGrid", "false");
+  waiting_units->setProperty("selectionBehavior", "SelectRows");
+  waiting_units->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  waiting_units->verticalHeader()->setVisible(false);
+  waiting_units->horizontalHeader()->setVisible(false);
+  waiting_units->setSelectionMode(QAbstractItemView::SingleSelection);
+  vb->addWidget(waiting_units);
+  setLayout(vb);
+
+  QTimer *timer = new QTimer(this);
+  connect(timer, &QTimer::timeout, this, &units_waiting::update_units);
+  timer->start(1000);
+}
+
+units_waiting::~units_waiting() {}
+
+void units_waiting::update_units()
+{
+  int units_count = 0;
+  // dont clear but update ??
+  waiting_units->clear();
+
+  unit_list_iterate(client_player()->units, punit)
+  {
+    if (!can_unit_move_now(punit)) {
+      QTableWidgetItem *newItem =
+          new QTableWidgetItem(utype_name_translation(punit->utype));
+      waiting_units->setItem(units_count, 0, newItem);
+      ++units_count;
+    }
+  }
+  unit_list_iterate_end;
+  waiting_units->setRowCount(units_count);
+}
 
 /**
    Unit item constructor (single item for units report)
@@ -270,6 +315,8 @@ units_reports::units_reports() : fcwidget()
   cw = new close_widget(this);
   cw->setFixedSize(12, 12);
   setVisible(false);
+  uw = new units_waiting(queen()->mapview_wdg);
+  uw->setVisible(false);
 }
 
 /**
@@ -448,6 +495,9 @@ void units_reports::update_units(bool show)
   layout->update();
   updateGeometry();
   delete[] unit_array;
+
+  uw->setVisible(true);
+
 }
 
 /**
