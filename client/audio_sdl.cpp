@@ -85,6 +85,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
     mus = Mix_LoadMUS(qUtf8Printable(fullpath));
     if (mus == NULL) {
       qCritical("Can't open file \"%s\"", qUtf8Printable(fullpath));
+      return false;
     }
 
     if (cb == NULL) {
@@ -113,6 +114,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
     wave = Mix_LoadWAV(qUtf8Printable(fullpath));
     if (wave == NULL) {
       qCritical("Can't open file \"%s\"", qUtf8Printable(fullpath));
+      return false;
     }
 
     /* play sound sample on first available channel, returns -1 if no
@@ -205,7 +207,9 @@ static void sdl_audio_shutdown()
     }
   }
   Mix_HaltMusic();
-  Mix_FreeMusic(mus);
+  if (mus != nullptr) {
+    Mix_FreeMusic(mus);
+  }
 
   Mix_CloseAudio();
   quit_sdl_audio();
