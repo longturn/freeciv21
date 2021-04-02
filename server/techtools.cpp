@@ -569,21 +569,20 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
   if (bonus_tech_hack) {
     Tech_type_id additional_tech;
     char research_name[MAX_LEN_NAME * 2];
-    const char *radv_name;
 
     research_pretty_name(presearch, research_name, sizeof(research_name));
 
     additional_tech = pick_free_tech(presearch);
 
-    radv_name = qUtf8Printable(
-        research_advance_name_translation(presearch, additional_tech));
+    auto radv_name =
+        research_advance_name_translation(presearch, additional_tech);
 
     give_immediate_free_tech(presearch, additional_tech);
     if (advance_by_number(tech_found)->bonus_message != NULL
         && additional_tech != A_UNSET) {
       notify_research(presearch, NULL, E_TECH_GAIN, ftc_server,
                       _(advance_by_number(tech_found)->bonus_message),
-                      radv_name);
+                      qUtf8Printable(radv_name));
     } else if (additional_tech != A_UNSET) {
       /* FIXME: "your" when it was just civilization of one of the players
        * sharing the reseach. */
@@ -591,12 +590,12 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
                       _("Great scientists from all the "
                         "world join your civilization: you learn "
                         "%s immediately."),
-                      radv_name);
+                      qUtf8Printable(radv_name));
     }
     // TODO: Ruleset should be able to customize this message too
     notify_research_embassies(presearch, NULL, E_TECH_EMBASSY, ftc_server,
                               _("%s acquire %s as a result of learning %s."),
-                              research_name, radv_name,
+                              research_name, qUtf8Printable(radv_name),
                               qUtf8Printable(advance_name));
   }
 }
