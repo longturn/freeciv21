@@ -34,15 +34,16 @@ find_package(Readline REQUIRED)
 # Internationalization
 add_custom_target(freeciv_translations)
 if(FREECIV_ENABLE_NLS)
-  if (${CMAKE_VERSION} VERSION_EQUAL "3.20.0")
+  find_package(Intl REQUIRED)
+  if (${CMAKE_VERSION} VERSION_EQUAL 3.20.0 AND NOT Intl_LIBRARIES)
     message(FATAL_ERROR
-      "Due to a bug in CMake, translations cannot be used with CMake 3.20.0. "
+      "Due to a bug in CMake, translations can not be used with "
+      "CMake 3.20.0 on your system. "
       "You can turn off translations by passing -DFREECIV_ENABLE_NLS=NO to "
       "CMake at configure time. "
       "Please see https://github.com/longturn/freeciv21/issues/383")
   endif()
 
-  find_package(Intl REQUIRED)
   set(FREECIV_HAVE_LIBINTL_H TRUE)
   set(ENABLE_NLS TRUE)
   if(UNIX)
