@@ -31,8 +31,8 @@
 #include "audio_sdl.h"
 
 struct sample {
-  Mix_Chunk *wave;
-  const char *tag;
+  Mix_Chunk *wave = nullptr;
+  QString tag;
 };
 
 /* Sounds don't sound good on Windows unless the buffer size is 4k,
@@ -45,7 +45,7 @@ const size_t buf_size = 1024;
 #endif
 
 static Mix_Music *mus = NULL;
-static struct sample samples[MIX_CHANNELS];
+static std::array<sample, MIX_CHANNELS> samples;
 static double sdl_audio_volume;
 
 /**
@@ -69,7 +69,6 @@ static double sdl_audio_get_volume() { return sdl_audio_volume; }
 static bool sdl_audio_play(const QString &tag, const QString &fullpath,
                            bool repeat, audio_finished_callback cb)
 {
-  int i, j;
   Mix_Chunk *wave = NULL;
 
   if (fullpath.isEmpty()) {
@@ -100,11 +99,11 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
 
   } else {
     // see if we can cache on this one
-    for (j = 0; j < MIX_CHANNELS; j++) {
-      if (samples[j].tag && samples[j].tag == qUtf8Printable(tag)) {
-        log_debug("Playing file \"%s\" from cache (slot %d)",
-                  qUtf8Printable(fullpath), j);
-        Mix_PlayChannel(-1, samples[j].wave, 0);
+    for (auto sample: samples) {
+      if (sample.wave != nullptr && sample.tag == tag) {
+        log_debug("Playing file \"%s\" from cache",
+                  qUtf8Printable(fullpath));
+        Mix_PlayChannel(-1, sample.wave, 0);
         return true;
       }
     } // guess not
@@ -117,7 +116,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
 
     /* play sound sample on first available channel, returns -1 if no
        channel found */
-    i = Mix_PlayChannel(-1, wave, 0);
+    int i = Mix_PlayChannel(-1, wave, 0);
     if (i < 0) {
       qDebug("No available sound channel to play %s.", qUtf8Printable(tag));
       Mix_FreeChunk(wave);
@@ -132,7 +131,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
     }
     // remember for cacheing
     samples[i].wave = wave;
-    samples[i].tag = qUtf8Printable(tag);
+    samples[i].tag = tag;
   }
   return true;
 }
