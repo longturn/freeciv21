@@ -732,7 +732,7 @@ static bool create_command(struct connection *caller, const char *str,
 
   // 2 legal arguments, and extra space for stuffing illegal part
   QStringList arg;
-  const char *ai_type_name;
+  QString ai_type_name;
 
   sz_strlcpy(buf, str);
   arg = QString(buf).split(QRegularExpression(REG_EXP),
@@ -741,7 +741,7 @@ static bool create_command(struct connection *caller, const char *str,
   if (arg.count() == 1) {
     ai_type_name = default_ai_type_name();
   } else if (arg.count() == 2) {
-    ai_type_name = qUtf8Printable(arg.at(1));
+    ai_type_name = arg.at(1);
   } else {
     cmd_reply(CMD_CREATE, caller, C_SYNTAX,
               _("Wrong number of arguments to create command."));
@@ -749,11 +749,13 @@ static bool create_command(struct connection *caller, const char *str,
   }
 
   if (game_was_started()) {
-    status = create_command_newcomer(qUtf8Printable(arg.at(0)), ai_type_name,
-                                     check, NULL, NULL, buf, sizeof(buf));
+    status = create_command_newcomer(qUtf8Printable(arg.at(0)),
+                                     qUtf8Printable(ai_type_name), check,
+                                     NULL, NULL, buf, sizeof(buf));
   } else {
-    status = create_command_pregame(qUtf8Printable(arg.at(0)), ai_type_name,
-                                    check, NULL, buf, sizeof(buf));
+    status = create_command_pregame(qUtf8Printable(arg.at(0)),
+                                    qUtf8Printable(ai_type_name), check,
+                                    NULL, buf, sizeof(buf));
   }
 
   if (status != C_OK) {
@@ -5091,7 +5093,6 @@ static bool delegate_command(struct connection *caller, char *arg,
   enum m_pre_result result;
   bool player_specified = false; // affects messages only
   bool ret = false;
-  const char *username = NULL;
   struct player *dplayer = NULL;
 
   if (!game_was_started()) {
@@ -5248,11 +5249,13 @@ static bool delegate_command(struct connection *caller, char *arg,
     return true;
   }
 
+  QString username;
+
   switch (ind) {
   case DELEGATE_TO:
     // delegate to <username> [player]
     if (tokens.count() > 1) {
-      username = qUtf8Printable(tokens.at(1));
+      username = tokens.at(1);
     } else {
       cmd_reply(
           CMD_DELEGATE, caller, C_SYNTAX,
@@ -5275,7 +5278,7 @@ static bool delegate_command(struct connection *caller, char *arg,
       if (caller && conn_get_access(caller) < ALLOW_ADMIN
           && !(srvarg.fcdb_enabled
                && script_fcdb_call("user_delegate_to", caller, dplayer,
-                                   username, &ret)
+                                   qUtf8Printable(username), &ret)
                && ret)) {
 #endif
         cmd_reply(CMD_DELEGATE, caller, C_SYNTAX,
@@ -5298,7 +5301,7 @@ static bool delegate_command(struct connection *caller, char *arg,
 
     // Delegate control of player to another user.
     fc_assert_ret_val(dplayer, false);
-    fc_assert_ret_val(username != NULL, false);
+    fc_assert_ret_val(!username.isEmpty(), false);
 
     /* Forbid delegation of players already controlled by a delegate, and
      * those 'put aside' by a delegate.
@@ -5339,7 +5342,7 @@ static bool delegate_command(struct connection *caller, char *arg,
     /* Forbid delegation to player's original owner
      * (from above test we know that dplayer->username is the original now)
      */
-    if (fc_strcasecmp(dplayer->username, username) == 0) {
+    if (username.compare(dplayer->username, Qt::CaseInsensitive) == 0) {
       if (player_specified) {
         // Probably admin or console.
         cmd_reply(CMD_DELEGATE, caller, C_FAIL,
@@ -5347,7 +5350,8 @@ static bool delegate_command(struct connection *caller, char *arg,
                   _("%s already owns '%s', so cannot also be delegate. "
                     "Use '%sdelegate cancel' to cancel an existing "
                     "delegation."),
-                  username, player_name(dplayer), caller ? "/" : "");
+                  qUtf8Printable(username), player_name(dplayer),
+                  caller ? "/" : "");
       } else {
         /* Player not specified on command line, so they must have been
          * trying to delegate control to themself. Give more specific
@@ -5365,10 +5369,10 @@ static bool delegate_command(struct connection *caller, char *arg,
     /* FIXME: if control was already delegated to someone else, that
      * delegation is implicitly canceled. Perhaps we should tell someone. */
 
-    player_delegation_set(dplayer, username);
+    player_delegation_set(dplayer, qUtf8Printable(username));
     cmd_reply(CMD_DELEGATE, caller, C_OK,
               _("Control of player '%s' delegated to user %s."),
-              player_name(dplayer), username);
+              player_name(dplayer), qUtf8Printable(username));
     ret = true;
     break;
 
