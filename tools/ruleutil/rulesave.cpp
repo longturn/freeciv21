@@ -343,15 +343,7 @@ static bool save_strvec(struct section_file *sfile,
                         const char *entry)
 {
   if (to_save != NULL) {
-    int sect_count = to_save->count();
-    const char *sections[sect_count];
-    int i;
-
-    for (i = 0; i < sect_count; i++) {
-      sections[i] = qUtf8Printable(to_save->at(i));
-    }
-
-    secfile_insert_str_vec(sfile, sections, sect_count, "%s.%s", path,
+    secfile_insert_str_vec(sfile, *to_save, to_save->size(), "%s.%s", path,
                            entry);
   }
 
