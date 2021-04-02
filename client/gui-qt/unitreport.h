@@ -34,7 +34,10 @@ class units_waiting : public QWidget {
 public:
   units_waiting(QWidget *parent = nullptr);
   ~units_waiting();
+protected:
+  void showEvent(QShowEvent *event) override;
 private:
+  void clicked(int x, int y);
   void update_units();
   QTableWidget *waiting_units;
 };
@@ -91,12 +94,15 @@ public:
   void update_units(bool show = false);
   void add_item(unittype_item *item);
   void update_menu() override;
+  static bool exists();
   QHBoxLayout *layout;
   QList<unittype_item *> unittype_list;
 
 protected:
   void mousePressEvent(QMouseEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
+  void resizeEvent(QResizeEvent *event) override;
+  void hideEvent(QHideEvent *event) override;
 };
 
 void popdown_units_report();
