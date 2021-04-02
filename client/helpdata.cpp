@@ -4133,8 +4133,8 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         output_type_iterate_end;
       }
       if (outputs.count()) {
-        or_outputs = qUtf8Printable(strvec_to_or_list(outputs));
-        and_outputs = qUtf8Printable(strvec_to_and_list(outputs));
+        or_outputs = strvec_to_or_list(outputs);
+        and_outputs = strvec_to_and_list(outputs);
       }
 
       switch (peffect->type) {
