@@ -230,29 +230,22 @@ static const char *research_future_set_name(QVector<QString> *psv, int no,
 /**
    Store the rule name of the given tech (including A_FUTURE) in 'buf'.
    'presearch' may be NULL.
-   We don't return a static buffer because that would break anything that
-   needed to work with more than one name at a time.
  */
-const char *research_advance_rule_name(const struct research *presearch,
-                                       Tech_type_id tech)
+QString research_advance_rule_name(const struct research *presearch,
+                                   Tech_type_id tech)
 {
   if (A_FUTURE == tech && NULL != presearch) {
     const int no = presearch->future_tech;
-    const char *name;
 
-    name = qUtf8Printable(future_rule_name->at(no));
-    if (name == NULL) {
+    if (no >= future_rule_name->size()) {
       char buffer[256];
 
       // NB: 'presearch->future_tech == 0' means "Future Tech. 1".
       fc_snprintf(buffer, sizeof(buffer), "%s %d",
                   rule_name_get(&advance_future_name), no + 1);
-      name = research_future_set_name(future_rule_name, no, buffer);
+      return research_future_set_name(future_rule_name, no, buffer);
     }
-
-    fc_assert(name != NULL);
-
-    return name;
+    return future_rule_name->at(no);
   }
 
   return rule_name_get(research_advance_name(tech));
@@ -261,12 +254,9 @@ const char *research_advance_rule_name(const struct research *presearch,
 /**
    Store the translated name of the given tech (including A_FUTURE) in 'buf'.
    'presearch' may be NULL.
-   We don't return a static buffer because that would break anything that
-   needed to work with more than one name at a time.
  */
-const QString
-research_advance_name_translation(const struct research *presearch,
-                                  Tech_type_id tech)
+QString research_advance_name_translation(const struct research *presearch,
+                                          Tech_type_id tech)
 {
   if (A_FUTURE == tech && NULL != presearch) {
     const int no = presearch->future_tech;

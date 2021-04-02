@@ -194,11 +194,12 @@ static void dai_select_tech(struct ai_type *ait, struct player *pplayer,
     goal->want = goal_values[newgoal] / num_cities_nonzero;
     goal->current_want =
         (goal_values[presearch->tech_goal] / num_cities_nonzero);
-    log_debug("Goal->choice = %s, goal->want = " ADV_WANT_PRINTF
-              ", goal_value = %d, "
-              "num_cities_nonzero = %d",
-              research_advance_rule_name(presearch, goal->choice),
-              goal->want, goal_values[newgoal], num_cities_nonzero);
+    log_debug(
+        "Goal->choice = %s, goal->want = " ADV_WANT_PRINTF
+        ", goal_value = %d, "
+        "num_cities_nonzero = %d",
+        qUtf8Printable(research_advance_rule_name(presearch, goal->choice)),
+        goal->want, goal_values[newgoal], num_cities_nonzero);
   }
 
   /* we can't have this, which will happen in the circumstance
@@ -366,7 +367,8 @@ void dai_manage_tech(struct ai_type *ait, struct player *pplayer)
                                              false))) {
       TECH_LOG(ait, LOG_DEBUG, pplayer, advance_by_number(choice.choice),
                "new research, was %s, penalty was %d",
-               research_advance_rule_name(research, research->researching),
+               qUtf8Printable(research_advance_rule_name(
+                   research, research->researching)),
                penalty);
       choose_tech(research, choice.choice);
     }
@@ -377,12 +379,15 @@ void dai_manage_tech(struct ai_type *ait, struct player *pplayer)
    * (research->tech_goal) is practically never used, see the comment for
    * ai_next_tech_goal */
   if (goal.choice != research->tech_goal) {
-    log_debug("%s change goal from %s (want=" ADV_WANT_PRINTF
-              ") to %s (want=" ADV_WANT_PRINTF ")",
-              player_name(pplayer),
-              research_advance_rule_name(research, research->tech_goal),
-              goal.current_want,
-              research_advance_rule_name(research, goal.choice), goal.want);
+    log_debug(
+        "%s change goal from %s (want=" ADV_WANT_PRINTF
+        ") to %s (want=" ADV_WANT_PRINTF ")",
+        player_name(pplayer),
+        qUtf8Printable(
+            research_advance_rule_name(research, research->tech_goal)),
+        goal.current_want,
+        qUtf8Printable(research_advance_rule_name(research, goal.choice)),
+        goal.want);
     choose_tech_goal(research, goal.choice);
   }
 }

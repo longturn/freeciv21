@@ -2237,7 +2237,8 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
         break;
       } else {
         log_debug("Pressed tech %s from captured enemy",
-                  research_advance_rule_name(research_get(pvictor), ttid));
+                  qUtf8Printable(research_advance_rule_name(
+                      research_get(pvictor), ttid)));
         if (!fc_rand(3)) {
           break; // out of luck
         }

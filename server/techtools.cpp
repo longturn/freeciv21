@@ -682,7 +682,8 @@ void update_bulbs(struct player *pplayer, int bulbs, bool check_tech)
         log_debug("%s: tech loss (%s)", research_rule_name(research),
                   (is_future_tech(tech)
                        ? "Future Tech"
-                       : research_advance_rule_name(research, tech)));
+                       : qUtf8Printable(
+                           research_advance_rule_name(research, tech))));
         research_tech_lost(research, tech);
         /* Make notification after losing the research, in case it is
          * a future tech (for getting the right tech number). */
