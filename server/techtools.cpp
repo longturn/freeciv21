@@ -146,7 +146,6 @@ void do_tech_parasite_effect(struct player *pplayer)
   struct research *plr_research;
   QString effects;
   char research_name[MAX_LEN_NAME * 2];
-  const char *advance_name;
   Tech_type_id tech;
   /* Note that two EFT_TECH_PARASITE effects will combine into a single,
    * much worse effect. */
@@ -197,26 +196,26 @@ void do_tech_parasite_effect(struct player *pplayer)
 
   // Notify.
   research_pretty_name(plr_research, research_name, sizeof(research_name));
-  advance_name =
-      qUtf8Printable(research_advance_name_translation(plr_research, tech));
+  auto advance_name = research_advance_name_translation(plr_research, tech);
   effects = get_effect_list_req_text(plist);
 
   notify_player(pplayer, NULL, E_TECH_GAIN, ftc_server,
                 /* TRANS: Tech from source of an effect
                  * (Great Library) */
-                Q_("?fromeffect:%s acquired from %s!"), advance_name,
-                qUtf8Printable(effects));
+                Q_("?fromeffect:%s acquired from %s!"),
+                qUtf8Printable(advance_name), qUtf8Printable(effects));
   notify_research(plr_research, pplayer, E_TECH_GAIN, ftc_server,
                   /* TRANS: Tech from source of an effect
                    * (Great Library) */
-                  Q_("?fromeffect:%s acquired from %s's %s!"), advance_name,
-                  player_name(pplayer), qUtf8Printable(effects));
+                  Q_("?fromeffect:%s acquired from %s's %s!"),
+                  qUtf8Printable(advance_name), player_name(pplayer),
+                  qUtf8Printable(effects));
   notify_research_embassies(
       plr_research, NULL, E_TECH_EMBASSY, ftc_server,
       /* TRANS: Tech from source of an effect
        * (Great Library) */
       Q_("?fromeffect:The %s have acquired %s from %s."), research_name,
-      advance_name, qUtf8Printable(effects));
+      qUtf8Printable(advance_name), qUtf8Printable(effects));
 
   effect_list_destroy(plist);
 
