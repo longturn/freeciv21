@@ -3493,11 +3493,9 @@ server_option_enum_pretty(const struct option *poption)
 static bool server_option_enum_set(struct option *poption, int val)
 {
   struct server_option *psoption = SERVER_OPTION(poption);
-  const char *name;
 
   if (val == psoption->enumerator.value
-      || !(name = qUtf8Printable(
-               psoption->enumerator.support_names->at(val)))) {
+      || val >= psoption->enumerator.support_names->size()) {
     return false;
   }
 
@@ -3512,17 +3510,17 @@ static bool server_option_enum_set(struct option *poption, int val)
    OT_ENUM.
  */
 static void server_option_enum_support_name(const struct option *poption,
-                                            const char **pvalue,
-                                            const char **pdefault)
+                                            QString *pvalue,
+                                            QString *pdefault)
 {
   const struct server_option *psoption = SERVER_OPTION(poption);
   const QVector<QString> *values = psoption->enumerator.support_names;
 
   if (NULL != pvalue) {
-    *pvalue = qUtf8Printable(values->at(psoption->enumerator.value));
+    *pvalue = values->at(psoption->enumerator.value);
   }
   if (NULL != pdefault) {
-    *pdefault = qUtf8Printable(values->at(psoption->enumerator.def));
+    *pdefault = values->at(psoption->enumerator.def);
   }
 }
 
@@ -4187,12 +4185,10 @@ static void settable_options_save(struct section_file *sf)
 void desired_settable_options_update()
 {
   char val_buf[1024], def_buf[1024];
-  const char *value, *def_val;
+  QString value, def_val;
 
   options_iterate(server_optset, poption)
   {
-    value = NULL;
-    def_val = NULL;
     switch (option_type(poption)) {
     case OT_BOOLEAN:
       fc_strlcpy(val_buf, option_bool_get(poption) ? "enabled" : "disabled",
@@ -4233,7 +4229,7 @@ void desired_settable_options_update()
       continue;
     }
 
-    if (0 == strcmp(value, def_val)) {
+    if (value == def_val) {
       // Not set, using default...
       settable_options->remove(option_name(poption));
     } else {
@@ -4335,7 +4331,6 @@ static void desired_settable_option_send(struct option *poption)
     return;
   case OT_ENUM: {
     char desired_buf[256];
-    const char *value_str;
 
     // Handle old values.
     if (str_to_int(desired, &value)
@@ -4344,8 +4339,9 @@ static void desired_settable_option_send(struct option *poption)
       desired = desired_buf;
     }
 
+    QString value_str;
     server_option_enum_support_name(poption, &value_str, NULL);
-    if (0 != strcmp(desired, value_str)) {
+    if (desired == value_str) {
       send_chat_printf("/set %s \"%s\"", option_name(poption), desired);
     }
   }
