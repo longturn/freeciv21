@@ -185,6 +185,12 @@ size_t secfile_insert_str_vec_full(struct section_file *secfile,
                                    const char *comment, bool allow_replace,
                                    bool no_escape, const char *path, ...)
     fc__attribute((__format__(__printf__, 7, 8)));
+size_t secfile_insert_str_vec_full(struct section_file *secfile,
+                                   const QVector<QString> &strings,
+                                   size_t dim, const char *comment,
+                                   bool allow_replace, bool no_escape,
+                                   const char *path, ...)
+    fc__attribute((__format__(__printf__, 7, 8)));
 #define secfile_insert_str_vec(secfile, strings, dim, path, ...)            \
   secfile_insert_str_vec_full(secfile, strings, dim, NULL, false, false,    \
                               path, ##__VA_ARGS__)

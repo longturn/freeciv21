@@ -107,11 +107,10 @@ int research_pretty_name(const struct research *presearch, char *buf,
 struct research *research_by_number(int number);
 struct research *research_get(const struct player *pplayer);
 
-const char *research_advance_rule_name(const struct research *presearch,
-                                       Tech_type_id tech);
-const QString
-research_advance_name_translation(const struct research *presearch,
-                                  Tech_type_id tech);
+QString research_advance_rule_name(const struct research *presearch,
+                                   Tech_type_id tech);
+QString research_advance_name_translation(const struct research *presearch,
+                                          Tech_type_id tech);
 
 // Ancillary routines
 void research_update(struct research *presearch);

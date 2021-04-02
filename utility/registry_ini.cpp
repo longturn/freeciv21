@@ -1297,6 +1297,47 @@ size_t secfile_insert_str_vec_full(struct section_file *secfile,
 }
 
 /**
+   Insert up to 'dim' string entries at 'path,0', 'path,1' etc. Returns
+   the number of entries inserted or replaced.
+ */
+size_t secfile_insert_str_vec_full(struct section_file *secfile,
+                                   const QVector<QString> &strings,
+                                   size_t dim, const char *comment,
+                                   bool allow_replace, bool no_escape,
+                                   const char *path, ...)
+{
+  char fullpath[MAX_LEN_SECPATH];
+  size_t i, ret = 0;
+  va_list args;
+
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, 0);
+
+  va_start(args, path);
+  fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
+  va_end(args);
+
+  /* NB: 'path,0' is actually 'path'.  See comment in the head
+   * of the file. */
+  if (dim > 0 && !strings.isEmpty()
+      && NULL
+             != secfile_insert_str_full(secfile, qUtf8Printable(strings[0]),
+                                        comment, allow_replace, no_escape,
+                                        EST_NORMAL, "%s", fullpath)) {
+    ret++;
+  }
+  for (i = 1; i < dim && i < strings.size(); i++) {
+    if (NULL
+        != secfile_insert_str_full(
+            secfile, qUtf8Printable(strings[i]), comment, allow_replace,
+            no_escape, EST_NORMAL, "%s,%d", fullpath, static_cast<int>(i))) {
+      ret++;
+    }
+  }
+
+  return ret;
+}
+
+/**
    Insert a read-from-a-file string entry
  */
 struct entry *secfile_insert_filereference(struct section_file *secfile,

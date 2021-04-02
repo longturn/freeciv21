@@ -146,7 +146,6 @@ void do_tech_parasite_effect(struct player *pplayer)
   struct research *plr_research;
   QString effects;
   char research_name[MAX_LEN_NAME * 2];
-  const char *advance_name;
   Tech_type_id tech;
   /* Note that two EFT_TECH_PARASITE effects will combine into a single,
    * much worse effect. */
@@ -197,26 +196,26 @@ void do_tech_parasite_effect(struct player *pplayer)
 
   // Notify.
   research_pretty_name(plr_research, research_name, sizeof(research_name));
-  advance_name =
-      qUtf8Printable(research_advance_name_translation(plr_research, tech));
+  auto advance_name = research_advance_name_translation(plr_research, tech);
   effects = get_effect_list_req_text(plist);
 
   notify_player(pplayer, NULL, E_TECH_GAIN, ftc_server,
                 /* TRANS: Tech from source of an effect
                  * (Great Library) */
-                Q_("?fromeffect:%s acquired from %s!"), advance_name,
-                qUtf8Printable(effects));
+                Q_("?fromeffect:%s acquired from %s!"),
+                qUtf8Printable(advance_name), qUtf8Printable(effects));
   notify_research(plr_research, pplayer, E_TECH_GAIN, ftc_server,
                   /* TRANS: Tech from source of an effect
                    * (Great Library) */
-                  Q_("?fromeffect:%s acquired from %s's %s!"), advance_name,
-                  player_name(pplayer), qUtf8Printable(effects));
+                  Q_("?fromeffect:%s acquired from %s's %s!"),
+                  qUtf8Printable(advance_name), player_name(pplayer),
+                  qUtf8Printable(effects));
   notify_research_embassies(
       plr_research, NULL, E_TECH_EMBASSY, ftc_server,
       /* TRANS: Tech from source of an effect
        * (Great Library) */
       Q_("?fromeffect:The %s have acquired %s from %s."), research_name,
-      advance_name, qUtf8Printable(effects));
+      qUtf8Printable(advance_name), qUtf8Printable(effects));
 
   effect_list_destroy(plist);
 
@@ -570,21 +569,20 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
   if (bonus_tech_hack) {
     Tech_type_id additional_tech;
     char research_name[MAX_LEN_NAME * 2];
-    const char *radv_name;
 
     research_pretty_name(presearch, research_name, sizeof(research_name));
 
     additional_tech = pick_free_tech(presearch);
 
-    radv_name = qUtf8Printable(
-        research_advance_name_translation(presearch, additional_tech));
+    auto radv_name =
+        research_advance_name_translation(presearch, additional_tech);
 
     give_immediate_free_tech(presearch, additional_tech);
     if (advance_by_number(tech_found)->bonus_message != NULL
         && additional_tech != A_UNSET) {
       notify_research(presearch, NULL, E_TECH_GAIN, ftc_server,
                       _(advance_by_number(tech_found)->bonus_message),
-                      radv_name);
+                      qUtf8Printable(radv_name));
     } else if (additional_tech != A_UNSET) {
       /* FIXME: "your" when it was just civilization of one of the players
        * sharing the reseach. */
@@ -592,12 +590,12 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
                       _("Great scientists from all the "
                         "world join your civilization: you learn "
                         "%s immediately."),
-                      radv_name);
+                      qUtf8Printable(radv_name));
     }
     // TODO: Ruleset should be able to customize this message too
     notify_research_embassies(presearch, NULL, E_TECH_EMBASSY, ftc_server,
                               _("%s acquire %s as a result of learning %s."),
-                              research_name, radv_name,
+                              research_name, qUtf8Printable(radv_name),
                               qUtf8Printable(advance_name));
   }
 }
@@ -683,7 +681,8 @@ void update_bulbs(struct player *pplayer, int bulbs, bool check_tech)
         log_debug("%s: tech loss (%s)", research_rule_name(research),
                   (is_future_tech(tech)
                        ? "Future Tech"
-                       : research_advance_rule_name(research, tech)));
+                       : qUtf8Printable(
+                           research_advance_rule_name(research, tech))));
         research_tech_lost(research, tech);
         /* Make notification after losing the research, in case it is
          * a future tech (for getting the right tech number). */

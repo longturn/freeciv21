@@ -740,14 +740,14 @@ void conn_pattern_destroy(struct conn_pattern *ppattern)
 bool conn_pattern_match(const struct conn_pattern *ppattern,
                         const struct connection *pconn)
 {
-  const char *test = NULL;
+  QString test;
 
   switch (ppattern->type) {
   case CPT_USER:
     test = pconn->username;
     break;
   case CPT_HOST:
-    test = qUtf8Printable(pconn->addr);
+    test = pconn->addr;
     break;
   case CPT_IP:
     if (is_server()) {
@@ -756,8 +756,8 @@ bool conn_pattern_match(const struct conn_pattern *ppattern,
     break;
   }
 
-  if (NULL != test) {
-    return wildcard_fit_string(ppattern->wildcard, test);
+  if (!test.isEmpty()) {
+    return wildcard_fit_string(ppattern->wildcard, qUtf8Printable(test));
   } else {
     qCritical("%s(): Invalid pattern type (%d)", __FUNCTION__,
               ppattern->type);
