@@ -78,7 +78,6 @@ void units_waiting::clicked(int x, int y)
     z++;
   }
   unit_list_iterate_end
-
 }
 
 void units_waiting::update_units()

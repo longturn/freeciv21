@@ -85,6 +85,7 @@ class units_reports : public fcwidget {
   QWidget scroll_widget;
   static units_reports *m_instance;
   units_waiting *uw;
+
 public:
   ~units_reports() override;
   static units_reports *instance();
