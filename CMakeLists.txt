@@ -36,14 +36,14 @@ if(WIN32 OR MSYS OR MINGW)
   set(CMAKE_INSTALL_DOCDIR "${CMAKE_INSTALL_DATAROOTDIR}/doc/")
 
   get_filename_component(MINGW_PATH ${CMAKE_CXX_COMPILER} PATH)
-  set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS 
+  set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS
     ${MINGW_PATH}/libbrotlicommon.dll
     ${MINGW_PATH}/libbrotlidec.dll
     ${MINGW_PATH}/libbz2-1.dll
     ${MINGW_PATH}/libdouble-conversion.dll
     ${MINGW_PATH}/libFLAC-8.dll
     ${MINGW_PATH}/libfreetype-6.dll
-    ${MINGW_PATH}/libgcc_s_seh-1.dll 
+    ${MINGW_PATH}/libgcc_s_seh-1.dll
     ${MINGW_PATH}/libglib-2.0-0.dll
     ${MINGW_PATH}/libgraphite2.dll
     ${MINGW_PATH}/libharfbuzz-0.dll
@@ -51,7 +51,7 @@ if(WIN32 OR MSYS OR MINGW)
     ${MINGW_PATH}/libicudt68.dll
     ${MINGW_PATH}/libicuin68.dll
     ${MINGW_PATH}/libicuuc68.dll
-    ${MINGW_PATH}/libintl-8.dll 
+    ${MINGW_PATH}/libintl-8.dll
     ${MINGW_PATH}/libKF5Archive.dll
     ${MINGW_PATH}/liblzma-5.dll
     ${MINGW_PATH}/libmpg123-0.dll
@@ -63,7 +63,7 @@ if(WIN32 OR MSYS OR MINGW)
     ${MINGW_PATH}/libpng16-16.dll
     ${MINGW_PATH}/libreadline8.dll
     ${MINGW_PATH}/libsqlite3-0.dll
-    ${MINGW_PATH}/libstdc++-6.dll 
+    ${MINGW_PATH}/libstdc++-6.dll
     ${MINGW_PATH}/libtermcap-0.dll
     ${MINGW_PATH}/libvorbis-0.dll
     ${MINGW_PATH}/libvorbisfile-3.dll
@@ -149,11 +149,11 @@ install(
 if(WIN32 OR MSYS OR MINGW)
   # Install the libraries compiled in the section above
   install(
-    PROGRAMS 
-    ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} 
-    DESTINATION ${CMAKE_INSTALL_BINDIR} 
+    PROGRAMS
+    ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
-  
+
   # Custom command files to run the applications
   install(
     FILES
@@ -161,14 +161,14 @@ if(WIN32 OR MSYS OR MINGW)
     ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-modpack-qt.cmd
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
-    
+
   # Qt5 Plugins -- this is a hack
   install(
     DIRECTORY ${MINGW_PATH}/../share/qt5/plugins/platforms
     DESTINATION ${CMAKE_INSTALL_BINDIR}/plugins
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.dll)
-	
+
   set(CMAKE_INSTALL_LOCALEDIR "${CMAKE_INSTALL_DATAROOTDIR}/locale")
 
 endif()
