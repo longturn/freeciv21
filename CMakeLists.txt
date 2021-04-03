@@ -157,8 +157,8 @@ if(WIN32 OR MSYS OR MINGW)
   # Custom command files to run the applications
   install(
     FILES
-    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv-qt.cmd
-    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv-modpack-qt.cmd
+    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-qt.cmd
+    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-modpack-qt.cmd
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
     
