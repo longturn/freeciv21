@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-    <id type="desktop">net.longturn.freeciv21.qt</id>
+    <id type="desktop">net.longturn.freeciv21.client</id>
     <metadata_license>CC0</metadata_license>
     <project_license>GPL-3.0+</project_license>
     <name>Freeciv21 Qt client</name>
@@ -14,7 +14,7 @@
             This client is for connecting to network games, or to launch local single-player games. It is based on the Qt framework.
         </p>
     </description>
-    <launchable type="desktop-id">org.longturn.freeciv21.qt.desktop</launchable>
+    <launchable type="desktop-id">org.longturn.freeciv21.client.desktop</launchable>
     <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv21-client.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
@@ -27,7 +27,7 @@
     <update_contact>longturn.net@gmail.com</update_contact>
     <developer_name>Longturn.net Community</developer_name>
     <provides>
-      <binary>freeciv21-qt</binary>
+      <binary>freeciv21-client</binary>
     </provides>
     <categories>
       <category>Game</category>
