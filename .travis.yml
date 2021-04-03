@@ -42,6 +42,27 @@ jobs:
         - libsdl2-mixer-dev
     before_script:
       - scripts/travis-clang-format.sh
+  - name: "windows"
+    if: branch != coverity_scan
+    os: windows
+    script:
+      - $mingw64 pacman -Syu --noconfirm
+      - $mingw64 pacman -S --noconfirm --needed
+          mingw-w64-x86_64-cmake
+          mingw-w64-x86_64-ninja
+          mingw-w64-x86_64-nsis
+          mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-libunwind
+          mingw-w64-x86_64-readline
+          mingw-w64-x86_64-SDL2_mixer
+          mingw-w64-x86_64-qt5
+          mingw-w64-x86_64-karchive-qt5
+      # Disable NLS for now, see #383
+      - $mingw64 cmake . -B build -G Ninja
+          -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+          -DFREECIV_ENABLE_NLS=OFF
+      - $mingw64 cmake --build build
+      - $mingw64 cmake --build build --target package
   - name: "os_x"
     if: branch != coverity_scan
     os: osx
@@ -96,3 +117,38 @@ script:
   - cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
   - cmake --build build
   - cmake --build build --target install
+
+# See https://docs.travis-ci.com/user/reference/windows/#how-do-i-use-msys2
+before_install:
+- |-
+  case $TRAVIS_OS_NAME in
+    windows)
+      [[ ! -f C:/tools/msys64/msys2_shell.cmd ]] && rm -rf C:/tools/msys64
+      choco uninstall -y mingw
+      choco upgrade --no-progress -y msys2
+      export msys2='cmd //C RefreshEnv.cmd '
+      export msys2+='& set MSYS=winsymlinks:nativestrict '
+      export msys2+='& C:\\tools\\msys64\\msys2_shell.cmd -defterm -no-start'
+      export mingw64="$msys2 -mingw64 -full-path -here -c "\"\$@"\" --"
+      export msys2+=" -msys2 -c "\"\$@"\" --"
+      $msys2 pacman --sync --noconfirm --needed mingw-w64-x86_64-toolchain
+      ## Install more MSYS2 packages from https://packages.msys2.org/base here
+      taskkill //IM gpg-agent.exe //F  # https://travis-ci.community/t/4967
+      export PATH=/C/tools/msys64/mingw64/bin:$PATH
+      export MAKE=mingw32-make  # so that Autotools can find it
+      ;;
+  esac
+
+before_cache:
+- |-
+  case $TRAVIS_OS_NAME in
+    windows)
+      # https://unix.stackexchange.com/a/137322/107554
+      $msys2 pacman --sync --clean --noconfirm
+      ;;
+  esac
+
+cache:
+  directories:
+    - $HOME/AppData/Local/Temp/chocolatey
+    - /C/tools/msys64
