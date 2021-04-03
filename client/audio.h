@@ -14,8 +14,6 @@
 
 #include <QVector>
 
-#define MAX_ALT_AUDIO_FILES 5
-
 typedef void (*audio_finished_callback)();
 
 class QString;

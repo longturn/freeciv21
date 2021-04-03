@@ -403,7 +403,7 @@ static void music_finished_callback()
 static int audio_play_tag(struct section_file *sfile, const QString &tag,
                           bool repeat, int exclude, bool keepstyle)
 {
-  const char *soundfile;
+  QString soundfile;
   QString fullpath;
   audio_finished_callback cb = NULL;
   int ret = 0;
@@ -413,44 +413,43 @@ static int audio_play_tag(struct section_file *sfile, const QString &tag,
   }
 
   if (sfile) {
-    soundfile = secfile_lookup_str(sfile, "files.%s", qUtf8Printable(tag));
-    if (soundfile == NULL) {
-      const char *files[MAX_ALT_AUDIO_FILES];
-      int excluded = -1;
-      int i;
-      int j;
-
-      j = 0;
-      for (i = 0; i < MAX_ALT_AUDIO_FILES; i++) {
+    auto str = secfile_lookup_str(sfile, "files.%s", qUtf8Printable(tag));
+    if (str) {
+      soundfile = str;
+    } else {
+      std::vector<QString> files;
+      for (int i = 0; i < std::numeric_limits<int>::max(); i++) {
         const char *ftmp =
             secfile_lookup_str(sfile, "files.%s_%d", qUtf8Printable(tag), i);
 
-        if (ftmp == NULL) {
-          if (excluded != -1 && j == 0) {
-            // Cannot exclude the only track
-            excluded = -1;
-            j++;
-          }
-          files[j] = NULL;
+        if (ftmp == nullptr) {
+          // Reached the end of the tracks vector
           break;
         }
-        files[j] = ftmp;
-        if (i != exclude) {
-          j++;
-        } else {
-          excluded = j;
-        }
+
+        files.push_back(ftmp);
       }
 
-      if (j > 0) {
-        ret = fc_rand(j);
+      if (files.size() > 1 && exclude >= 0) {
+        // Handle excluded track. Can only do it if we have more than one...
+        // There are only N-1 possible files to choose from since one is
+        // excluded.
+        ret = fc_rand(files.size() - 1);
 
-        soundfile = files[ret];
-        if (excluded != -1 && excluded < ret) {
-          /* Exclude track was skipped earlier, include it to track number to
-           * return */
-          ret++;
+        if (ret == exclude) {
+          // The excluded file was selected, select the last one instead.
+          // Note that the last file cannot be selected above.
+          ret = files.size() - 1;
         }
+      } else {
+        // No excluded track, easy case.
+        ret = fc_rand(files.size());
+      }
+
+      if (files.empty()) {
+        ret = -1;
+      } else {
+        soundfile = files.at(ret);
       }
     }
 
@@ -462,13 +461,13 @@ static int audio_play_tag(struct section_file *sfile, const QString &tag,
       cb = music_finished_callback;
     }
 
-    if (NULL == soundfile) {
+    if (soundfile.isEmpty()) {
       qDebug("No sound file for tag %s", qUtf8Printable(tag));
     } else {
-      fullpath = fileinfoname(get_data_dirs(), soundfile);
+      fullpath = fileinfoname(get_data_dirs(), qUtf8Printable(soundfile));
       if (fullpath.isEmpty()) {
-        qCritical("Cannot find audio file %s for tag %s", soundfile,
-                  qUtf8Printable(tag));
+        qCritical("Cannot find audio file %s for tag %s",
+                  qUtf8Printable(soundfile), qUtf8Printable(tag));
       }
     }
   }
