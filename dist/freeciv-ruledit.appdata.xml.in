@@ -14,7 +14,7 @@
             Freeciv21 Ruleset Editor can be used to create your own game rules, or the change existing ones. It is based on the Qt framework.
         </p>
     </description>
-    <launchable type="desktop-id">org.longturn.freeciv_rukedit.desktop</launchable>
+    <launchable type="desktop-id">net.longturn.freeciv_rukedit.desktop</launchable>
     <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv21-client.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>

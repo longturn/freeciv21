@@ -15,7 +15,7 @@
             It is based on the Qt framework.
         </p>
     </description>
-    <launchable type="desktop-id">org.longturn.freeciv21.modpack_qt.desktop</launchable>
+    <launchable type="desktop-id">net.longturn.freeciv21.modpack_qt.desktop</launchable>
     <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv21-modpack.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>

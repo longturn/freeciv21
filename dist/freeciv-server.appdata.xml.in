@@ -14,7 +14,7 @@
             The server hosts multiplayer games. For single-player games the client will launch server for itself automatically. The server is a console application.
         </p>
     </description>
-    <launchable type="desktop-id">org.longturn.freeciv_server.desktop</launchable>
+    <launchable type="desktop-id">net.longturn.freeciv_server.desktop</launchable>
     <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv-server.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
