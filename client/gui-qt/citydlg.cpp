@@ -55,6 +55,7 @@
 #include "mapview.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
+#include "sidebar.h"
 #include "tooltips.h"
 
 extern QApplication *qapp;
@@ -2838,6 +2839,7 @@ void city_dialog::update_title()
  */
 void qtg_real_city_dialog_popup(struct city *pcity)
 {
+  sidebarShowMap(true);
   queen()->mapview_wdg->hide_all_fcwidgets();
   center_tile_mapcanvas(pcity->tile);
 

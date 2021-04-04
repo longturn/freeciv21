@@ -24,6 +24,7 @@
 #include "nation.h"
 #include "research.h"
 // client
+#include "citydlg_g.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "ratesdlg_g.h"
@@ -546,6 +547,7 @@ void sidebar::resizeMe(int hght, bool force)
 void sidebarShowMap(bool nothing)
 {
   Q_UNUSED(nothing)
+  popdown_all_city_dialogs();
   queen()->game_tab_widget->setCurrentIndex(0);
 }
 
