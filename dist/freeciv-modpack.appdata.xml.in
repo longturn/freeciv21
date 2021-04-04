@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-    <id type="desktop">net.longturn.freeciv21.modpack_qt</id>
+    <id type="desktop">net.longturn.freeciv21.modpack-qt</id>
     <metadata_license>CC0</metadata_license>
     <project_license>GPL-3.0+</project_license>
     <name>Freeciv21 Qt modpack installer</name>
@@ -15,7 +15,7 @@
             It is based on the Qt framework.
         </p>
     </description>
-    <launchable type="desktop-id">net.longturn.freeciv21.modpack_qt.desktop</launchable>
+    <launchable type="desktop-id">net.longturn.freeciv21.modpack-qt.desktop</launchable>
     <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv21-modpack.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
