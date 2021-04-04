@@ -277,7 +277,7 @@ bool client_start_server()
   }
 
   // Start it
-  qInfo(_("Starting freeciv21-server at %s"), qPrintable(location));
+  qInfo(_("Starting freeciv21-server at %s"), qUtf8Printable(location));
 
   serverProcess::i()->start(location, arguments);
   if (!serverProcess::i()->waitForStarted(3000)) {
@@ -402,7 +402,7 @@ void send_client_wants_hack(const char *filename)
     QDir().mkpath(sdir);
 
     fc_snprintf(challenge_fullname, sizeof(challenge_fullname), "%s/%s",
-                qPrintable(sdir), filename);
+                qUtf8Printable(sdir), filename);
 
     // generate an authentication token
     randomize_string(req.token, sizeof(req.token));

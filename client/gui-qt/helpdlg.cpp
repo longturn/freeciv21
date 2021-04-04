@@ -739,13 +739,14 @@ void help_widget::anchor_clicked(const QString &link)
   st = sl.at(1);
   st = st.replace("\u00A0", QLatin1String(" "));
 
-  if (strcmp(qPrintable(st), REQ_LABEL_NEVER) != 0
-      && strcmp(qPrintable(st), skip_intl_qualifier_prefix(REQ_LABEL_NONE))
+  if (strcmp(qUtf8Printable(st), REQ_LABEL_NEVER) != 0
+      && strcmp(qUtf8Printable(st),
+                skip_intl_qualifier_prefix(REQ_LABEL_NONE))
              != 0
-      && strcmp(qPrintable(st),
+      && strcmp(qUtf8Printable(st),
                 advance_name_translation(advance_by_number(A_NONE)))
              != 0) {
-    popup_help_dialog_typed(qPrintable(st), type);
+    popup_help_dialog_typed(qUtf8Printable(st), type);
   }
 }
 

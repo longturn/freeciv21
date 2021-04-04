@@ -87,7 +87,7 @@ QString city_log_prefix(const city *pcity);
     if (notify) {                                                           \
       qInfo().noquote() << message;                                         \
       notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s",                    \
-                  qPrintable(message));                                     \
+                  qUtf8Printable(message));                                 \
     } else {                                                                \
       qDebug().noquote() << message;                                        \
     }                                                                       \
@@ -104,7 +104,7 @@ QString unit_log_prefix(const unit *punit);
     if (notify) {                                                           \
       qInfo().noquote() << message;                                         \
       notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s",                    \
-                  qPrintable(message));                                     \
+                  qUtf8Printable(message));                                 \
     } else {                                                                \
       qDebug().noquote() << message;                                        \
     }                                                                       \

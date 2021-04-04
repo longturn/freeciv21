@@ -48,17 +48,17 @@ void load_install_info_lists(struct fcmp_params *fcmp)
 
   fc_snprintf(main_db_filename, sizeof(main_db_filename),
               "%s/" DATASUBDIR "/" FCMP_CONTROLD "/mp.db",
-              qPrintable(fcmp->inst_prefix));
+              qUtf8Printable(fcmp->inst_prefix));
   fc_snprintf(scenario_db_filename, sizeof(scenario_db_filename),
               "%s/scenarios/" FCMP_CONTROLD "/mp.db",
-              qPrintable(fcmp->inst_prefix));
+              qUtf8Printable(fcmp->inst_prefix));
 
   fc_snprintf(main_ii_filename, sizeof(main_ii_filename),
               "%s/" DATASUBDIR "/" FCMP_CONTROLD "/modpacks.db",
-              qPrintable(fcmp->inst_prefix));
+              qUtf8Printable(fcmp->inst_prefix));
   fc_snprintf(scenario_ii_filename, sizeof(scenario_ii_filename),
               "%s/scenarios/" FCMP_CONTROLD "/modpacks.db",
-              qPrintable(fcmp->inst_prefix));
+              qUtf8Printable(fcmp->inst_prefix));
 
   if (fc_stat(main_db_filename, &buf)) {
     create_mpdb(main_db_filename, false);

@@ -297,7 +297,8 @@ int main(int argc, char *argv[])
         parser.value(QStringLiteral("port")).toUInt(&conversion_ok);
     srvarg.user_specified_port = true;
     if (!conversion_ok) {
-      qFatal(_("Invalid port number %s"), qPrintable(parser.value("port")));
+      qFatal(_("Invalid port number %s"),
+             qUtf8Printable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
   }
@@ -315,7 +316,8 @@ int main(int argc, char *argv[])
     srvarg.quitidle =
         parser.value(QStringLiteral("quitidle")).toUInt(&conversion_ok);
     if (!conversion_ok) {
-      qFatal(_("Invalid number %s"), qPrintable(parser.value("quitidle")));
+      qFatal(_("Invalid number %s"),
+             qUtf8Printable(parser.value("quitidle")));
       exit(EXIT_FAILURE);
     }
   }
@@ -364,7 +366,7 @@ int main(int argc, char *argv[])
       srvarg.announce = ANNOUNCE_NONE;
     } else {
       qCritical(_("Illegal value \"%s\" for --Announce"),
-                qPrintable(parser.value("Announce")));
+                qUtf8Printable(parser.value("Announce")));
     }
   }
   if (parser.isSet(QStringLiteral("warnings"))) {
