@@ -811,7 +811,7 @@ int main(int argc, char **argv)
 
   // Set ruleset user requested in to use
   if (!ruleset.isEmpty()) {
-    sz_strlcpy(game.server.rulesetdir, qPrintable(ruleset));
+    sz_strlcpy(game.server.rulesetdir, qUtf8Printable(ruleset));
   }
 
   settings_init(false);

@@ -526,7 +526,7 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
 
     // Call the callback with the modpack info we just parsed
     cb(name, resolved, version, license, type,
-       QString::fromUtf8(_(qPrintable(subtype))), notes);
+       QString::fromUtf8(_(qUtf8Printable(subtype))), notes);
   }
 
   return nullptr;

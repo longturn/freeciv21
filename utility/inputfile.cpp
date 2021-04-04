@@ -777,14 +777,14 @@ static QString get_token_value(struct inputfile *inf)
     if (rfname == NULL) {
 
       qCCritical(inf_category, _("Cannot find stringfile \"%s\"."),
-                 qPrintable(name));
+                 qUtf8Printable(name));
       return "";
     }
     auto fp = new KFilterDev(rfname);
     fp->open(QIODevice::ReadOnly);
     if (!fp->isOpen()) {
       qCCritical(inf_category, _("Cannot open stringfile \"%s\"."),
-                 qPrintable(rfname));
+                 qUtf8Printable(rfname));
       delete fp;
       return "";
     }

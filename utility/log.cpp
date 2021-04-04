@@ -137,7 +137,7 @@ bool log_init(const QString &level_str)
     //        "debug". It's exactly what the user must type.
     qCritical(_("\"%s\" is not a valid log level name (valid names are "
                 "fatal/critical/warning/info/debug)"),
-              qPrintable(level_str));
+              qUtf8Printable(level_str));
     return false;
   }
 }
@@ -256,6 +256,6 @@ void log_time(const QString &msg, bool log)
     logging = true;
   }
   if (logging) {
-    qInfo() << qPrintable(msg);
+    qInfo() << qUtf8Printable(msg);
   }
 }
