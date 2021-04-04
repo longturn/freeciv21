@@ -86,8 +86,14 @@ bool log_init(const QString &level_str)
 #endif
 
   // Set the default format (override with QT_MESSAGE_PATTERN)
+#ifdef QT_DEBUG
+  // In debug builds, we have the source location
   qSetMessagePattern(
       QStringLiteral("[%{type}] %{appname} (%{file}:%{line}) - %{message}"));
+#else
+  // Not a debug build, the function name will not be known
+  qSetMessagePattern(QStringLiteral("[%{type}] %{appname} - %{message}"));
+#endif
 
   // Create default filter rules to pass to Qt. We do it this way so the user
   // can override our simplistic rules with environment variables.
