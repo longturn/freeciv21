@@ -15,6 +15,8 @@
 #include <fc_config.h>
 #endif
 
+#include <QDateTime>
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -2600,6 +2602,11 @@ void package_unit(struct unit *punit, struct packet_unit_info *packet)
   packet->action_turn = punit->action_turn;
   // client doesnt have access to game.server.unitwaittime, so use release time
   time_t gotime = game.server.unitwaittime + punit->action_timestamp;
+  // convert to UTC using Qt
+  QDateTime localtime;
+  localtime.setSecsSinceEpoch(gotime);
+  QDateTime utctime(localtime.toUTC());
+  gotime = utctime.toSecsSinceEpoch();
   packet->action_timestamp = gotime;
   packet->action_decision_want = punit->action_decision_want;
   packet->action_decision_tile =

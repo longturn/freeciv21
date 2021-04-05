@@ -16,6 +16,7 @@
 #endif
 
 #include <QBitArray>
+#include <QDateTime>
 #include <cstring>
 
 // utility
@@ -257,6 +258,13 @@ static struct unit *unpackage_unit(const struct packet_unit_info *packet)
   }
   punit->action_turn = packet->action_turn;
   punit->action_timestamp = packet->action_timestamp;
+
+  // convert from UTC time when unit can move
+  QDateTime utctime;
+  utctime.setSecsSinceEpoch(punit->action_timestamp);
+  QDateTime localtime(utctime.toLocalTime());
+  punit->action_timestamp = localtime.toSecsSinceEpoch();
+
   punit->action_decision_want = packet->action_decision_want;
   punit->action_decision_tile =
       index_to_tile(&(wld.map), packet->action_decision_tile);
