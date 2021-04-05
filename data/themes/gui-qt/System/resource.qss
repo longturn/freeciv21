@@ -11,6 +11,11 @@
   border: 1px solid #c3b48e;
 }
 
+*[unit_wait_table="true"] {
+  background-color: rgba(0,0,0,175);
+  color: white;
+}
+
 chatwdg QTextBrowser
 {
   background-color: transparent;

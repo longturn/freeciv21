@@ -53,6 +53,8 @@ units_waiting::units_waiting(QWidget *parent)
   waiting_units->setSelectionMode(QAbstractItemView::SingleSelection);
   waiting_units->horizontalHeader()->resizeSections(QHeaderView::Stretch);
   waiting_units->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  waiting_units->setProperty("unit_wait_table", true);
+  waiting_units->setSortingEnabled(true);
   vb->addWidget(waiting_units, Qt::AlignHCenter);
   setLayout(vb);
   QTimer *timer = new QTimer(this);

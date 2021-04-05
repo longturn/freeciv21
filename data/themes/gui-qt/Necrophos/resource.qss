@@ -67,6 +67,16 @@ QMainWindow {
   border: 2px solid black;
 }
 
+*[unit_wait_table="true"] {
+  background-color: rgba(0,0,0,175);
+  border: 1px solid #006633;
+  color: white;
+}
+
+*[civstatus="true"] {
+  color: white;
+}
+
 close_widget
 {
   background: #006633;

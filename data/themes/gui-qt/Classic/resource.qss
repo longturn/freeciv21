@@ -56,6 +56,16 @@ QMainWindow {
   border: 2px solid #c3b48e;
 }
 
+*[unit_wait_table="true"] {
+  background-color: rgba(15,10,5,175);
+  border: 1px solid #685f47;
+  color: white;
+}
+
+*[civstatus="true"] {
+  color: white;
+}
+
 qfc_dialog::title {
   font-weight: bold;
   background-color: #a1936e;

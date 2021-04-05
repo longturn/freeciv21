@@ -71,6 +71,11 @@ QMainWindow {
   border-radius: none;
 }
 
+*[unit_wait_table="true"] {
+  border: 1px solid #1d5994;
+  background-color: rgba(0,0,25,185);
+}
+
 close_widget
 {
   background: #1155BB;

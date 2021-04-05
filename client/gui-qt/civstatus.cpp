@@ -60,7 +60,7 @@ civstatus::civstatus(QWidget *parent) : fcwidget()
 
   spr = get_tax_sprite(tileset, O_SCIENCE);
   label = new QLabel();
-  label->setAlignment(Qt::AlignBottom);
+  label->setAlignment(Qt::AlignVCenter);
   img = spr->toImage();
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
@@ -69,6 +69,9 @@ civstatus::civstatus(QWidget *parent) : fcwidget()
   layout->addWidget(label);
   scienceLabel.setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
   layout->addWidget(&scienceLabel);
+  unitLabel.setProperty("civstatus", true);
+  economyLabel.setProperty("civstatus", true);
+  scienceLabel.setProperty("civstatus", true);
   unitLabel.setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
   layout->addWidget(&unitLabel);
 
