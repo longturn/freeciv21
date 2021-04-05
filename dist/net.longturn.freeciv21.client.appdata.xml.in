@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-    <id type="desktop">net.longturn.freeciv_modpack_qt</id>
+    <id type="desktop">net.longturn.freeciv21.client</id>
     <metadata_license>CC0</metadata_license>
     <project_license>GPL-3.0+</project_license>
-    <name>Freeciv21 Qt modpack installer</name>
-    <summary>Qt based modpack installer for the Freeciv21 game</summary>
+    <name>Freeciv21 Qt client</name>
+    <summary>Qt based client for the Freeciv game</summary>
     <description>
         <p>
             Freeciv21 is a Free and Open Source empire-building strategy game inspired by the history of human civilization. The game commences in prehistory and your
             mission is to lead your tribe from the Stone Age to the Space Age...
         </p>
         <p>
-            Freeciv21 modpack utility can be used to automatically download and install custom rulesets, tilesets, soundsets, musicsets and maps for freeciv21 to use. 
-            It is based on the Qt framework.
+            This client is for connecting to network games, or to launch local single-player games. It is based on the Qt framework.
         </p>
     </description>
-    <launchable type="desktop-id">org.longturn.freeciv_modpack_qt.desktop</launchable>
-    <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv-modpack.png</icon>
+    <launchable type="desktop-id">net.longturn.freeciv21.client.desktop</launchable>
+    <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv21-client.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
     <screenshots>
@@ -28,7 +27,7 @@
     <update_contact>longturn.net@gmail.com</update_contact>
     <developer_name>Longturn.net Community</developer_name>
     <provides>
-      <binary>freeciv-modpack-qt</binary>
+      <binary>freeciv21-client</binary>
     </provides>
     <categories>
       <category>Game</category>

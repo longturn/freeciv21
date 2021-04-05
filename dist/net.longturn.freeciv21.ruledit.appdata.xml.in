@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component type="desktop-application">
-    <id type="desktop">net.longturn.freeciv_qt</id>
+<component type="desktop-application">>
+    <id type="desktop">net.longturn.freeciv21.ruledit</id>
     <metadata_license>CC0</metadata_license>
     <project_license>GPL-3.0+</project_license>
-    <name>Freeciv21 Qt client</name>
-    <summary>Qt based client for the Freeciv game</summary>
+    <name>Freeciv21 ruleset editor</name>
+    <summary>Ruleset editor for the Freeciv21 game</summary>
     <description>
         <p>
             Freeciv21 is a Free and Open Source empire-building strategy game inspired by the history of human civilization. The game commences in prehistory and your
             mission is to lead your tribe from the Stone Age to the Space Age...
         </p>
         <p>
-            This client is for connecting to network games, or to launch local single-player games. It is based on the Qt framework.
+            Freeciv21 Ruleset Editor can be used to create your own game rules, or the change existing ones. It is based on the Qt framework.
         </p>
     </description>
-    <launchable type="desktop-id">org.longturn.freeciv_qt.desktop</launchable>
-    <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv-client.png</icon>
+    <launchable type="desktop-id">net.longturn.freeciv21.ruledit.desktop</launchable>
+    <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv21-client.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
     <screenshots>
@@ -27,7 +27,7 @@
     <update_contact>longturn.net@gmail.com</update_contact>
     <developer_name>Longturn.net Community</developer_name>
     <provides>
-      <binary>freeciv-qt</binary>
+      <binary>freeciv21-ruledit</binary>
     </provides>
     <categories>
       <category>Game</category>

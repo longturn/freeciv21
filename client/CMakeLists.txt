@@ -92,11 +92,11 @@ target_link_libraries(client PUBLIC luascript)
 
 if(FREECIV_ENABLE_CLIENT)
   add_subdirectory(gui-qt)
-  add_executable(freeciv-qt packhand.cpp) # packhand.c depends on gui-qt
-  target_link_libraries(freeciv-qt client )
-  target_link_libraries(freeciv-qt gui-qt)
-  add_dependencies(freeciv-qt freeciv_translations)
-  install(TARGETS freeciv-qt
+  add_executable(freeciv21-client packhand.cpp) # packhand.c depends on gui-qt
+  target_link_libraries(freeciv21-client client)
+  target_link_libraries(freeciv21-client gui-qt)
+  add_dependencies(freeciv21-client freeciv_translations)
+  install(TARGETS freeciv21-client
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
           COMPONENT freeciv21)
 endif()

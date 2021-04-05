@@ -133,7 +133,7 @@
    client; in any case, we didn't recommend it, as if the client crashed
    or quit, the server and hence the game would be lost.)
 
-   To start the server, enter freeciv-server in a terminal or by
+   To start the server, enter freeciv21-server in a terminal or by
    double-clicking on the executable. This will start up a text-based
    interface.
 
@@ -603,9 +603,9 @@ I cannot conquer it, and they won't give up. What can I do?
    running, or you used -p to start it on a different port, or your
    system's network configuration is broken.
 
-   To start your local server, run freeciv-server. Then type start at the
+   To start your local server, run freeciv21-server. Then type start at the
    server prompt to begin!
-mike@localhost:/usr/local/bin$ ./freeciv-server
+mike@localhost:/usr/local/bin$ ./freeciv21-server
 This is the server for Freeciv version 2.6.0
 You can learn a lot about Freeciv at http://www.freeciv.org/
 2: Loading rulesets.
@@ -628,9 +628,9 @@ Starting game.
    blocking the connection.
 
    If you are running a personal firewall, make sure that you allow
-   communication for freeciv-server and the Freeciv client to the trusted
+   communication for freeciv21-server and the Freeciv client to the trusted
    zone. If you want to allow others to play on your server, allow
-   freeciv-server to act as a server on the Internet zone.
+   freeciv21-server to act as a server on the Internet zone.
 
 -------
 
@@ -713,8 +713,8 @@ Starting game.
    If for some reason you can't use the start-screen interface for loading
    a game, you can load one directly through the client or server command
    line (see Command-line options). You can start a client such as
-   freeciv-gtk3, or freeciv-server, with the -f option, for example:
-freeciv-server -f freeciv-T0175-Y01250-auto.sav.bz2
+   freeciv-gtk3, or freeciv21-server, with the -f option, for example:
+freeciv21-server -f freeciv-T0175-Y01250-auto.sav.bz2
 
    Or you can use the /load command inside the server before starting the
    game.
