@@ -11,7 +11,7 @@
 #define VERSION_STRING "3.0.1337.1-haxx"
 #endif
 
-#define NETWORK_CAPSTRING "+Freeciv21.21March06"
+#define NETWORK_CAPSTRING "+Freeciv21.21April04"
 
 #ifndef FOLLOWTAG
 #define FOLLOWTAG "S_HAXXOR"
