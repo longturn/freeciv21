@@ -5409,11 +5409,15 @@ static bool load_ruleset_styles(struct section_file *file,
 
         const char *s = secfile_lookup_str_default(
             file, "-", "%s.music_peaceful", sec_name);
-        pmus->music_peaceful = *s;
+        if (s) {
+          pmus->music_peaceful = s;
+        }
 
         s = secfile_lookup_str_default(file, "-", "%s.music_combat",
                                        sec_name);
-        pmus->music_combat = *s;
+        if (s) {
+          pmus->music_combat = s;
+        }
         reqs =
             lookup_req_list(file, compat, sec_name, "reqs", "Music Style");
         if (reqs == NULL) {
