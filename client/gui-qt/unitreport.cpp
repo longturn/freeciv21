@@ -123,7 +123,12 @@ void units_waiting::update_units()
   waiting_units->setRowCount(units_count);
   waiting_units->horizontalHeader()->resizeSections(
       QHeaderView::ResizeToContents);
-  units_count ? show() : hide();
+
+  if (units_reports::exists() && units_count && units_reports::instance()->isVisible()) {
+    show();
+  } else {
+    hide();
+  }
 
   setFixedSize(waiting_units->horizontalHeader()->length()
                    + waiting_units->verticalHeader()->width() + 25,
