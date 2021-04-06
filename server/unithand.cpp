@@ -1951,6 +1951,7 @@ void handle_unit_rename(player *pplayer, int unit_id, const char *name)
 
   // Use the QByteArray overload to prevent unbounded read
   unit->name = QString::fromUtf8(name, MAX_LEN_NAME);
+  send_unit_info(NULL, unit);
 }
 
 /**
