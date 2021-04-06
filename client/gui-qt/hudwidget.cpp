@@ -604,12 +604,28 @@ void hud_units::update_actions(unit_list *punits)
     tmp = tileset;
     tileset = unscaled_tileset;
   }
-  text_str = QString(unit_name_translation(punit));
   owner = punit->owner;
   pcity = player_city_by_number(owner, punit->homecity);
-  if (pcity != NULL) {
-    text_str = QString(("%1(%2)"))
-                   .arg(unit_name_translation(punit), city_name_get(pcity));
+  if (punit->name.isEmpty()) {
+    if (pcity == nullptr) {
+      text_str = QString(unit_name_translation(punit));
+    } else {
+      // TRANS: <unit> (<home city>)
+      text_str =
+          QString(_("%1 (%2)"))
+              .arg(unit_name_translation(punit), city_name_get(pcity));
+    }
+  } else {
+    if (pcity == nullptr) {
+      // TRANS: <unit> "<unit name>"
+      text_str = QString(_("%1 \"%2\""))
+                     .arg(punit->name, unit_name_translation(punit));
+    } else {
+      // TRANS: <unit> "<unit name>" (<home city>)
+      text_str = QString(_("%1 \"%2\" (%3)"))
+                     .arg(unit_name_translation(punit), punit->name,
+                          city_name_get(pcity));
+    }
   }
   text_str = text_str + " ";
   mp = QString(move_points_text(punit->moves_left, false));
