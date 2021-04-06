@@ -1707,6 +1707,16 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
       need_units_report_update = true;
     }
 
+    if (punit->name != packet_unit->name) {
+      // Name changed
+      punit->name = packet_unit->name;
+
+      if (unit_is_in_focus(punit)) {
+        // Update the orders menu -- the name is shown there
+        need_menus_update = true;
+      }
+    }
+
     if (punit->hp != packet_unit->hp) {
       // hp changed
       punit->hp = packet_unit->hp;
