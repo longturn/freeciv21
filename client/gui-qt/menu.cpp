@@ -13,6 +13,7 @@
 #include <QActionGroup>
 #include <QApplication>
 #include <QFileDialog>
+#include <QInputDialog>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QScrollArea>
@@ -835,6 +836,11 @@ void mr_menu::setup_menus()
   act->setShortcut(QKeySequence(tr("shift+d")));
   menu_list.insert(DISBAND, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_disband);
+
+  menu->addSeparator();
+  act = menu->addAction(_("Rename..."));
+  menu_list.insert(RENAME, act);
+  connect(act, &QAction::triggered, this, &mr_menu::slot_rename);
 
   // Combat Menu
   menu = this->addMenu(_("Combat"));
@@ -1866,6 +1872,10 @@ void mr_menu::menus_sensitive()
         }
         break;
 
+      case RENAME:
+        i.value()->setEnabled(get_num_units_in_focus() == 1);
+        break;
+
       case CONNECT_RAIL:
         proad = road_by_compat_special(ROCO_RAILROAD);
         if (proad != NULL) {
@@ -2177,6 +2187,36 @@ void mr_menu::slot_convert() { key_unit_convert(); }
    Action "DISBAND UNIT"
  */
 void mr_menu::slot_disband() { popup_disband_dialog(get_units_in_focus()); }
+
+/**
+ * Action "RENAME UNIT"
+ */
+void mr_menu::slot_rename()
+{
+  if (get_num_units_in_focus() != 1) {
+    return;
+  }
+  unit_list_iterate(get_units_in_focus(), punit)
+  {
+    auto ask = new hud_input_box(king()->central_wdg);
+
+    ask->set_text_title_definput(_("New unit name:"), _("Rename Unit"),
+                                 punit->name);
+    ask->setAttribute(Qt::WA_DeleteOnClose);
+
+    int id = punit->id;
+    connect(ask, &QDialog::accepted, [ask, id]() {
+      // Unit might have been removed, make sure it's still there
+      auto unit = game_unit_by_number(id);
+      if (unit) {
+        dsend_packet_unit_rename(&client.conn, id,
+                                 ask->input_edit.text().toUtf8());
+      }
+    });
+    ask->show();
+  }
+  unit_list_iterate_end;
+}
 
 /**
    Clears delayed orders
