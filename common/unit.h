@@ -127,6 +127,7 @@ struct unit {
   struct player *nationality;
   int id;
   int homecity;
+  QString name;
 
   int upkeep[O_LAST]; // unit upkeep with regards to the homecity
 

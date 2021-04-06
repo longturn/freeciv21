@@ -1941,6 +1941,19 @@ void handle_unit_get_actions(struct connection *pc, const int actor_unit_id,
 }
 
 /**
+ * Handle request to rename a unit.
+ */
+void handle_unit_rename(player *pplayer, int unit_id, const char *name)
+{
+  auto unit = game_unit_by_number(unit_id);
+  fc_assert_ret(unit != nullptr);
+  fc_assert_ret(pplayer == unit->owner);
+
+  // Use the QByteArray overload to prevent unbounded read
+  unit->name = QString::fromUtf8(name, MAX_LEN_NAME);
+}
+
+/**
    Try to explain to the player why an action is illegal.
 
    Event type should be E_BAD_COMMAND if the player should know that the

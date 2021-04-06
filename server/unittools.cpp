@@ -2539,6 +2539,7 @@ void package_unit(struct unit *punit, struct packet_unit_info *packet)
   packet->tile = tile_index(unit_tile(punit));
   packet->facing = punit->facing;
   packet->homecity = punit->homecity;
+  fc_strlcpy(packet->name, punit->name.toUtf8(), ARRAY_SIZE(packet->name));
   output_type_iterate(o) { packet->upkeep[o] = punit->upkeep[o]; }
   output_type_iterate_end;
   packet->veteran = punit->veteran;
@@ -2624,6 +2625,7 @@ void package_short_unit(struct unit *punit,
   packet->type = utype_number(unit_type_get(punit));
   packet->hp = punit->hp;
   packet->occupied = (get_transporter_occupancy(punit) > 0);
+  fc_strlcpy(packet->name, punit->name.toUtf8(), ARRAY_SIZE(packet->name));
   if (punit->activity == ACTIVITY_EXPLORE
       || punit->activity == ACTIVITY_GOTO) {
     packet->activity = ACTIVITY_IDLE;
