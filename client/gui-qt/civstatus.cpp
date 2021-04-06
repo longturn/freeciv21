@@ -40,7 +40,7 @@ civstatus::civstatus(QWidget *parent) : fcwidget()
   setParent(parent);
   layout = new QHBoxLayout;
   layout->setSizeConstraint(QLayout::SetMinimumSize);
-
+  setProperty("civstatus_bg", true);
   f = *fcFont::instance()->getFont(fonts::default_font);
   fm = new QFontMetrics(f);
   icon_size = fm->height() * 7 / 8;

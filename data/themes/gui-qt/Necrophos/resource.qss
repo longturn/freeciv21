@@ -73,6 +73,10 @@ QMainWindow {
   color: white;
 }
 
+*[civstatus_bg="true"] {
+   background-color: rgba(0,0,0,125);
+}
+
 *[civstatus="true"] {
   color: white;
 }

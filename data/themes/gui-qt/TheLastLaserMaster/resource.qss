@@ -46,6 +46,10 @@ QMainWindow {
   background-color: rgba(0,0,25,185);
 }
 
+*[civstatus_bg="true"] {
+   background-color: rgba(0,0,0,125);
+}
+
 close_widget
 {
   background: #1155BB;
