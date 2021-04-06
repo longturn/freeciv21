@@ -74,7 +74,7 @@ civstatus::civstatus(QWidget *parent) : fcwidget()
   scienceLabel.setProperty("civstatus", true);
   unitLabel.setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
   layout->addWidget(&unitLabel);
-
+  layout->setSizeConstraint(QLayout::SetMinimumSize);
   setLayout(layout);
 
   QTimer *timer = new QTimer(this);
@@ -132,10 +132,12 @@ void civstatus::updateInfo()
     unitText = QString("✋") + QString::number(unitsWaiting) + " "
                + _("units waiting");
   }
-
   economyLabel.setText(economyText);
   scienceLabel.setText(scienceText);
   unitLabel.setText(unitText);
+  // Magic trick to restore proper widget size if untiLabel became empty
+  hide();
+  show();
   update();
 }
 
