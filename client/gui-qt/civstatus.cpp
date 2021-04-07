@@ -122,7 +122,7 @@ void civstatus::updateInfo()
   int unitsWaiting = 0;
   unit_list_iterate(client_player()->units, punit)
   {
-    if (!can_unit_move_now(punit)) {
+    if (!can_unit_move_now(punit) && punit->ssa_controller == SSA_NONE) {
       ++unitsWaiting;
     }
   }

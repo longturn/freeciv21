@@ -94,7 +94,7 @@ void units_waiting::update_units()
 
   unit_list_iterate(client_player()->units, punit)
   {
-    if (!can_unit_move_now(punit)) {
+    if (!can_unit_move_now(punit) && punit->ssa_controller == SSA_NONE) {
       waiting_units->setItem(
           units_count, 0,
           new QTableWidgetItem(utype_name_translation(punit->utype)));
