@@ -146,7 +146,8 @@ static float city_migration_score(struct city *pcity);
 static bool do_city_migration(struct city *pcity_from,
                               struct city *pcity_to);
 static bool check_city_migrations_player(const struct player *pplayer);
-
+static bool city_handle_disorder(struct city *pcity);
+static bool city_handle_plague_risk(struct city *pcity);
 /**
    Updates unit upkeeps and city internal cached data. Returns whether
    city radius has changed.
@@ -3181,22 +3182,90 @@ void nullify_prechange_production(struct city *pcity)
   pcity->before_change_shields = 0;
 }
 
+/*  Handle the possibility of plague in city. Return TRUE if plague hit.
+  city_populate() checks pcity->turn_plague later to prevent growth.
+**************************************************************************/
+static bool city_handle_plague_risk(struct city *pcity)
+{
+    /* ------------------------------------------------------------------------
+    * Handle plague. Do it before food growth. */
+  if (game.info.illness_on) {
+    /* recalculate city illness; illness due to trade has to be saved
+      * within the city struct as the client has not all data to
+      * calculate it */
+    pcity->server.illness = city_illness_calc(
+        pcity, NULL, NULL, &(pcity->illness_trade), NULL);
+
+    if (city_illness_check(pcity)) {
+      city_illness_strike(pcity);
+      return true;
+    }
+  }
+  return false;
+}
+
+static bool city_handle_disorder(struct city *pcity)
+{
+  struct player *pplayer = city_owner(pcity);
+  int revolution_turns = get_city_bonus(pcity, EFT_REVOLUTION_UNHAPPINESS);
+  struct government *gov = government_of_city(pcity);
+  if (city_unhappy(pcity)) {
+    const char *revomsg;
+
+    pcity->anarchy++;
+    if (pcity->anarchy == revolution_turns) {
+      // Revolution next turn if not dealt with
+      /* TRANS: preserve leading space; this string will be appended to
+        * another sentence */
+      revomsg = _(" Unrest threatens to spread beyond the city.");
+    } else {
+      revomsg = "";
+    }
+    if (pcity->anarchy == 1) {
+      notify_player(pplayer, city_tile(pcity), E_CITY_DISORDER, ftc_server,
+                    // TRANS: second %s is an optional extra sentence
+                    _("Civil disorder in %s.%s"), city_link(pcity),
+                    revomsg);
+      return true;
+    } else {
+      notify_player(pplayer, city_tile(pcity), E_CITY_DISORDER, ftc_server,
+                    // TRANS: second %s is an optional extra sentence
+                    _("CIVIL DISORDER CONTINUES in %s.%s"),
+                    city_link(pcity), revomsg);
+      return true;
+    }
+  } else {
+    if (pcity->anarchy != 0) {
+      notify_player(pplayer, city_tile(pcity), E_CITY_NORMAL, ftc_server,
+                    _("Order restored in %s."), city_link(pcity));
+    }
+    pcity->anarchy = 0;
+  }
+
+
+  if (revolution_turns > 0 && pcity->anarchy > revolution_turns) {
+    notify_player(pplayer, city_tile(pcity), E_ANARCHY, ftc_server,
+                  // TRANS: %s - government form, e.g., Democracy
+                  _("The people have overthrown your %s, "
+                    "your country is in turmoil."),
+                  government_name_translation(gov));
+    handle_player_change_government(pplayer, government_number(gov));
+    return true;
+  }
+  return false;
+}
+
 /**
    Called every turn, at end of turn, for every city.
  */
 static void update_city_activity(struct city *pcity)
 {
-  struct player *pplayer;
-  struct government *gov;
+  struct player *pplayer = city_owner(pcity);
   int saved_id;
-  int revolution_turns;
 
   if (!pcity) {
     return;
   }
-
-  pplayer = city_owner(pcity);
-  gov = government_of_city(pcity);
 
   if (city_refresh(pcity)) {
     auto_arrange_workers(pcity);
@@ -3306,20 +3375,9 @@ static void update_city_activity(struct city *pcity)
     /* City disbanded into a unit, or was destroyed for lack of upkeep */
     return;
   }
-
-    /* ------------------------------------------------------------------------
-    * Handle plague. Do it before food growth. */
-  if (game.info.illness_on) {
-    /* recalculate city illness; illness due to trade has to be saved
-      * within the city struct as the client has not all data to
-      * calculate it */
-    pcity->server.illness = city_illness_calc(
-        pcity, NULL, NULL, &(pcity->illness_trade), NULL);
-
-    if (city_illness_check(pcity)) {
-      city_illness_strike(pcity);
-    }
-  }
+  /* ------------------------------------------------------------------------
+   * Handle plague. Do it before food growth. */
+  city_handle_plague_risk(pcity);
 
   // City population updated here, after the rapture stuff above. --Jing
   saved_id = pcity->id;
@@ -3330,48 +3388,7 @@ static void update_city_activity(struct city *pcity)
   }
   /* ------------------------------------------------------------------------
   * Check if disorder in city brings the government to anarchy */
-
-  revolution_turns = get_city_bonus(pcity, EFT_REVOLUTION_UNHAPPINESS);
-  if (city_unhappy(pcity)) {
-    const char *revomsg;
-
-    pcity->anarchy++;
-    if (pcity->anarchy == revolution_turns) {
-      // Revolution next turn if not dealt with
-      /* TRANS: preserve leading space; this string will be appended to
-        * another sentence */
-      revomsg = _(" Unrest threatens to spread beyond the city.");
-    } else {
-      revomsg = "";
-    }
-    if (pcity->anarchy == 1) {
-      notify_player(pplayer, city_tile(pcity), E_CITY_DISORDER, ftc_server,
-                    // TRANS: second %s is an optional extra sentence
-                    _("Civil disorder in %s.%s"), city_link(pcity),
-                    revomsg);
-    } else {
-      notify_player(pplayer, city_tile(pcity), E_CITY_DISORDER, ftc_server,
-                    // TRANS: second %s is an optional extra sentence
-                    _("CIVIL DISORDER CONTINUES in %s.%s"),
-                    city_link(pcity), revomsg);
-    }
-  } else {
-    if (pcity->anarchy != 0) {
-      notify_player(pplayer, city_tile(pcity), E_CITY_NORMAL, ftc_server,
-                    _("Order restored in %s."), city_link(pcity));
-    }
-    pcity->anarchy = 0;
-  }
-
-
-  if (revolution_turns > 0 && pcity->anarchy > revolution_turns) {
-    notify_player(pplayer, city_tile(pcity), E_ANARCHY, ftc_server,
-                  // TRANS: %s - government form, e.g., Democracy
-                  _("The people have overthrown your %s, "
-                    "your country is in turmoil."),
-                  government_name_translation(gov));
-    handle_player_change_government(pplayer, government_number(gov));
-  }
+city_handle_disorder(pcity);
 
   pcity->did_sell = false;
   pcity->did_buy = false;
