@@ -320,6 +320,9 @@ struct city {
   int citizen_base[O_LAST]; // Base production from citizens.
   int usage[O_LAST];        // Amount of each resource being used.
 
+   /* Surplus saved for use during city processing loop */
+  int saved_surplus[O_LAST];
+
   // Cached values for CPU savings.
   int bonus[O_LAST];
 
