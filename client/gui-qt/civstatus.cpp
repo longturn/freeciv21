@@ -10,17 +10,17 @@
 **************************************************************************/
 #include "civstatus.h"
 
+#include "canvas.h"
 #include "client_main.h"
+#include "fc_client.h"
+#include "fonts.h"
 #include "goto.h"
+#include "mapview.h"
+#include "page_game.h"
 #include "player.h"
 #include "text.h"
 #include "tilespec.h"
 #include "unitlist.h"
-#include "canvas.h"
-#include "mapview.h"
-#include "fonts.h"
-#include "fc_client.h"
-#include "page_game.h"
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -70,6 +70,9 @@ civstatus::civstatus(QWidget *parent) : fcwidget()
   scienceLabel.setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
   layout->addWidget(&scienceLabel);
   unitLabel.setProperty("civstatus", true);
+  unitLabel.setToolTip(
+      "Number of units which cannot do any action for some time, you can "
+      "see those units in unit report - F2");
   economyLabel.setProperty("civstatus", true);
   scienceLabel.setProperty("civstatus", true);
   unitLabel.setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
@@ -129,15 +132,11 @@ void civstatus::updateInfo()
   unit_list_iterate_end;
   QString unitText = "";
   if (unitsWaiting) {
-    unitText = QString("✋") + QString::number(unitsWaiting) + " "
-               + _("units waiting");
+    unitText = QString(" ✋ ") + QString::number(unitsWaiting) + " ";
   }
   economyLabel.setText(economyText);
   scienceLabel.setText(scienceText);
   unitLabel.setText(unitText);
-  // Magic trick to restore proper widget size if untiLabel became empty
-  hide();
-  show();
   update();
 }
 
