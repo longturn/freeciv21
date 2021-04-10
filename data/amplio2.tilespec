@@ -166,7 +166,7 @@ files =
   "misc/cursors.spec",
   "misc/overlays.spec",
   "misc/citybar.spec",
-  "misc/shields-large.spec",
+  "misc/shields.spec",
   "misc/editor.spec",
   "misc/icons.spec"
 
