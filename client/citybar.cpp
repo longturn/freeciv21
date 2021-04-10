@@ -273,7 +273,7 @@ const QVector<QString> *citybar_painter::available_vector(const option *)
   static QVector<QString> vector;
   if (vector.isEmpty()) {
     for (auto &name : available()) {
-      vector << _(qPrintable(name));
+      vector << _(qUtf8Printable(name));
     }
   }
   return &vector;
@@ -318,9 +318,10 @@ void citybar_painter::set_current(const QString &name)
   } else if (available().contains(name)) {
     qCCritical(bugs_category,
                "Could not instantiate known city bar style %s",
-               qPrintable(name));
+               qUtf8Printable(name));
   } else {
-    qCCritical(bugs_category, "Unknown city bar style %s", qPrintable(name));
+    qCCritical(bugs_category, "Unknown city bar style %s",
+               qUtf8Printable(name));
   }
 
   // Allocate the default to avoid crashes

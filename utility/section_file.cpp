@@ -119,7 +119,7 @@ bool entry_from_token(struct section *psection, const QString &name,
   if ('*' == tok[0]) {
     auto buf = remove_escapes(tok.mid(1), false);
     (void) section_entry_str_new(psection, name, buf, false);
-    DEBUG_ENTRIES("entry %s '%s'", name, qPrintable(buf));
+    DEBUG_ENTRIES("entry %s '%s'", name, qUtf8Printable(buf));
     return true;
   }
 
@@ -127,7 +127,7 @@ bool entry_from_token(struct section *psection, const QString &name,
     bool escaped = ('"' == tok[0]);
     auto buf = remove_escapes(tok.mid(1), escaped);
     (void) section_entry_str_new(psection, name, buf, escaped);
-    DEBUG_ENTRIES("entry %s '%s'", name, qPrintable(buf));
+    DEBUG_ENTRIES("entry %s '%s'", name, qUtf8Printable(buf));
     return true;
   }
 

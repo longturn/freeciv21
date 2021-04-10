@@ -5668,6 +5668,12 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
   sg_warn_ret_val(secfile_lookup_int(loading->file, &punit->homecity,
                                      "%s.homecity", unitstr),
                   false, "%s", secfile_error());
+
+  if (auto name = secfile_lookup_str(loading->file, "%s.name", unitstr)) {
+    // Support earlier saves
+    punit->name = QString::fromUtf8(name);
+  }
+
   sg_warn_ret_val(secfile_lookup_int(loading->file, &punit->moves_left,
                                      "%s.moves", unitstr),
                   false, "%s", secfile_error());
@@ -6206,6 +6212,8 @@ static void sg_save_player_units(struct savedata *saving, struct player *plr)
     secfile_insert_int(saving->file, punit->veteran, "%s.veteran", buf);
     secfile_insert_int(saving->file, punit->hp, "%s.hp", buf);
     secfile_insert_int(saving->file, punit->homecity, "%s.homecity", buf);
+    secfile_insert_str(saving->file, punit->name.toUtf8(), "%s.name", buf);
+
     secfile_insert_str(saving->file, unit_rule_name(punit),
                        "%s.type_by_name", buf);
 

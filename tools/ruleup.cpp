@@ -154,11 +154,11 @@ int main(int argc, char **argv)
       qCritical(R__("Failed to load %s."), COMMENTS_FILE_NAME);
     }
 
-    save_ruleset(qPrintable(tgt_dir), game.control.name, &data);
-    qInfo("Saved %s", qPrintable(tgt_dir));
+    save_ruleset(qUtf8Printable(tgt_dir), game.control.name, &data);
+    qInfo("Saved %s", qUtf8Printable(tgt_dir));
     comments_free();
   } else {
-    qCritical(_("Can't load ruleset %s"), qPrintable(rs_selected));
+    qCritical(_("Can't load ruleset %s"), qUtf8Printable(rs_selected));
   }
 
   log_close();

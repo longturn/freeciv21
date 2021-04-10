@@ -34,6 +34,7 @@ enum munit {
   UNLOAD,
   TRANSPORTER,
   DISBAND,
+  RENAME,
   CONVERT,
   MINE,
   PLANT,
@@ -256,6 +257,7 @@ private slots:
   void slot_upgrade();
   void slot_convert();
   void slot_disband();
+  void slot_rename();
 
   /*used by combat menu*/
   void slot_unit_fortify();

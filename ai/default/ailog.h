@@ -35,7 +35,7 @@ QString tech_log_prefix(ai_type *ait, const player *pplayer,
     if (notify) {                                                           \
       qCInfo(ai_category).noquote() << message;                             \
       notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s",                    \
-                  qPrintable(message));                                     \
+                  qUtf8Printable(message));                                 \
     } else {                                                                \
       qCDebug(ai_category).noquote() << message;                            \
     }                                                                       \
@@ -52,7 +52,7 @@ QString diplo_log_prefix(ai_type *ait, const player *pplayer,
     if (notify) {                                                           \
       qCInfo(ai_category).noquote() << message;                             \
       notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s",                    \
-                  qPrintable(message));                                     \
+                  qUtf8Printable(message));                                 \
     } else {                                                                \
       qCDebug(ai_category).noquote() << message;                            \
     }                                                                       \
@@ -68,7 +68,7 @@ QString bodyguard_log_prefix(ai_type *ait, const unit *punit);
     if (notify) {                                                           \
       qCInfo(ai_category).noquote() << message;                             \
       notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s",                    \
-                  qPrintable(message));                                     \
+                  qUtf8Printable(message));                                 \
     } else {                                                                \
       qCDebug(ai_category).noquote() << message;                            \
     }                                                                       \

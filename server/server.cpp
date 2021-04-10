@@ -192,7 +192,7 @@ QTcpServer *srv_prepare()
         fileinfoname(get_data_dirs(), qUtf8Printable(srvarg.ruleset));
     if (testfilename.isEmpty()) {
       qFatal(_("Ruleset directory \"%s\" not found"),
-             qPrintable(srvarg.ruleset));
+             qUtf8Printable(srvarg.ruleset));
       QCoreApplication::exit(EXIT_FAILURE);
       return tcp_server;
     }
@@ -212,7 +212,7 @@ QTcpServer *srv_prepare()
 
   if (!(srvarg.metaserver_no_send)) {
     qInfo(_("Sending info to metaserver <%s>."),
-          qPrintable(meta_addr_port()));
+          qUtf8Printable(meta_addr_port()));
     // Open socket for meta server
     if (!server_open_meta(srvarg.metaconnection_persistent)
         || !send_server_info_to_metaserver(META_INFO)) {

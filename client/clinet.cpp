@@ -90,7 +90,7 @@ static void client_conn_close_callback(struct connection *pconn)
   close_socket_nomessage(pconn);
   // If we lost connection to the internal server - kill it.
   client_kill_server(true);
-  qCritical("Lost connection to server: %s.", qPrintable(reason));
+  qCritical("Lost connection to server: %s.", qUtf8Printable(reason));
   output_window_printf(ftc_client, _("Lost connection to server (%s)!"),
                        qUtf8Printable(reason));
 }

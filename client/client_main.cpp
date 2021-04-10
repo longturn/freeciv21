@@ -434,7 +434,8 @@ int client_main(int argc, char *argv[])
     server_port =
         parser.value(QStringLiteral("port")).toUInt(&conversion_ok);
     if (!conversion_ok) {
-      qFatal(_("Invalid port number %s"), qPrintable(parser.value("port")));
+      qFatal(_("Invalid port number %s"),
+             qUtf8Printable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
   }
@@ -455,7 +456,7 @@ int client_main(int argc, char *argv[])
       announce = ANNOUNCE_NONE;
     } else {
       qCritical(_("Illegal value \"%s\" for --Announce"),
-                qPrintable(parser.value("Announce")));
+                qUtf8Printable(parser.value("Announce")));
     }
   }
   if (parser.isSet(QStringLiteral("warnings"))) {
@@ -601,19 +602,19 @@ static void log_option_save_msg(QtMsgType lvl, const QString &msg)
 {
   switch (lvl) {
   case QtDebugMsg:
-    qDebug("%s", qPrintable(msg));
+    qDebug("%s", qUtf8Printable(msg));
     break;
   case QtInfoMsg:
-    qInfo("%s", qPrintable(msg));
+    qInfo("%s", qUtf8Printable(msg));
     break;
   case QtWarningMsg:
-    qWarning("%s", qPrintable(msg));
+    qWarning("%s", qUtf8Printable(msg));
     break;
   case QtCriticalMsg:
-    qCritical("%s", qPrintable(msg));
+    qCritical("%s", qUtf8Printable(msg));
     break;
   case QtFatalMsg:
-    qFatal("%s", qPrintable(msg));
+    qFatal("%s", qUtf8Printable(msg));
     break;
   }
 }

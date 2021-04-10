@@ -222,7 +222,7 @@ section_entry_filereference_new(struct section *psection, const char *name,
  */
 static QString datafilename(const QString &filename)
 {
-  return fileinfoname(get_data_dirs(), qPrintable(filename));
+  return fileinfoname(get_data_dirs(), qUtf8Printable(filename));
 }
 
 /**
@@ -346,14 +346,14 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
          * normally a section may be split up, and that will no longer
          * work here because it will be short-cut. */
         SECFILE_LOG(secfile, psection, "%s",
-                    qPrintable(inf_log_str(
+                    qUtf8Printable(inf_log_str(
                         inf, "Found requested section; finishing")));
         goto END;
       }
       if (table_state) {
         SECFILE_LOG(
             secfile, psection, "%s",
-            qPrintable(inf_log_str(inf, "New section during table")));
+            qUtf8Printable(inf_log_str(inf, "New section during table")));
         error = true;
         goto END;
       }
@@ -373,8 +373,9 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
         }
       }
       if (inf_token(inf, INF_TOK_EOL).isEmpty()) {
-        SECFILE_LOG(secfile, psection, "%s",
-                    qPrintable(inf_log_str(inf, "Expected end of line")));
+        SECFILE_LOG(
+            secfile, psection, "%s",
+            qUtf8Printable(inf_log_str(inf, "Expected end of line")));
         error = true;
         goto END;
       }
@@ -383,13 +384,14 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
     if (!inf_token(inf, INF_TOK_TABLE_END).isEmpty()) {
       if (!table_state) {
         SECFILE_LOG(secfile, psection, "%s",
-                    qPrintable(inf_log_str(inf, "Misplaced \"}\"")));
+                    qUtf8Printable(inf_log_str(inf, "Misplaced \"}\"")));
         error = true;
         goto END;
       }
       if (inf_token(inf, INF_TOK_EOL).isEmpty()) {
-        SECFILE_LOG(secfile, psection, "%s",
-                    qPrintable(inf_log_str(inf, "Expected end of line")));
+        SECFILE_LOG(
+            secfile, psection, "%s",
+            qUtf8Printable(inf_log_str(inf, "Expected end of line")));
         error = true;
         goto END;
       }
@@ -406,7 +408,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
         inf_discard_tokens(inf, INF_TOK_EOL); // allow newlines
         if ((tok = inf_token(inf, INF_TOK_VALUE)).isEmpty()) {
           SECFILE_LOG(secfile, psection, "%s",
-                      qPrintable(inf_log_str(inf, "Expected value")));
+                      qUtf8Printable(inf_log_str(inf, "Expected value")));
           error = true;
           goto END;
         }
@@ -424,8 +426,9 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       } while (!inf_token(inf, INF_TOK_COMMA).isEmpty());
 
       if (inf_token(inf, INF_TOK_EOL).isEmpty()) {
-        SECFILE_LOG(secfile, psection, "%s",
-                    qPrintable(inf_log_str(inf, "Expected end of line")));
+        SECFILE_LOG(
+            secfile, psection, "%s",
+            qUtf8Printable(inf_log_str(inf, "Expected end of line")));
         error = true;
         goto END;
       }
@@ -435,7 +438,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
 
     if ((tok = inf_token(inf, INF_TOK_ENTRY_NAME)).isEmpty()) {
       SECFILE_LOG(secfile, psection, "%s",
-                  qPrintable(inf_log_str(inf, "Expected entry name")));
+                  qUtf8Printable(inf_log_str(inf, "Expected entry name")));
       error = true;
       goto END;
     }
@@ -452,13 +455,13 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
         inf_discard_tokens(inf, INF_TOK_EOL); // allow newlines
         if ((tok = inf_token(inf, INF_TOK_VALUE)).isEmpty()) {
           SECFILE_LOG(secfile, psection, "%s",
-                      qPrintable(inf_log_str(inf, "Expected value")));
+                      qUtf8Printable(inf_log_str(inf, "Expected value")));
           error = true;
           goto END;
         }
         if (tok[0] != '\"') {
           SECFILE_LOG(secfile, psection, "%s",
-                      qPrintable(inf_log_str(
+                      qUtf8Printable(inf_log_str(
                           inf, "Table column header non-string")));
           error = true;
           goto END;
@@ -467,8 +470,9 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       } while (!inf_token(inf, INF_TOK_COMMA).isEmpty());
 
       if (inf_token(inf, INF_TOK_EOL).isEmpty()) {
-        SECFILE_LOG(secfile, psection, "%s",
-                    qPrintable(inf_log_str(inf, "Expected end of line")));
+        SECFILE_LOG(
+            secfile, psection, "%s",
+            qUtf8Printable(inf_log_str(inf, "Expected end of line")));
         error = true;
         goto END;
       }
@@ -483,7 +487,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       inf_discard_tokens(inf, INF_TOK_EOL); // allow newlines
       if ((tok = inf_token(inf, INF_TOK_VALUE)).isEmpty()) {
         SECFILE_LOG(secfile, psection, "%s",
-                    qPrintable(inf_log_str(inf, "Expected value")));
+                    qUtf8Printable(inf_log_str(inf, "Expected value")));
         error = true;
         goto END;
       }
@@ -497,7 +501,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
     } while (!inf_token(inf, INF_TOK_COMMA).isEmpty());
     if (inf_token(inf, INF_TOK_EOL).isEmpty()) {
       SECFILE_LOG(secfile, psection, "%s",
-                  qPrintable(inf_log_str(inf, "Expected end of line")));
+                  qUtf8Printable(inf_log_str(inf, "Expected end of line")));
       error = true;
       goto END;
     }
@@ -834,7 +838,7 @@ bool secfile_save(const struct section_file *secfile, QString filename)
 
   if (fs->error() != 0) {
     SECFILE_LOG(secfile, NULL, "Error before closing %s: %s", real_filename,
-                qPrintable(fs->errorString()));
+                qUtf8Printable(fs->errorString()));
     return false;
   }
 
@@ -2790,7 +2794,7 @@ struct section *secfile_section_new(struct section_file *secfile,
 
   if (!is_secfile_entry_name_valid(name)) {
     SECFILE_LOG(secfile, NULL, "\"%s\" is not a valid section name.",
-                qPrintable(name));
+                qUtf8Printable(name));
     return NULL;
   }
 
@@ -2798,13 +2802,13 @@ struct section *secfile_section_new(struct section_file *secfile,
     /* We cannot duplicate sections in any case! Not even if one is
      * include -section and the other not. */
     SECFILE_LOG(secfile, NULL, "Section \"%s\" already exists.",
-                qPrintable(name));
+                qUtf8Printable(name));
     return NULL;
   }
 
   psection = new section;
   psection->special = EST_NORMAL;
-  psection->name = qstrdup(qPrintable(name));
+  psection->name = qstrdup(qUtf8Printable(name));
   psection->entries = entry_list_new_full(entry_destroy);
 
   // Append to secfile.
@@ -3002,19 +3006,19 @@ static entry *entry_new(struct section *psection, const QString &name)
 
   if (!is_secfile_entry_name_valid(name)) {
     SECFILE_LOG(secfile, psection, "\"%s\" is not a valid entry name.",
-                qPrintable(name));
+                qUtf8Printable(name));
     return NULL;
   }
 
   if (!secfile->allow_duplicates
       && NULL != section_entry_by_name(psection, name)) {
     SECFILE_LOG(secfile, psection, "Entry \"%s\" already exists.",
-                qPrintable(name));
+                qUtf8Printable(name));
     return NULL;
   }
 
   pentry = new entry;
-  pentry->name = qstrdup(qPrintable(name));
+  pentry->name = qstrdup(qUtf8Printable(name));
   pentry->type = ENTRY_ILLEGAL; // Invalid case
   pentry->used = 0;
   pentry->comment = NULL;
@@ -3512,8 +3516,8 @@ static void entry_from_inf_token(struct section *psection,
                                  struct inputfile *inf)
 {
   if (!entry_from_token(psection, name, tok)) {
-    qCritical("%s",
-              qPrintable(inf_log_str(inf, "Entry value not recognized: %s",
-                                     qPrintable(tok))));
+    qCritical("%s", qUtf8Printable(
+                        inf_log_str(inf, "Entry value not recognized: %s",
+                                    qUtf8Printable(tok))));
   }
 }
