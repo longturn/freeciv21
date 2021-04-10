@@ -270,7 +270,8 @@ void map_view::paint(QPainter *painter, QPaintEvent *event)
    Sets new point for new search
  */
 void map_view::resume_searching(int pos_x, int pos_y, int &w, int &h,
-                                int wdth, int hght, int recursive_nr)
+                                int wdth, int hght, int recursive_nr,
+                                bool direction)
 {
   int new_pos_x, new_pos_y;
 
@@ -278,16 +279,29 @@ void map_view::resume_searching(int pos_x, int pos_y, int &w, int &h,
   new_pos_x = pos_x;
   new_pos_y = pos_y;
 
-  if (pos_y + hght + 4 < height() && pos_x > width() / 2) {
-    new_pos_y = pos_y + 5;
-  } else if (pos_x > 0 && pos_y > 10) {
-    new_pos_x = pos_x - 5;
-  } else if (pos_y > 0) {
-    new_pos_y = pos_y - 5;
-  } else if (pos_x + wdth + 4 < this->width()) {
-    new_pos_x = pos_x + 5;
+  if (direction) {
+    if (pos_y + hght + 4 < height() && pos_x < width() / 2) {
+      new_pos_y = pos_y + 5;
+    } else if (pos_x > 0 && pos_y > 10) {
+      new_pos_x = pos_x - 5;
+    } else if (pos_y > 0) {
+      new_pos_y = pos_y - 5;
+    } else if (pos_x + wdth + 4 < this->width()) {
+      new_pos_x = pos_x + 5;
+    }
+  } else {
+    if (pos_y + hght + 4 < height() && pos_x > width() / 2) {
+      new_pos_y = pos_y + 5;
+    } else if (pos_x > 0 && pos_y > 10) {
+      new_pos_x = pos_x - 5;
+    } else if (pos_y > 0) {
+      new_pos_y = pos_y - 5;
+    } else if (pos_x + wdth + 4 < this->width()) {
+      new_pos_x = pos_x + 5;
+    }
   }
-  find_place(new_pos_x, new_pos_y, w, h, wdth, hght, recursive_nr);
+
+  find_place(new_pos_x, new_pos_y, w, h, wdth, hght, recursive_nr, direction);
 }
 
 /**
@@ -295,9 +309,10 @@ void map_view::resume_searching(int pos_x, int pos_y, int &w, int &h,
    Starts looking from position pos_x, pos_y, going clockwork
    Returns position as (w,h)
    Along with resume_searching its recursive function.
+   direction = false (default) = clockwise
  */
 void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
-                          int hght, int recursive_nr)
+                          int hght, int recursive_nr, bool direction)
 {
   int i;
   int x, y, xe, ye;
@@ -347,7 +362,8 @@ void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
   w = pos_x;
   h = pos_y;
   if (cont_searching) {
-    resume_searching(pos_x, pos_y, w, h, wdth, hght, recursive_nr);
+    resume_searching(pos_x, pos_y, w, h, wdth, hght, recursive_nr,
+                     direction);
   }
 }
 

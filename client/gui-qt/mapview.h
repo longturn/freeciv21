@@ -44,9 +44,9 @@ public:
   map_view();
   void paint(QPainter *painter, QPaintEvent *event);
   void find_place(int pos_x, int pos_y, int &w, int &h, int wdth, int hght,
-                  int recursive_nr);
+                  int recursive_nr, bool direction = false);
   void resume_searching(int pos_x, int pos_y, int &w, int &h, int wdtht,
-                        int hght, int recursive_nr);
+                        int hght, int recursive_nr, bool direction);
   void update_cursor(enum cursor_type);
 
   void hide_all_fcwidgets();

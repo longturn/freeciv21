@@ -72,7 +72,8 @@ void units_waiting::clicked(int x, int y)
 {
   Q_UNUSED(y);
   int z = 0;
-  unit_list_iterate(client_player()->units, punit) {
+  unit_list_iterate(client_player()->units, punit)
+  {
     if (punit && z == x) {
       unit_focus_set(punit);
       center_tile_mapcanvas(punit->tile);
@@ -124,7 +125,8 @@ void units_waiting::update_units()
   waiting_units->horizontalHeader()->resizeSections(
       QHeaderView::ResizeToContents);
 
-  if (units_reports::exists() && units_count && units_reports::instance()->isVisible()) {
+  if (units_reports::exists() && units_count
+      && units_reports::instance()->isVisible()) {
     show();
   } else {
     hide();
@@ -384,6 +386,11 @@ units_reports::units_reports() : fcwidget()
   setVisible(false);
   uw = new units_waiting(queen()->mapview_wdg);
   uw->setVisible(false);
+  int x, y;
+  x = width();
+  y = height();
+  queen()->mapview_wdg->find_place(0, 4, x, y, x, y, 0, true);
+  move(x, y);
 }
 
 /**
@@ -471,7 +478,7 @@ void units_reports::paintEvent(QPaintEvent *event)
 void units_reports::resizeEvent(QResizeEvent *event)
 {
   Q_UNUSED(event);
-  uw->move(0, height());
+  uw->move(pos().x(), height() + pos().y());
 }
 
 void units_reports::hideEvent(QHideEvent *event)
@@ -628,11 +635,12 @@ void units_reports::clear_layout()
 /**
    Closes units report
  */
-void popdown_units_report() {
+void popdown_units_report()
+{
   if (units_reports::exists()) {
-  units_reports::instance()->drop();
+    units_reports::instance()->drop();
   }
-   }
+}
 
 /**
    Toggles units report, bool used for compatibility with sidebar callback
