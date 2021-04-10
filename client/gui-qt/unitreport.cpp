@@ -71,16 +71,15 @@ units_waiting::~units_waiting() {}
 void units_waiting::clicked(int x, int y)
 {
   Q_UNUSED(y);
-  int z = 0;
-  unit_list_iterate(client_player()->units, punit)
-  {
-    if (punit && z == x) {
-      unit_focus_set(punit);
-      center_tile_mapcanvas(punit->tile);
-    }
-    z++;
+
+  QTableWidgetItem *item = waiting_units->item(x, 0);
+  struct unit *punit =
+      static_cast<unit *>(item->data(Qt::UserRole).value<void *>());
+
+  if (punit) {
+    unit_focus_set(punit);
+    center_tile_mapcanvas(punit->tile);
   }
-  unit_list_iterate_end
 }
 
 void units_waiting::update_units()
@@ -96,9 +95,11 @@ void units_waiting::update_units()
   unit_list_iterate(client_player()->units, punit)
   {
     if (!can_unit_move_now(punit) && punit->ssa_controller == SSA_NONE) {
-      waiting_units->setItem(
-          units_count, 0,
-          new QTableWidgetItem(utype_name_translation(punit->utype)));
+      QTableWidgetItem *item =
+          new QTableWidgetItem(utype_name_translation(punit->utype));
+      item->setData(Qt::UserRole,
+                    QVariant::fromValue(static_cast<void *>(punit)));
+      waiting_units->setItem(units_count, 0, item);
 
       int pcity_near_dist;
       struct city *pcity_near = get_nearest_city(punit, &pcity_near_dist);
