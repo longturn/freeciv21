@@ -48,7 +48,7 @@
 
 #include "text.h"
 
-static int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs);
+int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs);
 
 /**
    Return a (static) string with a tile's food/prod/trade
@@ -369,6 +369,13 @@ const QString popup_info_text(struct tile *ptile)
     get_full_username(username, sizeof(username), owner);
     get_full_nation(nation, sizeof(nation), owner);
 
+    time_t dt = time(NULL) - punit->action_timestamp;
+    if (dt < 0 && !can_unit_move_now(punit)) {
+      char buf[64];
+      format_time_duration(- dt, buf, sizeof(buf));
+      str += _("Can move in ") + QString(buf) + qendl();
+    }
+
     if (!client_player() || owner == client_player()) {
       struct city *hcity = player_city_by_number(owner, punit->homecity);
 
@@ -381,7 +388,7 @@ const QString popup_info_text(struct tile *ptile)
       } else {
         // TRANS: "Unit: <unit type> "<unit name>" | <username> (<nation +
         // team>)"
-        str = str
+        str += str
               + QString(_("Unit: %1 \"%2\" | %3 (%4)"))
                     .arg(utype_name_translation(ptype), punit->name,
                          username, nation)
@@ -725,7 +732,7 @@ const QString get_airlift_text(const struct unit_list *punits,
 /**
    Return total expected bulbs.
  */
-static int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs)
+int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs)
 {
   const struct research *presearch;
   int ours = 0, theirs = 0;

@@ -146,6 +146,29 @@ static struct unit *goto_map_unit(const struct goto_map *goto_map)
 }
 
 /**
+   Returns if unit can move now
+ */
+bool can_unit_move_now(const struct unit *punit)
+{
+  time_t dt;
+
+  if (!punit) {
+    return false;
+  }
+
+  if (punit->action_turn != game.info.turn - 1) {
+    return true;
+  }
+
+  dt = time(NULL) - punit->action_timestamp;
+  if (dt < 0) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
    Called only by handle_map_info() in client/packhand.c.
  */
 void init_client_goto()

@@ -68,6 +68,8 @@ struct fc_settings {
   float battlelog_scale;
   float battlelog_x;
   float battlelog_y;
+  float civstatus_x;
+  float civstatus_y;
 };
 
 /****************************************************************************

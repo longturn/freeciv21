@@ -15,6 +15,8 @@
 #include <fc_config.h>
 #endif
 
+#include <QDateTime>
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -2598,7 +2600,15 @@ void package_unit(struct unit *punit, struct packet_unit_info *packet)
     packet->orders_repeat = packet->orders_vigilant = false;
     // No need to initialize array.
   }
-
+  packet->action_turn = punit->action_turn;
+  // client doesnt have access to game.server.unitwaittime, so use release time
+  time_t gotime = game.server.unitwaittime + punit->action_timestamp;
+  // convert to UTC using Qt
+  QDateTime localtime;
+  localtime.setSecsSinceEpoch(gotime);
+  QDateTime utctime(localtime.toUTC());
+  gotime = utctime.toSecsSinceEpoch();
+  packet->action_timestamp = gotime;
   packet->action_decision_want = punit->action_decision_want;
   packet->action_decision_tile =
       (punit->action_decision_tile ? tile_index(punit->action_decision_tile)
@@ -4656,11 +4666,11 @@ bool unit_can_do_action_now(const struct unit *punit)
     return true;
   }
 
-  if (punit->server.action_turn != game.info.turn - 1) {
+  if (punit->action_turn != game.info.turn - 1) {
     return true;
   }
 
-  dt = time(NULL) - punit->server.action_timestamp;
+  dt = time(NULL) - punit->action_timestamp;
   if (dt < game.server.unitwaittime) {
     char buf[64];
     format_time_duration(game.server.unitwaittime - dt, buf, sizeof(buf));
@@ -4681,12 +4691,13 @@ bool unit_can_do_action_now(const struct unit *punit)
  */
 void unit_did_action(struct unit *punit)
 {
-  if (!punit) {
+  // Dont spam network with unitwaitime changes if its disabled
+  if (!punit || !game.server.unitwaittime) {
     return;
   }
 
-  punit->server.action_timestamp = time(NULL);
-  punit->server.action_turn = game.info.turn;
+  punit->action_timestamp = time(NULL);
+  punit->action_turn = game.info.turn;
 }
 
 /**

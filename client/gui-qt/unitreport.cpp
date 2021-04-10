@@ -11,20 +11,135 @@
 #include "unitreport.h"
 // Qt
 #include <QHBoxLayout>
+#include <QHeaderView>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QScrollArea>
+// common
+#include "movement.h"
+#include "text.h"
 // client
 #include "client_main.h"
+#include "climisc.h"
+#include "mapview_common.h"
 #include "sprite.h"
 // gui-qt
 #include "canvas.h"
 #include "fc_client.h"
 #include "fonts.h"
+#include "goto.h"
 #include "hudwidget.h"
 #include "page_game.h"
 
 units_reports *units_reports::m_instance = nullptr;
+
+units_waiting::units_waiting(QWidget *parent)
+{
+  setParent(parent);
+  setAttribute(Qt::WA_DeleteOnClose);
+  waiting_units = new QTableWidget(this);
+  QVBoxLayout *vb = new QVBoxLayout(this);
+
+  QStringList headersLabels;
+  headersLabels << _("Type") << _("Location") << _("Mp") << _("Time left");
+  waiting_units->setColumnCount(headersLabels.count());
+  waiting_units->setHorizontalHeaderLabels(headersLabels);
+
+  waiting_units->setProperty("showGrid", "false");
+  waiting_units->setProperty("selectionBehavior", "SelectRows");
+  waiting_units->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  waiting_units->verticalHeader()->setVisible(false);
+  waiting_units->horizontalHeader()->setVisible(true);
+  waiting_units->setSelectionMode(QAbstractItemView::SingleSelection);
+  waiting_units->horizontalHeader()->resizeSections(QHeaderView::Stretch);
+  waiting_units->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  waiting_units->setProperty("unit_wait_table", true);
+  waiting_units->setSortingEnabled(true);
+  vb->addWidget(waiting_units, Qt::AlignHCenter);
+  setLayout(vb);
+  QTimer *timer = new QTimer(this);
+  connect(timer, &QTimer::timeout, this, &units_waiting::update_units);
+  connect(waiting_units, &QTableWidget::cellClicked, this,
+          &units_waiting::clicked);
+  timer->start(1000);
+
+  update_units();
+}
+
+units_waiting::~units_waiting() {}
+
+void units_waiting::clicked(int x, int y)
+{
+  Q_UNUSED(y);
+
+  QTableWidgetItem *item = waiting_units->item(x, 0);
+  struct unit *punit =
+      static_cast<unit *>(item->data(Qt::UserRole).value<void *>());
+
+  if (punit) {
+    unit_focus_set(punit);
+    center_tile_mapcanvas(punit->tile);
+  }
+}
+
+void units_waiting::update_units()
+{
+  int units_count = 0;
+
+  waiting_units->clearContents();
+
+  if (!client_has_player()) {
+    return;
+  }
+
+  unit_list_iterate(client_player()->units, punit)
+  {
+    if (!can_unit_move_now(punit) && punit->ssa_controller == SSA_NONE) {
+      QTableWidgetItem *item =
+          new QTableWidgetItem(utype_name_translation(punit->utype));
+      item->setData(Qt::UserRole,
+                    QVariant::fromValue(static_cast<void *>(punit)));
+      waiting_units->setItem(units_count, 0, item);
+
+      int pcity_near_dist;
+      struct city *pcity_near = get_nearest_city(punit, &pcity_near_dist);
+      waiting_units->setItem(units_count, 1,
+                             new QTableWidgetItem(get_nearest_city_text(
+                                 pcity_near, pcity_near_dist)));
+
+      waiting_units->setItem(
+          units_count, 2,
+          new QTableWidgetItem(move_points_text(punit->moves_left, false)));
+
+      time_t dt = time(NULL) - punit->action_timestamp;
+      if (dt < 0 && !can_unit_move_now(punit)) {
+        char buf[64];
+        format_time_duration(-dt, buf, sizeof(buf));
+        waiting_units->setItem(units_count, 3, new QTableWidgetItem(buf));
+      }
+
+      ++units_count;
+    }
+  }
+  unit_list_iterate_end;
+  waiting_units->setRowCount(units_count);
+  waiting_units->horizontalHeader()->resizeSections(
+      QHeaderView::ResizeToContents);
+
+  if (units_reports::exists() && units_count
+      && units_reports::instance()->isVisible()) {
+    show();
+  } else {
+    hide();
+  }
+
+  setFixedSize(waiting_units->horizontalHeader()->length()
+                   + waiting_units->verticalHeader()->width() + 25,
+               waiting_units->verticalHeader()->length()
+                   + waiting_units->horizontalHeader()->height() + 30);
+}
+
+void units_waiting::showEvent(QShowEvent *event) { update_units(); }
 
 /**
    Unit item constructor (single item for units report)
@@ -270,6 +385,13 @@ units_reports::units_reports() : fcwidget()
   cw = new close_widget(this);
   cw->setFixedSize(12, 12);
   setVisible(false);
+  uw = new units_waiting(queen()->mapview_wdg);
+  uw->setVisible(false);
+  int x, y;
+  x = width();
+  y = height();
+  queen()->mapview_wdg->find_place(0, 4, x, y, x, y, 0, true);
+  move(x, y);
 }
 
 /**
@@ -279,6 +401,8 @@ units_reports::~units_reports()
 {
   qDeleteAll(unittype_list);
   unittype_list.clear();
+  uw->close();
+  uw->deleteLater();
   delete cw;
 }
 
@@ -289,6 +413,11 @@ void units_reports::add_item(unittype_item *item)
 {
   unittype_list.append(item);
 }
+
+/**
+  Check is instance exists
+ */
+bool units_reports::exists() { return static_cast<bool>(m_instance); }
 
 /**
    Returns instance of units_reports
@@ -342,6 +471,21 @@ void units_reports::paintEvent(QPaintEvent *event)
 {
   Q_UNUSED(event);
   cw->put_to_corner();
+}
+
+/**
+   Resize event
+ */
+void units_reports::resizeEvent(QResizeEvent *event)
+{
+  Q_UNUSED(event);
+  uw->move(pos().x(), height() + pos().y());
+}
+
+void units_reports::hideEvent(QHideEvent *event)
+{
+  Q_UNUSED(event);
+  destroy();
 }
 
 /**
@@ -448,6 +592,8 @@ void units_reports::update_units(bool show)
   layout->update();
   updateGeometry();
   delete[] unit_array;
+
+  uw->setVisible(true);
 }
 
 /**
@@ -490,7 +636,12 @@ void units_reports::clear_layout()
 /**
    Closes units report
  */
-void popdown_units_report() { units_reports::instance()->drop(); }
+void popdown_units_report()
+{
+  if (units_reports::exists()) {
+    units_reports::instance()->drop();
+  }
+}
 
 /**
    Toggles units report, bool used for compatibility with sidebar callback
@@ -498,7 +649,7 @@ void popdown_units_report() { units_reports::instance()->drop(); }
 void toggle_units_report(bool x)
 {
   Q_UNUSED(x);
-  if (units_reports::instance()->isVisible()
+  if (units_reports::exists()
       && queen()->game_tab_widget->currentIndex() == 0) {
     units_reports::instance()->drop();
   } else {
@@ -512,7 +663,7 @@ void toggle_units_report(bool x)
 void real_units_report_dialog_update(void *unused)
 {
   Q_UNUSED(unused)
-  if (units_reports::instance()->isVisible()) {
+  if (units_reports::exists()) {
     units_reports::instance()->update_units();
   }
 }

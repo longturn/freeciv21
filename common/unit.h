@@ -187,7 +187,8 @@ struct unit {
   struct tile *action_decision_tile;
 
   bool stay; // Unit is prohibited from moving
-
+  time_t action_timestamp;
+  int action_turn;
   union {
     struct {
       /* Only used at the client (the server is omniscient; ./client/). */
@@ -224,8 +225,6 @@ struct unit {
       int ord_city;
 
       struct vision *vision;
-      time_t action_timestamp;
-      int action_turn;
       struct unit_move_data *moving;
 
       // The unit is in the process of dying.

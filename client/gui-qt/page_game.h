@@ -20,6 +20,7 @@ class city_dialog;
 class fc_client;
 class map_view;
 class sidebar;
+class civstatus;
 class minimap_view;
 class sidebarWidget;
 class hud_units;
@@ -74,6 +75,7 @@ public:
   minimap_view *minimapview_wdg;
   city_dialog *city_overlay;
   xvote *x_vote;
+  civstatus *civ_status;
   sidebarWidget *sw_diplo;
   sidebarWidget *sw_indicators;
   sidebarWidget *sw_endturn;

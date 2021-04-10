@@ -25,8 +25,22 @@ class QHBoxLayout; // lines 25-25
 class QObject;
 class QPaintEvent;
 class QScrollArea;
+class QTableWidget;
 class QWheelEvent;
 struct unit_type;
+
+class units_waiting : public QWidget {
+  Q_OBJECT
+public:
+  units_waiting(QWidget *parent = nullptr);
+  ~units_waiting();
+protected:
+  void showEvent(QShowEvent *event) override;
+private:
+  void clicked(int x, int y);
+  void update_units();
+  QTableWidget *waiting_units;
+};
 
 class unittype_item : public QFrame {
   Q_OBJECT
@@ -70,6 +84,7 @@ class units_reports : public fcwidget {
   QScrollArea *scroll;
   QWidget scroll_widget;
   static units_reports *m_instance;
+  units_waiting *uw;
 
 public:
   ~units_reports() override;
@@ -80,12 +95,15 @@ public:
   void update_units(bool show = false);
   void add_item(unittype_item *item);
   void update_menu() override;
+  static bool exists();
   QHBoxLayout *layout;
   QList<unittype_item *> unittype_list;
 
 protected:
   void mousePressEvent(QMouseEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
+  void resizeEvent(QResizeEvent *event) override;
+  void hideEvent(QHideEvent *event) override;
 };
 
 void popdown_units_report();
