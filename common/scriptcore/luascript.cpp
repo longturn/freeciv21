@@ -91,18 +91,6 @@ static luaL_Reg luascript_lualibs_secure[] = {
     {LUA_MATHLIBNAME, luaopen_math},
     {LUA_DBLIBNAME, luaopen_debug},
     {NULL, NULL}};
-
-static luaL_Reg luascript_lualibs_permissive[] = {
-    // Using default libraries excluding: package, io, and bit32
-    {"_G", luaopen_base},
-    {LUA_COLIBNAME, luaopen_coroutine},
-    {LUA_TABLIBNAME, luaopen_table},
-    {LUA_STRLIBNAME, luaopen_string},
-    {LUA_UTF8LIBNAME, luaopen_utf8},
-    {LUA_MATHLIBNAME, luaopen_math},
-    {LUA_DBLIBNAME, luaopen_debug},
-    {LUA_OSLIBNAME, luaopen_os},
-    {NULL, NULL}};
 #else // LUA_VERSION_NUM
 #error "Unsupported lua version"
 #endif // LUA_VERSION_NUM
@@ -134,8 +122,7 @@ static int luascript_report(struct fc_lua *fcl, int status, const char *code)
     }
 
     // Add error message.
-    str = QStringLiteral("lua error:");
-    str += QStringLiteral("\t%s").arg(msg);
+    str = QStringLiteral("lua error:\t") + msg;
 
     luascript_log(fcl, LOG_ERROR, "%s", qUtf8Printable(str));
     lua_pop(fcl->state, 1);
@@ -293,7 +280,7 @@ struct fc_lua *luascript_new(luascript_log_func_t output_fct,
     luascript_traceback_func_save(fcl->state);
     luascript_blacklist(fcl->state, luascript_unsafe_symbols_secure);
   } else {
-    luascript_openlibs(fcl->state, luascript_lualibs_permissive);
+    luaL_openlibs(fcl->state);
     luascript_traceback_func_save(fcl->state);
     luascript_blacklist(fcl->state, luascript_unsafe_symbols_permissive);
   }
@@ -371,7 +358,7 @@ void luascript_log_vargs(struct fc_lua *fcl, QtMsgType level,
   char buf[1024];
 
   fc_assert_ret(fcl);
-  fc_assert_ret(0 <= level && level <= LOG_DEBUG);
+  fc_assert_ret(QtDebugMsg <= level && level <= QtFatalMsg);
 
   fc_vsnprintf(buf, sizeof(buf), format, args);
 
