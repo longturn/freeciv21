@@ -1628,7 +1628,9 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
  */
 static char *tilespec_gfx_filename(const char *gfx_filename)
 {
-  for (auto gfx_current_fileext : QImageReader::supportedImageFormats()) {
+  auto supported = QImageReader::supportedImageFormats();
+  supported.prepend("png");
+  for (auto gfx_current_fileext : supported) {
     QString real_full_name;
     QString full_name = QStringLiteral("%1.%2").arg(
         gfx_filename, gfx_current_fileext.data());
