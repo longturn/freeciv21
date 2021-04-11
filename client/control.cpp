@@ -2736,7 +2736,6 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
   struct city *pcity = tile_city(ptile);
   struct unit_list *punits = get_units_in_focus();
   bool maybe_goto = false;
-  struct city *near_pcity = find_city_near_tile(ptile);
 
   if (hover_state != HOVER_NONE) {
     switch (hover_state) {
@@ -2767,8 +2766,10 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
     clear_hover_state();
     update_unit_info_label(get_units_in_focus());
   }
+
+  auto near_pcity = is_any_city_dialog_open();
   if (near_pcity && !cma_is_city_under_agent(near_pcity, NULL)
-      && can_client_issue_orders() && near_pcity->client.city_opened) {
+      && can_client_issue_orders()) {
     int city_x, city_y;
 
     fc_assert_ret(
