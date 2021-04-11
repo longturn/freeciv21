@@ -3091,18 +3091,21 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     SET_GOTO_TURN_SPRITE(GTS_TURN_STEP, "step", , );
     SET_GOTO_TURN_SPRITE(GTS_EXHAUSTED_MP, "exhausted_mp", , );
 
-    buffer =
-        QStringLiteral("city.size_%10").arg(QString::number(i)); // %1 then 0
+    // using old buffer doesnt work, mb something wiped it
+    buffer = QStringLiteral("city.size_%1").arg(QString::number(i));
+    buffer += "0";
     SET_SPRITE(city.size_tens[i], buffer);
-    buffer2 = QStringLiteral("path.turns_%10").arg(QString::number(i));
+    buffer2 = QStringLiteral("path.turns_%1").arg(QString::number(i));
+    buffer2 += "0";
     SET_SPRITE_ALT(path.s[GTS_MP_LEFT].turns_tens[i], buffer2, buffer);
     SET_GOTO_TURN_SPRITE(GTS_TURN_STEP, "step", 0, _tens);
     SET_GOTO_TURN_SPRITE(GTS_EXHAUSTED_MP, "exhausted_mp", 0, _tens);
 
-    buffer = QStringLiteral("city.size_%100")
-                 .arg(QString::number(i)); // %1 then 00
+    buffer = QStringLiteral("city.size_%1").arg(QString::number(i));
+    buffer += "00";
     SET_SPRITE_OPT(city.size_hundreds[i], buffer);
-    buffer2 = QStringLiteral("path.turns_%100").arg(QString::number(i));
+    buffer2 = QStringLiteral("path.turns_%1").arg(QString::number(i));
+    buffer2 += "00";
     SET_SPRITE_ALT_OPT(path.s[GTS_MP_LEFT].turns_hundreds[i], buffer2,
                        buffer);
     SET_GOTO_TURN_SPRITE(GTS_TURN_STEP, "step", 00, _hundreds);
