@@ -91,18 +91,6 @@ static luaL_Reg luascript_lualibs_secure[] = {
     {LUA_MATHLIBNAME, luaopen_math},
     {LUA_DBLIBNAME, luaopen_debug},
     {NULL, NULL}};
-
-static luaL_Reg luascript_lualibs_permissive[] = {
-    // Using default libraries excluding: package, io, and bit32
-    {"_G", luaopen_base},
-    {LUA_COLIBNAME, luaopen_coroutine},
-    {LUA_TABLIBNAME, luaopen_table},
-    {LUA_STRLIBNAME, luaopen_string},
-    {LUA_UTF8LIBNAME, luaopen_utf8},
-    {LUA_MATHLIBNAME, luaopen_math},
-    {LUA_DBLIBNAME, luaopen_debug},
-    {LUA_OSLIBNAME, luaopen_os},
-    {NULL, NULL}};
 #else // LUA_VERSION_NUM
 #error "Unsupported lua version"
 #endif // LUA_VERSION_NUM
@@ -292,7 +280,7 @@ struct fc_lua *luascript_new(luascript_log_func_t output_fct,
     luascript_traceback_func_save(fcl->state);
     luascript_blacklist(fcl->state, luascript_unsafe_symbols_secure);
   } else {
-    luascript_openlibs(fcl->state, luascript_lualibs_permissive);
+    luaL_openlibs(fcl->state);
     luascript_traceback_func_save(fcl->state);
     luascript_blacklist(fcl->state, luascript_unsafe_symbols_permissive);
   }
