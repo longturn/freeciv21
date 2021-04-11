@@ -88,11 +88,7 @@ static void close_connection(struct connection *pconn)
     }
     FC_FREE(pconn->server.ping_timers);
   }
-  conn_list_iterate(game.all_connections, xconn)
-  {
-    xconn->sock->disconnect();
-  }
-  conn_list_iterate_end;
+
   conn_pattern_list_destroy(pconn->server.ignore_list);
   pconn->server.ignore_list = NULL;
 
