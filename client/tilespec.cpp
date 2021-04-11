@@ -5327,11 +5327,11 @@ static int fill_goto_sprite_array(const struct tileset *t,
       sprite = t->sprites.path.s[state].turns[length % 10];
       ADD_SPRITE_SIMPLE(sprite);
       if (length >= 10) {
-        sprite = t->sprites.path.s[state].turns_tens[(length / 10) % 10];
+        sprite = t->sprites.path.s[state].turns_hundreds[(length / 10) % 10];
         ADD_SPRITE_SIMPLE(sprite);
         if (length >= 100) {
           sprite =
-              t->sprites.path.s[state].turns_hundreds[(length / 100) % 10];
+              t->sprites.path.s[state].turns_tens[(length / 100) % 10];
 
           if (sprite != NULL) {
             ADD_SPRITE_SIMPLE(sprite);
