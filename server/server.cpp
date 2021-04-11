@@ -57,6 +57,7 @@
 #include "console.h"
 #include "diplhand.h"
 #include "edithand.h"
+#include "fcdb.h"
 #include "maphand.h"
 #include "mapimg.h"
 #include "meta.h"
@@ -128,14 +129,6 @@ void fc_interface_init_server()
  */
 QTcpServer *srv_prepare()
 {
-#ifdef HAVE_FCDB
-  if (!srvarg.auth_enabled) {
-    con_write(C_COMMENT, _("This freeciv-server program has player "
-                           "authentication support, but it's currently not "
-                           "in use."));
-  }
-#endif // HAVE_FCDB
-
   // make sure it's initialized
   srv_init();
 
@@ -172,18 +165,15 @@ QTcpServer *srv_prepare()
               mapimg_server_tile_unit, mapimg_server_plrcolor_count,
               mapimg_server_plrcolor_get);
 
-#ifdef HAVE_FCDB
   if (srvarg.fcdb_enabled) {
     bool success;
 
     success = fcdb_init(qUtf8Printable(srvarg.fcdb_conf));
-    srvarg.fcdb_conf = NULL;
     if (!success) {
       QCoreApplication::exit(EXIT_FAILURE);
       return tcp_server;
     }
   }
-#endif // HAVE_FCDB
 
   if (srvarg.ruleset != NULL) {
     QString testfilename;

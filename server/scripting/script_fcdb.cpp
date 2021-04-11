@@ -16,6 +16,9 @@
 #include <cstdlib>
 #include <ctime>
 
+// Qt
+#include <QStandardPaths>
+
 /* dependencies/lua */
 #include "lua.h"
 #include "lualib.h"
@@ -55,13 +58,9 @@
 #include "stdinhand.h"
 
 /* server/scripting */
-#ifdef HAVE_FCDB
 #include "tolua_fcdb_gen.h"
-#endif // HAVE_FCDB
 
 #include "script_fcdb.h"
-
-#ifdef HAVE_FCDB
 
 #define SCRIPT_FCDB_LUA_FILE "database.lua"
 
@@ -138,13 +137,13 @@ static bool script_fcdb_functions_check(const char *fcdb_luafile)
     for (auto func_name : *missing_func_required) {
       qCritical("Database script '%s' does not define the required function "
                 "'%s'.",
-                fcdb_luafile, func_name);
+                fcdb_luafile, qUtf8Printable(func_name));
       ret = false;
     }
     for (auto func_name : *missing_func_optional) {
       qDebug("Database script '%s' does not define the optional "
              "function '%s'.",
-             fcdb_luafile, func_name);
+             fcdb_luafile, qUtf8Printable(func_name));
     }
   }
 
@@ -189,49 +188,23 @@ static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
 }
 
 /**
-   MD5 checksum function for lua environment.
- */
-static int md5sum(lua_State *L)
-{
-  int n = lua_gettop(L);
-  char sum[16 + 1];
-  const char *plaintext;
-  QByteArray ba;
-  size_t len;
-
-  if (n != 1 || lua_type(L, -1) != LUA_TSTRING) {
-    lua_pushliteral(L, "invalid argument");
-    lua_error(L);
-  }
-
-  plaintext = lua_tolstring(L, -1, &len);
-  QCryptographicHash hash(QCryptographicHash::Md5);
-  hash.addData(plaintext, len);
-  ba = hash.result();
-  qstrncpy(sum, ba.data(), sizeof(sum));
-
-  lua_pushstring(L, sum);
-  return 1;
-}
-#endif // HAVE_FCDB
-
-/**
    Initialize the scripting state. Returns the status of the freeciv database
    lua state.
  */
-bool script_fcdb_init(const char *fcdb_luafile)
+bool script_fcdb_init(const QString &fcdb_luafile)
 {
-#ifdef HAVE_FCDB
   if (fcl != NULL) {
     fc_assert_ret_val(fcl->state != NULL, false);
 
     return true;
   }
 
-  if (!fcdb_luafile) {
-    // Use default freeciv database lua file.
-    fcdb_luafile = FC_CONF_PATH "/" SCRIPT_FCDB_LUA_FILE;
-  }
+  auto fcdb_luafile_resolved =
+      fcdb_luafile.isEmpty() ?
+                             // Use default freeciv database lua file.
+          QStandardPaths::locate(QStandardPaths::GenericConfigLocation,
+                                 SCRIPT_FCDB_LUA_FILE)
+                             : fcdb_luafile;
 
   fcl = luascript_new(NULL, false);
   if (fcl == NULL) {
@@ -242,7 +215,6 @@ bool script_fcdb_init(const char *fcdb_luafile)
   tolua_common_a_open(fcl->state);
   tolua_game_open(fcl->state);
   tolua_fcdb_open(fcl->state);
-  lua_register(fcl->state, "md5sum", md5sum);
 #ifdef HAVE_FCDB_MYSQL
   luaL_requiref(fcl->state, "ls_mysql", luaopen_luasql_mysql, 1);
   lua_pop(fcl->state, 1);
@@ -266,10 +238,11 @@ bool script_fcdb_init(const char *fcdb_luafile)
   // Define the prototypes for the needed lua functions.
   script_fcdb_functions_define();
 
-  if (luascript_do_file(fcl, fcdb_luafile)
-      || !script_fcdb_functions_check(fcdb_luafile)) {
+  if (luascript_do_file(fcl, qUtf8Printable(fcdb_luafile_resolved))
+      || !script_fcdb_functions_check(
+          qUtf8Printable(fcdb_luafile_resolved))) {
     qCritical("Error loading the Freeciv database lua script '%s'.",
-              fcdb_luafile);
+              qUtf8Printable(fcdb_luafile_resolved));
     script_fcdb_free();
     return false;
   }
@@ -279,8 +252,6 @@ bool script_fcdb_init(const char *fcdb_luafile)
     script_fcdb_free();
     return false;
   }
-#endif // HAVE_FCDB
-
   return true;
 }
 
@@ -293,14 +264,12 @@ bool script_fcdb_init(const char *fcdb_luafile)
 bool script_fcdb_call(const char *func_name, ...)
 {
   bool success = true;
-#ifdef HAVE_FCDB
 
   va_list args;
   va_start(args, func_name);
 
   success = luascript_func_call_valist(fcl, func_name, args);
   va_end(args);
-#endif // HAVE_FCDB
 
   return success;
 }
@@ -310,7 +279,6 @@ bool script_fcdb_call(const char *func_name, ...)
  */
 void script_fcdb_free()
 {
-#ifdef HAVE_FCDB
   if (!script_fcdb_call("database_free", 0)) {
     qCritical("Error closing the database connection. Continuing anyway...");
   }
@@ -320,7 +288,6 @@ void script_fcdb_free()
     luascript_destroy(fcl);
     fcl = NULL;
   }
-#endif // HAVE_FCDB
 }
 
 /**
@@ -329,7 +296,6 @@ void script_fcdb_free()
  */
 bool script_fcdb_do_string(struct connection *caller, const char *str)
 {
-#ifdef HAVE_FCDB
   int status;
   struct connection *save_caller;
   luascript_log_func_t save_output_fct;
@@ -348,7 +314,4 @@ bool script_fcdb_do_string(struct connection *caller, const char *str)
   fcl->output_fct = save_output_fct;
 
   return (status == 0);
-#else
-  return true;
-#endif // HAVE_FCDB
 }

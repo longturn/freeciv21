@@ -1863,12 +1863,10 @@ void server_quit()
   adv_settlers_free();
   ai_timer_free();
 
-#ifdef HAVE_FCDB
   if (srvarg.fcdb_enabled) {
     // If freeciv database has been initialized
     fcdb_free();
   }
-#endif // HAVE_FCDB
 
   settings_free();
   stdinhand_free();
