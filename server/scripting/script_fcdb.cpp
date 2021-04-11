@@ -62,7 +62,7 @@
 
 #include "script_fcdb.h"
 
-#define SCRIPT_FCDB_LUA_FILE "database.lua"
+#define SCRIPT_FCDB_LUA_FILE "freeciv21/database.lua"
 
 static void script_fcdb_functions_define(void);
 static bool script_fcdb_functions_check(const char *fcdb_luafile);
@@ -205,6 +205,13 @@ bool script_fcdb_init(const QString &fcdb_luafile)
           QStandardPaths::locate(QStandardPaths::GenericConfigLocation,
                                  SCRIPT_FCDB_LUA_FILE)
                              : fcdb_luafile;
+  if (fcdb_luafile_resolved.isEmpty()) {
+    qCritical() << "Could not find " SCRIPT_FCDB_LUA_FILE
+                   " in the following directories:"
+                << QStandardPaths::standardLocations(
+                       QStandardPaths::GenericConfigLocation);
+    return false;
+  }
 
   fcl = luascript_new(NULL, false);
   if (fcl == NULL) {
