@@ -134,8 +134,7 @@ static int luascript_report(struct fc_lua *fcl, int status, const char *code)
     }
 
     // Add error message.
-    str = QStringLiteral("lua error:");
-    str += QStringLiteral("\t%s").arg(msg);
+    str = QStringLiteral("lua error:\t") + msg;
 
     luascript_log(fcl, LOG_ERROR, "%s", qUtf8Printable(str));
     lua_pop(fcl->state, 1);
@@ -371,7 +370,7 @@ void luascript_log_vargs(struct fc_lua *fcl, QtMsgType level,
   char buf[1024];
 
   fc_assert_ret(fcl);
-  fc_assert_ret(0 <= level && level <= LOG_DEBUG);
+  fc_assert_ret(QtDebugMsg <= level && level <= QtFatalMsg);
 
   fc_vsnprintf(buf, sizeof(buf), format, args);
 
