@@ -26,22 +26,6 @@
 /* dependencies/tolua */
 #include "tolua.h"
 
-/* dependencies/luasql */
-#ifdef HAVE_FCDB_MYSQL
-#include "ls_mysql.h"
-#endif
-#ifdef HAVE_FCDB_ODBC
-#include "ls_odbc.h"
-#endif
-#ifdef HAVE_FCDB_POSTGRES
-#include "ls_postgres.h"
-#endif
-#ifdef HAVE_FCDB_SQLITE3
-#include "ls_sqlite3.h"
-#endif
-
-#include <QCryptographicHash>
-
 // utility
 #include "log.h"
 #include "registry.h"
@@ -222,22 +206,6 @@ bool script_fcdb_init(const QString &fcdb_luafile)
   tolua_common_a_open(fcl->state);
   tolua_game_open(fcl->state);
   tolua_fcdb_open(fcl->state);
-#ifdef HAVE_FCDB_MYSQL
-  luaL_requiref(fcl->state, "ls_mysql", luaopen_luasql_mysql, 1);
-  lua_pop(fcl->state, 1);
-#endif
-#ifdef HAVE_FCDB_ODBC
-  luaL_requiref(fcl->state, "ls_odbc", luaopen_luasql_odbc, 1);
-  lua_pop(fcl->state, 1);
-#endif
-#ifdef HAVE_FCDB_POSTGRES
-  luaL_requiref(fcl->state, "ls_postgres", luaopen_luasql_postgres, 1);
-  lua_pop(fcl->state, 1);
-#endif
-#ifdef HAVE_FCDB_SQLITE3
-  luaL_requiref(fcl->state, "ls_sqlite3", luaopen_luasql_sqlite3, 1);
-  lua_pop(fcl->state, 1);
-#endif
   tolua_common_z_open(fcl->state);
 
   luascript_func_init(fcl);
