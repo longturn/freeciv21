@@ -9,6 +9,7 @@
 **************************************************************************/
 
 #include "menu.h"
+
 // Qt
 #include <QActionGroup>
 #include <QApplication>
@@ -2793,7 +2794,6 @@ void mr_menu::tileset_custom_load()
   QLabel *label;
   QPushButton *but;
   QVBoxLayout *layout;
-  const QVector<QString> *tlset_list;
   const struct option *poption;
   QStringList sl;
 
@@ -2808,18 +2808,26 @@ void mr_menu::tileset_custom_load()
                    " map topology!"));
   layout->addWidget(label);
 
+  // Gather the list of tilesets
+  QStringList tilesets;
   for (auto const &s : qAsConst(sl)) {
-    QByteArray on_bytes;
-
-    on_bytes = s.toLocal8Bit();
-    poption = optset_option_by_name(client_optset, on_bytes.data());
-    tlset_list = get_tileset_list(poption);
-    for (const auto &value : *tlset_list) {
-      but = new QPushButton(value);
-      connect(but, &QAbstractButton::clicked, this,
-              &mr_menu::load_new_tileset);
-      layout->addWidget(but);
+    poption = optset_option_by_name(client_optset, qUtf8Printable(s));
+    for (const auto &name : qAsConst(*get_tileset_list(poption))) {
+      tilesets.append(name);
     }
+  }
+
+  // Remove duplicates
+  tilesets.sort();
+  tilesets.erase(std::unique(tilesets.begin(), tilesets.end()),
+                 tilesets.end());
+
+  // Add the buttons
+  for (const auto &name : qAsConst(tilesets)) {
+    but = new QPushButton(name);
+    connect(but, &QAbstractButton::clicked, this,
+            &mr_menu::load_new_tileset);
+    layout->addWidget(but);
   }
   dialog->setSizeGripEnabled(true);
   dialog->setLayout(layout);

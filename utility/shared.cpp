@@ -766,8 +766,8 @@ QVector<QString> *fileinfolist(const QStringList &dirs, const char *suffix)
       files->append(name.toUtf8().data());
     }
   }
-  files->erase(std::unique(files->begin(), files->end()), files->end());
   std::sort(files->begin(), files->end());
+  files->erase(std::unique(files->begin(), files->end()), files->end());
   return files;
 }
 
