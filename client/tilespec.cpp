@@ -23,6 +23,7 @@
 
 #include <QHash>
 #include <QImageReader>
+#include <QPixmap>
 #include <QSet>
 #include <QString>
 #include <QVector>
@@ -279,8 +280,8 @@ struct named_sprites {
   } upkeep;
   struct {
     QPixmap *disorder, *size[NUM_TILES_DIGITS], *size_tens[NUM_TILES_DIGITS],
-        *size_hundreds[NUM_TILES_DIGITS], *tile_foodnum[NUM_TILES_DIGITS],
-        *tile_shieldnum[NUM_TILES_DIGITS], *tile_tradenum[NUM_TILES_DIGITS];
+        *size_hundreds[NUM_TILES_DIGITS];
+    std::vector<QPixmap> tile_foodnum, tile_shieldnum, tile_tradenum;
     struct city_sprite *tile, *single_wall, *wall[NUM_WALL_TYPES], *occupied;
     struct sprite_vector worked_tile_overlay;
     struct sprite_vector unworked_tile_overlay;
@@ -3112,13 +3113,30 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
                        buffer);
     SET_GOTO_TURN_SPRITE(GTS_TURN_STEP, "step", 00, _hundreds);
     SET_GOTO_TURN_SPRITE(GTS_EXHAUSTED_MP, "exhausted_mp", 00, _hundreds);
-
+  }
+  for (int i = 0;; ++i) {
     buffer = QStringLiteral("city.t_food_%1").arg(QString::number(i));
-    SET_SPRITE(city.tile_foodnum[i], buffer);
+    if (auto sprite = load_sprite(t, buffer, true, true)) {
+      t->sprites.city.tile_foodnum.push_back(*sprite);
+    } else {
+      break;
+    }
+  }
+  for (int i = 0;; ++i) {
     buffer = QStringLiteral("city.t_shields_%1").arg(QString::number(i));
-    SET_SPRITE(city.tile_shieldnum[i], buffer);
+    if (auto sprite = load_sprite(t, buffer, true, true)) {
+      t->sprites.city.tile_shieldnum.push_back(*sprite);
+    } else {
+      break;
+    }
+  }
+  for (int i = 0;; ++i) {
     buffer = QStringLiteral("city.t_trade_%1").arg(QString::number(i));
-    SET_SPRITE(city.tile_tradenum[i], buffer);
+    if (auto sprite = load_sprite(t, buffer, true, true)) {
+      t->sprites.city.tile_tradenum.push_back(*sprite);
+    } else {
+      break;
+    }
   }
 #undef SET_GOTO_TURN_SPRITE
 
@@ -4765,21 +4783,34 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
                && (citymode || gui_options.draw_city_output
                    || pcity->client.city_opened)) {
       // Add on the tile output sprites.
-      int food = city_tile_output_now(pcity, ptile, O_FOOD);
-      int shields = city_tile_output_now(pcity, ptile, O_SHIELD);
-      int trade = city_tile_output_now(pcity, ptile, O_TRADE);
       const int ox = t->type == TS_ISOMETRIC ? t->normal_tile_width / 3 : 0;
       const int oy =
           t->type == TS_ISOMETRIC ? -t->normal_tile_height / 3 : 0;
 
-      food = CLIP(0, food / game.info.granularity, NUM_TILES_DIGITS - 1);
-      shields =
-          CLIP(0, shields / game.info.granularity, NUM_TILES_DIGITS - 1);
-      trade = CLIP(0, trade / game.info.granularity, NUM_TILES_DIGITS - 1);
-
-      ADD_SPRITE(t->sprites.city.tile_foodnum[food], true, ox, oy);
-      ADD_SPRITE(t->sprites.city.tile_shieldnum[shields], true, ox, oy);
-      ADD_SPRITE(t->sprites.city.tile_tradenum[trade], true, ox, oy);
+      if (!t->sprites.city.tile_foodnum.empty()) {
+        int food = city_tile_output_now(pcity, ptile, O_FOOD);
+        food = CLIP(0, food / game.info.granularity,
+                    t->sprites.city.tile_foodnum.size() - 1);
+        ADD_SPRITE(
+            const_cast<QPixmap *>(&t->sprites.city.tile_foodnum[food]), true,
+            ox, oy);
+      }
+      if (!t->sprites.city.tile_shieldnum.empty()) {
+        int shields = city_tile_output_now(pcity, ptile, O_SHIELD);
+        shields = CLIP(0, shields / game.info.granularity,
+                       t->sprites.city.tile_shieldnum.size() - 1);
+        ADD_SPRITE(
+            const_cast<QPixmap *>(&t->sprites.city.tile_shieldnum[shields]),
+            true, ox, oy);
+      }
+      if (!t->sprites.city.tile_tradenum.empty()) {
+        int trade = city_tile_output_now(pcity, ptile, O_TRADE);
+        trade = CLIP(0, trade / game.info.granularity,
+                     t->sprites.city.tile_tradenum.size() - 1);
+        ADD_SPRITE(
+            const_cast<QPixmap *>(&t->sprites.city.tile_tradenum[trade]),
+            true, ox, oy);
+      }
     }
   } else if (psettler && psettler->client.colored) {
     // Add citymap overlay for a unit.
