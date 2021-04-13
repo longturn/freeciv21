@@ -190,6 +190,11 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
                                  struct veteran_system **vsystem, char *err,
                                  size_t err_len, bool compat);
 
+static int secfile_lookup_int_default_min_max(struct section_file *file,
+                                              int def, int min, int max,
+                                              const char *path, ...)
+    fc__attribute((__format__(__printf__, 5, 6)));
+
 Q_LOGGING_CATEGORY(ruleset_category, "freeciv.ruleset")
 
 char *script_buffer = NULL;
@@ -1553,6 +1558,12 @@ static bool load_unit_names(struct section_file *file,
       set_user_unit_class_flag_name(unit_class_flag_id(UCF_USER_FLAG_1 + i),
                                     nullptr, nullptr);
     }
+  }
+
+  if (ok) {
+    // Sentry range
+    game.control.sentry_range = secfile_lookup_int_default_min_max(
+        file, 3, 1, 15, "control.sentry_range");
   }
 
   if (ok) {
@@ -5853,10 +5864,6 @@ static bool load_ruleset_effects(struct section_file *file,
 /**
    Print an error message if the value is out of range.
  */
-static int secfile_lookup_int_default_min_max(struct section_file *file,
-                                              int def, int min, int max,
-                                              const char *path, ...)
-    fc__attribute((__format__(__printf__, 5, 6)));
 static int secfile_lookup_int_default_min_max(struct section_file *file,
                                               int def, int min, int max,
                                               const char *path, ...)

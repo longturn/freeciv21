@@ -3373,9 +3373,10 @@ static void wakeup_neighbor_sentries(struct unit *punit)
     alone_in_city = false;
   }
 
-  /* There may be sentried units with a sightrange > 3, but we don't
-     wake them up if the punit is farther away than 3. */
-  square_iterate(&(wld.map), unit_tile(punit), 3, ptile)
+  // There may be sentried units with a sightrange > sentry_range, but we
+  // don't wake them up.
+  square_iterate(&(wld.map), unit_tile(punit), game.control.sentry_range,
+                 ptile)
   {
     unit_list_iterate(ptile->units, penemy)
     {
@@ -3404,9 +3405,9 @@ static void wakeup_neighbor_sentries(struct unit *punit)
   }
   square_iterate_end;
 
-  /* Wakeup patrolling units we bump into.
-     We do not wakeup units further away than 3 squares... */
-  square_iterate(&(wld.map), unit_tile(punit), 3, ptile)
+  // Wakeup patrolling units we bump into.
+  square_iterate(&(wld.map), unit_tile(punit), game.control.sentry_range,
+                 ptile)
   {
     unit_list_iterate(ptile->units, ppatrol)
     {
