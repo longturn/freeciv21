@@ -2120,7 +2120,8 @@ void city_dialog::update_citizens()
       break;
 
     case FEELING_EFFECT:
-      lab_table[k]->setToolTip(text_happiness_buildings(pcity));
+      lab_table[k]->setToolTip(text_happiness_buildings(pcity) + QStringLiteral("\n")
+                               + text_happiness_possible_grow(pcity));
       break;
 
     case FEELING_NATIONALITY:

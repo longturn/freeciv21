@@ -372,7 +372,7 @@ const QString popup_info_text(struct tile *ptile)
     time_t dt = time(NULL) - punit->action_timestamp;
     if (dt < 0 && !can_unit_move_now(punit)) {
       char buf[64];
-      format_time_duration(- dt, buf, sizeof(buf));
+      format_time_duration(-dt, buf, sizeof(buf));
       str += _("Can move in ") + QString(buf) + qendl();
     }
 
@@ -389,10 +389,10 @@ const QString popup_info_text(struct tile *ptile)
         // TRANS: "Unit: <unit type> "<unit name>" | <username> (<nation +
         // team>)"
         str += str
-              + QString(_("Unit: %1 \"%2\" | %3 (%4)"))
-                    .arg(utype_name_translation(ptype), punit->name,
-                         username, nation)
-              + qendl();
+               + QString(_("Unit: %1 \"%2\" | %3 (%4)"))
+                     .arg(utype_name_translation(ptype), punit->name,
+                          username, nation)
+               + qendl();
       }
       if (game.info.citizen_nationality
           && unit_nationality(punit) != unit_owner(punit)) {
@@ -541,19 +541,18 @@ const QString get_nearest_city_text(struct city *pcity, int sq_dist)
     sq_dist = -1;
   }
   QString str =
-      QString(
-          (sq_dist >= FAR_CITY_SQUARE_DIST)
-              // TRANS: on own line immediately following \n, ... <city>
-              ? _("far from %1")
-              : (sq_dist > 0)
-                    /* TRANS: on own line immediately following \n, ...
-                       <city> */
-                    ? _("near %1")
-                    : (sq_dist == 0)
-                          /* TRANS: on own line immediately following \n, ...
-                             <city> */
-                          ? _("in %1")
-                          : "%1")
+      QString((sq_dist >= FAR_CITY_SQUARE_DIST)
+                  // TRANS: on own line immediately following \n, ... <city>
+                  ? _("far from %1")
+                  : (sq_dist > 0)
+                        /* TRANS: on own line immediately following \n, ...
+                           <city> */
+                        ? _("near %1")
+                        : (sq_dist == 0)
+                              /* TRANS: on own line immediately following \n,
+                                 ... <city> */
+                              ? _("in %1")
+                              : "%1")
           .arg(pcity ? city_name_get(pcity) : "");
   return str.trimmed();
 }
@@ -1923,6 +1922,30 @@ QString text_happiness_buildings(const struct city *pcity)
 }
 
 /**
+   Number of citizens city can get before becaming unhappy
+ */
+QString text_happiness_possible_grow(const struct city *pcity)
+{
+  QString str;
+  int current = pcity->feel[CITIZEN_HAPPY][FEELING_FINAL]
+                - pcity->feel[CITIZEN_UNHAPPY][FEELING_FINAL]
+                + 2 * pcity->feel[CITIZEN_ANGRY][FEELING_FINAL] + 1;
+
+  // case when no unhappy ppl in city
+  if (pcity->feel[CITIZEN_UNHAPPY][FEELING_FINAL] == 0
+      && 2 * pcity->feel[CITIZEN_ANGRY][FEELING_FINAL] == 0) {
+    int content = get_player_bonus(pcity->owner, EFT_CITY_UNHAPPY_SIZE)
+                  - pcity->feel[CITIZEN_CONTENT][FEELING_FINAL];
+    current += content;
+  }
+
+  str = QString("With %1 more citizens city might need more luxuries")
+            .arg(current);
+
+  return str;
+}
+
+/**
    Describing nationality effects that affect happiness.
  */
 const QString text_happiness_nationality(const struct city *pcity)
@@ -2170,6 +2193,5 @@ const QString text_happiness_units(const struct city *pcity)
 const QString text_happiness_luxuries(const struct city *pcity)
 {
   return QString(_("Luxury: %1 total."))
-             .arg(QString::number(pcity->prod[O_LUXURY]))
-         + qendl();
+      .arg(QString::number(pcity->prod[O_LUXURY]));
 }

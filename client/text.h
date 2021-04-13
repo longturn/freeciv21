@@ -33,6 +33,7 @@ const QString get_government_tooltip();
 const QString get_unit_info_label_text1(struct unit_list *punits);
 const QString get_unit_info_label_text2(struct unit_list *punits,
                                         int linebreaks);
+QString text_happiness_possible_grow(const struct city *pcity);
 bool get_units_upgrade_info(char *buf, size_t bufsz,
                             struct unit_list *punits);
 bool get_units_disband_info(char *buf, size_t bufsz,
