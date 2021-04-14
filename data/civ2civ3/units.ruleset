@@ -60,6 +60,14 @@ class_flags =
     _("CanFortify"), _("Gets a 50% defensive bonus while in cities.")
   }
 
+; The maximum range considered to wake sentried units, in tiles. The default
+; is 3 tiles and corresponds to the AWACS sight range in the classic rules.
+; The minimum is 1 and the maximum is 15 (for performance reasons: with a
+; value of 15, the server has to check close to 1000 tiles every time a unit
+; moves). It is recommended to set this to the largest possible distance that
+; a unit can see in the rules.
+;sentry_range = 3
+
 [veteran_system]
 ; What are the names of the levels?
 veteran_names = _("green"), _("veteran"), _("hardened"), _("elite")
@@ -426,7 +434,7 @@ flags         = "Unreachable", "DoesntOccupyTile", "CanPillage", "Airliftable"
 ; "Explorer"              = unit to use for exploring
 ; "Hut"                   = can be found in a hut
 ; "HutTech"               = can be found in a hut, but its techs required
-; "Partisan"              = can be created as a partisan (only one unit can have this 
+; "Partisan"              = can be created as a partisan (only one unit can have this
 ;                           flag), see end of this file for its tech requirements option
 ; "DefendOk"              = AI hint: ok for defending with
 ; "DefendGood"            = AI hint: good for defending with
@@ -2525,7 +2533,7 @@ uk_happy      = 0
 uk_shield     = 0
 uk_food       = 0
 uk_gold       = 0
-flags         = "IgZOC", "NonMil", "NoBuild", "NoHome", "SuperSpy", 
+flags         = "IgZOC", "NonMil", "NoBuild", "NoHome", "SuperSpy",
                 "EvacuateFirst", "Unbribable", "GameLoss", "Unique",
                 "Provoking"
 ; No veteran levels (level name is never displayed)

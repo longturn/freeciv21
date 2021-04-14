@@ -48,6 +48,14 @@ class_flags =
     _("CanFortify"), _("Gets a 50% defensive bonus while in cities.")
   }
 
+; The maximum range considered to wake sentried units, in tiles. The default
+; is 3 tiles and corresponds to the AWACS sight range in the classic rules.
+; The minimum is 1 and the maximum is 15 (for performance reasons: with a
+; value of 15, the server has to check close to 1000 tiles every time a unit
+; moves). It is recommended to set this to the largest possible distance that
+; a unit can see in the rules.
+;sentry_range = 3
+
 [veteran_system]
 ; What are the names of the levels?
 veteran_names = _("Regular"), _("Elite"), _("Superb")
