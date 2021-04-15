@@ -115,7 +115,7 @@ Once the build files have been written, then compile with this command:
 
 Once the compilation is complete, install the game with this command.
 
-   cmake --install build
+   cmake --build build --target install
 
    NOTE: If you did not change the default install prefix, you will need to elevate privileges with sudo.
 
