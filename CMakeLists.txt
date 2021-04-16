@@ -1,4 +1,12 @@
-cmake_minimum_required(VERSION 3.12...3.17 FATAL_ERROR)
+# Win32 et al requires cmake version 3.16 because we use a newer command
+#   "file(GET_RUNTIME_DEPENDENCIES ..." that is only available at v3.16+
+# On other platforms (*nix, MacOS) we need to support older 3.12+ for the
+#   server and other components
+if(WIN32 OR MSYS OR MINGW)
+  cmake_minimum_required(VERSION 3.16...3.20 FATAL_ERROR)
+elseif()
+  cmake_minimum_required(VERSION 3.12...3.20 FATAL_ERROR)
+endif()
 
 # set vcpkg if exist
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -30,6 +38,7 @@ project(freeciv21 VERSION ${FREECIV21_VERSION} LANGUAGES C CXX)
 
 # Gather all the things we need for Windows builds early.
 if(WIN32 OR MSYS OR MINGW)
+  # We need to alter the out of box values of these variables for Win32 et al builds
   set(CMAKE_INSTALL_DATAROOTDIR ".")
   set(CMAKE_INSTALL_BINDIR ".")
   set(PROJECT_NAME "data")
@@ -102,7 +111,10 @@ install(
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   COMPONENT freeciv21)
 
+# Installing on Win32 et al platforms requires some custom configs
 if(WIN32 OR MSYS OR MINGW)
+  # This allows us to determine the external libraries we need to include at install time
+  #   dynamically instead of doing it manually.
   install(CODE [[
     message(STATUS "Collecting dependencies for freeciv21 executables...")
 
@@ -122,13 +134,7 @@ if(WIN32 OR MSYS OR MINGW)
         "${CMAKE_INSTALL_PREFIX}/freeciv21-*.exe"
       )
       message(STATUS "Installing library dependencies for freeciv21 executables...")
-      foreach(_file ${r_deps})
-        file(INSTALL
-          DESTINATION "${CMAKE_INSTALL_PREFIX}"
-          TYPE SHARED_LIBRARY
-          FILES "${_file}"
-        )
-      endforeach()  
+      file(INSTALL DESTINATION ${CMAKE_INSTALL_PREFIX} MESSAGE_LAZY FILES ${r_deps})
     ]] COMPONENT freeciv21)
 
   # Custom command files to run the applications
@@ -136,6 +142,8 @@ if(WIN32 OR MSYS OR MINGW)
     FILES
     ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-client.cmd
     ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-modpack-qt.cmd
+    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-ruledit.cmd
+    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-server.cmd
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 
