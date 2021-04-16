@@ -4,8 +4,8 @@
 #   server and other components
 if(WIN32 OR MSYS OR MINGW)
   cmake_minimum_required(VERSION 3.16...3.20 FATAL_ERROR)
-elseif()
-  cmake_minimum_required(VERSION 3.12...3.20 FATAL_ERROR)
+else()
+  cmake_minimum_required(VERSION 3.12...3.17 FATAL_ERROR)
 endif()
 
 # set vcpkg if exist
