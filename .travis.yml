@@ -84,6 +84,7 @@ jobs:
           - sqlite
           - sdl2
           - sdl2_mixer
+        update: true
     before_script:
       - brew link gettext --force
   - name: "coverity"
