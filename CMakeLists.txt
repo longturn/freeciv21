@@ -34,51 +34,7 @@ if(WIN32 OR MSYS OR MINGW)
   set(CMAKE_INSTALL_BINDIR ".")
   set(PROJECT_NAME "data")
   set(CMAKE_INSTALL_DOCDIR "${CMAKE_INSTALL_DATAROOTDIR}/doc/")
-
   get_filename_component(MINGW_PATH ${CMAKE_CXX_COMPILER} PATH)
-  set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS
-    ${MINGW_PATH}/libbrotlicommon.dll
-    ${MINGW_PATH}/libbrotlidec.dll
-    ${MINGW_PATH}/libbz2-1.dll
-    ${MINGW_PATH}/libdouble-conversion.dll
-    ${MINGW_PATH}/libFLAC-8.dll
-    ${MINGW_PATH}/libfreetype-6.dll
-    ${MINGW_PATH}/libgcc_s_seh-1.dll
-    ${MINGW_PATH}/libglib-2.0-0.dll
-    ${MINGW_PATH}/libgraphite2.dll
-    ${MINGW_PATH}/libharfbuzz-0.dll
-    ${MINGW_PATH}/libiconv-2.dll
-    ${MINGW_PATH}/libicudt68.dll
-    ${MINGW_PATH}/libicuin68.dll
-    ${MINGW_PATH}/libicuuc68.dll
-    ${MINGW_PATH}/libintl-8.dll
-    ${MINGW_PATH}/libKF5Archive.dll
-    ${MINGW_PATH}/liblzma-5.dll
-    ${MINGW_PATH}/libmpg123-0.dll
-    ${MINGW_PATH}/libogg-0.dll
-    ${MINGW_PATH}/libopus-0.dll
-    ${MINGW_PATH}/libopusfile-0.dll
-    ${MINGW_PATH}/libpcre-1.dll
-    ${MINGW_PATH}/libpcre2-16-0.dll
-    ${MINGW_PATH}/libpng16-16.dll
-    ${MINGW_PATH}/libreadline8.dll
-    ${MINGW_PATH}/libsqlite3-0.dll
-    ${MINGW_PATH}/libstdc++-6.dll
-    ${MINGW_PATH}/libtermcap-0.dll
-    ${MINGW_PATH}/libvorbis-0.dll
-    ${MINGW_PATH}/libvorbisfile-3.dll
-    ${MINGW_PATH}/libwinpthread-1.dll
-    ${MINGW_PATH}/libzstd.dll
-    ${MINGW_PATH}/Qt5Core.dll
-    ${MINGW_PATH}/Qt5Gui.dll
-    ${MINGW_PATH}/Qt5Network.dll
-    ${MINGW_PATH}/Qt5Widgets.dll
-    ${MINGW_PATH}/SDL2.dll
-    ${MINGW_PATH}/SDL2_mixer.dll
-    ${MINGW_PATH}/zlib1.dll
-    )
-  set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT "freeciv21")
-  include(InstallRequiredSystemLibraries)
 endif()
 
 if (NOT ${CMAKE_BUILD_TYPE} EQUAL "Release")
@@ -147,12 +103,33 @@ install(
   COMPONENT freeciv21)
 
 if(WIN32 OR MSYS OR MINGW)
-  # Install the libraries compiled in the section above
-  install(
-    PROGRAMS
-    ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    COMPONENT freeciv21)
+  install(CODE [[
+    message(STATUS "Collecting dependencies for freeciv21 executables...")
+
+    # Take a variable that is available at "install" time and repurpose
+    string(REGEX REPLACE "objdump.exe" "" MINGW_PATH ${CMAKE_OBJDUMP})
+
+    # Function to analyze the third party dll files linked to the exe's
+    #   Uses the repurposed variable from above to tell the function where
+    #   the dll files are located. Ignores dll's that come with Windows.
+    file(GET_RUNTIME_DEPENDENCIES
+      RESOLVED_DEPENDENCIES_VAR r_deps
+      UNRESOLVED_DEPENDENCIES_VAR u_deps
+      DIRECTORIES ${MINGW_PATH}
+      PRE_EXCLUDE_REGEXES "^api-ms-*"
+      POST_EXCLUDE_REGEXES "C:[\\\\/][Ww][Ii][Nn][Dd][Oo][Ww][Ss][\\\\/].*"
+      EXECUTABLES
+        "${CMAKE_INSTALL_PREFIX}/freeciv21-*.exe"
+      )
+      message(STATUS "Installing library dependencies for freeciv21 executables...")
+      foreach(_file ${r_deps})
+        file(INSTALL
+          DESTINATION "${CMAKE_INSTALL_PREFIX}"
+          TYPE SHARED_LIBRARY
+          FILES "${_file}"
+        )
+      endforeach()  
+    ]] COMPONENT freeciv21)
 
   # Custom command files to run the applications
   install(
