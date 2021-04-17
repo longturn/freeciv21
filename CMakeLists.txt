@@ -1,4 +1,12 @@
-cmake_minimum_required(VERSION 3.12...3.17 FATAL_ERROR)
+# Win32 et al requires cmake version 3.16 because we use a newer command
+#   "file(GET_RUNTIME_DEPENDENCIES ..." that is only available at v3.16+
+# On other platforms (*nix, MacOS) we need to support older 3.12+ for the
+#   server and other components
+if(WIN32 OR MSYS OR MINGW)
+  cmake_minimum_required(VERSION 3.16...3.20 FATAL_ERROR)
+else()
+  cmake_minimum_required(VERSION 3.12...3.17 FATAL_ERROR)
+endif()
 
 # set vcpkg if exist
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -30,55 +38,12 @@ project(freeciv21 VERSION ${FREECIV21_VERSION} LANGUAGES C CXX)
 
 # Gather all the things we need for Windows builds early.
 if(WIN32 OR MSYS OR MINGW)
+  # We need to alter the out of box values of these variables for Win32 et al builds
   set(CMAKE_INSTALL_DATAROOTDIR ".")
   set(CMAKE_INSTALL_BINDIR ".")
   set(PROJECT_NAME "data")
   set(CMAKE_INSTALL_DOCDIR "${CMAKE_INSTALL_DATAROOTDIR}/doc/")
-
   get_filename_component(MINGW_PATH ${CMAKE_CXX_COMPILER} PATH)
-  set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS
-    ${MINGW_PATH}/libbrotlicommon.dll
-    ${MINGW_PATH}/libbrotlidec.dll
-    ${MINGW_PATH}/libbz2-1.dll
-    ${MINGW_PATH}/libdouble-conversion.dll
-    ${MINGW_PATH}/libFLAC-8.dll
-    ${MINGW_PATH}/libfreetype-6.dll
-    ${MINGW_PATH}/libgcc_s_seh-1.dll
-    ${MINGW_PATH}/libglib-2.0-0.dll
-    ${MINGW_PATH}/libgraphite2.dll
-    ${MINGW_PATH}/libharfbuzz-0.dll
-    ${MINGW_PATH}/libiconv-2.dll
-    ${MINGW_PATH}/libicudt68.dll
-    ${MINGW_PATH}/libicuin68.dll
-    ${MINGW_PATH}/libicuuc68.dll
-    ${MINGW_PATH}/libintl-8.dll
-    ${MINGW_PATH}/libKF5Archive.dll
-    ${MINGW_PATH}/liblzma-5.dll
-    ${MINGW_PATH}/libmpg123-0.dll
-    ${MINGW_PATH}/libogg-0.dll
-    ${MINGW_PATH}/libopus-0.dll
-    ${MINGW_PATH}/libopusfile-0.dll
-    ${MINGW_PATH}/libpcre-1.dll
-    ${MINGW_PATH}/libpcre2-16-0.dll
-    ${MINGW_PATH}/libpng16-16.dll
-    ${MINGW_PATH}/libreadline8.dll
-    ${MINGW_PATH}/libsqlite3-0.dll
-    ${MINGW_PATH}/libstdc++-6.dll
-    ${MINGW_PATH}/libtermcap-0.dll
-    ${MINGW_PATH}/libvorbis-0.dll
-    ${MINGW_PATH}/libvorbisfile-3.dll
-    ${MINGW_PATH}/libwinpthread-1.dll
-    ${MINGW_PATH}/libzstd.dll
-    ${MINGW_PATH}/Qt5Core.dll
-    ${MINGW_PATH}/Qt5Gui.dll
-    ${MINGW_PATH}/Qt5Network.dll
-    ${MINGW_PATH}/Qt5Widgets.dll
-    ${MINGW_PATH}/SDL2.dll
-    ${MINGW_PATH}/SDL2_mixer.dll
-    ${MINGW_PATH}/zlib1.dll
-    )
-  set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT "freeciv21")
-  include(InstallRequiredSystemLibraries)
 endif()
 
 if (NOT ${CMAKE_BUILD_TYPE} EQUAL "Release")
@@ -146,19 +111,39 @@ install(
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   COMPONENT freeciv21)
 
+# Installing on Win32 et al platforms requires some custom configs
 if(WIN32 OR MSYS OR MINGW)
-  # Install the libraries compiled in the section above
-  install(
-    PROGRAMS
-    ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    COMPONENT freeciv21)
+  # This allows us to determine the external libraries we need to include at install time
+  #   dynamically instead of doing it manually.
+  install(CODE [[
+    message(STATUS "Collecting dependencies for freeciv21 executables...")
+
+    # Take a variable that is available at "install" time and repurpose
+    string(REGEX REPLACE "objdump.exe" "" MINGW_PATH ${CMAKE_OBJDUMP})
+
+    # Function to analyze the third party dll files linked to the exe's
+    #   Uses the repurposed variable from above to tell the function where
+    #   the dll files are located. Ignores dll's that come with Windows.
+    file(GET_RUNTIME_DEPENDENCIES
+      RESOLVED_DEPENDENCIES_VAR r_deps
+      UNRESOLVED_DEPENDENCIES_VAR u_deps
+      DIRECTORIES ${MINGW_PATH}
+      PRE_EXCLUDE_REGEXES "^api-ms-*"
+      POST_EXCLUDE_REGEXES "C:[\\\\/][Ww][Ii][Nn][Dd][Oo][Ww][Ss][\\\\/].*"
+      EXECUTABLES
+        "${CMAKE_INSTALL_PREFIX}/freeciv21-*.exe"
+      )
+      message(STATUS "Installing library dependencies for freeciv21 executables...")
+      file(INSTALL DESTINATION ${CMAKE_INSTALL_PREFIX} MESSAGE_LAZY FILES ${r_deps})
+    ]] COMPONENT freeciv21)
 
   # Custom command files to run the applications
   install(
     FILES
     ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-client.cmd
     ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-modpack-qt.cmd
+    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-ruledit.cmd
+    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-server.cmd
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 
