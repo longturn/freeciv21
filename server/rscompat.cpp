@@ -348,7 +348,7 @@ bool rscompat_names(struct rscompat_info *info)
         new_flags{N_("Cant_Fortify"), NULL},
     };
     fc_assert_ret_val(new_flags_31.size()
-                          >= UTYF_LAST_USER_FLAG - UTYF_LAST_USER_FLAG_3_0,
+                          <= UTYF_LAST_USER_FLAG - UTYF_LAST_USER_FLAG_3_0,
                       false);
 
     /* Some unit class flags moved to the ruleset between 3.0 and 3.1.
@@ -362,7 +362,7 @@ bool rscompat_names(struct rscompat_info *info)
                                        " in cities.")},
     };
     fc_assert_ret_val(new_class_flags_31.size()
-                          >= UCF_LAST_USER_FLAG - UCF_LAST_USER_FLAG_3_0,
+                          <= UCF_LAST_USER_FLAG - UCF_LAST_USER_FLAG_3_0,
                       false);
 
     int first_free;
@@ -432,7 +432,7 @@ bool rscompat_names(struct rscompat_info *info)
                   N_("No units can fortify on this terrain.")},
     };
     fc_assert_ret_val(new_flags_31.size()
-                          >= TER_USER_LAST - TER_LAST_USER_FLAG_3_0,
+                          <= TER_USER_LAST - TER_LAST_USER_FLAG_3_0,
                       false);
 
     int first_free;
