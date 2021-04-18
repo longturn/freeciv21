@@ -236,17 +236,15 @@ bool tileset_layer_in_category(enum mapview_layer layer,
                                enum layer_category cat);
 
 // Gfx support
-
-int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
-                      enum mapview_layer layer, const struct tile *ptile,
-                      const struct tile_edge *pedge,
-                      const struct tile_corner *pcorner,
-                      const struct unit *punit, const struct city *pcity,
-                      const struct unit_type *putype);
-int fill_basic_terrain_layer_sprite_array(struct tileset *t,
-                                          struct drawn_sprite *sprs,
-                                          int layer,
-                                          struct terrain *pterrain);
+std::vector<drawn_sprite>
+fill_sprite_array(struct tileset *t, enum mapview_layer layer,
+                  const struct tile *ptile, const struct tile_edge *pedge,
+                  const struct tile_corner *pcorner,
+                  const struct unit *punit, const struct city *pcity,
+                  const struct unit_type *putype);
+std::vector<drawn_sprite>
+fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,
+                                      struct terrain *pterrain);
 
 int get_focus_unit_toggle_timeout(const struct tileset *t);
 void reset_focus_unit_state(struct tileset *t);
@@ -346,9 +344,9 @@ QPixmap *get_unit_upkeep_sprite(const struct tileset *t,
                                 const struct unit *punit,
                                 const int *upkeep_cost);
 QPixmap *get_basic_fog_sprite(const struct tileset *t);
-int fill_basic_extra_sprite_array(const struct tileset *t,
-                                  struct drawn_sprite *sprs,
-                                  const struct extra_type *pextra);
+std::vector<drawn_sprite>
+fill_basic_extra_sprite_array(const struct tileset *t,
+                              const struct extra_type *pextra);
 QPixmap *get_event_sprite(const struct tileset *t, enum event_type event);
 
 QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
