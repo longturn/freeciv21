@@ -933,37 +933,32 @@ bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile)
    Draw an array of drawn sprites onto the canvas.
  */
 void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                       int count, struct drawn_sprite *pdrawn, bool fog,
+                       const std::vector<drawn_sprite> &sprites, bool fog,
                        bool city_dialog, bool city_unit)
 {
-  int i;
-
-  for (i = 0; i < count; i++) {
-    if (!pdrawn[i].sprite) {
+  for (auto s : sprites) {
+    if (!s.sprite) {
       // This can happen, although it should probably be avoided.
       continue;
     }
-    if (city_unit
-        && (i == LAYER_CATEGORY_TILE || i == LAYER_UNIT
-            || i == LAYER_FOCUS_UNIT || i == LAYER_CATEGORY_TILE)) {
-      canvas_put_unit_fogged(pcanvas, canvas_x + pdrawn[i].offset_x,
-                             canvas_y + pdrawn[i].offset_y, pdrawn[i].sprite,
-                             true, canvas_x, canvas_y);
+    if (city_unit) {
+      canvas_put_unit_fogged(pcanvas, canvas_x + s.offset_x,
+                             canvas_y + s.offset_y, s.sprite, true, canvas_x,
+                             canvas_y);
     } else if (city_dialog) {
-      canvas_put_sprite_citymode(pcanvas, canvas_x + pdrawn[i].offset_x,
-                                 canvas_y + pdrawn[i].offset_y,
-                                 pdrawn[i].sprite, true, canvas_x, canvas_y);
-    } else if (fog && pdrawn[i].foggable) {
-      canvas_put_sprite_fogged(pcanvas, canvas_x + pdrawn[i].offset_x,
-                               canvas_y + pdrawn[i].offset_y,
-                               pdrawn[i].sprite, true, canvas_x, canvas_y);
+      canvas_put_sprite_citymode(pcanvas, canvas_x + s.offset_x,
+                                 canvas_y + s.offset_y, s.sprite, true,
+                                 canvas_x, canvas_y);
+    } else if (fog && s.foggable) {
+      canvas_put_sprite_fogged(pcanvas, canvas_x + s.offset_x,
+                               canvas_y + s.offset_y, s.sprite, true,
+                               canvas_x, canvas_y);
     } else {
       /* We avoid calling canvas_put_sprite_fogged, even though it
        * should be a valid thing to do, because gui-gtk-2.0 doesn't have
        * a full implementation. */
-      canvas_put_sprite_full(pcanvas, canvas_x + pdrawn[i].offset_x,
-                             canvas_y + pdrawn[i].offset_y,
-                             pdrawn[i].sprite);
+      canvas_put_sprite_full(pcanvas, canvas_x + s.offset_x,
+                             canvas_y + s.offset_y, s.sprite);
     }
   }
 }
@@ -979,12 +974,11 @@ void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
                      int canvas_x, int canvas_y,
                      const struct unit_type *putype)
 {
-  struct drawn_sprite tile_sprs[80];
   bool city_mode = false;
   bool city_unit = false;
   int dummy_x, dummy_y;
-  int count = fill_sprite_array(tileset, tile_sprs, layer, ptile, pedge,
-                                pcorner, punit, pcity, putype);
+  auto sprites = fill_sprite_array(tileset, layer, ptile, pedge, pcorner,
+                                   punit, pcity, putype);
   bool fog = (ptile && gui_options.draw_fog_of_war
               && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile));
   if (ptile) {
@@ -1004,8 +998,8 @@ void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
     }
   }
   /*** Draw terrain and specials ***/
-  put_drawn_sprites(pcanvas, canvas_x, canvas_y, count, tile_sprs, fog,
-                    city_mode, city_unit);
+  put_drawn_sprites(pcanvas, canvas_x, canvas_y, sprites, fog, city_mode,
+                    city_unit);
 }
 
 /**

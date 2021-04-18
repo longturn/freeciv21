@@ -277,7 +277,7 @@ void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
                      const struct unit_type *putype);
 
 void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                       int count, struct drawn_sprite *pdrawn, bool fog,
+                       const std::vector<drawn_sprite> &sprites, bool fog,
                        bool citydialog = false, bool city_unit = false);
 
 void update_map_canvas(int canvas_x, int canvas_y, int width, int height);
