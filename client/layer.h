@@ -107,18 +107,6 @@ struct drawn_sprite {
 
 #define TERRAIN_LAYER_COUNT 3
 
-#define mapview_layer_iterate(layer)                                        \
-  {                                                                         \
-    enum mapview_layer layer;                                               \
-    int layer_index;                                                        \
-                                                                            \
-    for (layer_index = 0; layer_index < LAYER_COUNT; layer_index++) {       \
-      layer = tileset_get_layer(tileset, layer_index);
-
-#define mapview_layer_iterate_end                                           \
-  }                                                                         \
-  }
-
 // Layer categories can be used to only render part of a tile.
 enum layer_category {
   LAYER_CATEGORY_CITY, // Render cities
@@ -141,6 +129,8 @@ public:
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
                     const tile_corner *pcorner, const unit *punit,
                     const city *pcity, const unit_type *putype) const;
+
+  mapview_layer type() const { return m_layer; }
 
 private:
   tileset *m_ts;

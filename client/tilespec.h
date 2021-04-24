@@ -123,8 +123,8 @@ void tileset_background_init(struct tileset *t);
 void tileset_background_free(struct tileset *t);
 
 // Layer order
-
-enum mapview_layer tileset_get_layer(const struct tileset *t, int n);
+const std::vector<std::unique_ptr<freeciv::layer>> &
+tileset_get_layers(const struct tileset *t);
 bool tileset_layer_in_category(enum mapview_layer layer,
                                enum layer_category cat);
 
