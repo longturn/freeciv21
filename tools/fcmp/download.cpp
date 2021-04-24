@@ -237,11 +237,14 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
     return _("\"info.base_url\" is not a string");
   }
   auto base_url = QUrl(info["base_url"].toString());
-  if (base_url.isRelative()) {
-    base_url = url.resolved(base_url);
+  base_url = url.resolved(base_url);
+
+  // Make sure the url is treated as a directory by resolved(). For this we
+  // need to append a / if QUrl considers that there is a file name.
+  if (!base_url.fileName().isEmpty()) {
+    base_url.setPath(base_url.path(QUrl::FullyEncoded)
+                     + QStringLiteral("/"));
   }
-  // Make sure the url is treated as a directory by resolved()
-  base_url.setPath(base_url.path(QUrl::FullyEncoded) + "/");
 
   /*
    * Fetch dependencies
