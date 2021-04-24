@@ -401,7 +401,7 @@ struct tileset {
 
   char *for_ruleset;
 
-  enum mapview_layer layer_order[LAYER_COUNT];
+  std::vector<std::unique_ptr<freeciv::layer>> layers;
 
   enum ts_type type;
   int hex_width, hex_height;
@@ -2086,6 +2086,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   layer_order =
       secfile_lookup_str_vec(file, &num_layers, "tilespec.layer_order");
   if (layer_order != NULL) {
+    mapview_layer order[LAYER_COUNT];
     for (i = 0; i < num_layers; i++) {
       int j;
       enum mapview_layer layer =
@@ -2099,13 +2100,13 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       }
       // Check for duplicates.
       for (j = 0; j < i; j++) {
-        if (t->layer_order[j] == layer) {
+        if (order[j] == layer) {
           qCritical("layer_order: Duplicate layer \"%s\"", layer_order[i]);
           tileset_stop_read(t, file, fname, sections, layer_order);
           return nullptr;
         }
       }
-      t->layer_order[i] = layer;
+      order[i] = layer;
     }
 
     /* Now check that all layers are present. Doing it now allows for a
@@ -2115,7 +2116,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       bool found = false;
 
       for (j = 0; j < num_layers; j++) {
-        if (i == t->layer_order[j]) {
+        if (i == order[j]) {
           found = true;
           break;
         }
@@ -2127,10 +2128,15 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
         return nullptr;
       }
     }
+
+    for (auto layer : order) {
+      t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
+    }
   } else {
     // There is no layer_order tag in the specfile -> use the default
-    for (i = 0; i < LAYER_COUNT; i++) {
-      t->layer_order[i] = static_cast<mapview_layer>(i);
+    for (i = 0; i < LAYER_COUNT; ++i) {
+      t->layers.push_back(std::make_unique<freeciv::layer>(
+          t, static_cast<mapview_layer>(i)));
     }
   }
 
@@ -6754,17 +6760,14 @@ void fill_basic_base_sprite_array(const struct tileset *t,
 #undef ADD_SPRITE_IF_NOT_NULL
 }
 
-/**
-   Gets the nth layer of the tileset.
- */
-enum mapview_layer tileset_get_layer(const struct tileset *t, int n)
+const std::vector<std::unique_ptr<freeciv::layer>> &
+tileset_get_layers(const struct tileset *t)
 {
-  fc_assert(n < LAYER_COUNT);
-  return t->layer_order[n];
+  return t->layers;
 }
 
 /**
-   Gets the nth layer of the tileset.
+   Checks that a layer is within a category.
  */
 bool tileset_layer_in_category(enum mapview_layer layer,
                                enum layer_category cat)

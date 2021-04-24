@@ -1010,12 +1010,10 @@ void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
               int canvas_y)
 {
   canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
-  mapview_layer_iterate(layer)
-  {
-    put_one_element(pcanvas, layer, NULL, NULL, NULL, punit, NULL, canvas_x,
-                    canvas_y, NULL);
+  for (const auto &layer : tileset_get_layers(tileset)) {
+    put_one_element(pcanvas, layer->type(), NULL, NULL, NULL, punit, NULL,
+                    canvas_x, canvas_y, NULL);
   }
-  mapview_layer_iterate_end;
 }
 
 /**
@@ -1026,12 +1024,10 @@ void put_unittype(const struct unit_type *putype, QPixmap *pcanvas,
                   int canvas_x, int canvas_y)
 {
   canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
-  mapview_layer_iterate(layer)
-  {
-    put_one_element(pcanvas, layer, NULL, NULL, NULL, NULL, NULL, canvas_x,
-                    canvas_y, putype);
+  for (const auto &layer : tileset_get_layers(tileset)) {
+    put_one_element(pcanvas, layer->type(), NULL, NULL, NULL, NULL, NULL,
+                    canvas_x, canvas_y, putype);
   }
-  mapview_layer_iterate_end;
 }
 
 /**
@@ -1044,12 +1040,10 @@ void put_city(struct city *pcity, QPixmap *pcanvas, int canvas_x,
 {
   canvas_y +=
       (tileset_full_tile_height(tileset) - tileset_tile_height(tileset));
-  mapview_layer_iterate(layer)
-  {
-    put_one_element(pcanvas, layer, NULL, NULL, NULL, NULL, pcity, canvas_x,
-                    canvas_y, NULL);
+  for (const auto &layer : tileset_get_layers(tileset)) {
+    put_one_element(pcanvas, layer->type(), NULL, NULL, NULL, NULL, pcity,
+                    canvas_x, canvas_y, NULL);
   }
-  mapview_layer_iterate_end;
 }
 
 /**
@@ -1064,12 +1058,10 @@ void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,
   // Use full tile height, even for terrains.
   canvas_y +=
       (tileset_full_tile_height(tileset) - tileset_tile_height(tileset));
-  mapview_layer_iterate(layer)
-  {
-    put_one_element(pcanvas, layer, ptile, NULL, NULL, NULL, NULL, canvas_x,
-                    canvas_y, NULL);
+  for (const auto &layer : tileset_get_layers(tileset)) {
+    put_one_element(pcanvas, layer->type(), ptile, NULL, NULL, NULL, NULL,
+                    canvas_x, canvas_y, NULL);
   }
-  mapview_layer_iterate_end;
 }
 
 /**
@@ -1374,12 +1366,11 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
                        get_color(tileset, COLOR_MAPVIEW_UNKNOWN), canvas_x,
                        canvas_y, width, height);
 
-  mapview_layer_iterate(layer)
-  {
-    if (layer == LAYER_TILELABEL) {
+  for (const auto &layer : tileset_get_layers(tileset)) {
+    if (layer->type() == LAYER_TILELABEL) {
       show_tile_labels(canvas_x, canvas_y, width, height);
     }
-    if (layer == LAYER_CITYBAR) {
+    if (layer->type() == LAYER_CITYBAR) {
       show_city_descriptions(canvas_x, canvas_y, width, height);
       continue;
     }
@@ -1393,20 +1384,19 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
       const int cx = gui_x - mapview.gui_x0, cy = gui_y - mapview.gui_y0;
 
       if (ptile) {
-        put_one_tile(mapview.store, layer, ptile, cx, cy);
+        put_one_tile(mapview.store, layer->type(), ptile, cx, cy);
       } else if (pedge) {
-        put_one_element(mapview.store, layer, NULL, pedge, NULL, NULL, NULL,
-                        cx, cy, NULL);
+        put_one_element(mapview.store, layer->type(), NULL, pedge, NULL,
+                        NULL, NULL, cx, cy, NULL);
       } else if (pcorner) {
-        put_one_element(mapview.store, layer, NULL, NULL, pcorner, NULL,
-                        NULL, cx, cy, NULL);
+        put_one_element(mapview.store, layer->type(), NULL, NULL, pcorner,
+                        NULL, NULL, cx, cy, NULL);
       } else {
         // This can happen, for instance for unreal tiles.
       }
     }
     gui_rect_iterate_coord_end;
   }
-  mapview_layer_iterate_end;
 
   draw_trade_routes();
   link_marks_draw_all();
