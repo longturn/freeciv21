@@ -967,7 +967,8 @@ void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
    Draw one layer of a tile, edge, corner, unit, and/or city onto the
    canvas at the given position.
  */
-void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
+void put_one_element(QPixmap *pcanvas,
+                     const std::unique_ptr<freeciv::layer> &layer,
                      const struct tile *ptile, const struct tile_edge *pedge,
                      const struct tile_corner *pcorner,
                      const struct unit *punit, const struct city *pcity,
@@ -977,8 +978,8 @@ void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
   bool city_mode = false;
   bool city_unit = false;
   int dummy_x, dummy_y;
-  auto sprites = fill_sprite_array(tileset, layer, ptile, pedge, pcorner,
-                                   punit, pcity, putype);
+  auto sprites =
+      layer->fill_sprite_array(ptile, pedge, pcorner, punit, pcity, putype);
   bool fog = (ptile && gui_options.draw_fog_of_war
               && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile));
   if (ptile) {
@@ -1011,8 +1012,8 @@ void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
 {
   canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
   for (const auto &layer : tileset_get_layers(tileset)) {
-    put_one_element(pcanvas, layer->type(), NULL, NULL, NULL, punit, NULL,
-                    canvas_x, canvas_y, NULL);
+    put_one_element(pcanvas, layer, NULL, NULL, NULL, punit, NULL, canvas_x,
+                    canvas_y, NULL);
   }
 }
 
@@ -1025,8 +1026,8 @@ void put_unittype(const struct unit_type *putype, QPixmap *pcanvas,
 {
   canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
   for (const auto &layer : tileset_get_layers(tileset)) {
-    put_one_element(pcanvas, layer->type(), NULL, NULL, NULL, NULL, NULL,
-                    canvas_x, canvas_y, putype);
+    put_one_element(pcanvas, layer, NULL, NULL, NULL, NULL, NULL, canvas_x,
+                    canvas_y, putype);
   }
 }
 
@@ -1041,8 +1042,8 @@ void put_city(struct city *pcity, QPixmap *pcanvas, int canvas_x,
   canvas_y +=
       (tileset_full_tile_height(tileset) - tileset_tile_height(tileset));
   for (const auto &layer : tileset_get_layers(tileset)) {
-    put_one_element(pcanvas, layer->type(), NULL, NULL, NULL, NULL, pcity,
-                    canvas_x, canvas_y, NULL);
+    put_one_element(pcanvas, layer, NULL, NULL, NULL, NULL, pcity, canvas_x,
+                    canvas_y, NULL);
   }
 }
 
@@ -1059,8 +1060,8 @@ void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,
   canvas_y +=
       (tileset_full_tile_height(tileset) - tileset_tile_height(tileset));
   for (const auto &layer : tileset_get_layers(tileset)) {
-    put_one_element(pcanvas, layer->type(), ptile, NULL, NULL, NULL, NULL,
-                    canvas_x, canvas_y, NULL);
+    put_one_element(pcanvas, layer, ptile, NULL, NULL, NULL, NULL, canvas_x,
+                    canvas_y, NULL);
   }
 }
 
@@ -1178,7 +1179,8 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
 /**
    Draw some or all of a tile onto the canvas.
  */
-static void put_one_tile(QPixmap *pcanvas, enum mapview_layer layer,
+static void put_one_tile(QPixmap *pcanvas,
+                         const std::unique_ptr<freeciv::layer> &layer,
                          struct tile *ptile, int canvas_x, int canvas_y)
 {
   if (client_tile_get_known(ptile) != TILE_UNKNOWN
@@ -1384,13 +1386,13 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
       const int cx = gui_x - mapview.gui_x0, cy = gui_y - mapview.gui_y0;
 
       if (ptile) {
-        put_one_tile(mapview.store, layer->type(), ptile, cx, cy);
+        put_one_tile(mapview.store, layer, ptile, cx, cy);
       } else if (pedge) {
-        put_one_element(mapview.store, layer->type(), NULL, pedge, NULL,
-                        NULL, NULL, cx, cy, NULL);
+        put_one_element(mapview.store, layer, NULL, pedge, NULL, NULL, NULL,
+                        cx, cy, NULL);
       } else if (pcorner) {
-        put_one_element(mapview.store, layer->type(), NULL, NULL, pcorner,
-                        NULL, NULL, cx, cy, NULL);
+        put_one_element(mapview.store, layer, NULL, NULL, pcorner, NULL,
+                        NULL, cx, cy, NULL);
       } else {
         // This can happen, for instance for unreal tiles.
       }
