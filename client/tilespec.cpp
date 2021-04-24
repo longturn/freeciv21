@@ -442,7 +442,7 @@ struct tileset {
   int num_valid_tileset_dirs, num_cardinal_tileset_dirs;
   int num_index_valid, num_index_cardinal;
   enum direction8 valid_tileset_dirs[8], cardinal_tileset_dirs[8];
-  struct tileset_layer layers[MAX_NUM_LAYERS];
+  std::array<tileset_layer, MAX_NUM_LAYERS> terrain_layers;
   QSet<specfile *> *specfiles;
   QSet<struct small_sprite *> *small_sprites;
   // This hash table maps tilespec tags to struct small_sprites.
@@ -1086,7 +1086,7 @@ static void tileset_free_toplevel(struct tileset *t)
   }
 
   for (i = 0; i < MAX_NUM_LAYERS; i++) {
-    struct tileset_layer *tslp = &t->layers[i];
+    struct tileset_layer *tslp = &t->terrain_layers[i];
 
     if (tslp->match_types) {
       for (j = 0; j < tslp->match_count; j++) {
@@ -2136,7 +2136,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
   // Terrain layer info.
   for (i = 0; i < MAX_NUM_LAYERS; i++) {
-    struct tileset_layer *tslp = &t->layers[i];
+    struct tileset_layer *tslp = &t->terrain_layers[i];
     int j, k;
 
     tslp->match_types = const_cast<char **>(secfile_lookup_str_vec(
@@ -2201,7 +2201,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
     for (l = 0; l < draw->num_layers; l++) {
       struct drawing_layer *dlp = &draw->layer[l];
-      struct tileset_layer *tslp = &t->layers[l];
+      struct tileset_layer *tslp = &t->terrain_layers[l];
       const char *match_type;
       const char **match_with;
       size_t count;
@@ -3852,7 +3852,7 @@ void tileset_setup_tile_type(struct tileset *t,
   // Set up each layer of the drawing.
   for (l = 0; l < draw->num_layers; l++) {
     struct drawing_layer *dlp = &draw->layer[l];
-    struct tileset_layer *tslp = &t->layers[l];
+    struct tileset_layer *tslp = &t->terrain_layers[l];
     sprite_vector_init(&dlp->base);
     sprite_vector_init(&dlp->allocated);
 
