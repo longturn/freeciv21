@@ -20,8 +20,6 @@
 #include "layer.h"
 #include "options.h"
 
-class QPixmap; // opaque; gui-dep
-
 struct base_type;
 struct resource_type;
 
@@ -74,34 +72,6 @@ struct resource_type;
 #define SPECENUM_VALUE4 DARKNESS_CORNER
 #define SPECENUM_VALUE4NAME "Corner"
 #include "specenum_gen.h"
-
-/* An edge is the border between two tiles.  This structure represents one
- * edge.  The tiles are given in the same order as the enumeration name. */
-enum edge_type {
-  EDGE_NS, // North and south
-  EDGE_WE, // West and east
-  EDGE_UD, /* Up and down (nw/se), for hex_width tilesets */
-  EDGE_LR, /* Left and right (ne/sw), for hex_height tilesets */
-  EDGE_COUNT
-};
-struct tile_edge {
-  enum edge_type type;
-#define NUM_EDGE_TILES 2
-  const struct tile *tile[NUM_EDGE_TILES];
-};
-
-/* A corner is the endpoint of several edges.  At each corner 4 tiles will
- * meet (3 in hex view).  Tiles are in clockwise order NESW. */
-struct tile_corner {
-#define NUM_CORNER_TILES 4
-  const struct tile *tile[NUM_CORNER_TILES];
-};
-
-struct drawn_sprite {
-  bool foggable; // Set to FALSE for sprites that are never fogged.
-  QPixmap *sprite;
-  int offset_x, offset_y; // offset from tile origin
-};
 
 #define NUM_TILES_PROGRESS 8
 

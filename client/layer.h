@@ -12,6 +12,42 @@
       \____/        ********************************************************/
 #pragma once
 
+// Forward declarations
+class QPixmap;
+
+struct city;
+struct unit;
+struct unit_type;
+
+/* An edge is the border between two tiles.  This structure represents one
+ * edge.  The tiles are given in the same order as the enumeration name. */
+enum edge_type {
+  EDGE_NS, // North and south
+  EDGE_WE, // West and east
+  EDGE_UD, /* Up and down (nw/se), for hex_width tilesets */
+  EDGE_LR, /* Left and right (ne/sw), for hex_height tilesets */
+  EDGE_COUNT
+};
+
+struct tile_edge {
+  edge_type type;
+#define NUM_EDGE_TILES 2
+  const struct tile *tile[NUM_EDGE_TILES];
+};
+
+/* A corner is the endpoint of several edges.  At each corner 4 tiles will
+ * meet (3 in hex view).  Tiles are in clockwise order NESW. */
+struct tile_corner {
+#define NUM_CORNER_TILES 4
+  const struct tile *tile[NUM_CORNER_TILES];
+};
+
+struct drawn_sprite {
+  bool foggable; // Set to FALSE for sprites that are never fogged.
+  QPixmap *sprite;
+  int offset_x, offset_y; // offset from tile origin
+};
+
 /* Items on the mapview are drawn in layers.  Each entry below represents
  * one layer.  The names are basically arbitrary and just correspond to
  * groups of elements in fill_sprite_array().  Callers of fill_sprite_array
@@ -89,3 +125,26 @@ enum layer_category {
   LAYER_CATEGORY_TILE, // Render terrain only
   LAYER_CATEGORY_UNIT  // Render units only
 };
+
+struct tileset;
+
+namespace freeciv {
+
+/**
+ * A layer when drawing the map.
+ */
+class layer {
+public:
+  layer(tileset *ts, mapview_layer layer) : m_ts(ts), m_layer(layer) {}
+
+  virtual std::vector<drawn_sprite>
+  fill_sprite_array(const tile *ptile, const tile_edge *pedge,
+                    const tile_corner *pcorner, const unit *punit,
+                    const city *pcity, const unit_type *putype) const;
+
+private:
+  tileset *m_ts;
+  mapview_layer m_layer;
+};
+
+} // namespace freeciv
