@@ -1527,7 +1527,8 @@ struct adv_choice *military_advisor_choose_build(
     int num_defenders = unit_list_size(ptile->units);
     int wall_id, danger;
     bool build_walls = true;
-    int qdanger = city_data->danger * city_data->danger;
+    // Use a long to avoid overflows
+    auto qdanger = static_cast<long>(city_data->danger) * city_data->danger;
 
     /* First determine the danger.  It is measured in percents of our
      * defensive strength, capped at 200 + urgency */
