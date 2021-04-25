@@ -16,6 +16,7 @@
 class QPixmap;
 
 struct city;
+struct tileset;
 struct unit;
 struct unit_type;
 
@@ -43,8 +44,14 @@ struct tile_corner {
 };
 
 struct drawn_sprite {
-  bool foggable; // Set to FALSE for sprites that are never fogged.
-  QPixmap *sprite;
+  explicit drawn_sprite(const tileset *ts, const QPixmap *sprite,
+                        bool foggable = true, int offset_x = 0,
+                        int offset_y = 0);
+  drawn_sprite(const drawn_sprite &other) = default;
+  drawn_sprite(drawn_sprite &&other) = default;
+
+  const QPixmap *sprite;
+  bool foggable;          // Set to FALSE for sprites that are never fogged.
   int offset_x, offset_y; // offset from tile origin
 };
 
@@ -113,8 +120,6 @@ enum layer_category {
   LAYER_CATEGORY_TILE, // Render terrain only
   LAYER_CATEGORY_UNIT  // Render units only
 };
-
-struct tileset;
 
 namespace freeciv {
 

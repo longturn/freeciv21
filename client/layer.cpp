@@ -14,6 +14,15 @@
 #include "tilespec.h"
 
 #include "layer.h"
+#include "log.h"
+
+drawn_sprite::drawn_sprite(const struct tileset *ts, const QPixmap *sprite,
+                           bool foggable, int offset_x, int offset_y)
+    : sprite(sprite), foggable(foggable && tileset_use_hard_coded_fog(ts)),
+      offset_x(offset_x), offset_y(offset_y)
+{
+  fc_assert(sprite);
+}
 
 namespace freeciv {
 

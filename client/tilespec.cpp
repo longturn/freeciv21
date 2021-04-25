@@ -4172,9 +4172,7 @@ static QPixmap *get_unit_nation_flag_sprite(const struct tileset *t,
 #define FULL_TILE_Y_OFFSET (t->normal_tile_height - t->full_tile_height)
 
 #define ADD_SPRITE(s, draw_fog, x_offset, y_offset)                         \
-  (fc_assert(s != NULL),                                                    \
-   sprs.emplace_back(drawn_sprite{(draw_fog && t->fogstyle == FOG_AUTO), s, \
-                                  x_offset, y_offset}))
+  sprs.emplace_back(t, s, draw_fog, x_offset, y_offset)
 #define ADD_SPRITE_SIMPLE(s) ADD_SPRITE(s, true, 0, 0)
 #define ADD_SPRITE_FULL(s)                                                  \
   ADD_SPRITE(s, true, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET)
