@@ -13,15 +13,15 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "gui_proto_constructor.h"
 #include "support.h"
 
-class QPixmap; // opaque type, real type is gui-dep
-struct color;
+class QColor;
+class QPixmap;
 
 GUI_FUNC_PROTO(QPixmap *, load_gfxfile, const char *filename)
-GUI_FUNC_PROTO(QPixmap *, crop_sprite, QPixmap *source, int x, int y,
-               int width, int height, QPixmap *mask, int mask_offset_x,
+GUI_FUNC_PROTO(QPixmap *, crop_sprite, const QPixmap *source, int x, int y,
+               int width, int height, const QPixmap *mask, int mask_offset_x,
                int mask_offset_y, float scale, bool smooth)
 GUI_FUNC_PROTO(QPixmap *, create_sprite, int width, int height,
-               QColor *pcolor)
-GUI_FUNC_PROTO(void, get_sprite_dimensions, QPixmap *sprite, int *width,
-               int *height)
+               const QColor *pcolor)
+GUI_FUNC_PROTO(void, get_sprite_dimensions, const QPixmap *sprite,
+               int *width, int *height)
 GUI_FUNC_PROTO(void, free_sprite, QPixmap *s)
