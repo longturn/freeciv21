@@ -219,7 +219,7 @@ void help_dialog::make_tree()
   QHash<int, QTreeWidgetItem *> hash;
   QIcon icon;
   QTreeWidgetItem *item;
-  QPixmap *spite;
+  const QPixmap *spite;
   struct advance *padvance;
   QPixmap *pcan;
   struct extra_type *pextra;
