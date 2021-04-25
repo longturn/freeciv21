@@ -128,7 +128,9 @@ namespace freeciv {
  */
 class layer {
 public:
-  layer(tileset *ts, mapview_layer layer) : m_ts(ts), m_layer(layer) {}
+  layer(struct tileset *ts, mapview_layer layer) : m_ts(ts), m_layer(layer)
+  {
+  }
 
   virtual std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
@@ -137,8 +139,11 @@ public:
 
   mapview_layer type() const { return m_layer; }
 
+protected:
+  struct tileset *tileset() const { return m_ts; }
+
 private:
-  tileset *m_ts;
+  struct tileset *m_ts;
   mapview_layer m_layer;
 };
 

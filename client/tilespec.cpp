@@ -78,6 +78,7 @@
 #include "editor.h"
 #include "goto.h"
 #include "helpdata.h"
+#include "layer_background.h"
 #include "options.h" // for fill_xxx
 #include "themes_common.h"
 
@@ -2130,13 +2131,27 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     }
 
     for (auto layer : order) {
-      t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
+      switch (layer) {
+      case LAYER_BACKGROUND:
+        t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
+        break;
+      default:
+        t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
+        break;
+      }
     }
   } else {
     // There is no layer_order tag in the specfile -> use the default
     for (i = 0; i < LAYER_COUNT; ++i) {
-      t->layers.push_back(std::make_unique<freeciv::layer>(
-          t, static_cast<mapview_layer>(i)));
+      auto layer = static_cast<mapview_layer>(i);
+      switch (layer) {
+      case LAYER_BACKGROUND:
+        t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
+        break;
+      default:
+        t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
+        break;
+      }
     }
   }
 
