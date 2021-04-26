@@ -4678,7 +4678,6 @@ static void fill_irrigation_sprite_array(const struct tileset *t,
                                          bv_extras *textras_near,
                                          const struct city *pcity)
 {
-
   /* We don't draw the irrigation if there's a city (it just gets overdrawn
    * anyway, and ends up looking bad). */
   if (!(pcity && gui_options.draw_cities)) {
@@ -4843,7 +4842,6 @@ static void fill_fog_sprite_array(const struct tileset *t,
                                   const struct tile_edge *pedge,
                                   const struct tile_corner *pcorner)
 {
-
   if (t->fogstyle == FOG_SPRITE && gui_options.draw_fog_of_war
       && NULL != ptile
       && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile)) {
