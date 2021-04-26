@@ -16,6 +16,7 @@
 class QPixmap;
 
 struct city;
+struct player;
 struct tileset;
 struct unit;
 struct unit_type;
@@ -136,6 +137,22 @@ public:
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
                     const tile_corner *pcorner, const unit *punit,
                     const city *pcity, const unit_type *putype) const;
+
+  /**
+   * Initializes data specific to one player. This allows to cache tiles
+   * depending on the actual players in a game.
+   *
+   * \see free_player
+   */
+  virtual void initialize_player(const player *player) { Q_UNUSED(player); }
+
+  /**
+   * Frees data initialized by initialize_player. Note that this takes the
+   * player ID and not a pointer to the player.
+   *
+   * \see initialize_player
+   */
+  virtual void free_player(int player_id) { Q_UNUSED(player_id); }
 
   mapview_layer type() const { return m_layer; }
 

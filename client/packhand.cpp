@@ -4557,8 +4557,6 @@ void handle_ruleset_game(const struct packet_ruleset_game *packet)
   game.plr_bg_color =
       rgbcolor_new(packet->background_red, packet->background_green,
                    packet->background_blue);
-
-  tileset_background_init(tileset);
 }
 
 /**

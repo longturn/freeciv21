@@ -119,8 +119,6 @@ void tileset_setup_nation_flag(struct tileset *t,
 void tileset_setup_city_tiles(struct tileset *t, int style);
 
 void tileset_player_init(struct tileset *t, struct player *pplayer);
-void tileset_background_init(struct tileset *t);
-void tileset_background_free(struct tileset *t);
 
 // Layer order
 const std::vector<std::unique_ptr<freeciv::layer>> &
@@ -241,6 +239,7 @@ std::vector<drawn_sprite>
 fill_basic_extra_sprite_array(const struct tileset *t,
                               const struct extra_type *pextra);
 QPixmap *get_event_sprite(const struct tileset *t, enum event_type event);
+QPixmap *get_mask_sprite(const struct tileset *t);
 
 QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
                                      const char *tag, const char *alt,
