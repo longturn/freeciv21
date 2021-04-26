@@ -2366,19 +2366,6 @@ void request_toggle_city_trade_routes()
 }
 
 /**
-   Toggle display of terrain
- */
-void request_toggle_terrain()
-{
-  if (!can_client_change_view()) {
-    return;
-  }
-
-  gui_options.draw_terrain ^= 1;
-  update_map_canvas_visible();
-}
-
-/**
    Toggle display of coastline
  */
 void request_toggle_coastline()
@@ -3691,11 +3678,6 @@ void key_city_productions_toggle() { request_toggle_city_productions(); }
    by the city name for cities visible on the main map view.
  */
 void key_city_trade_routes_toggle() { request_toggle_city_trade_routes(); }
-
-/**
-   Handle user 'toggle terrain display' input
- */
-void key_terrain_toggle() { request_toggle_terrain(); }
 
 /**
    Handle user 'toggle coastline display' input

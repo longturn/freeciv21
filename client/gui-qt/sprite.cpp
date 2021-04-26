@@ -59,8 +59,8 @@ QPixmap *qtg_load_gfxfile(const char *filename)
    in the mask image will be used to clip pixel (0,0) in the source image
    which is pixel (-x,-y) in the new image.
  */
-QPixmap *qtg_crop_sprite(QPixmap *source, int x, int y, int width,
-                         int height, QPixmap *mask, int mask_offset_x,
+QPixmap *qtg_crop_sprite(const QPixmap *source, int x, int y, int width,
+                         int height, const QPixmap *mask, int mask_offset_x,
                          int mask_offset_y, float scale, bool smooth)
 {
   QPainter p;
@@ -116,7 +116,8 @@ QPixmap *qtg_crop_sprite(QPixmap *source, int x, int y, int width,
 /**
    Find the dimensions of the sprite.
  */
-void qtg_get_sprite_dimensions(QPixmap *sprite, int *width, int *height)
+void qtg_get_sprite_dimensions(const QPixmap *sprite, int *width,
+                               int *height)
 {
   *width = sprite->width();
   *height = sprite->height();
@@ -130,7 +131,7 @@ void qtg_free_sprite(QPixmap *s) { delete s; }
 /**
    Create a new sprite with the given height, width and color.
  */
-QPixmap *qtg_create_sprite(int width, int height, QColor *pcolor)
+QPixmap *qtg_create_sprite(int width, int height, const QColor *pcolor)
 {
   QPixmap *created = new QPixmap;
 

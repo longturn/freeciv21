@@ -78,6 +78,7 @@
 #include "editor.h"
 #include "goto.h"
 #include "helpdata.h"
+#include "layer_background.h"
 #include "options.h" // for fill_xxx
 #include "themes_common.h"
 
@@ -344,13 +345,8 @@ struct named_sprites {
     struct sprite_vector overlays;
   } colors;
   struct {
-    QPixmap *color;   // Generic background color
-    QPixmap *graphic; // Generic background graphic
-  } background;
-  struct {
     QPixmap *grid_borders[EDGE_COUNT][2];
     QPixmap *color;
-    QPixmap *background;
   } player[MAX_NUM_PLAYER_SLOTS];
 
   struct drawing_data *drawing[MAX_NUM_ITEMS];
@@ -401,7 +397,7 @@ struct tileset {
 
   char *for_ruleset;
 
-  enum mapview_layer layer_order[LAYER_COUNT];
+  std::vector<std::unique_ptr<freeciv::layer>> layers;
 
   enum ts_type type;
   int hex_width, hex_height;
@@ -442,7 +438,7 @@ struct tileset {
   int num_valid_tileset_dirs, num_cardinal_tileset_dirs;
   int num_index_valid, num_index_cardinal;
   enum direction8 valid_tileset_dirs[8], cardinal_tileset_dirs[8];
-  struct tileset_layer layers[MAX_NUM_LAYERS];
+  std::array<tileset_layer, MAX_NUM_LAYERS> terrain_layers;
   QSet<specfile *> *specfiles;
   QSet<struct small_sprite *> *small_sprites;
   // This hash table maps tilespec tags to struct small_sprites.
@@ -470,14 +466,14 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
                                              bool verbose, int topology_id,
                                              float scale);
 
-static int fill_unit_type_sprite_array(const struct tileset *t,
-                                       struct drawn_sprite *sprs,
-                                       const struct unit_type *putype,
-                                       enum direction8 facing);
-static int fill_unit_sprite_array(const struct tileset *t,
-                                  struct drawn_sprite *sprs,
-                                  const struct unit *punit, bool stack,
-                                  bool backdrop);
+static void fill_unit_type_sprite_array(const struct tileset *t,
+                                        std::vector<drawn_sprite> &sprs,
+                                        const struct unit_type *putype,
+                                        enum direction8 facing);
+static void fill_unit_sprite_array(const struct tileset *t,
+                                   std::vector<drawn_sprite> &sprs,
+                                   const struct unit *punit, bool stack,
+                                   bool backdrop);
 static bool load_river_sprites(struct tileset *t,
                                struct river_sprites *store,
                                const char *tag_pfx);
@@ -490,12 +486,12 @@ static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
 
 static bool is_extra_drawing_enabled(struct extra_type *pextra);
 
-static int fill_basic_road_sprite_array(const struct tileset *t,
-                                        struct drawn_sprite *sprs,
-                                        const struct extra_type *pextra);
-static int fill_basic_base_sprite_array(const struct tileset *t,
-                                        struct drawn_sprite *sprs,
-                                        const struct extra_type *pextra);
+static void fill_basic_road_sprite_array(const struct tileset *t,
+                                         std::vector<drawn_sprite> &sprs,
+                                         const struct extra_type *pextra);
+static void fill_basic_base_sprite_array(const struct tileset *t,
+                                         std::vector<drawn_sprite> &sprs,
+                                         const struct extra_type *pextra);
 
 static void tileset_player_free(struct tileset *t, int plrid);
 
@@ -1086,7 +1082,7 @@ static void tileset_free_toplevel(struct tileset *t)
   }
 
   for (i = 0; i < MAX_NUM_LAYERS; i++) {
-    struct tileset_layer *tslp = &t->layers[i];
+    struct tileset_layer *tslp = &t->terrain_layers[i];
 
     if (tslp->match_types) {
       for (j = 0; j < tslp->match_count; j++) {
@@ -1250,9 +1246,6 @@ bool tilespec_reread(const char *new_tileset_name,
   tileset_load_tiles(tileset);
 
   if (game_fully_initialized) {
-    if (game.client.ruleset_ready) {
-      tileset_background_init(tileset);
-    } // else we'll get round to it on PACKET_RULESET_GAME
     players_iterate(pplayer) { tileset_player_init(tileset, pplayer); }
     players_iterate_end;
     boot_help_texts(); // "About Current Tileset"
@@ -2086,6 +2079,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   layer_order =
       secfile_lookup_str_vec(file, &num_layers, "tilespec.layer_order");
   if (layer_order != NULL) {
+    mapview_layer order[LAYER_COUNT];
     for (i = 0; i < num_layers; i++) {
       int j;
       enum mapview_layer layer =
@@ -2099,13 +2093,13 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       }
       // Check for duplicates.
       for (j = 0; j < i; j++) {
-        if (t->layer_order[j] == layer) {
+        if (order[j] == layer) {
           qCritical("layer_order: Duplicate layer \"%s\"", layer_order[i]);
           tileset_stop_read(t, file, fname, sections, layer_order);
           return nullptr;
         }
       }
-      t->layer_order[i] = layer;
+      order[i] = layer;
     }
 
     /* Now check that all layers are present. Doing it now allows for a
@@ -2115,7 +2109,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       bool found = false;
 
       for (j = 0; j < num_layers; j++) {
-        if (i == t->layer_order[j]) {
+        if (i == order[j]) {
           found = true;
           break;
         }
@@ -2127,16 +2121,35 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
         return nullptr;
       }
     }
+
+    for (auto layer : order) {
+      switch (layer) {
+      case LAYER_BACKGROUND:
+        t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
+        break;
+      default:
+        t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
+        break;
+      }
+    }
   } else {
     // There is no layer_order tag in the specfile -> use the default
-    for (i = 0; i < LAYER_COUNT; i++) {
-      t->layer_order[i] = static_cast<mapview_layer>(i);
+    for (i = 0; i < LAYER_COUNT; ++i) {
+      auto layer = static_cast<mapview_layer>(i);
+      switch (layer) {
+      case LAYER_BACKGROUND:
+        t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
+        break;
+      default:
+        t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
+        break;
+      }
     }
   }
 
   // Terrain layer info.
   for (i = 0; i < MAX_NUM_LAYERS; i++) {
-    struct tileset_layer *tslp = &t->layers[i];
+    struct tileset_layer *tslp = &t->terrain_layers[i];
     int j, k;
 
     tslp->match_types = const_cast<char **>(secfile_lookup_str_vec(
@@ -2201,7 +2214,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
     for (l = 0; l < draw->num_layers; l++) {
       struct drawing_layer *dlp = &draw->layer[l];
-      struct tileset_layer *tslp = &t->layers[l];
+      struct tileset_layer *tslp = &t->terrain_layers[l];
       const char *match_type;
       const char **match_with;
       size_t count;
@@ -2556,25 +2569,6 @@ static QPixmap *load_sprite(struct tileset *t, const QString &tag_name,
   ss->ref_count++;
 
   return ss->sprite;
-}
-
-/**
-   Create a sprite with the given color and tag.
- */
-static QPixmap *create_plr_sprite(QColor *pcolor)
-{
-  QPixmap *sprite;
-
-  fc_assert_ret_val(pcolor != NULL, NULL);
-
-  if (tileset->scale == 1.0f) {
-    sprite = create_sprite(128, 64, pcolor);
-  } else {
-    sprite = create_sprite(tileset->full_tile_width,
-                           tileset->full_tile_height, pcolor);
-  }
-
-  return sprite;
 }
 
 /**
@@ -3852,7 +3846,7 @@ void tileset_setup_tile_type(struct tileset *t,
   // Set up each layer of the drawing.
   for (l = 0; l < draw->num_layers; l++) {
     struct drawing_layer *dlp = &draw->layer[l];
-    struct tileset_layer *tslp = &t->layers[l];
+    struct tileset_layer *tslp = &t->terrain_layers[l];
     sprite_vector_init(&dlp->base);
     sprite_vector_init(&dlp->allocated);
 
@@ -4164,14 +4158,8 @@ static QPixmap *get_unit_nation_flag_sprite(const struct tileset *t,
 
 #define FULL_TILE_X_OFFSET ((t->normal_tile_width - t->full_tile_width) / 2)
 #define FULL_TILE_Y_OFFSET (t->normal_tile_height - t->full_tile_height)
-
-#define ADD_SPRITE(s, draw_fog, x_offset, y_offset)                         \
-  (fc_assert(s != NULL), sprs->sprite = s,                                  \
-   sprs->foggable = (draw_fog && t->fogstyle == FOG_AUTO),                  \
-   sprs->offset_x = x_offset, sprs->offset_y = y_offset, sprs++)
-#define ADD_SPRITE_SIMPLE(s) ADD_SPRITE(s, true, 0, 0)
 #define ADD_SPRITE_FULL(s)                                                  \
-  ADD_SPRITE(s, true, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET)
+  sprs.emplace_back(t, s, true, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET)
 
 /**
    Assemble some data that is used in building the tile sprite arrays.
@@ -4213,35 +4201,31 @@ static void build_tile_data(const struct tile *ptile,
 /**
    Fill in the sprite array for the unit type.
  */
-static int fill_unit_type_sprite_array(const struct tileset *t,
-                                       struct drawn_sprite *sprs,
-                                       const struct unit_type *putype,
-                                       enum direction8 facing)
+static void fill_unit_type_sprite_array(const struct tileset *t,
+                                        std::vector<drawn_sprite> &sprs,
+                                        const struct unit_type *putype,
+                                        enum direction8 facing)
 {
-  struct drawn_sprite *save_sprs = sprs;
   QPixmap *uspr = get_unittype_sprite(t, putype, facing);
 
-  ADD_SPRITE(uspr, true, FULL_TILE_X_OFFSET + t->unit_offset_x,
+  sprs.emplace_back(t, uspr, true, FULL_TILE_X_OFFSET + t->unit_offset_x,
              FULL_TILE_Y_OFFSET + t->unit_offset_y);
-
-  return sprs - save_sprs;
 }
 
 /**
    Fill in the sprite array for the unit.
  */
-static int fill_unit_sprite_array(const struct tileset *t,
-                                  struct drawn_sprite *sprs,
-                                  const struct unit *punit, bool stack,
-                                  bool backdrop)
+static void fill_unit_sprite_array(const struct tileset *t,
+                                   std::vector<drawn_sprite> &sprs,
+                                   const struct unit *punit, bool stack,
+                                   bool backdrop)
 {
-  struct drawn_sprite *save_sprs = sprs;
   int ihp;
   const struct unit_type *ptype = unit_type_get(punit);
 
   if (backdrop) {
     if (!gui_options.solid_color_behind_units) {
-      ADD_SPRITE(get_unit_nation_flag_sprite(t, punit), true,
+      sprs.emplace_back(t, get_unit_nation_flag_sprite(t, punit), true,
                  FULL_TILE_X_OFFSET + t->unit_flag_offset_x,
                  FULL_TILE_Y_OFFSET + t->unit_flag_offset_y);
     } else {
@@ -4250,7 +4234,7 @@ static int fill_unit_sprite_array(const struct tileset *t,
   }
 
   // Add the sprite for the unit type.
-  sprs += fill_unit_type_sprite_array(t, sprs, ptype, punit->facing);
+  fill_unit_type_sprite_array(t, sprs, ptype, punit->facing);
 
   if (t->sprites.unit.loaded && unit_transported(punit)) {
     ADD_SPRITE_FULL(t->sprites.unit.loaded);
@@ -4317,7 +4301,7 @@ static int fill_unit_sprite_array(const struct tileset *t,
     }
 
     if (s != NULL) {
-      ADD_SPRITE(s, true, FULL_TILE_X_OFFSET + t->activity_offset_x,
+      sprs.emplace_back(t, s, true, FULL_TILE_X_OFFSET + t->activity_offset_x,
                  FULL_TILE_Y_OFFSET + t->activity_offset_y);
     }
   }
@@ -4345,7 +4329,7 @@ static int fill_unit_sprite_array(const struct tileset *t,
     }
 
     if (s != NULL) {
-      ADD_SPRITE(s, true, FULL_TILE_X_OFFSET + offset_x,
+      sprs.emplace_back(t, s, true, FULL_TILE_X_OFFSET + offset_x,
                  FULL_TILE_Y_OFFSET + offset_y);
     }
   }
@@ -4354,9 +4338,9 @@ static int fill_unit_sprite_array(const struct tileset *t,
     if (punit->orders.repeat) {
       ADD_SPRITE_FULL(t->sprites.unit.patrol);
     } else if (punit->activity != ACTIVITY_IDLE) {
-      ADD_SPRITE_SIMPLE(t->sprites.unit.connect);
+      sprs.emplace_back(t, t->sprites.unit.connect);
     } else {
-      ADD_SPRITE(t->sprites.unit.go_to, true,
+      sprs.emplace_back(t, t->sprites.unit.go_to, true,
                  FULL_TILE_X_OFFSET + t->activity_offset_x,
                  FULL_TILE_Y_OFFSET + t->activity_offset_y);
     }
@@ -4364,7 +4348,7 @@ static int fill_unit_sprite_array(const struct tileset *t,
 
   if (t->sprites.unit.action_decision_want != NULL
       && should_ask_server_for_actions(punit)) {
-    ADD_SPRITE(t->sprites.unit.action_decision_want, true,
+    sprs.emplace_back(t, t->sprites.unit.action_decision_want, true,
                FULL_TILE_X_OFFSET + t->activity_offset_x,
                FULL_TILE_Y_OFFSET + t->activity_offset_y);
   }
@@ -4396,25 +4380,22 @@ static int fill_unit_sprite_array(const struct tileset *t,
   ihp = ((NUM_TILES_HP_BAR - 1) * punit->hp) / ptype->hp;
   ihp = CLIP(0, ihp, NUM_TILES_HP_BAR - 1);
   ADD_SPRITE_FULL(t->sprites.unit.hp_bar[ihp]);
-
-  return sprs - save_sprs;
 }
 
 /**
    Add any corner road sprites to the sprite array.
  */
-static int fill_road_corner_sprites(const struct tileset *t,
-                                    const struct extra_type *pextra,
-                                    struct drawn_sprite *sprs, bool road,
-                                    bool *road_near, bool hider,
-                                    bool *hider_near)
+static void fill_road_corner_sprites(const struct tileset *t,
+                                     const struct extra_type *pextra,
+                                     std::vector<drawn_sprite> &sprs,
+                                     bool road, bool *road_near, bool hider,
+                                     bool *hider_near)
 {
-  struct drawn_sprite *saved_sprs = sprs;
   int i;
   int extra_idx = extra_index(pextra);
 
   if (is_cardinal_only_road(pextra)) {
-    return 0;
+    return;
   }
 
   /* Roads going diagonally adjacent to this tile need to be
@@ -4443,25 +4424,23 @@ static int fill_road_corner_sprites(const struct tileset *t,
           && (road_near[cwdir] && road_near[ccwdir]
               && !(hider_near[cwdir] && hider_near[ccwdir]))
           && !(road && road_near[dir] && !(hider && hider_near[dir]))) {
-        ADD_SPRITE_SIMPLE(t->sprites.extras[extra_idx].u.road.corner[dir]);
+        sprs.emplace_back(t, t->sprites.extras[extra_idx].u.road.corner[dir]);
       }
     }
   }
-
-  return sprs - saved_sprs;
 }
 
 /**
    Fill all road and rail sprites into the sprite array.
  */
-static int fill_road_sprite_array(const struct tileset *t,
-                                  const struct extra_type *pextra,
-                                  struct drawn_sprite *sprs,
-                                  bv_extras textras, bv_extras *textras_near,
-                                  struct terrain *tterrain_near[8],
-                                  const struct city *pcity)
+static void fill_road_sprite_array(const struct tileset *t,
+                                   const struct extra_type *pextra,
+                                   std::vector<drawn_sprite> &sprs,
+                                   bv_extras textras,
+                                   bv_extras *textras_near,
+                                   struct terrain *tterrain_near[8],
+                                   const struct city *pcity)
 {
-  struct drawn_sprite *saved_sprs = sprs;
   bool road, road_near[8], hider, hider_near[8];
   bool land_near[8], hland_near[8];
   bool draw_road[8], draw_single_road;
@@ -4575,8 +4554,8 @@ static int fill_road_sprite_array(const struct tileset *t,
   }
 
   // Draw road corners
-  sprs += fill_road_corner_sprites(t, pextra, sprs, road, road_near, hider,
-                                   hider_near);
+  fill_road_corner_sprites(t, pextra, sprs, road, road_near, hider,
+                           hider_near);
 
   if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE) {
     /* With ESTYLE_ROAD_ALL_SEPARATE, we simply draw one road for every
@@ -4588,7 +4567,7 @@ static int fill_road_sprite_array(const struct tileset *t,
     if (road) {
       for (i = 0; i < t->num_valid_tileset_dirs; i++) {
         if (draw_road[t->valid_tileset_dirs[i]]) {
-          ADD_SPRITE_SIMPLE(t->sprites.extras[extra_idx].u.road.ru.dir[i]);
+          sprs.emplace_back(t, t->sprites.extras[extra_idx].u.road.ru.dir[i]);
         }
       }
     }
@@ -4617,11 +4596,11 @@ static int fill_road_sprite_array(const struct tileset *t,
 
       /* Draw the cardinal/even roads first. */
       if (road_even_tileno != 0) {
-        ADD_SPRITE_SIMPLE(t->sprites.extras[extra_idx]
+        sprs.emplace_back(t, t->sprites.extras[extra_idx]
                               .u.road.ru.combo.even[road_even_tileno]);
       }
       if (road_odd_tileno != 0) {
-        ADD_SPRITE_SIMPLE(t->sprites.extras[extra_idx]
+        sprs.emplace_back(t, t->sprites.extras[extra_idx]
                               .u.road.ru.combo.odd[road_odd_tileno]);
       }
     }
@@ -4643,7 +4622,7 @@ static int fill_road_sprite_array(const struct tileset *t,
       }
 
       if (road_tileno != 0 || draw_single_road) {
-        ADD_SPRITE_SIMPLE(
+        sprs.emplace_back(t,
             t->sprites.extras[extra_idx].u.road.ru.total[road_tileno]);
       }
     }
@@ -4656,11 +4635,9 @@ static int fill_road_sprite_array(const struct tileset *t,
   if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE
       || extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
     if (draw_single_road) {
-      ADD_SPRITE_SIMPLE(t->sprites.extras[extra_idx].u.road.isolated);
+      sprs.emplace_back(t, t->sprites.extras[extra_idx].u.road.isolated);
     }
   }
-
-  return sprs - saved_sprs;
 }
 
 /**
@@ -4692,14 +4669,12 @@ static int get_irrigation_index(const struct tileset *t,
 /**
    Fill in the farmland/irrigation sprite for the tile.
  */
-static int fill_irrigation_sprite_array(const struct tileset *t,
-                                        struct drawn_sprite *sprs,
-                                        bv_extras textras,
-                                        bv_extras *textras_near,
-                                        const struct city *pcity)
+static void fill_irrigation_sprite_array(const struct tileset *t,
+                                         std::vector<drawn_sprite> &sprs,
+                                         bv_extras textras,
+                                         bv_extras *textras_near,
+                                         const struct city *pcity)
 {
-  struct drawn_sprite *saved_sprs = sprs;
-
   /* We don't draw the irrigation if there's a city (it just gets overdrawn
    * anyway, and ends up looking bad). */
   if (!(pcity && gui_options.draw_cities)) {
@@ -4723,35 +4698,32 @@ static int fill_irrigation_sprite_array(const struct tileset *t,
           if (!hidden) {
             int idx = get_irrigation_index(t, pextra, textras_near);
 
-            ADD_SPRITE_SIMPLE(t->sprites.extras[eidx].u.cardinals[idx]);
+            sprs.emplace_back(t, t->sprites.extras[eidx].u.cardinals[idx]);
           }
         }
       }
     }
     extra_type_list_iterate_end;
   }
-
-  return sprs - saved_sprs;
 }
 
 /**
    Fill in the city overlays for the tile.  This includes the citymap
    overlays on the mapview as well as the tile output sprites.
  */
-static int fill_city_overlays_sprite_array(const struct tileset *t,
-                                           struct drawn_sprite *sprs,
-                                           const struct tile *ptile,
-                                           const struct city *citymode)
+static void fill_city_overlays_sprite_array(const struct tileset *t,
+                                            std::vector<drawn_sprite> &sprs,
+                                            const struct tile *ptile,
+                                            const struct city *citymode)
 {
   const struct city *pcity;
   const struct city *pwork;
   struct unit *psettler = nullptr;
-  struct drawn_sprite *saved_sprs = sprs;
   int city_x, city_y;
   const int NUM_CITY_COLORS = t->sprites.city.worked_tile_overlay.size;
 
   if (NULL == ptile || TILE_UNKNOWN == client_tile_get_known(ptile)) {
-    return 0;
+    return;
   }
   pwork = tile_worked(ptile);
 
@@ -4763,7 +4735,7 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
 
   /* Below code does not work if pcity is invisible.
    * Make sure it is not. */
-  fc_assert_ret_val(pcity == NULL || pcity->tile != NULL, 0);
+  fc_assert_ret(pcity == NULL || pcity->tile != NULL);
   if (pcity && !pcity->tile) {
     pcity = NULL;
   }
@@ -4775,9 +4747,9 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
       int idx = pcity->client.color_index % NUM_CITY_COLORS;
 
       if (NULL != pwork && pwork == pcity) {
-        ADD_SPRITE_SIMPLE(t->sprites.city.worked_tile_overlay.p[idx]);
+        sprs.emplace_back(t, t->sprites.city.worked_tile_overlay.p[idx]);
       } else if (city_can_work_tile(pcity, ptile)) {
-        ADD_SPRITE_SIMPLE(t->sprites.city.unworked_tile_overlay.p[idx]);
+        sprs.emplace_back(t, t->sprites.city.unworked_tile_overlay.p[idx]);
       }
     } else if (NULL != pwork && pwork == pcity
                && (citymode || gui_options.draw_city_output
@@ -4791,7 +4763,7 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
         int food = city_tile_output_now(pcity, ptile, O_FOOD);
         food = CLIP(0, food / game.info.granularity,
                     t->sprites.city.tile_foodnum.size() - 1);
-        ADD_SPRITE(
+        sprs.emplace_back(t,
             const_cast<QPixmap *>(&t->sprites.city.tile_foodnum[food]), true,
             ox, oy);
       }
@@ -4799,7 +4771,7 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
         int shields = city_tile_output_now(pcity, ptile, O_SHIELD);
         shields = CLIP(0, shields / game.info.granularity,
                        t->sprites.city.tile_shieldnum.size() - 1);
-        ADD_SPRITE(
+        sprs.emplace_back(t,
             const_cast<QPixmap *>(&t->sprites.city.tile_shieldnum[shields]),
             true, ox, oy);
       }
@@ -4807,7 +4779,7 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
         int trade = city_tile_output_now(pcity, ptile, O_TRADE);
         trade = CLIP(0, trade / game.info.granularity,
                      t->sprites.city.tile_tradenum.size() - 1);
-        ADD_SPRITE(
+        sprs.emplace_back(t,
             const_cast<QPixmap *>(&t->sprites.city.tile_tradenum[trade]),
             true, ox, oy);
       }
@@ -4816,23 +4788,20 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
     // Add citymap overlay for a unit.
     int idx = psettler->client.color_index % NUM_CITY_COLORS;
 
-    ADD_SPRITE_SIMPLE(t->sprites.city.unworked_tile_overlay.p[idx]);
+    sprs.emplace_back(t, t->sprites.city.unworked_tile_overlay.p[idx]);
   }
-
-  return sprs - saved_sprs;
 }
 
 /**
    Helper function for fill_terrain_sprite_layer.
    Fill in the sprite array for blended terrain.
  */
-static int fill_terrain_sprite_blending(const struct tileset *t,
-                                        struct drawn_sprite *sprs,
-                                        const struct tile *ptile,
-                                        const struct terrain *pterrain,
-                                        struct terrain **tterrain_near)
+static void fill_terrain_sprite_blending(const struct tileset *t,
+                                         std::vector<drawn_sprite> &sprs,
+                                         const struct tile *ptile,
+                                         const struct terrain *pterrain,
+                                         struct terrain **tterrain_near)
 {
-  struct drawn_sprite *saved_sprs = sprs;
   const int W = t->normal_tile_width, H = t->normal_tile_height;
   const int offsets[4][2] = {{W / 2, 0}, {0, H / 2}, {W / 2, H / 2}, {0, 0}};
   int dir = 0;
@@ -4854,29 +4823,25 @@ static int fill_terrain_sprite_blending(const struct tileset *t,
       continue;
     }
 
-    ADD_SPRITE(t->sprites.drawing[terrain_index(other)]->blend[dir], true,
+    sprs.emplace_back(t, t->sprites.drawing[terrain_index(other)]->blend[dir], true,
                offsets[dir][0], offsets[dir][1]);
   }
-
-  return sprs - saved_sprs;
 }
 
 /**
    Add sprites for fog (and some forms of darkness).
  */
-static int fill_fog_sprite_array(const struct tileset *t,
-                                 struct drawn_sprite *sprs,
-                                 const struct tile *ptile,
-                                 const struct tile_edge *pedge,
-                                 const struct tile_corner *pcorner)
+static void fill_fog_sprite_array(const struct tileset *t,
+                                  std::vector<drawn_sprite> &sprs,
+                                  const struct tile *ptile,
+                                  const struct tile_edge *pedge,
+                                  const struct tile_corner *pcorner)
 {
-  struct drawn_sprite *saved_sprs = sprs;
-
   if (t->fogstyle == FOG_SPRITE && gui_options.draw_fog_of_war
       && NULL != ptile
       && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile)) {
     // With FOG_AUTO, fog is done this way.
-    ADD_SPRITE_SIMPLE(t->sprites.tx.fog);
+    sprs.emplace_back(t, t->sprites.tx.fog);
   }
 
   if (t->darkness_style == DARKNESS_CORNER && pcorner
@@ -4908,22 +4873,19 @@ static int fill_fog_sprite_array(const struct tileset *t,
     }
 
     if (t->sprites.tx.fullfog[tileno]) {
-      ADD_SPRITE_SIMPLE(t->sprites.tx.fullfog[tileno]);
+      sprs.emplace_back(t, t->sprites.tx.fullfog[tileno]);
     }
   }
-
-  return sprs - saved_sprs;
 }
 
 /**
    Helper function for fill_terrain_sprite_layer.
  */
-static int fill_terrain_sprite_array(
-    struct tileset *t, struct drawn_sprite *sprs, int l, // layer_num
+static void fill_terrain_sprite_array(
+    struct tileset *t, std::vector<drawn_sprite> &sprs, int l, // layer_num
     const struct tile *ptile, const struct terrain *pterrain,
     struct terrain **tterrain_near, struct drawing_data *draw)
 {
-  struct drawn_sprite *saved_sprs = sprs;
   struct drawing_layer *dlp = &draw->layer[l];
   int tthis = dlp->match_index[0];
   int that = dlp->match_index[1];
@@ -4953,7 +4915,7 @@ static int fill_terrain_sprite_array(
           ox += FULL_TILE_X_OFFSET;
           oy += FULL_TILE_Y_OFFSET;
         }
-        ADD_SPRITE(dlp->base.p[count], true, ox, oy);
+        sprs.emplace_back(t, dlp->base.p[count], true, ox, oy);
       }
       break;
     }
@@ -4973,7 +4935,7 @@ static int fill_terrain_sprite_array(
         ox += FULL_TILE_X_OFFSET;
         oy += FULL_TILE_Y_OFFSET;
       }
-      ADD_SPRITE(dlp->match[tileno], true, ox, oy);
+      sprs.emplace_back(t, dlp->match[tileno], true, ox, oy);
       break;
     }
     case MATCH_PAIR:
@@ -5048,27 +5010,24 @@ static int fill_terrain_sprite_array(
 
       s = dlp->cells[array_index];
       if (s) {
-        ADD_SPRITE(s, true, x, y);
+        sprs.emplace_back(t, s, true, x, y);
       }
     }
     break;
   }
   };
 #undef MATCH
-
-  return sprs - saved_sprs;
 }
 
 /**
    Helper function for fill_terrain_sprite_layer.
    Fill in the sprite array of darkness.
  */
-static int fill_terrain_sprite_darkness(struct tileset *t,
-                                        struct drawn_sprite *sprs,
-                                        const struct tile *ptile,
-                                        struct terrain **tterrain_near)
+static void fill_terrain_sprite_darkness(struct tileset *t,
+                                         std::vector<drawn_sprite> &sprs,
+                                         const struct tile *ptile,
+                                         struct terrain **tterrain_near)
 {
-  struct drawn_sprite *saved_sprs = sprs;
   int i, tileno;
   struct tile *adjc_tile;
 
@@ -5085,7 +5044,7 @@ static int fill_terrain_sprite_darkness(struct tileset *t,
       int offsets[4][2] = {{W / 2, 0}, {0, H / 2}, {W / 2, H / 2}, {0, 0}};
 
       if (UNKNOWN(static_cast<direction8>(DIR4_TO_DIR8[i]))) {
-        ADD_SPRITE(t->sprites.tx.darkness[i], true, offsets[i][0],
+        sprs.emplace_back(t, t->sprites.tx.darkness[i], true, offsets[i][0],
                    offsets[i][1]);
       }
     }
@@ -5093,7 +5052,7 @@ static int fill_terrain_sprite_darkness(struct tileset *t,
   case DARKNESS_CARD_SINGLE:
     for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
       if (UNKNOWN(t->cardinal_tileset_dirs[i])) {
-        ADD_SPRITE_SIMPLE(t->sprites.tx.darkness[i]);
+        sprs.emplace_back(t, t->sprites.tx.darkness[i]);
       }
     }
     break;
@@ -5111,7 +5070,7 @@ static int fill_terrain_sprite_darkness(struct tileset *t,
     }
 
     if (tileno != 0) {
-      ADD_SPRITE_SIMPLE(t->sprites.tx.darkness[tileno]);
+      sprs.emplace_back(t, t->sprites.tx.darkness[tileno]);
     }
     break;
   case DARKNESS_CORNER:
@@ -5119,22 +5078,20 @@ static int fill_terrain_sprite_darkness(struct tileset *t,
     break;
   };
 #undef UNKNOWN
-
-  return sprs - saved_sprs;
 }
 
 /**
    Add sprites for the base tile to the sprite list.  This doesn't
    include specials or rivers.
  */
-static int fill_terrain_sprite_layer(struct tileset *t,
-                                     struct drawn_sprite *sprs,
-                                     int layer_num, const struct tile *ptile,
-                                     const struct terrain *pterrain,
-                                     struct terrain **tterrain_near)
+static void fill_terrain_sprite_layer(struct tileset *t,
+                                      std::vector<drawn_sprite> &sprs,
+                                      int layer_num,
+                                      const struct tile *ptile,
+                                      const struct terrain *pterrain,
+                                      struct terrain **tterrain_near)
 {
   QPixmap *sprite;
-  struct drawn_sprite *saved_sprs = sprs;
   struct drawing_data *draw = t->sprites.drawing[terrain_index(pterrain)];
   const int l =
       (draw->is_reversed ? (draw->num_layers - layer_num - 1) : layer_num);
@@ -5147,24 +5104,19 @@ static int fill_terrain_sprite_layer(struct tileset *t,
   if (ptile->spec_sprite
       && (sprite = load_sprite(t, ptile->spec_sprite, true, false))) {
     if (l == 0) {
-      ADD_SPRITE_SIMPLE(sprite);
-      return 1;
-    } else {
-      return 0;
+      sprs.emplace_back(t, sprite);
     }
+    return;
   }
 
   if (l < draw->num_layers) {
-    sprs += fill_terrain_sprite_array(t, sprs, l, ptile, pterrain,
-                                      tterrain_near, draw);
+    fill_terrain_sprite_array(t, sprs, l, ptile, pterrain, tterrain_near,
+                              draw);
 
     if ((l + 1) == draw->blending) {
-      sprs += fill_terrain_sprite_blending(t, sprs, ptile, pterrain,
-                                           tterrain_near);
+      fill_terrain_sprite_blending(t, sprs, ptile, pterrain, tterrain_near);
     }
   }
-
-  return sprs - saved_sprs;
 }
 
 /**
@@ -5190,14 +5142,12 @@ bool unit_drawn_with_city_outline(const struct unit *punit, bool check_focus)
 /**
    Fill in the grid sprites for the given tile, city, and unit.
  */
-static int fill_grid_sprite_array(const struct tileset *t,
-                                  struct drawn_sprite *sprs,
-                                  const struct tile *ptile,
-                                  const struct tile_edge *pedge,
-                                  const struct city *citymode)
+static void fill_grid_sprite_array(const struct tileset *t,
+                                   std::vector<drawn_sprite> &sprs,
+                                   const struct tile *ptile,
+                                   const struct tile_edge *pedge,
+                                   const struct city *citymode)
 {
-  struct drawn_sprite *saved_sprs = sprs;
-
   if (pedge) {
     bool known[NUM_EDGE_TILES], city[NUM_EDGE_TILES];
     bool unit[NUM_EDGE_TILES], worked[NUM_EDGE_TILES];
@@ -5249,33 +5199,28 @@ static int fill_grid_sprite_array(const struct tileset *t,
       // Draw city grid for main citymap
       if (tile && citymode
           && city_base_to_city_map(&dummy_x, &dummy_y, citymode, tile)) {
-        ADD_SPRITE_SIMPLE(t->sprites.grid.selected[pedge->type]);
+        sprs.emplace_back(t, t->sprites.grid.selected[pedge->type]);
       }
     }
     if (mapdeco_is_highlight_set(pedge->tile[0])
         || mapdeco_is_highlight_set(pedge->tile[1])) {
-      ADD_SPRITE_SIMPLE(t->sprites.grid.selected[pedge->type]);
-    } else if (!gui_options.draw_terrain && gui_options.draw_coastline
-               && pedge->tile[0] && pedge->tile[1] && known[0] && known[1]
-               && (is_ocean_tile(pedge->tile[0])
-                   ^ is_ocean_tile(pedge->tile[1]))) {
-      ADD_SPRITE_SIMPLE(t->sprites.grid.coastline[pedge->type]);
+      sprs.emplace_back(t, t->sprites.grid.selected[pedge->type]);
     } else {
       if (gui_options.draw_map_grid) {
         if (worked[0] || worked[1]) {
-          ADD_SPRITE_SIMPLE(t->sprites.grid.worked[pedge->type]);
+          sprs.emplace_back(t, t->sprites.grid.worked[pedge->type]);
         } else if (city[0] || city[1]) {
-          ADD_SPRITE_SIMPLE(t->sprites.grid.city[pedge->type]);
+          sprs.emplace_back(t, t->sprites.grid.city[pedge->type]);
         } else if (known[0] || known[1]) {
-          ADD_SPRITE_SIMPLE(t->sprites.grid.main[pedge->type]);
+          sprs.emplace_back(t, t->sprites.grid.main[pedge->type]);
         }
       }
       if (gui_options.draw_city_outlines) {
         if (XOR(city[0], city[1])) {
-          ADD_SPRITE_SIMPLE(t->sprites.grid.city[pedge->type]);
+          sprs.emplace_back(t, t->sprites.grid.city[pedge->type]);
         }
         if (XOR(unit[0], unit[1])) {
-          ADD_SPRITE_SIMPLE(t->sprites.grid.worked[pedge->type]);
+          sprs.emplace_back(t, t->sprites.grid.worked[pedge->type]);
         }
       }
     }
@@ -5288,12 +5233,12 @@ static int fill_grid_sprite_array(const struct tileset *t,
       if (owner0 != owner1) {
         if (owner0) {
           int plrid = player_index(owner0);
-          ADD_SPRITE_SIMPLE(
+          sprs.emplace_back(t,
               t->sprites.player[plrid].grid_borders[pedge->type][0]);
         }
         if (owner1) {
           int plrid = player_index(owner1);
-          ADD_SPRITE_SIMPLE(
+          sprs.emplace_back(t,
               t->sprites.player[plrid].grid_borders[pedge->type][1]);
         }
       }
@@ -5305,7 +5250,7 @@ static int fill_grid_sprite_array(const struct tileset *t,
         // test to ensure valid coordinates?
         && city_base_to_city_map(&cx, &cy, citymode, ptile)
         && !client_city_can_work_tile(citymode, ptile)) {
-      ADD_SPRITE_SIMPLE(t->sprites.grid.unavailable);
+      sprs.emplace_back(t, t->sprites.grid.unavailable);
     }
 
     if (gui_options.draw_native && citymode == NULL) {
@@ -5323,27 +5268,24 @@ static int fill_grid_sprite_array(const struct tileset *t,
 
       if (!native) {
         if (t->sprites.grid.nonnative != NULL) {
-          ADD_SPRITE_SIMPLE(t->sprites.grid.nonnative);
+          sprs.emplace_back(t, t->sprites.grid.nonnative);
         } else {
-          ADD_SPRITE_SIMPLE(t->sprites.grid.unavailable);
+          sprs.emplace_back(t, t->sprites.grid.unavailable);
         }
       }
     }
   }
-
-  return sprs - saved_sprs;
 }
 
 /**
    Fill in the given sprite array with any needed goto sprites.
  */
-static int fill_goto_sprite_array(const struct tileset *t,
-                                  struct drawn_sprite *sprs,
-                                  const struct tile *ptile,
-                                  const struct tile_edge *pedge,
-                                  const struct tile_corner *pcorner)
+static void fill_goto_sprite_array(const struct tileset *t,
+                                   std::vector<drawn_sprite> &sprs,
+                                   const struct tile *ptile,
+                                   const struct tile_edge *pedge,
+                                   const struct tile_corner *pcorner)
 {
-  struct drawn_sprite *saved_sprs = sprs;
   QPixmap *sprite;
   bool warn = false;
   enum goto_tile_state state;
@@ -5357,20 +5299,20 @@ static int fill_goto_sprite_array(const struct tileset *t,
 
       sprite = t->sprites.path.s[state].specific;
       if (sprite != NULL) {
-        ADD_SPRITE(sprite, false, 0, 0);
+        sprs.emplace_back(t, sprite, false, 0, 0);
       }
 
       sprite = t->sprites.path.s[state].turns[length % 10];
-      ADD_SPRITE_SIMPLE(sprite);
+      sprs.emplace_back(t, sprite);
       if (length >= 10) {
         sprite = t->sprites.path.s[state].turns_tens[(length / 10) % 10];
-        ADD_SPRITE_SIMPLE(sprite);
+        sprs.emplace_back(t, sprite);
         if (length >= 100) {
           sprite =
               t->sprites.path.s[state].turns_hundreds[(length / 100) % 10];
 
           if (sprite != NULL) {
-            ADD_SPRITE_SIMPLE(sprite);
+            sprs.emplace_back(t, sprite);
             if (length >= 1000) {
               warn = true;
             }
@@ -5382,7 +5324,7 @@ static int fill_goto_sprite_array(const struct tileset *t,
     }
 
     if (waypoint) {
-      ADD_SPRITE(t->sprites.path.waypoint, false, 0, 0);
+      sprs.emplace_back(t, t->sprites.path.waypoint, false, 0, 0);
     }
 
     if (warn) {
@@ -5397,8 +5339,6 @@ static int fill_goto_sprite_array(const struct tileset *t,
       }
     }
   }
-
-  return sprs - saved_sprs;
 }
 
 /**
@@ -5469,20 +5409,18 @@ static bool is_extra_drawing_enabled(struct extra_type *pextra)
    pcity, if specified, gives the city.  For tile drawing this should
    generally be tile_city(ptile); otherwise it can be any city.
  */
-int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
-                      enum mapview_layer layer, const struct tile *ptile,
-                      const struct tile_edge *pedge,
-                      const struct tile_corner *pcorner,
-                      const struct unit *punit, const struct city *pcity,
-                      const struct unit_type *putype)
+std::vector<drawn_sprite>
+fill_sprite_array(struct tileset *t, enum mapview_layer layer,
+                  const struct tile *ptile, const struct tile_edge *pedge,
+                  const struct tile_corner *pcorner,
+                  const struct unit *punit, const struct city *pcity,
+                  const struct unit_type *putype)
 {
   int tileno, dir;
   bv_extras textras_near[8];
   bv_extras textras;
   struct terrain *tterrain_near[8];
   struct terrain *pterrain = NULL;
-  struct drawn_sprite *save_sprs = sprs;
-  struct player *owner = NULL;
   /* Unit drawing is disabled when the view options are turned off,
    * but only where we're drawing on the mapview. */
   bool do_draw_unit =
@@ -5490,8 +5428,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
        && (gui_options.draw_units || !ptile
            || (gui_options.draw_focus_unit && unit_is_in_focus(punit))));
   bool solid_bg = (gui_options.solid_color_behind_units
-                   && (do_draw_unit || (pcity && gui_options.draw_cities)
-                       || (ptile && !gui_options.draw_terrain)));
+                   && (do_draw_unit || (pcity && gui_options.draw_cities)));
 
   const city *citymode = is_any_city_dialog_open();
 
@@ -5513,55 +5450,42 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
     BV_CLR_ALL(textras);
   }
 
+  auto sprs = std::vector<drawn_sprite>();
+  sprs.reserve(80);
+
   switch (layer) {
   case LAYER_BACKGROUND:
-    // Set up background color.
-    if (gui_options.solid_color_behind_units) {
-      if (do_draw_unit) {
-        owner = unit_owner(punit);
-      } else if (pcity && gui_options.draw_cities) {
-        owner = city_owner(pcity);
-      }
-    }
-    if (owner) {
-      ADD_SPRITE_SIMPLE(t->sprites.player[player_index(owner)].background);
-    } else if (ptile && !gui_options.draw_terrain) {
-      ADD_SPRITE_SIMPLE(t->sprites.background.graphic);
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_TERRAIN1:
-    if (NULL != pterrain && gui_options.draw_terrain && !solid_bg) {
-      sprs += fill_terrain_sprite_layer(t, sprs, 0, ptile, pterrain,
-                                        tterrain_near);
+    if (NULL != pterrain && !solid_bg) {
+      fill_terrain_sprite_layer(t, sprs, 0, ptile, pterrain, tterrain_near);
     }
     break;
 
   case LAYER_DARKNESS:
-    if (NULL != pterrain && gui_options.draw_terrain && !solid_bg) {
-      sprs += fill_terrain_sprite_darkness(t, sprs, ptile, tterrain_near);
+    if (NULL != pterrain && !solid_bg) {
+      fill_terrain_sprite_darkness(t, sprs, ptile, tterrain_near);
     }
     break;
 
   case LAYER_TERRAIN2:
-    if (NULL != pterrain && gui_options.draw_terrain && !solid_bg) {
-      sprs += fill_terrain_sprite_layer(t, sprs, 1, ptile, pterrain,
-                                        tterrain_near);
+    if (NULL != pterrain && !solid_bg) {
+      fill_terrain_sprite_layer(t, sprs, 1, ptile, pterrain, tterrain_near);
     }
     break;
 
   case LAYER_TERRAIN3:
-    if (NULL != pterrain && gui_options.draw_terrain && !solid_bg) {
+    if (NULL != pterrain && !solid_bg) {
       fc_assert(MAX_NUM_LAYERS == 3);
-      sprs += fill_terrain_sprite_layer(t, sprs, 2, ptile, pterrain,
-                                        tterrain_near);
+      fill_terrain_sprite_layer(t, sprs, 2, ptile, pterrain, tterrain_near);
     }
     break;
 
   case LAYER_WATER:
     if (NULL != pterrain) {
-      if (gui_options.draw_terrain && !solid_bg
-          && terrain_type_terrain_class(pterrain) == TC_OCEAN) {
+      if (!solid_bg && terrain_type_terrain_class(pterrain) == TC_OCEAN) {
         for (dir = 0; dir < t->num_cardinal_tileset_dirs; dir++) {
           int didx = t->cardinal_tileset_dirs[dir];
 
@@ -5570,7 +5494,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
             int idx = extra_index(priver);
 
             if (BV_ISSET(textras_near[didx], idx)) {
-              ADD_SPRITE_SIMPLE(
+              sprs.emplace_back(t,
                   t->sprites.extras[idx].u.road.ru.rivers.outlet[dir]);
             }
           }
@@ -5578,10 +5502,9 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
         }
       }
 
-      sprs += fill_irrigation_sprite_array(t, sprs, textras, textras_near,
-                                           pcity);
+      fill_irrigation_sprite_array(t, sprs, textras, textras_near, pcity);
 
-      if (gui_options.draw_terrain && !solid_bg) {
+      if (!solid_bg) {
         extra_type_list_iterate(t->style_lists[ESTYLE_RIVER], priver)
         {
           int idx = extra_index(priver);
@@ -5600,7 +5523,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
               }
             }
 
-            ADD_SPRITE_SIMPLE(
+            sprs.emplace_back(t,
                 t->sprites.extras[idx].u.road.ru.rivers.spec[tileno]);
           }
         }
@@ -5615,8 +5538,8 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
                               pextra)
       {
         if (is_extra_drawing_enabled(pextra)) {
-          sprs += fill_road_sprite_array(t, pextra, sprs, textras,
-                                         textras_near, tterrain_near, pcity);
+          fill_road_sprite_array(t, pextra, sprs, textras, textras_near,
+                                 tterrain_near, pcity);
         }
       }
       extra_type_list_iterate_end;
@@ -5624,8 +5547,8 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
                               pextra)
       {
         if (is_extra_drawing_enabled(pextra)) {
-          sprs += fill_road_sprite_array(t, pextra, sprs, textras,
-                                         textras_near, tterrain_near, pcity);
+          fill_road_sprite_array(t, pextra, sprs, textras, textras_near,
+                                 tterrain_near, pcity);
         }
       }
       extra_type_list_iterate_end;
@@ -5633,8 +5556,8 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
                               pextra)
       {
         if (is_extra_drawing_enabled(pextra)) {
-          sprs += fill_road_sprite_array(t, pextra, sprs, textras,
-                                         textras_near, tterrain_near, pcity);
+          fill_road_sprite_array(t, pextra, sprs, textras, textras_near,
+                                 tterrain_near, pcity);
         }
       }
       extra_type_list_iterate_end;
@@ -5685,7 +5608,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
           extra_type_list_iterate_end;
 
           if (!hidden) {
-            ADD_SPRITE_SIMPLE(
+            sprs.emplace_back(t,
                 t->sprites.extras[extra_index(pextra)].u.single);
           }
         }
@@ -5696,7 +5619,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
 
   case LAYER_GRID1:
     if (t->type == TS_ISOMETRIC) {
-      sprs += fill_grid_sprite_array(t, sprs, ptile, pedge, citymode);
+      fill_grid_sprite_array(t, sprs, ptile, pedge, citymode);
     }
     break;
 
@@ -5704,7 +5627,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
     // City.  Some city sprites are drawn later.
     if (pcity && gui_options.draw_cities) {
       if (!citybar_painter::current()->has_flag()) {
-        ADD_SPRITE(get_city_flag_sprite(t, pcity), true,
+        sprs.emplace_back(t, get_city_flag_sprite(t, pcity), true,
                    FULL_TILE_X_OFFSET + t->city_flag_offset_x,
                    FULL_TILE_Y_OFFSET + t->city_flag_offset_y);
       }
@@ -5712,7 +5635,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
        * for non-iso view they are an overlay on top of the base city
        * graphic. */
       if (t->type == TS_OVERHEAD || pcity->client.walls <= 0) {
-        ADD_SPRITE(get_city_sprite(t->sprites.city.tile, pcity), true,
+        sprs.emplace_back(t, get_city_sprite(t->sprites.city.tile, pcity), true,
                    FULL_TILE_X_OFFSET + t->city_offset_x,
                    FULL_TILE_Y_OFFSET + t->city_offset_y);
       }
@@ -5732,12 +5655,12 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
         }
 
         if (spr != NULL) {
-          ADD_SPRITE(spr, true, FULL_TILE_X_OFFSET + t->city_offset_x,
+          sprs.emplace_back(t, spr, true, FULL_TILE_X_OFFSET + t->city_offset_x,
                      FULL_TILE_Y_OFFSET + t->city_offset_y);
         }
       }
       if (!citybar_painter::current()->has_units()) {
-        ADD_SPRITE(get_city_sprite(t->sprites.city.occupied, pcity), true,
+        sprs.emplace_back(t, get_city_sprite(t->sprites.city.occupied, pcity), true,
                    FULL_TILE_X_OFFSET + t->occupied_offset_x,
                    FULL_TILE_Y_OFFSET + t->occupied_offset_y);
       }
@@ -5810,7 +5733,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
           extra_type_list_iterate_end;
 
           if (!hidden) {
-            ADD_SPRITE_SIMPLE(
+            sprs.emplace_back(t,
                 t->sprites.extras[extra_index(pextra)].u.single);
           }
         }
@@ -5828,15 +5751,14 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
       if (ptile && unit_is_in_focus(punit) && t->sprites.unit.select[0]) {
         /* Special case for drawing the selection rectangle.  The blinking
          * unit is handled separately, inside get_drawable_unit(). */
-        ADD_SPRITE(t->sprites.unit.select[focus_unit_state], true,
+        sprs.emplace_back(t, t->sprites.unit.select[focus_unit_state], true,
                    t->select_offset_x, t->select_offset_y);
       }
 
-      sprs += fill_unit_sprite_array(t, sprs, punit, stacked, backdrop);
+      fill_unit_sprite_array(t, sprs, punit, stacked, backdrop);
     } else if (putype != NULL && layer == LAYER_UNIT) {
       // Only the sprite for the unit type.
-      sprs +=
-          fill_unit_type_sprite_array(t, sprs, putype, direction8_invalid());
+      fill_unit_type_sprite_array(t, sprs, putype, direction8_invalid());
     }
     break;
 
@@ -5897,7 +5819,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
           extra_type_list_iterate_end;
 
           if (show_flag) {
-            ADD_SPRITE(get_nation_flag_sprite(t, nation_of_player(eowner)),
+            sprs.emplace_back(t, get_nation_flag_sprite(t, nation_of_player(eowner)),
                        true, FULL_TILE_X_OFFSET + t->city_flag_offset_x,
                        FULL_TILE_Y_OFFSET + t->city_flag_offset_y);
           }
@@ -5907,7 +5829,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
     break;
 
   case LAYER_FOG:
-    sprs += fill_fog_sprite_array(t, sprs, ptile, pedge, pcorner);
+    fill_fog_sprite_array(t, sprs, ptile, pedge, pcorner);
     break;
 
   case LAYER_CITY2:
@@ -5917,18 +5839,18 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
       bool warn = false;
       unsigned int size = city_size_get(pcity);
 
-      ADD_SPRITE(t->sprites.city.size[size % 10], false,
+      sprs.emplace_back(t, t->sprites.city.size[size % 10], false,
                  FULL_TILE_X_OFFSET + t->city_size_offset_x,
                  FULL_TILE_Y_OFFSET + t->city_size_offset_y);
       if (10 <= size) {
-        ADD_SPRITE(t->sprites.city.size_tens[(size / 10) % 10], false,
+        sprs.emplace_back(t, t->sprites.city.size_tens[(size / 10) % 10], false,
                    FULL_TILE_X_OFFSET + t->city_size_offset_x,
                    FULL_TILE_Y_OFFSET + t->city_size_offset_y);
         if (100 <= size) {
           QPixmap *sprite = t->sprites.city.size_hundreds[(size / 100) % 10];
 
           if (NULL != sprite) {
-            ADD_SPRITE(sprite, false,
+            sprs.emplace_back(t, sprite, false,
                        FULL_TILE_X_OFFSET + t->city_size_offset_x,
                        FULL_TILE_Y_OFFSET + t->city_size_offset_y);
           } else {
@@ -5956,14 +5878,14 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
 
   case LAYER_GRID2:
     if (t->type == TS_OVERHEAD) {
-      sprs += fill_grid_sprite_array(t, sprs, ptile, pedge, citymode);
+      fill_grid_sprite_array(t, sprs, ptile, pedge, citymode);
     }
     break;
 
   case LAYER_OVERLAYS:
-    sprs += fill_city_overlays_sprite_array(t, sprs, ptile, citymode);
+    fill_city_overlays_sprite_array(t, sprs, ptile, citymode);
     if (mapdeco_is_crosshair_set(ptile)) {
-      ADD_SPRITE_SIMPLE(t->sprites.user.attention);
+      sprs.emplace_back(t, t->sprites.user.attention);
     }
     break;
 
@@ -5974,7 +5896,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
 
   case LAYER_GOTO:
     if (ptile && goto_is_active()) {
-      sprs += fill_goto_sprite_array(t, sprs, ptile, pedge, pcorner);
+      fill_goto_sprite_array(t, sprs, ptile, pedge, pcorner);
     }
     break;
 
@@ -5986,49 +5908,49 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
           switch (ptask->act) {
           case ACTIVITY_MINE:
             if (ptask->tgt == NULL) {
-              ADD_SPRITE(t->sprites.unit.plant, true,
+              sprs.emplace_back(t, t->sprites.unit.plant, true,
                          FULL_TILE_X_OFFSET + t->activity_offset_x,
                          FULL_TILE_Y_OFFSET + t->activity_offset_y);
             } else {
-              ADD_SPRITE(t->sprites.extras[extra_index(ptask->tgt)].activity,
+              sprs.emplace_back(t, t->sprites.extras[extra_index(ptask->tgt)].activity,
                          true, FULL_TILE_X_OFFSET + t->activity_offset_x,
                          FULL_TILE_Y_OFFSET + t->activity_offset_y);
             }
             break;
           case ACTIVITY_PLANT:
-            ADD_SPRITE(t->sprites.unit.plant, true,
+            sprs.emplace_back(t, t->sprites.unit.plant, true,
                        FULL_TILE_X_OFFSET + t->activity_offset_x,
                        FULL_TILE_Y_OFFSET + t->activity_offset_y);
             break;
           case ACTIVITY_IRRIGATE:
             if (ptask->tgt == NULL) {
-              ADD_SPRITE(t->sprites.unit.irrigate, true,
+              sprs.emplace_back(t, t->sprites.unit.irrigate, true,
                          FULL_TILE_X_OFFSET + t->activity_offset_x,
                          FULL_TILE_Y_OFFSET + t->activity_offset_y);
             } else {
-              ADD_SPRITE(t->sprites.extras[extra_index(ptask->tgt)].activity,
+              sprs.emplace_back(t, t->sprites.extras[extra_index(ptask->tgt)].activity,
                          true, FULL_TILE_X_OFFSET + t->activity_offset_x,
                          FULL_TILE_Y_OFFSET + t->activity_offset_y);
             }
             break;
           case ACTIVITY_CULTIVATE:
-            ADD_SPRITE(t->sprites.unit.irrigate, true,
+            sprs.emplace_back(t, t->sprites.unit.irrigate, true,
                        FULL_TILE_X_OFFSET + t->activity_offset_x,
                        FULL_TILE_Y_OFFSET + t->activity_offset_y);
             break;
           case ACTIVITY_GEN_ROAD:
-            ADD_SPRITE(t->sprites.extras[extra_index(ptask->tgt)].activity,
+            sprs.emplace_back(t, t->sprites.extras[extra_index(ptask->tgt)].activity,
                        true, FULL_TILE_X_OFFSET + t->activity_offset_x,
                        FULL_TILE_Y_OFFSET + t->activity_offset_y);
             break;
           case ACTIVITY_TRANSFORM:
-            ADD_SPRITE(t->sprites.unit.transform, true,
+            sprs.emplace_back(t, t->sprites.unit.transform, true,
                        FULL_TILE_X_OFFSET + t->activity_offset_x,
                        FULL_TILE_Y_OFFSET + t->activity_offset_y);
             break;
           case ACTIVITY_POLLUTION:
           case ACTIVITY_FALLOUT:
-            ADD_SPRITE(t->sprites.extras[extra_index(ptask->tgt)].rmact,
+            sprs.emplace_back(t, t->sprites.extras[extra_index(ptask->tgt)].rmact,
                        true, FULL_TILE_X_OFFSET + t->activity_offset_x,
                        FULL_TILE_Y_OFFSET + t->activity_offset_y);
             break;
@@ -6045,12 +5967,12 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
     if (ptile && editor_is_active()) {
       if (editor_tile_is_selected(ptile)) {
         int color = 2 % tileset_num_city_colors(tileset);
-        ADD_SPRITE_SIMPLE(t->sprites.city.unworked_tile_overlay.p[color]);
+        sprs.emplace_back(t, t->sprites.city.unworked_tile_overlay.p[color]);
       }
 
       if (NULL != map_startpos_get(ptile)) {
         // FIXME: Use a more representative sprite.
-        ADD_SPRITE_SIMPLE(t->sprites.user.attention);
+        sprs.emplace_back(t, t->sprites.user.attention);
       }
     }
     break;
@@ -6060,7 +5982,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
       const int id = extra_index(ptile->placing);
 
       if (t->sprites.extras[id].activity != NULL) {
-        ADD_SPRITE(t->sprites.extras[id].activity, true,
+        sprs.emplace_back(t, t->sprites.extras[id].activity, true,
                    FULL_TILE_X_OFFSET + t->activity_offset_x,
                    FULL_TILE_Y_OFFSET + t->activity_offset_y);
       }
@@ -6072,7 +5994,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
     break;
   }
 
-  return sprs - save_sprs;
+  return sprs;
 }
 
 /**
@@ -6278,8 +6200,6 @@ void tileset_free_tiles(struct tileset *t)
   sprite_vector_free(&t->sprites.nation_flag);
   sprite_vector_free(&t->sprites.nation_shield);
   sprite_vector_free(&t->sprites.citybar.occupancy);
-
-  tileset_background_free(t);
 }
 
 /**
@@ -6448,6 +6368,14 @@ QPixmap *get_tax_sprite(const struct tileset *t, Output_type_id otype)
 QPixmap *get_event_sprite(const struct tileset *t, enum event_type event)
 {
   return t->sprites.events[event];
+}
+
+/**
+ * Return tile mask sprite
+ */
+QPixmap *get_mask_sprite(const struct tileset *t)
+{
+  return t->sprites.mask.tile;
 }
 
 /**
@@ -6622,9 +6550,6 @@ void tileset_init(struct tileset *t)
 
   t->sprites.city.occupied = NULL;
 
-  t->sprites.background.color = NULL;
-  t->sprites.background.graphic = NULL;
-
   player_slots_iterate(pslot)
   {
     int edge, j, id = player_slot_index(pslot);
@@ -6636,7 +6561,6 @@ void tileset_init(struct tileset *t)
     }
 
     t->sprites.player[id].color = NULL;
-    t->sprites.player[id].background = NULL;
   }
   player_slots_iterate_end;
 
@@ -6652,12 +6576,11 @@ void tileset_init(struct tileset *t)
  1, 2. Using other values for 'layer' here will result in undefined
  behaviour. ;)
  */
-int fill_basic_terrain_layer_sprite_array(struct tileset *t,
-                                          struct drawn_sprite *sprs,
-                                          int layer,
-                                          struct terrain *pterrain)
+std::vector<drawn_sprite>
+fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,
+                                      struct terrain *pterrain)
 {
-  struct drawn_sprite *save_sprs = sprs;
+  auto sprs = std::vector<drawn_sprite>();
   struct drawing_data *draw = t->sprites.drawing[terrain_index(pterrain)];
 
   struct terrain *tterrain_near[8];
@@ -6675,43 +6598,46 @@ int fill_basic_terrain_layer_sprite_array(struct tileset *t,
   }
 
   i = draw->is_reversed ? draw->num_layers - layer - 1 : layer;
-  sprs += fill_terrain_sprite_array(t, sprs, i, &dummy_tile, pterrain,
-                                    tterrain_near, draw);
+  fill_terrain_sprite_array(t, sprs, i, &dummy_tile, pterrain, tterrain_near,
+                            draw);
 
-  return sprs - save_sprs;
+  return sprs;
 }
 
 /**
    Return a representative sprite for the given extra type.
  */
-int fill_basic_extra_sprite_array(const struct tileset *t,
-                                  struct drawn_sprite *sprs,
-                                  const struct extra_type *pextra)
+std::vector<drawn_sprite>
+fill_basic_extra_sprite_array(const struct tileset *t,
+                              const struct extra_type *pextra)
 {
+  auto sprs = std::vector<drawn_sprite>();
+
   int idx = extra_index(pextra);
-  struct drawn_sprite *saved_sprs = sprs;
 
   switch (t->sprites.extras[idx].extrastyle) {
   case ESTYLE_SINGLE1:
   case ESTYLE_SINGLE2:
-    ADD_SPRITE_SIMPLE(t->sprites.extras[idx].u.single);
+    sprs.emplace_back(t, t->sprites.extras[idx].u.single);
     break;
   case ESTYLE_CARDINALS:
-    ADD_SPRITE_SIMPLE(t->sprites.extras[idx].u.cardinals[0]);
+    sprs.emplace_back(t, t->sprites.extras[idx].u.cardinals[0]);
     break;
   case ESTYLE_ROAD_ALL_SEPARATE:
   case ESTYLE_ROAD_PARITY_COMBINED:
   case ESTYLE_ROAD_ALL_COMBINED:
   case ESTYLE_RIVER:
-    return fill_basic_road_sprite_array(t, sprs, pextra);
+    fill_basic_road_sprite_array(t, sprs, pextra);
+    break;
   case ESTYLE_3LAYER:
-    return fill_basic_base_sprite_array(t, sprs, pextra);
+    fill_basic_base_sprite_array(t, sprs, pextra);
+    break;
   case ESTYLE_COUNT:
     fc_assert(t->sprites.extras[idx].extrastyle != ESTYLE_COUNT);
     break;
   }
 
-  return sprs - saved_sprs;
+  return sprs;
 }
 
 /**
@@ -6719,48 +6645,45 @@ int fill_basic_extra_sprite_array(const struct tileset *t,
    image of the given road type. The image is suitable for use as an icon
    for the road type, for example.
  */
-int fill_basic_road_sprite_array(const struct tileset *t,
-                                 struct drawn_sprite *sprs,
-                                 const struct extra_type *pextra)
+void fill_basic_road_sprite_array(const struct tileset *t,
+                                  std::vector<drawn_sprite> &sprs,
+                                  const struct extra_type *pextra)
 {
-  struct drawn_sprite *saved_sprs = sprs;
   int idx;
   int i;
   int extrastyle;
 
-  if (!t || !sprs || !pextra) {
-    return 0;
+  if (!t || !pextra) {
+    return;
   }
 
   idx = extra_index(pextra);
 
   if (!(0 <= idx && idx < game.control.num_extra_types)) {
-    return 0;
+    return;
   }
 
   extrastyle = t->sprites.extras[idx].extrastyle;
 
   if (extrastyle == ESTYLE_RIVER) {
-    ADD_SPRITE_SIMPLE(t->sprites.extras[idx].u.road.ru.rivers.spec[0]);
+    sprs.emplace_back(t, t->sprites.extras[idx].u.road.ru.rivers.spec[0]);
   } else {
     for (i = 0; i < t->num_valid_tileset_dirs; i++) {
       if (!t->valid_tileset_dirs[i]) {
         continue;
       }
       if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE) {
-        ADD_SPRITE_SIMPLE(t->sprites.extras[idx].u.road.ru.dir[i]);
+        sprs.emplace_back(t, t->sprites.extras[idx].u.road.ru.dir[i]);
       } else if (extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
         if ((i % 2) == 0) {
-          ADD_SPRITE_SIMPLE(
+          sprs.emplace_back(t,
               t->sprites.extras[idx].u.road.ru.combo.even[1 << (i / 2)]);
         }
       } else if (extrastyle == ESTYLE_ROAD_ALL_COMBINED) {
-        ADD_SPRITE_SIMPLE(t->sprites.extras[idx].u.road.ru.total[1 << i]);
+        sprs.emplace_back(t, t->sprites.extras[idx].u.road.ru.total[1 << i]);
       }
     }
   }
-
-  return sprs - saved_sprs;
 }
 
 /**
@@ -6768,21 +6691,20 @@ int fill_basic_road_sprite_array(const struct tileset *t,
    image of the given base type. The image is suitable for use as an icon
    for the base type, for example.
  */
-int fill_basic_base_sprite_array(const struct tileset *t,
-                                 struct drawn_sprite *sprs,
-                                 const struct extra_type *pextra)
+void fill_basic_base_sprite_array(const struct tileset *t,
+                                  std::vector<drawn_sprite> &sprs,
+                                  const struct extra_type *pextra)
 {
-  struct drawn_sprite *saved_sprs = sprs;
   int idx;
 
-  if (!t || !sprs || !pextra) {
-    return 0;
+  if (!t || !pextra) {
+    return;
   }
 
   idx = extra_index(pextra);
 
   if (!(0 <= idx && idx < game.control.num_extra_types)) {
-    return 0;
+    return;
   }
 
 #define ADD_SPRITE_IF_NOT_NULL(x)                                           \
@@ -6798,21 +6720,16 @@ int fill_basic_base_sprite_array(const struct tileset *t,
   ADD_SPRITE_IF_NOT_NULL(t->sprites.extras[idx].u.bmf.foreground);
 
 #undef ADD_SPRITE_IF_NOT_NULL
-
-  return sprs - saved_sprs;
 }
 
-/**
-   Gets the nth layer of the tileset.
- */
-enum mapview_layer tileset_get_layer(const struct tileset *t, int n)
+const std::vector<std::unique_ptr<freeciv::layer>> &
+tileset_get_layers(const struct tileset *t)
 {
-  fc_assert(n < LAYER_COUNT);
-  return t->layer_order[n];
+  return t->layers;
 }
 
 /**
-   Gets the nth layer of the tileset.
+   Checks that a layer is within a category.
  */
 bool tileset_layer_in_category(enum mapview_layer layer,
                                enum layer_category cat)
@@ -6871,22 +6788,18 @@ void tileset_player_init(struct tileset *t, struct player *pplayer)
   // Free all data before recreating it.
   tileset_player_free(t, plrid);
 
-  if (player_has_color(t, pplayer)) {
-    t->sprites.player[plrid].color = color =
-        create_plr_sprite(get_player_color(t, pplayer));
-  } else {
-    /* XXX: if player hasn't been assigned a color, perhaps there's no
-     * point proceeding with an arbitrary color; this should only happen
-     * in pregame. Probably blank sprites would be better. */
-
-    fc_assert_ret(t->sprites.background.color != NULL);
-
-    color = t->sprites.background.color;
+  for (auto &&layer : t->layers) {
+    layer->initialize_player(pplayer);
   }
 
-  t->sprites.player[plrid].background =
-      crop_sprite(color, 0, 0, t->normal_tile_width, t->normal_tile_height,
-                  t->sprites.mask.tile, 0, 0, t->scale, false);
+  QColor c = Qt::black;
+  if (player_has_color(t, pplayer)) {
+    c = *get_player_color(t, pplayer);
+  }
+  color = tileset_scale(t) == 1.0f
+              ? create_sprite(128, 64, &c)
+              : create_sprite(tileset_full_tile_width(t),
+                              tileset_full_tile_height(t), &c);
 
   for (i = 0; i < EDGE_COUNT; i++) {
     for (j = 0; j < 2; j++) {
@@ -6914,13 +6827,13 @@ static void tileset_player_free(struct tileset *t, int plrid)
   fc_assert_ret(plrid >= 0);
   fc_assert_ret(plrid < ARRAY_SIZE(t->sprites.player));
 
+  for (auto &&layer : t->layers) {
+    layer->free_player(plrid);
+  }
+
   if (t->sprites.player[plrid].color) {
     free_sprite(t->sprites.player[plrid].color);
     t->sprites.player[plrid].color = NULL;
-  }
-  if (t->sprites.player[plrid].background) {
-    free_sprite(t->sprites.player[plrid].background);
-    t->sprites.player[plrid].background = NULL;
   }
 
   for (i = 0; i < EDGE_COUNT; i++) {
@@ -6930,40 +6843,6 @@ static void tileset_player_free(struct tileset *t, int plrid)
         t->sprites.player[plrid].grid_borders[i][j] = NULL;
       }
     }
-  }
-}
-
-/**
-   Setup tiles for the background.
- */
-void tileset_background_init(struct tileset *t)
-{
-  // Free all data before recreating it.
-  tileset_background_free(t);
-
-  // generate background color
-  t->sprites.background.color =
-      create_plr_sprite(ensure_color(game.plr_bg_color));
-
-  // Chop up and build the background graphics.
-  t->sprites.background.graphic = crop_sprite(
-      t->sprites.background.color, 0, 0, t->normal_tile_width,
-      t->normal_tile_height, t->sprites.mask.tile, 0, 0, t->scale, false);
-}
-
-/**
-   Free tiles for the background.
- */
-void tileset_background_free(struct tileset *t)
-{
-  if (t->sprites.background.color) {
-    free_sprite(t->sprites.background.color);
-    t->sprites.background.color = NULL;
-  }
-
-  if (t->sprites.background.graphic) {
-    free_sprite(t->sprites.background.graphic);
-    t->sprites.background.graphic = NULL;
   }
 }
 

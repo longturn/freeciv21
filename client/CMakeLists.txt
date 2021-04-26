@@ -55,6 +55,8 @@ add_library(
   gui_interface.cpp
   goto.cpp
   helpdata.cpp
+  layer.cpp
+  layer_background.cpp
   luaconsole_common.cpp
   mapctrl_common.cpp
   mapview_common.cpp
