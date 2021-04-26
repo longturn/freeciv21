@@ -125,7 +125,6 @@ struct client_options {
   bool draw_city_productions;
   bool draw_city_buycost;
   bool draw_city_trade_routes;
-  bool draw_terrain;
   bool draw_coastline;
   bool draw_roads_rails;
   bool draw_irrigation;

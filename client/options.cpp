@@ -152,7 +152,6 @@ struct client_options gui_options = {
     true,  //.draw_city_productions =
     false, //.draw_city_buycost =
     false, //.draw_city_trade_routes =
-    true,  //.draw_terrain =
     false, //.draw_coastline =
     true,  //.draw_roads_rails =
     true,  //.draw_irrigation =
@@ -1635,10 +1634,6 @@ static struct client_option client_options[] = {
                     N_("Setting this option will draw trade route lines "
                        "between cities which have trade routes."),
                     COC_GRAPHICS, GUI_STUB, false,
-                    view_option_changed_callback),
-    GEN_BOOL_OPTION(draw_terrain, N_("Draw the terrain"),
-                    N_("Setting this option will draw the terrain."),
-                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_coastline, N_("Draw the coast line"),

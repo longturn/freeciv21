@@ -345,13 +345,8 @@ struct named_sprites {
     struct sprite_vector overlays;
   } colors;
   struct {
-    QPixmap *color;   // Generic background color
-    QPixmap *graphic; // Generic background graphic
-  } background;
-  struct {
     QPixmap *grid_borders[EDGE_COUNT][2];
     QPixmap *color;
-    QPixmap *background;
   } player[MAX_NUM_PLAYER_SLOTS];
 
   struct drawing_data *drawing[MAX_NUM_ITEMS];
@@ -1251,9 +1246,6 @@ bool tilespec_reread(const char *new_tileset_name,
   tileset_load_tiles(tileset);
 
   if (game_fully_initialized) {
-    if (game.client.ruleset_ready) {
-      tileset_background_init(tileset);
-    } // else we'll get round to it on PACKET_RULESET_GAME
     players_iterate(pplayer) { tileset_player_init(tileset, pplayer); }
     players_iterate_end;
     boot_help_texts(); // "About Current Tileset"
@@ -2577,25 +2569,6 @@ static QPixmap *load_sprite(struct tileset *t, const QString &tag_name,
   ss->ref_count++;
 
   return ss->sprite;
-}
-
-/**
-   Create a sprite with the given color and tag.
- */
-static QPixmap *create_plr_sprite(QColor *pcolor)
-{
-  QPixmap *sprite;
-
-  fc_assert_ret_val(pcolor != NULL, NULL);
-
-  if (tileset->scale == 1.0f) {
-    sprite = create_sprite(128, 64, pcolor);
-  } else {
-    sprite = create_sprite(tileset->full_tile_width,
-                           tileset->full_tile_height, pcolor);
-  }
-
-  return sprite;
 }
 
 /**
@@ -5239,11 +5212,6 @@ static void fill_grid_sprite_array(const struct tileset *t,
     if (mapdeco_is_highlight_set(pedge->tile[0])
         || mapdeco_is_highlight_set(pedge->tile[1])) {
       sprs.emplace_back(t, t->sprites.grid.selected[pedge->type]);
-    } else if (!gui_options.draw_terrain && gui_options.draw_coastline
-               && pedge->tile[0] && pedge->tile[1] && known[0] && known[1]
-               && (is_ocean_tile(pedge->tile[0])
-                   ^ is_ocean_tile(pedge->tile[1]))) {
-      sprs.emplace_back(t, t->sprites.grid.coastline[pedge->type]);
     } else {
       if (gui_options.draw_map_grid) {
         if (worked[0] || worked[1]) {
@@ -5460,7 +5428,6 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
   bv_extras textras;
   struct terrain *tterrain_near[8];
   struct terrain *pterrain = NULL;
-  struct player *owner = NULL;
   /* Unit drawing is disabled when the view options are turned off,
    * but only where we're drawing on the mapview. */
   bool do_draw_unit =
@@ -5468,8 +5435,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
        && (gui_options.draw_units || !ptile
            || (gui_options.draw_focus_unit && unit_is_in_focus(punit))));
   bool solid_bg = (gui_options.solid_color_behind_units
-                   && (do_draw_unit || (pcity && gui_options.draw_cities)
-                       || (ptile && !gui_options.draw_terrain)));
+                   && (do_draw_unit || (pcity && gui_options.draw_cities)));
 
   const city *citymode = is_any_city_dialog_open();
 
@@ -5496,42 +5462,29 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
 
   switch (layer) {
   case LAYER_BACKGROUND:
-    // Set up background color.
-    if (gui_options.solid_color_behind_units) {
-      if (do_draw_unit) {
-        owner = unit_owner(punit);
-      } else if (pcity && gui_options.draw_cities) {
-        owner = city_owner(pcity);
-      }
-    }
-    if (owner) {
-      sprs.emplace_back(t,
-                        t->sprites.player[player_index(owner)].background);
-    } else if (ptile && !gui_options.draw_terrain) {
-      sprs.emplace_back(t, t->sprites.background.graphic);
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_TERRAIN1:
-    if (NULL != pterrain && gui_options.draw_terrain && !solid_bg) {
+    if (NULL != pterrain && !solid_bg) {
       fill_terrain_sprite_layer(t, sprs, 0, ptile, pterrain, tterrain_near);
     }
     break;
 
   case LAYER_DARKNESS:
-    if (NULL != pterrain && gui_options.draw_terrain && !solid_bg) {
+    if (NULL != pterrain && !solid_bg) {
       fill_terrain_sprite_darkness(t, sprs, ptile, tterrain_near);
     }
     break;
 
   case LAYER_TERRAIN2:
-    if (NULL != pterrain && gui_options.draw_terrain && !solid_bg) {
+    if (NULL != pterrain && !solid_bg) {
       fill_terrain_sprite_layer(t, sprs, 1, ptile, pterrain, tterrain_near);
     }
     break;
 
   case LAYER_TERRAIN3:
-    if (NULL != pterrain && gui_options.draw_terrain && !solid_bg) {
+    if (NULL != pterrain && !solid_bg) {
       fc_assert(MAX_NUM_LAYERS == 3);
       fill_terrain_sprite_layer(t, sprs, 2, ptile, pterrain, tterrain_near);
     }
@@ -5539,8 +5492,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
 
   case LAYER_WATER:
     if (NULL != pterrain) {
-      if (gui_options.draw_terrain && !solid_bg
-          && terrain_type_terrain_class(pterrain) == TC_OCEAN) {
+      if (!solid_bg && terrain_type_terrain_class(pterrain) == TC_OCEAN) {
         for (dir = 0; dir < t->num_cardinal_tileset_dirs; dir++) {
           int didx = t->cardinal_tileset_dirs[dir];
 
@@ -5559,7 +5511,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
 
       fill_irrigation_sprite_array(t, sprs, textras, textras_near, pcity);
 
-      if (gui_options.draw_terrain && !solid_bg) {
+      if (!solid_bg) {
         extra_type_list_iterate(t->style_lists[ESTYLE_RIVER], priver)
         {
           int idx = extra_index(priver);
@@ -6262,8 +6214,6 @@ void tileset_free_tiles(struct tileset *t)
   sprite_vector_free(&t->sprites.nation_flag);
   sprite_vector_free(&t->sprites.nation_shield);
   sprite_vector_free(&t->sprites.citybar.occupancy);
-
-  tileset_background_free(t);
 }
 
 /**
@@ -6432,6 +6382,14 @@ QPixmap *get_tax_sprite(const struct tileset *t, Output_type_id otype)
 QPixmap *get_event_sprite(const struct tileset *t, enum event_type event)
 {
   return t->sprites.events[event];
+}
+
+/**
+ * Return tile mask sprite
+ */
+QPixmap *get_mask_sprite(const struct tileset *t)
+{
+  return t->sprites.mask.tile;
 }
 
 /**
@@ -6606,9 +6564,6 @@ void tileset_init(struct tileset *t)
 
   t->sprites.city.occupied = NULL;
 
-  t->sprites.background.color = NULL;
-  t->sprites.background.graphic = NULL;
-
   player_slots_iterate(pslot)
   {
     int edge, j, id = player_slot_index(pslot);
@@ -6620,7 +6575,6 @@ void tileset_init(struct tileset *t)
     }
 
     t->sprites.player[id].color = NULL;
-    t->sprites.player[id].background = NULL;
   }
   player_slots_iterate_end;
 
@@ -6848,22 +6802,18 @@ void tileset_player_init(struct tileset *t, struct player *pplayer)
   // Free all data before recreating it.
   tileset_player_free(t, plrid);
 
-  if (player_has_color(t, pplayer)) {
-    t->sprites.player[plrid].color = color =
-        create_plr_sprite(get_player_color(t, pplayer));
-  } else {
-    /* XXX: if player hasn't been assigned a color, perhaps there's no
-     * point proceeding with an arbitrary color; this should only happen
-     * in pregame. Probably blank sprites would be better. */
-
-    fc_assert_ret(t->sprites.background.color != NULL);
-
-    color = t->sprites.background.color;
+  for (auto &&layer : t->layers) {
+    layer->initialize_player(pplayer);
   }
 
-  t->sprites.player[plrid].background =
-      crop_sprite(color, 0, 0, t->normal_tile_width, t->normal_tile_height,
-                  t->sprites.mask.tile, 0, 0, t->scale, false);
+  QColor c = Qt::black;
+  if (player_has_color(t, pplayer)) {
+    c = *get_player_color(t, pplayer);
+  }
+  color = tileset_scale(t) == 1.0f
+              ? create_sprite(128, 64, &c)
+              : create_sprite(tileset_full_tile_width(t),
+                              tileset_full_tile_height(t), &c);
 
   for (i = 0; i < EDGE_COUNT; i++) {
     for (j = 0; j < 2; j++) {
@@ -6891,13 +6841,13 @@ static void tileset_player_free(struct tileset *t, int plrid)
   fc_assert_ret(plrid >= 0);
   fc_assert_ret(plrid < ARRAY_SIZE(t->sprites.player));
 
+  for (auto &&layer : t->layers) {
+    layer->free_player(plrid);
+  }
+
   if (t->sprites.player[plrid].color) {
     free_sprite(t->sprites.player[plrid].color);
     t->sprites.player[plrid].color = NULL;
-  }
-  if (t->sprites.player[plrid].background) {
-    free_sprite(t->sprites.player[plrid].background);
-    t->sprites.player[plrid].background = NULL;
   }
 
   for (i = 0; i < EDGE_COUNT; i++) {
@@ -6907,40 +6857,6 @@ static void tileset_player_free(struct tileset *t, int plrid)
         t->sprites.player[plrid].grid_borders[i][j] = NULL;
       }
     }
-  }
-}
-
-/**
-   Setup tiles for the background.
- */
-void tileset_background_init(struct tileset *t)
-{
-  // Free all data before recreating it.
-  tileset_background_free(t);
-
-  // generate background color
-  t->sprites.background.color =
-      create_plr_sprite(ensure_color(game.plr_bg_color));
-
-  // Chop up and build the background graphics.
-  t->sprites.background.graphic = crop_sprite(
-      t->sprites.background.color, 0, 0, t->normal_tile_width,
-      t->normal_tile_height, t->sprites.mask.tile, 0, 0, t->scale, false);
-}
-
-/**
-   Free tiles for the background.
- */
-void tileset_background_free(struct tileset *t)
-{
-  if (t->sprites.background.color) {
-    free_sprite(t->sprites.background.color);
-    t->sprites.background.color = NULL;
-  }
-
-  if (t->sprites.background.graphic) {
-    free_sprite(t->sprites.background.graphic);
-    t->sprites.background.graphic = NULL;
   }
 }
 

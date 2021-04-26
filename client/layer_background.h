@@ -12,20 +12,31 @@
       \____/        ********************************************************/
 #pragma once
 
+#include "fc_types.h"
 #include "layer.h"
+
+#include <QPixmap>
 
 namespace freeciv {
 
 class layer_background : public layer {
 public:
-  layer_background(struct tileset *ts) : freeciv::layer(ts, LAYER_BACKGROUND)
-  {
-  }
+  explicit layer_background(struct tileset *ts);
 
   std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
                     const tile_corner *pcorner, const unit *punit,
-                    const city *pcity, const unit_type *putype) const;
+                    const city *pcity,
+                    const unit_type *putype) const override;
+
+  void initialize_player(const player *player) override;
+  void free_player(int player_id) override;
+
+private:
+  std::unique_ptr<QPixmap> create_player_sprite(const QColor &pcolor) const;
+
+  std::array<std::unique_ptr<QPixmap>, MAX_NUM_PLAYER_SLOTS>
+      m_player_background;
 };
 
 } // namespace freeciv
