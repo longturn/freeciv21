@@ -1,0 +1,274 @@
+;#########################################################
+; BEGIN NSIS.template.in
+; Template is picked up by CPACK from the CPackConfig.cmake
+; file and used to build our NSIS installer.
+;#########################################################
+
+;#########################################################
+; Freeciv21 Windows installer script
+; some parts adapted from classic Freeciv and Wesnoth 
+; installer scripts.
+;#########################################################
+
+  Unicode true
+  SetCompressor @CPACK_NSIS_COMPRESSOR@
+
+;#########################################################
+; Includes
+;#########################################################
+
+  !include "MUI2.nsh"
+  !include "LogicLib.nsh"
+  !include "Integration.nsh"
+  !include "Sections.nsh"
+  !include "Library.nsh"
+  !include "x64.nsh"
+
+;#########################################################
+; Defines
+;#########################################################
+
+  !define APPNAME "@CPACK_PACKAGE_NAME@"
+  !define VERSION "@CPACK_PACKAGE_VERSION@"
+  !define PATCH "@CPACK_PACKAGE_VERSION_PATCH@"
+  !define CPU_ARCH "@CPACK_CPU_ARCH@"
+  !define APPID "${APPNAME}-${VERSION}-${CPU_ARCH}"
+  !define INST_DIR "@CPACK_TEMPORARY_DIRECTORY@"
+  !define DISPLAYICON "@CPACK_NSIS_INSTALLED_ICON_NAME@"
+  !define REGPATH_UNINSTSUBKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPID}"
+  !define MUI_ICON "@CPACK_NSIS_MUI_ICON@"
+  !define MUI_UNICON "@CPACK_NSIS_MUI_UNIICON@"
+
+;#########################################################
+; General
+;#########################################################
+
+  Name "${APPNAME} v${VERSION}"
+  OutFile "@CPACK_TOPLEVEL_DIRECTORY@/@CPACK_OUTPUT_FILE_NAME@"  
+  ShowInstDetails show
+  ShowUninstDetails show
+  SetOverwrite on
+  RequestExecutionLevel Admin ; Request admin rights on WinVista+ (when UAC is turned on)
+
+  ;Default installation folder
+  InstallDir "@CPACK_NSIS_INSTALL_ROOT@\${APPNAME}-${VERSION}"
+
+;#########################################################
+; Interface Settings
+;#########################################################
+
+  ; Shown an "are you sure" dialog on cancel.
+  !define MUI_ABORTWARNING
+
+;#########################################################
+; Installation types
+;#########################################################
+
+  ; There are two install types: Default and Custom. However, CPACK will duplicate
+  ; the Custom install type twice, so we leave it out here so it's only shown once
+  InstType "Default"
+
+;#########################################################
+; Component sections
+;#########################################################
+
+  ; These are defined by the @CPACK_NSIS_PAGE_COMPONENTS@ macro
+  ; However, we choose to manually define so that we can control
+  ; the order of the list of components to install.
+  ; By default, tools is put on top, which we don't want.
+  
+  Section "Freeciv21" freeciv21
+    SectionIn RO 1 2
+    SetOutPath "$INSTDIR"
+    File /r "${INST_DIR}\freeciv21\*.*"
+  SectionEnd
+  SectionGroup "Tools" Tools
+    Section "Ruleset Editor" tool_ruledit
+      SectionIn 2
+      SetOutPath "$INSTDIR"
+      File /r "${INST_DIR}\tool_ruledit\*.*"
+    SectionEnd
+    Section "Modpack Installer CLI Edition" tool_fcmp_cli
+      SectionIn 2
+      SetOutPath "$INSTDIR"
+      File /r "${INST_DIR}\tool_fcmp_cli\*.*"
+    SectionEnd
+    Section "Ruleset Upgrade Tool" tool_ruleup
+      SectionIn 2
+      SetOutPath "$INSTDIR"
+      File /r "${INST_DIR}\tool_ruleup\*.*"
+    SectionEnd
+    Section "Server Manual Tool" tool_manual
+      SectionIn 2
+      SetOutPath "$INSTDIR"
+      File /r "${INST_DIR}\tool_manual\*.*"
+    SectionEnd
+  SectionGroupEnd
+  Section "Languages" translations
+    SectionIn 1 2
+    SetOutPath "$INSTDIR"
+    File /r "${INST_DIR}\translations\*.*"
+  SectionEnd
+
+;#########################################################
+; Define some macro setting for the gui
+;#########################################################
+
+  @CPACK_NSIS_INSTALLER_ICON_CODE@
+  @CPACK_NSIS_INSTALLER_MUI_WELCOMEFINISH_CODE@
+  @CPACK_NSIS_INSTALLER_MUI_UNWELCOMEFINISH_CODE@
+  @CPACK_NSIS_INSTALLER_MUI_COMPONENTS_DESC@
+  @CPACK_NSIS_INSTALLER_MUI_FINISHPAGE_RUN_CODE@
+
+;#########################################################
+; Installer GUI Pages
+;#########################################################
+
+  ; Installer Pages
+  !insertmacro MUI_PAGE_WELCOME
+  !insertmacro MUI_PAGE_LICENSE "@CPACK_RESOURCE_FILE_LICENSE@"
+  !insertmacro MUI_PAGE_DIRECTORY
+  !insertmacro MUI_PAGE_COMPONENTS
+  !insertmacro MUI_PAGE_INSTFILES
+  ; TODO: add a run feature
+  !insertmacro MUI_PAGE_FINISH
+
+  ; Uninstaller Pages
+  !insertmacro MUI_UNPAGE_WELCOME
+  !insertmacro MUI_UNPAGE_CONFIRM
+  !insertmacro MUI_UNPAGE_INSTFILES
+  !insertmacro MUI_UNPAGE_FINISH
+
+;#########################################################
+; Languages
+;#########################################################
+
+  !insertmacro MUI_LANGUAGE "English"
+
+;#########################################################
+; Macros
+;#########################################################
+
+  !macro EnsureAdminRights
+    UserInfo::GetAccountType
+    Pop $0
+    ${If} $0 != "admin" ; Require admin rights on WinNT4+
+      MessageBox MB_IconStop "Administrator rights required!"
+      SetErrorLevel 740 ; ERROR_ELEVATION_REQUIRED
+      Quit
+    ${EndIf}
+  !macroend
+
+;#########################################################
+; Funtions
+;#########################################################
+
+  Function .onInit
+    SetShellVarContext All
+    !insertmacro EnsureAdminRights
+  FunctionEnd
+
+  Function un.onInit
+    SetShellVarContext All
+    !insertmacro EnsureAdminRights
+  FunctionEnd
+
+  Function ConditionalAddToRegisty
+    Pop $0
+    Pop $1
+    StrCmp "$0" "" ConditionalAddToRegisty_EmptyString
+      WriteRegStr HKLM "${REGPATH_UNINSTSUBKEY}" "$1" "$0"
+    ConditionalAddToRegisty_EmptyString:
+  FunctionEnd
+
+;#########################################################
+; Installer Section
+;#########################################################
+
+  Section "-Core installation"
+
+    SetOutPath "$INSTDIR"
+    
+    ; Store installation folder.
+    WriteRegStr HKLM "Software\${APPID}" "Install Directory" $INSTDIR
+    
+    ; Create uninstaller.
+    WriteUninstaller "$INSTDIR\Uninstall.exe"
+    
+    ; Create Desktop Icon
+    CreateShortCut "$DESKTOP\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.cmd" '"${Arg}"' "$INSTDIR\client.ico" 0
+
+    ; Create Start Menu Entries
+    CreateDirectory "$SMPROGRAMS\${APPNAME} v${VERSION}"
+    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.cmd" '"${Arg}"' "$INSTDIR\client.ico" 0
+    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Modpack Installer.lnk" "$INSTDIR\freeciv21-modpack-qt.cmd" '"${Arg}"' "$INSTDIR\mp.ico" 0
+    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\Uninstall ${APPNAME}.lnk" "$INSTDIR\Uninstall.exe"
+
+    
+    ; Create entry in Windows "Add/Remove programs" panel.
+    Push "DisplayName"
+    Push "${APPNAME} v${VERSION}"
+    Call ConditionalAddToRegisty
+    Push "DisplayVersion"
+    Push "${VERSION}"
+    Call ConditionalAddToRegisty
+    Push "Publisher"
+    Push "@CPACK_PACKAGE_VENDOR@"
+    Call ConditionalAddToRegisty
+    Push "UninstallString"
+    Push "$INSTDIR\Uninstall.exe"
+    Call ConditionalAddToRegisty
+    Push "NoRepair"
+    Push "1"
+    Call ConditionalAddToRegisty
+    Push "NoModify"
+    Push "1"
+    Call ConditionalAddToRegisty
+    Push "DisplayIcon"
+    Push "$INSTDIR\client.ico"
+    Call ConditionalAddToRegisty
+    Push "HelpLink"
+    Push "@CPACK_NSIS_HELP_LINK@"
+    Call ConditionalAddToRegisty
+    Push "URLInfoAbout"
+    Push "@CPACK_NSIS_URL_INFO_ABOUT@"
+    Call ConditionalAddToRegisty
+    Push "Contact"
+    Push "@CPACK_NSIS_CONTACT@"
+    Call ConditionalAddToRegisty
+
+  SectionEnd
+
+;#########################################################
+; Uninstaller Section
+;#########################################################
+
+  Section "Uninstall"
+
+    ; Remove core application files & directories.
+    @CPACK_NSIS_DELETE_FILES@
+    @CPACK_NSIS_DELETE_DIRECTORIES@
+
+    ; Remove uninstaller.
+    Delete "$INSTDIR\Uninstall.exe"
+    
+    ; Remove shortcuts
+    Delete "$DESKTOP\${APPNAME} Client.lnk"
+    Delete "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Client.lnk"
+    Delete "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Modpack Installer.lnk"
+    Delete "$SMPROGRAMS\${APPNAME} v${VERSION}\Uninstall ${APPNAME}.lnk"
+    RMDir /r "$SMPROGRAMS\${APPNAME} v${VERSION]"
+    
+    ; Remove rest of installed files.
+    ; Custom files are left intact.
+    RMDir "$INSTDIR"
+
+    ; Remove entry from Windows "Add/Remove programs" panel.
+    DeleteRegKey HKLM "${REGPATH_UNINSTSUBKEY}" 
+    DeleteRegKey HKLM "Software\${APPID}"
+
+  SectionEnd
+
+;#########################################################
+; END NSIS.template.in
+;#########################################################
