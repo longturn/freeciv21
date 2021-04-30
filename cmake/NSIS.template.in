@@ -196,12 +196,12 @@
     WriteUninstaller "$INSTDIR\Uninstall.exe"
     
     ; Create Desktop Icon
-    CreateShortCut "$DESKTOP\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.cmd" '"${Arg}"' "$INSTDIR\client.ico" 0
+    CreateShortCut "$DESKTOP\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.exe" '"${Arg}"' "$INSTDIR\client.ico" 0
 
     ; Create Start Menu Entries
     CreateDirectory "$SMPROGRAMS\${APPNAME} v${VERSION}"
-    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.cmd" '"${Arg}"' "$INSTDIR\client.ico" 0
-    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Modpack Installer.lnk" "$INSTDIR\freeciv21-modpack-qt.cmd" '"${Arg}"' "$INSTDIR\mp.ico" 0
+    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.exe" '"${Arg}"' "$INSTDIR\client.ico" 0
+    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Modpack Installer.lnk" "$INSTDIR\freeciv21-modpack-qt.exe" '"${Arg}"' "$INSTDIR\mp.ico" 0
     CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\Uninstall ${APPNAME}.lnk" "$INSTDIR\Uninstall.exe"
 
     
@@ -257,7 +257,7 @@
     Delete "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Client.lnk"
     Delete "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Modpack Installer.lnk"
     Delete "$SMPROGRAMS\${APPNAME} v${VERSION}\Uninstall ${APPNAME}.lnk"
-    RMDir /r "$SMPROGRAMS\${APPNAME} v${VERSION]"
+    RMDir "$SMPROGRAMS\${APPNAME} v${VERSION]"
     
     ; Remove rest of installed files.
     ; Custom files are left intact.

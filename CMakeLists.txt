@@ -116,20 +116,11 @@ if(WIN32 OR MSYS OR MINGW)
   # Custom command files to run the applications
   install(
     FILES
-    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-client.cmd
-    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-modpack-qt.cmd
     ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-server.cmd
     ${CMAKE_SOURCE_DIR}/windows/client.ico
     ${CMAKE_SOURCE_DIR}/windows/mp.ico
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
-
-  # Custom command file to run ruleset editor
-  install(
-    FILES
-    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-ruledit.cmd
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    COMPONENT tool_ruledit)
 
   # Install the ca-bundle for the modpack installer
   install(
