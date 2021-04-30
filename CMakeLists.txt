@@ -138,13 +138,6 @@ if(WIN32 OR MSYS OR MINGW)
     DESTINATION ${CMAKE_INSTALL_BINDIR}/ssl/certs
     COMPONENT freeciv21)
 
-  # Qt5 Plugins -- this is a hack
-  install(
-    DIRECTORY ${MINGW_PATH}/../share/qt5/plugins/platforms
-    DESTINATION ${CMAKE_INSTALL_BINDIR}/plugins
-    COMPONENT freeciv21
-    FILES_MATCHING PATTERN *.dll)
-
   # Install OpenSSL library, not found with GET_RUNTIME_DEPENDENCIES
   install(
     FILES
@@ -175,6 +168,36 @@ if(WIN32 OR MSYS OR MINGW)
       )
       message(STATUS "Installing library dependencies for freeciv21 executables...")
       file(INSTALL DESTINATION ${CMAKE_INSTALL_PREFIX} MESSAGE_LAZY FILES ${r_deps})
+    ]] COMPONENT freeciv21)
+    
+  # Qt5 Plugins and required DLLs
+  # Before installation, run a series of commands that copy each of the Qt
+  # runtime files to the appropriate directory for installation
+  install(CODE [[
+  
+    message(STATUS "Collecting Qt dependencies for freeciv21 GUI executables...")
+
+    # Take a variable that is available at "install" time and repurpose
+    string(REGEX REPLACE "objdump.exe" "" MINGW_PATH ${CMAKE_OBJDUMP})
+    
+    # Run Qt's windeployqt.exe to find the required DLLs for the GUI apps.
+    execute_process(
+      COMMAND ${MINGW_PATH}/windeployqt.exe --no-translations --no-virtualkeyboard --no-compiler-runtime --no-webkit2 --no-angle --no-opengl-sw --list mapping ${CMAKE_INSTALL_PREFIX}
+      OUTPUT_VARIABLE _output
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    # Run a loop to go thought the output and copy the files we need
+    message(STATUS "Installing Qt library dependencies for freeciv21 GUI executables...")
+    separate_arguments(_files WINDOWS_COMMAND ${_output})
+      while(_files)
+          list(GET _files 0 _src)
+          list(GET _files 1 _dest)
+          execute_process(
+            COMMAND cp ${_src} "${CMAKE_INSTALL_PREFIX}/${_dest}"
+          )
+          message(STATUS "Installing: ${CMAKE_INSTALL_PREFIX}/${_dest}")
+          list(REMOVE_AT _files 0 1)
+      endwhile()
     ]] COMPONENT freeciv21)
 
 endif()
