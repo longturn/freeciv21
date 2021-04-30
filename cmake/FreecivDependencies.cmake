@@ -123,8 +123,6 @@ endif()
 # Removes the console window that pops up with the GUI app
 if (WIN32 OR MINGW OR MSYS)
   set(GUI_TYPE WIN32)
-elseif(APPLE)
-  set(GUI_TYPE MACOSX_BUNDLE)
 else()
   set(GUI_TYPE "")
 endif()
