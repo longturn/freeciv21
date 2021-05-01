@@ -23,7 +23,7 @@ endif()
 
 if (FREECIV_ENABLE_FCMP_QT)
   add_executable(
-    freeciv21-modpack-qt
+    freeciv21-modpack-qt ${GUI_TYPE}
     mpgui_qt_worker.cpp
     mpgui_qt.cpp
   )

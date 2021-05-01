@@ -1,7 +1,7 @@
 set(CMAKE_AUTOMOC ON)
 
 add_executable(
-  freeciv21-ruledit
+  freeciv21-ruledit ${GUI_TYPE} 
   conversion_log.cpp
   req_edit.cpp
   req_vec_fix.cpp
