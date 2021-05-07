@@ -2435,7 +2435,8 @@ void city_dialog::get_city(bool next)
   }
   center_tile_mapcanvas(other_pcity->tile);
   key_city_hide_open(pcity);
-  qtg_real_city_dialog_popup(other_pcity);
+  pcity = other_pcity;
+  refresh();
 }
 
 /**
