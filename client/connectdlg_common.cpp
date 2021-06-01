@@ -291,6 +291,7 @@ bool client_start_server()
 
   // Wait for the server to print its welcome screen
   serverProcess::i()->waitForReadyRead();
+  serverProcess::i()->waitForStarted();
   server_quitting = false;
   // a reasonable number of tries
   QString srv = QStringLiteral("localhost");
