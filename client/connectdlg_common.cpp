@@ -65,6 +65,7 @@ class serverProcess : public QProcess {
 
 public:
   static serverProcess *i();
+  static qint64 pid;
 
 private:
   void drop();
@@ -72,6 +73,7 @@ private:
   static serverProcess *m_instance;
 };
 serverProcess *serverProcess::m_instance = 0;
+qint64 serverProcess::pid = 0;
 
 // Server process constructor
 serverProcess::serverProcess()
@@ -98,6 +100,7 @@ void serverProcess::drop()
   if (m_instance) {
     m_instance->deleteLater();
     m_instance = 0;
+    pid = 0;
   }
 }
 
@@ -134,7 +137,11 @@ bool is_server_running()
   if (server_quitting) {
     return false;
   }
+#if defined(_WIN32)
+  return serverProcess::i()->pid;
+#else
   return serverProcess::i()->state();
+#endif
 }
 
 /**
@@ -279,8 +286,14 @@ bool client_start_server()
   // Start it
   qInfo(_("Starting freeciv21-server at %s"), qUtf8Printable(location));
 
+#if defined(_WIN32)
+  serverProcess::i()->startDetached(location, arguments, QString(),
+                                    &serverProcess::i()->pid);
+  if (!&serverProcess::i()->pid) {
+#else
   serverProcess::i()->start(location, arguments);
   if (!serverProcess::i()->waitForStarted(3000)) {
+#endif
     output_window_append(ftc_client, _("Couldn't start the server."));
     output_window_append(ftc_client,
                          _("We probably couldn't start it from here."));
@@ -291,13 +304,11 @@ bool client_start_server()
 
   // Wait for the server to print its welcome screen
   serverProcess::i()->waitForReadyRead();
-  serverProcess::i()->waitForStarted();
   server_quitting = false;
   // a reasonable number of tries
   QString srv = QStringLiteral("localhost");
-  while (connect_to_server(
-             user_name, srv, internal_server_port, buf,
-             sizeof(buf) && serverProcess::i()->state() == QProcess::Running)
+  while (connect_to_server(user_name, srv, internal_server_port, buf,
+                           sizeof(buf))
          == -1) {
     fc_usleep(WAIT_BETWEEN_TRIES);
     if (connect_tries++ > NUMBER_OF_TRIES) {
@@ -305,9 +316,13 @@ bool client_start_server()
       break;
     }
   }
-  /* weird, but could happen, if server doesn't support new startup stuff
-   * capabilities won't help us here... */
+/* weird, but could happen, if server doesn't support new startup stuff
+ * capabilities won't help us here... */
+#if defined(_WIN32)
+  if (!client.conn.used || serverProcess::i()->pid == 0) {
+#else
   if (!client.conn.used || serverProcess::i()->processId() == 0) {
+#endif
     // possible that server is still running. kill it, kill it with Igni
     client_kill_server(true);
 
