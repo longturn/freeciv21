@@ -298,12 +298,14 @@ void unit_versus_unit(struct unit *attacker, struct unit *defender,
   player_update_last_war_action(plr1);
   player_update_last_war_action(plr2);
 
-  if (attackpower == 0) {
-    *att_hp = 0;
-  } else if (defensepower == 0) {
-    *def_hp = 0;
-  }
   max_rounds = get_unit_bonus(attacker, EFT_COMBAT_ROUNDS);
+  if (max_rounds <= 0) {
+    if (attackpower == 0) {
+      *att_hp = 0;
+    } else if (defensepower == 0) {
+      *def_hp = 0;
+    }
+  }
   for (rounds = 0; *att_hp > 0 && *def_hp > 0
                    && (max_rounds <= 0 || max_rounds > rounds);
        rounds++) {
