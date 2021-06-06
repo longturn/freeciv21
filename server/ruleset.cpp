@@ -2017,18 +2017,6 @@ static bool load_ruleset_units(struct section_file *file,
       }
       u->move_rate *= SINGLE_MOVE;
 
-      if (u->firepower <= 0) {
-        qCCritical(ruleset_category,
-                   "\"%s\" unit_type \"%s\":"
-                   " firepower is %d,"
-                   " but must be at least 1. "
-                   "  If you want no attack ability,"
-                   " set the unit's attack strength to 0.",
-                   filename, utype_rule_name(u), u->firepower);
-        ok = false;
-        break;
-      }
-
       lookup_cbonus_list(compat, u->bonuses, file, sec_name, "bonuses");
 
       output_type_iterate(o)
