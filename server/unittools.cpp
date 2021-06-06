@@ -300,9 +300,9 @@ void unit_versus_unit(struct unit *attacker, struct unit *defender,
 
   max_rounds = get_unit_bonus(attacker, EFT_COMBAT_ROUNDS);
   if (max_rounds <= 0) {
-    if (attackpower == 0) {
+    if (attackpower == 0 || attack_firepower == 0) {
       *att_hp = 0;
-    } else if (defensepower == 0) {
+    } else if (defensepower == 0 || defense_firepower == 0) {
       *def_hp = 0;
     }
   }
