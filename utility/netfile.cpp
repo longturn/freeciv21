@@ -48,6 +48,8 @@ static bool netfile_download_file_core(const QUrl &url, QIODevice *out,
   auto request = QNetworkRequest(url);
   request.setHeader(QNetworkRequest::UserAgentHeader,
                     QLatin1String("Freeciv/" VERSION_STRING));
+  request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
+                       QNetworkRequest::NoLessSafeRedirectPolicy);
 
   auto *reply = manager->get(request);
   bool retval = true;
