@@ -18,6 +18,7 @@
 // Qt
 #include <QString>
 #include <QTcpSocket>
+#include <QUrl>
 
 // utility
 #include "capstr.h"
@@ -97,8 +98,8 @@ static void client_conn_close_callback(struct connection *pconn)
 
 /**
    Try to connect to a server:
-    - try to create a TCP socket to the given hostname and port (default to
-      localhost:DEFAULT_SOCK_PORT) and connect it to `names'.
+    - try to create a TCP socket to the given URL (default to
+      localhost:DEFAULT_SOCK_PORT).
     - if successful:
            - start monitoring the socket for packets from the server
            - send a "login request" packet to the server
@@ -107,16 +108,15 @@ static void client_conn_close_callback(struct connection *pconn)
       message in ERRBUF and return the Unix error code (ie., errno, which
       will be non-zero).
  */
-static int try_to_connect(QString &hostname, int port, QString &username,
-                          char *errbuf, int errbufsize)
+static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
 {
   // Apply defaults
-  if (hostname == nullptr) {
-    hostname = QStringLiteral("localhost");
+  auto url_copy = url;
+  if (url_copy.host().isEmpty()) {
+    url_copy.setHost(QStringLiteral("localhost"));
   }
-
-  if (port == 0) {
-    port = DEFAULT_SOCK_PORT;
+  if (url_copy.port() <= 0) {
+    url_copy.setPort(DEFAULT_SOCK_PORT);
   }
 
   connections_set_close_callback(client_conn_close_callback);
@@ -141,12 +141,12 @@ static int try_to_connect(QString &hostname, int port, QString &username,
           client.conn.used = false;
         });
   }
-  client.conn.sock->connectToHost(hostname, port);
+  client.conn.sock->connectToHost(url.host(), url.port());
   if (!client.conn.sock->waitForConnected(-1)) {
     errbuf[0] = '\0';
     return -1;
   }
-  make_connection(client.conn.sock, username);
+  make_connection(client.conn.sock, url.userName());
 
   return 0;
 }
@@ -155,21 +155,19 @@ static int try_to_connect(QString &hostname, int port, QString &username,
    Connect to a freeciv21-server instance -- or at least try to.  On success,
    return 0; on failure, put an error message in ERRBUF and return -1.
  */
-int connect_to_server(QString &username, QString &hostname, int port,
-                      char *errbuf, int errbufsize)
+int connect_to_server(const QUrl &url, char *errbuf, int errbufsize)
 {
   if (errbufsize > 0 && errbuf != NULL) {
     errbuf[0] = '\0';
   }
 
-  if (errbuf
-      && 0 != try_to_connect(hostname, port, username, errbuf, errbufsize)) {
+  if (errbuf && 0 != try_to_connect(url, errbuf, errbufsize)) {
     return -1;
   }
 
   if (gui_options.use_prev_server) {
-    sz_strlcpy(gui_options.default_server_host, qUtf8Printable(hostname));
-    gui_options.default_server_port = port;
+    sz_strlcpy(gui_options.default_server_host, qUtf8Printable(url.host()));
+    gui_options.default_server_port = url.port(DEFAULT_SOCK_PORT);
   }
 
   return 0;
@@ -178,7 +176,7 @@ int connect_to_server(QString &username, QString &hostname, int port,
 /**
    Called after a connection is completed (e.g., in try_to_connect).
  */
-void make_connection(QTcpSocket *sock, QString &username)
+void make_connection(QTcpSocket *sock, const QString &username)
 {
   struct packet_server_join_req req;
 
@@ -329,7 +327,7 @@ static bool autoconnecting = false;
    Make an attempt to autoconnect to the server.
    It returns number of seconds it should be called again.
  */
-double try_to_autoconnect()
+double try_to_autoconnect(const QUrl &url)
 {
   char errbuf[512];
   static int count = 0;
@@ -343,25 +341,19 @@ double try_to_autoconnect()
   count++;
 
   if (count >= MAX_AUTOCONNECT_ATTEMPTS) {
-    qFatal(_("Failed to contact server \"%s\" at port "
-             "%d as \"%s\" after %d attempts"),
-           qUtf8Printable(server_host), server_port,
-           qUtf8Printable(user_name), count);
+    qFatal(_("Failed to contact server \"%s\" after %d attempts"),
+           qUtf8Printable(url.toDisplayString()), count);
     exit(EXIT_FAILURE);
   }
 
-  if (try_to_connect(server_host, server_port, user_name, errbuf,
-                     sizeof(errbuf))
-      == 0) {
+  if (try_to_connect(url, errbuf, sizeof(errbuf)) == 0) {
     // Success! Don't call me again
     autoconnecting = false;
     return FC_INFINITY;
   } else {
     // All errors are fatal
-    qCritical(_("Error contacting server \"%s\" at port %d "
-                "as \"%s\":\n %s\n"),
-              qUtf8Printable(server_host), server_port,
-              qUtf8Printable(user_name), errbuf);
+    qCritical(_("Error contacting server \"%s\":\n %s\n"),
+              qUtf8Printable(url.toDisplayString()), errbuf);
     exit(EXIT_FAILURE);
   }
 }
@@ -373,14 +365,13 @@ double try_to_autoconnect()
    AUTOCONNECT_INTERVAL milliseconds, until success, fatal error or
    user intervention.
  */
-void start_autoconnecting_to_server()
+void start_autoconnecting_to_server(const QUrl &url)
 {
   output_window_printf(
       ftc_client,
-      _("Auto-connecting to server \"%s\" at port %d "
-        "as \"%s\" every %f second(s) for %d times"),
-      qUtf8Printable(server_host), server_port, qUtf8Printable(user_name),
-      0.001 * AUTOCONNECT_INTERVAL, MAX_AUTOCONNECT_ATTEMPTS);
+      _("Auto-connecting to \"%s\" every %f second(s) for %d times"),
+      qUtf8Printable(url.toDisplayString()), 0.001 * AUTOCONNECT_INTERVAL,
+      MAX_AUTOCONNECT_ATTEMPTS);
 
   autoconnecting = true;
 }

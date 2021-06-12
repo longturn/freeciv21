@@ -14,6 +14,10 @@
 
 #include "packets.h" // enum report_type
 
+// Forward declarations
+class QString;
+class QUrl;
+
 /*
  * Every TIMER_INTERVAL milliseconds real_timer_callback is
  * called. TIMER_INTERVAL has to stay 500 because real_timer_callback
@@ -58,17 +62,15 @@ bool is_server_busy();
 void client_remove_cli_conn(struct connection *pconn);
 void client_remove_all_cli_conn();
 
+QUrl &client_url();
+
 extern QString logfile;
 extern QString scriptfile;
 extern QString savefile;
 extern QString sound_plugin_name;
 extern QString sound_set_name;
 extern QString music_set_name;
-extern QString server_host;
-extern QString user_name;
-extern char password[MAX_LEN_PASSWORD];
 extern QString cmd_metaserver;
-extern int server_port;
 extern bool auto_connect;
 extern bool auto_spawn;
 extern bool waiting_for_end_turn;

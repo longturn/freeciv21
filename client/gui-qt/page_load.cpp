@@ -22,6 +22,7 @@
 #include "connectdlg_common.h"
 #include "rgbcolor.h"
 // client
+#include "client_main.h"
 #include "options.h"
 // gui-qt
 #include "fc_client.h"
@@ -143,7 +144,7 @@ void page_load::update_load_page()
 void page_load::start_from_save()
 {
   if (!is_server_running()) {
-    client_start_server();
+    client_start_server(client_url().userName());
     send_chat("/detach");
   }
   if (is_server_running() && !current_file.isEmpty()) {

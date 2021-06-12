@@ -18,6 +18,7 @@
 #include <QProcess>
 #include <QStandardPaths>
 #include <QTcpServer>
+#include <QUrl>
 
 #include <cstdio>
 #include <cstring>
@@ -201,7 +202,7 @@ static int find_next_free_port(int starting_port, int highest_port)
    Forks a server if it can. Returns FALSE if we find we
    couldn't start the server.
  */
-bool client_start_server()
+bool client_start_server(const QString &user_name)
 {
   QStringList arguments;
   QString trueFcser, ruleset, storage, port_buf, savesdir, scensdir;
@@ -293,10 +294,17 @@ bool client_start_server()
   serverProcess::i()->waitForReadyRead();
   serverProcess::i()->waitForStarted();
   server_quitting = false;
+
+  // Local server URL
+  auto url = QUrl();
+  url.setScheme(QStringLiteral("fc21"));
+  url.setUserName(user_name);
+  url.setHost(QStringLiteral("localhost"));
+  url.setPort(internal_server_port);
+
   // a reasonable number of tries
-  QString srv = QStringLiteral("localhost");
   while (connect_to_server(
-             user_name, srv, internal_server_port, buf,
+             url, buf,
              sizeof(buf) && serverProcess::i()->state() == QProcess::Running)
          == -1) {
     fc_usleep(WAIT_BETWEEN_TRIES);

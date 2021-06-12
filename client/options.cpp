@@ -15,11 +15,14 @@
 #include <fc_config.h>
 #endif
 
-#include <QHash>
 #include <cstdarg>
 #include <cstring>
 #include <sys/stat.h>
 #include <sys/types.h>
+
+// Qt
+#include <QHash>
+#include <QUrl>
 
 // utility
 #include "deprecations.h"
@@ -4520,8 +4523,10 @@ void options_load()
   secfile_allow_digital_boolean(sf, allow_digital_boolean);
 
   // a "secret" option for the lazy. TODO: make this saveable
-  sz_strlcpy(password,
-             secfile_lookup_str_default(sf, "", "%s.password", prefix));
+  if (client_url().password().isEmpty()) {
+    client_url().setPassword(
+        secfile_lookup_str_default(sf, "", "%s.password", prefix));
+  }
 
   gui_options.save_options_on_exit =
       secfile_lookup_bool_default(sf, gui_options.save_options_on_exit,

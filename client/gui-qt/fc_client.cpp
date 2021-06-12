@@ -640,7 +640,7 @@ void fc_client::create_loading_page()
  */
 void fc_client::start_new_game()
 {
-  if (is_server_running() || client_start_server()) {
+  if (is_server_running() || client_start_server(client_url().userName())) {
     /* saved settings are sent in client/options.c load_settable_options() */
   }
 }
