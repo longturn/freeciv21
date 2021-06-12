@@ -10,7 +10,10 @@
 **************************************************************************/
 #pragma once
 
-bool client_start_server();
+// Forward declarations
+class QString;
+
+bool client_start_server(const QString &user_name);
 void client_kill_server(bool force);
 
 bool is_server_running();

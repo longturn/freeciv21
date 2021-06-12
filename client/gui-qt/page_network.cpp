@@ -120,9 +120,9 @@ page_network::page_network(QWidget *parent, fc_client *gui)
   ui.lan_label->setText(_("Internet servers:"));
   ui.wan_label->setText(_("Local servers:"));
 
-  ui.connect_host_edit->setText(server_host);
-  ui.connect_port_edit->setText(QString::number(server_port));
-  ui.connect_login_edit->setText(user_name);
+  ui.connect_host_edit->setText(client_url().host());
+  ui.connect_port_edit->setText(QString::number(client_url().port()));
+  ui.connect_login_edit->setText(client_url().userName());
   ui.connect_password_edit->setDisabled(true);
   ui.connect_confirm_password_edit->setDisabled(true);
   setLayout(ui.gridLayout);
@@ -392,10 +392,10 @@ void page_network::handle_authentication_req(enum authentication_type type,
   case AUTH_LOGIN_FIRST:
     /* if we magically have a password already present in 'password'
      * then, use that and skip the password entry dialog */
-    if (password[0] != '\0') {
+    if (!client_url().password().isEmpty()) {
       struct packet_authentication_reply reply;
 
-      sz_strlcpy(reply.password, password);
+      sz_strlcpy(reply.password, qUtf8Printable(client_url().password()));
       send_packet_authentication_reply(&client.conn, &reply);
       return;
     } else {
@@ -420,17 +420,14 @@ void page_network::slot_connect()
 {
   char errbuf[512];
   struct packet_authentication_reply reply;
-  QByteArray ba_bytes;
 
   switch (connection_status) {
   case LOGIN_TYPE:
-    user_name = ui.connect_login_edit->text().toLocal8Bit();
-    server_host = ui.connect_host_edit->text().toLocal8Bit();
-    server_port = ui.connect_port_edit->text().toInt();
+    client_url().setUserName(ui.connect_login_edit->text());
+    client_url().setHost(ui.connect_host_edit->text());
+    client_url().setPort(ui.connect_port_edit->text().toInt());
 
-    if (connect_to_server(user_name, server_host, server_port, errbuf,
-                          sizeof(errbuf))
-        != -1) {
+    if (connect_to_server(client_url(), errbuf, sizeof(errbuf)) != -1) {
     } else {
       king->set_status_bar(QString::fromUtf8(errbuf));
       output_window_append(ftc_client, errbuf);
@@ -438,13 +435,11 @@ void page_network::slot_connect()
 
     return;
   case NEW_PASSWORD_TYPE:
-    ba_bytes = ui.connect_password_edit->text().toLatin1();
-    sz_strlcpy(password, ba_bytes.data());
-    ba_bytes = ui.connect_confirm_password_edit->text().toLatin1();
-    sz_strlcpy(reply.password, ba_bytes.data());
-
-    if (strncmp(reply.password, password, MAX_LEN_NAME) == 0) {
-      password[0] = '\0';
+    client_url().setPassword(ui.connect_password_edit->text());
+    if (client_url().password()
+        == ui.connect_confirm_password_edit->text()) {
+      fc_strlcpy(reply.password, qUtf8Printable(client_url().password()),
+                 MAX_LEN_NAME);
       send_packet_authentication_reply(&client.conn, &reply);
       set_connection_state(WAITING_TYPE);
     } else {
@@ -454,8 +449,8 @@ void page_network::slot_connect()
 
     return;
   case ENTER_PASSWORD_TYPE:
-    ba_bytes = ui.connect_password_edit->text().toLatin1();
-    sz_strlcpy(reply.password, ba_bytes.data());
+    fc_strlcpy(reply.password, qUtf8Printable(client_url().password()),
+               MAX_LEN_NAME);
     send_packet_authentication_reply(&client.conn, &reply);
     set_connection_state(WAITING_TYPE);
     return;

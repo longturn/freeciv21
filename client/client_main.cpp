@@ -29,6 +29,7 @@
 #include <QElapsedTimer>
 #include <QGlobalStatic>
 #include <QTimer>
+#include <QUrl>
 
 // utility
 #include "bitvector.h"
@@ -125,6 +126,10 @@ static struct rgbcolor *mapimg_client_plrcolor_get(int i);
 
 static void fc_interface_init_client();
 
+namespace /* anonymous */ {
+QUrl url;
+}
+
 QString logfile;
 QString scriptfile;
 QString savefile;
@@ -132,11 +137,7 @@ QString forced_tileset_name;
 QString sound_plugin_name;
 QString sound_set_name;
 QString music_set_name;
-QString server_host;
-QString user_name;
-char password[MAX_LEN_PASSWORD] = "\0";
 QString cmd_metaserver;
-int server_port = -1;
 bool auto_connect = false; // TRUE = skip "Connect to Freeciv Server" dialog
 bool auto_spawn = false;   // TRUE = skip main menu, start local server
 enum announce_type announce;
@@ -384,6 +385,8 @@ int client_main(int argc, char *argv[])
        {{"m", "music"}, _("Read music tags from FILE"), "FILE"},
        {{"t", "tiles"}, _("Use data file FILE.tilespec for tiles"), "FILE"},
        {{"w", "warnings"}, _("Warn about deprecated modpack constructs")}});
+  parser.addPositionalArgument(
+      _("url"), _("Server information in URL format"), _("[url]"));
   if (!ok) {
     qFatal("Adding command line arguments failed");
     exit(EXIT_FAILURE);
@@ -415,7 +418,7 @@ int client_main(int argc, char *argv[])
     auto_spawn = true;
   }
   if (parser.isSet(QStringLiteral("name"))) {
-    user_name = parser.value(QStringLiteral("name"));
+    url.setUserName(parser.value(QStringLiteral("name")));
   }
   if (parser.isSet(QStringLiteral("Meta"))) {
     cmd_metaserver = parser.value(QStringLiteral("Meta"));
@@ -431,13 +434,15 @@ int client_main(int argc, char *argv[])
   }
   if (parser.isSet(QStringLiteral("port"))) {
     bool conversion_ok;
-    server_port =
-        parser.value(QStringLiteral("port")).toUInt(&conversion_ok);
+    url.setPort(parser.value(QStringLiteral("port")).toUInt(&conversion_ok));
     if (!conversion_ok) {
       qFatal(_("Invalid port number %s"),
              qUtf8Printable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
+  }
+  if (parser.isSet(QStringLiteral("server"))) {
+    url.setHost(parser.value(QStringLiteral("server")));
   }
   if (parser.isSet(QStringLiteral("autoconnect"))) {
     auto_connect = true;
@@ -463,6 +468,25 @@ int client_main(int argc, char *argv[])
     qCWarning(deprecations_category,
               // TRANS: Do not translate --warnings
               _("The --warnings option is deprecated."));
+  }
+
+  // Server URL as positional argument
+  auto positional = parser.positionalArguments();
+  if (positional.size() == 1) {
+    url = QUrl(positional.constFirst());
+    if (!url.isValid() || url.scheme() != QStringLiteral("fc21")) {
+      // Try with the default protocol
+      url = QUrl(QStringLiteral("fc21://") + positional.constFirst());
+      // Still no luck
+      if (!url.isValid()) {
+        qFatal("%s", qPrintable(url.errorString()));
+      }
+    }
+  } else if (!positional.isEmpty()) {
+    qFatal(_("Too many positional arguments."));
+  } else {
+    // Unset by default
+    url.setScheme(QStringLiteral("fc21"));
   }
 
   if (auto_spawn && auto_connect) {
@@ -527,13 +551,13 @@ int client_main(int argc, char *argv[])
   if (sound_plugin_name.isEmpty()) {
     sound_plugin_name = gui_options.default_sound_plugin_name;
   }
-  if (server_host.isEmpty()) {
-    server_host = gui_options.default_server_host;
+  if (url.host().isEmpty()) {
+    url.setHost(gui_options.default_server_host);
   } else if (gui_options.use_prev_server) {
-    sz_strlcpy(gui_options.default_server_host, qUtf8Printable(server_host));
+    sz_strlcpy(gui_options.default_server_host, qUtf8Printable(url.host()));
   }
-  if (user_name.isEmpty()) {
-    user_name = gui_options.default_user_name;
+  if (url.userName().isEmpty()) {
+    url.setUserName(gui_options.default_user_name);
   }
   if (cmd_metaserver.isEmpty()) {
     // FIXME: Find a cleaner way to achieve this.
@@ -555,10 +579,10 @@ int client_main(int argc, char *argv[])
       cmd_metaserver = gui_options.default_metaserver;
     }
   }
-  if (server_port == -1) {
-    server_port = gui_options.default_server_port;
+  if (url.port() <= 0) {
+    url.setPort(gui_options.default_server_port);
   } else if (gui_options.use_prev_server) {
-    gui_options.default_server_port = server_port;
+    gui_options.default_server_port = url.port();
   }
 
   /* This seed is not saved anywhere; randoms in the client should
@@ -736,7 +760,7 @@ void set_client_state(enum client_states newstate)
   if (auto_spawn) {
     fc_assert(!auto_connect);
     auto_spawn = false;
-    if (!client_start_server()) {
+    if (!client_start_server(url.userName())) {
       qFatal(_("Failed to start local server; aborting."));
       exit(EXIT_FAILURE);
     }
@@ -747,7 +771,7 @@ void set_client_state(enum client_states newstate)
       qFatal(_("There was an error while auto connecting; aborting."));
       exit(EXIT_FAILURE);
     } else {
-      start_autoconnecting_to_server();
+      start_autoconnecting_to_server(url);
       auto_connect = false; // Don't try this again.
     }
   }
@@ -944,6 +968,11 @@ void client_remove_all_cli_conn()
 }
 
 /**
+ * Returns the URL that this client connects to.
+ */
+QUrl &client_url() { return url; }
+
+/**
    Send attribute block.
  */
 void send_attribute_block_request()
@@ -1051,7 +1080,7 @@ double real_timer_callback()
   voteinfo_queue_check_removed();
 
   {
-    double autoconnect_time = try_to_autoconnect();
+    double autoconnect_time = try_to_autoconnect(url);
     time_until_next_call = MIN(time_until_next_call, autoconnect_time);
   }
 

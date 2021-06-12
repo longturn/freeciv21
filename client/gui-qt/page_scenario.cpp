@@ -20,6 +20,8 @@
 #include "chatline_common.h"
 #include "connectdlg_common.h"
 #include "version.h"
+// client
+#include "client_main.h"
 // gui-qt
 #include "colors.h"
 #include "dialogs.h"
@@ -99,7 +101,7 @@ void page_scenario::browse_scenarios()
 void page_scenario::start_scenario()
 {
   if (!is_server_running()) {
-    client_start_server();
+    client_start_server(client_url().userName());
     send_chat("/detach");
   }
   if (is_server_running() && !current_file.isEmpty()) {
