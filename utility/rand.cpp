@@ -25,6 +25,9 @@
 
 #include "rand.h"
 
+// Qt
+#include <QRandomGenerator>
+
 #define log_rand log_debug
 
 /* A global random state:
@@ -74,37 +77,13 @@ bool fc_rand_is_init() { return is_init; }
  */
 void fc_rand_set_init(bool init) { is_init = init; }
 
-namespace /* anonymous */ {
-
-/**
- * Seed sequence based on std::random_device. Adapted from M. Skarupke,
- * https://probablydance.com/2016/12/29/random_seed_seq-a-small-utility-to-properly-seed-random-number-generators-in-c/
- */
-struct random_seed_seq {
-  /**
-   * Generates a random sequence.
-   */
-  template <typename It> void generate(It begin, It end)
-  {
-    for (; begin != end; ++begin) {
-      *begin = m_device();
-    }
-  }
-
-  /// Required by seed_seq.
-  using result_type = std::random_device::result_type;
-
-private:
-  std::random_device m_device;
-};
-} // anonymous namespace
-
 /**
  * Seeds the given generator with a random value.
  */
 void fc_rand_seed(std::mt19937 &gen)
 {
-  auto seed = random_seed_seq();
+  auto seed = std::seed_seq();
+  QRandomGenerator::securelySeeded().seed(seed);
   gen.seed(seed);
 }
 
