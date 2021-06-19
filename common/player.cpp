@@ -584,6 +584,7 @@ static void player_defaults(struct player *pplayer)
   BV_CLR_ALL(pplayer->gives_shared_vision);
   for (i = 0; i < B_LAST; i++) {
     pplayer->wonders[i] = WONDER_NOT_BUILT;
+    pplayer->wonder_build_turn[i] = -1;
   }
 
   pplayer->attribute_block.data = NULL;
