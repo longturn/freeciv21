@@ -779,6 +779,11 @@ void wonder_built(const struct city *pcity, const struct impr_type *pimprove)
   pplayer = city_owner(pcity);
   pplayer->wonders[windex] = pcity->id;
 
+    /* Build turn is set with wonder_set_build_turn() only when
+   * actually building it in-game. But this is called also when
+   * loading savegames etc., so initialize to something known. */
+  pplayer->wonder_build_turn[windex] = -1;
+
   if (is_great_wonder(pimprove)) {
     game.info.great_wonder_owners[windex] = player_number(pplayer);
   }
@@ -823,15 +828,25 @@ bool wonder_is_lost(const struct player *pplayer,
 
 /**
    Returns whether the player is currently in possession of this wonder
-   (small or great).
+   (small or great)  and it hasn't been just built this turn.
  */
 bool wonder_is_built(const struct player *pplayer,
                      const struct impr_type *pimprove)
 {
+  int windex = improvement_index(pimprove);
+
   fc_assert_ret_val(NULL != pplayer, false);
   fc_assert_ret_val(is_wonder(pimprove), false);
 
-  return WONDER_BUILT(pplayer->wonders[improvement_index(pimprove)]);
+
+  /* New city turn: Wonders don't take effect until the next
+   * turn after building */
+
+  if (! WONDER_BUILT(pplayer->wonders[windex])) {
+    return false;
+  }
+
+  return (pplayer->wonder_build_turn[windex] != game.info.turn);
 }
 
 /**
@@ -885,10 +900,14 @@ struct city *city_from_wonder(const struct player *pplayer,
  */
 bool great_wonder_is_built(const struct impr_type *pimprove)
 {
+  int windex = improvement_index(pimprove);
+  int owner;
   fc_assert_ret_val(is_great_wonder(pimprove), false);
 
-  return WONDER_OWNED(
-      game.info.great_wonder_owners[improvement_index(pimprove)]);
+  owner = game.info.great_wonder_owners[windex];
+  /* call wonder_is_built() to check the build turn */
+  return (WONDER_OWNED(owner)
+          && wonder_is_built(player_by_number(owner), pimprove));
 }
 
 /**
