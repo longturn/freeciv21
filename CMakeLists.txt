@@ -94,7 +94,6 @@ install(
   doc/README.AI_modules
   doc/README.attributes
   doc/README.delta
-  doc/README.effects
   doc/README.fcdb
   doc/README.governor
   doc/README.graphics
