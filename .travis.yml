@@ -43,7 +43,8 @@ jobs:
     before_script:
       - scripts/travis-clang-format.sh
   - name: "windows"
-    if: branch != coverity_scan
+    if: branch = disabled
+    #if: branch != coverity_scan
     os: windows
     script:
       - $mingw64 pacman -Syu --noconfirm
@@ -63,7 +64,8 @@ jobs:
       - $mingw64 cmake --build build
       - $mingw64 cmake --build build --target package
   - name: "os_x"
-    if: branch != coverity_scan
+    if: branch = disabled
+    #if: branch != coverity_scan
     os: osx
     osx_image: xcode12.2
     env:
