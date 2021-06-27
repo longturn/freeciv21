@@ -109,6 +109,7 @@ else()
   find_package(ToLuaProgram)
 endif()
 add_subdirectory(dependencies/tolua-5.2) # Will build the program if not found.
+add_subdirectory(dependencies/sol2)
 
 # backward-cpp
 include(FreecivBackward)
