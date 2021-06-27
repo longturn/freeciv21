@@ -410,6 +410,16 @@ static void do_upgrade_effects(struct player *pplayer)
     const struct unit_type *type_to =
         can_upgrade_unittype(pplayer, type_from);
 
+    if (type_to == nullptr) {
+      /* This is unlikely but it can happen with unique units. If the target
+       * unit type is a unique unit and some other unit has been upgraded
+       * first, punit can no longer be upgraded and can_upgrade_unittype
+       * returns nullptr. Thus punit is no longer a good candidate and we
+       * just remove it from the list. */
+      unit_list_remove(candidates, punit);
+      continue;
+    }
+
     transform_unit(punit, type_to, true);
     notify_player(pplayer, unit_tile(punit), E_UNIT_UPGRADED, ftc_server,
                   _("%s was upgraded for free to %s."),
