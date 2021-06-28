@@ -8,7 +8,6 @@ tolua_generate(
 add_library(
   scripting
   STATIC
-  api_fcdb_auth.cpp
   api_server_base.cpp
   api_server_edit.cpp
   api_server_game_methods.cpp

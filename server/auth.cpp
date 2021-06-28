@@ -356,6 +356,7 @@ static bool is_good_password(const char *password, char *msg)
 const char *auth_get_username(struct connection *pconn)
 {
   fc_assert_ret_val(pconn != NULL, NULL);
+  fc_assert_ret_val(conn_is_valid(pconn), NULL);
 
   return pconn->username;
 }
@@ -366,6 +367,7 @@ const char *auth_get_username(struct connection *pconn)
 const char *auth_get_ipaddr(struct connection *pconn)
 {
   fc_assert_ret_val(pconn != NULL, NULL);
+  fc_assert_ret_val(conn_is_valid(pconn), NULL);
 
   return pconn->server.ipaddr;
 }

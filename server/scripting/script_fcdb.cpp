@@ -33,11 +33,9 @@
 #include "tolua_game_gen.h"
 
 // server
+#include "auth.h"
 #include "console.h"
 #include "stdinhand.h"
-
-/* server/scripting */
-#include "api_fcdb_auth.h"
 
 #include "script_fcdb.h"
 
@@ -157,9 +155,8 @@ static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
 static void script_fcdb_register_functions()
 {
   // "auth" table
-  (*fcl)["auth"] =
-      fcl->create_table_with("get_ipaddr", api_auth_get_ipaddr,
-                             "get_username", api_auth_get_username);
+  (*fcl)["auth"] = fcl->create_table_with("get_ipaddr", auth_get_ipaddr,
+                                          "get_username", auth_get_username);
   // "fcdb" table
   (*fcl)["fcdb"] = fcl->create_table_with(
       "option", fcdb_option_get,
