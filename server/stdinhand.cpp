@@ -3145,9 +3145,7 @@ static bool is_allowed_to_take(struct connection *requester,
 
   if (srvarg.fcdb_enabled) {
     bool ok = false;
-
-    if (script_fcdb_call("user_take", requester, taker, pplayer, will_obs,
-                         &ok)
+    if (script_fcdb_user_take(requester, taker, pplayer, will_obs, ok)
         && ok) {
       return true;
     }
@@ -5282,8 +5280,8 @@ static bool delegate_command(struct connection *caller, char *arg,
       }
       if (caller && conn_get_access(caller) < ALLOW_ADMIN
           && !(srvarg.fcdb_enabled
-               && script_fcdb_call("user_delegate_to", caller, dplayer,
-                                   qUtf8Printable(username), &ret)
+               && script_fcdb_user_delegate_to(caller, dplayer,
+                                               qUtf8Printable(username), ret)
                && ret)) {
         cmd_reply(CMD_DELEGATE, caller, C_SYNTAX,
                   _("Command level '%s' or greater or special permission "

@@ -285,12 +285,20 @@ struct fc_lua *luascript_new(luascript_log_func_t output_fct,
     luascript_blacklist(fcl->state, luascript_unsafe_symbols_permissive);
   }
 
+  luascript_init(fcl);
+
+  return fcl;
+}
+
+/**
+   Sets the freeciv lua struct for a lua state.
+ */
+void luascript_init(fc_lua *fcl)
+{
   // Save the freeciv lua struct in the lua state.
   lua_pushstring(fcl->state, LUASCRIPT_GLOBAL_VAR_NAME);
   lua_pushlightuserdata(fcl->state, fcl);
   lua_settable(fcl->state, LUA_REGISTRYINDEX);
-
-  return fcl;
 }
 
 /**

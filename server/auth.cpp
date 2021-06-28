@@ -102,7 +102,7 @@ bool auth_user(struct connection *pconn, char *username)
 
     sz_strlcpy(pconn->username, username);
 
-    if (!script_fcdb_call("user_exists", pconn, &exists)) {
+    if (!script_fcdb_user_exists(pconn, exists)) {
       if (srvarg.auth_allow_guests) {
         sz_strlcpy(tmpname, pconn->username);
         get_unique_guest_name(tmpname); // don't pass pconn->username here
@@ -180,7 +180,7 @@ bool auth_handle_reply(struct connection *pconn, char *password)
       }
     }
 
-    if (!script_fcdb_call("user_save", pconn, password)) {
+    if (!script_fcdb_user_save(pconn, password)) {
       notify_conn(pconn->self, NULL, E_CONNECTION, ftc_warning,
                   _("Warning: There was an error in saving to the database. "
                     "Continuing, but your stats will not be saved."));
@@ -191,8 +191,7 @@ bool auth_handle_reply(struct connection *pconn, char *password)
   } else if (pconn->server.status == AS_REQUESTING_OLD_PASS) {
     bool success = false;
 
-    if (script_fcdb_call("user_verify", pconn, password, &success)
-        && success) {
+    if (script_fcdb_user_verify(pconn, password, success) && success) {
       establish_new_connection(pconn);
     } else {
       pconn->server.status = AS_FAILED;
