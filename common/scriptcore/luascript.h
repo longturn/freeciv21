@@ -56,6 +56,7 @@ int luascript_arg_error(lua_State *L, int narg, const char *msg);
 /* Create / destroy a freeciv lua instance. */
 struct fc_lua *luascript_new(luascript_log_func_t outputfct,
                              bool secured_environment);
+void luascript_init(fc_lua *fcl);
 struct fc_lua *luascript_get_fcl(lua_State *L);
 void luascript_destroy(struct fc_lua *fcl);
 
