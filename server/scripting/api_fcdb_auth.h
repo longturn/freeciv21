@@ -13,8 +13,5 @@
 /* common/scriptcore */
 #include "luascript_types.h"
 
-struct lua_State;
-
-const char *api_auth_get_username(lua_State *L, Connection *pconn);
-
-const char *api_auth_get_ipaddr(lua_State *L, Connection *pconn);
+const char *api_auth_get_ipaddr(Connection *pconn);
+const char *api_auth_get_username(Connection *pconn);

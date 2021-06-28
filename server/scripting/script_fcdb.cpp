@@ -37,7 +37,7 @@
 #include "stdinhand.h"
 
 /* server/scripting */
-#include "tolua_fcdb_gen.h"
+#include "api_fcdb_auth.h"
 
 #include "script_fcdb.h"
 
@@ -152,6 +152,35 @@ static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
 }
 
 /**
+ * Registers FCDB-related functions in the Lua state
+ */
+static void script_fcdb_register_functions()
+{
+  // "auth" table
+  (*fcl)["auth"] =
+      fcl->create_table_with("get_ipaddr", api_auth_get_ipaddr,
+                             "get_username", api_auth_get_username);
+  // "fcdb" table
+  (*fcl)["fcdb"] = fcl->create_table_with(
+      "option", fcdb_option_get,
+      // Definitions for backward compatibility with Freeciv 2.4.
+      // Old database.lua scripts might pass fcdb.param.USER etc to
+      // fcdb.option(), but it's deprecated in favour of literal strings, and
+      // the strings listed here are only conventional.
+      // clang-format off
+      "param", fcl->create_table_with("HOST", "host",
+                                      "USER", "user",
+                                      "PORT", "port",
+                                      "PASSWORD", "password",
+                                      "DATABASE", "database",
+                                      "TABLE_USER", "table_user",
+                                      "TABLE_LOG", "table_log",
+                                      "BACKEND", "backend")
+      // clang-format on
+  );
+}
+
+/**
    Initialize the scripting state. Returns the status of the freeciv database
    lua state.
  */
@@ -186,7 +215,7 @@ bool script_fcdb_init(const QString &fcdb_luafile)
 
     tolua_common_a_open(fcl->lua_state());
     tolua_game_open(fcl->lua_state());
-    tolua_fcdb_open(fcl->lua_state());
+    script_fcdb_register_functions();
     tolua_common_z_open(fcl->lua_state());
   } catch (const std::exception &e) {
     qCritical() << "Error loading the Freeciv21 database lua definition:"
