@@ -358,7 +358,7 @@ void luascript_log_vargs(struct fc_lua *fcl, QtMsgType level,
   char buf[1024];
 
   fc_assert_ret(fcl);
-  fc_assert_ret(QtDebugMsg <= level && level <= QtFatalMsg);
+  fc_assert_ret(level >= QtDebugMsg && level <= QtInfoMsg);
 
   fc_vsnprintf(buf, sizeof(buf), format, args);
 
