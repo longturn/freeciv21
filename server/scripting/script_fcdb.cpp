@@ -25,6 +25,7 @@
 #include "log.h"
 
 /* common/scriptcore */
+#define SOL_COMPATIBLE
 #include "luascript.h"
 #include "luascript_types.h"
 #include "tolua_common_a_gen.h"
