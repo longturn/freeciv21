@@ -35,7 +35,6 @@ extern "C" {
 #include "luascript_func.h"
 #include "luascript_signal.h"
 #include "tolua_common_a_gen.h"
-#include "tolua_common_z_gen.h"
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
 // server
@@ -303,7 +302,7 @@ bool script_server_init()
 
   tolua_server_open(fcl_main->state);
 
-  tolua_common_z_open(fcl_main->state);
+  luascript_common_z(fcl_main->state);
 
   script_server_code_init();
   script_server_vars_init();
@@ -329,7 +328,7 @@ bool script_server_init()
 
   tolua_server_open(fcl_unsafe->state);
 
-  tolua_common_z_open(fcl_unsafe->state);
+  luascript_common_z(fcl_unsafe->state);
 
   luascript_signal_init(fcl_unsafe);
   luascript_func_init(fcl_unsafe);

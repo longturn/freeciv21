@@ -29,7 +29,6 @@
 #include "luascript.h"
 #include "luascript_types.h"
 #include "tolua_common_a_gen.h"
-#include "tolua_common_z_gen.h"
 #include "tolua_game_gen.h"
 
 // server
@@ -213,7 +212,7 @@ bool script_fcdb_init(const QString &fcdb_luafile)
     tolua_common_a_open(fcl->lua_state());
     tolua_game_open(fcl->lua_state());
     script_fcdb_register_functions();
-    tolua_common_z_open(fcl->lua_state());
+    luascript_common_z(fcl->lua_state());
   } catch (const std::exception &e) {
     qCritical() << "Error loading the Freeciv21 database lua definition:"
                 << e.what();

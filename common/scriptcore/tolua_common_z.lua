@@ -1,30 +1,17 @@
-/**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- part of Freeciv21. Freeciv21 is free software: you can redistribute it
- and/or modify it under the terms of the GNU  General Public License  as
- published by the Free Software Foundation, either version 3 of the
- License,  or (at your option) any later version. You should have received
- a copy of the GNU General Public License along with Freeciv21. If not,
- see https://www.gnu.org/licenses/.
-**************************************************************************/
+-- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+-- part of Freeciv21. Freeciv21 is free software: you can redistribute it
+-- and/or modify it under the terms of the GNU  General Public License  as
+-- published by the Free Software Foundation, either version 3 of the
+-- License,  or (at your option) any later version. You should have received
+-- a copy of the GNU General Public License along with Freeciv21. If not,
+-- see https://www.gnu.org/licenses/.
 
-/*****************************************************************************
-  ADVERTISEMENT: do not attempt to change the name of the API functions.
-  They may be in use in Lua scripts in savefiles, so once released, the
-  name and signature cannot change shape even in new major versions of
-  Freeciv, until the relevant save format version can no longer be loaded.
-  If you really like to change a function name, be sure to keep also the
-  old one running.
-*****************************************************************************/
-
-$#ifdef HAVE_CONFIG_H
-$#include <fc_config.h>
-$#endif
-
-/* common/scriptcore */
-$#include "luascript_types.h"
-
-$[
+--  WARNING: do not attempt to change the name of the API functions.
+--  They may be in use in Lua scripts in savefiles, so once released, the
+--  name and signature cannot change shape even in new major versions of
+--  Freeciv, until the relevant save format version can no longer be loaded.
+--  If you really like to change a function name, be sure to keep also the
+--  old one running.
 
 -- ***************************************************************************
 -- API Types Special Methods
@@ -122,5 +109,3 @@ tolua = {
 
 -- Hide all private methods
 methods_private = nil
-
-$]
