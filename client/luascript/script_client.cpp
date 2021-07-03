@@ -35,7 +35,6 @@ extern "C" {
 #include "luascript.h"
 
 #include "tolua_common_a_gen.h"
-#include "tolua_common_z_gen.h"
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
 
@@ -210,7 +209,7 @@ bool script_client_init()
   tolua_client_open(main_fcl->state);
 #endif // MESON_BUILD
 
-  tolua_common_z_open(main_fcl->state);
+  luascript_common_z(main_fcl->state);
 
   script_client_code_init();
   script_client_vars_init();

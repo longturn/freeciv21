@@ -16,11 +16,17 @@
 #include <cstdlib>
 #include <ctime>
 
+// Qt
+#include <QFile>
+
 /* dependencies/lua */
 extern "C" {
 #include "lua.h"
 #include "lualib.h"
 }
+
+// Sol
+#include "sol/sol.hpp"
 
 // utility
 #include "fcintl.h"
@@ -342,6 +348,27 @@ void luascript_destroy(struct fc_lua *fcl)
     }
     delete[] fcl;
   }
+}
+
+/**
+ * Runs tolua_common_z.lua.
+ */
+void luascript_common_z(lua_State *L)
+{
+  Q_INIT_RESOURCE(scriptcore);
+
+  QFile in(":/lua/tolua_common_z.lua");
+  if (!in.open(QFile::ReadOnly)) {
+    qCritical() << "Could not find resource:" << in.fileName();
+    qFatal("Missing resource");
+  }
+  const auto data = in.readAll();
+
+  // We trust that it loads.
+  sol::state_view lua(L);
+  lua.script(data.data(), "tolua_common_z.lua");
+
+  Q_CLEANUP_RESOURCE(scriptcore);
 }
 
 /**
