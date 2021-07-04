@@ -102,16 +102,6 @@ bool script_client_callback_invoke(const char *callback_name, int nargs,
 }
 
 /**
-   Mark any, if exported, full userdata representing 'object' in
-   the current script state as 'Nonexistent'.
-   This changes the type of the lua variable.
- */
-void script_client_remove_exported_object(void *object)
-{
-  luascript_remove_exported_object(main_fcl, object);
-}
-
-/**
    Initialize the game script variables.
  */
 static void script_client_vars_init()
