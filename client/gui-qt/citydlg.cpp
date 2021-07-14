@@ -1599,7 +1599,6 @@ void city_dialog::showEvent(QShowEvent *event)
 {
   Q_UNUSED(event)
   dont_focus = false;
-  resize(200, 400); // It will resize to minimum
   if (pcity) {
     key_city_show_open(pcity);
     unit_focus_set(nullptr);
@@ -2436,7 +2435,8 @@ void city_dialog::get_city(bool next)
   }
   center_tile_mapcanvas(other_pcity->tile);
   key_city_hide_open(pcity);
-  qtg_real_city_dialog_popup(other_pcity);
+  pcity = other_pcity;
+  refresh();
 }
 
 /**

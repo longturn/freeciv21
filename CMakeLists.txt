@@ -1,4 +1,12 @@
-cmake_minimum_required(VERSION 3.12...3.17 FATAL_ERROR)
+# Win32 et al requires cmake version 3.16 because we use a newer command
+#   "file(GET_RUNTIME_DEPENDENCIES ..." that is only available at v3.16+
+# On other platforms (*nix, MacOS) we need to support older 3.12+ for the
+#   server and other components
+if(WIN32 OR MSYS OR MINGW)
+  cmake_minimum_required(VERSION 3.16...3.20 FATAL_ERROR)
+else()
+  cmake_minimum_required(VERSION 3.12...3.17 FATAL_ERROR)
+endif()
 
 # set vcpkg if exist
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -21,8 +29,8 @@ include(cmake/FreecivBuildOptions.cmake)
 
 # Set some project variables to reuse later
 set(FREECIV21_VERSION_MAJOR 3)
-set(FREECIV21_VERSION_MINOR 1)
-set(FREECIV21_VERSION_PATCH 0)
+set(FREECIV21_VERSION_MINOR 0)
+set(FREECIV21_VERSION_PATCH 20210613)
 set(FREECIV21_VERSION "${FREECIV21_VERSION_MAJOR}.${FREECIV21_VERSION_MINOR}.${FREECIV21_VERSION_PATCH}")
 
 # Set project
@@ -30,55 +38,12 @@ project(freeciv21 VERSION ${FREECIV21_VERSION} LANGUAGES C CXX)
 
 # Gather all the things we need for Windows builds early.
 if(WIN32 OR MSYS OR MINGW)
+  # We need to alter the out of box values of these variables for Win32 et al builds
   set(CMAKE_INSTALL_DATAROOTDIR ".")
   set(CMAKE_INSTALL_BINDIR ".")
   set(PROJECT_NAME "data")
   set(CMAKE_INSTALL_DOCDIR "${CMAKE_INSTALL_DATAROOTDIR}/doc/")
-
   get_filename_component(MINGW_PATH ${CMAKE_CXX_COMPILER} PATH)
-  set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS
-    ${MINGW_PATH}/libbrotlicommon.dll
-    ${MINGW_PATH}/libbrotlidec.dll
-    ${MINGW_PATH}/libbz2-1.dll
-    ${MINGW_PATH}/libdouble-conversion.dll
-    ${MINGW_PATH}/libFLAC-8.dll
-    ${MINGW_PATH}/libfreetype-6.dll
-    ${MINGW_PATH}/libgcc_s_seh-1.dll
-    ${MINGW_PATH}/libglib-2.0-0.dll
-    ${MINGW_PATH}/libgraphite2.dll
-    ${MINGW_PATH}/libharfbuzz-0.dll
-    ${MINGW_PATH}/libiconv-2.dll
-    ${MINGW_PATH}/libicudt68.dll
-    ${MINGW_PATH}/libicuin68.dll
-    ${MINGW_PATH}/libicuuc68.dll
-    ${MINGW_PATH}/libintl-8.dll
-    ${MINGW_PATH}/libKF5Archive.dll
-    ${MINGW_PATH}/liblzma-5.dll
-    ${MINGW_PATH}/libmpg123-0.dll
-    ${MINGW_PATH}/libogg-0.dll
-    ${MINGW_PATH}/libopus-0.dll
-    ${MINGW_PATH}/libopusfile-0.dll
-    ${MINGW_PATH}/libpcre-1.dll
-    ${MINGW_PATH}/libpcre2-16-0.dll
-    ${MINGW_PATH}/libpng16-16.dll
-    ${MINGW_PATH}/libreadline8.dll
-    ${MINGW_PATH}/libsqlite3-0.dll
-    ${MINGW_PATH}/libstdc++-6.dll
-    ${MINGW_PATH}/libtermcap-0.dll
-    ${MINGW_PATH}/libvorbis-0.dll
-    ${MINGW_PATH}/libvorbisfile-3.dll
-    ${MINGW_PATH}/libwinpthread-1.dll
-    ${MINGW_PATH}/libzstd.dll
-    ${MINGW_PATH}/Qt5Core.dll
-    ${MINGW_PATH}/Qt5Gui.dll
-    ${MINGW_PATH}/Qt5Network.dll
-    ${MINGW_PATH}/Qt5Widgets.dll
-    ${MINGW_PATH}/SDL2.dll
-    ${MINGW_PATH}/SDL2_mixer.dll
-    ${MINGW_PATH}/zlib1.dll
-    )
-  set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT "freeciv21")
-  include(InstallRequiredSystemLibraries)
 endif()
 
 if (NOT ${CMAKE_BUILD_TYPE} EQUAL "Release")
@@ -129,7 +94,6 @@ install(
   doc/README.AI_modules
   doc/README.attributes
   doc/README.delta
-  doc/README.effects
   doc/README.fcdb
   doc/README.governor
   doc/README.graphics
@@ -146,30 +110,85 @@ install(
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   COMPONENT freeciv21)
 
+# Installing on Win32 et al platforms requires some custom configs
 if(WIN32 OR MSYS OR MINGW)
-  # Install the libraries compiled in the section above
-  install(
-    PROGRAMS
-    ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    COMPONENT freeciv21)
-
   # Custom command files to run the applications
   install(
     FILES
-    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-client.cmd
-    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-modpack-qt.cmd
+    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-server.cmd
+    ${CMAKE_SOURCE_DIR}/windows/client.ico
+    ${CMAKE_SOURCE_DIR}/windows/mp.ico
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 
-  # Qt5 Plugins -- this is a hack
+  # Install the ca-bundle for the modpack installer
   install(
-    DIRECTORY ${MINGW_PATH}/../share/qt5/plugins/platforms
-    DESTINATION ${CMAKE_INSTALL_BINDIR}/plugins
-    COMPONENT freeciv21
-    FILES_MATCHING PATTERN *.dll)
+    FILES 
+    ${MINGW_PATH}/../ssl/certs/ca-bundle.crt
+    DESTINATION ${CMAKE_INSTALL_BINDIR}/ssl/certs
+    COMPONENT freeciv21)
 
-  set(CMAKE_INSTALL_LOCALEDIR "${CMAKE_INSTALL_DATAROOTDIR}/locale")
+  # Install OpenSSL library, not found with GET_RUNTIME_DEPENDENCIES
+  install(
+    FILES
+    ${MINGW_PATH}/libcrypto-1_1-x64.dll
+    ${MINGW_PATH}/libssl-1_1-x64.dll
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    COMPONENT freeciv21)
+    
+  # This allows us to determine the external libraries we need to include at install time
+  #   dynamically instead of doing it manually.
+  install(CODE [[
+    message(STATUS "Collecting dependencies for freeciv21 executables...")
+
+    # Take a variable that is available at "install" time and repurpose
+    string(REGEX REPLACE "objdump.exe" "" MINGW_PATH ${CMAKE_OBJDUMP})
+
+    # Function to analyze the third party dll files linked to the exe's
+    #   Uses the repurposed variable from above to tell the function where
+    #   the dll files are located. Ignores dll's that come with Windows.
+    file(GET_RUNTIME_DEPENDENCIES
+      RESOLVED_DEPENDENCIES_VAR r_deps
+      UNRESOLVED_DEPENDENCIES_VAR u_deps
+      DIRECTORIES ${MINGW_PATH}
+      PRE_EXCLUDE_REGEXES "^api-ms-*"
+      POST_EXCLUDE_REGEXES "C:[\\\\/][Ww][Ii][Nn][Dd][Oo][Ww][Ss][\\\\/].*"
+      EXECUTABLES
+        "${CMAKE_INSTALL_PREFIX}/freeciv21-*.exe"
+      )
+      message(STATUS "Installing library dependencies for freeciv21 executables...")
+      file(INSTALL DESTINATION ${CMAKE_INSTALL_PREFIX} MESSAGE_LAZY FILES ${r_deps})
+    ]] COMPONENT freeciv21)
+    
+  # Qt5 Plugins and required DLLs
+  # Before installation, run a series of commands that copy each of the Qt
+  # runtime files to the appropriate directory for installation
+  install(CODE [[
+  
+    message(STATUS "Collecting Qt dependencies for freeciv21 GUI executables...")
+
+    # Take a variable that is available at "install" time and repurpose
+    string(REGEX REPLACE "objdump.exe" "" MINGW_PATH ${CMAKE_OBJDUMP})
+    
+    # Run Qt's windeployqt.exe to find the required DLLs for the GUI apps.
+    execute_process(
+      COMMAND ${MINGW_PATH}/windeployqt.exe --no-translations --no-virtualkeyboard --no-compiler-runtime --no-webkit2 --no-angle --no-opengl-sw --list mapping ${CMAKE_INSTALL_PREFIX}
+      OUTPUT_VARIABLE _output
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    # Run a loop to go thought the output and copy the files we need
+    message(STATUS "Installing Qt library dependencies for freeciv21 GUI executables...")
+    separate_arguments(_files WINDOWS_COMMAND ${_output})
+      while(_files)
+          list(GET _files 0 _src)
+          list(GET _files 1 _dest)
+          execute_process(
+            COMMAND cp ${_src} "${CMAKE_INSTALL_PREFIX}/${_dest}"
+          )
+          message(STATUS "Installing: ${CMAKE_INSTALL_PREFIX}/${_dest}")
+          list(REMOVE_AT _files 0 1)
+      endwhile()
+    ]] COMPONENT freeciv21)
 
 endif()
 

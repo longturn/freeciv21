@@ -17,6 +17,10 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include <cstdlib>
 #include <cstring>
 
+// Qt
+#include <QHash>
+#include <QString>
+
 // utility
 #include "fcintl.h"
 #include "log.h"
@@ -34,15 +38,9 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "srv_main.h"
 
 /* server/scripting */
-#ifdef HAVE_FCDB
 #include "script_fcdb.h"
-#endif // HAVE_FCDB
 
 #include "fcdb.h"
-
-/* If HAVE_FCDB is set, the freeciv database module is compiled. Else only
- * some dummy functions are defiend. */
-#ifdef HAVE_FCDB
 
 enum fcdb_option_source {
   AOS_DEFAULT, // Internal default, currently not used
@@ -55,21 +53,7 @@ struct fcdb_option {
   char *value;
 };
 
-#define SPECHASH_TAG fcdb_option
-#define SPECHASH_ASTR_KEY_TYPE
-#define SPECHASH_IDATA_TYPE struct fcdb_option *
-#include "spechash.h"
-#define fcdb_option_hash_data_iterate(phash, data)                          \
-  TYPED_HASH_DATA_ITERATE(struct fcdb_option *, phash, data)
-#define fcdb_option_hash_data_iterate_end HASH_DATA_ITERATE_END
-#define fcdb_option_hash_keys_iterate(phash, key)                           \
-  TYPED_HASH_KEYS_ITERATE(char *, phash, key)
-#define fcdb_option_hash_keys_iterate_end HASH_KEYS_ITERATE_END
-#define fcdb_option_hash_iterate(phash, key, data)                          \
-  TYPED_HASH_ITERATE(char *, struct fcdb_option *, phash, key, data)
-#define fcdb_option_hash_iterate_end HASH_ITERATE_END
-
-struct fcdb_option_hash *fcdb_config = NULL;
+QHash<QString, fcdb_option *> fcdb_config;
 
 static bool fcdb_set_option(const char *key, const char *value,
                             enum fcdb_option_source source);
@@ -86,21 +70,28 @@ static bool fcdb_set_option(const char *key, const char *value,
   bool removed;
 
   if (value != NULL) {
-    struct fcdb_option *newopt = fc_malloc(sizeof(*newopt));
+    auto newopt = new fcdb_option;
 
     newopt->value = fc_strdup(value);
     newopt->source = source;
-    removed = fcdb_option_hash_replace_full(fcdb_config, key, newopt, NULL,
-                                            &oldopt);
+
+    removed = fcdb_config.contains(key);
+    if (removed) {
+      oldopt = fcdb_config.value(key);
+    }
+    fcdb_config[key] = newopt;
   } else {
-    removed = fcdb_option_hash_remove_full(fcdb_config, key, NULL, &oldopt);
+    removed = fcdb_config.contains(key);
+    if (removed) {
+      oldopt = fcdb_config.take(key);
+    }
   }
 
   if (removed) {
     /* Overwritten/removed an existing value */
-    fc_assert_ret_val(oldopt != NULL, FALSE);
+    fc_assert_ret_val(oldopt != NULL, false);
     FC_FREE(oldopt->value);
-    FC_FREE(oldopt);
+    delete oldopt;
   }
 
   return true;
@@ -115,9 +106,9 @@ static bool fcdb_load_config(const char *filename)
 {
   struct section_file *secfile;
 
-  fc_assert_ret_val(NULL != filename, FALSE);
+  fc_assert_ret_val(NULL != filename, false);
 
-  if (!(secfile = secfile_load(filename, FALSE))) {
+  if (!(secfile = secfile_load(filename, false))) {
     qCritical(_("Cannot load fcdb config file '%s':\n%s"), filename,
               secfile_error());
     return false;
@@ -151,9 +142,6 @@ static bool fcdb_load_config(const char *filename)
  */
 bool fcdb_init(const char *conf_file)
 {
-  fc_assert(fcdb_config == NULL);
-  fcdb_config = fcdb_option_hash_new();
-
   if (conf_file && strcmp(conf_file, "-")) {
     if (!fcdb_load_config(conf_file)) {
       return false;
@@ -170,10 +158,8 @@ bool fcdb_init(const char *conf_file)
  */
 const char *fcdb_option_get(const char *type)
 {
-  struct fcdb_option *opt;
-
-  if (fcdb_option_hash_lookup(fcdb_config, type, &opt)) {
-    return opt->value;
+  if (fcdb_config.contains(type)) {
+    return fcdb_config[type]->value;
   } else {
     return NULL;
   }
@@ -186,31 +172,10 @@ void fcdb_free(void)
 {
   script_fcdb_free();
 
-  fcdb_option_hash_data_iterate(fcdb_config, popt)
-  {
+  for (auto popt : qAsConst(fcdb_config)) {
+    // Dangling pointers freed below
     FC_FREE(popt->value);
-    FC_FREE(popt);
+    delete popt;
   }
-  fcdb_option_hash_data_iterate_end;
-
-  fcdb_option_hash_destroy(fcdb_config);
-  fcdb_config = NULL;
+  fcdb_config.clear();
 }
-
-#else // HAVE_FCDB
-
-/**
-   Dummy function - Initialize freeciv database system
- */
-bool fcdb_init(const char *conf_file) { return true; }
-
-/**
-   Dummy function - Return the selected fcdb config value.
- */
-const char *fcdb_option_get(const char *type) { return NULL; }
-
-/**
-   Dummy function - Free resources allocated by fcdb system.
- */
-void fcdb_free() {}
-#endif // HAVE_FCDB

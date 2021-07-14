@@ -12,14 +12,15 @@
 
 // Forward declarations
 class QTcpSocket;
+class QString;
+class QUrl;
 
-int connect_to_server(QString &username, QString &hostname, int port,
-                      char *errbuf, int errbufsize);
+int connect_to_server(const QUrl &url, char *errbuf, int errbufsize);
 
-void make_connection(QTcpSocket *sock, QString &username);
+void make_connection(QTcpSocket *sock, const QString &username);
 
 void input_from_server(QTcpSocket *sock);
 void disconnect_from_server();
 
-double try_to_autoconnect();
-void start_autoconnecting_to_server();
+double try_to_autoconnect(const QUrl &url);
+void start_autoconnecting_to_server(const QUrl &url);

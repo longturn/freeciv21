@@ -298,12 +298,14 @@ void unit_versus_unit(struct unit *attacker, struct unit *defender,
   player_update_last_war_action(plr1);
   player_update_last_war_action(plr2);
 
-  if (attackpower == 0) {
-    *att_hp = 0;
-  } else if (defensepower == 0) {
-    *def_hp = 0;
-  }
   max_rounds = get_unit_bonus(attacker, EFT_COMBAT_ROUNDS);
+  if (max_rounds <= 0) {
+    if (attackpower == 0 || attack_firepower == 0) {
+      *att_hp = 0;
+    } else if (defensepower == 0 || defense_firepower == 0) {
+      *def_hp = 0;
+    }
+  }
   for (rounds = 0; *att_hp > 0 && *def_hp > 0
                    && (max_rounds <= 0 || max_rounds > rounds);
        rounds++) {
@@ -3373,9 +3375,10 @@ static void wakeup_neighbor_sentries(struct unit *punit)
     alone_in_city = false;
   }
 
-  /* There may be sentried units with a sightrange > 3, but we don't
-     wake them up if the punit is farther away than 3. */
-  square_iterate(&(wld.map), unit_tile(punit), 3, ptile)
+  // There may be sentried units with a sightrange > sentry_range, but we
+  // don't wake them up.
+  square_iterate(&(wld.map), unit_tile(punit), game.control.sentry_range,
+                 ptile)
   {
     unit_list_iterate(ptile->units, penemy)
     {
@@ -3404,9 +3407,9 @@ static void wakeup_neighbor_sentries(struct unit *punit)
   }
   square_iterate_end;
 
-  /* Wakeup patrolling units we bump into.
-     We do not wakeup units further away than 3 squares... */
-  square_iterate(&(wld.map), unit_tile(punit), 3, ptile)
+  // Wakeup patrolling units we bump into.
+  square_iterate(&(wld.map), unit_tile(punit), game.control.sentry_range,
+                 ptile)
   {
     unit_list_iterate(ptile->units, ppatrol)
     {

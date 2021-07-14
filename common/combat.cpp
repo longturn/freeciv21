@@ -273,6 +273,10 @@ bool can_unit_attack_tile(const struct unit *punit,
  */
 double win_chance(int as, int ahp, int afp, int ds, int dhp, int dfp)
 {
+  if (afp == 0)
+    return 0.0;
+  if (dfp == 0)
+    return 1.0;
   // number of rounds a unit can fight without dying
   int att_N_lose = (ahp + dfp - 1) / dfp;
   int def_N_lose = (dhp + afp - 1) / afp;
@@ -705,7 +709,7 @@ static int get_defense_rating(const struct unit *attacker,
   get_modified_firepower(attacker, defender, &afp, &dfp);
 
   // How many rounds the defender will last
-  rating *= (defender->hp + afp - 1) / afp;
+  rating *= (defender->hp + afp - 1) / (afp ?: 1);
 
   rating *= dfp;
 

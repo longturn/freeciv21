@@ -190,6 +190,11 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
                                  struct veteran_system **vsystem, char *err,
                                  size_t err_len, bool compat);
 
+static int secfile_lookup_int_default_min_max(struct section_file *file,
+                                              int def, int min, int max,
+                                              const char *path, ...)
+    fc__attribute((__format__(__printf__, 5, 6)));
+
 Q_LOGGING_CATEGORY(ruleset_category, "freeciv.ruleset")
 
 char *script_buffer = NULL;
@@ -1556,6 +1561,12 @@ static bool load_unit_names(struct section_file *file,
   }
 
   if (ok) {
+    // Sentry range
+    game.control.sentry_range = secfile_lookup_int_default_min_max(
+        file, 3, 1, 15, "control.sentry_range");
+  }
+
+  if (ok) {
     // Unit classes
     sec = secfile_sections_by_name_prefix(file, UNIT_CLASS_SECTION_PREFIX);
     if (NULL == sec || 0 == (nval = section_list_size(sec))) {
@@ -2005,18 +2016,6 @@ static bool load_ruleset_units(struct section_file *file,
         break;
       }
       u->move_rate *= SINGLE_MOVE;
-
-      if (u->firepower <= 0) {
-        qCCritical(ruleset_category,
-                   "\"%s\" unit_type \"%s\":"
-                   " firepower is %d,"
-                   " but must be at least 1. "
-                   "  If you want no attack ability,"
-                   " set the unit's attack strength to 0.",
-                   filename, utype_rule_name(u), u->firepower);
-        ok = false;
-        break;
-      }
 
       lookup_cbonus_list(compat, u->bonuses, file, sec_name, "bonuses");
 
@@ -5853,10 +5852,6 @@ static bool load_ruleset_effects(struct section_file *file,
 /**
    Print an error message if the value is out of range.
  */
-static int secfile_lookup_int_default_min_max(struct section_file *file,
-                                              int def, int min, int max,
-                                              const char *path, ...)
-    fc__attribute((__format__(__printf__, 5, 6)));
 static int secfile_lookup_int_default_min_max(struct section_file *file,
                                               int def, int min, int max,
                                               const char *path, ...)

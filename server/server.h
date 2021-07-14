@@ -58,6 +58,8 @@ private slots:
 private:
   void init_interactive();
 
+  bool m_ready = false;
+
   bool m_interactive = false;
   QObject *m_stdin_notifier = nullptr; // Actual type is OS-dependent
 

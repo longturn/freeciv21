@@ -117,8 +117,9 @@ void line_of_text::add_text(const QString &text,
   m_blocks.back().margins = margins;
 
   QFontMetricsF metrics(format.font());
+  // +1 to be on the safe side and avoid wrapping
   m_blocks.back().base_size =
-      QSizeF(metrics.horizontalAdvance(text), metrics.height());
+      QSizeF(metrics.horizontalAdvance(text) + 1, metrics.height());
   m_blocks.back().ascent = metrics.ascent();
   m_blocks.back().descent = metrics.descent();
   if (shadow) {

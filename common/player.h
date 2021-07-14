@@ -277,6 +277,9 @@ struct player {
                                     * shared vision */
   int wonders[B_LAST];             /* contains city id's, WONDER_NOT_BUILT,
                                     * or WONDER_LOST */
+
+  int wonder_build_turn[B_LAST];    /* turn numbers when wonders were built */
+
   struct attribute_block_s attribute_block;
   struct attribute_block_s attribute_block_buffer;
 

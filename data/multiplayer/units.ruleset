@@ -9,7 +9,7 @@
 ; You should sort role units from worst to better, as often the best
 ; available role unit of a given sort will be picked by choosing
 ; the first available (not obsolete) such unit, or by picking the last
-; such unit directly. When determining starting units, the first 
+; such unit directly. When determining starting units, the first
 ; unit with the relevant role that the player can build will be chosen.
 ; If no such unit can be found (eg Explorers that require Seafaring),
 ; then the first unit with this role will be chosen.
@@ -56,6 +56,14 @@ class_flags =
     _("CanPillage")
     _("CanFortify"), _("Gets a 50% defensive bonus while in cities.")
   }
+
+; The maximum range considered to wake sentried units, in tiles. The default
+; is 3 tiles and corresponds to the AWACS sight range in the classic rules.
+; The minimum is 1 and the maximum is 15 (for performance reasons: with a
+; value of 15, the server has to check close to 1000 tiles every time a unit
+; moves). It is recommended to set this to the largest possible distance that
+; a unit can see in the rules.
+;sentry_range = 3
 
 [veteran_system]
 ; What are the names of the levels?
@@ -1520,7 +1528,7 @@ attack        = 8
 defense       = 4
 hitpoints     = 20
 firepower     = 2
-move_rate     = 28 
+move_rate     = 28
 vision_radius_sq = 8
 transport_cap = 0
 fuel          = 1
@@ -1559,7 +1567,7 @@ attack        = 18
 defense       = 5
 hitpoints     = 20
 firepower     = 2
-move_rate     = 24 
+move_rate     = 24
 vision_radius_sq = 8
 transport_cap = 0
 fuel          = 2
@@ -2380,7 +2388,7 @@ uk_happy      = 0
 uk_shield     = 0
 uk_food       = 0
 uk_gold       = 0
-flags         = "IgZOC", "NonMil", "HasNoZOC", "NoBuild", "NoHome", "SuperSpy", 
+flags         = "IgZOC", "NonMil", "HasNoZOC", "NoBuild", "NoHome", "SuperSpy",
                 "EvacuateFirst", "Unbribable", "GameLoss", "Unique",
                 "Provoking"
 ; No veteran levels (level name is never displayed)

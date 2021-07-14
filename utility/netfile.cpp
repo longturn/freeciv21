@@ -20,11 +20,11 @@
 // Qt
 #include <QBuffer>
 #include <QEventLoop>
-#include <QFile>
 #include <QJsonDocument>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QSaveFile>
 
 // utility
 #include "fcintl.h"
@@ -48,6 +48,8 @@ static bool netfile_download_file_core(const QUrl &url, QIODevice *out,
   auto request = QNetworkRequest(url);
   request.setHeader(QNetworkRequest::UserAgentHeader,
                     QLatin1String("Freeciv/" VERSION_STRING));
+  request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
+                       QNetworkRequest::NoLessSafeRedirectPolicy);
 
   auto *reply = manager->get(request);
   bool retval = true;
@@ -137,7 +139,7 @@ section_file *netfile_get_section_file(const QUrl &url, const nf_errmsg &cb)
 bool netfile_download_file(const QUrl &url, const char *filename,
                            const nf_errmsg &cb)
 {
-  QFile out(QString::fromUtf8(filename));
+  QSaveFile out(QString::fromUtf8(filename));
   if (!out.open(QIODevice::WriteOnly)) {
     if (cb != NULL) {
       auto msg = QString::fromUtf8(_("Could not open %1 for writing"))
@@ -147,5 +149,9 @@ bool netfile_download_file(const QUrl &url, const char *filename,
     return false;
   }
 
-  return netfile_download_file_core(url, &out, cb);
+  auto ok = netfile_download_file_core(url, &out, cb);
+  if (ok) {
+    out.commit();
+  }
+  return ok;
 }

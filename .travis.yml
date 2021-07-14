@@ -43,7 +43,8 @@ jobs:
     before_script:
       - scripts/travis-clang-format.sh
   - name: "windows"
-    if: branch != coverity_scan
+    if: branch = disabled
+    #if: branch != coverity_scan
     os: windows
     script:
       - $mingw64 pacman -Syu --noconfirm
@@ -60,11 +61,11 @@ jobs:
       # Disable NLS for now, see #383
       - $mingw64 cmake . -B build -G Ninja
           -DCMAKE_INSTALL_PREFIX=$PWD/build/install
-          -DFREECIV_ENABLE_NLS=OFF
       - $mingw64 cmake --build build
       - $mingw64 cmake --build build --target package
   - name: "os_x"
-    if: branch != coverity_scan
+    if: branch = disabled
+    #if: branch != coverity_scan
     os: osx
     osx_image: xcode12.2
     env:
@@ -84,6 +85,7 @@ jobs:
           - sqlite
           - sdl2
           - sdl2_mixer
+        update: true
     before_script:
       - brew link gettext --force
   - name: "coverity"

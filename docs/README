@@ -1,0 +1,8 @@
+Root of sphinx-build files here for the Longturn Documentation Project
+    https://github.com/orgs/longturn/projects/1
+
+To create a local test build run this command from this same directory
+
+    sphinx-build -b html . ../build/docs
+
+and then open ../build/docs/index.html in your browser of choice

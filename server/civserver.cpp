@@ -237,7 +237,6 @@ int main(int argc, char *argv[])
       {"scenarios", _("Save scenarios to directory DIR"),
        // TRANS: Command-line argument
        _("DIR")},
-#ifdef HAVE_FCDB
       {{"a", "auth"},
        _("Enable database authentication (requires --Database).")},
       {{"D", "Database"},
@@ -246,7 +245,6 @@ int main(int argc, char *argv[])
        _("FILE")},
       {{"G", "Guests"}, _("Allow guests to login if auth is enabled.")},
       {{"N", "Newusers"}, _("Allow new users to login if auth is enabled.")},
-#endif // HAVE_FCDB
 #ifdef AI_MODULES
       {"LoadAI", _("Load ai module MODULE. Can appear multiple times"),
        // TRANS: Command-line argument
@@ -328,7 +326,6 @@ int main(int argc, char *argv[])
     srvarg.timetrack = true;
     log_time(QStringLiteral("Time tracking enabled"), true);
   }
-#ifdef HAVE_FCDB
   if (parser.isSet("Database")) {
     srvarg.fcdb_enabled = true;
     srvarg.fcdb_conf = parser.value("Database");
@@ -342,7 +339,6 @@ int main(int argc, char *argv[])
   if (parser.isSet("Newusers")) {
     srvarg.auth_allow_newusers = true;
   }
-#endif // HAVE_FCDB
   if (parser.isSet(QStringLiteral("Serverid"))) {
     srvarg.serverid = parser.value(QStringLiteral("Serverid"));
   }
@@ -390,13 +386,11 @@ int main(int argc, char *argv[])
   // TRANS: No full stop after the URL, could cause confusion.
   con_write(C_COMMENT, _("You can learn a lot about Freeciv at %s"),
             WIKI_URL);
-#ifdef HAVE_FCDB
   if (srvarg.auth_enabled && !srvarg.fcdb_enabled) {
     fc_fprintf(stderr, _("Requested authentication with --auth, "
                          "but no --Database given\n"));
     exit(EXIT_FAILURE);
   }
-#endif // HAVE_FCDB
 
   // disallow running as root -- too dangerous
   dont_run_as_root(argv[0], "freeciv_server");

@@ -57,6 +57,7 @@
 #include "console.h"
 #include "diplhand.h"
 #include "edithand.h"
+#include "fcdb.h"
 #include "maphand.h"
 #include "mapimg.h"
 #include "meta.h"
@@ -126,16 +127,8 @@ void fc_interface_init_server()
 /**
    Server initialization.
  */
-QTcpServer *srv_prepare()
+std::pair<QTcpServer *, bool> srv_prepare()
 {
-#ifdef HAVE_FCDB
-  if (!srvarg.auth_enabled) {
-    con_write(C_COMMENT, _("This freeciv-server program has player "
-                           "authentication support, but it's currently not "
-                           "in use."));
-  }
-#endif // HAVE_FCDB
-
   // make sure it's initialized
   srv_init();
 
@@ -147,7 +140,7 @@ QTcpServer *srv_prepare()
   auto *tcp_server = server_open_socket();
   if (!tcp_server->isListening()) {
     // Don't even try to start a game.
-    return tcp_server;
+    return std::make_pair(tcp_server, false);
   }
 
 #if IS_BETA_VERSION
@@ -172,18 +165,14 @@ QTcpServer *srv_prepare()
               mapimg_server_tile_unit, mapimg_server_plrcolor_count,
               mapimg_server_plrcolor_get);
 
-#ifdef HAVE_FCDB
   if (srvarg.fcdb_enabled) {
     bool success;
 
     success = fcdb_init(qUtf8Printable(srvarg.fcdb_conf));
-    srvarg.fcdb_conf = NULL;
     if (!success) {
-      QCoreApplication::exit(EXIT_FAILURE);
-      return tcp_server;
+      return std::make_pair(tcp_server, false);
     }
   }
-#endif // HAVE_FCDB
 
   if (srvarg.ruleset != NULL) {
     QString testfilename;
@@ -193,8 +182,7 @@ QTcpServer *srv_prepare()
     if (testfilename.isEmpty()) {
       qFatal(_("Ruleset directory \"%s\" not found"),
              qUtf8Printable(srvarg.ruleset));
-      QCoreApplication::exit(EXIT_FAILURE);
-      return tcp_server;
+      return std::make_pair(tcp_server, false);
     }
     sz_strlcpy(game.server.rulesetdir, qUtf8Printable(srvarg.ruleset));
   }
@@ -218,12 +206,11 @@ QTcpServer *srv_prepare()
         || !send_server_info_to_metaserver(META_INFO)) {
       con_write(C_FAIL, _("Not starting without explicitly requested "
                           "metaserver connection."));
-      QCoreApplication::exit(EXIT_FAILURE);
-      return tcp_server;
+      return std::make_pair(tcp_server, false);
     }
   }
 
-  return tcp_server;
+  return std::make_pair(tcp_server, true);
 }
 
 } // anonymous namespace
@@ -232,7 +219,6 @@ QTcpServer *srv_prepare()
    Creates a server. It starts working as soon as there is an event loop.
  */
 server::server()
-
 {
   // Get notifications when there's some input on stdin. This is OS-dependent
   // and Qt doesn't have a wrapper. Maybe it should be split to a separate
@@ -268,13 +254,14 @@ server::server()
 
   // Now init the old C API
   fc_interface_init_server();
-  m_tcp_server = srv_prepare();
-  m_tcp_server->setParent(this);
-  if (!m_tcp_server->isListening()) {
+  bool success;
+  std::tie(m_tcp_server, success) = srv_prepare();
+  if (!success) {
     // Could not listen on the specified port. Rely on the caller checking
     // our state and not starting the event loop.
     return;
   }
+  m_tcp_server->setParent(this);
   connect(m_tcp_server, &QTcpServer::newConnection, this,
           &server::accept_connections);
   connect(m_tcp_server, &QTcpServer::acceptError,
@@ -294,6 +281,8 @@ server::server()
   m_pulse_timer = new QTimer(this);
   m_pulse_timer->start(1000);
   connect(m_pulse_timer, &QTimer::timeout, this, &server::pulse);
+
+  m_ready = true;
 }
 
 /**
@@ -348,7 +337,7 @@ void server::init_interactive()
    Checks if the server is ready for the event loop to start. In practice,
    this is only false if opening the port failed.
  */
-bool server::is_ready() const { return m_tcp_server->isListening(); }
+bool server::is_ready() const { return m_ready; }
 
 /**
    Server accepts connections from client:
