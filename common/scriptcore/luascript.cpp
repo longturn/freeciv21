@@ -25,6 +25,9 @@ extern "C" {
 #include "lualib.h"
 }
 
+/* dependencies/tolua */
+#include "tolua.h"
+
 // Sol
 #include "sol/sol.hpp"
 
@@ -39,6 +42,7 @@ extern "C" {
 /* common/scriptcore */
 #include "luascript_func.h"
 #include "luascript_signal.h"
+#include "tolua_common_a_gen.h"
 
 #include "luascript.h"
 
@@ -351,13 +355,13 @@ void luascript_destroy(struct fc_lua *fcl)
 }
 
 /**
- * Runs tolua_common_z.lua.
+ * Loads a script from a Qt resource file and executes it.
  */
-void luascript_common_z(lua_State *L)
+static void luascript_exec_resource(lua_State *L, const QString &filename)
 {
   Q_INIT_RESOURCE(scriptcore);
 
-  QFile in(":/lua/tolua_common_z.lua");
+  QFile in(filename);
   if (!in.open(QFile::ReadOnly)) {
     qCritical() << "Could not find resource:" << in.fileName();
     qFatal("Missing resource");
@@ -366,9 +370,26 @@ void luascript_common_z(lua_State *L)
 
   // We trust that it loads.
   sol::state_view lua(L);
-  lua.script(data.data(), "tolua_common_z.lua");
+  lua.script(data.data(), in.fileName().toStdString());
 
   Q_CLEANUP_RESOURCE(scriptcore);
+}
+
+/**
+ * Runs tolua_common_a.lua.
+ */
+void luascript_common_a(lua_State *L)
+{
+  tolua_common_a_open(L);
+  luascript_exec_resource(L, QStringLiteral(":/lua/tolua_common_a.lua"));
+}
+
+/**
+ * Runs tolua_common_z.lua.
+ */
+void luascript_common_z(lua_State *L)
+{
+  luascript_exec_resource(L, QStringLiteral(":/lua/tolua_common_z.lua"));
 }
 
 /**
