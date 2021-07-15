@@ -209,7 +209,7 @@ bool script_fcdb_init(const QString &fcdb_luafile)
     fcl_compat.caller = nullptr;
     luascript_init(&fcl_compat);
 
-    tolua_common_a_open(fcl->lua_state());
+    luascript_common_a(fcl->lua_state());
     tolua_game_open(fcl->lua_state());
     script_fcdb_register_functions();
     luascript_common_z(fcl->lua_state());

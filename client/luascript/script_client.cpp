@@ -34,7 +34,6 @@ extern "C" {
 #include "api_game_specenum.h"
 #include "luascript.h"
 
-#include "tolua_common_a_gen.h"
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
 
@@ -185,7 +184,7 @@ bool script_client_init()
     return false;
   }
 
-  tolua_common_a_open(main_fcl->state);
+  luascript_common_a(main_fcl->state);
   api_specenum_open(main_fcl->state);
   tolua_game_open(main_fcl->state);
   tolua_signal_open(main_fcl->state);

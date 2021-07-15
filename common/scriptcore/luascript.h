@@ -60,6 +60,7 @@ void luascript_init(fc_lua *fcl);
 struct fc_lua *luascript_get_fcl(lua_State *L);
 void luascript_destroy(struct fc_lua *fcl);
 
+void luascript_common_a(lua_State *L);
 void luascript_common_z(lua_State *L);
 
 void luascript_log(struct fc_lua *fcl, QtMsgType level, const char *format,
