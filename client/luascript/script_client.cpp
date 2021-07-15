@@ -34,8 +34,6 @@ extern "C" {
 #include "api_game_specenum.h"
 #include "luascript.h"
 
-#include "tolua_common_a_gen.h"
-#include "tolua_common_z_gen.h"
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
 
@@ -100,16 +98,6 @@ bool script_client_callback_invoke(const char *callback_name, int nargs,
 {
   return luascript_callback_invoke(main_fcl, callback_name, nargs,
                                    parg_types, args);
-}
-
-/**
-   Mark any, if exported, full userdata representing 'object' in
-   the current script state as 'Nonexistent'.
-   This changes the type of the lua variable.
- */
-void script_client_remove_exported_object(void *object)
-{
-  luascript_remove_exported_object(main_fcl, object);
 }
 
 /**
@@ -196,7 +184,7 @@ bool script_client_init()
     return false;
   }
 
-  tolua_common_a_open(main_fcl->state);
+  luascript_common_a(main_fcl->state);
   api_specenum_open(main_fcl->state);
   tolua_game_open(main_fcl->state);
   tolua_signal_open(main_fcl->state);
@@ -210,7 +198,7 @@ bool script_client_init()
   tolua_client_open(main_fcl->state);
 #endif // MESON_BUILD
 
-  tolua_common_z_open(main_fcl->state);
+  luascript_common_z(main_fcl->state);
 
   script_client_code_init();
   script_client_vars_init();

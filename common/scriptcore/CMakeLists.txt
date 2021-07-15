@@ -5,12 +5,6 @@ tolua_generate(
   PACKAGE_NAME common_a
 )
 tolua_generate(
-  INPUT tolua_common_z.pkg
-  HEADER tolua_common_z_gen.h
-  SOURCE tolua_common_z_gen.cpp
-  PACKAGE_NAME common_z
-)
-tolua_generate(
   INPUT tolua_game.pkg
   HEADER tolua_game_gen.h
   SOURCE tolua_game_gen.cpp
@@ -39,16 +33,19 @@ add_library(
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_common_a_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_common_a_gen.h
-  ${CMAKE_CURRENT_BINARY_DIR}/tolua_common_z_gen.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/tolua_common_z_gen.h
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_game_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_game_gen.h
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_signal_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_signal_gen.h
 )
 
+set_target_properties(scriptcore PROPERTIES AUTORCC ON)
+target_sources(scriptcore PRIVATE scriptcore.qrc)
+
 target_include_directories(scriptcore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(scriptcore PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(scriptcore PUBLIC common)
 target_link_libraries(scriptcore PUBLIC tolua)
+target_link_libraries(scriptcore PRIVATE sol2)
+target_link_libraries(scriptcore PRIVATE Qt5::Core)

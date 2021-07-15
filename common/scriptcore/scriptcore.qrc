@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/lua">
+    <file>tolua_common_a.lua</file>
+    <file>tolua_common_z.lua</file>
+</qresource>
+</RCC>

@@ -19,8 +19,6 @@ struct section_file;
 bool script_client_callback_invoke(const char *callback_name, int nargs,
                                    enum api_types *parg_types, va_list args);
 
-void script_client_remove_exported_object(void *object);
-
 // script functions.
 bool script_client_init();
 void script_client_free();
