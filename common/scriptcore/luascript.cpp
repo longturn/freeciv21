@@ -40,6 +40,7 @@ extern "C" {
 #include "map.h"
 
 /* common/scriptcore */
+#include "api_common_intl.h"
 #include "api_common_utilities.h"
 #include "luascript_func.h"
 #include "luascript_signal.h"
@@ -381,6 +382,12 @@ static void luascript_exec_resource(lua_State *L, const QString &filename)
  */
 static void luascript_common_a_register(sol::state_view state)
 {
+  // Intl module
+  state["_"] = api_intl__;
+  state["N_"] = api_intl_N_;
+  state["Q_"] = api_intl_Q_;
+  state["PL_"] = api_intl_PL_;
+
   // log module
   // clang-format off
   sol::table log = state.create_table_with(
