@@ -40,6 +40,7 @@ extern "C" {
 #include "map.h"
 
 /* common/scriptcore */
+#include "api_common_utilities.h"
 #include "luascript_func.h"
 #include "luascript_signal.h"
 #include "tolua_common_a_gen.h"
@@ -376,11 +377,37 @@ static void luascript_exec_resource(lua_State *L, const QString &filename)
 }
 
 /**
+ * Registers tolua_common_a functions and modules.
+ */
+static void luascript_common_a_register(sol::state_view state)
+{
+  // log module
+  // clang-format off
+  sol::table log = state.create_table_with(
+      "base", api_utilities_log_base,
+      "deprecation_warning", api_utilities_deprecation_warning);
+  log.new_enum("level",
+      "FATAL",   LOG_FATAL,
+      "ERROR",   LOG_ERROR,
+      "WARN",    LOG_WARN,
+      "NORMAL",  LOG_NORMAL,
+      "VERBOSE", LOG_VERBOSE,
+      "DEBUG",   LOG_DEBUG);
+  // clang-format on
+  state["log"] = log;
+
+  // Global functions
+  state["random"] = api_utilities_random;
+  state["fc_version"] = api_utilities_fc_version;
+}
+
+/**
  * Runs tolua_common_a.lua.
  */
 void luascript_common_a(lua_State *L)
 {
   tolua_common_a_open(L);
+  luascript_common_a_register(L);
   luascript_exec_resource(L, QStringLiteral(":/lua/tolua_common_a.lua"));
 }
 

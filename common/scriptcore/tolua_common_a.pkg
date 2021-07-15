@@ -40,30 +40,3 @@ const char *api_intl_Q_
   @ Q_ (lua_State *L, const char *untranslated);
 const char *api_intl_PL_
   @ PL_ (lua_State *L, const char *singular, const char *plural, int n);
-
-/* Log module. */
-module log {
-  module level {
-    enum log_level {
-      LOG_FATAL @ FATAL,
-      LOG_ERROR @ ERROR,
-      LOG_WARN @ WARN,
-      LOG_NORMAL @ NORMAL,
-      LOG_VERBOSE @ VERBOSE,
-      LOG_DEBUG @ DEBUG
-    };
-  }
-
-  void api_utilities_log_base
-    @ base (lua_State *L, int log_level, const char *message);
-
-  void api_utilities_deprecation_warning
-    @ deprecation_warning(lua_State *L, char *method, char *replacement, char *deprecated_since);
-}
-
-/* Utilities module. */
-int api_utilities_random
-  @ random (lua_State *L, int min, int max);
-
-const char *api_utilities_fc_version
-  @ fc_version (lua_State *L);
