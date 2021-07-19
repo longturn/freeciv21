@@ -449,6 +449,7 @@ void page_network::slot_connect()
 
     return;
   case ENTER_PASSWORD_TYPE:
+    client_url().setPassword(ui.connect_password_edit->text());
     fc_strlcpy(reply.password, qUtf8Printable(client_url().password()),
                MAX_LEN_NAME);
     send_packet_authentication_reply(&client.conn, &reply);
