@@ -56,6 +56,10 @@ support is under development.
 
    Especially the xgettext program is required to create the *.gmo files which aren't included in the git tree.
 
+ - Lua version 5.3 or higher
+
+   Exact 5.3 is preferred.
+
  - libkf5archive
 
  - libSDL2 Mixer
@@ -145,6 +149,7 @@ Start with ensuring your have a source repository (deb-src) turned on in apt sou
      python3 \
      qt5-default \
      libkf5archive-dev \
+     liblua5.3-dev \
      libmagickwand-dev \
      libsdl2-mixer-dev \
      libunwind-dev \
