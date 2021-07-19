@@ -48,6 +48,7 @@ always needed for building freeciv21.
  - mingw-w64-i686-curl / mingw-w64-x86_64-curl
  - mingw-w64-i686-bzip2 / mingw-w64-x86_64-bzip2
  - mingw-w64-i686-readline / mingw-w64-x86_64-readline
+ - mingw-w64-i686-lua / mingw-w64-x86_64-lua
  - mingw-w64-i686-imagemagick / mingw-w64-x86_64-imagemagick
  - mingw-w64-i686-SDL2_mixer / mingw-w64-x86_64-SDL2_mixer
  - mingw-w64-i686-cmake / mingw-w64-x86_64-cmake
