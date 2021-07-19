@@ -125,7 +125,7 @@ Once the compilation is complete, install the game with this command.
 
 After compilation, the important results are:
 
-  - The "build/freeciv-qt" and "build/freeciv-server" binaries.
+  - The "build/freeciv21-client" and "build/freeciv21-server" binaries.
   - The "build/data/" directory, which contains the graphics and scenarios.
 
 See the README file for more information.
@@ -173,7 +173,7 @@ Msys2 is an available environment for compiling Freeciv21. Microsoft Windows Vis
 
 Freeciv21 currently supports building and installing using the Msys2 environment. Build instructions for
 Msys2 versions are documented in doc/README.msys2. Alternately you can visit
-https://github.com/jwrober/freeciv-msys2 for ready make scripts.
+https://github.com/jwrober/freeciv-msys2 for ready made scripts.
 
 Follow the steps in Chapter 2. Compiling and Installing Freeciv21.
 
