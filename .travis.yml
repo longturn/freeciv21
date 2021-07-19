@@ -22,6 +22,7 @@ jobs:
         - gettext
         - qt5-default
         - libkf5archive-dev
+        - liblua5.3-dev
         - libsqlite3-dev
         - libsdl2-mixer-dev
   - name: "ubuntu-clang"
@@ -38,6 +39,7 @@ jobs:
         - gettext
         - qt5-default
         - libkf5archive-dev
+        - liblua5.3-dev
         - libsqlite3-dev
         - libsdl2-mixer-dev
     before_script:
@@ -55,6 +57,7 @@ jobs:
           mingw-w64-x86_64-gcc
           mingw-w64-x86_64-libunwind
           mingw-w64-x86_64-readline
+          mingw-w64-x86_64-lua # There is no lua53 in MSYS, 5.4 should work...
           mingw-w64-x86_64-SDL2_mixer
           mingw-w64-x86_64-qt5
           mingw-w64-x86_64-karchive-qt5
@@ -82,6 +85,7 @@ jobs:
           - qt@5
           - kde-karchive
           - readline
+          - lua@5.3
           - sqlite
           - sdl2
           - sdl2_mixer
@@ -101,6 +105,7 @@ jobs:
         - gettext
         - qt5-default
         - libkf5archive-dev
+        - liblua5.3-dev
         - libsqlite3-dev
         - libsdl2-mixer-dev
       coverity_scan:
