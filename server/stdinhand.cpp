@@ -3144,17 +3144,15 @@ static bool is_allowed_to_take(struct connection *requester,
     return true;
   }
 
-#ifdef HAVE_FCDB
   if (srvarg.fcdb_enabled) {
-    bool ok = FALSE;
+    bool ok = false;
 
     if (script_fcdb_call("user_take", requester, taker, pplayer, will_obs,
                          &ok)
         && ok) {
-      return TRUE;
+      return true;
     }
   }
-#endif
 
   if (!pplayer && will_obs) {
     // Global observer.
@@ -5280,15 +5278,11 @@ static bool delegate_command(struct connection *caller, char *arg,
         ret = false;
         break;
       }
-#ifndef HAVE_FCDB
-      if (caller && conn_get_access(caller) < ALLOW_ADMIN) {
-#else
       if (caller && conn_get_access(caller) < ALLOW_ADMIN
           && !(srvarg.fcdb_enabled
                && script_fcdb_call("user_delegate_to", caller, dplayer,
                                    qUtf8Printable(username), &ret)
                && ret)) {
-#endif
         cmd_reply(CMD_DELEGATE, caller, C_SYNTAX,
                   _("Command level '%s' or greater or special permission "
                     "needed to modify others' delegations."),
@@ -5917,12 +5911,6 @@ static bool fcdb_command(struct connection *caller, char *arg, bool check)
   QStringList token;
   bool ret = true;
   bool usage = false;
-
-#ifndef HAVE_FCDB
-  cmd_reply(CMD_FCDB, caller, C_FAIL,
-            _("Freeciv database script deactivated at compile time."));
-  return false;
-#endif
 
   if (!srvarg.fcdb_enabled) {
     // Not supposed to be used. It isn't initialized.
