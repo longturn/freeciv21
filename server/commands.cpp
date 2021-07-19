@@ -504,7 +504,8 @@ static struct command commands[] = {
      N_("playernation <player-name> [nation] [is-male] [leader] [style]"),
      N_("Define the nation of a player."),
      N_("This command sets the nation, leader name, style, and gender of a "
-        "specific player.\nThe gender parameter should be 1 if male, "
+        "specific player. The string \"random\" can be used to select a "
+        "random nation.\nThe gender parameter should be 1 if male, "
         "otherwise 0. Omitting any of the player settings will reset the "
         "player to defaults.\n"
         "This command may not be used once the game has started."),

@@ -4239,25 +4239,30 @@ static bool playernation_command(struct connection *caller, char *str,
       send_player_info_c(pplayer, game.est_connections);
     }
   } else {
-    pnation = nation_by_rule_name(qUtf8Printable(token.at(1)));
-    if (pnation == NO_NATION_SELECTED) {
-      cmd_reply(CMD_PLAYERNATION, caller, C_FAIL,
-                _("Unrecognized nation: %s."), qUtf8Printable(token.at(1)));
-      return false;
-    }
+    if (token.at(1) == QStringLiteral("random")) {
+      pnation = NO_NATION_SELECTED;
+    } else {
+      pnation = nation_by_rule_name(qUtf8Printable(token.at(1)));
+      if (pnation == NO_NATION_SELECTED) {
+        cmd_reply(CMD_PLAYERNATION, caller, C_FAIL,
+                  _("Unrecognized nation: %s."),
+                  qUtf8Printable(token.at(1)));
+        return false;
+      }
 
-    if (!client_can_pick_nation(pnation)) {
-      cmd_reply(CMD_PLAYERNATION, caller, C_FAIL,
-                _("%s nation is not available for user selection."),
-                qUtf8Printable(token.at(1)));
-      return false;
-    }
+      if (!client_can_pick_nation(pnation)) {
+        cmd_reply(CMD_PLAYERNATION, caller, C_FAIL,
+                  _("%s nation is not available for user selection."),
+                  qUtf8Printable(token.at(1)));
+        return false;
+      }
 
-    if (pnation->player && pnation->player != pplayer) {
-      cmd_reply(CMD_PLAYERNATION, caller, C_FAIL,
-                _("%s nation is already in use."),
-                qUtf8Printable(token.at(1)));
-      return false;
+      if (pnation->player && pnation->player != pplayer) {
+        cmd_reply(CMD_PLAYERNATION, caller, C_FAIL,
+                  _("%s nation is already in use."),
+                  qUtf8Printable(token.at(1)));
+        return false;
+      }
     }
 
     if (token.count() < 3) {
@@ -4286,7 +4291,7 @@ static bool playernation_command(struct connection *caller, char *str,
                   _("Unrecognized style: %s."), qUtf8Printable(token.at(4)));
         return false;
       }
-    } else {
+    } else if (pnation != NO_NATION_SELECTED) {
       pstyle = style_of_nation(pnation);
     }
 
@@ -4308,7 +4313,8 @@ static bool playernation_command(struct connection *caller, char *str,
       }
       cmd_reply(CMD_PLAYERNATION, caller, C_OK,
                 _("Nation of player %s set to [%s]."), player_name(pplayer),
-                nation_rule_name(pnation));
+                pnation == NO_NATION_SELECTED ? "random"
+                                              : nation_rule_name(pnation));
       send_player_info_c(pplayer, game.est_connections);
     }
   }
