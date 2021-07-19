@@ -341,7 +341,8 @@ QString luascript_signal_by_index(struct fc_lua *fcl, int sindex)
   fc_assert_ret_val(fcl != NULL, QString());
   fc_assert_ret_val(fcl->signal_names != NULL, QString());
 
-  return fcl->signal_names->at(sindex);
+  return sindex < fcl->signal_names->size() ? fcl->signal_names->at(sindex)
+                                            : QString();
 }
 
 /**
@@ -358,7 +359,7 @@ const char *luascript_signal_callback_by_index(struct fc_lua *fcl,
   fc_assert_ret_val(fcl->signals_hash != NULL, NULL);
 
   psignal = fcl->signals_hash->value(signal_name, nullptr);
-  if (psignal) {
+  if (psignal && sindex < psignal->callbacks->size()) {
     struct signal_callback *pcallback = psignal->callbacks->at(sindex);
     if (pcallback) {
       return pcallback->name;
