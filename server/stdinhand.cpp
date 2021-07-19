@@ -4303,9 +4303,11 @@ static bool playernation_command(struct connection *caller, char *str,
       pplayer->is_male = is_male;
 
       if (token.count() > 3) {
-        if (!server_player_set_name_full(caller, pplayer, pnation,
-                                         qUtf8Printable(token.at(3)),
-                                         error_buf, sizeof(error_buf))) {
+        if (server_player_set_name_full(caller, pplayer, pnation,
+                                        qUtf8Printable(token.at(3)),
+                                        error_buf, sizeof(error_buf))) {
+          pplayer->random_name = false;
+        } else {
           cmd_reply(CMD_PLAYERNATION, caller, C_WARNING, "%s", error_buf);
         }
       } else {
