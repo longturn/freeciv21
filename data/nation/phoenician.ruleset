@@ -21,6 +21,8 @@ leaders = {
  "Kadmos",      "Male"
  "Ithobaal",    "Male"
  "Abd'ashtart", "Male"
+ "Dido", "Female"
+ "Jezebel", "Female"
 }
 ruler_titles = {
  "government",      "male_title",        "female_title"
