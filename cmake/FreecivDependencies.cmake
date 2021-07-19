@@ -84,19 +84,29 @@ endif()
 
 # Lua
 #
-# Lua is not binary compatible even between minor releases. We stick to Lua 5.4.
+# Lua is not binary compatible even between minor releases. We stick to Lua 5.3.
 #
-# The tolua program is compatible with Lua 5.4, but the library may not be (eg
+# The tolua program is compatible with Lua 5.3, but the library may not be (eg
 # on Debian it's linked to Lua 5.2). We always build the library. When not
 # cross-compiling, we can also build the program. When cross-compiling, an
 # externally provided tolua program is required (or an emulator for the target
 # platform, eg qemu).
+find_package(Lua 5.3 REQUIRED)
+
+# Create an imported target since it's not created by CMake :(
+add_library(lua SHARED IMPORTED GLOBAL)
+# Get a library name for IMPORTED_LOCATION
+list(GET LUA_LIBRARIES 0 loc)
+set_target_properties(lua PROPERTIES IMPORTED_LOCATION "${loc}")
+# Link to all libs, not just the first
+target_link_libraries(lua INTERFACE "${LUA_LIBRARIES}")
+target_include_directories(lua SYSTEM INTERFACE "${LUA_INCLUDE_DIR}")
+
 if (CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR)
   find_package(ToLuaProgram REQUIRED)
 else()
   find_package(ToLuaProgram)
 endif()
-add_subdirectory(dependencies/lua-5.4)
 add_subdirectory(dependencies/tolua-5.2) # Will build the program if not found.
 
 # backward-cpp
