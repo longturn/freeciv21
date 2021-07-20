@@ -94,7 +94,7 @@ endif()
 find_package(Lua 5.3 REQUIRED)
 
 # Create an imported target since it's not created by CMake :(
-add_library(lua SHARED IMPORTED GLOBAL)
+add_library(lua UNKNOWN IMPORTED GLOBAL)
 # Get a library name for IMPORTED_LOCATION
 list(GET LUA_LIBRARIES 0 loc)
 set_target_properties(lua PROPERTIES IMPORTED_LOCATION "${loc}")
