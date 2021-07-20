@@ -439,7 +439,7 @@ void page_network::slot_connect()
     if (client_url().password()
         == ui.connect_confirm_password_edit->text()) {
       fc_strlcpy(reply.password, qUtf8Printable(client_url().password()),
-                 MAX_LEN_NAME);
+                 MAX_LEN_PASSWORD);
       send_packet_authentication_reply(&client.conn, &reply);
       set_connection_state(WAITING_TYPE);
     } else {
@@ -451,7 +451,7 @@ void page_network::slot_connect()
   case ENTER_PASSWORD_TYPE:
     client_url().setPassword(ui.connect_password_edit->text());
     fc_strlcpy(reply.password, qUtf8Printable(client_url().password()),
-               MAX_LEN_NAME);
+               MAX_LEN_PASSWORD);
     send_packet_authentication_reply(&client.conn, &reply);
     set_connection_state(WAITING_TYPE);
     return;
