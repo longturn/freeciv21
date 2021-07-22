@@ -3694,8 +3694,8 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
       }
     }
     unit_class_iterate_end;
-    QString andlist = strvec_to_and_list(classes);
     if (!classes.isEmpty()) {
+      QString andlist = strvec_to_and_list(classes);
       if (proad != NULL) {
         // TRANS: %s is a list of unit classes separated by "and".
         cat_snprintf(buf, bufsz, _("* Can be traveled by %s units.\n"),
