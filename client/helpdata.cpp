@@ -1794,35 +1794,35 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     unit_type_iterate_end;
 
     if (!against.isEmpty()) {
-      QString orlist = strvec_to_or_list(against);
-      QString andlist = strvec_to_and_list(against);
-
       switch (cbonus->type) {
       case CBONUS_DEFENSE_MULTIPLIER:
         cat_snprintf(buf, bufsz,
                      // TRANS: percentage ... or-list of unit types
                      _("* %d%% defense bonus if attacked by %s.\n"),
-                     cbonus->value * 100, qUtf8Printable(orlist));
+                     cbonus->value * 100,
+                     qUtf8Printable(strvec_to_or_list(against)));
         break;
       case CBONUS_DEFENSE_DIVIDER:
         cat_snprintf(buf, bufsz,
                      // TRANS: defense divider ... or-list of unit types
                      _("* Reduces target's defense to 1 / %d when "
                        "attacking %s.\n"),
-                     cbonus->value + 1, qUtf8Printable(orlist));
+                     cbonus->value + 1,
+                     qUtf8Printable(strvec_to_or_list(against)));
         break;
       case CBONUS_FIREPOWER1:
         cat_snprintf(buf, bufsz,
                      // TRANS: or-list of unit types
                      _("* Reduces target's fire power to 1 when "
                        "attacking %s.\n"),
-                     qUtf8Printable(andlist));
+                     qUtf8Printable(strvec_to_and_list(against)));
         break;
       case CBONUS_DEFENSE_MULTIPLIER_PCT:
         cat_snprintf(buf, bufsz,
                      // TRANS: percentage ... or-list of unit types
                      _("* %d%% defense bonus if attacked by %s.\n"),
-                     cbonus->value, qUtf8Printable(orlist));
+                     cbonus->value,
+                     qUtf8Printable(strvec_to_or_list(against)));
         break;
       case CBONUS_DEFENSE_DIVIDER_PCT:
         cat_snprintf(buf, bufsz,
@@ -1830,7 +1830,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                      _("* Reduces target's defense to 1 / %.2f when "
                        "attacking %s.\n"),
                      (static_cast<float>(cbonus->value) + 100.0f) / 100.0f,
-                     qUtf8Printable(orlist));
+                     qUtf8Printable(strvec_to_or_list(against)));
         break;
       }
     }
@@ -1912,11 +1912,10 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
     unit_type_iterate_end;
     if (!types.isEmpty()) {
-      QString orlist = strvec_to_or_list(types);
       cat_snprintf(buf, bufsz,
                    // TRANS: %s is a list of unit types separated by "or".
                    _("* May be obtained by conversion of %s.\n"),
-                   qUtf8Printable(orlist));
+                   qUtf8Printable(strvec_to_or_list(types)));
     }
   }
   if (utype_has_flag(utype, UTYF_NOHOME)) {
@@ -1959,14 +1958,14 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       }
     }
     unit_class_iterate_end;
-    QString orlist = strvec_to_or_list(classes);
 
     cat_snprintf(buf, bufsz,
                  // TRANS: %s is a list of unit classes separated by "or".
                  PL_("* Can carry and refuel %d %s unit.\n",
                      "* Can carry and refuel up to %d %s units.\n",
                      utype->transport_capacity),
-                 utype->transport_capacity, qUtf8Printable(orlist));
+                 utype->transport_capacity,
+                 qUtf8Printable(strvec_to_or_list(classes)));
     if (uclass_has_flag(utype_class(utype), UCF_UNREACHABLE)) {
       /* Document restrictions on when units can load/unload */
       bool has_restricted_load = false, has_unrestricted_load = false,
@@ -3695,15 +3694,14 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
     }
     unit_class_iterate_end;
     if (!classes.isEmpty()) {
-      QString andlist = strvec_to_and_list(classes);
       if (proad != NULL) {
         // TRANS: %s is a list of unit classes separated by "and".
         cat_snprintf(buf, bufsz, _("* Can be traveled by %s units.\n"),
-                     qUtf8Printable(andlist));
+                     qUtf8Printable(strvec_to_and_list(classes)));
       } else {
         // TRANS: %s is a list of unit classes separated by "and".
         cat_snprintf(buf, bufsz, _("* Native to %s units.\n"),
-                     qUtf8Printable(andlist));
+                     qUtf8Printable(strvec_to_and_list(classes)));
       }
 
       if (extra_has_flag(pextra, EF_NATIVE_TILE)) {
