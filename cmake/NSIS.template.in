@@ -14,20 +14,10 @@
   SetCompressor @CPACK_NSIS_COMPRESSOR@
 
 ;#########################################################
-; Includes
-;#########################################################
-
-  !include "MUI2.nsh"
-  !include "LogicLib.nsh"
-  !include "Integration.nsh"
-  !include "Sections.nsh"
-  !include "Library.nsh"
-  !include "x64.nsh"
-
-;#########################################################
 ; Defines
 ;#########################################################
 
+  ;Generic Variables
   !define APPNAME "@CPACK_PACKAGE_NAME@"
   !define VERSION "@CPACK_PACKAGE_VERSION@"
   !define PATCH "@CPACK_PACKAGE_VERSION_PATCH@"
@@ -38,6 +28,28 @@
   !define REGPATH_UNINSTSUBKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPID}"
   !define MUI_ICON "@CPACK_NSIS_MUI_ICON@"
   !define MUI_UNICON "@CPACK_NSIS_MUI_UNIICON@"
+  !define MUI_UI_COMPONENTSPAGE_SMALLDESC
+  !define MUI_LICENSEPAGE_CHECKBOX
+  !define MUI_LICENSEPAGE_CHECKBOX_TEXT "I agree to the license terms."
+  
+  ;Multi-User Variables
+  !define MULTIUSER_EXECUTIONLEVEL Highest
+  !define MULTIUSER_MUI
+  !define MULTIUSER_INSTALLMODE_COMMANDLINE
+  !define MULTIUSER_INSTALLMODEPAGE_TEXT_TOP "Select the type of installation you want to perform:"
+  !define MULTIUSER_INSTALLMODE_INSTDIR "${APPNAME}-${VERSION}"
+
+;#########################################################
+; Includes
+;#########################################################
+
+  !include "MUI2.nsh"
+  !include "MultiUser.nsh"
+  !include "LogicLib.nsh"
+  !include "Integration.nsh"
+  !include "Sections.nsh"
+  !include "Library.nsh"
+  !include "x64.nsh"
 
 ;#########################################################
 ; General
@@ -48,10 +60,6 @@
   ShowInstDetails show
   ShowUninstDetails show
   SetOverwrite on
-  RequestExecutionLevel Admin ; Request admin rights on WinVista+ (when UAC is turned on)
-
-  ;Default installation folder
-  InstallDir "@CPACK_NSIS_INSTALL_ROOT@\${APPNAME}-${VERSION}"
 
 ;#########################################################
 ; Interface Settings
@@ -79,34 +87,34 @@
   
   Section "Freeciv21" freeciv21
     SectionIn RO 1 2
-    SetOutPath "$INSTDIR"
+    SetOutPath $INSTDIR
     File /r "${INST_DIR}\freeciv21\*.*"
   SectionEnd
   SectionGroup "Tools" Tools
     Section "Ruleset Editor" tool_ruledit
       SectionIn 2
-      SetOutPath "$INSTDIR"
+      SetOutPath $INSTDIR
       File /r "${INST_DIR}\tool_ruledit\*.*"
     SectionEnd
     Section "Modpack Installer CLI Edition" tool_fcmp_cli
       SectionIn 2
-      SetOutPath "$INSTDIR"
+      SetOutPath $INSTDIR
       File /r "${INST_DIR}\tool_fcmp_cli\*.*"
     SectionEnd
     Section "Ruleset Upgrade Tool" tool_ruleup
       SectionIn 2
-      SetOutPath "$INSTDIR"
+      SetOutPath $INSTDIR
       File /r "${INST_DIR}\tool_ruleup\*.*"
     SectionEnd
     Section "Server Manual Tool" tool_manual
       SectionIn 2
-      SetOutPath "$INSTDIR"
+      SetOutPath $INSTDIR
       File /r "${INST_DIR}\tool_manual\*.*"
     SectionEnd
   SectionGroupEnd
   Section "Languages" translations
     SectionIn 1 2
-    SetOutPath "$INSTDIR"
+    SetOutPath $INSTDIR
     File /r "${INST_DIR}\translations\*.*"
   SectionEnd
 
@@ -127,8 +135,9 @@
   ; Installer Pages
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE "@CPACK_RESOURCE_FILE_LICENSE@"
-  !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_COMPONENTS
+  !insertmacro MULTIUSER_PAGE_INSTALLMODE
+  !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
   ; TODO: add a run feature
   !insertmacro MUI_PAGE_FINISH
@@ -149,35 +158,34 @@
 ; Macros
 ;#########################################################
 
-  !macro EnsureAdminRights
+  !macro CheckAdminRights
     UserInfo::GetAccountType
     Pop $0
-    ${If} $0 != "admin" ; Require admin rights on WinNT4+
-      MessageBox MB_IconStop "Administrator rights required!"
-      SetErrorLevel 740 ; ERROR_ELEVATION_REQUIRED
-      Quit
+    ${If} $0 != "admin" ; Check for admin rights on WinNT4+
+      MessageBox MB_IconInformation "Administrator rights not detected, installing in User's Home Directory by default."
     ${EndIf}
   !macroend
-
+  
 ;#########################################################
 ; Funtions
 ;#########################################################
 
   Function .onInit
     SetShellVarContext All
-    !insertmacro EnsureAdminRights
+	!insertmacro MULTIUSER_INIT
+	;!insertmacro CheckAdminRights
   FunctionEnd
 
   Function un.onInit
     SetShellVarContext All
-    !insertmacro EnsureAdminRights
+	!insertmacro MULTIUSER_UNINIT
   FunctionEnd
 
   Function ConditionalAddToRegisty
     Pop $0
     Pop $1
     StrCmp "$0" "" ConditionalAddToRegisty_EmptyString
-      WriteRegStr HKLM "${REGPATH_UNINSTSUBKEY}" "$1" "$0"
+      WriteRegStr "SHCTX" "${REGPATH_UNINSTSUBKEY}" "$1" "$0"
     ConditionalAddToRegisty_EmptyString:
   FunctionEnd
 
@@ -190,21 +198,20 @@
     SetOutPath "$INSTDIR"
     
     ; Store installation folder.
-    WriteRegStr HKLM "Software\${APPID}" "Install Directory" $INSTDIR
+    WriteRegStr "SHCTX" "SOFTWARE\${APPNAME}\${VERSION}\${CPU_ARCH}" "" "$INSTDIR"
     
     ; Create uninstaller.
     WriteUninstaller "$INSTDIR\Uninstall.exe"
     
+	
     ; Create Desktop Icon
-    CreateShortCut "$DESKTOP\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.exe" '"${Arg}"' "$INSTDIR\client.ico" 0
+    CreateShortCut "$DESKTOP\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.exe" "" "$INSTDIR\client.ico" 0
 
     ; Create Start Menu Entries
     CreateDirectory "$SMPROGRAMS\${APPNAME} v${VERSION}"
-    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.exe" '"${Arg}"' "$INSTDIR\client.ico" 0
-    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Modpack Installer.lnk" "$INSTDIR\freeciv21-modpack-qt.exe" '"${Arg}"' "$INSTDIR\mp.ico" 0
-    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\Uninstall ${APPNAME}.lnk" "$INSTDIR\Uninstall.exe"
-
-    
+    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.exe" "" "$INSTDIR\client.ico" 0
+    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Modpack Installer.lnk" "$INSTDIR\freeciv21-modpack-qt.exe" "" "$INSTDIR\mp.ico" 0
+	
     ; Create entry in Windows "Add/Remove programs" panel.
     Push "DisplayName"
     Push "${APPNAME} v${VERSION}"
@@ -254,18 +261,16 @@
     
     ; Remove shortcuts
     Delete "$DESKTOP\${APPNAME} Client.lnk"
-    Delete "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Client.lnk"
-    Delete "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Modpack Installer.lnk"
-    Delete "$SMPROGRAMS\${APPNAME} v${VERSION}\Uninstall ${APPNAME}.lnk"
-    RMDir "$SMPROGRAMS\${APPNAME} v${VERSION]"
+    Delete "$SMPROGRAMS\${APPNAME} v${VERSION}\*.*"
+    RMDir "$SMPROGRAMS\${APPNAME} v${VERSION}"
     
     ; Remove rest of installed files.
     ; Custom files are left intact.
     RMDir "$INSTDIR"
 
     ; Remove entry from Windows "Add/Remove programs" panel.
-    DeleteRegKey HKLM "${REGPATH_UNINSTSUBKEY}" 
-    DeleteRegKey HKLM "Software\${APPID}"
+    DeleteRegKey "SHCTX" "${REGPATH_UNINSTSUBKEY}" 
+    DeleteRegKey "SHCTX" "Software\${APPID}"
 
   SectionEnd
 
