@@ -57,7 +57,7 @@ jobs:
           mingw-w64-x86_64-gcc
           mingw-w64-x86_64-libunwind
           mingw-w64-x86_64-readline
-          mingw-w64-x86_64-lua # There is no lua53 in MSYS, 5.4 should work...
+          mingw-w64-x86_64-lua
           mingw-w64-x86_64-SDL2_mixer
           mingw-w64-x86_64-qt5
           mingw-w64-x86_64-karchive-qt5
