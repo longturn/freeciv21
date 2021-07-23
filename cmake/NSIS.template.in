@@ -139,7 +139,9 @@
   !insertmacro MULTIUSER_PAGE_INSTALLMODE
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
-  ; TODO: add a run feature
+  !define MUI_FINISHPAGE_RUN
+  !define MUI_FINISHPAGE_RUN_TEXT "Run Freeciv21"
+  !define MUI_FINISHPAGE_RUN_FUNCTION "RunFreeciv21"
   !insertmacro MUI_PAGE_FINISH
 
   ; Uninstaller Pages
@@ -187,6 +189,10 @@
     StrCmp "$0" "" ConditionalAddToRegisty_EmptyString
       WriteRegStr "SHCTX" "${REGPATH_UNINSTSUBKEY}" "$1" "$0"
     ConditionalAddToRegisty_EmptyString:
+  FunctionEnd
+
+  Function RunFreeciv21
+    ExecShell "" "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Client.lnk"
   FunctionEnd
 
 ;#########################################################
