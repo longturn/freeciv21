@@ -7,6 +7,7 @@ Welcome to longturn-manuals's documentation!
 ============================================
 
 .. toctree::
+  install/index.rst
   rulesets/index.rst
   :maxdepth: 2
   :caption: Contents:
