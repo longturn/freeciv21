@@ -1,6 +1,7 @@
 Installation
-================
+============
 
 .. toctree::
-  nsis-install.rst
+  install.rst
+  windows-install.rst
 
