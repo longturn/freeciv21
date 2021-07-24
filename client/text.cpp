@@ -388,11 +388,10 @@ const QString popup_info_text(struct tile *ptile)
       } else {
         // TRANS: "Unit: <unit type> "<unit name>" | <username> (<nation +
         // team>)"
-        str += str
-              + QString(_("Unit: %1 \"%2\" | %3 (%4)"))
-                    .arg(utype_name_translation(ptype), punit->name,
-                         username, nation)
-              + qendl();
+        str += QString(_("Unit: %1 \"%2\" | %3 (%4)"))
+                   .arg(utype_name_translation(ptype), punit->name, username,
+                        nation)
+               + qendl();
       }
       if (game.info.citizen_nationality
           && unit_nationality(punit) != unit_owner(punit)) {
