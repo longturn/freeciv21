@@ -33,5 +33,4 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr);
 void connection_ping(struct connection *pconn);
 void handle_conn_pong(struct connection *pconn);
 void handle_client_heartbeat(struct connection *pconn);
-void send_ping_times_to_all();
 void get_lanserver_announcement();
