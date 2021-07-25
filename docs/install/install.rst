@@ -113,22 +113,22 @@ them directives and they start with :literal:`-D`. The defaults are marked with 
 Directive                                    Description
 =========================================== =================
 FREECIV_ENABLE_TOOLS={:strong:`ON`/OFF}     Enables all the tools with one parameter (Ruledit, FCMP, 
-                                             Ruleup, and Manual)
+                                            Ruleup, and Manual)
 FREECIV_ENABLE_SERVER={:strong:`ON`/OFF}    Enables the server. Should typically set to ON to be able 
-                                             to play AI games
+                                            to play AI games
 FREECIV_ENABLE_NLS={:strong:`ON`/OFF}       Enables Native Language Support
 FREECIV_ENABLE_CIVMANUAL={:strong:`ON`/OFF} Enables the Freeciv Manual application
 FREECIV_ENABLE_CLIENT={:strong:`ON`/OFF}    Enables the Qt client. Should typically set to ON unless you 
-                                             only want the server
+                                            only want the server
 FREECIV_ENABLE_FCMP_CLI={ON/OFF}            Enables the command line version of the Freeciv21 Modpack 
-                                             Installer
+                                            Installer
 FREECIV_ENABLE_FCMP_QT={ON/OFF}             Enables the Qt version of the Freeciv21 Modpack Installer 
-                                             (recommended)
+                                            (recommended)
 FREECIV_ENABLE_RULEDIT={ON/OFF}             Enables the Ruleset Editor
 FREECIV_ENABLE_RULEUP={ON/OFF}              Enables the Ruleset upgrade tool
 CMAKE_BUILD_TYPE={:strong:`Release`/Debug}  Changes the Build Type. Most people will pick Release
 CMAKE_INSTALL_PREFIX=/some/path             Allows an alternative install path. Default is 
-                                             :file:`/usr/local/share/freeciv21`
+                                            :file:`/usr/local/share/freeciv21`
 =========================================== =================
 
 For more information on other cmake directives see 
