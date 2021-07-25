@@ -128,7 +128,7 @@ FREECIV_ENABLE_RULEDIT={ON/OFF}             Enables the Ruleset Editor
 FREECIV_ENABLE_RULEUP={ON/OFF}              Enables the Ruleset upgrade tool
 CMAKE_BUILD_TYPE={:strong:`Release`/Debug}  Changes the Build Type. Most people will pick Release
 CMAKE_INSTALL_PREFIX=/some/path             Allows an alternative install path. Default is 
-                                            :file:`/usr/local/share/freeciv21`
+                                            :file:`/usr/local/freeciv21`
 =========================================== =================
 
 For more information on other cmake directives see 
