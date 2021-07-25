@@ -20,7 +20,7 @@ configuration process is smart enough to work out whether your system is suitabl
 * A C and C++ 14 compiler.
 
   Freeciv21 is written in very portable C and C++. Both 32- and 64-bit machines are supported. You cannot
-  use a "K&R C" compiler, or a C++ compiler. The C++ compiler must support C++ 14.
+  use a "K&R C" compiler, or a C++ compiler. The C++ compiler must support C++ 17.
 
   Development of Freeciv21 is primarily done with :file:`gcc`, the GNU project's excellent C and C++
   compiler. Microsoft Windows MS Visual C support is under development.
@@ -47,8 +47,6 @@ configuration process is smart enough to work out whether your system is suitabl
 
   http://www.sqlite.org/
 
-  The git version has additional requirements. A release version contains the generated files.
-
 * The programs from GNU :file:`gettext` version 0.15 or better
 
   Especially the :file:`xgettext` program is required to create the :literal:`*.gmo` files which aren't
@@ -69,15 +67,15 @@ configuration process is smart enough to work out whether your system is suitabl
 * Python 3
 
 
-Prerequisites for the client
-****************************
+Prerequisites for the client and tools
+**************************************
 
 The Freeciv21 project maintains a single Qt client.
 
 * C++ compiler.
 
   The client is written in C++, so you need an appropriate compiler. In Freeciv21 development, :file:`g++`
-  has been used.
+  has been used as well as tests against LLVM's compiler (:file:`clang++`)
 
 * :file:`Qt5Core`, :file:`Qt5Gui`, and :file:`Qt5Widgets` libraries and headers.
 
@@ -173,8 +171,8 @@ Once the compilation is complete, install the game with this command.
 
 After compilation, the important results are:
 
-  - The :file:`build/freeciv21-client` and :file:`build/freeciv21-server` binaries.
-  - The :file:`build/data/` directory, which contains the graphics and scenarios.
+  - The :file:`build/freeciv21-client` client application binary.
+  - The :file:`build/freeciv21-server` game server binary.
 
 
 Debian Linux Notes
