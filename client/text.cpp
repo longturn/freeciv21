@@ -380,17 +380,23 @@ const QString popup_info_text(struct tile *ptile)
       struct city *hcity = player_city_by_number(owner, punit->homecity);
 
       if (punit->name.isEmpty()) {
-        // TRANS: "Unit: <unit type> | <username> (<nation + team>)"
-        str = str
-              + QString(_("Unit: %1 | %2 (%3)"))
-                    .arg(utype_name_translation(ptype), username, nation)
-              + qendl();
-      } else {
-        // TRANS: "Unit: <unit type> "<unit name>" | <username> (<nation +
+        // TRANS: "Unit: <unit type> #<unit id> | <username> (<nation +
         // team>)"
-        str += QString(_("Unit: %1 \"%2\" | %3 (%4)"))
-                   .arg(utype_name_translation(ptype), punit->name, username,
-                        nation)
+        str += QString(_("Unit: %1 #%2 | %3 (%4)"))
+                   .arg(utype_name_translation(ptype))
+                   .arg(punit->id)
+                   .arg(username)
+                   .arg(nation)
+               + qendl();
+      } else {
+        // TRANS: "Unit: <unit type> #<unit id> "<unit name>" | <username>
+        // (<nation + team>)"
+        str += QString(_("Unit: %1 #%2 \"%3\" | %4 (%5)"))
+                   .arg(utype_name_translation(ptype))
+                   .arg(punit->id)
+                   .arg(punit->name)
+                   .arg(username)
+                   .arg(nation)
                + qendl();
       }
       if (game.info.citizen_nationality
