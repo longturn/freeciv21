@@ -1750,36 +1750,6 @@ const QString format_duration(int duration)
 }
 
 /**
-   Return text giving the ping time for the player.  This is generally used
-   used in the playerdlg.  This should only be used in playerdlg_common.c.
- */
-QString get_ping_time_text(const struct player *pplayer)
-{
-  QString str;
-
-  conn_list_iterate(pplayer->connections, pconn)
-  {
-    if (!pconn->observer
-        // Certainly not needed, but safer.
-        && 0 == strcmp(pconn->username, pplayer->username)) {
-      if (pconn->ping_time != -1) {
-        double ping_time_in_ms = 1000 * pconn->ping_time;
-        str +=
-            QString(_("%1.%2 ms"))
-                .arg(QString::number(static_cast<int>(ping_time_in_ms)), 6)
-                .arg(QString::number(
-                         (static_cast<int>(ping_time_in_ms * 100.0)) % 100),
-                     2);
-      }
-      break;
-    }
-  }
-  conn_list_iterate_end;
-
-  return str.trimmed();
-}
-
-/**
    Return text giving the score of the player. This should only be used
    in playerdlg_common.c.
  */

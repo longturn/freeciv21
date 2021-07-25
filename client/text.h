@@ -40,7 +40,6 @@ bool get_units_disband_info(char *buf, size_t bufsz,
 const QString get_spaceship_descr(struct player_spaceship *pship);
 const QString get_timeout_label_text();
 const QString format_duration(int duration);
-QString get_ping_time_text(const struct player *pplayer);
 QString get_score_text(const struct player *pplayer);
 const QString get_report_title(const char *report_name);
 
