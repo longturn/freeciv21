@@ -2768,27 +2768,16 @@ void handle_conn_info(const struct packet_conn_info *pinfo)
 }
 
 /**
-   Handles a conn_ping_info packet from the server.  This packet contains
-   ping times for each connection.
+ * Handles a conn_ping_info packet from the server.  This packet contains
+ * ping times for each connection.
+ * FIXME Only present for backward compatibility.
  */
 void handle_conn_ping_info(int connections, const int *conn_id,
                            const float *ping_time)
 {
-  int i;
-
-  for (i = 0; i < connections; i++) {
-    struct connection *pconn = conn_by_number(conn_id[i]);
-
-    if (!pconn) {
-      continue;
-    }
-
-    pconn->ping_time = ping_time[i];
-    log_debug("conn-id=%d, ping=%fs", pconn->id, pconn->ping_time);
-  }
-  // The old_ping_time data is ignored.
-
-  players_dialog_update();
+  Q_UNUSED(connections)
+  Q_UNUSED(conn_id)
+  Q_UNUSED(ping_time)
 }
 
 /**

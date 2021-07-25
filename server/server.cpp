@@ -429,9 +429,6 @@ void server::send_pings()
 {
   // Pinging around for statistics
   if (time(NULL) > (game.server.last_ping + game.server.pingtime)) {
-    // send data about the previous run
-    send_ping_times_to_all();
-
     conn_list_iterate(game.all_connections, pconn)
     {
       if ((!pconn->server.is_closing && 0 < pconn->server.ping_timers->size()
