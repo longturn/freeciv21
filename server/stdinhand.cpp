@@ -6562,7 +6562,12 @@ static void show_connections(struct connection *caller)
   } else {
     conn_list_iterate(game.all_connections, pconn)
     {
-      sz_strlcpy(buf, conn_description(pconn));
+      /* only admins get the actual hostnames of users */
+      if (caller && caller->access_level < ALLOW_ADMIN) {
+        sz_strlcpy(buf, conn_description(pconn, false));
+      } else {
+        sz_strlcpy(buf, conn_description(pconn));
+      }
       if (pconn->established) {
         cat_snprintf(buf, sizeof(buf), " command access level %s",
                      cmdlevel_name(pconn->access_level));
