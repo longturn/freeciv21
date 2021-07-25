@@ -267,12 +267,12 @@ void establish_new_connection(struct connection *pconn)
   if (conn_controls_player(pconn)) {
     package_event(&connect_info, NULL, E_CONNECTION, ftc_server,
                   _("%s has connected from %s (player %s)."),
-                  pconn->username, qUtf8Printable(pconn->addr),
+                  pconn->username, conn_addr_public(pconn),
                   player_name(conn_get_player(pconn)));
   } else {
     package_event(&connect_info, NULL, E_CONNECTION, ftc_server,
                   _("%s has connected from %s."), pconn->username,
-                  qUtf8Printable(pconn->addr));
+                  conn_addr_public(pconn));
   }
   conn_list_iterate(game.est_connections, aconn)
   {
@@ -415,7 +415,7 @@ bool handle_login_request(struct connection *pconn,
     fc_snprintf(msg, sizeof(msg), _("Invalid username '%s'"), req->username);
     reject_new_connection(msg, pconn);
     qInfo(_("%s was rejected: Invalid name [%s]."), req->username,
-          qUtf8Printable(pconn->addr));
+          conn_addr_public(pconn));
     return false;
   }
 
@@ -439,7 +439,7 @@ bool handle_login_request(struct connection *pconn,
                   req->username);
       reject_new_connection(msg, pconn);
       qInfo(_("%s was rejected: Duplicate login name [%s]."), req->username,
-            qUtf8Printable(pconn->addr));
+            conn_addr_public(pconn));
       return false;
     }
   }
@@ -512,7 +512,7 @@ static void package_conn_info(struct connection *pconn,
   packet->access_level = pconn->access_level;
 
   sz_strlcpy(packet->username, pconn->username);
-  sz_strlcpy(packet->addr, qUtf8Printable(pconn->addr));
+  sz_strlcpy(packet->addr, conn_addr_public(pconn));
   sz_strlcpy(packet->capability, pconn->capability);
 }
 

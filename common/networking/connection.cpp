@@ -412,23 +412,27 @@ static void free_socket_packet_buffer(struct socket_packet_buffer *buf)
 }
 
 /**
-   Return pointer to static string containing a description for this
-   connection, based on pconn->name, pconn->addr, and (if applicable)
-   pconn->playing->name.  (Also pconn->established and pconn->observer.)
-
-   Note that when pconn is client.conn (connection to server),
-   pconn->name and pconn->addr contain empty string, and pconn->playing
-   is NULL: in this case return string "server".
+ ° Return pointer to static string containing a description for this
+ ° connection, based on pconn->name, pconn->addr, and (if applicable)
+ ° pconn->playing->name.  (Also pconn->established and pconn->observer.)
+ °
+ ° Note that when pconn is client.conn (connection to server),
+ ° pconn->name and pconn->addr contain empty string, and pconn->playing
+ ° is NULL: in this case return string "server".
+ *
+ * If `is_private` is true, show the actual hostname, otherwise mask it.
  */
-const char *conn_description(const struct connection *pconn)
+const char *conn_description(const struct connection *pconn, bool is_private)
 {
   static char buffer[MAX_LEN_NAME * 2 + MAX_LEN_ADDR + 128];
+
+  const auto addr = is_private ? pconn->addr : conn_addr_public(pconn);
 
   buffer[0] = '\0';
 
   if (*pconn->username != '\0') {
     fc_snprintf(buffer, sizeof(buffer), _("%s from %s"), pconn->username,
-                qUtf8Printable(pconn->addr));
+                qUtf8Printable(addr));
   } else {
     sz_strlcpy(buffer, "server");
   }
@@ -453,6 +457,16 @@ const char *conn_description(const struct connection *pconn)
   }
 
   return buffer;
+}
+
+/**
+ * Generate a fake hostname to tell publicly.
+ */
+const char *conn_addr_public(const struct connection *pconn)
+{
+  static char buf[256];
+  snprintf(buf, 256, "user-%s-host", pconn->username);
+  return buf;
 }
 
 /**
