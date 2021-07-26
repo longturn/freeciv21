@@ -1,36 +1,35 @@
-===================
+=====================
 Installing Freeciv21:
 =====================
 
-This file describes how to compile and install Freeciv21. Last time we made sure this file is up to date was 14-Feb-21. Last major
-update was 14-Feb-21.
+An HTML version of this file is available at https://longturn.readthedocs.io/en/latest/install/install.html.
 
 This document contains sections and subsections as follows:
-     0. Prerequisites:
-     1. Prerequisites for the Qt client:
-     2. Compiling and Installing Freeciv21:
-     3. Debian Notes:
-     4. Windows Notes:
+     0. Prerequisites
+     1. Prerequisites for the client and tools
+     2. Compiling and Installing Freeciv21
+     3. Debian Notes
+     4. Windows Notes
 
 
 0. Prerequisites:
 =================
 
-Freeciv21 has a number of prerequisites.  Note, that apart from the first prerequisite, the Freeciv21 configuration process is smart
-enough to work out whether your system is suitable.  If in doubt, just try it.
+Freeciv21 has a number of prerequisites.  Note, that apart from the first prerequisite, the Freeciv21 
+configuration process is smart enough to work out whether your system is suitable.  If in doubt, just try it.
 
  - An operating system that support Qt.
 
-Any modern operating system that support Qt is required. As of this writing this is Linux, Windows and Mac OS X. On Windows both
-Msys2 and Cygwin are supported. However, Msys2 is more supported by the Freeciv21 team.
+Any modern operating system that support Qt is required. As of this writing this is Linux, Windows and Mac 
+OS X. On Windows Msys2 is supported.
 
- - A C and C++ 14 compiler.
+ - A C and C++ compiler.
 
-Freeciv21 is written in very portable C and C++.  Both 32- and 64-bit machines are supported.  You cannot use a "K&R
-C" compiler, or a C++ compiler. The C++ compiler must support C++ 14.
+Freeciv21 is written in very portable C and C++.  Both 32- and 64-bit machines are supported.  You cannot 
+use a "K&R C" compiler, or a C++ compiler. The C++ compiler must support C++ 17.
 
-Development of Freeciv21 is primarily done with "gcc", the GNU project's excellent C and C++ compiler. Microsoft Windows MS Visual C
-support is under development.
+Development of Freeciv21 is primarily done with "gcc", the GNU project's excellent C and C++ compiler. 
+Microsoft Windows MS Visual C support is under development.
 
  - A "cmake" program.
 
@@ -50,8 +49,6 @@ support is under development.
 
    http://www.sqlite.org/
 
-   The git version has additional requirements. A release version contains the generated files.
-
  - The programs from GNU gettext version 0.15 or better
 
    Especially the xgettext program is required to create the *.gmo files which aren't included in the git tree.
@@ -60,15 +57,19 @@ support is under development.
 
    Exact 5.3 is preferred.
 
- - libkf5archive
+ - KF 5 Archive Library
 
- - libSDL2 Mixer
+   KArchive provides classes for easy reading, creation and manipulation of "archive" formats like ZIP and TAR.
+
+ - SDL2_Mixer
+
+   SDL_mixer is a sample multi-channel audio mixer library.
 
  - Python 3
 
 
-1. Prerequisites for the Qt client:
-===================================
+1. Prerequisites for the client and tools:
+==========================================
 
 The Freeciv21 project maintains a single Qt client.
 
@@ -87,20 +88,23 @@ directory:
 
    cmake . -B build -G Ninja
 
-To customize the compile, cmake requires the use of command line parameters.  cmake calls them directives and they start with -D.
-The defaults are marked with * (e.g. *ON*).
+To customize the compile, cmake requires the use of command line parameters.  cmake calls them directives 
+and they start with -D. The defaults are marked with * (e.g. *ON*).
 
-  -DFREECIV_ENABLE_TOOLS={*ON*/OFF}     -- Enables all the tools with one parameter (Ruledit, FCMP, Ruleup, and Manual)
-  -DFREECIV_ENABLE_SERVER={*ON*/OFF}    -- Enables the server. Should typically set to ON to be able to play AI games
+  -DFREECIV_ENABLE_TOOLS={*ON*/OFF}     -- Enables all the tools with one parameter (Ruledit, FCMP, Ruleup,
+                                           and Manual)
+  -DFREECIV_ENABLE_SERVER={*ON*/OFF}    -- Enables the server. Should typically set to ON to be able to play
+                                           AI games
   -DFREECIV_ENABLE_NLS={*ON*/OFF}       -- Enables Native Language Support
   -DFREECIV_ENABLE_CIVMANUAL={*ON*/OFF} -- Enables the Freeciv Manual application
-  -DFREECIV_ENABLE_CLIENT={*ON*/OFF}    -- Enables the Qt client. Should typically set to ON unless you only want the server
+  -DFREECIV_ENABLE_CLIENT={*ON*/OFF}    -- Enables the Qt client. Should typically set to ON unless you only
+                                           want the server
   -DFREECIV_ENABLE_FCMP_CLI={ON/OFF}    -- Enables the command line version of the Freeciv21 Modpack Installer
   -DFREECIV_ENABLE_FCMP_QT={ON/OFF}     -- Enables the Qt version of the Freeciv21 Modpack Installer (recommended)
   -DFREECIV_ENABLE_RULEDIT={ON/OFF}     -- Enables the Ruleset Editor
   -DFREECIV_ENABLE_RULEUP={ON/OFF}      -- Enables the Ruleset upgrade tool
   -DCMAKE_BUILD_TYPE={*Release*/Debug}  -- Changes the Build Type. Most people will pick Release
-  -DCMAKE_INSTALL_PREFIX=/some/path     -- Allows an alternative install path. Default is /usr/local/share/freeciv21
+  -DCMAKE_INSTALL_PREFIX=/some/path     -- Allows an alternative install path. Default is /usr/local/freeciv21
 
 For more information on other cmake directives see https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html.
 
@@ -125,19 +129,18 @@ Once the compilation is complete, install the game with this command.
 
 After compilation, the important results are:
 
-  - The "build/freeciv21-client" and "build/freeciv21-server" binaries.
-  - The "build/data/" directory, which contains the graphics and scenarios.
-
-See the README file for more information.
+  - The :file:`build/freeciv21-client` client application binary.
+  - The :file:`build/freeciv21-server` game server binary.
 
 
 3. Debian Linux Notes:
 ======================
 
-Below are all the command line steps needed to start with a fresh install of Debian or its variants (e.g. Ubuntu, Linux Mint) to
-install Freeciv21.
+Below are all the command line steps needed to start with a fresh install of Debian or its variants (e.g. 
+Ubuntu, Linux Mint) to install Freeciv21.
 
-Start with ensuring your have a source repository (deb-src) turned on in apt sources and then run the following commands.
+Start with ensuring your have a source repository (deb-src) turned on in apt sources and then run the 
+following commands.
 
    sudo apt update
 
@@ -175,11 +178,11 @@ Freeciv21 currently supports building and installing using the Msys2 environment
 Msys2 versions are documented in doc/README.msys2. Alternately you can visit
 https://github.com/jwrober/freeciv-msys2 for ready made scripts.
 
-Follow the steps in Chapter 2. Compiling and Installing Freeciv21.
+Follow the steps starting in configuring above.
 
-Instead of using this command to install and create the Windows Installer:
+Instead of installing, use this command to create the Windows Installer package:
 
-    cmake --build build --target package
+  cmake --build build --target package
 
 When the Ninja command is finished running, you will find an installer in build/Windows-${arch}
 
