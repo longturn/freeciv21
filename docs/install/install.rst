@@ -17,7 +17,7 @@ configuration process is smart enough to work out whether your system is suitabl
   Any modern operating system that support Qt is required. As of this writing this is Linux, Microsoft
   Windows\ |reg| and Apple Mac OS X\ |reg|. On Windows Msys2 is supported.
 
-* A C and C++ 14 compiler.
+* A C and C++ compiler.
 
   Freeciv21 is written in very portable C and C++. Both 32- and 64-bit machines are supported. You cannot
   use a "K&R C" compiler, or a C++ compiler. The C++ compiler must support C++ 17.
