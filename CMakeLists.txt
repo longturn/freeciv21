@@ -76,6 +76,9 @@ endif()
 # Always add tools, conditionals are inside
 add_subdirectory(tools)
 
+# Add docs
+add_subdirectory(docs)
+
 # Always install the documentation
 install(
   FILES
