@@ -184,7 +184,7 @@ Debian Linux Notes
 Below are all the command line steps needed to start with a fresh install of Debian or its variants (e.g.
 Ubuntu, Linux Mint) to install Freeciv21.
 
-Start with ensuring your have a source repository (deb-src) turned on in apt sources and then run the
+Start with ensuring you have a source repository (:file:`deb-src`) turned on in apt sources and then run the
 following commands.
 
 .. code-block:: rst
