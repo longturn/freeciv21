@@ -19,14 +19,15 @@ game settings (the defaults should be fine for a beginner-level single-player ga
 Freeciv21 is a client/server system. But in most cases you don't have to worry about this; the client 
 starts a server automatically for you when you start a new game.
 
-.. attention:: The Windows Server currently has a defect that does not allow it to run automatically from the
-    client. See Issue #341 as well as work in progress pull request #462. The current work around is to
-    manually start the server and a game and then connect to it via the client.
+.. attention:: The Windows Server currently has a defect that does not allow it to run automatically from 
+    the client. See Issue `#341 <https://github.com/longturn/freeciv21/issues/341>`_ as well as work in 
+    progress pull request `#462 <https://github.com/longturn/freeciv21/pull/462>`_. The current work around is
+    to manually start the server and a game and then connect to it via the client.
     
     This defect is not present in the Linux builds.
 
-Once the game is started you can find information in its :guilabel:`Help` menu. If you've never played a 
-Civilization-style game before you may want to look at the help on :title-reference:`Strategy and Tactics`.
+Once the game is started you can find information in the :guilabel:`Help` menu. If you've never played a 
+Civilization-style game before you may want to look at help on :title-reference:`Strategy and Tactics`.
 
 You can continue to change the game settings through the :menuselection:`Game --> Options --> Server 
 Options` menu. Type :literal:`/help` in the chatline (or server command line) to get more information about 
@@ -70,17 +71,17 @@ Where is the chatline you are talking about, how do I chat?
 -----------------------------------------------------------
 
 The chatline is located at the bottom of the messages window. You can activate and enlarge the chat panel by 
-double-clicking on the bottom row.
+double-clicking on the bottom row of text.
 
-The chatline can be used for normal chatting, or for issuing server commands by typing a forward-slash 
-:literal:`/` followed by the server command.
+The chatline can be used for normal chatting between players, or for issuing server commands by typing a 
+forward-slash :literal:`/` followed by the server command.
 
 See the in-game help on :title-reference:`Chatline` for more detail.
 
 Why can't I attack another player's units?
 ------------------------------------------
 
-You have to declare war first. See section for `How do I declare war on another player?`_ below.
+You have to declare war first. See the section for `How do I declare war on another player?`_ below.
 
 .. note:: In some rulesets, you start out at war with all players. In other rulesets, as soon as you 
     make contact with a player, you enter armistise towards peace. At lower skill levels, AI players offer 
@@ -124,7 +125,7 @@ arrives at Alpha Centauri; or when you reach the ending turn - whichever comes f
 For longturn.net multi-player games, the winning conditions are announced before the game begins.
 
 For local games, you can change the default ending turn by changing the endturn setting. You can do this 
-through :menuselection:`Game --> Options --> Remote Server` menu or by typing into the chatline something 
+through the :menuselection:`Game --> Options --> Remote Server` menu or by typing into the chatline something 
 like:
 
 .. code-block:: rst
@@ -282,24 +283,21 @@ particular, we're not aiming for bug-compatibility.
 My opponents seem to be able to play two moves at once!
 -------------------------------------------------------
 
-.. todo:: This section needs to be updated to support the local rulesets in Freeciv21, but also handle what 
-    happens with longturn.net games.
+He isn't, it only seems that way. Freeciv21's multiplayer facilities are asynchronous: during a turn, moves 
+from connected clients are processed in the order they are received. Server managed movement is executed in 
+between turns. This allows human players to surprise their opponents by clever use of goto or quick fingers.
 
-Freeciv21's multiplayer facilities are asynchronous: during a turn, moves from connected clients are processed 
-in the order they are received. Server managed movement is executed in between turns. This allows human 
-players to surprise their opponents by clever use of goto or quick fingers.
+A turn in Longturn lasts 23 hours and it's always possible that he managed to log in twice between your two 
+consecutive logins. However, firstly, there is a mechanic that slightly limits this (known as unit wait time), 
+and secondly, this can't happen every time because now he has already played his move this turn and now 
+needs to wait for the Turn Change to make his next move. So, in the next turn, if you log in before him, now 
+it was you who made your move twice. If not, he can't "move twice" until you do.
 
-Server settings to mitigate this problem include:
+The primary server setting to mitigate this problem is :literal:`unitwaittime`, which imposes a minimum 
+time between moves of a single unit on successive turns.
 
-* phasemode, which has an alternating movement mode, in which only one player can move their units at a time.
-
-* timeaddenemymove (which extends the turn timeout when an enemy's unit is seen moving).
-
-* (since 2.3.x) unitwaittime (which imposes a minimum time between moves of a single unit on successive turns).
-
-
-I am far superior to my opponent but their last city is on a 1x1 island so I cannot conquer it, and they won't give up. What can I do?
---------------------------------------------------------------------------------------------------------------------------------------
+My opponent's last city is on a 1x1 island so I cannot conquer it, and they won't give up. What can I do?
+---------------------------------------------------------------------------------------------------------
 
 It depends on the ruleset, but often researching 'amphibious warfare' will allow you to build a marine unit. 
 Alternatively research 'combined arms' and either move a helicopter or airdrop a paratroopers unit there.
@@ -507,8 +505,8 @@ to.
 Where are the save games located by default?
 --------------------------------------------
 
-On Unix like systems, they will be in :file:`~/.local/share/freeciv21/saves`. On Windows, they are typically 
-found in in the :file:`Appdata\\Roaming` User profile directory. For example:
+On Unix like systems (e.g. Linux), they will be in :file:`~/.local/share/freeciv21/saves`. On Windows, they 
+are typically found in in the :file:`Appdata\\Roaming` User profile directory. For example:
 
 .. code-block:: rst
 
@@ -586,18 +584,16 @@ Network
 Windows
 =======
 
-How do I use Freeciv under MS Windows?
---------------------------------------
+How do I use Freeciv21 under MS Windows?
+----------------------------------------
 
 Precompiled binaries can be downloaded from https://github.com/longturn/freeciv21/releases. The native 
 Windows packages come as self-extracting installers.
 
-.. todo:: Figure out how to link to the windows install page.
-
 OK, I've downloaded and installed it, how do I run it?
 ------------------------------------------------------
 
-.. todo:: Figure out how to link to the windows install page.
+See the document about :doc:`install/windows-install`
 
 How do I use a different tileset?
 ---------------------------------
