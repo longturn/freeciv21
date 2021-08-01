@@ -8,3 +8,6 @@
     max-width: 100%;
     overflow: visible;
 }
+cite {
+    text-decoration: underline;
+}
