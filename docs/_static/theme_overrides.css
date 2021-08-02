@@ -9,14 +9,6 @@
     overflow: visible;
 }
 
-/* custom unordered list icon */
-.simple li {
-    background-image: url('images/211620_b_right_arrow_icon.png');
-    background-position: -20px -13px;
-    background-repeat: no-repeat;
-    padding: 0px 20px
-}
-
 /* format for custom interpretive text roles */
 .unit {
     border:1px solid #7fbbe3;
