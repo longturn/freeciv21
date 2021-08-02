@@ -7,5 +7,6 @@ Playing
 
 
 .. toctree::
+  how-to-play.rst
   :maxdepth: 1
 
