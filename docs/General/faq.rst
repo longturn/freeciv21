@@ -597,7 +597,7 @@ Windows packages come as self-extracting installers.
 OK, I've downloaded and installed it, how do I run it?
 ------------------------------------------------------
 
-See the document about :doc:`install/windows-install`
+See the document about :doc:`windows-install`
 
 How do I use a different tileset?
 ---------------------------------

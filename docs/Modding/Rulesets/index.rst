@@ -1,4 +1,4 @@
-Editing rulesets
+Editing Rulesets
 ================
 
 .. toctree::

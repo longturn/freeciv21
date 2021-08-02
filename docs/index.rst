@@ -4,10 +4,10 @@ Welcome to longturn-manuals's documentation!
 ============================================
 
 .. toctree::
-  faq.rst
-  install/index.rst
-  rulesets/index.rst
-  style-guide.rst
+  General/index.rst
+  Playing/index.rst
+  Modding/index.rst
+  Developing/index.rst
   :maxdepth: 2
   :caption: Contents:
 
