@@ -1,6 +1,11 @@
 Frequently Asked Questions (FAQ)
 ********************************
 
+.. Custom Interpretive Text Roles for longturn.net/Freeciv21
+.. role:: unit
+.. role:: improvement
+.. role:: wonder
+
 The following page has a listing of frequenty asked questions with answers about Freeciv21.
 
 Gameplay
@@ -65,7 +70,7 @@ ready, click the :guilabel:`Connect` button at the botton-right, fill in your lo
 
 .. note:: Hosting an Internet server from a home Internet connection is often problematic, due to 
     firewalling and network address translation (NAT) that can make the server unreachable from the wider 
-    Internet. Safely bypassing NAT and firewalls is beyond the scope of this FAQ.
+    Internet. Safely and securely bypassing NAT and firewalls is beyond the scope of this FAQ.
 
 Where is the chatline you are talking about, how do I chat?
 -----------------------------------------------------------
@@ -218,13 +223,11 @@ No. This feature is not present in Freeciv21, and will not be until someone draw
 Can I build land over sea/transform ocean to land?
 --------------------------------------------------
 
-Yes. You can do that by placing engineer units on a transport and going to the ocean tile you want to build 
-land on (this must be in a land corner). Click the transport to display a list of the transported engineers 
-and activate them. Then give them the order of transforming this tile to swamp. This will take a very long 
-time though, so you'd better try with 6 or 8 engineers at a time. There must be 3 adjacent land tiles to the 
-ocean tile you are transforming.
-
-.. todo:: Do we want to have Sphinx custom directive to give a special highlight to unit names?
+Yes. You can do that by placing :unit:`engineer` on a :unit:`transport` and going to the ocean tile you want 
+to build land on (this must be in a land corner). Click the :unit:`transport` to display a list of the 
+transported :unit:`engineers` and activate them. Then give them the order of transforming this tile to 
+swamp. This will take a very long time though, so you'd better try with 6 or 8 :unit:`engineers` at a time. 
+There must be 3 adjacent land tiles to the ocean tile you are transforming.
 
 Can I change settings or rules to get different types of games?
 ---------------------------------------------------------------
@@ -299,12 +302,13 @@ time between moves of a single unit on successive turns.
 My opponent's last city is on a 1x1 island so I cannot conquer it, and they won't give up. What can I do?
 ---------------------------------------------------------------------------------------------------------
 
-It depends on the ruleset, but often researching 'amphibious warfare' will allow you to build a marine unit. 
-Alternatively research 'combined arms' and either move a helicopter or airdrop a paratroopers unit there.
+It depends on the ruleset, but often researching 'amphibious warfare' will allow you to build a 
+:unit:`marine`. Alternatively research 'combined arms' and either move a :unit:`helicopter` or airdrop a 
+:unit:`paratrooper` there.
 
-If you can't build marines yet, but you do have engineers, and other land is close-by, you can also build a 
-land-bridge to the island (i.e. transform the ocean). If you choose this route, make sure that your 
-transport is well defended!
+If you can't build :unit:`marines` yet, but you do have :unit:`engineers`, and other land is close-by, you 
+can also build a land-bridge to the island (i.e. transform the ocean). If you choose this route, make sure 
+that your :unit:`transport` is well defended!
 
 Why are the AI players so hard on 'novice' or 'easy'?
 -----------------------------------------------------
@@ -454,7 +458,7 @@ server prompt to begin!
 
     username@computername:~/games/freeciv21/bin$ ./freeciv21-server 
     This is the server for Freeciv21 version 3.0.20210721.3-alpha
-    You can learn a lot about Freeciv21 at https://github.com/longturn/freeciv21
+    You can learn a lot about Freeciv21 at https://longturn.readthedocs.io/en/latest/index.html
     [info] freeciv21-server - Loading rulesets.
     [info] freeciv21-server - AI*1 has been added as Easy level AI-controlled player (classic).
     [info] freeciv21-server - AI*2 has been added as Easy level AI-controlled player (classic).
@@ -522,8 +526,8 @@ How do I find out about the available units, improvements, terrain types, and te
 There is extensive help on this in the Help menu, but only once the game has been started - this is because 
 all of these things are configurable up to that point.
 
-The game comes with an interactive tutorial scenario. To run it, select Start Scenario Game from the main 
-menu, then load the tutorial scenario.
+The game comes with an interactive tutorial scenario. To run it, select :guilabel:`Start Scenario Game` from 
+the main menu, then load the tutorial scenario.
 
 How do I enable/disable sound support?
 --------------------------------------
