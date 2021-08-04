@@ -10,5 +10,6 @@ General
   faq.rst
   install.rst
   windows-install.rst
+  modpack-installer.rst
   :maxdepth: 1
 
