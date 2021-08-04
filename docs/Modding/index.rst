@@ -9,6 +9,7 @@ Modding
 
 
 .. toctree::
+  modpack-installer.rst
   Rulesets/index.rst
   :maxdepth: 1
 
