@@ -8,5 +8,6 @@ Playing
 
 .. toctree::
   how-to-play.rst
+  cma.rst
   :maxdepth: 1
 
