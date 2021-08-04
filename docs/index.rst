@@ -1,7 +1,7 @@
 .. longturn-manuals documentation master file
 
-Welcome to longturn-manuals's documentation!
-============================================
+Welcome to longturn-manuals's Documentation!
+********************************************
 
 Welcome to the longturn.net community Freeciv21 Documentation Project. The documentation is broken into
 four categories:

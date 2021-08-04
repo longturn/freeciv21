@@ -1,5 +1,5 @@
 Modding
-=======
+*******
 
 Modding
   The Modding category is an area for documentation editors to provide tips and other details on modifying

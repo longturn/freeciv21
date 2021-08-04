@@ -53,16 +53,17 @@ more cities you can have; the more cities you have, the faster you gain tech; th
 faster you win. After you have built as many cities as your corner of the world will hold, turn the settlers 
 to irrigating and building roads.
 
-.. note::	If the food surplus in a city drops to +1 from supporting too many settlers, and you can't 
+.. note:: If the food surplus in a city drops to +1 from supporting too many settlers, and you can't 
     rearrange people to increase it, then switch them to building temples. Unless you make contact with  
     another player, don't worry about building military units just yet.
 
 All this time, you have been gaining techs as fast as possible. What you should be shooting for is first 
-"The Republic", then "Democracy", then "Railroad", and then "Industrialization". (Some people go for 
-Monarchy before The Republic).  As soon as you've researched a new government type, start a revolution and 
-change over to it. Cities operate much better as Republics than they do under Despotism, but note that it's 
-much harder to keep military units outside of city limits under a Republic. Also, don't forget to recheck 
-your rates after you've changed governments, as the maximums vary for each type.
+:strong:`The Republic`, then :strong:`Democracy`, then :strong:`Railroad`, and then 
+:strong:`Industrialization`. (Some people go for :strong:`Monarchy` before :strong:`The Republic`).  As soon 
+as you've researched a new government type, start a revolution and change over to it. Cities operate much 
+better as Republics than they do under Despotism, but note that it's much harder to keep military units 
+outside of city limits under a Republic. Also, don't forget to recheck your rates after you've changed 
+governments, as the maximums vary for each type.
 
 When you get Democracy, you are equipped to go into the Second Expansion phase. This is accomplished by 
 changing the government to a Democracy, making all cities build temples, and setting the luxury rate to 
@@ -116,7 +117,8 @@ to build more units to take out the rest of them with. Show no quarter! To the d
 
 Repeat as often as necessary!
 
-.. note:: For pacifists: Freeciv21 also allows a player to win by building and launching a spaceship which arrives at Alpha Centauri before anyone else. It is known as the Space Race victory.
+.. note:: For pacifists: Freeciv21 also allows a player to win by building and launching a spaceship which 
+    arrives at Alpha Centauri before anyone else. It is known as the Space Race victory.
 
 
 Additional Questions that are Good for Getting Started
@@ -155,23 +157,23 @@ It alters the map generation process. If you play Freeciv21 a few times without 
 are sure to hear of (or experience) the horrors of a tiny island. Tiny Island Syndrome (TIS) is known to 
 make people go insane.  To fix this, our kind and loving coders installed the generator option.
   
-* When set to RANDOM, it creates the map using a random height generator, with islands of different 
+* When set to :literal:`RANDOM`, it creates the map using a random height generator, with islands of different 
   (and potentially unfair) sizes.
-* When set to FRACTAL it generates the map using a pseudo fractal height generator. This means that the 
-  mountains and the hills will be placed according to everlasting mathematical figures.
-* ISLAND generates islands of equal size (sometimes with some smaller islands thrown in). This way, nobody 
-  can whine about losing "on account of that d**ned island."
-* SCENARIO is used for premade maps. (Load a map by typing in :literal:`/load /dir/savegame.sav.gz` in the 
-  input field at the bottom of the screen, in this way it is possible to change the settings of a game. Use 
-  the map editor to change a map.)
-* FAIR is the most fair of all generators for the multiplayer games. It gives all users or teams identical 
-  islands.
-* FRACTURE generates maps from a fracture pattern. It tends to place hills and mountains along the edges of
-  the continents.
+* When set to :literal:`FRACTAL` it generates the map using a pseudo fractal height generator. This means 
+  that the mountains and the hills will be placed according to everlasting mathematical figures.
+* When set to :literal:`ISLAND` it generates islands of equal size (sometimes with some smaller islands 
+  thrown in). This way, nobody can whine about losing :emphasis:`on account of that island`.
+* When set to :literal:`SCENARIO` it is used for premade maps. Load a map by typing in :literal:`/load 
+  /dir/savegame.sav.gz` in the input field at the bottom of the screen, in this way it is possible to change 
+  the settings of a game. Use the map editor to change a map.
+* :literal:`FAIR` is the most fair of all generators for the multiplayer games. It gives all users or teams 
+  identical islands.
+* :literal:`FRACTURE` generates maps from a fracture pattern. It tends to place hills and mountains along 
+  the edges of the continents.
 
 Below the generator option there is the startpos option. This setting determines how many players are placed 
 on the same continent. Each generator option has its own default startpos value. Which is loaded when 
-startpos is DEFAULT. 
+startpos is :literal:`DEFAULT`. 
 
 .. note:: The default startpos for the fractal height generator is ALL, which means that the 
     generator will try to place all the players on the same continent.
@@ -184,20 +186,21 @@ Starting out with lots of money makes the game much easier, and makes it more di
 to cope with the default amount. Most experienced players don't increase this setting, and if they know how 
 to cope with it and you don't, you are going to go the way of Atlantis.
 
-.. note:: The same thing applied to the "techlevel" and "researchspeed" settings.
+.. note:: The same thing applies to the :literal:`techlevel` and :literal:`researchspeed` settings.
 
 :strong:`Q. What about those other settings?`
 
 The rest of them mainly have to do with what sort of world will be generated and game mechanics. Increasing 
-"specials" gives you a high chance of resources/square, and huts determines how many freebie huts there 
+:strong:`specials` gives you a high chance of resources/square, and huts determines how many freebie huts there 
 are. Increasing the amount of settlers or explorers one starts with makes the game go faster, and allows 
-people to survive "those $#@! barbarians" which sometimes live in huts.
+people to survive :emphasis:`those $#@! barbarians` which sometimes live in huts.
 
 The rail-related settings determine how much more a square will produce in food/trade/production with a 
 railroad on it, and the foodbox setting determines how much food each person in a city has to have before 
 a new person can be added.
 
-As for the rest, higher "mountains" means a more mountainous map, higher "deserts" means more deserts, etc.
+As for the rest, higher :strong:`mountains` means a more mountainous map, higher :strong:`deserts` means more
+deserts, etc.
 
 :strong:`Q. How do I get _____ tech?`
 

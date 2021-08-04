@@ -1,8 +1,8 @@
 Linux Compiling and Installing
-==============================
+******************************
 
 General Prerequisites
-*********************
+=====================
 
 Freeciv21 has a number of prerequisites.  Note, that apart from the first prerequisite, the Freeciv21
 configuration process is smart enough to work out whether your system is suitable. If in doubt, just try it.
@@ -75,8 +75,8 @@ Python
     Freeciv21 requires version 3 of Python
 
 
-Prerequisites for the client and tools
-**************************************
+Prerequisites for the Client and Tools
+======================================
 
 The Freeciv21 project maintains a single Qt client.
 
@@ -92,7 +92,7 @@ QT Libraries
 
 
 Obtaining the Source Code
-*************************
+=========================
 
 In order to compile Freeciv21, you need a local copy of the source code. You can download a saved version of
 the code from the project releases page at https://github.com/longturn/freeciv21/releases. Alternately you
@@ -104,7 +104,7 @@ can get the latest from the master branch with the :file:`git` program with this
 
 
 Configuring
-***********
+===========
 
 Configuring Freeciv21 for compilation requires the use of the :file:`cmake` program. To build with defaults
 enter the following commmand from the freeciv21 directory:
@@ -155,7 +155,7 @@ Once the command line directives are determined, the appropriate command looks l
 
 
 Compiling/Building
-******************
+==================
 
 Once the build files have been written, then compile with this command:
 
@@ -165,7 +165,7 @@ Once the build files have been written, then compile with this command:
 
 
 Installing
-**********
+==========
 
 Once the compilation is complete, install the game with this command.
 
@@ -179,7 +179,7 @@ Once the compilation is complete, install the game with this command.
 
 
 Debian Linux Notes
-******************
+==================
 
 Below are all the command line steps needed to start with a fresh install of Debian or its variants (e.g.
 Ubuntu, Linux Mint) to install Freeciv21.
@@ -218,7 +218,7 @@ At this point follow the steps in the configuring_ section above.
 
 
 Windows Notes
-*************
+=============
 
 Msys2 is an available environment for compiling Freeciv21. Microsoft Windows Visual C is under development.
 
@@ -237,7 +237,7 @@ Instead of installing, use this command to create the Windows Installer package:
 When the Ninja command is finished running, you will find an installer in :file:`build/Windows-${arch}`
 
 Documentation Build Notes
-*************************
+=========================
 
 Freeciv21 uses :file:`python3-sphynx` and https://readthedocs.org/ to generate well formatted HTML
 documentation. To generate a local copy of the documentation from the :file:`docs` directory you need two

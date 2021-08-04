@@ -20,6 +20,10 @@ latter includes the constraint of celebration, which makes it very easy to let y
 harder times. The forth, and probably most valuable thing in war times, is that is keeps your cities 
 content, preventing them from revolt.
 
+The legacy Freeciv Wiki also contains some other useful information related to the CMA:
+* https://freeciv.fandom.com/wiki/City_manager
+* https://freeciv.fandom.com/wiki/CMA
+
 Usage
 =====
 
@@ -44,10 +48,10 @@ though, is the Celebrate constraint, which makes the city celebrate at once (whi
 round after you change it).
 
 It is obvious that the Governor can't fulfill all these constraints in every case. Whenever the constraints 
-can't be fulfilled, the Governor quits its service for that city, giving a message: "The agent can't fulfill 
-the requirements for Berlin. Passing back control." You then have the choice of either managing the city on 
-your own (which has some drawbacks, see below), or open that city and change the surplus requirements so 
-that they can be fulfilled.
+can't be fulfilled, the Governor quits its service for that city, giving a message: :strong:`"The agent 
+can't fulfill the requirements for Berlin"`. Passing back control." You then have the choice of either 
+managing the city on your own (which has some drawbacks, see below), or open that city and change the 
+surplus requirements so that they can be fulfilled.
 
 When you have made a setup for a city, you need to click on :guilabel:`Enable` to switch on the Governor. If 
 this button's text is greyed, either the Governor is already active, or the task is impossible. In the 
@@ -91,7 +95,7 @@ but gives you more performance than you have ever seen (well, for most players).
 There are some drawbacks, though. Once you've switched on the Governor, it grabs any good tile it can get. 
 So you encounter very hard times trying to manage a city nearby a Governor-controlled one. This is true for 
 the city window and the main map worker's interface as well. If you want to have Governor-controlled and 
-"handmade" cities, they probably should be on different islands.
+:strong:`handmade` cities, they probably should be on different islands.
 
 There are several situations where the Governor can't fulfill the requirements just temporarily, e.g. when 
 you move a ship from one city to another, or when an enemy walks through your country. The Governor passes 

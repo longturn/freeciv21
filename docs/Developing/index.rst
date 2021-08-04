@@ -1,5 +1,5 @@
 Developing
-==========
+**********
 
 Developing
   The Developing category is an area for documentation editors to provide information on how to alter the

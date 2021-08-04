@@ -1,5 +1,5 @@
 Windows Installation
-====================
+********************
 
 The Freeciv21 community provides a Microsoft Windows\ |reg| installer when new releases are tagged. The 
 following is instructions for installing on Windows.
@@ -11,7 +11,7 @@ download and double-click the file to run.
 .. _admin:
 
 Local Admin Installation
-************************
+========================
 
 The following steps assume you :emphasis:`are` logged on as a local Administrator. If you :emphasis:`are
 not` then jump to the non-admin_ section below.
@@ -78,7 +78,7 @@ Freeciv21 [Version] --> Freeciv21 Client`.
 .. _non-admin:
 
 Non-Local Admin (Unpriviledged User) Instalation
-************************************************
+================================================
 
 If you :emphasis:`are not` logged on as a local Administrator there is no UAC prompt and the following panel
 will load after an uncompress process has completed.

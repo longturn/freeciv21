@@ -98,14 +98,15 @@ How do I declare war on another player?
 ---------------------------------------
 
 Go to the :guilabel:`Nations` page, select the player row, then click :guilabel:`Cancel Treaty` at the top. 
-This drops you from "cease fire", "armistice", or "peace" into "war". If you've already signed a permanent 
-"alliance" treaty with the player, you will have to cancel treaties several times to get to "war".
+This drops you from emphasis:`cease fire`, emphasis:`armistice`, or emphasis:`peace` into emphasis:`war`. If 
+you've already signed a permanent emphasis:`alliance` treaty with the player, you will have to cancel 
+treaties several times to get to emphasis:`war`.
 
 See the in-game help on :title-reference:`Diplomacy` for more detail.
 
-.. note:: The ability to arbitrarily leave "peace" and go to "war" is also heavily dependent on the form
-    of governement your nation is currently ruled by. See the in-game help on :title-reference:`Government`
-    for more details.
+.. note:: The ability to arbitrarily leave emphasis:`peace` and go to emphasis:`war` is also heavily 
+    dependent on the form of governement your nation is currently ruled by. See the in-game help on
+    :title-reference:`Government` for more details.
 
 How do I do diplomatic meetings?
 --------------------------------
@@ -257,7 +258,7 @@ to get help on a particular setting, or
 to change a setting to a particular value. After the game begins you may still change some settings, but not 
 others.
 
-You can create rulesets or "modpacks" - alternative sets of units, buildings, and technologies. Several 
+You can create rulesets or strong:`modpacks` - alternative sets of units, buildings, and technologies. Several 
 different rulesets come with the Freeciv21 distribution, including a civ1 (Civilization 1 compatibility mode), 
 and civ2 (Civilization 2 compatibility mode). Use the :literal:`rulesetdir` command to change the 
 ruleset (as in :literal:`/rulesetdir civ2`). 
@@ -279,9 +280,9 @@ Little or no work is being done on implementing features from other similar game
 Civilization III.
 
 So the goal of compatibility is mainly used as a limiting factor in development: when a new feature is added 
-to Freeciv21 that makes gameplay different, it is generally implemented in such a way that the "traditional" 
-behaviour remains available as an option. However, we're not aiming for absolute 100% compatibility; in 
-particular, we're not aiming for bug-compatibility.
+to Freeciv21 that makes gameplay different, it is generally implemented in such a way that the 
+:emphasis:`traditional` behaviour remains available as an option. However, we're not aiming for absolute 
+100% compatibility; in particular, we're not aiming for bug-compatibility.
 
 My opponents seem to be able to play two moves at once!
 -------------------------------------------------------
@@ -294,7 +295,7 @@ A turn in Longturn lasts 23 hours and it's always possible that he managed to lo
 consecutive logins. However, firstly, there is a mechanic that slightly limits this (known as unit wait time), 
 and secondly, this can't happen every time because now he has already played his move this turn and now 
 needs to wait for the Turn Change to make his next move. So, in the next turn, if you log in before him, now 
-it was you who made your move twice. If not, he can't "move twice" until you do.
+it was you who made your move twice. If not, he can't :emphasis:`move twice` until you do.
 
 The primary server setting to mitigate this problem is :literal:`unitwaittime`, which imposes a minimum 
 time between moves of a single unit on successive turns.
@@ -324,7 +325,7 @@ Why are the AI players so easy on 'hard'?
 Several reasons. For example, the AI is heavily playtested under and customized to the default ruleset and 
 server settings. Although there are several provisions in the code to adapt to changing rules, playing under 
 different conditions is quite a handicap for it. Though mostly the AI simply doesn't have a good, all 
-encompassing strategy besides "eliminate nation x". 
+encompassing strategy besides :strong:`"eliminate nation x"`. 
 
 To make the game harder, you could try putting some or all of the AI into a team. This will ensure that they 
 will waste no time and resources negotiating with each other and spend them trying to eliminate you. They 
@@ -603,9 +604,9 @@ How do I use a different tileset?
 ---------------------------------
 
 If the tilesets supplied with Freeciv21 don't do it for you, some popular add-on tilesets are available 
-through the "Freeciv21 Modpack Installer" utility. To install these, just launch the installer from the Start 
-menu, and choose the one you want; it should then be automatically downloaded and made available for the 
-current user.
+through the :strong:`Freeciv21 Modpack Installer` utility. To install these, just launch the installer from 
+the Start menu, and choose the one you want; it should then be automatically downloaded and made available 
+for the current user.
 
 If the tileset you want is not available via the modpack installer, you'll have to install it by hand from 
 somewhere. To do that is beyond the scope of this FAQ.
@@ -613,8 +614,8 @@ somewhere. To do that is beyond the scope of this FAQ.
 How do I use a different ruleset?
 ---------------------------------
 
-Again, this is easiest if the ruleset is available through the "Freeciv21 Modpack Installer" utility that's 
-shipped with Freeciv21.
+Again, this is easiest if the ruleset is available through the :strong:`Freeciv21 Modpack Installer` utility 
+that's shipped with Freeciv21.
 
 If the ruleset you want is not available via the modpack installer, you'll have to install it by hand from 
 somewhere. To do that is beyond the scope of this FAQ. 
