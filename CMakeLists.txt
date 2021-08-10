@@ -87,9 +87,7 @@ install(
   INSTALL
   doc/BUGS
   doc/CodingStyle
-  doc/FAQ
   doc/HACKING
-  doc/HOWTOPLAY
   doc/README.achievements
   doc/README.actions
   doc/README.agents
@@ -98,9 +96,7 @@ install(
   doc/README.attributes
   doc/README.delta
   doc/README.fcdb
-  doc/README.governor
   doc/README.graphics
-  doc/README.modpack_installer
   doc/README.msys2
   doc/README.nations
   doc/README.packaging
