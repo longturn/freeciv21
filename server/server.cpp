@@ -411,9 +411,6 @@ void server::accept_connections()
 
       // Turn off the quitidle timeout if it's running
       if (m_quitidle_timer != nullptr) {
-        // There may be a "race condition" here if the timeout signal is
-        // already queued and we're going to quit. This should be fairly rare
-        // in practice.
         m_quitidle_timer->stop();
         m_quitidle_timer->deleteLater();
         m_quitidle_timer = nullptr;
@@ -818,7 +815,7 @@ void server::update_game_state()
 
   // Set up the quitidle timer if not done already
   if (m_someone_ever_connected && m_quitidle_timer == nullptr
-      && srvarg.quitidle != 0 && conn_list_size(game.est_connections) == 0) {
+      && srvarg.quitidle != 0 && conn_list_size(game.all_connections) == 0) {
     if (srvarg.exit_on_end) {
       qInfo(_("Shutting down in %d seconds for lack of players."),
             srvarg.quitidle);
@@ -871,6 +868,11 @@ bool server::shut_game_down()
 void server::quit_idle()
 {
   m_quitidle_timer = nullptr;
+
+  if (conn_list_size(game.est_connections) > 0) {
+    qDebug("Quitidle timer fired but someone is connected; not quitting");
+    return;
+  }
 
   if (srvarg.exit_on_end) {
     qInfo(_("Shutting down for lack of players."));
