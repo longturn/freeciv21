@@ -552,7 +552,7 @@ void server::input_on_stdin()
       m_stdin_notifier->deleteLater();
       m_stdin_notifier = nullptr;
       qInfo(_("Reached end of standard input."));
-    } else {
+    } else if (f.canReadLine()) {
       // Got something to read. Hopefully there's even a complete line and
       // we can process it.
       auto line = f.readLine();
