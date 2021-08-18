@@ -111,8 +111,7 @@ layer_order =
   "Water",      ; All extras with "River" style.
   "Roads",      ; All extras with style "RoadAllSeparate",
                 ; "RoadParityCombined" or "RoadAllCombined".
-  "Special1",   ; 1st layer for extras with style "3Layers", "Single2" or
-                ; "Single1".
+  "Special1",   ; 1st layer for extras with style "3Layers" or "Single1".
   "Grid1",      ; Grid layer for isometric tilesets.
   "City1",      ; City and walls.
   "Special2",   ; 2nd layer for extras with "3Layers" and "Single2" styles.

@@ -15,7 +15,7 @@ priority = 25
 summary = _("Large isometric tileset.")
 ;description = ""
 
-; TODO: add more overall information fields on tiles, 
+; TODO: add more overall information fields on tiles,
 ; eg, authors, colors, etc.
 
 ; What is the primary ruleset this tileset is meant for.
@@ -106,8 +106,7 @@ tilelabel_offset_y = 15
 ;  "Water",      ; All extras with "River" style.
 ;  "Roads",      ; All extras with style "RoadAllSeparate",
 ;                ; "RoadParityCombined" or "RoadAllCombined".
-;  "Special1",   ; 1st layer for extras with style "3Layers", "Single2" or
-;                ; "Single1".
+;  "Special1",   ; 1st layer for extras with style "3Layers" or "Single1".
 ;  "Grid1",      ; Grid layer for isometric tilesets.
 ;  "City1",      ; City and walls.
 ;  "Special2",   ; 2nd layer for extras with "3Layers" and "Single2" styles.
@@ -128,8 +127,8 @@ tilelabel_offset_y = 15
 ; This is special because it gets freed and reloaded as required:
 main_intro_file    = "misc/intro"
 
-; Below, the graphics spec files; must be somewhere (anywhere) in 
-; the data path. Order may be important for color allocation on 
+; Below, the graphics spec files; must be somewhere (anywhere) in
+; the data path. Order may be important for color allocation on
 ; low-color systems, and if there are any duplicate tags (lattermost
 ; tag is used).
 files =
