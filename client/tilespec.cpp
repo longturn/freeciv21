@@ -5667,6 +5667,10 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_SPECIAL3:
+    fc_assert_ret_val(false, {});
+    break;
+
+  case LAYER_BASE_FLAGS:
     if (NULL != pterrain) {
       bool show_flag = false;
       struct player *eowner = extra_owner(ptile);
@@ -5703,7 +5707,6 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
         }
       }
     }
-    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_FOG:
@@ -6537,6 +6540,7 @@ bool tileset_layer_in_category(enum mapview_layer layer,
   case LAYER_SPECIAL1:
   case LAYER_SPECIAL2:
   case LAYER_SPECIAL3:
+  case LAYER_BASE_FLAGS:
     return cat == LAYER_CATEGORY_CITY || cat == LAYER_CATEGORY_TILE;
   case LAYER_CITY1:
   case LAYER_CITY2:
