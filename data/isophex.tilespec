@@ -115,7 +115,8 @@ tilelabel_offset_y = 10
 ;  "Special2",   ; 2nd layer for extras with "3Layers" and "Single2" styles.
 ;  "Fog",        ; Fog of war (on tiles one knows but doesn`t see).
 ;  "Unit",       ; Units except the selected one(s).
-;  "Special3",   ; 3rd layer for extras with "3Layers" style, and base flags.
+;  "Special3",   ; 3rd layer for extras with "3Layers" style.
+;  "BaseFlags",  ; Base flags.
 ;  "City2",      ; City size when the city bar is disabled.
 ;  "Grid2",      ; Second grid layer (overhead tilesets only).
 ;  "Overlays",   ; Tile output sprites.
