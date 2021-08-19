@@ -79,6 +79,7 @@
 #include "goto.h"
 #include "helpdata.h"
 #include "layer_background.h"
+#include "layer_special.h"
 #include "options.h" // for fill_xxx
 #include "themes_common.h"
 
@@ -121,25 +122,8 @@
 #define NUM_TILES_SELECT 4
 #define MAX_NUM_UPKEEP_SPRITES 10
 
-#define SPECENUM_NAME extrastyle_id
-#define SPECENUM_VALUE0 ESTYLE_ROAD_ALL_SEPARATE
-#define SPECENUM_VALUE0NAME "RoadAllSeparate"
-#define SPECENUM_VALUE1 ESTYLE_ROAD_PARITY_COMBINED
-#define SPECENUM_VALUE1NAME "RoadParityCombined"
-#define SPECENUM_VALUE2 ESTYLE_ROAD_ALL_COMBINED
-#define SPECENUM_VALUE2NAME "RoadAllCombined"
-#define SPECENUM_VALUE3 ESTYLE_RIVER
-#define SPECENUM_VALUE3NAME "River"
-#define SPECENUM_VALUE4 ESTYLE_SINGLE1
-#define SPECENUM_VALUE4NAME "Single1"
-#define SPECENUM_VALUE5 ESTYLE_SINGLE2
-#define SPECENUM_VALUE5NAME "Single2"
-#define SPECENUM_VALUE6 ESTYLE_3LAYER
-#define SPECENUM_VALUE6NAME "3Layer"
-#define SPECENUM_VALUE7 ESTYLE_CARDINALS
-#define SPECENUM_VALUE7NAME "Cardinals"
-#define SPECENUM_COUNT ESTYLE_COUNT
-#include "specenum_gen.h"
+#define FULL_TILE_X_OFFSET ((t->normal_tile_width - t->full_tile_width) / 2)
+#define FULL_TILE_Y_OFFSET (t->normal_tile_height - t->full_tile_height)
 
 /* This could be moved to common/map.h if there's more use for it. */
 enum direction4 { DIR4_NORTH = 0, DIR4_SOUTH, DIR4_EAST, DIR4_WEST };
@@ -309,11 +293,7 @@ struct named_sprites {
     QPixmap *activity, *rmact;
     int extrastyle;
     union {
-      QPixmap *single;
       QPixmap *cardinals[MAX_INDEX_CARDINAL];
-      struct {
-        QPixmap *background, *middleground, *foreground;
-      } bmf;
       struct {
         QPixmap
             /* for extrastyles ESTYLE_ROAD_ALL_SEPARATE and
@@ -398,6 +378,9 @@ struct tileset {
   char *for_ruleset;
 
   std::vector<std::unique_ptr<freeciv::layer>> layers;
+  struct {
+    freeciv::layer_special *background, *middleground, *foreground;
+  } special_layers;
 
   enum ts_type type;
   int hex_width, hex_height;
@@ -484,7 +467,7 @@ static void tileset_setup_base(struct tileset *t,
 static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
                                const char *tag);
 
-static bool is_extra_drawing_enabled(struct extra_type *pextra);
+bool is_extra_drawing_enabled(struct extra_type *pextra);
 
 static void tileset_player_free(struct tileset *t, int plrid);
 
@@ -2120,6 +2103,21 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       case LAYER_BACKGROUND:
         t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
         break;
+      case LAYER_SPECIAL1: {
+        auto l = std::make_unique<freeciv::layer_special>(t, layer);
+        t->special_layers.background = l.get();
+        t->layers.emplace_back(std::move(l));
+      } break;
+      case LAYER_SPECIAL2: {
+        auto l = std::make_unique<freeciv::layer_special>(t, layer);
+        t->special_layers.middleground = l.get();
+        t->layers.emplace_back(std::move(l));
+      } break;
+      case LAYER_SPECIAL3: {
+        auto l = std::make_unique<freeciv::layer_special>(t, layer);
+        t->special_layers.foreground = l.get();
+        t->layers.emplace_back(std::move(l));
+      } break;
       default:
         t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
         break;
@@ -2133,6 +2131,21 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       case LAYER_BACKGROUND:
         t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
         break;
+      case LAYER_SPECIAL1: {
+        auto l = std::make_unique<freeciv::layer_special>(t, layer);
+        t->special_layers.background = l.get();
+        t->layers.emplace_back(std::move(l));
+      } break;
+      case LAYER_SPECIAL2: {
+        auto l = std::make_unique<freeciv::layer_special>(t, layer);
+        t->special_layers.middleground = l.get();
+        t->layers.emplace_back(std::move(l));
+      } break;
+      case LAYER_SPECIAL3: {
+        auto l = std::make_unique<freeciv::layer_special>(t, layer);
+        t->special_layers.foreground = l.get();
+        t->layers.emplace_back(std::move(l));
+      } break;
       default:
         t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
         break;
@@ -2501,8 +2514,8 @@ static QString &valid_index_str(const struct tileset *t, int idx)
    Scale means if sprite should be scaled, smooth if scaling might use
    other scaling algorithm than nearest neighbor.
  */
-static QPixmap *load_sprite(struct tileset *t, const QString &tag_name,
-                            bool scale, bool smooth)
+QPixmap *load_sprite(struct tileset *t, const QString &tag_name, bool scale,
+                     bool smooth)
 {
   struct small_sprite *ss;
   float sprite_scale = 1.0f;
@@ -3598,8 +3611,10 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
       break;
 
     case ESTYLE_SINGLE1:
+      t->special_layers.background->set_sprite(pextra, tag);
+      break;
     case ESTYLE_SINGLE2:
-      SET_SPRITE(extras[id].u.single, tag);
+      t->special_layers.middleground->set_sprite(pextra, tag);
       break;
 
     case ESTYLE_CARDINALS: {
@@ -3787,25 +3802,16 @@ static void tileset_setup_base(struct tileset *t,
   fc_assert_ret(id >= 0 && id < extra_count());
 
   QString full_tag_name = QString(tag) + QStringLiteral("_bg");
-  t->sprites.extras[id].u.bmf.background =
-      load_sprite(t, qUtf8Printable(full_tag_name), true, true);
+  t->special_layers.background->set_sprite(
+      pextra, full_tag_name, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET);
 
   full_tag_name = QString(tag) + QStringLiteral("_mg");
-  t->sprites.extras[id].u.bmf.middleground =
-      load_sprite(t, qUtf8Printable(full_tag_name), true, true);
+  t->special_layers.middleground->set_sprite(
+      pextra, full_tag_name, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET);
 
   full_tag_name = QString(tag) + QStringLiteral("_fg");
-  t->sprites.extras[id].u.bmf.foreground =
-      load_sprite(t, qUtf8Printable(full_tag_name), true, true);
-
-  if (t->sprites.extras[id].u.bmf.background == NULL
-      && t->sprites.extras[id].u.bmf.middleground == NULL
-      && t->sprites.extras[id].u.bmf.foreground == NULL) {
-    // There was an extra style definition but no matching graphics
-    tileset_error(LOG_FATAL,
-                  _("No graphics with tag \"%s_bg/mg/fg\" for extra \"%s\""),
-                  tag, extra_rule_name(pextra));
-  }
+  t->special_layers.foreground->set_sprite(
+      pextra, full_tag_name, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET);
 }
 
 /**
@@ -4149,8 +4155,6 @@ static QPixmap *get_unit_nation_flag_sprite(const struct tileset *t,
   }
 }
 
-#define FULL_TILE_X_OFFSET ((t->normal_tile_width - t->full_tile_width) / 2)
-#define FULL_TILE_Y_OFFSET (t->normal_tile_height - t->full_tile_height)
 #define ADD_SPRITE_FULL(s)                                                  \
   sprs.emplace_back(t, s, true, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET)
 
@@ -5343,7 +5347,7 @@ static void fill_goto_sprite_array(const struct tileset *t,
    Should the given extra be drawn
    FIXME: Some extras can not be switched
  */
-static bool is_extra_drawing_enabled(struct extra_type *pextra)
+bool is_extra_drawing_enabled(struct extra_type *pextra)
 {
   bool no_disable = true; // Draw if matches no cause
 
@@ -5561,53 +5565,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_SPECIAL1:
-    if (ptile) {
-      extra_type_list_iterate(t->style_lists[ESTYLE_3LAYER], pextra)
-      {
-        if (tile_has_extra(ptile, pextra) && is_extra_drawing_enabled(pextra)
-            && t->sprites.extras[extra_index(pextra)].u.bmf.background) {
-          bool hidden = false;
-
-          extra_type_list_iterate(pextra->hiders, phider)
-          {
-            if (BV_ISSET(textras, extra_index(phider))) {
-              hidden = true;
-              break;
-            }
-          }
-          extra_type_list_iterate_end;
-
-          if (!hidden) {
-            ADD_SPRITE_FULL(
-                t->sprites.extras[extra_index(pextra)].u.bmf.background);
-          }
-        }
-      }
-      extra_type_list_iterate_end;
-
-      extra_type_list_iterate(t->style_lists[ESTYLE_SINGLE1], pextra)
-      {
-        if (BV_ISSET(textras, extra_index(pextra))
-            && is_extra_drawing_enabled(pextra)) {
-          bool hidden = false;
-
-          extra_type_list_iterate(pextra->hiders, phider)
-          {
-            if (BV_ISSET(textras, extra_index(phider))) {
-              hidden = true;
-              break;
-            }
-          }
-          extra_type_list_iterate_end;
-
-          if (!hidden) {
-            sprs.emplace_back(
-                t, t->sprites.extras[extra_index(pextra)].u.single);
-          }
-        }
-      }
-      extra_type_list_iterate_end;
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_GRID1:
@@ -5685,53 +5643,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_SPECIAL2:
-    if (ptile) {
-      extra_type_list_iterate(t->style_lists[ESTYLE_3LAYER], pextra)
-      {
-        if (tile_has_extra(ptile, pextra) && is_extra_drawing_enabled(pextra)
-            && t->sprites.extras[extra_index(pextra)].u.bmf.middleground) {
-          bool hidden = false;
-
-          extra_type_list_iterate(pextra->hiders, phider)
-          {
-            if (BV_ISSET(textras, extra_index(phider))) {
-              hidden = true;
-              break;
-            }
-          }
-          extra_type_list_iterate_end;
-
-          if (!hidden) {
-            ADD_SPRITE_FULL(
-                t->sprites.extras[extra_index(pextra)].u.bmf.middleground);
-          }
-        }
-      }
-      extra_type_list_iterate_end;
-
-      extra_type_list_iterate(t->style_lists[ESTYLE_SINGLE2], pextra)
-      {
-        if (BV_ISSET(textras, extra_index(pextra))
-            && is_extra_drawing_enabled(pextra)) {
-          bool hidden = false;
-
-          extra_type_list_iterate(pextra->hiders, phider)
-          {
-            if (BV_ISSET(textras, extra_index(phider))) {
-              hidden = true;
-              break;
-            }
-          }
-          extra_type_list_iterate_end;
-
-          if (!hidden) {
-            sprs.emplace_back(
-                t, t->sprites.extras[extra_index(pextra)].u.single);
-          }
-        }
-      }
-      extra_type_list_iterate_end;
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_UNIT:
@@ -5755,34 +5667,9 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_SPECIAL3:
-    if (ptile) {
+    if (NULL != pterrain) {
       bool show_flag = false;
       struct player *eowner = extra_owner(ptile);
-
-      extra_type_list_iterate(t->style_lists[ESTYLE_3LAYER], pextra)
-      {
-        if (is_extra_drawing_enabled(pextra) && tile_has_extra(ptile, pextra)
-            && t->sprites.extras[extra_index(pextra)].u.bmf.foreground) {
-          bool hidden = false;
-
-          extra_type_list_iterate(pextra->hiders, phider)
-          {
-            if (BV_ISSET(textras, extra_index(phider))) {
-              hidden = true;
-              break;
-            }
-          }
-          extra_type_list_iterate_end;
-
-          if (!hidden) {
-            if (t->sprites.extras[extra_index(pextra)].u.bmf.foreground) {
-              ADD_SPRITE_FULL(
-                  t->sprites.extras[extra_index(pextra)].u.bmf.foreground);
-            }
-          }
-        }
-      }
-      extra_type_list_iterate_end;
 
       /* Show base flag. Not part of previous iteration as
        * "extras of ESTYLE_3_LAYER" != "bases" */
@@ -5816,6 +5703,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
         }
       }
     }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_FOG:

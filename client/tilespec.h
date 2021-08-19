@@ -73,6 +73,26 @@ struct resource_type;
 #define SPECENUM_VALUE4NAME "Corner"
 #include "specenum_gen.h"
 
+#define SPECENUM_NAME extrastyle_id
+#define SPECENUM_VALUE0 ESTYLE_ROAD_ALL_SEPARATE
+#define SPECENUM_VALUE0NAME "RoadAllSeparate"
+#define SPECENUM_VALUE1 ESTYLE_ROAD_PARITY_COMBINED
+#define SPECENUM_VALUE1NAME "RoadParityCombined"
+#define SPECENUM_VALUE2 ESTYLE_ROAD_ALL_COMBINED
+#define SPECENUM_VALUE2NAME "RoadAllCombined"
+#define SPECENUM_VALUE3 ESTYLE_RIVER
+#define SPECENUM_VALUE3NAME "River"
+#define SPECENUM_VALUE4 ESTYLE_SINGLE1
+#define SPECENUM_VALUE4NAME "Single1"
+#define SPECENUM_VALUE5 ESTYLE_SINGLE2
+#define SPECENUM_VALUE5NAME "Single2"
+#define SPECENUM_VALUE6 ESTYLE_3LAYER
+#define SPECENUM_VALUE6NAME "3Layer"
+#define SPECENUM_VALUE7 ESTYLE_CARDINALS
+#define SPECENUM_VALUE7NAME "Cardinals"
+#define SPECENUM_COUNT ESTYLE_COUNT
+#include "specenum_gen.h"
+
 #define NUM_TILES_PROGRESS 8
 
 #define MAX_NUM_CITIZEN_SPRITES 6
@@ -127,6 +147,9 @@ bool tileset_layer_in_category(enum mapview_layer layer,
                                enum layer_category cat);
 
 // Gfx support
+QPixmap *load_sprite(struct tileset *t, const QString &tag_name,
+                     bool scale = true, bool smooth = true);
+
 std::vector<drawn_sprite>
 fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                   const struct tile *ptile, const struct tile_edge *pedge,
@@ -238,6 +261,7 @@ QPixmap *get_basic_fog_sprite(const struct tileset *t);
 std::vector<drawn_sprite>
 fill_basic_extra_sprite_array(const struct tileset *t,
                               const struct extra_type *pextra);
+bool is_extra_drawing_enabled(struct extra_type *pextra);
 QPixmap *get_event_sprite(const struct tileset *t, enum event_type event);
 QPixmap *get_mask_sprite(const struct tileset *t);
 
