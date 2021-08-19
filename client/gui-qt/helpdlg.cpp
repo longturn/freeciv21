@@ -11,6 +11,7 @@
 // Qt
 #include <QApplication>
 #include <QGraphicsDropShadowEffect>
+#include <QPainter>
 #include <QProgressBar>
 #include <QScreen>
 #include <QScrollArea>
@@ -253,7 +254,15 @@ void help_dialog::make_tree()
       case HELP_EXTRA: {
         pextra = extra_type_by_translated_name(s);
         auto sprs = fill_basic_extra_sprite_array(tileset, pextra);
-        spite = sprs.front().sprite;
+        if (!sprs.empty()) {
+          QPixmap pix(*sprs.front().sprite);
+          QPainter p;
+          p.begin(&pix);
+          for (std::size_t i = 1; i < sprs.size(); ++i) {
+            p.drawPixmap(0, 0, *sprs[i].sprite);
+          }
+          icon = QIcon(pix);
+        }
       } break;
 
       case HELP_GOVERNMENT:

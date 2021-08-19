@@ -1877,6 +1877,11 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
 struct city *find_city_or_settler_near_tile(const struct tile *ptile,
                                             struct unit **punit)
 {
+  // Rule g
+  if (tile_virtual_check(ptile)) {
+    return nullptr;
+  }
+
   struct city *closest_city;
   struct city *pcity;
   struct unit *closest_settler = NULL, *best_settler = NULL;

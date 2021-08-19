@@ -486,13 +486,6 @@ static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
 
 static bool is_extra_drawing_enabled(struct extra_type *pextra);
 
-static void fill_basic_road_sprite_array(const struct tileset *t,
-                                         std::vector<drawn_sprite> &sprs,
-                                         const struct extra_type *pextra);
-static void fill_basic_base_sprite_array(const struct tileset *t,
-                                         std::vector<drawn_sprite> &sprs,
-                                         const struct extra_type *pextra);
-
 static void tileset_player_free(struct tileset *t, int plrid);
 
 /**
@@ -5424,7 +5417,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
   int tileno, dir;
   bv_extras textras_near[8];
   bv_extras textras;
-  struct terrain *tterrain_near[8];
+  struct terrain *tterrain_near[8] = {nullptr};
   struct terrain *pterrain = NULL;
   /* Unit drawing is disabled when the view options are turned off,
    * but only where we're drawing on the mapview. */
@@ -5447,7 +5440,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
           || layer == LAYER_ROADS) {
         build_tile_data(ptile, pterrain, tterrain_near, textras_near);
       }
-    } else {
+    } else if (!tile_virtual_check(ptile)) {
       qCritical("fill_sprite_array() tile (%d,%d) has no terrain!",
                 TILE_XY(ptile));
     }
@@ -5506,96 +5499,91 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
           extra_type_list_iterate_end;
         }
       }
+    }
 
-      fill_irrigation_sprite_array(t, sprs, textras, textras_near, pcity);
+    fill_irrigation_sprite_array(t, sprs, textras, textras_near, pcity);
 
-      if (!solid_bg) {
-        extra_type_list_iterate(t->style_lists[ESTYLE_RIVER], priver)
-        {
-          int idx = extra_index(priver);
+    if (!solid_bg) {
+      extra_type_list_iterate(t->style_lists[ESTYLE_RIVER], priver)
+      {
+        int idx = extra_index(priver);
 
-          if (BV_ISSET(textras, idx)) {
-            int i;
+        if (BV_ISSET(textras, idx)) {
+          int i;
 
-            // Draw rivers on top of irrigation.
-            tileno = 0;
-            for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
-              enum direction8 cdir = t->cardinal_tileset_dirs[i];
+          // Draw rivers on top of irrigation.
+          tileno = 0;
+          for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
+            enum direction8 cdir = t->cardinal_tileset_dirs[i];
 
-              if (terrain_type_terrain_class(tterrain_near[cdir]) == TC_OCEAN
-                  || BV_ISSET(textras_near[cdir], idx)) {
-                tileno |= 1 << i;
-              }
+            if (tterrain_near[cdir] == nullptr
+                || terrain_type_terrain_class(tterrain_near[cdir])
+                       == TC_OCEAN
+                || BV_ISSET(textras_near[cdir], idx)) {
+              tileno |= 1 << i;
             }
-
-            sprs.emplace_back(
-                t, t->sprites.extras[idx].u.road.ru.rivers.spec[tileno]);
           }
+
+          sprs.emplace_back(
+              t, t->sprites.extras[idx].u.road.ru.rivers.spec[tileno]);
         }
-        extra_type_list_iterate_end;
       }
+      extra_type_list_iterate_end;
     }
     break;
 
   case LAYER_ROADS:
-    if (NULL != pterrain) {
-      extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_ALL_SEPARATE],
-                              pextra)
-      {
-        if (is_extra_drawing_enabled(pextra)) {
-          fill_road_sprite_array(t, pextra, sprs, textras, textras_near,
-                                 tterrain_near, pcity);
-        }
+    extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_ALL_SEPARATE], pextra)
+    {
+      if (is_extra_drawing_enabled(pextra)) {
+        fill_road_sprite_array(t, pextra, sprs, textras, textras_near,
+                               tterrain_near, pcity);
       }
-      extra_type_list_iterate_end;
-      extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_PARITY_COMBINED],
-                              pextra)
-      {
-        if (is_extra_drawing_enabled(pextra)) {
-          fill_road_sprite_array(t, pextra, sprs, textras, textras_near,
-                                 tterrain_near, pcity);
-        }
-      }
-      extra_type_list_iterate_end;
-      extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_ALL_COMBINED],
-                              pextra)
-      {
-        if (is_extra_drawing_enabled(pextra)) {
-          fill_road_sprite_array(t, pextra, sprs, textras, textras_near,
-                                 tterrain_near, pcity);
-        }
-      }
-      extra_type_list_iterate_end;
     }
+    extra_type_list_iterate_end;
+    extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_PARITY_COMBINED],
+                            pextra)
+    {
+      if (is_extra_drawing_enabled(pextra)) {
+        fill_road_sprite_array(t, pextra, sprs, textras, textras_near,
+                               tterrain_near, pcity);
+      }
+    }
+    extra_type_list_iterate_end;
+    extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_ALL_COMBINED], pextra)
+    {
+      if (is_extra_drawing_enabled(pextra)) {
+        fill_road_sprite_array(t, pextra, sprs, textras, textras_near,
+                               tterrain_near, pcity);
+      }
+    }
+    extra_type_list_iterate_end;
     break;
 
   case LAYER_SPECIAL1:
-    if (NULL != pterrain) {
-      if (ptile) {
-        extra_type_list_iterate(t->style_lists[ESTYLE_3LAYER], pextra)
-        {
-          if (tile_has_extra(ptile, pextra)
-              && is_extra_drawing_enabled(pextra)
-              && t->sprites.extras[extra_index(pextra)].u.bmf.background) {
-            bool hidden = false;
+    if (ptile) {
+      extra_type_list_iterate(t->style_lists[ESTYLE_3LAYER], pextra)
+      {
+        if (tile_has_extra(ptile, pextra) && is_extra_drawing_enabled(pextra)
+            && t->sprites.extras[extra_index(pextra)].u.bmf.background) {
+          bool hidden = false;
 
-            extra_type_list_iterate(pextra->hiders, phider)
-            {
-              if (BV_ISSET(textras, extra_index(phider))) {
-                hidden = true;
-                break;
-              }
-            }
-            extra_type_list_iterate_end;
-
-            if (!hidden) {
-              ADD_SPRITE_FULL(
-                  t->sprites.extras[extra_index(pextra)].u.bmf.background);
+          extra_type_list_iterate(pextra->hiders, phider)
+          {
+            if (BV_ISSET(textras, extra_index(phider))) {
+              hidden = true;
+              break;
             }
           }
+          extra_type_list_iterate_end;
+
+          if (!hidden) {
+            ADD_SPRITE_FULL(
+                t->sprites.extras[extra_index(pextra)].u.bmf.background);
+          }
         }
-        extra_type_list_iterate_end;
       }
+      extra_type_list_iterate_end;
 
       extra_type_list_iterate(t->style_lists[ESTYLE_SINGLE1], pextra)
       {
@@ -5697,32 +5685,29 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_SPECIAL2:
-    if (NULL != pterrain) {
-      if (ptile) {
-        extra_type_list_iterate(t->style_lists[ESTYLE_3LAYER], pextra)
-        {
-          if (tile_has_extra(ptile, pextra)
-              && is_extra_drawing_enabled(pextra)
-              && t->sprites.extras[extra_index(pextra)].u.bmf.middleground) {
-            bool hidden = false;
+    if (ptile) {
+      extra_type_list_iterate(t->style_lists[ESTYLE_3LAYER], pextra)
+      {
+        if (tile_has_extra(ptile, pextra) && is_extra_drawing_enabled(pextra)
+            && t->sprites.extras[extra_index(pextra)].u.bmf.middleground) {
+          bool hidden = false;
 
-            extra_type_list_iterate(pextra->hiders, phider)
-            {
-              if (BV_ISSET(textras, extra_index(phider))) {
-                hidden = true;
-                break;
-              }
-            }
-            extra_type_list_iterate_end;
-
-            if (!hidden) {
-              ADD_SPRITE_FULL(
-                  t->sprites.extras[extra_index(pextra)].u.bmf.middleground);
+          extra_type_list_iterate(pextra->hiders, phider)
+          {
+            if (BV_ISSET(textras, extra_index(phider))) {
+              hidden = true;
+              break;
             }
           }
+          extra_type_list_iterate_end;
+
+          if (!hidden) {
+            ADD_SPRITE_FULL(
+                t->sprites.extras[extra_index(pextra)].u.bmf.middleground);
+          }
         }
-        extra_type_list_iterate_end;
       }
+      extra_type_list_iterate_end;
 
       extra_type_list_iterate(t->style_lists[ESTYLE_SINGLE2], pextra)
       {
@@ -5770,16 +5755,41 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_SPECIAL3:
-    if (NULL != pterrain) {
-      if (ptile) {
-        bool show_flag = false;
-        struct player *eowner = extra_owner(ptile);
+    if (ptile) {
+      bool show_flag = false;
+      struct player *eowner = extra_owner(ptile);
 
-        extra_type_list_iterate(t->style_lists[ESTYLE_3LAYER], pextra)
+      extra_type_list_iterate(t->style_lists[ESTYLE_3LAYER], pextra)
+      {
+        if (is_extra_drawing_enabled(pextra) && tile_has_extra(ptile, pextra)
+            && t->sprites.extras[extra_index(pextra)].u.bmf.foreground) {
+          bool hidden = false;
+
+          extra_type_list_iterate(pextra->hiders, phider)
+          {
+            if (BV_ISSET(textras, extra_index(phider))) {
+              hidden = true;
+              break;
+            }
+          }
+          extra_type_list_iterate_end;
+
+          if (!hidden) {
+            if (t->sprites.extras[extra_index(pextra)].u.bmf.foreground) {
+              ADD_SPRITE_FULL(
+                  t->sprites.extras[extra_index(pextra)].u.bmf.foreground);
+            }
+          }
+        }
+      }
+      extra_type_list_iterate_end;
+
+      /* Show base flag. Not part of previous iteration as
+       * "extras of ESTYLE_3_LAYER" != "bases" */
+      if (eowner != NULL) {
+        extra_type_list_iterate(t->flagged_bases_list, pextra)
         {
-          if (is_extra_drawing_enabled(pextra)
-              && tile_has_extra(ptile, pextra)
-              && t->sprites.extras[extra_index(pextra)].u.bmf.foreground) {
+          if (tile_has_extra(ptile, pextra)) {
             bool hidden = false;
 
             extra_type_list_iterate(pextra->hiders, phider)
@@ -5792,45 +5802,17 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
             extra_type_list_iterate_end;
 
             if (!hidden) {
-              if (t->sprites.extras[extra_index(pextra)].u.bmf.foreground) {
-                ADD_SPRITE_FULL(
-                    t->sprites.extras[extra_index(pextra)].u.bmf.foreground);
-              }
+              show_flag = true;
             }
           }
         }
         extra_type_list_iterate_end;
 
-        /* Show base flag. Not part of previous iteration as
-         * "extras of ESTYLE_3_LAYER" != "bases" */
-        if (eowner != NULL) {
-          extra_type_list_iterate(t->flagged_bases_list, pextra)
-          {
-            if (tile_has_extra(ptile, pextra)) {
-              bool hidden = false;
-
-              extra_type_list_iterate(pextra->hiders, phider)
-              {
-                if (BV_ISSET(textras, extra_index(phider))) {
-                  hidden = true;
-                  break;
-                }
-              }
-              extra_type_list_iterate_end;
-
-              if (!hidden) {
-                show_flag = true;
-              }
-            }
-          }
-          extra_type_list_iterate_end;
-
-          if (show_flag) {
-            sprs.emplace_back(
-                t, get_nation_flag_sprite(t, nation_of_player(eowner)), true,
-                FULL_TILE_X_OFFSET + t->city_flag_offset_x,
-                FULL_TILE_Y_OFFSET + t->city_flag_offset_y);
-          }
+        if (show_flag) {
+          sprs.emplace_back(
+              t, get_nation_flag_sprite(t, nation_of_player(eowner)), true,
+              FULL_TILE_X_OFFSET + t->city_flag_offset_x,
+              FULL_TILE_Y_OFFSET + t->city_flag_offset_y);
         }
       }
     }
@@ -6623,115 +6605,25 @@ std::vector<drawn_sprite>
 fill_basic_extra_sprite_array(const struct tileset *t,
                               const struct extra_type *pextra)
 {
+  // We create a virtual tile with only the requested extra, then collect
+  // sprites from every layer.
+  auto tile = tile_virtual_new(nullptr);
+  BV_CLR_ALL(tile->extras);
+  BV_SET(tile->extras, pextra->id);
+
   auto sprs = std::vector<drawn_sprite>();
-
-  int idx = extra_index(pextra);
-
-  switch (t->sprites.extras[idx].extrastyle) {
-  case ESTYLE_SINGLE1:
-  case ESTYLE_SINGLE2:
-    sprs.emplace_back(t, t->sprites.extras[idx].u.single);
-    break;
-  case ESTYLE_CARDINALS:
-    sprs.emplace_back(t, t->sprites.extras[idx].u.cardinals[0]);
-    break;
-  case ESTYLE_ROAD_ALL_SEPARATE:
-  case ESTYLE_ROAD_PARITY_COMBINED:
-  case ESTYLE_ROAD_ALL_COMBINED:
-  case ESTYLE_RIVER:
-    fill_basic_road_sprite_array(t, sprs, pextra);
-    break;
-  case ESTYLE_3LAYER:
-    fill_basic_base_sprite_array(t, sprs, pextra);
-    break;
-  case ESTYLE_COUNT:
-    fc_assert(t->sprites.extras[idx].extrastyle != ESTYLE_COUNT);
-    break;
-  }
-
-  return sprs;
-}
-
-/**
-   Fills the sprite array with sprites that together make a representative
-   image of the given road type. The image is suitable for use as an icon
-   for the road type, for example.
- */
-void fill_basic_road_sprite_array(const struct tileset *t,
-                                  std::vector<drawn_sprite> &sprs,
-                                  const struct extra_type *pextra)
-{
-  int idx;
-  int i;
-  int extrastyle;
-
-  if (!t || !pextra) {
-    return;
-  }
-
-  idx = extra_index(pextra);
-
-  if (!(0 <= idx && idx < game.control.num_extra_types)) {
-    return;
-  }
-
-  extrastyle = t->sprites.extras[idx].extrastyle;
-
-  if (extrastyle == ESTYLE_RIVER) {
-    sprs.emplace_back(t, t->sprites.extras[idx].u.road.ru.rivers.spec[0]);
-  } else {
-    for (i = 0; i < t->num_valid_tileset_dirs; i++) {
-      if (!t->valid_tileset_dirs[i]) {
-        continue;
-      }
-      if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE) {
-        sprs.emplace_back(t, t->sprites.extras[idx].u.road.ru.dir[i]);
-      } else if (extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
-        if ((i % 2) == 0) {
-          sprs.emplace_back(
-              t, t->sprites.extras[idx].u.road.ru.combo.even[1 << (i / 2)]);
-        }
-      } else if (extrastyle == ESTYLE_ROAD_ALL_COMBINED) {
-        sprs.emplace_back(t, t->sprites.extras[idx].u.road.ru.total[1 << i]);
-      }
+  for (const auto &layer : t->layers) {
+    const auto lsprs = layer->fill_sprite_array(tile, nullptr, nullptr,
+                                                nullptr, nullptr, nullptr);
+    // Merge by hand because drawn_sprite isn't copyable (but it is
+    // copy-constructible)
+    for (const auto &sprite : lsprs) {
+      sprs.emplace_back(sprite);
     }
   }
-}
 
-/**
-   Fills the sprite array with sprites that together make a representative
-   image of the given base type. The image is suitable for use as an icon
-   for the base type, for example.
- */
-void fill_basic_base_sprite_array(const struct tileset *t,
-                                  std::vector<drawn_sprite> &sprs,
-                                  const struct extra_type *pextra)
-{
-  int idx;
-
-  if (!t || !pextra) {
-    return;
-  }
-
-  idx = extra_index(pextra);
-
-  if (!(0 <= idx && idx < game.control.num_extra_types)) {
-    return;
-  }
-
-#define ADD_SPRITE_IF_NOT_NULL(x)                                           \
-  do {                                                                      \
-    if ((x) != NULL) {                                                      \
-      ADD_SPRITE_FULL(x);                                                   \
-    }                                                                       \
-  } while (false)
-
-  // Corresponds to LAYER_SPECIAL{1,2,3} order.
-  ADD_SPRITE_IF_NOT_NULL(t->sprites.extras[idx].u.bmf.background);
-  ADD_SPRITE_IF_NOT_NULL(t->sprites.extras[idx].u.bmf.middleground);
-  ADD_SPRITE_IF_NOT_NULL(t->sprites.extras[idx].u.bmf.foreground);
-
-#undef ADD_SPRITE_IF_NOT_NULL
+  tile_virtual_destroy(tile);
+  return sprs;
 }
 
 const std::vector<std::unique_ptr<freeciv::layer>> &
