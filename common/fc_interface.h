@@ -28,7 +28,7 @@ struct functions {
   bool (*server_setting_val_bool_get)(server_setting_id id);
   int (*server_setting_val_int_get)(server_setting_id id);
   unsigned int (*server_setting_val_bitwise_get)(server_setting_id id);
-  void (*create_extra)(struct tile *ptile, struct extra_type *pextra,
+  void (*create_extra)(struct tile *ptile, const extra_type *pextra,
                        struct player *pplayer);
   void (*destroy_extra)(struct tile *ptile, struct extra_type *pextra);
   /* Returns iff the player 'pplayer' has the vision in the layer

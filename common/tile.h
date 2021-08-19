@@ -128,7 +128,7 @@ int tile_roads_output_incr(const struct tile *ptile, enum output_type_id o);
 int tile_roads_output_bonus(const struct tile *ptile, enum output_type_id o);
 bool tile_has_river(const struct tile *tile);
 
-bool tile_extra_apply(struct tile *ptile, struct extra_type *tgt);
+bool tile_extra_apply(struct tile *ptile, const extra_type *tgt);
 bool tile_extra_rm_apply(struct tile *ptile, struct extra_type *tgt);
 #define tile_has_extra(ptile, pextra)                                       \
   BV_ISSET(ptile->extras, extra_index(pextra))
@@ -170,7 +170,7 @@ const char *tile_get_info_text(const struct tile *ptile,
 // Virtual tiles are tiles that do not exist on the game map.
 struct tile *tile_virtual_new(const struct tile *ptile);
 void tile_virtual_destroy(struct tile *vtile);
-bool tile_virtual_check(struct tile *vtile);
+bool tile_virtual_check(const tile *vtile);
 
 bool tile_set_label(struct tile *ptile, const char *label);
 bool tile_is_placing(const struct tile *ptile);

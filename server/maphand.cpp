@@ -2356,7 +2356,7 @@ void map_calculate_borders()
 /**
    Claim base to player's ownership.
  */
-void map_claim_base(struct tile *ptile, struct extra_type *pextra,
+void map_claim_base(struct tile *ptile, const extra_type *pextra,
                     struct player *powner, struct player *ploser)
 {
   struct base_type *pbase;
@@ -2488,7 +2488,7 @@ void vision_clear_sight(struct vision *vision)
 /**
    Create extra to tile.
  */
-void create_extra(struct tile *ptile, struct extra_type *pextra,
+void create_extra(struct tile *ptile, const extra_type *pextra,
                   struct player *pplayer)
 {
   bool extras_removed = false;
