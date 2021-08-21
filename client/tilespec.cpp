@@ -79,6 +79,7 @@
 #include "goto.h"
 #include "helpdata.h"
 #include "layer_background.h"
+#include "layer_base_flags.h"
 #include "layer_special.h"
 #include "options.h" // for fill_xxx
 #include "themes_common.h"
@@ -432,7 +433,6 @@ struct tileset {
   struct named_sprites sprites;
   struct color_system *color_system;
   struct extra_type_list *style_lists[ESTYLE_COUNT];
-  struct extra_type_list *flagged_bases_list;
 
   int num_preferred_themes;
   char **preferred_themes;
@@ -1050,11 +1050,6 @@ static void tileset_free_toplevel(struct tileset *t)
       extra_type_list_destroy(t->style_lists[i]);
       t->style_lists[i] = NULL;
     }
-  }
-
-  if (t->flagged_bases_list != NULL) {
-    extra_type_list_destroy(t->flagged_bases_list);
-    t->flagged_bases_list = NULL;
   }
 
   for (i = 0; i < MAX_NUM_LAYERS; i++) {
@@ -1753,6 +1748,12 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
     t->special_layers.foreground = l.get();
     t->layers.emplace_back(std::move(l));
   } break;
+  case LAYER_BASE_FLAGS: {
+    auto l = std::make_unique<freeciv::layer_base_flags>(
+        t, FULL_TILE_X_OFFSET + t->city_flag_offset_x,
+        FULL_TILE_Y_OFFSET + t->city_flag_offset_y);
+    t->layers.emplace_back(std::move(l));
+  } break;
   default:
     t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
     break;
@@ -2347,7 +2348,6 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   for (i = 0; i < ESTYLE_COUNT; i++) {
     t->style_lists[i] = extra_type_list_new();
   }
-  t->flagged_bases_list = extra_type_list_new();
 
   for (i = 0; (extraname = secfile_lookup_str_default(
                    file, NULL, "extras.styles%d.name", i));
@@ -3580,10 +3580,6 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
     t->sprites.extras[id].extrastyle = extrastyle;
 
     extra_type_list_append(t->style_lists[extrastyle], pextra);
-
-    if (extra_has_flag(pextra, EF_SHOW_FLAG)) {
-      extra_type_list_append(t->flagged_bases_list, pextra);
-    }
 
     switch (extrastyle) {
     case ESTYLE_3LAYER:
@@ -5658,42 +5654,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_BASE_FLAGS:
-    if (NULL != pterrain) {
-      bool show_flag = false;
-      struct player *eowner = extra_owner(ptile);
-
-      /* Show base flag. Not part of previous iteration as
-       * "extras of ESTYLE_3_LAYER" != "bases" */
-      if (eowner != NULL) {
-        extra_type_list_iterate(t->flagged_bases_list, pextra)
-        {
-          if (tile_has_extra(ptile, pextra)) {
-            bool hidden = false;
-
-            extra_type_list_iterate(pextra->hiders, phider)
-            {
-              if (BV_ISSET(textras, extra_index(phider))) {
-                hidden = true;
-                break;
-              }
-            }
-            extra_type_list_iterate_end;
-
-            if (!hidden) {
-              show_flag = true;
-            }
-          }
-        }
-        extra_type_list_iterate_end;
-
-        if (show_flag) {
-          sprs.emplace_back(
-              t, get_nation_flag_sprite(t, nation_of_player(eowner)), true,
-              FULL_TILE_X_OFFSET + t->city_flag_offset_x,
-              FULL_TILE_Y_OFFSET + t->city_flag_offset_y);
-        }
-      }
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_FOG:
@@ -6641,11 +6602,6 @@ void tileset_ruleset_reset(struct tileset *t)
       extra_type_list_destroy(t->style_lists[i]);
       t->style_lists[i] = extra_type_list_new();
     }
-  }
-
-  if (t->flagged_bases_list != NULL) {
-    extra_type_list_destroy(t->flagged_bases_list);
-    t->flagged_bases_list = extra_type_list_new();
   }
 }
 
