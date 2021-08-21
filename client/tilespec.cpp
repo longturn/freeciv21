@@ -1727,6 +1727,38 @@ static void tileset_stop_read(struct tileset *t, struct section_file *file,
     section_list_destroy(sections);
   }
 }
+
+/**
+ * Creates a layer object for the given enumerated type and appends it to the
+ * layers of `t`. Also fills layer pointers in `*t` if needed.
+ */
+static void tileset_add_layer(struct tileset *t, mapview_layer layer)
+{
+  switch (layer) {
+  case LAYER_BACKGROUND:
+    t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
+    break;
+  case LAYER_SPECIAL1: {
+    auto l = std::make_unique<freeciv::layer_special>(t, layer);
+    t->special_layers.background = l.get();
+    t->layers.emplace_back(std::move(l));
+  } break;
+  case LAYER_SPECIAL2: {
+    auto l = std::make_unique<freeciv::layer_special>(t, layer);
+    t->special_layers.middleground = l.get();
+    t->layers.emplace_back(std::move(l));
+  } break;
+  case LAYER_SPECIAL3: {
+    auto l = std::make_unique<freeciv::layer_special>(t, layer);
+    t->special_layers.foreground = l.get();
+    t->layers.emplace_back(std::move(l));
+  } break;
+  default:
+    t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
+    break;
+  }
+}
+
 /**
    Finds and reads the toplevel tilespec file based on given name.
    Sets global variables, including tile sizes and full names for
@@ -2099,57 +2131,12 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     }
 
     for (auto layer : order) {
-      switch (layer) {
-      case LAYER_BACKGROUND:
-        t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
-        break;
-      case LAYER_SPECIAL1: {
-        auto l = std::make_unique<freeciv::layer_special>(t, layer);
-        t->special_layers.background = l.get();
-        t->layers.emplace_back(std::move(l));
-      } break;
-      case LAYER_SPECIAL2: {
-        auto l = std::make_unique<freeciv::layer_special>(t, layer);
-        t->special_layers.middleground = l.get();
-        t->layers.emplace_back(std::move(l));
-      } break;
-      case LAYER_SPECIAL3: {
-        auto l = std::make_unique<freeciv::layer_special>(t, layer);
-        t->special_layers.foreground = l.get();
-        t->layers.emplace_back(std::move(l));
-      } break;
-      default:
-        t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
-        break;
-      }
+      tileset_add_layer(t, layer);
     }
   } else {
     // There is no layer_order tag in the specfile -> use the default
     for (i = 0; i < LAYER_COUNT; ++i) {
-      auto layer = static_cast<mapview_layer>(i);
-      switch (layer) {
-      case LAYER_BACKGROUND:
-        t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
-        break;
-      case LAYER_SPECIAL1: {
-        auto l = std::make_unique<freeciv::layer_special>(t, layer);
-        t->special_layers.background = l.get();
-        t->layers.emplace_back(std::move(l));
-      } break;
-      case LAYER_SPECIAL2: {
-        auto l = std::make_unique<freeciv::layer_special>(t, layer);
-        t->special_layers.middleground = l.get();
-        t->layers.emplace_back(std::move(l));
-      } break;
-      case LAYER_SPECIAL3: {
-        auto l = std::make_unique<freeciv::layer_special>(t, layer);
-        t->special_layers.foreground = l.get();
-        t->layers.emplace_back(std::move(l));
-      } break;
-      default:
-        t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
-        break;
-      }
+      tileset_add_layer(t, static_cast<mapview_layer>(i));
     }
   }
 
