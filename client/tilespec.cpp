@@ -80,6 +80,7 @@
 #include "helpdata.h"
 #include "layer_background.h"
 #include "layer_base_flags.h"
+#include "layer_darkness.h"
 #include "layer_special.h"
 #include "options.h" // for fill_xxx
 #include "themes_common.h"
@@ -113,11 +114,6 @@
 #define TILESPEC_SUFFIX ".tilespec"
 #define TILE_SECTION_PREFIX "tile_"
 
-// This the way directional indices are now encoded:
-#define MAX_INDEX_CARDINAL 64
-#define MAX_INDEX_HALF 16
-#define MAX_INDEX_VALID 256
-
 #define NUM_TILES_HP_BAR 11
 #define NUM_TILES_DIGITS 10
 #define NUM_TILES_SELECT 4
@@ -126,16 +122,9 @@
 #define FULL_TILE_X_OFFSET ((t->normal_tile_width - t->full_tile_width) / 2)
 #define FULL_TILE_Y_OFFSET (t->normal_tile_height - t->full_tile_height)
 
-/* This could be moved to common/map.h if there's more use for it. */
-enum direction4 { DIR4_NORTH = 0, DIR4_SOUTH, DIR4_EAST, DIR4_WEST };
-
-/// lol sveinung 5 in 4
 static const char direction4letters[5] = "udrl";
 // This must correspond to enum edge_type.
 static const char edge_name[EDGE_COUNT][3] = {"ns", "we", "ud", "lr"};
-
-static const int DIR4_TO_DIR8[4] = {DIR8_NORTH, DIR8_SOUTH, DIR8_EAST,
-                                    DIR8_WEST};
 
 enum match_style {
   MATCH_NONE,
@@ -287,9 +276,8 @@ struct named_sprites {
     QPixmap *attention;
   } user;
   struct {
-    QPixmap *fog, **fullfog,
-        *darkness[MAX_INDEX_CARDINAL]; // first unused
-  } tx;                                // terrain extra
+    QPixmap *fog, **fullfog;
+  } tx; // terrain extra
   struct {
     QPixmap *activity, *rmact;
     int extrastyle;
@@ -382,6 +370,7 @@ struct tileset {
   struct {
     freeciv::layer_special *background, *middleground, *foreground;
   } special_layers;
+  freeciv::layer_darkness *darkness_layer;
 
   enum ts_type type;
   int hex_width, hex_height;
@@ -399,7 +388,6 @@ struct tileset {
   enum direction8 unit_default_orientation;
 
   enum fog_style fogstyle;
-  enum darkness_style darkness_style;
 
   int unit_flag_offset_x, unit_flag_offset_y;
   int city_flag_offset_x, city_flag_offset_y;
@@ -421,7 +409,7 @@ struct tileset {
 #define NUM_CORNER_DIRS 4
   int num_valid_tileset_dirs, num_cardinal_tileset_dirs;
   int num_index_valid, num_index_cardinal;
-  enum direction8 valid_tileset_dirs[8], cardinal_tileset_dirs[8];
+  std::array<direction8, 8> valid_tileset_dirs, cardinal_tileset_dirs;
   std::array<tileset_layer, MAX_NUM_LAYERS> terrain_layers;
   QSet<specfile *> *specfiles;
   QSet<struct small_sprite *> *small_sprites;
@@ -803,6 +791,25 @@ int tileset_num_city_colors(const struct tileset *t)
 bool tileset_use_hard_coded_fog(const struct tileset *t)
 {
   return FOG_AUTO == t->fogstyle;
+}
+
+/**
+ * @brief Returns the number of cardinal directions used by the tileset.
+ * @see tileset_cardinal_dirs
+ */
+int tileset_num_cardinal_dirs(const struct tileset *t)
+{
+  return t->num_cardinal_tileset_dirs;
+}
+
+/**
+ * @brief Returns the cardinal directions used by the tileset.
+ *
+ * Only the first @ref tileset_num_cardinal_dirs items should be used.
+ */
+std::array<direction8, 8> tileset_cardinal_dirs(const struct tileset *t)
+{
+  return t->cardinal_tileset_dirs;
 }
 
 /**
@@ -1733,6 +1740,11 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
   case LAYER_BACKGROUND:
     t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
     break;
+  case LAYER_DARKNESS: {
+    auto l = std::make_unique<freeciv::layer_darkness>(t);
+    t->darkness_layer = l.get();
+    t->layers.emplace_back(std::move(l));
+  } break;
   case LAYER_SPECIAL1: {
     auto l = std::make_unique<freeciv::layer_special>(t, layer);
     t->special_layers.background = l.get();
@@ -2028,28 +2040,6 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     return nullptr;
   }
 
-  tstr = secfile_lookup_str(file, "tilespec.darkness_style");
-  if (tstr == NULL) {
-    qCritical("Tileset \"%s\": no darkness_style", t->name);
-    tileset_stop_read(t, file, fname, sections, layer_order);
-    return nullptr;
-  }
-
-  t->darkness_style = darkness_style_by_name(tstr, fc_strcasecmp);
-  if (!darkness_style_is_valid(t->darkness_style)) {
-    qCritical("Tileset \"%s\": unknown darkness_style \"%s\"", t->name,
-              tstr);
-    tileset_stop_read(t, file, fname, sections, layer_order);
-    return nullptr;
-  }
-
-  if (t->darkness_style == DARKNESS_ISORECT
-      && (t->type == TS_OVERHEAD || t->hex_width > 0 || t->hex_height > 0)) {
-    qCritical("Invalid darkness style set in tileset \"%s\".", t->name);
-    tileset_stop_read(t, file, fname, sections, layer_order);
-    return nullptr;
-  }
-
   if (tileset_invalid_offsets(t, file)) {
     qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
     tileset_stop_read(t, file, fname, sections, layer_order);
@@ -2140,6 +2130,30 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       tileset_add_layer(t, static_cast<mapview_layer>(i));
     }
   }
+
+  tstr = secfile_lookup_str(file, "tilespec.darkness_style");
+  if (tstr == NULL) {
+    qCritical("Tileset \"%s\": no darkness_style", t->name);
+    tileset_stop_read(t, file, fname, sections, layer_order);
+    return nullptr;
+  }
+
+  auto darkness_style = freeciv::darkness_style_by_name(tstr, fc_strcasecmp);
+  if (!darkness_style_is_valid(darkness_style)) {
+    qCritical("Tileset \"%s\": unknown darkness_style \"%s\"", t->name,
+              tstr);
+    tileset_stop_read(t, file, fname, sections, layer_order);
+    return nullptr;
+  }
+
+  if (darkness_style == freeciv::DARKNESS_ISORECT
+      && (t->type == TS_OVERHEAD || t->hex_width > 0 || t->hex_height > 0)) {
+    qCritical("Invalid darkness style set in tileset \"%s\".", t->name);
+    tileset_stop_read(t, file, fname, sections, layer_order);
+    return nullptr;
+  }
+
+  t->darkness_layer->set_darkness_style(darkness_style);
 
   // Terrain layer info.
   for (i = 0; i < MAX_NUM_LAYERS; i++) {
@@ -3246,11 +3260,11 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     }
   }
 
-  switch (t->darkness_style) {
-  case DARKNESS_NONE:
+  switch (t->darkness_layer->style()) {
+  case freeciv::DARKNESS_NONE:
     // Nothing.
     break;
-  case DARKNESS_ISORECT: {
+  case freeciv::DARKNESS_ISORECT: {
     // Isometric: take a single tx.darkness tile and split it into 4.
     QPixmap *darkness =
         load_sprite(t, QStringLiteral("tx.darkness"), true, false);
@@ -3262,28 +3276,42 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
       tileset_error(LOG_FATAL, _("Sprite tx.darkness missing."));
     }
     for (i = 0; i < 4; i++) {
-      t->sprites.tx.darkness[i] =
-          crop_sprite(darkness, offsets[i][0], offsets[i][1], ntw / 2,
-                      nth / 2, NULL, 0, 0, 1.0f, false);
+      t->darkness_layer->set_sprite(
+          i, *crop_sprite(darkness, offsets[i][0], offsets[i][1], ntw / 2,
+                          nth / 2, NULL, 0, 0, 1.0f, false));
     }
   } break;
-  case DARKNESS_CARD_SINGLE:
+  case freeciv::DARKNESS_CARD_SINGLE:
     for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
       enum direction8 dir = t->cardinal_tileset_dirs[i];
 
       buffer =
           QStringLiteral("tx.darkness_%1").arg(dir_get_tileset_name(dir));
-      SET_SPRITE_NOTSMOOTH(tx.darkness[i], buffer);
+
+      const auto sprite = load_sprite(t, buffer, true, false);
+      if (sprite) {
+        t->darkness_layer->set_sprite(i, *sprite);
+      } else {
+        tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."),
+                      qUtf8Printable(buffer));
+      }
     }
     break;
-  case DARKNESS_CARD_FULL:
+  case freeciv::DARKNESS_CARD_FULL:
     for (i = 1; i < t->num_index_cardinal; i++) {
       buffer =
           QStringLiteral("tx.darkness_%1").arg(cardinal_index_str(t, i));
-      SET_SPRITE_NOTSMOOTH(tx.darkness[i], buffer);
+
+      const auto sprite = load_sprite(t, buffer, true, false);
+      if (sprite) {
+        t->darkness_layer->set_sprite(i, *sprite);
+      } else {
+        tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."),
+                      qUtf8Printable(buffer));
+      }
     }
     break;
-  case DARKNESS_CORNER:
+  case freeciv::DARKNESS_CORNER:
     t->sprites.tx.fullfog = static_cast<QPixmap **>(fc_realloc(
         t->sprites.tx.fullfog, 81 * sizeof(*t->sprites.tx.fullfog)));
     for (i = 0; i < 81; i++) {
@@ -4796,8 +4824,7 @@ static void fill_terrain_sprite_blending(const struct tileset *t,
    * get the "unknown" dither along the edge of the map.
    */
   for (; dir < 4; dir++) {
-    struct tile *tile1 = mapstep(&(wld.map), ptile,
-                                 static_cast<direction8>(DIR4_TO_DIR8[dir]));
+    struct tile *tile1 = mapstep(&(wld.map), ptile, DIR4_TO_DIR8[dir]);
     struct terrain *other;
 
     if (!tile1 || client_tile_get_known(tile1) == TILE_UNKNOWN
@@ -4829,7 +4856,7 @@ static void fill_fog_sprite_array(const struct tileset *t,
     sprs.emplace_back(t, t->sprites.tx.fog);
   }
 
-  if (t->darkness_style == DARKNESS_CORNER && pcorner
+  if (t->darkness_layer->style() == freeciv::DARKNESS_CORNER && pcorner
       && gui_options.draw_fog_of_war) {
     int i, tileno = 0;
 
@@ -4949,8 +4976,7 @@ static void fill_terrain_sprite_array(
     for (i = 0; i < NUM_CORNER_DIRS; i++) {
       const int count = dlp->match_indices;
       int array_index = 0;
-      enum direction8 dir =
-          dir_ccw(static_cast<direction8>(DIR4_TO_DIR8[i]));
+      enum direction8 dir = dir_ccw(DIR4_TO_DIR8[i]);
       int x = (t->type == TS_ISOMETRIC ? iso_offsets[i][0]
                                        : noniso_offsets[i][0]);
       int y = (t->type == TS_ISOMETRIC ? iso_offsets[i][1]
@@ -5002,67 +5028,6 @@ static void fill_terrain_sprite_array(
   }
   };
 #undef MATCH
-}
-
-/**
-   Helper function for fill_terrain_sprite_layer.
-   Fill in the sprite array of darkness.
- */
-static void fill_terrain_sprite_darkness(struct tileset *t,
-                                         std::vector<drawn_sprite> &sprs,
-                                         const struct tile *ptile,
-                                         struct terrain **tterrain_near)
-{
-  int i, tileno;
-  struct tile *adjc_tile;
-
-#define UNKNOWN(dir)                                                        \
-  ((adjc_tile = mapstep(&(wld.map), ptile, (dir)))                          \
-   && client_tile_get_known(adjc_tile) == TILE_UNKNOWN)
-
-  switch (t->darkness_style) {
-  case DARKNESS_NONE:
-    break;
-  case DARKNESS_ISORECT:
-    for (i = 0; i < 4; i++) {
-      const int W = t->normal_tile_width, H = t->normal_tile_height;
-      int offsets[4][2] = {{W / 2, 0}, {0, H / 2}, {W / 2, H / 2}, {0, 0}};
-
-      if (UNKNOWN(static_cast<direction8>(DIR4_TO_DIR8[i]))) {
-        sprs.emplace_back(t, t->sprites.tx.darkness[i], true, offsets[i][0],
-                          offsets[i][1]);
-      }
-    }
-    break;
-  case DARKNESS_CARD_SINGLE:
-    for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
-      if (UNKNOWN(t->cardinal_tileset_dirs[i])) {
-        sprs.emplace_back(t, t->sprites.tx.darkness[i]);
-      }
-    }
-    break;
-  case DARKNESS_CARD_FULL:
-    /* We're looking to find the INDEX_NSEW for the directions that
-     * are unknown.  We want to mark unknown tiles so that an unreal
-     * tile will be given the same marking as our current tile - that
-     * way we won't get the "unknown" dither along the edge of the
-     * map. */
-    tileno = 0;
-    for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
-      if (UNKNOWN(t->cardinal_tileset_dirs[i])) {
-        tileno |= 1 << i;
-      }
-    }
-
-    if (tileno != 0) {
-      sprs.emplace_back(t, t->sprites.tx.darkness[tileno]);
-    }
-    break;
-  case DARKNESS_CORNER:
-    // Handled separately.
-    break;
-  };
-#undef UNKNOWN
 }
 
 /**
@@ -5450,9 +5415,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_DARKNESS:
-    if (NULL != pterrain && !solid_bg) {
-      fill_terrain_sprite_darkness(t, sprs, ptile, tterrain_near);
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_TERRAIN2:

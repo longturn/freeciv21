@@ -52,27 +52,6 @@ struct resource_type;
 #define SPECENUM_VALUE2NAME "Darkness"
 #include "specenum_gen.h"
 
-#define SPECENUM_NAME darkness_style
-// No darkness sprites are drawn.
-#define SPECENUM_VALUE0 DARKNESS_NONE
-#define SPECENUM_VALUE0NAME "None"
-/* 1 sprite that is split into 4 parts and treated as a darkness4.  Only
- * works in iso-view. */
-#define SPECENUM_VALUE1 DARKNESS_ISORECT
-#define SPECENUM_VALUE1NAME "IsoRect"
-/* 4 sprites, one per direction.  More than one sprite per tile may be
- * drawn. */
-#define SPECENUM_VALUE2 DARKNESS_CARD_SINGLE
-#define SPECENUM_VALUE2NAME "CardinalSingle"
-/* 15=2^4-1 sprites.  A single sprite is drawn, chosen based on whether
- * there's darkness in _each_ of the cardinal directions. */
-#define SPECENUM_VALUE3 DARKNESS_CARD_FULL
-#define SPECENUM_VALUE3NAME "CardinalFull"
-// Corner darkness & fog.  3^4 = 81 sprites.
-#define SPECENUM_VALUE4 DARKNESS_CORNER
-#define SPECENUM_VALUE4NAME "Corner"
-#include "specenum_gen.h"
-
 #define SPECENUM_NAME extrastyle_id
 #define SPECENUM_VALUE0 ESTYLE_ROAD_ALL_SEPARATE
 #define SPECENUM_VALUE0NAME "RoadAllSeparate"
@@ -93,11 +72,22 @@ struct resource_type;
 #define SPECENUM_COUNT ESTYLE_COUNT
 #include "specenum_gen.h"
 
+// This the way directional indices are now encoded:
+#define MAX_INDEX_CARDINAL 64
+#define MAX_INDEX_HALF 16
+#define MAX_INDEX_VALID 256
+
 #define NUM_TILES_PROGRESS 8
 
 #define MAX_NUM_CITIZEN_SPRITES 6
 
 enum arrow_type { ARROW_RIGHT, ARROW_PLUS, ARROW_MINUS, ARROW_LAST };
+
+// This could be moved to common/map.h if there's more use for it.
+enum direction4 { DIR4_NORTH = 0, DIR4_SOUTH, DIR4_EAST, DIR4_WEST };
+
+constexpr direction8 DIR4_TO_DIR8[4] = {DIR8_NORTH, DIR8_SOUTH, DIR8_EAST,
+                                        DIR8_WEST};
 
 struct tileset;
 
@@ -297,6 +287,9 @@ float tileset_scale(const struct tileset *t);
 const char *tileset_main_intro_filename(const struct tileset *t);
 int tileset_num_city_colors(const struct tileset *t);
 bool tileset_use_hard_coded_fog(const struct tileset *t);
+
+int tileset_num_cardinal_dirs(const struct tileset *t);
+std::array<direction8, 8> tileset_cardinal_dirs(const struct tileset *t);
 
 /* These are used as array index -> can't be changed freely to values
    bigger than size of those arrays. */
