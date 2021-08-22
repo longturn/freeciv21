@@ -41,13 +41,7 @@ std::vector<drawn_sprite> layer_darkness::fill_sprite_array(
   }
 
   // Don't draw darkness when the solid background is used
-  bool do_draw_unit =
-      (punit
-       && (gui_options.draw_units || !ptile
-           || (gui_options.draw_focus_unit && unit_is_in_focus(punit))));
-
-  if (!(gui_options.solid_color_behind_units
-        && (do_draw_unit || (pcity && gui_options.draw_cities)))) {
+  if (!solid_background(ptile, punit, pcity)) {
     return {};
   }
 

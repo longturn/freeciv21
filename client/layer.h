@@ -161,6 +161,10 @@ public:
 protected:
   struct tileset *tileset() const { return m_ts; }
 
+  bool do_draw_unit(const tile *ptile, const unit *punit) const;
+  bool solid_background(const tile *ptile, const unit *punit,
+                        const city *pcity) const;
+
 private:
   struct tileset *m_ts;
   mapview_layer m_layer;
