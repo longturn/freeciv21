@@ -126,6 +126,7 @@ jobs:
       uses: jidicula/clang-format-action@v3.4.0
       with:
         clang-format-version: '11'
+        exclude-regex: 'dependencies'
 
 #script:
   #- cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
