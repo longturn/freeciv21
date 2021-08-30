@@ -2060,7 +2060,7 @@ To protect your rights, we need to prevent others from denying you these \
 rights or asking you to surrender the rights. Therefore, you have certain \
 responsibilities if you distribute copies of the software, or if you modify \
 it: responsibilities to respect the freedom of others.\
-
+\
 For example, if you distribute copies of such a program, whether gratis or \
 for a fee, you must pass on to the recipients the same freedoms that you received. \
 You must make sure that they, too, receive or can get the source code. And you \
@@ -2107,8 +2107,8 @@ works, such as semiconductor masks.\
 Each licensee is addressed as “you”. “Licensees” and “recipients” may be \
 individuals or organizations.\
 \n\n\
-To “modify” a work means to copy from or adapt all or part of the work in a
-\fashion requiring copyright permission, other than the making of an exact copy. \
+To “modify” a work means to copy from or adapt all or part of the work in a \
+fashion requiring copyright permission, other than the making of an exact copy. \
 The resulting work is called a “modified version” of the earlier work or a work \
 “based on” the earlier work.\
 \n\n\
@@ -2140,7 +2140,7 @@ A “Standard Interface” means an interface that either is an official standar
 defined by a recognized standards body, or, in the case of interfaces specified \
 for a particular programming language, one that is widely used among developers \
 working in that language.\
-
+\n\n\
 The “System Libraries” of an executable work include anything, other than the \
 work as a whole, that (a) is included in the normal form of packaging a Major \
 Component, but which is not part of that Major Component, and (b) serves only \
@@ -2504,7 +2504,7 @@ Nothing in this License shall be construed as excluding or limiting any implied 
 license or other defenses to infringement that may otherwise be available to \
 you under applicable patent law.\
 \n\n\
-12. No Surrender of Others' Freedom.'
+12. No Surrender of Others' Freedom.\
 If conditions are imposed on you (whether by court order, agreement or otherwise) \
 that contradict the conditions of this License, they do not excuse you from the \
 conditions of this License. If you cannot convey a covered work so as to satisfy \
