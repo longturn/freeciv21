@@ -72,27 +72,39 @@ jobs:
       - name: Install
         run: |
           cmake --build build --target install
-  #windows:
-    #name: "Windows"
-    #runs-on: windows-latest
-    #script:
-      #- $mingw64 pacman -Syu --noconfirm
-      #- $mingw64 pacman -S --noconfirm --needed
-          #mingw-w64-x86_64-cmake
-          #mingw-w64-x86_64-ninja
-          #mingw-w64-x86_64-nsis
-          #mingw-w64-x86_64-gcc
-          #mingw-w64-x86_64-libunwind
-          #mingw-w64-x86_64-readline
-          #mingw-w64-x86_64-lua
-          #mingw-w64-x86_64-SDL2_mixer
-          #mingw-w64-x86_64-qt5
-          #mingw-w64-x86_64-karchive-qt5
-      ## Disable NLS for now, see #383
-      #- $mingw64 cmake . -B build -G Ninja
-          #-DCMAKE_INSTALL_PREFIX=$PWD/build/install
-      #- $mingw64 cmake --build build
-      #- $mingw64 cmake --build build --target package
+  windows:
+    name: "Windows"
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: |
+            git
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-nsis
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-libunwind
+            mingw-w64-x86_64-readline
+            mingw-w64-x86_64-lua
+            mingw-w64-x86_64-SDL2_mixer
+            mingw-w64-x86_64-qt5
+            mingw-w64-x86_64-karchive-qt5
+      - name: Configure
+        run: |
+          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+      - name: Build
+        run: |
+          cmake --build build
+      - name: Package
+        run: |
+          cmake --build build --target package
   #os_x:
     #name: "Mac OS X"
     #runs-on: macos-latest
