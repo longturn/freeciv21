@@ -123,7 +123,7 @@ jobs:
             qt@5 \
             kde-karchive \
             readline \
-            lua@5.3 \
+            lua \
             sqlite \
             sdl2 \
             sdl2_mixer
