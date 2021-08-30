@@ -17,6 +17,7 @@ class QPixmap;
 
 struct city;
 struct player;
+struct terrain;
 struct tileset;
 struct unit;
 struct unit_type;
@@ -155,6 +156,14 @@ public:
    * \see initialize_player
    */
   virtual void free_player(int player_id) { Q_UNUSED(player_id); }
+
+  /**
+   * Initializes terrain-specific data.
+   */
+  virtual void initialize_terrain(const terrain *terrain)
+  {
+    Q_UNUSED(terrain);
+  }
 
   mapview_layer type() const { return m_layer; }
 
