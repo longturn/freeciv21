@@ -54,7 +54,6 @@ jobs:
             cmake \
             ninja-build \
             clang \
-            clang-format \
             python3 \
             gettext \
             qt5-default \
@@ -62,9 +61,6 @@ jobs:
             liblua5.3-dev \
             libsqlite3-dev \
             libsdl2-mixer-dev
-      - name: Check coding style
-        run: |
-          scripts/travis-clang-format.sh
       - name: Configure
         run: |
           export CC=$(which clang)
@@ -121,6 +117,15 @@ jobs:
         #update: true
     #before_script:
       #- brew link gettext --force
+  clang-format:
+    name: clang-format Code Formatter
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run clang-format style check for C/C++
+      uses: jidicula/clang-format-action@v3.4.0
+      with:
+        clang-format-version: '11'
 
 #script:
   #- cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
