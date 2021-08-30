@@ -67,6 +67,8 @@ jobs:
           scripts/travis-clang-format.sh
       - name: Configure
         run: |
+          export CC=$(which clang)
+          export CXX=$(which clang++)
           cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
       - name: Build
         run: |
