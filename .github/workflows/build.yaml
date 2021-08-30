@@ -1,0 +1,158 @@
+on:
+  push:
+    paths-ignore: docs
+  pull_request: {}
+
+#env:
+  #global:
+    ## The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+    ## via the "travis encrypt" command using the project repo's public key
+    ## It is visible from the Coverity UI.
+    #- secure: "iW4UUQNjIREKInYGFnEUBDqiSFxhyYjD4208BsTPBd8ocDzTN1aAQkpksU9TWu7M8GJjeAxsWDWHtz6X3i/Qy9/GjXGLrfRFofhNwFghmB4rcxNGgDZv6SPaA7eZfv8rQ3CsyyY7Uw2fz9xpUzB8JB0dwj0L9cNnP/8jt2CJ3y3xZeEfUr6OQlDi8dYBfKYTyoSBcnQJI8FSnCNTr44ayCr6ig9h4LkcoF51mVFpbE1KRDEABzten0wc+ef4N/+EQJByCn+RTnnc0jHM34ezpsu6DqdwYDm213PeBgfjdjoFq4xmTCQSPS0nXQpEK3749yHCUvzIp2oRVR3oS2+WdlIuW551dg5TNtpDN05PTsQbNt5LHvgQSViuU9y9HO92xydHh1KCaEKtLP7KI9vdsbuo6zP1KMM7lxlXBVXkshJWw8912g4VAQwWH94lXkeozDhXhDgs9ChQRzDWF8TL6LVWGiY9RCnp8ia7As8HCAQUCiEAoiVbhompKmK7ga12JxOHU3xNQqz6g6hIw4TwyHENVALXHTMgMlgYCtWtEvK1EDC6PDVqkSjQCFf8ENIlyTv7xoMyVwrNKatAgW0KR0+mwGbSqj98GwhU/6FnFP6gI7BfIBvEumERlrvJRbaC4yIBE91h1LAbVfkmKTdXM5+tScoXUMdW3fH+4D3jO9Q="
+
+#language: c++
+
+jobs:
+  ubuntu-gcc:
+    name: "Ubuntu with GCC"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            cmake \
+            ninja-build \
+            g++ \
+            python3 \
+            gettext \
+            qt5-default \
+            libkf5archive-dev \
+            liblua5.3-dev \
+            libsqlite3-dev \
+            libsdl2-mixer-dev
+      - name: Configure
+        run: |
+          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+      - name: Build
+        run: |
+          cmake --build build
+      - name: Install
+        run: |
+          cmake --build build --target install
+  ubuntu-clang:
+    name: "Ubuntu with clang"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            cmake \
+            ninja-build \
+            clang \
+            clang-format \
+            python3 \
+            gettext \
+            qt5-default \
+            libkf5archive-dev \
+            liblua5.3-dev \
+            libsqlite3-dev \
+            libsdl2-mixer-dev
+      - name: Check coding style
+        run: |
+          scripts/travis-clang-format.sh
+      - name: Configure
+        run: |
+          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+      - name: Build
+        run: |
+          cmake --build build
+      - name: Install
+        run: |
+          cmake --build build --target install
+  #windows:
+    #name: "Windows"
+    #runs-on: windows-latest
+    #script:
+      #- $mingw64 pacman -Syu --noconfirm
+      #- $mingw64 pacman -S --noconfirm --needed
+          #mingw-w64-x86_64-cmake
+          #mingw-w64-x86_64-ninja
+          #mingw-w64-x86_64-nsis
+          #mingw-w64-x86_64-gcc
+          #mingw-w64-x86_64-libunwind
+          #mingw-w64-x86_64-readline
+          #mingw-w64-x86_64-lua
+          #mingw-w64-x86_64-SDL2_mixer
+          #mingw-w64-x86_64-qt5
+          #mingw-w64-x86_64-karchive-qt5
+      ## Disable NLS for now, see #383
+      #- $mingw64 cmake . -B build -G Ninja
+          #-DCMAKE_INSTALL_PREFIX=$PWD/build/install
+      #- $mingw64 cmake --build build
+      #- $mingw64 cmake --build build --target package
+  #os_x:
+    #name: "Mac OS X"
+    #runs-on: macos-latest
+    #env:
+      #Intl_ROOT: /usr/local/opt/gettext
+      #Qt5_DIR: /usr/local/opt/qt5/lib/cmake
+      #Readline_ROOT: /usr/local/opt/readline
+    #addons:
+      #homebrew:
+        #packages:
+          #- cmake
+          #- ninja
+          #- python3
+          #- gettext
+          #- qt@5
+          #- kde-karchive
+          #- readline
+          #- lua@5.3
+          #- sqlite
+          #- sdl2
+          #- sdl2_mixer
+        #update: true
+    #before_script:
+      #- brew link gettext --force
+
+#script:
+  #- cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+  #- cmake --build build
+  #- cmake --build build --target install
+
+# See https://docs.travis-ci.com/user/reference/windows/#how-do-i-use-msys2
+#before_install:
+#- |-
+  #case $TRAVIS_OS_NAME in
+    #windows)
+      #[[ ! -f C:/tools/msys64/msys2_shell.cmd ]] && rm -rf C:/tools/msys64
+      #choco uninstall -y mingw
+      #choco upgrade --no-progress -y msys2
+      #export msys2='cmd //C RefreshEnv.cmd '
+      #export msys2+='& set MSYS=winsymlinks:nativestrict '
+      #export msys2+='& C:\\tools\\msys64\\msys2_shell.cmd -defterm -no-start'
+      #export mingw64="$msys2 -mingw64 -full-path -here -c "\"\$@"\" --"
+      #export msys2+=" -msys2 -c "\"\$@"\" --"
+      #$msys2 pacman --sync --noconfirm --needed mingw-w64-x86_64-toolchain
+      ### Install more MSYS2 packages from https://packages.msys2.org/base here
+      #taskkill //IM gpg-agent.exe //F  # https://travis-ci.community/t/4967
+      #export PATH=/C/tools/msys64/mingw64/bin:$PATH
+      #export MAKE=mingw32-make  # so that Autotools can find it
+      #;;
+  #esac
+
+#before_cache:
+#- |-
+  #case $TRAVIS_OS_NAME in
+    #windows)
+      ## https://unix.stackexchange.com/a/137322/107554
+      #$msys2 pacman --sync --clean --noconfirm
+      #;;
+  #esac
+
+#cache:
+  #directories:
+    #- $HOME/AppData/Local/Temp/chocolatey
+    #- /C/tools/msys64
