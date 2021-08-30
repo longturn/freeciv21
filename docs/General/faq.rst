@@ -24,13 +24,6 @@ game settings (the defaults should be fine for a beginner-level single-player ga
 Freeciv21 is a client/server system. But in most cases you don't have to worry about this; the client 
 starts a server automatically for you when you start a new game.
 
-.. attention:: The Windows Server currently has a defect that does not allow it to run automatically from 
-    the client. See Issue `#341 <https://github.com/longturn/freeciv21/issues/341>`_ as well as work in 
-    progress pull request `#462 <https://github.com/longturn/freeciv21/pull/462>`_. The current work around is
-    to manually start the server and a game and then connect to it via the client.
-    
-    This defect is not present in the Linux builds.
-
 Once the game is started you can find information in the :guilabel:`Help` menu. If you've never played a 
 Civilization-style game before you may want to look at help on :title-reference:`Strategy and Tactics`.
 
@@ -98,13 +91,13 @@ How do I declare war on another player?
 ---------------------------------------
 
 Go to the :guilabel:`Nations` page, select the player row, then click :guilabel:`Cancel Treaty` at the top. 
-This drops you from emphasis:`cease fire`, emphasis:`armistice`, or emphasis:`peace` into emphasis:`war`. If 
-you've already signed a permanent emphasis:`alliance` treaty with the player, you will have to cancel 
-treaties several times to get to emphasis:`war`.
+This drops you from :emphasis:`cease fire`, :emphasis:`armistice`, or :emphasis:`peace` into :emphasis:`war`. 
+If you've already signed a permanent :emphasis:`alliance` treaty with the player, you will have to cancel 
+treaties several times to get to :emphasis:`war`.
 
 See the in-game help on :title-reference:`Diplomacy` for more detail.
 
-.. note:: The ability to arbitrarily leave emphasis:`peace` and go to emphasis:`war` is also heavily 
+.. note:: The ability to arbitrarily leave :emphasis:`peace` and go to :emphasis:`war` is also heavily 
     dependent on the form of governement your nation is currently ruled by. See the in-game help on
     :title-reference:`Government` for more details.
 
@@ -258,7 +251,7 @@ to get help on a particular setting, or
 to change a setting to a particular value. After the game begins you may still change some settings, but not 
 others.
 
-You can create rulesets or strong:`modpacks` - alternative sets of units, buildings, and technologies. Several 
+You can create rulesets or :strong:`modpacks` - alternative sets of units, buildings, and technologies. Several 
 different rulesets come with the Freeciv21 distribution, including a civ1 (Civilization 1 compatibility mode), 
 and civ2 (Civilization 2 compatibility mode). Use the :literal:`rulesetdir` command to change the 
 ruleset (as in :literal:`/rulesetdir civ2`). 
