@@ -82,6 +82,7 @@
 #include "layer_base_flags.h"
 #include "layer_darkness.h"
 #include "layer_special.h"
+#include "layer_terrain.h"
 #include "options.h" // for fill_xxx
 #include "themes_common.h"
 
@@ -122,59 +123,10 @@
 #define FULL_TILE_X_OFFSET ((t->normal_tile_width - t->full_tile_width) / 2)
 #define FULL_TILE_Y_OFFSET (t->normal_tile_height - t->full_tile_height)
 
-static const char direction4letters[5] = "udrl";
 // This must correspond to enum edge_type.
 static const char edge_name[EDGE_COUNT][3] = {"ns", "we", "ud", "lr"};
 
-enum match_style {
-  MATCH_NONE,
-  MATCH_SAME, // "boolean" match
-  MATCH_PAIR,
-  MATCH_FULL
-};
-
-enum sprite_type {
-  CELL_WHOLE, // entire tile
-  CELL_CORNER // corner of tile
-};
-
-struct drawing_layer {
-  bool is_tall;
-  int offset_x, offset_y;
-
-#define MAX_NUM_MATCH_WITH 8
-  enum match_style match_style;
-  int match_index[1 + MAX_NUM_MATCH_WITH];
-  int match_indices; // 0 = no match_type, 1 = no match_with
-
-  enum sprite_type sprite_type;
-
-  struct sprite_vector base;
-  QPixmap *match[MAX_INDEX_CARDINAL];
-  QPixmap **cells;
-
-  /* List of those sprites in 'cells' that are allocated by some other
-   * means than load_sprite() and thus are not freed by unload_all_sprites().
-   */
-  struct sprite_vector allocated;
-};
-
-struct drawing_data {
-  bool init;
-
-  QString name;
-
-  int num_layers; // 1 thru MAX_NUM_LAYERS.
 #define MAX_NUM_LAYERS 3
-
-  struct drawing_layer layer[MAX_NUM_LAYERS];
-
-  bool is_reversed;
-
-  int blending; // layer, 0 = none
-  QPixmap *blender;
-  QPixmap *blend[4]; // indexed by a direction4
-};
 
 struct city_style_threshold {
   QPixmap *sprite;
@@ -317,8 +269,6 @@ struct named_sprites {
     QPixmap *grid_borders[EDGE_COUNT][2];
     QPixmap *color;
   } player[MAX_NUM_PLAYER_SLOTS];
-
-  struct drawing_data *drawing[MAX_NUM_ITEMS];
 };
 
 struct specfile {
@@ -347,13 +297,6 @@ struct small_sprite {
   QPixmap *sprite;
 };
 
-static void drawing_data_destroy(struct drawing_data *draw);
-
-struct tileset_layer {
-  char **match_types;
-  size_t match_count;
-};
-
 struct tileset {
   char name[512];
   char given_name[MAX_LEN_NAME];
@@ -370,6 +313,7 @@ struct tileset {
   struct {
     freeciv::layer_special *background, *middleground, *foreground;
   } special_layers;
+  std::array<freeciv::layer_terrain *, MAX_NUM_LAYERS> terrain_layers;
   freeciv::layer_darkness *darkness_layer;
 
   enum ts_type type;
@@ -406,17 +350,13 @@ struct tileset {
   int unit_upkeep_offset_y;
   int unit_upkeep_small_offset_y;
 
-#define NUM_CORNER_DIRS 4
   int num_valid_tileset_dirs, num_cardinal_tileset_dirs;
   int num_index_valid, num_index_cardinal;
   std::array<direction8, 8> valid_tileset_dirs, cardinal_tileset_dirs;
-  std::array<tileset_layer, MAX_NUM_LAYERS> terrain_layers;
   QSet<specfile *> *specfiles;
   QSet<struct small_sprite *> *small_sprites;
   // This hash table maps tilespec tags to struct small_sprites.
   QHash<QString, struct small_sprite *> *sprite_hash;
-  // This hash table maps terrain graphic strings to drawing data.
-  QHash<QString, drawing_data *> *tile_hash;
   QHash<QString, int> *estyle_hash;
   struct named_sprites sprites;
   struct color_system *color_system;
@@ -479,45 +419,6 @@ void tileset_error(QtMsgType level, const char *format, ...)
   if (level == QtFatalMsg) {
     exit(EXIT_FAILURE);
   }
-}
-
-/**
-   Create a new drawing data.
- */
-static struct drawing_data *drawing_data_new()
-{
-  struct drawing_data *draw = new drawing_data[1]();
-
-  return draw;
-}
-
-/**
-   Free a drawing data.
- */
-static void drawing_data_destroy(struct drawing_data *draw)
-{
-  int i;
-
-  fc_assert_ret(NULL != draw);
-
-  for (i = 0; i < 4; i++) {
-    if (draw->blend[i]) {
-      free_sprite(draw->blend[i]);
-    }
-  }
-  for (i = 0; i < draw->num_layers; i++) {
-    int vec_size = sprite_vector_size(&draw->layer[i].allocated);
-    int j;
-
-    for (j = 0; j < vec_size; j++) {
-      free_sprite(draw->layer[i].allocated.p[j]);
-    }
-
-    sprite_vector_free(&draw->layer[i].base);
-    sprite_vector_free(&draw->layer[i].allocated);
-    delete[] draw->layer[i].cells;
-  }
-  delete[] draw;
 }
 
 /**
@@ -803,6 +704,16 @@ int tileset_num_cardinal_dirs(const struct tileset *t)
 }
 
 /**
+ * @brief Returns the number of cardinal indices used by the tileset.
+ *
+ * This is `2^tileset_num_cardinal_dirs(t)`.
+ */
+int tileset_num_index_cardinals(const struct tileset *t)
+{
+  return t->num_index_cardinal;
+}
+
+/**
  * @brief Returns the cardinal directions used by the tileset.
  *
  * Only the first @ref tileset_num_cardinal_dirs items should be used.
@@ -1027,7 +938,7 @@ static bool check_tilespec_capabilities(struct section_file *file,
  */
 static void tileset_free_toplevel(struct tileset *t)
 {
-  int i, j;
+  int i;
 
   if (t->main_intro_filename) {
     FCPP_FREE(t->main_intro_filename);
@@ -1042,12 +953,6 @@ static void tileset_free_toplevel(struct tileset *t)
   }
   t->num_preferred_themes = 0;
 
-  if (t->tile_hash) {
-    for (auto *a : qAsConst(*t->tile_hash)) {
-      drawing_data_destroy(a);
-    }
-    FC_FREE(t->tile_hash);
-  }
   if (t->estyle_hash) {
     delete t->estyle_hash;
     t->estyle_hash = NULL;
@@ -1056,17 +961,6 @@ static void tileset_free_toplevel(struct tileset *t)
     if (t->style_lists[i] != NULL) {
       extra_type_list_destroy(t->style_lists[i]);
       t->style_lists[i] = NULL;
-    }
-  }
-
-  for (i = 0; i < MAX_NUM_LAYERS; i++) {
-    struct tileset_layer *tslp = &t->terrain_layers[i];
-
-    if (tslp->match_types) {
-      for (j = 0; j < tslp->match_count; j++) {
-        delete[] tslp->match_types[j];
-      }
-      FCPP_FREE(tslp->match_types);
     }
   }
 
@@ -1626,20 +1520,20 @@ static char *tilespec_gfx_filename(const char *gfx_filename)
 /**
    Determine the sprite_type string.
  */
-static int check_sprite_type(const char *sprite_type,
-                             const char *tile_section)
+static freeciv::layer_terrain::sprite_type
+check_sprite_type(const char *sprite_type, const char *tile_section)
 {
   if (fc_strcasecmp(sprite_type, "corner") == 0) {
-    return CELL_CORNER;
+    return freeciv::layer_terrain::CELL_CORNER;
   }
   if (fc_strcasecmp(sprite_type, "single") == 0) {
-    return CELL_WHOLE;
+    return freeciv::layer_terrain::CELL_WHOLE;
   }
   if (fc_strcasecmp(sprite_type, "whole") == 0) {
-    return CELL_WHOLE;
+    return freeciv::layer_terrain::CELL_WHOLE;
   }
   qCritical("[%s] unknown sprite_type \"%s\".", tile_section, sprite_type);
-  return CELL_WHOLE;
+  return freeciv::layer_terrain::CELL_WHOLE;
 }
 
 static bool tileset_invalid_offsets(struct tileset *t,
@@ -1743,6 +1637,21 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
   case LAYER_DARKNESS: {
     auto l = std::make_unique<freeciv::layer_darkness>(t);
     t->darkness_layer = l.get();
+    t->layers.emplace_back(std::move(l));
+  } break;
+  case LAYER_TERRAIN1: {
+    auto l = std::make_unique<freeciv::layer_terrain>(t, 0);
+    t->terrain_layers[0] = l.get();
+    t->layers.emplace_back(std::move(l));
+  } break;
+  case LAYER_TERRAIN2: {
+    auto l = std::make_unique<freeciv::layer_terrain>(t, 1);
+    t->terrain_layers[1] = l.get();
+    t->layers.emplace_back(std::move(l));
+  } break;
+  case LAYER_TERRAIN3: {
+    auto l = std::make_unique<freeciv::layer_terrain>(t, 2);
+    t->terrain_layers[2] = l.get();
     t->layers.emplace_back(std::move(l));
   } break;
   case LAYER_SPECIAL1: {
@@ -2157,22 +2066,13 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
   // Terrain layer info.
   for (i = 0; i < MAX_NUM_LAYERS; i++) {
-    struct tileset_layer *tslp = &t->terrain_layers[i];
-    int j, k;
-
-    tslp->match_types = const_cast<char **>(secfile_lookup_str_vec(
-        file, &tslp->match_count, "layer%d.match_types", i));
-    for (j = 0; j < tslp->match_count; j++) {
-      tslp->match_types[j] = fc_strdup(tslp->match_types[j]);
-
-      for (k = 0; k < j; k++) {
-        if (tslp->match_types[k][0] == tslp->match_types[j][0]) {
-          tileset_error(LOG_FATAL,
-                        _("[layer%d] match_types: \"%s\" initial "
-                          "('%c') is not unique."),
-                        i, tslp->match_types[j], tslp->match_types[j][0]);
-          // FIXME: Returns NULL.
-        }
+    std::size_t count = 0;
+    auto match_types =
+        secfile_lookup_str_vec(file, &count, "layer%d.match_types", i);
+    for (int j = 0; j < count; j++) {
+      if (!t->terrain_layers[i]->create_matching_group(match_types[j])) {
+        tileset_stop_read(t, file, fname, sections, layer_order);
+        return nullptr;
       }
     }
   }
@@ -2187,170 +2087,107 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     return nullptr;
   }
 
-  fc_assert(t->tile_hash == NULL);
-  t->tile_hash = new QHash<QString, drawing_data *>;
-
   section_list_iterate(sections, psection)
   {
-    const char *sec_name = section_name(psection);
-    struct drawing_data *draw = drawing_data_new();
-    const char *sprite_type;
-    int l;
-    const char *terrain_name;
+    auto sec_name = section_name(psection);
 
-    terrain_name = secfile_lookup_str(file, "%s.tag", sec_name);
-
-    if (terrain_name != NULL) {
-      draw->name = fc_strdup(terrain_name);
-    } else {
-      tileset_error(LOG_ERROR, _("No terrain tag given in section [%s]."),
-                    sec_name);
-      drawing_data_destroy(draw);
-      tileset_stop_read(t, file, fname, sections, layer_order);
-      return nullptr;
+    QString tag;
+    {
+      auto c_tag = secfile_lookup_str(file, "%s.tag", sec_name);
+      if (c_tag != NULL) {
+        tag = c_tag;
+      } else {
+        tileset_error(LOG_ERROR, _("No terrain tag given in section [%s]."),
+                      sec_name);
+        tileset_stop_read(t, file, fname, sections, layer_order);
+        return nullptr;
+      }
     }
 
-    draw->blending =
-        secfile_lookup_int_default(file, 0, "%s.blend_layer", sec_name);
-    draw->blending = CLIP(0, draw->blending, MAX_NUM_LAYERS);
+    {
+      auto num_layers =
+          secfile_lookup_int_default(file, 0, "%s.num_layers", sec_name);
+      num_layers = CLIP(1, num_layers, MAX_NUM_LAYERS);
 
-    draw->is_reversed =
-        secfile_lookup_bool_default(file, false, "%s.is_reversed", sec_name);
-    draw->num_layers =
-        secfile_lookup_int_default(file, 0, "%s.num_layers", sec_name);
-    draw->num_layers = CLIP(1, draw->num_layers, MAX_NUM_LAYERS);
+      for (int l = 0; l < num_layers; l++) {
+        if (!t->terrain_layers[l]->add_tag(
+                tag, QString(sec_name).mid(strlen(TILE_SECTION_PREFIX)))) {
+          tileset_stop_read(t, file, fname, sections, layer_order);
+          return nullptr;
+        }
 
-    for (l = 0; l < draw->num_layers; l++) {
-      struct drawing_layer *dlp = &draw->layer[l];
-      struct tileset_layer *tslp = &t->terrain_layers[l];
-      const char *match_type;
-      const char **match_with;
-      size_t count;
+        // Offsets
+        {
+          auto is_tall = secfile_lookup_bool_default(
+              file, false, "%s.layer%d_is_tall", sec_name, l);
 
-      dlp->is_tall = secfile_lookup_bool_default(
-          file, false, "%s.layer%d_is_tall", sec_name, l);
-      dlp->offset_x = secfile_lookup_int_default(
-          file, 0, "%s.layer%d_offset_x", sec_name, l);
-      dlp->offset_y = secfile_lookup_int_default(
-          file, 0, "%s.layer%d_offset_y", sec_name, l);
-      dlp->offset_x = ceil(t->scale * dlp->offset_x);
-      dlp->offset_y = ceil(t->scale * dlp->offset_y);
+          auto offset_x = secfile_lookup_int_default(
+              file, 0, "%s.layer%d_offset_x", sec_name, l);
+          offset_x = ceil(t->scale * offset_x);
+          if (is_tall) {
+            offset_x += FULL_TILE_X_OFFSET;
+          }
 
-      match_type = secfile_lookup_str_default(
-          file, NULL, "%s.layer%d_match_type", sec_name, l);
-      if (match_type) {
-        int j;
+          auto offset_y = secfile_lookup_int_default(
+              file, 0, "%s.layer%d_offset_y", sec_name, l);
+          offset_y = ceil(t->scale * offset_y);
+          if (is_tall) {
+            offset_y += FULL_TILE_Y_OFFSET;
+          }
 
-        // Determine our match_type.
-        for (j = 0; j < tslp->match_count; j++) {
-          if (fc_strcasecmp(tslp->match_types[j], match_type) == 0) {
-            break;
+          if (!t->terrain_layers[l]->set_tag_offsets(tag, offset_x,
+                                                     offset_y)) {
+            tileset_stop_read(t, file, fname, sections, layer_order);
+            return nullptr;
           }
         }
-        if (j >= tslp->match_count) {
-          qCritical("[%s] invalid match_type \"%s\".", sec_name, match_type);
-        } else {
-          dlp->match_index[dlp->match_indices++] = j;
-        }
-      }
 
-      match_with = secfile_lookup_str_vec(
-          file, &count, "%s.layer%d_match_with", sec_name, l);
-      if (match_with) {
-        int j, k;
-
-        if (count > MAX_NUM_MATCH_WITH) {
-          qCritical("[%s] match_with has too many types (%d, max %d)",
-                    sec_name, static_cast<int>(count), MAX_NUM_MATCH_WITH);
-          count = MAX_NUM_MATCH_WITH;
+        // Sprite type
+        {
+          auto type_str = secfile_lookup_str_default(
+              file, "whole", "%s.layer%d_sprite_type", sec_name, l);
+          if (!t->terrain_layers[l]->set_tag_sprite_type(
+                  tag, check_sprite_type(type_str, sec_name))) {
+            tileset_stop_read(t, file, fname, sections, layer_order);
+            return nullptr;
+          }
         }
 
-        if (1 < dlp->match_indices) {
-          qCritical("[%s] previous match_with ignored.", sec_name);
-          dlp->match_indices = 1;
-        } else if (1 > dlp->match_indices) {
-          qCritical("[%s] missing match_type, using \"%s\".", sec_name,
-                    tslp->match_types[0]);
-          dlp->match_index[0] = 0;
-          dlp->match_indices = 1;
-        }
+        // Matching
+        {
+          auto matching_group = secfile_lookup_str_default(
+              file, NULL, "%s.layer%d_match_type", sec_name, l);
 
-        for (k = 0; k < count; k++) {
-          for (j = 0; j < tslp->match_count; j++) {
-            if (fc_strcasecmp(tslp->match_types[j], match_with[k]) == 0) {
-              break;
+          if (matching_group) {
+            if (!t->terrain_layers[l]->set_tag_matching_group(
+                    tag, matching_group)) {
+              tileset_stop_read(t, file, fname, sections, layer_order);
+              return nullptr;
             }
           }
-          if (j >= tslp->match_count) {
-            qCritical("[%s] layer%d_match_with: invalid  \"%s\".", sec_name,
-                      l, match_with[k]);
-          } else if (1 < count) {
-            int m;
 
-            for (m = 0; m < dlp->match_indices; m++) {
-              if (dlp->match_index[m] == j) {
-                qCritical("[%s] layer%d_match_with: duplicate \"%s\".",
-                          sec_name, l, match_with[k]);
-                break;
+          std::size_t count = 0;
+          auto match_with = secfile_lookup_str_vec(
+              file, &count, "%s.layer%d_match_with", sec_name, l);
+          if (match_with) {
+            for (std::size_t j = 0; j < count; ++j) {
+              if (!t->terrain_layers[l]->set_tag_matches_with(
+                      tag, match_with[j])) {
+                tileset_stop_read(t, file, fname, sections, layer_order);
+                return nullptr;
               }
             }
-            if (m >= dlp->match_indices) {
-              dlp->match_index[dlp->match_indices++] = j;
-            }
-          } else {
-            dlp->match_index[dlp->match_indices++] = j;
           }
         }
-        FCPP_FREE(match_with);
       }
-
-      // Check match_indices
-      switch (dlp->match_indices) {
-      case 0:
-      case 1:
-        dlp->match_style = MATCH_NONE;
-        break;
-      case 2:
-        if (dlp->match_index[0] == dlp->match_index[1]) {
-          dlp->match_style = MATCH_SAME;
-        } else {
-          dlp->match_style = MATCH_PAIR;
+      {
+        auto blending =
+            secfile_lookup_int_default(file, 0, "%s.blend_layer", sec_name);
+        if (blending > 0) {
+          t->terrain_layers[CLIP(0, blending - 1, MAX_NUM_LAYERS - 1)]
+              ->enable_blending(tag);
         }
-        break;
-      default:
-        dlp->match_style = MATCH_FULL;
-        break;
-      };
-
-      sprite_type = secfile_lookup_str_default(
-          file, "whole", "%s.layer%d_sprite_type", sec_name, l);
-      dlp->sprite_type = static_cast<enum sprite_type>(
-          check_sprite_type(sprite_type, sec_name));
-
-      switch (dlp->sprite_type) {
-      case CELL_WHOLE:
-        // OK, no problem
-        break;
-      case CELL_CORNER:
-        if (dlp->is_tall || dlp->offset_x > 0 || dlp->offset_y > 0) {
-          qCritical("[%s] layer %d: you cannot have tall terrain or\n"
-                    "a sprite offset with a cell-based drawing method.",
-                    sec_name, l);
-          dlp->is_tall = false;
-          dlp->offset_x = dlp->offset_y = 0;
-        }
-        break;
-      };
-    }
-
-    bool hc = t->tile_hash->contains(draw->name);
-    t->tile_hash->insert(draw->name, draw);
-    if (hc) {
-      qCritical(
-          "warning: multiple tile sections containing terrain tag \"%s\".",
-          qUtf8Printable(draw->name));
-      tileset_stop_read(t, file, fname, sections, layer_order);
-      return nullptr;
+      }
     }
   }
   section_list_iterate_end;
@@ -2470,13 +2307,10 @@ static const char *citizen_rule_name(enum citizen_category citizen)
    binary value 1000 will be converted into "n1e0s0w0".  This is in a
    clockwise ordering.
  */
-static QString &cardinal_index_str(const struct tileset *t, int idx)
+QString cardinal_index_str(const struct tileset *t, int idx)
 {
-  static QString c;
-  int i;
-
-  c = QString();
-  for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
+  auto c = QString();
+  for (int i = 0; i < t->num_cardinal_tileset_dirs; i++) {
     int value = (idx >> i) & 1;
 
     c += QStringLiteral("%1%2").arg(
@@ -3832,268 +3666,9 @@ static void tileset_setup_base(struct tileset *t,
 void tileset_setup_tile_type(struct tileset *t,
                              const struct terrain *pterrain)
 {
-  struct drawing_data *draw;
-  QPixmap *sprite;
-  QString buffer;
-  int i, l;
-
-  if (!t->tile_hash->contains(pterrain->graphic_str)
-      && !t->tile_hash->contains(pterrain->graphic_alt)) {
-    tileset_error(LOG_FATAL,
-                  _("Terrain \"%s\": no graphic tile \"%s\" or \"%s\"."),
-                  terrain_rule_name(pterrain), pterrain->graphic_str,
-                  pterrain->graphic_alt);
+  for (auto &layer : t->layers) {
+    layer->initialize_terrain(pterrain);
   }
-  draw = t->tile_hash->value(pterrain->graphic_str);
-  if (!draw) {
-    draw = t->tile_hash->value(pterrain->graphic_alt);
-  }
-  if (draw->init) {
-    t->sprites.drawing[terrain_index(pterrain)] = draw;
-    return;
-  }
-
-  // Set up each layer of the drawing.
-  for (l = 0; l < draw->num_layers; l++) {
-    struct drawing_layer *dlp = &draw->layer[l];
-    struct tileset_layer *tslp = &t->terrain_layers[l];
-    sprite_vector_init(&dlp->base);
-    sprite_vector_init(&dlp->allocated);
-
-    switch (dlp->sprite_type) {
-    case CELL_WHOLE:
-      switch (dlp->match_style) {
-      case MATCH_NONE:
-        // Load whole sprites for this tile.
-        for (i = 0;; i++) {
-          buffer = QStringLiteral("t.l%1.%2%3")
-                       .arg(QString::number(l), draw->name,
-                            QString::number(i + 1));
-          sprite = load_sprite(t, buffer, true, false);
-          if (!sprite) {
-            break;
-          }
-          sprite_vector_reserve(&dlp->base, i + 1);
-          dlp->base.p[i] = sprite;
-        }
-        // check for base sprite, allowing missing sprites above base
-        if (0 == i && 0 == l) {
-          /* TRANS: 'base' means 'base of terrain gfx', not 'military base'
-           */
-          tileset_error(LOG_FATAL, _("Missing base sprite for tag \"%s\"."),
-                        qUtf8Printable(buffer));
-        }
-        break;
-      case MATCH_SAME:
-        // Load 16 cardinally-matched sprites.
-        for (i = 0; i < t->num_index_cardinal; i++) {
-          buffer = QStringLiteral("t.l%1.%2_%3")
-                       .arg(QString::number(l), draw->name,
-                            cardinal_index_str(t, i));
-          dlp->match[i] = tiles_lookup_sprite_tag_alt(
-              t, LOG_FATAL, qUtf8Printable(buffer), "", "matched terrain",
-              terrain_rule_name(pterrain), true);
-        }
-        break;
-      case MATCH_PAIR:
-      case MATCH_FULL:
-        fc_assert(false); // not yet defined
-        break;
-      };
-      break;
-    case CELL_CORNER: {
-      const int count = dlp->match_indices;
-      int number = NUM_CORNER_DIRS;
-
-      switch (dlp->match_style) {
-      case MATCH_NONE:
-        // do nothing
-        break;
-      case MATCH_PAIR:
-      case MATCH_SAME:
-        // N directions (NSEW) * 3 dimensions of matching
-        fc_assert(count == 2);
-        number = NUM_CORNER_DIRS * 2 * 2 * 2;
-        break;
-      case MATCH_FULL:
-      default:
-        // N directions (NSEW) * 3 dimensions of matching
-        // could use exp() or expi() here?
-        number = NUM_CORNER_DIRS * count * count * count;
-        break;
-      };
-
-      dlp->cells = new QPixmap *[number]();
-
-      for (i = 0; i < number; i++) {
-        enum direction4 dir = static_cast<direction4>(i % NUM_CORNER_DIRS);
-        int value = i / NUM_CORNER_DIRS;
-
-        switch (dlp->match_style) {
-        case MATCH_NONE:
-          buffer = QStringLiteral("t.l%1.%2_cell_%3")
-                       .arg(QString::number(l), draw->name,
-                            QString(direction4letters[dir]));
-          dlp->cells[i] = tiles_lookup_sprite_tag_alt(
-              t, LOG_FATAL, qUtf8Printable(buffer), "", "cell terrain",
-              terrain_rule_name(pterrain), true);
-          break;
-        case MATCH_SAME:
-          buffer = QStringLiteral("t.l%1.%2_cell_%3%4%5%6")
-                       .arg(QString::number(l), draw->name,
-                            QString(direction4letters[dir]),
-                            QString::number((value) &1),
-                            QString::number((value >> 1) & 1),
-                            QString::number((value >> 2) & 1));
-          dlp->cells[i] = tiles_lookup_sprite_tag_alt(
-              t, LOG_FATAL, qUtf8Printable(buffer), "", "same cell terrain",
-              terrain_rule_name(pterrain), true);
-          break;
-        case MATCH_PAIR:
-          buffer =
-              QStringLiteral("t.l%1.%2_cell_%3_%4_%5_%6")
-                  .arg(QString::number(l), draw->name,
-                       QChar(direction4letters[dir]),
-                       QChar(tslp->match_types[dlp->match_index[(value) &1]]
-                                              [0]),
-                       QChar(tslp->match_types[dlp->match_index[(value >> 1)
-                                                                & 1]][0]),
-                       QChar(tslp->match_types[dlp->match_index[(value >> 2)
-                                                                & 1]][0]));
-
-          dlp->cells[i] = tiles_lookup_sprite_tag_alt(
-              t, LOG_FATAL, qUtf8Printable(buffer), "", "cell pair terrain",
-              terrain_rule_name(pterrain), true);
-          break;
-        case MATCH_FULL: {
-          int tthis = dlp->match_index[0];
-          int n, s, e, w;
-          int v1, v2, v3;
-
-          v1 = dlp->match_index[value % count];
-          value /= count;
-          v2 = dlp->match_index[value % count];
-          value /= count;
-          v3 = dlp->match_index[value % count];
-
-          fc_assert(v1 < count && v2 < count && v3 < count);
-
-          // Assume merged cells.  This should be a separate option.
-          switch (dir) {
-          case DIR4_NORTH:
-            s = tthis;
-            w = v1;
-            n = v2;
-            e = v3;
-            break;
-          case DIR4_EAST:
-            w = tthis;
-            n = v1;
-            e = v2;
-            s = v3;
-            break;
-          case DIR4_SOUTH:
-            n = tthis;
-            e = v1;
-            s = v2;
-            w = v3;
-            break;
-          case DIR4_WEST:
-          default: // avoid warnings
-            e = tthis;
-            s = v1;
-            w = v2;
-            n = v3;
-            break;
-          };
-
-          /* Use first character of match_types,
-           * already checked for uniqueness. */
-          buffer =
-              QStringLiteral("t.l%1.cellgroup_%2_%3_%4_%5")
-                  .arg(QString::number(l), QChar(tslp->match_types[n][0]),
-                       QChar(tslp->match_types[e][0]),
-                       QChar(tslp->match_types[s][0]),
-                       QChar(tslp->match_types[w][0]));
-          sprite = load_sprite(t, buffer, true, false);
-
-          if (sprite) {
-            // Crop the sprite to separate this cell.
-            int vec_size = sprite_vector_size(&dlp->allocated);
-
-            const int W = t->normal_tile_width;
-            const int H = t->normal_tile_height;
-            int x[4] = {W / 4, W / 4, 0, W / 2};
-            int y[4] = {H / 2, 0, H / 4, H / 4};
-            int xo[4] = {0, 0, -W / 2, W / 2};
-            int yo[4] = {H / 2, -H / 2, 0, 0};
-
-            sprite = crop_sprite(sprite, x[dir], y[dir], W / 2, H / 2,
-                                 t->sprites.mask.tile, xo[dir], yo[dir],
-                                 1.0f, false);
-            /* We allocated new sprite with crop_sprite. Store its
-             * address so we can free it. */
-            sprite_vector_reserve(&dlp->allocated, vec_size + 1);
-            dlp->allocated.p[vec_size] = sprite;
-          } else {
-            qCritical("Terrain graphics sprite for tag \"%s\" missing.",
-                      qUtf8Printable(buffer));
-          }
-
-          dlp->cells[i] = sprite;
-        } break;
-        };
-      }
-    } break;
-    };
-  }
-
-  // try an optional special name
-  buffer = QStringLiteral("t.blend.%1").arg(draw->name);
-  draw->blender = tiles_lookup_sprite_tag_alt(
-      t, LOG_VERBOSE, qUtf8Printable(buffer), "", "blend terrain",
-      terrain_rule_name(pterrain), true);
-
-  if (draw->blending > 0) {
-    const int bl = draw->blending - 1;
-
-    if (NULL == draw->blender) {
-      int li = 0;
-
-      // try an already loaded base
-      while (NULL == draw->blender && li < draw->blending
-             && 0 < draw->layer[li].base.size) {
-        draw->blender = draw->layer[li++].base.p[0];
-      }
-    }
-
-    if (NULL == draw->blender) {
-      // try an unloaded base name
-      buffer =
-          QStringLiteral("t.l%1.%21").arg(QString::number(bl), draw->name);
-      draw->blender = tiles_lookup_sprite_tag_alt(
-          t, LOG_FATAL, qUtf8Printable(buffer), "", "base (blend) terrain",
-          terrain_rule_name(pterrain), true);
-    }
-  }
-
-  if (NULL != draw->blender) {
-    // Set up blending sprites. This only works in iso-view!
-    const int W = t->normal_tile_width;
-    const int H = t->normal_tile_height;
-    const int offsets[4][2] = {
-        {W / 2, 0}, {0, H / 2}, {W / 2, H / 2}, {0, 0}};
-    int dir = 0;
-
-    for (; dir < 4; dir++) {
-      draw->blend[dir] =
-          crop_sprite(draw->blender, offsets[dir][0], offsets[dir][1], W / 2,
-                      H / 2, t->sprites.dither_tile, 0, 0, 1.0f, false);
-    }
-  }
-
-  draw->init = true;
-  t->sprites.drawing[terrain_index(pterrain)] = draw;
 }
 
 /**
@@ -4176,10 +3751,8 @@ static QPixmap *get_unit_nation_flag_sprite(const struct tileset *t,
      tterrain_near  : terrain types of all adjacent terrain
      tspecial_near  : specials of all adjacent terrain
  */
-static void build_tile_data(const struct tile *ptile,
-                            struct terrain *pterrain,
-                            struct terrain **tterrain_near,
-                            bv_extras *textras_near)
+void build_tile_data(const struct tile *ptile, struct terrain *pterrain,
+                     struct terrain **tterrain_near, bv_extras *textras_near)
 {
   int dir;
 
@@ -4805,42 +4378,6 @@ static void fill_city_overlays_sprite_array(const struct tileset *t,
 }
 
 /**
-   Helper function for fill_terrain_sprite_layer.
-   Fill in the sprite array for blended terrain.
- */
-static void fill_terrain_sprite_blending(const struct tileset *t,
-                                         std::vector<drawn_sprite> &sprs,
-                                         const struct tile *ptile,
-                                         const struct terrain *pterrain,
-                                         struct terrain **tterrain_near)
-{
-  const int W = t->normal_tile_width, H = t->normal_tile_height;
-  const int offsets[4][2] = {{W / 2, 0}, {0, H / 2}, {W / 2, H / 2}, {0, 0}};
-  int dir = 0;
-
-  /*
-   * We want to mark unknown tiles so that an unreal tile will be
-   * given the same marking as our current tile - that way we won't
-   * get the "unknown" dither along the edge of the map.
-   */
-  for (; dir < 4; dir++) {
-    struct tile *tile1 = mapstep(&(wld.map), ptile, DIR4_TO_DIR8[dir]);
-    struct terrain *other;
-
-    if (!tile1 || client_tile_get_known(tile1) == TILE_UNKNOWN
-        || pterrain == (other = tterrain_near[DIR4_TO_DIR8[dir]])
-        || (0 == t->sprites.drawing[terrain_index(other)]->blending
-            && NULL == t->sprites.drawing[terrain_index(other)]->blender)) {
-      continue;
-    }
-
-    sprs.emplace_back(t,
-                      t->sprites.drawing[terrain_index(other)]->blend[dir],
-                      true, offsets[dir][0], offsets[dir][1]);
-  }
-}
-
-/**
    Add sprites for fog (and some forms of darkness).
  */
 static void fill_fog_sprite_array(const struct tileset *t,
@@ -4886,185 +4423,6 @@ static void fill_fog_sprite_array(const struct tileset *t,
 
     if (t->sprites.tx.fullfog[tileno]) {
       sprs.emplace_back(t, t->sprites.tx.fullfog[tileno]);
-    }
-  }
-}
-
-/**
-   Helper function for fill_terrain_sprite_layer.
- */
-static void fill_terrain_sprite_array(
-    struct tileset *t, std::vector<drawn_sprite> &sprs, int l, // layer_num
-    const struct tile *ptile, const struct terrain *pterrain,
-    struct terrain **tterrain_near, struct drawing_data *draw)
-{
-  struct drawing_layer *dlp = &draw->layer[l];
-  int tthis = dlp->match_index[0];
-  int that = dlp->match_index[1];
-  int ox = dlp->offset_x;
-  int oy = dlp->offset_y;
-  int i;
-
-#define MATCH(dir)                                                          \
-  (t->sprites.drawing[terrain_index(tterrain_near[(dir)])]->num_layers > l  \
-       ? t->sprites.drawing[terrain_index(tterrain_near[(dir)])]            \
-             ->layer[l]                                                     \
-             .match_index[0]                                                \
-       : -1)
-
-  switch (dlp->sprite_type) {
-  case CELL_WHOLE: {
-    switch (dlp->match_style) {
-    case MATCH_NONE: {
-      int count = sprite_vector_size(&dlp->base);
-
-      if (count > 0) {
-        /* Pseudo-random reproducable algorithm to pick a sprite. Use
-         * modulo to limit the number to a handleable size [0..32000). */
-        count = fc_randomly(tile_index(ptile) % 32000, count);
-
-        if (dlp->is_tall) {
-          ox += FULL_TILE_X_OFFSET;
-          oy += FULL_TILE_Y_OFFSET;
-        }
-        sprs.emplace_back(t, dlp->base.p[count], true, ox, oy);
-      }
-      break;
-    }
-    case MATCH_SAME: {
-      int tileno = 0;
-
-      for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
-        enum direction8 dir =
-            t->cardinal_tileset_dirs[static_cast<direction8>(i)];
-
-        if (MATCH(dir) == tthis) {
-          tileno |= 1 << i;
-        }
-      }
-
-      if (dlp->is_tall) {
-        ox += FULL_TILE_X_OFFSET;
-        oy += FULL_TILE_Y_OFFSET;
-      }
-      sprs.emplace_back(t, dlp->match[tileno], true, ox, oy);
-      break;
-    }
-    case MATCH_PAIR:
-    case MATCH_FULL:
-      fc_assert(false); // not yet defined
-      break;
-    };
-    break;
-  }
-  case CELL_CORNER: {
-    /* Divide the tile up into four rectangular cells.  Each of these
-     * cells covers one corner, and each is adjacent to 3 different
-     * tiles.  For each cell we pick a sprite based upon the adjacent
-     * terrains at each of those tiles.  Thus, we have 8 different sprites
-     * for each of the 4 cells (32 sprites total).
-     *
-     * These arrays correspond to the direction4 ordering. */
-    const int W = t->normal_tile_width;
-    const int H = t->normal_tile_height;
-    const int iso_offsets[4][2] = {
-        {W / 4, 0}, {W / 4, H / 2}, {W / 2, H / 4}, {0, H / 4}};
-    const int noniso_offsets[4][2] = {
-        {0, 0}, {W / 2, H / 2}, {W / 2, 0}, {0, H / 2}};
-
-    // put corner cells
-    for (i = 0; i < NUM_CORNER_DIRS; i++) {
-      const int count = dlp->match_indices;
-      int array_index = 0;
-      enum direction8 dir = dir_ccw(DIR4_TO_DIR8[i]);
-      int x = (t->type == TS_ISOMETRIC ? iso_offsets[i][0]
-                                       : noniso_offsets[i][0]);
-      int y = (t->type == TS_ISOMETRIC ? iso_offsets[i][1]
-                                       : noniso_offsets[i][1]);
-      int m[3] = {MATCH(dir_ccw(dir)), MATCH(dir), MATCH(dir_cw(dir))};
-      QPixmap *s;
-
-      // synthesize 4 dimensional array?
-      switch (dlp->match_style) {
-      case MATCH_NONE:
-        // We have no need for matching, just plug the piece in place.
-        break;
-      case MATCH_SAME:
-        array_index = array_index * 2 + (m[2] != tthis);
-        array_index = array_index * 2 + (m[1] != tthis);
-        array_index = array_index * 2 + (m[0] != tthis);
-        break;
-      case MATCH_PAIR:
-        array_index = array_index * 2 + (m[2] == that);
-        array_index = array_index * 2 + (m[1] == that);
-        array_index = array_index * 2 + (m[0] == that);
-        break;
-      case MATCH_FULL:
-      default: {
-        int n[3];
-        int j = 0;
-        for (; j < 3; j++) {
-          int k = 0;
-          for (; k < count; k++) {
-            n[j] = k; // default to last entry
-            if (m[j] == dlp->match_index[k]) {
-              break;
-            }
-          }
-        }
-        array_index = array_index * count + n[2];
-        array_index = array_index * count + n[1];
-        array_index = array_index * count + n[0];
-      } break;
-      };
-      array_index = array_index * NUM_CORNER_DIRS + i;
-
-      s = dlp->cells[array_index];
-      if (s) {
-        sprs.emplace_back(t, s, true, x, y);
-      }
-    }
-    break;
-  }
-  };
-#undef MATCH
-}
-
-/**
-   Add sprites for the base tile to the sprite list.  This doesn't
-   include specials or rivers.
- */
-static void fill_terrain_sprite_layer(struct tileset *t,
-                                      std::vector<drawn_sprite> &sprs,
-                                      int layer_num,
-                                      const struct tile *ptile,
-                                      const struct terrain *pterrain,
-                                      struct terrain **tterrain_near)
-{
-  QPixmap *sprite;
-  struct drawing_data *draw = t->sprites.drawing[terrain_index(pterrain)];
-  const int l =
-      (draw->is_reversed ? (draw->num_layers - layer_num - 1) : layer_num);
-
-  fc_assert(layer_num < TERRAIN_LAYER_COUNT);
-
-  // Skip the normal drawing process.
-  /* FIXME: this should avoid calling load_sprite since it's slow and
-   * increases the refcount without limit. */
-  if (ptile->spec_sprite
-      && (sprite = load_sprite(t, ptile->spec_sprite, true, false))) {
-    if (l == 0) {
-      sprs.emplace_back(t, sprite);
-    }
-    return;
-  }
-
-  if (l < draw->num_layers) {
-    fill_terrain_sprite_array(t, sprs, l, ptile, pterrain, tterrain_near,
-                              draw);
-
-    if ((l + 1) == draw->blending) {
-      fill_terrain_sprite_blending(t, sprs, ptile, pterrain, tterrain_near);
     }
   }
 }
@@ -5409,9 +4767,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_TERRAIN1:
-    if (NULL != pterrain && !solid_bg) {
-      fill_terrain_sprite_layer(t, sprs, 0, ptile, pterrain, tterrain_near);
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_DARKNESS:
@@ -5419,16 +4775,11 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_TERRAIN2:
-    if (NULL != pterrain && !solid_bg) {
-      fill_terrain_sprite_layer(t, sprs, 1, ptile, pterrain, tterrain_near);
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_TERRAIN3:
-    if (NULL != pterrain && !solid_bg) {
-      fc_assert(MAX_NUM_LAYERS == 3);
-      fill_terrain_sprite_layer(t, sprs, 2, ptile, pterrain, tterrain_near);
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_WATER:
@@ -6167,6 +5518,14 @@ QPixmap *get_event_sprite(const struct tileset *t, enum event_type event)
 }
 
 /**
+ * Return dither sprite
+ */
+QPixmap *get_dither_sprite(const struct tileset *t)
+{
+  return t->sprites.dither_tile;
+}
+
+/**
  * Return tile mask sprite
  */
 QPixmap *get_mask_sprite(const struct tileset *t)
@@ -6376,27 +5735,24 @@ std::vector<drawn_sprite>
 fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,
                                       struct terrain *pterrain)
 {
+  // We create a virtual tile with only the requested terrain, then collect
+  // sprites from every layer.
+  auto tile = tile_virtual_new(nullptr);
+  BV_CLR_ALL(tile->extras);
+  tile->terrain = pterrain;
+
   auto sprs = std::vector<drawn_sprite>();
-  struct drawing_data *draw = t->sprites.drawing[terrain_index(pterrain)];
-
-  struct terrain *tterrain_near[8];
-  bv_special tspecial_near[8];
-
-  struct tile dummy_tile; // :(
-
-  int i;
-
-  memset(&dummy_tile, 0, sizeof(struct tile));
-
-  for (i = 0; i < 8; i++) {
-    tterrain_near[i] = pterrain;
-    BV_CLR_ALL(tspecial_near[i]);
+  for (const auto &layer : t->layers) {
+    const auto lsprs = layer->fill_sprite_array(tile, nullptr, nullptr,
+                                                nullptr, nullptr, nullptr);
+    // Merge by hand because drawn_sprite isn't copyable (but it is
+    // copy-constructible)
+    for (const auto &sprite : lsprs) {
+      sprs.emplace_back(sprite);
+    }
   }
 
-  i = draw->is_reversed ? draw->num_layers - layer - 1 : layer;
-  fill_terrain_sprite_array(t, sprs, i, &dummy_tile, pterrain, tterrain_near,
-                            draw);
-
+  tile_virtual_destroy(tile);
   return sprs;
 }
 

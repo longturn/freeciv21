@@ -78,6 +78,7 @@ struct resource_type;
 #define MAX_INDEX_VALID 256
 
 #define NUM_TILES_PROGRESS 8
+#define NUM_CORNER_DIRS 4
 
 #define MAX_NUM_CITIZEN_SPRITES 6
 
@@ -215,6 +216,9 @@ QPixmap *get_citizen_sprite(const struct tileset *t,
                             const struct city *pcity);
 QPixmap *get_city_flag_sprite(const struct tileset *t,
                               const struct city *pcity);
+void build_tile_data(const struct tile *ptile, struct terrain *pterrain,
+                     struct terrain **tterrain_near,
+                     bv_extras *textras_near);
 QPixmap *get_nation_flag_sprite(const struct tileset *t,
                                 const struct nation_type *nation);
 QPixmap *get_nation_shield_sprite(const struct tileset *t,
@@ -253,6 +257,7 @@ fill_basic_extra_sprite_array(const struct tileset *t,
                               const struct extra_type *pextra);
 bool is_extra_drawing_enabled(struct extra_type *pextra);
 QPixmap *get_event_sprite(const struct tileset *t, enum event_type event);
+QPixmap *get_dither_sprite(const struct tileset *t);
 QPixmap *get_mask_sprite(const struct tileset *t);
 
 QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
@@ -289,7 +294,9 @@ int tileset_num_city_colors(const struct tileset *t);
 bool tileset_use_hard_coded_fog(const struct tileset *t);
 
 int tileset_num_cardinal_dirs(const struct tileset *t);
+int tileset_num_index_cardinals(const struct tileset *t);
 std::array<direction8, 8> tileset_cardinal_dirs(const struct tileset *t);
+QString cardinal_index_str(const struct tileset *t, int idx);
 
 /* These are used as array index -> can't be changed freely to values
    bigger than size of those arrays. */
