@@ -17,6 +17,7 @@ jobs:
     name: "Ubuntu with GCC"
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -44,6 +45,7 @@ jobs:
     name: "Ubuntu with clang"
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
           sudo apt-get update
