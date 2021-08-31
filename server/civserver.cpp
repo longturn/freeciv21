@@ -384,7 +384,7 @@ int main(int argc, char *argv[])
   con_write(C_VERSION, _("This is the server for %s"),
             freeciv_name_version());
   // TRANS: No full stop after the URL, could cause confusion.
-  con_write(C_COMMENT, _("You can learn a lot about Freeciv at %s"),
+  con_write(C_COMMENT, _("You can learn a lot about Freeciv21 at %s"),
             WIKI_URL);
   if (srvarg.auth_enabled && !srvarg.fcdb_enabled) {
     fc_fprintf(stderr, _("Requested authentication with --auth, "
