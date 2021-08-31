@@ -84,13 +84,37 @@ bool fc_rand_is_init() { return is_init; }
  */
 void fc_rand_set_init(bool init) { is_init = init; }
 
+namespace /* anonymous */ {
+
+/**
+ * Seed sequence based on std::random_device. Adapted from M. Skarupke,
+ * https://probablydance.com/2016/12/29/random_seed_seq-a-small-utility-to-properly-seed-random-number-generators-in-c/
+ */
+struct random_seed_seq {
+  /**
+   * Generates a random sequence.
+   */
+  template <typename It> void generate(It begin, It end)
+  {
+    for (; begin != end; ++begin) {
+      *begin = qgenerator();
+    }
+  }
+
+  /// Required by seed_seq.
+  using result_type = typeof(QRandomGenerator64().generate());
+
+private:
+  QRandomGenerator64 qgenerator = QRandomGenerator64::securelySeeded();
+};
+} // anonymous namespace
+
 /**
  * Seeds the given generator with a random value.
  */
 void fc_rand_seed(std::mt19937 &gen)
 {
-  auto seed = std::seed_seq();
-  QRandomGenerator::securelySeeded().seed(seed);
+  auto seed = random_seed_seq();
   gen.seed(seed);
 }
 
