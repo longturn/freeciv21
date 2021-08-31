@@ -3,6 +3,8 @@ on:
   push:
     paths-ignore: docs
   pull_request: {}
+  release:
+    types: [published]
   schedule:
     - cron: "0 5 * * MON"
   workflow_dispatch: {}
@@ -99,6 +101,13 @@ jobs:
       - name: Package
         run: |
           cmake --build build --target package
+      - name: Upload package
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe
+            build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe.sha256
   os_x:
     name: "Mac OS X"
     runs-on: macos-latest
