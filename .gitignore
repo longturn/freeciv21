@@ -1,8 +1,6 @@
 # Generated files
 *_gen.h
 *_gen.cpp
-/utility/fc_config.h
-/server/null.c
 
 # Build artefacts
 *.a
@@ -11,8 +9,6 @@
 *.pyo
 
 /compile_commands.json
-/freeciv-*
-/dependencies/tolua-5.2/tolua_program
 
 # Translations
 *.gmo
@@ -33,7 +29,7 @@
 # Manual files from freeciv-manual
 manual*.html
 
-# Core dumbs
+# Core dumps
 core
 
 # CMake files
@@ -47,3 +43,9 @@ build.ninja
 # Build directories
 build*
 
+# IDE files
+.clangd
+# Folder
+.kdev4
+# Project file
+*.kdev4
