@@ -301,7 +301,8 @@ void map_view::resume_searching(int pos_x, int pos_y, int &w, int &h,
     }
   }
 
-  find_place(new_pos_x, new_pos_y, w, h, wdth, hght, recursive_nr, direction);
+  find_place(new_pos_x, new_pos_y, w, h, wdth, hght, recursive_nr,
+             direction);
 }
 
 /**

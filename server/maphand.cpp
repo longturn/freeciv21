@@ -556,7 +556,8 @@ void send_tile_info(struct conn_list *dest, struct tile *ptile,
       }
 
       if (ptile->label != NULL) {
-        // Always leave final '/* Always leave final '\0' in place */' in place
+        // Always leave final '/* Always leave final '\0' in place */' in
+        // place
         qstrncpy(info.label, ptile->label, sizeof(info.label) - 1);
       } else {
         info.label[0] = '\0';

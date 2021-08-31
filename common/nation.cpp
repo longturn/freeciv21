@@ -76,9 +76,9 @@ static bool nation_check(const nation_type *pnation)
   return true;
 }
 
-#else // FREECIV_DEBUG
+#else                                 // FREECIV_DEBUG
 #define NATION_CHECK(pnation, action) // Do Nothing.
-#endif // FREECIV_DEBUG
+#endif                                // FREECIV_DEBUG
 
 /**
    Returns the nation that has the given (translated) plural noun.

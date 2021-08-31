@@ -16,7 +16,8 @@
 // Forward definitions
 class QString;
 
-#define MAX_LEN_CONSOLE_LINE 1024 // closing '/* closing '\0' included */' included
+#define MAX_LEN_CONSOLE_LINE                                                \
+  1024 // closing '/* closing '\0' included */' included
 
 /*
  * A note on "rfc-style":

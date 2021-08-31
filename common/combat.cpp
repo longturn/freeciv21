@@ -902,9 +902,9 @@ int combat_bonus_against(const struct combat_bonus_list *list,
   return value;
 }
 
-/*******************************************************************//**
- Returns if the attack is going to be a tired attack
-***********************************************************************/
+/*******************************************************************/ /**
+  Returns if the attack is going to be a tired attack
+ ***********************************************************************/
 bool is_tired_attack(int moves_left)
 {
   return game.info.tired_attack && moves_left < SINGLE_MOVE;

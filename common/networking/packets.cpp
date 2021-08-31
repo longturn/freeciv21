@@ -101,7 +101,8 @@ static bool conn_compression_flush(struct connection *pconn)
   bool jumbo;
   unsigned long compressed_packet_len;
 
-  error = compress2(compressed.data(), &compressed_size, pconn->compression.queue.p,
+  error = compress2(compressed.data(), &compressed_size,
+                    pconn->compression.queue.p,
                     pconn->compression.queue.size, compression_level);
   fc_assert_ret_val(error == Z_OK, false);
 

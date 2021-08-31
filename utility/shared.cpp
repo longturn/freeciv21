@@ -308,7 +308,6 @@ void randomize_base64url_string(char *s, size_t n)
   s[i] = '\0';
 }
 
-
 /**
    Returns 's' incremented to first non-space character.
  */
@@ -1182,7 +1181,9 @@ void dont_run_as_root(const char *argv0, const char *fallback)
   if (getuid() == 0 || geteuid() == 0) {
     fc_fprintf(stderr,
                _("%s: Fatal error: you're trying to run me as superuser!\n"),
-               (argv0 ? argv0 : fallback ? fallback : "freeciv"));
+               (argv0      ? argv0
+                : fallback ? fallback
+                           : "freeciv"));
     fc_fprintf(stderr, _("Use a non-privileged account instead.\n"));
     exit(EXIT_FAILURE);
   }

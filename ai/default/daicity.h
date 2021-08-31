@@ -47,8 +47,8 @@ struct ai_city {
   int grave_danger; // danger, should show positive feedback
   int urgency;      /* how close the danger is; if zero,
                                 bodyguards can leave */
-  int wallvalue;             /* how much it helps for defenders to be
-                                ground units */
+  int wallvalue;    /* how much it helps for defenders to be
+                       ground units */
 
   int distance_to_wonder_city; /* wondercity will set this for us,
                                   avoiding paradox */

@@ -4372,7 +4372,7 @@ void settings_game_save(struct section_file *file, const char *section)
   {
     char errbuf[200];
 
-    if (// It's explicitly set to some value to save
+    if ( // It's explicitly set to some value to save
         setting_get_setdef(pset) == SETDEF_CHANGED
         /* It must be same at loading time as it was saving time, even if
            freeciv's default has changed. */
@@ -4440,8 +4440,7 @@ void settings_game_load(struct section_file *file, const char *section)
   const char *name;
   char reject_msg[256], buf[256];
   int i, set_count;
-  int oldcitymindist =
-      game.info.citymindist; // backwards compat, see below
+  int oldcitymindist = game.info.citymindist; // backwards compat, see below
 
   /* Compatibility with savegames created with older versions is usually
    * handled as conversions in savecompat.c compat_load_<version>() */

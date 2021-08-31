@@ -136,7 +136,7 @@ struct gui_funcs {
   void (*gui_clear_theme)();
   QStringList (*get_gui_specific_themes_directories)(int *count);
   QStringList (*get_useable_themes_in_directory)(QString &directory,
-                                            int *count);
+                                                 int *count);
 };
 
 struct gui_funcs *get_gui_funcs();

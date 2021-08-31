@@ -2757,12 +2757,12 @@ static void announce_trade_route_removal(struct city *pc1, struct city *pc2,
     }
   } else {
     if (source_gone) {
-      notify_player(
-          plr2, city_tile(pc2), E_CARAVAN_ACTION, ftc_server,
-          // TRANS: "...between Spanish city Madrid and Paris..."
-          _("Trade between %s city %s and %s lost along with "
-            "their city."),
-          nation_adjective_for_player(plr1), city1_link, city2_link);
+      notify_player(plr2, city_tile(pc2), E_CARAVAN_ACTION, ftc_server,
+                    // TRANS: "...between Spanish city Madrid and Paris..."
+                    _("Trade between %s city %s and %s lost along with "
+                      "their city."),
+                    nation_adjective_for_player(plr1), city1_link,
+                    city2_link);
       /* It's implicit to removed city's owner that that city no longer
        * has trade routes, so say nothing in that case */
     } else {

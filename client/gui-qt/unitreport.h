@@ -34,8 +34,10 @@ class units_waiting : public QWidget {
 public:
   units_waiting(QWidget *parent = nullptr);
   ~units_waiting();
+
 protected:
   void showEvent(QShowEvent *event) override;
+
 private:
   void clicked(int x, int y);
   void update_units();

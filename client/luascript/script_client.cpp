@@ -206,7 +206,7 @@ bool script_client_init()
    * and we can't pass it a basename where the original
    * 'tolua_' has been stripped when generating from meson. */
   tolua_tolua_client_open(main_fcl->state);
-#else // MESON_BUILD
+#else  // MESON_BUILD
   tolua_client_open(main_fcl->state);
 #endif // MESON_BUILD
 

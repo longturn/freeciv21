@@ -359,7 +359,7 @@ const QString popup_info_text(struct tile *ptile)
     time_t dt = time(NULL) - punit->action_timestamp;
     if (dt < 0 && !can_unit_move_now(punit)) {
       char buf[64];
-      format_time_duration(- dt, buf, sizeof(buf));
+      format_time_duration(-dt, buf, sizeof(buf));
       str += _("Can move in ") + QString(buf) + qendl();
     }
 
@@ -522,19 +522,18 @@ const QString get_nearest_city_text(struct city *pcity, int sq_dist)
     sq_dist = -1;
   }
   QString str =
-      QString(
-          (sq_dist >= FAR_CITY_SQUARE_DIST)
-              // TRANS: on own line immediately following \n, ... <city>
-              ? _("far from %1")
-              : (sq_dist > 0)
-                    /* TRANS: on own line immediately following \n, ...
-                       <city> */
-                    ? _("near %1")
-                    : (sq_dist == 0)
-                          /* TRANS: on own line immediately following \n, ...
-                             <city> */
-                          ? _("in %1")
-                          : "%1")
+      QString((sq_dist >= FAR_CITY_SQUARE_DIST)
+                  // TRANS: on own line immediately following \n, ... <city>
+                  ? _("far from %1")
+                  : (sq_dist > 0)
+                        /* TRANS: on own line immediately following \n, ...
+                           <city> */
+                        ? _("near %1")
+                        : (sq_dist == 0)
+                              /* TRANS: on own line immediately following \n,
+                                 ... <city> */
+                              ? _("in %1")
+                              : "%1")
           .arg(pcity ? city_name_get(pcity) : "");
   return str.trimmed();
 }

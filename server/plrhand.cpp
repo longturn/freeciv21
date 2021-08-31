@@ -1500,7 +1500,7 @@ const struct rgbcolor *player_preferred_color(struct player *pplayer)
     default:
       qCritical("Invalid value for 'game.server.plrcolormode' (%d)!",
                 game.server.plrcolormode);
-      fc__fallthrough; // no break - using 'PLRCOL_PLR_ORDER' as fallback
+      fc__fallthrough;     // no break - using 'PLRCOL_PLR_ORDER' as fallback
     case PLRCOL_PLR_ORDER: // player color (ordered)
       colorid = player_number(pplayer) % playercolor_count();
       break;

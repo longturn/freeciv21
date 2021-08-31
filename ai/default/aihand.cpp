@@ -127,7 +127,7 @@ void dai_calc_data(const struct player *pplayer, int *trade, int *expenses,
     trade = &d0;
   };
   if (!expenses) {
-    expenses= &d0;
+    expenses = &d0;
   }
   *trade = 0;
   *expenses = 0;

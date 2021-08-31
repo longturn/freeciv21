@@ -952,8 +952,7 @@ static Tech_type_id pick_cheapest_tech(const struct research *presearch)
 {
   int cheapest_cost = -1;
   int cheapest_amount = 0;
-  Tech_type_id cheapest =
-      A_FUTURE; // If no real tech is found to be missing
+  Tech_type_id cheapest = A_FUTURE; // If no real tech is found to be missing
 
   advance_index_iterate(A_FIRST, i)
   {

@@ -195,8 +195,8 @@ static struct unit *unpackage_unit(const struct packet_unit_info *packet)
   unit_tile_set(punit, index_to_tile(&(wld.map), packet->tile));
   punit->facing = packet->facing;
   punit->homecity = packet->homecity;
-  punit->name = QString::fromUtf8(QByteArray(packet->name,
-                                             ARRAY_SIZE(packet->name)));
+  punit->name =
+      QString::fromUtf8(QByteArray(packet->name, ARRAY_SIZE(packet->name)));
   output_type_iterate(o) { punit->upkeep[o] = packet->upkeep[o]; }
   output_type_iterate_end;
   punit->moves_left = packet->movesleft;
@@ -788,7 +788,7 @@ void handle_city_info(const struct packet_city_info *packet)
 
   pcity->airlift = packet->airlift;
   pcity->did_buy = packet->did_buy;
-  pcity->did_buy_production =  packet->did_buy_production;
+  pcity->did_buy_production = packet->did_buy_production;
   pcity->did_sell = packet->did_sell;
   pcity->was_happy = packet->was_happy;
 

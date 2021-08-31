@@ -98,7 +98,8 @@ unsigned int get_tokens(const char *str, char **tokens, size_t num_tokens,
     }
 
     tokens[token] = static_cast<char *>(fc_malloc(len + 1));
-    (void) fc_strlcpy(tokens[token], str, len + 1); // adds the '/* adds the '\0' */'
+    (void) fc_strlcpy(tokens[token], str,
+                      len + 1); // adds the '/* adds the '\0' */'
 
     str += len + padlength;
   }

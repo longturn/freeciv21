@@ -1093,7 +1093,8 @@ static const char *get_challenge_fullname(struct connection *pc)
     return NULL;
   }
 
-  fc_snprintf(fullname, sizeof(fullname), "%s/%s", qUtf8Printable(sdir), cname);
+  fc_snprintf(fullname, sizeof(fullname), "%s/%s", qUtf8Printable(sdir),
+              cname);
 
   return fullname;
 }
