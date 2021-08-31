@@ -3,6 +3,8 @@ on:
   push:
     paths-ignore: docs
   pull_request: {}
+  schedule:
+    - cron: "0 5 * * MON"
 
 #env:
   #global:
