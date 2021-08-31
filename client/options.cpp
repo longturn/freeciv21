@@ -4016,14 +4016,14 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
                   : minor >= 0);
            minor--) {
         fc_snprintf(name_buffer, sizeof(name_buffer),
-                    "%s/freeciv-client-rc-%d.%d", qUtf8Printable(name), major, minor);
+                    "%s/freeciv-client-rc-%d.%d", qUtf8Printable(name),
+                    major, minor);
         if (0 == fc_stat(name_buffer, &buf)) {
           if (MAJOR_NEW_OPTION_FILE_NAME != major
               || MINOR_NEW_OPTION_FILE_NAME != minor) {
             qInfo(_("Didn't find '%s' option file, "
                     "loading from '%s' instead."),
-                  get_current_option_file_name(),
-                  name_buffer);
+                  get_current_option_file_name(), name_buffer);
           }
 
           return name_buffer;
@@ -4045,7 +4045,8 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
       if (0 == fc_stat(name_buffer, &buf)) {
         qInfo(_("Didn't find '%s' option file, "
                 "loading from '%s' instead."),
-              get_current_option_file_name() + qstrlen(qUtf8Printable(QDir::homePath())) + 1,
+              get_current_option_file_name()
+                  + qstrlen(qUtf8Printable(QDir::homePath())) + 1,
               name_buffer);
 
         if (FIRST_MINOR_NEW_BOOLEAN > minor) {
@@ -4056,13 +4057,12 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     }
 
     // Try with the old one.
-    fc_snprintf(name_buffer, sizeof(name_buffer), "%s/%s", qUtf8Printable(name),
-                OLD_OPTION_FILE_NAME);
+    fc_snprintf(name_buffer, sizeof(name_buffer), "%s/%s",
+                qUtf8Printable(name), OLD_OPTION_FILE_NAME);
     if (0 == fc_stat(name_buffer, &buf)) {
       qInfo(_("Didn't find '%s' option file, "
               "loading from '%s' instead."),
-            get_current_option_file_name(),
-            OLD_OPTION_FILE_NAME);
+            get_current_option_file_name(), OLD_OPTION_FILE_NAME);
       *allow_digital_boolean = true;
       return name_buffer;
     } else {
@@ -4677,8 +4677,7 @@ void options_save(option_save_log_callback log_cb)
 
   // Directory name
   sz_strlcpy(dir_name, name);
-  for (i = qstrlen(dir_name) - 1;
-       i >= 0 && dir_name[i] != '/'; i--) {
+  for (i = qstrlen(dir_name) - 1; i >= 0 && dir_name[i] != '/'; i--) {
     // Nothing
   }
   if (i > 0) {

@@ -143,8 +143,7 @@ int city_gold_worth(struct city *pcity)
   city_built_iterate(pcity, pimprove)
   {
     if (improvement_obsolete(pplayer, pimprove, pcity)) {
-      worth +=
-          impr_sell_gold(pimprove); // obsolete, candidate for selling
+      worth += impr_sell_gold(pimprove); // obsolete, candidate for selling
     } else if (!is_wonder(pimprove)) {
       // Buy cost, with nonzero shield amount
       worth += impr_build_shield_cost(pcity, pimprove) * 2;

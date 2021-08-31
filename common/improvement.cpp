@@ -779,7 +779,7 @@ void wonder_built(const struct city *pcity, const struct impr_type *pimprove)
   pplayer = city_owner(pcity);
   pplayer->wonders[windex] = pcity->id;
 
-    /* Build turn is set with wonder_set_build_turn() only when
+  /* Build turn is set with wonder_set_build_turn() only when
    * actually building it in-game. But this is called also when
    * loading savegames etc., so initialize to something known. */
   pplayer->wonder_build_turn[windex] = -1;
@@ -838,11 +838,10 @@ bool wonder_is_built(const struct player *pplayer,
   fc_assert_ret_val(NULL != pplayer, false);
   fc_assert_ret_val(is_wonder(pimprove), false);
 
-
   /* New city turn: Wonders don't take effect until the next
    * turn after building */
 
-  if (! WONDER_BUILT(pplayer->wonders[windex])) {
+  if (!WONDER_BUILT(pplayer->wonders[windex])) {
     return false;
   }
 

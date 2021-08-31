@@ -76,9 +76,9 @@ const char *fc_git_revision()
               translate ? _(FC_GITREV1) : FC_GITREV1, FC_GITREV2);
 
   return buf; // Either revision, or modified revision
-#else // FC_GITREV_OFF
+#else         // FC_GITREV_OFF
   return NULL;
-#endif // FC_GITREV_OFF
+#endif        // FC_GITREV_OFF
 }
 
 /**
@@ -103,12 +103,11 @@ const char *beta_message()
       N_("December")};
 
   if (FREECIV_RELEASE_MONTH > 0) {
-    fc_snprintf(
-        msgbuf, sizeof(msgbuf),
-        // TRANS: No full stop after the URL, could cause confusion.
-        _("THIS IS A BETA VERSION\n"
-          "Freeciv %s will be released in %s, at %s"),
-        NEXT_STABLE_VERSION, _(NEXT_RELEASE_MONTH), WIKI_URL);
+    fc_snprintf(msgbuf, sizeof(msgbuf),
+                // TRANS: No full stop after the URL, could cause confusion.
+                _("THIS IS A BETA VERSION\n"
+                  "Freeciv %s will be released in %s, at %s"),
+                NEXT_STABLE_VERSION, _(NEXT_RELEASE_MONTH), WIKI_URL);
   } else {
     fc_snprintf(msgbuf, sizeof(msgbuf),
                 _("THIS IS A BETA VERSION\n"
@@ -116,7 +115,7 @@ const char *beta_message()
                 NEXT_STABLE_VERSION, WIKI_URL);
   }
   return msgbuf;
-#else // IS_BETA_VERSION
+#else  // IS_BETA_VERSION
   return NULL;
 #endif // IS_BETA_VERSION
 }

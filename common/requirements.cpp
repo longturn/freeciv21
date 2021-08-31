@@ -4191,9 +4191,8 @@ const char *universal_name_translation(const struct universal *psource,
     return buf;
   case VUT_AI_LEVEL:
     // TRANS: "Hard AI"
-    cat_snprintf(
-        buf, bufsz, _("%s AI"),
-        ai_level_translated_name(psource->value.ai_level)); // FIXME
+    cat_snprintf(buf, bufsz, _("%s AI"),
+                 ai_level_translated_name(psource->value.ai_level)); // FIXME
     return buf;
   case VUT_MAXTILEUNITS:
     // TRANS: here <= means 'less than or equal'

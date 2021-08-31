@@ -52,9 +52,8 @@ QIcon fcIcons::getIcon(const QString &id)
   str = QStringLiteral("themes/gui-qt/");
   // Try custom icon from theme
   pn_bytes = str.toLocal8Bit();
-  png_bytes =
-      QString(pn_bytes.data() + current_theme + "/" + id + ".png")
-          .toLocal8Bit();
+  png_bytes = QString(pn_bytes.data() + current_theme + "/" + id + ".png")
+                  .toLocal8Bit();
   icon.addFile(fileinfoname(get_data_dirs(), png_bytes.data()));
   str = str + "icons/";
   // Try icon from icons dir
@@ -82,8 +81,7 @@ QPixmap *fcIcons::getPixmap(const QString &id)
     return pm;
   }
   str = QStringLiteral("themes/gui-qt/");
-  png_bytes = QString(str + current_theme + "/" + id + ".png")
-                  .toLocal8Bit();
+  png_bytes = QString(str + current_theme + "/" + id + ".png").toLocal8Bit();
   status = pm->load(fileinfoname(get_data_dirs(), png_bytes.data()));
 
   if (!status) {

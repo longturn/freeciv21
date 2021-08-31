@@ -552,7 +552,7 @@ static inline SPECLIST_LINK *
 #define TYPED_LIST_CHECK(ARG_list) fc_assert_action(NULL != ARG_list, break)
 #else
 #define TYPED_LIST_CHECK(ARG_list) // Nothing.
-#endif // FREECIV_DEBUG
+#endif                             // FREECIV_DEBUG
 
 /* Speclist data iterator.
  *

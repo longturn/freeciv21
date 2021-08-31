@@ -476,12 +476,12 @@ races_dialog::races_dialog(struct player *pplayer, QWidget *parent)
   connect(selected_nation_tabs->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
           &races_dialog::nation_selected);
-  connect(leader_name, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
-          &races_dialog::leader_selected);
+  connect(leader_name, QOverload<int>::of(&QComboBox::currentIndexChanged),
+          this, &races_dialog::leader_selected);
   connect(leader_name->lineEdit(), &QLineEdit::returnPressed, this,
           &races_dialog::ok_pressed);
-  connect(qnation_set, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
-          &races_dialog::nationset_changed);
+  connect(qnation_set, QOverload<int>::of(&QComboBox::currentIndexChanged),
+          this, &races_dialog::nationset_changed);
   connect(nation_tabs->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
           &races_dialog::group_selected);

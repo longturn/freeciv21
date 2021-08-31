@@ -143,8 +143,7 @@ static bool check_native_area(const struct unit_type *utype,
 {
   int tiles = 1; // There's the central tile already.
   struct tile_list *tlist = tile_list_new();
-  struct tile *central =
-      tile_virtual_new(ptile); // Non-const virtual tile
+  struct tile *central = tile_virtual_new(ptile); // Non-const virtual tile
   QBitArray handled(MAP_INDEX_SIZE);
 
   tile_list_append(tlist, central);

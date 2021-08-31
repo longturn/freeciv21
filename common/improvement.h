@@ -67,7 +67,7 @@ struct impr_type {
   struct requirement_vector obsolete_by;
   int build_cost; // Use wrappers to access this.
   int upkeep;
-  int sabotage; // Base chance of diplomat sabotage succeeding.
+  int sabotage;             // Base chance of diplomat sabotage succeeding.
   enum impr_genus_id genus; // genus; e.g. GreatWonder
   bv_impr_flags flags;
   QVector<QString> *helptext;
@@ -143,7 +143,7 @@ improvement_replacement(const struct impr_type *pimprove);
 #define WONDER_OWNED(player_id) ((player_id) < MAX_NUM_PLAYER_SLOTS)
 
 // Macros for struct player::wonders[].
-#define WONDER_LOST (-1) // Used as city id.
+#define WONDER_LOST (-1)   // Used as city id.
 #define WONDER_NOT_BUILT 0 // Used as city id.
 #define WONDER_BUILT(city_id) ((city_id) > 0)
 

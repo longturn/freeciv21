@@ -184,7 +184,7 @@ enum dipl_reason {
 
 // the following are for "pacts"
 struct player_diplstate {
-  enum diplstate_type type; // this player's disposition towards other
+  enum diplstate_type type;      // this player's disposition towards other
   enum diplstate_type max_state; // maximum treaty level ever had
   int first_contact_turn;   // turn we had first contact with this player
   int turns_left;           // until pact (e.g., cease-fire) ends
@@ -278,7 +278,7 @@ struct player {
   int wonders[B_LAST];             /* contains city id's, WONDER_NOT_BUILT,
                                     * or WONDER_LOST */
 
-  int wonder_build_turn[B_LAST];    /* turn numbers when wonders were built */
+  int wonder_build_turn[B_LAST]; /* turn numbers when wonders were built */
 
   struct attribute_block_s attribute_block;
   struct attribute_block_s attribute_block_buffer;

@@ -145,7 +145,7 @@ void fc_assert_handle_failure(const char *condition, const char *file,
 #ifdef FREECIV_CXX11_STATIC_ASSERT
 #define FC_STATIC_ASSERT(cond, tag) static_assert(cond, #tag)
 #endif // FREECIV_CXX11_STATIC_ASSERT
-#else // __cplusplus
+#else  // __cplusplus
 #ifdef FREECIV_C11_STATIC_ASSERT
 #define FC_STATIC_ASSERT(cond, tag) _Static_assert(cond, #tag)
 #endif // FREECIV_C11_STATIC_ASSERT

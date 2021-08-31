@@ -16,7 +16,6 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 class QPixmap; // opaque type, real type is gui-dep
 struct color;
 
-
 GUI_FUNC_PROTO(QPixmap *, load_gfxfile, const char *filename)
 GUI_FUNC_PROTO(QPixmap *, crop_sprite, QPixmap *source, int x, int y,
                int width, int height, QPixmap *mask, int mask_offset_x,

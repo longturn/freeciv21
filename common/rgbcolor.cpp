@@ -142,7 +142,8 @@ bool rgbcolor_to_hex(const struct rgbcolor *prgbcolor, char *hex,
                      size_t hex_len)
 {
   fc_assert_ret_val(prgbcolor != NULL, false);
-  // Needs a length greater than 7 ('#' + 6 hex digites and '/* Needs a length greater than 7 ('#' + 6 hex digites and '\0'). */').
+  // Needs a length greater than 7 ('#' + 6 hex digites and '/* Needs a
+  // length greater than 7 ('#' + 6 hex digites and '\0'). */').
   fc_assert_ret_val(hex_len > 7, false);
 
   fc_assert_ret_val(0 <= prgbcolor->r && prgbcolor->r <= 255, false);

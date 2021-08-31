@@ -386,8 +386,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
       if (punit->fuel == 1) {
         UNIT_LOG(LOG_DEBUG, punit, "Oops, fallin outta the sky");
       }
-      def_ai_unit_data(punit, ait)->done =
-          true; // Won't help trying again
+      def_ai_unit_data(punit, ait)->done = true; // Won't help trying again
       return;
     }
 

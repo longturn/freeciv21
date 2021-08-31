@@ -198,7 +198,7 @@ struct unit {
       int transported_by; /* Used for unit_short_info packets where we can't
                            * be sure that the information about the
                            * transporter is known. */
-      bool occupied; // TRUE if at least one cargo on the transporter.
+      bool occupied;      // TRUE if at least one cargo on the transporter.
 
       // Equivalent to pcity->client.color. Only for cityfounder units.
       bool colored;
@@ -246,9 +246,9 @@ struct unit {
    fc_assert(player_by_number(player_index(unit_owner(punit)))              \
              == unit_owner(punit)),                                         \
    fc_assert(game_unit_by_number(punit->id) != NULL))
-#else // FREECIV_DEBUG
+#else                     // FREECIV_DEBUG
 #define CHECK_UNIT(punit) // Do nothing
-#endif // FREECIV_DEBUG
+#endif                    // FREECIV_DEBUG
 
 void setup_real_activities_array();
 

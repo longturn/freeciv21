@@ -80,7 +80,7 @@ enum pf_zoc_type {
 struct pf_map {
 #ifdef PF_DEBUG
   enum pf_mode mode; // The mode of the map, for conversion checking.
-#endif // PF_DEBUG
+#endif               // PF_DEBUG
 
   // "Virtual" function table.
   void (*destroy)(struct pf_map *pfm); // Destructor.
@@ -388,8 +388,7 @@ static void pf_normal_map_fill_position(const struct pf_normal_map *pfnm,
 #endif // PF_DEBUG
   pos->fuel_left = 1;
   pos->dir_to_here = direction8(node->dir_to_here);
-  pos->dir_to_next_pos =
-      direction8_invalid(); // This field does not apply.
+  pos->dir_to_next_pos = direction8_invalid(); // This field does not apply.
 
   if (node->cost > 0) {
     pf_finalize_position(params, pos);
@@ -1113,8 +1112,7 @@ static void pf_danger_map_fill_position(const struct pf_danger_map *pfdm,
 #endif // PF_DEBUG
   pos->fuel_left = 1;
   pos->dir_to_here = direction8(node->dir_to_here);
-  pos->dir_to_next_pos =
-      direction8_invalid(); // This field does not apply.
+  pos->dir_to_next_pos = direction8_invalid(); // This field does not apply.
 
   if (node->cost > 0) {
     pf_finalize_position(params, pos);
@@ -2222,8 +2220,7 @@ static void pf_fuel_map_fill_position(const struct pf_fuel_map *pffm,
   pos->total_MC =
       (head->cost - pf_move_rate(params) + pf_moves_left_initially(params));
   pos->dir_to_here = direction8(head->dir_to_here);
-  pos->dir_to_next_pos =
-      direction8_invalid(); // This field does not apply.
+  pos->dir_to_next_pos = direction8_invalid(); // This field does not apply.
   pf_fuel_finalize_position(pos, params, node, head);
 }
 
@@ -3475,10 +3472,9 @@ inline uint qHash(const pf_parameter &key, uint seed)
 
 // The reverse map structure.
 struct pf_reverse_map {
-  struct tile *target_tile; // Where we want to go.
-  int max_turns;            // The maximum of turns.
-  struct pf_parameter
-      template_params; // Keep a parameter ready for usage.
+  struct tile *target_tile;            // Where we want to go.
+  int max_turns;                       // The maximum of turns.
+  struct pf_parameter template_params; // Keep a parameter ready for usage.
   QHash<const pf_parameter *, struct pf_position *>
       *hash; // A hash where pf_position are stored.
 };

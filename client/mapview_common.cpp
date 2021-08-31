@@ -1503,8 +1503,7 @@ void update_tile_label(struct tile *ptile)
 static void show_tile_label(QPixmap *pcanvas, int canvas_x, int canvas_y,
                             struct tile *ptile, int *width, int *height)
 {
-  const enum client_font FONT_TILE_LABEL =
-      FONT_CITY_NAME; // TODO: new font
+  const enum client_font FONT_TILE_LABEL = FONT_CITY_NAME; // TODO: new font
 #define COLOR_MAPVIEW_TILELABEL COLOR_MAPVIEW_CITYTEXT
 
   canvas_x += tileset_tile_width(tileset) / 2;

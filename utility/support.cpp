@@ -268,7 +268,7 @@ FILE *fc_fopen(const char *filename, const char *opentype)
   result = fopen(filename_in_local_encoding, opentype);
   free(filename_in_local_encoding);
   return result;
-#else // FREECIV_MSWINDOWS
+#else  // FREECIV_MSWINDOWS
   return fopen(filename, opentype);
 #endif // FREECIV_MSWINDOWS
 }
@@ -287,7 +287,7 @@ gzFile fc_gzopen(const char *filename, const char *opentype)
   result = gzopen(filename_in_local_encoding, opentype);
   free(filename_in_local_encoding);
   return result;
-#else // FREECIV_MSWINDOWS
+#else  // FREECIV_MSWINDOWS
   return gzopen(filename, opentype);
 #endif // FREECIV_MSWINDOWS
 }
@@ -306,7 +306,7 @@ int fc_remove(const char *filename)
   result = remove(filename_in_local_encoding);
   free(filename_in_local_encoding);
   return result;
-#else // FREECIV_MSWINDOWS
+#else  // FREECIV_MSWINDOWS
   return remove(filename);
 #endif // FREECIV_MSWINDOWS
 }
@@ -325,7 +325,7 @@ int fc_stat(const char *filename, struct stat *buf)
   result = stat(filename_in_local_encoding, buf);
   free(filename_in_local_encoding);
   return result;
-#else // FREECIV_MSWINDOWS
+#else  // FREECIV_MSWINDOWS
   return stat(filename, buf);
 #endif // FREECIV_MSWINDOWS
 }
@@ -337,7 +337,7 @@ fc_errno fc_get_errno()
 {
 #ifdef FREECIV_MSWINDOWS
   return GetLastError();
-#else // FREECIV_MSWINDOWS
+#else  // FREECIV_MSWINDOWS
   return errno;
 #endif // FREECIV_MSWINDOWS
 }
@@ -362,7 +362,7 @@ const char *fc_strerror(fc_errno err)
                 err);
   }
   return buf;
-#else // FREECIV_MSWINDOWS
+#else  // FREECIV_MSWINDOWS
   static char buf[256];
   return local_to_internal_string_buffer(strerror(err), buf, sizeof(buf));
 #endif // FREECIV_MSWINDOWS
@@ -744,7 +744,7 @@ int fc_at_quick_exit(void (*func)())
 {
 #ifdef HAVE_AT_QUICK_EXIT
   return at_quick_exit(func);
-#else // HAVE_AT_QUICK_EXIT
+#else  // HAVE_AT_QUICK_EXIT
   return -1;
 #endif // HAVE_AT_QUICK_EXIT
 }

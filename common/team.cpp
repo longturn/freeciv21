@@ -253,7 +253,7 @@ const char *team_slot_name_translation(const struct team_slot *tslot)
   }
 
   return tslot->name_translation;
-#else // FREECIV_ENABLE_NLS
+#else  // FREECIV_ENABLE_NLS
   return team_slot_rule_name(tslot);
 #endif // FREECIV_ENABLE_NLS
 }

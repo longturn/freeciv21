@@ -30,9 +30,9 @@
 
 // Stuff to wait for input on stdin.
 #ifdef Q_OS_WIN
-#include <io.h>
-#include <array>
 #include <QtCore/QWinEventNotifier>
+#include <array>
+#include <io.h>
 #include <windows.h>
 #else
 #include <QtCore/QSocketNotifier>
@@ -307,8 +307,7 @@ server::~server()
 
   if (m_interactive) {
     // Save history
-    auto history_file = freeciv_storage_dir()
-                        + QStringLiteral("/")
+    auto history_file = freeciv_storage_dir() + QStringLiteral("/")
                         + QLatin1String(HISTORY_FILENAME);
     auto history_file_encoded = history_file.toLocal8Bit();
     write_history(history_file_encoded.constData());

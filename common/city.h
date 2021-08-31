@@ -215,8 +215,8 @@ void citylog_map_workers(QtMsgType level, struct city *pcity);
  * (replaced Impr_Status) */
 
 struct built_status {
-  int turn;          // turn built, negative for old state
-#define I_NEVER (-1) // Improvement never built
+  int turn;              // turn built, negative for old state
+#define I_NEVER (-1)     // Improvement never built
 #define I_DESTROYED (-2) // Improvement built and destroyed
 };
 
@@ -316,11 +316,11 @@ struct city {
   int surplus[O_LAST];         // Final surplus in each category.
   int waste[O_LAST];           /* Waste/corruption in each category. */
   int unhappy_penalty[O_LAST]; // Penalty from unhappy cities.
-  int prod[O_LAST]; // Production is total minus waste and penalty.
+  int prod[O_LAST];         // Production is total minus waste and penalty.
   int citizen_base[O_LAST]; // Base production from citizens.
   int usage[O_LAST];        // Amount of each resource being used.
 
-   /* Surplus saved for use during city processing loop */
+  /* Surplus saved for use during city processing loop */
   int saved_surplus[O_LAST];
 
   // Cached values for CPU savings.
@@ -351,8 +351,8 @@ struct city {
 
   int before_change_shields; /* If changed this turn, shields before penalty
                               */
-  int caravan_shields;   // If caravan has helped city to build wonder.
-  int disbanded_shields; // If you disband unit in a city. Count them
+  int caravan_shields;       // If caravan has helped city to build wonder.
+  int disbanded_shields;     // If you disband unit in a city. Count them
   int last_turns_shield_surplus; // The surplus we had last turn.
 
   struct built_status built[B_LAST];
