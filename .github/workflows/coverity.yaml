@@ -4,6 +4,7 @@ name: Coverity Scan
 on:
   schedule:
     - cron: '0 5 * * MON'
+  workflow_dispatch: {}
 
 jobs:
   latest:
