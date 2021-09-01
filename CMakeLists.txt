@@ -114,9 +114,9 @@ if(WIN32 OR MSYS OR MINGW)
   # Custom command files to run the applications
   install(
     FILES
-    ${CMAKE_SOURCE_DIR}/windows/installer_msys2/freeciv21-server.cmd
-    ${CMAKE_SOURCE_DIR}/windows/client.ico
-    ${CMAKE_SOURCE_DIR}/windows/mp.ico
+    windows/installer_msys2/freeciv21-server.cmd
+    windows/client.ico
+    windows/mp.ico
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 
@@ -171,7 +171,7 @@ if(WIN32 OR MSYS OR MINGW)
 
     # Run Qt's windeployqt.exe to find the required DLLs for the GUI apps.
     execute_process(
-      COMMAND ${MINGW_PATH}/windeployqt.exe --no-translations --no-virtualkeyboard --no-compiler-runtime \
+      COMMAND ${MINGW_PATH}/windeployqt.exe --no-translations --no-virtualkeyboard --no-compiler-runtime
         --no-webkit2 --no-angle --no-opengl-sw --list mapping ${CMAKE_INSTALL_PREFIX}
       OUTPUT_VARIABLE _output
       OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -201,8 +201,10 @@ if(UNIX AND NOT APPLE)
       dist/net.longturn.freeciv21.client.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
     )
-    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.client.desktop.in net.longturn.freeciv21.client.desktop
-                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR} @ONLY NEWLINE_STYLE UNIX)
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.client.desktop.in
+                   net.longturn.freeciv21.client.desktop
+                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR}
+                   @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.client.desktop
@@ -216,8 +218,10 @@ if(UNIX AND NOT APPLE)
       dist/net.longturn.freeciv21.server.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
     )
-    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.server.desktop.in net.longturn.freeciv21.server.desktop
-                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR} @ONLY NEWLINE_STYLE UNIX)
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.server.desktop.in
+                   net.longturn.freeciv21.server.desktop
+                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR}
+                   @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.server.desktop
@@ -231,8 +235,10 @@ if(UNIX AND NOT APPLE)
       dist/net.longturn.freeciv21.modpack.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
     )
-    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.modpack-qt.desktop.in net.longturn.freeciv21.modpack-qt.desktop
-                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR} @ONLY NEWLINE_STYLE UNIX)
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.modpack-qt.desktop.in
+                   net.longturn.freeciv21.modpack-qt.desktop
+                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR}
+                   @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.modpack-qt.desktop
@@ -246,8 +252,10 @@ if(UNIX AND NOT APPLE)
       dist/net.longturn.freeciv21.ruledit.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
     )
-    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.ruledit.desktop.in net.longturn.freeciv21.ruledit.desktop
-                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR} @ONLY NEWLINE_STYLE UNIX)
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.ruledit.desktop.in
+                   net.longturn.freeciv21.ruledit.desktop
+                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR}
+                   @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.ruledit.desktop
