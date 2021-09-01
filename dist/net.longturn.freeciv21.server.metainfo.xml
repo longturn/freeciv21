@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component type="desktop-application">
-    <id type="desktop">net.longturn.freeciv21.modpack-qt</id>
+<component type="console-application">
+    <id type="desktop">net.longturn.freeciv21.server</id>
     <metadata_license>CC0</metadata_license>
     <project_license>GPL-3.0+</project_license>
-    <name>Freeciv21 Qt modpack installer</name>
-    <summary>Qt based modpack installer for the Freeciv21 game</summary>
+    <name>Freeciv21 server</name>
+    <summary>Server component for the Freeciv21 game</summary>
     <description>
         <p>
             Freeciv21 is a Free and Open Source empire-building strategy game inspired by the history of human civilization. The game commences in prehistory and your
             mission is to lead your tribe from the Stone Age to the Space Age...
         </p>
         <p>
-            Freeciv21 modpack utility can be used to automatically download and install custom rulesets, tilesets, soundsets, musicsets and maps for freeciv21 to use.
-            It is based on the Qt framework.
+            The server hosts multiplayer games. For single-player games the client will launch the server for itself automatically. The server is a console application.
         </p>
     </description>
-    <launchable type="desktop-id">net.longturn.freeciv21.modpack-qt.desktop</launchable>
-    <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv21-modpack.png</icon>
+    <launchable type="desktop-id">net.longturn.freeciv21.server.desktop</launchable>
+    <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv-server.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
     <screenshots>
       <screenshot type="default">
-        <caption>Freeciv21 Qt Client</caption>
+        <caption>Freeciv21 Client</caption>
         <image>https://github.com/longturn/freeciv21/raw/master/dist/freeciv-screenshot-2048x1112.png</image>
       </screenshot>
     </screenshots>
     <update_contact>longturn.net@gmail.com</update_contact>
     <developer_name>Longturn.net Community</developer_name>
     <provides>
-      <binary>freeciv21-modpack-qt</binary>
+      <binary>freeciv21-server</binary>
     </provides>
     <categories>
       <category>Game</category>
