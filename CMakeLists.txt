@@ -122,7 +122,7 @@ if(WIN32 OR MSYS OR MINGW)
 
   # Install the ca-bundle for the modpack installer
   install(
-    FILES 
+    FILES
     ${MINGW_PATH}/../ssl/certs/ca-bundle.crt
     DESTINATION ${CMAKE_INSTALL_BINDIR}/ssl/certs
     COMPONENT freeciv21)
@@ -134,7 +134,7 @@ if(WIN32 OR MSYS OR MINGW)
     ${MINGW_PATH}/libssl-1_1-x64.dll
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
-    
+
   # This allows us to determine the external libraries we need to include at install time
   #   dynamically instead of doing it manually.
   install(CODE [[
@@ -158,20 +158,21 @@ if(WIN32 OR MSYS OR MINGW)
       message(STATUS "Installing library dependencies for freeciv21 executables...")
       file(INSTALL DESTINATION ${CMAKE_INSTALL_PREFIX} MESSAGE_LAZY FILES ${r_deps})
     ]] COMPONENT freeciv21)
-    
+
   # Qt5 Plugins and required DLLs
   # Before installation, run a series of commands that copy each of the Qt
   # runtime files to the appropriate directory for installation
   install(CODE [[
-  
+
     message(STATUS "Collecting Qt dependencies for freeciv21 GUI executables...")
 
     # Take a variable that is available at "install" time and repurpose
     string(REGEX REPLACE "objdump.exe" "" MINGW_PATH ${CMAKE_OBJDUMP})
-    
+
     # Run Qt's windeployqt.exe to find the required DLLs for the GUI apps.
     execute_process(
-      COMMAND ${MINGW_PATH}/windeployqt.exe --no-translations --no-virtualkeyboard --no-compiler-runtime --no-webkit2 --no-angle --no-opengl-sw --list mapping ${CMAKE_INSTALL_PREFIX}
+      COMMAND ${MINGW_PATH}/windeployqt.exe --no-translations --no-virtualkeyboard --no-compiler-runtime \
+        --no-webkit2 --no-angle --no-opengl-sw --list mapping ${CMAKE_INSTALL_PREFIX}
       OUTPUT_VARIABLE _output
       OUTPUT_STRIP_TRAILING_WHITESPACE
     )
@@ -190,6 +191,70 @@ if(WIN32 OR MSYS OR MINGW)
     ]] COMPONENT freeciv21)
 
 endif()
+
+# Unix/Linux specific install steps
+if(UNIX AND NOT APPLE)
+  # Install MetaInfo and Desktop files for the applications asked for at configure
+  if(FREECIV_ENABLE_CLIENT)
+    install(
+      FILES
+      dist/net.longturn.freeciv21.client.metainfo.xml
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+    )
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.client.desktop.in net.longturn.freeciv21.client.desktop
+                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR} @ONLY NEWLINE_STYLE UNIX)
+    install(
+      FILES
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.client.desktop
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+    )
+  endif(FREECIV_ENABLE_CLIENT)
+
+  if(FREECIV_ENABLE_SERVER)
+    install(
+      FILES
+      dist/net.longturn.freeciv21.server.metainfo.xml
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+    )
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.server.desktop.in net.longturn.freeciv21.server.desktop
+                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR} @ONLY NEWLINE_STYLE UNIX)
+    install(
+      FILES
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.server.desktop
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+    )
+  endif(FREECIV_ENABLE_SERVER)
+
+  if(FREECIV_ENABLE_FCMP_QT)
+    install(
+      FILES
+      dist/net.longturn.freeciv21.modpack.metainfo.xml
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+    )
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.modpack-qt.desktop.in net.longturn.freeciv21.modpack-qt.desktop
+                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR} @ONLY NEWLINE_STYLE UNIX)
+    install(
+      FILES
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.modpack-qt.desktop
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+    )
+  endif(FREECIV_ENABLE_FCMP_QT)
+
+ if(FREECIV_ENABLE_RULEDIT)
+    install(
+      FILES
+      dist/net.longturn.freeciv21.ruledit.metainfo.xml
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+    )
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.ruledit.desktop.in net.longturn.freeciv21.ruledit.desktop
+                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR} @ONLY NEWLINE_STYLE UNIX)
+    install(
+      FILES
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.ruledit.desktop
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+    )
+  endif(FREECIV_ENABLE_RULEDIT)
+endif(UNIX AND NOT APPLE)
 
 # Packaging (CPack)
 include(CPackConfig)
