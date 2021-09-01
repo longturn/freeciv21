@@ -7,11 +7,12 @@
     <summary>Server component for the Freeciv21 game</summary>
     <description>
         <p>
-            Freeciv21 is a Free and Open Source empire-building strategy game inspired by the history of human civilization. The game commences in prehistory and your
-            mission is to lead your tribe from the Stone Age to the Space Age...
+            Freeciv21 is a Free and Open Source empire-building strategy game inspired by the history of human civilization.
+            The game commences in prehistory and your mission is to lead your tribe from the Stone Age to the Space Age...
         </p>
         <p>
-            The server hosts multiplayer games. For single-player games the client will launch the server for itself automatically. The server is a console application.
+            The server hosts multiplayer games. For single-player games the client will launch the server for itself
+            automatically. The server is a console application.
         </p>
     </description>
     <launchable type="desktop-id">net.longturn.freeciv21.server.desktop</launchable>

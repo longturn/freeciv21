@@ -7,8 +7,8 @@
     <summary>Client for the Freeciv21 game</summary>
     <description>
         <p>
-            Freeciv21 is a Free and Open Source empire-building strategy game inspired by the history of human civilization. The game commences in prehistory and your
-            mission is to lead your tribe from the Stone Age to the Space Age...
+            Freeciv21 is a Free and Open Source empire-building strategy game inspired by the history of human civilization.
+            The game commences in prehistory and your mission is to lead your tribe from the Stone Age to the Space Age...
         </p>
         <p>
             This client is for connecting to network games, or to launch local single-player games. It is based on the Qt framework.
