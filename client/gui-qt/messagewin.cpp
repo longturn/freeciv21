@@ -317,7 +317,7 @@ void messagewdg::msg(const struct message *pmsg)
     item->setIcon(QIcon(*pix));
   }
   mesg_table->setItem(i, 0, item);
-  msg_update();
+  mesg_table->resizeRowToContents(i);
   mesg_table->scrollToBottom();
 }
 
