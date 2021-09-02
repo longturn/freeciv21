@@ -177,6 +177,13 @@ Once the compilation is complete, install the game with this command.
 .. note:: If you did not change the default install prefix, you will need to elevate privileges
     with :file:`sudo`.
 
+.. tip:: If you want to enable menu integration for the installed copy of Freeciv21, you will want
+    to copy the :literal:`.desktop` files in :file:`$CMAKE_INSTALL_PREFIX/share/applications` to
+    :file:`$HOME/.local/share/applications`.
+
+    This is only necessary if you change the installation prefix. If you don't and use elevated
+    privileges, then the files get copied to the system default location.
+
 
 Debian Linux Notes
 ==================
@@ -197,6 +204,7 @@ following commands.
      cmake \
      ninja-build \
      python3 \
+     python3-pip \
      qt5-default \
      libkf5archive-dev \
      liblua5.3-dev \
@@ -205,6 +213,8 @@ following commands.
      libunwind-dev \
      libdw-dev \
      python3-sphinx
+
+  $ pip install sphinx_rtd_theme
 
   $ mkdir -p $HOME/GitHub
 

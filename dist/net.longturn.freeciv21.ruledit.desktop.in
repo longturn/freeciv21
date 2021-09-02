@@ -1,10 +1,16 @@
 [Desktop Entry]
 Name=Freeciv21 Ruleset Editor
 Name[ru]=Редактор наборов правил Freeciv21
-Comment=Edit Freeciv game rules
+GenericName=Strategy Game
+GenericName[ca]=Joc d'estrategia
+GenericName[es]=Juego de estrategia
+GenericName[fr]=Jeu de stratégie
+GenericName[pt]=Jogo de Estratégia
+GenericName[ru]=Стратегическая игра
+Comment=Edit Freeciv21 game rules
 Comment[ru]=Меняйте любые правила Freeciv21 и создавайте новые
-Exec=freeciv21-ruledit
-Icon=freeciv21-client
+Exec=@CMAKE_INSTALL_FULL_BINDIR@/freeciv21-ruledit
+Icon=@CMAKE_INSTALL_FULL_DATAROOTDIR@/freeciv21/misc/civicon.png
 StartupNotify=true
 Terminal=false
 Type=Application
