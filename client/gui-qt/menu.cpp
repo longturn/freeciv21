@@ -567,7 +567,6 @@ mr_menu::mr_menu() : QMenuBar() {}
 void mr_menu::setup_menus()
 {
   QAction *act;
-  QMenu *pr;
   QList<QMenu *> menus;
   int i;
 
@@ -577,8 +576,19 @@ void mr_menu::setup_menus()
 
   // Game Menu
   menu = this->addMenu(_("Game"));
-  pr = menu;
-  menu = menu->addMenu(_("Options"));
+  act = menu->addAction(_("Save Game"));
+  act->setShortcut(QKeySequence(tr("Ctrl+s")));
+  act->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
+  menu_list.insert(SAVE, act);
+  connect(act, &QAction::triggered, this, &mr_menu::save_game);
+  act = menu->addAction(_("Save Game As..."));
+  menu_list.insert(SAVE, act);
+  act->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
+  connect(act, &QAction::triggered, this, &mr_menu::save_game_as);
+  act = menu->addAction(_("Save Map to Image"));
+  connect(act, &QAction::triggered, this, &mr_menu::save_image);
+  menu->addSeparator();
+
   act = menu->addAction(_("Set local options"));
   connect(act, &QAction::triggered, this, &mr_menu::local_options);
   act = menu->addAction(_("Server Options"));
@@ -595,20 +605,8 @@ void mr_menu::setup_menus()
   act = menu->addAction(_("Save Options on Exit"));
   act->setCheckable(true);
   act->setChecked(gui_options.save_options_on_exit);
-  menu = pr;
   menu->addSeparator();
-  act = menu->addAction(_("Save Game"));
-  act->setShortcut(QKeySequence(tr("Ctrl+s")));
-  act->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
-  menu_list.insert(SAVE, act);
-  connect(act, &QAction::triggered, this, &mr_menu::save_game);
-  act = menu->addAction(_("Save Game As..."));
-  menu_list.insert(SAVE, act);
-  act->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
-  connect(act, &QAction::triggered, this, &mr_menu::save_game_as);
-  act = menu->addAction(_("Save Map to Image"));
-  connect(act, &QAction::triggered, this, &mr_menu::save_image);
-  menu->addSeparator();
+
   act = menu->addAction(_("Leave game"));
   act->setIcon(style()->standardIcon(QStyle::SP_DialogDiscardButton));
   connect(act, &QAction::triggered, this, &mr_menu::back_to_menu);
