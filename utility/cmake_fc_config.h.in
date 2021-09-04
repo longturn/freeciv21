@@ -90,11 +90,6 @@
 /* libintl.h available */
 #cmakedefine HAVE_LIBINTL_H
 
-/* iconv() available */
-#cmakedefine HAVE_ICONV
-
-#define ICONV_CONST const
-
 /* backtrace() available */
 #cmakedefine HAVE_BACKTRACE
 
