@@ -467,7 +467,7 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
         outbuf, outlen, game.veteran,
         _("In this ruleset, the following veteran levels are defined:"),
         _("This ruleset has no default veteran levels defined."));
-  } else if (0 == strcmp(name, "FreecivVersion")) {
+  } else if (0 == strcmp(name, "Freeciv21Version")) {
     const char *ver = freeciv_name_version();
 
     cat_snprintf(
