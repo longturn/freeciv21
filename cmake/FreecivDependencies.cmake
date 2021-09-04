@@ -22,13 +22,7 @@ find_package(PythonInterp 3 REQUIRED)
 # Required as the main networking and utility library
 find_package(Qt5 5.10 COMPONENTS Core Network REQUIRED)
 
-
 # Required for utility
-find_package(Iconv)
-if(Iconv_FOUND)
-  set(HAVE_ICONV TRUE) # For compiler macro
-  set(FREECIV_HAVE_ICONV TRUE) # For CMake code
-endif()
 find_package(Readline REQUIRED)
 
 # Internationalization
