@@ -1,4 +1,4 @@
-; Helpfile for Freeciv
+; Helpfile for Freeciv21
 ;
 ; Each [help_*] is a help node.
 ;
@@ -42,7 +42,7 @@
 ; /* TRANS: "Overview" topic in built-in help */
 name = _("?help:Overview")
 text = _("\
-Freeciv is a turn-based strategy game, in which each player becomes \
+Freeciv21 is a turn-based strategy game, in which each player becomes \
 the leader of a civilization. You compete against several opponents to \
 found cities, use them to support a military and economy, and finally \
 to complete an empire that survives all encounters with its neighbors \
@@ -71,7 +71,7 @@ end after 5000 turns if no spacecraft have yet been launched. The \
 surviving civilizations are then rated, and the one with the highest \
 score is the winner.\
 "), _("\
-A word of warning: Freeciv is highly customizable, both through \
+A word of warning: Freeciv21 is highly customizable, both through \
 run-time configuration and through custom rulesets which can change \
 almost any aspect of the game rules. This help system tries to adapt \
 to different rules, but may not completely cover rulesets which are \
@@ -277,11 +277,11 @@ Diplomatic units are very useful here, and WILL pay off later.\
     These basic concepts will allow you to play the game pretty \
 well, especially in the beginning of the game.  But to improve, \
 you need to study the various units and advances, and PRACTICE, \
-PRACTICE, PRACTICE!  Freeciv has many twists, so if you haven't \
-played a similar game before, try consulting the Freeciv WWW \
+PRACTICE, PRACTICE!  Freeciv21 has many twists, so if you haven't \
+played a similar game before, try consulting the Freeciv21 WWW \
 pages at:\
 "), "\
-  http://www.freeciv.org/\
+  https://longturn.readthedocs.io/\
 ", _("\
 You'll find more tips for playing, and details of how to contact \
 other players.\
@@ -782,7 +782,7 @@ generate = "  Specialists"
 name = _(" Happiness")
 text = _("\
 Keeping your citizens happy (or at least content) is one of the most \
-important objectives in Freeciv. When your citizens become unhappy, \
+important objectives in Freeciv21. When your citizens become unhappy, \
 your cities will fall into disorder, which disrupts production; but \
 when your citizens are happy, your cities will celebrate, and your \
 production will increase greatly. (If migration is enabled, happiness \
@@ -1844,7 +1844,7 @@ But beware! If you use the governor for some of your cities, you will \
 encounter some difficulties with managing cities nearby, by hand. \
 It's best to manage all cities on an island either by hand or by \
 governor. Read more hints, some background information, and some \
-preset examples in the file README.governor, included with Freeciv.\
+preset examples in the file README.governor, included with Freeciv21.\
 ")
 
 [help_chatline]
@@ -1992,25 +1992,10 @@ from the City Overview window.\
 [help_languages]
 name = _("Languages")
 text = _("\
-Freeciv supports several local languages.  See the Native \
+Freeciv21 supports several local languages.  See the Native \
 Language Support section of the README file for instructions \
 on how to use one of these languages.\
-\n\n\
-First, check whether a localization is already in progress \
-for your language:\
-"), "\
-  http://www.freeciv.org/wiki/Translations\
-", _("\
-If you would like to add a localization (translation) for your \
-language, please see the instructions at:\
-"), "\
-  http://www.freeciv.org/wiki/Localization\
-", _("\
-You are also welcome to send any questions to the translation \
-mailing list:\
-"), "\
-  freeciv-i18n@freelists.org\
-"
+")
 
 [help_copying]
 
@@ -2022,7 +2007,7 @@ mailing list:\
 
 name = _("Copying")
 text = _("\
-Freeciv is released under the GNU General Public License (version 3 \
+Freeciv21 is released under the GNU General Public License (version 3 \
 or, at your option, any later version).  In short, you may copy this \
 program (including source) freely, but see the full license text \
 below for full details.\
@@ -2573,37 +2558,36 @@ of liability accompanies a copy of the Program in return for a fee.\
 END OF TERMS AND CONDITIONS\n"
 
 [help_about]
-name = _("About Freeciv")
+name = _("About Freeciv21")
 text = "\
-$FreecivVersion\
+$Freeciv21Version\
 ",
 ; /* TRANS: followed by a URL */
 _("\
 If you find any bugs, then please send us a bug report.  This is \
-best done by visiting the Freeciv Bug Tracking System, at:\
+best done by visiting the Freeciv21 Bug Tracking System, at:\
 "), "\
-  https://www.hostedredmine.com/projects/freeciv\
+  https://github.com/longturn/freeciv21/issues\
 ", _("\
 Please quote the above version information. \
 For more information about submitting bug reports see the file BUGS \
-in the Freeciv distribution.\
+in the Freeciv21 distribution.\
 "), _("\
 To contact the developers about anything else, contact them on discord:\
 "), _("\
   https://discord.gg/98krqGm\
 "), _("\
-  Original authors:\n\
-    (they are no longer involved, please don't mail them!)\
+  Original authors:\
 "), "\
-    Allan Ove Kjeldbjerg - allan@daimi.aau.dk\n\
-    Claus Leth Gregersen - leth@daimi.aau.dk\n\
-    Peter Joachim Unold  - pjunold@daimi.aau.dk\
+    Allan Ove Kjeldbjerg\n\
+    Claus Leth Gregersen\n\
+    Peter Joachim Unold\
 ", _("\
   Present administrators: \
 "), "\
-    Open for your application\
+    Longturn developers\
 ", _("\
-For more information in general, visit the Freeciv website, at:\
+For more information in general, visit the Longturn documentation website, at:\
 "), "\
-  http://www.freeciv.org/\
+  https://longturn.readthedocs.io/\
 "
