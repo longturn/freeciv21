@@ -35,7 +35,7 @@ sudo apt install git cmake ninja-build g++ python3 gettext qt5-default \
   libkf5archive-dev liblua5.3-dev libsqlite3-dev libsdl2-mixer-dev
 ```
 
-### Get the code
+#### Get the code
 
 Use this command the first time you download Freeciv21:
 ```sh
