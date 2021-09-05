@@ -852,7 +852,7 @@ static QString get_token_value(struct inputfile *inf)
       break;
     }
 
-    inf->partial += start;
+    inf->partial += QString(start);
 
     if (!read_a_line(inf)) {
       // shouldn't happen
