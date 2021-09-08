@@ -52,7 +52,8 @@ SQLite
     http://www.sqlite.org/
 
 GNU Gettext
-    GNU Gettext is used for Internationalization support. Freeciv21 requires version 0.15 or better. The :file:`xgettext` program is required to create the :literal:`*.gmo` files which aren't
+    GNU Gettext is used for Internationalization support. Freeciv21 requires version 0.15 or better. The
+    :file:`xgettext` program is required to create the :literal:`*.gmo` files which aren't
     included in the git tree.
 
     https://www.gnu.org/software/gettext/
@@ -85,8 +86,8 @@ C++ compiler.
     has been used as well as tests against LLVM's compiler (:file:`clang++`)
 
 QT Libraries
-    Freeciv21 uses the Qt libraries, specifically :file:`Qt5Core`, :file:`Qt5Gui`, and :file:`Qt5Widgets`
-    libraries and headers.
+    Freeciv21 uses the Qt libraries, specifically :file:`Qt5Core`, :file:`Qt5Gui`, :file:`Qt5Network`,
+    :file:`Qt5Svg`, and :file:`Qt5Widgets` libraries and headers.
 
     At least version 5.11 is required.
 
