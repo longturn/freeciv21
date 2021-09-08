@@ -1,0 +1,215 @@
+Freeciv21 Third-Party Dependencies
+==================================
+
+GNU GCC C and C++ Compiler
+  Website: https://www.gnu.org/software/gcc/
+  License: GPL3
+  Key Files:
+    gcc (C Compiler)
+    g++ (C++ Compiler)
+    libgcc_s_seh-1 (Standard Exception Handling Library)
+    libstdc++-6 (Standard C Library)
+    libssp-0 (Stack Smashing Protection Library)
+    libwinpthread-1 (Windows Threading Library)
+
+Qt GUI Framework
+  Website: https://www.qt.io/
+  License: https://doc.qt.io/qt-5/licenses-used-in-qt.html
+  Key Files:
+    Qt5Core (Qt5:Core Library)
+    Qt5Gui (Qt5:Gui Library)
+    Qt5Network (Qt5:Network Library)
+    Qt5Svg (Qt5:Svg Library)
+    Qt5Widgets (Qt5:Widgets Library)
+    platforms\qwindows.dll (Qt5 Windows Platform Library)
+
+Cmake
+  Website: https://www.kitware.com/platforms/#cmake
+  License: BSD-3 Clause
+  Key Files:
+    cmake
+
+Ninja Build System
+  Website: https://ninja-build.org/
+  License: Apache License 2.0
+  Key Files:
+    ninja
+
+GNU Libtool i18n Utility
+  Website: https://www.gnu.org/software/libtool/
+  License: GPL3
+  Key Files:
+    libtool
+    libtoolize
+
+SQLite Database Library
+  Website: https://www.sqlite.org
+  License: Public Domain - https://www.sqlite.org/copyright.html
+  Key Files:
+    libsqlite3-0
+
+GNU Gettext i18n Library
+  Website: https://www.gnu.org/software/gettext/
+  License: GPL3
+  Key Files:
+    libintl-8
+
+Lua 5 Scripting Core Library
+  Website: http://www.lua.org
+  License: MIT
+  Key Files:
+    lua54
+
+KF5 Archive Library
+  Website: https://invent.kde.org/frameworks/karchive
+  License: BSD-2 Clause, LGPL-2.0 Only, LGPL-2.0 or Later, LGPL-3.0 Only, LicenseRef-KDE-Accepted-LGPL
+  Key Files:
+    libkf5archive
+
+SDL2 Sound Mixer Library
+  Website: https://www.libsdl.org
+  License: ZLIB
+  Key Files:
+    sdl2
+    sdl2_mixer
+
+Python 3 Interpreter
+  Website: https://www.python.org
+  License: PSF
+  Key Files:
+    python
+
+Brotli Compression Library
+  Website: https://github.com/google/brotli
+  License: MIT
+  Key Files:
+    libbrotlicommon
+    libbrotlidec
+
+BZ2 Compression Library
+  Website: https://sourceforge.net/projects/bzip2/
+  License: BZ2
+  Key Files:
+    libbz2-1
+
+Open SSL Library
+  Website: https://www.openssl.org/
+  License: OPENSSL
+  Key Files:
+    libcrypto-1_1-x64 (Cryptographic Library)
+    libssl-1_1-x64 (Secure Sockets Layer Library)
+
+Double Math Conversion Library
+  Website: https://github.com/google/double-conversion
+  License: BSD-3 Clause
+  Key Files:
+    libdouble-conversion
+
+Free Lossless Audio Codec (FLAC) Library
+  Website: https://flac.sourceforge.io/
+  License: GPL3
+  Key Files:
+    libflac-8
+
+Font Rendering Library
+  Website: https://www.freetype.org/
+  License: FREETYPE, GPL2
+  Key Files:
+    libfreetype-6
+
+GTK3 Graphic Library
+  Website: https://www.gtk.org/
+  License: LGPL-2.0 Only
+  Key Files:
+    libglib-2.0-0
+
+Smart i18n Font Library
+  Website: https://github.com/silnrsi/graphite
+  License: LGPL-2.0 or Later
+  Key Files:
+    libgraphite2
+
+HarfBuzz Text Shaping Engine Library
+  Website: https://github.com/harfbuzz/harfbuzz
+  License: MIT
+  Key Files:
+    libharfbuzz-0
+
+GNU i18n Library
+  Website: https://www.gnu.org/software/libiconv/
+  License: LGPL-2.0 Only, GPL3
+  Key Files:
+    libiconv-2
+
+Unicode i18n Library
+  Website: https://icu.unicode.org/
+  License: UNICODE
+  Key Files:
+    libicudt
+    libicuin
+    libicuuc
+
+XZ/LZMA Compression Library
+  Website: https://tukaani.org/xz/
+  License: Public Domain, LGPL-2.0 or Later
+  Key Files:
+    liblzma-5
+
+MPEG Audio Player Library
+  Website: https://www.mpg123.com/
+  License: LGPL-2.0 or Later
+  Key Files:
+    libmpg123-0
+
+OGG Audio Player Library
+  Website: https://xiph.org/
+  License: BSD
+  Key Files:
+    libogg-0
+    libvorbis-0
+    libvorbisfile-3
+
+Opus Interactive Audio Codec Library
+  Website: https://www.opus-codec.org/
+  License: BSD
+  Key Files:
+    libopus-0
+    libopusfile-0
+
+PERL Compatible Regular Expressions Library
+  Website: https://pcre.org/
+  Library: BSD
+  Key Files:
+    libpcre-1
+    libpcre2-16-0
+
+PNG Graphics File Library
+  Website: http://www.libpng.org/pub/png/libpng.html
+  License: PNG
+  Key Files:
+    libpng16-16
+
+Command Line Editing Library
+  Website: https://cnswww.cns.cwru.edu/php/chet/readline/rltop.html
+  License: GPL3
+  Key Files:
+    libreadline8
+
+GNU Terminal Feature Database Library
+  Website: https://www.gnu.org/software/termutils/
+  License:
+  Key Files:
+    libtermcap-0
+
+Z-Standard Compression Library
+  Website: https://facebook.github.io/zstd/
+  License: BSD
+  Key Files:
+    libzstd
+
+Zip Compression Library
+  Website: https://www.zlib.net/
+  License: ZLIB
+  Key Files:
+    zlib1
+

@@ -1,0 +1,7 @@
+Magickwand Library License
+==========================
+
+Magickwand is made by Image Magick, a non-profit company. They use thier own license. Refer to similarly
+named file for the full text. Alternately you can go to the ImageMagick license page at:
+
+  http://www.imagemagick.org/script/license.php
