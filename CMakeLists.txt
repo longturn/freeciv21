@@ -120,6 +120,31 @@ if(WIN32 OR MSYS OR MINGW)
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 
+  # Add Licenses
+  install(
+    FILES
+    dist/licenses/0-MSYS2-INDEX.txt
+    dist/licenses/APACHE-2.txt
+    dist/licenses/BSD-2-CLAUSE.txt
+    dist/licenses/BSD-3-CLAUSE.txt
+    dist/licenses/BZ2.txt
+    dist/licenses/FTL.txt
+    dist/licenses/GPL2.txt
+    dist/licenses/GPL3.txt
+    dist/licenses/IMAGEMAGICK.txt
+    dist/licenses/LGPL-2.0-ONLY.txt
+    dist/licenses/LGPL-2.0-OR-LATER.txt
+    dist/licenses/LGPL-3.0-ONLY.txt
+    dist/licenses/LICENSEREF-KDE-ACCEPTED-LGPL.txt
+    dist/licenses/MAGICKWAND.txt
+    dist/licenses/MIT.txt
+    dist/licenses/OPENSSL.txt
+    dist/licenses/PNG.txt
+    dist/licenses/UNICODE.txt
+    dist/licenses/ZLIB.txt
+    DESTINATION ${CMAKE_INSTALL_DOCDIR}/licenses
+    COMPONENT freeciv21)
+
   # Install the ca-bundle for the modpack installer
   install(
     FILES
