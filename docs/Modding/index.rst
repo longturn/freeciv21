@@ -7,13 +7,8 @@ Modding
   large amount of varyability in game play that is not hardcoded in the software. This is one of the
   strengths of Freeciv21.
 
-There are five major areas of Modding that are often called "Modpacks" and are written by "Modders".
-
-#. Rulesets
-#. Tilesets
-#. Soundsets
-#. Musicsets
-#. Scenarios
+There are five major areas of Modding that are often called "Modpacks" and are written by "Modders". The
+sections below describe these major Modding areas.
 
 All of the Modpacks are written in plain text files, except for Scenarios. The plain text files resemble
 :literal:`ini` files in format and are known as :literal:`spec` files to Freeciv21. Scenarios are specially
@@ -26,20 +21,26 @@ Rulesets
 Rulesets are a collection of :literal:`spec` files that fully define a game's rules. Rulesets are broken down
 into 12 files. The :literal:`spec` files for rulesets are defined as follows:
 
-- game.serv
-- game/buildings.ruleset
-- game/cities.ruleset
-- game/effects.ruleset
-- game/game.ruleset
-- game/governments.ruleset
-- game/nations.ruleset
-- game/script.lua
-- game/styles.ruleset
-- game/techs.ruleset
-- game/terrain.ruleset
-- game/units.ruleset
+- :literal:`game.serv`
+- :literal:`game/buildings.ruleset`
+- :literal:`game/cities.ruleset`
+- :literal:`game/effects.ruleset`
+- :literal:`game/game.ruleset`
+- :literal:`game/governments.ruleset`
+- :literal:`game/nations.ruleset`
+- :literal:`game/script.lua`
+- :literal:`game/styles.ruleset`
+- :literal:`game/techs.ruleset`
+- :literal:`game/terrain.ruleset`
+- :literal:`game/units.ruleset`
 
 Have a look at :file:`civ2civ3.serv` and associated files in :file:`/civ2civ3` for an example.
+
+Refer to Ruleset specific documents:
+
+.. toctree::
+  Rulesets/index.rst
+  :maxdepth: 1
 
 Tilesets
 ========
@@ -82,9 +83,13 @@ a map of the scenario and enable/change varying aspects of the game to set up th
 
 Have a look at the scenarios shipped with Freeciv21 in :file:`/scenarios` for some examples.
 
+Installer
+=========
+
+Refer to a document on how to serve your own modpack set. If you are interested in how to use the modpack
+installer, refer to :doc:`../General/modpack-installer`
 
 .. toctree::
   modpack-installer.rst
-  Rulesets/index.rst
   :maxdepth: 1
 
