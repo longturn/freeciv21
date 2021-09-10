@@ -50,6 +50,7 @@
 #include "page_scenario.h"
 #include "sidebar.h"
 #include "sprite.h"
+#include "tileset_debugger.h"
 #include "voteinfo_bar.h"
 
 fcFont *fcFont::m_instance = 0;
@@ -255,6 +256,11 @@ void fc_client::switch_page(int new_pg)
     }
     set_client_page(PAGE_MAIN);
     break;
+  }
+
+  // Maybe popdown the tileset debugger
+  if (page != PAGE_GAME) {
+    queen()->mapview_wdg->hide_debugger();
   }
 }
 

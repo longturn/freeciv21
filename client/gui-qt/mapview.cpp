@@ -197,6 +197,30 @@ void map_view::show_all_fcwidgets()
 }
 
 /**
+ * Ppens the tileset debugger.
+ */
+void map_view::show_debugger()
+{
+  if (!m_debugger) {
+    // We never destroy it once it's created.
+    m_debugger = new freeciv::tileset_debugger(this);
+  }
+
+  m_debugger->show();
+}
+
+/**
+ * Closes the tileset debugger if it is open.
+ */
+void map_view::hide_debugger()
+{
+  if (m_debugger) {
+    m_debugger->set_tile(nullptr);
+    m_debugger->close();
+  }
+}
+
+/**
    Timer for cursor
  */
 void map_view::timer_event()
