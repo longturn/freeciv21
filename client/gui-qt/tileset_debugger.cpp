@@ -67,7 +67,7 @@ void tileset_debugger::set_tile(const ::tile *t)
 
   // Update the GUI
   if (!t) {
-    m_label->setText(_("No tile selected"));
+    m_label->setText(_("Select a tile to start debugging."));
     return;
   }
 
