@@ -13,6 +13,7 @@
 #include <QMainWindow>
 #include <QPixmapCache>
 #include <QStackedWidget>
+
 // common
 #include "packets.h"
 // client
@@ -35,6 +36,10 @@ class QStatusBar;
 class QTimerEvent;
 class choice_dialog;
 struct server_scan;
+
+namespace freeciv {
+class tileset_debugger;
+}
 
 enum connection_state {
   LOGIN_TYPE,

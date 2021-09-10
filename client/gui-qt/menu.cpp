@@ -599,6 +599,9 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::shortcut_options);
   act = menu->addAction(_("Load another tileset"));
   connect(act, &QAction::triggered, this, &mr_menu::tileset_custom_load);
+  act = menu->addAction(_("Tileset debugger"));
+  connect(act, &QAction::triggered, queen()->mapview_wdg,
+          &map_view::show_debugger);
   act = menu->addAction(_("Save Options Now"));
   act->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
   connect(act, &QAction::triggered, this, &mr_menu::save_options_now);

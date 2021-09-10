@@ -12,9 +12,14 @@
 // Qt
 #include <QFrame>
 #include <QLabel>
+#include <QPointer>
 #include <QQueue>
 #include <QThread>
 #include <QTimer>
+
+// gui-qt
+#include "tileset_debugger.h"
+
 // common
 #include "tilespec.h"
 
@@ -54,6 +59,10 @@ public:
 
   bool menu_click;
 
+public slots:
+  void show_debugger();
+  void hide_debugger();
+
 protected:
   void paintEvent(QPaintEvent *event) override;
   void keyPressEvent(QKeyEvent *event) override;
@@ -71,6 +80,7 @@ private:
   bool stored_autocenter;
   int cursor_frame{0};
   int cursor;
+  QPointer<freeciv::tileset_debugger> m_debugger = nullptr;
   std::vector<fcwidget *> m_hidden_fcwidgets;
 };
 
