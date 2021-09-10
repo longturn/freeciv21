@@ -1,7 +1,7 @@
 Effects
 *******
 
-The ``effects.ruleset`` file contains all effects in play in a Freeciv21 ruleset. They have the following 
+The ``effects.ruleset`` file contains all effects in play in a Freeciv21 ruleset. They have the following
 form (this is perhaps the most complicated example I could find):
 
 .. code-block:: rst
@@ -18,29 +18,29 @@ form (this is perhaps the most complicated example I could find):
           "Building", "Nuclear Plant", "City", FALSE, FALSE
         }
 
-The text in the brackets is the entry name, which just has to be unique, but is otherwise not used. The 
-``type`` field tells Freeciv21 which effect you are defining.  The ``value`` is the effect's value, which 
-depends on which effect it is. The ``reqs`` table contain a list of requirements for this effect being in 
-effect. You need to satisfy all requirements listed here for this effect to take effect in the game. 
+The text in the brackets is the entry name, which just has to be unique, but is otherwise not used. The
+``type`` field tells Freeciv21 which effect you are defining.  The ``value`` is the effect's value, which
+depends on which effect it is. The ``reqs`` table contain a list of requirements for this effect being in
+effect. You need to satisfy all requirements listed here for this effect to take effect in the game.
 Requirements with ``present = TRUE`` must be present, those with ``present = FALSE`` must not be present.
 
 Value is integral amount parameter for many effects (must be in the range -32767 to 32767).
 
-Requirement range may be one of: ``None``, ``Local``, ``CAdjacent`` (Cardinally Adjacent), ``Adjacent``, 
-``City``, ``Continent``, ``Player``, ``Allied``, ``World``. Some requirement types may only work at certain 
-ranges; this is described below. In particular, at present, ``Continent`` effects can affect only cities and 
+Requirement range may be one of: ``None``, ``Local``, ``CAdjacent`` (Cardinally Adjacent), ``Adjacent``,
+``City``, ``Continent``, ``Player``, ``Allied``, ``World``. Some requirement types may only work at certain
+ranges; this is described below. In particular, at present, ``Continent`` effects can affect only cities and
 units in cities.
 
-A requirement may have a ``survives`` field, and if this ``TRUE``, the effect survives destruction. This is 
-supported for only a few conditions and ranges: wonders (at world or player range), nations, and advances 
+A requirement may have a ``survives`` field, and if this ``TRUE``, the effect survives destruction. This is
+supported for only a few conditions and ranges: wonders (at world or player range), nations, and advances
 (both at world range only).
 
-A requirement may have a ``present`` field, and if this is ``FALSE``, the requirement is negated (the 
+A requirement may have a ``present`` field, and if this is ``FALSE``, the requirement is negated (the
 condition must not be true for the req to be met).
 
-A requirement may have a ``quiet`` field, and if this is ``TRUE``, the help system does not try to 
-autogenerate text about that requirement. This can be used if the help system's text is unclear or 
-misleading, or if you want to describe the requirement in your own words. The ``quiet`` field has no effect 
+A requirement may have a ``quiet`` field, and if this is ``TRUE``, the help system does not try to
+autogenerate text about that requirement. This can be used if the help system's text is unclear or
+misleading, or if you want to describe the requirement in your own words. The ``quiet`` field has no effect
 on the game rules.
 
 
@@ -106,15 +106,15 @@ Requirement          Supported ranges
 * CityStatus is "OwnedByOriginal"
 * DiplRel is a diplomatic relationship.
 * MaxUnitsOnTile is about the number of units present on a tile.
-* UnitState is "Transported", "Transporting", "OnNativeTile", "OnLivableTile", "InNativeExtra", 
+* UnitState is "Transported", "Transporting", "OnNativeTile", "OnLivableTile", "InNativeExtra",
   "OnDomesticTile", "MovedThisTurn" or "HasHomeCity".
-* Activity is "Idle", "Pollution", "Mine", "Irrigate", "Fortified", "Fortress", "Sentry", "Pillage", 
+* Activity is "Idle", "Pollution", "Mine", "Irrigate", "Fortified", "Fortress", "Sentry", "Pillage",
   "Goto", "Explore", "Transform", "Fortifying", "Fallout", "Base", "Road", "Convert", "Cultivate", or "Plant".
 * MinMoveFrags is the minimum move fragments the unit must have left.
-* MinCalFrag is the minimum sub-year division the calendar must have reached, if enabled (see 
+* MinCalFrag is the minimum sub-year division the calendar must have reached, if enabled (see
   [calendar].fragments in game.ruleset).
 * Nationality is fulfilled by any citizens of the given nationality present in the city.
-* ServerSetting is if a Boolean server setting is enabled. The setting must be visible to all players and 
+* ServerSetting is if a Boolean server setting is enabled. The setting must be visible to all players and
   affect the game rules.
 
 Details about requirement types
@@ -123,28 +123,28 @@ Details about requirement types
 The DiplRel requirement type
 ----------------------------
 
-Look for the diplomatic relationship "Never met", "War", "Cease-fire", "Armistice", "Peace", "Alliance", 
-"Team", "Gives shared vision", "Receives shared vision", "Hosts embassy", "Has embassy", "Hosts real 
-embassy" (not from an effect), "Has real embassy", "Has Casus Belli" (reason for war), "Provided Casus 
+Look for the diplomatic relationship "Never met", "War", "Cease-fire", "Armistice", "Peace", "Alliance",
+"Team", "Gives shared vision", "Receives shared vision", "Hosts embassy", "Has embassy", "Hosts real
+embassy" (not from an effect), "Has real embassy", "Has Casus Belli" (reason for war), "Provided Casus
 Belli" or "Is foreign".
 
 A DiplRel is considered fulfilled for the range:
 
 * world if some player in the world has the specified diplomatic relationship to some other living player.
 * player if the player has the specified diplomatic relationship to some other living player.
-* local if the first player has the specified relationship to the second player. Example: When testing a 
-  build requirement for an extra the first player is the owner of the unit and the second player the owner 
+* local if the first player has the specified relationship to the second player. Example: When testing a
+  build requirement for an extra the first player is the owner of the unit and the second player the owner
   of the terrain the extra is built on.
 
-Only the exact relationship required fulfills it. Example: An alliance or an armistice agreement won't 
+Only the exact relationship required fulfills it. Example: An alliance or an armistice agreement won't
 fulfill a "Peace" requirement.
 
-It is possible to create a requirement that in some situations won't have a player to check. In those cases 
-the requirement will always be considered unfulfilled. This applies to both present and not present 
-requirements. The ranges Alliance, Team, Player and Local needs a player. The Local range also needs the 
+It is possible to create a requirement that in some situations won't have a player to check. In those cases
+the requirement will always be considered unfulfilled. This applies to both present and not present
+requirements. The ranges Alliance, Team, Player and Local needs a player. The Local range also needs the
 player the first player's relationship is to.
 
-Example: The requirements below are about the relationship to the owner of a tile. The table shows in what 
+Example: The requirements below are about the relationship to the owner of a tile. The table shows in what
 situations a requirement is fulfilled.
 
 +---------------------------------------------+----------+-----------+---------+
@@ -160,10 +160,10 @@ situations a requirement is fulfilled.
 The MaxUnitsOnTile requirement type
 -----------------------------------
 
-Check the number of units present on a tile. Is true if no more than the specified number of units are 
+Check the number of units present on a tile. Is true if no more than the specified number of units are
 present on a single tile.
 
-.. tip:: By using negation ("not present") it is possible to check if a tile has more than the given numbers. 
+.. tip:: By using negation ("not present") it is possible to check if a tile has more than the given numbers.
     It is possible to combine a negated and a non negated requirement to specify a range.
 
 The UnitState requirement type
@@ -176,7 +176,7 @@ Transporting
     is fulfilled if the unit is transporting another unit.
 
 OnNativeTile
-    is fulfilled if the unit is on a tile with native terrain or with a native Extra. Doesn't care about 
+    is fulfilled if the unit is on a tile with native terrain or with a native Extra. Doesn't care about
     details like cities and safe tiles.
 
 OnLivableTile
@@ -198,14 +198,14 @@ Effect types
 ------------
 
 Tech_Parasite
-    Gain any advance known already by amount number of other teams, if team_pooled_research is enabled, 
-    or amount number of other players otherwise. 
+    Gain any advance known already by amount number of other teams, if team_pooled_research is enabled,
+    or amount number of other players otherwise.
 
-.. note:: If you have two such effects, they combine into one much worse effect (the number of players 
+.. note:: If you have two such effects, they combine into one much worse effect (the number of players
     required to gain an advance is increased).
 
 Airlift
-    Allow airlift to/from a city. The value tells how many units per turn can be airlifted, unless server 
+    Allow airlift to/from a city. The value tells how many units per turn can be airlifted, unless server
     setting 'airlifttingstyle' sets the number unlimited for either source or destination city. If airlifts
     are set to unlimited, they are enabled by any positive value of this effect.
 
@@ -213,12 +213,12 @@ Any_Government
     Allow changing to any form of government regardless of tech prerequisites.
 
 Capital_City
-    The city with positive value is a capital city. Player's city with highest Capital_City value (or 
-    random among those with equal positive value) is the primary capital. Cities with lesser positive value 
+    The city with positive value is a capital city. Player's city with highest Capital_City value (or
+    random among those with equal positive value) is the primary capital. Cities with lesser positive value
     are secondary capitals.
 
 Gov_Center
-    The city with this effect is governmental center. Corruption and waste depends on distance to nearest 
+    The city with this effect is governmental center. Corruption and waste depends on distance to nearest
     such city.
 
 Enable_Nuke
@@ -246,7 +246,7 @@ Output_Per_Tile
     Increase tile output by amount percent.
 
 Output_Tile_Punish_Pct
-    Reduce the output of a tile by amount percent. The number of units to remove is rounded down. Applied 
+    Reduce the output of a tile by amount percent. The number of units to remove is rounded down. Applied
     after everything except a city center's minimal output.
 
 Output_Waste_Pct
@@ -262,7 +262,7 @@ Conquest_Tech_Pct
     Percent chance that a player conquering a city learns a tech from the former owner.
 
 Growth_Food
-    Food left after cities grow or shrink is amount percent of the capacity of he city's foodbox. This also 
+    Food left after cities grow or shrink is amount percent of the capacity of he city's foodbox. This also
     affects the 'aqueductloss' penalty.
 
 Have_Contact
@@ -272,8 +272,8 @@ Have_Embassies
     If value > 0, gives an embassy with all the other players owner has ever had contact with.
 
 Irrigation_Pct
-    The tile gets value % of its terrain's irrigation_food_incr bonus. 
-    
+    The tile gets value % of its terrain's irrigation_food_incr bonus.
+
 .. note:: This is how irrigation-like extras have an effect.
 
 Mining_Pct
@@ -306,11 +306,11 @@ Nuke_Proof
     City is nuke proof.
 
 Pollu_Pop_Pct
-    Increases pollution caused by each unit of population by amount percent (adds to baseline of 100%, 
+    Increases pollution caused by each unit of population by amount percent (adds to baseline of 100%,
     i.e. 1 pollution per citizen).
 
 Pollu_Pop_Pct_2
-    Increases pollution caused by each unit of population by amount percent (adds to baseline of 100%, 
+    Increases pollution caused by each unit of population by amount percent (adds to baseline of 100%,
     i.e. 1 pollution per citizen). This factor is applied after Pollu_Pop_Pct, so is multiplicative with it.
 
 Pollu_Prod_Pct
@@ -326,78 +326,78 @@ Reveal_Map
     Immediately make entire map known.
 
 Border_Vision
-    Give vision on all tiles within the player's borders. Happens during turn change. Does nothing unless the 
+    Give vision on all tiles within the player's borders. Happens during turn change. Does nothing unless the
     borders setting is set to "Enabled". You can lock it if border vision rules are important to your ruleset.
 
 Incite_Cost_Pct
     Increases revolt cost by amount percent.
 
 Unit_Bribe_Cost_Pct
-    Increases unit bribe cost by amount percent. Requirements are from the point of view of the target unit, 
+    Increases unit bribe cost by amount percent. Requirements are from the point of view of the target unit,
     not the briber.
 
 Max_Stolen_Gold_Pm
-    The upper limit on the permille of the players gold that may be stolen by a unit doing the "Steal Gold" 
+    The upper limit on the permille of the players gold that may be stolen by a unit doing the "Steal Gold"
     and the "Steal Gold Escape" actions. Evaluated against the city stolen from.
 
 Thiefs_Share_Pm
-    The permille of the gold stolen by a unit doing the "Steal Gold" and the "Steal Gold Escape" actions 
+    The permille of the gold stolen by a unit doing the "Steal Gold" and the "Steal Gold Escape" actions
     that is lost before it reaches the player ordering it. Evaluated against the actor unit.
 
 Maps_Stolen_Pct
     The probability (in percent) that the map of a tile is stolen in the actions "Steal Maps" and "Steal Maps
-    Escape". DiplRel reqs are unit owner to city owner. Requirements evaluated against tile or city not 
+    Escape". DiplRel reqs are unit owner to city owner. Requirements evaluated against tile or city not
     supported. Default value: 100%
 
 Illegal_Action_Move_Cost
-    The number of move fragments lost when the player tries to do an action that turns out to be illegal. 
-    Only applied when the player wasn't aware that the action was illegal and its illegality therefore 
+    The number of move fragments lost when the player tries to do an action that turns out to be illegal.
+    Only applied when the player wasn't aware that the action was illegal and its illegality therefore
     reveals new information.
 
 Illegal_Action_HP_Cost
-    The number of hit points lost when the player tries to do an action that turns out to be illegal. Only 
+    The number of hit points lost when the player tries to do an action that turns out to be illegal. Only
     applied when the player wasn't aware that the action was illegal and its illegality therefore reveals new
-    information. Can kill the unit. If the action always causes the actor unit to end up at the target tile 
-    two consolation prizes are given. An area with the radius of the actor unit's vision_radius_sq tiles is 
+    information. Can kill the unit. If the action always causes the actor unit to end up at the target tile
+    two consolation prizes are given. An area with the radius of the actor unit's vision_radius_sq tiles is
     revealed. The player may also get contact with the owners of units and cites adjacent to the target tile.
 
 Action_Success_Actor_Move_Cost
-    The number of move fragments lost when a unit successfully performs an action. Evaluated and done after 
+    The number of move fragments lost when a unit successfully performs an action. Evaluated and done after
     the action is successfully completed. Added on top of any movement fragments the action itself subtracts.
 
 Action_Success_Target_Move_Cost
-    The number of move fragments subtracted from a unit when someone successfully performs an action on it. 
+    The number of move fragments subtracted from a unit when someone successfully performs an action on it.
     Evaluated and done after the action is successfully completed. Added on top of any movement fragments the
-    action itself subtracts. Only supported for actions that targets an individual unit. 
+    action itself subtracts. Only supported for actions that targets an individual unit.
     (See doc/README.actions)
 
 Casus_Belli_Caught
-    Checked when a player is caught trying to do an action. Will cause an incident with the intended victim 
-    player if the value is 1 or higher. The incident gives the intended victim a casus belli against the 
+    Checked when a player is caught trying to do an action. Will cause an incident with the intended victim
+    player if the value is 1 or higher. The incident gives the intended victim a casus belli against the
     actor player. A value of 1000 or higher is international outrage. International outrage gives every other
     player a casus belli against the actor.
 
 Casus_Belli_Success
-    Checked when a player does an action to another player. Will cause an incident with the intended victim 
+    Checked when a player does an action to another player. Will cause an incident with the intended victim
     player if the value is 1 or higher. The incident gives the intended victim a casus belli against the actor
     player. A value of 1000 or higher is international outrage. International outrage gives every other player
     a casus belli against the actor.
 
 Casus_Belli_Complete
     Checked when a player completes an action that takes several turns against another player. Will cause an
-    incident with the intended victim player if the value is 1 or higher. The incident gives the intended 
-    victim a casus belli against the actor player. A value of 1000 or higher is international outrage. 
-    International outrage gives every other player a casus belli against the actor. Only "Pillage" is 
+    incident with the intended victim player if the value is 1 or higher. The incident gives the intended
+    victim a casus belli against the actor player. A value of 1000 or higher is international outrage.
+    International outrage gives every other player a casus belli against the actor. Only "Pillage" is
     currently supported.
 
 Action_Odds_Pct
-    Modifies the odds of an action being successful. Some actions have a  risk: the actor may get caught 
-    before he can perform it. This effect  modifies the actor's odds. A positive value helps him. A negative 
-    value  makes it more probable that he will get caught. Currently supports the  actions "Incite City", 
-    "Incite City Escape", "Steal Gold", "Steal Gold Escape", "Steal Maps", "Steal Maps Escape", "Suitcase 
-    Nuke",  "Suitcase Nuke Escape", "Sabotage City", "Sabotage City Escape", "Targeted Sabotage City", 
-    "Targeted Sabotage City Escape", "Sabotage City Production", "Sabotage City Production Escape",  
-    "Surgical Strike Building", "Surgical Strike Production", "Steal Tech", "Steal Tech Escape Expected", 
+    Modifies the odds of an action being successful. Some actions have a  risk: the actor may get caught
+    before he can perform it. This effect  modifies the actor's odds. A positive value helps him. A negative
+    value  makes it more probable that he will get caught. Currently supports the  actions "Incite City",
+    "Incite City Escape", "Steal Gold", "Steal Gold Escape", "Steal Maps", "Steal Maps Escape", "Suitcase
+    Nuke",  "Suitcase Nuke Escape", "Sabotage City", "Sabotage City Escape", "Targeted Sabotage City",
+    "Targeted Sabotage City Escape", "Sabotage City Production", "Sabotage City Production Escape",
+    "Surgical Strike Building", "Surgical Strike Production", "Steal Tech", "Steal Tech Escape Expected",
     "Targeted Steal Tech", "Targeted Steal Tech Escape Expected" and "Spread Plague".
 
 Size_Adj
@@ -407,30 +407,30 @@ Size_Unlimit
     Make the size of a city unlimited.
 
 Unit_Slots
-    Number of unit slots city can have units in. New units cannot be built, nor can homecity be changed so 
-    that maintained units would use more slots than this. Single unit does not necessarily use single slot - 
+    Number of unit slots city can have units in. New units cannot be built, nor can homecity be changed so
+    that maintained units would use more slots than this. Single unit does not necessarily use single slot -
     that's defined separately for each unit type.
 
 SS_Structural, SS_Component, SS_Module
-    A part of a spaceship; this is a "Local" ranged effect. It (for now) applies to improvements which 
-    cannot be built unless "Enable_Space" is felt. Buildings which have this effect should probably not be 
+    A part of a spaceship; this is a "Local" ranged effect. It (for now) applies to improvements which
+    cannot be built unless "Enable_Space" is felt. Buildings which have this effect should probably not be
     given any other effects.
 
 Spy_Resistant
-    In diplomatic combat defending diplomatic units will get an AMOUNT percent bonus. All Spy_Resistant's 
+    In diplomatic combat defending diplomatic units will get an AMOUNT percent bonus. All Spy_Resistant's
     are summed before being applied.
 
 Building_Saboteur_Resistant
     If a spy specifies a target for sabotage, then she has an AMOUNT percent chance to fail.
 
 Stealings_Ignore
-    When determining how difficult it is to steal a tech from enemy, AMOUNT previous times tech has been 
-    stolen from the city is ignored. Negative amount means that number of times tech has already been stolen 
-    from target city does not affect current attempt at all. With this effect it's possible to allow 
+    When determining how difficult it is to steal a tech from enemy, AMOUNT previous times tech has been
+    stolen from the city is ignored. Negative amount means that number of times tech has already been stolen
+    from target city does not affect current attempt at all. With this effect it's possible to allow
     diplomats to steal tech multiple times from the same city, or make it easier for spies.
 
 Move_Bonus
-    Add amount movement to units. Use UnitClass' requirement with range of 'Local' to give it a specific 
+    Add amount movement to units. Use UnitClass' requirement with range of 'Local' to give it a specific
     class of units only.
 
 Unit_No_Lose_Pop
@@ -446,21 +446,21 @@ Upkeep_Free
     Improvements with amount or less upkeep cost become free to upkeep (others are unaffected).
 
 Tech_Upkeep_Free
-    If this value is greater than 0, the tech upkeep is reduced by this value. For tech upkeep style 
+    If this value is greater than 0, the tech upkeep is reduced by this value. For tech upkeep style
     "Basic" this is total reduction, for tech upkeep style "Cities" this reduction is applied to every city.
 
 No_Unhappy
     No citizens in the city are ever unhappy.
 
 Veteran_Build
-    Increases the veteran class of newly created units of this type. The total amount determines the veteran 
+    Increases the veteran class of newly created units of this type. The total amount determines the veteran
     class (clipped at the maximum for the unit).
 
 Veteran_Combat
     Increases the chance of units of this type becoming veteran after combat by amount percent.
 
 Combat_Rounds
-    Maximum number of rounds combat lasts. Unit is the attacker. Zero and negative values mean that combat 
+    Maximum number of rounds combat lasts. Unit is the attacker. Zero and negative values mean that combat
     continues until either side dies.
 
 HP_Regen
@@ -473,14 +473,14 @@ Unit_Vision_Radius_Sq
     Increase unit vision radius in squared distance by amount tiles.
 
 Defend_Bonus
-    Increases defensive bonuses of units. Any unit requirements on this effect will be applied to the 
+    Increases defensive bonuses of units. Any unit requirements on this effect will be applied to the
     _attacking_ unit. Attackers with "BadWallAttacker" flag will have their firepower set to 1.
 
 Attack_Bonus
     Increases offensive bonuses of units. Unit requirements on this effect are the attacking unit itself.
 
 Fortify_Defense_Bonus
-    Percentage defense bonus multiplicative with Defend_Bonus, usually given to fortified units. Unit 
+    Percentage defense bonus multiplicative with Defend_Bonus, usually given to fortified units. Unit
     requirements on this effect are the defending unit itself.
 
 Gain_AI_Love
@@ -493,26 +493,26 @@ Turn_Fragments
     Year fragments advance by AMOUNT each turn.
 
 Slow_Down_Timeline
-    Slow down the timeline based on the AMOUNT. If AMOUNT >= 3 the timeline will be max 1 year/turn; with 
-    AMOUNT == 2 it is max 2 years/turn; with AMOUNT == 1 it is max 5 years/turn; with AMOUNT <= 0 the 
+    Slow down the timeline based on the AMOUNT. If AMOUNT >= 3 the timeline will be max 1 year/turn; with
+    AMOUNT == 2 it is max 2 years/turn; with AMOUNT == 1 it is max 5 years/turn; with AMOUNT <= 0 the
     timeline is unaffected. The effect will be ignored if game.spacerace isn't set.
 
 Civil_War_Chance
-    Base chance in per cent of a nation being split by civil war when its capital is captured is increased 
-    by this amount. This percentage is in- creased by 5 for each city in civil disorder and reduced by 5 for 
+    Base chance in per cent of a nation being split by civil war when its capital is captured is increased
+    by this amount. This percentage is in- creased by 5 for each city in civil disorder and reduced by 5 for
     each one celebrating.
 
 City_Unhappy_Size
-    The maximum number of citizens in each city that are naturally content; in larger cities, new citizens 
+    The maximum number of citizens in each city that are naturally content; in larger cities, new citizens
     above this limit start out unhappy. (Before Empire_Size_Base/Step are applied.)
 
 Empire_Size_Base
-    Once your civilization has more cities than the value of this effect, each city gets one more unhappy 
+    Once your civilization has more cities than the value of this effect, each city gets one more unhappy
     citizen. If the sum of this effect and Empire_Size_Step is zero, there is no such penalty.
 
 Empire_Size_Step
-    After your civilization reaches Empire_Size_Base size, it gets one more unhappy citizen for each amount 
-    of cities it gets above that. Set to zero to disable. You can use Empire_Size_Step even if 
+    After your civilization reaches Empire_Size_Base size, it gets one more unhappy citizen for each amount
+    of cities it gets above that. Set to zero to disable. You can use Empire_Size_Step even if
     Empire_Size_Base is zero.
 
 Max_Rates
@@ -528,7 +528,7 @@ Rapture_Grow
     Can rapture grow cities.
 
 Revolution_Unhappiness
-    If value is greater than zero, it tells how many turns citizens will tolerate city disorder before 
+    If value is greater than zero, it tells how many turns citizens will tolerate city disorder before
     government falls. If value is zero, government never falls.
 
 Has_Senate
@@ -541,9 +541,9 @@ Happiness_To_Gold
     Make all Make_Content and Force_Content effects instead generate gold.
 
 Max_Trade_Routes
-    Number of trade routes that city can establish. This is forced on trade route creation only. Existing 
-trade routes are never removed due to reduction of effect value. This is to avoid micro-management, need 
-to create same trade routes again after their max number has been temporarily down.
+    Number of trade routes that city can establish. This is forced on trade route creation only. Existing
+    trade routes are never removed due to reduction of effect value. This is to avoid micro-management, need
+    to create same trade routes again after their max number has been temporarily down.
 
 Fanatics
     Units with "Fanatics" flag incur no upkeep.
@@ -555,11 +555,11 @@ Not_Tech_Source
     Tech cannot be received from this player by any means.
 
 Trade_Revenue_Bonus
-    One time trade revenue bonus is multiplied by pow(2, amount/1000). The amount value is taken from the 
+    One time trade revenue bonus is multiplied by pow(2, amount/1000). The amount value is taken from the
     caravan's home city.
 
 Traderoute_Pct
-    Percentage bonus for trade from traderoutes. This bonus applies after the value of the traderoute is 
+    Percentage bonus for trade from traderoutes. This bonus applies after the value of the traderoute is
     already calculated. It affects one end of the traderoute only.
 
 Unhappy_Factor
@@ -591,16 +591,16 @@ Output_Inc_Tile_Celebrate
     Tiles get amount extra output when city working them is celebrating.
 
 Upgrade_Price_Pct
-    Increases unit upgrade cost by amount percent. This effect works at player level. You cannot adjust 
+    Increases unit upgrade cost by amount percent. This effect works at player level. You cannot adjust
     upgrade costs for certain unit type or for units upgraded in certain city.
 
 Unit_Shield_Value_Pct
-    Increase the unit's value in shields by amount percent. When this effect is used to determine how many 
-    shields the player gets for the actions "Recycle Unit" and "Help Wonder" it gets access to unit state. 
+    Increase the unit's value in shields by amount percent. When this effect is used to determine how many
+    shields the player gets for the actions "Recycle Unit" and "Help Wonder" it gets access to unit state.
     When it is used to influence the gold cost of "Upgrade Unit" it only has access to unit type.
 
 Retire_Pct
-    The chance that unit gets retired (removed) when turn changes. Retirement only happens if there are no 
+    The chance that unit gets retired (removed) when turn changes. Retirement only happens if there are no
     enemy units or cities within a few tiles. (This exists mainly to implement barbarian behavior.)
 
 Visible_Wall
@@ -623,8 +623,8 @@ Unit_Buy_Cost_Pct
     Percentage added to unit buy cost.
 
 Shield2Gold_Factor
-    Factor in percent for the conversion of unit shield upkeep to gold upkeep. A value of 200 would transfer 
-    1 shield upkeep to 2 gold upkeep. The range of this effect must be player or world. Note that only units 
+    Factor in percent for the conversion of unit shield upkeep to gold upkeep. A value of 200 would transfer
+    1 shield upkeep to 2 gold upkeep. The range of this effect must be player or world. Note that only units
     with the "Shield2Gold" flag will be affected by this.
 
 Tile_Workable
@@ -634,11 +634,11 @@ Migration_Pct
     Increase the calculated migration score for the a city by amount in percent.
 
 City_Radius_Sq
-    Increase the squared city radius by amount. Currently, this can only usefully have "MinSize", "Building", 
+    Increase the squared city radius by amount. Currently, this can only usefully have "MinSize", "Building",
     or "Tech" requirements.
 
 City_Build_Slots
-    Increase the number of units with no population cost a city can build in a turn if there are enough 
+    Increase the number of units with no population cost a city can build in a turn if there are enough
     shields.
 
 City_Image
@@ -660,5 +660,5 @@ National_History
     Value is how much history type (cumulative) culture, not tied to any any specific city, nation produces.
 
 Infra_Points
-    City increases owner's infra points by value each turn. If overall points are negative after all cities 
+    City increases owner's infra points by value each turn. If overall points are negative after all cities
     have been processed, they are set to 0.
