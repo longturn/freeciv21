@@ -49,6 +49,7 @@ add_library(
   spaceshipdlg.cpp
   sprite.cpp
   themes.cpp
+  tileset_debugger.cpp
   tradecalculation.cpp
   tooltips.cpp
   unitreport.cpp
