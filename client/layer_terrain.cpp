@@ -422,7 +422,7 @@ void layer_terrain::initialize_cell_corner_match_pair(const terrain *terrain,
     int value = i / NUM_CORNER_DIRS;
 
     QChar letters[2] = {info.group->name[0],
-                        info.matches_with.front()->name[0]};
+                        info.matches_with.back()->name[0]};
     auto buffer = QStringLiteral("t.l%1.%2_cell_%3_%4_%5_%6")
                       .arg(m_number)
                       .arg(info.sprite_name, QChar(direction4letters[dir]),
