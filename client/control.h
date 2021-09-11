@@ -176,7 +176,7 @@ void unit_focus_update();
 void auto_center_on_focus_unit();
 void update_unit_pix_label(struct unit_list *punitlist);
 
-struct unit *find_visible_unit(struct tile *ptile);
+unit *find_visible_unit(const ::tile *ptile);
 void set_units_in_combat(struct unit *pattacker, struct unit *pdefender);
 int blink_active_unit();
 int blink_turn_done_button();

@@ -802,7 +802,7 @@ void unit_focus_update()
 /**
    Return a pointer to a visible unit, if there is one.
  */
-struct unit *find_visible_unit(struct tile *ptile)
+unit *find_visible_unit(const ::tile *ptile)
 {
   struct unit *panyowned = NULL, *panyother = NULL, *ptptother = NULL;
 

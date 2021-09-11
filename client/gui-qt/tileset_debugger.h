@@ -13,6 +13,7 @@
 
 class QAction;
 class QLabel;
+class QTreeWidget;
 
 struct tile;
 
@@ -38,6 +39,7 @@ private:
   const ::tile *m_tile;
   QLabel *m_label;
   QAction *m_pick_action;
+  QTreeWidget *m_content;
 };
 
 } // namespace freeciv
