@@ -5240,7 +5240,7 @@ void toggle_focus_unit_state(struct tileset *t)
 /**
    Find unit that we can display from given tile.
  */
-struct unit *get_drawable_unit(const struct tileset *t, struct tile *ptile)
+struct unit *get_drawable_unit(const struct tileset *t, const ::tile *ptile)
 {
   struct unit *punit = find_visible_unit(ptile);
 
