@@ -26,6 +26,7 @@
 #include "fcintl.h"
 
 #include <QLabel>
+#include <QPainter>
 #include <QToolBar>
 #include <QTreeWidget>
 #include <QVBoxLayout>
@@ -111,10 +112,44 @@ void tileset_debugger::set_tile(const ::tile *t)
     const auto sprites = layer->fill_sprite_array(t, nullptr, nullptr, unit,
                                                   tile_city(t), nullptr);
 
+    if (sprites.empty()) {
+      continue;
+    }
+
+    // Generate a sprite with this layer only
+    // Geometry
+    auto rectangle = QRect();
+    for (const auto &ds : sprites) {
+      rectangle |= QRect(ds.offset_x, ds.offset_y, ds.sprite->width(),
+                         ds.sprite->height());
+    }
+
+    // Draw the composite picture
+    auto this_layer = QPixmap(rectangle.size());
+    this_layer.fill(Qt::transparent);
+    auto p = QPainter();
+    p.begin(&this_layer);
+    // If there are negative offsets, the pixmap was extended in the negative
+    // direction. Compensate by offsetting the painter back...
+    p.translate(-rectangle.topLeft());
+    for (const auto &ds : sprites) {
+      p.drawPixmap(ds.offset_x, ds.offset_y, *ds.sprite);
+    }
+    p.end();
+    item->setIcon(0, QIcon(this_layer));
+
     // Add the sprites as children
     for (const auto &ds : sprites) {
       auto child = new QTreeWidgetItem(item);
-      child->setIcon(0, QIcon(*ds.sprite));
+      auto this_sprite = QPixmap(rectangle.size());
+      this_sprite.fill(Qt::transparent);
+      p.begin(&this_sprite);
+      // We inherit the translation set above
+      p.drawPixmap(ds.offset_x, ds.offset_y, *ds.sprite);
+      p.end();
+      child->setIcon(0, QIcon(this_sprite));
+      child->setText(
+          0, QString(_("Offset: %1, %2")).arg(ds.offset_x).arg(ds.offset_y));
       maxSize = maxSize.expandedTo(ds.sprite->size());
     }
   }
