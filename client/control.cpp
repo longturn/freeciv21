@@ -287,7 +287,7 @@ void set_hover_state(struct unit_list *punits, enum cursor_hover_state state,
                      enum unit_orders order)
 {
   fc_assert_ret((punits && unit_list_size(punits) > 0)
-                || state == HOVER_NONE);
+                || (state == HOVER_NONE || state == HOVER_DEBUG_TILE));
   fc_assert_ret(state == HOVER_CONNECT || activity == ACTIVITY_LAST);
   fc_assert_ret((state == HOVER_GOTO || state == HOVER_GOTO_SEL_TGT)
                 || order == ORDER_LAST);
@@ -1285,6 +1285,7 @@ void control_mouse_cursor(struct tile *ptile)
     break;
   case HOVER_ACT_SEL_TGT:
   case HOVER_GOTO_SEL_TGT:
+  case HOVER_DEBUG_TILE:
     /* Select a tile to target / find targets on. */
     mouse_cursor_type = CURSOR_SELECT;
     break;
@@ -2748,6 +2749,16 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
       fc_assert(action_id_exists(goto_last_action));
       do_unit_goto(ptile);
       break;
+    case HOVER_DEBUG_TILE:
+      // This function is called twice, once on mouse press and once on mouse
+      // release. We get SELECT_POPUP the second time.
+      // We don't want to do anything the first time we're called to avoid
+      // selecting units or opening the tile dialog.
+      if (qtype == SELECT_POPUP) {
+        debug_tile(ptile);
+        clear_hover_state();
+      }
+      return;
     }
 
     clear_hover_state();
@@ -3031,6 +3042,9 @@ void key_cancel_action()
     keyboardless_goto_button_down = false;
     keyboardless_goto_active = false;
     keyboardless_goto_start_tile = NULL;
+    break;
+  case HOVER_DEBUG_TILE:
+    clear_hover_state();
     break;
   case HOVER_NONE:
     break;
