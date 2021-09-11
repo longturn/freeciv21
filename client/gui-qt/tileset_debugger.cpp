@@ -10,6 +10,9 @@
 
 #include "tileset_debugger.h"
 
+// client/include
+#include "dialogs_g.h"
+
 // common
 #include "map.h"
 #include "tile.h"
@@ -64,6 +67,7 @@ tileset_debugger::~tileset_debugger() {}
 void tileset_debugger::set_tile(const ::tile *t)
 {
   m_tile = t;
+  m_pick_action->setChecked(false);
 
   // Update the GUI
   if (!t) {
@@ -71,8 +75,9 @@ void tileset_debugger::set_tile(const ::tile *t)
     return;
   }
 
-  m_label->setText(QStringLiteral("%1 %2").arg(
-      index_to_map_pos_x(tile_index(t)), index_to_map_pos_y(tile_index(t))));
+  m_label->setText(QStringLiteral("%1 %2")
+                       .arg(index_to_map_pos_x(tile_index(t)))
+                       .arg(index_to_map_pos_y(tile_index(t))));
 }
 
 /**
