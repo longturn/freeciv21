@@ -125,13 +125,16 @@ void tileset_debugger::set_tile(const ::tile *t)
     }
 
     // Draw the composite picture
-    auto this_layer = QPixmap(rectangle.size());
+    auto this_layer = QPixmap(rectangle.size() + QSize(2, 2));
     this_layer.fill(Qt::transparent);
     auto p = QPainter();
     p.begin(&this_layer);
+    // Outline
+    p.setPen(palette().color(QPalette::WindowText));
+    p.drawRect(0, 0, this_layer.width() - 1, this_layer.height() - 1);
     // If there are negative offsets, the pixmap was extended in the negative
     // direction. Compensate by offsetting the painter back...
-    p.translate(-rectangle.topLeft());
+    p.translate(-rectangle.topLeft() + QPoint(1, 1));
     for (const auto &ds : sprites) {
       p.drawPixmap(ds.offset_x, ds.offset_y, *ds.sprite);
     }
@@ -141,16 +144,21 @@ void tileset_debugger::set_tile(const ::tile *t)
     // Add the sprites as children
     for (const auto &ds : sprites) {
       auto child = new QTreeWidgetItem(item);
-      auto this_sprite = QPixmap(rectangle.size());
+      auto this_sprite = QPixmap(rectangle.size() + QSize(2, 2));
       this_sprite.fill(Qt::transparent);
       p.begin(&this_sprite);
+      // Outline
+      p.resetTransform();
+      p.setPen(palette().color(QPalette::WindowText));
+      p.drawRect(0, 0, this_layer.width() - 1, this_layer.height() - 1);
       // We inherit the translation set above
+      p.translate(-rectangle.topLeft() + QPoint(1, 1));
       p.drawPixmap(ds.offset_x, ds.offset_y, *ds.sprite);
       p.end();
       child->setIcon(0, QIcon(this_sprite));
       child->setText(
           0, QString(_("Offset: %1, %2")).arg(ds.offset_x).arg(ds.offset_y));
-      maxSize = maxSize.expandedTo(ds.sprite->size());
+      maxSize = maxSize.expandedTo(rectangle.size());
     }
   }
 
