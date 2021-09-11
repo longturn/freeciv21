@@ -42,6 +42,10 @@ void draw_calculated_trade_routes(QPainter *painter);
 **************************************************************************/
 class map_view : public QWidget {
   Q_OBJECT
+
+  // Ought to be a private slot
+  friend void debug_tile(tile *tile);
+
   void shortcut_pressed(int key);
   void shortcut_released(Qt::MouseButton mb);
 

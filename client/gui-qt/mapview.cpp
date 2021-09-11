@@ -204,6 +204,16 @@ void map_view::show_debugger()
   if (!m_debugger) {
     // We never destroy it once it's created.
     m_debugger = new freeciv::tileset_debugger(this);
+    connect(m_debugger, &freeciv::tileset_debugger::tile_picking_requested,
+            [](bool active) {
+              if (active) {
+                set_hover_state(NULL, HOVER_DEBUG_TILE, ACTIVITY_LAST, NULL,
+                                NO_TARGET, NO_TARGET, ACTION_NONE,
+                                ORDER_LAST);
+              } else if (!active && hover_state == HOVER_DEBUG_TILE) {
+                clear_hover_state();
+              }
+            });
   }
 
   m_debugger->show();
@@ -796,4 +806,13 @@ void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
   *height = rect.height();
 
   p.end();
+}
+
+/**
+ * Callback to set the tile being debugged.
+ */
+void debug_tile(tile *tile)
+{
+  fc_assert_ret(queen()->mapview_wdg->m_debugger);
+  queen()->mapview_wdg->m_debugger->set_tile(tile);
 }

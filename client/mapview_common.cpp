@@ -577,6 +577,7 @@ static void base_set_mapview_origin(float gui_x0, float gui_y0)
   case HOVER_NONE:
   case HOVER_PARADROP:
   case HOVER_ACT_SEL_TGT:
+  case HOVER_DEBUG_TILE:
     break;
   };
   if (rectangle_active) {
