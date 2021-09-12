@@ -518,6 +518,7 @@ struct server_scan *server_scan_begin(enum server_scan_type type,
   scan = new server_scan;
   scan->type = type;
   scan->error_func = error_func;
+  scan->servers = nullptr;
 
   switch (type) {
   case SERVER_SCAN_GLOBAL:
