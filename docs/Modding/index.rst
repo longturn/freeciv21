@@ -52,7 +52,12 @@ break out the varying layers. It will always start with a top-level :literal:`.t
 directory of the same name will have :literal:`.png` graphics files and associated :literal:`.spec` files to
 explain to Freeciv21 what to do when.
 
-Have a look at :file:`amplio.tilespec` and associated files in :file:`/amplio` for an example.
+Have a look at :file:`amplio.tilespec` and associated files in :file:`/amplio` for an example. The following
+guides document specific aspects of tileset creation:
+
+.. toctree::
+  Tilesets/debugger.rst
+  :maxdepth: 1
 
 Soundsets
 =========
