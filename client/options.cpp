@@ -3951,7 +3951,7 @@ static const char *get_current_option_file_name()
 #else
     name = freeciv_storage_dir();
     if (name.isEmpty()) {
-      qCritical(_("Cannot find freeciv storage directory"));
+      qCritical(_("Cannot find Freeciv21 storage directory"));
       return NULL;
     }
     fc_snprintf(name_buffer, sizeof(name_buffer),
@@ -4003,7 +4003,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
 
     name = freeciv_storage_dir();
     if (name.isEmpty()) {
-      qCritical(_("Cannot find freeciv storage directory"));
+      qCritical(_("Cannot find Freeciv21 storage directory"));
 
       return NULL;
     }

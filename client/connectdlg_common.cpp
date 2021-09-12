@@ -232,7 +232,7 @@ bool client_start_server(const QString &user_name)
   storage = freeciv_storage_dir();
   if (storage == NULL) {
     output_window_append(ftc_client,
-                         _("Cannot find freeciv storage directory"));
+                         _("Cannot find Freeciv21 storage directory"));
     output_window_append(
         ftc_client, _("You'll have to start server manually. Sorry..."));
     return false;
