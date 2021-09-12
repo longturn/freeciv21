@@ -17,7 +17,7 @@ To start using the debugger, click on the :guilabel:`Pick tile` button and then
 somewhere on the map. The window will be updated with the list of sprites used
 to draw the selected tile:
 
-.. image:: tileset_debugger.png
+.. image:: /_static/images/gui-elements/tileset-debugger.png
   :alt: The tileset Debugger with a forest tile picked up.
   :align: center
   :scale: 75%
