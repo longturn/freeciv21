@@ -1226,7 +1226,7 @@ static void compat_load_020600(struct loaddata *loading,
     delete[] modname;
   }
 
-  /* Fix save games from Freeciv21 versions with a bug that made it view
+  /* Fix save games from legacy freeciv versions with a bug that made it view
    * "Never met" as closer than "Peace" or "Alliance". */
   player_slots_iterate(pslot)
   {
@@ -2302,7 +2302,7 @@ void set_unit_activity_road(struct unit *punit, Road_type_id road)
 
    Temporarily used to provide development version internal save game
    compatibility for what will become Freeciv21. This use should cease
-   before Freeciv 3.0.0 is released.
+   before Freeciv21 3.0.0 is released.
 
    Should never be called from savegame3 after the 3.0 development version
    internal save game compatibility is removed.

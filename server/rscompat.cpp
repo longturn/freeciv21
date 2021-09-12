@@ -534,13 +534,18 @@ static bool effect_list_compat_cb(struct effect *peffect, void *data)
                             ACTION_SPY_SABOTAGE_CITY_PRODUCTION_ESC));
 
     if (peffect->type == EFT_ILLEGAL_ACTION_MOVE_COST) {
+      /* Boarding a transporter became action enabler controlled in
+       * Freeciv 3.1. Old hard coded rules had no punishment for trying to
+       * do this when it is illegal according to the rules. */
       effect_req_append(peffect,
                         req_from_str("Action", "Local", false, false, false,
                                      "Transport Board"));
       effect_req_append(peffect,
                         req_from_str("Action", "Local", false, false, false,
                                      "Transport Embark"));
-
+      /* Disembarking became action enabler controlled in Freeciv 3.1. Old
+       * hard coded rules had no punishment for trying to do those when it
+       * is illegal according to the rules. */
       effect_req_append(peffect,
                         req_from_str("Action", "Local", false, false, false,
                                      "Transport Disembark"));
