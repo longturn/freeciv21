@@ -81,7 +81,7 @@ serverProcess::serverProcess()
           QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
           [=](int exitCode, QProcess::ExitStatus exitStatus) {
             Q_UNUSED(exitCode)
-            qInfo() << _("Freeciv Server") << exitStatus;
+            qInfo() << _("Freeciv21 Server") << exitStatus;
             drop();
           });
 }

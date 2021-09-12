@@ -1546,7 +1546,7 @@ static struct client_option client_options[] = {
         default_sound_plugin_name, N_("Sound plugin"),
         N_("If you have a problem with sound, try changing "
            "the sound plugin.  The new plugin won't take "
-           "effect until you restart Freeciv.  Changing this "
+           "effect until you restart Freeciv21.  Changing this "
            "is the same as using the -P command-line option."),
         COC_SOUND, GUI_STUB, "", get_soundplugin_list, NULL, 0),
     GEN_STR_OPTION(default_chat_logfile, N_("The chat log file"),

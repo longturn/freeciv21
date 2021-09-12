@@ -113,7 +113,7 @@ help_dialog::help_dialog(QWidget *parent) : qfc_dialog(parent)
   QVBoxLayout *layout;
   QWidget *buttons;
 
-  setWindowTitle(_("Freeciv Help Browser"));
+  setWindowTitle(_("Freeciv21 Help Browser"));
   history_pos = -1;
   update_history = true;
   layout = new QVBoxLayout(this);
