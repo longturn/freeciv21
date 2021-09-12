@@ -144,7 +144,8 @@ void fc_client::fc_main(QApplication *qapp)
   qRegisterMetaType<QTextCursor>("QTextCursor");
   qRegisterMetaType<QTextBlock>("QTextBlock");
   fc_allocate_ow_mutex();
-  real_output_window_append(_("This is the client for Freeciv21."), NULL, -1);
+  real_output_window_append(_("This is the client for Freeciv21."), NULL,
+                            -1);
   fc_release_ow_mutex();
   chat_welcome_message(true);
 

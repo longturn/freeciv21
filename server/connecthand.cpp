@@ -346,7 +346,7 @@ bool handle_login_request(struct connection *pconn,
 
   if (pconn->established || pconn->server.status != AS_NOT_ESTABLISHED) {
     /* We read the PACKET_SERVER_JOIN_REQ twice from this connection,
-      * this is probably not a Freeciv21 client. */
+     * this is probably not a Freeciv21 client. */
     return false;
   }
 
