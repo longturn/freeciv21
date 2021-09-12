@@ -91,10 +91,11 @@ find_package(Lua 5.3 REQUIRED)
 add_library(lua UNKNOWN IMPORTED GLOBAL)
 # Get a library name for IMPORTED_LOCATION
 list(GET LUA_LIBRARIES 0 loc)
-set_target_properties(lua PROPERTIES IMPORTED_LOCATION "${loc}")
+set_target_properties(lua PROPERTIES
+  IMPORTED_LOCATION "${loc}"
+  INTERFACE_INCLUDE_DIRECTORIES "${LUA_INCLUDE_DIR}")
 # Link to all libs, not just the first
 target_link_libraries(lua INTERFACE "${LUA_LIBRARIES}")
-target_include_directories(lua SYSTEM INTERFACE "${LUA_INCLUDE_DIR}")
 
 if (CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR)
   find_package(ToLuaProgram REQUIRED)
