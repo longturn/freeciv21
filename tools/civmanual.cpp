@@ -185,7 +185,7 @@ struct tag_types wiki_tags = {
 
 void insert_client_build_info(char *outbuf, size_t outlen);
 
-// Needed for "About Freeciv" help
+// Needed for "About Freeciv21" help
 const char *client_string = "freeciv-manual";
 
 static QString ruleset;
@@ -281,8 +281,8 @@ static bool manual_command(struct tag_types *tag_info)
 
     switch (manuals) {
     case MANUAL_SETTINGS:
-      // TRANS: markup ... Freeciv version ... ruleset name ... markup
-      fprintf(doc, _("%sFreeciv %s server options (%s)%s\n\n"),
+      // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
+      fprintf(doc, _("%sFreeciv21 %s server options (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
       settings_iterate(SSET_ALL, pset)
@@ -366,8 +366,8 @@ static bool manual_command(struct tag_types *tag_info)
       break;
 
     case MANUAL_COMMANDS:
-      // TRANS: markup ... Freeciv version ... markup
-      fprintf(doc, _("%sFreeciv %s server commands%s\n\n"),
+      // TRANS: markup ... Freeciv21 version ... markup
+      fprintf(doc, _("%sFreeciv21 %s server commands%s\n\n"),
               tag_info->title_begin, VERSION_STRING, tag_info->title_end);
       for (i = 0; i < CMD_NUM; i++) {
         const struct command *cmd = command_by_number(i);
@@ -402,8 +402,8 @@ static bool manual_command(struct tag_types *tag_info)
       break;
 
     case MANUAL_TERRAIN:
-      // TRANS: markup ... Freeciv version ... ruleset name ... markup
-      fprintf(doc, _("%sFreeciv %s terrain help (%s)%s\n\n"),
+      // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
+      fprintf(doc, _("%sFreeciv21 %s terrain help (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
       fprintf(doc, "<table><tr bgcolor=#9bc3d1><th colspan=2>%s</th>",
@@ -539,13 +539,13 @@ static bool manual_command(struct tag_types *tag_info)
     case MANUAL_BUILDINGS:
     case MANUAL_WONDERS:
       if (manuals == MANUAL_BUILDINGS) {
-        // TRANS: markup ... Freeciv version ... ruleset name ... markup
-        fprintf(doc, _("%sFreeciv %s buildings help (%s)%s\n\n"),
+        // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
+        fprintf(doc, _("%sFreeciv21 %s buildings help (%s)%s\n\n"),
                 tag_info->title_begin, VERSION_STRING, game.control.name,
                 tag_info->title_end);
       } else {
-        // TRANS: markup ... Freeciv version ... ruleset name ... markup
-        fprintf(doc, _("%sFreeciv %s wonders help (%s)%s\n\n"),
+        // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
+        fprintf(doc, _("%sFreeciv21 %s wonders help (%s)%s\n\n"),
                 tag_info->title_begin, VERSION_STRING, game.control.name,
                 tag_info->title_end);
       }
@@ -611,8 +611,8 @@ static bool manual_command(struct tag_types *tag_info)
       /* Freeciv-web uses (parts of) the government HTML output in its own
        * manual pages. */
       // FIXME: this doesn't resemble the wiki manual at all.
-      // TRANS: markup ... Freeciv version ... ruleset name ... markup
-      fprintf(doc, _("%sFreeciv %s governments help (%s)%s\n\n"),
+      // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
+      fprintf(doc, _("%sFreeciv21 %s governments help (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
       governments_iterate(pgov)
@@ -634,8 +634,8 @@ static bool manual_command(struct tag_types *tag_info)
       /* Freeciv-web uses (parts of) the unit type HTML output in its own
        * manual pages. */
       // FIXME: this doesn't resemble the wiki manual at all.
-      // TRANS: markup ... Freeciv version ... ruleset name ... markup
-      fprintf(doc, _("%sFreeciv %s unit types help (%s)%s\n\n"),
+      // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
+      fprintf(doc, _("%sFreeciv21 %s unit types help (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
       unit_type_iterate(putype)
@@ -691,8 +691,8 @@ static bool manual_command(struct tag_types *tag_info)
 
     case MANUAL_TECHS:
       // FIXME: this doesn't resemble the wiki manual at all.
-      // TRANS: markup ... Freeciv version ... ruleset name ... markup
-      fprintf(doc, _("%sFreeciv %s tech help (%s)%s\n\n"),
+      // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
+      fprintf(doc, _("%sFreeciv21 %s tech help (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
       advance_iterate(A_FIRST, ptech)

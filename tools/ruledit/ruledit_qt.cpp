@@ -407,7 +407,7 @@ void ruledit_gui::refresh_effect_edits()
  */
 ruledit_main::ruledit_main() : QMainWindow()
 {
-  const QString title = QString::fromUtf8(R__("Freeciv Ruleset Editor"));
+  const QString title = QString::fromUtf8(R__("Freeciv21 Ruleset Editor"));
 
   setWindowTitle(title);
 }

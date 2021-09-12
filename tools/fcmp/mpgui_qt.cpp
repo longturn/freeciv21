@@ -104,7 +104,7 @@ int main(int argc, char **argv)
 
   main_window->setGeometry(0, 30, 640, 60);
   main_window->setWindowTitle(
-      QString::fromUtf8(_("Freeciv modpack installer (Qt)")));
+      QString::fromUtf8(_("Freeciv21 modpack installer (Qt)")));
 
   gui = new mpgui;
 

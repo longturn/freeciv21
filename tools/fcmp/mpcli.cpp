@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 
   load_install_info_lists(&fcmp);
 
-  qInfo(_("Freeciv modpack installer (command line version)"));
+  qInfo(_("Freeciv21 modpack installer (command line version)"));
 
   qInfo("%s%s", word_version(), VERSION_STRING);
 
