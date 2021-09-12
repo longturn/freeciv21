@@ -28,7 +28,7 @@ class QTimer;
 
 namespace freeciv {
 
-/// @brief A Freeciv server.
+/// @brief A Freeciv21 server.
 class server : public QObject {
 public:
   explicit server();

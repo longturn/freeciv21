@@ -1218,7 +1218,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 
       if (!ignore_retired) {
         /* Support for letting some of the following hard requirements be
-         * implicit were retired in Freeciv 3.0. Others were retired later.
+         * implicit were retired in legacy Freeciv 3.0. Others were retired later.
          * Make sure that the opposite of each hard action requirement
          * blocks all its action enablers. */
 

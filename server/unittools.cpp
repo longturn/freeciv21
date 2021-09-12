@@ -4880,7 +4880,7 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
       if (i != length - 1) {
         // If the unit is dead,
         if (utype_is_consumed_by_action(paction, NULL)
-            /* or if Freeciv has no idea where the unit will end up after it
+            /* or if Freeciv21 has no idea where the unit will end up after it
              * has performed this action, */
             || !(utype_is_unmoved_by_action(paction, NULL)
                  || utype_is_moved_to_tgt_by_action(paction, NULL))

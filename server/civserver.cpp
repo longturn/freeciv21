@@ -74,7 +74,7 @@ static void signal_handler(int sig)
         game.info.timeout = 0;
       }
       if (!timer) {
-        qInfo(_("You must interrupt Freeciv twice "
+        qInfo(_("You must interrupt Freeciv21 twice "
                 "within one second to make it exit."));
       }
     }
@@ -109,7 +109,7 @@ static void signal_handler(int sig)
 }
 
 /**
-  Entry point for Freeciv server.  Basically, does two things:
+  Entry point for Freeciv21 server.  Basically, does two things:
    1. Parses command-line arguments (possibly dialog, on mac).
    2. Calls the main server-loop routine.
  */

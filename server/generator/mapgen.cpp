@@ -707,8 +707,8 @@ static struct test_func test_funcs[NUM_TEST_FUNCTIONS] = {
   How to make a river path look natural
   =====================================
   Rivers always flow down. Thus rivers are best implemented on maps
-  where every tile has an explicit height value. However, Freeciv has a
-  flat map. But there are certain things that help the user imagine
+  where every tile has an explicit height value. However, Freeciv21 has
+  a flat map. But there are certain things that help the user imagine
   differences in height between tiles. The selection of direction for
   rivers should confirm and even amplify the user's image of the map's
   topology.
@@ -1086,7 +1086,7 @@ static void make_land()
   fc_assert_exit_msg(NULL != land_fill,
                      "No land terrain type could be found for the purpose "
                      "of temporarily filling in land tiles during map "
-                     "generation. This could be an error in Freeciv, or a "
+                     "generation. This could be an error in Freeciv21, or a "
                      "mistake in the terrain.ruleset file. Please make sure "
                      "there is at least one land terrain type in the "
                      "ruleset, or use a different map generator. If this "
