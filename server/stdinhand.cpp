@@ -4993,9 +4993,10 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
 
     if (is_restricted(caller)) {
       if (!is_safe_filename(luafile)) {
-        cmd_reply(CMD_LUA, caller, C_FAIL,
-                  _("Freeciv21 script '%s' disallowed for security reasons."),
-                  luafile);
+        cmd_reply(
+            CMD_LUA, caller, C_FAIL,
+            _("Freeciv21 script '%s' disallowed for security reasons."),
+            luafile);
         return false;
         ;
       }

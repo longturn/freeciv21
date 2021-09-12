@@ -61,7 +61,8 @@ static struct section_file *create_ruleset_file(const char *rsname,
   comment_file_header(sfile);
 
   if (rsname != NULL && rsname[0] != '\0') {
-    fc_snprintf(buf, sizeof(buf), "%s %s data for Freeciv21", rsname, rstype);
+    fc_snprintf(buf, sizeof(buf), "%s %s data for Freeciv21", rsname,
+                rstype);
   } else {
     fc_snprintf(buf, sizeof(buf), "Template %s data for Freeciv21", rstype);
   }

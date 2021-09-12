@@ -138,8 +138,9 @@ QString sound_plugin_name;
 QString sound_set_name;
 QString music_set_name;
 QString cmd_metaserver;
-bool auto_connect = false; // TRUE = skip "Connect to Freeciv21 Server" dialog
-bool auto_spawn = false;   // TRUE = skip main menu, start local server
+bool auto_connect =
+    false;               // TRUE = skip "Connect to Freeciv21 Server" dialog
+bool auto_spawn = false; // TRUE = skip main menu, start local server
 enum announce_type announce;
 
 struct civclient client;
