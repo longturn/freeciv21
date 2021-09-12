@@ -4994,7 +4994,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     if (is_restricted(caller)) {
       if (!is_safe_filename(luafile)) {
         cmd_reply(CMD_LUA, caller, C_FAIL,
-                  _("Freeciv script '%s' disallowed for security reasons."),
+                  _("Freeciv21 script '%s' disallowed for security reasons."),
                   luafile);
         return false;
         ;
@@ -5009,7 +5009,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     if (!real_filename) {
       if (is_restricted(caller)) {
         cmd_reply(CMD_LUA, caller, C_FAIL,
-                  _("No Freeciv script found by the name '%s'."),
+                  _("No Freeciv21 script found by the name '%s'."),
                   tilde_filename);
         return false;
       }
@@ -5032,7 +5032,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     break;
   case LUA_FILE:
     cmd_reply(CMD_LUA, caller, C_COMMENT,
-              _("Loading Freeciv script file '%s'."), real_filename);
+              _("Loading Freeciv21 script file '%s'."), real_filename);
 
     if (QFile::exists(real_filename)
         && (script_file = fc_fopen(real_filename, "r"))) {
@@ -5041,13 +5041,13 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
       return ret;
     } else {
       cmd_reply(CMD_LUA, caller, C_FAIL,
-                _("Cannot read Freeciv script '%s'."), real_filename);
+                _("Cannot read Freeciv21 script '%s'."), real_filename);
       return false;
     }
     break;
   case LUA_UNSAFE_FILE:
     cmd_reply(CMD_LUA, caller, C_COMMENT,
-              _("Loading Freeciv script file '%s'."), real_filename);
+              _("Loading Freeciv21 script file '%s'."), real_filename);
 
     if (QFile::exists(real_filename)
         && (script_file = fc_fopen(real_filename, "r"))) {
@@ -5056,7 +5056,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
       return ret;
     } else {
       cmd_reply(CMD_LUA, caller, C_FAIL,
-                _("Cannot read Freeciv script '%s'."), real_filename);
+                _("Cannot read Freeciv21 script '%s'."), real_filename);
       return false;
     }
     break;
@@ -5915,8 +5915,8 @@ static bool fcdb_command(struct connection *caller, char *arg, bool check)
   if (!srvarg.fcdb_enabled) {
     // Not supposed to be used. It isn't initialized.
     cmd_reply(CMD_FCDB, caller, C_FAIL,
-              _("Freeciv database script not activated at server start. "
-                "See the Freeciv server's --auth command line option."));
+              _("Freeciv21 database script not activated at server start. "
+                "See the Freeciv21 server's --auth command line option."));
     return false;
   }
 
@@ -6303,7 +6303,7 @@ static void show_help_intro(struct connection *caller,
 {
   // This is formated like extra_help entries for settings and commands:
   char *help = fc_strdup(_(
-      "Welcome - this is the introductory help text for the Freeciv "
+      "Welcome - this is the introductory help text for the Freeciv21 "
       "server.\n"
       "\n"
       "Two important server concepts are Commands and Options. Commands, "

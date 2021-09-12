@@ -36,7 +36,7 @@
 #include "sprite_g.h"
 
 /*
- * Hierarchical directed draph drawing for Freeciv's technology tree
+ * Hierarchical directed draph drawing for Freeciv21's technology tree
  *
  *
  * \     Layer 0    /          \    Layer 1    /   \  Layer 2  /

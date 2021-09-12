@@ -225,7 +225,7 @@ static void send_metaserver_post(void *arg)
 
   QNetworkRequest request(QUrl(srvarg.metaserver_addr));
   request.setHeader(QNetworkRequest::UserAgentHeader,
-                    QLatin1String("Freeciv/" VERSION_STRING));
+                    QLatin1String("Freeciv21/" VERSION_STRING));
   request.setHeader(QNetworkRequest::ContentTypeHeader,
                     QLatin1String("application/x-www-form-urlencoded"));
   auto *reply =

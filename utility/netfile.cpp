@@ -47,7 +47,7 @@ static bool netfile_download_file_core(const QUrl &url, QIODevice *out,
   // Initiate the request
   auto request = QNetworkRequest(url);
   request.setHeader(QNetworkRequest::UserAgentHeader,
-                    QLatin1String("Freeciv/" VERSION_STRING));
+                    QLatin1String("Freeciv21/" VERSION_STRING));
   request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
                        QNetworkRequest::NoLessSafeRedirectPolicy);
 

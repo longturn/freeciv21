@@ -1546,7 +1546,7 @@ static struct client_option client_options[] = {
         default_sound_plugin_name, N_("Sound plugin"),
         N_("If you have a problem with sound, try changing "
            "the sound plugin.  The new plugin won't take "
-           "effect until you restart Freeciv.  Changing this "
+           "effect until you restart Freeciv21.  Changing this "
            "is the same as using the -P command-line option."),
         COC_SOUND, GUI_STUB, "", get_soundplugin_list, NULL, 0),
     GEN_STR_OPTION(default_chat_logfile, N_("The chat log file"),
@@ -3951,7 +3951,7 @@ static const char *get_current_option_file_name()
 #else
     name = freeciv_storage_dir();
     if (name.isEmpty()) {
-      qCritical(_("Cannot find freeciv storage directory"));
+      qCritical(_("Cannot find Freeciv21 storage directory"));
       return NULL;
     }
     fc_snprintf(name_buffer, sizeof(name_buffer),
@@ -4003,7 +4003,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
 
     name = freeciv_storage_dir();
     if (name.isEmpty()) {
-      qCritical(_("Cannot find freeciv storage directory"));
+      qCritical(_("Cannot find Freeciv21 storage directory"));
 
       return NULL;
     }

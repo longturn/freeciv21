@@ -1412,7 +1412,7 @@ static struct setting settings[] = {
         "topology", wld.map.topology_id, SSET_MAP_SIZE, SSET_GEOLOGY,
         SSET_VITAL, ALLOW_NONE, ALLOW_BASIC, N_("Map topology"),
         // TRANS: do not edit the ugly ASCII art
-        N_("Freeciv maps are always two-dimensional. They may wrap at the "
+        N_("Freeciv21 maps are always two-dimensional. They may wrap at the "
            "north-south and east-west directions to form a flat map, a "
            "cylinder, or a torus (donut). Individual tiles may be "
            "rectangular or hexagonal, with either an overhead (\"classic\") "
