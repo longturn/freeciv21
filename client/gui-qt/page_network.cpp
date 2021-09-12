@@ -316,15 +316,21 @@ void page_network::update_network_lists()
 
   lan_scan_timer = new QTimer(this);
   lan_scan = server_scan_begin(SERVER_SCAN_LOCAL, server_scan_error);
-  connect(lan_scan_timer, &QTimer::timeout, this,
-          &page_network::slot_lan_scan);
-  lan_scan_timer->start(500);
+  if (lan_scan_timer) {
+    // The timer may have been destroyed if there was an error
+    connect(lan_scan_timer, &QTimer::timeout, this,
+            &page_network::slot_lan_scan);
+    lan_scan_timer->start(500);
+  }
 
   meta_scan_timer = new QTimer(this);
   meta_scan = server_scan_begin(SERVER_SCAN_GLOBAL, server_scan_error);
-  connect(meta_scan_timer, &QTimer::timeout, this,
-          &page_network::slot_meta_scan);
-  meta_scan_timer->start(800);
+  if (meta_scan_timer) {
+    // The timer may have been destroyed if there was an error
+    connect(meta_scan_timer, &QTimer::timeout, this,
+            &page_network::slot_meta_scan);
+    meta_scan_timer->start(800);
+  }
 }
 
 /**
