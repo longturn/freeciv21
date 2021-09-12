@@ -606,7 +606,11 @@ int client_main(int argc, char *argv[])
   }
 
   audio_real_init(sound_set_name, music_set_name, sound_plugin_name);
-  start_menu_music(QStringLiteral("music_menu"), NULL);
+  if (!auto_connect) {
+    // People autoconnecting won't stay in the menus for long. Avoid starting
+    // music that will be stopped immediately.
+    start_menu_music(QStringLiteral("music_menu"), NULL);
+  }
 
   editor_init();
 
