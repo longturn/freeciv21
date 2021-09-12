@@ -30,7 +30,7 @@
 #endif // GITREV
 
 /**
-   Return string containing both name of Freeciv and version.
+   Return string containing both name of Freeciv21 and version.
  */
 const char *freeciv_name_version()
 {
@@ -106,12 +106,12 @@ const char *beta_message()
     fc_snprintf(msgbuf, sizeof(msgbuf),
                 // TRANS: No full stop after the URL, could cause confusion.
                 _("THIS IS A BETA VERSION\n"
-                  "Freeciv %s will be released in %s, at %s"),
+                  "Freeciv21 %s will be released in %s, at %s"),
                 NEXT_STABLE_VERSION, _(NEXT_RELEASE_MONTH), WIKI_URL);
   } else {
     fc_snprintf(msgbuf, sizeof(msgbuf),
                 _("THIS IS A BETA VERSION\n"
-                  "Freeciv %s will be released at %s"),
+                  "Freeciv21 %s will be released at %s"),
                 NEXT_STABLE_VERSION, WIKI_URL);
   }
   return msgbuf;

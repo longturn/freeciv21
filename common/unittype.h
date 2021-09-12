@@ -36,7 +36,7 @@ struct ai_type;
  * paratroopers_range field can transfer the new maximum if you increase
  * it.
  *
- * The top value is reserved in case a future Freeciv version wants to
+ * The top value is reserved in case a future Freeciv21 version wants to
  * implement "no maximum range". It could be used to signal that the unit
  * can paradrop anywhere. Note that the value below it is high enough to
  * give the same effect on all maps inside the current size limits.
