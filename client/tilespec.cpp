@@ -4725,7 +4725,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                   const struct unit_type *putype)
 {
   int tileno, dir;
-  bv_extras textras_near[8];
+  bv_extras textras_near[8]{};
   bv_extras textras;
   struct terrain *tterrain_near[8] = {nullptr};
   struct terrain *pterrain = NULL;
