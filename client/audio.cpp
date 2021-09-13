@@ -309,8 +309,7 @@ void audio_real_init(const QString &soundset_name,
     qCritical("Cannot find audio spec-file \"%s\" or \"%s\"",
               qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
     qInfo(_("To get sound you need to download a sound set!"));
-    qInfo(_("Get sound sets from <%s>."),
-          "http://www.freeciv.org/wiki/Sounds");
+    qInfo(_("Get sound sets from the Modpack Installer (freeciv21-modpack-qt) program."));
     qInfo(_("Proceeding with sound support disabled."));
     ss_tagfile = NULL;
     ms_tagfile = NULL;
