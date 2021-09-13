@@ -653,7 +653,11 @@ void server::begin_phase()
   }
 
   log_debug("sniffingpackets");
-  check_for_full_turn_done(); // HACK: don't wait during AI phases
+  if (game.info.timeout >= 0) {
+    check_for_full_turn_done(); // HACK: don't wait during AI phases
+  } else {
+    force_end_of_sniff = true;
+  }
 
   if (m_between_turns_timer != NULL) {
     game.server.turn_change_time = timer_read_seconds(m_between_turns_timer);
