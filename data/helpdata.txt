@@ -1,4 +1,4 @@
-; /* Helpfile for Freeciv21
+; Helpfile for Freeciv21
 ;
 ; Each [help_*] is a help node.
 ;
@@ -29,7 +29,7 @@
 ; Notice not all entries are marked for i18n, as some are not appropriate to translate.
 ;
 ; Comments with c-style comments are just to stop xgettext from complaining about stray single-quote
-; characters. */
+; characters.
 
 [help_overview]
 ; /* TRANS: "Overview" topic in built-in help */
@@ -191,7 +191,7 @@ Diplomacy section.\
 "), _("\
 A few notes:\n\
   1. You can't give away your capital.\n\
-  2. You can only request property that you know about; so you can't request technology unless you have an \
+  2. You can only request property that you know about; so you can't request technology unless you have an
 embassy, and if you can't see a city on your map, then you can't request it. Of course, the owner of that \
 city can still offer it to you, in which case the area around the city is shown on your map before you accept \
 the treaty.\n\
@@ -273,7 +273,7 @@ name = _(" Resources")
 text = _("\
 Tiles can have natural resources in addition to their base terrain. Different resources produce different \
 results such as extra food, production or trade points. Often when the terrain with a resource on it is \
-improved, the tile will produce even more of something.\
+improved, the tile will produce even more of something.
 ")
 
 [help_gen_resource_extras]
@@ -507,7 +507,7 @@ Beware: in rulesets where plague is enabled, it can travel along trade routes. S
 more details.\
 "), _("\
 To view the current trade routes of a city, hold your mouse point over the \"Trade:\" line on the General tab \
-in the city view dialog.\
+in the city view dialog.
 ")
 
 [help_goods]
@@ -571,7 +571,7 @@ with an emphasis on food production and hence growth. Citizen roles are also aut
 city grows, which means you may want to inspect cities that have just grown and adjust the role in which the \
 new citizen has been placed. You can set different priorities for a city with the Citizen Governor.\
 "), _("\
-; TODO: See issue #653\
+; TODO: See issue #653
 ; You can also request tile alterations from the city map, as an alternative to explicitly instructing units \
 ; to make them. Right-clicking on a city map tile gives a menu of changes which can be made to that tile, such \
 ; as irrigation and building roads. Refer to the section on Terrain Alterations. You can select one \
@@ -810,7 +810,7 @@ text = _("\
 Units provide both the mobility your civilization needs and the violence with which it will survive and \
 expand. The available units may be classified as military units, whose talents are those of defense and \
 aggression, and a few noncombatants which support expansion, diplomacy, and trade. All units, no matter \
-their purpose, have five important stats:\
+their purpose, have five important stats:
 "), _("\
  - Attack (A): This is the comparitive strength of the unit in an attack. The value can be zero, meaning no \
 attack is possible.\n\
