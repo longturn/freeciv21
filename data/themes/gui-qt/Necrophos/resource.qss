@@ -719,17 +719,16 @@ chatwdg QScrollBar::sub-page:vertical {
   background: transparent;
 }
 
-messagewdg QTableWidget
+messagewdg QListWidget
 {
   border: none;
   color: #cccccc;
   background-color: transparent;
 }
 
-messagewdg QTableWidget::item:hover {
+messagewdg QListWidget::item:hover {
   color: white;
   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5d8869, stop: 1 #5d8869);
-  border-radius: 9px;
 }
 
 messagewdg QScrollBar:vertical {

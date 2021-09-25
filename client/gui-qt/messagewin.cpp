@@ -9,15 +9,19 @@
 **************************************************************************/
 
 #include "messagewin.h"
+
 // Qt
 #include <QApplication>
 #include <QGridLayout>
 #include <QHeaderView>
+#include <QListWidget>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QTableWidget>
+
 // client
 #include "messagewin_common.h"
+#include "update_queue.h"
+
 // gui-qt
 #include "fc_client.h"
 #include "mapview.h"
@@ -184,14 +188,11 @@ messagewdg::messagewdg(QWidget *parent) : QWidget(parent)
   QPalette palette;
   layout = new QGridLayout;
 
-  mesg_table = new QTableWidget;
-  mesg_table->setColumnCount(1);
+  mesg_table = new QListWidget;
   mesg_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  mesg_table->verticalHeader()->setVisible(false);
   mesg_table->setSelectionMode(QAbstractItemView::SingleSelection);
-  mesg_table->horizontalHeader()->setStretchLastSection(true);
-  mesg_table->horizontalHeader()->setVisible(false);
-  mesg_table->setShowGrid(false);
+  mesg_table->setTextElideMode(Qt::ElideNone);
+  mesg_table->setWordWrap(true);
   layout->addWidget(mesg_table, 0, 2, 1, 1);
   layout->setContentsMargins(0, 0, 3, 3);
   setLayout(layout);
@@ -219,7 +220,7 @@ void messagewdg::item_selected(const QItemSelection &sl,
   QFont f;
   QModelIndex index;
   QModelIndexList indexes = sl.indexes();
-  QTableWidgetItem *item;
+  QListWidgetItem *item;
 
   if (indexes.isEmpty()) {
     return;
@@ -231,7 +232,7 @@ void messagewdg::item_selected(const QItemSelection &sl,
     if (QApplication::mouseButtons() == Qt::LeftButton
         || QApplication::mouseButtons() == Qt::RightButton) {
       meswin_set_visited_state(i, true);
-      item = mesg_table->item(i, 0);
+      item = mesg_table->item(i);
       f = item->font();
       f.setItalic(true);
       item->setFont(f);
@@ -286,49 +287,32 @@ void messagewdg::paintEvent(QPaintEvent *event)
 /**
    Clears and removes mesg_table all items
  */
-void messagewdg::clr()
-{
-  mesg_table->clearContents();
-  mesg_table->setRowCount(0);
-}
+void messagewdg::clr() { mesg_table->clear(); }
 
 /**
    Adds news message to mesg_table
  */
 void messagewdg::msg(const struct message *pmsg)
 {
-  int i;
-  QPixmap *icon;
-  QFont f;
-  QTableWidgetItem *item;
-
-  item = new QTableWidgetItem;
+  auto item = new QListWidgetItem;
   item->setText(pmsg->descr);
-  i = mesg_table->rowCount();
-  mesg_table->insertRow(i);
+  mesg_table->addItem(item);
   if (pmsg->visited) {
-    f = item->font();
+    auto f = item->font();
     f.setItalic(true);
     item->setFont(f);
   }
-  icon = get_event_sprite(tileset, pmsg->event);
+  auto icon = get_event_sprite(tileset, pmsg->event);
   if (icon != NULL) {
     pix = icon;
     item->setIcon(QIcon(*pix));
   }
-  mesg_table->setItem(i, 0, item);
-  mesg_table->resizeRowToContents(i);
-  mesg_table->scrollToBottom();
 }
 
 /**
    Updates mesg_table painting
  */
-void messagewdg::msg_update()
-{
-  mesg_table->resizeRowsToContents();
-  update();
-}
+void messagewdg::msg_update() { mesg_table->scrollToBottom(); }
 
 /**
    Resize event for messagewdg

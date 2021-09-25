@@ -708,17 +708,16 @@ chatwdg QScrollBar:vertical
   margin: 0px 0 0px 0;
 }
 
-messagewdg QTableWidget
+messagewdg QListWidget
 {
   border: none;
   color: white;
   background-color: transparent;
 }
 
-messagewdg QTableWidget::item:hover {
+messagewdg QListWidget::item:hover {
   color: black;
   background-color: rgba(180, 160, 120, 225);
-  border-radius: 9px;
 }
 
 xvote QPushButton {
