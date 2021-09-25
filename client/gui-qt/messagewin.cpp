@@ -325,10 +325,15 @@ void messagewdg::msg_update()
     msg(meswin_get_message(i));
   }
 
-  // Scroll only once to avoid laying out text repeately.
-  update_queue::uq()->connect_processing_finished_unique(
-      client.conn.client.request_id_of_currently_handled_packet,
-      scroll_to_bottom, (void *) this);
+  // Scroll down to make sure the latest message is visible.
+  if (client.conn.client.request_id_of_currently_handled_packet == 0) {
+    mesg_table->scrollToBottom();
+  } else {
+    // Scroll only once to avoid laying out text repeately.
+    update_queue::uq()->connect_processing_finished_unique(
+        client.conn.client.request_id_of_currently_handled_packet,
+        scroll_to_bottom, (void *) this);
+  }
 }
 
 /*
