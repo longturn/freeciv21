@@ -60,6 +60,8 @@ public:
                                   void *data);
   void connect_processing_finished(int request_id, uq_callback_t cb,
                                    void *data);
+  void connect_processing_finished_unique(int request_id, uq_callback_t cb,
+                                          void *data);
   void connect_processing_started_full(int request_id, uq_callback_t cb,
                                        void *data, uq_free_fn_t free_fn);
   void connect_processing_finished_full(int request_id, uq_callback_t cb,

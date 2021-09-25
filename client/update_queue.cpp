@@ -312,6 +312,25 @@ void update_queue::connect_processing_finished(int request_id,
   wq_add_request(wq_processing_finished, request_id, callback, data, NULL);
 }
 
+/**
+ * Connects the callback to the end of the processing (in server side) of
+ * the request. The callback will be called only once for this request.
+ */
+void update_queue::connect_processing_finished_unique(int request_id,
+                                                      uq_callback_t callback,
+                                                      void *data)
+{
+  if (wq_processing_finished.contains(request_id)) {
+    for (const auto &d : *wq_processing_finished[request_id]) {
+      if (d->callback == callback && d->uq_data->data == data) {
+        // Already present
+        return;
+      }
+    }
+  }
+  wq_add_request(wq_processing_finished, request_id, callback, data, NULL);
+}
+
 // Connects the callback to the end of the processing (in server side) of
 // the request.
 void update_queue::connect_processing_finished_full(

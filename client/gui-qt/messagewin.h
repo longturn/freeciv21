@@ -50,6 +50,9 @@ protected:
   void resizeEvent(QResizeEvent *event) override;
 public slots:
   void item_selected(const QItemSelection &sl, const QItemSelection &ds);
+
+private:
+  static void scroll_to_bottom(void *);
 };
 
 /***************************************************************************
