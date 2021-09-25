@@ -16,13 +16,13 @@
 class QEvent;
 class QGridLayout;
 class QItemSelection;
+class QListWidget;
 class QMouseEvent;
 class QObject;
 class QPaintEvent;
 class QPainter;
 class QPixmap;
 class QResizeEvent;
-class QTableWidget;
 class chatwdg;
 
 /***************************************************************************
@@ -38,7 +38,7 @@ public:
   void msg(const struct message *pmsg);
 
 private:
-  QTableWidget *mesg_table;
+  QListWidget *mesg_table;
   QGridLayout *layout;
   QPixmap *pix;
 
