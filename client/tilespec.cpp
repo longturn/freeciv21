@@ -4908,7 +4908,8 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                             FULL_TILE_Y_OFFSET + t->city_offset_y);
         }
       }
-      if (!citybar_painter::current()->has_units()) {
+      if (!citybar_painter::current()->has_units()
+          && pcity->client.occupied) {
         sprs.emplace_back(t,
                           get_city_sprite(t->sprites.city.occupied, pcity),
                           true, FULL_TILE_X_OFFSET + t->occupied_offset_x,
