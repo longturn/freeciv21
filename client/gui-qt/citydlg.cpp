@@ -1046,7 +1046,6 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
     qlt[iter]->setFont(*small_font);
     qlt[iter]->setProperty(fonts::notify_label, "true");
     info_grid_layout->addWidget(qlt[iter], iter, 1);
-    info_grid_layout->setRowStretch(iter, 0);
   }
   setLayout(info_grid_layout);
 }
