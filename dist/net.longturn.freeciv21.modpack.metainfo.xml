@@ -16,13 +16,13 @@
         </p>
     </description>
     <launchable type="desktop-id">net.longturn.freeciv21.modpack-qt.desktop</launchable>
-    <icon type="remote">https://github.com/longturn/freeciv21/raw/master/data/icons/64x64/freeciv21-modpack.png</icon>
+    <icon type="remote">https://raw.githubusercontent.com/longturn/freeciv21/master/data/icons/64x64/freeciv21-modpack.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
     <screenshots>
       <screenshot type="default">
         <caption>Freeciv21 Client</caption>
-        <image>https://github.com/longturn/freeciv21/raw/master/dist/freeciv-screenshot-2048x1112.png</image>
+        <image>https://raw.githubusercontent.com/longturn/freeciv21/master/dist/freeciv-screenshot-2048x1112.png</image>
       </screenshot>
     </screenshots>
     <update_contact>longturn.net@gmail.com</update_contact>
