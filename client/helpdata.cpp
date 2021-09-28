@@ -64,10 +64,10 @@
 
 // This must be in same order as enum in helpdlg_g.h
 static const char *const help_type_names[] = {
-    "(Any)",   "(Text)",      "Units",       "Improvements",
-    "Wonders", "Techs",       "Terrain",     "Extras",
-    "Goods",   "Specialists", "Governments", "Ruleset",
-    "Tileset", "Nations",     "Multipliers", NULL};
+    "(Any)",       "(Text)",  "Units",   "Improvements", "Wonders",
+    "Techs",       "Terrain", "Extras",  "Goods",        "Specialists",
+    "Governments", "Ruleset", "Tileset", "Nations",      "Multipliers",
+    "Effects",     NULL};
 
 typedef QList<const struct help_item *> helpList;
 helpList *help_nodes;
@@ -1049,6 +1049,33 @@ void boot_help_texts()
               help_nodes->append(pitem);
             }
             multipliers_iterate_end;
+            break;
+          case HELP_EFFECT:
+            for (int i = 0; i < EFT_COUNT; ++i) {
+              auto effects = get_effects(static_cast<effect_type>(i));
+              if (effect_list_size(effects) > 0) {
+                pitem = new_help_item(current_type);
+                fc_snprintf(name, sizeof(name), "%*s%s", level, "",
+                            effect_type_name(static_cast<effect_type>(i)));
+                pitem->topic = qstrdup(name);
+
+                QString all_text = _("This following rules contribute to "
+                                     "the value of this effect:\n");
+                effect_list_iterate(effects, peffect)
+                {
+                  help_text_buffer[0] = '\0';
+                  get_effect_req_text(peffect, help_text_buffer,
+                                      sizeof(help_text_buffer));
+                  all_text += QString(_("* %1 with %2\n"))
+                                  .arg(peffect->value)
+                                  .arg(help_text_buffer);
+                }
+                effect_list_iterate_end;
+
+                pitem->text = qstrdup(qUtf8Printable(all_text));
+                help_nodes->append(pitem);
+              }
+            }
             break;
           default:
             qCritical("Bad current_type: %d.", current_type);

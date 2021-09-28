@@ -118,6 +118,11 @@ static struct {
 } ruleset_cache;
 
 /**
+   Get a list of all effects.
+ */
+const effect_list *get_effects() { return ruleset_cache.tracker; }
+
+/**
    Get a list of effects of this type.
  */
 struct effect_list *get_effects(enum effect_type effect_type)
@@ -1014,15 +1019,14 @@ void get_effect_req_text(const struct effect *peffect, char *buf,
                buf_len);
   }
 
-  /* FIXME: should we do something for present == FALSE reqs?
-   * Currently we just ignore them. */
   requirement_vector_iterate(&peffect->reqs, preq)
   {
-    if (!preq->present) {
-      continue;
-    }
     if (buf[0] != '\0') {
-      fc_strlcat(buf, Q_("?req-list-separator:+"), buf_len);
+      if (preq->present) {
+        fc_strlcat(buf, Q_("?req-list-separator:+"), buf_len);
+      } else {
+        fc_strlcat(buf, Q_("?req-list-separator:+not "), buf_len);
+      }
     }
 
     universal_name_translation(&preq->source, buf + qstrlen(buf),
