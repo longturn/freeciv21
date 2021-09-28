@@ -69,9 +69,9 @@ if(WIN32 OR MSYS OR MINGW)
   ## Generator-specific configuration ##
 
   # NSIS (Windows .exe installer)
-  set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/windows/client.ico")
-  set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/windows/client.ico")
-  set(CPACK_NSIS_INSTALLED_ICON_NAME "${CMAKE_SOURCE_DIR}/windows/client.ico")
+  set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/dist/client.ico")
+  set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/dist/client.ico")
+  set(CPACK_NSIS_INSTALLED_ICON_NAME "${CMAKE_SOURCE_DIR}/dist/client.ico")
   set(CPACK_NSIS_HELP_LINK "${CPACK_PACKAGE_HOMEPAGE_URL}")
   set(CPACK_NSIS_URL_INFO_ABOUT "${CPACK_PACKAGE_HOMEPAGE_URL}")
   set(CPACK_NSIS_MENU_LINKS "${CPACK_PACKAGE_HOMEPAGE_URL}" "Longturn Homepage")
