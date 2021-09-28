@@ -1103,6 +1103,15 @@ You may change policy values at any time, but any changes only take effect at th
 [help_gen_policies]
 generate = " Multipliers"
 
+[help_effects]
+name = _("Effects")
+text = _("\
+Effects specify what buildings, wonders, etc. do.\
+")
+
+[help_gen_effects]
+generate = " Effects"
+
 [help_diplomacy]
 name = _("Diplomacy")
 text = _("\

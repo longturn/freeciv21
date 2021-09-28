@@ -31,6 +31,7 @@ enum help_page_type {
   HELP_TILESET,
   HELP_NATIONS,
   HELP_MULTIPLIER,
+  HELP_EFFECT,
   HELP_LAST
 };
 

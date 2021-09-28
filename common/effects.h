@@ -418,6 +418,7 @@ int get_potential_improvement_bonus(const struct impr_type *pimprove,
                                     enum effect_type effect_type,
                                     const enum req_problem_type prob_type);
 
+const effect_list *get_effects();
 struct effect_list *get_effects(enum effect_type effect_type);
 
 typedef bool (*iec_cb)(struct effect *, void *data);
