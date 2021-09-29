@@ -1054,6 +1054,190 @@ QString get_effect_list_req_text(const struct effect_list *plist)
 }
 
 /**
+ * Returns a string describing an effect value as interpreted in the context
+ * of an effect_type, typically as "value [unit]" for some unit.
+ */
+QString effect_type_unit_text(effect_type type, int value)
+{
+  switch (type) {
+  case EFT_TECH_PARASITE:
+    return QString(PL_("%1 player", "%1 players", value)).arg(value);
+  case EFT_AIRLIFT:
+  case EFT_UPGRADE_UNIT:
+  case EFT_MARTIAL_LAW_MAX:
+    // TRANS: Units like warriors and settlers, not miles and kg
+    return QString(PL_("%1 unit", "%1 units", value)).arg(value);
+  case EFT_OUTPUT_BONUS:
+  case EFT_OUTPUT_BONUS_2:
+  case EFT_OUTPUT_PER_TILE:
+  case EFT_OUTPUT_WASTE_PCT:
+  case EFT_GROWTH_FOOD:
+  case EFT_HEALTH_PCT:
+  case EFT_POLLU_POP_PCT:
+  case EFT_POLLU_POP_PCT_2:
+  case EFT_POLLU_PROD_PCT:
+  case EFT_INCITE_COST_PCT:
+  case EFT_SPY_RESISTANT:
+  case EFT_VETERAN_COMBAT:
+  case EFT_HP_REGEN:
+  case EFT_TRADEROUTE_PCT:
+  case EFT_DEFEND_BONUS:
+  case EFT_CIVIL_WAR_CHANCE:
+  case EFT_MIGRATION_PCT:
+  case EFT_MAX_RATES:
+  case EFT_OUTPUT_WASTE:
+  case EFT_UPGRADE_PRICE_PCT:
+  case EFT_SHIELD2GOLD_FACTOR:
+  case EFT_IMPR_BUILD_COST_PCT:
+  case EFT_IMPR_BUY_COST_PCT:
+  case EFT_UNIT_BUILD_COST_PCT:
+  case EFT_UNIT_BUY_COST_PCT:
+  case EFT_ENEMY_CITIZEN_UNHAPPY_PCT:
+  case EFT_IRRIGATION_PCT:
+  case EFT_MINING_PCT:
+  case EFT_OUTPUT_TILE_PUNISH_PCT:
+  case EFT_UNIT_BRIBE_COST_PCT:
+  case EFT_RETIRE_PCT:
+  case EFT_ACTION_ODDS_PCT:
+  case EFT_OUTPUT_WASTE_BY_REL_DISTANCE: // Effectively % but not really
+                                         // useful
+  case EFT_SABOTEUR_RESISTANT:
+  case EFT_ATTACK_BONUS:
+  case EFT_CONQUEST_TECH_PCT:
+  case EFT_FORTIFY_DEFENSE_BONUS:
+  case EFT_MAPS_STOLEN_PCT:
+  case EFT_UNIT_SHIELD_VALUE_PCT:
+    // TRANS: per cent
+    return QString(PL_("%1%", "%1%", value)).arg(value);
+  case EFT_MAX_STOLEN_GOLD_PM:
+  case EFT_THIEFS_SHARE_PM:
+    // TRANS: per mille
+    return QString(PL_("%1‰", "%1‰", value)).arg(value);
+  case EFT_FORCE_CONTENT:
+  case EFT_MAKE_CONTENT:
+  case EFT_MAKE_CONTENT_MIL:
+  case EFT_MAKE_HAPPY:
+  case EFT_SIZE_ADJ:
+  case EFT_MARTIAL_LAW_EACH:
+  case EFT_CITY_UNHAPPY_SIZE:
+    return QString(PL_("%1 citizen", "%1 citizens", value)).arg(value);
+  case EFT_GIVE_IMM_TECH:
+    return QString(PL_("%1 tech", "%1 techs", value)).arg(value);
+  case EFT_MOVE_BONUS:
+  case EFT_ILLEGAL_ACTION_MOVE_COST:
+  case EFT_ACTION_SUCCESS_MOVE_COST:
+  case EFT_ACTION_SUCCESS_TARGET_MOVE_COST:
+    // TRANS: Movement points
+    return QString(PL_("%1 MP", "%1 MP", value)).arg(value);
+  case EFT_UNIT_RECOVER:
+  case EFT_ILLEGAL_ACTION_HP_COST:
+    // TRANS: Health/hit points
+    return QString(PL_("%1 HP", "%1 HP", value)).arg(value);
+  case EFT_UPKEEP_FREE:
+    return QString(PL_("%1 building", "%1 buildings", value)).arg(value);
+  case EFT_VETERAN_BUILD:
+    // TRANS: Veteran levels
+    return QString(PL_("%1 level", "%1 levels", value)).arg(value);
+  case EFT_CITY_VISION_RADIUS_SQ:
+  case EFT_UNIT_VISION_RADIUS_SQ:
+  case EFT_CITY_RADIUS_SQ:
+    // TRANS: sq. = squared, as in sq. meter
+    return QString(PL_("%1 sq. tile", "%1 sq. tiles", value)).arg(value);
+  case EFT_GAIN_AI_LOVE:
+    // TRANS: "AI love" is what makes the AI friendly
+    return QString(PL_("%1 love", "%1 love", value)).arg(value);
+  case EFT_TURN_YEARS:
+    // TRANS: Year/turn
+    return QString(PL_("%1 yr/turn", "%1 yr/turn", value)).arg(value);
+  case EFT_EMPIRE_SIZE_BASE:
+  case EFT_EMPIRE_SIZE_STEP:
+    return QString(PL_("%1 city", "%1 cities", value)).arg(value);
+  case EFT_REVOLUTION_UNHAPPINESS:
+    return QString(PL_("%1 turn", "%1 turns", value)).arg(value);
+  case EFT_TRADE_REVENUE_BONUS: {
+    // Complicated arithmetics... and this effect is multiplicative
+    int factor = 100 * std::pow(2.0, value / 1000.);
+    return QString(PL_("%1%", "%1%", factor)).arg(factor);
+  }
+  case EFT_OUTPUT_WASTE_BY_DISTANCE:
+    return QString(PL_("%1%/tile", "%1%/tile", value)).arg(value);
+  case EFT_CITY_BUILD_SLOTS:
+    return QString(PL_("%1 slot", "%1 slots", value)).arg(value);
+  case EFT_MAX_TRADE_ROUTES:
+    // TRANS: Trade routes
+    return QString(PL_("%1 route", "%1 routes", value)).arg(value);
+  case EFT_COMBAT_ROUNDS:
+    // TRANS: Combat rounds
+    return QString(PL_("%1 round", "%1 rounds", value)).arg(value);
+  case EFT_PERFORMANCE:
+  case EFT_HISTORY:
+  case EFT_NATION_PERFORMANCE:
+  case EFT_NATION_HISTORY:
+    return QString(PL_("%1 culture point", "%1 culture points", value))
+        .arg(value);
+  case EFT_TURN_FRAGMENTS:
+    return QString(PL_("%1 fragment", "%1 fragments", value)).arg(value);
+  case EFT_UNIT_SLOTS:
+    // TRANS: Unit slots
+    return QString(PL_("%1 slot", "%1 slots", value)).arg(value);
+  case EFT_INFRA_POINTS:
+    return QString(PL_("%1 infrastructure point", "%1 infrastructure points",
+                       value))
+        .arg(value);
+  case EFT_ANY_GOVERNMENT:
+  case EFT_CAPITAL_CITY:
+  case EFT_ENABLE_NUKE:
+  case EFT_ENABLE_SPACE:
+  case EFT_SPECIALIST_OUTPUT: // FIXME should use the name of the
+                              // OutputType...
+  case EFT_OUTPUT_ADD_TILE:
+  case EFT_OUTPUT_INC_TILE:
+  case EFT_HAVE_EMBASSIES:
+  case EFT_MAKE_CONTENT_MIL_PER: // FIXME ?
+  case EFT_NO_ANARCHY:
+  case EFT_NUKE_PROOF:
+  case EFT_REVEAL_CITIES:
+  case EFT_REVEAL_MAP:
+  case EFT_SIZE_UNLIMIT:
+  case EFT_SS_STRUCTURAL:
+  case EFT_SS_COMPONENT:
+  case EFT_SS_MODULE:
+  case EFT_UNIT_NO_LOSE_POP:
+  case EFT_TECH_UPKEEP_FREE:
+  case EFT_NO_UNHAPPY:
+  case EFT_SLOW_DOWN_TIMELINE:
+  case EFT_RAPTURE_GROW:
+  case EFT_HAS_SENATE:
+  case EFT_INSPIRE_PARTISANS:
+  case EFT_HAPPINESS_TO_GOLD:
+  case EFT_FANATICS:
+  case EFT_NO_DIPLOMACY:
+  case EFT_UNHAPPY_FACTOR:
+  case EFT_UPKEEP_FACTOR:
+  case EFT_UNIT_UPKEEP_FREE_PER_CITY:
+  case EFT_OUTPUT_PENALTY_TILE:
+  case EFT_OUTPUT_INC_TILE_CELEBRATE:
+  case EFT_VISIBLE_WALLS:
+  case EFT_TECH_COST_FACTOR:
+  case EFT_TILE_WORKABLE:
+  case EFT_CITY_IMAGE:
+  case EFT_GOV_CENTER:
+  case EFT_NOT_TECH_SOURCE:
+  case EFT_VICTORY:
+  case EFT_HAVE_CONTACTS:
+  case EFT_CASUS_BELLI_CAUGHT:
+  case EFT_CASUS_BELLI_SUCCESS:
+  case EFT_BORDER_VISION:
+  case EFT_STEALINGS_IGNORE:
+  case EFT_CASUS_BELLI_COMPLETE:
+  case EFT_COUNT:
+    return QStringLiteral("%1").arg(value);
+  }
+
+  fc_assert_ret_val(false, QString());
+}
+
+/**
    Iterate through all the effects in cache, and call callback for each.
    This is currently not very generic implementation, as we have only one
  user; ruleset sanity checking. If any callback returns FALSE, there is no
