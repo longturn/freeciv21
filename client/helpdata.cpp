@@ -1064,14 +1064,16 @@ void boot_help_texts()
                 effect_list_iterate(effects, peffect)
                 {
                   if (requirement_vector_size(&peffect->reqs) == 0) {
-                    all_text +=
-                        QString(_("* %1 by default\n")).arg(peffect->value);
+                    all_text += QString(_("* %1 by default\n"))
+                                    .arg(effect_type_unit_text(
+                                        peffect->type, peffect->value));
                   } else {
                     help_text_buffer[0] = '\0';
                     get_effect_req_text(peffect, help_text_buffer,
                                         sizeof(help_text_buffer));
                     all_text += QString(_("* %1 with %2\n"))
-                                    .arg(peffect->value)
+                                    .arg(effect_type_unit_text(
+                                        peffect->type, peffect->value))
                                     .arg(help_text_buffer);
                   }
                 }
