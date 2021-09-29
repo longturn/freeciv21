@@ -7,5 +7,6 @@ Developing
 
 
 .. toctree::
+  bugs.rst
   style-guide.rst
   :maxdepth: 1
