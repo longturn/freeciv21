@@ -1059,8 +1059,8 @@ void boot_help_texts()
                             effect_type_name(static_cast<effect_type>(i)));
                 pitem->topic = qstrdup(name);
 
-                QString all_text = _("This following rules contribute to "
-                                     "the value of this effect:\n");
+                QString all_text = _("The following rules contribute to the "
+                                     "value of this effect:\n");
                 effect_list_iterate(effects, peffect)
                 {
                   if (requirement_vector_size(&peffect->reqs) == 0) {
