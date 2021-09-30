@@ -85,9 +85,6 @@ install(
   AUTHORS
   COPYING
   INSTALL
-  doc/BUGS
-  doc/CodingStyle
-  doc/HACKING
   doc/README.achievements
   doc/README.actions
   doc/README.agents
