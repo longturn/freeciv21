@@ -1,5 +1,5 @@
-Freeciv Hacker's Guide
-**********************
+Freeciv21 Hacker's Guide
+************************
 
 This guide is intended to be a help for developers, wanting to mess with Freeciv21 programming.
 
