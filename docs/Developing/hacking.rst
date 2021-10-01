@@ -1,5 +1,5 @@
-Contributing to Freeciv21
-*************************
+Freeciv Hacker's Guide
+**********************
 
 This guide is intended to be a help for developers, wanting to mess with Freeciv21 programming.
 
