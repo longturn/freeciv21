@@ -85,7 +85,6 @@ install(
   AUTHORS
   COPYING
   INSTALL
-  doc/README.achievements
   doc/README.actions
   doc/README.agents
   doc/README.AI
