@@ -87,7 +87,6 @@ install(
   INSTALL
   doc/README.AI
   doc/README.AI_modules
-  doc/README.delta
   doc/README.fcdb
   doc/README.graphics
   doc/README.msys2
