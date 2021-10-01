@@ -7,7 +7,8 @@ Developing
 
 
 .. toctree::
-  hacking.rst
   bugs.rst
+  hacking.rst
+  agents.rst
   style-guide.rst
   :maxdepth: 1

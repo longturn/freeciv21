@@ -85,7 +85,6 @@ install(
   AUTHORS
   COPYING
   INSTALL
-  doc/README.agents
   doc/README.AI
   doc/README.AI_modules
   doc/README.attributes
