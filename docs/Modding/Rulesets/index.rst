@@ -17,6 +17,7 @@ rules of a Freeciv21 game. Rulesets are broken down into the following categorie
 
 .. toctree::
   achievements.rst
+  actions.rst
   effects.rst
   :maxdepth: 1
 
