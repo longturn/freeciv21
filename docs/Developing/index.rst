@@ -10,5 +10,6 @@ Developing
   bugs.rst
   hacking.rst
   agents.rst
+  attributes.rst
   style-guide.rst
   :maxdepth: 1
