@@ -11,5 +11,6 @@ Developing
   hacking.rst
   agents.rst
   attributes.rst
+  delta.rst
   style-guide.rst
   :maxdepth: 1
