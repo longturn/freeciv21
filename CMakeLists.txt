@@ -88,7 +88,6 @@ install(
   doc/README.AI
   doc/README.AI_modules
   doc/README.graphics
-  doc/README.msys2
   doc/README.nations
   doc/README.packaging
   doc/README.rulesets
