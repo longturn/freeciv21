@@ -12,5 +12,7 @@ Developing
   agents.rst
   attributes.rst
   delta.rst
+  fcdb.rst
+  msys2.rst
   style-guide.rst
   :maxdepth: 1
