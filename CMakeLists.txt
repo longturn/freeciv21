@@ -87,11 +87,9 @@ install(
   INSTALL
   doc/README.AI
   doc/README.AI_modules
-  doc/README.graphics
   doc/README.nations
   doc/README.packaging
   doc/README.rulesets
-  doc/README.tilesets
   doc/README.scenarios
   doc/README.scorelog
   doc/README.sound
