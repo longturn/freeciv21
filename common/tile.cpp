@@ -411,6 +411,9 @@ void tile_set_continent(struct tile *ptile, Continent_id val)
 enum known_type tile_get_known(const struct tile *ptile,
                                const struct player *pplayer)
 {
+  if (tile_virtual_check(ptile)) {
+    return TILE_KNOWN_SEEN;
+  }
   if (!pplayer->tile_known->at(tile_index(ptile))) {
     return TILE_UNKNOWN;
   } else if (!fc_funcs->player_tile_vision_get(ptile, pplayer, V_MAIN)) {
@@ -470,7 +473,7 @@ int tile_activity_time(enum unit_activity activity, const struct tile *ptile,
 /**
    Create extra to tile.
  */
-static void tile_create_extra(struct tile *ptile, struct extra_type *pextra)
+static void tile_create_extra(struct tile *ptile, const extra_type *pextra)
 {
   if (fc_funcs->create_extra != NULL) {
     // Assume callback calls tile_add_extra() itself.
@@ -518,7 +521,7 @@ void tile_change_terrain(struct tile *ptile, struct terrain *pterrain)
    Recursively add all extra dependencies to add given extra.
  */
 static bool add_recursive_extras(struct tile *ptile,
-                                 struct extra_type *pextra, int rec)
+                                 const extra_type *pextra, int rec)
 {
   if (rec > MAX_EXTRA_TYPES) {
     // Infinite recursion
@@ -585,7 +588,7 @@ static bool rm_recursive_extras(struct tile *ptile,
    Pass virtual tile to the function if you are not sure it will success
    and don't want extras adjusted at all in case of failure.
  */
-bool tile_extra_apply(struct tile *ptile, struct extra_type *tgt)
+bool tile_extra_apply(struct tile *ptile, const extra_type *tgt)
 {
   // Add extra with its dependencies
   if (!add_recursive_extras(ptile, tgt, 0)) {
@@ -1116,12 +1119,14 @@ void tile_virtual_destroy(struct tile *vtile)
 /**
    Check if the given tile is a virtual one or not.
  */
-bool tile_virtual_check(struct tile *vtile)
+bool tile_virtual_check(const tile *vtile)
 {
   int tindex;
 
   if (!vtile || map_is_empty()) {
     return false;
+  } else if (tile_index(vtile) == TILE_INDEX_NONE) {
+    return true;
   }
 
   tindex = tile_index(vtile);

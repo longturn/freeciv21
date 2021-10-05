@@ -50,6 +50,7 @@
 #include "page_scenario.h"
 #include "sidebar.h"
 #include "sprite.h"
+#include "tileset_debugger.h"
 #include "voteinfo_bar.h"
 
 fcFont *fcFont::m_instance = 0;
@@ -84,7 +85,7 @@ fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
   status_bar_label = new QLabel;
   status_bar_label->setAlignment(Qt::AlignCenter);
   status_bar->addWidget(status_bar_label, 1);
-  set_status_bar(_("Welcome to Freeciv"));
+  set_status_bar(_("Welcome to Freeciv21"));
   create_cursors();
   // fake color init for research diagram
   research_color::i()->setFixedSize(1, 1);
@@ -144,7 +145,8 @@ void fc_client::fc_main(QApplication *qapp)
   qRegisterMetaType<QTextCursor>("QTextCursor");
   qRegisterMetaType<QTextBlock>("QTextBlock");
   fc_allocate_ow_mutex();
-  real_output_window_append(_("This is Qt-client for Freeciv."), NULL, -1);
+  real_output_window_append(_("This is the client for Freeciv21."), NULL,
+                            -1);
   fc_release_ow_mutex();
   chat_welcome_message(true);
 
@@ -254,6 +256,11 @@ void fc_client::switch_page(int new_pg)
     }
     set_client_page(PAGE_MAIN);
     break;
+  }
+
+  // Maybe popdown the tileset debugger
+  if (page != PAGE_GAME) {
+    queen()->mapview_wdg->hide_debugger();
   }
 }
 

@@ -149,8 +149,7 @@ void page_scenario::update_scenarios_page()
          * multiply by 100. */
         fcver *= 100;
       }
-      fcver -=
-          (fcver % 10000); // Patch level does not affect compatibility
+      fcver -= (fcver % 10000); // Patch level does not affect compatibility
       sname = secfile_lookup_str_default(sf, NULL, "scenario.name");
       sdescription =
           secfile_lookup_str_default(sf, NULL, "scenario.description");

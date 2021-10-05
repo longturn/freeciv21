@@ -1300,10 +1300,9 @@ void bounce_unit(struct unit *punit, bool verbose)
   }
 
   if (verbose) {
-    notify_player(
-        pplayer, punit_tile, E_UNIT_LOST_MISC, ftc_server,
-        // TRANS: A unit is disbanded to resolve stack conflicts.
-        _("Disbanded your %s."), unit_tile_link(punit));
+    notify_player(pplayer, punit_tile, E_UNIT_LOST_MISC, ftc_server,
+                  // TRANS: A unit is disbanded to resolve stack conflicts.
+                  _("Disbanded your %s."), unit_tile_link(punit));
   }
   wipe_unit(punit, ULR_STACK_CONFLICT, NULL);
 }
@@ -2424,11 +2423,10 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
                     PL_("Your attacking %s succeeded against the %s %s "
                         "(and %d other unit)!",
                         "Your attacking %s succeeded against the %s %s "
-                        "(and %d other units)!", unitcount - 1),
-                    pkiller_link,
-                    nation_adjective_for_player(pvictim),
-                    punit_link,
-                    unitcount - 1);
+                        "(and %d other units)!",
+                        unitcount - 1),
+                    pkiller_link, nation_adjective_for_player(pvictim),
+                    punit_link, unitcount - 1);
     }
 
     if (vet) {
@@ -2603,7 +2601,8 @@ void package_unit(struct unit *punit, struct packet_unit_info *packet)
     // No need to initialize array.
   }
   packet->action_turn = punit->action_turn;
-  // client doesnt have access to game.server.unitwaittime, so use release time
+  // client doesnt have access to game.server.unitwaittime, so use release
+  // time
   time_t gotime = game.server.unitwaittime + punit->action_timestamp;
   // convert to UTC using Qt
   QDateTime localtime;
@@ -4881,8 +4880,8 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
       if (i != length - 1) {
         // If the unit is dead,
         if (utype_is_consumed_by_action(paction, NULL)
-            /* or if Freeciv has no idea where the unit will end up after it
-             * has performed this action, */
+            /* or if Freeciv21 has no idea where the unit will end up after
+             * it has performed this action, */
             || !(utype_is_unmoved_by_action(paction, NULL)
                  || utype_is_moved_to_tgt_by_action(paction, NULL))
             // or if the unit will end up standing still,

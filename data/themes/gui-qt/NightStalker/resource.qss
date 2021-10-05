@@ -876,16 +876,15 @@ chatwdg QScrollBar:vertical
   background: transparent;
 }
 
-messagewdg QTableWidget
+messagewdg QListWidget
 {
   border: none;
   background-color: transparent;
 }
 
-messagewdg QTableWidget::item:hover {
+messagewdg QListWidget::item:hover {
   color: white;
   background-color: rgb(35, 110, 215);
-  border-radius: 9px;
 }
 
 xvote QPushButton {

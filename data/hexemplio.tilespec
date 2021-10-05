@@ -111,14 +111,14 @@ layer_order =
   "Water",      ; All extras with "River" style.
   "Roads",      ; All extras with style "RoadAllSeparate",
                 ; "RoadParityCombined" or "RoadAllCombined".
-  "Special1",   ; 1st layer for extras with style "3Layers", "Single2" or
-                ; "Single1".
+  "Special1",   ; 1st layer for extras with style "3Layers" or "Single1".
   "Grid1",      ; Grid layer for isometric tilesets.
   "City1",      ; City and walls.
   "Special2",   ; 2nd layer for extras with "3Layers" and "Single2" styles.
   "Fog",        ; Fog of war (on tiles one knows but doesn`t see).
   "Unit",       ; Units except the selected one(s).
-  "Special3",   ; 3rd layer for extras with "3Layers" style, and base flags.
+  "Special3",   ; 3rd layer for extras with "3Layers" style.
+  "BaseFlags",  ; Base flags.
   "City2",      ; City size when the city bar is disabled.
   "Grid2",      ; Second grid layer (overhead tilesets only).
   "Overlays",   ; Tile output sprites.

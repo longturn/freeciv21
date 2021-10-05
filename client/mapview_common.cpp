@@ -577,6 +577,7 @@ static void base_set_mapview_origin(float gui_x0, float gui_y0)
   case HOVER_NONE:
   case HOVER_PARADROP:
   case HOVER_ACT_SEL_TGT:
+  case HOVER_DEBUG_TILE:
     break;
   };
   if (rectangle_active) {
@@ -933,37 +934,32 @@ bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile)
    Draw an array of drawn sprites onto the canvas.
  */
 void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                       int count, struct drawn_sprite *pdrawn, bool fog,
+                       const std::vector<drawn_sprite> &sprites, bool fog,
                        bool city_dialog, bool city_unit)
 {
-  int i;
-
-  for (i = 0; i < count; i++) {
-    if (!pdrawn[i].sprite) {
+  for (auto s : sprites) {
+    if (!s.sprite) {
       // This can happen, although it should probably be avoided.
       continue;
     }
-    if (city_unit
-        && (i == LAYER_CATEGORY_TILE || i == LAYER_UNIT
-            || i == LAYER_FOCUS_UNIT || i == LAYER_CATEGORY_TILE)) {
-      canvas_put_unit_fogged(pcanvas, canvas_x + pdrawn[i].offset_x,
-                             canvas_y + pdrawn[i].offset_y, pdrawn[i].sprite,
-                             true, canvas_x, canvas_y);
+    if (city_unit) {
+      canvas_put_unit_fogged(pcanvas, canvas_x + s.offset_x,
+                             canvas_y + s.offset_y, s.sprite, true, canvas_x,
+                             canvas_y);
     } else if (city_dialog) {
-      canvas_put_sprite_citymode(pcanvas, canvas_x + pdrawn[i].offset_x,
-                                 canvas_y + pdrawn[i].offset_y,
-                                 pdrawn[i].sprite, true, canvas_x, canvas_y);
-    } else if (fog && pdrawn[i].foggable) {
-      canvas_put_sprite_fogged(pcanvas, canvas_x + pdrawn[i].offset_x,
-                               canvas_y + pdrawn[i].offset_y,
-                               pdrawn[i].sprite, true, canvas_x, canvas_y);
+      canvas_put_sprite_citymode(pcanvas, canvas_x + s.offset_x,
+                                 canvas_y + s.offset_y, s.sprite, true,
+                                 canvas_x, canvas_y);
+    } else if (fog && s.foggable) {
+      canvas_put_sprite_fogged(pcanvas, canvas_x + s.offset_x,
+                               canvas_y + s.offset_y, s.sprite, true,
+                               canvas_x, canvas_y);
     } else {
       /* We avoid calling canvas_put_sprite_fogged, even though it
        * should be a valid thing to do, because gui-gtk-2.0 doesn't have
        * a full implementation. */
-      canvas_put_sprite_full(pcanvas, canvas_x + pdrawn[i].offset_x,
-                             canvas_y + pdrawn[i].offset_y,
-                             pdrawn[i].sprite);
+      canvas_put_sprite_full(pcanvas, canvas_x + s.offset_x,
+                             canvas_y + s.offset_y, s.sprite);
     }
   }
 }
@@ -972,19 +968,19 @@ void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
    Draw one layer of a tile, edge, corner, unit, and/or city onto the
    canvas at the given position.
  */
-void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
+void put_one_element(QPixmap *pcanvas,
+                     const std::unique_ptr<freeciv::layer> &layer,
                      const struct tile *ptile, const struct tile_edge *pedge,
                      const struct tile_corner *pcorner,
                      const struct unit *punit, const struct city *pcity,
                      int canvas_x, int canvas_y,
                      const struct unit_type *putype)
 {
-  struct drawn_sprite tile_sprs[80];
   bool city_mode = false;
   bool city_unit = false;
   int dummy_x, dummy_y;
-  int count = fill_sprite_array(tileset, tile_sprs, layer, ptile, pedge,
-                                pcorner, punit, pcity, putype);
+  auto sprites =
+      layer->fill_sprite_array(ptile, pedge, pcorner, punit, pcity, putype);
   bool fog = (ptile && gui_options.draw_fog_of_war
               && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile));
   if (ptile) {
@@ -1004,8 +1000,8 @@ void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
     }
   }
   /*** Draw terrain and specials ***/
-  put_drawn_sprites(pcanvas, canvas_x, canvas_y, count, tile_sprs, fog,
-                    city_mode, city_unit);
+  put_drawn_sprites(pcanvas, canvas_x, canvas_y, sprites, fog, city_mode,
+                    city_unit);
 }
 
 /**
@@ -1016,12 +1012,10 @@ void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
               int canvas_y)
 {
   canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
-  mapview_layer_iterate(layer)
-  {
+  for (const auto &layer : tileset_get_layers(tileset)) {
     put_one_element(pcanvas, layer, NULL, NULL, NULL, punit, NULL, canvas_x,
                     canvas_y, NULL);
   }
-  mapview_layer_iterate_end;
 }
 
 /**
@@ -1032,12 +1026,10 @@ void put_unittype(const struct unit_type *putype, QPixmap *pcanvas,
                   int canvas_x, int canvas_y)
 {
   canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
-  mapview_layer_iterate(layer)
-  {
+  for (const auto &layer : tileset_get_layers(tileset)) {
     put_one_element(pcanvas, layer, NULL, NULL, NULL, NULL, NULL, canvas_x,
                     canvas_y, putype);
   }
-  mapview_layer_iterate_end;
 }
 
 /**
@@ -1050,12 +1042,10 @@ void put_city(struct city *pcity, QPixmap *pcanvas, int canvas_x,
 {
   canvas_y +=
       (tileset_full_tile_height(tileset) - tileset_tile_height(tileset));
-  mapview_layer_iterate(layer)
-  {
+  for (const auto &layer : tileset_get_layers(tileset)) {
     put_one_element(pcanvas, layer, NULL, NULL, NULL, NULL, pcity, canvas_x,
                     canvas_y, NULL);
   }
-  mapview_layer_iterate_end;
 }
 
 /**
@@ -1070,12 +1060,10 @@ void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,
   // Use full tile height, even for terrains.
   canvas_y +=
       (tileset_full_tile_height(tileset) - tileset_tile_height(tileset));
-  mapview_layer_iterate(layer)
-  {
+  for (const auto &layer : tileset_get_layers(tileset)) {
     put_one_element(pcanvas, layer, ptile, NULL, NULL, NULL, NULL, canvas_x,
                     canvas_y, NULL);
   }
-  mapview_layer_iterate_end;
 }
 
 /**
@@ -1192,7 +1180,8 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
 /**
    Draw some or all of a tile onto the canvas.
  */
-static void put_one_tile(QPixmap *pcanvas, enum mapview_layer layer,
+static void put_one_tile(QPixmap *pcanvas,
+                         const std::unique_ptr<freeciv::layer> &layer,
                          struct tile *ptile, int canvas_x, int canvas_y)
 {
   if (client_tile_get_known(ptile) != TILE_UNKNOWN
@@ -1380,12 +1369,11 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
                        get_color(tileset, COLOR_MAPVIEW_UNKNOWN), canvas_x,
                        canvas_y, width, height);
 
-  mapview_layer_iterate(layer)
-  {
-    if (layer == LAYER_TILELABEL) {
+  for (const auto &layer : tileset_get_layers(tileset)) {
+    if (layer->type() == LAYER_TILELABEL) {
       show_tile_labels(canvas_x, canvas_y, width, height);
     }
-    if (layer == LAYER_CITYBAR) {
+    if (layer->type() == LAYER_CITYBAR) {
       show_city_descriptions(canvas_x, canvas_y, width, height);
       continue;
     }
@@ -1412,7 +1400,6 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
     }
     gui_rect_iterate_coord_end;
   }
-  mapview_layer_iterate_end;
 
   draw_trade_routes();
   link_marks_draw_all();
@@ -1503,8 +1490,7 @@ void update_tile_label(struct tile *ptile)
 static void show_tile_label(QPixmap *pcanvas, int canvas_x, int canvas_y,
                             struct tile *ptile, int *width, int *height)
 {
-  const enum client_font FONT_TILE_LABEL =
-      FONT_CITY_NAME; // TODO: new font
+  const enum client_font FONT_TILE_LABEL = FONT_CITY_NAME; // TODO: new font
 #define COLOR_MAPVIEW_TILELABEL COLOR_MAPVIEW_CITYTEXT
 
   canvas_x += tileset_tile_width(tileset) / 2;
@@ -1892,6 +1878,11 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
 struct city *find_city_or_settler_near_tile(const struct tile *ptile,
                                             struct unit **punit)
 {
+  // Rule g
+  if (tile_virtual_check(ptile)) {
+    return nullptr;
+  }
+
   struct city *closest_city;
   struct city *pcity;
   struct unit *closest_settler = NULL, *best_settler = NULL;

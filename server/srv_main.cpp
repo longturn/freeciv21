@@ -2013,8 +2013,8 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
     dio_put_bool32_raw(&dout, false);
     dio_put_string_raw(&dout,
                        _("Your client is too old. To use this server, "
-                         "please upgrade your client to a "
-                         "Freeciv 2.2 or later."));
+                         "please upgrade your client to a more recent "
+                         "Freeciv21 release."));
     dio_put_string_raw(&dout, "");
 
     {

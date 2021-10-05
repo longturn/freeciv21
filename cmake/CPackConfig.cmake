@@ -66,20 +66,12 @@ if(WIN32 OR MSYS OR MINGW)
   set(CPACK_COMPONENT_TOOL_MANUAL_DISPLAY_NAME "Server Manual Tool")
   set(CPACK_COMPONENT_TRANSLATIONS_DISPLAY_NAME "Languages")
 
-  # Give the components a long description
-  set(CPACK_COMPONENT_FREECIV21_DESCRIPTION "All programs and supporting files to run Freeciv21. Includes Qt Client, Server and Qt Modpack Installer.")
-  set(CPACK_COMPONENT_TOOL_RULEDIT_DESCRIPTION "Freeciv21 Ruleset Editor")
-  set(CPACK_COMPONENT_TOOL_FCMP_CLI_DESCRIPTION "Modpack Installer Command Line Interpreter Edition")
-  set(CPACK_COMPONENT_TOOL_RULEUP_DESCRIPTION "Freeciv21 Ruleset Upgrade Tool")
-  set(CPACK_COMPONENT_TOOL_MANUAL_DESCRIPTION "Freeciv21 Server Manual Tool")
-  set(CPACK_COMPONENT_TRANSLATIONS_DESCRIPTION "Supported Languages")
-
   ## Generator-specific configuration ##
 
   # NSIS (Windows .exe installer)
-  set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/windows/client.ico")
-  set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/windows/client.ico")
-  set(CPACK_NSIS_INSTALLED_ICON_NAME "${CMAKE_SOURCE_DIR}/windows/client.ico")
+  set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/dist/client.ico")
+  set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/dist/client.ico")
+  set(CPACK_NSIS_INSTALLED_ICON_NAME "${CMAKE_SOURCE_DIR}/dist/client.ico")
   set(CPACK_NSIS_HELP_LINK "${CPACK_PACKAGE_HOMEPAGE_URL}")
   set(CPACK_NSIS_URL_INFO_ABOUT "${CPACK_PACKAGE_HOMEPAGE_URL}")
   set(CPACK_NSIS_MENU_LINKS "${CPACK_PACKAGE_HOMEPAGE_URL}" "Longturn Homepage")
@@ -90,7 +82,6 @@ if(WIN32 OR MSYS OR MINGW)
   set(CPACK_NSIS_COMPRESSOR "/SOLID lzma") # zlib|bzip2|lzma
   set(CPACK_NSIS_COMPRESSOR "${CPACK_NSIS_COMPRESSOR}\n  SetCompressorDictSize 64") # hack (improve compression)
   set(CPACK_NSIS_COMPRESSOR "${CPACK_NSIS_COMPRESSOR}\n  BrandingText '${CPACK_PACKAGE_DESCRIPTION_SUMMARY}'") # hack (overwrite BrandingText)
-  set(CPACK_NSIS_COMPRESSOR "${CPACK_NSIS_COMPRESSOR}\n  !define MUI_COMPONENTSPAGE_SMALLDESC") # hack (better components page layout)
 
 endif()
 

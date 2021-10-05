@@ -135,9 +135,11 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
         client.conn.sock,
         QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
         [] {
-          log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
-          real_output_window_append(client.conn.sock->errorString(), NULL,
-                                    -1);
+          if (client.conn.sock != nullptr) {
+            log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
+            real_output_window_append(client.conn.sock->errorString(), NULL,
+                                      -1);
+          }
           client.conn.used = false;
         });
   }

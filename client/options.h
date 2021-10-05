@@ -62,13 +62,12 @@ struct client_options {
   bool save_options_on_exit;
 
   /** Migrations **/
-  bool first_boot; /* There was no earlier options saved.
-                    * This affects some migrations, but not all. */
-  char
-      default_tileset_name[512]; // pre-2.6 had just this one tileset name
+  bool first_boot;                /* There was no earlier options saved.
+                                   * This affects some migrations, but not all. */
+  char default_tileset_name[512]; // pre-2.6 had just this one tileset name
   char default_tileset_overhead_name[512]; /* 2.6 had separate tilesets for
                                               ... */
-  char default_tileset_iso_name[512]; // ...overhead and iso topologies.
+  char default_tileset_iso_name[512];      // ...overhead and iso topologies.
   bool gui_qt_migrated_from_2_5;
 
   bool migrate_fullscreen;
@@ -126,7 +125,6 @@ struct client_options {
   bool draw_city_productions;
   bool draw_city_buycost;
   bool draw_city_trade_routes;
-  bool draw_terrain;
   bool draw_coastline;
   bool draw_roads_rails;
   bool draw_irrigation;
@@ -310,9 +308,9 @@ void options_dialogs_set();
 
 // for specifying which event messages go where:
 #define NUM_MW 3
-#define MW_OUTPUT 1 // add to the output window
+#define MW_OUTPUT 1   // add to the output window
 #define MW_MESSAGES 2 // add to the messages window
-#define MW_POPUP 4 // popup an individual window
+#define MW_POPUP 4    // popup an individual window
 
 extern int messages_where[]; // OR-ed MW_ values [E_COUNT]
 

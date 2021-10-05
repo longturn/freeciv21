@@ -157,7 +157,7 @@ void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
               "Trying to load the game nevertheless ...",
               loading->version, compat[compat_current].version);
   }
-#else // FREECIV_DEBUG
+#else  // FREECIV_DEBUG
   sg_failure_ret(0 < loading->version
                      && loading->version <= compat[compat_current].version,
                  "Unknown savefile format version (%d).", loading->version);
@@ -1226,7 +1226,7 @@ static void compat_load_020600(struct loaddata *loading,
     delete[] modname;
   }
 
-  /* Fix save games from Freeciv versions with a bug that made it view
+  /* Fix save games from legacy freeciv versions with a bug that made it view
    * "Never met" as closer than "Peace" or "Alliance". */
   player_slots_iterate(pslot)
   {
@@ -2139,7 +2139,7 @@ static void compat_load_dev(struct loaddata *loading)
 
 /**
    Update loaded game data from earlier development version to something
-   usable by current Freeciv.
+   usable by current Freeciv21.
  */
 static void compat_post_load_dev(struct loaddata *loading)
 {
@@ -2244,7 +2244,7 @@ enum ai_level ai_level_convert(int old_level)
   case 10:
 #ifdef FREECIV_DEBUG
     return AI_LEVEL_EXPERIMENTAL;
-#else // FREECIV_DEBUG
+#else  // FREECIV_DEBUG
     return AI_LEVEL_HARD;
 #endif // FREECIV_DEBUG
   }
@@ -2301,8 +2301,8 @@ void set_unit_activity_road(struct unit *punit, Road_type_id road)
    save games (savegame and savegame2). Should be deleted with savegame2.
 
    Temporarily used to provide development version internal save game
-   compatibility for what will become Freeciv 3.0. This use should cease
-   before Freeciv 3.0.0 is released.
+   compatibility for what will become Freeciv21. This use should cease
+   before Freeciv21 3.0.0 is released.
 
    Should never be called from savegame3 after the 3.0 development version
    internal save game compatibility is removed.

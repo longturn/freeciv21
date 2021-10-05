@@ -138,8 +138,9 @@ QString sound_plugin_name;
 QString sound_set_name;
 QString music_set_name;
 QString cmd_metaserver;
-bool auto_connect = false; // TRUE = skip "Connect to Freeciv Server" dialog
-bool auto_spawn = false;   // TRUE = skip main menu, start local server
+bool auto_connect =
+    false;               // TRUE = skip "Connect to Freeciv21 Server" dialog
+bool auto_spawn = false; // TRUE = skip main menu, start local server
 enum announce_type announce;
 
 struct civclient client;
@@ -605,7 +606,11 @@ int client_main(int argc, char *argv[])
   }
 
   audio_real_init(sound_set_name, music_set_name, sound_plugin_name);
-  start_menu_music(QStringLiteral("music_menu"), NULL);
+  if (!auto_connect) {
+    // People autoconnecting won't stay in the menus for long. Avoid starting
+    // music that will be stopped immediately.
+    start_menu_music(QStringLiteral("music_menu"), NULL);
+  }
 
   editor_init();
 

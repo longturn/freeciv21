@@ -77,7 +77,7 @@ const char *default_meta_message_string()
 #else // IS_BETA_VERSION
 #if IS_DEVEL_VERSION
   return "development version: beware";
-#else // IS_DEVEL_VERSION
+#else  // IS_DEVEL_VERSION
   return "-";
 #endif // IS_DEVEL_VERSION
 #endif // IS_BETA_VERSION
@@ -225,7 +225,7 @@ static void send_metaserver_post(void *arg)
 
   QNetworkRequest request(QUrl(srvarg.metaserver_addr));
   request.setHeader(QNetworkRequest::UserAgentHeader,
-                    QLatin1String("Freeciv/" VERSION_STRING));
+                    QLatin1String("Freeciv21/" VERSION_STRING));
   request.setHeader(QNetworkRequest::ContentTypeHeader,
                     QLatin1String("application/x-www-form-urlencoded"));
   auto *reply =

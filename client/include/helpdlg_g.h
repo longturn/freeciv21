@@ -31,6 +31,7 @@ enum help_page_type {
   HELP_TILESET,
   HELP_NATIONS,
   HELP_MULTIPLIER,
+  HELP_EFFECT,
   HELP_LAST
 };
 
@@ -65,5 +66,5 @@ GUI_FUNC_PROTO(void, popdown_help_dialog, void)
 #define HELP_DIPLOMACY_ITEM N_("Diplomacy")
 #define HELP_SPACE_RACE_ITEM N_("Space Race")
 #define HELP_COPYING_ITEM N_("Copying")
-#define HELP_ABOUT_ITEM N_("About Freeciv")
+#define HELP_ABOUT_ITEM N_("About Freeciv21")
 #define HELP_MULTIPLIER_ITEM N_("Policies")

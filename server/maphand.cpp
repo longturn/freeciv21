@@ -556,7 +556,8 @@ void send_tile_info(struct conn_list *dest, struct tile *ptile,
       }
 
       if (ptile->label != NULL) {
-        // Always leave final '/* Always leave final '\0' in place */' in place
+        // Always leave final '/* Always leave final '\0' in place */' in
+        // place
         qstrncpy(info.label, ptile->label, sizeof(info.label) - 1);
       } else {
         info.label[0] = '\0';
@@ -2355,7 +2356,7 @@ void map_calculate_borders()
 /**
    Claim base to player's ownership.
  */
-void map_claim_base(struct tile *ptile, struct extra_type *pextra,
+void map_claim_base(struct tile *ptile, const extra_type *pextra,
                     struct player *powner, struct player *ploser)
 {
   struct base_type *pbase;
@@ -2487,7 +2488,7 @@ void vision_clear_sight(struct vision *vision)
 /**
    Create extra to tile.
  */
-void create_extra(struct tile *ptile, struct extra_type *pextra,
+void create_extra(struct tile *ptile, const extra_type *pextra,
                   struct player *pplayer)
 {
   bool extras_removed = false;

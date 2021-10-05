@@ -102,7 +102,7 @@ Unit *api_edit_create_unit_full(lua_State *L, Player *pplayer, Tile *ptile,
 
   fcl = luascript_get_fcl(L);
 
-  LUASCRIPT_CHECK(L, fcl != NULL, "Undefined Freeciv lua state!", NULL);
+  LUASCRIPT_CHECK(L, fcl != NULL, "Undefined Freeciv21 lua state!", NULL);
 
   if (ptype == NULL || ptype < unit_type_array_first()
       || ptype > unit_type_array_last()) {
@@ -305,7 +305,7 @@ Player *api_edit_create_player(lua_State *L, const char *username,
 
   fcl = luascript_get_fcl(L);
 
-  LUASCRIPT_CHECK(L, fcl != NULL, "Undefined Freeciv lua state!", NULL);
+  LUASCRIPT_CHECK(L, fcl != NULL, "Undefined Freeciv21 lua state!", NULL);
 
   if (game_was_started()) {
     create_command_newcomer(username, ai, false, pnation, &pplayer, buf,

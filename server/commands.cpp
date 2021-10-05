@@ -504,7 +504,8 @@ static struct command commands[] = {
      N_("playernation <player-name> [nation] [is-male] [leader] [style]"),
      N_("Define the nation of a player."),
      N_("This command sets the nation, leader name, style, and gender of a "
-        "specific player.\nThe gender parameter should be 1 if male, "
+        "specific player. The string \"random\" can be used to select a "
+        "random nation.\nThe gender parameter should be 1 if male, "
         "otherwise 0. Omitting any of the player settings will reset the "
         "player to defaults.\n"
         "This command may not be used once the game has started."),
@@ -594,13 +595,13 @@ static struct command commands[] = {
         "lua file <script file>\n"
         "lua unsafe-file <script file>\n"
         "lua <script line> (deprecated)"),
-     N_("Evaluate a line of Freeciv script or a Freeciv script file in the "
-        "current game."),
+     N_("Evaluate a line of Freeciv21 script or a Freeciv script file in "
+        "the current game."),
      N_("The unsafe prefix runs the script in an instance separate from the "
         "ruleset. This instance doesn't restrict access to Lua functions "
-        "that can be used to hack the computer running the Freeciv server. "
-        "Access to it is therefore limited to the console and connections "
-        "with cmdlevel 'hack'"),
+        "that can be used to hack the computer running the Freeciv21 "
+        "server. Access to it is therefore limited to the console and "
+        "connections with cmdlevel 'hack'"),
      NULL, CMD_ECHO_ADMINS, VCF_NONE, 0},
     {"kick", ALLOW_CTRL,
      // TRANS: translate text between <>

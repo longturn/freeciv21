@@ -567,7 +567,6 @@ mr_menu::mr_menu() : QMenuBar() {}
 void mr_menu::setup_menus()
 {
   QAction *act;
-  QMenu *pr;
   QList<QMenu *> menus;
   int i;
 
@@ -577,26 +576,6 @@ void mr_menu::setup_menus()
 
   // Game Menu
   menu = this->addMenu(_("Game"));
-  pr = menu;
-  menu = menu->addMenu(_("Options"));
-  act = menu->addAction(_("Set local options"));
-  connect(act, &QAction::triggered, this, &mr_menu::local_options);
-  act = menu->addAction(_("Server Options"));
-  connect(act, &QAction::triggered, this, &mr_menu::server_options);
-  act = menu->addAction(_("Messages"));
-  connect(act, &QAction::triggered, this, &mr_menu::messages_options);
-  act = menu->addAction(_("Shortcuts"));
-  connect(act, &QAction::triggered, this, &mr_menu::shortcut_options);
-  act = menu->addAction(_("Load another tileset"));
-  connect(act, &QAction::triggered, this, &mr_menu::tileset_custom_load);
-  act = menu->addAction(_("Save Options Now"));
-  act->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
-  connect(act, &QAction::triggered, this, &mr_menu::save_options_now);
-  act = menu->addAction(_("Save Options on Exit"));
-  act->setCheckable(true);
-  act->setChecked(gui_options.save_options_on_exit);
-  menu = pr;
-  menu->addSeparator();
   act = menu->addAction(_("Save Game"));
   act->setShortcut(QKeySequence(tr("Ctrl+s")));
   act->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
@@ -609,6 +588,28 @@ void mr_menu::setup_menus()
   act = menu->addAction(_("Save Map to Image"));
   connect(act, &QAction::triggered, this, &mr_menu::save_image);
   menu->addSeparator();
+
+  act = menu->addAction(_("Set local options"));
+  connect(act, &QAction::triggered, this, &mr_menu::local_options);
+  act = menu->addAction(_("Server Options"));
+  connect(act, &QAction::triggered, this, &mr_menu::server_options);
+  act = menu->addAction(_("Messages"));
+  connect(act, &QAction::triggered, this, &mr_menu::messages_options);
+  act = menu->addAction(_("Shortcuts"));
+  connect(act, &QAction::triggered, this, &mr_menu::shortcut_options);
+  act = menu->addAction(_("Load another tileset"));
+  connect(act, &QAction::triggered, this, &mr_menu::tileset_custom_load);
+  act = menu->addAction(_("Tileset debugger"));
+  connect(act, &QAction::triggered, queen()->mapview_wdg,
+          &map_view::show_debugger);
+  act = menu->addAction(_("Save Options Now"));
+  act->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
+  connect(act, &QAction::triggered, this, &mr_menu::save_options_now);
+  act = menu->addAction(_("Save Options on Exit"));
+  act->setCheckable(true);
+  act->setChecked(gui_options.save_options_on_exit);
+  menu->addSeparator();
+
   act = menu->addAction(_("Leave game"));
   act->setIcon(style()->standardIcon(QStyle::SP_DialogDiscardButton));
   connect(act, &QAction::triggered, this, &mr_menu::back_to_menu);
@@ -2966,7 +2967,7 @@ void mr_menu::save_image()
     full_size_y = full_size_y / 2;
   }
   map_canvas_resized(full_size_x, full_size_y);
-  img_name = QStringLiteral("Freeciv-Turn%1").arg(game.info.turn);
+  img_name = QStringLiteral("Freeciv21-Turn%1").arg(game.info.turn);
   if (client_has_player()) {
     img_name =
         img_name + "-" + QString(nation_plural_for_player(client_player()));

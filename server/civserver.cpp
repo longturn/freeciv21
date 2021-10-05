@@ -74,7 +74,7 @@ static void signal_handler(int sig)
         game.info.timeout = 0;
       }
       if (!timer) {
-        qInfo(_("You must interrupt Freeciv twice "
+        qInfo(_("You must interrupt Freeciv21 twice "
                 "within one second to make it exit."));
       }
     }
@@ -109,7 +109,7 @@ static void signal_handler(int sig)
 }
 
 /**
-  Entry point for Freeciv server.  Basically, does two things:
+  Entry point for Freeciv21 server.  Basically, does two things:
    1. Parses command-line arguments (possibly dialog, on mac).
    2. Calls the main server-loop routine.
  */
@@ -384,7 +384,7 @@ int main(int argc, char *argv[])
   con_write(C_VERSION, _("This is the server for %s"),
             freeciv_name_version());
   // TRANS: No full stop after the URL, could cause confusion.
-  con_write(C_COMMENT, _("You can learn a lot about Freeciv at %s"),
+  con_write(C_COMMENT, _("You can learn a lot about Freeciv21 at %s"),
             WIKI_URL);
   if (srvarg.auth_enabled && !srvarg.fcdb_enabled) {
     fc_fprintf(stderr, _("Requested authentication with --auth, "

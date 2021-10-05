@@ -316,15 +316,21 @@ void page_network::update_network_lists()
 
   lan_scan_timer = new QTimer(this);
   lan_scan = server_scan_begin(SERVER_SCAN_LOCAL, server_scan_error);
-  connect(lan_scan_timer, &QTimer::timeout, this,
-          &page_network::slot_lan_scan);
-  lan_scan_timer->start(500);
+  if (lan_scan_timer) {
+    // The timer may have been destroyed if there was an error
+    connect(lan_scan_timer, &QTimer::timeout, this,
+            &page_network::slot_lan_scan);
+    lan_scan_timer->start(500);
+  }
 
   meta_scan_timer = new QTimer(this);
   meta_scan = server_scan_begin(SERVER_SCAN_GLOBAL, server_scan_error);
-  connect(meta_scan_timer, &QTimer::timeout, this,
-          &page_network::slot_meta_scan);
-  meta_scan_timer->start(800);
+  if (meta_scan_timer) {
+    // The timer may have been destroyed if there was an error
+    connect(meta_scan_timer, &QTimer::timeout, this,
+            &page_network::slot_meta_scan);
+    meta_scan_timer->start(800);
+  }
 }
 
 /**
@@ -439,7 +445,7 @@ void page_network::slot_connect()
     if (client_url().password()
         == ui.connect_confirm_password_edit->text()) {
       fc_strlcpy(reply.password, qUtf8Printable(client_url().password()),
-                 MAX_LEN_NAME);
+                 MAX_LEN_PASSWORD);
       send_packet_authentication_reply(&client.conn, &reply);
       set_connection_state(WAITING_TYPE);
     } else {
@@ -449,8 +455,9 @@ void page_network::slot_connect()
 
     return;
   case ENTER_PASSWORD_TYPE:
+    client_url().setPassword(ui.connect_password_edit->text());
     fc_strlcpy(reply.password, qUtf8Printable(client_url().password()),
-               MAX_LEN_NAME);
+               MAX_LEN_PASSWORD);
     send_packet_authentication_reply(&client.conn, &reply);
     set_connection_state(WAITING_TYPE);
     return;

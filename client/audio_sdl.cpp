@@ -100,7 +100,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
 
   } else {
     // see if we can cache on this one
-    for (auto sample: samples) {
+    for (auto sample : samples) {
       if (sample.wave != nullptr && sample.tag == tag) {
         log_debug("Playing file \"%s\" from cache",
                   qUtf8Printable(fullpath));

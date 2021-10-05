@@ -337,6 +337,7 @@ void effect_req_append(struct effect *peffect, struct requirement req);
 void get_effect_req_text(const struct effect *peffect, char *buf,
                          size_t buf_len);
 QString get_effect_list_req_text(const struct effect_list *plist);
+QString effect_type_unit_text(effect_type type, int value);
 
 // ruleset cache creation and communication functions
 struct packet_ruleset_effect;
@@ -418,6 +419,7 @@ int get_potential_improvement_bonus(const struct impr_type *pimprove,
                                     enum effect_type effect_type,
                                     const enum req_problem_type prob_type);
 
+const effect_list *get_effects();
 struct effect_list *get_effects(enum effect_type effect_type);
 
 typedef bool (*iec_cb)(struct effect *, void *data);

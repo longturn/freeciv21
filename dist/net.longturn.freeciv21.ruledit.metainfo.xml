@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">>
+    <id type="desktop">net.longturn.freeciv21.ruledit</id>
+    <metadata_license>CC0</metadata_license>
+    <project_license>GPL-3.0+</project_license>
+    <name>Freeciv21 Ruleset Editor</name>
+    <summary>Ruleset editor for the Freeciv21 game</summary>
+    <description>
+        <p>
+            Freeciv21 is a Free and Open Source empire-building strategy game inspired by the history of human civilization. The game commences in prehistory and your
+            mission is to lead your tribe from the Stone Age to the Space Age...
+        </p>
+        <p>
+            Freeciv21 Ruleset Editor can be used to create your own game rules, or the change existing ones. It is based on the Qt framework.
+        </p>
+    </description>
+    <launchable type="desktop-id">net.longturn.freeciv21.ruledit.desktop</launchable>
+    <icon type="remote">https://raw.githubusercontent.com/longturn/freeciv21/master/data/icons/64x64/freeciv21-client.png</icon>
+    <url type="homepage">https://longturn.net/</url>
+    <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
+    <screenshots>
+      <screenshot type="default">
+        <caption>Freeciv21 Client</caption>
+        <image>https://raw.githubusercontent.com/longturn/freeciv21/master/dist/freeciv-screenshot-2048x1112.png</image>
+      </screenshot>
+    </screenshots>
+    <update_contact>longturn.net@gmail.com</update_contact>
+    <developer_name>Longturn.net Community</developer_name>
+    <provides>
+      <binary>freeciv21-ruledit</binary>
+    </provides>
+    <categories>
+      <category>Game</category>
+      <category>Simulation</category>
+      <category>StrategyGame</category>
+    </categories>
+    <content_rating type="oars-1.0">
+      <content_attribute id="social-chat">mild</content_attribute>
+    </content_rating>
+</component>

@@ -632,6 +632,7 @@ void update_line(int canvas_x, int canvas_y)
   case HOVER_NONE:
   case HOVER_PARADROP:
   case HOVER_ACT_SEL_TGT:
+  case HOVER_DEBUG_TILE:
     break;
   };
 }
@@ -666,6 +667,7 @@ void overview_update_line(int overview_x, int overview_y)
   case HOVER_NONE:
   case HOVER_PARADROP:
   case HOVER_ACT_SEL_TGT:
+  case HOVER_DEBUG_TILE:
     break;
   };
 }

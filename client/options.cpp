@@ -152,7 +152,6 @@ struct client_options gui_options = {
     true,  //.draw_city_productions =
     false, //.draw_city_buycost =
     false, //.draw_city_trade_routes =
-    true,  //.draw_terrain =
     false, //.draw_coastline =
     true,  //.draw_roads_rails =
     true,  //.draw_irrigation =
@@ -1546,7 +1545,7 @@ static struct client_option client_options[] = {
         default_sound_plugin_name, N_("Sound plugin"),
         N_("If you have a problem with sound, try changing "
            "the sound plugin.  The new plugin won't take "
-           "effect until you restart Freeciv.  Changing this "
+           "effect until you restart Freeciv21.  Changing this "
            "is the same as using the -P command-line option."),
         COC_SOUND, GUI_STUB, "", get_soundplugin_list, NULL, 0),
     GEN_STR_OPTION(default_chat_logfile, N_("The chat log file"),
@@ -1635,10 +1634,6 @@ static struct client_option client_options[] = {
                     N_("Setting this option will draw trade route lines "
                        "between cities which have trade routes."),
                     COC_GRAPHICS, GUI_STUB, false,
-                    view_option_changed_callback),
-    GEN_BOOL_OPTION(draw_terrain, N_("Draw the terrain"),
-                    N_("Setting this option will draw the terrain."),
-                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_coastline, N_("Draw the coast line"),
@@ -3951,7 +3946,7 @@ static const char *get_current_option_file_name()
 #else
     name = freeciv_storage_dir();
     if (name.isEmpty()) {
-      qCritical(_("Cannot find freeciv storage directory"));
+      qCritical(_("Cannot find Freeciv21 storage directory"));
       return NULL;
     }
     fc_snprintf(name_buffer, sizeof(name_buffer),
@@ -4003,7 +3998,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
 
     name = freeciv_storage_dir();
     if (name.isEmpty()) {
-      qCritical(_("Cannot find freeciv storage directory"));
+      qCritical(_("Cannot find Freeciv21 storage directory"));
 
       return NULL;
     }
@@ -4016,14 +4011,14 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
                   : minor >= 0);
            minor--) {
         fc_snprintf(name_buffer, sizeof(name_buffer),
-                    "%s/freeciv-client-rc-%d.%d", qUtf8Printable(name), major, minor);
+                    "%s/freeciv-client-rc-%d.%d", qUtf8Printable(name),
+                    major, minor);
         if (0 == fc_stat(name_buffer, &buf)) {
           if (MAJOR_NEW_OPTION_FILE_NAME != major
               || MINOR_NEW_OPTION_FILE_NAME != minor) {
             qInfo(_("Didn't find '%s' option file, "
                     "loading from '%s' instead."),
-                  get_current_option_file_name(),
-                  name_buffer);
+                  get_current_option_file_name(), name_buffer);
           }
 
           return name_buffer;
@@ -4045,7 +4040,8 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
       if (0 == fc_stat(name_buffer, &buf)) {
         qInfo(_("Didn't find '%s' option file, "
                 "loading from '%s' instead."),
-              get_current_option_file_name() + qstrlen(qUtf8Printable(QDir::homePath())) + 1,
+              get_current_option_file_name()
+                  + qstrlen(qUtf8Printable(QDir::homePath())) + 1,
               name_buffer);
 
         if (FIRST_MINOR_NEW_BOOLEAN > minor) {
@@ -4056,13 +4052,12 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     }
 
     // Try with the old one.
-    fc_snprintf(name_buffer, sizeof(name_buffer), "%s/%s", qUtf8Printable(name),
-                OLD_OPTION_FILE_NAME);
+    fc_snprintf(name_buffer, sizeof(name_buffer), "%s/%s",
+                qUtf8Printable(name), OLD_OPTION_FILE_NAME);
     if (0 == fc_stat(name_buffer, &buf)) {
       qInfo(_("Didn't find '%s' option file, "
               "loading from '%s' instead."),
-            get_current_option_file_name(),
-            OLD_OPTION_FILE_NAME);
+            get_current_option_file_name(), OLD_OPTION_FILE_NAME);
       *allow_digital_boolean = true;
       return name_buffer;
     } else {
@@ -4677,8 +4672,7 @@ void options_save(option_save_log_callback log_cb)
 
   // Directory name
   sz_strlcpy(dir_name, name);
-  for (i = qstrlen(dir_name) - 1;
-       i >= 0 && dir_name[i] != '/'; i--) {
+  for (i = qstrlen(dir_name) - 1; i >= 0 && dir_name[i] != '/'; i--) {
     // Nothing
   }
   if (i > 0) {

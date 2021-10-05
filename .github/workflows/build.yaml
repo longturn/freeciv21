@@ -1,0 +1,152 @@
+name: Build
+on:
+  push:
+    paths-ignore: docs
+  pull_request: {}
+  schedule:
+    - cron: "0 5 * * MON"
+  workflow_dispatch: {}
+
+jobs:
+  ubuntu-gcc:
+    name: "Ubuntu with GCC"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            cmake \
+            ninja-build \
+            g++ \
+            python3 \
+            gettext \
+            qt5-default \
+            libkf5archive-dev \
+            liblua5.3-dev \
+            libsqlite3-dev \
+            libsdl2-mixer-dev
+      - name: Configure
+        run: |
+          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+      - name: Build
+        run: |
+          cmake --build build
+      - name: Install
+        run: |
+          cmake --build build --target install
+  ubuntu-clang:
+    name: "Ubuntu with clang"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            cmake \
+            ninja-build \
+            clang \
+            python3 \
+            gettext \
+            qt5-default \
+            libkf5archive-dev \
+            liblua5.3-dev \
+            libsqlite3-dev \
+            libsdl2-mixer-dev
+      - name: Configure
+        run: |
+          export CC=$(which clang)
+          export CXX=$(which clang++)
+          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+      - name: Build
+        run: |
+          cmake --build build
+      - name: Install
+        run: |
+          cmake --build build --target install
+  windows:
+    name: "Windows"
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: |
+            git
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-nsis
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-libunwind
+            mingw-w64-x86_64-readline
+            mingw-w64-x86_64-lua
+            mingw-w64-x86_64-SDL2_mixer
+            mingw-w64-x86_64-qt5
+            mingw-w64-x86_64-karchive-qt5
+      - name: Configure
+        run: |
+          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+      - name: Build
+        run: |
+          cmake --build build
+      - name: Package
+        run: |
+          cmake --build build --target package
+      - name: Upload package
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe
+            build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe.sha256
+  os_x:
+    name: "Mac OS X"
+    runs-on: macos-latest
+    env:
+      Intl_ROOT: /usr/local/opt/gettext
+      Qt5_DIR: /usr/local/opt/qt5/lib/cmake
+      Readline_ROOT: /usr/local/opt/readline
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          brew update
+          brew install \
+            cmake \
+            ninja \
+            python3 \
+            gettext \
+            qt@5 \
+            kde-karchive \
+            readline \
+            lua \
+            sqlite \
+            sdl2 \
+            sdl2_mixer
+          brew link gettext --force
+      - name: Configure
+        run: |
+          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+      - name: Build
+        run: |
+          cmake --build build
+      - name: Install
+        run: |
+          cmake --build build --target install
+  clang-format:
+    name: clang-format Code Formatter
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run clang-format style check for C/C++
+      uses: jidicula/clang-format-action@v3.4.0
+      with:
+        clang-format-version: '11'
+        exclude-regex: 'dependencies'

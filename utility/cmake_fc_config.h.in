@@ -5,7 +5,7 @@
 #define LOCALEDIR "${CMAKE_INSTALL_FULL_LOCALEDIR}"
 
 #cmakedefine BUG_URL "${BUG_URL}"
-#define WIKI_URL "http://www.freeciv.org/"
+#define WIKI_URL "https://longturn.readthedocs.io/en/latest/"
 
 #define DATASUBDIR "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
 
@@ -89,11 +89,6 @@
 
 /* libintl.h available */
 #cmakedefine HAVE_LIBINTL_H
-
-/* iconv() available */
-#cmakedefine HAVE_ICONV
-
-#define ICONV_CONST const
 
 /* backtrace() available */
 #cmakedefine HAVE_BACKTRACE

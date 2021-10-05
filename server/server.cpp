@@ -30,9 +30,9 @@
 
 // Stuff to wait for input on stdin.
 #ifdef Q_OS_WIN
-#include <io.h>
-#include <array>
 #include <QtCore/QWinEventNotifier>
+#include <array>
+#include <io.h>
 #include <windows.h>
 #else
 #include <QtCore/QSocketNotifier>
@@ -225,8 +225,12 @@ server::server()
   // class.
 #ifdef Q_OS_WIN
   {
-    auto handle = GetStdHandle(STD_INPUT_HANDLE);
-    if (handle != INVALID_HANDLE_VALUE) {
+    auto handle = CreateFileA("CONIN$", GENERIC_READ, FILE_SHARE_READ,
+                              nullptr, OPEN_EXISTING, 0, nullptr);
+    if (handle == INVALID_HANDLE_VALUE) {
+      // TRANS: Don't translate HANDLE and CONIN$
+      qCritical(_("Failed to get a HANDLE for CONIN$"));
+    } else {
       auto notifier = new QWinEventNotifier(handle, this);
       connect(notifier, &QWinEventNotifier::activated, this,
               &server::input_on_stdin);
@@ -290,10 +294,20 @@ server::server()
  */
 server::~server()
 {
+#ifdef Q_OS_WIN
+  {
+    // Close the handle to stdin
+    auto notifier = dynamic_cast<QWinEventNotifier *>(m_stdin_notifier);
+    if (notifier) {
+      notifier->setEnabled(false);
+      (void) CloseHandle(notifier->handle());
+    }
+  }
+#endif // Q_OS_WIN
+
   if (m_interactive) {
     // Save history
-    auto history_file = freeciv_storage_dir()
-                        + QStringLiteral("/")
+    auto history_file = freeciv_storage_dir() + QStringLiteral("/")
                         + QLatin1String(HISTORY_FILENAME);
     auto history_file_encoded = history_file.toLocal8Bit();
     write_history(history_file_encoded.constData());
@@ -411,9 +425,6 @@ void server::accept_connections()
 
       // Turn off the quitidle timeout if it's running
       if (m_quitidle_timer != nullptr) {
-        // There may be a "race condition" here if the timeout signal is
-        // already queued and we're going to quit. This should be fairly rare
-        // in practice.
         m_quitidle_timer->stop();
         m_quitidle_timer->deleteLater();
         m_quitidle_timer = nullptr;
@@ -429,9 +440,6 @@ void server::send_pings()
 {
   // Pinging around for statistics
   if (time(NULL) > (game.server.last_ping + game.server.pingtime)) {
-    // send data about the previous run
-    send_ping_times_to_all();
-
     conn_list_iterate(game.all_connections, pconn)
     {
       if ((!pconn->server.is_closing && 0 < pconn->server.ping_timers->size()
@@ -523,29 +531,6 @@ void server::input_on_socket()
  */
 void server::input_on_stdin()
 {
-#ifdef Q_OS_WIN
-  {
-    // Spurious events may occur because readline consumes only key down
-    // events. Clear the buffer if there's no key down event in the queue
-    // (rl_callback_read_char blocks if  there's no such event, which also
-    // blocks the event thread).
-    std::array<INPUT_RECORD, 8> records;
-    HANDLE h_in = GetStdHandle(STD_INPUT_HANDLE);
-    DWORD count;
-    if (PeekConsoleInput(h_in, records.data(), records.size(), &count)) {
-      if (count <= 0
-          || !std::any_of(records.begin(), records.begin() + count,
-                          [](const auto &record) {
-                            return record.EventType == KEY_EVENT
-                                   && record.Event.KeyEvent.bKeyDown;
-                          })) {
-        ReadConsoleInput(h_in, records.data(), records.size(), &count);
-        return;
-      }
-    }
-  }
-#endif
-
   if (m_interactive) {
     // Readline does everything nicely in interactive sessions
     rl_callback_read_char();
@@ -558,7 +543,7 @@ void server::input_on_stdin()
       m_stdin_notifier->deleteLater();
       m_stdin_notifier = nullptr;
       qInfo(_("Reached end of standard input."));
-    } else {
+    } else if (f.canReadLine()) {
       // Got something to read. Hopefully there's even a complete line and
       // we can process it.
       auto line = f.readLine();
@@ -668,7 +653,11 @@ void server::begin_phase()
   }
 
   log_debug("sniffingpackets");
-  check_for_full_turn_done(); // HACK: don't wait during AI phases
+  if (game.info.timeout >= 0) {
+    check_for_full_turn_done(); // HACK: don't wait during AI phases
+  } else {
+    force_end_of_sniff = true;
+  }
 
   if (m_between_turns_timer != NULL) {
     game.server.turn_change_time = timer_read_seconds(m_between_turns_timer);
@@ -821,7 +810,7 @@ void server::update_game_state()
 
   // Set up the quitidle timer if not done already
   if (m_someone_ever_connected && m_quitidle_timer == nullptr
-      && srvarg.quitidle != 0 && conn_list_size(game.est_connections) == 0) {
+      && srvarg.quitidle != 0 && conn_list_size(game.all_connections) == 0) {
     if (srvarg.exit_on_end) {
       qInfo(_("Shutting down in %d seconds for lack of players."),
             srvarg.quitidle);
@@ -874,6 +863,11 @@ bool server::shut_game_down()
 void server::quit_idle()
 {
   m_quitidle_timer = nullptr;
+
+  if (conn_list_size(game.est_connections) > 0) {
+    qDebug("Quitidle timer fired but someone is connected; not quitting");
+    return;
+  }
 
   if (srvarg.exit_on_end) {
     qInfo(_("Shutting down for lack of players."));

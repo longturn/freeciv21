@@ -608,23 +608,31 @@ void hud_units::update_actions(unit_list *punits)
   pcity = player_city_by_number(owner, punit->homecity);
   if (punit->name.isEmpty()) {
     if (pcity == nullptr) {
-      text_str = QString(unit_name_translation(punit));
+      // TRANS: <unit> #<unit id>
+      text_str = QString(_("%1 #%2"))
+                     .arg(unit_name_translation(punit))
+                     .arg(punit->id);
     } else {
-      // TRANS: <unit> (<home city>)
-      text_str =
-          QString(_("%1 (%2)"))
-              .arg(unit_name_translation(punit), city_name_get(pcity));
+      // TRANS: <unit> #<unit id> (<home city>)
+      text_str = QString(_("%1 #%2 (%3)"))
+                     .arg(unit_name_translation(punit))
+                     .arg(punit->id)
+                     .arg(city_name_get(pcity));
     }
   } else {
     if (pcity == nullptr) {
-      // TRANS: <unit> "<unit name>"
-      text_str = QString(_("%1 \"%2\""))
-                     .arg(punit->name, unit_name_translation(punit));
+      // TRANS: <unit> #<unit id> "<unit name>"
+      text_str = QString(_("%1 #%2 \"%3\""))
+                     .arg(unit_name_translation(punit))
+                     .arg(punit->id)
+                     .arg(punit->name);
     } else {
-      // TRANS: <unit> "<unit name>" (<home city>)
-      text_str = QString(_("%1 \"%2\" (%3)"))
-                     .arg(unit_name_translation(punit), punit->name,
-                          city_name_get(pcity));
+      // TRANS: <unit> #<unit id> "<unit name>" (<home city>)
+      text_str = QString(_("%1 #%2 \"%3\" (%4)"))
+                     .arg(unit_name_translation(punit))
+                     .arg(punit->id)
+                     .arg(punit->name)
+                     .arg(city_name_get(pcity));
     }
   }
   text_str = text_str + " ";

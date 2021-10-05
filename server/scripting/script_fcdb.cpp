@@ -199,7 +199,7 @@ bool script_fcdb_init(const QString &fcdb_luafile)
 
   fcl = luascript_new(NULL, false);
   if (fcl == NULL) {
-    qCritical("Error loading the Freeciv database lua definition.");
+    qCritical("Error loading the Freeciv21 database lua definition.");
     return false;
   }
 
@@ -216,7 +216,7 @@ bool script_fcdb_init(const QString &fcdb_luafile)
   if (luascript_do_file(fcl, qUtf8Printable(fcdb_luafile_resolved))
       || !script_fcdb_functions_check(
           qUtf8Printable(fcdb_luafile_resolved))) {
-    qCritical("Error loading the Freeciv database lua script '%s'.",
+    qCritical("Error loading the Freeciv21 database lua script '%s'.",
               qUtf8Printable(fcdb_luafile_resolved));
     script_fcdb_free();
     return false;

@@ -1,0 +1,58 @@
+/* override table width restrictions */
+.wy-table-responsive table td, .wy-table-responsive table th {
+    white-space: normal;
+}
+
+.wy-table-responsive {
+    margin-bottom: 24px;
+    max-width: 100%;
+    overflow: visible;
+}
+
+/* format for custom interpretive text roles */
+.unit {
+    border:1px solid #7fbbe3;
+    background:#ffdf80;
+    font-size:80%;
+    font-weight:700;
+    border-radius:4px;
+    padding:2.4px 6px;
+    margin:auto 2px 
+}
+
+.unit::before {
+    content: "Unit: ";
+}
+
+.improvement {
+    border:1px solid #7fbbe3;
+    background:#ffdf80;
+    font-size:80%;
+    font-weight:700;
+    border-radius:4px;
+    padding:2.4px 6px;
+    margin:auto 2px 
+}
+
+.improvement::before {
+    content: "City Improvement: ";
+}
+
+.wonder {
+    border:1px solid #7fbbe3;
+    background:#ffdf80;
+    font-size:80%;
+    font-weight:700;
+    border-radius:4px;
+    padding:2.4px 6px;
+    margin:auto 2px 
+}
+
+.wonder::before {
+    content: "Wonder: ";
+}
+
+/* add an underline for the title-reference interpretive text role */
+cite {
+    text-decoration: underline;
+}

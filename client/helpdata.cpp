@@ -64,10 +64,10 @@
 
 // This must be in same order as enum in helpdlg_g.h
 static const char *const help_type_names[] = {
-    "(Any)",   "(Text)",      "Units",       "Improvements",
-    "Wonders", "Techs",       "Terrain",     "Extras",
-    "Goods",   "Specialists", "Governments", "Ruleset",
-    "Tileset", "Nations",     "Multipliers", NULL};
+    "(Any)",       "(Text)",  "Units",   "Improvements", "Wonders",
+    "Techs",       "Terrain", "Extras",  "Goods",        "Specialists",
+    "Governments", "Ruleset", "Tileset", "Nations",      "Multipliers",
+    "Effects",     NULL};
 
 typedef QList<const struct help_item *> helpList;
 helpList *help_nodes;
@@ -467,7 +467,7 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
         outbuf, outlen, game.veteran,
         _("In this ruleset, the following veteran levels are defined:"),
         _("This ruleset has no default veteran levels defined."));
-  } else if (0 == strcmp(name, "FreecivVersion")) {
+  } else if (0 == strcmp(name, "Freeciv21Version")) {
     const char *ver = freeciv_name_version();
 
     cat_snprintf(
@@ -536,15 +536,15 @@ static void insert_allows_single(struct universal *psource,
                          subjstr, qUtf8Printable(strvec_to_and_list(coreqs)),
                          qUtf8Printable(strvec_to_or_list(conoreqs)));
           } else {
-            cat_snprintf(
-                buf, bufsz, Q_(strs[1]), // "Allows %s (with %s)."
-                subjstr, qUtf8Printable(strvec_to_and_list(coreqs)));
+            cat_snprintf(buf, bufsz, Q_(strs[1]), // "Allows %s (with %s)."
+                         subjstr,
+                         qUtf8Printable(strvec_to_and_list(coreqs)));
           }
         } else {
           if (0 < conoreqs.count()) {
-            cat_snprintf(
-                buf, bufsz, Q_(strs[2]), // "Allows %s (absent %s)."
-                subjstr, qUtf8Printable(strvec_to_and_list(conoreqs)));
+            cat_snprintf(buf, bufsz, Q_(strs[2]), // "Allows %s (absent %s)."
+                         subjstr,
+                         qUtf8Printable(strvec_to_and_list(conoreqs)));
           } else {
             cat_snprintf(buf, bufsz, Q_(strs[3]), // "Allows %s."
                          subjstr);
@@ -1049,6 +1049,40 @@ void boot_help_texts()
               help_nodes->append(pitem);
             }
             multipliers_iterate_end;
+            break;
+          case HELP_EFFECT:
+            for (int i = 0; i < EFT_COUNT; ++i) {
+              auto effects = get_effects(static_cast<effect_type>(i));
+              if (effect_list_size(effects) > 0) {
+                pitem = new_help_item(current_type);
+                fc_snprintf(name, sizeof(name), "%*s%s", level, "",
+                            effect_type_name(static_cast<effect_type>(i)));
+                pitem->topic = qstrdup(name);
+
+                QString all_text = _("The following rules contribute to the "
+                                     "value of this effect:\n");
+                effect_list_iterate(effects, peffect)
+                {
+                  if (requirement_vector_size(&peffect->reqs) == 0) {
+                    all_text += QString(_("* %1 by default\n"))
+                                    .arg(effect_type_unit_text(
+                                        peffect->type, peffect->value));
+                  } else {
+                    help_text_buffer[0] = '\0';
+                    get_effect_req_text(peffect, help_text_buffer,
+                                        sizeof(help_text_buffer));
+                    all_text += QString(_("* %1 with %2\n"))
+                                    .arg(effect_type_unit_text(
+                                        peffect->type, peffect->value))
+                                    .arg(help_text_buffer);
+                  }
+                }
+                effect_list_iterate_end;
+
+                pitem->text = qstrdup(qUtf8Printable(all_text));
+                help_nodes->append(pitem);
+              }
+            }
             break;
           default:
             qCritical("Bad current_type: %d.", current_type);
@@ -1733,10 +1767,9 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
   }
   if (uclass_has_flag(pclass, UCF_UNREACHABLE)) {
-    CATLSTR(
-        buf, bufsz,
-        // TRANS: indented unit class property, preserve leading spaces
-        _("  * Is unreachable. Most units cannot attack this one.\n"));
+    CATLSTR(buf, bufsz,
+            // TRANS: indented unit class property, preserve leading spaces
+            _("  * Is unreachable. Most units cannot attack this one.\n"));
     if (utype_has_flag(utype, UTYF_NEVER_PROTECTS)) {
       CATLSTR(buf, bufsz,
               // TRANS: indented twice; preserve leading spaces
@@ -1746,17 +1779,15 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   }
   if (uclass_has_flag(pclass, UCF_DOESNT_OCCUPY_TILE)
       && !utype_has_flag(utype, UTYF_CIVILIAN)) {
-    CATLSTR(
-        buf, bufsz,
-        // TRANS: indented unit class property, preserve leading spaces
-        _("  * Doesn't prevent enemy cities from working the tile it's "
-          "on.\n"));
+    CATLSTR(buf, bufsz,
+            // TRANS: indented unit class property, preserve leading spaces
+            _("  * Doesn't prevent enemy cities from working the tile it's "
+              "on.\n"));
   }
   if (can_attack_non_native(utype)) {
-    CATLSTR(
-        buf, bufsz,
-        // TRANS: indented unit class property, preserve leading spaces
-        _("  * Can attack units on non-native tiles.\n"));
+    CATLSTR(buf, bufsz,
+            // TRANS: indented unit class property, preserve leading spaces
+            _("  * Can attack units on non-native tiles.\n"));
   }
   for (flagid = UCF_USER_FLAG_1; flagid <= UCF_LAST_USER_FLAG; flagid++) {
     if (uclass_has_flag(pclass, static_cast<unit_class_flag_id>(flagid))) {
@@ -1794,35 +1825,35 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     unit_type_iterate_end;
 
     if (!against.isEmpty()) {
-      QString orlist = strvec_to_or_list(against);
-      QString andlist = strvec_to_and_list(against);
-
       switch (cbonus->type) {
       case CBONUS_DEFENSE_MULTIPLIER:
         cat_snprintf(buf, bufsz,
                      // TRANS: percentage ... or-list of unit types
                      _("* %d%% defense bonus if attacked by %s.\n"),
-                     cbonus->value * 100, qUtf8Printable(orlist));
+                     cbonus->value * 100,
+                     qUtf8Printable(strvec_to_or_list(against)));
         break;
       case CBONUS_DEFENSE_DIVIDER:
         cat_snprintf(buf, bufsz,
                      // TRANS: defense divider ... or-list of unit types
                      _("* Reduces target's defense to 1 / %d when "
                        "attacking %s.\n"),
-                     cbonus->value + 1, qUtf8Printable(orlist));
+                     cbonus->value + 1,
+                     qUtf8Printable(strvec_to_or_list(against)));
         break;
       case CBONUS_FIREPOWER1:
         cat_snprintf(buf, bufsz,
                      // TRANS: or-list of unit types
                      _("* Reduces target's fire power to 1 when "
                        "attacking %s.\n"),
-                     qUtf8Printable(andlist));
+                     qUtf8Printable(strvec_to_and_list(against)));
         break;
       case CBONUS_DEFENSE_MULTIPLIER_PCT:
         cat_snprintf(buf, bufsz,
                      // TRANS: percentage ... or-list of unit types
                      _("* %d%% defense bonus if attacked by %s.\n"),
-                     cbonus->value, qUtf8Printable(orlist));
+                     cbonus->value,
+                     qUtf8Printable(strvec_to_or_list(against)));
         break;
       case CBONUS_DEFENSE_DIVIDER_PCT:
         cat_snprintf(buf, bufsz,
@@ -1830,7 +1861,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                      _("* Reduces target's defense to 1 / %.2f when "
                        "attacking %s.\n"),
                      (static_cast<float>(cbonus->value) + 100.0f) / 100.0f,
-                     qUtf8Printable(orlist));
+                     qUtf8Printable(strvec_to_or_list(against)));
         break;
       }
     }
@@ -1912,11 +1943,10 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
     unit_type_iterate_end;
     if (!types.isEmpty()) {
-      QString orlist = strvec_to_or_list(types);
       cat_snprintf(buf, bufsz,
                    // TRANS: %s is a list of unit types separated by "or".
                    _("* May be obtained by conversion of %s.\n"),
-                   qUtf8Printable(orlist));
+                   qUtf8Printable(strvec_to_or_list(types)));
     }
   }
   if (utype_has_flag(utype, UTYF_NOHOME)) {
@@ -1959,14 +1989,14 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       }
     }
     unit_class_iterate_end;
-    QString orlist = strvec_to_or_list(classes);
 
     cat_snprintf(buf, bufsz,
                  // TRANS: %s is a list of unit classes separated by "or".
                  PL_("* Can carry and refuel %d %s unit.\n",
                      "* Can carry and refuel up to %d %s units.\n",
                      utype->transport_capacity),
-                 utype->transport_capacity, qUtf8Printable(orlist));
+                 utype->transport_capacity,
+                 qUtf8Printable(strvec_to_or_list(classes)));
     if (uclass_has_flag(utype_class(utype), UCF_UNREACHABLE)) {
       /* Document restrictions on when units can load/unload */
       bool has_restricted_load = false, has_unrestricted_load = false,
@@ -2275,15 +2305,14 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                 fuel),
             qUtf8Printable(strvec_to_or_list(types)), fuel);
       } else {
-        cat_snprintf(
-            buf, bufsz,
-            // TRANS: %s is a list of unit types separated by "or"
-            PL_("* Unit has to be in a city, a base, or on a %s"
-                " after %d turn.\n",
-                "* Unit has to be in a city, a base, or on a %s"
-                " after %d turns.\n",
-                fuel),
-            qUtf8Printable(strvec_to_or_list(types)), fuel);
+        cat_snprintf(buf, bufsz,
+                     // TRANS: %s is a list of unit types separated by "or"
+                     PL_("* Unit has to be in a city, a base, or on a %s"
+                         " after %d turn.\n",
+                         "* Unit has to be in a city, a base, or on a %s"
+                         " after %d turns.\n",
+                         fuel),
+                     qUtf8Printable(strvec_to_or_list(types)), fuel);
       }
     }
   }
@@ -2960,16 +2989,15 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
                 " The whole project will require %d bulbs to complete.",
                 bulbs),
             bulbs);
-        cat_snprintf(
-            buf, bufsz,
-            // TRANS: last %s is a sentence pluralized separately.
-            PL_("To research %s you need to research %d other"
-                " technology first.%s",
-                "To research %s you need to research %d other"
-                " technologies first.%s",
-                research_goal_unknown_techs(presearch, i) - 1),
-            advance_name_translation(vap),
-            research_goal_unknown_techs(presearch, i) - 1, buf2);
+        cat_snprintf(buf, bufsz,
+                     // TRANS: last %s is a sentence pluralized separately.
+                     PL_("To research %s you need to research %d other"
+                         " technology first.%s",
+                         "To research %s you need to research %d other"
+                         " technologies first.%s",
+                         research_goal_unknown_techs(presearch, i) - 1),
+                     advance_name_translation(vap),
+                     research_goal_unknown_techs(presearch, i) - 1, buf2);
       } else {
         CATLSTR(buf, bufsz, _("You cannot research this technology."));
       }
@@ -3529,10 +3557,10 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
 
     requirement_vector_iterate(&pextra->reqs, preq)
     {
-      (void) req_text_insert_nl(
-          reqsbuf, sizeof(reqsbuf), pplayer, preq, VERB_DEFAULT,
-          // TRANS: bullet point; note trailing space
-          buildable ? Q_("?bullet:* ") : "");
+      (void) req_text_insert_nl(reqsbuf, sizeof(reqsbuf), pplayer, preq,
+                                VERB_DEFAULT,
+                                // TRANS: bullet point; note trailing space
+                                buildable ? Q_("?bullet:* ") : "");
     }
     requirement_vector_iterate_end;
     if (reqsbuf[0] != '\0') {
@@ -3694,16 +3722,15 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
       }
     }
     unit_class_iterate_end;
-    QString andlist = strvec_to_and_list(classes);
     if (!classes.isEmpty()) {
       if (proad != NULL) {
         // TRANS: %s is a list of unit classes separated by "and".
         cat_snprintf(buf, bufsz, _("* Can be traveled by %s units.\n"),
-                     qUtf8Printable(andlist));
+                     qUtf8Printable(strvec_to_and_list(classes)));
       } else {
         // TRANS: %s is a list of unit classes separated by "and".
         cat_snprintf(buf, bufsz, _("* Native to %s units.\n"),
-                     qUtf8Printable(andlist));
+                     qUtf8Printable(strvec_to_and_list(classes)));
       }
 
       if (extra_has_flag(pextra, EF_NATIVE_TILE)) {
@@ -4110,8 +4137,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
       if (output_type == O_LAST) {
         /* There was no outputtype requirement. Effect is active for all
          * output types. Generate lists for that. */
-        bool harvested_only =
-            true; // Consider only output types from fields
+        bool harvested_only = true; // Consider only output types from fields
 
         if (peffect->type == EFT_UPKEEP_FACTOR
             || peffect->type == EFT_UNIT_UPKEEP_FREE_PER_CITY
@@ -4401,11 +4427,10 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
             }
           }
           unit_type_iterate_end;
-          cat_snprintf(
-              buf, bufsz,
-              // TRANS: %s is list of unit types separated by 'or'
-              _("* Pays no upkeep for %s.\n"),
-              qUtf8Printable(strvec_to_or_list(fanatics)));
+          cat_snprintf(buf, bufsz,
+                       // TRANS: %s is list of unit types separated by 'or'
+                       _("* Pays no upkeep for %s.\n"),
+                       qUtf8Printable(strvec_to_or_list(fanatics)));
         }
         break;
       case EFT_NO_UNHAPPY:

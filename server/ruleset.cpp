@@ -220,8 +220,7 @@ static QString valid_ruleset_filename(const char *subdir, const char *name,
     return dfilename;
   }
 
-  fc_snprintf(filename, sizeof(filename), "default/%s.%s", name,
-              extension);
+  fc_snprintf(filename, sizeof(filename), "default/%s.%s", name, extension);
   qCDebug(ruleset_category, "Trying \"%s\": default ruleset directory.",
           filename);
   dfilename = fileinfoname(get_data_dirs(), filename);

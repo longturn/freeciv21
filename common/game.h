@@ -227,8 +227,7 @@ struct civ_game {
       char demography[MAX_LEN_DEMOGRAPHY];
       char allow_take[MAX_LEN_ALLOW_TAKE];
 
-      bool
-          settings_gamestart_valid; // Valid settings from the game start.
+      bool settings_gamestart_valid; // Valid settings from the game start.
 
       struct rgbcolor_list *plr_colors;
 
@@ -645,9 +644,8 @@ extern struct world wld;
 #define GAME_DEFAULT_USER_META_MESSAGE ""
 
 #define GAME_DEFAULT_SKILL_LEVEL AI_LEVEL_EASY
-#define GAME_HARDCODED_DEFAULT_SKILL_LEVEL                                  \
-  3 // that was 'easy' in old saves
-#define GAME_OLD_DEFAULT_SKILL_LEVEL 5 // normal; for oldest save games
+#define GAME_HARDCODED_DEFAULT_SKILL_LEVEL 3 // that was 'easy' in old saves
+#define GAME_OLD_DEFAULT_SKILL_LEVEL 5       // normal; for oldest save games
 
 #define GAME_DEFAULT_DEMOGRAPHY "NASRLPEMOCqrb"
 #define GAME_DEFAULT_ALLOW_TAKE "HAhadOo"
@@ -687,8 +685,8 @@ extern struct world wld;
 #define GAME_MAX_READ_RECURSION 10 // max recursion for the read command
 
 #define GAME_DEFAULT_KICK_TIME 1800 // 1800 seconds = 30 minutes.
-#define GAME_MIN_KICK_TIME 0 // 0 = disabling.
-#define GAME_MAX_KICK_TIME 86400 // 86400 seconds = 24 hours.
+#define GAME_MIN_KICK_TIME 0        // 0 = disabling.
+#define GAME_MAX_KICK_TIME 86400    // 86400 seconds = 24 hours.
 
 // Max distance from the capital used to calculat the bribe cost.
 #define GAME_UNIT_BRIBE_DIST_MAX 32

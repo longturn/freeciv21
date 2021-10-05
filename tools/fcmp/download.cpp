@@ -342,8 +342,10 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
     if (!info.is_valid()) {
       // This doesn't look like a valid file
       auto error = info.error();
-      qWarning().noquote() <<
-        QString::fromUtf8(_("Error parsing modpack control file: file %1:")).arg(i);
+      qWarning().noquote()
+          << QString::fromUtf8(
+                 _("Error parsing modpack control file: file %1:"))
+                 .arg(i);
       qWarning().noquote() << error;
       if (mcb) {
         mcb(error);

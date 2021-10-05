@@ -7,8 +7,8 @@
 
 MAJOR_VERSION="3"
 MINOR_VERSION="0"
-PATCH_VERSION="20210613"
-EMERGENCY_VERSION="1"
+PATCH_VERSION="20210912"
+EMERGENCY_VERSION="6"
 VERSION_LABEL="-alpha"
 
 # 1) Development until MAJOR and MINOR version numbers are
@@ -56,7 +56,7 @@ DEFAULT_FOLLOW_TAG=S3_1
 #   - No new mandatory capabilities can be added to the release branch; doing
 #     so would break network capability of supposedly "compatible" releases.
 #
-NETWORK_CAPSTRING="+Freeciv.Devel-3.1-2020.Sep.10"
+NETWORK_CAPSTRING="+Freeciv21.21April13"
 
 FREECIV_DISTRIBUTOR=""
 

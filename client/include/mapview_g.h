@@ -55,3 +55,5 @@ GUI_FUNC_PROTO(void, draw_selection_rectangle, int canvas_x, int canvas_y,
 GUI_FUNC_PROTO(void, tileset_changed, void)
 void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
                     struct city *pcity, int *width, int *height);
+
+void debug_tile(tile *t);

@@ -725,7 +725,6 @@ void qtg_real_output_window_append(const QString &astring,
                         tags);
 }
 
-
 /**
    Got version message from metaserver
  */

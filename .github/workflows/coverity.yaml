@@ -1,0 +1,54 @@
+# Adapted from https://github.com/ruby/actions-coverity-scan/
+# Many thanks to the Ruby community
+name: Coverity Scan
+on:
+  schedule:
+    - cron: '0 5 * * MON'
+  workflow_dispatch: {}
+
+jobs:
+  latest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            cmake \
+            ninja-build \
+            g++ \
+            python3 \
+            gettext \
+            qt5-default \
+            libkf5archive-dev \
+            liblua5.3-dev \
+            libsqlite3-dev \
+            libsdl2-mixer-dev
+      - name: Download Coverity Build Tool
+        run: |
+          wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=${TOKEN}&project=longturn/freeciv21" -O cov-analysis-linux64.tar.gz
+          mkdir cov-analysis-linux64
+          tar xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
+        env:
+          TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
+      - name: Configure
+        run: |
+          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+      - name: Build with cov-build
+        run: |
+          export PATH=`pwd`/cov-analysis-linux64/bin:$PATH
+          cov-build --dir cov-int cmake --build build
+      - name: Submit the result to Coverity Scan
+        run: |
+          tar czvf freeciv21.tgz cov-int
+          curl \
+            --form project=longturn/freeciv21 \
+            --form token=$TOKEN \
+            --form email=longturn.net@gmail.com \
+            --form file=@freeciv21.tgz \
+            --form version=trunk \
+            --form description=Freeciv21 \
+            https://scan.coverity.com/builds?project=longturn/freeciv21
+        env:
+          TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}

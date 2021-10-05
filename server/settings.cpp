@@ -1412,7 +1412,7 @@ static struct setting settings[] = {
         "topology", wld.map.topology_id, SSET_MAP_SIZE, SSET_GEOLOGY,
         SSET_VITAL, ALLOW_NONE, ALLOW_BASIC, N_("Map topology"),
         // TRANS: do not edit the ugly ASCII art
-        N_("Freeciv maps are always two-dimensional. They may wrap at the "
+        N_("Freeciv21 maps are always two-dimensional. They may wrap at the "
            "north-south and east-west directions to form a flat map, a "
            "cylinder, or a torus (donut). Individual tiles may be "
            "rectangular or hexagonal, with either an overhead (\"classic\") "
@@ -4372,7 +4372,7 @@ void settings_game_save(struct section_file *file, const char *section)
   {
     char errbuf[200];
 
-    if (// It's explicitly set to some value to save
+    if ( // It's explicitly set to some value to save
         setting_get_setdef(pset) == SETDEF_CHANGED
         /* It must be same at loading time as it was saving time, even if
            freeciv's default has changed. */
@@ -4440,8 +4440,7 @@ void settings_game_load(struct section_file *file, const char *section)
   const char *name;
   char reject_msg[256], buf[256];
   int i, set_count;
-  int oldcitymindist =
-      game.info.citymindist; // backwards compat, see below
+  int oldcitymindist = game.info.citymindist; // backwards compat, see below
 
   /* Compatibility with savegames created with older versions is usually
    * handled as conversions in savecompat.c compat_load_<version>() */

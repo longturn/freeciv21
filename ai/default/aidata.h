@@ -50,11 +50,11 @@ struct ai_dip_intel {
   struct player *at_war_with_ally;
   struct player *is_allied_with_ally;
 
-  signed char spam; // timer to avoid spamming a player with chat
-  int distance;     // average distance to that player's cities
-  int countdown;    // we're on a countdown to war declaration
-  enum war_reason war_reason;        // why we declare war
-  signed char ally_patience;         // we EXPECT our allies to help us!
+  signed char spam;           // timer to avoid spamming a player with chat
+  int distance;               // average distance to that player's cities
+  int countdown;              // we're on a countdown to war declaration
+  enum war_reason war_reason; // why we declare war
+  signed char ally_patience;  // we EXPECT our allies to help us!
   signed char asked_about_peace;     // don't ask again
   signed char asked_about_alliance;  // don't nag!
   signed char asked_about_ceasefire; // don't ... you get the point

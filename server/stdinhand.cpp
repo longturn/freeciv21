@@ -307,15 +307,14 @@ static void cmd_reply_line(enum command_id cmd, struct connection *caller,
                            enum rfc_status rfc_status, const char *prefix,
                            const char *line)
 {
-  const char *cmdname = cmd < CMD_NUM
-                            ? command_name_by_number(cmd)
-                            : cmd == CMD_AMBIGUOUS
-                                  // TRANS: ambiguous command
-                                  ? _("(ambiguous)")
-                                  : cmd == CMD_UNRECOGNIZED
-                                        // TRANS: unrecognized command
-                                        ? _("(unknown)")
-                                        : "(?!?)"; // this case is a bug!
+  const char *cmdname = cmd < CMD_NUM ? command_name_by_number(cmd)
+                        : cmd == CMD_AMBIGUOUS
+                            // TRANS: ambiguous command
+                            ? _("(ambiguous)")
+                            : cmd == CMD_UNRECOGNIZED
+                                  // TRANS: unrecognized command
+                                  ? _("(unknown)")
+                                  : "(?!?)"; // this case is a bug!
 
   if (caller) {
     notify_conn(caller->self, NULL, E_SETTING, ftc_command, "/%s: %s%s",
@@ -3144,17 +3143,15 @@ static bool is_allowed_to_take(struct connection *requester,
     return true;
   }
 
-#ifdef HAVE_FCDB
   if (srvarg.fcdb_enabled) {
-    bool ok = FALSE;
+    bool ok = false;
 
     if (script_fcdb_call("user_take", requester, taker, pplayer, will_obs,
                          &ok)
         && ok) {
-      return TRUE;
+      return true;
     }
   }
-#endif
 
   if (!pplayer && will_obs) {
     // Global observer.
@@ -3561,7 +3558,8 @@ static bool take_command(struct connection *caller, char *str, bool check)
     cmd_reply(CMD_TAKE, caller, C_OK, _("%s now controls %s (%s, %s)."),
               pconn->username, player_name(pplayer),
               is_barbarian(pplayer) ? _("Barbarian")
-                                    : is_ai(pplayer) ? _("AI") : _("Human"),
+              : is_ai(pplayer)      ? _("AI")
+                                    : _("Human"),
               pplayer->is_alive ? _("Alive") : _("Dead"));
   } else {
     cmd_reply(CMD_TAKE, caller, C_FAIL,
@@ -4239,25 +4237,30 @@ static bool playernation_command(struct connection *caller, char *str,
       send_player_info_c(pplayer, game.est_connections);
     }
   } else {
-    pnation = nation_by_rule_name(qUtf8Printable(token.at(1)));
-    if (pnation == NO_NATION_SELECTED) {
-      cmd_reply(CMD_PLAYERNATION, caller, C_FAIL,
-                _("Unrecognized nation: %s."), qUtf8Printable(token.at(1)));
-      return false;
-    }
+    if (token.at(1) == QStringLiteral("random")) {
+      pnation = NO_NATION_SELECTED;
+    } else {
+      pnation = nation_by_rule_name(qUtf8Printable(token.at(1)));
+      if (pnation == NO_NATION_SELECTED) {
+        cmd_reply(CMD_PLAYERNATION, caller, C_FAIL,
+                  _("Unrecognized nation: %s."),
+                  qUtf8Printable(token.at(1)));
+        return false;
+      }
 
-    if (!client_can_pick_nation(pnation)) {
-      cmd_reply(CMD_PLAYERNATION, caller, C_FAIL,
-                _("%s nation is not available for user selection."),
-                qUtf8Printable(token.at(1)));
-      return false;
-    }
+      if (!client_can_pick_nation(pnation)) {
+        cmd_reply(CMD_PLAYERNATION, caller, C_FAIL,
+                  _("%s nation is not available for user selection."),
+                  qUtf8Printable(token.at(1)));
+        return false;
+      }
 
-    if (pnation->player && pnation->player != pplayer) {
-      cmd_reply(CMD_PLAYERNATION, caller, C_FAIL,
-                _("%s nation is already in use."),
-                qUtf8Printable(token.at(1)));
-      return false;
+      if (pnation->player && pnation->player != pplayer) {
+        cmd_reply(CMD_PLAYERNATION, caller, C_FAIL,
+                  _("%s nation is already in use."),
+                  qUtf8Printable(token.at(1)));
+        return false;
+      }
     }
 
     if (token.count() < 3) {
@@ -4286,7 +4289,7 @@ static bool playernation_command(struct connection *caller, char *str,
                   _("Unrecognized style: %s."), qUtf8Printable(token.at(4)));
         return false;
       }
-    } else {
+    } else if (pnation != NO_NATION_SELECTED) {
       pstyle = style_of_nation(pnation);
     }
 
@@ -4298,9 +4301,11 @@ static bool playernation_command(struct connection *caller, char *str,
       pplayer->is_male = is_male;
 
       if (token.count() > 3) {
-        if (!server_player_set_name_full(caller, pplayer, pnation,
-                                         qUtf8Printable(token.at(3)),
-                                         error_buf, sizeof(error_buf))) {
+        if (server_player_set_name_full(caller, pplayer, pnation,
+                                        qUtf8Printable(token.at(3)),
+                                        error_buf, sizeof(error_buf))) {
+          pplayer->random_name = false;
+        } else {
           cmd_reply(CMD_PLAYERNATION, caller, C_WARNING, "%s", error_buf);
         }
       } else {
@@ -4308,7 +4313,8 @@ static bool playernation_command(struct connection *caller, char *str,
       }
       cmd_reply(CMD_PLAYERNATION, caller, C_OK,
                 _("Nation of player %s set to [%s]."), player_name(pplayer),
-                nation_rule_name(pnation));
+                pnation == NO_NATION_SELECTED ? "random"
+                                              : nation_rule_name(pnation));
       send_player_info_c(pplayer, game.est_connections);
     }
   }
@@ -4987,9 +4993,10 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
 
     if (is_restricted(caller)) {
       if (!is_safe_filename(luafile)) {
-        cmd_reply(CMD_LUA, caller, C_FAIL,
-                  _("Freeciv script '%s' disallowed for security reasons."),
-                  luafile);
+        cmd_reply(
+            CMD_LUA, caller, C_FAIL,
+            _("Freeciv21 script '%s' disallowed for security reasons."),
+            luafile);
         return false;
         ;
       }
@@ -5003,7 +5010,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     if (!real_filename) {
       if (is_restricted(caller)) {
         cmd_reply(CMD_LUA, caller, C_FAIL,
-                  _("No Freeciv script found by the name '%s'."),
+                  _("No Freeciv21 script found by the name '%s'."),
                   tilde_filename);
         return false;
       }
@@ -5026,7 +5033,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     break;
   case LUA_FILE:
     cmd_reply(CMD_LUA, caller, C_COMMENT,
-              _("Loading Freeciv script file '%s'."), real_filename);
+              _("Loading Freeciv21 script file '%s'."), real_filename);
 
     if (QFile::exists(real_filename)
         && (script_file = fc_fopen(real_filename, "r"))) {
@@ -5035,13 +5042,13 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
       return ret;
     } else {
       cmd_reply(CMD_LUA, caller, C_FAIL,
-                _("Cannot read Freeciv script '%s'."), real_filename);
+                _("Cannot read Freeciv21 script '%s'."), real_filename);
       return false;
     }
     break;
   case LUA_UNSAFE_FILE:
     cmd_reply(CMD_LUA, caller, C_COMMENT,
-              _("Loading Freeciv script file '%s'."), real_filename);
+              _("Loading Freeciv21 script file '%s'."), real_filename);
 
     if (QFile::exists(real_filename)
         && (script_file = fc_fopen(real_filename, "r"))) {
@@ -5050,7 +5057,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
       return ret;
     } else {
       cmd_reply(CMD_LUA, caller, C_FAIL,
-                _("Cannot read Freeciv script '%s'."), real_filename);
+                _("Cannot read Freeciv21 script '%s'."), real_filename);
       return false;
     }
     break;
@@ -5272,15 +5279,11 @@ static bool delegate_command(struct connection *caller, char *arg,
         ret = false;
         break;
       }
-#ifndef HAVE_FCDB
-      if (caller && conn_get_access(caller) < ALLOW_ADMIN) {
-#else
       if (caller && conn_get_access(caller) < ALLOW_ADMIN
           && !(srvarg.fcdb_enabled
                && script_fcdb_call("user_delegate_to", caller, dplayer,
                                    qUtf8Printable(username), &ret)
                && ret)) {
-#endif
         cmd_reply(CMD_DELEGATE, caller, C_SYNTAX,
                   _("Command level '%s' or greater or special permission "
                     "needed to modify others' delegations."),
@@ -5910,17 +5913,11 @@ static bool fcdb_command(struct connection *caller, char *arg, bool check)
   bool ret = true;
   bool usage = false;
 
-#ifndef HAVE_FCDB
-  cmd_reply(CMD_FCDB, caller, C_FAIL,
-            _("Freeciv database script deactivated at compile time."));
-  return false;
-#endif
-
   if (!srvarg.fcdb_enabled) {
     // Not supposed to be used. It isn't initialized.
     cmd_reply(CMD_FCDB, caller, C_FAIL,
-              _("Freeciv database script not activated at server start. "
-                "See the Freeciv server's --auth command line option."));
+              _("Freeciv21 database script not activated at server start. "
+                "See the Freeciv21 server's --auth command line option."));
     return false;
   }
 
@@ -6307,7 +6304,7 @@ static void show_help_intro(struct connection *caller,
 {
   // This is formated like extra_help entries for settings and commands:
   char *help = fc_strdup(_(
-      "Welcome - this is the introductory help text for the Freeciv "
+      "Welcome - this is the introductory help text for the Freeciv21 "
       "server.\n"
       "\n"
       "Two important server concepts are Commands and Options. Commands, "
@@ -6566,7 +6563,12 @@ static void show_connections(struct connection *caller)
   } else {
     conn_list_iterate(game.all_connections, pconn)
     {
-      sz_strlcpy(buf, conn_description(pconn));
+      /* only admins get the actual hostnames of users */
+      if (caller && caller->access_level < ALLOW_ADMIN) {
+        sz_strlcpy(buf, conn_description(pconn, false));
+      } else {
+        sz_strlcpy(buf, conn_description(pconn));
+      }
       if (pconn->established) {
         cat_snprintf(buf, sizeof(buf), " command access level %s",
                      cmdlevel_name(pconn->access_level));
@@ -7190,9 +7192,9 @@ static char *cmdlevel_arg1_generator(const char *text, int state)
  */
 static const char *cmdlevel_arg2_accessor(int idx)
 {
-  return ((idx == 0)
-              ? "first"
-              : (idx == 1) ? "new" : connection_name_accessor(idx - 2));
+  return ((idx == 0)   ? "first"
+          : (idx == 1) ? "new"
+                       : connection_name_accessor(idx - 2));
 }
 
 /**

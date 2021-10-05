@@ -531,31 +531,6 @@ void handle_client_heartbeat(struct connection *pconn)
 }
 
 /**
-   Send ping time info about all connections to all connections.
- */
-void send_ping_times_to_all()
-{
-  struct packet_conn_ping_info packet;
-  int i;
-
-  i = 0;
-  conn_list_iterate(game.est_connections, pconn)
-  {
-    if (!pconn->used) {
-      continue;
-    }
-    fc_assert(i < ARRAY_SIZE(packet.conn_id));
-    packet.conn_id[i] = pconn->id;
-    packet.ping_time[i] = pconn->ping_time;
-    i++;
-  }
-  conn_list_iterate_end;
-  packet.connections = i;
-
-  lsend_packet_conn_ping_info(game.est_connections, &packet);
-}
-
-/**
    Listen for UDP packets multicasted from clients requesting
    announcement of servers on the LAN.
  */

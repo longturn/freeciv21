@@ -571,7 +571,7 @@ bool fc_ai_tex_setup(struct ai_type *ai)
   struct dai_private_data *private;
 
   if (!has_thread_cond_impl()) {
-    qCritical(_("This Freeciv compilation has no full threads "
+    qCritical(_("This Freeciv21 compilation has no full threads "
                 "implementation, tex ai cannot be used."));
     return false;
   }

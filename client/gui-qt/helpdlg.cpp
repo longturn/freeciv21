@@ -11,6 +11,7 @@
 // Qt
 #include <QApplication>
 #include <QGraphicsDropShadowEffect>
+#include <QPainter>
 #include <QProgressBar>
 #include <QScreen>
 #include <QScrollArea>
@@ -113,7 +114,7 @@ help_dialog::help_dialog(QWidget *parent) : qfc_dialog(parent)
   QVBoxLayout *layout;
   QWidget *buttons;
 
-  setWindowTitle(_("Freeciv Help Browser"));
+  setWindowTitle(_("Freeciv21 Help Browser"));
   history_pos = -1;
   update_history = true;
   layout = new QVBoxLayout(this);
@@ -219,7 +220,7 @@ void help_dialog::make_tree()
   QHash<int, QTreeWidgetItem *> hash;
   QIcon icon;
   QTreeWidgetItem *item;
-  QPixmap *spite;
+  const QPixmap *spite;
   struct advance *padvance;
   QPixmap *pcan;
   struct extra_type *pextra;
@@ -228,7 +229,6 @@ void help_dialog::make_tree()
   struct nation_type *nation;
   struct terrain *pterrain;
   struct unit_type *f_type;
-  struct drawn_sprite sprs[80];
 
   for (const auto *pitem : qAsConst(*help_nodes)) {
     const char *s;
@@ -251,11 +251,19 @@ void help_dialog::make_tree()
       icon = QIcon();
 
       switch (pitem->type) {
-      case HELP_EXTRA:
+      case HELP_EXTRA: {
         pextra = extra_type_by_translated_name(s);
-        fill_basic_extra_sprite_array(tileset, sprs, pextra);
-        spite = sprs->sprite;
-        break;
+        auto sprs = fill_basic_extra_sprite_array(tileset, pextra);
+        if (!sprs.empty()) {
+          QPixmap pix(*sprs.front().sprite);
+          QPainter p;
+          p.begin(&pix);
+          for (std::size_t i = 1; i < sprs.size(); ++i) {
+            p.drawPixmap(0, 0, *sprs[i].sprite);
+          }
+          icon = QIcon(pix);
+        }
+      } break;
 
       case HELP_GOVERNMENT:
         gov = government_by_translated_name(s);
@@ -766,6 +774,7 @@ void help_widget::set_topic(const help_item *topic)
 
   switch (topic->type) {
   case HELP_ANY:
+  case HELP_EFFECT:
   case HELP_MULTIPLIER:
   case HELP_RULESET:
   case HELP_TILESET:
@@ -1150,8 +1159,7 @@ QPixmap *terrain_canvas(struct terrain *terrain,
                         enum extra_cause cause)
 {
   QPixmap *canvas;
-  struct drawn_sprite sprs[80];
-  int canvas_y, count, i, width, height;
+  int canvas_y, i, width, height;
   struct extra_type *pextra;
 
   width = tileset_full_tile_width(tileset);
@@ -1161,8 +1169,9 @@ QPixmap *terrain_canvas(struct terrain *terrain,
   canvas = qtg_canvas_create(width, height);
   canvas->fill(Qt::transparent);
   for (i = 0; i < 3; ++i) {
-    count = fill_basic_terrain_layer_sprite_array(tileset, sprs, i, terrain);
-    put_drawn_sprites(canvas, 0, canvas_y, count, sprs, false);
+    auto sprites =
+        fill_basic_terrain_layer_sprite_array(tileset, i, terrain);
+    put_drawn_sprites(canvas, 0, canvas_y, sprites, false);
   }
 
   pextra = NULL;
@@ -1174,13 +1183,13 @@ QPixmap *terrain_canvas(struct terrain *terrain,
     }
     extra_type_by_cause_iterate_end;
     fc_assert_ret_val(pextra, nullptr);
-    count = fill_basic_extra_sprite_array(tileset, sprs, pextra);
-    put_drawn_sprites(canvas, 0, canvas_y, count, sprs, false);
+    auto sprites = fill_basic_extra_sprite_array(tileset, pextra);
+    put_drawn_sprites(canvas, 0, canvas_y, sprites, false);
   }
 
   if (resource != NULL) {
-    count = fill_basic_extra_sprite_array(tileset, sprs, resource);
-    put_drawn_sprites(canvas, 0, canvas_y, count, sprs, false);
+    auto sprites = fill_basic_extra_sprite_array(tileset, resource);
+    put_drawn_sprites(canvas, 0, canvas_y, sprites, false);
   }
 
   return canvas;

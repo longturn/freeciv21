@@ -23,6 +23,7 @@ enum cursor_hover_state {
   HOVER_PATROL,
   HOVER_ACT_SEL_TGT,
   HOVER_GOTO_SEL_TGT,
+  HOVER_DEBUG_TILE,
 };
 
 // Selecting unit from a stack without popup.
@@ -139,7 +140,6 @@ void request_toggle_city_growth();
 void request_toggle_city_productions();
 void request_toggle_city_buycost();
 void request_toggle_city_trade_routes();
-void request_toggle_terrain();
 void request_toggle_coastline();
 void request_toggle_roads_rails();
 void request_toggle_irrigation();
@@ -176,7 +176,7 @@ void unit_focus_update();
 void auto_center_on_focus_unit();
 void update_unit_pix_label(struct unit_list *punitlist);
 
-struct unit *find_visible_unit(struct tile *ptile);
+unit *find_visible_unit(const ::tile *ptile);
 void set_units_in_combat(struct unit *pattacker, struct unit *pdefender);
 int blink_active_unit();
 int blink_turn_done_button();
@@ -194,7 +194,6 @@ void key_city_growth_toggle();
 void key_city_productions_toggle();
 void key_city_buycost_toggle();
 void key_city_trade_routes_toggle();
-void key_terrain_toggle();
 void key_coastline_toggle();
 void key_roads_rails_toggle();
 void key_irrigation_toggle();

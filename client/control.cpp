@@ -287,7 +287,7 @@ void set_hover_state(struct unit_list *punits, enum cursor_hover_state state,
                      enum unit_orders order)
 {
   fc_assert_ret((punits && unit_list_size(punits) > 0)
-                || state == HOVER_NONE);
+                || (state == HOVER_NONE || state == HOVER_DEBUG_TILE));
   fc_assert_ret(state == HOVER_CONNECT || activity == ACTIVITY_LAST);
   fc_assert_ret((state == HOVER_GOTO || state == HOVER_GOTO_SEL_TGT)
                 || order == ORDER_LAST);
@@ -647,8 +647,8 @@ static struct unit *find_best_focus_candidate(bool accept_current)
           && punit->client.focus_status == FOCUS_AVAIL
           && punit->activity == ACTIVITY_IDLE && !unit_has_orders(punit)
           && (punit->moves_left > 0 || unit_type_get(punit)->move_rate == 0)
-          && can_unit_move_now(punit)
-          && !punit->done_moving && punit->ssa_controller == SSA_NONE) {
+          && can_unit_move_now(punit) && !punit->done_moving
+          && punit->ssa_controller == SSA_NONE) {
         return punit;
       }
     }
@@ -802,7 +802,7 @@ void unit_focus_update()
 /**
    Return a pointer to a visible unit, if there is one.
  */
-struct unit *find_visible_unit(struct tile *ptile)
+unit *find_visible_unit(const ::tile *ptile)
 {
   struct unit *panyowned = NULL, *panyother = NULL, *ptptother = NULL;
 
@@ -1285,6 +1285,7 @@ void control_mouse_cursor(struct tile *ptile)
     break;
   case HOVER_ACT_SEL_TGT:
   case HOVER_GOTO_SEL_TGT:
+  case HOVER_DEBUG_TILE:
     /* Select a tile to target / find targets on. */
     mouse_cursor_type = CURSOR_SELECT;
     break;
@@ -2366,19 +2367,6 @@ void request_toggle_city_trade_routes()
 }
 
 /**
-   Toggle display of terrain
- */
-void request_toggle_terrain()
-{
-  if (!can_client_change_view()) {
-    return;
-  }
-
-  gui_options.draw_terrain ^= 1;
-  update_map_canvas_visible();
-}
-
-/**
    Toggle display of coastline
  */
 void request_toggle_coastline()
@@ -2761,6 +2749,16 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
       fc_assert(action_id_exists(goto_last_action));
       do_unit_goto(ptile);
       break;
+    case HOVER_DEBUG_TILE:
+      // This function is called twice, once on mouse press and once on mouse
+      // release. We get SELECT_POPUP the second time.
+      // We don't want to do anything the first time we're called to avoid
+      // selecting units or opening the tile dialog.
+      if (qtype == SELECT_POPUP) {
+        debug_tile(ptile);
+        clear_hover_state();
+      }
+      return;
     }
 
     clear_hover_state();
@@ -3044,6 +3042,9 @@ void key_cancel_action()
     keyboardless_goto_button_down = false;
     keyboardless_goto_active = false;
     keyboardless_goto_start_tile = NULL;
+    break;
+  case HOVER_DEBUG_TILE:
+    clear_hover_state();
     break;
   case HOVER_NONE:
     break;
@@ -3691,11 +3692,6 @@ void key_city_productions_toggle() { request_toggle_city_productions(); }
    by the city name for cities visible on the main map view.
  */
 void key_city_trade_routes_toggle() { request_toggle_city_trade_routes(); }
-
-/**
-   Handle user 'toggle terrain display' input
- */
-void key_terrain_toggle() { request_toggle_terrain(); }
 
 /**
    Handle user 'toggle coastline display' input

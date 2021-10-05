@@ -9,15 +9,20 @@
 **************************************************************************/
 
 #include "messagewin.h"
+
 // Qt
 #include <QApplication>
 #include <QGridLayout>
 #include <QHeaderView>
+#include <QListWidget>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QTableWidget>
+
 // client
+#include "client_main.h"
 #include "messagewin_common.h"
+#include "update_queue.h"
+
 // gui-qt
 #include "fc_client.h"
 #include "mapview.h"
@@ -184,14 +189,11 @@ messagewdg::messagewdg(QWidget *parent) : QWidget(parent)
   QPalette palette;
   layout = new QGridLayout;
 
-  mesg_table = new QTableWidget;
-  mesg_table->setColumnCount(1);
+  mesg_table = new QListWidget;
   mesg_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  mesg_table->verticalHeader()->setVisible(false);
   mesg_table->setSelectionMode(QAbstractItemView::SingleSelection);
-  mesg_table->horizontalHeader()->setStretchLastSection(true);
-  mesg_table->horizontalHeader()->setVisible(false);
-  mesg_table->setShowGrid(false);
+  mesg_table->setTextElideMode(Qt::ElideNone);
+  mesg_table->setWordWrap(true);
   layout->addWidget(mesg_table, 0, 2, 1, 1);
   layout->setContentsMargins(0, 0, 3, 3);
   setLayout(layout);
@@ -219,7 +221,7 @@ void messagewdg::item_selected(const QItemSelection &sl,
   QFont f;
   QModelIndex index;
   QModelIndexList indexes = sl.indexes();
-  QTableWidgetItem *item;
+  QListWidgetItem *item;
 
   if (indexes.isEmpty()) {
     return;
@@ -231,7 +233,7 @@ void messagewdg::item_selected(const QItemSelection &sl,
     if (QApplication::mouseButtons() == Qt::LeftButton
         || QApplication::mouseButtons() == Qt::RightButton) {
       meswin_set_visited_state(i, true);
-      item = mesg_table->item(i, 0);
+      item = mesg_table->item(i);
       f = item->font();
       f.setItalic(true);
       item->setFont(f);
@@ -286,39 +288,26 @@ void messagewdg::paintEvent(QPaintEvent *event)
 /**
    Clears and removes mesg_table all items
  */
-void messagewdg::clr()
-{
-  mesg_table->clearContents();
-  mesg_table->setRowCount(0);
-}
+void messagewdg::clr() { mesg_table->clear(); }
 
 /**
    Adds news message to mesg_table
  */
 void messagewdg::msg(const struct message *pmsg)
 {
-  int i;
-  QPixmap *icon;
-  QFont f;
-  QTableWidgetItem *item;
-
-  item = new QTableWidgetItem;
+  auto item = new QListWidgetItem;
   item->setText(pmsg->descr);
-  i = mesg_table->rowCount();
-  mesg_table->insertRow(i);
+  mesg_table->addItem(item);
   if (pmsg->visited) {
-    f = item->font();
+    auto f = item->font();
     f.setItalic(true);
     item->setFont(f);
   }
-  icon = get_event_sprite(tileset, pmsg->event);
+  auto icon = get_event_sprite(tileset, pmsg->event);
   if (icon != NULL) {
     pix = icon;
     item->setIcon(QIcon(*pix));
   }
-  mesg_table->setItem(i, 0, item);
-  msg_update();
-  mesg_table->scrollToBottom();
 }
 
 /**
@@ -326,31 +315,50 @@ void messagewdg::msg(const struct message *pmsg)
  */
 void messagewdg::msg_update()
 {
-  mesg_table->resizeRowsToContents();
-  update();
+  const auto num = meswin_get_num_messages();
+  if (num < mesg_table->count()) {
+    // Fewer messages than before... no way to know which were removed, clear
+    // all and start from scratch.
+    mesg_table->clear();
+  }
+  for (int i = mesg_table->count(); i < num; i++) {
+    msg(meswin_get_message(i));
+  }
+
+  // Scroll down to make sure the latest message is visible.
+  if (client.conn.client.request_id_of_currently_handled_packet == 0) {
+    mesg_table->scrollToBottom();
+  } else {
+    // Scroll only once to avoid laying out text repeately.
+    update_queue::uq()->connect_processing_finished_unique(
+        client.conn.client.request_id_of_currently_handled_packet,
+        scroll_to_bottom, (void *) this);
+  }
+}
+
+/*
+ * Callback used to makes sure that the lastest message is visible.
+ */
+void messagewdg::scroll_to_bottom(void *self)
+{
+  static_cast<messagewdg *>(self)->mesg_table->scrollToBottom();
 }
 
 /**
    Resize event for messagewdg
  */
-void messagewdg::resizeEvent(QResizeEvent *event) { msg_update(); }
+void messagewdg::resizeEvent(QResizeEvent *event)
+{
+  mesg_table->scrollToBottom();
+}
 
 /**
    Do the work of updating (populating) the message dialog.
  */
 void real_meswin_dialog_update(void *unused)
 {
-  int i, num;
-  const struct message *pmsg;
-
   if (queen()->infotab == NULL) {
     return;
-  }
-  queen()->infotab->msgwdg->clr();
-  num = meswin_get_num_messages();
-  for (i = 0; i < num; i++) {
-    pmsg = meswin_get_message(i);
-    queen()->infotab->msgwdg->msg(pmsg);
   }
   queen()->infotab->msgwdg->msg_update();
 }

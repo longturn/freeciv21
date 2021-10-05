@@ -105,7 +105,7 @@ void fcUdpScan::drop() { NFCN_FREE(m_instance); }
 
 /**
    Broadcast an UDP package to all servers on LAN, requesting information
-   about the server. The packet is send to all Freeciv servers in the same
+   about the server. The packet is send to all Freeciv21 servers in the same
    multicast group as the client.
  */
 bool fcUdpScan::begin_scan(struct server_scan *scan)
@@ -273,13 +273,13 @@ static struct server_list *parse_metaserver_data(QIODevice *f)
                   /* TRANS: Type is version tag name like "stable", "S2_4",
                    * "win32" (which can also be localised -- msgids start
                    * '?vertag:') */
-                  _("Latest %s release of Freeciv is %s, this is %s."),
+                  _("Latest %s release of Freeciv21 is %s, this is %s."),
                   Q_(followtag), latest_ver, my_comparable);
 
       version_message(vertext);
     } else if (comment == NULL) {
       fc_snprintf(vertext, sizeof(vertext),
-                  _("There is no newer %s release of Freeciv available."),
+                  _("There is no newer %s release of Freeciv21 available."),
                   FOLLOWTAG);
 
       version_message(vertext);
@@ -425,7 +425,7 @@ static bool begin_metaserver_scan(struct server_scan *scan)
 
   QNetworkRequest request(cmd_metaserver);
   request.setHeader(QNetworkRequest::UserAgentHeader,
-                    QLatin1String("Freeciv/" VERSION_STRING));
+                    QLatin1String("Freeciv21/" VERSION_STRING));
   request.setHeader(QNetworkRequest::ContentTypeHeader,
                     QLatin1String("application/x-www-form-urlencoded"));
   auto *reply =
@@ -518,6 +518,7 @@ struct server_scan *server_scan_begin(enum server_scan_type type,
   scan = new server_scan;
   scan->type = type;
   scan->error_func = error_func;
+  scan->servers = nullptr;
 
   switch (type) {
   case SERVER_SCAN_GLOBAL:

@@ -1,3 +1,0 @@
-#include <windows.h>
-
-mp_icon ICON "mp.ico"

@@ -17,9 +17,8 @@
 ***********************************************************************/
 #pragma once
 
+#include "layer.h"
 #include "options.h"
-
-class QPixmap; // opaque; gui-dep
 
 struct base_type;
 struct resource_type;
@@ -53,138 +52,43 @@ struct resource_type;
 #define SPECENUM_VALUE2NAME "Darkness"
 #include "specenum_gen.h"
 
-#define SPECENUM_NAME darkness_style
-// No darkness sprites are drawn.
-#define SPECENUM_VALUE0 DARKNESS_NONE
-#define SPECENUM_VALUE0NAME "None"
-/* 1 sprite that is split into 4 parts and treated as a darkness4.  Only
- * works in iso-view. */
-#define SPECENUM_VALUE1 DARKNESS_ISORECT
-#define SPECENUM_VALUE1NAME "IsoRect"
-/* 4 sprites, one per direction.  More than one sprite per tile may be
- * drawn. */
-#define SPECENUM_VALUE2 DARKNESS_CARD_SINGLE
-#define SPECENUM_VALUE2NAME "CardinalSingle"
-/* 15=2^4-1 sprites.  A single sprite is drawn, chosen based on whether
- * there's darkness in _each_ of the cardinal directions. */
-#define SPECENUM_VALUE3 DARKNESS_CARD_FULL
-#define SPECENUM_VALUE3NAME "CardinalFull"
-// Corner darkness & fog.  3^4 = 81 sprites.
-#define SPECENUM_VALUE4 DARKNESS_CORNER
-#define SPECENUM_VALUE4NAME "Corner"
+#define SPECENUM_NAME extrastyle_id
+#define SPECENUM_VALUE0 ESTYLE_ROAD_ALL_SEPARATE
+#define SPECENUM_VALUE0NAME "RoadAllSeparate"
+#define SPECENUM_VALUE1 ESTYLE_ROAD_PARITY_COMBINED
+#define SPECENUM_VALUE1NAME "RoadParityCombined"
+#define SPECENUM_VALUE2 ESTYLE_ROAD_ALL_COMBINED
+#define SPECENUM_VALUE2NAME "RoadAllCombined"
+#define SPECENUM_VALUE3 ESTYLE_RIVER
+#define SPECENUM_VALUE3NAME "River"
+#define SPECENUM_VALUE4 ESTYLE_SINGLE1
+#define SPECENUM_VALUE4NAME "Single1"
+#define SPECENUM_VALUE5 ESTYLE_SINGLE2
+#define SPECENUM_VALUE5NAME "Single2"
+#define SPECENUM_VALUE6 ESTYLE_3LAYER
+#define SPECENUM_VALUE6NAME "3Layer"
+#define SPECENUM_VALUE7 ESTYLE_CARDINALS
+#define SPECENUM_VALUE7NAME "Cardinals"
+#define SPECENUM_COUNT ESTYLE_COUNT
 #include "specenum_gen.h"
 
-/* An edge is the border between two tiles.  This structure represents one
- * edge.  The tiles are given in the same order as the enumeration name. */
-enum edge_type {
-  EDGE_NS, // North and south
-  EDGE_WE, // West and east
-  EDGE_UD, /* Up and down (nw/se), for hex_width tilesets */
-  EDGE_LR, /* Left and right (ne/sw), for hex_height tilesets */
-  EDGE_COUNT
-};
-struct tile_edge {
-  enum edge_type type;
-#define NUM_EDGE_TILES 2
-  const struct tile *tile[NUM_EDGE_TILES];
-};
-
-/* A corner is the endpoint of several edges.  At each corner 4 tiles will
- * meet (3 in hex view).  Tiles are in clockwise order NESW. */
-struct tile_corner {
-#define NUM_CORNER_TILES 4
-  const struct tile *tile[NUM_CORNER_TILES];
-};
-
-struct drawn_sprite {
-  bool foggable; // Set to FALSE for sprites that are never fogged.
-  QPixmap *sprite;
-  int offset_x, offset_y; // offset from tile origin
-};
-
-/* Items on the mapview are drawn in layers.  Each entry below represents
- * one layer.  The names are basically arbitrary and just correspond to
- * groups of elements in fill_sprite_array().  Callers of fill_sprite_array
- * must call it once for each layer. */
-#define SPECENUM_NAME mapview_layer
-#define SPECENUM_VALUE0 LAYER_BACKGROUND
-#define SPECENUM_VALUE0NAME "Background"
-// Adjust also TERRAIN_LAYER_COUNT if changing these
-#define SPECENUM_VALUE1 LAYER_TERRAIN1
-#define SPECENUM_VALUE1NAME "Terrain1"
-#define SPECENUM_VALUE2 LAYER_DARKNESS
-#define SPECENUM_VALUE2NAME "Darkness"
-#define SPECENUM_VALUE3 LAYER_TERRAIN2
-#define SPECENUM_VALUE3NAME "Terrain2"
-#define SPECENUM_VALUE4 LAYER_TERRAIN3
-#define SPECENUM_VALUE4NAME "Terrain3"
-#define SPECENUM_VALUE5 LAYER_WATER
-#define SPECENUM_VALUE5NAME "Water"
-#define SPECENUM_VALUE6 LAYER_ROADS
-#define SPECENUM_VALUE6NAME "Roads"
-#define SPECENUM_VALUE7 LAYER_SPECIAL1
-#define SPECENUM_VALUE7NAME "Special1"
-#define SPECENUM_VALUE8 LAYER_GRID1
-#define SPECENUM_VALUE8NAME "Grid1"
-#define SPECENUM_VALUE9 LAYER_CITY1
-#define SPECENUM_VALUE9NAME "City1"
-#define SPECENUM_VALUE10 LAYER_SPECIAL2
-#define SPECENUM_VALUE10NAME "Special2"
-#define SPECENUM_VALUE11 LAYER_FOG
-#define SPECENUM_VALUE11NAME "Fog"
-#define SPECENUM_VALUE12 LAYER_UNIT
-#define SPECENUM_VALUE12NAME "Unit"
-#define SPECENUM_VALUE13 LAYER_SPECIAL3
-#define SPECENUM_VALUE13NAME "Special3"
-#define SPECENUM_VALUE14 LAYER_CITY2
-#define SPECENUM_VALUE14NAME "City2"
-#define SPECENUM_VALUE15 LAYER_GRID2
-#define SPECENUM_VALUE15NAME "Grid2"
-#define SPECENUM_VALUE16 LAYER_OVERLAYS
-#define SPECENUM_VALUE16NAME "Overlays"
-#define SPECENUM_VALUE17 LAYER_TILELABEL
-#define SPECENUM_VALUE17NAME "TileLabel"
-#define SPECENUM_VALUE18 LAYER_CITYBAR
-#define SPECENUM_VALUE18NAME "CityBar"
-#define SPECENUM_VALUE19 LAYER_FOCUS_UNIT
-#define SPECENUM_VALUE19NAME "FocusUnit"
-#define SPECENUM_VALUE20 LAYER_GOTO
-#define SPECENUM_VALUE20NAME "Goto"
-#define SPECENUM_VALUE21 LAYER_WORKERTASK
-#define SPECENUM_VALUE21NAME "WorkerTask"
-#define SPECENUM_VALUE22 LAYER_EDITOR
-#define SPECENUM_VALUE22NAME "Editor"
-#define SPECENUM_VALUE23 LAYER_INFRAWORK
-#define SPECENUM_VALUE23NAME "InfraWork"
-#define SPECENUM_COUNT LAYER_COUNT
-#include "specenum_gen.h"
-
-#define TERRAIN_LAYER_COUNT 3
-
-#define mapview_layer_iterate(layer)                                        \
-  {                                                                         \
-    enum mapview_layer layer;                                               \
-    int layer_index;                                                        \
-                                                                            \
-    for (layer_index = 0; layer_index < LAYER_COUNT; layer_index++) {       \
-      layer = tileset_get_layer(tileset, layer_index);
-
-#define mapview_layer_iterate_end                                           \
-  }                                                                         \
-  }
-
-// Layer categories can be used to only render part of a tile.
-enum layer_category {
-  LAYER_CATEGORY_CITY, // Render cities
-  LAYER_CATEGORY_TILE, // Render terrain only
-  LAYER_CATEGORY_UNIT  // Render units only
-};
+// This the way directional indices are now encoded:
+#define MAX_INDEX_CARDINAL 64
+#define MAX_INDEX_HALF 16
+#define MAX_INDEX_VALID 256
 
 #define NUM_TILES_PROGRESS 8
+#define NUM_CORNER_DIRS 4
 
 #define MAX_NUM_CITIZEN_SPRITES 6
 
 enum arrow_type { ARROW_RIGHT, ARROW_PLUS, ARROW_MINUS, ARROW_LAST };
+
+// This could be moved to common/map.h if there's more use for it.
+enum direction4 { DIR4_NORTH = 0, DIR4_SOUTH, DIR4_EAST, DIR4_WEST };
+
+constexpr direction8 DIR4_TO_DIR8[4] = {DIR8_NORTH, DIR8_SOUTH, DIR8_EAST,
+                                        DIR8_WEST};
 
 struct tileset;
 
@@ -226,33 +130,32 @@ void tileset_setup_nation_flag(struct tileset *t,
 void tileset_setup_city_tiles(struct tileset *t, int style);
 
 void tileset_player_init(struct tileset *t, struct player *pplayer);
-void tileset_background_init(struct tileset *t);
-void tileset_background_free(struct tileset *t);
 
 // Layer order
-
-enum mapview_layer tileset_get_layer(const struct tileset *t, int n);
+const std::vector<std::unique_ptr<freeciv::layer>> &
+tileset_get_layers(const struct tileset *t);
 bool tileset_layer_in_category(enum mapview_layer layer,
                                enum layer_category cat);
 
 // Gfx support
+QPixmap *load_sprite(struct tileset *t, const QString &tag_name,
+                     bool scale = true, bool smooth = true);
 
-int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
-                      enum mapview_layer layer, const struct tile *ptile,
-                      const struct tile_edge *pedge,
-                      const struct tile_corner *pcorner,
-                      const struct unit *punit, const struct city *pcity,
-                      const struct unit_type *putype);
-int fill_basic_terrain_layer_sprite_array(struct tileset *t,
-                                          struct drawn_sprite *sprs,
-                                          int layer,
-                                          struct terrain *pterrain);
+std::vector<drawn_sprite>
+fill_sprite_array(struct tileset *t, enum mapview_layer layer,
+                  const struct tile *ptile, const struct tile_edge *pedge,
+                  const struct tile_corner *pcorner,
+                  const struct unit *punit, const struct city *pcity,
+                  const struct unit_type *putype);
+std::vector<drawn_sprite>
+fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,
+                                      struct terrain *pterrain);
 
 int get_focus_unit_toggle_timeout(const struct tileset *t);
 void reset_focus_unit_state(struct tileset *t);
 void focus_unit_in_combat(struct tileset *t);
 void toggle_focus_unit_state(struct tileset *t);
-struct unit *get_drawable_unit(const struct tileset *t, struct tile *ptile);
+struct unit *get_drawable_unit(const struct tileset *t, const ::tile *ptile);
 bool unit_drawn_with_city_outline(const struct unit *punit,
                                   bool check_focus);
 
@@ -313,6 +216,9 @@ QPixmap *get_citizen_sprite(const struct tileset *t,
                             const struct city *pcity);
 QPixmap *get_city_flag_sprite(const struct tileset *t,
                               const struct city *pcity);
+void build_tile_data(const struct tile *ptile, struct terrain *pterrain,
+                     struct terrain **tterrain_near,
+                     bv_extras *textras_near);
 QPixmap *get_nation_flag_sprite(const struct tileset *t,
                                 const struct nation_type *nation);
 QPixmap *get_nation_shield_sprite(const struct tileset *t,
@@ -346,10 +252,13 @@ QPixmap *get_unit_upkeep_sprite(const struct tileset *t,
                                 const struct unit *punit,
                                 const int *upkeep_cost);
 QPixmap *get_basic_fog_sprite(const struct tileset *t);
-int fill_basic_extra_sprite_array(const struct tileset *t,
-                                  struct drawn_sprite *sprs,
-                                  const struct extra_type *pextra);
+std::vector<drawn_sprite>
+fill_basic_extra_sprite_array(const struct tileset *t,
+                              const struct extra_type *pextra);
+bool is_extra_drawing_enabled(struct extra_type *pextra);
 QPixmap *get_event_sprite(const struct tileset *t, enum event_type event);
+QPixmap *get_dither_sprite(const struct tileset *t);
+QPixmap *get_mask_sprite(const struct tileset *t);
 
 QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
                                      const char *tag, const char *alt,
@@ -383,6 +292,11 @@ float tileset_scale(const struct tileset *t);
 const char *tileset_main_intro_filename(const struct tileset *t);
 int tileset_num_city_colors(const struct tileset *t);
 bool tileset_use_hard_coded_fog(const struct tileset *t);
+
+int tileset_num_cardinal_dirs(const struct tileset *t);
+int tileset_num_index_cardinals(const struct tileset *t);
+std::array<direction8, 8> tileset_cardinal_dirs(const struct tileset *t);
+QString cardinal_index_str(const struct tileset *t, int idx);
 
 /* These are used as array index -> can't be changed freely to values
    bigger than size of those arrays. */

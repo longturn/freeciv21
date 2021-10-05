@@ -195,8 +195,8 @@ static struct unit *unpackage_unit(const struct packet_unit_info *packet)
   unit_tile_set(punit, index_to_tile(&(wld.map), packet->tile));
   punit->facing = packet->facing;
   punit->homecity = packet->homecity;
-  punit->name = QString::fromUtf8(QByteArray(packet->name,
-                                             ARRAY_SIZE(packet->name)));
+  punit->name =
+      QString::fromUtf8(QByteArray(packet->name, ARRAY_SIZE(packet->name)));
   output_type_iterate(o) { punit->upkeep[o] = packet->upkeep[o]; }
   output_type_iterate_end;
   punit->moves_left = packet->movesleft;
@@ -788,7 +788,7 @@ void handle_city_info(const struct packet_city_info *packet)
 
   pcity->airlift = packet->airlift;
   pcity->did_buy = packet->did_buy;
-  pcity->did_buy_production =  packet->did_buy_production;
+  pcity->did_buy_production = packet->did_buy_production;
   pcity->did_sell = packet->did_sell;
   pcity->was_happy = packet->was_happy;
 
@@ -2768,27 +2768,16 @@ void handle_conn_info(const struct packet_conn_info *pinfo)
 }
 
 /**
-   Handles a conn_ping_info packet from the server.  This packet contains
-   ping times for each connection.
+ * Handles a conn_ping_info packet from the server.  This packet contains
+ * ping times for each connection.
+ * FIXME Only present for backward compatibility.
  */
 void handle_conn_ping_info(int connections, const int *conn_id,
                            const float *ping_time)
 {
-  int i;
-
-  for (i = 0; i < connections; i++) {
-    struct connection *pconn = conn_by_number(conn_id[i]);
-
-    if (!pconn) {
-      continue;
-    }
-
-    pconn->ping_time = ping_time[i];
-    log_debug("conn-id=%d, ping=%fs", pconn->id, pconn->ping_time);
-  }
-  // The old_ping_time data is ignored.
-
-  players_dialog_update();
+  Q_UNUSED(connections)
+  Q_UNUSED(conn_id)
+  Q_UNUSED(ping_time)
 }
 
 /**
@@ -4568,8 +4557,6 @@ void handle_ruleset_game(const struct packet_ruleset_game *packet)
   game.plr_bg_color =
       rgbcolor_new(packet->background_red, packet->background_green,
                    packet->background_blue);
-
-  tileset_background_init(tileset);
 }
 
 /**

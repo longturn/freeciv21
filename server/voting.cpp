@@ -501,16 +501,16 @@ static void check_vote(struct vote *pvote)
     }
 
     if (!resolve) {
-      resolve = (// We have enough yes votes.
-                 (yes_pc - need_pc > MY_EPSILON)
-                 // We have too many no votes.
-                 || (no_pc - 1.0 + need_pc > MY_EPSILON
-                     || fabs(no_pc - 1.0 + need_pc) < MY_EPSILON)
-                 // We can't get enough no votes.
-                 || (no_pc + rem_pc - 1.0 + need_pc < -MY_EPSILON)
-                 // We can't get enough yes votes.
-                 || (yes_pc + rem_pc - need_pc < -MY_EPSILON
-                     || fabs(yes_pc + rem_pc - need_pc) < MY_EPSILON));
+      resolve = ( // We have enough yes votes.
+          (yes_pc - need_pc > MY_EPSILON)
+          // We have too many no votes.
+          || (no_pc - 1.0 + need_pc > MY_EPSILON
+              || fabs(no_pc - 1.0 + need_pc) < MY_EPSILON)
+          // We can't get enough no votes.
+          || (no_pc + rem_pc - 1.0 + need_pc < -MY_EPSILON)
+          // We can't get enough yes votes.
+          || (yes_pc + rem_pc - need_pc < -MY_EPSILON
+              || fabs(yes_pc + rem_pc - need_pc) < MY_EPSILON));
     }
 
     // Resolve if everyone voted already.
@@ -566,13 +566,12 @@ static void check_vote(struct vote *pvote)
                 title, pvote->vote_no, pvote->cmdline, pvote->yes, pvote->no,
                 pvote->abstain, num_voters - num_cast);
   } else {
-    notify_team(
-        callplr, NULL, E_VOTE_RESOLVED, ftc_vote_failed,
-        // TRANS: "[Vote|Teamvote] 3 \"proposed change\" failed ..."
-        _("%s %d \"%s\" failed with %d against, %d for, "
-          "%d abstentions and %d who did not vote."),
-        title, pvote->vote_no, pvote->cmdline, pvote->no, pvote->yes,
-        pvote->abstain, num_voters - num_cast);
+    notify_team(callplr, NULL, E_VOTE_RESOLVED, ftc_vote_failed,
+                // TRANS: "[Vote|Teamvote] 3 \"proposed change\" failed ..."
+                _("%s %d \"%s\" failed with %d against, %d for, "
+                  "%d abstentions and %d who did not vote."),
+                title, pvote->vote_no, pvote->cmdline, pvote->no, pvote->yes,
+                pvote->abstain, num_voters - num_cast);
   }
 
   lsend_vote_resolve(NULL, pvote, passed);

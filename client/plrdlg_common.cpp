@@ -268,15 +268,6 @@ QString plrdlg_col_state(const struct player *plr)
 }
 
 /**
-   Returns a string telling the player's client's hostname (the
-   machine from which he is connecting).
- */
-static QString col_host(const struct player *player)
-{
-  return player_addr_hack(player);
-}
-
-/**
    Returns a string telling how many turns the player has been idle.
  */
 static QString col_idle(const struct player *plr)
@@ -321,11 +312,8 @@ struct player_dlg_column player_dlg_columns[] = {
      "diplstate"},
     {true, COL_TEXT, N_("Vision"), col_vision, NULL, NULL, "vision"},
     {true, COL_TEXT, N_("State"), plrdlg_col_state, NULL, NULL, "state"},
-    {false, COL_TEXT, N_("?Player_dlg:Host"), col_host, NULL, NULL, "host"},
     {false, COL_RIGHT_TEXT, N_("?Player_dlg:Idle"), col_idle, NULL, NULL,
-     "idle"},
-    {false, COL_RIGHT_TEXT, N_("Ping"), get_ping_time_text, NULL, NULL,
-     "ping"}};
+     "idle"}};
 
 const int num_player_dlg_columns = ARRAY_SIZE(player_dlg_columns);
 
@@ -344,27 +332,4 @@ void init_player_dlg_common()
   for (i = 0; i < num_player_dlg_columns; i++) {
     player_dlg_columns[i].title = Q_(player_dlg_columns[i].title);
   }
-}
-
-/**
-   The only place where this is used is the player dialog.
-   Eventually this should go the way of the dodo with everything here
-   moved into col_host above, but some of the older clients (+win32) still
-   use this function directly.
-
-   This code in this function is only really needed so that the host is
-   kept as a blank address if no one is controlling a player, but there are
-   observers.
- */
-QString player_addr_hack(const struct player *pplayer)
-{
-  conn_list_iterate(pplayer->connections, pconn)
-  {
-    if (!pconn->observer) {
-      return pconn->addr;
-    }
-  }
-  conn_list_iterate_end;
-
-  return blank_addr_str;
 }

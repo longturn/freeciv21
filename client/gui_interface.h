@@ -45,10 +45,11 @@ struct gui_funcs {
   void (*tileset_type_set)(enum ts_type type);
   void (*free_intro_radar_sprites)();
   QPixmap *(*load_gfxfile)(const char *filename);
-  QPixmap *(*create_sprite)(int width, int height, QColor *pcolor);
-  void (*get_sprite_dimensions)(QPixmap *sprite, int *width, int *height);
-  QPixmap *(*crop_sprite)(QPixmap *source, int x, int y, int width,
-                          int height, QPixmap *mask, int mask_offset_x,
+  QPixmap *(*create_sprite)(int width, int height, const QColor *pcolor);
+  void (*get_sprite_dimensions)(const QPixmap *sprite, int *width,
+                                int *height);
+  QPixmap *(*crop_sprite)(const QPixmap *source, int x, int y, int width,
+                          int height, const QPixmap *mask, int mask_offset_x,
                           int mask_offset_y, float scale, bool smooth);
   void (*free_sprite)(QPixmap *s);
 
@@ -57,35 +58,36 @@ struct gui_funcs {
 
   QPixmap *(*canvas_create)(int width, int height);
   void (*canvas_free)(QPixmap *store);
-  void (*canvas_copy)(QPixmap *dest, QPixmap *src, int src_x, int src_y,
-                      int dest_x, int dest_y, int width, int height);
+  void (*canvas_copy)(QPixmap *dest, const QPixmap *src, int src_x,
+                      int src_y, int dest_x, int dest_y, int width,
+                      int height);
   void (*canvas_put_sprite)(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                            QPixmap *psprite, int offset_x, int offset_y,
-                            int width, int height);
+                            const QPixmap *psprite, int offset_x,
+                            int offset_y, int width, int height);
   void (*canvas_put_sprite_full)(QPixmap *pcanvas, int canvas_x,
-                                 int canvas_y, QPixmap *psprite);
+                                 int canvas_y, const QPixmap *psprite);
   void (*canvas_put_sprite_fogged)(QPixmap *pcanvas, int canvas_x,
-                                   int canvas_y, QPixmap *psprite, bool fog,
-                                   int fog_x, int fog_y);
+                                   int canvas_y, const QPixmap *psprite,
+                                   bool fog, int fog_x, int fog_y);
   void (*canvas_put_sprite_citymode)(QPixmap *pcanvas, int canvas_x,
-                                     int canvas_y, QPixmap *psprite,
+                                     int canvas_y, const QPixmap *psprite,
                                      bool fog, int fog_x, int fog_y);
-  void (*canvas_put_rectangle)(QPixmap *pcanvas, QColor *pcolor,
+  void (*canvas_put_rectangle)(QPixmap *pcanvas, const QColor *pcolor,
                                int canvas_x, int canvas_y, int width,
                                int height);
-  void (*canvas_fill_sprite_area)(QPixmap *pcanvas, QPixmap *psprite,
-                                  QColor *pcolor, int canvas_x,
+  void (*canvas_fill_sprite_area)(QPixmap *pcanvas, const QPixmap *psprite,
+                                  const QColor *pcolor, int canvas_x,
                                   int canvas_y);
-  void (*canvas_put_line)(QPixmap *pcanvas, QColor *pcolor,
+  void (*canvas_put_line)(QPixmap *pcanvas, const QColor *pcolor,
                           enum line_type ltype, int start_x, int start_y,
                           int dx, int dy);
-  void (*canvas_put_curved_line)(QPixmap *pcanvas, QColor *pcolor,
+  void (*canvas_put_curved_line)(QPixmap *pcanvas, const QColor *pcolor,
                                  enum line_type ltype, int start_x,
                                  int start_y, int dx, int dy);
   void (*get_text_size)(int *width, int *height, enum client_font font,
                         const QString &text);
   void (*canvas_put_text)(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                          enum client_font font, QColor *pcolor,
+                          enum client_font font, const QColor *pcolor,
                           const QString &);
 
   void (*set_rulesets)(int num_rulesets, QStringList rulesets);
@@ -136,7 +138,7 @@ struct gui_funcs {
   void (*gui_clear_theme)();
   QStringList (*get_gui_specific_themes_directories)(int *count);
   QStringList (*get_useable_themes_in_directory)(QString &directory,
-                                            int *count);
+                                                 int *count);
 };
 
 struct gui_funcs *get_gui_funcs();

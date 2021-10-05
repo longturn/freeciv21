@@ -23,8 +23,10 @@ public:
   void update_menu() override;
 private slots:
   void updateInfo();
+
 protected:
   void moveEvent(QMoveEvent *event);
+
 private:
   move_widget *mw;
   QHBoxLayout *layout;

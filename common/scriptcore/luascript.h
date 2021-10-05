@@ -97,7 +97,7 @@ const Direction *luascript_dir(enum direction8);
   if (!(check)) {                                                           \
     luascript_error(L, "in %s() [%s::%d]: the assertion '%s' failed.",      \
                     __FUNCTION__, __FILE__, __FC_LINE__, #check);           \
-    return __VA_ARGS__;                                                      \
+    return __VA_ARGS__;                                                     \
   }
 #else
 #define LUASCRIPT_ASSERT(check, ...)
@@ -106,28 +106,28 @@ const Direction *luascript_dir(enum direction8);
 #define LUASCRIPT_CHECK_STATE(L, ...)                                       \
   if (!L) {                                                                 \
     qCritical("No lua state available");                                    \
-    return __VA_ARGS__;                             \
+    return __VA_ARGS__;                                                     \
   }
 
 // script_error on failed check
 #define LUASCRIPT_CHECK(L, check, msg, ...)                                 \
   if (!(check)) {                                                           \
     luascript_error(L, msg);                                                \
-    return __VA_ARGS__;                             \
+    return __VA_ARGS__;                                                     \
   }
 
 // script_arg_error on failed check
 #define LUASCRIPT_CHECK_ARG(L, check, narg, msg, ...)                       \
   if (!(check)) {                                                           \
     luascript_arg_error(L, narg, msg);                                      \
-    return __VA_ARGS__;                             \
+    return __VA_ARGS__;                                                     \
   }
 
 // script_arg_error on nil value
 #define LUASCRIPT_CHECK_ARG_NIL(L, value, narg, type, ...)                  \
   if ((value) == NULL) {                                                    \
     luascript_arg_error(L, narg, "got 'nil', '" #type "' expected");        \
-    return __VA_ARGS__;                             \
+    return __VA_ARGS__;                                                     \
   }
 
 /* script_arg_error on nil value. The first argument is the lua state and the
@@ -135,5 +135,5 @@ const Direction *luascript_dir(enum direction8);
 #define LUASCRIPT_CHECK_SELF(L, value, ...)                                 \
   if ((value) == NULL) {                                                    \
     luascript_arg_error(L, 2, "got 'nil' for self");                        \
-    return __VA_ARGS__;                             \
+    return __VA_ARGS__;                                                     \
   }
