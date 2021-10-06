@@ -56,7 +56,8 @@ Have a look at :file:`amplio.tilespec` and associated files in :file:`/amplio` f
 guides document specific aspects of tileset creation:
 
 .. toctree::
-  Tilesets/index.rst
+  Tilesets/graphics.rst
+  Tilesets/debugger.rst
   :maxdepth: 1
 
 Soundsets
