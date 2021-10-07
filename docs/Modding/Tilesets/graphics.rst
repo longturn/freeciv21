@@ -42,8 +42,8 @@ and how the graphics will interact with each other.
 
 There are two layers to the :file:`.tilespec` files:
 
-* The top-level file is named, for example, :file:`engles.tilespec`. The basename of this file (here,
-  'engles') corresponds to the parameter of the :code:`--tiles` command-line argument for the Freeciv21 client,
+* The top-level file is named, for example, :file:`engels.tilespec`. The basename of this file (here,
+  'engels') corresponds to the parameter of the :code:`--tiles` command-line argument for the Freeciv21 client,
   as described above.
 
 * The top-level :file:`.tilespec` file contains general information on the full tileset, and a list of files
@@ -56,8 +56,8 @@ There are two layers to the :file:`.tilespec` files:
 
 .. code-block:: rst
 
-    engles.tileset
-    engles/
+    engels.tileset
+    engels/
       terrain1.spec
       terrain1.png
       terrain2.spec
