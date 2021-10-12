@@ -1498,22 +1498,20 @@ static bool save_governments_ruleset(const char *filename, const char *name)
       save_gov_ref(sfile, pg->ai.better, path, "ai_better");
     }
 
-    // prtitle = pg->ruler_titles->value(NATION!!!!);
-    // THIS IS BROKEN, COMMENTED always null
-    // ruler_title_hash_lookup(pg->ruler_titles, prtitle, &prtitle);
-    // if (prtitle != NULL) {
-    //   const char *title;
+    const auto prtitle = pg->ruler_titles->value(nullptr);
+    if (prtitle != NULL) {
+      const char *title;
 
-    //   title = ruler_title_male_untranslated_name(prtitle);
-    //   if (title != NULL) {
-    //     secfile_insert_str(sfile, title, "%s.ruler_male_title", path);
-    //   }
+      title = ruler_title_male_untranslated_name(prtitle);
+      if (title != NULL) {
+        secfile_insert_str(sfile, title, "%s.ruler_male_title", path);
+      }
 
-    //   title = ruler_title_female_untranslated_name(prtitle);
-    //   if (title != NULL) {
-    //     secfile_insert_str(sfile, title, "%s.ruler_female_title", path);
-    //   }
-    // }
+      title = ruler_title_female_untranslated_name(prtitle);
+      if (title != NULL) {
+        secfile_insert_str(sfile, title, "%s.ruler_female_title", path);
+      }
+    }
 
     save_strvec(sfile, pg->helptext, path, "helptext");
   }
