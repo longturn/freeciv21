@@ -78,7 +78,7 @@ static void rup_parse_cmdline(const QCoreApplication &app)
   // Process the parsed options
   fc_assert_set_fatal(parser.isSet(QStringLiteral("Fatal")));
   if (parser.isSet(QStringLiteral("ruleset"))) {
-    if (parser.values(QStringLiteral("ruleset")).size() >= 1) {
+    if (parser.values(QStringLiteral("ruleset")).size() > 1) {
       fc_fprintf(stderr, _("Multiple rulesets requested. Only one ruleset "
                            "at time supported.\n"));
       exit(EXIT_FAILURE);
