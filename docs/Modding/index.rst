@@ -39,7 +39,9 @@ Have a look at :file:`civ2civ3.serv` and associated files in :file:`/civ2civ3` f
 Refer to Ruleset specific documents:
 
 .. toctree::
-  Rulesets/index.rst
+  Rulesets/effects.rst
+  Rulesets/actions.rst
+  Rulesets/achievements.rst
   :maxdepth: 1
 
 Tilesets
