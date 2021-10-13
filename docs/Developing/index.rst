@@ -14,5 +14,6 @@ Developing
   delta.rst
   fcdb.rst
   msys2.rst
+  ai.rst
   style-guide.rst
   :maxdepth: 1
