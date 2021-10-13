@@ -89,7 +89,6 @@ install(
   doc/README.rulesets
   doc/README.scenarios
   doc/README.scorelog
-  doc/README.sound
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   COMPONENT freeciv21)
 

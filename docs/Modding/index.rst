@@ -73,6 +73,10 @@ will start with a top-lvel :literal:`.soundset` file and with a directory of the
 
 Have a look at :file:`stdsounds.soundspec` and associated files in :file:`/stdsounds` for an example.
 
+.. toctree::
+  Soundsets/sound.rst
+  :maxdepth: 1
+
 Musicsets
 =========
 
