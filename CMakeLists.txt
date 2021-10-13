@@ -85,15 +85,11 @@ install(
   AUTHORS
   COPYING
   INSTALL
-  doc/README.AI
-  doc/README.AI_modules
   doc/README.nations
-  doc/README.packaging
   doc/README.rulesets
   doc/README.scenarios
   doc/README.scorelog
   doc/README.sound
-  doc/TODO
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   COMPONENT freeciv21)
 
