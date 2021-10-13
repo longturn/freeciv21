@@ -87,7 +87,6 @@ install(
   INSTALL
   doc/README.nations
   doc/README.rulesets
-  doc/README.scenarios
   doc/README.scorelog
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   COMPONENT freeciv21)

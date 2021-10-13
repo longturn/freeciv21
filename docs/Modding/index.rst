@@ -42,6 +42,7 @@ Refer to Ruleset specific documents:
   Rulesets/effects.rst
   Rulesets/actions.rst
   Rulesets/achievements.rst
+  Rulesets/scenarios.rst
   :maxdepth: 1
 
 Tilesets
