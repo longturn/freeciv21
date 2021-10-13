@@ -42,7 +42,6 @@ Refer to Ruleset specific documents:
   Rulesets/effects.rst
   Rulesets/actions.rst
   Rulesets/achievements.rst
-  Rulesets/scenarios.rst
   :maxdepth: 1
 
 Tilesets
@@ -95,6 +94,10 @@ Scenarios are custom saved games that a player can load and play. A Modder will 
 a map of the scenario and enable/change varying aspects of the game to set up the game scenario.
 
 Have a look at the scenarios shipped with Freeciv21 in :file:`/scenarios` for some examples.
+
+.. toctree::
+  scenarios.rst
+  :maxdepth: 1
 
 Installer
 =========
