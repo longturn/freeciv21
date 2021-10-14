@@ -85,7 +85,6 @@ install(
   AUTHORS
   COPYING
   INSTALL
-  doc/README.rulesets
   doc/README.scorelog
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   COMPONENT freeciv21)
