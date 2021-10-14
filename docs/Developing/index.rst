@@ -15,5 +15,6 @@ Developing
   fcdb.rst
   msys2.rst
   ai.rst
+  nations.rst
   style-guide.rst
   :maxdepth: 1
