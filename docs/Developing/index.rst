@@ -16,5 +16,6 @@ Developing
   msys2.rst
   ai.rst
   nations.rst
+  scorelog.rst
   style-guide.rst
   :maxdepth: 1
