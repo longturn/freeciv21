@@ -115,20 +115,27 @@ pageGame::pageGame(QWidget *parent)
   sidebar_wdg->addWidget(sw_endturn);
 
   civ_status = new civstatus(mapview_wdg);
+  civ_status->setAttribute(Qt::WA_NoMousePropagation);
   civ_status->show();
 
   city_overlay = new city_dialog(mapview_wdg);
   city_overlay->hide();
   minimapview_wdg = new minimap_view(mapview_wdg);
+  minimapview_wdg->setAttribute(Qt::WA_NoMousePropagation);
   minimapview_wdg->show();
   unitinfo_wdg = new hud_units(mapview_wdg);
+  unitinfo_wdg->setAttribute(Qt::WA_NoMousePropagation);
   battlelog_wdg = new hud_battle_log(mapview_wdg);
+  battlelog_wdg->setAttribute(Qt::WA_NoMousePropagation);
   battlelog_wdg->hide();
   infotab = new info_tab(mapview_wdg);
+  infotab->setAttribute(Qt::WA_NoMousePropagation);
   infotab->show();
   x_vote = new xvote(mapview_wdg);
+  x_vote->setAttribute(Qt::WA_NoMousePropagation);
   x_vote->hide();
   gtd = new goto_dialog(mapview_wdg);
+  gtd->setAttribute(Qt::WA_NoMousePropagation);
   gtd->hide();
 
   game_layout->addWidget(mapview_wdg, 1, 0);

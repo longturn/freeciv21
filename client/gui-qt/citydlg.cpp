@@ -1321,6 +1321,11 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
   small_font = fcFont::instance()->getFont(fonts::notify_label);
   ui.setupUi(this);
 
+  // Prevent mouse events from going through the panels to the main map
+  for (auto child : findChildren<QWidget *>()) {
+    child->setAttribute(Qt::WA_NoMousePropagation);
+  }
+
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   setMouseTracking(true);
   selected_row_p = -1;
