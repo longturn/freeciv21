@@ -124,7 +124,6 @@ public:
   QCursor *fc_cursors[CURSOR_LAST][NUM_CURSOR_FRAMES];
   QWidget *central_wdg{nullptr};
   bool interface_locked{false};
-  bool map_font_scale{true};
   fc_corner *corner_wid;
   fc_settings qt_settings;
   float map_scale{1.0f};
