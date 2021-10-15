@@ -2620,13 +2620,13 @@ void mr_menu::zoom_scale_fonts()
   QFont *qf;
 
   if (scale_fonts_status->isChecked()) {
-    king()->map_font_scale = true;
+    gui_options.zoom_scale_fonts = true;
   } else {
     qf = fcFont::instance()->getFont(fonts::city_names);
     qf->setPointSize(fcFont::instance()->city_fontsize);
     qf = fcFont::instance()->getFont(fonts::city_productions);
     qf->setPointSize(fcFont::instance()->prod_fontsize);
-    king()->map_font_scale = false;
+    gui_options.zoom_scale_fonts = false;
   }
   update_city_descriptions();
 }

@@ -167,6 +167,7 @@ struct client_options gui_options = {
     true,  //.draw_borders =
     false, //.draw_native =
     true,  //.draw_unit_shields =
+    true,  //.zoom_scale_fonts =
     true,  //.player_dlg_show_dead_players =
     true,  //.reqtree_show_icons =
     false, //.reqtree_curved_lines =
@@ -1722,6 +1723,12 @@ static struct client_option client_options[] = {
                     N_("Show dead players in Nations report"),
                     N_("This option controls whether defeated nations are "
                        "shown on the Nations report page."),
+                    COC_GRAPHICS, GUI_STUB, true,
+                    view_option_changed_callback),
+    GEN_BOOL_OPTION(zoom_scale_fonts, N_("Scale fonts when zooming"),
+                    N_("When this option is set, the fonts and city "
+                       "descriptions will be "
+                       "scaled when the map is zoomed."),
                     COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(

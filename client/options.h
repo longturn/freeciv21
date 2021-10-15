@@ -140,6 +140,7 @@ struct client_options {
   bool draw_borders;
   bool draw_native;
   bool draw_unit_shields;
+  bool zoom_scale_fonts;
 
   bool player_dlg_show_dead_players;
   bool reqtree_show_icons;

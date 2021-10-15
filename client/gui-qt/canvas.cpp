@@ -370,7 +370,7 @@ QFont *get_font(client_font font)
   switch (font) {
   case FONT_CITY_NAME:
     qf = fcFont::instance()->getFont(fonts::city_names);
-    if (king()->map_scale != 1.0f && king()->map_font_scale) {
+    if (king()->map_scale != 1.0f && gui_options.zoom_scale_fonts) {
       ssize = ceil(king()->map_scale * fcFont::instance()->city_fontsize);
       if (qf->pointSize() != ssize) {
         qf->setPointSize(ssize);
@@ -379,7 +379,7 @@ QFont *get_font(client_font font)
     break;
   case FONT_CITY_PROD:
     qf = fcFont::instance()->getFont(fonts::city_productions);
-    if (king()->map_scale != 1.0f && king()->map_font_scale) {
+    if (king()->map_scale != 1.0f && gui_options.zoom_scale_fonts) {
       ssize = ceil(king()->map_scale * fcFont::instance()->prod_fontsize);
       if (qf->pointSize() != ssize) {
         qf->setPointSize(ssize);
