@@ -424,6 +424,28 @@ static bool check_include(struct inputfile *inf)
 }
 
 /**
+ * Stops reading the passed file. Returns the file from which it was
+ * included, if any.
+ */
+static bool stop_reading(inputfile *inf)
+{
+  if (inf->included_from == nullptr) {
+    return false;
+  }
+
+  qCDebug(inf_category) << "*include end:" << inf->filename;
+  // Pop the include, and get next line from file above instead.
+  struct inputfile *inc = inf->included_from;
+  inf_close_partial(inf);
+  // So the user pointer in still valid (and inf pointers in calling
+  // functions)
+  *inf = std::move(*inc);
+  delete inc;
+  qCDebug(inf_category) << "back to:" << inf->filename;
+  return read_a_line(inf);
+}
+
+/**
    Read a new line into cur_line.
    Increments line_num and cur_line_pos.
    Returns 0 if didn't read or other problem: treat as EOF.
@@ -433,35 +455,42 @@ static bool read_a_line(struct inputfile *inf)
 {
   fc_assert_ret_val(inf_sanity_check(inf), false);
 
-  bool eof = inf->fp->atEnd() && inf->cur_line_pos >= inf->cur_line.length();
-  if (eof && inf->included_from == nullptr) {
-    qCDebug(inf_category) << "eof in:" << inf->filename;
-    return false;
+  // eof
+  if (inf->fp->atEnd() && inf->cur_line_pos >= inf->cur_line.length()) {
+    return stop_reading(inf);
   }
 
   // Read a full line. Only ASCII line separators are valid.
-  inf->cur_line = QString::fromUtf8(inf->fp->readLine());
+  // First get the data. Proper error handling makes this terrible...
+  QByteArray line(1, '\0');
+  auto read = 0;
+  auto start = 0;
+  const auto chunk_size =
+      1024; // 1kB should be well enough for a single line
+  do {
+    line.resize(line.size() + chunk_size);
+    read = inf->fp->readLine(line.begin() + start, chunk_size + 1);
+    start += read;
+  } while (read == chunk_size && !line.contains('\n'));
+
+  // Error handling
+  if (read < 0 && !inf->fp->atEnd()) {
+    // TRANS: Error reading <file>: <reason>
+    qCCritical(inf_category) << QString::fromUtf8(_("Error reading %1: %2"))
+                                    .arg(inf->filename)
+                                    .arg(inf->fp->errorString());
+    return stop_reading(inf);
+  }
+
+  // Normal behavior
+  inf->cur_line = QString::fromUtf8(line.data());
   inf->cur_line_pos = 0;
   inf->line_num++;
 
-  if (eof) {
-    qCDebug(inf_category) << "*include end:" << inf->filename;
-    // Pop the include, and get next line from file above instead.
-    struct inputfile *inc = inf->included_from;
-    inf_close_partial(inf);
-    // So the user pointer in still valid (and inf pointers in calling
-    // functions)
-    *inf = std::move(*inc);
-    delete inc;
-    qCDebug(inf_category) << "back to:" << inf->filename;
+  if (check_include(inf)) {
     return read_a_line(inf);
-  } else {
-    // Normal behavior
-    if (check_include(inf)) {
-      return read_a_line(inf);
-    }
-    return true;
   }
+  return true;
 }
 
 /**
