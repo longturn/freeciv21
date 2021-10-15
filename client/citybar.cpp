@@ -460,8 +460,13 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
     return QRect();
   }
 
+  // Select the tileset to grab stuff from
+  const auto t = (gui_options.zoom_scale_fonts || !unscaled_tileset)
+                     ? tileset
+                     : unscaled_tileset;
+
   // Get some city properties
-  const citybar_sprites *citybar = get_citybar_sprites(tileset);
+  const citybar_sprites *citybar = get_citybar_sprites(t);
 
   char name[512], growth[32];
   color_std growth_color, production_color;
@@ -469,7 +474,7 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
                                    sizeof(growth), &growth_color,
                                    &production_color);
   const QMargins text_margins(3, 0, 3, 0);
-  QColor owner_color = *get_player_color(tileset, city_owner(pcity));
+  QColor owner_color = *get_player_color(t, city_owner(pcity));
 
   // This is used for both lines
   QTextCharFormat format;
@@ -480,7 +485,7 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
   // First line
   if (gui_options.draw_city_names) {
     // Flag
-    first.add_icon(get_city_flag_sprite(tileset, pcity));
+    first.add_icon(get_city_flag_sprite(t, pcity));
 
     // Units in city
     if (can_player_see_units_in_city(client.conn.playing, pcity)) {
@@ -498,7 +503,7 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
     }
 
     // City name
-    format.setForeground(*get_color(tileset, COLOR_MAPVIEW_CITYTEXT));
+    format.setForeground(*get_color(t, COLOR_MAPVIEW_CITYTEXT));
     first.add_spacer(); // Center it
     first.add_text(name, format, false, text_margins);
     first.add_spacer();
@@ -509,9 +514,8 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
 
     // Try to pick a color for city size text that contrasts with player
     // color
-    QColor *textcolors[2] = {
-        get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
-        get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
+    QColor *textcolors[2] = {get_color(t, COLOR_MAPVIEW_CITYTEXT),
+                             get_color(t, COLOR_MAPVIEW_CITYTEXT_DARK)};
     format.setForeground(*color_best_contrast(&owner_color, textcolors,
                                               ARRAY_SIZE(textcolors)));
 
@@ -534,7 +538,7 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
       char prod[512];
       get_city_mapview_production(pcity, prod, sizeof(prod));
 
-      format.setForeground(*get_color(tileset, production_color));
+      format.setForeground(*get_color(t, production_color));
       second.add_text(prod, format, false, text_margins);
     }
 
@@ -546,7 +550,7 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
       second.add_icon(citybar->food);
 
       // Text
-      format.setForeground(*get_color(tileset, growth_color));
+      format.setForeground(*get_color(t, growth_color));
       second.add_text(growth, format, false, text_margins);
     }
 
@@ -560,7 +564,7 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
       get_city_mapview_trade_routes(
           pcity, trade_routes, sizeof(trade_routes), &trade_routes_color);
 
-      format.setForeground(*get_color(tileset, trade_routes_color));
+      format.setForeground(*get_color(t, trade_routes_color));
       second.add_text(trade_routes, format, false, text_margins);
     }
   }
@@ -617,8 +621,13 @@ QRect polished_citybar_painter::paint(QPainter &painter,
   const bool should_draw_trade_routes =
       can_see_inside && gui_options.draw_city_trade_routes;
 
+  // Select the tileset to grab stuff from
+  const auto t = (gui_options.zoom_scale_fonts || !unscaled_tileset)
+                     ? tileset
+                     : unscaled_tileset;
+
   // Get some city properties
-  const citybar_sprites *citybar = get_citybar_sprites(tileset);
+  const citybar_sprites *citybar = get_citybar_sprites(t);
 
   char name[512], growth[32];
   color_std growth_color, production_color;
@@ -627,11 +636,11 @@ QRect polished_citybar_painter::paint(QPainter &painter,
                                    &production_color);
 
   // Decide colors
-  QColor owner_color = *get_player_color(tileset, city_owner(pcity));
-  QColor *textcolors[2] = {get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
-                           get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
+  QColor owner_color = *get_player_color(t, city_owner(pcity));
+  QColor *textcolors[2] = {get_color(t, COLOR_MAPVIEW_CITYTEXT),
+                           get_color(t, COLOR_MAPVIEW_CITYTEXT_DARK)};
   QColor text_color = pcity->owner == client_player()
-                          ? *get_color(tileset, COLOR_MAPVIEW_CITYTEXT)
+                          ? *get_color(t, COLOR_MAPVIEW_CITYTEXT)
                           : *color_best_contrast(&owner_color, textcolors,
                                                  ARRAY_SIZE(textcolors));
 
@@ -697,7 +706,7 @@ QRect polished_citybar_painter::paint(QPainter &painter,
     // Text
     format.setFont(*get_font(FONT_CITY_PROD));
     format.setFontPointSize(format.fontPointSize() / 1.5);
-    format.setForeground(*get_color(tileset, growth_color));
+    format.setForeground(*get_color(t, growth_color));
     line.add_text(growth, format, false, text_margins);
   }
 
@@ -705,8 +714,8 @@ QRect polished_citybar_painter::paint(QPainter &painter,
   std::unique_ptr<QPixmap> scaled_flag;
   if (city_owner(pcity) != client_player()) {
     scaled_flag = std::make_unique<QPixmap>(
-        get_city_flag_sprite(tileset, pcity)
-            ->scaledToHeight(target_height, Qt::SmoothTransformation));
+        get_city_flag_sprite(t, pcity)->scaledToHeight(
+            target_height, Qt::SmoothTransformation));
     line.add_icon(scaled_flag.get());
   }
 
@@ -738,7 +747,7 @@ QRect polished_citybar_painter::paint(QPainter &painter,
     // Format
     format.setFont(*get_font(FONT_CITY_PROD));
     format.setFontPointSize(format.fontPointSize() / 1.5);
-    format.setForeground(*get_color(tileset, production_color));
+    format.setForeground(*get_color(t, production_color));
 
     QMargins prod_margins = text_margins;
     prod_margins.setLeft(0); // Already have the city name on the left
@@ -795,10 +804,10 @@ QRect polished_citybar_painter::paint(QPainter &painter,
     QPixmap *xsprite = nullptr;
     const auto &target = pcity->production;
     if (can_see_inside && (VUT_UTYPE == target.kind)) {
-      xsprite = get_unittype_sprite(get_tileset(), target.value.utype,
-                                    direction8_invalid());
+      xsprite =
+          get_unittype_sprite(t, target.value.utype, direction8_invalid());
     } else if (can_see_inside && (target.kind == VUT_IMPROVEMENT)) {
-      xsprite = get_building_sprite(get_tileset(), target.value.building);
+      xsprite = get_building_sprite(t, target.value.building);
     }
     if (xsprite) {
       production_pix = std::make_unique<QPixmap>(
@@ -843,7 +852,7 @@ QRect polished_citybar_painter::paint(QPainter &painter,
                                   &trade_routes_color);
 
     format.setFont(*get_font(FONT_CITY_PROD));
-    format.setForeground(*get_color(tileset, trade_routes_color));
+    format.setForeground(*get_color(t, trade_routes_color));
     trade_line.add_text(trade_routes, format, false, text_margins);
 
     // Lay it out
