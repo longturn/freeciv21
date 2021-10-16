@@ -364,9 +364,10 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
   }
 
   // Where to install?
-  auto local_dir = fcmp->inst_prefix
-                   + ((type == MPT_SCENARIO) ? QStringLiteral("/scenarios/")
-                                             : QStringLiteral("/"));
+  auto local_dir =
+      fcmp->inst_prefix
+      + ((type == MPT_SCENARIO) ? QStringLiteral("/scenarios/")
+                                : QStringLiteral("/" DATASUBDIR "/"));
 
   // Download and install
   bool full_success = true;
