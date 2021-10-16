@@ -92,8 +92,7 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
   }
 
   if (fcmp.inst_prefix.isNull()) {
-    fcmp.inst_prefix =
-        freeciv_storage_dir() + QStringLiteral("/" DATASUBDIR);
+    fcmp.inst_prefix = freeciv_storage_dir();
 
     if (fcmp.inst_prefix.isNull()) {
       qCritical("Cannot determine Freeciv21 storage directory");
