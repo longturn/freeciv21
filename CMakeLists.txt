@@ -208,7 +208,6 @@ if(UNIX AND NOT APPLE)
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.client.desktop.in
                    net.longturn.freeciv21.client.desktop
-                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR}
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
@@ -225,7 +224,6 @@ if(UNIX AND NOT APPLE)
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.server.desktop.in
                    net.longturn.freeciv21.server.desktop
-                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR}
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
@@ -242,7 +240,6 @@ if(UNIX AND NOT APPLE)
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.modpack-qt.desktop.in
                    net.longturn.freeciv21.modpack-qt.desktop
-                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR}
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
@@ -259,7 +256,6 @@ if(UNIX AND NOT APPLE)
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.ruledit.desktop.in
                    net.longturn.freeciv21.ruledit.desktop
-                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR}
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
