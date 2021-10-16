@@ -43,6 +43,7 @@ Refer to Ruleset specific documents:
   Rulesets/effects.rst
   Rulesets/actions.rst
   Rulesets/achievements.rst
+  Rulesets/nations.rst
   :maxdepth: 1
 
 Tilesets
