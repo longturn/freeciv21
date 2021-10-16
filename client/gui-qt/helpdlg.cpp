@@ -193,7 +193,8 @@ void help_dialog::showEvent(QShowEvent *event)
     QList<QScreen *> screens = QGuiApplication::screens();
     QRect rect = screens[0]->availableGeometry();
 
-    resize((rect.width() * 3) / 5, (rect.height() * 3) / 6);
+    resize(qMax((rect.width() * 3) / 4, 1280),
+           qMax((rect.height() * 3) / 4, 800));
     sizes << rect.width() / 10 << rect.width() / 3;
     splitter->setSizes(sizes);
   }
