@@ -13,6 +13,7 @@ Developing
   attributes.rst
   delta.rst
   fcdb.rst
+  metaserver.rst
   msys2.rst
   ai.rst
   scorelog.rst

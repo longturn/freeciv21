@@ -213,7 +213,9 @@ following commands.
      libsdl2-mixer-dev \
      libunwind-dev \
      libdw-dev \
-     python3-sphinx
+     python3-sphinx \
+     python3-sphinx-rtd-theme \
+     python3-sphinxcontrib.httpdomain
 
   $ pip install sphinx_rtd_theme
 
