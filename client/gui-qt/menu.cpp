@@ -1194,9 +1194,9 @@ void mr_menu::setup_menus()
   QObject::connect(act, &QAction::triggered,
                    [this]() { slot_help(HELP_GOVERNMENT_ITEM); });
 
-  act = menu->addAction(Q_(HELP_ECONOMY_ITEM));
+  act = menu->addAction(Q_(HELP_EFFECTS_ITEM));
   QObject::connect(act, &QAction::triggered,
-                   [this]() { slot_help(HELP_ECONOMY_ITEM); });
+                   [this]() { slot_help(HELP_EFFECTS_ITEM); });
 
   act = menu->addAction(Q_(HELP_DIPLOMACY_ITEM));
   QObject::connect(act, &QAction::triggered,
