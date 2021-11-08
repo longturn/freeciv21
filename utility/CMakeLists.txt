@@ -56,7 +56,7 @@ list(APPEND BACKWARD_DEFINES BACKWARD_HAS_DW=${BACKWARD_HAS_DW})
 list(APPEND BACKWARD_DEFINES BACKWARD_HAS_BACKTRACE_SYMBOLS=${BACKWARD_HAS_BACKTRACE_SYMBOLS})
 set_source_files_properties(
   fcbacktrace.cpp PROPERTIES
-  INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/dependencies/backward-cpp-1.5
+  INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/dependencies/backward-cpp-1.6
   COMPILE_DEFINITIONS "${BACKWARD_DEFINES}")
 
 target_include_directories(utility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -68,6 +68,9 @@ target_link_libraries(utility PUBLIC Qt5::Core Qt5::Network)
 target_link_libraries(utility PRIVATE KF5::Archive)
 if (WIN32 OR MSYS OR MINGW)
   target_link_libraries(utility PRIVATE ws2_32 wsock32)
+endif()
+if ((MSYS OR MINGW) AND NOT (FREECIV_DEBUG OR FREECIV_TESTMATIC))
+  target_link_libraries(utility PRIVATE imagehlp)
 endif()
 
 # config.h is required, but this definition is still required for it to be used.
