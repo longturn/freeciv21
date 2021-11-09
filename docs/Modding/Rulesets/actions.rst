@@ -32,7 +32,7 @@ unable to perform the action. The actor unit may also lose a ruleset configurabl
 
 Example:
 
-.. code-block:: rst
+.. code-block:: ini
 
     [actionenabler_veil_the_threat_of_terror]
     action = "Incite City"
@@ -45,7 +45,7 @@ Example:
 
 Another Example:
 
-.. code-block:: rst
+.. code-block:: ini
 
     [actionenabler_go_bind_your_sons_to_exile]
     action = "Incite City"
