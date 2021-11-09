@@ -10,25 +10,25 @@ Setup
 
 This chapter is about creating new msys2 build environment.
 
-1. Install MSYS2 following the documentation on their homepage
+1. Install MSYS2 following the documentation on their homepage.
 
-2. Download: https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-x86_64-20210228.exe for win64 host
+2. Download: https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-x86_64-20210228.exe for win64 host.
 
-3. Run it to install MSYS2 on build system
+3. Run it to install MSYS2 on build system.
 
-4. Launch :file:`msys2_shell` to update packages
+4. Launch :file:`msys2_shell` to update packages.
 
 .. code-block:: rst
 
     > pacman -Syu
 
 
-5. Install following packages with :code:`pacman -Su`
+5. Install following packages with :code:`pacman -Su`.
 
 6. Packages needed for building freeciv21. These packages are needed even if you don't plan to make the
 installer, but only build Freeciv21 for local use.
 
-7. Arch independent packages needed for building Freeciv21
+7. Arch independent packages needed for building Freeciv21.
 
 8. Arch independent packages always needed for building Freeciv21. With these packages it's possible to build
 Freeciv21 source tree that has already such generated files present that are created for the release tarball.
@@ -69,23 +69,16 @@ addition to the ones always needed for building Freeciv21.
 * mingw-w64-i686-tolua / mingw-w64-x86_64-tolua
 
 
-13. Arch-specific packages for buildind Qt-client and/or Ruledit (i686 or x86_64, not both)
+13. Arch-specific packages for building the client and/or Ruledit (i686 or x86_64, not both)
 
 * mingw-w64-i686-qt5 / mingw-w64-x86_64-qt5
 * mingq-w64-i686-karchive-qt5 / mingw-w64-x86_64-karchive-qt5
 
 
-14. Arch-specific packages for building sdl2-client (i686 or x86_64, not both)
-
-* mingw-w64-i686-SDL2_image / mingw-w64-x86_64-SDL2_image
-* mingw-w64-i686-SDL2_ttf / mingw-w64-x86_64-SDL2_ttf
-* mingw-w64-i686-SDL2_gfx / mingw-w64-x86_64-SDL2_gfx
-
-
-15. Packages needed for building installer package. These are needed in addition to above ones used in the
+14. Packages needed for building installer package. These are needed in addition to above ones used in the
 building step already.
 
-16. Arch-specific packages needed for building installer package (i686 or x86_64, not both)
+15. Arch-specific packages needed for building Windows installer package (i686 or x86_64, not both)
 
 * mingw-w64-i686-nsis / mingw-w64-x86_64-nsis
 
@@ -100,4 +93,4 @@ environment. The scripts create an x86_64 environment.
 Build
 =====
 
-Now that you have the environment setup. You can follow the steps in :doc:`../General/install`
+Now that you have the environment setup. You can follow the steps in :doc:`../../General/install`
