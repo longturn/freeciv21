@@ -1,11 +1,10 @@
 Modding
 *******
 
-Modding
-  The Modding category is an area for documentation editors to provide tips and other details on modifying
-  aspects of Freeciv21 such as Rulesets, Musicsets, Soundsets and Tilesets. All of these areas allow for a
-  large amount of varyability in game play that is not hardcoded in the software. This is one of the
-  strengths of Freeciv21.
+The Modding category is an area for documentation editors to provide tips and other details on modifying
+aspects of Freeciv21 such as Rulesets, Musicsets, Soundsets and Tilesets. All of these areas allow for a
+large amount of varyability in game play that is not hardcoded in the software. This is one of the
+strengths of Freeciv21.
 
 There are five major areas of Modding that are often called "Modpacks" and are written by "Modders". The
 sections below describe these major Modding areas.
@@ -50,7 +49,7 @@ Tilesets
 ========
 
 Tilesets are a collection of :literal:`spec` files that fully define the look and feel of the game map, units,
-buildings, etc. This is effectively the graphics layer of Freeciv21. A tileset a Modder can create a whole new
+buildings, etc. This is effectively the graphics layer of Freeciv21. A tileset Modder can create a whole new
 custom graphics look and feel. The file layout for a tileset can vary depending on how the author wants to
 break out the varying layers. It will always start with a top-level :literal:`.tilespec` file and with a
 directory of the same name will have :literal:`.png` graphics files and associated :literal:`.spec` files to
