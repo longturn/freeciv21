@@ -329,7 +329,7 @@ mountains, and deserts. Although this degree of detail is probably unnecessary t
 the system is designed to degrade smoothly so it should work just fine.
 
 .. note::
-  A note on scale: it might be tempting to label London as "code:`!ocean`, i.e. not adjacent to an ocean.
+  A note on scale: it might be tempting to label London as :code:`!ocean`, i.e. not adjacent to an ocean.
   However, on a reasonably-sized Freeciv21 world map, London will be adjacent to the ocean; labeling it
   :code:`!ocean` will tend to give bad results. This is a limitation of the system, and should be taken into
   account when labelling cities.
