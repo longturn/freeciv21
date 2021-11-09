@@ -2,9 +2,9 @@ Tile Specification Files
 ************************
 
 Creating a Freeciv21 Tileset requires a mix of editing plain text :file:`spec` files as well as creating
-graphics files saved in the :file:`.png` image format. When complete, a Tileset editor will have created
-the canvas that Freeciv21 players play upon. Next to :doc:`../Rulesets/index`, creating Tilesets is one of the
-most important aspects of a Freeciv21 game.
+graphics files saved in the :file:`.png` image format. When complete, a Tileset editor will have created the
+canvas that Freeciv21 players play upon. Next to Rulesets, creating Tilesets is one of the most important
+aspects of a Freeciv21 game.
 
 Using Graphics
 ---------------
