@@ -132,9 +132,17 @@ namespace freeciv {
  */
 class layer {
 public:
+  /**
+   * Constructor.
+   */
   layer(struct tileset *ts, mapview_layer layer) : m_ts(ts), m_layer(layer)
   {
   }
+
+  /**
+   * Destructor.
+   */
+  virtual ~layer() = default;
 
   virtual std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
