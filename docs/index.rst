@@ -17,19 +17,24 @@ Playing
 Modding
   The Modding category is an area for documentation editors to provide tips and other details on modifying
   aspects of Freeciv21 such as Rulesets, Musicsets, Soundsets and Tilesets. All of these areas allow for a
-  large amount of varyability in game play that is not hardcoded in the software. This is one of the 
+  large amount of varyability in game play that is not hardcoded in the software. This is one of the
   strengths of Freeciv21.
 
-Developing
-  The Developing category is an area for documentation editors to provide information on how to alter the
-  source code of Freeciv21 and contribute to the project in general.
+Contributing
+  The Contributing category is where documentation editors provide instructions on how to contribute to the
+  Freeciv21 project.
+
+Coding
+  The Coding category is an area for documentation editors to provide information on how to alter the
+  source code of Freeciv21.
 
 
 .. toctree::
   General/index.rst
   Playing/index.rst
   Modding/index.rst
-  Developing/index.rst
+  Contributing/index.rst
+  Coding/index.rst
   :maxdepth: 2
   :caption: Contents:
 

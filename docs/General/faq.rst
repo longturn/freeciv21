@@ -424,7 +424,7 @@ Channels at https://discord.gg/98krqGm. The :literal:`#questions-and-answers` ch
 
 Patches and bug reports are best reported to the Freeciv21 bug tracking system at
 https://github.com/longturn/freeciv21/issues/new/choose. For more information, have a look at
-:doc:`../Developing/Contributing/bugs`.
+:doc:`../Contributing/bugs`.
 
 Technical Stuff
 ===============
