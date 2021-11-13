@@ -234,7 +234,7 @@ Windows Notes
 Msys2 is an available environment for compiling Freeciv21. Microsoft Windows Visual C is under development.
 
 Freeciv21 currently supports building and installing using the Msys2 environment. Build instructions for
-Msys2 versions are documented in :doc:`../Developing/Contributing/msys2`. Alternately you can visit
+Msys2 versions are documented in :doc:`../Contributing/msys2`. Alternately you can visit
 https://github.com/jwrober/freeciv-msys2 for ready made scripts.
 
 Follow the steps starting in configuring_ above.

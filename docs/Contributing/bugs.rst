@@ -8,7 +8,7 @@ The project team has implemented GitHub Issue Templates to make the process as e
 have 3 different ones: Bug Report, Documentation Request, and Feature Request. Each template has prompts to
 help you fill in the details.
 
-.. image:: ../../_static/images/github_issue_templates.png
+.. image:: ../_static/images/github_issue_templates.png
     :align: center
     :alt: GitHub Issue Templates
 
