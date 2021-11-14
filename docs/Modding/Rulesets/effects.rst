@@ -622,6 +622,11 @@ Unit_Build_Cost_Pct
 Unit_Buy_Cost_Pct
     Percentage added to unit buy cost.
 
+Nuke_Improvement_Pct
+    Percentage chance that an improvement would be destroyed while nuking the city
+    Only regular improvements (not wonders) are affected. Improvements protected from Sabotage (Eg: City Walls) 
+    aren't affected.
+
 Shield2Gold_Factor
     Factor in percent for the conversion of unit shield upkeep to gold upkeep. A value of 200 would transfer
     1 shield upkeep to 2 gold upkeep. The range of this effect must be player or world. Note that only units

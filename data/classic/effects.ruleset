@@ -2603,3 +2603,7 @@ reqs    =
     { "type",   "name",         "range", "present"
       "Action", "Upgrade Unit", "Local", TRUE
     }
+
+[effect_nuke_improvement_pct]
+type    = "Nuke_Improvement_Pct"
+value   = 50
