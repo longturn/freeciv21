@@ -375,6 +375,7 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
 
   /* Memorize some values before the tech is marked as researched.
    * We will check what has changed later. */
+  fc_assert_ret(player_slots_initialised());
   players_iterate(aplayer)
   {
     i = player_index(aplayer);
