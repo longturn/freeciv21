@@ -864,6 +864,9 @@ struct city *find_closest_city(const struct tile *ptile,
   int best_dist = -1;
 
   fc_assert_ret_val(ptile != NULL, NULL);
+  if (only_known || only_player || only_enemy) {
+    fc_assert_ret_val(pplayer != NULL, NULL);
+  }
 
   if (pplayer != NULL && only_player && only_enemy) {
     qCritical("Non of my own cities will be at war with me!");
