@@ -1090,6 +1090,7 @@ QString effect_type_unit_text(effect_type type, int value)
   case EFT_SHIELD2GOLD_FACTOR:
   case EFT_IMPR_BUILD_COST_PCT:
   case EFT_IMPR_BUY_COST_PCT:
+  case EFT_NUKE_IMPROVEMENT_PCT:
   case EFT_UNIT_BUILD_COST_PCT:
   case EFT_UNIT_BUY_COST_PCT:
   case EFT_ENEMY_CITIZEN_UNHAPPY_PCT:
