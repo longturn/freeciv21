@@ -4576,7 +4576,7 @@ static bool load_ruleset_nations(struct section_file *file,
   const char *sval;
   int default_set;
   const char *filename = secfile_name(file);
-  struct section_list *sec;
+  struct section_list *sec = nullptr;
   enum trait tr;
   bool ok = true;
 
