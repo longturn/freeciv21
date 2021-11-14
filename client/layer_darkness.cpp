@@ -24,7 +24,7 @@
 namespace freeciv {
 
 layer_darkness::layer_darkness(struct tileset *ts)
-    : freeciv::layer(ts, LAYER_DARKNESS), m_sprites{}
+    : freeciv::layer(ts, LAYER_DARKNESS), m_style(DARKNESS_NONE), m_sprites{}
 {
 }
 
