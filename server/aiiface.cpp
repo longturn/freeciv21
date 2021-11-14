@@ -244,7 +244,7 @@ void call_incident(enum incident_type type, enum casus_belli_range scope,
     fc_assert(scope == CBR_INTERNATIONAL_OUTRAGE);
     players_iterate(receiver)
     {
-      CALL_PLR_AI_FUNC(incident, victim, type, scope, paction, receiver,
+      CALL_PLR_AI_FUNC(incident, receiver, type, scope, paction, receiver,
                        violator, victim);
     }
   }
