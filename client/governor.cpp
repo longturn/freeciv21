@@ -550,7 +550,8 @@ struct city *cma_yoloswag::check_city(int city_id,
  */
 void cma_yoloswag::handle_city(struct city *pcity)
 {
-  struct cm_result *result = cm_result_new(pcity);
+  auto result = std::unique_ptr<cm_result, typeof(&cm_result_destroy)>(
+      cm_result_new(pcity), &cm_result_destroy);
   bool handled;
   int i, city_id = pcity->id;
 
@@ -572,7 +573,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
       break;
     }
 
-    cm_query_result(pcity, &parameter, result, false);
+    cm_query_result(pcity, &parameter, result.get(), false);
     if (!result->found_a_valid) {
       log_handle_city2("  no valid found result");
 
@@ -585,7 +586,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
       handled = true;
       break;
     } else {
-      if (!apply_result_on_server(pcity, result)) {
+      if (!apply_result_on_server(pcity, result.get())) {
         log_handle_city2("  doesn't cleanly apply");
         if (pcity == check_city(city_id, NULL) && i == 0) {
           create_event(city_tile(pcity), E_CITY_CMA_RELEASE, ftc_client,
