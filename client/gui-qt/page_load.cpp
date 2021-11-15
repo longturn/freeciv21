@@ -200,7 +200,6 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
   const char *terr_name;
   int ii = 0;
   int nat_y, nat_x;
-  struct section_file *sf;
   QByteArray fn_bytes;
 
   if (indexes.isEmpty()) {
@@ -216,7 +215,11 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
     return;
   }
   fn_bytes = current_file.toLocal8Bit();
-  sf = secfile_load_section(fn_bytes.data(), QStringLiteral("game"), true);
+
+  auto sf = std::unique_ptr<section_file, typeof(&secfile_destroy)>(
+      nullptr, &secfile_destroy);
+  sf.reset(
+      secfile_load_section(fn_bytes.data(), QStringLiteral("game"), true));
   if (sf) {
     const char *sname;
     bool sbool;
@@ -227,15 +230,15 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
     int curr_player = 0;
     QByteArray pl_bytes;
 
-    integer = secfile_lookup_int_default(sf, -1, "game.turn");
+    integer = secfile_lookup_int_default(sf.get(), -1, "game.turn");
     if (integer >= 0) {
       final_str = QStringLiteral("<b>") + _("Turn") + ":</b> "
                   + QString::number(integer).toHtmlEscaped() + "<br>";
     }
-    sf = secfile_load_section(fn_bytes.data(), QStringLiteral("players"),
-                              true);
+    sf.reset(secfile_load_section(fn_bytes.data(), QStringLiteral("players"),
+                                  true));
     if (sf) {
-      integer = secfile_lookup_int_default(sf, -1, "players.nplayers");
+      integer = secfile_lookup_int_default(sf.get(), -1, "players.nplayers");
       if (integer >= 0) {
         final_str = final_str + "<b>" + _("Players") + ":</b>" + " "
                     + QString::number(integer).toHtmlEscaped() + "<br>";
@@ -245,10 +248,10 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
     for (int i = 0; i < num_players; i++) {
       pl_str = QStringLiteral("player") + QString::number(i);
       pl_bytes = pl_str.toLocal8Bit();
-      if ((sf = secfile_load_section(fn_bytes.data(), pl_bytes.data(),
-                                     true))) {
+      sf.reset(secfile_load_section(fn_bytes.data(), pl_bytes.data(), true));
+      if (sf) {
         if (!(sbool = secfile_lookup_bool_default(
-                  sf, true, "player%d.unassigned_user", i))) {
+                  sf.get(), true, "player%d.unassigned_user", i))) {
           curr_player = i;
           break;
         }
@@ -262,28 +265,28 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
 
     // Information about human player
     pl_bytes = pl_str.toLocal8Bit();
-    if ((sf =
-             secfile_load_section(fn_bytes.data(), pl_bytes.data(), true))) {
-      sname = secfile_lookup_str_default(sf, nullptr, "player%d.nation",
-                                         curr_player);
+    sf.reset(secfile_load_section(fn_bytes.data(), pl_bytes.data(), true));
+    if (sf) {
+      sname = secfile_lookup_str_default(sf.get(), nullptr,
+                                         "player%d.nation", curr_player);
       if (sname) {
         final_str = final_str + "<b>" + _("Nation") + ":</b> "
                     + QString(sname).toHtmlEscaped() + "<br>";
       }
-      integer = secfile_lookup_int_default(sf, -1, "player%d.ncities",
+      integer = secfile_lookup_int_default(sf.get(), -1, "player%d.ncities",
                                            curr_player);
       if (integer >= 0) {
         final_str = final_str + "<b>" + _("Cities") + ":</b> "
                     + QString::number(integer).toHtmlEscaped() + "<br>";
       }
-      integer =
-          secfile_lookup_int_default(sf, -1, "player%d.nunits", curr_player);
+      integer = secfile_lookup_int_default(sf.get(), -1, "player%d.nunits",
+                                           curr_player);
       if (integer >= 0) {
         final_str = final_str + "<b>" + _("Units") + ":</b> "
                     + QString::number(integer).toHtmlEscaped() + "<br>";
       }
-      integer =
-          secfile_lookup_int_default(sf, -1, "player%d.gold", curr_player);
+      integer = secfile_lookup_int_default(sf.get(), -1, "player%d.gold",
+                                           curr_player);
       if (integer >= 0) {
         final_str = final_str + "<b>" + _("Gold") + ":</b> "
                     + QString::number(integer).toHtmlEscaped() + "<br>";
@@ -291,7 +294,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
       nat_x = 0;
       for (nat_y = 0; nat_y > -1; nat_y++) {
         const char *line = secfile_lookup_str_default(
-            sf, nullptr, "player%d.map_t%04d", curr_player, nat_y);
+            sf.get(), nullptr, "player%d.map_t%04d", curr_player, nat_y);
         if (line == nullptr) {
           break;
         }
@@ -304,20 +307,17 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
       terrain_type_iterate_end;
 
       // Load possible terrains and their identifiers (chars)
-      sf = secfile_load_section(fn_bytes.data(), QStringLiteral("savefile"),
-                                true);
+      sf.reset(secfile_load_section(fn_bytes.data(),
+                                    QStringLiteral("savefile"), true));
       if (sf) {
         while ((terr_name = secfile_lookup_str_default(
-                    sf, NULL, "savefile.terrident%d.name", ii))
+                    sf.get(), NULL, "savefile.terrident%d.name", ii))
                != NULL) {
           struct terrain *pterr = terrain_by_rule_name(terr_name);
           if (pterr != NULL) {
             const char *iptr = secfile_lookup_str_default(
-                sf, NULL, "savefile.terrident%d.identifier", ii);
-            if (!iptr) {
-              secfile_destroy(sf);
-              fc_assert_ret(!iptr);
-            }
+                sf.get(), NULL, "savefile.terrident%d.identifier", ii);
+            fc_assert_ret(iptr != nullptr);
             pterr->identifier_load = *iptr;
           }
           ii++;
@@ -346,19 +346,15 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
       }
       ui.load_pix->setFixedSize(ui.load_pix->pixmap()->width(),
                                 ui.load_pix->pixmap()->height());
-      if (sf) {
-        secfile_destroy(sf);
-      }
-      sf = secfile_load_section(fn_bytes.data(), QStringLiteral("research"),
-                                true);
+      sf.reset(secfile_load_section(fn_bytes.data(),
+                                    QStringLiteral("research"), true));
       if (sf) {
         sname = secfile_lookup_str_default(
-            sf, nullptr, "research.r%d.now_name", curr_player);
+            sf.get(), nullptr, "research.r%d.now_name", curr_player);
         if (sname) {
           final_str = final_str + "<b>" + _("Researching") + ":</b> "
                       + QString(sname).toHtmlEscaped();
         }
-        secfile_destroy(sf);
       }
     }
     ui.load_save_text->setText(final_str);
