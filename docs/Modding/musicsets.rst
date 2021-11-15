@@ -33,6 +33,9 @@ The discovery of :strong:`Rocketry brings` in the Modern Age.
 The discovery of :strong:`Superconductors` brings in the Post-Modern Age soundtrack. This is the final
 soundtrack of the game.
 
+This is all documented in the :file:`sytles.ruleset` file in any ruleset. The ruleset file also establishes
+the look and feel of the cities as they grow and technologies are learned.
+
 
 Spec File Layout
 ================
@@ -100,7 +103,3 @@ The :literal:`.musicspec` file is quite simple. Here is a sample:
 
 The value of X is a number from zero ( 0 ) up. For more than one song of each type, add a row and give the
 option another number +1 from the last.  You can reuse song files in different areas.
-
-If you are interested, all of this is documented in the  :file:`sytles.ruleset` file in any ruleset. It is
-possible to alter the file to create your own set of options, but there are probably a lot of implications
-in doing that.
