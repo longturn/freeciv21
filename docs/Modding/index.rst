@@ -75,7 +75,7 @@ will start with a top-lvel :literal:`.soundset` file and with a directory of the
 Have a look at :file:`stdsounds.soundspec` and associated files in :file:`/stdsounds` for an example.
 
 .. toctree::
-  Soundsets/sound.rst
+  sound.rst
   :maxdepth: 1
 
 Musicsets
@@ -83,10 +83,14 @@ Musicsets
 
 Musicsets are a collection of :literal:`spec` files that allow a Modder to add Music files to play as a
 soundtrack inside the game. Game music follows the game based on the nation selected and the mood. The mood is
-essentially binary: peace or war. Musicsets will start with a top-lvel :literal:`.musicset` file and with a
+essentially binary: peace or war. Musicsets will start with a top-lvel :literal:`.musicspec` file and with a
 directory of the same name will have :literal:`.ogg` sound files to play in the client.
 
 Have a look at :file:`stdmusic.musicspec` and associated files in :file:`/stdmusic` for an example.
+
+.. toctree::
+  musicsets.rst
+  :maxdepth: 1
 
 Scenarios
 =========
