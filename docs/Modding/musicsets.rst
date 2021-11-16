@@ -33,7 +33,7 @@ The discovery of :strong:`Rocketry brings` in the Modern Age.
 The discovery of :strong:`Superconductors` brings in the Post-Modern Age soundtrack. This is the final
 soundtrack of the game.
 
-This is all documented in the :file:`sytles.ruleset` file in any ruleset. The ruleset file also establishes
+This is all documented in the :file:`styles.ruleset` file in any ruleset. The ruleset file also establishes
 the look and feel of the cities as they grow and technologies are learned.
 
 
