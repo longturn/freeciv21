@@ -67,8 +67,8 @@ void generate_citydlg_dimensions()
   {
     float canvas_x, canvas_y;
 
-    map_to_gui_vector(get_tileset(), &canvas_x, &canvas_y,
-                      CITY_ABS2REL(city_x), CITY_ABS2REL(city_y));
+    map_to_gui_vector(tileset, &canvas_x, &canvas_y, CITY_ABS2REL(city_x),
+                      CITY_ABS2REL(city_y));
 
     min_x = MIN(canvas_x, min_x);
     max_x = MAX(canvas_x, max_x);
@@ -77,8 +77,8 @@ void generate_citydlg_dimensions()
   }
   city_map_iterate_without_index_end;
 
-  citydlg_map_width = max_x - min_x + tileset_tile_width(get_tileset());
-  citydlg_map_height = max_y - min_y + tileset_tile_height(get_tileset());
+  citydlg_map_width = max_x - min_x + tileset_tile_width(tileset);
+  citydlg_map_height = max_y - min_y + tileset_tile_height(tileset);
 }
 
 /**
