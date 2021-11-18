@@ -65,12 +65,12 @@ extern QString cut_helptext(const QString &text);
 /**
    Constructor
  */
-icon_list::icon_list(QWidget *parent) : QListWidget(parent)
+icon_list::icon_list(QWidget *parent) : QListWidget(parent), oneliner(true)
 {
   // Make sure viewportSizeHint is used
   setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
   setWrapping(true);
-  oneliner = true;
+  setMovement(QListView::Static);
 }
 
 /**
