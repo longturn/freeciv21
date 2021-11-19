@@ -71,33 +71,41 @@ pageGame::pageGame(QWidget *parent)
   sw_map = new sidebarWidget(
       fcIcons::instance()->getPixmap(QStringLiteral("view")),
       Q_("?noun:View"), QStringLiteral("MAP"), sidebarShowMap);
+  sw_map->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_tax = new sidebarWidget(nullptr, nullptr, QLatin1String(""),
-                             sidebarRatesWdg, SW_TAX);
-  sw_indicators = new sidebarWidget(nullptr, nullptr, QLatin1String(""),
-                                    sidebarShowMap, SW_INDICATORS);
+                             sidebarRatesWdg, sidebarWidget::SW_TAX);
+  sw_indicators =
+      new sidebarWidget(nullptr, nullptr, QLatin1String(""), sidebarShowMap,
+                        sidebarWidget::SW_INDICATORS);
   sw_indicators->setRightClick(sidebarIndicatorsMenu);
   sw_cunit = new sidebarWidget(
       fcIcons::instance()->getPixmap(QStringLiteral("units")), _("Units"),
       QLatin1String(""), toggle_units_report);
+  sw_cunit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_cities = new sidebarWidget(
       fcIcons::instance()->getPixmap(QStringLiteral("cities")), _("Cities"),
       QStringLiteral("CTS"), city_report_dialog_popup);
   sw_cities->setWheelUp(center_next_enemy_city);
   sw_cities->setWheelDown(center_next_player_city);
+  sw_cities->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_diplo = new sidebarWidget(
       fcIcons::instance()->getPixmap(QStringLiteral("nations")),
       _("Nations"), QStringLiteral("PLR"), popup_players_dialog);
   sw_diplo->setWheelUp(center_next_player_capital);
   sw_diplo->setWheelDown(key_center_capital);
+  sw_diplo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_science = new sidebarWidget(
       fcIcons::instance()->getPixmap(QStringLiteral("research")),
       _("Research"), QStringLiteral("SCI"), sidebarLeftClickScience);
+  sw_science->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_economy = new sidebarWidget(
       fcIcons::instance()->getPixmap(QStringLiteral("economy")),
       _("Economy"), QStringLiteral("ECO"), economy_report_dialog_popup);
+  sw_economy->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_endturn = new sidebarWidget(
       fcIcons::instance()->getPixmap(QStringLiteral("endturn")),
       _("Turn Done"), QLatin1String(""), sidebarFinishTurn);
+  sw_endturn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_cunit->setRightClick(sidebarCenterUnit);
   sw_cunit->setWheelUp(cycle_enemy_units);
   sw_cunit->setWheelDown(key_unit_wait);
@@ -110,6 +118,7 @@ pageGame::pageGame(QWidget *parent)
   sidebar_wdg->addWidget(sw_diplo);
   sidebar_wdg->addWidget(sw_science);
   sidebar_wdg->addWidget(sw_economy);
+  sidebar_wdg->addSpacer();
   sidebar_wdg->addWidget(sw_tax);
   sidebar_wdg->addWidget(sw_indicators);
   sidebar_wdg->addWidget(sw_endturn);
@@ -177,7 +186,7 @@ void pageGame::reloadSidebarIcons()
       fcIcons::instance()->getPixmap(QStringLiteral("economy")));
   sw_endturn->setPixmap(
       fcIcons::instance()->getPixmap(QStringLiteral("endturn")));
-  sidebar_wdg->resizeMe(game_tab_widget->height(), true);
+  sidebar_wdg->resizeMe();
 }
 
 /**
@@ -502,7 +511,7 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
   QSize size;
   size = event->size();
   if (C_S_RUNNING <= client_state()) {
-    queen()->sidebar_wdg->resizeMe(size.height());
+    queen()->sidebar_wdg->resizeMe();
     map_canvas_resized(size.width(), size.height());
     queen()->infotab->resize(
         qRound((size.width() * king()->qt_settings.chat_fwidth)),
@@ -540,14 +549,11 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
  */
 void fc_game_tab_widget::current_changed(int index)
 {
-  QList<sidebarWidget *> objs;
-
   if (king()->is_closing()) {
     return;
   }
-  objs = queen()->sidebar_wdg->objects;
 
-  for (auto *sw : qAsConst(objs)) {
+  for (auto *sw : qAsConst(queen()->sidebar_wdg->objects)) {
     sw->updateFinalPixmap();
   }
   currentWidget()->hide();
