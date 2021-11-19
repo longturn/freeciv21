@@ -56,7 +56,8 @@ void reduce_mod(int &mod, int &val)
    Sidewidget constructor
  */
 sidebarWidget::sidebarWidget(QPixmap *pix, const QString &label,
-                             const QString &pg, pfcn_bool func, int type)
+                             const QString &pg, pfcn_bool func,
+                             standards type)
     : QWidget(), blink(false), keep_blinking(false), disabled(false),
       standard(type), page(pg), hover(false), right_click(nullptr),
       wheel_down(nullptr), wheel_up(nullptr), left_click(func),
@@ -122,6 +123,28 @@ void sidebarWidget::setTooltip(const QString &tooltip)
 QPixmap *sidebarWidget::get_pixmap() { return scaled_pixmap; }
 
 /**
+ * Reimplemented virtual method.
+ */
+int sidebarWidget::heightForWidth(int width) const
+{
+  switch (standard) {
+  case SW_TAX:
+    return get_tax_sprite(tileset, O_LUXURY)->height() + 8;
+  case SW_INDICATORS:
+    return get_tax_sprite(tileset, O_LUXURY)->height() + 8;
+  case SW_STD:
+    return (width * def_pixmap->height()) / def_pixmap->width() + 8;
+  }
+
+  fc_assert_ret_val(false, 0);
+}
+
+/**
+ * Reimplemented virtual method.
+ */
+bool sidebarWidget::hasHeightForWidth() const { return true; }
+
+/**
    Sets default label on bottom of sidewidget
  */
 void sidebarWidget::setLabel(const QString &str) { desc = str; }
@@ -132,17 +155,9 @@ void sidebarWidget::setLabel(const QString &str) { desc = str; }
  */
 void sidebarWidget::resizePixmap(int width, int height)
 {
-  if (standard == SW_TAX) {
-    height = get_tax_sprite(tileset, O_LUXURY)->height() + 8;
-  }
-
-  if (standard == SW_INDICATORS) {
-    height = client_government_sprite()->height() + 8;
-  }
-
   if (def_pixmap) {
-    *scaled_pixmap = def_pixmap->scaled(width, height, Qt::IgnoreAspectRatio,
-                                        Qt::SmoothTransformation);
+    *scaled_pixmap =
+        def_pixmap->scaledToWidth(width, Qt::SmoothTransformation);
   }
 }
 
@@ -163,6 +178,7 @@ void sidebarWidget::paintEvent(QPaintEvent *event)
  */
 void sidebarWidget::paint(QPainter *painter, QPaintEvent *event)
 {
+  updateFinalPixmap();
   if (final_pixmap) {
     painter->drawPixmap(event->rect(), *final_pixmap, event->rect());
   }
@@ -326,14 +342,19 @@ void sidebarWidget::updateFinalPixmap()
   QPen pen;
   bool current = false;
 
+  if (scaled_pixmap && size() == scaled_pixmap->size()) {
+    return;
+  }
+
+  resizePixmap(width(), height());
+
   NFC_FREE(final_pixmap);
 
   i = queen()->gimmeIndexOf(page);
   if (i == queen()->game_tab_widget->currentIndex()) {
     current = true;
   }
-  final_pixmap =
-      new QPixmap(scaled_pixmap->width(), scaled_pixmap->height());
+  final_pixmap = new QPixmap(size());
   final_pixmap->fill(Qt::transparent);
 
   if (scaled_pixmap->width() == 0 || scaled_pixmap->height() == 0) {
@@ -399,7 +420,8 @@ void sidebarWidget::updateFinalPixmap()
     p.drawPixmap(pos, 5, *sprite);
 
   } else {
-    p.drawPixmap(0, 0, *scaled_pixmap);
+    p.drawPixmap(0, (height() - scaled_pixmap->height()) / 2,
+                 *scaled_pixmap);
     p.drawText(0, height() - 6, desc);
   }
 
@@ -448,6 +470,7 @@ sidebar::sidebar()
   setAttribute(Qt::WA_OpaquePaintEvent, true);
   layout = new QVBoxLayout;
   layout->setContentsMargins(0, 0, 0, 0);
+  layout->setSpacing(0);
   setLayout(layout);
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Ignored);
   setProperty("sidebar", true);
@@ -466,6 +489,11 @@ void sidebar::addWidget(sidebarWidget *fsw)
   objects.append(fsw);
   layout->addWidget(fsw);
 }
+
+/**
+ * Adds new spacer
+ */
+void sidebar::addSpacer() { layout->addStretch(); }
 
 /**
    Paint event for sidebar
@@ -491,7 +519,7 @@ void sidebar::paint(QPainter *painter, QPaintEvent *event)
 void sidebar::resizeEvent(QResizeEvent *event)
 {
   if (C_S_RUNNING <= client_state()) {
-    resizeMe(event->size().height(), true);
+    resizeMe();
   }
 }
 
@@ -500,45 +528,13 @@ void sidebar::resizeEvent(QResizeEvent *event)
   desktop and scaled accordingly for bigger resolutions eg 200 pixels for 4k
   desktop.
 **************************************************************************/
-void sidebar::resizeMe(int hght, bool force)
+void sidebar::resizeMe()
 {
-  int w, h, non_std, non_std_count, hres;
-
-  h = hght;
   auto temp = (QGuiApplication::screens());
-  hres = temp[0]->availableGeometry().width();
+  auto hres = temp[0]->availableGeometry().width();
 
-  w = (20 * gui_options.gui_qt_sidebar_width * hres) / 1920;
-  w = qMax(w, 20);
-
-  if (!force && w == width() && h == height()) {
-    return;
-  }
-
-  non_std = 0;
-  non_std_count = 0;
-
-  /* resize all non standard sidewidgets first*/
-  for (sidebarWidget *sw : qAsConst(objects)) {
-    if (sw->standard != SW_STD) {
-      sw->resizePixmap(w, 0);
-      sw->setFixedSize(w, sw->get_pixmap()->height());
-      sw->updateFinalPixmap();
-      non_std = non_std + sw->get_pixmap()->height();
-      non_std_count++;
-    }
-  }
-
-  h = h - non_std;
-  h = h / (objects.count() - non_std_count) - 2;
-  // resize all standard sidewidgets
-  for (sidebarWidget *sw : qAsConst(objects)) {
-    if (sw->standard == SW_STD) {
-      sw->resizePixmap(w, h);
-      sw->setFixedSize(w, h);
-      sw->updateFinalPixmap();
-    }
-  }
+  auto w = (20 * gui_options.gui_qt_sidebar_width * hres) / 1920;
+  setFixedWidth(qMax(w, 20));
 }
 
 /**
