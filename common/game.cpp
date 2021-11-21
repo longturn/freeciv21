@@ -309,7 +309,7 @@ static void game_defaults(bool keep_ruleset_value)
   game.scenario.have_resources = true;
   game.scenario.ruleset_locked = true;
   game.scenario.save_random = false;
-  game.scenario.allow_ai_type_fallback = false;
+  game.scenario.allow_ai_type_fallback = true;
 
   game.scenario_desc.description[0] = '\0';
 
