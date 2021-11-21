@@ -23,7 +23,7 @@ This page assumes the user knows how to use :file:`git`, compile Freeciv21 and u
   $ wget https://github.com/longturn/freeciv21/pull/[pr-number].diff -O pr[pr-number].diff
 
 
-:strong:`Apply The Downloaded Update To The Local Sandbox`
+:strong:`Apply The Downloaded Update To Local`
 
 .. code-block:: rst
 

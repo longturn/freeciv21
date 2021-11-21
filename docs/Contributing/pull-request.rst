@@ -72,7 +72,7 @@ Now that things are all up to date with the lastest code, let's create a branch 
 
 
 The tag :code:`[some_feature]` should be replaced by something that matches what you are planning to work on.
-For example, it could be as easy as :code:`issue_123`, meansing that this branch is changes to resolve GitHub
+For example, it could be as easy as :code:`issue_123`, meaning that this branch is changes to resolve GitHub
 Issue 123 in the Freeciv21 Issues list.
 
 .. attention::
@@ -91,7 +91,7 @@ and/or documentation updates.
 
 .. code-block:: rst
 
-  ~/GitHub/freeciv21$ clang-format
+  ~/GitHub/freeciv21$ git clang-format
   ~/GitHub/freeciv21$ rm -Rf build
   ~/GitHub/freeciv21$ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
   ~/GitHub/freeciv21$ cmake --build build
@@ -99,7 +99,7 @@ and/or documentation updates.
   ~/GitHub/freeciv21$ cmake --build build --target docs
 
 
-The first command, :file:`clang-format`, runs a pre-processor to format any code changes to support the
+The first command, :file:`git clang-format`, runs a pre-processor to format any code changes to support the
 Longturn community's code standards.
 
 The second command cleans out the :file:`build` directory to start fresh. The third command runs a configure
