@@ -268,6 +268,8 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
       hash->clear();
       return A_SERIAL_FAIL;
     }
+
+    hash->insert(key, pvalue);
   }
 
   if (dio_input_remaining(&din) > 0) {
