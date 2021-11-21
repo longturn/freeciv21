@@ -44,8 +44,8 @@ In order to get code to and from the forked repository to your local workstation
 SSH key pair to share with GitHub. Follow these
 `instructions <https://docs.github.com/en/authentication/connecting-to-github-with-ssh>`_.
 
-With that setup, now it's time to clone the forked repository from your personal GitHub account to a local
-copy (e.g. sandbox) on your workstation. The typcial way to do this is with the :code:`https` protocol.
+With that set up, now it's time to clone the forked repository from your personal GitHub account to a local
+copy (e.g. sandbox) on your workstation. The typical way to do this is with the :code:`https` protocol.
 However, this only works if you want to download a copy of a repository and not push any changes back up. To
 do that, you have to use the :code:`ssh` protocol instead.
 
