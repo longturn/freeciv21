@@ -35,19 +35,18 @@ GitHub
 The Longturn.net Community uses the online source code control and revision system known as
 `GitHub <https://github.com/>`_. To contribute, you will need an account on this platform. There is no cost.
 
-With an account setup, you can go to the `Longturn <https://github.com/longturn>`_ community repository page
-and :strong:`fork` a repository (such as the Freeciv21 repository) to your personal GitHub account. Go to the
-main page of the repository you want to fork and you will find a :strong:`fork` button in the upper-right
-corner.
+With an account, you can go to the `Longturn <https://github.com/longturn>`_ community repository page and
+:strong:`fork` a repository (such as the Freeciv21 repository) to your personal GitHub account. Go to the main
+page of the repository you want to fork and you will find a :strong:`fork` button in the upper-right corner.
 
-In order to get code to and from the forked repository to your local workstation, you need to setup an
+In order to get code pushed to the forked repository to your local workstation, you need to setup an
 SSH key pair to share with GitHub. Follow these
 `instructions <https://docs.github.com/en/authentication/connecting-to-github-with-ssh>`_.
 
 With that set up, now it's time to clone the forked repository from your personal GitHub account to a local
-copy (e.g. sandbox) on your workstation. The typical way to do this is with the :code:`https` protocol.
-However, this only works if you want to download a copy of a repository and not push any changes back up. To
-do that, you have to use the :code:`ssh` protocol instead.
+copy on your workstation. The typical way to do this is with the :code:`https` protocol. However, this only
+works if you want to download a copy of a repository and not push any changes back up. To do that, you have to
+use the :code:`ssh` protocol instead.
 
 First make a working directory to place the files in:
 
@@ -67,6 +66,8 @@ browser, click the code button and then select the SSH option as shown in this s
     :alt: GitHub Clone SSH
 
 
+Once you have the proper path, here is the command to clone the repository:
+
 .. code-block:: rst
 
   ~/GitHub$ git clone git@github.com:[username]/freeciv21.git
@@ -74,7 +75,7 @@ browser, click the code button and then select the SSH option as shown in this s
 
 This will clone the forked repository to the :file:`~/GitHub/freeciv21` directory on your computer.
 
-The final repository setup item is to link the original Longturn project repository to your local sandbox on
+The final repository setup item is to link the original Longturn project repository to your local area on
 your computer:
 
 .. code-block:: rst
