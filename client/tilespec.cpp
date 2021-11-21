@@ -1212,6 +1212,7 @@ void tilespec_reread_callback(struct option *poption)
   enum client_states state = client_state();
 
   if ((state == C_S_RUNNING || state == C_S_OVER)
+      && wld.map.topology_id & TF_HEX
       && option_get_cb_data(poption)
              != (wld.map.topology_id & (TF_ISO | TF_HEX))) {
     // Changed option was not for current topology
