@@ -218,10 +218,6 @@ void configure_fonts()
                512);
   }
   // Reqtree
-  sl.clear();
-  sl << QStringLiteral("Papyrus") << QStringLiteral("Segoe Script")
-     << QStringLiteral("Comic Sans MS") << QStringLiteral("Droid Sans")
-     << QStringLiteral("Noto Sans") << QStringLiteral("Ubuntu");
   font_name = configure_font(fonts::reqtree_text, sl, max, true);
   if (!font_name.isEmpty()) {
     fn_bytes = font_name.toLocal8Bit();
