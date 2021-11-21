@@ -73,7 +73,6 @@ class cma_yoloswag {
 public:
   cma_yoloswag();
   ~cma_yoloswag();
-  bool apply_result(struct city *pcity, const struct cm_result *result);
   void put_city_under_agent(struct city *pcity,
                             const struct cm_parameter *const parameter);
   void release_city(struct city *pcity);
@@ -274,17 +273,6 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
 }
 
 cma_yoloswag::~cma_yoloswag() = default;
-
-bool cma_yoloswag::apply_result(struct city *pcity,
-                                const struct cm_result *result)
-{
-  fc_assert(!cma_is_city_under_agent(pcity, NULL));
-  if (result->found_a_valid) {
-    return apply_result_on_server(pcity, result);
-  } else {
-    return false;
-  }
-}
 
 /**
  Change the actual city setting to the given result. Returns TRUE iff
@@ -640,14 +628,6 @@ static void city_changed(int city_id)
   if (pcity) {
     gimb->handle_city(pcity);
   }
-}
-
-/**
-   Apply result on server if it's valid
- */
-bool cma_apply_result(struct city *pcity, const struct cm_result *result)
-{
-  return gimb->apply_result(pcity, result);
 }
 
 /**
