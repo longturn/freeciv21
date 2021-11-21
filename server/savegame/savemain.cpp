@@ -228,7 +228,7 @@ void save_game(const char *orig_filename, const char *save_reason,
       sz_strlcat(stdata->filepath, ".xz");
       break;
 #endif
-#ifdef FREECIV_HAVE_LZMA
+#ifdef FREECIV_HAVE_ZSTD
     case COMPRESS_ZSTD:
       // Append ".zst" to filename.
       sz_strlcat(stdata->filepath, ".zst");
