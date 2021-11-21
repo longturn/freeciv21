@@ -52,6 +52,9 @@ Assuming you are in the appropriate Local directory, issue these commands to get
   ~/GitHub/freeciv21$ git pull upstream master --ff-only
 
 
+The first command sets the working branch to master on local. The second command downloads the changes from
+upstream to local.
+
 .. note::
   If you want :code:`git pull` to always do a "fast-forward" (which is preferred), you can set a local
   repository configuration option with this command: :code:`git config --local pull.ff only`. You only need to
@@ -165,4 +168,4 @@ This is the last major step in the process. To push the commit to your fork, iss
 You will be prompted for your SSH passkey and then the changes in the branch you created in step 3 will be
 pushed to your fork. Once complete, you can open your fork in a web browser and GitHub will notice the
 change and prompt you to open a Pull Request. The complete steps are documented
-here: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork.
+`here <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork>`_.
