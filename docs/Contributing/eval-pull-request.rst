@@ -8,19 +8,11 @@ master branch.
 
 This page assumes the user knows how to use :file:`git`, compile Freeciv21 and use GitHub.
 
-:strong:`Update Local Sandbox`
-
-.. code-block:: rst
-
-  $ git checkout master
-  $ git fetch upstream master
-  $ git pull upstream master --ff-only
-
-
 :strong:`Create A Testing Branch`
 
 .. code-block:: rst
 
+  $ git fetch upstream master
   $ git checkout -b testing/pr_[pr-number] upstream/master
 
 
@@ -53,7 +45,6 @@ This page assumes the user knows how to use :file:`git`, compile Freeciv21 and u
   $ cmake --build build
   $ cmake --build build --target install
   $ cmake --build build --target package      # MSys2 Only
-  $ cmake --build build --target docs
 
 
 :strong:`Read The Issue's Notes`
@@ -76,4 +67,3 @@ probably have to re-download the diff and run another test.
 
   $ git checkout master
   $ git branch -d testing/pr_[pr-number]
-
