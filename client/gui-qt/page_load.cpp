@@ -163,7 +163,7 @@ void page_load::browse_saves()
 {
   QString str;
   str = QString(_("Save Files"))
-        + QStringLiteral(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
+        + QStringLiteral(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz *.sav.zst)");
   current_file = QFileDialog::getOpenFileName(this, _("Open Save File"),
                                               QDir::homePath(), str);
   if (!current_file.isEmpty()) {

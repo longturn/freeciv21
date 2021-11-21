@@ -3015,7 +3015,7 @@ void mr_menu::save_game_as()
   }
 
   str = QString(_("Save Games"))
-        + QStringLiteral(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
+        + QStringLiteral(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz *.sav.zst)");
   current_file = QFileDialog::getSaveFileName(
       king()->central_wdg, _("Save Game As..."), location, str);
   if (!current_file.isEmpty()) {

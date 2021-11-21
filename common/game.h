@@ -46,6 +46,9 @@ enum compress_type {
 #ifdef FREECIV_HAVE_LZMA
   COMPRESS_XZ,
 #endif
+#ifdef FREECIV_HAVE_ZSTD
+  COMPRESS_ZSTD,
+#endif
 };
 
 enum autosave_type {
