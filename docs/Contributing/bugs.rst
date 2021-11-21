@@ -6,7 +6,7 @@ to report to https://github.com/longturn/freeciv21/issues/new/choose.
 
 The project team has implemented GitHub Issue Templates to make the process as easy as possible. We currently
 have 3 different ones: Bug Report, Documentation Request, and Feature Request. Each template has prompts to
-help you fill in the details. See an example screen shot below.
+help you fill in the details. See an example screenshot below.
 
 .. image:: ../_static/images/github_issue_templates.png
     :align: center
