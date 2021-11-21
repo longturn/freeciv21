@@ -87,7 +87,7 @@ void page_scenario::browse_scenarios()
   QString str;
 
   str = QString(_("Scenarios Files"))
-        + QStringLiteral(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
+        + QStringLiteral(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz *.sav.zst)");
   current_file = QFileDialog::getOpenFileName(this, _("Open Scenario File"),
                                               QDir::homePath(), str);
   if (!current_file.isEmpty()) {

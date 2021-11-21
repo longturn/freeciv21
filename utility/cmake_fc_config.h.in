@@ -125,6 +125,9 @@
 /* lzma compression is available in KArchive */
 #cmakedefine FREECIV_HAVE_LZMA
 
+/* zstd compression is available in KArchive */
+#cmakedefine FREECIV_HAVE_ZSTD
+
 /* Max number of AI modules */
 #cmakedefine FREECIV_AI_MOD_LAST ${FREECIV_AI_MOD_LAST}
 

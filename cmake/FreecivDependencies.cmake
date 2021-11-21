@@ -111,6 +111,7 @@ include(FreecivBackward)
 find_package(KF5Archive REQUIRED)
 set(FREECIV_HAVE_BZ2 ${KArchive_HAVE_BZIP2})
 set(FREECIV_HAVE_LZMA ${KArchive_HAVE_LZMA})
+set(FREECIV_HAVE_ZSTD ${KArchive_HAVE_ZSTD})
 
 find_package(ZLIB REQUIRED) # Network protocol code
 
