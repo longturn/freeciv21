@@ -40,14 +40,10 @@ page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
   king = gui;
   ui.setupUi(this);
 
-  QFont f;
   QStringList player_widget_list;
 
   ui.chat_line->setProperty("doomchat", true);
 
-  ui.output_window->setReadOnly(false);
-  f.setBold(true);
-  ui.output_window->setFont(f);
   player_widget_list << _("Name") << _("Ready") << Q_("?player:Leader")
                      << _("Flag") << _("Border") << _("Nation") << _("Team")
                      << _("Host");
