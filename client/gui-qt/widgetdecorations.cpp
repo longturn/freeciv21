@@ -94,7 +94,20 @@ void move_widget::put_to_corner() { move(0, 0); }
 void move_widget::mouseMoveEvent(QMouseEvent *event)
 {
   if (!king()->interface_locked) {
-    parentWidget()->move(event->globalPos() - point);
+    auto new_location = event->globalPos() - point;
+    if (new_location.x() < 0) {
+      new_location.setX(0);
+    } else if (new_location.x() + width()
+               > parentWidget()->parentWidget()->width()) {
+      new_location.setX(parentWidget()->parentWidget()->width() - width());
+    }
+    if (new_location.y() < 0) {
+      new_location.setY(0);
+    } else if (new_location.y() + height()
+               > parentWidget()->parentWidget()->height()) {
+      new_location.setY(parentWidget()->parentWidget()->height() - height());
+    }
+    parentWidget()->move(new_location);
   }
 }
 
