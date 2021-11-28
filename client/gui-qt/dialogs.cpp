@@ -363,7 +363,6 @@ races_dialog::races_dialog(struct player *pplayer, QWidget *parent)
   QGridLayout *qgroupbox_layout;
   QGroupBox *no_name;
   QTableWidgetItem *item;
-  QPixmap *pix;
   QHeaderView *header;
   QSize size;
   QString title;
@@ -443,7 +442,7 @@ races_dialog::races_dialog(struct player *pplayer, QWidget *parent)
     if (i >= 0) {
       item = new QTableWidgetItem;
       styles->insertRow(i);
-      pix = get_sample_city_sprite(tileset, i);
+      auto pix = get_sample_city_sprite(tileset, i);
       item->setData(Qt::DecorationRole, *pix);
       item->setData(Qt::UserRole, style_number(pstyle));
       size.setWidth(pix->width());
@@ -624,11 +623,9 @@ void races_dialog::group_selected(const QItemSelection &sl,
 void races_dialog::set_index(int index)
 {
   QTableWidgetItem *item;
-  QPixmap *pix;
   QFont f;
   struct nation_group *group;
   int i;
-  QPixmap *s;
   QHeaderView *header;
   selected_nation_tabs->clearContents();
   selected_nation_tabs->setRowCount(0);
@@ -652,14 +649,13 @@ void races_dialog::set_index(int index)
     }
     item = new QTableWidgetItem;
     selected_nation_tabs->insertRow(i);
-    s = get_nation_flag_sprite(tileset, pnation);
+    auto s = get_nation_flag_sprite(tileset, pnation);
     if (pnation->player) {
       f = item->font();
       f.setStrikeOut(true);
       item->setFont(f);
     }
-    pix = s;
-    item->setData(Qt::DecorationRole, *pix);
+    item->setData(Qt::DecorationRole, *s);
     item->setData(Qt::UserRole, nation_number(pnation));
     item->setText(nation_adjective_translation(pnation));
     selected_nation_tabs->setItem(i, 0, item);

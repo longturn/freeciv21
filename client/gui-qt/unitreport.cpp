@@ -163,7 +163,7 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
   QSpacerItem *spacer;
   QVBoxLayout *vbox;
   QVBoxLayout *vbox_main;
-  QPixmap *spr;
+  const QPixmap *spr;
 
   setParent(parent);
   utype = ut;
@@ -238,9 +238,7 @@ unittype_item::~unittype_item() = default;
  */
 void unittype_item::init_img()
 {
-  QPixmap *sp;
-
-  sp = get_unittype_sprite(get_tileset(), utype, direction8_invalid());
+  auto sp = get_unittype_sprite(get_tileset(), utype, direction8_invalid());
   label_pix.setPixmap(*sp);
 }
 

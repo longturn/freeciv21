@@ -689,10 +689,9 @@ void sidebarRightClickScience()
     menu = new QMenu(king()->central_wdg);
     for (int i = 0; i < curr_list.count(); i++) {
       QIcon ic;
-      QPixmap *sp;
 
       qvar = curr_list.at(i).id;
-      sp = get_tech_sprite(tileset, curr_list.at(i).id);
+      auto sp = get_tech_sprite(tileset, curr_list.at(i).id);
       if (sp) {
         ic = QIcon(*sp);
       }

@@ -455,17 +455,6 @@ void update_turn_done_button(bool do_restore)
 }
 
 /**
-   Set information for the indicator icons typically shown in the main
-   client window.  The parameters tell which sprite to use for the
-   indicator.
- */
-void set_indicator_icons(QPixmap *bulb, QPixmap *sol, QPixmap *flake,
-                         QPixmap *gov)
-{
-  queen()->sw_indicators->updateFinalPixmap();
-}
-
-/**
    Flush the given part of the canvas buffer (if there is one) to the
    screen.
  */
@@ -551,7 +540,8 @@ void update_city_descriptions(void) { update_map_canvas_visible(); }
 /**
    Put overlay tile to pixmap
  */
-void pixmap_put_overlay_tile(int canvas_x, int canvas_y, QPixmap *ssprite)
+void pixmap_put_overlay_tile(int canvas_x, int canvas_y,
+                             const QPixmap *ssprite)
 {
   if (!ssprite) {
     return;

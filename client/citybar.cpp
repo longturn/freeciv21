@@ -801,7 +801,7 @@ QRect polished_citybar_painter::paint(QPainter &painter,
     line.add_icon(production_progress.get());
 
     // Icon
-    QPixmap *xsprite = nullptr;
+    const QPixmap *xsprite = nullptr;
     const auto &target = pcity->production;
     if (can_see_inside && (VUT_UTYPE == target.kind)) {
       xsprite =

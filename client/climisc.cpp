@@ -348,7 +348,7 @@ void nuclear_winter_scaled(int *chance, int *rate, int max)
 /**
    Return the sprite for the research indicator.
  */
-QPixmap *client_research_sprite()
+const QPixmap *client_research_sprite()
 {
   if (NULL != client.conn.playing && can_client_change_view()) {
     const struct research *presearch = research_get(client_player());
@@ -371,7 +371,7 @@ QPixmap *client_research_sprite()
 /**
    Return the sprite for the global-warming indicator.
  */
-QPixmap *client_warming_sprite()
+const QPixmap *client_warming_sprite()
 {
   int idx;
 
@@ -388,7 +388,7 @@ QPixmap *client_warming_sprite()
 /**
    Return the sprite for the global-cooling indicator.
  */
-QPixmap *client_cooling_sprite()
+const QPixmap *client_cooling_sprite()
 {
   int idx;
 
@@ -405,7 +405,7 @@ QPixmap *client_cooling_sprite()
 /**
    Return the sprite for the government indicator.
  */
-QPixmap *client_government_sprite()
+const QPixmap *client_government_sprite()
 {
   if (NULL != client.conn.playing && can_client_change_view()
       && government_count() > 0) {

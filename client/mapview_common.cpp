@@ -1077,9 +1077,7 @@ void put_unit_city_overlays(struct unit *punit, QPixmap *pcanvas,
                             int canvas_x, int canvas_y, int *upkeep_cost,
                             int happy_cost)
 {
-  QPixmap *sprite;
-
-  sprite = get_unit_unhappy_sprite(tileset, punit, happy_cost);
+  auto sprite = get_unit_unhappy_sprite(tileset, punit, happy_cost);
   if (sprite) {
     canvas_put_sprite_full(pcanvas, canvas_x, canvas_y, sprite);
   }
@@ -1149,7 +1147,7 @@ void toggle_unit_color(struct unit *punit)
 void put_nuke_mushroom_pixmaps(struct tile *ptile)
 {
   float canvas_x, canvas_y;
-  QPixmap *mysprite = get_nuke_explode_sprite(tileset);
+  auto mysprite = get_nuke_explode_sprite(tileset);
   int width, height;
 
   get_sprite_dimensions(mysprite, &width, &height);
@@ -2769,7 +2767,7 @@ void free_mapcanvas_and_overview()
  */
 void get_spaceship_dimensions(int *width, int *height)
 {
-  QPixmap *sprite = get_spaceship_sprite(tileset, SPACESHIP_HABITATION);
+  auto sprite = get_spaceship_sprite(tileset, SPACESHIP_HABITATION);
 
   get_sprite_dimensions(sprite, width, height);
   *width *= 7;
@@ -2787,7 +2785,7 @@ void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
   int i, x, y;
   const struct player_spaceship *ship = &pplayer->spaceship;
   int w, h;
-  QPixmap *spr;
+  const QPixmap *spr;
   struct tileset *t = tileset;
 
   spr = get_spaceship_sprite(t, SPACESHIP_HABITATION);
