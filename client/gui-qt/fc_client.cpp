@@ -69,7 +69,7 @@ fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
   }
   fcFont::instance()->initFonts();
   read_settings();
-  QApplication::setFont(*fcFont::instance()->getFont(fonts::default_font));
+  QApplication::setFont(fcFont::instance()->getFont(fonts::default_font));
   QString path;
 
   central_wdg = new QWidget;
@@ -653,12 +653,12 @@ fc_corner::fc_corner(QMainWindow *qmw) : QWidget()
   QHBoxLayout *hb;
   QPushButton *qpb;
   int h;
-  QFont *f = fcFont::instance()->getFont(fonts::default_font);
+  QFont f = fcFont::instance()->getFont(fonts::default_font);
 
-  if (f->pointSize() > 0) {
-    h = f->pointSize();
+  if (f.pointSize() > 0) {
+    h = f.pointSize();
   } else {
-    h = f->pixelSize();
+    h = f.pixelSize();
   }
   mw = qmw;
   hb = new QHBoxLayout();

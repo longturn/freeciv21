@@ -161,7 +161,7 @@ QVariant plr_item::data(int column, int role) const
   pdc = &player_dlg_columns[column];
   switch (player_dlg_columns[column].type) {
   case COL_FLAG: {
-    auto f = *fcFont::instance()->getFont(fonts::default_font);
+    auto f = fcFont::instance()->getFont(fonts::default_font);
     auto fm = std::make_unique<QFontMetrics>(f);
     return get_nation_flag_sprite(tileset, nation_of_player(ipplayer))
         ->scaledToHeight(fm->height());

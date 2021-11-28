@@ -81,8 +81,8 @@ private:
   pfcn wheel_down;
   pfcn wheel_up;
   pfcn_bool left_click;
-  QFont *sfont;
-  QFont *info_font;
+  QFont sfont;
+  QFont info_font;
   QPixmap *def_pixmap;
   QPixmap *final_pixmap;
   QPixmap *scaled_pixmap;

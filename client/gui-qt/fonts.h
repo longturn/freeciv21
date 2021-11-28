@@ -30,21 +30,18 @@ class fcFont {
   Q_DISABLE_COPY(fcFont);
 
 private:
-  QMap<QString, QFont *> font_map;
+  QMap<QString, QFont> font_map;
   static fcFont *m_instance;
   explicit fcFont();
 
 public:
   static fcFont *instance();
   static void drop();
-  void setFont(const QString &name, QFont *qf);
+  void setFont(const QString &name, const QFont &qf);
   void setSizeAll(int);
-  QFont *getFont(const QString &name);
+  QFont getFont(const QString &name, double zoom = 1.0) const;
   void initFonts();
   void releaseFonts();
-  void getMapfontSize();
-  int city_fontsize{12};
-  int prod_fontsize{12};
 };
 
 void configure_fonts();

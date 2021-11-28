@@ -364,7 +364,7 @@ QRect simple_citybar_painter::paint(QPainter &painter,
   // First line
   if (gui_options.draw_city_names) {
     // City name
-    format.setFont(*get_font(FONT_CITY_NAME));
+    format.setFont(get_font(FONT_CITY_NAME));
     format.setForeground(*get_color(tileset, COLOR_MAPVIEW_CITYTEXT));
     first.add_text(name, format);
 
@@ -376,7 +376,7 @@ QRect simple_citybar_painter::paint(QPainter &painter,
       first.add_text(en_space, format);
 
       // Text
-      format.setFont(*get_font(FONT_CITY_PROD));
+      format.setFont(get_font(FONT_CITY_PROD));
       format.setForeground(*get_color(tileset, growth_color));
       first.add_text(growth, format);
     }
@@ -393,7 +393,7 @@ QRect simple_citybar_painter::paint(QPainter &painter,
           pcity, trade_routes, sizeof(trade_routes), &trade_routes_color);
 
       // Add it
-      format.setFont(*get_font(FONT_CITY_PROD));
+      format.setFont(get_font(FONT_CITY_PROD));
       format.setForeground(*get_color(tileset, trade_routes_color));
       first.add_text(en_space + trade_routes, format);
     }
@@ -406,7 +406,7 @@ QRect simple_citybar_painter::paint(QPainter &painter,
     get_city_mapview_production(pcity, prod, sizeof(prod));
 
     // Add text
-    format.setFont(*get_font(FONT_CITY_PROD));
+    format.setFont(get_font(FONT_CITY_PROD));
     format.setForeground(*get_color(tileset, production_color));
     second.add_text(prod, format);
   }
@@ -509,7 +509,7 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
     first.add_spacer();
 
     // City size (on colored background)
-    format.setFont(*get_font(FONT_CITY_NAME));
+    format.setFont(get_font(FONT_CITY_NAME));
     format.setBackground(owner_color);
 
     // Try to pick a color for city size text that contrasts with player
@@ -528,7 +528,7 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
   // Second line
   if (should_draw_lower_bar) {
     // All items share the same font
-    format.setFont(*get_font(FONT_CITY_PROD));
+    format.setFont(get_font(FONT_CITY_PROD));
 
     if (should_draw_productions) {
       // Icon
@@ -648,10 +648,10 @@ QRect polished_citybar_painter::paint(QPainter &painter,
   // occupied indicator (we assume all indicators have the same size).
   // It's used to scale the flag, progress bars and production.
   double target_height = citybar->occupancy.p[0]->height();
-  target_height = std::max(
-      target_height, QFontMetricsF(*get_font(FONT_CITY_NAME)).height());
-  target_height = std::max(
-      target_height, QFontMetricsF(*get_font(FONT_CITY_PROD)).height());
+  target_height = std::max(target_height,
+                           QFontMetricsF(get_font(FONT_CITY_NAME)).height());
+  target_height = std::max(target_height,
+                           QFontMetricsF(get_font(FONT_CITY_PROD)).height());
 
   // Build the contents
   line_of_text line;
@@ -660,7 +660,7 @@ QRect polished_citybar_painter::paint(QPainter &painter,
   QTextCharFormat format;
 
   // Size
-  format.setFont(*get_font(FONT_CITY_NAME));
+  format.setFont(get_font(FONT_CITY_NAME));
   format.setForeground(text_color);
   line.add_text(QString::number(pcity->size), format, false, text_margins);
 
@@ -704,7 +704,7 @@ QRect polished_citybar_painter::paint(QPainter &painter,
     line.add_icon(growth_progress.get());
 
     // Text
-    format.setFont(*get_font(FONT_CITY_PROD));
+    format.setFont(get_font(FONT_CITY_PROD));
     format.setFontPointSize(format.fontPointSize() / 1.5);
     format.setForeground(*get_color(t, growth_color));
     line.add_text(growth, format, false, text_margins);
@@ -735,7 +735,7 @@ QRect polished_citybar_painter::paint(QPainter &painter,
 
   // Name
   if (gui_options.draw_city_names) {
-    format.setFont(*get_font(FONT_CITY_NAME));
+    format.setFont(get_font(FONT_CITY_NAME));
     format.setForeground(text_color);
     line.add_text(name, format, false, text_margins);
   }
@@ -745,7 +745,7 @@ QRect polished_citybar_painter::paint(QPainter &painter,
   std::unique_ptr<QPixmap> production_progress;
   if (should_draw_productions) {
     // Format
-    format.setFont(*get_font(FONT_CITY_PROD));
+    format.setFont(get_font(FONT_CITY_PROD));
     format.setFontPointSize(format.fontPointSize() / 1.5);
     format.setForeground(*get_color(t, production_color));
 
@@ -851,7 +851,7 @@ QRect polished_citybar_painter::paint(QPainter &painter,
     get_city_mapview_trade_routes(pcity, trade_routes, sizeof(trade_routes),
                                   &trade_routes_color);
 
-    format.setFont(*get_font(FONT_CITY_PROD));
+    format.setFont(get_font(FONT_CITY_PROD));
     format.setForeground(*get_color(t, trade_routes_color));
     trade_line.add_text(trade_routes, format, false, text_margins);
 

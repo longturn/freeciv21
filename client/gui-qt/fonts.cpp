@@ -48,16 +48,20 @@ void fcFont::drop()
 /**
    Returns desired font
  */
-QFont *fcFont::getFont(const QString &name)
+QFont fcFont::getFont(const QString &name, double zoom) const
 {
   /**
    * example: get_font("gui_qt_font_notify_label")
    */
 
   if (font_map.contains(name)) {
-    return font_map.value(name);
+    auto font = font_map.value(name);
+    if (gui_options.zoom_scale_fonts) {
+      font.setPointSizeF(font.pointSizeF() * zoom);
+    }
+    return font;
   } else {
-    return nullptr;
+    return QFont();
   }
 }
 
@@ -66,9 +70,6 @@ QFont *fcFont::getFont(const QString &name)
  */
 void fcFont::initFonts()
 {
-  QFont *f;
-  QString s;
-
   /**
    * default font names are:
    * gui_qt_font_notify_label and so on.
@@ -78,18 +79,15 @@ void fcFont::initFonts()
   options_iterate(client_optset, poption)
   {
     if (option_type(poption) == OT_FONT) {
-      f = new QFont;
-      s = option_font_get(poption);
-      if (f->fromString(s)) {
+      auto f = QFont();
+      auto s = option_font_get(poption);
+      if (f.fromString(s)) {
         s = option_name(poption);
         setFont(s, f);
-      } else {
-        delete f;
       }
     }
   }
   options_iterate_end;
-  getMapfontSize();
 }
 
 /*****************************************************************************
@@ -116,26 +114,12 @@ void fcFont::setSizeAll(int new_size)
 /**
    Deletes all fonts
  */
-void fcFont::releaseFonts()
-{
-  for (QFont *f : qAsConst(font_map)) {
-    delete f;
-  }
-}
-
-/**
-   Stores default font sizes
- */
-void fcFont::getMapfontSize()
-{
-  city_fontsize = getFont(fonts::city_names)->pointSize();
-  prod_fontsize = getFont(fonts::city_productions)->pointSize();
-}
+void fcFont::releaseFonts() { font_map.clear(); }
 
 /**
    Adds new font or overwrite old one
  */
-void fcFont::setFont(const QString &name, QFont *qf)
+void fcFont::setFont(const QString &name, const QFont &qf)
 {
   font_map.insert(name, qf);
 }
@@ -232,20 +216,15 @@ QString configure_font(const QString &font_name, const QStringList &sl,
                        int size, bool bold)
 {
   QFontDatabase database;
-  QFont *f;
 
   for (auto const &str : sl) {
     if (database.families().contains(str)) {
-      QByteArray fn_bytes;
-
-      f = new QFont(str, size);
+      auto f = QFont(str, size);
       if (bold) {
-        f->setBold(true);
+        f.setBold(true);
       }
       fcFont::instance()->setFont(font_name, f);
-      fn_bytes = f->toString().toLocal8Bit();
-
-      return fn_bytes.data();
+      return f.toString();
     }
   }
   return QString();

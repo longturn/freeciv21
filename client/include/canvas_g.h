@@ -68,4 +68,4 @@ GUI_FUNC_PROTO(void, canvas_put_text, QPixmap *pcanvas, int canvas_x,
                int canvas_y, enum client_font font, const QColor *pcolor,
                const QString &text)
 
-QFont *get_font(enum client_font font);
+QFont get_font(enum client_font font);

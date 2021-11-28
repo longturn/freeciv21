@@ -529,26 +529,25 @@ void help_widget::do_layout()
 void help_widget::update_fonts()
 {
   QList<QWidget *> l;
-  QFont *f;
 
   l = findChildren<QWidget *>();
 
-  f = fcFont::instance()->getFont(fonts::notify_label);
+  auto f = fcFont::instance()->getFont(fonts::notify_label);
   for (auto i : qAsConst(l)) {
     if (i->property(fonts::help_label).isValid()) {
-      i->setFont(*f);
+      i->setFont(f);
     }
   }
   f = fcFont::instance()->getFont(fonts::help_text);
   for (auto i : qAsConst(l)) {
     if (i->property(fonts::help_text).isValid()) {
-      i->setFont(*f);
+      i->setFont(f);
     }
   }
   f = fcFont::instance()->getFont(fonts::default_font);
   for (auto i : qAsConst(l)) {
     if (i->property(fonts::default_font).isValid()) {
-      i->setFont(*f);
+      i->setFont(f);
     }
   }
 }
@@ -1199,7 +1198,7 @@ static QLabel *make_helplabel(const QString &title, const QString &tooltip,
                               QHBoxLayout *layout)
 {
   QLabel *label;
-  QFont f = *fcFont::instance()->getFont(fonts::default_font);
+  QFont f = fcFont::instance()->getFont(fonts::default_font);
   label = new QLabel(title);
   layout->addWidget(label, Qt::AlignVCenter);
   label->setProperty(fonts::default_font, "true");
@@ -1217,7 +1216,6 @@ static void make_helppiclabel(QPixmap *spr, const QString &tooltip,
   QImage cropped_img;
   QRect crop;
   QPixmap pix;
-  QFont f;
   QFontMetrics *fm;
   int isize;
 
@@ -1225,7 +1223,7 @@ static void make_helppiclabel(QPixmap *spr, const QString &tooltip,
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
   pix = QPixmap::fromImage(cropped_img);
-  f = *fcFont::instance()->getFont(fonts::help_text);
+  auto f = fcFont::instance()->getFont(fonts::help_text);
   fm = new QFontMetrics(f);
   isize = fm->height() * 7 / 8;
   label = new QLabel();
