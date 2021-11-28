@@ -2601,13 +2601,7 @@ void mr_menu::zoom_in()
  */
 void mr_menu::zoom_reset()
 {
-  QFont *qf;
-
   king()->map_scale = 1.0f;
-  qf = fcFont::instance()->getFont(fonts::city_names);
-  qf->setPointSize(fcFont::instance()->city_fontsize);
-  qf = fcFont::instance()->getFont(fonts::city_productions);
-  qf->setPointSize(fcFont::instance()->prod_fontsize);
   tilespec_reread(tileset_basename(tileset), true, king()->map_scale);
 }
 
@@ -2616,17 +2610,7 @@ void mr_menu::zoom_reset()
  */
 void mr_menu::zoom_scale_fonts()
 {
-  QFont *qf;
-
-  if (scale_fonts_status->isChecked()) {
-    gui_options.zoom_scale_fonts = true;
-  } else {
-    qf = fcFont::instance()->getFont(fonts::city_names);
-    qf->setPointSize(fcFont::instance()->city_fontsize);
-    qf = fcFont::instance()->getFont(fonts::city_productions);
-    qf->setPointSize(fcFont::instance()->prod_fontsize);
-    gui_options.zoom_scale_fonts = false;
-  }
+  gui_options.zoom_scale_fonts = scale_fonts_status->isChecked();
   update_city_descriptions();
 }
 

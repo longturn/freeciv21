@@ -325,8 +325,8 @@ void qtg_canvas_put_curved_line(QPixmap *pcanvas, const QColor *pcolor,
 void qtg_get_text_size(int *width, int *height, enum client_font font,
                        const QString &text)
 {
-  QFont *afont = get_font(font);
-  QScopedPointer<QFontMetrics> fm(new QFontMetrics(*afont));
+  QFont afont = get_font(font);
+  QScopedPointer<QFontMetrics> fm(new QFontMetrics(afont));
 
   if (width) {
     *width = fm->horizontalAdvance(text);
@@ -348,13 +348,13 @@ void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
 {
   QPainter p;
   QPen pen;
-  QFont *afont = get_font(font);
-  QScopedPointer<QFontMetrics> fm(new QFontMetrics(*afont));
+  QFont afont = get_font(font);
+  QScopedPointer<QFontMetrics> fm(new QFontMetrics(afont));
 
   pen.setColor(*pcolor);
   p.begin(pcanvas);
   p.setPen(pen);
-  p.setFont(*afont);
+  p.setFont(afont);
   p.drawText(canvas_x, canvas_y + fm->ascent(), text);
   p.end();
 }
@@ -362,40 +362,25 @@ void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
 /**
    Returns given font
  */
-QFont *get_font(client_font font)
+QFont get_font(client_font font)
 {
-  QFont *qf;
-  int ssize;
+  QFont qf;
 
   switch (font) {
   case FONT_CITY_NAME:
-    qf = fcFont::instance()->getFont(fonts::city_names);
-    if (king()->map_scale != 1.0f && gui_options.zoom_scale_fonts) {
-      ssize = ceil(king()->map_scale * fcFont::instance()->city_fontsize);
-      if (qf->pointSize() != ssize) {
-        qf->setPointSize(ssize);
-      }
-    }
+    qf = fcFont::instance()->getFont(fonts::city_names, king()->map_scale);
     break;
   case FONT_CITY_PROD:
-    qf = fcFont::instance()->getFont(fonts::city_productions);
-    if (king()->map_scale != 1.0f && gui_options.zoom_scale_fonts) {
-      ssize = ceil(king()->map_scale * fcFont::instance()->prod_fontsize);
-      if (qf->pointSize() != ssize) {
-        qf->setPointSize(ssize);
-      }
-    }
+    qf = fcFont::instance()->getFont(fonts::city_productions,
+                                     king()->map_scale);
     break;
   case FONT_REQTREE_TEXT:
     qf = fcFont::instance()->getFont(fonts::reqtree_text);
     break;
   case FONT_COUNT:
-    qf = NULL;
-    break;
-  default:
-    qf = NULL;
     break;
   }
+
   return qf;
 }
 

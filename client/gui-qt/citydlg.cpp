@@ -897,7 +897,7 @@ bool unit_list_event_filter::eventFilter(QObject *object, QEvent *event)
 
 cityIconInfoLabel::cityIconInfoLabel(QWidget *parent) : QWidget(parent)
 {
-  QFont f = *fcFont::instance()->getFont(fonts::default_font);
+  auto f = fcFont::instance()->getFont(fonts::default_font);
   QFontMetrics fm(f);
 
   pixHeight = fm.height();
@@ -1015,29 +1015,28 @@ void city_label::set_city(city *pciti) { pcity = pciti; }
 city_info::city_info(QWidget *parent) : QWidget(parent)
 {
   int iter;
-  QFont *small_font;
   QLabel *ql;
   QStringList info_list;
 
   QGridLayout *info_grid_layout = new QGridLayout();
-  small_font = fcFont::instance()->getFont(fonts::notify_label);
+  auto small_font = fcFont::instance()->getFont(fonts::notify_label);
   info_list << _("Food:") << _("Prod:") << _("Trade:") << _("Gold:")
             << _("Luxury:") << _("Science:") << _("Granary:")
             << _("Change in:") << _("Corruption:") << _("Waste:")
             << _("Culture:") << _("Pollution:") << _("Plague risk:")
             << _("Tech Stolen:") << _("Airlift:");
-  setFont(*small_font);
+  setFont(small_font);
   info_grid_layout->setSpacing(0);
   info_grid_layout->setContentsMargins(0, 0, 0, 0);
 
   fc_assert(info_list.count() == NUM_INFO_FIELDS);
   for (iter = 0; iter < NUM_INFO_FIELDS; iter++) {
     ql = new QLabel(info_list[iter], this);
-    ql->setFont(*small_font);
+    ql->setFont(small_font);
     ql->setProperty(fonts::notify_label, "true");
     info_grid_layout->addWidget(ql, iter, 0);
     qlt[iter] = new QLabel(this);
-    qlt[iter]->setFont(*small_font);
+    qlt[iter]->setFont(small_font);
     qlt[iter]->setProperty(fonts::notify_label, "true");
     info_grid_layout->addWidget(qlt[iter], iter, 1);
   }
@@ -1181,11 +1180,11 @@ governor_sliders::governor_sliders(QWidget *parent) : QGroupBox(parent)
   str_list << _("Food") << _("Shield") << _("Trade") << _("Gold")
            << _("Luxury") << _("Science") << _("Celebrate");
   some_label = new QLabel(_("Minimal Surplus"));
-  some_label->setFont(*fcFont::instance()->getFont(fonts::notify_label));
+  some_label->setFont(fcFont::instance()->getFont(fonts::notify_label));
   some_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   slider_grid->addWidget(some_label, 0, 0, 1, 3);
   some_label = new QLabel(_("Priority"));
-  some_label->setFont(*fcFont::instance()->getFont(fonts::notify_label));
+  some_label->setFont(fcFont::instance()->getFont(fonts::notify_label));
   some_label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
   slider_grid->addWidget(some_label, 0, 3, 1, 3);
 
@@ -1307,12 +1306,11 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
 
 {
   QFont f = QApplication::font();
-  QFont *small_font;
   QFontMetrics fm(f);
   QHeaderView *header;
 
   int h = 2 * fm.height() + 2;
-  small_font = fcFont::instance()->getFont(fonts::notify_label);
+  auto small_font = fcFont::instance()->getFont(fonts::notify_label);
   ui.setupUi(this);
 
   // Prevent mouse events from going through the panels to the main map
@@ -1420,12 +1418,12 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
   ui.label4->setText(_("Nationality:"));
   ui.label5->setText(_("Units:"));
   ui.label6->setText(_("Wonders:"));
-  ui.label1->setFont(*small_font);
-  ui.label2->setFont(*small_font);
-  ui.label4->setFont(*small_font);
-  ui.label3->setFont(*small_font);
-  ui.label5->setFont(*small_font);
-  ui.label6->setFont(*small_font);
+  ui.label1->setFont(small_font);
+  ui.label2->setFont(small_font);
+  ui.label4->setFont(small_font);
+  ui.label3->setFont(small_font);
+  ui.label5->setFont(small_font);
+  ui.label6->setFont(small_font);
   lab_table[0] = ui.lab_table1;
   lab_table[1] = ui.lab_table2;
   lab_table[2] = ui.lab_table3;
@@ -2874,15 +2872,14 @@ void qtg_real_city_dialog_refresh(struct city *pcity)
 void city_font_update()
 {
   QList<QLabel *> l;
-  QFont *f;
 
   l = queen()->city_overlay->findChildren<QLabel *>();
 
-  f = fcFont::instance()->getFont(fonts::notify_label);
+  auto f = fcFont::instance()->getFont(fonts::notify_label);
 
   for (auto i : qAsConst(l)) {
     if (i->property(fonts::notify_label).isValid()) {
-      i->setFont(*f);
+      i->setFont(f);
     }
   }
 }
@@ -3213,7 +3210,7 @@ void city_production_model::populate()
   struct universal *renegade, *renegate;
   int item, targets_used;
   QString str;
-  QFont f = *fcFont::instance()->getFont(fonts::default_font);
+  auto f = fcFont::instance()->getFont(fonts::default_font);
   QFontMetrics fm(f);
 
   sh.setY(fm.height() * 2);

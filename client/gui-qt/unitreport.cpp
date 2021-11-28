@@ -148,7 +148,6 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
     : QFrame(parent)
 {
   int isize;
-  QFont f;
   QFontMetrics *fm;
   QHBoxLayout *hbox;
   QHBoxLayout *hbox_top;
@@ -170,7 +169,7 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
   init_img();
   unit_scroll = 0;
   setSizePolicy(size_fixed_policy);
-  f = *fcFont::instance()->getFont(fonts::default_font);
+  auto f = fcFont::instance()->getFont(fonts::default_font);
   fm = new QFontMetrics(f);
   isize = fm->height() * 2 / 3;
   vbox_main = new QVBoxLayout();

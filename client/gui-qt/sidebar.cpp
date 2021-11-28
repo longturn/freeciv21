@@ -68,16 +68,16 @@ sidebarWidget::sidebarWidget(QPixmap *pix, const QString &label,
   }
   scaled_pixmap = new QPixmap;
   final_pixmap = new QPixmap;
-  sfont = new QFont(*fcFont::instance()->getFont(fonts::notify_label));
+  sfont = fcFont::instance()->getFont(fonts::notify_label);
   setContextMenuPolicy(Qt::CustomContextMenu);
   timer = new QTimer;
   timer->setSingleShot(false);
   timer->setInterval(700);
-  sfont->setCapitalization(QFont::SmallCaps);
-  sfont->setItalic(true);
-  info_font = new QFont(*sfont);
-  info_font->setBold(true);
-  info_font->setItalic(false);
+  sfont.setCapitalization(QFont::SmallCaps);
+  sfont.setItalic(true);
+  info_font = QFont(sfont);
+  info_font.setBold(true);
+  info_font.setItalic(false);
   connect(timer, &QTimer::timeout, this, &sidebarWidget::sblink);
 }
 
@@ -91,8 +91,6 @@ sidebarWidget::~sidebarWidget()
   NFC_FREE(final_pixmap);
 
   delete timer;
-  delete sfont;
-  delete info_font;
 }
 
 /**
@@ -362,7 +360,7 @@ void sidebarWidget::updateFinalPixmap()
   }
 
   p.begin(final_pixmap);
-  p.setFont(*sfont);
+  p.setFont(sfont);
   pen.setColor(QColor(232, 255, 0));
   p.setPen(pen);
 
@@ -427,7 +425,7 @@ void sidebarWidget::updateFinalPixmap()
 
   p.setPen(palette().color(QPalette::Text));
   if (!custom_label.isEmpty()) {
-    p.setFont(*info_font);
+    p.setFont(info_font);
     p.drawText(0, 0, width(), height(), Qt::AlignLeft | Qt::TextWordWrap,
                custom_label);
   }
