@@ -544,19 +544,12 @@ void popup_client_options()
  */
 void fc_client::create_cursors()
 {
-  enum cursor_type curs;
-  int cursor;
-  QPixmap *pix;
-  int hot_x, hot_y;
-  QPixmap *sprite;
-  int frame;
-  QCursor *c;
-  for (cursor = 0; cursor < CURSOR_LAST; cursor++) {
-    for (frame = 0; frame < NUM_CURSOR_FRAMES; frame++) {
-      curs = static_cast<cursor_type>(cursor);
-      sprite = get_cursor_sprite(tileset, curs, &hot_x, &hot_y, frame);
-      pix = sprite;
-      c = new QCursor(*pix, hot_x, hot_y);
+  for (int cursor = 0; cursor < CURSOR_LAST; cursor++) {
+    for (int frame = 0; frame < NUM_CURSOR_FRAMES; frame++) {
+      auto curs = static_cast<cursor_type>(cursor);
+      int hot_x, hot_y;
+      auto sprite = get_cursor_sprite(tileset, curs, &hot_x, &hot_y, frame);
+      auto c = new QCursor(*sprite, hot_x, hot_y);
       fc_cursors[cursor][frame] = c;
     }
   }

@@ -1229,7 +1229,6 @@ void hud_unit_loader::show_me()
   int max_size = 0;
   int i, j;
   int w, h;
-  QPixmap *spite;
 
   unit_list_iterate(qtile->units, ptransport)
   {
@@ -1245,22 +1244,21 @@ void hud_unit_loader::show_me()
   setRowCount(transports.count());
   setColumnCount(max_size + 1);
   for (i = 0; i < transports.count(); i++) {
-    QString str;
-    spite = get_unittype_sprite(tileset, transports.at(i)->utype,
-                                direction8_invalid());
-    str = utype_rule_name(transports.at(i)->utype);
+    auto sprite = get_unittype_sprite(tileset, transports.at(i)->utype,
+                                      direction8_invalid());
+    QString str = utype_rule_name(transports.at(i)->utype);
     // TRANS: MP - just movement points
-    str = str + " ("
-          + QString(move_points_text(transports.at(i)->moves_left, false))
-          + _("MP") + ")";
-    new_item = new QTableWidgetItem(QIcon(*spite), str);
+    str += " ("
+           + QString(move_points_text(transports.at(i)->moves_left, false))
+           + _("MP") + ")";
+    new_item = new QTableWidgetItem(QIcon(*sprite), str);
     setItem(i, 0, new_item);
     j = 1;
     unit_list_iterate(transports.at(i)->transporting, tunit)
     {
-      spite =
+      sprite =
           get_unittype_sprite(tileset, tunit->utype, direction8_invalid());
-      new_item = new QTableWidgetItem(QIcon(*spite), QLatin1String(""));
+      new_item = new QTableWidgetItem(QIcon(*sprite), QLatin1String(""));
       setItem(i, j, new_item);
       j++;
     }

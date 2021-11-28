@@ -222,9 +222,6 @@ void goto_dialog::fill_tab(player *pplayer)
   QFont f = QApplication::font();
   QFontMetrics fm(f);
   int h;
-  QPixmap *sprite;
-  QPixmap *pix;
-  QPixmap pix_scaled;
   QTableWidgetItem *item;
 
   h = fm.height() + 6;
@@ -238,15 +235,14 @@ void goto_dialog::fill_tab(player *pplayer)
       case 0:
         str = city_name_get(pcity);
         break;
-      case 1:
-        sprite = get_nation_flag_sprite(tileset, nation_of_player(pplayer));
+      case 1: {
+        auto sprite =
+            get_nation_flag_sprite(tileset, nation_of_player(pplayer));
         if (sprite != NULL) {
-          pix = sprite;
-          pix_scaled = pix->scaledToHeight(h);
-          item->setData(Qt::DecorationRole, pix_scaled);
+          item->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
         }
         str = nation_adjective_translation(nation_of_player(pplayer));
-        break;
+      } break;
       case 2:
         str = get_airlift_text(get_units_in_focus(), pcity);
         if (str.isEmpty()) {

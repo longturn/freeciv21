@@ -64,8 +64,7 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from)
   QLabel *goldlab2;
   QPushButton *add_clause1;
   QPushButton *add_clause2;
-  QPixmap *pix = NULL;
-  QPixmap *sprite, *sprite2;
+  const QPixmap *sprite, *sprite2;
   char plr_buf[4 * MAX_LEN_NAME];
   const struct player_diplstate *state;
   QHeaderView *header;
@@ -124,9 +123,8 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from)
   label = new QLabel;
   sprite = get_nation_flag_sprite(
       tileset, nation_of_player(player_by_number(initiated_from)));
-  if (sprite != NULL) {
-    pix = sprite;
-    plr1_label->setPixmap(*pix);
+  if (sprite != nullptr) {
+    plr1_label->setPixmap(*sprite);
   } else {
     plr1_label->setText(QStringLiteral("FLAG MISSING"));
   }
@@ -143,8 +141,7 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from)
       tileset, nation_of_player(player_by_number(counterpart)));
   plr2_label = new QLabel;
   if (sprite2 != NULL) {
-    pix = sprite2;
-    plr2_label->setPixmap(*pix);
+    plr2_label->setPixmap(*sprite2);
   } else {
     plr2_label->setText(QStringLiteral("FLAG MISSING"));
   }
@@ -631,8 +628,6 @@ void diplo_wdg::update_wdg()
 {
   bool blank;
   int i;
-  QPixmap *sprite;
-  QPixmap *pix = NULL;
   QTableWidgetItem *qitem;
 
   blank = true;
@@ -662,18 +657,16 @@ void diplo_wdg::update_wdg()
     text_edit->setItem(0, 0, qitem);
   }
 
-  sprite = get_treaty_thumb_sprite(tileset, treaty.accept0);
-  if (sprite != NULL) {
-    pix = sprite;
-    plr1_accept->setPixmap(*pix);
+  auto sprite = get_treaty_thumb_sprite(tileset, treaty.accept0);
+  if (sprite != nullptr) {
+    plr1_accept->setPixmap(*sprite);
   } else {
     plr1_accept->setText(QStringLiteral("PIXMAP MISSING"));
   }
 
   sprite = get_treaty_thumb_sprite(tileset, treaty.accept1);
-  if (sprite != NULL) {
-    pix = sprite;
-    plr2_accept->setPixmap(*pix);
+  if (sprite != nullptr) {
+    plr2_accept->setPixmap(*sprite);
   } else {
     plr2_accept->setText(QStringLiteral("PIXMAP MISSING"));
   }
@@ -727,22 +720,16 @@ diplo_dlg::diplo_dlg(int counterpart, int initiated_from) : QTabWidget()
 void diplo_dlg::add_widget(int counterpart, int initiated_from)
 {
   diplo_wdg *dw;
-  QPixmap *sprite;
-  QPixmap *pix;
   int i;
 
-  pix = NULL;
   dw = new diplo_wdg(counterpart, initiated_from);
   treaty_list.insert(counterpart, dw);
   i = addTab(dw, nation_plural_for_player(player_by_number(counterpart)));
   dw->set_index(i);
-  sprite = get_nation_flag_sprite(
+  auto sprite = get_nation_flag_sprite(
       tileset, nation_of_player(player_by_number(counterpart)));
   if (sprite != NULL) {
-    pix = sprite;
-  }
-  if (pix != NULL) {
-    setTabIcon(i, QIcon(*pix));
+    setTabIcon(i, QIcon(*sprite));
   }
 }
 
@@ -871,7 +858,8 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   int i;
   diplo_dlg *dd;
   QPainter p;
-  QPixmap *pix, *pix2, *pix3;
+  const QPixmap *pix;
+  QPixmap *pix2, *pix3;
   QWidget *w;
   QWidget *fw;
 

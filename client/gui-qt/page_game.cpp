@@ -238,9 +238,6 @@ void pageGame::updateInfoLabelTimeout()
   sw_map->setCustomLabels(s);
   sw_map->updateFinalPixmap();
 
-  set_indicator_icons(client_research_sprite(), client_warming_sprite(),
-                      client_cooling_sprite(), client_government_sprite());
-
   if (client.conn.playing != NULL) {
     if (player_get_expected_income(client.conn.playing) > 0) {
       eco_info =
@@ -259,6 +256,7 @@ void pageGame::updateInfoLabelTimeout()
   } else {
     sw_economy->setCustomLabels(QLatin1String(""));
   }
+  sw_indicators->updateFinalPixmap();
   sw_tax->updateFinalPixmap();
   sw_economy->updateFinalPixmap();
   FC_FREE(update_info_timer);

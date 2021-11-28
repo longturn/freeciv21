@@ -92,13 +92,10 @@ static void migrate_options_from_2_5()
 void qtg_ui_main()
 {
   if (true) {
-    QPixmap *qpm;
-    QIcon app_icon;
-
     tileset_init(tileset);
     tileset_load_tiles(tileset);
-    qpm = get_icon_sprite(tileset, ICON_FREECIV);
-    app_icon = ::QIcon(*qpm);
+    auto qpm = get_icon_sprite(tileset, ICON_FREECIV);
+    auto app_icon = QIcon(*qpm);
     qApp->setWindowIcon(app_icon);
     if (gui_options.first_boot) {
       /* We're using fresh defaults for this version of this client,

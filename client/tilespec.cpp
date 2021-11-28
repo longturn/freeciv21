@@ -170,9 +170,9 @@ struct named_sprites {
     QPixmap *tile, *worked_tile, *unworked_tile;
   } mask;
 
-  QPixmap *tech[A_LAST];
-  QPixmap *building[B_LAST];
-  QPixmap *government[G_LAST];
+  const QPixmap *tech[A_LAST];
+  const QPixmap *building[B_LAST];
+  const QPixmap *government[G_LAST];
 
   struct {
     QPixmap *icon[U_LAST];
@@ -3721,8 +3721,8 @@ void tileset_setup_nation_flag(struct tileset *t, struct nation_type *nation)
 /**
    Return the flag graphic to be used by the city.
  */
-QPixmap *get_city_flag_sprite(const struct tileset *t,
-                              const struct city *pcity)
+const QPixmap *get_city_flag_sprite(const struct tileset *t,
+                                    const struct city *pcity)
 {
   return get_nation_flag_sprite(t, nation_of_city(pcity));
 }
@@ -3788,7 +3788,7 @@ static void fill_unit_type_sprite_array(const struct tileset *t,
                                         const struct unit_type *putype,
                                         enum direction8 facing)
 {
-  QPixmap *uspr = get_unittype_sprite(t, putype, facing);
+  auto uspr = get_unittype_sprite(t, putype, facing);
 
   sprs.emplace_back(t, uspr, true, FULL_TILE_X_OFFSET + t->unit_offset_x,
                     FULL_TILE_Y_OFFSET + t->unit_offset_y);
@@ -5354,8 +5354,8 @@ void tileset_free_tiles(struct tileset *t)
 /**
    Return the sprite for drawing the given spaceship part.
  */
-QPixmap *get_spaceship_sprite(const struct tileset *t,
-                              enum spaceship_part part)
+const QPixmap *get_spaceship_sprite(const struct tileset *t,
+                                    enum spaceship_part part)
 {
   return t->sprites.spaceship[part];
 }
@@ -5367,9 +5367,10 @@ QPixmap *get_spaceship_sprite(const struct tileset *t,
    value indicates there is no city; i.e., the sprite is just being
    used as a picture).
  */
-QPixmap *get_citizen_sprite(const struct tileset *t,
-                            enum citizen_category type, int citizen_index,
-                            const struct city *pcity)
+const QPixmap *get_citizen_sprite(const struct tileset *t,
+                                  enum citizen_category type,
+                                  int citizen_index,
+                                  const struct city *pcity)
 {
   const struct citizen_graphic *graphic;
   int gfx_index = citizen_index;
@@ -5396,8 +5397,8 @@ QPixmap *get_citizen_sprite(const struct tileset *t,
 /**
    Return the sprite for the nation.
  */
-QPixmap *get_nation_flag_sprite(const struct tileset *t,
-                                const struct nation_type *pnation)
+const QPixmap *get_nation_flag_sprite(const struct tileset *t,
+                                      const struct nation_type *pnation)
 {
   return t->sprites.nation_flag.p[nation_index(pnation)];
 }
@@ -5405,8 +5406,8 @@ QPixmap *get_nation_flag_sprite(const struct tileset *t,
 /**
    Return the shield sprite for the nation.
  */
-QPixmap *get_nation_shield_sprite(const struct tileset *t,
-                                  const struct nation_type *pnation)
+const QPixmap *get_nation_shield_sprite(const struct tileset *t,
+                                        const struct nation_type *pnation)
 {
   return t->sprites.nation_shield.p[nation_index(pnation)];
 }
@@ -5414,7 +5415,7 @@ QPixmap *get_nation_shield_sprite(const struct tileset *t,
 /**
    Return the sprite for the technology/advance.
  */
-QPixmap *get_tech_sprite(const struct tileset *t, Tech_type_id tech)
+const QPixmap *get_tech_sprite(const struct tileset *t, Tech_type_id tech)
 {
   fc_assert_ret_val(0 <= tech && tech < advance_count(), NULL);
   return t->sprites.tech[tech];
@@ -5423,8 +5424,8 @@ QPixmap *get_tech_sprite(const struct tileset *t, Tech_type_id tech)
 /**
    Return the sprite for the building/improvement.
  */
-QPixmap *get_building_sprite(const struct tileset *t,
-                             const struct impr_type *pimprove)
+const QPixmap *get_building_sprite(const struct tileset *t,
+                                   const struct impr_type *pimprove)
 {
   fc_assert_ret_val(NULL != pimprove, NULL);
   return t->sprites.building[improvement_index(pimprove)];
@@ -5433,8 +5434,8 @@ QPixmap *get_building_sprite(const struct tileset *t,
 /**
    Return the sprite for the government.
  */
-QPixmap *get_government_sprite(const struct tileset *t,
-                               const struct government *gov)
+const QPixmap *get_government_sprite(const struct tileset *t,
+                                     const struct government *gov)
 {
   fc_assert_ret_val(NULL != gov, NULL);
   return t->sprites.government[government_index(gov)];
@@ -5445,9 +5446,9 @@ QPixmap *get_government_sprite(const struct tileset *t,
    If 'facing' is direction8_invalid(), will use an unoriented sprite or
    a default orientation.
  */
-QPixmap *get_unittype_sprite(const struct tileset *t,
-                             const struct unit_type *punittype,
-                             enum direction8 facing)
+const QPixmap *get_unittype_sprite(const struct tileset *t,
+                                   const struct unit_type *punittype,
+                                   enum direction8 facing)
 {
   int uidx = utype_index(punittype);
   bool icon = !direction8_is_valid(facing);
@@ -5476,7 +5477,7 @@ QPixmap *get_unittype_sprite(const struct tileset *t,
 /**
    Return a "sample" sprite for this city style.
  */
-QPixmap *get_sample_city_sprite(const struct tileset *t, int style_idx)
+const QPixmap *get_sample_city_sprite(const struct tileset *t, int style_idx)
 {
   int num_thresholds =
       t->sprites.city.tile->styles[style_idx].land_num_thresholds;
@@ -5493,7 +5494,7 @@ QPixmap *get_sample_city_sprite(const struct tileset *t, int style_idx)
 /**
    Return a tax sprite for the given output type (usually gold/lux/sci).
  */
-QPixmap *get_tax_sprite(const struct tileset *t, Output_type_id otype)
+const QPixmap *get_tax_sprite(const struct tileset *t, Output_type_id otype)
 {
   switch (otype) {
   case O_SCIENCE:
@@ -5514,7 +5515,8 @@ QPixmap *get_tax_sprite(const struct tileset *t, Output_type_id otype)
 /**
    Return event icon sprite
  */
-QPixmap *get_event_sprite(const struct tileset *t, enum event_type event)
+const QPixmap *get_event_sprite(const struct tileset *t,
+                                enum event_type event)
 {
   return t->sprites.events[event];
 }
@@ -5522,7 +5524,7 @@ QPixmap *get_event_sprite(const struct tileset *t, enum event_type event)
 /**
  * Return dither sprite
  */
-QPixmap *get_dither_sprite(const struct tileset *t)
+const QPixmap *get_dither_sprite(const struct tileset *t)
 {
   return t->sprites.dither_tile;
 }
@@ -5530,7 +5532,7 @@ QPixmap *get_dither_sprite(const struct tileset *t)
 /**
  * Return tile mask sprite
  */
-QPixmap *get_mask_sprite(const struct tileset *t)
+const QPixmap *get_mask_sprite(const struct tileset *t)
 {
   return t->sprites.mask.tile;
 }
@@ -5539,7 +5541,7 @@ QPixmap *get_mask_sprite(const struct tileset *t)
    Return a thumbs-up/thumbs-down sprite to show treaty approval or
    disapproval.
  */
-QPixmap *get_treaty_thumb_sprite(const struct tileset *t, bool on_off)
+const QPixmap *get_treaty_thumb_sprite(const struct tileset *t, bool on_off)
 {
   return t->sprites.treaty_thumb[on_off ? 1 : 0];
 }
@@ -5559,7 +5561,7 @@ get_unit_explode_animation(const struct tileset *t)
 
    TODO: This should be an animation like the unit explode animation.
  */
-QPixmap *get_nuke_explode_sprite(const struct tileset *t)
+const QPixmap *get_nuke_explode_sprite(const struct tileset *t)
 {
   return t->sprites.explode.nuke;
 }
@@ -5586,8 +5588,9 @@ const struct editor_sprites *get_editor_sprites(const struct tileset *t)
    (*hot_x, *hot_y).
    A cursor can consist of several frames to be used for animation.
  */
-QPixmap *get_cursor_sprite(const struct tileset *t, enum cursor_type cursor,
-                           int *hot_x, int *hot_y, int frame)
+const QPixmap *get_cursor_sprite(const struct tileset *t,
+                                 enum cursor_type cursor, int *hot_x,
+                                 int *hot_y, int frame)
 {
   *hot_x = t->sprites.cursor[cursor].hot_x;
   *hot_y = t->sprites.cursor[cursor].hot_y;
@@ -5603,7 +5606,7 @@ QPixmap *get_cursor_sprite(const struct tileset *t, enum cursor_type cursor,
    The GUI code must be sure to call tileset_load_tiles before setting the
    top-level icon.
  */
-QPixmap *get_icon_sprite(const struct tileset *t, enum icon_type icon)
+const QPixmap *get_icon_sprite(const struct tileset *t, enum icon_type icon)
 {
   return t->sprites.icon[icon];
 }
@@ -5614,7 +5617,7 @@ QPixmap *get_icon_sprite(const struct tileset *t, enum icon_type icon)
    FIXME: This function shouldn't be needed if the attention graphics are
    drawn natively by the tileset code.
  */
-QPixmap *get_attention_crosshair_sprite(const struct tileset *t)
+const QPixmap *get_attention_crosshair_sprite(const struct tileset *t)
 {
   return t->sprites.user.attention;
 }
@@ -5623,8 +5626,8 @@ QPixmap *get_attention_crosshair_sprite(const struct tileset *t)
    Returns a sprite for the given indicator with the given index.  The
    index should be in [0, NUM_TILES_PROGRESS).
  */
-QPixmap *get_indicator_sprite(const struct tileset *t,
-                              enum indicator_type indicator, int idx)
+const QPixmap *get_indicator_sprite(const struct tileset *t,
+                                    enum indicator_type indicator, int idx)
 {
   idx = CLIP(0, idx, NUM_TILES_PROGRESS - 1);
 
@@ -5639,8 +5642,9 @@ QPixmap *get_indicator_sprite(const struct tileset *t,
 
    May return NULL if there's no unhappiness.
  */
-QPixmap *get_unit_unhappy_sprite(const struct tileset *t,
-                                 const struct unit *punit, int happy_cost)
+const QPixmap *get_unit_unhappy_sprite(const struct tileset *t,
+                                       const struct unit *punit,
+                                       int happy_cost)
 {
   Q_UNUSED(punit)
   const int unhappy = CLIP(0, happy_cost, MAX_NUM_UPKEEP_SPRITES - 1);
@@ -5658,10 +5662,10 @@ QPixmap *get_unit_unhappy_sprite(const struct tileset *t,
 
    May return NULL if there's no upkeep of the kind.
  */
-QPixmap *get_unit_upkeep_sprite(const struct tileset *t,
-                                Output_type_id otype,
-                                const struct unit *punit,
-                                const int *upkeep_cost)
+const QPixmap *get_unit_upkeep_sprite(const struct tileset *t,
+                                      Output_type_id otype,
+                                      const struct unit *punit,
+                                      const int *upkeep_cost)
 {
   Q_UNUSED(punit)
   const int upkeep = CLIP(0, upkeep_cost[otype], MAX_NUM_UPKEEP_SPRITES);
@@ -5677,7 +5681,7 @@ QPixmap *get_unit_upkeep_sprite(const struct tileset *t,
    Return a rectangular sprite containing a fog "color".  This can be used
    for drawing fog onto arbitrary areas (like the overview).
  */
-QPixmap *get_basic_fog_sprite(const struct tileset *t)
+const QPixmap *get_basic_fog_sprite(const struct tileset *t)
 {
   return t->sprites.tx.fog;
 }

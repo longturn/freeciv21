@@ -70,9 +70,6 @@ void eco_report::update_report()
   int h;
   QFontMetrics fm(f);
   h = fm.height() + 6;
-  QPixmap *pix;
-  QPixmap pix_scaled;
-  QPixmap *sprite;
 
   ui.eco_widget->setRowCount(0);
   ui.eco_widget->clearContents();
@@ -82,26 +79,19 @@ void eco_report::update_report()
     struct improvement_entry *pentry = building_entries + i;
     struct impr_type *pimprove = pentry->type;
 
-    pix = NULL;
-    sprite = get_building_sprite(tileset, pimprove);
-    if (sprite != NULL) {
-      pix = sprite;
-    }
-    if (pix != NULL) {
-      pix_scaled = pix->scaledToHeight(h);
-    } else {
-      pix_scaled.fill();
-    }
     cid id = cid_encode_building(pimprove);
 
     ui.eco_widget->insertRow(i);
     for (j = 0; j < 6; j++) {
       item = new QTableWidgetItem;
       switch (j) {
-      case 0:
-        item->setData(Qt::DecorationRole, pix_scaled);
+      case 0: {
+        auto sprite = get_building_sprite(tileset, pimprove);
+        if (sprite != nullptr) {
+          item->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
+        }
         item->setData(Qt::UserRole, id);
-        break;
+      } break;
       case 1:
         item->setTextAlignment(Qt::AlignLeft);
         item->setText(improvement_name_translation(pimprove));
@@ -130,11 +120,7 @@ void eco_report::update_report()
     struct unit_type *putype = pentry->type;
     cid id;
 
-    pix = NULL;
-    sprite = get_unittype_sprite(tileset, putype, direction8_invalid());
-    if (sprite != NULL) {
-      pix = sprite;
-    }
+    auto sprite = get_unittype_sprite(tileset, putype, direction8_invalid());
     id = cid_encode_unit(putype);
 
     ui.eco_widget->insertRow(i + max_row);
@@ -143,9 +129,8 @@ void eco_report::update_report()
       item->setTextAlignment(Qt::AlignHCenter);
       switch (j) {
       case 0:
-        if (pix != NULL) {
-          pix_scaled = pix->scaledToHeight(h);
-          item->setData(Qt::DecorationRole, pix_scaled);
+        if (sprite != nullptr) {
+          item->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
         }
         item->setData(Qt::UserRole, id);
         break;

@@ -588,7 +588,7 @@ void help_widget::show_info_panel()
 /**
    Adds a pixmap to the information panel.
  */
-void help_widget::add_info_pixmap(QPixmap *pm, bool shadow)
+void help_widget::add_info_pixmap(const QPixmap *pm, bool shadow)
 {
   QLabel *label = new QLabel();
   QGraphicsDropShadowEffect *effect;
@@ -960,7 +960,6 @@ void help_widget::set_topic_building(const help_item *topic,
 {
   char buffer[MAX_HELP_TEXT_SIZE];
   int type, value;
-  QPixmap *spr;
   struct impr_type *itype = improvement_by_translated_name(title);
   char req_buf[512];
   QString str, s1, s2;
@@ -971,7 +970,7 @@ void help_widget::set_topic_building(const help_item *topic,
                       topic->text, itype);
     text_browser->setPlainText(buffer);
     show_info_panel();
-    spr = get_building_sprite(tileset, itype);
+    auto spr = get_building_sprite(tileset, itype);
     if (spr) {
       add_info_pixmap(spr);
     }
@@ -1051,7 +1050,6 @@ void help_widget::set_topic_building(const help_item *topic,
 void help_widget::set_topic_tech(const help_item *topic, const char *title)
 {
   char buffer[MAX_HELP_TEXT_SIZE];
-  QPixmap *spr;
   QLabel *tb;
   struct advance *padvance = advance_by_translated_name(title);
   QString str;
@@ -1060,7 +1058,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
     int n = advance_number(padvance);
     if (!is_future_tech(n)) {
       show_info_panel();
-      spr = get_tech_sprite(tileset, n);
+      auto spr = get_tech_sprite(tileset, n);
       if (spr) {
         add_info_pixmap(spr);
       }

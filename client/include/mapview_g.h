@@ -33,8 +33,6 @@ GUI_FUNC_PROTO(void, update_mouse_cursor, enum cursor_type new_cursor_type)
 GUI_FUNC_PROTO(void, update_timeout_label, void)
 GUI_FUNC_PROTO(void, update_turn_done_button, bool do_restore)
 GUI_FUNC_PROTO(void, update_city_descriptions, void)
-GUI_FUNC_PROTO(void, set_indicator_icons, QPixmap *bulb, QPixmap *sol,
-               QPixmap *flake, QPixmap *gov)
 
 GUI_FUNC_PROTO(void, start_turn, void)
 

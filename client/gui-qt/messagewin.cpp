@@ -202,7 +202,6 @@ messagewdg::messagewdg(QWidget *parent) : QWidget(parent)
   palette.setColor(QPalette::Highlight, QColor(0, 0, 0, 0));
   palette.setColor(QPalette::HighlightedText, QColor(205, 206, 173));
   palette.setColor(QPalette::Text, QColor(205, 206, 173));
-  pix = nullptr;
   mesg_table->setPalette(palette);
   connect(mesg_table->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
@@ -304,9 +303,8 @@ void messagewdg::msg(const struct message *pmsg)
     item->setFont(f);
   }
   auto icon = get_event_sprite(tileset, pmsg->event);
-  if (icon != NULL) {
-    pix = icon;
-    item->setIcon(QIcon(*pix));
+  if (icon != nullptr) {
+    item->setIcon(QIcon(*icon));
   }
 }
 

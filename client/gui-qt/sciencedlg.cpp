@@ -353,7 +353,6 @@ void science_report::update_report()
   double not_used;
   QString str;
   qlist_item item;
-  QPixmap *sp;
 
   fc_assert_ret(NULL != research);
 
@@ -425,7 +424,7 @@ void science_report::update_report()
   for (int i = 0; i < curr_list->count(); i++) {
     QIcon ic;
 
-    sp = get_tech_sprite(tileset, curr_list->at(i).id);
+    auto sp = get_tech_sprite(tileset, curr_list->at(i).id);
     if (sp) {
       ic = QIcon(*sp);
     }
@@ -436,7 +435,7 @@ void science_report::update_report()
   for (int i = 0; i < goal_list->count(); i++) {
     QIcon ic;
 
-    sp = get_tech_sprite(tileset, goal_list->at(i).id);
+    auto sp = get_tech_sprite(tileset, goal_list->at(i).id);
     if (sp) {
       ic = QIcon(*sp);
     }

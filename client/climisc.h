@@ -38,10 +38,10 @@ void client_diplomacy_clause_string(char *buf, int bufsiz,
 void global_warming_scaled(int *chance, int *rate, int max);
 void nuclear_winter_scaled(int *chance, int *rate, int max);
 
-QPixmap *client_research_sprite();
-QPixmap *client_warming_sprite();
-QPixmap *client_cooling_sprite();
-QPixmap *client_government_sprite();
+const QPixmap *client_research_sprite();
+const QPixmap *client_warming_sprite();
+const QPixmap *client_cooling_sprite();
+const QPixmap *client_government_sprite();
 
 void center_on_something();
 
