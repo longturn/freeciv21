@@ -9,14 +9,14 @@ counter of 23 hours. This allows players all over the world an opportunity to lo
 reasonable time. Single player games (one human against the AI) do not have a counter set. The turn ends when
 all moves have been completed and then the human player will manually clicks the :guilabel:`End Turn` button.
 
-Turns are typically enumerated from ``T0``.
+Turns are typically enumerated from ``T1``.
 
 The period of a turn when a specific player or player group can act in a game is called a *phase*. Most often
-Freeciv21 is played in the concurrent mode - there is only one phase per turn for everybody (AIs do thier
+Freeciv21 is played in the concurrent mode - there is only one phase per turn for everybody (AIs do their
 moving only at phase beginning). But in the server options another mode is available: all players move in a
 queue, or all teams move in a queue. Most things happen to an empire either at the start or at the end of its
-phase (since the default mode is one-phase, these periods are commonly referred as "``turn start``" or
-"``turn end``", but in alternate playing they will happen to different players in different time) [#f1]_.
+phase (since the default mode is one-phase, these periods are commonly referred as ``turn start`` or
+``turn end``, but in alternate playing they will happen to different players in different time) [#f1]_.
 Understanding the order in which things happen can give a player considerable advantage.
 
 Cities
@@ -48,13 +48,13 @@ timer expires and the turn ends.
 Turn start
   Function: ``begin_turn()``
 
-  * "``turn_started``" signal (turn, year) is emitted.
+  * A ``turn_started`` signal (turn, year) is emitted.
   * Player scores are calculated.
   * If fog of war setting was changed, the change is applied.
   * In the concurrent mode, random sequence of players is defined for the things that happen to them in a
     queue. Below, "For Each Player" (FEP) means iterating players in this order
     (``phase_players_iterate(pplayer)`` macro). In teams-alternating mode, player sequence within a team is
-    permanent through the game. After the procedure exits, "``begin_turn``" packet is sent to the clients.
+    permanent through the game. After the procedure exits, ``begin_turn`` packet is sent to the clients.
     Then, the phases of the game follow in the order of teams' or players' numbers as shown on the Nations
     report.
 
@@ -63,7 +63,7 @@ Phase Start
 
   * All players get available info on each other. Without contact or embassy, it's at least dead/alive, and
     great wonders. Add diplomatic states with players you are in contact with.
-  * "``start_phase``" packet is sent to the clients.
+  * A ``start_phase`` packet is sent to the clients.
   * FEP: Unit's activities (mining, etc.) are updated for each player's units in their default order: Unit
     activity rate is calculated (if the unit has at least one movement fragment, the rate is proportional to
     its basic move rate and veteranship power factor) that is added to its activity counter.
@@ -104,7 +104,7 @@ Phase End
 
   During phase end, server-client packages go to a buffer, that is unbuffered when the phase ends to end.
 
-  * "``end_phase``" packet is sent
+  * An ``end_phase`` packet is sent.
   * FEP: Techs updated:
 
     * If a player has not set what to research, a tech towards his or her goal is selected, or random tech (by
@@ -119,8 +119,8 @@ Phase End
 
     * Auto-settlers do their move to work terrain.
     * For AIs, governments, techs, taxes, cities and space program are handled.
-    * "``Tech_Parasite``" (Great Library) effect may bring techs known to others.
-    * Auto-upgrade (Leonardo's Workshop)
+    * The ``Tech_Parasite`` (Great Library) effect may bring techs known to others (depending on ruleset).
+    * Auto-upgrade (Leonardo's Workshop depending on ruleset)
 
   * For each player's unit:
 
@@ -159,7 +159,7 @@ Phase End
           removed.
         * For space parts, they are produced [#f4]_. Other improvements appear in the city; wonders are updated
           right this moment to the cache used by requirements; for global wonders, notifications are sent to
-          everybody. Then shield stocks are reduced on the used cost, and the "``building_built``" signal is
+          everybody. Then shield stocks are reduced on the used cost, and the ``building_built`` signal is
           emitted (as any signal, might potentially destroy the city right here).
         * City vision radius is updated.
         * Darwin's Voyage effect for the building may give techs.
@@ -172,7 +172,7 @@ Phase End
 
     * If the production can be changed (the city has not bought the former turn) and the unit is obsolete,
       city switches to the obsoleting unit.
-    * If the city does not fulfil the units requirements (tech, improvement, unit has no "``NoBuild``" flag...)
+    * If the city does not fulfil the units requirements (tech, improvement, unit has no ``NoBuild`` flag...)
       and the player is not barbarian, it is notified and a signal is emitted: city surival is not checked.
     * Otherwise, if we have enough shields to build the unit:
 
@@ -183,9 +183,9 @@ Phase End
       * Otherwise, the city remembers that we have built last this turn.
       * If some population cost is paid, the city size is reduced and the city is updated (citizens,
         borders...) and refreshed [#f2]_ with workers auto-arranging if the workable tiles change.
-      * Shields are reduced on paid cost. Notifications and "``unit_built``" signal are emitted.
+      * Shields are reduced on paid cost. Notifications and ``unit_built`` signal are emitted.
       * If we have additional building slots, the unit we build does not cost pop and is not unique, it can
-        be produced more than one time. If the city has worklist, to use the full "``City_Build_Slots``"
+        be produced more than one time. If the city has worklist, to use the full ``City_Build_Slots``
         effect, the unit should be repeated at the top of the list so many times (the positions will be
         removed). For floor (``shield_stock`` / ``unit_cost``), similar units are built with corresponding
         shield stock reduction (cycle breaks only if the city is destroyed in process).
@@ -231,7 +231,7 @@ Phase End
 Turn end
   Function: ``end_turn()``
 
-  * End phase packet is sent.
+  * An ``end_turn`` packet is sent.
   * Borders are updated over the map.
   * Barbarians are summoned.
   * If migrations are enabled, they happen, and all cities are sent to players.
@@ -259,10 +259,10 @@ Game over
 
 .. [#f1] A granary influents food stock if built on the growing turn. Barracks won't regenerate all HP of
    units resting in the city the turn they are built.
-.. [#f2] The "``City_Build_Slots``" effect works for making units only.
+.. [#f2] The ``City_Build_Slots`` effect works for making units only.
 .. [#f3] Units that obsolete another but have fallen not available for e.g. government change are not
    "downgraded" (but also are not produced, even if you have paid for them!).
-.. [#f4] A "``unit_built``" signal is not emitted if you disband a city; "``city_destroyed``" with nil as the
-   destroyer parameter is instead. By the way, the unit will have the former city's "``Veteran_Build``" rank
+.. [#f4] A "``unit_built``" signal is not emitted if you disband a city; ``city_destroyed`` with nil as the
+   destroyer parameter is instead. By the way, the unit will have the former city's ``Veteran_Build`` rank
    as a last memory of it.
 .. [#f5] City happiness is not immediately updated with building a unit unless it costs population.
