@@ -13,16 +13,16 @@ An operating system that support Qt
 
     Linux Distributions:
 
-    * Arch Current
+    * Arch
     * CentOS 8+
     * Debian 11+ (Bullseye)
     * Fedora 28+
     * Gentoo
-    * KDE neon LTS
-    * Manjaro Stable
-    * Mint 20+ or Mint Debian Edition Current
+    * KDE Neon
+    * Manjaro
+    * Mint 20+ or Mint Debian Edition
     * openSUSE Leap 15.2+
-    * Slackware Current
+    * Slackware
     * Ubuntu 20.04 LTS+
 
 
