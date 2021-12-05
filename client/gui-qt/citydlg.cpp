@@ -178,7 +178,7 @@ void progress_bar::set_pixmap(struct universal *target)
  */
 void progress_bar::set_pixmap(int n)
 {
-  const QPixmap *sprite;
+  const QPixmap *sprite = nullptr;
   if (valid_advance_by_number(n)) {
     sprite = get_tech_sprite(tileset, n);
   }
