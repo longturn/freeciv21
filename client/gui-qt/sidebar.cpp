@@ -155,7 +155,7 @@ void sidebarWidget::setLabel(const QString &str) { desc = str; }
  */
 void sidebarWidget::resizePixmap(int width, int height)
 {
-  if (def_pixmap) {
+  if (def_pixmap && scaled_pixmap) {
     *scaled_pixmap =
         def_pixmap->scaledToWidth(width, Qt::SmoothTransformation);
   }
