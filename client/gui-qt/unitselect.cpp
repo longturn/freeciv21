@@ -165,12 +165,9 @@ void units_select::create_pixmap()
 
       if (client_is_global_observer()
           || unit_owner(punit) == client.conn.playing) {
-        int rate, f;
-        QString str;
-
-        rate = unit_type_get(punit)->move_rate;
-        f = ((punit->fuel) - 1);
-        str = QString(move_points_text(punit->moves_left, false));
+        auto rate = unit_type_get(punit)->move_rate;
+        auto f = ((punit->fuel) - 1);
+        auto str = QString(move_points_text(punit->moves_left, false));
         if (utype_fuel(unit_type_get(punit))) {
           str = str + "("
                 + QString(
@@ -187,7 +184,7 @@ void units_select::create_pixmap()
     }
     p.end();
     setFixedWidth(pix->width() + 20);
-    setFixedHeight(pix->height() + 2 * (fm.height() + 6));
+    setFixedHeight(pix->height() + 3 * fm.height() + 2 * 6);
     qDeleteAll(pix_list.begin(), pix_list.end());
   }
 }
@@ -246,7 +243,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
   int h, i;
   int *f_size;
   QPen pen;
-  QString str, str2;
+  QString str, str2, unit_name;
   struct unit *punit;
   int point_size = info_font.pointSize();
   int pixel_size = info_font.pixelSize();
@@ -259,6 +256,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
   if (highligh_num != -1 && highligh_num < unit_list.count()) {
     punit = unit_list.at(highligh_num);
     // TRANS: HP - hit points
+    unit_name = unit_name_translation(punit);
     str2 = QString(_("%1 HP:%2/%3"))
                .arg(unit_activity_text(punit), QString::number(punit->hp),
                     QString::number(unit_type_get(punit)->hp));
@@ -284,6 +282,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
     painter->setFont(info_font);
     painter->drawText(10, h, str);
     if (highligh_num != -1 && highligh_num < unit_list.count()) {
+      painter->drawText(10, height() - 5 - h, unit_name);
       painter->drawText(10, height() - 5, str2);
     }
     // draw scroll
