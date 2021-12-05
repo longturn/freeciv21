@@ -131,10 +131,6 @@ QMenu::item:selected {
   border-radius: 9px;
 }
 
-QMainWindow {
-  border-image:url(LittleFingerpattern.png);
-}
-
 QStatusBar QLabel {
  color: black;
 }
