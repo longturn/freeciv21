@@ -12,19 +12,18 @@
 **************************************************************************/
 #pragma once
 
-#include "widgetdecorations.h"
-#include <QWidget>
+#include <QMenu>
 
 class QPixmap;
-class close_widget;
-struct unit;
 class QSize;
 class QFont;
+
+struct unit;
 
 /***************************************************************************
  Transparent widget for selecting units
 ***************************************************************************/
-class units_select : public fcwidget {
+class units_select : public QMenu {
   Q_OBJECT
   Q_DISABLE_COPY(units_select);
   QPixmap *pix;
@@ -35,12 +34,10 @@ class units_select : public fcwidget {
   QFont ufont;
   QFont info_font;
   int row_count;
-  close_widget *cw;
 
 public:
   units_select(struct tile *ptile, QWidget *parent = 0);
   ~units_select() override;
-  void update_menu() override;
   void update_units();
   void create_pixmap();
   tile *utile;
@@ -49,12 +46,9 @@ protected:
   void paint(QPainter *painter, QPaintEvent *event);
   void paintEvent(QPaintEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
-  void keyPressEvent(QKeyEvent *event) override;
   void mouseMoveEvent(QMouseEvent *event) override;
   void wheelEvent(QWheelEvent *event) override;
   void closeEvent(QCloseEvent *event) override;
-private slots:
-  void update_img();
 
 private:
   bool more;
