@@ -312,8 +312,9 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
  */
 void units_select::paintEvent(QPaintEvent *event)
 {
-  QPainter painter;
+  QMenu::paintEvent(event); // Draw background
 
+  QPainter painter;
   painter.begin(this);
   paint(&painter, event);
   painter.end();
