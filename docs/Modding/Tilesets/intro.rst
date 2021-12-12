@@ -39,3 +39,36 @@ Notice that a single image contains several sprites arranged in a grid. This mak
 units to friends, but is in no way mandatory: after all, a grid with a single cell is still a grid. One can
 adjust the width of the green lines to your liking or remove them, or even use several grids in a single
 image. All it takes is adjusting the configuration accordingly.
+
+To add these sprites to your tileset, create a new folder ``tutorial`` next to the ``tutorial.tilespec`` that
+you created earlier. Download the following files and move them to the new folder:
+
+* :download:`aliens.png </_static/images/tileset-tutorial/aliens.png>` --- this is the same image as above.
+* :download:`aliens.spec` --- we'll go through it shortly.
+
+The ``aliens.spec`` file tells Freeciv21 which sprites are in the image, and where in the grid. There is only
+one small change left to make the new sprites available in our tileset: we need to add the image to the
+tileset. To do this, open ``tutorial.tilespec`` and find the line with ``files =`` (around the half of the
+file). Insert the new ``spec`` file at the top of the list:
+
+.. code-block:: py
+  :emphasize-lines: 2
+
+  files =
+    "tutorial/aliens.spec",
+    "amplio2/terrain1.spec",
+    "amplio2/maglev.spec",
+    "amplio2/terrain2.spec",
+    "amplio2/hills.spec",
+    "amplio2/mountains.spec",
+    "amplio2/ocean.spec",
+    ...
+
+That's it! Your tileset will now display the Alien units for any ruleset that supports them --- or rather,
+for any ruleset that uses the ``u.alien`` tag. Here's what it could look like:
+
+.. figure:: /_static/images/tileset-tutorial/aliens_game.png
+  :alt: A game screenshot with three alien units, two green and one red.
+  :align: center
+
+  Alien invasion.
