@@ -72,3 +72,42 @@ for any ruleset that uses the ``u.alien`` tag. Here's what it could look like:
   :align: center
 
   Alien invasion.
+
+Let's now go through the newly added ``aliens.spec`` file. It can be opened with a normal text editor. On
+Windows, we recommend the excellent `Notepad++`_; on Linux, a good editor like Gedit or KWrite usually
+comes preinstalled.
+
+You will notice that the file contains four sections, each opened by a names between square brackets:
+``[spec]``, ``[info]``, ``[file]``, and ``[grid_main]``. The first section specifies the version of
+Freeciv21 supported by the tileset and will only change when moving from one version to the next. The
+``[info]`` section is there solely to give credit to the artists. The last two are more interesting, so
+let's reproduce them here:
+
+.. literalinclude:: aliens.spec
+  :language: ini
+  :lines: 8-9
+
+This section contains the name of the image file described by the ``spec``: one ``spec`` can only
+describe a single image file. Notice that the folder name, ``tutorial``, is included, and that the ``.png``
+extension is not given. Freeciv21 will figure automatically that it needs to add the ``.png``. In theory,
+some other image formats could be used, but PNG is the only one fully supported on every system where
+Freeciv21 runs.
+
+.. literalinclude:: aliens.spec
+  :language: ini
+  :lines: 11-
+
+The last section describes the layout of the sprites within the image. There is a single grid, called
+``main``, that starts one pixel from the top and one pixel from the left (``x_top_left`` and ``y_top_left``).
+This is because of the green outline around the file: it is not counted as being part of the grid. The next
+two lines specify the width (``dx``) and the height (``dy``) of the sprites in pixels. Then, we instructs
+Freeciv21 to skip one pixel between each sprite (``pixel_border``) to jump over the green lines separating
+them. With these values, Freeciv21 now has enough information to locate precisely every sprite in the grid.
+
+The last four lines is the part that changes the most. It specifies where in the grid our two aliens are: the
+green one is in the first row from the top, which has index 0, and in the first column with index 0. We give
+the tag ``u.alien`` to this sprite to associate it with the corresponding unit in the ruleset. The red alien
+is in the second row and first column (``1, 0``: remember, it counts from zero), and we call it
+``u.alien_angry``.
+
+.. _Notepad++: https://notepad-plus-plus.org/
