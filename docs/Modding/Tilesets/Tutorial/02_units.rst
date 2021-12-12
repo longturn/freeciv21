@@ -1,10 +1,5 @@
-Tileset tutorial
-****************
-
-copy an existing tileset... amplio...
-
-A new unit
-==========
+Adding units
+************
 
 One of the most common changes done when developing custom rules (as described in the
 :doc:`/Modding/Rulesets/overview`) is to add new unit types to the game. It is important to note that
