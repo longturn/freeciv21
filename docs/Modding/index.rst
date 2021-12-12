@@ -48,6 +48,23 @@ Refer to Ruleset specific documents:
 Tilesets
 ========
 
+Freeciv21 allows full customization of the appearance of the map including terrain, cities, units, buildings,
+and a few elements of the user interface. Freeciv21 already ships with a variety of presets that can be
+selected from the menu by navigating to :menuselection:`Game --> Load Another Tileset`.
+
+.. figure:: /_static/images/tilesets_demo.png
+  :alt: A Freeciv21 map with the ``hexemplio`` and ``isophex`` tilesets.
+  :align: center
+
+  The same map with two tilesets: ``hexemplio`` (left) and ``isophex`` (right).
+
+Nearly every aspect of the map rendering can be customized. In practice, this is achieved using a myriad of
+small images, called :emphasis:`sprites`, that are assembled together to form the final map. For instance,
+the units above are made of up to four sprites drawn on top of each other: the flag, the health bar, the
+yellow activity indicator, and finally the image that represents the unit itself. Customization is made
+possible thanks to a system of configuration files that specify where to find the sprites and how to assemble
+them.
+
 Tilesets are a collection of :literal:`spec` files that fully define the look and feel of the game map, units,
 buildings, etc. This is effectively the graphics layer of Freeciv21. A tileset Modder can create a whole new
 custom graphics look and feel. The file layout for a tileset can vary depending on how the author wants to
