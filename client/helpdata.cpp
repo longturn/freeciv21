@@ -476,7 +476,34 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
          * "Freeciv version 2.3.0-beta1 (beta version)" (translated).
          * Second %s is client_string, e.g., "gui-gtk-2.0". */
         _("This is %s, %s client."), ver, client_string);
+
     insert_client_build_info(outbuf, outlen);
+
+    QString data_dirs_info = "\n\n";
+    data_dirs_info += _("This instance of Freeciv21 searches the following "
+                        "directories for data files:");
+    data_dirs_info += "\n\n";
+    for (const auto &path : qAsConst(get_data_dirs())) {
+      qCritical() << path;
+      QFileInfo info(path + "/");
+      data_dirs_info += "* " + info.absolutePath() + " ";
+      if (!info.exists()) {
+        // TRANS: Folder does not exist
+        data_dirs_info += _("(does not exist)");
+      } else if (info.isWritable()) {
+        // TRANS: Folder can be modified by the current user
+        data_dirs_info += _("(user)");
+      } else {
+        // TRANS: Folder cannot be modified by the current user
+        data_dirs_info += _("(system)");
+      }
+      data_dirs_info += "\n";
+    }
+    data_dirs_info += "\n";
+    data_dirs_info += _("Note that for multiplayer games, the server may "
+                        "use different paths.");
+
+    cat_snprintf(outbuf, outlen, "%s", qUtf8Printable(data_dirs_info));
 
     return true;
   } else if (0 == strcmp(name, "DefaultMetaserver")) {
