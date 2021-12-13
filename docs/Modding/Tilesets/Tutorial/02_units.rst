@@ -68,9 +68,8 @@ for any ruleset that uses the ``u.alien`` tag. Here's what it could look like:
 
   Alien invasion.
 
-Let's now go through the newly added ``aliens.spec`` file. It can be opened with a normal text editor. On
-Windows, we recommend the excellent `Notepad++`_; on Linux, a good editor like Gedit or KWrite usually
-comes preinstalled.
+Let's now go through the newly added ``aliens.spec`` file. It can be opened with your text editor; go back to
+the :doc:`first page <../tutorial>` if you don't know what to use.
 
 You will notice that the file contains four sections, each opened by a names between square brackets:
 ``[spec]``, ``[info]``, ``[file]``, and ``[grid_main]``. The first section specifies the version of
