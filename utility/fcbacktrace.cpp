@@ -18,7 +18,9 @@
 #include <QLoggingCategory>
 #include <sstream>
 
+#ifdef FREECIV_DEBUG
 #include <backward.hpp>
+#endif
 
 // utility
 #include "log.h"

@@ -71,7 +71,6 @@ add_library(
   options.cpp
   repodlgs_common.cpp
   reqtree.cpp
-  servers.cpp
   text.cpp
   themes_common.cpp
   tilespec.cpp
@@ -81,11 +80,16 @@ add_library(
   audio_none.cpp
   ${FREECIV_AUDIO}
 )
+if(NOT EMSCRIPTEN)
+  target_sources(client PRIVATE servers.cpp)
+endif()
 
 target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_include_directories(client PUBLIC ${SDL2_INCLUDE_DIR})
-target_include_directories(client PUBLIC ${SDL2_MIXER_INCLUDE_DIR})
+if(NOT EMSCRIPTEN)
+  target_include_directories(client PUBLIC ${SDL2_INCLUDE_DIR})
+  target_include_directories(client PUBLIC ${SDL2_MIXER_INCLUDE_DIR})
+endif()
 
 add_subdirectory(luascript)
 
@@ -99,6 +103,9 @@ target_link_libraries(client PUBLIC luascript)
 if(FREECIV_ENABLE_CLIENT)
   add_subdirectory(gui-qt)
   add_executable(freeciv21-client ${GUI_TYPE} packhand.cpp) # packhand.c depends on gui-qt
+  if(EMSCRIPTEN)
+    target_link_options(freeciv21-client PRIVATE -sTOTAL_MEMORY=52428800)
+  endif()
   target_link_libraries(freeciv21-client client)
   target_link_libraries(freeciv21-client gui-qt)
   add_dependencies(freeciv21-client freeciv_translations)
