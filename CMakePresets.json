@@ -1,12 +1,17 @@
 
 {
-    "version": 1,
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 12
+    },
     "configurePresets": [
         {
             "name": "fullrelease",
             "displayName": "Build Everythign in Release Mode",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-rel",
+            "installDir": "install",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "FREECIV_ENABLE_TOOLS": "ON",
@@ -44,6 +49,12 @@
                 "CXX": "clazy",
                 "CLAZY_CHECKS": "level2,no-qstring-allocations,no-ctor-missing-parent-argument,no-missing-qobject-macro"
             }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "fullrelease",
+            "configurePreset": "fullrelease"
         }
     ]
 }

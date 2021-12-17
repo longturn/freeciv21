@@ -7545,7 +7545,9 @@ static bool is_enum_option_value(int start, int *opt_p)
                                       setting_type(pset) == SST_BITWISE)) {
         *opt_p = setting_number(pset);
         // Suppress appended space for bitwise options (user may want |)
+#ifdef HAVE_SUPPRESS_APPEND
         rl_completion_suppress_append = (setting_type(pset) == SST_BITWISE);
+#endif
         return true;
       }
     }
