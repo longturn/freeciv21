@@ -1,0 +1,12 @@
+{
+    "name": "freeciv21",
+    "version-string": "3.0.0",
+    "dependencies": [
+      "qt5-base",
+      "lua",
+      "gettext",
+      "kf5archive",
+      "sdl2-mixer",
+      "sqlite3"
+    ]
+  }

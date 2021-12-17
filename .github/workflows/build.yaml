@@ -110,36 +110,38 @@ jobs:
     name: "Mac OS X"
     runs-on: macos-latest
     env:
-      Intl_ROOT: /usr/local/opt/gettext
-      Qt5_DIR: /usr/local/opt/qt5/lib/cmake
-      Readline_ROOT: /usr/local/opt/readline
+      MACOSX_DEPLOYMENT_TARGET: 10.15
+      VCPKG_BUILD_TYPE: release
     steps:
       - uses: actions/checkout@v2
-      - name: Install dependencies
+      - name: Install build tools
         run: |
           brew update
           brew install \
             cmake \
             ninja \
             python3 \
-            gettext \
-            qt@5 \
-            kde-karchive \
-            readline \
-            lua \
-            sqlite \
-            sdl2 \
-            sdl2_mixer
+            gettext
           brew link gettext --force
-      - name: Configure
-        run: |
-          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+      - uses: lukka/run-vcpkg@v10.0
+        name: Install dependencies
+        with:
+          vcpkgGitCommitId: 50fd3d9957195575849a49fa591e645f1d8e7156
       - name: Build
-        run: |
-          cmake --build build
-      - name: Install
-        run: |
-          cmake --build build --target install
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: 'fullrelease'
+          buildPreset: 'fullrelease'
+      - name: Debug
+        if: failure()
+        run: cat CMakeCache.txt
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: macos
+          path: |
+            build-rel/freeciv21-client
+            build-rel/freeciv21-server
   wasm:
     name: "WebAssembly"
     runs-on: ubuntu-latest
