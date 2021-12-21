@@ -1136,9 +1136,7 @@ double real_timer_callback()
     }
   }
 
-  /* Make sure we wait at least 50 ms, otherwise we may not give any other
-   * code time to run. */
-  return MAX(time_until_next_call, 0.05);
+  return std::max(time_until_next_call, 0.0);
 }
 
 /**
