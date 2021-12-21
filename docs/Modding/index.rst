@@ -79,6 +79,7 @@ guides document specific aspects of tileset creation:
   Tilesets/tutorial.rst
   Tilesets/graphics.rst
   Tilesets/debugger.rst
+  Tilesets/compatibility.rst
   :maxdepth: 1
 
 Soundsets
