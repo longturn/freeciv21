@@ -351,6 +351,7 @@ struct tileset {
   int activity_offset_y;
   int select_offset_x;
   int select_offset_y;
+  int select_step_ms = 100;
   int occupied_offset_x;
   int occupied_offset_y;
   int unit_upkeep_offset_y;
@@ -1937,6 +1938,9 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
+
+  t->select_step_ms = secfile_lookup_int_def_min_max(
+      file, 100, 1, 10000, "tilespec.select_step_ms");
 
   if (tileset_invalid_offsets(t, file)) {
     qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
@@ -5186,9 +5190,9 @@ void tileset_setup_city_tiles(struct tileset *t, int style)
 int get_focus_unit_toggle_timeout(const struct tileset *t)
 {
   if (t->sprites.unit.select.empty()) {
-    return 500;
-  } else {
     return 100;
+  } else {
+    return t->select_step_ms;
   }
 }
 
