@@ -35,7 +35,7 @@ The rest of this page lists the available flags and their meaning.
 .. option:: unlimited-unit-select-frames
 
     The number of sprites used in the animation under the selected unit is no longer fixed to four
-    (sprites ``unit.select*``).
+    (sprites ``unit.select*``). Also introduces the setting ``select_step_ms``.
 
 .. option:: unlimited-upkeep-sprites
 
