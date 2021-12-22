@@ -21,6 +21,12 @@
             }
         },
         {
+            "name": "fullrelease-macos",
+            "displayName": "Build for Mac in Release Mode",
+            "inherits": "fullrelease",
+            "installDir": ".install"
+        },
+        {
             "name": "debug",
             "displayName": "Build Server and Client only in Debug Mode",
             "generator": "Unix Makefiles",
@@ -55,6 +61,11 @@
         {
             "name": "fullrelease",
             "configurePreset": "fullrelease"
+        },
+        {
+            "name": "fullrelease-macos",
+            "configurePreset": "fullrelease-macos",
+            "targets": "install"
         }
     ]
 }
