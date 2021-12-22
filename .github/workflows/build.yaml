@@ -121,7 +121,8 @@ jobs:
             cmake \
             ninja \
             python3 \
-            gettext
+            gettext \
+            create-dmg
           brew link gettext --force
       - uses: lukka/run-vcpkg@v10.0
         name: Install dependencies
@@ -130,8 +131,35 @@ jobs:
       - name: Build
         uses: lukka/run-cmake@v10
         with:
-          configurePreset: 'fullrelease'
-          buildPreset: 'fullrelease'
+          configurePreset: 'fullrelease-macos'
+          buildPreset: 'fullrelease-macos'
+      - name: Create App Bundle
+        run: |
+          mkdir -p Freeciv21.app/Contents/MacOS Freeciv21.app/Contents/Resources
+          cp macos/Info.plist Freeciv21.app/Contents/
+          cp -r .install/share/freeciv21/* Freeciv21.app/Contents/Resources
+          cp .install/bin/freeciv21-server .install/bin/freeciv21-client Freeciv21.app/Contents/MacOS
+          mkdir client.iconset
+          cp data/icons/16x16/freeciv21-client.png client.iconset/icon_16x16.png
+          cp data/icons/32x32/freeciv21-client.png client.iconset/icon_16x16@2x.png
+          cp data/icons/32x32/freeciv21-client.png client.iconset/icon_32x32.png
+          cp data/icons/64x64/freeciv21-client.png client.iconset/icon_32x32@2x.png
+          cp data/icons/128x128/freeciv21-client.png client.iconset/icon_128x128.png
+          iconutil -c icns client.iconset
+          cp client.icns Freeciv21.app/Contents/Resources
+          mkdir staging
+          mv Freeciv21.app staging
+          create-dmg \
+            --volname "Freeciv21 Installer" \
+            --volicon "client.icns" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --icon "Freeciv21.app" 200 190 \
+            --hide-extension "Freeciv21.app" \
+            --app-drop-link 600 185 \
+            "Freeciv21.dmg" \
+            "staging/"
       - name: Debug
         if: failure()
         run: cat CMakeCache.txt
@@ -139,9 +167,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: macos
-          path: |
-            build-rel/freeciv21-client
-            build-rel/freeciv21-server
+          path: Freeciv21.dmg
   wasm:
     name: "WebAssembly"
     runs-on: ubuntu-latest

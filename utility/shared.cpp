@@ -52,9 +52,17 @@
 
 static QStringList default_data_path()
 {
-  return {QStringLiteral("."), QStringLiteral("data"),
-          freeciv_storage_dir() + QStringLiteral("/" DATASUBDIR),
-          QStringLiteral(FREECIV_INSTALL_DATADIR)};
+  // Make sure that all executables get the same directory.
+  auto app_name = QCoreApplication::applicationName();
+  QCoreApplication::setApplicationName("freeciv21");
+
+  auto paths =
+      QStringList{QStringLiteral("."), QStringLiteral("data"),
+                  freeciv_storage_dir() + QStringLiteral("/" DATASUBDIR),
+                  QStringLiteral(FREECIV_INSTALL_DATADIR)}
+      + QStandardPaths::standardLocations(QStandardPaths::DataLocation);
+  QCoreApplication::setApplicationName(app_name);
+  return paths;
 }
 
 static QStringList default_save_path()
