@@ -11,7 +11,7 @@ You will find there the list of directories in which Freeciv21 looks for its dat
 them will contain a file called ``amplio2.tilespec``.
 
 .. note::
-  On Windows, the file explorer doesn't show the complete name of files by default. Because of
+  On Windows, the file explorer may not show the complete name of files by default. Because of
   this, ``amplio2.tilespec`` might appear as a file called ``amplio2`` with the description
   saying "TILESPEC file". This can be changed in Windows Explorer by checking
   :menuselection:`View --> Show/hide --> File name extensions`. In the rest of this
