@@ -3,7 +3,7 @@ Adding units
 
 One of the most common changes done when developing custom rules (as described in the
 :doc:`/Modding/Rulesets/overview`) is to add new unit types to the game. It is important to note that
-Freeciv21 has a priori no knowledge of which unit types will exist, and much less of what they should look
+Freeciv21 has no prior knowledge of which unit types will exist, and much less of what they should look
 like. Some collaboration between the ruleset and the tileset is thus needed to provide this information.
 This is achieved using :emphasis:`graphic tags` in the rules; for instance, one could find the following
 in the definition of a new unit type, the Alien:
@@ -71,7 +71,7 @@ for any ruleset that uses the ``u.alien`` tag. Here's what it could look like:
 Let's now go through the newly added ``aliens.spec`` file. It can be opened with your text editor; go back to
 the :doc:`first page <../tutorial>` if you don't know what to use.
 
-You will notice that the file contains four sections, each opened by a names between square brackets:
+You will notice that the file contains four sections, each opened by a name between square brackets:
 ``[spec]``, ``[info]``, ``[file]``, and ``[grid_main]``. The first section specifies the version of
 Freeciv21 supported by the tileset and will only change when moving from one version to the next. The
 ``[info]`` section is there solely to give credit to the artists. The last two are more interesting, so
@@ -94,7 +94,7 @@ Freeciv21 runs.
 The last section describes the layout of the sprites within the image. There is a single grid, called
 ``main``, that starts one pixel from the top and one pixel from the left (``x_top_left`` and ``y_top_left``).
 This is because of the green outline around the file: it is not counted as being part of the grid. The next
-two lines specify the width (``dx``) and the height (``dy``) of the sprites in pixels. Then, we instructs
+two lines specify the width (``dx``) and the height (``dy``) of the sprites in pixels. Then, we instruct
 Freeciv21 to skip one pixel between each sprite (``pixel_border``) to jump over the green lines separating
 them. With these values, Freeciv21 now has enough information to locate precisely every sprite in the grid.
 
