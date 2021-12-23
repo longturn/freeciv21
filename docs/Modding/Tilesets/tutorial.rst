@@ -17,7 +17,7 @@ right in the middle might be overwhelming. More advanced users may jump immediat
 interested in, although we also encourage them to read everything.
 
 :doc:`Tutorial/01_intro`
-  This chapter will get you started by creating a new tileset for the tutorial, can you can edit safely.
+  This chapter will get you started by creating a new tileset for the tutorial, that you can edit safely.
 
 :doc:`Tutorial/02_units`
   In this chapter, we add graphics for two fictitious units to our tileset.
