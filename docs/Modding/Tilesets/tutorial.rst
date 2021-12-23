@@ -30,7 +30,7 @@ interested in, although we also encourage them to read everything.
   Tutorial/01_intro.rst
   Tutorial/02_units.rst
 
-.. rubric:: A note on graphics software
+.. rubric:: A note on image editing
 
 If you create tilesets, you will likely also want to edit graphics. We are often asked which painting program
 we use. We believe that the program that will work best for you depends a lot on your workflow, so we
