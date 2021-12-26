@@ -565,7 +565,7 @@ void real_science_report_dialog_update(void *unused)
   } else {
     queen()->sw_science->keep_blinking = false;
     queen()->sw_science->setCustomLabels(str);
-    queen()->sw_science->updateFinalPixmap();
+    queen()->sw_science->update();
   }
   queen()->updateSidebarTooltips();
 

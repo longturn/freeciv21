@@ -682,7 +682,7 @@ void diplo_wdg::restore_pixmap()
   queen()->sw_diplo->resizePixmap(queen()->sw_diplo->width(),
                                   queen()->sw_diplo->height());
   queen()->sw_diplo->setCustomLabels(QString());
-  queen()->sw_diplo->updateFinalPixmap();
+  queen()->sw_diplo->update();
 }
 
 /**
@@ -893,7 +893,7 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
                                   queen()->sw_diplo->height());
   queen()->sw_diplo->setCustomLabels(
       QString(nation_plural_for_player(player_by_number(counterpart))));
-  queen()->sw_diplo->updateFinalPixmap();
+  queen()->sw_diplo->update();
   delete pix2;
   if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
     dd = new diplo_dlg(counterpart, initiated_from);

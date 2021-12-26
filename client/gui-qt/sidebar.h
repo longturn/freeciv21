@@ -55,7 +55,6 @@ public:
   void setTooltip(const QString &tooltip);
   void setWheelDown(pfcn func);
   void setWheelUp(pfcn func);
-  void updateFinalPixmap();
 
   bool blink;
   bool keep_blinking;
@@ -75,6 +74,7 @@ protected:
   void wheelEvent(QWheelEvent *event) override;
 
 private:
+  void updateFinalPixmap();
   void paint();
   bool hover;
   pfcn right_click;
