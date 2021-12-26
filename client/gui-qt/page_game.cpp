@@ -236,7 +236,7 @@ void pageGame::updateInfoLabelTimeout()
           .arg(calendar_text(), QString::number(game.info.turn));
 
   sw_map->setCustomLabels(s);
-  sw_map->updateFinalPixmap();
+  sw_map->update();
 
   if (client.conn.playing != NULL) {
     if (player_get_expected_income(client.conn.playing) > 0) {
@@ -256,9 +256,9 @@ void pageGame::updateInfoLabelTimeout()
   } else {
     sw_economy->setCustomLabels(QLatin1String(""));
   }
-  sw_indicators->updateFinalPixmap();
-  sw_tax->updateFinalPixmap();
-  sw_economy->updateFinalPixmap();
+  sw_indicators->update();
+  sw_tax->update();
+  sw_economy->update();
   FC_FREE(update_info_timer);
 }
 
@@ -552,7 +552,7 @@ void fc_game_tab_widget::current_changed(int index)
   }
 
   for (auto *sw : qAsConst(queen()->sidebar_wdg->objects)) {
-    sw->updateFinalPixmap();
+    sw->update();
   }
   currentWidget()->hide();
   widget(index)->show();

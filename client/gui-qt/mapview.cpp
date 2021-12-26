@@ -437,7 +437,7 @@ void update_mouse_cursor(enum cursor_type new_cursor_type)
 void qtg_update_timeout_label()
 {
   queen()->sw_endturn->setCustomLabels(QString(get_timeout_label_text()));
-  queen()->sw_endturn->updateFinalPixmap();
+  queen()->sw_endturn->update();
 }
 
 /**

@@ -189,7 +189,6 @@ void sidebarWidget::enterEvent(QEvent *event)
 {
   if (!hover) {
     hover = true;
-    updateFinalPixmap();
     QWidget::enterEvent(event);
     update();
   }
@@ -202,7 +201,6 @@ void sidebarWidget::leaveEvent(QEvent *event)
 {
   if (hover) {
     hover = false;
-    updateFinalPixmap();
     QWidget::leaveEvent(event);
     update();
   }
@@ -215,7 +213,6 @@ void sidebarWidget::contextMenuEvent(QContextMenuEvent *event)
 {
   if (hover) {
     hover = false;
-    updateFinalPixmap();
     QWidget::contextMenuEvent(event);
     update();
   }
@@ -287,7 +284,7 @@ void sidebarWidget::sblink()
       timer->stop();
     }
   }
-  updateFinalPixmap();
+  update();
 }
 
 /**
@@ -457,7 +454,6 @@ void sidebarWidget::updateFinalPixmap()
   }
 
   p.end();
-  update();
 }
 
 /**
@@ -579,7 +575,7 @@ void sidebarDisableEndturn(bool do_restore)
     return;
   }
   queen()->sw_endturn->disabled = !do_restore;
-  queen()->sw_endturn->updateFinalPixmap();
+  queen()->sw_endturn->update();
 }
 
 /**
@@ -591,7 +587,7 @@ void sidebarBlinkEndturn(bool do_restore)
     return;
   }
   queen()->sw_endturn->blink = !do_restore;
-  queen()->sw_endturn->updateFinalPixmap();
+  queen()->sw_endturn->update();
 }
 
 /**
