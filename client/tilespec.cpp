@@ -1921,7 +1921,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   }
   t->small_sprite_width = t->small_sprite_width * t->scale;
   t->small_sprite_height = t->small_sprite_height * t->scale;
-  qDebug("tile sizes %dx%d, %d%d unit, %d%d small", t->normal_tile_width,
+  qDebug("tile sizes %dx%d, %dx%d unit, %dx%d small", t->normal_tile_width,
          t->normal_tile_height, t->full_tile_width, t->full_tile_height,
          t->small_sprite_width, t->small_sprite_height);
 
