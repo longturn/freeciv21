@@ -1161,7 +1161,7 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
                          + "</pre>");
     }
   }
-  // handjob
+
   ciil->updateTooltip(0, buf[FOOD + 1]);
   ciil->updateTooltip(2, buf[SHIELD + 1]);
   ciil->updateTooltip(4, buf[GOLD + 1]);
