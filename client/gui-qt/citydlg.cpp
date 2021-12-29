@@ -91,27 +91,6 @@ QSize icon_list::viewportSizeHint() const
 }
 
 /**
-   Reimplemented virtual method.
- */
-int icon_list::heightForWidth(int width) const
-{
-  int height = 0, line_height = 0, line_width = 0;
-  for (int i = 0; i < count(); ++i) {
-    auto hint = sizeHintForIndex(indexFromItem(item(i)));
-    if (line_width + hint.width() > width) {
-      // New line
-      height += line_height;
-      line_width = 0;
-      line_height = 0;
-    }
-    line_width += hint.width();
-    line_height = qMax(line_height, hint.height());
-  }
-  // Add the last line and some extra room to make sure there's no scroll bar
-  return height + line_height + 5;
-}
-
-/**
    Custom progressbar constructor
  */
 progress_bar::progress_bar(QWidget *parent) : QProgressBar(parent)
@@ -2320,9 +2299,7 @@ void city_dialog::update_units()
   }
 
   ui.supported_units->clear();
-  if (unit_list_size(units) == 0) {
-    ui.supported_units->hide();
-  } else {
+  if (unit_list_size(units) > 0) {
     QSize icon_size;
     unit_list_iterate(units, punit)
     {
@@ -2335,7 +2312,6 @@ void city_dialog::update_units()
       ui.supported_units->addItem(item);
     }
     unit_list_iterate_end;
-    ui.supported_units->show();
     ui.supported_units->setGridSize(icon_size);
     ui.supported_units->setIconSize(icon_size);
   }

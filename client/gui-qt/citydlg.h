@@ -61,8 +61,6 @@ class QPixmap;
 class icon_list : public QListWidget {
 public:
   explicit icon_list(QWidget *parent = nullptr);
-  bool hasHeightForWidth() const override { return true; }
-  int heightForWidth(int width) const override;
   QSize viewportSizeHint() const override;
   bool oneliner;
 };
