@@ -484,7 +484,6 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
                         "directories for data files:");
     data_dirs_info += "\n\n";
     for (const auto &path : qAsConst(get_data_dirs())) {
-      qCritical() << path;
       QFileInfo info(path + "/");
       data_dirs_info += "* " + info.absolutePath() + " ";
       if (!info.exists()) {
