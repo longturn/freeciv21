@@ -86,9 +86,9 @@ sidebarWidget::sidebarWidget(QPixmap *pix, const QString &label,
  */
 sidebarWidget::~sidebarWidget()
 {
-  NFC_FREE(scaled_pixmap);
-  NFC_FREE(def_pixmap);
-  NFC_FREE(final_pixmap);
+  NFCN_FREE(scaled_pixmap);
+  NFCN_FREE(def_pixmap);
+  NFCN_FREE(final_pixmap);
 
   delete timer;
 }
@@ -98,7 +98,7 @@ sidebarWidget::~sidebarWidget()
  */
 void sidebarWidget::setPixmap(QPixmap *pm)
 {
-  NFC_FREE(def_pixmap);
+  NFCN_FREE(def_pixmap);
   def_pixmap = pm;
 }
 
@@ -343,7 +343,7 @@ void sidebarWidget::updateFinalPixmap()
 
   resizePixmap(width(), height());
 
-  NFC_FREE(final_pixmap);
+  NFCN_FREE(final_pixmap);
 
   i = queen()->gimmeIndexOf(page);
   if (i == queen()->game_tab_widget->currentIndex()) {
