@@ -15,4 +15,5 @@ architected.
   fcdb.rst
   logging.rst
   scorelog.rst
+  macros.rst
   :maxdepth: 1
