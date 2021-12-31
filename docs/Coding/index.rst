@@ -13,5 +13,6 @@ architected.
   attributes.rst
   delta.rst
   fcdb.rst
+  logging.rst
   scorelog.rst
   :maxdepth: 1
