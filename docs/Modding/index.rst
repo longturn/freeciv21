@@ -80,6 +80,7 @@ guides document specific aspects of tileset creation:
   Tilesets/graphics.rst
   Tilesets/debugger.rst
   Tilesets/compatibility.rst
+  Tilesets/nations.rst
   :maxdepth: 1
 
 Soundsets
