@@ -1095,14 +1095,12 @@ double real_timer_callback()
 
   {
     double blink_time = blink_turn_done_button();
-
-    time_until_next_call = MIN(time_until_next_call, blink_time) / 1000;
+    time_until_next_call = std::min(time_until_next_call, blink_time / 1000);
   }
 
   if (get_num_units_in_focus() > 0) {
     double blink_time = blink_active_unit();
-
-    time_until_next_call = MIN(time_until_next_call, blink_time) / 1000;
+    time_until_next_call = std::min(time_until_next_call, blink_time / 1000);
   }
 
   /* It is possible to have current_turn_timeout() > 0 but !turndone_timer,
@@ -1113,7 +1111,7 @@ double real_timer_callback()
       update_timeout_label();
     }
 
-    time_until_next_call = MIN(time_until_next_call, 1.0);
+    time_until_next_call = std::min(time_until_next_call, 1.0);
   }
   if (waiting_turn_change) {
     double seconds =
