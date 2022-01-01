@@ -28,7 +28,6 @@ Debain variant such as Ubuntu. Instructions for getting all of the tools needed 
 in :doc:`../General/install`. Refer to the section titled `Debian Linux Notes`. Don't follow the last few
 steps to clone the repository (e.g. the :code:`git clone` command), that will happen in a bit.
 
-
 GitHub
 ======
 
@@ -90,6 +89,30 @@ You will also need to set a couple global configuration settings so :code:`git` 
   ~/GitHub/freeciv21$ git config --global user.email [email address associated with GitHub]
   ~/GitHub/freeciv21$ git config --global user.name [your first and last name]
 
+
+KDevelop Project Setup
+======================
+
+On Linux, the easiest way to install KDevelop is with a command such as this:
+
+.. code-block:: rst
+
+    sudo apt install kdevelop
+
+
+Once installed, you can then import the Freeciv21 project into it. Follow these steps:
+
+#. Open Kdevelop
+#. :menuselection:`Project --> Open/Import Project`
+#. find :file:`freeciv21/CMakeLists.txt`
+#. :menuselection:`Session --> Rename Current Session` to Freeciv21
+#. Allow kdevelop to parse all of the code -- this can take awhile. Evenually you will see a full tree of
+   the code in the Projects tab on the left.
+
+Here are some useful help/documentation links:
+
+* https://userbase.kde.org/KDevelop5/Manual
+* https://docs.kde.org/trunk5/en/kdevelop/kdevelop/kdevelop.pdf
 
 Now you are ready to edit some code! When ready, follow the steps to submit a pull request here:
 :doc:`pull-request`.
