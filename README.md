@@ -12,9 +12,9 @@ Freeciv21 is an empire-building strategy game inspired by the history of human c
 
 ![Screenshot](https://github.com/longturn/freeciv21/raw/master/data/screenshot.png)
 
-The documentation is found on our [documentation website](https://longturn.readthedocs.io/). Some older documents are found in the [doc](doc) directory.
+The documentation is found on our [documentation website](https://longturn.readthedocs.io/).
 
-Freeciv21 is maintained by folks from [longturn.net](https://longturn.net). We welcome merge requests, bug reports and simple suggestions! Get in touch on [Discord](https://discord.gg/98krqGm).
+Freeciv21 is maintained by folks from [longturn.net](https://longturn.net). We welcome pull requests, bug reports and simple suggestions! Get in touch on [Discord](https://discord.gg/98krqGm).
 
 Installation
 ------------
