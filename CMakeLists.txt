@@ -144,6 +144,7 @@ if(WIN32 OR MSYS OR MINGW)
   #   dynamically instead of doing it manually.
   install(CODE [[
     message(STATUS "Collecting dependencies for freeciv21 executables...")
+    set(CMAKE_GET_RUNTIME_DEPENDENCIES_TOOL objdump)
 
     # Take a variable that is available at "install" time and repurpose
     string(REGEX REPLACE "objdump.exe" "" MINGW_PATH ${CMAKE_OBJDUMP})
