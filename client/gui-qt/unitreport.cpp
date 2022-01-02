@@ -50,6 +50,7 @@ units_waiting::units_waiting(QWidget *parent)
   waiting_units->setEditTriggers(QAbstractItemView::NoEditTriggers);
   waiting_units->verticalHeader()->setVisible(false);
   waiting_units->horizontalHeader()->setVisible(true);
+  waiting_units->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
   waiting_units->setSelectionMode(QAbstractItemView::SingleSelection);
   waiting_units->horizontalHeader()->resizeSections(QHeaderView::Stretch);
   waiting_units->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -133,10 +134,9 @@ void units_waiting::update_units()
     hide();
   }
 
-  setFixedSize(waiting_units->horizontalHeader()->length()
-                   + waiting_units->verticalHeader()->width() + 25,
-               waiting_units->verticalHeader()->length()
-                   + waiting_units->horizontalHeader()->height() + 30);
+  auto max_height = parentWidget()->height() - y();
+  auto want = sizeHint();
+  setFixedSize(want.width(), std::min(want.height(), max_height));
 }
 
 void units_waiting::showEvent(QShowEvent *event) { update_units(); }
