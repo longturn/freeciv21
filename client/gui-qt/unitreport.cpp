@@ -31,6 +31,35 @@
 #include "hudwidget.h"
 #include "page_game.h"
 
+namespace /* anonymous */ {
+
+/**
+ * \brief A QTableWidgetItem that can be sorted based on a custom value
+ */
+class sortable_list_widget_item : public QTableWidgetItem {
+  int m_sort_value;
+
+public:
+  /// \brief Constructor.
+  sortable_list_widget_item(const QString &text, int sort_value)
+      : QTableWidgetItem(text, UserType), m_sort_value(sort_value)
+  {
+  }
+
+  /// \brief Reimplemented public function.
+  bool operator<(const QTableWidgetItem &other) const override
+  {
+    if (const auto sortable =
+            dynamic_cast<const sortable_list_widget_item *>(&other)) {
+      return m_sort_value < sortable->m_sort_value;
+    } else {
+      return QTableWidgetItem::operator<(other);
+    }
+  }
+};
+
+} // anonymous namespace
+
 units_reports *units_reports::m_instance = nullptr;
 
 units_waiting::units_waiting(QWidget *parent)
@@ -104,19 +133,23 @@ void units_waiting::update_units()
 
       int pcity_near_dist;
       struct city *pcity_near = get_nearest_city(punit, &pcity_near_dist);
-      waiting_units->setItem(units_count, 1,
-                             new QTableWidgetItem(get_nearest_city_text(
-                                 pcity_near, pcity_near_dist)));
-
       waiting_units->setItem(
-          units_count, 2,
-          new QTableWidgetItem(move_points_text(punit->moves_left, false)));
+          units_count, 1,
+          new sortable_list_widget_item(
+              get_nearest_city_text(pcity_near, pcity_near_dist),
+              pcity_near_dist));
+
+      waiting_units->setItem(units_count, 2,
+                             new sortable_list_widget_item(
+                                 move_points_text(punit->moves_left, false),
+                                 punit->moves_left));
 
       time_t dt = time(NULL) - punit->action_timestamp;
       if (dt < 0 && !can_unit_move_now(punit)) {
         char buf[64];
         format_time_duration(-dt, buf, sizeof(buf));
-        waiting_units->setItem(units_count, 3, new QTableWidgetItem(buf));
+        waiting_units->setItem(units_count, 3,
+                               new sortable_list_widget_item(buf, dt));
       }
 
       ++units_count;
