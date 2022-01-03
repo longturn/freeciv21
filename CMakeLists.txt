@@ -260,7 +260,7 @@ if(UNIX AND NOT APPLE)
       FILES
       dist/net.longturn.freeciv21.ruledit.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
-      COMPONENT freeciv21
+      COMPONENT tool_ruledit
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.ruledit.desktop.in
                    net.longturn.freeciv21.ruledit.desktop
@@ -269,9 +269,10 @@ if(UNIX AND NOT APPLE)
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.ruledit.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
-      COMPONENT freeciv21
+      COMPONENT tool_ruledit
     )
   endif(FREECIV_ENABLE_RULEDIT)
+
 endif(UNIX AND NOT APPLE)
 
 # Packaging (CPack)
