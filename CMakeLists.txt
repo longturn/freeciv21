@@ -206,6 +206,7 @@ if(UNIX AND NOT APPLE)
       FILES
       dist/net.longturn.freeciv21.client.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+      COMPONENT freeciv21
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.client.desktop.in
                    net.longturn.freeciv21.client.desktop
@@ -214,6 +215,7 @@ if(UNIX AND NOT APPLE)
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.client.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+      COMPONENT freeciv21
     )
   endif(FREECIV_ENABLE_CLIENT)
 
@@ -222,6 +224,7 @@ if(UNIX AND NOT APPLE)
       FILES
       dist/net.longturn.freeciv21.server.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+      COMPONENT freeciv21
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.server.desktop.in
                    net.longturn.freeciv21.server.desktop
@@ -230,6 +233,7 @@ if(UNIX AND NOT APPLE)
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.server.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+      COMPONENT freeciv21
     )
   endif(FREECIV_ENABLE_SERVER)
 
@@ -238,6 +242,7 @@ if(UNIX AND NOT APPLE)
       FILES
       dist/net.longturn.freeciv21.modpack.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+      COMPONENT freeciv21
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.modpack-qt.desktop.in
                    net.longturn.freeciv21.modpack-qt.desktop
@@ -246,6 +251,7 @@ if(UNIX AND NOT APPLE)
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.modpack-qt.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+      COMPONENT freeciv21
     )
   endif(FREECIV_ENABLE_FCMP_QT)
 
@@ -254,6 +260,7 @@ if(UNIX AND NOT APPLE)
       FILES
       dist/net.longturn.freeciv21.ruledit.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+      COMPONENT freeciv21
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.ruledit.desktop.in
                    net.longturn.freeciv21.ruledit.desktop
@@ -262,6 +269,7 @@ if(UNIX AND NOT APPLE)
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.ruledit.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+      COMPONENT freeciv21
     )
   endif(FREECIV_ENABLE_RULEDIT)
 endif(UNIX AND NOT APPLE)
