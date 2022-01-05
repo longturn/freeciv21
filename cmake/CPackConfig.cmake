@@ -18,23 +18,19 @@ set(CPACK_PACKAGE_CHECKSUM "SHA256")
 
 if(WIN32 OR MSYS OR MINGW)
 
-  # Use the NSIS Package Tool same as classic Freeciv
+  # Use the NSIS Package for Windows
   set(CPACK_GENERATOR "NSIS")
 
-  # The variable is not set on MSYS2, so we force it.
+  # Establish some variables to place the package where we want it
   if(NOT CPACK_SYSTEM_NAME)
     set(CPACK_CPU_ARCH $ENV{MSYSTEM_CARCH})
     set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${CPACK_CPU_ARCH}")
   endif()
 
-  # Set some package specific variables...
-  #   Where to save the package exe at build time
   set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/${CPACK_SYSTEM_NAME}")
-  #   The name of the package exe file
-  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-v${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}")
-  #   This is a combo variable. Used on welcome screen to introduce the project and also sets
-  #   the install directory.
   set(CPACK_OUTPUT_FILE_PREFIX ${CPACK_PACKAGE_DIRECTORY})
+  # The name of the package exe file
+  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-v${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}")
 
   ## Component definition
   #  - variable names are UPPER CASE, even if component names are lower case
@@ -90,6 +86,19 @@ endif()
 # Unix/Linux specific packages
 if(UNIX AND NOT APPLE)
 
+  # Establish some variables to place the package where we want it
+  if(NOT CPACK_SYSTEM_NAME)
+    execute_process(COMMAND "uname"
+                    OUTPUT_VARIABLE CPACK_SYSTEM_NAME
+                    OUTPUT_STRIP_TRAILING_WHITESPACE)
+    set(CPACK_CPU_ARCH ${CMAKE_SYSTEM_PROCESSOR})
+    set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${CPACK_CPU_ARCH}")
+  endif()
+
+  set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/${CPACK_SYSTEM_NAME}")
+  set(CPACK_OUTPUT_FILE_PREFIX ${CPACK_PACKAGE_DIRECTORY})
+
+  # Debian "deb" file generator settings
   set(CPACK_GENERATOR "DEB")
   set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
   set(CPACK_DEBIAN_PACKAGE_SECTION "Games")
