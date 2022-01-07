@@ -20,7 +20,7 @@ An operating system that support Qt
     * Gentoo
     * KDE Neon
     * Manjaro
-    * Mint 20+ or Mint Debian Edition
+    * Mint 20+ or Mint Debian Edition (set to Bullseye)
     * openSUSE 15.2+
     * Slackware
     * Ubuntu 20.04 LTS+
@@ -252,8 +252,30 @@ following commands.
 At this point follow the steps in the configuring_ section above.
 
 
-Windows Notes
-=============
+Debian and Windows Package Notes
+================================
+
+Operating System native packages can be generated for Debian and Windows based systems.
+
+Debian
+------
+
+Assuming you have obtained the source code and installed the package dependencies in the section above, follow
+these steps to generate the Debian package:
+
+.. code-block:: rst
+
+  $ rm -Rf build
+
+  $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr
+
+  $ cmake --build build --target package
+
+
+When the Ninja command is finished running, you will find an installer in :file:`build/Linux-${arch}`
+
+Windows
+-------
 
 Msys2 is an available environment for compiling Freeciv21. Microsoft Windows Visual C is under development.
 
@@ -261,7 +283,7 @@ Freeciv21 currently supports building and installing using the Msys2 environment
 Msys2 versions are documented in :doc:`../Contributing/msys2`. Alternately you can visit
 https://github.com/jwrober/freeciv-msys2 for ready made scripts.
 
-Follow the steps starting in configuring_ above.
+Once your Msys2 environment is ready, start with configuring_ above.
 
 Instead of installing, use this command to create the Windows Installer package:
 
