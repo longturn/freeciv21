@@ -193,7 +193,8 @@ void help_dialog::showEvent(QShowEvent *event)
     QList<QScreen *> screens = QGuiApplication::screens();
     QRect rect = screens[0]->availableGeometry();
 
-    resize((rect.width() * 3) / 5, (rect.height() * 3) / 6);
+    resize(qMax((rect.width() * 3) / 4, 1280),
+           qMax((rect.height() * 3) / 4, 800));
     sizes << rect.width() / 10 << rect.width() / 3;
     splitter->setSizes(sizes);
   }
@@ -528,26 +529,25 @@ void help_widget::do_layout()
 void help_widget::update_fonts()
 {
   QList<QWidget *> l;
-  QFont *f;
 
   l = findChildren<QWidget *>();
 
-  f = fcFont::instance()->getFont(fonts::notify_label);
+  auto f = fcFont::instance()->getFont(fonts::notify_label);
   for (auto i : qAsConst(l)) {
     if (i->property(fonts::help_label).isValid()) {
-      i->setFont(*f);
+      i->setFont(f);
     }
   }
   f = fcFont::instance()->getFont(fonts::help_text);
   for (auto i : qAsConst(l)) {
     if (i->property(fonts::help_text).isValid()) {
-      i->setFont(*f);
+      i->setFont(f);
     }
   }
   f = fcFont::instance()->getFont(fonts::default_font);
   for (auto i : qAsConst(l)) {
     if (i->property(fonts::default_font).isValid()) {
-      i->setFont(*f);
+      i->setFont(f);
     }
   }
 }
@@ -587,7 +587,7 @@ void help_widget::show_info_panel()
 /**
    Adds a pixmap to the information panel.
  */
-void help_widget::add_info_pixmap(QPixmap *pm, bool shadow)
+void help_widget::add_info_pixmap(const QPixmap *pm, bool shadow)
 {
   QLabel *label = new QLabel();
   QGraphicsDropShadowEffect *effect;
@@ -959,7 +959,6 @@ void help_widget::set_topic_building(const help_item *topic,
 {
   char buffer[MAX_HELP_TEXT_SIZE];
   int type, value;
-  QPixmap *spr;
   struct impr_type *itype = improvement_by_translated_name(title);
   char req_buf[512];
   QString str, s1, s2;
@@ -970,7 +969,7 @@ void help_widget::set_topic_building(const help_item *topic,
                       topic->text, itype);
     text_browser->setPlainText(buffer);
     show_info_panel();
-    spr = get_building_sprite(tileset, itype);
+    auto spr = get_building_sprite(tileset, itype);
     if (spr) {
       add_info_pixmap(spr);
     }
@@ -1050,7 +1049,6 @@ void help_widget::set_topic_building(const help_item *topic,
 void help_widget::set_topic_tech(const help_item *topic, const char *title)
 {
   char buffer[MAX_HELP_TEXT_SIZE];
-  QPixmap *spr;
   QLabel *tb;
   struct advance *padvance = advance_by_translated_name(title);
   QString str;
@@ -1059,7 +1057,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
     int n = advance_number(padvance);
     if (!is_future_tech(n)) {
       show_info_panel();
-      spr = get_tech_sprite(tileset, n);
+      auto spr = get_tech_sprite(tileset, n);
       if (spr) {
         add_info_pixmap(spr);
       }
@@ -1200,7 +1198,7 @@ static QLabel *make_helplabel(const QString &title, const QString &tooltip,
                               QHBoxLayout *layout)
 {
   QLabel *label;
-  QFont f = *fcFont::instance()->getFont(fonts::default_font);
+  QFont f = fcFont::instance()->getFont(fonts::default_font);
   label = new QLabel(title);
   layout->addWidget(label, Qt::AlignVCenter);
   label->setProperty(fonts::default_font, "true");
@@ -1218,7 +1216,6 @@ static void make_helppiclabel(QPixmap *spr, const QString &tooltip,
   QImage cropped_img;
   QRect crop;
   QPixmap pix;
-  QFont f;
   QFontMetrics *fm;
   int isize;
 
@@ -1226,7 +1223,7 @@ static void make_helppiclabel(QPixmap *spr, const QString &tooltip,
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
   pix = QPixmap::fromImage(cropped_img);
-  f = *fcFont::instance()->getFont(fonts::help_text);
+  auto f = fcFont::instance()->getFont(fonts::help_text);
   fm = new QFontMetrics(f);
   isize = fm->height() * 7 / 8;
   label = new QLabel();
@@ -1360,7 +1357,7 @@ void help_widget::set_topic_terrain(const help_item *topic,
       fc_snprintf(buffer, sizeof(buffer),
                   PL_("%d turn", "%d turns", pterrain->cultivate_time),
                   pterrain->cultivate_time);
-      str = N_("Irrig. Rslt/Time:");
+      str = N_("Cultivate Rslt/Time:");
       str = str
             + link_me(terrain_name_translation(pterrain->irrigation_result),
                       HELP_TERRAIN)
@@ -1392,7 +1389,7 @@ void help_widget::set_topic_terrain(const help_item *topic,
       fc_snprintf(buffer, sizeof(buffer),
                   PL_("%d turn", "%d turns", pterrain->transform_time),
                   pterrain->transform_time);
-      str = N_("Trans. Rslt/Time:");
+      str = N_("Transform Rslt/Time:");
       str = str
             + link_me(terrain_name_translation(pterrain->transform_result),
                       HELP_TERRAIN)

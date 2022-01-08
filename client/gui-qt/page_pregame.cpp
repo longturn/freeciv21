@@ -40,14 +40,10 @@ page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
   king = gui;
   ui.setupUi(this);
 
-  QFont f;
   QStringList player_widget_list;
 
   ui.chat_line->setProperty("doomchat", true);
 
-  ui.output_window->setReadOnly(false);
-  f.setBold(true);
-  ui.output_window->setFont(f);
   player_widget_list << _("Name") << _("Ready") << Q_("?player:Leader")
                      << _("Flag") << _("Border") << _("Nation") << _("Team")
                      << _("Host");
@@ -95,9 +91,6 @@ void page_pregame::update_start_page()
   QVariant qvar, qvar2;
   bool is_ready;
   QString host, nation, leader, team, str;
-  QPixmap *pixmap;
-  QPainter p;
-  QPixmap *psprite;
   QTreeWidgetItem *item;
   QTreeWidgetItem *item_r;
   QList<QTreeWidgetItem *> items;
@@ -203,29 +196,29 @@ void page_pregame::update_start_page()
         case 2:
           item->setText(col, leader);
           break;
-        case 3:
+        case 3: {
           if (!pplayer->nation) {
             break;
           }
-          psprite = get_nation_flag_sprite(tileset, pplayer->nation);
-          pixmap = psprite;
+          auto pixmap = get_nation_flag_sprite(tileset, pplayer->nation);
           item->setData(col, Qt::DecorationRole, *pixmap);
-          break;
-        case 4:
+        } break;
+        case 4: {
           if (!player_has_color(tileset, pplayer)) {
             break;
           }
-          pixmap = new QPixmap(
+          auto pixmap = std::make_unique<QPixmap>(
               ui.start_players_tree->header()->sectionSizeHint(col), 16);
           pixmap->fill(Qt::transparent);
-          p.begin(pixmap);
+
+          QPainter p;
+          p.begin(pixmap.get());
           p.fillRect(pixmap->width() / 2 - 8, 0, 16, 16, Qt::black);
           p.fillRect(pixmap->width() / 2 - 7, 1, 14, 14,
                      *get_player_color(tileset, pplayer));
           p.end();
           item->setData(col, Qt::DecorationRole, *pixmap);
-          delete pixmap;
-          break;
+        } break;
         case 5:
           item->setText(col, nation);
           break;

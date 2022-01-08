@@ -9,7 +9,7 @@ include(CheckSymbolExists)
 #   - native API on MSVC (MSYS and MINGW aren't ABI-compatible with it)
 #   - libunwind if available
 #   - backtrace() if everything else fails.
-if (MSVC)
+if (MSVC OR MINGW OR MSYS)
   message(STATUS "Using the Windows native API for stack unwinding. "
                  "This is the preferred option.")
   set(CAN_UNWIND_STACK TRUE)
@@ -61,6 +61,10 @@ if (CAN_UNWIND_STACK) # If we can't unwind, everything below is useless
   if (MSVC)
     message(STATUS "Using the Windows native API to retrieve stack symbols. "
                    "This is the preferred option.")
+    set(CAN_RETRIEVE_SYMBOLS TRUE)
+  elseif (WIN32 AND (MINGW OR MSYS))
+    message(STATUS "Using the Windows native API to retrieve stack symbols. "
+                   "You'll need to convert DWARF debug information to PDB.")
     set(CAN_RETRIEVE_SYMBOLS TRUE)
   endif()
 

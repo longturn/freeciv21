@@ -16,6 +16,9 @@
 
 #include <cmath>
 
+// Sol
+#include "sol/sol.hpp"
+
 // utilities
 #include "deprecations.h"
 #include "fcintl.h"
@@ -34,11 +37,9 @@
 /**
    Generate random number.
  */
-int api_utilities_random(lua_State *L, int min, int max)
+int api_utilities_random(int min, int max)
 {
   double roll;
-
-  LUASCRIPT_CHECK_STATE(L, 0);
 
   roll =
       (static_cast<double>(fc_rand(MAX_UINT32) % MAX_UINT32) / MAX_UINT32);
@@ -49,24 +50,17 @@ int api_utilities_random(lua_State *L, int min, int max)
 /**
    Return the version of freeciv lua script
  */
-const char *api_utilities_fc_version(lua_State *L)
-{
-  return freeciv_name_version();
-}
+const char *api_utilities_fc_version() { return freeciv_name_version(); }
 
 /**
    One log message. This module is used by script_game and script_auth.
  */
-void api_utilities_log_base(lua_State *L, int level, const char *message)
+void api_utilities_log_base(sol::this_state s, int level,
+                            const char *message)
 {
-  struct fc_lua *fcl;
+  auto fcl = luascript_get_fcl(s);
 
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_ARG_NIL(L, message, 3, string);
-
-  fcl = luascript_get_fcl(L);
-
-  LUASCRIPT_CHECK(L, fcl != NULL, "Undefined Freeciv21 lua state!");
+  LUASCRIPT_CHECK(s, fcl != NULL, "Undefined Freeciv21 lua state!");
 
   luascript_log(fcl, QtMsgType(level), "%s", message);
 }
@@ -128,8 +122,7 @@ const Direction *api_utilities_opposite_dir(lua_State *L, Direction dir)
 /**
    Lua script wants to warn about use of deprecated construct.
  */
-void api_utilities_deprecation_warning(lua_State *L, char *method,
-                                       char *replacement,
+void api_utilities_deprecation_warning(char *method, char *replacement,
                                        char *deprecated_since)
 {
   /* TODO: Keep track which deprecations we have already warned about, and

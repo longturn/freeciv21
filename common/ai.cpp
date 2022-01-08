@@ -119,15 +119,11 @@ const char *ai_type_name_or_fallback(const char *orig_name)
     return orig_name;
   }
 
-  if (!strcmp("threaded", orig_name)) {
-    struct ai_type *fb;
-
-    fb = ai_type_by_name("classic");
-
-    if (fb != NULL) {
-      // Get pointer to persistent name of the ai_type
-      return ai_name(fb);
-    }
+  auto fb = ai_type_by_name("classic");
+  if (fb != nullptr) {
+    qWarning(_("Unknown AI type %s, using \"classic\" instead"), orig_name);
+    // Get pointer to persistent name of the ai_type
+    return ai_name(fb);
   }
 
   return NULL;

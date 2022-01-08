@@ -167,7 +167,8 @@ void save_game(const char *orig_filename, const char *save_reason,
       filename[0] = '\0';
     } else {
       char *end_dot;
-      const char *strip_extensions[] = {".sav", ".gz", ".bz2", ".xz", NULL};
+      const char *strip_extensions[] = {".sav", ".gz",  ".bz2",
+                                        ".xz",  ".zst", NULL};
       bool stripped = true;
 
       while ((end_dot = strrchr(dot, '.')) && stripped) {
@@ -225,6 +226,12 @@ void save_game(const char *orig_filename, const char *save_reason,
     case COMPRESS_XZ:
       // Append ".xz" to filename.
       sz_strlcat(stdata->filepath, ".xz");
+      break;
+#endif
+#ifdef FREECIV_HAVE_ZSTD
+    case COMPRESS_ZSTD:
+      // Append ".zst" to filename.
+      sz_strlcat(stdata->filepath, ".zst");
       break;
 #endif
     case COMPRESS_PLAIN:

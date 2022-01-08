@@ -104,3 +104,57 @@ research_color {
   color: #96b62e /*lines*/;
   alternate-background-color: white /* box edge */;
 }
+
+QMenuBar {
+  color: black;
+}
+
+QMenu {
+  background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(84, 85, 86, 225), stop:1 rgba(55, 55, 54, 255));
+  border:none;
+}
+
+QMenu::item {
+  color: #FFFFFF;
+  padding: 3px 20px 3px 25px;
+  border: 2px solid transparent;
+}
+
+QMenu::item:disabled {
+  color: #999999;
+}
+
+QMenu::item:selected {
+  color: #3399FF;
+  background-color: rgba(55, 55, 54, 255);
+  border: 2px solid grey;
+  border-radius: 9px;
+}
+
+QStatusBar QLabel {
+ color: black;
+}
+
+page_main QLabel {
+ color: black;
+}
+
+page_pregame QLabel {
+ color: black;
+}
+
+page_load QLabel {
+ color: black;
+}
+
+page_load QCheckBox {
+  color: black;
+}
+
+page_network QLabel {
+ color: black;
+}
+
+page_scenario QLabel {
+ color: black;
+}

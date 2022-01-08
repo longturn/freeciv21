@@ -864,6 +864,9 @@ struct city *find_closest_city(const struct tile *ptile,
   int best_dist = -1;
 
   fc_assert_ret_val(ptile != NULL, NULL);
+  if (only_known || only_player || only_enemy) {
+    fc_assert_ret_val(pplayer != NULL, NULL);
+  }
 
   if (pplayer != NULL && only_player && only_enemy) {
     qCritical("Non of my own cities will be at war with me!");
@@ -1958,7 +1961,6 @@ bool unit_conquer_city(struct unit *punit, struct city *pcity)
 {
   bool try_civil_war = false;
   bool city_remains;
-  int coins;
   struct player *pplayer = unit_owner(punit);
   struct player *cplayer = city_owner(pcity);
 
@@ -2022,8 +2024,8 @@ bool unit_conquer_city(struct unit *punit, struct city *pcity)
     return true;
   }
 
-  coins = cplayer->economic.gold;
-  coins = MIN(coins, fc_rand((coins / 20) + 1)
+  auto coins = cplayer->economic.gold;
+  coins = MIN(coins, int(fc_rand((coins / 20) + 1))
                          + (coins * (city_size_get(pcity))) / 200);
   pplayer->economic.gold += coins;
   cplayer->economic.gold -= coins;

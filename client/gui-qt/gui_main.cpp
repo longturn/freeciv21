@@ -92,13 +92,10 @@ static void migrate_options_from_2_5()
 void qtg_ui_main()
 {
   if (true) {
-    QPixmap *qpm;
-    QIcon app_icon;
-
     tileset_init(tileset);
     tileset_load_tiles(tileset);
-    qpm = get_icon_sprite(tileset, ICON_FREECIV);
-    app_icon = ::QIcon(*qpm);
+    auto qpm = get_icon_sprite(tileset, ICON_FREECIV);
+    auto app_icon = QIcon(*qpm);
     qApp->setWindowIcon(app_icon);
     if (gui_options.first_boot) {
       /* We're using fresh defaults for this version of this client,
@@ -285,23 +282,16 @@ void apply_sidebar(struct option *poption)
  */
 void gui_qt_apply_font(struct option *poption)
 {
-  QFont *f;
-  QFont *remove_old;
-  QString s;
-
   if (king()) {
-    f = new QFont;
-    s = option_font_get(poption);
-    f->fromString(s);
+    auto f = QFont();
+    auto s = option_font_get(poption);
+    f.fromString(s);
     s = option_name(poption);
-    remove_old = fcFont::instance()->getFont(s);
-    delete remove_old;
     fcFont::instance()->setFont(s, f);
     update_city_descriptions();
     queen()->infotab->chtwdg->update_font();
-    QApplication::setFont(*fcFont::instance()->getFont(fonts::default_font));
+    QApplication::setFont(fcFont::instance()->getFont(fonts::default_font));
     real_science_report_dialog_update(nullptr);
-    fcFont::instance()->getMapfontSize();
   }
   apply_help_font(poption);
 }
@@ -311,17 +301,11 @@ void gui_qt_apply_font(struct option *poption)
  */
 static void apply_help_font(struct option *poption)
 {
-  QFont *f;
-  QFont *remove_old;
-  QString s;
-
   if (king()) {
-    f = new QFont;
-    s = option_font_get(poption);
-    f->fromString(s);
+    auto f = QFont();
+    auto s = option_font_get(poption);
+    f.fromString(s);
     s = option_name(poption);
-    remove_old = fcFont::instance()->getFont(s);
-    delete remove_old;
     fcFont::instance()->setFont(s, f);
     update_help_fonts();
   }
@@ -384,17 +368,13 @@ void qtg_editgui_notify_object_created(int tag, int id) {}
  */
 void qtg_gui_update_font(const QString &font_name, const QString &font_value)
 {
-  QFont *f;
-  QFont *remove_old;
   QString fname;
 
   fname = "gui_qt_font_" + QString(font_name);
-  f = new QFont;
-  f->fromString(font_value);
-  remove_old = fcFont::instance()->getFont(fname);
-  delete remove_old;
+  auto f = QFont();
+  f.fromString(font_value);
+  auto remove_old = fcFont::instance()->getFont(fname);
   fcFont::instance()->setFont(fname, f);
-  fcFont::instance()->getMapfontSize();
 }
 
 void gui_update_allfonts()

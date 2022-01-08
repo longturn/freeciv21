@@ -16,9 +16,24 @@
 // server
 #include "fcdb.h"
 
+// Forward declarations
+class QString;
+
+struct connection;
+struct player;
+
 // fcdb script functions.
 bool script_fcdb_init(const QString &fcdb_luafile);
-bool script_fcdb_call(const char *func_name, ...);
 void script_fcdb_free();
 
 bool script_fcdb_do_string(struct connection *caller, const char *str);
+
+// Call Lua functions
+bool script_fcdb_user_delegate_to(connection *pconn, player *pplayer,
+                                  const char *delegate, bool &success);
+bool script_fcdb_user_exists(connection *pconn, bool &exists);
+bool script_fcdb_user_save(connection *pconn, const char *password);
+bool script_fcdb_user_take(connection *requester, connection *taker,
+                           player *player, bool will_observe, bool &success);
+bool script_fcdb_user_verify(connection *pconn, const char *username,
+                             bool &success);

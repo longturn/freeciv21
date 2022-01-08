@@ -87,7 +87,7 @@ void page_scenario::browse_scenarios()
   QString str;
 
   str = QString(_("Scenarios Files"))
-        + QStringLiteral(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
+        + QStringLiteral(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz *.sav.zst)");
   current_file = QFileDialog::getOpenFileName(this, _("Open Scenario File"),
                                               QDir::homePath(), str);
   if (!current_file.isEmpty()) {
@@ -242,13 +242,12 @@ void page_scenario::slot_selection_changed(const QItemSelection &selected,
                                            const QItemSelection &deselected)
 {
   Q_UNUSED(deselected)
-  QModelIndexList indexes = selected.indexes();
-  QStringList sl;
-  QModelIndex index;
-  QVariant qvar;
-  index = indexes.at(0);
-  qvar = index.data(Qt::UserRole);
-  sl = qvar.toStringList();
+
+  if (selected.isEmpty()) {
+    return;
+  }
+
+  auto sl = selected.indexes().front().data(Qt::UserRole).toStringList();
   ui.scenarios_text->setText(sl.at(0));
   if (sl.count() > 1) {
     ui.scenarios_view->setText(sl.at(2));

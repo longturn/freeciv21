@@ -65,12 +65,12 @@ extern QString cut_helptext(const QString &text);
 /**
    Constructor
  */
-icon_list::icon_list(QWidget *parent) : QListWidget(parent)
+icon_list::icon_list(QWidget *parent) : QListWidget(parent), oneliner(true)
 {
   // Make sure viewportSizeHint is used
   setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
   setWrapping(true);
-  oneliner = true;
+  setMovement(QListView::Static);
 }
 
 /**
@@ -88,27 +88,6 @@ QSize icon_list::viewportSizeHint() const
   }
   hint.setWidth(hint.width() * count());
   return hint;
-}
-
-/**
-   Reimplemented virtual method.
- */
-int icon_list::heightForWidth(int width) const
-{
-  int height = 0, line_height = 0, line_width = 0;
-  for (int i = 0; i < count(); ++i) {
-    auto hint = sizeHintForIndex(indexFromItem(item(i)));
-    if (line_width + hint.width() > width) {
-      // New line
-      height += line_height;
-      line_width = 0;
-      line_height = 0;
-    }
-    line_width += hint.width();
-    line_height = qMax(line_height, hint.height());
-  }
-  // Add the last line and some extra room to make sure there's no scroll bar
-  return height + line_height + 5;
 }
 
 /**
@@ -147,7 +126,7 @@ void progress_bar::resizeEvent(QResizeEvent *event)
  */
 void progress_bar::set_pixmap(struct universal *target)
 {
-  QPixmap *sprite;
+  const QPixmap *sprite;
   QImage cropped_img;
   QImage img;
   QPixmap tpix;
@@ -178,12 +157,9 @@ void progress_bar::set_pixmap(struct universal *target)
  */
 void progress_bar::set_pixmap(int n)
 {
-  QPixmap *sprite;
-
+  const QPixmap *sprite = nullptr;
   if (valid_advance_by_number(n)) {
     sprite = get_tech_sprite(tileset, n);
-  } else {
-    sprite = nullptr;
   }
   NFC_FREE(pix);
   if (sprite == nullptr) {
@@ -392,8 +368,8 @@ impr_item::impr_item(QWidget *parent, const impr_type *building,
   pcity = city;
   impr = building;
   impr_pixmap = nullptr;
-  QPixmap *sprite;
-  sprite = get_building_sprite(tileset, building);
+
+  auto sprite = get_building_sprite(tileset, building);
 
   if (sprite != nullptr) {
     impr_pixmap = qtg_canvas_create(sprite->width(), sprite->height());
@@ -435,15 +411,13 @@ void impr_item::init_pix()
 void impr_item::enterEvent(QEvent *event)
 {
   Q_UNUSED(event)
-  QPixmap *sprite;
-  QPainter p;
 
   if (impr_pixmap) {
     canvas_free(impr_pixmap);
   }
 
-  sprite = get_building_sprite(tileset, impr);
-  if (impr && sprite) {
+  auto sprite = get_building_sprite(tileset, impr);
+  if (impr && sprite != nullptr) {
     impr_pixmap = qtg_canvas_create(sprite->width(), sprite->height());
     impr_pixmap->fill(QColor(palette().color(QPalette::Highlight)));
     pixmap_copy(impr_pixmap, sprite, 0, 0, 0, 0, sprite->width(),
@@ -462,13 +436,12 @@ void impr_item::enterEvent(QEvent *event)
 void impr_item::leaveEvent(QEvent *event)
 {
   Q_UNUSED(event)
-  QPixmap *sprite;
 
   if (impr_pixmap) {
     canvas_free(impr_pixmap);
   }
 
-  sprite = get_building_sprite(tileset, impr);
+  auto sprite = get_building_sprite(tileset, impr);
   if (impr && sprite) {
     impr_pixmap = qtg_canvas_create(sprite->width(), sprite->height());
     impr_pixmap->fill(Qt::transparent);
@@ -903,7 +876,7 @@ bool unit_list_event_filter::eventFilter(QObject *object, QEvent *event)
 
 cityIconInfoLabel::cityIconInfoLabel(QWidget *parent) : QWidget(parent)
 {
-  QFont f = *fcFont::instance()->getFont(fonts::default_font);
+  auto f = fcFont::instance()->getFont(fonts::default_font);
   QFontMetrics fm(f);
 
   pixHeight = fm.height();
@@ -1021,29 +994,28 @@ void city_label::set_city(city *pciti) { pcity = pciti; }
 city_info::city_info(QWidget *parent) : QWidget(parent)
 {
   int iter;
-  QFont *small_font;
   QLabel *ql;
   QStringList info_list;
 
   QGridLayout *info_grid_layout = new QGridLayout();
-  small_font = fcFont::instance()->getFont(fonts::notify_label);
+  auto small_font = fcFont::instance()->getFont(fonts::notify_label);
   info_list << _("Food:") << _("Prod:") << _("Trade:") << _("Gold:")
             << _("Luxury:") << _("Science:") << _("Granary:")
             << _("Change in:") << _("Corruption:") << _("Waste:")
             << _("Culture:") << _("Pollution:") << _("Plague risk:")
             << _("Tech Stolen:") << _("Airlift:");
-  setFont(*small_font);
+  setFont(small_font);
   info_grid_layout->setSpacing(0);
   info_grid_layout->setContentsMargins(0, 0, 0, 0);
 
   fc_assert(info_list.count() == NUM_INFO_FIELDS);
   for (iter = 0; iter < NUM_INFO_FIELDS; iter++) {
     ql = new QLabel(info_list[iter], this);
-    ql->setFont(*small_font);
+    ql->setFont(small_font);
     ql->setProperty(fonts::notify_label, "true");
     info_grid_layout->addWidget(ql, iter, 0);
     qlt[iter] = new QLabel(this);
-    qlt[iter]->setFont(*small_font);
+    qlt[iter]->setFont(small_font);
     qlt[iter]->setProperty(fonts::notify_label, "true");
     info_grid_layout->addWidget(qlt[iter], iter, 1);
   }
@@ -1168,7 +1140,7 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
                          + "</pre>");
     }
   }
-  // handjob
+
   ciil->updateTooltip(0, buf[FOOD + 1]);
   ciil->updateTooltip(2, buf[SHIELD + 1]);
   ciil->updateTooltip(4, buf[GOLD + 1]);
@@ -1187,11 +1159,11 @@ governor_sliders::governor_sliders(QWidget *parent) : QGroupBox(parent)
   str_list << _("Food") << _("Shield") << _("Trade") << _("Gold")
            << _("Luxury") << _("Science") << _("Celebrate");
   some_label = new QLabel(_("Minimal Surplus"));
-  some_label->setFont(*fcFont::instance()->getFont(fonts::notify_label));
+  some_label->setFont(fcFont::instance()->getFont(fonts::notify_label));
   some_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   slider_grid->addWidget(some_label, 0, 0, 1, 3);
   some_label = new QLabel(_("Priority"));
-  some_label->setFont(*fcFont::instance()->getFont(fonts::notify_label));
+  some_label->setFont(fcFont::instance()->getFont(fonts::notify_label));
   some_label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
   slider_grid->addWidget(some_label, 0, 3, 1, 3);
 
@@ -1313,13 +1285,17 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
 
 {
   QFont f = QApplication::font();
-  QFont *small_font;
   QFontMetrics fm(f);
   QHeaderView *header;
 
   int h = 2 * fm.height() + 2;
-  small_font = fcFont::instance()->getFont(fonts::notify_label);
+  auto small_font = fcFont::instance()->getFont(fonts::notify_label);
   ui.setupUi(this);
+
+  // Prevent mouse events from going through the panels to the main map
+  for (auto child : findChildren<QWidget *>()) {
+    child->setAttribute(Qt::WA_NoMousePropagation);
+  }
 
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   setMouseTracking(true);
@@ -1421,12 +1397,12 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
   ui.label4->setText(_("Nationality:"));
   ui.label5->setText(_("Units:"));
   ui.label6->setText(_("Wonders:"));
-  ui.label1->setFont(*small_font);
-  ui.label2->setFont(*small_font);
-  ui.label4->setFont(*small_font);
-  ui.label3->setFont(*small_font);
-  ui.label5->setFont(*small_font);
-  ui.label6->setFont(*small_font);
+  ui.label1->setFont(small_font);
+  ui.label2->setFont(small_font);
+  ui.label4->setFont(small_font);
+  ui.label3->setFont(small_font);
+  ui.label5->setFont(small_font);
+  ui.label6->setFont(small_font);
   lab_table[0] = ui.lab_table1;
   lab_table[1] = ui.lab_table2;
   lab_table[2] = ui.lab_table3;
@@ -2059,7 +2035,6 @@ void city_dialog::update_citizens()
   enum citizen_category categories[MAX_CITY_SIZE];
   int i, j, width, height;
   QPainter p;
-  QPixmap *pix;
   int num_citizens =
       get_city_citizen_types(pcity, FEELING_FINAL, categories);
   int w = tileset_small_sprite_width(tileset) / king()->map_scale;
@@ -2081,7 +2056,7 @@ void city_dialog::update_citizens()
 
   for (j = 0, i = 0; i < num_citizens; i++, j++) {
     dest_rect.moveTo(i * w, 0);
-    pix = get_citizen_sprite(tileset, categories[j], j, pcity);
+    auto pix = get_citizen_sprite(tileset, categories[j], j, pcity);
     p.begin(citizen_pixmap);
     p.drawPixmap(dest_rect, *pix, source_rect);
     p.end();
@@ -2100,7 +2075,7 @@ void city_dialog::update_citizens()
 
     for (j = 0, i = 0; i < num_citizens; i++, j++) {
       dest_rect.moveTo(i * w, 0);
-      pix = get_citizen_sprite(tileset, categories[j], j, pcity);
+      auto pix = get_citizen_sprite(tileset, categories[j], j, pcity);
       p.begin(citizen_pixmap);
       p.drawPixmap(dest_rect, *pix, source_rect);
       p.end();
@@ -2192,8 +2167,6 @@ void city_dialog::update_nation_table()
 {
   QFont f = QApplication::font();
   QFontMetrics fm(f);
-  QPixmap *pix = NULL;
-  QPixmap pix_scaled;
   QString str;
   QStringList info_list;
   QTableWidgetItem *item;
@@ -2201,7 +2174,6 @@ void city_dialog::update_nation_table()
   citizens nationality_i;
   int h;
   int i = 0;
-  QPixmap *sprite;
 
   h = fm.height() + 6;
   ui.nationality_table->clear();
@@ -2231,18 +2203,16 @@ void city_dialog::update_nation_table()
         item->setText(str);
         break;
 
-      case 1:
-        sprite = get_nation_flag_sprite(
+      case 1: {
+        auto sprite = get_nation_flag_sprite(
             tileset, nation_of_player(player_slot_get_player(pslot)));
 
         if (sprite != NULL) {
-          pix = sprite;
-          pix_scaled = pix->scaledToHeight(h);
-          item->setData(Qt::DecorationRole, pix_scaled);
+          item->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
         } else {
           item->setText(QStringLiteral("FLAG MISSING"));
         }
-        break;
+      } break;
 
       case 2:
         item->setText(
@@ -2329,9 +2299,7 @@ void city_dialog::update_units()
   }
 
   ui.supported_units->clear();
-  if (unit_list_size(units) == 0) {
-    ui.supported_units->hide();
-  } else {
+  if (unit_list_size(units) > 0) {
     QSize icon_size;
     unit_list_iterate(units, punit)
     {
@@ -2344,7 +2312,6 @@ void city_dialog::update_units()
       ui.supported_units->addItem(item);
     }
     unit_list_iterate_end;
-    ui.supported_units->show();
     ui.supported_units->setGridSize(icon_size);
     ui.supported_units->setIconSize(icon_size);
   }
@@ -2522,11 +2489,9 @@ void city_dialog::update_improvements()
 {
   QFont f = QApplication::font();
   QFontMetrics fm(f);
-  QPixmap *pix = NULL;
-  QPixmap pix_scaled;
   QString str, tooltip;
   QTableWidgetItem *qitem;
-  QPixmap *sprite = nullptr;
+  const QPixmap *sprite = nullptr;
   int h, cost, item, targets_used, col, upkeep;
   struct item items[MAX_NUM_PRODUCTION_TARGETS];
   struct universal targets[MAX_NUM_PRODUCTION_TARGETS];
@@ -2550,12 +2515,7 @@ void city_dialog::update_improvements()
     ui.city_buildings->add_item(ii);
 
     fc_assert_action(VUT_IMPROVEMENT == target.kind, continue);
-    sprite = get_building_sprite(tileset, target.value.building);
-    upkeep = upkeep + city_improvement_upkeep(pcity, target.value.building);
-    if (sprite != nullptr) {
-      pix = sprite;
-      pix_scaled = pix->scaledToHeight(h);
-    }
+    upkeep += city_improvement_upkeep(pcity, target.value.building);
   }
 
   city_get_queue(pcity, &queue);
@@ -2592,9 +2552,7 @@ void city_dialog::update_improvements()
       switch (col) {
       case 0:
         if (sprite) {
-          pix = sprite;
-          pix_scaled = pix->scaledToHeight(h);
-          qitem->setData(Qt::DecorationRole, pix_scaled);
+          qitem->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
         }
         break;
 
@@ -2890,15 +2848,14 @@ void qtg_real_city_dialog_refresh(struct city *pcity)
 void city_font_update()
 {
   QList<QLabel *> l;
-  QFont *f;
 
   l = queen()->city_overlay->findChildren<QLabel *>();
 
-  f = fcFont::instance()->getFont(fonts::notify_label);
+  auto f = fcFont::instance()->getFont(fonts::notify_label);
 
   for (auto i : qAsConst(l)) {
     if (i->property(fonts::notify_label).isValid()) {
-      i->setFont(*f);
+      i->setFont(f);
     }
   }
 }
@@ -2970,11 +2927,11 @@ void city_production_delegate::paint(QPainter *painter,
   struct universal *target;
   QString name;
   QVariant qvar;
-  QPixmap *pix;
   QPixmap pix_scaled;
   QRect rect1;
   QRect rect2;
-  QPixmap *sprite;
+  const QPixmap *sprite;
+  QPixmap *free_sprite = nullptr;
   bool useless = false;
   bool is_coinage = false;
   bool is_neutral = false;
@@ -2985,7 +2942,6 @@ void city_production_delegate::paint(QPainter *painter,
   QStyleOptionViewItem opt;
   QColor col;
   QIcon icon = qapp->style()->standardIcon(QStyle::SP_DialogCancelButton);
-  bool free_sprite = false;
   struct unit_class *pclass;
 
   if (!option.rect.isValid()) {
@@ -3002,9 +2958,9 @@ void city_production_delegate::paint(QPainter *painter,
 
   if (target == NULL) {
     col = QColor(Qt::white);
-    sprite = qtg_create_sprite(100, 100, &col);
-    free_sprite = true;
-    *sprite = icon.pixmap(100, 100);
+    free_sprite = qtg_create_sprite(100, 100, &col);
+    *free_sprite = icon.pixmap(100, 100);
+    sprite = free_sprite;
     name = _("Cancel");
     is_unit = false;
   } else if (VUT_UTYPE == target->kind) {
@@ -3045,9 +3001,8 @@ void city_production_delegate::paint(QPainter *painter,
   }
 
   if (sprite != NULL) {
-    pix = sprite;
     pix_scaled =
-        pix->scaledToHeight(item_height - 2, Qt::SmoothTransformation);
+        sprite->scaledToHeight(item_height - 2, Qt::SmoothTransformation);
 
     if (useless) {
       pixmap_put_x(&pix_scaled);
@@ -3095,7 +3050,7 @@ void city_production_delegate::paint(QPainter *painter,
   painter->restore();
 
   if (free_sprite) {
-    qtg_free_sprite(sprite);
+    qtg_free_sprite(free_sprite);
   }
 }
 
@@ -3231,7 +3186,7 @@ void city_production_model::populate()
   struct universal *renegade, *renegate;
   int item, targets_used;
   QString str;
-  QFont f = *fcFont::instance()->getFont(fonts::default_font);
+  auto f = fcFont::instance()->getFont(fonts::default_font);
   QFontMetrics fm(f);
 
   sh.setY(fm.height() * 2);

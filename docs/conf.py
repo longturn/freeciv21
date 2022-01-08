@@ -21,7 +21,7 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = 'longturn-manuals'
-copyright = '2021, Longturn.net'
+copyright = '2022, Longturn.net'
 author = 'Longturn.net'
 
 # The short X.Y version
@@ -172,7 +172,7 @@ texinfo_documents = [
 # -- Options for Epub output -------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = project
+epub_title = 'longturn-manualsdoc'
 
 # The unique identifier of the text. This can be a ISBN number
 # or the project homepage.

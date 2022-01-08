@@ -30,7 +30,7 @@ include(cmake/FreecivBuildOptions.cmake)
 # Set some project variables to reuse later
 set(FREECIV21_VERSION_MAJOR 3)
 set(FREECIV21_VERSION_MINOR 0)
-set(FREECIV21_VERSION_PATCH 20210912)
+set(FREECIV21_VERSION_PATCH 20211112)
 set(FREECIV21_VERSION "${FREECIV21_VERSION_MAJOR}.${FREECIV21_VERSION_MINOR}.${FREECIV21_VERSION_PATCH}")
 
 # Set project
@@ -46,7 +46,7 @@ if(WIN32 OR MSYS OR MINGW)
   get_filename_component(MINGW_PATH ${CMAKE_CXX_COMPILER} PATH)
 endif()
 
-if (NOT ${CMAKE_BUILD_TYPE} EQUAL "Release")
+if (NOT ${CMAKE_BUILD_TYPE} STREQUAL "Release")
   add_compile_definitions(FREECIV_DEBUG)
 endif()
 
@@ -85,17 +85,6 @@ install(
   AUTHORS
   COPYING
   INSTALL
-  doc/README.AI
-  doc/README.AI_modules
-  doc/README.graphics
-  doc/README.nations
-  doc/README.packaging
-  doc/README.rulesets
-  doc/README.tilesets
-  doc/README.scenarios
-  doc/README.scorelog
-  doc/README.sound
-  doc/TODO
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   COMPONENT freeciv21)
 
@@ -155,6 +144,7 @@ if(WIN32 OR MSYS OR MINGW)
   #   dynamically instead of doing it manually.
   install(CODE [[
     message(STATUS "Collecting dependencies for freeciv21 executables...")
+    set(CMAKE_GET_RUNTIME_DEPENDENCIES_TOOL objdump)
 
     # Take a variable that is available at "install" time and repurpose
     string(REGEX REPLACE "objdump.exe" "" MINGW_PATH ${CMAKE_OBJDUMP})
@@ -216,15 +206,16 @@ if(UNIX AND NOT APPLE)
       FILES
       dist/net.longturn.freeciv21.client.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+      COMPONENT freeciv21
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.client.desktop.in
                    net.longturn.freeciv21.client.desktop
-                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR}
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.client.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+      COMPONENT freeciv21
     )
   endif(FREECIV_ENABLE_CLIENT)
 
@@ -233,15 +224,16 @@ if(UNIX AND NOT APPLE)
       FILES
       dist/net.longturn.freeciv21.server.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+      COMPONENT freeciv21
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.server.desktop.in
                    net.longturn.freeciv21.server.desktop
-                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR}
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.server.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+      COMPONENT freeciv21
     )
   endif(FREECIV_ENABLE_SERVER)
 
@@ -250,15 +242,16 @@ if(UNIX AND NOT APPLE)
       FILES
       dist/net.longturn.freeciv21.modpack.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+      COMPONENT freeciv21
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.modpack-qt.desktop.in
                    net.longturn.freeciv21.modpack-qt.desktop
-                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR}
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.modpack-qt.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+      COMPONENT freeciv21
     )
   endif(FREECIV_ENABLE_FCMP_QT)
 
@@ -267,17 +260,19 @@ if(UNIX AND NOT APPLE)
       FILES
       dist/net.longturn.freeciv21.ruledit.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+      COMPONENT tool_ruledit
     )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.ruledit.desktop.in
                    net.longturn.freeciv21.ruledit.desktop
-                   ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATAROOTDIR}
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.ruledit.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+      COMPONENT tool_ruledit
     )
   endif(FREECIV_ENABLE_RULEDIT)
+
 endif(UNIX AND NOT APPLE)
 
 # Packaging (CPack)

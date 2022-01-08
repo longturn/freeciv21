@@ -3,36 +3,33 @@
 # General Configuration for all OS's
 set(CPACK_PACKAGE_NAME "Freeciv21")
 set(CPACK_PACKAGE_VENDOR "longturn.net")
+set(CPACK_PACKAGE_CONTACT "longturn.net")
 set(CPACK_PACKAGE_VERSION_MAJOR ${FREECIV21_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${FREECIV21_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${FREECIV21_VERSION_PATCH})
 set(CPACK_PACKAGE_VERSION ${FREECIV21_VERSION})
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Freeciv21 - Freeciv for the 21st Century")
 set(CPACK_PACKAGE_HOMEPAGE_URL "https://longturn.net")
+set(CMAKE_PROJECT_HOMEPAGE_URL "https://longturn.net")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
 set(CPACK_PACKAGE_CHECKSUM "SHA256")
 
 if(WIN32 OR MSYS OR MINGW)
 
-  # Use the NSIS Package Tool same as classic Freeciv
+  # Use the NSIS Package for Windows
   set(CPACK_GENERATOR "NSIS")
 
-  # The variable is not set on MSYS2, so we force it.
+  # Establish some variables to place the package where we want it
   if(NOT CPACK_SYSTEM_NAME)
     set(CPACK_CPU_ARCH $ENV{MSYSTEM_CARCH})
     set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${CPACK_CPU_ARCH}")
   endif()
 
-  # Set some package specific variables...
-  #   Where to save the package exe at build time
   set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/${CPACK_SYSTEM_NAME}")
-  #   The name of the package exe file
-  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-v${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}")
-  #   This is a combo variable. Used on welcome screen to introduce the project and also sets
-  #   the install directory.
   set(CPACK_OUTPUT_FILE_PREFIX ${CPACK_PACKAGE_DIRECTORY})
+  # The name of the package exe file
+  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-v${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}")
 
   ## Component definition
   #  - variable names are UPPER CASE, even if component names are lower case
@@ -41,7 +38,6 @@ if(WIN32 OR MSYS OR MINGW)
 
   # Define the components and how they are organized in the install package
   set(CPACK_COMPONENTS_ALL freeciv21 tool_ruledit tool_fcmp_cli tool_ruleup tool_manual translations)
-  #set(CPACK_ALL_INSTALL_TYPES Default)
   set(CPACK_COMPONENT_FREECIV21_INSTALL_TYPES Default Custom)
   set(CPACK_COMPONENT_FREECIV21_REQUIRED)
   set(CPACK_COMPONENT_TOOL_RULEDIT_INSTALL_TYPES Custom)
@@ -82,6 +78,31 @@ if(WIN32 OR MSYS OR MINGW)
   set(CPACK_NSIS_COMPRESSOR "/SOLID lzma") # zlib|bzip2|lzma
   set(CPACK_NSIS_COMPRESSOR "${CPACK_NSIS_COMPRESSOR}\n  SetCompressorDictSize 64") # hack (improve compression)
   set(CPACK_NSIS_COMPRESSOR "${CPACK_NSIS_COMPRESSOR}\n  BrandingText '${CPACK_PACKAGE_DESCRIPTION_SUMMARY}'") # hack (overwrite BrandingText)
+
+endif()
+
+# Unix/Linux specific packages
+if(UNIX AND NOT APPLE)
+
+  # Establish some variables to place the package where we want it
+  if(NOT CPACK_SYSTEM_NAME)
+    execute_process(COMMAND "uname"
+                    OUTPUT_VARIABLE CPACK_SYSTEM_NAME
+                    OUTPUT_STRIP_TRAILING_WHITESPACE)
+    set(CPACK_CPU_ARCH ${CMAKE_SYSTEM_PROCESSOR})
+    set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${CPACK_CPU_ARCH}")
+  endif()
+
+  set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/${CPACK_SYSTEM_NAME}")
+  set(CPACK_OUTPUT_FILE_PREFIX ${CPACK_PACKAGE_DIRECTORY})
+
+  # Debian "deb" file generator settings
+  set(CPACK_GENERATOR "DEB")
+  set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+  set(CPACK_DEBIAN_PACKAGE_SECTION "Games")
+  set(CPACK_COMPONENTS_GROUPING ALL_COMPONENTS_IN_ONE)
+  set(CPACK_DEB_COMPONENT_INSTALL "ON")
+  set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
 
 endif()
 

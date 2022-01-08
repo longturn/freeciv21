@@ -77,7 +77,6 @@ void endgame_report::update_report(
     const struct packet_endgame_player *packet)
 {
   QTableWidgetItem *item;
-  QPixmap *pix;
   unsigned int i;
   const struct player *pplayer = player_by_number(packet->player_id);
   const size_t col_num = packet->category_num + 3;
@@ -88,12 +87,12 @@ void endgame_report::update_report(
     case 0:
       item->setText(player_name(pplayer));
       break;
-    case 1:
-      pix = get_nation_flag_sprite(tileset, nation_of_player(pplayer));
+    case 1: {
+      auto pix = get_nation_flag_sprite(tileset, nation_of_player(pplayer));
       if (pix != NULL) {
         item->setData(Qt::DecorationRole, *pix);
       }
-      break;
+    } break;
     case 2:
       item->setText(QString::number(packet->score));
       item->setTextAlignment(Qt::AlignHCenter);

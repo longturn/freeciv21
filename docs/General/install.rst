@@ -1,5 +1,5 @@
-Linux Compiling and Installing
-******************************
+Compiling and Installing
+************************
 
 General Prerequisites
 =====================
@@ -8,8 +8,31 @@ Freeciv21 has a number of prerequisites.  Note, that apart from the first prereq
 configuration process is smart enough to work out whether your system is suitable. If in doubt, just try it.
 
 An operating system that support Qt
-    Any modern operating system that support Qt is required. As of this writing this is Linux, Microsoft
-    Windows\ |reg| and Apple Mac OS X\ |reg|. On Windows Msys2 is supported.
+    Any modern operating system that supports Qt 5.12+ is required. As of this writing this is Linux, Microsoft
+    Windows\ |reg| and Apple Mac OS X\ |reg|. On Windows MSYS2 (MingW) is required.
+
+    Linux Distributions:
+
+    * Arch
+    * CentOS 8+
+    * Debian 11+ (Bullseye)
+    * Fedora 28+
+    * Gentoo
+    * KDE Neon
+    * Manjaro
+    * Mint 20+ or Mint Debian Edition (set to Bullseye)
+    * openSUSE 15.2+
+    * Slackware
+    * Ubuntu 20.04 LTS+
+
+
+.. note::
+  The above list of Linux distributions is, of course, not exhaustive. The Freeciv21 Community has simply
+  listed the mainline, well supported, distributions here. The code repository has Continuous Integration
+  enabled and all code commits pass through Ubuntu, Mac OS and Windows for testing. It is assummed that the
+  user is keeping his/her computer OS up to date. Support by the community for these distributions will be
+  better than for some of the others out there, so keep that in mind if you are not an experienced Linux user.
+
 
 A C and C++ compiler
     Freeciv21 is written in very portable C and C++. Both 32- and 64-bit machines are supported. You cannot
@@ -213,7 +236,8 @@ following commands.
      libsdl2-mixer-dev \
      libunwind-dev \
      libdw-dev \
-     python3-sphinx
+     python3-sphinx \
+     clang-format-11
 
   $ pip install sphinx_rtd_theme
 
@@ -228,22 +252,45 @@ following commands.
 At this point follow the steps in the configuring_ section above.
 
 
-Windows Notes
-=============
+Debian and Windows Package Notes
+================================
+
+Operating System native packages can be generated for Debian and Windows based systems.
+
+Debian
+------
+
+Assuming you have obtained the source code and installed the package dependencies in the section above, follow
+these steps to generate the Debian package:
+
+.. code-block:: rst
+
+  $ rm -Rf build
+
+  $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr
+
+  $ cmake --build build --target package
+
+
+When the Ninja command is finished running, you will find an installer in :file:`build/Linux-${arch}`
+
+Windows
+-------
 
 Msys2 is an available environment for compiling Freeciv21. Microsoft Windows Visual C is under development.
 
 Freeciv21 currently supports building and installing using the Msys2 environment. Build instructions for
-Msys2 versions are documented in :doc:`../Developing/msys2`. Alternately you can visit
+Msys2 versions are documented in :doc:`../Contributing/msys2`. Alternately you can visit
 https://github.com/jwrober/freeciv-msys2 for ready made scripts.
 
-Follow the steps starting in configuring_ above.
+Once your Msys2 environment is ready, start with configuring_ above.
 
 Instead of installing, use this command to create the Windows Installer package:
 
 .. code-block:: rst
 
   $ cmake --build build --target package
+
 
 When the Ninja command is finished running, you will find an installer in :file:`build/Windows-${arch}`
 

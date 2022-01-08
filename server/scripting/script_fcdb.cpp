@@ -1,5 +1,5 @@
 /**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -8,16 +8,11 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cstdarg>
-#include <cstdlib>
-#include <ctime>
-
 // Qt
 #include <QStandardPaths>
+
+// sol2
+#include "sol/sol.hpp"
 
 /* dependencies/lua */
 #include "lua.h"
@@ -28,40 +23,40 @@
 
 // utility
 #include "log.h"
-#include "registry.h"
 
 /* common/scriptcore */
+#define SOL_COMPATIBLE
 #include "luascript.h"
 #include "luascript_types.h"
 #include "tolua_common_a_gen.h"
-#include "tolua_common_z_gen.h"
 #include "tolua_game_gen.h"
 
 // server
+#include "auth.h"
 #include "console.h"
 #include "stdinhand.h"
-
-/* server/scripting */
-#include "tolua_fcdb_gen.h"
 
 #include "script_fcdb.h"
 
 #define SCRIPT_FCDB_LUA_FILE "freeciv21/database.lua"
 
-static void script_fcdb_functions_define(void);
 static bool script_fcdb_functions_check(const char *fcdb_luafile);
+
+static bool script_fcdb_database_init();
+static bool script_fcdb_database_free();
 
 static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
                                   const char *format, ...)
     fc__attribute((__format__(__printf__, 3, 4)));
 
-/**
-   Lua virtual machine state.
- */
-static struct fc_lua *fcl = NULL;
+/// Lua virtual machine state.
+static sol::state *fcl = nullptr;
+
+/// Tolua compatibility
+static fc_lua fcl_compat = fc_lua();
 
 /**
-   Add fcdb callback functions; these must be defined in the lua script
+   fcdb callback functions that must be defined in the lua script
    'database.lua':
 
    database_init:
@@ -75,64 +70,46 @@ static struct fc_lua *fcl = NULL;
      - Save a new user.
    user_verify(Connection pconn):
      - Check the credentials of the user.
-   user_log(Connection pconn, Bool success):
-     - check if the login attempt was successful logged.
    user_delegate_to(Connection pconn, Player pplayer, String delegate):
      - returns Bool, whether pconn is allowed to delegate player to delegate.
    user_take(Connection requester, Connection taker, Player pplayer,
              Bool observer):
      - returns Bool, whether requester is allowed to attach taker to pplayer.
-
-   If an error occurred, the functions return a non-NULL string error message
-   as the last return value.
  */
-static void script_fcdb_functions_define(void)
-{
-  luascript_func_add(fcl, "database_init", true, 0, 0);
-  luascript_func_add(fcl, "database_free", true, 0, 0);
-
-  luascript_func_add(fcl, "user_exists", true, 1, 1, API_TYPE_CONNECTION,
-                     API_TYPE_BOOL);
-  luascript_func_add(fcl, "user_verify", true, 2, 1, API_TYPE_CONNECTION,
-                     API_TYPE_STRING, API_TYPE_BOOL);
-  luascript_func_add(fcl, "user_save", false, 2, 0, API_TYPE_CONNECTION,
-                     API_TYPE_STRING);
-  luascript_func_add(fcl, "user_log", true, 2, 0, API_TYPE_CONNECTION,
-                     API_TYPE_BOOL);
-  luascript_func_add(fcl, "user_delegate_to", false, 3, 1,
-                     API_TYPE_CONNECTION, API_TYPE_PLAYER, API_TYPE_STRING,
-                     API_TYPE_BOOL);
-  luascript_func_add(fcl, "user_take", false, 4, 1, API_TYPE_CONNECTION,
-                     API_TYPE_CONNECTION, API_TYPE_PLAYER, API_TYPE_BOOL,
-                     API_TYPE_BOOL);
-}
 
 /**
    Check the existence of all needed functions.
  */
 static bool script_fcdb_functions_check(const char *fcdb_luafile)
 {
+  // Mandatory functions
   bool ret = true;
-  QVector<QString> *missing_func_required = new QVector<QString>;
-  QVector<QString> *missing_func_optional = new QVector<QString>;
-
-  if (!luascript_func_check(fcl, missing_func_required,
-                            missing_func_optional)) {
-    for (auto func_name : *missing_func_required) {
+  for (const auto &name : {
+           "database_init",
+           "database_free",
+           "user_exists",
+           "user_verify",
+       }) {
+    if (!(*fcl)[name].valid()) {
       qCritical("Database script '%s' does not define the required function "
                 "'%s'.",
-                fcdb_luafile, qUtf8Printable(func_name));
+                fcdb_luafile, name);
       ret = false;
-    }
-    for (auto func_name : *missing_func_optional) {
-      qDebug("Database script '%s' does not define the optional "
-             "function '%s'.",
-             fcdb_luafile, qUtf8Printable(func_name));
     }
   }
 
-  delete missing_func_required;
-  delete missing_func_optional;
+  // Optional functions
+  for (const auto &name : {
+           "user_save",
+           "user_delegate_to",
+           "user_take",
+       }) {
+    if (!(*fcl)[name].valid()) {
+      qDebug("Database script '%s' does not define the optional "
+             "function '%s'.",
+             fcdb_luafile, name);
+    }
+  }
 
   return ret;
 }
@@ -172,14 +149,40 @@ static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
 }
 
 /**
+ * Registers FCDB-related functions in the Lua state
+ */
+static void script_fcdb_register_functions()
+{
+  // "auth" table
+  (*fcl)["auth"] = fcl->create_table_with("get_ipaddr", auth_get_ipaddr,
+                                          "get_username", auth_get_username);
+  // "fcdb" table
+  (*fcl)["fcdb"] = fcl->create_table_with(
+      "option", fcdb_option_get,
+      // Definitions for backward compatibility with Freeciv 2.4.
+      // Old database.lua scripts might pass fcdb.param.USER etc to
+      // fcdb.option(), but it's deprecated in favour of literal strings, and
+      // the strings listed here are only conventional.
+      // clang-format off
+      "param", fcl->create_table_with("HOST", "host",
+                                      "USER", "user",
+                                      "PORT", "port",
+                                      "PASSWORD", "password",
+                                      "DATABASE", "database",
+                                      "TABLE_USER", "table_user",
+                                      "TABLE_LOG", "table_log",
+                                      "BACKEND", "backend")
+      // clang-format on
+  );
+}
+
+/**
    Initialize the scripting state. Returns the status of the freeciv database
    lua state.
  */
 bool script_fcdb_init(const QString &fcdb_luafile)
 {
-  if (fcl != NULL) {
-    fc_assert_ret_val(fcl->state != NULL, false);
-
+  if (fcl != nullptr) {
     return true;
   }
 
@@ -197,32 +200,39 @@ bool script_fcdb_init(const QString &fcdb_luafile)
     return false;
   }
 
-  fcl = luascript_new(NULL, false);
-  if (fcl == NULL) {
-    qCritical("Error loading the Freeciv21 database lua definition.");
+  try {
+    fcl = new sol::state();
+    fcl->open_libraries();
+
+    fcl_compat.state = fcl->lua_state();
+    fcl_compat.output_fct = nullptr;
+    fcl_compat.caller = nullptr;
+    luascript_init(&fcl_compat);
+
+    luascript_common_a(fcl->lua_state());
+    tolua_game_open(fcl->lua_state());
+    script_fcdb_register_functions();
+    luascript_common_z(fcl->lua_state());
+  } catch (const std::exception &e) {
+    qCritical() << "Error loading the Freeciv21 database lua definition:"
+                << e.what();
+    script_fcdb_free();
     return false;
   }
 
-  tolua_common_a_open(fcl->state);
-  tolua_game_open(fcl->state);
-  tolua_fcdb_open(fcl->state);
-  tolua_common_z_open(fcl->state);
-
-  luascript_func_init(fcl);
+  //   luascript_func_init(fcl->lua_state());
 
   // Define the prototypes for the needed lua functions.
-  script_fcdb_functions_define();
-
-  if (luascript_do_file(fcl, qUtf8Printable(fcdb_luafile_resolved))
-      || !script_fcdb_functions_check(
-          qUtf8Printable(fcdb_luafile_resolved))) {
+  if (!fcl->safe_script_file(qUtf8Printable(fcdb_luafile_resolved))
+           .valid()) {
     qCritical("Error loading the Freeciv21 database lua script '%s'.",
               qUtf8Printable(fcdb_luafile_resolved));
     script_fcdb_free();
     return false;
   }
+  script_fcdb_functions_check(qUtf8Printable(fcdb_luafile_resolved));
 
-  if (!script_fcdb_call("database_init")) {
+  if (!script_fcdb_database_init()) {
     qCritical("Error connecting to the database");
     script_fcdb_free();
     return false;
@@ -231,37 +241,18 @@ bool script_fcdb_init(const QString &fcdb_luafile)
 }
 
 /**
-   Call a lua function.
-
-   Example call to the lua function 'user_load()':
-     success = script_fcdb_call("user_load", pconn);
- */
-bool script_fcdb_call(const char *func_name, ...)
-{
-  bool success = true;
-
-  va_list args;
-  va_start(args, func_name);
-
-  success = luascript_func_call_valist(fcl, func_name, args);
-  va_end(args);
-
-  return success;
-}
-
-/**
    Free the scripting data.
  */
 void script_fcdb_free()
 {
-  if (!script_fcdb_call("database_free", 0)) {
-    qCritical("Error closing the database connection. Continuing anyway...");
-  }
+  if (fcl != nullptr) {
+    if (!script_fcdb_database_free()) {
+      qCritical(
+          "Error closing the database connection. Continuing anyway...");
+    }
 
-  if (fcl) {
-    // luascript_func_free() is called by luascript_destroy().
-    luascript_destroy(fcl);
-    fcl = NULL;
+    delete fcl;
+    fcl = nullptr;
   }
 }
 
@@ -271,22 +262,138 @@ void script_fcdb_free()
  */
 bool script_fcdb_do_string(struct connection *caller, const char *str)
 {
-  int status;
-  struct connection *save_caller;
-  luascript_log_func_t save_output_fct;
-
   /* Set a log callback function which allows to send the results of the
    * command to the clients. */
-  save_caller = fcl->caller;
-  save_output_fct = fcl->output_fct;
-  fcl->output_fct = script_fcdb_cmd_reply;
-  fcl->caller = caller;
+  auto save_caller = fcl_compat.caller;
+  auto save_output_fct = fcl_compat.output_fct;
+  fcl_compat.output_fct = script_fcdb_cmd_reply;
+  fcl_compat.caller = caller;
 
-  status = luascript_do_string(fcl, str, "cmd");
+  return fcl->safe_script(str).valid();
 
   // Reset the changes.
-  fcl->caller = save_caller;
-  fcl->output_fct = save_output_fct;
+  fcl_compat.caller = save_caller;
+  fcl_compat.output_fct = save_output_fct;
 
-  return (status == 0);
+  return true;
+}
+
+/**
+ * test and initialise the database.
+ */
+static bool script_fcdb_database_init()
+{
+  try {
+    const sol::protected_function database_init = (*fcl)["database_init"];
+    return database_init().valid();
+  } catch (const std::exception &e) {
+    qCritical() << e.what();
+  }
+  return false;
+}
+
+/**
+ * free the database.
+ */
+static bool script_fcdb_database_free()
+{
+  try {
+    const sol::protected_function database_free = (*fcl)["database_free"];
+    return database_free().valid();
+  } catch (const std::exception &e) {
+    qCritical() << e.what();
+  }
+  return false;
+}
+
+/**
+ * returns Bool, whether pconn is allowed to delegate player to delegate.
+ */
+bool script_fcdb_user_delegate_to(connection *pconn, player *pplayer,
+                                  const char *delegate, bool &success)
+{
+  try {
+    const sol::protected_function user_delegate_to =
+        (*fcl)["user_delegate_to"];
+    const sol::optional<bool> result =
+        user_delegate_to(pconn, pplayer, delegate);
+    if (result) {
+      success = *result;
+      return true;
+    }
+  } catch (const std::exception &e) {
+    qCritical() << e.what();
+  }
+  return false;
+}
+
+/**
+ * Check if the user exists.
+ */
+bool script_fcdb_user_exists(connection *pconn, bool &exists)
+{
+  try {
+    const sol::protected_function user_exists = (*fcl)["user_exists"];
+    const sol::optional<bool> result = user_exists(pconn);
+    if (result) {
+      exists = *result;
+      return true;
+    }
+  } catch (const std::exception &e) {
+    qCritical() << e.what();
+  }
+  return false;
+}
+
+/**
+ * Save a new user.
+ */
+bool script_fcdb_user_save(connection *pconn, const char *password)
+{
+  try {
+    const sol::protected_function user_save = (*fcl)["user_save"];
+    return user_save(pconn, password).valid();
+  } catch (const std::exception &e) {
+    qCritical() << e.what();
+  }
+  return false;
+}
+
+/**
+ * returns Bool, whether requester is allowed to attach taker to pplayer.
+ */
+bool script_fcdb_user_take(connection *requester, connection *taker,
+                           player *player, bool will_observe, bool &success)
+{
+  try {
+    const sol::protected_function user_take = (*fcl)["user_take"];
+    const sol::optional<bool> result =
+        user_take(requester, taker, player, will_observe);
+    if (result) {
+      success = *result;
+      return true;
+    }
+  } catch (const std::exception &e) {
+    qCritical() << e.what();
+  }
+  return false;
+}
+
+/**
+ * Check the credentials of the user.
+ */
+bool script_fcdb_user_verify(connection *pconn, const char *username,
+                             bool &success)
+{
+  try {
+    const sol::protected_function user_verify = (*fcl)["user_verify"];
+    const sol::optional<bool> result = user_verify(pconn, username);
+    if (result) {
+      success = *result;
+      return true;
+    }
+  } catch (const std::exception &e) {
+    qCritical() << e.what();
+  }
+  return false;
 }

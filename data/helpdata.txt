@@ -2139,8 +2139,8 @@ Tracking System, at:\
 "), "\
   https://github.com/longturn/freeciv21/issues\
 ", _("\
-Please quote the above version information. For more information about submitting bug reports see the file \
-BUGS in the Freeciv21 distribution.\
+Please quote the above version information. For more information about submitting \
+bug reports see https://longturn.readthedocs.io/en/latest/Contributing/bugs.html.\
 "), _("\
 To contact the developers about anything else, contact them on discord:\
 "), _("\

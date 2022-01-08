@@ -25,6 +25,10 @@
 #include "page_game.h"
 #include "qtg_cxxside.h"
 
+namespace {
+const auto always_visible_margin = 15;
+}
+
 /**
    Constructor for minimap
  */
@@ -326,8 +330,16 @@ void minimap_view::paint(QPainter *painter, QPaintEvent *event)
  */
 void minimap_view::resizeEvent(QResizeEvent *event)
 {
-  QSize size;
-  size = event->size();
+  auto size = event->size();
+
+  if (x() + size.width() < always_visible_margin) {
+    size.setWidth(always_visible_margin - x());
+    resize(size);
+  }
+  if (y() + size.height() < always_visible_margin) {
+    size.setHeight(always_visible_margin - y());
+    resize(size);
+  }
 
   if (C_S_RUNNING <= client_state() && size.width() > 0
       && size.height() > 0) {
@@ -417,16 +429,28 @@ void minimap_view::mouseMoveEvent(QMouseEvent *event)
     return;
   }
   if (event->buttons() & Qt::LeftButton) {
-    QPoint p, r;
-    p = event->pos();
-    r = mapTo(queen()->mapview_wdg, p);
-    p = r - p;
-    move(event->globalPos() - cursor);
+    auto location = event->globalPos() - cursor;
+
+    // Make sure we can't be moved out of the screen
+    if (location.x() + width() < always_visible_margin) {
+      location.setX(always_visible_margin - width());
+    } else if (location.x()
+               > parentWidget()->width() - always_visible_margin) {
+      location.setX(parentWidget()->width() - always_visible_margin);
+    }
+    if (location.y() + height() < always_visible_margin) {
+      location.setY(always_visible_margin - height());
+    } else if (location.y()
+               > parentWidget()->height() - always_visible_margin) {
+      location.setY(parentWidget()->height() - always_visible_margin);
+    }
+
+    move(location);
     setCursor(Qt::SizeAllCursor);
     king()->qt_settings.minimap_x =
-        static_cast<float>(p.x()) / mapview.width;
+        static_cast<float>(location.x()) / mapview.width;
     king()->qt_settings.minimap_y =
-        static_cast<float>(p.y()) / mapview.height;
+        static_cast<float>(location.y()) / mapview.height;
   }
 }
 

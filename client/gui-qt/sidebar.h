@@ -12,8 +12,6 @@
 // Qt
 #include <QWidget>
 
-enum { SW_STD = 0, SW_TAX = 1, SW_INDICATORS = 2 };
-
 class QPixmap;
 class QVBoxLayout;
 
@@ -38,11 +36,15 @@ class sidebarWidget : public QWidget {
   Q_OBJECT
 
 public:
+  enum standards { SW_STD, SW_TAX, SW_INDICATORS };
+
   sidebarWidget(QPixmap *pix, const QString &label, const QString &pg,
-                pfcn_bool func, int type = SW_STD);
+                pfcn_bool func, standards type = SW_STD);
   ~sidebarWidget() override;
   int getPriority();
   QPixmap *get_pixmap();
+  int heightForWidth(int width) const override;
+  bool hasHeightForWidth() const override;
   void paint(QPainter *painter, QPaintEvent *event);
   void resizePixmap(int width, int height);
   void setCustomLabels(const QString &);
@@ -53,12 +55,11 @@ public:
   void setTooltip(const QString &tooltip);
   void setWheelDown(pfcn func);
   void setWheelUp(pfcn func);
-  void updateFinalPixmap();
 
   bool blink;
   bool keep_blinking;
   bool disabled;
-  int standard;
+  standards standard;
   QString page;
 public slots:
   void sblink();
@@ -73,14 +74,15 @@ protected:
   void wheelEvent(QWheelEvent *event) override;
 
 private:
+  void updateFinalPixmap();
   void paint();
   bool hover;
   pfcn right_click;
   pfcn wheel_down;
   pfcn wheel_up;
   pfcn_bool left_click;
-  QFont *sfont;
-  QFont *info_font;
+  QFont sfont;
+  QFont info_font;
   QPixmap *def_pixmap;
   QPixmap *final_pixmap;
   QPixmap *scaled_pixmap;
@@ -99,8 +101,9 @@ public:
   sidebar();
   ~sidebar() override;
   void addWidget(sidebarWidget *fsw);
+  void addSpacer();
   void paint(QPainter *painter, QPaintEvent *event);
-  void resizeMe(int height, bool force = false);
+  void resizeMe();
   QList<sidebarWidget *> objects;
 
 protected:

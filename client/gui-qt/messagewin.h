@@ -40,7 +40,6 @@ public:
 private:
   QListWidget *mesg_table;
   QGridLayout *layout;
-  QPixmap *pix;
 
 protected:
   void enterEvent(QEvent *event) override;

@@ -3293,7 +3293,7 @@ bool entry_bool_get(const struct entry *pentry, bool *value)
 
   if (ENTRY_INT == pentry->type
       && (pentry->integer.value == 0 || pentry->integer.value == 1)
-      && NULL != pentry->psection && NULL != pentry->psection->secfile
+      && NULL != pentry->psection->secfile
       && pentry->psection->secfile->allow_digital_boolean) {
     *value = (0 != pentry->integer.value);
     return true;

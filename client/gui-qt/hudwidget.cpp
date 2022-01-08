@@ -68,8 +68,8 @@ hud_message_box::hud_message_box(QWidget *parent) : QMessageBox(parent)
   int size;
   setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog
                  | Qt::FramelessWindowHint);
-  f_text = *fcFont::instance()->getFont(fonts::default_font);
-  f_title = *fcFont::instance()->getFont(fonts::default_font);
+  f_text = fcFont::instance()->getFont(fonts::default_font);
+  f_title = fcFont::instance()->getFont(fonts::default_font);
 
   size = f_text.pointSize();
   if (size > 0) {
@@ -233,7 +233,7 @@ hud_text::hud_text(const QString &s, int time_secs, QWidget *parent)
   timeout = time_secs;
 
   setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
-  f_text = *fcFont::instance()->getFont(fonts::default_font);
+  f_text = fcFont::instance()->getFont(fonts::default_font);
   f_text.setBold(true);
   f_text.setCapitalization(QFont::SmallCaps);
   size = f_text.pointSize();
@@ -342,8 +342,8 @@ hud_input_box::hud_input_box(QWidget *parent) : QDialog(parent)
   setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog
                  | Qt::FramelessWindowHint);
 
-  f_text = *fcFont::instance()->getFont(fonts::default_font);
-  f_title = *fcFont::instance()->getFont(fonts::default_font);
+  f_text = fcFont::instance()->getFont(fonts::default_font);
+  f_title = fcFont::instance()->getFont(fonts::default_font);
 
   size = f_text.pointSize();
   if (size > 0) {
@@ -562,7 +562,7 @@ void hud_units::update_actions(unit_list *punits)
   int wwidth;
   int font_width;
   int expanded_unit_width;
-  QFont font = *fcFont::instance()->getFont(fonts::notify_label);
+  QFont font = fcFont::instance()->getFont(fonts::notify_label);
   QFontMetrics *fm;
   QImage cropped_img;
   QImage img;
@@ -1229,7 +1229,6 @@ void hud_unit_loader::show_me()
   int max_size = 0;
   int i, j;
   int w, h;
-  QPixmap *spite;
 
   unit_list_iterate(qtile->units, ptransport)
   {
@@ -1245,22 +1244,21 @@ void hud_unit_loader::show_me()
   setRowCount(transports.count());
   setColumnCount(max_size + 1);
   for (i = 0; i < transports.count(); i++) {
-    QString str;
-    spite = get_unittype_sprite(tileset, transports.at(i)->utype,
-                                direction8_invalid());
-    str = utype_rule_name(transports.at(i)->utype);
+    auto sprite = get_unittype_sprite(tileset, transports.at(i)->utype,
+                                      direction8_invalid());
+    QString str = utype_rule_name(transports.at(i)->utype);
     // TRANS: MP - just movement points
-    str = str + " ("
-          + QString(move_points_text(transports.at(i)->moves_left, false))
-          + _("MP") + ")";
-    new_item = new QTableWidgetItem(QIcon(*spite), str);
+    str += " ("
+           + QString(move_points_text(transports.at(i)->moves_left, false))
+           + _("MP") + ")";
+    new_item = new QTableWidgetItem(QIcon(*sprite), str);
     setItem(i, 0, new_item);
     j = 1;
     unit_list_iterate(transports.at(i)->transporting, tunit)
     {
-      spite =
+      sprite =
           get_unittype_sprite(tileset, tunit->utype, direction8_invalid());
-      new_item = new QTableWidgetItem(QIcon(*spite), QLatin1String(""));
+      new_item = new QTableWidgetItem(QIcon(*sprite), QLatin1String(""));
       setItem(i, j, new_item);
       j++;
     }
@@ -1835,7 +1833,7 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
   QRect left, right;
   QColor c1, c2;
   QPen pen;
-  QFont f = *fcFont::instance()->getFont(fonts::default_font);
+  QFont f = fcFont::instance()->getFont(fonts::default_font);
   QString ahploss, dhploss;
 
   if (att_hp_loss > 0) {

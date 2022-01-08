@@ -73,7 +73,6 @@ class cma_yoloswag {
 public:
   cma_yoloswag();
   ~cma_yoloswag();
-  bool apply_result(struct city *pcity, const struct cm_result *result);
   void put_city_under_agent(struct city *pcity,
                             const struct cm_parameter *const parameter);
   void release_city(struct city *pcity);
@@ -274,17 +273,6 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
 }
 
 cma_yoloswag::~cma_yoloswag() = default;
-
-bool cma_yoloswag::apply_result(struct city *pcity,
-                                const struct cm_result *result)
-{
-  fc_assert(!cma_is_city_under_agent(pcity, NULL));
-  if (result->found_a_valid) {
-    return apply_result_on_server(pcity, result);
-  } else {
-    return false;
-  }
-}
 
 /**
  Change the actual city setting to the given result. Returns TRUE iff
@@ -562,7 +550,8 @@ struct city *cma_yoloswag::check_city(int city_id,
  */
 void cma_yoloswag::handle_city(struct city *pcity)
 {
-  struct cm_result *result = cm_result_new(pcity);
+  auto result = std::unique_ptr<cm_result, typeof(&cm_result_destroy)>(
+      cm_result_new(pcity), &cm_result_destroy);
   bool handled;
   int i, city_id = pcity->id;
 
@@ -584,7 +573,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
       break;
     }
 
-    cm_query_result(pcity, &parameter, result, false);
+    cm_query_result(pcity, &parameter, result.get(), false);
     if (!result->found_a_valid) {
       log_handle_city2("  no valid found result");
 
@@ -597,7 +586,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
       handled = true;
       break;
     } else {
-      if (!apply_result_on_server(pcity, result)) {
+      if (!apply_result_on_server(pcity, result.get())) {
         log_handle_city2("  doesn't cleanly apply");
         if (pcity == check_city(city_id, NULL) && i == 0) {
           create_event(city_tile(pcity), E_CITY_CMA_RELEASE, ftc_client,
@@ -640,14 +629,6 @@ static void city_changed(int city_id)
   if (pcity) {
     gimb->handle_city(pcity);
   }
-}
-
-/**
-   Apply result on server if it's valid
- */
-bool cma_apply_result(struct city *pcity, const struct cm_result *result)
-{
-  return gimb->apply_result(pcity, result);
 }
 
 /**

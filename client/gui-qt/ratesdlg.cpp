@@ -328,7 +328,6 @@ void fc_double_edge::paintEvent(QPaintEvent *event)
   Q_UNUSED(event)
   QPainter p;
   int i, j, pos;
-  QPixmap *pix;
   QPixmap pix_scaled;
   QSize s;
   double x_min, x_max;
@@ -348,7 +347,7 @@ void fc_double_edge::paintEvent(QPaintEvent *event)
           + cursor_size;
 
   pos = cursor_size;
-  pix = get_tax_sprite(tileset, O_GOLD);
+  auto pix = get_tax_sprite(tileset, O_GOLD);
   s.setWidth((width() - 2 * cursor_size) / 10);
   s.setHeight(height());
   pix_scaled =

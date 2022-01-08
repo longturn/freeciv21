@@ -110,12 +110,11 @@ jobs:
     name: "Mac OS X"
     runs-on: macos-latest
     env:
-      Intl_ROOT: /usr/local/opt/gettext
-      Qt5_DIR: /usr/local/opt/qt5/lib/cmake
-      Readline_ROOT: /usr/local/opt/readline
+      MACOSX_DEPLOYMENT_TARGET: 10.15
+      VCPKG_BUILD_TYPE: release
     steps:
       - uses: actions/checkout@v2
-      - name: Install dependencies
+      - name: Install build tools
         run: |
           brew update
           brew install \
@@ -123,30 +122,194 @@ jobs:
             ninja \
             python3 \
             gettext \
-            qt@5 \
-            kde-karchive \
-            readline \
-            lua \
-            sqlite \
-            sdl2 \
-            sdl2_mixer
+            create-dmg
           brew link gettext --force
-      - name: Configure
-        run: |
-          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+      - uses: lukka/run-vcpkg@v10.0
+        name: Install dependencies
+        with:
+          vcpkgGitCommitId: 50fd3d9957195575849a49fa591e645f1d8e7156
       - name: Build
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: 'fullrelease-macos'
+          buildPreset: 'fullrelease-macos'
+      - name: Create App Bundle
         run: |
-          cmake --build build
-      - name: Install
+          mkdir -p Freeciv21.app/Contents/MacOS Freeciv21.app/Contents/Resources
+          cp macos/Info.plist Freeciv21.app/Contents/
+          cp -r .install/share/freeciv21/* Freeciv21.app/Contents/Resources
+          cp .install/bin/freeciv21-server .install/bin/freeciv21-client Freeciv21.app/Contents/MacOS
+          mkdir client.iconset
+          cp data/icons/16x16/freeciv21-client.png client.iconset/icon_16x16.png
+          cp data/icons/32x32/freeciv21-client.png client.iconset/icon_16x16@2x.png
+          cp data/icons/32x32/freeciv21-client.png client.iconset/icon_32x32.png
+          cp data/icons/64x64/freeciv21-client.png client.iconset/icon_32x32@2x.png
+          cp data/icons/128x128/freeciv21-client.png client.iconset/icon_128x128.png
+          iconutil -c icns client.iconset
+          cp client.icns Freeciv21.app/Contents/Resources
+          mkdir staging
+          mv Freeciv21.app staging
+          create-dmg \
+            --volname "Freeciv21 Installer" \
+            --volicon "client.icns" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --icon "Freeciv21.app" 200 190 \
+            --hide-extension "Freeciv21.app" \
+            --app-drop-link 600 185 \
+            "Freeciv21.dmg" \
+            "staging/"
+      - name: Debug
+        if: failure()
+        run: cat CMakeCache.txt
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: macos
+          path: Freeciv21.dmg
+  wasm:
+    name: "WebAssembly"
+    runs-on: ubuntu-latest
+    env:
+      QT_VERSION: 5.15.2
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache Qt build
+        id: qtcache
+        uses: actions/cache@v2
+        with:
+          path: ~/qt
+          key: qt-wasm-${{ env.QT_VERSION }}
+      - name: Install build tools
         run: |
-          cmake --build build --target install
+          sudo apt-get update
+          sudo apt-get install \
+            cmake \
+            ninja-build \
+            clang \
+            python3 \
+            gettext
+      - uses: actions/checkout@v2
+        name: Checkout emsdk
+        with:
+          repository: emscripten-core/emsdk
+          path: emsdk
+      - name: Install emsdk
+        run: |
+          cd emsdk
+          ./emsdk install latest
+          ./emsdk activate latest
+          touch prime.c
+          source emsdk_env.sh
+          emcc -sUSE_ZLIB=1 -sUSE_SDL=2 -sUSE_SDL_MIXER=2 prime.c -o prime.o
+          ln -s libSDL2_mixer_ogg.a upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libSDL2_mixer.a
+      - name: Install lua
+        run: |
+          source emsdk/emsdk_env.sh
+          wget https://www.lua.org/ftp/lua-5.4.3.tar.gz
+          tar xf lua-5.4.3.tar.gz
+          cp patches/lua.CMakeLists.txt lua-5.4.3/CMakeLists.txt
+          cd lua-5.4.3
+          emcmake cmake .
+          emmake make install
+      - uses: actions/checkout@v2
+        if: steps.qtcache.outputs.cache-hit != 'true'
+        name: Checkout qtbase
+        with:
+          repository: qt/qtbase
+          ref: ${{ env.QT_VERSION }}
+          path: qtbase
+      - name: Build Qt
+        if: steps.qtcache.outputs.cache-hit != 'true'
+        run: |
+          source emsdk/emsdk_env.sh
+          cd qtbase
+          ./configure -xplatform wasm-emscripten -opensource -confirm-license -prefix ~/qt -nomake examples
+          make install
+      - uses: actions/checkout@v2
+        name: Checkout zstd
+        with:
+          repository: facebook/zstd
+          ref: v1.5.0
+          path: zstd
+      - name: Build zstd
+        run: |
+          source emsdk/emsdk_env.sh
+          cd zstd
+          mkdir bld
+          emcmake cmake build/cmake -DZSTD_BUILD_PROGRAMS=0 -DZSTD_BUILD_SHARED=0
+          emmake make install
+      - uses: actions/checkout@v2
+        name: Checkout extra-cmake-modules
+        with:
+          repository: KDE/extra-cmake-modules
+          ref: v5.89.0
+          path: ecm
+      - name: Install ecm
+        run: |
+          cd ecm
+          cmake .
+          sudo make install
+      - uses: actions/checkout@v2
+        name: Checkout karchive
+        with:
+          repository: KDE/karchive
+          ref: v5.89.0
+          path: karchive
+      - name: Install karchive
+        run: |
+          source emsdk/emsdk_env.sh
+          cd karchive
+          git apply ../patches/karchive.diff
+          emcmake cmake -DECM_DIR=/usr/local/share/ECM/cmake -DBUILD_TESTING=0 \
+            -DQt5Core_DIR=$HOME/qt/lib/cmake/Qt5Core \
+            -DCMAKE_INSTALL_PREFIX=../emsdk/upstream/emscripten/cache/sysroot
+          emmake make install
+      - name: Build Freeciv
+        run: |
+          source emsdk/emsdk_env.sh
+          ls $HOME/qt/lib/cmake/Qt5
+          emcmake cmake . \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DQt5_DIR=$HOME/qt/lib/cmake/Qt5 \
+            -DQt5Gui_DIR=$HOME/qt/lib/cmake/Qt5Gui \
+            -DQt5Core_DIR=$HOME/qt/lib/cmake/Qt5Core \
+            -DQt5Network_DIR=$HOME/qt/lib/cmake/Qt5Network \
+            -DFREECIV_ENABLE_SERVER=0 \
+            -DLUA_MATH_LIBRARY=emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc.a \
+            -DQt5Widgets_DIR=$HOME/qt/lib/cmake/Qt5Widgets \
+            -DQt5EventDispatcherSupport_DIR=$HOME/qt/lib/cmake/Qt5EventDispatcherSupport \
+            -DQt5FontDatabaseSupport_DIR=$HOME/qt/lib/cmake/Qt5FontDatabaseSupport \
+            -DQt5EglSupport_DIR=$HOME/qt/lib/cmake/Qt5EglSupport \
+            -DFREECIV_ENABLE_FCMP_CLI=0 -DFREECIV_ENABLE_FCMP_QT=0 \
+            -DFREECIV_BUILD_LIBSERVER=0 -DFREECIV_ENABLE_RULEUP=0 \
+            -DFREECIV_ENABLE_RULEDIT=0 -DFREECIV_ENABLE_CIVMANUAL=0 \
+            -DKF5Archive_DIR=../emsdk/upstream/emscripten/cache/sysroot/lib/cmake \
+            -DCAN_UNWIND_STACK=0
+          VERBOSE=1 emmake make
+      - name: Debug
+        if: failure()
+        run: |
+          cat common/networking/CMakeFiles/networking.dir/includes_CXX.rsp
+          cat CMakeCache.txt
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cmakecache
+          path: CMakeCache.txt
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: wasm-client
+          path: freeciv21-client.*
   clang-format:
     name: clang-format Code Formatter
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Run clang-format style check for C/C++
-      uses: jidicula/clang-format-action@v3.4.0
+      uses: jidicula/clang-format-action@v4.4.0
       with:
         clang-format-version: '11'
         exclude-regex: 'dependencies'

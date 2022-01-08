@@ -437,7 +437,7 @@ void update_mouse_cursor(enum cursor_type new_cursor_type)
 void qtg_update_timeout_label()
 {
   queen()->sw_endturn->setCustomLabels(QString(get_timeout_label_text()));
-  queen()->sw_endturn->updateFinalPixmap();
+  queen()->sw_endturn->update();
 }
 
 /**
@@ -452,17 +452,6 @@ void update_turn_done_button(bool do_restore)
     return;
   }
   sidebarBlinkEndturn(do_restore);
-}
-
-/**
-   Set information for the indicator icons typically shown in the main
-   client window.  The parameters tell which sprite to use for the
-   indicator.
- */
-void set_indicator_icons(QPixmap *bulb, QPixmap *sol, QPixmap *flake,
-                         QPixmap *gov)
-{
-  queen()->sw_indicators->updateFinalPixmap();
 }
 
 /**
@@ -551,7 +540,8 @@ void update_city_descriptions(void) { update_map_canvas_visible(); }
 /**
    Put overlay tile to pixmap
  */
-void pixmap_put_overlay_tile(int canvas_x, int canvas_y, QPixmap *ssprite)
+void pixmap_put_overlay_tile(int canvas_x, int canvas_y,
+                             const QPixmap *ssprite)
 {
   if (!ssprite) {
     return;
@@ -634,7 +624,7 @@ void mapview_thaw()
 info_tile::info_tile(struct tile *ptile, QWidget *parent) : QLabel(parent)
 {
   setParent(parent);
-  info_font = *fcFont::instance()->getFont(fonts::notify_label);
+  info_font = fcFont::instance()->getFont(fonts::notify_label);
   itile = ptile;
   calc_size();
 }

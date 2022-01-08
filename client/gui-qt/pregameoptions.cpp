@@ -126,8 +126,6 @@ void pregame_options::set_aifill(int aifill)
  */
 void pregame_options::update_buttons()
 {
-  QPixmap *psprite = nullptr;
-  QPixmap *pixmap = nullptr;
   const struct player *pplayer = client_player();
 
   // Update the "Select Nation" button
@@ -137,8 +135,7 @@ void pregame_options::update_buttons()
       ui.nation->setText(
           QString(nation_adjective_for_player(pplayer))
               .replace(QLatin1String("&"), QLatin1String("&&")));
-      psprite = get_nation_shield_sprite(tileset, pplayer->nation);
-      pixmap = psprite;
+      auto pixmap = get_nation_shield_sprite(tileset, pplayer->nation);
       ui.nation->setIconSize(pixmap->size());
       ui.nation->setIcon(QIcon(*pixmap));
     } else {

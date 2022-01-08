@@ -56,7 +56,8 @@ void reduce_mod(int &mod, int &val)
    Sidewidget constructor
  */
 sidebarWidget::sidebarWidget(QPixmap *pix, const QString &label,
-                             const QString &pg, pfcn_bool func, int type)
+                             const QString &pg, pfcn_bool func,
+                             standards type)
     : QWidget(), blink(false), keep_blinking(false), disabled(false),
       standard(type), page(pg), hover(false), right_click(nullptr),
       wheel_down(nullptr), wheel_up(nullptr), left_click(func),
@@ -67,16 +68,16 @@ sidebarWidget::sidebarWidget(QPixmap *pix, const QString &label,
   }
   scaled_pixmap = new QPixmap;
   final_pixmap = new QPixmap;
-  sfont = new QFont(*fcFont::instance()->getFont(fonts::notify_label));
+  sfont = fcFont::instance()->getFont(fonts::notify_label);
   setContextMenuPolicy(Qt::CustomContextMenu);
   timer = new QTimer;
   timer->setSingleShot(false);
   timer->setInterval(700);
-  sfont->setCapitalization(QFont::SmallCaps);
-  sfont->setItalic(true);
-  info_font = new QFont(*sfont);
-  info_font->setBold(true);
-  info_font->setItalic(false);
+  sfont.setCapitalization(QFont::SmallCaps);
+  sfont.setItalic(true);
+  info_font = QFont(sfont);
+  info_font.setBold(true);
+  info_font.setItalic(false);
   connect(timer, &QTimer::timeout, this, &sidebarWidget::sblink);
 }
 
@@ -85,13 +86,11 @@ sidebarWidget::sidebarWidget(QPixmap *pix, const QString &label,
  */
 sidebarWidget::~sidebarWidget()
 {
-  NFC_FREE(scaled_pixmap);
-  NFC_FREE(def_pixmap);
-  NFC_FREE(final_pixmap);
+  NFCN_FREE(scaled_pixmap);
+  NFCN_FREE(def_pixmap);
+  NFCN_FREE(final_pixmap);
 
   delete timer;
-  delete sfont;
-  delete info_font;
 }
 
 /**
@@ -99,7 +98,7 @@ sidebarWidget::~sidebarWidget()
  */
 void sidebarWidget::setPixmap(QPixmap *pm)
 {
-  NFC_FREE(def_pixmap);
+  NFCN_FREE(def_pixmap);
   def_pixmap = pm;
 }
 
@@ -122,6 +121,28 @@ void sidebarWidget::setTooltip(const QString &tooltip)
 QPixmap *sidebarWidget::get_pixmap() { return scaled_pixmap; }
 
 /**
+ * Reimplemented virtual method.
+ */
+int sidebarWidget::heightForWidth(int width) const
+{
+  switch (standard) {
+  case SW_TAX:
+    return get_tax_sprite(tileset, O_LUXURY)->height() + 8;
+  case SW_INDICATORS:
+    return get_tax_sprite(tileset, O_LUXURY)->height() + 8;
+  case SW_STD:
+    return (width * def_pixmap->height()) / def_pixmap->width() + 8;
+  }
+
+  fc_assert_ret_val(false, 0);
+}
+
+/**
+ * Reimplemented virtual method.
+ */
+bool sidebarWidget::hasHeightForWidth() const { return true; }
+
+/**
    Sets default label on bottom of sidewidget
  */
 void sidebarWidget::setLabel(const QString &str) { desc = str; }
@@ -132,17 +153,9 @@ void sidebarWidget::setLabel(const QString &str) { desc = str; }
  */
 void sidebarWidget::resizePixmap(int width, int height)
 {
-  if (standard == SW_TAX) {
-    height = get_tax_sprite(tileset, O_LUXURY)->height() + 8;
-  }
-
-  if (standard == SW_INDICATORS) {
-    height = client_government_sprite()->height() + 8;
-  }
-
-  if (def_pixmap) {
-    *scaled_pixmap = def_pixmap->scaled(width, height, Qt::IgnoreAspectRatio,
-                                        Qt::SmoothTransformation);
+  if (def_pixmap && scaled_pixmap) {
+    *scaled_pixmap =
+        def_pixmap->scaledToWidth(width, Qt::SmoothTransformation);
   }
 }
 
@@ -163,6 +176,7 @@ void sidebarWidget::paintEvent(QPaintEvent *event)
  */
 void sidebarWidget::paint(QPainter *painter, QPaintEvent *event)
 {
+  updateFinalPixmap();
   if (final_pixmap) {
     painter->drawPixmap(event->rect(), *final_pixmap, event->rect());
   }
@@ -175,7 +189,6 @@ void sidebarWidget::enterEvent(QEvent *event)
 {
   if (!hover) {
     hover = true;
-    updateFinalPixmap();
     QWidget::enterEvent(event);
     update();
   }
@@ -188,7 +201,6 @@ void sidebarWidget::leaveEvent(QEvent *event)
 {
   if (hover) {
     hover = false;
-    updateFinalPixmap();
     QWidget::leaveEvent(event);
     update();
   }
@@ -201,7 +213,6 @@ void sidebarWidget::contextMenuEvent(QContextMenuEvent *event)
 {
   if (hover) {
     hover = false;
-    updateFinalPixmap();
     QWidget::contextMenuEvent(event);
     update();
   }
@@ -273,7 +284,7 @@ void sidebarWidget::sblink()
       timer->stop();
     }
   }
-  updateFinalPixmap();
+  update();
 }
 
 /**
@@ -326,14 +337,19 @@ void sidebarWidget::updateFinalPixmap()
   QPen pen;
   bool current = false;
 
-  NFC_FREE(final_pixmap);
+  if (scaled_pixmap && size() == scaled_pixmap->size()) {
+    return;
+  }
+
+  resizePixmap(width(), height());
+
+  NFCN_FREE(final_pixmap);
 
   i = queen()->gimmeIndexOf(page);
   if (i == queen()->game_tab_widget->currentIndex()) {
     current = true;
   }
-  final_pixmap =
-      new QPixmap(scaled_pixmap->width(), scaled_pixmap->height());
+  final_pixmap = new QPixmap(size());
   final_pixmap->fill(Qt::transparent);
 
   if (scaled_pixmap->width() == 0 || scaled_pixmap->height() == 0) {
@@ -341,7 +357,7 @@ void sidebarWidget::updateFinalPixmap()
   }
 
   p.begin(final_pixmap);
-  p.setFont(*sfont);
+  p.setFont(sfont);
   pen.setColor(QColor(232, 255, 0));
   p.setPen(pen);
 
@@ -399,13 +415,14 @@ void sidebarWidget::updateFinalPixmap()
     p.drawPixmap(pos, 5, *sprite);
 
   } else {
-    p.drawPixmap(0, 0, *scaled_pixmap);
+    p.drawPixmap(0, (height() - scaled_pixmap->height()) / 2,
+                 *scaled_pixmap);
     p.drawText(0, height() - 6, desc);
   }
 
   p.setPen(palette().color(QPalette::Text));
   if (!custom_label.isEmpty()) {
-    p.setFont(*info_font);
+    p.setFont(info_font);
     p.drawText(0, 0, width(), height(), Qt::AlignLeft | Qt::TextWordWrap,
                custom_label);
   }
@@ -437,7 +454,6 @@ void sidebarWidget::updateFinalPixmap()
   }
 
   p.end();
-  update();
 }
 
 /**
@@ -448,6 +464,7 @@ sidebar::sidebar()
   setAttribute(Qt::WA_OpaquePaintEvent, true);
   layout = new QVBoxLayout;
   layout->setContentsMargins(0, 0, 0, 0);
+  layout->setSpacing(0);
   setLayout(layout);
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Ignored);
   setProperty("sidebar", true);
@@ -466,6 +483,11 @@ void sidebar::addWidget(sidebarWidget *fsw)
   objects.append(fsw);
   layout->addWidget(fsw);
 }
+
+/**
+ * Adds new spacer
+ */
+void sidebar::addSpacer() { layout->addStretch(); }
 
 /**
    Paint event for sidebar
@@ -491,7 +513,7 @@ void sidebar::paint(QPainter *painter, QPaintEvent *event)
 void sidebar::resizeEvent(QResizeEvent *event)
 {
   if (C_S_RUNNING <= client_state()) {
-    resizeMe(event->size().height(), true);
+    resizeMe();
   }
 }
 
@@ -500,45 +522,13 @@ void sidebar::resizeEvent(QResizeEvent *event)
   desktop and scaled accordingly for bigger resolutions eg 200 pixels for 4k
   desktop.
 **************************************************************************/
-void sidebar::resizeMe(int hght, bool force)
+void sidebar::resizeMe()
 {
-  int w, h, non_std, non_std_count, hres;
-
-  h = hght;
   auto temp = (QGuiApplication::screens());
-  hres = temp[0]->availableGeometry().width();
+  auto hres = temp[0]->availableGeometry().width();
 
-  w = (20 * gui_options.gui_qt_sidebar_width * hres) / 1920;
-  w = qMax(w, 20);
-
-  if (!force && w == width() && h == height()) {
-    return;
-  }
-
-  non_std = 0;
-  non_std_count = 0;
-
-  /* resize all non standard sidewidgets first*/
-  for (sidebarWidget *sw : qAsConst(objects)) {
-    if (sw->standard != SW_STD) {
-      sw->resizePixmap(w, 0);
-      sw->setFixedSize(w, sw->get_pixmap()->height());
-      sw->updateFinalPixmap();
-      non_std = non_std + sw->get_pixmap()->height();
-      non_std_count++;
-    }
-  }
-
-  h = h - non_std;
-  h = h / (objects.count() - non_std_count) - 2;
-  // resize all standard sidewidgets
-  for (sidebarWidget *sw : qAsConst(objects)) {
-    if (sw->standard == SW_STD) {
-      sw->resizePixmap(w, h);
-      sw->setFixedSize(w, h);
-      sw->updateFinalPixmap();
-    }
-  }
+  auto w = (20 * gui_options.gui_qt_sidebar_width * hres) / 1920;
+  setFixedWidth(qMax(w, 20));
 }
 
 /**
@@ -585,7 +575,7 @@ void sidebarDisableEndturn(bool do_restore)
     return;
   }
   queen()->sw_endturn->disabled = !do_restore;
-  queen()->sw_endturn->updateFinalPixmap();
+  queen()->sw_endturn->update();
 }
 
 /**
@@ -597,7 +587,7 @@ void sidebarBlinkEndturn(bool do_restore)
     return;
   }
   queen()->sw_endturn->blink = !do_restore;
-  queen()->sw_endturn->updateFinalPixmap();
+  queen()->sw_endturn->update();
 }
 
 /**
@@ -693,10 +683,9 @@ void sidebarRightClickScience()
     menu = new QMenu(king()->central_wdg);
     for (int i = 0; i < curr_list.count(); i++) {
       QIcon ic;
-      QPixmap *sp;
 
       qvar = curr_list.at(i).id;
-      sp = get_tech_sprite(tileset, curr_list.at(i).id);
+      auto sp = get_tech_sprite(tileset, curr_list.at(i).id);
       if (sp) {
         ic = QIcon(*sp);
       }

@@ -487,7 +487,7 @@
            <attribute name="title">
             <string>Output</string>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_8">
+           <layout class="QVBoxLayout" name="verticalLayout_8" stretch="0,0,0,0,1">
             <item>
              <widget class="city_info" name="info_wdg" native="true">
               <property name="sizePolicy">
@@ -577,19 +577,6 @@
                <enum>QListView::IconMode</enum>
               </property>
              </widget>
-            </item>
-            <item>
-             <spacer name="verticalSpacer">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
             </item>
            </layout>
           </widget>

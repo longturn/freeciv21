@@ -149,9 +149,6 @@ bool plr_item::setData(int column, const QVariant &value, int role)
  */
 QVariant plr_item::data(int column, int role) const
 {
-  QFont f;
-  QFontMetrics *fm;
-  QPixmap *pix;
   QString str;
   struct player_dlg_column *pdc;
 
@@ -163,14 +160,12 @@ QVariant plr_item::data(int column, int role) const
   }
   pdc = &player_dlg_columns[column];
   switch (player_dlg_columns[column].type) {
-  case COL_FLAG:
-    pix = get_nation_flag_sprite(tileset, nation_of_player(ipplayer));
-    f = *fcFont::instance()->getFont(fonts::default_font);
-    fm = new QFontMetrics(f);
-    *pix = pix->scaledToHeight(fm->height());
-    delete fm;
-    return *pix;
-    break;
+  case COL_FLAG: {
+    auto f = fcFont::instance()->getFont(fonts::default_font);
+    auto fm = std::make_unique<QFontMetrics>(f);
+    return get_nation_flag_sprite(tileset, nation_of_player(ipplayer))
+        ->scaledToHeight(fm->height());
+  } break;
   case COL_COLOR:
     return *get_player_color(tileset, ipplayer);
     break;
@@ -188,9 +183,9 @@ QVariant plr_item::data(int column, int role) const
       return -1;
     }
     return str;
-  default:
-    return QVariant();
   }
+
+  return QVariant();
 }
 
 /**

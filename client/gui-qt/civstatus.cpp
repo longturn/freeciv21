@@ -28,24 +28,22 @@
 
 civstatus::civstatus(QWidget *parent) : fcwidget()
 {
-  QPixmap *spr;
   QLabel *label;
   QImage img, cropped_img;
   QPixmap pix;
   QRect crop;
   int icon_size;
   QFontMetrics *fm;
-  QFont f;
 
   setParent(parent);
   layout = new QHBoxLayout;
   layout->setSizeConstraint(QLayout::SetMinimumSize);
   setProperty("civstatus_bg", true);
-  f = *fcFont::instance()->getFont(fonts::default_font);
+  auto f = fcFont::instance()->getFont(fonts::default_font);
   fm = new QFontMetrics(f);
   icon_size = fm->height() * 7 / 8;
 
-  spr = get_tax_sprite(tileset, O_GOLD);
+  auto spr = get_tax_sprite(tileset, O_GOLD);
   label = new QLabel();
   label->setAlignment(Qt::AlignVCenter);
   img = spr->toImage();

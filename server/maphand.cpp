@@ -2361,7 +2361,6 @@ void map_claim_base(struct tile *ptile, const extra_type *pextra,
 {
   struct base_type *pbase;
   int units_num;
-  bv_player *could_see_unit;
   int i;
 
   if (!tile_has_extra(ptile, pextra)) {
@@ -2369,7 +2368,8 @@ void map_claim_base(struct tile *ptile, const extra_type *pextra,
   }
 
   units_num = unit_list_size(ptile->units);
-  could_see_unit = (units_num > 0 ? new bv_player[units_num] : NULL);
+  auto could_see_unit =
+      (units_num > 0 ? std::make_unique<bv_player[]>(units_num) : nullptr);
 
   i = 0;
   if (pextra->eus != EUS_NORMAL) {

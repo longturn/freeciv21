@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 675ddf4..ff55e03 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -72,8 +72,6 @@ target_include_directories(KF5Archive
+ target_link_libraries(KF5Archive
+     PUBLIC
+         Qt5::Core
+-    PRIVATE
+-        ZLIB::ZLIB
+ )
+ 
+ set_target_properties(KF5Archive PROPERTIES

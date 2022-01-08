@@ -1,0 +1,544 @@
+
+; Modifying this file:
+; You should not modify this file except to make bugfixes or
+; for other "maintenance".  If you want to make custom changes
+; you should create a new datadir subdirectory and copy this file
+; into that directory, and then modify that copy.  Then use the
+; command "rulesetdir <mysubdir>" in the server to have freeciv
+; use your new customized file.
+
+; Note that the freeciv AI may not cope well with anything more
+; than minor changes.
+
+[datafile]
+description="Royale governments data for Freeciv"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 web-compatible"
+format_version=20
+
+[governments]
+during_revolution="Anarchy"
+
+; /* <-- avoid gettext warnings
+;
+; Below: The individual government types, one per section.
+;
+; The actual tag used (the * in [government_*]) does not matter, except
+; it must be unique within this file, and it may be used in debug
+; output when reading this file.
+;
+; For the "official" rulesets, the order of these sections should not
+; be changed because that would break backward compatability with
+; savegames.  (In particular, if Fundamentalism is added to default
+; ruleset, should be added at end.)
+;
+; Notes on fields:
+;
+; name         = translatable name as seen by user
+; rule_name    = (optional) internal name for savegames, rulesets etc; if
+;                not present, "name" is used for this purpose too. Since
+;                the name used in savegames must not change, if you want
+;                to rename an item after a ruleset has been released, you
+;                should set "rule_name" to the original value of "name".
+; reqs         = requirements for this government (see README.effects)
+; graphic      = tag specifing preferred graphic
+; graphic_alt  = alternate graphics tag if preferred is not found;
+;                should be a standard tag if preferred is not;
+;                otherwise may be "-"
+; ai_better    = AI will not consider this government for use if the
+;                government listed here is available
+; ruler_male_title   = The default male ruler title for the government type.
+;                      It's a format string where name of the ruler is marked
+;                      by '%s'.
+;                      Individual nations may override this by their
+;                      own title.
+; ruler_female_title = The default female ruler title for the government type.
+;                      See above ruler_male_title.
+; helptext     = optional help text string; should escape all raw newlines
+;                so that xgettext parsing works
+;
+; */ <-- avoid gettext warnings
+
+;------------------------------------------------------------------------
+[government_anarchy]
+
+name        = _("Anarchy")
+; No reqs
+graphic     = "gov.anarchy"
+graphic_alt = "-"
+
+ruler_male_title = _("Warlord %s")
+ruler_female_title = _("Warlady %s")
+
+helptext = _("\
+Anarchy is simply the absence of any recognizable government.\
+ Citizens are disorganized and unproductive, and will spend all\
+ income as quickly as possible, rather than paying taxes or\
+ conducting research.\
+"),
+; /* xgettext:no-c-format */
+_("\
+* Buildings and technologies do not require any upkeep.\n\
+* Each worked tile that gives more than 2 Food, Shield, or Trade will\
+ suffer a -1 penalty, unless the city working it is celebrating.\
+ (Cities below size 3 will not celebrate.)\n\
+* Each city can support up to 2 units for free; further units each cost\
+ 1 shield per turn.\n\
+* Military units do not cause unhappiness even when deployed aggressively.\n\
+* Military units impose martial law. Up to 3 military units inside a city\
+ will each force 1 unhappy citizen to become content.\n\
+* You have no control over tax rates. Half of the trade income is\
+ simply lost to your economy (less if you have luxury-promoting buildings),\
+ and the remainder all goes to luxuries.\
+ Conventional corruption increases with distance from the capital\
+ (half as fast with knowledge of The Corporation).\n\
+* Base production waste is 30%. This increases with distance from the\
+ capital (half as fast with knowledge of Trade).\n\
+* Big cities with size of 9 or more will get an extra 50 % defense against military attacks. \n\
+* The number of free units will be doubled for cities with size of 9 or more.\n\
+      \n\\n\
+Playing with Anarchy? \n
+You don't usually want to play with anarchy but you need to when there is a need to switch the government. \
+For these situations you may want to plan your production so that you have some gold reserve before switching to anarchy and \
+also not using that many trade tiles while in anarchy. You may also want to explore the options to make your cities to \
+celebrate while in anarchy. This way you may be able to make your cities to celebrate when you switch to your \
+new government. If you have only some bulbs left from getting the governent you want it may make sense to revolt early and \
+complete the research with scientists. This may be very useful especially when you switch away from tribalism or despotism \
+because you may get the desired government turn or two early.
+")
+
+;------------------------------------------------------------------------
+[government_tribal]
+
+name        = _("Tribal")
+; No reqs
+graphic     = "gov.tribal"
+graphic_alt = "s.tax_luxury"
+ai_better   = "Republic"
+
+ruler_male_title = _("Warlord %s")
+ruler_female_title = _("Warlady %s")
+
+helptext = _("\
+Under a Tribal government, you are part ruler of your people. Your\
+ control over your citizens is maintained largely by spiritual counsel.\
+"), _("\
+Compared to Despotism, a Tribal economy is more shield-oriented. Its\
+ bonuses to veterancy can be an advantage in wartime.\
+"),
+; /* xgettext:no-c-format */
+_("\
+* Increases by half the chance of land units getting the next veteran level\
+ after a battle.\n\
+* Each worked tile that gives more than 2 Food, Shield, or Trade will\
+ suffer a -1 penalty, unless the city working it is celebrating.\
+ (Cities below size 3 will not celebrate.)\n\
+* Each city can support up to 2 units for free; further units each cost\
+ 1 shield per turn.\n\
+* Unlike later governments, military units do not cause unhappiness even\
+ when deployed aggressively.\n\
+* Military units impose martial law. Up to 3 military units inside a city\
+ will each force 1 unhappy citizen to become content.\n\
+* Base corruption is 30% (the highest under any government). This\
+ increases with distance from the capital (half as fast with knowledge\
+ of The Corporation).\n\
+* There is no base level of production waste, but an increasing amount\
+ with distance from the capital (half as fast with knowledge of Trade).\n\
+* Big cities with size of 9 or more will get an extra 50 % defense against military attacks. \n\
+* The number of free units will be doubled for cities with size of 9 or more.\n\
+* The number of free units will be doubled for cities with size of 9 or more.\n\
+      \n\\n\
+Playing with Tribal? \n
+Tribal nations get more production and are able to maintain more units for free. \
+Tribal is a very good alternative for someone who is not planning to go Monarchy first. Instead \
+you may want to consider building Hal Saflieni Hypogeum on your capital city and also building \
+the pyramids as fast as possible to that you will get rid of the -1 tile penalty related to anarchy, despotism and tribalism. \
+It will also make sense to revolt during the first turn. This way you may lose less production because of anarchy. \
+If you play well you will get the pyramids around T15 - T20 and this will keep your empire competive even \
+until the mid game. The catch however is that you may be too comfortable with the tribalism and switch to another gov \
+too late. This is why you may want to consider switching around T40 - T60. In short tribalism helps fast expansion more compared \
+to despotism. 
+")
+
+;------------------------------------------------------------------------
+[government_despotism]
+
+name        = _("Despotism")
+; No reqs
+graphic     = "gov.despotism"
+graphic_alt = "-"
+ai_better   = "Monarchy"
+
+ruler_male_title = _("Chief %s")
+ruler_female_title = _("?female:Chief %s")
+
+helptext = _("\
+Under Despotism, you are the absolute ruler of your people.  Your\
+ control over your citizens is maintained largely by martial law.\
+"), _("\
+Compared to Tribalism, a Despotic economy is more trade-oriented.\
+"),
+; /* xgettext:no-c-format */
+_("\
+* Your centers of government (cities with Palace and 2nd\
+ Palace) get a +75% bonus to gold production.\n\
+* Each worked tile that gives more than 2 Food, Shield, or Trade will\
+ suffer a -1 penalty, unless the city working it is celebrating.\
+ (Cities below size 3 will not celebrate.)\n\
+* Each city can support up to 2 units for free; further units each cost\
+ 1 gold per turn.\n\
+* Unlike later governments, military units do not cause unhappiness even\
+ when deployed aggressively.\n\
+* Military units impose martial law. Up to 20 military units inside a city\
+ will each force 1 unhappy citizen to become content.\n\
+* Base corruption is 20%. This increases with distance from the capital\
+ (half as fast with knowledge of The Corporation).\n\
+* Base production waste is 10%. This increases with distance from the\
+ capital (half as fast with knowledge of Trade).\n\
+* Big cities with size of 9 or more will get an extra 50 % defense against military attacks. \n\
+* The number of free units will be doubled for cities with size of 9 or more.\n\
+      \n\\n\
+Playing with Despotism? \n
+With despotism you get slightly better science and if you plan to go for monarchy this may be your choice. \
+Despotism is a very good alternative for someone who is planning to go Monarchy first.\
+While you may want to consider building Hal Saflieni Hypogeum on your capital city and also building \
+the pyramids as fast as possible you may want to focus instead on maxing science and using scientis for getting monarchy really fast. \
+In this case you may want to build te pyramids after revolting and switching to monarchy or maybe even fudamentalism. Then again \
+despotism may be great if you need to defend. It allows a crazy number of units to be used for keeping the people content. This \
+together with pyramids is also great.
+")
+
+;------------------------------------------------------------------------
+[government_monarchy]
+
+name        = _("Monarchy")
+reqs = { "type", "name", "range"
+         "tech", "Monarchy", "Player"
+       }
+graphic     = "gov.monarchy"
+graphic_alt = "-"
+
+ruler_male_title = _("King %s")
+ruler_female_title = _("Queen %s")
+
+helptext = _("\
+Under Monarchy, a king or queen serves as a hereditary figurehead\
+ for your government.\
+"), _("\
+Monarchy gives low unit upkeep costs.\
+"),
+; /* xgettext:no-c-format */
+_("\
+* Your centers of government (cities with Palace and 2nd\
+ Palace) get a +50% bonus to gold production.\n\
+* Celebrating cities produce one extra trade point for every tile which is\
+ already producing trade. (Cities below size 3 will not celebrate.)\n\
+* Each city can support up to 3 units for free (the maximum possible);\
+ further units each cost 1 gold per turn.\n\
+* Each city tolerates up to 3 aggressively deployed military units;\
+ each further unit causes 1 unhappy citizen.\n\
+* Military units impose martial law. Up to 3 military units inside a city\
+ will each force 1 unhappy citizen to become content.\n\
+* Base corruption is 10%. This increases with distance from the capital\
+ (half as fast with knowledge of The Corporation).\n\
+* Base production waste is 10%. This increases with distance from the\
+ capital (half as fast with knowledge of Trade).\n\
+* Big cities with size of 9 or more will get an extra 50 % defense against military attacks. \n\
+* The number of free units will be doubled for cities with size of 9 or more.\
+  The number of units avoiding the military unhappiness will also double at this size.\n\
+  \n\\n\
+Playing with Monarchy? \n
+Monarchy is great for those players who want to play war. You don't get that much gold of production with monarchy but instead it's reasonably good for those players who want to attack attack and attack. In the late early game and early mid game it's a good
+alternative also for those who wish to build and not fight wars. Switching to monarchy will remove the -1 penalty you get from anarchy, despotism and tribalism and this will allow you to ramp up your economy for the better governments to come.
+If you go for monarchy in the early game try to do it fast. Maybe using the scientists for few turns and then getting the tech by T15 - T20. \
+However even the farmers may want to stick with monarchy for some time because of the great unit upkeep for workers and less waste.
+")
+
+;------------------------------------------------------------------------
+[government_communism]
+
+name        = _("Communism")
+reqs = { "type", "name", "range"
+         "tech", "Communism", "Player"
+       }
+graphic     = "gov.communism"
+graphic_alt = "-"
+
+ruler_male_title = _("Comrade %s")
+ruler_female_title = _("?female:Comrade %s")
+
+helptext = _("\
+A Communist government is based on the ideal that all people are\
+ equal.  All goods are owned by the state, rather than by private\
+ citizens.  Communism gives a balance between military and commercial\
+ styles of government.\
+"), _("\
+Communism is a good government for maximizing shield production, and\
+ for large empires.\
+"),
+; /* xgettext:no-c-format */
+_("\
+* City improvements which would normally have an upkeep of 1 gold are\
+ free of upkeep.\n\
+* Each city can support up to 3 units for free (the maximum possible);\
+ further units each cost 1 shield per turn.\n\
+* Each city tolerates up to 3 aggressively deployed military units;\
+ each further unit causes 1 unhappy citizen.\n\
+* Military units impose martial law. Up to 3 military units inside a city\
+ will each force 2 unhappy citizens to become content (the maximum\
+ possible).\n\
+* Base corruption is 30%, but is not affected by distance to the capital.\n\
+* There is no production waste.\n\
+* Big cities with size of 9 or more will get an extra 50 % defense against military attacks. \n\
+* The number of free units will be doubled for cities with size of 9 or more.\
+  The number of units avoiding the military unhappiness will also double at this size.\n\
+    \n\\n\
+Playing with Communism? \n
+Communistic nations are able to grow big, fast and they can have huge production. The downside is that the gold production is low. If you manage to get the Statue of Liberty it may make sense to switch to communism really fast. 
+Also if you have a vast empire and you are allied with someone who has better techs, you may want to play as the commie leader. 
+")
+
+;------------------------------------------------------------------------
+[government_fundamentalism]
+
+name        = _("Fundamentalism")
+reqs = { "type", "name", "range"
+         "tech", "Feudalism", "Player"
+       }
+graphic     = "gov.fundamentalism"
+graphic_alt = "-"
+
+ruler_male_title = _("High Priest %s")
+ruler_female_title = _("High Priestess %s")
+
+helptext = _("\
+Fundamentalism is a form of government organized around a central\
+ set of beliefs. The beliefs, usually religious in nature, form\
+ a rigid guideline for actions and reactions of both the rulers\
+ and the people.\
+"), _("\
+In a fundamentalist society, the people and the rulers are entirely\
+ devoted to their beliefs, and are usually willing to die to\
+ preserve them.\
+"), _("\
+Improvements that normally convert unhappy citizens to content\
+ citizens, produce `tithes' (gold) equivalent to the number\
+ of people they would convert, and require no maintenance.\
+"), _("\
+Fundamentalism is a good government for maximizing gold, and its Fanatics\
+ are useful in wartime, but it has a heavy penalty to technological\
+ progress.\
+"),
+; /* xgettext:no-c-format */
+_("\
+* Base science production is 40% that of other governments. (A\
+ Fundamentalist city with a Library produces roughly as much science as a\
+ city under another government does alone.)\n\
+* Each city can support up to 2 units for free; further units each cost\
+ 2 gold per turn (except for Fanatics).\n\
+* Each city tolerates up to 2 aggressively deployed military units;\
+ each further unit causes 1 unhappy citizen.\n\
+* Base corruption is 15%. This increases with distance from the capital\
+ (half as fast with knowledge of The Corporation).\n\
+* Base production waste is 15%. This increases with distance from the\
+ capital (half as fast with knowledge of Trade).\n\
+* Big cities with size of 9 or more will get an extra 50 % defense against military attacks. \n\
+* The number of free units will be doubled for cities with size of 9 or more.\
+  The number of units avoiding the military unhappiness will also double at this size.\n\
+  \n\\n\
+Playing with fundamentalism? \n
+Fundamentalism is for a player who needs to build lots funda specific units (crusaders, fanatics) fast. \
+This may be useful if you are defending yur nation or buying some time to your ally while that other nation needs to focus on something else. \
+Funda can also be used as an alternative early gov if you need to get lots of gold fast. With the happiness buildings funda is like a money printing machine. \
+Choosing this government also makes sense if you plan to steal your techs while fosusing on building infra.
+")
+
+;------------------------------------------------------------------------
+[government_federation]
+
+name        = _("Federation")
+reqs = { "type", "name", "range"
+         "tech", "Economics", "Player"
+       }
+graphic     = "gov.federation"
+graphic_alt = "s.tax_gold"
+
+ruler_male_title = _("Consul %s")
+ruler_female_title = _("?female:Consul %s")
+
+helptext = _("\
+Federalism is a system in which the power to govern is shared between\
+ national and provincial governments. \
+ This decentralization minimizes the corruption and waste caused by distance\
+ to capital, and avoids separatist movements.\
+"),
+; /* xgettext:no-c-format */
+_("\
+* Each city gets 2 extra luxury points.\n\
+* Celebrating cities produce one extra trade point for every tile which is\
+ already producing trade. (Cities below size 3 will not celebrate.)\n\
+* Each city can support up to 2 units for free; further units each cost\
+ 2 gold per turn.\n\
+* Each city tolerates up to 2 aggressively deployed military units;\
+ each further unit causes 1 unhappy citizen.\n\
+* There is no base level of corruption, but an increasing amount\
+ with distance from the capital (half as much as with most other\
+ governments). Knowledge of The Corporation eliminates this corruption.\n\
+* Base production waste is 30%, but is not affected by distance to the\
+ capital.\n\
+* Has a senate that may prevent declaration of war.\n\
+* Big cities with size of 9 or more will get an extra 50 % defense against military attacks. \n\
+* The number of free units will be doubled for cities with size of 9 or more.\
+  The number of units avoiding the military unhappiness will also double at this size.\n\
+    \n\\n\
+Playing with federation? \n
+Federation may work as a boost for switching into Democracy. If yoiu need to research reasonably \
+fast and there is less need for gold, it may make sense to switch to Federation before you choose another form of govermnent. \
+With Federation you get a nice boost for your science while you are still able to fight wars. \
+However there is a catch to this. You may want to carefully compare your advance to the nations with the other form of government. \
+While Federation receives a generous boost to science, in addition to other bonuses, in the long term it will not be able \
+to compete against democracies. This of course depends on the game you are playing but typically 20 - 30 turns with 
+Federation should be more than enough in the mid game. After that you may want to quit fighting wars and focus on \
+something else or maybe switch to another government.
+")
+
+;------------------------------------------------------------------------
+[government_republic]
+
+name        = _("Republic")
+reqs = { "type", "name", "range"
+         "tech", "The Republic", "Player"
+       }
+graphic     = "gov.republic"
+graphic_alt = "-"
+
+ruler_male_title = _("President %s")
+ruler_female_title = _("?female:President %s")
+
+helptext = _("\
+Under a Republican government, citizens hold an election to select a\
+ representative who will govern them; since elected leaders must\
+ remain popular to remain in control, citizens are given a greater\
+ degree of freedom.  Citizens under the Republic become unhappy\
+ easily, but the self-sufficiency of your citizens allows high levels\
+ of trade.\
+"),
+; /* xgettext:no-c-format */
+_("\
+* Cities produce an extra trade point for every worked land tile that is\
+ already producing trade.\n\
+* Celebrating cities produce a further trade point for every worked tile\
+ (land or water) which is already producing trade. (Cities below size 3\
+ will not celebrate.)\n\
+* Each city can support one unit for free; further units each cost\
+ 1 shield per turn.\n\
+* Each city tolerates a single aggressively deployed military unit;\
+ each further unit causes 1 unhappy citizen.\n\
+* Base corruption is 25%. This increases with distance from the capital\
+ (half as fast with knowledge of The Corporation).\n\
+* Base production waste is 20%. This increases with distance from the\
+ capital (half as fast with knowledge of Trade).\n\
+* Big cities with size of 9 or more will get an extra 50 % defense against military attacks. \n\
+* The number of free units will be doubled for cities with size of 9 or more.\
+  The number of units avoiding the military unhappiness will also double at this size.\n\
+      \n\\n\
+Playing with Republic? \n
+Republic is the fast lane to Democracy and it's quite bad if you plan to fight wars. \
+Unlike with some other governments you can declare wars while in Republic. This however comes with a hefty price unless you manage to \
+keep the wars extremely short or you crush a very weak enemy. Republics can succeed if you have a very low number of units and you afford \
+to focus on building markets, mercantile exchanges and banks instead of military units and huge numbers of workers. \
+One of the best ways to succeed with a Republic is to make peace or alliane with everyone around you and then focus on \
+ramping up your economy. Republic may also work better if your cities have overlapping tiles. If you have littele 
+space for your empire it may make sense to micromanage the worked tiles as Republic as your government. This will allow you to \
+reduce the number of workers since overlapping city improvements will make it possible to use the same improved \
+tile for two or more cities. For example when one city is about to grow (currently getting +3 food) and needs +2 food \
+you may switch a grass tile (irrigated, recource +1 prod and roads) to another city and use a regular plans tile (irrigated, with roads) for the city \
+only needing +2 food. This way you don't produce +1 extra food going to waste and the other city will benefit from the same worker tile. \
+Like always there are many ways to deal with the governments and another way to look at this is saying that in republic you can afford more buildings \
+while in monarchy you can afford more units. Going from monarchy to democracy is a popular route even while in some situations adding \
+fedetation between them might make sense.
+")
+
+;------------------------------------------------------------------------
+[government_democracy]
+
+name        = _("Democracy")
+reqs = { "type", "name", "range"
+         "tech", "Democracy", "Player"
+       }
+graphic     = "gov.democracy"
+graphic_alt = "-"
+
+ruler_male_title = _("Prime Minister %s")
+ruler_female_title = _("?female:Prime Minister %s")
+
+helptext = _("\
+Under Democracy, citizens govern directly by voting on issues.\
+ Democracy offers the highest possible level of trade, but also\
+ offers the most potential for unhappiness; citizens become very\
+ upset during wars.\
+"),
+; /* xgettext:no-c-format */
+_("\
+* Cities produce an extra trade point for every worked land tile that is\
+ already producing trade.\n\
+* Celebrating cities produce a further trade point for every worked tile\
+ (land or water) which is already producing trade. (Cities below size 3\
+ will not celebrate.)\n\
+* Each city can support one unit for free; further units each cost\
+ 2 gold per turn.\n\
+* Each city tolerates a single aggressively deployed military unit;\
+ each further unit causes 2 unhappy citizens.\n\
+* Base corruption is 5%. This increases with distance from the capital\
+ (half as fast with knowledge of The Corporation).\n\
+* Base production waste is 25%. This increases with distance from the\
+ capital (half as fast with knowledge of Trade).\n\
+* Has a senate that may prevent declaration of war.\n\
+* Big cities with size of 9 or more will get an extra 50 % defense against military attacks. \n\
+* The number of free units will be doubled for cities with size of 9 or more.\
+  Unlike with other governments, the number of units avoiding the military unhappiness will NOT be doubled at this size.\n\
+      \n\\n\
+Playing with Democracy? \n
+Playing with a Democracy is probably the most effective way of creating a super powe but this comes with a price. \
+Unlike with some other setups LTT Democracies are quite vulnerable while the player is ramping up the economy. \
+The most common reason to have Democracy as your form of goverment is to build extremely powerful economy that will \
+simply crush those nations daring to act against your happy Democracy as you as it's eternal leader. If you are not planning to \
+fight wars and you can afford to build markets and other trade related buildings, Democracy is probably the best choice you can make. \
+With Democracy you will get the best possible effect for compound interest and if uyou manage to make your cities to \
+celebrate this effect is even more powerful. Democracies are able to maintain a decent army and lots of workers. \
+One very powerful strategy for you to consider is to switch between max tax and max sci. If you are confident enough you may want to \
+delay scientific advance and focus on max taxing so that your economy will grow really fast. There is however a catch to this. \
+If you postpone researching too much your enemy may be able to surprise yuu and your outdated army. With a democatic nation it's
+also extremely important to keep your citizens not only content but happy and celebrating. Celebraring gives you +1 extra trade for \
+each tile already producing trade if you manage to keep your cities celebrating. On some other setups using more than 20% lux \
+is usually considered bad but with LTT's trade building setup it may be worth celebrating even with +40% lux. It all depends \
+on the situiation but it may be worth it if you manage to avoid building some happiness buildings on the new cities while \
+focusing the resources on the big and old cities producing most of your gold. Also, if you are attacked or need to fight wars \
+it may make sense to home some units on the low production cities. That way if those units cause unhappiness \
+they will do it for those cities that matter less to you.
+ ")
+
+; /* <-- avoid gettext warnings
+;
+; Multipliers (aka policies)
+;
+; name                    = translatable name as seen by user
+; rule_name               = (optional) internal name for savegames, rulesets
+;                           etc; if not present, "name" is used for this
+;                           purpose too. Since the name used in savegames must
+;                           not change, if you want to rename an item after a
+;                           ruleset has been released, you should set
+;                           "rule_name" to the original value of "name".
+; default                 = default value (as presented in UI)
+; start                   = minimum value (as presented in UI)
+; stop                    = maximum value (as presented in UI)
+; step                    = minimum increase/decrease (as presented in UI)
+; offset                  = offset/factor control how UI values are turned
+; factor                  = into effect values for use in effects.ruleset.
+;                           effect_value = (ui_value + offset) * (factor/100)
+;                           Optional; by default offset=0, factor=100, so
+;                           that UI values are used as-is.
+; reqs                    = requirements for adjusting this policy (see README.effects)
+; helptext                = optional help text string; should escape all raw
+;                           newlines so that xgettext parsing works
+;
+; */ <-- avoid gettext warnings

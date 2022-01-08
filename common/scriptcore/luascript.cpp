@@ -16,11 +16,20 @@
 #include <cstdlib>
 #include <ctime>
 
+// Qt
+#include <QFile>
+
 /* dependencies/lua */
 extern "C" {
 #include "lua.h"
 #include "lualib.h"
 }
+
+/* dependencies/tolua */
+#include "tolua.h"
+
+// Sol
+#include "sol/sol.hpp"
 
 // utility
 #include "fcintl.h"
@@ -31,8 +40,11 @@ extern "C" {
 #include "map.h"
 
 /* common/scriptcore */
+#include "api_common_intl.h"
+#include "api_common_utilities.h"
 #include "luascript_func.h"
 #include "luascript_signal.h"
+#include "tolua_common_a_gen.h"
 
 #include "luascript.h"
 
@@ -285,12 +297,20 @@ struct fc_lua *luascript_new(luascript_log_func_t output_fct,
     luascript_blacklist(fcl->state, luascript_unsafe_symbols_permissive);
   }
 
+  luascript_init(fcl);
+
+  return fcl;
+}
+
+/**
+   Sets the freeciv lua struct for a lua state.
+ */
+void luascript_init(fc_lua *fcl)
+{
   // Save the freeciv lua struct in the lua state.
   lua_pushstring(fcl->state, LUASCRIPT_GLOBAL_VAR_NAME);
   lua_pushlightuserdata(fcl->state, fcl);
   lua_settable(fcl->state, LUA_REGISTRYINDEX);
-
-  return fcl;
 }
 
 /**
@@ -334,6 +354,76 @@ void luascript_destroy(struct fc_lua *fcl)
     }
     delete[] fcl;
   }
+}
+
+/**
+ * Loads a script from a Qt resource file and executes it.
+ */
+static void luascript_exec_resource(lua_State *L, const QString &filename)
+{
+  Q_INIT_RESOURCE(scriptcore);
+
+  QFile in(filename);
+  if (!in.open(QFile::ReadOnly)) {
+    qCritical() << "Could not find resource:" << in.fileName();
+    qFatal("Missing resource");
+  }
+  const auto data = in.readAll();
+
+  // We trust that it loads.
+  sol::state_view lua(L);
+  lua.script(data.data(), in.fileName().toStdString());
+
+  Q_CLEANUP_RESOURCE(scriptcore);
+}
+
+/**
+ * Registers tolua_common_a functions and modules.
+ */
+static void luascript_common_a_register(sol::state_view state)
+{
+  // Intl module
+  state["_"] = api_intl__;
+  state["N_"] = api_intl_N_;
+  state["Q_"] = api_intl_Q_;
+  state["PL_"] = api_intl_PL_;
+
+  // log module
+  // clang-format off
+  sol::table log = state.create_table_with(
+      "base", api_utilities_log_base,
+      "deprecation_warning", api_utilities_deprecation_warning);
+  log.new_enum("level",
+      "FATAL",   LOG_FATAL,
+      "ERROR",   LOG_ERROR,
+      "WARN",    LOG_WARN,
+      "NORMAL",  LOG_NORMAL,
+      "VERBOSE", LOG_VERBOSE,
+      "DEBUG",   LOG_DEBUG);
+  // clang-format on
+  state["log"] = log;
+
+  // Global functions
+  state["random"] = api_utilities_random;
+  state["fc_version"] = api_utilities_fc_version;
+}
+
+/**
+ * Runs tolua_common_a.lua.
+ */
+void luascript_common_a(lua_State *L)
+{
+  tolua_common_a_open(L);
+  luascript_common_a_register(L);
+  luascript_exec_resource(L, QStringLiteral(":/lua/tolua_common_a.lua"));
+}
+
+/**
+ * Runs tolua_common_z.lua.
+ */
+void luascript_common_z(lua_State *L)
+{
+  luascript_exec_resource(L, QStringLiteral(":/lua/tolua_common_z.lua"));
 }
 
 /**

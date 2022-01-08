@@ -714,7 +714,7 @@ void send_attribute_block(const struct player *pplayer,
   fc_assert_ret(pplayer->attribute_block.length > 0
                 && pplayer->attribute_block.length < MAX_ATTRIBUTE_BLOCK);
 
-  chunks = (pplayer->attribute_block.length - 1) / ATTRIBUTE_CHUNK_SIZE;
+  chunks = (pplayer->attribute_block.length - 1) / ATTRIBUTE_CHUNK_SIZE + 1;
   bytes_left = pplayer->attribute_block.length;
 
   connection_do_buffer(pconn);

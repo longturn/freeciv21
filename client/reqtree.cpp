@@ -112,7 +112,7 @@ static void node_rectangle_minimum_size(struct tree_node *node, int *width,
 {
   int max_icon_height; // maximal height of icons below the text
   int icons_width_sum; // sum of icons width plus space between them
-  QPixmap *sprite;
+  const QPixmap *sprite;
   int swidth, sheight;
 
   if (node->is_dummy) {
@@ -992,7 +992,7 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
   Q_UNUSED(canvas_y)
   int i, j, k;
   int swidth, sheight;
-  QPixmap *sprite;
+  const QPixmap *sprite;
   QColor *color;
   req_tooltip_help *rttp;
 

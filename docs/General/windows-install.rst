@@ -1,7 +1,7 @@
 Windows Installation
 ********************
 
-The Freeciv21 community provides a Microsoft Windows\ |reg| installer when new releases are tagged. The 
+The Freeciv21 community provides a Microsoft Windows\ |reg| installer when new releases are tagged. The
 following is instructions for installing on Windows.
 
 To obtain the installer, go to the Freeciv21 `Releases <https://github.com/longturn/freeciv21/releases>`_
@@ -18,7 +18,12 @@ not` then jump to the non-admin_ section below.
 
 If you :emphasis:`are` logged on as a local Administrator, a Windows User Access Control (UAC) window will
 appear and ask: "Do you want to allow this app from an unknown publisher to make changes to your device".
-Click :guilabel:`Yes` and the following panel will load after an uncompress process has completed.
+Click :guilabel:`Yes` and the welcome panel will load after an uncompress process has completed.
+
+.. image:: ../_static/images/windows-installer/00-Defender.png
+    :align: center
+    :height: 400
+    :alt: Windows Defender
 
 Click :guilabel:`Next` to continue...
 
@@ -72,7 +77,7 @@ uncheck the box before clicking :guilabel:`Finish` to complete the installation.
     :height: 400
     :alt: Finish Panel
 
-You will find an icon for the client on the Desktop or in the Start Menu at :menuselection:`Start Menu --> 
+You will find an icon for the client on the Desktop or in the Start Menu at :menuselection:`Start Menu -->
 Freeciv21 [Version] --> Freeciv21 Client`.
 
 .. _non-admin:
@@ -128,7 +133,7 @@ uncheck the box before clicking :guilabel:`Finish` to complete the installation.
     :height: 400
     :alt: Finish Panel
 
-You will find an icon for the client on the Desktop or in the Start Menu at :menuselection:`Start Menu --> 
+You will find an icon for the client on the Desktop or in the Start Menu at :menuselection:`Start Menu -->
 Freeciv21 [Version] --> Freeciv21 Client`.
 
 .. |reg|    unicode:: U+000AE .. REGISTERED SIGN

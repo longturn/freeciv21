@@ -35,35 +35,20 @@
    Contructor for units_select
  */
 units_select::units_select(struct tile *ptile, QWidget *parent)
+    : QMenu(parent)
 {
-  QPoint p, final_p;
-
-  setParent(parent);
   utile = ptile;
   pix = NULL;
   show_line = 0;
   highligh_num = -1;
   ufont.setItalic(true);
-  info_font = *fcFont::instance()->getFont(fonts::notify_label);
+  info_font = fcFont::instance()->getFont(fonts::notify_label);
   update_units();
   h_pix = NULL;
   create_pixmap();
-  p = mapFromGlobal(QCursor::pos());
-  cw = new close_widget(this);
   setMouseTracking(true);
-  final_p.setX(p.x());
-  final_p.setY(p.y());
-  if (p.x() + width() > parentWidget()->width()) {
-    final_p.setX(parentWidget()->width() - width());
-  }
-  if (p.y() - height() < 0) {
-    final_p.setY(height());
-  }
-  move(final_p.x(), final_p.y() - height());
-  setFocus();
-  /* Build fails with qt5 connect style for static functions
-   * Qt5.2 so dont update */
-  QTimer::singleShot(10, this, &units_select::update_img);
+
+  popup(mapFromGlobal(QCursor::pos()));
 }
 
 /**
@@ -73,7 +58,6 @@ units_select::~units_select()
 {
   delete h_pix;
   delete pix;
-  delete cw;
 }
 
 /**
@@ -181,12 +165,9 @@ void units_select::create_pixmap()
 
       if (client_is_global_observer()
           || unit_owner(punit) == client.conn.playing) {
-        int rate, f;
-        QString str;
-
-        rate = unit_type_get(punit)->move_rate;
-        f = ((punit->fuel) - 1);
-        str = QString(move_points_text(punit->moves_left, false));
+        auto rate = unit_type_get(punit)->move_rate;
+        auto f = ((punit->fuel) - 1);
+        auto str = QString(move_points_text(punit->moves_left, false));
         if (utype_fuel(unit_type_get(punit))) {
           str = str + "("
                 + QString(
@@ -203,7 +184,7 @@ void units_select::create_pixmap()
     }
     p.end();
     setFixedWidth(pix->width() + 20);
-    setFixedHeight(pix->height() + 2 * (fm.height() + 6));
+    setFixedHeight(pix->height() + 3 * fm.height() + 2 * 6);
     qDeleteAll(pix_list.begin(), pix_list.end());
   }
 }
@@ -241,11 +222,6 @@ void units_select::mouseMoveEvent(QMouseEvent *event)
 void units_select::mousePressEvent(QMouseEvent *event)
 {
   struct unit *punit;
-  if (event->button() == Qt::RightButton) {
-    was_destroyed = true;
-    close();
-    destroy();
-  }
   if (event->button() == Qt::LeftButton && highligh_num != -1) {
     update_units();
     if (highligh_num >= unit_list.count()) {
@@ -253,20 +229,8 @@ void units_select::mousePressEvent(QMouseEvent *event)
     }
     punit = unit_list.at(highligh_num);
     unit_focus_set(punit);
-    was_destroyed = true;
-    close();
-    destroy();
   }
-}
-
-/**
-   Update image, because in constructor theme colors
-   are uninitialized in QPainter
- */
-void units_select::update_img()
-{
-  create_pixmap();
-  update();
+  QMenu::mousePressEvent(event);
 }
 
 /**
@@ -279,7 +243,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
   int h, i;
   int *f_size;
   QPen pen;
-  QString str, str2;
+  QString str, str2, unit_name;
   struct unit *punit;
   int point_size = info_font.pointSize();
   int pixel_size = info_font.pixelSize();
@@ -292,6 +256,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
   if (highligh_num != -1 && highligh_num < unit_list.count()) {
     punit = unit_list.at(highligh_num);
     // TRANS: HP - hit points
+    unit_name = unit_name_translation(punit);
     str2 = QString(_("%1 HP:%2/%3"))
                .arg(unit_activity_text(punit), QString::number(punit->hp),
                     QString::number(unit_type_get(punit)->hp));
@@ -317,6 +282,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
     painter->setFont(info_font);
     painter->drawText(10, h, str);
     if (highligh_num != -1 && highligh_num < unit_list.count()) {
+      painter->drawText(10, height() - 5 - h, unit_name);
       painter->drawText(10, height() - 5, str2);
     }
     // draw scroll
@@ -339,7 +305,6 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
   } else {
     info_font.setPointSize(*f_size);
   }
-  cw->put_to_corner();
 }
 
 /**
@@ -347,22 +312,12 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
  */
 void units_select::paintEvent(QPaintEvent *event)
 {
-  QPainter painter;
+  QMenu::paintEvent(event); // Draw background
 
+  QPainter painter;
   painter.begin(this);
   paint(&painter, event);
   painter.end();
-}
-
-/**
-   Function from abstract fcwidget to update menu, its not needed
-   cause widget is easy closable via right mouse click
- */
-void units_select::update_menu()
-{
-  was_destroyed = true;
-  close();
-  destroy();
 }
 
 /**
@@ -409,7 +364,7 @@ void units_select::update_units()
 void units_select::closeEvent(QCloseEvent *event)
 {
   queen()->mapview_wdg->setFocus();
-  QWidget::closeEvent(event);
+  QMenu::closeEvent(event);
 }
 
 /**
@@ -434,19 +389,6 @@ void units_select::wheelEvent(QWheelEvent *event)
   create_pixmap();
   update();
   event->accept();
-}
-
-/**
-   Keyboard handler for units_select
- */
-void units_select::keyPressEvent(QKeyEvent *event)
-{
-  if (event->key() == Qt::Key_Escape) {
-    was_destroyed = true;
-    close();
-    destroy();
-  }
-  QWidget::keyPressEvent(event);
 }
 
 /**

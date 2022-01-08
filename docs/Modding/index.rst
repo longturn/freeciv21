@@ -1,11 +1,10 @@
 Modding
 *******
 
-Modding
-  The Modding category is an area for documentation editors to provide tips and other details on modifying
-  aspects of Freeciv21 such as Rulesets, Musicsets, Soundsets and Tilesets. All of these areas allow for a
-  large amount of varyability in game play that is not hardcoded in the software. This is one of the
-  strengths of Freeciv21.
+The Modding category is an area for documentation editors to provide tips and other details on modifying
+aspects of Freeciv21 such as Rulesets, Musicsets, Soundsets and Tilesets. All of these areas allow for a
+large amount of varyability in game play that is not hardcoded in the software. This is one of the
+strengths of Freeciv21.
 
 There are five major areas of Modding that are often called "Modpacks" and are written by "Modders". The
 sections below describe these major Modding areas.
@@ -39,14 +38,35 @@ Have a look at :file:`civ2civ3.serv` and associated files in :file:`/civ2civ3` f
 Refer to Ruleset specific documents:
 
 .. toctree::
-  Rulesets/index.rst
+  Rulesets/overview.rst
+  Rulesets/effects.rst
+  Rulesets/actions.rst
+  Rulesets/achievements.rst
+  Rulesets/nations.rst
   :maxdepth: 1
 
 Tilesets
 ========
 
+Freeciv21 allows full customization of the appearance of the map including terrain, cities, units, buildings,
+and a few elements of the user interface. Freeciv21 already ships with a variety of presets that can be
+selected from the menu by navigating to :menuselection:`Game --> Load Another Tileset`.
+
+.. figure:: /_static/images/tilesets_demo.png
+  :alt: A Freeciv21 map with the ``hexemplio`` and ``isophex`` tilesets.
+  :align: center
+
+  The same map with two tilesets: ``hexemplio`` (left) and ``isophex`` (right).
+
+Nearly every aspect of the map rendering can be customized. In practice, this is achieved using a myriad of
+small images, called :emphasis:`sprites`, that are assembled together to form the final map. For instance,
+the units above are made of up to four sprites drawn on top of each other: the flag, the health bar, the
+yellow activity indicator, and finally the image that represents the unit itself. Customization is made
+possible thanks to a system of configuration files that specify where to find the sprites and how to assemble
+them.
+
 Tilesets are a collection of :literal:`spec` files that fully define the look and feel of the game map, units,
-buildings, etc. This is effectively the graphics layer of Freeciv21. A tileset a Modder can create a whole new
+buildings, etc. This is effectively the graphics layer of Freeciv21. A tileset Modder can create a whole new
 custom graphics look and feel. The file layout for a tileset can vary depending on how the author wants to
 break out the varying layers. It will always start with a top-level :literal:`.tilespec` file and with a
 directory of the same name will have :literal:`.png` graphics files and associated :literal:`.spec` files to
@@ -56,7 +76,11 @@ Have a look at :file:`amplio.tilespec` and associated files in :file:`/amplio` f
 guides document specific aspects of tileset creation:
 
 .. toctree::
+  Tilesets/tutorial.rst
+  Tilesets/graphics.rst
   Tilesets/debugger.rst
+  Tilesets/compatibility.rst
+  Rulesets/nations.rst
   :maxdepth: 1
 
 Soundsets
@@ -70,15 +94,23 @@ will start with a top-lvel :literal:`.soundset` file and with a directory of the
 
 Have a look at :file:`stdsounds.soundspec` and associated files in :file:`/stdsounds` for an example.
 
+.. toctree::
+  sound.rst
+  :maxdepth: 1
+
 Musicsets
 =========
 
 Musicsets are a collection of :literal:`spec` files that allow a Modder to add Music files to play as a
 soundtrack inside the game. Game music follows the game based on the nation selected and the mood. The mood is
-essentially binary: peace or war. Musicsets will start with a top-lvel :literal:`.musicset` file and with a
+essentially binary: peace or war. Musicsets will start with a top-lvel :literal:`.musicspec` file and with a
 directory of the same name will have :literal:`.ogg` sound files to play in the client.
 
 Have a look at :file:`stdmusic.musicspec` and associated files in :file:`/stdmusic` for an example.
+
+.. toctree::
+  musicsets.rst
+  :maxdepth: 1
 
 Scenarios
 =========
@@ -87,6 +119,10 @@ Scenarios are custom saved games that a player can load and play. A Modder will 
 a map of the scenario and enable/change varying aspects of the game to set up the game scenario.
 
 Have a look at the scenarios shipped with Freeciv21 in :file:`/scenarios` for some examples.
+
+.. toctree::
+  scenarios.rst
+  :maxdepth: 1
 
 Installer
 =========
