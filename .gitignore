@@ -41,7 +41,7 @@ build.ninja
 *_autogen
 
 # Build directories
-build*
+/build*
 
 # IDE files
 .cache
