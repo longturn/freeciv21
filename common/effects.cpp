@@ -1022,11 +1022,10 @@ void get_effect_req_text(const struct effect *peffect, char *buf,
   requirement_vector_iterate(&peffect->reqs, preq)
   {
     if (buf[0] != '\0') {
-      if (preq->present) {
-        fc_strlcat(buf, Q_("?req-list-separator:+"), buf_len);
-      } else {
-        fc_strlcat(buf, Q_("?req-list-separator:+not "), buf_len);
-      }
+      fc_strlcat(buf, Q_("?req-list-separator:+"), buf_len);
+    }
+    if (!preq->present) {
+      fc_strlcat(buf, Q_("?req-list-separator:not "), buf_len);
     }
 
     universal_name_translation(&preq->source, buf + qstrlen(buf),
