@@ -25,4 +25,3 @@ target_include_directories(scripting PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(scripting PUBLIC server)
 target_link_libraries(scripting PUBLIC tolua)
-target_link_libraries(scripting PRIVATE sol2)

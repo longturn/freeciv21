@@ -47,5 +47,5 @@ target_include_directories(scriptcore PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(scriptcore PUBLIC common)
 target_link_libraries(scriptcore PUBLIC tolua)
-target_link_libraries(scriptcore PRIVATE sol2)
+target_link_libraries(scriptcore PUBLIC sol2)
 target_link_libraries(scriptcore PRIVATE Qt5::Core)
