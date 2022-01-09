@@ -99,19 +99,32 @@ typedef const struct city_list_link City_List_Link;
 #define SPECENUM_VALUE17NAME "Action"
 #include "specenum_gen.h"
 
-// Optionally define compatibility functions to translate between tolua and
-// sol2. See:
+// Define compatibility functions to translate between tolua and sol2. See:
 // https://sol2.readthedocs.io/en/latest/api/stack.html#extension-points
-#ifdef SOL_COMPATIBLE
-
-// Sol2
 #include "sol/forward.hpp"
+#include "tolua.h"
 
 #define DEFINE_SOL_TOLUA_COMPAT(TYPE_)                                      \
-  inline TYPE_ *sol_lua_get(sol::types<TYPE_ *>, lua_State *L, int index,   \
-                            sol::stack::record &)                           \
+  inline TYPE_ *sol_lua_check(sol::types<TYPE_ *>, lua_State *L, int index, \
+                              sol::stack::record &)                         \
   {                                                                         \
     return (TYPE_ *) tolua_tousertype(L, index, 0);                         \
+  }                                                                         \
+                                                                            \
+  template <typename Handler>                                               \
+  inline bool sol_lua_check(sol::types<TYPE_ *> expected, lua_State *L,     \
+                            int index, Handler &&handler,                   \
+                            sol::stack::record &)                           \
+  {                                                                         \
+    tolua_Error err;                                                        \
+    if (tolua_isusertype(L, index, #TYPE_, 0, &err))                        \
+      return true;                                                          \
+    /* Use LUA_TUSERDATA instead of sol::type::userdata to avoid including  \
+     * sol.hpp everywhere. */                                               \
+    handler(L, index, (sol::type) LUA_TUSERDATA,                            \
+            (sol::type) lua_type(L, index),                                 \
+            "could not convert to " #TYPE_);                                \
+    return false;                                                           \
   }                                                                         \
                                                                             \
   inline int sol_lua_push(sol::types<TYPE_ *>, lua_State *L, TYPE_ *object) \
@@ -124,5 +137,3 @@ DEFINE_SOL_TOLUA_COMPAT(Connection)
 DEFINE_SOL_TOLUA_COMPAT(Player)
 
 #undef DEFINE_SOL_TOLUA_COMPAT
-
-#endif // SOL_COMPATIBLE
