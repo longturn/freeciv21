@@ -282,11 +282,12 @@ bool script_fcdb_do_string(struct connection *caller, const char *str)
  */
 static bool script_fcdb_database_init()
 {
-  try {
-    const sol::protected_function database_init = (*fcl)["database_init"];
-    return database_init().valid();
-  } catch (const std::exception &e) {
-    qCritical() << e.what();
+  const sol::protected_function database_init = (*fcl)["database_init"];
+  auto result = database_init();
+  if (result.valid()) {
+    return true;
+  } else {
+    qCritical() << sol::error(result).what();
   }
   return false;
 }
@@ -296,11 +297,12 @@ static bool script_fcdb_database_init()
  */
 static bool script_fcdb_database_free()
 {
-  try {
-    const sol::protected_function database_free = (*fcl)["database_free"];
-    return database_free().valid();
-  } catch (const std::exception &e) {
-    qCritical() << e.what();
+  const sol::protected_function database_free = (*fcl)["database_free"];
+  auto result = database_free();
+  if (result.valid()) {
+    return true;
+  } else {
+    qCritical() << sol::error(result).what();
   }
   return false;
 }
@@ -311,17 +313,14 @@ static bool script_fcdb_database_free()
 bool script_fcdb_user_delegate_to(connection *pconn, player *pplayer,
                                   const char *delegate, bool &success)
 {
-  try {
-    const sol::protected_function user_delegate_to =
-        (*fcl)["user_delegate_to"];
-    const sol::optional<bool> result =
-        user_delegate_to(pconn, pplayer, delegate);
-    if (result) {
-      success = *result;
-      return true;
-    }
-  } catch (const std::exception &e) {
-    qCritical() << e.what();
+  const sol::protected_function user_delegate_to =
+      (*fcl)["user_delegate_to"];
+  auto result = user_delegate_to(pconn, pplayer, delegate);
+  if (result.valid()) {
+    success = result;
+    return true;
+  } else {
+    qCritical() << sol::error(result).what();
   }
   return false;
 }
@@ -331,15 +330,13 @@ bool script_fcdb_user_delegate_to(connection *pconn, player *pplayer,
  */
 bool script_fcdb_user_exists(connection *pconn, bool &exists)
 {
-  try {
-    const sol::protected_function user_exists = (*fcl)["user_exists"];
-    const sol::optional<bool> result = user_exists(pconn);
-    if (result) {
-      exists = *result;
-      return true;
-    }
-  } catch (const std::exception &e) {
-    qCritical() << e.what();
+  const sol::protected_function user_exists = (*fcl)["user_exists"];
+  auto result = user_exists(pconn);
+  if (result.valid()) {
+    exists = result;
+    return true;
+  } else {
+    qCritical() << sol::error(result).what();
   }
   return false;
 }
@@ -349,11 +346,12 @@ bool script_fcdb_user_exists(connection *pconn, bool &exists)
  */
 bool script_fcdb_user_save(connection *pconn, const char *password)
 {
-  try {
-    const sol::protected_function user_save = (*fcl)["user_save"];
-    return user_save(pconn, password).valid();
-  } catch (const std::exception &e) {
-    qCritical() << e.what();
+  const sol::protected_function user_save = (*fcl)["user_save"];
+  auto result = user_save(pconn, password);
+  if (result.valid()) {
+    return true;
+  } else {
+    qCritical() << sol::error(result).what();
   }
   return false;
 }
@@ -364,16 +362,13 @@ bool script_fcdb_user_save(connection *pconn, const char *password)
 bool script_fcdb_user_take(connection *requester, connection *taker,
                            player *player, bool will_observe, bool &success)
 {
-  try {
-    const sol::protected_function user_take = (*fcl)["user_take"];
-    const sol::optional<bool> result =
-        user_take(requester, taker, player, will_observe);
-    if (result) {
-      success = *result;
-      return true;
-    }
-  } catch (const std::exception &e) {
-    qCritical() << e.what();
+  const sol::protected_function user_take = (*fcl)["user_take"];
+  auto result = user_take(requester, taker, player, will_observe);
+  if (result.valid()) {
+    success = result;
+    return true;
+  } else {
+    qCritical() << sol::error(result).what();
   }
   return false;
 }
@@ -384,15 +379,14 @@ bool script_fcdb_user_take(connection *requester, connection *taker,
 bool script_fcdb_user_verify(connection *pconn, const char *username,
                              bool &success)
 {
-  try {
-    const sol::protected_function user_verify = (*fcl)["user_verify"];
-    const sol::optional<bool> result = user_verify(pconn, username);
-    if (result) {
-      success = *result;
-      return true;
-    }
-  } catch (const std::exception &e) {
-    qCritical() << e.what();
+  const sol::protected_function user_verify = (*fcl)["user_verify"];
+  auto result = user_verify(pconn, username);
+  if (result.valid()) {
+    success = result;
+    return true;
+  } else {
+    qCritical() << sol::error(result).what();
+    success = false;
   }
   return false;
 }
