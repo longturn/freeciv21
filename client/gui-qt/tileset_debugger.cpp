@@ -46,6 +46,8 @@ namespace freeciv {
 tileset_debugger::tileset_debugger(QWidget *parent) : QDialog(parent)
 {
   setWindowTitle(_("Tileset debugger"));
+  resize(600, 500);
+
   auto tabs = new QTabWidget;
 
   auto layout = new QVBoxLayout;
