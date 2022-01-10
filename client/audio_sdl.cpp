@@ -30,6 +30,8 @@
 
 #include "audio_sdl.h"
 
+#include <array>
+
 struct sample {
   Mix_Chunk *wave = nullptr;
   QString tag;
