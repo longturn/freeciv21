@@ -118,7 +118,7 @@ layer_terrain::layer_terrain(struct tileset *ts, int number)
 bool layer_terrain::create_matching_group(const QString &name)
 {
   if (name.isEmpty()) {
-    tileset_error(LOG_ERROR,
+    tileset_error(tileset(), LOG_ERROR,
                   _("[layer%d] match_types: names cannot be empty."),
                   m_number);
     return false;
@@ -126,7 +126,7 @@ bool layer_terrain::create_matching_group(const QString &name)
 
   if (m_matching_groups.count(name.at(0)) != 0) {
     tileset_error(
-        LOG_ERROR,
+        tileset(), LOG_ERROR,
         _("[layer%d] match_types: \"%s\" initial ('%c') is not unique."),
         m_number, qUtf8Printable(name), qUtf8Printable(name.at(0)));
     return false;
@@ -150,7 +150,7 @@ bool layer_terrain::add_tag(const QString &tag, const QString &sprite_name)
 {
   bool ok = true;
   if (m_terrain_tag_info.count(tag) > 0) {
-    tileset_error(LOG_ERROR,
+    tileset_error(tileset(), LOG_ERROR,
                   "Multiple [tile] sections containing terrain tag \"%s\".",
                   qUtf8Printable(tag));
     ok = false;
@@ -226,7 +226,7 @@ bool layer_terrain::set_tag_matches_with(const QString &tag,
 void layer_terrain::enable_blending(const QString &tag)
 {
   if (!tileset_is_isometric(tileset())) {
-    tileset_error(LOG_ERROR,
+    tileset_error(tileset(), LOG_ERROR,
                   _("Blending is only supported for isometric tilesets"));
     return;
   }
@@ -247,7 +247,7 @@ void layer_terrain::initialize_terrain(const terrain *terrain)
     info = m_terrain_tag_info[terrain->graphic_alt];
   } else if (m_number == 0) {
     // All terrains should be present in layer 0...
-    tileset_error(LOG_WARN,
+    tileset_error(tileset(), LOG_WARN,
                   _("Terrain \"%s\": no graphic tile \"%s\" or \"%s\"."),
                   terrain_rule_name(terrain), terrain->graphic_str,
                   terrain->graphic_alt);
@@ -289,7 +289,7 @@ void layer_terrain::initialize_terrain(const terrain *terrain)
     case MATCH_PAIR:
     case MATCH_FULL:
       tileset_error(
-          LOG_ERROR,
+          tileset(), LOG_ERROR,
           _("Not implemented CELL_WHOLE + MATCH_FULL/MATCH_PAIR."));
       return;
     }
@@ -343,7 +343,8 @@ void layer_terrain::initialize_cell_whole_match_none(const terrain *terrain,
   // check for base sprite, allowing missing sprites above base
   if (m_number == 0 && info.sprites.empty()) {
     // TRANS: 'base' means 'base of terrain gfx', not 'military base'
-    tileset_error(LOG_ERROR, _("Missing base sprite for tag \"%s\"."),
+    tileset_error(tileset(), LOG_ERROR,
+                  _("Missing base sprite for tag \"%s\"."),
                   qUtf8Printable(buffer));
   }
 }
@@ -518,7 +519,7 @@ void layer_terrain::initialize_cell_corner_match_full(const terrain *terrain,
       // can free it.
       m_allocated.push_back(sprite);
     } else {
-      tileset_error(LOG_ERROR,
+      tileset_error(tileset(), LOG_ERROR,
                     "Terrain graphics sprite for tag \"%s\" missing.",
                     qUtf8Printable(buffer));
     }
@@ -560,7 +561,7 @@ void layer_terrain::initialize_blending(const terrain *terrain,
 
   if (blender == nullptr) {
     tileset_error(
-        LOG_ERROR,
+        tileset(), LOG_ERROR,
         "Cannot find sprite for blending terrain with tag %s on layer %d",
         qUtf8Printable(info.sprite_name), m_number);
     return;
@@ -635,7 +636,7 @@ std::vector<drawn_sprite> layer_terrain::fill_sprite_array(
 layer_terrain::matching_group *layer_terrain::group(const QString &name)
 {
   if (name.isEmpty() || m_matching_groups.count(name[0]) == 0) {
-    tileset_error(LOG_ERROR, _("No matching group called %s"),
+    tileset_error(tileset(), LOG_ERROR, _("No matching group called %s"),
                   qUtf8Printable(name));
     return nullptr;
   }
