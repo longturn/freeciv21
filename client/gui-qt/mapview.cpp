@@ -581,7 +581,8 @@ void tileset_changed(void)
   QWidget *w;
 
   // Refresh the tileset debugger if it exists
-  if (auto debugger = queen()->mapview_wdg->debugger(); debugger != nullptr) {
+  if (auto debugger = queen()->mapview_wdg->debugger();
+      debugger != nullptr) {
     // When not zoomed in, unscaled_tileset is null
     // When zoomed in, unscaled_tileset is not null and holds the log
     debugger->refresh(unscaled_tileset ? unscaled_tileset : tileset);
