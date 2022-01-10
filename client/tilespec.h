@@ -90,6 +90,11 @@ enum direction4 { DIR4_NORTH = 0, DIR4_SOUTH, DIR4_EAST, DIR4_WEST };
 constexpr direction8 DIR4_TO_DIR8[4] = {DIR8_NORTH, DIR8_SOUTH, DIR8_EAST,
                                         DIR8_WEST};
 
+struct tileset_log_entry {
+  QtMsgType level;
+  QString message;
+};
+
 struct tileset;
 
 extern struct tileset *tileset;
@@ -97,7 +102,8 @@ extern struct tileset *unscaled_tileset;
 
 const QVector<QString> *get_tileset_list(const struct option *poption);
 
-void tileset_error(QtMsgType level, const char *format, ...);
+void tileset_error(struct tileset *t, QtMsgType level, const char *format,
+                   ...);
 
 void tileset_init(struct tileset *t);
 void tileset_free(struct tileset *tileset);
@@ -105,6 +111,8 @@ void tileset_load_tiles(struct tileset *t);
 void tileset_free_tiles(struct tileset *t);
 void tileset_ruleset_reset(struct tileset *t);
 bool tileset_is_fully_loaded();
+
+std::vector<tileset_log_entry> tileset_log(const struct tileset *t);
 
 void finish_loading_sprites(struct tileset *t);
 

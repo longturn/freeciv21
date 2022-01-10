@@ -313,6 +313,8 @@ struct tileset {
   char *description;
   float scale;
 
+  std::vector<tileset_log_entry> log;
+
   char *for_ruleset;
 
   std::vector<std::unique_ptr<freeciv::layer>> layers;
@@ -409,7 +411,7 @@ static void tileset_player_free(struct tileset *t, int plrid);
 /**
    Called when ever there's problem in ruleset/tileset compatibility
  */
-void tileset_error(QtMsgType level, const char *format, ...)
+void tileset_error(struct tileset *t, QtMsgType level, const char *format, ...)
 {
   va_list args;
 
@@ -417,11 +419,14 @@ void tileset_error(QtMsgType level, const char *format, ...)
   auto buf = QString::vasprintf(format, args);
   va_end(args);
 
-  log_base(level, "%s", qUtf8Printable(buf));
-
+  if (t != nullptr) {
+    t->log.push_back(tileset_log_entry{level, buf});
+  }
   if (level == QtCriticalMsg || level == QtFatalMsg) {
     show_tileset_error(buf);
   }
+
+  log_base(level, "%s", qUtf8Printable(buf));
 
   if (level == QtFatalMsg) {
     exit(EXIT_FAILURE);
@@ -1020,7 +1025,7 @@ bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
     delete list;
 
     if (!tileset) {
-      tileset_error(LOG_FATAL,
+      tileset_error(nullptr, LOG_FATAL,
                     _("No usable default tileset found, aborting!"));
     }
 
@@ -1134,7 +1139,7 @@ bool tilespec_reread(const char *new_tileset_name,
 
   if (tileset_map_topo_compatible(wld.map.topology_id, tileset)
       == TOPO_INCOMP_HARD) {
-    tileset_error(LOG_NORMAL, _("Map topology and tileset incompatible."));
+    tileset_error(tileset, LOG_NORMAL, _("Map topology and tileset incompatible."));
   }
 
   terrain_type_iterate(pterrain)
@@ -1275,7 +1280,7 @@ static QPixmap *load_gfx_file(const char *gfx_filename)
 /**
    Ensure that the big sprite of the given spec file is loaded.
  */
-static void ensure_big_sprite(struct specfile *sf)
+static void ensure_big_sprite(struct tileset *t, struct specfile *sf)
 {
   struct section_file *file;
   const char *gfx_filename;
@@ -1289,13 +1294,13 @@ static void ensure_big_sprite(struct specfile *sf)
    * to be reloaded, but most of the time it's just loaded once, the small
    * sprites are extracted, and then it's freed. */
   if (!(file = secfile_load(sf->file_name, true))) {
-    tileset_error(LOG_FATAL, _("Could not open '%s':\n%s"), sf->file_name,
+    tileset_error(t, LOG_FATAL, _("Could not open '%s':\n%s"), sf->file_name,
                   secfile_error());
   }
 
   if (!check_tilespec_capabilities(file, "spec", SPEC_CAPSTR, sf->file_name,
                                    true)) {
-    tileset_error(LOG_FATAL, _("Incompatible tileset capabilities"));
+    tileset_error(t, LOG_FATAL, _("Incompatible tileset capabilities"));
   }
 
   gfx_filename = secfile_lookup_str(file, "file.gfx");
@@ -1303,7 +1308,7 @@ static void ensure_big_sprite(struct specfile *sf)
   sf->big_sprite = load_gfx_file(gfx_filename);
 
   if (!sf->big_sprite) {
-    tileset_error(LOG_FATAL,
+    tileset_error(t, LOG_FATAL,
                   _("Could not load gfx file for the spec file \"%s\"."),
                   sf->file_name);
   }
@@ -1323,12 +1328,12 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
   int i;
 
   if (!(file = secfile_load(sf->file_name, true))) {
-    tileset_error(LOG_FATAL, _("Could not open '%s':\n%s"), sf->file_name,
+    tileset_error(t, LOG_FATAL, _("Could not open '%s':\n%s"), sf->file_name,
                   secfile_error());
   }
   if (!check_tilespec_capabilities(file, "spec", SPEC_CAPSTR, sf->file_name,
                                    true)) {
-    tileset_error(LOG_FATAL, _("Specfile %s has incompatible capabilities"),
+    tileset_error(t, LOG_FATAL, _("Specfile %s has incompatible capabilities"),
                   sf->file_name);
   }
 
@@ -1482,7 +1487,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
    Returns the correct name of the gfx file (with path and extension)
    Must be free'd when no longer used
  */
-static char *tilespec_gfx_filename(const char *gfx_filename)
+static char *tilespec_gfx_filename(struct tileset *t, const char *gfx_filename)
 {
   auto supported = QImageReader::supportedImageFormats();
   supported.prepend("png");
@@ -1499,7 +1504,7 @@ static char *tilespec_gfx_filename(const char *gfx_filename)
     }
   }
 
-  tileset_error(
+  tileset_error(t,
       LOG_FATAL,
       _("Couldn't find a supported gfx file extension for \"%s\"."),
       gfx_filename);
@@ -1958,7 +1963,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     dir = dir_by_tileset_name(c);
 
     if (!direction8_is_valid(dir)) {
-      tileset_error(LOG_ERROR,
+      tileset_error(t, LOG_ERROR,
                     "Tileset \"%s\": unknown "
                     "unit_default_orientation \"%s\"",
                     t->name, c);
@@ -1972,7 +1977,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   }
 
   c = secfile_lookup_str(file, "tilespec.main_intro_file");
-  t->main_intro_filename = tilespec_gfx_filename(c);
+  t->main_intro_filename = tilespec_gfx_filename(t, c);
   log_debug("intro file %s", t->main_intro_filename);
 
   // Layer order
@@ -2073,7 +2078,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   // Tile drawing info.
   sections = secfile_sections_by_name_prefix(file, TILE_SECTION_PREFIX);
   if (NULL == sections || 0 == section_list_size(sections)) {
-    tileset_error(LOG_ERROR,
+    tileset_error(t, LOG_ERROR,
                   _("No [%s] sections supported by tileset \"%s\"."),
                   TILE_SECTION_PREFIX, fname);
     tileset_stop_read(t, file, fname, sections, layer_order);
@@ -2090,7 +2095,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       if (c_tag != NULL) {
         tag = c_tag;
       } else {
-        tileset_error(LOG_ERROR, _("No terrain tag given in section [%s]."),
+        tileset_error(t, LOG_ERROR, _("No terrain tag given in section [%s]."),
                       sec_name);
         tileset_stop_read(t, file, fname, sections, layer_order);
         return nullptr;
@@ -2373,19 +2378,18 @@ QPixmap *load_sprite(struct tileset *t, const QString &tag_name, bool scale,
         ss->sprite = load_gfx_file(ss->file);
       }
       if (!ss->sprite) {
-        tileset_error(LOG_FATAL,
+        tileset_error(t, LOG_FATAL,
                       _("Couldn't load gfx file \"%s\" for sprite '%s'."),
                       ss->file, qUtf8Printable(tag_name));
       }
     } else {
       int sf_w, sf_h;
 
-      ensure_big_sprite(ss->sf);
+      ensure_big_sprite(t, ss->sf);
       get_sprite_dimensions(ss->sf->big_sprite, &sf_w, &sf_h);
       if (ss->x < 0 || ss->x + ss->width > sf_w || ss->y < 0
           || ss->y + ss->height > sf_h) {
-        tileset_error(
-            LOG_ERROR,
+        tileset_error(t, LOG_ERROR,
             _("Sprite '%s' in file \"%s\" isn't within the image!"),
             qUtf8Printable(tag_name), ss->sf->file_name);
         return NULL;
@@ -2432,7 +2436,7 @@ static void unload_sprite(struct tileset *t, const QString &tag_name)
   do {                                                                      \
     t->sprites.field = load_sprite(t, tag, true, true);                     \
     if (t->sprites.field == NULL) {                                         \
-      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."),           \
+      tileset_error(t, LOG_FATAL, _("Sprite for tag '%s' missing."),           \
                     qUtf8Printable(tag));                                   \
     }                                                                       \
   } while (false)
@@ -2441,7 +2445,7 @@ static void unload_sprite(struct tileset *t, const QString &tag_name)
   do {                                                                      \
     t->sprites.field = load_sprite(t, tag, true, false);                    \
     if (t->sprites.field == NULL) {                                         \
-      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."),           \
+      tileset_error(t, LOG_FATAL, _("Sprite for tag '%s' missing."),           \
                     qUtf8Printable(tag));                                   \
     }                                                                       \
   } while (false)
@@ -2450,7 +2454,7 @@ static void unload_sprite(struct tileset *t, const QString &tag_name)
   do {                                                                      \
     t->sprites.field = load_sprite(t, qUtf8Printable(tag), false, false);   \
     if (t->sprites.field == NULL) {                                         \
-      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."),           \
+      tileset_error(t, LOG_FATAL, _("Sprite for tag '%s' missing."),           \
                     qUtf8Printable(tag));                                   \
     }                                                                       \
   } while (false)
@@ -2463,7 +2467,7 @@ static void unload_sprite(struct tileset *t, const QString &tag_name)
       t->sprites.field = load_sprite(t, alt, true, true);                   \
     }                                                                       \
     if (t->sprites.field == NULL) {                                         \
-      tileset_error(LOG_FATAL,                                              \
+      tileset_error(t, LOG_FATAL,                                              \
                     _("Sprite for tags '%s' and alternate '%s' are "        \
                       "both missing."),                                     \
                     qUtf8Printable(tag), qUtf8Printable(alt));              \
@@ -2543,7 +2547,7 @@ void tileset_setup_specialist_type(struct tileset *t, Specialist_type_id id)
 
   // Still nothing? Give up.
   if (j == 0) {
-    tileset_error(LOG_FATAL, _("No graphics for specialist \"%s\"."), tag);
+    tileset_error(t, LOG_FATAL, _("No graphics for specialist \"%s\"."), tag);
   }
 }
 
@@ -2568,7 +2572,7 @@ static void tileset_setup_citizen_types(struct tileset *t)
     }
     t->sprites.citizen[i].count = j;
     if (j == 0) {
-      tileset_error(LOG_FATAL, _("No graphics for citizen \"%s\"."), name);
+      tileset_error(t, LOG_FATAL, _("No graphics for citizen \"%s\"."), name);
     }
   }
 }
@@ -2871,7 +2875,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     sprite_vector_append(&t->sprites.citybar.occupancy, sprite);
   }
   if (t->sprites.citybar.occupancy.size < 2) {
-    tileset_error(LOG_FATAL,
+    tileset_error(t, LOG_FATAL,
                   _("Missing necessary citybar.occupancy_N sprites."));
   }
 
@@ -2967,7 +2971,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   buffer = QStringLiteral("upkeep.unhappy");
   t->sprites.upkeep.unhappy.push_back(load_sprite(t, buffer, true, true));
   if (!t->sprites.upkeep.unhappy.back()) {
-    tileset_error(LOG_FATAL, "Missing sprite upkeep.unhappy");
+    tileset_error(t, LOG_FATAL, "Missing sprite upkeep.unhappy");
   }
   for (i = 1;; i++) {
     buffer = QStringLiteral("upkeep.unhappy%1").arg(QString::number(i));
@@ -3022,7 +3026,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     sprite_vector_append(&t->sprites.colors.overlays, sprite);
   }
   if (i == 0) {
-    tileset_error(LOG_FATAL,
+    tileset_error(t, LOG_FATAL,
                   _("Missing overlay-color sprite colors.overlay_0."));
   }
 
@@ -3095,7 +3099,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
         {ntw / 2, 0}, {0, nth / 2}, {ntw / 2, nth / 2}, {0, 0}};
 
     if (!darkness) {
-      tileset_error(LOG_FATAL, _("Sprite tx.darkness missing."));
+      tileset_error(t, LOG_FATAL, _("Sprite tx.darkness missing."));
     }
     for (i = 0; i < 4; i++) {
       t->darkness_layer->set_sprite(
@@ -3114,7 +3118,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
       if (sprite) {
         t->darkness_layer->set_sprite(i, *sprite);
       } else {
-        tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."),
+        tileset_error(t, LOG_FATAL, _("Sprite for tag '%s' missing."),
                       qUtf8Printable(buffer));
       }
     }
@@ -3128,7 +3132,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
       if (sprite) {
         t->darkness_layer->set_sprite(i, *sprite);
       } else {
-        tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."),
+        tileset_error(t, LOG_FATAL, _("Sprite for tag '%s' missing."),
                       qUtf8Printable(buffer));
       }
     }
@@ -3252,7 +3256,7 @@ QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
     return sp;
   }
 
-  tileset_error(
+  tileset_error(t,
       level, _("Don't have graphics tags \"%s\" or \"%s\" for %s \"%s\"."),
       tag, alt, what, name);
 
@@ -3344,7 +3348,7 @@ void tileset_setup_unit_type(struct tileset *t, struct unit_type *ut)
 
   if (!tileset_setup_unit_type_from_tag(t, uidx, ut->graphic_str)
       && !tileset_setup_unit_type_from_tag(t, uidx, ut->graphic_alt)) {
-    tileset_error(LOG_FATAL,
+    tileset_error(t, LOG_FATAL,
                   _("Missing %s unit sprite for tags \"%s\" and "
                     "alternative \"%s\"."),
                   utype_rule_name(ut), ut->graphic_str, ut->graphic_alt);
@@ -3352,7 +3356,7 @@ void tileset_setup_unit_type(struct tileset *t, struct unit_type *ut)
 
   if (!t->sprites.units.icon[uidx]) {
     if (!direction8_is_valid(t->unit_default_orientation)) {
-      tileset_error(LOG_FATAL,
+      tileset_error(t, LOG_FATAL,
                     "Unit type %s has no unoriented sprite and "
                     "tileset has no unit_default_orientation.",
                     utype_rule_name(ut));
@@ -3416,7 +3420,7 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
     if (!t->estyle_hash->contains(tag)) {
       tag = pextra->graphic_alt;
       if (!t->estyle_hash->contains(tag)) {
-        tileset_error(LOG_FATAL, _("No extra style for \"%s\" or \"%s\"."),
+        tileset_error(t, LOG_FATAL, _("No extra style for \"%s\" or \"%s\"."),
                       pextra->graphic_str, pextra->graphic_alt);
       } else {
         qDebug("Using alternate graphic \"%s\" "
@@ -3466,7 +3470,7 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
               load_sprite(t, tag, true, true);
         }
         if (!t->sprites.extras[id].u.cardinals[i]) {
-          tileset_error(LOG_FATAL,
+          tileset_error(t, LOG_FATAL,
                         _("No cardinal-style graphics \"%s*\" for "
                           "extra \"%s\""),
                         tag, extra_rule_name(pextra));
@@ -3492,7 +3496,7 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
           load_sprite(t, pextra->act_gfx_alt2, true, true);
     }
     if (t->sprites.extras[id].activity == NULL) {
-      tileset_error(LOG_FATAL,
+      tileset_error(t, LOG_FATAL,
                     _("Missing %s building activity sprite for tags \"%s\" "
                       "and alternatives \"%s\" and \"%s\"."),
                     extra_rule_name(pextra), pextra->activity_gfx,
@@ -3509,7 +3513,7 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
       t->sprites.extras[id].rmact =
           load_sprite(t, pextra->rmact_gfx_alt, true, true);
       if (t->sprites.extras[id].rmact == NULL) {
-        tileset_error(LOG_FATAL,
+        tileset_error(t, LOG_FATAL,
                       _("Missing %s removal activity sprite for tags \"%s\" "
                         "and alternative \"%s\"."),
                       extra_rule_name(pextra), pextra->rmact_gfx,
@@ -3594,7 +3598,7 @@ static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
   } else if (extrastyle == ESTYLE_RIVER) {
     if (!load_river_sprites(t, &t->sprites.extras[id].u.road.ru.rivers,
                             tag)) {
-      tileset_error(LOG_FATAL,
+      tileset_error(t, LOG_FATAL,
                     _("No river-style graphics \"%s*\" for extra \"%s\""),
                     tag, extra_rule_name(pextra));
     }
@@ -3694,7 +3698,7 @@ void tileset_setup_nation_flag(struct tileset *t, struct nation_type *nation)
   }
   if (!flag || !shield) {
     // Should never get here because of the f.unknown fallback.
-    tileset_error(LOG_FATAL, _("Nation %s: no national flag."),
+    tileset_error(t, LOG_FATAL, _("Nation %s: no national flag."),
                   nation_rule_name(nation));
   }
 
@@ -5170,11 +5174,11 @@ void tileset_setup_city_tiles(struct tileset *t, int style)
 
     for (style = 0; style < game.control.styles_count; style++) {
       if (t->sprites.city.tile->styles[style].land_num_thresholds == 0) {
-        tileset_error(LOG_FATAL, _("City style \"%s\": no city graphics."),
+        tileset_error(t, LOG_FATAL, _("City style \"%s\": no city graphics."),
                       city_style_rule_name(style));
       }
       if (t->sprites.city.occupied->styles[style].land_num_thresholds == 0) {
-        tileset_error(LOG_FATAL,
+        tileset_error(t, LOG_FATAL,
                       _("City style \"%s\": no occupied graphics."),
                       city_style_rule_name(style));
       }
@@ -5923,6 +5927,14 @@ void tileset_ruleset_reset(struct tileset *t)
    Is tileset in sane state?
  */
 bool tileset_is_fully_loaded() { return !tileset_update; }
+
+/**
+ * Get tileset log (warnings, errors, etc.)
+ */
+std::vector<tileset_log_entry> tileset_log(const struct tileset *t)
+{
+  return t->log;
+}
 
 /**
    Return tileset name

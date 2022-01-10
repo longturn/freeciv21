@@ -3311,7 +3311,8 @@ void popup_tileset_suggestion_dialog(void)
     forced_tileset_name = game.control.preferred_tileset;
     if (!tilespec_reread(game.control.preferred_tileset, true,
                          king()->map_scale)) {
-      tileset_error(LOG_ERROR, _("Can't load requested tileset %s."),
+      tileset_error(nullptr, LOG_ERROR,
+                    _("Can't load requested tileset %s."),
                     game.control.preferred_tileset);
     }
   });

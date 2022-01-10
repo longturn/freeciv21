@@ -2057,7 +2057,8 @@ void handle_map_info(int xsize, int ysize, int topology_id)
 
   if (tileset_map_topo_compatible(topology_id, tileset)
       == TOPO_INCOMP_HARD) {
-    tileset_error(LOG_NORMAL, _("Map topology and tileset incompatible."));
+    tileset_error(tileset, LOG_NORMAL,
+                  _("Map topology and tileset incompatible."));
   }
 
   wld.map.topology_id = topology_id;
