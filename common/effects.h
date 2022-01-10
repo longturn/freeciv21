@@ -301,6 +301,8 @@
 #define SPECENUM_VALUE125NAME "Illegal_Action_HP_Cost"
 #define SPECENUM_VALUE128 EFT_NUKE_IMPROVEMENT_PCT
 #define SPECENUM_VALUE128NAME "Nuke_Improvement_Pct"
+#define SPECENUM_VALUE129 EFT_HP_REGEN_MIN
+#define SPECENUM_VALUE129NAME "HP_Regen_Min"
 // keep this last
 #define SPECENUM_COUNT EFT_COUNT
 #include "specenum_gen.h"
