@@ -2378,9 +2378,10 @@ QPixmap *load_sprite(struct tileset *t, const QString &tag_name, bool scale,
         ss->sprite = load_gfx_file(ss->file);
       }
       if (!ss->sprite) {
-        tileset_error(t, LOG_FATAL,
+        tileset_error(t, LOG_ERROR,
                       _("Couldn't load gfx file \"%s\" for sprite '%s'."),
                       ss->file, qUtf8Printable(tag_name));
+        return nullptr;
       }
     } else {
       int sf_w, sf_h;
