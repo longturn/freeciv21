@@ -580,7 +580,11 @@ void tileset_changed(void)
   science_report *sci_rep;
   QWidget *w;
 
-  queen()->mapview_wdg->debugger()->refresh(tileset);
+  // Refresh the tileset debugger if it exists
+  if (auto debugger = queen()->mapview_wdg->debugger(); debugger != nullptr) {
+    debugger->refresh(tileset);
+  }
+
   update_unit_info_label(get_units_in_focus());
   destroy_city_dialog();
   // Update science report if open
