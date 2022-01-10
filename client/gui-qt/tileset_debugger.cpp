@@ -25,7 +25,9 @@
 // utility
 #include "fcintl.h"
 
+#include <QHeaderView>
 #include <QLabel>
+#include <QListWidget>
 #include <QPainter>
 #include <QToolBar>
 #include <QTreeWidget>
@@ -44,30 +46,55 @@ namespace freeciv {
 tileset_debugger::tileset_debugger(QWidget *parent) : QDialog(parent)
 {
   setWindowTitle(_("Tileset debugger"));
+  auto tabs = new QTabWidget;
 
   auto layout = new QVBoxLayout;
+  layout->addWidget(tabs);
+  layout->setContentsMargins(0, 0, 0, 0);
   setLayout(layout);
 
-  auto toolbar = new QToolBar;
-  toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-  layout->addWidget(toolbar);
+  // Log tab
+  {
+    m_messages = new QListWidget;
+    tabs->addTab(m_messages, _("Messages"));
 
-  m_pick_action =
-      toolbar->addAction(QIcon::fromTheme("pointer"), _("Pick tile"));
-  m_pick_action->setToolTip(_("Pick a tile to inspect on the map"));
-  m_pick_action->setCheckable(true);
-  connect(m_pick_action, &QAction::toggled, this,
-          &tileset_debugger::pick_tile);
+    m_messages->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    m_messages->setSelectionMode(QAbstractItemView::ContiguousSelection);
+    m_messages->setTextElideMode(Qt::ElideNone);
+    m_messages->setWordWrap(true);
+    m_messages->setSizeAdjustPolicy(
+        QAbstractItemView::AdjustToContentsOnFirstShow);
+    refresh_messages(tileset);
+  }
 
-  m_label = new QLabel;
-  layout->addWidget(m_label);
+  // Tile inspector tab
+  {
+    auto tab = new QWidget;
+    tabs->addTab(tab, _("Inspector"));
+    auto layout = new QVBoxLayout;
+    tab->setLayout(layout);
 
-  m_content = new QTreeWidget;
-  m_content->setHeaderHidden(true);
-  m_content->setSelectionMode(QAbstractItemView::NoSelection);
-  layout->addWidget(m_content, 100);
+    auto toolbar = new QToolBar;
+    toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    layout->addWidget(toolbar);
 
-  set_tile(nullptr);
+    m_pick_action =
+        toolbar->addAction(QIcon::fromTheme("pointer"), _("Pick tile"));
+    m_pick_action->setToolTip(_("Pick a tile to inspect on the map"));
+    m_pick_action->setCheckable(true);
+    connect(m_pick_action, &QAction::toggled, this,
+            &tileset_debugger::pick_tile);
+
+    m_label = new QLabel;
+    layout->addWidget(m_label);
+
+    m_content = new QTreeWidget;
+    m_content->setHeaderHidden(true);
+    m_content->setSelectionMode(QAbstractItemView::NoSelection);
+    layout->addWidget(m_content, 100);
+
+    set_tile(nullptr);
+  }
 }
 
 /**
@@ -169,9 +196,51 @@ void tileset_debugger::set_tile(const ::tile *t)
 /**
  * Enters or exits tile picking mode.
  */
+void tileset_debugger::refresh(const struct tileset *t)
+{
+  // Refresh the tile info, if any
+  set_tile(m_tile);
+
+  // Reload messages
+  refresh_messages(t);
+}
+
+/**
+ * Enters or exits tile picking mode.
+ */
 void tileset_debugger::pick_tile(bool active)
 {
   emit tile_picking_requested(active);
+}
+
+/**
+ * Refresh the messages list
+ */
+void tileset_debugger::refresh_messages(const struct tileset *t)
+{
+  fc_assert_ret(t != nullptr);
+
+  m_messages->clear();
+
+  const auto log = tileset_log(t);
+  for (std::size_t i = 0; i < log.size(); ++i) {
+    auto item = new QListWidgetItem;
+    switch (log[i].level) {
+    case QtFatalMsg:
+    case QtCriticalMsg:
+      item->setIcon(QIcon::fromTheme(QStringLiteral("data-error")));
+      break;
+    case QtWarningMsg:
+      item->setIcon(QIcon::fromTheme(QStringLiteral("data-warning")));
+      break;
+    case QtInfoMsg:
+    case QtDebugMsg:
+      item->setIcon(QIcon::fromTheme(QStringLiteral("data-information")));
+      break;
+    }
+    item->setText(log[i].message);
+    m_messages->addItem(item);
+  }
 }
 
 } // namespace freeciv

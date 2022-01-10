@@ -63,6 +63,8 @@ public:
 
   bool menu_click;
 
+  freeciv::tileset_debugger *debugger() const { return m_debugger; }
+
 public slots:
   void show_debugger();
   void hide_debugger();

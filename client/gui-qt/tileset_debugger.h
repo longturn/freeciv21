@@ -13,9 +13,11 @@
 
 class QAction;
 class QLabel;
+class QListWidget;
 class QTreeWidget;
 
 struct tile;
+struct tileset;
 
 namespace freeciv {
 
@@ -25,6 +27,8 @@ class tileset_debugger : public QDialog {
 public:
   explicit tileset_debugger(QWidget *parent = nullptr);
   virtual ~tileset_debugger();
+
+  void refresh(const struct tileset *t);
 
   const ::tile *tile() const { return m_tile; }
   void set_tile(const ::tile *t);
@@ -36,9 +40,12 @@ private slots:
   void pick_tile(bool active);
 
 private:
+  void refresh_messages(const struct tileset *t);
+
   const ::tile *m_tile;
   QLabel *m_label;
   QAction *m_pick_action;
+  QListWidget *m_messages;
   QTreeWidget *m_content;
 };
 
