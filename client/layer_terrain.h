@@ -18,6 +18,10 @@
 
 #include <QPixmap>
 
+#include <array>
+#include <map>
+#include <memory>
+
 namespace freeciv {
 
 class layer_terrain : public layer {

@@ -18,6 +18,8 @@
 
 #include <QPixmap>
 
+#include <array>
+
 namespace freeciv {
 
 #define SPECENUM_NAME darkness_style
