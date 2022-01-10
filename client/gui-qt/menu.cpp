@@ -2593,7 +2593,7 @@ void mr_menu::slot_city_growth() { key_city_growth_toggle(); }
 void mr_menu::zoom_in()
 {
   king()->map_scale = king()->map_scale * 1.2f;
-  tilespec_reread(tileset_basename(tileset), true, king()->map_scale);
+  tilespec_reread(tileset_basename(tileset), true, king()->map_scale, true);
 }
 
 /**
@@ -2602,7 +2602,7 @@ void mr_menu::zoom_in()
 void mr_menu::zoom_reset()
 {
   king()->map_scale = 1.0f;
-  tilespec_reread(tileset_basename(tileset), true, king()->map_scale);
+  tilespec_reread(tileset_basename(tileset), true, king()->map_scale, true);
 }
 
 /**
@@ -2620,7 +2620,7 @@ void mr_menu::zoom_scale_fonts()
 void mr_menu::zoom_out()
 {
   king()->map_scale = king()->map_scale / 1.2f;
-  tilespec_reread(tileset_basename(tileset), true, king()->map_scale);
+  tilespec_reread(tileset_basename(tileset), true, king()->map_scale, true);
 }
 
 /**

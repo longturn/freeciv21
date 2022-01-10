@@ -582,7 +582,9 @@ void tileset_changed(void)
 
   // Refresh the tileset debugger if it exists
   if (auto debugger = queen()->mapview_wdg->debugger(); debugger != nullptr) {
-    debugger->refresh(tileset);
+    // When not zoomed in, unscaled_tileset is null
+    // When zoomed in, unscaled_tileset is not null and holds the log
+    debugger->refresh(unscaled_tileset ? unscaled_tileset : tileset);
   }
 
   update_unit_info_label(get_units_in_focus());
