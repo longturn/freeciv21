@@ -422,9 +422,6 @@ void tileset_error(struct tileset *t, QtMsgType level, const char *format, ...)
   if (t != nullptr) {
     t->log.push_back(tileset_log_entry{level, buf});
   }
-  if (level == QtCriticalMsg || level == QtFatalMsg) {
-    show_tileset_error(buf);
-  }
 
   log_base(level, "%s", qUtf8Printable(buf));
 
