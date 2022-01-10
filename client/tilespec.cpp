@@ -1053,7 +1053,7 @@ bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
    Returns TRUE iff new tileset has been succesfully loaded.
  */
 bool tilespec_reread(const char *new_tileset_name,
-                     bool game_fully_initialized, float scale)
+                     bool game_fully_initialized, float scale, bool is_zoom)
 {
   int id;
   struct tile *center_tile;
@@ -1170,6 +1170,15 @@ bool tilespec_reread(const char *new_tileset_name,
 
   for (id = 0; id < game.control.styles_count; id++) {
     tileset_setup_city_tiles(tileset, id);
+  }
+
+  if (is_zoom) {
+    // Zooming in or out should not trigger the tileset error warning dialog.
+    // This hides the fact that we reload the tileset completely when zomming
+    // in or out. It's a hacky solution (the tileset might have changed), but
+    // so is our zoom handling. To refresh the tileset, use the dedicated
+    // shortcut.
+    tileset->log.clear();
   }
 
   if (state < C_S_RUNNING) {

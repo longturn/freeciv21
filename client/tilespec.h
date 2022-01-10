@@ -120,7 +120,7 @@ void finish_loading_sprites(struct tileset *t);
 bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
                        bool global_default);
 bool tilespec_reread(const char *tileset_name, bool game_fully_initialized,
-                     float scale);
+                     float scale, bool is_zoom = false);
 void tilespec_reread_callback(struct option *poption);
 void tilespec_reread_frozen_refresh(const char *tname);
 
