@@ -463,6 +463,7 @@ QRadioButton::indicator:checked:pressed {
 QListView {
   background-color: #414a57;
   border: none;
+  color: white;
 }
 
 QListView:item::hover {
