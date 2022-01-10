@@ -89,5 +89,3 @@ GUI_FUNC_PROTO(bool, request_transport, struct unit *pcargo,
                struct tile *ptile)
 
 GUI_FUNC_PROTO(void, update_infra_dialog, void)
-
-void show_tileset_error(QString msg);

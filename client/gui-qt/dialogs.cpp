@@ -3644,30 +3644,6 @@ void action_selection_close(void)
 void show_tech_gained_dialog(Tech_type_id tech) { Q_UNUSED(tech) }
 
 /**
-   Show tileset error dialog.
- */
-void show_tileset_error(QString msg)
-{
-  QString buf;
-
-  buf = QString(_("Tileset problem, it's probably incompatible with the"
-                  " ruleset:\n%1"))
-            .arg(msg);
-
-  if (king() != nullptr) {
-    QMessageBox *ask = new QMessageBox(king()->central_wdg);
-
-    ask->setText(buf);
-    ask->setStandardButtons(QMessageBox::Ok);
-    ask->setWindowTitle(_("Tileset error"));
-    ask->setAttribute(Qt::WA_DeleteOnClose);
-    // FIXME emscripten won't like this, but if we come here we're crashing
-    // anyway
-    ask->exec();
-  }
-}
-
-/**
    Popup dialog for upgrade units
  */
 void popup_upgrade_dialog(struct unit_list *punits)
