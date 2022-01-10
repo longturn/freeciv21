@@ -3660,7 +3660,9 @@ void show_tileset_error(QString msg)
     ask->setStandardButtons(QMessageBox::Ok);
     ask->setWindowTitle(_("Tileset error"));
     ask->setAttribute(Qt::WA_DeleteOnClose);
-    ask->show();
+    // FIXME emscripten won't like this, but if we come here we're crashing
+    // anyway
+    ask->exec();
   }
 }
 
