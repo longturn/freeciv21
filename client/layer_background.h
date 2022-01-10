@@ -17,6 +17,9 @@
 
 #include <QPixmap>
 
+#include <array>
+#include <memory>
+
 namespace freeciv {
 
 class layer_background : public layer {
