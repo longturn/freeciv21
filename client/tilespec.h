@@ -113,6 +113,7 @@ void tileset_ruleset_reset(struct tileset *t);
 bool tileset_is_fully_loaded();
 
 std::vector<tileset_log_entry> tileset_log(const struct tileset *t);
+bool tileset_has_error(const struct tileset *t);
 
 void finish_loading_sprites(struct tileset *t);
 

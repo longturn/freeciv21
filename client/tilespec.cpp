@@ -5935,6 +5935,15 @@ std::vector<tileset_log_entry> tileset_log(const struct tileset *t)
 }
 
 /**
+ * Checks if the tileset had any error message (LOG_ERROR).
+ */
+bool tileset_has_error(const struct tileset *t)
+{
+  return std::any_of(t->log.begin(), t->log.end(),
+                     [](auto &entry) { return entry.level == LOG_ERROR; });
+}
+
+/**
    Return tileset name
  */
 const char *tileset_name_get(struct tileset *t) { return t->given_name; }
