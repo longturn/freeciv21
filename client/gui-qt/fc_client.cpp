@@ -212,6 +212,7 @@ void fc_client::switch_page(int new_pg)
     qobject_cast<page_load *>(pages[PAGE_LOAD])->update_load_page();
     break;
   case PAGE_GAME:
+    tileset_changed();
     if (!gui_options.gui_qt_show_titlebar) {
       setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
     }
