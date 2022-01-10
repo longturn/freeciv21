@@ -710,7 +710,6 @@ void layer_terrain::fill_terrain_sprite_array(
         }
       }
       if (Q_LIKELY(info.sprites[tileno] != nullptr)) {
-
         sprs.emplace_back(tileset(), info.sprites[tileno], true,
                           info.offset_x, info.offset_y);
       }
