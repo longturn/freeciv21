@@ -124,22 +124,6 @@ private:
 
   /// Every terrain drawn in this layer appears here
   std::map<int, terrain_info> m_terrain_info;
-
-  // CELL_WHOLE
-  // len(match_with) == 0 or 1 => MATCH_NONE => 1 sprite (or random)       1
-  // ex: amplio2 base layer
-  // len(match_with) == 2, identical => MATCH_SAME => n0e1s0w1            16
-  // ex: amplio2 mountains/hills, forest/jungle
-  // len(match_with) == 2, different => MATCH_PAIR => doesn't exist
-  // len(match_with) > 2 => MATCH_FULL => doesn't exist
-
-  // CELL_CORNER
-  // len(match_with) == 0 or 1 => MATCH_NONE => x_cell_[urdl] 4 ex: useless??
-  // unused at least len(match_with) == 2, identical => MATCH_SAME =>
-  // x_cell_[urdl][01]{3}  24 = 4*2^3 ex: trident lake l0 len(match_with) ==
-  // 2, different => MATCH_PAIR => x_cell_[urdl]_a_b_c   24 = 4*2^3 ex:
-  // amplio2 lake l0 len(match_with) > 2 => MATCH_FULL => cellgroup_a_b_c_d
-  // (4*)n^4 ex: amplio2 coast l0
 };
 
 } // namespace freeciv
