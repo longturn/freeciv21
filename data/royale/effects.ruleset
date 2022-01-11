@@ -2615,7 +2615,7 @@ reqs    =
       "Building", "Palace", "City"
     }
 
-; Make it main capital -> value higher than that of Ecclesiastical Palace
+; Make it main capital -> value higher than that of 2nd Palace
 [effect_palace_3]
 type    = "Capital_City"
 value   = 2
@@ -2665,7 +2665,7 @@ type    = "Output_Waste_Pct"
 value   = 50
 reqs    =
     { "type", "name", "range", "present"
-      "Building", "Ecclesiastical Palace", "City", TRUE
+      "Building", "2nd Palace", "City", TRUE
       "OutputType", "Trade", "Local", TRUE
       "Building", "Palace", "City", FALSE
     }
@@ -2675,7 +2675,7 @@ type    = "Output_Waste_Pct"
 value   = 50
 reqs    =
     { "type", "name", "range", "present"
-      "Building", "Ecclesiastical Palace", "City", TRUE
+      "Building", "2nd Palace", "City", TRUE
       "OutputType", "Shield", "local", TRUE
       "Building", "Palace", "City", FALSE
     }
@@ -2685,7 +2685,7 @@ type    = "Spy_Resistant"
 value   = 50
 reqs    =
     { "type", "name", "range", "present"
-      "Building", "Ecclesiastical Palace", "City", TRUE
+      "Building", "2nd Palace", "City", TRUE
       "Building", "Palace", "City", FALSE
     }
 
@@ -2694,7 +2694,7 @@ type    = "Building_Saboteur_Resistant"
 value   = 50
 reqs    =
     { "type", "name", "range", "present"
-      "Building", "Ecclesiastical Palace", "City", TRUE
+      "Building", "2nd Palace", "City", TRUE
       "Building", "Palace", "City", FALSE
     }
 
@@ -2703,7 +2703,7 @@ type    = "Capital_City"
 value	= 1
 reqs	=
     { "type", "name", "range", "present"
-      "Building", "Ecclesiastical Palace", "City", TRUE
+      "Building", "2nd Palace", "City", TRUE
       "Building", "Palace", "City", FALSE
     }
 
@@ -2713,7 +2713,7 @@ value   = 75
 reqs    =
     { "type", "name", "range", "present", "quiet"
       "Gov", "Despotism", "Player", TRUE, TRUE
-      "Building", "Ecclesiastical Palace", "City", TRUE, FALSE
+      "Building", "2nd Palace", "City", TRUE, FALSE
       "OutputType", "Gold", "Local", TRUE, FALSE
       "Building", "Palace", "City", FALSE, FALSE
     }
@@ -2724,7 +2724,7 @@ value   = 50
 reqs    =
     { "type", "name", "range", "present", "quiet"
       "Gov", "Monarchy", "Player", TRUE, TRUE
-      "Building", "Ecclesiastical Palace", "City", TRUE, FALSE
+      "Building", "2nd Palace", "City", TRUE, FALSE
       "OutputType", "Gold", "Local", TRUE, FALSE
       "Building", "Palace", "City", FALSE, FALSE
     }
@@ -2734,7 +2734,7 @@ type    = "History"
 value	= 1
 reqs	=
     { "type", "name", "range", "present"
-      "Building", "Ecclesiastical Palace", "City", TRUE
+      "Building", "2nd Palace", "City", TRUE
       "Building", "Palace", "City", FALSE
     }
 
@@ -4508,6 +4508,17 @@ reqs    =
       "BuildingGenus", "GreatWonder", "Local"
     }
 
+
+; Double (+50%) buy cost for Small Wonders except Palace
+[effect_small_wonder_buy_cost]
+type    = "Building_Buy_Cost_Pct"
+value   = 50
+reqs    =
+    { "type", "name", "range", "present"
+      "BuildingGenus", "SmallWonder", "Local", TRUE
+      "Building", "Palace", "Local", FALSE
+    }
+
 [effect_action_success_move_cost_embassy]
 type    = "Action_Success_Actor_Move_Cost"
 value   = 1
@@ -4554,8 +4565,8 @@ type    = "Action_Success_Actor_Move_Cost"
 value   = 65535
 reqs    =
     { "type",      "name",           "range", "present"
-      "Action",    "Conquer City 2", "Local", TRUE
       "UnitState", "OnNativeTile",   "Local", TRUE
+      "Action",    "Conquer City 2", "Local", TRUE
     }
 
 [effect_unit_shield_value_recycle]
@@ -4574,9 +4585,6 @@ reqs    =
       "Action", "Upgrade Unit", "Local", TRUE
     }
 
-[effect_nuke_improvement_pct]
-type    = "Nuke_Improvement_Pct"
-value   = 100
 
 
 [effect_hal_salflieni_hypogeum]
@@ -4605,8 +4613,8 @@ reqs    =
     { "type", "name", "range"
       "Building", "Trade Company", "Player"
       "OutputType", "Trade", "Local"
-    }
 
+    }
 [effect_atlantic_telegraph_company]
 type    = "Have_Embassies"
 value   = 1
@@ -4667,29 +4675,7 @@ reqs    =
       "Tech", "Radio", "World"
     }
 
-[effect_radio_upgrade]
-type    = "Upgrade_Unit"
-value   = 2
-reqs    =
-    { "type", "name", "range"
-      "Tech", "Radio", "World"
-    }
-
-; Double (+100%) buy cost for Great Wonders
-[effect_great_wonder_buy_cost]
-type    = "Building_Buy_Cost_Pct"
-value   = 100
-reqs    =
-    { "type", "name", "range"
-      "BuildingGenus", "GreatWonder", "Local"
-    }
-
-; Double (+100%) buy cost for Small Wonders except Palace
-[effect_small_wonder_buy_cost]
-type    = "Building_Buy_Cost_Pct"
-value   = 100
-reqs    =
-    { "type", "name", "range", "present"
-      "BuildingGenus", "SmallWonder", "Local", TRUE
-      "Building", "Palace", "Local", FALSE
-    }
+; for future purposes not yet implemented
+; [effect_conquest_tech]
+; type    = "Conquest_Tech_Pct"
+; value   = 0

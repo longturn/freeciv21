@@ -73,7 +73,7 @@ class_flags =
 
 [veteran_system]
 ; What are the names of the levels?
-veteran_names = _("green (100%)"), _("veteran 1 (150%)"), _("veteran 2 (175%)"), _("veteran 3 (200%)"), _("hardened 1 (225%)"), _("hardened 2 (250%)"), _("hardened 3 (275%)"), _("elite 1 (300%)"), _("elite 2 (325%)"), _("elite 3 (350%)")
+veteran_names = _("green (100%)"), _("veteran 1 (150%)"), _("veteran 2 (175%)"), _("veteran 3 (200%)"), _("hardened 1 (225%)"), _("hardened 2 (250%)"), _("hardened 3 (275%)"), _("elite 1 (300%)"), _("elite 2 (325%)"), _("elite 3 royale (350%)")
 
 ; The percentage chance of increasing level through combat
 veteran_base_raise_chance = 50, 45, 40, 35, 30, 25, 20, 15, 10, 0
