@@ -109,10 +109,11 @@ private:
 
   int m_number = 0;
 
-  /* List of those sprites in 'cells' that are allocated by some other
+  /**
+   * List of those sprites in 'cells' that are allocated by some other
    * means than load_sprite() and thus are not freed by unload_all_sprites().
    */
-  std::vector<QPixmap *> m_allocated;
+  std::vector<std::unique_ptr<QPixmap>> m_allocated;
 
   std::map<QChar, matching_group> m_matching_groups;
 

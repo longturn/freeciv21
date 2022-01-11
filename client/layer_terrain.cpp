@@ -517,7 +517,7 @@ void layer_terrain::initialize_cell_corner_match_full(const terrain *terrain,
                            1.0f, false);
       // We allocated new sprite with crop_sprite. Store its address so we
       // can free it.
-      m_allocated.push_back(sprite);
+      m_allocated.emplace_back(sprite);
     } else {
       tileset_error(tileset(), LOG_ERROR,
                     "Terrain graphics sprite for tag \"%s\" missing.",
