@@ -464,7 +464,10 @@ Combat_Rounds
     continues until either side dies.
 
 HP_Regen
-    Units that do not move recover amount percentage of their full hitpoints per turn.
+    Units that do not move recover amount percentage (rounded up) of their full hitpoints per turn.
+
+HP_Regen_Min
+    Lower limit on "HP_Regen".  That is, the recovery percentage is the larger of "HP_Regen" and "HP_Regen_Min".
 
 City_Vision_Radius_Sq
     Increase city vision radius in squared distance by amount tiles.
