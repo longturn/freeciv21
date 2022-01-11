@@ -20,6 +20,7 @@ namespace freeciv {
 class layer_base_flags : public layer {
 public:
   explicit layer_base_flags(struct tileset *ts, int offset_x, int offset_y);
+  virtual ~layer_base_flags() = default;
 
   std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
