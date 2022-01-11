@@ -64,6 +64,7 @@ public:
   constexpr static auto MAX_NUM_MATCH_WITH = 8;
 
   explicit layer_terrain(struct tileset *ts, int number);
+  virtual ~layer_terrain() = default;
 
   bool create_matching_group(const QString &name);
 
