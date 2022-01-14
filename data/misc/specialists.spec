@@ -8,6 +8,8 @@ options = "+Freeciv-spec-Devel-2019-Jul-03"
 
 artists = "
     GriffonSpade
+    SCL
+    Lexxie
 "
 
 [file]
