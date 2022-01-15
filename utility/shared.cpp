@@ -225,7 +225,8 @@ bool is_safe_filename(const char *name)
   }
 
   for (; '\0' != name[i]; i++) {
-    if ('.' != name[i] && NULL == strchr(base64url, name[i])) {
+    if (NULL == strchr(".@", name[i])
+        && NULL == strchr(base64url, name[i])) {
       return false;
     }
   }
