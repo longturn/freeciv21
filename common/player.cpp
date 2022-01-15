@@ -16,6 +16,8 @@
 #endif
 
 #include <QBitArray>
+#include <QString>
+
 // utility
 #include "fcintl.h"
 #include "log.h"
@@ -1796,8 +1798,31 @@ int player_in_territory(const struct player *pplayer,
  */
 bool is_valid_username(const char *name)
 {
-  return (strlen(name) > 0 && !QChar::isDigit(name[0]) && is_ascii_name(name)
-          && fc_strcasecmp(name, ANON_USER_NAME) != 0);
+  QString username(name);
+
+  if (username.isEmpty()) {
+    return false;
+  }
+  if (username[0].isDigit()) {
+    return false;
+  }
+
+  if (!username.compare(QStringLiteral(ANON_USER_NAME),
+                        Qt::CaseInsensitive)) {
+    return false;
+  }
+
+  for (auto ch : username) {
+    if (ch.isLetterOrNumber()) {
+      continue;
+    }
+    if (ch == '#') {
+      continue;
+    }
+    return false;
+  }
+
+  return true;
 }
 
 /**
