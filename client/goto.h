@@ -10,6 +10,8 @@
 **************************************************************************/
 #pragma once
 
+#include "fc_types.h"
+
 struct pf_path;
 struct tile;
 struct unit;
