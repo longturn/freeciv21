@@ -1507,24 +1507,6 @@ void give_allied_visibility(struct player *pplayer, struct player *aplayer)
 }
 
 /**
-   Is unit being refueled in its current position
- */
-bool is_unit_being_refueled(const struct unit *punit)
-{
-  if (unit_transported(punit)        // Carrier
-      || tile_city(unit_tile(punit)) // City
-      || tile_has_refuel_extra(unit_tile(punit),
-                               unit_type_get(punit))) { // Airbase
-    return true;
-  }
-  if (unit_has_type_flag(punit, UTYF_COAST)) {
-    return is_safe_ocean(&(wld.map), unit_tile(punit));
-  }
-
-  return false;
-}
-
-/**
    Can unit refuel on tile. Considers also carrier capacity on tile.
  */
 bool is_airunit_refuel_point(const struct tile *ptile,

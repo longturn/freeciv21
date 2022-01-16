@@ -81,12 +81,6 @@ void unit_bombs_unit(struct unit *attacker, struct unit *defender,
                      int *att_hp, int *def_hp);
 void combat_veterans(struct unit *attacker, struct unit *defender);
 
-// move check related
-bool is_unit_being_refueled(const struct unit *punit);
-bool is_airunit_refuel_point(const struct tile *ptile,
-                             const struct player *pplayer,
-                             const struct unit *punit);
-
 // turn update related
 void player_restore_units(struct player *pplayer);
 void update_unit_activities(struct player *pplayer);
