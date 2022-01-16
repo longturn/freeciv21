@@ -66,6 +66,8 @@ add_library(
   movement.cpp
   multipliers.cpp
   nation.cpp
+  path.cpp
+  path_finder.cpp
   player.cpp
   reqtext.cpp
   requirements.cpp
