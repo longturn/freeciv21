@@ -89,41 +89,6 @@ struct vertex {
   unit_order order; ///< The order to come here
 
   /**
-   * Is this vertex unambigously worse than `other` and should be dropped?
-   * This function only makes sense if the `position` and `loaded` fields are
-   * identical.
-   */
-  bool worse(const vertex &other) const
-  {
-    // Can't compare if not at the same location => can't say it's worse
-    if (location != other.location)
-      return false;
-
-    // Identical isn't worse
-    if (*this == other)
-      return false;
-
-    // Taking longer to arrive is almost always bad...
-    if (cost.turns > other.cost.turns) {
-      // ...except if we have more fuel as a result
-      return cost.fuel_left <= other.cost.fuel_left;
-    }
-
-    // Having fewer MP left is almost always bad...
-    if (cost.moves_left < other.cost.moves_left) {
-      // ...except if we have more fuel as a result (but how would this
-      // happen?)
-      return cost.fuel_left <= other.cost.fuel_left;
-    }
-
-    // If we come here, we're no worse than `other` in number of turns or
-    // moves left, so the only thing that remains is fuel. To be worse in
-    // fuel means having less fuel left (note how the comparison is inverted
-    // wrt above).
-    return cost.fuel_left < other.cost.fuel_left;
-  }
-
-  /**
    * Equality comparator.
    */
   bool operator==(const vertex &other) const
