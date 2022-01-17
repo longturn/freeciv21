@@ -9,6 +9,7 @@
 #include "path.h"
 #include "tile.h"
 #include "unit.h"
+#include "unit_utils.h"
 #include "world_object.h"
 
 #include <iostream>
@@ -25,7 +26,10 @@ path_finder::path_finder_private::path_finder_private(const ::unit *unit)
     : unit(*unit)
 {
   // Insert the starting vertex
-  auto v = detail::vertex{unit->tile, {0, unit->moves_left}, nullptr};
+  auto v = detail::vertex{unit->tile,
+                          unit->moved,
+                          {0, unit->moves_left, unit->hp, unit->fuel},
+                          nullptr};
   queue.push(v);
   best_vertices.emplace(v.location, std::make_unique<detail::vertex>(v));
 }
@@ -44,9 +48,13 @@ void path_finder::path_finder_private::maybe_insert_vertex(
   if (v.cost.moves_left <= 0) {
     auto probe = unit;
     probe.tile = v.location;
+    probe.moved = v.moved;
     probe.fuel = v.cost.fuel_left;
+    probe.hp = v.cost.health;
     probe.moves_left = 0;
 
+    // FIXME The order could be important here: fuel before HP or HP before
+    // fuel?
     insert.cost.turns++;
     insert.cost.moves_left = unit_move_rate(&probe);
 
@@ -65,6 +73,20 @@ void path_finder::path_finder_private::maybe_insert_vertex(
         insert.cost.fuel_left--;
       }
     }
+
+    // HP loss and recovery
+    // Userful for helis, killunhomed, slow damaged units with fuel. A path
+    // can require that the unit heals first. Of course, it will choose
+    // barracks if you have them, because healing is faster there.
+    unit_restore_hitpoints(&probe);
+    if (probe.hp <= 0) {
+      // Unit dies, don't let the user send it there.
+      return;
+    }
+    insert.cost.health = probe.hp;
+
+    // "Start of turn" part
+    insert.moved = false; // Didn't move yet
   }
 
   // The remaining logic checks whether we should insert the new vertex. This
@@ -75,11 +97,13 @@ void path_finder::path_finder_private::maybe_insert_vertex(
   bool do_insert = true;
   for (auto it = begin; it != end; /* in loop body */) {
     if (it->second->cost.comparable(insert.cost)
+        && it->second->moved == insert.moved
         && insert.cost < it->second->cost) {
       // The new candidate is strictly better. Remove the old one
       it = best_vertices.erase(it);
       continue; // ++it is done inside erase()
-    } else if (it->second->cost.comparable(insert.cost)) {
+    } else if (it->second->cost.comparable(insert.cost)
+               && it->second->moved == insert.moved) {
       // We already have it (or something equivalent, or even something
       // better), no need to add it.
       do_insert = false;
@@ -158,7 +182,9 @@ path path_finder::find_path(const tile *destination)
     // Update the probe
     auto probe = m_d->unit;
     probe.tile = v.location;
+    probe.moved = v.moved;
     probe.fuel = v.cost.fuel_left;
+    probe.hp = v.cost.health;
     probe.moves_left = v.cost.moves_left;
 
     // Try moving to adjacent tiles
@@ -175,6 +201,7 @@ path path_finder::find_path(const tile *destination)
         // Construct the next vertex
         auto next = detail::vertex();
         next.location = target;
+        next.moved = true;
 
         next.cost = v.cost;
         next.cost.moves_left -= move_cost;

@@ -23,8 +23,8 @@ namespace detail {
 struct cost {
   int turns;      ///< How many turns it takes to get there
   int moves_left; ///< How many move fragments the unit has left
-  int fuel_left;  ///< How much fuel the unit has left
   int health;     ///< How many HP the unit has left
+  int fuel_left;  ///< How much fuel the unit has left
 
   /**
    * Returns `true` if the comparison with `other` would be unambiguous.
@@ -36,11 +36,12 @@ struct cost {
     // opposite.
     auto a = other.turns - turns;
     auto b = moves_left - other.moves_left;
-    auto c = fuel_left - other.fuel_left;
-    auto d = health - other.health;
+    auto c = health - other.health;
+    auto d = fuel_left - other.fuel_left;
     // For the comparison to be meaningful, all criteria must go in the same
     // direction.
-    return (a <= 0 && b <= 0 && c <= 0 && d <= 0) || (a >= 0 && b >= 0 && c >= 0 && d <= 0);
+    return (a <= 0 && b <= 0 && c <= 0 && d <= 0)
+           || (a >= 0 && b >= 0 && c >= 0 && d >= 0);
   }
 
   /**
@@ -57,6 +58,9 @@ struct cost {
    */
   bool operator<(const cost &other) const
   {
+    // To break ties, we prefer the unit with the most moves, then the
+    // healthiest unit, then the unit with the most fuel. This is an
+    // arbitrary choice.
     return std::tie(turns, other.moves_left, other.health, other.fuel_left)
            < std::tie(other.turns, moves_left, health, fuel_left);
   }
@@ -72,6 +76,7 @@ struct cost {
 struct vertex {
   // Vertex location on the map
   tile *location; ///< Where we are
+  bool moved;     ///< Whether we moved this turn (for HP recovery)
 
   // Cost of the path to come here, needed for path finding
   detail::cost cost; ///< How many turns it takes to get here
