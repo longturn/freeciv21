@@ -61,6 +61,19 @@ bool cost::operator<(const cost &other) const
 }
 
 /**
+ * Checks whether two vertices are comparable, which is the case when one of
+ * them is unambiguously "better" than the other. Vertices that are not
+ * comparable should be considered distinct: this is the case, for instance,
+ * of vertices at different locations. Comparability is not a transitive
+ * property.
+ */
+bool vertex::comparable(const vertex &other) const
+{
+  return std::tie(location, moved) == std::tie(other.location, other.moved)
+         && cost.comparable(other.cost);
+}
+
+/**
  * Equality comparator.
  */
 bool vertex::operator==(const vertex &other) const
@@ -155,14 +168,12 @@ void path_finder::path_finder_private::maybe_insert_vertex(
   const auto [begin, end] = best_vertices.equal_range(v.location);
   bool do_insert = true;
   for (auto it = begin; it != end; /* in loop body */) {
-    if (it->second->cost.comparable(insert.cost)
-        && it->second->moved == insert.moved
-        && insert.cost < it->second->cost) {
+    const bool comparable = it->second->comparable(insert);
+    if (comparable && insert.cost < it->second->cost) {
       // The new candidate is strictly better. Remove the old one
       it = best_vertices.erase(it);
       continue; // ++it is done inside erase()
-    } else if (it->second->cost.comparable(insert.cost)
-               && it->second->moved == insert.moved) {
+    } else if (comparable) {
       // We already have it (or something equivalent, or even something
       // better), no need to add it.
       do_insert = false;

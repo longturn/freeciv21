@@ -52,6 +52,8 @@ struct vertex {
   vertex *parent;   ///< The previous vertex, if any
   unit_order order; ///< The order to come here
 
+  bool comparable(const vertex &other) const;
+
   bool operator==(const vertex &other) const;
   bool operator>(const vertex &other) const;
 };
