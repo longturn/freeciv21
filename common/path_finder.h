@@ -52,18 +52,8 @@ struct vertex {
   vertex *parent;   ///< The previous vertex, if any
   unit_order order; ///< The order to come here
 
-  /**
-   * Equality comparator.
-   */
-  bool operator==(const vertex &other) const
-  {
-    return std::tie(location, cost) == std::tie(other.location, other.cost);
-  }
-
-  /**
-   * Defines an ordering for the priority queue.
-   */
-  bool operator>(const vertex &other) const { return other.cost < cost; }
+  bool operator==(const vertex &other) const;
+  bool operator>(const vertex &other) const;
 };
 } // namespace detail
 

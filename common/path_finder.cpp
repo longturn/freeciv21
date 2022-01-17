@@ -53,10 +53,27 @@ bool cost::operator==(const cost &other) const
  */
 bool cost::operator<(const cost &other) const
 {
-  // To break ties, we prefer the unit with the most moves, then the healthiest
-  // unit, then the unit with the most fuel. This is an arbitrary choice.
+  // To break ties, we prefer the unit with the most moves, then the
+  // healthiest unit, then the unit with the most fuel. This is an arbitrary
+  // choice.
   return std::tie(turns, other.moves_left, other.health, other.fuel_left)
          < std::tie(other.turns, moves_left, health, fuel_left);
+}
+
+/**
+ * Equality comparator.
+ */
+bool vertex::operator==(const vertex &other) const
+{
+  return std::tie(location, cost) == std::tie(other.location, other.cost);
+}
+
+/**
+ * Defines an ordering for the priority queue.
+ */
+bool vertex::operator>(const vertex &other) const
+{
+  return other.cost < cost;
 }
 
 } // namespace detail
