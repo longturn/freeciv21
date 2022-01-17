@@ -87,6 +87,9 @@ class path_finder {
         queue;
 
     void maybe_insert_vertex(const detail::vertex &v);
+
+    void attempt_move(detail::vertex &source);
+    void attempt_full_mp(detail::vertex &source);
   };
 
 public:

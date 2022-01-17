@@ -201,6 +201,56 @@ void path_finder::path_finder_private::maybe_insert_vertex(
 }
 
 /**
+ * Opens vertices corresponding to attempts to do ORDER_MOVE from the source
+ * vertex.
+ */
+void path_finder::path_finder_private::attempt_move(detail::vertex &source)
+{
+  // Make a probe
+  auto probe = unit;
+  source.fill_probe(probe);
+
+  // Try moving to adjacent tiles
+  adjc_dir_iterate(&(wld.map), source.location, target, dir)
+  {
+    if (target->terrain == nullptr) {
+      // Can't see this tile
+      continue;
+    }
+    if (unit_can_move_to_tile(&wld.map, &probe, target, false, false)) {
+      auto move_cost = std::min(map_move_cost_unit(&wld.map, &probe, target),
+                                probe.moves_left);
+
+      // Construct the next vertex
+      auto next = source;
+      next.location = target;
+      next.moved = true;
+      next.cost.moves_left -= move_cost;
+      next.parent = &source;
+      next.order.order = ORDER_MOVE;
+      next.order.dir = dir;
+      maybe_insert_vertex(next);
+    }
+  }
+  adjc_dir_iterate_end;
+}
+
+/**
+ * Opens vertices corresponding to attempts to do ORDER_FULL_MP from the
+ * source vertex. This is a last resort vertex that may give the unit more HP
+ * or fuel that will be useful to continue its journey.
+ */
+void path_finder::path_finder_private::attempt_full_mp(
+    detail::vertex &source)
+{
+  auto next = source;
+  next.cost.moves_left = 0; // Trigger end-of-turn logic
+  next.parent = &source;
+  next.order.order = ORDER_FULL_MP;
+  maybe_insert_vertex(next);
+}
+
+/**
  * Constructs a @c path_finder for the given unit and destination. Doesn't
  * start the path finding yet.
  *
@@ -257,47 +307,10 @@ path path_finder::find_path(const tile *destination)
     }
 
     // Fetch the pointer version of v for use as a parent
-    const auto parent = it->second.get();
+    auto parent = it->second.get();
 
-    // Make a probe
-    auto probe = m_d->unit;
-    v.fill_probe(probe);
-
-    // Try moving to adjacent tiles
-    adjc_dir_iterate(&(wld.map), v.location, target, dir)
-    {
-      if (target->terrain == nullptr) {
-        // Can't see this tile
-        continue;
-      }
-      if (unit_can_move_to_tile(&wld.map, &probe, target, false, false)) {
-        auto move_cost = std::min(
-            map_move_cost_unit(&wld.map, &probe, target), probe.moves_left);
-
-        // Construct the next vertex
-        auto next = detail::vertex();
-        next.location = target;
-        next.moved = true;
-
-        next.cost = v.cost;
-        next.cost.moves_left -= move_cost;
-
-        next.parent = parent;
-        next.order.order = ORDER_MOVE;
-        next.order.dir = dir;
-
-        m_d->maybe_insert_vertex(next);
-      }
-    }
-    adjc_dir_iterate_end;
-
-    // As a last resort, we can always stay where we are. Maybe this
-    // gives us enough MP or fuel to do something interesting next turn.
-    auto next = v;
-    next.cost.moves_left = 0; // Trigger end-of-turn logic
-    next.parent = parent;
-    next.order.order = ORDER_FULL_MP;
-    m_d->maybe_insert_vertex(next);
+    m_d->attempt_move(*parent);
+    m_d->attempt_full_mp(*parent);
   }
 
   if (m_d->best_vertices.count(destination) > 0) {
