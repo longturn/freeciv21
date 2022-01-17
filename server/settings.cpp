@@ -2215,7 +2215,7 @@ static struct setting settings[] = {
              NULL, NULL, GAME_DEFAULT_KILLCITIZEN),
 
     GEN_INT(
-        "killunhomed", game.server.killunhomed, SSET_RULES, SSET_MILITARY,
+        "killunhomed", game.info.killunhomed, SSET_RULES, SSET_MILITARY,
         SSET_RARE, ALLOW_NONE, ALLOW_BASIC,
         N_("Slowly kill units without home cities (e.g., starting units)"),
         N_("If greater than 0, then every unit without a homecity will lose "

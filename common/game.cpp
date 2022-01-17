@@ -296,6 +296,7 @@ static void game_defaults(bool keep_ruleset_value)
   game.info.warminglevel = 0; // set later
   game.info.year_0_hack = false;
   game.info.year = GAME_START_YEAR;
+  game.info.killunhomed = GAME_DEFAULT_KILLUNHOMED;
 
   // The scenario packets.
   game.scenario.is_scenario = false;
@@ -356,7 +357,6 @@ static void game_defaults(bool keep_ruleset_value)
     game.server.global_warming_percent = GAME_DEFAULT_GLOBAL_WARMING_PERCENT;
     game.server.homecaughtunits = GAME_DEFAULT_HOMECAUGHTUNITS;
     game.server.kick_time = GAME_DEFAULT_KICK_TIME;
-    game.server.killunhomed = GAME_DEFAULT_KILLUNHOMED;
     game.server.maxconnectionsperhost = GAME_DEFAULT_MAXCONNECTIONSPERHOST;
     game.server.last_ping = 0;
     game.server.max_players = GAME_DEFAULT_MAX_PLAYERS;

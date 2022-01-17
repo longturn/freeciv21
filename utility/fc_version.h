@@ -11,7 +11,7 @@
 #define VERSION_STRING "3.0.20211112.9-alpha"
 #endif
 
-#define NETWORK_CAPSTRING "+Freeciv21.21April13"
+#define NETWORK_CAPSTRING "+Freeciv21.21April13 killunhomed-is-game-info"
 
 #ifndef FOLLOWTAG
 #define FOLLOWTAG "S_HAXXOR"
