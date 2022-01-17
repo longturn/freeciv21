@@ -53,6 +53,7 @@ struct vertex {
   unit_order order; ///< The order to come here
 
   bool comparable(const vertex &other) const;
+  void fill_probe(unit &probe) const;
 
   bool operator==(const vertex &other) const;
   bool operator>(const vertex &other) const;

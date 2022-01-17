@@ -74,6 +74,19 @@ bool vertex::comparable(const vertex &other) const
 }
 
 /**
+ * Ensures that `probe` reflects the properties of this vertex. Any property
+ * of `probe` not used in path finding is left unchanged.
+ */
+void vertex::fill_probe(unit &probe) const
+{
+  probe.tile = location;
+  probe.moved = moved;
+  probe.fuel = cost.fuel_left;
+  probe.hp = cost.health;
+  probe.moves_left = cost.moves_left;
+}
+
+/**
  * Equality comparator.
  */
 bool vertex::operator==(const vertex &other) const
@@ -118,12 +131,9 @@ void path_finder::path_finder_private::maybe_insert_vertex(
 
   // Handle turn change
   if (v.cost.moves_left <= 0) {
+    // Make a probe
     auto probe = unit;
-    probe.tile = v.location;
-    probe.moved = v.moved;
-    probe.fuel = v.cost.fuel_left;
-    probe.hp = v.cost.health;
-    probe.moves_left = 0;
+    v.fill_probe(probe);
 
     // FIXME The order could be important here: fuel before HP or HP before
     // fuel?
@@ -249,13 +259,9 @@ path path_finder::find_path(const tile *destination)
     // Fetch the pointer version of v for use as a parent
     const auto parent = it->second.get();
 
-    // Update the probe
+    // Make a probe
     auto probe = m_d->unit;
-    probe.tile = v.location;
-    probe.moved = v.moved;
-    probe.fuel = v.cost.fuel_left;
-    probe.hp = v.cost.health;
-    probe.moves_left = v.cost.moves_left;
+    v.fill_probe(probe);
 
     // Try moving to adjacent tiles
     adjc_dir_iterate(&(wld.map), v.location, target, dir)
