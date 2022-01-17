@@ -186,15 +186,14 @@ path path_finder::find_path(const tile *destination)
         m_d->maybe_insert_vertex(next);
       }
     }
-    adjc_dir_iterate_end
+    adjc_dir_iterate_end;
 
-        // As a last resort, we can always stay where we are. Maybe this
-        // gives us enough MP or fuel to do something interesting next turn.
-        auto next = v;
+    // As a last resort, we can always stay where we are. Maybe this
+    // gives us enough MP or fuel to do something interesting next turn.
+    auto next = v;
     next.cost.moves_left = 0; // Trigger end-of-turn logic
     next.parent = parent;
     next.order.order = ORDER_FULL_MP;
-
     m_d->maybe_insert_vertex(next);
   }
 
