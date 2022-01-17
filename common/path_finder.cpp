@@ -19,6 +19,48 @@
 
 namespace freeciv {
 
+namespace detail {
+
+/**
+ * Returns `true` if the comparison with `other` would be unambiguous.
+ */
+bool cost::comparable(const cost &other) const
+{
+  // When the results of the expressions below are positive, this cost does
+  // better than the other for this criteria. When it's negative, it's the
+  // opposite.
+  auto a = other.turns - turns;
+  auto b = moves_left - other.moves_left;
+  auto c = health - other.health;
+  auto d = fuel_left - other.fuel_left;
+  // For the comparison to be meaningful, all criteria must go in the same
+  // direction.
+  return (a <= 0 && b <= 0 && c <= 0 && d <= 0)
+         || (a >= 0 && b >= 0 && c >= 0 && d >= 0);
+}
+
+/**
+ * Compares for equality.
+ */
+bool cost::operator==(const cost &other) const
+{
+  return std::tie(turns, other.moves_left, other.health, other.fuel_left)
+         == std::tie(other.turns, moves_left, health, fuel_left);
+}
+
+/**
+ * Defines a strict ordering among costs.
+ */
+bool cost::operator<(const cost &other) const
+{
+  // To break ties, we prefer the unit with the most moves, then the healthiest
+  // unit, then the unit with the most fuel. This is an arbitrary choice.
+  return std::tie(turns, other.moves_left, other.health, other.fuel_left)
+         < std::tie(other.turns, moves_left, health, fuel_left);
+}
+
+} // namespace detail
+
 /**
  * Constructor.
  */
