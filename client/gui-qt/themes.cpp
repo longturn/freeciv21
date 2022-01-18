@@ -25,7 +25,6 @@
 #include "fc_client.h"
 
 extern QApplication *current_app();
-extern QApplication *qapp;
 extern QString current_theme;
 Q_GLOBAL_STATIC(QString, def_app_style)
 Q_GLOBAL_STATIC(QString, stylestring)

@@ -67,7 +67,6 @@
 #include "spaceshipdlg.h"
 #include "sprite.h"
 
-extern QApplication *qapp;
 extern void popup_endgame_report();
 extern void toggle_units_report(bool);
 static void enable_interface(bool enable);

@@ -41,7 +41,6 @@
 #include "page_game.h"
 #include "qtg_cxxside.h"
 
-extern QApplication *qapp;
 static bool is_plain_public_message(const QString &s);
 
 FC_CPP_DECLARE_LISTENER(chat_listener)
@@ -715,7 +714,7 @@ void qtg_real_output_window_append(const QString &astring,
   king()->set_status_bar(astring);
 
   if (astring.contains(client.conn.username)) {
-    qapp->alert(king()->central_wdg);
+    qApp->alert(king()->central_wdg);
   }
 
   chat_listener::update_word_list();
