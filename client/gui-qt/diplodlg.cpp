@@ -42,7 +42,6 @@
 
 typedef advance *p_advance;
 typedef city *p_city;
-extern QApplication *qapp;
 
 /**
    Constructor for diplomacy widget
@@ -999,7 +998,7 @@ void close_all_diplomacy_dialogs()
   diplo_dlg *dd;
   QWidget *w;
 
-  qapp->alert(king()->central_wdg);
+  qApp->alert(king()->central_wdg);
   if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
     return;
   }

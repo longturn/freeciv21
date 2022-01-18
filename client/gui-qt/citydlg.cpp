@@ -58,7 +58,6 @@
 #include "sidebar.h"
 #include "tooltips.h"
 
-extern QApplication *qapp;
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
 
@@ -2941,7 +2940,7 @@ void city_production_delegate::paint(QPainter *painter,
   QPixmap pix_dec(option.rect.width(), option.rect.height());
   QStyleOptionViewItem opt;
   QColor col;
-  QIcon icon = qapp->style()->standardIcon(QStyle::SP_DialogCancelButton);
+  QIcon icon = qApp->style()->standardIcon(QStyle::SP_DialogCancelButton);
   struct unit_class *pclass;
 
   if (!option.rect.isValid()) {
