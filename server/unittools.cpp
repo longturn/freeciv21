@@ -332,6 +332,7 @@ void unit_bombs_unit(struct unit *attacker, struct unit *defender,
                      int *att_hp, int *def_hp)
 {
   int i;
+  int old_def_hp, bomb_limit_hp, bomb_limit_pct;
   int rate = unit_type_get(attacker)->bombard_rate;
 
   int attackpower = get_total_attack_power(attacker, defender);
@@ -341,13 +342,23 @@ void unit_bombs_unit(struct unit *attacker, struct unit *defender,
   struct player *plr2 = unit_owner(defender);
 
   *att_hp = attacker->hp;
-  *def_hp = defender->hp;
+  old_def_hp = *def_hp = defender->hp;
+  // don't reduce below maxHP * Bombard_Limit_Pct%, rounded up
+  bomb_limit_pct = get_unit_bonus(defender, EFT_BOMBARD_LIMIT_PCT);
+  if (bomb_limit_pct > 0)
+    bomb_limit_hp =
+        (unit_type_get(defender)->hp - 1) * bomb_limit_pct / 100 + 1;
+  else
+    bomb_limit_hp = 0;
+  // if unit was already below limit, don't heal it back up to the limit
+  bomb_limit_hp = MIN(bomb_limit_hp, old_def_hp);
   get_modified_firepower(attacker, defender, &attack_firepower,
                          &defense_firepower);
 
   qDebug("attack:%d, defense:%d, attack firepower:%d, "
-         "defense firepower:%d",
-         attackpower, defensepower, attack_firepower, defense_firepower);
+         "defense firepower:%d, bomb limit:%d",
+         attackpower, defensepower, attack_firepower, defense_firepower,
+         bomb_limit_hp);
 
   player_update_last_war_action(plr1);
   player_update_last_war_action(plr2);
@@ -359,8 +370,8 @@ void unit_bombs_unit(struct unit *attacker, struct unit *defender,
   }
 
   // Don't kill the target.
-  if (*def_hp <= 0) {
-    *def_hp = 1;
+  if (*def_hp < bomb_limit_hp) {
+    *def_hp = bomb_limit_hp;
   }
 }
 
