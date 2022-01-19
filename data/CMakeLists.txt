@@ -56,6 +56,7 @@ if (FREECIV_ENABLE_SERVER OR FREECIV_ENABLE_RULEDIT)
   add_ruleset(NAME classic SERV_FILE README README.classic)
   add_ruleset(NAME experimental SERV_FILE README README.experimental)
   add_ruleset(NAME multiplayer SERV_FILE README README.multiplayer)
+  add_ruleset(NAME royale SERV_FILE README README.royale)
 
   # Misc
   install(
