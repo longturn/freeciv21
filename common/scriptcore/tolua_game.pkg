@@ -33,6 +33,7 @@ struct Player {
   const char *name;
   Nation_Type *nation;
   bool is_alive;
+  bool is_connected;
 };
 
 struct City {

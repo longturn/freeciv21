@@ -78,6 +78,8 @@ bool luascript_check_function(struct fc_lua *fcl, const char *funcname);
 int luascript_call(struct fc_lua *fcl, int narg, int nret, const char *code);
 int luascript_do_string(struct fc_lua *fcl, const char *str,
                         const char *name);
+int luascript_do_bytecode(struct fc_lua *fcl, const char *buf, size_t len,
+                          const char *name);
 int luascript_do_file(struct fc_lua *fcl, const char *filename);
 
 // Callback invocation function.

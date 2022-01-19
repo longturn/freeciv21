@@ -15,6 +15,7 @@
 #include <cstdarg>
 #include <cstdlib>
 #include <ctime>
+#include <memory>
 #include <sys/stat.h>
 
 /* dependencies/lua */
@@ -25,6 +26,10 @@ extern "C" {
 /* dependencies/tolua */
 #include "tolua.h"
 }
+
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "log.h"
 #include "registry.h"
@@ -276,6 +281,29 @@ static void script_server_code_save(struct section_file *file)
 }
 
 /**
+   Dump the bytecode of function passed and send to client to execute.
+ */
+static sol::object execute_client_lua(sol::this_state s, int player,
+                                      sol::function f)
+{
+  sol::state_view lua(s);
+  struct player *pplayer = player_by_number(player);
+  if (pplayer == nullptr) {
+    return sol::make_object(lua, "player not found");
+  }
+  if (!pplayer->is_connected) {
+    return sol::make_object(lua, "player not connected");
+  }
+
+  const std::string bytecode = lua["string"]["dump"](f);
+  std::unique_ptr<packet_execute_lua> pack(new packet_execute_lua);
+  pack->size = bytecode.size();
+  memcpy(pack->bytecode, bytecode.data(), bytecode.size());
+  lsend_packet_execute_lua(pplayer->connections, pack.get());
+  return sol::make_object(lua, sol::lua_nil);
+}
+
+/**
    Initialize the scripting state.
  */
 bool script_server_init()
@@ -293,6 +321,9 @@ bool script_server_init()
 
     return false;
   }
+
+  sol::state_view sol_state(fcl_main->state);
+  sol_state["execute_client_lua"] = execute_client_lua;
 
   luascript_common_a(fcl_main->state);
   api_specenum_open(fcl_main->state);

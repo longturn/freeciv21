@@ -36,6 +36,8 @@ struct data_in;
 // Used in network protocol.
 #define MAX_LEN_MSG 1536
 #define MAX_LEN_ROUTE 2000 /* MAX_LEN_PACKET / 2 - header */
+const int MAX_LEN_LUA_SCRIPT = 1
+                               << 20; /* 1 MB should be enough for anyone. */
 
 /* The size of opaque (void *) data sent in the network packet.  To avoid
  * fragmentation issues, this SHOULD NOT be larger than the standard

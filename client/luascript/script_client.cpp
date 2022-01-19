@@ -307,3 +307,14 @@ static void script_client_signal_create()
 {
   luascript_signal_create(main_fcl, "new_tech", 0);
 }
+
+/**
+   Execute client lua.
+ */
+void handle_execute_lua(int size, const unsigned char *bytecode)
+{
+  luascript_do_bytecode(main_fcl, reinterpret_cast<const char *>(bytecode),
+                        size, "remote_execution");
+
+  return;
+}

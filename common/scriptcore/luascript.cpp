@@ -637,6 +637,26 @@ int luascript_do_string(struct fc_lua *fcl, const char *str,
 }
 
 /**
+   Execute lua bytecode with error message showing on errors.
+ */
+int luascript_do_bytecode(struct fc_lua *fcl, const char *buf, size_t len,
+                          const char *name)
+{
+  int status;
+
+  fc_assert_ret_val(fcl, 0);
+  fc_assert_ret_val(fcl->state, 0);
+
+  status = luaL_loadbuffer(fcl->state, buf, len, name);
+  if (status) {
+    luascript_report(fcl, status, name);
+  } else {
+    status = luascript_call(fcl, 0, 0, name);
+  }
+  return status;
+}
+
+/**
    Parse and execute the script at filename.
  */
 int luascript_do_file(struct fc_lua *fcl, const char *filename)

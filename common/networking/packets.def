@@ -2348,6 +2348,11 @@ PACKET_PLAY_MUSIC = 245; sc, lsend
   STRING tag[MAX_LEN_NAME];
 end
 
+PACKET_EXECUTE_LUA = 201; sc, lsend
+  UINT32 size;
+  MEMORY bytecode[MAX_LEN_LUA_SCRIPT:size];
+end
+
 /************* Packets reserved for freeciv-web ***************/
 /* Not supported. They use range 256:511 */
 /*
