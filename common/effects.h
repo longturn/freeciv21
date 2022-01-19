@@ -303,6 +303,8 @@
 #define SPECENUM_VALUE128NAME "Nuke_Improvement_Pct"
 #define SPECENUM_VALUE129 EFT_HP_REGEN_MIN
 #define SPECENUM_VALUE129NAME "HP_Regen_Min"
+#define SPECENUM_VALUE130 EFT_BOMBARD_LIMIT_PCT
+#define SPECENUM_VALUE130NAME "Bombard_Limit_Pct"
 // keep this last
 #define SPECENUM_COUNT EFT_COUNT
 #include "specenum_gen.h"
