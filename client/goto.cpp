@@ -267,7 +267,13 @@ void goto_unit_killed(struct unit *punit)
     return;
   }
 
+  // Drop the finder for the killed unit, if any.
   goto_finders.erase(punit->id);
+
+  // Notify our finders that something has changed.
+  for (auto &[_, finder] : goto_finders) {
+    finder.unit_changed(*punit);
+  }
 }
 
 /**

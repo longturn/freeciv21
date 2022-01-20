@@ -392,6 +392,21 @@ path_finder::~path_finder()
 }
 
 /**
+ * Notifies the path finder that some unit died or changed state. In many
+ * cases, this will trigger a recalculation of the path.
+ */
+void path_finder::unit_changed(const ::unit &unit)
+{
+  Q_UNUSED(unit);
+
+  // We can try to be smarter later. For now, just invalidate everything.
+  m_d->best_vertices.clear();
+  while (!m_d->queue.empty()) {
+    m_d->queue.pop();
+  }
+}
+
+/**
  * Runs the path finding algorithm.
  */
 path path_finder::find_path(const tile *destination)

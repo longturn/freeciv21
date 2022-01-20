@@ -8,6 +8,7 @@
 #include <map>
 #include <memory>
 #include <queue>
+#include <set>
 
 struct tile;
 
@@ -103,6 +104,8 @@ public:
   virtual ~path_finder();
 
   inline path_finder &operator=(path_finder &&other);
+
+  void unit_changed(const unit &unit);
 
   path find_path(const tile *destination);
 
