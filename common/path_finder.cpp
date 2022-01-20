@@ -280,8 +280,8 @@ void path_finder::path_finder_private::attempt_full_mp(
 }
 
 /**
- * Opens vertices corresponding to attempts to perform load or unload actions
- * from the source vertex.
+ * Opens vertices corresponding to attempts to load into a transport from the
+ * source vertex.
  */
 void path_finder::path_finder_private::attempt_load(detail::vertex &source)
 {
@@ -324,6 +324,10 @@ void path_finder::path_finder_private::attempt_load(detail::vertex &source)
   adjc_iterate_end;
 }
 
+/**
+ * Opens vertices corresponding to attempts to unload from a transport at the
+ * source vertex.
+ */
 void path_finder::path_finder_private::attempt_unload(detail::vertex &source)
 {
   // Make a probe
