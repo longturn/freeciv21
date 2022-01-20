@@ -3,11 +3,12 @@
 # to do it manually and automates it.
 
 # Auto Revision needs git to work
-find_package(Git REQUIRED)
+find_package(Git)
 
 if(Git_FOUND)
-  # get the value of the git hash at HEAD to 7 chars
-  execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short=7 HEAD
+
+  # get the value of the git hash at HEAD to 5 chars
+  execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short=5 HEAD
                   OUTPUT_VARIABLE FC21_REV_HEAD_HASH_H
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
 
@@ -33,5 +34,29 @@ if(Git_FOUND)
   set(FC21_REV_TAG_LIST ${FC21_REV_TAG2})
   separate_arguments(FC21_REV_TAG_LIST)
   message("-- Latest Git Tag List: ${FC21_REV_TAG_LIST}")
+
+else()
+
+  # In case git is not found (for example the person uses the tarball) we still need the variables
+  # set. So we get them from AutoRevision.txt instead that is updated by a GitHub Action at Release
+  # See .git/workflows/release.yaml
+
+  file(READ cmake/AutoRevision.txt FC21_REV_HEAD_HASH_H LIMIT 5)
+  string(REGEX REPLACE "\n$" "" FC21_REV_HEAD_HASH_H "${FC21_REV_HEAD_HASH_H}")
+
+  # convert the hexadecimal hash to a decimal number to support the project()
+  math(EXPR FC21_REV_HEAD_HASH_D "0x${FC21_REV_HEAD_HASH_H}" OUTPUT_FORMAT DECIMAL)
+  message("-- AutoRevision HEAD Commit Hash: (hex) ${FC21_REV_HEAD_HASH_H} and (dec) ${FC21_REV_HEAD_HASH_D}")
+
+  file(READ cmake/AutoRevision.txt FC21_REV_TAG OFFSET 6)
+  string(REGEX REPLACE "\n$" "" FC21_REV_TAG "${FC21_REV_TAG}")
+
+  # manipulate the tag so we can turn it into a list for use later
+  string(REPLACE "v" "" FC21_REV_TAG2 "${FC21_REV_TAG}")
+  string(REPLACE "." " " FC21_REV_TAG2 "${FC21_REV_TAG2}")
+  string(REPLACE "-" " " FC21_REV_TAG2 "${FC21_REV_TAG2}")
+  set(FC21_REV_TAG_LIST ${FC21_REV_TAG2})
+  separate_arguments(FC21_REV_TAG_LIST)
+  message("-- AutoRevision Git Tag List: ${FC21_REV_TAG_LIST}")
 
 endif()
