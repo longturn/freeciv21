@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -41,6 +43,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -74,6 +78,8 @@ jobs:
         shell: msys2 {0}
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
@@ -175,6 +181,8 @@ jobs:
       QT_VERSION: 5.15.2
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Cache Qt build
         id: qtcache
         uses: actions/cache@v2
@@ -308,6 +316,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Run clang-format style check for C/C++
       uses: jidicula/clang-format-action@v4.4.0
       with:
