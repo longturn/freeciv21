@@ -120,6 +120,8 @@ jobs:
       VCPKG_BUILD_TYPE: release
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Install build tools
         run: |
           brew update
