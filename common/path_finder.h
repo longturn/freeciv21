@@ -42,6 +42,7 @@ struct cost {
 struct vertex {
   // Vertex location on the map
   tile *location; ///< Where we are
+  unit *loaded;   ///< The unit we are loaded in
   bool moved;     ///< Whether we moved this turn (for HP recovery)
 
   // Cost of the path to come here, needed for path finding
@@ -51,6 +52,9 @@ struct vertex {
   // tile.
   vertex *parent;   ///< The previous vertex, if any
   unit_order order; ///< The order to come here
+
+  vertex child_for_action(action_id action, const unit &probe,
+                          const tile *target);
 
   bool comparable(const vertex &other) const;
   void fill_probe(unit &probe) const;
@@ -90,6 +94,8 @@ class path_finder {
 
     void attempt_move(detail::vertex &source);
     void attempt_full_mp(detail::vertex &source);
+    void attempt_load(detail::vertex &source);
+    void attempt_unload(detail::vertex &source);
   };
 
 public:

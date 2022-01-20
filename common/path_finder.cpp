@@ -3,6 +3,7 @@
 
 #include "path_finder.h"
 
+#include "actions.h"
 #include "game.h"
 #include "map.h"
 #include "movement.h"
@@ -12,7 +13,6 @@
 #include "unit_utils.h"
 #include "world_object.h"
 
-#include <iostream>
 #include <map>
 #include <queue>
 #include <set>
@@ -61,6 +61,25 @@ bool cost::operator<(const cost &other) const
 }
 
 /**
+ * Creates a vertex starting from this one and executing an action. The
+ * vertex state is initialized as a copy of this one except that the action
+ * move cost is subtracted.
+ */
+vertex vertex::child_for_action(action_id action, const unit &probe,
+                                const tile *target)
+{
+  auto ret = *this;
+  ret.parent = this;
+  ret.order.order = ORDER_PERFORM_ACTION;
+  ret.order.action = action;
+  ret.order.target = target->index;
+  ret.order.dir = DIR8_ORIGIN;
+  ret.cost.moves_left =
+      unit_pays_mp_for_action(action_by_number(action), &probe);
+  return ret;
+}
+
+/**
  * Checks whether two vertices are comparable, which is the case when one of
  * them is unambiguously "better" than the other. Vertices that are not
  * comparable should be considered distinct: this is the case, for instance,
@@ -69,7 +88,8 @@ bool cost::operator<(const cost &other) const
  */
 bool vertex::comparable(const vertex &other) const
 {
-  return std::tie(location, moved) == std::tie(other.location, other.moved)
+  return std::tie(location, loaded, moved)
+             == std::tie(other.location, other.loaded, other.moved)
          && cost.comparable(other.cost);
 }
 
@@ -80,6 +100,8 @@ bool vertex::comparable(const vertex &other) const
 void vertex::fill_probe(unit &probe) const
 {
   probe.tile = location;
+  probe.transporter = loaded;
+  probe.client.transported_by = loaded ? loaded->id : -1;
   probe.moved = moved;
   probe.fuel = cost.fuel_left;
   probe.hp = cost.health;
@@ -91,7 +113,8 @@ void vertex::fill_probe(unit &probe) const
  */
 bool vertex::operator==(const vertex &other) const
 {
-  return std::tie(location, cost) == std::tie(other.location, other.cost);
+  return std::tie(location, loaded, moved, cost)
+         == std::tie(other.location, loaded, moved, other.cost);
 }
 
 /**
@@ -112,6 +135,7 @@ path_finder::path_finder_private::path_finder_private(const ::unit *unit)
 {
   // Insert the starting vertex
   auto v = detail::vertex{unit->tile,
+                          unit->transporter,
                           unit->moved,
                           {0, unit->moves_left, unit->hp, unit->fuel},
                           nullptr};
@@ -206,6 +230,11 @@ void path_finder::path_finder_private::maybe_insert_vertex(
  */
 void path_finder::path_finder_private::attempt_move(detail::vertex &source)
 {
+  // Don't attempt to move loaded units
+  if (source.loaded) {
+    return;
+  }
+
   // Make a probe
   auto probe = unit;
   source.fill_probe(probe);
@@ -248,6 +277,99 @@ void path_finder::path_finder_private::attempt_full_mp(
   next.parent = &source;
   next.order.order = ORDER_FULL_MP;
   maybe_insert_vertex(next);
+}
+
+/**
+ * Opens vertices corresponding to attempts to perform load or unload actions
+ * from the source vertex.
+ */
+void path_finder::path_finder_private::attempt_load(detail::vertex &source)
+{
+  // Make a probe
+  auto probe = unit;
+  source.fill_probe(probe);
+
+  // Try to load into a transport -- even if we're already in a transport
+  // Same tile (maybe we can recover HP)
+  if (auto transport = transporter_for_unit(&probe);
+      transport != nullptr
+      && is_action_enabled_unit_on_unit(ACTION_TRANSPORT_BOARD, &probe,
+                                        transport)) {
+    auto next =
+        source.child_for_action(ACTION_TRANSPORT_BOARD, probe, probe.tile);
+    next.loaded = transport;
+    maybe_insert_vertex(next);
+  }
+
+  // Nearby tiles
+  adjc_iterate(&(wld.map), probe.tile, target)
+  {
+    probe.tile = target;
+    auto transport = transporter_for_unit(&probe);
+    // Reset the probe -- needed now because is_action_enabled_unit_on_unit
+    // checks the range
+    probe.tile = source.location;
+    if (transport != nullptr
+        && is_action_enabled_unit_on_unit(ACTION_TRANSPORT_EMBARK, &probe,
+                                          transport)) {
+      auto next =
+          source.child_for_action(ACTION_TRANSPORT_EMBARK, probe, target);
+      // See unithand.cpp:do_unit_embark
+      next.cost.moves_left -= map_move_cost_unit(&(wld.map), &probe, target);
+      next.moved = true;
+      next.loaded = transport;
+      maybe_insert_vertex(next);
+    }
+  }
+  adjc_iterate_end;
+}
+
+void path_finder::path_finder_private::attempt_unload(detail::vertex &source)
+{
+  // Make a probe
+  auto probe = unit;
+  source.fill_probe(probe);
+
+  // Try to unload from a transport -- but only if we're already loaded
+  if (probe.transporter != nullptr) {
+    // Same tile
+    if (is_action_enabled_unit_on_unit(ACTION_TRANSPORT_ALIGHT, &probe,
+                                       probe.transporter)) {
+      auto next = source.child_for_action(ACTION_TRANSPORT_ALIGHT, probe,
+                                          probe.tile);
+      next.loaded = nullptr;
+      maybe_insert_vertex(next);
+    }
+
+    // Nearby tiles
+    adjc_iterate(&(wld.map), probe.tile, target)
+    {
+      if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK1, &probe,
+                                         target, nullptr)) {
+        auto next = source.child_for_action(ACTION_TRANSPORT_DISEMBARK1,
+                                            probe, target);
+        next.moved = true;
+        next.loaded = nullptr;
+        // See unithand.cpp:do_disembark
+        next.cost.moves_left -=
+            map_move_cost_unit(&(wld.map), &probe, target);
+        maybe_insert_vertex(next);
+      }
+      // Thanks sveinung
+      if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK2, &probe,
+                                         target, nullptr)) {
+        auto next = source.child_for_action(ACTION_TRANSPORT_DISEMBARK2,
+                                            probe, target);
+        next.moved = true;
+        next.loaded = nullptr;
+        // See unithand.cpp:do_disembark
+        next.cost.moves_left -=
+            map_move_cost_unit(&(wld.map), &probe, target);
+        maybe_insert_vertex(next);
+      }
+    }
+    adjc_iterate_end;
+  }
 }
 
 /**
@@ -309,8 +431,11 @@ path path_finder::find_path(const tile *destination)
     // Fetch the pointer version of v for use as a parent
     auto parent = it->second.get();
 
+    // Generate vertices starting from this one
     m_d->attempt_move(*parent);
     m_d->attempt_full_mp(*parent);
+    m_d->attempt_load(*parent);
+    m_d->attempt_unload(*parent);
   }
 
   if (m_d->best_vertices.count(destination) > 0) {
