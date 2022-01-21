@@ -415,6 +415,8 @@ void path_finder::unit_changed(const ::unit &unit)
  */
 path path_finder::find_path(const tile *destination)
 {
+  fc_assert_ret_val(destination != nullptr, path());
+
   // Unit frozen by scenario
   if (m_d->unit.stay) {
     return path();

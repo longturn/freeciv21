@@ -327,7 +327,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
   fc_assert_ret_val(turns != NULL, false);
   fc_assert_ret_val(waypoint != NULL, false);
 
-  if (!goto_is_active()) {
+  if (!goto_is_active() || goto_destination == nullptr) {
     return false;
   }
 
