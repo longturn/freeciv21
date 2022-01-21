@@ -133,11 +133,19 @@ bool vertex::operator>(const vertex &other) const
 path_finder::path_finder_private::path_finder_private(const ::unit *unit)
     : unit(*unit)
 {
+  insert_initial_vertex();
+}
+
+/**
+ * Inserts the initial vertex, from which the search will be started.
+ */
+void path_finder::path_finder_private::insert_initial_vertex()
+{
   // Insert the starting vertex
-  auto v = detail::vertex{unit->tile,
-                          unit->transporter,
-                          unit->moved,
-                          {0, unit->moves_left, unit->hp, unit->fuel},
+  auto v = detail::vertex{unit.tile,
+                          unit.transporter,
+                          unit.moved,
+                          {0, 0, unit.moves_left, unit.hp, unit.fuel},
                           nullptr};
   queue.push(v);
   best_vertices.emplace(v.location, std::make_unique<detail::vertex>(v));
@@ -463,6 +471,7 @@ void path_finder::unit_changed(const ::unit &unit)
   while (!m_d->queue.empty()) {
     m_d->queue.pop();
   }
+  m_d->insert_initial_vertex();
 }
 
 /**

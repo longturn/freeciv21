@@ -91,6 +91,7 @@ class path_finder {
                         std::greater<>>
         queue;
 
+    void insert_initial_vertex();
     void maybe_insert_vertex(const detail::vertex &v);
 
     void attempt_move(detail::vertex &source);
