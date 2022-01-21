@@ -538,7 +538,7 @@ path path_finder::find_path(const tile *destination)
   }
 
   // Already at the destination
-  if (m_d->unit.tile == destination) {
+  if (m_d->unit.tile == destination && m_d->waypoints.empty()) {
     return path();
   }
 
