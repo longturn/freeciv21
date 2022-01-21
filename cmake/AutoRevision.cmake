@@ -8,7 +8,7 @@ find_package(Git)
 if(Git_FOUND)
 
   # Run git status to see if we are in a real local repo
-  execute_process(COMMAND ${GIT_EXECUTABLE} status
+  execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=.git status
                   RESULT_VARIABLE STATUS
                   OUTPUT_VARIABLE OUTPUT1
                   ERROR_QUIET )
