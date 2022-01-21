@@ -343,7 +343,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
     // FIXME unsupported
   } else {
     // FIXME patrol: if (hover_state == HOVER_PATROL)
-    *waypoint = false; // FIXME unsupported
+    *waypoint = false;
     *turns = -1;
 
     for (auto &[_, finder] : goto_finders) {
@@ -353,15 +353,18 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
         const auto steps = path.steps();
         // Find tiles on the path where we end turns
         for (std::size_t i = 1; i < steps.size() - 1; ++i) {
-          if (ptile == steps[i].location
-              && steps[i].turns > steps[i - 1].turns) {
-            // Number of turns increased at this step
-            *state = GTS_TURN_STEP;
-            *turns = std::max(*turns, steps[i - 1].turns);
+          if (ptile == steps[i].location) {
+            *waypoint |= steps[i].is_waypoint;
+            if (steps[i].turns > steps[i - 1].turns) {
+              // Number of turns increased at this step
+              *state = GTS_TURN_STEP;
+              *turns = std::max(*turns, steps[i - 1].turns);
+            }
           }
         }
         // Also show a sprite at the end of the path
         if (ptile == steps.back().location) {
+          *waypoint |= steps.back().is_waypoint;
           if (steps.back().moves_left > 0) {
             *state = GTS_MP_LEFT;
           } else {

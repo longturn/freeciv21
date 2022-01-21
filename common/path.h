@@ -21,6 +21,7 @@ public:
     tile *location = nullptr;
     int turns, moves_left;
     unit_order order;
+    bool is_waypoint;
 
     operator bool() const { return location != nullptr; }
   };

@@ -557,8 +557,11 @@ path path_finder::find_path(const tile *destination)
     auto steps = std::vector<path::step>();
     for (auto vertex = best; vertex->parent != nullptr;
          vertex = vertex->parent) {
+      bool waypoint =
+          vertex->parent != nullptr
+          && vertex->cost.waypoints > vertex->parent->cost.waypoints;
       steps.push_back({vertex->location, vertex->cost.turns,
-                       vertex->cost.turns, vertex->order});
+                       vertex->cost.turns, vertex->order, waypoint});
     }
 
     return path(std::vector<path::step>(steps.rbegin(), steps.rend()));
