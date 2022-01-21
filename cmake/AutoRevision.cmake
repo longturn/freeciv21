@@ -42,7 +42,7 @@ if(Git_FOUND)
     # In this case, we have git and are in a good repo, so let's get the values we need from git directly
 
     # Get the value of the git hash at HEAD to 5 chars
-    execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short=5 HEAD
+    execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=.git rev-parse --short=5 HEAD
                     OUTPUT_VARIABLE FC21_REV_HEAD_HASH_H
                     OUTPUT_STRIP_TRAILING_WHITESPACE)
 
@@ -51,12 +51,12 @@ if(Git_FOUND)
     message("-- Git HEAD Commit Hash: (hex) ${FC21_REV_HEAD_HASH_H} and (dec) ${FC21_REV_HEAD_HASH_D}")
 
     # Get a temp value of the full commit hash of the latest tag that is active
-    execute_process(COMMAND ${GIT_EXECUTABLE} rev-list --tags --max-count=1
+    execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=.git rev-list --tags --max-count=1
                     OUTPUT_VARIABLE _output
                     OUTPUT_STRIP_TRAILING_WHITESPACE)
 
     # Use the temp value to get the latest revision tag
-    execute_process(COMMAND ${GIT_EXECUTABLE} describe --tags ${_output}
+    execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=.git describe --tags ${_output}
                     OUTPUT_VARIABLE FC21_REV_TAG
                     OUTPUT_STRIP_TRAILING_WHITESPACE)
     message("-- Latest Git Tag: ${FC21_REV_TAG}")
