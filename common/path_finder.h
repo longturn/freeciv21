@@ -22,6 +22,7 @@ namespace detail {
  * can be compared to find out which is the best.
  */
 struct cost {
+  int waypoints;  ///< How many waypoints we have visited so far
   int turns;      ///< How many turns it takes to get there
   int moves_left; ///< How many move fragments the unit has left
   int health;     ///< How many HP the unit has left
@@ -91,6 +92,9 @@ class path_finder {
                         std::greater<>>
         queue;
 
+    // Waypoints are tiles we must use in our path
+    std::vector<const tile *> waypoints;
+
     void insert_initial_vertex();
     void maybe_insert_vertex(const detail::vertex &v);
 
@@ -107,6 +111,9 @@ public:
   virtual ~path_finder();
 
   inline path_finder &operator=(path_finder &&other);
+
+  void push_waypoint(const tile *location);
+  void pop_waypoint();
 
   void unit_changed(const unit &unit);
 

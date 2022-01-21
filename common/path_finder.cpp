@@ -29,14 +29,15 @@ bool cost::comparable(const cost &other) const
   // When the results of the expressions below are positive, this cost does
   // better than the other for this criteria. When it's negative, it's the
   // opposite.
-  auto a = other.turns - turns;
-  auto b = moves_left - other.moves_left;
-  auto c = health - other.health;
-  auto d = fuel_left - other.fuel_left;
+  auto a = waypoints - other.waypoints;
+  auto b = other.turns - turns;
+  auto c = moves_left - other.moves_left;
+  auto d = health - other.health;
+  auto e = fuel_left - other.fuel_left;
   // For the comparison to be meaningful, all criteria must go in the same
   // direction.
-  return (a <= 0 && b <= 0 && c <= 0 && d <= 0)
-         || (a >= 0 && b >= 0 && c >= 0 && d >= 0);
+  return (a <= 0 && b <= 0 && c <= 0 && d <= 0 && e <= 0)
+         || (a >= 0 && b >= 0 && c >= 0 && d >= 0 && e >= 0);
 }
 
 /**
@@ -44,8 +45,9 @@ bool cost::comparable(const cost &other) const
  */
 bool cost::operator==(const cost &other) const
 {
-  return std::tie(turns, other.moves_left, other.health, other.fuel_left)
-         == std::tie(other.turns, moves_left, health, fuel_left);
+  return std::tie(other.waypoints, turns, other.moves_left, other.health,
+                  other.fuel_left)
+         == std::tie(waypoints, other.turns, moves_left, health, fuel_left);
 }
 
 /**
@@ -56,8 +58,9 @@ bool cost::operator<(const cost &other) const
   // To break ties, we prefer the unit with the most moves, then the
   // healthiest unit, then the unit with the most fuel. This is an arbitrary
   // choice.
-  return std::tie(turns, other.moves_left, other.health, other.fuel_left)
-         < std::tie(other.turns, moves_left, health, fuel_left);
+  return std::tie(other.waypoints, turns, other.moves_left, other.health,
+                  other.fuel_left)
+         < std::tie(waypoints, other.turns, moves_left, health, fuel_left);
 }
 
 /**
@@ -201,6 +204,12 @@ void path_finder::path_finder_private::maybe_insert_vertex(
 
     // "Start of turn" part
     insert.moved = false; // Didn't move yet
+  }
+
+  // Did we just reach a waypoint?
+  if (insert.cost.waypoints < waypoints.size()
+      && insert.location == waypoints[insert.cost.waypoints]) {
+    insert.cost.waypoints++;
   }
 
   // The remaining logic checks whether we should insert the new vertex. This
@@ -409,7 +418,8 @@ bool path_finder::path_finder_private::run_search(
     // Check if we just arrived
     // Keep the node in the queue so adjacent nodes are generated if the
     // search needs to be expanded later.
-    if (v.location == stopping_condition) {
+    if (v.location == stopping_condition
+        && v.cost.waypoints == waypoints.size()) {
       return true;
     }
 
@@ -459,6 +469,45 @@ path_finder::~path_finder()
 }
 
 /**
+ * Adds a waypoint to the path finding. Waypoints are tiles that the path must
+ * go through (in order) before reaching the destination.
+ *
+ * \see pop_waypoint
+ */
+void path_finder::push_waypoint(const tile *location)
+{
+  m_d->waypoints.push_back(location);
+
+  // We can try to be smarter later. For now, just invalidate everything.
+  m_d->best_vertices.clear();
+  while (!m_d->queue.empty()) {
+    m_d->queue.pop();
+  }
+  m_d->insert_initial_vertex();
+}
+
+/**
+ * Removes the last added waypoint.
+ *
+ * \see push_waypoint
+ */
+void path_finder::pop_waypoint()
+{
+  // Nothing to to.
+  if (m_d->waypoints.empty()) {
+    return;
+  }
+
+  m_d->waypoints.pop_back();
+
+  // We can try to be smarter later. For now, just invalidate everything.
+  m_d->best_vertices.clear();
+  while (!m_d->queue.empty()) {
+    m_d->queue.pop();
+  }
+  m_d->insert_initial_vertex();
+}
+/**
  * Notifies the path finder that some unit died or changed state. In many
  * cases, this will trigger a recalculation of the path.
  */
@@ -497,7 +546,9 @@ path path_finder::find_path(const tile *destination)
     const auto [begin, end] = m_d->best_vertices.equal_range(destination);
     const detail::vertex *best = nullptr;
     for (auto it = begin; it != end; ++it) {
-      if (best == nullptr || it->second->cost < best->cost) {
+      if (best == nullptr
+          || (it->second->cost < best->cost
+              && it->second->cost.waypoints == m_d->waypoints.size())) {
         best = it->second.get();
       }
     }

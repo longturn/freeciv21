@@ -108,7 +108,9 @@ bool is_valid_goto_destination(const struct tile *ptile)
  */
 bool goto_add_waypoint()
 {
-  // FIXME port
+  for (auto &[_, finder] : goto_finders) {
+    finder.push_waypoint(goto_destination);
+  }
   return true;
 }
 
@@ -118,7 +120,9 @@ bool goto_add_waypoint()
  */
 bool goto_pop_waypoint()
 {
-  // FIXME port
+  for (auto &[_, finder] : goto_finders) {
+    finder.pop_waypoint();
+  }
   return true;
 }
 
