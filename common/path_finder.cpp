@@ -476,14 +476,16 @@ path_finder::~path_finder()
  */
 void path_finder::push_waypoint(const tile *location)
 {
-  m_d->waypoints.push_back(location);
+  if (m_d->waypoints.empty() || location != m_d->waypoints.back()) {
+    m_d->waypoints.push_back(location);
 
-  // We can try to be smarter later. For now, just invalidate everything.
-  m_d->best_vertices.clear();
-  while (!m_d->queue.empty()) {
-    m_d->queue.pop();
+    // We can try to be smarter later. For now, just invalidate everything.
+    m_d->best_vertices.clear();
+    while (!m_d->queue.empty()) {
+      m_d->queue.pop();
+    }
+    m_d->insert_initial_vertex();
   }
-  m_d->insert_initial_vertex();
 }
 
 /**
