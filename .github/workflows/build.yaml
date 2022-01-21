@@ -38,6 +38,19 @@ jobs:
       - name: Install
         run: |
           cmake --build build --target install
+      - name: Package
+        run: |
+          rm -Rf $PWD/build
+          cmake . -B build -G Ninja
+          cmake --build build --target package
+      - name: Upload package
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            build/Linux-x86_64/freeciv21_*_amd64.deb
+            build/Linux-x86_64/freeciv21_*_amd64.deb.sha256
+
   ubuntu-clang:
     name: "Ubuntu with clang"
     runs-on: ubuntu-latest
