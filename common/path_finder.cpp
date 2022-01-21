@@ -377,6 +377,61 @@ void path_finder::path_finder_private::attempt_unload(detail::vertex &source)
 }
 
 /**
+ * Runs the path finding seach until the stopping condition is met (the
+ * destination tile is reached). Checks if the tile has already been reached
+ * before proceeding.
+ *
+ * \returns true if a path was found.
+ */
+bool path_finder::path_finder_private::run_search(
+    const tile *stopping_condition)
+{
+  // Check if we've already found a path (but keep searching if the tip of
+  // the queue is cheaper: we haven't checked every possibility).
+  if (auto it = best_vertices.find(stopping_condition);
+      it != best_vertices.end() && !(queue.top().cost < it->second->cost)) {
+    return true;
+  }
+
+  // What follows is an implementation of Dijkstra's path finding algorithm.
+  while (!queue.empty()) {
+    // Get the "best" vertex
+    const auto v = queue.top();
+
+    // Check if we just arrived
+    // Keep the node in the queue so adjacent nodes are generated if the
+    // search needs to be expanded later.
+    if (v.location == stopping_condition) {
+      return true;
+    }
+
+    queue.pop(); // Remove it from the queue
+
+    // An equivalent (or better) vertex may already have been processed.
+    // Check that we have one of the "current best" vertices for that tile.
+    const auto [begin, end] = best_vertices.equal_range(v.location);
+    const auto it = std::find_if(
+        begin, end, [&v](const auto &pair) { return *pair.second == v; });
+    if (it == best_vertices.end()) {
+      // Not found, we processed something else in the meantime. Since we
+      // processed it earlier, that path was at least as short.
+      continue;
+    }
+
+    // Fetch the pointer version of v for use as a parent
+    auto parent = it->second.get();
+
+    // Generate vertices starting from this one
+    attempt_move(*parent);
+    attempt_full_mp(*parent);
+    attempt_load(*parent);
+    attempt_unload(*parent);
+  }
+
+  return false;
+}
+
+/**
  * Constructs a @c path_finder for the given unit and destination. Doesn't
  * start the path finding yet.
  *
@@ -427,39 +482,7 @@ path path_finder::find_path(const tile *destination)
     return path();
   }
 
-  // What follows is an implementation of Dijkstra path finding algorithm.
-  while (!m_d->queue.empty()) {
-    // Get the "best" vertex
-    const auto v = m_d->queue.top();
-    m_d->queue.pop(); // Remove it from the queue
-
-    // Check if we just arrived
-    if (v.location == destination) {
-      break;
-    }
-
-    // An equivalent (or better) vertex may already have been processed.
-    // Check that we have one of the "current best" vertices for that tile.
-    const auto [begin, end] = m_d->best_vertices.equal_range(v.location);
-    const auto it = std::find_if(
-        begin, end, [&v](const auto &pair) { return *pair.second == v; });
-    if (it == m_d->best_vertices.end()) {
-      // Not found, we processed something else in the meantime. Since we
-      // processed it earlier, that path was at least as short.
-      continue;
-    }
-
-    // Fetch the pointer version of v for use as a parent
-    auto parent = it->second.get();
-
-    // Generate vertices starting from this one
-    m_d->attempt_move(*parent);
-    m_d->attempt_full_mp(*parent);
-    m_d->attempt_load(*parent);
-    m_d->attempt_unload(*parent);
-  }
-
-  if (m_d->best_vertices.count(destination) > 0) {
+  if (m_d->run_search(destination)) {
     // Find the best path. We may have several vertices, so select the one
     // with the lowest cost.
     const auto [begin, end] = m_d->best_vertices.equal_range(destination);

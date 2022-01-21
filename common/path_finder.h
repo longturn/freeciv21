@@ -97,6 +97,8 @@ class path_finder {
     void attempt_full_mp(detail::vertex &source);
     void attempt_load(detail::vertex &source);
     void attempt_unload(detail::vertex &source);
+
+    bool run_search(const tile *stopping_condition);
   };
 
 public:
