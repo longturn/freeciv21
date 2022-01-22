@@ -109,7 +109,17 @@ bool is_valid_goto_destination(const struct tile *ptile)
 bool goto_add_waypoint()
 {
   for (auto &[_, finder] : goto_finders) {
+    // Patrol always uses a waypoint
+    if (hover_state == HOVER_PATROL) {
+      finder.pop_waypoint();
+    }
+
     finder.push_waypoint(goto_destination);
+
+    // Patrol always uses a waypoint
+    if (hover_state == HOVER_PATROL) {
+      finder.push_waypoint(goto_destination);
+    }
   }
   return true;
 }
@@ -121,7 +131,17 @@ bool goto_add_waypoint()
 bool goto_pop_waypoint()
 {
   for (auto &[_, finder] : goto_finders) {
+    // Patrol always uses a waypoint
+    if (hover_state == HOVER_PATROL) {
+      finder.pop_waypoint();
+    }
+
     finder.pop_waypoint();
+
+    // Patrol always uses a waypoint
+    if (hover_state == HOVER_PATROL) {
+      finder.push_waypoint(goto_destination);
+    }
   }
   return true;
 }
@@ -309,12 +329,14 @@ bool goto_get_turns(int *min, int *max)
     // FIXME unsupported
   } else {
     // In other modes, we want to know the turn number to reach the tile.
-    for (auto &[_, finder] : goto_finders) {
-      auto path = finder.find_path(goto_destination);
+    for (auto &[unit_id, finder] : goto_finders) {
+      auto destination = hover_state == HOVER_PATROL
+                             ? game_unit_by_number(unit_id)->tile
+                             : goto_destination;
+      auto path = finder.find_path(destination);
       *min = std::max(*min, path.turns());
       *max = std::max(*max, path.turns());
     }
-    // FIXME patrol => total time going and coming back
   }
 
   return true;
@@ -342,13 +364,15 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
   if (hover_state == HOVER_CONNECT) {
     // FIXME unsupported
   } else {
-    // FIXME patrol: if (hover_state == HOVER_PATROL)
     *waypoint = false;
     *turns = -1;
 
-    for (auto &[_, finder] : goto_finders) {
+    for (auto &[unit_id, finder] : goto_finders) {
       // Get a path
-      const auto path = finder.find_path(goto_destination);
+      auto destination = hover_state == HOVER_PATROL
+                             ? game_unit_by_number(unit_id)->tile
+                             : goto_destination;
+      const auto path = finder.find_path(destination);
       if (!path.empty()) {
         const auto steps = path.steps();
         // Find tiles on the path where we end turns
@@ -396,8 +420,18 @@ bool is_valid_goto_draw_line(struct tile *dest_tile)
 
   // assume valid destination
   goto_destination = dest_tile;
-  for (auto &[_, finder] : goto_finders) {
-    const auto path = finder.find_path(dest_tile);
+  for (auto &[unit_id, finder] : goto_finders) {
+    auto destination = dest_tile;
+
+    // Patrol is implemented by automatically adding a waypoint under the
+    // cursor
+    if (hover_state == HOVER_PATROL) {
+      finder.pop_waypoint(); // Remove the last waypoint
+      finder.push_waypoint(dest_tile);
+      destination = game_unit_by_number(unit_id)->tile;
+    }
+
+    const auto path = finder.find_path(destination);
     if (path.empty()) {
       // This is our way of signalling that we can't go to a tile
       goto_destination = NULL;
@@ -704,11 +738,7 @@ bool send_attack_tile(struct unit *punit, struct tile *ptile)
    Send the current patrol route (i.e., the one generated via HOVER_STATE)
    to the server.
  */
-void send_patrol_route()
-{
-  fc_assert_ret(goto_is_active());
-  // FIXME unsupported
-}
+void send_patrol_route() { send_goto_route(); }
 
 /**
    Send the current connect route (i.e., the one generated via HOVER_STATE)
@@ -731,7 +761,10 @@ void send_goto_route()
   fc_assert_ret(goto_destination != nullptr);
 
   for (auto &[unit_id, finder] : goto_finders) {
-    const auto path = finder.find_path(goto_destination);
+    auto destination = hover_state == HOVER_PATROL
+                           ? game_unit_by_number(unit_id)->tile
+                           : goto_destination;
+    const auto path = finder.find_path(destination);
     // No path to destination. Still try the other units...
     if (path.empty()) {
       continue;
@@ -744,8 +777,8 @@ void send_goto_route()
     packet.unit_id = unit_id;
     packet.dest_tile = goto_destination->index;
     packet.src_tile = unit->tile->index;
-    packet.repeat = false;
-    packet.vigilant = false;
+    packet.repeat = hover_state == HOVER_PATROL;
+    packet.vigilant = hover_state == HOVER_PATROL;
 
     const auto steps = path.steps();
     fc_assert_ret(steps.size() < MAX_LEN_ROUTE);
