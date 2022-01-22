@@ -22,7 +22,6 @@ namespace detail {
  * can be compared to find out which is the best.
  */
 struct cost {
-  int waypoints;  ///< How many waypoints we have visited so far
   int turns;      ///< How many turns it takes to get there
   int moves_left; ///< How many move fragments the unit has left
   int health;     ///< How many HP the unit has left
@@ -42,10 +41,11 @@ struct cost {
  * Additional information about the path finding is also stored.
  */
 struct vertex {
-  // Vertex location on the map
+  // Vertex location in the search graph
   tile *location; ///< Where we are
   unit *loaded;   ///< The unit we are loaded in
   bool moved;     ///< Whether we moved this turn (for HP recovery)
+  int waypoints;  ///< How many waypoints we have visited so far
 
   // Cost of the path to come here, needed for path finding
   detail::cost cost; ///< How many turns it takes to get here

@@ -29,15 +29,14 @@ bool cost::comparable(const cost &other) const
   // When the results of the expressions below are positive, this cost does
   // better than the other for this criteria. When it's negative, it's the
   // opposite.
-  auto a = waypoints - other.waypoints;
-  auto b = other.turns - turns;
-  auto c = moves_left - other.moves_left;
-  auto d = health - other.health;
-  auto e = fuel_left - other.fuel_left;
+  auto a = other.turns - turns;
+  auto b = moves_left - other.moves_left;
+  auto c = health - other.health;
+  auto d = fuel_left - other.fuel_left;
   // For the comparison to be meaningful, all criteria must go in the same
   // direction.
-  return (a <= 0 && b <= 0 && c <= 0 && d <= 0 && e <= 0)
-         || (a >= 0 && b >= 0 && c >= 0 && d >= 0 && e >= 0);
+  return (a <= 0 && b <= 0 && c <= 0 && d <= 0)
+         || (a >= 0 && b >= 0 && c >= 0 && d >= 0);
 }
 
 /**
@@ -45,9 +44,8 @@ bool cost::comparable(const cost &other) const
  */
 bool cost::operator==(const cost &other) const
 {
-  return std::tie(other.waypoints, turns, other.moves_left, other.health,
-                  other.fuel_left)
-         == std::tie(waypoints, other.turns, moves_left, health, fuel_left);
+  return std::tie(turns, other.moves_left, other.health, other.fuel_left)
+         == std::tie(other.turns, moves_left, health, fuel_left);
 }
 
 /**
@@ -58,9 +56,8 @@ bool cost::operator<(const cost &other) const
   // To break ties, we prefer the unit with the most moves, then the
   // healthiest unit, then the unit with the most fuel. This is an arbitrary
   // choice.
-  return std::tie(other.waypoints, turns, other.moves_left, other.health,
-                  other.fuel_left)
-         < std::tie(waypoints, other.turns, moves_left, health, fuel_left);
+  return std::tie(turns, other.moves_left, other.health, other.fuel_left)
+         < std::tie(other.turns, moves_left, health, fuel_left);
 }
 
 /**
@@ -91,8 +88,9 @@ vertex vertex::child_for_action(action_id action, const unit &probe,
  */
 bool vertex::comparable(const vertex &other) const
 {
-  return std::tie(location, loaded, moved)
-             == std::tie(other.location, other.loaded, other.moved)
+  return std::tie(location, loaded, moved, waypoints)
+             == std::tie(other.location, other.loaded, other.moved,
+                         other.waypoints)
          && cost.comparable(other.cost);
 }
 
@@ -116,8 +114,9 @@ void vertex::fill_probe(unit &probe) const
  */
 bool vertex::operator==(const vertex &other) const
 {
-  return std::tie(location, loaded, moved, cost)
-         == std::tie(other.location, loaded, moved, other.cost);
+  return std::tie(location, loaded, moved, waypoints, cost)
+         == std::tie(other.location, other.loaded, other.moved,
+                     other.waypoints, other.cost);
 }
 
 /**
@@ -148,7 +147,8 @@ void path_finder::path_finder_private::insert_initial_vertex()
   auto v = detail::vertex{unit.tile,
                           unit.transporter,
                           unit.moved,
-                          {0, 0, unit.moves_left, unit.hp, unit.fuel},
+                          0, // Waypoints
+                          {0, unit.moves_left, unit.hp, unit.fuel},
                           nullptr};
   queue.push(v);
   best_vertices.emplace(v.location, std::make_unique<detail::vertex>(v));
@@ -207,9 +207,9 @@ void path_finder::path_finder_private::maybe_insert_vertex(
   }
 
   // Did we just reach a waypoint?
-  if (insert.cost.waypoints < waypoints.size()
-      && insert.location == waypoints[insert.cost.waypoints]) {
-    insert.cost.waypoints++;
+  if (insert.waypoints < waypoints.size()
+      && insert.location == waypoints[insert.waypoints]) {
+    insert.waypoints++;
   }
 
   // The remaining logic checks whether we should insert the new vertex. This
@@ -406,7 +406,8 @@ bool path_finder::path_finder_private::run_search(
   // Check if we've already found a path (but keep searching if the tip of
   // the queue is cheaper: we haven't checked every possibility).
   if (auto it = best_vertices.find(stopping_condition);
-      it != best_vertices.end() && !(queue.top().cost < it->second->cost)) {
+      it != best_vertices.end() && it->second->waypoints == waypoints.size()
+      && !(queue.top().cost < it->second->cost)) {
     return true;
   }
 
@@ -419,7 +420,7 @@ bool path_finder::path_finder_private::run_search(
     // Keep the node in the queue so adjacent nodes are generated if the
     // search needs to be expanded later.
     if (v.location == stopping_condition
-        && v.cost.waypoints == waypoints.size()) {
+        && v.waypoints == waypoints.size()) {
       return true;
     }
 
@@ -548,9 +549,8 @@ path path_finder::find_path(const tile *destination)
     const auto [begin, end] = m_d->best_vertices.equal_range(destination);
     const detail::vertex *best = nullptr;
     for (auto it = begin; it != end; ++it) {
-      if (best == nullptr
-          || (it->second->cost < best->cost
-              && it->second->cost.waypoints == m_d->waypoints.size())) {
+      if ((best == nullptr || it->second->cost < best->cost)
+          && it->second->waypoints == m_d->waypoints.size()) {
         best = it->second.get();
       }
     }
@@ -559,9 +559,8 @@ path path_finder::find_path(const tile *destination)
     auto steps = std::vector<path::step>();
     for (auto vertex = best; vertex->parent != nullptr;
          vertex = vertex->parent) {
-      bool waypoint =
-          vertex->parent != nullptr
-          && vertex->cost.waypoints > vertex->parent->cost.waypoints;
+      bool waypoint = vertex->parent != nullptr
+                      && vertex->waypoints > vertex->parent->waypoints;
       steps.push_back({vertex->location, vertex->cost.turns,
                        vertex->cost.turns, vertex->order, waypoint});
     }
