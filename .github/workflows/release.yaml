@@ -11,7 +11,7 @@ jobs:
         with:
           fetch-depth: 0
       - run: git rev-parse --short=5 HEAD > cmake/AutoRevision.txt
-      - run: git describe --tags `git rev-list --tags --max-count=1` >> cmake/AutoRevision.txt
+      - run: git describe --tags `git rev-list --tags --max-count=1 master` >> cmake/AutoRevision.txt
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Release update of AutoRevision.txt"
