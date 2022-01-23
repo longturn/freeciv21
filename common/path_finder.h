@@ -42,10 +42,11 @@ struct cost {
  */
 struct vertex {
   // Vertex location in the search graph
-  tile *location; ///< Where we are
-  unit *loaded;   ///< The unit we are loaded in
-  bool moved;     ///< Whether we moved this turn (for HP recovery)
-  int waypoints;  ///< How many waypoints we have visited so far
+  tile *location;   ///< Where we are
+  unit *loaded;     ///< The unit we are loaded in
+  bool moved;       ///< Whether we moved this turn (for HP recovery)
+  bool paradropped; ///< Whether we paradropped this turn
+  int waypoints;    ///< How many waypoints we have visited so far
 
   // Cost of the path to come here, needed for path finding
   detail::cost cost; ///< How many turns it takes to get here
@@ -102,6 +103,7 @@ class path_finder {
     void attempt_full_mp(detail::vertex &source);
     void attempt_load(detail::vertex &source);
     void attempt_unload(detail::vertex &source);
+    void attempt_paradrop(detail::vertex &source);
 
     bool run_search(const tile *stopping_condition);
   };

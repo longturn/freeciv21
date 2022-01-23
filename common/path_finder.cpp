@@ -88,9 +88,9 @@ vertex vertex::child_for_action(action_id action, const unit &probe,
  */
 bool vertex::comparable(const vertex &other) const
 {
-  return std::tie(location, loaded, moved, waypoints)
+  return std::tie(location, loaded, moved, paradropped, waypoints)
              == std::tie(other.location, other.loaded, other.moved,
-                         other.waypoints)
+                         other.paradropped, other.waypoints)
          && cost.comparable(other.cost);
 }
 
@@ -104,6 +104,7 @@ void vertex::fill_probe(unit &probe) const
   probe.transporter = loaded;
   probe.client.transported_by = loaded ? loaded->id : -1;
   probe.moved = moved;
+  probe.paradropped = paradropped;
   probe.fuel = cost.fuel_left;
   probe.hp = cost.health;
   probe.moves_left = cost.moves_left;
@@ -114,9 +115,9 @@ void vertex::fill_probe(unit &probe) const
  */
 bool vertex::operator==(const vertex &other) const
 {
-  return std::tie(location, loaded, moved, waypoints, cost)
+  return std::tie(location, loaded, moved, paradropped, waypoints, cost)
          == std::tie(other.location, other.loaded, other.moved,
-                     other.waypoints, other.cost);
+                     other.paradropped, other.waypoints, other.cost);
 }
 
 /**
@@ -147,6 +148,7 @@ void path_finder::path_finder_private::insert_initial_vertex()
   auto v = detail::vertex{unit.tile,
                           unit.transporter,
                           unit.moved,
+                          unit.paradropped,
                           0, // Waypoints
                           {0, unit.moves_left, unit.hp, unit.fuel},
                           nullptr};
@@ -204,6 +206,7 @@ void path_finder::path_finder_private::maybe_insert_vertex(
 
     // "Start of turn" part
     insert.moved = false; // Didn't move yet
+    insert.paradropped = false; // Didn't paradrop yet
   }
 
   // Did we just reach a waypoint?
@@ -394,6 +397,91 @@ void path_finder::path_finder_private::attempt_unload(detail::vertex &source)
 }
 
 /**
+ * Opens vertices corresponding to attempts to unload from a transport at the
+ * source vertex.
+ */
+void path_finder::path_finder_private::attempt_paradrop(
+    detail::vertex &source)
+{
+  // Make a probe
+  auto probe = unit;
+  source.fill_probe(probe);
+
+  // Try to paradrop -- if we can at all
+  if (!probe.paradropped
+      && utype_can_do_action(probe.utype, ACTION_PARADROP)) {
+    // Get action details
+    auto action = action_by_number(ACTION_PARADROP);
+
+    // circle_dxyr_iterate will take the square root of this
+    auto sq_radius =
+        std::min(action->max_distance, probe.utype->paratroopers_range);
+    sq_radius *= sq_radius;
+
+    // circle_dxyr_iterate does some magic with the name of the center tile
+    // variable, make sure it will works
+    auto tile = probe.tile;
+
+    // Iterate over reachable tiles
+    circle_dxyr_iterate(&(wld.map), tile, sq_radius, target, _dx, _dy,
+                        distance)
+    {
+      if (distance >= action->min_distance * action->min_distance) {
+        // Paradrop has many hard requirements, see unittools.cpp:do_paradrop
+        // The target tile must be known
+        if (target == nullptr) {
+          continue;
+        }
+
+        // The target tile must be seen or be a native tile
+        if (TILE_KNOWN_SEEN != tile_get_known(target, probe.owner)
+            && !is_native_tile(probe.utype, target)) {
+          continue;
+        }
+
+        // Don't drown in the ocean (but allow dropping into ships)
+        if (!can_unit_exist_at_tile(&(wld.map), &probe, target)
+            && (!game.info.paradrop_to_transport
+                || !unit_could_load_at(&probe, target))) {
+          continue;
+        }
+
+        // We must be allowed to go to the target tile (not at peace with
+        // potential owner)
+        if (target->owner
+            && pplayers_non_attack(probe.owner, target->owner)) {
+          continue;
+        }
+
+        // Don't paradrop on top of other units or cities
+        if (is_non_allied_unit_tile(target, probe.owner)) {
+          continue;
+        }
+
+        // Don't paradrop to non allied cities
+        if (tile_city(target) && !is_allied_city_tile(target, probe.owner)) {
+          continue;
+        }
+
+        // Soft requirements
+        if (!is_action_enabled_unit_on_tile(ACTION_PARADROP, &probe, target,
+                                            nullptr)) {
+          continue;
+        }
+
+        auto next = source.child_for_action(ACTION_PARADROP, probe, target);
+        next.location = target;
+        next.paradropped = true;
+        next.moved = true;
+        next.loaded = nullptr;
+        maybe_insert_vertex(next);
+      }
+    }
+    circle_dxyr_iterate_end;
+  }
+}
+
+/**
  * Runs the path finding seach until the stopping condition is met (the
  * destination tile is reached). Checks if the tile has already been reached
  * before proceeding.
@@ -445,6 +533,7 @@ bool path_finder::path_finder_private::run_search(
     attempt_full_mp(*parent);
     attempt_load(*parent);
     attempt_unload(*parent);
+    attempt_paradrop(*parent);
   }
 
   return false;
