@@ -41,7 +41,7 @@ jobs:
       - name: Package
         run: |
           rm -Rf $PWD/build
-          cmake . -B build -G Ninja
+          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr
           cmake --build build --target package
       - name: Upload package
         uses: softprops/action-gh-release@v1

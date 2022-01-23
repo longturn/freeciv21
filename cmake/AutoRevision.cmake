@@ -35,7 +35,7 @@ if(Git_FOUND)
     string(REPLACE "-" " " FC21_REV_TAG2 "${FC21_REV_TAG2}")
     set(FC21_REV_TAG_LIST ${FC21_REV_TAG2})
     separate_arguments(FC21_REV_TAG_LIST)
-    message("-- AutoRevision Git Tag List: ${FC21_REV_TAG_LIST}")
+    #message("-- AutoRevision Git Tag List: ${FC21_REV_TAG_LIST}")
 
   else()
 
@@ -51,7 +51,7 @@ if(Git_FOUND)
     message("-- Git HEAD Commit Hash: (hex) ${FC21_REV_HEAD_HASH_H} and (dec) ${FC21_REV_HEAD_HASH_D}")
 
     # Get a temp value of the full commit hash of the latest tag that is active
-    execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=.git rev-list --tags --max-count=1
+    execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=.git rev-list --tags --max-count=1 master
                     OUTPUT_VARIABLE _output
                     OUTPUT_STRIP_TRAILING_WHITESPACE)
 
@@ -67,7 +67,7 @@ if(Git_FOUND)
     string(REPLACE "-" " " FC21_REV_TAG2 "${FC21_REV_TAG2}")
     set(FC21_REV_TAG_LIST ${FC21_REV_TAG2})
     separate_arguments(FC21_REV_TAG_LIST)
-    message("-- Latest Git Tag List: ${FC21_REV_TAG_LIST}")
+    #message("-- Latest Git Tag List: ${FC21_REV_TAG_LIST}")
 
   endif()
 endif()
