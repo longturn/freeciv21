@@ -25,7 +25,7 @@ private slots:
   void updateInfo();
 
 protected:
-  void moveEvent(QMoveEvent *event);
+  void moveEvent(QMoveEvent *event) override;
 
 private:
   move_widget *mw;
