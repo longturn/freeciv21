@@ -783,3 +783,18 @@ void action_list_add_all_by_result(action_id *act_list, int *position,
 // Action auto performers
 const struct action_auto_perf *action_auto_perf_by_number(const int num);
 struct action_auto_perf *action_auto_perf_slot_number(const int num);
+
+// Find targets
+struct city *action_tgt_city(struct unit *actor, struct tile *target_tile,
+                             bool accept_all_actions);
+
+struct unit *action_tgt_unit(struct unit *actor, struct tile *target_tile,
+                             bool accept_all_actions);
+
+struct tile *action_tgt_tile(struct unit *actor, struct tile *target_tile,
+                             const struct extra_type *target_extra,
+                             bool accept_all_actions);
+
+struct extra_type *action_tgt_tile_extra(const struct unit *actor,
+                                         const struct tile *target_tile,
+                                         bool accept_all_actions);

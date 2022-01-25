@@ -41,20 +41,6 @@ void action_success_target_pay_mp(struct action *paction, int target_id,
 void action_success_actor_price(struct action *paction, int actor_id,
                                 struct unit *actor);
 
-struct city *action_tgt_city(struct unit *actor, struct tile *target_tile,
-                             bool accept_all_actions);
-
-struct unit *action_tgt_unit(struct unit *actor, struct tile *target_tile,
-                             bool accept_all_actions);
-
-struct tile *action_tgt_tile(struct unit *actor, struct tile *target_tile,
-                             const struct extra_type *target_extra,
-                             bool accept_all_actions);
-
-struct extra_type *action_tgt_tile_extra(const struct unit *actor,
-                                         const struct tile *target_tile,
-                                         bool accept_all_actions);
-
 int action_sub_target_id_for_action(const struct action *paction,
                                     struct unit *actor_unit);
 
