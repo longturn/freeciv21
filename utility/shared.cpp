@@ -640,7 +640,7 @@ static QStringList base_get_dirs(const char *env_var)
     return {};
   } else if (qEnvironmentVariableIsSet(env_var)) {
     return QString(qEnvironmentVariable(env_var))
-        .split(QDir::listSeparator(), QString::SkipEmptyParts);
+        .split(QDir::listSeparator(), Qt::SkipEmptyParts);
   } else {
     return {};
   }
