@@ -4949,8 +4949,8 @@ static struct act_prob action_prob_vs_units_full(
   if (unit_list_size(target_tile->units) == 0) {
     // Can't act against an empty tile.
 
-    if (player_can_trust_tile_has_no_units(unit_owner(actor_unit),
-                                           target_tile)) {
+    if (can_player_see_hypotetic_units_at(unit_owner(actor_unit),
+                                          target_tile)) {
       // Known empty tile.
       return ACTPROB_IMPOSSIBLE;
     } else {
