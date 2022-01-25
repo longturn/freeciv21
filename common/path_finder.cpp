@@ -485,6 +485,54 @@ void path_finder::path_finder_private::attempt_paradrop(
 }
 
 /**
+ * Opens vertices corresponding to attempts to do ORDER_ACTION_MOVE from the
+ * source vertex. The generated vertices are always `final` because
+ * ORDER_ACTION_MOVE cannot be used in the middle of a path.
+ */
+void path_finder::path_finder_private::attempt_action_move(
+    detail::vertex &source)
+{
+  // Make a probe
+  auto probe = unit;
+  source.fill_probe(probe);
+
+  // Try action-moving to adjacent tiles
+  adjc_dir_iterate(&(wld.map), source.location, target, dir)
+  {
+    if (target->terrain == nullptr) {
+      // Can't see this tile
+      continue;
+    }
+
+    // See unithand.cpp:unit_move_handling
+    const bool can_not_move =
+        !unit_can_move_to_tile(&(wld.map), &probe, target, false, false);
+
+    const bool one_action_may_be_legal =
+        action_tgt_unit(&probe, target, can_not_move)
+        || action_tgt_city(&probe, target, can_not_move)
+        // A legal action with an extra sub target is a legal action
+        || action_tgt_tile_extra(&probe, target, can_not_move)
+        // Tile target actions with extra sub targets are handled above
+        // Includes actions vs unit stacks
+        || action_tgt_tile(&probe, target, NULL, can_not_move);
+
+    if (one_action_may_be_legal) {
+      // Construct the vertex
+      auto next = source;
+      next.location = target;
+      next.moved = true;
+      next.is_final = true;
+      next.parent = &source;
+      next.order.order = ORDER_ACTION_MOVE;
+      next.order.dir = dir;
+      maybe_insert_vertex(next);
+    }
+  }
+  adjc_dir_iterate_end;
+}
+
+/**
  * Runs the path finding seach until the stopping condition is met (the
  * destination tile is reached). Checks if the tile has already been reached
  * before proceeding.
@@ -538,6 +586,7 @@ bool path_finder::path_finder_private::run_search(
       attempt_load(*parent);
       attempt_unload(*parent);
       attempt_paradrop(*parent);
+      attempt_action_move(*parent);
     }
   }
 

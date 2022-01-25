@@ -105,6 +105,7 @@ class path_finder {
     void attempt_load(detail::vertex &source);
     void attempt_unload(detail::vertex &source);
     void attempt_paradrop(detail::vertex &source);
+    void attempt_action_move(detail::vertex &source);
 
     bool run_search(const tile *stopping_condition);
   };
