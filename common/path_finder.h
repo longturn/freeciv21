@@ -100,6 +100,9 @@ class path_finder {
     void insert_initial_vertex();
     void maybe_insert_vertex(const detail::vertex &v);
 
+    bool is_destination(const detail::vertex &v,
+                        const tile *destination) const;
+
     void attempt_move(detail::vertex &source);
     void attempt_full_mp(detail::vertex &source);
     void attempt_load(detail::vertex &source);

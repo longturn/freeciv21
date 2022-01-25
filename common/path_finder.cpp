@@ -248,6 +248,25 @@ void path_finder::path_finder_private::maybe_insert_vertex(
 }
 
 /**
+ * Checks if a vertex is at the destination.
+ */
+bool path_finder::path_finder_private::is_destination(
+    const detail::vertex &v, const tile *destination) const
+{
+  // Check that we went through every waypoint
+  if (v.waypoints != waypoints.size()) {
+    return false;
+  }
+
+  // We've just arrived.
+  if (v.location == destination) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
  * Opens vertices corresponding to attempts to do ORDER_MOVE from the source
  * vertex.
  */
@@ -545,7 +564,8 @@ bool path_finder::path_finder_private::run_search(
   // Check if we've already found a path (but keep searching if the tip of
   // the queue is cheaper: we haven't checked every possibility).
   if (auto it = best_vertices.find(stopping_condition);
-      it != best_vertices.end() && it->second->waypoints == waypoints.size()
+      it != best_vertices.end()
+      && is_destination(*it->second, stopping_condition)
       && !(queue.top().cost < it->second->cost)) {
     return true;
   }
@@ -558,8 +578,7 @@ bool path_finder::path_finder_private::run_search(
     // Check if we just arrived
     // Keep the node in the queue so adjacent nodes are generated if the
     // search needs to be expanded later.
-    if (v.location == stopping_condition
-        && v.waypoints == waypoints.size()) {
+    if (is_destination(v, stopping_condition)) {
       return true;
     }
 
