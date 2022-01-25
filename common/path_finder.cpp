@@ -88,9 +88,9 @@ vertex vertex::child_for_action(action_id action, const unit &probe,
  */
 bool vertex::comparable(const vertex &other) const
 {
-  return std::tie(location, loaded, moved, paradropped, waypoints)
+  return std::tie(location, loaded, moved, paradropped, is_final, waypoints)
              == std::tie(other.location, other.loaded, other.moved,
-                         other.paradropped, other.waypoints)
+                         other.paradropped, other.is_final, other.waypoints)
          && cost.comparable(other.cost);
 }
 
@@ -115,9 +115,11 @@ void vertex::fill_probe(unit &probe) const
  */
 bool vertex::operator==(const vertex &other) const
 {
-  return std::tie(location, loaded, moved, paradropped, waypoints, cost)
+  return std::tie(location, loaded, moved, paradropped, is_final, waypoints,
+                  cost)
          == std::tie(other.location, other.loaded, other.moved,
-                     other.paradropped, other.waypoints, other.cost);
+                     other.is_final, other.paradropped, other.waypoints,
+                     other.cost);
 }
 
 /**
@@ -149,7 +151,8 @@ void path_finder::path_finder_private::insert_initial_vertex()
                           unit.transporter,
                           unit.moved,
                           unit.paradropped,
-                          0, // Waypoints
+                          false, // Final
+                          0,     // Waypoints
                           {0, unit.moves_left, unit.hp, unit.fuel},
                           nullptr};
   queue.push(v);
@@ -205,7 +208,7 @@ void path_finder::path_finder_private::maybe_insert_vertex(
     insert.cost.health = probe.hp;
 
     // "Start of turn" part
-    insert.moved = false; // Didn't move yet
+    insert.moved = false;       // Didn't move yet
     insert.paradropped = false; // Didn't paradrop yet
   }
 
@@ -525,15 +528,17 @@ bool path_finder::path_finder_private::run_search(
       continue;
     }
 
-    // Fetch the pointer version of v for use as a parent
-    auto parent = it->second.get();
+    if (!v.is_final) {
+      // Fetch the pointer version of v for use as a parent
+      auto parent = it->second.get();
 
-    // Generate vertices starting from this one
-    attempt_move(*parent);
-    attempt_full_mp(*parent);
-    attempt_load(*parent);
-    attempt_unload(*parent);
-    attempt_paradrop(*parent);
+      // Generate vertices starting from this one
+      attempt_move(*parent);
+      attempt_full_mp(*parent);
+      attempt_load(*parent);
+      attempt_unload(*parent);
+      attempt_paradrop(*parent);
+    }
   }
 
   return false;
@@ -559,8 +564,8 @@ path_finder::~path_finder()
 }
 
 /**
- * Adds a waypoint to the path finding. Waypoints are tiles that the path must
- * go through (in order) before reaching the destination.
+ * Adds a waypoint to the path finding. Waypoints are tiles that the path
+ * must go through (in order) before reaching the destination.
  *
  * \see pop_waypoint
  */

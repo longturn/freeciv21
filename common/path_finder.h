@@ -46,6 +46,7 @@ struct vertex {
   unit *loaded;     ///< The unit we are loaded in
   bool moved;       ///< Whether we moved this turn (for HP recovery)
   bool paradropped; ///< Whether we paradropped this turn
+  bool is_final;    ///< Whether this vertex can have children
   int waypoints;    ///< How many waypoints we have visited so far
 
   // Cost of the path to come here, needed for path finding
