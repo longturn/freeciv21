@@ -942,7 +942,7 @@ bool can_player_see_hypotetic_units_at(const struct player *pplayer,
   // Can't see city units.
   pcity = tile_city(ptile);
   if (pcity && !can_player_see_units_in_city(pplayer, pcity)
-      && unit_list_size(ptile->units) > 0) {
+      && city_is_occupied(tile_city(ptile))) {
     return false;
   }
 
