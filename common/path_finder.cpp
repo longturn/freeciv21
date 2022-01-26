@@ -523,6 +523,13 @@ void path_finder::path_finder_private::attempt_action_move(
       continue;
     }
 
+    // Only search for actions on tiles with cities or visible stacks. This
+    // matches the old client behavior and allows us to skip the (extremely
+    // slow) search for actions most of the times.
+    if (!tile_city(target) && unit_list_size(target->units) == 0) {
+      continue;
+    }
+
     // See unithand.cpp:unit_move_handling
     const bool can_not_move =
         !unit_can_move_to_tile(&(wld.map), &probe, target, false, false);
