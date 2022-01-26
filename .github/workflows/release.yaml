@@ -10,8 +10,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          ref: bugfix/alpha10
       - run: git rev-parse --short=5 HEAD > cmake/AutoRevision.txt
-      - run: git describe --tags `git rev-list --tags --max-count=1 master` >> cmake/AutoRevision.txt
+      - run: git describe --tags `git rev-list --tags --max-count=1` >> cmake/AutoRevision.txt
+      - run: cat cmake/AutoRevision.txt
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Release update of AutoRevision.txt"
@@ -23,6 +25,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          ref: bugfix/alpha10
       - name: Make build directory
         run: mkdir -p -v $PWD/build
       - name: Create tar.gz
