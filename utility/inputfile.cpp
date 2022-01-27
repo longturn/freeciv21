@@ -392,7 +392,7 @@ static bool check_include(struct inputfile *inf)
   inf->cur_line_pos = inf->cur_line.length() - 1;
   auto full_name = inf->datafn(name);
   if (full_name.isEmpty()) {
-    qCCritical(inf_category) << "Could not find included file» <<" << name;
+    qCCritical(inf_category) << "Could not find included file: " << name;
     return false;
   }
 
