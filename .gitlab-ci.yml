@@ -1,0 +1,22 @@
+image: ubuntu:latest
+
+pages:
+  script:
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update
+    - apt-get install -y git cmake ninja-build clang python3 gettext qt5-default libkf5archive-dev liblua5.3-dev libsqlite3-dev libsdl2-mixer-dev libclang-dev ca-certificates curl llvm
+    - export CC=$(which clang)
+    - export CXX=$(which clang++)
+    - cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    - cmake --build build
+    - curl https://github.com/KDAB/codebrowser/archive/refs/heads/master.tar.gz -Ls | tar xfvz -
+    - cd codebrowser-master
+    - cmake . -DCMAKE_BUILD_TYPE=Release && make
+    - cd ..
+    - ./codebrowser-master/generator/codebrowser_generator -b build -a -o public -p freeciv21:$PWD
+    - ./codebrowser-master/indexgenerator/codebrowser_indexgenerator public
+    - cp -r codebrowser-master/data public
+
+  artifacts:
+    paths:
+      - public
