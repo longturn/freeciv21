@@ -15,8 +15,8 @@ if(Git_FOUND)
 
   if(STATUS AND NOT STATUS EQUAL 0)
 
-    # In case git is not found (for example the person uses the tarball) we still need the variables
-    #   set. So we get them from AutoRevision.txt instead that is updated by a GitHub Action at Release
+    # In case git is found but we are not in a good repo we still need the variables set.
+    #   So we get them from AutoRevision.txt instead that is updated by a GitHub Action at Release
     # See .git/workflows/release.yaml
 
     file(READ cmake/AutoRevision.txt FC21_REV_HEAD_HASH_H LIMIT 5)
@@ -51,7 +51,7 @@ if(Git_FOUND)
     message("-- Git HEAD Commit Hash: (hex) ${FC21_REV_HEAD_HASH_H} and (dec) ${FC21_REV_HEAD_HASH_D}")
 
     # Get a temp value of the full commit hash of the latest tag that is active
-    execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=.git rev-list --tags --max-count=1 master
+    execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=.git rev-list --tags --max-count=1
                     OUTPUT_VARIABLE _output
                     OUTPUT_STRIP_TRAILING_WHITESPACE)
 
@@ -70,4 +70,28 @@ if(Git_FOUND)
     #message("-- Latest Git Tag List: ${FC21_REV_TAG_LIST}")
 
   endif()
+
+else()
+
+  # In this case git is not found at all, but we still need the variables set.
+  #   So we get them from AutoRevision.txt instead that is updated by a GitHub Action at Release
+  # See .git/workflows/release.yaml
+
+  file(READ cmake/AutoRevision.txt FC21_REV_HEAD_HASH_H LIMIT 5)
+  string(REGEX REPLACE "\n$" "" FC21_REV_HEAD_HASH_H "${FC21_REV_HEAD_HASH_H}")
+
+  # Convert the hexadecimal hash to a decimal number to support the project()
+  math(EXPR FC21_REV_HEAD_HASH_D "0x${FC21_REV_HEAD_HASH_H}" OUTPUT_FORMAT DECIMAL)
+  message("-- AutoRevision HEAD Commit Hash: (hex) ${FC21_REV_HEAD_HASH_H} and (dec) ${FC21_REV_HEAD_HASH_D}")
+
+  file(READ cmake/AutoRevision.txt FC21_REV_TAG OFFSET 6)
+  string(REGEX REPLACE "\n$" "" FC21_REV_TAG "${FC21_REV_TAG}")
+
+  # Manipulate the tag so we can turn it into a list for use later
+  string(REPLACE "v" "" FC21_REV_TAG2 "${FC21_REV_TAG}")
+  string(REPLACE "." " " FC21_REV_TAG2 "${FC21_REV_TAG2}")
+  string(REPLACE "-" " " FC21_REV_TAG2 "${FC21_REV_TAG2}")
+  set(FC21_REV_TAG_LIST ${FC21_REV_TAG2})
+  separate_arguments(FC21_REV_TAG_LIST)
+
 endif()
