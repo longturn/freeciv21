@@ -386,8 +386,9 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
             }
           }
         }
-        // Also show a sprite at the end of the path
-        if (ptile == steps.back().location) {
+        // Also show a sprite at the end of the path when moving
+        if (ptile == steps.back().location
+            && steps.back().order.order == ORDER_MOVE) {
           *waypoint |= steps.back().is_waypoint;
           if (steps.back().moves_left > 0) {
             *state = GTS_MP_LEFT;
@@ -440,7 +441,9 @@ bool is_valid_goto_draw_line(struct tile *dest_tile)
 
     // Show the path on the map
     for (const auto &step : path.steps()) {
-      if (step && step.order.order == ORDER_MOVE
+      if (step
+          && (step.order.order == ORDER_MOVE
+              || step.order.order == ORDER_ACTION_MOVE)
           && is_valid_dir(step.order.dir)) {
         mapdeco_add_gotoline(step.location,
                              opposite_direction(step.order.dir));
