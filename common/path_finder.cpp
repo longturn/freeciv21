@@ -698,13 +698,13 @@ void path_finder::unit_changed(const ::unit &unit)
 /**
  * Runs the path finding algorithm.
  */
-path path_finder::find_path(const tile *destination)
+std::optional<path> path_finder::find_path(const tile *destination)
 {
   fc_assert_ret_val(destination != nullptr, path());
 
   // Unit frozen by scenario
   if (m_d->unit.stay) {
-    return path();
+    return std::nullopt;
   }
 
   // Already at the destination
@@ -736,7 +736,7 @@ path path_finder::find_path(const tile *destination)
 
     return path(std::vector<path::step>(steps.rbegin(), steps.rend()));
   } else {
-    return path();
+    return std::nullopt;
   }
 }
 

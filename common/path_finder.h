@@ -7,6 +7,7 @@
 
 #include <map>
 #include <memory>
+#include <optional>
 #include <queue>
 #include <set>
 
@@ -124,7 +125,7 @@ public:
 
   void unit_changed(const unit &unit);
 
-  path find_path(const tile *destination);
+  std::optional<path> find_path(const tile *destination);
 
 private:
   std::unique_ptr<path_finder_private> m_d;

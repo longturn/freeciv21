@@ -334,8 +334,10 @@ bool goto_get_turns(int *min, int *max)
                              ? game_unit_by_number(unit_id)->tile
                              : goto_destination;
       auto path = finder.find_path(destination);
-      *min = std::max(*min, path.turns());
-      *max = std::max(*max, path.turns());
+      if (path) {
+        *min = std::max(*min, path->turns());
+        *max = std::max(*max, path->turns());
+      }
     }
   }
 
@@ -373,8 +375,8 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
                              ? game_unit_by_number(unit_id)->tile
                              : goto_destination;
       const auto path = finder.find_path(destination);
-      if (!path.empty()) {
-        const auto steps = path.steps();
+      if (path && !path->empty()) {
+        const auto steps = path->steps();
         // Find tiles on the path where we end turns
         for (std::size_t i = 1; i < steps.size() - 1; ++i) {
           if (ptile == steps[i].location) {
@@ -433,14 +435,14 @@ bool is_valid_goto_draw_line(struct tile *dest_tile)
     }
 
     const auto path = finder.find_path(destination);
-    if (path.empty()) {
+    if (!path) {
       // This is our way of signalling that we can't go to a tile
       goto_destination = NULL;
       continue;
     }
 
     // Show the path on the map
-    for (const auto &step : path.steps()) {
+    for (const auto &step : path->steps()) {
       if (step
           && (step.order.order == ORDER_MOVE
               || step.order.order == ORDER_ACTION_MOVE)
@@ -769,7 +771,7 @@ void send_goto_route()
                            : goto_destination;
     const auto path = finder.find_path(destination);
     // No path to destination. Still try the other units...
-    if (path.empty()) {
+    if (!path) {
       continue;
     }
 
@@ -783,7 +785,7 @@ void send_goto_route()
     packet.repeat = hover_state == HOVER_PATROL;
     packet.vigilant = hover_state == HOVER_PATROL;
 
-    const auto steps = path.steps();
+    const auto steps = path->steps();
     fc_assert_ret(steps.size() < MAX_LEN_ROUTE);
 
     packet.length = steps.size();

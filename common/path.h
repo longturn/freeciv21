@@ -40,7 +40,7 @@ public:
    * Finds how many turns (rounded down) it takes to reach the end of the
    * path.
    */
-  int turns() const { return m_steps.back().turns; }
+  int turns() const { return empty() ? 0 : m_steps.back().turns; }
 
   /**
    * Returns true if the path is empty, usually meaning that a path to the
