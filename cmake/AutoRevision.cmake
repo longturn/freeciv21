@@ -19,6 +19,7 @@ if(Git_FOUND)
     #   So we get them from AutoRevision.txt instead that is updated by a GitHub Action at Release
     # See .git/workflows/release.yaml
 
+    message("-- git was found, but we are not in a valid repository. Using AutoRevision.txt")
     file(READ cmake/AutoRevision.txt FC21_REV_HEAD_HASH_H LIMIT 5)
     string(REGEX REPLACE "\n$" "" FC21_REV_HEAD_HASH_H "${FC21_REV_HEAD_HASH_H}")
 
@@ -42,6 +43,7 @@ if(Git_FOUND)
     # In this case, we have git and are in a good repo, so let's get the values we need from git directly
 
     # Get the value of the git hash at HEAD to 5 chars
+    message("-- git was found and we are in a valid repository. Using git commands.")
     execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=.git rev-parse --short=5 HEAD
                     OUTPUT_VARIABLE FC21_REV_HEAD_HASH_H
                     OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -77,6 +79,7 @@ else()
   #   So we get them from AutoRevision.txt instead that is updated by a GitHub Action at Release
   # See .git/workflows/release.yaml
 
+  message("-- git was not found installed. Using AutoRevision.txt")
   file(READ cmake/AutoRevision.txt FC21_REV_HEAD_HASH_H LIMIT 5)
   string(REGEX REPLACE "\n$" "" FC21_REV_HEAD_HASH_H "${FC21_REV_HEAD_HASH_H}")
 
