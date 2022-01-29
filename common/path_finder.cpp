@@ -700,7 +700,7 @@ void path_finder::unit_changed(const ::unit &unit)
  */
 std::optional<path> path_finder::find_path(const tile *destination)
 {
-  fc_assert_ret_val(destination != nullptr, path());
+  fc_assert_ret_val(destination != nullptr, std::nullopt);
 
   // Unit frozen by scenario
   if (m_d->unit.stay) {
