@@ -64,10 +64,13 @@ public:
 private:
   class path_finder_private {
   public:
-    explicit path_finder_private(const ::unit *unit);
+    explicit path_finder_private(const unit *unit,
+                                 const detail::vertex &init);
     ~path_finder_private() = default;
 
     const ::unit unit; ///< A unit used to probe whether moves are valid.
+    const detail::vertex
+        initial_vertex; ///< The starting point in the search graph.
 
     // Storage for Dijkstra's algorithm.
     // In most cases, a single vertex will be stored for a given tile. There
@@ -103,6 +106,7 @@ private:
 
 public:
   explicit path_finder(const unit *unit);
+  explicit path_finder(const unit *unit, const path::step &init);
   virtual ~path_finder();
 
   inline path_finder &operator=(path_finder &&other);
@@ -209,6 +213,30 @@ protected:
 
 private:
   const player *m_player;
+};
+
+/**
+ * A path finding destination that accepts any tile where one can refuel or,
+ * for units with HP loss, not lose HP. This is any tile for units without
+ * fuel or HP loss.
+ */
+class refuel_destination : public destination {
+public:
+  /**
+   * Constructor.
+   */
+  explicit refuel_destination(const unit &unit) : m_unit(unit) {}
+
+  /**
+   * Destructor.
+   */
+  ~refuel_destination() {}
+
+protected:
+  bool reached(const detail::vertex &vertex) const override;
+
+private:
+  unit m_unit;
 };
 
 } // namespace freeciv

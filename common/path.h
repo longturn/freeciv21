@@ -60,7 +60,9 @@ public:
   /**
    * Returns the steps making up this path.
    */
-  std::vector<step> steps() const { return m_steps; }
+  const std::vector<step> &steps() const { return m_steps; }
+
+  std::vector<step>::const_iterator first_unsafe_step(unit *unit) const;
 
 private:
   std::vector<step> m_steps;

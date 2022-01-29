@@ -125,8 +125,9 @@ bool vertex::operator>(const vertex &other) const
 /**
  * Constructor.
  */
-path_finder::path_finder_private::path_finder_private(const ::unit *unit)
-    : unit(*unit)
+path_finder::path_finder_private::path_finder_private(
+    const ::unit *unit, const detail::vertex &init)
+    : unit(*unit), initial_vertex(init)
 {
   insert_initial_vertex();
 }
@@ -137,9 +138,9 @@ path_finder::path_finder_private::path_finder_private(const ::unit *unit)
 void path_finder::path_finder_private::insert_initial_vertex()
 {
   // Insert the starting vertex
-  auto v = detail::vertex::from_unit(unit);
-  queue.push(v);
-  best_vertices.emplace(v.location, std::make_unique<detail::vertex>(v));
+  queue.push(initial_vertex);
+  best_vertices.emplace(initial_vertex.location,
+                        std::make_unique<detail::vertex>(initial_vertex));
 }
 
 /**
@@ -599,13 +600,26 @@ bool path_finder::path_finder_private::run_search(
 }
 
 /**
- * Constructs a @c path_finder for the given unit and destination. Doesn't
- * start the path finding yet.
+ * Constructs a @c path_finder for the given unit. Doesn't start the path
+ * finding yet.
  *
- * The path finder becomes useless if the unit moves.
+ * The path finder becomes useless if the unit state changes.
  */
-path_finder::path_finder(const ::unit *unit)
-    : m_d(std::make_unique<path_finder_private>(unit))
+path_finder::path_finder(const unit *unit)
+    : path_finder(unit, detail::vertex::from_unit(*unit))
+{
+}
+
+/**
+ * Constructs a @c path_finder for the given unit. Initializes the search
+ * from a step in the unit's planned path. Doesn't start the path finding
+ * yet.
+ *
+ * The path finder becomes useless if the unit state changes.
+ */
+path_finder::path_finder(const unit *unit, const path::step &init)
+    : m_d(std::make_unique<path_finder_private>(
+        unit, detail::vertex{init, nullptr}))
 {
 }
 
@@ -685,8 +699,7 @@ std::optional<path> path_finder::find_path(const destination &destination)
   }
 
   // Check if we're already at the destination
-  if (m_d->waypoints.empty()
-      && destination.reached(detail::vertex::from_unit(m_d->unit))) {
+  if (m_d->waypoints.empty() && destination.reached(m_d->initial_vertex)) {
     return path();
   }
 
@@ -771,6 +784,31 @@ tile_destination::find_best(const path_finder::storage_type &map,
 bool allied_city_destination::reached(const detail::vertex &vertex) const
 {
   return is_allied_city_tile(vertex.location, m_player);
+}
+
+/**
+ * \copydoc destination::reached
+ */
+bool refuel_destination::reached(const detail::vertex &vertex) const
+{
+  // Can't refuel here, we're not sure that can even enter the tile
+  if (vertex.is_final) {
+    return false;
+  }
+
+  // Get a probe
+  auto probe = m_unit;
+  vertex.fill_probe(probe);
+
+  // Fuel
+  if (utype_fuel(probe.utype) && !is_unit_being_refueled(&probe)) {
+    return false;
+  }
+
+  // HP loss/recovery
+  auto saved_hp = probe.hp;
+  unit_restore_hitpoints(&probe); // Will also handle HP loss
+  return probe.hp >= saved_hp;
 }
 
 } // namespace freeciv
