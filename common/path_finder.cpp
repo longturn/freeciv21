@@ -26,16 +26,12 @@ namespace detail {
  */
 vertex vertex::from_unit(const unit &unit)
 {
-  return detail::vertex{unit.tile,
-                        unit.transporter,
-                        unit.moved,
-                        unit.paradropped,
-                        false, // Final
-                        0,     // Waypoints
-                        0,     // Turns
-                        unit.moves_left,
-                        unit.hp,
-                        unit.fuel,
+  return detail::vertex{{unit.tile, unit.transporter, unit.moved,
+                         unit.paradropped,
+                         false, // Final
+                         0,     // Waypoints
+                         0,     // Turns
+                         unit.moves_left, unit.hp, unit.fuel},
                         nullptr};
 }
 
@@ -708,10 +704,7 @@ std::optional<path> path_finder::find_path(const destination &destination)
     auto steps = std::vector<path::step>();
     for (auto vertex = it->second.get(); vertex->parent != nullptr;
          vertex = vertex->parent) {
-      bool waypoint = vertex->parent != nullptr
-                      && vertex->waypoints > vertex->parent->waypoints;
-      steps.push_back({vertex->location, vertex->turns, vertex->turns,
-                       vertex->health, vertex->order, waypoint});
+      steps.push_back(*vertex);
     }
 
     return path(std::vector<path::step>(steps.rbegin(), steps.rend()));

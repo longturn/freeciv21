@@ -18,10 +18,21 @@ namespace freeciv {
 class path {
 public:
   struct step {
-    tile *location = nullptr;
-    int turns, moves_left, hp;
-    unit_order order;
-    bool is_waypoint;
+    // Vertex location in the search graph
+    tile *location;   ///< Where we are
+    unit *loaded;     ///< The unit we are loaded in
+    bool moved;       ///< Whether we moved this turn (for HP recovery)
+    bool paradropped; ///< Whether we paradropped this turn
+    bool is_final;    ///< Whether this vertex can have children
+    int waypoints;    ///< How many waypoints we have visited so far
+
+    // Cost of the path to come here
+    int turns;      ///< How many turns it takes to get there
+    int moves_left; ///< How many move fragments the unit has left
+    int health;     ///< How many HP the unit has left
+    int fuel_left;  ///< How much fuel the unit has left
+
+    unit_order order; ///< The order to come here
 
     operator bool() const { return location != nullptr; }
   };

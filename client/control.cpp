@@ -1544,7 +1544,7 @@ void request_units_return()
     if (auto path = finder.find_path(
             freeciv::allied_city_destination(unit->owner))) {
       auto steps = path->steps();
-      int hp = steps.empty() ? unit->hp : steps.back().hp;
+      int hp = steps.empty() ? unit->hp : steps.back().health;
       // Recover full health if needed
       if (hp < unit_type_get(unit)->hp) {
         auto sentry = steps.back();
