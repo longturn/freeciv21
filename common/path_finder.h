@@ -211,4 +211,30 @@ private:
   const tile *m_destination;
 };
 
+/**
+ * A path finding destination that accepts any allied city.
+ */
+class allied_city_destination : public destination {
+public:
+  /**
+   * Constructor.
+   */
+  explicit allied_city_destination(const player *allied_with)
+      : m_player(allied_with)
+  {
+    fc_assert(m_player != nullptr);
+  }
+
+  /**
+   * Destructor.
+   */
+  ~allied_city_destination() {}
+
+protected:
+  bool reached(const detail::vertex &vertex) const override;
+
+private:
+  const player *m_player;
+};
+
 } // namespace freeciv

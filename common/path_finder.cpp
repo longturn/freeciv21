@@ -795,4 +795,12 @@ tile_destination::find_best(const path_finder::storage_type &map,
   return best;
 }
 
+/**
+ * \copydoc destination::reached
+ */
+bool allied_city_destination::reached(const detail::vertex &vertex) const
+{
+  return is_allied_city_tile(vertex.location, m_player);
+}
+
 } // namespace freeciv
