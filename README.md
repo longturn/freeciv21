@@ -25,7 +25,12 @@ We provide Windows installers in the **Assets** section of every [release](https
 
 ### Linux
 
-Linux users need to compile the code. Ubuntu 20.04 or higher is supported. See [this link](https://longturn.readthedocs.io/en/latest/General/install.html) for the detailed procedure.
+Linux users running on Debian (or one of the many variants such as Ubuntu) can download a package from the **Assets** section of every [release](https://github.com/longturn/freeciv21/releases) (make sure to download the **.deb** file). After downloading, run the installer:
+```sh
+sudo apt install ./freeciv21_*_amd64.deb
+```
+
+Other Linux users will need to compile the code. Ubuntu 20.04 or higher is supported. See [this link](https://longturn.readthedocs.io/en/latest/General/install.html) for the detailed procedure and a list of supported distributions.
 
 #### Install dependencies
 
