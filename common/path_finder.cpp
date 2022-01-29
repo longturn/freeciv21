@@ -22,45 +22,6 @@ namespace freeciv {
 namespace detail {
 
 /**
- * Returns `true` if the comparison with `other` would be unambiguous.
- */
-bool cost::comparable(const cost &other) const
-{
-  // When the results of the expressions below are positive, this cost does
-  // better than the other for this criteria. When it's negative, it's the
-  // opposite.
-  auto a = other.turns - turns;
-  auto b = moves_left - other.moves_left;
-  auto c = health - other.health;
-  auto d = fuel_left - other.fuel_left;
-  // For the comparison to be meaningful, all criteria must go in the same
-  // direction.
-  return (a <= 0 && b <= 0 && c <= 0 && d <= 0)
-         || (a >= 0 && b >= 0 && c >= 0 && d >= 0);
-}
-
-/**
- * Compares for equality.
- */
-bool cost::operator==(const cost &other) const
-{
-  return std::tie(turns, other.moves_left, other.health, other.fuel_left)
-         == std::tie(other.turns, moves_left, health, fuel_left);
-}
-
-/**
- * Defines a strict ordering among costs.
- */
-bool cost::operator<(const cost &other) const
-{
-  // To break ties, we prefer the unit with the most moves, then the
-  // healthiest unit, then the unit with the most fuel. This is an arbitrary
-  // choice.
-  return std::tie(turns, other.moves_left, other.health, other.fuel_left)
-         < std::tie(other.turns, moves_left, health, fuel_left);
-}
-
-/**
  * Creates a vertex representing the state of a unit.
  */
 vertex vertex::from_unit(const unit &unit)
@@ -71,7 +32,10 @@ vertex vertex::from_unit(const unit &unit)
                         unit.paradropped,
                         false, // Final
                         0,     // Waypoints
-                        {0, unit.moves_left, unit.hp, unit.fuel},
+                        0,     // Turns
+                        unit.moves_left,
+                        unit.hp,
+                        unit.fuel,
                         nullptr};
 }
 
@@ -89,8 +53,7 @@ vertex vertex::child_for_action(action_id action, const unit &probe,
   ret.order.action = action;
   ret.order.target = target->index;
   ret.order.dir = DIR8_ORIGIN;
-  ret.cost.moves_left =
-      unit_pays_mp_for_action(action_by_number(action), &probe);
+  ret.moves_left = unit_pays_mp_for_action(action_by_number(action), &probe);
   return ret;
 }
 
@@ -103,10 +66,24 @@ vertex vertex::child_for_action(action_id action, const unit &probe,
  */
 bool vertex::comparable(const vertex &other) const
 {
-  return std::tie(location, loaded, moved, paradropped, is_final, waypoints)
-             == std::tie(other.location, other.loaded, other.moved,
-                         other.paradropped, other.is_final, other.waypoints)
-         && cost.comparable(other.cost);
+  // All "state" variables must be equal
+  if (std::tie(location, loaded, moved, paradropped, is_final, waypoints)
+      != std::tie(other.location, other.loaded, other.moved,
+                  other.paradropped, other.is_final, other.waypoints)) {
+    return false;
+  }
+
+  // When the results of the expressions below are positive, this node does
+  // better than the other for this criteria. When it's negative, it's the
+  // opposite.
+  auto a = other.turns - turns;
+  auto b = moves_left - other.moves_left;
+  auto c = health - other.health;
+  auto d = fuel_left - other.fuel_left;
+  // For the comparison to be meaningful, all criteria must go in the same
+  // direction.
+  return (a <= 0 && b <= 0 && c <= 0 && d <= 0)
+         || (a >= 0 && b >= 0 && c >= 0 && d >= 0);
 }
 
 /**
@@ -120,9 +97,9 @@ void vertex::fill_probe(unit &probe) const
   probe.client.transported_by = loaded ? loaded->id : -1;
   probe.moved = moved;
   probe.paradropped = paradropped;
-  probe.fuel = cost.fuel_left;
-  probe.hp = cost.health;
-  probe.moves_left = cost.moves_left;
+  probe.moves_left = moves_left;
+  probe.hp = health;
+  probe.fuel = fuel_left;
 }
 
 /**
@@ -131,10 +108,11 @@ void vertex::fill_probe(unit &probe) const
 bool vertex::operator==(const vertex &other) const
 {
   return std::tie(location, loaded, moved, paradropped, is_final, waypoints,
-                  cost)
+                  turns, moves_left, health, fuel_left)
          == std::tie(other.location, other.loaded, other.moved,
                      other.is_final, other.paradropped, other.waypoints,
-                     other.cost);
+                     other.turns, other.moves_left, other.health,
+                     other.fuel_left);
 }
 
 /**
@@ -142,7 +120,8 @@ bool vertex::operator==(const vertex &other) const
  */
 bool vertex::operator>(const vertex &other) const
 {
-  return other.cost < cost;
+  return std::tie(turns, other.moves_left, other.health, other.fuel_left)
+         > std::tie(other.turns, moves_left, health, fuel_left);
 }
 
 } // namespace detail
@@ -178,29 +157,29 @@ void path_finder::path_finder_private::maybe_insert_vertex(
   auto insert = v;
 
   // Handle turn change
-  if (v.cost.moves_left <= 0) {
+  if (v.moves_left <= 0) {
     // Make a probe
     auto probe = unit;
     v.fill_probe(probe);
 
     // FIXME The order could be important here: fuel before HP or HP before
     // fuel?
-    insert.cost.turns++;
-    insert.cost.moves_left = unit_move_rate(&probe);
+    insert.turns++;
+    insert.moves_left = unit_move_rate(&probe);
 
     // Fuel
     if (utype_fuel(probe.utype)) {
       if (is_unit_being_refueled(&probe)) {
         // Refuel
         probe.fuel = utype_fuel(probe.utype);
-        insert.cost.fuel_left = probe.fuel;
+        insert.fuel_left = probe.fuel;
       } else if (probe.fuel <= 1) {
         // The unit dies, don't generate a new vertex
         return;
       } else {
         // Consume fuel
         probe.fuel--;
-        insert.cost.fuel_left--;
+        insert.fuel_left--;
       }
     }
 
@@ -213,7 +192,7 @@ void path_finder::path_finder_private::maybe_insert_vertex(
       // Unit dies, don't let the user send it there.
       return;
     }
-    insert.cost.health = probe.hp;
+    insert.health = probe.hp;
 
     // "Start of turn" part
     insert.moved = false;       // Didn't move yet
@@ -234,7 +213,7 @@ void path_finder::path_finder_private::maybe_insert_vertex(
   bool do_insert = true;
   for (auto it = begin; it != end; /* in loop body */) {
     const bool comparable = it->second->comparable(insert);
-    if (comparable && insert.cost < it->second->cost) {
+    if (comparable && *it->second > insert) {
       // The new candidate is strictly better. Remove the old one
       it = best_vertices.erase(it);
       continue; // ++it is done inside erase()
@@ -304,7 +283,7 @@ void path_finder::path_finder_private::attempt_move(detail::vertex &source)
       auto next = source;
       next.location = target;
       next.moved = true;
-      next.cost.moves_left -= move_cost;
+      next.moves_left -= move_cost;
       next.parent = &source;
       next.order.order = ORDER_MOVE;
       next.order.dir = dir;
@@ -323,7 +302,7 @@ void path_finder::path_finder_private::attempt_full_mp(
     detail::vertex &source)
 {
   auto next = source;
-  next.cost.moves_left = 0; // Trigger end-of-turn logic
+  next.moves_left = 0; // Trigger end-of-turn logic
   next.parent = &source;
   next.order.order = ORDER_FULL_MP;
   maybe_insert_vertex(next);
@@ -365,7 +344,7 @@ void path_finder::path_finder_private::attempt_load(detail::vertex &source)
       auto next =
           source.child_for_action(ACTION_TRANSPORT_EMBARK, probe, target);
       // See unithand.cpp:do_unit_embark
-      next.cost.moves_left -= map_move_cost_unit(&(wld.map), &probe, target);
+      next.moves_left -= map_move_cost_unit(&(wld.map), &probe, target);
       next.moved = true;
       next.loaded = transport;
       maybe_insert_vertex(next);
@@ -405,8 +384,7 @@ void path_finder::path_finder_private::attempt_unload(detail::vertex &source)
         next.moved = true;
         next.loaded = nullptr;
         // See unithand.cpp:do_disembark
-        next.cost.moves_left -=
-            map_move_cost_unit(&(wld.map), &probe, target);
+        next.moves_left -= map_move_cost_unit(&(wld.map), &probe, target);
         maybe_insert_vertex(next);
       }
       // Thanks sveinung
@@ -417,8 +395,7 @@ void path_finder::path_finder_private::attempt_unload(detail::vertex &source)
         next.moved = true;
         next.loaded = nullptr;
         // See unithand.cpp:do_disembark
-        next.cost.moves_left -=
-            map_move_cost_unit(&(wld.map), &probe, target);
+        next.moves_left -= map_move_cost_unit(&(wld.map), &probe, target);
         maybe_insert_vertex(next);
       }
     }
@@ -579,7 +556,7 @@ bool path_finder::path_finder_private::run_search(
   // Check if we've already found a path (but keep searching if the tip of
   // the queue is cheaper: we haven't checked every possibility).
   if (auto it = destination.find_best(best_vertices, waypoints.size());
-      it != best_vertices.end() && !(queue.top().cost < it->second->cost)) {
+      it != best_vertices.end() && !(*it->second > queue.top())) {
     return true;
   }
 
@@ -733,9 +710,8 @@ std::optional<path> path_finder::find_path(const destination &destination)
          vertex = vertex->parent) {
       bool waypoint = vertex->parent != nullptr
                       && vertex->waypoints > vertex->parent->waypoints;
-      steps.push_back({vertex->location, vertex->cost.turns,
-                       vertex->cost.turns, vertex->cost.health,
-                       vertex->order, waypoint});
+      steps.push_back({vertex->location, vertex->turns, vertex->turns,
+                       vertex->health, vertex->order, waypoint});
     }
 
     return path(std::vector<path::step>(steps.rbegin(), steps.rend()));

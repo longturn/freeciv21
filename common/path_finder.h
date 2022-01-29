@@ -18,21 +18,6 @@ namespace freeciv {
 class path;
 
 namespace detail {
-/**
- * The "cost" of a path is the amount of effort needed to reach it. Two costs
- * can be compared to find out which is the best.
- */
-struct cost {
-  int turns;      ///< How many turns it takes to get there
-  int moves_left; ///< How many move fragments the unit has left
-  int health;     ///< How many HP the unit has left
-  int fuel_left;  ///< How much fuel the unit has left
-
-  bool comparable(const cost &other) const;
-
-  bool operator==(const cost &other) const;
-  bool operator<(const cost &other) const;
-};
 
 /**
  * A vertex in the path-finding graph. It primarily corresponds to a tile,
@@ -50,8 +35,11 @@ struct vertex {
   bool is_final;    ///< Whether this vertex can have children
   int waypoints;    ///< How many waypoints we have visited so far
 
-  // Cost of the path to come here, needed for path finding
-  detail::cost cost; ///< How many turns it takes to get here
+  // Cost of the path to come here
+  int turns;      ///< How many turns it takes to get there
+  int moves_left; ///< How many move fragments the unit has left
+  int health;     ///< How many HP the unit has left
+  int fuel_left;  ///< How much fuel the unit has left
 
   // Ancestor information, needed to build a path. Invalid for the first
   // tile.
