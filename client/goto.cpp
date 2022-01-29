@@ -804,38 +804,6 @@ void send_goto_route()
 }
 
 /**
-   Find the path to the nearest (fastest to reach) allied city for the
-   unit, or NULL if none is reachable.
- */
-struct pf_path *path_to_nearest_allied_city(struct unit *punit)
-{
-  struct pf_parameter parameter;
-  struct pf_map *pfm;
-  struct pf_path *path = NULL;
-
-  if (is_allied_city_tile(unit_tile(punit), unit_owner(punit))) {
-    // We're already on a city - don't go anywhere.
-    return NULL;
-  }
-
-  goto_fill_parameter_base(&parameter, punit);
-  pfm = pf_map_new(&parameter);
-
-  pf_map_tiles_iterate(pfm, ptile, false)
-  {
-    if (is_allied_city_tile(ptile, unit_owner(punit))) {
-      path = pf_map_path(pfm, ptile);
-      break;
-    }
-  }
-  pf_map_tiles_iterate_end;
-
-  pf_map_destroy(pfm);
-
-  return path;
-}
-
-/**
    Finds penultimate tile on path for given unit going to ptile
  */
 struct tile *tile_before_end_path(struct unit *punit, struct tile *ptile)

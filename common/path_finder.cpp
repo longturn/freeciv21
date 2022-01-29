@@ -734,7 +734,8 @@ std::optional<path> path_finder::find_path(const destination &destination)
       bool waypoint = vertex->parent != nullptr
                       && vertex->waypoints > vertex->parent->waypoints;
       steps.push_back({vertex->location, vertex->cost.turns,
-                       vertex->cost.turns, vertex->order, waypoint});
+                       vertex->cost.turns, vertex->cost.health,
+                       vertex->order, waypoint});
     }
 
     return path(std::vector<path::step>(steps.rbegin(), steps.rend()));

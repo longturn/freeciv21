@@ -104,7 +104,7 @@ void request_unit_pillage(struct unit *punit);
 void request_unit_sentry(struct unit *punit);
 struct unit *request_unit_unload_all(struct unit *punit);
 void request_unit_airlift(struct unit *punit, struct city *pcity);
-void request_unit_return(struct unit *punit);
+void request_units_return();
 void request_unit_upgrade(struct unit *punit);
 void request_unit_convert(struct unit *punit);
 void request_units_wait(struct unit_list *punits);

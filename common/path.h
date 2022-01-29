@@ -19,7 +19,7 @@ class path {
 public:
   struct step {
     tile *location = nullptr;
-    int turns, moves_left;
+    int turns, moves_left, hp;
     unit_order order;
     bool is_waypoint;
 
