@@ -333,7 +333,7 @@ bool goto_get_turns(int *min, int *max)
       auto destination = hover_state == HOVER_PATROL
                              ? game_unit_by_number(unit_id)->tile
                              : goto_destination;
-      auto path = finder.find_path(destination);
+      auto path = finder.find_path(freeciv::tile_destination(destination));
       if (path) {
         *min = std::max(*min, path->turns());
         *max = std::max(*max, path->turns());
@@ -374,7 +374,8 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
       auto destination = hover_state == HOVER_PATROL
                              ? game_unit_by_number(unit_id)->tile
                              : goto_destination;
-      const auto path = finder.find_path(destination);
+      const auto path =
+          finder.find_path(freeciv::tile_destination(destination));
       if (path && !path->empty()) {
         const auto steps = path->steps();
         int last_turns = 0;
@@ -435,7 +436,8 @@ bool is_valid_goto_draw_line(struct tile *dest_tile)
       destination = game_unit_by_number(unit_id)->tile;
     }
 
-    const auto path = finder.find_path(destination);
+    const auto path =
+        finder.find_path(freeciv::tile_destination(destination));
     if (!path) {
       // This is our way of signalling that we can't go to a tile
       goto_destination = NULL;
@@ -770,7 +772,8 @@ void send_goto_route()
     auto destination = hover_state == HOVER_PATROL
                            ? game_unit_by_number(unit_id)->tile
                            : goto_destination;
-    const auto path = finder.find_path(destination);
+    const auto path =
+        finder.find_path(freeciv::tile_destination(destination));
     // No path to destination. Still try the other units...
     if (!path) {
       continue;

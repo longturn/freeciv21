@@ -58,6 +58,8 @@ struct vertex {
   vertex *parent;   ///< The previous vertex, if any
   unit_order order; ///< The order to come here
 
+  static vertex from_unit(const unit &unit);
+
   vertex child_for_action(action_id action, const unit &probe,
                           const tile *target);
 
@@ -69,11 +71,23 @@ struct vertex {
 };
 } // namespace detail
 
+class destination;
+
 /**
  * A path is a succession of moves and actions to go from one location to
  * another.
  */
 class path_finder {
+  friend class destination;
+
+public:
+  /**
+   * The type of the underlying storage, exposed through \ref destination.
+   */
+  using storage_type =
+      std::multimap<const tile *, std::unique_ptr<detail::vertex>>;
+
+private:
   class path_finder_private {
   public:
     explicit path_finder_private(const ::unit *unit);
@@ -89,8 +103,7 @@ class path_finder {
     // to the same tile with only one fuel left (since we don't know how much
     // fuel will be needed to reach the target). In such a case, the tile is
     // mapped to several vertices.
-    std::multimap<const tile *, std::unique_ptr<detail::vertex>>
-        best_vertices;
+    storage_type best_vertices;
     std::priority_queue<detail::vertex, std::vector<detail::vertex>,
                         std::greater<>>
         queue;
@@ -101,8 +114,8 @@ class path_finder {
     void insert_initial_vertex();
     void maybe_insert_vertex(const detail::vertex &v);
 
-    bool is_destination(const detail::vertex &v,
-                        const tile *destination) const;
+    bool is_reached(const destination &destination,
+                    const detail::vertex &v) const;
 
     void attempt_move(detail::vertex &source);
     void attempt_full_mp(detail::vertex &source);
@@ -111,7 +124,7 @@ class path_finder {
     void attempt_paradrop(detail::vertex &source);
     void attempt_action_move(detail::vertex &source);
 
-    bool run_search(const tile *stopping_condition);
+    bool run_search(const destination &destination);
   };
 
 public:
@@ -125,7 +138,7 @@ public:
 
   void unit_changed(const unit &unit);
 
-  std::optional<path> find_path(const tile *destination);
+  std::optional<path> find_path(const destination &destination);
 
 private:
   std::unique_ptr<path_finder_private> m_d;
@@ -139,5 +152,63 @@ path_finder &path_finder::operator=(path_finder &&other)
   m_d = std::move(other.m_d);
   return *this;
 }
+
+/**
+ * \brief Abstraction for path finding destinations.
+ *
+ * The path finding algorithm can find paths not only to single tiles, but to
+ * any set of vertices. This class is used to specify which vertices are
+ * valid destinations.
+ */
+class destination {
+public:
+  friend class path_finder;
+  friend class path_finder::path_finder_private;
+
+  /**
+   * Destructor.
+   */
+  virtual ~destination() {}
+
+protected:
+  /**
+   * Checks if a vertex should be considered as being at the destination.
+   */
+  virtual bool reached(const detail::vertex &vertex) const = 0;
+
+  virtual path_finder::storage_type::const_iterator
+  find_best(const path_finder::storage_type &map,
+            std::size_t num_waypoints) const;
+};
+
+/**
+ * A path finding destination that accepts any path leading to a specific
+ * tile.
+ */
+class tile_destination : public destination {
+public:
+  /**
+   * Constructor.
+   */
+  explicit tile_destination(const tile *destination)
+      : m_destination(destination)
+  {
+    fc_assert(destination != nullptr);
+  }
+
+  /**
+   * Destructor.
+   */
+  ~tile_destination() {}
+
+protected:
+  bool reached(const detail::vertex &vertex) const override;
+  path_finder::storage_type::const_iterator
+  find_best(const path_finder::storage_type &map,
+            std::size_t num_waypoints) const override;
+
+private:
+  const tile *m_destination;
+};
 
 } // namespace freeciv

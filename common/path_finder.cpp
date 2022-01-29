@@ -61,6 +61,21 @@ bool cost::operator<(const cost &other) const
 }
 
 /**
+ * Creates a vertex representing the state of a unit.
+ */
+vertex vertex::from_unit(const unit &unit)
+{
+  return detail::vertex{unit.tile,
+                        unit.transporter,
+                        unit.moved,
+                        unit.paradropped,
+                        false, // Final
+                        0,     // Waypoints
+                        {0, unit.moves_left, unit.hp, unit.fuel},
+                        nullptr};
+}
+
+/**
  * Creates a vertex starting from this one and executing an action. The
  * vertex state is initialized as a copy of this one except that the action
  * move cost is subtracted.
@@ -147,14 +162,7 @@ path_finder::path_finder_private::path_finder_private(const ::unit *unit)
 void path_finder::path_finder_private::insert_initial_vertex()
 {
   // Insert the starting vertex
-  auto v = detail::vertex{unit.tile,
-                          unit.transporter,
-                          unit.moved,
-                          unit.paradropped,
-                          false, // Final
-                          0,     // Waypoints
-                          {0, unit.moves_left, unit.hp, unit.fuel},
-                          nullptr};
+  auto v = detail::vertex::from_unit(unit);
   queue.push(v);
   best_vertices.emplace(v.location, std::make_unique<detail::vertex>(v));
 }
@@ -248,10 +256,10 @@ void path_finder::path_finder_private::maybe_insert_vertex(
 }
 
 /**
- * Checks if a vertex is at the destination.
+ * Checks if a vertex is at the destination, taking waypoints into account.
  */
-bool path_finder::path_finder_private::is_destination(
-    const detail::vertex &v, const tile *destination) const
+bool path_finder::path_finder_private::is_reached(
+    const destination &destination, const detail::vertex &v) const
 {
   // Check that we went through every waypoint
   if (v.waypoints != waypoints.size()) {
@@ -259,7 +267,7 @@ bool path_finder::path_finder_private::is_destination(
   }
 
   // We've just arrived.
-  if (v.location == destination) {
+  if (destination.reached(v)) {
     return true;
   }
 
@@ -566,14 +574,12 @@ void path_finder::path_finder_private::attempt_action_move(
  * \returns true if a path was found.
  */
 bool path_finder::path_finder_private::run_search(
-    const tile *stopping_condition)
+    const destination &destination)
 {
   // Check if we've already found a path (but keep searching if the tip of
   // the queue is cheaper: we haven't checked every possibility).
-  if (auto it = best_vertices.find(stopping_condition);
-      it != best_vertices.end()
-      && is_destination(*it->second, stopping_condition)
-      && !(queue.top().cost < it->second->cost)) {
+  if (auto it = destination.find_best(best_vertices, waypoints.size());
+      it != best_vertices.end() && !(queue.top().cost < it->second->cost)) {
     return true;
   }
 
@@ -585,7 +591,7 @@ bool path_finder::path_finder_private::run_search(
     // Check if we just arrived
     // Keep the node in the queue so adjacent nodes are generated if the
     // search needs to be expanded later.
-    if (is_destination(v, stopping_condition)) {
+    if (is_reached(destination, v)) {
       return true;
     }
 
@@ -698,35 +704,32 @@ void path_finder::unit_changed(const ::unit &unit)
 /**
  * Runs the path finding algorithm.
  */
-std::optional<path> path_finder::find_path(const tile *destination)
+std::optional<path> path_finder::find_path(const destination &destination)
 {
-  fc_assert_ret_val(destination != nullptr, std::nullopt);
-
   // Unit frozen by scenario
   if (m_d->unit.stay) {
     return std::nullopt;
   }
 
-  // Already at the destination
-  if (m_d->unit.tile == destination && m_d->waypoints.empty()) {
+  // Check if we're already at the destination
+  if (m_d->waypoints.empty()
+      && destination.reached(detail::vertex::from_unit(m_d->unit))) {
     return path();
   }
 
   if (m_d->run_search(destination)) {
     // Find the best path. We may have several vertices, so select the one
     // with the lowest cost.
-    const auto [begin, end] = m_d->best_vertices.equal_range(destination);
-    const detail::vertex *best = nullptr;
-    for (auto it = begin; it != end; ++it) {
-      if ((best == nullptr || it->second->cost < best->cost)
-          && it->second->waypoints == m_d->waypoints.size()) {
-        best = it->second.get();
-      }
-    }
+    const auto it =
+        destination.find_best(m_d->best_vertices, m_d->waypoints.size());
+
+    // If run_search returned true, we should always have something. But
+    // better check anyway.
+    fc_assert_ret_val(it != m_d->best_vertices.end(), std::nullopt);
 
     // Build a path
     auto steps = std::vector<path::step>();
-    for (auto vertex = best; vertex->parent != nullptr;
+    for (auto vertex = it->second.get(); vertex->parent != nullptr;
          vertex = vertex->parent) {
       bool waypoint = vertex->parent != nullptr
                       && vertex->waypoints > vertex->parent->waypoints;
@@ -738,6 +741,58 @@ std::optional<path> path_finder::find_path(const tile *destination)
   } else {
     return std::nullopt;
   }
+}
+
+/**
+ * Returns an iterator to the best vertex that is a destination vertex. The
+ * default implementation calls \ref reached for every vertex.
+ */
+path_finder::storage_type::const_iterator
+destination::find_best(const path_finder::storage_type &map,
+                       std::size_t num_waypoints) const
+{
+  auto best = map.end();
+  for (auto it = map.begin(); it != map.end(); ++it) {
+    // Is this vertex a destination?
+    if (it->second->waypoints == num_waypoints && reached(*it->second)) {
+      // Is it better than the current `best'?
+      if (best == map.end() || *best->second > *it->second) {
+        best = it;
+      }
+    }
+  }
+  return best;
+}
+
+/**
+ * \copydoc destination::reached
+ */
+bool tile_destination::reached(const detail::vertex &vertex) const
+{
+  return vertex.location == m_destination;
+}
+
+/**
+ * \copydoc destination::find_best
+ *
+ * This implementation only checks relevant nodes.
+ */
+path_finder::storage_type::const_iterator
+tile_destination::find_best(const path_finder::storage_type &map,
+                            std::size_t num_waypoints) const
+{
+  auto best = map.end();
+  const auto [begin, end] = map.equal_range(m_destination);
+  for (auto it = begin; it != end; ++it) {
+    // Is this vertex a destination?
+    if (it->second->waypoints == num_waypoints && reached(*it->second)) {
+      // Is it better than the current `best'?
+      if (best == map.end() || *best->second > *it->second) {
+        best = it;
+      }
+    }
+  }
+  return best;
 }
 
 } // namespace freeciv
