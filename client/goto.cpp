@@ -446,13 +446,18 @@ bool is_valid_goto_draw_line(struct tile *dest_tile)
     }
 
     // Show the path on the map
-    for (const auto &step : path->steps()) {
+    const auto first_unsafe =
+        path->first_unsafe_step(game_unit_by_number(unit_id));
+    const auto &steps = path->steps();
+    for (auto it = steps.begin(); it != steps.end(); ++it) {
+      const auto &step = *it;
       if (step.location
           && (step.order.order == ORDER_MOVE
               || step.order.order == ORDER_ACTION_MOVE)
           && is_valid_dir(step.order.dir)) {
         mapdeco_add_gotoline(step.location,
-                             opposite_direction(step.order.dir));
+                             opposite_direction(step.order.dir),
+                             it < first_unsafe);
       }
     }
   }

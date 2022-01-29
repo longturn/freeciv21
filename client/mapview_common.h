@@ -38,9 +38,11 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair);
 bool mapdeco_is_crosshair_set(const struct tile *ptile);
 void mapdeco_clear_crosshairs();
 void mapdeco_set_gotoroute(const struct unit *punit);
-void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir);
+void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir,
+                          bool safe);
 void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir);
-bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir);
+bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir,
+                             bool *safe);
 void mapdeco_clear_gotoroutes();
 
 extern struct view mapview;
@@ -291,7 +293,7 @@ void show_tile_labels(int canvas_base_x, int canvas_base_y, int width_base,
                       int height_base);
 bool show_unit_orders(struct unit *punit);
 
-void draw_segment(struct tile *ptile, enum direction8 dir);
+void draw_segment(struct tile *ptile, enum direction8 dir, bool safe);
 
 void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
                              struct unit *punit1, int hp1);

@@ -63,6 +63,7 @@ Q_GLOBAL_STATIC(QSet<const struct tile *>, mapdeco_crosshair_set)
 
 struct gotoline_counter {
   int line_count[DIR8_MAGIC_MAX];
+  int line_danger_count[DIR8_MAGIC_MAX];
 };
 
 typedef QHash<const struct tile *, struct gotoline_counter *> gotohash;
@@ -1417,8 +1418,9 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
     }
     adjc_dir_base_iterate(&(wld.map), ptile, dir)
     {
-      if (mapdeco_is_gotoline_set(ptile, dir)) {
-        draw_segment(ptile, dir);
+      bool safe;
+      if (mapdeco_is_gotoline_set(ptile, dir, &safe)) {
+        draw_segment(ptile, dir, safe);
       }
     }
     adjc_dir_base_iterate_end;
@@ -1637,7 +1639,7 @@ bool show_unit_orders(struct unit *punit)
       switch (order->order) {
       case ORDER_MOVE:
         fc_assert_ret_val(ptile, false);
-        draw_segment(ptile, order->dir);
+        draw_segment(ptile, order->dir, true); // FIXME
         ptile = mapstep(&(wld.map), ptile, order->dir);
         if (!ptile) {
           /* This shouldn't happen unless the server gives us invalid
@@ -1662,7 +1664,7 @@ bool show_unit_orders(struct unit *punit)
    Draw a goto line at the given location and direction.  The line goes from
    the source tile to the adjacent tile in the given direction.
  */
-void draw_segment(struct tile *src_tile, enum direction8 dir)
+void draw_segment(struct tile *src_tile, enum direction8 dir, bool safe)
 {
   float canvas_x, canvas_y, canvas_dx, canvas_dy;
 
@@ -1676,7 +1678,9 @@ void draw_segment(struct tile *src_tile, enum direction8 dir)
                     DIR_DY[dir]);
 
   // Draw the segment.
-  canvas_put_line(mapview.store, get_color(tileset, COLOR_MAPVIEW_GOTO),
+  canvas_put_line(mapview.store,
+                  get_color(tileset, safe ? COLOR_MAPVIEW_GOTO
+                                          : COLOR_MAPVIEW_UNSAFE_GOTO),
                   LINE_GOTO, canvas_x, canvas_y, canvas_dx, canvas_dy);
 
   /* The actual area drawn will extend beyond the base rectangle, since
@@ -2520,7 +2524,8 @@ void mapdeco_clear_crosshairs()
    there was no previously drawn line there, a mapview update is queued
    for the source and destination tiles.
  */
-void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir)
+void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir,
+                          bool safe)
 {
   struct gotoline_counter *pglc;
   const struct tile *ptile_dest;
@@ -2535,11 +2540,17 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir)
   }
 
   if (!(pglc = mapdeco_gotoline->value(ptile, nullptr))) {
-    pglc = new gotoline_counter[1]();
+    pglc = new gotoline_counter();
     mapdeco_gotoline->insert(ptile, pglc);
   }
-  changed = (pglc->line_count[dir] < 1);
-  pglc->line_count[dir]++;
+  if (safe) {
+    changed = (pglc->line_count[dir] < 1);
+    pglc->line_count[dir]++;
+  } else {
+    changed =
+        (pglc->line_danger_count[dir] < 1) || (pglc->line_count[dir] > 0);
+    pglc->line_danger_count[dir]++;
+  }
 
   if (changed) {
     // FIXME: Remove cast.
@@ -2554,7 +2565,8 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir)
    'dir'. If this was the last line there, a mapview update is queued to
    erase the drawn line.
  */
-void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir)
+void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir,
+                             bool safe)
 {
   struct gotoline_counter *pglc;
   bool changed = false;
@@ -2567,10 +2579,18 @@ void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir)
     return;
   }
 
-  pglc->line_count[dir]--;
-  if (pglc->line_count[dir] <= 0) {
-    pglc->line_count[dir] = 0;
-    changed = true;
+  if (safe) {
+    pglc->line_count[dir]--;
+    if (pglc->line_count[dir] <= 0) {
+      pglc->line_count[dir] = 0;
+      changed = true;
+    }
+  } else {
+    pglc->line_danger_count[dir]--;
+    if (pglc->line_danger_count[dir] <= 0) {
+      pglc->line_danger_count[dir] = 0;
+      changed = true;
+    }
   }
 
   if (changed) {
@@ -2614,7 +2634,7 @@ void mapdeco_set_gotoroute(const struct unit *punit)
       continue;
     }
 
-    mapdeco_add_gotoline(ptile, porder->dir);
+    mapdeco_add_gotoline(ptile, porder->dir, true); // FIXME
     ptile = mapstep(&(wld.map), ptile, porder->dir);
   }
 }
@@ -2623,7 +2643,8 @@ void mapdeco_set_gotoroute(const struct unit *punit)
    Returns TRUE if a goto line should be drawn from the given tile in the
    given direction.
  */
-bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir)
+bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir,
+                             bool *safe)
 {
   struct gotoline_counter *pglc;
 
@@ -2635,7 +2656,8 @@ bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir)
     return false;
   }
 
-  return pglc->line_count[dir] > 0;
+  *safe = (pglc->line_danger_count[dir] == 0);
+  return pglc->line_count[dir] > 0 || pglc->line_danger_count[dir] > 0;
 }
 
 /**
@@ -2649,7 +2671,8 @@ void mapdeco_clear_gotoroutes()
     refresh_tile_mapcanvas(const_cast<struct tile *>(i.key()), false, false);
     adjc_dir_iterate(&(wld.map), i.key(), ptile_dest, dir)
     {
-      if (i.value()->line_count[dir] > 0) {
+      if (i.value()->line_count[dir] > 0
+          || i.value()->line_danger_count[dir] > 0) {
         refresh_tile_mapcanvas(ptile_dest, false, false);
       }
     }
