@@ -83,6 +83,7 @@ jobs:
       - name: Install
         run: |
           cmake --build build --target install
+
   windows:
     name: "Windows"
     runs-on: windows-latest
@@ -125,6 +126,7 @@ jobs:
           files: |
             build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe
             build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe.sha256
+
   os_x:
     name: "Mac OS X"
     runs-on: macos-latest
@@ -179,16 +181,18 @@ jobs:
             --icon "Freeciv21.app" 200 190 \
             --hide-extension "Freeciv21.app" \
             --app-drop-link 600 185 \
-            "Freeciv21.dmg" \
+            "Freeciv21-${{github.ref_name}}.dmg" \
             "staging/"
       - name: Debug
         if: failure()
         run: cat CMakeCache.txt
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+      - name: Upload package
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: macos
-          path: Freeciv21.dmg
+          files: |
+            Freeciv21-*.dmg
+
   wasm:
     name: "WebAssembly"
     runs-on: ubuntu-latest
@@ -326,6 +330,7 @@ jobs:
         with:
           name: wasm-client
           path: freeciv21-client.*
+
   clang-format:
     name: clang-format Code Formatter
     runs-on: ubuntu-latest
