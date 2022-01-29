@@ -377,22 +377,23 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
       const auto path = finder.find_path(destination);
       if (path && !path->empty()) {
         const auto steps = path->steps();
+        int last_turns = 0;
         // Find tiles on the path where we end turns
-        for (std::size_t i = 1; i < steps.size() - 1; ++i) {
-          if (ptile == steps[i].location) {
-            *waypoint |= steps[i].is_waypoint;
-            if (steps[i].turns > steps[i - 1].turns) {
+        for (const auto step : steps) {
+          if (ptile == step.location) {
+            *waypoint |= step.is_waypoint;
+            if (step.turns > last_turns) {
               // Number of turns increased at this step
               *state = GTS_TURN_STEP;
-              *turns = std::max(*turns, steps[i - 1].turns);
+              *turns = std::max(*turns, step.turns);
             }
           }
+          last_turns = step.turns;
         }
-        // Also show a sprite at the end of the path when moving
+        // Show end-of-path sprites (only when moving)
         if (ptile == steps.back().location
             && steps.back().order.order == ORDER_MOVE) {
-          *waypoint |= steps.back().is_waypoint;
-          if (steps.back().moves_left > 0) {
+          if (*state == GTS_INVALID) { // Not set above => not a turn step
             *state = GTS_MP_LEFT;
           } else {
             *state = GTS_EXHAUSTED_MP;
