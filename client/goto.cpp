@@ -378,11 +378,11 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
           finder.find_path(freeciv::tile_destination(destination));
       if (path && !path->empty()) {
         const auto steps = path->steps();
-        int last_turns = 0;
+        int last_turns = 0, last_waypoints = 0;
         // Find tiles on the path where we end turns
         for (const auto step : steps) {
           if (ptile == step.location) {
-            *waypoint |= step.is_waypoint;
+            *waypoint |= (step.waypoints > last_waypoints);
             if (step.turns > last_turns) {
               // Number of turns increased at this step
               *state = GTS_TURN_STEP;
@@ -390,6 +390,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
             }
           }
           last_turns = step.turns;
+          last_waypoints = step.waypoints;
         }
         // Show end-of-path sprites (only when moving)
         if (ptile == steps.back().location
@@ -446,7 +447,7 @@ bool is_valid_goto_draw_line(struct tile *dest_tile)
 
     // Show the path on the map
     for (const auto &step : path->steps()) {
-      if (step
+      if (step.location
           && (step.order.order == ORDER_MOVE
               || step.order.order == ORDER_ACTION_MOVE)
           && is_valid_dir(step.order.dir)) {

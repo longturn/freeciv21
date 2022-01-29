@@ -33,8 +33,6 @@ public:
     int fuel_left;  ///< How much fuel the unit has left
 
     unit_order order; ///< The order to come here
-
-    operator bool() const { return location != nullptr; }
   };
 
   /**
