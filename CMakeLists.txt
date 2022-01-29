@@ -27,10 +27,20 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 # Set the build defaults
 include(cmake/FreecivBuildOptions.cmake)
 
+# Add support for Auto Revision
+include(AutoRevision)
+
+# Set some variables from AutoRevision for use here and later
+list(GET FC21_REV_TAG_LIST 0 FC21_MAJOR_VERSION)
+list(GET FC21_REV_TAG_LIST 1 FC21_MINOR_VERSION)
+list(GET FC21_REV_TAG_LIST 2 FC21_LABEL_VERSION)
+list(GET FC21_REV_TAG_LIST 3 FC21_EMER_VERSION)
+set(FC21_PATCH_VERSION ${FC21_REV_HEAD_HASH_D})
+
 # Set some project variables to reuse later
-set(FREECIV21_VERSION_MAJOR 3)
-set(FREECIV21_VERSION_MINOR 0)
-set(FREECIV21_VERSION_PATCH 20211112)
+set(FREECIV21_VERSION_MAJOR ${FC21_MAJOR_VERSION})
+set(FREECIV21_VERSION_MINOR ${FC21_MINOR_VERSION})
+set(FREECIV21_VERSION_PATCH ${FC21_PATCH_VERSION})
 set(FREECIV21_VERSION "${FREECIV21_VERSION_MAJOR}.${FREECIV21_VERSION_MINOR}.${FREECIV21_VERSION_PATCH}")
 
 # Set project
@@ -87,6 +97,14 @@ install(
   INSTALL
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   COMPONENT freeciv21)
+
+# Use Auto Revision variables to convert some templates to real files at build time
+configure_file(${CMAKE_SOURCE_DIR}/utility/fc_version.h.in
+               utility/fc_version.h
+               @ONLY NEWLINE_STYLE UNIX)
+configure_file(${CMAKE_SOURCE_DIR}/fc_version.in
+               fc_version
+               @ONLY NEWLINE_STYLE UNIX)
 
 # Installing on Win32 et al platforms requires some custom configs
 if(WIN32 OR MSYS OR MINGW)

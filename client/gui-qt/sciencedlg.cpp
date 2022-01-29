@@ -39,7 +39,6 @@ extern QString cut_helptext(const QString &text);
 extern QString get_tooltip_improvement(impr_type *building,
                                        struct city *pcity, bool ext);
 extern QString get_tooltip_unit(struct unit_type *unit, bool ext);
-extern QApplication *qapp;
 
 /**
    Compare unit_items (used for techs) by name

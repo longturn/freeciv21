@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -36,11 +38,26 @@ jobs:
       - name: Install
         run: |
           cmake --build build --target install
+      - name: Package
+        run: |
+          rm -Rf $PWD/build
+          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr
+          cmake --build build --target package
+      - name: Upload package
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            build/Linux-x86_64/freeciv21_*_amd64.deb
+            build/Linux-x86_64/freeciv21_*_amd64.deb.sha256
+
   ubuntu-clang:
     name: "Ubuntu with clang"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -74,6 +91,8 @@ jobs:
         shell: msys2 {0}
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
@@ -114,6 +133,8 @@ jobs:
       VCPKG_BUILD_TYPE: release
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Install build tools
         run: |
           brew update
@@ -175,6 +196,8 @@ jobs:
       QT_VERSION: 5.15.2
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Cache Qt build
         id: qtcache
         uses: actions/cache@v2
@@ -308,6 +331,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Run clang-format style check for C/C++
       uses: jidicula/clang-format-action@v4.4.0
       with:

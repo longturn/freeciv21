@@ -25,6 +25,7 @@ namespace freeciv {
 class layer_special : public layer {
 public:
   explicit layer_special(struct tileset *ts, mapview_layer layer);
+  virtual ~layer_special() = default;
 
   void set_sprite(const extra_type *extra, const QString &tag,
                   int offset_x = 0, int offset_y = 0);

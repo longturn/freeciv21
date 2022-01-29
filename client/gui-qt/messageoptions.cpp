@@ -24,7 +24,6 @@
 #include "fc_client.h"
 #include "page_game.h"
 
-extern QApplication *qapp;
 /**
    Message widget constructor
  */
@@ -79,7 +78,7 @@ message_dlg::message_dlg()
   margins = msgtab->contentsMargins();
   len = msgtab->horizontalHeader()->length() + margins.left()
         + margins.right()
-        + qapp->style()->pixelMetric(QStyle::PM_ScrollBarExtent);
+        + qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent);
   msgtab->setFixedWidth(len);
   msgtab->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   but1->setFixedWidth(len / 3);

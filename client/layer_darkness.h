@@ -46,6 +46,7 @@ namespace freeciv {
 class layer_darkness : public layer {
 public:
   explicit layer_darkness(struct tileset *ts);
+  virtual ~layer_darkness() = default;
 
   /**
    * Sets the way in which the darkness is drawn.
