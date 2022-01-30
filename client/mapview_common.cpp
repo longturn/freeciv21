@@ -2629,13 +2629,17 @@ void mapdeco_set_gotoroute(const struct unit *punit)
 
     ind = (punit->orders.index + i) % punit->orders.length;
     porder = &punit->orders.list[ind];
-    if (porder->order != ORDER_MOVE) {
-      // FIXME: should display some indication of non-move orders here.
-      continue;
+    if (porder->order == ORDER_MOVE || porder->order == ORDER_ACTION_MOVE) {
+      mapdeco_add_gotoline(ptile, porder->dir, true); // FIXME always "safe"
+      ptile = mapstep(&(wld.map), ptile, porder->dir);
+    } else if (ptile != nullptr && porder->order == ORDER_PERFORM_ACTION) {
+      auto tile = index_to_tile(&(wld.map), porder->target);
+      auto dir = direction8_invalid();
+      if (base_get_direction_for_step(&(wld.map), ptile, tile, &dir)) {
+        mapdeco_add_gotoline(ptile, dir, true); // FIXME always "safe"
+      }
+      ptile = tile;
     }
-
-    mapdeco_add_gotoline(ptile, porder->dir, true); // FIXME
-    ptile = mapstep(&(wld.map), ptile, porder->dir);
   }
 }
 
