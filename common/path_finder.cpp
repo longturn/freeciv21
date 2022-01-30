@@ -792,8 +792,11 @@ bool allied_city_destination::reached(const detail::vertex &vertex) const
  */
 bool refuel_destination::reached(const detail::vertex &vertex) const
 {
-  // Can't refuel here, we're not sure that can even enter the tile
-  if (vertex.is_final) {
+  // "final" vertices currently only include ORDER_ACTION_MOVE. Try to find
+  // why this was generated: reject refueling if it wasn't because of an
+  // allied city or unit.
+  if (vertex.is_final && !is_allied_unit_tile(vertex.location, m_unit.owner)
+      && !is_allied_city_tile(vertex.location, m_unit.owner)) {
     return false;
   }
 
@@ -801,15 +804,7 @@ bool refuel_destination::reached(const detail::vertex &vertex) const
   auto probe = m_unit;
   vertex.fill_probe(probe);
 
-  // Fuel
-  if (utype_fuel(probe.utype) && !is_unit_being_refueled(&probe)) {
-    return false;
-  }
-
-  // HP loss/recovery
-  auto saved_hp = probe.hp;
-  unit_restore_hitpoints(&probe); // Will also handle HP loss
-  return probe.hp >= saved_hp;
+  return can_unit_survive_at_tile(&(wld.map), &probe, vertex.location);
 }
 
 } // namespace freeciv
