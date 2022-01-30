@@ -162,7 +162,7 @@ jobs:
           mkdir -p Freeciv21.app/Contents/MacOS Freeciv21.app/Contents/Resources
           cp macos/Info.plist Freeciv21.app/Contents/
           cp -r .install/share/freeciv21/* Freeciv21.app/Contents/Resources
-          cp .install/bin/freeciv21-server .install/bin/freeciv21-client Freeciv21.app/Contents/MacOS
+          cp .install/bin/freeciv21-server .install/bin/freeciv21-client .install/bin/freeciv21-modpack* Freeciv21.app/Contents/MacOS
           mkdir client.iconset
           cp data/icons/16x16/freeciv21-client.png client.iconset/icon_16x16.png
           cp data/icons/32x32/freeciv21-client.png client.iconset/icon_16x16@2x.png
