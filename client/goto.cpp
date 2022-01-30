@@ -446,19 +446,21 @@ bool is_valid_goto_draw_line(struct tile *dest_tile)
     }
 
     // Show the path on the map
+    auto unit = game_unit_by_number(unit_id);
+    tile *previous_tile = unit_tile(unit);
     const auto first_unsafe =
         path->first_unsafe_step(game_unit_by_number(unit_id));
     const auto &steps = path->steps();
     for (auto it = steps.begin(); it != steps.end(); ++it) {
       const auto &step = *it;
-      if (step.location
-          && (step.order.order == ORDER_MOVE
-              || step.order.order == ORDER_ACTION_MOVE)
-          && is_valid_dir(step.order.dir)) {
-        mapdeco_add_gotoline(step.location,
-                             opposite_direction(step.order.dir),
+      if (auto dir = direction8_invalid();
+          previous_tile != nullptr
+          && base_get_direction_for_step(&(wld.map), previous_tile,
+                                         step.location, &dir)) {
+        mapdeco_add_gotoline(step.location, opposite_direction(dir),
                              it < first_unsafe);
       }
+      previous_tile = step.location;
     }
   }
 
