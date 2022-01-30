@@ -56,6 +56,7 @@ if(Git_FOUND)
     execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=.git rev-list --tags --max-count=1
                     OUTPUT_VARIABLE _output
                     OUTPUT_STRIP_TRAILING_WHITESPACE)
+    message("-- Last tag commit hash: ${_output}")
 
     # Use the temp value to get the latest revision tag
     execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=.git describe --tags ${_output}
