@@ -41,7 +41,7 @@ vertex vertex::from_unit(const unit &unit)
  * move cost is subtracted.
  */
 vertex vertex::child_for_action(action_id action, const unit &probe,
-                                const tile *target)
+                                tile *target)
 {
   auto ret = *this;
   ret.parent = this;
@@ -50,6 +50,7 @@ vertex vertex::child_for_action(action_id action, const unit &probe,
   ret.order.target = target->index;
   ret.order.dir = DIR8_ORIGIN;
   ret.moves_left = unit_pays_mp_for_action(action_by_number(action), &probe);
+  ret.location = target;
   return ret;
 }
 

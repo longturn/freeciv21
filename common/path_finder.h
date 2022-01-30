@@ -34,8 +34,7 @@ struct vertex : public path::step {
 
   static vertex from_unit(const unit &unit);
 
-  vertex child_for_action(action_id action, const unit &probe,
-                          const tile *target);
+  vertex child_for_action(action_id action, const unit &probe, tile *target);
 
   bool comparable(const vertex &other) const;
   void fill_probe(unit &probe) const;
