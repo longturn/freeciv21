@@ -31,17 +31,15 @@ jobs:
             libsdl2-mixer-dev
       - name: Configure
         run: |
-          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr
       - name: Build
         run: |
           cmake --build build
       - name: Install
         run: |
-          cmake --build build --target install
+          DESTDIR=$PWD/build/install cmake --build build --target install
       - name: Package
         run: |
-          rm -Rf $PWD/build
-          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr
           cmake --build build --target package
       - name: Upload package
         uses: softprops/action-gh-release@v1
