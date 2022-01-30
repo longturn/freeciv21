@@ -393,8 +393,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
           last_waypoints = step.waypoints;
         }
         // Show end-of-path sprites (only when moving)
-        if (ptile == steps.back().location
-            && steps.back().order.order == ORDER_MOVE) {
+        if (ptile == steps.back().location) {
           if (*state == GTS_INVALID) { // Not set above => not a turn step
             *state = GTS_MP_LEFT;
           } else {
