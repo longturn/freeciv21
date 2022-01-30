@@ -1615,52 +1615,6 @@ void show_tile_labels(int canvas_base_x, int canvas_base_y, int width_base,
 }
 
 /**
-   Draw the goto route for the unit.  Return TRUE if anything is drawn.
-
-   This duplicates drawing code that is run during the hover state.
- */
-bool show_unit_orders(struct unit *punit)
-{
-  if (punit && unit_has_orders(punit)) {
-    struct tile *ptile = unit_tile(punit);
-    int i;
-
-    for (i = 0; i < punit->orders.length; i++) {
-      int idx = (punit->orders.index + i) % punit->orders.length;
-      struct unit_order *order;
-
-      if (punit->orders.index + i >= punit->orders.length
-          && !punit->orders.repeat) {
-        break;
-      }
-
-      order = &punit->orders.list[idx];
-
-      switch (order->order) {
-      case ORDER_MOVE:
-        fc_assert_ret_val(ptile, false);
-        draw_segment(ptile, order->dir, true); // FIXME
-        ptile = mapstep(&(wld.map), ptile, order->dir);
-        if (!ptile) {
-          /* This shouldn't happen unless the server gives us invalid
-           * data.  To avoid disaster we need to break out of the
-           * switch and the enclosing for loop. */
-          fc_assert(NULL != ptile);
-          i = punit->orders.length;
-        }
-        break;
-      default:
-        // TODO: graphics for other orders.
-        break;
-      }
-    }
-    return true;
-  } else {
-    return false;
-  }
-}
-
-/**
    Draw a goto line at the given location and direction.  The line goes from
    the source tile to the adjacent tile in the given direction.
  */
@@ -2632,7 +2586,7 @@ void mapdeco_set_gotoroute(const struct unit *punit)
     if (porder->order == ORDER_MOVE || porder->order == ORDER_ACTION_MOVE) {
       mapdeco_add_gotoline(ptile, porder->dir, true); // FIXME always "safe"
       ptile = mapstep(&(wld.map), ptile, porder->dir);
-    } else if (ptile != nullptr && porder->order == ORDER_PERFORM_ACTION) {
+    } else if (porder->order == ORDER_PERFORM_ACTION) {
       auto tile = index_to_tile(&(wld.map), porder->target);
       auto dir = direction8_invalid();
       if (base_get_direction_for_step(&(wld.map), ptile, tile, &dir)) {
