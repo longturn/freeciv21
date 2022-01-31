@@ -5750,6 +5750,9 @@ static bool load_ruleset_effects(struct section_file *file,
   if (compat->ver_effects <= 0) {
     return false;
   }
+
+  compat->cap_effects = secfile_lookup_str(file, "datafile.options");
+
   (void) secfile_entry_by_path(file, "datafile.description"); // unused
   (void) secfile_entry_by_path(file, "datafile.ruledit");     // unused
 
@@ -8608,7 +8611,6 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
 
   qInfo(_("Loading rulesets."));
 
-  rscompat_init_info(&compat_info);
   compat_info.compat_mode = compat_mode;
   compat_info.log_cb = logger;
 
