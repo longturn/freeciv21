@@ -750,7 +750,7 @@ bool unit_list_item::can_issue_orders() const
  */
 void unit_list_item::disband()
 {
-  if (!can_issue_orders()) {
+  if (can_issue_orders()) {
     auto *units = unit_list_new();
     unit_list_append(units, m_unit);
     popup_disband_dialog(units);
@@ -759,11 +759,11 @@ void unit_list_item::disband()
 }
 
 /**
-   Loads unit into some tranport
+   Loads unit into some transport
  */
 void unit_list_item::load()
 {
-  if (!can_issue_orders()) {
+  if (can_issue_orders()) {
     qtg_request_transport(m_unit, unit_tile(m_unit));
   }
 }
@@ -773,7 +773,7 @@ void unit_list_item::load()
  */
 void unit_list_item::unload()
 {
-  if (!can_issue_orders()) {
+  if (can_issue_orders()) {
     request_unit_unload(m_unit);
   }
 }
@@ -783,7 +783,7 @@ void unit_list_item::unload()
  */
 void unit_list_item::unload_all()
 {
-  if (!can_issue_orders()) {
+  if (can_issue_orders()) {
     request_unit_unload_all(m_unit);
   }
 }
@@ -793,7 +793,7 @@ void unit_list_item::unload_all()
  */
 void unit_list_item::upgrade()
 {
-  if (!can_issue_orders()) {
+  if (can_issue_orders()) {
     auto *units = unit_list_new();
     unit_list_append(units, m_unit);
     popup_upgrade_dialog(units);
@@ -802,7 +802,7 @@ void unit_list_item::upgrade()
 }
 
 /**
-   Changes homecity for given unit
+   Changes home city for given unit
  */
 void unit_list_item::change_homecity()
 {
