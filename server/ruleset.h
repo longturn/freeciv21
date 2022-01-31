@@ -14,7 +14,9 @@
 
 #include <QLoggingCategory>
 
-#define RULESET_CAPABILITIES "+Freeciv-ruleset-Devel-2017.Jan.02"
+#define CAP_EFT_HP_REGEN_MIN "HP_Regen_Min"
+#define RULESET_CAPABILITIES                                                \
+  "+Freeciv-ruleset-Devel-2017.Jan.02 " CAP_EFT_HP_REGEN_MIN
 /*
  * Ruleset capabilities acceptable to this program:
  *
@@ -23,6 +25,9 @@
  *
  * +Freeciv-ruleset-Devel-YYYY.MMM.DD
  *    - ruleset of the development version at the given data
+ *
+ * HP_Regen_Min (optional)
+ *    - Hard-coded HP regeneration rules in cities moved to effects.ruleset
  */
 
 Q_DECLARE_LOGGING_CATEGORY(ruleset_category)
