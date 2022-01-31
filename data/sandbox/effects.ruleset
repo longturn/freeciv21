@@ -11,7 +11,7 @@
 
 [datafile]
 description="Sandbox effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min"
 format_version=20
 
 ; /* <-- avoid gettext warnings

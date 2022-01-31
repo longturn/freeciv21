@@ -11,7 +11,7 @@
 
 [datafile]
 description="Experimental web-client effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 web-compatible"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 web-compatible +HP_Regen_Min"
 format_version=20
 
 ; /* <-- avoid gettext warnings
