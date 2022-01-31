@@ -466,8 +466,16 @@ Combat_Rounds
 HP_Regen
     Units that do not move recover amount percentage (rounded up) of their full hitpoints per turn.
 
+    .. note::
+        This effect is added automatically to implement HP recovery in cities. This behavior can be turned
+        off by requiring the ``+HP_Regen_Min`` option in ``effects.ruleset``.
+
 HP_Regen_Min
     Lower limit on "HP_Regen".  That is, the recovery percentage is the larger of "HP_Regen" and "HP_Regen_Min".
+
+    .. note::
+        This effect is added automatically to implement HP recovery in cities. This behavior can be turned
+        off by requiring the ``+HP_Regen_Min`` option in ``effects.ruleset``.
 
 City_Vision_Radius_Sq
     Increase city vision radius in squared distance by amount tiles.
@@ -627,7 +635,7 @@ Unit_Buy_Cost_Pct
 
 Nuke_Improvement_Pct
     Percentage chance that an improvement would be destroyed while nuking the city
-    Only regular improvements (not wonders) are affected. Improvements protected from Sabotage (Eg: City Walls) 
+    Only regular improvements (not wonders) are affected. Improvements protected from Sabotage (Eg: City Walls)
     aren't affected.
 
 Shield2Gold_Factor
