@@ -49,14 +49,6 @@ struct new_flags {
 #define TER_LAST_USER_FLAG_3_0 TER_USER_8
 
 /**
-   Initialize rscompat information structure
- */
-void rscompat_init_info(struct rscompat_info *info)
-{
-  memset(info, 0, sizeof(*info));
-}
-
-/**
    Ruleset files should have a capabilities string datafile.options
    This checks the string and that the required capabilities are satisfied.
  */
