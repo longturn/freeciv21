@@ -843,36 +843,6 @@ void unit_list_item::sentry()
   }
 }
 
-/**
-   Constructor
- */
-unit_list_event_filter::unit_list_event_filter(QObject *parent)
-    : QObject(parent)
-{
-}
-
-/**
-   Filters out context menu events and shows the unit context menu
- */
-bool unit_list_event_filter::eventFilter(QObject *object, QEvent *event)
-{
-  auto *list = qobject_cast<QListWidget *>(object);
-  if (list != nullptr && event->type() == QEvent::ContextMenu) {
-    auto *menu_event = static_cast<QContextMenuEvent *>(event);
-    auto *item = list->itemAt(menu_event->pos());
-    // Maybe there was no unit under the mouse
-    if (auto *unit_item = dynamic_cast<unit_list_item *>(item)) {
-      // Maybe we can't give orders to this unit
-      if (auto *menu = unit_item->menu()) {
-        // OK, show the menu
-        menu->exec(menu_event->globalPos());
-        return true;
-      }
-    }
-  }
-  return false;
-}
-
 cityIconInfoLabel::cityIconInfoLabel(QWidget *parent) : QWidget(parent)
 {
   auto f = fcFont::instance()->getFont(fonts::default_font);
@@ -1417,14 +1387,27 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
   ui.tabs_right->setTabText(0, _("General"));
   ui.tabs_right->setTabText(1, _("Citizens"));
 
+  const auto show_unit_actions_menu = [this](const QPoint &loc) {
+    auto *item = ui.present_units_list->itemAt(loc);
+    // Maybe there was no unit under the mouse
+    if (auto *unit_item = dynamic_cast<unit_list_item *>(item)) {
+      // Maybe we can't give orders to this unit
+      if (auto *menu = unit_item->menu()) {
+        // OK, show the menu
+        menu->popup(ui.present_units_list->mapToGlobal(loc));
+      }
+    }
+  };
+
   connect(ui.present_units_list, &QListWidget::itemDoubleClicked,
           [](QListWidgetItem *item) {
             if (auto *uitem = dynamic_cast<unit_list_item *>(item)) {
               uitem->activate_and_close_dialog();
             }
           });
-  ui.present_units_list->installEventFilter(
-      new unit_list_event_filter(this));
+  ui.present_units_list->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(ui.present_units_list, &QWidget::customContextMenuRequested,
+          show_unit_actions_menu);
 
   connect(ui.supported_units, &QListWidget::itemDoubleClicked,
           [](QListWidgetItem *item) {
@@ -1432,7 +1415,9 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
               uitem->activate_and_close_dialog();
             }
           });
-  ui.supported_units->installEventFilter(new unit_list_event_filter(this));
+  ui.supported_units->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(ui.supported_units, &QWidget::customContextMenuRequested,
+          show_unit_actions_menu);
   ui.supported_units->oneliner = false;
   installEventFilter(this);
 }
