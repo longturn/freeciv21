@@ -130,19 +130,6 @@ private:
 };
 
 /****************************************************************************
-  Pops up unit context menu
-****************************************************************************/
-class unit_list_event_filter : public QObject {
-  Q_OBJECT
-
-public:
-  explicit unit_list_event_filter(QObject *parent = nullptr);
-
-protected:
-  bool eventFilter(QObject *object, QEvent *event) override;
-};
-
-/****************************************************************************
   Single item on unit_info in city dialog representing one unit
 ****************************************************************************/
 class impr_item : public QLabel {
