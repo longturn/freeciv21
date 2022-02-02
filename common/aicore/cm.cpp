@@ -263,7 +263,7 @@ static void real_print_partial_solution(QtMsgType level, const char *file,
 #define print_partial_solution(loglevel, soln, state)
 #endif // FREECIV_DEBUG
 
-static void cm_result_copy(struct cm_result *result,
+static void cm_result_copy(std::unique_ptr<cm_result> &result,
                            const struct city *pcity, bool *workers_map);
 
 static double estimate_fitness(const struct cm_state *state,
@@ -318,17 +318,15 @@ void cm_free()
 /**
    Create a new cm_result.
  */
-struct cm_result *cm_result_new(struct city *pcity)
+std::unique_ptr<cm_result> cm_result_new(struct city *pcity)
 {
-  struct cm_result *result;
-
   // initialise all values
-  result = new cm_result[1]();
+  auto result = std::make_unique<cm_result>();
   result->city_radius_sq =
       pcity ? city_map_radius_sq_get(pcity) : CITY_MAP_MAX_RADIUS_SQ;
   int tiles = city_map_tiles(result->city_radius_sq);
   fc_assert_ret_val(tiles > 0, result);
-  result->worker_positions = new bool[tiles]();
+  result->worker_positions.resize(tiles, false);
 
   /* test if the city pointer is valid; the cm_result struct can be
    * returned as it uses the maximal possible value for the size of
@@ -336,19 +334,6 @@ struct cm_result *cm_result_new(struct city *pcity)
   fc_assert_ret_val(pcity != NULL, result);
 
   return result;
-}
-
-/**
-   Destroy a cm_result.
- */
-void cm_result_destroy(struct cm_result *result)
-{
-  if (result != NULL) {
-    if (result->worker_positions != NULL) {
-      FCPP_FREE(result->worker_positions);
-    }
-    FCPP_FREE(result);
-  }
 }
 
 /****************************************************************************
@@ -780,7 +765,7 @@ evaluate_solution(struct cm_state *state,
  */
 static void convert_solution_to_result(struct cm_state *state,
                                        const struct partial_solution *soln,
-                                       struct cm_result *result)
+                                       std::unique_ptr<cm_result> &result)
 {
   struct cm_fitness fitness;
 
@@ -2050,7 +2035,8 @@ static void cm_state_free(struct cm_state *state)
  */
 static void cm_find_best_solution(struct cm_state *state,
                                   const struct cm_parameter *const parameter,
-                                  struct cm_result *result, bool negative_ok)
+                                  std::unique_ptr<cm_result> &result,
+                                  bool negative_ok)
 {
   int loop_count = 0;
   int max_count;
@@ -2100,7 +2086,7 @@ static void cm_find_best_solution(struct cm_state *state,
    solution.
  */
 void cm_query_result(struct city *pcity, const struct cm_parameter *param,
-                     struct cm_result *result, bool negative_ok)
+                     std::unique_ptr<cm_result> &result, bool negative_ok)
 {
   struct cm_state *state = cm_state_init(pcity, negative_ok);
 
@@ -2192,7 +2178,7 @@ void cm_init_emergency_parameter(struct cm_parameter *dest)
 /**
    Count the total number of workers in the result.
  */
-int cm_result_workers(const struct cm_result *result)
+int cm_result_workers(const std::unique_ptr<cm_result> &result)
 {
   int count = 0;
 
@@ -2214,7 +2200,7 @@ int cm_result_workers(const struct cm_result *result)
 /**
    Count the total number of specialists in the result.
  */
-int cm_result_specialists(const struct cm_result *result)
+int cm_result_specialists(const std::unique_ptr<cm_result> &result)
 {
   int count = 0;
 
@@ -2227,7 +2213,7 @@ int cm_result_specialists(const struct cm_result *result)
 /**
    Count the total number of citizens in the result.
  */
-int cm_result_citizens(const struct cm_result *result)
+int cm_result_citizens(const std::unique_ptr<cm_result> &result)
 {
   return cm_result_workers(result) + cm_result_specialists(result);
 }
@@ -2236,7 +2222,7 @@ int cm_result_citizens(const struct cm_result *result)
    Copy the city's current setup into the cm result structure. Wrapper for
    cm_result_main().
  */
-void cm_result_from_main_map(struct cm_result *result,
+void cm_result_from_main_map(std::unique_ptr<cm_result> &result,
                              const struct city *pcity)
 {
   cm_result_copy(result, pcity, NULL);
@@ -2247,15 +2233,15 @@ void cm_result_from_main_map(struct cm_result *result,
    is a bool array with the size city_map_tiles_from_city(pcity). It is TRUE
    for tiles worked by the city.
  */
-static void cm_result_copy(struct cm_result *result,
+static void cm_result_copy(std::unique_ptr<cm_result> &result,
                            const struct city *pcity, bool *workers_map)
 {
   struct tile *pcenter = city_tile(pcity);
 
   // clear worker positions
-  memset(result->worker_positions, 0,
-         sizeof(*result->worker_positions)
-             * city_map_tiles(result->city_radius_sq));
+  for (auto position : result->worker_positions) {
+    position = false;
+  }
 
   city_tile_iterate_index(result->city_radius_sq, pcenter, ptile, ctindex)
   {
@@ -2452,11 +2438,11 @@ void cm_print_city(const struct city *pcity)
 /**
    Print debugging information about a full CM result.
  */
-void cm_print_result(const struct cm_result *result)
+void cm_print_result(const std::unique_ptr<cm_result> &result)
 {
   int *city_map_data = new int[city_map_tiles(result->city_radius_sq)]();
 
-  log_test("cm_print_result(result=%p)", (void *) result);
+  log_test("cm_print_result(result=%p)", (void *) result.get());
   log_test("  found_a_valid=%d disorder=%d happy=%d", result->found_a_valid,
            result->disorder, result->happy);
 

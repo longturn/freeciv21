@@ -32,16 +32,17 @@ struct cm_result {
   int surplus[O_LAST];
 
   int city_radius_sq;
-  bool *worker_positions;
+  std::vector<bool> worker_positions;
   citizens specialists[SP_MAX];
+
+  ~cm_result() = default;
 };
 
 void cm_init();
 void cm_init_citymap();
 void cm_free();
 
-struct cm_result *cm_result_new(struct city *pcity);
-void cm_result_destroy(struct cm_result *result);
+std::unique_ptr<cm_result> cm_result_new(struct city *pcity);
 
 /*
  * Will try to meet the requirements and fill out the result. Caller
@@ -50,7 +51,7 @@ void cm_result_destroy(struct cm_result *result);
  */
 void cm_query_result(struct city *pcity,
                      const struct cm_parameter *const parameter,
-                     struct cm_result *result, bool negative_ok);
+                     std::unique_ptr<cm_result> &result, bool negative_ok);
 
 /***************** utility methods *************************************/
 bool operator==(const struct cm_parameter &p1,
@@ -61,11 +62,11 @@ void cm_init_parameter(struct cm_parameter *dest);
 void cm_init_emergency_parameter(struct cm_parameter *dest);
 
 void cm_print_city(const struct city *pcity);
-void cm_print_result(const struct cm_result *result);
+void cm_print_result(const std::unique_ptr<cm_result> &result);
 
-int cm_result_citizens(const struct cm_result *result);
-int cm_result_specialists(const struct cm_result *result);
-int cm_result_workers(const struct cm_result *result);
+int cm_result_citizens(const std::unique_ptr<cm_result> &result);
+int cm_result_specialists(const std::unique_ptr<cm_result> &result);
+int cm_result_workers(const std::unique_ptr<cm_result> &result);
 
-void cm_result_from_main_map(struct cm_result *result,
+void cm_result_from_main_map(std::unique_ptr<cm_result> &result,
                              const struct city *pcity);

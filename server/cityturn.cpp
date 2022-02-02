@@ -282,7 +282,8 @@ void remove_obsolete_buildings(struct player *pplayer)
   Rearrange workers according to a cm_result struct.  The caller must make
   sure that the result is valid.
 **************************************************************************/
-void apply_cmresult_to_city(struct city *pcity, const struct cm_result *cmr)
+void apply_cmresult_to_city(struct city *pcity,
+                            const std::unique_ptr<cm_result> &cmr)
 {
   struct tile *pcenter = city_tile(pcity);
 
@@ -367,7 +368,6 @@ static void set_default_city_manager(struct cm_parameter *cmp,
 void auto_arrange_workers(struct city *pcity)
 {
   struct cm_parameter cmp;
-  struct cm_result *cmr;
 
   /* See comment in freeze_workers(): we can't rearrange while
    * workers are frozen (i.e. multiple updates need to be done). */
@@ -403,7 +403,7 @@ void auto_arrange_workers(struct city *pcity)
 
   /* This must be after city_refresh() so that the result gets created for
    * the right city radius */
-  cmr = cm_result_new(pcity);
+  auto cmr = cm_result_new(pcity);
   cm_query_result(pcity, &cmp, cmr, false);
 
   if (!cmr->found_a_valid) {
@@ -461,7 +461,6 @@ void auto_arrange_workers(struct city *pcity)
   }
   sanity_check_city(pcity);
 
-  cm_result_destroy(cmr);
   TIMING_LOG(AIT_CITIZEN_ARRANGE, TIMER_STOP);
 }
 

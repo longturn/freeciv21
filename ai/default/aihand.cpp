@@ -461,7 +461,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
     // Check if we celebrate - the city state must be restored at the end!
     city_list_iterate(pplayer->cities, pcity)
     {
-      struct cm_result *cmr = cm_result_new(pcity);
+      auto cmr = cm_result_new(pcity);
       struct ai_city *city_data = def_ai_city_data(pcity, ait);
 
       cm_query_result(pcity, &cmp, cmr, false); // burn some CPU
@@ -476,7 +476,6 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
       } else {
         city_data->celebrate = false;
       }
-      cm_result_destroy(cmr);
     }
     city_list_iterate_end;
 
@@ -646,7 +645,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
 
     city_list_iterate(pplayer->cities, pcity)
     {
-      struct cm_result *cmr = cm_result_new(pcity);
+      auto cmr = cm_result_new(pcity);
 
       if (def_ai_city_data(pcity, ait)->celebrate) {
         log_base(LOGLEVEL_TAX, "setting %s to celebrate",
@@ -662,7 +661,6 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
           CITY_LOG(LOG_ERROR, pcity, "has NO valid state!");
         }
       }
-      cm_result_destroy(cmr);
     }
     city_list_iterate_end;
   } else if (celebrate == AI_CELEBRATION_NO) {
