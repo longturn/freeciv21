@@ -521,6 +521,11 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
                                     * active. Fortify bonus applies only in
                                     * special case that unit is fortified. */
     break;
+  case EFT_BOMBARD_LIMIT_PCT:
+    /* TODO: ideally should track bombard threats in adv */
+    num = num_affected_units(peffect, adv);
+    v += (num + 4) * amount / 250;
+    break;
   case EFT_GAIN_AI_LOVE:
     players_iterate(aplayer)
     {
