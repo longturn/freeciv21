@@ -19,23 +19,15 @@
  */
 static int hp_gain_coord(struct unit *punit)
 {
-  int hp = 0;
+  int bonus, hp;
   const int base = unit_type_get(punit)->hp;
 
   // Includes barracks (100%), fortress (25%), etc.
-  hp += base * get_unit_bonus(punit, EFT_HP_REGEN) / 100;
-
-  if (tile_city(unit_tile(punit))) {
-    hp = MAX(hp, base / 3);
-  }
-
-  if (!unit_class_get(punit)->hp_loss_pct) {
-    hp += (base + 9) / 10;
-  }
-
-  if (punit->activity == ACTIVITY_FORTIFIED) {
-    hp += (base + 9) / 10;
-  }
+  bonus = get_unit_bonus(punit, EFT_HP_REGEN);
+  bonus = MAX(bonus, get_unit_bonus(punit, EFT_HP_REGEN_MIN));
+  if (bonus <= 0)
+    return 0;
+  hp = (base - 1) * bonus / 100 + 1; // rounds up
 
   return MAX(hp, 0);
 }

@@ -11,7 +11,7 @@
 
 [datafile]
 description="Royale effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 web-compatible"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 web-compatible +HP_Regen_Min"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -214,6 +214,33 @@ reqs    =
       "Extra", "Airbase", "Local"
     }
 
+; Basic HP regen.  Not for helis, as they have hp_loss_pct=10
+[effect_hp_regen_base]
+type    = "HP_Regen"
+value   = 10
+reqs    =
+    { "type", "name", "range", "present"
+      "UnitClass", "Helicopter", "Local", FALSE
+    }
+
+; When hardcoded, effect_hp_regen_base was applied after the HP_Regen_Min
+[effect_hp_regen_min_base]
+type    = "HP_Regen_Min"
+value   = 10
+reqs    =
+    { "type", "name", "range", "present"
+      "UnitClass", "Helicopter", "Local", FALSE
+    }
+
+; Units in cities regenerate at least 1/3 of their HP regardless
+[effect_hp_regen_min_city]
+type    = "HP_Regen_Min"
+value   = 33
+reqs    =
+    { "type", "name", "range"
+      "CityTile", "Center", "Local"
+    }
+
 ; Fortress HP regen (Every Land units)
 [effect_fortress_hp_regen]
 type    = "HP_Regen"
@@ -231,6 +258,23 @@ reqs    =
       "UnitClass", "Helicopter", "Local", FALSE
       "UnitClass", "Air", "Local", FALSE
       "UnitClass", "Missile", "Local", FALSE
+    }
+
+[effect_fortified_hp_regen]
+type    = "HP_Regen"
+value   = 10
+reqs    =
+    { "type", "name", "range"
+      "Activity", "Fortified", "Local"
+    }
+
+; When hardcoded, effect_fortified_hp_regen was applied after the HP_Regen_Min
+[effect_fortified_hp_regen_min]
+type    = "HP_Regen_Min"
+value   = 10
+reqs    =
+    { "type", "name", "range"
+      "Activity", "Fortified", "Local"
     }
 
 ; No defense bonus from Pre-Fortress, Fortress only helps against Land and Sea units
@@ -254,11 +298,11 @@ reqs    =
 
 
 
-; Airbase HP regen: 34% (this approximation to 1/3 is exact for units <50HP;
+; Airbase HP regen: 33% (this approximation to 1/3 is exact for units <100HP;
 ; 1/3 is equivalent to a city without Airport)
 [effect_airbase_hp_regen]
 type    = "HP_Regen"
-value   = 34
+value   = 33
 reqs    =
     { "type", "name", "range", "present"
       "Extra", "Airbase", "Local", TRUE

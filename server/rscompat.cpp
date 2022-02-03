@@ -48,13 +48,7 @@ struct new_flags {
 #define UCF_LAST_USER_FLAG_3_0 UCF_USER_FLAG_8
 #define TER_LAST_USER_FLAG_3_0 TER_USER_8
 
-/**
-   Initialize rscompat information structure
- */
-void rscompat_init_info(struct rscompat_info *info)
-{
-  memset(info, 0, sizeof(*info));
-}
+static void rscompat_optional_capabilities(rscompat_info *info);
 
 /**
    Ruleset files should have a capabilities string datafile.options
@@ -651,17 +645,13 @@ bool rscompat_old_effect_3_1(const char *type, struct section_file *file,
  */
 void rscompat_postprocess(struct rscompat_info *info)
 {
-  if (!info->compat_mode) {
-    /* There isn't anything here that should be done outside of compat
-     * mode. */
-    return;
+  if (info->compat_mode) {
+    /* Upgrade existing effects. Done before new effects are added to
+     * prevent the new effects from being upgraded by accident. */
+    iterate_effect_cache(effect_list_compat_cb, info);
   }
 
-  /* Upgrade existing effects. Done before new effects are added to prevent
-   * the new effects from being upgraded by accident. */
-  iterate_effect_cache(effect_list_compat_cb, info);
-
-  if (info->ver_effects < 20) {
+  if (info->compat_mode && info->ver_effects < 20) {
     struct effect *peffect;
 
     /* Post successful action move fragment loss for "Bombard"
@@ -792,7 +782,7 @@ void rscompat_postprocess(struct rscompat_info *info)
                                             false, "Upgrade Unit"));
   }
 
-  if (info->ver_game < 20) {
+  if (info->compat_mode && info->ver_game < 20) {
     // New enablers
     struct action_enabler *enabler;
     struct requirement e_req;
@@ -1074,6 +1064,8 @@ void rscompat_postprocess(struct rscompat_info *info)
     }
   }
 
+  rscompat_optional_capabilities(info);
+
   /* The ruleset may need adjustments it didn't need before compatibility
    * post processing.
    *
@@ -1081,6 +1073,61 @@ void rscompat_postprocess(struct rscompat_info *info)
    * the rules risks bad rules. A user that saves the ruleset rather than
    * using it risks an unexpected change on the next load and save. */
   autoadjust_ruleset_data();
+}
+
+/**
+ * Handles compatibility with older versions when the new behavior is
+ * tied to the presence of an optional ruleset capability.
+ */
+static void rscompat_optional_capabilities(rscompat_info *info)
+{
+  if (!has_capabilities(info->cap_effects.data(), CAP_EFT_HP_REGEN_MIN)) {
+    // Create new effects to replace the old hard-coded minimum HP
+    // recovery.
+
+    // 1- 10% base recovery for units without hp_loss_pct
+    auto effect = effect_new(EFT_HP_REGEN, 10, nullptr);
+    unit_class_iterate(uclass)
+    {
+      if (uclass->hp_loss_pct > 0) {
+        effect_req_append(effect,
+                          req_from_str("UnitClass", "Local", false, false,
+                                       false, uclass_rule_name(uclass)));
+      }
+    }
+    unit_class_iterate_end;
+
+    // 2- 10% base recovery for fortified units
+    effect = effect_new(EFT_HP_REGEN, 10, nullptr);
+    effect_req_append(effect, req_from_str("Activity", "Local", false, true,
+                                           false, "Fortified"));
+
+    // 3- At least one third in cities
+    effect = effect_new(EFT_HP_REGEN_MIN, 33, nullptr);
+    effect_req_append(effect, req_from_str("CityTile", "Local", false, true,
+                                           false, "Center"));
+
+    // 4- 10% more for units in cities without hp_loss_pct
+    effect = effect_new(EFT_HP_REGEN_MIN, 10, nullptr);
+    effect_req_append(effect, req_from_str("CityTile", "Local", false, true,
+                                           false, "Center"));
+    unit_class_iterate(uclass)
+    {
+      if (uclass->hp_loss_pct > 0) {
+        effect_req_append(effect,
+                          req_from_str("UnitClass", "Local", false, false,
+                                       false, uclass_rule_name(uclass)));
+      }
+    }
+    unit_class_iterate_end;
+
+    // 5- 10% more for units fortified in cities
+    effect = effect_new(EFT_HP_REGEN_MIN, 10, nullptr);
+    effect_req_append(effect, req_from_str("CityTile", "Local", false, true,
+                                           false, "Center"));
+    effect_req_append(effect, req_from_str("Activity", "Local", false, true,
+                                           false, "Fortified"));
+  }
 }
 
 /**

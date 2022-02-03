@@ -1079,6 +1079,7 @@ QString effect_type_unit_text(effect_type type, int value)
   case EFT_SPY_RESISTANT:
   case EFT_VETERAN_COMBAT:
   case EFT_HP_REGEN:
+  case EFT_HP_REGEN_MIN:
   case EFT_TRADEROUTE_PCT:
   case EFT_DEFEND_BONUS:
   case EFT_CIVIL_WAR_CHANCE:

@@ -13,7 +13,7 @@
 
 [datafile]
 description="Alien World effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -593,6 +593,45 @@ reqs	=
 [effect_pop_pollution]
 type	= "Pollu_Pop_Pct"
 value	= -100
+
+; Basic HP regen.
+; All unit-types' hitpoints are divisible by 10, so no need to worry about rounding
+[effect_hp_regen_base]
+type    = "HP_Regen"
+value   = 10
+reqs    = {}
+
+; When hardcoded, effect_hp_regen_base was applied after the HP_Regen_Min
+[effect_hp_regen_min_base]
+type    = "HP_Regen_Min"
+value   = 10
+reqs    = {}
+
+; Units in cities regenerate at least 1/3 of their HP regardless
+[effect_hp_regen_min_city]
+type    = "HP_Regen_Min"
+value   = 33
+reqs    =
+    { "type", "name", "range"
+      "CityTile", "Center", "Local"
+    }
+
+[effect_fortified_hp_regen]
+type    = "HP_Regen"
+value   = 10
+reqs    =
+    { "type", "name", "range"
+      "Activity", "Fortified", "Local"
+    }
+
+; When hardcoded, effect_fortified_hp_regen was applied after the HP_Regen_Min
+[effect_fortified_hp_regen_min]
+type    = "HP_Regen_Min"
+value   = 10
+reqs    =
+    { "type", "name", "range"
+      "Activity", "Fortified", "Local"
+    }
 
 [effect_hospital]
 type    = "HP_Regen"

@@ -89,9 +89,8 @@ public:
 private:
   struct city *check_city(int city_id, struct cm_parameter *parameter);
   bool apply_result_on_server(struct city *pcity,
-                              const struct cm_result *result);
-  struct cm_result *cma_state_result;
-  const struct cm_result *cma_result_got;
+                              std::unique_ptr<cm_result> &&result);
+  std::unique_ptr<cm_result> cma_result_got;
   int last_request;
   struct city *xcity;
 };
@@ -220,7 +219,6 @@ void cma_got_result(int citynr) { gimb->result_came_from_server(citynr); }
 // yolo constructor
 cma_yoloswag::cma_yoloswag()
 {
-  cma_state_result = nullptr;
   last_request = -9999;
   cma_result_got = nullptr;
   xcity = nullptr;
@@ -246,9 +244,10 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
   }
 
   // Return.
-  cm_result_from_main_map(cma_state_result, pcity);
+  auto state_result = cm_result_new(pcity);
+  cm_result_from_main_map(state_result, pcity);
 
-  success = (*cma_state_result == *cma_result_got);
+  success = (cma_result_got && *state_result == *cma_result_got);
   if (!success) {
 #if SHOW_APPLY_RESULT_ON_SERVER_ERRORS
     qCritical("apply_result_on_server(city %d=\"%s\") no match!", pcity->id,
@@ -257,17 +256,15 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
     log_test("apply_result_on_server(city %d=\"%s\") have:", pcity->id,
              city_name_get(pcity));
     cm_print_city(pcity);
-    cm_print_result(cma_state_result);
+    cm_print_result(state_result);
 
     log_test("apply_result_on_server(city %d=\"%s\") want:", pcity->id,
              city_name_get(pcity));
     cm_print_result(cma_result_got);
 #endif // SHOW_APPLY_RESULT_ON_SERVER_ERRORS
   }
-  cm_result_destroy(cma_state_result);
-  cm_result_destroy(const_cast<cm_result *>(cma_result_got));
+  cma_result_got = nullptr;
   log_apply_result("apply_result_on_server() return %d.", (int) success);
-  cma_state_result = nullptr;
   last_request = -9999;
   xcity = nullptr;
 }
@@ -275,19 +272,18 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
 cma_yoloswag::~cma_yoloswag() = default;
 
 /**
- Change the actual city setting to the given result. Returns TRUE iff
- the actual data matches the calculated one.
-****************************************************************************/
-bool cma_yoloswag::apply_result_on_server(struct city *pcity,
-                                          const struct cm_result *result)
+ * Change the actual city setting to the given result. Returns TRUE iff
+ * the actual data matches the calculated one.
+ */
+bool cma_yoloswag::apply_result_on_server(
+    struct city *pcity, std::unique_ptr<cm_result> &&result)
 {
   int first_request_id = 0, last_request_id = 0, i;
   int city_radius_sq = city_map_radius_sq_get(pcity);
-  struct cm_result *current_state;
   struct tile *pcenter = city_tile(pcity);
 
   fc_assert_ret_val(result->found_a_valid, false);
-  current_state = cm_result_new(pcity);
+  auto current_state = cm_result_new(pcity);
   cm_result_from_main_map(current_state, pcity);
 
   if (*current_state == *result && !ALWAYS_APPLY_AT_SERVER) {
@@ -402,8 +398,7 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
 
   connection_do_unbuffer(&client.conn);
 
-  cma_result_got = result;
-  cma_state_result = current_state;
+  cma_result_got = std::move(result);
   last_request = last_request_id;
   xcity = pcity;
   return true;
@@ -550,8 +545,7 @@ struct city *cma_yoloswag::check_city(int city_id,
  */
 void cma_yoloswag::handle_city(struct city *pcity)
 {
-  auto result = std::unique_ptr<cm_result, typeof(&cm_result_destroy)>(
-      cm_result_new(pcity), &cm_result_destroy);
+  auto result = cm_result_new(pcity);
   bool handled;
   int i, city_id = pcity->id;
 
@@ -573,7 +567,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
       break;
     }
 
-    cm_query_result(pcity, &parameter, result.get(), false);
+    cm_query_result(pcity, &parameter, result, false);
     if (!result->found_a_valid) {
       log_handle_city2("  no valid found result");
 
@@ -586,7 +580,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
       handled = true;
       break;
     } else {
-      if (!apply_result_on_server(pcity, result.get())) {
+      if (!apply_result_on_server(pcity, std::move(result))) {
         log_handle_city2("  doesn't cleanly apply");
         if (pcity == check_city(city_id, NULL) && i == 0) {
           create_event(city_tile(pcity), E_CITY_CMA_RELEASE, ftc_client,
@@ -600,6 +594,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
         handled = true;
         break;
       }
+      result = nullptr;
     }
   }
 
