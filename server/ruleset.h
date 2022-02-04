@@ -15,8 +15,10 @@
 #include <QLoggingCategory>
 
 #define CAP_EFT_HP_REGEN_MIN "HP_Regen_Min"
+#define CAP_EFT_BOMBARD_LIMIT_PCT "Bombard_Limit_Pct"
 #define RULESET_CAPABILITIES                                                \
-  "+Freeciv-ruleset-Devel-2017.Jan.02 " CAP_EFT_HP_REGEN_MIN
+  "+Freeciv-ruleset-Devel-2017.Jan.02 " CAP_EFT_HP_REGEN_MIN                \
+  " " CAP_EFT_BOMBARD_LIMIT_PCT
 /*
  * Ruleset capabilities acceptable to this program:
  *
