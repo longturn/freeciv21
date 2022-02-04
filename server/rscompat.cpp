@@ -1128,6 +1128,25 @@ static void rscompat_optional_capabilities(rscompat_info *info)
     effect_req_append(effect, req_from_str("Activity", "Local", false, true,
                                            false, "Fortified"));
   }
+
+  if (!has_capabilities(info->cap_effects.data(),
+                        CAP_EFT_BOMBARD_LIMIT_PCT)) {
+    // Create new effect to replace the old hard-coded bombard limit
+
+    // 1% base bombard limit
+    effect_new(EFT_BOMBARD_LIMIT_PCT, 1, nullptr);
+    unit_type_iterate(putype)
+    {
+      if (putype->hp > 100) {
+        qCWarning(ruleset_category,
+                  "Ruleset has units (such as '%s"
+                  "') for which bombard limit changed as hp > 100",
+                  utype_name_translation(putype));
+        break;
+      }
+    }
+    unit_type_iterate_end;
+  }
 }
 
 /**
