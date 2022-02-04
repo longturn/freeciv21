@@ -678,3 +678,11 @@ National_History
 Infra_Points
     City increases owner's infra points by value each turn. If overall points are negative after all cities
     have been processed, they are set to 0.
+
+Bombard_Limit_Pct
+    Bombardment may only reduce units to amount percent (rounded up) of their total hitpoints.  Unit
+    requirements on this effect are the defending unit itself.
+
+    .. note::
+        This effect is added automatically with a value of 1 and no reqs. This behavior can be turned
+        off by requiring the ``+Bombard_Limit_Pct`` option in ``effects.ruleset``.
