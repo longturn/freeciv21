@@ -599,13 +599,11 @@ value	= -100
 [effect_hp_regen_base]
 type    = "HP_Regen"
 value   = 10
-reqs    = {}
 
 ; When hardcoded, effect_hp_regen_base was applied after the HP_Regen_Min
 [effect_hp_regen_min_base]
 type    = "HP_Regen_Min"
 value   = 10
-reqs    = {}
 
 ; Units in cities regenerate at least 1/3 of their HP regardless
 [effect_hp_regen_min_city]
