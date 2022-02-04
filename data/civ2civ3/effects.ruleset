@@ -11,7 +11,7 @@
 
 [datafile]
 description="Civ2Civ3 effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 web-compatible +HP_Regen_Min"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 web-compatible +HP_Regen_Min +Bombard_Limit_Pct"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -244,6 +244,10 @@ reqs    =
     { "type", "name", "range"
       "Extra", "Airbase", "Local"
     }
+
+[effect_bomb_limit_base]
+type    = "Bombard_Limit_Pct"
+value   = 1
 
 ; Basic HP regen.  Not for helis or planes, as they have hp_loss_pct=10
 ; All unit-types' hitpoints are divisible by 10, so no need to worry about rounding

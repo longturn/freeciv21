@@ -11,7 +11,7 @@
 
 [datafile]
 description="Granularity effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -111,6 +111,10 @@ reqs	=
     { "type", "name", "range"
       "Building", "Throne", "City"
     }
+
+[effect_bomb_limit_base]
+type    = "Bombard_Limit_Pct"
+value   = 1
 
 ; Basic HP regen.
 ; All unit-types' hitpoints are divisible by 10, so no need to worry about rounding
