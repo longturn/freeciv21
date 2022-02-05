@@ -1,3 +1,5 @@
+set(RULESET_LIST)
+
 function(add_ruleset)
   cmake_parse_arguments(ARG "SERV_FILE" "NAME;README" "" ${ARGN})
   if (ARG_SERV_FILE)
@@ -12,6 +14,8 @@ function(add_ruleset)
       DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/${ARG_NAME}"
       COMPONENT freeciv21)
   endif()
+  list(APPEND RULESET_LIST ${ARG_NAME})
+  set(RULESET_LIST "${RULESET_LIST}" PARENT_SCOPE)
   install(
     FILES
     ${ARG_NAME}/buildings.ruleset
@@ -75,6 +79,13 @@ if (FREECIV_ENABLE_SERVER OR FREECIV_ENABLE_RULEDIT)
     FILES override/nation.ruleset
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/override"
     COMPONENT freeciv21)
+
+  # Ruleset tests
+  if (BUILD_TESTING AND FREECIV_ENABLE_SERVER)
+    # The stub ruleset isn't installed, but we test it
+    list(APPEND RULESET_LIST stub)
+    add_subdirectory(tests)
+  endif()
 endif()
 
 if (FREECIV_ENABLE_SERVER)
