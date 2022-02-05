@@ -934,7 +934,7 @@ void city_label::set_type(int x) { type = x; }
 void city_label::mousePressEvent(QMouseEvent *event)
 {
   int citnum, i, num_citizens, nothing_width;
-  int w = tileset_small_sprite_width(tileset) / king()->map_scale;
+  int w = tileset_small_sprite_width(tileset);
 
   if (!pcity) {
     return;
@@ -2021,8 +2021,8 @@ void city_dialog::update_citizens()
   QPainter p;
   int num_citizens =
       get_city_citizen_types(pcity, FEELING_FINAL, categories);
-  int w = tileset_small_sprite_width(tileset) / king()->map_scale;
-  int h = tileset_small_sprite_height(tileset) / king()->map_scale;
+  int w = tileset_small_sprite_width(tileset);
+  int h = tileset_small_sprite_height(tileset);
 
   i = 1 + (num_citizens * 5 / 200);
   w = w / i;
@@ -2122,9 +2122,11 @@ void city_dialog::refresh()
   ui.production_combo_p->blockSignals(false);
   setUpdatesEnabled(true);
 
-  ui.middleSpacer->changeSize(
-      get_citydlg_canvas_width(), get_citydlg_canvas_height(),
-      QSizePolicy::Expanding, QSizePolicy::Expanding);
+  auto scale = queen()->mapview_wdg->scale();
+  ui.middleSpacer->changeSize(scale * get_citydlg_canvas_width(),
+                              scale * get_citydlg_canvas_height(),
+                              QSizePolicy::Expanding,
+                              QSizePolicy::Expanding);
 
   updateGeometry();
   update();

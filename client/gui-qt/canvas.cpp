@@ -368,11 +368,10 @@ QFont get_font(client_font font)
 
   switch (font) {
   case FONT_CITY_NAME:
-    qf = fcFont::instance()->getFont(fonts::city_names, king()->map_scale);
+    qf = fcFont::instance()->getFont(fonts::city_names, 1);
     break;
   case FONT_CITY_PROD:
-    qf = fcFont::instance()->getFont(fonts::city_productions,
-                                     king()->map_scale);
+    qf = fcFont::instance()->getFont(fonts::city_productions, 1);
     break;
   case FONT_REQTREE_TEXT:
     qf = fcFont::instance()->getFont(fonts::reqtree_text);

@@ -2591,18 +2591,13 @@ void mr_menu::slot_city_growth() { key_city_growth_toggle(); }
  */
 void mr_menu::zoom_in()
 {
-  king()->map_scale = king()->map_scale * 1.2f;
-  tilespec_reread(tileset_basename(tileset), true, king()->map_scale, true);
+  queen()->mapview_wdg->set_scale(1.2 * queen()->mapview_wdg->scale());
 }
 
 /**
    Action "RESET ZOOM TO DEFAULT"
  */
-void mr_menu::zoom_reset()
-{
-  king()->map_scale = 1.0f;
-  tilespec_reread(tileset_basename(tileset), true, king()->map_scale, true);
-}
+void mr_menu::zoom_reset() { queen()->mapview_wdg->set_scale(1); }
 
 /**
    Action "SCALE FONTS WHEN SCALING MAP"
@@ -2618,8 +2613,7 @@ void mr_menu::zoom_scale_fonts()
  */
 void mr_menu::zoom_out()
 {
-  king()->map_scale = king()->map_scale / 1.2f;
-  tilespec_reread(tileset_basename(tileset), true, king()->map_scale, true);
+  queen()->mapview_wdg->set_scale(queen()->mapview_wdg->scale() / 1.2);
 }
 
 /**
@@ -2828,7 +2822,7 @@ void mr_menu::load_new_tileset()
   but = qobject_cast<QPushButton *>(sender());
   tn_bytes = but->text().toLocal8Bit();
   tilespec_reread(tn_bytes.data(), true, 1.0f);
-  king()->map_scale = 1.0f;
+  queen()->mapview_wdg->set_scale(1.0);
   but->parentWidget()->close();
 }
 
