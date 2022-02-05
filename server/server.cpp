@@ -588,6 +588,8 @@ void server::input_on_stdin()
     // Read from the input
     QFile f;
     f.open(stdin, QIODevice::ReadOnly);
+    // Force it to try and read something.
+    f.peek(1);
     if (f.atEnd() && m_stdin_notifier != nullptr) {
       // QSocketNotifier gets mad after EOF. Turn it off.
       m_stdin_notifier->deleteLater();
