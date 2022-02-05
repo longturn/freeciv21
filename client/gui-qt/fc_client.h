@@ -126,7 +126,6 @@ public:
   bool interface_locked{false};
   fc_corner *corner_wid;
   fc_settings qt_settings;
-  float map_scale{1.0f};
   mr_menu *menu_bar{nullptr};
   qfc_rally_list rallies;
   trade_generator trade_gen;

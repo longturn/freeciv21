@@ -63,9 +63,13 @@ public:
 
   bool menu_click;
 
+  double scale() const { return m_scale; }
+
   freeciv::tileset_debugger *debugger() const { return m_debugger; }
 
 public slots:
+  void set_scale(double scale);
+
   void show_debugger();
   void hide_debugger();
 
@@ -86,6 +90,7 @@ private:
   bool stored_autocenter;
   int cursor_frame{0};
   int cursor;
+  double m_scale = 1;
   QPointer<freeciv::tileset_debugger> m_debugger = nullptr;
   std::vector<fcwidget *> m_hidden_fcwidgets;
 };
