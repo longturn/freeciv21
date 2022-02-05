@@ -164,3 +164,9 @@ endif()
 if (FREECIV_ENABLE_FCMP_CLI OR FREECIV_ENABLE_FCMP_QT)
   find_package(SQLite3 REQUIRED)
 endif()
+
+# Testing
+include(CTest)
+if (BUILD_TESTING)
+  find_package(Qt5Test REQUIRED)
+endif()
