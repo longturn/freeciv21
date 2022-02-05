@@ -58,6 +58,10 @@ jobs:
       - name: Test
         run: |
           cmake --build build --target test
+      - name: Debug
+        if: failure()
+        run: |
+          cat build/Testing/Temporary/LastTest.log
       - name: Install
         run: |
           DESTDIR=$PWD/build/install cmake --build build --target install
@@ -111,6 +115,10 @@ jobs:
       - name: Test
         run: |
           cmake --build build --target test
+      - name: Debug
+        if: failure()
+        run: |
+          cat build/Testing/Temporary/LastTest.log
       - name: Install
         run: |
           cmake --build build --target install
