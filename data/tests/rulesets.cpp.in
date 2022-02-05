@@ -51,9 +51,9 @@ void test_rulesets::load()
 
   QCOMPARE(p.state(), QProcess::NotRunning);
   if (exists) {
-    QCOMPARE(p.exitCode(), 0);
+    QCOMPARE(p.exitCode(), EXIT_SUCCESS);
   } else {
-    QCOMPARE(p.exitCode(), 1);
+    QCOMPARE(p.exitCode(), EXIT_FAILURE);
   }
 }
 
