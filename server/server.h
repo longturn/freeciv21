@@ -45,7 +45,7 @@ private slots:
   void send_pings();
 
   // Higher-level stuff
-  void prepare_game();
+  bool prepare_game();
   void begin_turn();
   void begin_phase();
   void end_phase();
