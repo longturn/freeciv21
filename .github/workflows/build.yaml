@@ -62,6 +62,9 @@ jobs:
       - name: Build
         run: |
           cmake --build build
+      - name: Test
+        run: |
+          cmake --build build --target test
       - name: Install
         run: |
           DESTDIR=$PWD/build/install cmake --build build --target install
@@ -150,6 +153,9 @@ jobs:
       - name: Build
         run: |
           cmake --build build
+      - name: Test
+        run: |
+          cmake --build build --target test
       - name: Install
         run: |
           cmake --build build --target install
