@@ -166,7 +166,9 @@ if (FREECIV_ENABLE_FCMP_CLI OR FREECIV_ENABLE_FCMP_QT)
 endif()
 
 # Testing
-include(CTest)
-if (BUILD_TESTING)
-  find_package(Qt5Test REQUIRED)
+if (NOT EMSCRIPTEN)
+  include(CTest)
+  if (BUILD_TESTING)
+    find_package(Qt5Test REQUIRED)
+  endif()
 endif()
