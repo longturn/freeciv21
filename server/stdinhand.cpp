@@ -1188,17 +1188,24 @@ static bool read_init_script_real(struct connection *caller,
   if (QFile::exists(real_filename)
       && (script_file = fc_fopen(qUtf8Printable(real_filename), "r"))) {
     char buffer[MAX_LEN_CONSOLE_LINE];
+    bool ok = true;
 
     // the size is set as to not overflow buffer in handle_stdin_input
     while (fgets(buffer, MAX_LEN_CONSOLE_LINE - 1, script_file)) {
       // Execute script contents with same permissions as caller
-      handle_stdin_input_real(caller, buffer, check, read_recursion + 1);
+      if (!handle_stdin_input_real(caller, buffer, check,
+                                   read_recursion + 1)) {
+        // Errors are fatal
+        qCritical() << buffer;
+        ok = false;
+        break;
+      }
     }
     fclose(script_file);
 
     show_ruleset_info(caller, CMD_READ_SCRIPT, check, read_recursion);
 
-    return true;
+    return ok;
   } else {
     cmd_reply(CMD_READ_SCRIPT, caller, C_FAIL,
               _("Cannot read command line scriptfile '%s'."),
@@ -3914,7 +3921,7 @@ static bool set_rulesetdir(struct connection *caller, char *str, bool check,
   if (strcmp(str, game.server.rulesetdir) == 0) {
     cmd_reply(CMD_RULESETDIR, caller, C_COMMENT,
               _("Ruleset directory is already \"%s\""), str);
-    return false;
+    return true;
   }
 
   if (is_restricted(caller)
@@ -4362,7 +4369,7 @@ static bool handle_stdin_input_real(struct connection *caller, char *str,
   cptr_s = str = skip_leading_spaces(str);
   if ('\0' == *cptr_s || '#' == *cptr_s) {
     // This appear to be a comment or blank line.
-    return false;
+    return true;
   }
 
   if (SERVER_COMMAND_PREFIX == *cptr_s) {
