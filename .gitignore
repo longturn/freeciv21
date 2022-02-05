@@ -39,6 +39,7 @@ cmake_install.cmake
 Makefile
 build.ninja
 *_autogen
+/Testing
 
 # Build directories
 /build*
