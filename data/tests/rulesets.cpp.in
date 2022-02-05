@@ -49,6 +49,7 @@ void test_rulesets::load()
   p.closeWriteChannel();
   p.waitForFinished(5000);
 
+  QCOMPARE(p.state(), QProcess::NotRunning);
   if (exists) {
     QCOMPARE(p.exitCode(), 0);
   } else {
