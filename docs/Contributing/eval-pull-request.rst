@@ -46,6 +46,11 @@ This page assumes the user knows how to use :file:`git`, compile Freeciv21 and u
   $ cmake --build build --target install
   $ cmake --build build --target package      # MSys2 Only
 
+:strong:`Run tests`
+
+..code-block:: sh
+
+  $ cmake --build build --target test
 
 :strong:`Read The Issue's Notes`
 
