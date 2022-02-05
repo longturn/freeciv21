@@ -663,6 +663,8 @@ void server::input_on_stdin()
   } else {
     QFile f;
     f.open(stdin, QIODevice::ReadOnly);
+    // Force it to try and read something
+    f.peek(1);
     // Read from the input
     if (f.atEnd() && m_stdin_notifier != nullptr) {
       // QSocketNotifier gets mad after EOF. Turn it off.
