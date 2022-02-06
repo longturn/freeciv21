@@ -687,8 +687,8 @@ void layer_terrain::fill_terrain_sprite_array(
       if (!info.sprites.empty()) {
         /* Pseudo-random reproducable algorithm to pick a sprite. Use
          * modulo to limit the number to a handleable size [0..32000). */
-        const int i =
-            fc_randomly(tile_index(ptile) % 32000, info.sprites.size());
+        const int i = fc_randomly(std::abs(tile_index(ptile)) % 32000,
+                                  info.sprites.size());
         if (Q_LIKELY(info.sprites[i] != nullptr)) {
           sprs.emplace_back(tileset(), info.sprites[i], true, info.offset_x,
                             info.offset_y);
