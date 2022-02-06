@@ -192,14 +192,12 @@ jobs:
       QT_VERSION: 5.15.2
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - name: Cache Qt build
         id: qtcache
         uses: actions/cache@v2
         with:
           path: ~/qt
-          key: qt-wasm-${{ env.QT_VERSION }}-svg2
+          key: qt-wasm-${{ env.QT_VERSION }}-svg-socket
       - name: Install build tools
         run: |
           sudo apt-get update
@@ -244,6 +242,10 @@ jobs:
         run: |
           source emsdk/emsdk_env.sh
           cd qtbase
+          git config --global user.email "root@example.com"
+          git config --global user.name "root"
+          git fetch origin 76d12eea2252c5e537dff15b103bdc1f925cf760
+          git cherry-pick 76d12eea2252c5e537dff15b103bdc1f925cf760
           ./configure -xplatform wasm-emscripten -opensource -confirm-license -prefix ~/qt -nomake examples
           make install
       - uses: actions/checkout@v2
