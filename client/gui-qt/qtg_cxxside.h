@@ -43,7 +43,7 @@ void qtg_get_sprite_dimensions(const QPixmap *sprite, int *width,
                                int *height);
 QPixmap *qtg_crop_sprite(const QPixmap *source, int x, int y, int width,
                          int height, const QPixmap *mask, int mask_offset_x,
-                         int mask_offset_y, float scale, bool smooth);
+                         int mask_offset_y);
 void qtg_free_sprite(QPixmap *s);
 
 QColor *qtg_color_alloc(int r, int g, int b);

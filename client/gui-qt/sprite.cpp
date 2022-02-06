@@ -61,37 +61,24 @@ QPixmap *qtg_load_gfxfile(const char *filename)
  */
 QPixmap *qtg_crop_sprite(const QPixmap *source, int x, int y, int width,
                          int height, const QPixmap *mask, int mask_offset_x,
-                         int mask_offset_y, float scale, bool smooth)
+                         int mask_offset_y)
 {
   QPainter p;
   QRectF source_rect;
   QRectF dest_rect;
   QPixmap *cropped;
-  int widthzoom;
-  int heightzoom;
-  int hex = 0;
 
   fc_assert_ret_val(source, NULL);
 
   if (!width || !height) {
     return NULL;
   }
-  if (scale != 1.0f
-      && (tileset_hex_height(tileset) > 0
-          || tileset_hex_width(tileset) > 0)) {
-    hex = 1;
-  }
-  widthzoom = ceil(width * scale) + hex;
-  heightzoom = ceil(height * scale) + hex;
-  cropped = new QPixmap(widthzoom, heightzoom);
+  cropped = new QPixmap(width, height);
   cropped->fill(Qt::transparent);
   source_rect = QRectF(x, y, width, height);
-  dest_rect = QRectF(0, 0, widthzoom, heightzoom);
+  dest_rect = QRectF(0, 0, width, height);
 
   p.begin(cropped);
-  if (smooth) {
-    p.setRenderHint(QPainter::SmoothPixmapTransform);
-  }
   p.setRenderHint(QPainter::Antialiasing);
   p.drawPixmap(dest_rect, *source, source_rect);
   p.end();

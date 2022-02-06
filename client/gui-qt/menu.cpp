@@ -2821,7 +2821,7 @@ void mr_menu::load_new_tileset()
 
   but = qobject_cast<QPushButton *>(sender());
   tn_bytes = but->text().toLocal8Bit();
-  tilespec_reread(tn_bytes.data(), true, 1.0f);
+  tilespec_reread(tn_bytes.data(), true);
   queen()->mapview_wdg->set_scale(1.0);
   but->parentWidget()->close();
 }

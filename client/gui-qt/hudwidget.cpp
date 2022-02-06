@@ -577,7 +577,6 @@ void hud_units::update_actions(unit_list *punits)
   QPixmap *unit_pixmap;
   struct city *pcity;
   struct player *owner;
-  struct tileset *tmp;
   struct unit *punit;
 
   punit = head_of_units_in_focus();
@@ -599,11 +598,6 @@ void hud_units::update_actions(unit_list *punits)
 
   setUpdatesEnabled(false);
 
-  tmp = nullptr;
-  if (unscaled_tileset) {
-    tmp = tileset;
-    tileset = unscaled_tileset;
-  }
   owner = punit->owner;
   pcity = player_city_by_number(owner, punit->homecity);
   if (punit->name.isEmpty()) {
@@ -781,9 +775,6 @@ void hud_units::update_actions(unit_list *punits)
                 + qMax(unit_icons->update_actions() * (height() * 8) / 10,
                        text_label.width()));
   mw->put_to_corner();
-  if (tmp != nullptr) {
-    tileset = tmp;
-  }
   setUpdatesEnabled(true);
   updateGeometry();
   update();

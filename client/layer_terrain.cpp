@@ -333,7 +333,7 @@ void layer_terrain::initialize_cell_whole_match_none(const terrain *terrain,
                  .arg(m_number)
                  .arg(info.sprite_name)
                  .arg(i + 1);
-    auto sprite = load_sprite(tileset(), buffer, true, false);
+    auto sprite = load_sprite(tileset(), buffer);
     if (!sprite) {
       break;
     }
@@ -501,7 +501,7 @@ void layer_terrain::initialize_cell_corner_match_full(const terrain *terrain,
     auto buffer = QStringLiteral("t.l%1.cellgroup_%2_%3_%4_%5")
                       .arg(QString::number(m_number), n->name[0], e->name[0],
                            s->name[0], w->name[0]);
-    auto sprite = load_sprite(tileset(), buffer, true, false);
+    auto sprite = load_sprite(tileset(), buffer);
 
     if (sprite) {
       // Crop the sprite to separate this cell.
@@ -513,8 +513,7 @@ void layer_terrain::initialize_cell_corner_match_full(const terrain *terrain,
       int yo[4] = {H / 2, -H / 2, 0, 0};
 
       sprite = crop_sprite(sprite, x[dir], y[dir], W / 2, H / 2,
-                           get_mask_sprite(tileset()), xo[dir], yo[dir],
-                           1.0f, false);
+                           get_mask_sprite(tileset()), xo[dir], yo[dir]);
       // We allocated new sprite with crop_sprite. Store its address so we
       // can free it.
       m_allocated.emplace_back(sprite);
@@ -576,7 +575,7 @@ void layer_terrain::initialize_blending(const terrain *terrain,
   for (; dir < 4; dir++) {
     info.blend_sprites[dir] =
         crop_sprite(blender, offsets[dir][0], offsets[dir][1], W / 2, H / 2,
-                    get_dither_sprite(tileset()), 0, 0, 1.0f, false);
+                    get_dither_sprite(tileset()), 0, 0);
   }
 }
 
@@ -609,8 +608,7 @@ std::vector<drawn_sprite> layer_terrain::fill_sprite_array(
   // increases the refcount without limit.
   if (QPixmap * sprite;
       ptile->spec_sprite
-      && (sprite =
-              load_sprite(tileset(), ptile->spec_sprite, true, false))) {
+      && (sprite = load_sprite(tileset(), ptile->spec_sprite))) {
     if (m_number == 0) {
       sprites.emplace_back(tileset(), sprite);
     }
