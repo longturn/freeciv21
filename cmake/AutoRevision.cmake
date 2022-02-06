@@ -59,12 +59,6 @@ if (ok)
 
   if (STATUS EQUAL 0)
     message(STATUS "Latest Git Tag: ${FC21_REV_TAG}")
-    # Manipulate the tag so we can turn it into a list for use later
-    string(REPLACE "v" "" FC21_REV_TAG "${FC21_REV_TAG}")
-    string(REPLACE "." " " FC21_REV_TAG "${FC21_REV_TAG}")
-    string(REPLACE "-" " " FC21_REV_TAG "${FC21_REV_TAG}")
-    set(FC21_REV_TAG_LIST ${FC21_REV_TAG})
-    separate_arguments(FC21_REV_TAG_LIST)
   else()
     # Can't use git
     message(STATUS "Could not find a git tag")
@@ -86,12 +80,12 @@ if (NOT ok)
   message(STATUS "AutoRevision HEAD Commit Hash: (hex) ${FC21_REV_HEAD_HASH_H} and (dec) ${FC21_REV_HEAD_HASH_D}")
 
   file(READ cmake/AutoRevision.txt FC21_REV_TAG OFFSET 6)
-  string(REGEX REPLACE "\n$" "" FC21_REV_TAG "${FC21_REV_TAG}")
-
-  # Manipulate the tag so we can turn it into a list for use later
-  string(REPLACE "v" "" FC21_REV_TAG2 "${FC21_REV_TAG}")
-  string(REPLACE "." " " FC21_REV_TAG2 "${FC21_REV_TAG2}")
-  string(REPLACE "-" " " FC21_REV_TAG2 "${FC21_REV_TAG2}")
-  set(FC21_REV_TAG_LIST ${FC21_REV_TAG2})
-  separate_arguments(FC21_REV_TAG_LIST)
 endif()
+
+# Manipulate the tag so we can turn it into a list for use later
+string(STRIP "${FC21_REV_TAG}" FC21_REV_TAG)
+string(REPLACE "v" "" FC21_REV_TAG "${FC21_REV_TAG}")
+string(REPLACE "." " " FC21_REV_TAG "${FC21_REV_TAG}")
+string(REPLACE "-" " " FC21_REV_TAG "${FC21_REV_TAG}")
+set(FC21_REV_TAG_LIST ${FC21_REV_TAG})
+separate_arguments(FC21_REV_TAG_LIST)
