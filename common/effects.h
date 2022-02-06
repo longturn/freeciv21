@@ -305,6 +305,8 @@
 #define SPECENUM_VALUE129NAME "HP_Regen_Min"
 #define SPECENUM_VALUE130 EFT_BOMBARD_LIMIT_PCT
 #define SPECENUM_VALUE130NAME "Bombard_Limit_Pct"
+#define SPECENUM_VALUE131 EFT_TRADE_REVENUE_EXPONENT
+#define SPECENUM_VALUE131NAME "Trade_Revenue_Exponent"
 // keep this last
 #define SPECENUM_COUNT EFT_COUNT
 #include "specenum_gen.h"

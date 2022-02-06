@@ -1161,6 +1161,11 @@ QString effect_type_unit_text(effect_type type, int value)
     int factor = 100 * std::pow(2.0, value / 1000.);
     return QString(PL_("%1%", "%1%", factor)).arg(factor);
   }
+  case EFT_TRADE_REVENUE_EXPONENT: {
+    // additive in the exponent, which means... compositive??
+    float factor = 1.0f + value / 1000.0f;
+    return QString(PL_("**%1", "**%1", factor)).arg(factor);
+  }
   case EFT_OUTPUT_WASTE_BY_DISTANCE:
     return QString(PL_("%1%/tile", "%1%/tile", value)).arg(value);
   case EFT_CITY_BUILD_SLOTS:
