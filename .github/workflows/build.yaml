@@ -139,7 +139,7 @@ jobs:
             gettext \
             create-dmg
           brew link gettext --force
-      - uses: lukka/run-vcpkg@v10.0
+      - uses: lukka/run-vcpkg@v10.1
         name: Install dependencies
         with:
           vcpkgGitCommitId: 50fd3d9957195575849a49fa591e645f1d8e7156
