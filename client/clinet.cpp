@@ -18,6 +18,7 @@
 // Qt
 #include <QString>
 #include <QTcpSocket>
+#include <QTimer>
 #include <QUrl>
 
 // utility
@@ -55,10 +56,10 @@
 #include "clinet.h"
 
 // In autoconnect mode, try to connect to once a second
-#define AUTOCONNECT_INTERVAL 500
+const int AUTOCONNECT_INTERVAL = 500;
 
 // In autoconnect mode, try to connect 100 times
-#define MAX_AUTOCONNECT_ATTEMPTS 100
+const int MAX_AUTOCONNECT_ATTEMPTS = 100;
 
 /**
    Close socket and cleanup.  This one doesn't print a message, so should
@@ -96,6 +97,7 @@ static void client_conn_close_callback(struct connection *pconn)
                        qUtf8Printable(reason));
 }
 
+namespace {
 /**
    Try to connect to a server:
     - try to create a TCP socket to the given URL (default to
@@ -108,6 +110,9 @@ static void client_conn_close_callback(struct connection *pconn)
       message in ERRBUF and return the Unix error code (ie., errno, which
       will be non-zero).
  */
+
+QUrl connect_to;
+
 static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
 {
   // Apply defaults
@@ -123,35 +128,44 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
 
   // connection in progress? wait.
   if (client.conn.used) {
-    (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
-    return -1;
+    if (url_copy != connect_to) {
+      (void) fc_strlcpy(
+          errbuf, _("Canceled previous connection, trying new connection."),
+          errbufsize);
+      client.conn.sock->abort();
+      connect_to = url_copy;
+    } else {
+      (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
+      return -1;
+    }
   }
   client.conn.used = true; // Now there will be a connection :)
+  client.conn.sock->disconnect(client.conn.sock);
 
   // Connect
   if (!client.conn.sock) {
     client.conn.sock = new QTcpSocket;
-    QObject::connect(
-        client.conn.sock,
-        QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
-        [] {
-          if (client.conn.sock != nullptr) {
-            log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
-            real_output_window_append(client.conn.sock->errorString(), NULL,
-                                      -1);
-          }
-          client.conn.used = false;
-        });
   }
-  client.conn.sock->connectToHost(url.host(), url.port());
-  if (!client.conn.sock->waitForConnected(-1)) {
-    errbuf[0] = '\0';
-    return -1;
-  }
-  make_connection(client.conn.sock, url.userName());
+  QObject::connect(
+      client.conn.sock,
+      QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
+      [] {
+        if (client.conn.sock != nullptr) {
+          log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
+          real_output_window_append(client.conn.sock->errorString(), NULL,
+                                    -1);
+        }
+        client.conn.used = false;
+      });
+  QObject::connect(client.conn.sock, &QTcpSocket::connected,
+                   [userName = url.userName()] {
+                     make_connection(client.conn.sock, userName);
+                   });
 
+  client.conn.sock->connectToHost(url.host(), url.port());
   return 0;
 }
+} // namespace
 
 /**
    Connect to a freeciv21-server instance -- or at least try to.  On success,
@@ -324,21 +338,14 @@ void input_from_server(QTcpSocket *sock)
   }
 }
 
-static bool autoconnecting = false;
 /**
    Make an attempt to autoconnect to the server.
    It returns number of seconds it should be called again.
  */
-double try_to_autoconnect(const QUrl &url)
+void try_to_autoconnect(const QUrl &url)
 {
   char errbuf[512];
   static int count = 0;
-
-  // Don't repeat autoconnect if not autoconnecting or the user
-  // established a connection by himself.
-  if (!autoconnecting || client.conn.established) {
-    return FC_INFINITY;
-  }
 
   count++;
 
@@ -348,32 +355,24 @@ double try_to_autoconnect(const QUrl &url)
     exit(EXIT_FAILURE);
   }
 
-  if (try_to_connect(url, errbuf, sizeof(errbuf)) == 0) {
-    // Success! Don't call me again
-    autoconnecting = false;
-    return FC_INFINITY;
-  } else {
-    // All errors are fatal
-    qCritical(_("Error contacting server \"%s\":\n %s\n"),
-              qUtf8Printable(url.toDisplayString()), errbuf);
-    exit(EXIT_FAILURE);
+  if (!client.conn.sock) {
+    client.conn.sock = new QTcpSocket;
   }
-}
 
-/**
-   Start trying to autoconnect to freeciv21-server.  Calls
-   get_server_address(), then arranges for try_to_autoconnect(), which
-   calls try_to_connect(), to be called roughly every
-   AUTOCONNECT_INTERVAL milliseconds, until success, fatal error or
-   user intervention.
- */
-void start_autoconnecting_to_server(const QUrl &url)
-{
-  output_window_printf(
-      ftc_client,
-      _("Auto-connecting to \"%s\" every %f second(s) for %d times"),
-      qUtf8Printable(url.toDisplayString()), 0.001 * AUTOCONNECT_INTERVAL,
-      MAX_AUTOCONNECT_ATTEMPTS);
+  QObject::connect(
+      client.conn.sock,
+      QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
+      [url] {
+        if (client.conn.sock != nullptr) {
+          output_window_printf(ftc_client,
+                               _("Failed to autoconnect to %s: %d of %d "
+                                 "attempts, retrying..."),
+                               qUtf8Printable(url.toDisplayString()), count,
+                               MAX_AUTOCONNECT_ATTEMPTS);
+          QTimer::singleShot(AUTOCONNECT_INTERVAL,
+                             [url]() { try_to_autoconnect(url); });
+        }
+      });
 
-  autoconnecting = true;
+  try_to_connect(url, errbuf, sizeof(errbuf));
 }
