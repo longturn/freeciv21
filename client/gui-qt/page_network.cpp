@@ -284,6 +284,7 @@ void server_scan_error(struct server_scan *scan, const char *message)
  */
 void page_network::destroy_server_scans()
 {
+#ifndef __EMSCRIPTEN__
   if (meta_scan) {
     server_scan_finish(meta_scan);
     meta_scan = NULL;
@@ -305,6 +306,7 @@ void page_network::destroy_server_scans()
     lan_scan_timer->disconnect();
     FC_FREE(lan_scan_timer);
   }
+#endif
 }
 
 /**
@@ -312,6 +314,7 @@ void page_network::destroy_server_scans()
  */
 void page_network::update_network_lists()
 {
+#ifndef __EMSCRIPTEN__
   destroy_server_scans();
 
   lan_scan_timer = new QTimer(this);
@@ -331,6 +334,7 @@ void page_network::update_network_lists()
             &page_network::slot_meta_scan);
     meta_scan_timer->start(800);
   }
+#endif
 }
 
 /**
@@ -338,6 +342,7 @@ void page_network::update_network_lists()
  */
 bool page_network::check_server_scan(server_scan *scan_data)
 {
+#ifndef __EMSCRIPTEN__
   struct server_scan *scan = scan_data;
   enum server_scan_status stat;
 
@@ -357,6 +362,9 @@ bool page_network::check_server_scan(server_scan *scan_data)
   }
 
   return !(stat == SCAN_STATUS_ERROR || stat == SCAN_STATUS_DONE);
+#else
+  return true;
+#endif
 }
 
 /**
@@ -502,6 +510,7 @@ void page_network::slot_selection_changed(const QItemSelection &selected,
     ui.lan_widget->clearSelection();
   }
 
+#ifndef __EMSCRIPTEN__
   srvrs = server_scan_get_list(meta_scan);
   if (srvrs) {
     pserver = server_list_get(srvrs, index.row());
@@ -535,4 +544,5 @@ void page_network::slot_selection_changed(const QItemSelection &selected,
       ui.info_widget->setItem(k, col, item);
     }
   }
+#endif
 }
