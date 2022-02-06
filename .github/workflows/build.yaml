@@ -8,23 +8,40 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  ubuntu-gcc:
-    name: "Ubuntu with GCC"
+  ubuntu:
+    name: "Ubuntu"
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+        build_type: ["", Debug, RelWithDebInfo]
+        exclude:
+          - compiler: clang
+            build_type: RelWithDebInfo
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Install GCC
+        if: ${{ matrix.compiler == 'gcc' }}
+        run: |
+          sudo apt-get install g++
+      - name: Install clang
+        if: ${{ matrix.compiler == 'clang' }}
+        run: |
+          sudo apt-get install clang
+          export CC=$(which clang)
+          export CXX=$(which clang++)
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install \
             cmake \
             ninja-build \
-            g++ \
             python3 \
             gettext \
             qt5-default \
+            libqt5svg5-dev \
             libqt5svg5-dev \
             libkf5archive-dev \
             liblua5.3-dev \
@@ -32,7 +49,9 @@ jobs:
             libsdl2-mixer-dev
       - name: Configure
         run: |
-          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr
+          cmake . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DCMAKE_INSTALL_PREFIX=/usr
       - name: Build
         run: |
           cmake --build build
@@ -44,45 +63,14 @@ jobs:
           cmake --build build --target package
       - name: Upload package
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        if: |
+          startsWith(github.ref, 'refs/tags/')
+            && matrix.compiler == 'gcc'
+            && matrix.build_type == 'RelWithDebInfo'
         with:
           files: |
             build/Linux-x86_64/freeciv21_*_amd64.deb
             build/Linux-x86_64/freeciv21_*_amd64.deb.sha256
-
-  ubuntu-clang:
-    name: "Ubuntu with clang"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install \
-            cmake \
-            ninja-build \
-            clang \
-            python3 \
-            gettext \
-            qt5-default \
-            libqt5svg5-dev \
-            libkf5archive-dev \
-            liblua5.3-dev \
-            libsqlite3-dev \
-            libsdl2-mixer-dev
-      - name: Configure
-        run: |
-          export CC=$(which clang)
-          export CXX=$(which clang++)
-          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
-      - name: Build
-        run: |
-          cmake --build build
-      - name: Install
-        run: |
-          cmake --build build --target install
 
   windows:
     name: "Windows"
