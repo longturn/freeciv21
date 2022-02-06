@@ -13,6 +13,7 @@
 #include <QFrame>
 #include <QLabel>
 #include <QPointer>
+#include <QPropertyAnimation>
 #include <QQueue>
 #include <QThread>
 #include <QTimer>
@@ -42,6 +43,7 @@ void draw_calculated_trade_routes(QPainter *painter);
 **************************************************************************/
 class map_view : public QWidget {
   Q_OBJECT
+  Q_PROPERTY(double scale READ scale WRITE set_scale_now);
 
   // Ought to be a private slot
   friend void debug_tile(tile *tile);
@@ -81,7 +83,9 @@ protected:
   void mouseMoveEvent(QMouseEvent *event) override;
   void focusOutEvent(QFocusEvent *event) override;
   void leaveEvent(QEvent *event) override;
+
 private slots:
+  void set_scale_now(double scale);
   void timer_event();
 
 private:
@@ -91,6 +95,7 @@ private:
   int cursor_frame{0};
   int cursor;
   double m_scale = 1;
+  std::unique_ptr<QPropertyAnimation> m_scale_animation;
   QPointer<freeciv::tileset_debugger> m_debugger = nullptr;
   std::vector<fcwidget *> m_hidden_fcwidgets;
 };
