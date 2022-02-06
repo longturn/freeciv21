@@ -382,7 +382,10 @@ QTcpServer *server_open_socket()
            srvarg.bind_addr.isNull() ? qUtf8Printable(srvarg.bind_addr)
                                      : "(any)",
            srvarg.port);
-    if (server->listen(QHostAddress::Any, srvarg.port)) {
+    if (server->listen(srvarg.bind_addr.isNull()
+                           ? QHostAddress::Any
+                           : QHostAddress(srvarg.bind_addr),
+                       srvarg.port)) {
       break;
     }
 
