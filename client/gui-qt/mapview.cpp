@@ -138,7 +138,9 @@ void draw_calculated_trade_routes(QPainter *painter)
 /**
    Constructor for map
  */
-map_view::map_view() : QWidget()
+map_view::map_view()
+    : QWidget(),
+      m_scale_animation(std::make_unique<QPropertyAnimation>(this, "scale"))
 {
   menu_click = false;
   cursor = -1;
@@ -199,6 +201,18 @@ void map_view::show_all_fcwidgets()
  * Sets the map scale.
  */
 void map_view::set_scale(double scale)
+{
+  m_scale_animation->stop();
+  m_scale_animation->setDuration(100);
+  m_scale_animation->setEndValue(scale);
+  m_scale_animation->setCurrentTime(0);
+  m_scale_animation->start();
+}
+
+/**
+ * Sets the map scale immediately without doing any animation.
+ */
+void map_view::set_scale_now(double scale)
 {
   m_scale = scale;
   // When zoomed in, we pretend that the canvas is smaller than it is. This
