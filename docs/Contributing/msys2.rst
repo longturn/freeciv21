@@ -72,6 +72,7 @@ addition to the ones always needed for building Freeciv21.
 13. Arch-specific packages for building the client and/or Ruledit (i686 or x86_64, not both)
 
 * mingw-w64-i686-qt5 / mingw-w64-x86_64-qt5
+* mingw-w64-i686-qt5-svg / mingw-w64-x86_64-qt5-svg
 * mingq-w64-i686-karchive-qt5 / mingw-w64-x86_64-karchive-qt5
 
 

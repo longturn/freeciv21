@@ -21,7 +21,7 @@ check_function_exists(at_quick_exit HAVE_AT_QUICK_EXIT)
 find_package(PythonInterp 3 REQUIRED)
 
 # Required as the main networking and utility library
-find_package(Qt5 5.10 COMPONENTS Core Network REQUIRED)
+find_package(Qt5 5.10 COMPONENTS Core Network Svg REQUIRED)
 
 # Required for utility
 if(FREECIV_ENABLE_SERVER)

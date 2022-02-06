@@ -25,6 +25,7 @@ jobs:
             python3 \
             gettext \
             qt5-default \
+            libqt5svg5-dev \
             libkf5archive-dev \
             liblua5.3-dev \
             libsqlite3-dev \
@@ -66,6 +67,7 @@ jobs:
             python3 \
             gettext \
             qt5-default \
+            libqt5svg5-dev \
             libkf5archive-dev \
             liblua5.3-dev \
             libsqlite3-dev \
@@ -107,6 +109,7 @@ jobs:
             mingw-w64-x86_64-lua
             mingw-w64-x86_64-SDL2_mixer
             mingw-w64-x86_64-qt5
+            mingw-w64-x86_64-qt5-svg
             mingw-w64-x86_64-karchive-qt5
       - name: Configure
         run: |
@@ -208,7 +211,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/qt
-          key: qt-wasm-${{ env.QT_VERSION }}
+          key: qt-wasm-${{ env.QT_VERSION }}-svg2
       - name: Install build tools
         run: |
           sudo apt-get update
@@ -256,6 +259,20 @@ jobs:
           ./configure -xplatform wasm-emscripten -opensource -confirm-license -prefix ~/qt -nomake examples
           make install
       - uses: actions/checkout@v2
+        if: steps.qtcache.outputs.cache-hit != 'true'
+        name: Checkout qtsvg
+        with:
+          repository: qt/qtsvg
+          ref: ${{ env.QT_VERSION }}
+          path: qtsvg
+      - name: Build QtSvg
+        if: steps.qtcache.outputs.cache-hit != 'true'
+        run: |
+          source emsdk/emsdk_env.sh
+          cd qtsvg
+          ~/qt/bin/qmake
+          make install
+      - uses: actions/checkout@v2
         name: Checkout zstd
         with:
           repository: facebook/zstd
@@ -301,6 +318,7 @@ jobs:
           emcmake cmake . \
             -DCMAKE_BUILD_TYPE=Release \
             -DQt5_DIR=$HOME/qt/lib/cmake/Qt5 \
+            -DQt5Svg_DIR=$HOME/qt/lib/cmake/Qt5Svg \
             -DQt5Gui_DIR=$HOME/qt/lib/cmake/Qt5Gui \
             -DQt5Core_DIR=$HOME/qt/lib/cmake/Qt5Core \
             -DQt5Network_DIR=$HOME/qt/lib/cmake/Qt5Network \

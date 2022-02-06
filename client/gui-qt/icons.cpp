@@ -45,25 +45,35 @@ void fcIcons::drop() { NFCN_FREE(m_instance); }
 QIcon fcIcons::getIcon(const QString &id)
 {
   QIcon icon;
-  QString str;
-  QByteArray pn_bytes;
-  QByteArray png_bytes;
 
-  str = QStringLiteral("themes/gui-qt/");
   // Try custom icon from theme
-  pn_bytes = str.toLocal8Bit();
-  png_bytes = QString(pn_bytes.data() + current_theme + "/" + id + ".png")
-                  .toLocal8Bit();
-  icon.addFile(fileinfoname(get_data_dirs(), png_bytes.data()));
-  str = str + "icons/";
-  // Try icon from icons dir
-  if (icon.isNull()) {
-    pn_bytes = str.toLocal8Bit();
-    png_bytes = QString(pn_bytes.data() + id + ".png").toLocal8Bit();
-    icon.addFile(fileinfoname(get_data_dirs(), png_bytes.data()));
+  icon.addFile(
+      fileinfoname(get_data_dirs(),
+                   qUtf8Printable(QStringLiteral("themes/gui-qt/%1/%2.svg")
+                                      .arg(current_theme, id))));
+  if (!icon.isNull()) {
+    return icon;
+  }
+  icon.addFile(
+      fileinfoname(get_data_dirs(),
+                   qUtf8Printable(QStringLiteral("themes/gui-qt/%1/%2.png")
+                                      .arg(current_theme, id))));
+  if (!icon.isNull()) {
+    return icon;
   }
 
-  return QIcon(icon);
+  // Try icon from icons dir
+  icon.addFile(fileinfoname(
+      get_data_dirs(),
+      qUtf8Printable(QStringLiteral("themes/gui-qt/icons/%1.svg").arg(id))));
+  if (!icon.isNull()) {
+    return icon;
+  }
+  icon.addFile(fileinfoname(
+      get_data_dirs(),
+      qUtf8Printable(QStringLiteral("themes/gui-qt/icons/%1.png").arg(id))));
+
+  return icon;
 }
 
 /**

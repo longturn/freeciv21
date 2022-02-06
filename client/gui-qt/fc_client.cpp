@@ -154,6 +154,7 @@ void fc_client::fc_main(QApplication *qapp)
 
   startTimer(TIMER_INTERVAL);
   connect(qapp, &QCoreApplication::aboutToQuit, this, &fc_client::closing);
+  qapp->setAttribute(Qt::AA_UseHighDpiPixmaps);
   qapp->exec();
 
   free_mapcanvas_and_overview();
