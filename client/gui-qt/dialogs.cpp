@@ -3309,7 +3309,7 @@ void popup_tileset_suggestion_dialog(void)
 
   QObject::connect(ask, &hud_message_box::accepted, [=]() {
     forced_tileset_name = game.control.preferred_tileset;
-    if (!tilespec_reread(game.control.preferred_tileset, true, 1)) {
+    if (!tilespec_reread(game.control.preferred_tileset, true)) {
       tileset_error(nullptr, LOG_ERROR,
                     _("Can't load requested tileset %s."),
                     game.control.preferred_tileset);

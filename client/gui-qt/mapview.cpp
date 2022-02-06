@@ -606,7 +606,7 @@ void tileset_changed(void)
       debugger != nullptr) {
     // When not zoomed in, unscaled_tileset is null
     // When zoomed in, unscaled_tileset is not null and holds the log
-    debugger->refresh(unscaled_tileset ? unscaled_tileset : tileset);
+    debugger->refresh(tileset);
   }
 
   update_unit_info_label(get_units_in_focus());

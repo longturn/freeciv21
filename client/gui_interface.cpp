@@ -129,10 +129,10 @@ void get_sprite_dimensions(const QPixmap *sprite, int *width, int *height)
  */
 QPixmap *crop_sprite(const QPixmap *source, int x, int y, int width,
                      int height, const QPixmap *mask, int mask_offset_x,
-                     int mask_offset_y, float scale, bool smooth)
+                     int mask_offset_y)
 {
   return funcs.crop_sprite(source, x, y, width, height, mask, mask_offset_x,
-                           mask_offset_y, scale, smooth);
+                           mask_offset_y);
 }
 
 /**

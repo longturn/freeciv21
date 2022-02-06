@@ -64,10 +64,9 @@ void layer_background::initialize_player(const player *player)
   auto sprite = create_player_sprite(color);
 
   const auto id = player_index(player);
-  m_player_background.at(id) = std::unique_ptr<QPixmap>(
-      crop_sprite(sprite.get(), 0, 0, tileset_tile_width(tileset()),
-                  tileset_tile_height(tileset()), get_mask_sprite(tileset()),
-                  0, 0, tileset_scale(tileset()), false));
+  m_player_background.at(id) = std::unique_ptr<QPixmap>(crop_sprite(
+      sprite.get(), 0, 0, tileset_tile_width(tileset()),
+      tileset_tile_height(tileset()), get_mask_sprite(tileset()), 0, 0));
 }
 
 void layer_background::free_player(int player_id)
@@ -81,13 +80,9 @@ void layer_background::free_player(int player_id)
 std::unique_ptr<QPixmap>
 layer_background::create_player_sprite(const QColor &pcolor) const
 {
-  if (tileset_scale(tileset()) == 1.0f) {
-    return std::unique_ptr<QPixmap>(create_sprite(128, 64, &pcolor));
-  } else {
-    return std::unique_ptr<QPixmap>(
-        create_sprite(tileset_full_tile_width(tileset()),
-                      tileset_full_tile_height(tileset()), &pcolor));
-  }
+  return std::unique_ptr<QPixmap>(
+      create_sprite(tileset_full_tile_width(tileset()),
+                    tileset_full_tile_height(tileset()), &pcolor));
 }
 
 } // namespace freeciv

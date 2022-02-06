@@ -592,14 +592,8 @@ static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
   QImage img;
   QRect crop;
   QPixmap *unit_pixmap;
-  struct tileset *tmp;
   float isosize;
 
-  tmp = nullptr;
-  if (unscaled_tileset) {
-    tmp = tileset;
-    tileset = unscaled_tileset;
-  }
   isosize = 0.6;
   if (tileset_hex_height(tileset) > 0 || tileset_hex_width(tileset) > 0) {
     isosize = 0.45;
@@ -642,9 +636,6 @@ static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
                                           Qt::SmoothTransformation);
   }
   canvas_free(unit_pixmap);
-  if (tmp != nullptr) {
-    tileset = tmp;
-  }
 
   return unit_img;
 }
