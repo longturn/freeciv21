@@ -212,6 +212,8 @@ static const struct sset_val_name *caravanbonusstyle_name(int caravanbonus)
   switch (caravanbonus) {
     NAME_CASE(CBS_CLASSIC, "CLASSIC", N_("Classic Freeciv"));
     NAME_CASE(CBS_LOGARITHMIC, "LOGARITHMIC", N_("Log^2 N style"));
+    NAME_CASE(CBS_LINEAR, "LINEAR", N_("Linear max trade"));
+    NAME_CASE(CBS_DISTANCE, "DISTANCE", N_("Pure distance"));
   }
   return NULL;
 }
@@ -2116,7 +2118,10 @@ static struct setting settings[] = {
                 "CLASSIC bonuses are proportional to distance and trade of "
                 "source and destination with multipliers for overseas and "
                 "international destinations. LOGARITHMIC bonuses are "
-                "proportional to log^2(distance + trade)."),
+                "proportional to log^2(distance + trade). LINEAR bonuses "
+                "are similar to CLASSIC, but (like LOGARITHMIC) use the "
+                "max trade of the city rather than current. DISTANCE "
+                "bonuses are proportional only to distance."),
              NULL, NULL, NULL, caravanbonusstyle_name,
              GAME_DEFAULT_CARAVAN_BONUS_STYLE),
 
