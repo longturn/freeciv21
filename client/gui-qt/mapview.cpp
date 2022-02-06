@@ -218,6 +218,8 @@ void map_view::set_scale_now(double scale)
   // When zoomed in, we pretend that the canvas is smaller than it is. This
   // makes text look bad, but everything else is drawn correctly.
   map_canvas_resized(width() / m_scale, height() / m_scale);
+
+  emit scale_changed(m_scale);
 }
 
 /**

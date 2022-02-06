@@ -43,7 +43,8 @@ void draw_calculated_trade_routes(QPainter *painter);
 **************************************************************************/
 class map_view : public QWidget {
   Q_OBJECT
-  Q_PROPERTY(double scale READ scale WRITE set_scale_now);
+  Q_PROPERTY(
+      double scale READ scale WRITE set_scale_now NOTIFY scale_changed);
 
   // Ought to be a private slot
   friend void debug_tile(tile *tile);
@@ -68,6 +69,9 @@ public:
   double scale() const { return m_scale; }
 
   freeciv::tileset_debugger *debugger() const { return m_debugger; }
+
+signals:
+  void scale_changed(double scale) const;
 
 public slots:
   void set_scale(double scale);
