@@ -34,10 +34,10 @@ Other Linux users will need to compile the code. Ubuntu 20.04 or higher is suppo
 
 #### Install dependencies
 
-You may need to adjust this command for your package manager. You need CMake 3.16 or higher, Qt 5.10 or higher, and Lua 5.3 or 5.4. You need to do this only once.
+You may need to adjust this command for your package manager. You need CMake 3.16 or higher, Qt (base and SVG) 5.10 or higher, and Lua 5.3 or 5.4. You need to do this only once.
 ```sh
 sudo apt install git cmake ninja-build g++ python3 gettext qt5-default \
-  libkf5archive-dev liblua5.3-dev libsqlite3-dev libsdl2-mixer-dev
+  libqt5svg5-dev libkf5archive-dev liblua5.3-dev libsqlite3-dev libsdl2-mixer-dev
 ```
 
 #### Get the code

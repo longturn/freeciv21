@@ -3,6 +3,7 @@
     "version-string": "3.0.0",
     "dependencies": [
       "qt5-base",
+      "qt5-svg",
       "lua",
       "gettext",
       "kf5archive",
