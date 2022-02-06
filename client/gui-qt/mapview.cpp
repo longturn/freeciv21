@@ -703,9 +703,6 @@ void info_tile::calc_size()
 {
   QFontMetrics fm(info_font);
   QString str;
-  int hh = tileset_tile_height(tileset);
-  int fin_x;
-  int fin_y;
   float x, y;
   int w = 0;
 
@@ -718,17 +715,17 @@ void info_tile::calc_size()
   setFixedHeight(str_list.count() * (fm.height() + 5));
   setFixedWidth(w + 10);
   if (tile_to_canvas_pos(&x, &y, itile)) {
-    fin_x = x;
-    fin_y = y;
+    x *= queen()->mapview_wdg->scale();
+    y *= queen()->mapview_wdg->scale();
     if (y - height() > 0) {
-      fin_y = y - height();
+      y -= height();
     } else {
-      fin_y = y + hh;
+      int hh = tileset_tile_height(tileset) * queen()->mapview_wdg->scale();
+      y += hh;
     }
-    if (x + width() > parentWidget()->width()) {
-      fin_x = parentWidget()->width() - width();
-    }
-    move(fin_x, fin_y);
+    // Make sure it's visible
+    x = std::clamp(int(x), 0, parentWidget()->width() - width());
+    move(x, y);
   }
 }
 
