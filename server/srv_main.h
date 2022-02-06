@@ -20,6 +20,9 @@
 #include "fc_types.h"
 #include "game.h"
 
+// Qt
+#include <QHostAddress>
+
 struct conn_list;
 
 struct server_arguments {
@@ -30,7 +33,7 @@ struct server_arguments {
   QString identity_name;
   unsigned short int metaserver_port;
   // address this server is to listen on (NULL => INADDR_ANY)
-  QString bind_addr;
+  QHostAddress bind_addr;
   // this server's listen port
   int port;
   bool user_specified_port;

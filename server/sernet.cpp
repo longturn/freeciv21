@@ -378,11 +378,9 @@ QTcpServer *server_open_socket()
 
   int max = srvarg.port + 100;
   for (; srvarg.port < max; ++srvarg.port) {
-    qDebug("Server attempting to listen on %s:%d",
-           srvarg.bind_addr.isNull() ? qUtf8Printable(srvarg.bind_addr)
-                                     : "(any)",
-           srvarg.port);
-    if (server->listen(QHostAddress::Any, srvarg.port)) {
+    qInfo("Server attempting to listen on %s:%d",
+          qUtf8Printable(srvarg.bind_addr.toString()), srvarg.port);
+    if (server->listen(srvarg.bind_addr, srvarg.port)) {
       break;
     }
 

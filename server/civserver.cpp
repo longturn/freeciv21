@@ -15,7 +15,9 @@
 #include <fc_config.h>
 #endif
 
+#include <QHostAddress>
 #include <QString>
+
 #include <csignal>
 #include <cstdio>
 #include <cstdlib>
@@ -301,7 +303,12 @@ int main(int argc, char *argv[])
     }
   }
   if (parser.isSet(QStringLiteral("bind"))) {
-    srvarg.bind_addr = parser.value(QStringLiteral("bind"));
+    auto addr = parser.value(QStringLiteral("bind"));
+    // Check consistency
+    if (!srvarg.bind_addr.setAddress(addr)) {
+      qCritical(_("Not a valid IP address: %s"), qUtf8Printable(addr));
+      exit(EXIT_FAILURE);
+    }
   }
   if (parser.isSet(QStringLiteral("Bind-meta"))) {
     srvarg.bind_meta_addr = parser.value(QStringLiteral("Bind-meta"));
