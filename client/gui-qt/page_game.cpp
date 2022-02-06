@@ -128,6 +128,8 @@ pageGame::pageGame(QWidget *parent)
   civ_status->show();
 
   city_overlay = new city_dialog(mapview_wdg);
+  connect(mapview_wdg, &map_view::scale_changed, city_overlay,
+          &city_dialog::refresh);
   city_overlay->hide();
   minimapview_wdg = new minimap_view(mapview_wdg);
   minimapview_wdg->setAttribute(Qt::WA_NoMousePropagation);
