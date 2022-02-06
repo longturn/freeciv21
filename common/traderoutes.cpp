@@ -463,6 +463,13 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
                     * 2,
                 2);
     tb = bonus;
+  } else if (game.info.caravan_bonus_style == CBS_LINEAR) {
+    // Linear bonus (like CLASSIC) but using max_trade_prod
+    tb = real_map_distance(pc1->tile, pc2->tile) + 10;
+    tb = (tb * (max_trade_prod(pc1) + max_trade_prod(pc2))) / 24;
+  } else if (game.info.caravan_bonus_style == CBS_DISTANCE) {
+    // Purely dependent on distance, ignore city trade
+    tb = real_map_distance(pc1->tile, pc2->tile) + 10;
   }
 
   if (pgood != NULL) {

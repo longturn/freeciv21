@@ -752,6 +752,10 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 #define SPECENUM_VALUE0NAME "Classic"
 #define SPECENUM_VALUE1 CBS_LOGARITHMIC
 #define SPECENUM_VALUE1NAME "Logarithmic"
+#define SPECENUM_VALUE2 CBS_LINEAR
+#define SPECENUM_VALUE2NAME "Linear"
+#define SPECENUM_VALUE3 CBS_DISTANCE
+#define SPECENUM_VALUE3NAME "Distance"
 #include "specenum_gen.h"
 
 // Used in the network protocol.
