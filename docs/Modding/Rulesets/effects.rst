@@ -569,6 +569,10 @@ Trade_Revenue_Bonus
     One time trade revenue bonus is multiplied by pow(2, amount/1000). The amount value is taken from the
     caravan's home city.
 
+Trade_Revenue_Exponent
+    One time trade revenue bonus is raised to the (1 + amount/1000) power.
+    This is applied before ``Trade_Revenue_Bonus``.
+
 Traderoute_Pct
     Percentage bonus for trade from traderoutes. This bonus applies after the value of the traderoute is
     already calculated. It affects one end of the traderoute only.

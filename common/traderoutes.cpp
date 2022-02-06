@@ -484,6 +484,17 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
     tb = tb * pgood->onetime_pct / 100;
   }
 
+  // Trade_revenue_exponent (in milimes) bends the shape of the curve
+  bonus = get_target_bonus_effects(
+      NULL, city_owner(pc1), pc2 ? city_owner(pc2) : NULL,
+      pc1, NULL, city_tile(pc1),
+      NULL, NULL, NULL, NULL,
+      action_by_number(establish_trade ? ACTION_TRADE_ROUTE
+                                       : ACTION_MARKETPLACE),
+      EFT_TRADE_REVENUE_EXPONENT);
+  tb = ceil(pow(static_cast<float>(tb),
+                1.0f + static_cast<float>(bonus) / 1000.0));
+
   // Trade_revenue_bonus increases revenue by power of 2 in milimes
   bonus = get_target_bonus_effects(
       NULL, city_owner(pc1), pc2 ? city_owner(pc2) : NULL,
