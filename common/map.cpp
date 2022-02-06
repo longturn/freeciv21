@@ -351,7 +351,7 @@ struct tile *mapstep(const struct civ_map *nmap, const struct tile *ptile,
   Q_UNUSED(nmap)
   int dx, dy, tile_x, tile_y;
 
-  if (!is_valid_dir(dir)) {
+  if (tile_virtual_check(ptile) || !is_valid_dir(dir)) {
     return NULL;
   }
 
