@@ -11,15 +11,15 @@
 #pragma once
 
 // Forward declarations
-class QTcpSocket;
+class QIODevice;
 class QString;
 class QUrl;
 
 int connect_to_server(const QUrl &url, char *errbuf, int errbufsize);
 
-void make_connection(QTcpSocket *sock, const QString &username);
+void make_connection(QIODevice *sock, const QString &username);
 
-void input_from_server(QTcpSocket *sock);
+void input_from_server(QIODevice *sock);
 void disconnect_from_server();
 
 void try_to_autoconnect(const QUrl &url);

@@ -276,7 +276,7 @@ enum client_pages fc_client::current_page() { return page; }
 /**
    Add notifier for server input
  */
-void fc_client::add_server_source(QTcpSocket *sock)
+void fc_client::add_server_source(QIODevice *sock)
 {
   connect(sock, &QIODevice::readyRead, this, &fc_client::server_input);
 
@@ -299,7 +299,7 @@ void fc_client::closeEvent(QCloseEvent *event)
  */
 void fc_client::server_input()
 {
-  if (auto *socket = dynamic_cast<QTcpSocket *>(sender())) {
+  if (auto *socket = dynamic_cast<QIODevice *>(sender())) {
     input_from_server(socket);
   }
 }

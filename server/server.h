@@ -19,8 +19,12 @@
 
 #pragma once
 
+#include "sernet.h"
+
 // Qt
+#include <QLocalServer>
 #include <QObject>
+#include <QTcpServer>
 
 class civtimer;
 class QTcpServer;
@@ -41,7 +45,8 @@ private slots:
   void error_on_socket();
   void input_on_socket();
   void input_on_stdin();
-  void accept_connections();
+  void accept_local_connections();
+  void accept_tcp_connections();
   void send_pings();
 
   // Higher-level stuff
@@ -63,7 +68,7 @@ private:
   bool m_interactive = false;
   QObject *m_stdin_notifier = nullptr; // Actual type is OS-dependent
 
-  QTcpServer *m_tcp_server = nullptr;
+  socket_server m_server = socket_server();
 
   civtimer *m_eot_timer = nullptr, *m_between_turns_timer = nullptr;
 

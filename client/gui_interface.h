@@ -65,7 +65,7 @@ struct gui_funcs {
 
   void (*set_rulesets)(int num_rulesets, QStringList rulesets);
   void (*options_extra_init)();
-  void (*add_net_input)(QTcpSocket *sock);
+  void (*add_net_input)(QIODevice *sock);
   void (*remove_net_input)();
   void (*real_conn_list_dialog_update)(void *unused);
   void (*close_connection_dialog)();
