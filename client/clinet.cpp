@@ -86,6 +86,19 @@ static void client_conn_close_callback(struct connection *pconn)
 }
 
 /**
+ * Called when there is an error on the socket.
+ */
+static void error_on_socket()
+{
+  if (client.conn.sock != nullptr) {
+    log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
+    output_window_append(ftc_client,
+                         qUtf8Printable(client.conn.sock->errorString()));
+  }
+  client.conn.used = false;
+}
+
+/**
    Try to connect to a server:
     - try to create a TCP socket to the given URL (default to
       localhost:DEFAULT_SOCK_PORT).
@@ -124,20 +137,29 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
   client.conn.used = true; // Now there will be a connection :)
 
   // Connect
-  if (!client.conn.sock) {
-    auto sock = new QTcpSocket;
+  if (url.scheme() == QStringLiteral("fc21")) {
+    QTcpSocket *sock = new QTcpSocket;
     client.conn.sock = sock;
-    QObject::connect(sock, &QAbstractSocket::errorOccurred, [] {
-      if (client.conn.sock != nullptr) {
-        log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
-        output_window_append(
-            ftc_client, qUtf8Printable(client.conn.sock->errorString()));
-      }
-      client.conn.used = false;
-    });
+    QObject::connect(sock, &QAbstractSocket::errorOccurred,
+                     &error_on_socket);
     QObject::connect(sock, &QTcpSocket::disconnected,
                      [] { client.conn.used = false; });
     sock->connectToHost(url.host(), url.port());
+
+    if (!sock->waitForConnected(10000)) {
+      (void) fc_strlcpy(errbuf, _("Connection timed out."), errbufsize);
+      return -1;
+    }
+    make_connection(sock, url.userName());
+
+  } else if (url.scheme() == QStringLiteral("fc21+local")) {
+    QLocalSocket *sock = new QLocalSocket;
+    client.conn.sock = sock;
+    QObject::connect(sock, &QLocalSocket::errorOccurred, &error_on_socket);
+    QObject::connect(
+        sock, &QLocalSocket::disconnected,
+        [userName = url.userName()] { client.conn.used = false; });
+    sock->connectToServer(url.path());
 
     if (!sock->waitForConnected(10000)) {
       (void) fc_strlcpy(errbuf, _("Connection timed out."), errbufsize);
