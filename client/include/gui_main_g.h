@@ -11,18 +11,10 @@
 #pragma once
 
 // Forward declarations
-class QTcpSocket;
-
-// utility
-#include "support.h" // bool type
-
-// common
-#include "fc_types.h"
+class QIODevice;
 
 void ui_main();
 void ui_exit();
-
-void insert_client_build_info(char *outbuf, size_t outlen);
 
 extern const char *client_string;
 

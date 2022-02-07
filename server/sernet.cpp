@@ -17,6 +17,8 @@
 
 // Qt
 #include <QCoreApplication>
+#include <QHostInfo>
+#include <QLocalServer>
 #include <QNetworkDatagram>
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -119,7 +121,7 @@ void close_connections_and_socket()
   conn_list_destroy(game.all_connections);
   conn_list_destroy(game.est_connections);
 
-  if (srvarg.announce != ANNOUNCE_NONE) {
+  if (srvarg.announce != ANNOUNCE_NONE && udp_socket) {
     udp_socket->close();
     delete udp_socket;
     udp_socket = nullptr;
@@ -305,7 +307,8 @@ static const char *makeup_connection_name(int *id)
    Returns 0 on success, -1 on failure (bad accept(), or too many
    connections).
  */
-int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
+int server_make_connection(QIODevice *new_sock, const QString &client_addr,
+                           const QString &ip_addr)
 {
   civtimer *timer;
   int i;
@@ -338,8 +341,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
 
       sz_strlcpy(pconn->username, makeup_connection_name(&pconn->id));
       pconn->addr = client_addr;
-      sz_strlcpy(pconn->server.ipaddr,
-                 qUtf8Printable(new_sock->peerAddress().toString()));
+      sz_strlcpy(pconn->server.ipaddr, qUtf8Printable(ip_addr));
 
       conn_list_append(game.all_connections, pconn);
 
@@ -365,9 +367,27 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
    Open server socket to be used to accept client connections
    and open a server socket for server LAN announcements.
  */
-QTcpServer *server_open_socket()
+optional_socket_server server_open_socket()
 {
-  auto *server = new QTcpServer;
+  // Local socket mode
+  if (!srvarg.local_addr.isEmpty()) {
+    auto server = std::make_unique<QLocalServer>();
+    if (server->listen(srvarg.local_addr)) {
+      connections_set_close_callback(server_conn_close_callback);
+
+      // Don't do LAN announcements
+      return server;
+    } else {
+      qCritical().noquote()
+          << QString(_("Server: cannot listen on local socket %1: %2"))
+                 .arg(srvarg.local_addr)
+                 .arg(server->errorString());
+      return std::nullopt;
+    }
+  }
+
+  // TCP socket mode
+  auto server = std::make_unique<QTcpServer>();
 
   int max = srvarg.port + 100;
   for (; srvarg.port < max; ++srvarg.port) {
@@ -387,7 +407,7 @@ QTcpServer *server_open_socket()
                      _("Server: cannot listen on port %1: %2"))
                      .arg(srvarg.port)
                      .arg(server->errorString())));
-      return server;
+      return std::nullopt;
     }
   }
 
@@ -557,7 +577,7 @@ void get_lanserver_announcement()
     return;
   }
 
-  if (udp_socket->hasPendingDatagrams()) {
+  if (udp_socket && udp_socket->hasPendingDatagrams()) {
     QNetworkDatagram qnd = udp_socket->receiveDatagram();
     auto data = qnd.data();
     dio_input_init(&din, data.constData(), 1);
