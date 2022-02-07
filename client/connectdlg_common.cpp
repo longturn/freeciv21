@@ -17,6 +17,7 @@
 #include <QStandardPaths>
 #include <QTcpServer>
 #include <QUrl>
+#include <QUuid>
 
 #include <cstring>
 
@@ -174,24 +175,6 @@ void client_kill_server(bool force)
 }
 
 /**
-   Finds the next (lowest) free port.
- */
-static int find_next_free_port(int starting_port, int highest_port)
-{
-  // Make sure it's destroyed and resources are cleaned up on return
-  QTcpServer server;
-
-  // Simply attempt to listen until we find a port that works
-  for (int port = starting_port; port < highest_port; ++port) {
-    if (server.listen(QHostAddress::LocalHost, port)) {
-      return port;
-    }
-  }
-
-  return -1;
-}
-
-/**
    Forks a server if it can. Returns FALSE if we find we
    couldn't start the server.
  */
@@ -208,20 +191,6 @@ bool client_start_server(const QString &user_name)
 
   output_window_append(ftc_client, _("Starting local server..."));
 
-  // find a free port
-  /* Mitigate the risk of ending up with the port already
-   * used by standalone server on Windows where this is known to be buggy
-   * by not starting from DEFAULT_SOCK_PORT but from one higher. */
-  internal_server_port = find_next_free_port(DEFAULT_SOCK_PORT + 1,
-                                             DEFAULT_SOCK_PORT + 1 + 10000);
-
-  if (internal_server_port < 0) {
-    output_window_append(ftc_client, _("Couldn't start the server."));
-    output_window_append(ftc_client,
-                         _("You'll have to start one manually. Sorry..."));
-    return false;
-  }
-
   storage = freeciv_storage_dir();
   if (storage == nullptr) {
     output_window_append(ftc_client,
@@ -231,13 +200,14 @@ bool client_start_server(const QString &user_name)
     return false;
   }
 
+  // Unique name for this game
+  auto uuid = QUuid::createUuid().toString(QUuid::WithoutBraces);
+
   // Set up the command-line parameters.
-  port_buf = QString::number(internal_server_port);
   savesdir = QStringLiteral("%1/saves").arg(storage);
   scensdir = QStringLiteral("%1/scenarios").arg(storage);
 
-  arguments << QStringLiteral("-p") << port_buf << QStringLiteral("--bind")
-            << QStringLiteral("127.0.0.1") << QStringLiteral("-q")
+  arguments << QStringLiteral("--local") << uuid << QStringLiteral("-q")
             << QStringLiteral("1") << QStringLiteral("-e")
             << QStringLiteral("--saves") << savesdir
             << QStringLiteral("--scenarios") << scensdir
@@ -285,10 +255,9 @@ bool client_start_server(const QString &user_name)
 
   // Local server URL
   auto url = QUrl();
-  url.setScheme(QStringLiteral("fc21"));
+  url.setScheme(QStringLiteral("fc21+local"));
   url.setUserName(user_name);
-  url.setHost(QStringLiteral("localhost"));
-  url.setPort(internal_server_port);
+  url.setPath(uuid);
 
   // a reasonable number of tries
   while (connect_to_server(
