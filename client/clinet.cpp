@@ -100,6 +100,21 @@ static void client_conn_close_callback(struct connection *pconn)
 }
 
 namespace {
+/// The URL we are presently connecting to.
+QUrl connect_to;
+
+/**
+ * Called when there is an error on the socket.
+ */
+static void error_on_socket()
+{
+  if (client.conn.sock != nullptr) {
+    log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
+    real_output_window_append(client.conn.sock->errorString(), NULL);
+  }
+  client.conn.used = false;
+}
+
 /**
    Try to connect to a server:
     - try to create a TCP socket to the given URL (default to
@@ -112,9 +127,6 @@ namespace {
       message in ERRBUF and return the Unix error code (ie., errno, which
       will be non-zero).
  */
-
-QUrl connect_to;
-
 static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
 {
   // Apply defaults
@@ -155,24 +167,30 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
   client.conn.used = true; // Now there will be a connection :)
 
   // Connect
-  if (!client.conn.sock) {
-    auto sock = new QTcpSocket;
+  if (url.scheme() == QStringLiteral("fc21")) {
+    QTcpSocket *sock = new QTcpSocket;
     client.conn.sock = sock;
     QObject::connect(
         sock,
         QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
-        [] {
-          if (client.conn.sock != nullptr) {
-            log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
-            real_output_window_append(client.conn.sock->errorString(), NULL);
-          }
-          client.conn.used = false;
-        });
+        &error_on_socket);
     QObject::connect(sock, &QTcpSocket::connected,
-                    [userName = url.userName()] {
-                      make_connection(client.conn.sock, userName);
-                    });
+                     [userName = url.userName()] {
+                       make_connection(client.conn.sock, userName);
+                     });
     sock->connectToHost(url.host(), url.port());
+  } else if (url.scheme() == QStringLiteral("fc21+local")) {
+    QLocalSocket *sock = new QLocalSocket;
+    client.conn.sock = sock;
+    QObject::connect(
+        sock,
+        QOverload<QLocalSocket::LocalSocketError>::of(&QLocalSocket::error),
+        &error_on_socket);
+    QObject::connect(sock, &QLocalSocket::connected,
+                     [userName = url.userName()] {
+                       make_connection(client.conn.sock, userName);
+                     });
+    sock->connectToServer(url.path());
   }
 
   return 0;
@@ -371,20 +389,28 @@ void try_to_autoconnect(const QUrl &url)
     client.conn.sock = new QTcpSocket;
   }
 
-  QObject::connect(
-      client.conn.sock,
-      QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
-      [url] {
-        if (client.conn.sock != nullptr) {
-          output_window_printf(ftc_client,
-                               _("Failed to autoconnect to %s: %d of %d "
-                                 "attempts, retrying..."),
-                               qUtf8Printable(url.toDisplayString()), count,
-                               MAX_AUTOCONNECT_ATTEMPTS);
-          QTimer::singleShot(AUTOCONNECT_INTERVAL,
-                             [url]() { try_to_autoconnect(url); });
-        }
-      });
-
   try_to_connect(url, errbuf, sizeof(errbuf));
+
+  auto error_handler = [url] {
+    if (client.conn.sock != nullptr) {
+      output_window_printf(ftc_client,
+                           _("Failed to autoconnect to %s: %d of %d "
+                             "attempts, retrying..."),
+                           qUtf8Printable(url.toDisplayString()), count,
+                           MAX_AUTOCONNECT_ATTEMPTS);
+      QTimer::singleShot(AUTOCONNECT_INTERVAL,
+                         [url]() { try_to_autoconnect(url); });
+    }
+  };
+  if (auto tcp = qobject_cast<QTcpSocket *>(client.conn.sock)) {
+    QObject::connect(
+        tcp,
+        QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
+        error_handler);
+  } else if (auto local = qobject_cast<QLocalSocket *>(client.conn.sock)) {
+    QObject::connect(
+        local,
+        QOverload<QLocalSocket::LocalSocketError>::of(&QLocalSocket::error),
+        error_handler);
+  }
 }

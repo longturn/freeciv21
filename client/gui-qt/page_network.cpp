@@ -438,12 +438,12 @@ void page_network::slot_connect()
 
   switch (connection_status) {
   case LOGIN_TYPE:
+    client_url().setScheme(QStringLiteral("fc21"));
     client_url().setUserName(ui.connect_login_edit->text());
     client_url().setHost(ui.connect_host_edit->text());
     client_url().setPort(ui.connect_port_edit->text().toInt());
 
-    if (connect_to_server(client_url(), errbuf, sizeof(errbuf)) != -1) {
-    } else {
+    if (connect_to_server(client_url(), errbuf, sizeof(errbuf)) < 0) {
       king->set_status_bar(QString::fromUtf8(errbuf));
       output_window_append(ftc_client, errbuf);
     }
