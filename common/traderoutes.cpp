@@ -440,36 +440,44 @@ static int max_trade_prod(const struct city *pcity)
    trade route and also when you simply sell your trade goods at the
    new city.
 
-   If you change this calculation remember to also update its duplication
-   in dai_choose_trade_route()
-
    pgood can be NULL for ignoring good's onetime_pct.
+
+   pc2 can be NULL for using an imaginary city at distance 10 with
+   75% of pc1's trade (for dai_choose_trade_route()).
  */
 int get_caravan_enter_city_trade_bonus(const struct city *pc1,
                                        const struct city *pc2,
                                        struct goods_type *pgood,
                                        const bool establish_trade)
 {
+  int md, rmd, trade2, max_trade_2;
   int tb = 0, bonus = 0;
 
+  if (pc2) {
+    md = map_distance(pc1->tile, pc2->tile);
+    rmd = real_map_distance(pc1->tile, pc2->tile);
+    trade2 = pc2->surplus[O_TRADE];
+    max_trade_2 = max_trade_prod(pc2);
+  } else {
+    md = rmd = 10;
+    trade2 = pc1->surplus[O_TRADE] * 0.75;
+    max_trade_2 = max_trade_prod(pc1) * 0.75;
+  }
+
   if (game.info.caravan_bonus_style == CBS_CLASSIC) {
-    // Should this be real_map_distance?
-    tb = map_distance(pc1->tile, pc2->tile) + 10;
-    tb = (tb * (pc1->surplus[O_TRADE] + pc2->surplus[O_TRADE])) / 24;
+    // Should this be real_map_distance (rmd)?
+    tb = md + 10;
+    tb = (tb * (pc1->surplus[O_TRADE] + trade2)) / 24;
   } else if (game.info.caravan_bonus_style == CBS_LOGARITHMIC) {
     // Logarithmic bonus
-    bonus = pow(log(real_map_distance(pc1->tile, pc2->tile) + 20
-                    + max_trade_prod(pc1) + max_trade_prod(pc2))
-                    * 2,
-                2);
-    tb = bonus;
+    tb = pow(log(rmd + 20 + max_trade_prod(pc1) + max_trade_2) * 2, 2);
   } else if (game.info.caravan_bonus_style == CBS_LINEAR) {
     // Linear bonus (like CLASSIC) but using max_trade_prod
-    tb = real_map_distance(pc1->tile, pc2->tile) + 10;
-    tb = (tb * (max_trade_prod(pc1) + max_trade_prod(pc2))) / 24;
+    tb = rmd + 10;
+    tb = (tb * (max_trade_prod(pc1) + max_trade_2)) / 24;
   } else if (game.info.caravan_bonus_style == CBS_DISTANCE) {
     // Purely dependent on distance, ignore city trade
-    tb = real_map_distance(pc1->tile, pc2->tile) + 10;
+    tb = rmd + 10;
   }
 
   if (pgood != NULL) {
@@ -478,7 +486,8 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
 
   // Trade_revenue_bonus increases revenue by power of 2 in milimes
   bonus = get_target_bonus_effects(
-      NULL, city_owner(pc1), city_owner(pc2), pc1, NULL, city_tile(pc1),
+      NULL, city_owner(pc1), pc2 ? city_owner(pc2) : NULL,
+      pc1, NULL, city_tile(pc1),
       /* TODO: Should unit requirements be
        * allowed so stuff like moves left and
        * unit type can modify the bonus? */
