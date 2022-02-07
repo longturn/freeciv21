@@ -474,7 +474,8 @@ int client_main(int argc, char *argv[])
   auto positional = parser.positionalArguments();
   if (positional.size() == 1) {
     url = QUrl(positional.constFirst());
-    if (!url.isValid() || url.scheme() != QStringLiteral("fc21")) {
+    // Supported schemes: fc21://, fc21+local://
+    if (!url.isValid() || (!url.scheme().startsWith("fc21"))) {
       // Try with the default protocol
       url = QUrl(QStringLiteral("fc21://") + positional.constFirst());
       // Still no luck
