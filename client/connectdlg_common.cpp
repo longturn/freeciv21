@@ -19,6 +19,7 @@
 #include <QStandardPaths>
 #include <QTcpServer>
 #include <QUrl>
+#include <QUuid>
 
 #include <cstdio>
 #include <cstring>
@@ -238,6 +239,9 @@ bool client_start_server(const QString &user_name)
     return false;
   }
 
+  // Unique name for this game
+  auto uuid = QUuid::createUuid().toString(QUuid::WithoutBraces);
+
   ruleset = QString::fromUtf8(tileset_what_ruleset(tileset));
 
   // Set up the command-line parameters.
@@ -245,8 +249,7 @@ bool client_start_server(const QString &user_name)
   savesdir = QStringLiteral("%1/saves").arg(storage);
   scensdir = QStringLiteral("%1/scenarios").arg(storage);
 
-  arguments << QStringLiteral("-p") << port_buf << QStringLiteral("--bind")
-            << QStringLiteral("localhost") << QStringLiteral("-q")
+  arguments << QStringLiteral("--local") << uuid << QStringLiteral("-q")
             << QStringLiteral("1") << QStringLiteral("-e")
             << QStringLiteral("--saves") << savesdir
             << QStringLiteral("--scenarios") << scensdir
@@ -297,10 +300,9 @@ bool client_start_server(const QString &user_name)
 
   // Local server URL
   auto url = QUrl();
-  url.setScheme(QStringLiteral("fc21"));
+  url.setScheme(QStringLiteral("fc21+local"));
   url.setUserName(user_name);
-  url.setHost(QStringLiteral("localhost"));
-  url.setPort(internal_server_port);
+  url.setPath(uuid);
 
   // a reasonable number of tries
   while (connect_to_server(

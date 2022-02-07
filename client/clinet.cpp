@@ -116,33 +116,23 @@ static void error_on_socket()
 }
 
 /**
-   Try to connect to a server:
-    - try to create a TCP socket to the given URL (default to
-      localhost:DEFAULT_SOCK_PORT).
-    - if successful:
-           - start monitoring the socket for packets from the server
-           - send a "login request" packet to the server
-       and - return 0
-    - if unable to create the connection, close the socket, put an error
-      message in ERRBUF and return the Unix error code (ie., errno, which
-      will be non-zero).
+ * Try to connect to a server:
+ *  - try to create a TCP socket to the given URL
+ *  - if successful:
+ *         - start monitoring the socket for packets from the server
+ *         - send a "login request" packet to the server
+ *     and - return 0
+ *  - if unable to create the connection, close the socket, put an error
+ *    message in ERRBUF and return the Unix error code (ie., errno, which
+ *    will be non-zero).
  */
 static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
 {
-  // Apply defaults
-  auto url_copy = url;
-  if (url_copy.host().isEmpty()) {
-    url_copy.setHost(QStringLiteral("localhost"));
-  }
-  if (url_copy.port() <= 0) {
-    url_copy.setPort(DEFAULT_SOCK_PORT);
-  }
-
   connections_set_close_callback(client_conn_close_callback);
 
   // connection in progress? wait.
   if (client.conn.used) {
-    if (url_copy != connect_to) {
+    if (url != connect_to) {
       (void) fc_strlcpy(
           errbuf, _("Canceled previous connection, trying new connection."),
           errbufsize);
@@ -152,7 +142,7 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
                      qobject_cast<QLocalSocket *>(client.conn.sock)) {
         local->abort();
       }
-      connect_to = url_copy;
+      connect_to = url;
     } else {
       (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
       return -1;
