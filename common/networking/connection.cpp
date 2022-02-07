@@ -16,6 +16,7 @@
 #endif
 
 // Qt
+#include <QLocalSocket>
 #include <QTcpSocket>
 
 // utility
@@ -54,7 +55,7 @@ static void default_conn_close_callback(struct connection *pconn)
 {
   fc_assert_msg(conn_close_callback != default_conn_close_callback,
                 "Closing a socket (%s) before calling "
-                "close_socket_set_callback().",
+                "connections_set_close_callback().",
                 conn_description(pconn));
 }
 
@@ -69,13 +70,13 @@ void connections_set_close_callback(conn_close_fn_t func)
 /**
    Call the conn_close_callback.
  */
-void connection_close(struct connection *pconn, const char *reason)
+void connection_close(struct connection *pconn, const QString &reason)
 {
   fc_assert_ret(NULL != pconn);
 
   if (NULL != reason && pconn->closing_reason.isEmpty()) {
     // NB: we don't overwrite the original reason.
-    pconn->closing_reason = QString::fromUtf8(reason);
+    pconn->closing_reason = reason;
   }
 
   (*conn_close_callback)(pconn);
@@ -110,7 +111,7 @@ static bool buffer_ensure_free_extra_space(struct socket_packet_buffer *buf,
      >0  :  number of bytes read
      =0  :  non-blocking sockets only; no data read, would block
  */
-int read_socket_data(QTcpSocket *sock, struct socket_packet_buffer *buffer)
+int read_socket_data(QIODevice *sock, struct socket_packet_buffer *buffer)
 {
   int didget;
 
@@ -187,7 +188,11 @@ void flush_connection_send_buffer_all(struct connection *pc)
     }
   }
   if (pc && pc->sock) {
-    pc->sock->flush();
+    if (auto socket = qobject_cast<QLocalSocket *>(pc->sock)) {
+      socket->flush();
+    } else if (auto socket = qobject_cast<QTcpSocket *>(pc->sock)) {
+      socket->flush();
+    }
   }
 }
 
@@ -204,7 +209,11 @@ static void flush_connection_send_buffer_packets(struct connection *pc)
     }
   }
   if (pc && pc->sock) {
-    pc->sock->flush();
+    if (auto socket = qobject_cast<QLocalSocket *>(pc->sock)) {
+      socket->flush();
+    } else if (auto socket = qobject_cast<QTcpSocket *>(pc->sock)) {
+      socket->flush();
+    }
   }
 }
 

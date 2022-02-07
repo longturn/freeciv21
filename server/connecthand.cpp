@@ -957,7 +957,7 @@ bool connection_delegate_restore(struct connection *pconn)
    Close a connection. Use this in the server to take care of delegation
  stuff (reset the username of the controlled connection).
  */
-void connection_close_server(struct connection *pconn, const char *reason)
+void connection_close_server(struct connection *pconn, const QString &reason)
 {
   // Restore possible delegations before the connection is closed.
   connection_delegate_restore(pconn);
