@@ -14,6 +14,7 @@
 #include <fc_config.h>
 
 // Qt
+#include <QLocalSocket>
 #include <QString>
 #include <QTcpSocket>
 #include <QUrl>
@@ -114,12 +115,19 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
     (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
     return -1;
   }
+
+  // Reset
+  if (client.conn.sock) {
+    client.conn.sock->disconnect(client.conn.sock);
+    client.conn.sock->deleteLater();
+  }
   client.conn.used = true; // Now there will be a connection :)
 
   // Connect
   if (!client.conn.sock) {
-    client.conn.sock = new QTcpSocket;
-    QObject::connect(client.conn.sock, &QAbstractSocket::errorOccurred, [] {
+    auto sock = new QTcpSocket;
+    client.conn.sock = sock;
+    QObject::connect(sock, &QAbstractSocket::errorOccurred, [] {
       if (client.conn.sock != nullptr) {
         log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
         output_window_append(
@@ -127,16 +135,16 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
       }
       client.conn.used = false;
     });
-    QObject::connect(client.conn.sock, &QAbstractSocket::disconnected,
+    QObject::connect(sock, &QTcpSocket::disconnected,
                      [] { client.conn.used = false; });
-  }
+    sock->connectToHost(url.host(), url.port());
 
-  client.conn.sock->connectToHost(url.host(), url.port());
-  if (!client.conn.sock->waitForConnected(10000)) {
-    (void) fc_strlcpy(errbuf, _("Connection timed out."), errbufsize);
-    return -1;
+    if (!sock->waitForConnected(10000)) {
+      (void) fc_strlcpy(errbuf, _("Connection timed out."), errbufsize);
+      return -1;
+    }
+    make_connection(sock, url.userName());
   }
-  make_connection(client.conn.sock, url.userName());
 
   return 0;
 }
@@ -166,7 +174,7 @@ int connect_to_server(const QUrl &url, char *errbuf, int errbufsize)
 /**
    Called after a connection is completed (e.g., in try_to_connect).
  */
-void make_connection(QTcpSocket *sock, const QString &username)
+void make_connection(QIODevice *sock, const QString &username)
 {
   struct packet_server_join_req req;
 
@@ -234,7 +242,7 @@ void disconnect_from_server()
  */
 static int read_from_connection(struct connection *pc, bool block)
 {
-  QTcpSocket *socket = pc->sock;
+  auto socket = pc->sock;
   bool have_data_for_server =
       (pc->used && pc->send_buffer && 0 < pc->send_buffer->ndata);
 
@@ -250,7 +258,7 @@ static int read_from_connection(struct connection *pc, bool block)
 
   if (block) {
     // Wait (and block the main event loop) until we get some data
-    socket->waitForReadyRead();
+    socket->waitForReadyRead(-1);
   }
 
   // Consume everything
@@ -275,7 +283,7 @@ static int read_from_connection(struct connection *pc, bool block)
    This function is called when the client received a new input from the
    server.
  */
-void input_from_server(QTcpSocket *sock)
+void input_from_server(QIODevice *sock)
 {
   int nb;
 
