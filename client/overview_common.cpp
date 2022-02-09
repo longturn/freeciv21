@@ -50,8 +50,8 @@ static bool overview_dirty = false;
    coordinates as a floating-point value so there is no loss of information
    in the resulting values.
  */
-static void gui_to_natural_pos(const struct tileset *t, double *ntl_x,
-                               double *ntl_y, int gui_x, int gui_y)
+void gui_to_natural_pos(const struct tileset *t, double *ntl_x,
+                        double *ntl_y, int gui_x, int gui_y)
 {
   const double gui_xd = gui_x, gui_yd = gui_y;
   const double W = tileset_tile_width(t);

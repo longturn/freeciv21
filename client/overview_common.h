@@ -33,5 +33,7 @@ void center_tile_overviewcanvas();
 void flush_dirty_overview();
 
 void overview_redraw_callback(struct option *option);
+void gui_to_natural_pos(const struct tileset *t, double *ntl_x,
+                        double *ntl_y, int gui_x, int gui_y);
 void gui_to_overview_pos(const struct tileset *t, int *ovr_x, int *ovr_y,
                          int gui_x, int gui_y);

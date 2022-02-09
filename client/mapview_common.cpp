@@ -568,7 +568,7 @@ static void base_set_mapview_origin(float gui_x0, float gui_y0)
     update_map_canvas(0, 0, mapview.store_width, mapview.store_height);
   }
 
-  center_tile_overviewcanvas();
+  update_minimap();
   switch (hover_state) {
   case HOVER_GOTO:
   case HOVER_PATROL:
@@ -2704,7 +2704,7 @@ bool map_canvas_resized(int width, int height)
         mapview.gui_y0 = gui_y;
       }
       update_map_canvas_visible();
-      center_tile_overviewcanvas();
+      update_minimap();
 
       /* Do not draw to the screen here as that could cause problems
        * when we are only initially setting up the view and some widgets
