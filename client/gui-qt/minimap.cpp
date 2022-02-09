@@ -45,9 +45,6 @@ minimap_view::minimap_view(QWidget *parent) : fcwidget()
   rw = new resize_widget(this);
   rw->put_to_corner();
   pix = new QPixmap;
-  scale_factor = 1.0;
-  connect(&thread, &minimap_thread::rendered_image, this,
-          &minimap_view::update_pixmap);
 }
 
 /**
@@ -65,18 +62,6 @@ void minimap_view::paintEvent(QPaintEvent *event)
   painter.begin(this);
   paint(&painter, event);
   painter.end();
-}
-
-/**
-   Sets scaling factor for minimap
- */
-void minimap_view::scale(double factor)
-{
-  scale_factor *= factor;
-  if (scale_factor < 1.0) {
-    scale_factor = 1.0;
-  };
-  update_image();
 }
 
 /**
@@ -101,189 +86,88 @@ void minimap_view::showEvent(QShowEvent *event)
   event->setAccepted(true);
 }
 
+namespace {
+
+void overview_pos_nowrap(const struct tileset *t, int *ovr_x, int *ovr_y,
+                         int gui_x, int gui_y)
+{
+  double ntl_x, ntl_y;
+  gui_to_natural_pos(t, &ntl_x, &ntl_y, gui_x, gui_y);
+
+  // Now convert straight to overview coordinates.
+  *ovr_x = floor((ntl_x - gui_options.overview.map_x0) * OVERVIEW_TILE_SIZE);
+  *ovr_y = floor((ntl_y - gui_options.overview.map_y0) * OVERVIEW_TILE_SIZE);
+}
+
+} // namespace
+
 /**
    Draws viewport on minimap
  */
 void minimap_view::draw_viewport(QPainter *painter)
 {
-  int i, x[4], y[4];
-  int src_x, src_y, dst_x, dst_y;
+  int x[4], y[4];
 
   if (!gui_options.overview.map) {
     return;
   }
 
-  gui_to_overview_pos(tileset, &x[0], &y[0], mapview.gui_x0, mapview.gui_y0);
-  gui_to_overview_pos(tileset, &x[1], &y[1], mapview.gui_x0 + mapview.width,
+  overview_pos_nowrap(tileset, &x[0], &y[0], mapview.gui_x0, mapview.gui_y0);
+  overview_pos_nowrap(tileset, &x[1], &y[1], mapview.gui_x0 + mapview.width,
                       mapview.gui_y0);
-  gui_to_overview_pos(tileset, &x[2], &y[2], mapview.gui_x0 + mapview.width,
+  overview_pos_nowrap(tileset, &x[2], &y[2], mapview.gui_x0 + mapview.width,
                       mapview.gui_y0 + mapview.height);
-  gui_to_overview_pos(tileset, &x[3], &y[3], mapview.gui_x0,
+  overview_pos_nowrap(tileset, &x[3], &y[3], mapview.gui_x0,
                       mapview.gui_y0 + mapview.height);
+
+  if ((current_topo_has_flag(TF_WRAPX)
+       && (x[2] - x[0] > NATURAL_WIDTH * OVERVIEW_TILE_SIZE))
+      || (current_topo_has_flag(TF_WRAPY)
+          && (y[2] - y[0] > NATURAL_HEIGHT * OVERVIEW_TILE_SIZE))) {
+    // Don't draw viewport lines if the view wraps around the map.
+    return;
+  }
+
   painter->setPen(QColor(Qt::white));
 
-  if (scale_factor > 1.0) {
-    for (i = 0; i < 4; i++) {
-      scale_point(x[i], y[i]);
+  QVector<QLineF> lines;
+  for (int i = 0; i < 4; i++) {
+    lines.append(QLineF(x[i] * w_ratio, y[i] * h_ratio,
+                        x[(i + 1) % 4] * w_ratio, y[(i + 1) % 4] * h_ratio));
+
+    // Add another line segment if this one wraps around.
+    int wrap_src_x = current_topo_has_flag(TF_WRAPX)
+                         ? FC_WRAP(x[i], NATURAL_WIDTH * OVERVIEW_TILE_SIZE)
+                         : x[i];
+    int wrap_src_y = current_topo_has_flag(TF_WRAPY)
+                         ? FC_WRAP(y[i], NATURAL_HEIGHT * OVERVIEW_TILE_SIZE)
+                         : y[i];
+
+    if (wrap_src_x != x[i] || wrap_src_y != y[i]) {
+      int projected_dst_x = x[(i + 1) % 4] + wrap_src_x - x[i];
+      int projected_dst_y = y[(i + 1) % 4] + wrap_src_y - y[i];
+      lines.append(QLineF(wrap_src_x * w_ratio, wrap_src_y * h_ratio,
+                          projected_dst_x * w_ratio,
+                          projected_dst_y * h_ratio));
+    }
+
+    int wrap_dst_x =
+        current_topo_has_flag(TF_WRAPX)
+            ? FC_WRAP(x[(i + 1) % 4], NATURAL_WIDTH * OVERVIEW_TILE_SIZE)
+            : x[(i + 1) % 4];
+    int wrap_dst_y =
+        current_topo_has_flag(TF_WRAPY)
+            ? FC_WRAP(y[(i + 1) % 4], NATURAL_HEIGHT * OVERVIEW_TILE_SIZE)
+            : y[(i + 1) % 4];
+    if (wrap_dst_x != x[(i + 1) % 4] || wrap_dst_y != y[(i + 1) % 4]) {
+      int projected_src_x = x[i] + wrap_dst_x - x[(i + 1) % 4];
+      int projected_src_y = y[i] + wrap_dst_y - y[(i + 1) % 4];
+      lines.append(QLineF(projected_src_x * w_ratio,
+                          projected_src_y * h_ratio, wrap_dst_x * w_ratio,
+                          wrap_dst_y * h_ratio));
     }
   }
-
-  for (i = 0; i < 4; i++) {
-    src_x = static_cast<int>(x[i] * w_ratio);
-    src_y = static_cast<int>(y[i] * h_ratio);
-    dst_x = static_cast<int>(x[(i + 1) % 4] * w_ratio);
-    dst_y = static_cast<int>(y[(i + 1) % 4] * h_ratio);
-    painter->drawLine(src_x, src_y, dst_x, dst_y);
-  }
-}
-
-/**
-   Scales point from real overview coords to scaled overview coords.
- */
-void minimap_view::scale_point(int &x, int &y)
-{
-  int ax, bx;
-  int dx, dy;
-
-  gui_to_overview_pos(tileset, &ax, &bx, mapview.gui_x0 + mapview.width / 2,
-                      mapview.gui_y0 + mapview.height / 2);
-  x = qRound(static_cast<double>(x) * scale_factor);
-  y = qRound(static_cast<double>(y) * scale_factor);
-  dx = qRound(ax * scale_factor - gui_options.overview.width / 2);
-  dy = qRound(bx * scale_factor - gui_options.overview.height / 2);
-  x = x - dx;
-  y = y - dy;
-}
-
-/**
-   Scales point from scaled overview coords to real overview coords.
- */
-void unscale_point(double scale_factor, int &x, int &y)
-{
-  int ax, bx;
-  int dx, dy;
-
-  gui_to_overview_pos(tileset, &ax, &bx, mapview.gui_x0 + mapview.width / 2,
-                      mapview.gui_y0 + mapview.height / 2);
-  dx = qRound(ax * scale_factor - gui_options.overview.width / 2);
-  dy = qRound(bx * scale_factor - gui_options.overview.height / 2);
-  x = x + dx;
-  y = y + dy;
-  x = qRound(x / scale_factor);
-  y = qRound(y / scale_factor);
-}
-
-/**
-   Sets minimap scale to default
- */
-void minimap_view::reset() { scale_factor = 1; }
-
-/**
-   Slot for updating pixmap from thread's image
- */
-void minimap_view::update_pixmap(const QImage &image)
-{
-  *pix = QPixmap::fromImage(image);
-  update();
-}
-
-/**
-   Minimap thread's contructor
- */
-minimap_thread::minimap_thread(QObject *parent) : QThread(parent) {}
-
-/**
-   Minimap thread's desctructor
- */
-minimap_thread::~minimap_thread()
-{
-  mutex.lock();
-  threadabort = true;
-  condition.wakeOne();
-  mutex.unlock();
-  wait();
-}
-
-/**
-   Starts thread
- */
-void minimap_thread::render(double scale_factor, int width, int height)
-{
-  threadrestart = false;
-  threadabort = false;
-  mini_width = width;
-  mini_height = height;
-  scale = scale_factor;
-  if (!isRunning()) {
-    start(LowPriority);
-  } else {
-    threadrestart = true;
-    condition.wakeOne();
-  }
-}
-
-/**
-   Updates minimap's image in thread
- */
-void minimap_thread::run()
-{
-  forever
-  {
-    QImage tpix;
-    QImage gpix;
-    QImage image(QSize(mini_width, mini_height), QImage::Format_RGB32);
-    QImage bigger_pix(gui_options.overview.width * 2,
-                      gui_options.overview.height * 2, QImage::Format_RGB32);
-    int delta_x, delta_y;
-    int x, y, ix, iy;
-    float wf, hf;
-    QPixmap *src, *dst;
-
-    if (threadabort) {
-      return;
-    }
-    mutex.lock();
-    if (gui_options.overview.map != nullptr) {
-      if (scale > 1) {
-        /* move minimap now,
-           scale later and draw without looking for origin */
-        src = gui_options.overview.map;
-        dst = gui_options.overview.window;
-        x = gui_options.overview.map_x0;
-        y = gui_options.overview.map_y0;
-        ix = gui_options.overview.width - x;
-        iy = gui_options.overview.height - y;
-        pixmap_copy(dst, src, 0, 0, ix, iy, x, y);
-        pixmap_copy(dst, src, 0, y, ix, 0, x, iy);
-        pixmap_copy(dst, src, x, 0, 0, iy, ix, y);
-        pixmap_copy(dst, src, x, y, 0, 0, ix, iy);
-        tpix = gui_options.overview.window->toImage();
-        wf = static_cast<float>(gui_options.overview.width) / scale;
-        hf = static_cast<float>(gui_options.overview.height) / scale;
-        x = 0;
-        y = 0;
-        unscale_point(scale, x, y);
-        bigger_pix.fill(Qt::black);
-        delta_x = gui_options.overview.width / 2;
-        delta_y = gui_options.overview.height / 2;
-        image_copy(&bigger_pix, &tpix, 0, 0, delta_x, delta_y,
-                   gui_options.overview.width, gui_options.overview.height);
-        gpix = bigger_pix.copy(delta_x + x, delta_y + y, wf, hf);
-        image = gpix.scaled(mini_width, mini_height, Qt::IgnoreAspectRatio,
-                            Qt::FastTransformation);
-      } else {
-        tpix = gui_options.overview.map->toImage();
-        image = tpix.scaled(mini_width, mini_height, Qt::IgnoreAspectRatio,
-                            Qt::FastTransformation);
-      }
-    }
-    emit rendered_image(image);
-    if (!threadrestart) {
-      condition.wait(&mutex);
-    }
-    threadrestart = false;
-    mutex.unlock();
-  }
+  painter->drawLines(lines);
 }
 
 /**
@@ -296,7 +180,7 @@ void minimap_view::update_image()
   }
   // There might be some map updates lurking around
   mrIdle::idlecb()->runNow();
-  thread.render(scale_factor, width(), height());
+  update();
 }
 
 /**
@@ -304,23 +188,11 @@ void minimap_view::update_image()
  */
 void minimap_view::paint(QPainter *painter, QPaintEvent *event)
 {
-  int x, y, ix, iy;
+  painter->drawPixmap(1, 1, width() - 1, height() - 1,
+                      *gui_options.overview.map);
 
-  x = gui_options.overview.map_x0 * w_ratio;
-  y = gui_options.overview.map_y0 * h_ratio;
-  ix = pix->width() - x;
-  iy = pix->height() - y;
-
-  if (scale_factor > 1) {
-    painter->drawPixmap(0, 0, *pix, 0, 0, pix->width(), pix->height());
-  } else {
-    painter->drawPixmap(ix, iy, *pix, 0, 0, x, y);
-    painter->drawPixmap(ix, 0, *pix, 0, y, x, iy);
-    painter->drawPixmap(0, iy, *pix, x, 0, ix, y);
-    painter->drawPixmap(0, 0, *pix, x, y, ix, iy);
-  }
-  painter->setPen(QColor(palette().color(QPalette::Highlight)));
-  painter->drawRect(1, 1, width() - 1, height() - 1);
+  painter->setPen(QColor(palette().color(QPalette::HighlightedText)));
+  painter->drawRect(0, 0, width() - 1, height() - 1);
   draw_viewport(painter);
   rw->put_to_corner();
 }
@@ -354,34 +226,6 @@ void minimap_view::resizeEvent(QResizeEvent *event)
 }
 
 /**
-   Wheel event for minimap - zooms it in or out
- */
-void minimap_view::wheelEvent(QWheelEvent *event)
-{
-  if (event->angleDelta().y() > 0) {
-    zoom_in();
-  } else {
-    zoom_out();
-  }
-  event->accept();
-}
-
-/**
-   Sets scale factor to scale minimap 20% up
- */
-void minimap_view::zoom_in()
-{
-  if (scale_factor < double(gui_options.overview.width) / 8) {
-    scale(1.2);
-  }
-}
-
-/**
-   Sets scale factor to scale minimap 20% down
- */
-void minimap_view::zoom_out() { scale(0.833); }
-
-/**
    Mouse Handler for minimap_view
    Left button - moves minimap
    Right button - recenters on some point
@@ -404,9 +248,6 @@ void minimap_view::mousePressEvent(QMouseEvent *event)
     fy = event->pos().y();
     fx = qRound(fx / w_ratio);
     fy = qRound(fy / h_ratio);
-    if (scale_factor > 1) {
-      unscale_point(scale_factor, fx, fy);
-    }
     fx = qMax(fx, 1);
     fy = qMax(fy, 1);
     fx = qMin(fx, gui_options.overview.width - 1);

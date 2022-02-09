@@ -238,7 +238,6 @@ void fc_client::switch_page(int new_pg)
     center_on_something();
     voteinfo_gui_update();
     update_info_label();
-    queen()->minimapview_wdg->reset();
     update_minimap();
     queen()->updateSidebarTooltips();
     real_science_report_dialog_update(nullptr);

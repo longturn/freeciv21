@@ -15,11 +15,6 @@
 // Qt
 #include <QFrame>
 #include <QLabel>
-#include <QMutex>
-#include <QQueue>
-#include <QThread>
-#include <QTimer>
-#include <QWaitCondition>
 // gui-qt is The One
 #include "widgetdecorations.h"
 class QImage;
@@ -35,31 +30,6 @@ class QWheelEvent;
 class QWidget;
 
 /**************************************************************************
-  Thread helper for drawing minimap
-**************************************************************************/
-class minimap_thread : public QThread {
-  Q_OBJECT
-public:
-  minimap_thread(QObject *parent = 0);
-  ~minimap_thread() override;
-  void render(double scale_factor, int width, int height);
-
-signals:
-  void rendered_image(const QImage &image);
-
-protected:
-  void run() Q_DECL_OVERRIDE;
-
-private:
-  int mini_width{20}, mini_height{20};
-  double scale{1.0f};
-  QMutex mutex;
-  bool threadrestart{false};
-  bool threadabort{false};
-  QWaitCondition condition;
-};
-
-/**************************************************************************
   Widget used for displaying overview (minimap)
 **************************************************************************/
 class minimap_view : public fcwidget {
@@ -71,7 +41,6 @@ public:
   void paint(QPainter *painter, QPaintEvent *event);
   void update_menu() override;
   void update_image();
-  void reset();
 
 protected:
   void paintEvent(QPaintEvent *event) override;
@@ -79,22 +48,12 @@ protected:
   void mousePressEvent(QMouseEvent *event) override;
   void mouseMoveEvent(QMouseEvent *event) override;
   void mouseReleaseEvent(QMouseEvent *event) override;
-  void wheelEvent(QWheelEvent *event) override;
   void moveEvent(QMoveEvent *event) override;
   void showEvent(QShowEvent *event) override;
 
-private slots:
-  void update_pixmap(const QImage &image);
-  void zoom_in();
-  void zoom_out();
-
 private:
   void draw_viewport(QPainter *painter);
-  void scale(double factor);
-  void scale_point(int &x, int &y);
-  double scale_factor;
   float w_ratio, h_ratio;
-  minimap_thread thread;
   QBrush background;
   QPixmap *pix;
   QPoint cursor;
