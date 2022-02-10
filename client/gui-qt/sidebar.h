@@ -46,7 +46,6 @@ public:
   int heightForWidth(int width) const override;
   bool hasHeightForWidth() const override;
   void paint(QPainter *painter, QPaintEvent *event);
-  void resizePixmap(int width, int height);
   void setCustomLabels(const QString &);
   void setLabel(const QString &str);
   void setLeftClick(pfcn_bool func);
@@ -74,8 +73,6 @@ protected:
   void wheelEvent(QWheelEvent *event) override;
 
 private:
-  void updateFinalPixmap();
-  void paint();
   bool hover;
   pfcn right_click;
   pfcn wheel_down;
@@ -84,8 +81,6 @@ private:
   QFont sfont;
   QFont info_font;
   QPixmap *def_pixmap;
-  QPixmap *final_pixmap;
-  QPixmap *scaled_pixmap;
   QString custom_label;
   QString desc;
   QTimer *timer;
