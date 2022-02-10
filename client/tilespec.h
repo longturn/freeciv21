@@ -98,7 +98,6 @@ struct tileset_log_entry {
 struct tileset;
 
 extern struct tileset *tileset;
-extern struct tileset *unscaled_tileset;
 
 const QVector<QString> *get_tileset_list(const struct option *poption);
 
@@ -119,8 +118,7 @@ void finish_loading_sprites(struct tileset *t);
 
 bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
                        bool global_default);
-bool tilespec_reread(const char *tileset_name, bool game_fully_initialized,
-                     float scale, bool is_zoom = false);
+bool tilespec_reread(const char *tileset_name, bool game_fully_initialized);
 void tilespec_reread_callback(struct option *poption);
 void tilespec_reread_frozen_refresh(const char *tname);
 
@@ -147,8 +145,7 @@ bool tileset_layer_in_category(enum mapview_layer layer,
                                enum layer_category cat);
 
 // Gfx support
-QPixmap *load_sprite(struct tileset *t, const QString &tag_name,
-                     bool scale = true, bool smooth = true);
+QPixmap *load_sprite(struct tileset *t, const QString &tag_name);
 
 std::vector<drawn_sprite>
 fill_sprite_array(struct tileset *t, enum mapview_layer layer,
@@ -303,7 +300,6 @@ int tileset_small_sprite_width(const struct tileset *t);
 int tileset_small_sprite_height(const struct tileset *t);
 int tileset_citybar_offset_y(const struct tileset *t);
 int tileset_tilelabel_offset_y(const struct tileset *t);
-float tileset_scale(const struct tileset *t);
 const char *tileset_main_intro_filename(const struct tileset *t);
 int tileset_num_city_colors(const struct tileset *t);
 bool tileset_use_hard_coded_fog(const struct tileset *t);

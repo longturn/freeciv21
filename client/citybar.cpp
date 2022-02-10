@@ -460,10 +460,8 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
     return QRect();
   }
 
-  // Select the tileset to grab stuff from
-  const auto t = (gui_options.zoom_scale_fonts || !unscaled_tileset)
-                     ? tileset
-                     : unscaled_tileset;
+  // Get the tileset to grab stuff from
+  const auto t = get_tileset();
 
   // Get some city properties
   const citybar_sprites *citybar = get_citybar_sprites(t);
@@ -621,10 +619,8 @@ QRect polished_citybar_painter::paint(QPainter &painter,
   const bool should_draw_trade_routes =
       can_see_inside && gui_options.draw_city_trade_routes;
 
-  // Select the tileset to grab stuff from
-  const auto t = (gui_options.zoom_scale_fonts || !unscaled_tileset)
-                     ? tileset
-                     : unscaled_tileset;
+  // Get the tileset to grab stuff from
+  const auto t = get_tileset();
 
   // Get some city properties
   const citybar_sprites *citybar = get_citybar_sprites(t);

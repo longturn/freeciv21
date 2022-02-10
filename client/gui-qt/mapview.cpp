@@ -138,7 +138,9 @@ void draw_calculated_trade_routes(QPainter *painter)
 /**
    Constructor for map
  */
-map_view::map_view() : QWidget()
+map_view::map_view()
+    : QWidget(),
+      m_scale_animation(std::make_unique<QPropertyAnimation>(this, "scale"))
 {
   menu_click = false;
   cursor = -1;
@@ -196,7 +198,32 @@ void map_view::show_all_fcwidgets()
 }
 
 /**
- * Ppens the tileset debugger.
+ * Sets the map scale.
+ */
+void map_view::set_scale(double scale)
+{
+  m_scale_animation->stop();
+  m_scale_animation->setDuration(100);
+  m_scale_animation->setEndValue(scale);
+  m_scale_animation->setCurrentTime(0);
+  m_scale_animation->start();
+}
+
+/**
+ * Sets the map scale immediately without doing any animation.
+ */
+void map_view::set_scale_now(double scale)
+{
+  m_scale = scale;
+  // When zoomed in, we pretend that the canvas is smaller than it is. This
+  // makes text look bad, but everything else is drawn correctly.
+  map_canvas_resized(width() / m_scale, height() / m_scale);
+
+  emit scale_changed(m_scale);
+}
+
+/**
+ * Opens the tileset debugger.
  */
 void map_view::show_debugger()
 {
@@ -295,7 +322,16 @@ void map_view::paintEvent(QPaintEvent *event)
  */
 void map_view::paint(QPainter *painter, QPaintEvent *event)
 {
-  painter->drawPixmap(event->rect(), *mapview.store, event->rect());
+  if (scale() != 1) {
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+  }
+  auto widget_rect = QRectF(event->rect());
+  auto mapview_rect =
+      QRectF(widget_rect.left() / scale(), widget_rect.top() / scale(),
+             widget_rect.width() / scale(), widget_rect.height() / scale());
+  painter->drawPixmap(widget_rect, *mapview.store, mapview_rect);
+
+  painter->scale(1 / scale(), 1 / scale());
   draw_calculated_trade_routes(painter);
 }
 
@@ -460,8 +496,9 @@ void update_turn_done_button(bool do_restore)
 static void flush_mapcanvas(int canvas_x, int canvas_y, int pixel_width,
                             int pixel_height)
 {
-  queen()->mapview_wdg->repaint(canvas_x, canvas_y, pixel_width,
-                                pixel_height);
+  auto scale = queen()->mapview_wdg->scale();
+  queen()->mapview_wdg->repaint(canvas_x * scale, canvas_y * scale,
+                                pixel_width * scale, pixel_height * scale);
 }
 
 /**
@@ -505,8 +542,9 @@ void flush_dirty(void)
     return;
   }
   if (num_dirty_rects == MAX_DIRTY_RECTS) {
-    flush_mapcanvas(0, 0, queen()->mapview_wdg->width(),
-                    queen()->mapview_wdg->height());
+    flush_mapcanvas(
+        0, 0, queen()->mapview_wdg->width() / queen()->mapview_wdg->scale(),
+        queen()->mapview_wdg->height() / queen()->mapview_wdg->scale());
   } else {
     int i;
 
@@ -584,7 +622,7 @@ void tileset_changed(void)
       debugger != nullptr) {
     // When not zoomed in, unscaled_tileset is null
     // When zoomed in, unscaled_tileset is not null and holds the log
-    debugger->refresh(unscaled_tileset ? unscaled_tileset : tileset);
+    debugger->refresh(tileset);
   }
 
   update_unit_info_label(get_units_in_focus());
@@ -665,9 +703,6 @@ void info_tile::calc_size()
 {
   QFontMetrics fm(info_font);
   QString str;
-  int hh = tileset_tile_height(tileset);
-  int fin_x;
-  int fin_y;
   float x, y;
   int w = 0;
 
@@ -680,17 +715,17 @@ void info_tile::calc_size()
   setFixedHeight(str_list.count() * (fm.height() + 5));
   setFixedWidth(w + 10);
   if (tile_to_canvas_pos(&x, &y, itile)) {
-    fin_x = x;
-    fin_y = y;
+    x *= queen()->mapview_wdg->scale();
+    y *= queen()->mapview_wdg->scale();
     if (y - height() > 0) {
-      fin_y = y - height();
+      y -= height();
     } else {
-      fin_y = y + hh;
+      int hh = tileset_tile_height(tileset) * queen()->mapview_wdg->scale();
+      y += hh;
     }
-    if (x + width() > parentWidget()->width()) {
-      fin_x = parentWidget()->width() - width();
-    }
-    move(fin_x, fin_y);
+    // Make sure it's visible
+    x = std::clamp(int(x), 0, parentWidget()->width() - width());
+    move(x, y);
   }
 }
 

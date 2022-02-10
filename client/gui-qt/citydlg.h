@@ -10,8 +10,8 @@
 #pragma once
 
 #include "fc_types.h"
+
 // Qt
-#include "fc_types.h"
 #include <QDialog>
 #include <QElapsedTimer>
 #include <QGroupBox>
@@ -127,19 +127,6 @@ private:
 
   QMenu *m_menu = nullptr;
   struct unit *m_unit;
-};
-
-/****************************************************************************
-  Pops up unit context menu
-****************************************************************************/
-class unit_list_event_filter : public QObject {
-  Q_OBJECT
-
-public:
-  explicit unit_list_event_filter(QObject *parent = nullptr);
-
-protected:
-  bool eventFilter(QObject *object, QEvent *event) override;
 };
 
 /****************************************************************************

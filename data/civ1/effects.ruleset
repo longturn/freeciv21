@@ -11,7 +11,7 @@
 
 [datafile]
 description="Civ1 effects data for Freeciv (approximate)"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -238,6 +238,10 @@ reqs    =
 [effect_city_vision]
 type    = "City_Vision_Radius_Sq"
 value   = 5
+
+[effect_bomb_limit_base]
+type    = "Bombard_Limit_Pct"
+value   = 1
 
 [effect_trade_routes]
 type    = "Max_Trade_Routes"

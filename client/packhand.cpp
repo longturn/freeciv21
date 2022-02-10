@@ -3225,7 +3225,7 @@ void handle_ruleset_control(const struct packet_ruleset_control *packet)
     if (strcmp(packet->preferred_tileset, tileset_basename(tileset))) {
       // It's not currently in use
       if (gui_options.autoaccept_tileset_suggestion) {
-        tilespec_reread(game.control.preferred_tileset, true, 1.0f);
+        tilespec_reread(game.control.preferred_tileset, true);
       } else {
         popup_tileset_suggestion_dialog();
       }

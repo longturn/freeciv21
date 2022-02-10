@@ -268,13 +268,13 @@ bool script_fcdb_do_string(struct connection *caller, const char *str)
   fcl_compat.output_fct = script_fcdb_cmd_reply;
   fcl_compat.caller = caller;
 
-  return fcl->safe_script(str).valid();
+  auto result = fcl->safe_script(str).valid();
 
   // Reset the changes.
   fcl_compat.caller = save_caller;
   fcl_compat.output_fct = save_output_fct;
 
-  return true;
+  return result;
 }
 
 /**

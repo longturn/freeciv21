@@ -80,7 +80,8 @@ void create_line_at_mouse_pos(void)
   int x, y;
 
   global_pos = QCursor::pos();
-  local_pos = queen()->mapview_wdg->mapFromGlobal(global_pos);
+  local_pos = queen()->mapview_wdg->mapFromGlobal(global_pos)
+              / queen()->mapview_wdg->scale();
   x = local_pos.x();
   y = local_pos.y();
 
@@ -105,6 +106,8 @@ void map_view::keyPressEvent(QKeyEvent *event)
   Qt::KeyboardModifiers key_mod = QApplication::keyboardModifiers();
   bool is_shift = key_mod.testFlag(Qt::ShiftModifier);
 
+  auto scale = queen()->mapview_wdg->scale();
+
   if (C_S_RUNNING == client_state()) {
     if (is_shift) {
       switch (event->key()) {
@@ -121,7 +124,8 @@ void map_view::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Up:
     case Qt::Key_8:
       if (is_shift) {
-        recenter_button_pressed(queen()->mapview_wdg->width() / 2, 0);
+        recenter_button_pressed(queen()->mapview_wdg->width() / 2 / scale,
+                                0);
       } else {
         key_unit_move(DIR8_NORTH);
       }
@@ -129,7 +133,8 @@ void map_view::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Left:
     case Qt::Key_4:
       if (is_shift) {
-        recenter_button_pressed(0, queen()->mapview_wdg->height() / 2);
+        recenter_button_pressed(0,
+                                queen()->mapview_wdg->height() / 2 / scale);
       } else {
         key_unit_move(DIR8_WEST);
       }
@@ -137,8 +142,8 @@ void map_view::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Right:
     case Qt::Key_6:
       if (is_shift) {
-        recenter_button_pressed(queen()->mapview_wdg->width(),
-                                queen()->mapview_wdg->height() / 2);
+        recenter_button_pressed(queen()->mapview_wdg->width() / scale,
+                                queen()->mapview_wdg->height() / 2 / scale);
       } else {
         key_unit_move(DIR8_EAST);
       }
@@ -146,8 +151,8 @@ void map_view::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Down:
     case Qt::Key_2:
       if (is_shift) {
-        recenter_button_pressed(queen()->mapview_wdg->width() / 2,
-                                queen()->mapview_wdg->height());
+        recenter_button_pressed(queen()->mapview_wdg->width() / 2 / scale,
+                                queen()->mapview_wdg->height() / scale);
       } else {
         key_unit_move(DIR8_SOUTH);
       }
@@ -208,7 +213,7 @@ void map_view::shortcut_pressed(int key)
 
   md = QApplication::keyboardModifiers();
   bt = QApplication::mouseButtons();
-  pos = mapFromGlobal(QCursor::pos());
+  pos = mapFromGlobal(QCursor::pos()) / scale();
 
   ptile = canvas_pos_to_tile(pos.x(), pos.y());
   pcity = ptile ? tile_city(ptile) : nullptr;
@@ -220,7 +225,6 @@ void map_view::shortcut_pressed(int key)
   // Trade Generator - skip
   sc = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
   if (bt == sc->mouse && md == sc->mod && king()->trade_gen.hover_city) {
-    ptile = canvas_pos_to_tile(pos.x(), pos.y());
     king()->trade_gen.add_tile(ptile);
     queen()->mapview_wdg->repaint();
     return;
@@ -230,7 +234,6 @@ void map_view::shortcut_pressed(int key)
   if (bt == sc->mouse && md == sc->mod && king()->rallies.hover_city) {
     char text[1024];
 
-    ptile = canvas_pos_to_tile(pos.x(), pos.y());
     if (tile_city(ptile)) {
       king()->rallies.hover_tile = true;
       king()->rallies.rally_city = tile_city(ptile);
@@ -270,7 +273,6 @@ void map_view::shortcut_pressed(int key)
   }
 
   if (bt == Qt::LeftButton && king()->menu_bar->delayed_order) {
-    ptile = canvas_pos_to_tile(pos.x(), pos.y());
     king()->menu_bar->set_tile_for_order(ptile);
     clear_hover_state();
     exit_goto_state();
@@ -282,7 +284,6 @@ void map_view::shortcut_pressed(int key)
     queen()->infotab->restore_chat();
   }
   if (bt == Qt::LeftButton && king()->menu_bar->quick_airlifting) {
-    ptile = canvas_pos_to_tile(pos.x(), pos.y());
     if (tile_city(ptile)) {
       multiairlift(tile_city(ptile), king()->menu_bar->airlift_type_id);
     } else {
@@ -338,7 +339,7 @@ void map_view::shortcut_pressed(int key)
     sc = fc_shortcuts::sc()->get_shortcut(SC_RELOAD_TILESET);
     if (((key && key == sc->key) || bt == sc->mouse) && md == sc->mod) {
       QPixmapCache::clear();
-      tilespec_reread(tileset_basename(tileset), true, king()->map_scale);
+      tilespec_reread(tileset_basename(tileset), true);
       return;
     }
 
@@ -434,7 +435,7 @@ void map_view::shortcut_released(Qt::MouseButton bt)
   fc_shortcut *sc;
   Qt::KeyboardModifiers md;
   md = QApplication::keyboardModifiers();
-  pos = mapFromGlobal(QCursor::pos());
+  pos = mapFromGlobal(QCursor::pos()) / scale();
 
   sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_INFO);
   if (bt == sc->mouse && md == sc->mod) {
@@ -484,10 +485,11 @@ void map_view::mouseReleaseEvent(QMouseEvent *event)
  */
 void map_view::mouseMoveEvent(QMouseEvent *event)
 {
-  update_line(event->pos().x(), event->pos().y());
+  update_line(event->pos().x() / scale(), event->pos().y() / scale());
   if (keyboardless_goto_button_down && hover_state == HOVER_NONE) {
-    maybe_activate_keyboardless_goto(event->pos().x(), event->pos().y());
+    maybe_activate_keyboardless_goto(event->pos().x() / scale(),
+                                     event->pos().y() / scale());
   }
-  control_mouse_cursor(
-      canvas_pos_to_tile(event->pos().x(), event->pos().y()));
+  control_mouse_cursor(canvas_pos_to_tile(event->pos().x() / scale(),
+                                          event->pos().y() / scale()));
 }

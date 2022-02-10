@@ -94,6 +94,7 @@ endif()
 add_subdirectory(luascript)
 
 target_link_libraries(client PUBLIC Qt5::Widgets)
+target_link_libraries(client PUBLIC Qt5::Svg)
 target_link_libraries(client PUBLIC ${SDL2_MIXER_LIBRARIES} ${SDL2_LIBRARY})
 
 target_link_libraries(client PUBLIC client_gen)
@@ -104,7 +105,34 @@ if(FREECIV_ENABLE_CLIENT)
   add_subdirectory(gui-qt)
   add_executable(freeciv21-client ${GUI_TYPE} packhand.cpp) # packhand.c depends on gui-qt
   if(EMSCRIPTEN)
-    target_link_options(freeciv21-client PRIVATE -sTOTAL_MEMORY=52428800)
+    target_link_options(freeciv21-client PRIVATE
+                        -sASSERTIONS=1
+                        -sWEBSOCKET_URL=wss://
+                        -sTOTAL_MEMORY=52428800
+                        -sALLOW_MEMORY_GROWTH=1
+                        "-sEXPORTED_RUNTIME_METHODS=['UTF16ToString','stringToUTF16','callMain','printErr']"
+                        --bind
+                        -sUSE_SDL_MIXER=2
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/flags@data/flags"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/helpdata.txt@data/helpdata.txt"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/misc@data/misc"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/buildings@data/buildings"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/wonders@data/wonders"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/hexemplio.tilespec@data/hexemplio.tilespec"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/hexemplio@data/hexemplio"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/amplio2.tilespec@data/amplio2.tilespec"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/amplio2@data/amplio2"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/themes/gui-qt/Classic@data/themes/gui-qt/Classic"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/themes/gui-qt/icons@data/themes/gui-qt/icons"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/stdmusic.musicspec@data/stdmusic.musicspec"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/stdmusic@data/stdmusic"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/stdsounds@data/stdsounds"
+                        "--preload-file=${CMAKE_SOURCE_DIR}/data/stdsounds.soundspec@data/stdsounds.soundspec"
+                        "--exclude-file=*CMakeLists*"
+                        "--exclude-file=*.icns"
+                        "--exclude-file=*.serv"
+                        "--exclude-file=*.svg"
+    )
   endif()
   target_link_libraries(freeciv21-client client)
   target_link_libraries(freeciv21-client gui-qt)

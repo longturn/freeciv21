@@ -230,6 +230,7 @@ following commands.
      python3 \
      python3-pip \
      qt5-default \
+     libqt5svg5-dev \
      libkf5archive-dev \
      liblua5.3-dev \
      libmagickwand-dev \

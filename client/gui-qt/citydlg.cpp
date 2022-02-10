@@ -592,14 +592,8 @@ static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
   QImage img;
   QRect crop;
   QPixmap *unit_pixmap;
-  struct tileset *tmp;
   float isosize;
 
-  tmp = nullptr;
-  if (unscaled_tileset) {
-    tmp = tileset;
-    tileset = unscaled_tileset;
-  }
   isosize = 0.6;
   if (tileset_hex_height(tileset) > 0 || tileset_hex_width(tileset) > 0) {
     isosize = 0.45;
@@ -642,9 +636,6 @@ static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
                                           Qt::SmoothTransformation);
   }
   canvas_free(unit_pixmap);
-  if (tmp != nullptr) {
-    tileset = tmp;
-  }
 
   return unit_img;
 }
@@ -750,7 +741,7 @@ bool unit_list_item::can_issue_orders() const
  */
 void unit_list_item::disband()
 {
-  if (!can_issue_orders()) {
+  if (can_issue_orders()) {
     auto *units = unit_list_new();
     unit_list_append(units, m_unit);
     popup_disband_dialog(units);
@@ -759,11 +750,11 @@ void unit_list_item::disband()
 }
 
 /**
-   Loads unit into some tranport
+   Loads unit into some transport
  */
 void unit_list_item::load()
 {
-  if (!can_issue_orders()) {
+  if (can_issue_orders()) {
     qtg_request_transport(m_unit, unit_tile(m_unit));
   }
 }
@@ -773,7 +764,7 @@ void unit_list_item::load()
  */
 void unit_list_item::unload()
 {
-  if (!can_issue_orders()) {
+  if (can_issue_orders()) {
     request_unit_unload(m_unit);
   }
 }
@@ -783,7 +774,7 @@ void unit_list_item::unload()
  */
 void unit_list_item::unload_all()
 {
-  if (!can_issue_orders()) {
+  if (can_issue_orders()) {
     request_unit_unload_all(m_unit);
   }
 }
@@ -793,7 +784,7 @@ void unit_list_item::unload_all()
  */
 void unit_list_item::upgrade()
 {
-  if (!can_issue_orders()) {
+  if (can_issue_orders()) {
     auto *units = unit_list_new();
     unit_list_append(units, m_unit);
     popup_upgrade_dialog(units);
@@ -802,7 +793,7 @@ void unit_list_item::upgrade()
 }
 
 /**
-   Changes homecity for given unit
+   Changes home city for given unit
  */
 void unit_list_item::change_homecity()
 {
@@ -841,36 +832,6 @@ void unit_list_item::sentry()
   if (can_issue_orders()) {
     request_unit_sentry(m_unit);
   }
-}
-
-/**
-   Constructor
- */
-unit_list_event_filter::unit_list_event_filter(QObject *parent)
-    : QObject(parent)
-{
-}
-
-/**
-   Filters out context menu events and shows the unit context menu
- */
-bool unit_list_event_filter::eventFilter(QObject *object, QEvent *event)
-{
-  auto *list = qobject_cast<QListWidget *>(object);
-  if (list != nullptr && event->type() == QEvent::ContextMenu) {
-    auto *menu_event = static_cast<QContextMenuEvent *>(event);
-    auto *item = list->itemAt(menu_event->pos());
-    // Maybe there was no unit under the mouse
-    if (auto *unit_item = dynamic_cast<unit_list_item *>(item)) {
-      // Maybe we can't give orders to this unit
-      if (auto *menu = unit_item->menu()) {
-        // OK, show the menu
-        menu->exec(menu_event->globalPos());
-        return true;
-      }
-    }
-  }
-  return false;
 }
 
 cityIconInfoLabel::cityIconInfoLabel(QWidget *parent) : QWidget(parent)
@@ -964,7 +925,7 @@ void city_label::set_type(int x) { type = x; }
 void city_label::mousePressEvent(QMouseEvent *event)
 {
   int citnum, i, num_citizens, nothing_width;
-  int w = tileset_small_sprite_width(tileset) / king()->map_scale;
+  int w = tileset_small_sprite_width(tileset);
 
   if (!pcity) {
     return;
@@ -1417,14 +1378,27 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
   ui.tabs_right->setTabText(0, _("General"));
   ui.tabs_right->setTabText(1, _("Citizens"));
 
+  const auto show_unit_actions_menu = [this](const QPoint &loc) {
+    auto *item = ui.present_units_list->itemAt(loc);
+    // Maybe there was no unit under the mouse
+    if (auto *unit_item = dynamic_cast<unit_list_item *>(item)) {
+      // Maybe we can't give orders to this unit
+      if (auto *menu = unit_item->menu()) {
+        // OK, show the menu
+        menu->popup(ui.present_units_list->mapToGlobal(loc));
+      }
+    }
+  };
+
   connect(ui.present_units_list, &QListWidget::itemDoubleClicked,
           [](QListWidgetItem *item) {
             if (auto *uitem = dynamic_cast<unit_list_item *>(item)) {
               uitem->activate_and_close_dialog();
             }
           });
-  ui.present_units_list->installEventFilter(
-      new unit_list_event_filter(this));
+  ui.present_units_list->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(ui.present_units_list, &QWidget::customContextMenuRequested,
+          show_unit_actions_menu);
 
   connect(ui.supported_units, &QListWidget::itemDoubleClicked,
           [](QListWidgetItem *item) {
@@ -1432,7 +1406,9 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
               uitem->activate_and_close_dialog();
             }
           });
-  ui.supported_units->installEventFilter(new unit_list_event_filter(this));
+  ui.supported_units->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(ui.supported_units, &QWidget::customContextMenuRequested,
+          show_unit_actions_menu);
   ui.supported_units->oneliner = false;
   installEventFilter(this);
 }
@@ -2036,8 +2012,8 @@ void city_dialog::update_citizens()
   QPainter p;
   int num_citizens =
       get_city_citizen_types(pcity, FEELING_FINAL, categories);
-  int w = tileset_small_sprite_width(tileset) / king()->map_scale;
-  int h = tileset_small_sprite_height(tileset) / king()->map_scale;
+  int w = tileset_small_sprite_width(tileset);
+  int h = tileset_small_sprite_height(tileset);
 
   i = 1 + (num_citizens * 5 / 200);
   w = w / i;
@@ -2137,9 +2113,11 @@ void city_dialog::refresh()
   ui.production_combo_p->blockSignals(false);
   setUpdatesEnabled(true);
 
-  ui.middleSpacer->changeSize(
-      get_citydlg_canvas_width(), get_citydlg_canvas_height(),
-      QSizePolicy::Expanding, QSizePolicy::Expanding);
+  auto scale = queen()->mapview_wdg->scale();
+  ui.middleSpacer->changeSize(scale * get_citydlg_canvas_width(),
+                              scale * get_citydlg_canvas_height(),
+                              QSizePolicy::Expanding,
+                              QSizePolicy::Expanding);
 
   updateGeometry();
   update();

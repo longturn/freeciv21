@@ -311,7 +311,6 @@ struct tileset {
 
   char *summary;
   char *description;
-  float scale;
 
   std::vector<tileset_log_entry> log;
 
@@ -376,15 +375,13 @@ struct tileset {
 };
 
 struct tileset *tileset;
-struct tileset *unscaled_tileset;
 
 int focus_unit_state = 0;
 
 static bool tileset_update = false;
 
 static struct tileset *tileset_read_toplevel(const char *tileset_name,
-                                             bool verbose, int topology_id,
-                                             float scale);
+                                             bool verbose, int topology_id);
 
 static void fill_unit_type_sprite_array(const struct tileset *t,
                                         std::vector<drawn_sprite> &sprs,
@@ -432,16 +429,9 @@ void tileset_error(struct tileset *t, QtMsgType level, const char *format,
 }
 
 /**
-   Return unscaled tileset if it exists, or default otherwise
+   Returns the tileset
  */
-struct tileset *get_tileset()
-{
-  if (unscaled_tileset != NULL) {
-    return unscaled_tileset;
-  } else {
-    return tileset;
-  }
-}
+struct tileset *get_tileset() { return tileset; }
 
 /**
    Return the name of the given tileset.
@@ -646,11 +636,6 @@ int tileset_tilelabel_offset_y(const struct tileset *t)
 }
 
 /**
-   Returns tileset scale
- */
-float tileset_scale(const struct tileset *t) { return tileset->scale; }
-
-/**
    Return the small sprite height of the current tileset.  The small sprites
    are used for various theme graphics (e.g., citymap citizens/specialists
    as well as panel indicator icons).
@@ -847,7 +832,7 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
     tilesets[idx] = new QVector<QString>;
     for (const auto &file : qAsConst(*list)) {
       struct tileset *t =
-          tileset_read_toplevel(qUtf8Printable(file), false, topo, 1.0f);
+          tileset_read_toplevel(qUtf8Printable(file), false, topo);
 
       if (t) {
         tilesets[idx]->append(file);
@@ -997,14 +982,14 @@ bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
   bool original;
 
   if (tileset_name == NULL
-      || !(tileset = tileset_read_toplevel(tileset_name, verbose, topo_id,
-                                           1.0f))) {
+      || !(tileset =
+               tileset_read_toplevel(tileset_name, verbose, topo_id))) {
     QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
 
     original = false;
     for (const auto &file : qAsConst(*list)) {
       struct tileset *t =
-          tileset_read_toplevel(qUtf8Printable(file), false, topo_id, 1.0f);
+          tileset_read_toplevel(qUtf8Printable(file), false, topo_id);
 
       if (t) {
         if (!tileset) {
@@ -1054,7 +1039,7 @@ bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
    Returns TRUE iff new tileset has been succesfully loaded.
  */
 bool tilespec_reread(const char *new_tileset_name,
-                     bool game_fully_initialized, float scale, bool is_zoom)
+                     bool game_fully_initialized)
 {
   int id;
   struct tile *center_tile;
@@ -1076,16 +1061,9 @@ bool tilespec_reread(const char *new_tileset_name,
 
   /* Step 1:  Cleanup.
    *
-   * Free old tileset or keep it in memeory if we are loading the same
-   * tileset with scaling and old one was not scaled.
+   * Free old tileset.
    */
-
-  if (tileset_name == old_name && tileset->scale == 1.0f && scale != 1.0f) {
-    if (unscaled_tileset) {
-      tileset_free(unscaled_tileset);
-    }
-    unscaled_tileset = tileset;
-  } else {
+  if (tileset) {
     tileset_free(tileset);
   }
 
@@ -1093,15 +1071,14 @@ bool tilespec_reread(const char *new_tileset_name,
    *
    * We read in the new tileset.  This should be pretty straightforward.
    */
-  tileset =
-      tileset_read_toplevel(qUtf8Printable(tileset_name), false, -1, scale);
+  tileset = tileset_read_toplevel(qUtf8Printable(tileset_name), false, -1);
   if (tileset != NULL) {
     new_tileset_in_use = true;
   } else {
     new_tileset_in_use = false;
 
-    if (!(tileset = tileset_read_toplevel(qUtf8Printable(old_name), false,
-                                          -1, scale))) {
+    if (!(tileset =
+              tileset_read_toplevel(qUtf8Printable(old_name), false, -1))) {
       // Always fails.
       fc_assert_exit_msg(NULL != tileset,
                          "Failed to re-read the currently loaded tileset.");
@@ -1174,15 +1151,6 @@ bool tilespec_reread(const char *new_tileset_name,
     tileset_setup_city_tiles(tileset, id);
   }
 
-  if (is_zoom) {
-    // Zooming in or out should not trigger the tileset error warning dialog.
-    // This hides the fact that we reload the tileset completely when zomming
-    // in or out. It's a hacky solution (the tileset might have changed), but
-    // so is our zoom handling. To refresh the tileset, use the dedicated
-    // shortcut.
-    tileset->log.clear();
-  }
-
   if (state < C_S_RUNNING) {
     // Below redraws do not apply before this.
     return new_tileset_in_use;
@@ -1229,7 +1197,7 @@ void tilespec_reread_callback(struct option *poption)
 
   fc_assert_ret(NULL != tileset_name && tileset_name[0] != '\0');
   tileset_update = true;
-  tilespec_reread(tileset_name, client.conn.established, 1.0f);
+  tilespec_reread(tileset_name, client.conn.established);
   tileset_update = false;
   menus_init();
 }
@@ -1243,7 +1211,7 @@ void tilespec_reread_callback(struct option *poption)
 void tilespec_reread_frozen_refresh(const char *tname)
 {
   tileset_update = true;
-  tilespec_reread(tname, true, 1.0f);
+  tilespec_reread(tname, true);
   tileset_update = false;
   menus_init();
 }
@@ -1588,32 +1556,6 @@ static void tileset_set_offsets(struct tileset *t, struct section_file *file)
       file, tileset_tile_height(t), "tilespec.unit_upkeep_offset_y");
   t->unit_upkeep_small_offset_y = secfile_lookup_int_default(
       file, t->unit_upkeep_offset_y, "tilespec.unit_upkeep_small_offset_y");
-  t->city_size_offset_x = t->scale * t->city_size_offset_x;
-  t->city_size_offset_y = t->scale * t->city_size_offset_y;
-  t->select_offset_x = t->scale * t->select_offset_x;
-  t->select_offset_y = t->scale * t->select_offset_y;
-  t->unit_flag_offset_x = t->scale * t->unit_flag_offset_x;
-  t->unit_flag_offset_y = t->scale * t->unit_flag_offset_y;
-  t->city_flag_offset_x = t->scale * t->city_flag_offset_x;
-  t->city_flag_offset_y = t->scale * t->city_flag_offset_y;
-  t->unit_offset_x = t->scale * t->unit_offset_x;
-  t->unit_offset_y = t->scale * t->unit_offset_y;
-  t->activity_offset_x = t->scale * t->activity_offset_x;
-  t->activity_offset_y = t->scale * t->activity_offset_y;
-  t->city_offset_x = t->scale * t->city_offset_x;
-  t->city_offset_y = t->scale * t->city_offset_y;
-  t->citybar_offset_y = t->scale * t->citybar_offset_y;
-  t->tilelabel_offset_y = t->scale * t->tilelabel_offset_y;
-  t->occupied_offset_x = t->scale * t->occupied_offset_x;
-  t->occupied_offset_y = t->scale * t->occupied_offset_y;
-  if (t->scale != 1.0f
-      && t->unit_upkeep_offset_y != tileset_tile_height(t)) {
-    t->unit_upkeep_offset_y = t->scale * t->unit_upkeep_offset_y;
-  }
-  if (t->scale != 1.0f
-      && t->unit_upkeep_small_offset_y != t->unit_upkeep_offset_y) {
-    t->unit_upkeep_small_offset_y = t->scale * t->unit_upkeep_small_offset_y;
-  }
 }
 
 static void tileset_stop_read(struct tileset *t, struct section_file *file,
@@ -1693,8 +1635,7 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
    topology_id of -1 means any topology is acceptable.
  */
 static struct tileset *tileset_read_toplevel(const char *tileset_name,
-                                             bool verbose, int topology_id,
-                                             float scale)
+                                             bool verbose, int topology_id)
 {
   struct section_file *file;
   char *fname;
@@ -1737,7 +1678,6 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   }
 
   t = tileset_new();
-  t->scale = scale;
 
   file_capstr = secfile_lookup_str(file, "%s.options", "tilespec");
   duplicates_ok = (NULL != file_capstr
@@ -1827,7 +1767,6 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       tileset_stop_read(t, file, fname, sections, layer_order);
       return nullptr;
     }
-    hex_side = hex_side * t->scale;
     if (t->type == TS_ISOMETRIC) {
       t->hex_width = hex_side;
     } else {
@@ -1894,17 +1833,6 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
-  t->normal_tile_width = ceil(t->scale * t->normal_tile_width);
-  // Adjust width to be multiple of 8
-  if (scale != 1.0f) {
-    i = t->normal_tile_width;
-    while (i % 8 != 0) {
-      i++;
-    }
-    t->scale = (t->scale * i) / t->normal_tile_width;
-    t->normal_tile_width = i;
-  }
-  t->normal_tile_height = ceil(t->scale * t->normal_tile_height);
   if (t->type == TS_ISOMETRIC) {
     t->full_tile_width = t->normal_tile_width;
     if (tileset_hex_height(t) > 0) {
@@ -1928,14 +1856,6 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
-  if (t->unit_tile_width != t->full_tile_width && t->scale != 1.0f) {
-    t->unit_tile_width = ceil(t->unit_tile_width * t->scale);
-  }
-  if (t->unit_tile_height != t->full_tile_height && t->scale != 1.0f) {
-    t->unit_tile_height = ceil(t->unit_tile_height * t->scale);
-  }
-  t->small_sprite_width = t->small_sprite_width * t->scale;
-  t->small_sprite_height = t->small_sprite_height * t->scale;
   qDebug("tile sizes %dx%d, %dx%d unit, %dx%d small", t->normal_tile_width,
          t->normal_tile_height, t->full_tile_width, t->full_tile_height,
          t->small_sprite_width, t->small_sprite_height);
@@ -2131,14 +2051,12 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
           auto offset_x = secfile_lookup_int_default(
               file, 0, "%s.layer%d_offset_x", sec_name, l);
-          offset_x = ceil(t->scale * offset_x);
           if (is_tall) {
             offset_x += FULL_TILE_X_OFFSET;
           }
 
           auto offset_y = secfile_lookup_int_default(
               file, 0, "%s.layer%d_offset_y", sec_name, l);
-          offset_y = ceil(t->scale * offset_y);
           if (is_tall) {
             offset_y += FULL_TILE_Y_OFFSET;
           }
@@ -2354,14 +2272,10 @@ static QString &valid_index_str(const struct tileset *t, int idx)
    Loads the sprite. If the sprite is already loaded a reference
    counter is increased. Can return NULL if the sprite couldn't be
    loaded.
-   Scale means if sprite should be scaled, smooth if scaling might use
-   other scaling algorithm than nearest neighbor.
  */
-QPixmap *load_sprite(struct tileset *t, const QString &tag_name, bool scale,
-                     bool smooth)
+QPixmap *load_sprite(struct tileset *t, const QString &tag_name)
 {
   struct small_sprite *ss;
-  float sprite_scale = 1.0f;
 
   log_debug("load_sprite(tag='%s')", qUtf8Printable(tag_name));
   // Lookup information about where the sprite is found.
@@ -2375,18 +2289,7 @@ QPixmap *load_sprite(struct tileset *t, const QString &tag_name, bool scale,
     // If the sprite hasn't been loaded already, then load it.
     fc_assert(ss->ref_count == 0);
     if (ss->file) {
-      int w, h;
-      QPixmap *s;
-
-      if (scale) {
-        s = load_gfx_file(ss->file);
-        get_sprite_dimensions(s, &w, &h);
-        ss->sprite =
-            crop_sprite(s, 0, 0, w, h, NULL, -1, -1, t->scale, smooth);
-        free_sprite(s);
-      } else {
-        ss->sprite = load_gfx_file(ss->file);
-      }
+      ss->sprite = load_gfx_file(ss->file);
       if (!ss->sprite) {
         tileset_error(t, LOG_ERROR,
                       _("Couldn't load gfx file \"%s\" for sprite '%s'."),
@@ -2406,12 +2309,8 @@ QPixmap *load_sprite(struct tileset *t, const QString &tag_name, bool scale,
             qUtf8Printable(tag_name), ss->sf->file_name);
         return NULL;
       }
-      if (scale) {
-        sprite_scale = t->scale;
-      }
-      ss->sprite =
-          crop_sprite(ss->sf->big_sprite, ss->x, ss->y, ss->width,
-                      ss->height, NULL, -1, -1, sprite_scale, smooth);
+      ss->sprite = crop_sprite(ss->sf->big_sprite, ss->x, ss->y, ss->width,
+                               ss->height, NULL, -1, -1);
     }
   }
 
@@ -2446,25 +2345,7 @@ static void unload_sprite(struct tileset *t, const QString &tag_name)
 // Not very safe, but convenient:
 #define SET_SPRITE(field, tag)                                              \
   do {                                                                      \
-    t->sprites.field = load_sprite(t, tag, true, true);                     \
-    if (t->sprites.field == NULL) {                                         \
-      tileset_error(t, LOG_FATAL, _("Sprite for tag '%s' missing."),        \
-                    qUtf8Printable(tag));                                   \
-    }                                                                       \
-  } while (false)
-
-#define SET_SPRITE_NOTSMOOTH(field, tag)                                    \
-  do {                                                                      \
-    t->sprites.field = load_sprite(t, tag, true, false);                    \
-    if (t->sprites.field == NULL) {                                         \
-      tileset_error(t, LOG_FATAL, _("Sprite for tag '%s' missing."),        \
-                    qUtf8Printable(tag));                                   \
-    }                                                                       \
-  } while (false)
-
-#define SET_SPRITE_UNSCALED(field, tag)                                     \
-  do {                                                                      \
-    t->sprites.field = load_sprite(t, qUtf8Printable(tag), false, false);   \
+    t->sprites.field = load_sprite(t, tag);                                 \
     if (t->sprites.field == NULL) {                                         \
       tileset_error(t, LOG_FATAL, _("Sprite for tag '%s' missing."),        \
                     qUtf8Printable(tag));                                   \
@@ -2474,9 +2355,9 @@ static void unload_sprite(struct tileset *t, const QString &tag_name)
 // Sets sprites.field to tag or (if tag isn't available) to alt
 #define SET_SPRITE_ALT(field, tag, alt)                                     \
   do {                                                                      \
-    t->sprites.field = load_sprite(t, tag, true, true);                     \
+    t->sprites.field = load_sprite(t, tag);                                 \
     if (!t->sprites.field) {                                                \
-      t->sprites.field = load_sprite(t, alt, true, true);                   \
+      t->sprites.field = load_sprite(t, alt);                               \
     }                                                                       \
     if (t->sprites.field == NULL) {                                         \
       tileset_error(t, LOG_FATAL,                                           \
@@ -2487,8 +2368,7 @@ static void unload_sprite(struct tileset *t, const QString &tag_name)
   } while (false)
 
 // Sets sprites.field to tag, or NULL if not available
-#define SET_SPRITE_OPT(field, tag)                                          \
-  t->sprites.field = load_sprite(t, tag, true, true)
+#define SET_SPRITE_OPT(field, tag) t->sprites.field = load_sprite(t, tag)
 
 #define SET_SPRITE_ALT_OPT(field, tag, alt)                                 \
   do {                                                                      \
@@ -2512,8 +2392,7 @@ void tileset_setup_specialist_type(struct tileset *t, Specialist_type_id id)
   for (j = 0; j < MAX_NUM_CITIZEN_SPRITES; j++) {
     // Try tag name + index number
     buffer = QStringLiteral("%1_%2").arg(tag, QString::number(j));
-    t->sprites.specialist[id].sprite[j] =
-        load_sprite(t, buffer, false, false);
+    t->sprites.specialist[id].sprite[j] = load_sprite(t, buffer);
 
     // Break if no more index specific sprites are defined
     if (!t->sprites.specialist[id].sprite[j]) {
@@ -2523,7 +2402,7 @@ void tileset_setup_specialist_type(struct tileset *t, Specialist_type_id id)
 
   if (j == 0) {
     // Try non-indexed
-    t->sprites.specialist[id].sprite[j] = load_sprite(t, tag, false, false);
+    t->sprites.specialist[id].sprite[j] = load_sprite(t, tag);
 
     if (t->sprites.specialist[id].sprite[j]) {
       j = 1;
@@ -2535,8 +2414,7 @@ void tileset_setup_specialist_type(struct tileset *t, Specialist_type_id id)
     for (j = 0; j < MAX_NUM_CITIZEN_SPRITES; j++) {
       // Try alt tag name + index number
       buffer = QStringLiteral("%1_%2").arg(graphic_alt, QString::number(j));
-      t->sprites.specialist[id].sprite[j] =
-          load_sprite(t, buffer, false, false);
+      t->sprites.specialist[id].sprite[j] = load_sprite(t, buffer);
 
       // Break if no more index specific sprites are defined
       if (!t->sprites.specialist[id].sprite[j]) {
@@ -2547,8 +2425,7 @@ void tileset_setup_specialist_type(struct tileset *t, Specialist_type_id id)
 
   if (j == 0) {
     // Try alt tag non-indexed
-    t->sprites.specialist[id].sprite[j] =
-        load_sprite(t, graphic_alt, false, false);
+    t->sprites.specialist[id].sprite[j] = load_sprite(t, graphic_alt);
 
     if (t->sprites.specialist[id].sprite[j]) {
       j = 1;
@@ -2578,7 +2455,7 @@ static void tileset_setup_citizen_types(struct tileset *t)
 
     for (j = 0; j < MAX_NUM_CITIZEN_SPRITES; j++) {
       buffer = QStringLiteral("citizen.%1_%2").arg(name, QString::number(j));
-      t->sprites.citizen[i].sprite[j] = load_sprite(t, buffer, false, false);
+      t->sprites.citizen[i].sprite[j] = load_sprite(t, buffer);
       if (!t->sprites.citizen[i].sprite[j]) {
         break;
       }
@@ -2649,7 +2526,7 @@ load_city_thresholds_sprites(struct tileset *t, QString tag, char *graphic,
   for (size = 0; size < MAX_CITY_SIZE; size++) {
     buffer = QStringLiteral("%1_%2_%3")
                  .arg(gfx_in_use, tag, QString::number(size));
-    if ((sprite = load_sprite(t, buffer, true, true))) {
+    if ((sprite = load_sprite(t, buffer))) {
       num_thresholds++;
 
       *thresholds = static_cast<city_style_threshold *>(
@@ -2733,15 +2610,15 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
 
   fc_assert_ret(t->sprite_hash != NULL);
 
-  SET_SPRITE_UNSCALED(treaty_thumb[0], "treaty.disagree_thumb_down");
-  SET_SPRITE_UNSCALED(treaty_thumb[1], "treaty.agree_thumb_up");
+  SET_SPRITE(treaty_thumb[0], "treaty.disagree_thumb_down");
+  SET_SPRITE(treaty_thumb[1], "treaty.agree_thumb_up");
 
   for (j = 0; j < INDICATOR_COUNT; j++) {
     const char *names[] = {"science_bulb", "warming_sun", "cooling_flake"};
 
     for (i = 0; i < NUM_TILES_PROGRESS; i++) {
       buffer = QStringLiteral("s.%1_%2").arg(names[j], QString::number(j));
-      SET_SPRITE_UNSCALED(indicator[j][i], buffer);
+      SET_SPRITE(indicator[j][i], buffer);
     }
   }
 
@@ -2753,16 +2630,16 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   }
 
   if (tileset_is_isometric(tileset)) {
-    SET_SPRITE_NOTSMOOTH(mask.tile, "mask.tile");
+    SET_SPRITE(mask.tile, "mask.tile");
   } else {
     SET_SPRITE(mask.tile, "mask.tile");
   }
   SET_SPRITE(mask.worked_tile, "mask.worked_tile");
   SET_SPRITE(mask.unworked_tile, "mask.unworked_tile");
 
-  SET_SPRITE_UNSCALED(tax_luxury, "s.tax_luxury");
-  SET_SPRITE_UNSCALED(tax_science, "s.tax_science");
-  SET_SPRITE_UNSCALED(tax_gold, "s.tax_gold");
+  SET_SPRITE(tax_luxury, "s.tax_luxury");
+  SET_SPRITE(tax_science, "s.tax_science");
+  SET_SPRITE(tax_gold, "s.tax_gold");
 
   tileset_setup_citizen_types(t);
 
@@ -2814,7 +2691,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     QPixmap *sprite;
 
     buffer = QStringLiteral("explode.unit_%1").arg(QString::number(i));
-    sprite = load_sprite(t, buffer, true, true);
+    sprite = load_sprite(t, buffer);
     if (!sprite) {
       break;
     }
@@ -2850,7 +2727,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
 
   for (i = 0; i <= 100; i++) {
     buffer = QStringLiteral("unit.hp_%1").arg(QString::number(i));
-    auto sprite = load_sprite(t, buffer, true, true);
+    auto sprite = load_sprite(t, buffer);
     if (sprite) {
       t->sprites.unit.hp_bar.push_back(sprite);
     }
@@ -2860,12 +2737,12 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     /* Veteran level sprites are optional.  For instance "green" units
      * usually have no special graphic. */
     buffer = QStringLiteral("unit.vet_%1").arg(QString::number(i));
-    t->sprites.unit.vet_lev[i] = load_sprite(t, buffer, true, true);
+    t->sprites.unit.vet_lev[i] = load_sprite(t, buffer);
   }
 
   for (i = 0;; i++) {
     buffer = QStringLiteral("unit.select%1").arg(QString::number(i));
-    auto sprite = load_sprite(t, buffer, true, true);
+    auto sprite = load_sprite(t, buffer);
     if (!sprite) {
       break;
     }
@@ -2882,7 +2759,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     QPixmap *sprite;
 
     buffer = QStringLiteral("citybar.occupancy_%1").arg(QString::number(i));
-    sprite = load_sprite(t, buffer, true, true);
+    sprite = load_sprite(t, buffer);
     if (!sprite) {
       break;
     }
@@ -2956,7 +2833,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   }
   for (int i = 0;; ++i) {
     buffer = QStringLiteral("city.t_food_%1").arg(QString::number(i));
-    if (auto sprite = load_sprite(t, buffer, true, true)) {
+    if (auto sprite = load_sprite(t, buffer)) {
       t->sprites.city.tile_foodnum.push_back(*sprite);
     } else {
       break;
@@ -2964,7 +2841,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   }
   for (int i = 0;; ++i) {
     buffer = QStringLiteral("city.t_shields_%1").arg(QString::number(i));
-    if (auto sprite = load_sprite(t, buffer, true, true)) {
+    if (auto sprite = load_sprite(t, buffer)) {
       t->sprites.city.tile_shieldnum.push_back(*sprite);
     } else {
       break;
@@ -2972,7 +2849,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   }
   for (int i = 0;; ++i) {
     buffer = QStringLiteral("city.t_trade_%1").arg(QString::number(i));
-    if (auto sprite = load_sprite(t, buffer, true, true)) {
+    if (auto sprite = load_sprite(t, buffer)) {
       t->sprites.city.tile_tradenum.push_back(*sprite);
     } else {
       break;
@@ -2983,13 +2860,13 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   // Must have at least one upkeep sprite per output type (and unhappy)
   // The rest are optional.
   buffer = QStringLiteral("upkeep.unhappy");
-  t->sprites.upkeep.unhappy.push_back(load_sprite(t, buffer, true, true));
+  t->sprites.upkeep.unhappy.push_back(load_sprite(t, buffer));
   if (!t->sprites.upkeep.unhappy.back()) {
     tileset_error(t, LOG_FATAL, "Missing sprite upkeep.unhappy");
   }
   for (i = 1;; i++) {
     buffer = QStringLiteral("upkeep.unhappy%1").arg(QString::number(i));
-    auto sprite = load_sprite(t, buffer, true, true);
+    auto sprite = load_sprite(t, buffer);
     if (!sprite) {
       break;
     }
@@ -2999,7 +2876,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   {
     buffer = QStringLiteral("upkeep.%1")
                  .arg(get_output_identifier(static_cast<Output_type_id>(o)));
-    auto sprite = load_sprite(t, buffer, true, true);
+    auto sprite = load_sprite(t, buffer);
     if (sprite) {
       t->sprites.upkeep.output[o].push_back(sprite);
     }
@@ -3008,7 +2885,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
           QStringLiteral("upkeep.%1%2")
               .arg(get_output_identifier(static_cast<Output_type_id>(o)),
                    QString::number(i + 1));
-      auto sprite = load_sprite(t, buffer, true, true);
+      auto sprite = load_sprite(t, buffer);
       if (!sprite) {
         break;
       }
@@ -3026,14 +2903,14 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   SET_SPRITE_OPT(path.s[GTS_TURN_STEP].specific, "path.step");
   SET_SPRITE(path.waypoint, "path.waypoint");
 
-  SET_SPRITE_NOTSMOOTH(tx.fog, "tx.fog");
+  SET_SPRITE(tx.fog, "tx.fog");
 
   sprite_vector_init(&t->sprites.colors.overlays);
   for (i = 0;; i++) {
     QPixmap *sprite;
 
     buffer = QStringLiteral("colors.overlay_%1").arg(QString::number(i));
-    sprite = load_sprite(t, buffer, true, true);
+    sprite = load_sprite(t, buffer);
     if (!sprite) {
       break;
     }
@@ -3054,12 +2931,11 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     QPixmap *worked, *unworked;
 
     color = *sprite_vector_get(&t->sprites.colors.overlays, i);
-    color_mask = crop_sprite(color, 0, 0, W, H, t->sprites.mask.tile, 0, 0,
-                             1.0f, false);
+    color_mask = crop_sprite(color, 0, 0, W, H, t->sprites.mask.tile, 0, 0);
     worked = crop_sprite(color_mask, 0, 0, W, H, t->sprites.mask.worked_tile,
-                         0, 0, 1.0f, false);
+                         0, 0);
     unworked = crop_sprite(color_mask, 0, 0, W, H,
-                           t->sprites.mask.unworked_tile, 0, 0, 1.0f, false);
+                           t->sprites.mask.unworked_tile, 0, 0);
     free_sprite(color_mask);
     t->sprites.city.worked_tile_overlay.p[i] = worked;
     t->sprites.city.unworked_tile_overlay.p[i] = unworked;
@@ -3106,8 +2982,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     break;
   case freeciv::DARKNESS_ISORECT: {
     // Isometric: take a single tx.darkness tile and split it into 4.
-    QPixmap *darkness =
-        load_sprite(t, QStringLiteral("tx.darkness"), true, false);
+    QPixmap *darkness = load_sprite(t, QStringLiteral("tx.darkness"));
     const int ntw = t->normal_tile_width, nth = t->normal_tile_height;
     int offsets[4][2] = {
         {ntw / 2, 0}, {0, nth / 2}, {ntw / 2, nth / 2}, {0, 0}};
@@ -3116,9 +2991,9 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
       tileset_error(t, LOG_FATAL, _("Sprite tx.darkness missing."));
     }
     for (i = 0; i < 4; i++) {
-      t->darkness_layer->set_sprite(
-          i, *crop_sprite(darkness, offsets[i][0], offsets[i][1], ntw / 2,
-                          nth / 2, NULL, 0, 0, 1.0f, false));
+      t->darkness_layer->set_sprite(i, *crop_sprite(darkness, offsets[i][0],
+                                                    offsets[i][1], ntw / 2,
+                                                    nth / 2, NULL, 0, 0));
     }
   } break;
   case freeciv::DARKNESS_CARD_SINGLE:
@@ -3128,7 +3003,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
       buffer =
           QStringLiteral("tx.darkness_%1").arg(dir_get_tileset_name(dir));
 
-      const auto sprite = load_sprite(t, buffer, true, false);
+      const auto sprite = load_sprite(t, buffer);
       if (sprite) {
         t->darkness_layer->set_sprite(i, *sprite);
       } else {
@@ -3142,7 +3017,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
       buffer =
           QStringLiteral("tx.darkness_%1").arg(cardinal_index_str(t, i));
 
-      const auto sprite = load_sprite(t, buffer, true, false);
+      const auto sprite = load_sprite(t, buffer);
       if (sprite) {
         t->darkness_layer->set_sprite(i, *sprite);
       } else {
@@ -3168,7 +3043,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
       }
       fc_assert(k == 0);
 
-      t->sprites.tx.fullfog[i] = load_sprite(t, buf, true, false);
+      t->sprites.tx.fullfog[i] = load_sprite(t, buf);
     }
     break;
   };
@@ -3191,7 +3066,7 @@ static bool load_river_sprites(struct tileset *t,
   for (i = 0; i < t->num_index_cardinal; i++) {
     buffer =
         QStringLiteral("%1_s_%2").arg(tag_pfx, cardinal_index_str(t, i));
-    store->spec[i] = load_sprite(t, buffer, true, true);
+    store->spec[i] = load_sprite(t, buffer);
     if (store->spec[i] == NULL) {
       return false;
     }
@@ -3201,7 +3076,7 @@ static bool load_river_sprites(struct tileset *t,
     buffer =
         QStringLiteral("%1_outlet_%2")
             .arg(tag_pfx, dir_get_tileset_name(t->cardinal_tileset_dirs[i]));
-    store->outlet[i] = load_sprite(t, buffer, true, true);
+    store->outlet[i] = load_sprite(t, buffer);
     if (store->outlet[i] == NULL) {
       qCritical("Missing \"%s\" for \"%s\".", qUtf8Printable(buffer),
                 tag_pfx);
@@ -3257,12 +3132,12 @@ QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
                         "sprite_hash setup",
                         what, name);
 
-  sp = load_sprite(t, tag, scale, true);
+  sp = load_sprite(t, tag);
   if (sp) {
     return sp;
   }
 
-  sp = load_sprite(t, alt, scale, true);
+  sp = load_sprite(t, alt);
   if (sp) {
     qDebug("Using alternate graphic \"%s\" "
            "(instead of \"%s\") for %s \"%s\".",
@@ -3313,7 +3188,7 @@ static bool tileset_setup_unit_direction(struct tileset *t, int uidx,
   /* We don't use _alt graphics here, as that could lead to loading
    * real icon gfx, but alternative orientation gfx. Tileset author
    * probably meant icon gfx to be used as fallback for all orientations */
-  t->sprites.units.facing[uidx][dir] = load_sprite(t, buf, true, true);
+  t->sprites.units.facing[uidx][dir] = load_sprite(t, buf);
 
   return t->sprites.units.facing[uidx][dir] != NULL;
 }
@@ -3326,7 +3201,7 @@ static bool tileset_setup_unit_type_from_tag(struct tileset *t, int uidx,
 {
   bool has_icon, facing_sprites = true;
 
-  t->sprites.units.icon[uidx] = load_sprite(t, tag, true, true);
+  t->sprites.units.icon[uidx] = load_sprite(t, tag);
   has_icon = t->sprites.units.icon[uidx] != NULL;
 
 #define LOAD_FACING_SPRITE(dir)                                             \
@@ -3479,11 +3354,9 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
        * irrigation graphics. */
       for (i = 0; i < t->num_index_cardinal; i++) {
         buffer = QStringLiteral("%1_%2").arg(tag, cardinal_index_str(t, i));
-        t->sprites.extras[id].u.cardinals[i] =
-            load_sprite(t, buffer, true, true);
+        t->sprites.extras[id].u.cardinals[i] = load_sprite(t, buffer);
         if (!t->sprites.extras[id].u.cardinals[i]) {
-          t->sprites.extras[id].u.cardinals[i] =
-              load_sprite(t, tag, true, true);
+          t->sprites.extras[id].u.cardinals[i] = load_sprite(t, tag);
         }
         if (!t->sprites.extras[id].u.cardinals[i]) {
           tileset_error(t, LOG_FATAL,
@@ -3501,15 +3374,12 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
   if (!fc_strcasecmp(pextra->activity_gfx, "none")) {
     t->sprites.extras[id].activity = NULL;
   } else {
-    t->sprites.extras[id].activity =
-        load_sprite(t, pextra->activity_gfx, true, true);
+    t->sprites.extras[id].activity = load_sprite(t, pextra->activity_gfx);
     if (t->sprites.extras[id].activity == NULL) {
-      t->sprites.extras[id].activity =
-          load_sprite(t, pextra->act_gfx_alt, true, true);
+      t->sprites.extras[id].activity = load_sprite(t, pextra->act_gfx_alt);
     }
     if (t->sprites.extras[id].activity == NULL) {
-      t->sprites.extras[id].activity =
-          load_sprite(t, pextra->act_gfx_alt2, true, true);
+      t->sprites.extras[id].activity = load_sprite(t, pextra->act_gfx_alt2);
     }
     if (t->sprites.extras[id].activity == NULL) {
       tileset_error(t, LOG_FATAL,
@@ -3523,11 +3393,9 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
   if (!fc_strcasecmp(pextra->rmact_gfx, "none")) {
     t->sprites.extras[id].rmact = NULL;
   } else {
-    t->sprites.extras[id].rmact =
-        load_sprite(t, pextra->rmact_gfx, true, true);
+    t->sprites.extras[id].rmact = load_sprite(t, pextra->rmact_gfx);
     if (t->sprites.extras[id].rmact == NULL) {
-      t->sprites.extras[id].rmact =
-          load_sprite(t, pextra->rmact_gfx_alt, true, true);
+      t->sprites.extras[id].rmact = load_sprite(t, pextra->rmact_gfx_alt);
       if (t->sprites.extras[id].rmact == NULL) {
         tileset_error(t, LOG_FATAL,
                       _("Missing %s removal activity sprite for tags \"%s\" "
@@ -3706,11 +3574,11 @@ void tileset_setup_nation_flag(struct tileset *t, struct nation_type *nation)
 
   for (i = 0; tags[i] && !flag; i++) {
     buf = QStringLiteral("f.%1").arg(tags[i]);
-    flag = load_sprite(t, buf, true, true);
+    flag = load_sprite(t, buf);
   }
   for (i = 0; tags[i] && !shield; i++) {
     buf = QStringLiteral("f.shield.%1").arg(tags[i]);
-    shield = load_sprite(t, buf, true, true);
+    shield = load_sprite(t, buf);
   }
   if (!flag || !shield) {
     // Should never get here because of the f.unknown fallback.
@@ -5875,10 +5743,7 @@ void tileset_player_init(struct tileset *t, struct player *pplayer)
   if (player_has_color(t, pplayer)) {
     c = *get_player_color(t, pplayer);
   }
-  color = tileset_scale(t) == 1.0f
-              ? create_sprite(128, 64, &c)
-              : create_sprite(tileset_full_tile_width(t),
-                              tileset_full_tile_height(t), &c);
+  color = create_sprite(128, 64, &c);
 
   for (i = 0; i < EDGE_COUNT; i++) {
     for (j = 0; j < 2; j++) {
@@ -5887,7 +5752,7 @@ void tileset_player_init(struct tileset *t, struct player *pplayer)
       if (color && t->sprites.grid.borders[i][j]) {
         s = crop_sprite(color, 0, 0, t->normal_tile_width,
                         t->normal_tile_height, t->sprites.grid.borders[i][j],
-                        0, 0, 1.0f, false);
+                        0, 0);
       } else {
         s = t->sprites.grid.borders[i][j];
       }

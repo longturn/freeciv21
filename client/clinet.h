@@ -22,5 +22,4 @@ void make_connection(QTcpSocket *sock, const QString &username);
 void input_from_server(QTcpSocket *sock);
 void disconnect_from_server();
 
-double try_to_autoconnect(const QUrl &url);
-void start_autoconnecting_to_server(const QUrl &url);
+void try_to_autoconnect(const QUrl &url);

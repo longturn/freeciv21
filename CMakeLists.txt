@@ -99,12 +99,17 @@ install(
   COMPONENT freeciv21)
 
 # Use Auto Revision variables to convert some templates to real files at build time
-configure_file(${CMAKE_SOURCE_DIR}/utility/fc_version.h.in
-               utility/fc_version.h
-               @ONLY NEWLINE_STYLE UNIX)
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/utility/fc_version.h")
+  configure_file(${CMAKE_SOURCE_DIR}/utility/fc_version.h.in
+                utility/fc_version.h
+                @ONLY NEWLINE_STYLE UNIX)
+endif()
+
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/fc_version")
 configure_file(${CMAKE_SOURCE_DIR}/fc_version.in
-               fc_version
-               @ONLY NEWLINE_STYLE UNIX)
+                fc_version
+                @ONLY NEWLINE_STYLE UNIX)
+endif()
 
 # Installing on Win32 et al platforms requires some custom configs
 if(WIN32 OR MSYS OR MINGW)

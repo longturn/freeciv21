@@ -11,7 +11,7 @@
 
 [datafile]
 description="Experimental web-client effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 web-compatible +HP_Regen_Min"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 web-compatible +HP_Regen_Min +Bombard_Limit_Pct"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -117,6 +117,10 @@ reqs    =
 [effect_upkeep_tech_free]
 type    = "Tech_Upkeep_Free"
 value   = 3
+
+[effect_bomb_limit_base]
+type    = "Bombard_Limit_Pct"
+value   = 1
 
 ; Basic HP regen.  Not for helis, as they have hp_loss_pct=10
 [effect_hp_regen_base]
