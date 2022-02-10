@@ -247,7 +247,6 @@ private slots:
   void slot_unit_explore();
   void slot_unit_goto();
   void slot_airlift();
-  void slot_return_to_city();
   void slot_patrol();
   void slot_unsentry();
   void slot_load();

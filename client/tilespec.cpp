@@ -4478,8 +4478,8 @@ static void fill_goto_sprite_array(const struct tileset *t,
 
   if (goto_tile_state(ptile, &state, &length, &waypoint)) {
     if (length >= 0) {
-      fc_assert(state >= 0);
-      fc_assert(state < ARRAY_SIZE(t->sprites.path.s));
+      fc_assert_ret(state >= 0);
+      fc_assert_ret(state < ARRAY_SIZE(t->sprites.path.s));
 
       sprite = t->sprites.path.s[state].specific;
       if (sprite != NULL) {

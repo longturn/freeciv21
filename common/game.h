@@ -141,7 +141,6 @@ struct civ_game {
       int incite_unit_factor;
       int init_vis_radius_sq;
       int kick_time;
-      int killunhomed; // slowly killing unhomed units
       int maxconnectionsperhost;
       int max_players;
       char nationset[MAX_LEN_NAME];

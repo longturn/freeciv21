@@ -44,6 +44,7 @@
 #include "research.h"
 #include "terrain.h"
 #include "unit.h"
+#include "unit_utils.h"
 #include "unitlist.h"
 #include "unittype.h"
 
@@ -130,7 +131,6 @@ struct autoattack_prob {
 
 #define autoattack_prob_list_iterate_safe_end LIST_ITERATE_END
 
-static void unit_restore_hitpoints(struct unit *punit);
 static void unit_restore_movepoints(struct player *pplayer,
                                     struct unit *punit);
 static void update_unit_activity(struct unit *punit);
@@ -141,8 +141,6 @@ static void wakeup_neighbor_sentries(struct unit *punit);
 static void do_upgrade_effects(struct player *pplayer);
 
 static bool maybe_cancel_patrol_due_to_enemy(struct unit *punit);
-static int hp_gain_coord(struct unit *punit);
-
 static bool maybe_become_veteran_real(struct unit *punit, bool settler);
 
 static void unit_transport_load_tp_status(struct unit *punit,
@@ -466,7 +464,7 @@ void player_restore_units(struct player *pplayer)
        * units get 0 hp somehow, catch them too.  --dwp  */
       /* if 'game.server.killunhomed' is activated unhomed units are slowly
        * killed; notify player here */
-      if (!punit->homecity && 0 < game.server.killunhomed) {
+      if (!punit->homecity && 0 < game.info.killunhomed) {
         notify_player(pplayer, unit_tile(punit), E_UNIT_LOST_MISC,
                       ftc_server,
                       _("Your %s has run out of hit points "
@@ -597,63 +595,6 @@ void player_restore_units(struct player *pplayer)
 }
 
 /**
-   add hitpoints to the unit, hp_gain_coord returns the amount to add
-   united nations will speed up the process by 2 hp's / turn, means
- helicopters will actually not lose hp's every turn if player have that
- wonder. Units which have moved don't gain hp, except the United Nations and
-   helicopter effects still occur.
-
-   If 'game.server.killunhomed' is greater than 0, unhomed units lose
-   'game.server.killunhomed' hitpoints each turn, killing the unit at the
- end.
- */
-static void unit_restore_hitpoints(struct unit *punit)
-{
-  bool was_lower;
-  int save_hp;
-  struct unit_class *pclass = unit_class_get(punit);
-  struct city *pcity = tile_city(unit_tile(punit));
-
-  was_lower = (punit->hp < unit_type_get(punit)->hp);
-  save_hp = punit->hp;
-
-  if (!punit->moved) {
-    punit->hp += hp_gain_coord(punit);
-  }
-
-  // Bonus recovery HP (traditionally from the United Nations)
-  punit->hp += get_unit_bonus(punit, EFT_UNIT_RECOVER);
-
-  if (!punit->homecity && 0 < game.server.killunhomed
-      && !unit_has_type_flag(punit, UTYF_GAMELOSS)) {
-    // Hit point loss of units without homecity; at least 1 hp!
-    // Gameloss units are immune to this effect.
-    int hp_loss =
-        MAX(unit_type_get(punit)->hp * game.server.killunhomed / 100, 1);
-    punit->hp = MIN(punit->hp - hp_loss, save_hp - 1);
-  }
-
-  if (!pcity && !tile_has_native_base(unit_tile(punit), unit_type_get(punit))
-      && !unit_transported(punit)) {
-    punit->hp -= unit_type_get(punit)->hp * pclass->hp_loss_pct / 100;
-  }
-
-  if (punit->hp >= unit_type_get(punit)->hp) {
-    punit->hp = unit_type_get(punit)->hp;
-    if (was_lower && punit->activity == ACTIVITY_SENTRY) {
-      set_unit_activity(punit, ACTIVITY_IDLE);
-    }
-  }
-
-  if (punit->hp < 0) {
-    punit->hp = 0;
-  }
-
-  punit->moved = false;
-  punit->paradropped = false;
-}
-
-/**
    Move points are trivial, only modifiers to the base value is if it's
    sea units and the player has certain wonders/techs. Then add veteran
    bonus, if any.
@@ -706,29 +647,6 @@ void finalize_unit_phase_beginning(struct player *pplayer)
     send_unit_info(NULL, punit);
   }
   unit_list_iterate_end;
-}
-
-/**
-   returns how many hp's a unit will gain on this square
-   depends on whether or not it's inside city or fortress.
-   barracks will regen landunits completely
-   airports will regen airunits  completely
-   ports    will regen navalunits completely
-   fortify will add a little extra.
- */
-static int hp_gain_coord(struct unit *punit)
-{
-  int bonus, hp;
-  const int base = unit_type_get(punit)->hp;
-
-  // Includes barracks (100%), fortress (25%), etc.
-  bonus = get_unit_bonus(punit, EFT_HP_REGEN);
-  bonus = MAX(bonus, get_unit_bonus(punit, EFT_HP_REGEN_MIN));
-  if (bonus <= 0)
-    return 0;
-  hp = (base - 1) * bonus / 100 + 1; // rounds up
-
-  return MAX(hp, 0);
 }
 
 /**
@@ -1507,24 +1425,6 @@ void give_allied_visibility(struct player *pplayer, struct player *aplayer)
     }
   }
   unit_list_iterate_end;
-}
-
-/**
-   Is unit being refueled in its current position
- */
-bool is_unit_being_refueled(const struct unit *punit)
-{
-  if (unit_transported(punit)        // Carrier
-      || tile_city(unit_tile(punit)) // City
-      || tile_has_refuel_extra(unit_tile(punit),
-                               unit_type_get(punit))) { // Airbase
-    return true;
-  }
-  if (unit_has_type_flag(punit, UTYF_COAST)) {
-    return is_safe_ocean(&(wld.map), unit_tile(punit));
-  }
-
-  return false;
 }
 
 /**

@@ -22,6 +22,9 @@ add_custom_command(
 add_library(
   common_gen
   STATIC
+  # The generated code calls these directly
+  capstr.cpp
+  # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.cpp
 )
 
@@ -43,7 +46,6 @@ add_library(
   base.cpp
   borders.cpp
   calendar.cpp
-  capstr.cpp
   citizens.cpp
   city.cpp
   clientutils.cpp
@@ -66,6 +68,8 @@ add_library(
   movement.cpp
   multipliers.cpp
   nation.cpp
+  path.cpp
+  path_finder.cpp
   player.cpp
   reqtext.cpp
   requirements.cpp
@@ -82,6 +86,7 @@ add_library(
   tile.cpp
   traderoutes.cpp
   unit.cpp
+  unit_utils.cpp
   unitlist.cpp
   unittype.cpp
   version.cpp

@@ -10,6 +10,8 @@
 **************************************************************************/
 #pragma once
 
+#include "fc_types.h"
+
 struct pf_path;
 struct tile;
 struct unit;
@@ -54,7 +56,6 @@ void send_patrol_route();
 void send_goto_route();
 void send_connect_route(enum unit_activity activity, struct extra_type *tgt);
 
-struct pf_path *path_to_nearest_allied_city(struct unit *punit);
 struct tile *tile_before_end_path(struct unit *punit, struct tile *ptile);
 
 bool can_unit_move_now(const struct unit *punit);

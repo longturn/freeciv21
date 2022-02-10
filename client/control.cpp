@@ -28,6 +28,8 @@
 #include "game.h"
 #include "map.h"
 #include "movement.h"
+#include "path.h"
+#include "path_finder.h"
 #include "unitlist.h"
 
 /* common/aicore */
@@ -1533,33 +1535,51 @@ void request_unit_airlift(struct unit *punit, struct city *pcity)
    Return-and-recover for a particular unit.  This sets the unit to GOTO
    the nearest city.
  */
-void request_unit_return(struct unit *punit)
+void request_units_return()
 {
-  struct pf_path *path = path_to_nearest_allied_city(punit);
+  unit_list_iterate(get_units_in_focus(), unit)
+  {
+    // Find a path to the closest city
+    auto finder = freeciv::path_finder(unit);
+    if (auto path = finder.find_path(
+            freeciv::allied_city_destination(unit->owner))) {
+      auto steps = path->steps();
+      int hp = steps.empty() ? unit->hp : steps.back().health;
+      // Recover full health if needed
+      if (hp < unit_type_get(unit)->hp) {
+        auto sentry = steps.back();
+        sentry.order.order = ORDER_ACTIVITY;
+        sentry.order.dir = DIR8_ORIGIN;
+        sentry.order.activity = ACTIVITY_SENTRY;
+        sentry.order.target = NO_TARGET;
+        sentry.order.sub_target = NO_TARGET;
+        sentry.order.action = ACTION_NONE;
+        steps.push_back(sentry);
+      }
 
-  if (path) {
-    int turns = pf_path_last_position(path)->turn;
-    int max_hp = unit_type_get(punit)->hp;
+      // Make a packet and send it
+      if (!steps.empty()) {
+        auto packet = packet_unit_orders{};
+        packet.unit_id = unit->id;
+        packet.dest_tile = steps.back().location->index;
+        packet.src_tile = unit->tile->index;
+        packet.repeat = false;
+        packet.vigilant = false;
 
-    if (punit->hp
-            + turns
-                  * (get_unit_bonus(punit, EFT_UNIT_RECOVER)
-                     - (max_hp * unit_class_get(punit)->hp_loss_pct / 100))
-        < max_hp) {
-      struct unit_order order;
+        fc_assert_ret(steps.size() < MAX_LEN_ROUTE);
 
-      order.order = ORDER_ACTIVITY;
-      order.dir = DIR8_ORIGIN;
-      order.activity = ACTIVITY_SENTRY;
-      order.target = NO_TARGET;
-      order.sub_target = NO_TARGET;
-      order.action = ACTION_NONE;
-      send_goto_path(punit, path, &order);
-    } else {
-      send_goto_path(punit, path, NULL);
+        packet.length = steps.size();
+        for (std::size_t i = 0; i < steps.size(); ++i) {
+          packet.orders[i] = steps[i].order;
+        }
+
+        // Send
+        request_unit_ssa_set(unit, SSA_NONE);
+        send_packet_unit_orders(&client.conn, &packet);
+      }
     }
-    pf_path_destroy(path);
   }
+  unit_list_iterate_end;
 }
 
 /**

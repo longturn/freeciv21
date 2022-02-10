@@ -4499,6 +4499,7 @@ bool unit_move_handling(struct unit *punit, struct tile *pdesttile,
         // A legal action with an extra sub target is a legal action
         || action_tgt_tile_extra(punit, pdesttile, can_not_move)
         // Tile target actions with extra sub targets are handled above
+        // Includes actions vs unit stacks
         || action_tgt_tile(punit, pdesttile, NULL, can_not_move);
 
     if (one_action_may_be_legal || can_not_move) {

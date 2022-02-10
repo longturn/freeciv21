@@ -780,7 +780,7 @@ void mr_menu::setup_menus()
   act = menu->addAction(_("Go to Nearest City"));
   act->setShortcut(QKeySequence(tr("shift+g")));
   menu_list.insert(GOTO_CITY, act);
-  connect(act, &QAction::triggered, this, &mr_menu::slot_return_to_city);
+  connect(act, &QAction::triggered, this, &request_units_return);
   act = menu->addAction(_("Go to/Airlift to City..."));
   act->setShortcut(shortcut2key(SC_GOTOAIRLIFT));
   menu_list.insert(AIRLIFT, act);
@@ -2419,18 +2419,6 @@ void mr_menu::slot_load()
    Action "UNIT PATROL"
  */
 void mr_menu::slot_patrol() { key_unit_patrol(); }
-
-/**
-   Action "RETURN TO NEAREST CITY"
- */
-void mr_menu::slot_return_to_city()
-{
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
-    request_unit_return(punit);
-  }
-  unit_list_iterate_end;
-}
 
 /**
    Action "GOTO/AIRLIFT TO CITY"

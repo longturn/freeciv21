@@ -34,6 +34,8 @@
 
 #include "packets.h"
 
+#include <QRegularExpression>
+
 #include <zlib.h>
 /*
  * Value for the 16bit size to indicate a jumbo packet
@@ -798,7 +800,7 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
   fc_assert(strlen(capability) < sizeof(functional_capability));
 
   // Get functional network capability string.
-  tokens = QString(capability).split(QStringLiteral(" \t\n,"));
+  tokens = QString(capability).split(QRegularExpression("[ \t\n,]+"));
   tokens.sort();
 
   for (const auto &str : qAsConst(tokens)) {

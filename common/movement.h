@@ -115,6 +115,11 @@ bool can_unit_type_transport(const struct unit_type *transporter,
 bool unit_can_load(const struct unit *punit);
 bool unit_could_load_at(const struct unit *punit, const struct tile *ptile);
 
+bool is_unit_being_refueled(const struct unit *punit);
+bool is_airunit_refuel_point(const struct tile *ptile,
+                             const struct player *pplayer,
+                             const struct unit *punit);
+
 void init_move_fragments();
 const char *move_points_text_full(int mp, bool reduce, const char *prefix,
                                   const char *none, bool align);
