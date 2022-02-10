@@ -37,6 +37,8 @@
 #include "sidebar.h"
 #include "sprite.h"
 
+#include <cmath>
+
 extern void pixmap_copy(QPixmap *dest, QPixmap *src, int src_x, int src_y,
                         int dest_x, int dest_y, int width, int height);
 static void reduce_mod(int &val, int &mod);
@@ -66,8 +68,7 @@ sidebarWidget::sidebarWidget(QPixmap *pix, const QString &label,
   if (def_pixmap == nullptr) {
     def_pixmap = new QPixmap(5, 5);
   }
-  scaled_pixmap = new QPixmap;
-  final_pixmap = new QPixmap;
+
   sfont = fcFont::instance()->getFont(fonts::notify_label);
   setContextMenuPolicy(Qt::CustomContextMenu);
   timer = new QTimer;
@@ -86,9 +87,7 @@ sidebarWidget::sidebarWidget(QPixmap *pix, const QString &label,
  */
 sidebarWidget::~sidebarWidget()
 {
-  NFCN_FREE(scaled_pixmap);
   NFCN_FREE(def_pixmap);
-  NFCN_FREE(final_pixmap);
 
   delete timer;
 }
@@ -114,11 +113,6 @@ void sidebarWidget::setTooltip(const QString &tooltip)
 {
   setToolTip(tooltip);
 }
-
-/**
-   Returns scaled (not default) pixmap for sidewidget
- */
-QPixmap *sidebarWidget::get_pixmap() { return scaled_pixmap; }
 
 /**
  * Reimplemented virtual method.
@@ -148,38 +142,135 @@ bool sidebarWidget::hasHeightForWidth() const { return true; }
 void sidebarWidget::setLabel(const QString &str) { desc = str; }
 
 /**
-   Resizes default_pixmap to scaled_pixmap to fit current width,
-   leaves default_pixmap unchanged
- */
-void sidebarWidget::resizePixmap(int width, int height)
-{
-  if (def_pixmap && scaled_pixmap) {
-    *scaled_pixmap =
-        def_pixmap->scaledToWidth(width, Qt::SmoothTransformation);
-  }
-}
-
-/**
    Paint event for sidewidget
  */
 void sidebarWidget::paintEvent(QPaintEvent *event)
 {
-  QPainter painter;
+  int w, h, pos, i;
+  QPainter p;
+  QPen pen;
+  bool current = false;
 
-  painter.begin(this);
-  paint(&painter, event);
-  painter.end();
-}
-
-/**
-   Paints final pixmap on screeen
- */
-void sidebarWidget::paint(QPainter *painter, QPaintEvent *event)
-{
-  updateFinalPixmap();
-  if (final_pixmap) {
-    painter->drawPixmap(event->rect(), *final_pixmap, event->rect());
+  i = queen()->gimmeIndexOf(page);
+  if (i == queen()->game_tab_widget->currentIndex()) {
+    current = true;
   }
+
+  p.begin(this);
+  p.setFont(sfont);
+  pen.setColor(QColor(232, 255, 0));
+  p.setPen(pen);
+
+  const auto rect = QRectF(0, 0, width(), height());
+
+  if (standard == SW_TAX && !client_is_global_observer()) {
+    pos = 0;
+    int d, modulo;
+    auto sprite = get_tax_sprite(tileset, O_GOLD);
+    if (sprite == nullptr) {
+      return;
+    }
+    w = width() / 10.;
+    modulo = std::fmod(qreal(width()), 10);
+    h = sprite->height();
+    reduce_mod(modulo, pos);
+    if (client.conn.playing == nullptr) {
+      return;
+    }
+    for (d = 0; d < client.conn.playing->economic.tax / 10; ++d) {
+      p.drawPixmap(pos, 5, sprite->scaled(w, h), 0, 0, w, h);
+      pos = pos + w;
+      reduce_mod(modulo, pos);
+    }
+
+    sprite = get_tax_sprite(tileset, O_SCIENCE);
+
+    for (; d < (client.conn.playing->economic.tax
+                + client.conn.playing->economic.science)
+                   / 10;
+         ++d) {
+      p.drawPixmap(pos, 5, sprite->scaled(w, h), 0, 0, w, h);
+      pos = pos + w;
+      reduce_mod(modulo, pos);
+    }
+
+    sprite = get_tax_sprite(tileset, O_LUXURY);
+
+    for (; d < 10; ++d) {
+      p.drawPixmap(pos, 5, sprite->scaled(w, h), 0, 0, w, h);
+      pos = pos + w;
+      reduce_mod(modulo, pos);
+    }
+  } else if (standard == SW_INDICATORS) {
+    auto sprite = client_research_sprite();
+    w = sprite->width() / sprite->devicePixelRatioF();
+    pos = width() / 2 - 2 * w;
+    p.drawPixmap(pos, 5, *sprite);
+    pos = pos + w;
+    sprite = client_warming_sprite();
+    p.drawPixmap(pos, 5, *sprite);
+    pos = pos + w;
+    sprite = client_cooling_sprite();
+    p.drawPixmap(pos, 5, *sprite);
+    pos = pos + w;
+    sprite = client_government_sprite();
+    p.drawPixmap(pos, 5, *sprite);
+
+  } else {
+    auto pix_rect = QRectF(def_pixmap->rect());
+
+    // Shrink to make it fit
+    if (pix_rect.width() > width()) {
+      pix_rect.setSize(pix_rect.size() * width() / pix_rect.width());
+    }
+    if (pix_rect.height() > height()) {
+      pix_rect.setSize(pix_rect.size() * height() / pix_rect.height());
+    }
+
+    pix_rect.moveCenter(rect.center());
+    p.drawPixmap(pix_rect, *def_pixmap, def_pixmap->rect());
+    p.drawText(rect, desc);
+  }
+
+  p.setPen(palette().color(QPalette::Text));
+  if (!custom_label.isEmpty()) {
+    p.setFont(info_font);
+    p.drawText(rect, Qt::AlignLeft | Qt::AlignBottom | Qt::TextWordWrap,
+               custom_label);
+  }
+
+  // Remove 1px for the border on the right and at the bottom
+  const auto highlight_rect =
+      QRectF(0.5, 0, width() - 1. / devicePixelRatio(),
+             height() - 1. / devicePixelRatio());
+
+  if (current) {
+    p.setPen(QPen(palette().color(QPalette::Highlight), 0));
+    p.drawRect(highlight_rect);
+  }
+
+  if (hover && !disabled) {
+    p.setCompositionMode(QPainter::CompositionMode_ColorDodge);
+    p.setPen(QPen(palette().color(QPalette::Highlight), 0));
+    p.setBrush(palette().color(QPalette::AlternateBase));
+    p.drawRect(highlight_rect);
+  }
+
+  if (disabled) {
+    p.setCompositionMode(QPainter::CompositionMode_Darken);
+    p.setPen(QPen(Qt::black, 0));
+    p.setBrush(QColor(0, 0, 50, 95));
+    p.drawRect(highlight_rect);
+  }
+
+  if (blink) {
+    p.setCompositionMode(QPainter::CompositionMode_ColorDodge);
+    p.setPen(QPen(Qt::black, 0));
+    p.setBrush(palette().color(QPalette::HighlightedText));
+    p.drawRect(highlight_rect);
+  }
+
+  p.end();
 }
 
 /**
@@ -327,136 +418,6 @@ void sidebarWidget::someSlot()
 }
 
 /**
-   Updates final pixmap and draws it on screen
- */
-void sidebarWidget::updateFinalPixmap()
-{
-  const QPixmap *sprite;
-  int w, h, pos, i;
-  QPainter p;
-  QPen pen;
-  bool current = false;
-
-  if (scaled_pixmap && size() == scaled_pixmap->size()) {
-    return;
-  }
-
-  resizePixmap(width(), height());
-
-  NFCN_FREE(final_pixmap);
-
-  i = queen()->gimmeIndexOf(page);
-  if (i == queen()->game_tab_widget->currentIndex()) {
-    current = true;
-  }
-  final_pixmap = new QPixmap(size());
-  final_pixmap->fill(Qt::transparent);
-
-  if (scaled_pixmap->width() == 0 || scaled_pixmap->height() == 0) {
-    return;
-  }
-
-  p.begin(final_pixmap);
-  p.setFont(sfont);
-  pen.setColor(QColor(232, 255, 0));
-  p.setPen(pen);
-
-  if (standard == SW_TAX && !client_is_global_observer()) {
-    pos = 0;
-    int d, modulo;
-    sprite = get_tax_sprite(tileset, O_GOLD);
-    if (sprite == nullptr) {
-      return;
-    }
-    w = width() / 10;
-    modulo = width() % 10;
-    h = sprite->height();
-    reduce_mod(modulo, pos);
-    if (client.conn.playing == nullptr) {
-      return;
-    }
-    for (d = 0; d < client.conn.playing->economic.tax / 10; ++d) {
-      p.drawPixmap(pos, 5, sprite->scaled(w, h), 0, 0, w, h);
-      pos = pos + w;
-      reduce_mod(modulo, pos);
-    }
-
-    sprite = get_tax_sprite(tileset, O_SCIENCE);
-
-    for (; d < (client.conn.playing->economic.tax
-                + client.conn.playing->economic.science)
-                   / 10;
-         ++d) {
-      p.drawPixmap(pos, 5, sprite->scaled(w, h), 0, 0, w, h);
-      pos = pos + w;
-      reduce_mod(modulo, pos);
-    }
-
-    sprite = get_tax_sprite(tileset, O_LUXURY);
-
-    for (; d < 10; ++d) {
-      p.drawPixmap(pos, 5, sprite->scaled(w, h), 0, 0, w, h);
-      pos = pos + w;
-      reduce_mod(modulo, pos);
-    }
-  } else if (standard == SW_INDICATORS) {
-    sprite = client_research_sprite();
-    w = sprite->width();
-    pos = scaled_pixmap->width() / 2 - 2 * w;
-    p.drawPixmap(pos, 5, *sprite);
-    pos = pos + w;
-    sprite = client_warming_sprite();
-    p.drawPixmap(pos, 5, *sprite);
-    pos = pos + w;
-    sprite = client_cooling_sprite();
-    p.drawPixmap(pos, 5, *sprite);
-    pos = pos + w;
-    sprite = client_government_sprite();
-    p.drawPixmap(pos, 5, *sprite);
-
-  } else {
-    p.drawPixmap(0, (height() - scaled_pixmap->height()) / 2,
-                 *scaled_pixmap);
-    p.drawText(0, height() - 6, desc);
-  }
-
-  p.setPen(palette().color(QPalette::Text));
-  if (!custom_label.isEmpty()) {
-    p.setFont(info_font);
-    p.drawText(0, 0, width(), height(), Qt::AlignLeft | Qt::TextWordWrap,
-               custom_label);
-  }
-
-  if (current) {
-    p.setPen(palette().color(QPalette::Highlight));
-    p.drawRect(0, 0, width() - 1, height() - 1);
-  }
-
-  if (hover && !disabled) {
-    p.setCompositionMode(QPainter::CompositionMode_ColorDodge);
-    p.setPen(palette().color(QPalette::Highlight));
-    p.setBrush(palette().color(QPalette::AlternateBase));
-    p.drawRect(0, 0, width() - 1, height() - 1);
-  }
-
-  if (disabled) {
-    p.setCompositionMode(QPainter::CompositionMode_Darken);
-    p.setPen(QColor(0, 0, 0));
-    p.setBrush(QColor(0, 0, 50, 95));
-    p.drawRect(0, 0, width(), height());
-  }
-
-  if (blink) {
-    p.setCompositionMode(QPainter::CompositionMode_ColorDodge);
-    p.setPen(QColor(0, 0, 0));
-    p.setBrush(palette().color(QPalette::HighlightedText));
-    p.drawRect(0, 0, width(), height());
-  }
-
-  p.end();
-}
-
-/**
    Sidebar constructor
  */
 sidebar::sidebar()
@@ -517,18 +478,14 @@ void sidebar::resizeEvent(QResizeEvent *event)
   }
 }
 
-/**************************************************************************
-  Resize sidebar to take at least 20 pixels width and 100 pixels for FullHD
-  desktop and scaled accordingly for bigger resolutions eg 200 pixels for 4k
-  desktop.
-**************************************************************************/
+/**
+ * Resize the sidebar according to the user preference. The default is 90px
+ * and can be changed in increments of 15px using
+ * `gui_options.gui_qt_sidebar_width`.
+ */
 void sidebar::resizeMe()
 {
-  auto temp = (QGuiApplication::screens());
-  auto hres = temp[0]->availableGeometry().width();
-
-  auto w = (20 * gui_options.gui_qt_sidebar_width * hres) / 1920;
-  setFixedWidth(qMax(w, 20));
+  setFixedWidth(15 + gui_options.gui_qt_sidebar_width * 15);
 }
 
 /**

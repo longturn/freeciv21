@@ -678,8 +678,6 @@ void diplo_wdg::restore_pixmap()
 {
   queen()->sw_diplo->setPixmap(
       fcIcons::instance()->getPixmap(QStringLiteral("nations")));
-  queen()->sw_diplo->resizePixmap(queen()->sw_diplo->width(),
-                                  queen()->sw_diplo->height());
   queen()->sw_diplo->setCustomLabels(QString());
   queen()->sw_diplo->update();
 }
@@ -888,8 +886,6 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   p.drawPixmap(1, hmid, *pix2);
   p.end();
   queen()->sw_diplo->setPixmap(pix3);
-  queen()->sw_diplo->resizePixmap(queen()->sw_diplo->width(),
-                                  queen()->sw_diplo->height());
   queen()->sw_diplo->setCustomLabels(
       QString(nation_plural_for_player(player_by_number(counterpart))));
   queen()->sw_diplo->update();
