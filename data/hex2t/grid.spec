@@ -10,6 +10,7 @@ artists = "
     Jason Dorje Short <jdorje@freeciv.org>
 ; adapted to hex2t
     Daniel Markstedt <himasaram@spray.se>
+    Daavko
 "
 
 [file]
