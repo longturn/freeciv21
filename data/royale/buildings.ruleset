@@ -12,7 +12,7 @@
 
 [datafile]
 description="Royale buildings data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 web-compatible"
+options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
 ; /* <-- avoid gettext warnings
