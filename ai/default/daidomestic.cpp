@@ -327,8 +327,8 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
   /* We pass a NULL pc2 to get_caravan_enter_city_trade_bonus() so
    * it assumes that we are creating trade route to city with 75% of
    * pcitys trade 10 squares away. */
-  income = get_caravan_enter_city_trade_bonus(pcity, NULL, NULL,
-      utype_can_do_action(unit_type, ACTION_TRADE_ROUTE));
+  income = get_caravan_enter_city_trade_bonus(
+      pcity, NULL, NULL, utype_can_do_action(unit_type, ACTION_TRADE_ROUTE));
 
   if (dest_city_nat_same_cont) {
     pct = trade_route_type_trade_pct(TRT_NATIONAL);

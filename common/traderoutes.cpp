@@ -486,9 +486,8 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
 
   // Trade_revenue_exponent (in milimes) bends the shape of the curve
   bonus = get_target_bonus_effects(
-      NULL, city_owner(pc1), pc2 ? city_owner(pc2) : NULL,
-      pc1, NULL, city_tile(pc1),
-      NULL, NULL, NULL, NULL,
+      NULL, city_owner(pc1), pc2 ? city_owner(pc2) : NULL, pc1, NULL,
+      city_tile(pc1), NULL, NULL, NULL, NULL,
       action_by_number(establish_trade ? ACTION_TRADE_ROUTE
                                        : ACTION_MARKETPLACE),
       EFT_TRADE_REVENUE_EXPONENT);
@@ -497,8 +496,8 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
 
   // Trade_revenue_bonus increases revenue by power of 2 in milimes
   bonus = get_target_bonus_effects(
-      NULL, city_owner(pc1), pc2 ? city_owner(pc2) : NULL,
-      pc1, NULL, city_tile(pc1),
+      NULL, city_owner(pc1), pc2 ? city_owner(pc2) : NULL, pc1, NULL,
+      city_tile(pc1),
       /* TODO: Should unit requirements be
        * allowed so stuff like moves left and
        * unit type can modify the bonus? */
