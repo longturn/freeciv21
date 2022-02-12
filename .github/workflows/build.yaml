@@ -112,13 +112,6 @@ jobs:
       - name: Build
         run: |
           cmake --build build
-      - name: Test
-        run: |
-          cmake --build build --target test
-      - name: Debug
-        if: failure()
-        run: |
-          cat build/Testing/Temporary/LastTest.log
       - name: Install
         run: |
           cmake --build build --target install
