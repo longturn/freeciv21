@@ -2257,6 +2257,77 @@ void city_dialog::dbl_click_p(QTableWidgetItem *item)
   city_set_queue(pcity, &queue);
 }
 
+namespace /* anonymous */ {
+/**
+ * Finds how deeply the unit is nested in transports.
+ */
+int transport_depth(const unit *unit)
+{
+  int depth = 0;
+  for (auto parent = unit->transporter; parent != nullptr;
+       parent = parent->transporter) {
+    depth++;
+  }
+  return depth;
+}
+
+/**
+ * Comparison function to sort units as shown in the city dialog.
+ */
+int units_sort(const unit *const *plhs, const unit *const *prhs)
+{
+  if (plhs == prhs || *plhs == *prhs) {
+    return 0;
+  }
+
+  auto lhs = *plhs;
+  auto rhs = *prhs;
+
+  // Transports are shown before the units they transport.
+  if (lhs == rhs->transporter) {
+    return false;
+  } else if (lhs->transporter == rhs) {
+    return true;
+  }
+
+  // When one unit is deeper or the two transporters are different, compare
+  // the parents instead.
+  int lhs_depth = transport_depth(lhs);
+  int rhs_depth = transport_depth(rhs);
+  if (lhs_depth > rhs_depth) {
+    return units_sort(&lhs->transporter, &rhs);
+  } else if (lhs_depth < rhs_depth) {
+    return units_sort(&lhs, &rhs->transporter);
+  } else if (lhs->transporter != rhs->transporter) {
+    return units_sort(&lhs->transporter, &rhs->transporter);
+  }
+
+  // Put defensive units on the left
+  if (lhs->utype->defense_strength != rhs->utype->defense_strength) {
+    return rhs->utype->defense_strength - lhs->utype->defense_strength;
+  }
+
+  // Put fortified units on the left, then fortifying units, then sentried
+  // units.
+  for (auto activity :
+       {ACTIVITY_FORTIFIED, ACTIVITY_FORTIFYING, ACTIVITY_SENTRY}) {
+    if (lhs->activity == activity && rhs->activity != activity) {
+      return false;
+    } else if (lhs->activity != activity && rhs->activity == activity) {
+      return true;
+    }
+  }
+
+  // Order by unit type
+  if (lhs->utype != rhs->utype) {
+    return lhs->utype->item_number - rhs->utype->item_number;
+  }
+
+  // Then unit id
+  return lhs->id - rhs->id;
+}
+} // anonymous namespace
+
 /**
    Updates layouts for supported and present units in city
  */
@@ -2311,6 +2382,7 @@ void city_dialog::update_units()
     ui.present_units_list->hide();
   } else {
     QSize icon_size;
+    unit_list_sort(units, &units_sort);
     unit_list_iterate(units, punit)
     {
       auto *item = new unit_list_item(punit);
