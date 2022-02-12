@@ -1081,7 +1081,7 @@ void rscompat_postprocess(struct rscompat_info *info)
  */
 static void rscompat_optional_capabilities(rscompat_info *info)
 {
-  if (!has_capabilities(info->cap_effects.data(), CAP_EFT_HP_REGEN_MIN)) {
+  if (!has_capability(CAP_EFT_HP_REGEN_MIN, info->cap_effects.data())) {
     // Create new effects to replace the old hard-coded minimum HP
     // recovery.
 
@@ -1129,8 +1129,7 @@ static void rscompat_optional_capabilities(rscompat_info *info)
                                            false, "Fortified"));
   }
 
-  if (!has_capabilities(info->cap_effects.data(),
-                        CAP_EFT_BOMBARD_LIMIT_PCT)) {
+  if (!has_capability(CAP_EFT_BOMBARD_LIMIT_PCT, info->cap_effects.data())) {
     // Create new effect to replace the old hard-coded bombard limit
 
     // 1% base bombard limit
