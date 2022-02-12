@@ -2773,11 +2773,13 @@ void city_dialog::update_title()
  */
 void qtg_real_city_dialog_popup(struct city *pcity)
 {
-  sidebarShowMap(true);
-  queen()->mapview_wdg->hide_all_fcwidgets();
+  auto *widget = queen()->city_overlay;
+  if (!queen()->city_overlay->isVisible()) {
+    sidebarShowMap(true);
+    queen()->mapview_wdg->hide_all_fcwidgets();
+  }
   center_tile_mapcanvas(pcity->tile);
 
-  auto *widget = queen()->city_overlay;
   widget->setup_ui(pcity);
   widget->show();
   widget->resize(queen()->mapview_wdg->size());

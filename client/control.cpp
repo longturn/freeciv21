@@ -2786,13 +2786,10 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
   }
 
   auto near_pcity = is_any_city_dialog_open();
+  int city_x, city_y;
   if (near_pcity && !cma_is_city_under_agent(near_pcity, NULL)
-      && can_client_issue_orders()) {
-    int city_x, city_y;
-
-    fc_assert_ret(
-        city_base_to_city_map(&city_x, &city_y, near_pcity, ptile));
-
+      && can_client_issue_orders()
+      && city_base_to_city_map(&city_x, &city_y, near_pcity, ptile)) {
     if (NULL != tile_worked(ptile) && tile_worked(ptile) == near_pcity) {
       dsend_packet_city_make_specialist(&client.conn, near_pcity->id,
                                         ptile->index);
@@ -2801,7 +2798,8 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
                                     ptile->index);
     }
     city_workers_display = near_pcity;
-  } else if (qtype != SELECT_POPUP && qtype != SELECT_APPEND) {
+  } else if (!near_pcity && qtype != SELECT_POPUP
+             && qtype != SELECT_APPEND) {
     // Bypass stack or city popup if quickselect is specified.
     struct unit *qunit = quickselect(ptile, qtype);
 
@@ -2813,10 +2811,10 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
              && can_player_see_city_internals(client.conn.playing, pcity)) {
     // Otherwise use popups.
     popup_city_dialog(pcity);
-  } else if (unit_list_size(ptile->units) == 0 && NULL == pcity
-             && get_num_units_in_focus() > 0) {
+  } else if (!near_pcity && unit_list_size(ptile->units) == 0
+             && NULL == pcity && get_num_units_in_focus() > 0) {
     maybe_goto = gui_options.keyboardless_goto;
-  } else if (unit_list_size(ptile->units) == 1
+  } else if (!near_pcity && unit_list_size(ptile->units) == 1
              && !get_transporter_occupancy(unit_list_get(ptile->units, 0))) {
     struct unit *punit = unit_list_get(ptile->units, 0);
 
@@ -2833,7 +2831,7 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
       // Don't hide the unit in the city.
       unit_select_dialog_popup(ptile);
     }
-  } else if (unit_list_size(ptile->units) > 0) {
+  } else if (!near_pcity && unit_list_size(ptile->units) > 0) {
     /* The stack list is always popped up, even if it includes enemy units.
      * If the server doesn't want the player to know about them it shouldn't
      * tell him!  The previous behavior would only pop up the stack if you
