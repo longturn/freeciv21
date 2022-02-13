@@ -60,11 +60,6 @@ static void apply_titlebar(struct option *poption);
 class fc_client *king() { return freeciv_qt; }
 
 /**
-   Do any necessary pre-initialization of the UI, if necessary.
- */
-void qtg_ui_init() {}
-
-/**
    Entry point for whole freeciv client program.
  */
 int main(int argc, char **argv)
@@ -89,7 +84,7 @@ static void migrate_options_from_2_5()
    The main loop for the UI.  This is called from main(), and when it
    exits the client will exit.
  */
-void qtg_ui_main()
+void ui_main()
 {
   if (true) {
     tileset_init(tileset);
@@ -146,7 +141,7 @@ void qtg_options_extra_init()
 /**
    Do any necessary UI-specific cleanup
  */
-void qtg_ui_exit() { delete freeciv_qt; }
+void ui_exit() { delete freeciv_qt; }
 
 /**
    Update the connected users list at pregame state.

@@ -41,21 +41,6 @@ static struct gui_funcs funcs;
 struct gui_funcs *get_gui_funcs() { return &funcs; }
 
 /**
-   Call ui_init callback
- */
-void ui_init(void) { funcs.ui_init(); }
-
-/**
-   Call ui_main callback
- */
-void ui_main() { funcs.ui_main(); }
-
-/**
-   Call ui_exit callback
- */
-void ui_exit(void) { funcs.ui_exit(); }
-
-/**
    Call version_message callback
  */
 void version_message(const char *vertext) { funcs.version_message(vertext); }
