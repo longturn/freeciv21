@@ -524,7 +524,6 @@ int client_main(int argc, char *argv[])
   game.all_connections = conn_list_new();
   game.est_connections = conn_list_new();
 
-  ui_init();
   charsets_init();
   update_queue::uq()->init();
 

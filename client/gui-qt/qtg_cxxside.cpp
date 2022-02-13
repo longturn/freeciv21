@@ -21,10 +21,6 @@ void setup_gui_funcs()
 {
   struct gui_funcs *funcs = get_gui_funcs();
 
-  funcs->ui_init = qtg_ui_init;
-  funcs->ui_main = qtg_ui_main;
-  funcs->ui_exit = qtg_ui_exit;
-
   funcs->get_gui_type = qtg_get_gui_type;
   funcs->insert_client_build_info = qtg_insert_client_build_info;
 
