@@ -373,7 +373,7 @@ int city_num_trade_routes(const struct city *pcity)
 /**
    Returns the maximum trade production of the tiles of the city.
  */
-static int max_tile_trade(const struct city *pcity)
+static int max_tile_trade(const struct city *pcity, const player *seen_as)
 {
   int i, total = 0;
   int radius_sq = city_map_radius_sq_get(pcity);
@@ -399,7 +399,8 @@ static int max_tile_trade(const struct city *pcity)
       continue;
     }
 
-    if (!city_can_work_tile(pcity, ptile)) {
+    if (!base_city_can_work_tile(seen_as ? seen_as : city_owner(pcity),
+                                 pcity, ptile)) {
       continue;
     }
 
@@ -420,10 +421,10 @@ static int max_tile_trade(const struct city *pcity)
 /**
    Returns the maximum trade production of a city.
  */
-static int max_trade_prod(const struct city *pcity)
+static int max_trade_prod(const struct city *pcity, const player *seen_as)
 {
   // Trade tile base
-  int trade_prod = max_tile_trade(pcity);
+  int trade_prod = max_tile_trade(pcity, seen_as);
 
   // Add trade routes values
   trade_partners_iterate(pcity, partner)
@@ -447,6 +448,7 @@ static int max_trade_prod(const struct city *pcity)
  */
 int get_caravan_enter_city_trade_bonus(const struct city *pc1,
                                        const struct city *pc2,
+                                       const player *seen_as,
                                        struct goods_type *pgood,
                                        const bool establish_trade)
 {
@@ -457,11 +459,11 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
     md = map_distance(pc1->tile, pc2->tile);
     rmd = real_map_distance(pc1->tile, pc2->tile);
     trade2 = pc2->surplus[O_TRADE];
-    max_trade_2 = max_trade_prod(pc2);
+    max_trade_2 = max_trade_prod(pc2, seen_as);
   } else {
     md = rmd = 10;
     trade2 = pc1->surplus[O_TRADE] * 0.75;
-    max_trade_2 = max_trade_prod(pc1) * 0.75;
+    max_trade_2 = max_trade_prod(pc1, seen_as) * 0.75;
   }
 
   if (game.info.caravan_bonus_style == CBS_CLASSIC) {
@@ -470,11 +472,12 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
     tb = (tb * (pc1->surplus[O_TRADE] + trade2)) / 24;
   } else if (game.info.caravan_bonus_style == CBS_LOGARITHMIC) {
     // Logarithmic bonus
-    tb = pow(log(rmd + 20 + max_trade_prod(pc1) + max_trade_2) * 2, 2);
+    tb = pow(log(rmd + 20 + max_trade_prod(pc1, seen_as) + max_trade_2) * 2,
+             2);
   } else if (game.info.caravan_bonus_style == CBS_LINEAR) {
     // Linear bonus (like CLASSIC) but using max_trade_prod
     tb = rmd + 10;
-    tb = (tb * (max_trade_prod(pc1) + max_trade_2)) / 24;
+    tb = (tb * (max_trade_prod(pc1, seen_as) + max_trade_2)) / 24;
   } else if (game.info.caravan_bonus_style == CBS_DISTANCE) {
     // Purely dependent on distance, ignore city trade
     tb = rmd + 10;

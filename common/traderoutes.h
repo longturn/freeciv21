@@ -16,6 +16,7 @@
 
 struct city;
 struct city_list;
+struct player;
 
 /* What to do with previously established traderoutes that are now illegal.
  * Used in the network protocol. */
@@ -112,6 +113,7 @@ int trade_from_route(const struct city *pc1, const struct trade_route *route,
 int city_num_trade_routes(const struct city *pcity);
 int get_caravan_enter_city_trade_bonus(const struct city *pc1,
                                        const struct city *pc2,
+                                       const player *seen_as,
                                        struct goods_type *pgood,
                                        const bool establish_trade);
 int city_trade_removable(const struct city *pcity,

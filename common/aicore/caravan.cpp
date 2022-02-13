@@ -208,8 +208,8 @@ static double windfall_benefit(const struct unit *caravan,
   } else {
     bool can_establish = (unit_can_do_action(caravan, ACTION_TRADE_ROUTE)
                           && can_establish_trade_route(src, dest));
-    int bonus =
-        get_caravan_enter_city_trade_bonus(src, dest, NULL, can_establish);
+    int bonus = get_caravan_enter_city_trade_bonus(
+        src, dest, unit_owner(caravan), NULL, can_establish);
 
     // bonus goes to both sci and gold.
     bonus *= 2;

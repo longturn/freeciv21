@@ -1766,7 +1766,8 @@ const QString get_act_sel_action_custom_text(struct action *paction,
 
   if (action_has_result(paction, ACTRES_TRADE_ROUTE)) {
     int revenue = get_caravan_enter_city_trade_bonus(
-        actor_homecity, target_city, actor_unit->carrying, true);
+        actor_homecity, target_city, client_player(), actor_unit->carrying,
+        true);
 
     custom = QString(
                  /* TRANS: Estimated one time bonus and recurring revenue for
@@ -1777,7 +1778,8 @@ const QString get_act_sel_action_custom_text(struct action *paction,
                           actor_homecity, target_city)));
   } else if (action_has_result(paction, ACTRES_MARKETPLACE)) {
     int revenue = get_caravan_enter_city_trade_bonus(
-        actor_homecity, target_city, actor_unit->carrying, false);
+        actor_homecity, target_city, client_player(), actor_unit->carrying,
+        false);
 
     custom = QString(
                  /* TRANS: Estimated one time bonus for the Enter Marketplace
