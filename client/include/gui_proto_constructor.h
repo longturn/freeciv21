@@ -11,16 +11,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-#define EXTERN_C extern "C"
-#else
-#define EXTERN_C
-#endif
-
-#ifdef GUI_CB_MODE
 #define GUI_FUNC_PROTO(_type, _func, ...)                                   \
-  EXTERN_C _type gui_##_func(__VA_ARGS__);                                  \
-  EXTERN_C _type _func(__VA_ARGS__);
-#else
-#define GUI_FUNC_PROTO(_type, _func, ...) EXTERN_C _type _func(__VA_ARGS__);
-#endif
+  _type gui_##_func(__VA_ARGS__);                                           \
+  _type _func(__VA_ARGS__);
