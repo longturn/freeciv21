@@ -54,7 +54,7 @@
 #include "voteinfo_bar.h"
 
 fcFont *fcFont::m_instance = 0;
-extern "C" void real_science_report_dialog_update(void *);
+void real_science_report_dialog_update(void *);
 
 /**
    Constructor

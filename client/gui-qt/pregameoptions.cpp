@@ -43,8 +43,7 @@
 #include "sprite.h"
 #include "voteinfo_bar.h"
 
-extern "C" void option_dialog_popup(const char *name,
-                                    const struct option_set *poptset);
+void option_dialog_popup(const char *name, const struct option_set *poptset);
 /**
    Pregame options contructor
  */

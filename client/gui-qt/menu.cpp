@@ -72,8 +72,7 @@ extern void toggle_units_report(bool);
 static void enable_interface(bool enable);
 static QKeySequence shortcut2key(enum shortcut_id s);
 
-extern "C" void option_dialog_popup(const char *name,
-                                    const struct option_set *poptset);
+void option_dialog_popup(const char *name, const struct option_set *poptset);
 /**
    Constructor for units used in delayed orders
  */
