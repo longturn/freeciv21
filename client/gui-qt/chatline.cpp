@@ -15,6 +15,7 @@
 #include <QCheckBox>
 #include <QCompleter>
 #include <QGridLayout>
+#include <QHash>
 #include <QPainter>
 #include <QScrollBar>
 #include <QTextBlock>
@@ -46,6 +47,20 @@ static bool is_plain_public_message(const QString &s);
 FC_CPP_DECLARE_LISTENER(chat_listener)
 QStringList chat_listener::history = QStringList();
 QStringList chat_listener::word_list = QStringList();
+
+namespace {
+
+QHash<QString, QString> color_mapping;
+
+} // namespace
+
+/**
+   Sets color substitution map.
+ */
+void set_chat_colors(const QHash<QString, QString> &colors)
+{
+  color_mapping = colors;
+}
 
 /**
    Updates the chat completion word list.
@@ -523,8 +538,8 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
   QString str_col;
   QString color;
   QString final_string;
+  QString style;
   QByteArray qba;
-  QColor qc;
   QMultiMap<int, QString> mm;
   QByteArray str_bytes;
 
@@ -567,26 +582,25 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
     case TTT_COLOR:
       if (text_tag_color_foreground(ptag)) {
         color = text_tag_color_foreground(ptag);
-        if (color == QLatin1String("#00008B")) {
-          color = bg_color.name();
-        } else {
-          qc.setNamedColor(color);
-          qc = qc.lighter(200);
-          color = qc.name();
+        if (color_mapping.find(color) != color_mapping.end()) {
+          color = color_mapping[color];
         }
-        str_col = QStringLiteral("<span style=color:%1>").arg(color);
-        mm.insert(stop, QStringLiteral("</span>"));
-        mm.insert(start, str_col);
+        if (QColor::isValidColor(color)) {
+          style += QStringLiteral("color:%1;").arg(color);
+        }
       }
       if (text_tag_color_background(ptag)) {
         color = text_tag_color_background(ptag);
+        if (color_mapping.find(color) != color_mapping.end()) {
+          color = color_mapping[color];
+        }
         if (QColor::isValidColor(color)) {
-          str_col = QStringLiteral("<span style= background-color:%1;>")
-                        .arg(color);
-          mm.insert(stop, QStringLiteral("</span>"));
-          mm.insert(start, str_col);
+          style += QStringLiteral("background-color:%1;").arg(color);
         }
       }
+      mm.insert(stop, QStringLiteral("</span>"));
+      mm.insert(start, QStringLiteral("<span style=\"%1\">").arg(style));
+
       break;
     case TTT_LINK: {
       QColor *pcolor = NULL;
