@@ -12,6 +12,7 @@
 #include <QApplication>
 #include <QDir>
 #include <QPalette>
+#include <QSettings>
 #include <QStyle>
 #include <QStyleFactory>
 #include <QTextStream>
@@ -22,12 +23,71 @@
 #include "qtg_cxxside.h"
 #include "themes_common.h"
 // gui-qt
+#include "chatline.h"
 #include "fc_client.h"
 
 extern QApplication *current_app();
 extern QString current_theme;
 Q_GLOBAL_STATIC(QString, def_app_style)
 Q_GLOBAL_STATIC(QString, stylestring)
+
+namespace {
+
+/**
+   Loads chat color substitutions from theme settings.
+ */
+void load_chat_colors(QSettings &settings)
+{
+  settings.beginGroup("color_mapping");
+  QHash<QString, QString> colors;
+
+  for (auto k : settings.childKeys()) {
+    auto val = settings.value(k).toString();
+    if (!QColor::isValidColor(val)) {
+      qWarning() << "color invalid: " << val;
+      continue;
+    }
+    colors[QStringLiteral("#") + k] = val;
+  }
+
+  set_chat_colors(colors);
+  settings.endGroup();
+}
+
+const QHash<QString, QPalette::ColorRole> roles = {
+    {"link", QPalette::Link},
+    {"link.visited", QPalette::LinkVisited},
+};
+
+/**
+   Loads a palette from theme settings.
+ */
+QPalette load_palette(QSettings &settings)
+{
+  settings.beginGroup("general_colors");
+  QPalette pal;
+
+  // Hardcoded defaults.
+  pal.setBrush(QPalette::Link, QColor(92, 170, 229));
+  pal.setBrush(QPalette::LinkVisited, QColor(54, 150, 229));
+
+  for (auto k : settings.childKeys()) {
+    if (roles.find(k) == roles.end()) {
+      continue;
+    }
+    auto val = settings.value(k).toString();
+    if (!QColor::isValidColor(val)) {
+      qWarning() << "color invalid: " << val;
+      continue;
+    }
+    pal.setBrush(roles[k], QColor(val));
+  }
+
+  settings.endGroup();
+  return pal;
+}
+
+} // namespace
 
 /**
    Loads a qt theme directory/theme_name
@@ -72,15 +132,16 @@ void qtg_gui_load_theme(QString &directory, QString &theme_name)
     }
   }
 
+  QSettings settings(data_dir + "/" + theme_name + "/theme.conf",
+                     QSettings::IniFormat);
+  load_chat_colors(settings);
   current_theme = theme_name;
   QPixmapCache::clear();
   current_app()->setStyleSheet(*stylestring);
   if (king()) {
     queen()->reloadSidebarIcons();
   }
-  pal.setBrush(QPalette::Link, QColor(92, 170, 229));
-  pal.setBrush(QPalette::LinkVisited, QColor(54, 150, 229));
-  QApplication::setPalette(pal);
+  QApplication::setPalette(load_palette(settings));
 }
 
 /**
