@@ -2099,11 +2099,6 @@ client_option_next_valid(struct client_option *poption)
 {
   const struct client_option *const max =
       client_options + client_options_num;
-
-  while (poption < max) {
-    poption++;
-  }
-
   return (poption < max ? poption : NULL);
 }
 
