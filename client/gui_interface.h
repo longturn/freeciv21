@@ -29,10 +29,6 @@ class QTcpSocket;
 #include "tilespec.h"
 
 struct gui_funcs {
-  QPixmap *(*crop_sprite)(const QPixmap *source, int x, int y, int width,
-                          int height, const QPixmap *mask, int mask_offset_x,
-                          int mask_offset_y);
-
   QColor *(*color_alloc)(int r, int g, int b);
   void (*color_free)(QColor *pcolor);
 
