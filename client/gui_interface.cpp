@@ -40,17 +40,6 @@ static struct gui_funcs funcs;
 struct gui_funcs *get_gui_funcs() { return &funcs; }
 
 /**
-   Call crop_sprite callback
- */
-QPixmap *crop_sprite(const QPixmap *source, int x, int y, int width,
-                     int height, const QPixmap *mask, int mask_offset_x,
-                     int mask_offset_y)
-{
-  return funcs.crop_sprite(source, x, y, width, height, mask, mask_offset_x,
-                           mask_offset_y);
-}
-
-/**
    Call color_alloc callback
  */
 QColor *color_alloc(int r, int g, int b)

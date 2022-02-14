@@ -59,9 +59,9 @@ QPixmap *load_gfxfile(const char *filename)
    in the mask image will be used to clip pixel (0,0) in the source image
    which is pixel (-x,-y) in the new image.
  */
-QPixmap *qtg_crop_sprite(const QPixmap *source, int x, int y, int width,
-                         int height, const QPixmap *mask, int mask_offset_x,
-                         int mask_offset_y)
+QPixmap *crop_sprite(const QPixmap *source, int x, int y, int width,
+                     int height, const QPixmap *mask, int mask_offset_x,
+                     int mask_offset_y)
 {
   QPainter p;
   QRectF source_rect;

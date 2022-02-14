@@ -21,8 +21,6 @@ void setup_gui_funcs()
 {
   struct gui_funcs *funcs = get_gui_funcs();
 
-  funcs->crop_sprite = qtg_crop_sprite;
-
   funcs->color_alloc = qtg_color_alloc;
   funcs->color_free = qtg_color_free;
 
