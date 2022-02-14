@@ -114,17 +114,3 @@ void qtg_get_sprite_dimensions(const QPixmap *sprite, int *width,
    Free a sprite and all associated image data.
  */
 void qtg_free_sprite(QPixmap *s) { delete s; }
-
-/**
-   Create a new sprite with the given height, width and color.
- */
-QPixmap *qtg_create_sprite(int width, int height, const QColor *pcolor)
-{
-  QPixmap *created = new QPixmap;
-
-  created = new QPixmap(width, height);
-
-  created->fill(*pcolor);
-
-  return created;
-}

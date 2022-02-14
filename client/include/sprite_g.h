@@ -20,8 +20,6 @@ GUI_FUNC_PROTO(QPixmap *, load_gfxfile, const char *filename)
 GUI_FUNC_PROTO(QPixmap *, crop_sprite, const QPixmap *source, int x, int y,
                int width, int height, const QPixmap *mask, int mask_offset_x,
                int mask_offset_y)
-GUI_FUNC_PROTO(QPixmap *, create_sprite, int width, int height,
-               const QColor *pcolor)
 GUI_FUNC_PROTO(void, get_sprite_dimensions, const QPixmap *sprite,
                int *width, int *height)
 GUI_FUNC_PROTO(void, free_sprite, QPixmap *s)
