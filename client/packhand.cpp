@@ -347,6 +347,7 @@ void handle_server_join_reply(bool you_can_join, const char *message,
       set_client_page(PAGE_START);
     }
 
+    client_info._obsolete = 5; // Old value for gui_type(GUI_QT)
 #ifdef EMERGENCY_VERSION
     client_info.emerg_version = EMERGENCY_VERSION;
 #else
