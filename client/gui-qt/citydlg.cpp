@@ -2917,7 +2917,6 @@ void city_production_delegate::paint(QPainter *painter,
   bool is_unit = true;
   QPixmap pix_dec(option.rect.width(), option.rect.height());
   QStyleOptionViewItem opt;
-  QColor col;
   QIcon icon = qApp->style()->standardIcon(QStyle::SP_DialogCancelButton);
   struct unit_class *pclass;
 
@@ -2934,8 +2933,7 @@ void city_production_delegate::paint(QPainter *painter,
   target = reinterpret_cast<universal *>(qvar.value<void *>());
 
   if (target == NULL) {
-    col = QColor(Qt::white);
-    free_sprite = qtg_create_sprite(100, 100, &col);
+    free_sprite = new QPixmap;
     *free_sprite = icon.pixmap(100, 100);
     sprite = free_sprite;
     name = _("Cancel");

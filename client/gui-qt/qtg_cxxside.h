@@ -21,7 +21,6 @@ class QTcpSocket;
 
 void setup_gui_funcs();
 
-QPixmap *qtg_create_sprite(int width, int height, const QColor *pcolor);
 void qtg_get_sprite_dimensions(const QPixmap *sprite, int *width,
                                int *height);
 QPixmap *qtg_crop_sprite(const QPixmap *source, int x, int y, int width,

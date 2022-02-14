@@ -80,9 +80,10 @@ void layer_background::free_player(int player_id)
 std::unique_ptr<QPixmap>
 layer_background::create_player_sprite(const QColor &pcolor) const
 {
-  return std::unique_ptr<QPixmap>(
-      create_sprite(tileset_full_tile_width(tileset()),
-                    tileset_full_tile_height(tileset()), &pcolor));
+  auto ret = std::make_unique<QPixmap>(tileset_full_tile_width(tileset()),
+                                       tileset_full_tile_height(tileset()));
+  ret->fill(pcolor);
+  return ret;
 }
 
 } // namespace freeciv

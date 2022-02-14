@@ -1249,8 +1249,9 @@ static QPixmap *load_gfx_file(const char *gfx_filename)
   }
 
   qCritical("Could not load gfx file \"%s\".", gfx_filename);
-  QColor *c = color_alloc(255, 0, 0);
-  return create_sprite(20, 20, c);
+  s = new QPixmap(20, 20);
+  s->fill(Qt::red);
+  return s;
 }
 
 /**
@@ -5712,7 +5713,6 @@ bool tileset_layer_in_category(enum mapview_layer layer,
 void tileset_player_init(struct tileset *t, struct player *pplayer)
 {
   int plrid, i, j;
-  QPixmap *color;
 
   fc_assert_ret(pplayer != NULL);
 
@@ -5731,14 +5731,15 @@ void tileset_player_init(struct tileset *t, struct player *pplayer)
   if (player_has_color(t, pplayer)) {
     c = *get_player_color(t, pplayer);
   }
-  color = create_sprite(128, 64, &c);
+  QPixmap color(128, 64);
+  color.fill(c);
 
   for (i = 0; i < EDGE_COUNT; i++) {
     for (j = 0; j < 2; j++) {
       QPixmap *s;
 
-      if (color && t->sprites.grid.borders[i][j]) {
-        s = crop_sprite(color, 0, 0, t->normal_tile_width,
+      if (t->sprites.grid.borders[i][j]) {
+        s = crop_sprite(&color, 0, 0, t->normal_tile_width,
                         t->normal_tile_height, t->sprites.grid.borders[i][j],
                         0, 0);
       } else {
