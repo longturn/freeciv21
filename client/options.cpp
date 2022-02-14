@@ -1159,7 +1159,6 @@ struct client_option {
   const char *description; // One-line description
   const char *help_text;   // Paragraph-length help text
   enum client_option_category category;
-  enum gui_type specific; // GUI_STUB for common options.
 
   union {
     // OT_BOOLEAN type option.
@@ -1230,13 +1229,13 @@ struct client_option {
  * ocb:   A callback function of type void (*)(struct option *) called when
  *        the option changed.
  */
-#define GEN_BOOL_OPTION(oname, odesc, ohelp, ocat, ospec, odef, ocb)        \
+#define GEN_BOOL_OPTION(oname, odesc, ohelp, ocat, odef, ocb)               \
   {                                                                         \
     .base_option = OPTION_BOOL_INIT(&client_optset_static,                  \
                                     client_option_common_vtable,            \
                                     client_option_bool_vtable, ocb),        \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec,                                    \
+    .category = ocat,                                                       \
     .u =                                                                    \
     {.boolean = {                                                           \
          .pvalue = &gui_options.oname,                                      \
@@ -1254,22 +1253,19 @@ struct client_option {
  * ohelp: The help text for the client option.  Should be used with the N_()
  *        macro.
  * ocat:  The client_option_class of this client option.
- * ospec: A gui_type enumerator which determin for what particular client
- *        gui this option is for. Sets to GUI_STUB for common options.
  * odef:  The default value of this client option.
  * omin:  The minimal value of this client option.
  * omax:  The maximal value of this client option.
  * ocb:   A callback function of type void (*)(struct option *) called when
  *        the option changed.
  */
-#define GEN_INT_OPTION(oname, odesc, ohelp, ocat, ospec, odef, omin, omax,  \
-                       ocb)                                                 \
+#define GEN_INT_OPTION(oname, odesc, ohelp, ocat, odef, omin, omax, ocb)    \
   {                                                                         \
     .base_option =                                                          \
         OPTION_INT_INIT(&client_optset_static, client_option_common_vtable, \
                         client_option_int_vtable, ocb),                     \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec, .u = {                             \
+    .category = ocat, .u = {                                                \
       .integer = {.pvalue = &gui_options.oname,                             \
                   .def = odef,                                              \
                   .min = omin,                                              \
@@ -1289,19 +1285,17 @@ struct client_option {
  * ohelp: The help text for the client option.  Should be used with the N_()
  *        macro.
  * ocat:  The client_option_class of this client option.
- * ospec: A gui_type enumerator which determines for what particular client
- *        gui this option is for. Set to GUI_STUB for common options.
  * odef:  The default string for this client option.
  * ocb:   A callback function of type void (*)(struct option *) called when
  *        the option changed.
  */
-#define GEN_STR_OPTION(oname, odesc, ohelp, ocat, ospec, odef, ocb, cbd)    \
+#define GEN_STR_OPTION(oname, odesc, ohelp, ocat, odef, ocb, cbd)           \
   {                                                                         \
     .base_option =                                                          \
         OPTION_STR_INIT(&client_optset_static, client_option_common_vtable, \
                         client_option_str_vtable, ocb, cbd),                \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec, .u = {                             \
+    .category = ocat, .u = {                                                \
       .string = {.pvalue = gui_options.oname,                               \
                  .size = sizeof(gui_options.oname),                         \
                  .def = odef,                                               \
@@ -1322,22 +1316,20 @@ struct client_option {
  * ohelp: The help text for the client option.  Should be used with the N_()
  *        macro.
  * ocat:  The client_option_class of this client option.
- * ospec: A gui_type enumerator which determin for what particular client
- *        gui this option is for. Sets to GUI_STUB for common options.
  * odef:  The default string for this client option.
  * oacc:  The string accessor where to find the allowed values of type
  *        'const struct strvec * (*) (void)'.
  * ocb:   A callback function of type void (*)(struct option *) called when
  *        the option changed.
  */
-#define GEN_STR_LIST_OPTION(oname, odesc, ohelp, ocat, ospec, odef, oacc,   \
-                            ocb, cbd)                                       \
+#define GEN_STR_LIST_OPTION(oname, odesc, ohelp, ocat, odef, oacc, ocb,     \
+                            cbd)                                            \
   {                                                                         \
     .base_option =                                                          \
         OPTION_STR_INIT(&client_optset_static, client_option_common_vtable, \
                         client_option_str_vtable, ocb, cbd),                \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec, .u = {                             \
+    .category = ocat, .u = {                                                \
       .string = {.pvalue = gui_options.oname,                               \
                  .size = sizeof(gui_options.oname),                         \
                  .def = odef,                                               \
@@ -1355,20 +1347,18 @@ struct client_option {
  * ohelp: The help text for the client option.  Should be used with the N_()
  *        macro.
  * ocat:  The client_option_class of this client option.
- * ospec: A gui_type enumerator which determin for what particular client
- *        gui this option is for. Sets to GUI_STUB for common options.
  * odef:  The default value for this client option.
  * oacc:  The name accessor of type 'const struct copt_val_name * (*) (int)'.
  * ocb:   A callback function of type void (*) (struct option *) called when
  *        the option changed.
  */
-#define GEN_ENUM_OPTION(oname, odesc, ohelp, ocat, ospec, odef, oacc, ocb)  \
+#define GEN_ENUM_OPTION(oname, odesc, ohelp, ocat, odef, oacc, ocb)         \
   {                                                                         \
     .base_option = OPTION_ENUM_INIT(&client_optset_static,                  \
                                     client_option_common_vtable,            \
                                     client_option_enum_vtable, ocb),        \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec, .u = {                             \
+    .category = ocat, .u = {                                                \
       .enumerator = {.pvalue = (int *) &gui_options.oname,                  \
                      .def = odef,                                           \
                      .support_names = NULL, /* Set in options_init(). */    \
@@ -1387,21 +1377,18 @@ struct client_option {
  * ohelp: The help text for the client option.  Should be used with the N_()
  *        macro.
  * ocat:  The client_option_class of this client option.
- * ospec: A gui_type enumerator which determin for what particular client
- *        gui this option is for. Sets to GUI_STUB for common options.
  * odef:  The default value for this client option.
  * oacc:  The name accessor of type 'const struct copt_val_name * (*) (int)'.
  * ocb:   A callback function of type void (*) (struct option *) called when
  *        the option changed.
  */
-#define GEN_BITWISE_OPTION(oname, odesc, ohelp, ocat, ospec, odef, oacc,    \
-                           ocb)                                             \
+#define GEN_BITWISE_OPTION(oname, odesc, ohelp, ocat, odef, oacc, ocb)      \
   {                                                                         \
     .base_option = OPTION_BITWISE_INIT(&client_optset_static,               \
                                        client_option_common_vtable,         \
                                        client_option_bitwise_vtable, ocb),  \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec, .u = {                             \
+    .category = ocat, .u = {                                                \
       .bitwise = {.pvalue = &gui_options.oname,                             \
                   .def = odef,                                              \
                   .support_names = NULL, /* Set in options_init(). */       \
@@ -1423,19 +1410,17 @@ struct client_option {
  * ohelp: The help text for the client option.  Should be used with the N_()
  *        macro.
  * ocat:  The client_option_class of this client option.
- * ospec: A gui_type enumerator which determin for what particular client
- *        gui this option is for. Sets to GUI_STUB for common options.
  * odef:  The default string for this client option.
  * ocb:   A callback function of type void (*)(struct option *) called when
  *        the option changed.
  */
-#define GEN_FONT_OPTION(oname, otgt, odesc, ohelp, ocat, ospec, odef, ocb)  \
+#define GEN_FONT_OPTION(oname, otgt, odesc, ohelp, ocat, odef, ocb)         \
   {                                                                         \
     .base_option = OPTION_FONT_INIT(&client_optset_static,                  \
                                     client_option_common_vtable,            \
                                     client_option_font_vtable, ocb),        \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec,                                    \
+    .category = ocat,                                                       \
     .u =                                                                    \
     {.font = {                                                              \
          .pvalue = gui_options.oname,                                       \
@@ -1455,20 +1440,17 @@ struct client_option {
  * ohelp: The help text for the client option.  Should be used with the N_()
  *        macro.
  * ocat:  The client_option_class of this client option.
- * ospec: A gui_type enumerator which determin for what particular client
- *        gui this option is for. Sets to GUI_STUB for common options.
  * odef_fg, odef_bg:  The default values for this client option.
  * ocb:   A callback function of type void (*)(struct option *) called when
  *        the option changed.
  */
-#define GEN_COLOR_OPTION(oname, odesc, ohelp, ocat, ospec, odef_fg,         \
-                         odef_bg, ocb)                                      \
+#define GEN_COLOR_OPTION(oname, odesc, ohelp, ocat, odef_fg, odef_bg, ocb)  \
   {                                                                         \
     .base_option = OPTION_COLOR_INIT(&client_optset_static,                 \
                                      client_option_common_vtable,           \
                                      client_option_color_vtable, ocb),      \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec, .u = {                             \
+    .category = ocat, .u = {                                                \
       .color = {.pvalue = &gui_options.oname,                               \
                 .def = FT_COLOR(odef_fg, odef_bg)}                          \
     }                                                                       \
@@ -1497,7 +1479,7 @@ static struct client_option client_options[] = {
         N_("This is the default login username that will be used "
            "in the connection dialogs or with the -a command-line "
            "parameter."),
-        COC_NETWORK, GUI_STUB, NULL, NULL, 0),
+        COC_NETWORK, NULL, NULL, 0),
     GEN_BOOL_OPTION(use_prev_server, N_("Default to previously used server"),
                     N_("Automatically update \"Server\" and \"Server port\" "
                        "options to match your latest connection, so by "
@@ -1505,26 +1487,25 @@ static struct client_option client_options[] = {
                        "on the previous run. You should enable "
                        "saving options on exit too, so that the automatic "
                        "updates to the options get saved too."),
-                    COC_NETWORK, GUI_STUB, false, NULL),
+                    COC_NETWORK, false, NULL),
     GEN_STR_OPTION(
         default_server_host, N_("Server"),
         N_("This is the default server hostname that will be used "
            "in the connection dialogs or with the -a command-line "
            "parameter."),
-        COC_NETWORK, GUI_STUB, "localhost", NULL, 0),
+        COC_NETWORK, "localhost", NULL, 0),
     GEN_INT_OPTION(
         default_server_port, N_("Server port"),
         N_("This is the default server port that will be used "
            "in the connection dialogs or with the -a command-line "
            "parameter."),
-        COC_NETWORK, GUI_STUB, DEFAULT_SOCK_PORT, 0, 65535, NULL),
+        COC_NETWORK, DEFAULT_SOCK_PORT, 0, 65535, NULL),
     GEN_STR_OPTION(default_metaserver, N_("Metaserver"),
                    N_("The metaserver is a host that the client contacts to "
                       "find out about games on the internet.  Don't change "
                       "this from its default value unless you know what "
                       "you're doing."),
-                   COC_NETWORK, GUI_STUB, DEFAULT_METASERVER_OPTION, NULL,
-                   0),
+                   COC_NETWORK, DEFAULT_METASERVER_OPTION, NULL, 0),
     GEN_BOOL_OPTION(
         heartbeat_enabled, N_("Send heartbeat messages to server"),
         N_("Periodically send an empty heartbeat message to the "
@@ -1532,34 +1513,34 @@ static struct client_option client_options[] = {
            "This can help to make it obvious when the server has "
            "cut the connection due to a connectivity outage, if "
            "the client would otherwise sit idle for a long period."),
-        COC_NETWORK, GUI_STUB, true, NULL),
+        COC_NETWORK, true, NULL),
     GEN_STR_LIST_OPTION(
         default_sound_set_name, N_("Soundset"),
         N_("This is the soundset that will be used.  Changing "
            "this is the same as using the -S command-line "
            "parameter."),
-        COC_SOUND, GUI_STUB, "stdsounds", get_soundset_list, NULL, 0),
+        COC_SOUND, "stdsounds", get_soundset_list, NULL, 0),
     GEN_STR_LIST_OPTION(
         default_music_set_name, N_("Musicset"),
         N_("This is the musicset that will be used.  Changing "
            "this is the same as using the -m command-line "
            "parameter."),
-        COC_SOUND, GUI_STUB, "stdmusic", get_musicset_list,
-        musicspec_reread_callback, 0),
+        COC_SOUND, "stdmusic", get_musicset_list, musicspec_reread_callback,
+        0),
     GEN_STR_LIST_OPTION(
         default_sound_plugin_name, N_("Sound plugin"),
         N_("If you have a problem with sound, try changing "
            "the sound plugin.  The new plugin won't take "
            "effect until you restart Freeciv21.  Changing this "
            "is the same as using the -P command-line option."),
-        COC_SOUND, GUI_STUB, "", get_soundplugin_list, NULL, 0),
+        COC_SOUND, "", get_soundplugin_list, NULL, 0),
     GEN_STR_OPTION(default_chat_logfile, N_("The chat log file"),
                    N_("The name of the chat log file."), COC_INTERFACE,
-                   GUI_STUB, GUI_DEFAULT_CHAT_LOGFILE, NULL, 0),
+                   GUI_DEFAULT_CHAT_LOGFILE, NULL, 0),
     GEN_STR_LIST_OPTION(gui_qt_default_theme_name, N_("Theme"),
                         N_("By changing this option you change the "
                            "active theme."),
-                        COC_GRAPHICS, GUI_QT, FC_QT_DEFAULT_THEME_NAME,
+                        COC_GRAPHICS, FC_QT_DEFAULT_THEME_NAME,
                         get_themes_list, theme_reread_callback, 0),
 
     /* It's important to give empty string instead of NULL as as default
@@ -1574,8 +1555,7 @@ static struct client_option client_options[] = {
            "you are playing on such a map, in which "
            "case this is the same as using the -t "
            "command-line parameter."),
-        COC_GRAPHICS, GUI_STUB, "", get_tileset_list,
-        tilespec_reread_callback, 0),
+        COC_GRAPHICS, "", get_tileset_list, tilespec_reread_callback, 0),
     GEN_STR_LIST_OPTION(
         default_tileset_hex_name, N_("Tileset (Hex)"),
         N_("Select the tileset used with Hex maps. "
@@ -1583,8 +1563,8 @@ static struct client_option client_options[] = {
            "you are playing on such a map, in which "
            "case this is the same as using the -t "
            "command-line parameter."),
-        COC_GRAPHICS, GUI_STUB, "", get_tileset_list,
-        tilespec_reread_callback, TF_HEX),
+        COC_GRAPHICS, "", get_tileset_list, tilespec_reread_callback,
+        TF_HEX),
     GEN_STR_LIST_OPTION(
         default_tileset_isohex_name, N_("Tileset (Iso-Hex)"),
         N_("Select the tileset used with Iso-Hex maps. "
@@ -1592,128 +1572,115 @@ static struct client_option client_options[] = {
            "you are playing on such a map, in which "
            "case this is the same as using the -t "
            "command-line parameter."),
-        COC_GRAPHICS, GUI_STUB, "", get_tileset_list,
-        tilespec_reread_callback, TF_ISO | TF_HEX),
+        COC_GRAPHICS, "", get_tileset_list, tilespec_reread_callback,
+        TF_ISO | TF_HEX),
 
     GEN_STR_LIST_OPTION(default_city_bar_style_name, N_("City bar style"),
                         N_("Selects the style of the city bar."),
-                        COC_GRAPHICS, GUI_STUB, "Polished",
+                        COC_GRAPHICS, "Polished",
                         citybar_painter::available_vector,
                         citybar_painter::option_changed, 0),
 
     GEN_BOOL_OPTION(draw_city_outlines, N_("Draw city outlines"),
                     N_("Setting this option will draw a line at the city "
                        "workable limit."),
-                    COC_GRAPHICS, GUI_STUB, true,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_city_output, N_("Draw city output"),
                     N_("Setting this option will draw city output for every "
                        "citizen."),
-                    COC_GRAPHICS, GUI_STUB, false,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, false, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_map_grid, N_("Draw the map grid"),
                     N_("Setting this option will draw a grid over the map."),
-                    COC_GRAPHICS, GUI_STUB, false,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, false, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_city_names, N_("Draw the city names"),
         N_("Setting this option will draw the names of the cities "
            "on the map."),
-        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
+        COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_city_growth, N_("Draw the city growth"),
                     N_("Setting this option will draw in how many turns the "
                        "cities will grow or shrink."),
-                    COC_GRAPHICS, GUI_STUB, true,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_city_productions, N_("Draw the city productions"),
                     N_("Setting this option will draw what the cities are "
                        "currently building on the map."),
-                    COC_GRAPHICS, GUI_STUB, true,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_city_buycost, N_("Draw the city buy costs"),
                     N_("Setting this option will draw how much gold is "
                        "needed to buy the production of the cities."),
-                    COC_GRAPHICS, GUI_STUB, false,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, false, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_city_trade_routes, N_("Draw the city trade routes"),
                     N_("Setting this option will draw trade route lines "
                        "between cities which have trade routes."),
-                    COC_GRAPHICS, GUI_STUB, false,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, false, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_coastline, N_("Draw the coast line"),
         N_("Setting this option will draw a line to separate the "
            "land from the ocean."),
-        COC_GRAPHICS, GUI_STUB, false, view_option_changed_callback),
+        COC_GRAPHICS, false, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_roads_rails, N_("Draw the roads and the railroads"),
                     N_("Setting this option will draw the roads and the "
                        "railroads on the map."),
-                    COC_GRAPHICS, GUI_STUB, true,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_irrigation, N_("Draw the irrigation"),
         N_("Setting this option will draw the irrigation systems "
            "on the map."),
-        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
+        COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_mines, N_("Draw the mines"),
         N_("Setting this option will draw the mines on the map."),
-        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
+        COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_fortress_airbase, N_("Draw the bases"),
         N_("Setting this option will draw the bases on the map."),
-        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
+        COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_specials, N_("Draw the resources"),
                     N_("Setting this option will draw the resources on the "
                        "map."),
-                    COC_GRAPHICS, GUI_STUB, true,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_huts, N_("Draw the huts"),
                     N_("Setting this option will draw the huts on the "
                        "map."),
-                    COC_GRAPHICS, GUI_STUB, true,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_pollution, N_("Draw the pollution/nuclear fallout"),
                     N_("Setting this option will draw pollution and "
                        "nuclear fallout on the map."),
-                    COC_GRAPHICS, GUI_STUB, true,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_cities, N_("Draw the cities"),
         N_("Setting this option will draw the cities on the map."),
-        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
+        COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
-        draw_units,
-        N_("Draw the units"),
+        draw_units, N_("Draw the units"),
         N_("Setting this option will draw the units on the map."),
-        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
-    GEN_BOOL_OPTION(
-        solid_color_behind_units, N_("Solid unit background color"),
-        N_("Setting this option will cause units on the map "
-           "view to be drawn with a solid background color "
-           "instead of the flag backdrop."),
-        COC_GRAPHICS, GUI_STUB, false, view_option_changed_callback),
+        COC_GRAPHICS, true, view_option_changed_callback),
+    GEN_BOOL_OPTION(solid_color_behind_units,
+                    N_("Solid unit background color"),
+                    N_("Setting this option will cause units on the map "
+                       "view to be drawn with a solid background color "
+                       "instead of the flag backdrop."),
+                    COC_GRAPHICS, false, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_unit_shields, N_("Draw shield graphics for units"),
         N_("Setting this option will draw a shield icon "
            "as the flags on units.  If unset, the full flag will "
            "be drawn."),
-        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
+        COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_focus_unit, N_("Draw the units in focus"),
         N_("Setting this option will cause the currently focused "
            "unit(s) to always be drawn, even if units are not "
            "otherwise being drawn (for instance if 'Draw the units' "
            "is unset)."),
-        COC_GRAPHICS, GUI_STUB, false, view_option_changed_callback),
+        COC_GRAPHICS, false, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_fog_of_war, N_("Draw the fog of war"),
                     N_("Setting this option will draw the fog of war."),
-                    COC_GRAPHICS, GUI_STUB, true,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_borders, N_("Draw the borders"),
         N_("Setting this option will draw the national borders."),
-        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
+        COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_native,
         N_("Draw whether tiles are native to "
@@ -1722,33 +1689,31 @@ static struct client_option client_options[] = {
            "currently selected unit cannot enter unaided due to "
            "non-native terrain. (If multiple units are selected, "
            "only tiles that all of them can enter are indicated.)"),
-        COC_GRAPHICS, GUI_STUB, false, view_option_changed_callback),
+        COC_GRAPHICS, false, view_option_changed_callback),
     GEN_BOOL_OPTION(player_dlg_show_dead_players,
                     N_("Show dead players in Nations report"),
                     N_("This option controls whether defeated nations are "
                        "shown on the Nations report page."),
-                    COC_GRAPHICS, GUI_STUB, true,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(zoom_scale_fonts, N_("Scale fonts when zooming"),
                     N_("When this option is set, the fonts and city "
                        "descriptions will be "
                        "scaled when the map is zoomed."),
-                    COC_GRAPHICS, GUI_STUB, true,
-                    view_option_changed_callback),
+                    COC_GRAPHICS, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         sound_bell_at_new_turn, N_("Sound bell at new turn"),
         N_("Set this option to have a \"bell\" event be generated "
            "at the start of a new turn.  You can control the "
            "behavior of the \"bell\" event by editing the message "
            "options."),
-        COC_SOUND, GUI_STUB, false, NULL),
+        COC_SOUND, false, NULL),
     GEN_INT_OPTION(
         smooth_move_unit_msec,
         N_("Unit movement animation time (milliseconds)"),
         N_("This option controls how long unit \"animation\" takes "
            "when a unit moves on the map view.  Set it to 0 to "
            "disable animation entirely."),
-        COC_GRAPHICS, GUI_STUB, 30, 0, 2000, NULL),
+        COC_GRAPHICS, 30, 0, 2000, NULL),
     GEN_INT_OPTION(
         smooth_center_slide_msec,
         N_("Mapview recentering time (milliseconds)"),
@@ -1756,107 +1721,106 @@ static struct client_option client_options[] = {
            "smoothly over the map to its new position.  This "
            "option controls how long this slide lasts.  Set it to "
            "0 to disable mapview sliding entirely."),
-        COC_GRAPHICS, GUI_STUB, 200, 0, 5000, NULL),
+        COC_GRAPHICS, 200, 0, 5000, NULL),
     GEN_INT_OPTION(
         smooth_combat_step_msec,
         N_("Combat animation step time (milliseconds)"),
         N_("This option controls the speed of combat animation "
            "between units on the mapview.  Set it to 0 to disable "
            "animation entirely."),
-        COC_GRAPHICS, GUI_STUB, 10, 0, 100, NULL),
-    GEN_BOOL_OPTION(
-        reqtree_show_icons, N_("Show icons in the technology tree"),
-        N_("Setting this option will display icons "
-           "on the technology tree diagram. Turning "
-           "this option off makes the technology tree "
-           "more compact."),
-        COC_GRAPHICS, GUI_STUB, true, reqtree_show_icons_callback),
-    GEN_BOOL_OPTION(
-        reqtree_curved_lines, N_("Use curved lines in the technology tree"),
-        N_("Setting this option make the technology tree "
-           "diagram use curved lines to show technology "
-           "relations. Turning this option off causes "
-           "the lines to be drawn straight."),
-        COC_GRAPHICS, GUI_STUB, false, reqtree_show_icons_callback),
+        COC_GRAPHICS, 10, 0, 100, NULL),
+    GEN_BOOL_OPTION(reqtree_show_icons,
+                    N_("Show icons in the technology tree"),
+                    N_("Setting this option will display icons "
+                       "on the technology tree diagram. Turning "
+                       "this option off makes the technology tree "
+                       "more compact."),
+                    COC_GRAPHICS, true, reqtree_show_icons_callback),
+    GEN_BOOL_OPTION(reqtree_curved_lines,
+                    N_("Use curved lines in the technology tree"),
+                    N_("Setting this option make the technology tree "
+                       "diagram use curved lines to show technology "
+                       "relations. Turning this option off causes "
+                       "the lines to be drawn straight."),
+                    COC_GRAPHICS, false, reqtree_show_icons_callback),
     GEN_COLOR_OPTION(
         highlight_our_names, N_("Color to highlight your player/user name"),
         N_("If set, your player and user name in the new chat "
            "messages will be highlighted using this color as "
            "background.  If not set, it will just not highlight "
            "anything."),
-        COC_GRAPHICS, GUI_STUB, "#000000", "#FFFF00", NULL),
+        COC_GRAPHICS, "#000000", "#FFFF00", NULL),
     GEN_BOOL_OPTION(ai_manual_turn_done, N_("Manual Turn Done in AI mode"),
                     N_("Disable this option if you do not want to "
                        "press the Turn Done button manually when watching "
                        "an AI player."),
-                    COC_INTERFACE, GUI_STUB, true,
-                    manual_turn_done_callback),
+                    COC_INTERFACE, true, manual_turn_done_callback),
     GEN_BOOL_OPTION(auto_center_on_unit, N_("Auto center on units"),
                     N_("Set this option to have the active unit centered "
                        "automatically when the unit focus changes."),
-                    COC_INTERFACE, GUI_STUB, true, NULL),
+                    COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(auto_center_on_automated, N_("Show automated units"),
                     N_("Disable this option if you do not want to see "
                        "automated units autocentered and animated."),
-                    COC_INTERFACE, GUI_STUB, true, NULL),
+                    COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(
         auto_center_on_combat, N_("Auto center on combat"),
         N_("Set this option to have any combat be centered "
            "automatically.  Disabling this will speed up the time "
            "between turns but may cause you to miss combat "
            "entirely."),
-        COC_INTERFACE, GUI_STUB, false, NULL),
+        COC_INTERFACE, false, NULL),
     GEN_BOOL_OPTION(auto_center_each_turn, N_("Auto center on new turn"),
                     N_("Set this option to have the client automatically "
                        "recenter the map on a suitable location at the "
                        "start of each turn."),
-                    COC_INTERFACE, GUI_STUB, true, NULL),
+                    COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(wakeup_focus, N_("Focus on awakened units"),
                     N_("Set this option to have newly awoken units be "
                        "focused automatically."),
-                    COC_INTERFACE, GUI_STUB, true, NULL),
+                    COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(keyboardless_goto, N_("Keyboardless goto"),
                     N_("If this option is set then a goto may be initiated "
                        "by left-clicking and then holding down the mouse "
                        "button while dragging the mouse onto a different "
                        "tile."),
-                    COC_INTERFACE, GUI_STUB, true, NULL),
+                    COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(
         goto_into_unknown, N_("Allow goto into the unknown"),
         N_("Setting this option will make the game consider "
            "moving into unknown tiles.  If not, then goto routes "
            "will detour around or be blocked by unknown tiles."),
-        COC_INTERFACE, GUI_STUB, true, NULL),
+        COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(center_when_popup_city, N_("Center map when popup city"),
                     N_("Setting this option makes the mapview center on a "
                        "city when its city dialog is popped up."),
-                    COC_INTERFACE, GUI_STUB, true, NULL),
+                    COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(
         show_previous_turn_messages, N_("Show messages from previous turn"),
         N_("Message Window shows messages also from previous turn. "
            "This makes sure you don't miss messages received in the end of "
            "the turn, just before the window gets cleared."),
-        COC_INTERFACE, GUI_STUB, true, NULL),
+        COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(
         concise_city_production, N_("Concise city production"),
         N_("Set this option to make the city production (as shown "
            "in the city dialog) to be more compact."),
-        COC_INTERFACE, GUI_STUB, false, NULL),
+        COC_INTERFACE, false, NULL),
     GEN_BOOL_OPTION(
         auto_turn_done, N_("End turn when done moving"),
         N_("Setting this option makes your turn end automatically "
            "when all your units are done moving."),
-        COC_INTERFACE, GUI_STUB, false, NULL),
+        COC_INTERFACE, false, NULL),
     GEN_BOOL_OPTION(
         ask_city_name, N_("Prompt for city names"),
         N_("Disabling this option will make the names of newly "
            "founded cities be chosen automatically by the server."),
-        COC_INTERFACE, GUI_STUB, true, NULL),
+        COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(popup_new_cities,
                     N_("Pop up city dialog for new cities"),
                     N_("Setting this option will pop up a newly-founded "
                        "city's city dialog automatically."),
-                    COC_INTERFACE, GUI_STUB, true, NULL),
+                    COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(
         popup_actor_arrival, N_("Pop up caravan and spy actions"),
         N_("If this option is enabled, when a unit arrives at "
@@ -1868,7 +1832,7 @@ static struct client_option client_options[] = {
            "action manually by pressing either 'r' (for a trade "
            "route), 'b' (for building a wonder) or 'd' (for a "
            "spy action) when the unit is in the city."),
-        COC_INTERFACE, GUI_STUB, true, NULL),
+        COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(
         popup_attack_actions, N_("Pop up attack questions"),
         N_("If this option is enabled, when a unit arrives at a "
@@ -1877,7 +1841,7 @@ static struct client_option client_options[] = {
            "action is legal and no other interesting action are. "
            "This allows you to change your mind or to select an "
            "uninteresting action."),
-        COC_INTERFACE, GUI_STUB, true, NULL),
+        COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(
         popup_last_move_to_allied, N_("Pop up actions last move to allied"),
         N_("If this option is enabled the final move in a unit's"
@@ -1890,19 +1854,19 @@ static struct client_option client_options[] = {
            " The down side is that the unit remains adjacent to"
            " rather than inside the protection of an allied city"
            " or unit stack."),
-        COC_INTERFACE, GUI_STUB, true, NULL),
+        COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(enable_cursor_changes, N_("Enable cursor changing"),
                     N_("This option controls whether the client should "
                        "try to change the mouse cursor depending on what "
                        "is being pointed at, as well as to indicate "
                        "changes in the client or server state."),
-                    COC_INTERFACE, GUI_STUB, true, NULL),
+                    COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(separate_unit_selection,
                     N_("Select cities before units"),
                     N_("If this option is enabled, when both cities and "
                        "units are present in the selection rectangle, only "
                        "cities will be selected. See the help on Controls."),
-                    COC_INTERFACE, GUI_STUB, false, NULL),
+                    COC_INTERFACE, false, NULL),
     GEN_BOOL_OPTION(
         unit_selection_clears_orders, N_("Clear unit orders on selection"),
         N_("Enabling this option will cause unit orders to be "
@@ -1913,209 +1877,204 @@ static struct client_option client_options[] = {
            "<space> once will clear their orders and leave them "
            "selected, and pressing <space> a second time will "
            "dismiss them."),
-        COC_INTERFACE, GUI_STUB, true, NULL),
+        COC_INTERFACE, true, NULL),
     GEN_BOOL_OPTION(voteinfo_bar_use, N_("Enable vote bar"),
                     N_("If this option is turned on, the vote bar will be "
                        "displayed to show vote information."),
-                    COC_GRAPHICS, GUI_STUB, true, voteinfo_bar_callback),
+                    COC_GRAPHICS, true, voteinfo_bar_callback),
     GEN_BOOL_OPTION(
         voteinfo_bar_always_show, N_("Always display the vote bar"),
         N_("If this option is turned on, the vote bar will never "
            "be hidden, even if there is no running vote."),
-        COC_GRAPHICS, GUI_STUB, false, voteinfo_bar_callback),
+        COC_GRAPHICS, false, voteinfo_bar_callback),
     GEN_BOOL_OPTION(
         voteinfo_bar_hide_when_not_player,
         N_("Do not show vote bar if not a player"),
         N_("If this option is enabled, the client won't show the "
            "vote bar if you are not a player."),
-        COC_GRAPHICS, GUI_STUB, false, voteinfo_bar_callback),
+        COC_GRAPHICS, false, voteinfo_bar_callback),
     GEN_BOOL_OPTION(voteinfo_bar_new_at_front, N_("Set new votes at front"),
                     N_("If this option is enabled, then new votes will go "
                        "to the front of the vote list."),
-                    COC_GRAPHICS, GUI_STUB, false, voteinfo_bar_callback),
+                    COC_GRAPHICS, false, voteinfo_bar_callback),
     GEN_BOOL_OPTION(autoaccept_tileset_suggestion,
                     N_("Autoaccept tileset suggestions"),
                     N_("If this option is enabled, any tileset suggested by "
                        "the ruleset is automatically used; otherwise you "
                        "are prompted to change tileset."),
-                    COC_GRAPHICS, GUI_STUB, false, NULL),
+                    COC_GRAPHICS, false, NULL),
 
     GEN_BOOL_OPTION(sound_enable_effects, N_("Enable sound effects"),
                     N_("Play sound effects, assuming there's suitable "
                        "sound plugin and soundset with the sounds."),
-                    COC_SOUND, GUI_STUB, true, NULL),
+                    COC_SOUND, true, NULL),
     GEN_BOOL_OPTION(
         sound_enable_game_music, N_("Enable in-game music"),
         N_("Play music during the game, assuming there's suitable "
            "sound plugin and musicset with in-game tracks."),
-        COC_SOUND, GUI_STUB, true, game_music_enable_callback),
+        COC_SOUND, true, game_music_enable_callback),
     GEN_BOOL_OPTION(sound_enable_menu_music, N_("Enable menu music"),
                     N_("Play music while not in actual game, "
                        "assuming there's suitable "
                        "sound plugin and musicset with menu music tracks."),
-                    COC_SOUND, GUI_STUB, true, menu_music_enable_callback),
+                    COC_SOUND, true, menu_music_enable_callback),
     GEN_INT_OPTION(sound_effects_volume, N_("Sound volume"),
-                   N_("Volume scale from 0-100"), COC_SOUND, GUI_STUB, 100,
-                   0, 100, sound_volume_callback),
+                   N_("Volume scale from 0-100"), COC_SOUND, 100, 0, 100,
+                   sound_volume_callback),
 
     GEN_BOOL_OPTION(
         autoaccept_soundset_suggestion,
         N_("Autoaccept soundset suggestions"),
         N_("If this option is enabled, any soundset suggested by "
            "the ruleset is automatically used."),
-        COC_SOUND, GUI_STUB, false, NULL),
+        COC_SOUND, false, NULL),
     GEN_BOOL_OPTION(
         autoaccept_musicset_suggestion,
         N_("Autoaccept musicset suggestions"),
         N_("If this option is enabled, any musicset suggested by "
            "the ruleset is automatically used."),
-        COC_SOUND, GUI_STUB, false, NULL),
+        COC_SOUND, false, NULL),
 
     GEN_BOOL_OPTION(overview.layers[OLAYER_BACKGROUND],
                     N_("Background layer"),
                     N_("The background layer of the overview shows just "
                        "ocean and land."),
-                    COC_OVERVIEW, GUI_STUB, true, NULL),
+                    COC_OVERVIEW, true, NULL),
     GEN_BOOL_OPTION(overview.layers[OLAYER_RELIEF],
                     N_("Terrain relief map layer"),
                     N_("The relief layer shows all terrains on the map."),
-                    COC_OVERVIEW, GUI_STUB, false, overview_redraw_callback),
+                    COC_OVERVIEW, false, overview_redraw_callback),
     GEN_BOOL_OPTION(overview.layers[OLAYER_BORDERS], N_("Borders layer"),
                     N_("The borders layer of the overview shows which tiles "
                        "are owned by each player."),
-                    COC_OVERVIEW, GUI_STUB, false, overview_redraw_callback),
+                    COC_OVERVIEW, false, overview_redraw_callback),
     GEN_BOOL_OPTION(overview.layers[OLAYER_BORDERS_ON_OCEAN],
                     N_("Borders layer on ocean tiles"),
                     N_("The borders layer of the overview are drawn on "
                        "ocean tiles as well (this may look ugly with many "
                        "islands). This option is only of interest if you "
                        "have set the option \"Borders layer\" already."),
-                    COC_OVERVIEW, GUI_STUB, true, overview_redraw_callback),
+                    COC_OVERVIEW, true, overview_redraw_callback),
     GEN_BOOL_OPTION(overview.layers[OLAYER_UNITS], N_("Units layer"),
                     N_("Enabling this will draw units on the overview."),
-                    COC_OVERVIEW, GUI_STUB, true, overview_redraw_callback),
+                    COC_OVERVIEW, true, overview_redraw_callback),
     GEN_BOOL_OPTION(overview.layers[OLAYER_CITIES], N_("Cities layer"),
                     N_("Enabling this will draw cities on the overview."),
-                    COC_OVERVIEW, GUI_STUB, true, overview_redraw_callback),
+                    COC_OVERVIEW, true, overview_redraw_callback),
     GEN_BOOL_OPTION(overview.fog, N_("Overview fog of war"),
                     N_("Enabling this will show fog of war on the "
                        "overview."),
-                    COC_OVERVIEW, GUI_STUB, true, overview_redraw_callback),
+                    COC_OVERVIEW, true, overview_redraw_callback),
 
     // options for map images
     GEN_STR_LIST_OPTION(mapimg_format, N_("Image format"),
                         N_("The image toolkit and file format used for "
                            "map images."),
-                        COC_MAPIMG, GUI_STUB, NULL, get_mapimg_format_list,
-                        NULL, 0),
+                        COC_MAPIMG, NULL, get_mapimg_format_list, NULL, 0),
     GEN_INT_OPTION(mapimg_zoom, N_("Zoom factor for map images"),
                    N_("The magnification used for map images."), COC_MAPIMG,
-                   GUI_STUB, 2, 1, 5, mapimg_changed_callback),
+                   2, 1, 5, mapimg_changed_callback),
     GEN_BOOL_OPTION(mapimg_layer[MAPIMG_LAYER_AREA],
                     N_("Show area within borders"),
                     N_("If set, the territory of each nation is shown "
                        "on the saved image."),
-                    COC_MAPIMG, GUI_STUB, false, mapimg_changed_callback),
+                    COC_MAPIMG, false, mapimg_changed_callback),
     GEN_BOOL_OPTION(mapimg_layer[MAPIMG_LAYER_BORDERS], N_("Show borders"),
                     N_("If set, the border of each nation is shown on the "
                        "saved image."),
-                    COC_MAPIMG, GUI_STUB, true, mapimg_changed_callback),
+                    COC_MAPIMG, true, mapimg_changed_callback),
     GEN_BOOL_OPTION(mapimg_layer[MAPIMG_LAYER_CITIES], N_("Show cities"),
                     N_("If set, cities are shown on the saved image."),
-                    COC_MAPIMG, GUI_STUB, true, mapimg_changed_callback),
+                    COC_MAPIMG, true, mapimg_changed_callback),
     GEN_BOOL_OPTION(mapimg_layer[MAPIMG_LAYER_FOGOFWAR],
                     N_("Show fog of war"),
                     N_("If set, the extent of fog of war is shown on the "
                        "saved image."),
-                    COC_MAPIMG, GUI_STUB, true, mapimg_changed_callback),
+                    COC_MAPIMG, true, mapimg_changed_callback),
     GEN_BOOL_OPTION(
         mapimg_layer[MAPIMG_LAYER_TERRAIN], N_("Show full terrain"),
         N_("If set, terrain relief is shown with different colors "
            "in the saved image; otherwise, only land and water are "
            "distinguished."),
-        COC_MAPIMG, GUI_STUB, true, mapimg_changed_callback),
+        COC_MAPIMG, true, mapimg_changed_callback),
     GEN_BOOL_OPTION(mapimg_layer[MAPIMG_LAYER_UNITS], N_("Show units"),
                     N_("If set, units are shown in the saved image."),
-                    COC_MAPIMG, GUI_STUB, true, mapimg_changed_callback),
+                    COC_MAPIMG, true, mapimg_changed_callback),
     GEN_STR_OPTION(
         mapimg_filename, N_("Map image file name"),
         N_("The base part of the filename for saved map images. "
            "A string identifying the game turn and map options will "
            "be appended."),
-        COC_MAPIMG, GUI_STUB, GUI_DEFAULT_MAPIMG_FILENAME, NULL, 0),
+        COC_MAPIMG, GUI_DEFAULT_MAPIMG_FILENAME, NULL, 0),
 
-    // gui-qt client specific options.
     GEN_BOOL_OPTION(gui_qt_fullscreen, N_("Fullscreen"),
                     N_("If this option is set the client will use the "
                        "whole screen area for drawing."),
-                    COC_INTERFACE, GUI_QT, false, NULL),
+                    COC_INTERFACE, false, NULL),
     GEN_BOOL_OPTION(
         gui_qt_show_titlebar, N_("Show titlebar"),
         N_("If this option is set the client will show a titlebar. "
            "If disabled, then no titlebar will be shown, and "
            "minimize/maximize/etc buttons will be placed on the "
            "menu bar."),
-        COC_INTERFACE, GUI_QT, true, NULL),
+        COC_INTERFACE, true, NULL),
     GEN_INT_OPTION(gui_qt_increase_fonts, N_("Change all fonts size"),
                    N_("Change size of all fonts at once by given percent."
                       "That options is not unsaveable. Hit Apply button"
                       "after changing this."),
-                   COC_FONT, GUI_QT, 0, -100, 100, allfont_changed_callback),
+                   COC_FONT, 0, -100, 100, allfont_changed_callback),
     GEN_INT_OPTION(gui_qt_sidebar_width, N_("Sidebar width"),
                    N_("Change width of sidebar. 1 - narrow, 9 - fat"),
-                   COC_INTERFACE, GUI_QT, 5, 1, 31,
-                   sidebar_changed_callback),
+                   COC_INTERFACE, 5, 1, 31, sidebar_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_default, "default_font", N_("Default font"),
-                    N_("This is default font"), COC_FONT, GUI_QT,
+                    N_("This is default font"), COC_FONT,
                     "Sans Serif,10,-1,5,75,0,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(
         gui_qt_font_notify_label, "notify_label", N_("Notify Label"),
         N_("This font is used to display server reports such "
            "as the demographic report or historian publications."),
-        COC_FONT, GUI_QT, "Monospace,9,-1,5,75,0,0,0,0,0",
-        font_changed_callback),
+        COC_FONT, "Monospace,9,-1,5,75,0,0,0,0,0", font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_help_label, "help_label", N_("Help Label"),
                     N_("This font is used to display the help labels in the "
                        "help window."),
-                    COC_FONT, GUI_QT, "Sans Serif,9,-1,5,50,0,0,0,0,0",
+                    COC_FONT, "Sans Serif,9,-1,5,50,0,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_help_text, "help_text", N_("Help Text"),
                     N_("This font is used to display the help body text in "
                        "the help window."),
-                    COC_FONT, GUI_QT, "Monospace,8,-1,5,50,0,0,0,0,0",
+                    COC_FONT, "Monospace,8,-1,5,50,0,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_chatline, "chatline", N_("Chatline Area"),
                     N_("This font is used to display the text in the "
                        "chatline area."),
-                    COC_FONT, GUI_QT, "Monospace,8,-1,5,50,0,0,0,0,0",
+                    COC_FONT, "Monospace,8,-1,5,50,0,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_city_names, "city_names", N_("City Names"),
                     N_("This font is used to the display the city names "
                        "on the map."),
-                    COC_FONT, GUI_QT, "Sans Serif,10,-1,5,75,0,0,0,0,0",
+                    COC_FONT, "Sans Serif,10,-1,5,75,0,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_city_productions, "city_productions",
                     N_("City Productions"),
                     N_("This font is used to display the city production "
                        "on the map."),
-                    COC_FONT, GUI_QT, "Sans Serif,10,-1,5,50,1,0,0,0,0",
+                    COC_FONT, "Sans Serif,10,-1,5,50,1,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(
         gui_qt_font_reqtree_text, "reqtree_text", N_("Requirement Tree"),
         N_("This font is used to the display the requirement tree "
            "in the Research report."),
-        COC_FONT, GUI_QT, "Sans Serif,10,-1,5,50,1,0,0,0,0",
-        font_changed_callback),
+        COC_FONT, "Sans Serif,10,-1,5,50,1,0,0,0,0", font_changed_callback),
     GEN_BOOL_OPTION(gui_qt_show_preview, N_("Show savegame information"),
                     N_("If this option is set the client will show "
                        "information and map preview of current savegame."),
-                    COC_GRAPHICS, GUI_QT, true, NULL),
+                    COC_GRAPHICS, true, NULL),
     GEN_BOOL_OPTION(
         gui_qt_sidebar_left, N_("Sidebar position"),
         N_("If this option is set, the sidebar will be to the left "
            "of the map, otherwise to the right."),
-        COC_INTERFACE, GUI_QT, true, NULL)};
+        COC_INTERFACE, true, NULL)};
 static const int client_options_num = ARRAY_SIZE(client_options);
 
 // Iteration loop, including invalid options for the current gui type.
@@ -2140,10 +2099,8 @@ client_option_next_valid(struct client_option *poption)
 {
   const struct client_option *const max =
       client_options + client_options_num;
-  const enum gui_type our_type = get_gui_type();
 
-  while (poption < max && poption->specific != GUI_STUB
-         && poption->specific != our_type) {
+  while (poption < max) {
     poption++;
   }
 
@@ -4654,18 +4611,8 @@ void options_save(option_save_log_callback log_cb)
                       "client.migration_qt_from_2_5");
 
   // prevent saving that option
-  gui_options.gui_qt_increase_fonts = 0;
-  // gui-enabled options
-  client_options_iterate_all(poption)
-  {
-    if ((client_poption->specific != GUI_SDL)
-        && (client_poption->specific != GUI_GTK2)) {
-      /* Once sdl-client options have been migrated to sdl2-client, or
-       * gtk2-client options to gtk3-client, there's no use for them any
-       * more, so no point in saving them. */
-      client_option_save(poption, sf);
-    }
-  }
+  gui_options.gui_qt_increase_fonts = 0; // gui-enabled options
+  client_options_iterate_all(poption) { client_option_save(poption, sf); }
   client_options_iterate_all_end;
 
   if (gui_options.default_tileset_name[0] != '\0') {

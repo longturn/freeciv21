@@ -229,7 +229,6 @@ type DIPLSTATE_TYPE     = uint8(enum diplstate_type)
 type DIRECTION          = sint8(enum direction8)
 type EFFECT_TYPE        = uint8(enum effect_type)
 type EVENT              = sint16(enum event_type)
-type GUI_TYPE           = uint8(enum gui_type)
 type IMPR_GENUS         = uint8(enum impr_genus_id)
 type KNOWN              = uint8(enum known_type)
 type MOOD               = uint8(enum mood_type)
@@ -1290,7 +1289,7 @@ PACKET_CLIENT_HEARTBEAT = 254; cs, handle-per-conn
 end
 
 PACKET_CLIENT_INFO = 119; cs, handle-per-conn
-  GUI_TYPE gui;
+  UINT8 _obsolete;
   UINT32 emerg_version;
   STRING distribution[MAX_LEN_NAME];
 end
