@@ -37,7 +37,6 @@
 #include "version.h"
 
 /* client/include */
-#include "chatline_g.h"
 #include "dialogs_g.h"
 #include "gui_main_g.h"
 #include "menu_g.h"
@@ -48,6 +47,7 @@
 
 // client
 #include "audio.h"
+#include "chatline_common.h"
 #include "citybar.h"
 #include "cityrepdata.h"
 #include "client_main.h"

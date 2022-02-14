@@ -117,7 +117,7 @@ void output_window_append(const struct ft_color color,
   }
 
   fc_allocate_ow_mutex();
-  real_output_window_append(plain_text, tags, -1);
+  real_output_window_append(plain_text, tags);
   fc_release_ow_mutex();
   text_tag_list_destroy(tags);
 }
@@ -153,10 +153,10 @@ void output_window_printf(const struct ft_color color, const char *format,
    Add a line of text to the output ("chatline") window from server event.
  */
 void output_window_event(const char *plain_text,
-                         const struct text_tag_list *tags, int conn_id)
+                         const struct text_tag_list *tags)
 {
   fc_allocate_ow_mutex();
-  real_output_window_append(plain_text, tags, conn_id);
+  real_output_window_append(plain_text, tags);
   fc_release_ow_mutex();
 }
 

@@ -24,7 +24,7 @@ void output_window_vprintf(const struct ft_color color, const char *format,
 void output_window_printf(const struct ft_color color, const char *format,
                           ...) fc__attribute((__format__(__printf__, 2, 3)));
 void output_window_event(const char *plain_text,
-                         const struct text_tag_list *tags, int conn_id);
+                         const struct text_tag_list *tags);
 
 void chat_welcome_message(bool gui_has_copying_mitem);
 

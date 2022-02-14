@@ -10,10 +10,9 @@
 **************************************************************************/
 #pragma once
 
-#include "chatline_common.h"
+class QString;
+struct text_tag_list;
 
-#include "gui_proto_constructor.h"
-
-GUI_FUNC_PROTO(void, real_output_window_append, const QString &astring,
-               const struct text_tag_list *tags, int conn_id)
+void real_output_window_append(const QString &astring,
+                               const text_tag_list *tags);
 void version_message(const QString &vertext);

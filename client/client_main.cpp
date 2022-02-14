@@ -60,7 +60,6 @@
 #include "version.h"
 
 /* client/include */
-#include "chatline_g.h"
 #include "citydlg_g.h"
 #include "connectdlg_g.h"
 #include "dialogs_g.h"
@@ -80,6 +79,7 @@
 // client
 #include "attribute.h"
 #include "audio.h"
+#include "chatline_common.h"
 #include "cityrepdata.h"
 #include "climisc.h"
 #include "clinet.h"

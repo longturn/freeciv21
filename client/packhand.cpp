@@ -58,7 +58,6 @@
 #include "worklist.h"
 
 /* client/include */
-#include "chatline_g.h"
 #include "citydlg_g.h"
 #include "cityrep_g.h"
 #include "connectdlg_g.h"
@@ -80,6 +79,7 @@
 // client
 #include "attribute.h"
 #include "audio.h"
+#include "chatline_common.h"
 #include "client_main.h"
 #include "climap.h"
 #include "climisc.h"

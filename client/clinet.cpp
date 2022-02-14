@@ -36,6 +36,7 @@
 
 // client
 #include "attribute.h"
+#include "chatline_common.h"
 #include "chatline_g.h"
 #include "client_main.h"
 #include "climisc.h"
@@ -152,8 +153,8 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
       [] {
         if (client.conn.sock != nullptr) {
           log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
-          real_output_window_append(client.conn.sock->errorString(), NULL,
-                                    -1);
+          real_output_window_append(client.conn.sock->errorString(),
+                                    nullptr);
         }
         client.conn.used = false;
       });

@@ -46,7 +46,6 @@
 #include "unitlist.h"
 
 /* client/include */
-#include "chatline_g.h"
 #include "citydlg_g.h"
 #include "cityrep_g.h"
 #include "dialogs_g.h"
@@ -54,6 +53,7 @@
 #include "mapview_g.h"
 
 // client
+#include "chatline_common.h"
 #include "client_main.h"
 #include "climap.h"
 #include "climisc.h"
@@ -1082,7 +1082,7 @@ void handle_event(const char *featured_text, struct tile *ptile,
 
   // Chatline
   if (BOOL_VAL(where & MW_OUTPUT) || (fallback_needed && !shown)) {
-    output_window_event(plain_text, tags, conn_id);
+    output_window_event(plain_text, tags);
   }
 
   if (turn == game.info.turn) {
