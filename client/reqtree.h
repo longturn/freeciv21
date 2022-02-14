@@ -12,7 +12,7 @@
 
 #include "canvas_g.h"
 
-class QRect;
+#include <QRect>
 
 /* Requirements Tree
  *

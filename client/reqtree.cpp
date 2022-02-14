@@ -13,7 +13,6 @@
 #include <fc_config.h>
 #endif
 
-#include <QRect>
 #include <cstdarg>
 #include <cstring>
 
@@ -34,6 +33,10 @@
 
 #include "colors_g.h"
 #include "sprite_g.h"
+
+// Qt
+#include <QPixmap>
+#include <QRect>
 
 /*
  * Hierarchical directed draph drawing for Freeciv21's technology tree
@@ -113,7 +116,6 @@ static void node_rectangle_minimum_size(struct tree_node *node, int *width,
   int max_icon_height; // maximal height of icons below the text
   int icons_width_sum; // sum of icons width plus space between them
   const QPixmap *sprite;
-  int swidth, sheight;
 
   if (node->is_dummy) {
     // Dummy node is a straight line
@@ -136,9 +138,8 @@ static void node_rectangle_minimum_size(struct tree_node *node, int *width,
           continue;
         }
         sprite = get_unittype_sprite(tileset, unit, direction8_invalid());
-        get_sprite_dimensions(sprite, &swidth, &sheight);
-        max_icon_height = MAX(max_icon_height, sheight);
-        icons_width_sum += swidth + 2;
+        max_icon_height = std::max(max_icon_height, sprite->height());
+        icons_width_sum += sprite->width() + 2;
       }
       unit_type_iterate_end;
 
@@ -152,9 +153,8 @@ static void node_rectangle_minimum_size(struct tree_node *node, int *width,
             sprite = get_building_sprite(tileset, pimprove);
             // Improvement icons are not guaranteed to exist
             if (sprite) {
-              get_sprite_dimensions(sprite, &swidth, &sheight);
-              max_icon_height = MAX(max_icon_height, sheight);
-              icons_width_sum += swidth + 2;
+              max_icon_height = MAX(max_icon_height, sprite->height());
+              icons_width_sum += sprite->width() + 2;
             }
           }
         }
@@ -170,9 +170,8 @@ static void node_rectangle_minimum_size(struct tree_node *node, int *width,
           if (VUT_ADVANCE == preq->source.kind
               && advance_number(preq->source.value.advance) == node->tech) {
             sprite = get_government_sprite(tileset, gov);
-            get_sprite_dimensions(sprite, &swidth, &sheight);
-            max_icon_height = MAX(max_icon_height, sheight);
-            icons_width_sum += swidth + 2;
+            max_icon_height = MAX(max_icon_height, sprite->height());
+            icons_width_sum += sprite->width() + 2;
           }
         }
         requirement_vector_iterate_end;
@@ -991,7 +990,6 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
   Q_UNUSED(canvas_x)
   Q_UNUSED(canvas_y)
   int i, j, k;
-  int swidth, sheight;
   const QPixmap *sprite;
   QColor *color;
   req_tooltip_help *rttp;
@@ -1049,19 +1047,20 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
             }
             sprite =
                 get_unittype_sprite(tileset, unit, direction8_invalid());
-            get_sprite_dimensions(sprite, &swidth, &sheight);
             rttp = new req_tooltip_help();
-            rttp->rect = QRect(icon_startx,
-                               starty + text_h + 4
-                                   + (height - text_h - 4 - sheight) / 2,
-                               swidth, sheight);
+            rttp->rect =
+                QRect(icon_startx,
+                      starty + text_h + 4
+                          + (height - text_h - 4 - sprite->height()) / 2,
+                      sprite->width(), sprite->height());
             rttp->tunit = unit;
             tt_help->append(rttp);
-            canvas_put_sprite_full(pcanvas, icon_startx,
-                                   starty + text_h + 4
-                                       + (height - text_h - 4 - sheight) / 2,
-                                   sprite);
-            icon_startx += swidth + 2;
+            canvas_put_sprite_full(
+                pcanvas, icon_startx,
+                starty + text_h + 4
+                    + (height - text_h - 4 - sprite->height()) / 2,
+                sprite);
+            icon_startx += sprite->width() + 2;
           }
           unit_type_iterate_end;
 
@@ -1075,21 +1074,20 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
                 sprite = get_building_sprite(tileset, pimprove);
                 // Improvement icons are not guaranteed to exist
                 if (sprite) {
-                  get_sprite_dimensions(sprite, &swidth, &sheight);
                   rttp = new req_tooltip_help();
-                  rttp->rect =
-                      QRect(icon_startx,
-                            starty + text_h + 4
-                                + (height - text_h - 4 - sheight) / 2,
-                            swidth, sheight);
+                  rttp->rect = QRect(
+                      icon_startx,
+                      starty + text_h + 4
+                          + (height - text_h - 4 - sprite->height()) / 2,
+                      sprite->width(), sprite->height());
                   rttp->timpr = pimprove;
                   tt_help->append(rttp);
                   canvas_put_sprite_full(
                       pcanvas, icon_startx,
                       starty + text_h + 4
-                          + (height - text_h - 4 - sheight) / 2,
+                          + (height - text_h - 4 - sprite->height()) / 2,
                       sprite);
-                  icon_startx += swidth + 2;
+                  icon_startx += sprite->width() + 2;
                 }
               }
             }
@@ -1105,20 +1103,20 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
                   && advance_number(preq->source.value.advance)
                          == node->tech) {
                 sprite = get_government_sprite(tileset, gov);
-                get_sprite_dimensions(sprite, &swidth, &sheight);
                 rttp = new req_tooltip_help();
-                rttp->rect = QRect(icon_startx,
-                                   starty + text_h + 4
-                                       + (height - text_h - 4 - sheight) / 2,
-                                   swidth, sheight);
+                rttp->rect =
+                    QRect(icon_startx,
+                          starty + text_h + 4
+                              + (height - text_h - 4 - sprite->height()) / 2,
+                          sprite->width(), sprite->height());
                 rttp->tgov = gov;
                 tt_help->append(rttp);
-                canvas_put_sprite_full(pcanvas, icon_startx,
-                                       starty + text_h + 4
-                                           + (height - text_h - 4 - sheight)
-                                                 / 2,
-                                       sprite);
-                icon_startx += swidth + 2;
+                canvas_put_sprite_full(
+                    pcanvas, icon_startx,
+                    starty + text_h + 4
+                        + (height - text_h - 4 - sprite->height()) / 2,
+                    sprite);
+                icon_startx += sprite->width() + 2;
               }
             }
             requirement_vector_iterate_end;

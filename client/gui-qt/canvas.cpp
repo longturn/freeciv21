@@ -129,11 +129,8 @@ void qtg_canvas_put_sprite(QPixmap *pcanvas, int canvas_x, int canvas_y,
 void qtg_canvas_put_sprite_full(QPixmap *pcanvas, int canvas_x, int canvas_y,
                                 const QPixmap *sprite)
 {
-  int width, height;
-
-  get_sprite_dimensions(sprite, &width, &height);
-  canvas_put_sprite(pcanvas, canvas_x, canvas_y, sprite, 0, 0, width,
-                    height);
+  canvas_put_sprite(pcanvas, canvas_x, canvas_y, sprite, 0, 0,
+                    sprite->width(), sprite->height());
 }
 
 /**
@@ -229,11 +226,8 @@ void qtg_canvas_fill_sprite_area(QPixmap *pcanvas, const QPixmap *psprite,
                                  const QColor *pcolor, int canvas_x,
                                  int canvas_y)
 {
-  int width, height;
-
-  get_sprite_dimensions(psprite, &width, &height);
-  qtg_canvas_put_rectangle(pcanvas, pcolor, canvas_x, canvas_y, width,
-                           height);
+  qtg_canvas_put_rectangle(pcanvas, pcolor, canvas_x, canvas_y,
+                           psprite->width(), psprite->height());
 }
 
 /**
