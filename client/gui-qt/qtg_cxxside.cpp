@@ -21,7 +21,6 @@ void setup_gui_funcs()
 {
   struct gui_funcs *funcs = get_gui_funcs();
 
-  funcs->free_intro_radar_sprites = qtg_free_intro_radar_sprites;
   funcs->load_gfxfile = qtg_load_gfxfile;
   funcs->create_sprite = qtg_create_sprite;
   funcs->get_sprite_dimensions = qtg_get_sprite_dimensions;

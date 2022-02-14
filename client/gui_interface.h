@@ -29,7 +29,6 @@ class QTcpSocket;
 #include "tilespec.h"
 
 struct gui_funcs {
-  void (*free_intro_radar_sprites)();
   QPixmap *(*load_gfxfile)(const char *filename);
   QPixmap *(*create_sprite)(int width, int height, const QColor *pcolor);
   void (*get_sprite_dimensions)(const QPixmap *sprite, int *width,

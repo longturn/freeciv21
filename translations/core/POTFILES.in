@@ -27,7 +27,6 @@ client/gui-qt/endgamereport.cpp
 client/gui-qt/fc_client.cpp
 client/gui-qt/fonts.cpp
 client/gui-qt/gotodlg.cpp
-client/gui-qt/graphics.cpp
 client/gui-qt/gui_main.cpp
 client/gui-qt/helpdlg.cpp
 client/gui-qt/hudwidget.cpp

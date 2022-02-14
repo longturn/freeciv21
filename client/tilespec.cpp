@@ -62,10 +62,10 @@
 /* client/include */
 #include "citydlg_g.h"
 #include "dialogs_g.h"
-#include "graphics_g.h"
 #include "gui_main_g.h"
 #include "mapview_g.h" // for update_map_canvas_visible
 #include "menu_g.h"
+#include "sprite_g.h"
 #include "themes_g.h"
 
 // client

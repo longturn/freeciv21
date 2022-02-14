@@ -39,10 +39,10 @@
 
 /* client/include */
 #include "citydlg_g.h"
-#include "graphics_g.h"
 #include "gui_main_g.h"
 #include "mapctrl_g.h"
 #include "mapview_g.h"
+#include "sprite_g.h"
 
 // client
 #include "citydlg_common.h"
