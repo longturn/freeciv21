@@ -477,7 +477,9 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
          * Second %s is client_string, e.g., "gui-gtk-2.0". */
         _("This is %s, %s client."), ver, client_string);
 
-    insert_client_build_info(outbuf, outlen);
+    // There's also an separate entry about Qt.
+    cat_snprintf(outbuf, outlen, _("\nBuilt against Qt %s, using %s"),
+                 QT_VERSION_STR, qVersion());
 
     QString data_dirs_info = "\n\n";
     data_dirs_info += _("This instance of Freeciv21 searches the following "
