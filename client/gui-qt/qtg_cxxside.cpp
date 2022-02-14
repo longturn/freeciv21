@@ -21,7 +21,6 @@ void setup_gui_funcs()
 {
   struct gui_funcs *funcs = get_gui_funcs();
 
-  funcs->get_sprite_dimensions = qtg_get_sprite_dimensions;
   funcs->crop_sprite = qtg_crop_sprite;
   funcs->free_sprite = qtg_free_sprite;
 

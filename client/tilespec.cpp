@@ -2286,10 +2286,10 @@ QPixmap *load_sprite(struct tileset *t, const QString &tag_name)
         return nullptr;
       }
     } else {
-      int sf_w, sf_h;
-
       ensure_big_sprite(t, ss->sf);
-      get_sprite_dimensions(ss->sf->big_sprite, &sf_w, &sf_h);
+
+      auto sf_w = ss->sf->big_sprite->width();
+      auto sf_h = ss->sf->big_sprite->height();
       if (ss->x < 0 || ss->x + ss->width > sf_w || ss->y < 0
           || ss->y + ss->height > sf_h) {
         tileset_error(

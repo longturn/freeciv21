@@ -101,16 +101,6 @@ QPixmap *qtg_crop_sprite(const QPixmap *source, int x, int y, int width,
 }
 
 /**
-   Find the dimensions of the sprite.
- */
-void qtg_get_sprite_dimensions(const QPixmap *sprite, int *width,
-                               int *height)
-{
-  *width = sprite->width();
-  *height = sprite->height();
-}
-
-/**
    Free a sprite and all associated image data.
  */
 void qtg_free_sprite(QPixmap *s) { delete s; }

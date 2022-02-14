@@ -21,6 +21,7 @@
 #include <QGlobalStatic>
 #include <QHash>
 #include <QLoggingCategory>
+#include <QPixmap>
 #include <QSet>
 #include <QTimer>
 
@@ -1149,15 +1150,13 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
 {
   float canvas_x, canvas_y;
   auto mysprite = get_nuke_explode_sprite(tileset);
-  int width, height;
 
-  get_sprite_dimensions(mysprite, &width, &height);
   /* We can't count on the return value of tile_to_canvas_pos since the
    * sprite may span multiple tiles. */
   (void) tile_to_canvas_pos(&canvas_x, &canvas_y, ptile);
 
-  canvas_x += (tileset_tile_width(tileset) - width) / 2;
-  canvas_y += (tileset_tile_height(tileset) - height) / 2;
+  canvas_x += (tileset_tile_width(tileset) - mysprite->width()) / 2;
+  canvas_y += (tileset_tile_height(tileset) - mysprite->height()) / 2;
 
   /* Make sure everything is flushed and synced before proceeding.  First
    * we update everything to the store, but don't write this to screen.
@@ -1166,7 +1165,7 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
   unqueue_mapview_updates(false);
 
   canvas_put_sprite_full(mapview.store, canvas_x, canvas_y, mysprite);
-  dirty_rect(canvas_x, canvas_y, width, height);
+  dirty_rect(canvas_x, canvas_y, mysprite->width(), mysprite->height());
 
   flush_dirty();
   gui_flush();
@@ -1700,10 +1699,8 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
                 tileset_tile_height(tileset));
 
     for (i = 0; i < num_tiles_explode_unit; i++) {
-      int w, h;
       QPixmap *sprite = *sprite_vector_get(anim, i);
 
-      get_sprite_dimensions(sprite, &w, &h);
       /* We first draw the explosion onto the unit and draw draw the
        * complete thing onto the map canvas window. This avoids
        * flickering. */
@@ -1711,8 +1708,10 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
                   canvas_x, canvas_y, tileset_tile_width(tileset),
                   tileset_tile_height(tileset));
       canvas_put_sprite_full(
-          mapview.store, canvas_x + tileset_tile_width(tileset) / 2 - w / 2,
-          canvas_y + tileset_tile_height(tileset) / 2 - h / 2, sprite);
+          mapview.store,
+          canvas_x + tileset_tile_width(tileset) / 2 - sprite->width() / 2,
+          canvas_y + tileset_tile_height(tileset) / 2 - sprite->height() / 2,
+          sprite);
       dirty_rect(canvas_x, canvas_y, tileset_tile_width(tileset),
                  tileset_tile_height(tileset));
 
@@ -2749,10 +2748,8 @@ void free_mapcanvas_and_overview()
 void get_spaceship_dimensions(int *width, int *height)
 {
   auto sprite = get_spaceship_sprite(tileset, SPACESHIP_HABITATION);
-
-  get_sprite_dimensions(sprite, width, height);
-  *width *= 7;
-  *height *= 7;
+  *width = 7 * sprite->width();
+  *height = 7 * sprite->width();
 }
 
 /**
@@ -2765,12 +2762,11 @@ void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
   Q_UNUSED(canvas_y)
   int i, x, y;
   const struct player_spaceship *ship = &pplayer->spaceship;
-  int w, h;
   const QPixmap *spr;
   struct tileset *t = tileset;
 
   spr = get_spaceship_sprite(t, SPACESHIP_HABITATION);
-  get_sprite_dimensions(spr, &w, &h);
+  const int w = spr->width(), h = spr->height();
 
   canvas_put_rectangle(pcanvas,
                        get_color(tileset, COLOR_SPACESHIP_BACKGROUND), 0, 0,

@@ -29,8 +29,6 @@ class QTcpSocket;
 #include "tilespec.h"
 
 struct gui_funcs {
-  void (*get_sprite_dimensions)(const QPixmap *sprite, int *width,
-                                int *height);
   QPixmap *(*crop_sprite)(const QPixmap *source, int x, int y, int width,
                           int height, const QPixmap *mask, int mask_offset_x,
                           int mask_offset_y);

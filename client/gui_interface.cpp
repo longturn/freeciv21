@@ -40,14 +40,6 @@ static struct gui_funcs funcs;
 struct gui_funcs *get_gui_funcs() { return &funcs; }
 
 /**
-   Call get_sprite_dimensions callback
- */
-void get_sprite_dimensions(const QPixmap *sprite, int *width, int *height)
-{
-  funcs.get_sprite_dimensions(sprite, width, height);
-}
-
-/**
    Call crop_sprite callback
  */
 QPixmap *crop_sprite(const QPixmap *source, int x, int y, int width,
