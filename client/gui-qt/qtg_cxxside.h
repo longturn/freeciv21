@@ -21,8 +21,6 @@ class QTcpSocket;
 
 void setup_gui_funcs();
 
-bool qtg_is_view_supported(enum ts_type type);
-void qtg_tileset_type_set(enum ts_type type);
 void qtg_free_intro_radar_sprites();
 QPixmap *qtg_load_gfxfile(const char *filename);
 QPixmap *qtg_create_sprite(int width, int height, const QColor *pcolor);

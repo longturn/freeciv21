@@ -1792,18 +1792,6 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
   t->ts_topo_idx = ts_topology_index(topo);
 
-  if (!is_view_supported(t->type)) {
-    // TRANS: "Overhead" or "Isometric"
-    qInfo(_("Client does not support %s tilesets."),
-          _(ts_type_name(t->type)));
-    qInfo(_("Using default tileset instead."));
-    fc_assert(tileset_name != NULL);
-    tileset_stop_read(t, file, fname, sections, layer_order);
-    return nullptr;
-  }
-
-  tileset_type_set(t->type);
-
   /* Create arrays of valid and cardinal tileset dirs.  These depend
    * entirely on the tileset, not the topology.  They are also in clockwise
    * rotational ordering. */
