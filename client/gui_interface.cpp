@@ -25,7 +25,6 @@
 #include "connectdlg_g.h"
 #include "dialogs_g.h"
 #include "editgui_g.h"
-#include "graphics_g.h"
 #include "gui_main_g.h"
 #include "mapview_g.h"
 #include "themes_g.h"
@@ -39,11 +38,6 @@ static struct gui_funcs funcs;
    with function addresses.
  */
 struct gui_funcs *get_gui_funcs() { return &funcs; }
-
-/**
-   Call free_intro_radar_sprites callback
- */
-void free_intro_radar_sprites(void) { funcs.free_intro_radar_sprites(); }
 
 /**
    Call load_gfxfile callback

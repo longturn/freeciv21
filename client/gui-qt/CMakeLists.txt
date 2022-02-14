@@ -18,7 +18,6 @@ add_library(
   fc_client.cpp
   fonts.cpp
   gotodlg.cpp
-  graphics.cpp
   gui_main.cpp
   helpdlg.cpp
   hudwidget.cpp

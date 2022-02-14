@@ -65,7 +65,6 @@
 #include "dialogs_g.h"
 #include "diplodlg_g.h"
 #include "editgui_g.h"
-#include "graphics_g.h"
 #include "gui_main_g.h"
 #include "mapctrl_g.h"
 #include "mapview_g.h"
@@ -866,7 +865,6 @@ void set_client_state(enum client_states newstate)
     set_client_page(PAGE_GAME);
     // Find something sensible to display instead of the intro gfx.
     center_on_something();
-    free_intro_radar_sprites();
     editgui_tileset_changed();
     voteinfo_gui_update();
 
