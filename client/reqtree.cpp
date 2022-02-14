@@ -830,7 +830,7 @@ void get_reqtree_dimensions(struct reqtree *reqtree, int *width, int *height)
 /**
    Return a background color of node's rectangle
  */
-static QColor *node_color(struct tree_node *node)
+static QColor node_color(struct tree_node *node)
 {
   if (!node->is_dummy) {
     struct research *research = research_get(client_player());
@@ -952,8 +952,7 @@ static enum reqtree_edge_type get_edge_type(struct tree_node *node,
    Return a stroke color for an edge between two nodes
    if node is a dummy, dest_node can be NULL
  */
-static QColor *edge_color(struct tree_node *node,
-                          struct tree_node *dest_node)
+static QColor edge_color(struct tree_node *node, struct tree_node *dest_node)
 {
   enum reqtree_edge_type type = get_edge_type(node, dest_node);
 
@@ -991,7 +990,6 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
   Q_UNUSED(canvas_y)
   int i, j, k;
   const QPixmap *sprite;
-  QColor *color;
   req_tooltip_help *rttp;
 
   QList<req_tooltip_help *> *tt_help = new QList<req_tooltip_help *>;
@@ -1130,7 +1128,7 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
       starty = node->node_y + node->node_height / 2;
       for (k = 0; k < node->nprovide; k++) {
         struct tree_node *dest_node = node->provide[k];
-        color = edge_color(node, dest_node);
+        auto color = edge_color(node, dest_node);
 
         endx = dest_node->node_x;
         endy = dest_node->node_y + dest_node->node_height / 2;

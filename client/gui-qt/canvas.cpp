@@ -195,12 +195,12 @@ void canvas_put_unit_fogged(QPixmap *pcanvas, int canvas_x, int canvas_y,
 /**
    Draw a filled-in colored rectangle onto canvas.
  */
-void qtg_canvas_put_rectangle(QPixmap *pcanvas, const QColor *pcolor,
+void qtg_canvas_put_rectangle(QPixmap *pcanvas, const QColor &color,
                               int canvas_x, int canvas_y, int width,
                               int height)
 {
-  QBrush brush(*pcolor);
-  QPen pen(*pcolor);
+  QBrush brush(color);
+  QPen pen(color);
   QPainter p;
 
   p.begin(pcanvas);
@@ -223,24 +223,24 @@ void qtg_canvas_put_rectangle(QPixmap *pcanvas, const QColor *pcolor,
    Fill the area covered by the sprite with the given color.
  */
 void qtg_canvas_fill_sprite_area(QPixmap *pcanvas, const QPixmap *psprite,
-                                 const QColor *pcolor, int canvas_x,
+                                 const QColor &color, int canvas_x,
                                  int canvas_y)
 {
-  qtg_canvas_put_rectangle(pcanvas, pcolor, canvas_x, canvas_y,
+  qtg_canvas_put_rectangle(pcanvas, color, canvas_x, canvas_y,
                            psprite->width(), psprite->height());
 }
 
 /**
    Draw a 1-pixel-width colored line onto the canvas.
  */
-void qtg_canvas_put_line(QPixmap *pcanvas, const QColor *pcolor,
+void qtg_canvas_put_line(QPixmap *pcanvas, const QColor &color,
                          enum line_type ltype, int start_x, int start_y,
                          int dx, int dy)
 {
   QPen pen;
   QPainter p;
 
-  pen.setColor(*pcolor);
+  pen.setColor(color);
   switch (ltype) {
   case LINE_NORMAL:
     pen.setWidth(1);
@@ -271,12 +271,12 @@ void qtg_canvas_put_line(QPixmap *pcanvas, const QColor *pcolor,
 /**
    Draw a 1-pixel-width colored curved line onto the canvas.
  */
-void qtg_canvas_put_curved_line(QPixmap *pcanvas, const QColor *pcolor,
+void qtg_canvas_put_curved_line(QPixmap *pcanvas, const QColor &color,
                                 enum line_type ltype, int start_x,
                                 int start_y, int dx, int dy)
 {
   QPen pen;
-  pen.setColor(*pcolor);
+  pen.setColor(color);
   QPainter p;
   QPainterPath path;
 
@@ -337,7 +337,7 @@ void qtg_get_text_size(int *width, int *height, enum client_font font,
    take care of this manually.  The text will not be NULL but may be empty.
  */
 void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                         enum client_font font, const QColor *pcolor,
+                         enum client_font font, const QColor &color,
                          const QString &text)
 {
   QPainter p;
@@ -345,7 +345,7 @@ void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
   QFont afont = get_font(font);
   QScopedPointer<QFontMetrics> fm(new QFontMetrics(afont));
 
-  pen.setColor(*pcolor);
+  pen.setColor(color);
   p.begin(pcanvas);
   p.setPen(pen);
   p.setFont(afont);

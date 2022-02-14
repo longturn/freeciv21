@@ -58,7 +58,7 @@ void layer_background::initialize_player(const player *player)
 {
   // Get the color. In pregame, players have no color so we just use red.
   const auto color = player_has_color(tileset(), player)
-                         ? *get_player_color(tileset(), player)
+                         ? get_player_color(tileset(), player)
                          : Qt::red;
 
   auto sprite = create_player_sprite(color);

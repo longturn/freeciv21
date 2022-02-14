@@ -43,14 +43,6 @@ static int tool_player_tile_city_id_get(const struct tile *ptile,
 }
 
 /**
-   Unused but required by fc_interface_init()
- */
-static void tool_gui_color_free(QColor *pcolor)
-{
-  qCritical("Assumed unused function %s called.", __FUNCTION__);
-}
-
-/**
    Initialize tool specific functions.
  */
 void fc_interface_init_tool()
@@ -68,7 +60,6 @@ void fc_interface_init_tool()
   // Not used. Set to dummy functions.
   funcs->player_tile_vision_get = tool_player_tile_vision_get;
   funcs->player_tile_city_id_get = tool_player_tile_city_id_get;
-  funcs->gui_color_free = tool_gui_color_free;
 
   /* Keep this function call at the end. It checks if all required functions
      are defined. */

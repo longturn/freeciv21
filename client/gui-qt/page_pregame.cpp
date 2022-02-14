@@ -215,7 +215,7 @@ void page_pregame::update_start_page()
           p.begin(pixmap.get());
           p.fillRect(pixmap->width() / 2 - 8, 0, 16, 16, Qt::black);
           p.fillRect(pixmap->width() / 2 - 7, 1, 14, 14,
-                     *get_player_color(tileset, pplayer));
+                     get_player_color(tileset, pplayer));
           p.end();
           item->setData(col, Qt::DecorationRole, *pixmap);
         } break;

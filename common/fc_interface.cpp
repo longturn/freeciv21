@@ -62,7 +62,6 @@ void fc_interface_init()
   fc_assert_exit(fc_funcs->server_setting_val_bitwise_get);
   fc_assert_exit(fc_funcs->player_tile_vision_get);
   fc_assert_exit(fc_funcs->player_tile_city_id_get);
-  fc_assert_exit(fc_funcs->gui_color_free);
 
   fc_funcs_defined = true;
 

@@ -82,28 +82,16 @@ void color_system_free(struct color_system *colors)
 }
 
 /**
-   Return the RGB color, allocating it if necessary.
- */
-QColor *ensure_color(struct rgbcolor *rgb)
-{
-  fc_assert_ret_val(rgb != NULL, NULL);
-
-  if (!rgb->color) {
-    rgb->color = color_alloc(rgb->r, rgb->g, rgb->b);
-  }
-  return rgb->color;
-}
-
-/**
    Return a pointer to the given "standard" color.
  */
-QColor *get_color(const struct tileset *t, enum color_std stdcolor)
+QColor get_color(const struct tileset *t, enum color_std stdcolor)
 {
   struct color_system *colors = get_color_system(t);
 
-  fc_assert_ret_val(colors != NULL, NULL);
+  fc_assert_ret_val(colors != NULL, Qt::black);
 
-  return ensure_color(*(colors->stdcolors + stdcolor));
+  auto &color = *(colors->stdcolors + stdcolor);
+  return QColor(color->r, color->g, color->b);
 }
 
 /**
@@ -123,52 +111,63 @@ bool player_has_color(const struct tileset *t, const struct player *pplayer)
    In pregame, callers should check player_has_color() before calling
    this.
  */
-QColor *get_player_color(const struct tileset *t,
-                         const struct player *pplayer)
+QColor get_player_color(const struct tileset *t,
+                        const struct player *pplayer)
 {
   Q_UNUSED(t)
-  fc_assert_ret_val(pplayer != NULL, NULL);
-  fc_assert_ret_val(pplayer->rgb != NULL, NULL);
+  fc_assert_ret_val(pplayer != NULL, Qt::black);
+  fc_assert_ret_val(pplayer->rgb != NULL, Qt::black);
 
-  return ensure_color(pplayer->rgb);
+  return QColor(pplayer->rgb->r, pplayer->rgb->g, pplayer->rgb->b);
 }
 
 /**
    Return a pointer to the given "terrain" color.
  */
-QColor *get_terrain_color(const struct tileset *t,
-                          const struct terrain *pterrain)
+QColor get_terrain_color(const struct tileset *t,
+                         const struct terrain *pterrain)
 {
   Q_UNUSED(t)
-  fc_assert_ret_val(pterrain != NULL, NULL);
-  fc_assert_ret_val(pterrain->rgb != NULL, NULL);
+  fc_assert_ret_val(pterrain != NULL, Qt::black);
+  fc_assert_ret_val(pterrain->rgb != NULL, Qt::black);
 
-  return ensure_color(pterrain->rgb);
+  return QColor(pterrain->rgb->r, pterrain->rgb->g, pterrain->rgb->b);
 }
 
 /**
    Find the colour from 'candidates' with the best perceptual contrast from
    'subject'.
  */
-QColor *color_best_contrast(QColor *subject, QColor **candidates,
-                            int ncandidates)
+QColor color_best_contrast(const QColor &subject, const QColor *candidates,
+                           int ncandidates)
 {
   int sbright = color_brightness_score(subject), bestdiff = 0;
-  int i;
-  QColor *best = NULL;
 
-  fc_assert_ret_val(candidates != NULL, NULL);
-  fc_assert_ret_val(ncandidates > 0, NULL);
+  fc_assert_ret_val(candidates != NULL, Qt::black);
+  fc_assert_ret_val(ncandidates > 0, Qt::black);
 
-  for (i = 0; i < ncandidates; i++) {
+  QColor best;
+  for (int i = 0; i < ncandidates; i++) {
     int cbright = color_brightness_score(candidates[i]);
     int diff = ABS(sbright - cbright);
 
-    if (best == NULL || diff > bestdiff) {
+    if (i == 0 || diff > bestdiff) {
       best = candidates[i];
       bestdiff = diff;
     }
   }
 
   return best;
+}
+
+/**
+ * Return a number indicating the perceptual brightness of this color
+ * relative to others (larger is brighter).
+ */
+int color_brightness_score(const QColor &color)
+{
+  /* QColor has color space conversions, but nothing giving a perceptually
+   * even color space */
+  rgbcolor prgb{color.red(), color.green(), color.blue()};
+  return rgbcolor_brightness_score(&prgb);
 }

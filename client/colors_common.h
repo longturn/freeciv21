@@ -9,8 +9,7 @@
 **************************************************************************/
 #pragma once
 
-/* The color system is designed on the assumption that almost, but
- * not quite, all displays will be truecolor. */
+#include <QColor>
 
 struct color;
 struct color_system;
@@ -107,18 +106,17 @@ struct rgbcolor;
 #define SPECENUM_COUNT COLOR_LAST
 #include "specenum_gen.h"
 
-QColor *get_color(const struct tileset *t, enum color_std stdcolor);
+QColor get_color(const struct tileset *t, enum color_std stdcolor);
 bool player_has_color(const struct tileset *t, const struct player *pplayer);
-QColor *get_player_color(const struct tileset *t,
-                         const struct player *pplayer);
-QColor *get_terrain_color(const struct tileset *t,
-                          const struct terrain *pterrain);
-QColor *ensure_color(struct rgbcolor *rgb);
+QColor get_player_color(const struct tileset *t,
+                        const struct player *pplayer);
+QColor get_terrain_color(const struct tileset *t,
+                         const struct terrain *pterrain);
 
 // Functions used by the tileset to allocate the color system.
 struct color_system *color_system_read(struct section_file *file);
 void color_system_free(struct color_system *colors);
 
 // Utilities for color values
-QColor *color_best_contrast(QColor *subject, QColor **candidates,
-                            int ncandidates);
+QColor color_best_contrast(const QColor &subject, const QColor *candidates,
+                           int ncandidates);

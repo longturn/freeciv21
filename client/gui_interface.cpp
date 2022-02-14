@@ -40,19 +40,6 @@ static struct gui_funcs funcs;
 struct gui_funcs *get_gui_funcs() { return &funcs; }
 
 /**
-   Call color_alloc callback
- */
-QColor *color_alloc(int r, int g, int b)
-{
-  return funcs.color_alloc(r, g, b);
-}
-
-/**
-   Call color_free callback
- */
-void color_free(QColor *pcolor) { return funcs.color_free(pcolor); }
-
-/**
    Call canvas_create callback
  */
 QPixmap *canvas_create(int width, int height)
@@ -116,10 +103,10 @@ void canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x, int canvas_y,
 /**
    Call canvas_put_rectangle callback
  */
-void canvas_put_rectangle(QPixmap *pcanvas, const QColor *pcolor,
+void canvas_put_rectangle(QPixmap *pcanvas, const QColor &color,
                           int canvas_x, int canvas_y, int width, int height)
 {
-  funcs.canvas_put_rectangle(pcanvas, pcolor, canvas_x, canvas_y, width,
+  funcs.canvas_put_rectangle(pcanvas, color, canvas_x, canvas_y, width,
                              height);
 }
 
@@ -127,31 +114,29 @@ void canvas_put_rectangle(QPixmap *pcanvas, const QColor *pcolor,
    Call canvas_fill_sprite_area callback
  */
 void canvas_fill_sprite_area(QPixmap *pcanvas, QPixmap *psprite,
-                             const QColor *pcolor, int canvas_x,
-                             int canvas_y)
+                             const QColor &color, int canvas_x, int canvas_y)
 {
-  funcs.canvas_fill_sprite_area(pcanvas, psprite, pcolor, canvas_x,
-                                canvas_y);
+  funcs.canvas_fill_sprite_area(pcanvas, psprite, color, canvas_x, canvas_y);
 }
 
 /**
    Call canvas_put_line callback
  */
-void canvas_put_line(QPixmap *pcanvas, const QColor *pcolor,
+void canvas_put_line(QPixmap *pcanvas, const QColor &color,
                      enum line_type ltype, int start_x, int start_y, int dx,
                      int dy)
 {
-  funcs.canvas_put_line(pcanvas, pcolor, ltype, start_x, start_y, dx, dy);
+  funcs.canvas_put_line(pcanvas, color, ltype, start_x, start_y, dx, dy);
 }
 
 /**
    Call canvas_put_curved_line callback
  */
-void canvas_put_curved_line(QPixmap *pcanvas, const QColor *pcolor,
+void canvas_put_curved_line(QPixmap *pcanvas, const QColor &color,
                             enum line_type ltype, int start_x, int start_y,
                             int dx, int dy)
 {
-  funcs.canvas_put_curved_line(pcanvas, pcolor, ltype, start_x, start_y, dx,
+  funcs.canvas_put_curved_line(pcanvas, color, ltype, start_x, start_y, dx,
                                dy);
 }
 
@@ -168,10 +153,10 @@ void get_text_size(int *width, int *height, enum client_font font,
    Call canvas_put_text callback
  */
 void canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                     enum client_font font, const QColor *pcolor,
+                     enum client_font font, const QColor &color,
                      const QString &text)
 {
-  funcs.canvas_put_text(pcanvas, canvas_x, canvas_y, font, pcolor, text);
+  funcs.canvas_put_text(pcanvas, canvas_x, canvas_y, font, color, text);
 }
 
 /**

@@ -29,9 +29,6 @@ class QTcpSocket;
 #include "tilespec.h"
 
 struct gui_funcs {
-  QColor *(*color_alloc)(int r, int g, int b);
-  void (*color_free)(QColor *pcolor);
-
   QPixmap *(*canvas_create)(int width, int height);
   void (*canvas_free)(QPixmap *store);
   void (*canvas_copy)(QPixmap *dest, const QPixmap *src, int src_x,
@@ -48,22 +45,22 @@ struct gui_funcs {
   void (*canvas_put_sprite_citymode)(QPixmap *pcanvas, int canvas_x,
                                      int canvas_y, const QPixmap *psprite,
                                      bool fog, int fog_x, int fog_y);
-  void (*canvas_put_rectangle)(QPixmap *pcanvas, const QColor *pcolor,
+  void (*canvas_put_rectangle)(QPixmap *pcanvas, const QColor &color,
                                int canvas_x, int canvas_y, int width,
                                int height);
   void (*canvas_fill_sprite_area)(QPixmap *pcanvas, const QPixmap *psprite,
-                                  const QColor *pcolor, int canvas_x,
+                                  const QColor &color, int canvas_x,
                                   int canvas_y);
-  void (*canvas_put_line)(QPixmap *pcanvas, const QColor *pcolor,
+  void (*canvas_put_line)(QPixmap *pcanvas, const QColor &color,
                           enum line_type ltype, int start_x, int start_y,
                           int dx, int dy);
-  void (*canvas_put_curved_line)(QPixmap *pcanvas, const QColor *pcolor,
+  void (*canvas_put_curved_line)(QPixmap *pcanvas, const QColor &color,
                                  enum line_type ltype, int start_x,
                                  int start_y, int dx, int dy);
   void (*get_text_size)(int *width, int *height, enum client_font font,
                         const QString &text);
   void (*canvas_put_text)(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                          enum client_font font, const QColor *pcolor,
+                          enum client_font font, const QColor &color,
                           const QString &);
 
   void (*set_rulesets)(int num_rulesets, QStringList rulesets);

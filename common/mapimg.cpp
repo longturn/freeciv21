@@ -3282,13 +3282,13 @@ static int bvplayers_count(const struct mapdef *pmapdef)
 static const struct rgbcolor *imgcolor_special(enum img_special imgcolor)
 {
   static struct rgbcolor rgb_special[] = {
-      {255, 0, 0, NULL}, // IMGCOLOR_ERROR
+      {255, 0, 0}, // IMGCOLOR_ERROR
       /* FIXME: 'ocean' and 'ground' colors are also used in the overview;
        * the values are defined in colors.tilespec. */
-      {0, 0, 200, NULL},     // IMGCOLOR_OCEAN
-      {0, 200, 0, NULL},     // IMGCOLOR_GROUND
-      {0, 0, 0, NULL},       // IMGCOLOR_BACKGROUND
-      {255, 255, 255, NULL}, // IMGCOLOR_TEXT
+      {0, 0, 200},     // IMGCOLOR_OCEAN
+      {0, 200, 0},     // IMGCOLOR_GROUND
+      {0, 0, 0},       // IMGCOLOR_BACKGROUND
+      {255, 255, 255}, // IMGCOLOR_TEXT
   };
 
   fc_assert_ret_val(imgcolor >= 0 && imgcolor < ARRAY_SIZE(rgb_special),

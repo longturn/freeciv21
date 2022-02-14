@@ -5729,7 +5729,7 @@ void tileset_player_init(struct tileset *t, struct player *pplayer)
 
   QColor c = Qt::black;
   if (player_has_color(t, pplayer)) {
-    c = *get_player_color(t, pplayer);
+    c = get_player_color(t, pplayer);
   }
   QPixmap color(128, 64);
   color.fill(c);

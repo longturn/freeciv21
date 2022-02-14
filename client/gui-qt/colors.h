@@ -20,7 +20,7 @@ class research_color : public QWidget {
 public:
   research_color();
   static research_color *i();
-  QColor *get_color(int);
+  QColor get_color(int);
   void init_colors();
 
 private:
