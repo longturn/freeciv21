@@ -41,11 +41,6 @@ static struct gui_funcs funcs;
 struct gui_funcs *get_gui_funcs() { return &funcs; }
 
 /**
-   Call version_message callback
- */
-void version_message(const char *vertext) { funcs.version_message(vertext); }
-
-/**
    Call real_output_window_append callback
  */
 void real_output_window_append(const QString &astring,

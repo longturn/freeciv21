@@ -21,7 +21,6 @@ void setup_gui_funcs()
 {
   struct gui_funcs *funcs = get_gui_funcs();
 
-  funcs->version_message = qtg_version_message;
   funcs->real_output_window_append = qtg_real_output_window_append;
 
   funcs->is_view_supported = qtg_is_view_supported;

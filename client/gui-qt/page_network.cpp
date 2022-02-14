@@ -14,6 +14,7 @@
 #include "fcintl.h"
 // client
 #include "chatline_common.h"
+#include "chatline_g.h"
 #include "client_main.h"
 #include "clinet.h"
 #include "connectdlg_common.h"
@@ -273,7 +274,7 @@ void page_network::update_server_list(enum server_scan_type sstype,
 void server_scan_error(struct server_scan *scan, const char *message)
 {
   Q_UNUSED(scan)
-  qtg_version_message(message);
+  version_message(message);
   qCritical("%s", message);
   qobject_cast<page_network *>(king()->pages[PAGE_NETWORK])
       ->destroy_server_scans();

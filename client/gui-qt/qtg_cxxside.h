@@ -21,7 +21,6 @@ class QTcpSocket;
 
 void setup_gui_funcs();
 
-void qtg_version_message(const QString &vertext);
 void qtg_real_output_window_append(const QString &astring,
                                    const struct text_tag_list *tags,
                                    int conn_id);

@@ -725,7 +725,7 @@ void qtg_real_output_window_append(const QString &astring,
 /**
    Got version message from metaserver
  */
-void qtg_version_message(const QString &vertext)
+void version_message(const QString &vertext)
 {
   king()->set_status_bar(vertext);
 }
