@@ -415,25 +415,12 @@ const char *api_methods_nation_type_plural_translation(lua_State *L,
  */
 const char *api_methods_player_controlling_gui(lua_State *L, Player *pplayer)
 {
-  struct connection *conn = NULL;
-
-  LUASCRIPT_CHECK_STATE(L, NULL);
-  LUASCRIPT_CHECK_SELF(L, pplayer, NULL);
-
-  conn_list_iterate(pplayer->connections, pconn)
-  {
-    if (!pconn->observer) {
-      conn = pconn;
-      break;
-    }
+  static bool warned = false;
+  if (!warned) {
+    qWarning() << "player:controlling_gui is deprecated";
+    warned = true;
   }
-  conn_list_iterate_end;
-
-  if (conn == NULL) {
-    return "None";
-  }
-
-  return gui_type_name(conn->client_gui);
+  return "Qt";
 }
 
 /**

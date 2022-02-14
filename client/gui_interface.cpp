@@ -55,11 +55,6 @@ void real_output_window_append(const QString &astring,
 }
 
 /**
-   Call get_gui_type callback
- */
-enum gui_type get_gui_type(void) { return funcs.get_gui_type(); }
-
-/**
    Call insert_client_build_info callback
  */
 void insert_client_build_info(char *outbuf, size_t outlen)

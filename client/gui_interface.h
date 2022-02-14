@@ -29,7 +29,6 @@ class QTcpSocket;
 #include "tilespec.h"
 
 struct gui_funcs {
-  enum gui_type (*get_gui_type)();
   void (*insert_client_build_info)(char *outbuf, size_t outlen);
 
   void (*version_message)(const QString &vertext);

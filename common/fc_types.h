@@ -703,33 +703,6 @@ BV_DEFINE(bv_roads, MAX_ROAD_TYPES);
 BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 
 // Used in the network protocol.
-#define SPECENUM_NAME gui_type
-// Used for options which do not belong to any gui.
-#define SPECENUM_VALUE0 GUI_STUB
-#define SPECENUM_VALUE0NAME "stub"
-/* GUI_GTK2 remains for now for keeping client options alive until
- * user has migrated them to gtk3-client */
-#define SPECENUM_VALUE1 GUI_GTK2
-#define SPECENUM_VALUE1NAME "gtk2"
-#define SPECENUM_VALUE2 GUI_GTK3
-#define SPECENUM_VALUE2NAME "gtk3"
-#define SPECENUM_VALUE3 GUI_GTK3_22
-#define SPECENUM_VALUE3NAME "gtk3.22"
-/* GUI_SDL remains for now for keeping client options alive until
- * user has migrated them to sdl2-client */
-#define SPECENUM_VALUE4 GUI_SDL
-#define SPECENUM_VALUE4NAME "sdl"
-#define SPECENUM_VALUE5 GUI_QT
-#define SPECENUM_VALUE5NAME "qt"
-#define SPECENUM_VALUE6 GUI_SDL2
-#define SPECENUM_VALUE6NAME "sdl2"
-#define SPECENUM_VALUE7 GUI_WEB
-#define SPECENUM_VALUE7NAME "web"
-#define SPECENUM_VALUE8 GUI_GTK3x
-#define SPECENUM_VALUE8NAME "gtk3x"
-#include "specenum_gen.h"
-
-// Used in the network protocol.
 #define SPECENUM_NAME airlifting_style
 #define SPECENUM_BITWISE
 // Like classical Freeciv.  One unit per turn.

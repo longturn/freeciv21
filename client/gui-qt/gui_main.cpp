@@ -379,11 +379,6 @@ void gui_update_allfonts()
 }
 
 /**
-   Returns gui type of the client
- */
-enum gui_type qtg_get_gui_type() { return GUI_QT; }
-
-/**
    Called when the tileset is changed to reset the unit pixmap table.
  */
 void reset_unit_table()
