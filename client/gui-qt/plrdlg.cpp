@@ -167,7 +167,7 @@ QVariant plr_item::data(int column, int role) const
         ->scaledToHeight(fm->height());
   } break;
   case COL_COLOR:
-    return *get_player_color(tileset, ipplayer);
+    return get_player_color(tileset, ipplayer);
     break;
   case COL_BOOLEAN:
     return pdc->bool_func(ipplayer);

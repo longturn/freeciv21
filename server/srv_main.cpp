@@ -3196,12 +3196,6 @@ void server_game_free()
 }
 
 /**
-   Initialize client specific functions.
- */
-struct color;
-void server_gui_color_free(QColor *pcolor) { fc_assert_ret(pcolor == NULL); }
-
-/**
    Returns the id of the city the player map of 'pplayer' has at 'ptile' or
    IDENTITY_NUMBER_ZERO if the player map don't have a city there.
  */

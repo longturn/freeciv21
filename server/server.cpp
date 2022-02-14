@@ -117,7 +117,6 @@ void fc_interface_init_server()
   funcs->destroy_extra = destroy_extra;
   funcs->player_tile_vision_get = map_is_known_and_seen;
   funcs->player_tile_city_id_get = server_plr_tile_city_id_get;
-  funcs->gui_color_free = server_gui_color_free;
 
   // Keep this function call at the end. It checks if all required functions
   // are defined.

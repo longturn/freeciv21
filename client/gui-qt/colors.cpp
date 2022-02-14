@@ -64,46 +64,13 @@ void research_color::init_colors()
   colors_init = true;
 }
 // get color from fake object
-QColor *research_color::get_color(int c)
+QColor research_color::get_color(int c)
 {
   if (!colors_init) {
     init_colors();
   }
-  return &colors[c];
+  return colors[c];
 }
 
 // returns color from qss fake object
-QColor *get_diag_color(int c) { return research_color::i()->get_color(c); }
-/**
-   Allocate a color (adjusting it for our colormap if necessary on paletted
-   systems) and return a pointer to it.
- */
-QColor *qtg_color_alloc(int r, int g, int b)
-{
-  QColor *pcolor = new QColor;
-
-  pcolor->setRgb(r, g, b);
-
-  return pcolor;
-}
-
-/**
-   Free a previously allocated color.  See qtg_color_alloc.
- */
-void qtg_color_free(QColor *pcolor) { delete pcolor; }
-
-/**
-   Return a number indicating the perceptual brightness of this color
-   relative to others (larger is brighter).
- */
-int color_brightness_score(QColor *pcolor)
-{
-  /* QColor has color space conversions, but nothing giving a perceptually
-   * even color space */
-  struct rgbcolor *prgb =
-      rgbcolor_new(pcolor->red(), pcolor->green(), pcolor->blue());
-  int score = rgbcolor_brightness_score(prgb);
-
-  rgbcolor_destroy(prgb);
-  return score;
-}
+QColor get_diag_color(int c) { return research_color::i()->get_color(c); }

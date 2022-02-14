@@ -41,7 +41,6 @@ struct functions {
    * location. */
   int (*player_tile_city_id_get)(const struct tile *ptile,
                                  const struct player *pplayer);
-  void (*gui_color_free)(QColor *pcolor);
 };
 
 extern const struct functions *fc_funcs;

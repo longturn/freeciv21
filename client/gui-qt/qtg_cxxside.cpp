@@ -21,9 +21,6 @@ void setup_gui_funcs()
 {
   struct gui_funcs *funcs = get_gui_funcs();
 
-  funcs->color_alloc = qtg_color_alloc;
-  funcs->color_free = qtg_color_free;
-
   funcs->canvas_create = qtg_canvas_create;
   funcs->canvas_free = qtg_canvas_free;
   funcs->canvas_copy = qtg_canvas_copy;

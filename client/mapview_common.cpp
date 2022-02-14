@@ -1240,14 +1240,8 @@ static void draw_trade_route_line(const struct tile *ptile1,
 {
   struct trade_route_line lines[MAX_TRADE_ROUTE_DRAW_LINES];
   int line_count, i;
-  QColor *pcolor;
 
   if (!ptile1 || !ptile2) {
-    return;
-  }
-
-  pcolor = get_color(tileset, color);
-  if (!pcolor) {
     return;
   }
 
@@ -1263,7 +1257,7 @@ static void draw_trade_route_line(const struct tile *ptile1,
 
   line_count = trade_route_to_canvas_lines(ptile1, ptile2, lines);
   for (i = 0; i < line_count; i++) {
-    canvas_put_line(mapview.store, pcolor, LINE_BORDER,
+    canvas_put_line(mapview.store, get_color(tileset, color), LINE_BORDER,
                     lines[i].x + tileset_tile_width(tileset) / 2,
                     lines[i].y + tileset_tile_height(tileset) / 2,
                     lines[i].width, lines[i].height);
@@ -2903,7 +2897,7 @@ static struct tile *link_mark_tile(const struct link_mark *pmark)
 /**
    Returns the color of the pointed mark.
  */
-static QColor *link_mark_color(const struct link_mark *pmark)
+static QColor link_mark_color(const struct link_mark *pmark)
 {
   switch (pmark->type) {
   case TLT_CITY:
@@ -2915,7 +2909,7 @@ static QColor *link_mark_color(const struct link_mark *pmark)
   case TLT_INVALID:
     fc_assert_ret_val(pmark->type != TLT_INVALID, nullptr);
   }
-  return NULL;
+  return QColor();
 }
 
 /**
@@ -2930,7 +2924,7 @@ static void link_mark_draw(const struct link_mark *pmark)
   float canvas_x, canvas_y;
   int x_left, x_right, y_top, y_bottom;
   struct tile *ptile = link_mark_tile(pmark);
-  QColor *pcolor = link_mark_color(pmark);
+  auto color = link_mark_color(pmark);
 
   if (!ptile || !tile_to_canvas_pos(&canvas_x, &canvas_y, ptile)) {
     return;
@@ -2941,24 +2935,24 @@ static void link_mark_draw(const struct link_mark *pmark)
   y_top = canvas_y + yd;
   y_bottom = canvas_y + height - yd;
 
-  canvas_put_line(mapview.store, pcolor, LINE_TILE_FRAME, x_left, y_top,
-                  xlen, 0);
-  canvas_put_line(mapview.store, pcolor, LINE_TILE_FRAME, x_left, y_top, 0,
+  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_left, y_top, xlen,
+                  0);
+  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_left, y_top, 0,
                   ylen);
 
-  canvas_put_line(mapview.store, pcolor, LINE_TILE_FRAME, x_right, y_top,
+  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_right, y_top,
                   -xlen, 0);
-  canvas_put_line(mapview.store, pcolor, LINE_TILE_FRAME, x_right, y_top, 0,
+  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_right, y_top, 0,
                   ylen);
 
-  canvas_put_line(mapview.store, pcolor, LINE_TILE_FRAME, x_left, y_bottom,
+  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_left, y_bottom,
                   xlen, 0);
-  canvas_put_line(mapview.store, pcolor, LINE_TILE_FRAME, x_left, y_bottom,
-                  0, -ylen);
+  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_left, y_bottom, 0,
+                  -ylen);
 
-  canvas_put_line(mapview.store, pcolor, LINE_TILE_FRAME, x_right, y_bottom,
+  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_right, y_bottom,
                   -xlen, 0);
-  canvas_put_line(mapview.store, pcolor, LINE_TILE_FRAME, x_right, y_bottom,
+  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_right, y_bottom,
                   0, -ylen);
 }
 

@@ -21,9 +21,6 @@ class QTcpSocket;
 
 void setup_gui_funcs();
 
-QColor *qtg_color_alloc(int r, int g, int b);
-void qtg_color_free(QColor *pcolor);
-
 QPixmap *qtg_canvas_create(int width, int height);
 void qtg_canvas_free(QPixmap *store);
 void qtg_canvas_copy(QPixmap *dest, const QPixmap *src, int src_x, int src_y,
@@ -39,22 +36,22 @@ void qtg_canvas_put_sprite_fogged(QPixmap *pcanvas, int canvas_x,
 void qtg_canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x,
                                     int canvas_y, const QPixmap *psprite,
                                     bool fog, int fog_x, int fog_y);
-void qtg_canvas_put_rectangle(QPixmap *pcanvas, const QColor *pcolor,
+void qtg_canvas_put_rectangle(QPixmap *pcanvas, const QColor &color,
                               int canvas_x, int canvas_y, int width,
                               int height);
 void qtg_canvas_fill_sprite_area(QPixmap *pcanvas, const QPixmap *psprite,
-                                 const QColor *pcolor, int canvas_x,
+                                 const QColor &color, int canvas_x,
                                  int canvas_y);
-void qtg_canvas_put_line(QPixmap *pcanvas, const QColor *pcolor,
+void qtg_canvas_put_line(QPixmap *pcanvas, const QColor &color,
                          enum line_type ltype, int start_x, int start_y,
                          int dx, int dy);
-void qtg_canvas_put_curved_line(QPixmap *pcanvas, const QColor *pcolor,
+void qtg_canvas_put_curved_line(QPixmap *pcanvas, const QColor &color,
                                 enum line_type ltype, int start_x,
                                 int start_y, int dx, int dy);
 void qtg_get_text_size(int *width, int *height, enum client_font font,
                        const QString &);
 void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                         enum client_font font, const QColor *pcolor,
+                         enum client_font font, const QColor &color,
                          const QString &text);
 
 void qtg_set_rulesets(int num_rulesets, QStringList rulesets);

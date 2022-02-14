@@ -14,10 +14,5 @@
 
 #include "gui_proto_constructor.h"
 
-struct color;
-
-GUI_FUNC_PROTO(QColor *, color_alloc, int r, int g, int b)
-GUI_FUNC_PROTO(void, color_free, QColor *color)
-
-GUI_FUNC_PROTO(int, color_brightness_score, QColor *color)
-QColor *get_diag_color(int);
+int color_brightness_score(const QColor &color);
+QColor get_diag_color(int);

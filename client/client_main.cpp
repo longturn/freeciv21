@@ -1383,7 +1383,6 @@ static void fc_interface_init_client()
   funcs->destroy_extra = NULL;
   funcs->player_tile_vision_get = client_map_is_known_and_seen;
   funcs->player_tile_city_id_get = client_plr_tile_city_id_get;
-  funcs->gui_color_free = color_free;
 
   /* Keep this function call at the end. It checks if all required functions
      are defined. */
