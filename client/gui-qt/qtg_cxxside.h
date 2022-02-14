@@ -21,7 +21,6 @@ class QTcpSocket;
 
 void setup_gui_funcs();
 
-void qtg_insert_client_build_info(char *outbuf, size_t outlen);
 void qtg_adjust_default_options();
 
 void qtg_version_message(const QString &vertext);

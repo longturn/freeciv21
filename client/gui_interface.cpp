@@ -55,14 +55,6 @@ void real_output_window_append(const QString &astring,
 }
 
 /**
-   Call insert_client_build_info callback
- */
-void insert_client_build_info(char *outbuf, size_t outlen)
-{
-  funcs.insert_client_build_info(outbuf, outlen);
-}
-
-/**
    Call is_view_supported callback
  */
 bool is_view_supported(enum ts_type type)
