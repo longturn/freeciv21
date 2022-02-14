@@ -126,7 +126,7 @@ void fc_interface_init_server()
 /**
    Server initialization.
  */
-optional_socket_server srv_prepare()
+std::optional<socket_server> srv_prepare()
 {
   // make sure it's initialized
   srv_init();

@@ -373,7 +373,7 @@ int server_make_connection(QIODevice *new_sock, const QString &client_addr,
    Open server socket to be used to accept client connections
    and open a server socket for server LAN announcements.
  */
-optional_socket_server server_open_socket()
+std::optional<socket_server> server_open_socket()
 {
   // Local socket mode
   if (!srvarg.local_addr.isEmpty()) {

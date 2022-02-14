@@ -30,9 +30,8 @@ struct connection;
 
 using socket_server =
     std::variant<std::unique_ptr<QTcpServer>, std::unique_ptr<QLocalServer>>;
-using optional_socket_server = std::optional<socket_server>;
 
-optional_socket_server server_open_socket();
+std::optional<socket_server> server_open_socket();
 void flush_packets();
 void incoming_client_packets(connection *pconn);
 void close_connections_and_socket();
