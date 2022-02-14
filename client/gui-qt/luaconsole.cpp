@@ -20,8 +20,8 @@
 /* client/luascript */
 #include "script_client.h"
 // gui-qt
+#include "chatline_g.h"
 #include "fc_client.h"
-#include "qtg_cxxside.h"
 
 QString qlua_filename;
 
@@ -49,7 +49,7 @@ void real_luaconsole_dialog_update(void) {}
 void real_luaconsole_append(const char *astring,
                             const struct text_tag_list *tags)
 {
-  qtg_real_output_window_append(astring, tags, 0);
+  real_output_window_append(astring, tags);
 }
 
 /**

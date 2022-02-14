@@ -21,6 +21,7 @@
 // common
 #include "chat.h"
 #include "chatline_common.h"
+#include "chatline_g.h"
 // client
 #include "audio.h"
 #include "client_main.h"
@@ -39,7 +40,6 @@
 #include "mapview.h"
 #include "messagewin.h"
 #include "page_game.h"
-#include "qtg_cxxside.h"
 
 static bool is_plain_public_message(const QString &s);
 
@@ -706,11 +706,9 @@ static bool is_plain_public_message(const QString &s)
    Appends the string to the chat output window.  The string should be
    inserted on its own line, although it will have no newline.
  */
-void qtg_real_output_window_append(const QString &astring,
-                                   const struct text_tag_list *tags,
-                                   int conn_id)
+void real_output_window_append(const QString &astring,
+                               const text_tag_list *tags)
 {
-  Q_UNUSED(conn_id)
   king()->set_status_bar(astring);
 
   if (astring.contains(client.conn.username)) {

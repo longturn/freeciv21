@@ -41,15 +41,6 @@ static struct gui_funcs funcs;
 struct gui_funcs *get_gui_funcs() { return &funcs; }
 
 /**
-   Call real_output_window_append callback
- */
-void real_output_window_append(const QString &astring,
-                               const struct text_tag_list *tags, int conn_id)
-{
-  funcs.real_output_window_append(astring, tags, conn_id);
-}
-
-/**
    Call is_view_supported callback
  */
 bool is_view_supported(enum ts_type type)

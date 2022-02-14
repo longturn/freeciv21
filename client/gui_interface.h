@@ -29,10 +29,6 @@ class QTcpSocket;
 #include "tilespec.h"
 
 struct gui_funcs {
-  void (*real_output_window_append)(const QString &astring,
-                                    const struct text_tag_list *tags,
-                                    int conn_id);
-
   bool (*is_view_supported)(enum ts_type type);
   void (*tileset_type_set)(enum ts_type type);
   void (*free_intro_radar_sprites)();
