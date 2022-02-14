@@ -40,14 +40,6 @@ static struct gui_funcs funcs;
 struct gui_funcs *get_gui_funcs() { return &funcs; }
 
 /**
-   Call load_gfxfile callback
- */
-QPixmap *load_gfxfile(const char *filename)
-{
-  return funcs.load_gfxfile(filename);
-}
-
-/**
    Call create_sprite callback
  */
 QPixmap *create_sprite(int width, int height, const QColor *pcolor)

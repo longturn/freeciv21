@@ -25,7 +25,7 @@
    entire image file, which may later be broken up into individual sprites
    with crop_sprite.
  */
-QPixmap *qtg_load_gfxfile(const char *filename)
+QPixmap *load_gfxfile(const char *filename)
 {
   QPixmap *entire = new QPixmap;
 
