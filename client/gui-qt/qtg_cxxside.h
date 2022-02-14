@@ -24,7 +24,6 @@ void setup_gui_funcs();
 QPixmap *qtg_crop_sprite(const QPixmap *source, int x, int y, int width,
                          int height, const QPixmap *mask, int mask_offset_x,
                          int mask_offset_y);
-void qtg_free_sprite(QPixmap *s);
 
 QColor *qtg_color_alloc(int r, int g, int b);
 void qtg_color_free(QColor *pcolor);

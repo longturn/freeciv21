@@ -99,8 +99,3 @@ QPixmap *qtg_crop_sprite(const QPixmap *source, int x, int y, int width,
 
   return cropped;
 }
-
-/**
-   Free a sprite and all associated image data.
- */
-void qtg_free_sprite(QPixmap *s) { delete s; }

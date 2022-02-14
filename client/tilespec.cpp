@@ -2326,7 +2326,7 @@ static void unload_sprite(struct tileset *t, const QString &tag_name)
     /* Nobody's using the sprite anymore, so we should free it.  We know
      * where to find it if we need it again. */
     // log_debug("freeing sprite '%s'.", tag_name);
-    free_sprite(ss->sprite);
+    delete ss->sprite;
     ss->sprite = NULL;
   }
 }
@@ -2925,7 +2925,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
                          0, 0);
     unworked = crop_sprite(color_mask, 0, 0, W, H,
                            t->sprites.mask.unworked_tile, 0, 0);
-    free_sprite(color_mask);
+    delete color_mask;
     t->sprites.city.worked_tile_overlay.p[i] = worked;
     t->sprites.city.unworked_tile_overlay.p[i] = unworked;
   }
@@ -3086,7 +3086,7 @@ void finish_loading_sprites(struct tileset *t)
 {
   for (auto *sf : qAsConst(*t->specfiles)) {
     if (sf->big_sprite) {
-      free_sprite(sf->big_sprite);
+      delete sf->big_sprite;
       sf->big_sprite = NULL;
     }
   }
@@ -5183,7 +5183,7 @@ void tileset_free_tiles(struct tileset *t)
   for (auto *sf : qAsConst(*t->specfiles)) {
     delete[] sf->file_name;
     if (sf->big_sprite) {
-      free_sprite(sf->big_sprite);
+      delete sf->big_sprite;
       sf->big_sprite = NULL;
     }
     delete sf;
@@ -5192,14 +5192,14 @@ void tileset_free_tiles(struct tileset *t)
 
   sprite_vector_iterate(&t->sprites.city.worked_tile_overlay, psprite)
   {
-    free_sprite(*psprite);
+    delete *psprite;
   }
   sprite_vector_iterate_end;
   sprite_vector_free(&t->sprites.city.worked_tile_overlay);
 
   sprite_vector_iterate(&t->sprites.city.unworked_tile_overlay, psprite)
   {
-    free_sprite(*psprite);
+    delete *psprite;
   }
   sprite_vector_iterate_end;
   sprite_vector_free(&t->sprites.city.unworked_tile_overlay);
@@ -5765,14 +5765,14 @@ static void tileset_player_free(struct tileset *t, int plrid)
   }
 
   if (t->sprites.player[plrid].color) {
-    free_sprite(t->sprites.player[plrid].color);
+    delete t->sprites.player[plrid].color;
     t->sprites.player[plrid].color = NULL;
   }
 
   for (i = 0; i < EDGE_COUNT; i++) {
     for (j = 0; j < 2; j++) {
       if (t->sprites.player[plrid].grid_borders[i][j]) {
-        free_sprite(t->sprites.player[plrid].grid_borders[i][j]);
+        delete t->sprites.player[plrid].grid_borders[i][j];
         t->sprites.player[plrid].grid_borders[i][j] = NULL;
       }
     }

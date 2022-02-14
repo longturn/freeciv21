@@ -51,11 +51,6 @@ QPixmap *crop_sprite(const QPixmap *source, int x, int y, int width,
 }
 
 /**
-   Call free_sprite callback
- */
-void free_sprite(QPixmap *s) { funcs.free_sprite(s); }
-
-/**
    Call color_alloc callback
  */
 QColor *color_alloc(int r, int g, int b)
