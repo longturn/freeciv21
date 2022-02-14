@@ -3023,10 +3023,6 @@ void city_production_delegate::paint(QPainter *painter,
   drawFocus(painter, opt, option.rect);
 
   painter->restore();
-
-  if (free_sprite) {
-    qtg_free_sprite(free_sprite);
-  }
 }
 
 /**
