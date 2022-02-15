@@ -25,13 +25,13 @@
 class QComboBox;
 class QFontMetrics;
 class QHBoxLayout;
+class QIcon;
 class QItemSelection;
 class QKeyEvent;
 class QMouseEvent;
 class QMoveEvent;
 class QObject;
 class QPaintEvent;
-class QPixmap;
 class QPushButton;
 class QRadioButton;
 class QTimerEvent;
@@ -155,13 +155,12 @@ protected:
 ****************************************************************************/
 class hud_action : public QWidget {
   Q_OBJECT
-  QPixmap *action_pixmap;
+  const QIcon icon;
   bool focus;
 
 public:
-  hud_action(QWidget *parent);
+  hud_action(QWidget *parent, const QIcon &icon, shortcut_id shortcut);
   ~hud_action() override;
-  void set_pixmap(QPixmap *p);
   shortcut_id action_shortcut;
 signals:
   void left_clicked();

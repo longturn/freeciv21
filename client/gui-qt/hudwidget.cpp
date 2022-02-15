@@ -813,20 +813,15 @@ void click_label::mouse_clicked()
 /**
    Hud action constructor, used to show one action
  */
-hud_action::hud_action(QWidget *parent) : QWidget(parent)
+hud_action::hud_action(QWidget *parent, const QIcon &icon,
+                       shortcut_id shortcut)
+    : QWidget(parent), icon(icon), action_shortcut(shortcut)
 {
   connect(this, &hud_action::left_clicked, this, &hud_action::mouse_clicked);
   setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
   focus = false;
-  action_pixmap = nullptr;
-  action_shortcut = SC_NONE;
 }
-
-/**
-   Sets given pixmap for hud_action
- */
-void hud_action::set_pixmap(QPixmap *p) { action_pixmap = p; }
 
 /**
    Custom painting for hud_action
@@ -837,12 +832,11 @@ void hud_action::paintEvent(QPaintEvent *event)
   QPainter p;
 
   rx = QRect(0, 0, width(), height());
-  ry = QRect(0, 0, action_pixmap->width(), action_pixmap->height());
   rz = QRect(0, 2, width(), height() - 6);
   p.begin(this);
   p.setCompositionMode(QPainter::CompositionMode_Source);
   p.setRenderHint(QPainter::SmoothPixmapTransform);
-  p.drawPixmap(rx, *action_pixmap, ry);
+  icon.paint(&p, rx);
   p.setPen(QColor(palette().color(QPalette::Text)));
   p.drawRect(rz);
   if (focus) {
@@ -855,7 +849,7 @@ void hud_action::paintEvent(QPaintEvent *event)
 /**
    Hud action destructor
  */
-hud_action::~hud_action() { NFC_FREE(action_pixmap); }
+hud_action::~hud_action() {}
 
 /**
    Mouse press event for hud_action
@@ -950,8 +944,6 @@ void unit_actions::init_layout()
  */
 int unit_actions::update_actions()
 {
-  hud_action *a;
-
   current_unit = head_of_units_in_focus();
 
   if (current_unit == nullptr) {
@@ -977,49 +969,39 @@ int unit_actions::update_actions()
   // Create possible actions
 
   if (unit_can_add_or_build_city(current_unit)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_BUILDCITY;
-    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("home")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("home")),
+        SC_BUILDCITY));
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_MINE)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_BUILDMINE;
-    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("mine")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("mine")),
+        SC_BUILDMINE));
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_PLANT)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_PLANT;
-    a->set_pixmap(
-        fcIcons::instance()->getPixmap(QStringLiteral("plantforest")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("plantforest")),
+        SC_PLANT));
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_IRRIGATE)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_BUILDIRRIGATION;
-    a->set_pixmap(
-        fcIcons::instance()->getPixmap(QStringLiteral("irrigation")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("irrigation")),
+        SC_BUILDIRRIGATION));
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_CULTIVATE)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_CULTIVATE;
-    a->set_pixmap(
-        fcIcons::instance()->getPixmap(QStringLiteral("chopchop")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("chopchop")),
+        SC_CULTIVATE));
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_TRANSFORM)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_TRANSFORM;
-    a->set_pixmap(
-        fcIcons::instance()->getPixmap(QStringLiteral("transform")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("transform")),
+        SC_TRANSFORM));
   }
 
   // Road
@@ -1034,86 +1016,77 @@ int unit_actions::update_actions()
     }
     extra_type_by_cause_iterate_end;
     if (ok) {
-      a = new hud_action(this);
-      a->action_shortcut = SC_BUILDROAD;
-      a->set_pixmap(
-          fcIcons::instance()->getPixmap(QStringLiteral("buildroad")));
-      actions.append(a);
+      actions.append(new hud_action(
+          this, fcIcons::instance()->getIcon(QStringLiteral("buildroad")),
+          SC_BUILDROAD));
     }
   }
   // Goto
-  a = new hud_action(this);
-  a->action_shortcut = SC_GOTO;
-  a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("goto")));
-  actions.append(a);
+  actions.append(new hud_action(
+      this, fcIcons::instance()->getIcon(QStringLiteral("goto")), SC_GOTO));
 
   if (can_unit_do_activity(current_unit, ACTIVITY_FORTIFYING)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_FORTIFY;
-    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("fortify")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("fortify")),
+        SC_FORTIFY));
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_SENTRY)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_SENTRY;
-    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("sentry")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("sentry")),
+        SC_SENTRY));
   }
 
   // Load
   if (unit_can_load(current_unit)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_LOAD;
-    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("load")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("load")),
+        SC_LOAD));
   }
 
   // Set homecity
   if (tile_city(unit_tile(current_unit))) {
     if (can_unit_change_homecity_to(current_unit,
                                     tile_city(unit_tile(current_unit)))) {
-      a = new hud_action(this);
-      a->action_shortcut = SC_SETHOME;
-      a->set_pixmap(
-          fcIcons::instance()->getPixmap(QStringLiteral("set_homecity")));
-      actions.append(a);
+      actions.append(new hud_action(
+          this, fcIcons::instance()->getIcon(QStringLiteral("set_homecity")),
+          SC_SETHOME));
     }
   }
 
   // Upgrade
   if (UU_OK == unit_upgrade_test(current_unit, false)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_UPGRADE_UNIT;
-    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("upgrade")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("upgrade")),
+        SC_UPGRADE_UNIT));
   }
 
   // Automate
   if (can_unit_do_autosettlers(current_unit)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_AUTOMATE;
-    a->set_pixmap(
-        fcIcons::instance()->getPixmap(QStringLiteral("automate")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("automate")),
+        SC_AUTOMATE));
   }
 
   // Paradrop
   if (can_unit_paradrop(current_unit)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_PARADROP;
-    a->set_pixmap(
-        fcIcons::instance()->getPixmap(QStringLiteral("paradrop")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("paradrop")),
+        SC_PARADROP));
+  }
+
+  // Pillage
+  if (can_unit_do_activity(current_unit, ACTIVITY_PILLAGE)) {
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("pillage")),
+        SC_PILLAGE));
   }
 
   // Clean pollution
   if (can_unit_do_activity(current_unit, ACTIVITY_POLLUTION)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_PARADROP;
-    a->set_pixmap(
-        fcIcons::instance()->getPixmap(QStringLiteral("pollution")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("pollution")),
+        SC_PARADROP));
   }
 
   // Unload
@@ -1121,31 +1094,26 @@ int unit_actions::update_actions()
       && can_unit_unload(current_unit, unit_transport_get(current_unit))
       && can_unit_exist_at_tile(&(wld.map), current_unit,
                                 unit_tile(current_unit))) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_UNLOAD;
-    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("unload")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("unload")),
+        SC_UNLOAD));
   }
 
   // Nuke
   if (unit_can_do_action(current_unit, ACTION_NUKE)) {
-    a = new hud_action(this);
-    a->action_shortcut = SC_NUKE;
-    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("nuke")));
-    actions.append(a);
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("nuke")),
+        SC_NUKE));
   }
 
   // Wait
-  a = new hud_action(this);
-  a->action_shortcut = SC_WAIT;
-  a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("wait")));
-  actions.append(a);
+  actions.append(new hud_action(
+      this, fcIcons::instance()->getIcon(QStringLiteral("wait")), SC_WAIT));
 
   // Done moving
-  a = new hud_action(this);
-  a->action_shortcut = SC_DONE_MOVING;
-  a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("done")));
-  actions.append(a);
+  actions.append(new hud_action(
+      this, fcIcons::instance()->getIcon(QStringLiteral("done")),
+      SC_DONE_MOVING));
 
   for (auto *a : qAsConst(actions)) {
     a->setToolTip(
