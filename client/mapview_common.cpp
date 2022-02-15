@@ -21,6 +21,7 @@
 #include <QGlobalStatic>
 #include <QHash>
 #include <QLoggingCategory>
+#include <QPainter>
 #include <QPixmap>
 #include <QSet>
 #include <QTimer>
@@ -550,10 +551,11 @@ static void base_set_mapview_origin(float gui_x0, float gui_y0)
     }
 
     dirty_all();
-    canvas_copy(target, mapview.store, common_x0 - old_gui_x0,
-                common_y0 - old_gui_y0, common_x0 - gui_x0,
-                common_y0 - gui_y0, common_x1 - common_x0,
-                common_y1 - common_y0);
+    QPainter p(target);
+    p.drawPixmap(common_x0 - gui_x0, common_y0 - gui_y0, *mapview.store,
+                 common_x0 - old_gui_x0, common_y0 - old_gui_y0,
+                 common_x1 - common_x0, common_y1 - common_y0);
+    p.end();
     mapview.tmp_store = mapview.store;
     mapview.store = target;
 
