@@ -200,7 +200,7 @@ bool client_start_server(const QString &user_name)
     return false;
   }
 
-  // Unique name for this game
+  // Generate a (random) unique name for the local socket
   auto uuid = QUuid::createUuid().toString(QUuid::WithoutBraces);
 
   // Set up the command-line parameters.
