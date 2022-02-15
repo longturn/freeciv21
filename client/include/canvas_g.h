@@ -21,10 +21,6 @@ class QString;
 
 enum line_type { LINE_NORMAL, LINE_BORDER, LINE_TILE_FRAME, LINE_GOTO };
 
-// Creator and destructor
-GUI_FUNC_PROTO(QPixmap *, canvas_create, int width, int height)
-GUI_FUNC_PROTO(void, canvas_free, QPixmap *store)
-
 // Drawing functions
 GUI_FUNC_PROTO(void, canvas_copy, QPixmap *dest, const QPixmap *src,
                int src_x, int src_y, int dest_x, int dest_y, int width,

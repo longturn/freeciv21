@@ -2667,15 +2667,15 @@ bool map_canvas_resized(int width, int height)
   // If the tile size has changed, resize the canvas.
   if (tile_size_changed) {
     if (mapview.store) {
-      canvas_free(mapview.store);
-      canvas_free(mapview.tmp_store);
+      delete mapview.store;
+      delete mapview.tmp_store;
     }
-    mapview.store = canvas_create(full_width, full_height);
+    mapview.store = new QPixmap(full_width, full_height);
     canvas_put_rectangle(mapview.store,
                          get_color(tileset, COLOR_MAPVIEW_UNKNOWN), 0, 0,
                          full_width, full_height);
 
-    mapview.tmp_store = canvas_create(full_width, full_height);
+    mapview.tmp_store = new QPixmap(full_width, full_height);
   }
 
   if (!map_is_empty() && can_client_change_view()) {
@@ -2732,8 +2732,8 @@ void init_mapcanvas_and_overview()
  */
 void free_mapcanvas_and_overview()
 {
-  canvas_free(mapview.store);
-  canvas_free(mapview.tmp_store);
+  delete mapview.store;
+  delete mapview.tmp_store;
 }
 
 /**

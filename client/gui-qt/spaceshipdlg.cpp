@@ -38,7 +38,7 @@ ss_report::ss_report(struct player *pplayer)
   setAttribute(Qt::WA_DeleteOnClose);
   player = pplayer;
   get_spaceship_dimensions(&w, &h);
-  can = qtg_canvas_create(w, h);
+  can = new QPixmap(w, h);
 
   QGridLayout *layout = new QGridLayout;
   ss_pix_label = new QLabel;
@@ -60,7 +60,7 @@ ss_report::ss_report(struct player *pplayer)
 ss_report::~ss_report()
 {
   queen()->removeRepoDlg(QStringLiteral("SPS"));
-  qtg_canvas_free(can);
+  delete can;
 }
 
 /**

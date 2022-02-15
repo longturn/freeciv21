@@ -14,7 +14,6 @@
 // Qt
 #include <QPixmap>
 
-QPixmap *qtg_canvas_create(int width, int height);
 void pixmap_copy(QPixmap *dest, const QPixmap *src, int src_x, int src_y,
                  int dest_x, int dest_y, int width, int height);
 void image_copy(QImage *dest, const QImage *src, int src_x, int src_y,

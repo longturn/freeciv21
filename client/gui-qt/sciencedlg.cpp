@@ -65,7 +65,7 @@ research_diagram::research_diagram(QWidget *parent) : QWidget(parent)
 research_diagram::~research_diagram()
 {
   NFCN_FREE(tt_help);
-  canvas_free(pcanvas);
+  delete pcanvas;
   destroy_reqtree(req);
 }
 
@@ -90,11 +90,11 @@ void research_diagram::reset()
     destroy_reqtree(req);
   }
   if (pcanvas != NULL) {
-    canvas_free(pcanvas);
+    delete pcanvas;
   }
   req = create_reqtree(client_player(), true);
   get_reqtree_dimensions(req, &width, &height);
-  pcanvas = qtg_canvas_create(width, height);
+  pcanvas = new QPixmap(width, height);
   pcanvas->fill(Qt::transparent);
   resize(width, height);
 }

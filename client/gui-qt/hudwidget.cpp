@@ -671,8 +671,8 @@ void hud_units::update_actions(unit_list *punits)
   text_label.setFixedWidth(fm->horizontalAdvance(text_str) + 20);
   delete fm;
 
-  unit_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
-                                  tileset_unit_height(tileset));
+  unit_pixmap =
+      new QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
   unit_pixmap->fill(Qt::transparent);
   put_unit(punit, unit_pixmap, 0, 0);
   img = unit_pixmap->toImage();
@@ -751,11 +751,11 @@ void hud_units::update_actions(unit_list *punits)
   wwidth = 2 * 3 + pix.width();
   unit_label.setPixmap(pix);
   if (tileset_is_isometric(tileset)) {
-    tile_pixmap = qtg_canvas_create(tileset_full_tile_width(tileset),
-                                    tileset_tile_height(tileset) * 2);
+    tile_pixmap = new QPixmap(tileset_full_tile_width(tileset),
+                              tileset_tile_height(tileset) * 2);
   } else {
-    tile_pixmap = qtg_canvas_create(tileset_full_tile_width(tileset),
-                                    tileset_tile_height(tileset));
+    tile_pixmap = new QPixmap(tileset_full_tile_width(tileset),
+                              tileset_tile_height(tileset));
   }
   tile_pixmap->fill(QColor(0, 0, 0, 0));
   put_terrain(punit->tile, tile_pixmap, 0, 0);
@@ -768,8 +768,8 @@ void hud_units::update_actions(unit_list *punits)
   unit_label.setToolTip(popup_info_text(punit->tile));
   tile_label.setToolTip(popup_terrain_info(punit->tile));
   wwidth = wwidth + pix.width();
-  qtg_canvas_free(tile_pixmap);
-  qtg_canvas_free(unit_pixmap);
+  delete tile_pixmap;
+  delete unit_pixmap;
 
   setFixedWidth(wwidth
                 + qMax(unit_icons->update_actions() * (height() * 8) / 10,
@@ -1737,8 +1737,8 @@ void hud_unit_combat::init_images(bool redraw)
   w = 3 * hud_scale * tileset_unit_height(tileset) / 2;
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
   setFixedSize(2 * w, w);
-  defender_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
-                                      tileset_unit_height(tileset));
+  defender_pixmap =
+      new QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
   defender_pixmap->fill(Qt::transparent);
   if (defender != nullptr) {
     if (!redraw) {
@@ -1760,8 +1760,8 @@ void hud_unit_combat::init_images(bool redraw)
     dimg = dt;
   }
   dimg = dimg.scaled(w, w, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-  attacker_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
-                                      tileset_unit_height(tileset));
+  attacker_pixmap =
+      new QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
   attacker_pixmap->fill(Qt::transparent);
   if (attacker != nullptr) {
     if (!redraw) {

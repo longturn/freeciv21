@@ -21,8 +21,6 @@ class QTcpSocket;
 
 void setup_gui_funcs();
 
-QPixmap *qtg_canvas_create(int width, int height);
-void qtg_canvas_free(QPixmap *store);
 void qtg_canvas_copy(QPixmap *dest, const QPixmap *src, int src_x, int src_y,
                      int dest_x, int dest_y, int width, int height);
 void qtg_canvas_put_sprite(QPixmap *pcanvas, int canvas_x, int canvas_y,
