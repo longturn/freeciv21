@@ -28,6 +28,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "overview_common.h"
 
 // Qt
+#include <QPainter>
 #include <QPixmap>
 
 int OVERVIEW_TILE_SIZE = 2;
@@ -195,10 +196,12 @@ static void redraw_overview()
     int ix = gui_options.overview.width - x_left;
     int iy = gui_options.overview.height - y_top;
 
-    canvas_copy(dst, src, 0, 0, ix, iy, x_left, y_top);
-    canvas_copy(dst, src, 0, y_top, ix, 0, x_left, iy);
-    canvas_copy(dst, src, x_left, 0, 0, iy, ix, y_top);
-    canvas_copy(dst, src, x_left, y_top, 0, 0, ix, iy);
+    QPainter p(dst);
+    p.drawPixmap(ix, iy, *src, 0, 0, x_left, y_top);
+    p.drawPixmap(ix, 0, *src, 0, y_top, x_left, iy);
+    p.drawPixmap(0, iy, *src, x_left, 0, ix, y_top);
+    p.drawPixmap(0, 0, *src, x_left, y_top, ix, iy);
+    p.end();
   }
 
   gui_to_overview_pos(tileset, &x[0], &y[0], mapview.gui_x0, mapview.gui_y0);
