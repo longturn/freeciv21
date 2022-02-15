@@ -37,21 +37,6 @@
 #include "sprite.h"
 
 /**
-   Create a canvas of the given size.
- */
-QPixmap *qtg_canvas_create(int width, int height)
-{
-  QPixmap *store = new QPixmap(width, height);
-  return store;
-}
-
-/**
-   Free any resources associated with this canvas and the canvas struct
-   itself.
- */
-void qtg_canvas_free(QPixmap *store) { delete store; }
-
-/**
    Copies an area from the source canvas to the destination canvas.
  */
 void qtg_canvas_copy(QPixmap *dest, const QPixmap *src, int src_x, int src_y,

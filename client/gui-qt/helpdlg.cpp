@@ -862,12 +862,12 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
     max_utype = uclass_max_values(utype->uclass);
 
     // Unit icon
-    canvas = qtg_canvas_create(tileset_full_tile_width(tileset),
-                               tileset_full_tile_height(tileset));
+    canvas = new QPixmap(tileset_full_tile_width(tileset),
+                         tileset_full_tile_height(tileset));
     canvas->fill(Qt::transparent);
     put_unittype(utype, canvas, 0, 0);
     add_info_pixmap(canvas);
-    qtg_canvas_free(canvas);
+    delete canvas;
 
     add_info_progress(_("Attack:"), utype->attack_strength, 0,
                       max_utype->attack_strength);
@@ -1164,7 +1164,7 @@ QPixmap *terrain_canvas(struct terrain *terrain,
   height = tileset_full_tile_height(tileset);
   canvas_y = height - tileset_tile_height(tileset);
 
-  canvas = qtg_canvas_create(width, height);
+  canvas = new QPixmap(width, height);
   canvas->fill(Qt::transparent);
   for (i = 0; i < 3; ++i) {
     auto sprites =
@@ -1328,7 +1328,7 @@ void help_widget::set_topic_terrain(const help_item *topic,
     // Create terrain icon. Use shadow to help distinguish terrain.
     canvas = terrain_canvas(pterrain);
     add_info_pixmap(canvas, true);
-    qtg_canvas_free(canvas);
+    delete canvas;
 
     add_info_progress(_("Food:"), pterrain->output[O_FOOD], 0,
                       max->output[O_FOOD]);
@@ -1439,7 +1439,7 @@ void help_widget::set_topic_terrain(const help_item *topic,
             _("Output (Food, Shields, Trade) of a tile where the resource "
               "is "
               "present.")));
-        qtg_canvas_free(canvas);
+        delete canvas;
         show_panel = true;
       }
     }

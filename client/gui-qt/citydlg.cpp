@@ -371,12 +371,12 @@ impr_item::impr_item(QWidget *parent, const impr_type *building,
   auto sprite = get_building_sprite(tileset, building);
 
   if (sprite != nullptr) {
-    impr_pixmap = qtg_canvas_create(sprite->width(), sprite->height());
+    impr_pixmap = new QPixmap(sprite->width(), sprite->height());
     impr_pixmap->fill(Qt::transparent);
     pixmap_copy(impr_pixmap, sprite, 0, 0, 0, 0, sprite->width(),
                 sprite->height());
   } else {
-    impr_pixmap = qtg_canvas_create(10, 10);
+    impr_pixmap = new QPixmap(10, 10);
     impr_pixmap->fill(Qt::red);
   }
 
@@ -391,7 +391,7 @@ impr_item::impr_item(QWidget *parent, const impr_type *building,
 impr_item::~impr_item()
 {
   if (impr_pixmap) {
-    canvas_free(impr_pixmap);
+    delete impr_pixmap;
   }
 }
 
@@ -412,17 +412,17 @@ void impr_item::enterEvent(QEvent *event)
   Q_UNUSED(event)
 
   if (impr_pixmap) {
-    canvas_free(impr_pixmap);
+    delete impr_pixmap;
   }
 
   auto sprite = get_building_sprite(tileset, impr);
   if (impr && sprite != nullptr) {
-    impr_pixmap = qtg_canvas_create(sprite->width(), sprite->height());
+    impr_pixmap = new QPixmap(sprite->width(), sprite->height());
     impr_pixmap->fill(QColor(palette().color(QPalette::Highlight)));
     pixmap_copy(impr_pixmap, sprite, 0, 0, 0, 0, sprite->width(),
                 sprite->height());
   } else {
-    impr_pixmap = qtg_canvas_create(10, 10);
+    impr_pixmap = new QPixmap(10, 10);
     impr_pixmap->fill(QColor(palette().color(QPalette::Highlight)));
   }
 
@@ -437,17 +437,17 @@ void impr_item::leaveEvent(QEvent *event)
   Q_UNUSED(event)
 
   if (impr_pixmap) {
-    canvas_free(impr_pixmap);
+    delete impr_pixmap;
   }
 
   auto sprite = get_building_sprite(tileset, impr);
   if (impr && sprite) {
-    impr_pixmap = qtg_canvas_create(sprite->width(), sprite->height());
+    impr_pixmap = new QPixmap(sprite->width(), sprite->height());
     impr_pixmap->fill(Qt::transparent);
     pixmap_copy(impr_pixmap, sprite, 0, 0, 0, 0, sprite->width(),
                 sprite->height());
   } else {
-    impr_pixmap = qtg_canvas_create(10, 10);
+    impr_pixmap = new QPixmap(10, 10);
     impr_pixmap->fill(Qt::red);
   }
 
@@ -602,11 +602,11 @@ static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
   if (punit) {
     if (supported) {
       unit_pixmap =
-          qtg_canvas_create(tileset_unit_width(get_tileset()),
-                            tileset_unit_with_upkeep_height(get_tileset()));
+          new QPixmap(tileset_unit_width(get_tileset()),
+                      tileset_unit_with_upkeep_height(get_tileset()));
     } else {
-      unit_pixmap = qtg_canvas_create(tileset_unit_width(get_tileset()),
-                                      tileset_unit_height(get_tileset()));
+      unit_pixmap = new QPixmap(tileset_unit_width(get_tileset()),
+                                tileset_unit_height(get_tileset()));
     }
 
     unit_pixmap->fill(Qt::transparent);
@@ -618,7 +618,7 @@ static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
                              punit->upkeep, happy_cost);
     }
   } else {
-    unit_pixmap = qtg_canvas_create(10, 10);
+    unit_pixmap = new QPixmap(10, 10);
     unit_pixmap->fill(Qt::transparent);
   }
 
@@ -635,7 +635,7 @@ static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
     unit_img = cropped_img.scaledToHeight(tileset_unit_width(get_tileset()),
                                           Qt::SmoothTransformation);
   }
-  canvas_free(unit_pixmap);
+  delete unit_pixmap;
 
   return unit_img;
 }

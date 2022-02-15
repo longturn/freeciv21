@@ -27,6 +27,9 @@ received a copy of the GNU General Public License along with Freeciv21.
 
 #include "overview_common.h"
 
+// Qt
+#include <QPixmap>
+
 int OVERVIEW_TILE_SIZE = 2;
 #if 0
 struct overview overview = {
@@ -449,13 +452,13 @@ void calculate_overview_dimensions()
   gui_options.overview.height = OVERVIEW_TILE_HEIGHT * wld.map.ysize;
 
   if (gui_options.overview.map) {
-    canvas_free(gui_options.overview.map);
-    canvas_free(gui_options.overview.window);
+    delete gui_options.overview.map;
+    delete gui_options.overview.window;
   }
   gui_options.overview.map =
-      canvas_create(gui_options.overview.width, gui_options.overview.height);
+      new QPixmap(gui_options.overview.width, gui_options.overview.height);
   gui_options.overview.window =
-      canvas_create(gui_options.overview.width, gui_options.overview.height);
+      new QPixmap(gui_options.overview.width, gui_options.overview.height);
   canvas_put_rectangle(
       gui_options.overview.map, get_color(tileset, COLOR_OVERVIEW_UNKNOWN),
       0, 0, gui_options.overview.width, gui_options.overview.height);
@@ -474,8 +477,8 @@ void calculate_overview_dimensions()
 void overview_free()
 {
   if (gui_options.overview.map) {
-    canvas_free(gui_options.overview.map);
-    canvas_free(gui_options.overview.window);
+    delete gui_options.overview.map;
+    delete gui_options.overview.window;
     gui_options.overview.map = NULL;
     gui_options.overview.window = NULL;
   }

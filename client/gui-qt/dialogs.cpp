@@ -1190,12 +1190,12 @@ void choice_dialog::set_layout()
     prev->setIconSize(QSize(32, 32));
     prev->setFixedSize(QSize(36, 36));
     target_unit_button = new QPushButton;
-    pix = qtg_canvas_create(tileset_unit_width(tileset),
-                            tileset_unit_height(tileset));
+    pix = new QPixmap(tileset_unit_width(tileset),
+                      tileset_unit_height(tileset));
     pix->fill(Qt::transparent);
     put_unit(targeted_unit, pix, 0, 0);
     target_unit_button->setIcon(QIcon(*pix));
-    qtg_canvas_free(pix);
+    delete pix;
     target_unit_button->setIconSize(QSize(96, 96));
     target_unit_button->setFixedSize(QSize(100, 100));
     unit_skip->addStretch(100);
@@ -1342,12 +1342,12 @@ void choice_dialog::next_unit()
   }
   unit_list_iterate_end;
   targeted_unit = new_target;
-  pix = qtg_canvas_create(tileset_unit_width(tileset),
-                          tileset_unit_height(tileset));
+  pix =
+      new QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
   pix->fill(Qt::transparent);
   put_unit(targeted_unit, pix, 0, 0);
   target_unit_button->setIcon(QIcon(*pix));
-  qtg_canvas_free(pix);
+  delete pix;
   switch_target();
 }
 
@@ -1373,12 +1373,12 @@ void choice_dialog::prev_unit()
   }
   unit_list_iterate_end;
   targeted_unit = new_target;
-  pix = qtg_canvas_create(tileset_unit_width(tileset),
-                          tileset_unit_height(tileset));
+  pix =
+      new QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
   pix->fill(Qt::transparent);
   put_unit(targeted_unit, pix, 0, 0);
   target_unit_button->setIcon(QIcon(*pix));
-  qtg_canvas_free(pix);
+  delete pix;
   switch_target();
 }
 
