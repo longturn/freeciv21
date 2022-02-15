@@ -84,7 +84,8 @@ enum shortcut_id {
   SC_ZOOM_RESET = 57,
   SC_GOBUILDCITY = 58,
   SC_GOJOINCITY = 59,
-  SC_LAST_SC = 60 // It must be last, add before it
+  SC_PILLAGE = 60,
+  SC_LAST_SC = 61 // It must be last, add before it
 };
 
 /**************************************************************************
