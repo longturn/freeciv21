@@ -29,9 +29,6 @@ class QTcpSocket;
 #include "tilespec.h"
 
 struct gui_funcs {
-  void (*canvas_copy)(QPixmap *dest, const QPixmap *src, int src_x,
-                      int src_y, int dest_x, int dest_y, int width,
-                      int height);
   void (*canvas_put_sprite)(QPixmap *pcanvas, int canvas_x, int canvas_y,
                             const QPixmap *psprite, int offset_x,
                             int offset_y, int width, int height);

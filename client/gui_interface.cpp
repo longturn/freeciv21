@@ -40,15 +40,6 @@ static struct gui_funcs funcs;
 struct gui_funcs *get_gui_funcs() { return &funcs; }
 
 /**
-   Call canvas_copy callback
- */
-void canvas_copy(QPixmap *dest, const QPixmap *src, int src_x, int src_y,
-                 int dest_x, int dest_y, int width, int height)
-{
-  funcs.canvas_copy(dest, src, src_x, src_y, dest_x, dest_y, width, height);
-}
-
-/**
    Call canvas_put_sprite callback
  */
 void canvas_put_sprite(QPixmap *pcanvas, int canvas_x, int canvas_y,
