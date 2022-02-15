@@ -1429,8 +1429,10 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
     mapview.tmp_store = tmp;
 
     // And copy store to tmp_store.
-    canvas_copy(mapview.store, mapview.tmp_store, canvas_x, canvas_y,
-                canvas_x, canvas_y, width, height);
+    QPainter p(mapview.store);
+    p.drawPixmap(canvas_x, canvas_y, *mapview.tmp_store, canvas_x, canvas_y,
+                 width, height);
+    p.end();
   }
 
   dirty_rect(canvas_x, canvas_y, width, height);
