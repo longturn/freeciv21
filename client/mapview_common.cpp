@@ -1793,8 +1793,9 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
 
       if (new_x != prev_x || new_y != prev_y) {
         // Backup the canvas store to the temp store.
-        canvas_copy(mapview.tmp_store, mapview.store, new_x, new_y, new_x,
-                    new_y, tuw, tuh);
+        QPainter p(mapview.tmp_store);
+        p.drawPixmap(new_x, new_y, *mapview.store, new_x, new_y, tuw, tuh);
+        p.end();
 
         // Draw
         put_unit(punit, mapview.store, new_x, new_y);
@@ -1804,10 +1805,11 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
         flush_dirty();
         gui_flush();
 
-        /* Restore the backup.  It won't take effect until the next flush.
-         */
-        canvas_copy(mapview.store, mapview.tmp_store, new_x, new_y, new_x,
-                    new_y, tuw, tuh);
+        // Restore the backup.  It won't take effect until the next flush.
+        p.begin(mapview.store);
+        p.drawPixmap(new_x, new_y, *mapview.tmp_store, new_x, new_y, tuw,
+                     tuh);
+        p.end();
         dirty_rect(new_x, new_y, tuw, tuh);
 
         prev_x = new_x;
