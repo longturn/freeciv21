@@ -22,9 +22,6 @@ class QString;
 enum line_type { LINE_NORMAL, LINE_BORDER, LINE_TILE_FRAME, LINE_GOTO };
 
 // Drawing functions
-[[deprecated("Use QPainter")]] void
-canvas_copy(QPixmap *dest, const QPixmap *src, int src_x, int src_y,
-            int dest_x, int dest_y, int width, int height);
 GUI_FUNC_PROTO(void, canvas_put_sprite, QPixmap *pcanvas, int canvas_x,
                int canvas_y, const QPixmap *sprite, int offset_x,
                int offset_y, int width, int height);
