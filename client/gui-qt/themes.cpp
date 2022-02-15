@@ -57,6 +57,7 @@ void load_chat_colors(QSettings &settings)
 const QHash<QString, QPalette::ColorRole> roles = {
     {"link", QPalette::Link},
     {"link.visited", QPalette::LinkVisited},
+    {"button.text", QPalette::ButtonText},
 };
 
 /**
@@ -70,6 +71,7 @@ QPalette load_palette(QSettings &settings)
   // Hardcoded defaults.
   pal.setBrush(QPalette::Link, QColor(92, 170, 229));
   pal.setBrush(QPalette::LinkVisited, QColor(54, 150, 229));
+  pal.setBrush(QPalette::ButtonText, QColor(128, 128, 128));
 
   for (auto k : settings.childKeys()) {
     if (roles.find(k) == roles.end()) {
