@@ -1692,9 +1692,10 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
     refresh_unit_mapcanvas(losing_unit, unit_tile(losing_unit), false,
                            false);
     unqueue_mapview_updates(false);
-    canvas_copy(mapview.tmp_store, mapview.store, canvas_x, canvas_y,
-                canvas_x, canvas_y, tileset_tile_width(tileset),
-                tileset_tile_height(tileset));
+    QPainter p(mapview.tmp_store);
+    p.drawPixmap(canvas_x, canvas_y, *mapview.store, canvas_x, canvas_y,
+                 tileset_tile_width(tileset), tileset_tile_height(tileset));
+    p.end();
 
     for (i = 0; i < num_tiles_explode_unit; i++) {
       QPixmap *sprite = *sprite_vector_get(anim, i);
@@ -1702,9 +1703,11 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
       /* We first draw the explosion onto the unit and draw draw the
        * complete thing onto the map canvas window. This avoids
        * flickering. */
-      canvas_copy(mapview.store, mapview.tmp_store, canvas_x, canvas_y,
-                  canvas_x, canvas_y, tileset_tile_width(tileset),
-                  tileset_tile_height(tileset));
+      p.begin(mapview.store);
+      p.drawPixmap(canvas_x, canvas_y, *mapview.tmp_store, canvas_x,
+                   canvas_y, tileset_tile_width(tileset),
+                   tileset_tile_height(tileset));
+      p.end();
       canvas_put_sprite_full(
           mapview.store,
           canvas_x + tileset_tile_width(tileset) / 2 - sprite->width() / 2,
