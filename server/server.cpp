@@ -281,11 +281,7 @@ server::server()
   m_eot_timer = timer_new(TIMER_CPU, TIMER_ACTIVE);
 
   // Prepare a game
-  if (!prepare_game()) {
-    // Unable to start the game. Rely on the caller checking our state and
-    // not starting the event loop.
-    return;
-  }
+  prepare_game();
   con_prompt_init();
   if (m_interactive) {
     init_interactive();
@@ -592,8 +588,6 @@ void server::input_on_stdin()
     // Read from the input
     QFile f;
     f.open(stdin, QIODevice::ReadOnly);
-    // Force it to try and read something.
-    f.peek(1);
     if (f.atEnd() && m_stdin_notifier != nullptr) {
       // QSocketNotifier gets mad after EOF. Turn it off.
       m_stdin_notifier->deleteLater();
@@ -616,18 +610,15 @@ void server::input_on_stdin()
 /**
    Prepares for a new game.
  */
-bool server::prepare_game()
+void server::prepare_game()
 {
   set_server_state(S_S_INITIAL);
 
   // Load a script file.
-  if (!srvarg.script_filename.isEmpty()) {
+  if (NULL != srvarg.script_filename) {
     // Adding an error message more here will duplicate them.
-    auto ok = read_init_script(NULL, qUtf8Printable(srvarg.script_filename),
-                               true, false);
-    if (!ok) {
-      return false;
-    }
+    (void) read_init_script(NULL, qUtf8Printable(srvarg.script_filename),
+                            true, false);
   }
 
   (void) aifill(game.info.aifill);
@@ -641,8 +632,6 @@ bool server::prepare_game()
     // Autogame, start as soon as the event loop allows
     QTimer::singleShot(0, this, &server::update_game_state);
   }
-
-  return true;
 }
 
 /**
