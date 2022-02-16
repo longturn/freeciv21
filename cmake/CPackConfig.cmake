@@ -106,5 +106,5 @@ if(UNIX AND NOT APPLE)
 
 endif()
 
-message("-- Including CPack")
+message(STATUS "Including CPack")
 include(CPack)
