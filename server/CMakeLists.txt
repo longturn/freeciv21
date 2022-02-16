@@ -116,8 +116,3 @@ add_dependencies(freeciv21-server freeciv_translations)
 install(TARGETS freeciv21-server
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         COMPONENT freeciv21)
-
-# Tests
-if (BUILD_TESTING AND FREECIV_ENABLE_SERVER)
-  add_subdirectory(tests)
-endif()
