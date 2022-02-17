@@ -138,8 +138,8 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
         [] {
           if (client.conn.sock != nullptr) {
             log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
-            real_output_window_append(client.conn.sock->errorString(), NULL,
-                                      -1);
+            output_window_append(
+                ftc_client, qUtf8Printable(client.conn.sock->errorString()));
           }
           client.conn.used = false;
         });
