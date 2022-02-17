@@ -16,10 +16,8 @@
 #endif
 
 // Qt
-#include <QLocalSocket>
 #include <QString>
 #include <QTcpSocket>
-#include <QTimer>
 #include <QUrl>
 
 // utility
@@ -58,10 +56,10 @@
 #include "clinet.h"
 
 // In autoconnect mode, try to connect to once a second
-const int AUTOCONNECT_INTERVAL = 500;
+#define AUTOCONNECT_INTERVAL 500
 
 // In autoconnect mode, try to connect 100 times
-const int MAX_AUTOCONNECT_ATTEMPTS = 100;
+#define MAX_AUTOCONNECT_ATTEMPTS 100
 
 /**
    Close socket and cleanup.  This one doesn't print a message, so should
@@ -99,93 +97,63 @@ static void client_conn_close_callback(struct connection *pconn)
                        qUtf8Printable(reason));
 }
 
-namespace {
-/// The URL we are presently connecting to.
-QUrl connect_to;
-
 /**
- * Called when there is an error on the socket.
- */
-static void error_on_socket()
-{
-  if (client.conn.sock != nullptr) {
-    log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
-    real_output_window_append(client.conn.sock->errorString(), NULL);
-  }
-  client.conn.used = false;
-}
-
-/**
- * Try to connect to a server:
- *  - try to create a TCP socket to the given URL
- *  - if successful:
- *         - start monitoring the socket for packets from the server
- *         - send a "login request" packet to the server
- *     and - return 0
- *  - if unable to create the connection, close the socket, put an error
- *    message in ERRBUF and return the Unix error code (ie., errno, which
- *    will be non-zero).
+   Try to connect to a server:
+    - try to create a TCP socket to the given URL (default to
+      localhost:DEFAULT_SOCK_PORT).
+    - if successful:
+           - start monitoring the socket for packets from the server
+           - send a "login request" packet to the server
+       and - return 0
+    - if unable to create the connection, close the socket, put an error
+      message in ERRBUF and return the Unix error code (ie., errno, which
+      will be non-zero).
  */
 static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
 {
+  // Apply defaults
+  auto url_copy = url;
+  if (url_copy.host().isEmpty()) {
+    url_copy.setHost(QStringLiteral("localhost"));
+  }
+  if (url_copy.port() <= 0) {
+    url_copy.setPort(DEFAULT_SOCK_PORT);
+  }
+
   connections_set_close_callback(client_conn_close_callback);
 
   // connection in progress? wait.
   if (client.conn.used) {
-    if (url != connect_to) {
-      (void) fc_strlcpy(
-          errbuf, _("Canceled previous connection, trying new connection."),
-          errbufsize);
-      if (auto tcp = qobject_cast<QTcpSocket *>(client.conn.sock)) {
-        tcp->abort();
-      } else if (auto local =
-                     qobject_cast<QLocalSocket *>(client.conn.sock)) {
-        local->abort();
-      }
-      connect_to = url;
-    } else {
-      (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
-      return -1;
-    }
-  }
-
-  // Reset
-  if (client.conn.sock) {
-    client.conn.sock->disconnect(client.conn.sock);
-    client.conn.sock->deleteLater();
+    (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
+    return -1;
   }
   client.conn.used = true; // Now there will be a connection :)
 
   // Connect
-  if (url.scheme() == QStringLiteral("fc21")) {
-    QTcpSocket *sock = new QTcpSocket;
-    client.conn.sock = sock;
+  if (!client.conn.sock) {
+    client.conn.sock = new QTcpSocket;
     QObject::connect(
-        sock,
+        client.conn.sock,
         QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
-        &error_on_socket);
-    QObject::connect(sock, &QTcpSocket::connected,
-                     [userName = url.userName()] {
-                       make_connection(client.conn.sock, userName);
-                     });
-    sock->connectToHost(url.host(), url.port());
-  } else if (url.scheme() == QStringLiteral("fc21+local")) {
-    QLocalSocket *sock = new QLocalSocket;
-    client.conn.sock = sock;
-    QObject::connect(
-        sock,
-        QOverload<QLocalSocket::LocalSocketError>::of(&QLocalSocket::error),
-        &error_on_socket);
-    QObject::connect(sock, &QLocalSocket::connected,
-                     [userName = url.userName()] {
-                       make_connection(client.conn.sock, userName);
-                     });
-    sock->connectToServer(url.path());
+        [] {
+          if (client.conn.sock != nullptr) {
+            log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
+            real_output_window_append(client.conn.sock->errorString(), NULL,
+                                      -1);
+          }
+          client.conn.used = false;
+        });
   }
+
+  client.conn.sock->connectToHost(url.host(), url.port());
+  if (!client.conn.sock->waitForConnected(-1)) {
+    errbuf[0] = '\0';
+    return -1;
+  }
+  make_connection(client.conn.sock, url.userName());
 
   return 0;
 }
-} // namespace
 
 /**
    Connect to a freeciv21-server instance -- or at least try to.  On success,
@@ -212,7 +180,7 @@ int connect_to_server(const QUrl &url, char *errbuf, int errbufsize)
 /**
    Called after a connection is completed (e.g., in try_to_connect).
  */
-void make_connection(QIODevice *sock, const QString &username)
+void make_connection(QTcpSocket *sock, const QString &username)
 {
   struct packet_server_join_req req;
 
@@ -280,7 +248,7 @@ void disconnect_from_server()
  */
 static int read_from_connection(struct connection *pc, bool block)
 {
-  auto socket = pc->sock;
+  QTcpSocket *socket = pc->sock;
   bool have_data_for_server =
       (pc->used && pc->send_buffer && 0 < pc->send_buffer->ndata);
 
@@ -296,7 +264,7 @@ static int read_from_connection(struct connection *pc, bool block)
 
   if (block) {
     // Wait (and block the main event loop) until we get some data
-    socket->waitForReadyRead(-1);
+    socket->waitForReadyRead();
   }
 
   // Consume everything
@@ -321,7 +289,7 @@ static int read_from_connection(struct connection *pc, bool block)
    This function is called when the client received a new input from the
    server.
  */
-void input_from_server(QIODevice *sock)
+void input_from_server(QTcpSocket *sock)
 {
   int nb;
 
@@ -358,14 +326,21 @@ void input_from_server(QIODevice *sock)
   }
 }
 
+static bool autoconnecting = false;
 /**
    Make an attempt to autoconnect to the server.
    It returns number of seconds it should be called again.
  */
-void try_to_autoconnect(const QUrl &url)
+double try_to_autoconnect(const QUrl &url)
 {
   char errbuf[512];
   static int count = 0;
+
+  // Don't repeat autoconnect if not autoconnecting or the user
+  // established a connection by himself.
+  if (!autoconnecting || client.conn.established) {
+    return FC_INFINITY;
+  }
 
   count++;
 
@@ -375,32 +350,32 @@ void try_to_autoconnect(const QUrl &url)
     exit(EXIT_FAILURE);
   }
 
-  if (!client.conn.sock) {
-    client.conn.sock = new QTcpSocket;
+  if (try_to_connect(url, errbuf, sizeof(errbuf)) == 0) {
+    // Success! Don't call me again
+    autoconnecting = false;
+    return FC_INFINITY;
+  } else {
+    // All errors are fatal
+    qCritical(_("Error contacting server \"%s\":\n %s\n"),
+              qUtf8Printable(url.toDisplayString()), errbuf);
+    exit(EXIT_FAILURE);
   }
+}
 
-  try_to_connect(url, errbuf, sizeof(errbuf));
+/**
+   Start trying to autoconnect to freeciv21-server.  Calls
+   get_server_address(), then arranges for try_to_autoconnect(), which
+   calls try_to_connect(), to be called roughly every
+   AUTOCONNECT_INTERVAL milliseconds, until success, fatal error or
+   user intervention.
+ */
+void start_autoconnecting_to_server(const QUrl &url)
+{
+  output_window_printf(
+      ftc_client,
+      _("Auto-connecting to \"%s\" every %f second(s) for %d times"),
+      qUtf8Printable(url.toDisplayString()), 0.001 * AUTOCONNECT_INTERVAL,
+      MAX_AUTOCONNECT_ATTEMPTS);
 
-  auto error_handler = [url] {
-    if (client.conn.sock != nullptr) {
-      output_window_printf(ftc_client,
-                           _("Failed to autoconnect to %s: %d of %d "
-                             "attempts, retrying..."),
-                           qUtf8Printable(url.toDisplayString()), count,
-                           MAX_AUTOCONNECT_ATTEMPTS);
-      QTimer::singleShot(AUTOCONNECT_INTERVAL,
-                         [url]() { try_to_autoconnect(url); });
-    }
-  };
-  if (auto tcp = qobject_cast<QTcpSocket *>(client.conn.sock)) {
-    QObject::connect(
-        tcp,
-        QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
-        error_handler);
-  } else if (auto local = qobject_cast<QLocalSocket *>(client.conn.sock)) {
-    QObject::connect(
-        local,
-        QOverload<QLocalSocket::LocalSocketError>::of(&QLocalSocket::error),
-        error_handler);
-  }
+  autoconnecting = true;
 }

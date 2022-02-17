@@ -29,8 +29,6 @@ struct server_arguments {
   bool metaconnection_persistent;
   QString identity_name;
   unsigned short int metaserver_port;
-  // Address in case a local socket is used
-  QString local_addr;
   // address this server is to listen on (NULL => INADDR_ANY)
   QString bind_addr;
   // this server's listen port

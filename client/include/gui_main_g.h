@@ -11,7 +11,7 @@
 #pragma once
 
 // Forward declarations
-class QIODevice;
+class QTcpSocket;
 
 // utility
 #include "support.h" // bool type
@@ -28,7 +28,7 @@ GUI_FUNC_PROTO(void, options_extra_init, void)
 
 GUI_FUNC_PROTO(void, real_conn_list_dialog_update, void *)
 GUI_FUNC_PROTO(void, sound_bell, void)
-GUI_FUNC_PROTO(void, add_net_input, QIODevice *)
+GUI_FUNC_PROTO(void, add_net_input, QTcpSocket *)
 GUI_FUNC_PROTO(void, remove_net_input, void)
 
 GUI_FUNC_PROTO(void, set_unit_icon, int idx, struct unit *punit)
