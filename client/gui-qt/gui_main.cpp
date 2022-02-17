@@ -172,7 +172,7 @@ void qtg_sound_bell()
    This function is called after the client succesfully has connected
    to the server.
  */
-void qtg_add_net_input(QIODevice *sock) { king()->add_server_source(sock); }
+void qtg_add_net_input(QTcpSocket *sock) { king()->add_server_source(sock); }
 
 /**
    Stop waiting for any server network data.  See add_net_input().

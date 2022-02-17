@@ -24,7 +24,7 @@
 #include <QDir>
 #include <QFile>
 #include <QHostInfo>
-#include <QLocalSocket>
+#include <QTcpServer>
 #include <QTcpSocket>
 #include <QTimer>
 
@@ -126,7 +126,7 @@ void fc_interface_init_server()
 /**
    Server initialization.
  */
-std::optional<socket_server> srv_prepare()
+std::pair<QTcpServer *, bool> srv_prepare()
 {
   // make sure it's initialized
   srv_init();
@@ -136,9 +136,10 @@ std::optional<socket_server> srv_prepare()
   con_log_init(srvarg.log_filename);
   // logging available after this point
 
-  auto server = server_open_socket();
-  if (!server) {
-    return std::nullopt;
+  auto *tcp_server = server_open_socket();
+  if (!tcp_server->isListening()) {
+    // Don't even try to start a game.
+    return std::make_pair(tcp_server, false);
   }
 
 #if IS_BETA_VERSION
@@ -168,7 +169,7 @@ std::optional<socket_server> srv_prepare()
 
     success = fcdb_init(qUtf8Printable(srvarg.fcdb_conf));
     if (!success) {
-      return std::nullopt;
+      return std::make_pair(tcp_server, false);
     }
   }
 
@@ -180,7 +181,7 @@ std::optional<socket_server> srv_prepare()
     if (testfilename.isEmpty()) {
       qFatal(_("Ruleset directory \"%s\" not found"),
              qUtf8Printable(srvarg.ruleset));
-      return std::nullopt;
+      return std::make_pair(tcp_server, false);
     }
     sz_strlcpy(game.server.rulesetdir, qUtf8Printable(srvarg.ruleset));
   }
@@ -204,11 +205,11 @@ std::optional<socket_server> srv_prepare()
         || !send_server_info_to_metaserver(META_INFO)) {
       con_write(C_FAIL, _("Not starting without explicitly requested "
                           "metaserver connection."));
-      return std::nullopt;
+      return std::make_pair(tcp_server, false);
     }
   }
 
-  return server;
+  return std::make_pair(tcp_server, true);
 }
 
 } // anonymous namespace
@@ -256,27 +257,20 @@ server::server()
 
   // Now init the old C API
   fc_interface_init_server();
-  auto server = srv_prepare();
-  if (!server) {
+  bool success;
+  std::tie(m_tcp_server, success) = srv_prepare();
+  if (!success) {
     // Could not listen on the specified port. Rely on the caller checking
     // our state and not starting the event loop.
     return;
   }
-  m_server = std::move(*server);
-  if (std::holds_alternative<std::unique_ptr<QTcpServer>>(m_server)) {
-    auto &tcp = std::get<std::unique_ptr<QTcpServer>>(m_server);
-    connect(tcp.get(), &QTcpServer::newConnection, this,
-            &server::accept_tcp_connections);
-    connect(tcp.get(), &QTcpServer::acceptError,
-            [](QAbstractSocket::SocketError error) {
-              qCritical("Error accepting connection: %d", error);
-            });
-  } else if (std::holds_alternative<std::unique_ptr<QLocalServer>>(
-                 m_server)) {
-    auto &local = std::get<std::unique_ptr<QLocalServer>>(m_server);
-    connect(local.get(), &QLocalServer::newConnection, this,
-            &server::accept_local_connections);
-  }
+  m_tcp_server->setParent(this);
+  connect(m_tcp_server, &QTcpServer::newConnection, this,
+          &server::accept_connections);
+  connect(m_tcp_server, &QTcpServer::acceptError,
+          [](QAbstractSocket::SocketError error) {
+            qCritical("Error accepting connection: %d", error);
+          });
 
   m_eot_timer = timer_new(TIMER_CPU, TIMER_ACTIVE);
 
@@ -359,56 +353,14 @@ void server::init_interactive()
 bool server::is_ready() const { return m_ready; }
 
 /**
- * Server accepts connections over local socket:
- * Low level socket stuff, and basic-initialize the connection struct.
- */
-void server::accept_local_connections()
-{
-  // We know it's safe: this method is only called for local connections
-  auto &server = std::get<std::unique_ptr<QLocalServer>>(m_server);
-
-  // There may be several connections available.
-  while (server->hasPendingConnections()) {
-    auto *socket = server->nextPendingConnection();
-    socket->setParent(this);
-
-    if (server_make_connection(socket, QStringLiteral("local"),
-                               QStringLiteral("local"))
-        == 0) {
-      // Success making the connection, connect signals
-      connect(socket, &QIODevice::readyRead, this, &server::input_on_socket);
-      connect(socket,
-              QOverload<QLocalSocket::LocalSocketError>::of(
-                  &QLocalSocket::error),
-              this, &server::error_on_socket);
-
-      // Prevents quitidle from firing immediately
-      m_someone_ever_connected = true;
-
-      // Turn off the quitidle timeout if it's running
-      if (m_quitidle_timer != nullptr) {
-        m_quitidle_timer->stop();
-        m_quitidle_timer->deleteLater();
-        m_quitidle_timer = nullptr;
-      }
-    } else {
-      socket->deleteLater();
-    }
-  }
-}
-
-/**
    Server accepts connections from client:
    Low level socket stuff, and basic-initialize the connection struct.
  */
-void server::accept_tcp_connections()
+void server::accept_connections()
 {
-  // We know it's safe: this method is only called for TCP connections
-  auto &server = std::get<std::unique_ptr<QTcpServer>>(m_server);
-
   // There may be several connections available.
-  while (server->hasPendingConnections()) {
-    auto *socket = server->nextPendingConnection();
+  while (m_tcp_server->hasPendingConnections()) {
+    auto *socket = m_tcp_server->nextPendingConnection();
     socket->setParent(this);
 
     // Lookup the host name of the remote end.
@@ -438,9 +390,9 @@ void server::accept_tcp_connections()
       {
         // Use TolerantConversion so one connections from the same address on
         // IPv4 and IPv6 are rejected as well.
-        if (const auto *other = qobject_cast<QTcpSocket *>(pconn->sock);
-            socket->peerAddress().isEqual(
-                other->peerAddress(), QHostAddress::TolerantConversion)) {
+        if (socket->peerAddress().isEqual(
+                pconn->sock->peerAddress(),
+                QHostAddress::TolerantConversion)) {
           continue;
         }
         if (++count >= game.server.maxconnectionsperhost) {
@@ -455,14 +407,11 @@ void server::accept_tcp_connections()
       conn_list_iterate_end;
 
       if (!success) {
-        socket->deleteLater();
         continue;
       }
     }
 
-    if (server_make_connection(socket, remote,
-                               socket->peerAddress().toString())
-        == 0) {
+    if (server_make_connection(socket, remote) == 0) {
       // Success making the connection, connect signals
       connect(socket, &QIODevice::readyRead, this, &server::input_on_socket);
       connect(socket,
@@ -532,7 +481,7 @@ void server::error_on_socket()
   conn_list_iterate(game.all_connections, pconn)
   {
     if (pconn->sock == socket) {
-      connection_close_server(pconn, socket->errorString());
+      connection_close_server(pconn, _("network exception"));
       break;
     }
   }
@@ -548,7 +497,7 @@ void server::error_on_socket()
 void server::input_on_socket()
 {
   // Get the socket
-  auto *socket = dynamic_cast<QIODevice *>(sender());
+  auto *socket = dynamic_cast<QTcpSocket *>(sender());
   if (socket == nullptr) {
     return;
   }

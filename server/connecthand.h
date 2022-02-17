@@ -15,8 +15,6 @@
 
 #include "fc_types.h"
 
-class QString;
-
 struct connection;
 struct conn_list;
 struct packet_authentication_reply;
@@ -46,5 +44,4 @@ bool connection_delegate_take(struct connection *pconn,
                               struct player *pplayer);
 bool connection_delegate_restore(struct connection *pconn);
 
-void connection_close_server(struct connection *pconn,
-                             const QString &reason);
+void connection_close_server(struct connection *pconn, const char *reason);

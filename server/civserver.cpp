@@ -176,9 +176,6 @@ int main(int argc, char *argv[])
        _("Listen for clients on ADDR"),
        // TRANS: Command-line argument
        _("ADDR")},
-      {QStringLiteral("local"), _("Listens to the local socket NAME"),
-       // TRANS: Command-line argument
-       _("NAME")},
       {{"d", _("debug")},
        // TRANS: Do not translate "fatal", "critical", "warning", "info" or
        //        "debug". It's exactly what the user must type.
@@ -255,7 +252,7 @@ int main(int argc, char *argv[])
 #endif // AI_MODULES
   });
   if (!ok) {
-    qCritical("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed");
     exit(EXIT_FAILURE);
   }
 
@@ -292,29 +289,18 @@ int main(int argc, char *argv[])
   if (parser.isSet(QStringLiteral("identity"))) {
     srvarg.ranklog_filename = parser.value(QStringLiteral("identity"));
   }
-  if (parser.isSet(QStringLiteral("local"))) {
-    srvarg.local_addr = parser.value(QStringLiteral("local"));
-  }
   if (parser.isSet(QStringLiteral("port"))) {
-    if (!srvarg.local_addr.isEmpty()) {
-      qCritical(_("Cannot use --port with --local"));
-      exit(EXIT_FAILURE);
-    }
     bool conversion_ok;
     srvarg.port =
         parser.value(QStringLiteral("port")).toUInt(&conversion_ok);
     srvarg.user_specified_port = true;
     if (!conversion_ok) {
-      qCritical(_("Invalid port number %s"),
-                qUtf8Printable(parser.value("port")));
+      qFatal(_("Invalid port number %s"),
+             qUtf8Printable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
   }
   if (parser.isSet(QStringLiteral("bind"))) {
-    if (!srvarg.local_addr.isEmpty()) {
-      qCritical(_("Cannot use --bind with --local"));
-      exit(EXIT_FAILURE);
-    }
     srvarg.bind_addr = parser.value(QStringLiteral("bind"));
   }
   if (parser.isSet(QStringLiteral("Bind-meta"))) {
@@ -328,8 +314,8 @@ int main(int argc, char *argv[])
     srvarg.quitidle =
         parser.value(QStringLiteral("quitidle")).toUInt(&conversion_ok);
     if (!conversion_ok) {
-      qCritical(_("Invalid number %s"),
-                qUtf8Printable(parser.value("quitidle")));
+      qFatal(_("Invalid number %s"),
+             qUtf8Printable(parser.value("quitidle")));
       exit(EXIT_FAILURE);
     }
   }

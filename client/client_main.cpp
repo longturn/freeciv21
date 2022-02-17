@@ -474,8 +474,7 @@ int client_main(int argc, char *argv[])
   auto positional = parser.positionalArguments();
   if (positional.size() == 1) {
     url = QUrl(positional.constFirst());
-    // Supported schemes: fc21://, fc21+local://
-    if (!url.isValid() || (!url.scheme().startsWith("fc21"))) {
+    if (!url.isValid() || url.scheme() != QStringLiteral("fc21")) {
       // Try with the default protocol
       url = QUrl(QStringLiteral("fc21://") + positional.constFirst());
       // Still no luck
@@ -772,7 +771,8 @@ void set_client_state(enum client_states newstate)
       qFatal(_("There was an error while auto connecting; aborting."));
       exit(EXIT_FAILURE);
     } else {
-      try_to_autoconnect(url);
+      start_autoconnecting_to_server(url);
+      auto_connect = false; // Don't try this again.
     }
   }
 
@@ -1077,6 +1077,11 @@ double real_timer_callback()
   double time_until_next_call = 1.0;
 
   voteinfo_queue_check_removed();
+
+  {
+    double autoconnect_time = try_to_autoconnect(url);
+    time_until_next_call = MIN(time_until_next_call, autoconnect_time);
+  }
 
   if (C_S_RUNNING != client_state()) {
     return time_until_next_call;

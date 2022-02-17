@@ -153,7 +153,7 @@ void options_extra_init(void) { funcs.options_extra_init(); }
 /**
    Call add_net_input callback
  */
-void add_net_input(QIODevice *sock) { funcs.add_net_input(sock); }
+void add_net_input(QTcpSocket *sock) { funcs.add_net_input(sock); }
 
 /**
    Call remove_net_input callback
