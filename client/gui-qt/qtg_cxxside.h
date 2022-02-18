@@ -21,11 +21,6 @@ class QTcpSocket;
 
 void setup_gui_funcs();
 
-void qtg_canvas_put_sprite(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                           const QPixmap *sprite, int offset_x, int offset_y,
-                           int width, int height);
-void qtg_canvas_put_sprite_full(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                                const QPixmap *sprite);
 void qtg_canvas_put_sprite_fogged(QPixmap *pcanvas, int canvas_x,
                                   int canvas_y, const QPixmap *psprite,
                                   bool fog, int fog_x, int fog_y);
