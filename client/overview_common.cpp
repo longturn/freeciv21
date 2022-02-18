@@ -370,11 +370,12 @@ static void put_overview_tile_area(QPixmap *pcanvas, struct tile *ptile,
                                    int x, int y, int w, int h)
 {
   canvas_put_rectangle(pcanvas, overview_tile_color(ptile), x, y, w, h);
+  QPainter p(pcanvas);
   if (gui_options.overview.fog
       && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile)) {
-    canvas_put_sprite(pcanvas, x, y, get_basic_fog_sprite(tileset), 0, 0, w,
-                      h);
+    p.drawPixmap(x, y, w, h, *get_basic_fog_sprite(tileset));
   }
+  p.end();
 }
 
 /**

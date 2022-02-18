@@ -960,10 +960,11 @@ void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
                                canvas_x, canvas_y);
     } else {
       /* We avoid calling canvas_put_sprite_fogged, even though it
-       * should be a valid thing to do, because gui-gtk-2.0 doesn't have
+       * should be a valid thing to do, because gui-gtk-2.0 didn't have
        * a full implementation. */
-      canvas_put_sprite_full(pcanvas, canvas_x + s.offset_x,
-                             canvas_y + s.offset_y, s.sprite);
+      QPainter p(pcanvas);
+      p.drawPixmap(canvas_x + s.offset_x, canvas_y + s.offset_y, *s.sprite);
+      p.end();
     }
   }
 }
@@ -1081,9 +1082,11 @@ void put_unit_city_overlays(struct unit *punit, QPixmap *pcanvas,
                             int canvas_x, int canvas_y, int *upkeep_cost,
                             int happy_cost)
 {
+  QPainter p(pcanvas);
+
   auto sprite = get_unit_unhappy_sprite(tileset, punit, happy_cost);
   if (sprite) {
-    canvas_put_sprite_full(pcanvas, canvas_x, canvas_y, sprite);
+    p.drawPixmap(canvas_x, canvas_y, *sprite);
   }
 
   output_type_iterate(o)
@@ -1091,10 +1094,12 @@ void put_unit_city_overlays(struct unit *punit, QPixmap *pcanvas,
     sprite = get_unit_upkeep_sprite(tileset, static_cast<Output_type_id>(o),
                                     punit, upkeep_cost);
     if (sprite) {
-      canvas_put_sprite_full(pcanvas, canvas_x, canvas_y, sprite);
+      p.drawPixmap(canvas_x, canvas_y, *sprite);
     }
   }
   output_type_iterate_end;
+
+  p.end();
 }
 
 /*
@@ -1166,7 +1171,9 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
    * the screen and wait 1 second. */
   unqueue_mapview_updates(false);
 
-  canvas_put_sprite_full(mapview.store, canvas_x, canvas_y, mysprite);
+  QPainter p(mapview.store);
+  p.drawPixmap(canvas_x, canvas_y, *mysprite);
+  p.end();
   dirty_rect(canvas_x, canvas_y, mysprite->width(), mysprite->height());
 
   flush_dirty();
@@ -1707,12 +1714,11 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
       p.drawPixmap(canvas_x, canvas_y, *mapview.tmp_store, canvas_x,
                    canvas_y, tileset_tile_width(tileset),
                    tileset_tile_height(tileset));
-      p.end();
-      canvas_put_sprite_full(
-          mapview.store,
+      p.drawPixmap(
           canvas_x + tileset_tile_width(tileset) / 2 - sprite->width() / 2,
           canvas_y + tileset_tile_height(tileset) / 2 - sprite->height() / 2,
-          sprite);
+          *sprite);
+      p.end();
       dirty_rect(canvas_x, canvas_y, tileset_tile_width(tileset),
                  tileset_tile_height(tileset));
 
@@ -2775,6 +2781,8 @@ void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
                        get_color(tileset, COLOR_SPACESHIP_BACKGROUND), 0, 0,
                        w * 7, h * 7);
 
+  QPainter p(pcanvas);
+
   for (i = 0; i < NUM_SS_MODULES; i++) {
     const int j = i / 3;
     const int k = i % 3;
@@ -2790,7 +2798,7 @@ void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
     spr = (k == 0   ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
            : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
                     : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
-    canvas_put_sprite_full(pcanvas, x, y, spr);
+    p.drawPixmap(x, y, *spr);
   }
 
   for (i = 0; i < NUM_SS_COMPONENTS; i++) {
@@ -2806,11 +2814,11 @@ void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
     spr = ((k == 0) ? get_spaceship_sprite(t, SPACESHIP_FUEL)
                     : get_spaceship_sprite(t, SPACESHIP_PROPULSION));
 
-    canvas_put_sprite_full(pcanvas, x, y, spr);
+    p.drawPixmap(x, y, *spr);
 
     if (k && ship->state == SSHIP_LAUNCHED) {
       spr = get_spaceship_sprite(t, SPACESHIP_EXHAUST);
-      canvas_put_sprite_full(pcanvas, x + w, y, spr);
+      p.drawPixmap(x + w, y, *spr);
     }
   }
 
@@ -2822,8 +2830,10 @@ void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
     y = structurals_info[i].y * h / 4 - h / 2;
 
     spr = get_spaceship_sprite(t, SPACESHIP_STRUCTURAL);
-    canvas_put_sprite_full(pcanvas, x, y, spr);
+    p.drawPixmap(x, y, *spr);
   }
+
+  p.end();
 }
 
 /****************************************************************************

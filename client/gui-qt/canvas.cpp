@@ -75,31 +75,6 @@ void image_copy(QImage *dest, const QImage *src, int src_x, int src_y,
 }
 
 /**
-   Draw some or all of a sprite onto the canvas.
- */
-void qtg_canvas_put_sprite(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                           const QPixmap *sprite, int offset_x, int offset_y,
-                           int width, int height)
-{
-  QPainter p;
-
-  p.begin(pcanvas);
-  p.drawPixmap(canvas_x, canvas_y, *sprite, offset_x, offset_y, width,
-               height);
-  p.end();
-}
-
-/**
-   Draw a full sprite onto the canvas.
- */
-void qtg_canvas_put_sprite_full(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                                const QPixmap *sprite)
-{
-  canvas_put_sprite(pcanvas, canvas_x, canvas_y, sprite, 0, 0,
-                    sprite->width(), sprite->height());
-}
-
-/**
    Draw a full sprite onto the canvas.  If "fog" is specified draw it with
    fog.
  */

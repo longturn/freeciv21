@@ -35,6 +35,7 @@
 #include "sprite_g.h"
 
 // Qt
+#include <QPainter>
 #include <QPixmap>
 #include <QRect>
 
@@ -1038,6 +1039,7 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
         icon_startx = startx + 5;
 
         if (gui_options.reqtree_show_icons) {
+          QPainter p(pcanvas);
           unit_type_iterate(unit)
           {
             if (advance_number(unit->require_advance) != node->tech) {
@@ -1053,11 +1055,10 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
                       sprite->width(), sprite->height());
             rttp->tunit = unit;
             tt_help->append(rttp);
-            canvas_put_sprite_full(
-                pcanvas, icon_startx,
-                starty + text_h + 4
-                    + (height - text_h - 4 - sprite->height()) / 2,
-                sprite);
+            p.drawPixmap(icon_startx,
+                         starty + text_h + 4
+                             + (height - text_h - 4 - sprite->height()) / 2,
+                         *sprite);
             icon_startx += sprite->width() + 2;
           }
           unit_type_iterate_end;
@@ -1080,11 +1081,11 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
                       sprite->width(), sprite->height());
                   rttp->timpr = pimprove;
                   tt_help->append(rttp);
-                  canvas_put_sprite_full(
-                      pcanvas, icon_startx,
-                      starty + text_h + 4
-                          + (height - text_h - 4 - sprite->height()) / 2,
-                      sprite);
+                  p.drawPixmap(icon_startx,
+                               starty + text_h + 4
+                                   + (height - text_h - 4 - sprite->height())
+                                         / 2,
+                               *sprite);
                   icon_startx += sprite->width() + 2;
                 }
               }
@@ -1109,17 +1110,19 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
                           sprite->width(), sprite->height());
                 rttp->tgov = gov;
                 tt_help->append(rttp);
-                canvas_put_sprite_full(
-                    pcanvas, icon_startx,
-                    starty + text_h + 4
-                        + (height - text_h - 4 - sprite->height()) / 2,
-                    sprite);
+                p.drawPixmap(icon_startx,
+                             starty + text_h + 4
+                                 + (height - text_h - 4 - sprite->height())
+                                       / 2,
+                             *sprite);
                 icon_startx += sprite->width() + 2;
               }
             }
             requirement_vector_iterate_end;
           }
           governments_iterate_end;
+
+          p.end();
         }
       }
 
@@ -1143,6 +1146,7 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
       }
     }
   }
+
   return tt_help;
 }
 

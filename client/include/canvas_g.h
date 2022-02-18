@@ -22,11 +22,6 @@ class QString;
 enum line_type { LINE_NORMAL, LINE_BORDER, LINE_TILE_FRAME, LINE_GOTO };
 
 // Drawing functions
-GUI_FUNC_PROTO(void, canvas_put_sprite, QPixmap *pcanvas, int canvas_x,
-               int canvas_y, const QPixmap *sprite, int offset_x,
-               int offset_y, int width, int height);
-GUI_FUNC_PROTO(void, canvas_put_sprite_full, QPixmap *pcanvas, int canvas_x,
-               int canvas_y, const QPixmap *sprite)
 GUI_FUNC_PROTO(void, canvas_put_sprite_fogged, QPixmap *pcanvas,
                int canvas_x, int canvas_y, const QPixmap *psprite, bool fog,
                int fog_x, int fog_y)
