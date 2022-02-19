@@ -35,11 +35,6 @@ struct gui_funcs {
   void (*canvas_put_sprite_citymode)(QPixmap *pcanvas, int canvas_x,
                                      int canvas_y, const QPixmap *psprite,
                                      bool fog, int fog_x, int fog_y);
-  void (*get_text_size)(int *width, int *height, enum client_font font,
-                        const QString &text);
-  void (*canvas_put_text)(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                          enum client_font font, const QColor &color,
-                          const QString &);
 
   void (*set_rulesets)(int num_rulesets, QStringList rulesets);
   void (*options_extra_init)();

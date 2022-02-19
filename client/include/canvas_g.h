@@ -36,10 +36,5 @@ enum client_font {
   FONT_REQTREE_TEXT,
   FONT_COUNT
 };
-GUI_FUNC_PROTO(void, get_text_size, int *width, int *height,
-               enum client_font font, const QString &text)
-GUI_FUNC_PROTO(void, canvas_put_text, QPixmap *pcanvas, int canvas_x,
-               int canvas_y, enum client_font font, const QColor &color,
-               const QString &text)
 
 QFont get_font(enum client_font font);

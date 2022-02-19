@@ -59,25 +59,6 @@ void canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x, int canvas_y,
 }
 
 /**
-   Call get_text_size callback
- */
-void get_text_size(int *width, int *height, enum client_font font,
-                   const QString &text)
-{
-  funcs.get_text_size(width, height, font, text);
-}
-
-/**
-   Call canvas_put_text callback
- */
-void canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                     enum client_font font, const QColor &color,
-                     const QString &text)
-{
-  funcs.canvas_put_text(pcanvas, canvas_x, canvas_y, font, color, text);
-}
-
-/**
    Call set_rulesets callback
  */
 void set_rulesets(int num_rulesets, QStringList rulesets)
