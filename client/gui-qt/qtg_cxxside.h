@@ -27,12 +27,6 @@ void qtg_canvas_put_sprite_fogged(QPixmap *pcanvas, int canvas_x,
 void qtg_canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x,
                                     int canvas_y, const QPixmap *psprite,
                                     bool fog, int fog_x, int fog_y);
-void qtg_canvas_put_rectangle(QPixmap *pcanvas, const QColor &color,
-                              int canvas_x, int canvas_y, int width,
-                              int height);
-void qtg_canvas_fill_sprite_area(QPixmap *pcanvas, const QPixmap *psprite,
-                                 const QColor &color, int canvas_x,
-                                 int canvas_y);
 void qtg_canvas_put_line(QPixmap *pcanvas, const QColor &color,
                          enum line_type ltype, int start_x, int start_y,
                          int dx, int dy);

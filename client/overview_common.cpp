@@ -369,8 +369,8 @@ void refresh_overview_canvas()
 static void put_overview_tile_area(QPixmap *pcanvas, struct tile *ptile,
                                    int x, int y, int w, int h)
 {
-  canvas_put_rectangle(pcanvas, overview_tile_color(ptile), x, y, w, h);
   QPainter p(pcanvas);
+  p.fillRect(x, y, w, h, overview_tile_color(ptile));
   if (gui_options.overview.fog
       && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile)) {
     p.drawPixmap(x, y, w, h, *get_basic_fog_sprite(tileset));
@@ -463,9 +463,7 @@ void calculate_overview_dimensions()
       new QPixmap(gui_options.overview.width, gui_options.overview.height);
   gui_options.overview.window =
       new QPixmap(gui_options.overview.width, gui_options.overview.height);
-  canvas_put_rectangle(
-      gui_options.overview.map, get_color(tileset, COLOR_OVERVIEW_UNKNOWN),
-      0, 0, gui_options.overview.width, gui_options.overview.height);
+  gui_options.overview.map->fill(get_color(tileset, COLOR_OVERVIEW_UNKNOWN));
 
   update_minimap();
   if (can_client_change_view()) {
