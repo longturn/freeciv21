@@ -120,14 +120,15 @@ static void node_rectangle_minimum_size(struct tree_node *node, int *width,
   const QPixmap *sprite;
 
   if (node->is_dummy) {
-    // Dummy node is a straight line
-    *width = *height = 1;
+    // Dummy node is a straight line, tech tree lines are 2px wide
+    *width = *height = 2;
   } else {
-    get_text_size(width, height, FONT_REQTREE_TEXT,
-                  research_advance_name_translation(
-                      research_get(client_player()), node->tech));
-    *width += 2;
-    *height += 8;
+    auto font = get_font(FONT_REQTREE_TEXT);
+    auto rect =
+        QFontMetrics(font).boundingRect(research_advance_name_translation(
+            research_get(client_player()), node->tech));
+    *width = rect.width() + 8;
+    *height = rect.height() + 8;
 
     max_icon_height = 0;
     icons_width_sum = 5;
@@ -996,7 +997,10 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
 
   QList<req_tooltip_help *> *tt_help = new QList<req_tooltip_help *>;
   QPainter p(pcanvas);
+  p.setFont(get_font(FONT_REQTREE_TEXT));
   p.setRenderHint(QPainter::Antialiasing);
+
+  auto fm = p.fontMetrics();
 
   // draw the diagram
   for (i = 0; i < tree->num_layers; i++) {
@@ -1022,25 +1026,27 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
         p.setBrush(node_color(node));
         p.setPen(QPen(get_diag_color(10), 1));
         p.drawRect(startx, starty, width - 2, height - 2);
+        p.setBrush(Qt::NoBrush);
 
         /* The following code is similar to the one in
          * node_rectangle_minimum_size(). If you change something here,
          * change also node_rectangle_minimum_size().
          */
-        get_text_size(&text_w, &text_h, FONT_REQTREE_TEXT, text);
+        auto rect = fm.boundingRect(text);
+        text_w = rect.width();
+        text_h = rect.height();
+
         rttp = new req_tooltip_help();
         rttp->rect =
             QRect(startx + (width - text_w) / 2, starty + 4, text_w, text_h);
         rttp->tech_id = node->tech;
         tt_help->append(rttp);
 
-        p.end();
-        canvas_put_text(pcanvas, startx + (width - text_w) / 2, starty + 4,
-                        FONT_REQTREE_TEXT,
-                        get_color(tileset, COLOR_REQTREE_TEXT), text);
-        p.begin(pcanvas);
-        icon_startx = startx + 5;
+        p.setPen(get_color(tileset, COLOR_REQTREE_TEXT));
+        p.drawText(startx + (width - text_w) / 2 - rect.left(),
+                   starty + 4 + fm.ascent(), text);
 
+        icon_startx = startx + 5;
 
         if (gui_options.reqtree_show_icons) {
           unit_type_iterate(unit)

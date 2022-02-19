@@ -135,48 +135,6 @@ void canvas_put_unit_fogged(QPixmap *pcanvas, int canvas_x, int canvas_y,
 }
 
 /**
-   Return the size of the given text in the given font.  This size should
-   include the ascent and descent of the text.  Either of width or height
-   may be NULL in which case those values simply shouldn't be filled out.
- */
-void qtg_get_text_size(int *width, int *height, enum client_font font,
-                       const QString &text)
-{
-  QFont afont = get_font(font);
-  QScopedPointer<QFontMetrics> fm(new QFontMetrics(afont));
-
-  if (width) {
-    *width = fm->horizontalAdvance(text);
-  }
-
-  if (height) {
-    *height = fm->height();
-  }
-}
-
-/**
-   Draw the text onto the canvas in the given color and font.  The canvas
-   position does not account for the ascent of the text; this function must
-   take care of this manually.  The text will not be NULL but may be empty.
- */
-void qtg_canvas_put_text(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                         enum client_font font, const QColor &color,
-                         const QString &text)
-{
-  QPainter p;
-  QPen pen;
-  QFont afont = get_font(font);
-  QScopedPointer<QFontMetrics> fm(new QFontMetrics(afont));
-
-  pen.setColor(color);
-  p.begin(pcanvas);
-  p.setPen(pen);
-  p.setFont(afont);
-  p.drawText(canvas_x, canvas_y + fm->ascent(), text);
-  p.end();
-}
-
-/**
    Returns given font
  */
 QFont get_font(client_font font)

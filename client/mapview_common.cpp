@@ -1509,11 +1509,15 @@ static void show_tile_label(QPixmap *pcanvas, int canvas_x, int canvas_y,
   canvas_x += tileset_tile_width(tileset) / 2;
   canvas_y += tileset_tilelabel_offset_y(tileset);
 
-  get_text_size(width, height, FONT_TILE_LABEL, ptile->label);
+  QPainter p(pcanvas);
+  p.setFont(get_font(FONT_TILE_LABEL));
+  p.setPen(get_color(tileset, COLOR_MAPVIEW_TILELABEL));
 
-  canvas_put_text(pcanvas, (canvas_x - *width / 2), canvas_y,
-                  FONT_TILE_LABEL,
-                  get_color(tileset, COLOR_MAPVIEW_TILELABEL), ptile->label);
+  auto fm = p.fontMetrics();
+  auto rect = fm.boundingRect(ptile->label);
+
+  p.drawText((canvas_x - rect.width() / 2), canvas_y + fm.ascent(),
+             ptile->label);
 #undef COLOR_MAPVIEW_TILELABEL
 }
 
