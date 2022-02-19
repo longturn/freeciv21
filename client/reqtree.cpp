@@ -36,6 +36,7 @@
 
 // Qt
 #include <QPainter>
+#include <QPainterPath>
 #include <QPixmap>
 #include <QRect>
 
@@ -994,6 +995,8 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
   req_tooltip_help *rttp;
 
   QList<req_tooltip_help *> *tt_help = new QList<req_tooltip_help *>;
+  QPainter p(pcanvas);
+  p.setRenderHint(QPainter::Antialiasing);
 
   // draw the diagram
   for (i = 0; i < tree->num_layers; i++) {
@@ -1008,25 +1011,22 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
 
       if (node->is_dummy) {
         // Use the same layout as lines for dummy nodes
-        canvas_put_line(pcanvas, get_diag_color(20), LINE_GOTO, startx,
-                        starty, width, 0);
+        p.setPen(QPen(get_diag_color(20), 2));
+        p.drawLine(startx, starty, startx + width, starty);
       } else {
         const QString text = research_advance_name_translation(
             research_get(client_player()), node->tech);
         int text_w, text_h;
         int icon_startx;
 
-        QPainter p(pcanvas);
         p.setBrush(node_color(node));
         p.setPen(QPen(get_diag_color(10), 1));
         p.drawRect(startx, starty, width - 2, height - 2);
-        p.end();
 
         /* The following code is similar to the one in
          * node_rectangle_minimum_size(). If you change something here,
          * change also node_rectangle_minimum_size().
          */
-
         get_text_size(&text_w, &text_h, FONT_REQTREE_TEXT, text);
         rttp = new req_tooltip_help();
         rttp->rect =
@@ -1034,12 +1034,13 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
         rttp->tech_id = node->tech;
         tt_help->append(rttp);
 
+        p.end();
         canvas_put_text(pcanvas, startx + (width - text_w) / 2, starty + 4,
                         FONT_REQTREE_TEXT,
                         get_color(tileset, COLOR_REQTREE_TEXT), text);
+        p.begin(pcanvas);
         icon_startx = startx + 5;
 
-        p.begin(pcanvas);
 
         if (gui_options.reqtree_show_icons) {
           unit_type_iterate(unit)
@@ -1125,7 +1126,6 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
           governments_iterate_end;
         }
 
-        p.end();
       }
 
       // Draw all outgoing edges
@@ -1133,21 +1133,25 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
       starty = node->node_y + node->node_height / 2;
       for (k = 0; k < node->nprovide; k++) {
         struct tree_node *dest_node = node->provide[k];
-        auto color = edge_color(node, dest_node);
+        p.setPen(QPen(edge_color(node, dest_node), 2));
 
         endx = dest_node->node_x;
         endy = dest_node->node_y + dest_node->node_height / 2;
 
         if (gui_options.reqtree_curved_lines) {
-          canvas_put_curved_line(pcanvas, color, LINE_GOTO, startx, starty,
-                                 endx - startx, endy - starty);
+          QPainterPath path;
+          path.moveTo(startx, starty);
+          path.cubicTo((startx + endx) / 2., starty, startx,
+                       (starty + endy) / 2., endx, endy);
+          p.drawPath(path);
         } else {
-          canvas_put_line(pcanvas, color, LINE_GOTO, startx, starty,
-                          endx - startx, endy - starty);
+          p.drawLine(startx, starty, endx, endy);
         }
       }
     }
   }
+
+  p.end();
 
   return tt_help;
 }

@@ -70,17 +70,6 @@ void canvas_put_line(QPixmap *pcanvas, const QColor &color,
 }
 
 /**
-   Call canvas_put_curved_line callback
- */
-void canvas_put_curved_line(QPixmap *pcanvas, const QColor &color,
-                            enum line_type ltype, int start_x, int start_y,
-                            int dx, int dy)
-{
-  funcs.canvas_put_curved_line(pcanvas, color, ltype, start_x, start_y, dx,
-                               dy);
-}
-
-/**
    Call get_text_size callback
  */
 void get_text_size(int *width, int *height, enum client_font font,

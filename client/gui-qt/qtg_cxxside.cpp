@@ -24,7 +24,6 @@ void setup_gui_funcs()
   funcs->canvas_put_sprite_fogged = qtg_canvas_put_sprite_fogged;
   funcs->canvas_put_sprite_citymode = qtg_canvas_put_sprite_citymode;
   funcs->canvas_put_line = qtg_canvas_put_line;
-  funcs->canvas_put_curved_line = qtg_canvas_put_curved_line;
   funcs->get_text_size = qtg_get_text_size;
   funcs->canvas_put_text = qtg_canvas_put_text;
 
