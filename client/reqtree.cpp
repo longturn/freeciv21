@@ -1131,7 +1131,6 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
           }
           governments_iterate_end;
         }
-
       }
 
       // Draw all outgoing edges
