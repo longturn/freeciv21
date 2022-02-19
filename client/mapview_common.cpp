@@ -1264,13 +1264,21 @@ static void draw_trade_route_line(const struct tile *ptile1,
     ptile2 = tmp;
   }
 
+  QPen pen;
+  pen.setColor(get_color(tileset, color));
+  pen.setStyle(Qt::DashLine);
+  pen.setDashOffset(4);
+  pen.setWidth(1);
+
+  QPainter p(mapview.store);
+  p.setPen(pen);
   line_count = trade_route_to_canvas_lines(ptile1, ptile2, lines);
   for (i = 0; i < line_count; i++) {
-    canvas_put_line(mapview.store, get_color(tileset, color), LINE_BORDER,
-                    lines[i].x + tileset_tile_width(tileset) / 2,
-                    lines[i].y + tileset_tile_height(tileset) / 2,
-                    lines[i].width, lines[i].height);
+    int x = lines[i].x + tileset_tile_width(tileset) / 2;
+    int y = lines[i].y + tileset_tile_height(tileset) / 2;
+    p.drawLine(x, y, x + lines[i].width, y + lines[i].height);
   }
+  p.end();
 }
 
 /**
@@ -1637,10 +1645,12 @@ void draw_segment(struct tile *src_tile, enum direction8 dir, bool safe)
                     DIR_DY[dir]);
 
   // Draw the segment.
-  canvas_put_line(mapview.store,
-                  get_color(tileset, safe ? COLOR_MAPVIEW_GOTO
-                                          : COLOR_MAPVIEW_UNSAFE_GOTO),
-                  LINE_GOTO, canvas_x, canvas_y, canvas_dx, canvas_dy);
+  QPainter p(mapview.store);
+  p.setPen(QPen(get_color(tileset, safe ? COLOR_MAPVIEW_GOTO
+                                        : COLOR_MAPVIEW_UNSAFE_GOTO),
+                2));
+  p.drawLine(canvas_x, canvas_y, canvas_x + canvas_dx, canvas_y + canvas_dy);
+  p.end();
 
   /* The actual area drawn will extend beyond the base rectangle, since
    * the goto lines have width. */
@@ -2951,25 +2961,20 @@ static void link_mark_draw(const struct link_mark *pmark)
   y_top = canvas_y + yd;
   y_bottom = canvas_y + height - yd;
 
-  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_left, y_top, xlen,
-                  0);
-  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_left, y_top, 0,
-                  ylen);
+  QPainter p(mapview.store);
+  p.setPen(QPen(color, 2));
+  p.drawLine(x_left, y_top, x_left + xlen, y_top);
+  p.drawLine(x_left, y_top, x_left, y_top + ylen);
 
-  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_right, y_top,
-                  -xlen, 0);
-  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_right, y_top, 0,
-                  ylen);
+  p.drawLine(x_right, y_top, x_right - xlen, y_top);
+  p.drawLine(x_right, y_top, x_right, y_top + ylen);
 
-  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_left, y_bottom,
-                  xlen, 0);
-  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_left, y_bottom, 0,
-                  -ylen);
+  p.drawLine(x_left, y_bottom, x_left + xlen, y_bottom);
+  p.drawLine(x_left, y_bottom, x_left, y_bottom - ylen);
 
-  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_right, y_bottom,
-                  -xlen, 0);
-  canvas_put_line(mapview.store, color, LINE_TILE_FRAME, x_right, y_bottom,
-                  0, -ylen);
+  p.drawLine(x_right, y_bottom, x_right - xlen, y_bottom);
+  p.drawLine(x_right, y_bottom, x_right, y_bottom - ylen);
+  p.end();
 }
 
 /**

@@ -135,44 +135,6 @@ void canvas_put_unit_fogged(QPixmap *pcanvas, int canvas_x, int canvas_y,
 }
 
 /**
-   Draw a 1-pixel-width colored line onto the canvas.
- */
-void qtg_canvas_put_line(QPixmap *pcanvas, const QColor &color,
-                         enum line_type ltype, int start_x, int start_y,
-                         int dx, int dy)
-{
-  QPen pen;
-  QPainter p;
-
-  pen.setColor(color);
-  switch (ltype) {
-  case LINE_NORMAL:
-    pen.setWidth(1);
-    break;
-  case LINE_BORDER:
-    pen.setStyle(Qt::DashLine);
-    pen.setDashOffset(4);
-    pen.setWidth(1);
-    break;
-  case LINE_TILE_FRAME:
-    pen.setWidth(2);
-    break;
-  case LINE_GOTO:
-    pen.setWidth(2);
-    break;
-  default:
-    pen.setWidth(1);
-    break;
-  }
-
-  p.begin(pcanvas);
-  p.setPen(pen);
-  p.setRenderHint(QPainter::Antialiasing);
-  p.drawLine(start_x, start_y, start_x + dx, start_y + dy);
-  p.end();
-}
-
-/**
    Return the size of the given text in the given font.  This size should
    include the ascent and descent of the text.  Either of width or height
    may be NULL in which case those values simply shouldn't be filled out.

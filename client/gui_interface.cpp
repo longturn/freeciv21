@@ -58,17 +58,6 @@ void canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x, int canvas_y,
                                    fog_x, fog_y);
 }
 
-
-/**
-   Call canvas_put_line callback
- */
-void canvas_put_line(QPixmap *pcanvas, const QColor &color,
-                     enum line_type ltype, int start_x, int start_y, int dx,
-                     int dy)
-{
-  funcs.canvas_put_line(pcanvas, color, ltype, start_x, start_y, dx, dy);
-}
-
 /**
    Call get_text_size callback
  */
