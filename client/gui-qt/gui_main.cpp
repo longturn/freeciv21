@@ -284,7 +284,7 @@ void gui_qt_apply_font(struct option *poption)
     s = option_name(poption);
     fcFont::instance()->setFont(s, f);
     update_city_descriptions();
-    queen()->infotab->chtwdg->update_font();
+    queen()->chat->update_font();
     QApplication::setFont(fcFont::instance()->getFont(fonts::default_font));
     real_science_report_dialog_update(nullptr);
   }

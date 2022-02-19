@@ -18,6 +18,7 @@
 #include <QTextBrowser>
 // gui-qt
 #include "listener.h"
+#include "widgetdecorations.h"
 
 class QCheckBox;
 class QMouseEvent;
@@ -106,11 +107,11 @@ protected:
 /***************************************************************************
   Class for chat widget
 ***************************************************************************/
-class chatwdg : public QWidget, private chat_listener {
+class chat_widget : public resizable_widget, private chat_listener {
   Q_OBJECT
 
 public:
-  chatwdg(QWidget *parent);
+  chat_widget(QWidget *parent);
   void append(const QString &str);
   chat_input *chat_line;
   void make_link(struct tile *ptile);
@@ -119,21 +120,21 @@ public:
   void scroll_to_bottom();
   void update_font();
 private slots:
-  void state_changed(int state);
+  void update_menu() override {}
+  void set_chat_visible(bool visible);
   void rm_links();
   void anchor_clicked(const QUrl &link);
-  void toggle_size();
 
 protected:
-  void paint(QPainter *painter, QPaintEvent *event);
   void paintEvent(QPaintEvent *event) override;
   bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
   void chat_message_received(const QString &message,
                              const struct text_tag_list *tags) override;
-
-  text_browser_dblclck *chat_output;
+  QTextBrowser *chat_output;
   QPushButton *remove_links;
-  QCheckBox *cb;
+  QPushButton *show_hide;
+  QPushButton *cb;
+  move_widget *mw;
 };

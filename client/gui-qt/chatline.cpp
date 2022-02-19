@@ -38,6 +38,7 @@
 #include "fc_client.h"
 #include "fonts.h"
 #include "gui_main.h"
+#include "icons.h"
 #include "mapview.h"
 #include "messagewin.h"
 #include "page_game.h"
@@ -251,85 +252,95 @@ bool chat_input::event(QEvent *event)
 }
 
 /**
-   Constructor for chatwdg
+   Constructor for chat_widget
  */
-chatwdg::chatwdg(QWidget *parent)
+chat_widget::chat_widget(QWidget *parent)
 {
   QGridLayout *gl;
-
   setParent(parent);
-  cb = new QCheckBox(QLatin1String(""));
-  cb->setToolTip(_("Allies only"));
-  cb->setChecked(gui_options.gui_qt_allied_chat_only);
   gl = new QGridLayout;
+  cb = new QPushButton();
+  cb->setIconSize(QSize(24, 24));
+  cb->setIcon(fcIcons::instance()->getIcon("private"));
+  cb->setToolTip(_("Allies only"));
+  cb->setCheckable(true);
   chat_line = new chat_input;
   chat_output = new text_browser_dblclck(this);
   chat_output->setFont(fcFont::instance()->getFont(fonts::chatline));
-  remove_links = new QPushButton(QLatin1String(""));
-  remove_links->setIcon(
-      style()->standardPixmap(QStyle::SP_DialogCancelButton));
+  remove_links = new QPushButton();
+  remove_links->setIconSize(QSize(24, 24));
+  remove_links->setIcon(fcIcons::instance()->getIcon("erase"));
   remove_links->setToolTip(_("Clear links"));
+  show_hide = new QPushButton();
+  show_hide->setIcon(fcIcons::instance()->getIcon("expand-down"));
+  show_hide->setIconSize(QSize(24, 24));
+  show_hide->setToolTip(_("Show/hide chat"));
+  show_hide->setCheckable(true);
+  show_hide->setChecked(true);
   gl->setVerticalSpacing(0);
-  gl->addWidget(chat_output, 0, 0, 1, 3);
+  gl->addWidget(chat_output, 0, 0, 1, 4);
   gl->addWidget(chat_line, 1, 0);
   gl->addWidget(cb, 1, 1);
   gl->addWidget(remove_links, 1, 2);
-  gl->setContentsMargins(0, 0, 6, 0);
+  gl->addWidget(show_hide, 1, 3);
   setLayout(gl);
+  mw = new move_widget(this);
+  mw->put_to_corner();
+  show();
   chat_output->setReadOnly(true);
   chat_line->installEventFilter(this);
   chat_output->setVisible(true);
   chat_output->setAcceptRichText(true);
   chat_output->setOpenLinks(false);
   chat_output->setReadOnly(true);
+  connect(cb, &QAbstractButton::toggled, [=](bool priv) {
+    QString icon_name =
+        priv ? QLatin1String("public") : QLatin1String("private");
+    cb->setIcon(fcIcons::instance()->getIcon(icon_name));
+    gui_options.gui_qt_allied_chat_only = priv;
+  });
   connect(chat_output, &QTextBrowser::anchorClicked, this,
-          &chatwdg::anchor_clicked);
-  connect(chat_output, &QTextBrowser::anchorClicked, this,
-          &chatwdg::anchor_clicked);
-  connect(chat_output, &text_browser_dblclck::dbl_clicked, this,
-          &chatwdg::toggle_size);
-  connect(remove_links, &QAbstractButton::clicked, this, &chatwdg::rm_links);
-  connect(cb, &QCheckBox::stateChanged, this, &chatwdg::state_changed);
+          &chat_widget::anchor_clicked);
+  connect(remove_links, &QAbstractButton::clicked, this,
+          &chat_widget::rm_links);
+  connect(show_hide, &QAbstractButton::toggled, this,
+          &chat_widget::set_chat_visible);
   setMouseTracking(true);
 
   chat_listener::listen();
 }
 
 /**
-   Manages "To allies" chat button state
+   Manages toggling minimization.
  */
-void chatwdg::state_changed(int state)
+void chat_widget::set_chat_visible(bool visible)
 {
-  gui_options.gui_qt_allied_chat_only = state > 0;
-}
+  auto geo = geometry();
+  QString icon_name =
+      visible ? QLatin1String("expand-down") : QLatin1String("expand-up");
+  show_hide->setIcon(fcIcons::instance()->getIcon(icon_name));
 
-/**
-   Toggle chat size
- */
-void chatwdg::toggle_size()
-{
-  if (queen()->infotab->chat_maximized) {
-    queen()->infotab->restore_chat();
-    return;
-  } else {
-    queen()->infotab->maximize_chat();
-    chat_line->setFocus();
-  }
+  chat_output->setVisible(visible);
+  int height = visible ? qRound(parentWidget()->size().height()
+                                * king()->qt_settings.chat_fheight)
+                       : sizeHint().height();
+  geo.setTop(geo.top() + geo.height() - height);
+  setGeometry(geo);
 }
 
 /**
    Scrolls chat to bottom
  */
-void chatwdg::scroll_to_bottom()
+void chat_widget::scroll_to_bottom()
 {
   chat_output->verticalScrollBar()->setSliderPosition(
       chat_output->verticalScrollBar()->maximum());
 }
 
 /**
-   Updates font for chatwdg
+   Updates font for chat_widget
  */
-void chatwdg::update_font()
+void chat_widget::update_font()
 {
   chat_output->setFont(fcFont::instance()->getFont(fonts::chatline));
 }
@@ -337,12 +348,12 @@ void chatwdg::update_font()
 /**
    User clicked clear links button
  */
-void chatwdg::rm_links() { link_marks_clear_all(); }
+void chat_widget::rm_links() { link_marks_clear_all(); }
 
 /**
    User clicked some custom link
  */
-void chatwdg::anchor_clicked(const QUrl &link)
+void chat_widget::anchor_clicked(const QUrl &link)
 {
   int n;
   QStringList sl;
@@ -391,19 +402,19 @@ void chatwdg::anchor_clicked(const QUrl &link)
 }
 
 /**
-   Adds news string to chatwdg (from chat_listener interface)
+   Adds news string to chat_widget (from chat_listener interface)
  */
-void chatwdg::chat_message_received(const QString &message,
-                                    const struct text_tag_list *tags)
+void chat_widget::chat_message_received(const QString &message,
+                                        const struct text_tag_list *tags)
 {
   QColor col = chat_output->palette().color(QPalette::Text);
   append(apply_tags(message, tags, col));
 }
 
 /**
-   Adds news string to chatwdg
+   Adds news string to chat_widget
  */
-void chatwdg::append(const QString &str)
+void chat_widget::append(const QString &str)
 {
   chat_output->append(str);
   chat_output->verticalScrollBar()->setSliderPosition(
@@ -411,25 +422,14 @@ void chatwdg::append(const QString &str)
 }
 
 /**
-   Draws semi-transparent background
+   Paint event for chat_widget
  */
-void chatwdg::paint(QPainter *painter, QPaintEvent *event)
+void chat_widget::paintEvent(QPaintEvent *event)
 {
-  Q_UNUSED(event)
-  painter->setBrush(QColor(0, 0, 0, 35));
-  painter->drawRect(0, 0, width(), height());
-}
-
-/**
-   Paint event for chatwdg
- */
-void chatwdg::paintEvent(QPaintEvent *event)
-{
-  QPainter painter;
-
-  painter.begin(this);
-  paint(&painter, event);
-  painter.end();
+  QStyleOption opt;
+  opt.init(this);
+  QPainter p(this);
+  style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 void text_browser_dblclck::mouseDoubleClickEvent(QMouseEvent *event)
@@ -441,13 +441,12 @@ void text_browser_dblclck::mouseDoubleClickEvent(QMouseEvent *event)
 /**
    Processess history for chat
  */
-bool chatwdg::eventFilter(QObject *obj, QEvent *event)
+bool chat_widget::eventFilter(QObject *obj, QEvent *event)
 {
   if (obj == chat_line) {
     if (event->type() == QEvent::KeyPress) {
       QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
       if (keyEvent->key() == Qt::Key_Escape) {
-        queen()->infotab->restore_chat();
         queen()->mapview_wdg->setFocus();
         return true;
       }
@@ -462,7 +461,7 @@ bool chatwdg::eventFilter(QObject *obj, QEvent *event)
 /**
    Hides allies and links button for local game
  */
-void chatwdg::update_widgets()
+void chat_widget::update_widgets()
 {
   if (is_server_running()) {
     cb->hide();
@@ -477,7 +476,7 @@ void chatwdg::update_widgets()
    Returns how much space chatline of given number of lines would require,
    or zero if it can't be determined.
  */
-int chatwdg::default_size(int lines)
+int chat_widget::default_size(int lines)
 {
   int line_count = 0;
   int line_height;
@@ -511,7 +510,7 @@ int chatwdg::default_size(int lines)
 /**
    Makes link to tile/unit or city
  */
-void chatwdg::make_link(struct tile *ptile)
+void chat_widget::make_link(struct tile *ptile)
 {
   struct unit *punit;
   QString buf;

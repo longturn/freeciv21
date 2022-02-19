@@ -2291,8 +2291,7 @@ void mr_menu::slot_autocaravan()
   }
 
   if (!sent) {
-    queen()->infotab->chtwdg->append(_("Didn't find any trade route"
-                                       " to establish"));
+    queen()->chat->append(_("Didn't find any trade route to establish"));
   }
 }
 

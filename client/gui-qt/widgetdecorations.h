@@ -84,6 +84,29 @@ public:
 };
 
 /**************************************************************************
+  Abstract class for widgets that can be resized by dragging the edges.
+**************************************************************************/
+class resizable_widget : public fcwidget {
+  Q_OBJECT
+
+signals:
+  void resized(QRect rect);
+
+private:
+  QPoint cursor;
+  QSize last_size;
+  bool resize_mode;
+  bool resxy;
+  bool resx;
+  bool resy;
+
+protected:
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+};
+
+/**************************************************************************
   Widget allowing closing other widgets
 **************************************************************************/
 class close_widget : public QLabel {

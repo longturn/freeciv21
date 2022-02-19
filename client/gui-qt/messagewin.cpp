@@ -17,6 +17,7 @@
 #include <QListWidget>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QPushButton>
 
 // client
 #include "client_main.h"
@@ -25,167 +26,17 @@
 
 // gui-qt
 #include "fc_client.h"
+#include "icons.h"
 #include "mapview.h"
 #include "page_game.h"
 #include "sprite.h"
 
 /**
-   info_tab constructor
+   message_widget constructor
  */
-info_tab::info_tab(QWidget *parent)
+message_widget::message_widget(QWidget *parent)
 {
   setParent(parent);
-
-  layout = new QGridLayout;
-  msgwdg = new messagewdg(this);
-  layout->addWidget(msgwdg, 0, 0);
-  chtwdg = new chatwdg(this);
-  chtwdg->setProperty("messagewindow", true);
-  msgwdg->setProperty("messagewindow", true);
-  layout->addWidget(chtwdg, 1, 0);
-  layout->setHorizontalSpacing(0);
-  layout->setVerticalSpacing(0);
-  layout->setContentsMargins(0, 3, 3, 0);
-  layout->setSpacing(0);
-  layout->setVerticalSpacing(0);
-  setLayout(layout);
-  resize_mode = false;
-  resx = false;
-  resy = false;
-  resxy = false;
-  mw = new move_widget(this);
-  mw->put_to_corner();
-  mw->setFixedSize(13, 13);
-  setMouseTracking(true);
-  chat_maximized = false;
-}
-
-/**
-   Sets chat to default size of 3 lines
- */
-void info_tab::restore_chat()
-{
-  msgwdg->setFixedHeight(qMax(0, (height() - chtwdg->default_size(3))));
-  chtwdg->setFixedHeight(chtwdg->default_size(3));
-  chat_maximized = false;
-  chtwdg->scroll_to_bottom();
-}
-
-/**
-   Maximizes size of chat
- */
-void info_tab::maximize_chat()
-{
-  msgwdg->setFixedHeight(0);
-  chtwdg->setFixedHeight(height());
-  chat_maximized = true;
-  chtwdg->scroll_to_bottom();
-}
-
-/**
-   Checks if info_tab can be moved
- */
-void info_tab::mousePressEvent(QMouseEvent *event)
-{
-  if (king()->interface_locked) {
-    return;
-  }
-  if (event->button() == Qt::LeftButton) {
-    cursor = event->globalPos() - geometry().topLeft();
-    if (event->y() > 0 && event->y() < 25 && event->x() > width() - 25
-        && event->x() < width()) {
-      resize_mode = true;
-      resxy = true;
-      return;
-    }
-    if (event->y() > 0 && event->y() < 5) {
-      resize_mode = true;
-      resy = true;
-    } else if (event->x() > width() - 5 && event->x() < width()) {
-      resize_mode = true;
-      resx = true;
-    }
-  }
-  event->setAccepted(true);
-}
-
-/**
-   Restores cursor when resizing is done
- */
-void info_tab::mouseReleaseEvent(QMouseEvent *event)
-{
-  QPoint p;
-  if (king()->interface_locked) {
-    return;
-  }
-  if (resize_mode) {
-    resize_mode = false;
-    resx = false;
-    resy = false;
-    resxy = false;
-    setCursor(Qt::ArrowCursor);
-  }
-  p = pos();
-  king()->qt_settings.chat_fwidth =
-      static_cast<float>(width()) / queen()->mapview_wdg->width();
-  king()->qt_settings.chat_fheight =
-      static_cast<float>(height()) / queen()->mapview_wdg->height();
-  king()->qt_settings.chat_fx_pos =
-      static_cast<float>(p.x()) / queen()->mapview_wdg->width();
-  king()->qt_settings.chat_fy_pos =
-      static_cast<float>(p.y()) / queen()->mapview_wdg->height();
-}
-
-/**
-   Called when mouse moved (mouse track is enabled).
-   Used for resizing info_tab.
- */
-void info_tab::mouseMoveEvent(QMouseEvent *event)
-{
-  if (king()->interface_locked) {
-    return;
-  }
-  if ((event->buttons() & Qt::LeftButton) && resize_mode && resy) {
-    QPoint to_move;
-    int newheight = event->globalY() - cursor.y() - geometry().y();
-    resize(width(), this->geometry().height() - newheight);
-    to_move = event->globalPos() - cursor;
-    move(this->x(), to_move.y());
-    setCursor(Qt::SizeVerCursor);
-    restore_chat();
-  } else if (event->x() > width() - 9 && event->y() > 0 && event->y() < 9) {
-    setCursor(Qt::SizeBDiagCursor);
-  } else if ((event->buttons() & Qt::LeftButton) && resize_mode && resx) {
-    resize(event->x(), height());
-    setCursor(Qt::SizeHorCursor);
-  } else if (event->x() > width() - 5 && event->x() < width()) {
-    setCursor(Qt::SizeHorCursor);
-  } else if (event->y() > 0 && event->y() < 5) {
-    setCursor(Qt::SizeVerCursor);
-  } else if (resxy && (event->buttons() & Qt::LeftButton)) {
-    QPoint to_move;
-    int newheight = event->globalY() - cursor.y() - geometry().y();
-    resize(event->x(), this->geometry().height() - newheight);
-    to_move = event->globalPos() - cursor;
-    move(this->x(), to_move.y());
-    setCursor(Qt::SizeBDiagCursor);
-    restore_chat();
-  } else {
-    setCursor(Qt::ArrowCursor);
-  }
-  event->setAccepted(true);
-}
-
-/**
-   Inherited from abstract parent, does nothing here
- */
-void info_tab::update_menu() {}
-
-/**
-   Messagewdg constructor
- */
-messagewdg::messagewdg(QWidget *parent) : QWidget(parent)
-{
   QPalette palette;
   layout = new QGridLayout;
 
@@ -195,25 +46,46 @@ messagewdg::messagewdg(QWidget *parent) : QWidget(parent)
   mesg_table->setTextElideMode(Qt::ElideNone);
   mesg_table->setWordWrap(true);
   layout->addWidget(mesg_table, 0, 2, 1, 1);
-  layout->setContentsMargins(0, 0, 3, 3);
   setLayout(layout);
-
-  /* dont highlight show current cell - set the same colors*/
-  palette.setColor(QPalette::Highlight, QColor(0, 0, 0, 0));
-  palette.setColor(QPalette::HighlightedText, QColor(205, 206, 173));
-  palette.setColor(QPalette::Text, QColor(205, 206, 173));
-  mesg_table->setPalette(palette);
+  mw = new move_widget(this);
+  mw->put_to_corner();
+  min_max = new QPushButton(this);
+  min_max->setIcon(fcIcons::instance()->getIcon("expand-up"));
+  min_max->setIconSize(QSize(24, 24));
+  min_max->setFixedWidth(25);
+  min_max->setFixedHeight(25);
+  min_max->setCheckable(true);
+  min_max->setChecked(true);
   connect(mesg_table->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
-          &messagewdg::item_selected);
+          &message_widget::item_selected);
+  connect(min_max, &QAbstractButton::toggled, this,
+          &message_widget::set_events_visible);
   setMouseTracking(true);
+}
+
+/**
+   Manages toggling minimization.
+ */
+void message_widget::set_events_visible(bool visible)
+{
+  QString icon_name =
+      visible ? QLatin1String("expand-up") : QLatin1String("expand-down");
+  min_max->setIcon(fcIcons::instance()->getIcon(icon_name));
+  auto geo = geometry();
+  mesg_table->setVisible(visible);
+  int height = visible ? qRound(parentWidget()->size().height()
+                                * king()->qt_settings.chat_fheight)
+                       : 27;
+  geo.setBottom(geo.bottom() + height - geo.height());
+  setGeometry(geo);
 }
 
 /**
    Slot executed when selection on meg_table has changed
  */
-void messagewdg::item_selected(const QItemSelection &sl,
-                               const QItemSelection &ds)
+void message_widget::item_selected(const QItemSelection &sl,
+                                   const QItemSelection &ds)
 {
   const struct message *pmsg;
   int i, j;
@@ -254,45 +126,41 @@ void messagewdg::item_selected(const QItemSelection &sl,
 }
 
 /**
-   Mouse entered messagewdg
+   Mouse entered message_widget
  */
-void messagewdg::enterEvent(QEvent *event) { setCursor(Qt::ArrowCursor); }
-
-/**
-   Mouse left messagewdg
- */
-void messagewdg::leaveEvent(QEvent *event) { setCursor(Qt::ArrowCursor); }
-
-/**
-   Paints semi-transparent background
- */
-void messagewdg::paint(QPainter *painter, QPaintEvent *event)
+void message_widget::enterEvent(QEvent *event)
 {
-  painter->setBrush(QColor(0, 0, 0, 35));
-  painter->drawRect(0, 0, width(), height());
+  setCursor(Qt::ArrowCursor);
 }
 
 /**
-   Paint event for messagewdg
+   Mouse left message_widget
  */
-void messagewdg::paintEvent(QPaintEvent *event)
+void message_widget::leaveEvent(QEvent *event)
 {
-  QPainter painter;
+  setCursor(Qt::ArrowCursor);
+}
 
-  painter.begin(this);
-  paint(&painter, event);
-  painter.end();
+/**
+   Paint event for message_widget
+ */
+void message_widget::paintEvent(QPaintEvent *event)
+{
+  QStyleOption opt;
+  opt.init(this);
+  QPainter p(this);
+  style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 /**
    Clears and removes mesg_table all items
  */
-void messagewdg::clr() { mesg_table->clear(); }
+void message_widget::clr() { mesg_table->clear(); }
 
 /**
    Adds news message to mesg_table
  */
-void messagewdg::msg(const struct message *pmsg)
+void message_widget::msg(const struct message *pmsg)
 {
   auto item = new QListWidgetItem;
   item->setText(pmsg->descr);
@@ -311,7 +179,7 @@ void messagewdg::msg(const struct message *pmsg)
 /**
    Updates mesg_table painting
  */
-void messagewdg::msg_update()
+void message_widget::msg_update()
 {
   const auto num = meswin_get_num_messages();
   if (num < mesg_table->count()) {
@@ -337,17 +205,22 @@ void messagewdg::msg_update()
 /*
  * Callback used to makes sure that the lastest message is visible.
  */
-void messagewdg::scroll_to_bottom(void *self)
+void message_widget::scroll_to_bottom(void *self)
 {
-  static_cast<messagewdg *>(self)->mesg_table->scrollToBottom();
+  static_cast<message_widget *>(self)->mesg_table->scrollToBottom();
 }
 
 /**
-   Resize event for messagewdg
+   Resize event for message_widget
  */
-void messagewdg::resizeEvent(QResizeEvent *event)
+void message_widget::resizeEvent(QResizeEvent *event)
 {
   mesg_table->scrollToBottom();
+
+  QSize size;
+  size = event->size();
+  QSize mm_size = min_max->size();
+  min_max->move(size.width() - mm_size.width(), 0);
 }
 
 /**
@@ -355,8 +228,8 @@ void messagewdg::resizeEvent(QResizeEvent *event)
  */
 void real_meswin_dialog_update(void *unused)
 {
-  if (queen()->infotab == NULL) {
+  if (queen()->message == NULL) {
     return;
   }
-  queen()->infotab->msgwdg->msg_update();
+  queen()->message->msg_update();
 }

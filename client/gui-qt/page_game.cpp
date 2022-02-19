@@ -29,6 +29,7 @@
 #include "mapview_common.h"
 #include "text.h"
 // gui-qt - Eye of Storm
+#include "chatline.h"
 #include "citydlg.h"
 #include "fc_client.h"
 #include "gotodlg.h"
@@ -139,9 +140,12 @@ pageGame::pageGame(QWidget *parent)
   battlelog_wdg = new hud_battle_log(mapview_wdg);
   battlelog_wdg->setAttribute(Qt::WA_NoMousePropagation);
   battlelog_wdg->hide();
-  infotab = new info_tab(mapview_wdg);
-  infotab->setAttribute(Qt::WA_NoMousePropagation);
-  infotab->show();
+  message = new message_widget(mapview_wdg);
+  message->setAttribute(Qt::WA_NoMousePropagation);
+  message->show();
+  chat = new chat_widget(mapview_wdg);
+  chat->setAttribute(Qt::WA_NoMousePropagation);
+  chat->show();
   x_vote = new xvote(mapview_wdg);
   x_vote->setAttribute(Qt::WA_NoMousePropagation);
   x_vote->hide();
@@ -513,10 +517,14 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
   if (C_S_RUNNING <= client_state()) {
     queen()->sidebar_wdg->resizeMe();
     map_canvas_resized(size.width(), size.height());
-    queen()->infotab->resize(
+    queen()->message->resize(
         qRound((size.width() * king()->qt_settings.chat_fwidth)),
         qRound((size.height() * king()->qt_settings.chat_fheight)));
-    queen()->infotab->move(
+    queen()->message->move(0, 0);
+    queen()->chat->resize(
+        qRound((size.width() * king()->qt_settings.chat_fwidth)),
+        qRound((size.height() * king()->qt_settings.chat_fheight)));
+    queen()->chat->move(
         qRound((size.width() * king()->qt_settings.chat_fx_pos)),
         qRound((size.height() * king()->qt_settings.chat_fy_pos)));
     queen()->minimapview_wdg->move(
@@ -539,7 +547,6 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
         qRound(king()->qt_settings.civstatus_x * mapview.width),
         qRound(king()->qt_settings.civstatus_y * mapview.height));
     // It could be resized before mapview, so delayed it a bit
-    QTimer::singleShot(20, [] { queen()->infotab->restore_chat(); });
   }
   event->setAccepted(true);
 }

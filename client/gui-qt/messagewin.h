@@ -21,6 +21,7 @@ class QMouseEvent;
 class QObject;
 class QPaintEvent;
 class QPainter;
+class QPushButton;
 class QPixmap;
 class QResizeEvent;
 class chatwdg;
@@ -28,61 +29,31 @@ class chatwdg;
 /***************************************************************************
   Class representing message output
 ***************************************************************************/
-class messagewdg : public QWidget {
+class message_widget : public resizable_widget {
   Q_OBJECT
 
 public:
-  messagewdg(QWidget *parent);
+  message_widget(QWidget *parent);
   void msg_update();
   void clr();
   void msg(const struct message *pmsg);
 
 private:
+  void update_menu() override {}
   QListWidget *mesg_table;
   QGridLayout *layout;
 
 protected:
   void enterEvent(QEvent *event) override;
   void leaveEvent(QEvent *event) override;
-  void paint(QPainter *painter, QPaintEvent *event);
   void paintEvent(QPaintEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;
 public slots:
   void item_selected(const QItemSelection &sl, const QItemSelection &ds);
+  void set_events_visible(bool visible);
 
 private:
-  static void scroll_to_bottom(void *);
-};
-
-/***************************************************************************
-  Class which manages chat and messages
-***************************************************************************/
-class info_tab : public fcwidget {
-  Q_OBJECT
-
-public:
-  info_tab(QWidget *parent);
-  void max_chat_size();
-  QGridLayout *layout;
-  messagewdg *msgwdg;
-  chatwdg *chtwdg;
-  void maximize_chat();
-  void restore_chat();
-  bool chat_maximized;
-
-private:
-  void update_menu() override;
-  QPoint cursor;
-  QSize last_size;
+  QPushButton *min_max;
   move_widget *mw;
-  bool resize_mode;
-  bool resxy;
-  bool resx;
-  bool resy;
-
-protected:
-  void mousePressEvent(QMouseEvent *event) override;
-  void mouseMoveEvent(QMouseEvent *event) override;
-  void mouseReleaseEvent(QMouseEvent *event) override;
-  int &e_pos();
+  static void scroll_to_bottom(void *);
 };
