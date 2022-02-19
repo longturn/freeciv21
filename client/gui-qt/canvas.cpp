@@ -75,66 +75,6 @@ void image_copy(QImage *dest, const QImage *src, int src_x, int src_y,
 }
 
 /**
-   Draw a full sprite onto the canvas.  If "fog" is specified draw it with
-   fog.
- */
-void qtg_canvas_put_sprite_fogged(QPixmap *pcanvas, int canvas_x,
-                                  int canvas_y, const QPixmap *psprite,
-                                  bool fog, int fog_x, int fog_y)
-{
-  Q_UNUSED(fog_x)
-  Q_UNUSED(fog_y)
-
-  QPixmap temp(psprite->size());
-  temp.fill(Qt::transparent);
-  QPainter p(&temp);
-  p.setCompositionMode(QPainter::CompositionMode_Source);
-  p.drawPixmap(0, 0, *psprite);
-  p.setCompositionMode(QPainter::CompositionMode_SourceAtop);
-  p.fillRect(temp.rect(), QColor(0, 0, 0, 110));
-  p.end();
-
-  p.begin(pcanvas);
-  p.drawPixmap(canvas_x, canvas_y, temp);
-  p.end();
-}
-
-/*****************************************************************************
-   Draw fog outside city map when city is opened
- */
-void qtg_canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x,
-                                    int canvas_y, const QPixmap *psprite,
-                                    bool fog, int fog_x, int fog_y)
-{
-  Q_UNUSED(fog_x)
-  Q_UNUSED(fog_y)
-  QPainter p;
-
-  p.begin(pcanvas);
-  p.setCompositionMode(QPainter::CompositionMode_Difference);
-  p.setOpacity(0.5);
-  p.drawPixmap(canvas_x, canvas_y, *psprite);
-  p.end();
-}
-
-/*****************************************************************************
-   Put unit in city area when city dialog is open
- */
-void canvas_put_unit_fogged(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                            const QPixmap *psprite, bool fog, int fog_x,
-                            int fog_y)
-{
-  Q_UNUSED(fog_y)
-  Q_UNUSED(fog_x)
-  QPainter p;
-
-  p.begin(pcanvas);
-  p.setOpacity(0.7);
-  p.drawPixmap(canvas_x, canvas_y, *psprite);
-  p.end();
-}
-
-/**
    Returns given font
  */
 QFont get_font(client_font font)

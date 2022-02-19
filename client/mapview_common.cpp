@@ -941,32 +941,43 @@ void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
                        const std::vector<drawn_sprite> &sprites, bool fog,
                        bool city_dialog, bool city_unit)
 {
+  QPainter p(pcanvas);
   for (auto s : sprites) {
     if (!s.sprite) {
       // This can happen, although it should probably be avoided.
       continue;
     }
     if (city_unit) {
-      canvas_put_unit_fogged(pcanvas, canvas_x + s.offset_x,
-                             canvas_y + s.offset_y, s.sprite, true, canvas_x,
-                             canvas_y);
+      p.setCompositionMode(QPainter::CompositionMode_SourceOver);
+      p.setOpacity(0.7);
+      p.drawPixmap(canvas_x + s.offset_x, canvas_y + s.offset_y, *s.sprite);
     } else if (city_dialog) {
-      canvas_put_sprite_citymode(pcanvas, canvas_x + s.offset_x,
-                                 canvas_y + s.offset_y, s.sprite, true,
-                                 canvas_x, canvas_y);
+      p.setCompositionMode(QPainter::CompositionMode_Difference);
+      p.setOpacity(0.5);
+      p.drawPixmap(canvas_x + s.offset_x, canvas_y + s.offset_y, *s.sprite);
     } else if (fog && s.foggable) {
-      canvas_put_sprite_fogged(pcanvas, canvas_x + s.offset_x,
-                               canvas_y + s.offset_y, s.sprite, true,
-                               canvas_x, canvas_y);
+      // FIXME This looks rather expensive
+      QPixmap temp(s.sprite->size());
+      temp.fill(Qt::transparent);
+
+      QPainter p2(&temp);
+      p2.setCompositionMode(QPainter::CompositionMode_Source);
+      p2.drawPixmap(0, 0, *s.sprite);
+      p2.setCompositionMode(QPainter::CompositionMode_SourceAtop);
+      p2.fillRect(temp.rect(), QColor(0, 0, 0, 110));
+      p2.end();
+
+      p.drawPixmap(canvas_x + s.offset_x, canvas_y + s.offset_y, temp);
     } else {
       /* We avoid calling canvas_put_sprite_fogged, even though it
        * should be a valid thing to do, because gui-gtk-2.0 didn't have
        * a full implementation. */
-      QPainter p(pcanvas);
+      p.setCompositionMode(QPainter::CompositionMode_SourceOver);
+      p.setOpacity(1);
       p.drawPixmap(canvas_x + s.offset_x, canvas_y + s.offset_y, *s.sprite);
-      p.end();
     }
   }
+  p.end();
 }
 
 /**

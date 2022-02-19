@@ -29,13 +29,6 @@ class QTcpSocket;
 #include "tilespec.h"
 
 struct gui_funcs {
-  void (*canvas_put_sprite_fogged)(QPixmap *pcanvas, int canvas_x,
-                                   int canvas_y, const QPixmap *psprite,
-                                   bool fog, int fog_x, int fog_y);
-  void (*canvas_put_sprite_citymode)(QPixmap *pcanvas, int canvas_x,
-                                     int canvas_y, const QPixmap *psprite,
-                                     bool fog, int fog_x, int fog_y);
-
   void (*set_rulesets)(int num_rulesets, QStringList rulesets);
   void (*options_extra_init)();
   void (*add_net_input)(QTcpSocket *sock);
