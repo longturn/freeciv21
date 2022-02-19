@@ -1,0 +1,886 @@
+$yellow-00: hsl(45, 25%, 97%);
+$yellow-01: hsl(43, 47%, 94%);
+$yellow-02: hsl(41, 48%, 91%);
+$yellow-03: hsl(40, 40%, 83%);
+$yellow-04: hsl(39, 43%, 80%);
+$yellow-05: hsl(36, 50%, 75%);
+$yellow-06: hsl(30, 52%, 63%);
+$yellow-07: hsl(29, 55%, 51%);
+$yellow-08: hsl(28, 60%, 40%);
+$yellow-09: hsl(26, 70%, 32%);
+$yellow-10: hsl(25, 95%, 25%);
+
+$brownish: hsl(39, 95%, 34%);
+$bluish: hsl(206, 100%, 38%);
+$greenish: hsl(139, 100%, 29%);
+$cyanish: hsl(182, 99%, 35%);
+$yelloish: hsl(61, 100%, 29%);
+$redish: hsl(341, 93%, 43%);
+$purpls: hsl(299, 94%, 37%);
+
+$gray-02: hsl(41, 13%, 71%);
+$gray-04: hsl(35, 23%, 55%);
+
+$red-10: hsl(7, 55%, 10%);
+
+$gradient: qlineargradient(0, 0, 0, 1, (0 $yellow-01, 1 $yellow-02));
+$gradient-03: qlineargradient(0, 0, 0, 1, (0 $yellow-03, 1 $yellow-04));
+$input-bgcolor: $yellow-01;
+$base-bgcolor: $yellow-02;
+$base-border: $yellow-06;
+
+QMainWindow {
+  background-color: $base-bgcolor;
+}
+
+QPushButton {
+  color: $red-10;
+  border: 1px solid $base-border;
+  background-color: $base-bgcolor;
+  // font-size: 25px;
+  border-radius: 3px;
+  padding: 0.5em;
+}
+  
+QPushButton:hover {
+  background-color: $yellow-01;
+}
+
+QPushButton:pressed {
+  background-color: $yellow-00;
+}
+
+QPushButton:disabled {
+  background-color: $gray-02;
+  border-color: $gray-04;
+}
+
+*[doomed="true"] {
+  background-color: $yellow-01;
+  border: none;
+}
+
+*[shortcuts="true"] {
+  background-color: $yellow-01;
+  border: none;
+}
+
+*[city_name_button="true"] {
+  font-weight: bold italic;
+  border: 0px;
+  background: transparent;
+  text-align: right;
+}
+  
+/* color of border only - set the same as background */
+*[messagewindow="true"] {
+  color: $red-10;
+}
+/* color of border only*/
+*[sidebar="true"] {
+  color: $red-10;
+}
+
+/* Help dialog tile output 3 labels */
+*[foodlab="true"] {
+  background:$greenish;
+  color: $red-10;
+}
+
+*[shieldlab="true"] {
+  background: $gray-04;
+  color: $red-10;
+}
+
+*[ecolab="true"] {
+  background: $yelloish;
+  color: $red-10;
+}
+
+*[doomchat="true"] {
+  background-color: $base-bgcolor;
+  color: $red-10;
+  border: 1px solid $base-border;
+}
+
+*[themed_choice="true"] {
+  color: $red-10;
+  background-color: $base-bgcolor;
+  border: 2px solid $base-border;
+}
+
+*[unit_wait_table="true"] {
+  background-color: $red-10;
+  border: 1px solid #685f47;
+  color: $base-bgcolor;
+}
+
+*[civstatus_bg="true"] {
+    background-color: $base-bgcolor;
+}
+
+*[civstatus="true"] {
+  color: $red-10;
+}
+
+qfc_dialog::title {
+  font-weight: bold;
+  background-color: $yellow-03;
+}
+
+close_widget
+{
+  background: $yellow-02;
+}
+
+resize_widget
+{
+  background: $yellow-02;
+}
+
+
+QLabel {
+  color: $red-10;
+}
+
+QTableWidget {
+  alternate-background-color: $base-bgcolor;
+  background-color: $base-bgcolor;
+  border-top: 1px solid $base-border;
+  border-radius: 1px;
+  padding: 2 3px;
+  color: $red-10;
+  selection-color: $base-bgcolor;
+  selection-background-color: $yellow-03;
+}
+
+QTableWidget::item:selected {
+  border: none;
+  padding: 0 0;
+  background: $yellow-01;
+}
+
+QHeaderView::section {
+  background: $gradient;
+  color: $red-10;
+  border: 1px solid $base-border;
+}
+
+QLineEdit {
+  background-color: $input-bgcolor;
+  border: 1px solid $base-border;
+  border-radius: 2px;
+  color: $red-10;
+}
+
+QTabWidget {
+  background: $base-bgcolor;
+}
+
+QSpinBox {
+  color: $red-10;
+  background-color: $base-bgcolor;
+  selection-background-color: none;
+}
+
+QLineEdit:disabled, QComboBox:disabled, QSpinBox:disabled , QComboBox:disabled{
+  color: $gray-02;
+}
+
+QComboBox {
+  color: $red-10;
+  background-color: $yellow-01;
+  text-align: left;
+  padding-left: 10px;
+  padding-top: 0px;
+  padding-bottom: 2px;
+  border: 1px solid $base-border;
+  border-radius: 2px;
+  margin-top: .1em;
+  margin-bottom: 0em;
+}
+
+QComboBox::drop-down {
+  subcontrol-origin: padding;
+  subcontrol-position: top right;
+  width: 15px;
+  border-left-width: 0px;
+  border-left-color: $base-border;
+  border-left-style: solid;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+QComboBox::down-arrow {
+  image: url(LittleFingercombo-arrow.png);
+}
+
+
+QSlider::groove:horizontal {
+  background: transparent;
+  height: 16px;
+  position: absolute;
+  left: 4px; right: 4px;
+}
+
+QSlider::handle:horizontal {
+  height: 17px;
+  width: 10px;
+  background:url(LittleFingerwheel.png);
+  margin: 0 0px;
+}
+
+QSlider::add-page:horizontal {
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(0,0,0,0) ,stop:0.3 rgba(0,0,0,0), stop:0.4 rgba(181,181,181,255), stop: 0.6 rgba(181,181,181,255), stop:0.7 rgba(0,0,0,0), stop: 1 rgba(0,0,0,0));
+}
+
+QSlider::sub-page:horizontal {
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(0,0,0,0) ,stop:0.3 rgba(0,0,0,0), stop:0.4 rgba(181,181,181,255), stop: 0.6 rgba(181,181,181,255) , stop:0.7 rgba(0,0,0,0), stop: 1 rgba(0,0,0,0));
+}
+
+
+QSplitter::handle {
+  background: $gradient-03;
+}
+
+QSplitter::handle:vertical {
+  image: url(LittleFingersplitter-horizontal.png);
+  height: 8px;
+}
+
+QSplitter::handle:horizontal {
+  image: url(LittleFingersplitter-vertical.png);
+  width: 8px;
+}
+
+QMenuBar {
+  background-color: $base-bgcolor;
+}
+
+QMenuBar::item {
+  spacing: 3px;
+  padding: 1px 4px;
+  color: $red-10;
+  background: transparent;
+  border-radius: none
+}
+
+QMenuBar::item:selected {
+  color: $red-10;
+  background: $yellow-01;
+}
+
+QMenuBar::item:pressed {
+  background: $yellow-00;
+}
+
+QMenu {
+  background: $base-bgcolor;
+  border:none;
+}
+QMenu::item {
+  color: $red-10;
+  background: rgba(222,203,152, 100);
+  padding: 3px 20px 3px 25px;
+  border: 1px solid transparent;
+}
+
+QMenu::item:disabled {
+  color: $gray-02;
+}
+
+QMenu::item:selected {
+  color: $red-10;
+  background-color: #b6a785;
+  border: 1px solid grey;
+  border-radius: 3px;
+}
+
+minimap_view
+{
+  selection-background-color: #ddca97;
+}
+
+QComboBox:editable {
+  background-color: $yellow-01;
+}
+
+QComboBox:_qnot_editable, QComboBox::drop-down:editable {
+  background-color: $yellow-01;
+  selection-background-color: $yellow-00;
+}
+
+QComboBox QAbstractItemView{
+  color: $red-10;
+  background-color: $yellow-01;
+  border: 1px outset $base-border;
+  border-radius: 3px;
+  selection-background-color: $yellow-00;
+}
+
+QRadioButton {
+  color: $red-10;
+}
+
+QRadioButton::indicator {
+  width: 16px;
+  height: 16px;
+}
+
+QRadioButton::indicator::unchecked {
+  image: url(LittleFingerradio-unchecked.png);
+}
+
+QRadioButton::indicator:unchecked:hover {
+  image: url(LittleFingerradio-unchecked.png);
+}
+
+QRadioButton::indicator:unchecked:pressed {
+  image: url(LittleFingerradio-unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+  image: url(LittleFingerradio-checked.png);
+}
+
+QRadioButton::indicator:checked:hover {
+  image: url(LittleFingerradio-checked.png);
+}
+
+QRadioButton::indicator:checked:pressed {
+  image: url(LittleFingerradio-checked.png);
+}
+
+QDialog {
+  color: $red-10;
+  background: $base-bgcolor;
+  border: 1px solid $yellow-06;
+  border-radius: 3px;
+}
+
+QTabWidget::pane {
+  margin: 1px, 1px, 1px, 1px;
+  border: 1px solid $base-border;
+  border-radius: 8px;
+  border-top-left-radius: 0px;
+  padding: 0px;
+}
+
+QTabBar::tab {
+  border: 1px solid $base-border;
+  border-top-right-radius: 15;
+  border-top-left-radius: 5;
+  color: $red-10;
+  padding: 5px;
+  min-width: 80px;
+}
+
+
+QTabBar::tab:_qnot_selected {
+  margin-top: 3px;
+}
+
+QTabBar::tab:first {
+  border: 1px solid $base-border;
+  border-top-right-radius: 15;
+  border-top-left-radius: 5;
+  color:$red-10;
+  padding:5px;
+}
+
+QTabBar::tab::selected {
+  border: 1px solid $base-border;
+  border-top-right-radius: 15;
+  border-top-left-radius: 5;
+  color: $red-10;
+  padding:5px;
+}
+
+QTabWidget::tab-bar {
+  left: 0px;
+}
+
+QTabBar::tab:hover {
+  background: $gradient;
+/*  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0  #474747, stop: 0.4 #323232, stop: 0.4 #323232, stop: 1.0 #474747); */
+}
+
+QTabBar QToolButton {
+  background: $base-bgcolor;
+}
+
+QTabBar QToolButton::left-arrow {
+  image: url(LittleFingerarrow-left);
+}
+
+QTabBar QToolButton::right-arrow {
+  image: url(LittleFingerarrow-right);
+}
+
+
+QTreeView {
+  alternate-background-color: $yellow-03;
+  background-color: $yellow-02;
+  border: 1px solid $base-border;
+  border-radius: 3px;
+  padding: 2 3px;
+  color: $red-10;
+  selection-color: $red-10;
+  selection-background-color: $yellow-01;
+}
+
+QTreeView::item:selected {
+  border: none;
+  padding: 0 0;
+  background: $yellow-01;
+}
+
+QItemDelegate:selected {
+  border: none;
+  padding: 0 0;
+  background-color: $base-bgcolor
+}
+
+QToolTip {
+  border: 1px solid $base-border;
+  padding: 1px;
+  border-radius: 3px;
+  background: $base-bgcolor;
+  color: $red-10;
+}
+
+QCheckBox {
+  color: $red-10;
+  background: $base-bgcolor;
+  spacing: 5px;
+}
+
+QCheckBox::indicator {
+  width: 14px;
+  height: 14px;
+}
+
+QCheckBox::indicator:unchecked {
+  image: url(LittleFingercheckbox-unchecked.png);
+}
+
+
+QCheckBox::indicator:unchecked:pressed {
+  image: url(LittleFingercheckbox-unchecked_pressed.png);
+}
+
+QCheckBox::indicator:checked {
+  image: url(LittleFingercheckbox-checked.png);
+}
+
+QCheckBox::indicator:checked:pressed {
+  image: url(LittleFingercheckbox-checked-pressed.png);
+}
+
+QCheckBox::indicator:unchecked:hover {
+  image: url(LittleFingercheckbox-unchecked.png);
+}
+
+QCheckBox::indicator:checked:hover {
+  image: url(LittleFingercheckbox-checked.png);
+}
+
+QGroupBox {
+  color: $red-10;
+  background-color: $base-bgcolor;
+  border: 1px solid $base-border;
+  border-radius: 5px;
+  margin-top: 2ex;
+}
+
+QComboBox:hover {
+  color: $red-10;
+}
+
+city_dialog QScrollArea QWidget {
+  background: $base-bgcolor;
+}
+
+city_dialog QScrollArea QFrame {
+  background: $base-bgcolor;
+}
+
+city_dialog QScrollArea {
+  background: $base-bgcolor;
+}
+
+city_dialog QFrame {
+  border: none
+}
+
+city_dialog QGroupBox {
+  border-radius: 5px;
+  margin-top: 2.5ex;
+  border: 1px solid $gray-04;
+}
+
+city_dialog QListView {
+  background-color: $base-bgcolor;
+  border: none;
+}
+
+QListView:item::hover {
+  background-color: $yellow-01;
+}
+
+QCheckBox:disabled, QRadioButton:disabled {
+  background-color: transparent;
+  color: $gray-02;
+}
+
+QTextEdit {
+  background-color: $yellow-01;
+  color: $red-10;
+}
+
+QScrollBar:vertical {
+  border: 1px solid $base-border;
+  // width: 16px;
+  // margin: 18px 0 18px 0;
+}
+
+QScrollBar:horizontal {
+  border: 1px solid $base-border;
+  height: 16px;
+  margin: 0px 18px 0 18px;
+}
+
+QScrollBar::add-line:vertical {
+  background: $base-bgcolor;
+  height: 15px;
+  subcontrol-position: bottom;
+  subcontrol-origin: margin;
+  border: 1px solid $base-border;
+}
+
+QScrollBar::sub-line:vertical {
+  background: $base-bgcolor;
+  height: 16px;
+  subcontrol-position: top;
+  subcontrol-origin: margin;
+  border: 1px solid $yellow-06;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+  background: $base-bgcolor;
+}
+
+QScrollBar::left-arrow:horizontal{
+  background-image:url(LittleFingerarrow-left.png);
+}
+
+QScrollBar::right-arrow:horizontal {
+  background-image:url(LittleFingerarrow-right.png);
+}
+
+QScrollBar::up-arrow:vertical
+{
+    image:url(LittleFingerarrow-up.png);
+}
+
+QScrollBar::down-arrow:vertical
+{
+    background-image:url(LittleFingerarrow-down.png);
+}
+
+QScrollBar::add-line:horizontal {
+  background: $base-bgcolor;
+  width: 16px;
+  subcontrol-position: right;
+  subcontrol-origin: margin;
+  border: 1px solid $yellow-06;
+}
+
+QScrollBar::sub-line:horizontal {
+  background: $base-bgcolor;
+  width: 16px;
+  subcontrol-position: left;
+  subcontrol-origin: margin;
+  border: 1px solid $yellow-06;
+  position: absolute;
+  right: 20px;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: $base-bgcolor;
+}
+
+QScrollBar::handle:horizontal {
+  background: $base-bgcolor; min-width: 20px
+}
+
+QScrollBar::handle:vertical {
+  background: $base-bgcolor; min-height: 20px
+}
+
+QTreeWidget {
+  color: $red-10;
+  background-color: $yellow-01;
+  border: none;
+}
+
+QTreeWidget::item:selected {
+  color: $red-10;
+  border: none;
+  background: $yellow-01;
+}
+
+QFontListView {
+  color: $red-10;
+  background-color: $base-bgcolor;
+}
+
+units_reports QScrollArea {
+  background: rgba(0,0,0,45);
+}
+
+units_reports QScrollArea QWidget{
+  background: rgba(0,0,0,45);
+}
+
+unittype_item {
+  border: none;
+  background-color: $base-bgcolor;
+  selection-background-color: rgba(231, 214, 176, 220);
+}
+
+units_reports {
+  border: 1px solid $base-bgcolor;
+  background-color: rgba(85, 25, 25, 95);
+}
+
+unittype_item QLabel {
+  color: $red-10;
+  background-color: none;
+}
+
+unittype_item QPushButton {
+  color: white;
+  border: none;
+}
+
+
+help_widget QTextBrowser
+{
+  background: $yellow-01;
+  color: $red-10;
+}
+
+help_widget QWidget
+{
+  background: $yellow-01;
+  color: $red-10;
+}
+
+help_widget QScrollArea QFrame {
+  background: $yellow-01;
+  color: $red-10;
+}
+
+help_widget QScrollArea {
+  background: $yellow-01;
+  color: $red-10;
+}
+
+units_select {
+  background-color: $base-bgcolor;
+  color: $yelloish;
+  selection-color: $base-bgcolor;
+  border: 1px solid $red-10;
+}
+
+chat_widget, message_widget {
+  background-color: $base-bgcolor;
+  border: 1px solid $base-border;
+  border-radius: 3px;
+}
+
+chat_widget QTextBrowser
+{
+  background-color: $base-bgcolor;
+  border: none;
+  border-radius: 3px;
+  color: #3c1e02;
+}
+
+chat_widget QLineEdit
+{
+  background-color: $base-bgcolor;
+  border: 1px solid $base-border;
+  color: #3c1e02;
+}
+
+chat_widget QPushButton, message_widget QPushButton
+{
+  background-color: $gradient;
+  margin: 0;
+  padding: 0;
+  border: 1px solid $base-border;
+  border-radius: 8px;
+}
+
+chat_widget QScrollBar:vertical, message_widget QScrollBar:vertical
+{
+  background-color: transparent;
+  margin: 0;
+  border: none;
+}
+
+chat_widget QScrollBar::handle:vertical, message_widget QScrollBar::handle:vertical {
+  background: $gradient-03;
+  border: 0px;
+  border-radius: 7px;
+  min-height: 30px;
+}
+
+chat_widget QScrollBar::add-page:vertical, chat_widget QScrollBar::sub-page:vertical, message_widget QScrollBar::add-page:vertical, message_widget QScrollBar::sub-page:vertical   {
+  background: none;
+  border: none;
+  height: 0;
+  width: 0;
+}
+
+chat_widget QScrollBar::add-line:vertical, chat_widget QScrollBar::sub-line:vertical, message_widget QScrollBar::add-line:vertical, message_widget QScrollBar::sub-line:vertical {
+  background: none;
+  border: none;
+  height: 0;
+  width: 0;
+}
+
+message_widget QListWidget
+{
+  border: none;
+  color: $red-10;
+  background-color: $base-bgcolor;
+}
+
+message_widget QListWidget::item:hover {
+  background-color: $yellow-01;
+}
+
+message_widget QListWidget::item:selected {
+  background-color: $yellow-01;
+}
+
+xvote QPushButton {
+  background-color: $base-bgcolor;
+  color: $greenish;
+  min-width: 80px;
+  border: none;
+}
+
+xvote QPushButton:enabled {
+  color: $greenish;
+}
+
+xvote QPushButton:hover {
+  background-color: $gradient;
+}
+
+QProgressBar {
+  color: $yellow-06;
+  background: $base-bgcolor;
+  selection-background-color: $base-bgcolor;
+}
+
+info_tile {
+  color: $yellow-02;
+  border: 1px solid $yellow-06;
+  background-color: rgba(0, 0, 0,195);
+}
+
+notify_dialog {
+  color: $yellow-02;
+  border: 1px solid $yellow-06;
+  background-color: rgba(0, 0, 0,175);
+}
+
+unit_item, impr_item {
+  selection-background-color: $base-bgcolor;
+}
+
+chat_widget QCheckBox {
+  background: transparent;
+}
+
+chat_widget QCheckBox::indicator:checked {
+  image: url(LittleFingercheckbox-checked-pressed.png);
+}
+
+chat_widget QCheckBox::indicator:checked:hover {
+  image: url(LittleFingercheckbox-checked-pressed.png);
+}
+
+top_bar QPushButton {
+  font-family: 'fcicons';
+  border-radius: 25;
+  background: $gradient;
+}
+
+hud_message_box, hud_input_box {
+  /*background-color: transparent;*/
+  color: $red-10;
+  background-color: $input-bgcolor;
+
+  /*selection-background-color: rgba(231, 214, 176, 220);
+  alternate-background-color: rgba(131, 114, 76 ,220); */
+  border: 2px solid $red-10;
+}
+
+hud_message_box QPushButton {
+  color: $red-10;
+  background: $base-bgcolor;
+  border: 3px solid $base-border;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+hud_input_box QPushButton {
+  color: $red-10;
+  background: $base-bgcolor;
+  border: 3px solid $base-border;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+sidebarWidget {
+  color: $yellow-00;
+  background-color: $base-bgcolor;
+  font-size: 18px;
+  /*selection-background-color: rgb(34, 150, 4);
+  alternate-background-color: rgba(125, 25, 125, 125); */
+  selection-color: rgba(85, 25, 25, 185);
+}
+
+unit_hud_selector {
+  color: white;
+  background-color: $base-bgcolor;
+
+  /*background-image:url(LittleFingerpattern.png);*/
+  border: 2px solid $base-border;
+}
+
+
+hud_action {
+  selection-background-color: $base-bgcolor;
+  background-color: $base-bgcolor;
+  color: $bluish;
+}
+
+hud_units {
+  background: $base-bgcolor;
+}
+
+hud_units QLabel {
+  color: $red-10;
+}
+
+hud_unit_combat {
+  selection-background-color: rgba(0, 0, 75,165);
+  alternate-background-color: $yellow-02;
+}
