@@ -27,6 +27,7 @@
 #include "specialist.h"
 #include "terrain.h"
 // client
+#include "canvas.h"
 #include "client_main.h"
 #include "helpdata.h"
 #include "mapview_common.h"

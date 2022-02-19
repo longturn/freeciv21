@@ -21,9 +21,6 @@ void setup_gui_funcs()
 {
   struct gui_funcs *funcs = get_gui_funcs();
 
-  funcs->canvas_put_sprite_fogged = qtg_canvas_put_sprite_fogged;
-  funcs->canvas_put_sprite_citymode = qtg_canvas_put_sprite_citymode;
-
   funcs->set_rulesets = qtg_set_rulesets;
   funcs->options_extra_init = qtg_options_extra_init;
   funcs->add_net_input = qtg_add_net_input;

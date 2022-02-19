@@ -14,19 +14,11 @@
 // client
 #include "tilespec.h"
 // gui-qt
-#include "canvas.h"
 #include "pages_g.h"
 
 class QTcpSocket;
 
 void setup_gui_funcs();
-
-void qtg_canvas_put_sprite_fogged(QPixmap *pcanvas, int canvas_x,
-                                  int canvas_y, const QPixmap *psprite,
-                                  bool fog, int fog_x, int fog_y);
-void qtg_canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x,
-                                    int canvas_y, const QPixmap *psprite,
-                                    bool fog, int fog_x, int fog_y);
 
 void qtg_set_rulesets(int num_rulesets, QStringList rulesets);
 void qtg_options_extra_init();

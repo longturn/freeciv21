@@ -40,25 +40,6 @@ static struct gui_funcs funcs;
 struct gui_funcs *get_gui_funcs() { return &funcs; }
 
 /**
-   Call canvas_put_sprite_fogged callback
- */
-void canvas_put_sprite_fogged(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                              const QPixmap *psprite, bool fog, int fog_x,
-                              int fog_y)
-{
-  funcs.canvas_put_sprite_fogged(pcanvas, canvas_x, canvas_y, psprite, fog,
-                                 fog_x, fog_y);
-}
-
-void canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                                const QPixmap *psprite, bool fog, int fog_x,
-                                int fog_y)
-{
-  funcs.canvas_put_sprite_citymode(pcanvas, canvas_x, canvas_y, psprite, fog,
-                                   fog_x, fog_y);
-}
-
-/**
    Call set_rulesets callback
  */
 void set_rulesets(int num_rulesets, QStringList rulesets)
