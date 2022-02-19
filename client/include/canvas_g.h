@@ -31,9 +31,6 @@ GUI_FUNC_PROTO(void, canvas_put_sprite_citymode, QPixmap *pcanvas,
 GUI_FUNC_PROTO(void, canvas_put_line, QPixmap *pcanvas, const QColor &color,
                enum line_type ltype, int start_x, int start_y, int dx,
                int dy)
-GUI_FUNC_PROTO(void, canvas_put_curved_line, QPixmap *pcanvas,
-               const QColor &color, enum line_type ltype, int start_x,
-               int start_y, int dx, int dy)
 void canvas_put_unit_fogged(QPixmap *pcanvas, int canvas_x, int canvas_y,
                             const QPixmap *psprite, bool fog, int fog_x,
                             int fog_y);

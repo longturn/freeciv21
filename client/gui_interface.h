@@ -38,9 +38,6 @@ struct gui_funcs {
   void (*canvas_put_line)(QPixmap *pcanvas, const QColor &color,
                           enum line_type ltype, int start_x, int start_y,
                           int dx, int dy);
-  void (*canvas_put_curved_line)(QPixmap *pcanvas, const QColor &color,
-                                 enum line_type ltype, int start_x,
-                                 int start_y, int dx, int dy);
   void (*get_text_size)(int *width, int *height, enum client_font font,
                         const QString &text);
   void (*canvas_put_text)(QPixmap *pcanvas, int canvas_x, int canvas_y,
