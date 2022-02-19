@@ -212,16 +212,17 @@ static void redraw_overview()
   gui_to_overview_pos(tileset, &x[3], &y[3], mapview.gui_x0,
                       mapview.gui_y0 + mapview.height);
 
+  QPainter p(gui_options.overview.window);
+  p.setPen(QPen(get_color(tileset, COLOR_OVERVIEW_VIEWRECT), 2));
   for (i = 0; i < 4; i++) {
     int src_x = x[i];
     int src_y = y[i];
     int dst_x = x[(i + 1) % 4];
     int dst_y = y[(i + 1) % 4];
 
-    canvas_put_line(gui_options.overview.window,
-                    get_color(tileset, COLOR_OVERVIEW_VIEWRECT), LINE_NORMAL,
-                    src_x, src_y, dst_x - src_x, dst_y - src_y);
+    p.drawLine(src_x, src_y, dst_x, dst_y);
   }
+  p.end();
 
   update_minimap();
 
