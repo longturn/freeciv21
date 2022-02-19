@@ -1366,9 +1366,10 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
    *
    * Of course it's necessary to draw to the whole area to cover up any old
    * drawing that was done there. */
-  canvas_put_rectangle(mapview.store,
-                       get_color(tileset, COLOR_MAPVIEW_UNKNOWN), canvas_x,
-                       canvas_y, width, height);
+  QPainter p(mapview.store);
+  p.fillRect(canvas_x, canvas_y, width, height,
+             get_color(tileset, COLOR_MAPVIEW_UNKNOWN));
+  p.end();
 
   for (const auto &layer : tileset_get_layers(tileset)) {
     if (layer->type() == LAYER_TILELABEL) {
@@ -2686,9 +2687,7 @@ bool map_canvas_resized(int width, int height)
       delete mapview.tmp_store;
     }
     mapview.store = new QPixmap(full_width, full_height);
-    canvas_put_rectangle(mapview.store,
-                         get_color(tileset, COLOR_MAPVIEW_UNKNOWN), 0, 0,
-                         full_width, full_height);
+    mapview.store->fill(get_color(tileset, COLOR_MAPVIEW_UNKNOWN));
 
     mapview.tmp_store = new QPixmap(full_width, full_height);
   }
@@ -2777,11 +2776,9 @@ void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
   spr = get_spaceship_sprite(t, SPACESHIP_HABITATION);
   const int w = spr->width(), h = spr->height();
 
-  canvas_put_rectangle(pcanvas,
-                       get_color(tileset, COLOR_SPACESHIP_BACKGROUND), 0, 0,
-                       w * 7, h * 7);
-
   QPainter p(pcanvas);
+  p.fillRect(0, 0, w * 7, h * 7,
+             get_color(tileset, COLOR_SPACESHIP_BACKGROUND));
 
   for (i = 0; i < NUM_SS_MODULES; i++) {
     const int j = i / 3;

@@ -133,43 +133,6 @@ void canvas_put_unit_fogged(QPixmap *pcanvas, int canvas_x, int canvas_y,
   p.drawPixmap(canvas_x, canvas_y, *psprite);
   p.end();
 }
-/**
-   Draw a filled-in colored rectangle onto canvas.
- */
-void qtg_canvas_put_rectangle(QPixmap *pcanvas, const QColor &color,
-                              int canvas_x, int canvas_y, int width,
-                              int height)
-{
-  QBrush brush(color);
-  QPen pen(color);
-  QPainter p;
-
-  p.begin(pcanvas);
-  p.setPen(pen);
-  p.setBrush(brush);
-  if (width == 1 && height == 1) {
-    p.drawPoint(canvas_x, canvas_y);
-  } else if (width == 1) {
-    p.drawLine(canvas_x, canvas_y, canvas_x, canvas_y + height - 1);
-  } else if (height == 1) {
-    p.drawLine(canvas_x, canvas_y, canvas_x + width - 1, canvas_y);
-  } else {
-    p.drawRect(canvas_x, canvas_y, width, height);
-  }
-
-  p.end();
-}
-
-/**
-   Fill the area covered by the sprite with the given color.
- */
-void qtg_canvas_fill_sprite_area(QPixmap *pcanvas, const QPixmap *psprite,
-                                 const QColor &color, int canvas_x,
-                                 int canvas_y)
-{
-  qtg_canvas_put_rectangle(pcanvas, color, canvas_x, canvas_y,
-                           psprite->width(), psprite->height());
-}
 
 /**
    Draw a 1-pixel-width colored line onto the canvas.

@@ -1016,11 +1016,12 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
         int text_w, text_h;
         int icon_startx;
 
-        canvas_put_rectangle(pcanvas, get_diag_color(10), startx, starty,
-                             width, height);
-        // Print color rectangle with text inside.
-        canvas_put_rectangle(pcanvas, node_color(node), startx + 1,
-                             starty + 1, width - 2, height - 2);
+        QPainter p(pcanvas);
+        p.setBrush(node_color(node));
+        p.setPen(QPen(get_diag_color(10), 1));
+        p.drawRect(startx, starty, width - 2, height - 2);
+        p.end();
+
         /* The following code is similar to the one in
          * node_rectangle_minimum_size(). If you change something here,
          * change also node_rectangle_minimum_size().
@@ -1038,8 +1039,9 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
                         get_color(tileset, COLOR_REQTREE_TEXT), text);
         icon_startx = startx + 5;
 
+        p.begin(pcanvas);
+
         if (gui_options.reqtree_show_icons) {
-          QPainter p(pcanvas);
           unit_type_iterate(unit)
           {
             if (advance_number(unit->require_advance) != node->tech) {
@@ -1121,9 +1123,9 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
             requirement_vector_iterate_end;
           }
           governments_iterate_end;
-
-          p.end();
         }
+
+        p.end();
       }
 
       // Draw all outgoing edges

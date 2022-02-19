@@ -58,24 +58,6 @@ void canvas_put_sprite_citymode(QPixmap *pcanvas, int canvas_x, int canvas_y,
                                    fog_x, fog_y);
 }
 
-/**
-   Call canvas_put_rectangle callback
- */
-void canvas_put_rectangle(QPixmap *pcanvas, const QColor &color,
-                          int canvas_x, int canvas_y, int width, int height)
-{
-  funcs.canvas_put_rectangle(pcanvas, color, canvas_x, canvas_y, width,
-                             height);
-}
-
-/**
-   Call canvas_fill_sprite_area callback
- */
-void canvas_fill_sprite_area(QPixmap *pcanvas, QPixmap *psprite,
-                             const QColor &color, int canvas_x, int canvas_y)
-{
-  funcs.canvas_fill_sprite_area(pcanvas, psprite, color, canvas_x, canvas_y);
-}
 
 /**
    Call canvas_put_line callback
