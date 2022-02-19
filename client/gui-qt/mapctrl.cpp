@@ -179,16 +179,9 @@ void map_view::keyPressEvent(QKeyEvent *event)
       return;
     case Qt::Key_Escape:
       key_cancel_action();
-      if (queen()->infotab->chat_maximized) {
-        queen()->infotab->restore_chat();
-      }
       return;
     case Qt::Key_Enter:
     case Qt::Key_Return:
-      if (!queen()->infotab->chat_maximized) {
-        queen()->infotab->maximize_chat();
-        queen()->infotab->chtwdg->chat_line->setFocus();
-      }
       return;
     default:
       break;
@@ -280,9 +273,6 @@ void map_view::shortcut_pressed(int key)
     return;
   }
 
-  if (bt == Qt::LeftButton && queen()->infotab->chat_maximized) {
-    queen()->infotab->restore_chat();
-  }
   if (bt == Qt::LeftButton && king()->menu_bar->quick_airlifting) {
     if (tile_city(ptile)) {
       multiairlift(tile_city(ptile), king()->menu_bar->airlift_type_id);
@@ -363,7 +353,7 @@ void map_view::shortcut_pressed(int key)
     sc = fc_shortcuts::sc()->get_shortcut(SC_MAKE_LINK);
     if (((key && key == sc->key) || bt == sc->mouse) && md == sc->mod
         && ptile != nullptr) {
-      queen()->infotab->chtwdg->make_link(ptile);
+      queen()->chat->make_link(ptile);
       return;
     }
     sc = fc_shortcuts::sc()->get_shortcut(SC_BUY_MAP);

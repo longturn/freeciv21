@@ -226,7 +226,7 @@ void fc_client::switch_page(int new_pg)
     // QCoreApplication::processEvents();
     // For MS Windows, it might ingore first
     showMaximized();
-    queen()->infotab->chtwdg->update_widgets();
+    queen()->chat->update_widgets();
     status_bar->setVisible(false);
     if (gui_options.gui_qt_fullscreen) {
       king()->showFullScreen();

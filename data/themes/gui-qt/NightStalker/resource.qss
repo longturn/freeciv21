@@ -41,6 +41,13 @@ QMainWindow {
 *[themed_border="true"] {
   border: 2px solid #3399FF;
 }
+
+chat_widget, message_widget {
+  background-color: #00002f;
+  border: 1px solid #00002f;
+  border-radius: 3px;
+}
+
 /* color of border only - set the same as background */
 *[messagewindow="true"] {
   color: #00002f;

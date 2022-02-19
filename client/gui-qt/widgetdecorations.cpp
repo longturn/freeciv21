@@ -19,6 +19,7 @@
 // gui-qt
 #include "fc_client.h"
 #include "icons.h"
+#include "page_game.h"
 
 /****************************************************************************
   Scale widget allowing scaling other widgets, shown in right top corner
@@ -73,13 +74,13 @@ void scale_widget::mousePressEvent(QMouseEvent *event)
  */
 move_widget::move_widget(QWidget *parent) : QLabel()
 {
-  QPixmap *pix;
+  QPixmap pix;
 
   setParent(parent);
   setCursor(Qt::SizeAllCursor);
-  pix = fcIcons::instance()->getPixmap(QStringLiteral("move"));
-  setPixmap(*pix);
-  delete pix;
+  pix = fcIcons::instance()->getIcon(QStringLiteral("move")).pixmap(32);
+  pix.setDevicePixelRatio(2);
+  setPixmap(pix);
   setFixedSize(16, 16);
 }
 
@@ -226,4 +227,88 @@ void close_widget::notify_parent()
 
   fcw = reinterpret_cast<fcwidget *>(parentWidget());
   fcw->update_menu();
+}
+
+/**
+   Checks if info_tab can be moved
+ */
+void resizable_widget::mousePressEvent(QMouseEvent *event)
+{
+  if (king()->interface_locked) {
+    return;
+  }
+  if (event->button() == Qt::LeftButton) {
+    cursor = event->globalPos() - geometry().topLeft();
+    if (event->y() > 0 && event->y() < 25 && event->x() > width() - 25
+        && event->x() < width()) {
+      resize_mode = true;
+      resxy = true;
+      return;
+    }
+    if (event->y() > 0 && event->y() < 5) {
+      resize_mode = true;
+      resy = true;
+    } else if (event->x() > width() - 5 && event->x() < width()) {
+      resize_mode = true;
+      resx = true;
+    }
+  }
+  event->setAccepted(true);
+}
+
+/**
+   Restores cursor when resizing is done.
+ */
+void resizable_widget::mouseReleaseEvent(QMouseEvent *event)
+{
+  QPoint p;
+  if (king()->interface_locked) {
+    return;
+  }
+  if (resize_mode) {
+    resize_mode = false;
+    resx = false;
+    resy = false;
+    resxy = false;
+    setCursor(Qt::ArrowCursor);
+  }
+  p = pos();
+  emit resized(rect());
+}
+/**
+   Called when mouse moved (mouse track is enabled).
+   Used for resizing resizable_widget.
+ */
+void resizable_widget::mouseMoveEvent(QMouseEvent *event)
+{
+  if (king()->interface_locked) {
+    return;
+  }
+  if ((event->buttons() & Qt::LeftButton) && resize_mode && resy) {
+    QPoint to_move;
+    int newheight = event->globalY() - cursor.y() - geometry().y();
+    resize(width(), this->geometry().height() - newheight);
+    to_move = event->globalPos() - cursor;
+    move(this->x(), to_move.y());
+    setCursor(Qt::SizeVerCursor);
+  } else if (event->x() > width() - 9 && event->y() > 0 && event->y() < 9) {
+    setCursor(Qt::SizeBDiagCursor);
+  } else if ((event->buttons() & Qt::LeftButton) && resize_mode && resx) {
+    resize(event->x(), height());
+    setCursor(Qt::SizeHorCursor);
+  } else if (event->x() > width() - 5 && event->x() < width()) {
+    setCursor(Qt::SizeHorCursor);
+  } else if (event->y() > 0 && event->y() < 5) {
+    setCursor(Qt::SizeVerCursor);
+  } else if (resxy && (event->buttons() & Qt::LeftButton)) {
+    QPoint to_move;
+    int newheight = event->globalY() - cursor.y() - geometry().y();
+    resize(event->x(), this->geometry().height() - newheight);
+    to_move = event->globalPos() - cursor;
+    move(this->x(), to_move.y());
+    setCursor(Qt::SizeBDiagCursor);
+  } else {
+    setCursor(Qt::ArrowCursor);
+  }
+  event->setAccepted(true);
 }

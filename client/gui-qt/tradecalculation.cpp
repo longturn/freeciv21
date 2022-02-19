@@ -83,7 +83,7 @@ void trade_generator::add_city(struct city *pcity)
 {
   trade_city *tc = new trade_city(pcity);
   cities.append(tc);
-  queen()->infotab->chtwdg->append(
+  queen()->chat->append(
       QString(_("Adding city %1 to trade planning")).arg(tc->city->name));
 }
 
@@ -126,7 +126,7 @@ void trade_generator::remove_city(struct city *pcity)
   for (auto *tc : qAsConst(cities)) {
     if (tc->city->tile == pcity->tile) {
       cities.removeAll(tc);
-      queen()->infotab->chtwdg->append(
+      queen()->chat->append(
           QString(_("Removing city %1 from trade planning"))
               .arg(tc->city->name));
       return;
@@ -142,7 +142,7 @@ void trade_generator::remove_virtual_city(tile *ptile)
   for (auto *c : qAsConst(virtual_cities)) {
     if (c->tile == ptile) {
       virtual_cities.removeAll(c);
-      queen()->infotab->chtwdg->append(
+      queen()->chat->append(
           QString(_("Removing city %1 from trade planning")).arg(c->name));
     }
   }
