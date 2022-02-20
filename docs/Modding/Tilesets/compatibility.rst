@@ -41,3 +41,7 @@ The rest of this page lists the available flags and their meaning.
 
     The number of sprites used to display unit upkeep is no longer limited to 10
     (sprites ``upkeep.unhappy*``, ``upkeep.output*``).
+
+.. option:: hex_corner
+
+    Support for this option signals the availability of the new ``hex_corner`` sprite type for terrain.
