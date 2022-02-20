@@ -310,7 +310,6 @@ void layer_terrain::initialize_terrain(const terrain *terrain)
       break;
     }
     break;
-    break;
   case CELL_HEX_CORNER:
     if (tileset_topo_index(tileset()) != TS_TOPO_ISOHEX) {
       tileset_error(tileset(), LOG_ERROR,
