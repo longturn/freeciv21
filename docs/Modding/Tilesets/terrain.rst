@@ -1,6 +1,145 @@
 Terrain
 *******
 
+Drawing terrain with realistic (or not) transitions between adjacent tiles is a complex problem. Freeciv21
+comes with several patterns that can be used to build complex terrain schemes. They are specified in the
+main :file:`.tilespec` file of the tileset, under the ``[tile_*]`` and ``[layer*]`` sections.
+
+Terrain rendering is done in several independent passes, each of them having its own layer in the main
+tileset configuration file, ``Terrain1`` through ``Terrain3``. This allows several sprites to be combined in
+the drawing of a single tile, which is one of the ways to break monotony.
+
+Each terrain specified in a ruleset must have a ``graphic`` tag name, and optionally a ``graphic_alt`` tag.
+This information is used to search for compatible sprites in the tileset, first using ``graphic`` and, if
+it fails, ``graphic_alt``.
+
+Sprite tags
+-----------
+
+The names used to reference the sprites depend on the chosen cell type and on the number of groups included
+in the matching. The table below summarizes the naming scheme; available options are discussed in detail in
+the corresponding sections.
+
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+
+| Matched groups                 | ``single``                     | ``corner``                     | ``hex_corner``                 |
++================================+================================+================================+================================+
+| None                           | ``t.l0.grassland1``            | Avoid (``t.l1.plains_cell_n``) | Avoid                          |
+|                                | (:ref:`doc <single-simple>`)   |                                |                                |
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+
+| One, same as ``match_type``    | ``t.l1.hills_n0e1s0w1``        | ``t.l0.floor_cell_u011``       |                                |
+|                                | (:ref:`doc <single-match>`)    |                                |                                |
++--------------------------------+--------------------------------+--------------------------------+                                +
+| One, different from            | Not implemented                | ``t.l1.coast_cell_u_w_w_w``    | ``t.l0.hex_cell_right_p_i_p``, |
+| ``match_type``                 |                                |                                | ``t.l0.hex_cell_left_p_i_p``   |
++--------------------------------+                                +--------------------------------+                                +
+| Two or more                    |                                | ``t.l1.cellgroup_u_w_w_w``     |                                |
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+
+
+
+Sprite type ``single``
+----------------------
+
+In this mode, each tile is drawn using a single sprite. The sprites should have dimensions
+``normal_tile_width`` times ``normal_tile_height``. It is possible to augment the size by setting
+``layerN_is_tall`` to ``TRUE``, in which case the height is expanded by 50% above the tile. This can be used
+to render graphical elements like trees and mountains that hide terrain behind them.
+
+It is possible to set arbitrary offsets on a per-terrain basis using ``layerN_offset_x`` (positive values move
+the sprite to the right) and ``layerN_offset_y`` (positive values move the sprite down). These options should
+be used with caution, because pixels drawn outside of the area covered by a "tall" tile will confuse the
+renderer and cause artifacts.
+
+.. note:: ``whole`` is a synonym for ``single``; ``single`` is preferred.
+
+.. _single-simple:
+
+Without matching
+^^^^^^^^^^^^^^^^
+
+The name of the sprites used by sprite type ``single`` depend on the number of terrain groups included in
+``matches_with``. When no matching is performed, sprites names are built according to the following pattern::
+
+    t.l<n>.<tag><i>
+
+The value ``<n>`` is replaced with the layer number, and ``<tag>`` with the terrain tag. The last element,
+``<i>``, is a number starting from 1: if several sprites are provided with numbers 1, 2, ..., the renderer
+will pick one at random for every tile. This can be used to provide some variation, either by changing the
+base terrain sprite or by overlaying decorations on top.
+
+Example
+"""""""
+
+The following is the minimal definition for a terrain type: no matching is performed, and a single sprite is
+sufficient:
+
+.. code-block:: ini
+
+    [tile_desert]
+    tag = "desert"
+    num_layers = 1
+
+The base sprite would have tag ``t.l0.desert1``; additional sprites called ``t.l0.desert2``, ``t.l0.desert3``,
+etc., can also be added, in which case one will be picked at random for every tile.
+
+.. _single-match:
+
+With matching
+^^^^^^^^^^^^^
+
+Sprite type ``single`` also supports matching against the `same` group as the represented terrain is in. For
+instance, if one group is used for land, a second group for sea tiles, and a third group for ice, the sprite
+used for ice tiles can depend on the presence of ice on adjacent tiles --- but when there is no ice, one
+cannot know whether the other tile is land or water. In this case, the pattern is as follows::
+
+    t.l<n>.<tag>_<directions>
+
+Like in the unmatched case, ``<n>`` is replaced with the layer number and ``<tag>`` with the terrain tag. The
+``<directions>`` part indicated which in which directions a match has been achieved, as a list of directions
+followed by ``0`` (no match) or ``1`` (match). The directions depend on the tileset geometry:
+
+* For square tilesets, they are North, East, South, and West, and thus the ``<directions>`` part looks like
+  ``n0e1s1w0``. There are 16 sprites in total.
+* Isometric hexagonal tilesets also have South-East and North-West, and the ``<directions>`` part looks like
+  ``n0e1ne0s1w0nw0``. There are 64 sprites.
+* Non-isometric hexagonal tilesets use North-East and South-West instead, for instance ``n0ne0e1s1sw1w0``.
+  There are also 64 sprites.
+
+Example
+"""""""
+
+In many tilesets, the sprites used for hills and mountains depend on the presence of other hills and mountains
+on adjacent tiles. This is achieved by putting them in a single matching group, usually called ``hills``:
+
+.. code-block:: ini
+
+    [layer1]
+    match_types = "hills"
+
+We use layer 1 in this example because something is typically drawn under the hills for coasts and blending.
+The next step is to put hills and mountains in the group and enable matching:
+
+.. code-block:: ini
+
+    [tile_hills]
+    tag = "hills"
+    num_layers = 2
+    layer1_match_type = "hills"
+    layer1_match_with = "hills"
+
+    [tile_mountains]
+    tag = "mountains"
+    num_layers = 2
+    layer1_match_type = "hills"
+    layer1_match_with = "hills"
+
+With these settings, both hills and mountains will match adjacent tiles if they have hills or mountains.
+
+.. figure:: /_static/images/tileset-reference/example-single-match.png
+  :alt: Amplio2 hills and mountains in two different layouts
+  :align: center
+
+  Hills and mountains in ``amplio2`` use the pattern described above.
+
 Terrain Options
 ---------------
 
