@@ -157,10 +157,6 @@ file.
   graphic will be blended. The blending mask has sprite :code:`t.dither_tile`.
 * :code:`num_layers` : The number of layers in the terrain. This value must be 1, 2 or 3. Each layer is drawn
   separately. The layerN options below control the drawing of each layer (N should be 0, 1 or 2)
-* :code:`layerN_is_tall` : Left right corner of terrain sprites is not based on normal_tile_width and
-  normal_tile_height, but to corner of the full tile.
-* :code:`layerN_offset_x` : Offset for terrain sprites
-* :code:`layerN_offset_y` : Offset for terrain sprites
 * :code:`layerN_match_type` : If 0 or unset, no terrain matching will be done and the base sprite will be drawn
   for the terrain. If non-zero, then terrain matching will be done. A matched sprite will be chosen that
   matches all cardinally adjacent tiles whose terrain has the same match_type.
@@ -197,11 +193,6 @@ grassland appears in the name of the :file:`.tilespec` section, and 1 is an inde
 sprites with indices 1, 2, 3, ..., one is picked at random). For :code:`CELL_CORNER`, the names are like
 :code:`t.l0.grassland_cell_u`, where u ("up") indicates the direction of the corner. It can be u ("up"), d
 ("down"), r ("right"), or l ("left"). When a tag is matched against one group, there are two possibilities:
-
-* The matched group is the same as the tag group. For :code:`CELL_WHOLE`, this requires sprites with names
-  like :code:`t.l0.grassland_n1e0s0w0`, where the n1 indicates that the terrain in the north direction is in the
-  same group as the tile that is being drawn, and the 0's indicate that other terrains are different. Sprites
-  must be provided for all 16 combinations of 0's and 1's. Amplio2 forests and hills are drawn this way.
 
 * For :code:`CELL_CORNER`, this requires 24 sprites with names like :code:`t.l0.grassland_cell_u010`.
   :code:`t.l0.grassland_cell_u` is like in the no match case, and 010 indicates which sides of the corner match
