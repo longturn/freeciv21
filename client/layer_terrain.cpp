@@ -310,6 +310,16 @@ void layer_terrain::initialize_terrain(const terrain *terrain)
       break;
     }
     break;
+    break;
+  case CELL_HEX_CORNER:
+    if (tileset_topo_index(tileset()) != TS_TOPO_ISOHEX) {
+      tileset_error(tileset(), LOG_ERROR,
+                    _("Layer %d, tag \"%s\": Sprite type \"hex_corner\" is "
+                      "only supported for isometric hexagonal tilesets"),
+                    m_number, qUtf8Printable(info.sprite_name));
+    }
+    initialize_cell_hex_corner(terrain, info);
+    break;
   }
 
   // Blending
@@ -524,6 +534,104 @@ void layer_terrain::initialize_cell_corner_match_full(const terrain *terrain,
     }
 
     info.sprites.push_back(sprite);
+  }
+}
+
+/**
+ * \brief Sets up terrain information for \ref CELL_HEX_CORNER.
+ */
+void layer_terrain::initialize_cell_hex_corner(const terrain *terrain,
+                                               terrain_info &info)
+{
+  // There are two sorts of sprites, which we call `left' and `right':
+  //     ____
+  //     .:..\...:.
+  //      : R \__:_
+  //     .:.../..:.
+  //     _:__/ L :
+  //     .:..\...:.
+  //      : R \__:_
+  //     .:.../..:.
+  //     _:__/   :
+  //
+  // The `terrain' variable corresponds to the tile cut in two parts
+  // vertically (the ones with the L and R symbols in the drawing); the
+  // `right' and `left' terminology refers to that tile.
+  //
+  // For each terrain, we need sprites for left and right times the
+  // combinations for the two other tiles: for N matching groups, this is a
+  // total of 2 * N^3 sprites.
+
+  // In order to render the edge of a tile in a variety of situations (the
+  // help dialog, the map edges, unknown tiles, ...), we need to cut each
+  // corner into its own pixmap. We do this for each terrain because we
+  // don't have access to other matching groups. This increases memory usage
+  // quite a bit, but it's the best one can do in the current framework. We
+  // use `mask.sprite' to produce the tile shape.
+
+  // How to order the group indices when loading the sprite, depending on
+  // the direction. 0 is the terrain being loaded, 1 is the terrain for the
+  // direction before the corner if we count clockwise, and 2 is the terrain
+  // after the corner.
+  const int indices[6][3] = {
+      {2, 1, 0}, {0, 1, 2}, {1, 0, 2}, {2, 0, 1}, {0, 2, 1}, {1, 2, 0},
+  };
+
+  // Load the sprites, create the cut sprites and store them in `info'. We
+  // fill `info.sprites' as a 3D array with the following indices:
+  // - corner index, clockwise from the top
+  // - match type "before" the corner
+  // - match type "after" it
+  // Since we only have a 1D vector, the array is unrolled into a single
+  // index.
+  for (int idir = 0; idir < 6; ++idir) {
+    // We start from NORTH, thus the first corner needs a `left' sprite.
+    // Afterwards it alternates
+    bool left = (idir % 2 == 0);
+
+    for (int i = 0; i < info.matches_with.size(); ++i) {
+      for (int j = 0; j < info.matches_with.size(); ++j) {
+        std::array<matching_group *, 3> groups = {
+            info.group,           // Center tile
+            info.matches_with[i], // "before"
+            info.matches_with[j], // "after"
+        };
+
+        auto buffer =
+            QStringLiteral("t.l%1.hex_cell_%2_%3_%4_%5")
+                .arg(m_number)
+                .arg(left ? QStringLiteral("left") : QStringLiteral("right"))
+                .arg(groups[indices[idir][0]]->name[0])
+                .arg(groups[indices[idir][1]]->name[0])
+                .arg(groups[indices[idir][2]]->name[0]);
+
+        auto sprite = load_sprite(tileset(), buffer);
+        if (sprite) {
+          // Crop the sprite to separate this cell.
+          const int W = tileset_tile_width(tileset());
+          const int H = tileset_tile_height(tileset());
+          std::array<int, 6> y = {H / 4, 0, 0, 0, 0, H / 4};
+          std::array<int, 6> h = {H / 4, H / 2, H / 4, H / 4, H / 2, H / 4};
+          std::array<int, 6> xo = {-W / 2, -W / 2, -W / 2, 0, 0, 0};
+          std::array<int, 6> yo = {H / 4,      -H / 4, -3 * H / 4,
+                                   -3 * H / 4, -H / 4, H / 4};
+
+          sprite =
+              crop_sprite(sprite, 0, y[idir], W, h[idir],
+                          get_mask_sprite(tileset()), xo[idir], yo[idir]);
+
+          // We allocated a new sprite with crop_sprite. Store its address so
+          // we can free it.
+          m_allocated.emplace_back(sprite);
+        } else {
+          tileset_error(tileset(), LOG_ERROR,
+                        "Terrain graphics sprite for tag \"%s\" missing.",
+                        qUtf8Printable(buffer));
+        }
+
+        info.sprites.push_back(sprite);
+      }
+    }
   }
 }
 
@@ -788,7 +896,64 @@ void layer_terrain::fill_terrain_sprite_array(
     }
     break;
   }
-  };
+  case CELL_HEX_CORNER: {
+    const int W = tileset_tile_width(tileset());
+    const int H = tileset_tile_height(tileset());
+
+    // The directions of the terrain "after" (see initialize_cell_hex_corner)
+    const std::array<direction8, 6> iso_dirs = {
+        DIR8_NORTH, DIR8_EAST, DIR8_SOUTHEAST,
+        DIR8_SOUTH, DIR8_WEST, DIR8_NORTHWEST,
+    };
+    // Where to put the cut sprites inside the tile area
+    const int iso_offsets[6][2] = {
+        {W / 2, 0},     {W / 2, H / 4}, {W / 2, 3 * H / 4},
+        {0, 3 * H / 4}, {0, H / 4},     {0, 0},
+    };
+
+    // Iterate over corners
+    for (int i = 0; i < 6; ++i) {
+      std::array<int, 2> matches = {
+          MATCH(iso_dirs[(i + 5) % 6]), // Direction "before"
+          MATCH(iso_dirs[i])};          // Direction "after"
+
+      // Resolve the matching groups as indices in matches_with
+      std::array<int, 2> indices;
+      for (int j = 0; j < 2; ++j) {
+        if (matches[j] < 0) {
+          // Unknown tile or edge of the map, pretend current terrain
+          // continues (it's always at match index 0)
+          indices[j] = 0;
+          continue;
+        }
+        auto it = std::find_if(
+            info.matches_with.begin(), info.matches_with.end(),
+            [=](const auto &group) { return group->number == matches[j]; });
+        if (it == info.matches_with.end()) {
+          // Not matching against this terrain, pretend current terrain
+          // continues (it's always at match index 0)
+          indices[j] = 0;
+        }
+        indices[j] = std::distance(info.matches_with.begin(), it);
+      }
+
+      // Pick the sprite
+      int array_index = i;
+      array_index *= info.matches_with.size();
+      array_index += indices[0];
+      array_index *= info.matches_with.size();
+      array_index += indices[1];
+
+      const auto sprite = info.sprites[array_index];
+      if (sprite) {
+        sprs.emplace_back(tileset(), sprite, true, iso_offsets[i][0],
+                          iso_offsets[i][1]);
+      }
+    }
+  }
+
+  break;
+  }
 #undef MATCH
 }
 

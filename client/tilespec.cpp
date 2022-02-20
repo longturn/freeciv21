@@ -1500,6 +1500,9 @@ check_sprite_type(const char *sprite_type, const char *tile_section)
   if (fc_strcasecmp(sprite_type, "corner") == 0) {
     return freeciv::layer_terrain::CELL_CORNER;
   }
+  if (fc_strcasecmp(sprite_type, "hex_corner") == 0) {
+    return freeciv::layer_terrain::CELL_HEX_CORNER;
+  }
   if (fc_strcasecmp(sprite_type, "single") == 0) {
     return freeciv::layer_terrain::CELL_WHOLE;
   }

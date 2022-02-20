@@ -28,8 +28,9 @@ class layer_terrain : public layer {
 public:
   /// Indicates how many sprites are used to draw a tile.
   enum sprite_type {
-    CELL_WHOLE, ///< One sprite for the entire tile.
-    CELL_CORNER ///< One sprite for each corner of the tile.
+    CELL_WHOLE,      ///< One sprite for the entire tile.
+    CELL_CORNER,     ///< One sprite for each corner of the tile.
+    CELL_HEX_CORNER, ///< One sprite for each hexagonal corner of the tile.
   };
 
 private:
@@ -98,6 +99,8 @@ private:
                                          terrain_info &info);
   void initialize_cell_corner_match_full(const terrain *terrain,
                                          terrain_info &info);
+  void initialize_cell_hex_corner(const terrain *terrain,
+                                  terrain_info &info);
   void initialize_blending(const terrain *terrain, terrain_info &info);
 
   int terrain_group(const terrain *pterrain) const;
