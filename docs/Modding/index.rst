@@ -78,6 +78,7 @@ guides document specific aspects of tileset creation:
 .. toctree::
   Tilesets/tutorial.rst
   Tilesets/graphics.rst
+  Tilesets/terrain.rst
   Tilesets/debugger.rst
   Tilesets/compatibility.rst
   Rulesets/nations.rst
