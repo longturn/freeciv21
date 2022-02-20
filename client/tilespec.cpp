@@ -90,7 +90,7 @@
 
 #define TILESPEC_CAPSTR                                                     \
   "+Freeciv-tilespec-Devel-2019-Jul-03 duplicates_ok precise-hp-bars "      \
-  "unlimited-unit-select-frames unlimited-upkeep-sprites"
+  "unlimited-unit-select-frames unlimited-upkeep-sprites hex_corner"
 /*
  * Tilespec capabilities acceptable to this program:
  *
@@ -112,6 +112,8 @@
  * unlimited-upkeep-sprites
  *    - There is no limitation on the number of upkeep sprites
  *      (upkeep.unhappy*, upkeep.output*)
+ * hex_corner
+ *    - The sprite type "hex_corner" is supported
  */
 
 #define SPEC_CAPSTR "+Freeciv-spec-Devel-2019-Jul-03"
