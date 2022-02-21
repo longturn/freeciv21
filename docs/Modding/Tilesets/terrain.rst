@@ -29,10 +29,10 @@ the corresponding sections.
 | One, same as ``match_type``    | ``t.l1.hills_n0e1s0w1``        | ``t.l0.floor_cell_u011``       |                                |
 |                                | (:ref:`doc <single-match>`)    | (:ref:`doc <corner-same>`)     |                                |
 +--------------------------------+--------------------------------+--------------------------------+                                +
-| One, different from            | Not implemented                | ``t.l1.coast_cell_u_w_w_w``    | ``t.l0.hex_cell_right_p_i_p``, |
-| ``match_type``                 |                                | (:ref:`doc <corner-pair>`)     | ``t.l0.hex_cell_left_p_i_p``   |
+| One, different from            | Not implemented                | ``t.l1.coast_cell_u_g_g_g``    | ``t.l0.hex_cell_right_g_g_g``, |
+| ``match_type``                 |                                | (:ref:`doc <corner-pair>`)     | ``t.l0.hex_cell_left_g_g_g``   |
 +--------------------------------+                                +--------------------------------+                                +
-| Two or more                    |                                | ``t.l1.cellgroup_u_w_w_w``     |                                |
+| Two or more                    |                                | ``t.l0.cellgroup_g_g_g_g``     |                                |
 |                                |                                | (:ref:`doc <corner-general>`)  |                                |
 +--------------------------------+--------------------------------+--------------------------------+--------------------------------+
 
@@ -196,15 +196,27 @@ The value ``<n>`` is replaced with the layer number, and ``<tag>`` with the terr
 Matching with the same group
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. code-block:: xml
+
+    t.l<n>.<tag>_cell_<direction><01><01><01>
+
 .. _corner-pair:
 
 Matching a pair of groups
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. code-block:: xml
+
+    t.l<n>.<tag>_cell_<direction>_<g>_<g>_<g>
+
 .. _corner-general:
 
 General matching
 ^^^^^^^^^^^^^^^^
+
+.. code-block:: xml
+
+    t.l<n>.cellgroup_<g>_<g>_<g>_<g>
 
 
 .. _iso_corner:
