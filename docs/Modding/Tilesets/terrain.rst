@@ -196,9 +196,59 @@ The value ``<n>`` is replaced with the layer number, and ``<tag>`` with the terr
 Matching with the same group
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+This mode is used when a single matching group is specified in the ``matches_with`` list, and it is the same
+as ``match_type``. This is often used to draw beaches, because they are drawn where neighboring tiles are
+anything but water. 32 sprites are required for each tag, with the following naming convention:
+
 .. code-block:: xml
 
     t.l<n>.<tag>_cell_<direction><01><01><01>
+
+The value ``<n>`` is replaced with the layer number, and ``<tag>`` with the terrain tag. Sprites must be
+provided for each of the four possible values of ``<direction>``: ``u``, ``d``, ``l``, and ``r``, that
+indicate which corner the sprites are for. The three remaining parts, ``<01>``, each correspond to the
+matching status of one of the adjacent tiles, counting clockwise. ``0`` means that the tile is not matched,
+and ``1`` that it is.
+
+For instance, the suffix of ``u011`` corresponds to the following situation, where blue represents the group
+of the tile being rendered (black frame) and green is some other terrain:
+
+.. figure:: /_static/images/tileset-reference/example-corner-same-1.png
+    :alt: A diagram illustrating what the u011 corresponds to in terms of adjacent tiles.
+    :align: center
+
+Example
+"""""""
+
+Simple coasts can be drawn as follows:
+
+.. code-block:: ini
+
+    [layer0]
+    match_types = "water"
+
+    [tile_coast]
+    tag = "coast"
+    num_layers = 1
+    layer0_match_type = "water"
+    layer0_match_with = "water"
+    layer0_sprite_type = "corner"
+
+    [tile_floor]
+    tag = "floor"
+    num_layers = 1
+    layer0_match_type = "water"
+    layer0_match_with = "water"
+    layer0_sprite_type = "corner"
+
+    [tile_lake]
+    tag = "lake"
+    num_layers = 1
+    layer0_match_type = "water"
+    layer0_match_with = "water"
+    layer0_sprite_type = "corner"
+
+This requires 96 sprites, 32 for each tile type.
 
 .. _corner-pair:
 
@@ -306,26 +356,6 @@ Matched Sprites
   sprites with tags :code:`t.<terrain>_n<V>e<V>s<V>w<V>` (e.g., :code:`t.hills_n0e0s1w0`. Each direcional value
   :code:`<V>` is either 0 or 1. Note that the directions are in map coordinates, so n (north) in iso-view is
   northeast on the mapview. (Note this only applies for cell_type "single".)
-
-Cell Sprites
-  For matched terrains that have cell_type "rect", 32 different sprites are needed. Each sprite is a rectangle
-  corresponding to one cell, and there are 8 different sprites per cell. Each sprite has a name like
-  :code:`t.ocean_cell_u110` where "ocean" is the terrain, "u" means up (north on the map) and 110 indicates
-  which of the adjacent tiles are mismatched. For instance u110 means:
-
-.. code-block:: rst
-
-      |      /\
-      |     /B \
-      |    /\ 1/\
-      |   / A\/C \
-      |   \1 /\ 0/
-      |    \/D \/
-      |     \  /
-      |      \/
-
-
-a matching terrain exists at C but not at A or B. In this case D is the current tile.
 
   Examples:
 
