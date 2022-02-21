@@ -58,7 +58,9 @@ Without matching
 ^^^^^^^^^^^^^^^^
 
 The name of the sprites used by sprite type ``single`` depend on the number of terrain groups included in
-``matches_with``. When no matching is performed, sprites names are built according to the following pattern::
+``matches_with``. When no matching is performed, sprites names are built according to the following pattern:
+
+.. code-block:: xml
 
     t.l<n>.<tag><i>
 
@@ -90,7 +92,9 @@ With matching
 Sprite type ``single`` also supports matching against the `same` group as the represented terrain is in. For
 instance, if one group is used for land, a second group for sea tiles, and a third group for ice, the sprite
 used for ice tiles can depend on the presence of ice on adjacent tiles --- but when there is no ice, one
-cannot know whether the other tile is land or water. In this case, the pattern is as follows::
+cannot know whether the other tile is land or water. In this case, the pattern is as follows:
+
+.. code-block:: xml
 
     t.l<n>.<tag>_<directions>
 
@@ -178,7 +182,9 @@ Without matching
     is likely to be worse and the naming convention is harder to track. Avoid using this mode.
 
 When no matching is performed, four ``corner`` sprites are required for each terrain. They are expected to be
-half the size of a normal tile in both dimensions, and use the following naming scheme::
+half the size of a normal tile in both dimensions, and use the following naming scheme:
+
+.. code-block:: xml
 
     t.l<n>.<tag>_cell_<direction>
 
