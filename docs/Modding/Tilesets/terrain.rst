@@ -23,16 +23,17 @@ the corresponding sections.
 +--------------------------------+--------------------------------+--------------------------------+--------------------------------+
 | Matched groups                 | ``single``                     | ``corner``                     | ``hex_corner``                 |
 +================================+================================+================================+================================+
-| None                           | ``t.l0.grassland1``            | Avoid (``t.l1.plains_cell_n``) | Avoid                          |
-|                                | (:ref:`doc <single-simple>`)   |                                |                                |
+| None                           | ``t.l0.grassland1``            | Avoid                          | Avoid                          |
+|                                | (:ref:`doc <single-simple>`)   | (:ref:`doc <corner-simple>`)   |                                |
 +--------------------------------+--------------------------------+--------------------------------+--------------------------------+
 | One, same as ``match_type``    | ``t.l1.hills_n0e1s0w1``        | ``t.l0.floor_cell_u011``       |                                |
-|                                | (:ref:`doc <single-match>`)    |                                |                                |
+|                                | (:ref:`doc <single-match>`)    | (:ref:`doc <corner-same>`)     |                                |
 +--------------------------------+--------------------------------+--------------------------------+                                +
 | One, different from            | Not implemented                | ``t.l1.coast_cell_u_w_w_w``    | ``t.l0.hex_cell_right_p_i_p``, |
-| ``match_type``                 |                                |                                | ``t.l0.hex_cell_left_p_i_p``   |
+| ``match_type``                 |                                | (:ref:`doc <corner-pair>`)     | ``t.l0.hex_cell_left_p_i_p``   |
 +--------------------------------+                                +--------------------------------+                                +
 | Two or more                    |                                | ``t.l1.cellgroup_u_w_w_w``     |                                |
+|                                |                                | (:ref:`doc <corner-general>`)  |                                |
 +--------------------------------+--------------------------------+--------------------------------+--------------------------------+
 
 
@@ -161,6 +162,43 @@ three other tiles. Matching takes place with respect to each of them, which enab
 requiring comparatively small numbers of small sprites. For isometric hexagonal tilesets, some slices are
 adjacent to two tiles and some to three; it is recommended that new tilesets use
 :ref:`iso_corner <iso_corner>` instead.
+
+The four corners are identified using the letters shown in the diagram, which stand for their location in
+isometric mode: up, down, left, and right. The names used in the :file:`.spec` files depends on the number of
+groups listed in ``matches_with`` and, when a single group is listed, of the group matching is performed
+against. This naming scheme is explained in the next sections.
+
+.. _corner-simple:
+
+Without matching
+^^^^^^^^^^^^^^^^
+
+.. warning::
+    Using corner sprites without matching is fully equivalent to a ``single`` sprite, except that performance
+    is likely to be worse and the naming convention is harder to track. Avoid using this mode.
+
+When no matching is performed, four ``corner`` sprites are required for each terrain. They are expected to be
+half the size of a normal tile in both dimensions, and use the following naming scheme::
+
+    t.l<n>.<tag>_cell_<direction>
+
+The value ``<n>`` is replaced with the layer number, and ``<tag>`` with the terrain tag. The last part,
+``<direction>``, indicates which corner the sprite refers to.
+
+.. _corner-same:
+
+Matching with the same group
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. _corner-pair:
+
+Matching a pair of groups
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. _corner-general:
+
+General matching
+^^^^^^^^^^^^^^^^
 
 
 .. _iso_corner:
