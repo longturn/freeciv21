@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="174"
+   height="125"
+   viewBox="0 0 46.037498 33.072915"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="sprite-corners.svg"
+   inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corners.png"
+   inkscape:export-xdpi="199.68005"
+   inkscape:export-ydpi="199.68005"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-global="true"
+     inkscape:zoom="3.1647592"
+     inkscape:cx="80.890831"
+     inkscape:cy="65.249831"
+     inkscape:window-width="1280"
+     inkscape:window-height="967"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     fit-margin-top="5"
+     fit-margin-left="5"
+     fit-margin-right="5"
+     fit-margin-bottom="5"
+     units="px"
+     lock-margins="true" />
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20015"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20011"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect18021"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect18015"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect18009"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17778"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17445"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17231"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17145"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect1407"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect1321"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect1150"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20015-4"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20011-9"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17445-0"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17778-9"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20011-9-1"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20015-4-7"
+       is_visible="true"
+       lpeversion="1" />
+  </defs>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-51.46146,-25.003126)">
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#ff0000;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect1427"
+       width="12.7"
+       height="6.3499999"
+       x="59.398956"
+       y="26.458334"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#00ff00;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect1685"
+       width="12.7"
+       height="6.3499999"
+       x="59.398956"
+       y="33.072914"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#ff00ff;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect1687"
+       width="12.7"
+       height="6.3499999"
+       x="65.881248"
+       y="29.765627"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#00ffff;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect1689"
+       width="12.7"
+       height="6.3499999"
+       x="52.916668"
+       y="29.765625"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 65.748958,26.590623 12.7,6.350003 -12.699999,6.35 -12.700001,-6.350001 z"
+       id="path1148"
+       inkscape:path-effect="#path-effect1150"
+       inkscape:original-d="m 65.748958,26.590623 12.7,6.350003 -12.699999,6.35 -12.700001,-6.350001 z"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 59.398958,29.765623 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       id="path1319"
+       inkscape:path-effect="#path-effect1321"
+       inkscape:original-d="m 59.398958,29.765623 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 72.098958,29.765623 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       id="path1403"
+       inkscape:path-effect="#path-effect1407"
+       inkscape:original-d="m 72.098958,29.765623 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#ff0000;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect3511"
+       width="6.2177081"
+       height="6.2177081"
+       x="83.34375"
+       y="26.590626"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#00ff00;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect3513"
+       width="6.2177081"
+       height="6.2177081"
+       x="89.826042"
+       y="33.072918"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#ff00ff;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect3515"
+       width="6.2177081"
+       height="6.2177081"
+       x="89.826042"
+       y="26.590626"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#00ffff;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect3517"
+       width="6.2177081"
+       height="6.2177081"
+       x="83.34375"
+       y="33.072918"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect3389"
+       width="12.7"
+       height="12.7"
+       x="83.34375"
+       y="26.590626"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="64.939331"
+       y="28.972591"
+       id="text4539"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan4537"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff0000;stroke:none;stroke-width:0.264583px"
+         x="64.939331"
+         y="28.972591">u</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="85.642982"
+       y="30.395332"
+       id="text11333"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan11331"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff0000;stroke:none;stroke-width:0.264583px"
+         x="85.642982"
+         y="30.395332">u</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#00ff00;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="64.939331"
+       y="38.537899"
+       id="text11337"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan11335"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#00ff00;stroke:none;stroke-width:0.264583px"
+         x="64.939331"
+         y="38.537899">d</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#00ff00;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="92.160988"
+       y="37.173958"
+       id="text11879"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan11877"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#00ff00;stroke:none;stroke-width:0.264583px"
+         x="92.160988"
+         y="37.173958">d</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#ff00ff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="73.701775"
+       y="33.662937"
+       id="text11883"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan11881"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff00ff;stroke:none;stroke-width:0.264583px"
+         x="73.701775"
+         y="33.662937">r</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#ff00ff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="92.295929"
+       y="30.421791"
+       id="text12801"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan12799"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff00ff;stroke:none;stroke-width:0.264583px"
+         x="92.295929"
+         y="30.421791">r</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#00ffff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="57.355534"
+       y="33.662937"
+       id="text12805"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan12803"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#00ffff;stroke:none;stroke-width:0.264583px"
+         x="57.355534"
+         y="33.662937">l</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#00ffff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="86.11129"
+       y="37.171513"
+       id="text12929"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan12927"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#00ffff;stroke:none;stroke-width:0.264583px"
+         x="86.11129"
+         y="37.171513">l</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect16839"
+       width="6.3499999"
+       height="6.3499999"
+       x="83.34375"
+       y="26.590626"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect16943"
+       width="6.3499999"
+       height="6.3499999"
+       x="89.693748"
+       y="32.940628"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#ff0000;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect17997"
+       width="12.7"
+       height="6.3499999"
+       x="59.398956"
+       y="43.65625"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#00ff00;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect17999"
+       width="12.7"
+       height="6.3499999"
+       x="59.398956"
+       y="50.270832"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#ff00ff;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect18001"
+       width="12.7"
+       height="6.3499999"
+       x="65.881248"
+       y="46.963543"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#00ffff;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect18003"
+       width="12.7"
+       height="6.3499999"
+       x="52.916668"
+       y="46.963543"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="64.997543"
+       y="46.170509"
+       id="text18025"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan18023"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff0000;stroke:none;stroke-width:0.264583px"
+         x="64.997543"
+         y="46.170509">u</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#00ff00;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="65.008125"
+       y="55.735817"
+       id="text18029"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan18027"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#00ff00;stroke:none;stroke-width:0.264583px"
+         x="65.008125"
+         y="55.735817">d</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#ff00ff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="74.760109"
+       y="50.860855"
+       id="text18033"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan18031"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff00ff;stroke:none;stroke-width:0.264583px"
+         x="74.760109"
+         y="50.860855">r</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#00ffff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="55.768032"
+       y="50.860855"
+       id="text18037"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan18035"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#00ffff;stroke:none;stroke-width:0.264583px"
+         x="55.768032"
+         y="50.860855">l</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#ff0000;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect20017"
+       width="6.2177081"
+       height="6.2177081"
+       x="83.34375"
+       y="43.788544"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#00ff00;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect20019"
+       width="6.2177081"
+       height="6.2177081"
+       x="89.826042"
+       y="50.270836"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#ff00ff;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect20021"
+       width="6.2177081"
+       height="6.2177081"
+       x="89.826042"
+       y="43.788544"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#00ffff;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect20023"
+       width="6.2177081"
+       height="6.2177081"
+       x="83.34375"
+       y="50.270836"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <g
+       id="g20007"
+       transform="rotate(-90,66.312875,49.664585)">
+      <path
+         id="path20001"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.500001;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 54.33998,67.162502 -23.99998,12 V 103.1625 l 24,12 24,-12 V 79.162505 Z"
+         transform="matrix(0.26458333,0,0,0.26458333,51.46146,25.003126)"
+         sodipodi:nodetypes="ccccccc" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 62.663918,53.885704 6.349997,-9.524999 z"
+         id="path17441"
+         inkscape:path-effect="#path-effect17445-0"
+         inkscape:original-d="m 62.663918,53.885704 6.349997,-9.524999 z"
+         inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+         inkscape:export-xdpi="199.68005"
+         inkscape:export-ydpi="199.68005"
+         sodipodi:nodetypes="ccc" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 69.013918,53.885704 -6.350002,-9.525 z"
+         id="path17774"
+         inkscape:path-effect="#path-effect17778-9"
+         inkscape:original-d="m 69.013918,53.885704 -6.350002,-9.525 z"
+         inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+         inkscape:export-xdpi="199.68005"
+         inkscape:export-ydpi="199.68005"
+         sodipodi:nodetypes="ccc" />
+    </g>
+    <g
+       id="g18042"
+       transform="translate(23.880202,1.0153383)">
+      <path
+         id="path17227"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.500001;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 54.33998,67.162502 -23.99998,12 V 103.1625 l 24,12 24,-12 V 79.162505 Z"
+         transform="matrix(0.26458333,0,0,0.26458333,51.46146,25.003126)"
+         sodipodi:nodetypes="ccccccc" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 72.188918,49.123204 -12.7,5e-6 z"
+         id="path20003"
+         inkscape:path-effect="#path-effect20011-9-1"
+         inkscape:original-d="m 72.188918,49.123204 -12.7,5e-6 z"
+         inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+         inkscape:export-xdpi="199.68005"
+         inkscape:export-ydpi="199.68005"
+         sodipodi:nodetypes="ccc" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 65.838918,55.473204 v -12.7 z"
+         id="path20005"
+         inkscape:path-effect="#path-effect20015-4-7"
+         inkscape:original-d="m 65.838918,55.473204 v -12.7 z"
+         inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+         inkscape:export-xdpi="199.68005"
+         inkscape:export-ydpi="199.68005"
+         sodipodi:nodetypes="ccc" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="86.17215"
+       y="48.122417"
+       id="text20029"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan20027"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff0000;stroke:none;stroke-width:0.264583px"
+         x="86.17215"
+         y="48.122417">u</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#00ff00;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="91.631821"
+       y="53.842709"
+       id="text20033"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan20031"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#00ff00;stroke:none;stroke-width:0.264583px"
+         x="91.631821"
+         y="53.842709">d</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#ff00ff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="91.766762"
+       y="48.148876"
+       id="text20037"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan20035"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff00ff;stroke:none;stroke-width:0.264583px"
+         x="91.766762"
+         y="48.148876">r</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#00ffff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="86.640457"
+       y="53.840263"
+       id="text20041"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan20039"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#00ffff;stroke:none;stroke-width:0.264583px"
+         x="86.640457"
+         y="53.840263">l</tspan></text>
+  </g>
+</svg>

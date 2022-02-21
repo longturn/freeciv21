@@ -140,6 +140,38 @@ With these settings, both hills and mountains will match adjacent tiles if they 
 
   Hills and mountains in ``amplio2`` use the pattern described above.
 
+
+Sprite type ``corner``
+----------------------
+
+The ``corner`` sprite type divides each tile in four smaller parts that are adjacent to only three tiles.
+This allows matching with diagonal tiles, which would be impractical in ``single`` mode due to the large
+number of sprites required. Corner mode was developed primarily for square isometric tilesets, but it can
+also be used with other topologies, as shown in the diagram below:
+
+.. figure:: /_static/images/tileset-reference/sprite-corners.png
+    :alt: A diagram showing how the corners are defined
+    :align: center
+
+    Definition of the corners for the four tileset topologies: square isometric (top left), square (top
+    right), hexagonal isometric (bottom left), and hexagonal (bottom right).
+
+For square topologies, the corner sprites (colored rectangles) cover a slice of the tile area adjacent to
+three other tiles. Matching takes place with respect to each of them, which enables complicated designs while
+requiring comparatively small numbers of small sprites. For isometric hexagonal tilesets, some slices are
+adjacent to two tiles and some to three; it is recommended that new tilesets use
+:ref:`iso_corner <iso_corner>` instead.
+
+
+.. _iso_corner:
+
+Sprite type ``iso_corner``
+--------------------------
+
+.. todo::
+    Documentation for this mode has yet to be written.
+
+
 Terrain Options
 ---------------
 
