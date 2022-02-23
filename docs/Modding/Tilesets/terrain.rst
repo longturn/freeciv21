@@ -255,9 +255,77 @@ This requires 96 sprites, 32 for each tile type.
 Matching a pair of groups
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+This mode is used when a single matching group is specified in the ``matches_with`` list, and it is different
+from ``match_type``: a neighbor tile matches only if it is in the specified group. This can be used in a
+similar role as :ref:`matching with the same group <corner-same>`, but is sometimes more convenient
+(especially when a layer starts to have many groups). This mode requires 32 sprites per tag and uses the
+following naming convention:
+
 .. code-block:: xml
 
     t.l<n>.<tag>_cell_<direction>_<g>_<g>_<g>
+
+The value ``<n>`` is replaced with the layer number, and ``<tag>`` with the terrain tag. Sprites must be
+provided for each of the four possible values of ``<direction>``: ``u``, ``d``, ``l``, and ``r``, that
+indicate which corner the sprites are for. The three remaining parts, ``<g>``, each correspond to the first
+letter of a matching group of one of the adjacent tiles, counting clockwise. If there was a match, the first
+letter of the group in ``matches_with`` is used; otherwise, it is the first letter of ``match_type``.
+
+.. warning::
+    Extra care is needed when drawing sprites for this mode; see the example for guidance.
+
+Example
+"""""""
+
+Suppose that you have a tileset where mountains are drawn as solid rock. It would then make sense to draw
+cliffs instead of beaches where the mountains meet water, as below:
+
+.. figure:: /_static/images/tileset-reference/example-corner-pair-1.png
+    :alt: The meeting point of four tiles, from left to right and top to bottom: mountains, water, plains,
+        and water. A cliff is drawn between the mountains and the water.
+    :align: center
+
+    Cliffs
+
+This can be achieved by drawing the mountains and the sea normally in the first layer, and overlaying the
+cliffs in the second layer. In this example, the cliffs are drawn on top of the water (the mountains advance
+into the sea):
+
+.. code-block:: ini
+
+    [layer2]
+    match_types = "water", "mountains"
+
+    [tile_coast]
+    tag = "coast"
+    num_layers = 2
+    layer1_match_type = "water"
+    layer1_match_with = "mountains"
+    layer1_sprite_type = "corner"
+
+    [tile_mountains]
+    tag = "mountains"
+    num_layers = 1
+    layer1_match_type = "mountains"
+
+The sprite shown above would be called ``t.l1.coast_cell_l_w_w_m`` (left side, water, water, and mountains
+when enumerating clockwise): even though the tile on the left is not water, it is still identified as such
+because it is not in the group given in ``match_with``.
+
+Because the tile on the left is identified with water, there is no way to distinguish between the following
+situations:
+
+.. figure:: /_static/images/tileset-reference/example-corner-pair-2.png
+    :alt: On the left, the same drawing as above. On the right, the same drawing with water instead of the
+        plains.
+    :align: center
+
+    Indistinguishable cases when using pair matching.
+
+Because of this, sprites need to be designed to work in several cases (the tile at the bottom could also be
+either land or water). In the example above, the cliff vanishes at the corner, which allows it to merge with
+the land and is also a plausible behavior when there is only water around.
+
 
 .. _corner-general:
 

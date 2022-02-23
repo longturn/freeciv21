@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="321.05649"
+   height="64.929802"
+   viewBox="0 0 84.946194 17.179342"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="example-corner-pair-2.svg"
+   inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/example-corner-pair-2.png"
+   inkscape:export-xdpi="199.68005"
+   inkscape:export-ydpi="199.68005"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-global="true"
+     inkscape:zoom="2"
+     inkscape:cx="181"
+     inkscape:cy="7.75"
+     inkscape:window-width="1280"
+     inkscape:window-height="967"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     fit-margin-top="5"
+     fit-margin-left="5"
+     fit-margin-right="5"
+     fit-margin-bottom="5"
+     units="px"
+     lock-margins="true" />
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57490"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57476"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57466"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57456"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57448"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57440"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57432"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57424"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57418"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57412"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57406"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57400"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect57394"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect50167"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect49132"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect48689"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect48233"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect47676"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect42604"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect38497"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect37229"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect34621"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect33532"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect31538"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect30718"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect30024"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect29861"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect29585"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect28296"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect28290"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect28228"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect28222"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect27666"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect27013"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect25264"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect23981"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect23029"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect23023"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect23017"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20015"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20011"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect18021"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect18015"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect18009"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17778"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17445"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17231"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17145"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect1407"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect1321"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect1150"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20015-4"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20011-9"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17445-0"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17778-9"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20011-9-1"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20015-4-7"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect25264-7"
+       is_visible="true"
+       lpeversion="1" />
+  </defs>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-38.99646,-23.493362)">
+    <path
+       style="fill:#ccffaa;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 46.698958,29.765622 6.35,3.175003 6.35,-3.174997 -6.35,-3.175003 z"
+       id="path48687"
+       inkscape:path-effect="#path-effect48689"
+       inkscape:original-d="m 46.698958,29.765622 6.35,3.175003 6.35,-3.174997 -6.35,-3.175003 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:#80e5ff;fill-rule:evenodd;stroke:none;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 53.048958,32.940624 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       id="path29857"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"
+       inkscape:original-d="m 53.048958,32.940624 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       inkscape:path-effect="#path-effect29861" />
+    <path
+       style="fill:#ccffaa;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 52.846093,32.763985 c -0.766428,0.592246 -1.559768,1.149663 -2.376752,1.669955 -1.094566,0.697068 -2.23159,1.327456 -3.402674,1.886509 l -6.717709,-3.379825 6.35,-3.175002 z"
+       id="path48229"
+       inkscape:path-effect="#path-effect48233"
+       inkscape:original-d="m 52.846093,32.763985 c -0.744708,0.643745 -1.370586,1.277031 -2.376752,1.669955 -1.054742,0.411892 -1.684608,1.065407 -3.402674,1.886509 l -6.717709,-3.379825 6.35,-3.175002 z"
+       sodipodi:nodetypes="csc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#00ff00;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 52.846093,32.763985 c -0.766428,0.592246 -1.559768,1.149663 -2.376752,1.669955 -1.094566,0.697068 -2.23159,1.327456 -3.402674,1.886509"
+       id="path47672"
+       inkscape:path-effect="#path-effect47676"
+       inkscape:original-d="m 52.846093,32.763985 c -0.744708,0.643745 -1.370586,1.277031 -2.376752,1.669955 -1.054742,0.411892 -1.684608,1.065407 -3.402674,1.886509"
+       sodipodi:nodetypes="csc" />
+    <path
+       style="fill:#00ccff;fill-rule:evenodd;stroke:none;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 59.398958,29.765623 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       id="path29581"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"
+       inkscape:original-d="m 59.398958,29.765623 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       inkscape:path-effect="#path-effect29585" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#ffff00;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 53.056567,32.857529 c -0.758985,0.620045 -1.550823,1.199872 -2.371084,1.736236 -1.074536,0.702633 -2.197871,1.330623 -3.35923,1.877948"
+       id="path25260"
+       inkscape:path-effect="#path-effect25264-7"
+       inkscape:original-d="m 53.056567,32.857529 c -0.744708,0.643745 -1.364918,1.343312 -2.371084,1.736236 -1.054742,0.411892 -1.641164,1.056846 -3.35923,1.877948"
+       sodipodi:nodetypes="csc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#808080;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:0.264584, 0.132292;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 59.398958,29.765625 -6.35,-3.175 -6.35,3.174997"
+       id="path23013"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 59.398958,29.765623 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       id="path1319"
+       inkscape:path-effect="#path-effect1321"
+       inkscape:original-d="m 59.398958,29.765623 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#808080;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:0.264584, 0.132292;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 59.398959,36.115626 -6.350001,3.175001 -6.35,-3.175003"
+       id="path23019"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 72.098958,29.765623 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       id="path1403"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"
+       inkscape:original-d="m 72.098958,29.765623 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       inkscape:path-effect="#path-effect1407" />
+    <path
+       style="fill:#bec8b7;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 46.698958,29.765622 6.254274,3.181983 0.09573,-6.35698 -1.642203,-0.08662 z"
+       id="path49128"
+       inkscape:path-effect="#path-effect49132"
+       inkscape:original-d="m 46.698958,29.765622 6.254274,3.181983 0.09573,-6.35698 -1.642203,-0.08662 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#808080;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:0.264584, 0.132292;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 46.698958,29.765622 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       id="path23025"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:#e3dedb;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 65.748958,26.590623 -12.692391,6.266906 -0.0076,-6.266904 7.931874,-1.774346 z"
+       id="path50163"
+       inkscape:path-effect="#path-effect50167"
+       inkscape:original-d="m 65.748958,26.590623 -12.692391,6.266906 -0.0076,-6.266904 7.931874,-1.774346 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="color:#000000;fill:#4d4d4d;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 61.003002,30.546403 -0.85134,0.212207 -1.016955,0.345696 -0.343353,0.205656 -1.183652,0.278029 -1.043733,0.220738 -3.515011,1.131895 v 0 l 3.78618,-1.049836 1.013547,-0.279862 1.223709,-0.216008 0.499972,-0.169819 0.814206,-0.416413 0.826345,-0.102861 z"
+       id="path38495"
+       sodipodi:nodetypes="ccccccccccccccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 65.748958,26.590623 12.7,6.350003 -12.699999,6.35 -12.700001,-6.350001 z"
+       id="path1148"
+       inkscape:path-effect="#path-effect1150"
+       inkscape:original-d="m 65.748958,26.590623 12.7,6.350003 -12.699999,6.35 -12.700001,-6.350001 z"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#ff00ff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="61.315136"
+       y="33.917244"
+       id="text12805"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan12803"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff00ff;stroke:none;stroke-width:0.264583px"
+         x="61.315136"
+         y="33.917244">l</tspan></text>
+    <path
+       style="fill:#c8beb7;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 53.048958,32.940624 3.515012,-1.131899 -0.653811,-1.755697 -1.206233,1.354226 z"
+       id="path30022"
+       inkscape:path-effect="#path-effect30024"
+       inkscape:original-d="m 53.048958,32.940624 3.515012,-1.131899 -0.653811,-1.755697 -1.206233,1.354226 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       id="path31534"
+       style="fill:#ac9d93;fill-rule:evenodd;stroke:none;stroke-width:0.999999px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 35.210938,41.105469 -4.311474,0.320047 1.057133,3.551117 3.217231,-0.802805 z"
+       sodipodi:nodetypes="ccccc"
+       transform="matrix(0.26458333,0,0,0.26458333,51.69646,18.858543)" />
+    <path
+       id="path32024"
+       style="fill:#ac9d93;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 59.204788,30.115579 -0.381239,0.259051 -0.436937,0.48941 0.404742,0.445922 0.343353,-0.205656 z"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       id="path32587"
+       style="fill:#c8b7b7;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 57.047131,29.870625 -1.136972,0.182403 1.697547,1.534963 1.183648,-0.278029 -0.809483,-0.891844 z"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       id="rect34535"
+       style="fill:#00aa00;fill-opacity:1;stroke:none;stroke-width:0.500001;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:0.999999, 0.500001;stroke-dashoffset:0"
+       d="m 26.93703,43.525369 -6.714021,-1.904901 3.532874,2.069266 1.529733,1.685373 z"
+       sodipodi:nodetypes="ccccc"
+       transform="matrix(0.26458333,0,0,0.26458333,51.69646,18.858543)" />
+    <path
+       id="path32391"
+       style="fill:#c8b7b7;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 59.871943,29.819044 -0.749995,-0.0182 0.08284,0.314736 -0.07006,0.988725 1.016936,-0.345694 z"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       id="path33129"
+       style="fill:#ac9d93;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 55.910159,30.053028 v 0 l 0.653807,1.755697 1.043736,-0.220734 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:#00d400;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 54.703926,31.407254 1.206233,-1.354226 -0.820901,0.502702 z"
+       id="path37225"
+       inkscape:path-effect="#path-effect37229"
+       inkscape:original-d="m 54.703926,31.407254 1.206233,-1.354226 -0.820901,0.502702 z"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 60.576693,31.052389 -0.567165,0.242148 1.407141,-0.325492 z"
+       id="path40788"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 58.419561,31.513551 -0.269306,0.145892 1.407141,-0.325492 z"
+       id="path41306"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 56.859011,31.989243 -0.415937,0.184107 1.407141,-0.325492 z"
+       id="path41308"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 56.058159,32.401692 -0.854127,0.284301 1.407141,-0.325492 z"
+       id="path41310"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 54.249192,32.743074 -0.639698,0.213309 1.407141,-0.325492 z"
+       id="path41312"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 59.404693,31.593082 -0.269306,0.145892 1.407141,-0.325492 z"
+       id="path41565"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 57.621344,32.143293 -0.269306,0.145892 1.407141,-0.325492 z"
+       id="path41567"
+       sodipodi:nodetypes="cccc" />
+    <path
+       id="path53681"
+       style="fill:#917c6f;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 59.121948,29.800843 -0.606572,0.03736 0.308173,0.536426 0.381239,-0.259051 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       id="path53215"
+       style="fill:#c8b7b7;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 58.515376,29.838204 -1.468245,0.03242 1.776418,0.504005 z"
+       sodipodi:nodetypes="cccc" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#ff00ff;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect1689"
+       width="12.700001"
+       height="6.3499999"
+       x="52.953232"
+       y="29.772606"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="56.518372"
+       y="28.129589"
+       id="text23784"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan23782"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#000000;stroke:none;stroke-width:0.264583px"
+         x="56.518372"
+         y="28.129589">m</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="51.901989"
+       y="38.148006"
+       id="text55539"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan55537"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#000000;stroke:none;stroke-width:0.264583px"
+         x="51.901989"
+         y="38.148006">w</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="45.569622"
+       y="33.730949"
+       id="text56728"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan56726"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#000000;stroke:none;stroke-width:0.264583px"
+         x="45.569622"
+         y="33.730949">w</tspan></text>
+    <path
+       style="fill:#ccffaa;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 90.840178,29.765622 6.35,3.175003 6.349982,-3.174997 -6.349982,-3.175003 z"
+       id="path57390"
+       inkscape:path-effect="#path-effect57394"
+       inkscape:original-d="m 90.840178,29.765622 6.35,3.175003 6.349982,-3.174997 -6.349982,-3.175003 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:#80e5ff;fill-rule:evenodd;stroke:none;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 90.840181,29.765622 12.699979,6.350005 -6.349982,3.174999 -12.7,-6.350002 z"
+       id="path57396"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"
+       inkscape:original-d="m 90.840181,29.765622 12.699979,6.350005 -6.349982,3.174999 -12.7,-6.350002 z"
+       inkscape:path-effect="#path-effect57400"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:#00ccff;fill-rule:evenodd;stroke:none;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 103.54016,29.765623 6.35,3.175003 -6.35,3.174999 -6.349982,-3.175 z"
+       id="path57414"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"
+       inkscape:original-d="m 103.54016,29.765623 6.35,3.175003 -6.35,3.174999 -6.349982,-3.175 z"
+       inkscape:path-effect="#path-effect57418" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#808080;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:0.264584, 0.132292;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 103.54016,29.765625 -6.349982,-3.175 -6.35,3.174997"
+       id="path57426"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:#bec8b7;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 90.840178,29.765622 6.25427,3.181983 0.0957,-6.35698 -1.642199,-0.08662 z"
+       id="path57472"
+       inkscape:path-effect="#path-effect57476"
+       inkscape:original-d="m 90.840178,29.765622 6.25427,3.181983 0.0957,-6.35698 -1.642199,-0.08662 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 103.54016,29.765623 6.35,3.175003 -6.35,3.174999 -6.349982,-3.175 z"
+       id="path57428"
+       inkscape:path-effect="#path-effect57432"
+       inkscape:original-d="m 103.54016,29.765623 6.35,3.175003 -6.35,3.174999 -6.349982,-3.175 z"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#808080;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:0.264584, 0.132292;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 103.54016,36.115626 -6.349982,3.175001 -6.35,-3.175003"
+       id="path57434"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 116.24016,29.765623 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       id="path57436"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"
+       inkscape:original-d="m 116.24016,29.765623 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       inkscape:path-effect="#path-effect57440" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#808080;stroke-width:0.132292;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:0.264584, 0.132292;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 90.840178,29.765622 6.35,3.175003 -6.35,3.174999 -6.35,-3.175 z"
+       id="path57442"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:#e3dedb;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 109.89016,26.590623 -12.692372,6.266906 -0.008,-6.266904 7.931852,-1.774346 z"
+       id="path57444"
+       inkscape:path-effect="#path-effect57448"
+       inkscape:original-d="m 109.89016,26.590623 -12.692372,6.266906 -0.008,-6.266904 7.931852,-1.774346 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="color:#000000;fill:#4d4d4d;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 105.1442,30.546403 -0.85134,0.212207 -1.01695,0.345696 -0.34336,0.205656 -1.18365,0.278029 -1.04373,0.220738 -3.514992,1.131895 v 0 l 3.786162,-1.049836 1.01354,-0.279862 1.22371,-0.216008 0.49998,-0.169819 0.8142,-0.416413 0.82635,-0.102861 z"
+       id="path57450"
+       sodipodi:nodetypes="ccccccccccccccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 109.89016,26.590623 12.7,6.350003 -12.7,6.35 -12.699982,-6.350001 z"
+       id="path57452"
+       inkscape:path-effect="#path-effect57456"
+       inkscape:original-d="m 109.89016,26.590623 12.7,6.350003 -12.7,6.35 -12.699982,-6.350001 z"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#ff00ff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="105.45636"
+       y="33.917244"
+       id="text57460"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan57458"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff00ff;stroke:none;stroke-width:0.264583px"
+         x="105.45636"
+         y="33.917244">l</tspan></text>
+    <path
+       style="fill:#c8beb7;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 97.190178,32.940624 3.514992,-1.131899 -0.65381,-1.755697 -1.206221,1.354226 z"
+       id="path57462"
+       inkscape:path-effect="#path-effect57466"
+       inkscape:original-d="m 97.190178,32.940624 3.514992,-1.131899 -0.65381,-1.755697 -1.206221,1.354226 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       id="path57468"
+       style="fill:#ac9d93;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 105.15389,29.734365 -1.14075,0.08468 0.2797,0.939566 0.85123,-0.212408 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       id="path57470"
+       style="fill:#ac9d93;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 103.34599,30.115579 -0.38124,0.259051 -0.43694,0.48941 0.40474,0.445922 0.34336,-0.205656 z"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       id="path57478"
+       style="fill:#c8b7b7;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 101.18833,29.870625 -1.13697,0.182403 1.69755,1.534963 1.18364,-0.278029 -0.80948,-0.891844 z"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       id="path57480"
+       style="fill:#00aa00;fill-opacity:1;stroke:none;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:0.264583, 0.132292;stroke-dashoffset:0"
+       d="m 102.96475,30.37463 -1.77642,-0.504005 0.93474,0.547493 0.40474,0.445922 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       id="path57482"
+       style="fill:#c8b7b7;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 104.01314,29.819044 -0.74999,-0.0182 0.0828,0.314736 -0.0701,0.988725 1.01693,-0.345694 z"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       id="path57484"
+       style="fill:#ac9d93;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 100.05136,30.053028 v 0 l 0.65381,1.755697 1.04373,-0.220734 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:#00d400;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 98.845139,31.407254 1.206221,-1.354226 -0.820894,0.502702 z"
+       id="path57486"
+       inkscape:path-effect="#path-effect57490"
+       inkscape:original-d="m 98.845139,31.407254 1.206221,-1.354226 -0.820894,0.502702 z"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 104.71789,31.052389 -0.56716,0.242148 1.40714,-0.325492 z"
+       id="path57492"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 102.56076,31.513551 -0.26931,0.145892 1.40715,-0.325492 z"
+       id="path57494"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 101.00021,31.989243 -0.41594,0.184107 1.40714,-0.325492 z"
+       id="path57496"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 100.19936,32.401692 -0.854124,0.284301 1.407134,-0.325492 z"
+       id="path57498"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 98.390402,32.743074 -0.639697,0.213309 1.407131,-0.325492 z"
+       id="path57500"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 103.54589,31.593082 -0.2693,0.145892 1.40714,-0.325492 z"
+       id="path57502"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+       d="m 101.76254,32.143293 -0.2693,0.145892 1.40714,-0.325492 z"
+       id="path57504"
+       sodipodi:nodetypes="cccc" />
+    <path
+       id="path57506"
+       style="fill:#917c6f;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 103.26315,29.800843 -0.60657,0.03736 0.30817,0.536426 0.38124,-0.259051 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       id="path57508"
+       style="fill:#c8b7b7;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 102.65658,29.838204 -1.46825,0.03242 1.77642,0.504005 z"
+       sodipodi:nodetypes="cccc" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#ff00ff;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect57510"
+       width="12.700001"
+       height="6.3499999"
+       x="97.094444"
+       y="29.772606"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="100.6596"
+       y="28.129589"
+       id="text57514"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan57512"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#000000;stroke:none;stroke-width:0.264583px"
+         x="100.6596"
+         y="28.129589">m</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="96.043205"
+       y="38.148006"
+       id="text57518"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan57516"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#000000;stroke:none;stroke-width:0.264583px"
+         x="96.043205"
+         y="38.148006">w</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="89.710838"
+       y="33.730949"
+       id="text57522"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan57520"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#000000;stroke:none;stroke-width:0.264583px"
+         x="89.710838"
+         y="33.730949">w</tspan></text>
+  </g>
+</svg>
