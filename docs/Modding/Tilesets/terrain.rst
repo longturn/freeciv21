@@ -31,7 +31,7 @@ the corresponding sections.
 +--------------------------------+--------------------------------+--------------------------------+                                +
 | One, different from            | Not implemented                | ``t.l1.coast_cell_u_g_g_g``    | ``t.l0.hex_cell_right_g_g_g``, |
 | ``match_type``                 |                                | (:ref:`doc <corner-pair>`)     | ``t.l0.hex_cell_left_g_g_g``   |
-+--------------------------------+                                +--------------------------------+                                +
++--------------------------------+                                +--------------------------------+ (:ref:`doc <hex_corner>`)      +
 | Two or more                    |                                | ``t.l0.cellgroup_g_g_g_g``     |                                |
 |                                |                                | (:ref:`doc <corner-general>`)  |                                |
 +--------------------------------+--------------------------------+--------------------------------+--------------------------------+
@@ -364,8 +364,75 @@ from top (referring to the above schema, ``u``, ``r``, ``d``, and ``l``).
 Sprite type ``hex_corner``
 --------------------------
 
-.. todo::
-    Documentation for this mode has yet to be written.
+.. versionadded:: 3.0-beta1
+
+    Use the ``+hex_corner`` option in tilesets requiring this feature.
+
+The ``hex_corner`` sprite type provides functionality similar to ``corner``, using a geometry optimized for
+isometric hexagonal tilesets. Hexagonal corner sprites cover one half of the height of the hexagons and are
+centered vertically within the tiles. They come in two types: "left" corners cover the left hand side of an
+hexagon and the right hand side of the border between two others; "right" corners have a similar geometry,
+but are flipped horizontally. When drawn in a checkerboard pattern, left and right sprites reconstruct the
+complete hexagons.
+
+.. figure:: /_static/images/tileset-reference/sprite-hex-corners.png
+    :alt: An illustration of the geometry explained above.
+    :align: center
+
+    The geometry of hexagonal corner sprites.
+
+Matching for ``hex_corner`` sprites is always performed based on terrain groups, as in
+:ref:`the general mode for square tilesets <corner-general>`. The naming convention for "left" sprites is as
+follows:
+
+.. code-block:: xml
+
+    t.l<n>.hex_cell_left_<g>_<g>_<g>
+
+For "right" sprites, simply replace ``left`` with ``right``. The value of ``<n>`` gives the layer number, and
+the three ``<g>`` each correspond to the first letter of a matching group. For "left" sprites, the first
+group corresponds to the tile of the right, the second to the tile at the top left, and the third group is the
+one of the tile at the bottom left. For "right" sprites, the tile on the left comes first, followed by the
+one at the top right and the tile at the bottom right. The order is indicated by the letters ``a``, ``b``, and
+``c`` in the figure above.
+
+Example
+^^^^^^^
+
+.. figure:: /_static/images/tileset-reference/example-hex-corners.png
+    :alt: Four hexagons, two of which are water and the others land. The coast is highlighted and the
+        boundaries of two corner sprites are shown.
+    :align: center
+
+    Coasts using ``hex_corner`` sprites.
+
+To draw coasts using ``hex_corner``, one starts by defining two matching groups ``land`` and ``water``:
+
+.. code-block:: ini
+
+    [layer0]
+    match_types = "land", "water"
+
+Each land terrain must be declared within the ``land`` matching group, while seas and lakes go to ``water``:
+
+.. code-block:: ini
+
+    [tile_coast]
+    tag = "coast"
+    num_layers = 1
+    layer0_match_type = "water"
+    layer0_match_with = "land", "water"
+
+    [tile_plains]
+    tag = "plains"
+    num_layers = 1
+    layer0_match_type = "land"
+    layer0_match_with = "land", "water"
+
+    ; etc
+
+With these settings, the two sprites shown in the figure are called ``t.l0.hex_cell_right_w_w_l`` for the one
+above (white), and ``t.l0.hex_cell_left_l_w_l`` for the one below (red).
 
 
 Terrain Options
