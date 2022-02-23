@@ -37,13 +37,6 @@ Welcome to the documentation of the Freeciv21 project brought to you by the
   :hidden:
 
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
 .. role:: improvement
