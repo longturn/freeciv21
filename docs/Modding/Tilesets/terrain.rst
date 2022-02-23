@@ -1,3 +1,8 @@
+..
+    SPDX-License-Identifier:  GPL-3.0-or-later
+    SPDX-FileCopyrightText: 1999-2021 Freeciv and Freeciv21 contributors
+    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+
 Terrain
 *******
 
