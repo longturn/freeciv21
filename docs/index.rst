@@ -34,7 +34,7 @@ Welcome to the documentation of the Freeciv21 project brought to you by the
   Contributing/index.rst
   Coding/index.rst
   :maxdepth: 2
-  :caption: Contents:
+  :hidden:
 
 
 Indices and tables
