@@ -165,7 +165,7 @@ For square topologies, the corner sprites (colored rectangles) cover a slice of 
 three other tiles. Matching takes place with respect to each of them, which enables complicated designs while
 requiring comparatively small numbers of small sprites. For isometric hexagonal tilesets, some slices are
 adjacent to two tiles and some to three; it is recommended that new tilesets use
-:ref:`iso_corner <iso_corner>` instead.
+:ref:`hex_corner <hex_corner>` instead.
 
 The four corners are identified using the letters shown in the diagram, which stand for their location in
 isometric mode: up, down, left, and right. The names used in the :file:`.spec` files depends on the number of
@@ -359,9 +359,9 @@ from top (referring to the above schema, ``u``, ``r``, ``d``, and ``l``).
     256; and to use four groups, one would need to draw 625 sprites.
 
 
-.. _iso_corner:
+.. _hex_corner:
 
-Sprite type ``iso_corner``
+Sprite type ``hex_corner``
 --------------------------
 
 .. todo::
