@@ -20,9 +20,9 @@ import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'longturn-manuals'
-copyright = '2022, Longturn.net'
-author = 'Longturn.net'
+project = 'Freeciv21 manual'
+copyright = '1999-2022, Freeciv and Freeciv21 contributors'
+author = 'Freeciv and Freeciv21 contributors'
 
 # The short X.Y version
 version = ''
