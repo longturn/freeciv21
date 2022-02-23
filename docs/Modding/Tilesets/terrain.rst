@@ -332,9 +332,31 @@ the land and is also a plausible behavior when there is only water around.
 General matching
 ^^^^^^^^^^^^^^^^
 
+When more than one element is present in the ``matches_with`` list, general matching is used. This mode uses
+sprites that cover the intersection between four tiles:
+
+.. figure:: /_static/images/tileset-reference/sprite-corner-general.png
+    :alt: The meeting point of four tiles, with the area covered by the sprites highlighted.
+    :align: center
+
+The sprites have the same size as a normal tile, but are drawn with an offset equal to one half of a tile,
+such that they are centered around the meeting point of the tiles.
+
+The sprite naming convention uses only the names of the four groups the tiles are in. Unlike with other
+modes, the terrain tag is not used:
+
 .. code-block:: xml
 
     t.l<n>.cellgroup_<g>_<g>_<g>_<g>
+
+The value ``<n>`` is replaced with the layer number. The four remaining parts, ``<g>``, each correspond to
+the first letter of one of the groups specified in ``matches_with``, specified in clockwise order starting
+from top (referring to the above schema, ``u``, ``r``, ``d``, and ``l``).
+
+.. note::
+    General matching is a very flexible mode that lets one draw very complex terrain, but this comes at the
+    cost of a large number of sprites: for three groups, 81 sprites are needed; for four groups, it raises to
+    256; and to use four groups, one would need to draw 625 sprites.
 
 
 .. _iso_corner:
