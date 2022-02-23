@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="94.447289"
+   height="130.5"
+   viewBox="0 0 24.989179 34.528123"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="example-hex-corners.svg"
+   inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/example-hex-corners.png"
+   inkscape:export-xdpi="199.68005"
+   inkscape:export-ydpi="199.68005"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-global="true"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="6.7175144"
+     inkscape:cy="44.724504"
+     inkscape:window-width="1280"
+     inkscape:window-height="967"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     fit-margin-top="5"
+     fit-margin-left="5"
+     fit-margin-right="5"
+     fit-margin-bottom="5"
+     units="px"
+     lock-margins="true"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true" />
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20015"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20011"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect18021"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect18015"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect18009"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17778"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17445"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17231"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17145"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect1407"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect1321"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect1150"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20015-4"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20011-9"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17445-0"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect17778-9"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20011-9-1"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect20015-4-7"
+       is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect25264"
+       is_visible="true"
+       lpeversion="1" />
+  </defs>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-96.108111,-36.049477)">
+    <path
+       id="path63065"
+       style="fill:#b3ff80;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+       d="m 107.0152,56.488546 3.175,6.349994 h 6.35001 l 3.175,-6.35 -3.175,-6.35 h -6.35 z"
+       sodipodi:nodetypes="ccccccc" />
+    <path
+       id="path64961"
+       style="fill:#b3ff80;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 97.49019,62.838546 3.175,6.349994 h 6.35001 l 3.175,-6.35 -3.175,-6.35 h -6.35 z"
+       sodipodi:nodetypes="ccccccc" />
+    <path
+       id="path63063"
+       style="fill:#aaeeff;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+       d="m 107.0152,43.788546 3.175,6.349994 h 6.35001 l 3.175,-6.35 -3.175,-6.35 h -6.35 z"
+       sodipodi:nodetypes="ccccccc" />
+    <path
+       id="path63061"
+       style="fill:#aaeeff;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+       d="m 97.50585,50.138545 3.175,6.349995 h 6.35001 l 3.175,-6.35 -3.175,-6.35 h -6.35001 z"
+       sodipodi:nodetypes="ccccccc" />
+    <path
+       style="fill:#b3ff80;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="m 100.6652,56.48854 c 1.16114,-0.0402 2.75619,-0.07917 3.30038,-0.06615 0,0 2.07283,0.139323 2.7369,-0.507618 0.66407,-0.646941 1.45673,-1.631504 1.91588,-2.601236 0.50923,-1.050894 1.13158,-2.05818 1.88853,-2.610053 0.75695,-0.551873 2.14119,-0.565963 2.99076,-0.566472 0.82858,-4.97e-4 2.19303,-0.0057 3.04256,0.0015 l -6.90218,11.63033 z"
+       id="path69681"
+       sodipodi:nodetypes="cczczsc" />
+    <path
+       id="path69947"
+       style="fill:#66ff00;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.999999px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 65.697266 53.244141 C 62.484152 53.246344 57.273261 53.304468 54.419922 55.384766 C 51.559008 57.470585 49.207852 61.278117 47.283203 65.25 C 45.547833 68.915129 42.550886 72.6369 40.041016 75.082031 C 37.531145 77.527163 29.697266 77 29.697266 77 L 29.697266 88.5 L 65.697266 88.5 L 65.697266 53.244141 z "
+       transform="matrix(0.26458333,0,0,0.26458333,96.108111,36.049477)" />
+    <path
+       style="fill:#aaeeff;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="m 100.56598,56.223956 c 1.16114,-0.0402 2.85541,-0.07917 3.3996,-0.06615 0,0 1.94054,0.172396 2.60461,-0.474545 0.66407,-0.646941 1.42366,-1.631504 1.88281,-2.601236 0.50923,-1.050894 1.23079,-2.05818 1.98774,-2.610053 0.75695,-0.551873 2.20734,-0.565963 3.05691,-0.566472 0.82858,-4.97e-4 2.29225,-0.0057 3.14178,0.0015 l -1.91593,-4.2953 -12.02712,0.183872 z"
+       id="path70414"
+       sodipodi:nodetypes="cczczsc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#00ccff;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 100.56598,56.223956 c 1.16114,-0.0402 2.85541,-0.07917 3.3996,-0.06615 0,0 1.94054,0.172396 2.60461,-0.474545 0.66407,-0.646941 1.42366,-1.631504 1.88281,-2.601236 0.50923,-1.050894 1.23079,-2.05818 1.98774,-2.610053 0.75695,-0.551873 2.20734,-0.565963 3.05691,-0.566472 0.82858,-4.97e-4 2.29225,-0.0057 3.14178,0.0015"
+       id="path69105"
+       sodipodi:nodetypes="cczczsc" />
+    <path
+       id="path70703"
+       style="fill:#00ccff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.999999px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 29.697266 41.5 L 29.697266 76 C 29.697266 76 37.031145 76.652163 39.541016 74.207031 C 42.050886 71.7619 44.922833 68.040129 46.658203 64.375 C 48.582852 60.403117 51.309008 56.595585 54.169922 54.509766 C 57.023318 52.429427 62.482861 52.371342 65.697266 52.369141 L 65.697266 41.5 L 29.697266 41.5 z "
+       transform="matrix(0.26458333,0,0,0.26458333,96.108111,36.049477)" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#ffff00;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 100.6652,56.48854 c 1.16114,-0.0402 2.75619,-0.07917 3.30038,-0.06615 0,0 2.07283,0.139323 2.7369,-0.507618 0.66407,-0.646941 1.45673,-1.631504 1.91588,-2.601236 0.50923,-1.050894 1.13158,-2.05818 1.88853,-2.610053 0.75695,-0.551873 2.14119,-0.565963 2.99076,-0.566472 0.82858,-4.97e-4 2.19303,-0.0057 3.04256,0.0015"
+       id="path25260"
+       sodipodi:nodetypes="cczczsc" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#ffffff;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect63057"
+       width="9.5249996"
+       height="6.0854168"
+       x="103.96558"
+       y="47.029686"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <rect
+       style="fill:none;fill-opacity:0.45;stroke:#ff0000;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect63059"
+       width="9.5250006"
+       height="6.0854168"
+       x="103.96558"
+       y="53.379684"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#ff0000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="109.76418"
+       y="57.1791"
+       id="text63071"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan63069"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff0000;stroke:none;stroke-width:0.264583px"
+         x="109.76418"
+         y="57.1791">a</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#ffffff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="105.99968"
+       y="50.860851"
+       id="text63075"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan63073"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ffffff;stroke:none;stroke-width:0.264583px"
+         x="105.99968"
+         y="50.860851">a</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#ffffff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="110.8042"
+       y="49.624107"
+       id="text63575"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan63573"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ffffff;stroke:none;stroke-width:0.264583px"
+         x="110.8042"
+         y="49.624107">b</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#ffffff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="110.8042"
+       y="52.353546"
+       id="text63579"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan63577"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ffffff;stroke:none;stroke-width:0.264583px"
+         x="110.8042"
+         y="52.353546">c</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#ff0000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="104.81802"
+       y="55.974106"
+       id="text63957"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan63955"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff0000;stroke:none;stroke-width:0.264583px"
+         x="104.81802"
+         y="55.974106">b</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#ff0000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="104.81802"
+       y="58.703545"
+       id="text63961"
+       inkscape:export-filename="/home/louis/freeciv/freeciv21/docs/_static/images/tileset-reference/sprite-corner.png"
+       inkscape:export-xdpi="199.68005"
+       inkscape:export-ydpi="199.68005"><tspan
+         sodipodi:role="line"
+         id="tspan63959"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.64583px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#ff0000;stroke:none;stroke-width:0.264583px"
+         x="104.81802"
+         y="58.703545">c</tspan></text>
+    <path
+       id="path69907"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+       d="m 107.0152,56.488546 3.175,6.349994 h 6.35001 l 3.175,-6.35 -3.175,-6.35 h -6.35 z"
+       sodipodi:nodetypes="ccccccc" />
+    <path
+       id="path69927"
+       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 97.49019,62.838546 3.175,6.349994 h 6.35001 l 3.175,-6.35 -3.175,-6.35 h -6.35 z"
+       sodipodi:nodetypes="ccccccc" />
+    <path
+       id="path70681"
+       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.132292;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 107.0152,43.788546 3.175,6.349994 h 6.35001 l 3.175,-6.35"
+       sodipodi:nodetypes="cccc" />
+  </g>
+</svg>
