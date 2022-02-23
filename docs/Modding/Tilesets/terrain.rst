@@ -13,6 +13,16 @@ Each terrain specified in a ruleset must have a ``graphic`` tag name, and option
 This information is used to search for compatible sprites in the tileset, first using ``graphic`` and, if
 it fails, ``graphic_alt``.
 
+.. todo::
+    Documentation is still missing for:
+
+    * Sprite dimensions, in particular in hexagonal mode where it's counter-intuitive.
+    * Blending
+    * The mask sprite and what happens at the edge of the map
+    * A general introduction to the structure (``[layer*]`` and ``[tile_*]`` sections). Some of this is
+      already there at the bottom of but would need reformatting.
+
+
 Sprite tags
 -----------
 
