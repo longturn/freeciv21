@@ -434,6 +434,34 @@ static void do_upgrade_effects(struct player *pplayer)
 }
 
 /**
+   Return true if unit is about to finish converting to a unittype
+   with more/no fuel, rescuing it from imminent death
+ */
+static bool converting_fuel_rescue(struct unit *punit)
+{
+  const struct unit_type *from_type, *to_type;
+
+  if (punit->activity != ACTIVITY_CONVERT)
+    /* not converting */
+    return false;
+  if (punit->activity_count + get_activity_rate_this_turn(punit)
+      < action_id_get_act_time(ACTION_CONVERT, punit, unit_tile(punit),
+                               punit->activity_target))
+    /* won't be finished in time */
+    return false;
+  if (!unit_can_convert(punit))
+    /* can't actually convert */
+    return false;
+  from_type = unit_type_get(punit);
+  to_type = from_type->converted_to;
+  if (utype_fuel(to_type) && utype_fuel(to_type) <= utype_fuel(from_type))
+    /* to_type doesn't have more fuel, so conversion doesn't help */
+    return false;
+  /* we're saved! */
+  return true;
+}
+
+/**
    1. Do Leonardo's Workshop upgrade if applicable.
 
    2. Restore/decrease unit hitpoints.
@@ -580,7 +608,8 @@ void player_restore_units(struct player *pplayer)
   // 7) Check if there are air units without fuel
   unit_list_iterate_safe(pplayer->units, punit)
   {
-    if (punit->fuel <= 0 && utype_fuel(unit_type_get(punit))) {
+    if (punit->fuel <= 0 && utype_fuel(unit_type_get(punit))
+        && !converting_fuel_rescue(punit)) {
       notify_player(pplayer, unit_tile(punit), E_UNIT_LOST_MISC, ftc_server,
                     _("Your %s has run out of fuel."),
                     unit_tile_link(punit));
@@ -1510,6 +1539,16 @@ void transform_unit(struct unit *punit, const struct unit_type *to_unit,
     punit->moves_left = unit_move_rate(punit);
   } else {
     punit->moves_left = punit->moves_left * unit_move_rate(punit) / old_mr;
+  }
+
+  /* Update unit fuel state */
+  if (utype_fuel(to_unit) && utype_fuel(old_type)) {
+    /* Keep the amount of fuel used constant, except don't kill the unit */
+    int delta = utype_fuel(to_unit) - utype_fuel(old_type);
+    punit->fuel = MAX(punit->fuel + delta, 1);
+  } else {
+    /* When converting from a non-fuel unit, fully refuel */
+    punit->fuel = utype_fuel(to_unit);
   }
 
   unit_forget_last_activity(punit);
