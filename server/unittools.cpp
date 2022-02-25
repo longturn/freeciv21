@@ -1533,6 +1533,16 @@ void transform_unit(struct unit *punit, const struct unit_type *to_unit,
   const struct unit_type *old_type = punit->utype;
   int old_mr = unit_move_rate(punit);
   int old_hp = unit_type_get(punit)->hp;
+  bv_player can_see_unit;
+
+  BV_CLR_ALL(can_see_unit);
+  players_iterate(oplayer)
+  {
+    if (can_player_see_unit(oplayer, punit)) {
+      BV_SET(can_see_unit, player_index(oplayer));
+    }
+  }
+  players_iterate_end;
 
   if (!is_free) {
     pplayer->economic.gold -=
@@ -1581,6 +1591,16 @@ void transform_unit(struct unit *punit, const struct unit_type *to_unit,
   conn_list_do_buffer(pplayer->connections);
 
   unit_refresh_vision(punit);
+
+  // unit may disappear for some players if vlayer changed
+  players_iterate(oplayer)
+  {
+    if (BV_ISSET(can_see_unit, player_index(oplayer))
+        && !can_player_see_unit(oplayer, punit)) {
+      unit_goes_out_of_sight(oplayer, punit);
+    }
+  }
+  players_iterate_end;
 
   CALL_PLR_AI_FUNC(unit_transformed, pplayer, punit, old_type);
   CALL_FUNC_EACH_AI(unit_info, punit);
