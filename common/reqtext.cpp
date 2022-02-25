@@ -2836,6 +2836,28 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
       }
     }
 
+  case VUT_VISIONLAYER:
+    switch (preq->range) {
+    case REQ_RANGE_LOCAL:
+      fc_strlcat(buf, prefix, bufsz);
+      if (preq->present) {
+        cat_snprintf(buf, bufsz, _("Applies to the \"%s\" vision layer."),
+                     qUtf8Printable(vision_layer_translated_name(
+                         preq->source.value.vlayer)));
+      } else {
+        cat_snprintf(buf, bufsz,
+                     _("Doesn't apply to the \"%s\""
+                       " vision layer."),
+                     qUtf8Printable(vision_layer_translated_name(
+                         preq->source.value.vlayer)));
+      }
+      return true;
+    default:
+      // Not supported.
+      break;
+    }
+    break;
+
   case VUT_COUNT:
     break;
   }

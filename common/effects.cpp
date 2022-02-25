@@ -621,7 +621,8 @@ int get_target_bonus_effects(
     const struct unit *target_unit, const struct unit_type *target_unittype,
     const struct output_type *target_output,
     const struct specialist *target_specialist,
-    const struct action *target_action, enum effect_type effect_type)
+    const struct action *target_action, enum effect_type effect_type,
+    enum vision_layer vision_layer)
 {
   int bonus = 0;
 
@@ -632,7 +633,8 @@ int get_target_bonus_effects(
     if (are_reqs_active(target_player, other_player, target_city,
                         target_building, target_tile, target_unit,
                         target_unittype, target_output, target_specialist,
-                        target_action, &peffect->reqs, RPT_CERTAIN)) {
+                        target_action, &peffect->reqs, RPT_CERTAIN,
+                        vision_layer)) {
       /* This code will add value of effect. If there's multiplier for
        * effect and target_player aren't null, then value is multiplied
        * by player's multiplier factor. */
@@ -823,7 +825,8 @@ int get_building_bonus(const struct city *pcity,
 int get_unittype_bonus(const struct player *pplayer,
                        const struct tile *ptile,
                        const struct unit_type *punittype,
-                       enum effect_type effect_type)
+                       enum effect_type effect_type,
+                       enum vision_layer vision_layer)
 {
   struct city *pcity;
 
@@ -841,7 +844,8 @@ int get_unittype_bonus(const struct player *pplayer,
 
   return get_target_bonus_effects(nullptr, pplayer, nullptr, pcity, nullptr,
                                   ptile, nullptr, punittype, nullptr,
-                                  nullptr, nullptr, effect_type);
+                                  nullptr, nullptr, effect_type,
+                                  vision_layer);
 }
 
 /**

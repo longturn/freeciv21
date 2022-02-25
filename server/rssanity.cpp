@@ -308,6 +308,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
     case VUT_STYLE:
     case VUT_IMPR_GENUS:
     case VUT_CITYSTATUS:
+    case VUT_VISIONLAYER:
       /* There can be only one requirement of these types (with current
        * range limitations)
        * Requirements might be identical, but we consider multiple
