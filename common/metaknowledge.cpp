@@ -613,7 +613,8 @@ static bool is_req_knowable(
     }
   }
 
-  if (req->source.kind == VUT_ACTION || req->source.kind == VUT_OTYPE) {
+  if (req->source.kind == VUT_ACTION || req->source.kind == VUT_OTYPE
+      || req->source.kind == VUT_VISIONLAYER) {
     // This requirement type is intended to specify the situation.
     return true;
   }

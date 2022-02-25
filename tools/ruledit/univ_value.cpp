@@ -216,6 +216,9 @@ bool universal_value_initial(struct universal *src)
   case VUT_EXTRAFLAG:
     src->value.extraflag = EF_NATIVE_TILE;
     return true;
+  case VUT_VISIONLAYER:
+    src->value.vlayer = V_MAIN;
+    return true;
   case VUT_COUNT:
     fc_assert(src->kind != VUT_COUNT);
     return false;
@@ -466,6 +469,12 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
       cb(action_rule_name(pact), univ->value.action == pact, data);
     }
     action_iterate_end;
+    break;
+  case VUT_VISIONLAYER:
+    for (i = 0; i < V_COUNT; i++) {
+      cb(vision_layer_name(vision_layer(i)),
+         univ->value.vlayer == i, data);
+    }
     break;
   case VUT_MINSIZE:
   case VUT_MINYEAR:
