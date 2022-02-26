@@ -41,7 +41,7 @@ QPushButton {
   border-radius: 3px;
   padding: 0.5em;
 }
-  
+
 QPushButton:hover {
   background-color: $yellow-01;
 }
@@ -71,7 +71,7 @@ QPushButton:disabled {
   background: transparent;
   text-align: right;
 }
-  
+
 /* color of border only - set the same as background */
 *[messagewindow="true"] {
   color: $red-10;
@@ -611,11 +611,11 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 }
 
 QScrollBar::handle:horizontal {
-  background: $base-bgcolor; min-width: 20px
+  background: $base-border; min-width: 20px
 }
 
 QScrollBar::handle:vertical {
-  background: $base-bgcolor; min-height: 20px
+  background: $base-border; min-height: 20px
 }
 
 QTreeWidget {
