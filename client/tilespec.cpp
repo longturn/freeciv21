@@ -2742,6 +2742,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     }
     t->sprites.unit.select.push_back(sprite);
   }
+  focus_unit_state = 0;
 
   SET_SPRITE(citybar.shields, "citybar.shields");
   SET_SPRITE(citybar.food, "citybar.food");
