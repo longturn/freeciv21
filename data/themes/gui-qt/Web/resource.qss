@@ -464,11 +464,11 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
   background: #f3ecdd; }
 
 QScrollBar::handle:horizontal {
-  background: #f3ecdd;
+  background: #d2a170;
   min-width: 20px; }
 
 QScrollBar::handle:vertical {
-  background: #f3ecdd;
+  background: #d2a170;
   min-height: 20px; }
 
 QTreeWidget {
