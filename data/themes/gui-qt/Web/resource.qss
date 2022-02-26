@@ -501,7 +501,7 @@ units_reports {
   background-color: rgba(85, 25, 25, 37%); }
 
 unittype_item QLabel {
-  color: #280f0b;
+  color: white;
   background-color: none; }
 
 unittype_item QPushButton {
