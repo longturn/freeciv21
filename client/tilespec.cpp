@@ -4820,7 +4820,8 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
       bool stacked = ptile && (unit_list_size(ptile->units) > 1);
       bool backdrop = !pcity;
 
-      if (ptile && unit_is_in_focus(punit) && t->sprites.unit.select[0]) {
+      if (ptile && unit_is_in_focus(punit)
+          && !t->sprites.unit.select.empty()) {
         /* Special case for drawing the selection rectangle.  The blinking
          * unit is handled separately, inside get_drawable_unit(). */
         sprs.emplace_back(t, t->sprites.unit.select[focus_unit_state], true,
@@ -5120,7 +5121,7 @@ struct unit *get_drawable_unit(const struct tileset *t, const ::tile *ptile)
     return NULL;
   }
 
-  if (!unit_is_in_focus(punit) || t->sprites.unit.select[0]
+  if (!unit_is_in_focus(punit) || !t->sprites.unit.select.empty()
       || focus_unit_state == 0) {
     return punit;
   } else {
