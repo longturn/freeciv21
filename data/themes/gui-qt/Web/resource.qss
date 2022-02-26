@@ -600,9 +600,15 @@ xvote QPushButton:hover {
   background-color: qlineargradient(x1: 0.0, y1: 0.0, x2: 0.0, y2: 1.0, stop: 0.0 rgba(246, 242, 232, 100%), stop: 1.0 rgba(243, 236, 221, 100%)); }
 
 QProgressBar {
-  color: #d2a170;
-  background: #f3ecdd;
-  selection-background-color: #f3ecdd; }
+  color: white;
+  background-color: #dfc69f;
+  selection-background-color: #dfc69f;
+  border: 1px solid #dfc69f;
+  border-radius: 2px; }
+
+QProgressBar::chunk {
+  background: #a96f04;
+  border-radius: 2px; }
 
 info_tile {
   color: #f3ecdd;

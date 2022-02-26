@@ -783,9 +783,16 @@ xvote QPushButton:hover {
 }
 
 QProgressBar {
-  color: $yellow-06;
-  background: $base-bgcolor;
-  selection-background-color: $base-bgcolor;
+  color: white;
+  background-color: $yellow-05;
+  selection-background-color: $yellow-05;
+  border: 1px solid $yellow-05;
+  border-radius: 2px;
+}
+
+QProgressBar::chunk {
+  background: $brownish;
+  border-radius: 2px;
 }
 
 info_tile {
