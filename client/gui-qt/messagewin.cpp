@@ -37,18 +37,22 @@
 message_widget::message_widget(QWidget *parent)
 {
   setParent(parent);
-  QPalette palette;
   layout = new QGridLayout;
+  layout->setMargin(0);
+  setLayout(layout);
+
+  layout->addWidget(new QLabel(_("Events")), 0, 1);
 
   mesg_table = new QListWidget;
   mesg_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
   mesg_table->setSelectionMode(QAbstractItemView::SingleSelection);
   mesg_table->setTextElideMode(Qt::ElideNone);
   mesg_table->setWordWrap(true);
-  layout->addWidget(mesg_table, 0, 2, 1, 1);
-  setLayout(layout);
+  layout->addWidget(mesg_table, 1, 0, 1, 3);
+
   mw = new move_widget(this);
-  mw->put_to_corner();
+  layout->addWidget(mw, 0, 0, Qt::AlignLeft | Qt::AlignTop);
+
   min_max = new QPushButton(this);
   min_max->setIcon(fcIcons::instance()->getIcon("expand-up"));
   min_max->setIconSize(QSize(24, 24));
@@ -56,6 +60,7 @@ message_widget::message_widget(QWidget *parent)
   min_max->setFixedHeight(25);
   min_max->setCheckable(true);
   min_max->setChecked(true);
+  layout->addWidget(min_max, 0, 2);
   connect(mesg_table->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
           &message_widget::item_selected);
@@ -208,19 +213,6 @@ void message_widget::msg_update()
 void message_widget::scroll_to_bottom(void *self)
 {
   static_cast<message_widget *>(self)->mesg_table->scrollToBottom();
-}
-
-/**
-   Resize event for message_widget
- */
-void message_widget::resizeEvent(QResizeEvent *event)
-{
-  mesg_table->scrollToBottom();
-
-  QSize size;
-  size = event->size();
-  QSize mm_size = min_max->size();
-  min_max->move(size.width() - mm_size.width(), 0);
 }
 
 /**
