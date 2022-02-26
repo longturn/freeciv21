@@ -47,7 +47,6 @@ protected:
   void enterEvent(QEvent *event) override;
   void leaveEvent(QEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
-  void resizeEvent(QResizeEvent *event) override;
 public slots:
   void item_selected(const QItemSelection &sl, const QItemSelection &ds);
   void set_events_visible(bool visible);
