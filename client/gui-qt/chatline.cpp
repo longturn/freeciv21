@@ -335,20 +335,29 @@ chat_widget::chat_widget(QWidget *parent)
  */
 void chat_widget::set_chat_visible(bool visible)
 {
-  auto geo = geometry();
-  QString icon_name =
-      visible ? QLatin1String("expand-down") : QLatin1String("expand-up");
-  show_hide->setIcon(fcIcons::instance()->getIcon(icon_name));
-
   chat_line->setVisible(visible);
   chat_output->setVisible(visible);
   cb->setVisible(visible && !is_server_running());
   remove_links->setVisible(visible);
 
-  int height = visible ? qRound(parentWidget()->size().height()
-                                * king()->qt_settings.chat_fheight)
-                       : sizeHint().height();
-  geo.setTop(geo.top() + geo.height() - height);
+  int h = visible ? qRound(parentWidget()->size().height()
+                           * king()->qt_settings.chat_fheight)
+                  : sizeHint().height();
+
+  // Heuristic that more or less works
+  bool expand_up =
+      (y() > parentWidget()->height() - y() - (visible ? h : height()));
+
+  QString icon_name = (expand_up ^ visible) ? QLatin1String("expand-up")
+                                            : QLatin1String("expand-down");
+  show_hide->setIcon(fcIcons::instance()->getIcon(icon_name));
+
+  auto geo = geometry();
+  if (expand_up) {
+    geo.setTop(std::max(geo.bottom() - h, 0));
+  } else {
+    geo.setBottom(std::min(geo.top() + h, parentWidget()->height()));
+  }
   setGeometry(geo);
 }
 
