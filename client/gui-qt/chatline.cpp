@@ -355,6 +355,7 @@ void chat_widget::set_chat_visible(bool visible)
   auto geo = geometry();
   if (expand_up) {
     geo.setTop(std::max(geo.bottom() - h, 0));
+    geo.setHeight(h);
   } else {
     geo.setBottom(std::min(geo.top() + h, parentWidget()->height()));
   }

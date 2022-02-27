@@ -77,15 +77,28 @@ message_widget::message_widget(QWidget *parent)
  */
 void message_widget::set_events_visible(bool visible)
 {
-  QString icon_name =
-      visible ? QLatin1String("expand-up") : QLatin1String("expand-down");
-  min_max->setIcon(fcIcons::instance()->getIcon(icon_name));
-  auto geo = geometry();
   mesg_table->setVisible(visible);
-  int height = visible ? qRound(parentWidget()->size().height()
-                                * king()->qt_settings.chat_fheight)
-                       : 27;
-  geo.setBottom(geo.bottom() + height - geo.height());
+
+  int h = visible ? qRound(parentWidget()->size().height()
+                           * king()->qt_settings.chat_fheight)
+                  : sizeHint().height();
+
+  // Heuristic that more or less works
+  bool expand_up =
+      (y() > parentWidget()->height() - y() - (visible ? h : height()));
+
+  QString icon_name = (expand_up ^ visible) ? QLatin1String("expand-up")
+                                            : QLatin1String("expand-down");
+  min_max->setIcon(fcIcons::instance()->getIcon(icon_name));
+
+  auto geo = geometry();
+  if (expand_up) {
+    geo.setTop(
+        std::clamp(geo.bottom() - h, 0, parentWidget()->height() - h));
+    geo.setHeight(h);
+  } else {
+    geo.setBottom(std::clamp(geo.top() + h, h, parentWidget()->height()));
+  }
   setGeometry(geo);
 }
 
