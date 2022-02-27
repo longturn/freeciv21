@@ -63,6 +63,7 @@
 #include "citydlg_g.h"
 #include "dialogs_g.h"
 #include "gui_main_g.h"
+#include "helpdlg_g.h"
 #include "mapview_g.h" // for update_map_canvas_visible
 #include "menu_g.h"
 #include "sprite_g.h"
@@ -1091,6 +1092,7 @@ bool tilespec_reread(const char *new_tileset_name,
   if (game_fully_initialized) {
     players_iterate(pplayer) { tileset_player_init(tileset, pplayer); }
     players_iterate_end;
+    popdown_help_dialog();
     boot_help_texts(); // "About Current Tileset"
   }
 

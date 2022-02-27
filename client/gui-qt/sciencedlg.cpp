@@ -21,7 +21,7 @@
 #include "research.h"
 // client
 #include "client_main.h"
-#include "helpdata.h"
+#include "helpdlg_g.h"
 #include "reqtree.h"
 #include "sprite.h"
 #include "text.h"

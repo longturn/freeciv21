@@ -50,10 +50,7 @@
 
 // client
 #include "client_main.h"
-#include "climisc.h"
 #include "helpdata.h"
-#include "helpdlg_g.h"
-#include "tilespec.h"
 
 // server
 #include "citytools.h"
@@ -204,6 +201,7 @@ void popdown_help_dialog(void)
 { // Empty stub.
 }
 
+struct tileset;
 struct tileset *tileset;
 
 /**

@@ -66,6 +66,7 @@
 #include "diplodlg_g.h"
 #include "editgui_g.h"
 #include "gui_main_g.h"
+#include "helpdlg_g.h"
 #include "mapctrl_g.h"
 #include "mapview_g.h"
 #include "menu_g.h"
@@ -858,6 +859,7 @@ void set_client_state(enum client_states newstate)
       research_update(research_get(pplayer));
     }
     role_unit_precalcs();
+    popdown_help_dialog();
     boot_help_texts(); // reboot with player
     global_worklists_build();
     can_slide = false;
@@ -905,6 +907,7 @@ void set_client_state(enum client_states newstate)
         research_update(research_get(pplayer));
       }
       role_unit_precalcs();
+      popdown_help_dialog();
       boot_help_texts(); // reboot
       global_worklists_build();
       unit_focus_set(NULL);
