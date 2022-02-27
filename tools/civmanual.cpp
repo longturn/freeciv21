@@ -182,9 +182,6 @@ struct tag_types wiki_tags = {
 
 void insert_client_build_info(char *outbuf, size_t outlen);
 
-// Needed for "About Freeciv21" help
-const char *client_string = "freeciv-manual";
-
 static QString ruleset;
 
 /**

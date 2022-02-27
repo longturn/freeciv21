@@ -55,7 +55,6 @@
 // client
 #include "client_main.h"
 #include "climisc.h"
-#include "gui_main_g.h" // client_string
 
 #include "helpdata.h"
 
@@ -473,9 +472,8 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
     cat_snprintf(
         outbuf, outlen,
         /* TRANS: First %s is version string, e.g.,
-         * "Freeciv version 2.3.0-beta1 (beta version)" (translated).
-         * Second %s is client_string, e.g., "gui-gtk-2.0". */
-        _("This is %s, %s client."), ver, client_string);
+         * "Freeciv version 2.3.0-beta1 (beta version)" (translated). */
+        _("This is %s."), ver);
 
     // There's also an separate entry about Qt.
     cat_snprintf(outbuf, outlen, _("\nBuilt against Qt %s, using %s"),
