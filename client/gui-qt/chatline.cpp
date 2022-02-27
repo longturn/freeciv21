@@ -259,40 +259,60 @@ chat_widget::chat_widget(QWidget *parent)
   QGridLayout *gl;
   setParent(parent);
   gl = new QGridLayout;
+  gl->setVerticalSpacing(0);
+  gl->setMargin(0);
+  setLayout(gl);
+
   cb = new QPushButton();
   cb->setIconSize(QSize(24, 24));
+  cb->setFixedWidth(25);
+  cb->setFixedHeight(25);
   cb->setIcon(fcIcons::instance()->getIcon("private"));
   cb->setToolTip(_("Allies only"));
   cb->setCheckable(true);
+
   chat_line = new chat_input;
-  chat_output = new text_browser_dblclck(this);
-  chat_output->setFont(fcFont::instance()->getFont(fonts::chatline));
+  chat_line->installEventFilter(this);
+
   remove_links = new QPushButton();
   remove_links->setIconSize(QSize(24, 24));
+  remove_links->setFixedWidth(25);
+  remove_links->setFixedHeight(25);
   remove_links->setIcon(fcIcons::instance()->getIcon("erase"));
   remove_links->setToolTip(_("Clear links"));
+
   show_hide = new QPushButton();
   show_hide->setIcon(fcIcons::instance()->getIcon("expand-down"));
   show_hide->setIconSize(QSize(24, 24));
+  show_hide->setFixedWidth(25);
+  show_hide->setFixedHeight(25);
   show_hide->setToolTip(_("Show/hide chat"));
   show_hide->setCheckable(true);
   show_hide->setChecked(true);
-  gl->setVerticalSpacing(0);
-  gl->addWidget(chat_output, 0, 0, 1, 4);
-  gl->addWidget(chat_line, 1, 0);
-  gl->addWidget(cb, 1, 1);
-  gl->addWidget(remove_links, 1, 2);
-  gl->addWidget(show_hide, 1, 3);
-  setLayout(gl);
+
   mw = new move_widget(this);
   mw->put_to_corner();
-  show();
+
+  chat_output = new text_browser_dblclck(this);
+  chat_output->setFont(fcFont::instance()->getFont(fonts::chatline));
   chat_output->setReadOnly(true);
-  chat_line->installEventFilter(this);
   chat_output->setVisible(true);
   chat_output->setAcceptRichText(true);
   chat_output->setOpenLinks(false);
   chat_output->setReadOnly(true);
+
+  auto title = new QLabel(_("Chat"));
+  title->setAlignment(Qt::AlignCenter);
+
+  gl->addWidget(mw, 0, 0, Qt::AlignLeft | Qt::AlignTop);
+  gl->addWidget(title, 0, 1, 1, 2);
+  gl->setColumnStretch(1, 100);
+  gl->addWidget(show_hide, 0, 3);
+  gl->addWidget(chat_output, 1, 0, 1, 4);
+  gl->addWidget(chat_line, 2, 0, 1, 2);
+  gl->addWidget(cb, 2, 2);
+  gl->addWidget(remove_links, 2, 3);
+
   connect(cb, &QAbstractButton::toggled, [=](bool priv) {
     QString icon_name =
         priv ? QLatin1String("public") : QLatin1String("private");
@@ -320,7 +340,11 @@ void chat_widget::set_chat_visible(bool visible)
       visible ? QLatin1String("expand-down") : QLatin1String("expand-up");
   show_hide->setIcon(fcIcons::instance()->getIcon(icon_name));
 
+  chat_line->setVisible(visible);
   chat_output->setVisible(visible);
+  cb->setVisible(visible && !is_server_running());
+  remove_links->setVisible(visible);
+
   int height = visible ? qRound(parentWidget()->size().height()
                                 * king()->qt_settings.chat_fheight)
                        : sizeHint().height();
