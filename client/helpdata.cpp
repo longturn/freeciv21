@@ -52,9 +52,6 @@
 #include "unit.h"
 #include "version.h"
 
-// client
-#include "climisc.h"
-
 #include "helpdata.h"
 
 // helper macro for easy conversion from snprintf and cat_snprintf
