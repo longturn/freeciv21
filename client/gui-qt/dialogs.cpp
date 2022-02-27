@@ -38,7 +38,7 @@
 #include "chatline_common.h"
 #include "client_main.h"
 #include "control.h"
-#include "helpdata.h"
+#include "helpdlg_g.h"
 #include "mapview_common.h"
 #include "packhand.h"
 #include "text.h"

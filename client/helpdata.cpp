@@ -62,7 +62,7 @@
 // helper macro for easy conversion from snprintf and cat_snprintf
 #define CATLSTR(_b, _s, _t) fc_strlcat(_b, _t, _s)
 
-// This must be in same order as enum in helpdlg_g.h
+// This must be in same order as enum in helpdata.h
 static const char *const help_type_names[] = {
     "(Any)",       "(Text)",  "Units",   "Improvements", "Wonders",
     "Techs",       "Terrain", "Extras",  "Goods",        "Specialists",
@@ -716,7 +716,6 @@ void boot_help_texts()
   empty[0] = '\0';
 
   // need to do something like this or bad things happen
-  popdown_help_dialog();
   free_help_texts();
   help_nodes = new helpList;
 

@@ -89,6 +89,7 @@
 #include "goto.h" // client_goto_init()
 #include "governor.h"
 #include "helpdata.h" // boot_help_texts()
+#include "helpdlg_g.h"
 #include "mapview_common.h"
 #include "music.h"
 #include "options.h"
@@ -2131,6 +2132,7 @@ void handle_game_info(const struct packet_game_info *pinfo)
   boot_help = (can_client_change_view()
                && game.info.victory_conditions != pinfo->victory_conditions);
   if (boot_help) {
+    popdown_help_dialog();
     boot_help_texts(); // reboot, after setting game.spacerace
   }
   unit_focus_update();

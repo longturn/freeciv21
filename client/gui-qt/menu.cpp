@@ -40,6 +40,7 @@
 #include "connectdlg_common.h"
 #include "control.h"
 #include "helpdata.h"
+#include "helpdlg_g.h"
 #include "mapctrl_g.h"
 #include "mapview_common.h"
 #include "ratesdlg_g.h"
