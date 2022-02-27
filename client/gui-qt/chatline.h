@@ -118,10 +118,11 @@ public:
   void update_widgets();
   int default_size(int lines);
   void scroll_to_bottom();
+  void take_focus();
   void update_font();
 private slots:
-  void update_menu() override {}
   void set_chat_visible(bool visible);
+  void update_menu() override {}
   void rm_links();
   void anchor_clicked(const QUrl &link);
 

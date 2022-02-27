@@ -182,6 +182,8 @@ void map_view::keyPressEvent(QKeyEvent *event)
       return;
     case Qt::Key_Enter:
     case Qt::Key_Return:
+      // Ensure chat is visible
+      queen()->chat->take_focus();
       return;
     default:
       break;
