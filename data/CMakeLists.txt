@@ -82,6 +82,14 @@ if (FREECIV_ENABLE_SERVER)
   add_subdirectory(scenarios)
 endif()
 
+if (FREECIV_ENABLE_CLIENT OR FREECIV_ENABLE_CIVMANUAL)
+  # Used by code in common/
+  install(
+    FILES helpdata.txt
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    COMPONENT freeciv21)
+endif()
+
 if (FREECIV_ENABLE_CLIENT)
   # Tilesets
   add_tileset(NAME amplio)
@@ -94,10 +102,6 @@ if (FREECIV_ENABLE_CLIENT)
   add_tileset(NAME trident)
 
   # Misc
-  install(
-    FILES helpdata.txt
-    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
-    COMPONENT freeciv21)
   install(
     DIRECTORY buildings
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"

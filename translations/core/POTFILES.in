@@ -58,7 +58,6 @@ client/gui-qt/unitreport.cpp
 client/gui-qt/unitselect.cpp
 client/gui-qt/voteinfo_bar.cpp
 client/gui-qt/widgetdecorations.cpp
-client/helpdata.cpp
 client/governor.cpp
 client/include/helpdlg_g.h
 client/luaconsole_common.cpp
@@ -82,6 +81,7 @@ common/extras.h
 common/fc_types.h
 common/game.h
 common/government.cpp
+common/helpdata.cpp
 common/mapimg.cpp
 common/player.cpp
 common/player.h

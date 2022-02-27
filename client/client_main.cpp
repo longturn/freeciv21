@@ -588,7 +588,7 @@ int client_main(int argc, char *argv[])
   /* This seed is not saved anywhere; randoms in the client should
      have cosmetic effects only (eg city name suggestions).  --dwp */
   fc_srand(time(NULL));
-  boot_help_texts(client_current_nation_set());
+  boot_help_texts(client_current_nation_set(), tileset_help(tileset));
 
   fill_topo_ts_default();
 
@@ -859,8 +859,11 @@ void set_client_state(enum client_states newstate)
       research_update(research_get(pplayer));
     }
     role_unit_precalcs();
+
+    // reboot with player
     popdown_help_dialog();
-    boot_help_texts(client_current_nation_set()); // reboot with player
+    boot_help_texts(client_current_nation_set(), tileset_help(tileset));
+
     global_worklists_build();
     can_slide = false;
     unit_focus_update();
@@ -907,8 +910,11 @@ void set_client_state(enum client_states newstate)
         research_update(research_get(pplayer));
       }
       role_unit_precalcs();
+
+      // reboot
       popdown_help_dialog();
-      boot_help_texts(client_current_nation_set()); // reboot
+      boot_help_texts(client_current_nation_set(), tileset_help(tileset));
+
       global_worklists_build();
       unit_focus_set(NULL);
       set_client_page(PAGE_GAME);

@@ -60,6 +60,7 @@ add_library(
   fc_interface.cpp
   game.cpp
   government.cpp
+  helpdata.cpp
   idex.cpp
   improvement.cpp
   map.cpp

@@ -2132,9 +2132,9 @@ void handle_game_info(const struct packet_game_info *pinfo)
   boot_help = (can_client_change_view()
                && game.info.victory_conditions != pinfo->victory_conditions);
   if (boot_help) {
+    // reboot, after setting game.spacerace
     popdown_help_dialog();
-    boot_help_texts(
-        client_current_nation_set()); // reboot, after setting game.spacerace
+    boot_help_texts(client_current_nation_set(), tileset_help(tileset));
   }
   unit_focus_update();
   menus_update();
