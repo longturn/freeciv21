@@ -53,7 +53,6 @@
 #include "version.h"
 
 // client
-#include "client_main.h"
 #include "climisc.h"
 
 #include "helpdata.h"
@@ -88,14 +87,6 @@ void free_help_texts()
     NFC_FREE(ptmp);
   }
   FC_FREE(help_nodes);
-}
-
-/**
-   Returns whether we should show help for this nation.
- */
-static bool show_help_for_nation(const struct nation_type *pnation)
-{
-  return client_nation_is_in_current_set(pnation);
 }
 
 /**
@@ -697,7 +688,7 @@ static int help_item_compar(const struct help_item *v1,
 /**
    pplayer may be NULL.
  */
-void boot_help_texts()
+void boot_help_texts(const nation_set *nations_to_show)
 {
   static bool booted = false;
 
@@ -1042,8 +1033,8 @@ void boot_help_texts()
           case HELP_NATIONS:
             nations_iterate(pnation)
             {
-              if (client_state() < C_S_RUNNING
-                  || show_help_for_nation(pnation)) {
+              if (nations_to_show
+                  && nation_is_in_set(pnation, nations_to_show)) {
                 pitem = new_help_item(current_type);
                 fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                             nation_plural_translation(pnation));
@@ -1262,7 +1253,8 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
  */
 char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                         const char *user_text,
-                        const struct impr_type *pimprove)
+                        const struct impr_type *pimprove,
+                        const nation_set *nations_to_show)
 {
   bool reqs = false;
   struct universal source = {.value = {.building = pimprove},
@@ -1644,7 +1636,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
   nations_iterate(pnation)
   {
     // Avoid mentioning nations not in current set.
-    if (!show_help_for_nation(pnation)) {
+    if (nations_to_show && !nation_is_in_set(pnation, nations_to_show)) {
       continue;
     }
     for (int n : pnation->init_buildings) {
@@ -1720,7 +1712,8 @@ static bool utype_may_do_escape_action(const struct unit_type *utype)
    pplayer may be NULL.
  */
 char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
-                    const char *user_text, const struct unit_type *utype)
+                    const char *user_text, const struct unit_type *utype,
+                    const nation_set *nations_to_show)
 {
   bool has_vet_levels;
   int flagid;
@@ -1935,7 +1928,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     int i, count = 0;
 
     // Avoid mentioning nations not in current set.
-    if (!show_help_for_nation(pnation)) {
+    if (nations_to_show && !nation_is_in_set(pnation, nations_to_show)) {
       continue;
     }
     for (i = 0; i < MAX_NUM_UNIT_LIST; i++) {
@@ -2965,7 +2958,8 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
    pplayer may be NULL.
  */
 void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
-                      const char *user_text, int i)
+                      const char *user_text, int i,
+                      const nation_set *nations_to_show)
 {
   struct advance *vap = valid_advance_by_number(i);
   struct universal source = {.value = {.advance = vap}, .kind = VUT_ADVANCE};
@@ -3076,7 +3070,7 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
     int j;
 
     // Avoid mentioning nations not in current set.
-    if (!show_help_for_nation(pnation)) {
+    if (nations_to_show && !nation_is_in_set(pnation, nations_to_show)) {
       continue;
     }
     for (j = 0; j < MAX_NUM_TECH_LIST; j++) {

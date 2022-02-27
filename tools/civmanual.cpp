@@ -227,16 +227,6 @@ const char *tileset_description(struct tileset *t) { return NULL; }
 enum client_states client_state() { return C_S_INITIAL; }
 
 /**
-   Mostly a client stub.
- */
-bool client_nation_is_in_current_set(const struct nation_type *pnation)
-{
-  /* Currently, there is no way to select a nation set for freeciv-manual.
-   * Then, let's assume we want to print help for all nations. */
-  return true;
-}
-
-/**
    Write a server manual, then quit.
  */
 static bool manual_command(struct tag_types *tag_info)
@@ -561,7 +551,7 @@ static bool manual_command(struct tag_types *tag_info)
           continue;
         }
 
-        helptext_building(buf, sizeof(buf), NULL, NULL, pimprove);
+        helptext_building(buf, sizeof(buf), NULL, NULL, pimprove, nullptr);
 
         fprintf(doc,
                 "<tr><td>%s%s%s</td><td>%s</td>\n"
@@ -676,7 +666,7 @@ static bool manual_command(struct tag_types *tag_info)
                     : utype_name_translation(putype->obsoleted_by));
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "helptext");
-        helptext_unit(buf, sizeof(buf), NULL, "", putype);
+        helptext_unit(buf, sizeof(buf), NULL, "", putype, nullptr);
         fprintf(doc, "%s", buf);
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, "%s", tag_info->item_end);
@@ -700,7 +690,8 @@ static bool manual_command(struct tag_types *tag_info)
                   advance_name_translation(ptech), tag_info->sect_title_end);
 
           fprintf(doc, tag_info->subitem_begin, "helptext");
-          helptext_advance(buf, sizeof(buf), NULL, "", ptech->item_number);
+          helptext_advance(buf, sizeof(buf), NULL, "", ptech->item_number,
+                           nullptr);
           fprintf(doc, "%s", buf);
           fprintf(doc, "%s", tag_info->subitem_end);
 

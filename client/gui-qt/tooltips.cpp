@@ -18,6 +18,7 @@
 #include "support.h"
 // client
 #include "client_main.h"
+#include "climisc.h"
 #include "helpdata.h"
 #include "movement.h"
 // gui-qt
@@ -127,7 +128,7 @@ QString get_tooltip_improvement(const impr_type *building,
     char buffer[8192];
 
     str = helptext_building(buffer, sizeof(buffer), client.conn.playing,
-                            NULL, building);
+                            NULL, building, client_current_nation_set());
     str = cut_helptext(str);
     str = split_text(str, true);
     str = str.trimmed();
@@ -198,7 +199,7 @@ QString get_tooltip_unit(const struct unit_type *utype, bool ext)
 
     buf2[0] = '\0';
     str = helptext_unit(buffer, sizeof(buffer), client.conn.playing, buf2,
-                        utype);
+                        utype, client_current_nation_set());
     str = cut_helptext(str);
     str = split_text(str, true);
     str = str.trimmed().toHtmlEscaped();
@@ -226,14 +227,15 @@ QString get_tooltip(const QVariant &qvar)
   } else if (VUT_UTYPE == target->kind) {
     def_str = get_tooltip_unit(target->value.utype);
     str = helptext_unit(buffer, sizeof(buffer), client.conn.playing, buf2,
-                        target->value.utype);
+                        target->value.utype, client_current_nation_set());
   } else {
     if (!improvement_has_flag(target->value.building, IF_GOLD)) {
       def_str = get_tooltip_improvement(target->value.building);
     }
 
     str = helptext_building(buffer, sizeof(buffer), client.conn.playing,
-                            NULL, target->value.building);
+                            NULL, target->value.building,
+                            client_current_nation_set());
   }
 
   // Remove all lines from help which has '*' in first 3 chars

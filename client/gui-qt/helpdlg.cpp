@@ -29,6 +29,7 @@
 // client
 #include "canvas.h"
 #include "client_main.h"
+#include "climisc.h"
 #include "helpdata.h"
 #include "mapview_common.h"
 // gui-qt
@@ -855,7 +856,7 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
   utype = unit_type_by_translated_name(title);
   if (utype) {
     helptext_unit(buffer, sizeof(buffer), client.conn.playing, topic->text,
-                  utype);
+                  utype, client_current_nation_set());
     text_browser->setPlainText(buffer);
 
     // Create information panel
@@ -967,7 +968,7 @@ void help_widget::set_topic_building(const help_item *topic,
 
   if (itype) {
     helptext_building(buffer, sizeof(buffer), client.conn.playing,
-                      topic->text, itype);
+                      topic->text, itype, client_current_nation_set());
     text_browser->setPlainText(buffer);
     show_info_panel();
     auto spr = get_building_sprite(tileset, itype);
@@ -1142,7 +1143,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
 
       info_panel_done();
       helptext_advance(buffer, sizeof(buffer), client.conn.playing,
-                       topic->text, n);
+                       topic->text, n, client_current_nation_set());
       text_browser->setPlainText(buffer);
     }
   } else {

@@ -1368,6 +1368,10 @@ bool mapimg_client_createmap(const char *filename)
  */
 struct nation_set *client_current_nation_set()
 {
+  if (client_state() < C_S_RUNNING) {
+    return nullptr;
+  }
+
   struct option *poption = optset_option_by_name(server_optset, "nationset");
   const char *setting_str;
 
@@ -1376,14 +1380,6 @@ struct nation_set *client_current_nation_set()
     setting_str = "";
   }
   return nation_set_by_setting_value(setting_str);
-}
-
-/**
-   Returns Whether 'pnation' is in the current nation set.
- */
-bool client_nation_is_in_current_set(const struct nation_type *pnation)
-{
-  return nation_is_in_set(pnation, client_current_nation_set());
 }
 
 /**

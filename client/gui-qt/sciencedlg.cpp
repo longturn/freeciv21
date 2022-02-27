@@ -21,6 +21,7 @@
 #include "research.h"
 // client
 #include "client_main.h"
+#include "climisc.h"
 #include "helpdlg_g.h"
 #include "reqtree.h"
 #include "sprite.h"
@@ -164,7 +165,7 @@ void research_diagram::mouseMoveEvent(QMouseEvent *event)
     if (rttp->rect.contains(event->pos())) {
       if (rttp->tech_id != -1) {
         helptext_advance(buffer, sizeof(buffer), client.conn.playing, buf2,
-                         rttp->tech_id);
+                         rttp->tech_id, client_current_nation_set());
         tt_text = QString(buffer);
         def_str = "<p style='white-space:pre'><b>"
                   + QString(advance_name_translation(
@@ -174,12 +175,14 @@ void research_diagram::mouseMoveEvent(QMouseEvent *event)
       } else if (rttp->timpr != nullptr) {
         def_str = get_tooltip_improvement(rttp->timpr, nullptr);
         tt_text = helptext_building(buffer, sizeof(buffer),
-                                    client.conn.playing, NULL, rttp->timpr);
+                                    client.conn.playing, NULL, rttp->timpr,
+                                    client_current_nation_set());
         tt_text = cut_helptext(tt_text);
       } else if (rttp->tunit != nullptr) {
         def_str = get_tooltip_unit(rttp->tunit);
-        tt_text += helptext_unit(buffer, sizeof(buffer), client.conn.playing,
-                                 buf2, rttp->tunit);
+        tt_text +=
+            helptext_unit(buffer, sizeof(buffer), client.conn.playing, buf2,
+                          rttp->tunit, client_current_nation_set());
         tt_text = cut_helptext(tt_text);
       } else if (rttp->tgov != nullptr) {
         helptext_government(buffer, sizeof(buffer), client.conn.playing,

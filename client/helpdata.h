@@ -12,6 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
+struct nation_set;
+
 // This must be in same order as names in helpdata.cpp
 enum help_page_type {
   HELP_ANY,
@@ -68,7 +70,7 @@ struct help_item {
   enum help_page_type type;
 };
 
-void boot_help_texts();
+void boot_help_texts(const nation_set *nations_to_show);
 void free_help_texts();
 
 const struct help_item *get_help_item(int pos);
@@ -77,11 +79,14 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos);
 
 char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                         const char *user_text,
-                        const struct impr_type *pimprove);
+                        const struct impr_type *pimprove,
+                        const nation_set *nations_to_show);
 char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
-                    const char *user_text, const struct unit_type *utype);
+                    const char *user_text, const struct unit_type *utype,
+                    const nation_set *nations_to_show);
 void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
-                      const char *user_text, int i);
+                      const char *user_text, int i,
+                      const nation_set *nations_to_show);
 void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
                       const char *user_text, struct terrain *pterrain);
 void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,

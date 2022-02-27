@@ -74,6 +74,7 @@
 #include "citydlg_common.h" // for generate_citydlg_dimensions()
 #include "client_main.h"
 #include "climap.h" // for client_tile_get_known()
+#include "climisc.h"
 #include "colors_common.h"
 #include "control.h" // for fill_xxx
 #include "editor.h"
@@ -1093,7 +1094,7 @@ bool tilespec_reread(const char *new_tileset_name,
     players_iterate(pplayer) { tileset_player_init(tileset, pplayer); }
     players_iterate_end;
     popdown_help_dialog();
-    boot_help_texts(); // "About Current Tileset"
+    boot_help_texts(client_current_nation_set()); // "About Current Tileset"
   }
 
   /* Step 3: Setup
