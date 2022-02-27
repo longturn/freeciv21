@@ -36,6 +36,7 @@
 #include "extras.h"
 #include "game.h"
 #include "government.h"
+#include "helpdata.h" // boot_help_texts()
 #include "idex.h"
 #include "map.h"
 #include "movement.h"
@@ -88,7 +89,6 @@
 #include "editor.h"
 #include "goto.h" // client_goto_init()
 #include "governor.h"
-#include "helpdata.h" // boot_help_texts()
 #include "helpdlg_g.h"
 #include "mapview_common.h"
 #include "music.h"

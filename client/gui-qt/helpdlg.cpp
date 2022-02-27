@@ -22,6 +22,7 @@
 #include "fcintl.h"
 // common
 #include "government.h"
+#include "helpdata.h"
 #include "movement.h"
 #include "nation.h"
 #include "specialist.h"
@@ -30,7 +31,6 @@
 #include "canvas.h"
 #include "client_main.h"
 #include "climisc.h"
-#include "helpdata.h"
 #include "mapview_common.h"
 // gui-qt
 #include "fc_client.h"

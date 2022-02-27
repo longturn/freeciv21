@@ -49,6 +49,7 @@
 #include "diptreaty.h"
 #include "fc_interface.h"
 #include "game.h"
+#include "helpdata.h" // boot_help_texts()
 #include "idex.h"
 #include "map.h"
 #include "mapimg.h"
@@ -88,7 +89,6 @@
 #include "editor.h"
 #include "global_worklist.h"
 #include "governor.h"
-#include "helpdata.h" // boot_help_texts()
 #include "mapview_common.h"
 #include "music.h"
 #include "options.h"

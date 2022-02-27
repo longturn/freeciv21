@@ -50,6 +50,7 @@
 #include "effects.h"
 #include "game.h" // game.control.styles_count
 #include "government.h"
+#include "helpdata.h"
 #include "map.h"
 #include "movement.h"
 #include "nation.h"
@@ -79,7 +80,6 @@
 #include "control.h" // for fill_xxx
 #include "editor.h"
 #include "goto.h"
-#include "helpdata.h"
 #include "layer_background.h"
 #include "layer_base_flags.h"
 #include "layer_darkness.h"
