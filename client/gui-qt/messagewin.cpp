@@ -41,7 +41,10 @@ message_widget::message_widget(QWidget *parent)
   layout->setMargin(0);
   setLayout(layout);
 
-  layout->addWidget(new QLabel(_("Messages")), 0, 1);
+  auto title = new QLabel(_("Messages"));
+  title->setAlignment(Qt::AlignCenter);
+  layout->addWidget(title, 0, 1);
+  layout->setColumnStretch(1, 100);
 
   mesg_table = new QListWidget;
   mesg_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
