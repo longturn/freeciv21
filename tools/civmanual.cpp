@@ -42,15 +42,12 @@
 #include "fc_types.h" // LINE_BREAK
 #include "game.h"
 #include "government.h"
+#include "helpdata.h"
 #include "improvement.h"
 #include "map.h"
 #include "movement.h"
 #include "player.h"
 #include "version.h"
-
-// client
-#include "client_main.h"
-#include "helpdata.h"
 
 // server
 #include "citytools.h"
@@ -180,51 +177,7 @@ struct tag_types wiki_tags = {
     // tail
     " "};
 
-void insert_client_build_info(char *outbuf, size_t outlen);
-
 static QString ruleset;
-
-/**
-   Client stub
- */
-void popup_help_dialog_string(const char *item)
-{ // Empty stub.
-}
-
-/**
-   Client stub
- */
-void popdown_help_dialog(void)
-{ // Empty stub.
-}
-
-struct tileset;
-struct tileset *tileset;
-
-/**
-   Client stub
- */
-const char *tileset_name_get(struct tileset *t) { return NULL; }
-
-/**
-   Client stub
- */
-const char *tileset_version(struct tileset *t) { return NULL; }
-
-/**
-   Client stub
- */
-const char *tileset_summary(struct tileset *t) { return NULL; }
-
-/**
-   Client stub
- */
-const char *tileset_description(struct tileset *t) { return NULL; }
-
-/**
-   Mostly a client stub.
- */
-enum client_states client_state() { return C_S_INITIAL; }
 
 /**
    Write a server manual, then quit.
@@ -811,12 +764,4 @@ int main(int argc, char **argv)
   free_nls();
 
   return retval;
-}
-
-/**
-   Empty function required by helpdata
- */
-void insert_client_build_info(char *outbuf, size_t outlen)
-{
-  // Nothing here
 }

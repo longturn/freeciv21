@@ -16,7 +16,6 @@ endif()
 if (FREECIV_ENABLE_CIVMANUAL)
   add_executable(freeciv21-manual civmanual.cpp)
   target_link_libraries(freeciv21-manual server)
-  target_link_libraries(freeciv21-manual client)
   target_link_libraries(freeciv21-manual tools_shared)
   install(TARGETS freeciv21-manual
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
