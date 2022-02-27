@@ -465,10 +465,8 @@ void chat_widget::update_widgets()
 {
   if (is_server_running()) {
     cb->hide();
-    remove_links->hide();
   } else {
     cb->show();
-    remove_links->show();
   }
 }
 
