@@ -48,7 +48,6 @@
 #include "research.h"
 #include "server_settings.h"
 #include "specialist.h"
-#include "tilespec.h"
 #include "unit.h"
 #include "version.h"
 
@@ -659,12 +658,12 @@ static void insert_allows(struct universal *psource, char *buf, size_t bufsz,
 /**
    Allocate and initialize new help item
  */
-static struct help_item *new_help_item(int type)
+struct help_item *new_help_item(help_page_type type)
 {
   struct help_item *pitem = new help_item;
   pitem->topic = NULL;
   pitem->text = NULL;
-  pitem->type = static_cast<help_page_type>(type);
+  pitem->type = type;
   return pitem;
 }
 
@@ -685,7 +684,8 @@ static int help_item_compar(const struct help_item *v1,
 /**
    pplayer may be NULL.
  */
-void boot_help_texts(const nation_set *nations_to_show)
+void boot_help_texts(const nation_set *nations_to_show,
+                     help_item *tileset_help)
 {
   static bool booted = false;
 
@@ -970,62 +970,12 @@ void boot_help_texts(const nation_set *nations_to_show)
             help_nodes->append(pitem);
           } break;
           case HELP_TILESET: {
-            int desc_len;
-            int len;
-            const char *ts_name = tileset_name_get(tileset);
-            const char *version = tileset_version(tileset);
-            const char *summary = tileset_summary(tileset);
-            const char *description = tileset_description(tileset);
-
-            pitem = new_help_item(HELP_TILESET);
-            fc_snprintf(name, sizeof(name), "%*s%s", level, "",
-                        Q_(HELP_TILESET_ITEM));
-            pitem->topic = qstrdup(name);
-            if (description != NULL) {
-              desc_len = qstrlen("\n\n") + qstrlen(description);
-            } else {
-              desc_len = 0;
+            if (tileset_help) {
+              fc_snprintf(name, sizeof(name), "%*s%s", level, "",
+                          Q_(HELP_TILESET_ITEM));
+              tileset_help->topic = qstrdup(name);
+              help_nodes->append(tileset_help);
             }
-            if (summary != NULL) {
-              if (version[0] != '\0') {
-                len = qstrlen(_(ts_name)) + qstrlen(" ") + qstrlen(version)
-                      + qstrlen("\n\n") + qstrlen(_(summary)) + 1;
-
-                pitem->text = new char[len + desc_len];
-                fc_snprintf(pitem->text, len, "%s %s\n\n%s", _(ts_name),
-                            version, _(summary));
-              } else {
-                len = qstrlen(_(ts_name)) + qstrlen("\n\n")
-                      + qstrlen(_(summary)) + 1;
-
-                pitem->text = new char[len + desc_len];
-                fc_snprintf(pitem->text, len, "%s\n\n%s", _(ts_name),
-                            _(summary));
-              }
-            } else {
-              const char *nodesc = _("Current tileset contains no summary.");
-
-              if (version[0] != '\0') {
-                len = qstrlen(_(ts_name)) + qstrlen(" ") + qstrlen(version)
-                      + qstrlen("\n\n") + qstrlen(nodesc) + 1;
-
-                pitem->text = new char[len + desc_len];
-                fc_snprintf(pitem->text, len, "%s %s\n\n%s", _(ts_name),
-                            version, nodesc);
-              } else {
-                len = qstrlen(_(ts_name)) + qstrlen("\n\n") + qstrlen(nodesc)
-                      + 1;
-
-                pitem->text = new char[len + desc_len];
-                fc_snprintf(pitem->text, len, "%s\n\n%s", _(ts_name),
-                            nodesc);
-              }
-            }
-            if (description != NULL) {
-              fc_strlcat(pitem->text, "\n\n", len + desc_len);
-              fc_strlcat(pitem->text, description, len + desc_len);
-            }
-            help_nodes->append(pitem);
           } break;
           case HELP_NATIONS:
             nations_iterate(pnation)

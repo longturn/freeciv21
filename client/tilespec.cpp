@@ -1093,8 +1093,10 @@ bool tilespec_reread(const char *new_tileset_name,
   if (game_fully_initialized) {
     players_iterate(pplayer) { tileset_player_init(tileset, pplayer); }
     players_iterate_end;
+
+    // "About Current Tileset"
     popdown_help_dialog();
-    boot_help_texts(client_current_nation_set()); // "About Current Tileset"
+    boot_help_texts(client_current_nation_set(), tileset_help(tileset));
   }
 
   /* Step 3: Setup
@@ -5853,3 +5855,64 @@ char *tileset_what_ruleset(struct tileset *t) { return t->for_ruleset; }
    Return tileset topology index
  */
 int tileset_topo_index(struct tileset *t) { return t->ts_topo_idx; }
+
+/**
+ * Creates the help item for the given tileset
+ */
+help_item *tileset_help(struct tileset *t)
+{
+  if (t == nullptr) {
+    return nullptr;
+  }
+
+  int desc_len;
+  int len;
+
+  const char *ts_name = tileset_name_get(t);
+  const char *version = tileset_version(t);
+  const char *summary = tileset_summary(t);
+  const char *description = tileset_description(t);
+
+  auto pitem = new_help_item(HELP_TILESET);
+  if (description != NULL) {
+    desc_len = qstrlen("\n\n") + qstrlen(description);
+  } else {
+    desc_len = 0;
+  }
+  if (summary != NULL) {
+    if (version[0] != '\0') {
+      len = qstrlen(_(ts_name)) + qstrlen(" ") + qstrlen(version)
+            + qstrlen("\n\n") + qstrlen(_(summary)) + 1;
+
+      pitem->text = new char[len + desc_len];
+      fc_snprintf(pitem->text, len, "%s %s\n\n%s", _(ts_name), version,
+                  _(summary));
+    } else {
+      len = qstrlen(_(ts_name)) + qstrlen("\n\n") + qstrlen(_(summary)) + 1;
+
+      pitem->text = new char[len + desc_len];
+      fc_snprintf(pitem->text, len, "%s\n\n%s", _(ts_name), _(summary));
+    }
+  } else {
+    const char *nodesc = _("Current tileset contains no summary.");
+
+    if (version[0] != '\0') {
+      len = qstrlen(_(ts_name)) + qstrlen(" ") + qstrlen(version)
+            + qstrlen("\n\n") + qstrlen(nodesc) + 1;
+
+      pitem->text = new char[len + desc_len];
+      fc_snprintf(pitem->text, len, "%s %s\n\n%s", _(ts_name), version,
+                  nodesc);
+    } else {
+      len = qstrlen(_(ts_name)) + qstrlen("\n\n") + qstrlen(nodesc) + 1;
+
+      pitem->text = new char[len + desc_len];
+      fc_snprintf(pitem->text, len, "%s\n\n%s", _(ts_name), nodesc);
+    }
+  }
+  if (description != NULL) {
+    fc_strlcat(pitem->text, "\n\n", len + desc_len);
+    fc_strlcat(pitem->text, description, len + desc_len);
+  }
+  return pitem;
+}

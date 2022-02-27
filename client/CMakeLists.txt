@@ -54,7 +54,6 @@ add_library(
   governor.cpp
   gui_interface.cpp
   goto.cpp
-  helpdata.cpp
   layer.cpp
   layer_background.cpp
   layer_base_flags.cpp
