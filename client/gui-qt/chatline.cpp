@@ -362,6 +362,15 @@ void chat_widget::scroll_to_bottom()
 }
 
 /**
+ * Shows the chat and ensures the chat line has focus
+ */
+void chat_widget::take_focus()
+{
+  show_hide->setChecked(true); // Make sure we're visible
+  chat_line->setFocus(Qt::ShortcutFocusReason);
+}
+
+/**
    Updates font for chat_widget
  */
 void chat_widget::update_font()
