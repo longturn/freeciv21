@@ -41,7 +41,7 @@ message_widget::message_widget(QWidget *parent)
   layout->setMargin(0);
   setLayout(layout);
 
-  layout->addWidget(new QLabel(_("Events")), 0, 1);
+  layout->addWidget(new QLabel(_("Messages")), 0, 1);
 
   mesg_table = new QListWidget;
   mesg_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
