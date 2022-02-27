@@ -16,10 +16,11 @@
 // utility
 #include "fcintl.h"
 #include "support.h"
+// common
+#include "helpdata.h"
 // client
 #include "client_main.h"
 #include "climisc.h"
-#include "helpdata.h"
 #include "movement.h"
 // gui-qt
 #include "fc_client.h"

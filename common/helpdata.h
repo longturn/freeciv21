@@ -12,6 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
+#include "fc_types.h"
+
 struct nation_set;
 
 // This must be in same order as names in helpdata.cpp
