@@ -159,6 +159,10 @@ static void show_delegations(struct connection *caller);
 static const char horiz_line[] = "------------------------------------------"
                                  "------------------------------------";
 
+namespace {
+static bool static_should_quit = false;
+}
+
 static void remove_quotes(QStringList &str)
 {
   for (QString &a : str) {
@@ -4321,17 +4325,23 @@ static bool playernation_command(struct connection *caller, char *str,
   return true;
 }
 
-/**************************************************************************
-  Handle quit command
-**************************************************************************/
+/**
+ * Handle quit command
+ */
 static bool quit_game(struct connection *caller, bool check)
 {
   if (!check) {
     cmd_reply(CMD_QUIT, caller, C_OK, _("Goodbye."));
+    static_should_quit = true;
     QCoreApplication::quit();
   }
   return true;
 }
+
+/**
+ * Returns whether the server should exit after a command.
+ */
+bool should_quit() { return static_should_quit; }
 
 /**
    Main entry point for "command input".

@@ -22,14 +22,42 @@
 // Qt
 #include <QObject>
 
+#ifdef Q_OS_WIN
+#include <QRecursiveMutex>
+#include <QThread>
+#endif // Q_OS_WIN
+
 class civtimer;
 class QTcpServer;
 class QTimer;
 
 namespace freeciv {
 
+#ifdef Q_OS_WIN
+namespace detail {
+/**
+ * Worker thread from which blocking calls to stdin are made.
+ */
+class async_readline_wrapper final : public QThread {
+  Q_OBJECT
+public:
+  async_readline_wrapper(bool interactive, QObject *parent = nullptr);
+
+public slots:
+  void wait_for_input();
+
+signals:
+  void line_available(const QString &line);
+
+private:
+  bool m_interactive; // Whether to use readline.
+};
+} // namespace detail
+#endif
+
 /// @brief A Freeciv21 server.
 class server : public QObject {
+  Q_OBJECT
 public:
   explicit server();
   ~server() override;
@@ -40,7 +68,6 @@ private slots:
   // Low-level stuff
   void error_on_socket();
   void input_on_socket();
-  void input_on_stdin();
   void accept_connections();
   void send_pings();
 
@@ -58,6 +85,27 @@ private slots:
 private:
   void init_interactive();
 
+#ifdef Q_OS_WIN
+  // On Windows, we need a ton of additional functions to work around the
+  // lack of (constistent) notification system for stdin.  Native Windows
+  // mechanisms work for either the console, named pipes, or files, but not
+  // all of them at once.  So we resort to spawning a thread and making
+  // blocking calls, for which we need additional synchronization.
+signals:
+  void input_requested();
+private slots:
+  void input_on_stdin(const QString &line);
+
+private:
+  static QRecursiveMutex s_stdin_mutex;
+  static char **synchronized_completion(const char *text, int start,
+                                        int end);
+#else  // !Q_OS_WIN
+private slots:
+  void input_on_stdin();
+#endif // Q_OS_WIN
+
+private:
   bool m_ready = false;
 
   bool m_interactive = false;

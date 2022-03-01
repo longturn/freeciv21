@@ -30,10 +30,7 @@
 
 // Stuff to wait for input on stdin.
 #ifdef Q_OS_WIN
-#include <QtCore/QWinEventNotifier>
-#include <array>
-#include <io.h>
-#include <windows.h>
+#include <QMutexLocker>
 #else
 #include <QtCore/QSocketNotifier>
 #endif
@@ -80,6 +77,7 @@ static const char *HISTORY_FILENAME = "freeciv-server_history";
 static const int HISTORY_LENGTH = 100;
 
 namespace {
+#ifndef Q_OS_WIN
 /**
    Readline callback for input.
  */
@@ -99,6 +97,7 @@ void handle_readline_input_callback(char *line)
   delete[] line_internal;
   free(line);
 }
+#endif // !Q_OS_WIN
 
 /**
    Initialize server specific functions.
@@ -214,27 +213,80 @@ std::pair<QTcpServer *, bool> srv_prepare()
 
 } // anonymous namespace
 
+#ifdef Q_OS_WIN
+/**
+ * Constructor.
+ */
+detail::async_readline_wrapper::async_readline_wrapper(bool interactive,
+                                                       QObject *parent)
+    : QThread(parent), m_interactive(interactive)
+{
+}
+
+/**
+ * Blocks until a line of input can be read from stdin, then emits
+ * `line_available`.
+ */
+void detail::async_readline_wrapper::wait_for_input()
+{
+  // Loop until we get a non-trivial line
+  QString line;
+  while (line.isEmpty()) {
+    if (m_interactive) {
+      char *buffer = readline("> ");
+      if (buffer == nullptr) {
+        break;
+      }
+
+      if (buffer && buffer[0] != '\0') {
+        add_history(buffer);
+      }
+
+      line = QString::fromLocal8Bit(buffer);
+    } else {
+      QFile f;
+      f.open(stdin, QIODevice::ReadOnly);
+      line = QString::fromLocal8Bit(f.readLine());
+    }
+  }
+  emit line_available(line);
+}
+
+/// Synchronizes stdin and network handling
+QRecursiveMutex server::s_stdin_mutex = QRecursiveMutex();
+#endif // Q_OS_WIN
+
 /**
    Creates a server. It starts working as soon as there is an event loop.
  */
 server::server()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
+  // Are we running an interactive session?
+#ifdef Q_OS_WIN
+  // isatty and fileno are deprecated on Windows
+  m_interactive = _isatty(_fileno(stdin));
+#else
+  m_interactive = isatty(fileno(stdin));
+#endif
+
   // Get notifications when there's some input on stdin. This is OS-dependent
   // and Qt doesn't have a wrapper. Maybe it should be split to a separate
   // class.
 #ifdef Q_OS_WIN
   {
-    auto handle = CreateFileA("CONIN$", GENERIC_READ, FILE_SHARE_READ,
-                              nullptr, OPEN_EXISTING, 0, nullptr);
-    if (handle == INVALID_HANDLE_VALUE) {
-      // TRANS: Don't translate HANDLE and CONIN$
-      qCritical(_("Failed to get a HANDLE for CONIN$"));
-    } else {
-      auto notifier = new QWinEventNotifier(handle, this);
-      connect(notifier, &QWinEventNotifier::activated, this,
-              &server::input_on_stdin);
-      m_stdin_notifier = notifier;
-    }
+    // Spawn a thread from where we can afford to do blocking calls
+    auto wrapper = new detail::async_readline_wrapper(m_interactive);
+    wrapper->moveToThread(wrapper);
+    connect(wrapper, &detail::async_readline_wrapper::line_available, this,
+            &server::input_on_stdin);
+    connect(this, &server::input_requested, wrapper,
+            &detail::async_readline_wrapper::wait_for_input);
+    wrapper->start();
+    m_stdin_notifier = wrapper;
   }
 #else
   {
@@ -245,14 +297,6 @@ server::server()
             &server::input_on_stdin);
     m_stdin_notifier = notifier;
   }
-#endif
-
-  // Are we running an interactive session?
-#ifdef Q_OS_WIN
-  // isatty and fileno are deprecated on Windows
-  m_interactive = _isatty(_fileno(stdin));
-#else
-  m_interactive = isatty(fileno(stdin));
 #endif
 
   // Now init the old C API
@@ -286,6 +330,11 @@ server::server()
   connect(m_pulse_timer, &QTimer::timeout, this, &server::pulse);
 
   m_ready = true;
+
+#ifdef Q_OS_WIN
+  // Ask the stdin worker thread to start looking at imput.
+  emit input_requested();
+#endif // Q_OS_WIN
 }
 
 /**
@@ -294,12 +343,16 @@ server::server()
 server::~server()
 {
 #ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
+#ifdef Q_OS_WIN
   {
-    // Close the handle to stdin
-    auto notifier = dynamic_cast<QWinEventNotifier *>(m_stdin_notifier);
+    auto notifier =
+        qobject_cast<detail::async_readline_wrapper *>(m_stdin_notifier);
     if (notifier) {
-      notifier->setEnabled(false);
-      (void) CloseHandle(notifier->handle());
+      notifier->wait();
+      delete notifier;
     }
   }
 #endif // Q_OS_WIN
@@ -342,8 +395,12 @@ void server::init_interactive()
 
   // Initialize readline
   rl_initialize();
+#ifdef Q_OS_WIN
+  rl_attempted_completion_function = synchronized_completion;
+#else
   rl_callback_handler_install((char *) "> ", handle_readline_input_callback);
   rl_attempted_completion_function = freeciv_completion;
+#endif
 }
 
 /**
@@ -358,6 +415,10 @@ bool server::is_ready() const { return m_ready; }
  */
 void server::accept_connections()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   // There may be several connections available.
   while (m_tcp_server->hasPendingConnections()) {
     auto *socket = m_tcp_server->nextPendingConnection();
@@ -437,6 +498,10 @@ void server::accept_connections()
  */
 void server::send_pings()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   // Pinging around for statistics
   if (time(NULL) > (game.server.last_ping + game.server.pingtime)) {
     conn_list_iterate(game.all_connections, pconn)
@@ -471,6 +536,10 @@ void server::send_pings()
  */
 void server::error_on_socket()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   // Get the socket
   auto *socket = dynamic_cast<QTcpSocket *>(sender());
   if (socket == nullptr) {
@@ -496,6 +565,10 @@ void server::error_on_socket()
  */
 void server::input_on_socket()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   // Get the socket
   auto *socket = dynamic_cast<QTcpSocket *>(sender());
   if (socket == nullptr) {
@@ -525,8 +598,45 @@ void server::input_on_socket()
   update_game_state();
 }
 
+#ifdef Q_OS_WIN
+
 /**
-   Called when there's something to read on stdin.
+ * Called when a line was read from stdin.
+ */
+void server::input_on_stdin(const QString &line)
+{
+  QMutexLocker lock(&s_stdin_mutex);
+
+  auto buffer = line.toUtf8();
+  handle_stdin_input(NULL, buffer.data());
+  if (should_quit()) {
+    // Stop the worker thread
+    auto notifier =
+        qobject_cast<detail::async_readline_wrapper *>(m_stdin_notifier);
+    if (notifier) {
+      notifier->quit();
+    }
+  } else {
+    // Ask the notifier to block until it reads the next line
+    emit input_requested();
+  }
+
+  update_game_state();
+}
+
+/**
+ * Synchronized wrapper around @ref freeciv_completion.
+ */
+char **server::synchronized_completion(const char *text, int start, int end)
+{
+  QMutexLocker lock(&s_stdin_mutex);
+  return freeciv_completion(text, start, end);
+}
+
+#else // !Q_OS_WIN
+
+/**
+ * Called when there's something to read on stdin.
  */
 void server::input_on_stdin()
 {
@@ -534,9 +644,9 @@ void server::input_on_stdin()
     // Readline does everything nicely in interactive sessions
     rl_callback_read_char();
   } else {
-    // Read from the input
     QFile f;
     f.open(stdin, QIODevice::ReadOnly);
+    // Read from the input
     if (f.atEnd() && m_stdin_notifier != nullptr) {
       // QSocketNotifier gets mad after EOF. Turn it off.
       m_stdin_notifier->deleteLater();
@@ -556,11 +666,17 @@ void server::input_on_stdin()
   update_game_state();
 }
 
+#endif
+
 /**
    Prepares for a new game.
  */
 void server::prepare_game()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   set_server_state(S_S_INITIAL);
 
   // Load a script file.
@@ -588,6 +704,10 @@ void server::prepare_game()
  */
 void server::begin_turn()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   ::begin_turn(m_is_new_turn);
 
   // Start the first phase
@@ -599,6 +719,10 @@ void server::begin_turn()
  */
 void server::begin_phase()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   log_debug("Starting phase %d/%d.", game.info.phase,
             game.server.num_phases);
   ::begin_phase(m_is_new_turn);
@@ -672,6 +796,10 @@ void server::begin_phase()
  */
 void server::end_phase()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   m_between_turns_timer =
       timer_renew(m_between_turns_timer, TIMER_USER, TIMER_ACTIVE);
   timer_start(m_between_turns_timer);
@@ -711,6 +839,10 @@ void server::end_phase()
  */
 void server::end_turn()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   ::end_turn();
   log_debug("Sendinfotometaserver");
   (void) send_server_info_to_metaserver(META_REFRESH);
@@ -761,6 +893,10 @@ void server::end_turn()
  */
 void server::update_game_state()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   // Set in the following cases:
   // - in pregame: game start
   // - during the game: turn done, end game and any other command affecting
@@ -836,6 +972,10 @@ void server::update_game_state()
  */
 bool server::shut_game_down()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   // Close it even between games.
   save_system_close();
 
@@ -861,6 +1001,10 @@ bool server::shut_game_down()
  */
 void server::quit_idle()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   m_quitidle_timer = nullptr;
 
   if (conn_list_size(game.est_connections) > 0) {
@@ -894,6 +1038,10 @@ void server::quit_idle()
  */
 void server::pulse()
 {
+#ifdef Q_OS_WIN
+  QMutexLocker lock(&s_stdin_mutex);
+#endif
+
   send_pings();
 
   get_lanserver_announcement();
