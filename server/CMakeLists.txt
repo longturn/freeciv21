@@ -1,3 +1,5 @@
+set(CMAKE_AUTOMOC true)
+
 # Generate the packet handling code
 add_custom_command(
   OUTPUT
