@@ -42,7 +42,6 @@ jobs:
             gettext \
             qt5-default \
             libqt5svg5-dev \
-            libqt5svg5-dev \
             libkf5archive-dev \
             liblua5.3-dev \
             libsqlite3-dev \
