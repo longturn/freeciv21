@@ -143,6 +143,9 @@ static void transport_alight(QVariant data1, QVariant data2);
 static void transport_unload(QVariant data1, QVariant data2);
 static void keep_moving(QVariant data1, QVariant data2);
 static void pillage_something(QVariant data1, QVariant data2);
+static void user_action_1(QVariant data1, QVariant data2);
+static void user_action_2(QVariant data1, QVariant data2);
+static void user_action_3(QVariant data1, QVariant data2);
 static void action_entry(choice_dialog *cd, action_id act,
                          const struct act_prob *act_probs,
                          const QString custom, QVariant data1,
@@ -252,6 +255,11 @@ static const QHash<action_id, pfcn_void> af_map_init()
   action_function[ACTION_DISBAND_UNIT] = disband_unit;
   action_function[ACTION_FORTIFY] = fortify;
   action_function[ACTION_CONVERT] = convert_unit;
+
+  // Unit target depends on ruleset
+  action_function[ACTION_USER_ACTION1] = user_action_1;
+  action_function[ACTION_USER_ACTION2] = user_action_2;
+  action_function[ACTION_USER_ACTION3] = user_action_3;
 
   return action_function;
 }
@@ -3112,6 +3120,106 @@ static void pillage_something(QVariant data1, QVariant data2)
     request_new_unit_activity_targeted(punit, ACTIVITY_PILLAGE, target);
   }
   ::is_showing_pillage_dialog = false;
+}
+
+/**
+  User action with target kind ATK_UNIT
+ */
+static void user_action_unit_vs_unit(int actor_id, int target_id,
+                                     action_id act_id)
+{
+  if (NULL != game_unit_by_number(actor_id)
+      && NULL != game_unit_by_number(target_id)) {
+    request_do_action(act_id, actor_id, target_id, 0, "");
+  }
+}
+
+/**
+  User action with target kind ATK_CITY
+ */
+static void user_action_unit_vs_city(int actor_id, int target_id,
+                                     action_id act_id)
+{
+  if (NULL != game_unit_by_number(actor_id)
+      && NULL != game_city_by_number(target_id)) {
+    request_do_action(act_id, actor_id, target_id, 0, "");
+  }
+}
+
+/**
+  User action with target kind ATK_TILE or ATK_UNITS
+ */
+static void user_action_unit_vs_tile(int actor_id, int target_id,
+                                     action_id act_id)
+{
+  if (NULL != game_unit_by_number(actor_id)
+      && NULL != index_to_tile(&(wld.map), target_id)) {
+    request_do_action(act_id, actor_id, target_id, 0, "");
+  }
+}
+
+/**
+  User action with target kind ATK_SELF
+ */
+static void user_action_unit_vs_self(int actor_id, int target_id,
+                                     action_id act_id)
+{
+  if (NULL != game_unit_by_number(actor_id)) {
+    request_do_action(act_id, actor_id, target_id, 0, "");
+  }
+}
+
+/**
+  User action handler, dispatches on target kind
+ */
+static void user_action(QVariant data1, QVariant data2, action_id act_id)
+{
+  int actor_id = data1.toInt();
+  int target_id = data2.toInt();
+
+  switch (action_id_get_target_kind(act_id)) {
+  case ATK_UNIT:
+    user_action_unit_vs_unit(actor_id, target_id, act_id);
+    break;
+  case ATK_CITY:
+    user_action_unit_vs_city(actor_id, target_id, act_id);
+    break;
+  case ATK_TILE:
+  case ATK_UNITS:
+    user_action_unit_vs_tile(actor_id, target_id, act_id);
+    break;
+  case ATK_SELF:
+    user_action_unit_vs_self(actor_id, target_id, act_id);
+    break;
+  case ATK_COUNT:
+    fc_assert_msg(ATK_COUNT != action_id_get_target_kind(act_id),
+                  "Bad target kind");
+    break;
+  }
+}
+
+/**
+   User Action 1 for choice dialog
+ */
+static void user_action_1(QVariant data1, QVariant data2)
+{
+  user_action(data1, data2, ACTION_USER_ACTION1);
+}
+
+/**
+   User Action 2 for choice dialog
+ */
+static void user_action_2(QVariant data1, QVariant data2)
+{
+  user_action(data1, data2, ACTION_USER_ACTION2);
+}
+
+/**
+   User Action 3 for choice dialog
+ */
+static void user_action_3(QVariant data1, QVariant data2)
+{
+  user_action(data1, data2, ACTION_USER_ACTION3);
 }
 
 /**
