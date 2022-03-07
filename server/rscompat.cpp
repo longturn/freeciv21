@@ -1079,6 +1079,24 @@ void rscompat_postprocess(struct rscompat_info *info)
 }
 
 /**
+ * Adds <VisionLayer, Main, Local, True> req to all unit vision reqs,
+ * as compat for missing CAP_VUT_VISIONLAYER
+ */
+static bool rscompat_vision_effect_cb(struct effect *peffect, void *data)
+{
+  struct rscompat_info [[maybe_unused]] *info =
+      static_cast<struct rscompat_info *>(data);
+
+  if (peffect->type == EFT_UNIT_VISION_RADIUS_SQ) {
+    effect_req_append(peffect,
+                      req_from_str("VisionLayer", "Local", false, true,
+                                   false, "Main"));
+  }
+
+  return true;
+}
+
+/**
  * Handles compatibility with older versions when the new behavior is
  * tied to the presence of an optional ruleset capability.
  */
@@ -1149,6 +1167,9 @@ static void rscompat_optional_capabilities(rscompat_info *info)
     }
     unit_type_iterate_end;
   }
+
+  if (!has_capability(CAP_VUT_VISIONLAYER, info->cap_effects.data()))
+    iterate_effect_cache(rscompat_vision_effect_cb, info);
 }
 
 /**
