@@ -16,9 +16,10 @@
 
 #define CAP_EFT_HP_REGEN_MIN "HP_Regen_Min"
 #define CAP_EFT_BOMBARD_LIMIT_PCT "Bombard_Limit_Pct"
+#define CAP_VUT_VISIONLAYER "Vision_Layer"
 #define RULESET_CAPABILITIES                                                \
   "+Freeciv-ruleset-Devel-2017.Jan.02 " CAP_EFT_HP_REGEN_MIN                \
-  " " CAP_EFT_BOMBARD_LIMIT_PCT
+  " " CAP_EFT_BOMBARD_LIMIT_PCT " " CAP_VUT_VISIONLAYER
 /*
  * Ruleset capabilities acceptable to this program:
  *
