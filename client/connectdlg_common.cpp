@@ -246,7 +246,7 @@ bool client_start_server(const QString &user_name)
   scensdir = QStringLiteral("%1/scenarios").arg(storage);
 
   arguments << QStringLiteral("-p") << port_buf << QStringLiteral("--bind")
-            << QStringLiteral("localhost") << QStringLiteral("-q")
+            << QStringLiteral("127.0.0.1") << QStringLiteral("-q")
             << QStringLiteral("1") << QStringLiteral("-e")
             << QStringLiteral("--saves") << savesdir
             << QStringLiteral("--scenarios") << scensdir
