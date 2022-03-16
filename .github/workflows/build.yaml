@@ -1,7 +1,10 @@
 name: Build
 on:
   push:
-    paths-ignore: docs
+    paths-ignore:
+      - 'data/**'
+      - 'dist/**'
+      - 'docs/**'
   pull_request: {}
   schedule:
     - cron: "0 5 * * MON"
