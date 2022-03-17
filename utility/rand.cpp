@@ -102,7 +102,7 @@ struct random_seed_seq {
   }
 
   /// Required by seed_seq.
-  using result_type = typeof(QRandomGenerator64().generate());
+  using result_type = decltype(QRandomGenerator64{}.generate());
 
 private:
   QRandomGenerator64 qgenerator = QRandomGenerator64::securelySeeded();

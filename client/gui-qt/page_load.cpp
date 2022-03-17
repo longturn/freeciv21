@@ -216,7 +216,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
   }
   fn_bytes = current_file.toLocal8Bit();
 
-  auto sf = std::unique_ptr<section_file, typeof(&secfile_destroy)>(
+  auto sf = std::unique_ptr<section_file, decltype(&secfile_destroy)>(
       nullptr, &secfile_destroy);
   sf.reset(
       secfile_load_section(fn_bytes.data(), QStringLiteral("game"), true));
