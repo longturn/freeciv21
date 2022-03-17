@@ -49,3 +49,5 @@ target_link_libraries(scriptcore PUBLIC common)
 target_link_libraries(scriptcore PUBLIC tolua)
 target_link_libraries(scriptcore PUBLIC sol2)
 target_link_libraries(scriptcore PRIVATE Qt5::Core)
+
+add_compile_definitions(LUA_LIB)
