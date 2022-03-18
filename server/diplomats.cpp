@@ -17,6 +17,9 @@
 
 #include <cstdio>
 
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "bitvector.h"
 #include "fcintl.h"
@@ -51,6 +54,9 @@
 
 /* server/scripting */
 #include "script_server.h"
+
+// First player is former owner, second new one.
+SERVER_SIGNAL(city_transferred, city *, player *, player *, const char *)
 
 /****************************************************************************/
 
@@ -1137,8 +1143,7 @@ bool diplomat_incite(struct player *pplayer, struct unit *pdiplomat,
      are within one square of the city) to the new owner. */
   if (transfer_city(pplayer, pcity, 1, true, true, false,
                     !is_barbarian(pplayer))) {
-    script_server_signal_emit("city_transferred", pcity, cplayer, pplayer,
-                              "incited");
+    server_signals::city_transferred(pcity, cplayer, pplayer, "incited");
   }
 
   /* Check if a spy survives her mission.

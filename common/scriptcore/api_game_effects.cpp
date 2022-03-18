@@ -12,6 +12,9 @@
 #include <fc_config.h>
 #endif
 
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "fcintl.h"
 
@@ -23,15 +26,14 @@
 
 #include "api_game_effects.h"
 
+namespace {
+
 /**
    Returns the effect bonus in the world
  */
-int api_effects_world_bonus(lua_State *L, const char *effect_type)
+int effects_world_bonus(const char *effect_type)
 {
   enum effect_type etype = EFT_COUNT;
-
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_ARG_NIL(L, effect_type, 2, string, 0);
 
   etype = effect_type_by_name(effect_type, fc_strcasecmp);
   if (!effect_type_is_valid(etype)) {
@@ -43,14 +45,9 @@ int api_effects_world_bonus(lua_State *L, const char *effect_type)
 /**
    Returns the effect bonus for a player
  */
-int api_effects_player_bonus(lua_State *L, Player *pplayer,
-                             const char *effect_type)
+int effects_player_bonus(player *pplayer, const char *effect_type)
 {
   enum effect_type etype = EFT_COUNT;
-
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 2, Player, 0);
-  LUASCRIPT_CHECK_ARG_NIL(L, effect_type, 3, string, 0);
 
   etype = effect_type_by_name(effect_type, fc_strcasecmp);
   if (!effect_type_is_valid(etype)) {
@@ -62,18 +59,27 @@ int api_effects_player_bonus(lua_State *L, Player *pplayer,
 /**
    Returns the effect bonus at a city.
  */
-int api_effects_city_bonus(lua_State *L, City *pcity,
-                           const char *effect_type)
+int effects_city_bonus(city *pcity, const char *effect_type)
 {
   enum effect_type etype = EFT_COUNT;
-
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_ARG_NIL(L, pcity, 2, City, 0);
-  LUASCRIPT_CHECK_ARG_NIL(L, effect_type, 3, string, 0);
 
   etype = effect_type_by_name(effect_type, fc_strcasecmp);
   if (!effect_type_is_valid(etype)) {
     return 0;
   }
   return get_city_bonus(pcity, etype);
+}
+
+} // namespace
+
+/**
+   Register game effects.
+ */
+void setup_game_effects(sol::state_view lua)
+{
+  auto effects = lua["effects"].get_or_create<sol::table>();
+
+  effects.set("world_bonus", effects_world_bonus);
+  effects.set("city_bonus", effects_city_bonus);
+  effects.set("player_bonus", effects_player_bonus);
 }

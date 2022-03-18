@@ -28,34 +28,13 @@
 
 #include "api_server_base.h"
 
-/**
-   Return the civilization score (total) for player
- */
-int api_server_player_civilization_score(lua_State *L, Player *pplayer)
-{
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_SELF(L, pplayer, 0);
-
-  return get_civ_score(pplayer);
-}
-
-/**
-   Returns TRUE if the game was started.
- */
-bool api_server_was_started(lua_State *L)
-{
-  LUASCRIPT_CHECK_STATE(L, false);
-
-  return game_was_started();
-}
+namespace {
 
 /**
    Save the game (a manual save is triggered).
  */
-bool api_server_save(lua_State *L, const char *filename)
+bool server_save(const char *filename)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-
   // Limit the allowed characters in the filename.
   if (filename != nullptr && !is_safe_filename(filename)) {
     return false;
@@ -69,13 +48,9 @@ bool api_server_save(lua_State *L, const char *filename)
 /**
    Play music track for player
  */
-bool api_play_music(lua_State *L, Player *pplayer, const char *tag)
+bool play_music(player *pplayer, const char *tag)
 {
   struct packet_play_music p;
-
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pplayer, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, tag, 3, API_TYPE_STRING, false);
 
   sz_strlcpy(p.tag, tag);
 
@@ -88,13 +63,10 @@ bool api_play_music(lua_State *L, Player *pplayer, const char *tag)
    Return the formated value of the setting or nullptr if no such setting
  exists,
  */
-const char *api_server_setting_get(lua_State *L, const char *sett_name)
+const char *server_setting_get(const char *sett_name)
 {
   struct setting *pset;
   static char buf[512];
-
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_ARG_NIL(L, sett_name, 2, API_TYPE_STRING, nullptr);
 
   pset = setting_by_name(sett_name);
 
@@ -103,4 +75,18 @@ const char *api_server_setting_get(lua_State *L, const char *sett_name)
   }
 
   return setting_value_name(pset, false, buf, sizeof(buf));
+}
+
+} // namespace
+
+void setup_lua_server_base(sol::state_view lua)
+{
+  auto server = lua["server"].get_or_create<sol::table>();
+  server.set("save", server_save);
+  server.set("started", game_was_started);
+  server.set("civilization_score", get_civ_score);
+  server.set("play_music", play_music);
+
+  auto settings = server["settings"].get_or_create<sol::table>();
+  settings.set("get", server_setting_get);
 }

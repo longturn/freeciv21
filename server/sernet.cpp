@@ -21,6 +21,9 @@
 #include <cstring>
 #include <ctime>
 
+// Sol
+#include "sol/sol.hpp"
+
 // Qt
 #include <QCoreApplication>
 #include <QHostInfo>

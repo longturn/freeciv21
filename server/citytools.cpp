@@ -15,6 +15,9 @@
 #include <fc_config.h>
 #endif
 
+// Sol
+#include "sol/sol.hpp"
+
 #include <QBitArray>
 
 #include <cstdio>
@@ -57,6 +60,7 @@
 #include "cm.h"
 
 /* common/scriptcore */
+#include "luascript.h"
 #include "luascript_types.h"
 
 // server
@@ -91,6 +95,26 @@
 #include "handicaps.h"
 
 #include "citytools.h"
+
+SERVER_SIGNAL(city_built, city *)
+
+// First player is city owner, second is enemy.
+SERVER_SIGNAL(city_destroyed, city *, player *, player *)
+
+// First player is former owner, second new one.
+SERVER_SIGNAL(city_transferred, city *, player *, player *, const char *)
+
+/* Deprecated form of the 'city_transferred' signal for the case of
+ * conquest. */
+SERVER_SIGNAL(city_lost, city *, player *, player *)
+// deprecate_signal(depr, "city_lost", "city_transferred", "2.6");
+
+/* Third argument gives a reason; "landlocked", "cant_maintain",
+ * "obsolete", "sold", "disaster", "sabotaged", "razed", "city_destroyed",
+ * "conquered" (applicable for small wonders only)
+ * Fourth argument gives unit that caused that, applicable for "sabotaged"
+ */
+SERVER_SIGNAL(building_lost, city *, const impr_type *, const char *, unit *)
 
 // Queue for pending auto_arrange_workers()
 static struct city_list *arrange_workers_queue = nullptr;
@@ -1664,7 +1688,7 @@ void create_city(struct player *pplayer, struct tile *ptile,
 
   sanity_check_city(pcity);
 
-  script_server_signal_emit("city_built", pcity);
+  server_signals::city_built(pcity);
 
   CALL_FUNC_EACH_AI(city_created, pcity);
   CALL_PLR_AI_FUNC(city_got, pplayer, pplayer, pcity);
@@ -1854,7 +1878,6 @@ void remove_city(struct city *pcity)
 
   old_vision = pcity->server.vision;
   pcity->server.vision = nullptr;
-  script_server_remove_exported_object(pcity);
   adv_city_free(pcity);
 
   // Remove city from the map.
@@ -2010,7 +2033,7 @@ bool unit_conquer_city(struct unit *punit, struct city *pcity)
     notify_player(cplayer, city_tile(pcity), E_CITY_LOST, ftc_server,
                   _("%s has been destroyed by %s."), city_tile_link(pcity),
                   player_name(pplayer));
-    script_server_signal_emit("city_destroyed", pcity, cplayer, pplayer);
+    server_signals::city_destroyed(pcity, cplayer, pplayer);
 
     // We cant't be sure of city existence after running some script
     if (city_exist(saved_id)) {
@@ -2101,9 +2124,8 @@ bool unit_conquer_city(struct unit *punit, struct city *pcity)
   }
 
   if (city_remains) {
-    script_server_signal_emit("city_transferred", pcity, cplayer, pplayer,
-                              "conquest");
-    script_server_signal_emit("city_lost", pcity, cplayer, pplayer);
+    server_signals::city_transferred(pcity, cplayer, pplayer, "conquest");
+    server_signals::city_lost(pcity, cplayer, pplayer);
   }
 
   return true;
@@ -2866,8 +2888,7 @@ bool building_removed(struct city *pcity, const struct impr_type *pimprove,
 
   city_remove_improvement(pcity, pimprove);
 
-  script_server_signal_emit("building_lost", pcity, pimprove, reason,
-                            destroyer);
+  server_signals::building_lost(pcity, pimprove, reason, destroyer);
 
   return city_exist(backup);
 }

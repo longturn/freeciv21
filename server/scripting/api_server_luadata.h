@@ -10,6 +10,10 @@
 
 #pragma once
 
-struct lua_State;
+// Sol
+#include "sol/sol.hpp"
 
-const char *api_luadata_get_str(lua_State *L, const char *field);
+/* common/scriptcore */
+#include "luascript_types.h"
+
+void setup_server_luadata(sol::state_view lua);

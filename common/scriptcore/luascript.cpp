@@ -25,9 +25,6 @@ extern "C" {
 #include "lualib.h"
 }
 
-/* dependencies/tolua */
-#include "tolua.h"
-
 // Sol
 #include "sol/sol.hpp"
 
@@ -42,9 +39,7 @@ extern "C" {
 /* common/scriptcore */
 #include "api_common_intl.h"
 #include "api_common_utilities.h"
-#include "luascript_func.h"
 #include "luascript_signal.h"
-#include "tolua_common_a_gen.h"
 
 #include "luascript.h"
 
@@ -107,104 +102,8 @@ static luaL_Reg luascript_lualibs_secure[] = {
 #error "Unsupported lua version"
 #endif // LUA_VERSION_NUM
 
-static int luascript_report(struct fc_lua *fcl, int status,
-                            const char *code);
-static void luascript_traceback_func_save(lua_State *L);
-static void luascript_traceback_func_push(lua_State *L);
-static void luascript_exec_check(lua_State *L, lua_Debug *ar);
-static void luascript_hook_start(lua_State *L);
-static void luascript_hook_end(lua_State *L);
 static void luascript_openlibs(lua_State *L, const luaL_Reg *llib);
 static void luascript_blacklist(lua_State *L, const char *lsymbols[]);
-
-/**
-   Report a lua error.
- */
-static int luascript_report(struct fc_lua *fcl, int status, const char *code)
-{
-  fc_assert_ret_val(fcl, 0);
-  fc_assert_ret_val(fcl->state, 0);
-
-  if (status) {
-    QString str;
-    const char *msg;
-
-    if (!(msg = lua_tostring(fcl->state, -1))) {
-      msg = "(error with no message)";
-    }
-
-    // Add error message.
-    str = QStringLiteral("lua error:\t") + msg;
-
-    luascript_log(fcl, LOG_ERROR, "%s", qUtf8Printable(str));
-    lua_pop(fcl->state, 1);
-  }
-
-  return status;
-}
-
-/**
-   Find the debug.traceback function and store in the registry
- */
-static void luascript_traceback_func_save(lua_State *L)
-{
-  // Find the debug.traceback function, if available
-  lua_getglobal(L, "debug");
-  if (lua_istable(L, -1)) {
-    lua_getfield(L, -1, "traceback");
-    lua_setfield(L, LUA_REGISTRYINDEX, "freeciv_traceback");
-  }
-  lua_pop(L, 1); // pop debug
-}
-
-/**
-   Push the traceback function to the stack
- */
-static void luascript_traceback_func_push(lua_State *L)
-{
-  lua_getfield(L, LUA_REGISTRYINDEX, "freeciv_traceback");
-}
-
-/**
-   Check currently excecuting lua function for execution time limit
- */
-static void luascript_exec_check(lua_State *L, lua_Debug *ar)
-{
-  Q_UNUSED(ar)
-  lua_Number exec_clock;
-
-  lua_getfield(L, LUA_REGISTRYINDEX, "freeciv_exec_clock");
-  exec_clock = lua_tonumber(L, -1);
-  lua_pop(L, 1);
-  if (static_cast<float>(clock() - exec_clock) / CLOCKS_PER_SEC
-      > LUASCRIPT_MAX_EXECUTION_TIME_SEC) {
-    luaL_error(L, "Execution time limit exceeded in script");
-  }
-}
-
-/**
-   Setup function execution guard
- */
-static void luascript_hook_start(lua_State *L)
-{
-#if LUASCRIPT_CHECKINTERVAL
-  // Store clock timestamp in the registry
-  lua_pushnumber(L, clock());
-  lua_setfield(L, LUA_REGISTRYINDEX, "freeciv_exec_clock");
-  lua_sethook(L, luascript_exec_check, LUA_MASKCOUNT,
-              LUASCRIPT_CHECKINTERVAL);
-#endif
-}
-
-/**
-   Clear function execution guard
- */
-static void luascript_hook_end(lua_State *L)
-{
-#if LUASCRIPT_CHECKINTERVAL
-  lua_sethook(L, luascript_exec_check, 0, 0);
-#endif
-}
 
 /**
    Open lua libraries in the array of library definitions in llib.
@@ -289,11 +188,9 @@ struct fc_lua *luascript_new(luascript_log_func_t output_fct,
 
   if (secured_environment) {
     luascript_openlibs(fcl->state, luascript_lualibs_secure);
-    luascript_traceback_func_save(fcl->state);
     luascript_blacklist(fcl->state, luascript_unsafe_symbols_secure);
   } else {
     luaL_openlibs(fcl->state);
-    luascript_traceback_func_save(fcl->state);
     luascript_blacklist(fcl->state, luascript_unsafe_symbols_permissive);
   }
 
@@ -341,12 +238,6 @@ void luascript_destroy(struct fc_lua *fcl)
   if (fcl) {
     fc_assert_ret(fcl->caller == nullptr);
 
-    // Free function data.
-    luascript_func_free(fcl);
-
-    // Free signal data.
-    luascript_signal_free(fcl);
-
     // Free lua state.
     if (fcl->state) {
       lua_gc(fcl->state, LUA_GCCOLLECT, 0); // Collected garbage
@@ -372,7 +263,14 @@ static void luascript_exec_resource(lua_State *L, const QString &filename)
 
   // We trust that it loads.
   sol::state_view lua(L);
-  lua.script(data.data(), in.fileName().toStdString());
+  auto result = lua.safe_script(data.data(), in.fileName().toStdString());
+  if (!result.valid()) {
+    sol::error err = result;
+    std::cout << "An error (an expected one) occurred: " << err.what()
+              << std::endl;
+
+    return;
+  }
 
   Q_CLEANUP_RESOURCE(scriptcore);
 }
@@ -413,8 +311,9 @@ static void luascript_common_a_register(sol::state_view state)
  */
 void luascript_common_a(lua_State *L)
 {
-  tolua_common_a_open(L);
   luascript_common_a_register(L);
+
+  sol::state_view lua(L);
   luascript_exec_resource(L, QStringLiteral(":/lua/tolua_common_a.lua"));
 }
 
@@ -460,99 +359,6 @@ void luascript_log_vargs(struct fc_lua *fcl, QtMsgType level,
 }
 
 /**
-   Pop return values from the Lua stack.
- */
-void luascript_pop_returns(struct fc_lua *fcl, const char *func_name,
-                           int nreturns, enum api_types *preturn_types,
-                           va_list args)
-{
-  int i;
-  lua_State *L;
-
-  fc_assert_ret(fcl);
-  fc_assert_ret(fcl->state);
-  L = fcl->state;
-
-  for (i = 0; i < nreturns; i++) {
-    enum api_types type = preturn_types[i];
-
-    fc_assert_ret(api_types_is_valid(type));
-
-    switch (type) {
-    case API_TYPE_INT: {
-      int isnum;
-      int *pres = va_arg(args, int *);
-
-      *pres = lua_tointegerx(L, -1, &isnum);
-      if (!isnum) {
-        qCritical("Return value from lua function %s is a %s, want int",
-                  func_name, lua_typename(L, lua_type(L, -1)));
-      }
-    } break;
-    case API_TYPE_BOOL: {
-      bool *pres = va_arg(args, bool *);
-      *pres = lua_toboolean(L, -1);
-    } break;
-    case API_TYPE_STRING: {
-      char **pres = va_arg(args, char **);
-
-      if (lua_isstring(L, -1)) {
-        *pres = fc_strdup(lua_tostring(L, -1));
-      }
-    } break;
-    default: {
-      void **pres = va_arg(args, void **);
-
-      *pres = tolua_tousertype(fcl->state, -1, nullptr);
-    } break;
-    }
-    lua_pop(L, 1);
-  }
-}
-
-/**
-   Push arguments into the Lua stack.
- */
-void luascript_push_args(struct fc_lua *fcl, int nargs,
-                         enum api_types *parg_types, va_list args)
-{
-  int i;
-
-  fc_assert_ret(fcl);
-  fc_assert_ret(fcl->state);
-
-  for (i = 0; i < nargs; i++) {
-    enum api_types type = parg_types[i];
-
-    fc_assert_ret(api_types_is_valid(type));
-
-    switch (type) {
-    case API_TYPE_INT: {
-      lua_Integer arg = va_arg(args, lua_Integer);
-      lua_pushinteger(fcl->state, arg);
-    } break;
-    case API_TYPE_BOOL: {
-      int arg = va_arg(args, int);
-      lua_pushboolean(fcl->state, arg);
-    } break;
-    case API_TYPE_STRING: {
-      const char *arg = va_arg(args, const char *);
-      lua_pushstring(fcl->state, arg);
-    } break;
-    default: {
-      const char *name;
-      void *arg;
-
-      name = api_types_name(type);
-
-      arg = va_arg(args, void *);
-      tolua_pushusertype(fcl->state, arg, name);
-    } break;
-    }
-  }
-}
-
-/**
    Return if the function 'funcname' is define in the lua state 'fcl->state'.
  */
 bool luascript_check_function(struct fc_lua *fcl, const char *funcname)
@@ -570,70 +376,23 @@ bool luascript_check_function(struct fc_lua *fcl, const char *funcname)
 }
 
 /**
-   Evaluate a Lua function call or loaded script on the stack.
-   Return nonzero if an error occurred.
-
-   If available pass the source code string as code, else nullptr.
-
-   Will pop function and arguments (1 + narg values) from the stack.
-   Will push nret return values to the stack.
-
-   On error, print an error message with traceback. Nothing is pushed to
-   the stack.
- */
-int luascript_call(struct fc_lua *fcl, int narg, int nret, const char *code)
-{
-  int status;
-  int base;          // Index of function to call
-  int traceback = 0; // Index of traceback function
-
-  fc_assert_ret_val(fcl, 0);
-  fc_assert_ret_val(fcl->state, 0);
-
-  base = lua_gettop(fcl->state) - narg;
-
-  // Find the traceback function, if available
-  luascript_traceback_func_push(fcl->state);
-  if (lua_isfunction(fcl->state, -1)) {
-    lua_insert(fcl->state, base); // insert traceback before function
-    traceback = base;
-  } else {
-    lua_pop(fcl->state, 1); // pop non-function traceback
-  }
-
-  luascript_hook_start(fcl->state);
-  status = lua_pcall(fcl->state, narg, nret, traceback);
-  luascript_hook_end(fcl->state);
-
-  if (status) {
-    luascript_report(fcl, status, code);
-  }
-
-  if (traceback) {
-    lua_remove(fcl->state, traceback);
-  }
-
-  return status;
-}
-
-/**
    lua_dostring replacement with error message showing on errors.
  */
 int luascript_do_string(struct fc_lua *fcl, const char *str,
                         const char *name)
 {
-  int status;
-
   fc_assert_ret_val(fcl, 0);
   fc_assert_ret_val(fcl->state, 0);
 
-  status = luaL_loadbuffer(fcl->state, str, qstrlen(str), name);
-  if (status) {
-    luascript_report(fcl, status, str);
-  } else {
-    status = luascript_call(fcl, 0, 0, str);
+  sol::state_view lua(fcl->state);
+
+  auto result = lua.safe_script(str);
+  if (!result.valid()) {
+    sol::error err = result;
+    std::cout << "An error (an expected one) occurred: " << err.what()
+              << std::endl;
   }
-  return status;
+  return !result.valid();
 }
 
 /**
@@ -641,98 +400,24 @@ int luascript_do_string(struct fc_lua *fcl, const char *str,
  */
 int luascript_do_file(struct fc_lua *fcl, const char *filename)
 {
-  int status;
-
   fc_assert_ret_val(fcl, 0);
   fc_assert_ret_val(fcl->state, 0);
 
-  status = luaL_loadfile(fcl->state, filename);
-  if (status) {
-    luascript_report(fcl, status, nullptr);
-  } else {
-    status = luascript_call(fcl, 0, 0, nullptr);
-  }
-  return status;
-}
+  sol::state_view lua(fcl->state);
 
-/**
-   Invoke the 'callback_name' Lua function.
- */
-bool luascript_callback_invoke(struct fc_lua *fcl, const char *callback_name,
-                               int nargs, enum api_types *parg_types,
-                               va_list args)
-{
-  bool stop_emission = false;
+  auto result = lua.safe_script_file(
+      filename, [](lua_State *, sol::protected_function_result pfr) {
+        // pfr will contain things that went wrong, for either loading or
+        // executing the script the user can do whatever they like here,
+        // including throw. Otherwise...
+        sol::error err = pfr;
+        std::cout << "An error (an expected one) occurred: " << err.what()
+                  << std::endl;
 
-  fc_assert_ret_val(fcl, false);
-  fc_assert_ret_val(fcl->state, false);
-
-  // The function name
-  lua_getglobal(fcl->state, callback_name);
-
-  if (!lua_isfunction(fcl->state, -1)) {
-    luascript_log(fcl, LOG_ERROR, "lua error: Unknown callback '%s'",
-                  callback_name);
-    lua_pop(fcl->state, 1);
-    return false;
-  }
-
-  luascript_log(fcl, LOG_DEBUG, "lua callback: '%s'", callback_name);
-
-  luascript_push_args(fcl, nargs, parg_types, args);
-
-  // Call the function with nargs arguments, return 1 results
-  if (luascript_call(fcl, nargs, 1, nullptr)) {
-    return false;
-  }
-
-  // Shall we stop the emission of this signal?
-  if (lua_isboolean(fcl->state, -1)) {
-    stop_emission = lua_toboolean(fcl->state, -1);
-  }
-  lua_pop(fcl->state, 1); // pop return value
-
-  return stop_emission;
-}
-
-/**
-   Mark any, if exported, full userdata representing 'object' in
-   the current script state as 'Nonexistent'.
-   This changes the type of the lua variable.
- */
-void luascript_remove_exported_object(struct fc_lua *fcl, void *object)
-{
-  if (fcl && fcl->state) {
-    fc_assert_ret(object != nullptr);
-
-    /* The following is similar to tolua_release(..) in src/lib/tolua_map.c
-     */
-    // Find the userdata representing 'object'
-    lua_pushstring(fcl->state, "tolua_ubox");
-    // stack: ubox
-    lua_rawget(fcl->state, LUA_REGISTRYINDEX);
-    // stack: ubox u
-    lua_pushlightuserdata(fcl->state, object);
-    // stack: ubox ubox[u]
-    lua_rawget(fcl->state, -2);
-
-    if (!lua_isnil(fcl->state, -1)) {
-      fc_assert(object == tolua_tousertype(fcl->state, -1, nullptr));
-      // Change API type to 'Nonexistent'
-      // stack: ubox ubox[u] mt
-      tolua_getmetatable(fcl->state, "Nonexistent");
-      lua_setmetatable(fcl->state, -2);
-      // Set the userdata payload to nullptr
-      *(static_cast<void **>(lua_touserdata(fcl->state, -1))) = nullptr;
-      // Remove from ubox
-      // stack: ubox ubox[u] u
-      lua_pushlightuserdata(fcl->state, object);
-      // stack: ubox ubox[u] u nil
-      lua_pushnil(fcl->state);
-      lua_rawset(fcl->state, -4);
-    }
-    lua_pop(fcl->state, 2);
-  }
+        // ... they need to return the protected_function_result
+        return pfr;
+      });
+  return !result.valid();
 }
 
 /**
@@ -745,20 +430,27 @@ void luascript_vars_save(struct fc_lua *fcl, struct section_file *file,
   fc_assert_ret(fcl);
   fc_assert_ret(fcl->state);
 
-  lua_getglobal(fcl->state, "_freeciv_state_dump");
-  if (luascript_call(fcl, 0, 1, nullptr) == 0) {
-    const char *vars;
+  sol::state_view lua(fcl->state);
 
-    vars = lua_tostring(fcl->state, -1);
-    lua_pop(fcl->state, 1);
+  sol::protected_function dump(lua["_freeciv_state_dump"]);
+  if (!dump.valid()) {
+    return;
+  }
 
-    if (vars) {
-      secfile_insert_str_noescape(file, vars, "%s", section);
-    }
-  } else {
+  auto result = dump();
+
+  if (!result.valid() || result.get_type() != sol::type::string) {
     // _freeciv_state_dump in tolua_game.pkg is busted
     luascript_log(fcl, LOG_ERROR, "lua error: Failed to dump variables");
+    sol::error err = result;
+    std::cout << "An error (an expected one) occurred: " << err.what()
+              << std::endl;
+
+    return;
   }
+
+  secfile_insert_str_noescape(file, result.get<const char *>(), "%s",
+                              section);
 }
 
 /**
@@ -774,6 +466,7 @@ void luascript_vars_load(struct fc_lua *fcl, struct section_file *file,
   fc_assert_ret(fcl->state);
 
   vars = secfile_lookup_str_default(file, "", "%s", section);
+  sol::state_view lua(fcl->state);
   luascript_do_string(fcl, vars, section);
 }
 

@@ -12,6 +12,16 @@
 // Qt
 #include <QFileDialog>
 #include <QString>
+
+/* dependencies/lua */
+extern "C" {
+#include "lua.h"
+#include "lualib.h"
+}
+
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "shared.h"
 // common

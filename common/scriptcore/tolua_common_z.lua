@@ -25,7 +25,6 @@ do
     "Connection",
     "Government",
     "Nation_Type",
-    "Nonexistent",
     "Player",
     "Tech_Type",
     "Terrain",
@@ -47,11 +46,11 @@ do
     local id = self.id
     local name = self.rule_name and self:rule_name() or self.name
     if name and id then
-      return string.format('<%s #%d %s>', tolua.type(self), id, name)
+      return string.format('<%s #%d %s>', self.__type.name, id, name)
     elseif id then
-      return string.format('<%s #%d>', tolua.type(self), id)
+      return string.format('<%s #%d>', self.__type.name, id)
     else
-      return string.format('<%s>', tolua.type(self))
+      return string.format('<%s>', self.__type.name)
     end
   end
 
@@ -60,40 +59,6 @@ do
 
     api_type[".eq"] = id_eq
     api_type.__tostring = string_rep
-
-    -- Object field resolution
-    -- 1) Check properties defined in our API
-    --    (Properties are fields that call an accessor to get their value)
-    -- 2) Delegate to tolua's __index if name is without _ or . prefix
-    --    (metamethods and tolua fields give access to unprotected C
-    --     functions in a pointer-unsafe way).
-    -- otherwise, return nil
-    local api_type_index = api_type.__index
-    local properties = api_type.properties
-    -- Prevent tampering with the notion of equality
-    local rawequal = rawequal
-    local string_sub = string.sub
-
-    local function field_getter(self, field)
-      local getter = properties and properties[field]
-      if getter then
-        return getter(self)
-      else
-        local pfx = string_sub(field, 1, 1)
-        if rawequal(pfx, '.') or rawequal(pfx, '_') then
-          return nil
-        else
-          return api_type_index(self, field)
-        end
-      end
-    end
-    api_type.__index = field_getter
-
-    -- Delete '.set' table to disallow direct writing of struct fields
-    api_type[".set"] = nil
-    -- Hide the metatable and hide the class from global namespace
-    api_type.__metatable = false
-    _G[typename] = nil
   end
   -- End (API Types Special Methods)
 end
@@ -101,11 +66,6 @@ end
 -- ***************************************************************************
 -- API Lockdown
 -- ***************************************************************************
-
--- Override global 'tolua' module with a reduced version
-tolua = {
-  type=tolua.type,
-}
 
 -- Hide all private methods
 methods_private = nil

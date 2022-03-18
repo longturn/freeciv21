@@ -18,17 +18,14 @@
 #include "lua.h"
 #include "lualib.h"
 
-/* dependencies/tolua */
-#include "tolua.h"
-
 // utility
 #include "log.h"
 
 /* common/scriptcore */
+#include "api_game_methods.h"
 #include "luascript.h"
+#include "luascript_signal.h"
 #include "luascript_types.h"
-#include "tolua_common_a_gen.h"
-#include "tolua_game_gen.h"
 
 // server
 #include "auth.h"
@@ -208,8 +205,8 @@ bool script_fcdb_init(const QString &fcdb_luafile)
     fcl_compat.caller = nullptr;
     luascript_init(&fcl_compat);
 
+    setup_game_methods(*fcl);
     luascript_common_a(fcl->lua_state());
-    tolua_game_open(fcl->lua_state());
     script_fcdb_register_functions();
     luascript_common_z(fcl->lua_state());
   } catch (const std::exception &e) {

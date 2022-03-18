@@ -13,11 +13,6 @@
 --  If you really like to change a function name, be sure to keep also the
 --  old one running.
 
--- Nonexistent methods.
-function Nonexistent:exists()
-  return false
-end
-
 -- Log module implementation.
 
 function log.fatal(fmt, ...)
@@ -65,6 +60,8 @@ function _freeciv_state_dump()
   for k, v in pairs(_G) do
     if k == '_VERSION' then
       -- ignore _VERSION variable.
+    elseif string.sub(k, 1, 4) == "sol." then
+      -- ignore sol magic.
     elseif type(v) == 'boolean'
         or type(v) == 'number' then
       -- FIXME: depending on locale, the number formatting can use a
@@ -77,7 +74,7 @@ function _freeciv_state_dump()
 
       res = res .. k .. '=' .. rvalue .. '\n'
     elseif type(v) == 'userdata' then
-      local method = string.lower(tolua.type(v))
+      local method = string.lower(v.__type.name)
 
       res = res .. k .. '=find.' .. method
       if method == 'city' or method == 'unit' then

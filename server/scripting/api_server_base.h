@@ -10,18 +10,7 @@
 
 #pragma once
 
-/* common/scriptcore */
-#include "luascript_types.h"
+// Sol
+#include "sol/sol.hpp"
 
-struct lua_State;
-
-// Additional methods on the server.
-int api_server_player_civilization_score(lua_State *L, Player *pplayer);
-
-bool api_server_was_started(lua_State *L);
-
-bool api_server_save(lua_State *L, const char *filename);
-
-const char *api_server_setting_get(lua_State *L, const char *sett_name);
-
-bool api_play_music(lua_State *L, Player *pplayer, const char *tag);
+void setup_lua_server_base(sol::state_view lua);

@@ -19,6 +19,9 @@
 
 #include "server.h"
 
+// Sol
+#include "sol/sol.hpp"
+
 // Qt
 #include <QCoreApplication>
 #include <QDir>
@@ -70,6 +73,11 @@
 #include "stdinhand.h"
 #include "timing.h"
 #include "voting.h"
+
+/* server/scripting */
+#include "script_server.h"
+
+SERVER_SIGNAL(pulse)
 
 using namespace freeciv;
 
@@ -1057,7 +1065,7 @@ void server::pulse()
   conn_list_iterate_end
 
   call_ai_refresh();
-  script_server_signal_emit("pulse");
+  server_signals::pulse();
   (void) send_server_info_to_metaserver(META_REFRESH);
   if (current_turn_timeout() > 0 && S_S_RUNNING == server_state()
       && game.server.phase_timer

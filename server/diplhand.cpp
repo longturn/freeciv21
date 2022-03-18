@@ -18,6 +18,9 @@
 #include <cstdio>
 #include <cstdlib>
 
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "bitvector.h"
 #include "fcintl.h"
@@ -53,6 +56,9 @@
 #include "script_server.h"
 
 #include "diplhand.h"
+
+// First player is former owner, second new one.
+SERVER_SIGNAL(city_transferred, city *, player *, player *, const char *)
 
 static struct treaty_list *treaties = nullptr;
 
@@ -563,8 +569,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
 
         if (transfer_city(pdest, pcity, -1, true, true, false,
                           !is_barbarian(pdest))) {
-          script_server_signal_emit("city_transferred", pcity, pgiver, pdest,
-                                    "trade");
+          server_signals::city_transferred(pcity, pgiver, pdest, "trade");
         }
         break;
       }

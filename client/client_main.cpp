@@ -22,6 +22,15 @@
 #include <cmath>
 #include <csignal>
 
+/* dependencies/lua */
+extern "C" {
+#include "lua.h"
+#include "lualib.h"
+}
+
+// Sol
+#include "sol/sol.hpp"
+
 // Qt
 #include <QApplication>
 #include <QBitArray>

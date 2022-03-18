@@ -12,6 +12,9 @@
 #include <fc_config.h>
 #endif
 
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "registry_ini.h"
 
@@ -26,10 +29,12 @@
 
 #include "api_server_luadata.h"
 
+namespace {
+
 /**
    Get string value from luadata.
  */
-const char *api_luadata_get_str(lua_State *L, const char *field)
+const char *luadata_get_str(lua_State *L, const char *field)
 {
   LUASCRIPT_CHECK_STATE(L, nullptr);
 
@@ -39,4 +44,12 @@ const char *api_luadata_get_str(lua_State *L, const char *field)
 
   return secfile_lookup_str_default(game.server.luadata, nullptr, "%s",
                                     field);
+}
+
+} // namespace
+
+void setup_server_notify(sol::state_view lua)
+{
+  auto luadata = lua["luadata"].get_or_create<sol::table>();
+  luadata["get_str"] = luadata_get_str;
 }

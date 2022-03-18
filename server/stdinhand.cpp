@@ -20,6 +20,9 @@
 #include <cstdlib>
 #include <cstring>
 
+// Sol
+#include "sol/sol.hpp"
+
 // Qt
 #include <QCoreApplication>
 #include <QRegularExpression>

@@ -8,38 +8,52 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 #pragma once
+
 // utility
 #include "support.h"
 
 #include "luascript_types.h"
-struct fc_lua;
-
-typedef char *signal_deprecator;
-
-// Signal callback datastructure.
-struct signal_callback {
-  char *name; // callback function name
-};
 
 // Signal datastructure.
 struct signal {
-  int nargs;                           // number of arguments to pass
-  enum api_types *arg_types;           // argument types
-  QList<signal_callback *> *callbacks; // connected callbacks
-  char *depr_msg; // deprecation message to show if handler added
+  QList<QString> callbacks; // connected callbacks
+  const char *depr_msg;     // deprecation message to show if handler added
 };
 
-void luascript_signal_init(struct fc_lua *fcl);
-void luascript_signal_free(struct fc_lua *fcl);
+typedef fc_lua *(*get_lua)();
+template <typename... Args> class Signal {
+public:
+  Signal(const char *name, get_lua getter, const char *deprecated = nullptr)
+      : name(name), getter(getter)
+  {
+    auto fcl = getter();
+    std::lock_guard<std::mutex> l(fcl->mu);
 
-void luascript_signal_emit_valist(struct fc_lua *fcl,
-                                  const char *signal_name, va_list args);
-void luascript_signal_emit(struct fc_lua *fcl, const char *signal_name, ...);
-signal_deprecator *luascript_signal_create(struct fc_lua *fcl,
-                                           const char *signal_name,
-                                           int nargs, ...);
-void deprecate_signal(signal_deprecator *deprecator, const char *signal_name,
-                      const char *replacement, const char *deprecated_since);
+    if (fcl->signals_hash.constFind(name) != fcl->signals_hash.constEnd()) {
+      qFatal("Attempting to create a second signal named '%s'", name);
+    }
+
+    struct signal sig = {{}, deprecated};
+    fcl->signals_hash.insert(name, sig);
+    fcl->signal_names.push_back(name);
+  }
+
+  void operator()(Args... args) const
+  {
+    auto fcl = getter();
+
+    sol::state_view lua(fcl->state);
+
+    for (const auto &handler : fcl->signals_hash[name].callbacks) {
+      lua[handler](std::forward<Args>(args)...);
+    }
+  }
+
+private:
+  QString name;
+  get_lua getter;
+};
+
 void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,
                                const char *callback_name, bool create);
 bool luascript_signal_callback_defined(struct fc_lua *fcl,
@@ -47,6 +61,6 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
                                        const char *callback_name);
 
 QString luascript_signal_by_index(struct fc_lua *fcl, int sindex);
-const char *luascript_signal_callback_by_index(struct fc_lua *fcl,
-                                               const char *signal_name,
-                                               int sindex);
+QString luascript_signal_callback_by_index(struct fc_lua *fcl,
+                                           const char *signal_name,
+                                           int sindex);

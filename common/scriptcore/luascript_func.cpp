@@ -14,6 +14,9 @@
 
 #include <cstdarg>
 
+// Sol
+#include "sol/sol.hpp"
+
 /* dependencies/lua */
 extern "C" {
 #include "lua.h"

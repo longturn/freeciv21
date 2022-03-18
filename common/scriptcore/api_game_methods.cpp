@@ -12,6 +12,9 @@
 #include <fc_config.h>
 #endif
 
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "deprecations.h"
 #include "fcintl.h"
@@ -40,209 +43,86 @@
 
 #include "api_game_methods.h"
 
+namespace sol {
+
+namespace stack {
+template <> struct unqualified_pusher<::QString> {
+  static int push(lua_State *L, const ::QString &str)
+  {
+    return stack::push(L, qUtf8Printable(str));
+  }
+};
+
+template <> struct unqualified_getter<::QString> {
+  static ::QString get(lua_State *L, int index)
+  {
+    return QString(stack::get<const char *>(L, index));
+  }
+};
+
+} // namespace stack
+
+} // namespace sol
+
+struct unit_list_link {
+  struct unit_list_link *next, *prev;
+  void *dataptr;
+};
+
+struct city_list_link {
+  struct unit_list_link *next, *prev;
+  void *dataptr;
+};
+
+namespace {
+
 /**
    Return the current turn.
  */
-int api_methods_game_turn(lua_State *L)
-{
-  LUASCRIPT_CHECK_STATE(L, 0);
-
-  return game.info.turn;
-}
+int game_turn() { return game.info.turn; }
 
 /**
    Return the current year.
  */
-int api_methods_game_year(lua_State *L)
-{
-  LUASCRIPT_CHECK_STATE(L, 0);
-
-  return game.info.year;
-}
+int game_year() { return game.info.year; }
 
 /**
    Return the current year fragment.
  */
-int api_methods_game_year_fragment(lua_State *L)
-{
-  LUASCRIPT_CHECK_STATE(L, 0);
-
-  return game.info.fragment_count;
-}
-
-/**
-   Return the current year fragment.
- */
-const char *api_methods_game_year_text(lua_State *L)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-
-  return calendar_text();
-}
-
-/**
-   Return the current turn, as if real turns started from 0.
- */
-int api_methods_game_turn_deprecated(lua_State *L)
-{
-  LUASCRIPT_CHECK_STATE(L, 0);
-
-  qCWarning(deprecations_category,
-            "Deprecated: lua construct \"game:turn\", deprecated "
-            "since \"3.0\", used. "
-            "Use \"game:current_turn\" instead.");
-
-  if (game.info.turn > 0) {
-    return game.info.turn - 1;
-  }
-
-  return game.info.turn;
-}
+int game_year_fragment() { return game.info.fragment_count; }
 
 /**
    Return name of the current ruleset.
  */
-const char *api_methods_game_rulesetdir(lua_State *L)
-{
-  Q_UNUSED(L)
-  return game.server.rulesetdir;
-}
+const char *game_rulesetdir() { return game.server.rulesetdir; }
 
 /**
    Return name of the current ruleset.
  */
-const char *api_methods_game_ruleset_name(lua_State *L)
-{
-  Q_UNUSED(L)
-  return game.control.name;
-}
+const char *game_ruleset_name() { return game.control.name; }
 
 /**
-   Return TRUE if pbuilding is a wonder.
+   Register game table.
  */
-bool api_methods_building_type_is_wonder(lua_State *L,
-                                         Building_Type *pbuilding)
+sol::table register_game(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pbuilding, false);
+  auto game = lua["game"].get_or_create<sol::table>();
 
-  return is_wonder(pbuilding);
-}
+  game.set("turn", game_turn);
+  game.set("current_year", game_year);
+  game.set("year_text", calendar_text);
+  game.set("current_fragment", game_year_fragment);
+  game.set("rulesetdir", game_rulesetdir);
+  game.set("ruleset_name", game_ruleset_name);
 
-/**
-   Return TRUE if pbuilding is a great wonder.
- */
-bool api_methods_building_type_is_great_wonder(lua_State *L,
-                                               Building_Type *pbuilding)
-{
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pbuilding, false);
-
-  return is_great_wonder(pbuilding);
-}
-
-/**
-   Return TRUE if pbuilding is a small wonder.
- */
-bool api_methods_building_type_is_small_wonder(lua_State *L,
-                                               Building_Type *pbuilding)
-{
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pbuilding, false);
-
-  return is_small_wonder(pbuilding);
-}
-
-/**
-   Return TRUE if pbuilding is a building.
- */
-bool api_methods_building_type_is_improvement(lua_State *L,
-                                              Building_Type *pbuilding)
-{
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pbuilding, false);
-
-  return is_improvement(pbuilding);
-}
-
-/**
-   Return rule name for Building_Type
- */
-const char *api_methods_building_type_rule_name(lua_State *L,
-                                                Building_Type *pbuilding)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pbuilding, nullptr);
-
-  return improvement_rule_name(pbuilding);
-}
-
-/**
-   Return translated name for Building_Type
- */
-const char *
-api_methods_building_type_name_translation(lua_State *L,
-                                           Building_Type *pbuilding)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pbuilding, nullptr);
-
-  return improvement_name_translation(pbuilding);
-}
-
-/**
-   Return TRUE iff city has building
- */
-bool api_methods_city_has_building(lua_State *L, City *pcity,
-                                   Building_Type *building)
-{
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pcity, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, building, 3, Building_Type, false);
-
-  return city_has_building(pcity, building);
-}
-
-/**
-   Return the square raduis of the city map.
- */
-int api_methods_city_map_sq_radius(lua_State *L, City *pcity)
-{
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_SELF(L, pcity, 0);
-
-  return city_map_radius_sq_get(pcity);
-}
-
-/**
-   Return the size of the city.
- */
-int api_methods_city_size_get(lua_State *L, City *pcity)
-{
-  LUASCRIPT_CHECK_STATE(L, 1);
-  LUASCRIPT_CHECK_SELF(L, pcity, 1);
-
-  return city_size_get(pcity);
-}
-
-/**
-   Return the tile of the city.
- */
-Tile *api_methods_city_tile_get(lua_State *L, City *pcity)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pcity, nullptr);
-
-  return pcity->tile;
+  return game;
 }
 
 /**
    How much city inspires partisans for a player.
  */
-int api_methods_city_inspire_partisans(lua_State *L, City *self,
-                                       Player *inspirer)
+int city_inspire_partisans(city *self, player *inspirer)
 {
-  Q_UNUSED(L)
   bool inspired = false;
 
   if (!game.info.citizen_nationality) {
@@ -283,24 +163,10 @@ int api_methods_city_inspire_partisans(lua_State *L, City *self,
 }
 
 /**
-   How much culture city has?
- */
-int api_methods_city_culture_get(lua_State *L, City *pcity)
-{
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_SELF(L, pcity, 0);
-
-  return city_culture(pcity);
-}
-
-/**
    Return TRUE iff city happy
  */
-bool api_methods_is_city_happy(lua_State *L, City *pcity)
+bool city_is_happy(city *pcity)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pcity, false);
-
   // Note: if clients ever have virtual cities or sth, needs amending
   return is_server() ? city_happy(pcity) : pcity->client.happy;
 }
@@ -308,112 +174,75 @@ bool api_methods_is_city_happy(lua_State *L, City *pcity)
 /**
    Return TRUE iff city is unhappy
  */
-bool api_methods_is_city_unhappy(lua_State *L, City *pcity)
+bool city_is_unhappy(city *pcity)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pcity, false);
-
   // Note: if clients ever have virtual cities or sth, needs amending
   return is_server() ? city_unhappy(pcity) : pcity->client.unhappy;
 }
 
 /**
-   Return TRUE iff city is celebrating
+   Register city metatable.
  */
-bool api_methods_is_city_celebrating(lua_State *L, City *pcity)
+sol::usertype<city> register_city(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pcity, false);
+  auto city = lua.new_usertype<::city>("City", sol::no_constructor);
+  city.set("name", sol::readonly(&city::name));
+  city.set("owner", sol::readonly(&city::owner));
+  city.set("original", sol::readonly(&city::original));
+  city.set("id", sol::readonly(&city::id));
 
-  return city_celebrating(pcity);
+  city.set("map_sq_radius", sol::property(city_map_radius_sq_get));
+  city.set("size", sol::property(city_size_get));
+  city.set("tile", sol::property(city_tile));
+  city.set("culture", sol::property(city_culture));
+  city.set("is_capital", sol::property(is_capital));
+  city.set("is_gov_center", sol::property(is_gov_center));
+  city.set("is_celebrating", sol::property(city_celebrating));
+  city.set("is_unhappy", sol::property(city_is_unhappy));
+  city.set("is_happy", sol::property(city_is_happy));
+
+  city.set("inspire_partisans", city_inspire_partisans);
+  city.set("has_building", city_has_building);
+
+  return city;
 }
 
 /**
-   Return TRUE iff city is government center
+   Register government metatable.
  */
-bool api_methods_is_gov_center(lua_State *L, City *pcity)
+sol::usertype<government> register_government(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pcity, false);
+  auto government =
+      lua.new_usertype<::government>("Government", sol::no_constructor);
+  government.set("id", sol::readonly(&government::item_number));
 
-  return is_gov_center(pcity);
+  government.set("rule_name", sol::property(government_rule_name));
+  government.set("name_translation",
+                 sol::property(government_name_translation));
+
+  return government;
 }
 
 /**
-   Return TRUE if city is capital
+   Register nation metatable.
  */
-bool api_methods_is_capital(lua_State *L, City *pcity)
+sol::usertype<nation_type> register_nation(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pcity, false);
+  auto nation =
+      lua.new_usertype<nation_type>("Nation_Type", sol::no_constructor);
+  nation.set("id", sol::readonly(&nation_type::item_number));
+  nation.set("rule_name", sol::property(nation_rule_name));
+  nation.set("name_translation",
+             sol::property(nation_adjective_translation));
+  nation.set("plural_translation", sol::property(nation_plural_translation));
 
-  return is_capital(pcity);
-}
-
-/**
-    Return rule name for Government
- */
-const char *api_methods_government_rule_name(lua_State *L,
-                                             Government *pgovernment)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pgovernment, nullptr);
-
-  return government_rule_name(pgovernment);
-}
-
-/**
-   Return translated name for Government
- */
-const char *api_methods_government_name_translation(lua_State *L,
-                                                    Government *pgovernment)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pgovernment, nullptr);
-
-  return government_name_translation(pgovernment);
-}
-
-/**
-   Return rule name for Nation_Type
- */
-const char *api_methods_nation_type_rule_name(lua_State *L,
-                                              Nation_Type *pnation)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pnation, nullptr);
-
-  return nation_rule_name(pnation);
-}
-
-/**
-   Return translated adjective for Nation_Type
- */
-const char *api_methods_nation_type_name_translation(lua_State *L,
-                                                     Nation_Type *pnation)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pnation, nullptr);
-
-  return nation_adjective_translation(pnation);
-}
-
-/**
-   Return translated plural noun for Nation_Type
- */
-const char *api_methods_nation_type_plural_translation(lua_State *L,
-                                                       Nation_Type *pnation)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pnation, nullptr);
-
-  return nation_plural_translation(pnation);
+  return nation;
 }
 
 /**
    Return gui type string of the controlling connection.
  */
-const char *api_methods_player_controlling_gui(lua_State *L, Player *pplayer)
+const char *player_controlling_gui(player *pplayer)
 {
   static bool warned = false;
   if (!warned) {
@@ -426,96 +255,49 @@ const char *api_methods_player_controlling_gui(lua_State *L, Player *pplayer)
 /**
    Return TRUE iff player has wonder
  */
-bool api_methods_player_has_wonder(lua_State *L, Player *pplayer,
-                                   Building_Type *building)
+bool player_has_wonder(sol::this_state s, player *pplayer,
+                       impr_type *building)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pplayer, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, building, 3, Building_Type, false);
-
   return wonder_is_built(pplayer, building);
-}
-
-/**
-   Return player number
- */
-int api_methods_player_number(lua_State *L, Player *pplayer)
-{
-  LUASCRIPT_CHECK_STATE(L, -1);
-  LUASCRIPT_CHECK_SELF(L, pplayer, -1);
-
-  return player_number(pplayer);
 }
 
 /**
    Return the number of cities pplayer has.
  */
-int api_methods_player_num_cities(lua_State *L, Player *pplayer)
+int player_num_cities(player *pplayer)
 {
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_SELF(L, pplayer, 0);
-
   return city_list_size(pplayer->cities);
 }
 
 /**
    Return the number of units pplayer has.
  */
-int api_methods_player_num_units(lua_State *L, Player *pplayer)
+int player_num_units(player *pplayer)
 {
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_SELF(L, pplayer, 0);
-
   return unit_list_size(pplayer->units);
 }
 
 /**
    Return gold for Player
  */
-int api_methods_player_gold(lua_State *L, Player *pplayer)
-{
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_SELF(L, pplayer, 0);
-
-  return pplayer->economic.gold;
-}
+int player_gold(player *pplayer) { return pplayer->economic.gold; }
 
 /**
    Return TRUE if Player knows advance ptech.
  */
-bool api_methods_player_knows_tech(lua_State *L, Player *pplayer,
-                                   Tech_Type *ptech)
+bool player_knows_tech(player *pplayer, advance *ptech)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pplayer, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptech, 3, Tech_Type, false);
-
   return research_invention_state(research_get(pplayer),
                                   advance_number(ptech))
          == TECH_KNOWN;
 }
 
 /**
-   How much culture player has?
- */
-int api_methods_player_culture_get(lua_State *L, Player *pplayer)
-{
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_SELF(L, pplayer, 0);
-
-  return player_culture(pplayer);
-}
-
-/**
    Does player have flag set?
  */
-bool api_methods_player_has_flag(lua_State *L, Player *pplayer,
-                                 const char *flag)
+bool player_has_flag(player *pplayer, const char *flag)
 {
   enum plr_flag_id flag_val;
-
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_SELF(L, pplayer, 0);
 
   flag_val = plr_flag_id_by_name(flag, fc_strcasecmp);
 
@@ -529,37 +311,25 @@ bool api_methods_player_has_flag(lua_State *L, Player *pplayer,
 /**
    Return TRUE if players share research.
  */
-bool api_methods_player_shares_research(lua_State *L, Player *pplayer,
-                                        Player *aplayer)
+bool player_shares_research(player *pplayer, player *aplayer)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, pplayer, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, aplayer, 3, Player, false);
-
   return research_get(pplayer) == research_get(aplayer);
 }
 
 /**
    Return name of the research group player belongs to.
  */
-const char *api_methods_research_rule_name(lua_State *L, Player *pplayer)
+const char *player_research_rule_name(player *pplayer)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pplayer, nullptr);
-
   return research_rule_name(research_get(pplayer));
 }
 
 /**
    Return name of the research group player belongs to.
  */
-const char *api_methods_research_name_translation(lua_State *L,
-                                                  Player *pplayer)
+const char *player_research_name_translation(player *pplayer)
 {
   static char buf[MAX_LEN_MSG];
-
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pplayer, nullptr);
 
   (void) research_pretty_name(research_get(pplayer), buf, ARRAY_SIZE(buf));
 
@@ -569,229 +339,203 @@ const char *api_methods_research_name_translation(lua_State *L,
 /**
    Return list head for unit list for Player
  */
-Unit_List_Link *api_methods_private_player_unit_list_head(lua_State *L,
-                                                          Player *pplayer)
+unit_list_link *player_unit_list_head(player *pplayer)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pplayer, nullptr);
   return unit_list_head(pplayer->units);
+}
+
+/**
+   Register player metatable.
+ */
+sol::usertype<player> register_player(sol::state_view lua)
+{
+  auto player = lua.new_usertype<::player>("Player", sol::no_constructor);
+
+  player.set("name", sol::readonly(&player::name));
+  player.set("nation", sol::readonly(&player::nation));
+  player.set("is_alive", sol::readonly(&player::is_alive));
+
+  player.set("id", sol::property(player_number));
+  player.set("controlling_gui", sol::property(player_controlling_gui));
+  player.set("num_cities", sol::property(player_num_cities));
+  player.set("num_units", sol::property(player_num_units));
+  player.set("gold", sol::property(player_gold));
+  player.set("culture", sol::property(player_culture));
+
+  player.set("has_wonder", player_has_wonder);
+  player.set("knows_tech", player_knows_tech);
+  player.set("shares_research", player_shares_research);
+  player.set("research_rule_name", player_research_rule_name);
+  player.set("shares_research", player_shares_research);
+  player.set("research_name_translation", player_research_name_translation);
+  player.set("has_flag", player_has_flag);
+
+  lua.script(R"(
+  function Player:is_human()
+    return not self.has_flag(self, "AI");
+  end
+  )");
+  return player;
+}
+
+/**
+   Register unit list metatable.
+ */
+sol::usertype<unit_list_link> register_unit_list_link(sol::state_view lua)
+{
+  auto unit_list = lua.new_usertype<unit_list_link>("Unit_List_Link",
+                                                    sol::no_constructor);
+  unit_list.set("data", unit_list_link_data);
+  unit_list.set("next", unit_list_link_next);
+
+  return unit_list;
 }
 
 /**
    Return list head for city list for Player
  */
-City_List_Link *api_methods_private_player_city_list_head(lua_State *L,
-                                                          Player *pplayer)
+city_list_link *player_city_list_head(player *pplayer)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pplayer, nullptr);
-
   return city_list_head(pplayer->cities);
 }
 
 /**
-   Return rule name for Tech_Type
+   Register city list metatable.
  */
-const char *api_methods_tech_type_rule_name(lua_State *L, Tech_Type *ptech)
+sol::usertype<city_list_link> register_city_list_link(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, ptech, nullptr);
+  auto city_list = lua.new_usertype<city_list_link>("City_List_Link",
+                                                    sol::no_constructor);
+  city_list.set("data", city_list_link_data);
+  city_list.set("next", city_list_link_next);
 
-  return advance_rule_name(ptech);
+  return city_list;
 }
 
 /**
-   Return translated name for Tech_Type
+   Register advance metatable.
  */
-const char *api_methods_tech_type_name_translation(lua_State *L,
-                                                   Tech_Type *ptech)
+sol::usertype<advance> register_advance(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, ptech, nullptr);
+  auto tech = lua.new_usertype<::advance>("Tech_Type", sol::no_constructor);
+  tech.set("id", sol::readonly(&advance::item_number));
+  tech.set("rule_name", advance_rule_name);
+  tech.set("name_translation", advance_name_translation);
 
-  return advance_name_translation(ptech);
-}
-
-/**
-   Return rule name for Terrain
- */
-const char *api_methods_terrain_rule_name(lua_State *L, Terrain *pterrain)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pterrain, nullptr);
-
-  return terrain_rule_name(pterrain);
-}
-
-/**
-   Return translated name for Terrain
- */
-const char *api_methods_terrain_name_translation(lua_State *L,
-                                                 Terrain *pterrain)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pterrain, nullptr);
-
-  return terrain_name_translation(pterrain);
+  return tech;
 }
 
 /**
    Return name of the terrain's class
  */
-const char *api_methods_terrain_class_name(lua_State *L, Terrain *pterrain)
+const char *class_name(terrain *pterrain)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pterrain, nullptr);
-
   return terrain_class_name(terrain_type_terrain_class(pterrain));
 }
 
 /**
-   Return rule name for Disaster
+   Register terrain metatable.
  */
-const char *api_methods_disaster_rule_name(lua_State *L, Disaster *pdis)
+sol::usertype<terrain> register_terrain(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pdis, nullptr);
+  auto terrain = lua.new_usertype<::terrain>("Terrain", sol::no_constructor);
+  terrain.set("id", sol::readonly(&terrain::item_number));
+  terrain.set("name_translation", terrain_name_translation);
+  terrain.set("rule_name", terrain_rule_name);
+  terrain.set("class_name", class_name);
 
-  return disaster_rule_name(pdis);
+  return terrain;
 }
 
 /**
-   Return translated name for Disaster
+   Register disaster metatable.
  */
-const char *api_methods_disaster_name_translation(lua_State *L,
-                                                  Disaster *pdis)
+sol::usertype<disaster_type> register_disaster(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pdis, nullptr);
+  auto disaster =
+      lua.new_usertype<disaster_type>("Disaster", sol::no_constructor);
+  disaster.set("id", sol::readonly(&disaster_type::id));
+  disaster.set("rule_name", disaster_rule_name);
+  disaster.set("name_translation", disaster_name_translation);
 
-  return disaster_name_translation(pdis);
+  return disaster;
 }
 
 /**
-   Return rule name for Achievement
+   Register achievement metatable.
  */
-const char *api_methods_achievement_rule_name(lua_State *L,
-                                              Achievement *pach)
+sol::usertype<achievement> register_achievement(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pach, nullptr);
+  auto achievement =
+      lua.new_usertype<::achievement>("Achievement", sol::no_constructor);
+  achievement.set("id", sol::readonly(&achievement::id));
+  achievement.set("rule_name", achievement_rule_name);
+  achievement.set("name_translation", achievement_name_translation);
 
-  return achievement_rule_name(pach);
-}
-
-/**
-   Return translated name for Achievement
- */
-const char *api_methods_achievement_name_translation(lua_State *L,
-                                                     Achievement *pach)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pach, nullptr);
-
-  return achievement_name_translation(pach);
+  return achievement;
 }
 
 /**
    Return rule name for Action
  */
-const char *api_methods_action_rule_name(lua_State *L, Action *pact)
+const char *action_rule_name(action *pact)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pact, nullptr);
-
   return action_id_rule_name(pact->id);
 }
 
 /**
    Return translated name for Action
  */
-const char *api_methods_action_name_translation(lua_State *L, Action *pact)
+const QString action_name_translation(action *pact)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pact, nullptr);
+  return action_id_name_translation(pact->id);
+}
 
-  return qUtf8Printable(action_id_name_translation(pact->id));
+/**
+   Register action metatable.
+ */
+sol::usertype<action> register_action(sol::state_view lua)
+{
+  auto action = lua.new_usertype<::action>("Action", sol::no_constructor);
+  action.set("id", sol::readonly(&action::id));
+  action.set("rule_name", action_rule_name);
+  action.set("name_translation", action_name_translation);
+
+  return action;
 }
 
 /**
    Return the native x coordinate of the tile.
  */
-int api_methods_tile_nat_x(lua_State *L, Tile *ptile)
+int tile_nat_x(tile *ptile)
 {
-  LUASCRIPT_CHECK_STATE(L, -1);
-  LUASCRIPT_CHECK_SELF(L, ptile, -1);
-
   return index_to_native_pos_x(tile_index(ptile));
 }
 
 /**
    Return the native y coordinate of the tile.
  */
-int api_methods_tile_nat_y(lua_State *L, Tile *ptile)
+int tile_nat_y(tile *ptile)
 {
-  LUASCRIPT_CHECK_STATE(L, -1);
-  LUASCRIPT_CHECK_SELF(L, ptile, -1);
-
   return index_to_native_pos_y(tile_index(ptile));
 }
 
 /**
    Return the map x coordinate of the tile.
  */
-int api_methods_tile_map_x(lua_State *L, Tile *ptile)
-{
-  LUASCRIPT_CHECK_STATE(L, -1);
-  LUASCRIPT_CHECK_SELF(L, ptile, -1);
-
-  return index_to_map_pos_x(tile_index(ptile));
-}
+int tile_map_x(tile *ptile) { return index_to_map_pos_x(tile_index(ptile)); }
 
 /**
    Return the map y coordinate of the tile.
  */
-int api_methods_tile_map_y(lua_State *L, Tile *ptile)
-{
-  LUASCRIPT_CHECK_STATE(L, -1);
-  LUASCRIPT_CHECK_SELF(L, ptile, -1);
-
-  return index_to_map_pos_y(tile_index(ptile));
-}
-
-/**
-   Return City on ptile, else nullptr
- */
-City *api_methods_tile_city(lua_State *L, Tile *ptile)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, ptile, nullptr);
-
-  return tile_city(ptile);
-}
-
-/**
-   Return TRUE if there is a city inside the maximum city radius from ptile.
- */
-bool api_methods_tile_city_exists_within_max_city_map(lua_State *L,
-                                                      Tile *ptile,
-                                                      bool may_be_on_center)
-{
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, ptile, false);
-
-  return city_exists_within_max_city_map(ptile, may_be_on_center);
-}
+int tile_map_y(tile *ptile) { return index_to_map_pos_y(tile_index(ptile)); }
 
 /**
    Return TRUE if there is a extra with rule name name on ptile.
    If no name is specified return true if there is a extra on ptile.
  */
-bool api_methods_tile_has_extra(lua_State *L, Tile *ptile, const char *name)
+bool has_extra(tile *ptile, const char *name)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, ptile, false);
-
   if (!name) {
     extra_type_iterate(pextra)
     {
@@ -803,9 +547,7 @@ bool api_methods_tile_has_extra(lua_State *L, Tile *ptile, const char *name)
 
     return false;
   } else {
-    struct extra_type *pextra;
-
-    pextra = extra_type_by_rule_name(name);
+    struct extra_type *pextra = extra_type_by_rule_name(name);
 
     return (nullptr != pextra && tile_has_extra(ptile, pextra));
   }
@@ -815,11 +557,8 @@ bool api_methods_tile_has_extra(lua_State *L, Tile *ptile, const char *name)
    Return TRUE if there is a base with rule name name on ptile.
    If no name is specified return true if there is any base on ptile.
  */
-bool api_methods_tile_has_base(lua_State *L, Tile *ptile, const char *name)
+bool tile_has_base(tile *ptile, const char *name)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, ptile, false);
-
   if (!name) {
     extra_type_by_cause_iterate(EC_BASE, pextra)
     {
@@ -844,11 +583,8 @@ bool api_methods_tile_has_base(lua_State *L, Tile *ptile, const char *name)
    Return TRUE if there is a road with rule name name on ptile.
    If no name is specified return true if there is any road on ptile.
  */
-bool api_methods_tile_has_road(lua_State *L, Tile *ptile, const char *name)
+bool tile_has_road(tile *ptile, const char *name)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, ptile, false);
-
   if (!name) {
     extra_type_by_cause_iterate(EC_ROAD, pextra)
     {
@@ -872,12 +608,9 @@ bool api_methods_tile_has_road(lua_State *L, Tile *ptile, const char *name)
 /**
    Is tile occupied by enemies
  */
-bool api_methods_enemy_tile(lua_State *L, Tile *ptile, Player *against)
+bool enemy_tile(tile *ptile, player *against)
 {
   struct city *pcity;
-
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, ptile, false);
 
   if (is_non_allied_unit_tile(ptile, against)) {
     return true;
@@ -890,23 +623,13 @@ bool api_methods_enemy_tile(lua_State *L, Tile *ptile, Player *against)
 /**
    Return number of units on tile
  */
-int api_methods_tile_num_units(lua_State *L, Tile *ptile)
-{
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_SELF(L, ptile, 0);
-
-  return unit_list_size(ptile->units);
-}
+int tile_num_units(tile *ptile) { return unit_list_size(ptile->units); }
 
 /**
    Return list head for unit list for Tile
  */
-Unit_List_Link *api_methods_private_tile_unit_list_head(lua_State *L,
-                                                        Tile *ptile)
+unit_list_link *tile_unit_list_head(tile *ptile)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, ptile, nullptr);
-
   return unit_list_head(ptile->units);
 }
 
@@ -914,15 +637,11 @@ Unit_List_Link *api_methods_private_tile_unit_list_head(lua_State *L,
    Return nth tile iteration index (for internal use)
    Will return the next index, or an index < 0 when done
  */
-int api_methods_private_tile_next_outward_index(lua_State *L, Tile *pstart,
-                                                int tindex, int max_dist)
+int tile_next_outward_index(tile *pstart, int tindex, int max_dist)
 {
   int dx, dy;
   int newx, newy;
   int startx, starty;
-
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_SELF(L, pstart, 0);
 
   if (tindex < 0) {
     return 0;
@@ -953,15 +672,11 @@ int api_methods_private_tile_next_outward_index(lua_State *L, Tile *pstart,
 /**
    Return tile for nth iteration index (for internal use)
  */
-Tile *api_methods_private_tile_for_outward_index(lua_State *L, Tile *pstart,
-                                                 int tindex)
+tile *tile_for_outward_index(sol::this_state s, tile *pstart, int tindex)
 {
   int newx, newy;
-
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, pstart, nullptr);
   LUASCRIPT_CHECK_ARG(
-      L, tindex >= 0 && tindex < wld.map.num_iterate_outwards_indices, 3,
+      s, tindex >= 0 && tindex < wld.map.num_iterate_outwards_indices, 3,
       "index out of bounds", nullptr);
 
   index_to_map_pos(&newx, &newy, tile_index(pstart));
@@ -976,89 +691,88 @@ Tile *api_methods_private_tile_for_outward_index(lua_State *L, Tile *pstart,
 }
 
 /**
-   Return squared distance between tiles 1 and 2
+   Register tile metatable.
  */
-int api_methods_tile_sq_distance(lua_State *L, Tile *ptile1, Tile *ptile2)
+sol::usertype<tile> register_tile(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_SELF(L, ptile1, 0);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile2, 3, Tile, 0);
+  auto tile = lua.new_usertype<::tile>("Tile", sol::no_constructor);
+  tile.set("id", sol::readonly(&tile::index));
+  tile.set("terrain", sol::readonly(&tile::terrain));
+  tile.set("owner", sol::readonly(&tile::owner));
 
-  return sq_map_distance(ptile1, ptile2);
+  tile.set("nat_x", sol::property(tile_nat_x));
+  tile.set("nat_y", sol::property(tile_nat_y));
+  tile.set("map_x", sol::property(tile_map_x));
+  tile.set("map_y", sol::property(tile_map_y));
+
+  tile.set("city", tile_city);
+  tile.set("sq_distance", sq_map_distance);
+  tile.set("num_units", tile_num_units);
+  tile.set("is_enemy", enemy_tile);
+  tile.set("has_road", tile_has_road);
+  tile.set("has_base", tile_has_base);
+  tile.set("has_extra", has_extra);
+  tile.set("city_exists_within_max_city_map",
+           city_exists_within_max_city_map);
+
+  return tile;
 }
 
 /**
    Can punit found a city on its tile?
  */
-bool api_methods_unit_city_can_be_built_here(lua_State *L, Unit *punit)
+bool unit_city_can_be_built_here(unit *punit)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, punit, false);
-
   return city_can_be_built_here(unit_tile(punit), punit);
-}
-
-/**
-   Return the tile of the unit.
- */
-Tile *api_methods_unit_tile_get(lua_State *L, Unit *punit)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, punit, nullptr);
-
-  return unit_tile(punit);
 }
 
 /**
    Get unit orientation
  */
-const Direction *api_methods_unit_orientation_get(lua_State *L, Unit *punit)
+const Direction *unit_facing(unit *punit)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit, nullptr);
-
   return luascript_dir(punit->facing);
 }
 
 /**
-   Return Unit that transports punit, if any.
+   Register unit metatable.
  */
-Unit *api_methods_unit_transporter(lua_State *L, Unit *punit)
+sol::usertype<unit> register_unit(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, punit, nullptr);
+  auto unit = lua.new_usertype<::unit>("Unit", sol::no_constructor);
+  unit.set("id", sol::readonly(&unit::id));
+  unit.set("tile", sol::readonly(&unit::tile));
+  unit.set("utype", sol::readonly(&unit::utype));
+  unit.set("owner", sol::readonly(&unit::owner));
+  unit.set("homecity", sol::readonly(&unit::homecity));
+  unit.set("transporter", sol::readonly(&unit::transporter));
 
-  return punit->transporter;
+  unit.set("facing", sol::property(unit_facing));
+
+  unit.set("is_on_possible_city_tile", unit_city_can_be_built_here);
+
+  return unit;
 }
 
 /**
    Return list head for cargo list for Unit
  */
-Unit_List_Link *api_methods_private_unit_cargo_list_head(lua_State *L,
-                                                         Unit *punit)
+unit_list_link *unit_cargo_list_head(unit *punit)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, punit, nullptr);
   return unit_list_head(punit->transporting);
 }
 
 /**
    Return TRUE if punit_type has flag.
  */
-bool api_methods_unit_type_has_flag(lua_State *L, Unit_Type *punit_type,
-                                    const char *flag)
+bool unit_type_has_flag(sol::this_state s, unit_type *punit_type,
+                        const char *flag)
 {
-  enum unit_type_flag_id id;
-
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, punit_type, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, flag, 3, string, false);
-
-  id = unit_type_flag_id_by_name(flag, fc_strcasecmp);
+  enum unit_type_flag_id id = unit_type_flag_id_by_name(flag, fc_strcasecmp);
   if (unit_type_flag_id_is_valid(id)) {
     return utype_has_flag(punit_type, id);
   } else {
-    luascript_error(L, "Unit type flag \"%s\" does not exist", flag);
+    luascript_error(s, "Unit type flag \"%s\" does not exist", flag);
     return false;
   }
 }
@@ -1066,20 +780,14 @@ bool api_methods_unit_type_has_flag(lua_State *L, Unit_Type *punit_type,
 /**
    Return TRUE if punit_type has role.
  */
-bool api_methods_unit_type_has_role(lua_State *L, Unit_Type *punit_type,
-                                    const char *role)
+bool unit_type_has_role(sol::this_state s, unit_type *punit_type,
+                        const char *role)
 {
-  enum unit_role_id id;
-
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, punit_type, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, role, 3, string, false);
-
-  id = unit_role_id_by_name(role, fc_strcasecmp);
+  enum unit_role_id id = unit_role_id_by_name(role, fc_strcasecmp);
   if (unit_role_id_is_valid(id)) {
     return utype_has_role(punit_type, id);
   } else {
-    luascript_error(L, "Unit role \"%s\" does not exist", role);
+    luascript_error(s, "Unit role \"%s\" does not exist", role);
     return false;
   }
 }
@@ -1087,79 +795,219 @@ bool api_methods_unit_type_has_role(lua_State *L, Unit_Type *punit_type,
 /**
    Return TRUE iff the unit type can exist on the tile.
  */
-bool api_methods_unit_type_can_exist_at_tile(lua_State *L,
-                                             Unit_Type *punit_type,
-                                             Tile *ptile)
+bool unit_type_can_exist_at_tile(unit_type *punit_type, tile *ptile)
 {
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, punit_type, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 3, Tile, false);
-
   return can_exist_at_tile(&(wld.map), punit_type, ptile);
 }
 
 /**
-   Return rule name for Unit_Type
+   Register unit type metatable.
  */
-const char *api_methods_unit_type_rule_name(lua_State *L,
-                                            Unit_Type *punit_type)
+sol::usertype<unit_type> register_unit_type(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, punit_type, nullptr);
+  auto utype = lua.new_usertype<unit_type>("Unit_Type", sol::no_constructor);
+  utype.set("name_translation", sol::property(utype_name_translation));
+  utype.set("rule_name", sol::property(utype_rule_name));
 
-  return utype_rule_name(punit_type);
+  utype.set("can_exist_at_tile", unit_type_can_exist_at_tile);
+  utype.set("has_role", unit_type_has_role);
+  utype.set("has_flag", unit_type_has_flag);
+
+  return utype;
 }
 
 /**
-   Return translated name for Unit_Type
+   Register building metatable.
  */
-const char *api_methods_unit_type_name_translation(lua_State *L,
-                                                   Unit_Type *punit_type)
+sol::usertype<impr_type> register_building(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_SELF(L, punit_type, nullptr);
+  auto building =
+      lua.new_usertype<impr_type>("Building_Type", sol::no_constructor);
+  building.set("is_wonder", is_wonder);
+  building.set("is_great_wonder", sol::property(is_great_wonder));
+  building.set("is_small_wonder", sol::property(is_small_wonder));
+  building.set("is_improvement", sol::property(is_improvement));
+  building.set("rule_name", sol::property(improvement_rule_name));
+  building.set("name_translation",
+               sol::property(improvement_name_translation));
 
-  return utype_name_translation(punit_type);
+  return building;
+}
+
+const std::string private_script = R"(
+-- ***************************************************************************
+-- Player and Tile: cities_iterate and units_iterate methods
+-- ***************************************************************************
+do
+  local private = methods_private
+
+  -- Iterate over the values of 'array' in order:
+  -- array[1], array[2], array[3], etc.
+  local function value_iterator(array)
+    local i = 0
+    local function iterator()
+      i = i + 1
+      return array[i]
+    end
+    return iterator
+  end
+
+  -- use a copy of the list for safe iteration
+  local function safe_iterate_list(link)
+    local objs = {}
+    while link do
+      objs[#objs + 1] = link:data()
+      link = link:next()
+    end
+    return value_iterator(objs)
+  end
+
+  -- Safe iteration over all units that belong to Player
+  function Player:units_iterate()
+    return safe_iterate_list(private.Player.unit_list_head(self))
+  end
+
+  -- Safe iteration over all cities that belong to Player
+  function Player:cities_iterate()
+    return safe_iterate_list(private.Player.city_list_head(self))
+  end
+
+  -- Safe iteration over the units on Tile
+  function Tile:units_iterate()
+    return safe_iterate_list(private.Tile.unit_list_head(self))
+  end
+
+  -- Safe iteration over the units transported by Unit
+  function Unit:cargo_iterate()
+    return safe_iterate_list(private.Unit.cargo_list_head(self))
+  end
+end
+
+-- ***************************************************************************
+-- Tile: square_iterate, circle_iterate
+-- ***************************************************************************
+do
+  local next_outward_index = methods_private.Tile.next_outward_index
+  local tile_for_outward_index = methods_private.Tile.tile_for_outward_index
+
+  -- iterate over tiles at distance 'radius'
+  function Tile:square_iterate(radius)
+    local index = -1
+    local function iterator()
+      index = next_outward_index(self, index, radius)
+      if index < 0 then
+        return nil
+      else
+        return tile_for_outward_index(self, index)
+      end
+    end
+    return iterator
+  end
+
+  -- iterate over tiles at squared distance 'sq_radius'
+  function Tile:circle_iterate(sq_radius)
+    local cr_radius = math.floor(math.sqrt(sq_radius))
+    local sq_iter = self:square_iterate(cr_radius)
+    local function iterator()
+      local tile = nil
+      repeat
+        tile = sq_iter()
+      until not tile or self:sq_distance(tile) <= sq_radius
+      return tile
+    end
+    return iterator
+  end
+end
+
+-- ***************************************************************************
+-- Iteration constructs for game-global objects
+-- ***************************************************************************
+do
+  -- iterate over the values returned by lookup
+  -- until nil is returned:
+  -- lookup(0), lookup(1), lookup(2), etc
+  local function index_iterate(lookup)
+    local index = -1
+    local function iterator()
+      index = index + 1
+      return lookup(index)
+    end
+    return iterator
+  end
+
+  -- Iterate over all players of the game
+  function players_iterate()
+    return index_iterate(find.player)
+  end
+
+  -- Iterate over all tiles of the game
+  function whole_map_iterate()
+    return index_iterate(find.tile)
+  end
+
+  -- NOTE: Identical further definitions can be made for
+  -- governments, tech_types, building_types etc
+end
+
+)";
+
+/**
+   Register private methods.
+ */
+sol::table register_private(sol::state_view lua)
+{
+  auto priv = lua["methods_private"].get_or_create<sol::table>();
+  auto player = priv["Player"].get_or_create<sol::table>();
+  player.set("unit_list_head", player_unit_list_head);
+  player.set("city_list_head", player_city_list_head);
+
+  auto unit = priv["Unit"].get_or_create<sol::table>();
+  unit.set("cargo_list_head", unit_cargo_list_head);
+
+  auto tile = priv["Tile"].get_or_create<sol::table>();
+  tile.set("next_outward_index", tile_next_outward_index);
+  tile.set("tile_for_outward_index", tile_for_outward_index);
+  tile.set("unit_list_head", tile_unit_list_head);
+
+  lua.script(private_script);
+  return priv;
 }
 
 /**
-   Return Unit for list link
+   Register connection metatable.
  */
-Unit *api_methods_unit_list_link_data(lua_State *L, Unit_List_Link *ul_link)
+sol::usertype<connection> register_connection(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
+  auto conn =
+      lua.new_usertype<connection>("Connection", sol::no_constructor);
+  conn.set("id", sol::readonly(&connection::id));
 
-  return unit_list_link_data(ul_link);
+  return conn;
 }
 
-/**
-   Return next list link or nullptr when link is the last link
- */
-Unit_List_Link *api_methods_unit_list_next_link(lua_State *L,
-                                                Unit_List_Link *ul_link)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-
-  return unit_list_link_next(ul_link);
-}
+} // namespace
 
 /**
-   Return City for list link
+   Register game methods.
  */
-City *api_methods_city_list_link_data(lua_State *L, City_List_Link *cl_link)
+void setup_game_methods(sol::state_view lua)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-
-  return city_list_link_data(cl_link);
-}
-
-/**
-   Return next list link or nullptr when link is the last link
- */
-City_List_Link *api_methods_city_list_next_link(lua_State *L,
-                                                City_List_Link *cl_link)
-{
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-
-  return city_list_link_next(cl_link);
+  register_game(lua);
+  register_nation(lua);
+  register_player(lua);
+  register_city(lua);
+  register_city_list_link(lua);
+  register_building(lua);
+  register_government(lua);
+  register_unit(lua);
+  register_unit_type(lua);
+  register_unit_list_link(lua);
+  register_achievement(lua);
+  register_action(lua);
+  register_disaster(lua);
+  register_advance(lua);
+  register_terrain(lua);
+  register_tile(lua);
+  register_connection(lua);
+  register_private(lua);
 }

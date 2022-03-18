@@ -11,13 +11,10 @@
 #pragma once
 
 /* common/scriptcore */
+#include "luascript_signal.h"
 #include "luascript_types.h"
 
 struct section_file;
-
-// callback invocation function.
-bool script_client_callback_invoke(const char *callback_name, int nargs,
-                                   enum api_types *parg_types, va_list args);
 
 // script functions.
 bool script_client_init();
@@ -29,8 +26,9 @@ bool script_client_do_file(const char *filename);
 void script_client_state_load(struct section_file *file);
 void script_client_state_save(struct section_file *file);
 
-// Signals.
-void script_client_signal_connect(const char *signal_name,
-                                  const char *callback_name);
-void script_client_signal_emit(const char *signal_name, ...);
-const char *script_client_signal_list();
+fc_lua *client_lua();
+
+#define CLIENT_SIGNAL(name, ...)                                            \
+  namespace client_signals {                                                \
+  const Signal<__VA_ARGS__> name(#name, client_lua);                        \
+  }

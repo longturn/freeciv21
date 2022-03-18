@@ -12,6 +12,9 @@
 #include <fc_config.h>
 #endif
 
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "fcintl.h"
 #include "rand.h"
@@ -47,28 +50,16 @@
 
 #include "api_server_edit.h"
 
-/**
-   Unleash barbarians on a tile, for example from a hut
- */
-bool api_edit_unleash_barbarians(lua_State *L, Tile *ptile)
-{
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 2, Tile, false);
-
-  return unleash_barbarians(ptile);
-}
+namespace {
 
 /**
    Place partisans for a player around a tile (normally around a city).
  */
-void api_edit_place_partisans(lua_State *L, Tile *ptile, Player *pplayer,
-                              int count, int sq_radius)
+void edit_place_partisans(sol::this_state s, tile *ptile, player *pplayer,
+                          int count, int sq_radius)
 {
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 2, Tile);
-  LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 3, Player);
-  LUASCRIPT_CHECK_ARG(L, 0 <= sq_radius, 5, "radius must be positive");
-  LUASCRIPT_CHECK(L, 0 < num_role_units(L_PARTISAN),
+  LUASCRIPT_CHECK_ARG(s, 0 <= sq_radius, 5, "radius must be positive");
+  LUASCRIPT_CHECK(s, 0 < num_role_units(L_PARTISAN),
                   "no partisans in ruleset");
 
   return place_partisans(ptile, pplayer, count, sq_radius);
@@ -77,33 +68,15 @@ void api_edit_place_partisans(lua_State *L, Tile *ptile, Player *pplayer,
 /**
    Create a new unit.
  */
-Unit *api_edit_create_unit(lua_State *L, Player *pplayer, Tile *ptile,
-                           Unit_Type *ptype, int veteran_level,
-                           City *homecity, int moves_left)
-{
-  return api_edit_create_unit_full(L, pplayer, ptile, ptype, veteran_level,
-                                   homecity, moves_left, -1, nullptr);
-}
-
-/**
-   Create a new unit.
- */
-Unit *api_edit_create_unit_full(lua_State *L, Player *pplayer, Tile *ptile,
-                                Unit_Type *ptype, int veteran_level,
-                                City *homecity, int moves_left, int hp_left,
-                                Unit *ptransport)
+unit *edit_create_unit_full(sol::this_state s, player *pplayer, tile *ptile,
+                            unit_type *ptype, int veteran_level,
+                            city *homecity, int moves_left, int hp_left,
+                            unit *ptransport)
 {
   struct fc_lua *fcl;
   struct city *pcity;
 
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 2, Player, nullptr);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 3, Tile, nullptr);
-
-  fcl = luascript_get_fcl(L);
-
-  LUASCRIPT_CHECK(L, fcl != nullptr, "Undefined Freeciv21 lua state!",
-                  nullptr);
+  fcl = luascript_get_fcl(s);
 
   if (ptype == nullptr || ptype < unit_type_array_first()
       || ptype > unit_type_array_last()) {
@@ -156,16 +129,23 @@ Unit *api_edit_create_unit_full(lua_State *L, Player *pplayer, Tile *ptile,
 }
 
 /**
+   Create a new unit.
+ */
+unit *edit_create_unit(sol::this_state s, player *pplayer, tile *ptile,
+                       unit_type *ptype, int veteran_level, city *homecity,
+                       int moves_left)
+{
+  return edit_create_unit_full(s, pplayer, ptile, ptype, veteran_level,
+                               homecity, moves_left, -1, nullptr);
+}
+
+/**
    Teleport unit to destination tile
  */
-bool api_edit_unit_teleport(lua_State *L, Unit *punit, Tile *dest)
+bool edit_unit_teleport(unit *punit, tile *dest)
 {
   bool alive;
   struct city *pcity;
-
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, dest, 3, Tile, false);
 
   // Teleport first so destination is revealed even if unit dies
   alive = unit_move(
@@ -205,11 +185,8 @@ bool api_edit_unit_teleport(lua_State *L, Unit *punit, Tile *dest)
 /**
    Change unit orientation
  */
-void api_edit_unit_turn(lua_State *L, Unit *punit, Direction dir)
+void edit_unit_turn(unit *punit, Direction dir)
 {
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit);
-
   if (direction8_is_valid(dir)) {
     punit->facing = dir;
 
@@ -222,18 +199,14 @@ void api_edit_unit_turn(lua_State *L, Unit *punit, Direction dir)
 /**
    Kill the unit.
  */
-void api_edit_unit_kill(lua_State *L, Unit *punit, const char *reason,
-                        Player *killer)
+void edit_unit_kill(sol::this_state s, unit *punit, const char *reason,
+                    player *killer)
 {
   enum unit_loss_reason loss_reason;
 
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit);
-  LUASCRIPT_CHECK_ARG_NIL(L, reason, 3, string);
-
   loss_reason = unit_loss_reason_by_name(reason, fc_strcasecmp);
 
-  LUASCRIPT_CHECK_ARG(L, unit_loss_reason_is_valid(loss_reason), 3,
+  LUASCRIPT_CHECK_ARG(s, unit_loss_reason_is_valid(loss_reason), 3,
                       "Invalid unit loss reason");
 
   wipe_unit(punit, loss_reason, killer);
@@ -242,13 +215,9 @@ void api_edit_unit_kill(lua_State *L, Unit *punit, const char *reason,
 /**
    Change terrain on tile
  */
-bool api_edit_change_terrain(lua_State *L, Tile *ptile, Terrain *pterr)
+bool edit_change_terrain(tile *ptile, terrain *pterr)
 {
   struct terrain *old_terrain;
-
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 2, Tile, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, pterr, 3, Terrain, false);
 
   old_terrain = tile_terrain(ptile);
 
@@ -273,13 +242,8 @@ bool api_edit_change_terrain(lua_State *L, Tile *ptile, Terrain *pterr)
 /**
    Create a new city.
  */
-void api_edit_create_city(lua_State *L, Player *pplayer, Tile *ptile,
-                          const char *name)
+void edit_create_city(player *pplayer, tile *ptile, const char *name)
 {
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 2, Player);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 3, Tile);
-
   if (!name || name[0] == '\0') {
     name = city_name_suggestion(pplayer, ptile);
   }
@@ -291,23 +255,18 @@ void api_edit_create_city(lua_State *L, Player *pplayer, Tile *ptile,
 /**
    Create a new player.
  */
-Player *api_edit_create_player(lua_State *L, const char *username,
-                               Nation_Type *pnation, const char *ai)
+player *edit_create_player(sol::this_state s, const char *username,
+                           nation_type *pnation, const char *ai)
 {
   struct player *pplayer = nullptr;
   char buf[128] = "";
   struct fc_lua *fcl;
 
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_ARG_NIL(L, username, 2, string, nullptr);
   if (!ai) {
     ai = default_ai_type_name();
   }
 
-  fcl = luascript_get_fcl(L);
-
-  LUASCRIPT_CHECK(L, fcl != nullptr, "Undefined Freeciv21 lua state!",
-                  nullptr);
+  fcl = luascript_get_fcl(s);
 
   if (game_was_started()) {
     create_command_newcomer(username, ai, false, pnation, &pplayer, buf,
@@ -326,11 +285,8 @@ Player *api_edit_create_player(lua_State *L, const char *username,
 /**
    Change pplayer's gold by amount.
  */
-void api_edit_change_gold(lua_State *L, Player *pplayer, int amount)
+void edit_change_gold(player *pplayer, int amount)
 {
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 2, Player);
-
   pplayer->economic.gold = MAX(0, pplayer->economic.gold + amount);
 }
 
@@ -340,17 +296,15 @@ void api_edit_change_gold(lua_State *L, Player *pplayer, int amount)
    Use nullptr for ptech to grant a random tech.
    sends script signal "tech_researched" with the given reason
  */
-Tech_Type *api_edit_give_technology(lua_State *L, Player *pplayer,
-                                    Tech_Type *ptech, int cost, bool notify,
-                                    const char *reason)
+advance *edit_give_technology(sol::this_state s, player *pplayer,
+                              advance *ptech, int cost, bool notify,
+                              const char *reason)
 {
   struct research *presearch;
-  Tech_type_id id;
-  Tech_Type *result;
+  int id;
+  advance *result;
 
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 2, Player, nullptr);
-  LUASCRIPT_CHECK_ARG(L, cost >= -3, 4, "Unknown give_tech() cost value",
+  LUASCRIPT_CHECK_ARG(s, cost >= -3, 4, "Unknown give_tech() cost value",
                       nullptr);
 
   presearch = research_get(pplayer);
@@ -409,18 +363,14 @@ Tech_Type *api_edit_give_technology(lua_State *L, Player *pplayer,
 /**
    Modify player's trait value.
  */
-bool api_edit_trait_mod_set(lua_State *L, Player *pplayer, const char *tname,
-                            const int mod)
+bool edit_trait_mod_set(sol::this_state s, player *pplayer,
+                        const char *tname, const int mod)
 {
   enum trait tr;
 
-  LUASCRIPT_CHECK_STATE(L, -1);
-  LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 2, Player, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, tname, 3, string, false);
-
   tr = trait_by_name(tname, fc_strcasecmp);
 
-  LUASCRIPT_CHECK_ARG(L, trait_is_valid(tr), 3, "no such trait", 0);
+  LUASCRIPT_CHECK_ARG(s, trait_is_valid(tr), 3, "no such trait", 0);
 
   pplayer->ai_common.traits[tr].mod += mod;
 
@@ -430,13 +380,9 @@ bool api_edit_trait_mod_set(lua_State *L, Player *pplayer, const char *tname,
 /**
    Create a new owned extra.
  */
-void api_edit_create_owned_extra(lua_State *L, Tile *ptile, const char *name,
-                                 Player *pplayer)
+void edit_create_owned_extra(tile *ptile, const char *name, player *pplayer)
 {
   struct extra_type *pextra;
-
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 2, Tile);
 
   if (!name) {
     return;
@@ -453,37 +399,17 @@ void api_edit_create_owned_extra(lua_State *L, Tile *ptile, const char *name,
 /**
    Create a new extra.
  */
-void api_edit_create_extra(lua_State *L, Tile *ptile, const char *name)
+void edit_create_extra(tile *ptile, const char *name)
 {
-  api_edit_create_owned_extra(L, ptile, name, nullptr);
-}
-
-/**
-   Create a new base.
- */
-void api_edit_create_base(lua_State *L, Tile *ptile, const char *name,
-                          Player *pplayer)
-{
-  api_edit_create_owned_extra(L, ptile, name, pplayer);
-}
-
-/**
-   Add a new road.
- */
-void api_edit_create_road(lua_State *L, Tile *ptile, const char *name)
-{
-  api_edit_create_owned_extra(L, ptile, name, nullptr);
+  edit_create_owned_extra(ptile, name, nullptr);
 }
 
 /**
    Remove extra from tile, if present
  */
-void api_edit_remove_extra(lua_State *L, Tile *ptile, const char *name)
+void edit_remove_extra(tile *ptile, const char *name)
 {
   struct extra_type *pextra;
-
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 2, Tile);
 
   if (!name) {
     return;
@@ -500,12 +426,8 @@ void api_edit_remove_extra(lua_State *L, Tile *ptile, const char *name)
 /**
    Set tile label text.
  */
-void api_edit_tile_set_label(lua_State *L, Tile *ptile, const char *label)
+void edit_tile_set_label(tile *ptile, const char *label)
 {
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_SELF(L, ptile);
-  LUASCRIPT_CHECK_ARG_NIL(L, label, 3, string);
-
   tile_set_label(ptile, label);
   if (server_state() >= S_S_RUNNING) {
     send_tile_info(nullptr, ptile, false);
@@ -515,27 +437,24 @@ void api_edit_tile_set_label(lua_State *L, Tile *ptile, const char *label)
 /**
    Global climate change.
  */
-void api_edit_climate_change(lua_State *L, enum climate_change_type type,
-                             int effect)
+void edit_climate_change(sol::this_state s, enum climate_change_type type,
+                         int effect)
 {
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_ARG(L,
+  LUASCRIPT_CHECK_ARG(s,
                       type == CLIMATE_CHANGE_GLOBAL_WARMING
                           || type == CLIMATE_CHANGE_NUCLEAR_WINTER,
                       2, "invalid climate change type");
-  LUASCRIPT_CHECK_ARG(L, effect > 0, 3, "effect must be greater than zero");
+  LUASCRIPT_CHECK_ARG(s, effect > 0, 3, "effect must be greater than zero");
 
-  climate_change(type == CLIMATE_CHANGE_GLOBAL_WARMING, effect);
+  ::climate_change(type == CLIMATE_CHANGE_GLOBAL_WARMING, effect);
 }
 
 /**
    Provoke a civil war.
  */
-Player *api_edit_civil_war(lua_State *L, Player *pplayer, int probability)
+player *edit_civil_war(sol::this_state s, player *pplayer, int probability)
 {
-  LUASCRIPT_CHECK_STATE(L, nullptr);
-  LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 2, Player, nullptr);
-  LUASCRIPT_CHECK_ARG(L, probability >= 0 && probability <= 100, 3,
+  LUASCRIPT_CHECK_ARG(s, probability >= 0 && probability <= 100, 3,
                       "must be a percentage", nullptr);
 
   if (!civil_war_possible(pplayer, false, false)) {
@@ -560,25 +479,20 @@ Player *api_edit_civil_war(lua_State *L, Player *pplayer, int probability)
 /**
    Make player winner of the scenario
  */
-void api_edit_player_victory(lua_State *L, Player *pplayer)
+void edit_player_victory(player *pplayer)
 {
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_SELF(L, pplayer);
-
   player_status_add(pplayer, PSTATUS_WINNER);
 }
 
 /**
    Move a unit.
  */
-bool api_edit_unit_move(lua_State *L, Unit *punit, Tile *ptile, int movecost)
+bool edit_unit_move(sol::this_state s, unit *punit, tile *ptile,
+                    int movecost)
 {
   struct city *pcity;
 
-  LUASCRIPT_CHECK_STATE(L, false);
-  LUASCRIPT_CHECK_SELF(L, punit, false);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 3, Tile, false);
-  LUASCRIPT_CHECK_ARG(L, movecost >= 0, 4, "Negative move cost!", false);
+  LUASCRIPT_CHECK_ARG(s, movecost >= 0, 4, "Negative move cost!", false);
 
   return unit_move(
       punit, ptile, movecost,
@@ -602,11 +516,8 @@ bool api_edit_unit_move(lua_State *L, Unit *punit, Tile *ptile, int movecost)
 /**
    Prohibit unit from moving
  */
-void api_edit_unit_moving_disallow(lua_State *L, Unit *punit)
+void edit_movement_disallow(unit *punit)
 {
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_SELF(L, punit);
-
   if (punit != nullptr) {
     punit->stay = true;
   }
@@ -615,11 +526,8 @@ void api_edit_unit_moving_disallow(lua_State *L, Unit *punit)
 /**
    Allow unit to move
  */
-void api_edit_unit_moving_allow(lua_State *L, Unit *punit)
+void edit_movement_allow(unit *punit)
 {
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_SELF(L, punit);
-
   if (punit != nullptr) {
     punit->stay = false;
   }
@@ -628,21 +536,158 @@ void api_edit_unit_moving_allow(lua_State *L, Unit *punit)
 /**
    Add history to a city
  */
-void api_edit_city_add_history(lua_State *L, City *pcity, int amount)
+void edit_add_city_history(city *pcity, int amount)
 {
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_SELF(L, pcity);
-
   pcity->history += amount;
 }
 
 /**
    Add history to a player
  */
-void api_edit_player_add_history(lua_State *L, Player *pplayer, int amount)
+void edit_add_player_history(player *pplayer, int amount)
 {
-  LUASCRIPT_CHECK_STATE(L);
-  LUASCRIPT_CHECK_SELF(L, pplayer);
-
   pplayer->history += amount;
+}
+
+const std::string setup_lua = R"(
+-- Server functions for Player module
+function Player:create_unit(tile, utype, veteran_level, homecity, moves_left)
+  return edit.create_unit(self, tile, utype, veteran_level, homecity,
+                          moves_left)
+end
+
+function Player:create_unit_full(tile, utype, veteran_level, homecity,
+                                 moves_left, hp_left, ptransport)
+  return edit.create_unit_full(self, tile, utype, veteran_level, homecity,
+                               moves_left, hp_left, ptransport)
+end
+
+function Player:civilization_score()
+  return server.civilization_score(self)
+end
+
+function Player:create_city(tile, name)
+  edit.create_city(self, tile, name)
+end
+
+function Player:change_gold(amount)
+  edit.change_gold(self, amount)
+end
+
+function Player:give_tech(tech, cost, notify, reason)
+  return edit.give_tech(self, tech, cost, notify, reason)
+end
+
+function Player:trait_mod(trait, mod)
+  return edit.trait_mod(self, trait, mod)
+end
+
+function Player:civil_war(probability)
+  return edit.civil_war(self, probability)
+end
+
+function Player:victory()
+  edit.player_victory(self)
+end
+
+function Player:add_history(amount)
+  edit.add_player_history(self, amount)
+end
+
+-- Server functions for City module
+function City:add_history(amount)
+  edit.add_city_history(self, amount)
+end
+
+-- Server functions for Unit module
+function Unit:teleport(dest)
+  return edit.unit_teleport(self, dest)
+end
+
+function Unit:turn(direction)
+  edit.unit_turn(self, direction)
+end
+
+function Unit:kill(reason, killer)
+  edit.unit_kill(self, reason, killer)
+end
+
+function Unit:move(moveto, movecost)
+  return edit.unit_move(self, moveto, movecost)
+end
+
+function Unit:movement_disallow()
+  edit.movement_disallow(self)
+end
+
+function Unit:movement_allow()
+  edit.movement_allow(self)
+end
+
+-- Server functions for Tile module
+function Tile:create_owned_extra(name, player)
+  edit.create_owned_extra(self, name, player)
+end
+
+function Tile:create_extra(name)
+  edit.create_extra(self, name)
+end
+
+function Tile:remove_extra(name)
+  edit.remove_extra(self, name)
+end
+
+function Tile:change_terrain(terrain)
+  edit.change_terrain(self, terrain)
+end
+
+function Tile:unleash_barbarians()
+  return edit.unleash_barbarians(self)
+end
+
+function Tile:place_partisans(player, count, sq_radius)
+  edit.place_partisans(self, player, count, sq_radius)
+end
+
+function Tile:set_label(label)
+  edit.tile_set_label(self, label)
+end
+)";
+} // namespace
+
+void setup_server_edit(sol::state_view lua)
+{
+  auto edit = lua["edit"].get_or_create<sol::table>();
+  edit["climate_change"] = edit_climate_change;
+  edit["create_unit"] = edit_create_unit;
+  edit["create_unit_full"] = edit_create_unit_full;
+  edit["unit_teleport"] = edit_unit_teleport;
+  edit["unit_kill"] = edit_unit_kill;
+  edit["change_terrain"] = edit_change_terrain;
+  edit["create_city"] = edit_create_city;
+  edit["create_owned_extra"] = edit_create_owned_extra;
+  edit["create_extra"] = edit_create_extra;
+  edit["remove_extra"] = edit_remove_extra;
+  edit["tile_set_label"] = edit_tile_set_label;
+  edit["create_player"] = edit_create_player;
+  edit["change_gold"] = edit_change_gold;
+  /* cost:
+   *     0 or above - The exact cost % to apply
+   *    -1          - Apply freecost
+   *    -2          - Apply conquercost
+   *    -3          - Apply diplbulbcost */
+  edit["give_tech"] = edit_give_technology;
+  edit["trait_mod"] = edit_trait_mod_set;
+  edit["unleash_barbarians"] = unleash_barbarians;
+  edit["place_partisans"] = edit_place_partisans;
+  edit["civil_war"] = edit_civil_war;
+  edit["unit_turn"] = edit_unit_turn;
+  edit["player_victory"] = edit_player_victory;
+  edit["unit_move"] = edit_unit_move;
+  edit["movement_disallow"] = edit_movement_disallow;
+  edit["movement_allow"] = edit_movement_allow;
+  edit["add_city_history"] = edit_add_city_history;
+  edit["add_player_history"] = edit_add_player_history;
+
+  lua.script(setup_lua);
 }

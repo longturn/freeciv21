@@ -20,16 +20,4 @@
 /* Server-only methods added to the modules defined in
  * the common tolua_game.pkg. */
 
-int api_methods_player_trait(lua_State *L, Player *pplayer,
-                             const char *tname);
-int api_methods_player_trait_base(lua_State *L, Player *pplayer,
-                                  const char *tname);
-int api_methods_player_trait_current_mod(lua_State *L, Player *pplayer,
-                                         const char *tname);
-
-int api_methods_nation_trait_min(lua_State *L, Nation_Type *pnation,
-                                 const char *tname);
-int api_methods_nation_trait_max(lua_State *L, Nation_Type *pnation,
-                                 const char *tname);
-int api_methods_nation_trait_default(lua_State *L, Nation_Type *pnation,
-                                     const char *tname);
+void setup_server_methods(sol::state_view lua);

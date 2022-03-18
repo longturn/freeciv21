@@ -20,6 +20,9 @@
 #include <cstdlib>
 #include <cstring>
 
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "fcintl.h"
 #include "log.h"
@@ -79,6 +82,28 @@
 
 /* server/scripting */
 #include "script_server.h"
+
+SERVER_SIGNAL(city_transferred, city *, player *, player *, const char *)
+
+// First player is city owner, second is enemy.
+SERVER_SIGNAL(city_destroyed, city *, player *, player *)
+
+SERVER_SIGNAL(city_size_change, city *, int, const char *)
+
+/* These can happen for various reasons; the third argument gives the
+ * reason (a simple string identifier).  Example identifiers:
+ * "pop_cost", "need_tech", "need_building", "need_special",
+ * "need_terrain", "need_government", "need_nation", "never",
+ * "unavailable". */
+SERVER_SIGNAL(unit_cant_be_built, const unit_type *, city *, const char *)
+SERVER_SIGNAL(building_cant_be_built, const impr_type *, city *,
+              const char *)
+
+// Only includes units built in cities, for now.
+SERVER_SIGNAL(unit_built, unit *, city *)
+SERVER_SIGNAL(building_built, const impr_type *, city *)
+
+SERVER_SIGNAL(disaster_occurred, const disaster_type *, city *, bool)
 
 // Queue for pending city_refresh()
 static struct city_list *city_refresh_queue = nullptr;
@@ -837,8 +862,7 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
   }
 
   if (city_size_get(pcity) <= pop_loss) {
-    script_server_signal_emit("city_destroyed", pcity, pcity->owner,
-                              destroyer);
+    server_signals::city_destroyed(pcity, pcity->owner, destroyer);
 
     remove_city(pcity);
     return false;
@@ -895,7 +919,7 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
   if (reason != nullptr) {
     int id = pcity->id;
 
-    script_server_signal_emit("city_size_change", pcity, -pop_loss, reason);
+    server_signals::city_size_change(pcity, -pop_loss, reason);
 
     return city_exist(id);
   }
@@ -1049,10 +1073,6 @@ static bool city_increase_size(struct city *pcity,
                 _("%s grows to size %d."), city_link(pcity),
                 city_size_get(pcity));
 
-  /* Deprecated signal. Connect your lua functions to "city_size_change"
-   * that's emitted from calling functions which know the 'reason' of the
-   * increase. */
-  script_server_signal_emit("city_growth", pcity, city_size_get(pcity));
   if (city_exist(saved_id)) {
     // Script didn't destroy this city
     sanity_check_city(pcity);
@@ -1085,8 +1105,7 @@ bool city_change_size(struct city *pcity, citizens size,
     if (real_change != 0 && reason != nullptr) {
       int id = pcity->id;
 
-      script_server_signal_emit("city_size_change", pcity, real_change,
-                                reason);
+      server_signals::city_size_change(pcity, real_change, reason);
 
       if (!city_exist(id)) {
         return false;
@@ -1133,7 +1152,7 @@ static void city_populate(struct city *pcity, struct player *nationality)
       map_claim_border(pcity->tile, pcity->owner, -1);
 
       if (success) {
-        script_server_signal_emit("city_size_change", pcity, 1, "growth");
+        server_signals::city_size_change(pcity, 1, "growth");
       }
     }
   } else if (pcity->food_stock < 0) {
@@ -1192,26 +1211,22 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
   const void *ptarget;
   const char *tgt_name;
   const struct requirement_vector *build_reqs;
-  const char *signal_name;
 
   bool purge = false;
   bool known = false;
 
   switch (target->kind) {
-  case VUT_UTYPE:
+  case VUT_UTYPE: {
     ptarget = target->value.utype;
     build_reqs = &target->value.utype->build_reqs;
-    tgt_name =
-        utype_name_translation(static_cast<const unit_type *>(ptarget));
-    signal_name = "unit_cant_be_built";
-    break;
-  case VUT_IMPROVEMENT:
+    tgt_name = utype_name_translation(target->value.utype);
+  } break;
+  case VUT_IMPROVEMENT: {
     ptarget = target->value.building;
     build_reqs = &target->value.building->reqs;
-    tgt_name = city_improvement_name_translation(
-        pcity, static_cast<const impr_type *>(ptarget));
-    signal_name = "building_cant_be_built";
-    break;
+    tgt_name =
+        city_improvement_name_translation(pcity, target->value.building);
+  } break;
   default:
     fc_assert_ret_val(
         (target->kind == VUT_IMPROVEMENT || target->kind == VUT_UTYPE),
@@ -1226,6 +1241,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                        nullptr, nullptr, nullptr, nullptr, preq,
                        RPT_POSSIBLE)) {
       known = true;
+      const char *reason = nullptr;
       switch (preq->source.kind) {
       case VUT_ADVANCE:
         if (preq->present) {
@@ -1235,8 +1251,6 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "tech %s not yet available. Postponing..."),
               city_link(pcity), tgt_name,
               advance_name_translation(preq->source.value.advance));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_tech");
         } else {
           // While techs can be unlearned, this isn't useful feedback
           purge = true;
@@ -1251,8 +1265,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "Postponing..."),
               city_link(pcity), tgt_name,
               tech_flag_id_name(tech_flag_id(preq->source.value.techflag)));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_techflag");
+          reason = "need_techflag";
         } else {
           // While techs can be unlearned, this isn't useful feedback
           purge = true;
@@ -1267,8 +1280,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                         city_link(pcity), tgt_name,
                         city_improvement_name_translation(
                             pcity, preq->source.value.building));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_building");
+          reason = "need_building";
         } else {
           notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
                         ftc_server,
@@ -1277,8 +1289,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                         city_link(pcity), tgt_name,
                         city_improvement_name_translation(
                             pcity, preq->source.value.building));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_building");
+          reason = "have_building";
         }
         break;
       case VUT_IMPR_GENUS:
@@ -1289,8 +1300,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "need to have %s first. Postponing..."),
               city_link(pcity), tgt_name,
               impr_genus_id_translated_name(preq->source.value.impr_genus));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_building_genus");
+          reason = "need_building_genus";
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
@@ -1298,8 +1308,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "need to not have %s. Postponing..."),
               city_link(pcity), tgt_name,
               impr_genus_id_translated_name(preq->source.value.impr_genus));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_building_genus");
+          reason = "have_building_genus";
         }
         break;
       case VUT_GOVERNMENT:
@@ -1310,8 +1319,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "it needs %s government. Postponing..."),
               city_link(pcity), tgt_name,
               government_name_translation(preq->source.value.govern));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_government");
+          reason = "need_government";
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
@@ -1319,8 +1327,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "it cannot have %s government. Postponing..."),
               city_link(pcity), tgt_name,
               government_name_translation(preq->source.value.govern));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_government");
+          reason = "have_government";
         }
         break;
       case VUT_ACHIEVEMENT:
@@ -1331,8 +1338,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "it needs \"%s\" achievement. Postponing..."),
               city_link(pcity), tgt_name,
               achievement_name_translation(preq->source.value.achievement));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_achievement");
+          reason = "need_achievement";
         } else {
           // Can't unachieve things.
           purge = true;
@@ -1346,8 +1352,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                            "%s is required. Postponing..."),
                         city_link(pcity), tgt_name,
                         extra_name_translation(preq->source.value.extra));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_extra");
+          reason = "need_extra";
         } else {
           notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
                         ftc_server,
@@ -1355,8 +1360,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                            "%s is prohibited. Postponing..."),
                         city_link(pcity), tgt_name,
                         extra_name_translation(preq->source.value.extra));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_extra");
+          reason = "have_extra";
         }
         break;
       case VUT_GOOD:
@@ -1367,8 +1371,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                            "%s is required. Postponing..."),
                         city_link(pcity), tgt_name,
                         goods_name_translation(preq->source.value.good));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_good");
+          reason = "need_good";
         } else {
           notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
                         ftc_server,
@@ -1376,8 +1379,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                            "%s is prohibited. Postponing..."),
                         city_link(pcity), tgt_name,
                         goods_name_translation(preq->source.value.good));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_good");
+          reason = "have_good";
         }
         break;
       case VUT_TERRAIN:
@@ -1388,8 +1390,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                  "%s terrain is required. Postponing..."),
               city_link(pcity), tgt_name,
               terrain_name_translation(preq->source.value.terrain));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_terrain");
+          reason = "need_terrain";
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
@@ -1397,8 +1398,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                  "%s terrain is prohibited. Postponing..."),
               city_link(pcity), tgt_name,
               terrain_name_translation(preq->source.value.terrain));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_terrain");
+          reason = "have_terrain";
         }
         break;
       case VUT_NATION:
@@ -1411,8 +1411,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                  "%s nation is required. Postponing..."),
               city_link(pcity), tgt_name,
               nation_adjective_translation(preq->source.value.nation));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_nation");
+          reason = "need_nation";
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
@@ -1420,8 +1419,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                  "%s nation is prohibited. Postponing..."),
               city_link(pcity), tgt_name,
               nation_adjective_translation(preq->source.value.nation));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_nation");
+          reason = "have_nation";
         }
         break;
       case VUT_NATIONGROUP:
@@ -1435,8 +1433,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                  "%s nation is required. Postponing..."),
               city_link(pcity), tgt_name,
               nation_group_name_translation(preq->source.value.nationgroup));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_nationgroup");
+          reason = "need_nationgroup";
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
@@ -1444,8 +1441,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                  "%s nation is prohibited. Postponing..."),
               city_link(pcity), tgt_name,
               nation_group_name_translation(preq->source.value.nationgroup));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_nationgroup");
+          reason = "have_nationgroup";
         }
         break;
       case VUT_STYLE:
@@ -1459,8 +1455,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "only %s style cities may build this. Postponing..."),
               city_link(pcity), tgt_name,
               style_name_translation(preq->source.value.style));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_style");
+          reason = "need_style";
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
@@ -1468,8 +1463,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "%s style cities may not build this. Postponing..."),
               city_link(pcity), tgt_name,
               style_name_translation(preq->source.value.style));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_style");
+          reason = "have_style";
         }
         break;
       case VUT_NATIONALITY:
@@ -1483,8 +1477,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "only city with %s may build this. Postponing..."),
               city_link(pcity), tgt_name,
               nation_plural_translation(preq->source.value.nationality));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_nationality");
+          reason = "need_nationality";
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
@@ -1493,8 +1486,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "only city without %s may build this. Postponing..."),
               city_link(pcity), tgt_name,
               nation_plural_translation(preq->source.value.nationality));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_nationality");
+          reason = "have_nationality";
         }
         break;
       case VUT_DIPLREL:
@@ -1509,8 +1501,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "  Postponing..."),
               city_link(pcity), tgt_name,
               diplrel_name_translation(preq->source.value.diplrel));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_diplrel");
+          reason = "need_diplrel";
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
@@ -1519,8 +1510,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "  Postponing..."),
               city_link(pcity), tgt_name,
               diplrel_name_translation(preq->source.value.diplrel));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_diplrel");
+          reason = "have_diplrel";
         }
         break;
       case VUT_MINSIZE:
@@ -1531,8 +1521,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "city must be of size %d or larger. "
                 "Postponing..."),
               city_link(pcity), tgt_name, preq->source.value.minsize);
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_minsize");
+          reason = "need_minsize";
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
@@ -1540,8 +1529,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "city must be of size %d or smaller."
                 "Postponing..."),
               city_link(pcity), tgt_name, (preq->source.value.minsize - 1));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_minsize");
+          reason = "need_minsize";
         }
         break;
       case VUT_MINCULTURE:
@@ -1551,8 +1539,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
               _("%s can't build %s from the worklist; "
                 "city must have culture of %d. Postponing..."),
               city_link(pcity), tgt_name, preq->source.value.minculture);
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_minculture");
+          reason = "need_minculture";
         } else {
           // What has been written may not be unwritten.
           purge = true;
@@ -1565,8 +1552,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
               _("%s can't build %s from the worklist; "
                 "city must have %d%% foreign population. Postponing..."),
               city_link(pcity), tgt_name, preq->source.value.minforeignpct);
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_minforeignpct");
+          reason = "need_minforeignpct";
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
@@ -1574,8 +1560,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "city must have %d%% native population. Postponing..."),
               city_link(pcity), tgt_name,
               100 - preq->source.value.minforeignpct);
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_minforeignpct");
+          reason = "need_minforeignpct";
         }
         break;
       case VUT_MINTECHS:
@@ -1585,8 +1570,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
               _("%s can't build %s from the worklist; "
                 "%d techs must be known. Postponing..."),
               city_link(pcity), tgt_name, preq->source.value.min_techs);
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_mintechs");
+          reason = "need_mintechs";
         } else {
           purge = true;
         }
@@ -1603,8 +1587,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                   "  Postponing...",
                   preq->source.value.max_tile_units),
               city_link(pcity), tgt_name, preq->source.value.max_tile_units);
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_tileunits");
+          reason = "need_tileunits";
         } else {
           notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
                         ftc_server,
@@ -1617,8 +1600,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                             preq->source.value.max_tile_units + 1),
                         city_link(pcity), tgt_name,
                         preq->source.value.max_tile_units + 1);
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_tileunits");
+          reason = "need_tileunits";
         }
         break;
       case VUT_AI_LEVEL:
@@ -1635,8 +1617,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                         city_link(pcity), tgt_name,
                         terrain_class_name_translation(
                             terrain_class(preq->source.value.terrainclass)));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_terrainclass");
+          reason = "need_terrainclass";
         } else {
           notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
                         ftc_server,
@@ -1646,8 +1627,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                         city_link(pcity), tgt_name,
                         terrain_class_name_translation(
                             terrain_class(preq->source.value.terrainclass)));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_terrainclass");
+          reason = "have_terrainclass";
         }
         break;
       case VUT_TERRFLAG:
@@ -1660,8 +1640,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                         city_link(pcity), tgt_name,
                         terrain_flag_id_name(terrain_flag_id(
                             preq->source.value.terrainflag)));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_terrainflag");
+          reason = "need_terrainflag";
         } else {
           notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
                         ftc_server,
@@ -1671,8 +1650,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                         city_link(pcity), tgt_name,
                         terrain_flag_id_name(terrain_flag_id(
                             preq->source.value.terrainflag)));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_terrainflag");
+          reason = "have_terrainflag";
         }
         break;
       case VUT_BASEFLAG:
@@ -1684,8 +1662,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "Postponing..."),
               city_link(pcity), tgt_name,
               base_flag_id_name(base_flag_id(preq->source.value.baseflag)));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_baseflag");
+          reason = "need_baseflag";
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
@@ -1694,8 +1671,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "Postponing..."),
               city_link(pcity), tgt_name,
               base_flag_id_name(base_flag_id(preq->source.value.baseflag)));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_baseflag");
+          reason = "have_baseflag";
         }
         break;
       case VUT_ROADFLAG:
@@ -1707,8 +1683,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "Postponing..."),
               city_link(pcity), tgt_name,
               road_flag_id_name(road_flag_id(preq->source.value.roadflag)));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_roadflag");
+          reason = "need_roadflag";
         } else {
           notify_player(
               pplayer, city_tile(pcity), E_CITY_CANTBUILD, ftc_server,
@@ -1717,8 +1692,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                 "Postponing..."),
               city_link(pcity), tgt_name,
               road_flag_id_name(road_flag_id(preq->source.value.roadflag)));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_roadflag");
+          reason = "have_roadflag";
         }
         break;
       case VUT_EXTRAFLAG:
@@ -1731,8 +1705,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                         city_link(pcity), tgt_name,
                         extra_flag_id_translated_name(
                             extra_flag_id(preq->source.value.extraflag)));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_extraflag");
+          reason = "need_extraflag";
         } else {
           notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
                         ftc_server,
@@ -1742,8 +1715,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                         city_link(pcity), tgt_name,
                         extra_flag_id_translated_name(
                             extra_flag_id(preq->source.value.extraflag)));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_extraflag");
+          reason = "have_extraflag";
         }
         break;
       case VUT_UTYPE:
@@ -1773,8 +1745,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "only available from %s. Postponing..."),
                         city_link(pcity), tgt_name,
                         textyear(preq->source.value.minyear));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_minyear");
+          reason = "need_minyear";
         } else {
           // Can't go back in time.
           purge = true;
@@ -1792,8 +1763,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "only available from %s. Postponing..."),
                         city_link(pcity), tgt_name,
                         textcalfrag(preq->source.value.mincalfrag));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_mincalfrag");
+          reason = "need_mincalfrag";
         } else {
           fc_assert_action(preq->source.value.mincalfrag > 0, break);
           notify_player(pplayer, city_tile(pcity), E_CITY_CANTBUILD,
@@ -1804,8 +1774,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "not available after %s. Postponing..."),
                         city_link(pcity), tgt_name,
                         textcalfrag(preq->source.value.mincalfrag - 1));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "have_mincalfrag");
+          reason = "have_mincalfrag";
         }
         break;
       case VUT_TOPO:
@@ -1818,8 +1787,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "only available in worlds with %s map."),
                         city_link(pcity), tgt_name,
                         _(topo_flag_name(preq->source.value.topo_property)));
-          script_server_signal_emit(signal_name, ptarget, pcity,
-                                    "need_topo");
+          reason = "need_topo";
         }
         purge = true;
         break;
@@ -1837,8 +1805,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                       city_link(pcity), tgt_name,
                       qUtf8Printable(ssetv_human_readable(
                           preq->source.value.ssetval, preq->present)));
-        script_server_signal_emit(signal_name, ptarget, pcity,
-                                  "need_setting");
+        reason = "need_setting";
         // Don't assume that the server setting will be changed.
         purge = true;
         break;
@@ -1849,7 +1816,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                         _("%s can't build %s from the worklist; "
                           "only available once %d turns old. Postponing..."),
                         city_link(pcity), tgt_name, preq->source.value.age);
-          script_server_signal_emit(signal_name, ptarget, pcity, "need_age");
+          reason = "need_age";
         } else {
           // Can't go back in time.
           purge = true;
@@ -1865,6 +1832,16 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
          * if new requirement type is added to enum and it's not handled
          * here. */
       };
+      if (!reason) {
+        break;
+      }
+      if (target->kind == VUT_UTYPE) {
+        server_signals::unit_cant_be_built(
+            static_cast<const unit_type *>(ptarget), pcity, reason);
+      } else if (target->kind == VUT_IMPROVEMENT) {
+        server_signals::building_cant_be_built(
+            static_cast<const impr_type *>(ptarget), pcity, reason);
+      }
       break;
     }
 
@@ -1952,8 +1929,7 @@ static bool worklist_change_build_target(struct player *pplayer,
                           "tech %s not yet available. Postponing..."),
                         city_link(pcity), utype_name_translation(ptarget),
                         advance_name_translation(ptarget->require_advance));
-          script_server_signal_emit("unit_cant_be_built", ptarget, pcity,
-                                    "need_tech");
+          server_signals::unit_cant_be_built(ptarget, pcity, "need_tech");
         } else {
           // Unknown or requirement from vector.
           purge = worklist_item_postpone_req_vec(&target, pcity, pplayer,
@@ -1976,8 +1952,7 @@ static bool worklist_change_build_target(struct player *pplayer,
                          in the worklist, not its obsolete-closure
                          pupdate. */
                       utype_name_translation(ptarget));
-        script_server_signal_emit("unit_cant_be_built", ptarget, pcity,
-                                  "never");
+        server_signals::unit_cant_be_built(ptarget, pcity, "never");
         if (city_exist(saved_id)) {
           city_checked = true;
           // Purge this worklist item.
@@ -2038,8 +2013,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                       _("%s can't build %s from the worklist. Purging..."),
                       city_link(pcity),
                       city_improvement_name_translation(pcity, ptarget));
-        script_server_signal_emit("building_cant_be_built", ptarget, pcity,
-                                  "never");
+        server_signals::building_cant_be_built(
+            static_cast<const impr_type *>(ptarget), pcity, "never");
         if (city_exist(saved_id)) {
           city_checked = true;
           // Purge this worklist item.
@@ -2336,8 +2311,7 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
                   _("%s is building %s, which is no longer available."),
                   city_link(pcity),
                   city_improvement_name_translation(pcity, pimprove));
-    script_server_signal_emit("building_cant_be_built", pimprove, pcity,
-                              "unavailable");
+    server_signals::building_cant_be_built(pimprove, pcity, "unavailable");
     return true;
   }
   if (pcity->shield_stock >= impr_build_shield_cost(pcity, pimprove)) {
@@ -2389,7 +2363,7 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
     notify_player(pplayer, city_tile(pcity), E_IMP_BUILD, ftc_server,
                   _("%s has finished building %s."), city_link(pcity),
                   improvement_name_translation(pimprove));
-    script_server_signal_emit("building_built", pimprove, pcity);
+    server_signals::building_built(pimprove, pcity);
 
     if (!city_exist(saved_id)) {
       // Script removed city
@@ -2490,7 +2464,7 @@ static struct unit *city_create_unit(struct city *pcity,
   }
 
   /* This might destroy pcity and/or punit: */
-  script_server_signal_emit("unit_built", punit, pcity);
+  server_signals::unit_built(punit, pcity);
 
   if (unit_is_alive(saved_unit_id)) {
     return punit;
@@ -2537,8 +2511,7 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
     qDebug("%s %s tried to build %s, which is not available.",
            nation_rule_name(nation_of_city(pcity)), city_name_get(pcity),
            utype_rule_name(utype));
-    script_server_signal_emit("unit_cant_be_built", utype, pcity,
-                              "unavailable");
+    server_signals::unit_cant_be_built(utype, pcity, "unavailable");
     return city_exist(saved_city_id);
   }
 
@@ -2559,8 +2532,7 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
                       "(city size: %d, unit population cost: %d)"),
                     city_link(pcity), utype_name_translation(utype),
                     city_size_get(pcity), pop_cost);
-      script_server_signal_emit("unit_cant_be_built", utype, pcity,
-                                "pop_cost");
+      server_signals::unit_cant_be_built(utype, pcity, "pop_cost");
       return city_exist(saved_city_id);
     }
 
@@ -3491,8 +3463,7 @@ static bool disband_city(struct city *pcity)
                   _("%s can't build %s yet, "
                     "as we can't disband our only city."),
                   city_link(pcity), utype_name_translation(utype));
-    script_server_signal_emit("unit_cant_be_built", utype, pcity,
-                              "pop_cost");
+    server_signals::unit_cant_be_built(utype, pcity, "pop_cost");
     if (!city_exist(saved_id)) {
       // Script decided to remove even the last city
       return true;
@@ -3521,8 +3492,7 @@ static bool disband_city(struct city *pcity)
                     utype_name_translation(utype));
     }
 
-    script_server_signal_emit("city_destroyed", pcity, pcity->owner,
-                              nullptr);
+    server_signals::city_destroyed(pcity, pcity->owner, nullptr);
 
     remove_city(pcity);
 
@@ -3822,12 +3792,11 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
                           true);
       sz_strlcpy(name_from, city_tile_link(pcity_from));
 
-      script_server_signal_emit("city_size_change", pcity_from, -1,
-                                "migration_from");
+      server_signals::city_size_change(pcity_from, -1, "migration_from");
 
       if (city_exist(id)) {
-        script_server_signal_emit("city_destroyed", pcity_from,
-                                  pcity_from->owner, nullptr);
+        server_signals::city_destroyed(pcity_from, pcity_from->owner,
+                                       nullptr);
 
         if (city_exist(id)) {
           remove_city(pcity_from);
@@ -3900,8 +3869,7 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
         auto_arrange_workers(pcity_to);
       }
       if (incr_success) {
-        script_server_signal_emit("city_size_change", pcity_to, 1,
-                                  "migration_to");
+        server_signals::city_size_change(pcity_to, 1, "migration_to");
       }
     }
   }
@@ -4088,9 +4056,7 @@ static void apply_disaster(struct city *pcity, struct disaster_type *pdis)
     }
   }
 
-  script_server_signal_emit("disaster_occurred", pdis, pcity,
-                            had_internal_effect);
-  script_server_signal_emit("disaster", pdis, pcity);
+  server_signals::disaster_occurred(pdis, pcity, had_internal_effect);
 }
 
 /**

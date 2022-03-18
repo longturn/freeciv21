@@ -37,6 +37,13 @@
 #include <fc_config.h>
 #endif
 
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "deprecations.h"
 
@@ -46,235 +53,49 @@
 
 #include "luascript_signal.h"
 
-static struct signal_callback *signal_callback_new(const char *name);
-static void signal_callback_destroy(struct signal_callback *pcallback);
-static struct signal *signal_new(int nargs, enum api_types *parg_types);
-static void signal_destroy(struct signal *psignal);
-
-/**
-   Create a new signal callback.
- */
-static struct signal_callback *signal_callback_new(const char *name)
-{
-  auto *pcallback = new signal_callback;
-
-  pcallback->name = fc_strdup(name);
-  return pcallback;
-}
-
-/**
-   Free a signal callback.
- */
-static void signal_callback_destroy(struct signal_callback *pcallback)
-{
-  delete[] pcallback->name;
-  delete pcallback;
-}
-
-/**
-   Create a new signal.
- */
-static struct signal *signal_new(int nargs, enum api_types *parg_types)
-{
-  auto *psignal = new struct signal;
-
-  psignal->nargs = nargs;
-  psignal->arg_types = parg_types;
-  psignal->callbacks = new QList<signal_callback *>;
-  psignal->depr_msg = nullptr;
-
-  return psignal;
-}
-
-/**
-   Free a signal.
- */
-static void signal_destroy(struct signal *psignal)
-{
-  if (psignal->arg_types) {
-    delete[] psignal->arg_types;
-  }
-  if (psignal->depr_msg) {
-    delete[] psignal->depr_msg;
-  }
-  while (!psignal->callbacks->isEmpty()) {
-    signal_callback_destroy(psignal->callbacks->takeFirst());
-  }
-
-  delete psignal->callbacks;
-  delete psignal;
-}
-
-/**
-   Invoke all the callback functions attached to a given signal.
- */
-void luascript_signal_emit_valist(struct fc_lua *fcl,
-                                  const char *signal_name, va_list args)
-{
-  struct signal *psignal;
-
-  fc_assert_ret(fcl);
-  fc_assert_ret(fcl->signals_hash);
-
-  psignal = fcl->signals_hash->value(signal_name, nullptr);
-  if (psignal) {
-    for (auto *pcallback : qAsConst(*psignal->callbacks)) {
-      va_list args_cb;
-
-      va_copy(args_cb, args);
-      if (luascript_callback_invoke(fcl, pcallback->name, psignal->nargs,
-                                    psignal->arg_types, args_cb)) {
-        va_end(args_cb);
-        break;
-      }
-      va_end(args_cb);
-    }
-  } else {
-    luascript_log(fcl, LOG_ERROR,
-                  "Signal \"%s\" does not exist, so cannot "
-                  "be invoked.",
-                  signal_name);
-  }
-}
-
-/**
-   Invoke all the callback functions attached to a given signal.
- */
-void luascript_signal_emit(struct fc_lua *fcl, const char *signal_name, ...)
-{
-  va_list args;
-
-  va_start(args, signal_name);
-  luascript_signal_emit_valist(fcl, signal_name, args);
-  va_end(args);
-}
-
-/**
-   Create a new signal type.
- */
-static struct signal *luascript_signal_create_valist(struct fc_lua *fcl,
-                                                     const char *signal_name,
-                                                     int nargs, va_list args)
-{
-  struct signal *psignal;
-
-  fc_assert_ret_val(fcl, nullptr);
-  fc_assert_ret_val(fcl->signals_hash, nullptr);
-
-  psignal = fcl->signals_hash->value(signal_name, nullptr);
-  if (psignal) {
-    luascript_log(fcl, LOG_ERROR, "Signal \"%s\" was already created.",
-                  signal_name);
-    return nullptr;
-  } else {
-    enum api_types *parg_types = new api_types[nargs]();
-    int i;
-    QString sn = QString(signal_name);
-    struct signal *created;
-
-    for (i = 0; i < nargs; i++) {
-      *(parg_types + i) = api_types(va_arg(args, int));
-    }
-    created = signal_new(nargs, parg_types);
-    fcl->signals_hash->insert(signal_name, created);
-    fcl->signal_names->append(sn);
-
-    return created;
-  }
-}
-
-/**
-   Create a new signal type.
- */
-signal_deprecator *luascript_signal_create(struct fc_lua *fcl,
-                                           const char *signal_name,
-                                           int nargs, ...)
-{
-  va_list args;
-  struct signal *created;
-
-  va_start(args, nargs);
-  created = luascript_signal_create_valist(fcl, signal_name, nargs, args);
-  va_end(args);
-
-  if (created != nullptr) {
-    return &(created->depr_msg);
-  }
-
-  return nullptr;
-}
-
-/**
-   Mark signal deprecated.
- */
-void deprecate_signal(signal_deprecator *deprecator, const char *signal_name,
-                      const char *replacement, const char *deprecated_since)
-{
-  if (deprecator != nullptr) {
-    char buffer[1024];
-
-    if (deprecated_since != nullptr && replacement != nullptr) {
-      fc_snprintf(
-          buffer, sizeof(buffer),
-          "Deprecated: lua signal \"%s\", deprecated since \"%s\", used. "
-          "Use \"%s\" instead",
-          signal_name, deprecated_since, replacement);
-    } else if (replacement != nullptr) {
-      fc_snprintf(buffer, sizeof(buffer),
-                  "Deprecated: lua signal \"%s\" used. Use \"%s\" instead",
-                  signal_name, replacement);
-    } else {
-      fc_snprintf(buffer, sizeof(buffer),
-                  "Deprecated: lua signal \"%s\" used.", signal_name);
-    }
-
-    *deprecator = fc_strdup(buffer);
-  }
-}
-
 /**
    Connects a callback function to a certain signal.
  */
 void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,
                                const char *callback_name, bool create)
 {
-  struct signal *psignal;
-  struct signal_callback *pcallback_found = nullptr;
+  QString callback_found;
 
   fc_assert_ret(fcl != nullptr);
-  fc_assert_ret(fcl->signals_hash != nullptr);
 
-  psignal = fcl->signals_hash->value(signal_name, nullptr);
-  if (psignal) {
-    // check for a duplicate callback
-    for (auto *pcallback : qAsConst(*psignal->callbacks)) {
-      if (!strcmp(pcallback->name, callback_name)) {
-        pcallback_found = pcallback;
-        break;
-      }
-    }
-
-    if (psignal->depr_msg != nullptr) {
-      qCWarning(deprecations_category, "%s", psignal->depr_msg);
-    }
-
-    if (create) {
-      if (pcallback_found) {
-        luascript_error(fcl->state,
-                        "Signal \"%s\" already has a callback "
-                        "called \"%s\".",
-                        signal_name, callback_name);
-      } else {
-        psignal->callbacks->append(signal_callback_new(callback_name));
-      }
-    } else {
-      if (pcallback_found) {
-        psignal->callbacks->removeAll(pcallback_found);
-      }
-    }
-  } else {
+  auto it = fcl->signals_hash.find(signal_name);
+  if (it == fcl->signals_hash.end()) {
     luascript_error(fcl->state, "Signal \"%s\" does not exist.",
                     signal_name);
+    return;
+  }
+
+  struct signal sig = it.value();
+
+  for (auto callback : qAsConst(sig.callbacks)) {
+    if (callback == callback_name) {
+      callback_found = callback;
+      break;
+    }
+  }
+
+  if (sig.depr_msg != nullptr) {
+    qCWarning(deprecations_category, "%s", sig.depr_msg);
+  }
+
+  if (create) {
+    if (!callback_found.isEmpty()) {
+      luascript_error(fcl->state,
+                      "Signal \"%s\" already has a callback "
+                      "called \"%s\".",
+                      signal_name, callback_name);
+    } else {
+      sig.callbacks.append(callback_name);
+    }
+  } else {
+    if (!callback_found.isEmpty()) {
+      sig.callbacks.removeAll(callback_found);
+    }
   }
 }
 
@@ -285,52 +106,23 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
                                        const char *signal_name,
                                        const char *callback_name)
 {
-  struct signal *psignal;
-
   fc_assert_ret_val(fcl != nullptr, false);
-  fc_assert_ret_val(fcl->signals_hash != nullptr, false);
 
-  psignal = fcl->signals_hash->value(signal_name, nullptr);
-  if (psignal) {
-    // check for a duplicate callback
-    for (auto *pcallback : qAsConst(*psignal->callbacks)) {
-      if (!strcmp(pcallback->name, callback_name)) {
-        return true;
-      }
+  auto it = fcl->signals_hash.find(signal_name);
+  if (it == fcl->signals_hash.end()) {
+    return false;
+  }
+
+  struct signal sig = it.value();
+
+  // check for a duplicate callback
+  for (auto callback : qAsConst(sig.callbacks)) {
+    if (callback == callback_name) {
+      return true;
     }
   }
 
   return false;
-}
-
-/**
-   Initialize script signals and callbacks.
- */
-void luascript_signal_init(struct fc_lua *fcl)
-{
-  fc_assert_ret(fcl != nullptr);
-
-  if (nullptr == fcl->signals_hash) {
-    fcl->signals_hash = new QHash<QString, struct signal *>;
-    fcl->signal_names = new QVector<QString>;
-  }
-}
-
-/**
-   Free script signals and callbacks.
- */
-void luascript_signal_free(struct fc_lua *fcl)
-{
-  if (!fcl || !fcl->signals_hash) {
-    return;
-  }
-  for (auto *nissan : qAsConst(*fcl->signals_hash)) {
-    signal_destroy(nissan);
-  }
-  NFC_FREE(fcl->signals_hash);
-  fcl->signals_hash = nullptr;
-  NFC_FREE(fcl->signal_names);
-  fcl->signal_names = nullptr;
 }
 
 /**
@@ -339,31 +131,31 @@ void luascript_signal_free(struct fc_lua *fcl)
 QString luascript_signal_by_index(struct fc_lua *fcl, int sindex)
 {
   fc_assert_ret_val(fcl != nullptr, QString());
-  fc_assert_ret_val(fcl->signal_names != nullptr, QString());
 
-  return sindex < fcl->signal_names->size() ? fcl->signal_names->at(sindex)
-                                            : QString();
+  return sindex < fcl->signal_names.size() ? fcl->signal_names.at(sindex)
+                                           : QString();
 }
 
 /**
    Return the name of the 'index' callback function of the signal with the
    name 'signal_name'.
  */
-const char *luascript_signal_callback_by_index(struct fc_lua *fcl,
-                                               const char *signal_name,
-                                               int sindex)
+QString luascript_signal_callback_by_index(struct fc_lua *fcl,
+                                           const char *signal_name,
+                                           int sindex)
 {
-  struct signal *psignal;
-
   fc_assert_ret_val(fcl != nullptr, nullptr);
-  fc_assert_ret_val(fcl->signals_hash != nullptr, nullptr);
 
-  psignal = fcl->signals_hash->value(signal_name, nullptr);
-  if (psignal && sindex < psignal->callbacks->size()) {
-    struct signal_callback *pcallback = psignal->callbacks->at(sindex);
-    if (pcallback) {
-      return pcallback->name;
-    }
+  auto it = fcl->signals_hash.find(signal_name);
+  if (it == fcl->signals_hash.end()) {
+    return nullptr;
   }
+
+  struct signal sig = it.value();
+
+  if (sindex < sig.callbacks.size()) {
+    return sig.callbacks.at(sindex);
+  }
+
   return nullptr;
 }

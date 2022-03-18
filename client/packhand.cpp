@@ -19,6 +19,15 @@
 #include <QDateTime>
 #include <cstring>
 
+/* dependencies/lua */
+extern "C" {
+#include "lua.h"
+#include "lualib.h"
+}
+
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "bitvector.h"
 #include "capability.h"
@@ -102,6 +111,8 @@
 #include "script_client.h"
 
 #include "packhand.h"
+
+CLIENT_SIGNAL(new_tech)
 
 /* Define this macro to get additional debug output about the transport
  * status of the units. */
@@ -2551,7 +2562,7 @@ void handle_research_info(const struct packet_research_info *packet)
          *    worker on a river, the road menu item needs updating. */
         menus_update();
 
-        script_client_signal_emit("new_tech");
+        client_signals::new_tech();
 
         // If we got a new tech the tech tree news an update.
         science_report_dialog_redraw();

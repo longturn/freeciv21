@@ -14,12 +14,11 @@
 #include "support.h"
 
 /* common/scriptcore */
+#include "luascript_signal.h"
 #include "luascript_types.h"
 
 struct section_file;
 struct connection;
-
-void script_server_remove_exported_object(void *object);
 
 // Script functions.
 bool script_server_init();
@@ -41,5 +40,9 @@ void script_server_state_save(struct section_file *file);
 // Signals.
 void script_server_signal_emit(const char *signal_name, ...);
 
-// Functions
-bool script_server_call(const char *func_name, ...);
+fc_lua *server_fcl_main();
+
+#define SERVER_SIGNAL(name, ...)                                            \
+  namespace server_signals {                                                \
+  inline const Signal<__VA_ARGS__> name(#name, server_fcl_main);            \
+  }

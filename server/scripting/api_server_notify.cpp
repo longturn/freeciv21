@@ -12,6 +12,9 @@
 #include <fc_config.h>
 #endif
 
+// Sol
+#include "sol/sol.hpp"
+
 // common
 #include "featured_text.h"
 #include "research.h"
@@ -24,14 +27,47 @@
 
 #include "api_server_notify.h"
 
+namespace {
+const std::string script = R"(
+-- Notify module implementation.
+
+function notify.all(...)
+  local arg = table.pack(...);
+  notify.event_msg(nil, nil, E.SCRIPT, string.format(table.unpack(arg)))
+end
+
+function notify.player(player, ...)
+  local arg = table.pack(...);
+  notify.event_msg(player, nil, E.SCRIPT, string.format(table.unpack(arg)))
+end
+
+function notify.event(player, tile, event, ...)
+  local arg = table.pack(...);
+  notify.event_msg(player, tile, event, string.format(table.unpack(arg)))
+end
+
+function notify.embassies(player, ptile, event, ...)
+  local arg = table.pack(...);
+  notify.embassies_msg(player, ptile, event, string.format(table.unpack(arg)))
+end
+
+function notify.research(player, selfmsg, event, ...)
+  local arg = table.pack(...);
+  notify.research_msg(player, selfmsg, event, string.format(table.unpack(arg)))
+end
+
+function notify.research_embassies(player, event, ...)
+  local arg = table.pack(...);
+  notify.research_embassies_msg(player, event, string.format(table.unpack(arg)))
+end
+)";
+
 /**
    Notify players which have embassies with pplayer with the given message.
  */
-void api_notify_embassies_msg(lua_State *L, Player *pplayer, Tile *ptile,
-                              int event, const char *message)
+void notify_embassies_msg(sol::this_state s, player *pplayer, tile *ptile,
+                          int event, const char *message)
 {
-  LUASCRIPT_CHECK_STATE(L);
-
   notify_embassies(pplayer, ptile, static_cast<event_type>(event), ftc_any,
                    "%s", message);
 }
@@ -39,11 +75,9 @@ void api_notify_embassies_msg(lua_State *L, Player *pplayer, Tile *ptile,
 /**
    Notify pplayer of a complex event.
  */
-void api_notify_event_msg(lua_State *L, Player *pplayer, Tile *ptile,
-                          int event, const char *message)
+void notify_event_msg(sol::this_state s, player *pplayer, tile *ptile,
+                      int event, const char *message)
 {
-  LUASCRIPT_CHECK_STATE(L);
-
   notify_player(pplayer, ptile, static_cast<event_type>(event), ftc_any,
                 "%s", message);
 }
@@ -51,15 +85,10 @@ void api_notify_event_msg(lua_State *L, Player *pplayer, Tile *ptile,
 /**
    Notify players sharing research with the player.
  */
-void api_notify_research_msg(lua_State *L, Player *pplayer, bool include_plr,
-                             int event, const char *message)
+void notify_research_msg(sol::this_state s, player *pplayer,
+                         bool include_plr, int event, const char *message)
 {
-  struct research *pres;
-
-  LUASCRIPT_CHECK_STATE(L);
-
-  pres = research_get(pplayer);
-
+  struct research *pres = research_get(pplayer);
   notify_research(pres, include_plr ? nullptr : pplayer,
                   static_cast<event_type>(event), ftc_any, "%s", message);
 }
@@ -67,15 +96,22 @@ void api_notify_research_msg(lua_State *L, Player *pplayer, bool include_plr,
 /**
    Notify players sharing research with the player.
  */
-void api_notify_research_embassies_msg(lua_State *L, Player *pplayer,
-                                       int event, const char *message)
+void notify_research_embassies_msg(sol::this_state s, player *pplayer,
+                                   int event, const char *message)
 {
-  struct research *pres;
-
-  LUASCRIPT_CHECK_STATE(L);
-
-  pres = research_get(pplayer);
+  struct research *pres = research_get(pplayer);
 
   notify_research_embassies(pres, nullptr, static_cast<event_type>(event),
                             ftc_any, "%s", message);
+}
+
+} // namespace
+
+void setup_server_notify(sol::state_view lua)
+{
+  auto notify = lua["notify"].get_or_create<sol::table>();
+  notify["embassies_msg"] = notify_embassies_msg;
+  notify["research_msg"] = notify_research_msg;
+  notify["research_embassies_msg"] = notify_research_embassies_msg;
+  notify["event_msg"] = notify_event_msg;
 }

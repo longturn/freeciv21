@@ -75,6 +75,9 @@
 #include <cstring>
 #include <sstream>
 
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "bitvector.h"
 #include "fcintl.h"

@@ -16,14 +16,15 @@
 #include <cstdlib>
 #include <ctime>
 
+// Sol
+#include "sol/sol.hpp"
+
 extern "C" {
 /* dependencies/lua */
 #include "lua.h"
 #include "lualib.h"
-
-/* dependencies/tolua */
-#include "tolua.h"
 }
+
 // utility
 #include "log.h"
 
@@ -31,24 +32,18 @@ extern "C" {
 #include "featured_text.h"
 
 /* common/scriptcore */
+#include "api_game_methods.h"
 #include "api_game_specenum.h"
+#include "api_signal_base.h"
 #include "luascript.h"
-
-#include "tolua_game_gen.h"
-#include "tolua_signal_gen.h"
+#include "luascript_signal.h"
 
 // client
+#include "chatline_common.h"
 #include "luaconsole_common.h"
 
 /* client/luascript */
-#include "tolua_client_gen.h"
-
 #include "script_client.h"
-
-/*****************************************************************************
-  Lua virtual machine state.
-*****************************************************************************/
-static struct fc_lua *main_fcl = nullptr;
 
 /*****************************************************************************
   Optional game script code (useful for scenarios).
@@ -68,14 +63,22 @@ static void script_client_output(struct fc_lua *fcl, QtMsgType level,
                                  const char *format, ...)
     fc__attribute((__format__(__printf__, 3, 4)));
 
-static void script_client_signal_create();
+/*****************************************************************************
+  Lua virtual machine state.
+*****************************************************************************/
+
+fc_lua *client_lua()
+{
+  static fc_lua *main = luascript_new(script_client_output, true);
+  return main;
+}
 
 /**
    Parse and execute the script in str
  */
 bool script_client_do_string(const char *str)
 {
-  int status = luascript_do_string(main_fcl, str, "cmd");
+  int status = luascript_do_string(client_lua(), str, "cmd");
 
   return (status == 0);
 }
@@ -85,19 +88,9 @@ bool script_client_do_string(const char *str)
  */
 bool script_client_do_file(const char *filename)
 {
-  int status = luascript_do_file(main_fcl, filename);
+  int status = luascript_do_file(client_lua(), filename);
 
   return (status == 0);
-}
-
-/**
-   Invoke the 'callback_name' Lua function.
- */
-bool script_client_callback_invoke(const char *callback_name, int nargs,
-                                   enum api_types *parg_types, va_list args)
-{
-  return luascript_callback_invoke(main_fcl, callback_name, nargs,
-                                   parg_types, args);
 }
 
 /**
@@ -119,7 +112,7 @@ static void script_client_vars_free()
  */
 static void script_client_vars_load(struct section_file *file)
 {
-  luascript_vars_load(main_fcl, file, "script.vars");
+  luascript_vars_load(client_lua(), file, "script.vars");
 }
 
 /**
@@ -127,7 +120,7 @@ static void script_client_vars_load(struct section_file *file)
  */
 static void script_client_vars_save(struct section_file *file)
 {
-  luascript_vars_save(main_fcl, file, "script.vars");
+  luascript_vars_save(client_lua(), file, "script.vars");
 }
 
 /**
@@ -151,7 +144,7 @@ static void script_client_code_load(struct section_file *file)
 
     code = secfile_lookup_str_default(file, "", "%s", section);
     script_client_code = fc_strdup(code);
-    luascript_do_string(main_fcl, script_client_code, section);
+    luascript_do_string(client_lua(), script_client_code, section);
   }
 }
 
@@ -165,46 +158,48 @@ static void script_client_code_save(struct section_file *file)
   }
 }
 
+namespace {
+
+void chat_base(const char *msg)
+{
+  output_window_printf(ftc_chat_luaconsole, "%s", msg);
+}
+
+void setup_client(sol::state_view lua)
+{
+  auto chat = lua["chat"].get_or_create<sol::table>();
+  chat.set("base", chat_base);
+
+  lua.script(R"(
+function chat.msg(fmt, ...)
+  chat.base(string.format(fmt, ...))
+end
+  )");
+}
+
+} // namespace
+
 /**
    Initialize the scripting state.
  */
 bool script_client_init()
 {
-  if (main_fcl != nullptr) {
-    fc_assert_ret_val(main_fcl->state != nullptr, false);
+  auto main_fcl = client_lua();
 
-    return true;
-  }
+  sol::state_view main_view(main_fcl->state);
+  setup_game_methods(main_view);
+  setup_lua_signal(main_fcl->state);
 
-  main_fcl = luascript_new(script_client_output, true);
-  if (main_fcl == nullptr) {
-    luascript_destroy(main_fcl); // TODO: main_fcl is nullptr here...
-    main_fcl = nullptr;
-
-    return false;
-  }
+  setup_client(main_view);
 
   luascript_common_a(main_fcl->state);
   api_specenum_open(main_fcl->state);
-  tolua_game_open(main_fcl->state);
-  tolua_signal_open(main_fcl->state);
-
-#ifdef MESON_BUILD
-  /* Tolua adds 'tolua_' prefix to _open() function names,
-   * and we can't pass it a basename where the original
-   * 'tolua_' has been stripped when generating from meson. */
-  tolua_tolua_client_open(main_fcl->state);
-#else  // MESON_BUILD
-  tolua_client_open(main_fcl->state);
-#endif // MESON_BUILD
+  setup_lua_signal(main_fcl->state);
 
   luascript_common_z(main_fcl->state);
 
   script_client_code_init();
   script_client_vars_init();
-
-  luascript_signal_init(main_fcl);
-  script_client_signal_create();
 
   return true;
 }
@@ -256,14 +251,12 @@ static void script_client_output(struct fc_lua *fcl, QtMsgType level,
  */
 void script_client_free()
 {
+  auto main_fcl = client_lua();
   if (main_fcl != nullptr) {
     script_client_code_free();
     script_client_vars_free();
 
-    luascript_signal_free(main_fcl);
-
     luascript_destroy(main_fcl);
-    main_fcl = nullptr;
   }
 }
 
@@ -286,24 +279,4 @@ void script_client_state_save(struct section_file *file)
 {
   script_client_code_save(file);
   script_client_vars_save(file);
-}
-
-/**
-   Invoke all the callback functions attached to a given signal.
- */
-void script_client_signal_emit(const char *signal_name, ...)
-{
-  va_list args;
-
-  va_start(args, signal_name);
-  luascript_signal_emit_valist(main_fcl, signal_name, args);
-  va_end(args);
-}
-
-/**
-   Declare any new signal types you need here.
- */
-static void script_client_signal_create()
-{
-  luascript_signal_create(main_fcl, "new_tech", 0);
 }

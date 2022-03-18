@@ -50,3 +50,4 @@ build.ninja
 .kdev4
 # Project file
 *.kdev4
+.vscode

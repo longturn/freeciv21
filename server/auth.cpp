@@ -17,6 +17,15 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include <cstdlib>
 #include <cstring>
 
+/* dependencies/lua */
+extern "C" {
+#include "lua.h"
+#include "lualib.h"
+}
+
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "fcintl.h"
 #include "log.h"

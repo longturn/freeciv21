@@ -17,6 +17,9 @@
 
 #include <cstdarg>
 
+// Sol
+#include "sol/sol.hpp"
+
 // utility
 #include "bitvector.h"
 #include "fcintl.h"
@@ -77,6 +80,9 @@
 #include "aitraits.h"
 #include "difficulty.h"
 #include "handicaps.h"
+
+// First player is former owner, second new one.
+SERVER_SIGNAL(city_transferred, city *, player *, player *, const char *);
 
 struct rgbcolor;
 
@@ -178,8 +184,8 @@ void kill_player(struct player *pplayer)
          a radius of 3, give verbose messages of every unit transferred,
          and raze buildings according to raze chance (also removes palace) */
       if (transfer_city(pcity->original, pcity, 3, true, true, true, true)) {
-        script_server_signal_emit("city_transferred", pcity, pplayer,
-                                  pcity->original, "death-back_to_original");
+        server_signals::city_transferred(pcity, pplayer, pcity->original,
+                                         "death-back_to_original");
       }
     }
   }
@@ -221,8 +227,8 @@ void kill_player(struct player *pplayer)
     city_list_iterate_safe(pplayer->cities, pcity)
     {
       if (transfer_city(barbarians, pcity, -1, false, false, false, false)) {
-        script_server_signal_emit("city_transferred", pcity, pplayer,
-                                  barbarians, "death-barbarians_get");
+        server_signals::city_transferred(pcity, pplayer, barbarians,
+                                         "death-barbarians_get");
       }
     }
     city_list_iterate_safe_end;
@@ -1782,7 +1788,6 @@ void server_remove_player(struct player *pplayer)
     connection_detach(conn_list_get(pplayer->connections, 0), false);
   }
 
-  script_server_remove_exported_object(pplayer);
   // Clear data saved in the other player structs.
   players_iterate(aplayer)
   {
@@ -2966,8 +2971,8 @@ struct player *civil_war(struct player *pplayer)
                       // TRANS: <city> ... the Poles.
                       _("%s declares allegiance to the %s."),
                       city_link(pcity), nation_plural_for_player(cplayer));
-        script_server_signal_emit("city_transferred", pcity, pplayer,
-                                  cplayer, "civil_war");
+        server_signals::city_transferred(pcity, pplayer, cplayer,
+                                         "civil_war");
       }
       i--;
     }

@@ -21,6 +21,9 @@
 #include <cstring>
 #include <ctime>
 
+// Sol
+#include "sol/sol.hpp"
+
 // Qt
 #include <QCoreApplication>
 #include <QDebug>
@@ -122,6 +125,10 @@
 #include "difficulty.h"
 
 #include "srv_main.h"
+
+SERVER_SIGNAL(turn_begin, int, int);
+SERVER_SIGNAL(achievement_gained, achievement *, player *, bool);
+SERVER_SIGNAL(map_generated);
 
 static void announce_player(struct player *pplayer);
 
@@ -1094,11 +1101,7 @@ void begin_turn(bool is_new_turn)
   send_game_info(nullptr);
 
   if (is_new_turn) {
-    script_server_signal_emit("turn_begin", game.info.turn, game.info.year);
-    script_server_signal_emit("turn_started",
-                              game.info.turn > 0 ? game.info.turn - 1
-                                                 : game.info.turn,
-                              game.info.year);
+    server_signals::turn_begin(game.info.turn, game.info.year);
 
     /* We build scores at the beginning of every turn.  We have to
      * build them at the beginning so that the AI can use the data,
@@ -1601,7 +1604,7 @@ void end_turn()
 
       lsend_packet_achievement_info(first->connections, &pack);
 
-      script_server_signal_emit("achievement_gained", ach, first, true);
+      server_signals::achievement_gained(ach, first, true);
     }
 
     pack.first = false;
@@ -1616,8 +1619,7 @@ void end_turn()
 
           lsend_packet_achievement_info(pplayer->connections, &pack);
 
-          script_server_signal_emit("achievement_gained", ach, pplayer,
-                                    false);
+          server_signals::achievement_gained(ach, pplayer, false);
         }
       }
       player_list_iterate_end;
@@ -2977,7 +2979,7 @@ void srv_ready()
     }
 
     if (wld.map.server.generator != MAPGEN_SCENARIO) {
-      script_server_signal_emit("map_generated");
+      server_signals::map_generated();
     }
 
     game_map_init();

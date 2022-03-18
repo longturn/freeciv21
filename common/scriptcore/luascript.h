@@ -11,16 +11,21 @@
 
 #include <QHash>
 #include <QVector>
-/* dependencies/tolua */
-#include "tolua.h"
+
+/* dependencies/lua */
+extern "C" {
+#include "lua.h"
+#include "lualib.h"
+}
+
+// Sol
+#include "sol/sol.hpp"
 
 // utility
 #include "log.h"
 #include "support.h" // fc__attribute()
 
 /* common/scriptcore */
-#include "luascript_func.h"
-#include "luascript_signal.h"
 #include "luascript_types.h"
 
 struct section_file;
@@ -28,24 +33,6 @@ struct luascript_func_hash;
 struct luascript_signal_hash;
 struct luascript_signal_name_list;
 struct connection;
-struct fc_lua;
-
-typedef void (*luascript_log_func_t)(struct fc_lua *fcl, QtMsgType level,
-                                     const char *format, ...)
-    fc__attribute((__format__(__printf__, 3, 4)));
-
-struct fc_lua {
-  lua_State *state;
-
-  luascript_log_func_t output_fct;
-  // This is needed for server 'lua' and 'luafile' commands.
-  struct connection *caller;
-
-  QHash<QString, struct luascript_func *> *funcs;
-
-  QHash<QString, struct signal *> *signals_hash;
-  QVector<QString> *signal_names;
-};
 
 // Error functions for lua scripts.
 int luascript_error(lua_State *L, const char *format, ...)
@@ -68,22 +55,11 @@ void luascript_log(struct fc_lua *fcl, QtMsgType level, const char *format,
 void luascript_log_vargs(struct fc_lua *fcl, QtMsgType level,
                          const char *format, va_list args);
 
-void luascript_push_args(struct fc_lua *fcl, int nargs,
-                         enum api_types *parg_types, va_list args);
-void luascript_pop_returns(struct fc_lua *fcl, const char *func_name,
-                           int nreturns, enum api_types *preturn_types,
-                           va_list args);
 bool luascript_check_function(struct fc_lua *fcl, const char *funcname);
 
-int luascript_call(struct fc_lua *fcl, int narg, int nret, const char *code);
 int luascript_do_string(struct fc_lua *fcl, const char *str,
                         const char *name);
 int luascript_do_file(struct fc_lua *fcl, const char *filename);
-
-// Callback invocation function.
-bool luascript_callback_invoke(struct fc_lua *fcl, const char *callback_name,
-                               int nargs, enum api_types *parg_types,
-                               va_list args);
 
 void luascript_remove_exported_object(struct fc_lua *fcl, void *object);
 
