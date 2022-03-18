@@ -691,7 +691,8 @@ int get_player_bonus(const struct player *pplayer,
 /**
    Returns the effect bonus at a city.
  */
-int get_city_bonus(const struct city *pcity, enum effect_type effect_type)
+int get_city_bonus(const struct city *pcity, enum effect_type effect_type,
+		   enum vision_layer vlayer)
 {
   if (!initialized) {
     return 0;
@@ -699,7 +700,7 @@ int get_city_bonus(const struct city *pcity, enum effect_type effect_type)
 
   return get_target_bonus_effects(
       nullptr, city_owner(pcity), nullptr, pcity, nullptr, city_tile(pcity),
-      nullptr, nullptr, nullptr, nullptr, nullptr, effect_type);
+      nullptr, nullptr, nullptr, nullptr, nullptr, effect_type, vlayer);
 }
 
 /**

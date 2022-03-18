@@ -1079,7 +1079,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 }
 
 /**
- * Adds <VisionLayer, Main, Local, True> req to all unit vision reqs,
+ * Adds <VisionLayer, Main, Local, True> req to all unit/city vision reqs,
  * as compat for missing CAP_VUT_VISIONLAYER
  */
 static bool rscompat_vision_effect_cb(struct effect *peffect, void *data)
@@ -1087,7 +1087,8 @@ static bool rscompat_vision_effect_cb(struct effect *peffect, void *data)
   struct rscompat_info [[maybe_unused]] *info =
       static_cast<struct rscompat_info *>(data);
 
-  if (peffect->type == EFT_UNIT_VISION_RADIUS_SQ) {
+  if (peffect->type == EFT_UNIT_VISION_RADIUS_SQ ||
+      peffect->type == EFT_CITY_VISION_RADIUS_SQ) {
     effect_req_append(peffect,
                       req_from_str("VisionLayer", "Local", false, true,
                                    false, "Main"));
@@ -1168,8 +1169,14 @@ static void rscompat_optional_capabilities(rscompat_info *info)
     unit_type_iterate_end;
   }
 
-  if (!has_capability(CAP_VUT_VISIONLAYER, info->cap_effects.data()))
+  if (!has_capability(CAP_VUT_VISIONLAYER, info->cap_effects.data())) {
+    // Add vlayer=Main to existing vision effects
     iterate_effect_cache(rscompat_vision_effect_cb, info);
+    // Add effect to give cities radius 2 vision on other layers
+    auto effect = effect_new(EFT_CITY_VISION_RADIUS_SQ, 2, nullptr);
+    effect_req_append(effect, req_from_str("VisionLayer", "Local", false,
+                                           false, false, "Main"));
+  }
 }
 
 /**

@@ -368,7 +368,8 @@ bool is_building_replaced(const struct city *pcity,
 // functions to know the bonuses a certain effect is granting
 int get_world_bonus(enum effect_type effect_type);
 int get_player_bonus(const struct player *plr, enum effect_type effect_type);
-int get_city_bonus(const struct city *pcity, enum effect_type effect_type);
+int get_city_bonus(const struct city *pcity, enum effect_type effect_type,
+                   enum vision_layer vlayer = V_COUNT);
 int get_city_specialist_output_bonus(const struct city *pcity,
                                      const struct specialist *pspecialist,
                                      const struct output_type *poutput,
