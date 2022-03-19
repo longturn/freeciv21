@@ -193,7 +193,6 @@ struct client_options gui_options = {
     false, //.gui_qt_fullscreen =
     true,  //.gui_qt_show_preview =
     true,  //.gui_qt_allied_chat_only =
-    true,  //.gui_qt_sidebar_left =
     0,     // font_increase
     FC_QT_DEFAULT_THEME_NAME,
     "Monospace,8,-1,5,75,0,0,0,0,0",   //.gui_qt_font_notify_label =
@@ -205,7 +204,6 @@ struct client_options gui_options = {
     "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_reqtree_text =
     {true},                            //=?
     true,                              //.gui_qt_show_titlebar
-    5,
     {}};
 
 /* Set to TRUE after the first call to options_init(), to avoid the usage
@@ -1469,7 +1467,6 @@ static void manual_turn_done_callback(struct option *poption);
 static void voteinfo_bar_callback(struct option *poption);
 static void font_changed_callback(struct option *poption);
 static void allfont_changed_callback(struct option *poption);
-static void sidebar_changed_callback(struct option *poption);
 static void mapimg_changed_callback(struct option *poption);
 static void game_music_enable_callback(struct option *poption);
 static void menu_music_enable_callback(struct option *poption);
@@ -2026,9 +2023,6 @@ static struct client_option client_options[] = {
                       "That options is not unsaveable. Hit Apply button"
                       "after changing this."),
                    COC_FONT, 0, -100, 100, allfont_changed_callback),
-    GEN_INT_OPTION(gui_qt_sidebar_width, N_("Sidebar width"),
-                   N_("Change width of sidebar. 1 - narrow, 9 - fat"),
-                   COC_INTERFACE, 5, 1, 31, sidebar_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_default, "default_font", N_("Default font"),
                     N_("This is default font"), COC_FONT,
                     "Sans Serif,10,-1,5,75,0,0,0,0,0",
@@ -2073,11 +2067,7 @@ static struct client_option client_options[] = {
                     N_("If this option is set the client will show "
                        "information and map preview of current savegame."),
                     COC_GRAPHICS, true, nullptr),
-    GEN_BOOL_OPTION(
-        gui_qt_sidebar_left, N_("Sidebar position"),
-        N_("If this option is set, the sidebar will be to the left "
-           "of the map, otherwise to the right."),
-        COC_INTERFACE, true, nullptr)};
+};
 static const int client_options_num = ARRAY_SIZE(client_options);
 
 // Iteration loop, including invalid options for the current gui type.
@@ -4864,12 +4854,6 @@ static void allfont_changed_callback(struct option *poption)
 {
   Q_UNUSED(poption)
   gui_update_allfonts();
-}
-
-static void sidebar_changed_callback(struct option *poption)
-{
-  Q_UNUSED(poption)
-  gui_update_sidebar();
 }
 
 /**
