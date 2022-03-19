@@ -3814,6 +3814,7 @@ static void load_cma_preset(struct section_file *file, int i)
         secfile_lookup_int_default(file, 0, "cma.preset%d.factor%d", i, o);
   }
   output_type_iterate_end;
+  parameter.max_growth = false;
   parameter.require_happy =
       secfile_lookup_bool_default(file, false, "cma.preset%d.reqhappy", i);
   parameter.happy_factor =
