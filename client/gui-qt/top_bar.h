@@ -43,8 +43,6 @@ public:
   ~top_bar_widget() override;
   int getPriority();
   QPixmap *get_pixmap();
-  int heightForWidth(int width) const override;
-  bool hasHeightForWidth() const override;
   void paint(QPainter *painter, QPaintEvent *event);
   void setCustomLabels(const QString &);
   void setLabel(const QString &str);
