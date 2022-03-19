@@ -1419,7 +1419,7 @@ void handle_edit_game(struct connection *pc,
 
   if (0
       != strncmp(packet->scenario_authors, game.scenario.authors,
-                 MAX_LEN_PACKET)) {
+                 sizeof(packet->scenario_authors))) {
     sz_strlcpy(game.scenario.authors, packet->scenario_authors);
     changed = true;
   }
