@@ -48,9 +48,9 @@
 #include "page_network.h"
 #include "page_pregame.h"
 #include "page_scenario.h"
-#include "sidebar.h"
 #include "sprite.h"
 #include "tileset_debugger.h"
+#include "top_bar.h"
 #include "voteinfo_bar.h"
 
 fcFont *fcFont::m_instance = 0;

@@ -18,29 +18,29 @@ class QVBoxLayout;
 typedef void (*pfcn_bool)(bool);
 typedef void (*pfcn)();
 
-void sidebarBlinkEndturn(bool do_restore);
-void sidebarCenterUnit();
-void sidebarDisableEndturn(bool do_restore);
-void sidebarFinishTurn(bool nothing);
-void sidebarIndicatorsMenu();
-void sidebarRatesWdg(bool nothing);
-void sidebarRightClickDiplomacy();
-void sidebarRightClickScience();
-void sidebarLeftClickScience(bool nothing);
-void sidebarShowMap(bool nothing);
+void top_bar_blink_end_turn(bool do_restore);
+void top_bar_center_unit();
+void top_bar_disable_end_turn(bool do_restore);
+void top_bar_finish_turn(bool nothing);
+void top_bar_indicators_menu();
+void top_bar_rates_wdg(bool nothing);
+void top_bar_right_click_diplomacy();
+void top_bar_right_click_science();
+void top_bar_left_click_science(bool nothing);
+void top_bar_show_map(bool nothing);
 
 /***************************************************************************
-  Class representing single widget(icon) on sidebar
+  Class representing single widget(icon) on top_bar
 ***************************************************************************/
-class sidebarWidget : public QWidget {
+class top_bar_widget : public QWidget {
   Q_OBJECT
 
 public:
   enum standards { SW_STD, SW_TAX, SW_INDICATORS };
 
-  sidebarWidget(QPixmap *pix, const QString &label, const QString &pg,
-                pfcn_bool func, standards type = SW_STD);
-  ~sidebarWidget() override;
+  top_bar_widget(QPixmap *pix, const QString &label, const QString &pg,
+                 pfcn_bool func, standards type = SW_STD);
+  ~top_bar_widget() override;
   int getPriority();
   QPixmap *get_pixmap();
   int heightForWidth(int width) const override;
@@ -87,18 +87,18 @@ private:
 };
 
 /***************************************************************************
-  Freeciv21 sidebar
+  Freeciv21 top_bar
 ***************************************************************************/
-class sidebar : public QWidget {
+class top_bar : public QWidget {
   Q_OBJECT
 
 public:
-  sidebar();
-  ~sidebar() override;
-  void addWidget(sidebarWidget *fsw);
+  top_bar();
+  ~top_bar() override;
+  void addWidget(top_bar_widget *fsw);
   void addSpacer();
   void paint(QPainter *painter, QPaintEvent *event);
-  QList<sidebarWidget *> objects;
+  QList<top_bar_widget *> objects;
 
 protected:
   void paintEvent(QPaintEvent *event) override;

@@ -53,7 +53,7 @@ chat_widget, message_widget {
   color: #00002f;
 }
 /* color of border only*/
-*[sidebar="true"] {
+*[top_bar="true"] {
   color: #000000;
 }
 
@@ -938,7 +938,7 @@ hud_unit_loader::item:hover {
   background: #3399FF;
 }
 
-sidebarWidget {
+top_bar_widget {
   color: white;
   /* Box around current widget */
   selection-background-color: rgb(100, 30, 30);

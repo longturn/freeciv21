@@ -37,7 +37,7 @@ QPushButton:disabled {
   color: #280f0b; }
 
 /* color of border only*/
-*[sidebar="true"] {
+*[top_bar="true"] {
   color: #280f0b; }
 
 /* Help dialog tile output 3 labels */
@@ -659,7 +659,7 @@ hud_input_box QPushButton {
   border-radius: 8px;
   padding: 2px; }
 
-sidebarWidget {
+top_bar_widget {
   color: #f9f8f5;
   background-color: #f3ecdd;
   font-size: 18px;
