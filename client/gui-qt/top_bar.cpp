@@ -115,28 +115,6 @@ void top_bar_widget::setTooltip(const QString &tooltip)
 }
 
 /**
- * Reimplemented virtual method.
- */
-int top_bar_widget::heightForWidth(int width) const
-{
-  switch (standard) {
-  case SW_TAX:
-    return get_tax_sprite(tileset, O_LUXURY)->height() + 8;
-  case SW_INDICATORS:
-    return get_tax_sprite(tileset, O_LUXURY)->height() + 8;
-  case SW_STD:
-    return (width * def_pixmap->height()) / def_pixmap->width() + 8;
-  }
-
-  fc_assert_ret_val(false, 0);
-}
-
-/**
- * Reimplemented virtual method.
- */
-bool top_bar_widget::hasHeightForWidth() const { return true; }
-
-/**
    Sets default label on bottom of sidewidget
  */
 void top_bar_widget::setLabel(const QString &str) { desc = str; }
