@@ -177,6 +177,9 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
   req_edits = req_edit_list_new();
   this->req_vec_fixers = req_vec_fix_list_new();
   effect_edits = effect_edit_list_new();
+
+  // FIXME Should get rid of the static variable.
+  gui = this;
 }
 
 /**
