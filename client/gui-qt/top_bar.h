@@ -39,8 +39,8 @@ class top_bar_widget : public QToolButton {
 public:
   enum standards { SW_STD, SW_TAX, SW_INDICATORS };
 
-  top_bar_widget(QPixmap *pix, const QString &label, const QString &pg,
-                 pfcn_bool func, standards type = SW_STD);
+  top_bar_widget(const QString &label, const QString &pg, pfcn_bool func,
+                 standards type = SW_STD);
   ~top_bar_widget() override;
   int getPriority();
   QPixmap *get_pixmap();
@@ -48,7 +48,6 @@ public:
   void setCustomLabels(const QString &);
   void setLabel(const QString &str);
   void setLeftClick(pfcn_bool func);
-  void setPixmap(QPixmap *pm);
   void setRightClick(pfcn func);
   void setTooltip(const QString &tooltip);
   void setWheelDown(pfcn func);
@@ -78,7 +77,6 @@ private:
   pfcn_bool left_click;
   QFont sfont;
   QFont info_font;
-  QPixmap *def_pixmap;
   QString custom_label;
   QString desc;
   QTimer *timer;
