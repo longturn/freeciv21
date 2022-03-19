@@ -2787,7 +2787,8 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
 
   auto near_pcity = is_any_city_dialog_open();
   int city_x, city_y;
-  if (near_pcity && !cma_is_city_under_agent(near_pcity, NULL)
+  if (qtype == SELECT_FOCUS && near_pcity
+      && !cma_is_city_under_agent(near_pcity, NULL)
       && can_client_issue_orders()
       && city_base_to_city_map(&city_x, &city_y, near_pcity, ptile)) {
     if (NULL != tile_worked(ptile) && tile_worked(ptile) == near_pcity) {
