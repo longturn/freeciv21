@@ -1836,8 +1836,8 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   // Add requirement text for the unit type itself
   requirement_vector_iterate(&utype->build_reqs, preq)
   {
-    req_text_insert_nl(buf, bufsz, pplayer, preq, VERB_DEFAULT,
-                       Q_("?bullet:* "));
+    (void) req_text_insert_nl(buf, bufsz, pplayer, preq, VERB_DEFAULT,
+                              Q_("?bullet:* "));
   }
   requirement_vector_iterate_end;
 
