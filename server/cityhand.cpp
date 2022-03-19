@@ -586,7 +586,7 @@ void handle_city_manager(struct player *pplayer, int city_id, bool enabled,
   }
 
   if (!pcity->cm_parameter) {
-    pcity->cm_parameter = new cm_parameter[1]();
+    pcity->cm_parameter = new cm_parameter();
   }
 
   cm_copy_parameter(pcity->cm_parameter, &parameter);

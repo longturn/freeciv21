@@ -409,7 +409,7 @@ void auto_arrange_workers(struct city *pcity)
   if (!cmr->found_a_valid) {
     if (pcity->cm_parameter) {
       // If player-defined parameters fail, cancel and notify player.
-      free(pcity->cm_parameter);
+      delete pcity->cm_parameter;
       pcity->cm_parameter = NULL;
 
       notify_player(city_owner(pcity), city_tile(pcity), E_CITY_CMA_RELEASE,

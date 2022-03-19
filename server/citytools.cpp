@@ -1255,7 +1255,7 @@ bool transfer_city(struct player *ptaker, struct city *pcity,
 
     // Clear CMA.
     if (pcity->cm_parameter) {
-      free(pcity->cm_parameter);
+      delete pcity->cm_parameter;
       pcity->cm_parameter = NULL;
     }
 
