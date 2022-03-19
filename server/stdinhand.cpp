@@ -4294,6 +4294,8 @@ static bool playernation_command(struct connection *caller, char *str,
       }
     } else if (pnation != NO_NATION_SELECTED) {
       pstyle = style_of_nation(pnation);
+    } else {
+      pstyle = nullptr;
     }
 
     if (!check) {
