@@ -1508,9 +1508,8 @@ struct unit *unit_virtual_create(struct player *pplayer, struct city *pcity,
   fc_assert_ret_val(NULL != punittype, NULL); // No untyped units!
   fc_assert_ret_val(NULL != pplayer, NULL);   // No unowned units!
 
-  /* Make sure that contents of unit structure are correctly initialized,
-   * if you ever allocate it by some other mean than fc_calloc() */
-  struct unit *punit = new unit[1]();
+  // Make sure that contents of unit structure are correctly initialized.
+  struct unit *punit = new unit();
   int max_vet_lvl;
 
   // It does not register the unit so the id is set to 0.
@@ -1551,6 +1550,8 @@ struct unit *unit_virtual_create(struct player *pplayer, struct city *pcity,
 
   punit->carrying = NULL;
 
+  punit->changed_from = ACTIVITY_IDLE;
+  punit->changed_from_count = 0;
   set_unit_activity(punit, ACTIVITY_IDLE);
   punit->battlegroup = BATTLEGROUP_NONE;
   punit->has_orders = false;
