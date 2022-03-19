@@ -65,6 +65,7 @@ top_bar_widget::top_bar_widget(const QString &label, const QString &pg,
 {
   setText(label);
   setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setContextMenuPolicy(Qt::CustomContextMenu);
 
   timer = new QTimer;
