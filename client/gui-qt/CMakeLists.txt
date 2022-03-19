@@ -43,12 +43,12 @@ add_library(
   qtg_cxxside.cpp
   ratesdlg.cpp
   shortcuts.cpp
-  sidebar.cpp
   sciencedlg.cpp
   spaceshipdlg.cpp
   sprite.cpp
   themes.cpp
   tileset_debugger.cpp
+  top_bar.cpp
   tradecalculation.cpp
   tooltips.cpp
   unitreport.cpp

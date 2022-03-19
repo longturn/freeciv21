@@ -55,8 +55,8 @@
 #include "mapview.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
-#include "sidebar.h"
 #include "tooltips.h"
+#include "top_bar.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
@@ -2848,7 +2848,7 @@ void qtg_real_city_dialog_popup(struct city *pcity)
 {
   auto *widget = queen()->city_overlay;
   if (!queen()->city_overlay->isVisible()) {
-    sidebarShowMap(true);
+    top_bar_show_map(true);
     queen()->mapview_wdg->hide_all_fcwidgets();
   }
   center_tile_mapcanvas(pcity->tile);

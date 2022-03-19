@@ -34,8 +34,8 @@
 #include "mapview.h"
 #include "page_game.h"
 #include "sciencedlg.h"
-#include "sidebar.h"
 #include "sprite.h"
+#include "top_bar.h"
 
 #include <cmath>
 
@@ -57,9 +57,9 @@ void reduce_mod(int &mod, int &val)
 /**
    Sidewidget constructor
  */
-sidebarWidget::sidebarWidget(QPixmap *pix, const QString &label,
-                             const QString &pg, pfcn_bool func,
-                             standards type)
+top_bar_widget::top_bar_widget(QPixmap *pix, const QString &label,
+                               const QString &pg, pfcn_bool func,
+                               standards type)
     : QWidget(), blink(false), keep_blinking(false), disabled(false),
       standard(type), page(pg), hover(false), right_click(nullptr),
       wheel_down(nullptr), wheel_up(nullptr), left_click(func),
@@ -79,13 +79,13 @@ sidebarWidget::sidebarWidget(QPixmap *pix, const QString &label,
   info_font = QFont(sfont);
   info_font.setBold(true);
   info_font.setItalic(false);
-  connect(timer, &QTimer::timeout, this, &sidebarWidget::sblink);
+  connect(timer, &QTimer::timeout, this, &top_bar_widget::sblink);
 }
 
 /**
    Sidewidget destructor
  */
-sidebarWidget::~sidebarWidget()
+top_bar_widget::~top_bar_widget()
 {
   NFCN_FREE(def_pixmap);
 
@@ -95,7 +95,7 @@ sidebarWidget::~sidebarWidget()
 /**
    Sets default pixmap for sidewidget
  */
-void sidebarWidget::setPixmap(QPixmap *pm)
+void top_bar_widget::setPixmap(QPixmap *pm)
 {
   NFCN_FREE(def_pixmap);
   def_pixmap = pm;
@@ -104,12 +104,12 @@ void sidebarWidget::setPixmap(QPixmap *pm)
 /**
    Sets custom text visible on top of sidewidget
  */
-void sidebarWidget::setCustomLabels(const QString &l) { custom_label = l; }
+void top_bar_widget::setCustomLabels(const QString &l) { custom_label = l; }
 
 /**
    Sets tooltip for sidewidget
  */
-void sidebarWidget::setTooltip(const QString &tooltip)
+void top_bar_widget::setTooltip(const QString &tooltip)
 {
   setToolTip(tooltip);
 }
@@ -117,7 +117,7 @@ void sidebarWidget::setTooltip(const QString &tooltip)
 /**
  * Reimplemented virtual method.
  */
-int sidebarWidget::heightForWidth(int width) const
+int top_bar_widget::heightForWidth(int width) const
 {
   switch (standard) {
   case SW_TAX:
@@ -134,17 +134,17 @@ int sidebarWidget::heightForWidth(int width) const
 /**
  * Reimplemented virtual method.
  */
-bool sidebarWidget::hasHeightForWidth() const { return true; }
+bool top_bar_widget::hasHeightForWidth() const { return true; }
 
 /**
    Sets default label on bottom of sidewidget
  */
-void sidebarWidget::setLabel(const QString &str) { desc = str; }
+void top_bar_widget::setLabel(const QString &str) { desc = str; }
 
 /**
    Paint event for sidewidget
  */
-void sidebarWidget::paintEvent(QPaintEvent *event)
+void top_bar_widget::paintEvent(QPaintEvent *event)
 {
   int w, h, pos, i;
   QPainter p;
@@ -276,7 +276,7 @@ void sidebarWidget::paintEvent(QPaintEvent *event)
 /**
    Mouse entered on widget area
  */
-void sidebarWidget::enterEvent(QEvent *event)
+void top_bar_widget::enterEvent(QEvent *event)
 {
   if (!hover) {
     hover = true;
@@ -288,7 +288,7 @@ void sidebarWidget::enterEvent(QEvent *event)
 /**
    Mouse left widget area
  */
-void sidebarWidget::leaveEvent(QEvent *event)
+void top_bar_widget::leaveEvent(QEvent *event)
 {
   if (hover) {
     hover = false;
@@ -300,7 +300,7 @@ void sidebarWidget::leaveEvent(QEvent *event)
 /**
    Context menu requested
  */
-void sidebarWidget::contextMenuEvent(QContextMenuEvent *event)
+void top_bar_widget::contextMenuEvent(QContextMenuEvent *event)
 {
   if (hover) {
     hover = false;
@@ -312,27 +312,27 @@ void sidebarWidget::contextMenuEvent(QContextMenuEvent *event)
 /**
    Sets callback for mouse left click
  */
-void sidebarWidget::setLeftClick(pfcn_bool func) { left_click = func; }
+void top_bar_widget::setLeftClick(pfcn_bool func) { left_click = func; }
 
 /**
    Sets callback for mouse right click
  */
-void sidebarWidget::setRightClick(pfcn func) { right_click = func; }
+void top_bar_widget::setRightClick(pfcn func) { right_click = func; }
 
 /**
    Sets callback for mouse wheel down
  */
-void sidebarWidget::setWheelDown(pfcn func) { wheel_down = func; }
+void top_bar_widget::setWheelDown(pfcn func) { wheel_down = func; }
 
 /**
    Sets callback for mouse wheel up
  */
-void sidebarWidget::setWheelUp(pfcn func) { wheel_up = func; }
+void top_bar_widget::setWheelUp(pfcn func) { wheel_up = func; }
 
 /**
    Mouse press event for sidewidget
  */
-void sidebarWidget::mousePressEvent(QMouseEvent *event)
+void top_bar_widget::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton && left_click != nullptr) {
     left_click(true);
@@ -348,7 +348,7 @@ void sidebarWidget::mousePressEvent(QMouseEvent *event)
 /**
    Mouse wheel event
  */
-void sidebarWidget::wheelEvent(QWheelEvent *event)
+void top_bar_widget::wheelEvent(QWheelEvent *event)
 {
   if (event->angleDelta().y() < 0 && wheel_down) {
     wheel_down();
@@ -360,9 +360,9 @@ void sidebarWidget::wheelEvent(QWheelEvent *event)
 }
 
 /**
-   Blinks current sidebar widget
+   Blinks current top_bar widget
  */
-void sidebarWidget::sblink()
+void top_bar_widget::sblink()
 {
   if (keep_blinking) {
     if (!timer->isActive()) {
@@ -383,7 +383,7 @@ void sidebarWidget::sblink()
    extra functionality might be added,
    eg by setting properties
  */
-void sidebarWidget::someSlot()
+void top_bar_widget::someSlot()
 {
   QVariant qvar;
   struct player *obs_player;
@@ -420,7 +420,7 @@ void sidebarWidget::someSlot()
 /**
    Sidebar constructor
  */
-sidebar::sidebar()
+top_bar::top_bar()
 {
   setAttribute(Qt::WA_OpaquePaintEvent, true);
   layout = new QVBoxLayout;
@@ -428,18 +428,18 @@ sidebar::sidebar()
   layout->setSpacing(0);
   setLayout(layout);
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Ignored);
-  setProperty("sidebar", true);
+  setProperty("top_bar", true);
 }
 
 /**
    Sidebar destructor
  */
-sidebar::~sidebar() = default;
+top_bar::~top_bar() = default;
 
 /**
-   Adds new sidebar widget
+   Adds new top_bar widget
  */
-void sidebar::addWidget(sidebarWidget *fsw)
+void top_bar::addWidget(top_bar_widget *fsw)
 {
   objects.append(fsw);
   layout->addWidget(fsw);
@@ -448,12 +448,12 @@ void sidebar::addWidget(sidebarWidget *fsw)
 /**
  * Adds new spacer
  */
-void sidebar::addSpacer() { layout->addStretch(); }
+void top_bar::addSpacer() { layout->addStretch(); }
 
 /**
-   Paint event for sidebar
+   Paint event for top_bar
  */
-void sidebar::paintEvent(QPaintEvent *event)
+void top_bar::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
 
@@ -463,9 +463,9 @@ void sidebar::paintEvent(QPaintEvent *event)
 }
 
 /**
-   Paints dark rectangle as background for sidebar
+   Paints dark rectangle as background for top_bar
  */
-void sidebar::paint(QPainter *painter, QPaintEvent *event)
+void top_bar::paint(QPainter *painter, QPaintEvent *event)
 {
   painter->setBrush(QBrush(QColor(14, 14, 14)));
   painter->drawRect(event->rect());
@@ -474,7 +474,7 @@ void sidebar::paint(QPainter *painter, QPaintEvent *event)
 /**
    Callback to show map
  */
-void sidebarShowMap(bool nothing)
+void top_bar_show_map(bool nothing)
 {
   Q_UNUSED(nothing)
   popdown_all_city_dialogs();
@@ -484,12 +484,12 @@ void sidebarShowMap(bool nothing)
 /**
    Callback for finishing turn
  */
-void sidebarFinishTurn(bool nothing) { key_end_turn(); }
+void top_bar_finish_turn(bool nothing) { key_end_turn(); }
 
 /**
    Callback to popup rates dialog
  */
-void sidebarRatesWdg(bool nothing)
+void top_bar_rates_wdg(bool nothing)
 {
   Q_UNUSED(nothing)
   if (!client_is_observer()) {
@@ -500,7 +500,7 @@ void sidebarRatesWdg(bool nothing)
 /**
    Callback to center on current unit
  */
-void sidebarCenterUnit()
+void top_bar_center_unit()
 {
   queen()->game_tab_widget->setCurrentIndex(0);
   request_center_focus_unit();
@@ -509,7 +509,7 @@ void sidebarCenterUnit()
 /**
    Disables end turn button if asked
  */
-void sidebarDisableEndturn(bool do_restore)
+void top_bar_disable_end_turn(bool do_restore)
 {
   if (king()->current_page() != PAGE_GAME) {
     return;
@@ -521,7 +521,7 @@ void sidebarDisableEndturn(bool do_restore)
 /**
    Changes background of endturn widget if asked
  */
-void sidebarBlinkEndturn(bool do_restore)
+void top_bar_blink_end_turn(bool do_restore)
 {
   if (king()->current_page() != PAGE_GAME) {
     return;
@@ -533,9 +533,9 @@ void sidebarBlinkEndturn(bool do_restore)
 /**
    Popups menu on indicators widget
  */
-void sidebarIndicatorsMenu()
+void top_bar_indicators_menu()
 {
-  gov_menu *menu = new gov_menu(queen()->sidebar_wdg);
+  gov_menu *menu = new gov_menu(queen()->top_bar_wdg);
 
   menu->create();
   menu->update();
@@ -547,7 +547,7 @@ void sidebarIndicatorsMenu()
    Opens diplomacy meeting for player
    For observer popups menu
  */
-void sidebarRightClickDiplomacy()
+void top_bar_right_click_diplomacy()
 {
   if (client_is_observer()) {
     QMenu *menu = new QMenu(king()->central_wdg);
@@ -565,7 +565,7 @@ void sidebarRightClickDiplomacy()
       eiskalt = new QAction(erwischt, queen()->mapview_wdg);
       eiskalt->setData(QVariant::fromValue((void *) pplayer));
       QObject::connect(eiskalt, &QAction::triggered, queen()->sw_diplo,
-                       &sidebarWidget::someSlot);
+                       &top_bar_widget::someSlot);
       menu->addAction(eiskalt);
     }
     players_iterate_end
@@ -576,7 +576,7 @@ void sidebarRightClickDiplomacy()
       eiskalt->setData(-1);
       menu->addAction(eiskalt);
       QObject::connect(eiskalt, &QAction::triggered, queen()->sw_diplo,
-                       &sidebarWidget::someSlot);
+                       &top_bar_widget::someSlot);
     }
 
     menu->setAttribute(Qt::WA_DeleteOnClose);
@@ -594,7 +594,7 @@ void sidebarRightClickDiplomacy()
 /**
    Right click for science, allowing to choose current tech
  */
-void sidebarRightClickScience()
+void top_bar_right_click_science()
 {
   QMenu *menu;
   QAction *act;
@@ -634,7 +634,7 @@ void sidebarRightClickScience()
       act->setProperty("scimenu", true);
       menu->addAction(act);
       QObject::connect(act, &QAction::triggered, queen()->sw_science,
-                       &sidebarWidget::someSlot);
+                       &top_bar_widget::someSlot);
     }
     menu->setAttribute(Qt::WA_DeleteOnClose);
     menu->popup(QCursor::pos());
@@ -644,7 +644,7 @@ void sidebarRightClickScience()
 /**
    Left click for science, allowing to close/open
  */
-void sidebarLeftClickScience(bool nothing)
+void top_bar_left_click_science(bool nothing)
 {
   Q_UNUSED(nothing)
   science_report *sci_rep;
@@ -669,5 +669,5 @@ void sidebarLeftClickScience(bool nothing)
   }
 }
 
-// Reloads all icons and resize sidebar width to new value
-void gui_update_sidebar() { queen()->reloadSidebarIcons(); }
+// Reloads all icons and resize top_bar width to new value
+void gui_update_top_bar() { queen()->reloadSidebarIcons(); }

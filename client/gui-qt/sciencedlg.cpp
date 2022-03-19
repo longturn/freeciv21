@@ -32,8 +32,8 @@
 #include "fc_client.h"
 #include "page_game.h"
 #include "sciencedlg.h"
-#include "sidebar.h"
 #include "tooltips.h"
+#include "top_bar.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);

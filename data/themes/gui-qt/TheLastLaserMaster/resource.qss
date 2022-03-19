@@ -889,7 +889,7 @@ hud_unit_loader::item:hover {
   background: #5294e2;
 }
 
-sidebarWidget {
+top_bar_widget {
   color: white;
   /* Box around current widget */
   selection-background-color: rgb(100, 30, 30);
