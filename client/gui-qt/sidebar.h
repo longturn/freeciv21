@@ -98,12 +98,10 @@ public:
   void addWidget(sidebarWidget *fsw);
   void addSpacer();
   void paint(QPainter *painter, QPaintEvent *event);
-  void resizeMe();
   QList<sidebarWidget *> objects;
 
 protected:
   void paintEvent(QPaintEvent *event) override;
-  void resizeEvent(QResizeEvent *event) override;
 
 private:
   QVBoxLayout *layout;

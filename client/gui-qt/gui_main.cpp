@@ -51,7 +51,6 @@ static fc_client *freeciv_qt;
 void reset_unit_table();
 static void apply_help_font(struct option *poption);
 static void apply_notify_font(struct option *poption);
-static void apply_sidebar(struct option *poption);
 static void apply_titlebar(struct option *poption);
 
 /**
@@ -134,7 +133,6 @@ void qtg_options_extra_init()
   option_var_set_callback(gui_qt_font_chatline, gui_qt_apply_font);
   option_var_set_callback(gui_qt_font_notify_label, apply_notify_font);
   option_var_set_callback(gui_qt_show_titlebar, apply_titlebar);
-  option_var_set_callback(gui_qt_sidebar_left, apply_sidebar);
 #undef option_var_set_callback
 }
 
@@ -262,14 +260,6 @@ void apply_titlebar(struct option *poption)
     king()->menu_bar->setCornerWidget(king()->corner_wid);
   }
   king()->show();
-}
-
-/**
-   Change sidebar position
- */
-void apply_sidebar(struct option *poption)
-{
-  queen()->updateSidebarPosition();
 }
 
 /**

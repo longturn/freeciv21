@@ -54,7 +54,6 @@ class pageGame : public QWidget {
 public:
   pageGame(QWidget *);
   ~pageGame() override;
-  void updateSidebarPosition();
   void reloadSidebarIcons();
   void updateSidebarTooltips();
   int addGameTab(QWidget *widget);
