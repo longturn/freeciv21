@@ -10,6 +10,7 @@
 #pragma once
 
 // Qt
+#include <QToolButton>
 #include <QWidget>
 
 class QHBoxLayout;
@@ -32,7 +33,7 @@ void top_bar_show_map(bool nothing);
 /***************************************************************************
   Class representing single widget(icon) on top_bar
 ***************************************************************************/
-class top_bar_widget : public QWidget {
+class top_bar_widget : public QToolButton {
   Q_OBJECT
 
 public:
