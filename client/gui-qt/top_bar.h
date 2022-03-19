@@ -92,7 +92,6 @@ public:
   top_bar();
   ~top_bar() override;
   void addWidget(top_bar_widget *fsw);
-  void addSpacer();
   void paint(QPainter *painter, QPaintEvent *event);
   QList<top_bar_widget *> objects;
 
