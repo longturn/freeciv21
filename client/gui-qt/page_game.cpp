@@ -70,7 +70,6 @@ pageGame::pageGame(QWidget *parent)
   sw_map = new top_bar_widget(
       Q_("?noun:View"), QStringLiteral("MAP"), top_bar_show_map);
   sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("view")));
-  sw_map->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_tax = new top_bar_widget(nullptr, QLatin1String(""), top_bar_rates_wdg,
                               top_bar_widget::SW_TAX);
   sw_indicators =
@@ -80,34 +79,28 @@ pageGame::pageGame(QWidget *parent)
   sw_cunit =
       new top_bar_widget(_("Units"), QLatin1String(""), toggle_units_report);
   sw_cunit->setIcon(fcIcons::instance()->getIcon(QStringLiteral("units")));
-  sw_cunit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_cities = new top_bar_widget(_("Cities"), QStringLiteral("CTS"),
                                  city_report_dialog_popup);
   sw_cities->setIcon(fcIcons::instance()->getIcon(QStringLiteral("cities")));
   sw_cities->setWheelUp(center_next_enemy_city);
   sw_cities->setWheelDown(center_next_player_city);
-  sw_cities->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_diplo = new top_bar_widget(
       _("Nations"), QStringLiteral("PLR"), popup_players_dialog);
   sw_diplo->setIcon(fcIcons::instance()->getIcon(QStringLiteral("nations")));
   sw_diplo->setWheelUp(center_next_player_capital);
   sw_diplo->setWheelDown(key_center_capital);
-  sw_diplo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_science = new top_bar_widget(
       _("Research"), QStringLiteral("SCI"), top_bar_left_click_science);
   sw_science->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("research")));
-  sw_science->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_economy = new top_bar_widget(
       _("Economy"), QStringLiteral("ECO"), economy_report_dialog_popup);
   sw_economy->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("economy")));
-  sw_economy->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_endturn = new top_bar_widget(
       _("Turn Done"), QLatin1String(""), top_bar_finish_turn);
   sw_endturn->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("endturn")));
-  sw_endturn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   sw_cunit->setRightClick(top_bar_center_unit);
   sw_cunit->setWheelUp(cycle_enemy_units);
   sw_cunit->setWheelDown(key_unit_wait);
