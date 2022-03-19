@@ -49,10 +49,10 @@ client/gui-qt/pregameoptions.cpp
 client/gui-qt/ratesdlg.cpp
 client/gui-qt/sciencedlg.cpp
 client/gui-qt/shortcuts.cpp
-client/gui-qt/sidebar.cpp
 client/gui-qt/spaceshipdlg.cpp
 client/gui-qt/themes.cpp
 client/gui-qt/tooltips.cpp
+client/gui-qt/top_bar.cpp
 client/gui-qt/tradecalculation.cpp
 client/gui-qt/unitreport.cpp
 client/gui-qt/unitselect.cpp

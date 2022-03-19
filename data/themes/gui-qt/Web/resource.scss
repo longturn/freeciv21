@@ -77,7 +77,7 @@ QPushButton:disabled {
   color: $red-10;
 }
 /* color of border only*/
-*[sidebar="true"] {
+*[top_bar="true"] {
   color: $red-10;
 }
 
@@ -855,7 +855,7 @@ hud_input_box QPushButton {
   padding: 2px;
 }
 
-sidebarWidget {
+top_bar_widget {
   color: $yellow-00;
   background-color: $base-bgcolor;
   font-size: 18px;

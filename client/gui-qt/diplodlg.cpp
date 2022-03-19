@@ -37,8 +37,8 @@
 #include "fc_client.h"
 #include "icons.h"
 #include "page_game.h"
-#include "sidebar.h"
 #include "sprite.h"
+#include "top_bar.h"
 
 typedef advance *p_advance;
 typedef city *p_city;

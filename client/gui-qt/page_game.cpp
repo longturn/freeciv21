@@ -40,7 +40,7 @@
 #include "messagewin.h"
 #include "minimap.h"
 #include "plrdlg.h"
-#include "sidebar.h"
+#include "top_bar.h"
 #include "voteinfo_bar.h"
 
 int last_center_capital = 0;
@@ -66,61 +66,61 @@ pageGame::pageGame(QWidget *parent)
   game_layout->setSpacing(0);
   mapview_wdg = new map_view();
   mapview_wdg->setFocusPolicy(Qt::WheelFocus);
-  sidebar_wdg = new sidebar();
-  sw_map = new sidebarWidget(
+  top_bar_wdg = new top_bar();
+  sw_map = new top_bar_widget(
       fcIcons::instance()->getPixmap(QStringLiteral("view")),
-      Q_("?noun:View"), QStringLiteral("MAP"), sidebarShowMap);
+      Q_("?noun:View"), QStringLiteral("MAP"), top_bar_show_map);
   sw_map->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_tax = new sidebarWidget(nullptr, nullptr, QLatin1String(""),
-                             sidebarRatesWdg, sidebarWidget::SW_TAX);
+  sw_tax = new top_bar_widget(nullptr, nullptr, QLatin1String(""),
+                              top_bar_rates_wdg, top_bar_widget::SW_TAX);
   sw_indicators =
-      new sidebarWidget(nullptr, nullptr, QLatin1String(""), sidebarShowMap,
-                        sidebarWidget::SW_INDICATORS);
-  sw_indicators->setRightClick(sidebarIndicatorsMenu);
-  sw_cunit = new sidebarWidget(
+      new top_bar_widget(nullptr, nullptr, QLatin1String(""),
+                         top_bar_show_map, top_bar_widget::SW_INDICATORS);
+  sw_indicators->setRightClick(top_bar_indicators_menu);
+  sw_cunit = new top_bar_widget(
       fcIcons::instance()->getPixmap(QStringLiteral("units")), _("Units"),
       QLatin1String(""), toggle_units_report);
   sw_cunit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_cities = new sidebarWidget(
+  sw_cities = new top_bar_widget(
       fcIcons::instance()->getPixmap(QStringLiteral("cities")), _("Cities"),
       QStringLiteral("CTS"), city_report_dialog_popup);
   sw_cities->setWheelUp(center_next_enemy_city);
   sw_cities->setWheelDown(center_next_player_city);
   sw_cities->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_diplo = new sidebarWidget(
+  sw_diplo = new top_bar_widget(
       fcIcons::instance()->getPixmap(QStringLiteral("nations")),
       _("Nations"), QStringLiteral("PLR"), popup_players_dialog);
   sw_diplo->setWheelUp(center_next_player_capital);
   sw_diplo->setWheelDown(key_center_capital);
   sw_diplo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_science = new sidebarWidget(
+  sw_science = new top_bar_widget(
       fcIcons::instance()->getPixmap(QStringLiteral("research")),
-      _("Research"), QStringLiteral("SCI"), sidebarLeftClickScience);
+      _("Research"), QStringLiteral("SCI"), top_bar_left_click_science);
   sw_science->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_economy = new sidebarWidget(
+  sw_economy = new top_bar_widget(
       fcIcons::instance()->getPixmap(QStringLiteral("economy")),
       _("Economy"), QStringLiteral("ECO"), economy_report_dialog_popup);
   sw_economy->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_endturn = new sidebarWidget(
+  sw_endturn = new top_bar_widget(
       fcIcons::instance()->getPixmap(QStringLiteral("endturn")),
-      _("Turn Done"), QLatin1String(""), sidebarFinishTurn);
+      _("Turn Done"), QLatin1String(""), top_bar_finish_turn);
   sw_endturn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_cunit->setRightClick(sidebarCenterUnit);
+  sw_cunit->setRightClick(top_bar_center_unit);
   sw_cunit->setWheelUp(cycle_enemy_units);
   sw_cunit->setWheelDown(key_unit_wait);
-  sw_diplo->setRightClick(sidebarRightClickDiplomacy);
-  sw_science->setRightClick(sidebarRightClickScience);
+  sw_diplo->setRightClick(top_bar_right_click_diplomacy);
+  sw_science->setRightClick(top_bar_right_click_science);
 
-  sidebar_wdg->addWidget(sw_map);
-  sidebar_wdg->addWidget(sw_cunit);
-  sidebar_wdg->addWidget(sw_cities);
-  sidebar_wdg->addWidget(sw_diplo);
-  sidebar_wdg->addWidget(sw_science);
-  sidebar_wdg->addWidget(sw_economy);
-  sidebar_wdg->addSpacer();
-  sidebar_wdg->addWidget(sw_tax);
-  sidebar_wdg->addWidget(sw_indicators);
-  sidebar_wdg->addWidget(sw_endturn);
+  top_bar_wdg->addWidget(sw_map);
+  top_bar_wdg->addWidget(sw_cunit);
+  top_bar_wdg->addWidget(sw_cities);
+  top_bar_wdg->addWidget(sw_diplo);
+  top_bar_wdg->addWidget(sw_science);
+  top_bar_wdg->addWidget(sw_economy);
+  top_bar_wdg->addSpacer();
+  top_bar_wdg->addWidget(sw_tax);
+  top_bar_wdg->addWidget(sw_indicators);
+  top_bar_wdg->addWidget(sw_endturn);
 
   civ_status = new civstatus(mapview_wdg);
   civ_status->setAttribute(Qt::WA_NoMousePropagation);
@@ -160,7 +160,7 @@ pageGame::pageGame(QWidget *parent)
   game_tab_widget->addWidget(game_main_widget);
 
   auto page_game_layout = new QVBoxLayout;
-  page_game_layout->addWidget(sidebar_wdg);
+  page_game_layout->addWidget(top_bar_wdg);
   page_game_layout->addWidget(game_tab_widget);
   page_game_layout->setContentsMargins(0, 0, 0, 0);
   page_game_layout->setSpacing(0);
@@ -172,7 +172,7 @@ pageGame::pageGame(QWidget *parent)
 pageGame::~pageGame() = default;
 
 /**
-   Reloads sidebar icons (useful on theme change)
+   Reloads top bar icons (useful on theme change)
  */
 void pageGame::reloadSidebarIcons()
 {
@@ -251,7 +251,7 @@ void pageGame::updateInfoLabelTimeout()
 }
 
 /**
-   Updates sidebar tooltips
+   Updates top bar tooltips
  */
 void pageGame::updateSidebarTooltips()
 {
@@ -520,7 +520,7 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
         qRound(king()->qt_settings.battlelog_y * mapview.height));
     queen()->x_vote->move(width() / 2 - queen()->x_vote->width() / 2, 0);
     queen()->updateSidebarTooltips();
-    sidebarDisableEndturn(get_turn_done_button_state());
+    top_bar_disable_end_turn(get_turn_done_button_state());
     queen()->mapview_wdg->resize(event->size().width(), size.height());
     queen()->city_overlay->resize(queen()->mapview_wdg->size());
     queen()->unitinfo_wdg->update_actions(nullptr);
@@ -541,7 +541,7 @@ void fc_game_tab_widget::current_changed(int index)
     return;
   }
 
-  for (auto *sw : qAsConst(queen()->sidebar_wdg->objects)) {
+  for (auto *sw : qAsConst(queen()->top_bar_wdg->objects)) {
     sw->update();
   }
   currentWidget()->hide();
