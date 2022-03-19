@@ -229,7 +229,7 @@ void map_view::shortcut_pressed(int key)
   if (bt == sc->mouse && md == sc->mod && king()->rallies.hover_city) {
     char text[1024];
 
-    if (tile_city(ptile)) {
+    if (ptile && tile_city(ptile)) {
       king()->rallies.hover_tile = true;
       king()->rallies.rally_city = tile_city(ptile);
 
@@ -267,7 +267,7 @@ void map_view::shortcut_pressed(int key)
     return;
   }
 
-  if (bt == Qt::LeftButton && king()->menu_bar->delayed_order) {
+  if (bt == Qt::LeftButton && king()->menu_bar->delayed_order && ptile) {
     king()->menu_bar->set_tile_for_order(ptile);
     clear_hover_state();
     exit_goto_state();
@@ -275,7 +275,7 @@ void map_view::shortcut_pressed(int key)
     return;
   }
 
-  if (bt == Qt::LeftButton && king()->menu_bar->quick_airlifting) {
+  if (bt == Qt::LeftButton && king()->menu_bar->quick_airlifting && ptile) {
     if (tile_city(ptile)) {
       multiairlift(tile_city(ptile), king()->menu_bar->airlift_type_id);
     } else {
