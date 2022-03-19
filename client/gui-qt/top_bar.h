@@ -56,7 +56,6 @@ public:
 
   bool blink;
   bool keep_blinking;
-  bool disabled;
   standards standard;
   QString page;
 public slots:

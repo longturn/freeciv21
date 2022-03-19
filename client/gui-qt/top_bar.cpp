@@ -60,10 +60,9 @@ void reduce_mod(int &mod, int &val)
 top_bar_widget::top_bar_widget(QPixmap *pix, const QString &label,
                                const QString &pg, pfcn_bool func,
                                standards type)
-    : QToolButton(), blink(false), keep_blinking(false), disabled(false),
-      standard(type), page(pg), hover(false), right_click(nullptr),
-      wheel_down(nullptr), wheel_up(nullptr), left_click(func),
-      def_pixmap(pix), desc(label)
+    : QToolButton(), blink(false), keep_blinking(false), standard(type),
+      page(pg), hover(false), right_click(nullptr), wheel_down(nullptr),
+      wheel_up(nullptr), left_click(func), def_pixmap(pix), desc(label)
 {
   if (def_pixmap == nullptr) {
     def_pixmap = new QPixmap(5, 5);
@@ -225,20 +224,6 @@ void top_bar_widget::paintEvent(QPaintEvent *event)
 
   if (current) {
     p.setPen(QPen(palette().color(QPalette::Highlight), 0));
-    p.drawRect(highlight_rect);
-  }
-
-  if (hover && !disabled) {
-    p.setCompositionMode(QPainter::CompositionMode_ColorDodge);
-    p.setPen(QPen(palette().color(QPalette::Highlight), 0));
-    p.setBrush(palette().color(QPalette::AlternateBase));
-    p.drawRect(highlight_rect);
-  }
-
-  if (disabled) {
-    p.setCompositionMode(QPainter::CompositionMode_Darken);
-    p.setPen(QPen(Qt::black, 0));
-    p.setBrush(QColor(0, 0, 50, 95));
     p.drawRect(highlight_rect);
   }
 
@@ -494,8 +479,7 @@ void top_bar_disable_end_turn(bool do_restore)
   if (king()->current_page() != PAGE_GAME) {
     return;
   }
-  queen()->sw_endturn->disabled = !do_restore;
-  queen()->sw_endturn->update();
+  queen()->sw_endturn->setEnabled(do_restore);
 }
 
 /**
