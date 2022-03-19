@@ -60,7 +60,7 @@ void reduce_mod(int &mod, int &val)
 top_bar_widget::top_bar_widget(QPixmap *pix, const QString &label,
                                const QString &pg, pfcn_bool func,
                                standards type)
-    : QWidget(), blink(false), keep_blinking(false), disabled(false),
+    : QToolButton(), blink(false), keep_blinking(false), disabled(false),
       standard(type), page(pg), hover(false), right_click(nullptr),
       wheel_down(nullptr), wheel_up(nullptr), left_click(func),
       def_pixmap(pix), desc(label)
@@ -69,16 +69,17 @@ top_bar_widget::top_bar_widget(QPixmap *pix, const QString &label,
     def_pixmap = new QPixmap(5, 5);
   }
 
-  sfont = fcFont::instance()->getFont(fonts::notify_label);
+  setText(label);
+  setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   setContextMenuPolicy(Qt::CustomContextMenu);
+
+  if (def_pixmap) {
+    setIcon(QIcon(*def_pixmap));
+  }
+
   timer = new QTimer;
   timer->setSingleShot(false);
   timer->setInterval(700);
-  sfont.setCapitalization(QFont::SmallCaps);
-  sfont.setItalic(true);
-  info_font = QFont(sfont);
-  info_font.setBold(true);
-  info_font.setItalic(false);
   connect(timer, &QTimer::timeout, this, &top_bar_widget::sblink);
 }
 
@@ -104,7 +105,7 @@ void top_bar_widget::setPixmap(QPixmap *pm)
 /**
    Sets custom text visible on top of sidewidget
  */
-void top_bar_widget::setCustomLabels(const QString &l) { custom_label = l; }
+void top_bar_widget::setCustomLabels(const QString &l) { setText(l); }
 
 /**
    Sets tooltip for sidewidget
@@ -249,6 +250,8 @@ void top_bar_widget::paintEvent(QPaintEvent *event)
   }
 
   p.end();
+
+  QToolButton::paintEvent(event);
 }
 
 /**
@@ -405,7 +408,6 @@ top_bar::top_bar()
   layout->setContentsMargins(0, 0, 0, 0);
   layout->setSpacing(0);
   setLayout(layout);
-  setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Ignored);
   setProperty("top_bar", true);
 }
 
