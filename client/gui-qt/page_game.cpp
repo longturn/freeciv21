@@ -161,7 +161,9 @@ pageGame::pageGame(QWidget *parent)
 
   auto page_game_layout = new QVBoxLayout;
   page_game_layout->addWidget(top_bar_wdg);
+  page_game_layout->setStretchFactor(top_bar_wdg, 0);
   page_game_layout->addWidget(game_tab_widget);
+  page_game_layout->setStretchFactor(game_tab_widget, 1);
   page_game_layout->setContentsMargins(0, 0, 0, 0);
   page_game_layout->setSpacing(0);
   setLayout(page_game_layout);
