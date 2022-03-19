@@ -12,8 +12,8 @@
 // Qt
 #include <QWidget>
 
+class QHBoxLayout;
 class QPixmap;
-class QVBoxLayout;
 
 typedef void (*pfcn_bool)(bool);
 typedef void (*pfcn)();
@@ -104,5 +104,5 @@ protected:
   void paintEvent(QPaintEvent *event) override;
 
 private:
-  QVBoxLayout *layout;
+  QHBoxLayout *layout;
 };
