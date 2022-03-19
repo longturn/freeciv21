@@ -471,23 +471,6 @@ void sidebar::paint(QPainter *painter, QPaintEvent *event)
   painter->drawRect(event->rect());
 }
 
-void sidebar::resizeEvent(QResizeEvent *event)
-{
-  if (C_S_RUNNING <= client_state()) {
-    resizeMe();
-  }
-}
-
-/**
- * Resize the sidebar according to the user preference. The default is 90px
- * and can be changed in increments of 15px using
- * `gui_options.gui_qt_sidebar_width`.
- */
-void sidebar::resizeMe()
-{
-  setFixedWidth(15 + gui_options.gui_qt_sidebar_width * 15);
-}
-
 /**
    Callback to show map
  */

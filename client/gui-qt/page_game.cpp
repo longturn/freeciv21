@@ -58,10 +58,8 @@ extern void toggle_units_report(bool);
 pageGame::pageGame(QWidget *parent)
     : QWidget(parent), unit_selector(nullptr), update_info_timer(nullptr)
 {
-  QGridLayout *page_game_layout;
   QGridLayout *game_layout;
 
-  page_game_layout = new QGridLayout;
   game_main_widget = new QWidget;
   game_layout = new QGridLayout;
   game_layout->setContentsMargins(0, 0, 0, 0);
@@ -160,15 +158,14 @@ pageGame::pageGame(QWidget *parent)
   game_tab_widget->setContentsMargins(0, 0, 0, 0);
 
   game_tab_widget->addWidget(game_main_widget);
-  if (gui_options.gui_qt_sidebar_left) {
-    page_game_layout->addWidget(sidebar_wdg, 1, 0);
-  } else {
-    page_game_layout->addWidget(sidebar_wdg, 1, 2);
-  }
-  page_game_layout->addWidget(game_tab_widget, 1, 1);
+
+  auto page_game_layout = new QVBoxLayout;
+  page_game_layout->addWidget(sidebar_wdg);
+  page_game_layout->addWidget(game_tab_widget);
   page_game_layout->setContentsMargins(0, 0, 0, 0);
   page_game_layout->setSpacing(0);
   setLayout(page_game_layout);
+
   game_tab_widget->init();
 }
 
@@ -192,21 +189,6 @@ void pageGame::reloadSidebarIcons()
       fcIcons::instance()->getPixmap(QStringLiteral("economy")));
   sw_endturn->setPixmap(
       fcIcons::instance()->getPixmap(QStringLiteral("endturn")));
-  sidebar_wdg->resizeMe();
-}
-
-/**
-   Update position
- */
-void pageGame::updateSidebarPosition()
-{
-  QGridLayout *l = qobject_cast<QGridLayout *>(layout());
-  l->removeWidget(queen()->sidebar_wdg);
-  if (gui_options.gui_qt_sidebar_left) {
-    l->addWidget(queen()->sidebar_wdg, 1, 0);
-  } else {
-    l->addWidget(sidebar_wdg, 1, 2);
-  }
 }
 
 /**
@@ -515,7 +497,6 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
   QSize size;
   size = event->size();
   if (C_S_RUNNING <= client_state()) {
-    queen()->sidebar_wdg->resizeMe();
     map_canvas_resized(size.width(), size.height());
     queen()->message->resize(
         qRound((size.width() * king()->qt_settings.chat_fwidth)),
