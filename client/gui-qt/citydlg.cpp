@@ -1635,6 +1635,7 @@ void city_dialog::save_cma()
     QByteArray ask_bytes = ask->input_edit.text().toLocal8Bit();
     QString text = ask_bytes.data();
     if (!text.isEmpty()) {
+      param.max_growth = false;
       param.allow_disorder = false;
       param.allow_specialists = true;
       param.require_happy = ui.qsliderbox->cma_celeb_checkbox->isChecked();
