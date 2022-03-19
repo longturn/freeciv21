@@ -11,7 +11,7 @@
 
 [datafile]
 description="Civ2 effects data for Freeciv (incomplete)"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -432,6 +432,19 @@ reqs    =
 [effect_city_vision]
 type    = "City_Vision_Radius_Sq"
 value   = 5
+reqs    =
+    { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
+    }
+
+; Stealth or Subsurface can only be seen when adjacent
+[effect_city_vision_layers]
+type    = "City_Vision_Radius_Sq"
+value   = 2
+reqs    =
+    { "type", "name", "range", "present"
+      "VisionLayer", "Main", "Local", FALSE
+    }
 
 [effect_trade_routes]
 type    = "Max_Trade_Routes"

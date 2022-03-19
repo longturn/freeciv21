@@ -3,7 +3,7 @@
 
 [datafile]
 description="<modpack> effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct Vision_Layer"
 format_version=20
 
 ; /* <-- avoid gettext warnings
