@@ -184,7 +184,7 @@ static QString ruleset;
  */
 static bool manual_command(struct tag_types *tag_info)
 {
-  FILE *doc;
+  FILE *doc = nullptr;
   char filename[40];
   struct connection my_conn;
 
