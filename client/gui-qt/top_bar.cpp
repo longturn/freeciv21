@@ -57,24 +57,15 @@ void reduce_mod(int &mod, int &val)
 /**
    Sidewidget constructor
  */
-top_bar_widget::top_bar_widget(QPixmap *pix, const QString &label,
-                               const QString &pg, pfcn_bool func,
-                               standards type)
+top_bar_widget::top_bar_widget(const QString &label, const QString &pg,
+                               pfcn_bool func, standards type)
     : QToolButton(), blink(false), keep_blinking(false), standard(type),
       page(pg), hover(false), right_click(nullptr), wheel_down(nullptr),
-      wheel_up(nullptr), left_click(func), def_pixmap(pix), desc(label)
+      wheel_up(nullptr), left_click(func), desc(label)
 {
-  if (def_pixmap == nullptr) {
-    def_pixmap = new QPixmap(5, 5);
-  }
-
   setText(label);
   setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   setContextMenuPolicy(Qt::CustomContextMenu);
-
-  if (def_pixmap) {
-    setIcon(QIcon(*def_pixmap));
-  }
 
   timer = new QTimer;
   timer->setSingleShot(false);
@@ -87,18 +78,7 @@ top_bar_widget::top_bar_widget(QPixmap *pix, const QString &label,
  */
 top_bar_widget::~top_bar_widget()
 {
-  NFCN_FREE(def_pixmap);
-
   delete timer;
-}
-
-/**
-   Sets default pixmap for sidewidget
- */
-void top_bar_widget::setPixmap(QPixmap *pm)
-{
-  NFCN_FREE(def_pixmap);
-  def_pixmap = pm;
 }
 
 /**
@@ -193,21 +173,6 @@ void top_bar_widget::paintEvent(QPaintEvent *event)
     pos = pos + w;
     sprite = client_government_sprite();
     p.drawPixmap(pos, 5, *sprite);
-
-  } else {
-    auto pix_rect = QRectF(def_pixmap->rect());
-
-    // Shrink to make it fit
-    if (pix_rect.width() > width()) {
-      pix_rect.setSize(pix_rect.size() * width() / pix_rect.width());
-    }
-    if (pix_rect.height() > height()) {
-      pix_rect.setSize(pix_rect.size() * height() / pix_rect.height());
-    }
-
-    pix_rect.moveCenter(rect.center());
-    p.drawPixmap(pix_rect, *def_pixmap, def_pixmap->rect());
-    p.drawText(rect, desc);
   }
 
   p.setPen(palette().color(QPalette::Text));
