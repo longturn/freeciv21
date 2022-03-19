@@ -113,7 +113,6 @@ pageGame::pageGame(QWidget *parent)
   top_bar_wdg->addWidget(sw_diplo);
   top_bar_wdg->addWidget(sw_science);
   top_bar_wdg->addWidget(sw_economy);
-  top_bar_wdg->addSpacer();
   top_bar_wdg->addWidget(sw_tax);
   top_bar_wdg->addWidget(sw_indicators);
   top_bar_wdg->addWidget(sw_endturn);

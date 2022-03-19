@@ -377,11 +377,6 @@ void top_bar::addWidget(top_bar_widget *fsw)
 }
 
 /**
- * Adds new spacer
- */
-void top_bar::addSpacer() { layout->addStretch(); }
-
-/**
    Paint event for top_bar
  */
 void top_bar::paintEvent(QPaintEvent *event)
