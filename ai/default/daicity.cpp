@@ -343,9 +343,11 @@ static void dai_city_choose_build(struct ai_type *ait,
       break;
     case CT_NONE:
       build_new.kind = VUT_NONE;
+      build_new.value.age = 0; // Don't leave it uninitialized
       break;
     case CT_LAST:
       build_new.kind = universals_n_invalid();
+      build_new.value.age = 0; // Don't leave it uninitialized
       break;
     };
 
