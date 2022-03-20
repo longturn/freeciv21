@@ -62,15 +62,11 @@ public slots:
   void someSlot();
 
 protected:
-  void contextMenuEvent(QContextMenuEvent *event) override;
-  void enterEvent(QEvent *event) override;
-  void leaveEvent(QEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
   void wheelEvent(QWheelEvent *event) override;
 
 private:
-  bool hover;
   pfcn right_click;
   pfcn wheel_down;
   pfcn wheel_up;
