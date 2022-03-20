@@ -42,7 +42,6 @@
 #include "gui_main.h"
 #include "icons.h"
 #include "mapview.h"
-#include "messagewin.h"
 #include "page_game.h"
 
 static bool is_plain_public_message(const QString &s);

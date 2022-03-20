@@ -58,7 +58,6 @@
 #include "hudwidget.h"
 #include "mapview.h"
 #include "messageoptions.h"
-#include "messagewin.h"
 #include "minimap.h"
 #include "page_game.h"
 #include "page_pregame.h"

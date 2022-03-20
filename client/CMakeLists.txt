@@ -63,7 +63,6 @@ add_library(
   luaconsole_common.cpp
   mapctrl_common.cpp
   mapview_common.cpp
-  messagewin_common.cpp
   music.cpp
   overview_common.cpp
   plrdlg_common.cpp

@@ -71,7 +71,6 @@
 #include "mapctrl_g.h"
 #include "mapview_g.h"
 #include "menu_g.h"
-#include "messagewin_g.h"
 #include "pages_g.h"
 #include "plrdlg_g.h"
 #include "repodlgs_g.h"
@@ -807,7 +806,6 @@ void set_client_state(enum client_states newstate)
     popdown_all_city_dialogs();
     close_all_diplomacy_dialogs();
     popdown_all_game_dialogs();
-    meswin_clear_older(MESWIN_CLEAR_ALL, 0);
 
     if (oldstate > C_S_DISCONNECTED) {
       unit_focus_set(NULL);
@@ -827,7 +825,6 @@ void set_client_state(enum client_states newstate)
     popdown_all_city_dialogs();
     close_all_diplomacy_dialogs();
     popdown_all_game_dialogs();
-    meswin_clear_older(MESWIN_CLEAR_ALL, 0);
 
     if (oldstate < C_S_PREPARING) {
       client_game_init();

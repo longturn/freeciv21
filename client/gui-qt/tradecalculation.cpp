@@ -20,7 +20,6 @@
 // qt
 #include "fc_client.h"
 #include "mapview.h"
-#include "messagewin.h"
 #include "page_game.h"
 
 /**

@@ -37,7 +37,6 @@ client/gui-qt/mapctrl.cpp
 client/gui-qt/mapview.cpp
 client/gui-qt/menu.cpp
 client/gui-qt/messageoptions.cpp
-client/gui-qt/messagewin.cpp
 client/gui-qt/notifyreport.cpp
 client/gui-qt/optiondlg.cpp
 client/gui-qt/page_main.cpp

@@ -69,7 +69,6 @@
 #include "mapctrl_g.h" // popup_newcity_dialog()
 #include "mapview_g.h"
 #include "menu_g.h"
-#include "messagewin_g.h"
 #include "pages_g.h"
 #include "plrdlg_g.h"
 #include "ratesdlg_g.h"
@@ -1306,9 +1305,6 @@ void handle_new_year(int year, int fragments, int turn)
  */
 void handle_end_phase()
 {
-  /* Messagewindow will contain events happened since our own phase ended,
-   * so player of the first phase and last phase are in equal situation. */
-  meswin_clear_older(game.info.turn, game.info.phase);
 }
 
 /**

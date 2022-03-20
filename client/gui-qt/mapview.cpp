@@ -40,7 +40,6 @@
 #include "fonts.h"
 #include "hudwidget.h"
 #include "mapview.h"
-#include "messagewin.h"
 #include "minimap.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"

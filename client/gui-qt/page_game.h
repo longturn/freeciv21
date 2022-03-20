@@ -72,7 +72,6 @@ public:
   units_select *unit_selector;
   hud_battle_log *battlelog_wdg;
   hud_units *unitinfo_wdg;
-  message_widget *message;
   chat_widget *chat;
   map_view *mapview_wdg;
   minimap_view *minimapview_wdg;

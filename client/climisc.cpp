@@ -60,7 +60,6 @@
 #include "control.h"
 #include "mapctrl_common.h"
 #include "mapview_common.h"
-#include "messagewin_common.h"
 #include "options.h"
 #include "packhand.h"
 #include "repodlgs_common.h"

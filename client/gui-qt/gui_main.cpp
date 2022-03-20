@@ -32,7 +32,6 @@
 #include "fonts.h"
 #include "helpdlg.h"
 #include "hudwidget.h"
-#include "messagewin.h"
 #include "page_game.h"
 #include "page_pregame.h"
 #include "qtg_cxxside.h"

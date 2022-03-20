@@ -46,7 +46,6 @@
 #include "gui_main_g.h"     // add_net_input(), remove_net_input()
 #include "mapview_common.h" // unqueue_mapview_update
 #include "menu_g.h"
-#include "messagewin_g.h"
 #include "options.h"
 #include "packhand.h"
 #include "pages_g.h"

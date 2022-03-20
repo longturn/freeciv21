@@ -37,7 +37,6 @@
 #include "icons.h"
 #include "mapctrl_common.h"
 #include "mapview.h"
-#include "messagewin.h"
 #include "minimap.h"
 #include "plrdlg.h"
 #include "top_bar.h"
@@ -138,9 +137,6 @@ pageGame::pageGame(QWidget *parent)
   battlelog_wdg = new hud_battle_log(mapview_wdg);
   battlelog_wdg->setAttribute(Qt::WA_NoMousePropagation);
   battlelog_wdg->hide();
-  message = new message_widget(mapview_wdg);
-  message->setAttribute(Qt::WA_NoMousePropagation);
-  message->show();
   chat = new chat_widget(mapview_wdg);
   chat->setAttribute(Qt::WA_NoMousePropagation);
   chat->show();
@@ -496,10 +492,6 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
   size = event->size();
   if (C_S_RUNNING <= client_state()) {
     map_canvas_resized(size.width(), size.height());
-    queen()->message->resize(
-        qRound((size.width() * king()->qt_settings.chat_fwidth)),
-        qRound((size.height() * king()->qt_settings.chat_fheight)));
-    queen()->message->move(0, 0);
     queen()->chat->resize(
         qRound((size.width() * king()->qt_settings.chat_fwidth)),
         qRound((size.height() * king()->qt_settings.chat_fheight)));

@@ -39,7 +39,6 @@
 #include "gui_main.h"
 #include "icons.h"
 #include "mapview.h"
-#include "messagewin.h"
 #include "minimap.h"
 #include "optiondlg.h"
 #include "page_game.h"

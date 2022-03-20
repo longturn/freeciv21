@@ -28,7 +28,6 @@ add_library(
   mapview.cpp
   menu.cpp
   messageoptions.cpp
-  messagewin.cpp
   minimap.cpp
   notifyreport.cpp
   optiondlg.cpp
