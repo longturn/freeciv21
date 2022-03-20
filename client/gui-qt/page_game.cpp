@@ -74,10 +74,9 @@ pageGame::pageGame(QWidget *parent)
   sw_tax = new tax_rates_widget();
   connect(sw_tax, &QAbstractButton::clicked, top_bar_rates_wdg);
 
-  sw_indicators =
-      new top_bar_widget(nullptr, QLatin1String(""), top_bar_show_map,
-                         top_bar_widget::SW_INDICATORS);
-  sw_indicators->setRightClick(top_bar_indicators_menu);
+  sw_indicators = new indicators_widget();
+  connect(sw_indicators, &QAbstractButton::clicked, top_bar_indicators_menu);
+
   sw_cunit =
       new top_bar_widget(_("Units"), QLatin1String(""), toggle_units_report);
   sw_cunit->setIcon(fcIcons::instance()->getIcon(QStringLiteral("units")));
@@ -303,7 +302,7 @@ void pageGame::updateSidebarTooltips()
     sw_map->setTooltip(QLatin1String(""));
     sw_economy->setTooltip(QLatin1String(""));
   }
-  sw_indicators->setTooltip(QString(get_info_label_text_popup()));
+  sw_indicators->setToolTip(get_info_label_text_popup());
 }
 
 /**
