@@ -26,6 +26,7 @@ class chat_widget;
 class message_widget;
 class hud_battle_log;
 class goto_dialog;
+class tax_rates_widget;
 class top_bar;
 class top_bar_widget;
 class unitinfo_wdg;
@@ -92,7 +93,7 @@ private:
   top_bar_widget *sw_cunit;
   top_bar_widget *sw_economy;
   top_bar_widget *sw_map;
-  top_bar_widget *sw_tax;
+  tax_rates_widget *sw_tax;
 };
 
 /**

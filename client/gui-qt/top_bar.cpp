@@ -17,7 +17,10 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QScreen>
+#include <QStyle>
+#include <QStyleOptionToolButton>
 #include <QTimer>
+
 // common
 #include "chatline_common.h"
 #include "government.h"
@@ -39,18 +42,84 @@
 
 #include <cmath>
 
-extern void pixmap_copy(QPixmap *dest, QPixmap *src, int src_x, int src_y,
-                        int dest_x, int dest_y, int width, int height);
-static void reduce_mod(int &val, int &mod);
+/**
+ * Constructor
+ */
+tax_rates_widget::tax_rates_widget()
+{
+  setToolButtonStyle(Qt::ToolButtonIconOnly);
+  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+}
 
 /**
-   Helper function to fit tax sprites, reduces modulo, increasing value
+ * Destructor
  */
-void reduce_mod(int &mod, int &val)
+tax_rates_widget::~tax_rates_widget() {}
+
+/**
+ * Size hint
+ */
+QSize tax_rates_widget::sizeHint() const
 {
-  if (mod > 0) {
-    val++;
-    mod--;
+  if (client_is_global_observer()) {
+    // Nothing to show
+    return QSize();
+  }
+
+  // Assume that all icons have the same size
+  auto content_size = get_tax_sprite(tileset, O_GOLD)->size();
+  content_size.setWidth(10 * content_size.width());
+
+  // See QToolButton::sizeHint
+  ensurePolished();
+
+  QStyleOptionToolButton opt;
+  initStyleOption(&opt);
+
+  return style()
+      ->sizeFromContents(QStyle::CT_ToolButton, &opt, content_size, this)
+      .expandedTo(QApplication::globalStrut());
+}
+
+/**
+ * Renders the tax rates widget
+ */
+void tax_rates_widget::paintEvent(QPaintEvent *event)
+{
+  if (client_is_global_observer()) {
+    // Nothing to show
+    return;
+  }
+
+  // Draw a button without contents
+  QToolButton::paintEvent(event);
+
+  // Draw the tax icons on top (centered; the style might expect something
+  // else but screw it)
+  auto tax = get_tax_sprite(tileset, O_GOLD);
+  auto sci = get_tax_sprite(tileset, O_SCIENCE);
+  auto lux = get_tax_sprite(tileset, O_LUXURY);
+
+  // Assume that they have the same size
+  auto icon_size = tax->size();
+  auto center = size() / 2;
+
+  auto x = center.width() - 5 * icon_size.width();
+  auto y = center.height() - icon_size.height() / 2;
+
+  QPainter p(this);
+  for (int i = 0; i < 10; ++i) {
+    if (i < client.conn.playing->economic.tax / 10) {
+      p.drawPixmap(QPointF(x, y), *tax);
+    } else if (i < (client.conn.playing->economic.tax
+                    + client.conn.playing->economic.science)
+                       / 10) {
+      p.drawPixmap(QPointF(x, y), *sci);
+    } else {
+      p.drawPixmap(QPointF(x, y), *lux);
+    }
+
+    x += icon_size.width();
   }
 }
 
@@ -100,7 +169,7 @@ void top_bar_widget::setTooltip(const QString &tooltip)
  */
 void top_bar_widget::paintEvent(QPaintEvent *event)
 {
-  int w, h, pos, i;
+  int w, pos, i;
   QPainter p;
   QPen pen;
 
@@ -112,45 +181,7 @@ void top_bar_widget::paintEvent(QPaintEvent *event)
   pen.setColor(QColor(232, 255, 0));
   p.setPen(pen);
 
-  if (standard == SW_TAX && !client_is_global_observer()) {
-    pos = 0;
-    int d, modulo;
-    auto sprite = get_tax_sprite(tileset, O_GOLD);
-    if (sprite == nullptr) {
-      return;
-    }
-    w = width() / 10.;
-    modulo = std::fmod(qreal(width()), 10);
-    h = sprite->height();
-    reduce_mod(modulo, pos);
-    if (client.conn.playing == nullptr) {
-      return;
-    }
-    for (d = 0; d < client.conn.playing->economic.tax / 10; ++d) {
-      p.drawPixmap(pos, 5, sprite->scaled(w, h), 0, 0, w, h);
-      pos = pos + w;
-      reduce_mod(modulo, pos);
-    }
-
-    sprite = get_tax_sprite(tileset, O_SCIENCE);
-
-    for (; d < (client.conn.playing->economic.tax
-                + client.conn.playing->economic.science)
-                   / 10;
-         ++d) {
-      p.drawPixmap(pos, 5, sprite->scaled(w, h), 0, 0, w, h);
-      pos = pos + w;
-      reduce_mod(modulo, pos);
-    }
-
-    sprite = get_tax_sprite(tileset, O_LUXURY);
-
-    for (; d < 10; ++d) {
-      p.drawPixmap(pos, 5, sprite->scaled(w, h), 0, 0, w, h);
-      pos = pos + w;
-      reduce_mod(modulo, pos);
-    }
-  } else if (standard == SW_INDICATORS) {
+  if (standard == SW_INDICATORS) {
     auto sprite = client_research_sprite();
     w = sprite->width() / sprite->devicePixelRatioF();
     pos = width() / 2 - 2 * w;
@@ -313,7 +344,7 @@ top_bar::~top_bar() = default;
 /**
    Adds new top_bar widget
  */
-void top_bar::addWidget(top_bar_widget *fsw)
+void top_bar::addWidget(QWidget *fsw)
 {
   objects.append(fsw);
   layout->addWidget(fsw);
