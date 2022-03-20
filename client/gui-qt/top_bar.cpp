@@ -67,6 +67,7 @@ top_bar_widget::top_bar_widget(const QString &label, const QString &pg,
   setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setContextMenuPolicy(Qt::CustomContextMenu);
+  setCheckable(true);
 
   timer = new QTimer;
   timer->setSingleShot(false);
@@ -96,19 +97,17 @@ void top_bar_widget::setTooltip(const QString &tooltip)
 }
 
 /**
-   Paint event for sidewidget
+ * Paint event for top bar widget
  */
 void top_bar_widget::paintEvent(QPaintEvent *event)
 {
   int w, h, pos, i;
   QPainter p;
   QPen pen;
-  bool current = false;
 
+  // HACK Should improve this logic, paintEvent is NOT the right place.
   i = queen()->gimmeIndexOf(page);
-  if (i == queen()->game_tab_widget->currentIndex()) {
-    current = true;
-  }
+  setChecked(i == queen()->game_tab_widget->currentIndex());
 
   p.begin(this);
   pen.setColor(QColor(232, 255, 0));
