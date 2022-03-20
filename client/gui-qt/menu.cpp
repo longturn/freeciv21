@@ -69,7 +69,7 @@
 #include "sprite.h"
 
 extern void popup_endgame_report();
-extern void toggle_units_report(bool);
+extern void toggle_units_report();
 static void enable_interface(bool enable);
 static QKeySequence shortcut2key(enum shortcut_id s);
 
@@ -1103,20 +1103,20 @@ void mr_menu::setup_menus()
 
   act = menu->addAction(_("Units"));
   act->setShortcut(QKeySequence(tr("F2")));
-  connect(act, &QAction::triggered, this, &mr_menu::slot_show_units_report);
+  connect(act, &QAction::triggered, this, &toggle_units_report);
 
   // TRANS: Also menu item, but 'headers' should be good enough.
   act = menu->addAction(Q_("?header:Players"));
   act->setShortcut(QKeySequence(tr("F3")));
-  connect(act, &QAction::triggered, this, &mr_menu::slot_show_nations);
+  connect(act, &QAction::triggered, this, &popup_players_dialog);
 
   act = menu->addAction(_("Cities"));
   act->setShortcut(QKeySequence(tr("F4")));
-  connect(act, &QAction::triggered, this, &mr_menu::slot_show_cities);
+  connect(act, &QAction::triggered, this, &city_report_dialog_popup);
 
   act = menu->addAction(_("Economy"));
   act->setShortcut(QKeySequence(tr("F5")));
-  connect(act, &QAction::triggered, this, &mr_menu::slot_show_eco_report);
+  connect(act, &QAction::triggered, this, &economy_report_dialog_popup);
 
   act = menu->addAction(_("Research"));
   act->setShortcut(QKeySequence(tr("F6")));
@@ -1969,32 +1969,12 @@ void mr_menu::slot_spaceship()
 }
 
 /**
-   Slot for showing economy tab
- */
-void mr_menu::slot_show_eco_report() { economy_report_dialog_popup(false); }
-
-/**
    Changes tab to mapview
  */
 void mr_menu::slot_show_map()
 {
   ::queen()->game_tab_widget->setCurrentIndex(0);
 }
-
-/**
-   Slot for showing units tab
- */
-void mr_menu::slot_show_units_report() { toggle_units_report(true); }
-
-/**
-   Slot for showing nations report
- */
-void mr_menu::slot_show_nations() { popup_players_dialog(false); }
-
-/**
-   Slot for showing cities report
- */
-void mr_menu::slot_show_cities() { city_report_dialog_popup(false); }
 
 /**
    Action "BUILD_CITY"

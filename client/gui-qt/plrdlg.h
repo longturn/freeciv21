@@ -154,5 +154,4 @@ private slots:
   void toggle_ai_mode();
 };
 
-void popup_players_dialog(bool raise);
 void popdown_players_report();

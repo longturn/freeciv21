@@ -16,19 +16,18 @@
 class QHBoxLayout;
 class QPixmap;
 
-typedef void (*pfcn_bool)(bool);
 typedef void (*pfcn)();
 
 void top_bar_blink_end_turn(bool do_restore);
 void top_bar_center_unit();
 void top_bar_disable_end_turn(bool do_restore);
-void top_bar_finish_turn(bool nothing);
+void top_bar_finish_turn();
 void top_bar_indicators_menu();
-void top_bar_rates_wdg(bool nothing);
+void top_bar_rates_wdg();
 void top_bar_right_click_diplomacy();
 void top_bar_right_click_science();
-void top_bar_left_click_science(bool nothing);
-void top_bar_show_map(bool nothing);
+void top_bar_left_click_science();
+void top_bar_show_map();
 
 /***************************************************************************
   Class representing single widget(icon) on top_bar
@@ -39,7 +38,7 @@ class top_bar_widget : public QToolButton {
 public:
   enum standards { SW_STD, SW_TAX, SW_INDICATORS };
 
-  top_bar_widget(const QString &label, const QString &pg, pfcn_bool func,
+  top_bar_widget(const QString &label, const QString &pg, pfcn func,
                  standards type = SW_STD);
   ~top_bar_widget() override;
   int getPriority();
@@ -47,7 +46,7 @@ public:
   void paint(QPainter *painter, QPaintEvent *event);
   void setCustomLabels(const QString &);
   void setLabel(const QString &str);
-  void setLeftClick(pfcn_bool func);
+  void setLeftClick(pfcn func);
   void setRightClick(pfcn func);
   void setTooltip(const QString &tooltip);
   void setWheelDown(pfcn func);
@@ -70,7 +69,7 @@ private:
   pfcn right_click;
   pfcn wheel_down;
   pfcn wheel_up;
-  pfcn_bool left_click;
+  pfcn left_click;
   QTimer *timer;
 };
 
