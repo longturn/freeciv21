@@ -67,7 +67,6 @@ top_bar_widget::top_bar_widget(const QString &label, const QString &pg,
   setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setContextMenuPolicy(Qt::CustomContextMenu);
-  setCheckable(true);
 
   timer = new QTimer;
   timer->setSingleShot(false);
