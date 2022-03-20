@@ -23,6 +23,7 @@
 // utility
 #include "fcintl.h"
 // common
+#include "chatline_common.h"
 #include "fc_types.h"
 #include "game.h"
 #include "goto.h"
@@ -2272,7 +2273,8 @@ void mr_menu::slot_autocaravan()
   }
 
   if (!sent) {
-    queen()->chat->append(_("Didn't find any trade route to establish"));
+    output_window_append(E_LOG_ERROR, ftc_client,
+                         _("Didn't find any trade route to establish"));
   }
 }
 

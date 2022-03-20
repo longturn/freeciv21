@@ -31,6 +31,9 @@ class QPaintEvent;
 class QPainter;
 class QPushButton;
 class QUrl;
+
+struct tileset;
+
 class chat_listener;
 
 void set_chat_colors(const QHash<QString, QString> &colors);
@@ -116,7 +119,9 @@ class chat_widget : public resizable_widget, private chat_listener {
 
 public:
   chat_widget(QWidget *parent);
+
   void append(const QString &str);
+  void append(event_type event, const QString &str);
   chat_input *chat_line;
   void make_link(struct tile *ptile);
   void update_widgets();
@@ -135,8 +140,11 @@ protected:
   bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
+  void init_tileset(const struct tileset *t);
   void chat_message_received(event_type event, const QString &message,
                              const struct text_tag_list *tags) override;
+
+  QSize icon_size;
   QTextBrowser *chat_output;
   QPushButton *remove_links;
   QPushButton *show_hide;

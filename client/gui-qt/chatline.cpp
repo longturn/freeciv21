@@ -19,6 +19,8 @@
 #include <QPainter>
 #include <QScrollBar>
 #include <QTextBlock>
+#include <QTextTable>
+
 // common
 #include "chat.h"
 #include "chatline_common.h"
@@ -327,6 +329,8 @@ chat_widget::chat_widget(QWidget *parent)
           &chat_widget::set_chat_visible);
   setMouseTracking(true);
 
+  init_tileset(tileset);
+
   chat_listener::listen();
 }
 
@@ -447,23 +451,65 @@ void chat_widget::anchor_clicked(const QUrl &link)
 }
 
 /**
+ * Loads event icons from the tileset
+ */
+void chat_widget::init_tileset(const struct tileset *t)
+{
+  icon_size = QSize();
+
+  auto document = chat_output->document();
+  for (int i = 0; i < E_COUNT; ++i) {
+    auto event = static_cast<event_type>(i);
+    auto ppix = get_event_sprite(tileset, event);
+    if (ppix && icon_size == QSize()) {
+      // Assume they all have the same size
+      icon_size = ppix->size();
+    }
+    auto pix = ppix ? *ppix : QPixmap();
+    auto url = QUrl(QStringLiteral("tileset:/") + get_event_tag(event));
+    document->addResource(QTextDocument::ImageResource, url, pix);
+  }
+}
+
+/**
    Adds news string to chat_widget (from chat_listener interface)
  */
 void chat_widget::chat_message_received(event_type event,
                                         const QString &message,
                                         const struct text_tag_list *tags)
 {
-  // TODO
   QColor col = chat_output->palette().color(QPalette::Text);
-  append(apply_tags(message, tags, col));
+  append(event, apply_tags(message, tags, col));
 }
 
 /**
    Adds news string to chat_widget
  */
-void chat_widget::append(const QString &str)
+void chat_widget::append(const QString &str) { append(E_LOG_INFO, str); }
+
+/**
+   Adds news string to chat_widget
+ */
+void chat_widget::append(event_type event, const QString &str)
 {
-  chat_output->append(str);
+  // Old-style HTML layout with tables: each message is a table with the
+  // icon in the first column and the text in the second.
+  auto cursor = chat_output->textCursor();
+  cursor.movePosition(QTextCursor::End);
+
+  auto table_format = QTextTableFormat();
+  table_format.setBorderStyle(QTextTableFormat::BorderStyle_None);
+  table_format.setCellSpacing(2);
+  cursor.insertTable(1, 2, table_format);
+
+  auto img_format = QTextImageFormat();
+  img_format.setWidth(icon_size.width());
+  img_format.setHeight(icon_size.height());
+  img_format.setName(QStringLiteral("tileset:/") + get_event_tag(event));
+  cursor.insertImage(img_format);
+
+  cursor.movePosition(QTextCursor::NextCell);
+  cursor.insertHtml(str);
   chat_output->verticalScrollBar()->setSliderPosition(
       chat_output->verticalScrollBar()->maximum());
 }
