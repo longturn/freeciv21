@@ -216,10 +216,7 @@ top_bar_widget::top_bar_widget(const QString &label, const QString &pg,
 /**
    Sidewidget destructor
  */
-top_bar_widget::~top_bar_widget()
-{
-  delete timer;
-}
+top_bar_widget::~top_bar_widget() { delete timer; }
 
 /**
    Sets custom text visible on top of sidewidget
