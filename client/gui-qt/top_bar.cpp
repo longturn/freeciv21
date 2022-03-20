@@ -60,8 +60,8 @@ void reduce_mod(int &mod, int &val)
 top_bar_widget::top_bar_widget(const QString &label, const QString &pg,
                                pfcn_bool func, standards type)
     : QToolButton(), blink(false), keep_blinking(false), standard(type),
-      page(pg), hover(false), right_click(nullptr), wheel_down(nullptr),
-      wheel_up(nullptr), left_click(func)
+      page(pg), right_click(nullptr), wheel_down(nullptr), wheel_up(nullptr),
+      left_click(func)
 {
   setText(label);
   setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -188,42 +188,6 @@ void top_bar_widget::paintEvent(QPaintEvent *event)
   p.end();
 
   QToolButton::paintEvent(event);
-}
-
-/**
-   Mouse entered on widget area
- */
-void top_bar_widget::enterEvent(QEvent *event)
-{
-  if (!hover) {
-    hover = true;
-    QWidget::enterEvent(event);
-    update();
-  }
-}
-
-/**
-   Mouse left widget area
- */
-void top_bar_widget::leaveEvent(QEvent *event)
-{
-  if (hover) {
-    hover = false;
-    QWidget::leaveEvent(event);
-    update();
-  }
-}
-
-/**
-   Context menu requested
- */
-void top_bar_widget::contextMenuEvent(QContextMenuEvent *event)
-{
-  if (hover) {
-    hover = false;
-    QWidget::contextMenuEvent(event);
-    update();
-  }
 }
 
 /**
