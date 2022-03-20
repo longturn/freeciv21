@@ -45,6 +45,23 @@ protected:
   void paintEvent(QPaintEvent *event) override;
 };
 
+/**
+ * Top bar widget for indicators (global warming/nuclear winter/science/
+ * government).
+ */
+class indicators_widget : public QToolButton {
+  Q_OBJECT
+
+public:
+  indicators_widget();
+  ~indicators_widget() override;
+
+  QSize sizeHint() const override;
+
+protected:
+  void paintEvent(QPaintEvent *event) override;
+};
+
 /***************************************************************************
   Class representing single widget(icon) on top_bar
 ***************************************************************************/

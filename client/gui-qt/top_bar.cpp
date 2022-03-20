@@ -124,6 +124,76 @@ void tax_rates_widget::paintEvent(QPaintEvent *event)
 }
 
 /**
+ * Constructor
+ */
+indicators_widget::indicators_widget()
+{
+  setToolButtonStyle(Qt::ToolButtonIconOnly);
+  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+}
+
+/**
+ * Destructor
+ */
+indicators_widget::~indicators_widget() {}
+
+/**
+ * Size hint
+ */
+QSize indicators_widget::sizeHint() const
+{
+  // Assume that all icons have the same size
+  auto content_size = client_research_sprite()->size();
+  if (client_is_global_observer()) {
+    // Global observers can only see climate change
+    content_size.setWidth(2 * content_size.width());
+  } else {
+    content_size.setWidth(4 * content_size.width());
+  }
+
+  // See QToolButton::sizeHint
+  ensurePolished();
+
+  QStyleOptionToolButton opt;
+  initStyleOption(&opt);
+
+  return style()
+      ->sizeFromContents(QStyle::CT_ToolButton, &opt, content_size, this)
+      .expandedTo(QApplication::globalStrut());
+}
+
+/**
+ * Renders the indicators widget
+ */
+void indicators_widget::paintEvent(QPaintEvent *event)
+{
+  // Draw a button without contents
+  QToolButton::paintEvent(event);
+
+  // Draw the icons on top (centered; the style might expect something else
+  // but screw it)
+  // Assume that they have the same size
+  auto icon_size = client_warming_sprite()->size();
+  auto center = size() / 2;
+
+  auto x = center.width()
+           - (client_is_global_observer() ? 1 : 2) * icon_size.width();
+  auto y = center.height() - icon_size.height() / 2;
+
+  QPainter p(this);
+  p.drawPixmap(QPointF(x, y), *client_warming_sprite());
+  x += icon_size.width();
+  p.drawPixmap(QPointF(x, y), *client_cooling_sprite());
+
+  if (!client_is_global_observer()) {
+    x += icon_size.width();
+    p.drawPixmap(QPointF(x, y), *client_research_sprite());
+    x += icon_size.width();
+    p.drawPixmap(QPointF(x, y), *client_government_sprite());
+  }
+}
+
+/**
    Sidewidget constructor
  */
 top_bar_widget::top_bar_widget(const QString &label, const QString &pg,
@@ -169,48 +239,19 @@ void top_bar_widget::setTooltip(const QString &tooltip)
  */
 void top_bar_widget::paintEvent(QPaintEvent *event)
 {
-  int w, pos, i;
-  QPainter p;
-  QPen pen;
-
   // HACK Should improve this logic, paintEvent is NOT the right place.
-  i = queen()->gimmeIndexOf(page);
+  int i = queen()->gimmeIndexOf(page);
   setChecked(i == queen()->game_tab_widget->currentIndex());
-
-  p.begin(this);
-  pen.setColor(QColor(232, 255, 0));
-  p.setPen(pen);
-
-  if (standard == SW_INDICATORS) {
-    auto sprite = client_research_sprite();
-    w = sprite->width() / sprite->devicePixelRatioF();
-    pos = width() / 2 - 2 * w;
-    p.drawPixmap(pos, 5, *sprite);
-    pos = pos + w;
-    sprite = client_warming_sprite();
-    p.drawPixmap(pos, 5, *sprite);
-    pos = pos + w;
-    sprite = client_cooling_sprite();
-    p.drawPixmap(pos, 5, *sprite);
-    pos = pos + w;
-    sprite = client_government_sprite();
-    p.drawPixmap(pos, 5, *sprite);
-  }
-
-  // Remove 1px for the border on the right and at the bottom
-  const auto highlight_rect =
-      QRectF(0.5, 0, width() - 1. / devicePixelRatio(),
-             height() - 1. / devicePixelRatio());
-  p.end();
 
   QToolButton::paintEvent(event);
 
   if (blink) {
+    QPainter p;
     p.begin(this);
     p.setPen(Qt::NoPen);
     p.setCompositionMode(QPainter::CompositionMode_SoftLight);
     p.setBrush(palette().color(QPalette::HighlightedText));
-    p.drawRect(highlight_rect);
+    p.drawRect(0, 0, width(), height());
     p.end();
   }
 }
