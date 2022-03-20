@@ -3584,24 +3584,18 @@ static void message_options_init()
                 E_CITY_MAY_SOON_GROW,
                 E_WORKLIST,
                 E_AI_DEBUG};
-  int out_only[] = {E_NATION_SELECTED, E_CHAT_MSG,      E_CHAT_ERROR,
-                    E_CONNECTION,      E_LOG_ERROR,     E_SETTING,
-                    E_VOTE_NEW,        E_VOTE_RESOLVED, E_VOTE_ABORTED};
   int all[] = {E_LOG_FATAL, E_SCRIPT, E_DEPRECATION_WARNING, E_MESSAGE_WALL};
   int i;
 
   for (i = 0; i <= event_type_max(); i++) {
     // Include possible undefined values.
-    messages_where[i] = MW_MESSAGES;
+    messages_where[i] = MW_OUTPUT;
   }
   for (i = 0; i < ARRAY_SIZE(none); i++) {
     messages_where[none[i]] = 0;
   }
-  for (i = 0; i < ARRAY_SIZE(out_only); i++) {
-    messages_where[out_only[i]] = MW_OUTPUT;
-  }
   for (i = 0; i < ARRAY_SIZE(all); i++) {
-    messages_where[all[i]] = MW_MESSAGES | MW_POPUP;
+    messages_where[all[i]] = MW_OUTPUT | MW_POPUP;
   }
 
   events_init();
@@ -3624,116 +3618,8 @@ static void message_options_load(struct section_file *file,
   const char *p;
 
   if (!secfile_lookup_int(file, &num_events, "messages.count")) {
-    // version < 2.2
-    // Order of the events in 2.1.
-    const enum event_type old_events[] = {E_CITY_CANTBUILD,
-                                          E_CITY_LOST,
-                                          E_CITY_LOVE,
-                                          E_CITY_DISORDER,
-                                          E_CITY_FAMINE,
-                                          E_CITY_FAMINE_FEARED,
-                                          E_CITY_GROWTH,
-                                          E_CITY_MAY_SOON_GROW,
-                                          E_CITY_AQUEDUCT,
-                                          E_CITY_AQ_BUILDING,
-                                          E_CITY_NORMAL,
-                                          E_CITY_NUKED,
-                                          E_CITY_CMA_RELEASE,
-                                          E_CITY_GRAN_THROTTLE,
-                                          E_CITY_TRANSFER,
-                                          E_CITY_BUILD,
-                                          E_CITY_PRODUCTION_CHANGED,
-                                          E_WORKLIST,
-                                          E_UPRISING,
-                                          E_CIVIL_WAR,
-                                          E_ANARCHY,
-                                          E_FIRST_CONTACT,
-                                          E_NEW_GOVERNMENT,
-                                          E_LOW_ON_FUNDS,
-                                          E_POLLUTION,
-                                          E_REVOLT_DONE,
-                                          E_REVOLT_START,
-                                          E_SPACESHIP,
-                                          E_MY_DIPLOMAT_BRIBE,
-                                          E_DIPLOMATIC_INCIDENT,
-                                          E_MY_DIPLOMAT_ESCAPE,
-                                          E_MY_DIPLOMAT_EMBASSY,
-                                          E_MY_DIPLOMAT_FAILED,
-                                          E_MY_DIPLOMAT_INCITE,
-                                          E_MY_DIPLOMAT_POISON,
-                                          E_MY_DIPLOMAT_SABOTAGE,
-                                          E_MY_DIPLOMAT_THEFT,
-                                          E_ENEMY_DIPLOMAT_BRIBE,
-                                          E_ENEMY_DIPLOMAT_EMBASSY,
-                                          E_ENEMY_DIPLOMAT_FAILED,
-                                          E_ENEMY_DIPLOMAT_INCITE,
-                                          E_ENEMY_DIPLOMAT_POISON,
-                                          E_ENEMY_DIPLOMAT_SABOTAGE,
-                                          E_ENEMY_DIPLOMAT_THEFT,
-                                          E_CARAVAN_ACTION,
-                                          E_SCRIPT,
-                                          E_BROADCAST_REPORT,
-                                          E_GAME_END,
-                                          E_GAME_START,
-                                          E_NATION_SELECTED,
-                                          E_DESTROYED,
-                                          E_REPORT,
-                                          E_TURN_BELL,
-                                          E_NEXT_YEAR,
-                                          E_GLOBAL_ECO,
-                                          E_NUKE,
-                                          E_HUT_BARB,
-                                          E_HUT_CITY,
-                                          E_HUT_GOLD,
-                                          E_HUT_BARB_KILLED,
-                                          E_HUT_MERC,
-                                          E_HUT_SETTLER,
-                                          E_HUT_TECH,
-                                          E_HUT_BARB_CITY_NEAR,
-                                          E_IMP_BUY,
-                                          E_IMP_BUILD,
-                                          E_IMP_AUCTIONED,
-                                          E_IMP_AUTO,
-                                          E_IMP_SOLD,
-                                          E_TECH_GAIN,
-                                          E_TECH_LEARNED,
-                                          E_TREATY_ALLIANCE,
-                                          E_TREATY_BROKEN,
-                                          E_TREATY_CEASEFIRE,
-                                          E_TREATY_PEACE,
-                                          E_TREATY_SHARED_VISION,
-                                          E_UNIT_LOST_ATT,
-                                          E_UNIT_WIN_ATT,
-                                          E_UNIT_BUY,
-                                          E_UNIT_BUILT,
-                                          E_UNIT_LOST_DEF,
-                                          E_UNIT_WIN_DEF,
-                                          E_UNIT_BECAME_VET,
-                                          E_UNIT_UPGRADED,
-                                          E_UNIT_RELOCATED,
-                                          E_UNIT_ORDERS,
-                                          E_UNIT_WAKE,
-                                          E_WONDER_BUILD,
-                                          E_WONDER_OBSOLETE,
-                                          E_WONDER_STARTED,
-                                          E_WONDER_STOPPED,
-                                          E_WONDER_WILL_BE_BUILT,
-                                          E_DIPLOMACY,
-                                          E_TREATY_EMBASSY,
-                                          E_BAD_COMMAND,
-                                          E_SETTING,
-                                          E_CHAT_MSG,
-                                          E_MESSAGE_WALL,
-                                          E_CHAT_ERROR,
-                                          E_CONNECTION,
-                                          E_AI_DEBUG};
-    const size_t old_events_num = ARRAY_SIZE(old_events);
-
-    for (i = 0; i < old_events_num; i++) {
-      messages_where[old_events[i]] =
-          secfile_lookup_int_default(file, messages_where[old_events[i]],
-                                     "%s.message_where_%02d", prefix, i);
-    }
+    // File format from 2.2 or earlier.
+    qWarning() << _("Couldn't migrate message settings.");
     return;
   }
 
@@ -3760,6 +3646,11 @@ static void message_options_load(struct section_file *file,
                             "messages.event%d.where", i)) {
       qCritical("Corruption in file %s: %s", secfile_name(file),
                 secfile_error());
+    }
+
+    // Compatibility: old message window -> merged chat and messages
+    if (messages_where[event] & 2) {
+      messages_where[event] |= MW_OUTPUT;
     }
   }
 }

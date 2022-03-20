@@ -42,7 +42,7 @@ message_dlg::message_dlg()
   empty2 = new QLabel;
   layout = new QGridLayout;
   msgtab = new QTableWidget;
-  slist << _("Event") << _("Out") << _("Mes") << _("Pop");
+  slist << _("Event") << _("Out") << _("Pop");
   msgtab->setColumnCount(slist.count());
   msgtab->setHorizontalHeaderLabels(slist);
   msgtab->setProperty("showGrid", "false");

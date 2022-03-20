@@ -1068,18 +1068,6 @@ void handle_event(const char *featured_text, struct tile *ptile,
     }
   }
 
-  // Message window
-  if (BOOL_VAL(where & MW_MESSAGES)) {
-    // When the game isn't running, the messages dialog isn't present.
-    if (C_S_RUNNING <= client_state()) {
-      meswin_add(plain_text, tags, ptile, event, turn, phase);
-      shown = true;
-    } else {
-      // Force to chatline instead.
-      fallback_needed = true;
-    }
-  }
-
   // Chatline
   if (BOOL_VAL(where & MW_OUTPUT) || (fallback_needed && !shown)) {
     output_window_event(plain_text, tags);
