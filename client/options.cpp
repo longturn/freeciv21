@@ -4451,8 +4451,11 @@ void options_load()
 static void option_save_output_window_callback(QtMsgType lvl,
                                                const QString &msg)
 {
-  Q_UNUSED(lvl)
-  output_window_append(ftc_client, qUtf8Printable(msg));
+  if (lvl == QtCriticalMsg) {
+    output_window_append(E_LOG_ERROR, ftc_client, qUtf8Printable(msg));
+  } else {
+    output_window_append(E_LOG_INFO, ftc_client, qUtf8Printable(msg));
+  }
 }
 
 /**

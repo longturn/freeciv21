@@ -587,9 +587,12 @@ void page_pregame::send_fake_chat_message(const QString &message)
 /**
    Appends text to chat window
  */
-void page_pregame::chat_message_received(const QString &message,
+void page_pregame::chat_message_received(event_type event,
+                                         const QString &message,
                                          const struct text_tag_list *tags)
 {
+  Q_UNUSED(event);
+
   QColor col = ui.output_window->palette().color(QPalette::Text);
   QString str = apply_tags(message, tags, col);
 

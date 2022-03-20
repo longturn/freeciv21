@@ -10,9 +10,11 @@
 **************************************************************************/
 #pragma once
 
+#include "events.h"
+
 class QString;
 struct text_tag_list;
 
-void real_output_window_append(const QString &astring,
+void real_output_window_append(event_type event, const QString &astring,
                                const text_tag_list *tags);
 void version_message(const QString &vertext);

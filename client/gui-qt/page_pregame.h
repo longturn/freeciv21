@@ -35,7 +35,7 @@ private slots:
 
 private:
   void update_buttons();
-  void chat_message_received(const QString &message,
+  void chat_message_received(event_type event, const QString &message,
                              const struct text_tag_list *tags) override;
   void slot_pregame_observe();
   void slot_pregame_start();

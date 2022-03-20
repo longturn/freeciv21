@@ -782,22 +782,25 @@ void races_dialog::ok_pressed()
   }
 
   if (selected_sex == -1) {
-    output_window_append(ftc_client, _("You must select your sex."));
+    output_window_append(E_LOG_ERROR, ftc_client,
+                         _("You must select your sex."));
     return;
   }
 
   if (selected_style == -1) {
-    output_window_append(ftc_client, _("You must select your style."));
+    output_window_append(E_LOG_ERROR, ftc_client,
+                         _("You must select your style."));
     return;
   }
 
   if (leader_name->currentText().length() == 0) {
-    output_window_append(ftc_client, _("You must type a legal name."));
+    output_window_append(E_LOG_ERROR, ftc_client,
+                         _("You must type a legal name."));
     return;
   }
 
   if (nation_by_number(selected_nation)->player != NULL) {
-    output_window_append(ftc_client,
+    output_window_append(E_LOG_ERROR, ftc_client,
                          _("Nation has been chosen by other player"));
     return;
   }

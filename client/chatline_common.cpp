@@ -91,7 +91,7 @@ void fc_destroy_ow_mutex() {}
    Add a line of text to the output ("chatline") window, like puts() would
    do it in the console.
  */
-void output_window_append(const struct ft_color color,
+void output_window_append(event_type event, const struct ft_color color,
                           const char *featured_text)
 {
   char plain_text[MAX_LEN_MSG];
@@ -117,7 +117,7 @@ void output_window_append(const struct ft_color color,
   }
 
   fc_allocate_ow_mutex();
-  real_output_window_append(plain_text, tags);
+  real_output_window_append(event, plain_text, tags);
   fc_release_ow_mutex();
   text_tag_list_destroy(tags);
 }
@@ -126,54 +126,51 @@ void output_window_append(const struct ft_color color,
    Add a line of text to the output ("chatline") window.  The text is
    constructed in printf style.
  */
-void output_window_vprintf(const struct ft_color color, const char *format,
-                           va_list args)
+void output_window_vprintf(event_type event, const struct ft_color color,
+                           const char *format, va_list args)
 {
   char featured_text[MAX_LEN_MSG];
 
   fc_vsnprintf(featured_text, sizeof(featured_text), format, args);
-  output_window_append(color, featured_text);
+  output_window_append(event, color, featured_text);
 }
 
 /**
    Add a line of text to the output ("chatline") window.  The text is
    constructed in printf style.
  */
-void output_window_printf(const struct ft_color color, const char *format,
-                          ...)
+void output_window_printf(event_type event, const struct ft_color color,
+                          const char *format, ...)
 {
   va_list args;
 
   va_start(args, format);
-  output_window_vprintf(color, format, args);
+  output_window_vprintf(event, color, format, args);
   va_end(args);
 }
 
 /**
    Add a line of text to the output ("chatline") window from server event.
  */
-void output_window_event(const char *plain_text,
+void output_window_event(event_type event, const char *plain_text,
                          const struct text_tag_list *tags)
 {
   fc_allocate_ow_mutex();
-  real_output_window_append(plain_text, tags);
+  real_output_window_append(event, plain_text, tags);
   fc_release_ow_mutex();
 }
 
 /**
    Standard welcome message.
  */
-void chat_welcome_message(bool gui_has_copying_mitem)
+void chat_welcome_message()
 {
-  output_window_append(ftc_any, _("Freeciv21 is free software and you are "
-                                  "welcome to distribute copies of it "
-                                  "under certain conditions;"));
-  if (gui_has_copying_mitem) {
-    output_window_append(ftc_any, _("See the \"Copying\" item on the "
-                                    "Help menu."));
-  } else {
-    output_window_append(ftc_any, _("See COPYING file distributed with "
-                                    "this program."));
-  }
-  output_window_append(ftc_any, _("Now ... Go give 'em hell!"));
+  output_window_append(E_WELCOME, ftc_any,
+                       _("Freeciv21 is free software and you are "
+                         "welcome to distribute copies of it "
+                         "under certain conditions;"));
+  output_window_append(E_WELCOME, ftc_any,
+                       _("See the \"Copying\" item on the "
+                         "Help menu."));
+  output_window_append(E_WELCOME, ftc_any, _("Now ... Go give 'em hell!"));
 }

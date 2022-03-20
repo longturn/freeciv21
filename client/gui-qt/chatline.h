@@ -16,6 +16,10 @@
 #include <QEvent>
 #include <QLineEdit>
 #include <QTextBrowser>
+
+// common
+#include "events.h"
+
 // gui-qt
 #include "listener.h"
 #include "widgetdecorations.h"
@@ -53,7 +57,7 @@ public:
 
   explicit chat_listener();
 
-  virtual void chat_message_received(const QString &,
+  virtual void chat_message_received(event_type, const QString &,
                                      const struct text_tag_list *);
   virtual void chat_word_list_changed(const QStringList &);
 
@@ -131,7 +135,7 @@ protected:
   bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
-  void chat_message_received(const QString &message,
+  void chat_message_received(event_type event, const QString &message,
                              const struct text_tag_list *tags) override;
   QTextBrowser *chat_output;
   QPushButton *remove_links;

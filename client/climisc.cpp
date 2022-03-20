@@ -1070,7 +1070,7 @@ void handle_event(const char *featured_text, struct tile *ptile,
 
   // Chatline
   if (BOOL_VAL(where & MW_OUTPUT) || (fallback_needed && !shown)) {
-    output_window_event(plain_text, tags);
+    output_window_event(E_CHAT_MSG, plain_text, tags);
   }
 
   if (turn == game.info.turn) {

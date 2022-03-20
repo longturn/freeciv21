@@ -132,7 +132,8 @@ tiles = { "row", "column", "tag"
   5,  9, "e_enemy_spy_nuke"
   5, 10, "e_enemy_spy_steal_map"
 ;  5, 11, "e_embassy_did_expel"
-
+  5, 20, "e_welcome" ; blank
+  5, 20, "e_log_info" ; blank
 
   6,  0, "e_achievement"
   6,  1, "e_uprising"

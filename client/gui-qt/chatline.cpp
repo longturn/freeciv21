@@ -88,9 +88,9 @@ void chat_listener::update_word_list()
       word_list << str;
     }
   }
-  players_iterate_end
+  players_iterate_end;
 
-      invoke(&chat_listener::chat_word_list_changed, word_list);
+  invoke(&chat_listener::chat_word_list_changed, word_list);
 }
 
 /**
@@ -102,7 +102,7 @@ chat_listener::chat_listener() : position(HISTORY_END) {}
    Called whenever a message is received. Default implementation does
    nothing.
  */
-void chat_listener::chat_message_received(const QString &,
+void chat_listener::chat_message_received(event_type, const QString &,
                                           const struct text_tag_list *)
 {
 }
@@ -415,14 +415,15 @@ void chat_widget::anchor_clicked(const QUrl &link)
     if (pcity) {
       ptile = client_city_tile(pcity);
     } else {
-      output_window_append(ftc_client, _("This city isn't known!"));
+      output_window_append(E_LOG_ERROR, ftc_client,
+                           _("This city isn't known!"));
     }
   } break;
   case TLT_TILE:
     ptile = index_to_tile(&(wld.map), id);
 
     if (!ptile) {
-      output_window_append(ftc_client,
+      output_window_append(E_LOG_ERROR, ftc_client,
                            _("This tile doesn't exist in this game!"));
     }
     break;
@@ -432,7 +433,8 @@ void chat_widget::anchor_clicked(const QUrl &link)
     if (punit) {
       ptile = unit_tile(punit);
     } else {
-      output_window_append(ftc_client, _("This unit isn't known!"));
+      output_window_append(E_LOG_ERROR, ftc_client,
+                           _("This unit isn't known!"));
     }
   }
   case TLT_INVALID:
@@ -447,9 +449,11 @@ void chat_widget::anchor_clicked(const QUrl &link)
 /**
    Adds news string to chat_widget (from chat_listener interface)
  */
-void chat_widget::chat_message_received(const QString &message,
+void chat_widget::chat_message_received(event_type event,
+                                        const QString &message,
                                         const struct text_tag_list *tags)
 {
+  // TODO
   QColor col = chat_output->palette().color(QPalette::Text);
   append(apply_tags(message, tags, col));
 }
@@ -757,7 +761,7 @@ static bool is_plain_public_message(const QString &s)
    Appends the string to the chat output window.  The string should be
    inserted on its own line, although it will have no newline.
  */
-void real_output_window_append(const QString &astring,
+void real_output_window_append(event_type event, const QString &astring,
                                const text_tag_list *tags)
 {
   king()->set_status_bar(astring);
@@ -767,8 +771,8 @@ void real_output_window_append(const QString &astring,
   }
 
   chat_listener::update_word_list();
-  chat_listener::invoke(&chat_listener::chat_message_received, astring,
-                        tags);
+  chat_listener::invoke(&chat_listener::chat_message_received, event,
+                        astring, tags);
 }
 
 /**

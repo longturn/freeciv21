@@ -11,22 +11,24 @@
 #pragma once
 
 // common
+#include "events.h"
 #include "featured_text.h" // struct text_tag_list, struct ft_color
 
 int send_chat(const char *message);
 int send_chat_printf(const char *format, ...)
     fc__attribute((__format__(__printf__, 1, 2)));
 
-void output_window_append(const struct ft_color color,
+void output_window_append(event_type event, const struct ft_color color,
                           const char *featured_text);
-void output_window_vprintf(const struct ft_color color, const char *format,
-                           va_list args);
-void output_window_printf(const struct ft_color color, const char *format,
-                          ...) fc__attribute((__format__(__printf__, 2, 3)));
-void output_window_event(const char *plain_text,
+void output_window_vprintf(event_type event, const struct ft_color color,
+                           const char *format, va_list args);
+void output_window_printf(event_type event, const struct ft_color color,
+                          const char *format, ...)
+    fc__attribute((__format__(__printf__, 3, 4)));
+void output_window_event(event_type event, const char *plain_text,
                          const struct text_tag_list *tags);
 
-void chat_welcome_message(bool gui_has_copying_mitem);
+void chat_welcome_message();
 
 void fc_allocate_ow_mutex();
 void fc_release_ow_mutex();

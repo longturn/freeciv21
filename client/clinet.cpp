@@ -93,7 +93,8 @@ static void client_conn_close_callback(struct connection *pconn)
   // If we lost connection to the internal server - kill it.
   client_kill_server(true);
   qCritical("Lost connection to server: %s.", qUtf8Printable(reason));
-  output_window_printf(ftc_client, _("Lost connection to server (%s)!"),
+  output_window_printf(E_LOG_ERROR, ftc_client,
+                       _("Lost connection to server (%s)!"),
                        qUtf8Printable(reason));
 }
 
@@ -139,7 +140,8 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
           if (client.conn.sock != nullptr) {
             log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
             output_window_append(
-                ftc_client, qUtf8Printable(client.conn.sock->errorString()));
+                E_LOG_ERROR, ftc_client,
+                qUtf8Printable(client.conn.sock->errorString()));
           }
           client.conn.used = false;
         });
@@ -228,7 +230,8 @@ void disconnect_from_server()
   if (force) {
     client_kill_server(true);
   }
-  output_window_append(ftc_client, _("Disconnected from server."));
+  output_window_append(E_LOG_INFO, ftc_client,
+                       _("Disconnected from server."));
 
   if (gui_options.save_options_on_exit) {
     options_save(NULL);
@@ -372,7 +375,7 @@ double try_to_autoconnect(const QUrl &url)
 void start_autoconnecting_to_server(const QUrl &url)
 {
   output_window_printf(
-      ftc_client,
+      E_LOG_INFO, ftc_client,
       _("Auto-connecting to \"%s\" every %f second(s) for %d times"),
       qUtf8Printable(url.toDisplayString()), 0.001 * AUTOCONNECT_INTERVAL,
       MAX_AUTOCONNECT_ATTEMPTS);

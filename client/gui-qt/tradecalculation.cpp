@@ -214,7 +214,7 @@ void trade_generator::calculate()
                       max_trade_routes(tc->city) - tc->trade_num),
                   city_link(tc->city),
                   max_trade_routes(tc->city) - tc->trade_num);
-      output_window_append(ftc_client, text);
+      output_window_append(E_LOG_INFO, ftc_client, text);
     }
   }
 
