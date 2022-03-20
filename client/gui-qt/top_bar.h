@@ -69,10 +69,7 @@ class top_bar_widget : public QToolButton {
   Q_OBJECT
 
 public:
-  enum standards { SW_STD, SW_TAX, SW_INDICATORS };
-
-  top_bar_widget(const QString &label, const QString &pg, pfcn func,
-                 standards type = SW_STD);
+  top_bar_widget(const QString &label, const QString &pg, pfcn func);
   ~top_bar_widget() override;
   int getPriority();
   QPixmap *get_pixmap();
@@ -87,7 +84,6 @@ public:
 
   bool blink;
   bool keep_blinking;
-  standards standard;
   QString page;
 public slots:
   void sblink();

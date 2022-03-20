@@ -197,9 +197,9 @@ void indicators_widget::paintEvent(QPaintEvent *event)
    Sidewidget constructor
  */
 top_bar_widget::top_bar_widget(const QString &label, const QString &pg,
-                               pfcn func, standards type)
-    : QToolButton(), blink(false), keep_blinking(false), standard(type),
-      page(pg), right_click(nullptr), wheel_down(nullptr), wheel_up(nullptr),
+                               pfcn func)
+    : QToolButton(), blink(false), keep_blinking(false), page(pg),
+      right_click(nullptr), wheel_down(nullptr), wheel_up(nullptr),
       left_click(func)
 {
   setText(label);
