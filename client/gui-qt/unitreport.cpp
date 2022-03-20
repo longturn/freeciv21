@@ -674,11 +674,10 @@ void popdown_units_report()
 }
 
 /**
-   Toggles units report, bool used for compatibility with sidebar callback
+ * Toggles units report
  */
-void toggle_units_report(bool x)
+void toggle_units_report()
 {
-  Q_UNUSED(x);
   if (units_reports::exists()
       && queen()->game_tab_widget->currentIndex() == 0) {
     units_reports::instance()->drop();

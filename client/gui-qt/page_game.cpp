@@ -53,7 +53,7 @@ static void center_next_player_city();
 static void center_next_player_capital();
 static void cycle_enemy_units();
 
-extern void toggle_units_report(bool);
+extern void toggle_units_report();
 
 pageGame::pageGame(QWidget *parent)
     : QWidget(parent), unit_selector(nullptr), update_info_timer(nullptr)

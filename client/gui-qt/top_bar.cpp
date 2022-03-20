@@ -58,7 +58,7 @@ void reduce_mod(int &mod, int &val)
    Sidewidget constructor
  */
 top_bar_widget::top_bar_widget(const QString &label, const QString &pg,
-                               pfcn_bool func, standards type)
+                               pfcn func, standards type)
     : QToolButton(), blink(false), keep_blinking(false), standard(type),
       page(pg), right_click(nullptr), wheel_down(nullptr), wheel_up(nullptr),
       left_click(func)
@@ -189,7 +189,7 @@ void top_bar_widget::paintEvent(QPaintEvent *event)
 /**
    Sets callback for mouse left click
  */
-void top_bar_widget::setLeftClick(pfcn_bool func) { left_click = func; }
+void top_bar_widget::setLeftClick(pfcn func) { left_click = func; }
 
 /**
    Sets callback for mouse right click
@@ -212,7 +212,7 @@ void top_bar_widget::setWheelUp(pfcn func) { wheel_up = func; }
 void top_bar_widget::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton && left_click != nullptr) {
-    left_click(true);
+    left_click();
   }
   if (event->button() == Qt::RightButton && right_click != nullptr) {
     right_click();
@@ -324,9 +324,8 @@ void top_bar::addWidget(top_bar_widget *fsw)
 /**
    Callback to show map
  */
-void top_bar_show_map(bool nothing)
+void top_bar_show_map()
 {
-  Q_UNUSED(nothing)
   popdown_all_city_dialogs();
   queen()->game_tab_widget->setCurrentIndex(0);
 }
@@ -334,14 +333,13 @@ void top_bar_show_map(bool nothing)
 /**
    Callback for finishing turn
  */
-void top_bar_finish_turn(bool nothing) { key_end_turn(); }
+void top_bar_finish_turn() { key_end_turn(); }
 
 /**
    Callback to popup rates dialog
  */
-void top_bar_rates_wdg(bool nothing)
+void top_bar_rates_wdg()
 {
-  Q_UNUSED(nothing)
   if (!client_is_observer()) {
     popup_rates_dialog();
   }
@@ -493,9 +491,8 @@ void top_bar_right_click_science()
 /**
    Left click for science, allowing to close/open
  */
-void top_bar_left_click_science(bool nothing)
+void top_bar_left_click_science()
 {
-  Q_UNUSED(nothing)
   science_report *sci_rep;
   int i;
   QWidget *w;

@@ -856,11 +856,10 @@ void plr_report::update_report(bool update_selection)
 }
 
 /**
-   Display the player list dialog.  Optionally raise it.
+ * Display the player list dialog.
  */
-void popup_players_dialog(bool raise)
+void popup_players_dialog()
 {
-  Q_UNUSED(raise)
   int i;
   QWidget *w;
 

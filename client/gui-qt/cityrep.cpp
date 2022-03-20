@@ -1242,9 +1242,8 @@ void city_report::update_city(struct city *pcity)
 /**
    Display the city report dialog.  Optionally raise it.
  */
-void city_report_dialog_popup(bool raise)
+void city_report_dialog_popup()
 {
-  Q_UNUSED(raise)
   int i;
   city_report *cr;
   QWidget *w;

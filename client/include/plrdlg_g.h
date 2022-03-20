@@ -14,7 +14,7 @@
 
 #include "gui_proto_constructor.h"
 
-GUI_FUNC_PROTO(void, popup_players_dialog, bool raise)
+void popup_players_dialog();
 GUI_FUNC_PROTO(void, real_players_dialog_update, void *)
 
 // Actually defined in update_queue.c
