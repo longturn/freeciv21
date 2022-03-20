@@ -70,8 +70,10 @@ pageGame::pageGame(QWidget *parent)
   sw_map = new top_bar_widget(
       Q_("?noun:View"), QStringLiteral("MAP"), top_bar_show_map);
   sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("view")));
-  sw_tax = new top_bar_widget(nullptr, QLatin1String(""), top_bar_rates_wdg,
-                              top_bar_widget::SW_TAX);
+
+  sw_tax = new tax_rates_widget();
+  connect(sw_tax, &QAbstractButton::clicked, top_bar_rates_wdg);
+
   sw_indicators =
       new top_bar_widget(nullptr, QLatin1String(""), top_bar_show_map,
                          top_bar_widget::SW_INDICATORS);
@@ -297,7 +299,6 @@ void pageGame::updateSidebarTooltips()
           text_happiness_cities(player_primary_capital(client_player())));
     }
   } else {
-    sw_tax->setTooltip(QLatin1String(""));
     sw_science->setTooltip(QLatin1String(""));
     sw_map->setTooltip(QLatin1String(""));
     sw_economy->setTooltip(QLatin1String(""));

@@ -29,6 +29,22 @@ void top_bar_right_click_science();
 void top_bar_left_click_science();
 void top_bar_show_map();
 
+/**
+ * Top bar widget for tax rates.
+ */
+class tax_rates_widget : public QToolButton {
+  Q_OBJECT
+
+public:
+  tax_rates_widget();
+  ~tax_rates_widget() override;
+
+  QSize sizeHint() const override;
+
+protected:
+  void paintEvent(QPaintEvent *event) override;
+};
+
 /***************************************************************************
   Class representing single widget(icon) on top_bar
 ***************************************************************************/
@@ -82,8 +98,8 @@ class top_bar : public QWidget {
 public:
   top_bar();
   ~top_bar() override;
-  void addWidget(top_bar_widget *fsw);
-  QList<top_bar_widget *> objects;
+  void addWidget(QWidget *fsw);
+  QList<QWidget *> objects;
 
 private:
   QHBoxLayout *layout;
