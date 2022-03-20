@@ -172,22 +172,18 @@ void top_bar_widget::paintEvent(QPaintEvent *event)
   const auto highlight_rect =
       QRectF(0.5, 0, width() - 1. / devicePixelRatio(),
              height() - 1. / devicePixelRatio());
-
-  if (current) {
-    p.setPen(QPen(palette().color(QPalette::Highlight), 0));
-    p.drawRect(highlight_rect);
-  }
-
-  if (blink) {
-    p.setCompositionMode(QPainter::CompositionMode_ColorDodge);
-    p.setPen(QPen(Qt::black, 0));
-    p.setBrush(palette().color(QPalette::HighlightedText));
-    p.drawRect(highlight_rect);
-  }
-
   p.end();
 
   QToolButton::paintEvent(event);
+
+  if (blink) {
+    p.begin(this);
+    p.setPen(Qt::NoPen);
+    p.setCompositionMode(QPainter::CompositionMode_SoftLight);
+    p.setBrush(palette().color(QPalette::HighlightedText));
+    p.drawRect(highlight_rect);
+    p.end();
+  }
 }
 
 /**
