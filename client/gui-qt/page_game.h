@@ -22,6 +22,7 @@ class map_view;
 class civstatus;
 class minimap_view;
 class hud_units;
+class indicators_widget;
 class chat_widget;
 class message_widget;
 class hud_battle_log;
@@ -79,7 +80,7 @@ public:
   xvote *x_vote;
   civstatus *civ_status;
   top_bar_widget *sw_diplo;
-  top_bar_widget *sw_indicators;
+  indicators_widget *sw_indicators;
   top_bar_widget *sw_endturn;
   top_bar_widget *sw_science;
 public slots:
