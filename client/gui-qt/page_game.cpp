@@ -67,8 +67,8 @@ pageGame::pageGame(QWidget *parent)
   mapview_wdg = new map_view();
   mapview_wdg->setFocusPolicy(Qt::WheelFocus);
   top_bar_wdg = new top_bar();
-  sw_map = new top_bar_widget(
-      Q_("?noun:View"), QStringLiteral("MAP"), top_bar_show_map);
+  sw_map = new top_bar_widget(Q_("?noun:View"), QStringLiteral("MAP"),
+                              top_bar_show_map);
   sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("view")));
 
   sw_tax = new tax_rates_widget();
@@ -86,24 +86,24 @@ pageGame::pageGame(QWidget *parent)
   sw_cities->setWheelUp(center_next_enemy_city);
   sw_cities->setWheelDown(center_next_player_city);
   sw_cities->setCheckable(true);
-  sw_diplo = new top_bar_widget(
-      _("Nations"), QStringLiteral("PLR"), popup_players_dialog);
+  sw_diplo = new top_bar_widget(_("Nations"), QStringLiteral("PLR"),
+                                popup_players_dialog);
   sw_diplo->setIcon(fcIcons::instance()->getIcon(QStringLiteral("nations")));
   sw_diplo->setWheelUp(center_next_player_capital);
   sw_diplo->setWheelDown(key_center_capital);
   sw_diplo->setCheckable(true);
-  sw_science = new top_bar_widget(
-      _("Research"), QStringLiteral("SCI"), top_bar_left_click_science);
+  sw_science = new top_bar_widget(_("Research"), QStringLiteral("SCI"),
+                                  top_bar_left_click_science);
   sw_science->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("research")));
   sw_science->setCheckable(true);
-  sw_economy = new top_bar_widget(
-      _("Economy"), QStringLiteral("ECO"), economy_report_dialog_popup);
+  sw_economy = new top_bar_widget(_("Economy"), QStringLiteral("ECO"),
+                                  economy_report_dialog_popup);
   sw_economy->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("economy")));
   sw_economy->setCheckable(true);
-  sw_endturn = new top_bar_widget(
-      _("Turn Done"), QLatin1String(""), top_bar_finish_turn);
+  sw_endturn = new top_bar_widget(_("Turn Done"), QLatin1String(""),
+                                  top_bar_finish_turn);
   sw_endturn->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("endturn")));
   sw_cunit->setRightClick(top_bar_center_unit);
