@@ -84,11 +84,7 @@ public:
   top_bar();
   ~top_bar() override;
   void addWidget(top_bar_widget *fsw);
-  void paint(QPainter *painter, QPaintEvent *event);
   QList<top_bar_widget *> objects;
-
-protected:
-  void paintEvent(QPaintEvent *event) override;
 
 private:
   QHBoxLayout *layout;

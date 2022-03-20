@@ -326,27 +326,6 @@ void top_bar::addWidget(top_bar_widget *fsw)
 }
 
 /**
-   Paint event for top_bar
- */
-void top_bar::paintEvent(QPaintEvent *event)
-{
-  QPainter painter;
-
-  painter.begin(this);
-  paint(&painter, event);
-  painter.end();
-}
-
-/**
-   Paints dark rectangle as background for top_bar
- */
-void top_bar::paint(QPainter *painter, QPaintEvent *event)
-{
-  painter->setBrush(QBrush(QColor(14, 14, 14)));
-  painter->drawRect(event->rect());
-}
-
-/**
    Callback to show map
  */
 void top_bar_show_map(bool nothing)
