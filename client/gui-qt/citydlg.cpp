@@ -2848,7 +2848,7 @@ void qtg_real_city_dialog_popup(struct city *pcity)
 {
   auto *widget = queen()->city_overlay;
   if (!queen()->city_overlay->isVisible()) {
-    top_bar_show_map(true);
+    top_bar_show_map();
     queen()->mapview_wdg->hide_all_fcwidgets();
   }
   center_tile_mapcanvas(pcity->tile);
