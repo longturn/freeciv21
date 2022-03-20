@@ -61,7 +61,7 @@ top_bar_widget::top_bar_widget(const QString &label, const QString &pg,
                                pfcn_bool func, standards type)
     : QToolButton(), blink(false), keep_blinking(false), standard(type),
       page(pg), hover(false), right_click(nullptr), wheel_down(nullptr),
-      wheel_up(nullptr), left_click(func), desc(label)
+      wheel_up(nullptr), left_click(func)
 {
   setText(label);
   setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -96,11 +96,6 @@ void top_bar_widget::setTooltip(const QString &tooltip)
 }
 
 /**
-   Sets default label on bottom of sidewidget
- */
-void top_bar_widget::setLabel(const QString &str) { desc = str; }
-
-/**
    Paint event for sidewidget
  */
 void top_bar_widget::paintEvent(QPaintEvent *event)
@@ -116,11 +111,8 @@ void top_bar_widget::paintEvent(QPaintEvent *event)
   }
 
   p.begin(this);
-  p.setFont(sfont);
   pen.setColor(QColor(232, 255, 0));
   p.setPen(pen);
-
-  const auto rect = QRectF(0, 0, width(), height());
 
   if (standard == SW_TAX && !client_is_global_observer()) {
     pos = 0;
@@ -174,13 +166,6 @@ void top_bar_widget::paintEvent(QPaintEvent *event)
     pos = pos + w;
     sprite = client_government_sprite();
     p.drawPixmap(pos, 5, *sprite);
-  }
-
-  p.setPen(palette().color(QPalette::Text));
-  if (!custom_label.isEmpty()) {
-    p.setFont(info_font);
-    p.drawText(rect, Qt::AlignLeft | Qt::AlignBottom | Qt::TextWordWrap,
-               custom_label);
   }
 
   // Remove 1px for the border on the right and at the bottom

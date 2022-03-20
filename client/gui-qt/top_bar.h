@@ -75,10 +75,6 @@ private:
   pfcn wheel_down;
   pfcn wheel_up;
   pfcn_bool left_click;
-  QFont sfont;
-  QFont info_font;
-  QString custom_label;
-  QString desc;
   QTimer *timer;
 };
 
