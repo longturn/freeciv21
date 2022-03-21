@@ -2,8 +2,6 @@ name: Build
 on:
   push:
     paths-ignore:
-      - 'data/**'
-      - 'dist/**'
       - 'docs/**'
   pull_request: {}
   schedule:
