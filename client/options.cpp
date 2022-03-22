@@ -2773,7 +2773,7 @@ static void server_option_free(struct server_option *poption)
     break;
   }
 
-  NFCN_FREE(poption->name);
+  NFCNPP_FREE(poption->name);
   NFCN_FREE(poption->description);
   NFCN_FREE(poption->help_text);
 }

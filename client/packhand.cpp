@@ -150,7 +150,7 @@ void packhand_free()
   }
 
   if (NULL != invisible.placeholder) {
-    free(invisible.placeholder);
+    delete[] invisible.placeholder;
     invisible.placeholder = NULL;
   }
 }
