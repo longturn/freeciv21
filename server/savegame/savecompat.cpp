@@ -1311,7 +1311,7 @@ static void compat_load_030000(struct loaddata *loading,
   bool randsaved;
   int num_settings;
   bool started;
-  int old_turn;
+  int old_turn = 0;
 
   // Check status and return if not OK (sg_success != TRUE).
   sg_check_ret();

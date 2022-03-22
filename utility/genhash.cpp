@@ -315,7 +315,7 @@ static void genhash_resize_table(struct genhash *pgenhash,
     }
   }
 
-  free(pgenhash->buckets);
+  delete[] pgenhash->buckets;
   pgenhash->buckets = new_buckets;
   pgenhash->num_buckets = new_nbuckets;
 }
