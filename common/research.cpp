@@ -393,27 +393,22 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
                                          Tech_type_id tech)
 {
   bv_techs done;
-  std::vector<Tech_type_id> techs;
-  techs.reserve(game.control.num_tech_types);
-  int techs_num;
-  int i;
-
-  techs[0] = tech;
+  std::vector<Tech_type_id> techs{tech};
   BV_CLR_ALL(done);
   BV_SET(done, A_NONE);
   BV_SET(done, tech);
-  techs_num = 1;
-
   /* Check that all recursive requirements have their research_reqs
    * in order. */
-  for (i = 0; i < techs_num; i++) {
-    if (presearch->inventions[techs[i]].state == TECH_KNOWN) {
+  while (!techs.empty()) { // Iterate till there is no-more techs to check
+    auto iter_tech = techs[techs.size() - 1]; // Last Element
+    techs.pop_back();                         // Remove Last element
+    if (presearch->inventions[iter_tech].state == TECH_KNOWN) {
       /* This tech is already reached. What is required to research it and
        * the techs it depends on is therefore irrelevant. */
       continue;
     }
 
-    if (!research_may_become_allowed(presearch, techs[i])) {
+    if (!research_may_become_allowed(presearch, iter_tech)) {
       /* It will always be illegal to start researching this tech because
        * of unchanging requirements. Since it isn't already known and can't
        * be researched it must be unreachable. */
@@ -422,14 +417,12 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
 
     // Check if required techs are research_reqs reachable.
     for (int req = 0; req < AR_SIZE; req++) {
-      Tech_type_id req_tech = advance_required(techs[i], tech_req(req));
+      Tech_type_id req_tech = advance_required(iter_tech, tech_req(req));
 
       if (valid_advance_by_number(req_tech) == NULL) {
         return false;
       } else if (!BV_ISSET(done, req_tech)) {
-        techs[techs_num] = req_tech;
-        techs_num++;
-
+        techs.push_back(req_tech);
         BV_SET(done, req_tech);
       }
     }
