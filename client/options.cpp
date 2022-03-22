@@ -2749,10 +2749,10 @@ static void server_option_free(struct server_option *poption)
   switch (poption->base_option.type) {
   case OT_STRING:
     if (NULL != poption->string.value) {
-      FC_FREE(poption->string.value);
+      FCPP_FREE(poption->string.value);
     }
     if (NULL != poption->string.def) {
-      FC_FREE(poption->string.def);
+      FCPP_FREE(poption->string.def);
     }
     break;
 
@@ -2774,8 +2774,8 @@ static void server_option_free(struct server_option *poption)
   }
 
   NFCNPP_FREE(poption->name);
-  NFCN_FREE(poption->description);
-  NFCN_FREE(poption->help_text);
+  NFCNPP_FREE(poption->description);
+  NFCNPP_FREE(poption->help_text);
 }
 
 /**
