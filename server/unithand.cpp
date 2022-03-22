@@ -4920,7 +4920,7 @@ static bool do_unit_establish_trade(struct player *pplayer,
 
       pback = remove_trade_route(pcity_homecity, premove, true, false);
       delete premove;
-      free(pback);
+      delete pback;
     }
     trade_route_list_iterate_end;
 
@@ -4933,8 +4933,8 @@ static bool do_unit_establish_trade(struct player *pplayer,
                        game_city_by_number(premove->partner));
 
       pback = remove_trade_route(pcity_dest, premove, true, false);
-      free(premove);
-      free(pback);
+      delete premove;
+      delete pback;
     }
     trade_route_list_iterate_end;
 
