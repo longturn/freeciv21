@@ -2793,7 +2793,7 @@ void server_options_free()
     for (i = 0; i < server_options_num; i++) {
       server_option_free(server_options + i);
     }
-    FC_FREE(server_options);
+    FCPP_FREE(server_options);
     server_options_num = 0;
   }
 
@@ -2801,10 +2801,10 @@ void server_options_free()
   if (NULL != server_options_categories) {
     for (i = 0; i < server_options_categories_num; i++) {
       if (NULL != server_options_categories[i]) {
-        FC_FREE(server_options_categories[i]);
+        FCPP_FREE(server_options_categories[i]);
       }
     }
-    FC_FREE(server_options_categories);
+    FCPP_FREE(server_options_categories);
     server_options_categories_num = 0;
   }
 }
