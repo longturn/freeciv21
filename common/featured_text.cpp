@@ -69,23 +69,23 @@ enum sequence_type {
 };
 
 // Predefined colors.
-const struct ft_color ftc_any = FT_COLOR(NULL, NULL);
+const struct ft_color ftc_any = FT_COLOR(nullptr, nullptr);
 
-const struct ft_color ftc_warning = FT_COLOR("#FF0000", NULL);
-const struct ft_color ftc_log = FT_COLOR("#7F7F7F", NULL);
-const struct ft_color ftc_server = FT_COLOR("#8B0000", NULL);
-const struct ft_color ftc_client = FT_COLOR("#EF7F00", NULL);
-const struct ft_color ftc_editor = FT_COLOR("#0000FF", NULL);
-const struct ft_color ftc_command = FT_COLOR("#006400", NULL);
-struct ft_color ftc_changed = FT_COLOR("#FF0000", NULL);
+const struct ft_color ftc_warning = FT_COLOR("#FF0000", nullptr);
+const struct ft_color ftc_log = FT_COLOR("#7F7F7F", nullptr);
+const struct ft_color ftc_server = FT_COLOR("#8B0000", nullptr);
+const struct ft_color ftc_client = FT_COLOR("#EF7F00", nullptr);
+const struct ft_color ftc_editor = FT_COLOR("#0000FF", nullptr);
+const struct ft_color ftc_command = FT_COLOR("#006400", nullptr);
+struct ft_color ftc_changed = FT_COLOR("#FF0000", nullptr);
 const struct ft_color ftc_server_prompt = FT_COLOR("#FF0000", "#BEBEBE");
 const struct ft_color ftc_player_lost = FT_COLOR("#FFFFFF", "#000000");
 const struct ft_color ftc_game_start = FT_COLOR("#00FF00", "#115511");
 
-const struct ft_color ftc_chat_public = FT_COLOR("#00008B", NULL);
-const struct ft_color ftc_chat_ally = FT_COLOR("#551166", NULL);
-const struct ft_color ftc_chat_private = FT_COLOR("#A020F0", NULL);
-const struct ft_color ftc_chat_luaconsole = FT_COLOR("#006400", NULL);
+const struct ft_color ftc_chat_public = FT_COLOR("#00008B", nullptr);
+const struct ft_color ftc_chat_ally = FT_COLOR("#551166", nullptr);
+const struct ft_color ftc_chat_private = FT_COLOR("#A020F0", nullptr);
+const struct ft_color ftc_chat_luaconsole = FT_COLOR("#006400", nullptr);
 
 const struct ft_color ftc_vote_public = FT_COLOR("#FFFFFF", "#AA0000");
 const struct ft_color ftc_vote_team = FT_COLOR("#FFFFFF", "#5555CC");
@@ -95,11 +95,11 @@ const struct ft_color ftc_vote_yes = FT_COLOR("#000000", "#C8FFD5");
 const struct ft_color ftc_vote_no = FT_COLOR("#000000", "#FFD2D2");
 const struct ft_color ftc_vote_abstain = FT_COLOR("#000000", "#E8E8E8");
 
-const struct ft_color ftc_luaconsole_input = FT_COLOR("#2B008B", NULL);
-const struct ft_color ftc_luaconsole_error = FT_COLOR("#FF0000", NULL);
-const struct ft_color ftc_luaconsole_warn = FT_COLOR("#CF2020", NULL);
-const struct ft_color ftc_luaconsole_normal = FT_COLOR("#006400", NULL);
-const struct ft_color ftc_luaconsole_verbose = FT_COLOR("#B8B8B8", NULL);
+const struct ft_color ftc_luaconsole_input = FT_COLOR("#2B008B", nullptr);
+const struct ft_color ftc_luaconsole_error = FT_COLOR("#FF0000", nullptr);
+const struct ft_color ftc_luaconsole_warn = FT_COLOR("#CF2020", nullptr);
+const struct ft_color ftc_luaconsole_normal = FT_COLOR("#006400", nullptr);
+const struct ft_color ftc_luaconsole_verbose = FT_COLOR("#B8B8B8", nullptr);
 
 /**
    Return the long name of the text tag type.
@@ -124,7 +124,7 @@ static const char *text_tag_type_name(enum text_tag_type type)
     return nullptr;
   };
   // Don't handle the default case to be warned if a new value was added.
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -150,7 +150,7 @@ static const char *text_tag_type_short_name(enum text_tag_type type)
     return nullptr;
   };
   // Don't handle the default case to be warned if a new value was added.
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -170,7 +170,7 @@ static const char *text_link_type_name(enum text_link_type type)
     fc_assert_ret_val(type != TLT_INVALID, nullptr);
   };
   // Don't handle the default case to be warned if a new value was added.
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -413,18 +413,18 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
   case TTT_COLOR: {
     const struct ft_color color = va_arg(args, struct ft_color);
 
-    if ((NULL == color.foreground || '\0' == color.foreground[0])
-        && (NULL == color.background || '\0' == color.background[0])) {
+    if ((nullptr == color.foreground || '\0' == color.foreground[0])
+        && (nullptr == color.background || '\0' == color.background[0])) {
       return false; // No color at all.
     }
 
-    if (NULL != color.foreground && '\0' != color.foreground[0]) {
+    if (nullptr != color.foreground && '\0' != color.foreground[0]) {
       sz_strlcpy(ptag->color.foreground, color.foreground);
     } else {
       ptag->color.foreground[0] = '\0';
     }
 
-    if (NULL != color.background && '\0' != color.background[0]) {
+    if (nullptr != color.background && '\0' != color.background[0]) {
       sz_strlcpy(ptag->color.background, color.background);
     } else {
       ptag->color.background[0] = '\0';
@@ -587,11 +587,11 @@ static size_t text_tag_replace_text(const struct text_tag *ptag, char *buf,
     case TLT_CITY: {
       struct city *pcity = game_city_by_number(ptag->link.id);
 
-      /* Note that if city_tile(pcity) is NULL, then it is probably an
+      /* Note that if city_tile(pcity) is nullptr, then it is probably an
        * invisible city (see client/packhand.c).  Then, we don't
        * use the current city name which is usually not complete,
        * a dumb string using the city id. */
-      if (NULL != pcity && NULL != city_tile(pcity)) {
+      if (nullptr != pcity && nullptr != city_tile(pcity)) {
         return fc_snprintf(buf, len, "%s", city_name_get(pcity));
       }
     } break;
@@ -618,7 +618,7 @@ static size_t text_tag_replace_text(const struct text_tag *ptag, char *buf,
 }
 
 /**
-   Returns a new text_tag or NULL on error.
+   Returns a new text_tag or nullptr on error.
 
    Prototype:
    - If tag_type is TTT_BOLD, TTT_ITALIC, TTT_STRIKE or TTT_UNDERLINE, there
@@ -650,7 +650,7 @@ struct text_tag *text_tag_new(enum text_tag_type tag_type,
     return ptag;
   } else {
     delete ptag;
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -661,7 +661,7 @@ struct text_tag *text_tag_new(enum text_tag_type tag_type,
 struct text_tag *text_tag_copy(const struct text_tag *ptag)
 {
   if (!ptag) {
-    return NULL;
+    return nullptr;
   }
 
   auto *pnew_tag = new text_tag;
@@ -701,13 +701,13 @@ ft_offset_t text_tag_stop_offset(const struct text_tag *ptag)
 
 /**
    Return the foreground color suggested by this text tag.  This requires
-   the tag type to be TTT_COLOR.  Returns NULL on error, "" if unset.
+   the tag type to be TTT_COLOR.  Returns nullptr on error, "" if unset.
  */
 const char *text_tag_color_foreground(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_COLOR) {
     qCritical("text_tag_color_foreground(): incompatible tag type.");
-    return NULL;
+    return nullptr;
   }
 
   return ptag->color.foreground;
@@ -715,13 +715,13 @@ const char *text_tag_color_foreground(const struct text_tag *ptag)
 
 /**
    Return the background color suggested by this text tag.  This requires
-   the tag type to be TTT_COLOR.  Returns NULL on error, "" if unset.
+   the tag type to be TTT_COLOR.  Returns nullptr on error, "" if unset.
  */
 const char *text_tag_color_background(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_COLOR) {
     qCritical("text_tag_color_background(): incompatible tag type.");
-    return NULL;
+    return nullptr;
   }
 
   return ptag->color.background;
@@ -855,7 +855,7 @@ static size_t extract_sequence_text(const char *featured_text, QString &buf,
 }
 
 /**
-   Separate the text from the text features.  'tags' can be NULL.
+   Separate the text from the text features.  'tags' can be nullptr.
 
    When 'replace_link_text' is set, the text used for the signal sequence
    links will be overwritten. It is used on client side to have updated
@@ -907,7 +907,7 @@ size_t featured_text_to_plain_text(const char *featured_text,
         case ST_STOP:
           if (tags) {
             // Set the stop offset.
-            struct text_tag *ptag = NULL;
+            struct text_tag *ptag = nullptr;
 
             // Look up on reversed order.
             text_tag_list_rev_iterate(*tags, piter)

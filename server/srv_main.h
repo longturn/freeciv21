@@ -32,12 +32,12 @@ struct server_arguments {
   bool metaconnection_persistent;
   QString identity_name;
   unsigned short int metaserver_port;
-  // address this server is to listen on (NULL => INADDR_ANY)
+  // address this server is to listen on (nullptr => INADDR_ANY)
   QHostAddress bind_addr;
   // this server's listen port
   int port;
   bool user_specified_port;
-  // address to bind when connecting to the metaserver (NULL => bind_addr)
+  // address to bind when connecting to the metaserver (nullptr => bind_addr)
   QString bind_meta_addr;
   // filenames
   QString log_filename;

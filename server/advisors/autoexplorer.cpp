@@ -144,7 +144,7 @@ static bool explorer_goto(struct unit *punit, struct tile *ptile)
   pfm = pf_map_new(&parameter);
   path = pf_map_path(pfm, ptile);
 
-  if (path != NULL) {
+  if (path != nullptr) {
     alive = adv_follow_path(punit, path, ptile);
     pf_path_destroy(path);
   }
@@ -291,7 +291,7 @@ enum unit_move_result manage_auto_explorer(struct unit *punit)
 
   /* Coordinates of most desirable tile. Initialized to make
    * compiler happy. Also MC to the best tile. */
-  struct tile *best_tile = NULL;
+  struct tile *best_tile = nullptr;
   int best_MC = FC_INFINITY;
 
   // Path-finding stuff
@@ -380,7 +380,7 @@ enum unit_move_result manage_auto_explorer(struct unit *punit)
   TIMING_LOG(AIT_EXPLORER, TIMER_STOP);
 
   // Go to the best tile found.
-  if (best_tile != NULL) {
+  if (best_tile != nullptr) {
     /* TODO: read the path off the map we made.  Then we can make a path
      * which goes beside the unknown, with a good EC callback... */
     enum override_bool allow = NO_OVERRIDE;

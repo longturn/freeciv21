@@ -35,7 +35,7 @@
 
 #include "messagewin_common.h"
 
-static struct message **messages = NULL;
+static struct message **messages = nullptr;
 static int messages_total = 0;
 static int messages_alloc = 0;
 
@@ -47,7 +47,7 @@ static void meswin_dialog_update()
   if (!can_client_change_view()) {
     return;
   }
-  update_queue::uq()->add(real_meswin_dialog_update, NULL);
+  update_queue::uq()->add(real_meswin_dialog_update, nullptr);
 }
 
 /**
@@ -77,7 +77,7 @@ void meswin_clear_older(int turn, int phase)
   if (i != 0) {
     for (; i < messages_total; i++, j++) {
       messages[j] = messages[i];
-      messages[i] = NULL;
+      messages[i] = nullptr;
     }
     messages_total = j;
   }
@@ -117,7 +117,7 @@ void meswin_add(const char *message, const struct text_tag_list *tags,
   msg->event = event;
   msg->descr = s;
   msg->tags = text_tag_list_copy(tags);
-  msg->location_ok = (ptile != NULL);
+  msg->location_ok = (ptile != nullptr);
   msg->visited = false;
   msg->turn = turn;
   msg->phase = phase;
@@ -142,7 +142,7 @@ void meswin_add(const char *message, const struct text_tag_list *tags,
 }
 
 /**
-   Returns the pointer to a message.  Returns NULL on error.
+   Returns the pointer to a message.  Returns nullptr on error.
  */
 const struct message *meswin_get_message(int message_index)
 {
@@ -150,7 +150,7 @@ const struct message *meswin_get_message(int message_index)
     return messages[message_index];
   } else {
     // Can happen in turn change...
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -185,7 +185,7 @@ void meswin_popup_city(int message_index)
     }
 
     if (pcity && can_player_see_units_in_city(client.conn.playing, pcity)) {
-      /* If the event was the city being destroyed, pcity will be NULL
+      /* If the event was the city being destroyed, pcity will be nullptr
        * and we'd better not try to pop it up.  It's also possible that
        * events will happen on enemy cities; we generally don't want to pop
        * those dialogs up either (although it's hard to be certain).

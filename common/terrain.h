@@ -47,8 +47,8 @@ struct resource_type {
 
 // ===
 
-#define T_NONE (NULL)    // A special flag meaning no terrain type.
-#define T_UNKNOWN (NULL) // An unknown terrain.
+#define T_NONE (nullptr)    // A special flag meaning no terrain type.
+#define T_UNKNOWN (nullptr) // An unknown terrain.
 
 // The first terrain value.
 #define T_FIRST 0
@@ -187,7 +187,7 @@ struct terrain {
 
   int output[O_LAST];
 
-  struct extra_type **resources; // NULL-terminated
+  struct extra_type **resources; // nullptr-terminated
 
   int road_output_incr_pct[O_LAST];
   int base_time;
@@ -215,7 +215,7 @@ struct terrain {
 
   const struct unit_type *animal;
 
-  // May be NULL if the transformation is impossible.
+  // May be nullptr if the transformation is impossible.
   struct terrain *warmer_wetter_result, *warmer_drier_result;
   struct terrain *cooler_wetter_result, *cooler_drier_result;
 
@@ -342,7 +342,7 @@ const struct terrain *terrain_array_last();
 #define terrain_type_iterate(_p)                                            \
   {                                                                         \
     struct terrain *_p = terrain_array_first();                             \
-    if (NULL != _p) {                                                       \
+    if (nullptr != _p) {                                                    \
       for (; _p <= terrain_array_last(); _p++) {
 
 #define terrain_type_iterate_end                                            \

@@ -68,10 +68,10 @@ QPixmap *crop_sprite(const QPixmap *source, int x, int y, int width,
   QRectF dest_rect;
   QPixmap *cropped;
 
-  fc_assert_ret_val(source, NULL);
+  fc_assert_ret_val(source, nullptr);
 
   if (!width || !height) {
-    return NULL;
+    return nullptr;
   }
   cropped = new QPixmap(width, height);
   cropped->fill(Qt::transparent);

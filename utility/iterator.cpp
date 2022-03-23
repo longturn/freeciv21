@@ -30,7 +30,7 @@ static void invalid_iter_next(struct iterator *it)
 /**
    'get' function implementation for an "invalid" iterator.
  */
-static void *invalid_iter_get(const struct iterator *it) { return NULL; }
+static void *invalid_iter_get(const struct iterator *it) { return nullptr; }
 
 /**
    'valid' function implementation for an "invalid" iterator.

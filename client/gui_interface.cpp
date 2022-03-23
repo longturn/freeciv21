@@ -67,7 +67,7 @@ void remove_net_input(void) { funcs.remove_net_input(); }
  */
 void real_conn_list_dialog_update(void *unused)
 {
-  funcs.real_conn_list_dialog_update(NULL);
+  funcs.real_conn_list_dialog_update(nullptr);
 }
 
 /**

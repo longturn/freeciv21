@@ -185,15 +185,15 @@ static void build_landarea_map(struct claim_map *pcmap)
 
   whole_map_iterate(&(wld.map), ptile)
   {
-    struct player *owner = NULL;
+    struct player *owner = nullptr;
     bv_player *pclaim = &claims[tile_index(ptile)];
 
     if (is_ocean_tile(ptile)) {
       // Nothing.
-    } else if (NULL != tile_city(ptile)) {
+    } else if (nullptr != tile_city(ptile)) {
       owner = city_owner(tile_city(ptile));
       pcmap->player[player_index(owner)].settledarea++;
-    } else if (NULL != tile_worked(ptile)) {
+    } else if (nullptr != tile_worked(ptile)) {
       owner = city_owner(tile_worked(ptile));
       pcmap->player[player_index(owner)].settledarea++;
     } else if (unit_list_size(ptile->units) > 0) {
@@ -429,8 +429,8 @@ void rank_users(bool interrupt)
   int i, t_winner_score = 0;
   enum victory_state { VS_NONE, VS_LOSER, VS_WINNER };
   enum victory_state plr_state[player_slot_count()];
-  struct player *spacerace_winner = NULL;
-  struct team *t_winner = NULL;
+  struct player *spacerace_winner = nullptr;
+  struct team *t_winner = nullptr;
 
   // don't output ranking info if we haven't enabled it via cmdline
   if (srvarg.ranklog_filename.isNull()) {

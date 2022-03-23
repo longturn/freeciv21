@@ -49,12 +49,12 @@
 #define SPECLIST_TYPE struct cma_preset
 #include "speclist.h"
 
-static struct preset_list *preset_list = NULL;
+static struct preset_list *preset_list = nullptr;
 
 static void city_changed(int city_id);
 static void city_remove(int city_id)
 {
-  attr_city_set(ATTR_CITY_CMA_PARAMETER, city_id, 0, NULL);
+  attr_city_set(ATTR_CITY_CMA_PARAMETER, city_id, 0, nullptr);
 }
 
 struct cma_preset {
@@ -161,7 +161,7 @@ void governor::run()
   scity_changed.clear();
   for (auto *pcity : qAsConst(scity_remove)) {
     if (pcity) {
-      attr_city_set(ATTR_CITY_CMAFE_PARAMETER, pcity->id, 0, NULL);
+      attr_city_set(ATTR_CITY_CMAFE_PARAMETER, pcity->id, 0, nullptr);
       city_remove(pcity->id);
     }
   }
@@ -237,7 +237,7 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
   if (last_request_id != 0) {
     int city_id = pcity->id;
 
-    if (pcity != check_city(city_id, NULL)) {
+    if (pcity != check_city(city_id, nullptr)) {
       qDebug("apply_result_on_server(city %d) !check_city()!", city_id);
       return;
     }
@@ -349,7 +349,7 @@ bool cma_yoloswag::apply_result_on_server(
   city_tile_iterate_skip_free_worked(city_radius_sq, pcenter, ptile, idx, x,
                                      y)
   {
-    if (NULL == tile_worked(ptile) && result->worker_positions[idx]) {
+    if (nullptr == tile_worked(ptile) && result->worker_positions[idx]) {
       log_apply_result("Putting worker at {%d,%d}.", x, y);
       fc_assert_action(city_can_work_tile(pcity, ptile), break);
 
@@ -417,7 +417,7 @@ void cma_yoloswag::put_city_under_agent(
 
 void cma_yoloswag::release_city(struct city *pcity)
 {
-  attr_city_set(ATTR_CITY_CMA_PARAMETER, pcity->id, 0, NULL);
+  attr_city_set(ATTR_CITY_CMA_PARAMETER, pcity->id, 0, nullptr);
   refresh_city_dialog(pcity);
   city_report_dialog_update_city(pcity);
 }
@@ -513,7 +513,7 @@ void cma_yoloswag::set_parameter(enum attr_city attr, int city_id,
 
 /**
    Returns TRUE if the city is valid for CMA. Fills parameter if TRUE
-   is returned. Parameter can be NULL.
+   is returned. Parameter can be nullptr.
  */
 struct city *cma_yoloswag::check_city(int city_id,
                                       struct cm_parameter *parameter)
@@ -527,12 +527,12 @@ struct city *cma_yoloswag::check_city(int city_id,
 
   if (!pcity
       || !cma_get_parameter(ATTR_CITY_CMA_PARAMETER, city_id, parameter)) {
-    return NULL;
+    return nullptr;
   }
 
   if (city_owner(pcity) != client.conn.playing) {
     cma_release_city(pcity);
-    return NULL;
+    return nullptr;
   }
 
   return pcity;
@@ -582,7 +582,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
     } else {
       if (!apply_result_on_server(pcity, std::move(result))) {
         log_handle_city2("  doesn't cleanly apply");
-        if (pcity == check_city(city_id, NULL) && i == 0) {
+        if (pcity == check_city(city_id, nullptr) && i == 0) {
           create_event(city_tile(pcity), E_CITY_CMA_RELEASE, ftc_client,
                        _("The citizen governor has gotten confused dealing "
                          "with %s.  You may want to have a look."),
@@ -599,7 +599,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
   }
 
   if (!handled) {
-    fc_assert_ret(pcity == check_city(city_id, NULL));
+    fc_assert_ret(pcity == check_city(city_id, nullptr));
     log_handle_city2("  not handled");
 
     create_event(city_tile(pcity), E_CITY_CMA_RELEASE, ftc_client,
@@ -676,7 +676,7 @@ void cma_set_parameter(enum attr_city attr, int city_id,
  */
 void cmafec_init()
 {
-  if (preset_list == NULL) {
+  if (preset_list == nullptr) {
     preset_list = preset_list_new();
   }
 }
@@ -730,7 +730,7 @@ void cmafec_preset_add(const char *descr_name, struct cm_parameter *pparam)
 {
   struct cma_preset *ppreset = new cma_preset;
 
-  if (preset_list == NULL) {
+  if (preset_list == nullptr) {
     preset_list = preset_list_new();
   }
 
@@ -763,7 +763,7 @@ char *cmafec_preset_get_descr(int idx)
 {
   struct cma_preset *ppreset;
 
-  fc_assert_ret_val(idx >= 0 && idx < cmafec_preset_num(), NULL);
+  fc_assert_ret_val(idx >= 0 && idx < cmafec_preset_num(), nullptr);
 
   ppreset = preset_list_get(preset_list, idx);
   return ppreset->descr;
@@ -776,7 +776,7 @@ const struct cm_parameter *cmafec_preset_get_parameter(int idx)
 {
   struct cma_preset *ppreset;
 
-  fc_assert_ret_val(idx >= 0 && idx < cmafec_preset_num(), NULL);
+  fc_assert_ret_val(idx >= 0 && idx < cmafec_preset_num(), nullptr);
 
   ppreset = preset_list_get(preset_list, idx);
   return &ppreset->parameter;

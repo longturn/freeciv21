@@ -82,7 +82,7 @@ static void close_connection(struct connection *pconn)
     return;
   }
 
-  if (pconn->server.ping_timers != NULL) {
+  if (pconn->server.ping_timers != nullptr) {
     while (!pconn->server.ping_timers->isEmpty()) {
       timer_destroy(pconn->server.ping_timers->takeFirst());
     }
@@ -90,18 +90,18 @@ static void close_connection(struct connection *pconn)
   }
 
   conn_pattern_list_destroy(pconn->server.ignore_list);
-  pconn->server.ignore_list = NULL;
+  pconn->server.ignore_list = nullptr;
 
   // safe to do these even if not in lists:
   conn_list_remove(game.glob_observers, pconn);
   conn_list_remove(game.all_connections, pconn);
   conn_list_remove(game.est_connections, pconn);
 
-  pconn->playing = NULL;
+  pconn->playing = nullptr;
   pconn->access_level = ALLOW_NONE;
   connection_common_close(pconn);
 
-  send_updated_vote_totals(NULL);
+  send_updated_vote_totals(nullptr);
 }
 
 /**
@@ -160,7 +160,7 @@ void really_close_connections()
         conn_list_remove(game.glob_observers, pconn);
         conn_list_remove(game.est_connections, pconn);
         conn_list_remove(game.all_connections, pconn);
-        if (NULL != conn_get_player(pconn)) {
+        if (nullptr != conn_get_player(pconn)) {
           conn_list_remove(conn_get_player(pconn)->connections, pconn);
         }
       }
@@ -224,7 +224,7 @@ static bool get_packet(struct connection *pconn,
 {
   ppacket->data = get_packet_from_connection(pconn, &ppacket->type);
 
-  return NULL != ppacket->data;
+  return nullptr != ppacket->data;
 }
 
 /**
@@ -236,7 +236,7 @@ void incoming_client_packets(struct connection *pconn)
 {
   struct packet_to_handle packet;
 #if PROCESSING_TIME_STATISTICS
-  civtimer *request_time = NULL;
+  civtimer *request_time = nullptr;
 #endif
 
   while (get_packet(pconn, &packet)) {
@@ -299,8 +299,8 @@ static const char *makeup_connection_name(int *id)
       i++;
     }
     fc_snprintf(name, sizeof(name), "c%u", static_cast<unsigned int>(++i));
-    if (NULL == player_by_name(name) && NULL == player_by_user(name)
-        && NULL == conn_by_number(i) && NULL == conn_by_user(name)) {
+    if (nullptr == player_by_name(name) && nullptr == player_by_user(name)
+        && nullptr == conn_by_number(i) && nullptr == conn_by_user(name)) {
       *id = i;
       return name;
     }
@@ -325,10 +325,10 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
       connection_common_init(pconn);
       pconn->sock = new_sock;
       pconn->observer = false;
-      pconn->playing = NULL;
+      pconn->playing = nullptr;
       pconn->capability[0] = '\0';
       pconn->access_level = access_level_for_next_connection();
-      pconn->notify_of_writable_data = NULL;
+      pconn->notify_of_writable_data = nullptr;
       pconn->server.currently_processed_request_id = 0;
       pconn->server.last_request_id_seen = 0;
       pconn->server.auth_tries = 0;
@@ -340,8 +340,8 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
           conn_pattern_list_new_full(conn_pattern_destroy);
       pconn->server.is_closing = false;
       pconn->ping_time = -1.0;
-      pconn->incoming_packet_notify = NULL;
-      pconn->outgoing_packet_notify = NULL;
+      pconn->incoming_packet_notify = nullptr;
+      pconn->outgoing_packet_notify = nullptr;
 
       sz_strlcpy(pconn->username, makeup_connection_name(&pconn->id));
       pconn->addr = client_addr;

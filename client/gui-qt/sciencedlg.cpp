@@ -54,8 +54,8 @@ bool comp_less_than(const qlist_item &q1, const qlist_item &q2)
  */
 research_diagram::research_diagram(QWidget *parent) : QWidget(parent)
 {
-  pcanvas = NULL;
-  req = NULL;
+  pcanvas = nullptr;
+  req = nullptr;
   reset();
   setMouseTracking(true);
 }
@@ -87,10 +87,10 @@ void research_diagram::update_reqtree()
 void research_diagram::reset()
 {
   timer_active = false;
-  if (req != NULL) {
+  if (req != nullptr) {
     destroy_reqtree(req);
   }
-  if (pcanvas != NULL) {
+  if (pcanvas != nullptr) {
     delete pcanvas;
   }
   req = create_reqtree(client_player(), true);
@@ -174,9 +174,9 @@ void research_diagram::mouseMoveEvent(QMouseEvent *event)
                   + "</b>\n";
       } else if (rttp->timpr != nullptr) {
         def_str = get_tooltip_improvement(rttp->timpr, nullptr);
-        tt_text = helptext_building(buffer, sizeof(buffer),
-                                    client.conn.playing, NULL, rttp->timpr,
-                                    client_current_nation_set());
+        tt_text = helptext_building(
+            buffer, sizeof(buffer), client.conn.playing, nullptr,
+            rttp->timpr, client_current_nation_set());
         tt_text = cut_helptext(tt_text);
       } else if (rttp->tunit != nullptr) {
         def_str = get_tooltip_unit(rttp->tunit);
@@ -356,7 +356,7 @@ void science_report::update_report()
   QString str;
   qlist_item item;
 
-  fc_assert_ret(NULL != research);
+  fc_assert_ret(nullptr != research);
 
   NFC_FREE(curr_list);
   NFC_FREE(goal_list);
@@ -541,7 +541,7 @@ void real_science_report_dialog_update(void *unused)
   QWidget *w;
   QString str;
 
-  if (NULL != client.conn.playing) {
+  if (nullptr != client.conn.playing) {
     struct research *research = research_get(client_player());
     if (research->researching == A_UNSET) {
       str = QString(_("none"));

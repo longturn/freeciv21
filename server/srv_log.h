@@ -86,7 +86,7 @@ QString city_log_prefix(const city *pcity);
                       + QString::asprintf(msg, ##__VA_ARGS__);              \
     if (notify) {                                                           \
       qInfo().noquote() << message;                                         \
-      notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s",                    \
+      notify_conn(nullptr, nullptr, E_AI_DEBUG, ftc_log, "%s",              \
                   qUtf8Printable(message));                                 \
     } else {                                                                \
       qDebug().noquote() << message;                                        \
@@ -103,7 +103,7 @@ QString unit_log_prefix(const unit *punit);
                       + QString::asprintf(msg, ##__VA_ARGS__);              \
     if (notify) {                                                           \
       qInfo().noquote() << message;                                         \
-      notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s",                    \
+      notify_conn(nullptr, nullptr, E_AI_DEBUG, ftc_log, "%s",              \
                   qUtf8Printable(message));                                 \
     } else {                                                                \
       qDebug().noquote() << message;                                        \

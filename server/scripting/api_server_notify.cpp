@@ -60,7 +60,7 @@ void api_notify_research_msg(lua_State *L, Player *pplayer, bool include_plr,
 
   pres = research_get(pplayer);
 
-  notify_research(pres, include_plr ? NULL : pplayer,
+  notify_research(pres, include_plr ? nullptr : pplayer,
                   static_cast<event_type>(event), ftc_any, "%s", message);
 }
 
@@ -76,6 +76,6 @@ void api_notify_research_embassies_msg(lua_State *L, Player *pplayer,
 
   pres = research_get(pplayer);
 
-  notify_research_embassies(pres, NULL, static_cast<event_type>(event),
+  notify_research_embassies(pres, nullptr, static_cast<event_type>(event),
                             ftc_any, "%s", message);
 }

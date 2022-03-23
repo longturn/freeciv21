@@ -292,7 +292,7 @@ void plr_model::populate()
  */
 plr_widget::plr_widget(QWidget *widget) : QTreeView(widget)
 {
-  other_player = NULL;
+  other_player = nullptr;
   selected_player = nullptr;
   pid = new plr_item_delegate(this);
   setItemDelegate(pid);
@@ -440,7 +440,7 @@ void plr_widget::nation_selected(const QItemSelection &sl,
   Tech_type_id tech_id;
   bool global_observer = client_is_global_observer();
 
-  other_player = NULL;
+  other_player = nullptr;
   intel_str.clear();
   tech_str.clear();
   ally_str.clear();
@@ -832,10 +832,11 @@ void plr_report::update_report(bool update_selection)
   ui.ally_label->setText(ui.plr_wdg->ally_str);
   ui.tech_label->setText(ui.plr_wdg->tech_str);
   other_player = ui.plr_wdg->other_player;
-  if (other_player == NULL || !can_client_issue_orders()) {
+  if (other_player == nullptr || !can_client_issue_orders()) {
     return;
   }
-  if (NULL != client.conn.playing && other_player != client.conn.playing) {
+  if (nullptr != client.conn.playing
+      && other_player != client.conn.playing) {
     // We keep button sensitive in case of DIPL_SENATE_BLOCKING, so that
     // player can request server side to check requirements of those effects
     // with omniscience

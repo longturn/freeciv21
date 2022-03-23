@@ -195,7 +195,8 @@ static bool manual_command(struct tag_types *tag_info)
   // Reset aifill to zero
   game.info.aifill = 0;
 
-  if (!load_rulesets(NULL, NULL, false, NULL, false, false, false)) {
+  if (!load_rulesets(nullptr, nullptr, false, nullptr, false, false,
+                     false)) {
     // Failed to load correct ruleset
     return false;
   }
@@ -249,7 +250,7 @@ static bool manual_command(struct tag_types *tag_info)
          * the function setting_is_changeable() */
         if (setting_locked(pset)) {
           fprintf(doc, _("Is locked by the ruleset."));
-        } else if (!setting_is_changeable(pset, &my_conn, NULL, 0)) {
+        } else if (!setting_is_changeable(pset, &my_conn, nullptr, 0)) {
           fprintf(doc, _("Can only be used in server console."));
         }
 
@@ -409,7 +410,7 @@ static bool manual_command(struct tag_types *tag_info)
         } else {
           fprintf(doc, "<tr><td>%s</td></tr>\n", _("impossible"));
         }
-        if (pterrain->irrigation_result != NULL
+        if (pterrain->irrigation_result != nullptr
             && pterrain->irrigation_result != pterrain) {
           fprintf(doc, "<tr><td>%s</td><td align=\"right\">(%d)</td></tr>\n",
                   terrain_name_translation(pterrain->irrigation_result),
@@ -424,7 +425,7 @@ static bool manual_command(struct tag_types *tag_info)
         } else {
           fprintf(doc, "<tr><td>%s</td></tr>\n", _("impossible"));
         }
-        if (pterrain->mining_result != NULL
+        if (pterrain->mining_result != nullptr
             && pterrain->mining_result != pterrain) {
           fprintf(doc, "<tr><td>%s</td><td align=\"right\">(%d)</td></tr>\n",
                   terrain_name_translation(pterrain->mining_result),
@@ -497,14 +498,15 @@ static bool manual_command(struct tag_types *tag_info)
       improvement_iterate(pimprove)
       {
         char buf[64000];
-        struct advance *obs_tech = NULL;
+        struct advance *obs_tech = nullptr;
 
         if (!valid_improvement(pimprove)
             || is_great_wonder(pimprove) == (manuals == MANUAL_BUILDINGS)) {
           continue;
         }
 
-        helptext_building(buf, sizeof(buf), NULL, NULL, pimprove, nullptr);
+        helptext_building(buf, sizeof(buf), nullptr, nullptr, pimprove,
+                          nullptr);
 
         fprintf(doc,
                 "<tr><td>%s%s%s</td><td>%s</td>\n"
@@ -537,8 +539,8 @@ static bool manual_command(struct tag_types *tag_info)
         requirement_vector_iterate_end;
 
         fprintf(doc, "<em>%s</em></td>\n",
-                obs_tech != NULL ? advance_name_translation(obs_tech)
-                                 : Q_("?tech:None"));
+                obs_tech != nullptr ? advance_name_translation(obs_tech)
+                                    : Q_("?tech:None"));
         fprintf(doc, "<td>%s</td>\n</tr>\n\n", buf);
       }
       improvement_iterate_end;
@@ -560,7 +562,7 @@ static bool manual_command(struct tag_types *tag_info)
         fprintf(doc, "%s%s%s\n\n", tag_info->sect_title_begin,
                 government_name_translation(pgov), tag_info->sect_title_end);
         fprintf(doc, tag_info->subitem_begin, "helptext");
-        helptext_government(buf, sizeof(buf), NULL, NULL, pgov);
+        helptext_government(buf, sizeof(buf), nullptr, nullptr, pgov);
         fprintf(doc, "%s\n\n", buf);
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, "%s", tag_info->item_end);
@@ -619,7 +621,7 @@ static bool manual_command(struct tag_types *tag_info)
                     : utype_name_translation(putype->obsoleted_by));
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "helptext");
-        helptext_unit(buf, sizeof(buf), NULL, "", putype, nullptr);
+        helptext_unit(buf, sizeof(buf), nullptr, "", putype, nullptr);
         fprintf(doc, "%s", buf);
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, "%s", tag_info->item_end);
@@ -643,7 +645,7 @@ static bool manual_command(struct tag_types *tag_info)
                   advance_name_translation(ptech), tag_info->sect_title_end);
 
           fprintf(doc, tag_info->subitem_begin, "helptext");
-          helptext_advance(buf, sizeof(buf), NULL, "", ptech->item_number,
+          helptext_advance(buf, sizeof(buf), nullptr, "", ptech->item_number,
                            nullptr);
           fprintf(doc, "%s", buf);
           fprintf(doc, "%s", tag_info->subitem_end);

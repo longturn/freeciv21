@@ -60,7 +60,7 @@ void api_utilities_log_base(sol::this_state s, int level,
 {
   auto fcl = luascript_get_fcl(s);
 
-  LUASCRIPT_CHECK(s, fcl != NULL, "Undefined Freeciv21 lua state!");
+  LUASCRIPT_CHECK(s, fcl != nullptr, "Undefined Freeciv21 lua state!");
 
   luascript_log(fcl, QtMsgType(level), "%s", message);
 }
@@ -70,8 +70,8 @@ void api_utilities_log_base(sol::this_state s, int level,
  */
 const Direction *api_utilities_str2dir(lua_State *L, const char *dir)
 {
-  LUASCRIPT_CHECK_STATE(L, NULL);
-  LUASCRIPT_CHECK_ARG_NIL(L, dir, 2, string, NULL);
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_ARG_NIL(L, dir, 2, string, nullptr);
 
   return luascript_dir(direction8_by_name(dir, fc_strcasecmp));
 }
@@ -83,7 +83,7 @@ const Direction *api_utilities_dir_ccw(lua_State *L, Direction dir)
 {
   Direction new_dir = dir;
 
-  LUASCRIPT_CHECK_STATE(L, NULL);
+  LUASCRIPT_CHECK_STATE(L, nullptr);
 
   do {
     new_dir = dir_ccw(new_dir);
@@ -99,7 +99,7 @@ const Direction *api_utilities_dir_cw(lua_State *L, Direction dir)
 {
   Direction new_dir = dir;
 
-  LUASCRIPT_CHECK_STATE(L, NULL);
+  LUASCRIPT_CHECK_STATE(L, nullptr);
 
   do {
     new_dir = dir_cw(new_dir);
@@ -114,7 +114,7 @@ const Direction *api_utilities_dir_cw(lua_State *L, Direction dir)
  */
 const Direction *api_utilities_opposite_dir(lua_State *L, Direction dir)
 {
-  LUASCRIPT_CHECK_STATE(L, NULL);
+  LUASCRIPT_CHECK_STATE(L, nullptr);
 
   return luascript_dir(opposite_direction(dir));
 }
@@ -127,13 +127,13 @@ void api_utilities_deprecation_warning(char *method, char *replacement,
 {
   /* TODO: Keep track which deprecations we have already warned about, and
    * do not keep spamming about them. */
-  if (deprecated_since != NULL && replacement != NULL) {
+  if (deprecated_since != nullptr && replacement != nullptr) {
     qCWarning(
         deprecations_category,
         "Deprecated: lua construct \"%s\", deprecated since \"%s\", used. "
         "Use \"%s\" instead",
         method, deprecated_since, replacement);
-  } else if (replacement != NULL) {
+  } else if (replacement != nullptr) {
     qCWarning(deprecations_category,
               "Deprecated: lua construct \"%s\" used. "
               "Use \"%s\" instead",

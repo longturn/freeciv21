@@ -62,9 +62,9 @@ static void package_event_full(struct packet_chat_msg *packet,
   char buf[MAX_LEN_MSG];
   char *str;
 
-  fc_assert_ret(NULL != packet);
+  fc_assert_ret(nullptr != packet);
 
-  packet->tile = (NULL != ptile ? tile_index(ptile) : -1);
+  packet->tile = (nullptr != ptile ? tile_index(ptile) : -1);
   packet->event = event;
   packet->conn_id = pconn ? pconn->id : -1;
   packet->turn = game.info.turn;
@@ -106,7 +106,8 @@ void vpackage_chat_msg(struct packet_chat_msg *packet,
                        const struct ft_color color, const char *format,
                        va_list vargs)
 {
-  package_event_full(packet, NULL, E_CHAT_MSG, sender, color, format, vargs);
+  package_event_full(packet, nullptr, E_CHAT_MSG, sender, color, format,
+                     vargs);
 }
 
 /**
@@ -147,7 +148,7 @@ void vpackage_event(struct packet_chat_msg *packet, const struct tile *ptile,
                     enum event_type event, const struct ft_color color,
                     const char *format, va_list vargs)
 {
-  package_event_full(packet, ptile, event, NULL, color, format, vargs);
+  package_event_full(packet, ptile, event, nullptr, color, format, vargs);
 }
 
 /**
@@ -180,9 +181,9 @@ void package_event(struct packet_chat_msg *packet, const struct tile *ptile,
    Notify specified connections of an event of specified type (from events.h)
    and specified (x,y) coords associated with the event.  Coords will only
    apply if game has started and the conn's player knows that tile (or
-   NULL == pconn->playing && pconn->observer).  If coords are not required,
-   caller should specify (x,y) = (-1,-1); otherwise make sure that the
-   coordinates have been normalized.
+   nullptr == pconn->playing && pconn->observer).  If coords are not
+   required, caller should specify (x,y) = (-1,-1); otherwise make sure that
+   the coordinates have been normalized.
  */
 static void notify_conn_packet(struct conn_list *dest,
                                const struct packet_chat_msg *packet,
@@ -207,8 +208,8 @@ static void notify_conn_packet(struct conn_list *dest,
     }
 
     if (S_S_RUNNING <= server_state() && ptile // special case, see above
-        && ((NULL == pconn->playing && pconn->observer)
-            || (NULL != pconn->playing
+        && ((nullptr == pconn->playing && pconn->observer)
+            || (nullptr != pconn->playing
                 && map_is_known(ptile, pconn->playing)))) {
       // tile info is OK; see above.
       /* FIXME: in the case this is a city event, we should check if the
@@ -277,16 +278,16 @@ void notify_conn_early(struct conn_list *dest, const struct tile *ptile,
 
 /**
    Similar to notify_conn_packet (see also), but takes player as
- "destination". If player != NULL, sends to all connections for that player.
-   If player == NULL, sends to all game connections, to support
-   old code, but this feature may go away - should use notify_conn(NULL)
+ "destination". If player != nullptr, sends to all connections for that
+ player. If player == nullptr, sends to all game connections, to support old
+ code, but this feature may go away - should use notify_conn(nullptr)
    instead.
  */
 void notify_player(const struct player *pplayer, const struct tile *ptile,
                    enum event_type event, const struct ft_color color,
                    const char *format, ...)
 {
-  struct conn_list *dest = pplayer ? pplayer->connections : NULL;
+  struct conn_list *dest = pplayer ? pplayer->connections : nullptr;
   struct packet_chat_msg genmsg;
   va_list args;
 
@@ -309,7 +310,7 @@ void notify_embassies(const struct player *pplayer, const struct tile *ptile,
                       const char *format, ...)
 {
   struct packet_chat_msg genmsg;
-  struct event_cache_players *players = NULL;
+  struct event_cache_players *players = nullptr;
   va_list args;
 
   va_start(args, format);
@@ -331,7 +332,7 @@ void notify_embassies(const struct player *pplayer, const struct tile *ptile,
 }
 
 /**
-   Sends a message to all players on pplayer's team. If 'pplayer' is NULL,
+   Sends a message to all players on pplayer's team. If 'pplayer' is nullptr,
    sends to all players.
  */
 void notify_team(const struct player *pplayer, const struct tile *ptile,
@@ -340,7 +341,7 @@ void notify_team(const struct player *pplayer, const struct tile *ptile,
 {
   struct conn_list *dest = game.est_connections;
   struct packet_chat_msg genmsg;
-  struct event_cache_players *players = NULL;
+  struct event_cache_players *players = nullptr;
   va_list args;
 
   va_start(args, format);
@@ -389,11 +390,11 @@ void notify_research(const struct research *presearch,
                      const struct ft_color color, const char *format, ...)
 {
   struct packet_chat_msg genmsg;
-  struct event_cache_players *players = NULL;
+  struct event_cache_players *players = nullptr;
   va_list args;
 
   va_start(args, format);
-  vpackage_event(&genmsg, NULL, event, color, format, args);
+  vpackage_event(&genmsg, nullptr, event, color, format, args);
   va_end(args);
 
   research_players_iterate(presearch, aplayer)
@@ -431,11 +432,11 @@ void notify_research_embassies(const struct research *presearch,
                                const char *format, ...)
 {
   struct packet_chat_msg genmsg;
-  struct event_cache_players *players = NULL;
+  struct event_cache_players *players = nullptr;
   va_list args;
 
   va_start(args, format);
-  vpackage_event(&genmsg, NULL, event, color, format, args);
+  vpackage_event(&genmsg, nullptr, event, color, format, args);
   va_end(args);
 
   players_iterate(aplayer)
@@ -486,7 +487,7 @@ struct event_cache_players {
 };
 
 // The full list of the events.
-static struct event_cache_data_list *event_cache = NULL;
+static struct event_cache_data_list *event_cache = nullptr;
 
 /* Event cache status: ON(TRUE) / OFF(FALSE); used for saving the
  * event cache */
@@ -513,26 +514,26 @@ event_cache_data_new(const struct packet_chat_msg *packet, time_t timestamp,
   struct event_cache_data *pdata;
   int max_events;
 
-  if (NULL == event_cache) {
+  if (nullptr == event_cache) {
     /* Don't do log for this, because this could make an infinite
      * recursion. */
-    return NULL;
+    return nullptr;
   }
-  fc_assert_ret_val(NULL != packet, NULL);
+  fc_assert_ret_val(nullptr != packet, nullptr);
 
   if (packet->event == E_MESSAGE_WALL) {
     // No popups at save game load.
-    return NULL;
+    return nullptr;
   }
 
   if (!game.server.event_cache.chat && packet->event == E_CHAT_MSG) {
     // chat messages should _not_ be saved
-    return NULL;
+    return nullptr;
   }
 
   // check if cache is active
   if (!event_cache_status) {
-    return NULL;
+    return nullptr;
   }
 
   pdata = new event_cache_data;
@@ -562,7 +563,7 @@ event_cache_data_new(const struct packet_chat_msg *packet, time_t timestamp,
  */
 void event_cache_init()
 {
-  if (event_cache != NULL) {
+  if (event_cache != nullptr) {
     event_cache_free();
   }
   event_cache = event_cache_data_list_new_full(event_cache_data_free);
@@ -574,9 +575,9 @@ void event_cache_init()
  */
 void event_cache_free()
 {
-  if (event_cache != NULL) {
+  if (event_cache != nullptr) {
     event_cache_data_list_destroy(event_cache);
-    event_cache = NULL;
+    event_cache = nullptr;
   }
   event_cache_status = false;
 }
@@ -596,7 +597,7 @@ void event_cache_remove_old()
   // This assumes that entries are in order, the ones to be removed first.
   current = event_cache_data_list_get(event_cache, 0);
 
-  while (current != NULL
+  while (current != nullptr
          && current->packet.turn + game.server.event_cache.turns
                 <= game.info.turn) {
     event_cache_data_list_pop_front(event_cache);
@@ -610,8 +611,8 @@ void event_cache_remove_old()
 void event_cache_add_for_all(const struct packet_chat_msg *packet)
 {
   if (0 < game.server.event_cache.turns) {
-    (void) event_cache_data_new(packet, time(NULL), server_state(), ECT_ALL,
-                                NULL);
+    (void) event_cache_data_new(packet, time(nullptr), server_state(),
+                                ECT_ALL, nullptr);
   }
 }
 
@@ -622,22 +623,22 @@ void event_cache_add_for_global_observers(
     const struct packet_chat_msg *packet)
 {
   if (0 < game.server.event_cache.turns) {
-    (void) event_cache_data_new(packet, time(NULL), server_state(),
-                                ECT_GLOBAL_OBSERVERS, NULL);
+    (void) event_cache_data_new(packet, time(nullptr), server_state(),
+                                ECT_GLOBAL_OBSERVERS, nullptr);
   }
 }
 
 /**
    Add an event to the cache for one player.
 
-   N.B.: event_cache_add_for_player(&packet, NULL) will have the same effect
-         as event_cache_add_for_all(&packet).
-   N.B.: in pregame, this will never success, because players are not fixed.
+   N.B.: event_cache_add_for_player(&packet, nullptr) will have the same
+   effect as event_cache_add_for_all(&packet). N.B.: in pregame, this will
+   never success, because players are not fixed.
  */
 void event_cache_add_for_player(const struct packet_chat_msg *packet,
                                 const struct player *pplayer)
 {
-  if (NULL == pplayer) {
+  if (nullptr == pplayer) {
     event_cache_add_for_all(packet);
     return;
   }
@@ -646,9 +647,9 @@ void event_cache_add_for_player(const struct packet_chat_msg *packet,
       && (server_state() > S_S_INITIAL || !game.info.is_new_game)) {
     struct event_cache_data *pdata;
 
-    pdata = event_cache_data_new(packet, time(NULL), server_state(),
-                                 ECT_PLAYERS, NULL);
-    fc_assert_ret(NULL != pdata);
+    pdata = event_cache_data_new(packet, time(nullptr), server_state(),
+                                 ECT_PLAYERS, nullptr);
+    fc_assert_ret(nullptr != pdata);
     BV_SET(pdata->target, player_index(pplayer));
   }
 }
@@ -663,24 +664,24 @@ void event_cache_add_for_player(const struct packet_chat_msg *packet,
 void event_cache_add_for_players(const struct packet_chat_msg *packet,
                                  struct event_cache_players *players)
 {
-  if (0 < game.server.event_cache.turns && NULL != players
+  if (0 < game.server.event_cache.turns && nullptr != players
       && BV_ISSET_ANY(players->vector)
       && (server_state() > S_S_INITIAL || !game.info.is_new_game)) {
-    (void) event_cache_data_new(packet, time(NULL), server_state(),
+    (void) event_cache_data_new(packet, time(nullptr), server_state(),
                                 ECT_PLAYERS, players);
   }
 
-  if (NULL != players) {
+  if (nullptr != players) {
     delete players;
   }
 }
 
 /**
-   Select players for event_cache_add_for_players().  Pass NULL as players
+   Select players for event_cache_add_for_players().  Pass nullptr as players
    argument to create a new selection.  Usually the usage of this function
    would look to:
 
-   struct event_cache_players *players = NULL;
+   struct event_cache_players *players = nullptr;
 
    players_iterate(pplayer) {
      if (some_condition) {
@@ -694,12 +695,12 @@ struct event_cache_players *
 event_cache_player_add(struct event_cache_players *players,
                        const struct player *pplayer)
 {
-  if (NULL == players) {
+  if (nullptr == players) {
     players = new event_cache_players;
     BV_CLR_ALL(players->vector);
   }
 
-  if (NULL != pplayer) {
+  if (nullptr != pplayer) {
     BV_SET(players->vector, player_index(pplayer));
   }
 
@@ -727,7 +728,7 @@ static bool event_cache_match(const struct event_cache_data *pdata,
   case ECT_ALL:
     return include_public;
   case ECT_PLAYERS:
-    return (NULL != pplayer
+    return (nullptr != pplayer
             && BV_ISSET(pdata->target, player_index(pplayer)));
   case ECT_GLOBAL_OBSERVERS:
     return is_global_observer;
@@ -775,7 +776,7 @@ void event_cache_load(struct section_file *file, const char *section)
   struct packet_chat_msg packet;
   enum event_cache_target target_type;
   enum server_states server_status;
-  struct event_cache_players *players = NULL;
+  struct event_cache_players *players = nullptr;
   int i, x, y, event_count;
   time_t timestamp, now;
   const char *p, *q;
@@ -787,7 +788,7 @@ void event_cache_load(struct section_file *file, const char *section)
     return;
   }
 
-  now = time(NULL);
+  now = time(nullptr);
   for (i = 0; i < event_count; i++) {
     int turn;
     int phase;
@@ -800,7 +801,7 @@ void event_cache_load(struct section_file *file, const char *section)
     packet.conn_id = -1;
 
     p = secfile_lookup_str(file, "%s.events%d.event", section, i);
-    if (NULL == p) {
+    if (nullptr == p) {
       qDebug("[Event cache %4d] Missing event type.", i);
       continue;
     }
@@ -811,7 +812,7 @@ void event_cache_load(struct section_file *file, const char *section)
     }
 
     p = secfile_lookup_str(file, "%s.events%d.message", section, i);
-    if (NULL == p) {
+    if (nullptr == p) {
       qDebug("[Event cache %4d] Missing message.", i);
       continue;
     }
@@ -830,7 +831,7 @@ void event_cache_load(struct section_file *file, const char *section)
         file, now, "%s.events%d.timestamp", section, i);
 
     p = secfile_lookup_str(file, "%s.events%d.server_state", section, i);
-    if (NULL == p) {
+    if (nullptr == p) {
       qDebug("[Event cache %4d] Missing server state info.", i);
       continue;
     }
@@ -841,7 +842,7 @@ void event_cache_load(struct section_file *file, const char *section)
     }
 
     p = secfile_lookup_str(file, "%s.events%d.target", section, i);
-    if (NULL == p) {
+    if (nullptr == p) {
       qDebug("[Event cache %4d] Missing target info.", i);
       continue;
     } else if (0 == fc_strcasecmp(p, "All")) {
@@ -867,9 +868,9 @@ void event_cache_load(struct section_file *file, const char *section)
       }
       players_iterate_end;
 
-      if (!valid && NULL == players) {
+      if (!valid && nullptr == players) {
         qDebug("[Event cache %4d] invalid target bitmap: %s", i, p);
-        if (NULL != players) {
+        if (nullptr != players) {
           FC_FREE(players);
         }
       }
@@ -879,7 +880,7 @@ void event_cache_load(struct section_file *file, const char *section)
     (void) event_cache_data_new(&packet, timestamp, server_status,
                                 target_type, players);
 
-    if (NULL != players) {
+    if (nullptr != players) {
       // free the event cache player selection
       FC_FREE(players);
     }
@@ -906,7 +907,7 @@ void event_cache_save(struct section_file *file, const char *section)
     char *p;
     int tile_x = -1, tile_y = -1;
 
-    if (ptile != NULL) {
+    if (ptile != nullptr) {
       index_to_map_pos(&tile_x, &tile_y, tile_index(ptile));
     }
 

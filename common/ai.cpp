@@ -68,7 +68,7 @@ struct ai_type *ai_type_by_name(const char *search)
   }
   ai_type_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -79,7 +79,7 @@ struct ai_type *ai_type_alloc()
   if (ai_type_count >= FREECIV_AI_MOD_LAST) {
     qCritical(_("Too many AI modules. Max is %d."), FREECIV_AI_MOD_LAST);
 
-    return NULL;
+    return nullptr;
   }
 
   return get_ai_type(ai_type_count++);
@@ -100,22 +100,22 @@ int ai_type_get_count() { return ai_type_count; }
  */
 const char *ai_name(const struct ai_type *ai)
 {
-  fc_assert_ret_val(ai, NULL);
+  fc_assert_ret_val(ai, nullptr);
   return ai->name;
 }
 
 /**
    Return usable ai type name, if possible. This is either the name
-   given as parameter or some fallback name for it. NULL is returned if
+   given as parameter or some fallback name for it. nullptr is returned if
    no name matches.
  */
 const char *ai_type_name_or_fallback(const char *orig_name)
 {
-  if (orig_name == NULL) {
-    return NULL;
+  if (orig_name == nullptr) {
+    return nullptr;
   }
 
-  if (ai_type_by_name(orig_name) != NULL) {
+  if (ai_type_by_name(orig_name) != nullptr) {
     return orig_name;
   }
 
@@ -126,5 +126,5 @@ const char *ai_type_name_or_fallback(const char *orig_name)
     return ai_name(fb);
   }
 
-  return NULL;
+  return nullptr;
 }

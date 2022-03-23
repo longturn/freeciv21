@@ -64,7 +64,7 @@
  */
 static void signal_handler(int sig)
 {
-  static civtimer *timer = NULL;
+  static civtimer *timer = nullptr;
 
   switch (sig) {
   case SIGINT:

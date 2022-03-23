@@ -55,7 +55,8 @@ bool rectangle_active = false;
 bool tiles_hilited_cities = false;
 
 // The mapcanvas clipboard
-struct universal clipboard = {.value = {.building = NULL}, .kind = VUT_NONE};
+struct universal clipboard = {.value = {.building = nullptr},
+                              .kind = VUT_NONE};
 
 // Goto with drag and drop.
 bool keyboardless_goto_button_down = false;
@@ -63,7 +64,7 @@ bool keyboardless_goto_active = false;
 struct tile *keyboardless_goto_start_tile;
 
 // Update the workers for a city on the map, when the update is received
-struct city *city_workers_display = NULL;
+struct city *city_workers_display = nullptr;
 
 /*************************************************************************/
 
@@ -148,7 +149,7 @@ static void define_tiles_within_rectangle(bool append)
       /*  Tile passed all tests; process it.
        */
       pcity = tile_city(ptile);
-      if (pcity != NULL && city_owner(pcity) == client_player()) {
+      if (pcity != nullptr && city_owner(pcity) == client_player()) {
         mapdeco_set_highlight(ptile, true);
         found_any_cities = tiles_hilited_cities = true;
       }
@@ -186,7 +187,7 @@ void update_selection_rectangle(float canvas_x, float canvas_y)
 {
   const int W = tileset_tile_width(tileset), half_W = W / 2;
   const int H = tileset_tile_height(tileset), half_H = H / 2;
-  static struct tile *rec_tile = NULL;
+  static struct tile *rec_tile = nullptr;
   int diff_x, diff_y;
   struct tile *center_tile;
   struct tile *ptile;
@@ -386,13 +387,13 @@ void clipboard_paste_production(struct city *pcity)
   if (!can_client_issue_orders()) {
     return;
   }
-  if (NULL == clipboard.value.building) {
+  if (nullptr == clipboard.value.building) {
     create_event(city_tile(pcity), E_BAD_COMMAND, ftc_client,
                  _("Clipboard is empty."));
     return;
   }
   if (!tiles_hilited_cities) {
-    if (NULL != pcity && city_owner(pcity) == client.conn.playing) {
+    if (nullptr != pcity && city_owner(pcity) == client.conn.playing) {
       clipboard_send_production_packet(pcity);
     }
     return;
@@ -448,7 +449,7 @@ void release_goto_button(int canvas_x, int canvas_y)
   }
   keyboardless_goto_active = false;
   keyboardless_goto_button_down = false;
-  keyboardless_goto_start_tile = NULL;
+  keyboardless_goto_start_tile = nullptr;
 }
 
 /**
@@ -485,7 +486,7 @@ bool can_end_turn()
   struct option *opt;
 
   opt = optset_option_by_name(server_optset, "fixedlength");
-  if (opt != NULL && option_bool_get(opt)) {
+  if (opt != nullptr && option_bool_get(opt)) {
     return false;
   }
 
@@ -548,15 +549,15 @@ void adjust_workers_button_pressed(int canvas_x, int canvas_y)
 {
   struct tile *ptile = canvas_pos_to_tile(canvas_x, canvas_y);
 
-  if (NULL != ptile && can_client_issue_orders()) {
+  if (nullptr != ptile && can_client_issue_orders()) {
     struct city *pcity = find_city_near_tile(ptile);
 
-    if (pcity && !cma_is_city_under_agent(pcity, NULL)) {
+    if (pcity && !cma_is_city_under_agent(pcity, nullptr)) {
       int city_x, city_y;
 
       fc_assert_ret(city_base_to_city_map(&city_x, &city_y, pcity, ptile));
 
-      if (NULL != tile_worked(ptile) && tile_worked(ptile) == pcity) {
+      if (nullptr != tile_worked(ptile) && tile_worked(ptile) == pcity) {
         dsend_packet_city_make_specialist(&client.conn, pcity->id,
                                           ptile->index);
       } else if (city_can_work_tile(pcity, ptile)) {

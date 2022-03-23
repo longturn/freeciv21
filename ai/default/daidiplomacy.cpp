@@ -104,7 +104,8 @@ static void dai_diplo_notify(struct player *pplayer, const char *text, ...)
     struct packet_chat_msg packet;
 
     va_start(ap, text);
-    vpackage_event(&packet, NULL, E_DIPLOMACY, ftc_chat_private, text, ap);
+    vpackage_event(&packet, nullptr, E_DIPLOMACY, ftc_chat_private, text,
+                   ap);
     va_end(ap);
 
     lsend_packet_chat_msg(dest, &packet);
@@ -284,7 +285,7 @@ get_allied_with_enemy_player(const struct player *us,
     }
   }
   players_iterate_alive_end;
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -537,7 +538,7 @@ static int dai_goldequiv_clause(struct ai_type *ait, struct player *pplayer,
     } else {
       worth = city_gold_worth(offer);
     }
-    if (offer != NULL) {
+    if (offer != nullptr) {
       DIPLO_LOG(ait, LOG_DEBUG, pplayer, aplayer, "worth of %s is %d",
                 city_name_get(offer), worth);
     }
@@ -790,8 +791,8 @@ void dai_treaty_accepted(struct ai_type *ait, struct player *pplayer,
 static int dai_war_desire(struct ai_type *ait, struct player *pplayer,
                           struct player *target)
 {
-  struct ai_plr *ai = dai_plr_data_get(ait, pplayer, NULL);
-  struct adv_data *adv = adv_data_get(pplayer, NULL);
+  struct ai_plr *ai = dai_plr_data_get(ait, pplayer, nullptr);
+  struct adv_data *adv = adv_data_get(pplayer, nullptr);
   int want = 0, fear = 0, distance = 0, settlers = 0, cities = 0;
   struct player_spaceship *ship = &target->spaceship;
 
@@ -1016,11 +1017,11 @@ void dai_diplomacy_first_contact(struct ai_type *ait, struct player *pplayer,
 void dai_diplomacy_begin_new_phase(struct ai_type *ait,
                                    struct player *pplayer)
 {
-  struct ai_plr *ai = dai_plr_data_get(ait, pplayer, NULL);
-  struct adv_data *adv = adv_data_get(pplayer, NULL);
+  struct ai_plr *ai = dai_plr_data_get(ait, pplayer, nullptr);
+  struct adv_data *adv = adv_data_get(pplayer, nullptr);
   int war_desire[player_slot_count()];
   int best_desire = 0;
-  struct player *best_target = NULL;
+  struct player *best_target = nullptr;
 
   fc_assert_ret(is_ai(pplayer));
 
@@ -1111,7 +1112,7 @@ void dai_diplomacy_begin_new_phase(struct ai_type *ait,
     amount -=
         MIN(player_in_territory(pplayer, aplayer) * (MAX_AI_LOVE / 200),
             ai->diplomacy.love_incr
-                * ((adip->is_allied_with_enemy != NULL) + 1));
+                * ((adip->is_allied_with_enemy != nullptr) + 1));
     pplayer->ai_common.love[player_index(aplayer)] += amount;
     if (amount != 0) {
       DIPLO_LOG(ait, LOG_DEBUG, pplayer, aplayer,
@@ -1248,7 +1249,7 @@ static void clear_old_treaty(struct player *pplayer, struct player *aplayer)
 {
   struct Treaty *old_treaty = find_treaty(pplayer, aplayer);
 
-  if (old_treaty != NULL) {
+  if (old_treaty != nullptr) {
     // Remove existing clauses
     clause_list_iterate(old_treaty->clauses, pclause)
     {
@@ -1552,9 +1553,9 @@ static void war_countdown(struct ai_type *ait, struct player *pplayer,
  */
 void dai_diplomacy_actions(struct ai_type *ait, struct player *pplayer)
 {
-  struct ai_plr *ai = dai_plr_data_get(ait, pplayer, NULL);
+  struct ai_plr *ai = dai_plr_data_get(ait, pplayer, nullptr);
   bool need_targets = true;
-  struct player *target = NULL;
+  struct player *target = nullptr;
   int most_hatred = MAX_AI_LOVE;
   int war_threshold;
   int aggr;
@@ -1589,7 +1590,7 @@ void dai_diplomacy_actions(struct ai_type *ait, struct player *pplayer)
   /*** Stop other players from winning by space race ***/
 
   if (ai->diplomacy.strategy != WIN_SPACE) {
-    struct adv_data *adv = adv_data_get(pplayer, NULL);
+    struct adv_data *adv = adv_data_get(pplayer, nullptr);
 
     players_iterate_alive(aplayer)
     {
@@ -1808,7 +1809,7 @@ void dai_diplomacy_actions(struct ai_type *ait, struct player *pplayer)
         if (adip->at_war_with_ally) {
           break;
         }
-        target = NULL;
+        target = nullptr;
         players_iterate(eplayer)
         {
           if (WAR(pplayer, eplayer) && !pplayers_at_war(aplayer, eplayer)) {

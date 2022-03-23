@@ -65,7 +65,7 @@ bool comments_load()
   }
 
   comment_file = secfile_load(fullpath, false);
-  if (comment_file == NULL) {
+  if (comment_file == nullptr) {
     return false;
   }
 
@@ -135,7 +135,7 @@ void comments_free() { free(comments_storage.file_header); }
 static void comment_write(struct section_file *sfile, const char *comment,
                           const char *name)
 {
-  if (comment == NULL) {
+  if (comment == nullptr) {
     qCritical("Comment for %s missing.", name);
     return;
   }

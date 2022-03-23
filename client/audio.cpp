@@ -46,8 +46,8 @@ received a copy of the GNU General Public License along with Freeciv21.
 #define MUSICSPEC_CAPSTR "+Freeciv-2.6-musicset"
 
 // keep it open throughout
-static struct section_file *ss_tagfile = NULL;
-static struct section_file *ms_tagfile = NULL;
+static struct section_file *ss_tagfile = nullptr;
+static struct section_file *ms_tagfile = nullptr;
 
 static struct audio_plugin plugins[MAX_NUM_PLUGINS];
 static int num_plugins_used = 0;
@@ -87,12 +87,12 @@ const QVector<QString> *get_soundplugin_list(const struct option *poption)
    Returns a static string vector of audiosets of given type available
    on the system by searching all data directories for files matching
    suffix.
-   The list is NULL-terminated.
+   The list is nullptr-terminated.
  */
 static const QVector<QString> *
 get_audio_speclist(const char *suffix, QVector<QString> **audio_list)
 {
-  if (NULL == *audio_list) {
+  if (nullptr == *audio_list) {
     *audio_list = fileinfolist(get_data_dirs(), suffix);
   }
 
@@ -104,7 +104,7 @@ get_audio_speclist(const char *suffix, QVector<QString> **audio_list)
  */
 const QVector<QString> *get_soundset_list(const struct option *poption)
 {
-  static QVector<QString> *sound_list = NULL;
+  static QVector<QString> *sound_list = nullptr;
 
   return get_audio_speclist(SNDSPEC_SUFFIX, &sound_list);
 }
@@ -114,7 +114,7 @@ const QVector<QString> *get_soundset_list(const struct option *poption)
  */
 const QVector<QString> *get_musicset_list(const struct option *poption)
 {
-  static QVector<QString> *music_list = NULL;
+  static QVector<QString> *music_list = nullptr;
 
   return get_audio_speclist(MUSICSPEC_SUFFIX, &music_list);
 }
@@ -200,7 +200,7 @@ void audio_init()
 }
 
 /**
-   Returns the filename for the given audio set. Returns NULL if
+   Returns the filename for the given audio set. Returns nullptr if
    set couldn't be found. Caller has to free the return value.
  */
 static const QString audiospec_fullname(const QString &audioset_name,
@@ -220,7 +220,7 @@ static const QString audiospec_fullname(const QString &audioset_name,
 
   if (audioset_name == audioset_default) {
     // avoid endless recursion
-    return NULL;
+    return nullptr;
   }
 
   qCritical("Couldn't find audioset \"%s\", trying \"%s\".",
@@ -240,7 +240,7 @@ static bool check_audiofile_capstr(struct section_file *sfile,
   const char *file_capstr;
 
   file_capstr = secfile_lookup_str(sfile, "%s", qUtf8Printable(*opt_path));
-  if (NULL == file_capstr) {
+  if (nullptr == file_capstr) {
     qFatal("Audio spec-file \"%s\" doesn't have capability string.",
            qUtf8Printable(*filename));
     exit(EXIT_FAILURE);
@@ -279,8 +279,8 @@ void audio_real_init(const QString &soundset_name,
   if (preferred_plugin_name == QLatin1String("none")) {
     // We explicitly choose none plugin, silently skip the code below
     qDebug("Proceeding with sound support disabled.");
-    ss_tagfile = NULL;
-    ms_tagfile = NULL;
+    ss_tagfile = nullptr;
+    ms_tagfile = nullptr;
     return;
   }
   if (num_plugins_used == 1) {
@@ -289,8 +289,8 @@ void audio_real_init(const QString &soundset_name,
     qInfo(_("Proceeding with sound support disabled."));
     qInfo(_("For sound support, install SDL2_mixer"));
     qInfo("http://www.libsdl.org/projects/SDL_mixer/index.html");
-    ss_tagfile = NULL;
-    ms_tagfile = NULL;
+    ss_tagfile = nullptr;
+    ms_tagfile = nullptr;
     return;
   }
   if (soundset_name.isEmpty()) {
@@ -312,8 +312,8 @@ void audio_real_init(const QString &soundset_name,
     qInfo(_("Get sound sets from the Modpack Installer "
             "(freeciv21-modpack-qt) program."));
     qInfo(_("Proceeding with sound support disabled."));
-    ss_tagfile = NULL;
-    ms_tagfile = NULL;
+    ss_tagfile = nullptr;
+    ms_tagfile = nullptr;
     return;
   }
   ss_tagfile = secfile_load(ss_filename, true);
@@ -410,7 +410,7 @@ static int audio_play_tag(struct section_file *sfile, const QString &tag,
 {
   QString soundfile;
   QString fullpath;
-  audio_finished_callback cb = NULL;
+  audio_finished_callback cb = nullptr;
   int ret = 0;
 
   if (tag.isEmpty() || (tag == QLatin1String("-"))) {
@@ -514,7 +514,7 @@ void audio_play_sound(const QString &tag, const QString &alt_tag)
       alt_tag.isEmpty() ? QStringLiteral("(null)") : alt_tag;
 
   if (gui_options.sound_enable_effects) {
-    fc_assert_ret(tag != NULL);
+    fc_assert_ret(tag != nullptr);
 
     log_debug("audio_play_sound('%s', '%s')", qUtf8Printable(tag),
               qUtf8Printable(pretty_alt_tag));
@@ -537,7 +537,7 @@ static void real_audio_play_music(const QString &tag, const QString &alt_tag,
 {
   QString pretty_alt_tag = alt_tag.isEmpty() ? ("(null)") : alt_tag;
 
-  fc_assert_ret(tag != NULL);
+  fc_assert_ret(tag != nullptr);
 
   log_debug("audio_play_music('%s', '%s')", qUtf8Printable(tag),
             qUtf8Printable(pretty_alt_tag));
@@ -618,17 +618,17 @@ void audio_shutdown()
   // avoid infinite loop at end of game
   audio_stop();
 
-  audio_play_sound(QStringLiteral("e_game_quit"), NULL);
+  audio_play_sound(QStringLiteral("e_game_quit"), nullptr);
   plugins[selected_plugin].wait();
   plugins[selected_plugin].shutdown();
 
-  if (NULL != ss_tagfile) {
+  if (nullptr != ss_tagfile) {
     secfile_destroy(ss_tagfile);
-    ss_tagfile = NULL;
+    ss_tagfile = nullptr;
   }
-  if (NULL != ms_tagfile) {
+  if (nullptr != ms_tagfile) {
     secfile_destroy(ms_tagfile);
-    ms_tagfile = NULL;
+    ms_tagfile = nullptr;
   }
 }
 

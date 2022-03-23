@@ -161,7 +161,7 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
  */
 int connect_to_server(const QUrl &url, char *errbuf, int errbufsize)
 {
-  if (errbufsize > 0 && errbuf != NULL) {
+  if (errbufsize > 0 && errbuf != nullptr) {
     errbuf[0] = '\0';
   }
 
@@ -231,7 +231,7 @@ void disconnect_from_server()
   output_window_append(ftc_client, _("Disconnected from server."));
 
   if (gui_options.save_options_on_exit) {
-    options_save(NULL);
+    options_save(nullptr);
   }
 }
 
@@ -302,7 +302,7 @@ void input_from_server(QTcpSocket *sock)
       enum packet_type type;
       void *packet = get_packet_from_connection(&client.conn, &type);
 
-      if (NULL != packet) {
+      if (nullptr != packet) {
         client_packet_input(packet, type);
         ::operator delete(packet);
 

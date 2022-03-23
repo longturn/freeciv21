@@ -29,5 +29,5 @@ const char *fc_git_revision();
 const char *fc_comparable_version();
 const char *freeciv_datafile_version();
 
-// If returns NULL, not a beta version.
+// If returns nullptr, not a beta version.
 const char *beta_message();

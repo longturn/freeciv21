@@ -194,7 +194,8 @@ class choice_dialog : public QWidget {
 
 public:
   choice_dialog(const QString title, const QString text,
-                QWidget *parent = NULL, void (*run_on_close_in)(int) = NULL);
+                QWidget *parent = nullptr,
+                void (*run_on_close_in)(int) = nullptr);
   ~choice_dialog() override;
   void set_layout();
   void add_item(QString title, pfcn_void func, QVariant data1,
@@ -216,7 +217,7 @@ private slots:
   void next_unit();
 };
 
-void popup_revolution_dialog(struct government *government = NULL);
+void popup_revolution_dialog(struct government *government = nullptr);
 void revolution_response(struct government *government);
 void popup_upgrade_dialog(struct unit_list *punits);
 void popup_disband_dialog(struct unit_list *punits);

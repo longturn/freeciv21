@@ -32,8 +32,9 @@
 
 bool sg_success;
 
-static const char *special_names[] = {
-    "Irrigation", "Mine", "Pollution", "Hut", "Farmland", "Fallout", NULL};
+static const char *special_names[] = {"Irrigation", "Mine",     "Pollution",
+                                      "Hut",        "Farmland", "Fallout",
+                                      nullptr};
 
 /*
   For each savefile format after 2.3.0, compatibility functions are defined
@@ -110,19 +111,19 @@ struct compatibility {
  * - compat_load_030100 to load old savegame. */
 static struct compatibility compat[] = {
     // dummy; equal to the current version (last element)
-    {0, NULL, NULL},
+    {0, nullptr, nullptr},
     // version 1 and 2 is not used
     /* version 3: first savegame2 format, so no compat functions for
      * translation from previous format */
-    {3, NULL, NULL},
+    {3, nullptr, nullptr},
     // version 4 to 9 are reserved for possible changes in 2.3.x
-    {10, compat_load_020400, NULL},
+    {10, compat_load_020400, nullptr},
     // version 11 to 19 are reserved for possible changes in 2.4.x
-    {20, compat_load_020500, NULL},
+    {20, compat_load_020500, nullptr},
     // version 21 to 29 are reserved for possible changes in 2.5.x
-    {30, compat_load_020600, NULL},
+    {30, compat_load_020600, nullptr},
     // version 31 to 39 are reserved for possible changes in 2.6.x
-    {40, compat_load_030000, NULL},
+    {40, compat_load_030000, nullptr},
     // version 41 to 49 are reserved for possible changes in 3.0.x
     {50, compat_load_030100, compat_post_load_030100},
     /* Current savefile version is listed above this line; it corresponds to
@@ -164,7 +165,7 @@ void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
 #endif // FREECIV_DEBUG
 
   for (i = 0; i < compat_num; i++) {
-    if (loading->version < compat[i].version && compat[i].load != NULL) {
+    if (loading->version < compat[i].version && compat[i].load != nullptr) {
       qInfo(_("Run compatibility function for version: <%d "
               "(save file: %d; server: %d)."),
             compat[i].version, loading->version,
@@ -200,7 +201,7 @@ void sg_load_post_load_compat(struct loaddata *loading,
 
   for (i = 0; i < compat_num; i++) {
     if (loading->version < compat[i].version
-        && compat[i].post_load != NULL) {
+        && compat[i].post_load != nullptr) {
       qInfo(_("Run post load compatibility function for version: <%d "
               "(save file: %d; server: %d)."),
             compat[i].version, loading->version,
@@ -251,7 +252,7 @@ int ascii_hex2bin(char ch, int halfbyte)
 
   pch = strchr(hex_chars, ch);
 
-  sg_failure_ret_val(NULL != pch && '\0' != ch, 0,
+  sg_failure_ret_val(nullptr != pch && '\0' != ch, 0,
                      "Unknown hex value: '%c' %d", ch, ch);
   return (pch - hex_chars) << (halfbyte * 4);
 }
@@ -269,8 +270,8 @@ int char2num(char ch)
 
   pch = strchr(num_chars, ch);
 
-  sg_failure_ret_val(NULL != pch, 0, "Unknown ascii value for num: '%c' %d",
-                     ch, ch);
+  sg_failure_ret_val(nullptr != pch, 0,
+                     "Unknown ascii value for num: '%c' %d", ch, ch);
 
   return pch - num_chars;
 }
@@ -282,7 +283,7 @@ enum tile_special_type special_by_rule_name(const char *name)
 {
   int i;
 
-  for (i = 0; special_names[i] != NULL; i++) {
+  for (i = 0; special_names[i] != nullptr; i++) {
     if (!strcmp(name, special_names[i])) {
       return static_cast<tile_special_type>(i);
     }
@@ -313,11 +314,11 @@ struct extra_type *special_extra_get(int spe)
     return extra_type_list_get(elist, spe);
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /**
-   Return the resource type matching the identifier, or NULL when none
+   Return the resource type matching the identifier, or nullptr when none
  matches.
  */
 struct extra_type *resource_by_identifier(const char identifier)
@@ -330,7 +331,7 @@ struct extra_type *resource_by_identifier(const char identifier)
   }
   extra_type_by_cause_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /* =======================================================================
@@ -353,7 +354,8 @@ static void compat_load_020400(struct loaddata *loading,
   {
     int ncities, i, plrno = player_slot_index(pslot);
 
-    if (NULL == secfile_section_lookup(loading->file, "player%d", plrno)) {
+    if (nullptr
+        == secfile_section_lookup(loading->file, "player%d", plrno)) {
       continue;
     }
 
@@ -429,7 +431,7 @@ static void compat_load_020400(struct loaddata *loading,
         for (l = 0; l < lines; l++) {
           for (j = 0; j < 8; j++) {
             const char *s = secfile_lookup_str_default(
-                loading->file, NULL, "map.k%02d_%04d", l * 8 + j, y);
+                loading->file, nullptr, "map.k%02d_%04d", l * 8 + j, y);
             if (s) {
               found = true;
               if (xsize == 0) {
@@ -566,7 +568,7 @@ static const char *killcitizen_enum_str(secfile_data_t data, int bit)
     return "BOTH";
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -621,7 +623,7 @@ static void compat_load_020500(struct loaddata *loading,
           int value;
 
           if (secfile_lookup_enum_data(loading->file, &value, true,
-                                       killcitizen_enum_str, NULL,
+                                       killcitizen_enum_str, nullptr,
                                        "settings.set%d.value", i)) {
             /* Lowest bit of old killcitizen value indicates if
              * land units should kill citizens. We take that as
@@ -638,7 +640,7 @@ static void compat_load_020500(struct loaddata *loading,
           }
           if (gamestart_valid) {
             if (secfile_lookup_enum_data(loading->file, &value, true,
-                                         killcitizen_enum_str, NULL,
+                                         killcitizen_enum_str, nullptr,
                                          "settings.set%d.gamestart", i)) {
               /* Lowest bit of old killcitizen value indicates if
                * land units should kill citizens. We take that as
@@ -946,7 +948,8 @@ static void compat_load_020600(struct loaddata *loading,
     int score;
     int units_num;
 
-    if (NULL == secfile_section_lookup(loading->file, "player%d", plrno)) {
+    if (nullptr
+        == secfile_section_lookup(loading->file, "player%d", plrno)) {
       continue;
     }
 
@@ -1083,7 +1086,8 @@ static void compat_load_020600(struct loaddata *loading,
     int ncities;
     int i;
 
-    if (NULL == secfile_section_lookup(loading->file, "player%d", plrno)) {
+    if (nullptr
+        == secfile_section_lookup(loading->file, "player%d", plrno)) {
       continue;
     }
 
@@ -1139,7 +1143,8 @@ static void compat_load_020600(struct loaddata *loading,
       const char *sval;
       int j;
 
-      if (secfile_section_lookup(loading->file, "player%d", plrno) == NULL) {
+      if (secfile_section_lookup(loading->file, "player%d", plrno)
+          == nullptr) {
         continue;
       }
 
@@ -1232,7 +1237,8 @@ static void compat_load_020600(struct loaddata *loading,
   {
     int plrno = player_slot_index(pslot);
 
-    if (NULL == secfile_section_lookup(loading->file, "player%d", plrno)) {
+    if (nullptr
+        == secfile_section_lookup(loading->file, "player%d", plrno)) {
       continue;
     }
 
@@ -1243,7 +1249,7 @@ static void compat_load_020600(struct loaddata *loading,
       int current;
       int closest;
 
-      if (NULL == secfile_section_lookup(loading->file, "player%d", i)) {
+      if (nullptr == secfile_section_lookup(loading->file, "player%d", i)) {
         continue;
       }
 
@@ -1343,7 +1349,8 @@ static void compat_load_030000(struct loaddata *loading,
     int plrno = player_slot_index(pslot);
     const char *flag_names[1];
 
-    if (secfile_section_lookup(loading->file, "player%d", plrno) == NULL) {
+    if (secfile_section_lookup(loading->file, "player%d", plrno)
+        == nullptr) {
       continue;
     }
 
@@ -1456,7 +1463,8 @@ static void insert_server_side_agent(struct loaddata *loading,
     int units_num;
     int plrno = player_slot_index(pslot);
 
-    if (secfile_section_lookup(loading->file, "player%d", plrno) == NULL) {
+    if (secfile_section_lookup(loading->file, "player%d", plrno)
+        == nullptr) {
       continue;
     }
 
@@ -1469,7 +1477,7 @@ static void insert_server_side_agent(struct loaddata *loading,
 
       if (secfile_section_lookup(
               loading->file, "player%d.u%d.server_side_agent", plrno, unit)
-          != NULL) {
+          != nullptr) {
         // Already updated?
         continue;
       }
@@ -1512,7 +1520,8 @@ static void compat_load_030100(struct loaddata *loading,
     int units_num;
     int plrno = player_slot_index(pslot);
 
-    if (secfile_section_lookup(loading->file, "player%d", plrno) == NULL) {
+    if (secfile_section_lookup(loading->file, "player%d", plrno)
+        == nullptr) {
       continue;
     }
 
@@ -1686,7 +1695,7 @@ static void upgrade_unit_order_targets(struct unit *act_unit)
     if (order->order == ORDER_PERFORM_ACTION && order->target != NO_TARGET) {
       // The target is already specified in the new format.
       tgt_tile = index_to_tile(&(wld.map), order->target);
-      fc_assert(tgt_tile != NULL);
+      fc_assert(tgt_tile != nullptr);
       return;
     }
 
@@ -1760,7 +1769,7 @@ static void compat_post_load_030100(struct loaddata *loading,
         }
 
         fc_assert_action(punit->orders.length == 0
-                             || punit->orders.list != NULL,
+                             || punit->orders.list != nullptr,
                          continue);
 
         for (i = 0; i < punit->orders.length; i++) {
@@ -1899,7 +1908,8 @@ static void compat_load_dev(struct loaddata *loading)
       int units_num;
       int plrno = player_slot_index(pslot);
 
-      if (secfile_section_lookup(loading->file, "player%d", plrno) == NULL) {
+      if (secfile_section_lookup(loading->file, "player%d", plrno)
+          == nullptr) {
         continue;
       }
 
@@ -1930,7 +1940,8 @@ static void compat_load_dev(struct loaddata *loading)
       int units_num;
       int plrno = player_slot_index(pslot);
 
-      if (secfile_section_lookup(loading->file, "player%d", plrno) == NULL) {
+      if (secfile_section_lookup(loading->file, "player%d", plrno)
+          == nullptr) {
         continue;
       }
 
@@ -2024,7 +2035,8 @@ static void compat_load_dev(struct loaddata *loading)
       int units_num;
       int plrno = player_slot_index(pslot);
 
-      if (secfile_section_lookup(loading->file, "player%d", plrno) == NULL) {
+      if (secfile_section_lookup(loading->file, "player%d", plrno)
+          == nullptr) {
         continue;
       }
 
@@ -2076,7 +2088,8 @@ static void compat_load_dev(struct loaddata *loading)
       int city_num;
       int plrno = player_slot_index(pslot);
 
-      if (secfile_section_lookup(loading->file, "player%d", plrno) == NULL) {
+      if (secfile_section_lookup(loading->file, "player%d", plrno)
+          == nullptr) {
         continue;
       }
 
@@ -2165,7 +2178,7 @@ static void compat_post_load_dev(struct loaddata *loading)
         }
 
         fc_assert_action(punit->orders.length == 0
-                             || punit->orders.list != NULL,
+                             || punit->orders.list != nullptr,
                          continue);
 
         for (i = 0; i < punit->orders.length; i++) {

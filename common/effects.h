@@ -317,7 +317,7 @@
 struct effect {
   enum effect_type type;
 
-  // pointer to multipliers (NULL means that this effect has no multiplier
+  // pointer to multipliers (nullptr means that this effect has no multiplier
   struct multiplier *multiplier;
 
   /* The "value" of the effect.  The meaning of this varies between

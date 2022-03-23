@@ -41,7 +41,7 @@ void caravan_parameter_init_default(struct caravan_parameter *parameter)
   parameter->allow_foreign_trade = FTL_NATIONAL_ONLY;
   parameter->ignore_transit_time = false;
   parameter->convert_trade = false;
-  parameter->callback = NULL;
+  parameter->callback = nullptr;
 }
 
 /**
@@ -92,7 +92,7 @@ bool caravan_parameter_is_legal(const struct caravan_parameter *parameter)
  */
 void caravan_result_init_zero(struct caravan_result *result)
 {
-  result->src = result->dest = NULL;
+  result->src = result->dest = nullptr;
   result->arrival_time = 0;
   result->value = 0;
   result->help_wonder = false;
@@ -113,7 +113,7 @@ static void caravan_result_init(struct caravan_result *result,
 
   result->value = 0;
   result->help_wonder = false;
-  if ((src != NULL) && (dest != NULL)) {
+  if ((src != nullptr) && (dest != nullptr)) {
     result->required_boat =
         tile_continent(src->tile) != tile_continent(dest->tile);
   } else {
@@ -209,7 +209,7 @@ static double windfall_benefit(const struct unit *caravan,
     bool can_establish = (unit_can_do_action(caravan, ACTION_TRADE_ROUTE)
                           && can_establish_trade_route(src, dest));
     int bonus = get_caravan_enter_city_trade_bonus(
-        src, dest, unit_owner(caravan), NULL, can_establish);
+        src, dest, unit_owner(caravan), nullptr, can_establish);
 
     // bonus goes to both sci and gold.
     bonus *= 2;
@@ -243,7 +243,7 @@ static int one_city_trade_benefit(const struct city *pcity,
     losttrade = 0;
   } else {
     struct trade_route_list *would_remove =
-        (countloser ? trade_route_list_new() : NULL);
+        (countloser ? trade_route_list_new() : nullptr);
     int oldtrade = city_trade_removable(pcity, would_remove);
 
     /* if we own the city, the trade benefit is only by how much
@@ -599,7 +599,7 @@ static void caravan_find_best_destination_notransit(
   struct city *pcity = game_city_by_number(caravan->homecity);
   struct player *src_owner = city_owner(pcity);
 
-  caravan_result_init(best, pcity, NULL, 0);
+  caravan_result_init(best, pcity, nullptr, 0);
   current = *best;
 
   players_iterate(dest_owner)
@@ -662,7 +662,7 @@ static void caravan_find_best_destination_withtransit(
   data.param = param;
   data.caravan = caravan;
   data.best = result;
-  caravan_result_init(data.best, src, NULL, 0);
+  caravan_result_init(data.best, src, nullptr, 0);
 
   if (src->id != caravan->homecity) {
     start_tile = src->tile;
@@ -690,7 +690,7 @@ void caravan_find_best_destination(const struct unit *caravan,
   } else {
     const struct city *src = game_city_by_number(caravan->homecity);
 
-    fc_assert(src != NULL);
+    fc_assert(src != nullptr);
 
     caravan_find_best_destination_withtransit(
         caravan, parameter, src, 0, caravan->moves_left, omniscient, result);

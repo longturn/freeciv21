@@ -213,7 +213,7 @@ char *city_production_cost_str(const struct city *pcity)
 /**
    Find the city dialog city production text for the given city, and
    place it into the buffer.  This will check the
-   concise_city_production option.  pcity may be NULL; in this case a
+   concise_city_production option.  pcity may be nullptr; in this case a
    filler string is returned.
  */
 void get_city_dialog_production(struct city *pcity, char *buffer,
@@ -222,7 +222,7 @@ void get_city_dialog_production(struct city *pcity, char *buffer,
   char time_str[50], *cost_str;
   int turns, stock;
 
-  if (pcity == NULL) {
+  if (pcity == nullptr) {
     /*
      * Some GUIs use this to build a "filler string" so that they can
      * properly size the widget to hold the string.  This has some
@@ -402,7 +402,7 @@ static void fc__attribute((__format__(__printf__, 3, 4)))
   va_end(args);
 
   // Descriptions will be freed individually, so need to strdup
-  city_sum_add_real(sum, value, false, NULL, 0, desc, desc);
+  city_sum_add_real(sum, value, false, nullptr, 0, desc, desc);
 }
 
 /**
@@ -425,7 +425,7 @@ static void fc__attribute((__format__(__printf__, 3, 4)))
   va_end(args);
 
   // Descriptions will be freed individually, so need to strdup
-  city_sum_add_real(sum, value, true, NULL, 0, desc, desc);
+  city_sum_add_real(sum, value, true, nullptr, 0, desc, desc);
 }
 
 /**
@@ -707,7 +707,7 @@ void get_city_dialog_illness_text(const struct city *pcity, char *buf,
 
   plist = effect_list_new();
 
-  (void) get_city_bonus_effects(plist, pcity, NULL, EFT_HEALTH_PCT);
+  (void) get_city_bonus_effects(plist, pcity, nullptr, EFT_HEALTH_PCT);
 
   effect_list_iterate(plist, peffect)
   {
@@ -793,7 +793,7 @@ void get_city_dialog_culture_text(const struct city *pcity, char *buf,
 
   plist = effect_list_new();
 
-  (void) get_city_bonus_effects(plist, pcity, NULL, EFT_PERFORMANCE);
+  (void) get_city_bonus_effects(plist, pcity, nullptr, EFT_PERFORMANCE);
 
   effect_list_iterate(plist, peffect)
   {
@@ -1225,7 +1225,7 @@ bool city_can_buy(const struct city *pcity)
   /* See really_handle_city_buy() in the server.  However this function
    * doesn't allow for error messages.  It doesn't check the cost of
    * buying; that's handled separately (and with an error message). */
-  return (can_client_issue_orders() && NULL != pcity
+  return (can_client_issue_orders() && nullptr != pcity
           && city_owner(pcity) == client.conn.playing
           && pcity->turn_founded != game.info.turn && !pcity->did_buy
           && (VUT_UTYPE == pcity->production.kind
@@ -1277,11 +1277,11 @@ int city_toggle_worker(struct city *pcity, int city_x, int city_y)
   city_radius_sq = city_map_radius_sq_get(pcity);
   fc_assert(is_valid_city_coords(city_radius_sq, city_x, city_y));
   ptile = city_map_to_tile(city_tile(pcity), city_radius_sq, city_x, city_y);
-  if (NULL == ptile) {
+  if (nullptr == ptile) {
     return 0;
   }
 
-  if (NULL != tile_worked(ptile) && tile_worked(ptile) == pcity) {
+  if (nullptr != tile_worked(ptile) && tile_worked(ptile) == pcity) {
     return dsend_packet_city_make_specialist(&client.conn, pcity->id,
                                              ptile->index);
   } else if (city_can_work_tile(pcity, ptile)) {

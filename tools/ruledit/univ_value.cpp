@@ -479,7 +479,7 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
   case VUT_AGE:
   case VUT_MINTECHS:
     // Requirement types having numerical value
-    cb(NULL, false, data);
+    cb(nullptr, false, data);
     break;
   case VUT_COUNT:
     fc_assert(univ->kind != VUT_COUNT);

@@ -35,7 +35,7 @@ static bool *placed_map;
 /**
    Return TRUE if initialized
  */
-bool placed_map_is_initialized() { return placed_map != NULL; }
+bool placed_map_is_initialized() { return placed_map != nullptr; }
 
 /**
    Create a clean pmap
@@ -54,7 +54,7 @@ void destroy_placed_map()
 {
   fc_assert_ret(placed_map_is_initialized());
   delete[] placed_map;
-  placed_map = NULL;
+  placed_map = nullptr;
 }
 
 #define pmap(_tile) (placed_map[tile_index(_tile)])
@@ -179,7 +179,7 @@ bool is_normal_nat_pos(int x, int y)
  */
 void smooth_int_map(int *int_map, bool zeroes_at_edges)
 {
-  fc_assert_ret(NULL != int_map);
+  fc_assert_ret(nullptr != int_map);
 
   static const float weight_standard[5] = {0.13, 0.19, 0.37, 0.19, 0.13};
   static const float weight_isometric[5] = {0.15, 0.21, 0.29, 0.21, 0.15};
@@ -233,9 +233,9 @@ void smooth_int_map(int *int_map, bool zeroes_at_edges)
  * The _sizes arrays give the sizes (in tiles) of each continent and
  * ocean.
  */
-static Continent_id *lake_surrounders = NULL;
-static int *continent_sizes = NULL;
-static int *ocean_sizes = NULL;
+static Continent_id *lake_surrounders = nullptr;
+static int *continent_sizes = nullptr;
+static int *ocean_sizes = nullptr;
 
 /**
    Calculate lake_surrounders[] array
@@ -286,10 +286,10 @@ static void recalculate_lake_surrounders()
  */
 static void assign_continent_flood(struct tile *ptile, bool is_land, int nr)
 {
-  struct tile_list *tlist = NULL;
-  const struct terrain *pterrain = NULL;
+  struct tile_list *tlist = nullptr;
+  const struct terrain *pterrain = nullptr;
 
-  fc_assert_ret(ptile != NULL);
+  fc_assert_ret(ptile != nullptr);
 
   pterrain = tile_terrain(ptile);
   /* Check if the initial tile is a valid tile for continent / ocean. */
@@ -504,7 +504,7 @@ void assign_continent_numbers()
 struct terrain *most_shallow_ocean(bool frozen)
 {
   bool oceans = false, frozenmatch = false;
-  struct terrain *shallow = NULL;
+  struct terrain *shallow = nullptr;
 
   terrain_type_iterate(pterr)
   {
@@ -547,11 +547,11 @@ struct terrain *most_shallow_ocean(bool frozen)
 /**
    Picks an ocean terrain to match the given depth.
    Only considers terrains with/without Frozen flag depending on 'frozen'.
-   Return NULL when there is no available ocean.
+   Return nullptr when there is no available ocean.
  */
 struct terrain *pick_ocean(int depth, bool frozen)
 {
-  struct terrain *best_terrain = NULL;
+  struct terrain *best_terrain = nullptr;
   int best_match = TERRAIN_OCEAN_DEPTH_MAXIMUM;
 
   terrain_type_iterate(pterrain)
@@ -615,7 +615,7 @@ static struct terrain *most_adjacent_ocean_type(const struct tile *ptile)
   }
   terrain_type_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -643,7 +643,7 @@ void smooth_water_depth()
       // Overwrite the terrain (but preserve frozenness).
       ocean = pick_ocean(dist * OCEAN_DEPTH_STEP + fc_rand(OCEAN_DEPTH_RAND),
                          terrain_has_flag(tile_terrain(ptile), TER_FROZEN));
-      if (NULL != ocean && ocean != tile_terrain(ptile)) {
+      if (nullptr != ocean && ocean != tile_terrain(ptile)) {
         log_debug("Replacing %s by %s at (%d, %d) "
                   "to have shallow ocean on coast.",
                   terrain_rule_name(tile_terrain(ptile)),
@@ -662,7 +662,7 @@ void smooth_water_depth()
     }
 
     ocean = most_adjacent_ocean_type(ptile);
-    if (NULL != ocean && ocean != tile_terrain(ptile)) {
+    if (nullptr != ocean && ocean != tile_terrain(ptile)) {
       log_debug("Replacing %s by %s at (%d, %d) "
                 "to smooth the ocean types.",
                 terrain_rule_name(tile_terrain(ptile)),
@@ -678,17 +678,17 @@ void smooth_water_depth()
  */
 void generator_free()
 {
-  if (lake_surrounders != NULL) {
+  if (lake_surrounders != nullptr) {
     free(lake_surrounders);
-    lake_surrounders = NULL;
+    lake_surrounders = nullptr;
   }
-  if (continent_sizes != NULL) {
+  if (continent_sizes != nullptr) {
     free(continent_sizes);
-    continent_sizes = NULL;
+    continent_sizes = nullptr;
   }
-  if (ocean_sizes != NULL) {
+  if (ocean_sizes != nullptr) {
     free(ocean_sizes);
-    ocean_sizes = NULL;
+    ocean_sizes = nullptr;
   }
 }
 

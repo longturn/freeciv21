@@ -45,7 +45,7 @@ struct government {
 
   // AI cached data for this government.
   struct {
-    struct government *better; // hint: a better government (or NULL)
+    struct government *better; // hint: a better government (or nullptr)
   } ai;
 };
 

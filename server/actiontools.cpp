@@ -42,15 +42,15 @@ static void action_success_actor_consume(struct action *paction,
       && utype_is_consumed_by_action(paction, unit_type_get(actor))) {
     if (action_has_result(paction, ACTRES_DISBAND_UNIT)
         || action_has_result(paction, ACTRES_RECYCLE_UNIT)) {
-      wipe_unit(actor, ULR_DISBANDED, NULL);
+      wipe_unit(actor, ULR_DISBANDED, nullptr);
     } else if (action_has_result(paction, ACTRES_NUKE)
                || action_has_result(paction, ACTRES_NUKE_CITY)
                || action_has_result(paction, ACTRES_NUKE_UNITS)) {
-      wipe_unit(actor, ULR_DETONATED, NULL);
+      wipe_unit(actor, ULR_DETONATED, nullptr);
     } else if (action_has_result(paction, ACTRES_ATTACK)) {
-      wipe_unit(actor, ULR_MISSILE, NULL);
+      wipe_unit(actor, ULR_MISSILE, nullptr);
     } else {
-      wipe_unit(actor, ULR_USED, NULL);
+      wipe_unit(actor, ULR_USED, nullptr);
     }
   }
 }
@@ -64,7 +64,7 @@ static void action_success_pay_mp(struct action *paction, int actor_id,
   if (unit_is_alive(actor_id)) {
     int spent_mp = unit_pays_mp_for_action(paction, actor);
     actor->moves_left = MAX(0, actor->moves_left - spent_mp);
-    send_unit_info(NULL, actor);
+    send_unit_info(nullptr, actor);
   }
 }
 
@@ -76,13 +76,13 @@ void action_success_target_pay_mp(struct action *paction, int target_id,
 {
   if (unit_is_alive(target_id)) {
     int spent_mp = get_target_bonus_effects(
-        NULL, unit_owner(target), NULL,
-        unit_tile(target) ? tile_city(unit_tile(target)) : NULL, NULL,
-        unit_tile(target), target, unit_type_get(target), NULL, NULL,
+        nullptr, unit_owner(target), nullptr,
+        unit_tile(target) ? tile_city(unit_tile(target)) : nullptr, nullptr,
+        unit_tile(target), target, unit_type_get(target), nullptr, nullptr,
         paction, EFT_ACTION_SUCCESS_TARGET_MOVE_COST);
 
     target->moves_left = MAX(0, target->moves_left - spent_mp);
-    send_unit_info(NULL, target);
+    send_unit_info(nullptr, target);
   }
 }
 
@@ -133,7 +133,7 @@ static void action_give_casus_belli(struct player *offender,
    Take care of any consequences (like casus belli) of the given action
    when the situation was as specified.
 
-   victim_player can be NULL
+   victim_player can be nullptr
  */
 static void action_consequence_common(
     const struct action *paction, struct player *offender,
@@ -179,12 +179,12 @@ static void action_consequence_common(
     call_incident(INCIDENT_ACTION, cbr, paction, offender, victim_player);
 
     // Update the clients.
-    send_player_all_c(offender, NULL);
+    send_player_all_c(offender, nullptr);
 
-    if (victim_player != NULL && victim_player != offender) {
+    if (victim_player != nullptr && victim_player != offender) {
       // The actor player was just sent.
       // An action against an ownerless tile is victimless.
-      send_player_all_c(victim_player, NULL);
+      send_player_all_c(victim_player, nullptr);
     }
   }
 }
@@ -314,7 +314,7 @@ notify_global_caught(struct player *receiver, const struct action *paction,
                     "everyone a casus belli against the %s."),
                   qUtf8Printable(action_name_translation(paction)),
                   nation_plural_for_player(offender));
-  } else if (victim_player == NULL) {
+  } else if (victim_player == nullptr) {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
                   // TRANS: Europeans ... Suitcase Nuke
                   _("You now have a casus belli against the %s. "
@@ -336,7 +336,7 @@ notify_global_caught(struct player *receiver, const struct action *paction,
    Take care of any consequences (like casus belli) of getting caught while
    trying to perform the given action.
 
-   victim_player can be NULL
+   victim_player can be nullptr
  */
 void action_consequence_caught(const struct action *paction,
                                struct player *offender,
@@ -473,7 +473,7 @@ static void notify_global_success(struct player *receiver,
                     "the %s."),
                   qUtf8Printable(action_name_translation(paction)),
                   nation_plural_for_player(offender));
-  } else if (victim_player == NULL) {
+  } else if (victim_player == nullptr) {
     notify_player(receiver, victim_tile, E_DIPLOMATIC_INCIDENT, ftc_server,
                   // TRANS: Europeans ... Suitcase Nuke
                   _("You now have a casus belli against the %s. "
@@ -495,7 +495,7 @@ static void notify_global_success(struct player *receiver,
    Take care of any consequences (like casus belli) of successfully
    performing the given action.
 
-   victim_player can be NULL
+   victim_player can be nullptr
  */
 void action_consequence_success(const struct action *paction,
                                 struct player *offender,
@@ -513,7 +513,7 @@ void action_consequence_success(const struct action *paction,
   Take care of any consequences (like casus belli) of successfully
   completing the given action.
 
-  victim_player can be NULL
+  victim_player can be nullptr
 **************************************************************************/
 void action_consequence_complete(const struct action *paction,
                                  struct player *offender,
@@ -563,7 +563,7 @@ int action_sub_target_id_for_action(const struct action *paction,
 
       unit_assign_specific_activity_target(actor_unit, &activity, &pextra);
 
-      if (pextra != NULL) {
+      if (pextra != nullptr) {
         return extra_number(pextra);
       }
     }
@@ -590,8 +590,8 @@ int action_sub_target_id_for_action(const struct action *paction,
 
 /**
    Returns the action auto performer that the specified cause can force the
-   specified actor to perform. Returns NULL if no such action auto performer
-   exists.
+   specified actor to perform. Returns nullptr if no such action auto
+   performer exists.
  */
 const struct action_auto_perf *action_auto_perf_unit_sel(
     const enum action_auto_perf_cause cause, const struct unit *actor,
@@ -599,9 +599,9 @@ const struct action_auto_perf *action_auto_perf_unit_sel(
 {
   action_auto_perf_by_cause_iterate(cause, autoperformer)
   {
-    if (are_reqs_active(unit_owner(actor), other_player, NULL, NULL,
+    if (are_reqs_active(unit_owner(actor), other_player, nullptr, nullptr,
                         unit_tile(actor), actor, unit_type_get(actor),
-                        output, NULL, NULL, &autoperformer->reqs,
+                        output, nullptr, nullptr, &autoperformer->reqs,
                         RPT_CERTAIN)) {
       // Select this action auto performer.
       return autoperformer;
@@ -610,7 +610,7 @@ const struct action_auto_perf *action_auto_perf_unit_sel(
   action_auto_perf_by_cause_iterate_end;
 
   // Can't even try to force an action.
-  return NULL;
+  return nullptr;
 }
 
 #define action_auto_perf_acquire_targets(_target_extra_)                    \
@@ -628,7 +628,7 @@ const struct action_auto_perf *action_auto_perf_unit_sel(
    Make the specified actor unit perform an action because of cause.
 
    Returns the action the actor unit was forced to perform.
-   Returns NULL if that didn't happen.
+   Returns nullptr if that didn't happen.
 
    Note that the return value doesn't say anything about survival.
  */
@@ -649,7 +649,7 @@ const struct action *action_auto_perf_unit_do(
 
   if (!autoperf) {
     // No matching Action Auto Performer.
-    return NULL;
+    return nullptr;
   }
 
   actor_id = actor->id;
@@ -664,7 +664,7 @@ const struct action *action_auto_perf_unit_do(
 
 #define perform_action_to(act, actor, tgtid, tgt_extra)                     \
   if (unit_perform_action(unit_owner(actor), actor->id, tgtid, tgt_extra,   \
-                          NULL, act, ACT_REQ_RULES)) {                      \
+                          nullptr, act, ACT_REQ_RULES)) {                   \
     return action_by_number(act);                                           \
   }
 
@@ -706,13 +706,13 @@ const struct action *action_auto_perf_unit_do(
 
       if (!unit_is_alive(actor_id)) {
         // The unit is gone. Maybe it was killed in Lua?
-        return NULL;
+        return nullptr;
       }
     }
   }
   action_auto_perf_actions_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**

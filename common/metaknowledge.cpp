@@ -170,7 +170,7 @@ static bool is_req_knowable(
   Q_UNUSED(target_output)
   Q_UNUSED(target_specialist)
   Q_UNUSED(target_building)
-  fc_assert_ret_val_msg(NULL != pow_player, false, "No point of view");
+  fc_assert_ret_val_msg(nullptr != pow_player, false, "No point of view");
 
   if (req->source.kind == VUT_UTFLAG || req->source.kind == VUT_UTYPE
       || req->source.kind == VUT_UCLASS || req->source.kind == VUT_UCFLAG
@@ -178,7 +178,7 @@ static bool is_req_knowable(
       || req->source.kind == VUT_MINHP) {
     switch (req->range) {
     case REQ_RANGE_LOCAL:
-      if (target_unit == NULL) {
+      if (target_unit == nullptr) {
         /* The unit may exist but not be passed when the problem type is
          * RPT_POSSIBLE. */
         return prob_type == RPT_CERTAIN;
@@ -203,7 +203,7 @@ static bool is_req_knowable(
     fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, false,
                           "Wrong range");
 
-    if (target_unit == NULL) {
+    if (target_unit == nullptr) {
       /* The unit may exist but not be passed when the problem type is
        * RPT_POSSIBLE. */
       return prob_type == RPT_CERTAIN;
@@ -234,7 +234,7 @@ static bool is_req_knowable(
     fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, false,
                           "Wrong range");
 
-    if (target_unit == NULL) {
+    if (target_unit == nullptr) {
       /* The unit may exist but not be passed when the problem type is
        * RPT_POSSIBLE. */
       return prob_type == RPT_CERTAIN;
@@ -263,7 +263,7 @@ static bool is_req_knowable(
     fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, false,
                           "Wrong range");
 
-    if (target_unit == NULL) {
+    if (target_unit == nullptr) {
       /* The unit may exist but not be passed when the problem type is
        * RPT_POSSIBLE. */
       return prob_type == RPT_CERTAIN;
@@ -283,7 +283,7 @@ static bool is_req_knowable(
   if (req->source.kind == VUT_DIPLREL) {
     switch (req->range) {
     case REQ_RANGE_LOCAL:
-      if (other_player == NULL || target_player == NULL) {
+      if (other_player == nullptr || target_player == nullptr) {
         /* The two players may exist but not be passed when the problem
          * type is RPT_POSSIBLE. */
         return prob_type == RPT_CERTAIN;
@@ -301,7 +301,7 @@ static bool is_req_knowable(
       // TODO: Non symmetric diplomatic relationships.
       break;
     case REQ_RANGE_PLAYER:
-      if (target_player == NULL) {
+      if (target_player == nullptr) {
         /* The target player may exist but not be passed when the problem
          * type is RPT_POSSIBLE. */
         return prob_type == RPT_CERTAIN;
@@ -339,7 +339,7 @@ static bool is_req_knowable(
   }
 
   if (req->source.kind == VUT_MINSIZE) {
-    if (target_city == NULL) {
+    if (target_city == nullptr) {
       /* The city may exist but not be passed when the problem type is
        * RPT_POSSIBLE. */
       return prob_type == RPT_CERTAIN;
@@ -353,7 +353,7 @@ static bool is_req_knowable(
   if (req->source.kind == VUT_CITYTILE) {
     struct city *pcity;
 
-    if (target_tile == NULL) {
+    if (target_tile == nullptr) {
       /* The tile may exist but not be passed when the problem type is
        * RPT_POSSIBLE. */
       return prob_type == RPT_CERTAIN;
@@ -520,7 +520,7 @@ static bool is_req_knowable(
   }
 
   if (req->source.kind == VUT_MAXTILEUNITS) {
-    if (target_tile == NULL) {
+    if (target_tile == nullptr) {
       /* The tile may exist but not be passed when the problem type is
        * RPT_POSSIBLE. */
       return prob_type == RPT_CERTAIN;
@@ -573,7 +573,7 @@ static bool is_req_knowable(
       || req->source.kind == VUT_EXTRA || req->source.kind == VUT_EXTRAFLAG
       || req->source.kind == VUT_BASEFLAG
       || req->source.kind == VUT_BASEFLAG) {
-    if (target_tile == NULL) {
+    if (target_tile == nullptr) {
       /* The tile may exist but not be passed when the problem type is
        * RPT_POSSIBLE. */
       return prob_type == RPT_CERTAIN;
@@ -651,13 +651,13 @@ enum fc_tristate mke_eval_req(
   if (target_unit) {
     target_unittype = unit_type_get(target_unit);
   } else {
-    target_unittype = NULL;
+    target_unittype = nullptr;
   }
 
   if (is_req_active(target_player, other_player, target_city,
                     target_building, target_tile, target_unit,
-                    target_unittype, target_output, target_specialist, NULL,
-                    req, prob_type)) {
+                    target_unittype, target_output, target_specialist,
+                    nullptr, req, prob_type)) {
     return TRI_YES;
   } else {
     return TRI_NO;

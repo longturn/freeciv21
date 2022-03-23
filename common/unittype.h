@@ -481,7 +481,7 @@ struct unit_type {
   int move_rate;
   int unknown_move_cost; // See utype_unknown_move_cost().
 
-  struct advance *require_advance; // may be NULL
+  struct advance *require_advance; // may be nullptr
   struct requirement_vector build_reqs;
 
   int vision_radius_sq;
@@ -490,7 +490,7 @@ struct unit_type {
   int firepower;
   struct combat_bonus_list *bonuses;
 
-#define U_NOT_OBSOLETED (NULL)
+#define U_NOT_OBSOLETED (nullptr)
   const struct unit_type *obsoleted_by;
   const struct unit_type *converted_to;
   int convert_time;
@@ -792,7 +792,7 @@ const struct unit_type *unit_type_array_last();
 #define unit_type_iterate(_p)                                               \
   {                                                                         \
     struct unit_type *_p = unit_type_array_first();                         \
-    if (NULL != _p) {                                                       \
+    if (nullptr != _p) {                                                    \
       for (; _p <= unit_type_array_last(); _p++) {
 
 #define unit_type_iterate_end                                               \
@@ -830,7 +830,7 @@ const struct unit_class *unit_class_array_last();
 #define unit_class_iterate(_p)                                              \
   {                                                                         \
     struct unit_class *_p = unit_class_array_first();                       \
-    if (NULL != _p) {                                                       \
+    if (nullptr != _p) {                                                    \
       for (; _p <= unit_class_array_last(); _p++) {
 
 #define unit_class_iterate_end                                              \

@@ -58,7 +58,7 @@ void citizens_update(struct city *pcity, struct player *plr)
     return;
   }
 
-  if (pcity->nationality == NULL) {
+  if (pcity->nationality == nullptr) {
     // If nationalities are not set (virtual cities) do nothing.
     return;
   }
@@ -71,7 +71,7 @@ void citizens_update(struct city *pcity, struct player *plr)
   }
 
   if (delta > 0) {
-    if (plr != NULL) {
+    if (plr != nullptr) {
       citizens_nation_add(pcity, plr->slot, delta);
       log_citizens_add(pcity, delta, plr);
     } else {
@@ -100,7 +100,7 @@ void citizens_update(struct city *pcity, struct player *plr)
       citizens nationality = citizens_nation_get(pcity, pslot);
 
       fc_assert_ret(nationality != 0);
-      fc_assert_ret(pplayer != NULL);
+      fc_assert_ret(pplayer != nullptr);
 
       if (nationality == 1) {
         // Remove one citizen.
@@ -159,7 +159,7 @@ void citizens_print(const struct city *pcity)
   {
     struct player *pplayer = player_slot_get_player(pslot);
 
-    fc_assert_ret(pplayer != NULL);
+    fc_assert_ret(pplayer != nullptr);
 
     log_citizens("%s (size %d; %s): %d citizen(s) for %s",
                  city_name_get(pcity), city_size_get(pcity),
@@ -214,7 +214,7 @@ void citizens_convert(struct city *pcity)
   pslot = city_nations[fc_rand(count)];
   pplayer = player_slot_get_player(pslot);
 
-  fc_assert_ret(pplayer != NULL);
+  fc_assert_ret(pplayer != nullptr);
 
   log_citizens("%s (size %d; %s): convert 1 citizen from %s",
                city_name_get(pcity), city_size_get(pcity),
@@ -243,7 +243,7 @@ void citizens_convert_conquest(struct city *pcity)
     citizens convert = MAX(1, nat * game.info.conquest_convert_pct / 100);
     struct player *pplayer = player_slot_get_player(pslot);
 
-    fc_assert_ret(pplayer != NULL);
+    fc_assert_ret(pplayer != nullptr);
 
     log_citizens("%s (size %d; %s): convert %d citizen from %s (conquered)",
                  city_name_get(pcity), city_size_get(pcity),

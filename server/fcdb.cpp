@@ -60,16 +60,16 @@ static bool fcdb_set_option(const char *key, const char *value,
 static bool fcdb_load_config(const char *filename);
 
 /**
-   Set one fcdb option (or delete it if value == NULL).
+   Set one fcdb option (or delete it if value == nullptr).
    Replaces any previous setting.
  */
 static bool fcdb_set_option(const char *key, const char *value,
                             enum fcdb_option_source source)
 {
-  struct fcdb_option *oldopt = NULL;
+  struct fcdb_option *oldopt = nullptr;
   bool removed;
 
-  if (value != NULL) {
+  if (value != nullptr) {
     auto newopt = new fcdb_option;
 
     newopt->value = fc_strdup(value);
@@ -89,7 +89,7 @@ static bool fcdb_set_option(const char *key, const char *value,
 
   if (removed) {
     /* Overwritten/removed an existing value */
-    fc_assert_ret_val(oldopt != NULL, false);
+    fc_assert_ret_val(oldopt != nullptr, false);
     FC_FREE(oldopt->value);
     delete oldopt;
   }
@@ -106,7 +106,7 @@ static bool fcdb_load_config(const char *filename)
 {
   struct section_file *secfile;
 
-  fc_assert_ret_val(NULL != filename, false);
+  fc_assert_ret_val(nullptr != filename, false);
 
   if (!(secfile = secfile_load(filename, false))) {
     qCritical(_("Cannot load fcdb config file '%s':\n%s"), filename,
@@ -150,7 +150,7 @@ bool fcdb_init(const char *conf_file)
     log_debug("No fcdb config file.");
   }
 
-  return script_fcdb_init(NULL);
+  return script_fcdb_init(nullptr);
 }
 
 /**
@@ -161,7 +161,7 @@ const char *fcdb_option_get(const char *type)
   if (fcdb_config.contains(type)) {
     return fcdb_config[type]->value;
   } else {
-    return NULL;
+    return nullptr;
   }
 }
 

@@ -32,7 +32,7 @@
  */
 #define B_LAST MAX_NUM_BUILDINGS
 
-#define B_NEVER (NULL)
+#define B_NEVER (nullptr)
 
 // Changing these breaks network compatibility.
 #define SPECENUM_NAME impr_flag_id
@@ -198,7 +198,7 @@ const struct impr_type *improvement_array_last();
 #define improvement_iterate(_p)                                             \
   {                                                                         \
     struct impr_type *_p = improvement_array_first();                       \
-    if (NULL != _p) {                                                       \
+    if (nullptr != _p) {                                                    \
       for (; _p <= improvement_array_last(); _p++) {
 
 #define improvement_iterate_end                                             \

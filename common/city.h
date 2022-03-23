@@ -172,7 +172,7 @@ void citylog_map_workers(QtMsgType level, struct city *pcity);
                                               _radius_sq, _index, _x,       \
                                               _y) struct tile *_tile =      \
         city_map_to_tile(_city_tile, _radius_sq, _x, _y);                   \
-    if (NULL != _tile) {
+    if (nullptr != _tile) {
 
 #define city_tile_iterate_index_end                                         \
   }                                                                         \
@@ -188,7 +188,7 @@ void citylog_map_workers(QtMsgType level, struct city *pcity);
       if (!is_free_worked_index(_index)) {                                  \
         struct tile *_tile =                                                \
             city_map_to_tile(_city_tile, _radius_sq, _x, _y);               \
-        if (NULL != _tile) {
+        if (nullptr != _tile) {
 
 #define city_tile_iterate_skip_free_worked_end                              \
   }                                                                         \
@@ -204,7 +204,7 @@ void citylog_map_workers(QtMsgType level, struct city *pcity);
     city_map_iterate_outwards_radius_sq(                                    \
         CITY_MAP_CENTER_RADIUS_SQ, _radius_sq, _x, _y) struct tile *_tile = \
         city_map_to_tile(_city_tile, _radius_sq, _x, _y);                   \
-    if (NULL != _tile) {
+    if (nullptr != _tile) {
 
 #define city_tile_iterate_end                                               \
   }                                                                         \
@@ -282,9 +282,9 @@ struct cm_parameter; /* defined in ./common/aicore/cm.h */
 
 struct city {
   char name[MAX_LEN_CITYNAME];
-  struct tile *tile;       // May be NULL, should check!
-  struct player *owner;    // Cannot be NULL.
-  struct player *original; // Cannot be NULL.
+  struct tile *tile;       // May be nullptr, should check!
+  struct player *owner;    // Cannot be nullptr.
+  struct player *original; // Cannot be nullptr.
   int id;
   int style;
   enum capital_type capital;
@@ -437,7 +437,7 @@ struct city {
       struct unit_list *info_units_supported;
       struct unit_list *info_units_present;
       /* Before popup the city dialog, units go there. In normal process,
-       * these pointers are set to NULL. */
+       * these pointers are set to nullptr. */
       struct unit_list *collecting_info_units_supported;
       struct unit_list *collecting_info_units_present;
 
@@ -504,7 +504,7 @@ extern struct output_type output_types[];
         struct city *_city =                                                \
             game_city_by_number(_city##_numbers[_city##_index]);            \
                                                                             \
-        if (NULL != _city) {
+        if (nullptr != _city) {
 
 #define city_list_iterate_safe_end                                          \
   }                                                                         \

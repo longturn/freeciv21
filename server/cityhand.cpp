@@ -59,14 +59,14 @@ void handle_city_name_suggestion_req(struct player *pplayer, int unit_id)
 {
   struct unit *punit = player_unit_by_number(pplayer, unit_id);
 
-  if (NULL == punit) {
+  if (nullptr == punit) {
     // Probably died or bribed.
     qDebug("handle_city_name_suggestion_req() invalid unit %d", unit_id);
     return;
   }
 
   if (action_prob_possible(action_prob_vs_tile(punit, ACTION_FOUND_CITY,
-                                               unit_tile(punit), NULL))) {
+                                               unit_tile(punit), nullptr))) {
     qDebug("handle_city_name_suggest_req(unit_pos (%d, %d))",
            TILE_XY(unit_tile(punit)));
     dlsend_packet_city_name_suggestion_info(
@@ -82,7 +82,7 @@ void handle_city_name_suggestion_req(struct player *pplayer, int unit_id)
          TILE_XY(unit_tile(punit)));
 
   illegal_action_msg(pplayer, E_BAD_COMMAND, punit, ACTION_FOUND_CITY,
-                     unit_tile(punit), NULL, NULL);
+                     unit_tile(punit), nullptr, nullptr);
 }
 
 /**
@@ -124,13 +124,13 @@ void handle_city_make_specialist(struct player *pplayer, int city_id,
   struct tile *ptile = index_to_tile(&(wld.map), tile_id);
   struct city *pcity = player_city_by_number(pplayer, city_id);
 
-  if (NULL == pcity) {
+  if (nullptr == pcity) {
     // Probably lost.
     qDebug("handle_city_make_specialist() bad city number %d.", city_id);
     return;
   }
 
-  if (NULL == ptile) {
+  if (nullptr == ptile) {
     qCritical("handle_city_make_specialist() bad tile number %d.", tile_id);
     return;
   }
@@ -169,13 +169,13 @@ void handle_city_make_worker(struct player *pplayer, int city_id,
   struct tile *ptile = index_to_tile(&(wld.map), tile_id);
   struct city *pcity = player_city_by_number(pplayer, city_id);
 
-  if (NULL == pcity) {
+  if (nullptr == pcity) {
     // Probably lost.
     qDebug("handle_city_make_worker() bad city number %d.", city_id);
     return;
   }
 
-  if (NULL == ptile) {
+  if (nullptr == ptile) {
     qCritical("handle_city_make_worker() bad tile number %d.", tile_id);
     return;
   }
@@ -261,7 +261,7 @@ void really_handle_city_sell(struct player *pplayer, struct city *pcity,
   city_refresh(pcity);
 
   // If we sold the walls the other players should see it
-  send_city_info(NULL, pcity);
+  send_city_info(nullptr, pcity);
   send_player_info_c(pplayer, pplayer->connections);
 }
 
@@ -494,7 +494,7 @@ void handle_city_rename(struct player *pplayer, int city_id,
 
   sz_strlcpy(pcity->name, name);
   city_refresh(pcity);
-  send_city_info(NULL, pcity);
+  send_city_info(nullptr, pcity);
 }
 
 /**
@@ -525,7 +525,7 @@ void handle_city_rally_point(struct player *pplayer, int city_id, int length,
   struct city *pcity = player_city_by_number(pplayer, city_id);
   struct unit_order *checked_orders;
 
-  if (NULL == pcity) {
+  if (nullptr == pcity) {
     // Probably lost.
     qDebug("handle_city_rally_point() bad city number %d.", city_id);
     return;
@@ -570,7 +570,7 @@ void handle_city_manager(struct player *pplayer, int city_id, bool enabled,
 {
   struct city *pcity = player_city_by_number(pplayer, city_id);
 
-  if (NULL == pcity) {
+  if (nullptr == pcity) {
     // Probably lost.
     qDebug("handle_city_manager() bad city number %d.", city_id);
     return;
@@ -579,7 +579,7 @@ void handle_city_manager(struct player *pplayer, int city_id, bool enabled,
   if (!enabled) {
     if (pcity->cm_parameter) {
       free(pcity->cm_parameter);
-      pcity->cm_parameter = NULL;
+      pcity->cm_parameter = nullptr;
       send_city_info(pplayer, pcity);
     }
     return;

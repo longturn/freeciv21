@@ -165,7 +165,7 @@ void req_edit::refresh()
     QListWidgetItem *item;
 
     buf[0] = '\0';
-    if (!req_text_insert(buf, sizeof(buf), NULL, preq, VERB_ACTUAL, "")) {
+    if (!req_text_insert(buf, sizeof(buf), nullptr, preq, VERB_ACTUAL, "")) {
       if (preq->present) {
         universal_name_translation(&preq->source, buf, sizeof(buf));
       } else {
@@ -204,7 +204,7 @@ void req_edit::clear_selected()
   selected = nullptr;
 
   selected_values.source.kind = VUT_NONE;
-  selected_values.source.value.advance = NULL;
+  selected_values.source.value.advance = nullptr;
   selected_values.range = REQ_RANGE_LOCAL;
   selected_values.present = true;
   selected_values.survives = false;
@@ -255,7 +255,7 @@ static void universal_value_cb(const char *value, bool current, void *cbdata)
 {
   struct uvb_data *data = (struct uvb_data *) cbdata;
 
-  if (value == NULL) {
+  if (value == nullptr) {
     int kind, val;
 
     universal_extraction(data->univ, &kind, &val);

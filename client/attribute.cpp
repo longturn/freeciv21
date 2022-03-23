@@ -302,7 +302,7 @@ void attribute_flush()
 
   if (pplayer->attribute_block.data) {
     free(pplayer->attribute_block.data);
-    pplayer->attribute_block.data = NULL;
+    pplayer->attribute_block.data = nullptr;
   }
 
   serialize_hash(attribute_hash, &pplayer->attribute_block.data,
@@ -322,7 +322,7 @@ void attribute_restore()
     return;
   }
 
-  fc_assert_ret(attribute_hash != NULL);
+  fc_assert_ret(attribute_hash != nullptr);
 
   switch (unserialize_hash(attribute_hash, pplayer->attribute_block.data,
                            pplayer->attribute_block.length)) {
@@ -351,7 +351,7 @@ void attribute_set(int key, int id, int x, int y, size_t data_length,
                 "data_length = %lu, data = %p)",
                 key, id, x, y, (long unsigned) data_length, data);
 
-  fc_assert_ret(NULL != attribute_hash);
+  fc_assert_ret(nullptr != attribute_hash);
 
   if (0 != data_length) {
     void *pvalue = new char[data_length + 4];
@@ -372,7 +372,7 @@ void attribute_set(int key, int id, int x, int y, size_t data_length,
    to hold the attribute data isn't set to the attribute. Returns the
    actual size of the attribute. Can be zero if the attribute is
    unset. To get the size of an attribute use
-     size = attribute_get(key, id, x, y, 0, NULL)
+     size = attribute_get(key, id, x, y, 0, nullptr)
  */
 size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
                      void *data)
@@ -385,7 +385,7 @@ size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
                 "max_data_length = %lu, data = %p)",
                 key, id, x, y, (long unsigned) max_data_length, data);
 
-  fc_assert_ret_val(NULL != attribute_hash, 0);
+  fc_assert_ret_val(nullptr != attribute_hash, 0);
 
   if (!attribute_hash->contains(akey)) {
     log_attribute("  not found");

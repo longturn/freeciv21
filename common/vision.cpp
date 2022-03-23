@@ -120,7 +120,7 @@ void vision_site_update_from_city(struct vision_site *psite,
  */
 citizens vision_site_size_get(const struct vision_site *psite)
 {
-  fc_assert_ret_val(psite != NULL, 0);
+  fc_assert_ret_val(psite != nullptr, 0);
 
   return psite->size;
 }
@@ -130,7 +130,7 @@ citizens vision_site_size_get(const struct vision_site *psite)
  */
 void vision_site_size_set(struct vision_site *psite, citizens size)
 {
-  fc_assert_ret(psite != NULL);
+  fc_assert_ret(psite != nullptr);
 
   psite->size = size;
 }

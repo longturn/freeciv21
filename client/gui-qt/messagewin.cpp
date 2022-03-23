@@ -121,7 +121,7 @@ void message_widget::item_selected(const QItemSelection &sl,
   index = indexes.at(0);
   i = index.row();
   pmsg = meswin_get_message(i);
-  if (i > -1 && pmsg != NULL) {
+  if (i > -1 && pmsg != nullptr) {
     if (QApplication::mouseButtons() == Qt::LeftButton
         || QApplication::mouseButtons() == Qt::RightButton) {
       meswin_set_visited_state(i, true);
@@ -236,7 +236,7 @@ void message_widget::scroll_to_bottom(void *self)
  */
 void real_meswin_dialog_update(void *unused)
 {
-  if (queen()->message == NULL) {
+  if (queen()->message == nullptr) {
     return;
   }
   queen()->message->msg_update();

@@ -63,11 +63,11 @@ bool adv_follow_path(struct unit *punit, struct pf_path *path,
       /* Only go via ACTIVITY_IDLE if we are actually changing the activity
        */
       unit_activity_handling(punit, ACTIVITY_IDLE);
-      send_unit_info(NULL, punit); // FIXME: probably duplicate
+      send_unit_info(nullptr, punit); // FIXME: probably duplicate
       unit_activity_handling_targeted(punit, activity, &tgt);
     }
-    punit->goto_tile = old_tile; // May be NULL.
-    send_unit_info(NULL, punit);
+    punit->goto_tile = old_tile; // May be nullptr.
+    send_unit_info(nullptr, punit);
   }
   return alive;
 }
@@ -133,7 +133,7 @@ static bool adv_unit_move(struct unit *punit, struct tile *ptile)
 {
   struct action *paction;
   struct player *pplayer = unit_owner(punit);
-  struct unit *ptrans = NULL;
+  struct unit *ptrans = nullptr;
 
   /* if enemy, stop and give a chance for the human player to
      handle this case */
@@ -151,20 +151,20 @@ static bool adv_unit_move(struct unit *punit, struct tile *ptile)
     // "Transport Embark".
     paction = action_by_number(ACTION_TRANSPORT_EMBARK);
   } else if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK1,
-                                            punit, ptile, NULL)) {
+                                            punit, ptile, nullptr)) {
     // "Transport Disembark".
     paction = action_by_number(ACTION_TRANSPORT_DISEMBARK1);
   } else if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK2,
-                                            punit, ptile, NULL)) {
+                                            punit, ptile, nullptr)) {
     // "Transport Disembark 2".
     paction = action_by_number(ACTION_TRANSPORT_DISEMBARK2);
   } else {
     // Other move.
-    paction = NULL;
+    paction = nullptr;
   }
 
   // Try not to end move next to an enemy if we can avoid it by waiting
-  if (paction == NULL // Regular move
+  if (paction == nullptr // Regular move
       || action_has_result(paction, ACTRES_TRANSPORT_DISEMBARK)) {
     // The unit will have to move it self rather than being moved.
     int mcost = map_move_cost_unit(&(wld.map), punit, ptile);
@@ -257,7 +257,7 @@ int adv_could_unit_move_to_tile(struct unit *punit, struct tile *dest_tile)
 {
   enum unit_move_result reason = unit_move_to_tile_test(
       &(wld.map), punit, ACTIVITY_IDLE, unit_tile(punit), dest_tile,
-      unit_has_type_flag(punit, UTYF_IGZOC), NULL, false);
+      unit_has_type_flag(punit, UTYF_IGZOC), nullptr, false);
 
   switch (reason) {
   case MR_OK:

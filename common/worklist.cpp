@@ -44,7 +44,7 @@ void worklist_init(struct worklist *pwl)
     // just setting the entry to zero:
     pwl->entries[i].kind = VUT_NONE;
     // all the union pointers should be in the same place:
-    pwl->entries[i].value.building = NULL;
+    pwl->entries[i].value.building = nullptr;
   }
 }
 
@@ -88,7 +88,7 @@ bool worklist_peek_ith(const struct worklist *pwl, struct universal *prod,
   // Out of possible bounds.
   if (idx < 0 || pwl->length <= idx) {
     prod->kind = VUT_NONE;
-    prod->value.building = NULL;
+    prod->value.building = nullptr;
     return false;
   }
 
@@ -131,7 +131,7 @@ void worklist_remove(struct worklist *pwl, int idx)
   // just setting the entry to zero:
   pwl->entries[pwl->length - 1].kind = VUT_NONE;
   // all the union pointers should be in the same place:
-  pwl->entries[pwl->length - 1].value.building = NULL;
+  pwl->entries[pwl->length - 1].value.building = nullptr;
   pwl->length--;
 }
 

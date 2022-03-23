@@ -63,7 +63,7 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
 {
   int best = 0;
   int val;
-  struct tile *best_tile = NULL;
+  struct tile *best_tile = nullptr;
   int range = unit_type_get(punit)->paratroopers_range;
   struct city *acity;
   struct player *pplayer = unit_owner(punit);
@@ -87,7 +87,7 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
   }
   square_iterate_end;
 
-  if (best_tile != NULL) {
+  if (best_tile != nullptr) {
     acity = tile_city(best_tile);
     UNIT_LOG(LOGLEVEL_PARATROOPER, punit,
              "Choose to jump in order to protect allied city %s (%d %d). "
@@ -117,7 +117,7 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
   }
   square_iterate_end;
 
-  if (best_tile != NULL) {
+  if (best_tile != nullptr) {
     acity = tile_city(best_tile);
     UNIT_LOG(LOGLEVEL_PARATROOPER, punit,
              "Choose to jump into enemy city %s (%d %d). Benefit: %d",
@@ -179,7 +179,7 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
   }
   square_iterate_end;
 
-  if (best_tile != NULL) {
+  if (best_tile != nullptr) {
     UNIT_LOG(LOG_DEBUG, punit,
              "Choose to jump at (%d, %d) to attack "
              "adjacent units. Benefit: %d",
@@ -196,7 +196,7 @@ void dai_manage_paratrooper(struct ai_type *ait, struct player *pplayer,
                             struct unit *punit)
 {
   struct city *pcity = tile_city(unit_tile(punit));
-  struct tile *ptile_dest = NULL;
+  struct tile *ptile_dest = nullptr;
 
   int sanity = punit->id;
 
@@ -231,7 +231,7 @@ void dai_manage_paratrooper(struct ai_type *ait, struct player *pplayer,
                               tile_index(ptile_dest), 0, "", ACTION_PARADROP,
                               ACT_REQ_PLAYER)) {
         // successfull!
-        if (NULL == game_unit_by_number(sanity)) {
+        if (nullptr == game_unit_by_number(sanity)) {
           // the unit did not survive the move
           return;
         }
@@ -242,7 +242,7 @@ void dai_manage_paratrooper(struct ai_type *ait, struct player *pplayer,
     }
   } else {
     // we can't paradrop :-(
-    struct city *acity = NULL;
+    struct city *acity = nullptr;
 
     // we are in a city, so don't try to find another
     if (pcity) {
@@ -331,7 +331,7 @@ static int calculate_want_for_paratrooper(struct unit *punit,
   }
   square_iterate_end;
 
-  total = adv_data_get(pplayer, NULL)->stats.units.paratroopers;
+  total = adv_data_get(pplayer, nullptr)->stats.units.paratroopers;
   total_cities = city_list_size(pplayer->cities);
 
   if (total > total_cities) {

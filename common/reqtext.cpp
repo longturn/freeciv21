@@ -39,7 +39,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 
      "Requires knowledge of the technology Communism."
 
-   pplayer may be NULL. Note that it must be updated everytime
+   pplayer may be nullptr. Note that it must be updated everytime
    a new requirement type or range is defined.
  */
 bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
@@ -2705,7 +2705,7 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
     if (preq->source.value.citytile == CITYT_LAST) {
       break;
     } else {
-      static const char *tile_property = NULL;
+      static const char *tile_property = nullptr;
 
       switch (preq->source.value.citytile) {
       case CITYT_CENTER:
@@ -2781,7 +2781,7 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
     if (preq->source.value.citystatus == CITYS_LAST) {
       break;
     } else {
-      static const char *city_property = NULL;
+      static const char *city_property = nullptr;
 
       switch (preq->source.value.citystatus) {
       case CITYS_OWNED_BY_ORIGINAL:

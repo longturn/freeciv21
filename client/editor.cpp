@@ -95,7 +95,7 @@ struct editor_state {
   struct edit_buffer *copybuf;
 };
 
-static struct editor_state *editor = NULL;
+static struct editor_state *editor = nullptr;
 
 /**
    Set tool to some value legal under current ruleset.
@@ -106,7 +106,7 @@ static void tool_set_init_value(enum editor_tool_type ett)
 
   if (ett == ETT_TERRAIN_SPECIAL || ett == ETT_ROAD
       || ett == ETT_MILITARY_BASE || ett == ETT_TERRAIN_RESOURCE) {
-    struct extra_type *first = NULL;
+    struct extra_type *first = nullptr;
 
     extra_type_iterate(pextra)
     {
@@ -133,7 +133,7 @@ static void tool_set_init_value(enum editor_tool_type ett)
     }
     extra_type_iterate_end;
 
-    if (first != NULL) {
+    if (first != nullptr) {
       tool->value = extra_index(first);
     } else {
       tool->value = 0;
@@ -190,7 +190,7 @@ void editor_ruleset_changed()
  */
 void editor_init()
 {
-  fc_assert(editor == NULL);
+  fc_assert(editor == nullptr);
 
   editor = new editor_state[1]();
 
@@ -242,7 +242,7 @@ void editor_init()
  */
 void editor_clear()
 {
-  fc_assert_ret(editor != NULL);
+  fc_assert_ret(editor != nullptr);
 
   edit_buffer_clear(editor->copybuf);
   editor->selected_tile_table->clear();
@@ -253,11 +253,11 @@ void editor_clear()
  */
 void editor_free()
 {
-  if (editor != NULL) {
+  if (editor != nullptr) {
     edit_buffer_free(editor->copybuf);
     delete editor->selected_tile_table;
     delete[] editor;
-    editor = NULL;
+    editor = nullptr;
   }
 }
 
@@ -266,7 +266,7 @@ void editor_free()
  */
 void editor_set_tool(enum editor_tool_type ett)
 {
-  if (editor == NULL) {
+  if (editor == nullptr) {
     return;
   }
 
@@ -282,7 +282,7 @@ void editor_set_tool(enum editor_tool_type ett)
  */
 enum editor_tool_type editor_get_tool()
 {
-  if (editor == NULL) {
+  if (editor == nullptr) {
     return NUM_EDITOR_TOOL_TYPES;
   }
 
@@ -295,7 +295,7 @@ enum editor_tool_type editor_get_tool()
 void editor_tool_set_mode(enum editor_tool_type ett,
                           enum editor_tool_mode etm)
 {
-  if (editor == NULL || !(ett < NUM_EDITOR_TOOL_TYPES)
+  if (editor == nullptr || !(ett < NUM_EDITOR_TOOL_TYPES)
       || !(etm < NUM_EDITOR_TOOL_MODES) || !editor_tool_has_mode(ett, etm)) {
     return;
   }
@@ -309,7 +309,7 @@ void editor_tool_set_mode(enum editor_tool_type ett,
 bool editor_tool_has_mode(enum editor_tool_type ett,
                           enum editor_tool_mode etm)
 {
-  if (editor == NULL || !(ett < NUM_EDITOR_TOOL_TYPES)
+  if (editor == nullptr || !(ett < NUM_EDITOR_TOOL_TYPES)
       || !(etm < NUM_EDITOR_TOOL_MODES)) {
     return false;
   }
@@ -330,7 +330,7 @@ bool editor_tool_has_mode(enum editor_tool_type ett,
  */
 enum editor_tool_mode editor_tool_get_mode(enum editor_tool_type ett)
 {
-  if (editor == NULL || !(ett < NUM_EDITOR_TOOL_TYPES)) {
+  if (editor == nullptr || !(ett < NUM_EDITOR_TOOL_TYPES)) {
     return NUM_EDITOR_TOOL_MODES;
   }
   return editor->tools[ett].mode;
@@ -470,17 +470,17 @@ static void editor_grab_applied_player(const struct tile *ptile)
     return;
   }
 
-  if (tile_city(ptile) != NULL) {
+  if (tile_city(ptile) != nullptr) {
     apno = player_number(city_owner(tile_city(ptile)));
   } else if (unit_list_size(ptile->units) > 0) {
     struct unit *punit = unit_list_get(ptile->units, 0);
 
     apno = player_number(unit_owner(punit));
-  } else if (tile_owner(ptile) != NULL) {
+  } else if (tile_owner(ptile) != nullptr) {
     apno = player_number(tile_owner(ptile));
   }
 
-  if (player_by_number(apno) != NULL) {
+  if (player_by_number(apno) != nullptr) {
     editor_tool_set_applied_player(editor_get_tool(), apno);
     editgui_refresh();
   }
@@ -492,9 +492,9 @@ static void editor_grab_applied_player(const struct tile *ptile)
 static void editor_grab_tool(const struct tile *ptile)
 {
   int ett = -1, value = 0;
-  struct extra_type *first_base = NULL;
-  struct extra_type *first_road = NULL;
-  struct extra_type *first_resource = NULL;
+  struct extra_type *first_base = nullptr;
+  struct extra_type *first_road = nullptr;
+  struct extra_type *first_resource = nullptr;
 
   if (!editor) {
     return;
@@ -540,7 +540,7 @@ static void editor_grab_tool(const struct tile *ptile)
 
   } else if (unit_list_size(ptile->units) > 0) {
     int max_score = 0, score;
-    struct unit *grabbed_punit = NULL;
+    struct unit *grabbed_punit = nullptr;
 
     unit_list_iterate(ptile->units, punit)
     {
@@ -568,18 +568,18 @@ static void editor_grab_tool(const struct tile *ptile)
       ett = ETT_UNIT;
       value = utype_number(unit_type_get(grabbed_punit));
     }
-  } else if (first_base != NULL) {
+  } else if (first_base != nullptr) {
     ett = ETT_MILITARY_BASE;
     value = extra_index(first_base);
 
-  } else if (first_road != NULL) {
+  } else if (first_road != nullptr) {
     ett = ETT_ROAD;
     value = extra_index(first_road);
 
   } else if (tile_really_has_any_specials(ptile)) {
     struct extra_type *specials_array[MAX_EXTRA_TYPES];
     int count = 0, i;
-    struct extra_type *special = NULL;
+    struct extra_type *special = nullptr;
 
     extra_type_by_cause_iterate(static_cast<extra_cause>(EC_SPECIAL), s)
     {
@@ -596,7 +596,7 @@ static void editor_grab_tool(const struct tile *ptile)
       }
     }
 
-    if (special != NULL) {
+    if (special != nullptr) {
       ett = ETT_TERRAIN_SPECIAL;
       value = extra_index(special);
     }
@@ -604,7 +604,7 @@ static void editor_grab_tool(const struct tile *ptile)
     ett = ETT_TERRAIN_RESOURCE;
     value = extra_index(first_resource);
 
-  } else if (tile_terrain(ptile) != NULL) {
+  } else if (tile_terrain(ptile) != nullptr) {
     ett = ETT_TERRAIN;
     value = terrain_number(tile_terrain(ptile));
   }
@@ -625,7 +625,7 @@ static void editor_grab_tool(const struct tile *ptile)
  */
 static inline bool can_edit_tile_properties(struct tile *ptile)
 {
-  return ptile != NULL;
+  return ptile != nullptr;
 }
 
 /**
@@ -668,12 +668,12 @@ void editor_mouse_button_press(int canvas_x, int canvas_y, int button,
 {
   struct tile *ptile;
 
-  if (editor == NULL) {
+  if (editor == nullptr) {
     return;
   }
 
   ptile = canvas_pos_to_tile(canvas_x, canvas_y);
-  if (ptile == NULL) {
+  if (ptile == nullptr) {
     return;
   }
 
@@ -757,7 +757,7 @@ static void editor_end_selection_rectangle(int canvas_x, int canvas_y)
                    mapview.gui_y0 + editor->selrect_y, editor->selrect_width,
                    editor->selrect_height, ptile, pedge, pcorner)
   {
-    if (ptile == NULL) {
+    if (ptile == nullptr) {
       continue;
     }
     if (editor->selection_mode == SELECTION_MODE_NEW
@@ -803,7 +803,7 @@ void editor_mouse_button_release(int canvas_x, int canvas_y, int button,
   Q_UNUSED(modifiers)
   switch (button) {
   case MOUSE_BUTTON_LEFT:
-    editor_set_current_tile(NULL);
+    editor_set_current_tile(nullptr);
     editor->tool_active = false;
     break;
 
@@ -881,7 +881,7 @@ void editor_mouse_move(int canvas_x, int canvas_y, int modifiers)
     return;
   }
 
-  if (editor->tool_active && old != NULL && old != ptile) {
+  if (editor->tool_active && old != nullptr && old != ptile) {
     editor_apply_tool(ptile, false);
     editor_notify_edit_finished();
     editor_set_current_tile(ptile);
@@ -917,7 +917,7 @@ void editor_apply_tool(const struct tile *ptile, bool part_of_selection)
   bool erase;
   struct connection *my_conn = &client.conn;
 
-  if (editor == NULL || ptile == NULL) {
+  if (editor == nullptr || ptile == nullptr) {
     return;
   }
 
@@ -935,7 +935,7 @@ void editor_apply_tool(const struct tile *ptile, bool part_of_selection)
   }
 
   if (editor_tool_has_applied_player(ett)
-      && player_by_number(apno) == NULL) {
+      && player_by_number(apno) == nullptr) {
     return;
   }
 
@@ -986,7 +986,7 @@ void editor_apply_tool(const struct tile *ptile, bool part_of_selection)
   case ETT_CITY:
     if (erase) {
       struct city *pcity = tile_city(ptile);
-      if (pcity != NULL) {
+      if (pcity != nullptr) {
         id = pcity->id;
         dsend_packet_edit_city_remove(my_conn, id);
       }
@@ -1016,7 +1016,7 @@ void editor_apply_tool(const struct tile *ptile, bool part_of_selection)
  */
 void editor_set_current_tile(const struct tile *ptile)
 {
-  if (editor == NULL) {
+  if (editor == nullptr) {
     return;
   }
 
@@ -1028,8 +1028,8 @@ void editor_set_current_tile(const struct tile *ptile)
  */
 const struct tile *editor_get_current_tile()
 {
-  if (editor == NULL) {
-    return NULL;
+  if (editor == nullptr) {
+    return nullptr;
   }
 
   return editor->current_tile;
@@ -1189,7 +1189,7 @@ const char *editor_tool_get_value_name(enum editor_tool_type emt, int value)
   case ETT_ROAD:
   case ETT_MILITARY_BASE:
     pextra = extra_by_number(value);
-    return pextra != NULL ? extra_name_translation(pextra) : "";
+    return pextra != nullptr ? extra_name_translation(pextra) : "";
     break;
   case ETT_UNIT:
     putype = utype_by_number(value);
@@ -1270,19 +1270,19 @@ void editor_tool_set_count(enum editor_tool_type ett, int count)
 
 /**
    Returns a sprite containing an icon for the given tool type. Returns
-   NULL if no such sprite exists.
+   nullptr if no such sprite exists.
  */
 QPixmap *editor_tool_get_sprite(enum editor_tool_type ett)
 {
   const struct editor_sprites *sprites;
 
   if (!tileset || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return NULL;
+    return nullptr;
   }
 
   sprites = get_editor_sprites(tileset);
   if (!sprites) {
-    return NULL;
+    return nullptr;
   }
 
   switch (ett) {
@@ -1318,7 +1318,7 @@ QPixmap *editor_tool_get_sprite(enum editor_tool_type ett)
     break;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -1336,7 +1336,7 @@ const char *editor_tool_get_tooltip(enum editor_tool_type ett)
 /**
    Returns the current applied player number for the editor tool.
 
-   May return a player number for which player_by_number returns NULL.
+   May return a player number for which player_by_number returns nullptr.
  */
 int editor_tool_get_applied_player(enum editor_tool_type ett)
 {
@@ -1384,7 +1384,7 @@ bool editor_tool_has_value_erase(enum editor_tool_type ett)
 /**
    Creates a virtual unit (like unit_virtual_create) based on the current
    editor state. You should free() the unit when it is no longer needed.
-   If creation is not possible, then NULL is returned.
+   If creation is not possible, then nullptr is returned.
 
    The virtual unit has no homecity or tile. It is owned by the player
    corresponding to the current 'applied player' parameter and has unit type
@@ -1401,16 +1401,16 @@ struct unit *editor_unit_virtual_create()
   putype = utype_by_number(value);
 
   if (!putype) {
-    return NULL;
+    return nullptr;
   }
 
   apno = editor_tool_get_applied_player(ETT_UNIT);
   pplayer = player_by_number(apno);
   if (!pplayer) {
-    return NULL;
+    return nullptr;
   }
 
-  vunit = unit_virtual_create(pplayer, NULL, putype, 0);
+  vunit = unit_virtual_create(pplayer, nullptr, putype, 0);
 
   return vunit;
 }
@@ -1423,7 +1423,7 @@ struct edit_buffer *edit_buffer_new(int type_flags)
   struct edit_buffer *ebuf;
 
   if (!(0 <= type_flags && type_flags <= EBT_ALL)) {
-    return NULL;
+    return nullptr;
   }
 
   ebuf = new edit_buffer[1]();
@@ -1446,7 +1446,7 @@ void edit_buffer_free(struct edit_buffer *ebuf)
     tile_list_iterate(ebuf->vtiles, vtile) { tile_virtual_destroy(vtile); }
     tile_list_iterate_end;
     tile_list_destroy(ebuf->vtiles);
-    ebuf->vtiles = NULL;
+    ebuf->vtiles = nullptr;
   }
   delete[] ebuf;
 }
@@ -1464,7 +1464,7 @@ void edit_buffer_clear(struct edit_buffer *ebuf)
   tile_list_iterate_end;
   tile_list_clear(ebuf->vtiles);
 
-  edit_buffer_set_origin(ebuf, NULL);
+  edit_buffer_set_origin(ebuf, nullptr);
 }
 
 /**
@@ -1499,7 +1499,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
     return;
   }
 
-  vtile = tile_virtual_new(NULL);
+  vtile = tile_virtual_new(nullptr);
   vtile->index = tile_index(ptile);
 
   edit_buffer_type_iterate(ebuf, type)
@@ -1556,7 +1556,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
         if (!punit) {
           continue;
         }
-        vunit = unit_virtual_create(unit_owner(punit), NULL,
+        vunit = unit_virtual_create(unit_owner(punit), nullptr,
                                     unit_type_get(punit), punit->veteran);
         vunit->homecity = punit->homecity;
         vunit->hp = punit->hp;
@@ -1572,7 +1572,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
 
         pcity = tile_city(ptile);
         fc_snprintf(name, sizeof(name), "Copy of %s", city_name_get(pcity));
-        vcity = create_city_virtual(city_owner(pcity), NULL, name);
+        vcity = create_city_virtual(city_owner(pcity), nullptr, name);
         city_size_set(vcity, city_size_get(pcity));
         improvement_iterate(pimprove)
         {
@@ -1620,13 +1620,13 @@ static void fill_tile_edit_packet(struct packet_edit_tile *packet,
 
   pterrain = tile_terrain(ptile);
   packet->terrain = pterrain ? terrain_number(pterrain) : terrain_count();
-  if (ptile->extras_owner != NULL) {
+  if (ptile->extras_owner != nullptr) {
     packet->eowner = player_number(ptile->extras_owner);
   } else {
     packet->eowner = MAP_TILE_OWNER_NULL;
   }
 
-  if (ptile->label == NULL) {
+  if (ptile->label == nullptr) {
     packet->label[0] = '\0';
   } else {
     sz_strlcpy(packet->label, ptile->label);
@@ -1751,7 +1751,7 @@ void edit_buffer_paste(struct edit_buffer *ebuf, const struct tile *dest)
 
   // Calculate vector.
   origin = edit_buffer_get_origin(ebuf);
-  fc_assert_ret(origin != NULL);
+  fc_assert_ret(origin != nullptr);
   map_distance_vector(&dx, &dy, origin, dest);
 
   connection_do_buffer(my_conn);
@@ -1776,7 +1776,7 @@ void edit_buffer_paste(struct edit_buffer *ebuf, const struct tile *dest)
 struct edit_buffer *editor_get_copy_buffer()
 {
   if (!editor) {
-    return NULL;
+    return nullptr;
   }
   return editor->copybuf;
 }
@@ -1838,7 +1838,7 @@ const char *editor_get_mode_tooltip(enum editor_tool_mode etm)
     break;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -1850,7 +1850,7 @@ QPixmap *editor_get_mode_sprite(enum editor_tool_mode etm)
 
   sprites = get_editor_sprites(tileset);
   if (!sprites) {
-    return NULL;
+    return nullptr;
   }
 
   switch (etm) {
@@ -1870,7 +1870,7 @@ QPixmap *editor_get_mode_sprite(enum editor_tool_mode etm)
     break;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -1915,12 +1915,12 @@ void edit_buffer_set_origin(struct edit_buffer *ebuf,
 }
 
 /**
-   Return the previously set origin, or NULL if none.
+   Return the previously set origin, or nullptr if none.
  */
 const struct tile *edit_buffer_get_origin(const struct edit_buffer *ebuf)
 {
   if (!ebuf) {
-    return NULL;
+    return nullptr;
   }
   return ebuf->origin;
 }
@@ -1937,7 +1937,7 @@ bool edit_buffer_has_type(const struct edit_buffer *ebuf, int type)
 }
 
 /**
-   Returns the "center" tile of a group of selected tiles, or NULL.
+   Returns the "center" tile of a group of selected tiles, or nullptr.
    The center is calculated as the vector sum divided by the number of tiles,
    i.e. the average of the map distance vectors of the selected tiles.
  */
@@ -1949,12 +1949,12 @@ const struct tile *editor_get_selection_center()
   int xsum = 0, ysum = 0;
 
   if (!editor || !editor->selected_tile_table) {
-    return NULL;
+    return nullptr;
   }
 
   count = editor->selected_tile_table->count();
   if (count < 1) {
-    return NULL;
+    return nullptr;
   }
 
   origin = map_pos_to_tile(&(wld.map), 0, 0);

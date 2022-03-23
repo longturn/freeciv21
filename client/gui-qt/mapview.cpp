@@ -232,8 +232,8 @@ void map_view::show_debugger()
     connect(m_debugger, &freeciv::tileset_debugger::tile_picking_requested,
             [](bool active) {
               if (active) {
-                set_hover_state(NULL, HOVER_DEBUG_TILE, ACTIVITY_LAST, NULL,
-                                NO_TARGET, NO_TARGET, ACTION_NONE,
+                set_hover_state(nullptr, HOVER_DEBUG_TILE, ACTIVITY_LAST,
+                                nullptr, NO_TARGET, NO_TARGET, ACTION_NONE,
                                 ORDER_LAST);
               } else if (!active && hover_state == HOVER_DEBUG_TILE) {
                 clear_hover_state();

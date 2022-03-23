@@ -412,7 +412,7 @@ void city_widget::city_view()
   }
   pcity = selected_cities[0];
 
-  Q_ASSERT(pcity != NULL);
+  Q_ASSERT(pcity != nullptr);
   if (gui_options.center_when_popup_city) {
     center_tile_mapcanvas(pcity->tile);
   }
@@ -428,7 +428,7 @@ void city_widget::clear_worlist()
   worklist_init(&empty);
 
   for (auto *pcity : qAsConst(selected_cities)) {
-    Q_ASSERT(pcity != NULL);
+    Q_ASSERT(pcity != nullptr);
     city_set_worklist(pcity, &empty);
   }
 }
@@ -439,7 +439,7 @@ void city_widget::clear_worlist()
 void city_widget::buy()
 {
   for (auto *pcity : qAsConst(selected_cities)) {
-    Q_ASSERT(pcity != NULL);
+    Q_ASSERT(pcity != nullptr);
     cityrep_buy(pcity);
   }
 }
@@ -455,7 +455,7 @@ void city_widget::center()
     return;
   }
   pcity = selected_cities[0];
-  Q_ASSERT(pcity != NULL);
+  Q_ASSERT(pcity != nullptr);
   center_tile_mapcanvas(pcity->tile);
   queen()->game_tab_widget->setCurrentIndex(0);
 }
@@ -573,7 +573,7 @@ void city_widget::display_list_menu(const QPoint)
 
     city_list_iterate(client_player()->cities, iter_city)
     {
-      if (NULL != iter_city) {
+      if (nullptr != iter_city) {
         switch (m_state) {
         case SELECT_IMPR:
           if (need_clear) {
@@ -690,7 +690,7 @@ void city_widget::display_list_menu(const QPoint)
           }
           break;
         case CMA:
-          if (NULL != pcity) {
+          if (nullptr != pcity) {
             if (CMA_NONE == id) {
               cma_release_city(pcity);
             } else {
@@ -843,7 +843,8 @@ void city_widget::select_coastal()
       continue;
     }
     pcity = reinterpret_cast<city *>(qvar.value<void *>());
-    if (NULL != pcity && is_terrain_class_near_tile(pcity->tile, TC_OCEAN)) {
+    if (nullptr != pcity
+        && is_terrain_class_near_tile(pcity->tile, TC_OCEAN)) {
       selection.append(QItemSelectionRange(i));
     }
   }
@@ -870,7 +871,7 @@ void city_widget::select_same_island()
     }
     pcity = reinterpret_cast<city *>(qvar.value<void *>());
     for (auto *pscity : qAsConst(selected_cities)) {
-      if (NULL != pcity
+      if (nullptr != pcity
           && (tile_continent(pcity->tile) == tile_continent(pscity->tile))) {
         selection.append(QItemSelectionRange(i));
       }
@@ -905,7 +906,7 @@ void city_widget::select_building_something()
     act = qobject_cast<QAction *>(sender());
     qvar = act->data();
     str = qvar.toString();
-    if (NULL != pcity) {
+    if (nullptr != pcity) {
       if (str == QLatin1String("impr")
           && VUT_IMPROVEMENT == pcity->production.kind
           && !is_wonder(pcity->production.value.building)
@@ -1063,7 +1064,7 @@ void city_widget::gen_production_labels(city_widget::menu_labels what,
   targets_used =
       collect_production_targets(targets, city_data, num_sel, append_units,
                                  append_wonders, true, test_func);
-  name_and_sort_items(targets, targets_used, items, true, NULL);
+  name_and_sort_items(targets, targets_used, items, true, nullptr);
   list.clear();
   for (item = 0; item < targets_used; item++) {
     struct universal target = items[item].item;

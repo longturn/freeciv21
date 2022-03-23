@@ -114,9 +114,9 @@ bool player_can_build_base(const struct base_type *pbase,
 
   pextra = base_extra_get(pbase);
 
-  return are_reqs_active(pplayer, tile_owner(ptile), NULL, NULL, ptile, NULL,
-                         NULL, NULL, NULL, NULL, &pextra->reqs,
-                         RPT_POSSIBLE);
+  return are_reqs_active(pplayer, tile_owner(ptile), nullptr, nullptr, ptile,
+                         nullptr, nullptr, nullptr, nullptr, nullptr,
+                         &pextra->reqs, RPT_POSSIBLE);
 }
 
 /**
@@ -132,9 +132,9 @@ bool can_build_base(const struct unit *punit, const struct base_type *pbase,
     return false;
   }
 
-  return are_reqs_active(pplayer, tile_owner(ptile), NULL, NULL, ptile,
-                         punit, unit_type_get(punit), NULL, NULL, NULL,
-                         &pextra->reqs, RPT_CERTAIN);
+  return are_reqs_active(pplayer, tile_owner(ptile), nullptr, nullptr, ptile,
+                         punit, unit_type_get(punit), nullptr, nullptr,
+                         nullptr, &pextra->reqs, RPT_CERTAIN);
 }
 
 /**
@@ -146,8 +146,8 @@ struct base_type *base_by_number(const Base_type_id id)
 
   bases = extra_type_list_by_cause(EC_BASE);
 
-  if (bases == NULL || id < 0 || id >= extra_type_list_size(bases)) {
-    return NULL;
+  if (bases == nullptr || id < 0 || id >= extra_type_list_size(bases)) {
+    return nullptr;
   }
 
   return extra_base_get(extra_type_list_get(bases, id));
@@ -158,7 +158,7 @@ struct base_type *base_by_number(const Base_type_id id)
  */
 Base_type_id base_number(const struct base_type *pbase)
 {
-  fc_assert_ret_val(NULL != pbase, 0);
+  fc_assert_ret_val(nullptr != pbase, 0);
   return pbase->item_number;
 }
 
@@ -205,13 +205,13 @@ struct base_type *get_base_by_gui_type(enum base_gui_type type,
     struct base_type *pbase = extra_base_get(pextra);
 
     if (type == pbase->gui_type
-        && (punit == NULL || can_build_base(punit, pbase, ptile))) {
+        && (punit == nullptr || can_build_base(punit, pbase, ptile))) {
       return pbase;
     }
   }
   extra_type_by_cause_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**

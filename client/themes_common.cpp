@@ -129,6 +129,6 @@ void theme_reread_callback(struct option *poption)
 {
   const char *theme_name = option_str_get(poption);
 
-  fc_assert_ret(NULL != theme_name && theme_name[0] != '\0');
+  fc_assert_ret(nullptr != theme_name && theme_name[0] != '\0');
   load_theme(theme_name);
 }

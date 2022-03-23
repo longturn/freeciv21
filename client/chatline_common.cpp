@@ -110,9 +110,10 @@ void output_window_append(const struct ft_color color,
       // Prepends to the list, to avoid to overwrite inside colors.
       text_tag_list_prepend(tags, ptag);
     } else {
-      qCritical("Failed to create a color text tag (fg = %s, bg = %s).",
-                (NULL != color.foreground ? color.foreground : "NULL"),
-                (NULL != color.background ? color.background : "NULL"));
+      qCritical(
+          "Failed to create a color text tag (fg = %s, bg = %s).",
+          (nullptr != color.foreground ? color.foreground : "nullptr"),
+          (nullptr != color.background ? color.background : "nullptr"));
     }
   }
 

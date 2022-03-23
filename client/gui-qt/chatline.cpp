@@ -407,7 +407,7 @@ void chat_widget::anchor_clicked(const QUrl &link)
   id = sl.at(1).toInt();
 
   type = static_cast<text_link_type>(n);
-  struct tile *ptile = NULL;
+  struct tile *ptile = nullptr;
   switch (type) {
   case TLT_CITY: {
     struct city *pcity = game_city_by_number(id);
@@ -583,7 +583,7 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
   QMultiMap<int, QString> mm;
   QByteArray str_bytes;
 
-  if (tags == NULL) {
+  if (tags == nullptr) {
     return str;
   }
   str_bytes = str.toLocal8Bit();

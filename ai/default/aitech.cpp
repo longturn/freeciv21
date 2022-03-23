@@ -220,15 +220,15 @@ static adv_want dai_tech_base_want(struct ai_type *ait,
   struct research *pres = research_get(pplayer);
   Tech_type_id tech = advance_number(padv);
   enum tech_state old_state = research_invention_state(pres, tech);
-  struct adv_data *adv = adv_data_get(pplayer, NULL);
-  adv_want orig_want = dai_city_want(pplayer, pcity, adv, NULL);
+  struct adv_data *adv = adv_data_get(pplayer, nullptr);
+  adv_want orig_want = dai_city_want(pplayer, pcity, adv, nullptr);
   adv_want final_want;
   bool world_knew = game.info.global_advances[tech];
   int world_count = game.info.global_advance_count;
 
   research_invention_set(pres, tech, TECH_KNOWN);
 
-  final_want = dai_city_want(pplayer, pcity, adv, NULL);
+  final_want = dai_city_want(pplayer, pcity, adv, nullptr);
 
   research_invention_set(pres, tech, old_state);
   game.info.global_advances[tech] = world_knew;
@@ -247,7 +247,7 @@ static void dai_tech_effect_values(struct ai_type *ait,
    *       evaluating almost verbose - refactor so that they can share code.
    */
   struct government *gov = government_of_player(pplayer);
-  struct adv_data *adv = adv_data_get(pplayer, NULL);
+  struct adv_data *adv = adv_data_get(pplayer, nullptr);
   struct ai_plr *aip = def_ai_player_data(pplayer, ait);
   int turns = 9999; // TODO: Set to correct value
   int nplayers = normal_player_count();
@@ -296,8 +296,9 @@ static void dai_tech_effect_values(struct ai_type *ait,
               present = preq->present;
               continue;
             }
-            if (!is_req_active(pplayer, NULL, pcity, NULL, NULL, NULL, NULL,
-                               NULL, NULL, NULL, preq, RPT_POSSIBLE)) {
+            if (!is_req_active(pplayer, nullptr, pcity, nullptr, nullptr,
+                               nullptr, nullptr, nullptr, nullptr, nullptr,
+                               preq, RPT_POSSIBLE)) {
               active = false;
               break; // presence doesn't matter for inactive effects.
             }
@@ -393,7 +394,7 @@ void dai_manage_tech(struct ai_type *ait, struct player *pplayer)
 }
 
 /**
-   Returns the best defense multiplier unit we can build, or NULL if none.
+   Returns the best defense multiplier unit we can build, or nullptr if none.
    Assigns tech wants for techs to get better units, but only for the
    cheapest to research.
  */
@@ -405,10 +406,10 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
 {
   struct research *presearch = research_get(pplayer);
   int best_avl_def = 0;
-  struct unit_type *best_avl = NULL;
+  struct unit_type *best_avl = nullptr;
   int best_cost = FC_INFINITY;
   struct advance *best_tech = A_NEVER;
-  struct unit_type *best_unit = NULL;
+  struct unit_type *best_unit = nullptr;
   int def_values[U_LAST] = {0};
   int att_idx = utype_index(att);
 
@@ -457,9 +458,9 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
           && !can_player_build_improvement_direct(pplayer, building)) {
         requirement_vector_iterate(&building->reqs, preq)
         {
-          if (!is_req_active(pplayer, NULL, pcity, building,
-                             city_tile(pcity), NULL, deftype, NULL, NULL,
-                             NULL, preq, RPT_CERTAIN)) {
+          if (!is_req_active(pplayer, nullptr, pcity, building,
+                             city_tile(pcity), nullptr, deftype, nullptr,
+                             nullptr, nullptr, preq, RPT_CERTAIN)) {
             if (VUT_ADVANCE == preq->source.kind && preq->present) {
               int iimprtech = advance_number(preq->source.value.advance);
               int imprcost =
@@ -497,7 +498,7 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
     struct ai_plr *plr_data = def_ai_player_data(pplayer, ait);
 
     // Crank up chosen tech want
-    if (best_avl != NULL
+    if (best_avl != nullptr
         && def_values[utype_index(best_unit)] <= 1.5 * best_avl_def) {
       /* We already have almost as good unit suitable for defending against
        * this attacker */
@@ -513,7 +514,7 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
 }
 
 /**
-   Returns the best unit we can build, or NULL if none.  "Best" here
+   Returns the best unit we can build, or nullptr if none.  "Best" here
    means last in the unit list as defined in the ruleset.  Assigns tech
    wants for techs to get better units with given role, but only for the
    cheapest to research "next" unit up the "chain".
@@ -526,8 +527,8 @@ struct unit_type *dai_wants_role_unit(struct ai_type *ait,
   int i, n;
   int best_cost = FC_INFINITY;
   struct advance *best_tech = A_NEVER;
-  struct unit_type *best_unit = NULL;
-  struct unit_type *build_unit = NULL;
+  struct unit_type *best_unit = nullptr;
+  struct unit_type *build_unit = nullptr;
 
   n = num_role_units(role);
   for (i = n - 1; i >= 0; i--) {
@@ -589,7 +590,7 @@ struct unit_type *dai_wants_role_unit(struct ai_type *ait,
     struct ai_plr *plr_data = def_ai_player_data(pplayer, ait);
 
     // Crank up chosen tech want
-    if (build_unit != NULL) {
+    if (build_unit != nullptr) {
       // We already have a role unit of this kind
       want /= 2;
     }

@@ -61,7 +61,7 @@ static const char *const help_type_names[] = {
     "(Any)",       "(Text)",  "Units",   "Improvements", "Wonders",
     "Techs",       "Terrain", "Extras",  "Goods",        "Specialists",
     "Governments", "Ruleset", "Tileset", "Nations",      "Multipliers",
-    "Effects",     NULL};
+    "Effects",     nullptr};
 
 typedef QList<const struct help_item *> helpList;
 helpList *help_nodes;
@@ -87,14 +87,14 @@ void free_help_texts()
 
 /**
    Insert fixed-width table describing veteran system.
-   If only one veteran level, inserts 'nolevels' if non-NULL.
+   If only one veteran level, inserts 'nolevels' if non-nullptr.
    Otherwise, insert 'intro' then a table.
  */
 static bool insert_veteran_help(char *outbuf, size_t outlen,
                                 const struct veteran_system *veteran,
                                 const char *intro, const char *nolevels)
 {
-  /* game.veteran can be NULL in pregame; if so, keep quiet about
+  /* game.veteran can be nullptr in pregame; if so, keep quiet about
    * veteran levels */
   if (!veteran) {
     return false;
@@ -112,7 +112,7 @@ static bool insert_veteran_help(char *outbuf, size_t outlen,
     }
   } else {
     int i;
-    fc_assert_ret_val(veteran->definitions != NULL, false);
+    fc_assert_ret_val(veteran->definitions != nullptr, false);
     if (intro) {
       CATLSTR(outbuf, outlen, intro);
       CATLSTR(outbuf, outlen, "\n\n");
@@ -149,7 +149,7 @@ static const char *terrtrans2char(struct terrain *result,
                                   enum gen_action act)
 {
   return (result == pterrain || result == T_NONE
-          || !action_id_univs_not_blocking(act, NULL, &for_terr))
+          || !action_id_univs_not_blocking(act, nullptr, &for_terr))
              ? ""
              : terrain_name_translation(result);
 }
@@ -661,8 +661,8 @@ static void insert_allows(struct universal *psource, char *buf, size_t bufsz,
 struct help_item *new_help_item(help_page_type type)
 {
   struct help_item *pitem = new help_item;
-  pitem->topic = NULL;
-  pitem->text = NULL;
+  pitem->topic = nullptr;
+  pitem->text = nullptr;
   pitem->type = type;
   return pitem;
 }
@@ -682,7 +682,7 @@ static int help_item_compar(const struct help_item *v1,
 }
 
 /**
-   pplayer may be NULL.
+   pplayer may be nullptr.
  */
 void boot_help_texts(const nation_set *nations_to_show,
                      help_item *tileset_help)
@@ -721,7 +721,7 @@ void boot_help_texts(const nation_set *nations_to_show,
 
   sec = secfile_sections_by_name_prefix(sf, "help_");
 
-  if (NULL != sec) {
+  if (nullptr != sec) {
     section_list_iterate(sec, psection)
     {
       char help_text_buffer[MAX_LEN_PACKET];
@@ -918,12 +918,12 @@ void boot_help_texts(const nation_set *nations_to_show,
             fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                         Q_(HELP_RULESET_ITEM));
             pitem->topic = qstrdup(name);
-            if (game.ruleset_description != NULL) {
+            if (game.ruleset_description != nullptr) {
               desc_len = qstrlen("\n\n") + qstrlen(game.ruleset_description);
             } else {
               desc_len = 0;
             }
-            if (game.ruleset_summary != NULL) {
+            if (game.ruleset_summary != nullptr) {
               if (game.control.version[0] != '\0') {
                 len = qstrlen(_(game.control.name)) + qstrlen(" ")
                       + qstrlen(game.control.version) + qstrlen("\n\n")
@@ -962,7 +962,7 @@ void boot_help_texts(const nation_set *nations_to_show,
                             _(game.control.name), nodesc);
               }
             }
-            if (game.ruleset_description != NULL) {
+            if (game.ruleset_description != nullptr) {
               fc_strlcat(pitem->text, "\n\n", len + desc_len);
               fc_strlcat(pitem->text, game.ruleset_description,
                          len + desc_len);
@@ -1110,8 +1110,8 @@ void boot_help_texts(const nation_set *nations_to_show,
 
 /**
    Return pointer to given help_item.
-   Returns NULL for 1 past end.
-   Returns NULL and prints error message for other out-of bounds.
+   Returns nullptr for 1 past end.
+   Returns nullptr and prints error message for other out-of bounds.
  */
 const struct help_item *get_help_item(int pos)
 {
@@ -1120,10 +1120,10 @@ const struct help_item *get_help_item(int pos)
   size = help_nodes->size();
   if (pos < 0 || pos > size) {
     qCritical("Bad index %d to get_help_item (size %d)", pos, size);
-    return NULL;
+    return nullptr;
   }
   if (pos == size) {
-    return NULL;
+    return nullptr;
   }
   return help_nodes->at(pos);
 }
@@ -1138,7 +1138,7 @@ const struct help_item *
 get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
 {
   int idx;
-  const struct help_item *pitem = NULL;
+  const struct help_item *pitem = nullptr;
   static struct help_item vitem; // v = virtual
   static char vtopic[128];
   static char vtext[256];
@@ -1195,8 +1195,8 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
    Write dynamic text for buildings (including wonders).  This includes
    the ruleset helptext as well as any automatically generated text.
 
-   pplayer may be NULL.
-   user_text, if non-NULL, will be appended to the text.
+   pplayer may be nullptr.
+   user_text, if non-nullptr, will be appended to the text.
  */
 char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
                         const char *user_text,
@@ -1207,14 +1207,14 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
   struct universal source = {.value = {.building = pimprove},
                              .kind = VUT_IMPROVEMENT};
 
-  fc_assert_ret_val(NULL != buf && 0 < bufsz, NULL);
+  fc_assert_ret_val(nullptr != buf && 0 < bufsz, nullptr);
   buf[0] = '\0';
 
-  if (NULL == pimprove) {
+  if (nullptr == pimprove) {
     return buf;
   }
 
-  if (NULL != pimprove->helptext) {
+  if (nullptr != pimprove->helptext) {
     for (const auto &text : qAsConst(*pimprove->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
@@ -1261,7 +1261,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
 
   if (building_has_effect(pimprove, EFT_ENABLE_NUKE)) {
     action_id nuke_actions[MAX_NUM_ACTIONS];
-    struct unit_type *u = NULL;
+    struct unit_type *u = nullptr;
 
     {
       // Find Manhattan dependent nuke actions
@@ -1656,7 +1656,7 @@ static bool utype_may_do_escape_action(const struct unit_type *utype)
    Append misc dynamic text for units.
    Transport capacity, unit flags, fuel.
 
-   pplayer may be NULL.
+   pplayer may be nullptr.
  */
 char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                     const char *user_text, const struct unit_type *utype,
@@ -1667,7 +1667,8 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   struct unit_class *pclass;
   int fuel;
 
-  fc_assert_ret_val(NULL != buf && 0 < bufsz && NULL != user_text, NULL);
+  fc_assert_ret_val(nullptr != buf && 0 < bufsz && nullptr != user_text,
+                    nullptr);
 
   if (!utype) {
     qCritical("Unknown unit!");
@@ -1682,7 +1683,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   pclass = utype_class(utype);
   cat_snprintf(buf, bufsz, _("* Belongs to %s unit class."),
                uclass_name_translation(pclass));
-  if (NULL != pclass->helptext) {
+  if (nullptr != pclass->helptext) {
     for (const auto &text : qAsConst(*pclass->helptext)) {
       cat_snprintf(buf, bufsz, "\n%s\n", _(qUtf8Printable(text)));
     }
@@ -1759,7 +1760,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       const char *helptxt =
           unit_class_flag_helptxt(static_cast<unit_class_flag_id>(flagid));
 
-      if (helptxt != NULL) {
+      if (helptxt != nullptr) {
         // TRANS: indented unit class property, preserve leading spaces
         CATLSTR(buf, bufsz, Q_("?bullet:  * "));
         CATLSTR(buf, bufsz, _(helptxt));
@@ -1929,7 +1930,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       const char *helptxt =
           unit_type_flag_helptxt(static_cast<unit_type_flag_id>(flagid));
 
-      if (helptxt != NULL) {
+      if (helptxt != nullptr) {
         // TRANS: bullet point; note trailing space
         CATLSTR(buf, bufsz, Q_("?bullet:* "));
         CATLSTR(buf, bufsz, _(helptxt));
@@ -2886,11 +2887,11 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
      * been handled above, so keep quiet here if that happens */
     if (insert_veteran_help(
             buf, bufsz, utype->veteran,
-            _("This type of unit has its own veteran levels:"), NULL)) {
+            _("This type of unit has its own veteran levels:"), nullptr)) {
       CATLSTR(buf, bufsz, "\n\n");
     }
   }
-  if (NULL != utype->helptext) {
+  if (nullptr != utype->helptext) {
     for (const auto &text : qAsConst(*utype->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
@@ -2902,7 +2903,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 /**
    Append misc dynamic text for advance/technology.
 
-   pplayer may be NULL.
+   pplayer may be nullptr.
  */
 void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
                       const char *user_text, int i,
@@ -2912,16 +2913,16 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
   struct universal source = {.value = {.advance = vap}, .kind = VUT_ADVANCE};
   int flagid;
 
-  fc_assert_ret(NULL != buf && 0 < bufsz && NULL != user_text);
+  fc_assert_ret(nullptr != buf && 0 < bufsz && nullptr != user_text);
   fc_strlcpy(buf, user_text, bufsz);
 
-  if (NULL == vap) {
+  if (nullptr == vap) {
     qCritical("Unknown tech %d.", i);
     return;
   }
 
   if (game.control.num_tech_classes > 0) {
-    if (vap->tclass == NULL) {
+    if (vap->tclass == nullptr) {
       cat_snprintf(buf, bufsz, _("Belongs to the default tech class.\n\n"));
     } else {
       cat_snprintf(buf, bufsz, _("Belongs to tech class %s.\n\n"),
@@ -2929,7 +2930,7 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
     }
   }
 
-  if (NULL != pplayer) {
+  if (nullptr != pplayer) {
     const struct research *presearch = research_get(pplayer);
 
     if (research_invention_state(presearch, i) != TECH_KNOWN) {
@@ -3106,7 +3107,7 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
       const char *helptxt =
           tech_flag_helptxt(static_cast<tech_flag_id>(flagid));
 
-      if (helptxt != NULL) {
+      if (helptxt != nullptr) {
         // TRANS: bullet point; note trailing space
         CATLSTR(buf, bufsz, Q_("?bullet:* "));
         CATLSTR(buf, bufsz, _(helptxt));
@@ -3124,7 +3125,7 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
               "are needed each turn.\n"));
   }
 
-  if (NULL != vap->helptext) {
+  if (nullptr != vap->helptext) {
     if (strlen(buf) > 0) {
       CATLSTR(buf, bufsz, "\n");
     }
@@ -3145,7 +3146,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
                              .kind = VUT_TERRAIN};
   int flagid;
 
-  fc_assert_ret(NULL != buf && 0 < bufsz);
+  fc_assert_ret(nullptr != buf && 0 < bufsz);
   buf[0] = '\0';
 
   if (!pterrain) {
@@ -3195,7 +3196,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
 
     unit_class_iterate(uclass)
     {
-      if (is_native_to_class(uclass, pterrain, NULL)) {
+      if (is_native_to_class(uclass, pterrain, nullptr)) {
         classes.append(uclass_name_translation(uclass));
       }
     }
@@ -3221,7 +3222,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
       const char *helptxt =
           terrain_flag_helptxt(static_cast<terrain_flag_id>(flagid));
 
-      if (helptxt != NULL) {
+      if (helptxt != nullptr) {
         // TRANS: bullet point; note trailing space
         CATLSTR(buf, bufsz, Q_("?bullet:* "));
         CATLSTR(buf, bufsz, _(helptxt));
@@ -3230,7 +3231,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
     }
   }
 
-  if (NULL != pterrain->helptext) {
+  if (nullptr != pterrain->helptext) {
     if (buf[0] != '\0') {
       CATLSTR(buf, bufsz, "\n");
     }
@@ -3246,10 +3247,10 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
 
 /**
    Return a textual representation of the F/P/T bonus a road provides to a
-   terrain if supplied, or the terrain-independent bonus if pterrain == NULL.
-   e.g. "0/0/+1", "0/+50%/0", or for a complex road "+2/+1+50%/0".
+   terrain if supplied, or the terrain-independent bonus if pterrain ==
+   nullptr. e.g. "0/0/+1", "0/+50%/0", or for a complex road "+2/+1+50%/0".
    Returns a pointer to a static string, so caller should not free
-   (or NULL if there is no effect at all).
+   (or nullptr if there is no effect at all).
  */
 const char *helptext_road_bonus_str(const struct terrain *pterrain,
                                     const struct road_type *proad)
@@ -3296,7 +3297,7 @@ const char *helptext_road_bonus_str(const struct terrain *pterrain,
   }
   output_type_iterate_end;
 
-  return has_effect ? str : NULL;
+  return has_effect ? str : nullptr;
 }
 
 /**
@@ -3313,7 +3314,7 @@ static void extra_bonus_for_terrain(struct extra_type *pextra,
       {.value = {.terrain = pterrain}, .kind = VUT_TERRAIN},
       {.kind = VUT_OTYPE /* value filled in later */}};
 
-  fc_assert_ret(bonus != NULL);
+  fc_assert_ret(bonus != nullptr);
 
   // Irrigation-like food bonuses
   bonus[0] = (pterrain->irrigation_food_incr
@@ -3415,7 +3416,7 @@ const char *helptext_extra_for_terrain_str(struct extra_type *pextra,
    Append misc dynamic text for extras.
    Assumes build time and conflicts are handled in the GUI front-end.
 
-   pplayer may be NULL.
+   pplayer may be nullptr.
  */
 void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
                     const char *user_text, struct extra_type *pextra)
@@ -3427,7 +3428,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
 
   int flagid;
 
-  fc_assert_ret(NULL != buf && 0 < bufsz);
+  fc_assert_ret(nullptr != buf && 0 < bufsz);
   buf[0] = '\0';
 
   if (!pextra) {
@@ -3438,16 +3439,16 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   if (is_extra_caused_by(pextra, EC_BASE)) {
     pbase = pextra->data.base;
   } else {
-    pbase = NULL;
+    pbase = nullptr;
   }
 
   if (is_extra_caused_by(pextra, EC_ROAD)) {
     proad = pextra->data.road;
   } else {
-    proad = NULL;
+    proad = nullptr;
   }
 
-  if (pextra->helptext != NULL) {
+  if (pextra->helptext != nullptr) {
     for (const auto &text : qAsConst(*pextra->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
@@ -3504,7 +3505,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   if (pextra->generated
       && (is_extra_caused_by(pextra, EC_HUT)
           || is_extra_caused_by(pextra, EC_RESOURCE)
-          || (proad != NULL && road_has_flag(proad, RF_RIVER)))) {
+          || (proad != nullptr && road_has_flag(proad, RF_RIVER)))) {
     CATLSTR(buf, bufsz, _("Placed by map generator.\n"));
   }
 
@@ -3689,7 +3690,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
     }
     unit_class_iterate_end;
     if (!classes.isEmpty()) {
-      if (proad != NULL) {
+      if (proad != nullptr) {
         // TRANS: %s is a list of unit classes separated by "and".
         cat_snprintf(buf, bufsz, _("* Can be traveled by %s units.\n"),
                      qUtf8Printable(strvec_to_and_list(classes)));
@@ -3705,7 +3706,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
                 _("  * Such units can move onto this tile even if it would "
                   "not normally be suitable terrain.\n"));
       }
-      if (pbase != NULL) {
+      if (pbase != nullptr) {
         if (base_has_flag(pbase, BF_NOT_AGGRESSIVE)) {
           // "3 tiles" is hardcoded in is_friendly_city_near()
           CATLSTR(
@@ -3731,7 +3732,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
     }
   }
 
-  if (proad != NULL && road_provides_move_bonus(proad)) {
+  if (proad != nullptr && road_provides_move_bonus(proad)) {
     if (proad->move_cost == 0) {
       CATLSTR(buf, bufsz, _("* Allows infinite movement.\n"));
     } else {
@@ -3749,7 +3750,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
             _("* Defeat of one unit does not cause death of all other units "
               "on this tile.\n"));
   }
-  if (pbase != NULL) {
+  if (pbase != nullptr) {
     if (territory_claiming_base(pbase)) {
       CATLSTR(buf, bufsz,
               _("* Extends national borders of the building nation.\n"));
@@ -3776,7 +3777,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
       const char *helptxt =
           extra_flag_helptxt(static_cast<extra_flag_id>(flagid));
 
-      if (helptxt != NULL) {
+      if (helptxt != nullptr) {
         // TRANS: bullet point; note trailing space
         CATLSTR(buf, bufsz, Q_("?bullet:* "));
         CATLSTR(buf, bufsz, _(helptxt));
@@ -3786,10 +3787,10 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   // Table of terrain-specific attributes, if needed
-  if (proad != NULL || pbase != NULL) {
+  if (proad != nullptr || pbase != nullptr) {
     bool road, do_time, do_bonus;
 
-    road = (proad != NULL);
+    road = (proad != nullptr);
     // Terrain-dependent build time?
     do_time = pextra->buildable && pextra->build_time == 0;
     if (road) {
@@ -3842,7 +3843,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
             road ? terrain_extra_build_time(t, ACTIVITY_GEN_ROAD, pextra)
                  : terrain_extra_build_time(t, ACTIVITY_BASE, pextra);
         const char *bonus_text =
-            road ? helptext_road_bonus_str(t, proad) : NULL;
+            road ? helptext_road_bonus_str(t, proad) : nullptr;
         if (turns > 0 || bonus_text) {
           const char *terrain = terrain_name_translation(t);
 
@@ -3857,7 +3858,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
             }
           }
           if (do_bonus) {
-            fc_assert(proad != NULL);
+            fc_assert(proad != nullptr);
             cat_snprintf(buf, bufsz, " %s", bonus_text ? bonus_text : "-");
           }
           CATLSTR(buf, bufsz, "\n");
@@ -3877,17 +3878,17 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
    Append misc dynamic text for goods.
    Assumes effects are described in the help text.
 
-   pplayer may be NULL.
+   pplayer may be nullptr.
  */
 void helptext_goods(char *buf, size_t bufsz, struct player *pplayer,
                     const char *user_text, struct goods_type *pgood)
 {
   bool reqs = false;
 
-  fc_assert_ret(NULL != buf && 0 < bufsz);
+  fc_assert_ret(nullptr != buf && 0 < bufsz);
   buf[0] = '\0';
 
-  if (NULL != pgood->helptext) {
+  if (nullptr != pgood->helptext) {
     for (const auto &text : qAsConst(*pgood->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
@@ -3929,17 +3930,17 @@ void helptext_goods(char *buf, size_t bufsz, struct player *pplayer,
    Append misc dynamic text for specialists.
    Assumes effects are described in the help text.
 
-   pplayer may be NULL.
+   pplayer may be nullptr.
  */
 void helptext_specialist(char *buf, size_t bufsz, struct player *pplayer,
                          const char *user_text, struct specialist *pspec)
 {
   bool reqs = false;
 
-  fc_assert_ret(NULL != buf && 0 < bufsz);
+  fc_assert_ret(nullptr != buf && 0 < bufsz);
   buf[0] = '\0';
 
-  if (NULL != pspec->helptext) {
+  if (nullptr != pspec->helptext) {
     for (const auto &text : qAsConst(*pspec->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
@@ -3963,7 +3964,7 @@ void helptext_specialist(char *buf, size_t bufsz, struct player *pplayer,
 /**
    Append text for government.
 
-   pplayer may be NULL.
+   pplayer may be nullptr.
 
    TODO: Generalize the effects code for use elsewhere. Add
    other requirements.
@@ -3976,10 +3977,10 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
   struct universal source = {.value = {.govern = gov},
                              .kind = VUT_GOVERNMENT};
 
-  fc_assert_ret(NULL != buf && 0 < bufsz);
+  fc_assert_ret(nullptr != buf && 0 < bufsz);
   buf[0] = '\0';
 
-  if (NULL != gov->helptext) {
+  if (nullptr != gov->helptext) {
     for (const auto &text : qAsConst(*gov->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
@@ -4005,8 +4006,8 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
   effect_list_iterate(get_req_source_effects(&source), peffect)
   {
     Output_type_id output_type = O_LAST;
-    struct unit_class *unitclass = NULL;
-    const struct unit_type *unittype = NULL;
+    struct unit_class *unitclass = nullptr;
+    const struct unit_type *unittype = nullptr;
     enum unit_type_flag_id unitflag = unit_type_flag_id_invalid();
     outputs.clear();
     QString or_outputs = Q_("?outputlist: Nothing ");
@@ -4036,13 +4037,13 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         outputs.append(get_output_name(output_type));
         break;
       case VUT_UCLASS:
-        fc_assert(unitclass == NULL);
+        fc_assert(unitclass == nullptr);
         unitclass = preq->source.value.uclass;
         // FIXME: can't easily get world bonus for unit class
         world_value_valid = false;
         break;
       case VUT_UTYPE:
-        fc_assert(unittype == NULL);
+        fc_assert(unittype == nullptr);
         unittype = preq->source.value.utype;
         break;
       case VUT_UTFLAG:
@@ -4093,10 +4094,10 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         /* Get government-independent world value of effect if the extra
          * requirements were simple enough. */
         struct output_type *potype =
-            output_type != O_LAST ? get_output_type(output_type) : NULL;
-        world_value = get_target_bonus_effects(NULL, NULL, NULL, NULL, NULL,
-                                               NULL, NULL, unittype, potype,
-                                               NULL, NULL, peffect->type);
+            output_type != O_LAST ? get_output_type(output_type) : nullptr;
+        world_value = get_target_bonus_effects(
+            nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+            unittype, potype, nullptr, nullptr, peffect->type);
         net_value = peffect->value + world_value;
       }
 
@@ -4433,7 +4434,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                        // TRANS: %s is a (translatable) unit type flag
                        Q_("?unitflag:* New %s units will be veteran.\n"),
                        unit_type_flag_id_translated_name(unitflag));
-        } else if (unittype != NULL) {
+        } else if (unittype != nullptr) {
           if (world_value_valid && net_value > 0) {
             /* Here we can be specific about veteran level, and get
              * net value correct. */
@@ -4696,7 +4697,7 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
     }                                                                       \
   } while (false)
 
-  fc_assert_ret(NULL != buf && 0 < bufsz);
+  fc_assert_ret(nullptr != buf && 0 < bufsz);
   buf[0] = '\0';
 
   if (pnation->legend[0] != '\0') {

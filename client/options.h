@@ -289,7 +289,7 @@ bool option_color_set(struct option *poption, struct ft_color color);
 #define options_iterate(poptset, poption)                                   \
   {                                                                         \
     struct option *poption = optset_option_first(poptset);                  \
-    for (; NULL != poption; poption = option_next(poption)) {
+    for (; nullptr != poption; poption = option_next(poption)) {
 
 #define options_iterate_end                                                 \
   }                                                                         \

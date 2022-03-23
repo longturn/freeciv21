@@ -123,7 +123,7 @@ void spaceship_calc_derived(struct player_spaceship *ship)
 
 /**
    Send details of src's spaceship (or spaceships of all players
-   if src is NULL) to specified destinations.  If dest is NULL then
+   if src is nullptr) to specified destinations.  If dest is nullptr then
    game.est_connections is used.
  */
 void send_spaceship_info(struct player *src, struct conn_list *dest)
@@ -172,18 +172,18 @@ void handle_spaceship_launch(struct player *pplayer)
   int arrival;
 
   if (!player_primary_capital(pplayer)) {
-    notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+    notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                   _("You need to have a capital in order to launch "
                     "your spaceship."));
     return;
   }
   if (ship->state >= SSHIP_LAUNCHED) {
-    notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+    notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                   _("Your spaceship is already launched!"));
     return;
   }
   if (ship->state != SSHIP_STARTED || ship->success_rate == 0.0) {
-    notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+    notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                   _("Your spaceship can't be launched yet!"));
     return;
   }
@@ -192,12 +192,12 @@ void handle_spaceship_launch(struct player *pplayer)
   ship->launch_year = game.info.year;
   arrival = ship->launch_year + static_cast<int>(ship->travel_time);
 
-  notify_player(NULL, NULL, E_SPACESHIP, ftc_server,
+  notify_player(nullptr, nullptr, E_SPACESHIP, ftc_server,
                 _("The %s have launched a spaceship!  "
                   "It is estimated to arrive at Alpha Centauri in %s."),
                 nation_plural_for_player(pplayer), textyear(arrival));
 
-  send_spaceship_info(pplayer, NULL);
+  send_spaceship_info(pplayer, nullptr);
 }
 
 /**
@@ -219,7 +219,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
 
   if (ship->state == SSHIP_NONE) {
     if (from == ACT_REQ_PLAYER) {
-      notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+      notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                     _("Spaceship action received,"
                       " but you don't have a spaceship!"));
     }
@@ -229,7 +229,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
 
   if (ship->state >= SSHIP_LAUNCHED) {
     if (from == ACT_REQ_PLAYER) {
-      notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+      notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                     _("You can't modify your spaceship after launch!"));
     }
 
@@ -243,7 +243,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     }
     if (num_spaceship_structurals_placed(ship) >= ship->structurals) {
       if (from == ACT_REQ_PLAYER) {
-        notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+        notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                       _("You don't have any unplaced Space Structurals!"));
       }
 
@@ -252,7 +252,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     if (num != 0
         && !BV_ISSET(ship->structure, structurals_info[num].required)) {
       if (from == ACT_REQ_PLAYER) {
-        notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+        notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                       _("That Space Structural would not be connected!"));
       }
 
@@ -261,7 +261,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
 
     BV_SET(ship->structure, num);
     spaceship_calc_derived(ship);
-    send_spaceship_info(pplayer, NULL);
+    send_spaceship_info(pplayer, nullptr);
     return true;
   }
 
@@ -271,7 +271,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     }
     if (ship->fuel + ship->propulsion >= ship->components) {
       if (from == ACT_REQ_PLAYER) {
-        notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+        notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                       _("You don't have any unplaced Space Components!"));
       }
 
@@ -279,7 +279,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     }
     if (num > NUM_SS_COMPONENTS / 2) {
       if (from == ACT_REQ_PLAYER) {
-        notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+        notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                       _("Your spaceship already has"
                         " the maximum number of Fuel Components!"));
       }
@@ -289,7 +289,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
 
     ship->fuel++;
     spaceship_calc_derived(ship);
-    send_spaceship_info(pplayer, NULL);
+    send_spaceship_info(pplayer, nullptr);
     return true;
   }
 
@@ -299,7 +299,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     }
     if (ship->fuel + ship->propulsion >= ship->components) {
       if (from == ACT_REQ_PLAYER) {
-        notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+        notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                       _("You don't have any unplaced"
                         " Space Components!"));
       }
@@ -308,7 +308,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     }
     if (num > NUM_SS_COMPONENTS / 2) {
       if (from == ACT_REQ_PLAYER) {
-        notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+        notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                       _("Your spaceship already has the"
                         " maximum number of Propulsion Components!"));
       }
@@ -318,7 +318,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
 
     ship->propulsion++;
     spaceship_calc_derived(ship);
-    send_spaceship_info(pplayer, NULL);
+    send_spaceship_info(pplayer, nullptr);
     return true;
   }
 
@@ -329,7 +329,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     if (ship->habitation + ship->life_support + ship->solar_panels
         >= ship->modules) {
       if (from == ACT_REQ_PLAYER) {
-        notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+        notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                       _("You don't have any unplaced Space Modules!"));
       }
 
@@ -337,7 +337,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     }
     if (num > NUM_SS_MODULES / 3) {
       if (from == ACT_REQ_PLAYER) {
-        notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+        notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                       _("Your spaceship already has the"
                         " maximum number of Habitation Modules!"));
       }
@@ -347,7 +347,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
 
     ship->habitation++;
     spaceship_calc_derived(ship);
-    send_spaceship_info(pplayer, NULL);
+    send_spaceship_info(pplayer, nullptr);
     return true;
   }
 
@@ -358,7 +358,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     if (ship->habitation + ship->life_support + ship->solar_panels
         >= ship->modules) {
       if (from == ACT_REQ_PLAYER) {
-        notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+        notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                       _("You don't have any unplaced Space Modules!"));
       }
 
@@ -366,7 +366,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     }
     if (num > NUM_SS_MODULES / 3) {
       if (from == ACT_REQ_PLAYER) {
-        notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+        notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                       _("Your spaceship already has the"
                         " maximum number of Life Support Modules!"));
       }
@@ -376,7 +376,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
 
     ship->life_support++;
     spaceship_calc_derived(ship);
-    send_spaceship_info(pplayer, NULL);
+    send_spaceship_info(pplayer, nullptr);
     return true;
   }
 
@@ -387,7 +387,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     if (ship->habitation + ship->life_support + ship->solar_panels
         >= ship->modules) {
       if (from == ACT_REQ_PLAYER) {
-        notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+        notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                       _("You don't have any unplaced Space Modules!"));
       }
 
@@ -395,7 +395,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     }
     if (num > NUM_SS_MODULES / 3) {
       if (from == ACT_REQ_PLAYER) {
-        notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
+        notify_player(pplayer, nullptr, E_SPACESHIP, ftc_server,
                       _("Your spaceship already has the"
                         " maximum number of Solar Panel Modules!"));
       }
@@ -405,7 +405,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
 
     ship->solar_panels++;
     spaceship_calc_derived(ship);
-    send_spaceship_info(pplayer, NULL);
+    send_spaceship_info(pplayer, nullptr);
     return true;
   }
 
@@ -419,7 +419,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
  */
 void spaceship_arrived(struct player *pplayer)
 {
-  notify_player(NULL, NULL, E_SPACESHIP, ftc_server,
+  notify_player(nullptr, nullptr, E_SPACESHIP, ftc_server,
                 _("The %s spaceship has arrived at Alpha Centauri."),
                 nation_adjective_for_player(pplayer));
   pplayer->spaceship.state = SSHIP_ARRIVED;
@@ -430,12 +430,12 @@ void spaceship_arrived(struct player *pplayer)
  */
 void spaceship_lost(struct player *pplayer)
 {
-  notify_player(NULL, NULL, E_SPACESHIP, ftc_server,
+  notify_player(nullptr, nullptr, E_SPACESHIP, ftc_server,
                 _("Without guidance from the capital, the %s "
                   "spaceship is lost!"),
                 nation_adjective_for_player(pplayer));
   spaceship_init(&pplayer->spaceship);
-  send_spaceship_info(pplayer, NULL);
+  send_spaceship_info(pplayer, nullptr);
 }
 
 /**

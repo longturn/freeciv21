@@ -30,7 +30,7 @@ struct section {
 
 // The section file struct itself.
 struct section_file {
-  char *name; // Can be NULL.
+  char *name; // Can be nullptr.
   size_t num_entries;
   /* num_includes should be size_t, but as there's no truly portable
    * printf format for size_t and we need to construct string containing

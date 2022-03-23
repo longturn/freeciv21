@@ -119,11 +119,11 @@ struct unit;
 struct unit_list;
 
 struct unit {
-  const struct unit_type *utype; // Cannot be NULL.
+  const struct unit_type *utype; // Cannot be nullptr.
   struct tile *tile;
   int refcount;
   enum direction8 facing;
-  struct player *owner; // Cannot be NULL.
+  struct player *owner; // Cannot be nullptr.
   struct player *nationality;
   int id;
   int homecity;
@@ -136,7 +136,7 @@ struct unit {
   int veteran;
   int fuel;
 
-  struct tile *goto_tile; // May be NULL.
+  struct tile *goto_tile; // May be nullptr.
 
   enum unit_activity activity;
 
@@ -241,11 +241,11 @@ struct unit {
 
 #ifdef FREECIV_DEBUG
 #define CHECK_UNIT(punit)                                                   \
-  (fc_assert(punit != NULL), fc_assert(unit_type_get(punit) != NULL),       \
-   fc_assert(unit_owner(punit) != NULL),                                    \
+  (fc_assert(punit != nullptr), fc_assert(unit_type_get(punit) != nullptr), \
+   fc_assert(unit_owner(punit) != nullptr),                                 \
    fc_assert(player_by_number(player_index(unit_owner(punit)))              \
              == unit_owner(punit)),                                         \
-   fc_assert(game_unit_by_number(punit->id) != NULL))
+   fc_assert(game_unit_by_number(punit->id) != nullptr))
 #else                     // FREECIV_DEBUG
 #define CHECK_UNIT(punit) // Do nothing
 #endif                    // FREECIV_DEBUG
@@ -432,7 +432,7 @@ bool unit_is_cityfounder(const struct unit *punit);
 #define unit_transports_iterate(_pcargo, _ptrans)                           \
   {                                                                         \
     struct unit *_ptrans;                                                   \
-    for (_ptrans = unit_transport_get(_pcargo); NULL != _ptrans;            \
+    for (_ptrans = unit_transport_get(_pcargo); nullptr != _ptrans;         \
          _ptrans = unit_transport_get(_ptrans)) {
 #define unit_transports_iterate_end                                         \
   }                                                                         \

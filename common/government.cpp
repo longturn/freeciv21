@@ -30,11 +30,11 @@
 
 #include "government.h"
 
-struct government *governments = NULL;
+struct government *governments = nullptr;
 
 /**
    Returns the government that has the given (translated) name.
-   Returns NULL if none match.
+   Returns nullptr if none match.
  */
 struct government *government_by_translated_name(const char *name)
 {
@@ -46,12 +46,12 @@ struct government *government_by_translated_name(const char *name)
   }
   governments_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
    Returns the government that has the given (untranslated) rule name.
-   Returns NULL if none match.
+   Returns nullptr if none match.
  */
 struct government *government_by_rule_name(const char *name)
 {
@@ -65,7 +65,7 @@ struct government *government_by_rule_name(const char *name)
   }
   governments_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -84,7 +84,7 @@ Government_type_id government_count()
  */
 Government_type_id government_index(const struct government *pgovern)
 {
-  fc_assert_ret_val(NULL != pgovern, 0);
+  fc_assert_ret_val(nullptr != pgovern, 0);
   return pgovern - governments;
 }
 
@@ -93,20 +93,20 @@ Government_type_id government_index(const struct government *pgovern)
  */
 Government_type_id government_number(const struct government *pgovern)
 {
-  fc_assert_ret_val(NULL != pgovern, 0);
+  fc_assert_ret_val(nullptr != pgovern, 0);
   return pgovern->item_number;
 }
 
 /**
    Return the government with the given index.
 
-   This function returns NULL for an out-of-range index (some callers
+   This function returns nullptr for an out-of-range index (some callers
    rely on this).
  */
 struct government *government_by_number(const Government_type_id gov)
 {
   if (gov < 0 || gov >= game.control.government_count) {
-    return NULL;
+    return nullptr;
   }
   return &governments[gov];
 }
@@ -116,7 +116,7 @@ struct government *government_by_number(const Government_type_id gov)
  */
 struct government *government_of_player(const struct player *pplayer)
 {
-  fc_assert_ret_val(NULL != pplayer, NULL);
+  fc_assert_ret_val(nullptr != pplayer, nullptr);
   return pplayer->government;
 }
 
@@ -125,7 +125,7 @@ struct government *government_of_player(const struct player *pplayer)
  */
 struct government *government_of_city(const struct city *pcity)
 {
-  fc_assert_ret_val(NULL != pcity, NULL);
+  fc_assert_ret_val(nullptr != pcity, nullptr);
   return government_of_player(city_owner(pcity));
 }
 
@@ -135,7 +135,7 @@ struct government *government_of_city(const struct city *pcity)
  */
 const char *government_rule_name(const struct government *pgovern)
 {
-  fc_assert_ret_val(NULL != pgovern, NULL);
+  fc_assert_ret_val(nullptr != pgovern, nullptr);
   return rule_name_get(&pgovern->name);
 }
 
@@ -145,7 +145,7 @@ const char *government_rule_name(const struct government *pgovern)
  */
 const char *government_name_translation(const struct government *pgovern)
 {
-  fc_assert_ret_val(NULL != pgovern, NULL);
+  fc_assert_ret_val(nullptr != pgovern, nullptr);
 
   return name_translation_get(&pgovern->name);
 }
@@ -164,12 +164,12 @@ const char *government_name_for_player(const struct player *pplayer)
     - no required tech (required is A_NONE)
     - player has required tech
     - we have an appropriate wonder
-   Returns FALSE if pplayer is NULL (used for observers).
+   Returns FALSE if pplayer is nullptr (used for observers).
  */
 bool can_change_to_government(struct player *pplayer,
                               const struct government *gov)
 {
-  fc_assert_ret_val(NULL != gov, false);
+  fc_assert_ret_val(nullptr != gov, false);
 
   if (!pplayer) {
     return false;
@@ -180,8 +180,9 @@ bool can_change_to_government(struct player *pplayer,
     return true;
   }
 
-  return are_reqs_active(pplayer, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-                         NULL, NULL, &gov->reqs, RPT_CERTAIN);
+  return are_reqs_active(pplayer, nullptr, nullptr, nullptr, nullptr,
+                         nullptr, nullptr, nullptr, nullptr, nullptr,
+                         &gov->reqs, RPT_CERTAIN);
 }
 
 /**************************************************************************
@@ -226,7 +227,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
   bool ret = true;
 
   if (!formats_match(rule_name_get(&pruler_title->male), "%s")) {
-    if (NULL != pruler_title->pnation) {
+    if (nullptr != pruler_title->pnation) {
       qCritical("\"%s\" male ruler title for nation \"%s\" (nb %d) "
                 "is not a format. It should match \"%%s\"",
                 rule_name_get(&pruler_title->male),
@@ -241,7 +242,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
   }
 
   if (!formats_match(rule_name_get(&pruler_title->female), "%s")) {
-    if (NULL != pruler_title->pnation) {
+    if (nullptr != pruler_title->pnation) {
       qCritical("\"%s\" female ruler title for nation \"%s\" (nb %d) "
                 "is not a format. It should match \"%%s\"",
                 rule_name_get(&pruler_title->female),
@@ -256,7 +257,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
   }
 
   if (!formats_match(name_translation_get(&pruler_title->male), "%s")) {
-    if (NULL != pruler_title->pnation) {
+    if (nullptr != pruler_title->pnation) {
       qCritical("Translation of \"%s\" male ruler title for nation \"%s\" "
                 "(nb %d) is not a format (\"%s\"). It should match \"%%s\"",
                 rule_name_get(&pruler_title->male),
@@ -273,7 +274,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
   }
 
   if (!formats_match(name_translation_get(&pruler_title->female), "%s")) {
-    if (NULL != pruler_title->pnation) {
+    if (nullptr != pruler_title->pnation) {
       qCritical("Translation of \"%s\" female ruler title for nation \"%s\" "
                 "(nb %d) is not a format (\"%s\"). It should match \"%%s\"",
                 rule_name_get(&pruler_title->female),
@@ -298,22 +299,22 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
 QHash<const struct nation_type *, struct ruler_title *> *
 government_ruler_titles(const struct government *pgovern)
 {
-  fc_assert_ret_val(NULL != pgovern, NULL);
+  fc_assert_ret_val(nullptr != pgovern, nullptr);
   return pgovern->ruler_titles;
 }
 
 /**
-   Add a new ruler title for the nation. Pass NULL for pnation for defining
-   the default title.
+   Add a new ruler title for the nation. Pass nullptr for pnation for
+   defining the default title.
  */
 struct ruler_title *government_ruler_title_new(
     struct government *pgovern, const struct nation_type *pnation,
     const char *ruler_male_title, const char *ruler_female_title)
 {
-  const char *domain = NULL;
+  const char *domain = nullptr;
   struct ruler_title *pruler_title;
 
-  if (pnation != NULL) {
+  if (pnation != nullptr) {
     domain = pnation->translation_domain;
   }
   pruler_title =
@@ -321,11 +322,11 @@ struct ruler_title *government_ruler_title_new(
 
   if (!ruler_title_check(pruler_title)) {
     ruler_title_destroy(pruler_title);
-    return NULL;
+    return nullptr;
   }
 
   if (pgovern->ruler_titles->contains(pnation)) {
-    if (NULL != pnation) {
+    if (nullptr != pnation) {
       qCritical("Ruler title for government \"%s\" (nb %d) and "
                 "nation \"%s\" (nb %d) was set twice.",
                 government_rule_name(pgovern), government_number(pgovern),
@@ -343,7 +344,7 @@ struct ruler_title *government_ruler_title_new(
 }
 
 /**
-   Return the nation of the rule title. Returns NULL if this is default.
+   Return the nation of the rule title. Returns nullptr if this is default.
  */
 const struct nation_type *
 ruler_title_nation(const struct ruler_title *pruler_title)
@@ -379,8 +380,8 @@ const char *ruler_title_for_player(const struct player *pplayer, char *buf,
   const struct nation_type *pnation = nation_of_player(pplayer);
   struct ruler_title *pruler_title;
 
-  fc_assert_ret_val(NULL != buf, NULL);
-  fc_assert_ret_val(0 < buf_len, NULL);
+  fc_assert_ret_val(nullptr != buf, nullptr);
+  fc_assert_ret_val(0 < buf_len, nullptr);
 
   // Try specific nation rule title.
   if (!pgovern->ruler_titles->contains(pnation)
@@ -498,7 +499,7 @@ void governments_alloc(int num)
 {
   int i;
 
-  fc_assert(NULL == governments);
+  fc_assert(nullptr == governments);
   governments = new government[num];
   game.control.government_count = num;
 
@@ -514,7 +515,7 @@ void governments_free()
 {
   int i;
 
-  if (NULL == governments) {
+  if (nullptr == governments) {
     return;
   }
 
