@@ -32,7 +32,7 @@
  */
 enum known_type client_tile_get_known(const struct tile *ptile)
 {
-  if (NULL == client.conn.playing) {
+  if (nullptr == client.conn.playing) {
     if (client_is_observer()) {
       return TILE_KNOWN_SEEN;
     } else {
@@ -87,11 +87,11 @@ struct tile *client_city_tile(const struct city *pcity)
   double x = 0, y = 0;
   size_t num = 0;
 
-  if (NULL == pcity) {
-    return NULL;
+  if (nullptr == pcity) {
+    return nullptr;
   }
 
-  if (NULL != city_tile(pcity)) {
+  if (nullptr != city_tile(pcity)) {
     // Normal city case.
     return city_tile(pcity);
   }
@@ -121,7 +121,7 @@ struct tile *client_city_tile(const struct city *pcity)
     return map_pos_to_tile(&(wld.map), static_cast<int>(x),
                            static_cast<int>(y));
   } else {
-    return NULL;
+    return nullptr;
   }
 }
 

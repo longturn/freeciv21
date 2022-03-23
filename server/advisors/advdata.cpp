@@ -202,7 +202,7 @@ void adv_data_analyze_rulesets(struct player *pplayer)
 {
   struct adv_data *adv = pplayer->server.adv;
 
-  fc_assert_ret(adv != NULL);
+  fc_assert_ret(adv != nullptr);
 
   adv_data_city_impr_calc(pplayer, adv);
 }
@@ -212,7 +212,7 @@ void adv_data_analyze_rulesets(struct player *pplayer)
  */
 static void count_my_units(struct player *pplayer)
 {
-  struct adv_data *adv = adv_data_get(pplayer, NULL);
+  struct adv_data *adv = adv_data_get(pplayer, nullptr);
 
   memset(&adv->stats.units, 0, sizeof(adv->stats.units));
 
@@ -282,7 +282,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
     action_list_end(nuke_actions, i);
   }
 
-  fc_assert_ret_val(adv != NULL, false);
+  fc_assert_ret_val(adv != nullptr, false);
 
   if (adv->phase_is_initialized) {
     return false;
@@ -492,10 +492,10 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
 
   adv->dipl.spacerace_leader = player_leading_spacerace();
 
-  adv->dipl.production_leader = NULL;
+  adv->dipl.production_leader = nullptr;
   players_iterate(aplayer)
   {
-    if (adv->dipl.production_leader == NULL
+    if (adv->dipl.production_leader == nullptr
         || adv->dipl.production_leader->score.mfg < aplayer->score.mfg) {
       adv->dipl.production_leader = aplayer;
     }
@@ -575,7 +575,7 @@ void adv_data_phase_done(struct player *pplayer)
 {
   struct adv_data *adv = pplayer->server.adv;
 
-  fc_assert_ret(adv != NULL);
+  fc_assert_ret(adv != nullptr);
 
   if (!adv->phase_is_initialized) {
     return;
@@ -604,7 +604,7 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
 {
   struct adv_data *adv = pplayer->server.adv;
 
-  fc_assert_ret_val(adv != NULL, NULL);
+  fc_assert_ret_val(adv != nullptr, nullptr);
 
   /* It's certainly indication of bug causing problems
      if this adv_data_get() gets called between adv_data_phase_done() and
@@ -644,10 +644,10 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
        instead of making intrusive fixes for actual bug in stable branch,
        do not assert for non-debug builds of stable versions. */
 #if defined(FREECIV_DEBUG) || defined(IS_DEVEL_VERSION)
-  fc_assert(caller_closes != NULL || adv->phase_is_initialized);
+  fc_assert(caller_closes != nullptr || adv->phase_is_initialized);
 #endif
 
-  if (caller_closes != NULL) {
+  if (caller_closes != nullptr) {
     *caller_closes = false;
   }
 
@@ -675,14 +675,14 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
       log_debug("%s advisor data phase closed when adv_data_get() called",
                 player_name(pplayer));
       adv_data_phase_init(pplayer, false);
-      if (caller_closes != NULL) {
+      if (caller_closes != nullptr) {
         *caller_closes = true;
       } else {
         adv_data_phase_done(pplayer);
       }
     }
   } else {
-    if (!adv->phase_is_initialized && caller_closes != NULL) {
+    if (!adv->phase_is_initialized && caller_closes != nullptr) {
       adv_data_phase_init(pplayer, false);
       *caller_closes = true;
     }
@@ -698,19 +698,19 @@ void adv_data_init(struct player *pplayer)
 {
   struct adv_data *adv;
 
-  if (pplayer->server.adv == NULL) {
+  if (pplayer->server.adv == nullptr) {
     pplayer->server.adv = new adv_data();
   }
   adv = pplayer->server.adv;
 
-  adv->government_want = NULL;
+  adv->government_want = nullptr;
 
   adv->dipl.adv_dipl_slots = new adv_dipl *[player_slot_count()]();
   player_slots_iterate(pslot)
   {
     struct adv_dipl **dip_slot =
         adv->dipl.adv_dipl_slots + player_slot_index(pslot);
-    *dip_slot = NULL;
+    *dip_slot = nullptr;
   }
   player_slots_iterate_end;
 
@@ -733,7 +733,7 @@ void adv_data_default(struct player *pplayer)
 {
   struct adv_data *adv = pplayer->server.adv;
 
-  fc_assert_ret(adv != NULL);
+  fc_assert_ret(adv != nullptr);
 
   adv->govt_reeval = 0;
   if (!adv->government_want) {
@@ -754,13 +754,13 @@ void adv_data_close(struct player *pplayer)
 {
   struct adv_data *adv = pplayer->server.adv;
 
-  fc_assert_ret(NULL != adv);
+  fc_assert_ret(nullptr != adv);
 
   adv_data_phase_done(pplayer);
 
   NFCPP_FREE(adv->government_want);
 
-  if (adv->dipl.adv_dipl_slots != NULL) {
+  if (adv->dipl.adv_dipl_slots != nullptr) {
     players_iterate(aplayer)
     {
       adv_dipl_free(pplayer, aplayer);
@@ -774,7 +774,7 @@ void adv_data_close(struct player *pplayer)
 
   NFC_FREE(adv);
 
-  pplayer->server.adv = NULL;
+  pplayer->server.adv = nullptr;
 }
 
 /**
@@ -798,9 +798,9 @@ static void adv_dipl_free(const struct player *plr1,
   struct adv_dipl **dip_slot =
       plr1->server.adv->dipl.adv_dipl_slots + player_index(plr2);
 
-  if (*dip_slot != NULL) {
+  if (*dip_slot != nullptr) {
     FC_FREE(*dip_slot);
-    *dip_slot = NULL;
+    *dip_slot = nullptr;
   }
 }
 
@@ -830,7 +830,7 @@ static struct adv_dipl *adv_dipl_get(const struct player *plr1,
  */
 void adv_best_government(struct player *pplayer)
 {
-  struct adv_data *adv = adv_data_get(pplayer, NULL);
+  struct adv_data *adv = adv_data_get(pplayer, nullptr);
   int best_val = 0;
   struct government *current_gov = government_of_player(pplayer);
 
@@ -1069,7 +1069,7 @@ void adv_best_government(struct player *pplayer)
  */
 bool adv_wants_science(struct player *pplayer)
 {
-  return adv_data_get(pplayer, NULL)->wants_science;
+  return adv_data_get(pplayer, nullptr)->wants_science;
 }
 
 /**

@@ -57,7 +57,7 @@ bool api_server_save(lua_State *L, const char *filename)
   LUASCRIPT_CHECK_STATE(L, false);
 
   // Limit the allowed characters in the filename.
-  if (filename != NULL && !is_safe_filename(filename)) {
+  if (filename != nullptr && !is_safe_filename(filename)) {
     return false;
   }
 
@@ -85,7 +85,7 @@ bool api_play_music(lua_State *L, Player *pplayer, const char *tag)
 }
 
 /**
-   Return the formated value of the setting or NULL if no such setting
+   Return the formated value of the setting or nullptr if no such setting
  exists,
  */
 const char *api_server_setting_get(lua_State *L, const char *sett_name)
@@ -93,13 +93,13 @@ const char *api_server_setting_get(lua_State *L, const char *sett_name)
   struct setting *pset;
   static char buf[512];
 
-  LUASCRIPT_CHECK_STATE(L, NULL);
-  LUASCRIPT_CHECK_ARG_NIL(L, sett_name, 2, API_TYPE_STRING, NULL);
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_ARG_NIL(L, sett_name, 2, API_TYPE_STRING, nullptr);
 
   pset = setting_by_name(sett_name);
 
   if (!pset) {
-    return NULL;
+    return nullptr;
   }
 
   return setting_value_name(pset, false, buf, sizeof(buf));

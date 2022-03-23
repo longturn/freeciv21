@@ -302,7 +302,7 @@ bool player_knows_extra_exist(const struct player *pplayer,
   {                                                                         \
     struct extra_type_list *_etl_##_extra =                                 \
         extra_type_list_by_cause(_cause);                                   \
-    if (_etl_##_extra != NULL) {                                            \
+    if (_etl_##_extra != nullptr) {                                         \
       extra_type_list_iterate(_etl_##_extra, _extra)                        \
       {
 

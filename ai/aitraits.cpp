@@ -60,7 +60,7 @@ void ai_traits_close(struct player *pplayer)
 {
   free(pplayer->ai_common.traits); // realloc
 
-  pplayer->ai_common.traits = NULL;
+  pplayer->ai_common.traits = nullptr;
 }
 
 /**

@@ -74,7 +74,7 @@ enum fc_tristate fc_tristate_and(enum fc_tristate one, enum fc_tristate two);
 #define ARRAY_SIZE(x) (*(&(x) + 1) - (x))
 #define ADD_TO_POINTER(p, n) ((void *) ((char *) (p) + (n)))
 
-#define FC_MEMBER(type, member) (((type *) NULL)->member)
+#define FC_MEMBER(type, member) (((type *) nullptr)->member)
 #define FC_MEMBER_OFFSETOF(type, member) ((size_t) &FC_MEMBER(type, member))
 #define FC_MEMBER_SIZEOF(type, member) sizeof(FC_MEMBER(type, member))
 #define FC_MEMBER_ARRAY_SIZE(type, member)                                  \

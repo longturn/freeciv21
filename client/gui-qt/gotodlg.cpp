@@ -88,7 +88,7 @@ goto_dialog::goto_dialog(QWidget *parent)
           this, &goto_dialog::item_selected);
 
   setLayout(layout);
-  original_tile = NULL;
+  original_tile = nullptr;
   setFocus();
 }
 
@@ -238,7 +238,7 @@ void goto_dialog::fill_tab(player *pplayer)
       case 1: {
         auto sprite =
             get_nation_flag_sprite(tileset, nation_of_player(pplayer));
-        if (sprite != NULL) {
+        if (sprite != nullptr) {
           item->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
         }
         str = nation_adjective_translation(nation_of_player(pplayer));
@@ -353,7 +353,7 @@ void popup_goto_dialog(void)
     return;
   }
 
-  if (queen()->gtd != NULL) {
+  if (queen()->gtd != nullptr) {
     queen()->gtd->init();
     queen()->gtd->update_dlg();
     queen()->gtd->sort_def();

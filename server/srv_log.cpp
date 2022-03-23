@@ -128,11 +128,11 @@ void timing_results_real()
               timer_read_seconds(aitimer[which][0]),                        \
               timer_read_seconds(aitimer[which][1]));                       \
   qCInfo(timers_category, "%s", buf);                                       \
-  notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s", buf);
+  notify_conn(nullptr, nullptr, E_AI_DEBUG, ftc_log, "%s", buf);
 
   qCInfo(timers_category, "  --- AI timing results ---");
 
-  notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log,
+  notify_conn(nullptr, nullptr, E_AI_DEBUG, ftc_log,
               "  --- AI timing results ---");
   AILOG_OUT("Total AI time", AIT_ALL);
   AILOG_OUT("Movemap", AIT_MOVEMAP);

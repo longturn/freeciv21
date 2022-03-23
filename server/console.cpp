@@ -57,7 +57,7 @@ static void console_handle_message(QtMsgType type,
   con_set_color(CON_GREEN);
   if (type == QtCriticalMsg) {
     con_set_color(CON_RED);
-    notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning, "%s",
+    notify_conn(nullptr, nullptr, E_LOG_ERROR, ftc_warning, "%s",
                 qUtf8Printable(message));
   } else if (type == QtFatalMsg) {
     // Make sure that message is not left to buffers when server dies
@@ -68,9 +68,9 @@ static void console_handle_message(QtMsgType type,
     }
     conn_list_iterate_end;
 
-    notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning, "%s",
+    notify_conn(nullptr, nullptr, E_LOG_FATAL, ftc_warning, "%s",
                 qUtf8Printable(message));
-    notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning,
+    notify_conn(nullptr, nullptr, E_LOG_FATAL, ftc_warning,
                 _("Please report this message at %s"), BUG_URL);
   }
 
@@ -116,7 +116,8 @@ static QString log_prefix()
  */
 static void depr_warn_callback(const char *msg)
 {
-  notify_conn(NULL, NULL, E_DEPRECATION_WARNING, ftc_warning, "%s", msg);
+  notify_conn(nullptr, nullptr, E_DEPRECATION_WARNING, ftc_warning, "%s",
+              msg);
 }
 
 /**
@@ -163,7 +164,7 @@ void con_write(enum rfc_status rfc_status, const char *message, ...)
   va_end(args);
 
   // remove all format tags
-  featured_text_to_plain_text(buf1, buf2, sizeof(buf2), NULL, false);
+  featured_text_to_plain_text(buf1, buf2, sizeof(buf2), nullptr, false);
   con_puts(rfc_status, buf2);
 }
 

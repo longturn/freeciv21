@@ -64,7 +64,7 @@ struct update_queue_data *
 update_queue::wq_data_extract(struct waiting_queue_data *wq_data)
 {
   struct update_queue_data *uq_data = wq_data->uq_data;
-  wq_data->uq_data = NULL;
+  wq_data->uq_data = nullptr;
   return uq_data;
 }
 
@@ -96,9 +96,9 @@ void update_queue::wq_run_requests(waitingQueue &hash, int request_id)
 // Free a waiting queue data.
 void update_queue::wq_data_destroy(struct waiting_queue_data *wq_data)
 {
-  fc_assert_ret(NULL != wq_data);
-  if (NULL != wq_data->uq_data) {
-    // May be NULL, see waiting_queue_data_extract().
+  fc_assert_ret(nullptr != wq_data);
+  if (nullptr != wq_data->uq_data) {
+    // May be nullptr, see waiting_queue_data_extract().
     data_destroy(wq_data->uq_data);
   }
   delete wq_data;
@@ -157,8 +157,8 @@ struct update_queue_data *update_queue::data_new(void *data,
 //  Free a update queue data.
 void update_queue::data_destroy(struct update_queue_data *uq_data)
 {
-  fc_assert_ret(NULL != uq_data);
-  if (NULL != uq_data->free_data_func) {
+  fc_assert_ret(nullptr != uq_data);
+  if (nullptr != uq_data->free_data_func) {
     uq_data->free_data_func(uq_data->data);
   }
   delete uq_data;
@@ -251,7 +251,7 @@ void update_queue::push(uq_callback_t callback,
 // once. Setting a callback twice will overwrite the previous.
 void update_queue::add(uq_callback_t callback, void *data)
 {
-  push(callback, data_new(data, NULL));
+  push(callback, data_new(data, nullptr));
 }
 
 // Add a callback to the update queue. NB: you can only set a callback
@@ -282,10 +282,10 @@ bool update_queue::has_callback_full(uq_callback_t callback,
       uq_data = p.second;
   }
   if (uq_data) {
-    if (NULL != data) {
+    if (nullptr != data) {
       *data = uq_data->data;
     }
-    if (NULL != free_data_func) {
+    if (nullptr != free_data_func) {
       *free_data_func = uq_data->free_data_func;
     }
     return true;
@@ -309,7 +309,8 @@ void update_queue::connect_processing_finished(int request_id,
                                                uq_callback_t callback,
                                                void *data)
 {
-  wq_add_request(wq_processing_finished, request_id, callback, data, NULL);
+  wq_add_request(wq_processing_finished, request_id, callback, data,
+                 nullptr);
 }
 
 /**
@@ -328,7 +329,8 @@ void update_queue::connect_processing_finished_unique(int request_id,
       }
     }
   }
-  wq_add_request(wq_processing_finished, request_id, callback, data, NULL);
+  wq_add_request(wq_processing_finished, request_id, callback, data,
+                 nullptr);
 }
 
 // Connects the callback to the end of the processing (in server side) of
@@ -347,7 +349,7 @@ void update_queue::connect_processing_started(int request_id,
                                               uq_callback_t callback,
                                               void *data)
 {
-  wq_add_request(wq_processing_started, request_id, callback, data, NULL);
+  wq_add_request(wq_processing_started, request_id, callback, data, nullptr);
 }
 
 // Set the client page.
@@ -384,7 +386,7 @@ enum client_pages get_client_page(void)
   const void *data;
 
   if (update_queue::uq()->has_callback_full(set_client_page_callback, &data,
-                                            NULL)) {
+                                            nullptr)) {
     return static_cast<client_pages>(FC_PTR_TO_INT(data));
   } else {
     return get_current_client_page();
@@ -423,7 +425,7 @@ void menus_update(void)
 // Update multipliers/policy dialog.
 void multipliers_dialog_update(void)
 {
-  update_queue::uq()->add(real_multipliers_dialog_update, NULL);
+  update_queue::uq()->add(real_multipliers_dialog_update, nullptr);
 }
 
 // Update cities gui.
@@ -475,7 +477,7 @@ void popup_city_dialog(struct city *pcity)
   pcity->client.need_updates =
       static_cast<city_updates>(static_cast<int>(pcity->client.need_updates)
                                 | static_cast<int>(CU_POPUP_DIALOG));
-  update_queue::uq()->add(cities_update_callback, NULL);
+  update_queue::uq()->add(cities_update_callback, nullptr);
 }
 
 // Request the city dialog to be updated for the city.
@@ -484,7 +486,7 @@ void refresh_city_dialog(struct city *pcity)
   pcity->client.need_updates =
       static_cast<city_updates>(static_cast<int>(pcity->client.need_updates)
                                 | static_cast<int>(CU_UPDATE_DIALOG));
-  update_queue::uq()->add(cities_update_callback, NULL);
+  update_queue::uq()->add(cities_update_callback, nullptr);
 }
 
 // Request the city to be updated in the city report.
@@ -493,47 +495,47 @@ void city_report_dialog_update_city(struct city *pcity)
   pcity->client.need_updates =
       static_cast<city_updates>(static_cast<int>(pcity->client.need_updates)
                                 | static_cast<int>(CU_UPDATE_REPORT));
-  update_queue::uq()->add(cities_update_callback, NULL);
+  update_queue::uq()->add(cities_update_callback, nullptr);
 }
 
 // Update the connection list in the start page.
 void conn_list_dialog_update(void)
 {
-  update_queue::uq()->add(real_conn_list_dialog_update, NULL);
+  update_queue::uq()->add(real_conn_list_dialog_update, nullptr);
 }
 
 // Update the nation report.
 void players_dialog_update(void)
 {
-  update_queue::uq()->add(real_players_dialog_update, NULL);
+  update_queue::uq()->add(real_players_dialog_update, nullptr);
 }
 
 // Update the city report.
 void city_report_dialog_update(void)
 {
-  update_queue::uq()->add(real_city_report_dialog_update, NULL);
+  update_queue::uq()->add(real_city_report_dialog_update, nullptr);
 }
 
 // Update the science report.
 void science_report_dialog_update(void)
 {
-  update_queue::uq()->add(real_science_report_dialog_update, NULL);
+  update_queue::uq()->add(real_science_report_dialog_update, nullptr);
 }
 
 // Update the economy report.
 void economy_report_dialog_update(void)
 {
-  update_queue::uq()->add(real_economy_report_dialog_update, NULL);
+  update_queue::uq()->add(real_economy_report_dialog_update, nullptr);
 }
 
 // Update the units report.
 void units_report_dialog_update(void)
 {
-  update_queue::uq()->add(real_units_report_dialog_update, NULL);
+  update_queue::uq()->add(real_units_report_dialog_update, nullptr);
 }
 
 // Update the units report.
 void unit_select_dialog_update(void)
 {
-  update_queue::uq()->add(unit_select_dialog_update_real, NULL);
+  update_queue::uq()->add(unit_select_dialog_update_real, nullptr);
 }

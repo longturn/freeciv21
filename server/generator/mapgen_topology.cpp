@@ -38,7 +38,7 @@ int map_colatitude(const struct tile *ptile)
   double x, y;
   int tile_x, tile_y;
 
-  fc_assert_ret_val(ptile != NULL, MAX_COLATITUDE / 2);
+  fc_assert_ret_val(ptile != nullptr, MAX_COLATITUDE / 2);
 
   if (wld.map.server.alltemperate) {
     /* An all-temperate map has "average" temperature everywhere.

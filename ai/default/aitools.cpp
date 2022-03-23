@@ -102,7 +102,7 @@ const char *dai_unit_task_rule_name(const enum ai_unit_task task)
   }
   // no default, ensure all types handled somehow
   qCritical("Unsupported ai_unit_task %d.", task);
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -125,7 +125,7 @@ const char *dai_choice_rule_name(const struct adv_choice *choice)
   };
   // no default, ensure all types handled somehow
   qCritical("Unsupported ai_unit_task %d.", choice->type);
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -139,7 +139,7 @@ const char *dai_choice_rule_name(const struct adv_choice *choice)
 int military_amortize(struct player *pplayer, struct city *pcity, int value,
                       int delay, int build_cost)
 {
-  struct adv_data *ai = adv_data_get(pplayer, NULL);
+  struct adv_data *ai = adv_data_get(pplayer, nullptr);
   int city_output = (pcity ? pcity->surplus[O_SHIELD] : 1);
   int output = MAX(city_output, ai->stats.average_production);
   int build_time = build_cost / MAX(output, 1);
@@ -226,10 +226,10 @@ static bool dai_gothere_bodyguard(struct ai_type *ait, struct unit *punit,
   }
 
   vlevel = utype_veteran_level(unit_type_get(punit), punit->veteran);
-  fc_assert_ret_val(vlevel != NULL, false);
+  fc_assert_ret_val(vlevel != nullptr, false);
 
   // We look for the bodyguard where we stand.
-  if (guard == NULL || unit_tile(guard) != unit_tile(punit)) {
+  if (guard == nullptr || unit_tile(guard) != unit_tile(punit)) {
     int my_def = (punit->hp * unit_type_get(punit)->defense_strength
                   * POWER_FACTOR * vlevel->power_fact / 100);
 
@@ -243,7 +243,7 @@ static bool dai_gothere_bodyguard(struct ai_type *ait, struct unit *punit,
       aiguard_clear_guard(ait, punit);
       bg_needed = false;
     }
-  } else if (guard != NULL) {
+  } else if (guard != nullptr) {
     bg_needed = true;
   }
 
@@ -408,18 +408,18 @@ bool dai_unit_goto_constrained(struct ai_type *ait, struct unit *punit,
     /* Not an error; sometimes immediate_destination instructs the unit
      * to stay here. For example, to refuel.*/
     UNIT_LOG(LOG_DEBUG, punit, "constrained goto: already there!");
-    send_unit_info(NULL, punit);
+    send_unit_info(nullptr, punit);
 
     return true;
   } else if (!goto_is_sane(punit, ptile)) {
     UNIT_LOG(LOG_DEBUG, punit, "constrained goto: 'insane' goto!");
     punit->activity = ACTIVITY_IDLE;
-    send_unit_info(NULL, punit);
+    send_unit_info(nullptr, punit);
 
     return true;
   } else if (punit->moves_left == 0) {
     UNIT_LOG(LOG_DEBUG, punit, "constrained goto: no moves left!");
-    send_unit_info(NULL, punit);
+    send_unit_info(nullptr, punit);
 
     return true;
   }
@@ -542,7 +542,7 @@ void dai_fill_unit_param(struct ai_type *ait, struct pf_parameter *parameter,
    * but probably ought to be more cautious for non military units
    */
   if (!is_ferry && !utype_fuel(unit_type_get(punit))) {
-    parameter->get_moves_left_req = NULL;
+    parameter->get_moves_left_req = nullptr;
   }
 
   if (long_path) {
@@ -558,7 +558,7 @@ void dai_fill_unit_param(struct ai_type *ait, struct pf_parameter *parameter,
      * or our destination is far but there are enemy units near us and on the
      * shortest path to the destination.
      */
-    parameter->get_zoc = NULL;
+    parameter->get_zoc = nullptr;
   }
 
   if (unit_has_type_flag(punit, UTYF_SETTLERS)) {
@@ -718,10 +718,10 @@ void dai_unit_new_task(struct ai_type *ait, struct unit *punit,
 
   /* Verify and set the goto destination.  Eventually this can be a lot more
    * stringent, but for now we don't want to break things too badly. */
-  punit->goto_tile = ptile; // May be NULL.
+  punit->goto_tile = ptile; // May be nullptr.
 
   if (unit_data->task == AIUNIT_NONE && bodyguard) {
-    dai_unit_new_task(ait, bodyguard, AIUNIT_NONE, NULL);
+    dai_unit_new_task(ait, bodyguard, AIUNIT_NONE, nullptr);
   }
 
   // Reserve city spot, _unless_ we want to add ourselves to a city.
@@ -732,7 +732,7 @@ void dai_unit_new_task(struct ai_type *ait, struct unit *punit,
     // Set victim's hunted bit - the hunt is on!
     struct unit *target = game_unit_by_number(unit_data->target);
 
-    fc_assert_ret(target != NULL);
+    fc_assert_ret(target != nullptr);
     BV_SET(def_ai_unit_data(target, ait)->hunted,
            player_index(unit_owner(punit)));
     UNIT_LOG(LOGLEVEL_HUNT, target, "is being hunted");
@@ -810,11 +810,11 @@ static void dai_unit_bodyguard_move(struct ai_type *ait,
   struct unit *punit;
   struct player *pplayer;
 
-  fc_assert_ret(bodyguard != NULL);
+  fc_assert_ret(bodyguard != nullptr);
   pplayer = unit_owner(bodyguard);
-  fc_assert_ret(pplayer != NULL);
+  fc_assert_ret(pplayer != nullptr);
   punit = aiguard_charge_unit(ait, bodyguard);
-  fc_assert_ret(punit != NULL);
+  fc_assert_ret(punit != nullptr);
 
   CHECK_GUARD(ait, bodyguard);
   CHECK_CHARGE_UNIT(ait, punit);
@@ -911,12 +911,12 @@ bool dai_unit_attack(struct ai_type *ait, struct unit *punit,
     unit_do_action(unit_owner(punit), punit->id, ptrans->id, 0, "",
                    ACTION_TRANSPORT_EMBARK);
   } else if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK1,
-                                            punit, ptile, NULL)) {
+                                            punit, ptile, nullptr)) {
     // "Transport Disembark".
     unit_do_action(unit_owner(punit), punit->id, tile_index(ptile), 0, "",
                    ACTION_TRANSPORT_DISEMBARK1);
   } else if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK2,
-                                            punit, ptile, NULL)) {
+                                            punit, ptile, nullptr)) {
     // "Transport Disembark 2".
     unit_do_action(unit_owner(punit), punit->id, tile_index(ptile), 0, "",
                    ACTION_TRANSPORT_DISEMBARK2);
@@ -924,13 +924,13 @@ bool dai_unit_attack(struct ai_type *ait, struct unit *punit,
     // Other move.
     (void) unit_move_handling(punit, ptile, false, true);
   }
-  alive = (game_unit_by_number(sanity) != NULL);
+  alive = (game_unit_by_number(sanity) != nullptr);
 
-  if (alive && same_pos(ptile, unit_tile(punit)) && bodyguard != NULL
+  if (alive && same_pos(ptile, unit_tile(punit)) && bodyguard != nullptr
       && def_ai_unit_data(bodyguard, ait)->charge == punit->id) {
     dai_unit_bodyguard_move(ait, bodyguard, ptile);
     // Clumsy bodyguard might trigger an auto-attack
-    alive = (game_unit_by_number(sanity) != NULL);
+    alive = (game_unit_by_number(sanity) != nullptr);
   }
 
   return alive;
@@ -963,7 +963,7 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit,
 {
   struct action *paction;
   struct unit *bodyguard;
-  struct unit *ptrans = NULL;
+  struct unit *ptrans = nullptr;
   int sanity = punit->id;
   struct player *pplayer = unit_owner(punit);
   const bool is_plr_ai = is_ai(pplayer);
@@ -1007,20 +1007,20 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit,
     // "Transport Embark".
     paction = action_by_number(ACTION_TRANSPORT_EMBARK);
   } else if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK1,
-                                            punit, ptile, NULL)) {
+                                            punit, ptile, nullptr)) {
     // "Transport Disembark".
     paction = action_by_number(ACTION_TRANSPORT_DISEMBARK1);
   } else if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK2,
-                                            punit, ptile, NULL)) {
+                                            punit, ptile, nullptr)) {
     // "Transport Disembark 2".
     paction = action_by_number(ACTION_TRANSPORT_DISEMBARK2);
   } else {
     // Other move.
-    paction = NULL;
+    paction = nullptr;
   }
 
   // Try not to end move next to an enemy if we can avoid it by waiting
-  if (paction == NULL // Regular move
+  if (paction == nullptr // Regular move
       || action_has_result(paction, ACTRES_TRANSPORT_DISEMBARK)) {
     // The unit will have to move it self rather than being moved.
     int mcost = map_move_cost_unit(&(wld.map), punit, ptile);
@@ -1070,7 +1070,7 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit,
   if (game_unit_by_number(sanity) && same_pos(ptile, unit_tile(punit))) {
     bodyguard = aiguard_guard_of(ait, punit);
 
-    if (is_plr_ai && bodyguard != NULL
+    if (is_plr_ai && bodyguard != nullptr
         && def_ai_unit_data(bodyguard, ait)->charge == punit->id) {
       dai_unit_bodyguard_move(ait, bodyguard, ptile);
     }
@@ -1158,7 +1158,7 @@ bool dai_choose_role_unit(struct ai_type *ait, struct player *pplayer,
   struct unit_type *iunit =
       dai_wants_role_unit(ait, pplayer, pcity, role, want);
 
-  if (iunit != NULL) {
+  if (iunit != nullptr) {
     choice->type = type;
     choice->value.utype = iunit;
     choice->want = want;
@@ -1182,7 +1182,7 @@ void dai_build_adv_override(struct ai_type *ait, struct city *pcity,
 
   if (choice->type == CT_NONE) {
     want = 0;
-    chosen = NULL;
+    chosen = nullptr;
   } else {
     want = choice->want;
     chosen = choice->value.building;

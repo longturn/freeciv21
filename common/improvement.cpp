@@ -135,7 +135,7 @@ struct impr_type *improvement_array_first()
   if (game.control.num_impr_types > 0) {
     return improvement_types;
   }
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -146,7 +146,7 @@ const struct impr_type *improvement_array_last()
   if (game.control.num_impr_types > 0) {
     return &improvement_types[game.control.num_impr_types - 1];
   }
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -162,7 +162,7 @@ Impr_type_id improvement_count() { return game.control.num_impr_types; }
  */
 Impr_type_id improvement_index(const struct impr_type *pimprove)
 {
-  fc_assert_ret_val(NULL != pimprove, 0);
+  fc_assert_ret_val(nullptr != pimprove, 0);
   return pimprove - improvement_types;
 }
 
@@ -171,25 +171,25 @@ Impr_type_id improvement_index(const struct impr_type *pimprove)
  */
 Impr_type_id improvement_number(const struct impr_type *pimprove)
 {
-  fc_assert_ret_val(NULL != pimprove, 0);
+  fc_assert_ret_val(nullptr != pimprove, 0);
   return pimprove->item_number;
 }
 
 /**
-   Returns the improvement type for the given index/ID.  Returns NULL for
+   Returns the improvement type for the given index/ID.  Returns nullptr for
    an out-of-range index.
  */
 struct impr_type *improvement_by_number(const Impr_type_id id)
 {
   if (id < 0 || id >= improvement_count()) {
-    return NULL;
+    return nullptr;
   }
   return &improvement_types[id];
 }
 
 /**
    Returns pointer when the improvement_type "exists" in this game,
-   returns NULL otherwise.
+   returns nullptr otherwise.
 
    An improvement_type doesn't exist for any of:
     - the improvement_type has been flagged as removed by setting its
@@ -198,8 +198,8 @@ struct impr_type *improvement_by_number(const Impr_type_id id)
  */
 const struct impr_type *valid_improvement(const struct impr_type *pimprove)
 {
-  if (NULL == pimprove) {
-    return NULL;
+  if (nullptr == pimprove) {
+    return nullptr;
   }
 
   if (!victory_enabled(VC_SPACERACE)
@@ -207,7 +207,7 @@ const struct impr_type *valid_improvement(const struct impr_type *pimprove)
           || building_has_effect(pimprove, EFT_SS_COMPONENT)
           || building_has_effect(pimprove, EFT_SS_MODULE))) {
     // This assumes that space parts don't have any other effects.
-    return NULL;
+    return nullptr;
   }
 
   return pimprove;
@@ -215,7 +215,7 @@ const struct impr_type *valid_improvement(const struct impr_type *pimprove)
 
 /**
    Returns pointer when the improvement_type "exists" in this game,
-   returns NULL otherwise.
+   returns nullptr otherwise.
 
    In addition to valid_improvement(), tests for id is out of range.
  */
@@ -255,8 +255,8 @@ int impr_base_build_shield_cost(const struct impr_type *pimprove)
 
 /**
    Returns estimate of the number of shields it takes to build this
- improvement. pplayer and ptile can be NULL, but that might reduce quality of
- the estimate.
+ improvement. pplayer and ptile can be nullptr, but that might reduce quality
+ of the estimate.
  */
 int impr_estimate_build_shield_cost(const struct player *pplayer,
                                     const struct tile *ptile,
@@ -264,9 +264,10 @@ int impr_estimate_build_shield_cost(const struct player *pplayer,
 {
   int base = pimprove->build_cost
              * (100
-                + get_target_bonus_effects(
-                    NULL, pplayer, NULL, NULL, pimprove, ptile, NULL, NULL,
-                    NULL, NULL, NULL, EFT_IMPR_BUILD_COST_PCT))
+                + get_target_bonus_effects(nullptr, pplayer, nullptr,
+                                           nullptr, pimprove, ptile, nullptr,
+                                           nullptr, nullptr, nullptr,
+                                           nullptr, EFT_IMPR_BUILD_COST_PCT))
              / 100;
 
   return MAX(base * game.info.shieldbox / 100, 1);
@@ -336,7 +337,7 @@ bool is_wonder(const struct impr_type *pimprove)
 
 /**
    Does a linear search of improvement_types[].name.translated
-   Returns NULL when none match.
+   Returns nullptr when none match.
  */
 struct impr_type *improvement_by_translated_name(const char *name)
 {
@@ -348,12 +349,12 @@ struct impr_type *improvement_by_translated_name(const char *name)
   }
   improvement_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
    Does a linear search of improvement_types[].name.vernacular
-   Returns NULL when none match.
+   Returns nullptr when none match.
  */
 struct impr_type *improvement_by_rule_name(const char *name)
 {
@@ -367,7 +368,7 @@ struct impr_type *improvement_by_rule_name(const char *name)
   }
   improvement_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -405,16 +406,17 @@ bool improvement_obsolete(const struct player *pplayer,
                           const struct impr_type *pimprove,
                           const struct city *pcity)
 {
-  struct tile *ptile = NULL;
+  struct tile *ptile = nullptr;
 
-  if (pcity != NULL) {
+  if (pcity != nullptr) {
     ptile = city_tile(pcity);
   }
 
   requirement_vector_iterate(&pimprove->obsolete_by, preq)
   {
-    if (is_req_active(pplayer, NULL, pcity, pimprove, ptile, NULL, NULL,
-                      NULL, NULL, NULL, preq, RPT_CERTAIN)) {
+    if (is_req_active(pplayer, nullptr, pcity, pimprove, ptile, nullptr,
+                      nullptr, nullptr, nullptr, nullptr, preq,
+                      RPT_CERTAIN)) {
       return true;
     }
   }
@@ -515,7 +517,7 @@ static bool impr_protects_vs_actions(const struct city *pcity,
   action_enablers_iterate(act)
   {
     if (!requirement_fulfilled_by_improvement(pimprove, &act->target_reqs)
-        && !is_action_possible_on_city(act->action, NULL, pcity)) {
+        && !is_action_possible_on_city(act->action, nullptr, pcity)) {
       return true;
     }
   }
@@ -637,8 +639,9 @@ bool can_player_build_improvement_direct(const struct player *p,
   requirement_vector_iterate(&pimprove->reqs, preq)
   {
     if (preq->range >= REQ_RANGE_PLAYER
-        && !is_req_active(p, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-                          NULL, preq, RPT_CERTAIN)) {
+        && !is_req_active(p, nullptr, nullptr, nullptr, nullptr, nullptr,
+                          nullptr, nullptr, nullptr, nullptr, preq,
+                          RPT_CERTAIN)) {
       return false;
     }
   }
@@ -690,7 +693,7 @@ bool can_player_build_improvement_now(const struct player *p,
   if (!can_player_build_improvement_direct(p, pimprove)) {
     return false;
   }
-  if (improvement_obsolete(p, pimprove, NULL)) {
+  if (improvement_obsolete(p, pimprove, nullptr)) {
     return false;
   }
   return true;
@@ -707,7 +710,7 @@ bool can_player_build_improvement_later(const struct player *p,
   if (!valid_improvement(pimprove)) {
     return false;
   }
-  if (improvement_obsolete(p, pimprove, NULL)) {
+  if (improvement_obsolete(p, pimprove, nullptr)) {
     return false;
   }
   if (is_great_wonder(pimprove) && !great_wonder_is_available(pimprove)) {
@@ -720,8 +723,9 @@ bool can_player_build_improvement_later(const struct player *p,
   requirement_vector_iterate(&pimprove->reqs, preq)
   {
     if (preq->range >= REQ_RANGE_PLAYER && is_req_unchanging(preq)
-        && !is_req_active(p, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-                          NULL, preq, RPT_POSSIBLE)) {
+        && !is_req_active(p, nullptr, nullptr, nullptr, nullptr, nullptr,
+                          nullptr, nullptr, nullptr, nullptr, preq,
+                          RPT_POSSIBLE)) {
       return false;
     }
   }
@@ -773,7 +777,7 @@ void wonder_built(const struct city *pcity, const struct impr_type *pimprove)
   struct player *pplayer;
   int windex = improvement_number(pimprove);
 
-  fc_assert_ret(NULL != pcity);
+  fc_assert_ret(nullptr != pcity);
   fc_assert_ret(is_wonder(pimprove));
 
   pplayer = city_owner(pcity);
@@ -799,7 +803,7 @@ void wonder_destroyed(const struct city *pcity,
   struct player *pplayer;
   int windex = improvement_number(pimprove);
 
-  fc_assert_ret(NULL != pcity);
+  fc_assert_ret(nullptr != pcity);
   fc_assert_ret(is_wonder(pimprove));
 
   pplayer = city_owner(pcity);
@@ -820,7 +824,7 @@ void wonder_destroyed(const struct city *pcity,
 bool wonder_is_lost(const struct player *pplayer,
                     const struct impr_type *pimprove)
 {
-  fc_assert_ret_val(NULL != pplayer, false);
+  fc_assert_ret_val(nullptr != pplayer, false);
   fc_assert_ret_val(is_wonder(pimprove), false);
 
   return pplayer->wonders[improvement_index(pimprove)] == WONDER_LOST;
@@ -835,7 +839,7 @@ bool wonder_is_built(const struct player *pplayer,
 {
   int windex = improvement_index(pimprove);
 
-  fc_assert_ret_val(NULL != pplayer, false);
+  fc_assert_ret_val(nullptr != pplayer, false);
   fc_assert_ret_val(is_wonder(pimprove), false);
 
   /* New city turn: Wonders don't take effect until the next
@@ -851,7 +855,7 @@ bool wonder_is_built(const struct player *pplayer,
 /**
    Get the world city with this wonder (small or great).  This doesn't
    always succeed on the client side, and even when it does, it may
-   return an "invisible" city whose members are unexpectedly NULL;
+   return an "invisible" city whose members are unexpectedly nullptr;
    take care.
  */
 struct city *city_from_wonder(const struct player *pplayer,
@@ -859,11 +863,11 @@ struct city *city_from_wonder(const struct player *pplayer,
 {
   int city_id = pplayer->wonders[improvement_index(pimprove)];
 
-  fc_assert_ret_val(NULL != pplayer, NULL);
-  fc_assert_ret_val(is_wonder(pimprove), NULL);
+  fc_assert_ret_val(nullptr != pplayer, nullptr);
+  fc_assert_ret_val(is_wonder(pimprove), nullptr);
 
   if (!WONDER_BUILT(city_id)) {
-    return NULL;
+    return nullptr;
   }
 
 #ifdef FREECIV_DEBUG
@@ -871,7 +875,7 @@ struct city *city_from_wonder(const struct player *pplayer,
     // On client side, this info is not always known.
     struct city *pcity = player_city_by_number(pplayer, city_id);
 
-    if (NULL == pcity) {
+    if (nullptr == pcity) {
       qCritical("Player %s (nb %d) has outdated wonder info for "
                 "%s (nb %d), it points to city nb %d.",
                 player_name(pplayer), player_number(pplayer),
@@ -884,7 +888,7 @@ struct city *city_from_wonder(const struct player *pplayer,
                 improvement_rule_name(pimprove),
                 improvement_number(pimprove), city_name_get(pcity),
                 pcity->id);
-      return NULL;
+      return nullptr;
     }
 
     return pcity;
@@ -939,14 +943,14 @@ struct city *city_from_great_wonder(const struct impr_type *pimprove)
 {
   int player_id = game.info.great_wonder_owners[improvement_index(pimprove)];
 
-  fc_assert_ret_val(is_great_wonder(pimprove), NULL);
+  fc_assert_ret_val(is_great_wonder(pimprove), nullptr);
 
   if (WONDER_OWNED(player_id)) {
 #ifdef FREECIV_DEBUG
     const struct player *pplayer = player_by_number(player_id);
     struct city *pcity = city_from_wonder(pplayer, pimprove);
 
-    if (is_server() && NULL == pcity) {
+    if (is_server() && nullptr == pcity) {
       qCritical("Game has outdated wonder info for %s (nb %d), "
                 "the player %s (nb %d) doesn't have this wonder.",
                 improvement_rule_name(pimprove),
@@ -959,7 +963,7 @@ struct city *city_from_great_wonder(const struct impr_type *pimprove)
     return city_from_wonder(player_by_number(player_id), pimprove);
 #endif // FREECIV_DEBUG
   } else {
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -971,12 +975,12 @@ struct player *great_wonder_owner(const struct impr_type *pimprove)
 {
   int player_id = game.info.great_wonder_owners[improvement_index(pimprove)];
 
-  fc_assert_ret_val(is_great_wonder(pimprove), NULL);
+  fc_assert_ret_val(is_great_wonder(pimprove), nullptr);
 
   if (WONDER_OWNED(player_id)) {
     return player_by_number(player_id);
   } else {
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -988,7 +992,7 @@ bool small_wonder_is_built(const struct player *pplayer,
 {
   fc_assert_ret_val(is_small_wonder(pimprove), false);
 
-  return (NULL != pplayer && wonder_is_built(pplayer, pimprove));
+  return (nullptr != pplayer && wonder_is_built(pplayer, pimprove));
 }
 
 /**
@@ -997,10 +1001,10 @@ bool small_wonder_is_built(const struct player *pplayer,
 struct city *city_from_small_wonder(const struct player *pplayer,
                                     const struct impr_type *pimprove)
 {
-  fc_assert_ret_val(is_small_wonder(pimprove), NULL);
+  fc_assert_ret_val(is_small_wonder(pimprove), nullptr);
 
-  if (NULL == pplayer) {
-    return NULL; // Used in some places in the client.
+  if (nullptr == pplayer) {
+    return nullptr; // Used in some places in the client.
   } else {
     return city_from_wonder(pplayer, pimprove);
   }
@@ -1025,8 +1029,8 @@ bool can_city_sell_building(const struct city *pcity,
 
 /**
    Return TRUE iff the player can sell the given improvement from city.
-   If pimprove is NULL, returns iff city could sell some building type (this
-   does not check if such building is in this city)
+   If pimprove is nullptr, returns iff city could sell some building type
+   (this does not check if such building is in this city)
  */
 enum test_result
 test_player_sell_building_now(struct player *pplayer, struct city *pcity,
@@ -1042,7 +1046,7 @@ test_player_sell_building_now(struct player *pplayer, struct city *pcity,
   }
 
   // Check if particular building can be solt
-  if (pimprove != NULL && !can_city_sell_building(pcity, pimprove)) {
+  if (pimprove != nullptr && !can_city_sell_building(pcity, pimprove)) {
     return TR_OTHER_FAILURE;
   }
 
@@ -1064,5 +1068,5 @@ improvement_replacement(const struct impr_type *pimprove)
   }
   requirement_vector_iterate_end;
 
-  return NULL;
+  return nullptr;
 }

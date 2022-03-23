@@ -129,7 +129,7 @@ bool genhash_str_comp_func(const char *vkey1, const char *vkey2)
  */
 char *genhash_str_copy_func(const char *vkey)
 {
-  return fc_strdup(NULL != vkey ? vkey : "");
+  return fc_strdup(nullptr != vkey ? vkey : "");
 }
 
 /**
@@ -138,7 +138,7 @@ char *genhash_str_copy_func(const char *vkey)
 void genhash_str_free_func(char *vkey)
 {
 #ifdef FREECIV_DEBUG
-  fc_assert_ret(NULL != vkey);
+  fc_assert_ret(nullptr != vkey);
 #endif
   delete[] vkey;
 }
@@ -248,8 +248,9 @@ struct genhash *genhash_new_nentries(genhash_val_fn_t key_val_func,
                                      genhash_comp_fn_t key_comp_func,
                                      size_t nentries)
 {
-  return genhash_new_nbuckets(key_val_func, key_comp_func, NULL, NULL, NULL,
-                              NULL, genhash_calc_num_buckets(nentries));
+  return genhash_new_nbuckets(key_val_func, key_comp_func, nullptr, nullptr,
+                              nullptr, nullptr,
+                              genhash_calc_num_buckets(nentries));
 }
 
 /**
@@ -276,8 +277,8 @@ struct genhash *genhash_new_full(genhash_val_fn_t key_val_func,
 struct genhash *genhash_new(genhash_val_fn_t key_val_func,
                             genhash_comp_fn_t key_comp_func)
 {
-  return genhash_new_nbuckets(key_val_func, key_comp_func, NULL, NULL, NULL,
-                              NULL, MIN_BUCKETS);
+  return genhash_new_nbuckets(key_val_func, key_comp_func, nullptr, nullptr,
+                              nullptr, nullptr, MIN_BUCKETS);
 }
 
 /**
@@ -285,7 +286,7 @@ struct genhash *genhash_new(genhash_val_fn_t key_val_func,
  */
 void genhash_destroy(struct genhash *pgenhash)
 {
-  fc_assert_ret(NULL != pgenhash);
+  fc_assert_ret(nullptr != pgenhash);
   pgenhash->no_shrink = true;
   genhash_clear(pgenhash);
   delete[] pgenhash->buckets;
@@ -307,7 +308,7 @@ static void genhash_resize_table(struct genhash *pgenhash,
   bucket = pgenhash->buckets;
   end = bucket + pgenhash->num_buckets;
   for (; bucket < end; bucket++) {
-    for (iter = *bucket; NULL != iter; iter = next) {
+    for (iter = *bucket; nullptr != iter; iter = next) {
       slot = new_buckets + (iter->hash_val % new_nbuckets);
       next = iter->next;
       iter->next = *slot;
@@ -373,7 +374,7 @@ static bool genhash_maybe_resize(struct genhash *pgenhash, bool expandingp)
 static inline genhash_val_t genhash_val_calc(const struct genhash *pgenhash,
                                              const void *key)
 {
-  if (NULL != pgenhash->key_val_func) {
+  if (nullptr != pgenhash->key_val_func) {
     return pgenhash->key_val_func(key);
   } else {
     return ((intptr_t) key);
@@ -392,15 +393,15 @@ genhash_slot_lookup(const struct genhash *pgenhash, const void *key,
   genhash_comp_fn_t key_comp_func = pgenhash->key_comp_func;
 
   slot = pgenhash->buckets + (hash_val % pgenhash->num_buckets);
-  if (NULL != key_comp_func) {
-    for (; NULL != *slot; slot = &(*slot)->next) {
+  if (nullptr != key_comp_func) {
+    for (; nullptr != *slot; slot = &(*slot)->next) {
       if (hash_val == (*slot)->hash_val
           && key_comp_func((*slot)->key, key)) {
         return slot;
       }
     }
   } else {
-    for (; NULL != *slot; slot = &(*slot)->next) {
+    for (; nullptr != *slot; slot = &(*slot)->next) {
       if (key == (*slot)->key) {
         return slot;
       }
@@ -414,11 +415,11 @@ genhash_slot_lookup(const struct genhash *pgenhash, const void *key,
  */
 static inline void genhash_default_get(void **pkey, void **data)
 {
-  if (NULL != pkey) {
-    *pkey = NULL;
+  if (nullptr != pkey) {
+    *pkey = nullptr;
   }
-  if (NULL != data) {
-    *data = NULL;
+  if (nullptr != data) {
+    *data = nullptr;
   }
 }
 
@@ -430,10 +431,10 @@ static inline void genhash_slot_get(struct genhash_entry *const *slot,
 {
   const struct genhash_entry *entry = *slot;
 
-  if (NULL != pkey) {
+  if (nullptr != pkey) {
     *pkey = entry->key;
   }
-  if (NULL != data) {
+  if (nullptr != data) {
     *data = entry->data;
   }
 }
@@ -449,11 +450,11 @@ static inline void genhash_slot_create(struct genhash *pgenhash,
   genhash_entry *entry = new genhash_entry;
 
   entry->key =
-      (NULL != pgenhash->key_copy_func ? pgenhash->key_copy_func(key)
-                                       : const_cast<void *>(key));
+      (nullptr != pgenhash->key_copy_func ? pgenhash->key_copy_func(key)
+                                          : const_cast<void *>(key));
   entry->data =
-      (NULL != pgenhash->data_copy_func ? pgenhash->data_copy_func(data)
-                                        : const_cast<void *>(data));
+      (nullptr != pgenhash->data_copy_func ? pgenhash->data_copy_func(data)
+                                           : const_cast<void *>(data));
   entry->hash_val = hash_val;
   entry->next = *slot;
   *slot = entry;
@@ -467,10 +468,10 @@ static inline void genhash_slot_free(struct genhash *pgenhash,
 {
   struct genhash_entry *entry = *slot;
 
-  if (NULL != pgenhash->key_free_func) {
+  if (nullptr != pgenhash->key_free_func) {
     ::operator delete[](entry->key);
   }
-  if (NULL != pgenhash->data_free_func) {
+  if (nullptr != pgenhash->data_free_func) {
     ::operator delete(entry->data);
   }
   *slot = entry->next;
@@ -486,18 +487,18 @@ static inline void genhash_slot_set(struct genhash *pgenhash,
 {
   struct genhash_entry *entry = *slot;
 
-  if (NULL != pgenhash->key_free_func) {
+  if (nullptr != pgenhash->key_free_func) {
     pgenhash->key_free_func(entry->key);
   }
-  if (NULL != pgenhash->data_free_func) {
+  if (nullptr != pgenhash->data_free_func) {
     pgenhash->data_free_func(entry->data);
   }
   entry->key =
-      (NULL != pgenhash->key_copy_func ? pgenhash->key_copy_func(key)
-                                       : const_cast<void *>(key));
+      (nullptr != pgenhash->key_copy_func ? pgenhash->key_copy_func(key)
+                                          : const_cast<void *>(key));
   entry->data =
-      (NULL != pgenhash->data_copy_func ? pgenhash->data_copy_func(data)
-                                        : const_cast<void *>(data));
+      (nullptr != pgenhash->data_copy_func ? pgenhash->data_copy_func(data)
+                                           : const_cast<void *>(data));
 }
 
 /**
@@ -508,7 +509,7 @@ bool genhash_set_no_shrink(struct genhash *pgenhash, bool no_shrink)
 {
   bool old;
 
-  fc_assert_ret_val(NULL != pgenhash, false);
+  fc_assert_ret_val(nullptr != pgenhash, false);
   old = pgenhash->no_shrink;
   pgenhash->no_shrink = no_shrink;
   return old;
@@ -519,7 +520,7 @@ bool genhash_set_no_shrink(struct genhash *pgenhash, bool no_shrink)
  */
 size_t genhash_size(const struct genhash *pgenhash)
 {
-  fc_assert_ret_val(NULL != pgenhash, 0);
+  fc_assert_ret_val(nullptr != pgenhash, 0);
   return pgenhash->num_entries;
 }
 
@@ -528,7 +529,7 @@ size_t genhash_size(const struct genhash *pgenhash)
  */
 size_t genhash_capacity(const struct genhash *pgenhash)
 {
-  fc_assert_ret_val(NULL != pgenhash, 0);
+  fc_assert_ret_val(nullptr != pgenhash, 0);
   return pgenhash->num_buckets;
 }
 
@@ -542,7 +543,7 @@ struct genhash *genhash_copy(const struct genhash *pgenhash)
   const struct genhash_entry *src_iter;
   struct genhash_entry **dest_slot, **dest_bucket;
 
-  fc_assert_ret_val(NULL != pgenhash, NULL);
+  fc_assert_ret_val(nullptr != pgenhash, nullptr);
 
   new_genhash = new genhash;
 
@@ -559,7 +560,7 @@ struct genhash *genhash_copy(const struct genhash *pgenhash)
 
   for (; src_bucket < end; src_bucket++, dest_bucket++) {
     dest_slot = dest_bucket;
-    for (src_iter = *src_bucket; NULL != src_iter;
+    for (src_iter = *src_bucket; nullptr != src_iter;
          src_iter = src_iter->next) {
       genhash_slot_create(new_genhash, dest_slot, src_iter->key,
                           src_iter->data, src_iter->hash_val);
@@ -577,12 +578,12 @@ void genhash_clear(struct genhash *pgenhash)
 {
   struct genhash_entry **bucket, **end;
 
-  fc_assert_ret(NULL != pgenhash);
+  fc_assert_ret(nullptr != pgenhash);
 
   bucket = pgenhash->buckets;
   end = bucket + pgenhash->num_buckets;
   for (; bucket < end; bucket++) {
-    while (NULL != *bucket) {
+    while (nullptr != *bucket) {
       genhash_slot_free(pgenhash, bucket);
     }
   }
@@ -601,11 +602,11 @@ bool genhash_insert(struct genhash *pgenhash, const void *key,
   struct genhash_entry **slot;
   genhash_val_t hash_val;
 
-  fc_assert_ret_val(NULL != pgenhash, false);
+  fc_assert_ret_val(nullptr != pgenhash, false);
 
   hash_val = genhash_val_calc(pgenhash, key);
   slot = genhash_slot_lookup(pgenhash, key, hash_val);
-  if (NULL != *slot) {
+  if (nullptr != *slot) {
     return false;
   } else {
     if (genhash_maybe_expand(pgenhash)) {
@@ -626,7 +627,7 @@ bool genhash_insert(struct genhash *pgenhash, const void *key,
 bool genhash_replace(struct genhash *pgenhash, const void *key,
                      const void *data)
 {
-  return genhash_replace_full(pgenhash, key, data, NULL, NULL);
+  return genhash_replace_full(pgenhash, key, data, nullptr, nullptr);
 }
 
 /**
@@ -635,7 +636,7 @@ bool genhash_replace(struct genhash *pgenhash, const void *key,
    insertion.
 
    Returns in 'old_pkey' and 'old_pdata' the old content of the bucket if
-   they are not NULL. NB: It can returns freed pointers if free functions
+   they are not nullptr. NB: It can returns freed pointers if free functions
    were supplied to the genhash table.
  */
 bool genhash_replace_full(struct genhash *pgenhash, const void *key,
@@ -645,13 +646,13 @@ bool genhash_replace_full(struct genhash *pgenhash, const void *key,
   struct genhash_entry **slot;
   genhash_val_t hash_val;
 
-  fc_assert_action(NULL != pgenhash,
+  fc_assert_action(nullptr != pgenhash,
                    genhash_default_get(old_pkey, old_pdata);
                    return false);
 
   hash_val = genhash_val_calc(pgenhash, key);
   slot = genhash_slot_lookup(pgenhash, key, hash_val);
-  if (NULL != *slot) {
+  if (nullptr != *slot) {
     // Replace.
     genhash_slot_get(slot, old_pkey, old_pdata);
     genhash_slot_set(pgenhash, slot, key, data);
@@ -670,23 +671,23 @@ bool genhash_replace_full(struct genhash *pgenhash, const void *key,
 }
 
 /**
-   Lookup data. Return TRUE on success, then pdata - if not NULL will be set
-   to the data value.
+   Lookup data. Return TRUE on success, then pdata - if not nullptr will be
+   set to the data value.
  */
 bool genhash_lookup(const struct genhash *pgenhash, const void *key,
                     void **pdata)
 {
   struct genhash_entry **slot;
 
-  fc_assert_action(NULL != pgenhash, genhash_default_get(NULL, pdata);
+  fc_assert_action(nullptr != pgenhash, genhash_default_get(nullptr, pdata);
                    return false);
 
   slot = genhash_slot_lookup(pgenhash, key, genhash_val_calc(pgenhash, key));
-  if (NULL != *slot) {
-    genhash_slot_get(slot, NULL, pdata);
+  if (nullptr != *slot) {
+    genhash_slot_get(slot, nullptr, pdata);
     return true;
   } else {
-    genhash_default_get(NULL, pdata);
+    genhash_default_get(nullptr, pdata);
     return false;
   }
 }
@@ -696,14 +697,14 @@ bool genhash_lookup(const struct genhash *pgenhash, const void *key,
  */
 bool genhash_remove(struct genhash *pgenhash, const void *key)
 {
-  return genhash_remove_full(pgenhash, key, NULL, NULL);
+  return genhash_remove_full(pgenhash, key, nullptr, nullptr);
 }
 
 /**
    Delete an entry from the genhash table. Returns TRUE on success.
 
    Returns in 'deleted_pkey' and 'deleted_pdata' the old contents of the
-   deleted entry if not NULL. NB: It can returns freed pointers if free
+   deleted entry if not nullptr. NB: It can returns freed pointers if free
    functions were supplied to the genhash table.
  */
 bool genhash_remove_full(struct genhash *pgenhash, const void *key,
@@ -711,12 +712,12 @@ bool genhash_remove_full(struct genhash *pgenhash, const void *key,
 {
   struct genhash_entry **slot;
 
-  fc_assert_action(NULL != pgenhash,
+  fc_assert_action(nullptr != pgenhash,
                    genhash_default_get(deleted_pkey, deleted_pdata);
                    return false);
 
   slot = genhash_slot_lookup(pgenhash, key, genhash_val_calc(pgenhash, key));
-  if (NULL != *slot) {
+  if (nullptr != *slot) {
     genhash_slot_get(slot, deleted_pkey, deleted_pdata);
     genhash_slot_free(pgenhash, slot);
     genhash_maybe_shrink(pgenhash);
@@ -735,7 +736,7 @@ bool genhash_remove_full(struct genhash *pgenhash, const void *key,
 bool genhashs_are_equal(const struct genhash *pgenhash1,
                         const struct genhash *pgenhash2)
 {
-  return genhashs_are_equal_full(pgenhash1, pgenhash2, NULL);
+  return genhashs_are_equal_full(pgenhash1, pgenhash2, nullptr);
 }
 
 /**
@@ -751,7 +752,7 @@ bool genhashs_are_equal_full(const struct genhash *pgenhash1,
   // Check pointers.
   if (pgenhash1 == pgenhash2) {
     return true;
-  } else if (NULL == pgenhash1 || NULL == pgenhash2) {
+  } else if (nullptr == pgenhash1 || nullptr == pgenhash2) {
     return false;
   }
 
@@ -768,11 +769,11 @@ bool genhashs_are_equal_full(const struct genhash *pgenhash1,
   bucket1 = pgenhash1->buckets;
   max1 = bucket1 + pgenhash1->num_buckets;
   for (; bucket1 < max1; bucket1++) {
-    for (iter1 = *bucket1; NULL != iter1; iter1 = iter1->next) {
+    for (iter1 = *bucket1; nullptr != iter1; iter1 = iter1->next) {
       slot2 = genhash_slot_lookup(pgenhash2, iter1->key, iter1->hash_val);
-      if (NULL == *slot2
+      if (nullptr == *slot2
           || (iter1->data != (*slot2)->data
-              && (NULL == data_comp_func
+              && (nullptr == data_comp_func
                   || !data_comp_func(iter1->data, (*slot2)->data)))) {
         return false;
       }
@@ -813,12 +814,12 @@ static void genhash_iter_next(struct iterator *genhash_iter)
   struct genhash_iter *iter = GENHASH_ITER(genhash_iter);
 
   iter->iterator = iter->iterator->next;
-  if (NULL != iter->iterator) {
+  if (nullptr != iter->iterator) {
     return;
   }
 
   for (iter->bucket++; iter->bucket < iter->end; iter->bucket++) {
-    if (NULL != *iter->bucket) {
+    if (nullptr != *iter->bucket) {
       iter->iterator = *iter->bucket;
       return;
     }
@@ -852,7 +853,7 @@ genhash_iter_init_common(struct genhash_iter *iter,
                          const struct genhash *pgenhash,
                          void *(*get)(const struct iterator *) )
 {
-  if (NULL == pgenhash) {
+  if (nullptr == pgenhash) {
     return invalid_iter_init(ITERATOR(iter));
   }
 
@@ -864,7 +865,7 @@ genhash_iter_init_common(struct genhash_iter *iter,
 
   // Seek to the first used bucket.
   for (; iter->bucket < iter->end; iter->bucket++) {
-    if (NULL != *iter->bucket) {
+    if (nullptr != *iter->bucket) {
       iter->iterator = *iter->bucket;
       break;
     }

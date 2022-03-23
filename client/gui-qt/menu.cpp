@@ -149,7 +149,7 @@ static const char *get_tile_change_menu_text(struct tile *ptile,
   struct tile *newtile = tile_virtual_new(ptile);
   const char *text;
 
-  tile_apply_activity(newtile, activity, NULL);
+  tile_apply_activity(newtile, activity, nullptr);
   text = tile_get_info_text(newtile, false, 0);
   tile_virtual_destroy(newtile);
 
@@ -227,7 +227,7 @@ void gov_menu::update()
     gov = government_by_number(i);
     if (gov != revol_gov) { // Skip revolution goverment
       auto sprite = get_government_sprite(tileset, gov);
-      if (sprite != NULL) {
+      if (sprite != nullptr) {
         actions[j + 1]->setIcon(QIcon(*sprite));
       }
       actions[j + 1]->setEnabled(
@@ -1546,7 +1546,7 @@ static struct extra_type *next_extra(struct unit_list *punits,
   {
     pextra = next_extra_for_tile(unit_tile(builder), cause,
                                  unit_owner(builder), builder);
-    if (pextra != NULL) {
+    if (pextra != nullptr) {
       break;
     }
   }
@@ -1645,7 +1645,7 @@ void mr_menu::menus_sensitive()
           if (units_have_type_flag(punits, UTYF_SETTLERS, true)) {
             struct extra_type *pextra = next_extra(punits, EC_MINE);
 
-            if (pextra != NULL) {
+            if (pextra != nullptr) {
               i.value()->setText(
                   // TRANS: Build mine of specific type
                   QString(_("Build %1"))
@@ -1856,7 +1856,7 @@ void mr_menu::menus_sensitive()
         break;
       case CONNECT_ROAD:
         proad = road_by_compat_special(ROCO_ROAD);
-        if (proad != NULL) {
+        if (proad != nullptr) {
           tgt = road_extra_get(proad);
         } else {
           break;
@@ -1878,7 +1878,7 @@ void mr_menu::menus_sensitive()
 
       case CONNECT_RAIL:
         proad = road_by_compat_special(ROCO_RAILROAD);
-        if (proad != NULL) {
+        if (proad != nullptr) {
           tgt = road_extra_get(proad);
         } else {
           break;
@@ -1963,7 +1963,7 @@ void mr_menu::slot_show_research_tab() { science_report_dialog_popup(true); }
  */
 void mr_menu::slot_spaceship()
 {
-  if (NULL != client.conn.playing) {
+  if (nullptr != client.conn.playing) {
     popup_spaceship_dialog(client.conn.playing);
   }
 }
@@ -2035,7 +2035,7 @@ void mr_menu::slot_clean_pollution()
 
     pextra = prev_extra_in_tile(unit_tile(punit), ERM_CLEANPOLLUTION,
                                 unit_owner(punit), punit);
-    if (pextra != NULL) {
+    if (pextra != nullptr) {
       request_new_unit_activity_targeted(punit, ACTIVITY_POLLUTION, pextra);
     } else if (can_unit_paradrop(punit)) {
       /* FIXME: This is getting worse, we use a key_unit_*() function
@@ -2069,7 +2069,7 @@ void mr_menu::slot_conn_rail()
 {
   struct road_type *prail = road_by_compat_special(ROCO_RAILROAD);
 
-  if (prail != NULL) {
+  if (prail != nullptr) {
     struct extra_type *tgt;
 
     tgt = road_extra_get(prail);
@@ -2094,7 +2094,7 @@ void mr_menu::slot_conn_road()
 {
   struct road_type *proad = road_by_compat_special(ROCO_ROAD);
 
-  if (proad != NULL) {
+  if (proad != nullptr) {
     struct extra_type *tgt;
 
     tgt = road_extra_get(proad);
@@ -2135,7 +2135,7 @@ void mr_menu::slot_build_road()
                                                  unit_owner(punit), punit);
     bool building_road = false;
 
-    if (tgt != NULL
+    if (tgt != nullptr
         && can_unit_do_activity_targeted(punit, ACTIVITY_GEN_ROAD, tgt)) {
       request_new_unit_activity_targeted(punit, ACTIVITY_GEN_ROAD, tgt);
       building_road = true;
@@ -2353,11 +2353,11 @@ void mr_menu::slot_delayed_goto()
     return;
   }
   if (hover_state != HOVER_GOTO) {
-    set_hover_state(punits, HOVER_GOTO, ACTIVITY_LAST, NULL, NO_TARGET,
+    set_hover_state(punits, HOVER_GOTO, ACTIVITY_LAST, nullptr, NO_TARGET,
                     NO_TARGET, ACTION_NONE, ORDER_LAST);
     enter_goto_state(punits);
     create_line_at_mouse_pos();
-    control_mouse_cursor(NULL);
+    control_mouse_cursor(nullptr);
   }
   unit_list_iterate(get_units_in_focus(), punit)
   {
@@ -2901,7 +2901,7 @@ void mr_menu::messages_options() { popup_messageopt_dialog(); }
 /**
    Menu Save Options Now
  */
-void mr_menu::save_options_now() { options_save(NULL); }
+void mr_menu::save_options_now() { options_save(nullptr); }
 
 /**
    Invoke popup for quiting game
@@ -2961,7 +2961,7 @@ void mr_menu::save_image()
 /**
    Menu Save Game
  */
-void mr_menu::save_game() { send_save_game(NULL); }
+void mr_menu::save_game() { send_save_game(nullptr); }
 
 /**
    Menu Save Game As...

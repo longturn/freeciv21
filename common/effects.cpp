@@ -146,22 +146,22 @@ struct effect_list *get_req_source_effects(struct universal *psource)
     if (value >= 0 && value < government_count()) {
       return ruleset_cache.reqs.govs[value];
     } else {
-      return NULL;
+      return nullptr;
     }
   case VUT_IMPROVEMENT:
     if (value >= 0 && value < improvement_count()) {
       return ruleset_cache.reqs.buildings[value];
     } else {
-      return NULL;
+      return nullptr;
     }
   case VUT_ADVANCE:
     if (value >= 0 && value < advance_count()) {
       return ruleset_cache.reqs.advances[value];
     } else {
-      return NULL;
+      return nullptr;
     }
   default:
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -261,7 +261,7 @@ void ruleset_cache_free()
     }
     effect_list_iterate_end;
     effect_list_destroy(tracker_list);
-    ruleset_cache.tracker = NULL;
+    ruleset_cache.tracker = nullptr;
   }
 
   for (i = 0; i < ARRAY_SIZE(ruleset_cache.effects); i++) {
@@ -269,7 +269,7 @@ void ruleset_cache_free()
 
     if (plist) {
       effect_list_destroy(plist);
-      ruleset_cache.effects[i] = NULL;
+      ruleset_cache.effects[i] = nullptr;
     }
   }
 
@@ -278,7 +278,7 @@ void ruleset_cache_free()
 
     if (plist) {
       effect_list_destroy(plist);
-      ruleset_cache.reqs.buildings[i] = NULL;
+      ruleset_cache.reqs.buildings[i] = nullptr;
     }
   }
 
@@ -287,7 +287,7 @@ void ruleset_cache_free()
 
     if (plist) {
       effect_list_destroy(plist);
-      ruleset_cache.reqs.govs[i] = NULL;
+      ruleset_cache.reqs.govs[i] = nullptr;
     }
   }
 
@@ -296,7 +296,7 @@ void ruleset_cache_free()
 
     if (plist) {
       effect_list_destroy(plist);
-      ruleset_cache.reqs.advances[i] = NULL;
+      ruleset_cache.reqs.advances[i] = nullptr;
     }
   }
 
@@ -308,7 +308,7 @@ void ruleset_cache_free()
    (that is, the sum of all positive effects clauses that apply specifically
    to this universal -- this can be an overestimate in the case of
    mutually exclusive effects).
-   for_uni can be NULL to get max effect value ignoring requirements.
+   for_uni can be nullptr to get max effect value ignoring requirements.
  */
 int effect_cumulative_max(enum effect_type type, struct universal *for_uni)
 {
@@ -319,7 +319,7 @@ int effect_cumulative_max(enum effect_type type, struct universal *for_uni)
     effect_list_iterate(plist, peffect)
     {
       if (peffect->type == type && peffect->value > 0) {
-        if (for_uni == NULL
+        if (for_uni == nullptr
             || universal_fulfills_requirements(false, &(peffect->reqs),
                                                for_uni)) {
           value += peffect->value;
@@ -337,7 +337,7 @@ int effect_cumulative_max(enum effect_type type, struct universal *for_uni)
    (that is, the sum of all negative effects clauses that apply specifically
    to this universal -- this can be an overestimate in the case of
    mutually exclusive effects).
-   for_uni can be NULL to get min effect value ignoring requirements.
+   for_uni can be nullptr to get min effect value ignoring requirements.
  */
 int effect_cumulative_min(enum effect_type type, struct universal *for_uni)
 {
@@ -348,7 +348,7 @@ int effect_cumulative_min(enum effect_type type, struct universal *for_uni)
     effect_list_iterate(plist, peffect)
     {
       if (peffect->type == type && peffect->value < 0) {
-        if (for_uni == NULL
+        if (for_uni == nullptr
             || universal_fulfills_requirements(false, &(peffect->reqs),
                                                for_uni)) {
           value += peffect->value;
@@ -457,7 +457,7 @@ void recv_ruleset_effect(const struct packet_ruleset_effect *packet)
   int i;
 
   pmul = packet->has_multiplier ? multiplier_by_number(packet->multiplier)
-                                : NULL;
+                                : nullptr;
   peffect = effect_new(packet->effect_type, packet->effect_value, pmul);
 
   for (i = 0; i < packet->reqs_count; i++) {
@@ -555,7 +555,7 @@ static bool is_effect_prevented(
         && !is_req_active(target_player, other_player, target_city,
                           target_building, target_tile, target_unit,
                           target_unittype, target_output, target_specialist,
-                          NULL, preq, REVERSED_RPT(prob_type))) {
+                          nullptr, preq, REVERSED_RPT(prob_type))) {
       return true;
     }
   }
@@ -591,8 +591,9 @@ bool is_building_replaced(const struct city *pcity,
      * checked depends on the range of the effect. */
     /* Prob_type is not reversed here. disabled is equal to replaced, not
      * reverse */
-    if (!is_effect_prevented(city_owner(pcity), NULL, pcity, pimprove, NULL,
-                             NULL, NULL, NULL, NULL, peffect, prob_type)) {
+    if (!is_effect_prevented(city_owner(pcity), nullptr, pcity, pimprove,
+                             nullptr, nullptr, nullptr, nullptr, nullptr,
+                             peffect, prob_type)) {
       return false;
     }
   }
@@ -665,8 +666,9 @@ int get_world_bonus(enum effect_type effect_type)
     return 0;
   }
 
-  return get_target_bonus_effects(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-                                  NULL, NULL, NULL, NULL, effect_type);
+  return get_target_bonus_effects(nullptr, nullptr, nullptr, nullptr,
+                                  nullptr, nullptr, nullptr, nullptr,
+                                  nullptr, nullptr, nullptr, effect_type);
 }
 
 /**
@@ -679,8 +681,9 @@ int get_player_bonus(const struct player *pplayer,
     return 0;
   }
 
-  return get_target_bonus_effects(NULL, pplayer, NULL, NULL, NULL, NULL,
-                                  NULL, NULL, NULL, NULL, NULL, effect_type);
+  return get_target_bonus_effects(nullptr, pplayer, nullptr, nullptr,
+                                  nullptr, nullptr, nullptr, nullptr,
+                                  nullptr, nullptr, nullptr, effect_type);
 }
 
 /**
@@ -692,9 +695,9 @@ int get_city_bonus(const struct city *pcity, enum effect_type effect_type)
     return 0;
   }
 
-  return get_target_bonus_effects(NULL, city_owner(pcity), NULL, pcity, NULL,
-                                  city_tile(pcity), NULL, NULL, NULL, NULL,
-                                  NULL, effect_type);
+  return get_target_bonus_effects(
+      nullptr, city_owner(pcity), nullptr, pcity, nullptr, city_tile(pcity),
+      nullptr, nullptr, nullptr, nullptr, nullptr, effect_type);
 }
 
 /**
@@ -705,12 +708,12 @@ int get_city_specialist_output_bonus(const struct city *pcity,
                                      const struct output_type *poutput,
                                      enum effect_type effect_type)
 {
-  fc_assert_ret_val(pcity != NULL, 0);
-  fc_assert_ret_val(pspecialist != NULL, 0);
-  fc_assert_ret_val(poutput != NULL, 0);
-  return get_target_bonus_effects(NULL, city_owner(pcity), NULL, pcity, NULL,
-                                  NULL, NULL, NULL, poutput, pspecialist,
-                                  NULL, effect_type);
+  fc_assert_ret_val(pcity != nullptr, 0);
+  fc_assert_ret_val(pspecialist != nullptr, 0);
+  fc_assert_ret_val(poutput != nullptr, 0);
+  return get_target_bonus_effects(
+      nullptr, city_owner(pcity), nullptr, pcity, nullptr, nullptr, nullptr,
+      nullptr, poutput, pspecialist, nullptr, effect_type);
 }
 
 /**
@@ -718,7 +721,7 @@ int get_city_specialist_output_bonus(const struct city *pcity,
    pcity must be supplied.
 
    FIXME: this is now used both for tile bonuses, tile-output bonuses,
-   and city-output bonuses.  Thus ptile or poutput may be NULL for
+   and city-output bonuses.  Thus ptile or poutput may be nullptr for
    certain callers.  This could be changed by adding 2 new functions to
    the interface but they'd be almost identical and their likely names
    would conflict with functions already in city.c.
@@ -730,14 +733,14 @@ int get_city_tile_output_bonus(const struct city *pcity,
                                const struct output_type *poutput,
                                enum effect_type effect_type)
 {
-  fc_assert_ret_val(pcity != NULL, 0);
-  return get_target_bonus_effects(NULL, city_owner(pcity), NULL, pcity, NULL,
-                                  ptile, NULL, NULL, poutput, NULL, NULL,
-                                  effect_type);
+  fc_assert_ret_val(pcity != nullptr, 0);
+  return get_target_bonus_effects(nullptr, city_owner(pcity), nullptr, pcity,
+                                  nullptr, ptile, nullptr, nullptr, poutput,
+                                  nullptr, nullptr, effect_type);
 }
 
 /**
-   Returns the effect bonus at a tile for given output type (or NULL for
+   Returns the effect bonus at a tile for given output type (or nullptr for
    output-type-independent bonus).
    If pcity is supplied, it's the bonus for that particular city, otherwise
    it's the player/city-independent bonus (and any city on the tile is
@@ -747,11 +750,11 @@ int get_tile_output_bonus(const struct city *pcity, const struct tile *ptile,
                           const struct output_type *poutput,
                           enum effect_type effect_type)
 {
-  const struct player *pplayer = pcity ? city_owner(pcity) : NULL;
+  const struct player *pplayer = pcity ? city_owner(pcity) : nullptr;
 
-  return get_target_bonus_effects(NULL, pplayer, NULL, pcity, NULL, ptile,
-                                  NULL, NULL, poutput, NULL, NULL,
-                                  effect_type);
+  return get_target_bonus_effects(nullptr, pplayer, nullptr, pcity, nullptr,
+                                  ptile, nullptr, nullptr, poutput, nullptr,
+                                  nullptr, effect_type);
 }
 
 /**
@@ -765,12 +768,12 @@ int get_player_output_bonus(const struct player *pplayer,
     return 0;
   }
 
-  fc_assert_ret_val(pplayer != NULL, 0);
-  fc_assert_ret_val(poutput != NULL, 0);
+  fc_assert_ret_val(pplayer != nullptr, 0);
+  fc_assert_ret_val(poutput != nullptr, 0);
   fc_assert_ret_val(effect_type != EFT_COUNT, 0);
-  return get_target_bonus_effects(NULL, pplayer, NULL, NULL, NULL, NULL,
-                                  NULL, NULL, poutput, NULL, NULL,
-                                  effect_type);
+  return get_target_bonus_effects(nullptr, pplayer, nullptr, nullptr,
+                                  nullptr, nullptr, nullptr, nullptr,
+                                  poutput, nullptr, nullptr, effect_type);
 }
 
 /**
@@ -784,12 +787,12 @@ int get_city_output_bonus(const struct city *pcity,
     return 0;
   }
 
-  fc_assert_ret_val(pcity != NULL, 0);
-  fc_assert_ret_val(poutput != NULL, 0);
+  fc_assert_ret_val(pcity != nullptr, 0);
+  fc_assert_ret_val(poutput != nullptr, 0);
   fc_assert_ret_val(effect_type != EFT_COUNT, 0);
-  return get_target_bonus_effects(NULL, city_owner(pcity), NULL, pcity, NULL,
-                                  NULL, NULL, NULL, poutput, NULL, NULL,
-                                  effect_type);
+  return get_target_bonus_effects(nullptr, city_owner(pcity), nullptr, pcity,
+                                  nullptr, nullptr, nullptr, nullptr,
+                                  poutput, nullptr, nullptr, effect_type);
 }
 
 /**
@@ -803,10 +806,10 @@ int get_building_bonus(const struct city *pcity,
     return 0;
   }
 
-  fc_assert_ret_val(NULL != pcity && NULL != building, 0);
-  return get_target_bonus_effects(NULL, city_owner(pcity), NULL, pcity,
-                                  building, NULL, NULL, NULL, NULL, NULL,
-                                  NULL, effect_type);
+  fc_assert_ret_val(nullptr != pcity && nullptr != building, 0);
+  return get_target_bonus_effects(nullptr, city_owner(pcity), nullptr, pcity,
+                                  building, nullptr, nullptr, nullptr,
+                                  nullptr, nullptr, nullptr, effect_type);
 }
 
 /**
@@ -828,17 +831,17 @@ int get_unittype_bonus(const struct player *pplayer,
     return 0;
   }
 
-  fc_assert_ret_val(punittype != NULL, 0);
+  fc_assert_ret_val(punittype != nullptr, 0);
 
-  if (ptile != NULL) {
+  if (ptile != nullptr) {
     pcity = tile_city(ptile);
   } else {
-    pcity = NULL;
+    pcity = nullptr;
   }
 
-  return get_target_bonus_effects(NULL, pplayer, NULL, pcity, NULL, ptile,
-                                  NULL, punittype, NULL, NULL, NULL,
-                                  effect_type);
+  return get_target_bonus_effects(nullptr, pplayer, nullptr, pcity, nullptr,
+                                  ptile, nullptr, punittype, nullptr,
+                                  nullptr, nullptr, effect_type);
 }
 
 /**
@@ -850,12 +853,12 @@ int get_unit_bonus(const struct unit *punit, enum effect_type effect_type)
     return 0;
   }
 
-  fc_assert_ret_val(punit != NULL, 0);
+  fc_assert_ret_val(punit != nullptr, 0);
   return get_target_bonus_effects(
-      NULL, unit_owner(punit), NULL,
-      unit_tile(punit) ? tile_city(unit_tile(punit)) : NULL, NULL,
-      unit_tile(punit), punit, unit_type_get(punit), NULL, NULL, NULL,
-      effect_type);
+      nullptr, unit_owner(punit), nullptr,
+      unit_tile(punit) ? tile_city(unit_tile(punit)) : nullptr, nullptr,
+      unit_tile(punit), punit, unit_type_get(punit), nullptr, nullptr,
+      nullptr, effect_type);
 }
 
 /**
@@ -864,23 +867,23 @@ int get_unit_bonus(const struct unit *punit, enum effect_type effect_type)
 int get_tile_bonus(const struct tile *ptile, const struct unit *punit,
                    enum effect_type etype)
 {
-  struct player *pplayer = NULL;
-  const struct unit_type *utype = NULL;
+  struct player *pplayer = nullptr;
+  const struct unit_type *utype = nullptr;
 
   if (!initialized) {
     return 0;
   }
 
-  fc_assert_ret_val(ptile != NULL, 0);
+  fc_assert_ret_val(ptile != nullptr, 0);
 
-  if (punit != NULL) {
+  if (punit != nullptr) {
     pplayer = unit_owner(punit);
     utype = unit_type_get(punit);
   }
 
-  return get_target_bonus_effects(NULL, pplayer, NULL, tile_city(ptile),
-                                  NULL, ptile, punit, utype, NULL, NULL,
-                                  NULL, etype);
+  return get_target_bonus_effects(nullptr, pplayer, nullptr,
+                                  tile_city(ptile), nullptr, ptile, punit,
+                                  utype, nullptr, nullptr, nullptr, etype);
 }
 
 /**
@@ -897,9 +900,10 @@ int get_player_bonus_effects(struct effect_list *plist,
     return 0;
   }
 
-  fc_assert_ret_val(pplayer != NULL, 0);
-  return get_target_bonus_effects(plist, pplayer, NULL, NULL, NULL, NULL,
-                                  NULL, NULL, NULL, NULL, NULL, effect_type);
+  fc_assert_ret_val(pplayer != nullptr, 0);
+  return get_target_bonus_effects(plist, pplayer, nullptr, nullptr, nullptr,
+                                  nullptr, nullptr, nullptr, nullptr,
+                                  nullptr, nullptr, effect_type);
 }
 
 /**
@@ -917,10 +921,10 @@ int get_city_bonus_effects(struct effect_list *plist,
     return 0;
   }
 
-  fc_assert_ret_val(pcity != NULL, 0);
-  return get_target_bonus_effects(plist, city_owner(pcity), NULL, pcity,
-                                  NULL, NULL, NULL, NULL, poutput, NULL,
-                                  NULL, effect_type);
+  fc_assert_ret_val(pcity != nullptr, 0);
+  return get_target_bonus_effects(plist, city_owner(pcity), nullptr, pcity,
+                                  nullptr, nullptr, nullptr, nullptr,
+                                  poutput, nullptr, nullptr, effect_type);
 }
 
 /**
@@ -982,8 +986,9 @@ int get_potential_improvement_bonus(const struct impr_type *pimprove,
           continue;
         }
 
-        if (!is_req_active(city_owner(pcity), NULL, pcity, pimprove, NULL,
-                           NULL, NULL, NULL, NULL, NULL, preq, prob_type)) {
+        if (!is_req_active(city_owner(pcity), nullptr, pcity, pimprove,
+                           nullptr, nullptr, nullptr, nullptr, nullptr,
+                           nullptr, preq, prob_type)) {
           useful = false;
           break;
         }
@@ -1252,7 +1257,7 @@ QString effect_type_unit_text(effect_type type, int value)
  */
 bool iterate_effect_cache(iec_cb cb, void *data)
 {
-  fc_assert_ret_val(cb != NULL, false);
+  fc_assert_ret_val(cb != nullptr, false);
 
   effect_list_iterate(ruleset_cache.tracker, peffect)
   {

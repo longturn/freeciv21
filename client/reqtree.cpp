@@ -78,8 +78,8 @@ enum reqtree_edge_type {
  */
 static void add_requirement(struct tree_node *node, struct tree_node *req)
 {
-  fc_assert_ret(node != NULL);
-  fc_assert_ret(req != NULL);
+  fc_assert_ret(node != nullptr);
+  fc_assert_ret(req != nullptr);
 
   node->require = static_cast<tree_node **>(fc_realloc(
       node->require, sizeof(*node->require) * (node->nrequire + 1)));
@@ -101,8 +101,8 @@ static struct tree_node *new_tree_node()
 
   node->nrequire = 0;
   node->nprovide = 0;
-  node->require = NULL;
-  node->provide = NULL;
+  node->require = nullptr;
+  node->provide = nullptr;
   node->order = -1;
   node->layer = -1;
   return node;
@@ -356,18 +356,18 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
   std::vector<struct tree_node *> nodes;
   nodes.reserve(advance_count());
 
-  nodes[A_NONE] = NULL;
+  nodes[A_NONE] = nullptr;
   advance_index_iterate(A_FIRST, tech)
   {
     if (!valid_advance_by_number(tech)) {
-      nodes[tech] = NULL;
+      nodes[tech] = nullptr;
       continue;
     }
     if (pplayer && !show_all
         && !research_invention_reachable(presearch, tech)) {
       /* Reqtree requested for particular player and this tech is
        * unreachable to him/her. */
-      nodes[tech] = NULL;
+      nodes[tech] = nullptr;
       continue;
     }
     nodes[tech] = new_tree_node();
@@ -384,7 +384,7 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
     if (!padvance) {
       continue;
     }
-    if (nodes[tech] == NULL) {
+    if (nodes[tech] == nullptr) {
       continue;
     }
 
@@ -393,7 +393,7 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
 
     if (!show_all && A_NONE != tech_one && A_LAST != tech_two
         && A_NONE != tech_two
-        && (nodes[tech_one] == NULL || nodes[tech_two] == NULL)) {
+        && (nodes[tech_one] == nullptr || nodes[tech_two] == nullptr)) {
       // Print only reachable techs.
       continue;
     }
@@ -425,7 +425,7 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
   }
   advance_index_iterate_end;
   tree->num_nodes = j;
-  tree->layers = NULL;
+  tree->layers = nullptr;
 
   return tree;
 }
@@ -517,7 +517,7 @@ static struct reqtree *add_dummy_nodes(struct reqtree *tree)
   for (i = 0; i < tree->num_nodes; i++) {
     int mpl;
 
-    if (tree->nodes[i] == NULL) {
+    if (tree->nodes[i] == nullptr) {
       continue;
     }
     mpl = max_provide_layer(tree->nodes[i]);
@@ -588,7 +588,7 @@ static struct reqtree *add_dummy_nodes(struct reqtree *tree)
       fc_assert(k <= new_tree->num_nodes);
     }
   }
-  new_tree->layers = NULL;
+  new_tree->layers = nullptr;
 
   return new_tree;
 }
@@ -787,7 +787,7 @@ static void improve(struct reqtree *tree)
    Generate optimized tech_tree from current ruleset.
    You should free it by destroy_reqtree.
 
-   If pplayer is not NULL, techs unreachable to that player are not shown.
+   If pplayer is not nullptr, techs unreachable to that player are not shown.
  */
 struct reqtree *create_reqtree(struct player *pplayer, bool show_all)
 {
@@ -882,14 +882,14 @@ static QColor node_color(struct tree_node *node)
 
 /**
    Return the type for an edge between two nodes
-   if node is a dummy, dest_node can be NULL
+   if node is a dummy, dest_node can be nullptr
  */
 static enum reqtree_edge_type get_edge_type(struct tree_node *node,
                                             struct tree_node *dest_node)
 {
   struct research *research = research_get(client_player());
 
-  if (dest_node == NULL) {
+  if (dest_node == nullptr) {
     // assume node is a dummy
     dest_node = node;
   }
@@ -953,7 +953,7 @@ static enum reqtree_edge_type get_edge_type(struct tree_node *node,
 
 /**
    Return a stroke color for an edge between two nodes
-   if node is a dummy, dest_node can be NULL
+   if node is a dummy, dest_node can be nullptr
  */
 static QColor edge_color(struct tree_node *node, struct tree_node *dest_node)
 {

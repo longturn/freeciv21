@@ -48,13 +48,13 @@ extern "C" {
 /**
    Lua virtual machine states.
  */
-static struct fc_lua *fcl_main = NULL;
-static struct fc_lua *fcl_unsafe = NULL;
+static struct fc_lua *fcl_main = nullptr;
+static struct fc_lua *fcl_unsafe = nullptr;
 
 /**
    Optional game script code (useful for scenarios).
  */
-static char *script_server_code = NULL;
+static char *script_server_code = nullptr;
 
 static void script_server_vars_init();
 static void script_server_vars_free();
@@ -129,7 +129,7 @@ bool script_server_load_file(const char *filename, char **buf)
   fc_stat(filename, &stats);
   ffile = fc_fopen(filename, "r");
 
-  if (ffile != NULL) {
+  if (ffile != nullptr) {
     int len;
 
     buffer = new char[stats.st_size + 1];
@@ -238,7 +238,7 @@ static void script_server_vars_save(struct section_file *file)
 /**
    Initialize the optional game script code (useful for scenarios).
  */
-static void script_server_code_init() { script_server_code = NULL; }
+static void script_server_code_init() { script_server_code = nullptr; }
 
 /**
    Free the optional game script code (useful for scenarios).
@@ -280,16 +280,16 @@ static void script_server_code_save(struct section_file *file)
  */
 bool script_server_init()
 {
-  if (fcl_main != NULL) {
-    fc_assert_ret_val(fcl_main->state != NULL, false);
+  if (fcl_main != nullptr) {
+    fc_assert_ret_val(fcl_main->state != nullptr, false);
 
     return true;
   }
 
-  fcl_main = luascript_new(NULL, true);
-  if (fcl_main == NULL) {
+  fcl_main = luascript_new(nullptr, true);
+  if (fcl_main == nullptr) {
     luascript_destroy(fcl_main);
-    fcl_main = NULL;
+    fcl_main = nullptr;
 
     return false;
   }
@@ -313,10 +313,10 @@ bool script_server_init()
   script_server_functions_define();
 
   // Add the unsafe instance.
-  fcl_unsafe = luascript_new(NULL, false);
-  if (fcl_unsafe == NULL) {
+  fcl_unsafe = luascript_new(nullptr, false);
+  if (fcl_unsafe == nullptr) {
     luascript_destroy(fcl_unsafe);
-    fcl_unsafe = NULL;
+    fcl_unsafe = nullptr;
 
     return false;
   }
@@ -340,19 +340,19 @@ bool script_server_init()
  */
 void script_server_free()
 {
-  if (fcl_main != NULL) {
+  if (fcl_main != nullptr) {
     script_server_code_free();
     script_server_vars_free();
 
     // luascript_signal_free() is called by luascript_destroy().
     luascript_destroy(fcl_main);
-    fcl_main = NULL;
+    fcl_main = nullptr;
   }
 
-  if (fcl_unsafe != NULL) {
+  if (fcl_unsafe != nullptr) {
     // luascript_signal_free() is called by luascript_destroy().
     luascript_destroy(fcl_unsafe);
-    fcl_unsafe = NULL;
+    fcl_unsafe = nullptr;
   }
 }
 

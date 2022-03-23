@@ -190,7 +190,8 @@ static inline int index_to_map_pos_y(int mindex);
   ((dest_x) = DIR_DX[(dir)], (dest_y) = DIR_DY[(dir)])
 
 /*
- * Steps from the tile in the given direction, yielding a new tile (or NULL).
+ * Steps from the tile in the given direction, yielding a new tile (or
+ * nullptr).
  *
  * Direct calls to DIR_DXY should be avoided and DIRSTEP should be
  * used. But to allow dest and src to be the same, as in
@@ -256,7 +257,7 @@ static inline int map_move_cost(const struct civ_map *nmap,
                                 const struct tile *src_tile,
                                 const struct tile *dst_tile)
 {
-  return tile_move_cost_ptrs(nmap, NULL, punittype, pplayer, src_tile,
+  return tile_move_cost_ptrs(nmap, nullptr, punittype, pplayer, src_tile,
                              dst_tile);
 }
 
@@ -297,7 +298,7 @@ extern struct terrain_misc terrain_control;
       _tile##_x = _x + _start##_x;                                          \
       _tile##_y = _y + _start##_y;                                          \
       _tile = map_pos_to_tile(nmap, _tile##_x, _tile##_y);                  \
-      if (NULL == _tile) {                                                  \
+      if (nullptr == _tile) {                                               \
         continue;                                                           \
       }
 
@@ -457,7 +458,7 @@ extern struct terrain_misc terrain_control;
       _tile##_x += _tile##_cx;                                              \
       _tile##_y += _tile##_cy;                                              \
       _tile = map_pos_to_tile(nmap, _tile##_x, _tile##_y);                  \
-      if (NULL == _tile) {                                                  \
+      if (nullptr == _tile) {                                               \
         continue;                                                           \
       }
 

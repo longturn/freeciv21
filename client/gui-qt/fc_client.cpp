@@ -68,8 +68,8 @@ fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
   status_bar_queue.clear();
   for (int i = 0; i <= PAGE_GAME; i++) {
-    pages_layout[i] = NULL;
-    pages[i] = NULL;
+    pages_layout[i] = nullptr;
+    pages[i] = nullptr;
   }
   fcFont::instance()->initFonts();
   read_settings();

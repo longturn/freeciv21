@@ -210,7 +210,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
                      : 100);
   struct research *research = research_get(pplayer);
   enum celebration celebrate = AI_CELEBRATION_UNCHECKED;
-  struct adv_data *ai = adv_data_get(pplayer, NULL);
+  struct adv_data *ai = adv_data_get(pplayer, nullptr);
   int can_celebrate = 0, total_cities = 0;
   int trade = 0;         // total amount of trade generated
   int expenses = 0;      // total amount of gold upkeep
@@ -224,7 +224,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
   int rate_lux_min_celebrate = maxrate;
   int delta_tax = 0, delta_sci = 0;
 
-  civtimer *taxtimer = NULL;
+  civtimer *taxtimer = nullptr;
 
   struct cm_parameter cmp;
 
@@ -653,7 +653,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
         cm_query_result(pcity, &cmp, cmr, false);
         if (cmr->found_a_valid) {
           apply_cmresult_to_city(pcity, cmr);
-          city_refresh_from_main_map(pcity, NULL);
+          city_refresh_from_main_map(pcity, nullptr);
           if (!city_happy(pcity)) {
             CITY_LOG(LOG_ERROR, pcity, "is NOT happy when it should be!");
           }
@@ -669,7 +669,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
       /* KLUDGE: Must refresh to restore the original values which
        * were clobbered in cm_query_result(), after the tax rates
        * were changed. */
-      city_refresh_from_main_map(pcity, NULL);
+      city_refresh_from_main_map(pcity, nullptr);
     }
     city_list_iterate_end;
   }
@@ -694,7 +694,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
 static void dai_manage_government(struct ai_type *ait,
                                   struct player *pplayer)
 {
-  struct adv_data *adv = adv_data_get(pplayer, NULL);
+  struct adv_data *adv = adv_data_get(pplayer, nullptr);
 
   if (!pplayer->is_alive || has_handicap(pplayer, H_AWAY)) {
     return;

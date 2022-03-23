@@ -174,7 +174,7 @@ static char *put_conv(const char *src, size_t *length)
     return out;
   } else {
     *length = 0;
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -240,7 +240,7 @@ static void at_exit()
  */
 static void client_game_init()
 {
-  client.conn.playing = NULL;
+  client.conn.playing = nullptr;
   client.conn.observer = false;
 
   game_init(false);
@@ -279,7 +279,7 @@ static void client_game_free()
      the server! */
   update_queue::uq()->init();
 
-  client.conn.playing = NULL;
+  client.conn.playing = nullptr;
   client.conn.observer = false;
 }
 
@@ -587,7 +587,7 @@ int client_main(int argc, char *argv[])
 
   /* This seed is not saved anywhere; randoms in the client should
      have cosmetic effects only (eg city name suggestions).  --dwp */
-  fc_srand(time(NULL));
+  fc_srand(time(nullptr));
   boot_help_texts(client_current_nation_set(), tileset_help(tileset));
 
   fill_topo_ts_default();
@@ -608,7 +608,7 @@ int client_main(int argc, char *argv[])
   if (!auto_connect) {
     // People autoconnecting won't stay in the menus for long. Avoid starting
     // music that will be stopped immediately.
-    start_menu_music(QStringLiteral("music_menu"), NULL);
+    start_menu_music(QStringLiteral("music_menu"), nullptr);
   }
 
   editor_init();
@@ -792,7 +792,7 @@ void set_client_state(enum client_states newstate)
 
     if (!is_client_quitting()) {
       // Back to menu
-      start_menu_music(QStringLiteral("music_menu"), NULL);
+      start_menu_music(QStringLiteral("music_menu"), nullptr);
     }
   }
 
@@ -810,7 +810,7 @@ void set_client_state(enum client_states newstate)
     meswin_clear_older(MESWIN_CLEAR_ALL, 0);
 
     if (oldstate > C_S_DISCONNECTED) {
-      unit_focus_set(NULL);
+      unit_focus_set(nullptr);
       editor_clear();
       global_worklists_unbuild();
       client_remove_all_cli_conn();
@@ -838,7 +838,7 @@ void set_client_state(enum client_states newstate)
       options_dialogs_update();
     }
 
-    unit_focus_set(NULL);
+    unit_focus_set(nullptr);
 
     if (get_client_page() != PAGE_SCENARIO
         && get_client_page() != PAGE_LOAD) {
@@ -854,7 +854,7 @@ void set_client_state(enum client_states newstate)
 
     init_city_report_game_data();
     options_dialogs_set();
-    create_event(NULL, E_GAME_START, ftc_client, _("Game started."));
+    create_event(nullptr, E_GAME_START, ftc_client, _("Game started."));
     if (pplayer) {
       research_update(research_get(pplayer));
     }
@@ -892,7 +892,7 @@ void set_client_state(enum client_states newstate)
       if (pplayer && pplayer->cities) {
         city_list_iterate(pplayer->cities, pcity)
         {
-          if (cma_is_city_under_agent(pcity, NULL)) {
+          if (cma_is_city_under_agent(pcity, nullptr)) {
             cma_release_city(pcity);
           }
         }
@@ -901,7 +901,7 @@ void set_client_state(enum client_states newstate)
       popdown_all_city_dialogs();
       close_all_diplomacy_dialogs();
       popdown_all_game_dialogs();
-      unit_focus_set(NULL);
+      unit_focus_set(nullptr);
     } else {
       // From C_S_PREPARING.
       init_city_report_game_data();
@@ -916,7 +916,7 @@ void set_client_state(enum client_states newstate)
       boot_help_texts(client_current_nation_set(), tileset_help(tileset));
 
       global_worklists_build();
-      unit_focus_set(NULL);
+      unit_focus_set(nullptr);
       set_client_page(PAGE_GAME);
       center_on_something();
     }
@@ -924,7 +924,7 @@ void set_client_state(enum client_states newstate)
 
     update_info_label();
     unit_focus_update();
-    update_unit_info_label(NULL);
+    update_unit_info_label(nullptr);
 
     break;
   }
@@ -950,9 +950,10 @@ enum client_states client_state() { return civclient_state; }
  */
 void client_remove_cli_conn(struct connection *pconn)
 {
-  fc_assert_msg(pconn != NULL, "Trying to remove a non existing connection");
+  fc_assert_msg(pconn != nullptr,
+                "Trying to remove a non existing connection");
 
-  if (NULL != pconn->playing) {
+  if (nullptr != pconn->playing) {
     conn_list_remove(pconn->playing->connections, pconn);
   }
   conn_list_remove(game.all_connections, pconn);
@@ -967,7 +968,7 @@ void client_remove_cli_conn(struct connection *pconn)
  */
 void client_remove_all_cli_conn()
 {
-  fc_assert_msg(game.all_connections != NULL, "Connection list missing");
+  fc_assert_msg(game.all_connections != nullptr, "Connection list missing");
 
   while (conn_list_size(game.all_connections) > 0) {
     struct connection *pconn = conn_list_get(game.all_connections, 0);
@@ -1145,7 +1146,7 @@ double real_timer_callback()
  */
 bool can_client_control()
 {
-  return (NULL != client.conn.playing && !client_is_observer());
+  return (nullptr != client.conn.playing && !client_is_observer());
 }
 
 /**
@@ -1165,7 +1166,7 @@ bool can_client_issue_orders()
 bool can_meet_with_player(const struct player *pplayer)
 {
   return (can_client_issue_orders()
-          // && NULL != client.conn.playing (above)
+          // && nullptr != client.conn.playing (above)
           && could_meet_with_player(client.conn.playing, pplayer));
 }
 
@@ -1176,7 +1177,7 @@ bool can_meet_with_player(const struct player *pplayer)
 bool can_intel_with_player(const struct player *pplayer)
 {
   return (client_is_observer()
-          || (NULL != client.conn.playing
+          || (nullptr != client.conn.playing
               && could_intel_with_player(client.conn.playing, pplayer)));
 }
 
@@ -1187,7 +1188,7 @@ bool can_intel_with_player(const struct player *pplayer)
  */
 bool can_client_change_view()
 {
-  return ((NULL != client.conn.playing || client_is_observer())
+  return ((nullptr != client.conn.playing || client_is_observer())
           && (C_S_RUNNING == client_state() || C_S_OVER == client_state()));
 }
 
@@ -1202,7 +1203,7 @@ void set_server_busy(bool busy)
     server_busy = busy;
 
     // This may mean that we have to change from or to wait cursor
-    control_mouse_cursor(NULL);
+    control_mouse_cursor(nullptr);
   }
 }
 
@@ -1216,7 +1217,7 @@ bool is_server_busy() { return server_busy; }
  */
 bool client_is_global_observer()
 {
-  return client.conn.playing == NULL && client.conn.observer;
+  return client.conn.playing == nullptr && client.conn.observer;
 }
 
 /**
@@ -1224,7 +1225,7 @@ bool client_is_global_observer()
  */
 int client_player_number()
 {
-  if (client.conn.playing == NULL) {
+  if (client.conn.playing == nullptr) {
     return -1;
   }
   return player_number(client.conn.playing);
@@ -1233,7 +1234,7 @@ int client_player_number()
 /**
    Either controlling or observing.
  */
-bool client_has_player() { return client.conn.playing != NULL; }
+bool client_has_player() { return client.conn.playing != nullptr; }
 
 /**
    Either controlling or observing.
@@ -1291,7 +1292,7 @@ static const char *client_ss_name_get(server_setting_id id)
     return option_name(pset);
   } else {
     qCritical("No server setting with the id %d exists.", id);
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -1394,8 +1395,8 @@ static void fc_interface_init_client()
   funcs->server_setting_val_bool_get = client_ss_val_bool_get;
   funcs->server_setting_val_int_get = client_ss_val_int_get;
   funcs->server_setting_val_bitwise_get = client_ss_val_bitwise_get;
-  funcs->create_extra = NULL;
-  funcs->destroy_extra = NULL;
+  funcs->create_extra = nullptr;
+  funcs->destroy_extra = nullptr;
   funcs->player_tile_vision_get = client_map_is_known_and_seen;
   funcs->player_tile_city_id_get = client_plr_tile_city_id_get;
 
@@ -1455,7 +1456,7 @@ static struct player *mapimg_client_tile_city(const struct tile *ptile,
   struct city *pcity = tile_city(ptile);
 
   if (!pcity) {
-    return NULL;
+    return nullptr;
   }
 
   return city_owner(tile_city(ptile));
@@ -1473,7 +1474,7 @@ static struct player *mapimg_client_tile_unit(const struct tile *ptile,
   int unit_count = unit_list_size(ptile->units);
 
   if (unit_count == 0) {
-    return NULL;
+    return nullptr;
   }
 
   return unit_owner(unit_list_get(ptile->units, 0));
@@ -1493,7 +1494,7 @@ static struct rgbcolor *mapimg_client_plrcolor_get(int i)
   int count = 0;
 
   if (0 > i || i > player_count()) {
-    return NULL;
+    return nullptr;
   }
 
   players_iterate(pplayer)
@@ -1505,7 +1506,7 @@ static struct rgbcolor *mapimg_client_plrcolor_get(int i)
   }
   players_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**

@@ -77,7 +77,7 @@ static struct unit *dai_hunter_find(struct player *pplayer,
   }
   unit_list_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -88,7 +88,7 @@ static struct unit_type *dai_hunter_guess_best(struct city *pcity,
                                                struct ai_type *ait,
                                                bool allow_gold_upkeep)
 {
-  struct unit_type *bestid = NULL;
+  struct unit_type *bestid = nullptr;
   int best = 0;
   struct player *pplayer = city_owner(pcity);
 
@@ -158,8 +158,8 @@ static void dai_hunter_missile_want(struct player *pplayer,
                                     struct adv_choice *choice)
 {
   adv_want best = -1;
-  struct unit_type *best_unit_type = NULL;
-  struct unit *hunter = NULL;
+  struct unit_type *best_unit_type = nullptr;
+  struct unit *hunter = nullptr;
 
   unit_list_iterate(pcity->tile->units, punit)
   {
@@ -321,7 +321,7 @@ static void dai_hunter_try_launch(struct ai_type *ait,
 
   unit_list_iterate_safe(unit_tile(punit)->units, missile)
   {
-    struct unit *sucker = NULL;
+    struct unit *sucker = nullptr;
 
     if (unit_owner(missile) == pplayer
         && utype_can_do_action(unit_type_get(missile),
@@ -583,7 +583,7 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
       if (target != game_unit_by_number(sanity_target)) {
         UNIT_LOG(LOGLEVEL_HUNT, punit,
                  "mission accomplished by cargo (pre)");
-        dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+        dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
         pf_map_destroy(pfm);
         return -1; // try again
       }
@@ -599,7 +599,7 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
 
       if (target != game_unit_by_number(sanity_target)) {
         UNIT_LOG(LOGLEVEL_HUNT, punit, "mission accomplished");
-        dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+        dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
         pf_map_destroy(pfm);
         return -1; // try again
       }
@@ -609,7 +609,7 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
       if (target != game_unit_by_number(sanity_target)) {
         UNIT_LOG(LOGLEVEL_HUNT, punit,
                  "mission accomplished by cargo (post)");
-        dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+        dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
         pf_map_destroy(pfm);
         return -1; // try again
       }

@@ -141,7 +141,7 @@ bool netfile_download_file(const QUrl &url, const char *filename,
 {
   QSaveFile out(QString::fromUtf8(filename));
   if (!out.open(QIODevice::WriteOnly)) {
-    if (cb != NULL) {
+    if (cb != nullptr) {
       auto msg = QString::fromUtf8(_("Could not open %1 for writing"))
                      .arg(filename);
       cb(msg);

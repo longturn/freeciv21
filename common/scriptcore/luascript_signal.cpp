@@ -158,14 +158,14 @@ static struct signal *luascript_signal_create_valist(struct fc_lua *fcl,
 {
   struct signal *psignal;
 
-  fc_assert_ret_val(fcl, NULL);
-  fc_assert_ret_val(fcl->signals_hash, NULL);
+  fc_assert_ret_val(fcl, nullptr);
+  fc_assert_ret_val(fcl->signals_hash, nullptr);
 
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
     luascript_log(fcl, LOG_ERROR, "Signal \"%s\" was already created.",
                   signal_name);
-    return NULL;
+    return nullptr;
   } else {
     enum api_types *parg_types = new api_types[nargs]();
     int i;
@@ -197,11 +197,11 @@ signal_deprecator *luascript_signal_create(struct fc_lua *fcl,
   created = luascript_signal_create_valist(fcl, signal_name, nargs, args);
   va_end(args);
 
-  if (created != NULL) {
+  if (created != nullptr) {
     return &(created->depr_msg);
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -210,16 +210,16 @@ signal_deprecator *luascript_signal_create(struct fc_lua *fcl,
 void deprecate_signal(signal_deprecator *deprecator, const char *signal_name,
                       const char *replacement, const char *deprecated_since)
 {
-  if (deprecator != NULL) {
+  if (deprecator != nullptr) {
     char buffer[1024];
 
-    if (deprecated_since != NULL && replacement != NULL) {
+    if (deprecated_since != nullptr && replacement != nullptr) {
       fc_snprintf(
           buffer, sizeof(buffer),
           "Deprecated: lua signal \"%s\", deprecated since \"%s\", used. "
           "Use \"%s\" instead",
           signal_name, deprecated_since, replacement);
-    } else if (replacement != NULL) {
+    } else if (replacement != nullptr) {
       fc_snprintf(buffer, sizeof(buffer),
                   "Deprecated: lua signal \"%s\" used. Use \"%s\" instead",
                   signal_name, replacement);
@@ -239,10 +239,10 @@ void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,
                                const char *callback_name, bool create)
 {
   struct signal *psignal;
-  struct signal_callback *pcallback_found = NULL;
+  struct signal_callback *pcallback_found = nullptr;
 
-  fc_assert_ret(fcl != NULL);
-  fc_assert_ret(fcl->signals_hash != NULL);
+  fc_assert_ret(fcl != nullptr);
+  fc_assert_ret(fcl->signals_hash != nullptr);
 
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
@@ -254,7 +254,7 @@ void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,
       }
     }
 
-    if (psignal->depr_msg != NULL) {
+    if (psignal->depr_msg != nullptr) {
       qCWarning(deprecations_category, "%s", psignal->depr_msg);
     }
 
@@ -287,8 +287,8 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
 {
   struct signal *psignal;
 
-  fc_assert_ret_val(fcl != NULL, false);
-  fc_assert_ret_val(fcl->signals_hash != NULL, false);
+  fc_assert_ret_val(fcl != nullptr, false);
+  fc_assert_ret_val(fcl->signals_hash != nullptr, false);
 
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
@@ -308,9 +308,9 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
  */
 void luascript_signal_init(struct fc_lua *fcl)
 {
-  fc_assert_ret(fcl != NULL);
+  fc_assert_ret(fcl != nullptr);
 
-  if (NULL == fcl->signals_hash) {
+  if (nullptr == fcl->signals_hash) {
     fcl->signals_hash = new QHash<QString, struct signal *>;
     fcl->signal_names = new QVector<QString>;
   }
@@ -338,8 +338,8 @@ void luascript_signal_free(struct fc_lua *fcl)
  */
 QString luascript_signal_by_index(struct fc_lua *fcl, int sindex)
 {
-  fc_assert_ret_val(fcl != NULL, QString());
-  fc_assert_ret_val(fcl->signal_names != NULL, QString());
+  fc_assert_ret_val(fcl != nullptr, QString());
+  fc_assert_ret_val(fcl->signal_names != nullptr, QString());
 
   return sindex < fcl->signal_names->size() ? fcl->signal_names->at(sindex)
                                             : QString();
@@ -355,8 +355,8 @@ const char *luascript_signal_callback_by_index(struct fc_lua *fcl,
 {
   struct signal *psignal;
 
-  fc_assert_ret_val(fcl != NULL, NULL);
-  fc_assert_ret_val(fcl->signals_hash != NULL, NULL);
+  fc_assert_ret_val(fcl != nullptr, nullptr);
+  fc_assert_ret_val(fcl->signals_hash != nullptr, nullptr);
 
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal && sindex < psignal->callbacks->size()) {
@@ -365,5 +365,5 @@ const char *luascript_signal_callback_by_index(struct fc_lua *fcl,
       return pcallback->name;
     }
   }
-  return NULL;
+  return nullptr;
 }

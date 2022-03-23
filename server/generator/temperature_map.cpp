@@ -72,7 +72,7 @@ static char *tmap_y2str(int ycoor)
 /**
    Return TRUE if temperateure_map is initialized
  */
-bool temperature_is_initialized() { return temperature_map != NULL; }
+bool temperature_is_initialized() { return temperature_map != nullptr; }
 
 /**
    Return true if the tile has tt temperature type
@@ -103,7 +103,7 @@ bool is_temperature_type_near(const struct tile *ptile, temperature_type tt)
  */
 void destroy_tmap()
 {
-  fc_assert_ret(NULL != temperature_map);
+  fc_assert_ret(nullptr != temperature_map);
   FCPP_FREE(temperature_map);
 }
 
@@ -119,7 +119,7 @@ void create_tmap(bool real)
   // if map is defined this is not changed
   // TODO: load if from scenario game with tmap
   // to debug, never load a this time
-  fc_assert_ret(NULL == temperature_map);
+  fc_assert_ret(nullptr == temperature_map);
 
   temperature_map = new int[MAP_INDEX_SIZE];
   whole_map_iterate(&(wld.map), ptile)

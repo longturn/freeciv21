@@ -93,7 +93,7 @@ class text_browser_dblclck : public QTextBrowser {
   Q_OBJECT
 
 public:
-  explicit text_browser_dblclck(QWidget *parent = NULL)
+  explicit text_browser_dblclck(QWidget *parent = nullptr)
       : QTextBrowser(parent)
   {
   }

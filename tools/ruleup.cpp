@@ -128,7 +128,7 @@ int main(int argc, char **argv)
   fc_interface_init_tool();
 
   // Set ruleset user requested to use
-  if (rs_selected == NULL) {
+  if (rs_selected == nullptr) {
     rs_selected = GAME_DEFAULT_RULESETDIR;
   }
   sz_strlcpy(game.server.rulesetdir, qUtf8Printable(rs_selected));
@@ -136,7 +136,7 @@ int main(int argc, char **argv)
   // Reset aifill to zero
   game.info.aifill = 0;
 
-  if (load_rulesets(NULL, NULL, true, conv_log, false, true, true)) {
+  if (load_rulesets(nullptr, nullptr, true, conv_log, false, true, true)) {
     struct rule_data data;
     QString tgt_dir;
 

@@ -244,7 +244,7 @@ void pageGame::updateInfoLabelTimeout()
   sw_map->setCustomLabels(s);
   sw_map->update();
 
-  if (client.conn.playing != NULL) {
+  if (client.conn.playing != nullptr) {
     if (player_get_expected_income(client.conn.playing) > 0) {
       eco_info =
           QString(_("%1 (+%2)"))
@@ -285,7 +285,7 @@ void pageGame::updateSidebarTooltips()
     return;
   }
 
-  if (NULL != client.conn.playing) {
+  if (nullptr != client.conn.playing) {
     max = get_player_bonus(client.conn.playing, EFT_MAX_RATES);
   } else {
     max = 100;
@@ -648,7 +648,7 @@ bool pageGame::isRepoDlgOpen(const QString &str)
 
   w = opened_repo_dlgs.value(str);
 
-  return w != NULL;
+  return w != nullptr;
 }
 
 /**

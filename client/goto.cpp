@@ -52,7 +52,7 @@ static auto goto_finders = std::map<int, freeciv::path_finder>();
 /****************************************************************************
   Various stuff for the goto routes
 ****************************************************************************/
-static struct tile *goto_destination = NULL;
+static struct tile *goto_destination = nullptr;
 
 /**
    Returns if unit can move now
@@ -69,7 +69,7 @@ bool can_unit_move_now(const struct unit *punit)
     return true;
   }
 
-  dt = time(NULL) - punit->action_timestamp;
+  dt = time(nullptr) - punit->action_timestamp;
   if (dt < 0) {
     return false;
   }
@@ -91,7 +91,7 @@ void init_client_goto()
 void free_client_goto()
 {
   goto_finders.clear();
-  goto_destination = NULL;
+  goto_destination = nullptr;
   goto_warned = false;
 }
 
@@ -100,7 +100,7 @@ void free_client_goto()
  */
 bool is_valid_goto_destination(const struct tile *ptile)
 {
-  return (NULL != goto_destination && ptile == goto_destination);
+  return (nullptr != goto_destination && ptile == goto_destination);
 }
 
 /**
@@ -227,9 +227,9 @@ static void goto_fill_parameter_base(struct pf_parameter *parameter,
 {
   pft_fill_unit_parameter(parameter, punit);
 
-  fc_assert(parameter->get_EC == NULL);
-  fc_assert(parameter->get_TB == NULL);
-  fc_assert(parameter->get_MC != NULL);
+  fc_assert(parameter->get_EC == nullptr);
+  fc_assert(parameter->get_TB == nullptr);
+  fc_assert(parameter->get_MC != nullptr);
   fc_assert(parameter->start_tile == unit_tile(punit));
   fc_assert(parameter->omniscience == false);
 
@@ -278,7 +278,7 @@ void exit_goto_state()
   mapdeco_clear_gotoroutes();
 
   goto_finders.clear();
-  goto_destination = NULL;
+  goto_destination = nullptr;
   goto_warned = false;
 }
 
@@ -311,8 +311,8 @@ bool goto_is_active() { return !goto_finders.empty(); }
  */
 bool goto_get_turns(int *min, int *max)
 {
-  fc_assert_ret_val(min != NULL, false);
-  fc_assert_ret_val(max != NULL, false);
+  fc_assert_ret_val(min != nullptr, false);
+  fc_assert_ret_val(max != nullptr, false);
 
   *min = FC_INFINITY;
   *max = -1;
@@ -320,7 +320,7 @@ bool goto_get_turns(int *min, int *max)
   if (!goto_is_active()) {
     return false;
   }
-  if (NULL == goto_destination) {
+  if (nullptr == goto_destination) {
     // Not a valid position.
     return false;
   }
@@ -351,9 +351,9 @@ bool goto_get_turns(int *min, int *max)
 bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
                      int *turns, bool *waypoint)
 {
-  fc_assert_ret_val(ptile != NULL, false);
-  fc_assert_ret_val(turns != NULL, false);
-  fc_assert_ret_val(waypoint != NULL, false);
+  fc_assert_ret_val(ptile != nullptr, false);
+  fc_assert_ret_val(turns != nullptr, false);
+  fc_assert_ret_val(waypoint != nullptr, false);
 
   if (!goto_is_active() || goto_destination == nullptr) {
     return false;
@@ -416,7 +416,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
 bool is_valid_goto_draw_line(struct tile *dest_tile)
 {
   fc_assert_ret_val(goto_is_active(), false);
-  if (NULL == dest_tile) {
+  if (nullptr == dest_tile) {
     return false;
   }
 
@@ -440,7 +440,7 @@ bool is_valid_goto_draw_line(struct tile *dest_tile)
         finder.find_path(freeciv::tile_destination(destination));
     if (!path) {
       // This is our way of signalling that we can't go to a tile
-      goto_destination = NULL;
+      goto_destination = nullptr;
       continue;
     }
 
@@ -465,7 +465,7 @@ bool is_valid_goto_draw_line(struct tile *dest_tile)
 
   // Update goto data in info label.
   update_unit_info_label(get_units_in_focus());
-  return (NULL != goto_destination);
+  return (nullptr != goto_destination);
 }
 
 /**
@@ -504,11 +504,11 @@ static void make_path_orders(struct unit *punit, struct pf_path *path,
   int i;
   struct tile *old_tile;
 
-  fc_assert_ret(path != NULL);
+  fc_assert_ret(path != nullptr);
   fc_assert_ret_msg(unit_tile(punit) == path->positions[0].tile,
                     "Unit %d has moved without goto cancelation.",
                     punit->id);
-  fc_assert_ret(length != NULL);
+  fc_assert_ret(length != nullptr);
 
   // We skip the start position.
   *length = path->length - 1;
@@ -544,8 +544,9 @@ static void make_path_orders(struct unit *punit, struct pf_path *path,
   }
 
   if (i > 0 && order_list[i - 1].order == ORDER_MOVE
-      && (is_non_allied_city_tile(old_tile, client_player()) != NULL
-          || is_non_allied_unit_tile(old_tile, client_player()) != NULL)) {
+      && (is_non_allied_city_tile(old_tile, client_player()) != nullptr
+          || is_non_allied_unit_tile(old_tile, client_player())
+                 != nullptr)) {
     // Won't be able to perform a regular move to the target tile...
     if (!final_order) {
       /* ...and no final order exists. Choose what to do when the unit gets
@@ -593,7 +594,7 @@ static void send_path_orders(struct unit *punit, struct pf_path *path,
 {
   struct packet_unit_orders p;
 
-  if (path->length == 1 && final_order == NULL) {
+  if (path->length == 1 && final_order == nullptr) {
     return; // No path at all, no need to spam the server.
   }
 
@@ -632,7 +633,7 @@ static void send_rally_path_orders(struct city *pcity, struct unit *punit,
   qCDebug(goto_category, "  Vigilant: %d.", p.vigilant);
 
   make_path_orders(punit, path, orders, final_order, p.orders, &p.length,
-                   NULL);
+                   nullptr);
 
   send_packet_city_rally_point(&client.conn, &p);
 }
@@ -671,7 +672,7 @@ bool send_goto_tile(struct unit *punit, struct tile *ptile)
   pf_map_destroy(pfm);
 
   if (path) {
-    send_goto_path(punit, path, NULL);
+    send_goto_path(punit, path, nullptr);
     pf_path_destroy(path);
     return true;
   } else {
@@ -692,8 +693,8 @@ bool send_rally_tile(struct city *pcity, struct tile *ptile)
   struct pf_map *pfm;
   struct pf_path *path;
 
-  fc_assert_ret_val(pcity != NULL, false);
-  fc_assert_ret_val(ptile != NULL, false);
+  fc_assert_ret_val(pcity != nullptr, false);
+  fc_assert_ret_val(ptile != nullptr, false);
 
   // Create a virtual unit of the type being produced by the city.
   if (pcity->production.kind != VUT_UTYPE) {
@@ -713,7 +714,7 @@ bool send_rally_tile(struct city *pcity, struct tile *ptile)
 
   if (path) {
     // Send orders to server.
-    send_rally_path(pcity, punit, path, NULL);
+    send_rally_path(pcity, punit, path, nullptr);
     unit_virtual_destroy(punit);
     pf_path_destroy(path);
     return true;
@@ -735,14 +736,14 @@ bool send_attack_tile(struct unit *punit, struct tile *ptile)
 
   goto_fill_parameter_base(&parameter, punit);
   parameter.move_rate = 0;
-  parameter.is_pos_dangerous = NULL;
-  parameter.get_moves_left_req = NULL;
+  parameter.is_pos_dangerous = nullptr;
+  parameter.get_moves_left_req = nullptr;
   pfm = pf_map_new(&parameter);
   path = pf_map_path(pfm, ptile);
   pf_map_destroy(pfm);
 
   if (path) {
-    send_path_orders(punit, path, false, false, ORDER_ACTION_MOVE, NULL);
+    send_path_orders(punit, path, false, false, ORDER_ACTION_MOVE, nullptr);
     pf_path_destroy(path);
     return true;
   }
@@ -822,15 +823,15 @@ struct tile *tile_before_end_path(struct unit *punit, struct tile *ptile)
 
   goto_fill_parameter_base(&parameter, punit);
   parameter.move_rate = 0;
-  parameter.is_pos_dangerous = NULL;
-  parameter.get_moves_left_req = NULL;
+  parameter.is_pos_dangerous = nullptr;
+  parameter.get_moves_left_req = nullptr;
   pfm = pf_map_new(&parameter);
   path = pf_map_path(pfm, ptile);
-  if (path == NULL) {
-    return NULL;
+  if (path == nullptr) {
+    return nullptr;
   }
   if (path->length < 2) {
-    dtile = NULL;
+    dtile = nullptr;
   } else {
     dtile = path->positions[path->length - 2].tile;
   }

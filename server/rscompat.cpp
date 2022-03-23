@@ -138,7 +138,7 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
    * the beginning. */
   bool needs_restart = false;
 
-  while ((problem = action_enabler_suggest_repair(ae)) != NULL) {
+  while ((problem = action_enabler_suggest_repair(ae)) != nullptr) {
     // A hard obligatory requirement is missing.
 
     int i;
@@ -268,7 +268,7 @@ static int first_free_unit_type_user_flag()
   // Find the first unused user defined unit type flag.
   for (flag = 0; flag < MAX_NUM_USER_UNIT_FLAGS; flag++) {
     if (unit_type_flag_id_name_cb(unit_type_flag_id(flag + UTYF_USER_FLAG_1))
-        == NULL) {
+        == nullptr) {
       return flag;
     }
   }
@@ -289,7 +289,7 @@ static int first_free_unit_class_user_flag()
   for (flag = 0; flag < MAX_NUM_USER_UCLASS_FLAGS; flag++) {
     if (unit_class_flag_id_name_cb(
             unit_class_flag_id(flag + UCF_USER_FLAG_1))
-        == NULL) {
+        == nullptr) {
       return flag;
     }
   }
@@ -309,7 +309,7 @@ static int first_free_terrain_user_flag()
   // Find the first unused user defined terrain flag.
   for (flag = 0; flag < MAX_NUM_USER_TER_FLAGS; flag++) {
     if (terrain_flag_id_name_cb(terrain_flag_id(flag + TER_USER_1))
-        == NULL) {
+        == nullptr) {
       return flag;
     }
   }
@@ -339,7 +339,7 @@ bool rscompat_names(struct rscompat_info *info)
         new_flags{N_("BeachLander"),
                   N_("Won't lose all movement when moving from"
                      " non-native terrain to native terrain.")},
-        new_flags{N_("Cant_Fortify"), NULL},
+        new_flags{N_("Cant_Fortify"), nullptr},
     };
     fc_assert_ret_val(new_flags_31.size()
                           <= UTYF_LAST_USER_FLAG - UTYF_LAST_USER_FLAG_3_0,
@@ -585,7 +585,7 @@ static void effect_to_enabler(action_id action, struct section_file *file,
     // Add the enabler to the ruleset.
     action_enabler_add(enabler);
 
-    if (compat->log_cb != NULL) {
+    if (compat->log_cb != nullptr) {
       fc_snprintf(buf, sizeof(buf),
                   "Converted effect %s in %s to an action enabler. Make "
                   "sure requirements "
@@ -594,7 +594,7 @@ static void effect_to_enabler(action_id action, struct section_file *file,
       compat->log_cb(buf);
     }
   } else if (value < 0) {
-    if (compat->log_cb != NULL) {
+    if (compat->log_cb != nullptr) {
       fc_snprintf(buf, sizeof(buf),
                   "%s effect with negative value in %s can't be "
                   "automatically converted "
@@ -656,7 +656,8 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for "Bombard"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, NULL);
+    peffect =
+        effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, nullptr);
 
     // The reduction only applies to "Bombard".
     effect_req_append(peffect, req_from_str("Action", "Local", false, true,
@@ -664,7 +665,8 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for "Heal Unit"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, NULL);
+    peffect =
+        effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, nullptr);
 
     // The reduction only applies to "Heal Unit".
     effect_req_append(peffect, req_from_str("Action", "Local", false, true,
@@ -672,7 +674,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for "Expel Unit"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, SINGLE_MOVE, NULL);
+    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, SINGLE_MOVE, nullptr);
 
     // The reduction only applies to "Expel Unit".
     effect_req_append(peffect, req_from_str("Action", "Local", false, true,
@@ -680,7 +682,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for "Capture Units"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, SINGLE_MOVE, NULL);
+    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, SINGLE_MOVE, nullptr);
 
     // The reduction only applies to "Capture Units".
     effect_req_append(peffect, req_from_str("Action", "Local", false, true,
@@ -688,7 +690,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for "Establish Embassy"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, 1, NULL);
+    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, 1, nullptr);
 
     // The reduction only applies to "Establish Embassy".
     effect_req_append(peffect, req_from_str("Action", "Local", false, true,
@@ -696,7 +698,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for "Investigate City"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, 1, NULL);
+    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, 1, nullptr);
 
     // The reduction only applies to "Investigate City".
     effect_req_append(peffect, req_from_str("Action", "Local", false, true,
@@ -705,7 +707,7 @@ void rscompat_postprocess(struct rscompat_info *info)
     /* Post successful action move fragment loss for targets of "Expel Unit"
      * has moved to the ruleset. */
     peffect = effect_new(EFT_ACTION_SUCCESS_TARGET_MOVE_COST, MAX_MOVE_FRAGS,
-                         NULL);
+                         nullptr);
 
     // The reduction only applies to "Expel Unit".
     effect_req_append(peffect, req_from_str("Action", "Local", false, true,
@@ -727,8 +729,9 @@ void rscompat_postprocess(struct rscompat_info *info)
       }
 
       // Subtract the value via the Action_Success_Actor_Move_Cost effect
-      peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST,
-                           putype->rscompat_cache.paratroopers_mr_sub, NULL);
+      peffect =
+          effect_new(EFT_ACTION_SUCCESS_MOVE_COST,
+                     putype->rscompat_cache.paratroopers_mr_sub, nullptr);
 
       // The reduction only applies to "Paradrop Unit".
       effect_req_append(peffect, req_from_str("Action", "Local", false, true,
@@ -742,7 +745,7 @@ void rscompat_postprocess(struct rscompat_info *info)
     unit_type_iterate_end;
 
     // Fortifying rules have been unhardcoded to effects.
-    peffect = effect_new(EFT_FORTIFY_DEFENSE_BONUS, 50, NULL);
+    peffect = effect_new(EFT_FORTIFY_DEFENSE_BONUS, 50, nullptr);
 
     /* Unit actually fortified. This does not need checks for unit class or
      * type flags for unit's ability to fortify as it would not be fortified
@@ -751,7 +754,7 @@ void rscompat_postprocess(struct rscompat_info *info)
                                             false, "Fortified"));
 
     // Fortify bonus in cities
-    peffect = effect_new(EFT_FORTIFY_DEFENSE_BONUS, 50, NULL);
+    peffect = effect_new(EFT_FORTIFY_DEFENSE_BONUS, 50, nullptr);
 
     // City center
     effect_req_append(peffect, req_from_str("CityTile", "Local", false, true,
@@ -767,17 +770,17 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* The probability that "Steal Maps" and "Steal Maps Escape" steals the
      * map of a tile has moved to the ruleset. */
-    peffect = effect_new(EFT_MAPS_STOLEN_PCT, -50, NULL);
+    peffect = effect_new(EFT_MAPS_STOLEN_PCT, -50, nullptr);
 
     /* The rule that "Recycle Unit"'s unit shield value is 50% has moved to
      * the ruleset. */
-    peffect = effect_new(EFT_UNIT_SHIELD_VALUE_PCT, -50, NULL);
+    peffect = effect_new(EFT_UNIT_SHIELD_VALUE_PCT, -50, nullptr);
     effect_req_append(peffect, req_from_str("Action", "Local", false, true,
                                             false, "Recycle Unit"));
 
     /* The rule that "Upgrade Unit"'s current unit shield value is 50% when
      * calculating unit upgrade price has moved to the ruleset. */
-    peffect = effect_new(EFT_UNIT_SHIELD_VALUE_PCT, -50, NULL);
+    peffect = effect_new(EFT_UNIT_SHIELD_VALUE_PCT, -50, nullptr);
     effect_req_append(peffect, req_from_str("Action", "Local", false, true,
                                             false, "Upgrade Unit"));
   }
@@ -1299,7 +1302,7 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
 
       // Take movement for disembarking from non native terrain
       peffect =
-          effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, NULL);
+          effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, nullptr);
 
       // The reduction only applies to "Transport Disembark 2".
       effect_req_append(peffect,
@@ -1313,7 +1316,7 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
 
       // Take movement for conquering from non native terrain
       peffect =
-          effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, NULL);
+          effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, nullptr);
 
       // The reduction only applies to "Conquer City 2".
       effect_req_append(peffect, req_from_str("Action", "Local", false, true,

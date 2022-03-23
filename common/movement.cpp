@@ -41,7 +41,7 @@ received a copy of the GNU General Public License along with Freeciv21.
    the penalty for reduced hitpoints, the active effects, and any veteran
    bonuses.
 
-   'utype' and 'pplayer' must be set. 'ptile' can be NULL.
+   'utype' and 'pplayer' must be set. 'ptile' can be nullptr.
  */
 int utype_move_rate(const struct unit_type *utype, const struct tile *ptile,
                     const struct player *pplayer, int veteran_level,
@@ -51,10 +51,10 @@ int utype_move_rate(const struct unit_type *utype, const struct tile *ptile,
   const struct veteran_level *vlevel;
   int base_move_rate, move_rate;
 
-  fc_assert_ret_val(NULL != utype, 0);
-  fc_assert_ret_val(NULL != pplayer, 0);
+  fc_assert_ret_val(nullptr != utype, 0);
+  fc_assert_ret_val(nullptr != pplayer, 0);
   vlevel = utype_veteran_level(utype, veteran_level);
-  fc_assert_ret_val(NULL != vlevel, 0);
+  fc_assert_ret_val(nullptr != vlevel, 0);
   uclass = utype_class(utype);
 
   base_move_rate = utype->move_rate + vlevel->move_bonus;
@@ -85,7 +85,7 @@ int utype_move_rate(const struct unit_type *utype, const struct tile *ptile,
  */
 int unit_move_rate(const struct unit *punit)
 {
-  fc_assert_ret_val(NULL != punit, 0);
+  fc_assert_ret_val(nullptr != punit, 0);
 
   return utype_move_rate(unit_type_get(punit), unit_tile(punit),
                          unit_owner(punit), punit->veteran, punit->hp);
@@ -114,7 +114,7 @@ int utype_unknown_move_cost(const struct unit_type *utype)
     move_cost = 1; // Arbitrary minimum.
     terrain_type_iterate(pterrain)
     {
-      if (is_native_to_class(uclass, pterrain, NULL)
+      if (is_native_to_class(uclass, pterrain, nullptr)
           && pterrain->movement_cost > move_cost) {
         /* Exact movement cost matters only if we can enter
          * the tile. */
@@ -131,7 +131,7 @@ int utype_unknown_move_cost(const struct unit_type *utype)
   terrain_type_iterate(pterrain)
   {
     if (BV_ISSET_ANY(pterrain->native_to)
-        && !is_native_to_class(uclass, pterrain, NULL)) {
+        && !is_native_to_class(uclass, pterrain, nullptr)) {
       // Units that may encounter unsuitable terrain explore less.
       move_cost *= 2;
       break;
@@ -156,7 +156,7 @@ bool unit_can_defend_here(const struct civ_map *nmap,
    * Even transported units may step out from transport to fight,
    * if this is their native terrain. */
   return (can_unit_exist_at_tile(nmap, punit, unit_tile(punit))
-          && (ptrans == NULL
+          && (ptrans == nullptr
               // Don't care if unloaded by the transport or alight itself
               /* FIXME: should being able to be unloaded by the transport
                * count as being able to defend (like it does now) or should
@@ -216,7 +216,7 @@ bool is_city_channel_tile(const struct unit_class *punitclass,
                                        tile_extras(piter))) {
         found = true;
         break;
-      } else if (piter != pexclude && NULL != tile_city(piter)) {
+      } else if (piter != pexclude && nullptr != tile_city(piter)) {
         tile_list_append(process_queue, piter);
       } else {
         tile_processed.setBit(tile_index(piter));
@@ -248,11 +248,12 @@ bool can_exist_at_tile(const struct civ_map *nmap,
   /* Cities are safe havens except for units in the middle of non-native
    * terrain. This can happen if adjacent terrain is changed after unit
    * arrived to city. */
-  if (NULL != tile_city(ptile)
+  if (nullptr != tile_city(ptile)
       && (uclass_has_flag(utype_class(utype), UCF_BUILD_ANYWHERE)
           || is_native_near_tile(nmap, utype_class(utype), ptile)
           || (1 == game.info.citymindist
-              && is_city_channel_tile(utype_class(utype), ptile, NULL)))) {
+              && is_city_channel_tile(utype_class(utype), ptile,
+                                      nullptr)))) {
     return true;
   }
 
@@ -307,7 +308,7 @@ bool is_native_to_class(const struct unit_class *punitclass,
     return true;
   }
 
-  if (extras != NULL) {
+  if (extras != nullptr) {
     extra_type_list_iterate(punitclass->cache.native_tile_extras, pextra)
     {
       if (BV_ISSET(*extras, extra_index(pextra))) {
@@ -331,13 +332,14 @@ bool is_native_move(const struct unit_class *punitclass,
 {
   const struct road_type *proad;
 
-  if (is_native_to_class(punitclass, tile_terrain(dst_tile), NULL)) {
+  if (is_native_to_class(punitclass, tile_terrain(dst_tile), nullptr)) {
     // We aren't using extras to make the destination native.
     return true;
   } else if (!is_native_tile_to_class(punitclass, src_tile)) {
     // Disembarking or leaving port, so ignore road connectivity.
     return true;
-  } else if (is_native_to_class(punitclass, tile_terrain(src_tile), NULL)) {
+  } else if (is_native_to_class(punitclass, tile_terrain(src_tile),
+                                nullptr)) {
     /* Native source terrain depends entirely on destination tile nativity.
      */
     return is_native_tile_to_class(punitclass, dst_tile);
@@ -539,8 +541,8 @@ bool unit_can_move_to_tile(const struct civ_map *nmap,
 {
   return (MR_OK
           == unit_move_to_tile_test(nmap, punit, punit->activity,
-                                    unit_tile(punit), dst_tile, igzoc, NULL,
-                                    enter_enemy_city));
+                                    unit_tile(punit), dst_tile, igzoc,
+                                    nullptr, enter_enemy_city));
 }
 
 /**
@@ -609,7 +611,7 @@ unit_move_to_tile_test(const struct civ_map *nmap, const struct unit *punit,
   }
 
   // 6)
-  if (embark_to != NULL) {
+  if (embark_to != nullptr) {
     if (!could_unit_load(punit, embark_to)) {
       return MR_NO_TRANSPORTER_CAPACITY;
     }
@@ -688,8 +690,8 @@ unit_move_to_tile_test(const struct civ_map *nmap, const struct unit *punit,
 bool can_unit_transport(const struct unit *transporter,
                         const struct unit *transported)
 {
-  fc_assert_ret_val(transporter != NULL, false);
-  fc_assert_ret_val(transported != NULL, false);
+  fc_assert_ret_val(transporter != nullptr, false);
+  fc_assert_ret_val(transported != nullptr, false);
 
   return can_unit_type_transport(unit_type_get(transporter),
                                  unit_class_get(transported));
@@ -796,7 +798,7 @@ void init_move_fragments()
      lowest terms (this might be confusing in some cases).
    'prefix' is a string put in front of all numeric output.
    'none' is the string to display in place of the integer part if no
-     movement points (or NULL to just say 0).
+     movement points (or nullptr to just say 0).
    'align' controls whether this is for a fixed-width table, in which case
      padding spaces will be included to make all such strings line up when
      right-aligned.
@@ -862,5 +864,5 @@ const char *move_points_text_full(int mp, bool reduce, const char *prefix,
  */
 const char *move_points_text(int mp, bool reduce)
 {
-  return move_points_text_full(mp, reduce, NULL, NULL, false);
+  return move_points_text_full(mp, reduce, nullptr, nullptr, false);
 }

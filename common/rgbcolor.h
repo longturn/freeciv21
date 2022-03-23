@@ -21,8 +21,8 @@ struct section_file;
 struct color;
 
 /* An RGBcolor contains the R,G,B bitvalues for a color.  The color itself
- * holds the color structure for this color but may be NULL (it's allocated
- * on demand at runtime). */
+ * holds the color structure for this color but may be nullptr (it's
+ * allocated on demand at runtime). */
 struct rgbcolor {
   int r, g, b;
 };

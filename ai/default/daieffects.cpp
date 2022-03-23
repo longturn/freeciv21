@@ -715,7 +715,7 @@ static bool have_better_government(const struct player *pplayer,
    function to determine if a currently *inactive* requirement could
    be met in the future.
 
-   City may be NULL, so request pplayer separately.
+   City may be nullptr, so request pplayer separately.
  */
 bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
                                         const struct player *pplayer,
@@ -732,7 +732,7 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
     if (preq->present && improvement_obsolete(pplayer, pimprove, pcity)) {
       // Would need to unobsolete a building, which is too hard.
       return false;
-    } else if (!preq->present && pcity != NULL
+    } else if (!preq->present && pcity != nullptr
                && I_NEVER < pcity->built[improvement_index(pimprove)].turn
                && !can_improvement_go_obsolete(pimprove)) {
       /* Would need to unbuild an unobsoleteable building, which is too hard.
@@ -768,7 +768,7 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
     return nation_is_in_current_set(preq->source.value.nation);
 
   case VUT_CITYSTATUS:
-    if (pcity == NULL) {
+    if (pcity == nullptr) {
       return preq->present;
     }
     if (preq->present) {

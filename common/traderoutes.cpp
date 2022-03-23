@@ -143,7 +143,7 @@ void trade_route_types_init()
  */
 const char *trade_route_type_name(enum trade_route_type type)
 {
-  fc_assert_ret_val(type >= TRT_NATIONAL && type < TRT_LAST, NULL);
+  fc_assert_ret_val(type >= TRT_NATIONAL && type < TRT_LAST, nullptr);
 
   return trade_route_type_names[type];
 }
@@ -168,7 +168,7 @@ enum trade_route_type trade_route_type_by_name(const char *name)
 const char *
 traderoute_cancelling_type_name(enum traderoute_illegal_cancelling type)
 {
-  fc_assert_ret_val(type >= TRI_ACTIVE && type < TRI_LAST, NULL);
+  fc_assert_ret_val(type >= TRI_ACTIVE && type < TRI_LAST, nullptr);
 
   return traderoute_cancelling_type_names[type];
 }
@@ -194,7 +194,7 @@ traderoute_cancelling_type_by_name(const char *name)
 struct trade_route_settings *
 trade_route_settings_by_type(enum trade_route_type type)
 {
-  fc_assert_ret_val(type >= TRT_NATIONAL && type < TRT_LAST, NULL);
+  fc_assert_ret_val(type >= TRT_NATIONAL && type < TRT_LAST, nullptr);
 
   return &trtss[type];
 }
@@ -254,7 +254,7 @@ int city_trade_removable(const struct city *pcity,
   // Return values.
   for (i = j = 0; i < num; i++) {
     j += sorted[i]->value;
-    if (NULL != would_remove) {
+    if (nullptr != would_remove) {
       trade_route_list_append(would_remove, sorted[i]);
     }
   }
@@ -293,7 +293,7 @@ bool can_establish_trade_route(const struct city *pc1,
   if (city_num_trade_routes(pc1) >= maxpc1) {
     trade = trade_base_between_cities(pc1, pc2);
     // can we replace trade route?
-    if (city_trade_removable(pc1, NULL) >= trade) {
+    if (city_trade_removable(pc1, nullptr) >= trade) {
       return false;
     }
   }
@@ -303,7 +303,7 @@ bool can_establish_trade_route(const struct city *pc1,
       trade = trade_base_between_cities(pc1, pc2);
     }
     // can we replace trade route?
-    if (city_trade_removable(pc2, NULL) >= trade) {
+    if (city_trade_removable(pc2, nullptr) >= trade) {
       return false;
     }
   }
@@ -319,7 +319,8 @@ int trade_base_between_cities(const struct city *pc1, const struct city *pc2)
 {
   int bonus = 0;
 
-  if (NULL == pc1 || NULL == pc1->tile || NULL == pc2 || NULL == pc2->tile) {
+  if (nullptr == pc1 || nullptr == pc1->tile || nullptr == pc2
+      || nullptr == pc2->tile) {
     return 0;
   }
 
@@ -382,7 +383,7 @@ static int max_tile_trade(const struct city *pcity, const player *seen_as)
   size_t size = 0;
   bool is_celebrating = base_city_celebrating(pcity);
 
-  if (pcity->tile == NULL) {
+  if (pcity->tile == nullptr) {
     return 0;
   }
 
@@ -390,7 +391,7 @@ static int max_tile_trade(const struct city *pcity, const player *seen_as)
   {
     struct tile *ptile = city_map_to_tile(pcity->tile, radius_sq, cx, cy);
 
-    if (ptile == NULL) {
+    if (ptile == nullptr) {
       continue;
     }
 
@@ -441,9 +442,9 @@ static int max_trade_prod(const struct city *pcity, const player *seen_as)
    trade route and also when you simply sell your trade goods at the
    new city.
 
-   pgood can be NULL for ignoring good's onetime_pct.
+   pgood can be nullptr for ignoring good's onetime_pct.
 
-   pc2 can be NULL for using an imaginary city at distance 10 with
+   pc2 can be nullptr for using an imaginary city at distance 10 with
    75% of pc1's trade (for dai_choose_trade_route()).
  */
 int get_caravan_enter_city_trade_bonus(const struct city *pc1,
@@ -483,14 +484,14 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
     tb = rmd + 10;
   }
 
-  if (pgood != NULL) {
+  if (pgood != nullptr) {
     tb = tb * pgood->onetime_pct / 100;
   }
 
   // Trade_revenue_exponent (in milimes) bends the shape of the curve
   bonus = get_target_bonus_effects(
-      NULL, city_owner(pc1), pc2 ? city_owner(pc2) : NULL, pc1, NULL,
-      city_tile(pc1), NULL, NULL, NULL, NULL,
+      nullptr, city_owner(pc1), pc2 ? city_owner(pc2) : nullptr, pc1,
+      nullptr, city_tile(pc1), nullptr, nullptr, nullptr, nullptr,
       action_by_number(establish_trade ? ACTION_TRADE_ROUTE
                                        : ACTION_MARKETPLACE),
       EFT_TRADE_REVENUE_EXPONENT);
@@ -499,12 +500,12 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
 
   // Trade_revenue_bonus increases revenue by power of 2 in milimes
   bonus = get_target_bonus_effects(
-      NULL, city_owner(pc1), pc2 ? city_owner(pc2) : NULL, pc1, NULL,
-      city_tile(pc1),
+      nullptr, city_owner(pc1), pc2 ? city_owner(pc2) : nullptr, pc1,
+      nullptr, city_tile(pc1),
       /* TODO: Should unit requirements be
        * allowed so stuff like moves left and
        * unit type can modify the bonus? */
-      NULL, NULL, NULL, NULL,
+      nullptr, nullptr, nullptr, nullptr,
       /* Could be used to reduce the one time
        * bonus if no trade route is
        * established. */
@@ -547,7 +548,7 @@ void goods_init()
 
     requirement_vector_init(&(goods[i].reqs));
     goods[i].ruledit_disabled = false;
-    goods[i].helptext = NULL;
+    goods[i].helptext = nullptr;
   }
 }
 
@@ -569,7 +570,7 @@ void goods_free()
  */
 Goods_type_id goods_number(const struct goods_type *pgood)
 {
-  fc_assert_ret_val(NULL != pgood, 0);
+  fc_assert_ret_val(nullptr != pgood, 0);
 
   return pgood->id;
 }
@@ -582,7 +583,7 @@ Goods_type_id goods_number(const struct goods_type *pgood)
  */
 Goods_type_id goods_index(const struct goods_type *pgood)
 {
-  fc_assert_ret_val(NULL != pgood, 0);
+  fc_assert_ret_val(nullptr != pgood, 0);
 
   return pgood - goods;
 }
@@ -592,7 +593,7 @@ Goods_type_id goods_index(const struct goods_type *pgood)
  */
 struct goods_type *goods_by_number(Goods_type_id id)
 {
-  fc_assert_ret_val(id >= 0 && id < game.control.num_goods_types, NULL);
+  fc_assert_ret_val(id >= 0 && id < game.control.num_goods_types, nullptr);
 
   return &goods[id];
 }
@@ -614,15 +615,15 @@ const char *goods_rule_name(struct goods_type *pgood)
 }
 
 /**
-   Returns goods type matching rule name or NULL if there is no goods type
+   Returns goods type matching rule name or nullptr if there is no goods type
    with such name.
  */
 struct goods_type *goods_by_rule_name(const char *name)
 {
   const char *qs;
 
-  if (name == NULL) {
-    return NULL;
+  if (name == nullptr) {
+    return nullptr;
   }
 
   qs = Qn_(name);
@@ -635,11 +636,11 @@ struct goods_type *goods_by_rule_name(const char *name)
   }
   goods_type_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /*
-   Returns goods type matching the translated name, or NULL if there is no
+   Returns goods type matching the translated name, or nullptr if there is no
    goods type with that name.
  */
 struct goods_type *goods_by_translated_name(const char *name)
@@ -652,7 +653,7 @@ struct goods_type *goods_by_translated_name(const char *name)
   }
   goods_type_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -671,15 +672,15 @@ bool goods_can_be_provided(struct city *pcity, struct goods_type *pgood,
 {
   const struct unit_type *ptype;
 
-  if (punit != NULL) {
+  if (punit != nullptr) {
     ptype = unit_type_get(punit);
   } else {
-    ptype = NULL;
+    ptype = nullptr;
   }
 
-  return are_reqs_active(city_owner(pcity), NULL, pcity, NULL,
-                         city_tile(pcity), punit, ptype, NULL, NULL, NULL,
-                         &pgood->reqs, RPT_CERTAIN);
+  return are_reqs_active(city_owner(pcity), nullptr, pcity, nullptr,
+                         city_tile(pcity), punit, ptype, nullptr, nullptr,
+                         nullptr, &pgood->reqs, RPT_CERTAIN);
 }
 
 /**
@@ -718,7 +719,7 @@ struct goods_type *goods_from_city_to_unit(struct city *src,
   goods_type_iterate_end;
 
   if (i == 0) {
-    return NULL;
+    return nullptr;
   }
 
   return potential[fc_rand(i)];

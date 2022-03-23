@@ -84,7 +84,7 @@ char *real_fc_strdup(const char *str, const char *called_as, int line,
   Q_UNUSED(file)
   char *dest = new char[strlen(str) + 1];
 
-  // no need to check whether dest is non-NULL (raises std::bad_alloc)
+  // no need to check whether dest is non-nullptr (raises std::bad_alloc)
   qstrcpy(dest, str);
   return dest;
 }
@@ -357,7 +357,7 @@ const char *fc_strerror(fc_errno err)
 
   if (!FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM
                          | FORMAT_MESSAGE_IGNORE_INSERTS,
-                     NULL, err, 0, buf, sizeof(buf), NULL)) {
+                     nullptr, err, 0, buf, sizeof(buf), nullptr)) {
     fc_snprintf(buf, sizeof(buf), _("error %ld (failed FormatMessage)"),
                 err);
   }
@@ -384,9 +384,9 @@ char *fc_strrep_resize(char *str, size_t *len, const char *search,
   size_t len_max;
   bool success;
 
-  fc_assert_ret_val(str != NULL, NULL);
-  fc_assert_ret_val(len != NULL, NULL);
-  if (search == NULL || replace == NULL) {
+  fc_assert_ret_val(str != nullptr, nullptr);
+  fc_assert_ret_val(len != nullptr, nullptr);
+  if (search == nullptr || replace == nullptr) {
     return str;
   }
 
@@ -402,7 +402,7 @@ char *fc_strrep_resize(char *str, size_t *len, const char *search,
 
   success = fc_strrep(str, (*len), search, replace);
   // should never happen
-  fc_assert_ret_val_msg(success == true, NULL,
+  fc_assert_ret_val_msg(success == true, nullptr,
                         "Can't replace '%s' by '%s' in '%s'. To small "
                         "size after reallocation: %lu.",
                         search, replace, str, (long unsigned int) *len);
@@ -421,8 +421,8 @@ bool fc_strrep(char *str, size_t len, const char *search,
   size_t len_search, len_replace;
   char *s, *p;
 
-  fc_assert_ret_val(str != NULL, false);
-  if (search == NULL || replace == NULL) {
+  fc_assert_ret_val(str != nullptr, false);
+  if (search == nullptr || replace == nullptr) {
     return true;
   }
 
@@ -430,9 +430,9 @@ bool fc_strrep(char *str, size_t len, const char *search,
   len_replace = qstrlen(replace);
 
   s = str;
-  while (s != NULL) {
+  while (s != nullptr) {
     p = strstr(s, search);
-    if (p == NULL) {
+    if (p == nullptr) {
       // nothing found
       break;
     }
@@ -473,8 +473,8 @@ bool fc_strrep(char *str, size_t len, const char *search,
  */
 size_t fc_strlcpy(char *dest, const char *src, size_t n)
 {
-  fc_assert_ret_val(NULL != dest, -1);
-  fc_assert_ret_val(NULL != src, -1);
+  fc_assert_ret_val(nullptr != dest, -1);
+  fc_assert_ret_val(nullptr != src, -1);
   fc_assert_ret_val(0 < n, -1);
 
   auto source = QString::fromUtf8(src);
@@ -578,9 +578,9 @@ int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
   /* This may be overzealous, but I suspect any triggering of these to
    * be bugs.  */
 
-  fc_assert_ret_val(NULL != str, -1);
+  fc_assert_ret_val(nullptr != str, -1);
   fc_assert_ret_val(0 < n, -1);
-  fc_assert_ret_val(NULL != format, -1);
+  fc_assert_ret_val(nullptr != format, -1);
 
   r = vsnprintf(str, n, format, ap);
   str[n - 1] = 0;
@@ -601,7 +601,7 @@ int fc_snprintf(char *str, size_t n, const char *format, ...)
   int ret;
   va_list ap;
 
-  fc_assert_ret_val(NULL != format, -1);
+  fc_assert_ret_val(nullptr != format, -1);
 
   va_start(ap, format);
   ret = fc_vsnprintf(str, n, format, ap);
@@ -629,8 +629,8 @@ int cat_snprintf(char *str, size_t n, const char *format, ...)
   int ret;
   va_list ap;
 
-  fc_assert_ret_val(NULL != format, -1);
-  fc_assert_ret_val(NULL != str, -1);
+  fc_assert_ret_val(nullptr != format, -1);
+  fc_assert_ret_val(nullptr != str, -1);
   fc_assert_ret_val(0 < n, -1);
 
   len = qstrlen(str);

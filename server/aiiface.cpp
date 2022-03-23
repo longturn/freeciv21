@@ -46,18 +46,18 @@ bool fc_ai_tex_setup(struct ai_type *ai);
 bool fc_ai_stub_setup(struct ai_type *ai);
 #endif
 
-static struct ai_type *default_ai = NULL;
+static struct ai_type *default_ai = nullptr;
 
 #ifdef AI_MODULES
 /**
-   Return string describing module loading error. Never returns NULL.
+   Return string describing module loading error. Never returns nullptr.
  */
 static const char *fc_module_error(void)
 {
   static char def_err[] = "Unknown error";
   const char *errtxt = lt_dlerror();
 
-  if (errtxt == NULL) {
+  if (errtxt == nullptr) {
     return def_err;
   }
 
@@ -78,7 +78,7 @@ bool load_ai_module(const char *modname)
   char buffer[2048];
   char filename[1024];
 
-  if (ai == NULL) {
+  if (ai == nullptr) {
     return false;
   }
 
@@ -87,7 +87,7 @@ bool load_ai_module(const char *modname)
   fc_snprintf(filename, sizeof(filename), "fc_ai_%s", modname);
   fc_snprintf(buffer, sizeof(buffer), "%s", filename);
   handle = lt_dlopenext(buffer);
-  if (handle == NULL) {
+  if (handle == nullptr) {
     qCritical(_("Cannot open AI module %s (%s)"), filename,
               fc_module_error());
     return false;
@@ -95,7 +95,7 @@ bool load_ai_module(const char *modname)
 
   fc_snprintf(buffer, sizeof(buffer), "%s_capstr", filename);
   capstr_func = lt_dlsym(handle, buffer);
-  if (capstr_func == NULL) {
+  if (capstr_func == nullptr) {
     qCritical(_("Cannot find capstr function from ai module %s (%s)"),
               filename, fc_module_error());
     return false;
@@ -112,7 +112,7 @@ bool load_ai_module(const char *modname)
 
   fc_snprintf(buffer, sizeof(buffer), "%s_setup", filename);
   setup_func = lt_dlsym(handle, buffer);
-  if (setup_func == NULL) {
+  if (setup_func == nullptr) {
     qCritical(_("Cannot find setup function from ai module %s (%s)"),
               filename, fc_module_error());
     return false;
@@ -150,10 +150,11 @@ void ai_init()
     /* First search ai modules under directory ai/<module> under
        current directory. This allows us to run freeciv without
        installing it. */
-    const char *moduledirs[] = {"classic", "threaded", "tex", "stub", NULL};
+    const char *moduledirs[] = {"classic", "threaded", "tex", "stub",
+                                nullptr};
     int i;
 
-    for (i = 0; moduledirs[i] != NULL; i++) {
+    for (i = 0; moduledirs[i] != nullptr; i++) {
       char buf[2048];
 
       fc_snprintf(buf, sizeof(buf), "ai/%s", moduledirs[i]);
@@ -168,7 +169,7 @@ void ai_init()
 
 #ifdef AI_MOD_STATIC_CLASSIC
   ai = ai_type_alloc();
-  if (ai != NULL) {
+  if (ai != nullptr) {
     init_ai(ai);
     if (!fc_ai_classic_setup(ai)) {
       qCritical(_("Failed to setup \"%s\" AI module"), "classic");
@@ -179,7 +180,7 @@ void ai_init()
 
 #ifdef AI_MOD_STATIC_THREADED
   ai = ai_type_alloc();
-  if (ai != NULL) {
+  if (ai != nullptr) {
     init_ai(ai);
     if (!fc_ai_threaded_setup(ai)) {
       qCritical(_("Failed to setup \"%s\" AI module"), "threaded");
@@ -190,7 +191,7 @@ void ai_init()
 
 #ifdef AI_MOD_STATIC_TEX
   ai = ai_type_alloc();
-  if (ai != NULL) {
+  if (ai != nullptr) {
     init_ai(ai);
     if (!fc_ai_tex_setup(ai)) {
       qCritical(_("Failed to setup \"%s\" AI module"), "tex");
@@ -201,7 +202,7 @@ void ai_init()
 
 #ifdef AI_MOD_STATIC_STUB
   ai = ai_type_alloc();
-  if (ai != NULL) {
+  if (ai != nullptr) {
     init_ai(ai);
     if (!fc_ai_stub_setup(ai)) {
       qCritical(_("Failed to setup \"%s\" AI module"), "stub");
@@ -212,7 +213,7 @@ void ai_init()
 
   default_ai = ai_type_by_name(AI_MOD_DEFAULT);
 #ifdef AI_MODULES
-  if (default_ai == NULL) {
+  if (default_ai == nullptr) {
     // Wasn't among statically linked. Try to load dynamic module.
     if (!failure && !load_ai_module(AI_MOD_DEFAULT)) {
       failure = TRUE;
@@ -222,7 +223,7 @@ void ai_init()
     }
   }
 #endif // AI_MODULES
-  if (default_ai == NULL || failure) {
+  if (default_ai == nullptr || failure) {
     qCritical(
         _("Failed to setup default AI module \"%s\", cannot continue."),
         AI_MOD_DEFAULT);

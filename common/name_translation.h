@@ -31,7 +31,7 @@ struct name_translation {
 // Inititalization macro.
 #define NAME_INIT                                                           \
   {                                                                         \
-    NULL, "\0", "\0"                                                        \
+    nullptr, "\0", "\0"                                                     \
   }
 
 /****************************************************************************
@@ -40,13 +40,13 @@ struct name_translation {
 static inline void name_init(struct name_translation *ptrans)
 {
   ptrans->vernacular[0] = ptrans->rulename[0] = '\0';
-  ptrans->translated = NULL;
+  ptrans->translated = nullptr;
 }
 
 /****************************************************************************
   Set the untranslated and rule names of the name translation structure.
-  If rule_name is NULL, use vernacular_name for it (after removing any i18n
-  qualifier).
+  If rule_name is nullptr, use vernacular_name for it (after removing any
+i18n qualifier).
 ****************************************************************************/
 static inline void names_set(struct name_translation *ptrans,
                              const char *domain, const char *vernacular_name,
@@ -61,7 +61,7 @@ static inline void names_set(struct name_translation *ptrans,
 
   if (ptrans->vernacular[0] != '\0') {
     // Translate now.
-    if (domain == NULL) {
+    if (domain == nullptr) {
       ptrans->translated = Q_(ptrans->vernacular);
     } else {
       ptrans->translated =
@@ -79,7 +79,7 @@ static inline void names_set(struct name_translation *ptrans,
 static inline void name_set(struct name_translation *ptrans,
                             const char *domain, const char *vernacular_name)
 {
-  names_set(ptrans, domain, vernacular_name, NULL);
+  names_set(ptrans, domain, vernacular_name, nullptr);
 }
 
 /****************************************************************************

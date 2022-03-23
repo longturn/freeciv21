@@ -48,7 +48,7 @@ void savegame_load(struct section_file *sfile)
 {
   const char *savefile_options;
 
-  fc_assert_ret(sfile != NULL);
+  fc_assert_ret(sfile != nullptr);
 
   civtimer *loadtimer = timer_new(TIMER_CPU, TIMER_DEBUG);
   timer_start(loadtimer);
@@ -123,7 +123,7 @@ static void save_thread_run(void *arg)
   if (!secfile_save(stdata->sfile, stdata->filepath)) {
     con_write(C_FAIL, _("Failed saving game as %s"), stdata->filepath);
     qCritical("Game saving failed: %s", secfile_error());
-    notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning,
+    notify_conn(nullptr, nullptr, E_LOG_ERROR, ftc_warning,
                 _("Failed saving game."));
   } else {
     con_write(C_OK, _("Game saved as %s"), stdata->filepath);
@@ -168,7 +168,7 @@ void save_game(const char *orig_filename, const char *save_reason,
     } else {
       char *end_dot;
       const char *strip_extensions[] = {".sav", ".gz",  ".bz2",
-                                        ".xz",  ".zst", NULL};
+                                        ".xz",  ".zst", nullptr};
       bool stripped = true;
 
       while ((end_dot = strrchr(dot, '.')) && stripped) {
@@ -176,7 +176,7 @@ void save_game(const char *orig_filename, const char *save_reason,
 
         stripped = false;
 
-        for (i = 0; strip_extensions[i] != NULL && !stripped; i++) {
+        for (i = 0; strip_extensions[i] != nullptr && !stripped; i++) {
           if (!strcmp(end_dot, strip_extensions[i])) {
             *end_dot = '\0';
             stripped = true;
@@ -186,7 +186,7 @@ void save_game(const char *orig_filename, const char *save_reason,
     }
   }
 
-  // If orig_filename is NULL or empty, use a generated default name.
+  // If orig_filename is nullptr or empty, use a generated default name.
   if (filename[0] == '\0') {
     // manual save
     generate_save_name(
@@ -239,7 +239,7 @@ void save_game(const char *orig_filename, const char *save_reason,
     default:
       qCritical(_("Unsupported compression type %d."),
                 stdata->save_compress_type);
-      notify_conn(NULL, NULL, E_SETTING, ftc_warning,
+      notify_conn(nullptr, nullptr, E_SETTING, ftc_warning,
                   _("Unsupported compression type %d."),
                   stdata->save_compress_type);
       break;

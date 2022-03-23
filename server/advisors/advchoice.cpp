@@ -30,12 +30,12 @@
  */
 void adv_init_choice(struct adv_choice *choice)
 {
-  choice->value.utype = NULL;
+  choice->value.utype = nullptr;
   choice->want = 0;
   choice->type = CT_NONE;
   choice->need_boat = false;
 #ifdef ADV_CHOICE_TRACK
-  choice->use = NULL;
+  choice->use = nullptr;
   choice->log_if_chosen = FALSE;
 #endif // ADV_CHOICE_TRACK
 }
@@ -46,9 +46,9 @@ void adv_init_choice(struct adv_choice *choice)
 void adv_deinit_choice(struct adv_choice *choice)
 {
 #ifdef ADV_CHOICE_TRACK
-  if (choice->use != NULL) {
+  if (choice->use != nullptr) {
     free(choice->use);
-    choice->use = NULL;
+    choice->use = nullptr;
   }
 #endif // ADV_CHOICE_TRACK
 }
@@ -71,7 +71,7 @@ struct adv_choice *adv_new_choice()
 void adv_free_choice(struct adv_choice *choice)
 {
 #ifdef ADV_CHOICE_TRACK
-  if (choice->use != NULL) {
+  if (choice->use != nullptr) {
     free(choice->use);
   }
 #endif // ADV_CHOICE_TRACK
@@ -128,13 +128,13 @@ void adv_choice_copy(struct adv_choice *dest, struct adv_choice *src)
     dest->value = src->value;
     dest->want = src->want;
     dest->need_boat = src->need_boat;
-    if (dest->use != NULL) {
+    if (dest->use != nullptr) {
       free(dest->use);
     }
-    if (src->use != NULL) {
+    if (src->use != nullptr) {
       dest->use = fc_strdup(src->use);
     } else {
-      dest->use = NULL;
+      dest->use = nullptr;
     }
     dest->log_if_chosen = src->log_if_chosen;
   }
@@ -145,7 +145,7 @@ void adv_choice_copy(struct adv_choice *dest, struct adv_choice *src)
  */
 void adv_choice_set_use(struct adv_choice *choice, const char *use)
 {
-  if (choice->use != NULL) {
+  if (choice->use != nullptr) {
     free(choice->use);
   }
   choice->use = fc_strdup(use);
@@ -160,7 +160,7 @@ void adv_choice_log_info(struct adv_choice *choice, const char *loc1,
   const char *use;
   const char *name;
 
-  if (choice->use != NULL) {
+  if (choice->use != nullptr) {
     use = choice->use;
   } else {
     use = "<unknown>";
@@ -174,7 +174,7 @@ void adv_choice_log_info(struct adv_choice *choice, const char *loc1,
     name = utype_rule_name(choice->value.utype);
   }
 
-  if (loc2 != NULL) {
+  if (loc2 != nullptr) {
     log_base(ADV_CHOICE_QtMsgType,
              "Choice at \"%s:%s\": %s, "
              "want " ADV_WANT_PRINTF " as %s (%d)",
@@ -192,7 +192,7 @@ void adv_choice_log_info(struct adv_choice *choice, const char *loc1,
  */
 const char *adv_choice_get_use(const struct adv_choice *choice)
 {
-  if (choice->use == NULL) {
+  if (choice->use == nullptr) {
     return "(unset)";
   }
 

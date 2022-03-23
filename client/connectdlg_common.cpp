@@ -230,7 +230,7 @@ bool client_start_server(const QString &user_name)
   }
 
   storage = freeciv_storage_dir();
-  if (storage == NULL) {
+  if (storage == nullptr) {
     output_window_append(ftc_client,
                          _("Cannot find Freeciv21 storage directory"));
     output_window_append(
@@ -261,7 +261,7 @@ bool client_start_server(const QString &user_name)
   if (savefile.isEmpty()) {
     arguments << QStringLiteral("--file") << savefile;
   }
-  if (ruleset != NULL) {
+  if (ruleset != nullptr) {
     arguments << QStringLiteral("--ruleset") << ruleset;
   }
 

@@ -46,7 +46,7 @@ const size_t buf_size = 4096;
 const size_t buf_size = 1024;
 #endif
 
-static Mix_Music *mus = NULL;
+static Mix_Music *mus = nullptr;
 static std::array<sample, MIX_CHANNELS> samples;
 static double sdl_audio_volume;
 
@@ -71,7 +71,7 @@ static double sdl_audio_get_volume() { return sdl_audio_volume; }
 static bool sdl_audio_play(const QString &tag, const QString &fullpath,
                            bool repeat, audio_finished_callback cb)
 {
-  Mix_Chunk *wave = NULL;
+  Mix_Chunk *wave = nullptr;
 
   if (fullpath.isEmpty()) {
     return false;
@@ -84,12 +84,12 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
 
     // load music file
     mus = Mix_LoadMUS(qUtf8Printable(fullpath));
-    if (mus == NULL) {
+    if (mus == nullptr) {
       qCritical("Can't open file \"%s\"", qUtf8Printable(fullpath));
       return false;
     }
 
-    if (cb == NULL) {
+    if (cb == nullptr) {
       Mix_PlayMusic(mus, -1); // -1 means loop forever
     } else {
       Mix_PlayMusic(mus, 0);
@@ -113,7 +113,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
 
     // load wave
     wave = Mix_LoadWAV(qUtf8Printable(fullpath));
-    if (wave == NULL) {
+    if (wave == nullptr) {
       qCritical("Can't open file \"%s\"", qUtf8Printable(fullpath));
       return false;
     }
@@ -131,7 +131,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
        longer be playing by the time we get here */
     if (samples[i].wave) {
       Mix_FreeChunk(samples[i].wave);
-      samples[i].wave = NULL;
+      samples[i].wave = nullptr;
     }
     // remember for cacheing
     samples[i].wave = wave;
@@ -241,7 +241,7 @@ static bool sdl_audio_init()
 
   Mix_AllocateChannels(MIX_CHANNELS);
   for (i = 0; i < MIX_CHANNELS; i++) {
-    samples[i].wave = NULL;
+    samples[i].wave = nullptr;
   }
   // sanity check, for now; add volume controls later
   sdl_audio_set_volume(sdl_audio_volume);

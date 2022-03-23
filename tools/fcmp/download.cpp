@@ -174,7 +174,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
     return _("Cannot install to given directory hierarchy");
   }
 
-  if (mcb != NULL) {
+  if (mcb != nullptr) {
     // TRANS: %s is a filename with suffix '.modpack'
     mcb(QString::fromUtf8(_("Downloading \"%1\" control file."))
             .arg(url.fileName()));
@@ -359,7 +359,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
 
   // Control file already downloaded
   int downloaded = 1;
-  if (pbcb != NULL) {
+  if (pbcb != nullptr) {
     pbcb(downloaded, required_files.size() + 1);
   }
 
@@ -380,7 +380,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
       return _("Cannot create required directories");
     }
 
-    if (mcb != NULL) {
+    if (mcb != nullptr) {
       mcb(QString::fromUtf8(_("Downloading %1")).arg(info.source()));
     }
 
@@ -391,14 +391,14 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
 
     if (!netfile_download_file(
             source, qUtf8Printable(destination.absoluteFilePath()), mcb)) {
-      if (mcb != NULL) {
+      if (mcb != nullptr) {
         mcb(QString::fromUtf8(_("Failed to download %1"))
                 .arg(info.source()));
       }
       full_success = false;
     }
 
-    if (pbcb != NULL) {
+    if (pbcb != nullptr) {
       // Count download of control file also
       downloaded++;
       pbcb(downloaded, required_files.size() + 1);
@@ -411,7 +411,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
 
   mpdb_update_modpack(qUtf8Printable(mpname), type, qUtf8Printable(mpver));
 
-  return NULL;
+  return nullptr;
 }
 
 /**

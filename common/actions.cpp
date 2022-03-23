@@ -149,7 +149,7 @@ static struct ae_contra_or *req_contradiction_or(int alternatives, ...)
   int i;
   va_list args;
 
-  fc_assert_ret_val(alternatives > 0, NULL);
+  fc_assert_ret_val(alternatives > 0, nullptr);
   auto *out = new ae_contra_or;
   out->users = 0;
   out->alternatives = alternatives;
@@ -1149,7 +1149,7 @@ bool action_id_exists(const action_id act_id)
 /**
    Return the action with the given id.
 
-   Returns NULL if no action with the given id exists.
+   Returns nullptr if no action with the given id exists.
  */
 struct action *action_by_number(action_id act_id)
 {
@@ -1158,7 +1158,7 @@ struct action *action_by_number(action_id act_id)
 
     qDebug("Asked for non existing action numbered %d", act_id);
 
-    return NULL;
+    return nullptr;
   }
 
   fc_assert_msg(actions[act_id], "Action %d don't exist.", act_id);
@@ -1169,7 +1169,7 @@ struct action *action_by_number(action_id act_id)
 /**
    Return the action with the given name.
 
-   Returns NULL if no action with the given name exists.
+   Returns nullptr if no action with the given name exists.
  */
 struct action *action_by_rule_name(const char *name)
 {
@@ -1181,7 +1181,7 @@ struct action *action_by_rule_name(const char *name)
 
     qDebug("Asked for non existing action named %s", name);
 
-    return NULL;
+    return nullptr;
   }
 
   return action_by_number(act_id);
@@ -1266,7 +1266,7 @@ bool action_has_result(const struct action *paction,
  */
 bool action_has_complex_target(const struct action *paction)
 {
-  fc_assert_ret_val(paction != NULL, false);
+  fc_assert_ret_val(paction != nullptr, false);
 
   return paction->target_complexity >= ACT_TGT_COMPL_FLEXIBLE;
 }
@@ -1279,7 +1279,7 @@ bool action_has_complex_target(const struct action *paction)
  */
 bool action_requires_details(const struct action *paction)
 {
-  fc_assert_ret_val(paction != NULL, false);
+  fc_assert_ret_val(paction != nullptr, false);
 
   return paction->target_complexity >= ACT_TGT_COMPL_MANDATORY;
 }
@@ -1377,12 +1377,12 @@ const char *action_id_rule_name(action_id act_id)
  */
 const QString action_id_name_translation(action_id act_id)
 {
-  return action_prepare_ui_name(gen_action(act_id), "", ACTPROB_NA, NULL);
+  return action_prepare_ui_name(gen_action(act_id), "", ACTPROB_NA, nullptr);
 }
 
 /**
    Returns a text representation of the action probability prob unless it
-   is a signal. Returns NULL if prob is a signal.
+   is a signal. Returns nullptr if prob is a signal.
  */
 static QString action_prob_to_text(const struct act_prob prob)
 {
@@ -1392,7 +1392,7 @@ static QString action_prob_to_text(const struct act_prob prob)
     fc_assert(action_prob_not_impl(prob) || action_prob_not_relevant(prob));
 
     // Unknown because of missing server support or should not exits.
-    return NULL;
+    return nullptr;
   }
 
   if (prob.min == prob.max) {
@@ -1431,7 +1431,7 @@ const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
                           "Invalid action %d", act_id);
 
     // and no custom text will be inserted
-    fc_assert(custom == NULL || custom[0] == '\0');
+    fc_assert(custom == nullptr || custom[0] == '\0');
 
     // Make the best of what is known
     str = QString(_("%1%2 (name may be wrong)"))
@@ -1654,8 +1654,8 @@ int action_get_act_time(const struct action *paction,
 bool action_creates_extra(const struct action *paction,
                           const struct extra_type *pextra)
 {
-  fc_assert(paction != NULL);
-  if (pextra == NULL) {
+  fc_assert(paction != nullptr);
+  if (pextra == nullptr) {
     return false;
   }
 
@@ -1737,8 +1737,8 @@ bool action_creates_extra(const struct action *paction,
 bool action_removes_extra(const struct action *paction,
                           const struct extra_type *pextra)
 {
-  fc_assert(paction != NULL);
-  if (pextra == NULL) {
+  fc_assert(paction != nullptr);
+  if (pextra == nullptr) {
     return false;
   }
 
@@ -1889,18 +1889,18 @@ bool action_enabler_remove(struct action_enabler *enabler)
 struct action_enabler_list *action_enablers_for_action(action_id action)
 {
   // Sanity check: a non existing action doesn't have enablers.
-  fc_assert_ret_val(action_id_exists(action), NULL);
+  fc_assert_ret_val(action_id_exists(action), nullptr);
 
   return action_enablers_by_action[action];
 }
 
 /**
    Returns a suggestion to add an obligatory hard requirement to an action
-   enabler or NULL if no hard obligatory reqs were missing. It is the
+   enabler or nullptr if no hard obligatory reqs were missing. It is the
    responsibility of the caller to free the suggestion when it is done with
    it.
    @param enabler the action enabler to suggest a fix for.
-   @return a problem with fix suggestions or NULL if no obligatory hard
+   @return a problem with fix suggestions or nullptr if no obligatory hard
            requirement problems were detected.
  */
 struct req_vec_problem *
@@ -1919,7 +1919,7 @@ action_enabler_suggest_repair_oblig(const struct action_enabler *enabler)
 
   if (paction->result == ACTRES_NONE) {
     // No hard coded results means no obiligatory requirements.
-    return NULL;
+    return nullptr;
   }
 
   obligatory_req_vector_iterate(&obligatory_hard_reqs[paction->result],
@@ -1993,12 +1993,12 @@ action_enabler_suggest_repair_oblig(const struct action_enabler *enabler)
   obligatory_req_vector_iterate_end;
 
   // No obligatory req problems found.
-  return NULL;
+  return nullptr;
 }
 
 /**
    Returns the first local DiplRel requirement in the specified requirement
-   vector or NULL if it doesn't have a local DiplRel requirement.
+   vector or nullptr if it doesn't have a local DiplRel requirement.
    @param vec the requirement vector to look in
    @return the first local DiplRel requirement.
  */
@@ -2013,12 +2013,12 @@ req_vec_first_local_diplrel(const struct requirement_vector *vec)
   }
   requirement_vector_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
    Returns the first requirement in the specified requirement vector that
-   contradicts the specified requirement or NULL if no contradiction was
+   contradicts the specified requirement or nullptr if no contradiction was
    detected.
    @param req the requirement that may contradict the vector
    @param vec the requirement vector to look in
@@ -2040,14 +2040,14 @@ req_vec_first_contradiction_in_vec(const struct requirement *req,
 
   /* Not a singe requirement in the requirement vector is contradicted be
    * the specified requirement. */
-  return NULL;
+  return nullptr;
 }
 
 /**
    Detects a local DiplRel requirement in a tile targeted action without
    an explicit claimed requirement in the target reqs.
    @param enabler the enabler to look at
-   @return the problem or NULL if no problem was found
+   @return the problem or nullptr if no problem was found
  */
 static struct req_vec_problem *
 enabler_tile_tgt_local_diplrel_implies_claimed(
@@ -2063,13 +2063,13 @@ enabler_tile_tgt_local_diplrel_implies_claimed(
 
   if (action_get_target_kind(paction) != ATK_TILE) {
     // Not tile targeted
-    return NULL;
+    return nullptr;
   }
 
   local_diplrel = req_vec_first_local_diplrel(&enabler->actor_reqs);
-  if (local_diplrel == NULL) {
+  if (local_diplrel == nullptr) {
     // No local diplrel
-    return NULL;
+    return nullptr;
   }
 
   // Tile is unclaimed as a requirement.
@@ -2085,7 +2085,7 @@ enabler_tile_tgt_local_diplrel_implies_claimed(
 
   if (claimed_req) {
     // Already clear
-    return NULL;
+    return nullptr;
   }
 
   // Tile is claimed as a requirement.
@@ -2117,7 +2117,7 @@ enabler_tile_tgt_local_diplrel_implies_claimed(
 
 /**
    Returns the first action enabler specific contradiction in the specified
-   enabler or NULL if no enabler specific contradiction is found.
+   enabler or nullptr if no enabler specific contradiction is found.
    @param enabler the enabler to look at
    @return the first problem and maybe a suggested fix
  */
@@ -2133,13 +2133,13 @@ enabler_first_self_contradiction(const struct action_enabler *enabler)
 
   if (action_get_target_kind(paction) != ATK_TILE) {
     // Not tile targeted
-    return NULL;
+    return nullptr;
   }
 
   local_diplrel = req_vec_first_local_diplrel(&enabler->actor_reqs);
-  if (local_diplrel == NULL) {
+  if (local_diplrel == nullptr) {
     // No local diplrel
-    return NULL;
+    return nullptr;
   }
 
   // Tile is claimed as a requirement.
@@ -2152,9 +2152,9 @@ enabler_first_self_contradiction(const struct action_enabler *enabler)
   unclaimed_req = req_vec_first_contradiction_in_vec(&tile_is_claimed,
                                                      &enabler->target_reqs);
 
-  if (unclaimed_req == NULL) {
+  if (unclaimed_req == nullptr) {
     // No unclaimed req
-    return NULL;
+    return nullptr;
   }
 
   out = req_vec_problem_new(
@@ -2184,7 +2184,7 @@ enabler_first_self_contradiction(const struct action_enabler *enabler)
 }
 
 /**
-   Returns a suggestion to fix the specified action enabler or NULL if no
+   Returns a suggestion to fix the specified action enabler or nullptr if no
    fix is found to be needed. It is the responsibility of the caller to
    free the suggestion when it is done with it.
  */
@@ -2194,41 +2194,41 @@ action_enabler_suggest_repair(const struct action_enabler *enabler)
   struct req_vec_problem *out;
 
   out = action_enabler_suggest_repair_oblig(enabler);
-  if (out != NULL) {
+  if (out != nullptr) {
     return out;
   }
 
   out = req_vec_get_first_contradiction(
       &enabler->actor_reqs, action_enabler_vector_number, enabler);
-  if (out != NULL) {
+  if (out != nullptr) {
     return out;
   }
 
   out = req_vec_get_first_contradiction(
       &enabler->target_reqs, action_enabler_vector_number, enabler);
-  if (out != NULL) {
+  if (out != nullptr) {
     return out;
   }
 
   // Enabler specific contradictions.
   out = enabler_first_self_contradiction(enabler);
-  if (out != NULL) {
+  if (out != nullptr) {
     return out;
   }
 
   // Needed in action not enabled explanation finding.
   out = enabler_tile_tgt_local_diplrel_implies_claimed(enabler);
-  if (out != NULL) {
+  if (out != nullptr) {
     return out;
   }
 
   // No problems found.
-  return NULL;
+  return nullptr;
 }
 
 /**
    Returns the first action enabler specific clarification possibility in
-   the specified enabler or NULL if no enabler specific contradiction is
+   the specified enabler or nullptr if no enabler specific contradiction is
    found.
    @param enabler the enabler to look at
    @return the first problem and maybe a suggested fix
@@ -2239,13 +2239,13 @@ enabler_first_clarification(const struct action_enabler *enabler)
   Q_UNUSED(enabler)
   struct req_vec_problem *out;
 
-  out = NULL;
+  out = nullptr;
 
   return out;
 }
 
 /**
-   Returns a suggestion to improve the specified action enabler or NULL if
+   Returns a suggestion to improve the specified action enabler or nullptr if
    nothing to improve is found to be needed. It is the responsibility of the
    caller to free the suggestion when it is done with it. A possible
    improvement isn't always an error.
@@ -2287,7 +2287,7 @@ action_enabler_suggest_improvement(const struct action_enabler *enabler)
                                       " by any unit."));
     }
   }
-  if (out != NULL) {
+  if (out != nullptr) {
     return out;
   }
 
@@ -2320,7 +2320,7 @@ action_enabler_vector_number(const void *enabler,
 
 /**
    Returns a writable pointer to the specified requirement vector in the
-   action enabler or NULL if the action enabler doesn't have a requirement
+   action enabler or nullptr if the action enabler doesn't have a requirement
    vector with that requirement vector number.
    @param enabler the action enabler that may own the vector.
    @param number the item's requirement vector number.
@@ -2332,7 +2332,7 @@ action_enabler_vector_by_number(const void *enabler,
 {
   struct action_enabler *ae = (struct action_enabler *) enabler;
 
-  fc_assert_ret_val(number >= 0, NULL);
+  fc_assert_ret_val(number >= 0, nullptr);
 
   switch (number) {
   case 0:
@@ -2340,16 +2340,16 @@ action_enabler_vector_by_number(const void *enabler,
   case 1:
     return &ae->target_reqs;
   default:
-    return NULL;
+    return nullptr;
   }
 }
 
 /**
    Returns the name of the given requirement vector number n in an action
-   enabler or NULL if enablers don't have a requirement vector with that
+   enabler or nullptr if enablers don't have a requirement vector with that
    number.
    @param vec the requirement vector to name
-   @return the requirement vector name or NULL.
+   @return the requirement vector name or nullptr.
  */
 const char *action_enabler_vector_by_number_name(req_vec_num_in_item vec)
 {
@@ -2361,7 +2361,7 @@ const char *action_enabler_vector_by_number_name(req_vec_num_in_item vec)
     // TRANS: requirement vector in an action enabler (ruledit)
     return _("target_reqs");
   default:
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -2386,13 +2386,13 @@ static bool plr_sees_tile(const struct player *plr, const struct tile *ttile)
 /**
    Returns the local building type of a city target.
 
-   target_city can't be NULL
+   target_city can't be nullptr
  */
 static const struct impr_type *
 tgt_city_local_building(const struct city *target_city)
 {
   // Only used with city targets
-  fc_assert_ret_val(target_city, NULL);
+  fc_assert_ret_val(target_city, nullptr);
 
   if (target_city->production.kind == VUT_IMPROVEMENT) {
     // The local building is what the target city currently is building.
@@ -2402,20 +2402,20 @@ tgt_city_local_building(const struct city *target_city)
      * being built. */
     /* TODO: Consider making the local building the target building for
      * actions that allows specifying a building target. */
-    return NULL;
+    return nullptr;
   }
 }
 
 /**
    Returns the local unit type of a city target.
 
-   target_city can't be NULL
+   target_city can't be nullptr
  */
 static const struct unit_type *
 tgt_city_local_utype(const struct city *target_city)
 {
   // Only used with city targets
-  fc_assert_ret_val(target_city, NULL);
+  fc_assert_ret_val(target_city, nullptr);
 
   if (target_city->production.kind == VUT_UTYPE) {
     /* The local unit type is what the target city currently is
@@ -2424,7 +2424,7 @@ tgt_city_local_utype(const struct city *target_city)
   } else {
     /* In the current semantic the local utype is always the type of the
      * unit being built. */
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -2441,29 +2441,29 @@ static const struct tile *blocked_find_target_tile(
     const struct tile *target_tile_arg, const struct city *target_city,
     const struct unit *target_unit)
 {
-  if (target_tile_arg != NULL) {
+  if (target_tile_arg != nullptr) {
     // Trust the caller.
     return target_tile_arg;
   }
 
   switch (action_id_get_target_kind(act_id)) {
   case ATK_CITY:
-    fc_assert_ret_val(target_city, NULL);
+    fc_assert_ret_val(target_city, nullptr);
     return city_tile(target_city);
   case ATK_UNIT:
-    fc_assert_ret_val(target_unit, NULL);
+    fc_assert_ret_val(target_unit, nullptr);
     return unit_tile(target_unit);
   case ATK_UNITS:
-    fc_assert_ret_val(target_unit || target_tile_arg, NULL);
+    fc_assert_ret_val(target_unit || target_tile_arg, nullptr);
     if (target_unit) {
       return unit_tile(target_unit);
     }
     // Fall through.
   case ATK_TILE:
-    fc_assert_ret_val(target_tile_arg, NULL);
+    fc_assert_ret_val(target_tile_arg, nullptr);
     return target_tile_arg;
   case ATK_SELF:
-    fc_assert_ret_val(actor_unit, NULL);
+    fc_assert_ret_val(actor_unit, nullptr);
     return unit_tile(actor_unit);
   case ATK_COUNT:
     // Handled below.
@@ -2472,7 +2472,7 @@ static const struct tile *blocked_find_target_tile(
 
   fc_assert_msg(false, "Bad action target kind %d for action %d",
                 action_id_get_target_kind(act_id), act_id);
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -2489,7 +2489,7 @@ static const struct city *blocked_find_target_city(
     const struct tile *target_tile, const struct city *target_city_arg,
     const struct unit *target_unit)
 {
-  if (target_city_arg != NULL) {
+  if (target_city_arg != nullptr) {
     // Trust the caller.
     return target_city_arg;
   }
@@ -2497,25 +2497,25 @@ static const struct city *blocked_find_target_city(
   switch (action_id_get_target_kind(act_id)) {
   case ATK_CITY:
     Q_UNREACHABLE();
-    fc_assert_ret_val(target_city_arg, NULL);
+    fc_assert_ret_val(target_city_arg, nullptr);
     return target_city_arg;
   case ATK_UNIT:
-    fc_assert_ret_val(target_unit, NULL);
-    fc_assert_ret_val(unit_tile(target_unit), NULL);
+    fc_assert_ret_val(target_unit, nullptr);
+    fc_assert_ret_val(unit_tile(target_unit), nullptr);
     return tile_city(unit_tile(target_unit));
   case ATK_UNITS:
-    fc_assert_ret_val(target_unit || target_tile, NULL);
+    fc_assert_ret_val(target_unit || target_tile, nullptr);
     if (target_unit) {
-      fc_assert_ret_val(unit_tile(target_unit), NULL);
+      fc_assert_ret_val(unit_tile(target_unit), nullptr);
       return tile_city(unit_tile(target_unit));
     }
     // Fall through.
   case ATK_TILE:
-    fc_assert_ret_val(target_tile, NULL);
+    fc_assert_ret_val(target_tile, nullptr);
     return tile_city(target_tile);
   case ATK_SELF:
-    fc_assert_ret_val(actor_unit, NULL);
-    fc_assert_ret_val(unit_tile(actor_unit), NULL);
+    fc_assert_ret_val(actor_unit, nullptr);
+    fc_assert_ret_val(unit_tile(actor_unit), nullptr);
     return tile_city(unit_tile(actor_unit));
   case ATK_COUNT:
     // Handled below.
@@ -2524,11 +2524,11 @@ static const struct city *blocked_find_target_city(
 
   fc_assert_msg(false, "Bad action target kind %d for action %d",
                 action_id_get_target_kind(act_id), act_id);
-  return NULL;
+  return nullptr;
 }
 
 /**
-   Returns the action that blocks the specified action or NULL if the
+   Returns the action that blocks the specified action or nullptr if the
    specified action isn't blocked.
 
    An action that can block another blocks when it is forced and possible.
@@ -2591,7 +2591,7 @@ struct action *action_is_blocked_by(const action_id act_id,
         continue;
       }
       if (is_action_enabled_unit_on_tile(blocker_id, actor_unit, target_tile,
-                                         NULL)) {
+                                         nullptr)) {
         return action_by_number(blocker_id);
       }
       break;
@@ -2609,7 +2609,7 @@ struct action *action_is_blocked_by(const action_id act_id,
   action_iterate_end;
 
   // Not blocked.
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -2829,7 +2829,7 @@ static enum fc_tristate action_hard_reqs_actor(
     /* Obligatory hard requirement. Checked here too since
      * action_hard_reqs_actor() may be called before any
      * action enablers are checked. */
-    if (actor_city == NULL) {
+    if (actor_city == nullptr) {
       // No city to airlift from.
       return TRI_NO;
     }
@@ -2987,14 +2987,14 @@ static enum fc_tristate is_action_possible(
 
   fc_assert_msg(
       (action_id_get_target_kind(wanted_action) == ATK_CITY
-       && target_city != NULL)
+       && target_city != nullptr)
           || (action_id_get_target_kind(wanted_action) == ATK_TILE
-              && target_tile != NULL)
+              && target_tile != nullptr)
           || (action_id_get_target_kind(wanted_action) == ATK_UNIT
-              && target_unit != NULL)
+              && target_unit != nullptr)
           || (action_id_get_target_kind(wanted_action) == ATK_UNITS
               // At this level each individual unit is tested.
-              && target_unit != NULL)
+              && target_unit != nullptr)
           || (action_id_get_target_kind(wanted_action) == ATK_SELF),
       "Missing target!");
 
@@ -3125,7 +3125,7 @@ static enum fc_tristate is_action_possible(
   case ACTRES_TRADE_ROUTE:
   case ACTRES_MARKETPLACE: {
     // Checked in action_hard_reqs_actor()
-    fc_assert_ret_val(homecity != NULL, TRI_NO);
+    fc_assert_ret_val(homecity != nullptr, TRI_NO);
 
     /* Can't establish a trade route or enter the market place if the
      * cities can't trade at all. */
@@ -3185,7 +3185,7 @@ static enum fc_tristate is_action_possible(
         square_iterate(&(wld.map), target_tile, game.info.citymindist - 1,
                        otile)
         {
-          if (tile_city(otile) != NULL
+          if (tile_city(otile) != nullptr
               && plr_sees_tile(actor_player, otile)) {
             // Known to be blocked by citymindist
             return TRI_NO;
@@ -3271,7 +3271,7 @@ static enum fc_tristate is_action_possible(
   case ACTRES_HOME_CITY:
     // Reason: can't change to what is.
     // Info leak: The player knows his unit's current home city.
-    if (homecity != NULL && homecity->id == target_city->id) {
+    if (homecity != nullptr && homecity->id == target_city->id) {
       // This is already the unit's home city.
       return TRI_NO;
     }
@@ -3355,7 +3355,7 @@ static enum fc_tristate is_action_possible(
   case ACTRES_AIRLIFT:
     // Reason: Keep the old rules.
     // Info leak: same as test_unit_can_airlift_to()
-    switch (test_unit_can_airlift_to(omniscient ? NULL : actor_player,
+    switch (test_unit_can_airlift_to(omniscient ? nullptr : actor_player,
                                      actor_unit, target_city)) {
     case AR_OK:
       return TRI_YES;
@@ -3440,7 +3440,7 @@ static enum fc_tristate is_action_possible(
     break;
 
   case ACTRES_ROAD:
-    if (target_extra == NULL) {
+    if (target_extra == nullptr) {
       return TRI_NO;
     }
     if (!is_extra_caused_by(target_extra, EC_ROAD)) {
@@ -3454,7 +3454,7 @@ static enum fc_tristate is_action_possible(
     break;
 
   case ACTRES_BASE:
-    if (target_extra == NULL) {
+    if (target_extra == nullptr) {
       return TRI_NO;
     }
     if (!is_extra_caused_by(target_extra, EC_BASE)) {
@@ -3468,7 +3468,7 @@ static enum fc_tristate is_action_possible(
     break;
 
   case ACTRES_MINE:
-    if (target_extra == NULL) {
+    if (target_extra == nullptr) {
       return TRI_NO;
     }
     if (!is_extra_caused_by(target_extra, EC_MINE)) {
@@ -3491,7 +3491,7 @@ static enum fc_tristate is_action_possible(
     break;
 
   case ACTRES_IRRIGATE:
-    if (target_extra == NULL) {
+    if (target_extra == nullptr) {
       return TRI_NO;
     }
     if (!is_extra_caused_by(target_extra, EC_IRRIGATION)) {
@@ -3521,7 +3521,8 @@ static enum fc_tristate is_action_possible(
     }
 
     {
-      bv_extras pspresent = get_tile_infrastructure_set(target_tile, NULL);
+      bv_extras pspresent =
+          get_tile_infrastructure_set(target_tile, nullptr);
       bv_extras psworking = get_unit_tile_pillage_set(target_tile);
       bv_extras pspossible;
 
@@ -3567,7 +3568,7 @@ static enum fc_tristate is_action_possible(
         return TRI_NO;
       }
 
-      if (target_extra != NULL) {
+      if (target_extra != nullptr) {
         if (!game.info.pillage_select) {
           // Hobson's choice (this case mostly exists for old clients)
           // Needs to match what unit_activity_assign_target chooses
@@ -3596,14 +3597,14 @@ static enum fc_tristate is_action_possible(
       return TRI_NO;
     }
 
-    if (target_extra != NULL) {
+    if (target_extra != nullptr) {
       pextra = target_extra;
     } else {
       /* TODO: Make sure that all callers set target so that
        * we don't need this fallback. */
       pextra = prev_extra_in_tile(target_tile, ERM_CLEANPOLLUTION,
                                   actor_player, actor_unit);
-      if (pextra == NULL) {
+      if (pextra == nullptr) {
         // No available pollution extras
         return TRI_NO;
       }
@@ -3632,14 +3633,14 @@ static enum fc_tristate is_action_possible(
       return TRI_NO;
     }
 
-    if (target_extra != NULL) {
+    if (target_extra != nullptr) {
       pextra = target_extra;
     } else {
       /* TODO: Make sure that all callers set target so that
        * we don't need this fallback. */
       pextra = prev_extra_in_tile(target_tile, ERM_CLEANFALLOUT,
                                   actor_player, actor_unit);
-      if (pextra == NULL) {
+      if (pextra == nullptr) {
         // No available pollution extras
         return TRI_NO;
       }
@@ -3831,11 +3832,11 @@ static bool is_enabler_active(
   return are_reqs_active(actor_player, target_player, actor_city,
                          actor_building, actor_tile, actor_unit,
                          actor_unittype, actor_output, actor_specialist,
-                         NULL, &enabler->actor_reqs, RPT_CERTAIN)
+                         nullptr, &enabler->actor_reqs, RPT_CERTAIN)
          && are_reqs_active(
              target_player, actor_player, target_city, target_building,
              target_tile, target_unit, target_unittype, target_output,
-             target_specialist, NULL, &enabler->target_reqs, RPT_CERTAIN);
+             target_specialist, nullptr, &enabler->target_reqs, RPT_CERTAIN);
 }
 
 /**
@@ -3908,7 +3909,7 @@ static bool is_action_enabled_unit_on_city_full(
   const struct impr_type *target_building;
   const struct unit_type *target_utype;
 
-  if (actor_unit == NULL || target_city == NULL) {
+  if (actor_unit == nullptr || target_city == nullptr) {
     // Can't do an action when actor or target are missing.
     return false;
   }
@@ -3936,12 +3937,12 @@ static bool is_action_enabled_unit_on_city_full(
   target_building = tgt_city_local_building(target_city);
   target_utype = tgt_city_local_utype(target_city);
 
-  return is_action_enabled(wanted_action, unit_owner(actor_unit),
-                           tile_city(actor_tile), NULL, actor_tile,
-                           actor_unit, unit_type_get(actor_unit), NULL, NULL,
-                           city_owner(target_city), target_city,
-                           target_building, city_tile(target_city), NULL,
-                           target_utype, NULL, NULL, NULL, actor_home);
+  return is_action_enabled(
+      wanted_action, unit_owner(actor_unit), tile_city(actor_tile), nullptr,
+      actor_tile, actor_unit, unit_type_get(actor_unit), nullptr, nullptr,
+      city_owner(target_city), target_city, target_building,
+      city_tile(target_city), nullptr, target_utype, nullptr, nullptr,
+      nullptr, actor_home);
 }
 
 /**
@@ -3970,7 +3971,7 @@ static bool is_action_enabled_unit_on_unit_full(
     const struct city *actor_home, const struct tile *actor_tile,
     const struct unit *target_unit)
 {
-  if (actor_unit == NULL || target_unit == NULL) {
+  if (actor_unit == nullptr || target_unit == nullptr) {
     // Can't do an action when actor or target are missing.
     return false;
   }
@@ -3996,11 +3997,11 @@ static bool is_action_enabled_unit_on_unit_full(
   }
 
   return is_action_enabled(
-      wanted_action, unit_owner(actor_unit), tile_city(actor_tile), NULL,
-      actor_tile, actor_unit, unit_type_get(actor_unit), NULL, NULL,
-      unit_owner(target_unit), tile_city(unit_tile(target_unit)), NULL,
-      unit_tile(target_unit), target_unit, unit_type_get(target_unit), NULL,
-      NULL, NULL, actor_home);
+      wanted_action, unit_owner(actor_unit), tile_city(actor_tile), nullptr,
+      actor_tile, actor_unit, unit_type_get(actor_unit), nullptr, nullptr,
+      unit_owner(target_unit), tile_city(unit_tile(target_unit)), nullptr,
+      unit_tile(target_unit), target_unit, unit_type_get(target_unit),
+      nullptr, nullptr, nullptr, actor_home);
 }
 
 /**
@@ -4029,7 +4030,7 @@ static bool is_action_enabled_unit_on_units_full(
     const struct city *actor_home, const struct tile *actor_tile,
     const struct tile *target_tile)
 {
-  if (actor_unit == NULL || target_tile == NULL
+  if (actor_unit == nullptr || target_tile == nullptr
       || unit_list_size(target_tile->units) == 0) {
     // Can't do an action when actor or target are missing.
     return false;
@@ -4059,10 +4060,11 @@ static bool is_action_enabled_unit_on_units_full(
   {
     if (!is_action_enabled(
             wanted_action, unit_owner(actor_unit), tile_city(actor_tile),
-            NULL, actor_tile, actor_unit, unit_type_get(actor_unit), NULL,
-            NULL, unit_owner(target_unit), tile_city(unit_tile(target_unit)),
-            NULL, unit_tile(target_unit), target_unit,
-            unit_type_get(target_unit), NULL, NULL, NULL, actor_home)) {
+            nullptr, actor_tile, actor_unit, unit_type_get(actor_unit),
+            nullptr, nullptr, unit_owner(target_unit),
+            tile_city(unit_tile(target_unit)), nullptr,
+            unit_tile(target_unit), target_unit, unit_type_get(target_unit),
+            nullptr, nullptr, nullptr, actor_home)) {
       // One unit makes it impossible for all units.
       return false;
     }
@@ -4099,7 +4101,7 @@ static bool is_action_enabled_unit_on_tile_full(
     const struct city *actor_home, const struct tile *actor_tile,
     const struct tile *target_tile, const struct extra_type *target_extra)
 {
-  if (actor_unit == NULL || target_tile == NULL) {
+  if (actor_unit == nullptr || target_tile == nullptr) {
     // Can't do an action when actor or target are missing.
     return false;
   }
@@ -4125,10 +4127,10 @@ static bool is_action_enabled_unit_on_tile_full(
   }
 
   return is_action_enabled(
-      wanted_action, unit_owner(actor_unit), tile_city(actor_tile), NULL,
-      actor_tile, actor_unit, unit_type_get(actor_unit), NULL, NULL,
-      tile_owner(target_tile), tile_city(target_tile), NULL, target_tile,
-      NULL, NULL, NULL, NULL, target_extra, actor_home);
+      wanted_action, unit_owner(actor_unit), tile_city(actor_tile), nullptr,
+      actor_tile, actor_unit, unit_type_get(actor_unit), nullptr, nullptr,
+      tile_owner(target_tile), tile_city(target_tile), nullptr, target_tile,
+      nullptr, nullptr, nullptr, nullptr, target_extra, actor_home);
 }
 
 /**
@@ -4158,7 +4160,7 @@ static bool is_action_enabled_unit_on_self_full(
     const action_id wanted_action, const struct unit *actor_unit,
     const struct city *actor_home, const struct tile *actor_tile)
 {
-  if (actor_unit == NULL) {
+  if (actor_unit == nullptr) {
     // Can't do an action when the actor is missing.
     return false;
   }
@@ -4184,9 +4186,10 @@ static bool is_action_enabled_unit_on_self_full(
   }
 
   return is_action_enabled(
-      wanted_action, unit_owner(actor_unit), tile_city(actor_tile), NULL,
-      actor_tile, actor_unit, unit_type_get(actor_unit), NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, actor_home);
+      wanted_action, unit_owner(actor_unit), tile_city(actor_tile), nullptr,
+      actor_tile, actor_unit, unit_type_get(actor_unit), nullptr, nullptr,
+      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+      nullptr, actor_home);
 }
 
 /**
@@ -4373,19 +4376,20 @@ static struct act_prob ap_dipl_battle_win(const struct unit *pattacker,
   // Defense bonus.
   {
     if (!is_effect_val_known(EFT_SPY_RESISTANT, unit_owner(pattacker),
-                             tile_owner(pdefender->tile), NULL,
-                             tile_city(pdefender->tile), NULL,
-                             pdefender->tile, NULL, NULL, NULL)) {
+                             tile_owner(pdefender->tile), nullptr,
+                             tile_city(pdefender->tile), nullptr,
+                             pdefender->tile, nullptr, nullptr, nullptr)) {
       return ACTPROB_NOT_KNOWN;
     }
 
     // Reduce the chance of an attack by EFT_SPY_RESISTANT percent.
-    chance -= chance
-              * get_target_bonus_effects(NULL, tile_owner(pdefender->tile),
-                                         NULL, tile_city(pdefender->tile),
-                                         NULL, pdefender->tile, NULL, NULL,
-                                         NULL, NULL, NULL, EFT_SPY_RESISTANT)
-              / 100;
+    chance -=
+        chance
+        * get_target_bonus_effects(
+            nullptr, tile_owner(pdefender->tile), nullptr,
+            tile_city(pdefender->tile), nullptr, pdefender->tile, nullptr,
+            nullptr, nullptr, nullptr, nullptr, EFT_SPY_RESISTANT)
+        / 100;
   }
 
   // Convert to action probability
@@ -4469,13 +4473,13 @@ static struct act_prob action_prob(
 
   const struct action *paction = action_by_number(wanted_action);
 
-  if (actor_unittype_p == NULL && actor_unit != NULL) {
+  if (actor_unittype_p == nullptr && actor_unit != nullptr) {
     actor_unittype = unit_type_get(actor_unit);
   } else {
     actor_unittype = actor_unittype_p;
   }
 
-  if (target_unittype_p == NULL && target_unit != NULL) {
+  if (target_unittype_p == nullptr && target_unit != nullptr) {
     target_unittype = unit_type_get(target_unit);
   } else {
     target_unittype = target_unittype_p;
@@ -4507,7 +4511,7 @@ static struct act_prob action_prob(
   switch (paction->result) {
   case ACTRES_SPY_POISON:
     // All uncertainty comes from potential diplomatic battles.
-    chance = ap_diplomat_battle(actor_unit, NULL, target_tile);
+    chance = ap_diplomat_battle(actor_unit, nullptr, target_tile);
     break;
   case ACTRES_SPY_STEAL_GOLD:
     // TODO
@@ -4528,7 +4532,7 @@ static struct act_prob action_prob(
     break;
   case ACTRES_SPY_ATTACK:
     // All uncertainty comes from potential diplomatic battles.
-    chance = ap_diplomat_battle(actor_unit, NULL, target_tile);
+    chance = ap_diplomat_battle(actor_unit, nullptr, target_tile);
     break;
   case ACTRES_SPY_SABOTAGE_CITY:
     // TODO
@@ -4748,7 +4752,7 @@ static struct act_prob action_prob_vs_city_full(
   const struct impr_type *target_building;
   const struct unit_type *target_utype;
 
-  if (actor_unit == NULL || target_city == NULL) {
+  if (actor_unit == nullptr || target_city == nullptr) {
     // Can't do an action when actor or target are missing.
     return ACTPROB_IMPOSSIBLE;
   }
@@ -4783,7 +4787,7 @@ static struct act_prob action_prob_vs_city_full(
   /* Doesn't leak information since it must be 100% certain from the
    * player's perspective that the blocking action is legal. */
   if (action_is_blocked_by(act_id, actor_unit, city_tile(target_city),
-                           target_city, NULL)) {
+                           target_city, nullptr)) {
     // Don't offer to perform an action known to be blocked.
     return ACTPROB_IMPOSSIBLE;
   }
@@ -4798,10 +4802,10 @@ static struct act_prob action_prob_vs_city_full(
   target_utype = tgt_city_local_utype(target_city);
 
   return action_prob(act_id, unit_owner(actor_unit), tile_city(actor_tile),
-                     NULL, actor_tile, actor_unit, NULL, NULL, NULL,
-                     actor_home, city_owner(target_city), target_city,
-                     target_building, city_tile(target_city), NULL,
-                     target_utype, NULL, NULL, NULL);
+                     nullptr, actor_tile, actor_unit, nullptr, nullptr,
+                     nullptr, actor_home, city_owner(target_city),
+                     target_city, target_building, city_tile(target_city),
+                     nullptr, target_utype, nullptr, nullptr, nullptr);
 }
 
 /**
@@ -4826,7 +4830,7 @@ static struct act_prob action_prob_vs_unit_full(
     const struct tile *actor_tile, const action_id act_id,
     const struct unit *target_unit)
 {
-  if (actor_unit == NULL || target_unit == NULL) {
+  if (actor_unit == nullptr || target_unit == nullptr) {
     // Can't do an action when actor or target are missing.
     return ACTPROB_IMPOSSIBLE;
   }
@@ -4858,11 +4862,12 @@ static struct act_prob action_prob_vs_unit_full(
     return ACTPROB_IMPOSSIBLE;
   }
 
-  return action_prob(
-      act_id, unit_owner(actor_unit), tile_city(actor_tile), NULL,
-      actor_tile, actor_unit, NULL, NULL, NULL, actor_home,
-      unit_owner(target_unit), tile_city(unit_tile(target_unit)), NULL,
-      unit_tile(target_unit), target_unit, NULL, NULL, NULL, NULL);
+  return action_prob(act_id, unit_owner(actor_unit), tile_city(actor_tile),
+                     nullptr, actor_tile, actor_unit, nullptr, nullptr,
+                     nullptr, actor_home, unit_owner(target_unit),
+                     tile_city(unit_tile(target_unit)), nullptr,
+                     unit_tile(target_unit), target_unit, nullptr, nullptr,
+                     nullptr, nullptr);
 }
 
 /**
@@ -4889,7 +4894,7 @@ static struct act_prob action_prob_vs_units_full(
 {
   struct act_prob prob_all;
 
-  if (actor_unit == NULL || target_tile == NULL) {
+  if (actor_unit == nullptr || target_tile == nullptr) {
     // Can't do an action when actor or target are missing.
     return ACTPROB_IMPOSSIBLE;
   }
@@ -4924,7 +4929,7 @@ static struct act_prob action_prob_vs_units_full(
   /* Doesn't leak information since the actor player can see the target
    * tile. */
   if (tile_is_seen(target_tile, unit_owner(actor_unit))
-      && tile_city(target_tile) != NULL
+      && tile_city(target_tile) != nullptr
       && !utype_can_do_act_if_tgt_citytile(unit_type_get(actor_unit), act_id,
                                            CITYT_CENTER, true)) {
     /* Don't offer to perform actions that never can target a unit stack in
@@ -4961,7 +4966,7 @@ static struct act_prob action_prob_vs_units_full(
 
   if ((action_id_has_result_safe(act_id, ACTRES_ATTACK)
        || action_id_has_result_safe(act_id, ACTRES_BOMBARD))
-      && tile_city(target_tile) != NULL
+      && tile_city(target_tile) != nullptr
       && !pplayers_at_war(city_owner(tile_city(target_tile)),
                           unit_owner(actor_unit))) {
     /* Hard coded rule: can't "Bombard", "Suicide Attack", or "Attack"
@@ -4988,10 +4993,11 @@ static struct act_prob action_prob_vs_units_full(
     }
 
     prob_unit = action_prob(
-        act_id, unit_owner(actor_unit), tile_city(actor_tile), NULL,
-        actor_tile, actor_unit, NULL, NULL, NULL, actor_home,
-        unit_owner(target_unit), tile_city(unit_tile(target_unit)), NULL,
-        unit_tile(target_unit), target_unit, NULL, NULL, NULL, NULL);
+        act_id, unit_owner(actor_unit), tile_city(actor_tile), nullptr,
+        actor_tile, actor_unit, nullptr, nullptr, nullptr, actor_home,
+        unit_owner(target_unit), tile_city(unit_tile(target_unit)), nullptr,
+        unit_tile(target_unit), target_unit, nullptr, nullptr, nullptr,
+        nullptr);
 
     if (!action_prob_possible(prob_unit)) {
       // One unit makes it impossible for all units.
@@ -5044,7 +5050,7 @@ static struct act_prob action_prob_vs_tile_full(
     const struct tile *actor_tile, const action_id act_id,
     const struct tile *target_tile, const struct extra_type *target_extra)
 {
-  if (actor_unit == NULL || target_tile == NULL) {
+  if (actor_unit == nullptr || target_tile == nullptr) {
     // Can't do an action when actor or target are missing.
     return ACTPROB_IMPOSSIBLE;
   }
@@ -5077,10 +5083,10 @@ static struct act_prob action_prob_vs_tile_full(
   }
 
   return action_prob(act_id, unit_owner(actor_unit), tile_city(actor_tile),
-                     NULL, actor_tile, actor_unit, NULL, NULL, NULL,
-                     actor_home, tile_owner(target_tile),
-                     tile_city(target_tile), NULL, target_tile, NULL, NULL,
-                     NULL, NULL, target_extra);
+                     nullptr, actor_tile, actor_unit, nullptr, nullptr,
+                     nullptr, actor_home, tile_owner(target_tile),
+                     tile_city(target_tile), nullptr, target_tile, nullptr,
+                     nullptr, nullptr, nullptr, target_extra);
 }
 
 /**
@@ -5106,7 +5112,7 @@ static struct act_prob action_prob_self_full(const struct unit *actor_unit,
                                              const struct tile *actor_tile,
                                              const action_id act_id)
 {
-  if (actor_unit == NULL) {
+  if (actor_unit == nullptr) {
     // Can't do the action when the actor is missing.
     return ACTPROB_IMPOSSIBLE;
   }
@@ -5133,9 +5139,9 @@ static struct act_prob action_prob_self_full(const struct unit *actor_unit,
   }
 
   return action_prob(act_id, unit_owner(actor_unit), tile_city(actor_tile),
-                     NULL, actor_tile, actor_unit, NULL, NULL, NULL,
-                     actor_home, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-                     NULL, NULL);
+                     nullptr, actor_tile, actor_unit, nullptr, nullptr,
+                     nullptr, actor_home, nullptr, nullptr, nullptr, nullptr,
+                     nullptr, nullptr, nullptr, nullptr, nullptr);
 }
 
 /**
@@ -5711,10 +5717,10 @@ int action_dice_roll_odds(const struct player *act_player,
    * it this way in stead of rolling twice is that Action_Odds_Pct can
    * increase the odds. */
   odds += ((odds
-            * get_target_bonus_effects(NULL, act_player, tgt_player,
-                                       tgt_city, NULL, NULL, act_unit,
-                                       unit_type_get(act_unit), NULL, NULL,
-                                       paction, EFT_ACTION_ODDS_PCT))
+            * get_target_bonus_effects(
+                nullptr, act_player, tgt_player, tgt_city, nullptr, nullptr,
+                act_unit, unit_type_get(act_unit), nullptr, nullptr, paction,
+                EFT_ACTION_ODDS_PCT))
            / 100);
 
   // Odds are between 0% and 100%.
@@ -5759,7 +5765,7 @@ static bool is_target_possible(
     if (are_reqs_active(target_player, actor_player, target_city,
                         target_building, target_tile, target_unit,
                         target_unittype, target_output, target_specialist,
-                        NULL, &enabler->target_reqs, RPT_POSSIBLE)) {
+                        nullptr, &enabler->target_reqs, RPT_POSSIBLE)) {
       return true;
     }
   }
@@ -5781,8 +5787,8 @@ bool is_action_possible_on_city(action_id act_id,
       action_target_kind_name(action_id_get_target_kind(act_id)));
 
   return is_target_possible(act_id, actor_player, city_owner(target_city),
-                            target_city, NULL, city_tile(target_city), NULL,
-                            NULL, NULL, NULL);
+                            target_city, nullptr, city_tile(target_city),
+                            nullptr, nullptr, nullptr, nullptr);
 }
 
 /**
@@ -5809,8 +5815,8 @@ bool action_maybe_possible_actor_unit(const action_id act_id,
   }
 
   result = action_hard_reqs_actor(paction->result, actor_player, actor_city,
-                                  NULL, actor_tile, actor_unit,
-                                  actor_unittype, NULL, NULL, false,
+                                  nullptr, actor_tile, actor_unit,
+                                  actor_unittype, nullptr, nullptr, false,
                                   game_city_by_number(actor_unit->homecity));
 
   if (result == TRI_NO) {
@@ -5821,8 +5827,8 @@ bool action_maybe_possible_actor_unit(const action_id act_id,
   action_enabler_list_iterate(action_enablers_for_action(act_id), enabler)
   {
     const enum fc_tristate current = mke_eval_reqs(
-        actor_player, actor_player, NULL, actor_city, NULL, actor_tile,
-        actor_unit, NULL, NULL, &enabler->actor_reqs,
+        actor_player, actor_player, nullptr, actor_city, nullptr, actor_tile,
+        actor_unit, nullptr, nullptr, &enabler->actor_reqs,
         /* Needed since no player to evaluate DiplRel
          * requirements against. */
         RPT_POSSIBLE);
@@ -5859,8 +5865,8 @@ bool action_mp_full_makes_legal(const struct unit *actor,
  */
 struct action_auto_perf *action_auto_perf_slot_number(const int num)
 {
-  fc_assert_ret_val(num >= 0, NULL);
-  fc_assert_ret_val(num < MAX_NUM_ACTION_AUTO_PERFORMERS, NULL);
+  fc_assert_ret_val(num >= 0, nullptr);
+  fc_assert_ret_val(num < MAX_NUM_ACTION_AUTO_PERFORMERS, nullptr);
 
   return &auto_perfs[num];
 }
@@ -5887,10 +5893,10 @@ bool action_univs_not_blocking(const struct action *paction,
 {
   action_enabler_list_iterate(action_enablers_for_action(paction->id), enab)
   {
-    if ((actor_uni == NULL
+    if ((actor_uni == nullptr
          || universal_fulfills_requirements(false, &(enab->actor_reqs),
                                             actor_uni))
-        && (target_uni == NULL
+        && (target_uni == nullptr
             || universal_fulfills_requirements(false, &(enab->target_reqs),
                                                target_uni))) {
       return true;
@@ -6106,7 +6112,7 @@ const char *action_ui_name_ruleset_var_name(int act)
   }
 
   fc_assert(act >= 0 && act < ACTION_COUNT);
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -6350,11 +6356,11 @@ const char *action_ui_name_default(int act)
     return N_("%sUser Action 3%s");
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /**
-   Return min range ruleset variable name for the action or NULL if min
+   Return min range ruleset variable name for the action or nullptr if min
    range can't be set in the ruleset.
 
    TODO: make actions generic and put min_range in a field of the action.
@@ -6437,7 +6443,7 @@ const char *action_min_range_ruleset_var_name(int act)
   case ACTION_NUKE:
   case ACTION_SPY_ATTACK:
     // Min range is not ruleset changeable
-    return NULL;
+    return nullptr;
   case ACTION_USER_ACTION1:
     return "user_action_1_min_range";
   case ACTION_USER_ACTION2:
@@ -6449,7 +6455,7 @@ const char *action_min_range_ruleset_var_name(int act)
   }
 
   fc_assert(act >= 0 && act < ACTION_COUNT);
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -6548,7 +6554,7 @@ int action_min_range_default(int act)
 }
 
 /**
-   Return max range ruleset variable name for the action or NULL if max
+   Return max range ruleset variable name for the action or nullptr if max
    range can't be set in the ruleset.
 
    TODO: make actions generic and put max_range in a field of the action.
@@ -6622,7 +6628,7 @@ const char *action_max_range_ruleset_var_name(int act)
   case ACTION_TRANSPORT_DISEMBARK2:
   case ACTION_SPY_ATTACK:
     // Max range is not ruleset changeable
-    return NULL;
+    return nullptr;
   case ACTION_HELP_WONDER:
     return "help_wonder_max_range";
   case ACTION_RECYCLE_UNIT:
@@ -6652,7 +6658,7 @@ const char *action_max_range_ruleset_var_name(int act)
   }
 
   fc_assert(act >= 0 && act < ACTION_COUNT);
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -6756,7 +6762,7 @@ int action_max_range_default(int act)
 }
 
 /**
-   Return target kind ruleset variable name for the action or NULL if min
+   Return target kind ruleset variable name for the action or nullptr if min
    range can't be set in the ruleset.
 
    TODO: make actions generic and put target_kind in a field of the action.
@@ -6839,7 +6845,7 @@ const char *action_target_kind_ruleset_var_name(int act)
   case ACTION_NUKE:
   case ACTION_SPY_ATTACK:
     // Target kind is not ruleset changeable
-    return NULL;
+    return nullptr;
   case ACTION_USER_ACTION1:
     return "user_action_1_target_kind";
   case ACTION_USER_ACTION2:
@@ -6851,12 +6857,12 @@ const char *action_target_kind_ruleset_var_name(int act)
   }
 
   fc_assert(act >= 0 && act < ACTION_COUNT);
-  return NULL;
+  return nullptr;
 }
 
 /**
    Return actor consuming always ruleset variable name for the action or
-   NULL if actor consuming always can't be set in the ruleset.
+   nullptr if actor consuming always can't be set in the ruleset.
 
    TODO: make actions generic and put actor consuming always in a field of
    the action.
@@ -6938,7 +6944,7 @@ const char *action_actor_consuming_always_ruleset_var_name(action_id act)
   case ACTION_NUKE:
   case ACTION_SPY_ATTACK:
     // actor consuming always is not ruleset changeable
-    return NULL;
+    return nullptr;
   case ACTION_SPY_SPREAD_PLAGUE:
     return "spread_plague_actor_consuming_always";
   case ACTION_USER_ACTION1:
@@ -6952,7 +6958,7 @@ const char *action_actor_consuming_always_ruleset_var_name(action_id act)
   }
 
   fc_assert(act >= 0 && act < ACTION_COUNT);
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -6970,7 +6976,7 @@ const char *action_actor_consuming_always_ruleset_var_name(action_id act)
 static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
                                  bool accept_all_actions)
 {
-  if (actor == NULL || target == NULL) {
+  if (actor == nullptr || target == nullptr) {
     // Can't do any actions if actor or target are missing.
     return false;
   }
@@ -7002,7 +7008,7 @@ static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
 /**
  * Find a city to target for an action on the specified tile.
  *
- * Returns NULL if no proper target is found.
+ * Returns nullptr if no proper target is found.
  *
  * If the only action(s) that can be performed against a target has the
  * rare_pop_up property the target will only be considered valid if the
@@ -7018,7 +7024,7 @@ struct city *action_tgt_city(struct unit *actor, struct tile *target_tile,
     return target;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -7036,7 +7042,7 @@ struct city *action_tgt_city(struct unit *actor, struct tile *target_tile,
 static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
                                  bool accept_all_actions)
 {
-  if (actor == NULL || target == NULL) {
+  if (actor == nullptr || target == nullptr) {
     // Can't do any actions if actor or target are missing.
     return false;
   }
@@ -7069,7 +7075,7 @@ static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
  * Find a unit to target for an action at the specified tile.
  *
  * Returns the first unit found at the tile that the actor may act against
- * or NULL if no proper target is found.
+ * or nullptr if no proper target is found.
  *
  * If the only action(s) that can be performed against a target has the
  * rare_pop_up property the target will only be considered valid if the
@@ -7086,14 +7092,14 @@ struct unit *action_tgt_unit(struct unit *actor, struct tile *target_tile,
   }
   unit_list_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
  * Returns the tile iff it, from the point of view of the owner of the
  * actor unit, looks like a target tile.
  *
- * Returns NULL if the player knows that the actor unit can't do any
+ * Returns nullptr if the player knows that the actor unit can't do any
  * action (that specifies its target as a tile) to the tile.
  *
  * If the owner of the actor unit doesn't have the knowledge needed to know
@@ -7152,7 +7158,7 @@ struct tile *action_tgt_tile(struct unit *actor, struct tile *target,
   }
   action_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -7172,7 +7178,7 @@ static bool may_unit_act_vs_tile_extra(const struct unit *actor,
                                        const struct extra_type *tgt_extra,
                                        bool accept_all_actions)
 {
-  if (actor == NULL || tgt_tile == NULL || tgt_extra == NULL) {
+  if (actor == nullptr || tgt_tile == nullptr || tgt_extra == nullptr) {
     // Can't do any actions if actor or target are missing.
     return false;
   }
@@ -7208,7 +7214,7 @@ static bool may_unit_act_vs_tile_extra(const struct unit *actor,
  * Find an extra to target for an action at the specified tile.
  *
  * Returns the first extra found that the actor may act against at the tile
- * or NULL if no proper target is found. (Note that some actions requires
+ * or nullptr if no proper target is found. (Note that some actions requires
  * the absence of an extra since they result in its creation while other
  * requires its presence.)
  *
@@ -7229,5 +7235,5 @@ struct extra_type *action_tgt_tile_extra(const struct unit *actor,
   }
   extra_type_re_active_iterate_end;
 
-  return NULL;
+  return nullptr;
 }

@@ -137,7 +137,7 @@ struct connection {
    */
   bool observer;
 
-  /* NULL for connections not yet associated with a specific player.
+  /* nullptr for connections not yet associated with a specific player.
    */
   struct player *playing;
 

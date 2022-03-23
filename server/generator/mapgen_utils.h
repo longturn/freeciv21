@@ -69,7 +69,7 @@ struct terrain *pick_terrain(enum mapgen_terrain_property target,
       _tile##_x = _nat##_x + (_index##_axis ? _index : 0);                  \
       _tile##_y = _nat##_y + (_index##_axis ? 0 : _index);                  \
       _tile = native_pos_to_tile(nmap, _tile##_x, _tile##_y);               \
-      if (NULL != _tile) {
+      if (nullptr != _tile) {
 
 #define axis_iterate_end                                                    \
   }                                                                         \
@@ -77,7 +77,7 @@ struct terrain *pick_terrain(enum mapgen_terrain_property target,
   }
 
 /***************************************************************************
-  pdata or pfilter can be NULL!
+  pdata or pfilter can be nullptr!
 ***************************************************************************/
 #define whole_map_iterate_filtered(_tile, pdata, pfilter)                   \
   {                                                                         \
@@ -87,7 +87,8 @@ struct terrain *pick_terrain(enum mapgen_terrain_property target,
                                                                             \
     whole_map_iterate(&(wld.map), _tile)                                    \
     {                                                                       \
-      if (NULL == _tile##_filter || (_tile##_filter)(_tile, _tile##_data)) {
+      if (nullptr == _tile##_filter                                         \
+          || (_tile##_filter)(_tile, _tile##_data)) {
 
 #define whole_map_iterate_filtered_end                                      \
   }                                                                         \
@@ -103,8 +104,8 @@ void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
                                             const void *data));
 #define adjust_int_map(int_map, int_map_max)                                \
   adjust_int_map_filtered(                                                  \
-      int_map, int_map_max, (void *) NULL,                                  \
-      (bool (*)(const struct tile *ptile, const void *data)) NULL)
+      int_map, int_map_max, (void *) nullptr,                               \
+      (bool (*)(const struct tile *ptile, const void *data)) nullptr)
 void smooth_int_map(int *int_map, bool zeroes_at_edges);
 
 // placed_map tool

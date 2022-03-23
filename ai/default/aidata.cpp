@@ -67,7 +67,7 @@ void dai_data_init(struct ai_type *ait, struct player *pplayer)
   {
     const struct ai_dip_intel **player_intel_slot =
         ai->diplomacy.player_intel_slots + player_slot_index(pslot);
-    *player_intel_slot = NULL;
+    *player_intel_slot = nullptr;
   }
   player_slots_iterate_end;
 
@@ -91,7 +91,7 @@ void dai_data_init(struct ai_type *ait, struct player *pplayer)
   ai->diplomacy.req_love_for_peace = MAX_AI_LOVE / 8;
   ai->diplomacy.req_love_for_alliance = MAX_AI_LOVE / 4;
 
-  ai->settler = NULL;
+  ai->settler = nullptr;
 
   // Initialise autosettler.
   dai_auto_settler_init(ai);
@@ -111,7 +111,7 @@ void dai_data_close(struct ai_type *ait, struct player *pplayer)
   // Free autosettler.
   dai_auto_settler_free(ai);
 
-  if (ai->diplomacy.player_intel_slots != NULL) {
+  if (ai->diplomacy.player_intel_slots != nullptr) {
     players_iterate(aplayer)
     {
       // destroy the ai diplomacy states of this player with others ...
@@ -178,9 +178,9 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
   {
     struct ai_dip_intel *adip = dai_diplomacy_get(ait, pplayer, aplayer);
 
-    adip->is_allied_with_enemy = NULL;
-    adip->at_war_with_ally = NULL;
-    adip->is_allied_with_ally = NULL;
+    adip->is_allied_with_enemy = nullptr;
+    adip->at_war_with_ally = nullptr;
+    adip->is_allied_with_ally = nullptr;
 
     players_iterate(check_pl)
     {
@@ -229,13 +229,13 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
   {
     if (aia_utype_is_considered_spy_vs_city(unit_type_get(punit))
         && def_ai_unit_data(punit, ait)->task == AIUNIT_ATTACK) {
-      fc_assert_msg(punit->goto_tile != NULL,
+      fc_assert_msg(punit->goto_tile != nullptr,
                     "No target city for spy action");
 
-      if (punit->goto_tile != NULL) {
+      if (punit->goto_tile != nullptr) {
         struct city *pcity = tile_city(punit->goto_tile);
 
-        if (pcity != NULL) {
+        if (pcity != nullptr) {
           // Heading somewhere on a mission, reserve target.
           ai->stats.diplomat_reservations.insert(pcity->id);
         }
@@ -248,10 +248,10 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
 
   /*** Interception engine ***/
 
-  /* We are tracking a unit if punit->server.ai->cur_pos is not NULL. If we
-   * are not tracking, start tracking by setting cur_pos. If we are,
-   * fill prev_pos with previous cur_pos. This way we get the
-   * necessary coordinates to calculate a probable trajectory. */
+  /* We are tracking a unit if punit->server.ai->cur_pos is not nullptr. If
+   * we are not tracking, start tracking by setting cur_pos. If we are, fill
+   * prev_pos with previous cur_pos. This way we get the necessary
+   * coordinates to calculate a probable trajectory. */
   players_iterate_alive(aplayer)
   {
     if (aplayer == pplayer) {
@@ -264,7 +264,7 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
       if (!unit_data->cur_pos) {
         // Start tracking
         unit_data->cur_pos = &unit_data->cur_struct;
-        unit_data->prev_pos = NULL;
+        unit_data->prev_pos = nullptr;
       } else {
         unit_data->prev_struct = unit_data->cur_struct;
         unit_data->prev_pos = &unit_data->prev_struct;
@@ -292,10 +292,10 @@ void dai_data_phase_finished(struct ai_type *ait, struct player *pplayer)
   }
 
   delete[] ai->stats.workers;
-  ai->stats.workers = NULL;
+  ai->stats.workers = nullptr;
 
   delete[] ai->stats.ocean_workers;
-  ai->stats.ocean_workers = NULL;
+  ai->stats.ocean_workers = nullptr;
 
   ai->phase_initialized = false;
 }
@@ -311,15 +311,15 @@ struct ai_plr *dai_plr_data_get(struct ai_type *ait, struct player *pplayer,
 {
   struct ai_plr *ai = def_ai_player_data(pplayer, ait);
 
-  fc_assert_ret_val(ai != NULL, NULL);
+  fc_assert_ret_val(ai != nullptr, nullptr);
 
   /* This assert really is required. See longer comment
      in adv_data_get() for equivalent code. */
 #if defined(FREECIV_DEBUG) || defined(IS_DEVEL_VERSION)
-  fc_assert(caller_closes != NULL || ai->phase_initialized);
+  fc_assert(caller_closes != nullptr || ai->phase_initialized);
 #endif
 
-  if (caller_closes != NULL) {
+  if (caller_closes != nullptr) {
     *caller_closes = false;
   }
 
@@ -336,14 +336,14 @@ struct ai_plr *dai_plr_data_get(struct ai_type *ait, struct player *pplayer,
       log_debug("%s ai data phase closed when dai_plr_data_get() called",
                 player_name(pplayer));
       dai_data_phase_begin(ait, pplayer, false);
-      if (caller_closes != NULL) {
+      if (caller_closes != nullptr) {
         *caller_closes = true;
       } else {
         dai_data_phase_finished(ait, pplayer);
       }
     }
   } else {
-    if (!ai->phase_initialized && caller_closes != NULL) {
+    if (!ai->phase_initialized && caller_closes != nullptr) {
       dai_data_phase_begin(ait, pplayer, false);
       *caller_closes = true;
     }
@@ -360,14 +360,14 @@ static void dai_diplomacy_new(struct ai_type *ait, const struct player *plr1,
 {
   struct ai_dip_intel *player_intel;
 
-  fc_assert_ret(plr1 != NULL);
-  fc_assert_ret(plr2 != NULL);
+  fc_assert_ret(plr1 != nullptr);
+  fc_assert_ret(plr2 != nullptr);
 
   const struct ai_dip_intel **player_intel_slot =
       def_ai_player_data(plr1, ait)->diplomacy.player_intel_slots
       + player_index(plr2);
 
-  fc_assert_ret(*player_intel_slot == NULL);
+  fc_assert_ret(*player_intel_slot == nullptr);
 
   player_intel = new ai_dip_intel[1]();
   *player_intel_slot = player_intel;
@@ -382,7 +382,7 @@ static void dai_diplomacy_defaults(struct ai_type *ait,
 {
   struct ai_dip_intel *player_intel = dai_diplomacy_get(ait, plr1, plr2);
 
-  fc_assert_ret(player_intel != NULL);
+  fc_assert_ret(player_intel != nullptr);
 
   // pseudorandom value
   player_intel->spam = (player_index(plr1) + player_index(plr2)) % 5;
@@ -403,14 +403,14 @@ struct ai_dip_intel *dai_diplomacy_get(struct ai_type *ait,
                                        const struct player *plr1,
                                        const struct player *plr2)
 {
-  fc_assert_ret_val(plr1 != NULL, NULL);
-  fc_assert_ret_val(plr2 != NULL, NULL);
+  fc_assert_ret_val(plr1 != nullptr, nullptr);
+  fc_assert_ret_val(plr2 != nullptr, nullptr);
 
   const struct ai_dip_intel **player_intel_slot =
       def_ai_player_data(plr1, ait)->diplomacy.player_intel_slots
       + player_index(plr2);
 
-  fc_assert_ret_val(player_intel_slot != NULL, NULL);
+  fc_assert_ret_val(player_intel_slot != nullptr, nullptr);
 
   return const_cast<struct ai_dip_intel *>(*player_intel_slot);
 }
@@ -422,18 +422,18 @@ static void dai_diplomacy_destroy(struct ai_type *ait,
                                   const struct player *plr1,
                                   const struct player *plr2)
 {
-  fc_assert_ret(plr1 != NULL);
-  fc_assert_ret(plr2 != NULL);
+  fc_assert_ret(plr1 != nullptr);
+  fc_assert_ret(plr2 != nullptr);
 
   const struct ai_dip_intel **player_intel_slot =
       def_ai_player_data(plr1, ait)->diplomacy.player_intel_slots
       + player_index(plr2);
 
-  if (*player_intel_slot != NULL) {
+  if (*player_intel_slot != nullptr) {
     delete[] dai_diplomacy_get(ait, plr1, plr2);
   }
 
-  *player_intel_slot = NULL;
+  *player_intel_slot = nullptr;
 }
 
 /**
@@ -444,7 +444,7 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
   bool needs_back_rearrange = false;
   struct adv_data *adv;
 
-  adv = adv_data_get(pplayer, NULL);
+  adv = adv_data_get(pplayer, nullptr);
 
   multipliers_iterate(ppol)
   {
@@ -456,7 +456,7 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
 
       city_list_iterate(pplayer->cities, pcity)
       {
-        orig_value += dai_city_want(pplayer, pcity, adv, NULL);
+        orig_value += dai_city_want(pplayer, pcity, adv, nullptr);
       }
       city_list_iterate_end;
 
@@ -474,7 +474,7 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
 
         city_list_iterate(pplayer->cities, pcity)
         {
-          new_value += dai_city_want(pplayer, pcity, adv, NULL);
+          new_value += dai_city_want(pplayer, pcity, adv, nullptr);
         }
         city_list_iterate_end;
 
@@ -501,7 +501,7 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
 
         city_list_iterate(pplayer->cities, pcity)
         {
-          new_value += dai_city_want(pplayer, pcity, adv, NULL);
+          new_value += dai_city_want(pplayer, pcity, adv, nullptr);
         }
         city_list_iterate_end;
 
@@ -554,7 +554,7 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
     return;
   }
 
-  adv = adv_data_get(pplayer, NULL);
+  adv = adv_data_get(pplayer, nullptr);
   nplayers = normal_player_count();
   presearch = research_get(pplayer);
 
@@ -568,7 +568,7 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
   {
     bool capital;
 
-    *val += dai_city_want(pplayer, pcity, adv, NULL);
+    *val += dai_city_want(pplayer, pcity, adv, nullptr);
     capital = is_capital(pcity);
 
     effect_list_iterate(get_req_source_effects(&source), peffect)
@@ -586,8 +586,9 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
           present = preq->present;
           continue;
         }
-        if (!is_req_active(pplayer, NULL, pcity, NULL, NULL, NULL, NULL,
-                           NULL, NULL, NULL, preq, RPT_POSSIBLE)) {
+        if (!is_req_active(pplayer, nullptr, pcity, nullptr, nullptr,
+                           nullptr, nullptr, nullptr, nullptr, nullptr, preq,
+                           RPT_POSSIBLE)) {
           active = false;
           break; // presence doesn't matter for inactive effects.
         }

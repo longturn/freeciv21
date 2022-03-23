@@ -157,7 +157,7 @@ void packets_deinit();
 
 #define RECEIVE_PACKET_END(result)                                          \
   if (!packet_check(&din, pc)) {                                            \
-    return NULL;                                                            \
+    return nullptr;                                                         \
   }                                                                         \
   remove_packet_from_buffer(pc->buffer);                                    \
   result = new std::remove_reference<decltype(*result)>::type;              \
@@ -166,7 +166,7 @@ void packets_deinit();
 
 #define RECEIVE_PACKET_FIELD_ERROR(field, ...)                              \
   log_packet("Error on field '" #field "'" __VA_ARGS__);                    \
-  return NULL
+  return nullptr
 
 int send_packet_data(struct connection *pc, unsigned char *data, int len,
                      enum packet_type packet_type);

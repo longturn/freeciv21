@@ -108,7 +108,7 @@ static QString col_diplstate(const struct player *player)
   static char buf[100];
   const struct player_diplstate *pds;
 
-  if (NULL == client.conn.playing || player == client.conn.playing) {
+  if (nullptr == client.conn.playing || player == client.conn.playing) {
     return QStringLiteral("-");
   } else {
     pds = player_diplstate_get(client.conn.playing, player);
@@ -146,7 +146,7 @@ static int diplstate_value(const struct player *plr)
   const struct player_diplstate *pds;
   int ds_value;
 
-  if (NULL == client.conn.playing || plr == client.conn.playing) {
+  if (nullptr == client.conn.playing || plr == client.conn.playing) {
     /* current global player is as close as players get
        -> return value smaller than for DS_TEAM */
     return 0;
@@ -176,7 +176,7 @@ static int cmp_diplstate(const struct player *player1,
  */
 static QString col_love(const struct player *player)
 {
-  if (NULL == client.conn.playing || player == client.conn.playing
+  if (nullptr == client.conn.playing || player == client.conn.playing
       || is_human(player)) {
     return QStringLiteral("-");
   } else {
@@ -193,7 +193,7 @@ static int cmp_love(const struct player *player1,
 {
   int love1, love2;
 
-  if (NULL == client.conn.playing) {
+  if (nullptr == client.conn.playing) {
     return player_number(player1) - player_number(player2);
   }
 
@@ -239,7 +239,7 @@ QString plrdlg_col_state(const struct player *plr)
     }
 
     opt = optset_option_by_name(server_optset, "turnblock");
-    if (opt != NULL) {
+    if (opt != nullptr) {
       consider_tb = option_bool_get(opt);
     }
 
@@ -297,23 +297,28 @@ static int cmp_score(const struct player *player1,
   ...
 ****************************************************************************/
 struct player_dlg_column player_dlg_columns[] = {
-    {true, COL_TEXT, N_("?Player:Name"), col_name, NULL, cmp_name, "name"},
-    {false, COL_TEXT, N_("Username"), col_username, NULL, NULL, "username"},
-    {true, COL_FLAG, N_("Flag"), NULL, NULL, NULL, "flag"},
-    {true, COL_TEXT, N_("Nation"), col_nation, NULL, NULL, "nation"},
-    {true, COL_COLOR, N_("Border"), NULL, NULL, NULL, "border"},
-    {true, COL_RIGHT_TEXT, N_("Score"), get_score_text, NULL, cmp_score,
+    {true, COL_TEXT, N_("?Player:Name"), col_name, nullptr, cmp_name,
+     "name"},
+    {false, COL_TEXT, N_("Username"), col_username, nullptr, nullptr,
+     "username"},
+    {true, COL_FLAG, N_("Flag"), nullptr, nullptr, nullptr, "flag"},
+    {true, COL_TEXT, N_("Nation"), col_nation, nullptr, nullptr, "nation"},
+    {true, COL_COLOR, N_("Border"), nullptr, nullptr, nullptr, "border"},
+    {true, COL_RIGHT_TEXT, N_("Score"), get_score_text, nullptr, cmp_score,
      "score"},
-    {true, COL_TEXT, N_("Team"), col_team, NULL, NULL, "team"},
-    {true, COL_BOOLEAN, N_("AI"), NULL, col_ai, NULL, "ai"},
-    {true, COL_TEXT, N_("Attitude"), col_love, NULL, cmp_love, "attitude"},
-    {true, COL_TEXT, N_("Embassy"), col_embassy, NULL, NULL, "embassy"},
-    {true, COL_TEXT, N_("Dipl.State"), col_diplstate, NULL, cmp_diplstate,
+    {true, COL_TEXT, N_("Team"), col_team, nullptr, nullptr, "team"},
+    {true, COL_BOOLEAN, N_("AI"), nullptr, col_ai, nullptr, "ai"},
+    {true, COL_TEXT, N_("Attitude"), col_love, nullptr, cmp_love,
+     "attitude"},
+    {true, COL_TEXT, N_("Embassy"), col_embassy, nullptr, nullptr,
+     "embassy"},
+    {true, COL_TEXT, N_("Dipl.State"), col_diplstate, nullptr, cmp_diplstate,
      "diplstate"},
-    {true, COL_TEXT, N_("Vision"), col_vision, NULL, NULL, "vision"},
-    {true, COL_TEXT, N_("State"), plrdlg_col_state, NULL, NULL, "state"},
-    {false, COL_RIGHT_TEXT, N_("?Player_dlg:Idle"), col_idle, NULL, NULL,
-     "idle"}};
+    {true, COL_TEXT, N_("Vision"), col_vision, nullptr, nullptr, "vision"},
+    {true, COL_TEXT, N_("State"), plrdlg_col_state, nullptr, nullptr,
+     "state"},
+    {false, COL_RIGHT_TEXT, N_("?Player_dlg:Idle"), col_idle, nullptr,
+     nullptr, "idle"}};
 
 const int num_player_dlg_columns = ARRAY_SIZE(player_dlg_columns);
 

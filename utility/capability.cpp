@@ -46,7 +46,7 @@ static bool fc_has_capability(const char *cap, const char *capstr,
 {
   const char *next;
 
-  fc_assert_ret_val(capstr != NULL, false);
+  fc_assert_ret_val(capstr != nullptr, false);
 
   for (;;) {
     GET_TOKEN(capstr, next);
@@ -70,7 +70,7 @@ static bool fc_has_capability(const char *cap, const char *capstr,
 }
 
 /**
-   Wrapper for fc_has_capability() for NULL terminated strings.
+   Wrapper for fc_has_capability() for nullptr terminated strings.
  */
 bool has_capability(const char *cap, const char *capstr)
 {

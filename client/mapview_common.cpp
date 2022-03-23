@@ -73,7 +73,7 @@ Q_GLOBAL_STATIC(gotohash, mapdeco_gotoline)
 struct view mapview;
 bool can_slide = true;
 
-struct tile *center_tile = NULL;
+struct tile *center_tile = nullptr;
 
 static void base_canvas_to_map_pos(int *map_x, int *map_y, float canvas_x,
                                    float canvas_y);
@@ -384,7 +384,7 @@ static void base_canvas_to_map_pos(int *map_x, int *map_y, float canvas_x,
 
 /**
    Finds the tile corresponding to pixel coordinates.  Returns that tile,
-   or NULL if the position is off the map.
+   or nullptr if the position is off the map.
  */
 struct tile *canvas_pos_to_tile(float canvas_x, float canvas_y)
 {
@@ -394,14 +394,14 @@ struct tile *canvas_pos_to_tile(float canvas_x, float canvas_y)
   if (normalize_map_pos(&(wld.map), &map_x, &map_y)) {
     return map_pos_to_tile(&(wld.map), map_x, map_y);
   } else {
-    return NULL;
+    return nullptr;
   }
 }
 
 /**
    Finds the tile corresponding to pixel coordinates.  Returns that tile,
    or the one nearest is the position is off the map.  Will never return
- NULL.
+ nullptr.
  */
 struct tile *canvas_pos_to_nearest_tile(float canvas_x, float canvas_y)
 {
@@ -1029,8 +1029,8 @@ void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
 {
   canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
   for (const auto &layer : tileset_get_layers(tileset)) {
-    put_one_element(pcanvas, layer, NULL, NULL, NULL, punit, NULL, canvas_x,
-                    canvas_y, NULL);
+    put_one_element(pcanvas, layer, nullptr, nullptr, nullptr, punit,
+                    nullptr, canvas_x, canvas_y, nullptr);
   }
 }
 
@@ -1043,8 +1043,8 @@ void put_unittype(const struct unit_type *putype, QPixmap *pcanvas,
 {
   canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
   for (const auto &layer : tileset_get_layers(tileset)) {
-    put_one_element(pcanvas, layer, NULL, NULL, NULL, NULL, NULL, canvas_x,
-                    canvas_y, putype);
+    put_one_element(pcanvas, layer, nullptr, nullptr, nullptr, nullptr,
+                    nullptr, canvas_x, canvas_y, putype);
   }
 }
 
@@ -1059,8 +1059,8 @@ void put_city(struct city *pcity, QPixmap *pcanvas, int canvas_x,
   canvas_y +=
       (tileset_full_tile_height(tileset) - tileset_tile_height(tileset));
   for (const auto &layer : tileset_get_layers(tileset)) {
-    put_one_element(pcanvas, layer, NULL, NULL, NULL, NULL, pcity, canvas_x,
-                    canvas_y, NULL);
+    put_one_element(pcanvas, layer, nullptr, nullptr, nullptr, nullptr,
+                    pcity, canvas_x, canvas_y, nullptr);
   }
 }
 
@@ -1077,8 +1077,8 @@ void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,
   canvas_y +=
       (tileset_full_tile_height(tileset) - tileset_tile_height(tileset));
   for (const auto &layer : tileset_get_layers(tileset)) {
-    put_one_element(pcanvas, layer, ptile, NULL, NULL, NULL, NULL, canvas_x,
-                    canvas_y, NULL);
+    put_one_element(pcanvas, layer, ptile, nullptr, nullptr, nullptr,
+                    nullptr, canvas_x, canvas_y, nullptr);
   }
 }
 
@@ -1206,8 +1206,8 @@ static void put_one_tile(QPixmap *pcanvas,
       || (editor_is_active() && editor_tile_is_selected(ptile))) {
     struct unit *punit = get_drawable_unit(tileset, ptile);
 
-    put_one_element(pcanvas, layer, ptile, NULL, NULL, punit,
-                    tile_city(ptile), canvas_x, canvas_y, NULL);
+    put_one_element(pcanvas, layer, ptile, nullptr, nullptr, punit,
+                    tile_city(ptile), canvas_x, canvas_y, nullptr);
   }
 }
 
@@ -1410,11 +1410,11 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
       if (ptile) {
         put_one_tile(mapview.store, layer, ptile, cx, cy);
       } else if (pedge) {
-        put_one_element(mapview.store, layer, NULL, pedge, NULL, NULL, NULL,
-                        cx, cy, NULL);
+        put_one_element(mapview.store, layer, nullptr, pedge, nullptr,
+                        nullptr, nullptr, cx, cy, nullptr);
       } else if (pcorner) {
-        put_one_element(mapview.store, layer, NULL, NULL, pcorner, NULL,
-                        NULL, cx, cy, NULL);
+        put_one_element(mapview.store, layer, nullptr, nullptr, pcorner,
+                        nullptr, nullptr, cx, cy, nullptr);
       } else {
         // This can happen, for instance for unreal tiles.
       }
@@ -1615,7 +1615,7 @@ void show_tile_labels(int canvas_base_x, int canvas_base_y, int width_base,
     const int canvas_x = gui_x - mapview.gui_x0;
     const int canvas_y = gui_y - mapview.gui_y0;
 
-    if (ptile && ptile->label != NULL) {
+    if (ptile && ptile->label != nullptr) {
       int width = 0, height = 0;
 
       show_tile_label(mapview.store, canvas_x, canvas_y, ptile, &width,
@@ -1754,7 +1754,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
     }
   }
 
-  set_units_in_combat(NULL, NULL);
+  set_units_in_combat(nullptr, nullptr);
   refresh_unit_mapcanvas(punit0, unit_tile(punit0), true, false);
   refresh_unit_mapcanvas(punit1, unit_tile(punit1), true, false);
   flush_dirty_overview();
@@ -1856,14 +1856,14 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
 /**
    Find the "best" city/settlers to associate with the selected tile.
      a.  If a visible city is working the tile, return that city.
-     b.  If another player's city is working the tile, return NULL.
+     b.  If another player's city is working the tile, return nullptr.
      c.  If any selected cities are within range, return the closest one.
      d.  If any cities are within range, return the closest one.
      e.  If any active (with color) settler could work it if they founded a
-         city, choose the closest one (only if punit != NULL).
+         city, choose the closest one (only if punit != nullptr).
      f.  If any settler could work it if they founded a city, choose the
-         closest one (only if punit != NULL).
-     g.  If nobody can work it, return NULL.
+         closest one (only if punit != nullptr).
+     g.  If nobody can work it, return nullptr.
  */
 struct city *find_city_or_settler_near_tile(const struct tile *ptile,
                                             struct unit **punit)
@@ -1875,35 +1875,35 @@ struct city *find_city_or_settler_near_tile(const struct tile *ptile,
 
   struct city *closest_city;
   struct city *pcity;
-  struct unit *closest_settler = NULL, *best_settler = NULL;
+  struct unit *closest_settler = nullptr, *best_settler = nullptr;
   int max_rad = rs_max_city_radius_sq();
 
   if (punit) {
-    *punit = NULL;
+    *punit = nullptr;
   }
 
   // Check if there is visible city working that tile
   pcity = tile_worked(ptile);
   if (pcity && pcity->tile) {
-    if (NULL == client.conn.playing
+    if (nullptr == client.conn.playing
         || city_owner(pcity) == client.conn.playing) {
       // rule a
       return pcity;
     } else {
       // rule b
-      return NULL;
+      return nullptr;
     }
   }
 
   // rule e
-  closest_city = NULL;
+  closest_city = nullptr;
 
   // check within maximum (squared) city radius
   city_tile_iterate(max_rad, ptile, tile1)
   {
     pcity = tile_city(tile1);
     if (pcity
-        && (NULL == client.conn.playing
+        && (nullptr == client.conn.playing
             || city_owner(pcity) == client.conn.playing)
         && client_city_can_work_tile(pcity, tile1)) {
       /*
@@ -1934,7 +1934,7 @@ struct city *find_city_or_settler_near_tile(const struct tile *ptile,
     {
       unit_list_iterate(tile1->units, psettler)
       {
-        if ((NULL == client.conn.playing
+        if ((nullptr == client.conn.playing
              || unit_owner(psettler) == client.conn.playing)
             && unit_can_do_action(psettler, ACTION_FOUND_CITY)
             && city_can_be_built_here(unit_tile(psettler), psettler)) {
@@ -1960,7 +1960,7 @@ struct city *find_city_or_settler_near_tile(const struct tile *ptile,
   }
 
   // rule g
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -1968,12 +1968,12 @@ struct city *find_city_or_settler_near_tile(const struct tile *ptile,
  */
 struct city *find_city_near_tile(const struct tile *ptile)
 {
-  return find_city_or_settler_near_tile(ptile, NULL);
+  return find_city_or_settler_near_tile(ptile, nullptr);
 }
 
 /**
    Append the buy cost of the current production of the given city to the
-   already NULL-terminated buffer. Does nothing if draw_city_buycost is
+   already nullptr-terminated buffer. Does nothing if draw_city_buycost is
    set to FALSE, or if it does not make sense to buy the current production
    (e.g. coinage).
  */
@@ -2019,7 +2019,7 @@ void get_city_mapview_production(const city *pcity, char *buffer,
 /**
    Find the mapview city trade routes text for the given city, and place it
    into the buffer. Sets 'pcolor' to the preferred color the text should
-   be drawn in if it is non-NULL.
+   be drawn in if it is non-nullptr.
  */
 void get_city_mapview_trade_routes(const city *pcity,
                                    char *trade_routes_buffer,
@@ -2089,7 +2089,7 @@ static void queue_add_callback()
 {
   if (!callback_queued) {
     callback_queued = true;
-    add_idle_callback(queue_callback, NULL);
+    add_idle_callback(queue_callback, nullptr);
   }
 }
 
@@ -2202,7 +2202,7 @@ void unqueue_mapview_updates(bool write_to_screen)
    * the function itself (namely, within update_map_canvas). */
   for (i = 0; i < TILE_UPDATE_COUNT; i++) {
     my_tile_updates[i] = tile_updates[i];
-    tile_updates[i] = NULL;
+    tile_updates[i] = nullptr;
   }
 
   if (!map_is_empty()) {
@@ -2281,7 +2281,7 @@ void get_city_mapview_name_and_growth(const city *pcity, char *name_buffer,
   fc_strlcpy(name_buffer, city_name_get(pcity), name_buffer_len);
 
   *production_color = COLOR_MAPVIEW_CITYTEXT;
-  if (NULL == client.conn.playing
+  if (nullptr == client.conn.playing
       || city_owner(pcity) == client.conn.playing) {
     int turns = city_turns_to_grow(pcity);
 
@@ -2585,7 +2585,7 @@ void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir,
     // FIXME: Remove the casts.
     refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
     ptile = mapstep(&(wld.map), ptile, dir);
-    if (ptile != NULL) {
+    if (ptile != nullptr) {
       refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
     }
   }
@@ -2609,7 +2609,7 @@ void mapdeco_set_gotoroute(const struct unit *punit)
 
   ptile = unit_tile(punit);
 
-  for (i = 0; ptile != NULL && i < punit->orders.length; i++) {
+  for (i = 0; ptile != nullptr && i < punit->orders.length; i++) {
     if (punit->orders.index + i >= punit->orders.length
         && !punit->orders.repeat) {
       break;
@@ -2719,7 +2719,7 @@ bool map_canvas_resized(int width, int height)
 
   if (!map_is_empty() && can_client_change_view()) {
     if (tile_size_changed) {
-      if (center_tile != NULL) {
+      if (center_tile != nullptr) {
         int x_left, y_top;
         float gui_x, gui_y;
 
@@ -2762,7 +2762,7 @@ bool map_canvas_resized(int width, int height)
  */
 void init_mapcanvas_and_overview()
 {
-  // Create a dummy map to make sure mapview.store is never NULL.
+  // Create a dummy map to make sure mapview.store is never nullptr.
   map_canvas_resized(1, 1);
 }
 
@@ -2875,7 +2875,7 @@ struct link_mark {
   TYPED_LIST_ITERATE(struct link_mark, link_marks, pmark)
 #define link_marks_iterate_end LIST_ITERATE_END
 
-static struct link_mark_list *link_marks = NULL;
+static struct link_mark_list *link_marks = nullptr;
 
 /**
    Find a link mark in the list.
@@ -2890,7 +2890,7 @@ static struct link_mark *link_mark_find(enum text_link_type type, int id)
   }
   link_marks_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -2921,18 +2921,18 @@ static struct tile *link_mark_tile(const struct link_mark *pmark)
   switch (pmark->type) {
   case TLT_CITY: {
     struct city *pcity = game_city_by_number(pmark->id);
-    return pcity ? pcity->tile : NULL;
+    return pcity ? pcity->tile : nullptr;
   }
   case TLT_TILE:
     return index_to_tile(&(wld.map), pmark->id);
   case TLT_UNIT: {
     struct unit *punit = game_unit_by_number(pmark->id);
-    return punit ? unit_tile(punit) : NULL;
+    return punit ? unit_tile(punit) : nullptr;
   }
   case TLT_INVALID:
     fc_assert_ret_val(pmark->type != TLT_INVALID, nullptr);
   }
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -3014,7 +3014,7 @@ void link_marks_free()
   }
 
   link_mark_list_destroy(link_marks);
-  link_marks = NULL;
+  link_marks = nullptr;
 }
 
 /**

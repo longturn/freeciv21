@@ -61,10 +61,10 @@ const QString get_tile_output_text(const struct tile *ptile)
 
   for (i = 0; i < O_LAST; i++) {
     int before_penalty = 0;
-    int x =
-        city_tile_output(NULL, ptile, false, static_cast<Output_type_id>(i));
+    int x = city_tile_output(nullptr, ptile, false,
+                             static_cast<Output_type_id>(i));
 
-    if (NULL != client.conn.playing) {
+    if (nullptr != client.conn.playing) {
       before_penalty = get_player_output_bonus(
           client.conn.playing,
           get_output_type(static_cast<Output_type_id>(i)),
@@ -196,13 +196,13 @@ const QString popup_info_text(struct tile *ptile)
     get_full_username(username, sizeof(username), owner);
     get_full_nation(nation, sizeof(nation), owner);
 
-    if (NULL != client.conn.playing && owner == client.conn.playing) {
+    if (nullptr != client.conn.playing && owner == client.conn.playing) {
       str += QString(_("Our territory")) + qendl();
-    } else if (NULL != owner && NULL == client.conn.playing) {
+    } else if (nullptr != owner && nullptr == client.conn.playing) {
       // TRANS: "Territory of <username> (<nation + team>)"
       str +=
           QString(_("Territory of %1 (%2)")).arg(username, nation) + qendl();
-    } else if (NULL != owner) {
+    } else if (nullptr != owner) {
       struct player_diplstate *ds =
           player_diplstate_get(client.conn.playing, owner);
 
@@ -247,7 +247,7 @@ const QString popup_info_text(struct tile *ptile)
     get_full_username(username, sizeof(username), owner);
     get_full_nation(nation, sizeof(nation), owner);
 
-    if (NULL == client.conn.playing || owner == client.conn.playing) {
+    if (nullptr == client.conn.playing || owner == client.conn.playing) {
       // TRANS: "City: <city name> | <username> (<nation + team>)"
       str += QString(_("City: %1 | %2 (%3)"))
                  .arg(city_name_get(pcity), username, nation)
@@ -356,7 +356,7 @@ const QString popup_info_text(struct tile *ptile)
     get_full_username(username, sizeof(username), owner);
     get_full_nation(nation, sizeof(nation), owner);
 
-    time_t dt = time(NULL) - punit->action_timestamp;
+    time_t dt = time(nullptr) - punit->action_timestamp;
     if (dt < 0 && !can_unit_move_now(punit)) {
       char buf[64];
       format_time_duration(-dt, buf, sizeof(buf));
@@ -388,7 +388,7 @@ const QString popup_info_text(struct tile *ptile)
       }
       if (game.info.citizen_nationality
           && unit_nationality(punit) != unit_owner(punit)) {
-        if (hcity != NULL) {
+        if (hcity != nullptr) {
           /* TRANS: on own line immediately following \n, "from <city> |
            * <nationality> people" */
           str +=
@@ -404,11 +404,11 @@ const QString popup_info_text(struct tile *ptile)
                   .arg(nation_adjective_for_player(unit_nationality(punit)))
               + qendl();
         }
-      } else if (hcity != NULL) {
+      } else if (hcity != nullptr) {
         // TRANS: on own line immediately following \n, ... <city>
         str += QString(_("from %1")).arg(city_name_get(hcity)) + qendl();
       }
-    } else if (NULL != owner) {
+    } else if (nullptr != owner) {
       struct player_diplstate *ds =
           player_diplstate_get(client_player(), owner);
       if (ds->type == DS_CEASEFIRE) {
@@ -491,7 +491,7 @@ const QString popup_info_text(struct tile *ptile)
         || client_is_global_observer()) {
       // Show bribe cost for own units.
       str += QString(_("Probable bribe cost: %1"))
-                 .arg(QString::number(unit_bribe_cost(punit, NULL)))
+                 .arg(QString::number(unit_bribe_cost(punit, nullptr)))
              + qendl();
     } else {
       // We can only give an (lower) boundary for units of other players.
@@ -501,7 +501,7 @@ const QString popup_info_text(struct tile *ptile)
           + qendl();
     }
 
-    if ((NULL == client.conn.playing || owner == client.conn.playing)
+    if ((nullptr == client.conn.playing || owner == client.conn.playing)
         && unit_list_size(ptile->units) >= 2) {
       // TRANS: "5 more" units on this tile
       str += QString(_("  (%1 more)"))
@@ -575,7 +575,7 @@ const QString unit_description(struct unit *punit)
     str += qendl();
   }
   if (game.info.citizen_nationality) {
-    if (nationality != NULL && owner != nationality) {
+    if (nationality != nullptr && owner != nationality) {
       /* TRANS: Nationality of the people comprising a unit, if
        * different from owner. */
       str += QString(_("%1 people"))
@@ -598,19 +598,19 @@ const QString unit_description(struct unit *punit)
 /**
    Describe the airlift capacity of a city for the given units (from their
    current positions).
-   If pdest is non-NULL, describe its capacity as a destination, otherwise
+   If pdest is non-nullptr, describe its capacity as a destination, otherwise
    describe the capacity of the city the unit's currently in (if any) as a
    source. (If the units in the list are in different cities, this will
    probably not give a useful result in this case.)
    If not all of the listed units can be airlifted, return the description
    for those that can.
-   Returns NULL if an airlift is not possible for any of the units.
+   Returns nullptr if an airlift is not possible for any of the units.
  */
 const QString get_airlift_text(const struct unit_list *punits,
                                const struct city *pdest)
 {
   QString str;
-  bool src = (pdest == NULL);
+  bool src = (pdest == nullptr);
   enum texttype {
     AL_IMPOSSIBLE,
     AL_UNKNOWN,
@@ -624,7 +624,7 @@ const QString get_airlift_text(const struct unit_list *punits,
     enum texttype tthis = AL_IMPOSSIBLE;
     enum unit_airlift_result result;
 
-    // NULL will tell us about the capability of airlifting from source
+    // nullptr will tell us about the capability of airlifting from source
     result = test_unit_can_airlift_to(client_player(), punit, pdest);
 
     switch (result) {
@@ -647,7 +647,7 @@ const QString get_airlift_text(const struct unit_list *punits,
       {
         const struct city *pcity = src ? tile_city(unit_tile(punit)) : pdest;
 
-        fc_assert_ret_val(pcity != NULL, fc_strdup("-"));
+        fc_assert_ret_val(pcity != nullptr, fc_strdup("-"));
         if (!src
             && (game.info.airlifting_style & AIRLIFTING_UNLIMITED_DEST)) {
           /* No restrictions on destination (and we can infer this even for
@@ -692,7 +692,7 @@ const QString get_airlift_text(const struct unit_list *punits,
 
   switch (best) {
   case AL_IMPOSSIBLE:
-    return NULL;
+    return nullptr;
   case AL_UNKNOWN:
     str = QStringLiteral("?");
     break;
@@ -817,7 +817,7 @@ const QString science_dialog_text()
   research = research_get(client_player());
   upkeep = client_player()->client.tech_upkeep;
 
-  if (NULL == client.conn.playing
+  if (nullptr == client.conn.playing
       || (ours == 0 && theirs == 0 && upkeep == 0)) {
     return _("Progress: no research");
   }
@@ -898,7 +898,7 @@ const QString get_science_target_text(double *percent)
   } else {
     int total = research->client.researching_cost;
     int done = research->bulbs_researched;
-    int perturn = get_bulbs_per_turn(NULL, NULL, NULL);
+    int perturn = get_bulbs_per_turn(nullptr, nullptr, nullptr);
     int turns;
 
     if ((turns = turns_to_research_done(research, perturn)) >= 0) {
@@ -933,7 +933,7 @@ const QString get_science_goal_text(Tech_type_id goal)
   int steps = research_goal_unknown_techs(research, goal);
   int bulbs_needed = research_goal_bulbs_required(research, goal);
   int turns;
-  int perturn = get_bulbs_per_turn(NULL, NULL, NULL);
+  int perturn = get_bulbs_per_turn(nullptr, nullptr, nullptr);
   QString str, buf1, buf2, buf3;
 
   if (!research) {
@@ -971,7 +971,7 @@ const QString get_info_label_text(bool moreinfo)
 {
   QString str;
 
-  if (NULL != client.conn.playing) {
+  if (nullptr != client.conn.playing) {
     str = QString(_("Population: %1"))
               .arg(population_to_text(civ_population(client.conn.playing)))
           + qendl();
@@ -980,7 +980,7 @@ const QString get_info_label_text(bool moreinfo)
              .arg(calendar_text(), QString::number(game.info.turn))
          + qendl();
 
-  if (NULL != client.conn.playing) {
+  if (nullptr != client.conn.playing) {
     str += QString(_("Gold: %1 (%2)"))
                .arg(QString::number(client.conn.playing->economic.gold),
                     QString::number(
@@ -1026,7 +1026,7 @@ const QString get_info_label_text_popup()
 {
   QString str;
 
-  if (NULL != client.conn.playing) {
+  if (nullptr != client.conn.playing) {
     str = QString(_("%1 People"))
               .arg(population_to_text(civ_population(client.conn.playing)))
           + qendl();
@@ -1035,9 +1035,9 @@ const QString get_info_label_text_popup()
   str +=
       QString(_("Turn: %1")).arg(QString::number(game.info.turn)) + qendl();
 
-  if (NULL != client.conn.playing) {
+  if (nullptr != client.conn.playing) {
     const struct research *presearch = research_get(client_player());
-    int perturn = get_bulbs_per_turn(NULL, NULL, NULL);
+    int perturn = get_bulbs_per_turn(nullptr, nullptr, nullptr);
     int upkeep = client_player()->client.tech_upkeep;
 
     str += QString(_("Gold: %1"))
@@ -1057,7 +1057,7 @@ const QString get_info_label_text_popup()
     str += QString(_("Researching %1: %2"))
                .arg(research_advance_name_translation(
                         presearch, presearch->researching),
-                    get_science_target_text(NULL))
+                    get_science_target_text(nullptr))
            + qendl();
     // perturn is defined as: (bulbs produced) - upkeep
     if (game.info.tech_upkeep_style != TECH_UPKEEP_NONE) {
@@ -1106,7 +1106,7 @@ const QString get_info_label_text_popup()
     str += QString(_("Nuclear winter deactivated.")) + qendl();
   }
 
-  if (NULL != client.conn.playing) {
+  if (nullptr != client.conn.playing) {
     str += QString(_("Government: %1"))
                .arg(government_name_for_player(client.conn.playing))
            + qendl();
@@ -1216,7 +1216,7 @@ const QString get_unit_info_label_text2(struct unit_list *punits,
       struct player *nationality = unit_nationality(punit);
 
       // Line 5, nationality text
-      if (nationality != NULL && owner != nationality) {
+      if (nationality != nullptr && owner != nationality) {
         /* TRANS: Nationality of the people comprising a unit, if
          * different from owner. */
         str += QString(_("%1 people"))
@@ -1244,7 +1244,7 @@ const QString get_unit_info_label_text2(struct unit_list *punits,
     }
     unit_list_iterate_end;
 
-    top[0] = top[1] = top[2] = NULL;
+    top[0] = top[1] = top[2] = nullptr;
     unit_type_iterate(utype)
     {
       if (!top[2]
@@ -1454,14 +1454,14 @@ const QString get_bulb_tooltip()
                   "researching the current technology.")
                 + qendl();
 
-  if (NULL != client.conn.playing) {
+  if (nullptr != client.conn.playing) {
     struct research *research = research_get(client_player());
 
     if (research->researching == A_UNSET) {
       str += _("No research target.");
     } else {
       int turns;
-      int perturn = get_bulbs_per_turn(NULL, NULL, NULL);
+      int perturn = get_bulbs_per_turn(nullptr, nullptr, nullptr);
       QString buf1, buf2;
 
       if ((turns = turns_to_research_done(research, perturn)) >= 0) {
@@ -1551,7 +1551,7 @@ const QString get_government_tooltip()
 
   str = _("Shows your current government:") + qendl();
 
-  if (NULL != client.conn.playing) {
+  if (nullptr != client.conn.playing) {
     str += QStringLiteral("%1").arg(
                government_name_for_player(client.conn.playing))
            + qendl();
@@ -1561,7 +1561,7 @@ const QString get_government_tooltip()
 
 /**
    Returns a description of the given spaceship.  If there is no spaceship
-   (pship is NULL) then text with dummy values is returned.
+   (pship is nullptr) then text with dummy values is returned.
  */
 const QString get_spaceship_descr(struct player_spaceship *pship)
 {
@@ -1701,7 +1701,7 @@ QString get_score_text(const struct player *pplayer)
 {
   QString str;
 
-  if (pplayer->score.game > 0 || NULL == client.conn.playing
+  if (pplayer->score.game > 0 || nullptr == client.conn.playing
       || pplayer == client.conn.playing) {
     str = QStringLiteral("%1").arg(QString::number(pplayer->score.game));
   } else {
@@ -1723,7 +1723,7 @@ const QString get_report_title(const char *report_name)
 
   str = QString(report_name) + qendl();
 
-  if (pplayer != NULL) {
+  if (pplayer != nullptr) {
     char buf[4 * MAX_LEN_NAME];
     /* TRANS: <nation adjective> <government name>.
      * E.g. "Polish Republic". */
@@ -1757,12 +1757,12 @@ const QString get_act_sel_action_custom_text(struct action *paction,
   QString custom;
   if (!action_prob_possible(prob)) {
     // No info since impossible.
-    return NULL;
+    return nullptr;
   }
 
-  fc_assert_ret_val(
-      (action_get_target_kind(paction) != ATK_CITY || target_city != NULL),
-      NULL);
+  fc_assert_ret_val((action_get_target_kind(paction) != ATK_CITY
+                     || target_city != nullptr),
+                    nullptr);
 
   if (action_has_result(paction, ACTRES_TRADE_ROUTE)) {
     int revenue = get_caravan_enter_city_trade_bonus(
@@ -1796,7 +1796,7 @@ const QString get_act_sel_action_custom_text(struct action *paction,
                  .arg(QString::number(cost - target_city->shield_stock));
   } else {
     // No info to add.
-    return NULL;
+    return nullptr;
   }
 
   return custom;
@@ -1823,7 +1823,7 @@ QString text_happiness_buildings(const struct city *pcity)
   QString effects;
   QString str;
 
-  get_city_bonus_effects(plist, pcity, NULL, EFT_MAKE_CONTENT);
+  get_city_bonus_effects(plist, pcity, nullptr, EFT_MAKE_CONTENT);
   if (0 < effect_list_size(plist)) {
     effects = get_effect_list_req_text(plist);
     str = QString(_("Buildings: %1.")).arg(effects);
@@ -1882,9 +1882,9 @@ QString text_happiness_wonders(const struct city *pcity)
   struct effect_list *plist = effect_list_new();
   QString str;
 
-  get_city_bonus_effects(plist, pcity, NULL, EFT_MAKE_HAPPY);
-  get_city_bonus_effects(plist, pcity, NULL, EFT_FORCE_CONTENT);
-  get_city_bonus_effects(plist, pcity, NULL, EFT_NO_UNHAPPY);
+  get_city_bonus_effects(plist, pcity, nullptr, EFT_MAKE_HAPPY);
+  get_city_bonus_effects(plist, pcity, nullptr, EFT_FORCE_CONTENT);
+  get_city_bonus_effects(plist, pcity, nullptr, EFT_NO_UNHAPPY);
   if (0 < effect_list_size(plist)) {
     QString effects;
 

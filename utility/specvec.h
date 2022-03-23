@@ -66,7 +66,7 @@ SPECVEC_VECTOR
 
 static inline void SPECVEC_FOO(_vector_init)(SPECVEC_VECTOR *tthis)
 {
-  tthis->p = NULL;
+  tthis->p = nullptr;
   tthis->size = tthis->size_alloc = 0;
 }
 
@@ -96,7 +96,7 @@ static inline SPECVEC_TYPE *
   } else if (svindex >= 0 && static_cast<size_t>(svindex) < tthis->size) {
     return tthis->p + svindex;
   } else {
-    return NULL;
+    return nullptr;
   }
 }
 
