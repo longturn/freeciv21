@@ -3251,7 +3251,7 @@ static struct pf_path *
 pf_path_new_to_start_tile(const struct pf_parameter *param)
 {
   auto *path = new pf_path;
-  auto *pos = new pf_position;
+  auto *pos = new pf_position[1];
 
   path->length = 1;
   pf_position_fill_start_tile(pos, param);
@@ -3266,6 +3266,7 @@ pf_path_new_to_start_tile(const struct pf_parameter *param)
 void pf_path_destroy(struct pf_path *path)
 {
   if (nullptr != path) {
+    delete[] path->positions;
     delete path;
   }
 }
