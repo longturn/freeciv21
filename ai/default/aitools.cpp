@@ -743,7 +743,6 @@ void dai_unit_new_task(struct ai_type *ait, struct unit *punit,
       if (unit_owner(missile) == unit_owner(punit)
           && def_ai_unit_data(missile, ait)->task != AIUNIT_ESCORT
           && !unit_transported(missile)
-          && unit_owner(missile) == unit_owner(punit)
           && utype_can_do_action(unit_type_get(missile),
                                  ACTION_SUICIDE_ATTACK)
           && can_unit_load(missile, punit)) {

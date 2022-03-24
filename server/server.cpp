@@ -31,9 +31,12 @@
 // Stuff to wait for input on stdin.
 #ifdef Q_OS_WIN
 #include <QMutexLocker>
+#include <io.h>
 #else
 #include <QtCore/QSocketNotifier>
+#include <unistd.h>
 #endif
+#include <stdio.h>
 
 // Readline
 #include <readline/history.h>
