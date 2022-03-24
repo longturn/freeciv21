@@ -6,6 +6,13 @@ It is the policy of the Longturn community that all (100%) Pull Requests have at
 an evaluation of a change and either approve or make suggestions for improvements before a merge into the
 master branch.
 
+For each Pull Request, a set of tests are run automatically. When the tests do not pass, the author is
+expected to fix the problems by himself before someone tries to test the code. There is an exception to this
+for simple changes with code formatting issues (as flagged by the automated `clang-format` test): in this
+case, the author of the Pull Request or a maintainer can request automatic reformatting of the code by adding
+a comment that contains the case-sensitive phrase "Auto clang-format". This triggers a script that, if
+successful, fixes the code formatting by adding a new commit to the branch of the Pull Request.
+
 This page assumes the user knows how to use :file:`git`, compile Freeciv21 and use GitHub.
 
 :strong:`Create A Testing Branch`
