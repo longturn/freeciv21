@@ -45,7 +45,19 @@ public:
     sol::state_view lua(fcl->state);
 
     for (const auto &handler : fcl->signals_hash[name].callbacks) {
-      lua[handler](std::forward<Args>(args)...);
+      sol::optional<sol::protected_function> opt =
+          lua[handler.toStdString()];
+      if (!opt) {
+        qCritical(_("Could not find callback %s"), qUtf8Printable(handler));
+        continue;
+      }
+      sol::protected_function f = *opt;
+      auto result = f(std::forward<Args>(args)...);
+      if (!result.valid()) {
+        sol::error err = result;
+        qCritical(_("Error in callback %s: %s"), qUtf8Printable(handler),
+                  err.what());
+      }
     }
   }
 
