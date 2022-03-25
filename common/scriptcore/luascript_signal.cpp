@@ -70,7 +70,7 @@ void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,
     return;
   }
 
-  struct signal sig = it.value();
+  auto &sig = *it;
 
   for (auto callback : qAsConst(sig.callbacks)) {
     if (callback == callback_name) {
