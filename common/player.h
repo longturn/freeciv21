@@ -112,7 +112,7 @@ struct player_ai {
 
   int love[MAX_NUM_PLAYER_SLOTS];
 
-  struct ai_trait *traits;
+  std::vector<ai_trait> traits;
 };
 
 /* Diplomatic states (how one player views another).

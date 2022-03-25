@@ -575,7 +575,7 @@ static void player_defaults(struct player *pplayer)
     pplayer->ai_common.love[player_slot_index(pslot)] = 1;
   }
   player_slots_iterate_end;
-  pplayer->ai_common.traits = nullptr;
+  pplayer->ai_common.traits.clear();
 
   pplayer->ai = nullptr;
   pplayer->was_created = false;
