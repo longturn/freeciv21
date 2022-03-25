@@ -29,7 +29,7 @@ struct city_report_spec {
   const char *tagname; // for save_options
 };
 
-extern struct city_report_spec *city_report_specs;
+extern std::vector<city_report_spec> city_report_specs;
 
 int num_city_report_spec();
 bool *city_report_spec_show_ptr(int i);

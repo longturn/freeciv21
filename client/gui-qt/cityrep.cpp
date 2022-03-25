@@ -75,9 +75,9 @@ void city_item_delegate::paint(QPainter *painter,
   QString txt;
   QFont font;
   QPalette palette;
-  struct city_report_spec *spec;
-  spec = city_report_specs + index.column();
-  txt = spec->tagname;
+  struct city_report_spec spec;
+  spec = city_report_specs[index.column()];
+  txt = spec.tagname;
   if (txt == QLatin1String("cityname")) {
     font.setCapitalization(QFont::SmallCaps);
     font.setBold(true);
@@ -138,7 +138,7 @@ bool city_item::setData(int column, const QVariant &value, int role)
  */
 QVariant city_item::data(int column, int role) const
 {
-  struct city_report_spec *spec;
+  struct city_report_spec spec;
 
   if (role == Qt::UserRole && column == 0) {
     return QVariant::fromValue((void *) i_city);
@@ -146,8 +146,8 @@ QVariant city_item::data(int column, int role) const
   if (role != Qt::DisplayRole) {
     return QVariant();
   }
-  spec = city_report_specs + column;
-  QString buf = QStringLiteral("%1").arg(spec->func(i_city, spec->data));
+  spec = city_report_specs[column];
+  QString buf = QStringLiteral("%1").arg(spec.func(i_city, spec.data));
   return buf.trimmed();
 }
 
@@ -219,24 +219,23 @@ bool city_model::setData(const QModelIndex &index, const QVariant &value,
 QVariant city_model::headerData(int section, Qt::Orientation orientation,
                                 int role) const
 {
-  struct city_report_spec *spec = city_report_specs + section;
+  struct city_report_spec spec = city_report_specs[section];
 
   if (orientation == Qt::Horizontal && section < NUM_CREPORT_COLS) {
     if (role == Qt::DisplayRole) {
-      QString buf =
-          QStringLiteral("%1\n%2").arg(spec->title1 ? spec->title1 : "",
-                                       spec->title2 ? spec->title2 : "");
-      QIcon i = hIcon::i()->get(spec->tagname);
+      QString buf = QStringLiteral("%1\n%2").arg(
+          spec.title1 ? spec.title1 : "", spec.title2 ? spec.title2 : "");
+      QIcon i = hIcon::i()->get(spec.tagname);
       if (!i.isNull()) { // icon exists for that header
         return QString();
       }
       return buf.trimmed();
     }
     if (role == Qt::ToolTipRole) {
-      return QString(spec->explanation);
+      return QString(spec.explanation);
     }
     if (role == Qt::DecorationRole) {
-      QIcon i = hIcon::i()->get(spec->tagname);
+      QIcon i = hIcon::i()->get(spec.tagname);
       if (!i.isNull()) {
         return i;
       }
@@ -250,11 +249,11 @@ QVariant city_model::headerData(int section, Qt::Orientation orientation,
  */
 QVariant city_model::menu_data(int section) const
 {
-  struct city_report_spec *spec;
+  struct city_report_spec spec;
 
   if (section < NUM_CREPORT_COLS) {
-    spec = city_report_specs + section;
-    return QString(spec->explanation);
+    spec = city_report_specs[section];
+    return QString(spec.explanation);
   }
   return QVariant();
 }
@@ -264,11 +263,11 @@ QVariant city_model::menu_data(int section) const
  */
 QVariant city_model::hide_data(int section) const
 {
-  struct city_report_spec *spec;
+  struct city_report_spec spec;
 
   if (section < NUM_CREPORT_COLS) {
-    spec = city_report_specs + section;
-    return spec->show;
+    spec = city_report_specs[section];
+    return spec.show;
   }
   return QVariant();
 }
@@ -1117,7 +1116,7 @@ void city_widget::display_header_menu(const QPoint)
   hideshow_column->setAttribute(Qt::WA_DeleteOnClose);
   connect(hideshow_column, &QMenu::triggered, this, [=](QAction *act) {
     int col;
-    struct city_report_spec *spec;
+    struct city_report_spec spec;
     if (!act) {
       return;
     }
@@ -1125,8 +1124,8 @@ void city_widget::display_header_menu(const QPoint)
     col = actions.indexOf(act);
     fc_assert_ret(col >= 0);
     setColumnHidden(col, !isColumnHidden(col));
-    spec = city_report_specs + col;
-    spec->show = !spec->show;
+    spec = city_report_specs[col];
+    spec.show = !spec.show;
     if (!isColumnHidden(col) && columnWidth(col) <= 5) {
       setColumnWidth(col, 100);
     }

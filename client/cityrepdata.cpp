@@ -790,7 +790,7 @@ static const struct city_report_spec base_city_report_specs[] = {
     {true, 0, 1, N_("Currently Building"), N_("?Stock/Target:(Have/Need)"),
      N_("Currently Building"), nullptr, FUNC_TAG(building)}};
 
-struct city_report_spec *city_report_specs;
+std::vector<city_report_spec> city_report_specs;
 static int num_creport_cols;
 
 /**
@@ -828,8 +828,7 @@ void init_city_report_game_data()
 
   num_creport_cols =
       ARRAY_SIZE(base_city_report_specs) + specialist_count() + 1;
-  city_report_specs = static_cast<city_report_spec *>(fc_realloc(
-      city_report_specs, num_creport_cols * sizeof(*city_report_specs)));
+  city_report_specs = std::vector<city_report_spec>(num_creport_cols);
   p = &city_report_specs[0];
 
   fc_snprintf(sp_explanations, sizeof(sp_explanations), "%s",
