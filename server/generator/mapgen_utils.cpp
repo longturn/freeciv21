@@ -233,20 +233,16 @@ void smooth_int_map(int *int_map, bool zeroes_at_edges)
  * The _sizes arrays give the sizes (in tiles) of each continent and
  * ocean.
  */
-static Continent_id *lake_surrounders = nullptr;
-static int *continent_sizes = nullptr;
-static int *ocean_sizes = nullptr;
+std::vector<Continent_id> lake_surrounders;
+std::vector<int> continent_sizes;
+std::vector<int> ocean_sizes;
 
 /**
    Calculate lake_surrounders[] array
  */
 static void recalculate_lake_surrounders()
 {
-  const size_t size = (wld.map.num_oceans + 1) * sizeof(*lake_surrounders);
-
-  lake_surrounders =
-      static_cast<Continent_id *>(fc_realloc(lake_surrounders, size));
-  memset(lake_surrounders, 0, size);
+  lake_surrounders = std::vector<Continent_id>(wld.map.num_oceans + 1, 0);
 
   whole_map_iterate(&(wld.map), ptile)
   {
@@ -476,15 +472,12 @@ void assign_continent_numbers()
 
     if (terrain_type_terrain_class(pterrain) != TC_OCEAN) {
       wld.map.num_continents++;
-      continent_sizes = static_cast<int *>(
-          fc_realloc(continent_sizes, (wld.map.num_continents + 1)
-                                          * sizeof(*continent_sizes)));
+      continent_sizes = std::vector<int>(wld.map.num_continents + 1);
       continent_sizes[wld.map.num_continents] = 0;
       assign_continent_flood(ptile, true, wld.map.num_continents);
     } else {
       wld.map.num_oceans++;
-      ocean_sizes = static_cast<int *>(fc_realloc(
-          ocean_sizes, (wld.map.num_oceans + 1) * sizeof(*ocean_sizes)));
+      ocean_sizes = std::vector<int>(wld.map.num_oceans + 1);
       ocean_sizes[wld.map.num_oceans] = 0;
       assign_continent_flood(ptile, false, -wld.map.num_oceans);
     }
@@ -678,18 +671,9 @@ void smooth_water_depth()
  */
 void generator_free()
 {
-  if (lake_surrounders != nullptr) {
-    free(lake_surrounders);
-    lake_surrounders = nullptr;
-  }
-  if (continent_sizes != nullptr) {
-    free(continent_sizes);
-    continent_sizes = nullptr;
-  }
-  if (ocean_sizes != nullptr) {
-    free(ocean_sizes);
-    ocean_sizes = nullptr;
-  }
+  lake_surrounders.clear();
+  continent_sizes.clear();
+  ocean_sizes.clear();
 }
 
 /**
