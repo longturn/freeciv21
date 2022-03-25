@@ -219,7 +219,7 @@ bool city_model::setData(const QModelIndex &index, const QVariant &value,
 QVariant city_model::headerData(int section, Qt::Orientation orientation,
                                 int role) const
 {
-  struct city_report_spec spec = city_report_specs[section];
+  const auto &spec = city_report_specs[section];
 
   if (orientation == Qt::Horizontal && section < NUM_CREPORT_COLS) {
     if (role == Qt::DisplayRole) {
