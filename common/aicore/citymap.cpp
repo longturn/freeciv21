@@ -12,7 +12,6 @@
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
 #endif
-
 #include <cstdio>
 #include <cstring>
 
@@ -47,7 +46,7 @@
  * which has a negative value.
  */
 
-static int *citymap = nullptr;
+std::vector<int> citymap;
 
 #define log_citymap log_debug
 
@@ -60,9 +59,8 @@ void citymap_turn_init(struct player *pplayer)
   /* The citymap is reinitialized at the start of ever turn.  This includes
    * a call to realloc, which only really matters if this is the first turn
    * of the game (but it's easier than a separate function to do this). */
-  citymap = static_cast<int *>(
-      fc_realloc(citymap, MAP_INDEX_SIZE * sizeof(*citymap)));
-  memset(citymap, 0, MAP_INDEX_SIZE * sizeof(*citymap));
+  citymap.clear();
+  citymap = std::vector<int>(MAP_INDEX_SIZE, 0);
 
   players_iterate(pother)
   {
@@ -111,12 +109,7 @@ void citymap_turn_init(struct player *pplayer)
 /**
    Free resources allocated for citymap.
  */
-void citymap_free()
-{
-  if (citymap != nullptr) {
-    FC_FREE(citymap);
-  }
-}
+void citymap_free() { citymap.clear(); }
 
 /**
    This function reserves a single tile for a (possibly virtual) city with
@@ -190,7 +183,8 @@ int citymap_read(struct tile *ptile) { return citymap[tile_index(ptile)]; }
  */
 bool citymap_is_reserved(struct tile *ptile)
 {
-  if (nullptr != tile_worked(ptile) /*|| tile_city(ptile)*/) {
+  if (nullptr != tile_worked(ptile)
+      || citymap.empty() /*|| tile_city(ptile)*/) {
     return true;
   }
   return (citymap[tile_index(ptile)] < 0);
