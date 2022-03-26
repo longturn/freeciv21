@@ -70,6 +70,7 @@
 
 #include "aitools.h"
 
+class Pf_path;
 /**
    Return the (untranslated) rule name of the ai_unit_task.
    You don't have to free the return pointer.
@@ -325,7 +326,7 @@ struct tile *immediate_destination(struct unit *punit,
       && utype_fuel(unit_type_get(punit))) {
     struct pf_parameter parameter;
     struct pf_map *pfm;
-    struct pf_path *path;
+    Pf_path *path;
     size_t i;
     struct player *pplayer = unit_owner(punit);
 
@@ -367,7 +368,7 @@ struct tile *immediate_destination(struct unit *punit,
 /**
    Log the cost of travelling a path.
  */
-void dai_log_path(struct unit *punit, struct pf_path *path,
+void dai_log_path(struct unit *punit, Pf_path *path,
                   struct pf_parameter *parameter)
 {
   const struct pf_position *last = pf_path_last_position(path);
@@ -395,7 +396,7 @@ bool dai_unit_goto_constrained(struct ai_type *ait, struct unit *punit,
 {
   bool alive = true;
   struct pf_map *pfm;
-  struct pf_path *path;
+  Pf_path *path;
 
   UNIT_LOG(LOG_DEBUG, punit, "constrained goto to %d,%d", TILE_XY(ptile));
 
@@ -939,8 +940,7 @@ bool dai_unit_attack(struct ai_type *ait, struct unit *punit,
    Ai unit moving function called from AI interface.
  */
 void dai_unit_move_or_attack(struct ai_type *ait, struct unit *punit,
-                             struct tile *ptile, struct pf_path *path,
-                             int step)
+                             struct tile *ptile, Pf_path *path, int step)
 {
   if (step == path->length - 1) {
     (void) dai_unit_attack(ait, punit, ptile);

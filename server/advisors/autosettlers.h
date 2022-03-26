@@ -19,7 +19,7 @@
 void auto_settlers_ruleset_init();
 
 struct settlermap;
-struct pf_path;
+class Pf_path;
 
 void adv_settlers_free();
 
@@ -30,7 +30,7 @@ void auto_settler_findwork(struct player *pplayer, struct unit *punit,
 
 bool auto_settler_setup_work(struct player *pplayer, struct unit *punit,
                              struct settlermap *state, int recursion,
-                             struct pf_path *path, struct tile *best_tile,
+                             Pf_path *path, struct tile *best_tile,
                              enum unit_activity best_act,
                              struct extra_type **best_target,
                              int completion_time);
@@ -39,12 +39,12 @@ adv_want settler_evaluate_improvements(struct unit *punit,
                                        enum unit_activity *best_act,
                                        struct extra_type **best_target,
                                        struct tile **best_tile,
-                                       struct pf_path **path,
+                                       Pf_path **path,
                                        struct settlermap *state);
 
 struct city *settler_evaluate_city_requests(struct unit *punit,
                                             struct worker_task **best_task,
-                                            struct pf_path **path,
+                                            Pf_path **path,
                                             struct settlermap *state);
 
 void adv_unit_new_task(struct unit *punit, enum adv_unit_task task,

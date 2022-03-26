@@ -495,7 +495,7 @@ bool is_boss_of_boat(struct ai_type *ait, struct unit *punit)
    combined_land_sea_move), the path won't lead onto the boat itself.
  */
 int aiferry_find_boat(struct ai_type *ait, struct unit *punit, int cap,
-                      struct pf_path **path)
+                      Pf_path **path)
 {
   int best_turns = FC_INFINITY;
   int best_id = 0;
@@ -650,7 +650,7 @@ bool dai_amphibious_goto_constrained(struct ai_type *ait, struct unit *ferry,
   bool alive = true;
   struct player *pplayer = unit_owner(passenger);
   struct pf_map *pfm;
-  struct pf_path *path;
+  Pf_path *path;
   int pass_id = passenger->id;
 
   fc_assert_ret_val(is_ai(pplayer), true);
@@ -784,7 +784,7 @@ bool aiferry_gobyboat(struct ai_type *ait, struct player *pplayer,
              TILE_XY(dest_tile));
 
     if (!is_terrain_class_near_tile(unit_tile(punit), TC_OCEAN)) {
-      struct pf_path *path_to_ferry = nullptr;
+      Pf_path *path_to_ferry = nullptr;
 
       boatid = aiferry_find_boat(ait, punit, cap, &path_to_ferry);
       if (boatid <= 0) {

@@ -18,7 +18,7 @@
 #include "unittype.h"
 
 struct pf_map;
-struct pf_path;
+class Pf_path;
 
 struct section_file;
 
@@ -112,7 +112,7 @@ bool find_beachhead(const struct player *pplayer, struct pf_map *ferry_map,
                     struct tile **ferry_dest, struct tile **beachhead_tile);
 int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
                            struct unit *punit, struct tile **pdest_tile,
-                           struct pf_path **ppath, struct pf_map **pferrymap,
+                           Pf_path **ppath, struct pf_map **pferrymap,
                            struct unit **pferryboat,
                            const struct unit_type **pboattype,
                            int *pmove_time);

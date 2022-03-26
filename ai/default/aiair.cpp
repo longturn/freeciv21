@@ -48,6 +48,7 @@
 
 #include "aiair.h"
 
+class Pf_path;
 /**
    Looks for nearest airbase for punit reachable imediatly.
    Returns nullptr if not found.  The path is stored in the path
@@ -56,7 +57,7 @@
          IMO should be less restrictive than general H_MAP, H_FOG
  */
 static struct tile *find_nearest_airbase(const struct unit *punit,
-                                         struct pf_path **path)
+                                         Pf_path **path)
 {
   struct player *pplayer = unit_owner(punit);
   struct pf_parameter parameter;
@@ -202,8 +203,7 @@ static int dai_evaluate_tile_for_air_attack(struct unit *punit,
          IMO should be more restrictive than general H_MAP, H_FOG
  */
 static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
-                                  struct pf_path **path,
-                                  struct tile **pptile)
+                                  Pf_path **path, struct tile **pptile)
 {
   struct player *pplayer = unit_owner(punit);
   struct pf_parameter parameter;
@@ -268,7 +268,7 @@ static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
  */
 static struct tile *dai_find_strategic_airbase(struct ai_type *ait,
                                                const struct unit *punit,
-                                               struct pf_path **path)
+                                               Pf_path **path)
 {
   struct player *pplayer = unit_owner(punit);
   struct pf_parameter parameter;
@@ -349,7 +349,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
   int id = punit->id;
   struct pf_parameter parameter;
   struct pf_map *pfm;
-  struct pf_path *path;
+  Pf_path *path;
 
   CHECK_UNIT(punit);
   pft_fill_unit_parameter(&parameter, punit);

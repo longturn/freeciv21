@@ -44,8 +44,7 @@ static bool adv_unit_move(struct unit *punit, struct tile *ptile);
    or assigned destination
    Return FALSE iff we died.
  */
-bool adv_follow_path(struct unit *punit, struct pf_path *path,
-                     struct tile *ptile)
+bool adv_follow_path(struct unit *punit, Pf_path *path, struct tile *ptile)
 {
   struct tile *old_tile = punit->goto_tile;
   enum unit_activity activity = punit->activity;
@@ -79,7 +78,7 @@ bool adv_follow_path(struct unit *punit, struct pf_path *path,
    Brings our bodyguard along.
    Returns FALSE only if died.
  */
-bool adv_unit_execute_path(struct unit *punit, struct pf_path *path)
+bool adv_unit_execute_path(struct unit *punit, Pf_path *path)
 {
   const bool is_plr_ai = is_ai(unit_owner(punit));
   int i;
