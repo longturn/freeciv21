@@ -75,7 +75,7 @@ QPushButton:hover[main_pagebt="true"] {
   border: 3px solid #fbff00;
 }
 
-QPushButton {
+QPushButton, QToolButton {
   color: white;
   background: black;
   border: 1px solid #6a6a00;
@@ -83,14 +83,14 @@ QPushButton {
   padding: 0px;
 }
 
-
-QPushButton:hover {
+QPushButton:hover, QToolButton:hover,
+QPushButton:checked, QToolButton:checked {
   color: white;
   background: black;
   border: 2px solid #fbff00;
 }
 
-QPushButton:disabled {
+QPushButton:disabled, QToolButton:disabled {
   background: #696969;
   border: 2px solid #164471;
 }
