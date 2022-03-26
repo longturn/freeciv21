@@ -44,6 +44,8 @@
 // Logging category for goto
 Q_LOGGING_CATEGORY(goto_category, "freeciv.goto")
 
+class Pf_path;
+
 static bool goto_warned = false;
 
 // Indexed by unit id
@@ -495,7 +497,7 @@ void request_orders_cleared(struct unit *punit)
 /**
    Creates orders for a path as a goto or patrol route.
  */
-static void make_path_orders(struct unit *punit, struct pf_path *path,
+static void make_path_orders(struct unit *punit, Pf_path *path,
                              enum unit_orders orders,
                              struct unit_order *final_order,
                              struct unit_order *order_list, int *length,
@@ -587,9 +589,8 @@ static void make_path_orders(struct unit *punit, struct pf_path *path,
 /**
    Send a path as a goto or patrol route to the server.
  */
-static void send_path_orders(struct unit *punit, struct pf_path *path,
-                             bool repeat, bool vigilant,
-                             enum unit_orders orders,
+static void send_path_orders(struct unit *punit, Pf_path *path, bool repeat,
+                             bool vigilant, enum unit_orders orders,
                              struct unit_order *final_order)
 {
   struct packet_unit_orders p;
@@ -619,7 +620,7 @@ static void send_path_orders(struct unit *punit, struct pf_path *path,
    Send a path as a goto or patrol rally orders to the server.
  */
 static void send_rally_path_orders(struct city *pcity, struct unit *punit,
-                                   struct pf_path *path, bool vigilant,
+                                   Pf_path *path, bool vigilant,
                                    enum unit_orders orders,
                                    struct unit_order *final_order)
 {
@@ -641,7 +642,7 @@ static void send_rally_path_orders(struct city *pcity, struct unit *punit,
 /**
    Send an arbitrary goto path for the unit to the server.
  */
-void send_goto_path(struct unit *punit, struct pf_path *path,
+void send_goto_path(struct unit *punit, Pf_path *path,
                     struct unit_order *final_order)
 {
   send_path_orders(punit, path, false, false, ORDER_MOVE, final_order);
@@ -650,8 +651,8 @@ void send_goto_path(struct unit *punit, struct pf_path *path,
 /**
    Send an arbitrary rally path for the city to the server.
  */
-void send_rally_path(struct city *pcity, struct unit *punit,
-                     struct pf_path *path, struct unit_order *final_order)
+void send_rally_path(struct city *pcity, struct unit *punit, Pf_path *path,
+                     struct unit_order *final_order)
 {
   send_rally_path_orders(pcity, punit, path, false, ORDER_MOVE, final_order);
 }
@@ -664,7 +665,7 @@ bool send_goto_tile(struct unit *punit, struct tile *ptile)
 {
   struct pf_parameter parameter;
   struct pf_map *pfm;
-  struct pf_path *path;
+  Pf_path *path;
 
   goto_fill_parameter_base(&parameter, punit);
   pfm = pf_map_new(&parameter);
@@ -691,7 +692,7 @@ bool send_rally_tile(struct city *pcity, struct tile *ptile)
 
   struct pf_parameter parameter;
   struct pf_map *pfm;
-  struct pf_path *path;
+  Pf_path *path;
 
   fc_assert_ret_val(pcity != nullptr, false);
   fc_assert_ret_val(ptile != nullptr, false);
@@ -732,7 +733,7 @@ bool send_attack_tile(struct unit *punit, struct tile *ptile)
 {
   struct pf_parameter parameter;
   struct pf_map *pfm;
-  struct pf_path *path;
+  Pf_path *path;
 
   goto_fill_parameter_base(&parameter, punit);
   parameter.move_rate = 0;
@@ -819,7 +820,7 @@ struct tile *tile_before_end_path(struct unit *punit, struct tile *ptile)
   struct pf_parameter parameter;
   struct pf_map *pfm;
   struct tile *dtile;
-  struct pf_path *path;
+  Pf_path *path;
 
   goto_fill_parameter_base(&parameter, punit);
   parameter.move_rate = 0;

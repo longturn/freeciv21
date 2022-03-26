@@ -39,6 +39,7 @@
 
 #include "classicai.h"
 
+class Pf_path;
 /* This function is only needed as symbol in module. Nevertheless
    gcc requires that there is prior prototype. */
 const char *fc_ai_classic_capstr();
@@ -349,7 +350,7 @@ static void cai_unit_turn_end(struct unit *punit)
    Call default ai with classic ai type as parameter.
  */
 static void cai_unit_move_or_attack(struct unit *punit, struct tile *ptile,
-                                    struct pf_path *path, int step)
+                                    Pf_path *path, int step)
 {
   struct ai_type *deftype = classic_ai_get_self();
 

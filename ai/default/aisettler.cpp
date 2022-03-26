@@ -114,6 +114,8 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
  * This is % of defense % to increase want by. */
 #define DEFENSE_EMPHASIS 20
 
+class Pf_path;
+
 struct tile_data_cache {
   char food;   // food output of the tile
   char trade;  // trade output of the tile
@@ -1010,7 +1012,7 @@ void dai_auto_settler_run(struct ai_type *ait, struct player *pplayer,
   enum unit_activity best_act;
   struct extra_type *best_target;
   struct tile *best_tile = nullptr;
-  struct pf_path *path = nullptr;
+  Pf_path *path = nullptr;
   struct city *pcity = nullptr;
 
   // time it will take worker to complete its given task

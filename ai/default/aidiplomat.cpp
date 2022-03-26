@@ -77,6 +77,8 @@
  * previously used one. This is important for diplomacy. - Per */
 #define DIPLO_DEFENSE_WANT 3000
 
+class Pf_path;
+
 static bool is_city_surrounded_by_our_spies(struct player *pplayer,
                                             struct city *pcity);
 
@@ -649,7 +651,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
     // Found someone!
     {
       struct tile *bribee_tile;
-      struct pf_path *path;
+      Pf_path *path;
 
       bribee_tile =
           mapstep(&(wld.map), pos.tile,
@@ -836,7 +838,7 @@ void dai_manage_diplomat(struct ai_type *ait, struct player *pplayer,
 
   // GOTO unless we want to stay
   if (!same_pos(unit_tile(punit), ctarget->tile)) {
-    struct pf_path *path;
+    Pf_path *path;
 
     path = pf_map_path(pfm, punit->goto_tile);
     if (path && adv_unit_execute_path(punit, path)

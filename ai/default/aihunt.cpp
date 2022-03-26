@@ -55,6 +55,8 @@
 
 #include "aihunt.h"
 
+class Pf_path;
+
 /**
    We don't need a hunter in this city if we already have one. Return
    existing hunter if any.
@@ -487,7 +489,7 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
       struct player *aplayer = unit_owner(target);
       int dist1, dist2, stackthreat = 0, stackcost = 0;
       int sanity_target = target->id;
-      struct pf_path *path;
+      Pf_path *path;
       struct unit_ai *target_data;
 
       // Note that we need not (yet) be at war with aplayer
