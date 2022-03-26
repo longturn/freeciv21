@@ -366,12 +366,12 @@ void top_bar_widget::someSlot()
  */
 top_bar::top_bar()
 {
-  setAttribute(Qt::WA_OpaquePaintEvent, true);
   layout = new QHBoxLayout;
   layout->setContentsMargins(0, 0, 0, 0);
   layout->setSpacing(0);
   setLayout(layout);
   setProperty("top_bar", true);
+  setAutoFillBackground(true);
 }
 
 /**
