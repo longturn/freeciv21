@@ -28,6 +28,8 @@ author = 'Freeciv and Freeciv21 contributors'
 version = ''
 # The full version, including alpha/beta/rc tags
 release = ''
+# Adjust the title
+html_title = 'Freeciv21 Manual'
 
 
 # -- General configuration ---------------------------------------------------
