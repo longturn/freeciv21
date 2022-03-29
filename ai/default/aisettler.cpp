@@ -1012,7 +1012,7 @@ void dai_auto_settler_run(struct ai_type *ait, struct player *pplayer,
   enum unit_activity best_act;
   struct extra_type *best_target;
   struct tile *best_tile = nullptr;
-  Pf_path *path = nullptr;
+  Pf_path path;
   struct city *pcity = nullptr;
 
   // time it will take worker to complete its given task
@@ -1075,8 +1075,8 @@ BUILD_CITY:
     pcity = settler_evaluate_city_requests(punit, &best_task, &path, state);
 
     if (pcity != nullptr) {
-      if (path != nullptr) {
-        completion_time = pf_path_last_position(path)->turn;
+      if (!path.empty()) {
+        completion_time = path[-1].turn;
         best_impr = 1;
         best_act = best_task->act;
         best_target = best_task->tgt;
@@ -1089,8 +1089,8 @@ BUILD_CITY:
     if (pcity == nullptr) {
       best_impr = settler_evaluate_improvements(
           punit, &best_act, &best_target, &best_tile, &path, state);
-      if (path) {
-        completion_time = pf_path_last_position(path)->turn;
+      if (path.empty()) {
+        completion_time = path[-1].turn;
       }
     }
     UNIT_LOG(LOG_DEBUG, punit, "impr want " ADV_WANT_PRINTF, best_impr);
@@ -1129,8 +1129,7 @@ BUILD_CITY:
       cityresult_destroy(result);
 
       /*** Go back to and found a city ***/
-      pf_path_destroy(path);
-      path = nullptr;
+      path = Pf_path();
       goto BUILD_CITY;
     } else if (best_impr > 0) {
       UNIT_LOG(LOG_DEBUG, punit, "improves terrain instead of founding");
@@ -1145,24 +1144,18 @@ BUILD_CITY:
       UNIT_LOG(LOG_DEBUG, punit, "cannot find work");
       fc_assert(result == nullptr);
       dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
-      goto CLEANUP;
+      return;
     }
   } else {
     // We are a worker or engineer
     adv_unit_new_task(punit, AUT_AUTO_SETTLER, best_tile);
   }
 
-  if (auto_settler_setup_work(pplayer, punit, state, 0, path, best_tile,
+  if (auto_settler_setup_work(pplayer, punit, state, 0, &path, best_tile,
                               best_act, &best_target, completion_time)) {
     if (pcity != nullptr) {
       clear_worker_tasks(pcity);
     }
-  }
-
-CLEANUP:
-
-  if (nullptr != path) {
-    pf_path_destroy(path);
   }
 }
 

@@ -539,7 +539,7 @@ void player_restore_units(struct player *pplayer)
             }
 
             if (is_airunit_refuel_point(ptile, pplayer, punit)) {
-              Pf_path *path;
+              Pf_path path;
               int id = punit->id;
 
               /* Client orders may be running for this unit - if so
@@ -579,7 +579,6 @@ void player_restore_units(struct player *pplayer)
                     pplayer, unit_tile(punit), E_UNIT_ORDERS, ftc_server,
                     _("Your %s has returned to refuel."), unit_link(punit));
               }
-              pf_path_destroy(path);
               break;
             }
           }

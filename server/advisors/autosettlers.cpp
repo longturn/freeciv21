@@ -431,7 +431,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
                                        enum unit_activity *best_act,
                                        struct extra_type **best_target,
                                        struct tile **best_tile,
-                                       Pf_path **path,
+                                       Pf_path *path,
                                        struct settlermap *state)
 {
   const struct player *pplayer = unit_owner(punit);
@@ -788,7 +788,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
   }
 
   if (path) {
-    *path = *best_tile ? pf_map_path(pfm, *best_tile) : nullptr;
+    *path = *best_tile ? pf_map_path(pfm, *best_tile) : Pf_path();
   }
 
   pf_map_destroy(pfm);
@@ -801,7 +801,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
  */
 struct city *settler_evaluate_city_requests(struct unit *punit,
                                             struct worker_task **best_task,
-                                            Pf_path **path,
+                                            Pf_path *path,
                                             struct settlermap *state)
 {
   const struct player *pplayer = unit_owner(punit);
@@ -881,8 +881,8 @@ struct city *settler_evaluate_city_requests(struct unit *punit,
 
   *best_task = best;
 
-  if (path != nullptr) {
-    *path = best ? pf_map_path(pfm, best->ptile) : nullptr;
+  if (!path->empty()) {
+    *path = best ? pf_map_path(pfm, best->ptile) : Pf_path();
   }
 
   pf_map_destroy(pfm);
@@ -900,7 +900,7 @@ void auto_settler_findwork(struct player *pplayer, struct unit *punit,
   enum unit_activity best_act;
   struct tile *best_tile = nullptr;
   struct extra_type *best_target;
-  Pf_path *path = nullptr;
+  Pf_path path;
   struct city *taskcity;
 
   // time it will take worker to complete its given task
@@ -925,22 +925,18 @@ void auto_settler_findwork(struct player *pplayer, struct unit *punit,
   taskcity = settler_evaluate_city_requests(punit, &best_task, &path, state);
 
   if (taskcity != nullptr) {
-    if (path != nullptr) {
-      completion_time = pf_path_last_position(path)->turn;
+    if (!path.empty()) {
+      completion_time = path[-1].turn;
     }
 
     adv_unit_new_task(punit, AUT_AUTO_SETTLER, best_tile);
 
     best_target = best_task->tgt;
 
-    if (auto_settler_setup_work(pplayer, punit, state, recursion, path,
+    if (auto_settler_setup_work(pplayer, punit, state, recursion, &path,
                                 best_task->ptile, best_task->act,
                                 &best_target, completion_time)) {
       clear_worker_task(taskcity, best_task);
-    }
-
-    if (path != nullptr) {
-      pf_path_destroy(path);
     }
 
     return;
@@ -952,20 +948,16 @@ void auto_settler_findwork(struct player *pplayer, struct unit *punit,
     TIMING_LOG(AIT_WORKERS, TIMER_START);
     settler_evaluate_improvements(punit, &best_act, &best_target, &best_tile,
                                   &path, state);
-    if (path) {
-      completion_time = pf_path_last_position(path)->turn;
+    if (!path.empty()) {
+      completion_time = path[-1].turn;
     }
     TIMING_LOG(AIT_WORKERS, TIMER_STOP);
 
     adv_unit_new_task(punit, AUT_AUTO_SETTLER, best_tile);
 
-    auto_settler_setup_work(pplayer, punit, state, recursion, path,
+    auto_settler_setup_work(pplayer, punit, state, recursion, &path,
                             best_tile, best_act, &best_target,
                             completion_time);
-
-    if (nullptr != path) {
-      pf_path_destroy(path);
-    }
   }
 }
 
@@ -1050,19 +1042,19 @@ bool auto_settler_setup_work(struct player *pplayer, struct unit *punit,
                                          : "-",
              TILE_XY(best_tile));
 
-    if (!path) {
+    if (!path->empty()) {
       pft_fill_unit_parameter(&parameter, punit);
       parameter.omniscience = !has_handicap(pplayer, H_MAP);
       parameter.get_TB = autosettler_tile_behavior;
       pfm = pf_map_new(&parameter);
-      path = pf_map_path(pfm, best_tile);
+      *path = pf_map_path(pfm, best_tile);
     }
 
-    if (path) {
+    if (!path->empty()) {
       bool alive;
 
-      alive = adv_follow_path(punit, path, best_tile);
-
+      alive = adv_follow_path(punit, *path, best_tile);
+      *path = Pf_path(); // Done moving have an empty path
       if (alive && same_pos(unit_tile(punit), best_tile)
           && punit->moves_left > 0) {
         // Reached destination and can start working immediately
