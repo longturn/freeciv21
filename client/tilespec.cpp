@@ -2991,9 +2991,10 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
       tileset_error(t, LOG_FATAL, _("Sprite tx.darkness missing."));
     }
     for (i = 0; i < 4; i++) {
-      t->darkness_layer->set_sprite(i, *crop_sprite(darkness, offsets[i][0],
-                                                    offsets[i][1], ntw / 2,
-                                                    nth / 2, nullptr, 0, 0));
+      const auto sprite = std::unique_ptr<QPixmap>(
+          crop_sprite(darkness, offsets[i][0], offsets[i][1], ntw / 2,
+                      nth / 2, nullptr, 0, 0));
+      t->darkness_layer->set_sprite(i, *sprite);
     }
   } break;
   case freeciv::DARKNESS_CARD_SINGLE:
