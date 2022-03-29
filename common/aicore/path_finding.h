@@ -317,10 +317,28 @@ struct pf_position {
 
 // Full specification of a path.
 class Pf_path {
+  std::vector<pf_position> positions;
+
 public:
-  int length; // Number of steps in the path
-  struct pf_position *positions;
+  Pf_path();
+  Pf_path(int size);
+  Pf_path(const Pf_path &obj);
+  Pf_path(const struct pf_parameter *param);
+  int length() const;
+  void add_pos(pf_position pos);
+  virtual ~Pf_path();
+  bool empty() const;
+  bool pf_path_advance(struct tile *ptile);
+  bool pf_path_backtrack(struct tile *ptile);
+  pf_position &operator[](int i);
+  pf_position operator[](int i) const;
 };
+// Paths functions.
+void pf_path_destroy(Pf_path *path);
+Pf_path pf_path_concat(Pf_path *dest_path, const Pf_path *src_path);
+bool pf_path_backtrack(Pf_path *path, struct tile *ptile);
+
+QDebug &operator<<(QDebug &logger, const Pf_path &path);
 
 /* Initial data for the path-finding. Normally should use functions
  * from "pf_tools.[ch]" to fill the parameter.
@@ -461,8 +479,8 @@ void pf_map_destroy(struct pf_map *pfm);
 
 // Method A) functions.
 int pf_map_move_cost(struct pf_map *pfm, struct tile *ptile);
-Pf_path *pf_map_path(struct pf_map *pfm,
-                     struct tile *ptile) fc__warn_unused_result;
+Pf_path pf_map_path(struct pf_map *pfm,
+                    struct tile *ptile) fc__warn_unused_result;
 bool pf_map_position(struct pf_map *pfm, struct tile *ptile,
                      struct pf_position *pos) fc__warn_unused_result;
 
@@ -470,20 +488,11 @@ bool pf_map_position(struct pf_map *pfm, struct tile *ptile,
 bool pf_map_iterate(struct pf_map *pfm);
 struct tile *pf_map_iter(struct pf_map *pfm);
 int pf_map_iter_move_cost(struct pf_map *pfm);
-Pf_path *pf_map_iter_path(struct pf_map *pfm) fc__warn_unused_result;
+Pf_path pf_map_iter_path(struct pf_map *pfm) fc__warn_unused_result;
 void pf_map_iter_position(struct pf_map *pfm, struct pf_position *pos);
 
 // Other related functions.
 const struct pf_parameter *pf_map_parameter(const struct pf_map *pfm);
-
-// Paths functions.
-void pf_path_destroy(Pf_path *path);
-Pf_path *pf_path_concat(Pf_path *dest_path, const Pf_path *src_path);
-bool pf_path_advance(Pf_path *path, struct tile *ptile);
-bool pf_path_backtrack(Pf_path *path, struct tile *ptile);
-const struct pf_position *pf_path_last_position(const Pf_path *path);
-
-QDebug &operator<<(QDebug &logger, const Pf_path *path);
 
 // Reverse map functions (Costs to go to start tile).
 struct pf_reverse_map *

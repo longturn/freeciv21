@@ -28,7 +28,7 @@ void aiferry_init_stats(struct ai_type *ait, struct player *pplayer);
  * Find the nearest boat.  Can be called from inside the continents too
  */
 int aiferry_find_boat(struct ai_type *ait, struct unit *punit, int cap,
-                      Pf_path **path);
+                      Pf_path *path);
 
 /*
  * How many boats are available

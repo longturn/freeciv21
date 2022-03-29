@@ -497,7 +497,7 @@ void request_orders_cleared(struct unit *punit)
 /**
    Creates orders for a path as a goto or patrol route.
  */
-static void make_path_orders(struct unit *punit, Pf_path *path,
+static void make_path_orders(struct unit *punit, Pf_path path,
                              enum unit_orders orders,
                              struct unit_order *final_order,
                              struct unit_order *order_list, int *length,
@@ -506,20 +506,20 @@ static void make_path_orders(struct unit *punit, Pf_path *path,
   int i;
   struct tile *old_tile;
 
-  fc_assert_ret(path != nullptr);
-  fc_assert_ret_msg(unit_tile(punit) == path->positions[0].tile,
+  fc_assert_ret(!path.empty());
+  fc_assert_ret_msg(unit_tile(punit) == path[0].tile,
                     "Unit %d has moved without goto cancelation.",
                     punit->id);
   fc_assert_ret(length != nullptr);
 
   // We skip the start position.
-  *length = path->length - 1;
+  *length = path.length() - 1;
   fc_assert(*length < MAX_LEN_ROUTE);
-  old_tile = path->positions[0].tile;
+  old_tile = path[0].tile;
 
   // If the path has n positions it takes n-1 steps.
-  for (i = 0; i < path->length - 1; i++) {
-    struct tile *new_tile = path->positions[i + 1].tile;
+  for (i = 0; i < path.length() - 1; i++) {
+    struct tile *new_tile = path[i + 1].tile;
 
     if (same_pos(new_tile, old_tile)) {
       order_list[i].order = ORDER_FULL_MP;
@@ -589,13 +589,13 @@ static void make_path_orders(struct unit *punit, Pf_path *path,
 /**
    Send a path as a goto or patrol route to the server.
  */
-static void send_path_orders(struct unit *punit, Pf_path *path, bool repeat,
+static void send_path_orders(struct unit *punit, Pf_path path, bool repeat,
                              bool vigilant, enum unit_orders orders,
                              struct unit_order *final_order)
 {
   struct packet_unit_orders p;
 
-  if (path->length == 1 && final_order == nullptr) {
+  if (path.length() == 1 && final_order == nullptr) {
     return; // No path at all, no need to spam the server.
   }
 
@@ -620,7 +620,7 @@ static void send_path_orders(struct unit *punit, Pf_path *path, bool repeat,
    Send a path as a goto or patrol rally orders to the server.
  */
 static void send_rally_path_orders(struct city *pcity, struct unit *punit,
-                                   Pf_path *path, bool vigilant,
+                                   Pf_path path, bool vigilant,
                                    enum unit_orders orders,
                                    struct unit_order *final_order)
 {
@@ -642,7 +642,7 @@ static void send_rally_path_orders(struct city *pcity, struct unit *punit,
 /**
    Send an arbitrary goto path for the unit to the server.
  */
-void send_goto_path(struct unit *punit, Pf_path *path,
+void send_goto_path(struct unit *punit, Pf_path path,
                     struct unit_order *final_order)
 {
   send_path_orders(punit, path, false, false, ORDER_MOVE, final_order);
@@ -651,7 +651,7 @@ void send_goto_path(struct unit *punit, Pf_path *path,
 /**
    Send an arbitrary rally path for the city to the server.
  */
-void send_rally_path(struct city *pcity, struct unit *punit, Pf_path *path,
+void send_rally_path(struct city *pcity, struct unit *punit, Pf_path path,
                      struct unit_order *final_order)
 {
   send_rally_path_orders(pcity, punit, path, false, ORDER_MOVE, final_order);
@@ -665,16 +665,14 @@ bool send_goto_tile(struct unit *punit, struct tile *ptile)
 {
   struct pf_parameter parameter;
   struct pf_map *pfm;
-  Pf_path *path;
 
   goto_fill_parameter_base(&parameter, punit);
   pfm = pf_map_new(&parameter);
-  path = pf_map_path(pfm, ptile);
+  auto path = pf_map_path(pfm, ptile);
   pf_map_destroy(pfm);
 
-  if (path) {
+  if (!path.empty()) {
     send_goto_path(punit, path, nullptr);
-    pf_path_destroy(path);
     return true;
   } else {
     return false;
@@ -692,7 +690,6 @@ bool send_rally_tile(struct city *pcity, struct tile *ptile)
 
   struct pf_parameter parameter;
   struct pf_map *pfm;
-  Pf_path *path;
 
   fc_assert_ret_val(pcity != nullptr, false);
   fc_assert_ret_val(ptile != nullptr, false);
@@ -710,14 +707,13 @@ bool send_rally_tile(struct city *pcity, struct tile *ptile)
   // Use the unit to find a path to the destination tile.
   goto_fill_parameter_base(&parameter, punit);
   pfm = pf_map_new(&parameter);
-  path = pf_map_path(pfm, ptile);
+  auto path = pf_map_path(pfm, ptile);
   pf_map_destroy(pfm);
 
-  if (path) {
+  if (!path.empty()) {
     // Send orders to server.
     send_rally_path(pcity, punit, path, nullptr);
     unit_virtual_destroy(punit);
-    pf_path_destroy(path);
     return true;
   } else {
     unit_virtual_destroy(punit);
@@ -733,19 +729,17 @@ bool send_attack_tile(struct unit *punit, struct tile *ptile)
 {
   struct pf_parameter parameter;
   struct pf_map *pfm;
-  Pf_path *path;
 
   goto_fill_parameter_base(&parameter, punit);
   parameter.move_rate = 0;
   parameter.is_pos_dangerous = nullptr;
   parameter.get_moves_left_req = nullptr;
   pfm = pf_map_new(&parameter);
-  path = pf_map_path(pfm, ptile);
+  auto path = pf_map_path(pfm, ptile);
   pf_map_destroy(pfm);
 
-  if (path) {
+  if (!path.empty()) {
     send_path_orders(punit, path, false, false, ORDER_ACTION_MOVE, nullptr);
-    pf_path_destroy(path);
     return true;
   }
   return false;
@@ -820,21 +814,20 @@ struct tile *tile_before_end_path(struct unit *punit, struct tile *ptile)
   struct pf_parameter parameter;
   struct pf_map *pfm;
   struct tile *dtile;
-  Pf_path *path;
 
   goto_fill_parameter_base(&parameter, punit);
   parameter.move_rate = 0;
   parameter.is_pos_dangerous = nullptr;
   parameter.get_moves_left_req = nullptr;
   pfm = pf_map_new(&parameter);
-  path = pf_map_path(pfm, ptile);
-  if (path == nullptr) {
+  auto path = pf_map_path(pfm, ptile);
+  if (path.empty()) {
     return nullptr;
   }
-  if (path->length < 2) {
+  if (path.length() < 2) {
     dtile = nullptr;
   } else {
-    dtile = path->positions[path->length - 2].tile;
+    dtile = path[-2].tile;
   }
   pf_map_destroy(pfm);
 

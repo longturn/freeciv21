@@ -495,7 +495,7 @@ bool is_boss_of_boat(struct ai_type *ait, struct unit *punit)
    combined_land_sea_move), the path won't lead onto the boat itself.
  */
 int aiferry_find_boat(struct ai_type *ait, struct unit *punit, int cap,
-                      Pf_path **path)
+                      Pf_path *path)
 {
   int best_turns = FC_INFINITY;
   int best_id = 0;
@@ -512,7 +512,7 @@ int aiferry_find_boat(struct ai_type *ait, struct unit *punit, int cap,
    * Don't try to be clever and pass 'fallback' path that will be returned
    * if no path is found. Instead check for nullptr return value and then
    * use fallback path in calling function. */
-  fc_assert_ret_val(path == nullptr || *path == nullptr, 0);
+  fc_assert_ret_val(!path->empty(), 0);
 
   fc_assert_ret_val(0 < ferryboat || FERRY_NONE == ferryboat
                         || FERRY_WANTED == ferryboat,
@@ -565,12 +565,7 @@ int aiferry_find_boat(struct ai_type *ait, struct unit *punit, int cap,
                      "Found a potential boat %s[%d](%d,%d)(moves left: %d)",
                      unit_rule_name(aunit), aunit->id,
                      TILE_XY(unit_tile(aunit)), aunit->moves_left);
-            if (path) {
-              if (*path) {
-                pf_path_destroy(*path);
-              }
               *path = pf_map_iter_path(search_map);
-            }
             best_turns = turns;
             best_id = aunit->id;
           }
@@ -650,7 +645,6 @@ bool dai_amphibious_goto_constrained(struct ai_type *ait, struct unit *ferry,
   bool alive = true;
   struct player *pplayer = unit_owner(passenger);
   struct pf_map *pfm;
-  Pf_path *path;
   int pass_id = passenger->id;
 
   fc_assert_ret_val(is_ai(pplayer), true);
@@ -670,9 +664,9 @@ bool dai_amphibious_goto_constrained(struct ai_type *ait, struct unit *ferry,
   }
 
   pfm = pf_map_new(&parameter->combined);
-  path = pf_map_path(pfm, ptile);
+  auto path = pf_map_path(pfm, ptile);
 
-  if (path) {
+  if (!path.empty()) {
     dai_log_path(passenger, path, &parameter->combined);
     // Sea leg
     alive = adv_follow_path(ferry, path, ptile);
@@ -681,12 +675,12 @@ bool dai_amphibious_goto_constrained(struct ai_type *ait, struct unit *ferry,
        * has run out of movement points */
       struct tile *next_tile;
 
-      if (!pf_path_advance(path, unit_tile(passenger))) {
+      if (!path.pf_path_advance(unit_tile(passenger))) {
         /* Somehow we got thrown away from our route.
          * This can happen if our movement caused alliance breakup. */
         return unit_is_alive(pass_id);
       }
-      next_tile = path->positions[1].tile;
+      next_tile = path[1].tile;
       if (!is_ocean_tile(next_tile)) {
         int ferry_id = ferry->id;
 
@@ -725,7 +719,6 @@ bool dai_amphibious_goto_constrained(struct ai_type *ait, struct unit *ferry,
     UNIT_LOG(LOG_DEBUG, passenger, "no path to destination");
   }
 
-  pf_path_destroy(path);
   pf_map_destroy(pfm);
 
   return alive;
@@ -784,7 +777,7 @@ bool aiferry_gobyboat(struct ai_type *ait, struct player *pplayer,
              TILE_XY(dest_tile));
 
     if (!is_terrain_class_near_tile(unit_tile(punit), TC_OCEAN)) {
-      Pf_path *path_to_ferry = nullptr;
+      Pf_path path_to_ferry;
 
       boatid = aiferry_find_boat(ait, punit, cap, &path_to_ferry);
       if (boatid <= 0) {
@@ -803,10 +796,8 @@ bool aiferry_gobyboat(struct ai_type *ait, struct player *pplayer,
        * It might not lead _onto_ the boat. */
       if (!adv_unit_execute_path(punit, path_to_ferry)) {
         // Died.
-        pf_path_destroy(path_to_ferry);
         return false;
       }
-      pf_path_destroy(path_to_ferry);
     }
 
     if (!is_terrain_class_near_tile(unit_tile(punit), TC_OCEAN)) {

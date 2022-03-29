@@ -208,7 +208,7 @@ struct ai_type {
     void (*unit_turn_end)(struct unit *punit);
 
     // Called for unit owner AI type when advisors goto moves unit.
-    void (*unit_move)(struct unit *punit, struct tile *ptile, Pf_path *path,
+    void (*unit_move)(struct unit *punit, struct tile *ptile, Pf_path path,
                       int step);
 
     // Called for all AI types when ever unit has moved.
