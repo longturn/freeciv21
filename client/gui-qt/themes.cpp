@@ -94,7 +94,7 @@ QPalette load_palette(QSettings &settings)
 /**
    Loads a qt theme directory/theme_name
  */
-void qtg_gui_load_theme(QString &directory, QString &theme_name)
+void gui_load_theme(const QString &directory, const QString &theme_name)
 {
   QString fake_dir;
   QString data_dir;
@@ -184,11 +184,9 @@ QStringList qtg_get_gui_specific_themes_directories(int *count)
    Array size is stored in count.
    The caller is responsible for freeing the array and the names
  */
-QStringList qtg_get_useable_themes_in_directory(QString &directory,
-                                                int *count)
+QStringList get_useable_themes_in_directory(QString &directory)
 {
   QStringList sl, theme_list, array;
-  char *data;
   QByteArray qba;
   QString name;
   QString qtheme_name;
@@ -213,17 +211,5 @@ QStringList qtg_get_useable_themes_in_directory(QString &directory,
     theme_list.removeAll(qtheme_name);
     theme_list.prepend(qtheme_name);
   }
-  *count = theme_list.count();
-
-  for (int i = 0; i < *count; i++) {
-    QByteArray tn_bytes;
-
-    qba = theme_list[i].toLocal8Bit();
-    data = new char[theme_list[i].toLocal8Bit().count() + 1];
-    tn_bytes = theme_list[i].toLocal8Bit();
-    qstrcpy(data, tn_bytes.data());
-    array.append(data);
-  }
-
-  return array;
+  return theme_list;
 }

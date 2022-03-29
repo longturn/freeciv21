@@ -260,14 +260,6 @@ bool request_transport(struct unit *pcargo, struct tile *ptile)
 void update_infra_dialog(void) { funcs.update_infra_dialog(); }
 
 /**
-   Call gui_load_theme callback
- */
-void gui_load_theme(QString &directory, QString &theme_name)
-{
-  funcs.gui_load_theme(directory, theme_name);
-}
-
-/**
    Call gui_clear_theme callback
  */
 void gui_clear_theme(void) { funcs.gui_clear_theme(); }
@@ -278,12 +270,4 @@ void gui_clear_theme(void) { funcs.gui_clear_theme(); }
 QStringList get_gui_specific_themes_directories(int *count)
 {
   return funcs.get_gui_specific_themes_directories(count);
-}
-
-/**
-   Call get_useable_themes_in_directory callback
- */
-QStringList get_useable_themes_in_directory(QString &directory, int *count)
-{
-  return funcs.get_useable_themes_in_directory(directory, count);
 }
