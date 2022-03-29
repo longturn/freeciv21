@@ -48,8 +48,6 @@ struct theme_directory {
   QString path;
   // Array of theme names
   QStringList themes;
-  // Themes array length
-  int num_themes;
 };
 
 // List of all directories with themes
@@ -73,8 +71,8 @@ void init_themes()
     directories[i].path = gui_directories.at(i);
 
     // get useable themes in this directory
-    directories[i].themes = get_useable_themes_in_directory(
-        directories[i].path, &(directories[i].num_themes));
+    directories[i].themes =
+        get_useable_themes_in_directory(directories[i].path);
   }
 }
 
@@ -84,17 +82,17 @@ void init_themes()
 const QVector<QString> *get_themes_list(const struct option *poption)
 {
   if (themes_list->isEmpty()) {
-    int i, j, k;
-
-    for (i = 0; i < num_directories; i++) {
-      for (j = 0; j < directories[i].num_themes; j++) {
-        for (k = 0; k < themes_list->count(); k++) {
-          if (themes_list->at(k) == directories[i].themes.at(j)) {
+    for (int i = 0; i < num_directories; i++) {
+      for (const auto &theme : qAsConst(directories[i].themes)) {
+        bool found = false;
+        for (int k = 0; k < themes_list->count(); k++) {
+          if (themes_list->at(k) == theme) {
+            found = true;
             break;
           }
         }
-        if (k == themes_list->count()) {
-          themes_list->append(directories[i].themes[j]);
+        if (!found) {
+          themes_list->append(theme);
         }
       }
     }
@@ -109,12 +107,10 @@ const QVector<QString> *get_themes_list(const struct option *poption)
  */
 bool load_theme(const QString &theme_name)
 {
-  int i, j;
-
-  for (i = 0; i < num_directories; i++) {
-    for (j = 0; j < directories[i].num_themes; j++) {
-      if (theme_name == directories[i].themes[j]) {
-        gui_load_theme(directories[i].path, directories[i].themes[j]);
+  for (int i = 0; i < num_directories; i++) {
+    for (const auto &theme : directories[i].themes) {
+      if (theme_name == theme) {
+        gui_load_theme(directories[i].path, theme);
         return true;
       }
     }
