@@ -33,15 +33,14 @@ civstatus::civstatus(QWidget *parent) : fcwidget()
   QPixmap pix;
   QRect crop;
   int icon_size;
-  QFontMetrics *fm;
 
   setParent(parent);
   layout = new QHBoxLayout;
   layout->setSizeConstraint(QLayout::SetMinimumSize);
   setProperty("civstatus_bg", true);
   auto f = fcFont::instance()->getFont(fonts::default_font);
-  fm = new QFontMetrics(f);
-  icon_size = fm->height() * 7 / 8;
+  auto fm = QFontMetrics(f);
+  icon_size = fm.height() * 7 / 8;
 
   auto spr = get_tax_sprite(tileset, O_GOLD);
   label = new QLabel();
