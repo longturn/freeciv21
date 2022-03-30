@@ -123,6 +123,7 @@ jobs:
   windows_clang_msvc:
     name: "Windows Clang"
     runs-on: windows-latest
+    needs: clang-format
     strategy:
       matrix:
         architecture: [Win32, x64]
