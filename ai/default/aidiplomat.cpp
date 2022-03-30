@@ -657,7 +657,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
           mapstep(&(wld.map), pos.tile,
                   static_cast<direction8>(DIR_REVERSE(pos.dir_to_here)));
       path = pf_map_path(pfm, bribee_tile);
-      if (!path.empty() || !adv_unit_execute_path(punit, path)
+      if (path.empty() || !adv_unit_execute_path(punit, path)
           || punit->moves_left <= 0) {
         return false;
       }

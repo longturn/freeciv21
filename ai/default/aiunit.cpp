@@ -1295,8 +1295,9 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
 
     if (nullptr == ferryboat) {
       // Try to find new boat
+      auto path = Pf_path();
       ferryboat = player_unit_by_number(
-          pplayer, aiferry_find_boat(ait, punit, 1, nullptr));
+          pplayer, aiferry_find_boat(ait, punit, 1, &path));
     }
 
     if (0 == punit->id && is_terrain_class_near_tile(punit_tile, TC_OCEAN)) {

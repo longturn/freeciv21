@@ -512,7 +512,7 @@ int aiferry_find_boat(struct ai_type *ait, struct unit *punit, int cap,
    * Don't try to be clever and pass 'fallback' path that will be returned
    * if no path is found. Instead check for nullptr return value and then
    * use fallback path in calling function. */
-  fc_assert_ret_val(!path->empty(), 0);
+  fc_assert_ret_val(path->empty(), 0);
 
   fc_assert_ret_val(0 < ferryboat || FERRY_NONE == ferryboat
                         || FERRY_WANTED == ferryboat,
