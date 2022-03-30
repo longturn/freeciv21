@@ -3317,25 +3317,23 @@ bool Pf_path::pf_path_backtrack(struct tile *ptile)
 }
 pf_position &Pf_path::operator[](int i)
 {
-  fc_assert_msg((i < positions.size()), "id %d/%zu", i, positions.size());
-  if (i > positions.size()) {
-  }
   if (i < 0) {
-    fc_assert_msg((-i < positions.size()), "id %d/%zu", i, positions.size());
+    fc_assert_msg((-i <= positions.size()), "id %d/%zu", i,
+                  positions.size());
     return positions[positions.size() + i];
   }
+  fc_assert_msg((i < positions.size()), "id %d/%zu", i, positions.size());
   return positions[i];
 }
 
 const pf_position &Pf_path::operator[](int i) const
 {
-  fc_assert_msg((i < positions.size()), "id %d/%zu", i, positions.size());
-  if (i > positions.size()) {
-  }
   if (i < 0) {
-    fc_assert_msg((-i < positions.size()), "id %d/%zu", i, positions.size());
+    fc_assert_msg((-i <= positions.size()), "id %d/%zu", i,
+                  positions.size());
     return positions[positions.size() + i];
   }
+  fc_assert_msg((i < positions.size()), "id %d/%zu", i, positions.size());
   return positions[i];
 }
 /**

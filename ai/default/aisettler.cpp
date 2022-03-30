@@ -901,7 +901,8 @@ static struct cityresult *find_best_city_placement(struct ai_type *ait,
   // Phase 2: Consider travelling to another continent
 
   if (look_for_boat) {
-    int ferry_id = aiferry_find_boat(ait, punit, 1, nullptr);
+    auto path = Pf_path();
+    int ferry_id = aiferry_find_boat(ait, punit, 1, &path);
 
     ferry = game_unit_by_number(ferry_id);
   }
