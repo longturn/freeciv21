@@ -12,7 +12,7 @@
 
 #include "fc_types.h"
 
-class Pf_path;
+class PFPath;
 struct tile;
 struct unit;
 struct unit_list;
@@ -45,9 +45,9 @@ bool is_valid_goto_destination(const struct tile *ptile);
 bool is_valid_goto_draw_line(struct tile *dest_tile);
 
 void request_orders_cleared(struct unit *punit);
-void send_goto_path(struct unit *punit, Pf_path *path,
+void send_goto_path(struct unit *punit, PFPath *path,
                     struct unit_order *last_order);
-void send_rally_path(city *pcity, unit *punit, Pf_path path,
+void send_rally_path(city *pcity, unit *punit, PFPath path,
                      unit_order *final_order);
 bool send_goto_tile(struct unit *punit, struct tile *ptile);
 bool send_rally_tile(struct city *pcity, struct tile *ptile);

@@ -55,7 +55,7 @@
 
 #include "aihunt.h"
 
-class Pf_path;
+class PFPath;
 
 /**
    We don't need a hunter in this city if we already have one. Return

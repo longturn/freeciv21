@@ -539,7 +539,7 @@ void player_restore_units(struct player *pplayer)
             }
 
             if (is_airunit_refuel_point(ptile, pplayer, punit)) {
-              Pf_path path;
+              PFPath path;
               int id = punit->id;
 
               /* Client orders may be running for this unit - if so

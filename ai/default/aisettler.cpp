@@ -114,7 +114,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
  * This is % of defense % to increase want by. */
 #define DEFENSE_EMPHASIS 20
 
-class Pf_path;
+class PFPath;
 
 struct tile_data_cache {
   char food;   // food output of the tile
@@ -901,7 +901,7 @@ static struct cityresult *find_best_city_placement(struct ai_type *ait,
   // Phase 2: Consider travelling to another continent
 
   if (look_for_boat) {
-    auto path = Pf_path();
+    auto path = PFPath();
     int ferry_id = aiferry_find_boat(ait, punit, 1, &path);
 
     ferry = game_unit_by_number(ferry_id);
@@ -1013,7 +1013,7 @@ void dai_auto_settler_run(struct ai_type *ait, struct player *pplayer,
   enum unit_activity best_act;
   struct extra_type *best_target;
   struct tile *best_tile = nullptr;
-  Pf_path path;
+  PFPath path;
   struct city *pcity = nullptr;
 
   // time it will take worker to complete its given task
@@ -1130,7 +1130,7 @@ BUILD_CITY:
       cityresult_destroy(result);
 
       /*** Go back to and found a city ***/
-      path = Pf_path();
+      path = PFPath();
       goto BUILD_CITY;
     } else if (best_impr > 0) {
       UNIT_LOG(LOG_DEBUG, punit, "improves terrain instead of founding");

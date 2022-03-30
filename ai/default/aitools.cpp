@@ -70,7 +70,7 @@
 
 #include "aitools.h"
 
-class Pf_path;
+class PFPath;
 /**
    Return the (untranslated) rule name of the ai_unit_task.
    You don't have to free the return pointer.
@@ -364,7 +364,7 @@ struct tile *immediate_destination(struct unit *punit,
 /**
    Log the cost of travelling a path.
  */
-void dai_log_path(struct unit *punit, Pf_path path,
+void dai_log_path(struct unit *punit, PFPath path,
                   struct pf_parameter *parameter)
 {
   const struct pf_position last = path[-1];
@@ -934,7 +934,7 @@ bool dai_unit_attack(struct ai_type *ait, struct unit *punit,
    Ai unit moving function called from AI interface.
  */
 void dai_unit_move_or_attack(struct ai_type *ait, struct unit *punit,
-                             struct tile *ptile, Pf_path path, int step)
+                             struct tile *ptile, PFPath path, int step)
 {
   if (step == path.length() - 1) {
     (void) dai_unit_attack(ait, punit, ptile);
