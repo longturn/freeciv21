@@ -124,14 +124,6 @@ jobs:
     name: "Windows Clang"
     runs-on: windows-latest
     needs: clang-format
-    strategy:
-      matrix:
-        architecture: [Win32, x64]
-        include:
-          - architecture: Win32
-            vcpkg_arch: x86
-          - architecture: x64
-            vcpkg_arch: x64
     env:
       VCPKG_ROOT: C:/vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
@@ -146,20 +138,20 @@ jobs:
         uses: actions/cache@4a1587e51eefd737551e59c2bcd63e33405c48b3
         with:
           path: ${{env.VCPKG_DEFAULT_BINARY_CACHE}}/*
-          key: ${{hashFiles('vcpkg.json')}}-${{matrix.architecture}}
+          key: ${{hashFiles('vcpkg.json')}}
       - name: Show content of workspace after cache has been restored
         run: find $RUNNER_WORKSPACE
         shell: bash
       - name: Enable Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1.10.0
       - name: Configure
-        run: cmake -S . -B build -G "Visual Studio 17 2022" -DCMAKE_BUILD_TYPE=Debug -DVCPKG_BUILD_TYPE=debug -DVCPKG_TARGET_ARCHITECTURE=${{matrix.vcpkg_arch}} -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake" -A ${{matrix.architecture}} -T ClangCL
+        run: cmake -S . -B build -G "Visual Studio 17 2022" -DCMAKE_BUILD_TYPE=Debug -DVCPKG_BUILD_TYPE=debug -DVCPKG_TARGET_ARCHITECTURE=x64 -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake" -A x64 -T ClangCL
       - name: Building
         run: cmake --build build --config Debug
       - name: Upload a build
         uses: actions/upload-artifact@v2
         with:
-          name: Client (MSVC_Clang ${{matrix.vcpkg_arch}})
+          name: Client (MSVC_Clang x64)
           path: ${{github.workspace}}/build/Debug/freeciv21-client.exe
           if-no-files-found: error
   os_x:
