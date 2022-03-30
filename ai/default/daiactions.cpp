@@ -155,7 +155,7 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
     int incite_cost, expenses;
 
     incite_cost = city_incite_cost(actor_player, target_city);
-    dai_calc_data(actor_player, NULL, &expenses, NULL);
+    dai_calc_data(actor_player, nullptr, &expenses, nullptr);
 
     if (incite_cost <= actor_player->economic.gold - 2 * expenses) {
       utility += 7000;

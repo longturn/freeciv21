@@ -22,7 +22,7 @@
   higher-level tools... (flex/lex bison/yacc?)
 
   When the user tries to read a token, we return a (const char*)
-  pointing to some data if the token was found, or NULL otherwise.
+  pointing to some data if the token was found, or nullptr otherwise.
   The data pointed to should not be modified.  The retuned pointer
   is valid _only_ until another inputfile is performed.  (So should
   be used immediately, or fc_strdup-ed etc.)
@@ -41,16 +41,16 @@
 
   end_of_line: newline, or optional '#' or ';' (comment characters)
                followed by any other chars, then newline.
-  returned token: should not be used except to check non-NULL.
+  returned token: should not be used except to check non-nullptr.
 
   table_start: '{'
-  returned token: should not be used except to check non-NULL.
+  returned token: should not be used except to check non-nullptr.
 
   table_end: '}'
-  returned token: should not be used except to check non-NULL.
+  returned token: should not be used except to check non-nullptr.
 
   comma:  literal ','
-  returned token: should not be used except to check non-NULL.
+  returned token: should not be used except to check non-nullptr.
 
   value:  a signed integer, or a double-quoted string, or a
           gettext-marked double quoted string.  Strings _may_ contain
@@ -103,7 +103,7 @@ struct inputfile {
                                 of line as include mechanism */
   int string_start_line;     /* when in_string is true, this is the
                                 start line of current string */
-  struct inputfile *included_from; /* NULL for toplevel file, otherwise
+  struct inputfile *included_from; /* nullptr for toplevel file, otherwise
                                       points back to files which this one
                                       has been included from */
 };
@@ -150,12 +150,12 @@ template <class Char> static bool is_comment(Char c)
  */
 static void init_zeros(struct inputfile *inf)
 {
-  fc_assert_ret(NULL != inf);
+  fc_assert_ret(nullptr != inf);
   inf->magic = INF_MAGIC;
   inf->filename.clear();
-  inf->fp = NULL;
-  inf->datafn = NULL;
-  inf->included_from = NULL;
+  inf->fp = nullptr;
+  inf->datafn = nullptr;
+  inf->included_from = nullptr;
   inf->line_num = inf->cur_line_pos = 0;
   inf->in_string = false;
   inf->string_start_line = 0;
@@ -170,9 +170,9 @@ static void init_zeros(struct inputfile *inf)
  */
 static bool inf_sanity_check(struct inputfile *inf)
 {
-  fc_assert_ret_val(NULL != inf, false);
+  fc_assert_ret_val(nullptr != inf, false);
   fc_assert_ret_val(INF_MAGIC == inf->magic, false);
-  fc_assert_ret_val(NULL != inf->fp, false);
+  fc_assert_ret_val(nullptr != inf->fp, false);
   fc_assert_ret_val(false == inf->in_string || true == inf->in_string,
                     false);
 
@@ -201,20 +201,20 @@ static QString inf_filename(struct inputfile *inf)
 
 /**
    Open the file, and return an allocated, initialized structure.
-   Returns NULL if the file could not be opened.
+   Returns nullptr if the file could not be opened.
  */
 struct inputfile *inf_from_file(const QString &filename,
                                 datafilename_fn_t datafn)
 {
   struct inputfile *inf;
 
-  fc_assert_ret_val(!filename.isEmpty(), NULL);
-  fc_assert_ret_val(0 < filename.length(), NULL);
+  fc_assert_ret_val(!filename.isEmpty(), nullptr);
+  fc_assert_ret_val(0 < filename.length(), nullptr);
   auto *fp = new KFilterDev(filename);
   fp->open(QIODevice::ReadOnly);
   if (!fp->isOpen()) {
     delete fp;
-    return NULL;
+    return nullptr;
   }
   qCDebug(inf_category) << "opened" << filename << "ok";
   inf = inf_from_stream(fp, datafn);
@@ -224,14 +224,14 @@ struct inputfile *inf_from_file(const QString &filename,
 
 /**
    Open the stream, and return an allocated, initialized structure.
-   Returns NULL if the file could not be opened.
+   Returns nullptr if the file could not be opened.
  */
 struct inputfile *inf_from_stream(QIODevice *stream,
                                   datafilename_fn_t datafn)
 {
   struct inputfile *inf;
 
-  fc_assert_ret_val(NULL != stream, NULL);
+  fc_assert_ret_val(nullptr != stream, nullptr);
   inf = new inputfile;
   init_zeros(inf);
 
@@ -495,12 +495,12 @@ static bool read_a_line(struct inputfile *inf)
 
 /**
    Return a detailed log message, including information on current line
-   number etc. Message can be NULL: then just logs information on where
+   number etc. Message can be nullptr: then just logs information on where
    we are in the file.
  */
 QString inf_log_str(struct inputfile *inf, const char *message, ...)
 {
-  fc_assert_ret_val(inf_sanity_check(inf), NULL);
+  fc_assert_ret_val(inf_sanity_check(inf), nullptr);
 
   QString str;
 
@@ -542,8 +542,8 @@ QString inf_log_str(struct inputfile *inf, const char *message, ...)
  */
 QString inf_token(struct inputfile *inf, enum inf_token_type type)
 {
-  fc_assert_ret_val(inf_sanity_check(inf), NULL);
-  fc_assert_ret_val(INF_TOK_FIRST <= type && INF_TOK_LAST > type, NULL);
+  fc_assert_ret_val(inf_sanity_check(inf), nullptr);
+  fc_assert_ret_val(INF_TOK_FIRST <= type && INF_TOK_LAST > type, nullptr);
 
   auto name = tok_tab[type].name ? tok_tab[type].name : "(unnamed)";
   auto func = tok_tab[type].func;
@@ -579,7 +579,7 @@ int inf_discard_tokens(struct inputfile *inf, enum inf_token_type type)
 }
 
 /**
-   Returns section name in current position of inputfile. Returns NULL
+   Returns section name in current position of inputfile. Returns nullptr
    if there is no section name on that position. Sets inputfile position
    after section name.
  */
@@ -685,7 +685,7 @@ static QString get_token_eol(struct inputfile *inf)
  */
 static QString get_token_white_char(struct inputfile *inf, char target)
 {
-  fc_assert_ret_val(have_line(inf), NULL);
+  fc_assert_ret_val(have_line(inf), nullptr);
 
   // Skip whitespace
   auto it = inf->cur_line.cbegin() + inf->cur_line_pos;
@@ -702,7 +702,7 @@ static QString get_token_white_char(struct inputfile *inf, char target)
 }
 
 /**
-   Get flag token for table start, or NULL if that is not next token.
+   Get flag token for table start, or nullptr if that is not next token.
  */
 static QString get_token_table_start(struct inputfile *inf)
 {
@@ -710,7 +710,7 @@ static QString get_token_table_start(struct inputfile *inf)
 }
 
 /**
-   Get flag token for table end, or NULL if that is not next token.
+   Get flag token for table end, or nullptr if that is not next token.
  */
 static QString get_token_table_end(struct inputfile *inf)
 {
@@ -718,7 +718,7 @@ static QString get_token_table_end(struct inputfile *inf)
 }
 
 /**
-   Get flag token comma, or NULL if that is not next token.
+   Get flag token comma, or nullptr if that is not next token.
  */
 static QString get_token_comma(struct inputfile *inf)
 {
@@ -730,7 +730,7 @@ static QString get_token_comma(struct inputfile *inf)
  */
 static QString get_token_value(struct inputfile *inf)
 {
-  fc_assert_ret_val(have_line(inf), NULL);
+  fc_assert_ret_val(have_line(inf), nullptr);
 
   auto begin = inf->cur_line.cbegin();
   auto end = inf->cur_line.cend();
@@ -780,7 +780,7 @@ static QString get_token_value(struct inputfile *inf)
       c++;
     }
     if (c == end) {
-      return NULL;
+      return nullptr;
     }
   }
 
@@ -803,7 +803,7 @@ static QString get_token_value(struct inputfile *inf)
     // File name without *
     auto name = inf->cur_line.mid(first, last - first);
     auto rfname = inf->datafn(name);
-    if (rfname == NULL) {
+    if (rfname == nullptr) {
 
       qCCritical(inf_category, _("Cannot find stringfile \"%s\"."),
                  qUtf8Printable(name));
@@ -837,7 +837,7 @@ static QString get_token_value(struct inputfile *inf)
     }
     // check that the trailing stuff is ok:
     if (!(c == end || *c == ',' || c->isSpace() || is_comment(*c))) {
-      return NULL;
+      return nullptr;
     }
 
     inf->cur_line_pos = c - begin;
@@ -849,7 +849,7 @@ static QString get_token_value(struct inputfile *inf)
   /* From here, we know we have a string, we just have to find the
      trailing (un-escaped) double-quote.  We read in extra lines if
      necessary to find it.  If we _don't_ find the end-of-string
-     (that is, we come to end-of-file), we return NULL, but we
+     (that is, we come to end-of-file), we return nullptr, but we
      leave the file in at_eof, and don't try to back-up to the
      current point.  (That would be more difficult, and probably
      not necessary: at that point we probably have a malformed

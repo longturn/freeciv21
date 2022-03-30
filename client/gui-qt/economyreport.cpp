@@ -354,10 +354,9 @@ void real_economy_report_dialog_update(void *unused)
 }
 
 /**
-   Display the economy report.  Optionally raise it.
-   Typically triggered by F5.
+ * Display the economy report. Typically triggered by F5.
  */
-void economy_report_dialog_popup(bool raise)
+void economy_report_dialog_popup()
 {
   int i;
   eco_report *eco_rep;

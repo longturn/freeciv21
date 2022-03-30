@@ -119,7 +119,7 @@ static int unit_def_rating_squared(const struct unit *punit,
  *
  * Not dealing with planes yet.
  *
- * Terminated by NULL.
+ * Terminated by nullptr.
  */
 struct unit_type *simple_ai_types[U_LAST];
 
@@ -129,14 +129,14 @@ struct unit_type *simple_ai_types[U_LAST];
    To be considerd, a city must have an air field. All cities with an
    urgent need for units are serviced before cities in danger.
 
-   Return value may be NULL, this means no servicable city found.
+   Return value may be nullptr, this means no servicable city found.
 
-   parameter pplayer may not be NULL.
+   parameter pplayer may not be nullptr.
  */
 static struct city *find_neediest_airlift_city(struct ai_type *ait,
                                                const struct player *pplayer)
 {
-  struct city *neediest_city = NULL;
+  struct city *neediest_city = nullptr;
   int most_danger = 0;
   int most_urgent = 0;
 
@@ -175,7 +175,7 @@ static void dai_airlift(struct ai_type *ait, struct player *pplayer)
   do {
     most_needed = find_neediest_airlift_city(ait, pplayer);
     comparison = 0;
-    transported = NULL;
+    transported = nullptr;
 
     if (!most_needed) {
       return;
@@ -502,7 +502,7 @@ static int dai_rampage_want(struct unit *punit, struct tile *ptile)
     struct city *pcity = tile_city(ptile);
 
     // ...and free foreign city waiting for us. Who would resist!
-    if (NULL != pcity && pplayers_at_war(pplayer, city_owner(pcity))
+    if (nullptr != pcity && pplayers_at_war(pplayer, city_owner(pcity))
         && unit_can_take_over(punit)) {
       return -RAMPAGE_FREE_CITY_OR_BETTER;
     }
@@ -525,7 +525,7 @@ static struct pf_path *find_rampage_target(struct unit *punit,
                                            int thresh_adj, int thresh_move)
 {
   struct pf_map *tgt_map;
-  struct pf_path *path = NULL;
+  struct pf_path *path = nullptr;
   struct pf_parameter parameter;
   // Coordinates of the best target (initialize to silence compiler)
   struct tile *ptile = unit_tile(punit);
@@ -579,7 +579,7 @@ static struct pf_path *find_rampage_target(struct unit *punit,
   if (max_want > 0) {
     // We found something
     path = pf_map_path(tgt_map, ptile);
-    fc_assert(path != NULL);
+    fc_assert(path != nullptr);
   }
 
   pf_map_destroy(tgt_map);
@@ -605,7 +605,7 @@ bool dai_military_rampage(struct unit *punit, int thresh_adj,
                           int thresh_move)
 {
   int count = punit->moves_left + 1; // break any infinite loops
-  struct pf_path *path = NULL;
+  struct pf_path *path = nullptr;
 
   TIMING_LOG(AIT_RAMPAGE, TIMER_START);
   CHECK_UNIT(punit);
@@ -622,10 +622,10 @@ bool dai_military_rampage(struct unit *punit, int thresh_adj,
       count = -1;
     }
     pf_path_destroy(path);
-    path = NULL;
+    path = nullptr;
   }
 
-  fc_assert(NULL == path);
+  fc_assert(nullptr == path);
 
   TIMING_LOG(AIT_RAMPAGE, TIMER_STOP);
   return (count >= 0);
@@ -648,7 +648,7 @@ static void dai_military_bodyguard(struct ai_type *ait,
 
   if (aunit && unit_owner(aunit) == unit_owner(punit)) {
     // protect a unit
-    if (aunit->goto_tile != NULL) {
+    if (aunit->goto_tile != nullptr) {
       // Our charge is going somewhere: maybe we should meet them there
       // FIXME: This probably isn't the best algorithm for this.
       int me2them = real_map_distance(unit_tile(punit), unit_tile(aunit));
@@ -673,7 +673,7 @@ static void dai_military_bodyguard(struct ai_type *ait,
   } else {
     // should be impossible
     BODYGUARD_LOG(ait, LOG_DEBUG, punit, "we lost our charge");
-    dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+    dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
     return;
   }
 
@@ -688,7 +688,7 @@ static void dai_military_bodyguard(struct ai_type *ait,
       }
     } else {
       BODYGUARD_LOG(ait, LOG_DEBUG, punit, "can not meet charge");
-      dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+      dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
     }
   }
   /* We might have stopped because of an enemy nearby.
@@ -725,14 +725,14 @@ int look_for_charge(struct ai_type *ait, struct player *pplayer,
   struct pf_parameter parameter;
   struct pf_map *pfm;
   struct city *pcity;
-  struct ai_city *data, *best_data = NULL;
+  struct ai_city *data, *best_data = nullptr;
   const int toughness = adv_unit_def_rating_basic_squared(punit);
   int def, best_def = -1;
   // Arbitrary: 3 turns.
   const int max_move_cost = 3 * unit_move_rate(punit);
 
-  *aunit = NULL;
-  *acity = NULL;
+  *aunit = nullptr;
+  *acity = nullptr;
 
   if (0 == toughness) {
     // useless
@@ -784,17 +784,17 @@ int look_for_charge(struct ai_type *ait, struct player *pplayer,
       }
       if (def > best_def) {
         *aunit = buddy;
-        *acity = NULL;
+        *acity = nullptr;
         best_def = def;
       }
     }
     unit_list_iterate_end;
 
     // City bodyguard. TODO: allied city bodyguard?
-    if (ai_fuzzy(pplayer, true) && NULL != pcity
+    if (ai_fuzzy(pplayer, true) && nullptr != pcity
         && city_owner(pcity) == pplayer
         && (data = def_ai_city_data(pcity, ait)) && 0 < data->urgency) {
-      if (NULL != best_data
+      if (nullptr != best_data
           && (0 < best_data->grave_danger
               || best_data->urgency > data->urgency
               || ((best_data->danger > data->danger
@@ -813,7 +813,7 @@ int look_for_charge(struct ai_type *ait, struct player *pplayer,
       def >>= move_cost / (2 * unit_move_rate(punit));
       if (def > best_def && ai_fuzzy(pplayer, true)) {
         *acity = pcity;
-        *aunit = NULL;
+        *aunit = nullptr;
         best_def = def;
         best_data = data;
       }
@@ -825,16 +825,17 @@ int look_for_charge(struct ai_type *ait, struct player *pplayer,
 
   UNIT_LOG(LOGLEVEL_BODYGUARD, punit, "%s(), best_def=%d, type=%s (%d, %d)",
            __FUNCTION__, best_def * 100 / toughness,
-           (NULL != *acity ? city_name_get(*acity)
-                           : (NULL != *aunit ? unit_rule_name(*aunit) : "")),
-           (NULL != *acity
+           (nullptr != *acity
+                ? city_name_get(*acity)
+                : (nullptr != *aunit ? unit_rule_name(*aunit) : "")),
+           (nullptr != *acity
                 ? index_to_map_pos_x(tile_index(city_tile(*acity)))
-                : (NULL != *aunit
+                : (nullptr != *aunit
                        ? index_to_map_pos_x(tile_index(unit_tile(*aunit)))
                        : -1)),
-           (NULL != *acity
+           (nullptr != *acity
                 ? index_to_map_pos_y(tile_index(city_tile(*acity)))
-                : (NULL != *aunit
+                : (nullptr != *aunit
                        ? index_to_map_pos_y(tile_index(unit_tile(*aunit)))
                        : -1)));
 
@@ -880,7 +881,7 @@ static void dai_military_findjob(struct ai_type *ait, struct player *pplayer,
       // land barbarians pillage
       unit_activity_handling(punit, ACTIVITY_PILLAGE);
     }
-    dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+    dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
     return;
   }
 
@@ -894,9 +895,9 @@ static void dai_military_findjob(struct ai_type *ait, struct player *pplayer,
   if (aiguard_has_charge(ait, punit) && unit_data->task == AIUNIT_ESCORT) {
     struct unit *aunit = aiguard_charge_unit(ait, punit);
     struct city *acity = aiguard_charge_city(ait, punit);
-    struct ai_city *city_data = NULL;
+    struct ai_city *city_data = nullptr;
 
-    if (acity != NULL) {
+    if (acity != nullptr) {
       city_data = def_ai_city_data(acity, ait);
     }
 
@@ -911,7 +912,7 @@ static void dai_military_findjob(struct ai_type *ait, struct player *pplayer,
             && city_data->danger > assess_defense_quadratic(ait, acity))) {
       return; // Yep!
     } else {
-      dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL); // Nope!
+      dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr); // Nope!
     }
   }
 
@@ -919,7 +920,7 @@ static void dai_military_findjob(struct ai_type *ait, struct player *pplayer,
   if ((unit_data->task == AIUNIT_RECOVER && punit->hp < punittype->hp)
       || punit->hp < punittype->hp * 0.25) { // WAG
     UNIT_LOG(LOGLEVEL_RECOVERY, punit, "set to hp recovery");
-    dai_unit_new_task(ait, punit, AIUNIT_RECOVER, NULL);
+    dai_unit_new_task(ait, punit, AIUNIT_RECOVER, nullptr);
     return;
   }
 
@@ -971,8 +972,9 @@ static void dai_military_defend(struct ai_type *ait, struct player *pplayer,
     /* Try to find a place to rest. Sitting duck out in the wilderness
      * is generally a bad idea, since we protect no cities that way, and
      * it looks silly. */
-    pcity = find_closest_city(unit_tile(punit), NULL, pplayer, false, false,
-                              false, true, false, unit_class_get(punit));
+    pcity =
+        find_closest_city(unit_tile(punit), nullptr, pplayer, false, false,
+                          false, true, false, unit_class_get(punit));
   }
 
   if (!pcity) {
@@ -1051,13 +1053,13 @@ bool find_beachhead(const struct player *pplayer, struct pf_map *ferry_map,
                     const struct unit_type *cargo_type,
                     struct tile **ferry_dest, struct tile **beachhead_tile)
 {
-  if (NULL == tile_city(dest_tile)
+  if (nullptr == tile_city(dest_tile)
       || can_attack_from_non_native(cargo_type)) {
     // Unit can directly go to 'dest_tile'.
-    struct tile *best_tile = NULL;
+    struct tile *best_tile = nullptr;
     int best_cost = PF_IMPOSSIBLE_MC, cost;
 
-    if (NULL != beachhead_tile) {
+    if (nullptr != beachhead_tile) {
       *beachhead_tile = dest_tile;
     }
 
@@ -1065,21 +1067,21 @@ bool find_beachhead(const struct player *pplayer, struct pf_map *ferry_map,
     {
       cost = pf_map_move_cost(ferry_map, ptile);
       if (cost != PF_IMPOSSIBLE_MC
-          && (NULL == best_tile || cost < best_cost)) {
+          && (nullptr == best_tile || cost < best_cost)) {
         best_tile = ptile;
         best_cost = cost;
       }
     }
     adjc_iterate_end;
 
-    if (NULL != ferry_dest) {
+    if (nullptr != ferry_dest) {
       *ferry_dest = best_tile;
     }
 
     return (PF_IMPOSSIBLE_MC != best_cost);
   } else {
     // We need to find a beach around 'dest_tile'.
-    struct tile *best_tile = NULL, *best_beach = NULL;
+    struct tile *best_tile = nullptr, *best_beach = nullptr;
     struct tile_list *checked_tiles = tile_list_new();
     int best_cost = PF_IMPOSSIBLE_MC, cost;
 
@@ -1095,7 +1097,7 @@ bool find_beachhead(const struct player *pplayer, struct pf_map *ferry_map,
             tile_list_append(checked_tiles, ptile);
             cost = pf_map_move_cost(ferry_map, ptile);
             if (cost != PF_IMPOSSIBLE_MC
-                && (NULL == best_tile || cost < best_cost)) {
+                && (nullptr == best_tile || cost < best_cost)) {
               best_beach = beach;
               best_tile = ptile;
               best_cost = cost;
@@ -1109,10 +1111,10 @@ bool find_beachhead(const struct player *pplayer, struct pf_map *ferry_map,
 
     tile_list_destroy(checked_tiles);
 
-    if (NULL != beachhead_tile) {
+    if (nullptr != beachhead_tile) {
       *beachhead_tile = best_beach;
     }
-    if (NULL != ferry_dest) {
+    if (nullptr != ferry_dest) {
       *ferry_dest = best_tile;
     }
     return (PF_IMPOSSIBLE_MC != best_cost);
@@ -1141,9 +1143,9 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
   struct unit_class *punit_class = unit_class_get(punit);
   const struct unit_type *punit_type = unit_type_get(punit);
   struct tile *punit_tile = unit_tile(punit);
-  // Type of our boat (a future one if ferryboat == NULL).
-  const struct unit_type *boattype = NULL;
-  struct unit *ferryboat = NULL;
+  // Type of our boat (a future one if ferryboat == nullptr).
+  const struct unit_type *boattype = nullptr;
+  struct unit *ferryboat = nullptr;
   struct city *pcity;
   struct ai_city *acity_data;
   int bcost, bcost_bal; // Build cost of the attacker (+adjustments).
@@ -1166,25 +1168,25 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
   int bk = 0;
   int want;     // Want (amortized) of the operaton.
   int best = 0; // Best of all wants.
-  struct tile *goto_dest_tile = NULL;
+  struct tile *goto_dest_tile = nullptr;
   bool can_occupy;
 
   // Very preliminary checks.
   *pdest_tile = punit_tile;
-  if (NULL != pferrymap) {
-    *pferrymap = NULL;
+  if (nullptr != pferrymap) {
+    *pferrymap = nullptr;
   }
-  if (NULL != pferryboat) {
-    *pferryboat = NULL;
+  if (nullptr != pferryboat) {
+    *pferryboat = nullptr;
   }
-  if (NULL != pboattype) {
-    *pboattype = NULL;
+  if (nullptr != pboattype) {
+    *pboattype = nullptr;
   }
-  if (NULL != pmove_time) {
+  if (nullptr != pmove_time) {
     *pmove_time = 0;
   }
-  if (NULL != ppath) {
-    *ppath = NULL;
+  if (nullptr != ppath) {
+    *ppath = nullptr;
   }
 
   if (0 == attack_value) {
@@ -1270,7 +1272,7 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
    */
 
   pcity = tile_city(punit_tile);
-  if (NULL != pcity && (0 == punit->id || pcity->id == punit->homecity)) {
+  if (nullptr != pcity && (0 == punit->id || pcity->id == punit->homecity)) {
     /* I would have thought unhappiness should be taken into account
      * irrespectfully the city in which it will surface... -- GB */
     unhap = dai_assess_military_unhappiness(pcity);
@@ -1288,15 +1290,15 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
     ferryboat = unit_transport_get(punit);
 
     // First check if we can use the boat we are currently loaded to.
-    if (ferryboat == NULL || !is_boat_free(ait, ferryboat, punit, 0)) {
+    if (ferryboat == nullptr || !is_boat_free(ait, ferryboat, punit, 0)) {
       // No, we cannot control current boat
-      ferryboat = NULL;
+      ferryboat = nullptr;
     }
 
-    if (NULL == ferryboat) {
+    if (nullptr == ferryboat) {
       // Try to find new boat
       ferryboat = player_unit_by_number(
-          pplayer, aiferry_find_boat(ait, punit, 1, NULL));
+          pplayer, aiferry_find_boat(ait, punit, 1, nullptr));
     }
 
     if (0 == punit->id && is_terrain_class_near_tile(punit_tile, TC_OCEAN)) {
@@ -1304,25 +1306,25 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
     }
   }
 
-  if (NULL != ferryboat) {
+  if (nullptr != ferryboat) {
     boattype = unit_type_get(ferryboat);
     pft_fill_unit_overlap_param(&parameter, ferryboat);
     parameter.omniscience = !has_handicap(pplayer, H_MAP);
     ferry_map = pf_map_new(&parameter);
   } else {
     boattype = best_role_unit_for_player(pplayer, L_FERRYBOAT);
-    if (NULL == boattype) {
+    if (nullptr == boattype) {
       // We pretend that we can have the simplest boat to stimulate tech.
       boattype = get_role_unit(L_FERRYBOAT, 0);
     }
-    if (NULL != boattype && harbor) {
+    if (nullptr != boattype && harbor) {
       // Let's simulate a boat at 'punit' position.
       pft_fill_utype_overlap_param(&parameter, boattype, punit_tile,
                                    pplayer);
       parameter.omniscience = !has_handicap(pplayer, H_MAP);
       ferry_map = pf_map_new(&parameter);
     } else {
-      ferry_map = NULL;
+      ferry_map = nullptr;
     }
   }
 
@@ -1358,7 +1360,7 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
       if (pf_map_position(punit_map, atile, &pos)) {
         go_by_boat = false;
         move_time = pos.turn;
-      } else if (NULL == ferry_map) {
+      } else if (nullptr == ferry_map) {
         continue; // Impossible to handle.
       } else {
         struct tile *dest, *beach;
@@ -1375,7 +1377,7 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
         if (dest != beach) {
           move_time++; // Land time.
         }
-        if (NULL != ferryboat && unit_tile(ferryboat) != punit_tile) {
+        if (nullptr != ferryboat && unit_tile(ferryboat) != punit_tile) {
           if (pf_map_position(punit_map, unit_tile(ferryboat), &pos)) {
             move_time += pos.turn; // Time to reach the boat.
           } else {
@@ -1390,7 +1392,7 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
         vulnerability = unit_def_rating_squared(punit, pdefender);
         benefit = unit_build_shield_cost_base(pdefender);
       } else {
-        pdefender = NULL;
+        pdefender = nullptr;
         vulnerability = 0;
         benefit = 0;
       }
@@ -1436,7 +1438,7 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
        * This variable enables total carnage. -- Syela */
       victim_count = unit_list_size(atile->units);
 
-      if (!can_occupy && NULL == pdefender) {
+      if (!can_occupy && nullptr == pdefender) {
         /* Nothing there to bash and we can't occupy!
          * Not having this check caused warships yoyoing */
         want = 0;
@@ -1455,7 +1457,7 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
               * (unhap ? SHIELD_WEIGHTING + 2 * TRADE_WEIGHTING
                        : SHIELD_WEIGHTING);
       // Build_cost of ferry.
-      needferry = (go_by_boat && NULL == ferryboat
+      needferry = (go_by_boat && nullptr == ferryboat
                        ? utype_build_shield_cost(acity, boattype)
                        : 0);
       // FIXME: add time to build the ferry?
@@ -1472,27 +1474,27 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
 
         if (bk_e > bk) {
           *pdest_tile = atile;
-          if (NULL != pferrymap) {
-            *pferrymap = go_by_boat ? ferry_map : NULL;
+          if (nullptr != pferrymap) {
+            *pferrymap = go_by_boat ? ferry_map : nullptr;
           }
-          if (NULL != pferryboat) {
-            *pferryboat = go_by_boat ? ferryboat : NULL;
+          if (nullptr != pferryboat) {
+            *pferryboat = go_by_boat ? ferryboat : nullptr;
           }
-          if (NULL != pboattype) {
-            *pboattype = go_by_boat ? boattype : NULL;
+          if (nullptr != pboattype) {
+            *pboattype = go_by_boat ? boattype : nullptr;
           }
-          if (NULL != pmove_time) {
+          if (nullptr != pmove_time) {
             *pmove_time = move_time;
           }
           goto_dest_tile =
-              (go_by_boat && NULL != ferryboat ? unit_tile(ferryboat)
-                                               : atile);
+              (go_by_boat && nullptr != ferryboat ? unit_tile(ferryboat)
+                                                  : atile);
           bk = bk_e;
         }
       }
       // END STEAM-ENGINES KLUGE
 
-      if (0 != punit->id && NULL != ferryboat
+      if (0 != punit->id && nullptr != ferryboat
           && punit_class->adv.sea_move == MOVE_NONE) {
         UNIT_LOG(LOG_DEBUG, punit,
                  "%s(): with boat %s@(%d, %d) -> %s@(%d, %d)"
@@ -1506,20 +1508,21 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
         // Yes, we like this target
         best = want;
         *pdest_tile = atile;
-        if (NULL != pferrymap) {
-          *pferrymap = go_by_boat ? ferry_map : NULL;
+        if (nullptr != pferrymap) {
+          *pferrymap = go_by_boat ? ferry_map : nullptr;
         }
-        if (NULL != pferryboat) {
-          *pferryboat = go_by_boat ? ferryboat : NULL;
+        if (nullptr != pferryboat) {
+          *pferryboat = go_by_boat ? ferryboat : nullptr;
         }
-        if (NULL != pboattype) {
-          *pboattype = go_by_boat ? boattype : NULL;
+        if (nullptr != pboattype) {
+          *pboattype = go_by_boat ? boattype : nullptr;
         }
-        if (NULL != pmove_time) {
+        if (nullptr != pmove_time) {
           *pmove_time = move_time;
         }
         goto_dest_tile =
-            (go_by_boat && NULL != ferryboat ? unit_tile(ferryboat) : atile);
+            (go_by_boat && nullptr != ferryboat ? unit_tile(ferryboat)
+                                                : atile);
       }
     }
     city_list_iterate_end;
@@ -1532,7 +1535,7 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
     {
       struct tile *atile = unit_tile(aunit);
 
-      if (NULL != tile_city(atile)) {
+      if (nullptr != tile_city(atile)) {
         // already dealt with it.
         continue;
       }
@@ -1583,16 +1586,16 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
       if (want > best && ai_fuzzy(pplayer, true)) {
         best = want;
         *pdest_tile = atile;
-        if (NULL != pferrymap) {
-          *pferrymap = NULL;
+        if (nullptr != pferrymap) {
+          *pferrymap = nullptr;
         }
-        if (NULL != pferryboat) {
-          *pferryboat = NULL;
+        if (nullptr != pferryboat) {
+          *pferryboat = nullptr;
         }
-        if (NULL != pboattype) {
-          *pboattype = NULL;
+        if (nullptr != pboattype) {
+          *pboattype = nullptr;
         }
-        if (NULL != pmove_time) {
+        if (nullptr != pmove_time) {
           *pmove_time = move_time;
         }
         goto_dest_tile = atile;
@@ -1602,14 +1605,15 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
   }
   players_iterate_end;
 
-  if (NULL != ppath) {
-    *ppath = (NULL != goto_dest_tile && goto_dest_tile != punit_tile
+  if (nullptr != ppath) {
+    *ppath = (nullptr != goto_dest_tile && goto_dest_tile != punit_tile
                   ? pf_map_path(punit_map, goto_dest_tile)
-                  : NULL);
+                  : nullptr);
   }
 
   pf_map_destroy(punit_map);
-  if (NULL != ferry_map && (NULL == pferrymap || *pferrymap != ferry_map)) {
+  if (nullptr != ferry_map
+      && (nullptr == pferrymap || *pferrymap != ferry_map)) {
     pf_map_destroy(ferry_map);
   }
 
@@ -1631,7 +1635,7 @@ struct city *find_nearest_safe_city(struct unit *punit)
   struct pf_parameter parameter;
   struct pf_map *pfm;
   struct player *pplayer = unit_owner(punit);
-  struct city *pcity, *best_city = NULL;
+  struct city *pcity, *best_city = nullptr;
   int best = FC_INFINITY, cur;
 
   pft_fill_unit_parameter(&parameter, punit);
@@ -1646,7 +1650,7 @@ struct city *find_nearest_safe_city(struct unit *punit)
     }
 
     pcity = tile_city(ptile);
-    if (NULL == pcity || !pplayers_allied(pplayer, city_owner(pcity))) {
+    if (nullptr == pcity || !pplayers_allied(pplayer, city_owner(pcity))) {
       continue;
     }
 
@@ -1691,14 +1695,15 @@ static void dai_military_attack_barbarian(struct ai_type *ait,
     only_continent = false;
   }
 
-  if ((pc = find_closest_city(unit_tile(punit), NULL, pplayer, false,
-                              only_continent, false, false, true, NULL))) {
+  if ((pc =
+           find_closest_city(unit_tile(punit), nullptr, pplayer, false,
+                             only_continent, false, false, true, nullptr))) {
     if (can_unit_exist_at_tile(&(wld.map), punit, unit_tile(punit))) {
       UNIT_LOG(LOG_DEBUG, punit, "Barbarian heading to conquer %s",
                city_name_get(pc));
       (void) dai_gothere(ait, pplayer, punit, pc->tile);
     } else {
-      struct unit *ferry = NULL;
+      struct unit *ferry = nullptr;
 
       if (unit_transported(punit)) {
         ferry = unit_transport_get(punit);
@@ -1707,7 +1712,7 @@ static void dai_military_attack_barbarian(struct ai_type *ait,
          * free capacity */
         if (!is_boat_free(ait, ferry, punit, 0)) {
           // We cannot control our ferry.
-          ferry = NULL;
+          ferry = nullptr;
         }
       } else {
         // We are not in a boat yet. Search for one.
@@ -1749,7 +1754,7 @@ static void dai_military_attack(struct ai_type *ait, struct player *pplayer,
   struct tile *dest_tile;
   int id = punit->id;
   int ct = 10;
-  struct city *pcity = NULL;
+  struct city *pcity = nullptr;
 
   CHECK_UNIT(punit);
 
@@ -1782,8 +1787,8 @@ static void dai_military_attack(struct ai_type *ait, struct player *pplayer,
     struct unit *ferryboat;
 
     // Then find enemies the hard way
-    find_something_to_kill(ait, pplayer, punit, &dest_tile, &path, NULL,
-                           &ferryboat, NULL, NULL);
+    find_something_to_kill(ait, pplayer, punit, &dest_tile, &path, nullptr,
+                           &ferryboat, nullptr, nullptr);
     if (!same_pos(unit_tile(punit), dest_tile)) {
       if (!is_tiles_adjacent(unit_tile(punit), dest_tile)
           || !can_unit_attack_tile(punit, dest_tile)) {
@@ -1797,12 +1802,12 @@ static void dai_military_attack(struct ai_type *ait, struct player *pplayer,
          * on our way even if we don't reach target yet. */
         punit->goto_tile = dest_tile;
         unit_activity_handling(punit, ACTIVITY_GOTO);
-        if (NULL != path && !adv_follow_path(punit, path, dest_tile)) {
+        if (nullptr != path && !adv_follow_path(punit, path, dest_tile)) {
           // Died.
           pf_path_destroy(path);
           return;
         }
-        if (NULL != ferryboat) {
+        if (nullptr != ferryboat) {
           // Need a boat.
           aiferry_gobyboat(ait, pplayer, punit, dest_tile, false);
           pf_path_destroy(path);
@@ -1861,7 +1866,7 @@ static void dai_military_attack(struct ai_type *ait, struct player *pplayer,
     return;
   }
   pcity = find_nearest_safe_city(punit);
-  if (pcity != NULL
+  if (pcity != nullptr
       && (dai_is_ferry(punit, ait)
           || punit->hp < unit_type_get(punit)->hp * 0.50)) { // WAG
     // Go somewhere safe
@@ -1900,7 +1905,7 @@ static bool dai_find_boat_for_unit(struct ai_type *ait, struct unit *punit)
 {
   bool alive = true;
   int ferryboat = 0;
-  struct pf_path *path_to_ferry = NULL;
+  struct pf_path *path_to_ferry = nullptr;
 
   UNIT_LOG(LOG_CARAVAN, punit, "requesting a boat!");
   ferryboat = aiferry_find_boat(ait, punit, 1, &path_to_ferry);
@@ -1910,22 +1915,22 @@ static bool dai_find_boat_for_unit(struct ai_type *ait, struct unit *punit)
              "in find_boat_for_unit cannot find any boats.");
     // if we are undefended on the country side go to a city
     struct city *current_city = tile_city(unit_tile(punit));
-    if (current_city == NULL) {
+    if (current_city == nullptr) {
       struct city *city_near = find_nearest_safe_city(punit);
-      if (city_near != NULL) {
+      if (city_near != nullptr) {
         alive = dai_unit_goto(ait, punit, city_near->tile);
       }
     }
   } else {
-    if (path_to_ferry != NULL) {
+    if (path_to_ferry != nullptr) {
       if (!adv_unit_execute_path(punit, path_to_ferry)) {
         // Died.
         pf_path_destroy(path_to_ferry);
-        path_to_ferry = NULL;
+        path_to_ferry = nullptr;
         alive = false;
       } else {
         pf_path_destroy(path_to_ferry);
-        path_to_ferry = NULL;
+        path_to_ferry = nullptr;
         alive = true;
       }
     }
@@ -1947,7 +1952,7 @@ static void dai_caravan_goto(struct ai_type *ait, struct player *pplayer,
   bool alive = true;
   struct unit_ai *unit_data = def_ai_unit_data(punit, ait);
 
-  fc_assert_ret(NULL != dest_city);
+  fc_assert_ret(nullptr != dest_city);
 
   // if we're not there yet, and we can move, move...
   if (!same_pos(dest_city->tile, unit_tile(punit))
@@ -2058,19 +2063,19 @@ static void caravan_optimize_callback(const struct caravan_result *result,
 static bool dai_is_unit_tired_waiting_boat(struct ai_type *ait,
                                            struct unit *punit)
 {
-  struct tile *src = NULL, *dest = NULL, *src_home_city = NULL;
-  struct city *phome_city = NULL;
+  struct tile *src = nullptr, *dest = nullptr, *src_home_city = nullptr;
+  struct city *phome_city = nullptr;
   struct unit_ai *unit_data = def_ai_unit_data(punit, ait);
 
   if ((unit_data->task != AIUNIT_NONE)) {
     src = unit_tile(punit);
     phome_city = game_city_by_number(punit->homecity);
-    if (phome_city != NULL) {
+    if (phome_city != nullptr) {
       src_home_city = city_tile(phome_city);
     }
     dest = punit->goto_tile;
 
-    if (src == NULL || dest == NULL || src_home_city == NULL) {
+    if (src == nullptr || dest == nullptr || src_home_city == nullptr) {
       return false;
     }
     // if we're not at home continent
@@ -2113,7 +2118,7 @@ static bool dai_caravan_can_trade_cities_diff_cont(struct player *pplayer,
   struct city *pcity = game_city_by_number(punit->homecity);
   Continent_id continent;
 
-  fc_assert(pcity != NULL);
+  fc_assert(pcity != nullptr);
 
   continent = tile_continent(pcity->tile);
 
@@ -2157,7 +2162,7 @@ static bool dai_caravan_can_trade_cities_diff_cont(struct player *pplayer,
 static bool search_homecity_for_caravan(struct ai_type *ait,
                                         struct unit *punit)
 {
-  struct city *nearest = NULL;
+  struct city *nearest = nullptr;
   int min_dist = FC_INFINITY;
   struct tile *current_loc = unit_tile(punit);
   Continent_id continent = tile_continent(current_loc);
@@ -2178,7 +2183,7 @@ static bool search_homecity_for_caravan(struct ai_type *ait,
   }
   city_list_iterate_end;
 
-  if (nearest != NULL) {
+  if (nearest != nullptr) {
     alive = dai_unit_goto(ait, punit, nearest->tile);
     if (alive && same_pos(unit_tile(punit), nearest->tile)) {
       dai_unit_make_homecity(punit, nearest);
@@ -2200,7 +2205,7 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
   struct caravan_parameter parameter;
   struct caravan_result result;
   const struct city *homecity;
-  const struct city *dest = NULL;
+  const struct city *dest = nullptr;
   struct unit_ai *unit_data;
   bool help_wonder = false;
   bool required_boat = false;
@@ -2226,12 +2231,12 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
            TILE_XY(punit->goto_tile));
 
   homecity = game_city_by_number(punit->homecity);
-  if (homecity == NULL && unit_data->task == AIUNIT_TRADE) {
+  if (homecity == nullptr && unit_data->task == AIUNIT_TRADE) {
     if (!search_homecity_for_caravan(ait, punit)) {
       return;
     }
     homecity = game_city_by_number(punit->homecity);
-    if (homecity == NULL) {
+    if (homecity == nullptr) {
       return;
     }
   }
@@ -2242,7 +2247,7 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
     // we check to see if our current goal is feasible
     struct city *city_dest = tile_city(punit->goto_tile);
 
-    if ((city_dest == NULL)
+    if ((city_dest == nullptr)
         || !pplayers_allied(unit_owner(punit), city_dest->owner)
         || (unit_data->task == AIUNIT_TRADE
             && !(can_cities_trade(homecity, city_dest)
@@ -2261,7 +2266,7 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
             && !is_action_enabled_unit_on_city(ACTION_HELP_WONDER, punit,
                                                city_dest))) {
       // destination invalid!
-      dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+      dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
       log_base(LOG_CARAVAN2, "%s %s[%d](%d,%d) destination invalid!",
                nation_rule_name(nation_of_unit(punit)),
                unit_rule_name(punit), punit->id, TILE_XY(unit_tile(punit)));
@@ -2269,7 +2274,7 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
       // destination valid, are we tired of waiting for a boat?
       if (dai_is_unit_tired_waiting_boat(ait, punit)) {
         aiferry_clear_boat(ait, punit);
-        dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+        dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
         log_base(LOG_CARAVAN2, "%s %s[%d](%d,%d) unit tired of waiting!",
                  nation_rule_name(nation_of_unit(punit)),
                  unit_rule_name(punit), punit->id,
@@ -2286,14 +2291,14 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
   }
 
   if (unit_data->task == AIUNIT_NONE) {
-    if (homecity == NULL) {
+    if (homecity == nullptr) {
       /* FIXME: We shouldn't bother in getting homecity for
        * caravan that will then be used for wonder building. */
       if (!search_homecity_for_caravan(ait, punit)) {
         return;
       }
       homecity = game_city_by_number(punit->homecity);
-      if (homecity == NULL) {
+      if (homecity == nullptr) {
         return;
       }
     }
@@ -2322,7 +2327,7 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
     }
     caravan_find_best_destination(punit, &parameter, &result,
                                   !has_handicap(pplayer, H_MAP));
-    if (result.dest != NULL) {
+    if (result.dest != nullptr) {
       // we did find a new destination for the unit
       dest = result.dest;
       help_wonder = result.help_wonder;
@@ -2333,11 +2338,11 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
                         (help_wonder) ? AIUNIT_WONDER : AIUNIT_TRADE,
                         dest->tile);
     } else {
-      dest = NULL;
+      dest = nullptr;
     }
   }
 
-  if (dest != NULL) {
+  if (dest != nullptr) {
     dai_caravan_goto(ait, pplayer, punit, dest, help_wonder, required_boat,
                      request_boat);
     return; // that may have clobbered the unit
@@ -2359,7 +2364,7 @@ static void dai_manage_hitpoint_recovery(struct ai_type *ait,
 {
   struct player *pplayer = unit_owner(punit);
   struct city *pcity = tile_city(unit_tile(punit));
-  struct city *safe = NULL;
+  struct city *safe = nullptr;
   const struct unit_type *punittype = unit_type_get(punit);
 
   CHECK_UNIT(punit);
@@ -2394,7 +2399,7 @@ static void dai_manage_hitpoint_recovery(struct ai_type *ait,
       // oops
       UNIT_LOG(LOGLEVEL_RECOVERY, punit,
                "didn't find a city to recover in!");
-      dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+      dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
       dai_military_attack(ait, pplayer, punit);
       return;
     }
@@ -2404,7 +2409,7 @@ static void dai_manage_hitpoint_recovery(struct ai_type *ait,
   if (punit->hp == punittype->hp) {
     // we are ready to go out and kick ass again
     UNIT_LOG(LOGLEVEL_RECOVERY, punit, "ready to kick ass again!");
-    dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+    dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
     return;
   } else {
     def_ai_unit_data(punit, ait)->done = true; // sit tight
@@ -2450,7 +2455,7 @@ void dai_manage_military(struct ai_type *ait, struct player *pplayer,
 
     UNIT_LOG(LOGLEVEL_HUNT, punit, "is qualified as hunter");
     result = dai_hunter_manage(ait, pplayer, punit);
-    if (NULL == game_unit_by_number(sanity)) {
+    if (nullptr == game_unit_by_number(sanity)) {
       TIMING_LOG(AIT_HUNTER, TIMER_STOP);
       return; // died
     }
@@ -2463,10 +2468,10 @@ void dai_manage_military(struct ai_type *ait, struct player *pplayer,
       return; // Done moving
     } else if (unit_data->task == AIUNIT_HUNTER) {
       // This should be very rare
-      dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+      dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
     }
   } else if (unit_data->task == AIUNIT_HUNTER) {
-    dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+    dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
   }
   TIMING_LOG(AIT_HUNTER, TIMER_STOP);
 
@@ -2555,7 +2560,7 @@ static void dai_manage_settler(struct ai_type *ait, struct player *pplayer,
   unit_data->done = true; // we will manage this unit later... ugh
   // if BUILD_CITY must remain BUILD_CITY, otherwise turn into autosettler
   if (unit_data->task == AIUNIT_NONE) {
-    adv_unit_new_task(punit, AUT_AUTO_SETTLER, NULL);
+    adv_unit_new_task(punit, AUT_AUTO_SETTLER, nullptr);
   }
 }
 
@@ -2582,7 +2587,7 @@ void dai_manage_unit(struct ai_type *ait, struct player *pplayer,
 
     UNIT_LOG(LOG_VERBOSE, punit,
              "is under human orders, aborting AI control.");
-    dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+    dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
     unit_data->done = true;
     return;
   }
@@ -2662,7 +2667,7 @@ void dai_manage_unit(struct ai_type *ait, struct player *pplayer,
       break;
     default:
       UNIT_LOG(LOG_DEBUG, punit, "fell through all unit tasks, defending");
-      dai_unit_new_task(ait, punit, AIUNIT_DEFEND_HOME, NULL);
+      dai_unit_new_task(ait, punit, AIUNIT_DEFEND_HOME, nullptr);
       dai_military_defend(ait, pplayer, punit);
       break;
     };
@@ -2709,7 +2714,7 @@ static void dai_set_defenders(struct ai_type *ait, struct player *pplayer)
                || (count < mart_max && mart_each > 0
                    && martless_unhappy > mart_each * count))) {
       int best_want = 0;
-      struct unit *best = NULL;
+      struct unit *best = nullptr;
       bool defense_needed =
           total_defense <= total_attack; // Defense or martial
 
@@ -2730,7 +2735,7 @@ static void dai_set_defenders(struct ai_type *ait, struct player *pplayer)
       }
       unit_list_iterate_end;
 
-      if (best == NULL) {
+      if (best == nullptr) {
         if (defense_needed) {
           // Ooops - try to grab any unit as defender!
           if (emergency) {
@@ -2790,7 +2795,7 @@ void dai_manage_units(struct ai_type *ait, struct player *pplayer)
 
     unit_data->done = false;
     if (unit_data->task == AIUNIT_DEFEND_HOME) {
-      dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
+      dai_unit_new_task(ait, punit, AIUNIT_NONE, nullptr);
     }
   }
   unit_list_iterate_end;
@@ -2821,12 +2826,13 @@ const struct impr_type *
 utype_needs_improvement(const struct unit_type *putype,
                         const struct city *pcity)
 {
-  const struct impr_type *impr_req = NULL;
+  const struct impr_type *impr_req = nullptr;
 
   requirement_vector_iterate(&putype->build_reqs, preq)
   {
-    if (is_req_active(city_owner(pcity), NULL, pcity, NULL, city_tile(pcity),
-                      NULL, putype, NULL, NULL, NULL, preq, RPT_CERTAIN)) {
+    if (is_req_active(city_owner(pcity), nullptr, pcity, nullptr,
+                      city_tile(pcity), nullptr, putype, nullptr, nullptr,
+                      nullptr, preq, RPT_CERTAIN)) {
       // Already there.
       continue;
     }
@@ -2963,7 +2969,7 @@ static void dai_manage_barbarian_leader(struct ai_type *ait,
   // Check for units we could fear.
   pfrm = pf_reverse_map_new(pplayer, leader_tile, 3,
                             !has_handicap(pplayer, H_MAP), &(wld.map));
-  worst_danger = NULL;
+  worst_danger = nullptr;
   best_move_cost = FC_INFINITY;
 
   players_iterate(other_player)
@@ -2986,7 +2992,7 @@ static void dai_manage_barbarian_leader(struct ai_type *ait,
 
   pf_reverse_map_destroy(pfrm);
 
-  if (NULL == worst_danger) {
+  if (nullptr == worst_danger) {
     unit_activity_handling(leader, ACTIVITY_IDLE);
     UNIT_LOG(LOG_DEBUG, leader, "Barbarian leader: no close enemy.");
     return;
@@ -3129,7 +3135,7 @@ static void update_simple_ai_types()
   }
   unit_type_iterate_end;
 
-  simple_ai_types[i] = NULL;
+  simple_ai_types[i] = nullptr;
 }
 
 /**
@@ -3249,10 +3255,10 @@ void dai_units_ruleset_close(struct ai_type *ait)
     struct unit_type_ai *utai =
         static_cast<unit_type_ai *>(utype_ai_data(ptype, ait));
 
-    if (utai == NULL) {
+    if (utai == nullptr) {
       continue;
     }
-    utype_set_ai_data(ptype, ait, NULL);
+    utype_set_ai_data(ptype, ait, nullptr);
 
     unit_type_list_destroy(utai->potential_charges);
     delete utai;
@@ -3271,8 +3277,8 @@ void dai_unit_init(struct ai_type *ait, struct unit *punit)
   struct unit_ai *unit_data = new unit_ai[1]();
 
   unit_data->done = false;
-  unit_data->cur_pos = NULL;
-  unit_data->prev_pos = NULL;
+  unit_data->cur_pos = nullptr;
+  unit_data->prev_pos = nullptr;
   unit_data->target = 0;
   BV_CLR_ALL(unit_data->hunted);
   unit_data->ferryboat = 0;
@@ -3290,7 +3296,7 @@ void dai_unit_turn_end(struct ai_type *ait, struct unit *punit)
 {
   struct unit_ai *unit_data = def_ai_unit_data(punit, ait);
 
-  fc_assert_ret(unit_data != NULL);
+  fc_assert_ret(unit_data != nullptr);
 
   BV_CLR_ALL(unit_data->hunted);
 }
@@ -3302,13 +3308,13 @@ void dai_unit_close(struct ai_type *ait, struct unit *punit)
 {
   struct unit_ai *unit_data = def_ai_unit_data(punit, ait);
 
-  fc_assert_ret(unit_data != NULL);
+  fc_assert_ret(unit_data != nullptr);
 
   aiguard_clear_charge(ait, punit);
   aiguard_clear_guard(ait, punit);
 
-  if (unit_data != NULL) {
-    unit_set_ai_data(punit, ait, NULL);
+  if (unit_data != nullptr) {
+    unit_set_ai_data(punit, ait, nullptr);
     FCPP_FREE(unit_data);
   }
 }
@@ -3370,7 +3376,7 @@ static bool role_unit_cb(struct unit_type *ptype, void *data)
     return false;
   }
 
-  return cb_data->build_city == NULL
+  return cb_data->build_city == nullptr
          || can_city_build_unit_now(cb_data->build_city, ptype);
 }
 

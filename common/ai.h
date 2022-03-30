@@ -326,9 +326,9 @@ struct ai_type {
     /* These are here reserving space for future optional callbacks.
      * This way we don't need to change the mandatory capability of the AI
      * module interface when adding such callbacks, but existing modules just
-     * have these set to NULL. Optional capability should be set when taking
-     * one of these to use, so that new modules know if the server is going
-     * to call these or is it too old version to do so. When mandatory
+     * have these set to nullptr. Optional capability should be set when
+     * taking one of these to use, so that new modules know if the server is
+     * going to call these or is it too old version to do so. When mandatory
      * capability then changes again, please add new reservations to
      * replace those taken to use. */
     void (*reserved_01)();

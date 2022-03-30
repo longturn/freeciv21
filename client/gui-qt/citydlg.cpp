@@ -55,8 +55,8 @@
 #include "mapview.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
-#include "sidebar.h"
 #include "tooltips.h"
+#include "top_bar.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
@@ -930,7 +930,7 @@ void city_label::mousePressEvent(QMouseEvent *event)
   if (!pcity) {
     return;
   }
-  if (cma_is_city_under_agent(pcity, NULL)) {
+  if (cma_is_city_under_agent(pcity, nullptr)) {
     return;
   }
   num_citizens = pcity->size;
@@ -1072,7 +1072,7 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
   if (!game.info.illness_on) {
     fc_snprintf(buf[ILLNESS], sizeof(buf[ILLNESS]), " -.-");
   } else {
-    illness = city_illness_calc(pcity, NULL, NULL, NULL, NULL);
+    illness = city_illness_calc(pcity, nullptr, nullptr, nullptr, nullptr);
     // illness is in tenth of percent
     fc_snprintf(buf[ILLNESS], sizeof(buf[ILLNESS]), "%4.1f%%",
                 static_cast<float>(illness) / 10.0);
@@ -1260,7 +1260,7 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   setMouseTracking(true);
   selected_row_p = -1;
-  pcity = NULL;
+  pcity = nullptr;
 
   // main tab
   ui.lcity_name->setToolTip(_("Click to change city name"));
@@ -1269,7 +1269,7 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
   connect(ui.buy_button, &QAbstractButton::clicked, this, &city_dialog::buy);
   connect(ui.lcity_name, &QAbstractButton::clicked, this,
           &city_dialog::city_rename);
-  citizen_pixmap = NULL;
+  citizen_pixmap = nullptr;
   ui.scroll3->setWidgetResizable(true);
   ui.scroll3->setMaximumHeight(
       tileset_unit_height(tileset) + 6
@@ -1461,7 +1461,7 @@ void city_dialog::change_production(bool next)
  */
 void city_dialog::update_disabled()
 {
-  if (NULL == client.conn.playing
+  if (nullptr == client.conn.playing
       || city_owner(pcity) != client.conn.playing) {
     ui.prev_city_but->setDisabled(true);
     ui.next_city_but->setDisabled(true);
@@ -1635,6 +1635,7 @@ void city_dialog::save_cma()
     QByteArray ask_bytes = ask->input_edit.text().toLocal8Bit();
     QString text = ask_bytes.data();
     if (!text.isEmpty()) {
+      param.max_growth = false;
       param.allow_disorder = false;
       param.allow_specialists = true;
       param.require_happy = ui.qsliderbox->cma_celeb_checkbox->isChecked();
@@ -1659,7 +1660,7 @@ void city_dialog::save_cma()
  */
 void city_dialog::cma_enable()
 {
-  if (cma_is_city_under_agent(pcity, NULL)) {
+  if (cma_is_city_under_agent(pcity, nullptr)) {
     cma_release_city(pcity);
     return;
   }
@@ -1700,7 +1701,7 @@ void city_dialog::cma_double_clicked(int row, int column)
     return;
   }
   param = cmafec_preset_get_parameter(row);
-  if (cma_is_city_under_agent(pcity, NULL)) {
+  if (cma_is_city_under_agent(pcity, nullptr)) {
     cma_release_city(pcity);
   }
 
@@ -1733,7 +1734,7 @@ void city_dialog::cma_selected(const QItemSelection &sl,
   param = cmafec_preset_get_parameter(ind);
   update_sliders();
 
-  if (cma_is_city_under_agent(pcity, NULL)) {
+  if (cma_is_city_under_agent(pcity, nullptr)) {
     cma_release_city(pcity);
     cma_put_city_under_agent(pcity, param);
   }
@@ -1767,7 +1768,7 @@ void city_dialog::update_cma_tab()
     ui.cma_table->setItem(0, 0, item);
   }
 
-  if (cma_is_city_under_agent(pcity, NULL)) {
+  if (cma_is_city_under_agent(pcity, nullptr)) {
     // view->update(); sveinung - update map here ?
     s = QString(cmafec_get_short_descr_of_city(pcity));
     pix = style()->standardPixmap(QStyle::SP_DialogApplyButton);
@@ -1787,7 +1788,7 @@ void city_dialog::update_cma_tab()
     ui.cma_result->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
   }
 
-  if (cma_is_city_under_agent(pcity, NULL)) {
+  if (cma_is_city_under_agent(pcity, nullptr)) {
     cmafec_get_fe_parameter(pcity, &param);
     i = cmafec_preset_get_index_of_parameter(
         const_cast<struct cm_parameter *const>(&param));
@@ -1987,7 +1988,7 @@ void city_dialog::update_buy_button()
 
   ui.buy_button->setDisabled(true);
 
-  if (!client_is_observer() && client.conn.playing != NULL) {
+  if (!client_is_observer() && client.conn.playing != nullptr) {
     value = pcity->client.buy_cost;
     str = QString(PL_("Buy (%1 gold)", "Buy (%1 gold)", value))
               .arg(QString::number(value));
@@ -2184,7 +2185,7 @@ void city_dialog::update_nation_table()
         auto sprite = get_nation_flag_sprite(
             tileset, nation_of_player(player_slot_get_player(pslot)));
 
-        if (sprite != NULL) {
+        if (sprite != nullptr) {
           item->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
         } else {
           item->setText(QStringLiteral("FLAG MISSING"));
@@ -2339,7 +2340,7 @@ void city_dialog::update_units()
   int free_unhappy = get_city_bonus(pcity, EFT_MAKE_CONTENT_MIL);
   ui.supported_units->setUpdatesEnabled(false);
 
-  if (NULL != client.conn.playing
+  if (nullptr != client.conn.playing
       && city_owner(pcity) != client.conn.playing) {
     units = pcity->client.info_units_supported;
   } else {
@@ -2370,7 +2371,7 @@ void city_dialog::update_units()
   ui.supported_units->setUpdatesEnabled(true);
   ui.supported_units->updateGeometry();
 
-  if (NULL != client.conn.playing
+  if (nullptr != client.conn.playing
       && city_owner(pcity) != client.conn.playing) {
     units = pcity->client.info_units_present;
   } else {
@@ -2425,9 +2426,9 @@ void city_dialog::item_selected(const QItemSelection &sl,
 void city_dialog::get_city(bool next)
 {
   int size, i, j;
-  struct city *other_pcity = NULL;
+  struct city *other_pcity = nullptr;
 
-  if (NULL == client.conn.playing) {
+  if (nullptr == client.conn.playing) {
     return;
   }
 
@@ -2797,7 +2798,7 @@ void city_dialog::save_worklist()
 
 void city_dialog::cma_check_agent()
 {
-  if (cma_is_city_under_agent(pcity, NULL)) {
+  if (cma_is_city_under_agent(pcity, nullptr)) {
     cma_changed();
     update_cma_tab();
   }
@@ -2847,7 +2848,7 @@ void qtg_real_city_dialog_popup(struct city *pcity)
 {
   auto *widget = queen()->city_overlay;
   if (!queen()->city_overlay->isVisible()) {
-    sidebarShowMap(true);
+    top_bar_show_map();
     queen()->mapview_wdg->hide_all_fcwidgets();
   }
   center_tile_mapcanvas(pcity->tile);
@@ -3006,7 +3007,7 @@ void city_production_delegate::paint(QPainter *painter,
 
   target = reinterpret_cast<universal *>(qvar.value<void *>());
 
-  if (target == NULL) {
+  if (target == nullptr) {
     free_sprite = new QPixmap;
     *free_sprite = icon.pixmap(100, 100);
     sprite = free_sprite;
@@ -3049,7 +3050,7 @@ void city_production_delegate::paint(QPainter *painter,
     is_coinage = improvement_has_flag(target->value.building, IF_GOLD);
   }
 
-  if (sprite != NULL) {
+  if (sprite != nullptr) {
     pix_scaled =
         sprite->scaledToHeight(item_height - 2, Qt::SmoothTransformation);
 
@@ -3273,7 +3274,7 @@ void city_production_model::populate()
     }
   }
 
-  renegate = NULL;
+  renegate = nullptr;
   pi = new production_item(renegate, this);
   city_target_list << pi;
   sh.setX(2 * sh.y() + sh.x());
@@ -3442,7 +3443,7 @@ void production_widget::prod_selected(const QItemSelection &sl,
     return;
   }
   target = reinterpret_cast<universal *>(qvar.value<void *>());
-  if (target != NULL) {
+  if (target != nullptr) {
     city_get_queue(pw_city, &queue);
     switch (when_change) {
     case 0: // Change current target

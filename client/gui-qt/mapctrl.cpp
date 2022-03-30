@@ -36,7 +36,7 @@
 #include "shortcuts.h"
 #include "unitselect.h"
 
-extern void sidebarDisableEndturn(bool do_restore);
+extern void top_bar_disable_end_turn(bool do_restore);
 extern void qload_lua_script();
 extern void qreload_lua_script();
 
@@ -69,7 +69,10 @@ void popup_newcity_dialog(struct unit *punit, const char *suggestname)
    A turn done button should be provided for the player.  This function
    is called to toggle it between active/inactive.
  */
-void set_turn_done_button_state(bool state) { sidebarDisableEndturn(state); }
+void set_turn_done_button_state(bool state)
+{
+  top_bar_disable_end_turn(state);
+}
 
 /**
    Draw a goto or patrol line at the current mouse position.
@@ -229,7 +232,7 @@ void map_view::shortcut_pressed(int key)
   if (bt == sc->mouse && md == sc->mod && king()->rallies.hover_city) {
     char text[1024];
 
-    if (tile_city(ptile)) {
+    if (ptile && tile_city(ptile)) {
       king()->rallies.hover_tile = true;
       king()->rallies.rally_city = tile_city(ptile);
 
@@ -244,11 +247,12 @@ void map_view::shortcut_pressed(int key)
   }
 
   // Rally point - select tile  - skip
-  if (bt == Qt::LeftButton && king()->rallies.hover_tile && ptile != NULL) {
+  if (bt == Qt::LeftButton && king()->rallies.hover_tile
+      && ptile != nullptr) {
     char text[1024];
 
     struct city *pcity = king()->rallies.rally_city;
-    fc_assert_ret(pcity != NULL);
+    fc_assert_ret(pcity != nullptr);
 
     if (send_rally_tile(pcity, ptile)) {
       fc_snprintf(text, sizeof(text),
@@ -262,12 +266,12 @@ void map_view::shortcut_pressed(int key)
       output_window_append(ftc_client, text);
     }
 
-    king()->rallies.rally_city = NULL;
+    king()->rallies.rally_city = nullptr;
     king()->rallies.hover_tile = false;
     return;
   }
 
-  if (bt == Qt::LeftButton && king()->menu_bar->delayed_order) {
+  if (bt == Qt::LeftButton && king()->menu_bar->delayed_order && ptile) {
     king()->menu_bar->set_tile_for_order(ptile);
     clear_hover_state();
     exit_goto_state();
@@ -275,7 +279,7 @@ void map_view::shortcut_pressed(int key)
     return;
   }
 
-  if (bt == Qt::LeftButton && king()->menu_bar->quick_airlifting) {
+  if (bt == Qt::LeftButton && king()->menu_bar->quick_airlifting && ptile) {
     if (tile_city(ptile)) {
       multiairlift(tile_city(ptile), king()->menu_bar->airlift_type_id);
     } else {

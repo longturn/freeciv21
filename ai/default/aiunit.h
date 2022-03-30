@@ -148,7 +148,7 @@ void dai_unit_close(struct ai_type *ait, struct unit *punit);
   {                                                                         \
     struct unit_type *_ut;                                                  \
     int _ut##_index = 0;                                                    \
-    while (NULL != (_ut = simple_ai_types[_ut##_index++])) {
+    while (nullptr != (_ut = simple_ai_types[_ut##_index++])) {
 
 #define simple_ai_unit_type_iterate_end                                     \
   }                                                                         \

@@ -83,10 +83,10 @@ void researches_init()
 
   // Set technology names.
   // TRANS: "None" tech
-  name_set(&advance_unset_name, NULL, N_("?tech:None"));
-  name_set(&advance_future_name, NULL, N_("Future Tech."));
+  name_set(&advance_unset_name, nullptr, N_("?tech:None"));
+  name_set(&advance_future_name, nullptr, N_("Future Tech."));
   /* TRANS: "Unknown" advance/technology */
-  name_set(&advance_unknown_name, NULL, N_("(Unknown)"));
+  name_set(&advance_unknown_name, nullptr, N_("(Unknown)"));
 }
 
 /**
@@ -103,7 +103,7 @@ void researches_free()
  */
 int research_number(const struct research *presearch)
 {
-  fc_assert_ret_val(NULL != presearch, 0);
+  fc_assert_ret_val(nullptr != presearch, 0);
   return presearch - research_array;
 }
 
@@ -112,8 +112,8 @@ int research_number(const struct research *presearch)
  */
 struct research *research_by_number(int number)
 {
-  fc_assert_ret_val(0 <= number, NULL);
-  fc_assert_ret_val(ARRAY_SIZE(research_array) > number, NULL);
+  fc_assert_ret_val(0 <= number, nullptr);
+  fc_assert_ret_val(ARRAY_SIZE(research_array) > number, nullptr);
   return &research_array[number];
 }
 
@@ -122,9 +122,9 @@ struct research *research_by_number(int number)
  */
 struct research *research_get(const struct player *pplayer)
 {
-  if (NULL == pplayer) {
+  if (nullptr == pplayer) {
     // Special case used at client side.
-    return NULL;
+    return nullptr;
   } else if (game.info.team_pooled_research) {
     return &research_array[team_number(pplayer->team)];
   } else {
@@ -203,7 +203,7 @@ research_advance_name(Tech_type_id tech)
   } else {
     const struct advance *padvance = advance_by_number(tech);
 
-    fc_assert_ret_val(NULL != padvance, NULL);
+    fc_assert_ret_val(nullptr != padvance, nullptr);
     return &padvance->name;
   }
 }
@@ -229,12 +229,12 @@ static const char *research_future_set_name(QVector<QString> *psv, int no,
 
 /**
    Store the rule name of the given tech (including A_FUTURE) in 'buf'.
-   'presearch' may be NULL.
+   'presearch' may be nullptr.
  */
 QString research_advance_rule_name(const struct research *presearch,
                                    Tech_type_id tech)
 {
-  if (A_FUTURE == tech && NULL != presearch) {
+  if (A_FUTURE == tech && nullptr != presearch) {
     const int no = presearch->future_tech;
 
     if (no >= future_rule_name->size()) {
@@ -253,12 +253,12 @@ QString research_advance_rule_name(const struct research *presearch,
 
 /**
    Store the translated name of the given tech (including A_FUTURE) in 'buf'.
-   'presearch' may be NULL.
+   'presearch' may be nullptr.
  */
 QString research_advance_name_translation(const struct research *presearch,
                                           Tech_type_id tech)
 {
-  if (A_FUTURE == tech && NULL != presearch) {
+  if (A_FUTURE == tech && nullptr != presearch) {
     const int no = presearch->future_tech;
     QString name;
 
@@ -341,15 +341,16 @@ static bool research_allowed(
 
   adv = valid_advance_by_number(tech);
 
-  if (adv == NULL) {
+  if (adv == nullptr) {
     // Not a valid advance.
     return false;
   }
 
   research_players_iterate(presearch, pplayer)
   {
-    if (reqs_eval(pplayer, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-                  NULL, &(adv->research_reqs), RPT_CERTAIN)) {
+    if (reqs_eval(pplayer, nullptr, nullptr, nullptr, nullptr, nullptr,
+                  nullptr, nullptr, nullptr, nullptr, &(adv->research_reqs),
+                  RPT_CERTAIN)) {
       /* It is enough that one player that shares research is allowed to
        * research it.
        * Reasoning: Imagine a tech with that requires a nation in the
@@ -393,27 +394,22 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
                                          Tech_type_id tech)
 {
   bv_techs done;
-  std::vector<Tech_type_id> techs;
-  techs.reserve(game.control.num_tech_types);
-  int techs_num;
-  int i;
-
-  techs[0] = tech;
+  std::vector<Tech_type_id> techs{tech};
   BV_CLR_ALL(done);
   BV_SET(done, A_NONE);
   BV_SET(done, tech);
-  techs_num = 1;
-
   /* Check that all recursive requirements have their research_reqs
    * in order. */
-  for (i = 0; i < techs_num; i++) {
-    if (presearch->inventions[techs[i]].state == TECH_KNOWN) {
+  while (!techs.empty()) { // Iterate till there is no-more techs to check
+    auto iter_tech = techs[techs.size() - 1]; // Last Element
+    techs.pop_back();                         // Remove Last element
+    if (presearch->inventions[iter_tech].state == TECH_KNOWN) {
       /* This tech is already reached. What is required to research it and
        * the techs it depends on is therefore irrelevant. */
       continue;
     }
 
-    if (!research_may_become_allowed(presearch, techs[i])) {
+    if (!research_may_become_allowed(presearch, iter_tech)) {
       /* It will always be illegal to start researching this tech because
        * of unchanging requirements. Since it isn't already known and can't
        * be researched it must be unreachable. */
@@ -422,14 +418,12 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
 
     // Check if required techs are research_reqs reachable.
     for (int req = 0; req < AR_SIZE; req++) {
-      Tech_type_id req_tech = advance_required(techs[i], tech_req(req));
+      Tech_type_id req_tech = advance_required(iter_tech, tech_req(req));
 
-      if (valid_advance_by_number(req_tech) == NULL) {
+      if (valid_advance_by_number(req_tech) == nullptr) {
         return false;
       } else if (!BV_ISSET(done, req_tech)) {
-        techs[techs_num] = req_tech;
-        techs_num++;
-
+        techs.push_back(req_tech);
         BV_SET(done, req_tech);
       }
     }
@@ -447,7 +441,7 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
 static bool research_get_reachable(const struct research *presearch,
                                    Tech_type_id tech)
 {
-  if (valid_advance_by_number(tech) == NULL) {
+  if (valid_advance_by_number(tech) == nullptr) {
     return false;
   } else {
     advance_root_req_iterate(advance_by_number(tech), proot)
@@ -464,7 +458,7 @@ static bool research_get_reachable(const struct research *presearch,
       } else {
         for (int req = 0; req < AR_SIZE; req++) {
           if (valid_advance(advance_requires(proot, tech_req(req)))
-              == NULL) {
+              == nullptr) {
             return false;
           }
         }
@@ -625,15 +619,16 @@ void research_update(struct research *presearch)
    This can be: TECH_KNOWN, TECH_UNKNOWN, or TECH_PREREQS_KNOWN
    Should be called with existing techs.
 
-   If 'presearch' is NULL this checks whether any player knows the tech
+   If 'presearch' is nullptr this checks whether any player knows the tech
    (used by the client).
  */
 enum tech_state research_invention_state(const struct research *presearch,
                                          Tech_type_id tech)
 {
-  fc_assert_ret_val(NULL != valid_advance_by_number(tech), tech_state(-1));
+  fc_assert_ret_val(nullptr != valid_advance_by_number(tech),
+                    tech_state(-1));
 
-  if (NULL != presearch) {
+  if (nullptr != presearch) {
     return presearch->inventions[tech].state;
   } else if (game.info.global_advances[tech]) {
     return TECH_KNOWN;
@@ -651,7 +646,8 @@ enum tech_state research_invention_set(struct research *presearch,
 {
   enum tech_state old;
 
-  fc_assert_ret_val(NULL != valid_advance_by_number(tech), tech_state(-1));
+  fc_assert_ret_val(nullptr != valid_advance_by_number(tech),
+                    tech_state(-1));
 
   old = presearch->inventions[tech].state;
   if (old == value) {
@@ -673,15 +669,15 @@ enum tech_state research_invention_set(struct research *presearch,
    Returns TRUE iff the given tech is ever reachable via research by the
    players sharing the research by checking tech tree limitations.
 
-   'presearch' may be NULL in which case a simplified result is returned
+   'presearch' may be nullptr in which case a simplified result is returned
    (used by the client).
  */
 bool research_invention_reachable(const struct research *presearch,
                                   const Tech_type_id tech)
 {
-  if (valid_advance_by_number(tech) == NULL) {
+  if (valid_advance_by_number(tech) == nullptr) {
     return false;
-  } else if (presearch != NULL) {
+  } else if (presearch != nullptr) {
     return presearch->inventions[tech].reachable;
   } else {
     researches_iterate(research_iter)
@@ -706,9 +702,9 @@ bool research_invention_reachable(const struct research *presearch,
 bool research_invention_gettable(const struct research *presearch,
                                  const Tech_type_id tech, bool allow_holes)
 {
-  if (valid_advance_by_number(tech) == NULL) {
+  if (valid_advance_by_number(tech) == nullptr) {
     return false;
-  } else if (presearch != NULL) {
+  } else if (presearch != nullptr) {
     return (allow_holes
                 ? presearch->inventions[tech].root_reqs_known
                 : presearch->inventions[tech].state == TECH_PREREQS_KNOWN);
@@ -736,7 +732,7 @@ Tech_type_id research_goal_step(const struct research *presearch,
 {
   const struct advance *pgoal = valid_advance_by_number(goal);
 
-  if (NULL == pgoal || !research_invention_reachable(presearch, goal)) {
+  if (nullptr == pgoal || !research_invention_reachable(presearch, goal)) {
     return A_UNSET;
   }
 
@@ -759,7 +755,7 @@ Tech_type_id research_goal_step(const struct research *presearch,
    the goal technology. This includes the goal technology. Technologies
    are only counted once.
 
-   'presearch' may be NULL in which case it will returns the total number
+   'presearch' may be nullptr in which case it will returns the total number
    of technologies needed for reaching the goal.
  */
 int research_goal_unknown_techs(const struct research *presearch,
@@ -767,9 +763,9 @@ int research_goal_unknown_techs(const struct research *presearch,
 {
   const struct advance *pgoal = valid_advance_by_number(goal);
 
-  if (NULL == pgoal) {
+  if (nullptr == pgoal) {
     return 0;
-  } else if (NULL != presearch) {
+  } else if (nullptr != presearch) {
     return presearch->inventions[goal].num_required_techs;
   } else {
     return pgoal->num_reqs;
@@ -781,7 +777,7 @@ int research_goal_unknown_techs(const struct research *presearch,
    These costs _include_ the cost for researching the goal technology
    itself.
 
-   'presearch' may be NULL in which case it will returns the total number
+   'presearch' may be nullptr in which case it will returns the total number
    of bulbs needed for reaching the goal.
  */
 int research_goal_bulbs_required(const struct research *presearch,
@@ -789,9 +785,9 @@ int research_goal_bulbs_required(const struct research *presearch,
 {
   const struct advance *pgoal = valid_advance_by_number(goal);
 
-  if (NULL == pgoal) {
+  if (nullptr == pgoal) {
     return 0;
-  } else if (NULL != presearch) {
+  } else if (nullptr != presearch) {
     return presearch->inventions[goal].bulbs_required;
   } else if (game.info.tech_cost_style == TECH_COST_CIV1CIV2) {
     return game.info.base_tech_cost * pgoal->num_reqs * (pgoal->num_reqs + 1)
@@ -809,17 +805,17 @@ int research_goal_bulbs_required(const struct research *presearch,
    Returns if the given tech has to be researched to reach the goal. The
    goal itself isn't a requirement of itself.
 
-   'presearch' may be NULL.
+   'presearch' may be nullptr.
  */
 bool research_goal_tech_req(const struct research *presearch,
                             Tech_type_id goal, Tech_type_id tech)
 {
   const struct advance *pgoal, *ptech;
 
-  if (tech == goal || NULL == (pgoal = valid_advance_by_number(goal))
-      || NULL == (ptech = valid_advance_by_number(tech))) {
+  if (tech == goal || nullptr == (pgoal = valid_advance_by_number(goal))
+      || nullptr == (ptech = valid_advance_by_number(tech))) {
     return false;
-  } else if (NULL != presearch) {
+  } else if (nullptr != presearch) {
     return BV_ISSET(presearch->inventions[goal].required_techs, tech);
   } else {
     advance_req_iterate(pgoal, preq)
@@ -869,7 +865,7 @@ bool research_goal_tech_req(const struct research *presearch,
    At the end we multiply by the sciencebox value, as a percentage.  The
    cost can never be less than 1.
 
-   'presearch' may be NULL in which case a simplified result is returned
+   'presearch' may be nullptr in which case a simplified result is returned
    (used by client and manual code).
  */
 int research_total_bulbs_required(const struct research *presearch,
@@ -880,7 +876,7 @@ int research_total_bulbs_required(const struct research *presearch,
   double base_cost, total_cost;
   double leak = 0.0;
 
-  if (!loss_value && NULL != presearch && !is_future_tech(tech)
+  if (!loss_value && nullptr != presearch && !is_future_tech(tech)
       && research_invention_state(presearch, tech) == TECH_KNOWN) {
     // A non-future tech which is already known costs nothing.
     return 0;
@@ -896,12 +892,12 @@ int research_total_bulbs_required(const struct research *presearch,
   base_cost = 0.0;
   switch (tech_cost_style) {
   case TECH_COST_CIV1CIV2:
-    if (NULL != presearch) {
+    if (nullptr != presearch) {
       base_cost = game.info.base_tech_cost * presearch->techs_researched;
       break;
     }
 
-    fc_assert(presearch != NULL);
+    fc_assert(presearch != nullptr);
     fc__fallthrough; // No break; Fallback to using preset cost.
   case TECH_COST_CLASSIC:
   case TECH_COST_CLASSIC_PRESET:
@@ -910,10 +906,10 @@ int research_total_bulbs_required(const struct research *presearch,
   case TECH_COST_LINEAR: {
     const struct advance *padvance = valid_advance_by_number(tech);
 
-    if (NULL != padvance) {
+    if (nullptr != padvance) {
       base_cost = padvance->cost;
     } else {
-      fc_assert(NULL != padvance); // Always fails.
+      fc_assert(nullptr != padvance); // Always fails.
     }
   } break;
   }
@@ -1176,7 +1172,7 @@ static bool research_iter_team_valid(const struct iterator *it)
   struct research_iter *rit = RESEARCH_ITER(it);
 
   return (0 <= rit->index && ARRAY_SIZE(research_array) > rit->index
-          && NULL != team_by_number(rit->index));
+          && nullptr != team_by_number(rit->index));
 }
 
 /**
@@ -1201,7 +1197,7 @@ static bool research_iter_player_valid(const struct iterator *it)
   struct research_iter *rit = RESEARCH_ITER(it);
 
   return (0 <= rit->index && ARRAY_SIZE(research_array) > rit->index
-          && NULL != player_by_number(rit->index));
+          && nullptr != player_by_number(rit->index));
 }
 
 /**
@@ -1241,7 +1237,7 @@ static inline bool research_player_iter_valid_state(struct iterator *it)
 {
   const player *pplayer = static_cast<const player *>(iterator_get(it));
 
-  return (NULL == pplayer || pplayer->is_alive);
+  return (nullptr == pplayer || pplayer->is_alive);
 }
 
 /**
@@ -1269,7 +1265,7 @@ static void research_player_iter_pooled_next(struct iterator *it)
  */
 static bool research_player_iter_pooled_valid(const struct iterator *it)
 {
-  return NULL != RESEARCH_PLAYER_ITER(it)->plink;
+  return nullptr != RESEARCH_PLAYER_ITER(it)->plink;
 }
 
 /**
@@ -1285,7 +1281,7 @@ static void *research_player_iter_not_pooled_get(const struct iterator *it)
  */
 static void research_player_iter_not_pooled_next(struct iterator *it)
 {
-  RESEARCH_PLAYER_ITER(it)->pplayer = NULL;
+  RESEARCH_PLAYER_ITER(it)->pplayer = nullptr;
 }
 
 /**
@@ -1293,7 +1289,7 @@ static void research_player_iter_not_pooled_next(struct iterator *it)
  */
 static bool research_player_iter_not_pooled_valid(const struct iterator *it)
 {
-  return NULL != RESEARCH_PLAYER_ITER(it)->pplayer;
+  return nullptr != RESEARCH_PLAYER_ITER(it)->pplayer;
 }
 
 /**
@@ -1304,7 +1300,7 @@ struct iterator *research_player_iter_init(struct research_player_iter *it,
 {
   struct iterator *base = ITERATOR(it);
 
-  if (game.info.team_pooled_research && NULL != presearch) {
+  if (game.info.team_pooled_research && nullptr != presearch) {
     base->get = research_player_iter_pooled_get;
     base->next = research_player_iter_pooled_next;
     base->valid = research_player_iter_pooled_valid;
@@ -1315,8 +1311,8 @@ struct iterator *research_player_iter_init(struct research_player_iter *it,
     base->next = research_player_iter_not_pooled_next;
     base->valid = research_player_iter_not_pooled_valid;
     it->pplayer =
-        (NULL != presearch ? player_by_number(research_number(presearch))
-                           : NULL);
+        (nullptr != presearch ? player_by_number(research_number(presearch))
+                              : nullptr);
   }
 
   // Ensure we have consistent data.

@@ -109,4 +109,4 @@ protected:
 };
 
 void popdown_units_report();
-void toggle_units_report(bool);
+void toggle_units_report();

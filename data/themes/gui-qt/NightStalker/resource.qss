@@ -53,7 +53,7 @@ chat_widget, message_widget {
   color: #00002f;
 }
 /* color of border only*/
-*[sidebar="true"] {
+*[top_bar="true"] {
   color: #000000;
 }
 
@@ -117,7 +117,7 @@ QPushButton:hover[main_pagebt="true"] {
 }
 
 
-QPushButton {
+QPushButton, QToolButton {
   color: #FFFFFF;
   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #474747, stop: 1 #323232);
   border: 2px solid #12375c;
@@ -125,13 +125,14 @@ QPushButton {
   padding: 2px;
 }
 
-QPushButton:hover {
+QPushButton:hover, QToolButton:hover,
+QPushButton:checked, QToolButton:checked {
   color: white;
   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #565656, stop: 1 #414141);
   border: 2px solid #3399FF;
 }
 
-QPushButton:disabled {
+QPushButton:disabled, QToolButton:disabled {
   background: #696969;
   border: 2px solid #164471;
 }
@@ -938,7 +939,7 @@ hud_unit_loader::item:hover {
   background: #3399FF;
 }
 
-sidebarWidget {
+top_bar_widget {
   color: white;
   /* Box around current widget */
   selection-background-color: rgb(100, 30, 30);

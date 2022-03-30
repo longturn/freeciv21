@@ -119,7 +119,7 @@ static QColor overview_tile_color(struct tile *ptile)
     struct city *pcity = tile_city(ptile);
 
     if (pcity) {
-      if (NULL == client.conn.playing
+      if (nullptr == client.conn.playing
           || city_owner(pcity) == client.conn.playing) {
         return get_color(tileset, COLOR_OVERVIEW_MY_CITY);
       } else if (pplayers_allied(city_owner(pcity), client.conn.playing)) {
@@ -134,7 +134,7 @@ static QColor overview_tile_color(struct tile *ptile)
     struct unit *punit = find_visible_unit(ptile);
 
     if (punit) {
-      if (NULL == client.conn.playing
+      if (nullptr == client.conn.playing
           || unit_owner(punit) == client.conn.playing) {
         return get_color(tileset, COLOR_OVERVIEW_MY_UNIT);
       } else if (pplayers_allied(unit_owner(punit), client.conn.playing)) {
@@ -482,8 +482,8 @@ void overview_free()
   if (gui_options.overview.map) {
     delete gui_options.overview.map;
     delete gui_options.overview.window;
-    gui_options.overview.map = NULL;
-    gui_options.overview.window = NULL;
+    gui_options.overview.map = nullptr;
+    gui_options.overview.window = nullptr;
   }
 }
 

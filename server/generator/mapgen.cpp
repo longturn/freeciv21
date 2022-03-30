@@ -916,7 +916,7 @@ static void make_rivers()
   struct tile *ptile;
   struct terrain *pterrain;
   struct river_map rivermap;
-  struct extra_type *road_river = NULL;
+  struct extra_type *road_river = nullptr;
 
   /* Formula to make the river density similar om different sized maps.
      Avoids too few rivers on large maps and too many rivers on small maps.
@@ -971,7 +971,7 @@ static void make_rivers()
 
         /* Don't start a river on a tile is surrounded by > 1 river +
            ocean tile. */
-        && (count_river_near_tile(ptile, NULL)
+        && (count_river_near_tile(ptile, nullptr)
                 + count_terrain_class_near_tile(ptile, true, false, TC_OCEAN)
             <= 1)
 
@@ -1031,7 +1031,7 @@ static void make_rivers()
             if (!terrain_has_flag(river_terrain, TER_CAN_HAVE_RIVER)) {
               // We have to change the terrain to put a river here.
               river_terrain = pick_terrain_by_flag(TER_CAN_HAVE_RIVER);
-              if (river_terrain != NULL) {
+              if (river_terrain != nullptr) {
                 tile_set_terrain(ptile1, river_terrain);
               }
             }
@@ -1064,7 +1064,7 @@ static void make_rivers()
  */
 static void make_land()
 {
-  struct terrain *land_fill = NULL;
+  struct terrain *land_fill = nullptr;
 
   if (HAS_POLES) {
     normalize_hmap_poles();
@@ -1083,7 +1083,7 @@ static void make_land()
   }
   terrain_type_iterate_end;
 
-  fc_assert_exit_msg(NULL != land_fill,
+  fc_assert_exit_msg(nullptr != land_fill,
                      "No land terrain type could be found for the purpose "
                      "of temporarily filling in land tiles during map "
                      "generation. This could be an error in Freeciv21, or a "
@@ -1211,7 +1211,7 @@ static void remove_tiny_islands()
       struct terrain *shallow = most_shallow_ocean(
           terrain_has_flag(tile_terrain(ptile), TER_FROZEN));
 
-      fc_assert_ret(NULL != shallow);
+      fc_assert_ret(nullptr != shallow);
       tile_set_terrain(ptile, shallow);
       extra_type_by_cause_iterate(EC_ROAD, priver)
       {
@@ -1567,7 +1567,7 @@ static void make_huts(int number)
       struct extra_type *phut = rand_extra_for_tile(ptile, EC_HUT, true);
 
       number--;
-      if (phut != NULL) {
+      if (phut != nullptr) {
         tile_add_extra(ptile, phut);
       }
       set_placed_near_pos(ptile, 3);
@@ -1584,7 +1584,7 @@ static bool is_resource_close(const struct tile *ptile)
 {
   square_iterate(&(wld.map), ptile, 1, tile1)
   {
-    if (NULL != tile_resource(tile1)) {
+    if (nullptr != tile_resource(tile1)) {
       return true;
     }
   }
@@ -1613,7 +1613,7 @@ static void add_resources(int prob)
       for (r = pterrain->resources; *r; r++) {
         /* This is a standard way to get a random element from the
          * pterrain->resources list, without computing its length in
-         * advance. Note that if *(pterrain->resources) == NULL, then
+         * advance. Note that if *(pterrain->resources) == nullptr, then
          * this loop is a no-op. */
         if ((*r)->generated) {
           if (0 == fc_rand(++i)) {
@@ -1636,10 +1636,10 @@ get_random_map_position_from_state(const struct gen234_state *const pstate)
 {
   int xrnd, yrnd;
 
-  fc_assert_ret_val((pstate->e - pstate->w) > 0, NULL);
-  fc_assert_ret_val((pstate->e - pstate->w) < wld.map.xsize, NULL);
-  fc_assert_ret_val((pstate->s - pstate->n) > 0, NULL);
-  fc_assert_ret_val((pstate->s - pstate->n) < wld.map.ysize, NULL);
+  fc_assert_ret_val((pstate->e - pstate->w) > 0, nullptr);
+  fc_assert_ret_val((pstate->e - pstate->w) < wld.map.xsize, nullptr);
+  fc_assert_ret_val((pstate->s - pstate->n) > 0, nullptr);
+  fc_assert_ret_val((pstate->s - pstate->n) < wld.map.ysize, nullptr);
 
   xrnd = pstate->w + fc_rand(pstate->e - pstate->w);
   yrnd = pstate->n + fc_rand(pstate->s - pstate->n);
@@ -1674,7 +1674,7 @@ static struct terrain_select *tersel_new(int weight,
  */
 static void tersel_free(struct terrain_select *ptersel)
 {
-  if (ptersel != NULL) {
+  if (ptersel != nullptr) {
     FC_FREE(ptersel);
   }
 }
@@ -2230,7 +2230,7 @@ static void initworld(struct gen234_state *pstate)
   struct terrain *deepest_ocean =
       pick_ocean(TERRAIN_OCEAN_DEPTH_MAXIMUM, false);
 
-  fc_assert(NULL != deepest_ocean);
+  fc_assert(nullptr != deepest_ocean);
   height_map = new int[MAP_INDEX_SIZE];
 
   create_placed_map(); // land tiles which aren't placed yet
@@ -2241,8 +2241,8 @@ static void initworld(struct gen234_state *pstate)
     tile_set_continent(ptile, 0);
     map_set_placed(ptile); // not a land tile
     BV_CLR_ALL(ptile->extras);
-    tile_set_owner(ptile, NULL, NULL);
-    ptile->extras_owner = NULL;
+    tile_set_owner(ptile, nullptr, nullptr);
+    ptile->extras_owner = nullptr;
   }
   whole_map_iterate_end;
 
@@ -2602,14 +2602,14 @@ static inline struct fair_tile *fair_map_pos_tile(struct fair_tile *pmap,
     if (current_topo_has_flag(TF_WRAPX)) {
       nat_x = FC_WRAP(nat_x, wld.map.xsize);
     } else {
-      return NULL;
+      return nullptr;
     }
   }
   if (nat_y < 0 || nat_y >= wld.map.ysize) {
     if (current_topo_has_flag(TF_WRAPY)) {
       nat_y = FC_WRAP(nat_y, wld.map.ysize);
     } else {
-      return NULL;
+      return nullptr;
     }
   }
 
@@ -2854,7 +2854,7 @@ static bool fair_map_copy(struct fair_tile *ptarget, int tx, int ty,
     x += tx;
     y += ty;
     pttile = fair_map_pos_tile(ptarget, x, y);
-    if (pttile == NULL) {
+    if (pttile == nullptr) {
       return false; // Limit of the map.
     }
     if (pttile->flags & FTF_ASSIGNED) {
@@ -2865,8 +2865,9 @@ static bool fair_map_copy(struct fair_tile *ptarget, int tx, int ty,
     } else if (pttile->flags & FTF_OCEAN && !(pstile->flags & FTF_OCEAN)) {
       return false; // We clearly want a sea tile here.
     }
-    if ((pttile->flags & FTF_NO_RESOURCE && pstile->presource != NULL)
-        || (pstile->flags & FTF_NO_RESOURCE && pttile->presource != NULL)) {
+    if ((pttile->flags & FTF_NO_RESOURCE && pstile->presource != nullptr)
+        || (pstile->flags & FTF_NO_RESOURCE
+            && pttile->presource != nullptr)) {
       return false; // Resource disallowed there.
     }
     if ((pttile->flags & FTF_NO_HUT && pstile->flags & FTF_HAS_HUT)
@@ -2889,10 +2890,10 @@ static bool fair_map_copy(struct fair_tile *ptarget, int tx, int ty,
     x += tx;
     y += ty;
     pttile = fair_map_pos_tile(ptarget, x, y);
-    fc_assert_ret_val(pttile != NULL, false);
+    fc_assert_ret_val(pttile != nullptr, false);
     pttile->flags =
         static_cast<fair_tile_flag>(pttile->flags | pstile->flags);
-    if (pstile->pterrain != NULL) {
+    if (pstile->pterrain != nullptr) {
       pttile->pterrain = pstile->pterrain;
       pttile->presource = pstile->presource;
       pttile->extras = pstile->extras;
@@ -2989,7 +2990,7 @@ static void fair_map_make_resources(struct fair_tile *pmap)
 
       for (j = 0; j < wld.map.num_valid_dirs; j++) {
         pftile2 = fair_map_tile_step(pmap, pftile, wld.map.valid_dirs[j]);
-        if (pftile2 != NULL && pftile2->flags & FTF_ASSIGNED
+        if (pftile2 != nullptr && pftile2->flags & FTF_ASSIGNED
             && !(pftile2->flags & FTF_OCEAN)) {
           land_around = true;
           break;
@@ -3001,19 +3002,19 @@ static void fair_map_make_resources(struct fair_tile *pmap)
     }
 
     j = 0;
-    for (r = pftile->pterrain->resources; *r != NULL; r++) {
+    for (r = pftile->pterrain->resources; *r != nullptr; r++) {
       if (fc_rand(++j) == 0) {
         pftile->presource = *r;
       }
     }
-    /* Note that 'pftile->presource' might be NULL if there is no suitable
+    /* Note that 'pftile->presource' might be nullptr if there is no suitable
      * resource for the terrain. */
-    if (pftile->presource != NULL) {
+    if (pftile->presource != nullptr) {
       pftile->flags =
           static_cast<fair_tile_flag>(pftile->flags | FTF_NO_RESOURCE);
       for (j = 0; j < wld.map.num_valid_dirs; j++) {
         pftile2 = fair_map_tile_step(pmap, pftile, wld.map.valid_dirs[j]);
-        if (pftile2 != NULL) {
+        if (pftile2 != nullptr) {
           pftile2->flags =
               static_cast<fair_tile_flag>(pftile2->flags | FTF_NO_RESOURCE);
         }
@@ -3030,7 +3031,7 @@ static void fair_map_make_resources(struct fair_tile *pmap)
 static void fair_map_make_huts(struct fair_tile *pmap)
 {
   struct fair_tile *pftile;
-  struct tile *pvtile = tile_virtual_new(NULL);
+  struct tile *pvtile = tile_virtual_new(nullptr);
   struct extra_type *phut;
   int i, j, k;
 
@@ -3052,7 +3053,7 @@ static void fair_map_make_huts(struct fair_tile *pmap)
     }
 
     i--;
-    if (pftile->pterrain == NULL) {
+    if (pftile->pterrain == nullptr) {
       continue; // Not an used tile.
     }
 
@@ -3062,7 +3063,7 @@ static void fair_map_make_huts(struct fair_tile *pmap)
     pvtile->extras = pftile->extras;
 
     phut = rand_extra_for_tile(pvtile, EC_HUT, true);
-    if (phut != NULL) {
+    if (phut != nullptr) {
       tile_add_extra(pvtile, phut);
       pftile->extras = pvtile->extras;
       pftile->flags =
@@ -3136,7 +3137,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
 
     for (j = 0; j < wld.map.num_valid_dirs; j++) {
       pftile2 = fair_map_tile_step(pisland, pftile, wld.map.valid_dirs[j]);
-      fc_assert(pftile2 != NULL);
+      fc_assert(pftile2 != nullptr);
       if (fair_map_tile_border(pisland, pftile2, sea_around_island)) {
         continue;
       }
@@ -3155,7 +3156,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
     pftile2 = fair_map_tile_step(
         pisland, pftile,
         wld.map.cardinal_dirs[fc_rand(wld.map.num_cardinal_dirs)]);
-    fc_assert(pftile2 != NULL);
+    fc_assert(pftile2 != nullptr);
     if (fair_map_tile_border(pisland, pftile2, sea_around_island)) {
       continue;
     }
@@ -3262,7 +3263,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
       ocean_around = false;
       for (j = 0; j < wld.map.num_valid_dirs; j++) {
         pftile2 = fair_map_tile_step(pisland, pftile, wld.map.valid_dirs[j]);
-        if (pftile2 == NULL) {
+        if (pftile2 == nullptr) {
           continue;
         }
 
@@ -3290,7 +3291,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
       }
 
       // Check a river in one direction.
-      pend = NULL;
+      pend = nullptr;
       length = -1;
       dir = direction8_invalid();
       dirs_num = 0;
@@ -3304,7 +3305,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
         for (l = 2; l < length_max; l++) {
           pftile2 =
               fair_map_tile_step(pisland, pftile2, wld.map.valid_dirs[j]);
-          if (pftile2 == NULL
+          if (pftile2 == nullptr
               || !terrain_has_flag(pftile2->pterrain, TER_CAN_HAVE_RIVER)) {
             break;
           }
@@ -3320,7 +3321,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
 
             pftile3 =
                 fair_map_tile_step(pisland, pftile2, wld.map.valid_dirs[k]);
-            if (pftile3 == NULL) {
+            if (pftile3 == nullptr) {
               continue;
             }
 
@@ -3348,7 +3349,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
           length = l;
         }
       }
-      if (pend == NULL) {
+      if (pend == nullptr) {
         continue;
       }
 
@@ -3366,7 +3367,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
           break;
         }
         pftile = fair_map_tile_step(pisland, pftile, dir);
-        fc_assert(pftile != NULL);
+        fc_assert(pftile != nullptr);
       }
     }
   }
@@ -3495,8 +3496,8 @@ static bool map_generate_fair_islands()
     tile_set_terrain(ptile, deepest_ocean);
     tile_set_continent(ptile, 0);
     BV_CLR_ALL(ptile->extras);
-    tile_set_owner(ptile, NULL, NULL);
-    ptile->extras_owner = NULL;
+    tile_set_owner(ptile, nullptr, nullptr);
+    ptile->extras_owner = nullptr;
   }
   whole_map_iterate_end;
 
@@ -3758,7 +3759,7 @@ static bool map_generate_fair_islands()
   {
     struct fair_tile *pftile = pmap + tile_index(ptile);
 
-    fc_assert(pftile->pterrain != NULL);
+    fc_assert(pftile->pterrain != nullptr);
     tile_set_terrain(ptile, pftile->pterrain);
     ptile->extras = pftile->extras;
     tile_set_resource(ptile, pftile->presource);

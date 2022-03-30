@@ -39,7 +39,7 @@ void start_style_music()
     return;
   }
 
-  if (client.conn.playing == NULL) {
+  if (client.conn.playing == nullptr) {
     /* Detached connections and global observers currently not
      * supported */
     return;
@@ -52,7 +52,7 @@ void start_style_music()
 
     pms = music_style_by_number(client.conn.playing->music_style);
 
-    if (pms != NULL) {
+    if (pms != nullptr) {
       QString tag;
 
       switch (client.conn.playing->client.mood) {
@@ -69,7 +69,7 @@ void start_style_music()
 
       if (!tag.isEmpty()) {
         log_debug("Play %s", qUtf8Printable(tag));
-        audio_play_music(tag, NULL, MU_INGAME);
+        audio_play_music(tag, nullptr, MU_INGAME);
       }
     }
   }
@@ -105,7 +105,7 @@ void play_single_track(const QString &tag)
     return;
   }
 
-  audio_play_track(tag, NULL);
+  audio_play_track(tag, nullptr);
 }
 
 /**
@@ -119,7 +119,7 @@ void musicspec_reread_callback(struct option *poption)
 
   // Start suitable music from the new set
   if (client_state() != C_S_RUNNING) {
-    start_menu_music(QStringLiteral("music_menu"), NULL);
+    start_menu_music(QStringLiteral("music_menu"), nullptr);
   } else {
     start_style_music();
   }

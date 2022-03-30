@@ -45,7 +45,7 @@ civtimer::civtimer(enum timer_timetype ttype, enum timer_use tuse)
  */
 civtimer *timer_new(enum timer_timetype type, enum timer_use use)
 {
-  return timer_renew(NULL, type, use);
+  return timer_renew(nullptr, type, use);
 }
 
 /************************************************************************
@@ -70,7 +70,7 @@ void timer_destroy(civtimer *t) { NFC_FREE(t); }
 
 /**
    Return whether timer is in use.
-   t may be NULL, in which case returns 0
+   t may be nullptr, in which case returns 0
  */
 bool timer_in_use(civtimer *t) { return (t && t->use != TIMER_IGNORE); }
 
@@ -81,7 +81,7 @@ bool timer_in_use(civtimer *t) { return (t && t->use != TIMER_IGNORE); }
  */
 void timer_clear(civtimer *t)
 {
-  fc_assert_ret(NULL != t);
+  fc_assert_ret(nullptr != t);
   t->state = TIMER_STOPPED;
   t->sec = 0.0;
   t->msec = 0;
@@ -93,7 +93,7 @@ void timer_clear(civtimer *t)
  */
 void timer_start(civtimer *t)
 {
-  fc_assert_ret(NULL != t);
+  fc_assert_ret(nullptr != t);
 
   if (t->use == TIMER_IGNORE) {
     return;
@@ -114,7 +114,7 @@ void timer_start(civtimer *t)
  */
 void timer_stop(civtimer *t)
 {
-  fc_assert_ret(NULL != t);
+  fc_assert_ret(nullptr != t);
 
   if (t->use == TIMER_IGNORE) {
     return;
@@ -135,7 +135,7 @@ void timer_stop(civtimer *t)
  */
 double timer_read_seconds(civtimer *t)
 {
-  fc_assert_ret_val(NULL != t, -1.0);
+  fc_assert_ret_val(nullptr != t, -1.0);
 
   if (t->use == TIMER_IGNORE) {
     return 0.0;

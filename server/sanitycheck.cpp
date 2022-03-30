@@ -60,7 +60,7 @@
 #define SANITY_TILE(_tile, check)                                           \
   do {                                                                      \
     struct city *_tile##_city = tile_city(_tile);                           \
-    if (NULL != _tile##_city) {                                             \
+    if (nullptr != _tile##_city) {                                          \
       SANITY_CITY(_tile##_city, check);                                     \
     } else {                                                                \
       SANITY_TERRAIN(_tile, check);                                         \
@@ -147,7 +147,7 @@ static void check_fow(const char *file, const char *function, int line)
   }
   whole_map_iterate_end;
 
-  SANITY_CHECK(game.government_during_revolution != NULL);
+  SANITY_CHECK(game.government_during_revolution != nullptr);
   SANITY_CHECK(
       game.government_during_revolution
       == government_by_number(game.info.government_during_revolution_id));
@@ -192,14 +192,14 @@ static void check_map(const char *file, const char *function, int line)
 
     CHECK_INDEX(tile_index(ptile));
 
-    if (NULL != pcity) {
+    if (nullptr != pcity) {
       SANITY_TILE(ptile, same_pos(pcity->tile, ptile));
-      SANITY_TILE(ptile, tile_owner(ptile) != NULL);
+      SANITY_TILE(ptile, tile_owner(ptile) != nullptr);
     }
 
-    if (NULL == pcity && BORDERS_DISABLED == game.info.borders) {
+    if (nullptr == pcity && BORDERS_DISABLED == game.info.borders) {
       // Only city tiles are claimed when borders are disabled
-      SANITY_TILE(ptile, tile_owner(ptile) == NULL);
+      SANITY_TILE(ptile, tile_owner(ptile) == nullptr);
     }
 
     if (is_ocean_tile(ptile)) {
@@ -252,7 +252,7 @@ static bool check_city_good(struct city *pcity, const char *file,
   struct player *pplayer = city_owner(pcity);
   struct tile *pcenter = city_tile(pcity);
 
-  if (NULL == pcenter) {
+  if (nullptr == pcenter) {
     // Editor!
     SANITY_FAIL("(----,----) city has no tile (skipping remaining tests), "
                 "at %s \"%s\"[%d]%s",
@@ -264,10 +264,10 @@ static bool check_city_good(struct city *pcity, const char *file,
   SANITY_CITY(pcity,
               !terrain_has_flag(tile_terrain(pcenter), TER_NO_CITIES));
 
-  SANITY_CITY(pcity, NULL != tile_owner(pcenter));
+  SANITY_CITY(pcity, nullptr != tile_owner(pcenter));
   SANITY_CITY(pcity, city_owner(pcity) == tile_owner(pcenter));
 
-  if (NULL != tile_owner(pcenter)) {
+  if (nullptr != tile_owner(pcenter)) {
     if (tile_owner(pcenter) != pplayer) {
       SANITY_FAIL(
           "(%4d,%4d) tile owned by %s, at %s \"%s\"[%d]%s", TILE_XY(pcenter),
@@ -298,8 +298,8 @@ static bool check_city_good(struct city *pcity, const char *file,
   {
     struct city *partner = game_city_by_number(proute->partner);
 
-    if (partner != NULL) {
-      struct trade_route *back_route = NULL;
+    if (partner != nullptr) {
+      struct trade_route *back_route = nullptr;
 
       trade_routes_iterate(partner, pback)
       {
@@ -310,9 +310,9 @@ static bool check_city_good(struct city *pcity, const char *file,
       }
       trade_routes_iterate_end;
 
-      SANITY_CITY(pcity, back_route != NULL);
+      SANITY_CITY(pcity, back_route != nullptr);
 
-      if (back_route != NULL) {
+      if (back_route != nullptr) {
         switch (back_route->dir) {
         case RDIR_TO:
           SANITY_CITY(pcity, proute->dir == RDIR_FROM);
@@ -368,7 +368,7 @@ static void check_city_size(struct city *pcity, const char *file,
               city_specialists(pcity));
 
     city_repair_size(pcity, delta);
-    city_refresh_from_main_map(pcity, NULL);
+    city_refresh_from_main_map(pcity, nullptr);
   }
 }
 
@@ -457,7 +457,7 @@ static void check_units(const char *file, const char *function, int line)
 
       // Unit in the correct player list?
       SANITY_CHECK(player_unit_by_number(unit_owner(punit), punit->id)
-                   != NULL);
+                   != nullptr);
 
       if (!can_unit_continue_current_activity(punit)) {
         SANITY_FAIL("(%4d,%4d) %s has activity %s, "
@@ -472,7 +472,7 @@ static void check_units(const char *file, const char *function, int line)
               || pterr->irrigation_result == pterr)
           && (punit->activity != ACTIVITY_MINE
               || pterr->mining_result == pterr)) {
-        SANITY_CHECK(punit->activity_target != NULL);
+        SANITY_CHECK(punit->activity_target != nullptr);
       }
 
       pcity = tile_city(ptile);
@@ -485,7 +485,7 @@ static void check_units(const char *file, const char *function, int line)
 
       // Check for ground units in the ocean.
       SANITY_CHECK(can_unit_exist_at_tile(&(wld.map), punit, ptile)
-                   || ptrans != NULL);
+                   || ptrans != nullptr);
 
       // Check for over-full transports.
       SANITY_CHECK(get_transporter_occupancy(punit)
@@ -493,7 +493,7 @@ static void check_units(const char *file, const char *function, int line)
 
       /* Check transporter. This should be last as the pointer ptrans will
        * be modified. */
-      if (ptrans != NULL) {
+      if (ptrans != nullptr) {
         struct unit *plevel = punit;
         int level = 0;
 
@@ -505,13 +505,13 @@ static void check_units(const char *file, const char *function, int line)
 
         // Check that the unit is listed as transported.
         SANITY_CHECK(unit_list_search(unit_transport_cargo(ptrans), punit)
-                     != NULL);
+                     != nullptr);
 
         // Check the depth of the transportation.
         while (ptrans) {
           struct unit_list *pcargos = unit_transport_cargo(ptrans);
 
-          SANITY_CHECK(pcargos != NULL);
+          SANITY_CHECK(pcargos != nullptr);
           SANITY_CHECK(level < GAME_TRANSPORT_MAX_RECURSIVE);
 
           // Check for next level.
@@ -553,7 +553,7 @@ static void check_players(const char *file, const char *function, int line)
       continue;
     }
 
-    SANITY_CHECK(pplayer->server.adv != NULL);
+    SANITY_CHECK(pplayer->server.adv != nullptr);
     SANITY_CHECK(!pplayer->nation || pplayer->nation->player == pplayer);
     SANITY_CHECK(player_list_search(team_members(pplayer->team), pplayer));
 
@@ -654,7 +654,7 @@ static void check_teams(const char *file, const char *function, int line)
   players_iterate(pplayer)
   {
     // For the moment, all players have teams.
-    SANITY_CHECK(pplayer->team != NULL);
+    SANITY_CHECK(pplayer->team != nullptr);
     if (pplayer->team) {
       count[team_index(pplayer->team)]++;
     }
@@ -738,8 +738,8 @@ void real_sanity_check(const char *file, const char *function, int line)
 void real_sanity_check_tile(struct tile *ptile, const char *file,
                             const char *function, int line)
 {
-  SANITY_CHECK(ptile != NULL);
-  SANITY_CHECK(ptile->terrain != NULL);
+  SANITY_CHECK(ptile != nullptr);
+  SANITY_CHECK(ptile->terrain != nullptr);
 
   unit_list_iterate(ptile->units, punit)
   {

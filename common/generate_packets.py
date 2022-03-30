@@ -290,29 +290,34 @@ class Field:
         if not self.is_array:
             return "  differ = (old->%(name)s != real_packet->%(name)s);" % self.__dict__
 
+        sizes = None, None
         if self.dataio_type == "string" or self.dataio_type == "estring":
             c = "strcmp(old->%(name)s[i], real_packet->%(name)s[i]) != 0" % self.__dict__
-            array_size_u = self.array_size1_u
-            array_size_o = self.array_size1_o
+            sizes = self.array_size1_o, self.array_size1_u
         elif self.is_struct:
             c = "!are_%(dataio_type)ss_equal(&old->%(name)s[i], &real_packet->%(name)s[i])" % self.__dict__
+            sizes = self.array_size_o, self.array_size_u
         else:
             c = "old->%(name)s[i] != real_packet->%(name)s[i]" % self.__dict__
+            sizes = self.array_size_o, self.array_size_u
 
-        return '''
-    {
-      differ = (%(array_size_o)s != %(array_size_u)s);
-      if (!differ) {
+        differ = f'({sizes[0]} != {sizes[1]})'
+        if sizes[0] == sizes[1]:
+          differ = 'false'
+        return f'''
+    {{
+      differ = {differ};
+      if (!differ) {{
         int i;
 
-        for (i = 0; i < %(array_size_u)s; i++) {
-          if (%(c)s) {
+        for (i = 0; i < {sizes[1]}; i++) {{
+          if ({c}) {{
             differ = true;
             break;
-          }
-        }
-      }
-    }''' % self.get_dict(vars())
+          }}
+        }}
+      }}
+    }}'''
 
     # Returns a code fragment which updates the bit of the this field
     # in the "fields" bitvector. The bit is either a "content-differs"

@@ -38,7 +38,7 @@ private:
   QPixmap cursor_pix;
 
 public:
-  fc_double_edge(QWidget *parent = NULL);
+  fc_double_edge(QWidget *parent = nullptr);
   ~fc_double_edge() override;
   int current_min;
   int current_max;

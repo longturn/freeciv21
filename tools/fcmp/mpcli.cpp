@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
   qInfo("%s%s", word_version(), VERSION_STRING);
 
   rev_ver = fc_git_revision();
-  if (rev_ver != NULL) {
+  if (rev_ver != nullptr) {
     qInfo(_("commit: %s"), rev_ver);
   }
 
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     auto errmsg =
         download_modpack(fcmp.autoinstall, &fcmp, msg_callback, nullptr);
 
-    if (errmsg == NULL) {
+    if (errmsg == nullptr) {
       qInfo(_("Modpack installed successfully"));
     } else {
       qCritical(_("Modpack install failed: %s"), errmsg);

@@ -29,7 +29,7 @@
  */
 void handicaps_init(struct player *pplayer)
 {
-  if (pplayer->ai_common.handicaps != NULL) {
+  if (pplayer->ai_common.handicaps != nullptr) {
     return;
   }
   pplayer->ai_common.handicaps = new QBitArray(H_LAST);
@@ -40,12 +40,12 @@ void handicaps_init(struct player *pplayer)
  */
 void handicaps_close(struct player *pplayer)
 {
-  if (pplayer->ai_common.handicaps == NULL) {
+  if (pplayer->ai_common.handicaps == nullptr) {
     return;
   }
 
   delete pplayer->ai_common.handicaps;
-  pplayer->ai_common.handicaps = NULL;
+  pplayer->ai_common.handicaps = nullptr;
 }
 
 /**
@@ -84,7 +84,7 @@ const char *handicap_desc(enum handicap_type htype, bool *inverted)
   case H_DIPLOMAT:
     return _("Doesn't build offensive diplomatic units.");
   case H_AWAY:
-    return NULL; // AI_LEVEL_AWAY has its own description
+    return nullptr; // AI_LEVEL_AWAY has its own description
   case H_LIMITEDHUTS:
     return _("Gets reduced bonuses from huts.");
   case H_DEFENSIVE:

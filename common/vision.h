@@ -112,8 +112,8 @@ bool vision_reveal_tiles(struct vision *vision, bool reveal_tiles);
  */
 struct vision_site {
   char name[MAX_LEN_NAME];
-  struct tile *location; // Cannot be NULL
-  struct player *owner;  // May be NULL, always check!
+  struct tile *location; // Cannot be nullptr
+  struct player *owner;  // May be nullptr, always check!
 
   int identity;  // city > IDENTITY_NUMBER_ZERO
   citizens size; // city size (0 <= size <= MAX_CITY_SIZE)

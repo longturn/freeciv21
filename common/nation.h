@@ -16,7 +16,7 @@
 
 #include "rgbcolor.h"
 
-#define NO_NATION_SELECTED (NULL)
+#define NO_NATION_SELECTED (nullptr)
 
 // Changing this value will break network compatibility.
 #define NATION_NONE -1
@@ -91,13 +91,14 @@ struct nation_type {
   // Groups which this nation is assigned to
   struct nation_group_list *groups;
 
-  struct player *player; // Who's using the nation, or NULL.
+  struct player *player; // Who's using the nation, or nullptr.
 
   // Items given to this nation at game start.
   // (Only used in the client for documentation purposes.)
   int init_techs[MAX_NUM_TECH_LIST];
   int init_buildings[MAX_NUM_BUILDING_LIST];
-  struct government *init_government; // use game default_government if NULL
+  struct government
+      *init_government; // use game default_government if nullptr
   struct unit_type *init_units[MAX_NUM_UNIT_LIST];
 
   union {
@@ -115,7 +116,7 @@ struct nation_type {
        * British and English. */
       struct nation_list *conflicts_with;
 
-      // Nation's associated player color (NULL if none).
+      // Nation's associated player color (nullptr if none).
       struct rgbcolor *rgb;
 
       struct trait_limits *traits;

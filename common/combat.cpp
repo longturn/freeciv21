@@ -88,7 +88,7 @@ bool is_unit_reachable_at(const struct unit *defender,
                           const struct unit *attacker,
                           const struct tile *location)
 {
-  if (NULL != tile_city(location)) {
+  if (nullptr != tile_city(location)) {
     return true;
   }
 
@@ -429,7 +429,7 @@ double unit_win_chance(const struct unit *attacker,
 /**
    Try defending against nuclear attack; if successful, return a city which
    had enough luck and EFT_NUKE_PROOF.
-   If the attack was successful return NULL.
+   If the attack was successful return nullptr.
  */
 struct city *sdi_try_defend(const struct player *owner,
                             const struct tile *ptile)
@@ -440,14 +440,15 @@ struct city *sdi_try_defend(const struct player *owner,
 
     if (pcity
         && fc_rand(100) < get_target_bonus_effects(
-               NULL, city_owner(pcity), owner, pcity, NULL, ptile, NULL,
-               NULL, NULL, NULL, NULL, EFT_NUKE_PROOF)) {
+               nullptr, city_owner(pcity), owner, pcity, nullptr, ptile,
+               nullptr, nullptr, nullptr, nullptr, nullptr,
+               EFT_NUKE_PROOF)) {
       return pcity;
     }
   }
   square_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -469,10 +470,10 @@ int base_get_attack_power(const struct unit_type *punittype, int veteran,
   int power;
   const struct veteran_level *vlevel;
 
-  fc_assert_ret_val(punittype != NULL, 0);
+  fc_assert_ret_val(punittype != nullptr, 0);
 
   vlevel = utype_veteran_level(punittype, veteran);
-  fc_assert_ret_val(vlevel != NULL, 0);
+  fc_assert_ret_val(vlevel != nullptr, 0);
 
   power =
       punittype->attack_strength * POWER_FACTOR * vlevel->power_fact / 100;
@@ -491,10 +492,10 @@ int base_get_defense_power(const struct unit *punit)
 {
   const struct veteran_level *vlevel;
 
-  fc_assert_ret_val(punit != NULL, 0);
+  fc_assert_ret_val(punit != nullptr, 0);
 
   vlevel = utype_veteran_level(unit_type_get(punit), punit->veteran);
-  fc_assert_ret_val(vlevel != NULL, 0);
+  fc_assert_ret_val(vlevel != nullptr, 0);
 
   return unit_type_get(punit)->defense_strength * POWER_FACTOR
          * vlevel->power_fact / 100;
@@ -557,16 +558,16 @@ static int defense_multiplication(const struct unit_type *att_type,
   int mod;
   const struct unit_type *def_type = unit_type_get(def);
 
-  fc_assert_ret_val(NULL != def_type, 0);
+  fc_assert_ret_val(nullptr != def_type, 0);
 
-  if (NULL != att_type) {
+  if (nullptr != att_type) {
     int defense_divider_pct;
     int defense_multiplier_pct =
         100 + def_type->cache.defense_mp_bonuses_pct[utype_index(att_type)];
 
     defensepower = defensepower * defense_multiplier_pct / 100;
 
-    // This applies even if pcity is NULL.
+    // This applies even if pcity is nullptr.
     mod =
         100
         + get_unittype_bonus(def_player, ptile, att_type, EFT_DEFEND_BONUS);
@@ -589,9 +590,9 @@ static int defense_multiplication(const struct unit_type *att_type,
   defensepower = defensepower
                  * (100
                     + get_target_bonus_effects(
-                        NULL, unit_owner(def), NULL, tile_city(ptile), NULL,
-                        ptile, def, unit_type_get(def), NULL, NULL, NULL,
-                        EFT_FORTIFY_DEFENSE_BONUS))
+                        nullptr, unit_owner(def), nullptr, tile_city(ptile),
+                        nullptr, ptile, def, unit_type_get(def), nullptr,
+                        nullptr, nullptr, EFT_FORTIFY_DEFENSE_BONUS))
                  / 100;
 
   return defensepower;
@@ -613,7 +614,7 @@ int get_virtual_defense_power(const struct unit_type *att_type,
   struct unit *vdef;
   int def;
 
-  fc_assert_ret_val(def_type != NULL, 0);
+  fc_assert_ret_val(def_type != nullptr, 0);
 
   if (!can_exist_at_tile(&(wld.map), def_type, ptile)) {
     // Ground units on ship doesn't defend.
@@ -621,11 +622,11 @@ int get_virtual_defense_power(const struct unit_type *att_type,
   }
 
   vlevel = utype_veteran_level(def_type, veteran);
-  fc_assert_ret_val(vlevel != NULL, 0);
+  fc_assert_ret_val(vlevel != nullptr, 0);
 
   defclass = utype_class(def_type);
 
-  vdef = unit_virtual_create(def_player, NULL, def_type, veteran);
+  vdef = unit_virtual_create(def_player, nullptr, def_type, veteran);
   unit_tile_set(vdef, ptile);
   if (fortified) {
     vdef->activity = ACTIVITY_FORTIFIED;
@@ -664,18 +665,18 @@ int get_total_defense_power(const struct unit *attacker,
 
 /**
    Return total defense power of the unit if it fortifies, if possible,
-   where it is. attacker might be NULL to skip calculating attacker specific
-   bonuses.
+   where it is. attacker might be nullptr to skip calculating attacker
+   specific bonuses.
  */
 int get_fortified_defense_power(const struct unit *attacker,
                                 struct unit *defender)
 {
-  const struct unit_type *att_type = NULL;
+  const struct unit_type *att_type = nullptr;
   enum unit_activity real_act;
   int def;
   const struct unit_type *utype;
 
-  if (attacker != NULL) {
+  if (attacker != nullptr) {
     att_type = unit_type_get(attacker);
   }
 
@@ -724,7 +725,7 @@ static int get_defense_rating(const struct unit *attacker,
 struct unit *get_defender(const struct unit *attacker,
                           const struct tile *ptile)
 {
-  struct unit *bestdef = NULL;
+  struct unit *bestdef = nullptr;
   int bestvalue = -99, best_cost = 0, rating_of_best = 0;
 
   /* Simply call win_chance with all the possible defenders in turn, and
@@ -801,7 +802,7 @@ struct unit *get_attacker(const struct unit *defender,
     int build_cost = unit_build_shield_cost_base(attacker);
 
     if (pplayers_allied(unit_owner(defender), unit_owner(attacker))) {
-      return NULL;
+      return nullptr;
     }
     unit_a =
         static_cast<int>(100000 * (unit_win_chance(attacker, defender)));
@@ -818,19 +819,19 @@ struct unit *get_attacker(const struct unit *defender,
 }
 
 /**
-   Returns the defender of the tile in a diplomatic battle or NULL if no
+   Returns the defender of the tile in a diplomatic battle or nullptr if no
    diplomatic defender could be found.
    @param act_unit the diplomatic attacker, trying to perform an action.
    @param pvictim  unit that should be excluded as a defender.
    @param tgt_tile the tile to defend.
-   @return the defender or NULL if no diplomatic defender could be found.
+   @return the defender or nullptr if no diplomatic defender could be found.
  */
 struct unit *get_diplomatic_defender(const struct unit *act_unit,
                                      const struct unit *pvictim,
                                      const struct tile *tgt_tile)
 {
-  fc_assert_ret_val(act_unit, NULL);
-  fc_assert_ret_val(tgt_tile, NULL);
+  fc_assert_ret_val(act_unit, nullptr);
+  fc_assert_ret_val(tgt_tile, nullptr);
 
   unit_list_iterate(tgt_tile->units, punit)
   {
@@ -866,7 +867,7 @@ struct unit *get_diplomatic_defender(const struct unit *act_unit,
   unit_list_iterate_end;
 
   // No diplomatic defender found.
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -876,7 +877,7 @@ bool is_stack_vulnerable(const struct tile *ptile)
 {
   return (game.info.killstack
           && !tile_has_extra_flag(ptile, EF_NO_STACK_DEATH)
-          && NULL == tile_city(ptile));
+          && nullptr == tile_city(ptile));
 }
 
 /**

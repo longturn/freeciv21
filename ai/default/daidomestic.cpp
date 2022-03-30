@@ -88,7 +88,7 @@ static void dai_choose_help_wonder(struct ai_type *ait, struct city *pcity,
     return;
   }
 
-  if (pcity == wonder_city || wonder_city == NULL
+  if (pcity == wonder_city || wonder_city == nullptr
       || city_data->distance_to_wonder_city <= 0
       || !city_production_gets_caravan_shields(&wonder_city->production)
       // TODO: Should helping to build a unit be considered when legal?
@@ -153,7 +153,7 @@ static void dai_choose_help_wonder(struct ai_type *ait, struct city *pcity,
        * the unit. */
       unit_type = dai_wants_role_unit(
           ait, pplayer, pcity, action_id_get_role(ACTION_HELP_WONDER), want);
-      if (unit_type != NULL) {
+      if (unit_type != nullptr) {
         choice->want = want;
         choice->type = CT_CIVILIAN;
         choice->value.utype = unit_type;
@@ -324,11 +324,11 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
    * have four trade routes, if there already is route between them
    * or if the Establish Trade Route action is illegal. */
 
-  /* We pass a NULL pc2 to get_caravan_enter_city_trade_bonus() so
+  /* We pass a nullptr pc2 to get_caravan_enter_city_trade_bonus() so
    * it assumes that we are creating trade route to city with 75% of
    * pcitys trade 10 squares away. */
   income = get_caravan_enter_city_trade_bonus(
-      pcity, NULL, pplayer, NULL,
+      pcity, nullptr, pplayer, nullptr,
       utype_can_do_action(unit_type, ACTION_TRADE_ROUTE));
 
   if (dest_city_nat_same_cont) {
@@ -410,12 +410,12 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
     unit_type = dai_wants_role_unit(
         ait, pplayer, pcity, action_id_get_role(ACTION_TRADE_ROUTE), want);
 
-    if (unit_type == NULL) {
+    if (unit_type == nullptr) {
       unit_type = dai_wants_role_unit(
           ait, pplayer, pcity, action_id_get_role(ACTION_MARKETPLACE), want);
     }
 
-    if (unit_type != NULL) {
+    if (unit_type != nullptr) {
       choice->want = want;
       choice->type = CT_CIVILIAN;
       choice->value.utype = unit_type;
@@ -436,7 +436,7 @@ struct adv_choice *domestic_advisor_choose_build(struct ai_type *ait,
                                                  struct player *pplayer,
                                                  struct city *pcity)
 {
-  struct adv_data *adv = adv_data_get(pplayer, NULL);
+  struct adv_data *adv = adv_data_get(pplayer, nullptr);
   // Unit type with certain role
   struct unit_type *worker_type;
   struct unit_type *founder_type;
@@ -454,14 +454,14 @@ struct adv_choice *domestic_advisor_choose_build(struct ai_type *ait,
   worker_want = city_data->worker_want * pplayer->ai_common.expand / 100;
 
   if (adv->wonder_city == pcity->id) {
-    if (worker_type == NULL || worker_type->pop_cost > 0) {
+    if (worker_type == nullptr || worker_type->pop_cost > 0) {
       worker_want /= 5;
     } else {
       worker_want /= 2;
     }
   }
 
-  if (worker_type != NULL
+  if (worker_type != nullptr
       && pcity->surplus[O_FOOD]
              > utype_upkeep_cost(worker_type, pplayer, O_FOOD)) {
     if (worker_want > 0) {
@@ -474,7 +474,7 @@ struct adv_choice *domestic_advisor_choose_build(struct ai_type *ait,
     }
     // Terrain improvers don't use boats (yet)
 
-  } else if (worker_type == NULL && worker_want > 0) {
+  } else if (worker_type == nullptr && worker_want > 0) {
     // Can't build workers. Lets stimulate science
     dai_wants_role_unit(ait, pplayer, pcity, UTYF_SETTLERS, worker_want);
   }
@@ -489,7 +489,7 @@ struct adv_choice *domestic_advisor_choose_build(struct ai_type *ait,
     founder_want = city_data->founder_want;
 
     if (adv->wonder_city == pcity->id) {
-      if (founder_type == NULL || founder_type->pop_cost > 0) {
+      if (founder_type == nullptr || founder_type->pop_cost > 0) {
         founder_want /= 5;
       } else {
         founder_want /= 2;
@@ -521,7 +521,7 @@ struct adv_choice *domestic_advisor_choose_build(struct ai_type *ait,
         // We need boats to colonize!
         /* We might need boats even if there are boats free,
          * if they are blockaded or in inland seas. */
-        struct ai_plr *ai = dai_plr_data_get(ait, pplayer, NULL);
+        struct ai_plr *ai = dai_plr_data_get(ait, pplayer, nullptr);
 
         CITY_LOG(LOG_DEBUG, pcity,
                  "desires founders with passion " ADV_WANT_PRINTF
@@ -605,7 +605,7 @@ void dai_wonder_city_distance(struct ai_type *ait, struct player *pplayer,
   }
   city_list_iterate_end;
 
-  if (wonder_city == NULL) {
+  if (wonder_city == nullptr) {
     return;
   }
 

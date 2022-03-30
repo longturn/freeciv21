@@ -79,7 +79,7 @@ action_id as_actions_transform[MAX_NUM_ACTIONS];
 action_id as_actions_extra[MAX_NUM_ACTIONS];
 action_id as_actions_rmextra[MAX_NUM_ACTIONS];
 
-static civtimer *as_timer = NULL;
+static civtimer *as_timer = nullptr;
 
 /**
    Free resources allocated for autosettlers system
@@ -87,7 +87,7 @@ static civtimer *as_timer = NULL;
 void adv_settlers_free()
 {
   timer_destroy(as_timer);
-  as_timer = NULL;
+  as_timer = nullptr;
 }
 
 /**
@@ -141,7 +141,7 @@ adv_want adv_settlers_road_bonus(struct tile *ptile, struct road_type *proad)
   int dep_count = 0;
   struct extra_type *pextra;
 
-  if (proad == NULL) {
+  if (proad == nullptr) {
     return 0;
   }
 
@@ -189,7 +189,7 @@ adv_want adv_settlers_road_bonus(struct tile *ptile, struct road_type *proad)
              * if it's already built. */
             int build_rnbr;
 
-            fc_assert(punit->activity_target != NULL);
+            fc_assert(punit->activity_target != nullptr);
 
             build_rnbr = road_number(extra_road_get(punit->activity_target));
 
@@ -404,7 +404,7 @@ autosettler_tile_behavior(const struct tile *ptile, enum known_type known,
 {
   const struct player *owner = tile_owner(ptile);
 
-  if (NULL != owner && !pplayers_allied(owner, param->owner)) {
+  if (nullptr != owner && !pplayers_allied(owner, param->owner)) {
     return TB_IGNORE;
   }
   return TB_NORMAL;
@@ -415,7 +415,7 @@ autosettler_tile_behavior(const struct tile *ptile, enum known_type known,
 
    The returned value is the goodness of the best tile and action found.  If
    this return value is > 0, then best_tile indicates the tile chosen,
-   bestact indicates the activity it wants to do, and path (if not NULL)
+   bestact indicates the activity it wants to do, and path (if not nullptr)
    indicates the path to follow for the unit.  If 0 is returned
    then there are no worthwhile activities available.
 
@@ -425,7 +425,7 @@ autosettler_tile_behavior(const struct tile *ptile, enum known_type known,
    state contains, for each tile, the unit id of the worker en route,
    and the eta of this worker (if any).  This information
    is used to possibly displace this previously assigned worker.
-   if this array is NULL, workers are never displaced.
+   if this array is nullptr, workers are never displaced.
  */
 adv_want settler_evaluate_improvements(struct unit *punit,
                                        enum unit_activity *best_act,
@@ -448,7 +448,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
   int best_delay = 0;
 
   // closest worker, if any, headed towards target tile
-  struct unit *enroute = NULL;
+  struct unit *enroute = nullptr;
 
   pft_fill_unit_parameter(&parameter, punit);
   parameter.omniscience = !has_handicap(pplayer, H_MAP);
@@ -523,7 +523,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
           // Now, consider various activities...
           as_transform_action_iterate(act)
           {
-            struct extra_type *target = NULL;
+            struct extra_type *target = nullptr;
             enum extra_cause cause =
                 activity_to_extra_cause(action_id_get_activity(act));
             enum extra_rmcause rmcause =
@@ -628,7 +628,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
 
               proad = extra_road_get(pextra);
 
-              if (proad != NULL && road_provides_move_bonus(proad)) {
+              if (proad != nullptr && road_provides_move_bonus(proad)) {
                 int mc_multiplier = 1;
                 int mc_divisor = 1;
                 int old_move_cost =
@@ -784,11 +784,11 @@ adv_want settler_evaluate_improvements(struct unit *punit,
     /* Fill in dummy values.  The callers should check if the return value
      * is > 0 but this will avoid confusing them. */
     *best_act = ACTIVITY_IDLE;
-    *best_tile = NULL;
+    *best_tile = nullptr;
   }
 
   if (path) {
-    *path = *best_tile ? pf_map_path(pfm, *best_tile) : NULL;
+    *path = *best_tile ? pf_map_path(pfm, *best_tile) : nullptr;
   }
 
   pf_map_destroy(pfm);
@@ -809,8 +809,8 @@ struct city *settler_evaluate_city_requests(struct unit *punit,
   struct pf_map *pfm;
   struct pf_position pos;
   int best_value = -1;
-  struct worker_task *best = NULL;
-  struct city *taskcity = NULL;
+  struct worker_task *best = nullptr;
+  struct city *taskcity = nullptr;
   int dist = FC_INFINITY;
 
   pft_fill_unit_parameter(&parameter, punit);
@@ -840,7 +840,7 @@ struct city *settler_evaluate_city_requests(struct unit *punit,
                                                 parameter.omniscience,
                                                 ptask->tgt, ptask->ptile)) {
         // closest worker, if any, headed towards target tile
-        struct unit *enroute = NULL;
+        struct unit *enroute = nullptr;
 
         if (state) {
           enroute = player_unit_by_number(
@@ -881,8 +881,8 @@ struct city *settler_evaluate_city_requests(struct unit *punit,
 
   *best_task = best;
 
-  if (path != NULL) {
-    *path = best ? pf_map_path(pfm, best->ptile) : NULL;
+  if (path != nullptr) {
+    *path = best ? pf_map_path(pfm, best->ptile) : nullptr;
   }
 
   pf_map_destroy(pfm);
@@ -898,9 +898,9 @@ void auto_settler_findwork(struct player *pplayer, struct unit *punit,
 {
   struct worker_task *best_task;
   enum unit_activity best_act;
-  struct tile *best_tile = NULL;
+  struct tile *best_tile = nullptr;
   struct extra_type *best_target;
-  struct pf_path *path = NULL;
+  struct pf_path *path = nullptr;
   struct city *taskcity;
 
   // time it will take worker to complete its given task
@@ -908,9 +908,9 @@ void auto_settler_findwork(struct player *pplayer, struct unit *punit,
 
   if (recursion > unit_list_size(pplayer->units)) {
     fc_assert(recursion <= unit_list_size(pplayer->units));
-    adv_unit_new_task(punit, AUT_NONE, NULL);
+    adv_unit_new_task(punit, AUT_NONE, nullptr);
     set_unit_activity(punit, ACTIVITY_IDLE);
-    send_unit_info(NULL, punit);
+    send_unit_info(nullptr, punit);
     return; // avoid further recursion.
   }
 
@@ -924,8 +924,8 @@ void auto_settler_findwork(struct player *pplayer, struct unit *punit,
 
   taskcity = settler_evaluate_city_requests(punit, &best_task, &path, state);
 
-  if (taskcity != NULL) {
-    if (path != NULL) {
+  if (taskcity != nullptr) {
+    if (path != nullptr) {
       completion_time = pf_path_last_position(path)->turn;
     }
 
@@ -939,7 +939,7 @@ void auto_settler_findwork(struct player *pplayer, struct unit *punit,
       clear_worker_task(taskcity, best_task);
     }
 
-    if (path != NULL) {
+    if (path != nullptr) {
       pf_path_destroy(path);
     }
 
@@ -963,7 +963,7 @@ void auto_settler_findwork(struct player *pplayer, struct unit *punit,
                             best_tile, best_act, &best_target,
                             completion_time);
 
-    if (NULL != path) {
+    if (nullptr != path) {
       pf_path_destroy(path);
     }
   }
@@ -982,7 +982,7 @@ bool auto_settler_setup_work(struct player *pplayer, struct unit *punit,
 {
   // Run the "autosettler" program
   if (punit->server.adv->task == AUT_AUTO_SETTLER) {
-    struct pf_map *pfm = NULL;
+    struct pf_map *pfm = nullptr;
     struct pf_parameter parameter;
     bool working = false;
     struct unit *displaced;
@@ -1020,9 +1020,9 @@ bool auto_settler_setup_work(struct player *pplayer, struct unit *punit,
       int saved_id = punit->id;
       struct tile *old_pos = unit_tile(punit);
 
-      displaced->goto_tile = NULL;
+      displaced->goto_tile = nullptr;
       auto_settler_findwork(pplayer, displaced, state, recursion + 1);
-      if (NULL == player_unit_by_number(pplayer, saved_id)) {
+      if (nullptr == player_unit_by_number(pplayer, saved_id)) {
         /* Actions of the displaced settler somehow caused this settler
          * to die. (maybe by recursively giving control back to this unit)
          */
@@ -1071,7 +1071,7 @@ bool auto_settler_setup_work(struct player *pplayer, struct unit *punit,
         } else {
           unit_activity_handling(punit, best_act);
         }
-        send_unit_info(NULL, punit); // FIXME: probably duplicate
+        send_unit_info(nullptr, punit); // FIXME: probably duplicate
 
         UNIT_LOG(LOG_DEBUG, punit, "reached its worksite and started work");
         working = true;
@@ -1237,7 +1237,7 @@ bool auto_settlers_speculate_can_act_at(const struct unit *punit,
                                         struct extra_type *target,
                                         const struct tile *ptile)
 {
-  struct action *paction = NULL;
+  struct action *paction = nullptr;
 
   action_iterate(act_id)
   {
@@ -1255,7 +1255,7 @@ bool auto_settlers_speculate_can_act_at(const struct unit *punit,
   }
   action_iterate_end;
 
-  if (paction == NULL) {
+  if (paction == nullptr) {
     // The action it self isn't there. It can't be enabled.
     return false;
   }

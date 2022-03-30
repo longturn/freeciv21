@@ -112,7 +112,7 @@ struct player_ai {
 
   int love[MAX_NUM_PLAYER_SLOTS];
 
-  struct ai_trait *traits;
+  std::vector<ai_trait> traits;
 };
 
 /* Diplomatic states (how one player views another).
@@ -232,8 +232,8 @@ struct player {
   bool unassigned_ranked;
   int user_turns; // number of turns this user has played
   bool is_male;
-  struct government *government;        // may be NULL in pregame
-  struct government *target_government; // may be NULL
+  struct government *government;        // may be nullptr in pregame
+  struct government *target_government; // may be nullptr
   struct nation_type *nation;
   struct team *team;
   bool is_ready;      // Did the player click "start" yet?
@@ -499,7 +499,7 @@ int player_multiplier_target_value(const struct player *pplayer,
 #define player_slots_iterate(_pslot)                                        \
   if (player_slots_initialised()) {                                         \
     struct player_slot *_pslot = player_slot_first();                       \
-    for (; NULL != _pslot; _pslot = player_slot_next(_pslot)) {
+    for (; nullptr != _pslot; _pslot = player_slot_next(_pslot)) {
 #define player_slots_iterate_end                                            \
   }                                                                         \
   }
@@ -509,7 +509,7 @@ int player_multiplier_target_value(const struct player *pplayer,
   player_slots_iterate(_pslot##_pplayer)                                    \
   {                                                                         \
     struct player *_pplayer = player_slot_get_player(_pslot##_pplayer);     \
-    if (_pplayer != NULL) {
+    if (_pplayer != nullptr) {
 
 #define players_iterate_end                                                 \
   }                                                                         \

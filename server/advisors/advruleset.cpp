@@ -41,7 +41,7 @@ void adv_units_ruleset_init()
 
     terrain_type_iterate(pterrain)
     {
-      if (is_native_to_class(pclass, pterrain, NULL)) {
+      if (is_native_to_class(pclass, pterrain, nullptr)) {
         // Can move at terrain
         if (is_ocean(pterrain)) {
           move_sea_enabled = true;
@@ -88,8 +88,9 @@ void adv_units_ruleset_init()
       if (peffect->value > 0) {
         requirement_vector_iterate(&peffect->reqs, preq)
         {
-          if (!is_req_active(NULL, NULL, NULL, NULL, NULL, NULL, ptype, NULL,
-                             NULL, NULL, preq, RPT_POSSIBLE)) {
+          if (!is_req_active(nullptr, nullptr, nullptr, nullptr, nullptr,
+                             nullptr, ptype, nullptr, nullptr, nullptr, preq,
+                             RPT_POSSIBLE)) {
             ptype->adv.igwall = false;
             break;
           }

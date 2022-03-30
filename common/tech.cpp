@@ -66,7 +66,7 @@ const struct advance *advance_array_last()
   if (game.control.num_tech_types > 0) {
     return &advances[game.control.num_tech_types - 1];
   }
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -82,7 +82,7 @@ Tech_type_id advance_count() { return game.control.num_tech_types; }
  */
 Tech_type_id advance_index(const struct advance *padvance)
 {
-  fc_assert_ret_val(NULL != padvance, 0);
+  fc_assert_ret_val(nullptr != padvance, 0);
   return padvance - advances;
 }
 
@@ -91,7 +91,7 @@ Tech_type_id advance_index(const struct advance *padvance)
  */
 Tech_type_id advance_number(const struct advance *padvance)
 {
-  fc_assert_ret_val(NULL != padvance, 0);
+  fc_assert_ret_val(nullptr != padvance, 0);
   return padvance->item_number;
 }
 
@@ -103,7 +103,7 @@ struct advance *advance_by_number(const Tech_type_id atype)
   if (atype != A_FUTURE
       && (atype < 0 || atype >= game.control.num_tech_types)) {
     // This isn't an error; some callers depend on it.
-    return NULL;
+    return nullptr;
   }
 
   return &advances[atype];
@@ -129,24 +129,24 @@ Tech_type_id advance_required(const Tech_type_id tech, enum tech_req require)
 struct advance *advance_requires(const struct advance *padvance,
                                  enum tech_req require)
 {
-  fc_assert_ret_val(require >= 0 && require < AR_SIZE, NULL);
-  fc_assert_ret_val(NULL != padvance, NULL);
+  fc_assert_ret_val(require >= 0 && require < AR_SIZE, nullptr);
+  fc_assert_ret_val(nullptr != padvance, nullptr);
   return padvance->require[require];
 }
 
 /**
-   Returns pointer when the advance "exists" in this game, returns NULL
+   Returns pointer when the advance "exists" in this game, returns nullptr
    otherwise.
 
    A tech doesn't exist if it has been flagged as removed by setting its
-   require values to A_NEVER. Note that this function returns NULL if either
-   of req values is A_NEVER, rather than both, to be on the safe side.
+   require values to A_NEVER. Note that this function returns nullptr if
+   either of req values is A_NEVER, rather than both, to be on the safe side.
  */
 struct advance *valid_advance(struct advance *padvance)
 {
-  if (NULL == padvance || A_NEVER == padvance->require[AR_ONE]
+  if (nullptr == padvance || A_NEVER == padvance->require[AR_ONE]
       || A_NEVER == padvance->require[AR_TWO]) {
-    return NULL;
+    return nullptr;
   }
 
   return padvance;
@@ -154,7 +154,7 @@ struct advance *valid_advance(struct advance *padvance)
 
 /**
    Returns pointer when the advance "exists" in this game,
-   returns NULL otherwise.
+   returns nullptr otherwise.
 
    In addition to valid_advance(), tests for id is out of range.
  */
@@ -165,7 +165,7 @@ struct advance *valid_advance_by_number(const Tech_type_id id)
 
 /**
    Does a linear search of advances[].name.translated
-   Returns NULL when none match.
+   Returns nullptr when none match.
  */
 struct advance *advance_by_translated_name(const char *name)
 {
@@ -177,12 +177,12 @@ struct advance *advance_by_translated_name(const char *name)
   }
   advance_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
    Does a linear search of advances[].name.vernacular
-   Returns NULL when none match.
+   Returns nullptr when none match.
  */
 struct advance *advance_by_rule_name(const char *name)
 {
@@ -196,7 +196,7 @@ struct advance *advance_by_rule_name(const char *name)
   }
   advance_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -262,7 +262,7 @@ void techs_precalc_data()
     }
 
     // Class cost
-    if (padvance->tclass != NULL) {
+    if (padvance->tclass != nullptr) {
       padvance->cost = padvance->cost * padvance->tclass->cost_pct / 100;
     }
   }
@@ -311,7 +311,7 @@ void tech_classes_init()
 struct tech_class *tech_class_by_number(const int idx)
 {
   if (idx < 0 || idx >= game.control.num_tech_classes) {
-    return NULL;
+    return nullptr;
   }
 
   return &tech_classes[idx];
@@ -337,7 +337,7 @@ const char *tech_class_rule_name(const struct tech_class *ptclass)
 
 /**
    Does a linear search of tech_classes[].name.vernacular
-   Returns NULL when none match.
+   Returns nullptr when none match.
  */
 struct tech_class *tech_class_by_rule_name(const char *name)
 {
@@ -352,7 +352,7 @@ struct tech_class *tech_class_by_rule_name(const char *name)
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -408,7 +408,7 @@ void set_user_tech_flag_name(enum tech_flag_id id, const char *name,
 const char *tech_flag_id_name_cb(enum tech_flag_id flag)
 {
   if (flag < TECH_USER_1 || flag > TECH_USER_LAST) {
-    return NULL;
+    return nullptr;
   }
 
   return user_tech_flags[flag - TECH_USER_1].name;
@@ -459,12 +459,12 @@ void techs_init()
 
   // Initialize dummy tech A_NONE
   // TRANS: "None" tech
-  name_set(&a_none->name, NULL, N_("?tech:None"));
+  name_set(&a_none->name, nullptr, N_("?tech:None"));
   a_none->require[AR_ONE] = a_none;
   a_none->require[AR_TWO] = a_none;
   a_none->require[AR_ROOT] = A_NEVER;
 
-  name_set(&a_future->name, NULL, "Future");
+  name_set(&a_future->name, nullptr, "Future");
   a_future->require[AR_ONE] = A_NEVER;
   a_future->require[AR_TWO] = A_NEVER;
   a_future->require[AR_ROOT] = A_NEVER;
@@ -519,7 +519,7 @@ static void advance_req_iter_next(struct iterator *it)
 
   for (int req = AR_ONE; req < AR_SIZE; req++) {
     preq = valid_advance(advance_requires(padvance, tech_req(req)));
-    if (NULL != preq && A_NONE != advance_number(preq)
+    if (nullptr != preq && A_NONE != advance_number(preq)
         && !BV_ISSET(iter->done, advance_number(preq))) {
       BV_SET(iter->done, advance_number(preq));
       if (is_new) {
@@ -611,7 +611,7 @@ static void advance_root_req_iter_next(struct iterator *it)
       const struct advance *preq =
           valid_advance(advance_requires(padvance, tech_req(req)));
 
-      if (NULL != preq && A_NONE != advance_number(preq)
+      if (nullptr != preq && A_NONE != advance_number(preq)
           && !BV_ISSET(iter->done, advance_number(preq))) {
         BV_SET(iter->done, advance_number(preq));
         /* Do we need to look at this subtree at all? If it has A_NONE as

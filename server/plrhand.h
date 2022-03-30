@@ -102,7 +102,7 @@ void reset_all_start_commands(bool plrchange);
               __FC_LINE__);                                                 \
     for (MY_i = 0; MY_i < player_slot_count(); MY_i++) {                    \
       NAME_pplayer = shuffled_player(MY_i);                                 \
-      if (NAME_pplayer != NULL) {
+      if (NAME_pplayer != nullptr) {
 
 #define shuffled_players_iterate_end                                        \
   }                                                                         \

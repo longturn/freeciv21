@@ -42,11 +42,12 @@
 ************************************************************************/
 typedef enum req_item_found (*universal_found)(const struct requirement *,
                                                const struct universal *);
-static universal_found universal_found_function[VUT_COUNT] = {NULL};
+static universal_found universal_found_function[VUT_COUNT] = {nullptr};
 
 /**
    Parse requirement type (kind) and value strings into a universal
-   structure.  Passing in a NULL type is considered VUT_NONE (not an error).
+   structure.  Passing in a nullptr type is considered VUT_NONE (not an
+   error).
 
    Pass this some values like "Building", "Factory".
    FIXME: ensure that every caller checks error return!
@@ -78,7 +79,7 @@ void universal_value_from_str(struct universal *source, const char *value)
     return;
   case VUT_ADVANCE:
     source->value.advance = advance_by_rule_name(value);
-    if (source->value.advance != NULL) {
+    if (source->value.advance != nullptr) {
       return;
     }
     break;
@@ -90,25 +91,25 @@ void universal_value_from_str(struct universal *source, const char *value)
     break;
   case VUT_GOVERNMENT:
     source->value.govern = government_by_rule_name(value);
-    if (source->value.govern != NULL) {
+    if (source->value.govern != nullptr) {
       return;
     }
     break;
   case VUT_ACHIEVEMENT:
     source->value.achievement = achievement_by_rule_name(value);
-    if (source->value.achievement != NULL) {
+    if (source->value.achievement != nullptr) {
       return;
     }
     break;
   case VUT_STYLE:
     source->value.style = style_by_rule_name(value);
-    if (source->value.style != NULL) {
+    if (source->value.style != nullptr) {
       return;
     }
     break;
   case VUT_IMPROVEMENT:
     source->value.building = improvement_by_rule_name(value);
-    if (source->value.building != NULL) {
+    if (source->value.building != nullptr) {
       return;
     }
     break;
@@ -120,13 +121,13 @@ void universal_value_from_str(struct universal *source, const char *value)
     break;
   case VUT_EXTRA:
     source->value.extra = extra_type_by_rule_name(value);
-    if (source->value.extra != NULL) {
+    if (source->value.extra != nullptr) {
       return;
     }
     break;
   case VUT_GOOD:
     source->value.good = goods_by_rule_name(value);
-    if (source->value.good != NULL) {
+    if (source->value.good != nullptr) {
       return;
     }
     break;
@@ -152,7 +153,7 @@ void universal_value_from_str(struct universal *source, const char *value)
     break;
   case VUT_NATIONGROUP:
     source->value.nationgroup = nation_group_by_rule_name(value);
-    if (source->value.nationgroup != NULL) {
+    if (source->value.nationgroup != nullptr) {
       return;
     }
     break;
@@ -239,7 +240,7 @@ void universal_value_from_str(struct universal *source, const char *value)
     break;
   case VUT_ACTION:
     source->value.action = action_by_rule_name(value);
-    if (source->value.action != NULL) {
+    if (source->value.action != nullptr) {
       return;
     }
     break;
@@ -375,12 +376,12 @@ struct universal universal_by_number(const enum universals_n kind,
   switch (source.kind) {
   case VUT_NONE:
     // Avoid compiler warning about unitialized source.value
-    source.value.advance = NULL;
+    source.value.advance = nullptr;
 
     return source;
   case VUT_ADVANCE:
     source.value.advance = advance_by_number(value);
-    if (source.value.advance != NULL) {
+    if (source.value.advance != nullptr) {
       return source;
     }
     break;
@@ -389,25 +390,25 @@ struct universal universal_by_number(const enum universals_n kind,
     return source;
   case VUT_GOVERNMENT:
     source.value.govern = government_by_number(value);
-    if (source.value.govern != NULL) {
+    if (source.value.govern != nullptr) {
       return source;
     }
     break;
   case VUT_ACHIEVEMENT:
     source.value.achievement = achievement_by_number(value);
-    if (source.value.achievement != NULL) {
+    if (source.value.achievement != nullptr) {
       return source;
     }
     break;
   case VUT_STYLE:
     source.value.style = style_by_number(value);
-    if (source.value.style != NULL) {
+    if (source.value.style != nullptr) {
       return source;
     }
     break;
   case VUT_IMPROVEMENT:
     source.value.building = improvement_by_number(value);
-    if (source.value.building != NULL) {
+    if (source.value.building != nullptr) {
       return source;
     }
     break;
@@ -422,7 +423,7 @@ struct universal universal_by_number(const enum universals_n kind,
     return source;
   case VUT_TERRAIN:
     source.value.terrain = terrain_by_number(value);
-    if (source.value.terrain != NULL) {
+    if (source.value.terrain != nullptr) {
       return source;
     }
     break;
@@ -431,13 +432,13 @@ struct universal universal_by_number(const enum universals_n kind,
     return source;
   case VUT_NATION:
     source.value.nation = nation_by_number(value);
-    if (source.value.nation != NULL) {
+    if (source.value.nation != nullptr) {
       return source;
     }
     break;
   case VUT_NATIONGROUP:
     source.value.nationgroup = nation_group_by_number(value);
-    if (source.value.nationgroup != NULL) {
+    if (source.value.nationgroup != nullptr) {
       return source;
     }
     break;
@@ -449,13 +450,13 @@ struct universal universal_by_number(const enum universals_n kind,
     break;
   case VUT_NATIONALITY:
     source.value.nationality = nation_by_number(value);
-    if (source.value.nationality != NULL) {
+    if (source.value.nationality != nullptr) {
       return source;
     }
     break;
   case VUT_UTYPE:
     source.value.utype = utype_by_number(value);
-    if (source.value.utype != NULL) {
+    if (source.value.utype != nullptr) {
       return source;
     }
     break;
@@ -464,7 +465,7 @@ struct universal universal_by_number(const enum universals_n kind,
     return source;
   case VUT_UCLASS:
     source.value.uclass = uclass_by_number(value);
-    if (source.value.uclass != NULL) {
+    if (source.value.uclass != nullptr) {
       return source;
     }
     break;
@@ -494,7 +495,7 @@ struct universal universal_by_number(const enum universals_n kind,
     return source;
   case VUT_ACTION:
     source.value.action = action_by_number(value);
-    if (source.value.action != NULL) {
+    if (source.value.action != nullptr) {
       return source;
     }
     break;
@@ -559,7 +560,7 @@ struct universal universal_by_number(const enum universals_n kind,
   // If we reach here there's been an error.
   source.kind = universals_n_invalid();
   // Avoid compiler warning about unitialized source.value
-  source.value.advance = NULL;
+  source.value.advance = nullptr;
 
   return source;
 }
@@ -701,7 +702,7 @@ QString req_to_fstring(const struct requirement *req)
 /**
    Parse a requirement type and value string into a requirement structure.
    Returns the invalid element for enum universal_n on error. Passing in a
-   NULL type is considered VUT_NONE (not an error).
+   nullptr type is considered VUT_NONE (not an error).
 
    Pass this some values like "Building", "Factory".
  */
@@ -711,7 +712,7 @@ struct requirement req_from_str(const char *type, const char *range,
 {
   struct requirement req;
   bool invalid;
-  const char *error = NULL;
+  const char *error = nullptr;
 
   req.source = universal_by_rule_name(type, value);
 
@@ -1361,7 +1362,7 @@ static enum fc_tristate is_building_in_range(
       return BOOL_TO_TRISTATE(num_world_buildings_total(source) > 0);
     case REQ_RANGE_ALLIANCE:
     case REQ_RANGE_TEAM:
-      if (target_player == NULL) {
+      if (target_player == nullptr) {
         return TRI_MAYBE;
       }
       players_iterate_alive(plr2)
@@ -1374,7 +1375,7 @@ static enum fc_tristate is_building_in_range(
       players_iterate_alive_end;
       return TRI_NO;
     case REQ_RANGE_PLAYER:
-      if (target_player == NULL) {
+      if (target_player == nullptr) {
         return TRI_MAYBE;
       }
       return BOOL_TO_TRISTATE(player_has_ever_built(target_player, source));
@@ -1399,7 +1400,7 @@ static enum fc_tristate is_building_in_range(
       return BOOL_TO_TRISTATE(num_world_buildings(source) > 0);
     case REQ_RANGE_ALLIANCE:
     case REQ_RANGE_TEAM:
-      if (target_player == NULL) {
+      if (target_player == nullptr) {
         return TRI_MAYBE;
       }
       players_iterate_alive(plr2)
@@ -1412,7 +1413,7 @@ static enum fc_tristate is_building_in_range(
       players_iterate_alive_end;
       return TRI_NO;
     case REQ_RANGE_PLAYER:
-      if (target_player == NULL) {
+      if (target_player == nullptr) {
         return TRI_MAYBE;
       }
       return BOOL_TO_TRISTATE(num_player_buildings(target_player, source)
@@ -1488,7 +1489,7 @@ static enum fc_tristate is_tech_in_range(const struct player *target_player,
   // Not a 'surviving' requirement.
   switch (range) {
   case REQ_RANGE_PLAYER:
-    if (NULL != target_player) {
+    if (nullptr != target_player) {
       return BOOL_TO_TRISTATE(
           TECH_KNOWN
           == research_invention_state(research_get(target_player), tech));
@@ -1498,7 +1499,7 @@ static enum fc_tristate is_tech_in_range(const struct player *target_player,
   case REQ_RANGE_TEAM:
   case REQ_RANGE_ALLIANCE:
   case REQ_RANGE_WORLD:
-    if (NULL == target_player) {
+    if (nullptr == target_player) {
       return TRI_MAYBE;
     }
     players_iterate_alive(plr2)
@@ -1537,7 +1538,7 @@ is_techflag_in_range(const struct player *target_player,
 {
   switch (range) {
   case REQ_RANGE_PLAYER:
-    if (NULL != target_player) {
+    if (nullptr != target_player) {
       return BOOL_TO_TRISTATE(
           player_knows_techs_with_flag(target_player, techflag));
     } else {
@@ -1546,7 +1547,7 @@ is_techflag_in_range(const struct player *target_player,
     break;
   case REQ_RANGE_TEAM:
   case REQ_RANGE_ALLIANCE:
-    if (NULL == target_player) {
+    if (nullptr == target_player) {
       return TRI_MAYBE;
     }
     players_iterate_alive(plr2)
@@ -1617,7 +1618,7 @@ is_minculture_in_range(const struct city *target_city,
   case REQ_RANGE_TEAM:
   case REQ_RANGE_ALLIANCE:
   case REQ_RANGE_WORLD:
-    if (NULL == target_player) {
+    if (nullptr == target_player) {
       return TRI_MAYBE;
     }
     players_iterate_alive(plr2)
@@ -1907,7 +1908,7 @@ static enum fc_tristate is_terrain_in_range(const struct tile *target_tile,
     if (!target_city) {
       return TRI_MAYBE;
     }
-    if (pterrain != NULL) {
+    if (pterrain != nullptr) {
       city_tile_iterate(city_map_radius_sq_get(target_city),
                         city_tile(target_city), ptile)
       {
@@ -1922,7 +1923,7 @@ static enum fc_tristate is_terrain_in_range(const struct tile *target_tile,
     if (!target_city) {
       return TRI_MAYBE;
     }
-    if (pterrain != NULL) {
+    if (pterrain != nullptr) {
       city_tile_iterate(city_map_radius_sq_get(target_city),
                         city_tile(target_city), ptile)
       {
@@ -2445,13 +2446,13 @@ is_nation_in_range(const struct player *target_player, enum req_range range,
 {
   switch (range) {
   case REQ_RANGE_PLAYER:
-    if (target_player == NULL) {
+    if (target_player == nullptr) {
       return TRI_MAYBE;
     }
     return BOOL_TO_TRISTATE(nation_of_player(target_player) == nation);
   case REQ_RANGE_TEAM:
   case REQ_RANGE_ALLIANCE:
-    if (target_player == NULL) {
+    if (target_player == nullptr) {
       return TRI_MAYBE;
     }
     players_iterate_alive(plr2)
@@ -2469,7 +2470,7 @@ is_nation_in_range(const struct player *target_player, enum req_range range,
      * (e.g. via /remove), rather than just dying, this 'survives'
      * requirement will stop being true for their nation.
      * create_command_newcomer() can also cause this to happen. */
-    return BOOL_TO_TRISTATE(NULL != nation->player
+    return BOOL_TO_TRISTATE(nullptr != nation->player
                             && (survives || nation->player->is_alive));
   case REQ_RANGE_LOCAL:
   case REQ_RANGE_CADJACENT:
@@ -2497,7 +2498,7 @@ is_nation_group_in_range(const struct player *target_player,
   Q_UNUSED(survives)
   switch (range) {
   case REQ_RANGE_PLAYER:
-    if (target_player == NULL) {
+    if (target_player == nullptr) {
       return TRI_MAYBE;
     }
     return BOOL_TO_TRISTATE(
@@ -2505,7 +2506,7 @@ is_nation_group_in_range(const struct player *target_player,
   case REQ_RANGE_TEAM:
   case REQ_RANGE_ALLIANCE:
   case REQ_RANGE_WORLD:
-    if (target_player == NULL) {
+    if (target_player == nullptr) {
       return TRI_MAYBE;
     }
     players_iterate_alive(plr2)
@@ -2542,7 +2543,7 @@ is_nationality_in_range(const struct city *target_city, enum req_range range,
 {
   switch (range) {
   case REQ_RANGE_CITY:
-    if (target_city == NULL) {
+    if (target_city == nullptr) {
       return TRI_MAYBE;
     }
     citizens_iterate(target_city, slot, count)
@@ -2555,7 +2556,7 @@ is_nationality_in_range(const struct city *target_city, enum req_range range,
 
     return TRI_NO;
   case REQ_RANGE_TRADEROUTE:
-    if (target_city == NULL) {
+    if (target_city == nullptr) {
       return TRI_MAYBE;
     }
     citizens_iterate(target_city, slot, count)
@@ -2606,14 +2607,14 @@ is_diplrel_in_range(const struct player *target_player,
 {
   switch (range) {
   case REQ_RANGE_PLAYER:
-    if (target_player == NULL) {
+    if (target_player == nullptr) {
       return TRI_MAYBE;
     }
     return BOOL_TO_TRISTATE(is_diplrel_to_other(target_player, diplrel));
   case REQ_RANGE_TEAM:
   case REQ_RANGE_ALLIANCE:
   case REQ_RANGE_WORLD:
-    if (target_player == NULL) {
+    if (target_player == nullptr) {
       return TRI_MAYBE;
     }
     players_iterate_alive(plr2)
@@ -2627,7 +2628,7 @@ is_diplrel_in_range(const struct player *target_player,
     players_iterate_alive_end;
     return TRI_NO;
   case REQ_RANGE_LOCAL:
-    if (target_player == NULL || other_player == NULL) {
+    if (target_player == nullptr || other_player == nullptr) {
       return TRI_MAYBE;
     }
     return BOOL_TO_TRISTATE(
@@ -2733,13 +2734,13 @@ static enum fc_tristate is_unit_state(const struct unit *target_unit,
 
   /* Could be asked with incomplete data.
    * is_req_active() will handle it based on prob_type. */
-  if (target_unit == NULL) {
+  if (target_unit == nullptr) {
     return TRI_MAYBE;
   }
 
   switch (uprop) {
   case USP_TRANSPORTED:
-    return BOOL_TO_TRISTATE(target_unit->transporter != NULL);
+    return BOOL_TO_TRISTATE(target_unit->transporter != nullptr);
   case USP_LIVABLE_TILE:
     return BOOL_TO_TRISTATE(can_unit_exist_at_tile(&(wld.map), target_unit,
                                                    unit_tile(target_unit)));
@@ -2774,20 +2775,20 @@ static enum fc_tristate is_unit_state(const struct unit *target_unit,
 }
 
 /**
-   Is center of given city in tile. If city is NULL, any city will do.
+   Is center of given city in tile. If city is nullptr, any city will do.
  */
 static bool is_city_in_tile(const struct tile *ptile,
                             const struct city *pcity)
 {
-  if (pcity == NULL) {
-    return tile_city(ptile) != NULL;
+  if (pcity == nullptr) {
+    return tile_city(ptile) != nullptr;
   } else {
     return is_city_center(pcity, ptile);
   }
 }
 
 /**
-   Is center of given city in range. If city is NULL, any city will do.
+   Is center of given city in range. If city is nullptr, any city will do.
  */
 static enum fc_tristate is_citytile_in_range(const struct tile *target_tile,
                                              const struct city *target_city,
@@ -2842,14 +2843,14 @@ static enum fc_tristate is_citytile_in_range(const struct tile *target_tile,
     } else if (citytile == CITYT_CLAIMED) {
       switch (range) {
       case REQ_RANGE_LOCAL:
-        return BOOL_TO_TRISTATE(target_tile->owner != NULL);
+        return BOOL_TO_TRISTATE(target_tile->owner != nullptr);
       case REQ_RANGE_CADJACENT:
-        if (target_tile->owner != NULL) {
+        if (target_tile->owner != nullptr) {
           return TRI_YES;
         }
         cardinal_adjc_iterate(&(wld.map), target_tile, adjc_tile)
         {
-          if (adjc_tile->owner != NULL) {
+          if (adjc_tile->owner != nullptr) {
             return TRI_YES;
           }
         }
@@ -2857,12 +2858,12 @@ static enum fc_tristate is_citytile_in_range(const struct tile *target_tile,
 
         return TRI_NO;
       case REQ_RANGE_ADJACENT:
-        if (target_tile->owner != NULL) {
+        if (target_tile->owner != nullptr) {
           return TRI_YES;
         }
         adjc_iterate(&(wld.map), target_tile, adjc_tile)
         {
-          if (adjc_tile->owner != NULL) {
+          if (adjc_tile->owner != nullptr) {
             return TRI_YES;
           }
         }
@@ -2894,7 +2895,8 @@ static enum fc_tristate is_citytile_in_range(const struct tile *target_tile,
 }
 
 /**
-   Is city with specific status in range. If city is NULL, any city will do.
+   Is city with specific status in range. If city is nullptr, any city will
+   do.
  */
 static enum fc_tristate
 is_citystatus_in_range(const struct city *target_city, enum req_range range,
@@ -2951,7 +2953,7 @@ is_achievement_in_range(const struct player *target_player,
 {
   if (range == REQ_RANGE_WORLD) {
     return BOOL_TO_TRISTATE(achievement_claimed(achievement));
-  } else if (target_player == NULL) {
+  } else if (target_player == nullptr) {
     return TRI_MAYBE;
   } else if (range == REQ_RANGE_ALLIANCE || range == REQ_RANGE_TEAM) {
     players_iterate_alive(plr2)
@@ -3000,7 +3002,7 @@ bool is_req_active(
   enum fc_tristate eval = TRI_NO;
 
   // The supplied unit has a type. Use it if the unit type is missing.
-  if (target_unittype == NULL && target_unit != NULL) {
+  if (target_unittype == nullptr && target_unit != nullptr) {
     target_unittype = unit_type_get(target_unit);
   }
 
@@ -3023,7 +3025,7 @@ bool is_req_active(
     break;
   case VUT_GOVERNMENT:
     // The requirement is filled if the player is using the government.
-    if (target_player == NULL) {
+    if (target_player == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = BOOL_TO_TRISTATE(government_of_player(target_player)
@@ -3035,7 +3037,7 @@ bool is_req_active(
                                    req->source.value.achievement);
     break;
   case VUT_STYLE:
-    if (target_player == NULL) {
+    if (target_player == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval =
@@ -3086,7 +3088,7 @@ bool is_req_active(
                                req->source.value.diplrel);
     break;
   case VUT_UTYPE:
-    if (target_unittype == NULL) {
+    if (target_unittype == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = is_unittype_in_range(target_unittype, req->range, req->survives,
@@ -3099,7 +3101,7 @@ bool is_req_active(
                              unit_type_flag_id(req->source.value.unitflag));
     break;
   case VUT_UCLASS:
-    if (target_unittype == NULL) {
+    if (target_unittype == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = is_unitclass_in_range(target_unittype, req->range,
@@ -3107,7 +3109,7 @@ bool is_req_active(
     }
     break;
   case VUT_UCFLAG:
-    if (target_unittype == NULL) {
+    if (target_unittype == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = is_unitclassflag_in_range(
@@ -3116,7 +3118,7 @@ bool is_req_active(
     }
     break;
   case VUT_MINVETERAN:
-    if (target_unit == NULL) {
+    if (target_unit == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = BOOL_TO_TRISTATE(target_unit->veteran
@@ -3124,7 +3126,7 @@ bool is_req_active(
     }
     break;
   case VUT_UNITSTATE:
-    if (target_unit == NULL) {
+    if (target_unit == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = is_unit_state(target_unit, req->range, req->survives,
@@ -3132,7 +3134,7 @@ bool is_req_active(
     }
     break;
   case VUT_ACTIVITY:
-    if (target_unit == NULL) {
+    if (target_unit == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = BOOL_TO_TRISTATE(target_unit->activity
@@ -3140,7 +3142,7 @@ bool is_req_active(
     }
     break;
   case VUT_MINMOVES:
-    if (target_unit == NULL) {
+    if (target_unit == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = BOOL_TO_TRISTATE(req->source.value.minmoves
@@ -3148,7 +3150,7 @@ bool is_req_active(
     }
     break;
   case VUT_MINHP:
-    if (target_unit == NULL) {
+    if (target_unit == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = BOOL_TO_TRISTATE(req->source.value.min_hit_points
@@ -3158,7 +3160,7 @@ bool is_req_active(
   case VUT_AGE:
     switch (req->range) {
     case REQ_RANGE_LOCAL:
-      if (target_unit == NULL || !is_server()) {
+      if (target_unit == nullptr || !is_server()) {
         eval = TRI_MAYBE;
       } else {
         eval = BOOL_TO_TRISTATE(req->source.value.age
@@ -3167,7 +3169,7 @@ bool is_req_active(
       }
       break;
     case REQ_RANGE_CITY:
-      if (target_city == NULL) {
+      if (target_city == nullptr) {
         eval = TRI_MAYBE;
       } else {
         eval =
@@ -3176,7 +3178,7 @@ bool is_req_active(
       }
       break;
     case REQ_RANGE_PLAYER:
-      if (target_player == NULL) {
+      if (target_player == nullptr) {
         eval = TRI_MAYBE;
       } else {
         eval = BOOL_TO_TRISTATE(req->source.value.age
@@ -3196,7 +3198,7 @@ bool is_req_active(
                               >= req->source.value.min_techs);
       break;
     case REQ_RANGE_PLAYER:
-      if (target_player == NULL) {
+      if (target_player == nullptr) {
         eval = TRI_MAYBE;
       } else {
         // "None" does not count
@@ -3226,7 +3228,7 @@ bool is_req_active(
                                    == req->source.value.specialist);
     break;
   case VUT_MINSIZE:
-    if (target_city == NULL) {
+    if (target_city == nullptr) {
       eval = TRI_MAYBE;
     } else {
       if (req->range == REQ_RANGE_TRADEROUTE) {
@@ -3260,7 +3262,7 @@ bool is_req_active(
                                      req->source.value.minforeignpct);
     break;
   case VUT_AI_LEVEL:
-    if (target_player == NULL) {
+    if (target_player == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = BOOL_TO_TRISTATE(is_ai(target_player)
@@ -3308,7 +3310,7 @@ bool is_req_active(
         BOOL_TO_TRISTATE(ssetv_setting_has_value(req->source.value.ssetval));
     break;
   case VUT_TERRAINALTER:
-    if (target_tile == NULL) {
+    if (target_tile == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = is_terrain_alter_possible_in_range(
@@ -3317,7 +3319,7 @@ bool is_req_active(
     }
     break;
   case VUT_CITYTILE:
-    if (target_tile == NULL) {
+    if (target_tile == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = is_citytile_in_range(target_tile, target_city, req->range,
@@ -3325,7 +3327,7 @@ bool is_req_active(
     }
     break;
   case VUT_CITYSTATUS:
-    if (target_city == NULL) {
+    if (target_city == nullptr) {
       eval = TRI_MAYBE;
     } else {
       eval = is_citystatus_in_range(target_city, req->range,
@@ -3520,7 +3522,7 @@ req_vec_vector_number(const void *parent_item,
 
 /**
    Returns a writable pointer to the specified requirement vector in the
-   specified requirement vector or NULL if the parent item doesn't have a
+   specified requirement vector or nullptr if the parent item doesn't have a
    requirement vector with that requirement vector number.
    @param parent_item the item that should have the requirement vector.
    @param number the item's requirement vector number.
@@ -3529,7 +3531,7 @@ req_vec_vector_number(const void *parent_item,
 struct requirement_vector *req_vec_by_number(const void *parent_item,
                                              req_vec_num_in_item number)
 {
-  fc_assert_ret_val(number == 0, NULL);
+  fc_assert_ret_val(number == 0, nullptr);
   return (struct requirement_vector *) parent_item;
 }
 
@@ -3549,14 +3551,14 @@ const char *req_vec_change_translation(const struct req_vec_change *change,
   const char *req_vec_description;
   static char buf[MAX_LEN_NAME * 3];
 
-  fc_assert_ret_val(change, NULL);
+  fc_assert_ret_val(change, nullptr);
   fc_assert_ret_val(req_vec_change_operation_is_valid(change->operation),
-                    NULL);
+                    nullptr);
 
   // Get rid of the previous.
   buf[0] = '\0';
 
-  if (namer == NULL) {
+  if (namer == nullptr) {
     /* TRANS: default description of a requirement vector
      * (used in ruledit) */
     req_vec_description = _("the requirement vector");
@@ -3693,7 +3695,7 @@ void req_vec_problem_free(struct req_vec_problem *issue)
 
 /**
    Returns the first self contradiction found in the specified requirement
-   vector with suggested solutions or NULL if no contradiction was found.
+   vector with suggested solutions or nullptr if no contradiction was found.
    It is the responsibility of the caller to free the suggestion when it is
    done with it.
    @param vec the requirement vector to look in.
@@ -3710,12 +3712,12 @@ req_vec_get_first_contradiction(const struct requirement_vector *vec,
   int i, j;
   req_vec_num_in_item vec_num;
 
-  if (vec == NULL || requirement_vector_size(vec) == 0) {
+  if (vec == nullptr || requirement_vector_size(vec) == 0) {
     // No vector.
-    return NULL;
+    return nullptr;
   }
 
-  if (get_num == NULL || parent_item == NULL) {
+  if (get_num == nullptr || parent_item == nullptr) {
     vec_num = 0;
   } else {
     vec_num = get_num(parent_item, vec);
@@ -3750,7 +3752,7 @@ req_vec_get_first_contradiction(const struct requirement_vector *vec,
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -3996,7 +3998,7 @@ const char *universal_rule_name(const struct universal *psource)
   }
 
   fc_assert_msg(false, "Invalid source kind %d.", psource->kind);
-  return NULL;
+  return nullptr;
 }
 
 /**

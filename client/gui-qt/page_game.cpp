@@ -40,7 +40,7 @@
 #include "messagewin.h"
 #include "minimap.h"
 #include "plrdlg.h"
-#include "sidebar.h"
+#include "top_bar.h"
 #include "voteinfo_bar.h"
 
 int last_center_capital = 0;
@@ -53,76 +53,74 @@ static void center_next_player_city();
 static void center_next_player_capital();
 static void cycle_enemy_units();
 
-extern void toggle_units_report(bool);
+extern void toggle_units_report();
 
 pageGame::pageGame(QWidget *parent)
     : QWidget(parent), unit_selector(nullptr), update_info_timer(nullptr)
 {
-  QGridLayout *page_game_layout;
   QGridLayout *game_layout;
 
-  page_game_layout = new QGridLayout;
   game_main_widget = new QWidget;
   game_layout = new QGridLayout;
   game_layout->setContentsMargins(0, 0, 0, 0);
   game_layout->setSpacing(0);
   mapview_wdg = new map_view();
   mapview_wdg->setFocusPolicy(Qt::WheelFocus);
-  sidebar_wdg = new sidebar();
-  sw_map = new sidebarWidget(
-      fcIcons::instance()->getPixmap(QStringLiteral("view")),
-      Q_("?noun:View"), QStringLiteral("MAP"), sidebarShowMap);
-  sw_map->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_tax = new sidebarWidget(nullptr, nullptr, QLatin1String(""),
-                             sidebarRatesWdg, sidebarWidget::SW_TAX);
-  sw_indicators =
-      new sidebarWidget(nullptr, nullptr, QLatin1String(""), sidebarShowMap,
-                        sidebarWidget::SW_INDICATORS);
-  sw_indicators->setRightClick(sidebarIndicatorsMenu);
-  sw_cunit = new sidebarWidget(
-      fcIcons::instance()->getPixmap(QStringLiteral("units")), _("Units"),
-      QLatin1String(""), toggle_units_report);
-  sw_cunit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_cities = new sidebarWidget(
-      fcIcons::instance()->getPixmap(QStringLiteral("cities")), _("Cities"),
-      QStringLiteral("CTS"), city_report_dialog_popup);
+  top_bar_wdg = new top_bar();
+  sw_map = new top_bar_widget(Q_("?noun:View"), QStringLiteral("MAP"),
+                              top_bar_show_map);
+  sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("view")));
+
+  sw_tax = new tax_rates_widget();
+  connect(sw_tax, &QAbstractButton::clicked, top_bar_rates_wdg);
+
+  sw_indicators = new indicators_widget();
+  connect(sw_indicators, &QAbstractButton::clicked, top_bar_indicators_menu);
+
+  sw_cunit =
+      new top_bar_widget(_("Units"), QLatin1String(""), toggle_units_report);
+  sw_cunit->setIcon(fcIcons::instance()->getIcon(QStringLiteral("units")));
+  sw_cities = new top_bar_widget(_("Cities"), QStringLiteral("CTS"),
+                                 city_report_dialog_popup);
+  sw_cities->setIcon(fcIcons::instance()->getIcon(QStringLiteral("cities")));
   sw_cities->setWheelUp(center_next_enemy_city);
   sw_cities->setWheelDown(center_next_player_city);
-  sw_cities->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_diplo = new sidebarWidget(
-      fcIcons::instance()->getPixmap(QStringLiteral("nations")),
-      _("Nations"), QStringLiteral("PLR"), popup_players_dialog);
+  sw_cities->setCheckable(true);
+  sw_diplo = new top_bar_widget(_("Nations"), QStringLiteral("PLR"),
+                                popup_players_dialog);
+  sw_diplo->setIcon(fcIcons::instance()->getIcon(QStringLiteral("nations")));
   sw_diplo->setWheelUp(center_next_player_capital);
   sw_diplo->setWheelDown(key_center_capital);
-  sw_diplo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_science = new sidebarWidget(
-      fcIcons::instance()->getPixmap(QStringLiteral("research")),
-      _("Research"), QStringLiteral("SCI"), sidebarLeftClickScience);
-  sw_science->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_economy = new sidebarWidget(
-      fcIcons::instance()->getPixmap(QStringLiteral("economy")),
-      _("Economy"), QStringLiteral("ECO"), economy_report_dialog_popup);
-  sw_economy->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_endturn = new sidebarWidget(
-      fcIcons::instance()->getPixmap(QStringLiteral("endturn")),
-      _("Turn Done"), QLatin1String(""), sidebarFinishTurn);
-  sw_endturn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sw_cunit->setRightClick(sidebarCenterUnit);
+  sw_diplo->setCheckable(true);
+  sw_science = new top_bar_widget(_("Research"), QStringLiteral("SCI"),
+                                  top_bar_left_click_science);
+  sw_science->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("research")));
+  sw_science->setCheckable(true);
+  sw_economy = new top_bar_widget(_("Economy"), QStringLiteral("ECO"),
+                                  economy_report_dialog_popup);
+  sw_economy->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("economy")));
+  sw_economy->setCheckable(true);
+  sw_endturn = new top_bar_widget(_("Turn Done"), QLatin1String(""),
+                                  top_bar_finish_turn);
+  sw_endturn->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("endturn")));
+  sw_cunit->setRightClick(top_bar_center_unit);
   sw_cunit->setWheelUp(cycle_enemy_units);
   sw_cunit->setWheelDown(key_unit_wait);
-  sw_diplo->setRightClick(sidebarRightClickDiplomacy);
-  sw_science->setRightClick(sidebarRightClickScience);
+  sw_diplo->setRightClick(top_bar_right_click_diplomacy);
+  sw_science->setRightClick(top_bar_right_click_science);
 
-  sidebar_wdg->addWidget(sw_map);
-  sidebar_wdg->addWidget(sw_cunit);
-  sidebar_wdg->addWidget(sw_cities);
-  sidebar_wdg->addWidget(sw_diplo);
-  sidebar_wdg->addWidget(sw_science);
-  sidebar_wdg->addWidget(sw_economy);
-  sidebar_wdg->addSpacer();
-  sidebar_wdg->addWidget(sw_tax);
-  sidebar_wdg->addWidget(sw_indicators);
-  sidebar_wdg->addWidget(sw_endturn);
+  top_bar_wdg->addWidget(sw_map);
+  top_bar_wdg->addWidget(sw_cunit);
+  top_bar_wdg->addWidget(sw_cities);
+  top_bar_wdg->addWidget(sw_diplo);
+  top_bar_wdg->addWidget(sw_science);
+  top_bar_wdg->addWidget(sw_economy);
+  top_bar_wdg->addWidget(sw_tax);
+  top_bar_wdg->addWidget(sw_indicators);
+  top_bar_wdg->addWidget(sw_endturn);
 
   civ_status = new civstatus(mapview_wdg);
   civ_status->setAttribute(Qt::WA_NoMousePropagation);
@@ -160,53 +158,36 @@ pageGame::pageGame(QWidget *parent)
   game_tab_widget->setContentsMargins(0, 0, 0, 0);
 
   game_tab_widget->addWidget(game_main_widget);
-  if (gui_options.gui_qt_sidebar_left) {
-    page_game_layout->addWidget(sidebar_wdg, 1, 0);
-  } else {
-    page_game_layout->addWidget(sidebar_wdg, 1, 2);
-  }
-  page_game_layout->addWidget(game_tab_widget, 1, 1);
+
+  auto page_game_layout = new QVBoxLayout;
+  page_game_layout->addWidget(top_bar_wdg);
+  page_game_layout->setStretchFactor(top_bar_wdg, 0);
+  page_game_layout->addWidget(game_tab_widget);
+  page_game_layout->setStretchFactor(game_tab_widget, 1);
   page_game_layout->setContentsMargins(0, 0, 0, 0);
   page_game_layout->setSpacing(0);
   setLayout(page_game_layout);
+
   game_tab_widget->init();
 }
 
 pageGame::~pageGame() = default;
 
 /**
-   Reloads sidebar icons (useful on theme change)
+   Reloads top bar icons (useful on theme change)
  */
 void pageGame::reloadSidebarIcons()
 {
-  sw_map->setPixmap(fcIcons::instance()->getPixmap(QStringLiteral("view")));
-  sw_cunit->setPixmap(
-      fcIcons::instance()->getPixmap(QStringLiteral("units")));
-  sw_cities->setPixmap(
-      fcIcons::instance()->getPixmap(QStringLiteral("cities")));
-  sw_diplo->setPixmap(
-      fcIcons::instance()->getPixmap(QStringLiteral("nations")));
-  sw_science->setPixmap(
-      fcIcons::instance()->getPixmap(QStringLiteral("research")));
-  sw_economy->setPixmap(
-      fcIcons::instance()->getPixmap(QStringLiteral("economy")));
-  sw_endturn->setPixmap(
-      fcIcons::instance()->getPixmap(QStringLiteral("endturn")));
-  sidebar_wdg->resizeMe();
-}
-
-/**
-   Update position
- */
-void pageGame::updateSidebarPosition()
-{
-  QGridLayout *l = qobject_cast<QGridLayout *>(layout());
-  l->removeWidget(queen()->sidebar_wdg);
-  if (gui_options.gui_qt_sidebar_left) {
-    l->addWidget(queen()->sidebar_wdg, 1, 0);
-  } else {
-    l->addWidget(sidebar_wdg, 1, 2);
-  }
+  sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("view")));
+  sw_cunit->setIcon(fcIcons::instance()->getIcon(QStringLiteral("units")));
+  sw_cities->setIcon(fcIcons::instance()->getIcon(QStringLiteral("cities")));
+  sw_diplo->setIcon(fcIcons::instance()->getIcon(QStringLiteral("nations")));
+  sw_science->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("research")));
+  sw_economy->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("economy")));
+  sw_endturn->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("endturn")));
 }
 
 /**
@@ -244,7 +225,7 @@ void pageGame::updateInfoLabelTimeout()
   sw_map->setCustomLabels(s);
   sw_map->update();
 
-  if (client.conn.playing != NULL) {
+  if (client.conn.playing != nullptr) {
     if (player_get_expected_income(client.conn.playing) > 0) {
       eco_info =
           QString(_("%1 (+%2)"))
@@ -269,7 +250,7 @@ void pageGame::updateInfoLabelTimeout()
 }
 
 /**
-   Updates sidebar tooltips
+   Updates top bar tooltips
  */
 void pageGame::updateSidebarTooltips()
 {
@@ -285,7 +266,7 @@ void pageGame::updateSidebarTooltips()
     return;
   }
 
-  if (NULL != client.conn.playing) {
+  if (nullptr != client.conn.playing) {
     max = get_player_bonus(client.conn.playing, EFT_MAX_RATES);
   } else {
     max = 100;
@@ -317,12 +298,11 @@ void pageGame::updateSidebarTooltips()
           text_happiness_cities(player_primary_capital(client_player())));
     }
   } else {
-    sw_tax->setTooltip(QLatin1String(""));
     sw_science->setTooltip(QLatin1String(""));
     sw_map->setTooltip(QLatin1String(""));
     sw_economy->setTooltip(QLatin1String(""));
   }
-  sw_indicators->setTooltip(QString(get_info_label_text_popup()));
+  sw_indicators->setToolTip(get_info_label_text_popup());
 }
 
 /**
@@ -515,7 +495,6 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
   QSize size;
   size = event->size();
   if (C_S_RUNNING <= client_state()) {
-    queen()->sidebar_wdg->resizeMe();
     map_canvas_resized(size.width(), size.height());
     queen()->message->resize(
         qRound((size.width() * king()->qt_settings.chat_fwidth)),
@@ -539,7 +518,7 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
         qRound(king()->qt_settings.battlelog_y * mapview.height));
     queen()->x_vote->move(width() / 2 - queen()->x_vote->width() / 2, 0);
     queen()->updateSidebarTooltips();
-    sidebarDisableEndturn(get_turn_done_button_state());
+    top_bar_disable_end_turn(get_turn_done_button_state());
     queen()->mapview_wdg->resize(event->size().width(), size.height());
     queen()->city_overlay->resize(queen()->mapview_wdg->size());
     queen()->unitinfo_wdg->update_actions(nullptr);
@@ -560,7 +539,7 @@ void fc_game_tab_widget::current_changed(int index)
     return;
   }
 
-  for (auto *sw : qAsConst(queen()->sidebar_wdg->objects)) {
+  for (auto *sw : qAsConst(queen()->top_bar_wdg->objects)) {
     sw->update();
   }
   currentWidget()->hide();
@@ -648,7 +627,7 @@ bool pageGame::isRepoDlgOpen(const QString &str)
 
   w = opened_repo_dlgs.value(str);
 
-  return w != NULL;
+  return w != nullptr;
 }
 
 /**

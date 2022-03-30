@@ -66,7 +66,7 @@ void idex_register_city(struct world *iworld, struct city *pcity)
 
   if (iworld->cities->contains(pcity->id)) {
     old = iworld->cities->value(pcity->id);
-    fc_assert_ret_msg(NULL == old,
+    fc_assert_ret_msg(nullptr == old,
                       "IDEX: city collision: new %d %p %s, old %d %p %s",
                       pcity->id, (void *) pcity, city_name_get(pcity),
                       old->id, (void *) old, city_name_get(old));
@@ -84,7 +84,7 @@ void idex_register_unit(struct world *iworld, struct unit *punit)
 
   if (iworld->units->contains(punit->id)) {
     old = iworld->units->value(punit->id);
-    fc_assert_ret_msg(NULL == old,
+    fc_assert_ret_msg(nullptr == old,
                       "IDEX: unit collision: new %d %p %s, old %d %p %s",
                       punit->id, (void *) punit, unit_rule_name(punit),
                       old->id, (void *) old, unit_rule_name(old));
@@ -102,7 +102,7 @@ void idex_unregister_city(struct world *iworld, struct city *pcity)
 
   if (!iworld->units->contains(pcity->id)) {
     old = pcity;
-    fc_assert_ret_msg(NULL != old, "IDEX: city unreg missing: %d %p %s",
+    fc_assert_ret_msg(nullptr != old, "IDEX: city unreg missing: %d %p %s",
                       pcity->id, (void *) pcity, city_name_get(pcity));
     fc_assert_ret_msg(old == pcity,
                       "IDEX: city unreg mismatch: "
@@ -123,7 +123,7 @@ void idex_unregister_unit(struct world *iworld, struct unit *punit)
 
   if (!iworld->units->contains(punit->id)) {
     old = punit;
-    fc_assert_ret_msg(NULL != old, "IDEX: unit unreg missing: %d %p %s",
+    fc_assert_ret_msg(nullptr != old, "IDEX: unit unreg missing: %d %p %s",
                       punit->id, (void *) punit, unit_rule_name(punit));
     fc_assert_ret_msg(old == punit,
                       "IDEX: unit unreg mismatch: "
@@ -136,7 +136,7 @@ void idex_unregister_unit(struct world *iworld, struct unit *punit)
 
 /**
     Lookup city with given id.
-    Returns NULL if the city is not registered (which is not an error).
+    Returns nullptr if the city is not registered (which is not an error).
  */
 struct city *idex_lookup_city(struct world *iworld, int id)
 {
@@ -149,7 +149,7 @@ struct city *idex_lookup_city(struct world *iworld, int id)
 
 /**
     Lookup unit with given id.
-    Returns NULL if the unit is not registered (which is not an error).
+    Returns nullptr if the unit is not registered (which is not an error).
  */
 struct unit *idex_lookup_unit(struct world *iworld, int id)
 {

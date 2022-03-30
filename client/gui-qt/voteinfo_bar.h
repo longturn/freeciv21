@@ -25,7 +25,7 @@ class pregamevote : public QWidget {
   Q_OBJECT
 
 public:
-  explicit pregamevote(QWidget *parent = NULL);
+  explicit pregamevote(QWidget *parent = nullptr);
   ~pregamevote() override;
   void update_vote();
   QLabel *label_text;

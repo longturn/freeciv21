@@ -37,8 +37,8 @@
 #include "fc_client.h"
 #include "icons.h"
 #include "page_game.h"
-#include "sidebar.h"
 #include "sprite.h"
+#include "top_bar.h"
 
 typedef advance *p_advance;
 typedef city *p_city;
@@ -138,7 +138,7 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from)
   sprite2 = get_nation_flag_sprite(
       tileset, nation_of_player(player_by_number(counterpart)));
   plr2_label = new QLabel;
-  if (sprite2 != NULL) {
+  if (sprite2 != nullptr) {
     plr2_label->setPixmap(*sprite2);
   } else {
     plr2_label->setText(QStringLiteral("FLAG MISSING"));
@@ -576,8 +576,8 @@ void diplo_wdg::all_advances()
   struct player *pgiver = player_by_number(giver);
   struct player *pdest = player_by_number(dest);
 
-  fc_assert_ret(NULL != pgiver);
-  fc_assert_ret(NULL != pdest);
+  fc_assert_ret(nullptr != pgiver);
+  fc_assert_ret(nullptr != pdest);
 
   dresearch = research_get(pdest);
   gresearch = research_get(pgiver);
@@ -675,8 +675,8 @@ void diplo_wdg::update_wdg()
  */
 void diplo_wdg::restore_pixmap()
 {
-  queen()->sw_diplo->setPixmap(
-      fcIcons::instance()->getPixmap(QStringLiteral("nations")));
+  queen()->sw_diplo->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("nations")));
   queen()->sw_diplo->setCustomLabels(QString());
   queen()->sw_diplo->update();
 }
@@ -724,7 +724,7 @@ void diplo_dlg::add_widget(int counterpart, int initiated_from)
   dw->set_index(i);
   auto sprite = get_nation_flag_sprite(
       tileset, nation_of_player(player_by_number(counterpart)));
-  if (sprite != NULL) {
+  if (sprite != nullptr) {
     setTabIcon(i, QIcon(*sprite));
   }
 }
@@ -737,7 +737,7 @@ void diplo_dlg::make_active(int party)
   QWidget *w;
 
   w = find_widget(party);
-  if (w == NULL) {
+  if (w == nullptr) {
     return;
   }
   setCurrentWidget(w);
@@ -884,11 +884,12 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   hmid = qMax(1, hmid);
   p.drawPixmap(1, hmid, *pix2);
   p.end();
-  queen()->sw_diplo->setPixmap(pix3);
+  queen()->sw_diplo->setIcon(QIcon(*pix3));
   queen()->sw_diplo->setCustomLabels(
       QString(nation_plural_for_player(player_by_number(counterpart))));
   queen()->sw_diplo->update();
   delete pix2;
+  delete pix3;
   if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
     dd = new diplo_dlg(counterpart, initiated_from);
 
@@ -904,7 +905,7 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
   fw = dd->find_widget(counterpart);
-  if (fw == NULL) {
+  if (fw == nullptr) {
     dd->add_widget(counterpart, initiated_from);
     queen()->game_tab_widget->setCurrentIndex(i);
   }

@@ -1,0 +1,58 @@
+name: Automation
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  apply-clang-format:
+    name: "Apply clang-format"
+    runs-on: ubuntu-latest
+    # Conditions for the action to run:
+    # - It must be a comment on a PR
+    # - The comment must contain "Auto clang-format"
+    # - The author of the comment must be the PR author or a repo member. For
+    #   the values of author_association, see:
+    #    https://docs.github.com/en/graphql/reference/enums#commentauthorassociation
+    if: >-
+      github.event.issue.pull_request
+      && contains(github.event.comment.body, 'Auto clang-format')
+      && (github.event.comment.user.id == github.event.issue.user.id
+          || github.event.comment.author_association == 'OWNER'
+          || github.event.comment.author_association == 'MEMBER'
+          || github.event.comment.author_association == 'COLLABORATOR')
+    steps:
+      - uses: actions/github-script@v5
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `:baby_bottle: **clang-format**
+            This branch will be reformatted automatically with \`clang-format\`. Please avoid doing this for complex PRs and use squash merge when it makes sense — the bot :space_invader:`
+            })
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install clang-format-11
+        run: |
+          sudo apt-get install clang-format-11
+      - name: Format the code
+        run: |
+          find -name dependencies -prune -o \
+            \( -name '*.h' -o -name '*.cpp' \) \
+            -print \
+            -exec clang-format-11 -i '{}' +
+      - name: Commit and push
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'actions@github.com>'
+          # Only try to commit if clang-format changed something
+          if ! git diff --quiet ; then
+            git commit -a \
+              -m "Automated clang-format" \
+              -m "See PR #${{ github.event.issue.number }}"
+          fi
+          git push "https://${GITHUB_ACTOR}:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}" \
+            "HEAD:${GITHUB_REF_NAME}"

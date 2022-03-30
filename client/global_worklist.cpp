@@ -89,7 +89,7 @@ void global_worklists_free()
     global_worklists_iterate_all(pgwl) { global_worklist_destroy(pgwl); }
     global_worklists_iterate_all_end;
     global_worklist_list_destroy(client.worklists);
-    client.worklists = NULL;
+    client.worklists = nullptr;
   }
 }
 
@@ -215,7 +215,7 @@ global_worklist_alloc(enum global_worklist_status type)
  */
 void global_worklist_destroy(struct global_worklist *pgwl)
 {
-  fc_assert_ret(NULL != pgwl);
+  fc_assert_ret(nullptr != pgwl);
 
   global_worklist_list_remove(client.worklists, pgwl);
 
@@ -273,7 +273,7 @@ bool global_worklist_set(struct global_worklist *pgwl,
 }
 
 /**
-   Returns the worklist of this global worklist or NULL if it's not valid.
+   Returns the worklist of this global worklist or nullptr if it's not valid.
  */
 const struct worklist *
 global_worklist_get(const struct global_worklist *pgwl)
@@ -281,7 +281,7 @@ global_worklist_get(const struct global_worklist *pgwl)
   if (pgwl && pgwl->status == STATUS_WORKLIST) {
     return &pgwl->worklist;
   } else {
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -290,7 +290,7 @@ global_worklist_get(const struct global_worklist *pgwl)
  */
 int global_worklist_id(const struct global_worklist *pgwl)
 {
-  fc_assert_ret_val(NULL != pgwl, 0);
+  fc_assert_ret_val(nullptr != pgwl, 0);
   return pgwl->id;
 }
 
@@ -308,7 +308,7 @@ struct global_worklist *global_worklist_by_id(int id)
   }
   global_worklists_iterate_all_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -326,7 +326,7 @@ void global_worklist_set_name(struct global_worklist *pgwl, const char *name)
  */
 const char *global_worklist_name(const struct global_worklist *pgwl)
 {
-  fc_assert_ret_val(NULL != pgwl, NULL);
+  fc_assert_ret_val(nullptr != pgwl, nullptr);
   return pgwl->name;
 }
 
@@ -362,8 +362,8 @@ static bool global_worklist_load(struct section_file *file, const char *path,
                                        path_str));
 
   for (i = 0; i < length; i++) {
-    kind =
-        secfile_lookup_str_default(file, NULL, "%s.wl_kind%d", path_str, i);
+    kind = secfile_lookup_str_default(file, nullptr, "%s.wl_kind%d",
+                                      path_str, i);
 
     if (!kind) {
       // before 2.2.0 unit production was indicated by flag.
@@ -372,9 +372,10 @@ static bool global_worklist_load(struct section_file *file, const char *path,
       kind = universals_n_name(is_unit ? VUT_UTYPE : VUT_IMPROVEMENT);
     }
 
-    name =
-        secfile_lookup_str_default(file, NULL, "%s.wl_value%d", path_str, i);
-    if (NULL == kind || '\0' == kind[0] || NULL == name || '\0' == name[0]) {
+    name = secfile_lookup_str_default(file, nullptr, "%s.wl_value%d",
+                                      path_str, i);
+    if (nullptr == kind || '\0' == kind[0] || nullptr == name
+        || '\0' == name[0]) {
       break;
     } else {
       pgwl->unbuilt.entries[i].kind = fc_strdup(kind);

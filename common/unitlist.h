@@ -47,7 +47,7 @@
         struct unit *_unit =                                                \
             game_unit_by_number(_unit##_numbers[_unit##_index]);            \
                                                                             \
-        if (NULL != _unit) {
+        if (nullptr != _unit) {
 
 #define unit_list_iterate_safe_end                                          \
   }                                                                         \

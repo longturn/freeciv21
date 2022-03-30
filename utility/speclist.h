@@ -549,7 +549,8 @@ static inline SPECLIST_LINK *
 #define FC__SPECLIST_H
 
 #ifdef FREECIV_DEBUG
-#define TYPED_LIST_CHECK(ARG_list) fc_assert_action(NULL != ARG_list, break)
+#define TYPED_LIST_CHECK(ARG_list)                                          \
+  fc_assert_action(nullptr != ARG_list, break)
 #else
 #define TYPED_LIST_CHECK(ARG_list) // Nothing.
 #endif                             // FREECIV_DEBUG
@@ -570,7 +571,7 @@ static inline SPECLIST_LINK *
     TYPE_data *NAME_data;                                                   \
     TYPED_LIST_CHECK(ARG_list);                                             \
     NAME_data##_iter = genlist_head((const struct genlist *) ARG_list);     \
-    while (NULL != NAME_data##_iter) {                                      \
+    while (nullptr != NAME_data##_iter) {                                   \
       NAME_data = (TYPE_data *) genlist_link_data(NAME_data##_iter);        \
       NAME_data##_iter = genlist_link_next(NAME_data##_iter);
 
@@ -599,7 +600,7 @@ static inline SPECLIST_LINK *
     LIST_tag##_list_allocate_mutex(ARG_list);                               \
     TYPED_LIST_CHECK(ARG_list);                                             \
     NAME_data##_iter = genlist_head((const struct genlist *) ARG_list);     \
-    while (NULL != NAME_data##_iter) {                                      \
+    while (nullptr != NAME_data##_iter) {                                   \
       NAME_data = (TYPE_data *) genlist_link_data(NAME_data##_iter);        \
       NAME_data##_iter = genlist_link_next(NAME_data##_iter);
 
@@ -627,7 +628,7 @@ static inline SPECLIST_LINK *
     TYPE_data *NAME_data;                                                   \
     TYPED_LIST_CHECK(ARG_list);                                             \
     NAME_data##_iter = genlist_tail((const struct genlist *) ARG_list);     \
-    while (NULL != NAME_data##_iter) {                                      \
+    while (nullptr != NAME_data##_iter) {                                   \
       NAME_data = (TYPE_data *) genlist_link_data(NAME_data##_iter);        \
       NAME_data##_iter = genlist_link_prev(NAME_data##_iter);
 
@@ -652,7 +653,7 @@ static inline SPECLIST_LINK *
         ((TYPE_link *) genlist_head((const struct genlist *) ARG_list));    \
     TYPE_link *NAME_link##_next;                                            \
     TYPED_LIST_CHECK(ARG_list);                                             \
-    for (; NULL != NAME_link; NAME_link = NAME_link##_next) {               \
+    for (; nullptr != NAME_link; NAME_link = NAME_link##_next) {            \
       NAME_link##_next = ((TYPE_link *) genlist_link_next(                  \
           (struct genlist_link *) NAME_link));
 
@@ -674,7 +675,7 @@ static inline SPECLIST_LINK *
         ((TYPE_link *) genlist_tail((const struct genlist *) ARG_list));    \
     TYPE_link *NAME_link##_prev;                                            \
     TYPED_LIST_CHECK(ARG_list);                                             \
-    for (; NULL != NAME_link; NAME_link = NAME_link##_prev) {               \
+    for (; nullptr != NAME_link; NAME_link = NAME_link##_prev) {            \
       NAME_link##_prev = ((TYPE_link *) genlist_link_prev(                  \
           (struct genlist_link *) NAME_link));
 
@@ -703,7 +704,7 @@ static inline SPECLIST_LINK *
     TYPE_link *NAME_link##_next;                                            \
     TYPE_data *NAME_data;                                                   \
     TYPED_LIST_CHECK(ARG_list);                                             \
-    for (; NULL != NAME_link; NAME_link = NAME_link##_next) {               \
+    for (; nullptr != NAME_link; NAME_link = NAME_link##_next) {            \
       NAME_link##_next = ((TYPE_link *) genlist_link_next(                  \
           (struct genlist_link *) NAME_link));                              \
       NAME_data = ((TYPE_data *) genlist_link_data(                         \
@@ -731,7 +732,7 @@ static inline SPECLIST_LINK *
     TYPE_link *NAME_link##_prev;                                            \
     TYPE_data *NAME_data;                                                   \
     TYPED_LIST_CHECK(ARG_list);                                             \
-    for (; NULL != NAME_link; NAME_link = NAME_link##_prev) {               \
+    for (; nullptr != NAME_link; NAME_link = NAME_link##_prev) {            \
       NAME_link##_prev = ((TYPE_link *) genlist_link_prev(                  \
           (struct genlist_link *) NAME_link));                              \
       NAME_data = ((TYPE_data *) genlist_link_data(                         \

@@ -73,13 +73,13 @@ enabler_problem_level(struct action_enabler *enabler)
 {
   struct req_vec_problem *problem = action_enabler_suggest_repair(enabler);
 
-  if (problem != NULL) {
+  if (problem != nullptr) {
     req_vec_problem_free(problem);
     return RVPS_REPAIR;
   }
 
   problem = action_enabler_suggest_improvement(enabler);
-  if (problem != NULL) {
+  if (problem != nullptr) {
     req_vec_problem_free(problem);
     return RVPS_IMPROVE;
   }
@@ -479,7 +479,7 @@ const char *fix_enabler_item::name() { return my_name.toUtf8().data(); }
 struct req_vec_problem *fix_enabler_item::find_next_problem()
 {
   struct req_vec_problem *out = action_enabler_suggest_repair(local_copy);
-  if (out != NULL) {
+  if (out != nullptr) {
     return out;
   }
 

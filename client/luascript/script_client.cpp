@@ -48,12 +48,12 @@ extern "C" {
 /*****************************************************************************
   Lua virtual machine state.
 *****************************************************************************/
-static struct fc_lua *main_fcl = NULL;
+static struct fc_lua *main_fcl = nullptr;
 
 /*****************************************************************************
   Optional game script code (useful for scenarios).
 *****************************************************************************/
-static char *script_client_code = NULL;
+static char *script_client_code = nullptr;
 
 static void script_client_vars_init();
 static void script_client_vars_free();
@@ -133,7 +133,7 @@ static void script_client_vars_save(struct section_file *file)
 /**
    Initialize the optional game script code (useful for scenarios).
  */
-static void script_client_code_init() { script_client_code = NULL; }
+static void script_client_code_init() { script_client_code = nullptr; }
 
 /**
    Free the optional game script code (useful for scenarios).
@@ -170,16 +170,16 @@ static void script_client_code_save(struct section_file *file)
  */
 bool script_client_init()
 {
-  if (main_fcl != NULL) {
-    fc_assert_ret_val(main_fcl->state != NULL, false);
+  if (main_fcl != nullptr) {
+    fc_assert_ret_val(main_fcl->state != nullptr, false);
 
     return true;
   }
 
   main_fcl = luascript_new(script_client_output, true);
-  if (main_fcl == NULL) {
-    luascript_destroy(main_fcl); // TODO: main_fcl is NULL here...
-    main_fcl = NULL;
+  if (main_fcl == nullptr) {
+    luascript_destroy(main_fcl); // TODO: main_fcl is nullptr here...
+    main_fcl = nullptr;
 
     return false;
   }
@@ -256,14 +256,14 @@ static void script_client_output(struct fc_lua *fcl, QtMsgType level,
  */
 void script_client_free()
 {
-  if (main_fcl != NULL) {
+  if (main_fcl != nullptr) {
     script_client_code_free();
     script_client_vars_free();
 
     luascript_signal_free(main_fcl);
 
     luascript_destroy(main_fcl);
-    main_fcl = NULL;
+    main_fcl = nullptr;
   }
 }
 

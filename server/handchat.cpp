@@ -52,7 +52,7 @@ static void send_chat_msg(struct connection *pconn,
 static inline bool conn_is_ignored(const struct connection *sender,
                                    const struct connection *dest)
 {
-  if (NULL != sender && NULL != dest) {
+  if (nullptr != sender && nullptr != dest) {
     return conn_pattern_list_match(dest->server.ignore_list, sender);
   } else {
     return false;
@@ -105,15 +105,15 @@ static void complain_ambiguous(struct connection *pconn, const char *name,
 {
   switch (player_conn) {
   case 0:
-    notify_conn(pconn->self, NULL, E_CHAT_ERROR, ftc_server,
+    notify_conn(pconn->self, nullptr, E_CHAT_ERROR, ftc_server,
                 _("%s is an ambiguous player name-prefix."), name);
     break;
   case 1:
-    notify_conn(pconn->self, NULL, E_CHAT_ERROR, ftc_server,
+    notify_conn(pconn->self, nullptr, E_CHAT_ERROR, ftc_server,
                 _("%s is an ambiguous connection name-prefix."), name);
     break;
   case 2:
-    notify_conn(pconn->self, NULL, E_CHAT_ERROR, ftc_server,
+    notify_conn(pconn->self, nullptr, E_CHAT_ERROR, ftc_server,
                 _("%s is an anonymous name. Use connection name."), name);
     break;
   default:
@@ -132,7 +132,7 @@ static void chat_msg_to_conn(struct connection *sender,
   form_chat_name(dest, dest_name, sizeof(dest_name));
 
   if (conn_is_ignored(sender, dest)) {
-    send_chat_msg(sender, NULL, ftc_warning,
+    send_chat_msg(sender, nullptr, ftc_warning,
                   _("You cannot send messages to %s; you are ignored."),
                   dest_name);
     return;
@@ -158,8 +158,9 @@ static void chat_msg_to_player(struct connection *sender,
 {
   struct packet_chat_msg packet;
   char sender_name[MAX_LEN_CHAT_NAME];
-  struct connection *dest = NULL; // The 'pdest' user.
-  struct event_cache_players *players = event_cache_player_add(NULL, pdest);
+  struct connection *dest = nullptr; // The 'pdest' user.
+  struct event_cache_players *players =
+      event_cache_player_add(nullptr, pdest);
 
   msg = skip_leading_spaces(msg);
   form_chat_name(sender, sender_name, sizeof(sender_name));
@@ -170,7 +171,7 @@ static void chat_msg_to_player(struct connection *sender,
     if (!pconn->observer) {
       // Found it!
       if (conn_is_ignored(sender, pconn)) {
-        send_chat_msg(sender, NULL, ftc_warning,
+        send_chat_msg(sender, nullptr, ftc_warning,
                       _("You cannot send messages to %s; you are ignored."),
                       player_name(pdest));
         return; // NB: stop here, don't send to observers.
@@ -186,7 +187,7 @@ static void chat_msg_to_player(struct connection *sender,
                 player_name(pdest), msg);
 
   // Send the message to destination.
-  if (NULL != dest && dest != sender) {
+  if (nullptr != dest && dest != sender) {
     send_chat_msg(dest, sender, ftc_chat_private, "{%s} %s", sender_name,
                   msg);
   }
@@ -202,7 +203,7 @@ static void chat_msg_to_player(struct connection *sender,
     }
   }
   conn_list_iterate_end;
-  if (NULL != sender->playing && !sender->observer
+  if (nullptr != sender->playing && !sender->observer
       && sender->playing != pdest) {
     // The sender is another player.
     conn_list_iterate(sender->playing->connections, pconn)
@@ -226,7 +227,7 @@ static void chat_msg_to_player(struct connection *sender,
 static void chat_msg_to_allies(struct connection *sender, char *msg)
 {
   struct packet_chat_msg packet;
-  struct event_cache_players *players = NULL;
+  struct event_cache_players *players = nullptr;
   char sender_name[MAX_LEN_CHAT_NAME];
 
   msg = skip_leading_spaces(msg);
@@ -358,13 +359,13 @@ void handle_chat_msg_req(struct connection *pconn, const char *message)
   // Send to allies command
   if (real_message[0] == CHAT_ALLIES_PREFIX) {
     // this won't work if we aren't attached to a player
-    if (NULL == pconn->playing && !pconn->observer) {
-      notify_conn(pconn->self, NULL, E_CHAT_ERROR, ftc_server,
+    if (nullptr == pconn->playing && !pconn->observer) {
+      notify_conn(pconn->self, nullptr, E_CHAT_ERROR, ftc_server,
                   _("You are not attached to a player."));
       return;
     }
 
-    if (NULL != pconn->playing) {
+    if (nullptr != pconn->playing) {
       chat_msg_to_allies(pconn, real_message + 1);
     } else {
       chat_msg_to_global_observers(pconn, real_message + 1);
@@ -399,8 +400,8 @@ void handle_chat_msg_req(struct connection *pconn, const char *message)
 
   if (cp && (cp != &real_message[0])) {
     enum m_pre_result match_result_player, match_result_conn;
-    struct player *pdest = NULL;
-    struct connection *conn_dest = NULL;
+    struct player *pdest = nullptr;
+    struct connection *conn_dest = nullptr;
     char name[MAX_LEN_NAME];
     char *cpblank;
 
@@ -450,10 +451,10 @@ void handle_chat_msg_req(struct connection *pconn, const char *message)
     cpblank = strchr(real_message, ' ');
     if (!cpblank || (cp < cpblank)) {
       if (double_colon) {
-        notify_conn(pconn->self, NULL, E_CHAT_ERROR, ftc_server,
+        notify_conn(pconn->self, nullptr, E_CHAT_ERROR, ftc_server,
                     _("There is no connection by the name %s."), name);
       } else {
-        notify_conn(pconn->self, NULL, E_CHAT_ERROR, ftc_server,
+        notify_conn(pconn->self, nullptr, E_CHAT_ERROR, ftc_server,
                     _("There is no player nor connection by the name %s."),
                     name);
       }

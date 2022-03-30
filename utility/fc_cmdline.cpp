@@ -77,7 +77,7 @@ unsigned int get_tokens(const char *str, char **tokens, size_t num_tokens,
 {
   unsigned int token;
 
-  fc_assert_ret_val(NULL != str, -1);
+  fc_assert_ret_val(nullptr != str, -1);
 
   for (token = 0; token < num_tokens && *str != '\0'; token++) {
     size_t len, padlength = 0;

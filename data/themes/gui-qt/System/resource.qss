@@ -1,3 +1,4 @@
+
 *[city_name_button="true"] {
   font-weight: bold italic;
   border: 0px;
@@ -16,14 +17,14 @@
   color: white;
 }
 
-chatwdg QTextBrowser
+chat_widget QTextBrowser
 {
   background-color: transparent;
   border: none;
   color: rgb( 240, 240, 240);
 }
 
-chatwdg QLineEdit
+chat_widget QLineEdit
 {
   background-color: black;
   border: 1px solid #13395f;
@@ -36,22 +37,26 @@ info_tile, notify_dialog {
   background-color: rgba(0, 0, 0,175);
 }
 
-info_tab {
+message_widget, chat_widget {
   background-color: rgba(0,0,0,175);
 }
 
-chatwdg QScrollBar:vertical
+message_widget *, chat_widget * {
+  color: white;
+}
+
+chat_widget QScrollBar:vertical
 {
   background: transparent;
 }
 
-messagewdg QListWidget
+message_widget QListWidget
 {
   border: none;
   background-color: transparent;
 }
 
-messagewdg QTableWidget::item:hover {
+message_widget QTableWidget::item:hover {
   color: #3399FF;
   background-color: rgba(55, 55, 54, 225);
 }
@@ -84,12 +89,7 @@ QProgressBar {
   selection-background-color: #36c620;
 }
 
-sidebarWidget {
-  color: white;
-  /* Box around current widget */
-  selection-background-color: rgb(34, 150, 4);
-  /* Hover effect */
-  alternate-background-color: rgba(125, 25, 25, 125);
+top_bar_widget {
   /* blink */
   selection-color: rgba(85, 25, 25, 185);
 }

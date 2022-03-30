@@ -80,7 +80,7 @@ bool auth_user(struct connection *pconn, char *username)
       get_unique_guest_name(username);
 
       if (strncmp(tmpname, username, MAX_LEN_NAME) != 0) {
-        notify_conn_early(pconn->self, NULL, E_CONNECTION, ftc_warning,
+        notify_conn_early(pconn->self, nullptr, E_CONNECTION, ftc_warning,
                           _("Warning: the guest name '%s' has been "
                             "taken, renaming to user '%s'."),
                           tmpname, username);
@@ -110,7 +110,7 @@ bool auth_user(struct connection *pconn, char *username)
 
         qCritical("Error reading database; connection -> guest");
         notify_conn_early(
-            pconn->self, NULL, E_CONNECTION, ftc_warning,
+            pconn->self, nullptr, E_CONNECTION, ftc_warning,
             _("There was an error reading the user "
               "database, logging in as guest connection '%s'."),
             pconn->username);
@@ -130,7 +130,7 @@ bool auth_user(struct connection *pconn, char *username)
       fc_snprintf(buffer, sizeof(buffer), _("Enter password for %s:"),
                   pconn->username);
       dsend_packet_authentication_req(pconn, AUTH_LOGIN_FIRST, buffer);
-      pconn->server.auth_settime = time(NULL);
+      pconn->server.auth_settime = time(nullptr);
       pconn->server.status = AS_REQUESTING_OLD_PASS;
     } else {
       // we couldn't find the user, he is new
@@ -141,7 +141,7 @@ bool auth_user(struct connection *pconn, char *username)
             buffer,
             _("First time login. Set a new password and confirm it."));
         dsend_packet_authentication_req(pconn, AUTH_NEWUSER_FIRST, buffer);
-        pconn->server.auth_settime = time(NULL);
+        pconn->server.auth_settime = time(nullptr);
         pconn->server.status = AS_REQUESTING_NEW_PASS;
       } else {
         reject_new_connection(_("This server allows only preregistered "
@@ -181,7 +181,7 @@ bool auth_handle_reply(struct connection *pconn, char *password)
     }
 
     if (!script_fcdb_user_save(pconn, password)) {
-      notify_conn(pconn->self, NULL, E_CONNECTION, ftc_warning,
+      notify_conn(pconn->self, nullptr, E_CONNECTION, ftc_warning,
                   _("Warning: There was an error in saving to the database. "
                     "Continuing, but your stats will not be saved."));
       qCritical("Error writing to database for: %s", pconn->username);
@@ -197,7 +197,7 @@ bool auth_handle_reply(struct connection *pconn, char *password)
       pconn->server.status = AS_FAILED;
       pconn->server.auth_tries++;
       pconn->server.auth_settime =
-          time(NULL) + auth_fail_wait[pconn->server.auth_tries];
+          time(nullptr) + auth_fail_wait[pconn->server.auth_tries];
     }
   } else {
     qDebug("%s is sending unrequested auth packets", pconn->username);
@@ -220,7 +220,7 @@ void auth_process_status(struct connection *pconn)
     /* the connection gave the wrong password, we kick 'em off or
      * we're throttling the connection to avoid password guessing */
     if (pconn->server.auth_settime > 0
-        && time(NULL) >= pconn->server.auth_settime) {
+        && time(nullptr) >= pconn->server.auth_settime) {
       if (pconn->server.auth_tries >= MAX_AUTH_TRIES) {
         pconn->server.status = AS_NOT_ESTABLISHED;
         reject_new_connection(_("Sorry, too many wrong tries..."), pconn);
@@ -241,7 +241,7 @@ void auth_process_status(struct connection *pconn)
   case AS_REQUESTING_OLD_PASS:
   case AS_REQUESTING_NEW_PASS:
     // waiting on the client to send us a password... don't wait too long
-    if (time(NULL) >= pconn->server.auth_settime + MAX_WAIT_TIME) {
+    if (time(nullptr) >= pconn->server.auth_settime + MAX_WAIT_TIME) {
       pconn->server.status = AS_NOT_ESTABLISHED;
       reject_new_connection(_("Sorry, your connection timed out..."), pconn);
       qInfo(_("%s was rejected: Connection timeout waiting for "
@@ -355,8 +355,8 @@ static bool is_good_password(const char *password, char *msg)
  */
 const char *auth_get_username(struct connection *pconn)
 {
-  fc_assert_ret_val(pconn != NULL, NULL);
-  fc_assert_ret_val(conn_is_valid(pconn), NULL);
+  fc_assert_ret_val(pconn != nullptr, nullptr);
+  fc_assert_ret_val(conn_is_valid(pconn), nullptr);
 
   return pconn->username;
 }
@@ -366,8 +366,8 @@ const char *auth_get_username(struct connection *pconn)
  */
 const char *auth_get_ipaddr(struct connection *pconn)
 {
-  fc_assert_ret_val(pconn != NULL, NULL);
-  fc_assert_ret_val(conn_is_valid(pconn), NULL);
+  fc_assert_ret_val(pconn != nullptr, nullptr);
+  fc_assert_ret_val(conn_is_valid(pconn), nullptr);
 
   return pconn->server.ipaddr;
 }

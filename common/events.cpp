@@ -52,11 +52,11 @@ static const char *event_sections[] = {
     N_("Diplomat Action: %s"), N_("Enemy Diplomat: %s"), N_("Global: %s"),
     N_("Hut: %s"), N_("Nation: %s"), N_("Treaty: %s"), N_("Unit: %s"),
     // TRANS: "Vote" as a process
-    N_("Vote: %s"), N_("Wonder: %s"), NULL};
+    N_("Vote: %s"), N_("Wonder: %s"), nullptr};
 
 #define GEN_EV(event, section, descr)                                       \
   {                                                                         \
-#event, NULL, section, descr, NULL, event                               \
+#event, nullptr, section, descr, nullptr, event                         \
   }
 
 /*
@@ -239,7 +239,7 @@ enum event_type sorted_events[E_COUNT];
  */
 const char *get_event_message_text(enum event_type event)
 {
-  fc_assert_ret_val(event_type_is_valid(event), NULL);
+  fc_assert_ret_val(event_type_is_valid(event), nullptr);
 
   if (events[event_to_index[event]].event == event) {
     return events[event_to_index[event]].full_descr;
@@ -268,13 +268,13 @@ static int compar_event_message_texts(const void *i1, const void *i2)
  */
 const char *get_event_tag(enum event_type event)
 {
-  fc_assert_ret_val(event_type_is_valid(event), NULL);
+  fc_assert_ret_val(event_type_is_valid(event), nullptr);
 
   if (events[event_to_index[event]].event == event) {
     return events[event_to_index[event]].tag_name;
   }
   qCritical("unknown event %d", event);
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -378,7 +378,7 @@ void events_free()
     if (E_S_XYZZY > events[i].esn) {
       // We have allocated memory for this event
       delete[] events[i].full_descr;
-      events[i].full_descr = NULL;
+      events[i].full_descr = nullptr;
     }
   }
 }

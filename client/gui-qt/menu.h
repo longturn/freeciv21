@@ -318,10 +318,6 @@ private slots:
   void calc_trade_routes();
   void slot_popup_tax_rates();
   void slot_popup_mult_rates();
-  void slot_show_eco_report();
-  void slot_show_units_report();
-  void slot_show_nations();
-  void slot_show_cities();
   void slot_show_research_tab();
   void slot_spaceship();
   void slot_demographics();

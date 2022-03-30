@@ -144,7 +144,7 @@ void units_waiting::update_units()
                                  move_points_text(punit->moves_left, false),
                                  punit->moves_left));
 
-      time_t dt = time(NULL) - punit->action_timestamp;
+      time_t dt = time(nullptr) - punit->action_timestamp;
       if (dt < 0 && !can_unit_move_now(punit)) {
         char buf[64];
         format_time_duration(-dt, buf, sizeof(buf));
@@ -353,7 +353,7 @@ void unittype_item::wheelEvent(QWheelEvent *event)
 {
   int unit_count = 0;
 
-  if (client_is_observer() && client.conn.playing == NULL) {
+  if (client_is_observer() && client.conn.playing == nullptr) {
     return;
   }
 
@@ -674,11 +674,10 @@ void popdown_units_report()
 }
 
 /**
-   Toggles units report, bool used for compatibility with sidebar callback
+ * Toggles units report
  */
-void toggle_units_report(bool x)
+void toggle_units_report()
 {
-  Q_UNUSED(x);
   if (units_reports::exists()
       && queen()->game_tab_widget->currentIndex() == 0) {
     units_reports::instance()->drop();

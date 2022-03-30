@@ -51,7 +51,7 @@ struct color_system *color_system_read(struct section_file *file)
 
   for (stdcolor = color_std_begin(); stdcolor != color_std_end();
        stdcolor = color_std_next(stdcolor)) {
-    struct rgbcolor *prgbcolor = NULL;
+    struct rgbcolor *prgbcolor = nullptr;
 
     if (rgbcolor_load(file, &prgbcolor, "colors.%s0",
                       color_std_name(stdcolor))) {
@@ -88,7 +88,7 @@ QColor get_color(const struct tileset *t, enum color_std stdcolor)
 {
   struct color_system *colors = get_color_system(t);
 
-  fc_assert_ret_val(colors != NULL, Qt::black);
+  fc_assert_ret_val(colors != nullptr, Qt::black);
 
   auto &color = *(colors->stdcolors + stdcolor);
   return QColor(color->r, color->g, color->b);
@@ -101,9 +101,9 @@ QColor get_color(const struct tileset *t, enum color_std stdcolor)
 bool player_has_color(const struct tileset *t, const struct player *pplayer)
 {
   Q_UNUSED(t)
-  fc_assert_ret_val(pplayer != NULL, NULL);
+  fc_assert_ret_val(pplayer != nullptr, false);
 
-  return pplayer->rgb != NULL;
+  return pplayer->rgb != nullptr;
 }
 
 /**
@@ -115,8 +115,8 @@ QColor get_player_color(const struct tileset *t,
                         const struct player *pplayer)
 {
   Q_UNUSED(t)
-  fc_assert_ret_val(pplayer != NULL, Qt::black);
-  fc_assert_ret_val(pplayer->rgb != NULL, Qt::black);
+  fc_assert_ret_val(pplayer != nullptr, Qt::black);
+  fc_assert_ret_val(pplayer->rgb != nullptr, Qt::black);
 
   return QColor(pplayer->rgb->r, pplayer->rgb->g, pplayer->rgb->b);
 }
@@ -128,8 +128,8 @@ QColor get_terrain_color(const struct tileset *t,
                          const struct terrain *pterrain)
 {
   Q_UNUSED(t)
-  fc_assert_ret_val(pterrain != NULL, Qt::black);
-  fc_assert_ret_val(pterrain->rgb != NULL, Qt::black);
+  fc_assert_ret_val(pterrain != nullptr, Qt::black);
+  fc_assert_ret_val(pterrain->rgb != nullptr, Qt::black);
 
   return QColor(pterrain->rgb->r, pterrain->rgb->g, pterrain->rgb->b);
 }
@@ -143,7 +143,7 @@ QColor color_best_contrast(const QColor &subject, const QColor *candidates,
 {
   int sbright = color_brightness_score(subject), bestdiff = 0;
 
-  fc_assert_ret_val(candidates != NULL, Qt::black);
+  fc_assert_ret_val(candidates != nullptr, Qt::black);
   fc_assert_ret_val(ncandidates > 0, Qt::black);
 
   QColor best;

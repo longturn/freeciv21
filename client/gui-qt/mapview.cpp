@@ -45,7 +45,7 @@
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "sciencedlg.h"
-#include "sidebar.h"
+#include "top_bar.h"
 #include "widgetdecorations.h"
 
 static int mapview_frozen_level = 0;
@@ -232,8 +232,8 @@ void map_view::show_debugger()
     connect(m_debugger, &freeciv::tileset_debugger::tile_picking_requested,
             [](bool active) {
               if (active) {
-                set_hover_state(NULL, HOVER_DEBUG_TILE, ACTIVITY_LAST, NULL,
-                                NO_TARGET, NO_TARGET, ACTION_NONE,
+                set_hover_state(nullptr, HOVER_DEBUG_TILE, ACTIVITY_LAST,
+                                nullptr, NO_TARGET, NO_TARGET, ACTION_NONE,
                                 ORDER_LAST);
               } else if (!active && hover_state == HOVER_DEBUG_TILE) {
                 clear_hover_state();
@@ -261,7 +261,7 @@ void map_view::hide_debugger()
 void map_view::timer_event()
 {
   if (queen()->minimapview_wdg->underMouse()
-      || queen()->sidebar_wdg->underMouse()) {
+      || queen()->top_bar_wdg->underMouse()) {
     update_cursor(CURSOR_DEFAULT);
     return;
   }
@@ -484,7 +484,7 @@ void update_turn_done_button(bool do_restore)
   if (!get_turn_done_button_state()) {
     return;
   }
-  sidebarBlinkEndturn(do_restore);
+  top_bar_blink_end_turn(do_restore);
 }
 
 /**

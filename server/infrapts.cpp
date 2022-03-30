@@ -38,26 +38,26 @@ void handle_player_place_infra(struct player *pplayer, int tile, int extra)
   ptile = index_to_tile(&(wld.map), tile);
   pextra = extra_by_number(extra);
 
-  if (ptile == NULL || pextra == NULL) {
+  if (ptile == nullptr || pextra == nullptr) {
     return;
   }
 
   if (!map_is_known_and_seen(ptile, pplayer, V_MAIN)) {
-    notify_player(pplayer, NULL, E_LOW_ON_FUNDS, ftc_server,
+    notify_player(pplayer, nullptr, E_LOW_ON_FUNDS, ftc_server,
                   _("Cannot place %s to unseen tile."),
                   extra_name_translation(pextra));
     return;
   }
 
   if (pplayer->economic.infra_points < pextra->infracost) {
-    notify_player(pplayer, NULL, E_LOW_ON_FUNDS, ftc_server,
+    notify_player(pplayer, nullptr, E_LOW_ON_FUNDS, ftc_server,
                   _("Cannot place %s for lack of infrapoints."),
                   extra_name_translation(pextra));
     return;
   }
 
   if (!player_can_place_extra(pextra, pplayer, ptile)) {
-    notify_player(pplayer, NULL, E_LOW_ON_FUNDS, ftc_server,
+    notify_player(pplayer, nullptr, E_LOW_ON_FUNDS, ftc_server,
                   _("Cannot place unbuildable %s."),
                   extra_name_translation(pextra));
     return;

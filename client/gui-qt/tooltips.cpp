@@ -113,8 +113,8 @@ QString get_tooltip_improvement(const impr_type *building,
                    .arg(upkeep)
                    .toHtmlEscaped();
   } else {
-    int cost_est =
-        impr_estimate_build_shield_cost(client.conn.playing, NULL, building);
+    int cost_est = impr_estimate_build_shield_cost(client.conn.playing,
+                                                   nullptr, building);
 
     def_str += QString(_("Cost Estimate: %1, Upkeep: %2\n"))
                    .arg(cost_est)
@@ -129,7 +129,7 @@ QString get_tooltip_improvement(const impr_type *building,
     char buffer[8192];
 
     str = helptext_building(buffer, sizeof(buffer), client.conn.playing,
-                            NULL, building, client_current_nation_set());
+                            nullptr, building, client_current_nation_set());
     str = cut_helptext(str);
     str = split_text(str, true);
     str = str.trimmed();
@@ -224,7 +224,7 @@ QString get_tooltip(const QVariant &qvar)
   buf2[0] = '\0';
   target = reinterpret_cast<universal *>(qvar.value<void *>());
 
-  if (target == NULL) {
+  if (target == nullptr) {
   } else if (VUT_UTYPE == target->kind) {
     def_str = get_tooltip_unit(target->value.utype);
     str = helptext_unit(buffer, sizeof(buffer), client.conn.playing, buf2,
@@ -235,7 +235,7 @@ QString get_tooltip(const QVariant &qvar)
     }
 
     str = helptext_building(buffer, sizeof(buffer), client.conn.playing,
-                            NULL, target->value.building,
+                            nullptr, target->value.building,
                             client_current_nation_set());
   }
 

@@ -65,7 +65,7 @@ struct logging_civ_score {
  * the end of previous turn in the beginning to turn 0. */
 struct history_report latest_history_report = {-2};
 
-static struct logging_civ_score *score_log = NULL;
+static struct logging_civ_score *score_log = nullptr;
 
 static void plrdata_slot_init(struct plrdata_slot *plrdata,
                               const char *name);
@@ -328,7 +328,7 @@ void report_top_five_cities(struct conn_list *dest)
 
   for (i = 0; i < NUM_BEST_CITIES; i++) {
     size[i].value = 0;
-    size[i].city = NULL;
+    size[i].city = nullptr;
   }
 
   shuffled_players_iterate(pplayer)
@@ -354,7 +354,7 @@ void report_top_five_cities(struct conn_list *dest)
 
     if (!size[i].city) {
       /*
-       * pcity may be NULL if there are less then NUM_BEST_CITIES in
+       * pcity may be nullptr if there are less then NUM_BEST_CITIES in
        * the whole game.
        */
       break;
@@ -896,7 +896,7 @@ static void dem_line_item(char *outptr, size_t out_size,
                           struct player *pplayer, struct dem_row *prow,
                           bv_cols selcols)
 {
-  if (NULL != pplayer && BV_ISSET(selcols, DEM_COL_QUANTITY)) {
+  if (nullptr != pplayer && BV_ISSET(selcols, DEM_COL_QUANTITY)) {
     const char *text = prow->to_text(prow->get_value(pplayer));
 
     cat_snprintf(outptr, out_size, " %s", text);
@@ -905,7 +905,7 @@ static void dem_line_item(char *outptr, size_t out_size,
                  "");
   }
 
-  if (NULL != pplayer && BV_ISSET(selcols, DEM_COL_RANK)) {
+  if (nullptr != pplayer && BV_ISSET(selcols, DEM_COL_RANK)) {
     int basis = prow->get_value(pplayer);
     int place = 1;
 
@@ -924,9 +924,9 @@ static void dem_line_item(char *outptr, size_t out_size,
     cat_snprintf(outptr, out_size, _("(ranked %d)"), place);
   }
 
-  if (NULL == pplayer || BV_ISSET(selcols, DEM_COL_BEST)) {
+  if (nullptr == pplayer || BV_ISSET(selcols, DEM_COL_BEST)) {
     struct player *best_player = pplayer;
-    int best_value = NULL != pplayer ? prow->get_value(pplayer) : 0;
+    int best_value = nullptr != pplayer ? prow->get_value(pplayer) : 0;
 
     players_iterate(other)
     {
@@ -943,7 +943,7 @@ static void dem_line_item(char *outptr, size_t out_size,
     }
     players_iterate_end;
 
-    if (NULL == pplayer
+    if (nullptr == pplayer
         || (player_has_embassy(pplayer, best_player)
             && (pplayer != best_player))) {
       cat_snprintf(outptr, out_size, "   %s: %s",
@@ -992,7 +992,7 @@ bool is_valid_demography(const char *demography, int *error)
     }
 
     if (!found) {
-      if (error != NULL) {
+      if (error != nullptr) {
         (*error) = i;
       }
       // The character is invalid.
@@ -1076,7 +1076,7 @@ void report_achievements(struct connection *pconn)
   char buffer[4096];
   struct player *pplayer = pconn->playing;
 
-  if (pplayer == NULL) {
+  if (pplayer == nullptr) {
     return;
   }
 
@@ -1103,7 +1103,7 @@ void report_achievements(struct connection *pconn)
  */
 static void plrdata_slot_init(struct plrdata_slot *plrdata, const char *name)
 {
-  fc_assert_ret(plrdata->name == NULL);
+  fc_assert_ret(plrdata->name == nullptr);
 
   plrdata->name = new char[MAX_LEN_NAME]();
   plrdata_slot_replace(plrdata, name);
@@ -1115,7 +1115,7 @@ static void plrdata_slot_init(struct plrdata_slot *plrdata, const char *name)
 static void plrdata_slot_replace(struct plrdata_slot *plrdata,
                                  const char *name)
 {
-  fc_assert_ret(plrdata->name != NULL);
+  fc_assert_ret(plrdata->name != nullptr);
 
   fc_strlcpy(plrdata->name, name, MAX_LEN_NAME);
 }
@@ -1141,8 +1141,8 @@ static bool scan_score_log(char *id)
   struct plrdata_slot *plrdata;
   char plr_name[120], line[120], *ptr;
 
-  fc_assert_ret_val(score_log != NULL, false);
-  fc_assert_ret_val(score_log->fp != NULL, false);
+  fc_assert_ret_val(score_log != nullptr, false);
+  fc_assert_ret_val(score_log->fp != nullptr, false);
 
   score_log->last_turn = -1;
   id[0] = '\0';
@@ -1226,7 +1226,7 @@ static bool scan_score_log(char *id)
       }
 
       plrdata = score_log->plrdata + plr_no;
-      if (plrdata->name != NULL) {
+      if (plrdata->name != nullptr) {
         qCritical("[%s:%d] Two names for one player (id %d)!",
                   game.server.scorefile, line_nr, plr_no);
         return false;
@@ -1250,7 +1250,7 @@ static bool scan_score_log(char *id)
       }
 
       plrdata = score_log->plrdata + plr_no;
-      if (plrdata->name == NULL) {
+      if (plrdata->name == nullptr) {
         qCritical("[%s:%d] Trying to remove undefined player (id %d)!",
                   game.server.scorefile, line_nr, plr_no);
         return false;
@@ -1284,19 +1284,19 @@ static bool scan_score_log(char *id)
  */
 void log_civ_score_init()
 {
-  if (score_log != NULL) {
+  if (score_log != nullptr) {
     return;
   }
 
   score_log = new logging_civ_score[1]();
-  score_log->fp = NULL;
+  score_log->fp = nullptr;
   score_log->last_turn = -1;
   score_log->plrdata = new plrdata_slot[player_slot_count()]();
   player_slots_iterate(pslot)
   {
     struct plrdata_slot *plrdata =
         score_log->plrdata + player_slot_index(pslot);
-    plrdata->name = NULL;
+    plrdata->name = nullptr;
   }
   player_slots_iterate_end;
 
@@ -1315,7 +1315,7 @@ void log_civ_score_free()
 
   if (score_log->fp) {
     fclose(score_log->fp);
-    score_log->fp = NULL;
+    score_log->fp = nullptr;
   }
 
   if (score_log->plrdata) {
@@ -1330,7 +1330,7 @@ void log_civ_score_free()
   }
 
   free(score_log);
-  score_log = NULL;
+  score_log = nullptr;
 }
 
 /**
@@ -1407,7 +1407,7 @@ void log_civ_score_now()
         oper = SL_APPEND;
 
         fclose(score_log->fp);
-        score_log->fp = NULL;
+        score_log->fp = nullptr;
       }
     }
 
@@ -1458,7 +1458,7 @@ void log_civ_score_now()
   {
     struct plrdata_slot *plrdata =
         score_log->plrdata + player_slot_index(pslot);
-    if (plrdata->name != NULL && player_slot_is_used(pslot)) {
+    if (plrdata->name != nullptr && player_slot_is_used(pslot)) {
       struct player *pplayer = player_slot_get_player(pslot);
 
       if (!GOOD_PLAYER(pplayer)) {
@@ -1475,7 +1475,7 @@ void log_civ_score_now()
     struct plrdata_slot *plrdata =
         score_log->plrdata + player_index(pplayer);
 
-    if (plrdata->name == NULL && GOOD_PLAYER(pplayer)) {
+    if (plrdata->name == nullptr && GOOD_PLAYER(pplayer)) {
       switch (game.server.scoreloglevel) {
       case SL_HUMANS:
         if (is_ai(pplayer)) {
@@ -1501,7 +1501,7 @@ void log_civ_score_now()
     if (GOOD_PLAYER(pplayer)) {
       switch (game.server.scoreloglevel) {
       case SL_HUMANS:
-        if (is_ai(pplayer) && plrdata->name == NULL) {
+        if (is_ai(pplayer) && plrdata->name == nullptr) {
           // If a human player toggled into AI mode, don't break.
           break;
         }

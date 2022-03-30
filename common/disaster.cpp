@@ -52,7 +52,7 @@ void disaster_types_free()
  */
 Disaster_type_id disaster_number(const struct disaster_type *pdis)
 {
-  fc_assert_ret_val(NULL != pdis, 0);
+  fc_assert_ret_val(nullptr != pdis, 0);
 
   return pdis->id;
 }
@@ -65,7 +65,7 @@ Disaster_type_id disaster_number(const struct disaster_type *pdis)
  */
 Disaster_type_id disaster_index(const struct disaster_type *pdis)
 {
-  fc_assert_ret_val(NULL != pdis, 0);
+  fc_assert_ret_val(nullptr != pdis, 0);
 
   return pdis - disaster_types;
 }
@@ -80,7 +80,8 @@ Disaster_type_id disaster_count() { return game.control.num_disaster_types; }
  */
 struct disaster_type *disaster_by_number(Disaster_type_id id)
 {
-  fc_assert_ret_val(id >= 0 && id < game.control.num_disaster_types, NULL);
+  fc_assert_ret_val(id >= 0 && id < game.control.num_disaster_types,
+                    nullptr);
 
   return &disaster_types[id];
 }
@@ -116,7 +117,7 @@ bool disaster_has_effect(const struct disaster_type *pdis,
 bool can_disaster_happen(const struct disaster_type *pdis,
                          const struct city *pcity)
 {
-  return are_reqs_active(city_owner(pcity), NULL, pcity, NULL,
-                         city_tile(pcity), NULL, NULL, NULL, NULL, NULL,
-                         &pdis->reqs, RPT_POSSIBLE);
+  return are_reqs_active(city_owner(pcity), nullptr, pcity, nullptr,
+                         city_tile(pcity), nullptr, nullptr, nullptr,
+                         nullptr, nullptr, &pdis->reqs, RPT_POSSIBLE);
 }

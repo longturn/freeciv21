@@ -193,7 +193,6 @@ struct client_options gui_options = {
     false, //.gui_qt_fullscreen =
     true,  //.gui_qt_show_preview =
     true,  //.gui_qt_allied_chat_only =
-    true,  //.gui_qt_sidebar_left =
     0,     // font_increase
     FC_QT_DEFAULT_THEME_NAME,
     "Monospace,8,-1,5,75,0,0,0,0,0",   //.gui_qt_font_notify_label =
@@ -205,7 +204,6 @@ struct client_options gui_options = {
     "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_reqtree_text =
     {true},                            //=?
     true,                              //.gui_qt_show_titlebar
-    5,
     {}};
 
 /* Set to TRUE after the first call to options_init(), to avoid the usage
@@ -232,7 +230,7 @@ struct option_set {
 struct option *optset_option_by_number(const struct option_set *poptset,
                                        int id)
 {
-  fc_assert_ret_val(NULL != poptset, NULL);
+  fc_assert_ret_val(nullptr != poptset, nullptr);
 
   return poptset->option_by_number(id);
 }
@@ -243,7 +241,7 @@ struct option *optset_option_by_number(const struct option_set *poptset,
 struct option *optset_option_by_name(const struct option_set *poptset,
                                      const char *name)
 {
-  fc_assert_ret_val(NULL != poptset, NULL);
+  fc_assert_ret_val(nullptr != poptset, nullptr);
 
   options_iterate(poptset, poption)
   {
@@ -252,7 +250,7 @@ struct option *optset_option_by_name(const struct option_set *poptset,
     }
   }
   options_iterate_end;
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -260,7 +258,7 @@ struct option *optset_option_by_name(const struct option_set *poptset,
  */
 struct option *optset_option_first(const struct option_set *poptset)
 {
-  fc_assert_ret_val(NULL != poptset, NULL);
+  fc_assert_ret_val(nullptr != poptset, nullptr);
 
   return poptset->option_first();
 }
@@ -270,7 +268,7 @@ struct option *optset_option_first(const struct option_set *poptset)
  */
 int optset_category_number(const struct option_set *poptset)
 {
-  fc_assert_ret_val(NULL != poptset, 0);
+  fc_assert_ret_val(nullptr != poptset, 0);
 
   return poptset->category_number();
 }
@@ -281,7 +279,7 @@ int optset_category_number(const struct option_set *poptset)
 const char *optset_category_name(const struct option_set *poptset,
                                  int category)
 {
-  fc_assert_ret_val(NULL != poptset, NULL);
+  fc_assert_ret_val(nullptr != poptset, nullptr);
 
   return poptset->category_name(category);
 }
@@ -390,7 +388,7 @@ struct option {
   {                                                                         \
     .poptset = optset, .type = spec_type, .common_vtable = &common_table,   \
     .spec_table_var = &spec_table, .changed_callback = changed_cb,          \
-    .callback_data = cb_data, .gui_data = NULL                              \
+    .callback_data = cb_data, .gui_data = nullptr                           \
   }
 #define OPTION_BOOL_INIT(optset, common_table, bool_table, changed_cb)      \
   OPTION_INIT(optset, OT_BOOLEAN, bool_vtable, common_table, bool_table,    \
@@ -421,7 +419,7 @@ struct option {
  */
 const struct option_set *option_optset(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
 
   return poption->poptset;
 }
@@ -431,7 +429,7 @@ const struct option_set *option_optset(const struct option *poption)
  */
 int option_number(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, 0);
+  fc_assert_ret_val(nullptr != poption, 0);
 
   return poption->common_vtable->number(poption);
 }
@@ -441,7 +439,7 @@ int option_number(const struct option *poption)
  */
 const char *option_name(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
 
   return poption->common_vtable->name(poption);
 }
@@ -451,7 +449,7 @@ const char *option_name(const struct option *poption)
  */
 const char *option_description(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
 
   return poption->common_vtable->description(poption);
 }
@@ -461,7 +459,7 @@ const char *option_description(const struct option *poption)
  */
 QString option_help_text(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
 
   return poption->common_vtable->help_text(poption);
 }
@@ -471,7 +469,7 @@ QString option_help_text(const struct option *poption)
  */
 enum option_type option_type(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, static_cast<enum option_type>(0));
+  fc_assert_ret_val(nullptr != poption, static_cast<enum option_type>(0));
 
   return poption->type;
 }
@@ -481,7 +479,7 @@ enum option_type option_type(const struct option *poption)
  */
 int option_category(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, 0);
+  fc_assert_ret_val(nullptr != poption, 0);
 
   return poption->common_vtable->category(poption);
 }
@@ -491,7 +489,7 @@ int option_category(const struct option *poption)
  */
 QString option_category_name(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
 
   return optset_category_name(poption->poptset,
                               poption->common_vtable->category(poption));
@@ -502,17 +500,17 @@ QString option_category_name(const struct option *poption)
  */
 bool option_is_changeable(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, false);
+  fc_assert_ret_val(nullptr != poption, false);
 
   return poption->common_vtable->is_changeable(poption);
 }
 
 /**
-   Returns the next option or NULL if this is the last.
+   Returns the next option or nullptr if this is the last.
  */
 struct option *option_next(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
 
   return poption->common_vtable->next(poption);
 }
@@ -522,7 +520,7 @@ struct option *option_next(const struct option *poption)
  */
 bool option_reset(struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, false);
+  fc_assert_ret_val(nullptr != poption, false);
 
   switch (option_type(poption)) {
   case OT_BOOLEAN:
@@ -544,12 +542,12 @@ bool option_reset(struct option *poption)
 }
 
 /**
-   Set the function to call every time this option changes.  Can be NULL.
+   Set the function to call every time this option changes.  Can be nullptr.
  */
 void option_set_changed_callback(struct option *poption,
                                  void (*callback)(struct option *))
 {
-  fc_assert_ret(NULL != poption);
+  fc_assert_ret(nullptr != poption);
 
   poption->changed_callback = callback;
 }
@@ -559,7 +557,7 @@ void option_set_changed_callback(struct option *poption,
  */
 void option_changed(struct option *poption)
 {
-  fc_assert_ret(NULL != poption);
+  fc_assert_ret(nullptr != poption);
 
   if (!options_fully_initialized) {
     // Prevent to use non-initialized datas.
@@ -578,7 +576,7 @@ void option_changed(struct option *poption)
  */
 void option_set_gui_data(struct option *poption, void *data)
 {
-  fc_assert_ret(NULL != poption);
+  fc_assert_ret(nullptr != poption);
 
   poption->gui_data = data;
 }
@@ -588,7 +586,7 @@ void option_set_gui_data(struct option *poption, void *data)
  */
 void *option_get_gui_data(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
 
   return poption->gui_data;
 }
@@ -598,7 +596,7 @@ void *option_get_gui_data(const struct option *poption)
  */
 int option_get_cb_data(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, 0);
+  fc_assert_ret_val(nullptr != poption, 0);
 
   return poption->callback_data;
 }
@@ -608,7 +606,7 @@ int option_get_cb_data(const struct option *poption)
  */
 bool option_bool_get(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, false);
+  fc_assert_ret_val(nullptr != poption, false);
   fc_assert_ret_val(OT_BOOLEAN == poption->type, false);
 
   return poption->bool_vtable->get(poption);
@@ -619,7 +617,7 @@ bool option_bool_get(const struct option *poption)
  */
 bool option_bool_def(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, false);
+  fc_assert_ret_val(nullptr != poption, false);
   fc_assert_ret_val(OT_BOOLEAN == poption->type, false);
 
   return poption->bool_vtable->def(poption);
@@ -630,7 +628,7 @@ bool option_bool_def(const struct option *poption)
  */
 bool option_bool_set(struct option *poption, bool val)
 {
-  fc_assert_ret_val(NULL != poption, false);
+  fc_assert_ret_val(nullptr != poption, false);
   fc_assert_ret_val(OT_BOOLEAN == poption->type, false);
 
   if (poption->bool_vtable->set(poption, val)) {
@@ -645,7 +643,7 @@ bool option_bool_set(struct option *poption, bool val)
  */
 int option_int_get(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, 0);
+  fc_assert_ret_val(nullptr != poption, 0);
   fc_assert_ret_val(OT_INTEGER == poption->type, 0);
 
   return poption->int_vtable->get(poption);
@@ -656,7 +654,7 @@ int option_int_get(const struct option *poption)
  */
 int option_int_def(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, 0);
+  fc_assert_ret_val(nullptr != poption, 0);
   fc_assert_ret_val(OT_INTEGER == poption->type, 0);
 
   return poption->int_vtable->def(poption);
@@ -667,7 +665,7 @@ int option_int_def(const struct option *poption)
  */
 int option_int_min(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, 0);
+  fc_assert_ret_val(nullptr != poption, 0);
   fc_assert_ret_val(OT_INTEGER == poption->type, 0);
 
   return poption->int_vtable->minimum(poption);
@@ -678,7 +676,7 @@ int option_int_min(const struct option *poption)
  */
 int option_int_max(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, 0);
+  fc_assert_ret_val(nullptr != poption, 0);
   fc_assert_ret_val(OT_INTEGER == poption->type, 0);
 
   return poption->int_vtable->maximum(poption);
@@ -689,7 +687,7 @@ int option_int_max(const struct option *poption)
  */
 bool option_int_set(struct option *poption, int val)
 {
-  fc_assert_ret_val(NULL != poption, false);
+  fc_assert_ret_val(nullptr != poption, false);
   fc_assert_ret_val(OT_INTEGER == poption->type, false);
 
   if (poption->int_vtable->set(poption, val)) {
@@ -704,8 +702,8 @@ bool option_int_set(struct option *poption, int val)
  */
 const char *option_str_get(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
-  fc_assert_ret_val(OT_STRING == poption->type, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
+  fc_assert_ret_val(OT_STRING == poption->type, nullptr);
 
   return poption->str_vtable->get(poption);
 }
@@ -715,8 +713,8 @@ const char *option_str_get(const struct option *poption)
  */
 const char *option_str_def(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
-  fc_assert_ret_val(OT_STRING == poption->type, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
+  fc_assert_ret_val(OT_STRING == poption->type, nullptr);
 
   return poption->str_vtable->def(poption);
 }
@@ -726,8 +724,8 @@ const char *option_str_def(const struct option *poption)
  */
 const QVector<QString> *option_str_values(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
-  fc_assert_ret_val(OT_STRING == poption->type, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
+  fc_assert_ret_val(OT_STRING == poption->type, nullptr);
 
   return poption->str_vtable->values(poption);
 }
@@ -737,9 +735,9 @@ const QVector<QString> *option_str_values(const struct option *poption)
  */
 bool option_str_set(struct option *poption, const char *str)
 {
-  fc_assert_ret_val(NULL != poption, false);
+  fc_assert_ret_val(nullptr != poption, false);
   fc_assert_ret_val(OT_STRING == poption->type, false);
-  fc_assert_ret_val(NULL != str, false);
+  fc_assert_ret_val(nullptr != str, false);
 
   if (poption->str_vtable->set(poption, str)) {
     option_changed(poption);
@@ -757,10 +755,10 @@ int option_enum_str_to_int(const struct option *poption, const char *str)
   const QVector<QString> *values;
   int val;
 
-  fc_assert_ret_val(NULL != poption, 0);
+  fc_assert_ret_val(nullptr != poption, 0);
   fc_assert_ret_val(OT_ENUM == poption->type, 0);
   values = poption->enum_vtable->values(poption);
-  fc_assert_ret_val(NULL != values, 0);
+  fc_assert_ret_val(nullptr != values, 0);
 
   for (val = 0; val < values->count(); val++) {
     if (0
@@ -773,16 +771,16 @@ int option_enum_str_to_int(const struct option *poption, const char *str)
 
 /**
    Returns the user-visible (translatable but not translated) string
-   corresponding to the value. Returns NULL on error.
+   corresponding to the value. Returns nullptr on error.
  */
 QString option_enum_int_to_str(const struct option *poption, int val)
 {
   const QVector<QString> *values;
 
-  fc_assert_ret_val(NULL != poption, NULL);
-  fc_assert_ret_val(OT_ENUM == poption->type, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
+  fc_assert_ret_val(OT_ENUM == poption->type, nullptr);
   values = poption->enum_vtable->values(poption);
-  fc_assert_ret_val(NULL != values, NULL);
+  fc_assert_ret_val(nullptr != values, nullptr);
   if (val < values->count()) {
     // TODO bug here - val is bigger than vector size
     return values->at(val);
@@ -796,7 +794,7 @@ QString option_enum_int_to_str(const struct option *poption, int val)
  */
 int option_enum_get_int(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, -1);
+  fc_assert_ret_val(nullptr != poption, -1);
   fc_assert_ret_val(OT_ENUM == poption->type, -1);
 
   return poption->enum_vtable->get(poption);
@@ -808,8 +806,8 @@ int option_enum_get_int(const struct option *poption)
  */
 QString option_enum_get_str(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
-  fc_assert_ret_val(OT_ENUM == poption->type, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
+  fc_assert_ret_val(OT_ENUM == poption->type, nullptr);
 
   return poption->enum_vtable->values(poption)->at(
       poption->enum_vtable->get(poption));
@@ -820,7 +818,7 @@ QString option_enum_get_str(const struct option *poption)
  */
 int option_enum_def_int(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, -1);
+  fc_assert_ret_val(nullptr != poption, -1);
   fc_assert_ret_val(OT_ENUM == poption->type, -1);
 
   return poption->enum_vtable->def(poption);
@@ -832,8 +830,8 @@ int option_enum_def_int(const struct option *poption)
  */
 QString option_enum_def_str(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
-  fc_assert_ret_val(OT_ENUM == poption->type, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
+  fc_assert_ret_val(OT_ENUM == poption->type, nullptr);
 
   return poption->enum_vtable->values(poption)->at(
       poption->enum_vtable->def(poption));
@@ -845,8 +843,8 @@ QString option_enum_def_str(const struct option *poption)
  */
 const QVector<QString> *option_enum_values(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
-  fc_assert_ret_val(OT_ENUM == poption->type, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
+  fc_assert_ret_val(OT_ENUM == poption->type, nullptr);
 
   return poption->enum_vtable->values(poption);
 }
@@ -856,7 +854,7 @@ const QVector<QString> *option_enum_values(const struct option *poption)
  */
 bool option_enum_set_int(struct option *poption, int val)
 {
-  fc_assert_ret_val(NULL != poption, false);
+  fc_assert_ret_val(nullptr != poption, false);
   fc_assert_ret_val(OT_ENUM == poption->type, false);
 
   if (poption->enum_vtable->set(poption, val)) {
@@ -873,9 +871,9 @@ bool option_enum_set_int(struct option *poption, int val)
  */
 bool option_enum_set_str(struct option *poption, const char *str)
 {
-  fc_assert_ret_val(NULL != poption, false);
+  fc_assert_ret_val(nullptr != poption, false);
   fc_assert_ret_val(OT_ENUM == poption->type, false);
-  fc_assert_ret_val(NULL != str, false);
+  fc_assert_ret_val(nullptr != str, false);
 
   if (poption->enum_vtable->set(poption,
                                 option_enum_str_to_int(poption, str))) {
@@ -890,7 +888,7 @@ bool option_enum_set_str(struct option *poption, const char *str)
  */
 unsigned option_bitwise_get(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, 0);
+  fc_assert_ret_val(nullptr != poption, 0);
   fc_assert_ret_val(OT_BITWISE == poption->type, 0);
 
   return poption->bitwise_vtable->get(poption);
@@ -901,7 +899,7 @@ unsigned option_bitwise_get(const struct option *poption)
  */
 unsigned option_bitwise_def(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, 0);
+  fc_assert_ret_val(nullptr != poption, 0);
   fc_assert_ret_val(OT_BITWISE == poption->type, 0);
 
   return poption->bitwise_vtable->def(poption);
@@ -914,11 +912,11 @@ unsigned option_bitwise_mask(const struct option *poption)
 {
   const QVector<QString> *values;
 
-  fc_assert_ret_val(NULL != poption, 0);
+  fc_assert_ret_val(nullptr != poption, 0);
   fc_assert_ret_val(OT_BITWISE == poption->type, 0);
 
   values = poption->bitwise_vtable->values(poption);
-  fc_assert_ret_val(NULL != values, 0);
+  fc_assert_ret_val(nullptr != values, 0);
 
   return (1 << values->count()) - 1;
 }
@@ -929,8 +927,8 @@ unsigned option_bitwise_mask(const struct option *poption)
  */
 const QVector<QString> *option_bitwise_values(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
-  fc_assert_ret_val(OT_BITWISE == poption->type, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
+  fc_assert_ret_val(OT_BITWISE == poption->type, nullptr);
 
   return poption->bitwise_vtable->values(poption);
 }
@@ -940,7 +938,7 @@ const QVector<QString> *option_bitwise_values(const struct option *poption)
  */
 bool option_bitwise_set(struct option *poption, unsigned val)
 {
-  fc_assert_ret_val(NULL != poption, false);
+  fc_assert_ret_val(nullptr != poption, false);
   fc_assert_ret_val(OT_BITWISE == poption->type, false);
 
   if (0 != (val & ~option_bitwise_mask(poption))
@@ -957,8 +955,8 @@ bool option_bitwise_set(struct option *poption, unsigned val)
  */
 const QString option_font_get(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
-  fc_assert_ret_val(OT_FONT == poption->type, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
+  fc_assert_ret_val(OT_FONT == poption->type, nullptr);
 
   return poption->font_vtable->get(poption);
 }
@@ -968,8 +966,8 @@ const QString option_font_get(const struct option *poption)
  */
 const QString option_font_def(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
-  fc_assert_ret_val(OT_FONT == poption->type, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
+  fc_assert_ret_val(OT_FONT == poption->type, nullptr);
 
   return poption->font_vtable->def(poption);
 }
@@ -979,8 +977,8 @@ const QString option_font_def(const struct option *poption)
  */
 const QString option_font_target(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, NULL);
-  fc_assert_ret_val(OT_FONT == poption->type, NULL);
+  fc_assert_ret_val(nullptr != poption, nullptr);
+  fc_assert_ret_val(OT_FONT == poption->type, nullptr);
 
   return poption->font_vtable->target(poption);
 }
@@ -990,9 +988,9 @@ const QString option_font_target(const struct option *poption)
  */
 bool option_font_set(struct option *poption, const QString &font)
 {
-  fc_assert_ret_val(NULL != poption, false);
+  fc_assert_ret_val(nullptr != poption, false);
   fc_assert_ret_val(OT_FONT == poption->type, false);
-  fc_assert_ret_val(NULL != font, false);
+  fc_assert_ret_val(nullptr != font, false);
 
   if (poption->font_vtable->set(poption, qUtf8Printable(font))) {
     option_changed(poption);
@@ -1006,9 +1004,10 @@ bool option_font_set(struct option *poption, const QString &font)
  */
 struct ft_color option_color_get(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, ft_color_construct(NULL, NULL));
+  fc_assert_ret_val(nullptr != poption,
+                    ft_color_construct(nullptr, nullptr));
   fc_assert_ret_val(OT_COLOR == poption->type,
-                    ft_color_construct(NULL, NULL));
+                    ft_color_construct(nullptr, nullptr));
 
   return poption->color_vtable->get(poption);
 }
@@ -1018,9 +1017,10 @@ struct ft_color option_color_get(const struct option *poption)
  */
 struct ft_color option_color_def(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, ft_color_construct(NULL, NULL));
+  fc_assert_ret_val(nullptr != poption,
+                    ft_color_construct(nullptr, nullptr));
   fc_assert_ret_val(OT_COLOR == poption->type,
-                    ft_color_construct(NULL, NULL));
+                    ft_color_construct(nullptr, nullptr));
 
   return poption->color_vtable->def(poption);
 }
@@ -1031,7 +1031,7 @@ struct ft_color option_color_def(const struct option *poption)
  */
 bool option_color_set(struct option *poption, struct ft_color color)
 {
-  fc_assert_ret_val(NULL != poption, false);
+  fc_assert_ret_val(nullptr != poption, false);
   fc_assert_ret_val(OT_COLOR == poption->type, false);
 
   if (poption->color_vtable->set(poption, color)) {
@@ -1178,7 +1178,7 @@ struct client_option {
       const char *const def;
       /*
        * A function to return a string vector of possible string values,
-       * or NULL for none.
+       * or nullptr for none.
        */
       const QVector<QString> *(*const val_accessor)(const struct option *);
     } string;
@@ -1299,7 +1299,7 @@ struct client_option {
       .string = {.pvalue = gui_options.oname,                               \
                  .size = sizeof(gui_options.oname),                         \
                  .def = odef,                                               \
-                 .val_accessor = NULL}                                      \
+                 .val_accessor = nullptr}                                   \
     }                                                                       \
   }
 
@@ -1361,8 +1361,8 @@ struct client_option {
     .category = ocat, .u = {                                                \
       .enumerator = {.pvalue = (int *) &gui_options.oname,                  \
                      .def = odef,                                           \
-                     .support_names = NULL, /* Set in options_init(). */    \
-                     .pretty_names = NULL,                                  \
+                     .support_names = nullptr, /* Set in options_init(). */ \
+                     .pretty_names = nullptr,                               \
                      .name_accessor = oacc}                                 \
     }                                                                       \
   }
@@ -1391,8 +1391,8 @@ struct client_option {
     .category = ocat, .u = {                                                \
       .bitwise = {.pvalue = &gui_options.oname,                             \
                   .def = odef,                                              \
-                  .support_names = NULL, /* Set in options_init(). */       \
-                  .pretty_names = NULL,                                     \
+                  .support_names = nullptr, /* Set in options_init(). */    \
+                  .pretty_names = nullptr,                                  \
                   .name_accessor = oacc}                                    \
     }                                                                       \
   }
@@ -1467,7 +1467,6 @@ static void manual_turn_done_callback(struct option *poption);
 static void voteinfo_bar_callback(struct option *poption);
 static void font_changed_callback(struct option *poption);
 static void allfont_changed_callback(struct option *poption);
-static void sidebar_changed_callback(struct option *poption);
 static void mapimg_changed_callback(struct option *poption);
 static void game_music_enable_callback(struct option *poption);
 static void menu_music_enable_callback(struct option *poption);
@@ -1479,7 +1478,7 @@ static struct client_option client_options[] = {
         N_("This is the default login username that will be used "
            "in the connection dialogs or with the -a command-line "
            "parameter."),
-        COC_NETWORK, NULL, NULL, 0),
+        COC_NETWORK, nullptr, nullptr, 0),
     GEN_BOOL_OPTION(use_prev_server, N_("Default to previously used server"),
                     N_("Automatically update \"Server\" and \"Server port\" "
                        "options to match your latest connection, so by "
@@ -1487,25 +1486,25 @@ static struct client_option client_options[] = {
                        "on the previous run. You should enable "
                        "saving options on exit too, so that the automatic "
                        "updates to the options get saved too."),
-                    COC_NETWORK, false, NULL),
+                    COC_NETWORK, false, nullptr),
     GEN_STR_OPTION(
         default_server_host, N_("Server"),
         N_("This is the default server hostname that will be used "
            "in the connection dialogs or with the -a command-line "
            "parameter."),
-        COC_NETWORK, "localhost", NULL, 0),
+        COC_NETWORK, "localhost", nullptr, 0),
     GEN_INT_OPTION(
         default_server_port, N_("Server port"),
         N_("This is the default server port that will be used "
            "in the connection dialogs or with the -a command-line "
            "parameter."),
-        COC_NETWORK, DEFAULT_SOCK_PORT, 0, 65535, NULL),
+        COC_NETWORK, DEFAULT_SOCK_PORT, 0, 65535, nullptr),
     GEN_STR_OPTION(default_metaserver, N_("Metaserver"),
                    N_("The metaserver is a host that the client contacts to "
                       "find out about games on the internet.  Don't change "
                       "this from its default value unless you know what "
                       "you're doing."),
-                   COC_NETWORK, DEFAULT_METASERVER_OPTION, NULL, 0),
+                   COC_NETWORK, DEFAULT_METASERVER_OPTION, nullptr, 0),
     GEN_BOOL_OPTION(
         heartbeat_enabled, N_("Send heartbeat messages to server"),
         N_("Periodically send an empty heartbeat message to the "
@@ -1513,13 +1512,13 @@ static struct client_option client_options[] = {
            "This can help to make it obvious when the server has "
            "cut the connection due to a connectivity outage, if "
            "the client would otherwise sit idle for a long period."),
-        COC_NETWORK, true, NULL),
+        COC_NETWORK, true, nullptr),
     GEN_STR_LIST_OPTION(
         default_sound_set_name, N_("Soundset"),
         N_("This is the soundset that will be used.  Changing "
            "this is the same as using the -S command-line "
            "parameter."),
-        COC_SOUND, "stdsounds", get_soundset_list, NULL, 0),
+        COC_SOUND, "stdsounds", get_soundset_list, nullptr, 0),
     GEN_STR_LIST_OPTION(
         default_music_set_name, N_("Musicset"),
         N_("This is the musicset that will be used.  Changing "
@@ -1533,18 +1532,18 @@ static struct client_option client_options[] = {
            "the sound plugin.  The new plugin won't take "
            "effect until you restart Freeciv21.  Changing this "
            "is the same as using the -P command-line option."),
-        COC_SOUND, "", get_soundplugin_list, NULL, 0),
+        COC_SOUND, "", get_soundplugin_list, nullptr, 0),
     GEN_STR_OPTION(default_chat_logfile, N_("The chat log file"),
                    N_("The name of the chat log file."), COC_INTERFACE,
-                   GUI_DEFAULT_CHAT_LOGFILE, NULL, 0),
+                   GUI_DEFAULT_CHAT_LOGFILE, nullptr, 0),
     GEN_STR_LIST_OPTION(gui_qt_default_theme_name, N_("Theme"),
                         N_("By changing this option you change the "
                            "active theme."),
                         COC_GRAPHICS, FC_QT_DEFAULT_THEME_NAME,
                         get_themes_list, theme_reread_callback, 0),
 
-    /* It's important to give empty string instead of NULL as as default
-     * value. For NULL value it would default to assigning first value
+    /* It's important to give empty string instead of nullptr as as default
+     * value. For nullptr value it would default to assigning first value
      * from the tileset list returned by get_tileset_list() as default
      * tileset. We don't want default tileset assigned at all here, but
      * leave it to tilespec code that can handle tileset priority. */
@@ -1706,14 +1705,14 @@ static struct client_option client_options[] = {
            "at the start of a new turn.  You can control the "
            "behavior of the \"bell\" event by editing the message "
            "options."),
-        COC_SOUND, false, NULL),
+        COC_SOUND, false, nullptr),
     GEN_INT_OPTION(
         smooth_move_unit_msec,
         N_("Unit movement animation time (milliseconds)"),
         N_("This option controls how long unit \"animation\" takes "
            "when a unit moves on the map view.  Set it to 0 to "
            "disable animation entirely."),
-        COC_GRAPHICS, 30, 0, 2000, NULL),
+        COC_GRAPHICS, 30, 0, 2000, nullptr),
     GEN_INT_OPTION(
         smooth_center_slide_msec,
         N_("Mapview recentering time (milliseconds)"),
@@ -1721,14 +1720,14 @@ static struct client_option client_options[] = {
            "smoothly over the map to its new position.  This "
            "option controls how long this slide lasts.  Set it to "
            "0 to disable mapview sliding entirely."),
-        COC_GRAPHICS, 200, 0, 5000, NULL),
+        COC_GRAPHICS, 200, 0, 5000, nullptr),
     GEN_INT_OPTION(
         smooth_combat_step_msec,
         N_("Combat animation step time (milliseconds)"),
         N_("This option controls the speed of combat animation "
            "between units on the mapview.  Set it to 0 to disable "
            "animation entirely."),
-        COC_GRAPHICS, 10, 0, 100, NULL),
+        COC_GRAPHICS, 10, 0, 100, nullptr),
     GEN_BOOL_OPTION(reqtree_show_icons,
                     N_("Show icons in the technology tree"),
                     N_("Setting this option will display icons "
@@ -1749,7 +1748,7 @@ static struct client_option client_options[] = {
            "messages will be highlighted using this color as "
            "background.  If not set, it will just not highlight "
            "anything."),
-        COC_GRAPHICS, "#000000", "#FFFF00", NULL),
+        COC_GRAPHICS, "#000000", "#FFFF00", nullptr),
     GEN_BOOL_OPTION(ai_manual_turn_done, N_("Manual Turn Done in AI mode"),
                     N_("Disable this option if you do not want to "
                        "press the Turn Done button manually when watching "
@@ -1758,69 +1757,69 @@ static struct client_option client_options[] = {
     GEN_BOOL_OPTION(auto_center_on_unit, N_("Auto center on units"),
                     N_("Set this option to have the active unit centered "
                        "automatically when the unit focus changes."),
-                    COC_INTERFACE, true, NULL),
+                    COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(auto_center_on_automated, N_("Show automated units"),
                     N_("Disable this option if you do not want to see "
                        "automated units autocentered and animated."),
-                    COC_INTERFACE, true, NULL),
+                    COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(
         auto_center_on_combat, N_("Auto center on combat"),
         N_("Set this option to have any combat be centered "
            "automatically.  Disabling this will speed up the time "
            "between turns but may cause you to miss combat "
            "entirely."),
-        COC_INTERFACE, false, NULL),
+        COC_INTERFACE, false, nullptr),
     GEN_BOOL_OPTION(auto_center_each_turn, N_("Auto center on new turn"),
                     N_("Set this option to have the client automatically "
                        "recenter the map on a suitable location at the "
                        "start of each turn."),
-                    COC_INTERFACE, true, NULL),
+                    COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(wakeup_focus, N_("Focus on awakened units"),
                     N_("Set this option to have newly awoken units be "
                        "focused automatically."),
-                    COC_INTERFACE, true, NULL),
+                    COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(keyboardless_goto, N_("Keyboardless goto"),
                     N_("If this option is set then a goto may be initiated "
                        "by left-clicking and then holding down the mouse "
                        "button while dragging the mouse onto a different "
                        "tile."),
-                    COC_INTERFACE, true, NULL),
+                    COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(
         goto_into_unknown, N_("Allow goto into the unknown"),
         N_("Setting this option will make the game consider "
            "moving into unknown tiles.  If not, then goto routes "
            "will detour around or be blocked by unknown tiles."),
-        COC_INTERFACE, true, NULL),
+        COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(center_when_popup_city, N_("Center map when popup city"),
                     N_("Setting this option makes the mapview center on a "
                        "city when its city dialog is popped up."),
-                    COC_INTERFACE, true, NULL),
+                    COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(
         show_previous_turn_messages, N_("Show messages from previous turn"),
         N_("Message Window shows messages also from previous turn. "
            "This makes sure you don't miss messages received in the end of "
            "the turn, just before the window gets cleared."),
-        COC_INTERFACE, true, NULL),
+        COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(
         concise_city_production, N_("Concise city production"),
         N_("Set this option to make the city production (as shown "
            "in the city dialog) to be more compact."),
-        COC_INTERFACE, false, NULL),
+        COC_INTERFACE, false, nullptr),
     GEN_BOOL_OPTION(
         auto_turn_done, N_("End turn when done moving"),
         N_("Setting this option makes your turn end automatically "
            "when all your units are done moving."),
-        COC_INTERFACE, false, NULL),
+        COC_INTERFACE, false, nullptr),
     GEN_BOOL_OPTION(
         ask_city_name, N_("Prompt for city names"),
         N_("Disabling this option will make the names of newly "
            "founded cities be chosen automatically by the server."),
-        COC_INTERFACE, true, NULL),
+        COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(popup_new_cities,
                     N_("Pop up city dialog for new cities"),
                     N_("Setting this option will pop up a newly-founded "
                        "city's city dialog automatically."),
-                    COC_INTERFACE, true, NULL),
+                    COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(
         popup_actor_arrival, N_("Pop up caravan and spy actions"),
         N_("If this option is enabled, when a unit arrives at "
@@ -1832,7 +1831,7 @@ static struct client_option client_options[] = {
            "action manually by pressing either 'r' (for a trade "
            "route), 'b' (for building a wonder) or 'd' (for a "
            "spy action) when the unit is in the city."),
-        COC_INTERFACE, true, NULL),
+        COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(
         popup_attack_actions, N_("Pop up attack questions"),
         N_("If this option is enabled, when a unit arrives at a "
@@ -1841,7 +1840,7 @@ static struct client_option client_options[] = {
            "action is legal and no other interesting action are. "
            "This allows you to change your mind or to select an "
            "uninteresting action."),
-        COC_INTERFACE, true, NULL),
+        COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(
         popup_last_move_to_allied, N_("Pop up actions last move to allied"),
         N_("If this option is enabled the final move in a unit's"
@@ -1854,19 +1853,19 @@ static struct client_option client_options[] = {
            " The down side is that the unit remains adjacent to"
            " rather than inside the protection of an allied city"
            " or unit stack."),
-        COC_INTERFACE, true, NULL),
+        COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(enable_cursor_changes, N_("Enable cursor changing"),
                     N_("This option controls whether the client should "
                        "try to change the mouse cursor depending on what "
                        "is being pointed at, as well as to indicate "
                        "changes in the client or server state."),
-                    COC_INTERFACE, true, NULL),
+                    COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(separate_unit_selection,
                     N_("Select cities before units"),
                     N_("If this option is enabled, when both cities and "
                        "units are present in the selection rectangle, only "
                        "cities will be selected. See the help on Controls."),
-                    COC_INTERFACE, false, NULL),
+                    COC_INTERFACE, false, nullptr),
     GEN_BOOL_OPTION(
         unit_selection_clears_orders, N_("Clear unit orders on selection"),
         N_("Enabling this option will cause unit orders to be "
@@ -1877,7 +1876,7 @@ static struct client_option client_options[] = {
            "<space> once will clear their orders and leave them "
            "selected, and pressing <space> a second time will "
            "dismiss them."),
-        COC_INTERFACE, true, NULL),
+        COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(voteinfo_bar_use, N_("Enable vote bar"),
                     N_("If this option is turned on, the vote bar will be "
                        "displayed to show vote information."),
@@ -1902,12 +1901,12 @@ static struct client_option client_options[] = {
                     N_("If this option is enabled, any tileset suggested by "
                        "the ruleset is automatically used; otherwise you "
                        "are prompted to change tileset."),
-                    COC_GRAPHICS, false, NULL),
+                    COC_GRAPHICS, false, nullptr),
 
     GEN_BOOL_OPTION(sound_enable_effects, N_("Enable sound effects"),
                     N_("Play sound effects, assuming there's suitable "
                        "sound plugin and soundset with the sounds."),
-                    COC_SOUND, true, NULL),
+                    COC_SOUND, true, nullptr),
     GEN_BOOL_OPTION(
         sound_enable_game_music, N_("Enable in-game music"),
         N_("Play music during the game, assuming there's suitable "
@@ -1927,19 +1926,19 @@ static struct client_option client_options[] = {
         N_("Autoaccept soundset suggestions"),
         N_("If this option is enabled, any soundset suggested by "
            "the ruleset is automatically used."),
-        COC_SOUND, false, NULL),
+        COC_SOUND, false, nullptr),
     GEN_BOOL_OPTION(
         autoaccept_musicset_suggestion,
         N_("Autoaccept musicset suggestions"),
         N_("If this option is enabled, any musicset suggested by "
            "the ruleset is automatically used."),
-        COC_SOUND, false, NULL),
+        COC_SOUND, false, nullptr),
 
     GEN_BOOL_OPTION(overview.layers[OLAYER_BACKGROUND],
                     N_("Background layer"),
                     N_("The background layer of the overview shows just "
                        "ocean and land."),
-                    COC_OVERVIEW, true, NULL),
+                    COC_OVERVIEW, true, nullptr),
     GEN_BOOL_OPTION(overview.layers[OLAYER_RELIEF],
                     N_("Terrain relief map layer"),
                     N_("The relief layer shows all terrains on the map."),
@@ -1970,7 +1969,8 @@ static struct client_option client_options[] = {
     GEN_STR_LIST_OPTION(mapimg_format, N_("Image format"),
                         N_("The image toolkit and file format used for "
                            "map images."),
-                        COC_MAPIMG, NULL, get_mapimg_format_list, NULL, 0),
+                        COC_MAPIMG, nullptr, get_mapimg_format_list, nullptr,
+                        0),
     GEN_INT_OPTION(mapimg_zoom, N_("Zoom factor for map images"),
                    N_("The magnification used for map images."), COC_MAPIMG,
                    2, 1, 5, mapimg_changed_callback),
@@ -2005,27 +2005,24 @@ static struct client_option client_options[] = {
         N_("The base part of the filename for saved map images. "
            "A string identifying the game turn and map options will "
            "be appended."),
-        COC_MAPIMG, GUI_DEFAULT_MAPIMG_FILENAME, NULL, 0),
+        COC_MAPIMG, GUI_DEFAULT_MAPIMG_FILENAME, nullptr, 0),
 
     GEN_BOOL_OPTION(gui_qt_fullscreen, N_("Fullscreen"),
                     N_("If this option is set the client will use the "
                        "whole screen area for drawing."),
-                    COC_INTERFACE, false, NULL),
+                    COC_INTERFACE, false, nullptr),
     GEN_BOOL_OPTION(
         gui_qt_show_titlebar, N_("Show titlebar"),
         N_("If this option is set the client will show a titlebar. "
            "If disabled, then no titlebar will be shown, and "
            "minimize/maximize/etc buttons will be placed on the "
            "menu bar."),
-        COC_INTERFACE, true, NULL),
+        COC_INTERFACE, true, nullptr),
     GEN_INT_OPTION(gui_qt_increase_fonts, N_("Change all fonts size"),
                    N_("Change size of all fonts at once by given percent."
                       "That options is not unsaveable. Hit Apply button"
                       "after changing this."),
                    COC_FONT, 0, -100, 100, allfont_changed_callback),
-    GEN_INT_OPTION(gui_qt_sidebar_width, N_("Sidebar width"),
-                   N_("Change width of sidebar. 1 - narrow, 9 - fat"),
-                   COC_INTERFACE, 5, 1, 31, sidebar_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_default, "default_font", N_("Default font"),
                     N_("This is default font"), COC_FONT,
                     "Sans Serif,10,-1,5,75,0,0,0,0,0",
@@ -2069,12 +2066,8 @@ static struct client_option client_options[] = {
     GEN_BOOL_OPTION(gui_qt_show_preview, N_("Show savegame information"),
                     N_("If this option is set the client will show "
                        "information and map preview of current savegame."),
-                    COC_GRAPHICS, true, NULL),
-    GEN_BOOL_OPTION(
-        gui_qt_sidebar_left, N_("Sidebar position"),
-        N_("If this option is set, the sidebar will be to the left "
-           "of the map, otherwise to the right."),
-        COC_INTERFACE, true, NULL)};
+                    COC_GRAPHICS, true, nullptr),
+};
 static const int client_options_num = ARRAY_SIZE(client_options);
 
 // Iteration loop, including invalid options for the current gui type.
@@ -2099,7 +2092,7 @@ client_option_next_valid(struct client_option *poption)
 {
   const struct client_option *const max =
       client_options + client_options_num;
-  return (poption < max ? poption : NULL);
+  return (poption < max ? poption : nullptr);
 }
 
 /**
@@ -2108,7 +2101,7 @@ client_option_next_valid(struct client_option *poption)
 static struct option *client_optset_option_by_number(int id)
 {
   if (0 > id || id > client_options_num) {
-    return NULL;
+    return nullptr;
   }
   return OPTION(client_options + id);
 }
@@ -2153,7 +2146,7 @@ static const char *client_optset_category_name(int category)
 
   qCritical("%s: invalid option category number %d.", __FUNCTION__,
             category);
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -2319,7 +2312,7 @@ client_option_str_values(const struct option *poption)
 {
   return (CLIENT_OPTION(poption)->u.string.val_accessor
               ? CLIENT_OPTION(poption)->u.string.val_accessor(poption)
-              : NULL);
+              : nullptr);
 }
 
 /**
@@ -2351,7 +2344,7 @@ static const char *client_option_enum_secfile_str(secfile_data_t data,
       CLIENT_OPTION(data)->u.enumerator.support_names;
 
   return (0 <= val && val < names->count() ? qUtf8Printable(names->at(val))
-                                           : NULL);
+                                           : nullptr);
 }
 
 /**
@@ -2366,7 +2359,7 @@ static const char *client_option_bitwise_secfile_str(secfile_data_t data,
       CLIENT_OPTION(data)->u.bitwise.support_names;
 
   return (0 <= val && val < names->count() ? qUtf8Printable(names->at(val))
-                                           : NULL);
+                                           : nullptr);
 }
 
 /**
@@ -2437,15 +2430,15 @@ static bool client_option_color_set(struct option *poption,
   bool changed = false;
 
 #define color_set(color_tgt, color)                                         \
-  if (NULL == color_tgt) {                                                  \
-    if (NULL != color) {                                                    \
+  if (nullptr == color_tgt) {                                               \
+    if (nullptr != color) {                                                 \
       color_tgt = fc_strdup(color);                                         \
       changed = true;                                                       \
     }                                                                       \
   } else {                                                                  \
-    if (NULL == color) {                                                    \
+    if (nullptr == color) {                                                 \
       delete[] color_tgt;                                                   \
-      color_tgt = NULL;                                                     \
+      color_tgt = nullptr;                                                  \
       changed = true;                                                       \
     } else if (0 != strcmp(color_tgt, color)) {                             \
       delete[] color_tgt;                                                   \
@@ -2468,8 +2461,8 @@ static bool client_option_color_set(struct option *poption,
 static bool client_option_load(struct option *poption,
                                struct section_file *sf)
 {
-  fc_assert_ret_val(NULL != poption, false);
-  fc_assert_ret_val(NULL != sf, false);
+  fc_assert_ret_val(nullptr != poption, false);
+  fc_assert_ret_val(nullptr != sf, false);
 
   switch (option_type(poption)) {
   case OT_BOOLEAN: {
@@ -2534,8 +2527,8 @@ static bool client_option_load(struct option *poption,
 static void client_option_save(struct option *poption,
                                struct section_file *sf)
 {
-  fc_assert_ret(NULL != poption);
-  fc_assert_ret(NULL != sf);
+  fc_assert_ret(nullptr != poption);
+  fc_assert_ret(nullptr != sf);
 
   switch (option_type(poption)) {
   case OT_BOOLEAN:
@@ -2578,8 +2571,8 @@ static void client_option_save(struct option *poption,
 /****************************************************************************
   Server options variables.
 ****************************************************************************/
-static char **server_options_categories = NULL;
-static struct server_option *server_options = NULL;
+static char **server_options_categories = nullptr;
+static struct server_option *server_options = nullptr;
 
 static int server_options_categories_num = 0;
 static int server_options_num = 0;
@@ -2735,8 +2728,8 @@ static void desired_settable_option_send(struct option *poption);
  */
 void server_options_init()
 {
-  fc_assert(NULL == server_options_categories);
-  fc_assert(NULL == server_options);
+  fc_assert(nullptr == server_options_categories);
+  fc_assert(nullptr == server_options);
   fc_assert(0 == server_options_categories_num);
   fc_assert(0 == server_options_num);
 }
@@ -2748,11 +2741,11 @@ static void server_option_free(struct server_option *poption)
 {
   switch (poption->base_option.type) {
   case OT_STRING:
-    if (NULL != poption->string.value) {
-      FC_FREE(poption->string.value);
+    if (nullptr != poption->string.value) {
+      FCPP_FREE(poption->string.value);
     }
-    if (NULL != poption->string.def) {
-      FC_FREE(poption->string.def);
+    if (nullptr != poption->string.def) {
+      FCPP_FREE(poption->string.def);
     }
     break;
 
@@ -2773,9 +2766,9 @@ static void server_option_free(struct server_option *poption)
     break;
   }
 
-  NFCN_FREE(poption->name);
-  NFCN_FREE(poption->description);
-  NFCN_FREE(poption->help_text);
+  NFCNPP_FREE(poption->name);
+  NFCNPP_FREE(poption->description);
+  NFCNPP_FREE(poption->help_text);
 }
 
 /**
@@ -2789,22 +2782,22 @@ void server_options_free()
   option_dialog_popdown(server_optset);
 
   // Free the options themselves.
-  if (NULL != server_options) {
+  if (nullptr != server_options) {
     for (i = 0; i < server_options_num; i++) {
       server_option_free(server_options + i);
     }
-    FC_FREE(server_options);
+    FCPP_FREE(server_options);
     server_options_num = 0;
   }
 
   // Free the categories.
-  if (NULL != server_options_categories) {
+  if (nullptr != server_options_categories) {
     for (i = 0; i < server_options_categories_num; i++) {
-      if (NULL != server_options_categories[i]) {
-        FC_FREE(server_options_categories[i]);
+      if (nullptr != server_options_categories[i]) {
+        FCPP_FREE(server_options_categories[i]);
       }
     }
-    FC_FREE(server_options_categories);
+    FCPP_FREE(server_options_categories);
     server_options_categories_num = 0;
   }
 }
@@ -2818,8 +2811,8 @@ void handle_server_setting_control(
   int i;
 
   // This packet should be received only once.
-  fc_assert_ret(NULL == server_options_categories);
-  fc_assert_ret(NULL == server_options);
+  fc_assert_ret(nullptr == server_options_categories);
+  fc_assert_ret(nullptr == server_options);
   fc_assert_ret(0 == server_options_categories_num);
   fc_assert_ret(0 == server_options_num);
 
@@ -2850,14 +2843,14 @@ void handle_server_setting_const(
   struct option *poption = server_optset_option_by_number(packet->id);
   struct server_option *psoption = SERVER_OPTION(poption);
 
-  fc_assert_ret(NULL != poption);
+  fc_assert_ret(nullptr != poption);
 
-  fc_assert(NULL == psoption->name);
+  fc_assert(nullptr == psoption->name);
   psoption->name = fc_strdup(packet->name);
-  fc_assert(NULL == psoption->description);
+  fc_assert(nullptr == psoption->description);
   // NB: Translate now.
   psoption->description = fc_strdup(_(packet->short_help));
-  fc_assert(NULL == psoption->help_text);
+  fc_assert(nullptr == psoption->help_text);
   // NB: Translate now.
   psoption->help_text = fc_strdup(_(packet->extra_help));
   psoption->category = packet->category;
@@ -2908,9 +2901,9 @@ void handle_server_setting_bool(
   bool need_gui_remove = false;
   bool need_gui_add = false;
 
-  fc_assert_ret(NULL != poption);
+  fc_assert_ret(nullptr != poption);
 
-  if (NULL == poption->common_vtable) {
+  if (nullptr == poption->common_vtable) {
     // Not initialized yet.
     poption->poptset = server_optset;
     poption->common_vtable = &server_option_common_vtable;
@@ -2943,9 +2936,9 @@ void handle_server_setting_int(
   bool need_gui_remove = false;
   bool need_gui_add = false;
 
-  fc_assert_ret(NULL != poption);
+  fc_assert_ret(nullptr != poption);
 
-  if (NULL == poption->common_vtable) {
+  if (nullptr == poption->common_vtable) {
     // Not initialized yet.
     poption->poptset = server_optset;
     poption->common_vtable = &server_option_common_vtable;
@@ -2980,9 +2973,9 @@ void handle_server_setting_str(
   bool need_gui_remove = false;
   bool need_gui_add = false;
 
-  fc_assert_ret(NULL != poption);
+  fc_assert_ret(nullptr != poption);
 
-  if (NULL == poption->common_vtable) {
+  if (nullptr == poption->common_vtable) {
     // Not initialized yet.
     poption->poptset = server_optset;
     poption->common_vtable = &server_option_common_vtable;
@@ -2997,13 +2990,13 @@ void handle_server_setting_str(
                     option_type_name(OT_STRING), OT_STRING);
 
   if (packet->is_visible) {
-    if (NULL == psoption->string.value) {
+    if (nullptr == psoption->string.value) {
       psoption->string.value = fc_strdup(packet->val);
     } else if (0 != strcmp(packet->val, psoption->string.value)) {
       delete[] psoption->string.value;
       psoption->string.value = fc_strdup(packet->val);
     }
-    if (NULL == psoption->string.def) {
+    if (nullptr == psoption->string.def) {
       psoption->string.def = fc_strdup(packet->default_val);
     } else if (0 != strcmp(packet->default_val, psoption->string.def)) {
       delete[] psoption->string.def;
@@ -3025,9 +3018,9 @@ void handle_server_setting_enum(
   bool need_gui_remove = false;
   bool need_gui_add = false;
 
-  fc_assert_ret(NULL != poption);
+  fc_assert_ret(nullptr != poption);
 
-  if (NULL == poption->common_vtable) {
+  if (nullptr == poption->common_vtable) {
     // Not initialized yet.
     poption->poptset = server_optset;
     poption->common_vtable = &server_option_common_vtable;
@@ -3047,9 +3040,9 @@ void handle_server_setting_enum(
     psoption->enumerator.value = packet->val;
     psoption->enumerator.def = packet->default_val;
 
-    if (NULL == psoption->enumerator.support_names) {
+    if (nullptr == psoption->enumerator.support_names) {
       // First time we get this packet.
-      fc_assert(NULL == psoption->enumerator.pretty_names);
+      fc_assert(nullptr == psoption->enumerator.pretty_names);
       psoption->enumerator.support_names = new QVector<QString>;
       psoption->enumerator.support_names->resize(packet->values_num);
       psoption->enumerator.pretty_names = new QVector<QString>;
@@ -3114,9 +3107,9 @@ void handle_server_setting_bitwise(
   bool need_gui_remove = false;
   bool need_gui_add = false;
 
-  fc_assert_ret(NULL != poption);
+  fc_assert_ret(nullptr != poption);
 
-  if (NULL == poption->common_vtable) {
+  if (nullptr == poption->common_vtable) {
     // Not initialized yet.
     poption->poptset = server_optset;
     poption->common_vtable = &server_option_common_vtable;
@@ -3136,9 +3129,9 @@ void handle_server_setting_bitwise(
     psoption->bitwise.value = packet->val;
     psoption->bitwise.def = packet->default_val;
 
-    if (NULL == psoption->bitwise.support_names) {
+    if (nullptr == psoption->bitwise.support_names) {
       // First time we get this packet.
-      fc_assert(NULL == psoption->bitwise.pretty_names);
+      fc_assert(nullptr == psoption->bitwise.pretty_names);
       psoption->bitwise.support_names = new QVector<QString>;
       psoption->bitwise.support_names->resize(packet->bits_num);
       psoption->bitwise.pretty_names = new QVector<QString>;
@@ -3199,11 +3192,11 @@ server_option_next_valid(struct server_option *poption)
   const struct server_option *const max =
       server_options + server_options_num;
 
-  while (NULL != poption && poption < max && !poption->is_visible) {
+  while (nullptr != poption && poption < max && !poption->is_visible) {
     poption++;
   }
 
-  return (poption < max ? poption : NULL);
+  return (poption < max ? poption : nullptr);
 }
 
 /**
@@ -3212,7 +3205,7 @@ server_option_next_valid(struct server_option *poption)
 struct option *server_optset_option_by_number(int id)
 {
   if (0 > id || id > server_options_num) {
-    return NULL;
+    return nullptr;
   }
   return OPTION(server_options + id);
 }
@@ -3236,7 +3229,7 @@ int server_optset_category_number() { return server_options_categories_num; }
 const char *server_optset_category_name(int category)
 {
   if (0 > category || category >= server_options_categories_num) {
-    return NULL;
+    return nullptr;
   }
 
   return server_options_categories[category];
@@ -3404,7 +3397,7 @@ static const QVector<QString> *
 server_option_str_values(const struct option *poption)
 {
   Q_UNUSED(poption)
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -3479,10 +3472,10 @@ static void server_option_enum_support_name(const struct option *poption,
   const struct server_option *psoption = SERVER_OPTION(poption);
   const QVector<QString> *values = psoption->enumerator.support_names;
 
-  if (NULL != pvalue) {
+  if (nullptr != pvalue) {
     *pvalue = values->at(psoption->enumerator.value);
   }
-  if (NULL != pdefault) {
+  if (nullptr != pdefault) {
     *pdefault = values->at(psoption->enumerator.def);
   }
 }
@@ -3563,11 +3556,11 @@ static void server_option_bitwise_support_name(const struct option *poption,
   const struct server_option *psoption = SERVER_OPTION(poption);
   const QVector<QString> *values = psoption->bitwise.support_names;
 
-  if (NULL != val_buf && 0 < val_len) {
+  if (nullptr != val_buf && 0 < val_len) {
     server_option_bitwise_support_base(values, psoption->bitwise.value,
                                        val_buf, val_len);
   }
-  if (NULL != def_buf && 0 < def_len) {
+  if (nullptr != def_buf && 0 < def_len) {
     server_option_bitwise_support_base(values, psoption->bitwise.def,
                                        def_buf, def_len);
   }
@@ -3750,7 +3743,7 @@ static void message_options_load(struct section_file *file,
 
   for (i = 0; i < num_events; i++) {
     p = secfile_lookup_str(file, "messages.event%d.name", i);
-    if (NULL == p) {
+    if (nullptr == p) {
       qCritical("Corruption in file %s: %s", secfile_name(file),
                 secfile_error());
       continue;
@@ -3814,6 +3807,7 @@ static void load_cma_preset(struct section_file *file, int i)
         secfile_lookup_int_default(file, 0, "cma.preset%d.factor%d", i, o);
   }
   output_type_iterate_end;
+  parameter.max_growth = false;
   parameter.require_happy =
       secfile_lookup_bool_default(file, false, "cma.preset%d.reqhappy", i);
   parameter.happy_factor =
@@ -3895,7 +3889,7 @@ static void save_cma_presets(struct section_file *file)
    option file.  Usually used for saving.
    Ie, based on FREECIV_OPT env var, and freeciv storage root dir.
    (or a OPTION_FILE_NAME define defined in fc_config.h)
-   Or NULL if problem.
+   Or nullptr if problem.
  */
 static const char *get_current_option_file_name()
 {
@@ -3912,7 +3906,7 @@ static const char *get_current_option_file_name()
     name = freeciv_storage_dir();
     if (name.isEmpty()) {
       qCritical(_("Cannot find Freeciv21 storage directory"));
-      return NULL;
+      return nullptr;
     }
     fc_snprintf(name_buffer, sizeof(name_buffer),
                 "%s/freeciv-client-rc-%d.%d", qUtf8Printable(name),
@@ -3926,7 +3920,7 @@ static const char *get_current_option_file_name()
 /**
    Check the last option file we saved. Usually used to load. Ie, based on
    FREECIV_OPT env var, and home dir. (or a OPTION_FILE_NAME define defined
-   in fc_config.h), or NULL if not found.
+   in fc_config.h), or nullptr if not found.
 
    Set in allow_digital_boolean if we should look for old boolean values
    (saved as 0 and 1), so if the rc file version is older than 2.3.0.
@@ -3965,7 +3959,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     if (name.isEmpty()) {
       qCritical(_("Cannot find Freeciv21 storage directory"));
 
-      return NULL;
+      return nullptr;
     }
 
     for (major = MAJOR_NEW_OPTION_FILE_NAME,
@@ -4026,7 +4020,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
       *allow_digital_boolean = true;
       return name_buffer;
     } else {
-      return NULL;
+      return nullptr;
     }
 #endif // OPTION_FILE_NAME
   }
@@ -4059,7 +4053,7 @@ static void settable_options_load(struct section_file *sf)
   settable_options->clear();
 
   psection = secfile_section_by_name(sf, "server");
-  if (NULL == psection) {
+  if (nullptr == psection) {
     // Does not exist!
     return;
   }
@@ -4067,7 +4061,7 @@ static void settable_options_load(struct section_file *sf)
   entries = section_entries(psection);
   entry_list_iterate(entries, pentry)
   {
-    string = NULL;
+    string = nullptr;
     switch (entry_type_get(pentry)) {
     case ENTRY_BOOL:
       if (entry_bool_get(pentry, &bval)) {
@@ -4096,7 +4090,7 @@ static void settable_options_load(struct section_file *sf)
       break;
     }
 
-    if (NULL == string) {
+    if (nullptr == string) {
       qCritical("Entry type variant of \"%s.%s\" is not supported.",
                 section_name(psection), entry_name(pentry));
       continue;
@@ -4185,7 +4179,7 @@ void desired_settable_options_update()
       break;
     }
 
-    if (NULL == value || NULL == def_val) {
+    if (nullptr == value || nullptr == def_val) {
       qCritical("Option type %s (%d) not supported for '%s'.",
                 option_type_name(option_type(poption)), option_type(poption),
                 option_name(poption));
@@ -4228,7 +4222,7 @@ static bool settable_option_upgrade_value(const struct option *poption,
   if (0 == strcmp(ARG_name, name)) {                                        \
     static const char *values[] = {__VA_ARGS__};                            \
     if (0 <= old_value && old_value < ARRAY_SIZE(values)                    \
-        && NULL != values[old_value]) {                                     \
+        && nullptr != values[old_value]) {                                  \
       fc_strlcpy(buf, values[old_value], buf_len);                          \
       return true;                                                          \
     } else {                                                                \
@@ -4240,7 +4234,7 @@ static bool settable_option_upgrade_value(const struct option *poption,
                "WRAPX|ISO", "WRAPY|ISO", "WRAPX|WRAPY|ISO", "HEX",
                "WRAPX|HEX", "WRAPY|HEX", "WRAPX|WRAPY|HEX", "ISO|HEX",
                "WRAPX|ISO|HEX", "WRAPY|ISO|HEX", "WRAPX|WRAPY|ISO|HEX");
-  SETTING_CASE("generator", NULL, "RANDOM", "FRACTAL", "ISLAND");
+  SETTING_CASE("generator", nullptr, "RANDOM", "FRACTAL", "ISLAND");
   SETTING_CASE("startpos", "DEFAULT", "SINGLE", "2or3", "ALL", "VARIABLE");
   SETTING_CASE("borders", "DISABLED", "ENABLED", "SEE_INSIDE", "EXPAND");
   SETTING_CASE("diplomacy", "ALL", "HUMAN", "AI", "TEAM", "DISABLED");
@@ -4303,7 +4297,7 @@ static void desired_settable_option_send(struct option *poption)
     }
 
     QString value_str;
-    server_option_enum_support_name(poption, &value_str, NULL);
+    server_option_enum_support_name(poption, &value_str, nullptr);
     if (desired == value_str) {
       send_chat_printf("/set %s \"%s\"", option_name(poption), desired);
     }
@@ -4320,7 +4314,7 @@ static void desired_settable_option_send(struct option *poption)
     }
 
     server_option_bitwise_support_name(poption, value_buf, sizeof(value_buf),
-                                       NULL, 0);
+                                       nullptr, 0);
     if (0 != strcmp(desired, value_buf)) {
       send_chat_printf("/set %s \"%s\"", option_name(poption), desired);
     }
@@ -4344,16 +4338,16 @@ Q_GLOBAL_STATIC(dialOptionsHash, dialog_options)
 static void options_dialogs_load(struct section_file *sf)
 {
   const struct entry_list *entries;
-  const char *prefixes[] = {"player_dlg_", "city_report_", NULL};
+  const char *prefixes[] = {"player_dlg_", "city_report_", nullptr};
   const char **prefix;
   bool visible;
 
   entries = section_entries(secfile_section_by_name(sf, "client"));
 
-  if (NULL != entries) {
+  if (nullptr != entries) {
     entry_list_iterate(entries, pentry)
     {
-      for (prefix = prefixes; NULL != *prefix; prefix++) {
+      for (prefix = prefixes; nullptr != *prefix; prefix++) {
         if (0 == strncmp(*prefix, entry_name(pentry), qstrlen(*prefix))
             && secfile_lookup_bool(sf, &visible, "client.%s",
                                    entry_name(pentry))) {
@@ -4371,7 +4365,7 @@ static void options_dialogs_load(struct section_file *sf)
  */
 static void options_dialogs_save(struct section_file *sf)
 {
-  fc_assert_ret(NULL != dialog_options);
+  fc_assert_ret(nullptr != dialog_options);
 
   options_dialogs_update();
   dialOptionsHash::const_iterator it = dialog_options->constBegin();
@@ -4392,7 +4386,7 @@ void options_dialogs_update()
   char buf[64];
   int i;
 
-  fc_assert_ret(NULL != dialog_options);
+  fc_assert_ret(nullptr != dialog_options);
 
   // Player report dialog options.
   for (i = 1; i < num_player_dlg_columns; i++) {
@@ -4498,18 +4492,19 @@ void options_load()
       secfile_lookup_bool_default(sf, gui_options.gui_qt_migrated_from_2_5,
                                   "%s.migration_qt_from_2_5", prefix);
 
-  str = secfile_lookup_str_default(sf, NULL, "client.default_tileset_name");
-  if (str != NULL) {
+  str =
+      secfile_lookup_str_default(sf, nullptr, "client.default_tileset_name");
+  if (str != nullptr) {
     sz_strlcpy(gui_options.default_tileset_name, str);
   }
-  str = secfile_lookup_str_default(sf, NULL,
+  str = secfile_lookup_str_default(sf, nullptr,
                                    "client.default_tileset_overhead_name");
-  if (str != NULL) {
+  if (str != nullptr) {
     sz_strlcpy(gui_options.default_tileset_overhead_name, str);
   }
-  str = secfile_lookup_str_default(sf, NULL,
+  str = secfile_lookup_str_default(sf, nullptr,
                                    "client.default_tileset_iso_name");
-  if (str != NULL) {
+  if (str != nullptr) {
     sz_strlcpy(gui_options.default_tileset_iso_name, str);
   }
 
@@ -4584,7 +4579,7 @@ void options_save(option_save_log_callback log_cb)
   char dir_name[2048];
   int i;
 
-  if (log_cb == NULL) {
+  if (log_cb == nullptr) {
     // Default callback
     log_cb = option_save_output_window_callback;
   }
@@ -4655,7 +4650,7 @@ static void options_init_names(const struct copt_val_name *(*acc)(int),
 {
   int val;
   const struct copt_val_name *name;
-  fc_assert_ret(NULL != acc);
+  fc_assert_ret(nullptr != acc);
   *support = new QVector<QString>;
   *pretty = new QVector<QString>;
   for (val = 0; (name = acc(val)); val++) {
@@ -4701,11 +4696,11 @@ void options_init()
             fc_strdup(gui_options.default_user_name);
       }
 
-      if (NULL == option_str_def(poption)) {
+      if (nullptr == option_str_def(poption)) {
         const QVector<QString> *values = option_str_values(poption);
 
-        if (NULL == values || values->count() == 0) {
-          qCritical("Invalid NULL default string for option %s.",
+        if (nullptr == values || values->count() == 0) {
+          qCritical("Invalid nullptr default string for option %s.",
                     option_name(poption));
         } else {
           *(const_cast<const char **>(&(pcoption->u.string.def))) =
@@ -4715,33 +4710,33 @@ void options_init()
       break;
 
     case OT_ENUM:
-      fc_assert(NULL == pcoption->u.enumerator.support_names);
-      fc_assert(NULL == pcoption->u.enumerator.pretty_names);
+      fc_assert(nullptr == pcoption->u.enumerator.support_names);
+      fc_assert(nullptr == pcoption->u.enumerator.pretty_names);
       options_init_names(pcoption->u.enumerator.name_accessor,
                          &pcoption->u.enumerator.support_names,
                          &pcoption->u.enumerator.pretty_names);
-      fc_assert(NULL != pcoption->u.enumerator.support_names);
-      fc_assert(NULL != pcoption->u.enumerator.pretty_names);
+      fc_assert(nullptr != pcoption->u.enumerator.support_names);
+      fc_assert(nullptr != pcoption->u.enumerator.pretty_names);
       break;
 
     case OT_BITWISE:
-      fc_assert(NULL == pcoption->u.bitwise.support_names);
-      fc_assert(NULL == pcoption->u.bitwise.pretty_names);
+      fc_assert(nullptr == pcoption->u.bitwise.support_names);
+      fc_assert(nullptr == pcoption->u.bitwise.pretty_names);
       options_init_names(pcoption->u.bitwise.name_accessor,
                          &pcoption->u.bitwise.support_names,
                          &pcoption->u.bitwise.pretty_names);
-      fc_assert(NULL != pcoption->u.bitwise.support_names);
-      fc_assert(NULL != pcoption->u.bitwise.pretty_names);
+      fc_assert(nullptr != pcoption->u.bitwise.support_names);
+      fc_assert(nullptr != pcoption->u.bitwise.pretty_names);
       break;
 
     case OT_COLOR: {
       // Duplicate the string pointers.
       struct ft_color *pcolor = pcoption->u.color.pvalue;
 
-      if (NULL != pcolor->foreground) {
+      if (nullptr != pcolor->foreground) {
         pcolor->foreground = fc_strdup(pcolor->foreground);
       }
-      if (NULL != pcolor->background) {
+      if (nullptr != pcolor->background) {
         pcolor->background = fc_strdup(pcolor->background);
       }
     }
@@ -4768,16 +4763,18 @@ void options_free()
 
     switch (option_type(poption)) {
     case OT_ENUM:
-      fc_assert_action(NULL != pcoption->u.enumerator.support_names, break);
+      fc_assert_action(nullptr != pcoption->u.enumerator.support_names,
+                       break);
       FC_FREE(pcoption->u.enumerator.support_names);
-      fc_assert_action(NULL != pcoption->u.enumerator.pretty_names, break);
+      fc_assert_action(nullptr != pcoption->u.enumerator.pretty_names,
+                       break);
       FC_FREE(pcoption->u.enumerator.pretty_names);
       break;
 
     case OT_BITWISE:
-      fc_assert_action(NULL != pcoption->u.bitwise.support_names, break);
+      fc_assert_action(nullptr != pcoption->u.bitwise.support_names, break);
       FC_FREE(pcoption->u.bitwise.support_names);
-      fc_assert_action(NULL != pcoption->u.bitwise.pretty_names, break);
+      fc_assert_action(nullptr != pcoption->u.bitwise.pretty_names, break);
       FC_FREE(pcoption->u.bitwise.pretty_names);
       break;
 
@@ -4859,12 +4856,6 @@ static void allfont_changed_callback(struct option *poption)
   gui_update_allfonts();
 }
 
-static void sidebar_changed_callback(struct option *poption)
-{
-  Q_UNUSED(poption)
-  gui_update_sidebar();
-}
-
 /**
    Callback for font options.
  */
@@ -4920,7 +4911,7 @@ static void menu_music_enable_callback(struct option *poption)
   Q_UNUSED(poption)
   if (client_state() != C_S_RUNNING) {
     if (gui_options.sound_enable_menu_music) {
-      start_menu_music(QStringLiteral("music_menu"), NULL);
+      start_menu_music(QStringLiteral("music_menu"), nullptr);
     } else {
       stop_menu_music();
     }
@@ -4942,7 +4933,7 @@ get_mapimg_format_list(const struct option *poption)
  */
 const char *tileset_name_for_topology(int topology_id)
 {
-  const char *tsn = NULL;
+  const char *tsn = nullptr;
 
   switch (topology_id & (TF_ISO | TF_HEX)) {
   case 0:
@@ -4957,7 +4948,7 @@ const char *tileset_name_for_topology(int topology_id)
     break;
   }
 
-  if (tsn == NULL) {
+  if (tsn == nullptr) {
     tsn = gui_options.default_tileset_name;
   }
 
@@ -4989,7 +4980,7 @@ void option_set_default_ts(struct tileset *t)
 
   opt = optset_option_by_name(client_optset, optname);
 
-  if (opt == NULL) {
+  if (opt == nullptr) {
     qCritical("Unknown option name \"%s\" in option_set_default_ts()",
               optname);
     return;
@@ -5011,13 +5002,13 @@ static bool is_ts_option_unset(const char *optname)
 
   opt = optset_option_by_name(client_optset, optname);
 
-  if (opt == NULL) {
+  if (opt == nullptr) {
     return true;
   }
 
   val = opt->str_vtable->get(opt);
 
-  return val == NULL || val[0] == '\0';
+  return val == nullptr || val[0] == '\0';
 }
 
 /**
@@ -5036,15 +5027,15 @@ void fill_topo_ts_default()
                sizeof(gui_options.default_tileset_square_name));
     } else {
       log_debug("Setting tileset for square topologies.");
-      tilespec_try_read(NULL, false, 0, false);
+      tilespec_try_read(nullptr, false, 0, false);
     }
   }
   if (is_ts_option_unset("default_tileset_hex_name")) {
     log_debug("Setting tileset for hex topology.");
-    tilespec_try_read(NULL, false, TF_HEX, false);
+    tilespec_try_read(nullptr, false, TF_HEX, false);
   }
   if (is_ts_option_unset("default_tileset_isohex_name")) {
     log_debug("Setting tileset for isohex topology.");
-    tilespec_try_read(NULL, false, TF_ISO | TF_HEX, false);
+    tilespec_try_read(nullptr, false, TF_ISO | TF_HEX, false);
   }
 }

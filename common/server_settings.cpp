@@ -34,8 +34,8 @@ server_setting_id server_setting_by_name(const char *name)
  */
 const char *server_setting_name_get(server_setting_id id)
 {
-  fc_assert_ret_val(fc_funcs, NULL);
-  fc_assert_ret_val(fc_funcs->server_setting_name_get, NULL);
+  fc_assert_ret_val(fc_funcs, nullptr);
+  fc_assert_ret_val(fc_funcs->server_setting_name_get, nullptr);
 
   return fc_funcs->server_setting_name_get(id);
 }

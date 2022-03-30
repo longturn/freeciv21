@@ -10,46 +10,73 @@
 #pragma once
 
 // Qt
+#include <QToolButton>
 #include <QWidget>
 
+class QHBoxLayout;
 class QPixmap;
-class QVBoxLayout;
 
-typedef void (*pfcn_bool)(bool);
 typedef void (*pfcn)();
 
-void sidebarBlinkEndturn(bool do_restore);
-void sidebarCenterUnit();
-void sidebarDisableEndturn(bool do_restore);
-void sidebarFinishTurn(bool nothing);
-void sidebarIndicatorsMenu();
-void sidebarRatesWdg(bool nothing);
-void sidebarRightClickDiplomacy();
-void sidebarRightClickScience();
-void sidebarLeftClickScience(bool nothing);
-void sidebarShowMap(bool nothing);
+void top_bar_blink_end_turn(bool do_restore);
+void top_bar_center_unit();
+void top_bar_disable_end_turn(bool do_restore);
+void top_bar_finish_turn();
+void top_bar_indicators_menu();
+void top_bar_rates_wdg();
+void top_bar_right_click_diplomacy();
+void top_bar_right_click_science();
+void top_bar_left_click_science();
+void top_bar_show_map();
 
-/***************************************************************************
-  Class representing single widget(icon) on sidebar
-***************************************************************************/
-class sidebarWidget : public QWidget {
+/**
+ * Top bar widget for tax rates.
+ */
+class tax_rates_widget : public QToolButton {
   Q_OBJECT
 
 public:
-  enum standards { SW_STD, SW_TAX, SW_INDICATORS };
+  tax_rates_widget();
+  ~tax_rates_widget() override;
 
-  sidebarWidget(QPixmap *pix, const QString &label, const QString &pg,
-                pfcn_bool func, standards type = SW_STD);
-  ~sidebarWidget() override;
+  QSize sizeHint() const override;
+
+protected:
+  void paintEvent(QPaintEvent *event) override;
+};
+
+/**
+ * Top bar widget for indicators (global warming/nuclear winter/science/
+ * government).
+ */
+class indicators_widget : public QToolButton {
+  Q_OBJECT
+
+public:
+  indicators_widget();
+  ~indicators_widget() override;
+
+  QSize sizeHint() const override;
+
+protected:
+  void paintEvent(QPaintEvent *event) override;
+};
+
+/***************************************************************************
+  Class representing single widget(icon) on top_bar
+***************************************************************************/
+class top_bar_widget : public QToolButton {
+  Q_OBJECT
+
+public:
+  top_bar_widget(const QString &label, const QString &pg, pfcn func);
+  ~top_bar_widget() override;
   int getPriority();
   QPixmap *get_pixmap();
-  int heightForWidth(int width) const override;
-  bool hasHeightForWidth() const override;
   void paint(QPainter *painter, QPaintEvent *event);
   void setCustomLabels(const QString &);
   void setLabel(const QString &str);
-  void setLeftClick(pfcn_bool func);
-  void setPixmap(QPixmap *pm);
+  void setLeftClick(pfcn func);
   void setRightClick(pfcn func);
   void setTooltip(const QString &tooltip);
   void setWheelDown(pfcn func);
@@ -57,54 +84,36 @@ public:
 
   bool blink;
   bool keep_blinking;
-  bool disabled;
-  standards standard;
   QString page;
 public slots:
   void sblink();
   void someSlot();
 
 protected:
-  void contextMenuEvent(QContextMenuEvent *event) override;
-  void enterEvent(QEvent *event) override;
-  void leaveEvent(QEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
   void wheelEvent(QWheelEvent *event) override;
 
 private:
-  bool hover;
   pfcn right_click;
   pfcn wheel_down;
   pfcn wheel_up;
-  pfcn_bool left_click;
-  QFont sfont;
-  QFont info_font;
-  QPixmap *def_pixmap;
-  QString custom_label;
-  QString desc;
+  pfcn left_click;
   QTimer *timer;
 };
 
 /***************************************************************************
-  Freeciv21 sidebar
+  Freeciv21 top_bar
 ***************************************************************************/
-class sidebar : public QWidget {
+class top_bar : public QWidget {
   Q_OBJECT
 
 public:
-  sidebar();
-  ~sidebar() override;
-  void addWidget(sidebarWidget *fsw);
-  void addSpacer();
-  void paint(QPainter *painter, QPaintEvent *event);
-  void resizeMe();
-  QList<sidebarWidget *> objects;
-
-protected:
-  void paintEvent(QPaintEvent *event) override;
-  void resizeEvent(QResizeEvent *event) override;
+  top_bar();
+  ~top_bar() override;
+  void addWidget(QWidget *fsw);
+  QList<QWidget *> objects;
 
 private:
-  QVBoxLayout *layout;
+  QHBoxLayout *layout;
 };

@@ -76,7 +76,7 @@ Specialist_type_id specialist_count()
  */
 Specialist_type_id specialist_index(const struct specialist *sp)
 {
-  fc_assert_ret_val(NULL != sp, 0);
+  fc_assert_ret_val(nullptr != sp, 0);
   return sp - specialists;
 }
 
@@ -85,7 +85,7 @@ Specialist_type_id specialist_index(const struct specialist *sp)
  */
 Specialist_type_id specialist_number(const struct specialist *sp)
 {
-  fc_assert_ret_val(NULL != sp, 0);
+  fc_assert_ret_val(nullptr != sp, 0);
   return sp->item_number;
 }
 
@@ -95,14 +95,14 @@ Specialist_type_id specialist_number(const struct specialist *sp)
 struct specialist *specialist_by_number(const Specialist_type_id id)
 {
   if (id < 0 || id >= game.control.num_specialist_types) {
-    return NULL;
+    return nullptr;
   }
   return &specialists[id];
 }
 
 /**
    Return the specialist type with the given (untranslated!) rule name.
-   Returns NULL if none match.
+   Returns nullptr if none match.
  */
 struct specialist *specialist_by_rule_name(const char *name)
 {
@@ -117,12 +117,12 @@ struct specialist *specialist_by_rule_name(const char *name)
   }
   specialist_type_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
    Return the specialist type with the given (translated, plural) name.
-   Returns NULL if none match.
+   Returns nullptr if none match.
  */
 struct specialist *specialist_by_translated_name(const char *name)
 {
@@ -135,7 +135,7 @@ struct specialist *specialist_by_translated_name(const char *name)
   }
   specialist_type_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**

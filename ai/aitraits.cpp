@@ -33,8 +33,7 @@ void ai_traits_init(struct player *pplayer)
 {
   enum trait tr;
 
-  pplayer->ai_common.traits = static_cast<ai_trait *>(fc_realloc(
-      pplayer->ai_common.traits, sizeof(struct ai_trait) * TRAIT_COUNT));
+  pplayer->ai_common.traits = std::vector<ai_trait>(TRAIT_COUNT);
 
   for (tr = trait_begin(); tr != trait_end(); tr = trait_next(tr)) {
     int min = pplayer->nation->server.traits[tr].min;
@@ -58,9 +57,7 @@ void ai_traits_init(struct player *pplayer)
  */
 void ai_traits_close(struct player *pplayer)
 {
-  free(pplayer->ai_common.traits); // realloc
-
-  pplayer->ai_common.traits = NULL;
+  pplayer->ai_common.traits.clear();
 }
 
 /**

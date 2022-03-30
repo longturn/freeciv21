@@ -157,7 +157,6 @@ struct client_options {
   bool gui_qt_fullscreen;
   bool gui_qt_show_preview;
   bool gui_qt_allied_chat_only;
-  bool gui_qt_sidebar_left;
   int gui_qt_increase_fonts;
   char gui_qt_default_theme_name[512];
   char gui_qt_font_default[512];
@@ -169,7 +168,6 @@ struct client_options {
   char gui_qt_font_city_productions[512];
   char gui_qt_font_reqtree_text[512];
   bool gui_qt_show_titlebar;
-  int gui_qt_sidebar_width;
 
   struct overview overview;
 };
@@ -289,7 +287,7 @@ bool option_color_set(struct option *poption, struct ft_color color);
 #define options_iterate(poptset, poption)                                   \
   {                                                                         \
     struct option *poption = optset_option_first(poptset);                  \
-    for (; NULL != poption; poption = option_next(poption)) {
+    for (; nullptr != poption; poption = option_next(poption)) {
 
 #define options_iterate_end                                                 \
   }                                                                         \

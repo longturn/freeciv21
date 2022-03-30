@@ -41,7 +41,7 @@ typedef int Tech_type_id;
 #define A_UNSET (A_LAST + 2)
 #define A_UNKNOWN (A_LAST + 3)
 
-#define A_NEVER (NULL)
+#define A_NEVER (nullptr)
 
 /*
    A_NONE is the root tech. All players always know this tech. It is
@@ -232,7 +232,7 @@ const struct advance *advance_array_last();
 #define advance_iterate(_start, _p)                                         \
   {                                                                         \
     struct advance *_p = advance_by_number(_start);                         \
-    if (NULL != _p) {                                                       \
+    if (nullptr != _p) {                                                    \
       for (; _p <= advance_array_last(); _p++) {
 
 #define advance_iterate_end                                                 \

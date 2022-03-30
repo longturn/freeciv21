@@ -64,7 +64,7 @@ static int adv_calc_irrigate_transform(const struct city *pcity,
   int goodness;
   struct terrain *old_terrain, *new_terrain;
 
-  fc_assert_ret_val(ptile != NULL, 0);
+  fc_assert_ret_val(ptile != nullptr, 0);
 
   old_terrain = tile_terrain(ptile);
   new_terrain = old_terrain->irrigation_result;
@@ -104,7 +104,7 @@ static int adv_calc_mine_transform(const struct city *pcity,
   int goodness;
   struct terrain *old_terrain, *new_terrain;
 
-  fc_assert_ret_val(ptile != NULL, 0);
+  fc_assert_ret_val(ptile != nullptr, 0);
 
   old_terrain = tile_terrain(ptile);
   new_terrain = old_terrain->mining_result;
@@ -145,7 +145,7 @@ static int adv_calc_transform(const struct city *pcity,
   struct tile *vtile;
   struct terrain *old_terrain, *new_terrain;
 
-  fc_assert_ret_val(ptile != NULL, 0);
+  fc_assert_ret_val(ptile != nullptr, 0);
 
   old_terrain = tile_terrain(ptile);
   new_terrain = old_terrain->transform_result;
@@ -188,7 +188,7 @@ static int adv_calc_extra(const struct city *pcity, const struct tile *ptile,
 {
   int goodness = -1;
 
-  fc_assert_ret_val(ptile != NULL, 0);
+  fc_assert_ret_val(ptile != nullptr, 0);
 
   if (player_can_build_extra(pextra, city_owner(pcity), ptile)) {
     struct tile *vtile = tile_virtual_new(ptile);
@@ -225,7 +225,7 @@ static int adv_calc_rmextra(const struct city *pcity,
 {
   int goodness = -1;
 
-  fc_assert_ret_val(ptile != NULL, 0);
+  fc_assert_ret_val(ptile != nullptr, 0);
 
   if (player_can_remove_extra(pextra, city_owner(pcity), ptile)) {
     struct tile *vtile = tile_virtual_new(ptile);
@@ -349,9 +349,9 @@ void adv_city_worker_act_set(struct city *pcity, int city_tile_index,
     adv_city_update(pcity);
   }
 
-  fc_assert_ret(NULL != pcity);
-  fc_assert_ret(NULL != pcity->server.adv);
-  fc_assert_ret(NULL != pcity->server.adv->act_cache);
+  fc_assert_ret(nullptr != pcity);
+  fc_assert_ret(nullptr != pcity->server.adv);
+  fc_assert_ret(nullptr != pcity->server.adv->act_cache);
   fc_assert_ret(pcity->server.adv->act_cache_radius_sq
                 == city_map_radius_sq_get(pcity));
   fc_assert_ret(city_tile_index < city_map_tiles_from_city(pcity));
@@ -366,9 +366,9 @@ void adv_city_worker_act_set(struct city *pcity, int city_tile_index,
 int adv_city_worker_act_get(const struct city *pcity, int city_tile_index,
                             enum unit_activity act_id)
 {
-  fc_assert_ret_val(NULL != pcity, 0);
-  fc_assert_ret_val(NULL != pcity->server.adv, 0);
-  fc_assert_ret_val(NULL != pcity->server.adv->act_cache, 0);
+  fc_assert_ret_val(nullptr != pcity, 0);
+  fc_assert_ret_val(nullptr != pcity->server.adv, 0);
+  fc_assert_ret_val(nullptr != pcity->server.adv->act_cache, 0);
   fc_assert_ret_val(pcity->server.adv->act_cache_radius_sq
                         == city_map_radius_sq_get(pcity),
                     0);
@@ -393,9 +393,9 @@ void adv_city_worker_extra_set(struct city *pcity, int city_tile_index,
     adv_city_update(pcity);
   }
 
-  fc_assert_ret(NULL != pcity);
-  fc_assert_ret(NULL != pcity->server.adv);
-  fc_assert_ret(NULL != pcity->server.adv->act_cache);
+  fc_assert_ret(nullptr != pcity);
+  fc_assert_ret(nullptr != pcity->server.adv);
+  fc_assert_ret(nullptr != pcity->server.adv->act_cache);
   fc_assert_ret(pcity->server.adv->act_cache_radius_sq
                 == city_map_radius_sq_get(pcity));
   fc_assert_ret(city_tile_index < city_map_tiles_from_city(pcity));
@@ -420,9 +420,9 @@ void adv_city_worker_rmextra_set(struct city *pcity, int city_tile_index,
     adv_city_update(pcity);
   }
 
-  fc_assert_ret(NULL != pcity);
-  fc_assert_ret(NULL != pcity->server.adv);
-  fc_assert_ret(NULL != pcity->server.adv->act_cache);
+  fc_assert_ret(nullptr != pcity);
+  fc_assert_ret(nullptr != pcity->server.adv);
+  fc_assert_ret(nullptr != pcity->server.adv->act_cache);
   fc_assert_ret(pcity->server.adv->act_cache_radius_sq
                 == city_map_radius_sq_get(pcity));
   fc_assert_ret(city_tile_index < city_map_tiles_from_city(pcity));
@@ -438,9 +438,9 @@ void adv_city_worker_rmextra_set(struct city *pcity, int city_tile_index,
 int adv_city_worker_extra_get(const struct city *pcity, int city_tile_index,
                               const struct extra_type *pextra)
 {
-  fc_assert_ret_val(NULL != pcity, 0);
-  fc_assert_ret_val(NULL != pcity->server.adv, 0);
-  fc_assert_ret_val(NULL != pcity->server.adv->act_cache, 0);
+  fc_assert_ret_val(nullptr != pcity, 0);
+  fc_assert_ret_val(nullptr != pcity->server.adv, 0);
+  fc_assert_ret_val(nullptr != pcity->server.adv->act_cache, 0);
   fc_assert_ret_val(pcity->server.adv->act_cache_radius_sq
                         == city_map_radius_sq_get(pcity),
                     0);
@@ -458,9 +458,9 @@ int adv_city_worker_rmextra_get(const struct city *pcity,
                                 int city_tile_index,
                                 const struct extra_type *pextra)
 {
-  fc_assert_ret_val(NULL != pcity, 0);
-  fc_assert_ret_val(NULL != pcity->server.adv, 0);
-  fc_assert_ret_val(NULL != pcity->server.adv->act_cache, 0);
+  fc_assert_ret_val(nullptr != pcity, 0);
+  fc_assert_ret_val(nullptr != pcity->server.adv, 0);
+  fc_assert_ret_val(nullptr != pcity->server.adv->act_cache, 0);
   fc_assert_ret_val(pcity->server.adv->act_cache_radius_sq
                         == city_map_radius_sq_get(pcity),
                     0);
@@ -477,11 +477,11 @@ void adv_city_update(struct city *pcity)
 {
   int radius_sq = city_map_radius_sq_get(pcity);
 
-  fc_assert_ret(NULL != pcity);
-  fc_assert_ret(NULL != pcity->server.adv);
+  fc_assert_ret(nullptr != pcity);
+  fc_assert_ret(nullptr != pcity->server.adv);
 
   // initialize act_cache if needed
-  if (pcity->server.adv->act_cache == NULL
+  if (pcity->server.adv->act_cache == nullptr
       || pcity->server.adv->act_cache_radius_sq == -1
       || pcity->server.adv->act_cache_radius_sq != radius_sq) {
     pcity->server.adv->act_cache = static_cast<worker_activity_cache *>(
@@ -502,7 +502,7 @@ void adv_city_update(struct city *pcity)
 void adv_city_alloc(struct city *pcity)
 {
   pcity->server.adv = new adv_city[1]();
-  pcity->server.adv->act_cache = NULL;
+  pcity->server.adv->act_cache = nullptr;
   pcity->server.adv->act_cache_radius_sq = -1;
   // allocate memory for pcity->ai->act_cache
   adv_city_update(pcity);
@@ -513,7 +513,7 @@ void adv_city_alloc(struct city *pcity)
  */
 void adv_city_free(struct city *pcity)
 {
-  fc_assert_ret(NULL != pcity);
+  fc_assert_ret(nullptr != pcity);
 
   if (pcity->server.adv) {
     if (pcity->server.adv->act_cache) {

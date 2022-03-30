@@ -311,12 +311,12 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
                                     QStringLiteral("savefile"), true));
       if (sf) {
         while ((terr_name = secfile_lookup_str_default(
-                    sf.get(), NULL, "savefile.terrident%d.name", ii))
-               != NULL) {
+                    sf.get(), nullptr, "savefile.terrident%d.name", ii))
+               != nullptr) {
           struct terrain *pterr = terrain_by_rule_name(terr_name);
-          if (pterr != NULL) {
+          if (pterr != nullptr) {
             const char *iptr = secfile_lookup_str_default(
-                sf.get(), NULL, "savefile.terrident%d.identifier", ii);
+                sf.get(), nullptr, "savefile.terrident%d.identifier", ii);
             fc_assert_ret(iptr != nullptr);
             pterr->identifier_load = *iptr;
           }

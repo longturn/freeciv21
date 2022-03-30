@@ -61,8 +61,8 @@ static int get_tile_value(struct tile *ptile)
   value = 0;
   output_type_iterate(o)
   {
-    value +=
-        city_tile_output(NULL, ptile, false, static_cast<Output_type_id>(o));
+    value += city_tile_output(nullptr, ptile, false,
+                              static_cast<Output_type_id>(o));
   }
   output_type_iterate_end;
 
@@ -76,18 +76,18 @@ static int get_tile_value(struct tile *ptile)
       struct road_type *proad = extra_road_get(pextra);
 
       if (road_can_be_built(proad, roaded)
-          && are_reqs_active(NULL, NULL, NULL, NULL, roaded, NULL,
-                             start_worker, NULL, NULL, NULL, &pextra->reqs,
-                             RPT_CERTAIN)) {
+          && are_reqs_active(nullptr, nullptr, nullptr, nullptr, roaded,
+                             nullptr, start_worker, nullptr, nullptr,
+                             nullptr, &pextra->reqs, RPT_CERTAIN)) {
         tile_add_extra(roaded, pextra);
       }
     }
     extra_type_by_cause_iterate_end;
   }
 
-  nextra = next_extra_for_tile(roaded, EC_IRRIGATION, NULL, NULL);
+  nextra = next_extra_for_tile(roaded, EC_IRRIGATION, nullptr, nullptr);
 
-  if (nextra != NULL) {
+  if (nextra != nullptr) {
     struct tile *vtile;
 
     vtile = tile_virtual_new(roaded);
@@ -95,17 +95,17 @@ static int get_tile_value(struct tile *ptile)
     irrig_bonus = -value;
     output_type_iterate(o)
     {
-      irrig_bonus += city_tile_output(NULL, vtile, false,
+      irrig_bonus += city_tile_output(nullptr, vtile, false,
                                       static_cast<Output_type_id>(o));
     }
     output_type_iterate_end;
     tile_virtual_destroy(vtile);
   }
 
-  nextra = next_extra_for_tile(roaded, EC_MINE, NULL, NULL);
+  nextra = next_extra_for_tile(roaded, EC_MINE, nullptr, nullptr);
 
   // Same set of roads used with mine as with irrigation.
-  if (nextra != NULL) {
+  if (nextra != nullptr) {
     struct tile *vtile;
 
     vtile = tile_virtual_new(roaded);
@@ -113,7 +113,7 @@ static int get_tile_value(struct tile *ptile)
     mine_bonus = -value;
     output_type_iterate(o)
     {
-      mine_bonus += city_tile_output(NULL, vtile, false,
+      mine_bonus += city_tile_output(nullptr, vtile, false,
                                      static_cast<Output_type_id>(o));
     }
     output_type_iterate_end;
@@ -318,8 +318,8 @@ bool create_start_positions(enum map_startpos mode,
   struct tile *ptile;
   int k, sum;
   struct start_filter_data data;
-  int *tile_value_aux = NULL;
-  int *tile_value = NULL;
+  int *tile_value_aux = nullptr;
+  int *tile_value = nullptr;
   int min_goodies_per_player = 1500;
   int total_goodies = 0;
   // this is factor is used to maximize land used in extreme little maps
@@ -391,7 +391,7 @@ bool create_start_positions(enum map_startpos mode,
   // Only consider tiles marked as 'starter terrains' by ruleset
   whole_map_iterate(&(wld.map), starter_tile)
   {
-    if (!filter_starters(starter_tile, NULL)) {
+    if (!filter_starters(starter_tile, nullptr)) {
       tile_value[tile_index(starter_tile)] = 0;
     } else {
       // Oceanic terrain cannot be starter terrain currently
@@ -404,7 +404,7 @@ bool create_start_positions(enum map_startpos mode,
   whole_map_iterate_end;
 
   // evaluate the best places on the map
-  adjust_int_map_filtered(tile_value, 1000, NULL, filter_starters);
+  adjust_int_map_filtered(tile_value, 1000, nullptr, filter_starters);
 
   /* Sort the islands so the best ones come first.  Note that islands[0] is
    * unused so we just skip it. */

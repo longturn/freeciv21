@@ -150,10 +150,10 @@ void page_scenario::update_scenarios_page()
         fcver *= 100;
       }
       fcver -= (fcver % 10000); // Patch level does not affect compatibility
-      sname = secfile_lookup_str_default(sf, NULL, "scenario.name");
+      sname = secfile_lookup_str_default(sf, nullptr, "scenario.name");
       sdescription =
-          secfile_lookup_str_default(sf, NULL, "scenario.description");
-      sauthors = secfile_lookup_str_default(sf, NULL, "scenario.authors");
+          secfile_lookup_str_default(sf, nullptr, "scenario.description");
+      sauthors = secfile_lookup_str_default(sf, nullptr, "scenario.authors");
       if (fcver <= current_ver) {
         QString version;
         bool add_item = true;
@@ -214,7 +214,7 @@ void page_scenario::update_scenarios_page()
                         .toHtmlEscaped()
                   + "</b>"
            << QString(pfile->fullname).toHtmlEscaped()
-           << QString(NULL != sdescription && '\0' != sdescription[0]
+           << QString(nullptr != sdescription && '\0' != sdescription[0]
                           ? Q_(sdescription)
                           : "")
                       .toHtmlEscaped()

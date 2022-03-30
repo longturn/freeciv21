@@ -80,14 +80,14 @@ static void place_animal(struct player *plr)
 
   ptype = animal_for_terrain(tile_terrain(ptile));
 
-  if (ptype != NULL) {
+  if (ptype != nullptr) {
     struct unit *punit;
 
     fc_assert_ret(can_exist_at_tile(&(wld.map), ptype, ptile));
 
     punit = create_unit(plr, ptile, ptype, 0, 0, -1);
 
-    send_unit_info(NULL, punit);
+    send_unit_info(nullptr, punit);
   }
 }
 
@@ -105,14 +105,14 @@ void create_animals()
     return;
   }
 
-  anination = pick_a_nation(NULL, false, true, ANIMAL_BARBARIAN);
+  anination = pick_a_nation(nullptr, false, true, ANIMAL_BARBARIAN);
 
   if (anination == NO_NATION_SELECTED) {
     return;
   }
 
-  plr = server_create_player(-1, default_ai_type_name(), NULL, false);
-  if (plr == NULL) {
+  plr = server_create_player(-1, default_ai_type_name(), nullptr, false);
+  if (plr == nullptr) {
     return;
   }
   server_player_init(plr, true, true);
@@ -152,10 +152,10 @@ void create_animals()
 
   CALL_PLR_AI_FUNC(gained_control, plr, plr);
 
-  send_player_all_c(plr, NULL);
+  send_player_all_c(plr, nullptr);
   /* Send research info after player info, else the client will complain
    * about invalid team. */
-  send_research_info(presearch, NULL);
+  send_research_info(presearch, nullptr);
 
   for (i = 0;
        i < wld.map.xsize * wld.map.ysize * wld.map.server.animals / 1000;

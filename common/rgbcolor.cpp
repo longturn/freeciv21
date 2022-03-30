@@ -47,7 +47,7 @@ struct rgbcolor *rgbcolor_new(int r, int g, int b)
  */
 struct rgbcolor *rgbcolor_copy(const struct rgbcolor *prgbcolor)
 {
-  fc_assert_ret_val(prgbcolor != NULL, NULL);
+  fc_assert_ret_val(prgbcolor != nullptr, nullptr);
 
   return rgbcolor_new(prgbcolor->r, prgbcolor->g, prgbcolor->b);
 }
@@ -59,7 +59,7 @@ struct rgbcolor *rgbcolor_copy(const struct rgbcolor *prgbcolor)
 bool rgbcolors_are_equal(const struct rgbcolor *c1,
                          const struct rgbcolor *c2)
 {
-  fc_assert_ret_val(c1 != NULL && c2 != NULL, false);
+  fc_assert_ret_val(c1 != nullptr && c2 != nullptr, false);
 
   /* No check of cached 'color' member -- if values are equal, it should be
    * equivalent */
@@ -89,8 +89,8 @@ bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
   char colorpath[256];
   va_list args;
 
-  fc_assert_ret_val(file != NULL, false);
-  fc_assert_ret_val(*prgbcolor == NULL, false);
+  fc_assert_ret_val(file != nullptr, false);
+  fc_assert_ret_val(*prgbcolor == nullptr, false);
 
   va_start(args, path);
   fc_vsnprintf(colorpath, sizeof(colorpath), path, args);
@@ -119,8 +119,8 @@ void rgbcolor_save(struct section_file *file,
   char colorpath[256];
   va_list args;
 
-  fc_assert_ret(file != NULL);
-  fc_assert_ret(prgbcolor != NULL);
+  fc_assert_ret(file != nullptr);
+  fc_assert_ret(prgbcolor != nullptr);
 
   va_start(args, path);
   fc_vsnprintf(colorpath, sizeof(colorpath), path, args);
@@ -137,7 +137,7 @@ void rgbcolor_save(struct section_file *file,
 bool rgbcolor_to_hex(const struct rgbcolor *prgbcolor, char *hex,
                      size_t hex_len)
 {
-  fc_assert_ret_val(prgbcolor != NULL, false);
+  fc_assert_ret_val(prgbcolor != nullptr, false);
   // Needs a length greater than 7 ('#' + 6 hex digites and '/* Needs a
   // length greater than 7 ('#' + 6 hex digites and '\0'). */').
   fc_assert_ret_val(hex_len > 7, false);
@@ -160,8 +160,8 @@ bool rgbcolor_from_hex(struct rgbcolor **prgbcolor, const char *hex)
   int rgb, r, g, b;
   char hex2[16];
 
-  fc_assert_ret_val(*prgbcolor == NULL, false);
-  fc_assert_ret_val(hex != NULL, false);
+  fc_assert_ret_val(*prgbcolor == nullptr, false);
+  fc_assert_ret_val(hex != nullptr, false);
 
   if (hex[0] == '#') {
     hex++;

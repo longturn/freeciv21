@@ -19,15 +19,17 @@
 class city_dialog;
 class fc_client;
 class map_view;
-class sidebar;
 class civstatus;
 class minimap_view;
-class sidebarWidget;
 class hud_units;
+class indicators_widget;
 class chat_widget;
 class message_widget;
 class hud_battle_log;
 class goto_dialog;
+class tax_rates_widget;
+class top_bar;
+class top_bar_widget;
 class unitinfo_wdg;
 class units_select;
 class xvote;
@@ -54,7 +56,6 @@ class pageGame : public QWidget {
 public:
   pageGame(QWidget *);
   ~pageGame() override;
-  void updateSidebarPosition();
   void reloadSidebarIcons();
   void updateSidebarTooltips();
   int addGameTab(QWidget *widget);
@@ -66,7 +67,7 @@ public:
   void updateInfoLabel();
   QWidget *game_main_widget;
   fc_game_tab_widget *game_tab_widget;
-  sidebar *sidebar_wdg;
+  top_bar *top_bar_wdg;
   goto_dialog *gtd;
   units_select *unit_selector;
   hud_battle_log *battlelog_wdg;
@@ -78,10 +79,10 @@ public:
   city_dialog *city_overlay;
   xvote *x_vote;
   civstatus *civ_status;
-  sidebarWidget *sw_diplo;
-  sidebarWidget *sw_indicators;
-  sidebarWidget *sw_endturn;
-  sidebarWidget *sw_science;
+  top_bar_widget *sw_diplo;
+  indicators_widget *sw_indicators;
+  top_bar_widget *sw_endturn;
+  top_bar_widget *sw_science;
 public slots:
 private slots:
   void updateInfoLabelTimeout();
@@ -89,11 +90,11 @@ private slots:
 private:
   QMap<QString, QWidget *> opened_repo_dlgs;
   QTimer *update_info_timer;
-  sidebarWidget *sw_cities;
-  sidebarWidget *sw_cunit;
-  sidebarWidget *sw_economy;
-  sidebarWidget *sw_map;
-  sidebarWidget *sw_tax;
+  top_bar_widget *sw_cities;
+  top_bar_widget *sw_cunit;
+  top_bar_widget *sw_economy;
+  top_bar_widget *sw_map;
+  tax_rates_widget *sw_tax;
 };
 
 /**

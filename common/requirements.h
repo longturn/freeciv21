@@ -151,7 +151,7 @@ typedef req_vec_num_in_item (*requirement_vector_number)(
 
 /**
    Returns a writable pointer to the specified requirement vector in the
-   specified parent item or NULL if the parent item doesn't have a
+   specified parent item or nullptr if the parent item doesn't have a
    requirement vector with that requirement vector number.
    @param parent_item the item that should have the requirement vector.
    @param number the item's requirement vector number.
@@ -162,10 +162,10 @@ typedef struct requirement_vector *(*requirement_vector_by_number)(
 
 /**
    Returns the name of the specified requirement vector number in the
-   parent item or NULL if parent items of the kind this function is for
+   parent item or nullptr if parent items of the kind this function is for
    don't have a requirement vector with that number.
    @param number the requirement vector to name
-   @return the requirement vector name or NULL.
+   @return the requirement vector name or nullptr.
  */
 typedef const char *(*requirement_vector_namer)(req_vec_num_in_item number);
 

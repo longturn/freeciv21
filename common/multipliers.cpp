@@ -34,7 +34,7 @@ void multipliers_init()
     name_init(&multipliers[i].name);
     requirement_vector_init(&multipliers[i].reqs);
     multipliers[i].ruledit_disabled = false;
-    multipliers[i].helptext = NULL;
+    multipliers[i].helptext = nullptr;
   }
 }
 
@@ -56,7 +56,7 @@ void multipliers_free()
  */
 struct multiplier *multiplier_by_number(Multiplier_type_id id)
 {
-  fc_assert_ret_val(id >= 0 && id < game.control.num_multipliers, NULL);
+  fc_assert_ret_val(id >= 0 && id < game.control.num_multipliers, nullptr);
 
   return &multipliers[id];
 }
@@ -66,7 +66,7 @@ struct multiplier *multiplier_by_number(Multiplier_type_id id)
  */
 Multiplier_type_id multiplier_number(const struct multiplier *pmul)
 {
-  fc_assert_ret_val(NULL != pmul, 0);
+  fc_assert_ret_val(nullptr != pmul, 0);
 
   return pmul - multipliers;
 }
@@ -109,15 +109,15 @@ const char *multiplier_rule_name(const struct multiplier *pmul)
 }
 
 /**
-   Returns multiplier matching rule name, or NULL if there is no multiplier
-   with such a name.
+   Returns multiplier matching rule name, or nullptr if there is no
+   multiplier with such a name.
  */
 struct multiplier *multiplier_by_rule_name(const char *name)
 {
   const char *qs;
 
-  if (name == NULL) {
-    return NULL;
+  if (name == nullptr) {
+    return nullptr;
   }
 
   qs = Qn_(name);
@@ -130,7 +130,7 @@ struct multiplier *multiplier_by_rule_name(const char *name)
   }
   multipliers_iterate_end;
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -139,6 +139,7 @@ struct multiplier *multiplier_by_rule_name(const char *name)
 bool multiplier_can_be_changed(struct multiplier *pmul,
                                struct player *pplayer)
 {
-  return are_reqs_active(pplayer, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-                         NULL, NULL, &pmul->reqs, RPT_CERTAIN);
+  return are_reqs_active(pplayer, nullptr, nullptr, nullptr, nullptr,
+                         nullptr, nullptr, nullptr, nullptr, nullptr,
+                         &pmul->reqs, RPT_CERTAIN);
 }

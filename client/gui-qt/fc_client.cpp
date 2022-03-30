@@ -48,9 +48,9 @@
 #include "page_network.h"
 #include "page_pregame.h"
 #include "page_scenario.h"
-#include "sidebar.h"
 #include "sprite.h"
 #include "tileset_debugger.h"
+#include "top_bar.h"
 #include "voteinfo_bar.h"
 
 fcFont *fcFont::m_instance = 0;
@@ -68,8 +68,8 @@ fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
   status_bar_queue.clear();
   for (int i = 0; i <= PAGE_GAME; i++) {
-    pages_layout[i] = NULL;
-    pages[i] = NULL;
+    pages_layout[i] = nullptr;
+    pages[i] = nullptr;
   }
   fcFont::instance()->initFonts();
   read_settings();

@@ -88,10 +88,10 @@
 
 /* Tools for controlling the client vision of every unit when a unit
  * moves + script effects. See unit_move(). You can access this data with
- * punit->server.moving; it may be NULL if the unit is not moving). */
+ * punit->server.moving; it may be nullptr if the unit is not moving). */
 struct unit_move_data {
   int ref_count;
-  struct unit *punit; // NULL for invalidating.
+  struct unit *punit; // nullptr for invalidating.
   struct player *powner;
   bv_player can_see_unit;
   bv_player can_see_move;
@@ -125,7 +125,7 @@ struct autoattack_prob {
   TYPED_LIST_ITERATE(struct autoattack_prob, autoattack_prob_list, _aap_)   \
   struct unit *_unit_ = game_unit_by_number(_aap_->unit_id);                \
                                                                             \
-  if (_unit_ == NULL) {                                                     \
+  if (_unit_ == nullptr) {                                                  \
     continue;                                                               \
   }
 
@@ -231,14 +231,14 @@ static bool maybe_become_veteran_real(struct unit *punit, bool settler)
   const struct veteran_level *vlevel;
   int chance;
 
-  fc_assert_ret_val(punit != NULL, false);
+  fc_assert_ret_val(punit != nullptr, false);
 
   vsystem = utype_veteran_system(unit_type_get(punit));
-  fc_assert_ret_val(vsystem != NULL, false);
+  fc_assert_ret_val(vsystem != nullptr, false);
   fc_assert_ret_val(vsystem->levels > punit->veteran, false);
 
   vlevel = utype_veteran_level(unit_type_get(punit), punit->veteran);
-  fc_assert_ret_val(vlevel != NULL, false);
+  fc_assert_ret_val(vlevel != nullptr, false);
 
   if (punit->veteran + 1 >= vsystem->levels
       || unit_has_type_flag(punit, UTYF_NO_VETERAN)) {
@@ -434,6 +434,34 @@ static void do_upgrade_effects(struct player *pplayer)
 }
 
 /**
+   Return true if unit is about to finish converting to a unittype
+   with more/no fuel, rescuing it from imminent death
+ */
+static bool converting_fuel_rescue(struct unit *punit)
+{
+  const struct unit_type *from_type, *to_type;
+
+  if (punit->activity != ACTIVITY_CONVERT)
+    /* not converting */
+    return false;
+  if (punit->activity_count + get_activity_rate_this_turn(punit)
+      < action_id_get_act_time(ACTION_CONVERT, punit, unit_tile(punit),
+                               punit->activity_target))
+    /* won't be finished in time */
+    return false;
+  if (!unit_can_convert(punit))
+    /* can't actually convert */
+    return false;
+  from_type = unit_type_get(punit);
+  to_type = from_type->converted_to;
+  if (utype_fuel(to_type) && utype_fuel(to_type) <= utype_fuel(from_type))
+    /* to_type doesn't have more fuel, so conversion doesn't help */
+    return false;
+  /* we're saved! */
+  return true;
+}
+
+/**
    1. Do Leonardo's Workshop upgrade if applicable.
 
    2. Restore/decrease unit hitpoints.
@@ -476,7 +504,7 @@ void player_restore_units(struct player *pplayer)
                       unit_tile_link(punit));
       }
 
-      wipe_unit(punit, ULR_HP_LOSS, NULL);
+      wipe_unit(punit, ULR_HP_LOSS, nullptr);
       continue; // Continue iterating...
     }
 
@@ -537,8 +565,8 @@ void player_restore_units(struct player *pplayer)
                 /* Clear activity. Unit info will be sent in the end of
                  * the function. */
                 unit_activity_handling(punit, ACTIVITY_IDLE);
-                adv_unit_new_task(punit, AUT_NONE, NULL);
-                punit->goto_tile = NULL;
+                adv_unit_new_task(punit, AUT_NONE, nullptr);
+                punit->goto_tile = nullptr;
 
                 if (!is_unit_being_refueled(punit)) {
                   carrier = transporter_for_unit(punit);
@@ -580,17 +608,21 @@ void player_restore_units(struct player *pplayer)
   // 7) Check if there are air units without fuel
   unit_list_iterate_safe(pplayer->units, punit)
   {
-    if (punit->fuel <= 0 && utype_fuel(unit_type_get(punit))) {
+    if (punit->fuel <= 0 && utype_fuel(unit_type_get(punit))
+        && !converting_fuel_rescue(punit)) {
       notify_player(pplayer, unit_tile(punit), E_UNIT_LOST_MISC, ftc_server,
                     _("Your %s has run out of fuel."),
                     unit_tile_link(punit));
-      wipe_unit(punit, ULR_FUEL, NULL);
+      wipe_unit(punit, ULR_FUEL, nullptr);
     }
   }
   unit_list_iterate_safe_end;
 
   // Send all updates.
-  unit_list_iterate(pplayer->units, punit) { send_unit_info(NULL, punit); }
+  unit_list_iterate(pplayer->units, punit)
+  {
+    send_unit_info(nullptr, punit);
+  }
   unit_list_iterate_end;
 }
 
@@ -644,7 +676,7 @@ void finalize_unit_phase_beginning(struct player *pplayer)
     punit->changed_from = punit->activity;
     punit->changed_from_target = punit->activity_target;
     punit->changed_from_count = punit->activity_count;
-    send_unit_info(NULL, punit);
+    send_unit_info(nullptr, punit);
   }
   unit_list_iterate_end;
 }
@@ -695,11 +727,11 @@ void notify_unit_experience(struct unit *punit)
   }
 
   vsystem = utype_veteran_system(unit_type_get(punit));
-  fc_assert_ret(vsystem != NULL);
+  fc_assert_ret(vsystem != nullptr);
   fc_assert_ret(vsystem->levels > punit->veteran);
 
   vlevel = utype_veteran_level(unit_type_get(punit), punit->veteran);
-  fc_assert_ret(vlevel != NULL);
+  fc_assert_ret(vlevel != nullptr);
 
   notify_player(unit_owner(punit), unit_tile(punit), E_UNIT_BECAME_VET,
                 ftc_server,
@@ -751,7 +783,7 @@ void unit_activities_cancel_all_illegal(const struct tile *ptile)
       }
 
       set_unit_activity(punit2, ACTIVITY_IDLE);
-      send_unit_info(NULL, punit2);
+      send_unit_info(nullptr, punit2);
     }
   }
   unit_list_iterate_end;
@@ -847,9 +879,9 @@ static void update_unit_activity(struct unit *punit)
   case ACTIVITY_POLLUTION:
     /* TODO: Remove this fallback target setting when target always correctly
      *       set */
-    if (punit->activity_target == NULL) {
+    if (punit->activity_target == nullptr) {
       punit->activity_target =
-          prev_extra_in_tile(ptile, ERM_CLEANPOLLUTION, NULL, punit);
+          prev_extra_in_tile(ptile, ERM_CLEANPOLLUTION, nullptr, punit);
     }
     if (total_activity_done(ptile, ACTIVITY_POLLUTION,
                             punit->activity_target)) {
@@ -861,9 +893,9 @@ static void update_unit_activity(struct unit *punit)
   case ACTIVITY_FALLOUT:
     /* TODO: Remove this fallback target setting when target always correctly
      *       set */
-    if (punit->activity_target == NULL) {
+    if (punit->activity_target == nullptr) {
       punit->activity_target =
-          prev_extra_in_tile(ptile, ERM_CLEANFALLOUT, NULL, punit);
+          prev_extra_in_tile(ptile, ERM_CLEANFALLOUT, nullptr, punit);
     }
     if (total_activity_done(ptile, ACTIVITY_FALLOUT,
                             punit->activity_target)) {
@@ -929,7 +961,7 @@ static void update_unit_activity(struct unit *punit)
       {
         if (punit2->activity == activity) {
           set_unit_activity(punit2, ACTIVITY_IDLE);
-          send_unit_info(NULL, punit2);
+          send_unit_info(nullptr, punit2);
         }
       }
       unit_list_iterate_end;
@@ -938,7 +970,7 @@ static void update_unit_activity(struct unit *punit)
       {
         if (!can_unit_continue_current_activity(punit2)) {
           set_unit_activity(punit2, ACTIVITY_IDLE);
-          send_unit_info(NULL, punit2);
+          send_unit_info(nullptr, punit2);
         }
       }
       unit_list_iterate_end;
@@ -1029,7 +1061,7 @@ void unit_assign_specific_activity_target(struct unit *punit,
                                           enum unit_activity *activity,
                                           struct extra_type **target)
 {
-  if (*activity == ACTIVITY_PILLAGE && *target == NULL) {
+  if (*activity == ACTIVITY_PILLAGE && *target == nullptr) {
     struct tile *ptile = unit_tile(punit);
     struct extra_type *tgt;
 
@@ -1068,7 +1100,7 @@ static bool find_a_good_partisan_spot(struct tile *pcenter,
       continue;
     }
 
-    if (NULL != tile_city(ptile)) {
+    if (nullptr != tile_city(ptile)) {
       continue;
     }
 
@@ -1077,7 +1109,8 @@ static bool find_a_good_partisan_spot(struct tile *pcenter,
     }
 
     // City may not have changed hands yet; see place_partisans().
-    value = get_virtual_defense_power(NULL, u_type, powner, ptile, false, 0);
+    value =
+        get_virtual_defense_power(nullptr, u_type, powner, ptile, false, 0);
     value *= 10;
 
     if (tile_continent(ptile) != tile_continent(pcenter)) {
@@ -1102,7 +1135,7 @@ static bool find_a_good_partisan_spot(struct tile *pcenter,
 void place_partisans(struct tile *pcenter, struct player *powner, int count,
                      int sq_radius)
 {
-  struct tile *ptile = NULL;
+  struct tile *ptile = nullptr;
   struct unit_type *u_type = get_role_unit(L_PARTISAN, 0);
 
   while (count-- > 0
@@ -1113,7 +1146,7 @@ void place_partisans(struct tile *pcenter, struct player *powner, int count,
     punit = create_unit(powner, ptile, u_type, 0, 0, -1);
     if (can_unit_do_activity(punit, ACTIVITY_FORTIFYING)) {
       punit->activity = ACTIVITY_FORTIFIED; // yes; directly fortified
-      send_unit_info(NULL, punit);
+      send_unit_info(nullptr, punit);
     }
   }
 }
@@ -1144,7 +1177,7 @@ bool teleport_unit_to_city(struct unit *punit, struct city *pcity,
     if (move_cost == -1) {
       move_cost = punit->moves_left;
     }
-    unit_move(punit, dst_tile, move_cost, NULL, false, false);
+    unit_move(punit, dst_tile, move_cost, nullptr, false, false);
 
     return true;
   }
@@ -1208,7 +1241,7 @@ void bounce_unit(struct unit *punit, bool verbose)
      * because the transport is Unreachable and the unit doesn't have it in
      * its embarks field or because "Transport Embark" isn't enabled? Kept
      * like it was to preserve the old rules for now. -- Sveinung */
-    unit_move(punit, ptile, 0, NULL, true, false);
+    unit_move(punit, ptile, 0, nullptr, true, false);
     return;
   }
 
@@ -1225,7 +1258,7 @@ void bounce_unit(struct unit *punit, bool verbose)
                   // TRANS: A unit is disbanded to resolve stack conflicts.
                   _("Disbanded your %s."), unit_tile_link(punit));
   }
-  wipe_unit(punit, ULR_STACK_CONFLICT, NULL);
+  wipe_unit(punit, ULR_STACK_CONFLICT, nullptr);
 }
 
 /**
@@ -1246,7 +1279,7 @@ static void throw_units_from_illegal_cities(struct player *pplayer,
   {
     ptile = unit_tile(punit);
     pcity = tile_city(ptile);
-    if (NULL != pcity && !pplayers_allied(city_owner(pcity), pplayer)
+    if (nullptr != pcity && !pplayers_allied(city_owner(pcity), pplayer)
         && 0 < get_transporter_occupancy(punit)) {
       pcargo_units = unit_transport_cargo(punit);
       unit_list_iterate(pcargo_units, pcargo)
@@ -1268,9 +1301,9 @@ static void throw_units_from_illegal_cities(struct player *pplayer,
   {
     ptile = unit_tile(punit);
     pcity = tile_city(ptile);
-    if (NULL != pcity && !pplayers_allied(city_owner(pcity), pplayer)) {
+    if (nullptr != pcity && !pplayers_allied(city_owner(pcity), pplayer)) {
       ptrans = unit_transport_get(punit);
-      if (NULL == ptrans || pplayer != unit_owner(ptrans)) {
+      if (nullptr == ptrans || pplayer != unit_owner(ptrans)) {
         bounce_unit(punit, verbose);
       }
     }
@@ -1284,7 +1317,7 @@ static void throw_units_from_illegal_cities(struct player *pplayer,
     ptile = unit_tile(punit);
     pcity = tile_city(ptile);
     fc_assert_msg(
-        NULL == pcity || pplayers_allied(city_owner(pcity), pplayer),
+        nullptr == pcity || pplayers_allied(city_owner(pcity), pplayer),
         "Failed to throw %s %d from %s %d (%d, %d)", unit_rule_name(punit),
         punit->id, city_name_get(pcity), pcity->id, TILE_XY(ptile));
   }
@@ -1436,16 +1469,16 @@ bool is_airunit_refuel_point(const struct tile *ptile,
 {
   const struct unit_class *pclass;
 
-  if (NULL != is_non_allied_unit_tile(ptile, pplayer)) {
+  if (nullptr != is_non_allied_unit_tile(ptile, pplayer)) {
     return false;
   }
 
-  if (NULL != is_allied_city_tile(ptile, pplayer)) {
+  if (nullptr != is_allied_city_tile(ptile, pplayer)) {
     return true;
   }
 
   pclass = unit_class_get(punit);
-  if (NULL != pclass->cache.refuel_bases) {
+  if (nullptr != pclass->cache.refuel_bases) {
     const struct player_tile *plrtile = map_get_player_tile(ptile, pplayer);
 
     extra_type_list_iterate(pclass->cache.refuel_bases, pextra)
@@ -1508,6 +1541,16 @@ void transform_unit(struct unit *punit, const struct unit_type *to_unit,
     punit->moves_left = punit->moves_left * unit_move_rate(punit) / old_mr;
   }
 
+  /* Update unit fuel state */
+  if (utype_fuel(to_unit) && utype_fuel(old_type)) {
+    /* Keep the amount of fuel used constant, except don't kill the unit */
+    int delta = utype_fuel(to_unit) - utype_fuel(old_type);
+    punit->fuel = MAX(punit->fuel + delta, 1);
+  } else {
+    /* When converting from a non-fuel unit, fully refuel */
+    punit->fuel = utype_fuel(to_unit);
+  }
+
   unit_forget_last_activity(punit);
 
   // update unit upkeep
@@ -1520,7 +1563,7 @@ void transform_unit(struct unit *punit, const struct unit_type *to_unit,
   CALL_PLR_AI_FUNC(unit_transformed, pplayer, punit, old_type);
   CALL_FUNC_EACH_AI(unit_info, punit);
 
-  send_unit_info(NULL, punit);
+  send_unit_info(nullptr, punit);
   conn_list_do_unbuffer(pplayer->connections);
 }
 
@@ -1532,7 +1575,7 @@ struct unit *create_unit(struct player *pplayer, struct tile *ptile,
                          int homecity_id, int moves_left)
 {
   return create_unit_full(pplayer, ptile, type, veteran_level, homecity_id,
-                          moves_left, -1, NULL);
+                          moves_left, -1, nullptr);
 }
 
 /**
@@ -1543,7 +1586,7 @@ void unit_get_goods(struct unit *punit)
   if (punit->homecity != 0) {
     struct city *home = game_city_by_number(punit->homecity);
 
-    if (home != NULL && game.info.goods_selection == GSM_LEAVING) {
+    if (home != nullptr && game.info.goods_selection == GSM_LEAVING) {
       punit->carrying = goods_from_city_to_unit(home, punit);
     }
   }
@@ -1561,14 +1604,14 @@ struct unit *create_unit_full(struct player *pplayer, struct tile *ptile,
                               struct unit *ptrans)
 {
   struct unit *punit =
-      unit_virtual_create(pplayer, NULL, type, veteran_level);
+      unit_virtual_create(pplayer, nullptr, type, veteran_level);
   struct city *pcity;
 
   // Register unit
   punit->id = identity_number();
   idex_register_unit(&wld, punit);
 
-  fc_assert_ret_val(ptile != NULL, NULL);
+  fc_assert_ret_val(ptile != nullptr, nullptr);
   unit_tile_set(punit, ptile);
 
   pcity = game_city_by_number(homecity_id);
@@ -1593,7 +1636,7 @@ struct unit *create_unit_full(struct player *pplayer, struct tile *ptile,
     unit_transport_load_tp_status(punit, ptrans, false);
   } else {
     fc_assert_ret_val(
-        !ptile || can_unit_exist_at_tile(&(wld.map), punit, ptile), NULL);
+        !ptile || can_unit_exist_at_tile(&(wld.map), punit, ptile), nullptr);
   }
 
   /* Assume that if moves_left < 0 then the unit is "fresh",
@@ -1615,7 +1658,7 @@ struct unit *create_unit_full(struct player *pplayer, struct tile *ptile,
   punit->server.vision = vision_new(pplayer, ptile);
   unit_refresh_vision(punit);
 
-  send_unit_info(NULL, punit);
+  send_unit_info(nullptr, punit);
   maybe_make_contact(ptile, unit_owner(punit));
   wakeup_neighbor_sentries(punit);
 
@@ -1643,7 +1686,7 @@ void unit_set_removal_callback(struct unit *punit,
   /* Tried to overwrite another call back. If this assertion is triggered
    * in a case where two call back are needed it may be time to support
    * more than one unit removal call back at a time. */
-  fc_assert_ret(punit->server.removal_callback == NULL);
+  fc_assert_ret(punit->server.removal_callback == nullptr);
 
   punit->server.removal_callback = callback;
 }
@@ -1653,7 +1696,7 @@ void unit_set_removal_callback(struct unit *punit,
  */
 void unit_unset_removal_callback(struct unit *punit)
 {
-  punit->server.removal_callback = NULL;
+  punit->server.removal_callback = nullptr;
 }
 
 /**
@@ -1693,13 +1736,13 @@ static void server_remove_unit_full(struct unit *punit, bool transported,
      are built, so that no two settlers head towards the same city
      spot, we need to ensure this reservation is cleared should
      the settler disappear on the way. */
-  adv_unit_new_task(punit, AUT_NONE, NULL);
+  adv_unit_new_task(punit, AUT_NONE, nullptr);
 
   /* Clear the vision before sending unit remove. Else, we might duplicate
    * the PACKET_UNIT_REMOVE if we lose vision of the unit tile. */
   vision_clear_sight(punit->server.vision);
   vision_free(punit->server.vision);
-  punit->server.vision = NULL;
+  punit->server.vision = nullptr;
 
   packet.unit_id = punit->id;
   // Send to onlookers.
@@ -1720,12 +1763,12 @@ static void server_remove_unit_full(struct unit *punit, bool transported,
   }
   conn_list_iterate_end;
 
-  if (punit->server.moving != NULL) {
+  if (punit->server.moving != nullptr) {
     // Do not care of this unit for running moves.
-    punit->server.moving->punit = NULL;
+    punit->server.moving->punit = nullptr;
   }
 
-  if (punit->server.removal_callback != NULL) {
+  if (punit->server.removal_callback != nullptr) {
     // Run the unit removal call back.
     punit->server.removal_callback(punit);
   }
@@ -1748,11 +1791,11 @@ static void server_remove_unit_full(struct unit *punit, bool transported,
 
   script_server_remove_exported_object(punit);
   game_remove_unit(&wld, punit);
-  punit = NULL;
+  punit = nullptr;
 
-  if (NULL != ptrans) {
+  if (nullptr != ptrans) {
     // Update the occupy info.
-    send_unit_info(NULL, ptrans);
+    send_unit_info(nullptr, ptrans);
   }
 
   // This unit may have blocked tiles of adjacent cities. Update them.
@@ -1771,7 +1814,7 @@ static void server_remove_unit_full(struct unit *punit, bool transported,
 
   if (pcity && unit_list_size(ptile->units) == 0) {
     // The last unit in the city was killed: update the occupied flag.
-    send_city_info(NULL, pcity);
+    send_city_info(nullptr, pcity);
   }
 }
 
@@ -1803,7 +1846,7 @@ static void unit_lost_with_transport(const struct player *pplayer,
    * about the swimming unit, and we can't remove it if it's not there
    * in the first place -> we send it once here just to be sure it's
    * there. */
-  send_unit_info(NULL, pcargo);
+  send_unit_info(nullptr, pcargo);
   wipe_unit_full(pcargo, false, ULR_TRANSPORT_LOST, killer);
 }
 
@@ -1835,13 +1878,13 @@ static void wipe_unit_full(struct unit *punit, bool transported,
   if (reason == ULR_CITY_LOST) {
     pexclcity = unit_home(punit);
   } else {
-    pexclcity = NULL;
+    pexclcity = nullptr;
   }
 
   // Remove unit itself from its transport
-  if (ptrans != NULL) {
+  if (ptrans != nullptr) {
     unit_transport_unload(punit);
-    send_unit_info(NULL, ptrans);
+    send_unit_info(nullptr, ptrans);
   }
 
   // First pull all units off of the transporter.
@@ -1880,7 +1923,7 @@ static void wipe_unit_full(struct unit *punit, bool transported,
       /* Unit info for unhealthy units will be sent when they are
        * assigned new transport or removed. */
       if (healthy) {
-        send_unit_info(NULL, pcargo);
+        send_unit_info(nullptr, pcargo);
       }
     }
     unit_list_iterate_safe_end;
@@ -1899,7 +1942,7 @@ static void wipe_unit_full(struct unit *punit, bool transported,
   case ULR_CAUGHT:
   case ULR_ELIMINATED:
   case ULR_TRANSPORT_LOST:
-    if (killer != NULL) {
+    if (killer != nullptr) {
       killer->score.units_killed++;
     }
     pplayer->score.units_lost++;
@@ -2029,9 +2072,9 @@ static bool try_to_save_unit(struct unit *punit,
   struct unit *ptransport = transporter_for_unit(punit);
 
   // Helpless units cannot board a transport in their current state.
-  if (!helpless && ptransport != NULL) {
+  if (!helpless && ptransport != nullptr) {
     unit_transport_load_tp_status(punit, ptransport, false);
-    send_unit_info(NULL, punit);
+    send_unit_info(nullptr, punit);
     return true;
   } else {
     // Only units that cannot find transport are considered for teleport.
@@ -2039,7 +2082,7 @@ static bool try_to_save_unit(struct unit *punit,
       struct city *pcity =
           find_closest_city(ptile, pexclcity, unit_owner(punit), false,
                             false, false, true, false, utype_class(pttype));
-      if (pcity != NULL) {
+      if (pcity != nullptr) {
         char tplink[MAX_LEN_LINK]; // In case unit dies when teleported
 
         sz_strlcpy(tplink, unit_link(punit));
@@ -2074,7 +2117,7 @@ struct unit *unit_change_owner(struct unit *punit, struct player *pplayer,
    */
   gained_unit = create_unit_full(
       pplayer, unit_tile(punit), unit_type_get(punit), punit->veteran,
-      homecity, punit->moves_left, punit->hp, NULL);
+      homecity, punit->moves_left, punit->hp, nullptr);
 
   // Owner changes, nationality not.
   gained_unit->nationality = punit->nationality;
@@ -2084,7 +2127,7 @@ struct unit *unit_change_owner(struct unit *punit, struct player *pplayer,
   gained_unit->paradropped = punit->paradropped;
   gained_unit->server.birth_turn = punit->server.birth_turn;
 
-  send_unit_info(NULL, gained_unit);
+  send_unit_info(nullptr, gained_unit);
 
   // update unit upkeep in the homecity of the victim
   if (punit->homecity > 0) {
@@ -2097,7 +2140,7 @@ struct unit *unit_change_owner(struct unit *punit, struct player *pplayer,
   }
 
   // Be sure to wipe the converted unit!
-  wipe_unit(punit, reason, NULL);
+  wipe_unit(punit, reason, nullptr);
 
   return gained_unit; // Returns the replacement.
 }
@@ -2216,7 +2259,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
                   ransom);
     pvictor->economic.gold += ransom;
     pvictim->economic.gold -= ransom;
-    send_player_info_c(pvictor, NULL); // let me see my new gold :-)
+    send_player_info_c(pvictor, nullptr); // let me see my new gold :-)
     unitcount = 1;
   }
 
@@ -2247,7 +2290,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
     // initialize
     for (i = 0; i < player_slot_count(); i++) {
       num_killed[i] = 0;
-      other_killed[i] = NULL;
+      other_killed[i] = nullptr;
       num_escaped[i] = 0;
     }
 
@@ -2266,7 +2309,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
             && fc_rand(2)) {
           int curr_def_bonus;
           int def_bonus = 0;
-          struct tile *dsttile = NULL;
+          struct tile *dsttile = nullptr;
           int move_cost;
 
           fc_assert(vunit->hp > 0);
@@ -2274,7 +2317,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
           adjc_iterate(&(wld.map), ptile, ptile2)
           {
             if (can_exist_at_tile(&(wld.map), vunit->utype, ptile2)
-                && NULL == tile_city(ptile2)) {
+                && nullptr == tile_city(ptile2)) {
               move_cost = map_move_cost_unit(&(wld.map), vunit, ptile2);
               if (pkiller->moves_left <= vunit->moves_left - move_cost
                   && (is_allied_unit_tile(ptile2, pvictim)
@@ -2291,7 +2334,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
           }
           adjc_iterate_end;
 
-          if (dsttile != NULL) {
+          if (dsttile != nullptr) {
             /* TODO: Consider if forcing the unit to perform actions that
              * includes a move, like "Transport Embark", should be done when
              * a regular move is illegal or rather than a regular move. If
@@ -2300,7 +2343,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
             /* FIXME: Shouldn't unit_move_handling() be used here? This is
              * the unit escaping by moving itself. It should therefore
              * respect movement rules. */
-            unit_move(vunit, dsttile, move_cost, NULL, false, false);
+            unit_move(vunit, dsttile, move_cost, nullptr, false, false);
             num_escaped[player_index(vplayer)]++;
             escaped = true;
             unitcount--;
@@ -2345,7 +2388,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
     for (i = 0; i < player_slot_count(); i++) {
       if (num_killed[i] == 1) {
         if (i == player_index(pvictim)) {
-          fc_assert(other_killed[i] == NULL);
+          fc_assert(other_killed[i] == nullptr);
           notify_player(player_by_number(i), ptile, E_UNIT_LOST_DEF,
                         ftc_server,
                         // TRANS: "Cannon ... the Polish Destroyer."
@@ -2419,7 +2462,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
 
     /* remove the units - note the logic of which units actually die
      * must be mimiced exactly in at least one place up above. */
-    punit = NULL; // wiped during following iteration so unsafe to use
+    punit = nullptr; // wiped during following iteration so unsafe to use
 
     unit_list_iterate_safe(ptile->units, punit2)
     {
@@ -2454,7 +2497,7 @@ void package_unit(struct unit *punit, struct packet_unit_info *packet)
   packet->activity = punit->activity;
   packet->activity_count = punit->activity_count;
 
-  if (punit->activity_target != NULL) {
+  if (punit->activity_target != nullptr) {
     packet->activity_tgt = extra_index(punit->activity_target);
   } else {
     packet->activity_tgt = EXTRA_NONE;
@@ -2463,7 +2506,7 @@ void package_unit(struct unit *punit, struct packet_unit_info *packet)
   packet->changed_from = punit->changed_from;
   packet->changed_from_count = punit->changed_from_count;
 
-  if (punit->changed_from_target != NULL) {
+  if (punit->changed_from_target != nullptr) {
     packet->changed_from_tgt = extra_index(punit->changed_from_target);
   } else {
     packet->changed_from_tgt = EXTRA_NONE;
@@ -2472,7 +2515,7 @@ void package_unit(struct unit *punit, struct packet_unit_info *packet)
   packet->ssa_controller = punit->ssa_controller;
   packet->fuel = punit->fuel;
   packet->goto_tile =
-      (NULL != punit->goto_tile ? tile_index(punit->goto_tile) : -1);
+      (nullptr != punit->goto_tile ? tile_index(punit->goto_tile) : -1);
   packet->paradropped = punit->paradropped;
   packet->done_moving = punit->done_moving;
   packet->stay = punit->stay;
@@ -2483,7 +2526,7 @@ void package_unit(struct unit *punit, struct packet_unit_info *packet)
     packet->transported = true;
     packet->transported_by = unit_transport_get(punit)->id;
   }
-  if (punit->carrying != NULL) {
+  if (punit->carrying != nullptr) {
     packet->carrying = goods_index(punit->carrying);
   } else {
     packet->carrying = -1;
@@ -2547,7 +2590,7 @@ void package_short_unit(struct unit *punit,
     packet->activity = punit->activity;
   }
 
-  if (punit->activity_target == NULL) {
+  if (punit->activity_target == nullptr) {
     packet->activity_tgt = EXTRA_NONE;
   } else {
     packet->activity_tgt = extra_index(punit->activity_target);
@@ -2572,7 +2615,7 @@ void package_short_unit(struct unit *punit,
 void unit_goes_out_of_sight(struct player *pplayer, struct unit *punit)
 {
   dlsend_packet_unit_remove(pplayer->connections, punit->id);
-  if (punit->server.moving != NULL) {
+  if (punit->server.moving != nullptr) {
     // Update status of 'pplayer' vision for 'punit'.
     BV_CLR(punit->server.moving->can_see_unit, player_index(pplayer));
   }
@@ -2580,7 +2623,7 @@ void unit_goes_out_of_sight(struct player *pplayer, struct unit *punit)
 
 /**
    Send the unit to the players who need the info.
-   dest = NULL means all connections (game.est_connections)
+   dest = nullptr means all connections (game.est_connections)
  */
 void send_unit_info(struct conn_list *dest, struct unit *punit)
 {
@@ -2589,7 +2632,7 @@ void send_unit_info(struct conn_list *dest, struct unit *punit)
   struct packet_unit_short_info sinfo;
   struct unit_move_data *pdata;
 
-  if (dest == NULL) {
+  if (dest == nullptr) {
     dest = game.est_connections;
   }
 
@@ -2604,19 +2647,19 @@ void send_unit_info(struct conn_list *dest, struct unit *punit)
   {
     struct player *pplayer = conn_get_player(pconn);
 
-    // Be careful to consider all cases where pplayer is NULL...
-    if (pplayer == NULL) {
+    // Be careful to consider all cases where pplayer is nullptr...
+    if (pplayer == nullptr) {
       if (pconn->observer) {
         send_packet_unit_info(pconn, &info);
       }
     } else if (pplayer == powner) {
       send_packet_unit_info(pconn, &info);
-      if (pdata != NULL) {
+      if (pdata != nullptr) {
         BV_SET(pdata->can_see_unit, player_index(pplayer));
       }
     } else if (can_player_see_unit(pplayer, punit)) {
       send_packet_unit_short_info(pconn, &sinfo, false);
-      if (pdata != NULL) {
+      if (pdata != nullptr) {
         BV_SET(pdata->can_see_unit, player_index(pplayer));
       }
     }
@@ -2635,7 +2678,7 @@ void send_all_known_units(struct conn_list *dest)
   {
     struct player *pplayer = pconn->playing;
 
-    if (NULL == pplayer && !pconn->observer) {
+    if (nullptr == pplayer && !pconn->observer) {
       continue;
     }
 
@@ -2663,7 +2706,7 @@ void send_all_known_units(struct conn_list *dest)
  */
 static void do_nuke_tile(struct player *pplayer, struct tile *ptile)
 {
-  struct city *pcity = NULL;
+  struct city *pcity = nullptr;
   int pop_loss;
 
   pcity = tile_city(ptile);
@@ -2720,14 +2763,14 @@ static void do_nuke_tile(struct player *pplayer, struct tile *ptile)
     pop_loss = (game.info.nuke_pop_loss_pct * city_size_get(pcity)) / 100;
     city_reduce_size(pcity, pop_loss, pplayer, "nuke");
 
-    send_city_info(NULL, pcity);
+    send_city_info(nullptr, pcity);
   }
 
   if (fc_rand(2) == 1) {
     struct extra_type *pextra;
 
     pextra = rand_extra_for_tile(ptile, EC_FALLOUT, false);
-    if (pextra != NULL && !tile_has_extra(ptile, pextra)) {
+    if (pextra != nullptr && !tile_has_extra(ptile, pextra)) {
       tile_add_extra(ptile, pextra);
       update_tile_knowledge(ptile);
     }
@@ -2748,7 +2791,8 @@ void do_nuclear_explosion(struct player *pplayer, struct tile *ptile)
 
   script_server_signal_emit("nuke_exploded", 2, API_TYPE_TILE, ptile,
                             API_TYPE_PLAYER, pplayer);
-  notify_conn(NULL, ptile, E_NUKE, ftc_server, _("The %s detonated a nuke!"),
+  notify_conn(nullptr, ptile, E_NUKE, ftc_server,
+              _("The %s detonated a nuke!"),
               nation_plural_for_player(pplayer));
 }
 
@@ -2765,7 +2809,7 @@ bool do_airline(struct unit *punit, struct city *pdest_city,
                 ftc_server, _("%s transported successfully."),
                 unit_link(punit));
 
-  unit_move(punit, pdest_city->tile, punit->moves_left, NULL,
+  unit_move(punit, pdest_city->tile, punit->moves_left, nullptr,
             // Can only airlift to allied and domestic cities
             false, false);
 
@@ -2812,7 +2856,7 @@ void do_explore(struct unit *punit)
     break;
   }
 
-  send_unit_info(NULL, punit); // probably duplicate
+  send_unit_info(nullptr, punit); // probably duplicate
 }
 
 /**
@@ -2835,7 +2879,7 @@ bool do_paradrop(struct unit *punit, struct tile *ptile,
     // Only take in account values from player map.
     const struct player_tile *plrtile = map_get_player_tile(ptile, pplayer);
 
-    if (NULL == plrtile->site
+    if (nullptr == plrtile->site
         && !is_native_to_class(unit_class_get(punit), plrtile->terrain,
                                &(plrtile->extras))) {
       notify_player(pplayer, ptile, E_BAD_COMMAND, ftc_server,
@@ -2844,7 +2888,7 @@ bool do_paradrop(struct unit *punit, struct tile *ptile,
       return false;
     }
 
-    if (NULL != plrtile->site && plrtile->owner != NULL
+    if (nullptr != plrtile->site && plrtile->owner != nullptr
         && pplayers_non_attack(pplayer, plrtile->owner)) {
       notify_player(pplayer, ptile, E_BAD_COMMAND, ftc_server,
                     _("Cannot attack unless you declare war first."));
@@ -2893,7 +2937,7 @@ bool do_paradrop(struct unit *punit, struct tile *ptile,
   if (unit_move(
           punit, ptile,
           // Done by Action_Success_Actor_Move_Cost
-          0, NULL, game.info.paradrop_to_transport,
+          0, nullptr, game.info.paradrop_to_transport,
           /* A paradrop into a non allied city results in a city
            * occupation. */
           /* FIXME: move the following actor requirements to the
@@ -2935,7 +2979,7 @@ static bool hut_get_limited(struct unit *punit)
     notify_player(pplayer, unit_tile(punit), E_HUT_BARB_KILLED, ftc_server,
                   _("Your %s has been killed by barbarians!"),
                   unit_tile_link(punit));
-    wipe_unit(punit, ULR_BARB_UNLEASH, NULL);
+    wipe_unit(punit, ULR_BARB_UNLEASH, nullptr);
     ok = false;
   }
   return ok;
@@ -2960,9 +3004,9 @@ static void unit_enter_hut(struct unit *punit)
   extra_type_by_rmcause_iterate(ERM_ENTER, pextra)
   {
     if (tile_has_extra(ptile, pextra)
-        && are_reqs_active(pplayer, tile_owner(ptile), NULL, NULL, ptile,
-                           NULL, NULL, NULL, NULL, NULL, &pextra->rmreqs,
-                           RPT_CERTAIN)) {
+        && are_reqs_active(pplayer, tile_owner(ptile), nullptr, nullptr,
+                           ptile, nullptr, nullptr, nullptr, nullptr,
+                           nullptr, &pextra->rmreqs, RPT_CERTAIN)) {
       hut = true;
       // FIXME: are all enter-removes extras worth counting?
       pplayer->server.huts++;
@@ -3003,8 +3047,8 @@ void unit_transport_load_send(struct unit *punit, struct unit *ptrans)
 {
   bv_player can_see_unit;
 
-  fc_assert_ret(punit != NULL);
-  fc_assert_ret(ptrans != NULL);
+  fc_assert_ret(punit != nullptr);
+  fc_assert_ret(ptrans != nullptr);
 
   BV_CLR_ALL(can_see_unit);
   players_iterate(pplayer)
@@ -3026,8 +3070,8 @@ void unit_transport_load_send(struct unit *punit, struct unit *ptrans)
   }
   players_iterate_end;
 
-  send_unit_info(NULL, punit);
-  send_unit_info(NULL, ptrans);
+  send_unit_info(nullptr, punit);
+  send_unit_info(nullptr, ptrans);
 }
 
 /**
@@ -3038,8 +3082,8 @@ static void unit_transport_load_tp_status(struct unit *punit,
 {
   bool had_cargo;
 
-  fc_assert_ret(punit != NULL);
-  fc_assert_ret(ptrans != NULL);
+  fc_assert_ret(punit != nullptr);
+  fc_assert_ret(ptrans != nullptr);
 
   had_cargo = get_transporter_occupancy(ptrans) > 0;
 
@@ -3047,7 +3091,7 @@ static void unit_transport_load_tp_status(struct unit *punit,
 
   if (!had_cargo) {
     // Transport's loaded status changed
-    send_unit_info(NULL, ptrans);
+    send_unit_info(nullptr, ptrans);
   }
 }
 
@@ -3066,8 +3110,8 @@ void unit_transport_unload_send(struct unit *punit)
 
   unit_transport_unload(punit);
 
-  send_unit_info(NULL, punit);
-  send_unit_info(NULL, ptrans);
+  send_unit_info(nullptr, punit);
+  send_unit_info(nullptr, ptrans);
 }
 
 /**
@@ -3156,8 +3200,8 @@ static bool unit_survive_autoattack(struct unit *punit)
       fc_assert_action(tgt_tile, continue);
 
       probability->prob = action_auto_perf_unit_prob(
-          AAPC_UNIT_MOVED_ADJ, penemy, unit_owner(punit), NULL, tgt_tile,
-          tile_city(tgt_tile), punit, NULL);
+          AAPC_UNIT_MOVED_ADJ, penemy, unit_owner(punit), nullptr, tgt_tile,
+          tile_city(tgt_tile), punit, nullptr);
 
       if (action_prob_possible(probability->prob)) {
         probability->unit_id = penemy->id;
@@ -3192,7 +3236,7 @@ static bool unit_survive_autoattack(struct unit *punit)
       threshold = 0.90;
     }
 
-    if (NULL != enemy_defender) {
+    if (nullptr != enemy_defender) {
       punitwin = unit_win_chance(punit, enemy_defender);
     } else {
       // 'penemy' can attack 'punit' but it may be not reciproque.
@@ -3201,8 +3245,8 @@ static bool unit_survive_autoattack(struct unit *punit)
 
     // Previous attacks may have changed the odds. Recalculate.
     peprob->prob = action_auto_perf_unit_prob(
-        AAPC_UNIT_MOVED_ADJ, penemy, unit_owner(punit), NULL, tgt_tile,
-        tile_city(tgt_tile), punit, NULL);
+        AAPC_UNIT_MOVED_ADJ, penemy, unit_owner(punit), nullptr, tgt_tile,
+        tile_city(tgt_tile), punit, nullptr);
 
     if (!action_prob_possible(peprob->prob)) {
       // No longer legal.
@@ -3224,8 +3268,8 @@ static bool unit_survive_autoattack(struct unit *punit)
 
       unit_activity_handling(penemy, ACTIVITY_IDLE);
       action_auto_perf_unit_do(AAPC_UNIT_MOVED_ADJ, penemy,
-                               unit_owner(punit), NULL, tgt_tile,
-                               tile_city(tgt_tile), punit, NULL);
+                               unit_owner(punit), nullptr, tgt_tile,
+                               tile_city(tgt_tile), punit, nullptr);
     } else {
 #ifdef REALLY_DEBUG_THIS
       log_test("!AA %s -> %s (%d,%d) %.2f > %.2f && > %.2f",
@@ -3237,10 +3281,10 @@ static bool unit_survive_autoattack(struct unit *punit)
     }
 
     if (game_unit_by_number(sanity2)) {
-      send_unit_info(NULL, penemy);
+      send_unit_info(nullptr, penemy);
     }
     if (game_unit_by_number(sanity1)) {
-      send_unit_info(NULL, punit);
+      send_unit_info(nullptr, punit);
     } else {
       autoattack_prob_list_destroy(autoattack);
       return false; // moving unit dead
@@ -3252,7 +3296,7 @@ static bool unit_survive_autoattack(struct unit *punit)
   if (game_unit_by_number(sanity1)) {
     // We could have lost movement in combat
     punit->moves_left = MIN(punit->moves_left, moves);
-    send_unit_info(NULL, punit);
+    send_unit_info(nullptr, punit);
     return true;
   } else {
     return false;
@@ -3265,7 +3309,7 @@ static bool unit_survive_autoattack(struct unit *punit)
 static void cancel_orders(struct unit *punit, const char *dbg_msg)
 {
   free_unit_orders(punit);
-  send_unit_info(NULL, punit);
+  send_unit_info(nullptr, punit);
   log_debug("%s", dbg_msg);
 }
 
@@ -3277,7 +3321,7 @@ static void wakeup_neighbor_sentries(struct unit *punit)
 {
   bool alone_in_city;
 
-  if (NULL != tile_city(unit_tile(punit))) {
+  if (nullptr != tile_city(unit_tile(punit))) {
     int count = 0;
 
     unit_list_iterate(unit_tile(punit)->units, aunit)
@@ -3314,7 +3358,7 @@ static void wakeup_neighbor_sentries(struct unit *punit)
           // on board transport; don't awaken
           && can_unit_exist_at_tile(&(wld.map), penemy, unit_tile(penemy))) {
         set_unit_activity(penemy, ACTIVITY_IDLE);
-        send_unit_info(NULL, penemy);
+        send_unit_info(nullptr, penemy);
         notify_player(unit_owner(penemy), unit_tile(punit), E_UNIT_ORDERS,
                       ftc_server, _("Sentried %s saw %s %s moving at %s"),
                       unit_tile_link(penemy),
@@ -3364,8 +3408,8 @@ static bool unit_move_consequences(struct unit *punit, struct tile *src_tile,
 {
   struct city *fromcity = tile_city(src_tile);
   struct city *tocity = tile_city(dst_tile);
-  struct city *homecity_start_pos = NULL;
-  struct city *homecity_end_pos = NULL;
+  struct city *homecity_start_pos = nullptr;
+  struct city *homecity_end_pos = nullptr;
   int homecity_id_start_pos = punit->homecity;
   int homecity_id_end_pos = punit->homecity;
   struct player *pplayer_start_pos = unit_owner(punit);
@@ -3530,7 +3574,7 @@ static struct unit_move_data *unit_move_data(struct unit *punit,
                   "Unit number %d (%p) was going to die, but "
                   "server attempts to move it.",
                   punit->id, punit);
-    fc_assert_msg(pdata->old_vision == NULL,
+    fc_assert_msg(pdata->old_vision == nullptr,
                   "Unit number %d (%p) has done an incomplete move.",
                   punit->id, punit);
   } else {
@@ -3583,17 +3627,18 @@ static struct unit_move_data *unit_move_data(struct unit *punit,
  */
 static void unit_move_data_unref(struct unit_move_data *pdata)
 {
-  fc_assert_ret(pdata != NULL);
+  fc_assert_ret(pdata != nullptr);
   fc_assert_ret(pdata->ref_count > 0);
-  fc_assert_msg(pdata->old_vision == NULL,
+  fc_assert_msg(pdata->old_vision == nullptr,
                 "Unit number %d (%p) has done an incomplete move.",
-                pdata->punit != NULL ? pdata->punit->id : -1, pdata->punit);
+                pdata->punit != nullptr ? pdata->punit->id : -1,
+                pdata->punit);
 
   pdata->ref_count--;
   if (pdata->ref_count == 0) {
-    if (pdata->punit != NULL) {
+    if (pdata->punit != nullptr) {
       fc_assert(pdata->punit->server.moving == pdata);
-      pdata->punit->server.moving = NULL;
+      pdata->punit->server.moving = nullptr;
     }
     delete pdata;
   }
@@ -3629,8 +3674,8 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
   struct player *bowner;
 
   // Some checks.
-  fc_assert_ret_val(punit != NULL, false);
-  fc_assert_ret_val(pdesttile != NULL, false);
+  fc_assert_ret_val(punit != nullptr, false);
+  fc_assert_ret_val(pdesttile != nullptr, false);
 
   plist = unit_move_data_list_new_full(unit_move_data_unref);
   pplayer = unit_owner(punit);
@@ -3643,12 +3688,12 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
 
   // Unload the unit if on a transport.
   ptransporter = unit_transport_get(punit);
-  if (ptransporter != NULL) {
+  if (ptransporter != nullptr) {
     // Unload unit _before_ setting the new tile!
     unit_transport_unload(punit);
     /* Send updated information to anyone watching that transporter
      * was unloading cargo. */
-    send_unit_info(NULL, ptransporter);
+    send_unit_info(nullptr, ptransporter);
   }
 
   // Wakup units next to us before we move.
@@ -3681,7 +3726,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
   }
 
   // No longer relevant.
-  punit->action_decision_tile = NULL;
+  punit->action_decision_tile = nullptr;
   punit->action_decision_want = ACT_DEC_NOTHING;
 
   if (!adj && action_tgt_city(punit, pdesttile, false)) {
@@ -3695,7 +3740,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
 
   // Claim ownership of fortress?
   bowner = extra_owner(pdesttile);
-  if ((bowner == NULL || pplayers_at_war(bowner, pplayer))
+  if ((bowner == nullptr || pplayers_at_war(bowner, pplayer))
       && tile_has_claimable_base(pdesttile, unit_type_get(punit))) {
     /* Yes. We claim *all* bases if there's *any* claimable base(s).
      * Even if original unit cannot claim other kind of bases, the
@@ -3796,7 +3841,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
     {
       struct player *aplayer = conn_get_player(pconn);
 
-      if (aplayer == NULL) {
+      if (aplayer == nullptr) {
         if (pconn->observer) {
           // Global observers see all...
           send_packet_unit_info(pconn, &src_info);
@@ -3833,7 +3878,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
     {
       struct player *aplayer = conn_get_player(pconn);
 
-      if (aplayer == NULL) {
+      if (aplayer == nullptr) {
         if (pconn->observer) {
           // Global observers see all...
           send_packet_unit_info(pconn, &dest_info);
@@ -3855,7 +3900,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
   {
     vision_clear_sight(pmove_data->old_vision);
     vision_free(pmove_data->old_vision);
-    pmove_data->old_vision = NULL;
+    pmove_data->old_vision = nullptr;
   }
   unit_move_data_list_iterate_end;
 
@@ -3864,7 +3909,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
   {
     struct unit *aunit = pmove_data->punit;
 
-    if (aunit != NULL && unit_owner(aunit) == pmove_data->powner
+    if (aunit != nullptr && unit_owner(aunit) == pmove_data->powner
         && unit_tile(aunit) == pdesttile) {
       (void) unit_move_consequences(aunit, psrctile, pdesttile,
                                     pdata != pmove_data,
@@ -3885,14 +3930,14 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
     // Special checks for ground units in the ocean.
     if (embark_to
         || !can_unit_survive_at_tile(&(wld.map), punit, pdesttile)) {
-      if (embark_to != NULL) {
+      if (embark_to != nullptr) {
         ptransporter = embark_to;
       } else if (find_embark_target) {
         /* TODO: Consider to stop supporting find_embark_target and make all
          * callers that wants auto loading set embark_to. */
         ptransporter = transporter_for_unit(punit);
       } else {
-        ptransporter = NULL;
+        ptransporter = nullptr;
       }
       if (ptransporter) {
         unit_transport_load_tp_status(punit, ptransporter, false);
@@ -3904,7 +3949,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
           set_unit_activity(punit, ACTIVITY_SENTRY);
         }
 
-        send_unit_info(NULL, punit);
+        send_unit_info(nullptr, punit);
       }
     }
   }
@@ -3914,7 +3959,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
   {
     struct unit *aunit = pmove_data->punit;
 
-    if (aunit == NULL) {
+    if (aunit == nullptr) {
       continue; // Died!
     }
 
@@ -3945,7 +3990,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
       act_unit = pmove_data->punit;
       act_player = unit_owner(act_unit);
 
-      if (act_unit == NULL || !unit_is_alive(act_unit->id)) {
+      if (act_unit == nullptr || !unit_is_alive(act_unit->id)) {
         // The unit died before reaching this point.
         continue;
       }
@@ -3975,7 +4020,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
 
       for (ptrans = unit_transport_get(act_unit);;
            ptrans = unit_transport_get(ptrans)) {
-        if (NULL == ptrans) {
+        if (nullptr == ptrans) {
           // No (recursive) transport has orders.
           ok = true;
           break;
@@ -4168,7 +4213,7 @@ bool execute_orders(struct unit *punit, const bool fresh)
       // For repeating orders, don't repeat more than once per turn.
       log_debug("  stopping because we ran a round");
       punit->done_moving = true;
-      send_unit_info(NULL, punit);
+      send_unit_info(nullptr, punit);
       return true;
     }
     moves_made++;
@@ -4227,7 +4272,7 @@ bool execute_orders(struct unit *punit, const bool fresh)
          * (there's no check for that). */
         punit->done_moving = true;
         log_debug("  waiting this turn");
-        send_unit_info(NULL, punit);
+        send_unit_info(nullptr, punit);
       }
       break;
     case ORDER_ACTIVITY: {
@@ -4238,7 +4283,7 @@ bool execute_orders(struct unit *punit, const bool fresh)
       if (can_unit_do_activity(punit, activity)) {
         punit->done_moving = true;
         set_unit_activity(punit, activity);
-        send_unit_info(NULL, punit);
+        send_unit_info(nullptr, punit);
 
         break;
       }
@@ -4285,7 +4330,7 @@ bool execute_orders(struct unit *punit, const bool fresh)
       if (res && !same_pos(dst_tile, unit_tile(punit))) {
         // Movement succeeded but unit didn't move.
         log_debug("  orders resulted in combat.");
-        send_unit_info(NULL, punit);
+        send_unit_info(nullptr, punit);
         return true;
       }
 
@@ -4321,19 +4366,19 @@ bool execute_orders(struct unit *punit, const bool fresh)
       oaction = action_by_number(order.action);
 
       // Checked in unit_order_list_is_sane()
-      fc_assert_action(oaction != NULL, continue);
+      fc_assert_action(oaction != nullptr, continue);
 
       log_debug("  orders: doing action %s", action_rule_name(oaction));
 
       dst_tile = index_to_tile(&(wld.map), order.target);
 
-      if (dst_tile == NULL) {
+      if (dst_tile == nullptr) {
         /* Could be at the edge of the map while trying to target a tile
          * outside of it. */
 
         cancel_orders(punit, "  target location doesn't exist");
         illegal_action_msg(unit_owner(punit), E_UNIT_ORDERS, punit,
-                           order.action, dst_tile, NULL, NULL);
+                           order.action, dst_tile, nullptr, nullptr);
 
         return true;
       }
@@ -4341,13 +4386,13 @@ bool execute_orders(struct unit *punit, const bool fresh)
       // Get the target city from the target tile.
       tgt_city = tile_city(dst_tile);
 
-      if (tgt_city == NULL
+      if (tgt_city == nullptr
           && action_id_get_target_kind(order.action) == ATK_CITY) {
         // This action targets a city but no city target was found.
 
         cancel_orders(punit, "  perform action vs city with no city");
         illegal_action_msg(unit_owner(punit), E_UNIT_ORDERS, punit,
-                           order.action, dst_tile, tgt_city, NULL);
+                           order.action, dst_tile, tgt_city, nullptr);
 
         return true;
       }
@@ -4355,7 +4400,7 @@ bool execute_orders(struct unit *punit, const bool fresh)
       // Get a target unit at the target tile.
       tgt_unit = action_tgt_unit(punit, dst_tile, true);
 
-      if (tgt_unit == NULL
+      if (tgt_unit == nullptr
           && action_id_get_target_kind(order.action) == ATK_UNIT) {
         // This action targets a unit but no target unit was found.
 
@@ -4378,17 +4423,17 @@ bool execute_orders(struct unit *punit, const bool fresh)
 
       // Get a target extra at the target tile
       pextra =
-          (sub_tgt_id == NO_TARGET ? NULL : extra_by_number(sub_tgt_id));
+          (sub_tgt_id == NO_TARGET ? nullptr : extra_by_number(sub_tgt_id));
 
       if (action_get_sub_target_kind(oaction) == ASTK_EXTRA_NOT_THERE
-          && pextra != NULL && action_creates_extra(oaction, pextra)
+          && pextra != nullptr && action_creates_extra(oaction, pextra)
           && tile_has_extra(dst_tile, pextra)) {
         // Already there. Move on to the next order.
         break;
       }
 
-      if (action_get_sub_target_kind(oaction) == ASTK_EXTRA && pextra != NULL
-          && action_removes_extra(oaction, pextra)
+      if (action_get_sub_target_kind(oaction) == ASTK_EXTRA
+          && pextra != nullptr && action_removes_extra(oaction, pextra)
           && !tile_has_extra(dst_tile, pextra)) {
         // Already not there. Move on to the next order.
         break;
@@ -4486,7 +4531,7 @@ bool execute_orders(struct unit *punit, const bool fresh)
           != ACT_TIME_INSTANTANEOUS) {
         // Done at turn change.
         punit->done_moving = true;
-        send_unit_info(NULL, punit);
+        send_unit_info(nullptr, punit);
         break;
       }
 
@@ -4592,7 +4637,7 @@ bool unit_can_do_action_now(const struct unit *punit)
     return true;
   }
 
-  dt = time(NULL) - punit->action_timestamp;
+  dt = time(nullptr) - punit->action_timestamp;
   if (dt < game.server.unitwaittime) {
     char buf[64];
     format_time_duration(game.server.unitwaittime - dt, buf, sizeof(buf));
@@ -4618,7 +4663,7 @@ void unit_did_action(struct unit *punit)
     return;
   }
 
-  punit->action_timestamp = time(NULL);
+  punit->action_timestamp = time(nullptr);
   punit->action_turn = game.info.turn;
 }
 
@@ -4724,7 +4769,7 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
       paction = action_by_number(orders[i].action);
 
       // Validate main target.
-      if (index_to_tile(&(wld.map), orders[i].target) == NULL) {
+      if (index_to_tile(&(wld.map), orders[i].target) == nullptr) {
         qCritical("at index %d, invalid tile target %d for the action %d.",
                   i, orders[i].target, orders[i].action);
         return false;
@@ -4766,9 +4811,9 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
                         || (orders[i].sub_target
                             >= game.control.num_extra_types)))
                       ? extra_by_number(orders[i].sub_target)
-                      : NULL);
-        fc_assert(pextra == NULL || !(pextra->ruledit_disabled));
-        if (pextra == NULL) {
+                      : nullptr);
+        fc_assert(pextra == nullptr || !(pextra->ruledit_disabled));
+        if (pextra == nullptr) {
           if (paction->target_complexity != ACT_TGT_COMPL_FLEXIBLE) {
             // Target extra is invalid.
             qCritical("at index %d, cannot do %s without a target.", i,
@@ -4799,11 +4844,11 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
       // Some action orders are sane only in the last order.
       if (i != length - 1) {
         // If the unit is dead,
-        if (utype_is_consumed_by_action(paction, NULL)
+        if (utype_is_consumed_by_action(paction, nullptr)
             /* or if Freeciv21 has no idea where the unit will end up after
              * it has performed this action, */
-            || !(utype_is_unmoved_by_action(paction, NULL)
-                 || utype_is_moved_to_tgt_by_action(paction, NULL))
+            || !(utype_is_unmoved_by_action(paction, nullptr)
+                 || utype_is_moved_to_tgt_by_action(paction, nullptr))
             // or if the unit will end up standing still,
             || action_has_result(paction, ACTRES_FORTIFY)) {
           /* than having this action in the middle of a unit's orders is
@@ -4844,7 +4889,7 @@ struct unit_order *create_unit_orders(int length,
                                       const struct unit_order *orders)
 {
   if (!unit_order_list_is_sane(length, orders)) {
-    return NULL;
+    return nullptr;
   }
 
   auto *unit_orders = new unit_order[length];

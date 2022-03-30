@@ -227,7 +227,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
     pserver->nplayers = atoi(players);
     pserver->humans = atoi(humans);
     pserver->message = fc_strdup(message);
-    pserver->players = NULL;
+    pserver->players = nullptr;
     found_new = true;
 
     server_list_prepend(scan->servers, pserver);
@@ -253,14 +253,15 @@ static struct server_list *parse_metaserver_data(QIODevice *f)
 
   // This call closes f.
   if (!(file = secfile_from_stream(f, true))) {
-    return NULL;
+    return nullptr;
   }
 
-  latest_ver = secfile_lookup_str_default(file, NULL, "versions." FOLLOWTAG);
-  comment =
-      secfile_lookup_str_default(file, NULL, "version_comments." FOLLOWTAG);
+  latest_ver =
+      secfile_lookup_str_default(file, nullptr, "versions." FOLLOWTAG);
+  comment = secfile_lookup_str_default(file, nullptr,
+                                       "version_comments." FOLLOWTAG);
 
-  if (latest_ver != NULL) {
+  if (latest_ver != nullptr) {
     const char *my_comparable = fc_comparable_version();
     char vertext[2048];
 
@@ -277,7 +278,7 @@ static struct server_list *parse_metaserver_data(QIODevice *f)
                   Q_(followtag), latest_ver, my_comparable);
 
       version_message(vertext);
-    } else if (comment == NULL) {
+    } else if (comment == nullptr) {
       fc_snprintf(vertext, sizeof(vertext),
                   _("There is no newer %s release of Freeciv21 available."),
                   FOLLOWTAG);
@@ -286,7 +287,7 @@ static struct server_list *parse_metaserver_data(QIODevice *f)
     }
   }
 
-  if (comment != NULL) {
+  if (comment != nullptr) {
     qDebug("Mesaserver comment about '" FOLLOWTAG "': %s", comment);
     version_message(comment);
   }
@@ -325,7 +326,7 @@ static struct server_list *parse_metaserver_data(QIODevice *f)
     if (pserver->nplayers > 0) {
       pserver->players = new str_players[pserver->nplayers];
     } else {
-      pserver->players = NULL;
+      pserver->players = nullptr;
     }
 
     for (j = 0; j < pserver->nplayers; j++) {
@@ -374,7 +375,7 @@ static bool meta_read_response(struct server_scan *scan)
   // 'f' (hence 'meta.mem') was closed in parse_metaserver_data().
   scan->meta.mem.clear();
 
-  if (NULL == srvrs) {
+  if (nullptr == srvrs) {
     fc_snprintf(str, sizeof(str),
                 _("Failed to parse the metaserver data from %s:\n"
                   "%s."),
@@ -499,7 +500,7 @@ static void delete_server_list(struct server_list *server_list)
 }
 
 /**
-   Creates a new server scan and returns it, or NULL if impossible.
+   Creates a new server scan and returns it, or nullptr if impossible.
 
    Depending on 'type' the scan will look for either local or internet
    games.
@@ -584,12 +585,12 @@ enum server_scan_status server_scan_poll(struct server_scan *scan)
 }
 
 /**
-   Returns the srv_list currently held by the scan (may be NULL).
+   Returns the srv_list currently held by the scan (may be nullptr).
  */
 struct server_list *server_scan_get_list(struct server_scan *scan)
 {
   if (!scan) {
-    return NULL;
+    return nullptr;
   }
 
   return scan->servers;
@@ -611,13 +612,13 @@ void server_scan_finish(struct server_scan *scan)
 
     if (scan->servers) {
       delete_server_list(scan->servers);
-      scan->servers = NULL;
+      scan->servers = nullptr;
     }
   } else {
     fcUdpScan::i()->drop();
     if (scan->servers) {
       delete_server_list(scan->servers);
-      scan->servers = NULL;
+      scan->servers = nullptr;
     }
   }
 

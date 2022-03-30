@@ -96,7 +96,7 @@ void handle_readline_input_callback(char *line)
 
   con_prompt_enter(); // just got an 'Enter' hit
   auto *line_internal = local_to_internal_string_malloc(line);
-  (void) handle_stdin_input(NULL, line_internal);
+  (void) handle_stdin_input(nullptr, line_internal);
   delete[] line_internal;
   free(line);
 }
@@ -175,7 +175,7 @@ std::pair<QTcpServer *, bool> srv_prepare()
     }
   }
 
-  if (srvarg.ruleset != NULL) {
+  if (srvarg.ruleset != nullptr) {
     QString testfilename;
 
     testfilename =
@@ -190,11 +190,11 @@ std::pair<QTcpServer *, bool> srv_prepare()
 
   // load a saved game
   if (srvarg.load_filename.isEmpty()
-      || !load_command(NULL, qUtf8Printable(srvarg.load_filename), false,
+      || !load_command(nullptr, qUtf8Printable(srvarg.load_filename), false,
                        true)) {
     /* Rulesets are loaded on game initialization, but may be changed later
      * if /load or /rulesetdir is done. */
-    load_rulesets(NULL, NULL, false, NULL, true, false, true);
+    load_rulesets(nullptr, nullptr, false, nullptr, true, false, true);
   }
 
   maybe_automatic_meta_message(default_meta_message_string());
@@ -506,7 +506,7 @@ void server::send_pings()
 #endif
 
   // Pinging around for statistics
-  if (time(NULL) > (game.server.last_ping + game.server.pingtime)) {
+  if (time(nullptr) > (game.server.last_ping + game.server.pingtime)) {
     conn_list_iterate(game.all_connections, pconn)
     {
       if ((!pconn->server.is_closing && 0 < pconn->server.ping_timers->size()
@@ -530,7 +530,7 @@ void server::send_pings()
       }
     }
     conn_list_iterate_end;
-    game.server.last_ping = time(NULL);
+    game.server.last_ping = time(nullptr);
   }
 }
 
@@ -611,7 +611,7 @@ void server::input_on_stdin(const QString &line)
   QMutexLocker lock(&s_stdin_mutex);
 
   auto buffer = line.toUtf8();
-  handle_stdin_input(NULL, buffer.data());
+  handle_stdin_input(nullptr, buffer.data());
   if (should_quit()) {
     // Stop the worker thread
     auto notifier =
@@ -661,7 +661,7 @@ void server::input_on_stdin()
       auto line = f.readLine();
       auto *non_const_line =
           local_to_internal_string_malloc(line.constData());
-      (void) handle_stdin_input(NULL, non_const_line);
+      (void) handle_stdin_input(nullptr, non_const_line);
       free(non_const_line);
     }
   }
@@ -683,9 +683,9 @@ void server::prepare_game()
   set_server_state(S_S_INITIAL);
 
   // Load a script file.
-  if (NULL != srvarg.script_filename) {
+  if (nullptr != srvarg.script_filename) {
     // Adding an error message more here will duplicate them.
-    (void) read_init_script(NULL, qUtf8Printable(srvarg.script_filename),
+    (void) read_init_script(nullptr, qUtf8Printable(srvarg.script_filename),
                             true, false);
   }
 
@@ -766,7 +766,7 @@ void server::begin_phase()
       // Save map image(s).
       for (int i = 0; i < mapimg_count(); i++) {
         struct mapdef *pmapdef = mapimg_isvalid(i);
-        if (pmapdef != NULL) {
+        if (pmapdef != nullptr) {
           mapimg_create(pmapdef, false, game.server.save_name,
                         qUtf8Printable(srvarg.saves_pathname));
         } else {
@@ -785,7 +785,7 @@ void server::begin_phase()
     force_end_of_sniff = true;
   }
 
-  if (m_between_turns_timer != NULL) {
+  if (m_between_turns_timer != nullptr) {
     game.server.turn_change_time = timer_read_seconds(m_between_turns_timer);
     log_debug("Inresponsive between turns %g seconds",
               game.server.turn_change_time);
@@ -872,9 +872,9 @@ void server::end_turn()
     // This will thaw the reports and agents at the client.
     lsend_packet_thaw_client(game.est_connections);
 
-    if (game.server.save_timer != NULL) {
+    if (game.server.save_timer != nullptr) {
       timer_destroy(game.server.save_timer);
-      game.server.save_timer = NULL;
+      game.server.save_timer = nullptr;
     }
     if (m_between_turns_timer != nullptr) {
       timer_destroy(m_between_turns_timer);
@@ -993,7 +993,7 @@ bool server::shut_game_down()
   fc_rand_set_init(false);
   server_game_init(false);
   mapimg_reset();
-  load_rulesets(NULL, NULL, false, NULL, true, false, true);
+  load_rulesets(nullptr, nullptr, false, nullptr, true, false, true);
   game.info.is_new_game = true;
   return true;
 }

@@ -179,11 +179,12 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
     return false;
   }
 
-  if (!are_reqs_active(pfrom, pto, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-                       NULL, &clause_infos[type].giver_reqs, RPT_POSSIBLE)
-      || !are_reqs_active(pto, pfrom, NULL, NULL, NULL, NULL, NULL, NULL,
-                          NULL, NULL, &clause_infos[type].receiver_reqs,
-                          RPT_POSSIBLE)) {
+  if (!are_reqs_active(pfrom, pto, nullptr, nullptr, nullptr, nullptr,
+                       nullptr, nullptr, nullptr, nullptr,
+                       &clause_infos[type].giver_reqs, RPT_POSSIBLE)
+      || !are_reqs_active(pto, pfrom, nullptr, nullptr, nullptr, nullptr,
+                          nullptr, nullptr, nullptr, nullptr,
+                          &clause_infos[type].receiver_reqs, RPT_POSSIBLE)) {
     return false;
   }
 

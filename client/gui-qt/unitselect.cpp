@@ -38,13 +38,13 @@ units_select::units_select(struct tile *ptile, QWidget *parent)
     : QMenu(parent)
 {
   utile = ptile;
-  pix = NULL;
+  pix = nullptr;
   show_line = 0;
   highligh_num = -1;
   ufont.setItalic(true);
   info_font = fcFont::instance()->getFont(fonts::notify_label);
   update_units();
-  h_pix = NULL;
+  h_pix = nullptr;
   create_pixmap();
   setMouseTracking(true);
 
@@ -154,7 +154,7 @@ void units_select::create_pixmap()
         y = y + item_size.height();
       }
       punit = unit_list.at(i);
-      Q_ASSERT(punit != NULL);
+      Q_ASSERT(punit != nullptr);
 
       if (i == highligh_num) {
         p.drawPixmap(x, y, *h_pix);
@@ -275,7 +275,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
     }
   }
   h = fm.height();
-  if (pix != NULL) {
+  if (pix != nullptr) {
     painter->drawPixmap(10, h + 3, *pix);
     pen.setColor(palette().color(QPalette::Text));
     painter->setPen(pen);
@@ -332,7 +332,7 @@ void units_select::update_units()
     return;
   }
   unit_count = 0;
-  if (utile == NULL) {
+  if (utile == nullptr) {
     struct unit *punit = head_of_units_in_focus();
     if (punit) {
       utile = unit_tile(punit);
@@ -374,7 +374,7 @@ void units_select::wheelEvent(QWheelEvent *event)
 {
   int nr;
 
-  if (!more && utile == NULL) {
+  if (!more && utile == nullptr) {
     return;
   }
   nr = qCeil(static_cast<qreal>(unit_list_size(utile->units)) / 4) - 3;
@@ -397,7 +397,7 @@ void units_select::wheelEvent(QWheelEvent *event)
 void toggle_unit_sel_widget(struct tile *ptile)
 {
   units_select *unit_sel = queen()->unit_selector;
-  if (unit_sel != NULL) {
+  if (unit_sel != nullptr) {
     unit_sel->close();
     delete unit_sel;
     unit_sel = new units_select(ptile, queen()->mapview_wdg);
@@ -414,7 +414,7 @@ void toggle_unit_sel_widget(struct tile *ptile)
 void update_unit_sel()
 {
   units_select *unit_sel = queen()->unit_selector;
-  if (unit_sel != NULL) {
+  if (unit_sel != nullptr) {
     unit_sel->update_units();
     unit_sel->create_pixmap();
     unit_sel->update();

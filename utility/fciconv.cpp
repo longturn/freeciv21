@@ -39,7 +39,7 @@ static const char *local_encoding, *data_encoding, *internal_encoding;
    Must be called during the initialization phase of server and client to
    initialize the character encodings to be used.
 
-   Pass an internal encoding of NULL to use the local encoding internally.
+   Pass an internal encoding of nullptr to use the local encoding internally.
  */
 void init_character_encodings(const char *my_internal_encoding,
                               bool my_use_transliteration)

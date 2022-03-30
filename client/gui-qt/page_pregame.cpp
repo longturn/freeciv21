@@ -269,7 +269,7 @@ void page_pregame::update_start_page()
 
   conn_list_iterate(game.est_connections, pconn)
   {
-    if (NULL != pconn->playing || !pconn->observer) {
+    if (nullptr != pconn->playing || !pconn->observer) {
       continue;
     }
     item = new QTreeWidgetItem();
@@ -306,7 +306,7 @@ void page_pregame::update_start_page()
 
   conn_list_iterate(game.all_connections, pconn)
   {
-    if (NULL != pconn->playing || pconn->observer) {
+    if (nullptr != pconn->playing || pconn->observer) {
       continue;
     }
     item = new QTreeWidgetItem();
@@ -557,7 +557,7 @@ void page_pregame::start_page_menu(QPoint pos)
         team_slots_iterate_end;
       }
 
-      if (ALLOW_CTRL <= client.conn.access_level && NULL != pplayer
+      if (ALLOW_CTRL <= client.conn.access_level && nullptr != pplayer
           && sel_items.count() == 1) {
         str = QString(_("Aitoggle player"));
         action = new QAction(str, ui.start_players_tree);
@@ -593,7 +593,7 @@ void page_pregame::chat_message_received(const QString &message,
   QColor col = ui.output_window->palette().color(QPalette::Text);
   QString str = apply_tags(message, tags, col);
 
-  if (ui.output_window != NULL) {
+  if (ui.output_window != nullptr) {
     ui.output_window->append(str);
     ui.output_window->verticalScrollBar()->setSliderPosition(
         ui.output_window->verticalScrollBar()->maximum());

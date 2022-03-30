@@ -433,11 +433,6 @@ void path_finder::path_finder_private::attempt_paradrop(
     {
       if (distance >= action->min_distance * action->min_distance) {
         // Paradrop has many hard requirements, see unittools.cpp:do_paradrop
-        // The target tile must be known
-        if (target == nullptr) {
-          continue;
-        }
-
         // The target tile must be seen or be a native tile
         if (TILE_KNOWN_SEEN != tile_get_known(target, probe.owner)
             && !is_native_tile(probe.utype, target)) {
@@ -524,7 +519,7 @@ void path_finder::path_finder_private::attempt_action_move(
         || action_tgt_tile_extra(&probe, target, can_not_move)
         // Tile target actions with extra sub targets are handled above
         // Includes actions vs unit stacks
-        || action_tgt_tile(&probe, target, NULL, can_not_move);
+        || action_tgt_tile(&probe, target, nullptr, can_not_move);
 
     if (one_action_may_be_legal) {
       // Construct the vertex

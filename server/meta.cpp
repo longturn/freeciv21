@@ -102,7 +102,7 @@ static const char *get_meta_type_string()
     return game.server.meta_info.type;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -114,13 +114,13 @@ const char *get_user_meta_message_string()
     return game.server.meta_info.user_message;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /**
    Update meta message. Set it to user meta message, if it is available.
    Otherwise use provided message.
-   It is ok to call this with NULL message. Then it only replaces current
+   It is ok to call this with nullptr message. Then it only replaces current
    meta message with user meta message if available.
  */
 void maybe_automatic_meta_message(const char *automatic)
@@ -129,9 +129,9 @@ void maybe_automatic_meta_message(const char *automatic)
 
   user_message = get_user_meta_message_string();
 
-  if (user_message == NULL) {
+  if (user_message == nullptr) {
     // No user message
-    if (automatic != NULL) {
+    if (automatic != nullptr) {
       set_meta_message_string(automatic);
     }
     return;
@@ -161,7 +161,7 @@ void set_meta_message_string(const char *string)
  */
 void set_user_meta_message_string(const char *string)
 {
-  if (string != NULL && string[0] != '\0') {
+  if (string != nullptr && string[0] != '\0') {
     sz_strlcpy(game.server.meta_info.user_message, string);
     set_meta_message_string(string);
   } else {
@@ -202,7 +202,7 @@ static inline bool meta_insert_setting(QUrlQuery *query,
   const struct setting *pset = setting_by_name(set_name);
   char buf[256];
 
-  fc_assert_ret_val_msg(NULL != pset, false, "Setting \"%s\" not found!",
+  fc_assert_ret_val_msg(nullptr != pset, false, "Setting \"%s\" not found!",
                         set_name);
   query->addQueryItem(QStringLiteral("vn[]"),
                       QString::fromUtf8(setting_name(pset)));
@@ -302,7 +302,7 @@ static bool send_to_metaserver(enum meta_flag flag)
   } else {
     const char *srvtype = get_meta_type_string();
 
-    if (srvtype != NULL) {
+    if (srvtype != nullptr) {
       post->addQueryItem(QStringLiteral("type"), QString::fromUtf8(srvtype));
     }
     post->addQueryItem(QStringLiteral("version"),
@@ -483,7 +483,7 @@ bool is_metaserver_open() { return server_is_open; }
  */
 bool send_server_info_to_metaserver(enum meta_flag flag)
 {
-  static civtimer *last_send_timer = NULL;
+  static civtimer *last_send_timer = nullptr;
   static bool want_update;
 
   if (!server_is_open) {
@@ -503,7 +503,7 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
   if (flag == META_GOODBYE) {
     if (last_send_timer) {
       timer_destroy(last_send_timer);
-      last_send_timer = NULL;
+      last_send_timer = nullptr;
     }
     send_to_metaserver(flag);
 

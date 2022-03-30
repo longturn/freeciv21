@@ -26,7 +26,8 @@ static char error_buffer[MAX_LEN_ERRORBUF] = "\0";
 #define DEBUG_ENTRIES(...) // log_debug(__VA_ARGS__);
 
 /**
-   Returns the last error which occurred in a string.  It never returns NULL.
+   Returns the last error which occurred in a string.  It never returns
+   nullptr.
  */
 const char *secfile_error() { return error_buffer; }
 
@@ -47,7 +48,8 @@ void secfile_log(const struct section_file *secfile,
   fc_snprintf(error_buffer, sizeof(error_buffer),
               "In %s() [%s:%d]: secfile '%s' in section '%s': %s", function,
               file, line, secfile_name(secfile),
-              psection != NULL ? section_name(psection) : "NULL", message);
+              psection != nullptr ? section_name(psection) : "nullptr",
+              message);
 }
 
 /**
@@ -55,7 +57,7 @@ void secfile_log(const struct section_file *secfile,
  */
 const char *section_name(const struct section *psection)
 {
-  return (NULL != psection ? psection->name : NULL);
+  return (nullptr != psection ? psection->name : nullptr);
 }
 
 /**
@@ -65,7 +67,7 @@ struct section_file *secfile_new(bool allow_duplicates)
 {
   section_file *secfile = new section_file;
 
-  secfile->name = NULL;
+  secfile->name = nullptr;
   secfile->num_entries = 0;
   secfile->num_includes = 0;
   secfile->num_long_comments = 0;
@@ -75,7 +77,7 @@ struct section_file *secfile_new(bool allow_duplicates)
 
   secfile->hash.sections = new QMultiHash<QString, struct section *>;
   // Maybe allocated later.
-  secfile->hash.entries = NULL;
+  secfile->hash.entries = nullptr;
 
   return secfile;
 }
@@ -85,12 +87,12 @@ struct section_file *secfile_new(bool allow_duplicates)
  */
 void secfile_destroy(struct section_file *secfile)
 {
-  SECFILE_RETURN_IF_FAIL(secfile, NULL, secfile != NULL);
+  SECFILE_RETURN_IF_FAIL(secfile, nullptr, secfile != nullptr);
 
   delete secfile->hash.sections;
-  /* Mark it NULL to be sure to don't try to make operations when
+  /* Mark it nullptr to be sure to don't try to make operations when
    * deleting the entries. */
-  secfile->hash.sections = NULL;
+  secfile->hash.sections = nullptr;
   NFCN_FREE(secfile->hash.entries);
   section_list_destroy(secfile->sections);
   NFCPP_FREE(secfile->name);
@@ -106,7 +108,7 @@ void secfile_destroy(struct section_file *secfile)
 void secfile_allow_digital_boolean(struct section_file *secfile,
                                    bool allow_digital_boolean)
 {
-  fc_assert_ret(NULL != secfile);
+  fc_assert_ret(nullptr != secfile);
   secfile->allow_digital_boolean = allow_digital_boolean;
 }
 

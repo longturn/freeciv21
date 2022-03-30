@@ -173,7 +173,7 @@ void page_network::set_connection_state(enum connection_state state)
 void page_network::update_server_list(enum server_scan_type sstype,
                                       const struct server_list *list)
 {
-  QTableWidget *sel = NULL;
+  QTableWidget *sel = nullptr;
   QString host, portstr;
   int port;
   int row;
@@ -288,10 +288,10 @@ void page_network::destroy_server_scans()
 #ifndef __EMSCRIPTEN__
   if (meta_scan) {
     server_scan_finish(meta_scan);
-    meta_scan = NULL;
+    meta_scan = nullptr;
   }
 
-  if (meta_scan_timer != NULL) {
+  if (meta_scan_timer != nullptr) {
     meta_scan_timer->stop();
     meta_scan_timer->disconnect();
     FC_FREE(meta_scan_timer);
@@ -299,10 +299,10 @@ void page_network::destroy_server_scans()
 
   if (lan_scan) {
     server_scan_finish(lan_scan);
-    lan_scan = NULL;
+    lan_scan = nullptr;
   }
 
-  if (lan_scan_timer != NULL) {
+  if (lan_scan_timer != nullptr) {
     lan_scan_timer->stop();
     lan_scan_timer->disconnect();
     FC_FREE(lan_scan_timer);
@@ -373,7 +373,7 @@ bool page_network::check_server_scan(server_scan *scan_data)
  */
 void page_network::slot_lan_scan()
 {
-  if (lan_scan_timer == NULL) {
+  if (lan_scan_timer == nullptr) {
     return;
   }
   check_server_scan(lan_scan);
@@ -384,7 +384,7 @@ void page_network::slot_lan_scan()
  */
 void page_network::slot_meta_scan()
 {
-  if (meta_scan_timer == NULL) {
+  if (meta_scan_timer == nullptr) {
     return;
   }
   check_server_scan(meta_scan);
@@ -490,7 +490,7 @@ void page_network::slot_selection_changed(const QItemSelection &selected,
   QTableWidgetItem *item;
   QItemSelectionModel *tw;
 
-  const struct server *pserver = NULL;
+  const struct server *pserver = nullptr;
   int k, col, n;
   struct server_list *srvrs;
 

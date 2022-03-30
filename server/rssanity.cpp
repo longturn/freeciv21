@@ -46,7 +46,7 @@
  */
 static bool sanity_check_metadata()
 {
-  if (game.ruleset_summary != NULL
+  if (game.ruleset_summary != nullptr
       && qstrlen(game.ruleset_summary) > MAX_LEN_CONTENT) {
     qCritical("Too long ruleset summary. It can be only %d bytes long. "
               "Put longer explanations to ruleset description.",
@@ -443,7 +443,7 @@ static bool sanity_check_req_vec(const struct requirement_vector *preqs,
 
   problem =
       req_vec_get_first_contradiction(preqs, req_vec_vector_number, preqs);
-  if (problem != NULL) {
+  if (problem != nullptr) {
     qCritical("%s: %s.", list_for, problem->description);
     req_vec_problem_free(problem);
     return false;
@@ -640,7 +640,7 @@ static bool rs_common_units()
   }
 
   if (num_role_units(L_PARTISAN) == 0
-      && effect_cumulative_max(EFT_INSPIRE_PARTISANS, NULL) > 0) {
+      && effect_cumulative_max(EFT_INSPIRE_PARTISANS, nullptr) > 0) {
     qCCritical(ruleset_category, "Inspire_Partisans effect present, but no "
                                  "units with partisan role.");
     return false;
@@ -697,8 +697,8 @@ static bool sanity_check_boolean_effects()
   bool ret = true;
 
   for (i = 0; boolean_effects[i] != EFT_COUNT; i++) {
-    if (effect_cumulative_min(boolean_effects[i], NULL) < 0
-        && effect_cumulative_max(boolean_effects[i], NULL) == 0) {
+    if (effect_cumulative_min(boolean_effects[i], nullptr) < 0
+        && effect_cumulative_max(boolean_effects[i], nullptr) == 0) {
       qCCritical(ruleset_category,
                  "Boolean effect %s can get disabled, but it can't get "
                  "enabled before that.",
@@ -800,7 +800,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
     }
     requirement_vector_iterate_end;
 
-    if (padvance->bonus_message != NULL) {
+    if (padvance->bonus_message != nullptr) {
       if (!formats_match(padvance->bonus_message, "%s")) {
         qCCritical(ruleset_category,
                    "Tech \"%s\" bonus message is not format with %%s for "
@@ -834,7 +834,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       Tech_type_id tech = game.rgame.global_init_techs[techi];
       struct advance *a = valid_advance_by_number(tech);
 
-      if (a == NULL) {
+      if (a == nullptr) {
         qCCritical(ruleset_category,
                    "Tech %s does not exist, but is initial "
                    "tech for everyone.",
@@ -858,7 +858,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       Tech_type_id tech = pnation->init_techs[techi];
       struct advance *a = valid_advance_by_number(tech);
 
-      if (a == NULL) {
+      if (a == nullptr) {
         qCCritical(ruleset_category,
                    "Tech %s does not exist, but is tech for %s.",
                    advance_rule_name(advance_by_number(tech)),
@@ -904,7 +904,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
     int chain_length = 0;
     const struct unit_type *upgraded = putype;
 
-    while (upgraded != NULL) {
+    while (upgraded != nullptr) {
       upgraded = upgraded->obsoleted_by;
       chain_length++;
       if (chain_length > num_utypes) {
@@ -954,7 +954,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 
   /* Check requirement sets against conflicting requirements.
    * Effects use requirement lists */
-  if (!iterate_effect_cache(effect_list_sanity_cb, NULL)) {
+  if (!iterate_effect_cache(effect_list_sanity_cb, nullptr)) {
     qCCritical(ruleset_category,
                "Effects have conflicting or invalid requirements!");
     ok = false;
@@ -1225,13 +1225,13 @@ bool sanity_check_ruleset_data(bool ignore_retired)
         struct req_vec_problem *problem =
             action_enabler_suggest_repair(enabler);
 
-        if (problem != NULL) {
+        if (problem != nullptr) {
           qCCritical(ruleset_category, "%s", problem->description);
           ok = false;
         }
 
         problem = action_enabler_suggest_improvement(enabler);
-        if (problem != NULL) {
+        if (problem != nullptr) {
           // There is a potential for improving this enabler.
           qCWarning(deprecations_category, "%s", problem->description);
         }
@@ -1293,8 +1293,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 
   terrain_type_iterate(pterr)
   {
-    if (pterr->animal != NULL) {
-      if (!is_native_to_class(utype_class(pterr->animal), pterr, NULL)) {
+    if (pterr->animal != nullptr) {
+      if (!is_native_to_class(utype_class(pterr->animal), pterr, nullptr)) {
         qCCritical(ruleset_category,
                    "%s has %s as animal to appear, but it's not native "
                    "to the terrain.",
@@ -1343,7 +1343,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 
   achievements_iterate(pach)
   {
-    if (!pach->unique && pach->cons_msg == NULL) {
+    if (!pach->unique && pach->cons_msg == nullptr) {
       qCCritical(
           ruleset_category,
           "Achievement %s has no message for consecutive gainers though "
@@ -1354,7 +1354,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
   achievements_iterate_end;
 
-  if (game.server.ruledit.embedded_nations != NULL) {
+  if (game.server.ruledit.embedded_nations != nullptr) {
     int nati;
 
     for (nati = 0; nati < game.server.ruledit.embedded_nations_count;
@@ -1362,7 +1362,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       struct nation_type *pnat =
           nation_by_rule_name(game.server.ruledit.embedded_nations[nati]);
 
-      if (pnat == NULL) {
+      if (pnat == nullptr) {
         qCCritical(
             ruleset_category,
             "There's nation %s listed in embedded nations, but there's "
@@ -1494,7 +1494,7 @@ bool autolock_settings()
            ("Disabling 'barbarians' setting for lack of suitable "
             "unit types."));
     setting_lock_set(pset, false);
-    if (!setting_enum_set(pset, "DISABLED", NULL, NULL, 0)) {
+    if (!setting_enum_set(pset, "DISABLED", nullptr, nullptr, 0)) {
       ok = false;
     }
     setting_lock_set(pset, true);

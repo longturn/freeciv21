@@ -50,8 +50,8 @@
 
 /**
    Looks for nearest airbase for punit reachable imediatly.
-   Returns NULL if not found.  The path is stored in the path
-   argument if not NULL.
+   Returns nullptr if not found.  The path is stored in the path
+   argument if not nullptr.
    TODO: Special handicaps for planes running out of fuel
          IMO should be less restrictive than general H_MAP, H_FOG
  */
@@ -84,7 +84,7 @@ static struct tile *find_nearest_airbase(const struct unit *punit,
   pf_map_move_costs_iterate_end;
 
   pf_map_destroy(pfm);
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -196,7 +196,7 @@ static int dai_evaluate_tile_for_air_attack(struct unit *punit,
    Find something to bomb
    Air-units specific victim search
    Returns the want for the best target.  The targets are stored in the
-   path and pptile arguments if not NULL.
+   path and pptile arguments if not nullptr.
    TODO: take counterattack dangers into account
    TODO: make separate handicaps for air units seeing targets
          IMO should be more restrictive than general H_MAP, H_FOG
@@ -208,7 +208,7 @@ static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
   struct player *pplayer = unit_owner(punit);
   struct pf_parameter parameter;
   struct pf_map *pfm;
-  struct tile *best_tile = NULL;
+  struct tile *best_tile = nullptr;
   int best = 0;
 
   pft_fill_unit_parameter(&parameter, punit);
@@ -254,7 +254,7 @@ static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
     *pptile = best_tile;
   }
   if (path) {
-    *path = best_tile ? pf_map_path(pfm, best_tile) : NULL;
+    *path = best_tile ? pf_map_path(pfm, best_tile) : nullptr;
   }
 
   pf_map_destroy(pfm);
@@ -263,8 +263,8 @@ static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
 
 /**
    Iterates through reachable cities and appraises them as a possible
-   base for air operations by (air)unit punit.  Returns NULL if not
-   found.  The path is stored in the path argument if not NULL.
+   base for air operations by (air)unit punit.  Returns nullptr if not
+   found.  The path is stored in the path argument if not nullptr.
  */
 static struct tile *dai_find_strategic_airbase(struct ai_type *ait,
                                                const struct unit *punit,
@@ -273,9 +273,9 @@ static struct tile *dai_find_strategic_airbase(struct ai_type *ait,
   struct player *pplayer = unit_owner(punit);
   struct pf_parameter parameter;
   struct pf_map *pfm;
-  struct tile *best_tile = NULL;
+  struct tile *best_tile = nullptr;
   struct city *pcity;
-  struct unit *pvirtual = NULL;
+  struct unit *pvirtual = nullptr;
   int best_worth = 0, target_worth;
 
   pft_fill_unit_parameter(&parameter, punit);
@@ -304,7 +304,7 @@ static struct tile *dai_find_strategic_airbase(struct ai_type *ait,
     }
 
     unit_tile_set(pvirtual, ptile);
-    target_worth = find_something_to_bomb(ait, pvirtual, NULL, NULL);
+    target_worth = find_something_to_bomb(ait, pvirtual, nullptr, nullptr);
     if (target_worth > best_worth) {
       // It's either a first find or it's better than the previous.
       best_worth = target_worth;
@@ -320,7 +320,7 @@ static struct tile *dai_find_strategic_airbase(struct ai_type *ait,
 
   if (path) {
     // Stores the path.
-    *path = best_tile ? pf_map_path(pfm, best_tile) : NULL;
+    *path = best_tile ? pf_map_path(pfm, best_tile) : nullptr;
   }
   pf_map_destroy(pfm);
 
@@ -358,7 +358,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
     // We are out in the open, what shall we do?
     if (punit->activity == ACTIVITY_GOTO
         // We are on a GOTO.  Check if it will get us anywhere
-        && NULL != punit->goto_tile
+        && nullptr != punit->goto_tile
         && !same_pos(unit_tile(punit), punit->goto_tile)
         && is_airunit_refuel_point(punit->goto_tile, pplayer, punit)) {
       pfm = pf_map_new(&parameter);
@@ -397,7 +397,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
       /* Found target, coordinates are in punit's goto_dest.
        * TODO: separate attacking into a function, check for the best
        * tile to attack from */
-      fc_assert_ret(path != NULL && dst_tile != NULL);
+      fc_assert_ret(path != nullptr && dst_tile != nullptr);
       if (!adv_follow_path(punit, path, dst_tile)) {
         pf_path_destroy(path);
         return; // The unit died.
@@ -430,7 +430,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
     }
   }
 
-  if ((punit = game_unit_by_number(id)) != NULL && punit->moves_left > 0
+  if ((punit = game_unit_by_number(id)) != nullptr && punit->moves_left > 0
       && punit->moves_left != moves) {
     /* We have moved this turn, might have ended up stuck out in the fields
      * so, as a safety measure, let's manage again */
@@ -492,7 +492,8 @@ bool dai_choose_attacker_air(struct ai_type *ait, struct player *pplayer,
       struct unit *virtual_unit = unit_virtual_create(
           pplayer, pcity, punittype,
           city_production_unit_veteran_level(pcity, punittype));
-      int profit = find_something_to_bomb(ait, virtual_unit, NULL, NULL);
+      int profit =
+          find_something_to_bomb(ait, virtual_unit, nullptr, nullptr);
 
       if (profit > choice->want) {
         // Update choice

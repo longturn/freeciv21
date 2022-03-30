@@ -114,20 +114,20 @@ enum unit_role_id crole_to_role_id(char crole)
  */
 struct unit_type *crole_to_unit_type(char crole, struct player *pplayer)
 {
-  struct unit_type *utype = NULL;
+  struct unit_type *utype = nullptr;
   enum unit_role_id role = crole_to_role_id(crole);
 
   if (role == 0) {
-    fc_assert_ret_val(false, NULL);
-    return NULL;
+    fc_assert_ret_val(false, nullptr);
+    return nullptr;
   }
 
   // Create the unit of an appropriate type, if it exists
   if (num_role_units(role) > 0) {
-    if (pplayer != NULL) {
+    if (pplayer != nullptr) {
       utype = first_role_unit_for_player(pplayer, role);
     }
-    if (utype == NULL) {
+    if (utype == nullptr) {
       utype = get_role_unit(role, 0);
     }
   }
@@ -138,23 +138,23 @@ struct unit_type *crole_to_unit_type(char crole, struct player *pplayer)
 /**
    Place a starting unit for the player. Returns tile where unit was really
    placed. By default the ptype is used and crole does not matter, but if
-   former is NULL, crole will be used instead.
+   former is nullptr, crole will be used instead.
  */
 static struct tile *place_starting_unit(struct tile *starttile,
                                         struct player *pplayer,
                                         struct unit_type *ptype, char crole)
 {
-  struct tile *ptile = NULL;
+  struct tile *ptile = nullptr;
   struct unit_type *utype;
   bool hut_present = false;
 
-  if (ptype != NULL) {
+  if (ptype != nullptr) {
     utype = ptype;
   } else {
     utype = crole_to_unit_type(crole, pplayer);
   }
 
-  if (utype != NULL) {
+  if (utype != nullptr) {
     iterate_outward(&(wld.map), starttile, wld.map.xsize + wld.map.ysize,
                     itertile)
     {
@@ -167,12 +167,12 @@ static struct tile *place_starting_unit(struct tile *starttile,
     iterate_outward_end;
   }
 
-  if (ptile == NULL) {
+  if (ptile == nullptr) {
     // No place where unit may exist.
-    return NULL;
+    return nullptr;
   }
 
-  fc_assert_ret_val(!is_non_allied_unit_tile(ptile, pplayer), NULL);
+  fc_assert_ret_val(!is_non_allied_unit_tile(ptile, pplayer), nullptr);
 
   /* For scenarios or dispersion, huts may coincide with player starts (in
    * other cases, huts are avoided as start positions).  Remove any such hut,
@@ -285,7 +285,7 @@ static void do_team_placement(const struct team_placement_config *pconfig,
 {
   const size_t state_array_size =
       (sizeof(*pbest_state->startpos) * pconfig->total_startpos_num);
-  int (*distance)(const struct tile *, const struct tile *) = NULL;
+  int (*distance)(const struct tile *, const struct tile *) = nullptr;
   const struct tile *ptile1, *ptile2;
   long base_delta, delta;
   bool base_delta_calculated;
@@ -309,7 +309,7 @@ static void do_team_placement(const struct team_placement_config *pconfig,
   case TEAM_PLACEMENT_DISABLED:
     break;
   }
-  fc_assert_ret_msg(distance != NULL, "Wrong team_placement variant (%d)",
+  fc_assert_ret_msg(distance != nullptr, "Wrong team_placement variant (%d)",
                     wld.map.server.team_placement);
 
   struct team_placement_pq *pqueue =
@@ -478,18 +478,18 @@ void init_new_game()
       // Assign first players which can pick only one start position.
       players_iterate(pplayer)
       {
-        if (NULL != player_startpos[player_index(pplayer)]) {
+        if (nullptr != player_startpos[player_index(pplayer)]) {
           // Already assigned.
           continue;
         }
 
         pnation = nation_of_player(pplayer);
-        choice = NULL;
+        choice = nullptr;
         startpos_list_iterate(targeted_list, plink, psp)
         {
           if (startpos_nation_allowed(psp, pnation)) {
-            if (NULL != choice) {
-              choice = NULL;
+            if (nullptr != choice) {
+              choice = nullptr;
               break; // Many choices.
             } else {
               choice = plink;
@@ -498,7 +498,7 @@ void init_new_game()
         }
         startpos_list_iterate_end;
 
-        if (NULL != choice) {
+        if (nullptr != choice) {
           /* Assign this start position to this player and remove
            * both from consideration. */
           struct tile *ptile =
@@ -521,13 +521,13 @@ void init_new_game()
          * restrictions such that more 1:1 matches are possible.) */
         struct startpos *psp = startpos_list_back(targeted_list);
         struct tile *ptile = startpos_tile(psp);
-        struct player *rand_plr = NULL;
+        struct player *rand_plr = nullptr;
         int i = 0;
 
         startpos_list_pop_back(targeted_list); // Detach 'psp'.
         players_iterate(pplayer)
         {
-          if (NULL != player_startpos[player_index(pplayer)]) {
+          if (nullptr != player_startpos[player_index(pplayer)]) {
             // Already assigned.
             continue;
           }
@@ -539,7 +539,7 @@ void init_new_game()
         }
         players_iterate_end;
 
-        if (NULL != rand_plr) {
+        if (nullptr != rand_plr) {
           player_startpos[player_index(rand_plr)] = ptile;
           players_to_place--;
           qDebug("Start position (%d, %d) matches player %s (%s).",
@@ -578,7 +578,7 @@ void init_new_game()
       }
       player_list_iterate(members, pplayer)
       {
-        if (player_startpos[player_index(pplayer)] == NULL) {
+        if (player_startpos[player_index(pplayer)] == nullptr) {
           team_placement_players_to_place++;
         }
       }
@@ -621,7 +621,7 @@ void init_new_game()
       }
       fc_assert(i == config.usable_startpos_num);
       while (i < config.total_startpos_num) {
-        config.startpos[i++] = NULL;
+        config.startpos[i++] = nullptr;
       }
       fc_assert(i == config.total_startpos_num);
 
@@ -642,7 +642,7 @@ void init_new_game()
         {
           struct tile *ptile = player_startpos[player_index(pplayer)];
 
-          if (ptile == NULL) {
+          if (ptile == nullptr) {
             state.startpos[i++] = t;
           } else {
             state.startpos[j] = t;
@@ -678,7 +678,7 @@ void init_new_game()
 
           player_list_iterate(team_members(pteam), member)
           {
-            if (player_startpos[player_index(member)] == NULL
+            if (player_startpos[player_index(member)] == nullptr
                 && fc_rand(++candidate_num) == 0) {
               candidate_index = player_index(member);
             }
@@ -733,7 +733,7 @@ void init_new_game()
     startpos_list_shuffle(flexible_list); // Randomize.
     players_iterate(pplayer)
     {
-      if (NULL != player_startpos[player_index(pplayer)]) {
+      if (nullptr != player_startpos[player_index(pplayer)]) {
         // Already assigned.
         continue;
       }
@@ -766,7 +766,7 @@ void init_new_game()
     startpos_list_shuffle(impossible_list); // Randomize.
     players_iterate(pplayer)
     {
-      if (NULL != player_startpos[player_index(pplayer)]) {
+      if (nullptr != player_startpos[player_index(pplayer)]) {
         // Already assigned.
         continue;
       }
@@ -806,19 +806,19 @@ void init_new_game()
 
     ptile = player_startpos[player_index(pplayer)];
 
-    fc_assert_action(NULL != ptile, continue);
+    fc_assert_action(nullptr != ptile, continue);
 
     // Place first city
     if (game.server.start_city) {
       create_city(pplayer, ptile, city_name_suggestion(pplayer, ptile),
-                  NULL);
+                  nullptr);
     }
 
     if (sulen > 0) {
       // Place the first unit.
-      if (place_starting_unit(ptile, pplayer, NULL,
+      if (place_starting_unit(ptile, pplayer, nullptr,
                               game.server.start_units[0])
-          != NULL) {
+          != nullptr) {
         placed_units[player_index(pplayer)] = 1;
       } else {
         placed_units[player_index(pplayer)] = 0;
@@ -836,28 +836,28 @@ void init_new_game()
     struct tile *const ptile = player_startpos[player_index(pplayer)];
     struct nation_type *nation = nation_of_player(pplayer);
 
-    fc_assert_action(NULL != ptile, continue);
+    fc_assert_action(nullptr != ptile, continue);
 
     // Place global start units
     for (i = 1; i < sulen; i++) {
       struct tile *rand_tile = find_dispersed_position(pplayer, ptile);
 
       // Create the unit of an appropriate type.
-      if (place_starting_unit(rand_tile, pplayer, NULL,
+      if (place_starting_unit(rand_tile, pplayer, nullptr,
                               game.server.start_units[i])
-          != NULL) {
+          != nullptr) {
         placed_units[player_index(pplayer)]++;
       }
     }
 
     // Place nation specific start units (not role based!)
     i = 0;
-    while (i < MAX_NUM_UNIT_LIST && NULL != nation->init_units[i]) {
+    while (i < MAX_NUM_UNIT_LIST && nullptr != nation->init_units[i]) {
       struct tile *rand_tile = find_dispersed_position(pplayer, ptile);
 
       if (place_starting_unit(rand_tile, pplayer, nation->init_units[i],
                               '\0')
-          != NULL) {
+          != nullptr) {
         placed_units[player_index(pplayer)]++;
       }
       i++;
@@ -896,13 +896,13 @@ void send_year_to_clients()
   lsend_packet_new_year(game.est_connections, &apacket);
 
   // Hmm, clients could add this themselves based on above packet?
-  notify_conn(game.est_connections, NULL, E_NEXT_YEAR, ftc_any,
+  notify_conn(game.est_connections, nullptr, E_NEXT_YEAR, ftc_any,
               _("Year: %s"), calendar_text());
 }
 
 /**
    Send game_info packet; some server options and various stuff...
-   dest == NULL means game.est_connections
+   dest == nullptr means game.est_connections
 
    It may be sent at any time. It MUST be sent before any player info,
    as it contains the number of players.  To avoid inconsistency, it
@@ -951,7 +951,7 @@ void send_game_info(struct conn_list *dest)
 }
 
 /**
-   Send current scenario info. dest NULL causes send to everyone
+   Send current scenario info. dest nullptr causes send to everyone
  */
 void send_scenario_info(struct conn_list *dest)
 {
@@ -967,7 +967,7 @@ void send_scenario_info(struct conn_list *dest)
 }
 
 /**
-   Send description of the current scenario. dest NULL causes send to
+   Send description of the current scenario. dest nullptr causes send to
  everyone
  */
 void send_scenario_description(struct conn_list *dest)
@@ -1007,7 +1007,7 @@ int update_timeout()
     game.server.timeoutint += game.server.timeoutintinc;
 
     if (game.info.timeout > GAME_MAX_TIMEOUT) {
-      notify_conn(game.est_connections, NULL, E_SETTING, ftc_server,
+      notify_conn(game.est_connections, nullptr, E_SETTING, ftc_server,
                   _("The turn timeout has exceeded its maximum value, "
                     "fixing at its maximum."));
       log_debug("game.info.timeout exceeded maximum value");
@@ -1015,7 +1015,7 @@ int update_timeout()
       game.server.timeoutint = 0;
       game.server.timeoutinc = 0;
     } else if (game.info.timeout < 0) {
-      notify_conn(game.est_connections, NULL, E_SETTING, ftc_server,
+      notify_conn(game.est_connections, nullptr, E_SETTING, ftc_server,
                   _("The turn timeout is smaller than zero, "
                     "fixing at zero."));
       log_debug("game.info.timeout less than zero");
@@ -1051,7 +1051,7 @@ void increase_timeout_because_unit_moved()
 
     if (maxsec > game.tinfo.seconds_to_phasedone) {
       game.tinfo.seconds_to_phasedone = maxsec;
-      send_game_info(NULL);
+      send_game_info(nullptr);
     }
   }
 }
@@ -1083,14 +1083,14 @@ static const char *get_challenge_fullname(struct connection *pc)
   auto sdir = freeciv_storage_dir();
   const char *cname;
 
-  if (sdir == NULL) {
-    return NULL;
+  if (sdir == nullptr) {
+    return nullptr;
   }
 
   cname = get_challenge_filename(pc);
 
-  if (cname == NULL) {
-    return NULL;
+  if (cname == nullptr) {
+    return nullptr;
   }
 
   fc_snprintf(fullname, sizeof(fullname), "%s/%s", qUtf8Printable(sdir),
@@ -1151,7 +1151,7 @@ void handle_single_want_hack_req(
     struct connection *pc, const struct packet_single_want_hack_req *packet)
 {
   struct section_file *secfile;
-  const char *token = NULL;
+  const char *token = nullptr;
   bool you_have_hack = false;
 
   if ((secfile = secfile_load(get_challenge_fullname(pc), false))) {
@@ -1174,5 +1174,5 @@ void handle_single_want_hack_req(
   dsend_packet_single_want_hack_reply(pc, you_have_hack);
 
   send_ruleset_choices(pc);
-  send_conn_info(pc->self, NULL);
+  send_conn_info(pc->self, nullptr);
 }

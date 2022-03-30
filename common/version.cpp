@@ -64,7 +64,7 @@ const char *word_version()
 
 /**
    Returns string with git revision information if it is possible to
-   determine. Can return also some fallback string or even NULL.
+   determine. Can return also some fallback string or even nullptr.
  */
 const char *fc_git_revision()
 {
@@ -77,7 +77,7 @@ const char *fc_git_revision()
 
   return buf; // Either revision, or modified revision
 #else         // FC_GITREV_OFF
-  return NULL;
+  return nullptr;
 #endif        // FC_GITREV_OFF
 }
 
@@ -90,14 +90,14 @@ const char *fc_comparable_version() { return VERSION_STRING; }
 
 /**
    Return the BETA message.
-   If returns NULL, not a beta version.
+   If returns nullptr, not a beta version.
  */
 const char *beta_message()
 {
 #if IS_BETA_VERSION
   static char msgbuf[500];
   static const char *month[] = {
-      NULL,          N_("January"),   N_("February"), N_("March"),
+      nullptr,       N_("January"),   N_("February"), N_("March"),
       N_("April"),   N_("May"),       N_("June"),     N_("July"),
       N_("August"),  N_("September"), N_("October"),  N_("November"),
       N_("December")};
@@ -116,7 +116,7 @@ const char *beta_message()
   }
   return msgbuf;
 #else  // IS_BETA_VERSION
-  return NULL;
+  return nullptr;
 #endif // IS_BETA_VERSION
 }
 
@@ -132,7 +132,7 @@ const char *freeciv_datafile_version()
     const char *ver_rev;
 
     ver_rev = fc_git_revision();
-    if (ver_rev != NULL) {
+    if (ver_rev != nullptr) {
       fc_snprintf(buf, sizeof(buf), "%s (%s)", VERSION_STRING, ver_rev);
     } else {
       fc_snprintf(buf, sizeof(buf), "%s", VERSION_STRING);

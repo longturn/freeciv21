@@ -75,9 +75,9 @@ void city_item_delegate::paint(QPainter *painter,
   QString txt;
   QFont font;
   QPalette palette;
-  struct city_report_spec *spec;
-  spec = city_report_specs + index.column();
-  txt = spec->tagname;
+  struct city_report_spec spec;
+  spec = city_report_specs[index.column()];
+  txt = spec.tagname;
   if (txt == QLatin1String("cityname")) {
     font.setCapitalization(QFont::SmallCaps);
     font.setBold(true);
@@ -138,7 +138,7 @@ bool city_item::setData(int column, const QVariant &value, int role)
  */
 QVariant city_item::data(int column, int role) const
 {
-  struct city_report_spec *spec;
+  struct city_report_spec spec;
 
   if (role == Qt::UserRole && column == 0) {
     return QVariant::fromValue((void *) i_city);
@@ -146,8 +146,8 @@ QVariant city_item::data(int column, int role) const
   if (role != Qt::DisplayRole) {
     return QVariant();
   }
-  spec = city_report_specs + column;
-  QString buf = QStringLiteral("%1").arg(spec->func(i_city, spec->data));
+  spec = city_report_specs[column];
+  QString buf = QStringLiteral("%1").arg(spec.func(i_city, spec.data));
   return buf.trimmed();
 }
 
@@ -219,24 +219,23 @@ bool city_model::setData(const QModelIndex &index, const QVariant &value,
 QVariant city_model::headerData(int section, Qt::Orientation orientation,
                                 int role) const
 {
-  struct city_report_spec *spec = city_report_specs + section;
+  const auto &spec = city_report_specs[section];
 
   if (orientation == Qt::Horizontal && section < NUM_CREPORT_COLS) {
     if (role == Qt::DisplayRole) {
-      QString buf =
-          QStringLiteral("%1\n%2").arg(spec->title1 ? spec->title1 : "",
-                                       spec->title2 ? spec->title2 : "");
-      QIcon i = hIcon::i()->get(spec->tagname);
+      QString buf = QStringLiteral("%1\n%2").arg(
+          spec.title1 ? spec.title1 : "", spec.title2 ? spec.title2 : "");
+      QIcon i = hIcon::i()->get(spec.tagname);
       if (!i.isNull()) { // icon exists for that header
         return QString();
       }
       return buf.trimmed();
     }
     if (role == Qt::ToolTipRole) {
-      return QString(spec->explanation);
+      return QString(spec.explanation);
     }
     if (role == Qt::DecorationRole) {
-      QIcon i = hIcon::i()->get(spec->tagname);
+      QIcon i = hIcon::i()->get(spec.tagname);
       if (!i.isNull()) {
         return i;
       }
@@ -250,11 +249,11 @@ QVariant city_model::headerData(int section, Qt::Orientation orientation,
  */
 QVariant city_model::menu_data(int section) const
 {
-  struct city_report_spec *spec;
+  struct city_report_spec spec;
 
   if (section < NUM_CREPORT_COLS) {
-    spec = city_report_specs + section;
-    return QString(spec->explanation);
+    spec = city_report_specs[section];
+    return QString(spec.explanation);
   }
   return QVariant();
 }
@@ -264,11 +263,11 @@ QVariant city_model::menu_data(int section) const
  */
 QVariant city_model::hide_data(int section) const
 {
-  struct city_report_spec *spec;
+  struct city_report_spec spec;
 
   if (section < NUM_CREPORT_COLS) {
-    spec = city_report_specs + section;
-    return spec->show;
+    spec = city_report_specs[section];
+    return spec.show;
   }
   return QVariant();
 }
@@ -412,7 +411,7 @@ void city_widget::city_view()
   }
   pcity = selected_cities[0];
 
-  Q_ASSERT(pcity != NULL);
+  Q_ASSERT(pcity != nullptr);
   if (gui_options.center_when_popup_city) {
     center_tile_mapcanvas(pcity->tile);
   }
@@ -428,7 +427,7 @@ void city_widget::clear_worlist()
   worklist_init(&empty);
 
   for (auto *pcity : qAsConst(selected_cities)) {
-    Q_ASSERT(pcity != NULL);
+    Q_ASSERT(pcity != nullptr);
     city_set_worklist(pcity, &empty);
   }
 }
@@ -439,7 +438,7 @@ void city_widget::clear_worlist()
 void city_widget::buy()
 {
   for (auto *pcity : qAsConst(selected_cities)) {
-    Q_ASSERT(pcity != NULL);
+    Q_ASSERT(pcity != nullptr);
     cityrep_buy(pcity);
   }
 }
@@ -455,7 +454,7 @@ void city_widget::center()
     return;
   }
   pcity = selected_cities[0];
-  Q_ASSERT(pcity != NULL);
+  Q_ASSERT(pcity != nullptr);
   center_tile_mapcanvas(pcity->tile);
   queen()->game_tab_widget->setCurrentIndex(0);
 }
@@ -573,7 +572,7 @@ void city_widget::display_list_menu(const QPoint)
 
     city_list_iterate(client_player()->cities, iter_city)
     {
-      if (NULL != iter_city) {
+      if (nullptr != iter_city) {
         switch (m_state) {
         case SELECT_IMPR:
           if (need_clear) {
@@ -690,7 +689,7 @@ void city_widget::display_list_menu(const QPoint)
           }
           break;
         case CMA:
-          if (NULL != pcity) {
+          if (nullptr != pcity) {
             if (CMA_NONE == id) {
               cma_release_city(pcity);
             } else {
@@ -843,7 +842,8 @@ void city_widget::select_coastal()
       continue;
     }
     pcity = reinterpret_cast<city *>(qvar.value<void *>());
-    if (NULL != pcity && is_terrain_class_near_tile(pcity->tile, TC_OCEAN)) {
+    if (nullptr != pcity
+        && is_terrain_class_near_tile(pcity->tile, TC_OCEAN)) {
       selection.append(QItemSelectionRange(i));
     }
   }
@@ -870,7 +870,7 @@ void city_widget::select_same_island()
     }
     pcity = reinterpret_cast<city *>(qvar.value<void *>());
     for (auto *pscity : qAsConst(selected_cities)) {
-      if (NULL != pcity
+      if (nullptr != pcity
           && (tile_continent(pcity->tile) == tile_continent(pscity->tile))) {
         selection.append(QItemSelectionRange(i));
       }
@@ -905,7 +905,7 @@ void city_widget::select_building_something()
     act = qobject_cast<QAction *>(sender());
     qvar = act->data();
     str = qvar.toString();
-    if (NULL != pcity) {
+    if (nullptr != pcity) {
       if (str == QLatin1String("impr")
           && VUT_IMPROVEMENT == pcity->production.kind
           && !is_wonder(pcity->production.value.building)
@@ -1063,7 +1063,7 @@ void city_widget::gen_production_labels(city_widget::menu_labels what,
   targets_used =
       collect_production_targets(targets, city_data, num_sel, append_units,
                                  append_wonders, true, test_func);
-  name_and_sort_items(targets, targets_used, items, true, NULL);
+  name_and_sort_items(targets, targets_used, items, true, nullptr);
   list.clear();
   for (item = 0; item < targets_used; item++) {
     struct universal target = items[item].item;
@@ -1116,7 +1116,7 @@ void city_widget::display_header_menu(const QPoint)
   hideshow_column->setAttribute(Qt::WA_DeleteOnClose);
   connect(hideshow_column, &QMenu::triggered, this, [=](QAction *act) {
     int col;
-    struct city_report_spec *spec;
+    struct city_report_spec spec;
     if (!act) {
       return;
     }
@@ -1124,8 +1124,8 @@ void city_widget::display_header_menu(const QPoint)
     col = actions.indexOf(act);
     fc_assert_ret(col >= 0);
     setColumnHidden(col, !isColumnHidden(col));
-    spec = city_report_specs + col;
-    spec->show = !spec->show;
+    spec = city_report_specs[col];
+    spec.show = !spec.show;
     if (!isColumnHidden(col) && columnWidth(col) <= 5) {
       setColumnWidth(col, 100);
     }
@@ -1242,9 +1242,8 @@ void city_report::update_city(struct city *pcity)
 /**
    Display the city report dialog.  Optionally raise it.
  */
-void city_report_dialog_popup(bool raise)
+void city_report_dialog_popup()
 {
-  Q_UNUSED(raise)
   int i;
   city_report *cr;
   QWidget *w;

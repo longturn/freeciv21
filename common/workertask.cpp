@@ -26,6 +26,6 @@ received a copy of the GNU General Public License along with Freeciv21.
  */
 void worker_task_init(struct worker_task *ptask)
 {
-  ptask->ptile = NULL;
+  ptask->ptile = nullptr;
   ptask->want = 0;
 }

@@ -88,15 +88,15 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
   char verbuf[2048];
   const char *rev_ver;
 
-  data.nationlist = NULL;
-  data.nationlist_saved = NULL;
+  data.nationlist = nullptr;
+  data.nationlist_saved = nullptr;
 
   auto *central = new QWidget;
   main->setCentralWidget(central);
 
   rev_ver = fc_git_revision();
 
-  if (rev_ver == NULL) {
+  if (rev_ver == nullptr) {
     fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
                 VERSION_STRING);
   } else {
@@ -177,6 +177,9 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
   req_edits = req_edit_list_new();
   this->req_vec_fixers = req_vec_fix_list_new();
   effect_edits = effect_edit_list_new();
+
+  // FIXME Should get rid of the static variable.
+  gui = this;
 }
 
 /**
@@ -206,15 +209,15 @@ void ruledit_gui::launch_now()
   rn_bytes = ruleset_select->text().toUtf8();
   sz_strlcpy(game.server.rulesetdir, rn_bytes.data());
 
-  if (load_rulesets(NULL, NULL, true, conversion_log_cb, false, true,
+  if (load_rulesets(nullptr, nullptr, true, conversion_log_cb, false, true,
                     true)) {
     display_msg(R__("Ruleset loaded"));
 
     // Make freeable copy
-    if (game.server.ruledit.nationlist != NULL) {
+    if (game.server.ruledit.nationlist != nullptr) {
       data.nationlist = fc_strdup(game.server.ruledit.nationlist);
     } else {
-      data.nationlist = NULL;
+      data.nationlist = nullptr;
     }
 
     bldg->refresh();

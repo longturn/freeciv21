@@ -50,7 +50,7 @@ void get_economy_report_data(struct improvement_entry *entries,
   *total_cost = 0;
   *total_income = 0;
 
-  if (NULL == client.conn.playing) {
+  if (nullptr == client.conn.playing) {
     return;
   }
 
@@ -114,7 +114,7 @@ void get_economy_report_units_data(struct unit_entry *entries,
   *num_entries_used = 0;
   *total_cost = 0;
 
-  if (NULL == client.conn.playing) {
+  if (nullptr == client.conn.playing) {
     return;
   }
 

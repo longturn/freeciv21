@@ -169,7 +169,7 @@ void setting_lock_set(struct setting *pset, bool lock);
 #define settings_iterate(_level, _pset)                                     \
   {                                                                         \
     struct setting_list *_setting_list = settings_list_get(_level);         \
-    if (_setting_list != NULL) {                                            \
+    if (_setting_list != nullptr) {                                         \
       setting_list_iterate(_setting_list, _pset)                            \
       {
 

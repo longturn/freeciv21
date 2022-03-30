@@ -33,24 +33,31 @@ QMainWindow {
   background-color: $base-bgcolor;
 }
 
-QPushButton {
+QPushButton, QToolButton {
   color: $red-10;
   border: 1px solid $base-border;
   background-color: $base-bgcolor;
   // font-size: 25px;
   border-radius: 3px;
+}
+
+QPushButton {
   padding: 0.5em;
 }
 
-QPushButton:hover {
+QPushButton:hover, QToolButton:hover {
   background-color: $yellow-01;
 }
 
-QPushButton:pressed {
+QPushButton:pressed, QToolButton:pressed {
   background-color: $yellow-00;
 }
 
-QPushButton:disabled {
+QPushButton:checked, QToolButton:checked {
+  background-color: $yellow-04;
+}
+
+QPushButton:disabled, QToolButton:disabled {
   background-color: $gray-02;
   border-color: $gray-04;
 }
@@ -74,10 +81,6 @@ QPushButton:disabled {
 
 /* color of border only - set the same as background */
 *[messagewindow="true"] {
-  color: $red-10;
-}
-/* color of border only*/
-*[sidebar="true"] {
   color: $red-10;
 }
 
@@ -823,9 +826,7 @@ chat_widget QCheckBox::indicator:checked:hover {
   image: url(LittleFingercheckbox-checked-pressed.png);
 }
 
-top_bar QPushButton {
-  font-family: 'fcicons';
-  border-radius: 25;
+top_bar QToolButton {
   background: $gradient;
 }
 
@@ -853,15 +854,6 @@ hud_input_box QPushButton {
   border: 3px solid $base-border;
   border-radius: 8px;
   padding: 2px;
-}
-
-sidebarWidget {
-  color: $yellow-00;
-  background-color: $base-bgcolor;
-  font-size: 18px;
-  /*selection-background-color: rgb(34, 150, 4);
-  alternate-background-color: rgba(125, 25, 125, 125); */
-  selection-color: rgba(85, 25, 25, 185);
 }
 
 unit_hud_selector {

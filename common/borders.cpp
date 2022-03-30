@@ -117,7 +117,7 @@ bool is_border_source(struct tile *ptile)
     return true;
   }
 
-  if (extra_owner(ptile) != NULL) {
+  if (extra_owner(ptile) != nullptr) {
     extra_type_by_cause_iterate(EC_BASE, pextra)
     {
       struct base_type *pbase = extra_base_get(pextra);

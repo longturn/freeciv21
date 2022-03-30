@@ -83,7 +83,7 @@ static inline int get_compression_level()
   if (-2 == level) {
     const char *s = getenv("FREECIV_COMPRESSION_LEVEL");
 
-    if (NULL == s || !str_to_int(s, &level) || -1 > level || 9 < level) {
+    if (nullptr == s || !str_to_int(s, &level) || -1 > level || 9 < level) {
       level = -1;
     }
   }
@@ -334,7 +334,7 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
 /**
    Read and return a packet from the connection 'pc'. The type of the
    packet is written in 'ptype'. On error, the connection is closed and
-   the function returns NULL.
+   the function returns nullptr.
  */
 void *get_packet_from_connection_raw(struct connection *pc,
                                      enum packet_type *ptype)
@@ -352,13 +352,13 @@ void *get_packet_from_connection_raw(struct connection *pc,
   void *(*receive_handler)(struct connection *);
 
   if (!pc->used) {
-    return NULL; // connection was closed, stop reading
+    return nullptr; // connection was closed, stop reading
   }
 
   if (pc->buffer->ndata
       < data_type_size(data_type(pc->packet_header.length))) {
     // Not got enough for a length field yet
-    return NULL;
+    return nullptr;
   }
 
   dio_input_init(&din, pc->buffer->data, pc->buffer->ndata);
@@ -378,7 +378,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
       log_compress("COMPRESS: got a jumbo packet of size %d",
                    whole_packet_len);
     } else {
-      // to return NULL below
+      // to return nullptr below
       whole_packet_len = 6;
     }
   } else if (len_read >= COMPRESSION_BORDER) {
@@ -390,7 +390,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
   }
 
   if (static_cast<unsigned>(whole_packet_len) > pc->buffer->ndata) {
-    return NULL; // not all data has been read
+    return nullptr; // not all data has been read
   }
 
   if (whole_packet_len < header_size) {
@@ -398,7 +398,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
            "The connection will be closed now.");
     connection_close(pc, _("illegal packet size"));
 
-    return NULL;
+    return nullptr;
   }
 
   if (compressed_packet) {
@@ -429,7 +429,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
                  "The connection will be closed now.");
           connection_close(pc, _("decoding error"));
           free(decompressed);
-          return NULL;
+          return nullptr;
         }
       }
     } while (error != Z_OK);
@@ -478,19 +478,20 @@ void *get_packet_from_connection_raw(struct connection *pc,
     qDebug("The packet stream is corrupt. The connection "
            "will be closed now.");
     connection_close(pc, _("decoding error"));
-    return NULL;
+    return nullptr;
   }
 
   dio_get_type_raw(&din, data_type(pc->packet_header.type), &utype.itype);
   utype.type = packet_type(utype.itype);
 
   if (utype.type >= PACKET_LAST
-      || (receive_handler = pc->phs.handlers->receive[utype.type]) == NULL) {
+      || (receive_handler = pc->phs.handlers->receive[utype.type])
+             == nullptr) {
     qDebug("Received unsupported packet type %d (%s). The connection "
            "will be closed now.",
            utype.type, packet_name(utype.type));
     connection_close(pc, _("unsupported packet type"));
-    return NULL;
+    return nullptr;
   }
 
   log_packet("got packet type=(%s)%d len=%d from %s",
@@ -550,7 +551,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
   data = receive_handler(pc);
   if (!data) {
     connection_close(pc, _("incompatible packet contents"));
-    return NULL;
+    return nullptr;
   } else {
     return data;
   }
@@ -668,7 +669,7 @@ void generic_handle_player_attribute_chunk(
     // wrong attribute data
     if (pplayer->attribute_block_buffer.data) {
       free(pplayer->attribute_block_buffer.data);
-      pplayer->attribute_block_buffer.data = NULL;
+      pplayer->attribute_block_buffer.data = nullptr;
     }
     pplayer->attribute_block_buffer.length = 0;
     qCritical("Received wrong attribute chunk");
@@ -678,7 +679,7 @@ void generic_handle_player_attribute_chunk(
   if (chunk->offset == 0) {
     if (pplayer->attribute_block_buffer.data) {
       free(pplayer->attribute_block_buffer.data);
-      pplayer->attribute_block_buffer.data = NULL;
+      pplayer->attribute_block_buffer.data = nullptr;
     }
     pplayer->attribute_block_buffer.data = fc_malloc(chunk->total_length);
     pplayer->attribute_block_buffer.length = chunk->total_length;
@@ -689,13 +690,13 @@ void generic_handle_player_attribute_chunk(
 
   if (chunk->offset + chunk->chunk_length == chunk->total_length) {
     // Received full attribute block
-    if (pplayer->attribute_block.data != NULL) {
+    if (pplayer->attribute_block.data != nullptr) {
       free(pplayer->attribute_block.data);
     }
     pplayer->attribute_block.data = pplayer->attribute_block_buffer.data;
     pplayer->attribute_block.length = pplayer->attribute_block_buffer.length;
 
-    pplayer->attribute_block_buffer.data = NULL;
+    pplayer->attribute_block_buffer.data = nullptr;
     pplayer->attribute_block_buffer.length = 0;
   }
 }
@@ -821,7 +822,7 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
     packet_handlers_hash->insert(functional_capability, phandlers);
   }
   phandlers = packet_handlers_hash->value(functional_capability);
-  fc_assert(phandlers != NULL);
+  fc_assert(phandlers != nullptr);
   return phandlers;
 }
 
@@ -833,7 +834,7 @@ void packets_deinit() { packet_handlers_free(); }
 
 void packet_strvec_compute(char *str, QVector<QString> *qstrvec)
 {
-  if (NULL != qstrvec) {
+  if (nullptr != qstrvec) {
     qstrvec_to_str(qstrvec, PACKET_STRVEC_SEPARATOR, str);
   } else {
     str[0] = '\0';

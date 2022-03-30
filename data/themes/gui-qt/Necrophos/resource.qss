@@ -57,7 +57,7 @@ QMainWindow {
   color: #000000;
 }
 /* color of border only*/
-*[sidebar="true"] {
+*[top_bar="true"] {
   color: #000000;
 }
 
@@ -96,7 +96,7 @@ qfc_dialog::title {
   background-color: #10691a;
 }
 
-QPushButton {
+QPushButton, QToolButton {
   color: black;
   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f4f4f4 ,stop: 1 #f4f4f4);
   border: 2px solid #a5a5a5;
@@ -104,17 +104,18 @@ QPushButton {
   padding: 2px;
 }
 
-QPushButton:hover {
+QPushButton:hover, QToolButton:hover,
+QPushButton:checked, QToolButton:checked {
   color: black;
   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f5f5f5, stop: 1 #ededed);
   border: 2px solid #0e8706;
 }
 
-QPushButton:disabled {
+QToolButton:disabled, QToolButton:disabled {
   background: #c2c2c2;
 }
 
-QPushButton:default {
+QPushButton:default, QToolButton:default {
   padding: 2px;
 }
 
@@ -777,12 +778,7 @@ hud_input_box {
 }
 
 
-sidebarWidget {
-  color: white;
-  /* Box around current widget */
-  selection-background-color: rgb(34, 150, 4);
-  /* Hover effect */
-  alternate-background-color: rgba(25, 125, 25, 125);
+top_bar_widget {
   /* blink */
   selection-color: rgba(85, 25, 25, 185);
 }

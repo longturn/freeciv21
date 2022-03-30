@@ -24,7 +24,7 @@
 
 #include "height_map.h"
 
-int *height_map = NULL;
+int *height_map = nullptr;
 int hmap_shore_level = 0, hmap_mountain_level = 0;
 
 /**

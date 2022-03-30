@@ -195,7 +195,7 @@ void option_dialog::apply_option(int response)
     break;
   case RESPONSE_SAVE:
     desired_settable_options_update();
-    options_save(NULL);
+    options_save(nullptr);
     break;
   case RESPONSE_RESET:
     full_reset();
@@ -344,7 +344,7 @@ void option_dialog::set_string(struct option *poption, const char *string)
   QComboBox *cb;
   QLineEdit *le;
 
-  if (option_str_values(poption) != NULL) {
+  if (option_str_values(poption) != nullptr) {
     cb = reinterpret_cast<QComboBox *>(option_get_gui_data(poption));
     i = cb->findText(string);
     if (i != -1) {
@@ -364,7 +364,7 @@ QByteArray option_dialog::get_string(struct option *poption)
   QComboBox *cb;
   QLineEdit *le;
 
-  if (option_str_values(poption) != NULL) {
+  if (option_str_values(poption) != nullptr) {
     cb = reinterpret_cast<QComboBox *>(option_get_gui_data(poption));
     return cb->currentText().toUtf8();
   } else {
@@ -449,7 +449,7 @@ struct option *option_dialog::get_color_option()
     }
   }
   options_iterate_end;
-  return NULL;
+  return nullptr;
 }
 
 /**
@@ -465,13 +465,13 @@ void option_dialog::set_color(struct option *poption, struct ft_color color)
 
   w = reinterpret_cast<QPushButton *>(option_get_gui_data(poption));
   but = w->findChild<QPushButton *>(QStringLiteral("text_color"));
-  if (NULL != but && NULL != color.foreground
+  if (nullptr != but && nullptr != color.foreground
       && '\0' != color.foreground[0]) {
     col.setNamedColor(color.foreground);
     but->setStyleSheet(s1 + col.name() + s2);
   }
   but = w->findChild<QPushButton *>(QStringLiteral("text_background"));
-  if (NULL != but && NULL != color.background
+  if (nullptr != but && nullptr != color.background
       && '\0' != color.background[0]) {
     col.setNamedColor(color.background);
     but->setStyleSheet(s1 + col.name() + s2);
@@ -592,7 +592,7 @@ void option_dialog::add_option(struct option *poption)
   unsigned int j;
 
   category_name = option_category_name(poption);
-  widget = NULL;
+  widget = nullptr;
 
   if (!categories.contains(category_name)) {
     twidget = new QWidget();
@@ -630,7 +630,7 @@ void option_dialog::add_option(struct option *poption)
 
   case OT_STRING:
     values = option_str_values(poption);
-    if (NULL != values) {
+    if (nullptr != values) {
       combo = new QComboBox();
       for (const auto &value : *values) {
         combo->addItem(value);
@@ -705,7 +705,7 @@ void option_dialog::add_option(struct option *poption)
     break;
   }
 
-  if (widget != NULL) {
+  if (widget != nullptr) {
     hbox_layout = new QHBoxLayout();
     hbox_layout->setAlignment(Qt::AlignRight);
     label = new QLabel(description);

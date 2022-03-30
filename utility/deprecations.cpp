@@ -15,7 +15,7 @@
 
 Q_LOGGING_CATEGORY(deprecations_category, "freeciv.depr")
 
-static deprecation_warn_callback depr_cb = NULL;
+static deprecation_warn_callback depr_cb = nullptr;
 
 /**
    Set callback to call when deprecation warnings are issued
