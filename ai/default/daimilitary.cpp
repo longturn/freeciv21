@@ -1233,7 +1233,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
   struct adv_choice *best_choice;
   struct ai_city *city_data = def_ai_city_data(pcity, ait);
   struct ai_city *acity_data;
-  auto path = Pf_path();
+  auto path = PFPath();
 
   fc_assert_ret_val(is_military_unit(myunit)
                         && !utype_fuel(unit_type_get(myunit)),

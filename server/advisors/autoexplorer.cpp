@@ -127,7 +127,7 @@ static bool explorer_goto(struct unit *punit, struct tile *ptile)
   struct adv_risk_cost risk_cost;
   bool alive = true;
   struct pf_map *pfm;
-  Pf_path path;
+  PFPath path;
   struct player *pplayer = unit_owner(punit);
 
   pft_fill_unit_parameter(&parameter, punit);

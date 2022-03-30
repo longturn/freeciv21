@@ -495,7 +495,7 @@ bool is_boss_of_boat(struct ai_type *ait, struct unit *punit)
    combined_land_sea_move), the path won't lead onto the boat itself.
  */
 int aiferry_find_boat(struct ai_type *ait, struct unit *punit, int cap,
-                      Pf_path *path)
+                      PFPath *path)
 {
   int best_turns = FC_INFINITY;
   int best_id = 0;
@@ -565,7 +565,7 @@ int aiferry_find_boat(struct ai_type *ait, struct unit *punit, int cap,
                      "Found a potential boat %s[%d](%d,%d)(moves left: %d)",
                      unit_rule_name(aunit), aunit->id,
                      TILE_XY(unit_tile(aunit)), aunit->moves_left);
-              *path = pf_map_iter_path(search_map);
+            *path = pf_map_iter_path(search_map);
             best_turns = turns;
             best_id = aunit->id;
           }
@@ -777,7 +777,7 @@ bool aiferry_gobyboat(struct ai_type *ait, struct player *pplayer,
              TILE_XY(dest_tile));
 
     if (!is_terrain_class_near_tile(unit_tile(punit), TC_OCEAN)) {
-      Pf_path path_to_ferry;
+      PFPath path_to_ferry;
 
       boatid = aiferry_find_boat(ait, punit, cap, &path_to_ferry);
       if (boatid <= 0) {

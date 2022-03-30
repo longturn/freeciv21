@@ -87,7 +87,7 @@
 #define LOG_CARAVAN2 LOG_DEBUG
 #define LOG_CARAVAN3 LOG_DEBUG
 
-class Pf_path;
+class PFPath;
 
 static bool dai_find_boat_for_unit(struct ai_type *ait, struct unit *punit);
 static bool dai_caravan_can_trade_cities_diff_cont(struct player *pplayer,
@@ -523,11 +523,11 @@ static int dai_rampage_want(struct unit *punit, struct tile *ptile)
 /**
    Look for worthy targets within a one-turn horizon.
  */
-static Pf_path find_rampage_target(struct unit *punit, int thresh_adj,
-                                   int thresh_move)
+static PFPath find_rampage_target(struct unit *punit, int thresh_adj,
+                                  int thresh_move)
 {
   struct pf_map *tgt_map;
-  Pf_path path;
+  PFPath path;
   struct pf_parameter parameter;
   // Coordinates of the best target (initialize to silence compiler)
   struct tile *ptile = unit_tile(punit);
@@ -607,7 +607,7 @@ bool dai_military_rampage(struct unit *punit, int thresh_adj,
                           int thresh_move)
 {
   int count = punit->moves_left + 1; // break any infinite loops
-  Pf_path path;
+  PFPath path;
 
   TIMING_LOG(AIT_RAMPAGE, TIMER_START);
   CHECK_UNIT(punit);
@@ -1129,7 +1129,7 @@ bool find_beachhead(const struct player *pplayer, struct pf_map *ferry_map,
  */
 int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
                            struct unit *punit, struct tile **pdest_tile,
-                           Pf_path *ppath, struct pf_map **pferrymap,
+                           PFPath *ppath, struct pf_map **pferrymap,
                            struct unit **pferryboat,
                            const struct unit_type **pboattype,
                            int *pmove_time)
@@ -1184,7 +1184,7 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
     *pmove_time = 0;
   }
   if (!ppath->empty()) {
-    *ppath = Pf_path();
+    *ppath = PFPath();
   }
 
   if (0 == attack_value) {
@@ -1295,7 +1295,7 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
 
     if (nullptr == ferryboat) {
       // Try to find new boat
-      auto path = Pf_path();
+      auto path = PFPath();
       ferryboat = player_unit_by_number(
           pplayer, aiferry_find_boat(ait, punit, 1, &path));
     }
@@ -1607,7 +1607,7 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
   if (!ppath->empty()) {
     *ppath = (nullptr != goto_dest_tile && goto_dest_tile != punit_tile
                   ? pf_map_path(punit_map, goto_dest_tile)
-                  : Pf_path());
+                  : PFPath());
   }
 
   pf_map_destroy(punit_map);
@@ -1782,7 +1782,7 @@ static void dai_military_attack(struct ai_type *ait, struct player *pplayer,
   // Main attack loop
   do {
     struct tile *start_tile = unit_tile(punit);
-    Pf_path path;
+    PFPath path;
     struct unit *ferryboat;
 
     // Then find enemies the hard way
@@ -1897,7 +1897,7 @@ static bool dai_find_boat_for_unit(struct ai_type *ait, struct unit *punit)
 {
   bool alive = true;
   int ferryboat = 0;
-  Pf_path path_to_ferry;
+  PFPath path_to_ferry;
 
   UNIT_LOG(LOG_CARAVAN, punit, "requesting a boat!");
   ferryboat = aiferry_find_boat(ait, punit, 1, &path_to_ferry);

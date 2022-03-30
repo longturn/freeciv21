@@ -48,7 +48,7 @@
 
 #include "aiair.h"
 
-class Pf_path;
+class PFPath;
 /**
    Looks for nearest airbase for punit reachable imediatly.
    Returns nullptr if not found.  The path is stored in the path
@@ -57,7 +57,7 @@ class Pf_path;
          IMO should be less restrictive than general H_MAP, H_FOG
  */
 static struct tile *find_nearest_airbase(const struct unit *punit,
-                                         Pf_path *path)
+                                         PFPath *path)
 {
   struct player *pplayer = unit_owner(punit);
   struct pf_parameter parameter;
@@ -75,7 +75,7 @@ static struct tile *find_nearest_airbase(const struct unit *punit,
     }
 
     if (is_airunit_refuel_point(ptile, pplayer, punit)) {
-        *path = pf_map_path(pfm, ptile);
+      *path = pf_map_path(pfm, ptile);
       pf_map_destroy(pfm);
       return ptile;
     }
@@ -201,7 +201,7 @@ static int dai_evaluate_tile_for_air_attack(struct unit *punit,
          IMO should be more restrictive than general H_MAP, H_FOG
  */
 static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
-                                  Pf_path *path, struct tile **pptile)
+                                  PFPath *path, struct tile **pptile)
 {
   struct player *pplayer = unit_owner(punit);
   struct pf_parameter parameter;
@@ -252,7 +252,7 @@ static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
     *pptile = best_tile;
   }
   if (path) {
-    *path = best_tile ? pf_map_path(pfm, best_tile) : Pf_path();
+    *path = best_tile ? pf_map_path(pfm, best_tile) : PFPath();
   }
   pf_map_destroy(pfm);
   return best;
@@ -265,7 +265,7 @@ static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
  */
 static struct tile *dai_find_strategic_airbase(struct ai_type *ait,
                                                const struct unit *punit,
-                                               Pf_path *path)
+                                               PFPath *path)
 {
   struct player *pplayer = unit_owner(punit);
   struct pf_parameter parameter;
@@ -317,7 +317,7 @@ static struct tile *dai_find_strategic_airbase(struct ai_type *ait,
 
   if (path) {
     // Stores the path.
-    *path = best_tile ? pf_map_path(pfm, best_tile) : Pf_path();
+    *path = best_tile ? pf_map_path(pfm, best_tile) : PFPath();
   }
   pf_map_destroy(pfm);
 
@@ -346,7 +346,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
   int id = punit->id;
   struct pf_parameter parameter;
   struct pf_map *pfm;
-  Pf_path path;
+  PFPath path;
   CHECK_UNIT(punit);
   pft_fill_unit_parameter(&parameter, punit);
 

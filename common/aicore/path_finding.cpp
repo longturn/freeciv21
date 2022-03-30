@@ -85,7 +85,7 @@ struct pf_map {
   // "Virtual" function table.
   void (*destroy)(struct pf_map *pfm); // Destructor.
   int (*get_move_cost)(struct pf_map *pfm, struct tile *ptile);
-  Pf_path (*get_path)(struct pf_map *pfm, struct tile *ptile);
+  PFPath (*get_path)(struct pf_map *pfm, struct tile *ptile);
   bool (*get_position)(struct pf_map *pfm, struct tile *ptile,
                        struct pf_position *pos);
   bool (*iterate)(struct pf_map *pfm);
@@ -396,8 +396,8 @@ static void pf_normal_map_fill_position(const struct pf_normal_map *pfnm,
    Read off the path to the node dest_tile, which must already be discovered.
    A helper for pf_normal_map_path functions.
  */
-static Pf_path pf_normal_map_construct_path(const struct pf_normal_map *pfnm,
-                                            struct tile *dest_tile)
+static PFPath pf_normal_map_construct_path(const struct pf_normal_map *pfnm,
+                                           struct tile *dest_tile)
 {
   struct pf_normal_node *node = pfnm->lattice + tile_index(dest_tile);
   const struct pf_parameter *params = pf_map_parameter(PF_MAP(pfnm));
@@ -406,7 +406,7 @@ static Pf_path pf_normal_map_construct_path(const struct pf_normal_map *pfnm,
   int i;
 
 #ifdef PF_DEBUG
-  fc_assert_ret_val_msg(NS_PROCESSED == node->status, Pf_path(),
+  fc_assert_ret_val_msg(NS_PROCESSED == node->status, PFPath(),
                         "Unreached destination (%d, %d).",
                         TILE_XY(dest_tile));
 #endif // PF_DEBUG
@@ -425,7 +425,7 @@ static Pf_path pf_normal_map_construct_path(const struct pf_normal_map *pfnm,
   }
 
   // 2: Allocate the memory
-  Pf_path path(i + 1);
+  PFPath path(i + 1);
 
   // 3: Backtrack again and fill the positions this time
   ptile = dest_tile;
@@ -766,16 +766,16 @@ static int pf_normal_map_move_cost(struct pf_map *pfm, struct tile *ptile)
    Return the path to ptile. If ptile has not been reached yet, iterate the
    map until we reach it or run out of map.
  */
-static Pf_path pf_normal_map_path(struct pf_map *pfm, struct tile *ptile)
+static PFPath pf_normal_map_path(struct pf_map *pfm, struct tile *ptile)
 {
   struct pf_normal_map *pfnm = PF_NORMAL_MAP(pfm);
 
   if (ptile == pfm->params.start_tile) {
-    return Pf_path(pf_map_parameter(pfm));
+    return PFPath(pf_map_parameter(pfm));
   } else if (pf_normal_map_iterate_until(pfnm, ptile)) {
     return pf_normal_map_construct_path(pfnm, ptile);
   } else {
-    return Pf_path();
+    return PFPath();
   }
 }
 
@@ -1132,8 +1132,8 @@ pf_danger_map_fill_cost_for_full_moves(const struct pf_parameter *param,
    Read off the path to the node 'ptile', but with dangers.
    NB: will only find paths to safe tiles!
  */
-static Pf_path pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
-                                            struct tile *ptile)
+static PFPath pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
+                                           struct tile *ptile)
 {
   enum direction8 dir_next = direction8_invalid();
   struct pf_danger_node::pf_danger_pos *danger_seg = nullptr;
@@ -1147,7 +1147,7 @@ static Pf_path pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
 #ifdef PF_DEBUG
   fc_assert_ret_val_msg(NS_PROCESSED == node->status
                             || NS_WAITING == node->status,
-                        Pf_path(), // Return empty path
+                        PFPath(), // Return empty path
                         "Unreached destination (%d, %d).", TILE_XY(ptile));
 #endif // PF_DEBUG
 
@@ -1179,7 +1179,7 @@ static Pf_path pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
   }
 
   // Allocate memory for path.
-  auto path = Pf_path(length);
+  auto path = PFPath(length);
 
   // Reset variables for main iteration.
   iter_tile = ptile;
@@ -1223,7 +1223,7 @@ static Pf_path pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
       path[i].total_EC = node->extra_cost;
     } else {
       // When on dangerous tiles, must have a valid danger segment.
-      fc_assert_ret_val(danger_seg != nullptr, Pf_path());
+      fc_assert_ret_val(danger_seg != nullptr, PFPath());
       path[i].total_MC = danger_seg->cost;
       path[i].total_EC = danger_seg->extra_cost;
     }
@@ -1244,7 +1244,7 @@ static Pf_path pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
     // 3: Check if we finished.
     if (i == 0) {
       // We should be back at the start now!
-      fc_assert_ret_val(iter_tile == params->start_tile, Pf_path());
+      fc_assert_ret_val(iter_tile == params->start_tile, PFPath());
       return path;
     }
 
@@ -1269,7 +1269,7 @@ static Pf_path pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
   }
 
   fc_assert_msg(false, "Cannot get to the starting point!");
-  return Pf_path();
+  return PFPath();
 }
 
 /**
@@ -1718,16 +1718,16 @@ static int pf_danger_map_move_cost(struct pf_map *pfm, struct tile *ptile)
    Return the path to ptile. If ptile has not been reached yet, iterate the
    map until we reach it or run out of map.
  */
-static Pf_path pf_danger_map_path(struct pf_map *pfm, struct tile *ptile)
+static PFPath pf_danger_map_path(struct pf_map *pfm, struct tile *ptile)
 {
   struct pf_danger_map *pfdm = PF_DANGER_MAP(pfm);
 
   if (ptile == pfm->params.start_tile) {
-    return Pf_path(pf_map_parameter(pfm));
+    return PFPath(pf_map_parameter(pfm));
   } else if (pf_danger_map_iterate_until(pfdm, ptile)) {
     return pf_danger_map_construct_path(pfdm, ptile);
   } else {
-    return Pf_path();
+    return PFPath();
   }
 }
 
@@ -2230,8 +2230,8 @@ pf_fuel_map_fill_cost_for_full_moves(const struct pf_parameter *param,
 /**
    Read off the path to the node 'ptile', but with fuel danger.
  */
-static Pf_path pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
-                                          struct tile *ptile)
+static PFPath pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
+                                         struct tile *ptile)
 {
   enum direction8 dir_next = direction8_invalid();
   struct pf_fuel_node *node = pffm->lattice + tile_index(ptile);
@@ -2242,7 +2242,7 @@ static Pf_path pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
   int i;
 
 #ifdef PF_DEBUG
-  fc_assert_ret_val_msg(nullptr != segment, Pf_path(),
+  fc_assert_ret_val_msg(nullptr != segment, PFPath(),
                         "Unreached destination (%d, %d).", TILE_XY(ptile));
 #endif // PF_DEBUG
 
@@ -2277,7 +2277,7 @@ static Pf_path pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
   }
 
   // Allocate memory for path.
-  auto path = Pf_path(length);
+  auto path = PFPath(length);
 
   // Reset variables for main iteration.
   iter_tile = ptile;
@@ -2325,7 +2325,7 @@ static Pf_path pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
     // 3: Check if we finished.
     if (i == 0) {
       // We should be back at the start now!
-      fc_assert_ret_val(iter_tile == params->start_tile, Pf_path());
+      fc_assert_ret_val(iter_tile == params->start_tile, PFPath());
       return path;
     }
 
@@ -2342,7 +2342,7 @@ static Pf_path pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
   }
 
   fc_assert_msg(false, "Cannot get to the starting point!");
-  return Pf_path();
+  return PFPath();
 }
 
 /**
@@ -2884,16 +2884,16 @@ static int pf_fuel_map_move_cost(struct pf_map *pfm, struct tile *ptile)
    Return the path to ptile. If 'ptile' has not been reached yet, iterate
    the map until we reach it or run out of map.
  */
-static Pf_path pf_fuel_map_path(struct pf_map *pfm, struct tile *ptile)
+static PFPath pf_fuel_map_path(struct pf_map *pfm, struct tile *ptile)
 {
   struct pf_fuel_map *pffm = PF_FUEL_MAP(pfm);
 
   if (ptile == pfm->params.start_tile) {
-    return Pf_path(pf_map_parameter(pfm));
+    return PFPath(pf_map_parameter(pfm));
   } else if (pf_fuel_map_iterate_until(pffm, ptile)) {
     return pf_fuel_map_construct_path(pffm, ptile);
   } else {
-    return Pf_path();
+    return PFPath();
   }
 }
 
@@ -3065,17 +3065,17 @@ int pf_map_move_cost(struct pf_map *pfm, struct tile *ptile)
 }
 
 /**
- * CHECK DOCS AFTER FULL CONVERSTION OF pf_path to class Pf_path
+ * CHECK DOCS AFTER FULL CONVERSTION OF pf_path to class PFPath
    Tries to find the best path in the given map to the position ptile.
    If empty path is returned no path could be found. The pf_path[-1]
    of such path would be the same (almost) as the result of the call to
    pf_map_position(). If ptile has not been reached yet, iterate the map
    until we reach it or run out of map.
  */
-Pf_path pf_map_path(struct pf_map *pfm, struct tile *ptile)
+PFPath pf_map_path(struct pf_map *pfm, struct tile *ptile)
 {
 #ifdef PF_DEBUG
-  Pf_path path;
+  PFPath path;
 
   fc_assert_ret_val(nullptr != pfm, path);
   fc_assert_ret_val(nullptr != ptile, path);
@@ -3172,11 +3172,11 @@ int pf_map_iter_move_cost(struct pf_map *pfm)
    Return the path to our current position.This is equivalent to
    pf_map_path(pfm, pf_map_iter(pfm)).
  */
-Pf_path pf_map_iter_path(struct pf_map *pfm)
+PFPath pf_map_iter_path(struct pf_map *pfm)
 {
 #ifdef PF_DEBUG
-  fc_assert_ret_val(nullptr != pfm, Pf_path());
-  fc_assert_ret_val(nullptr != pfm->tile, Pf_path());
+  fc_assert_ret_val(nullptr != pfm, PFPath());
+  fc_assert_ret_val(nullptr != pfm->tile, PFPath());
 #endif
   return pfm->get_path(pfm, pfm->tile);
 }
@@ -3208,7 +3208,7 @@ const struct pf_parameter *pf_map_parameter(const struct pf_map *pfm)
   return &pfm->params;
 }
 
-// ====================== Pf_path public functions =======================
+// ====================== PFPath public functions =======================
 
 /**
    Fill the position for the start tile of a parameter.
@@ -3230,31 +3230,31 @@ static void pf_position_fill_start_tile(struct pf_position *pos,
  * MEMBER FUNCTIONS FOR THE CLASS Pf_Class
  */
 // Constructors
-Pf_path::Pf_path() {}
+PFPath::PFPath() {}
 // Constructor to just initialize with size
-Pf_path::Pf_path(int size) { positions = std::vector<pf_position>(size); }
+PFPath::PFPath(int size) { positions = std::vector<pf_position>(size); }
 // Copy Constructor
-Pf_path::Pf_path(const Pf_path &obj)
+PFPath::PFPath(const PFPath &obj)
 {
   positions = std::vector<pf_position>(obj.positions);
 }
 /**
    Create a path with start tile of a parameter.
  */
-Pf_path::Pf_path(const struct pf_parameter *param)
+PFPath::PFPath(const struct pf_parameter *param)
 {
   positions = std::vector<pf_position>(1);
   pf_position_fill_start_tile(&positions[0], param);
 }
 
 // Destructor
-Pf_path::~Pf_path() { positions.clear(); }
+PFPath::~PFPath() { positions.clear(); }
 // Check if path is empty
-bool Pf_path::empty() const { return positions.empty(); }
+bool PFPath::empty() const { return positions.empty(); }
 // Return Length of path
-int Pf_path::length() const { return positions.size(); }
+int PFPath::length() const { return positions.size(); }
 // Add position to end of path
-void Pf_path::add_pos(pf_position pos) { positions.push_back(pos); }
+void PFPath::add_pos(pf_position pos) { positions.push_back(pos); }
 /**
    Remove the part of a path leading up to a given tile.
    If given tile is on the path more than once then the first occurrence
@@ -3262,7 +3262,7 @@ void Pf_path::add_pos(pf_position pos) { positions.push_back(pos); }
    If tile is not on the path at all, returns FALSE and path is not changed
    at all.
  */
-bool Pf_path::pf_path_advance(struct tile *ptile)
+bool PFPath::pf_path_advance(struct tile *ptile)
 {
   int i;
   int length = positions.size();
@@ -3288,7 +3288,7 @@ bool Pf_path::pf_path_advance(struct tile *ptile)
    If tile is not on the path at all, returns FALSE and path is not changed
    at all.
  */
-bool Pf_path::pf_path_backtrack(struct tile *ptile)
+bool PFPath::pf_path_backtrack(struct tile *ptile)
 {
   int i;
   fc_assert_ret_val(positions.size() > 0, false);
@@ -3315,7 +3315,7 @@ bool Pf_path::pf_path_backtrack(struct tile *ptile)
 
   return true;
 }
-pf_position &Pf_path::operator[](int i)
+pf_position &PFPath::operator[](int i)
 {
   if (i < 0) {
     fc_assert_msg((-i <= positions.size()), "id %d/%zu", i,
@@ -3326,7 +3326,7 @@ pf_position &Pf_path::operator[](int i)
   return positions[i];
 }
 
-const pf_position &Pf_path::operator[](int i) const
+const pf_position &PFPath::operator[](int i) const
 {
   if (i < 0) {
     fc_assert_msg((-i <= positions.size()), "id %d/%zu", i,
@@ -3343,12 +3343,12 @@ const pf_position &Pf_path::operator[](int i) const
 
    If 'dest_path' == nullptr, we just copy the src_path and nothing else.
  */
-Pf_path pf_path_concat(Pf_path dest_path, const Pf_path src_path)
+PFPath pf_path_concat(PFPath dest_path, const PFPath src_path)
 {
-  fc_assert_ret_val(src_path.empty(), Pf_path());
+  fc_assert_ret_val(src_path.empty(), PFPath());
   if (dest_path.empty()) {
     // Just copy path.
-    dest_path = Pf_path(src_path);
+    dest_path = PFPath(src_path);
     return dest_path;
   }
 
@@ -3380,7 +3380,7 @@ Pf_path pf_path_concat(Pf_path dest_path, const Pf_path src_path)
 /**
    Debug a path.
  */
-QDebug &operator<<(QDebug &logger, const Pf_path &path)
+QDebug &operator<<(QDebug &logger, const PFPath &path)
 {
   struct pf_position pos;
   int i;
