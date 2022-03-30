@@ -1089,7 +1089,7 @@ BUILD_CITY:
     if (pcity == nullptr) {
       best_impr = settler_evaluate_improvements(
           punit, &best_act, &best_target, &best_tile, &path, state);
-      if (path.empty()) {
+      if (!path.empty()) {
         completion_time = path[-1].turn;
       }
     }
