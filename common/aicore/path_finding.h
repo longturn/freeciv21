@@ -331,7 +331,7 @@ public:
   bool pf_path_advance(struct tile *ptile);
   bool pf_path_backtrack(struct tile *ptile);
   pf_position &operator[](int i);
-  pf_position operator[](int i) const;
+  const pf_position &operator[](int i) const;
 };
 // Paths functions.
 void pf_path_destroy(Pf_path *path);
