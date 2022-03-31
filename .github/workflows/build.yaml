@@ -104,7 +104,7 @@ jobs:
       - name: Configure
         run: |
           cmake . -B build -G Ninja \
-           -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+           -DCMAKE_INSTALL_PREFIX=$PWD/build/install \
            -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: |
