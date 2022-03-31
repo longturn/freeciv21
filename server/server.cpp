@@ -36,7 +36,7 @@
 #include <QtCore/QSocketNotifier>
 #include <unistd.h>
 #endif
-#include <stdio.h>
+#include <cstdio>
 
 // Readline
 #include <readline/history.h>
