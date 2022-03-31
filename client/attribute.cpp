@@ -40,7 +40,7 @@ enum attribute_serial {
 
 class attr_key {
 public:
-  attr_key(){};
+  attr_key() = default;
   attr_key(int, int, int, int);
   int key{0}, id{0}, x{0}, y{0};
 };

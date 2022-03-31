@@ -200,7 +200,7 @@ static bool save_tech_list(struct section_file *sfile, int *input,
   int i;
 
   set_count = 0;
-  for (i = 0; input[i] != A_LAST && i < MAX_NUM_TECH_LIST; i++) {
+  for (i = 0; i < MAX_NUM_TECH_LIST && input[i] != A_LAST; i++) {
     tech_names[set_count++] = advance_rule_name(advance_by_number(input[i]));
   }
 
@@ -271,7 +271,7 @@ static bool save_building_list(struct section_file *sfile, int *input,
   int i;
 
   set_count = 0;
-  for (i = 0; input[i] != B_LAST && i < MAX_NUM_BUILDING_LIST; i++) {
+  for (i = 0; i < MAX_NUM_BUILDING_LIST && input[i] != B_LAST; i++) {
     building_names[set_count++] =
         improvement_rule_name(improvement_by_number(input[i]));
   }
@@ -297,7 +297,7 @@ static bool save_unit_list(struct section_file *sfile,
   int i;
 
   set_count = 0;
-  for (i = 0; input[i] != nullptr && i < MAX_NUM_UNIT_LIST; i++) {
+  for (i = 0; i < MAX_NUM_UNIT_LIST && input[i] != nullptr; i++) {
     unit_names[set_count++] = utype_rule_name(input[i]);
   }
 

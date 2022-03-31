@@ -35,3 +35,5 @@ if(NOT TARGET ToLuaProgram::tolua)
     target_link_options(tolua_program PRIVATE "SHELL:-s NODERAWFS=1")
   endif()
 endif()
+
+add_compile_definitions(LUA_LIB)

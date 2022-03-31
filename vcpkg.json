@@ -5,9 +5,16 @@
       "qt5-base",
       "qt5-svg",
       "lua",
-      "gettext",
+      {
+        "name": "gettext",
+        "features": ["tools"]
+      },
       "kf5archive",
       "sdl2-mixer",
-      "sqlite3"
+      "sqlite3",
+      {
+        "name": "readline",
+        "platform": "windows"
+      }
     ]
   }

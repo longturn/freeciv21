@@ -327,7 +327,7 @@ static void city_sum_add_real(struct city_sum *sum, double value,
   // likely to lead to quadratic behaviour, but who cares:
   for (i = 0; i < sum->n; i++) {
     if (sum->sums[i].posdesc == posdesc && sum->sums[i].negdesc == negdesc
-        && (sum->sums[i].auxfmt == auxfmt || sum->sums[i].auxfmt == auxfmt)
+        && sum->sums[i].auxfmt == auxfmt
         && sum->sums[i].suppress_if_zero == suppress_if_zero) {
       // Looks like we already have an entry like this. Accumulate values.
       sum->sums[i].value += value;

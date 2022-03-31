@@ -569,10 +569,11 @@ static bool is_req_knowable(
   }
 
   if (req->source.kind == VUT_TERRAIN || req->source.kind == VUT_TERRFLAG
+      || req->source.kind == VUT_TERRAINALTER
       || req->source.kind == VUT_TERRAINCLASS
       || req->source.kind == VUT_EXTRA || req->source.kind == VUT_EXTRAFLAG
       || req->source.kind == VUT_BASEFLAG
-      || req->source.kind == VUT_BASEFLAG) {
+      || req->source.kind == VUT_ROADFLAG) {
     if (target_tile == nullptr) {
       /* The tile may exist but not be passed when the problem type is
        * RPT_POSSIBLE. */

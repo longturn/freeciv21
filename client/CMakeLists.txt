@@ -100,6 +100,8 @@ target_link_libraries(client PUBLIC client_gen)
 target_link_libraries(client PUBLIC cvercmp)
 target_link_libraries(client PUBLIC luascript)
 
+add_compile_definitions(NOMINMAX)
+
 if(FREECIV_ENABLE_CLIENT)
   add_subdirectory(gui-qt)
   add_executable(freeciv21-client ${GUI_TYPE} packhand.cpp) # packhand.c depends on gui-qt

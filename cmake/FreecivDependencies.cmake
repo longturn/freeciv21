@@ -93,14 +93,17 @@ find_package(Lua 5.3 REQUIRED)
 
 # Create an imported target since it's not created by CMake :(
 # Get a library name for IMPORTED_LOCATION
-if (NOT EMSCRIPTEN AND NOT APPLE)
-  add_library(lua UNKNOWN IMPORTED GLOBAL)
-  list(GET LUA_LIBRARIES 0 loc)
-  set_target_properties(lua PROPERTIES
-    IMPORTED_LOCATION "${loc}"
-    INTERFACE_INCLUDE_DIRECTORIES "${LUA_INCLUDE_DIR}")
-  # Link to all libs, not just the first
-  target_link_libraries(lua INTERFACE "${LUA_LIBRARIES}")
+
+if(NOT TARGET lua)
+    if (NOT EMSCRIPTEN AND NOT APPLE)
+      add_library(lua UNKNOWN IMPORTED GLOBAL)
+      list(GET LUA_LIBRARIES 0 loc)
+      set_target_properties(lua PROPERTIES
+        IMPORTED_LOCATION "${loc}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LUA_INCLUDE_DIR}")
+      # Link to all libs, not just the first
+      target_link_libraries(lua INTERFACE "${LUA_LIBRARIES}")
+    endif()
 endif()
 
 if (CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR)
