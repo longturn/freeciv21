@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         compiler: [gcc, clang]
-        build_type: ["", Debug, RelWithDebInfo]
+        build_type: ["", Release, Debug, RelWithDebInfo]
         exclude:
           - compiler: clang
             build_type: RelWithDebInfo
@@ -67,7 +67,7 @@ jobs:
         if: |
           startsWith(github.ref, 'refs/tags/')
             && matrix.compiler == 'gcc'
-            && matrix.build_type == ''
+            && matrix.build_type == 'Release'
         with:
           files: |
             build/Linux-x86_64/freeciv21_*_amd64.deb
@@ -103,7 +103,9 @@ jobs:
             mingw-w64-x86_64-karchive-qt5
       - name: Configure
         run: |
-          cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+          cmake . -B build -G Ninja \
+           -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+           -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: |
           cmake --build build
