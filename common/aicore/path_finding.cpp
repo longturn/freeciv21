@@ -3343,7 +3343,7 @@ const pf_position &PFPath::operator[](int i) const
 
    If 'dest_path' == nullptr, we just copy the src_path and nothing else.
  */
-PFPath pf_path_concat(PFPath dest_path, const PFPath src_path)
+PFPath pf_path_concat(PFPath dest_path, const PFPath &src_path)
 {
   fc_assert_ret_val(src_path.empty(), PFPath());
   if (dest_path.empty()) {

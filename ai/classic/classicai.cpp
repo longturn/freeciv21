@@ -350,7 +350,7 @@ static void cai_unit_turn_end(struct unit *punit)
    Call default ai with classic ai type as parameter.
  */
 static void cai_unit_move_or_attack(struct unit *punit, struct tile *ptile,
-                                    PFPath path, int step)
+                                    const PFPath &path, int step)
 {
   struct ai_type *deftype = classic_ai_get_self();
 

@@ -36,7 +36,7 @@ int military_amortize(struct player *pplayer, struct city *pcity, int value,
 int stack_cost(struct unit *pattacker, struct unit *pdefender);
 
 void dai_unit_move_or_attack(ai_type *ait, unit *punit, tile *ptile,
-                             PFPath path, int step);
+                             const PFPath &path, int step);
 
 void dai_fill_unit_param(struct ai_type *ait, struct pf_parameter *parameter,
                          struct adv_risk_cost *risk_cost, struct unit *punit,
@@ -45,7 +45,7 @@ bool dai_gothere(struct ai_type *ait, struct player *pplayer,
                  struct unit *punit, struct tile *dst_tile);
 struct tile *immediate_destination(struct unit *punit,
                                    struct tile *dest_tile);
-void dai_log_path(struct unit *punit, PFPath path,
+void dai_log_path(struct unit *punit, const PFPath &path,
                   struct pf_parameter *parameter);
 bool dai_unit_goto_constrained(struct ai_type *ait, struct unit *punit,
                                struct tile *ptile,
