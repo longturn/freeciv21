@@ -335,9 +335,7 @@ public:
 };
 // Paths functions.
 void pf_path_destroy(PFPath *path);
-PFPath pf_path_concat(PFPath *dest_path, const PFPath *src_path);
-bool pf_path_backtrack(PFPath *path, struct tile *ptile);
-
+PFPath pf_path_concat(PFPath *dest_path, const PFPath &src_path);
 QDebug &operator<<(QDebug &logger, const PFPath &path);
 
 /* Initial data for the path-finding. Normally should use functions
