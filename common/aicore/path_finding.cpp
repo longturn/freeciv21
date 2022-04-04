@@ -3232,18 +3232,18 @@ static void pf_position_fill_start_tile(struct pf_position *pos,
 // Constructors
 PFPath::PFPath() {}
 // Constructor to just initialize with size
-PFPath::PFPath(int size) { positions = std::vector<pf_position>(size); }
+PFPath::PFPath(int size) : positions(std::vector<pf_position>(size)) {}
 // Copy Constructor
 PFPath::PFPath(const PFPath &obj)
+    : positions(std::vector<pf_position>(obj.positions))
 {
-  positions = std::vector<pf_position>(obj.positions);
 }
 /**
    Create a path with start tile of a parameter.
  */
 PFPath::PFPath(const struct pf_parameter *param)
+    : positions(std::vector<pf_position>(1))
 {
-  positions = std::vector<pf_position>(1);
   pf_position_fill_start_tile(&positions[0], param);
 }
 
