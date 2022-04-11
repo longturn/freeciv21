@@ -472,8 +472,7 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
     break;
   case VUT_VISIONLAYER:
     for (i = 0; i < V_COUNT; i++) {
-      cb(vision_layer_name(vision_layer(i)),
-         univ->value.vlayer == i, data);
+      cb(vision_layer_name(vision_layer(i)), univ->value.vlayer == i, data);
     }
     break;
   case VUT_MINSIZE:

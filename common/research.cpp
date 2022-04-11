@@ -328,16 +328,14 @@ static bool reqs_may_activate(const struct player *target_player,
  */
 static bool research_allowed(
     const struct research *presearch, Tech_type_id tech,
-    bool (*reqs_eval)(const struct player *tplr, const struct player *oplr,
-                      const struct city *tcity, const struct impr_type *tbld,
-                      const struct tile *ttile, const struct unit *tunit,
-                      const struct unit_type *tutype,
-                      const struct output_type *top,
-                      const struct specialist *tspe,
-                      const struct action *tact,
-                      const struct requirement_vector *reqs,
-                      const enum req_problem_type ptype,
-                      const enum vision_layer vlayer))
+    bool (*reqs_eval)(
+        const struct player *tplr, const struct player *oplr,
+        const struct city *tcity, const struct impr_type *tbld,
+        const struct tile *ttile, const struct unit *tunit,
+        const struct unit_type *tutype, const struct output_type *top,
+        const struct specialist *tspe, const struct action *tact,
+        const struct requirement_vector *reqs,
+        const enum req_problem_type ptype, const enum vision_layer vlayer))
 {
   struct advance *adv;
 
