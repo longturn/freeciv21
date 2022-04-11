@@ -4614,9 +4614,9 @@ int get_unit_vision_at(struct unit *punit, const struct tile *ptile,
                        enum vision_layer vlayer)
 {
   const int base = unit_type_get(punit)->vision_radius_sq;
-  const int bonus = get_unittype_bonus(unit_owner(punit), ptile,
-                                       unit_type_get(punit),
-                                       EFT_UNIT_VISION_RADIUS_SQ, vlayer);
+  const int bonus =
+      get_unittype_bonus(unit_owner(punit), ptile, unit_type_get(punit),
+                         EFT_UNIT_VISION_RADIUS_SQ, vlayer);
   switch (vlayer) {
   case V_MAIN:
     return MAX(0, base) + MAX(0, bonus);
