@@ -1081,12 +1081,11 @@ void rscompat_postprocess(struct rscompat_info *info)
 /**
  * Adds <VisionLayer, Main, Local, True> req to all unit/city vision reqs,
  * as compat for missing CAP_VUT_VISIONLAYER
+ *
+ * @data is a struct rscompat_info *.
  */
 static bool rscompat_vision_effect_cb(struct effect *peffect, void *data)
 {
-  struct rscompat_info [[maybe_unused]] *info =
-      static_cast<struct rscompat_info *>(data);
-
   if (peffect->type == EFT_UNIT_VISION_RADIUS_SQ
       || peffect->type == EFT_CITY_VISION_RADIUS_SQ) {
     effect_req_append(peffect, req_from_str("VisionLayer", "Local", false,
