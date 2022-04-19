@@ -9,7 +9,9 @@ add_library(
   luascript
   STATIC
   api_client_base.cpp
+  api_client_base.h
   script_client.cpp
+  script_client.h
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.h

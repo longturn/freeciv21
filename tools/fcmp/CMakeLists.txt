@@ -4,9 +4,13 @@ add_library(
   freeciv_modpack
   STATIC
   download.cpp
+  download.h
   modinst.cpp
+  modinst.h
   mpcmdline.cpp
+  mpcmdline.h
   mpdb.cpp
+  mpdb.h
 )
 
 target_link_libraries(freeciv_modpack PUBLIC common)
@@ -25,7 +29,9 @@ if (FREECIV_ENABLE_FCMP_QT)
   add_executable(
     freeciv21-modpack-qt ${GUI_TYPE}
     mpgui_qt_worker.cpp
+    mpgui_qt_worker.h
     mpgui_qt.cpp
+    mpgui_qt.h
   )
   target_link_libraries(freeciv21-modpack-qt PRIVATE freeciv_modpack)
   target_link_libraries(freeciv21-modpack-qt PRIVATE Qt5::Widgets)

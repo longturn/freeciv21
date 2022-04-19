@@ -31,56 +31,94 @@ target_include_directories(client_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(client_gen PUBLIC common)
 
 if (AUDIO_SDL)
-  set(FREECIV_AUDIO audio_sdl.cpp)
+  set(FREECIV_AUDIO audio_sdl.cpp audio_sdl.h)
 endif()
 
 add_library(
   client
   STATIC
   attribute.cpp
-  citybar.cpp
-  citydlg_common.cpp
-  cityrepdata.cpp
-  client_main.cpp
-  chatline_common.cpp
-  connectdlg_common.cpp
-  climisc.cpp
-  climap.cpp
-  clinet.cpp
-  colors_common.cpp
-  control.cpp
-  editor.cpp
-  global_worklist.cpp
-  governor.cpp
-  gui_interface.cpp
-  goto.cpp
-  layer.cpp
-  layer_background.cpp
-  layer_base_flags.cpp
-  layer_darkness.cpp
-  layer_special.cpp
-  layer_terrain.cpp
-  luaconsole_common.cpp
-  mapctrl_common.cpp
-  mapview_common.cpp
-  messagewin_common.cpp
-  music.cpp
-  overview_common.cpp
-  plrdlg_common.cpp
-  options.cpp
-  repodlgs_common.cpp
-  reqtree.cpp
-  text.cpp
-  themes_common.cpp
-  tilespec.cpp
-  update_queue.cpp
-  voteinfo.cpp
-  audio.cpp
+  attribute.h
   audio_none.cpp
+  audio_none.h
+  audio.cpp
+  audio.h
+  chatline_common.cpp
+  chatline_common.h
+  citybar.cpp
+  citybar.h
+  citydlg_common.cpp
+  citydlg_common.h
+  cityrepdata.cpp
+  cityrepdata.h
+  client_main.cpp
+  client_main.h
+  climap.cpp
+  climap.h
+  climisc.cpp
+  climisc.h
+  clinet.cpp
+  clinet.h
+  colors_common.cpp
+  colors_common.h
+  connectdlg_common.cpp
+  connectdlg_common.h
+  control.cpp
+  control.h
+  editor.cpp
+  editor.h
+  global_worklist.cpp
+  global_worklist.h
+  goto.cpp
+  goto.h
+  governor.cpp
+  governor.h
+  layer_background.cpp
+  layer_background.h
+  layer_base_flags.cpp
+  layer_base_flags.h
+  layer_darkness.cpp
+  layer_darkness.h
+  layer_special.cpp
+  layer_special.h
+  layer_terrain.cpp
+  layer_terrain.h
+  layer.cpp
+  layer.h
+  luaconsole_common.cpp
+  luaconsole_common.h
+  mapctrl_common.cpp
+  mapctrl_common.h
+  mapview_common.cpp
+  mapview_common.h
+  messagewin_common.cpp
+  messagewin_common.h
+  music.cpp
+  music.h
+  options.cpp
+  options.h
+  overview_common.cpp
+  overview_common.h
+  plrdlg_common.cpp
+  plrdlg_common.h
+  repodlgs_common.cpp
+  repodlgs_common.h
+  reqtree.cpp
+  reqtree.h
+  text.cpp
+  text.h
+  themes_common.cpp
+  themes_common.h
+  tilespec.cpp
+  tilespec.h
+  update_queue.cpp
+  update_queue.h
+  voteinfo.cpp
+  voteinfo.h
   ${FREECIV_AUDIO}
 )
 if(NOT EMSCRIPTEN)
-  target_sources(client PRIVATE servers.cpp)
+  target_sources(client PRIVATE servers.cpp servers.h)
 endif()
 
 target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -104,7 +142,7 @@ add_compile_definitions(NOMINMAX)
 
 if(FREECIV_ENABLE_CLIENT)
   add_subdirectory(gui-qt)
-  add_executable(freeciv21-client ${GUI_TYPE} packhand.cpp) # packhand.c depends on gui-qt
+  add_executable(freeciv21-client ${GUI_TYPE} packhand.cpp packhand.h) # packhand.c depends on gui-qt
   if(EMSCRIPTEN)
     target_link_options(freeciv21-client PRIVATE
                         -sASSERTIONS=1
